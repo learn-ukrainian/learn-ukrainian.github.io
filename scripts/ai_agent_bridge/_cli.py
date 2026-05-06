@@ -543,8 +543,13 @@ def _build_parser() -> argparse.ArgumentParser:
     check_model_parser.add_argument("model", help="Model name")
 
     # cleanup
-    cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state")
-    cleanup_parser.add_argument("--max-age", type=int, default=24, help="Force-ack messages older than N hours")
+    cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state and old acknowledged rows")
+    cleanup_parser.add_argument("--max-age", type=int, default=24, help="Force-ack stuck messages older than N hours")
+    cleanup_parser.add_argument(
+        "--older-than",
+        default="30d",
+        help="Delete acknowledged/terminal broker rows older than this age (default: 30d)",
+    )
     cleanup_parser.add_argument("--dry-run", action="store_true", help="Report what would be cleaned")
 
     # status
@@ -610,7 +615,7 @@ def _dispatch_command(args):
         ok = check_model(args.model, force=True)
         sys.exit(0 if ok else 1)
     elif args.command == "cleanup":
-        broker_cleanup(args.max_age, args.dry_run)
+        broker_cleanup(args.max_age, args.dry_run, args.older_than)
     elif args.command == "status":
         bridge_status()
     elif args.command == "interactive":

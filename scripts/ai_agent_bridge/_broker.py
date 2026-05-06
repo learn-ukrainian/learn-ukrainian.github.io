@@ -4,7 +4,7 @@ import json
 import os
 import sqlite3
 import subprocess
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from ._config import DB_PATH, PID_DIR, REPO_ROOT
@@ -137,8 +137,30 @@ def _remove_pid_file(agent: str, task_id: str):
     pid_file.unlink(missing_ok=True)
 
 
-def broker_cleanup(max_age_hours: int = 24, dry_run: bool = False):
-    """Clean up stuck broker state: stale PIDs, ancient unacked messages, orphaned locks."""
+def _parse_age_window(value: str) -> timedelta:
+    """Parse compact age windows such as 30d, 12h, or 90m."""
+    raw = value.strip().lower()
+    if len(raw) < 2:
+        raise ValueError("age must look like 30d, 12h, or 90m")
+    amount = int(raw[:-1])
+    unit = raw[-1]
+    if amount < 1:
+        raise ValueError("age amount must be positive")
+    if unit == "d":
+        return timedelta(days=amount)
+    if unit == "h":
+        return timedelta(hours=amount)
+    if unit == "m":
+        return timedelta(minutes=amount)
+    raise ValueError("age unit must be one of d, h, or m")
+
+
+def broker_cleanup(
+    max_age_hours: int = 24,
+    dry_run: bool = False,
+    older_than: str = "30d",
+):
+    """Clean stuck broker state and apply explicit message retention."""
     action = "Would clean" if dry_run else "Cleaning"
     cleaned = 0
 
@@ -148,12 +170,132 @@ def broker_cleanup(max_age_hours: int = 24, dry_run: bool = False):
     # 2. Force-ack ancient unacknowledged messages
     cleaned += _cleanup_ancient_messages(action, max_age_hours, dry_run)
 
-    # 3. Summary
+    # 3. Delete old acknowledged/terminal broker rows.
+    cleaned += broker_retention_cleanup(older_than=older_than, dry_run=dry_run)
+
+    # 4. Summary
     mode = " (DRY RUN)" if dry_run else ""
     if cleaned == 0:
         print(f"✅ Broker is clean — nothing to do{mode}")
     else:
         print(f"\n🧹 {cleaned} items cleaned{mode}")
+
+
+def broker_retention_cleanup(older_than: str = "30d", dry_run: bool = False) -> int:
+    """Delete acknowledged/terminal broker rows older than the retention window."""
+    if not DB_PATH.exists():
+        return 0
+
+    cutoff = datetime.now(UTC) - _parse_age_window(older_than)
+    cutoff_iso = cutoff.isoformat()
+    db = sqlite3.connect(str(DB_PATH))
+    db.row_factory = sqlite3.Row
+    db.execute("PRAGMA busy_timeout=5000")
+    db.execute("PRAGMA foreign_keys=ON")
+
+    counts = _retention_counts(db, cutoff_iso)
+    total = sum(counts.values())
+    mode = "Would delete" if dry_run else "Deleting"
+    print(
+        f"  {mode} retention rows older than {older_than}: "
+        f"{counts['messages']} messages, "
+        f"{counts['deliveries']} deliveries, "
+        f"{counts['channel_messages']} channel_messages"
+    )
+
+    if dry_run or total == 0:
+        db.close()
+        return total
+
+    try:
+        if _table_exists(db, "messages"):
+            db.execute(
+                """
+                DELETE FROM messages
+                WHERE acknowledged = 1 AND timestamp < ?
+                """,
+                (cutoff_iso,),
+            )
+        if _table_exists(db, "deliveries") and _table_exists(db, "channel_messages"):
+            db.execute(
+                """
+                DELETE FROM deliveries
+                WHERE status IN ('delivered', 'failed')
+                  AND message_id IN (
+                      SELECT message_id FROM channel_messages WHERE created_at < ?
+                  )
+                """,
+                (cutoff_iso,),
+            )
+            while True:
+                cur = db.execute(
+                    """
+                    DELETE FROM channel_messages
+                    WHERE created_at < ?
+                      AND NOT EXISTS (
+                          SELECT 1 FROM deliveries d
+                          WHERE d.message_id = channel_messages.message_id
+                      )
+                      AND NOT EXISTS (
+                          SELECT 1 FROM channel_messages child
+                          WHERE child.parent_id = channel_messages.message_id
+                      )
+                    """,
+                    (cutoff_iso,),
+                )
+                if cur.rowcount == 0:
+                    break
+        db.commit()
+        db.execute("VACUUM")
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
+    return total
+
+
+def _retention_counts(db: sqlite3.Connection, cutoff_iso: str) -> dict[str, int]:
+    """Return retention delete counts for legacy and channel tables."""
+    counts = {"messages": 0, "deliveries": 0, "channel_messages": 0}
+    if _table_exists(db, "messages"):
+        counts["messages"] = db.execute(
+            "SELECT COUNT(*) FROM messages WHERE acknowledged = 1 AND timestamp < ?",
+            (cutoff_iso,),
+        ).fetchone()[0]
+    if _table_exists(db, "deliveries") and _table_exists(db, "channel_messages"):
+        counts["deliveries"] = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.status IN ('delivered', 'failed')
+              AND cm.created_at < ?
+            """,
+            (cutoff_iso,),
+        ).fetchone()[0]
+        counts["channel_messages"] = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM channel_messages cm
+            WHERE cm.created_at < ?
+              AND NOT EXISTS (
+                  SELECT 1 FROM deliveries d
+                  WHERE d.message_id = cm.message_id
+                    AND d.status NOT IN ('delivered', 'failed')
+              )
+            """,
+            (cutoff_iso,),
+        ).fetchone()[0]
+    return counts
+
+
+def _table_exists(db: sqlite3.Connection, table: str) -> bool:
+    row = db.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
+        (table,),
+    ).fetchone()
+    return row is not None
 
 
 def _cleanup_stale_pids(action: str, max_age_hours: int, dry_run: bool) -> int:
