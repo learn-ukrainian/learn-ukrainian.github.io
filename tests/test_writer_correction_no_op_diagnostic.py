@@ -10,6 +10,104 @@ def _events(path: Path) -> list[dict[str, object]]:
     return [json.loads(line) for line in path.read_text("utf-8").splitlines()]
 
 
+def test_detect_tool_theatre_returns_unmatched_citations() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro" verification="checked">'
+        "Verified lemmas with `verify_words`; heritage via `search_heritage`."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(
+        writer_output,
+        [{"tool": "verify_words"}],
+    ) == ["search_heritage"]
+
+
+def test_detect_tool_theatre_normalizes_mcp_prefix() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro">'
+        "Verified lemmas with `mcp__sources__verify_words`."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(
+        writer_output,
+        [{"tool": "verify_words"}],
+    ) == []
+
+
+def test_detect_tool_theatre_empty_input() -> None:
+    assert linear_pipeline.detect_tool_theatre("", []) == []
+
+
+def test_detect_tool_theatre_only_scans_plan_reasoning_blocks() -> None:
+    writer_output = (
+        "```markdown file=module.md\n"
+        "This lesson mentions that `search_heritage` is the function name.\n"
+        "```\n\n"
+        '<plan_reasoning section="intro">No tool citation here.</plan_reasoning>'
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
+
+
+def test_detect_tool_theatre_handles_multiple_blocks() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro">`verify_words` checked.</plan_reasoning>\n'
+        '<plan_reasoning section="heritage">`search_heritage` checked.</plan_reasoning>'
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
+        "search_heritage",
+        "verify_words",
+    ]
+
+
+def test_detect_tool_theatre_returns_all_citations_when_trace_empty() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro">'
+        "`verify_words`, `search_heritage`, and `query_pravopys` checked."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
+        "query_pravopys",
+        "search_heritage",
+        "verify_words",
+    ]
+
+
+def test_writer_summary_emits_tool_theatre_event(tmp_path: Path) -> None:
+    writer_output = (
+        '<plan_reasoning section="intro">'
+        "`verify_words` checked; `search_heritage` checked."
+        "</plan_reasoning>"
+    )
+    telemetry = tmp_path / "events.jsonl"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        summary = linear_pipeline.emit_writer_response_telemetry(
+            writer_output,
+            writer="codex-tools",
+            module="a1/test",
+            sections=["intro"],
+            tool_calls=[{"tool": "verify_words"}],
+        )
+
+    events = _events(telemetry)
+    theatre_event = next(
+        event for event in events if event["event"] == "writer_tool_theatre"
+    )
+    summary_event = next(
+        event for event in events if event["event"] == "phase_writer_summary"
+    )
+    assert summary["tool_theatre_violations"] == ["search_heritage"]
+    assert theatre_event["violations"] == ["search_heritage"]
+    assert theatre_event["cited_count"] == 2
+    assert theatre_event["called_count"] == 1
+    assert summary_event["tool_theatre_violations"] == ["search_heritage"]
+
+
 def test_writer_correction_unparseable_response_emits_diagnostic(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -163,6 +261,56 @@ def test_writer_correction_module_only_writes_patched_module(tmp_path: Path) -> 
     # module.md was patched with the new prose.
     assert (module_dir / "module.md").read_text("utf-8") == (
         "## Morning\n\nOriginal prose. Patched insert: добрий ранок!\n"
+    )
+
+
+def test_writer_correction_handles_tool_theatre_gate(tmp_path: Path) -> None:
+    """The tool_theatre gate uses the module-only correction path."""
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "module.md").write_text(
+        "## Morning\n\nOriginal prose with `search_heritage` theatre.\n",
+        encoding="utf-8",
+    )
+    reports = [
+        {
+            "gates": {
+                "tool_theatre": {
+                    "passed": False,
+                    "violations": ["search_heritage"],
+                },
+                "passed": False,
+            }
+        },
+        {"gates": {"tool_theatre": {"passed": True}, "passed": True}},
+    ]
+    patched_response = (
+        "```markdown file=module.md\n"
+        "## Morning\n\n"
+        "Original prose with verification not performed theatre.\n"
+        "```\n"
+    )
+
+    def qg_runner() -> dict[str, object]:
+        return reports.pop(0)
+
+    def writer_corrector(
+        context: linear_pipeline.CorrectionContext,
+    ) -> str:
+        assert context.gate == "tool_theatre"
+        assert "search_heritage" in context.prompt
+        return patched_response
+
+    report = linear_pipeline.run_python_qg_with_corrections(
+        module_dir,
+        tmp_path / "plan.yaml",
+        qg_runner=qg_runner,
+        writer_corrector=writer_corrector,
+    )
+
+    assert report["gates"]["passed"] is True
+    assert (module_dir / "module.md").read_text("utf-8") == (
+        "## Morning\n\nOriginal prose with verification not performed theatre.\n"
     )
 
 

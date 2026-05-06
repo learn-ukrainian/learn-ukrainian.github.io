@@ -39,6 +39,29 @@ below.
 {CORRECTION_SECTION}
 ```
 
+## When `gate = tool_theatre`
+
+Your previous turn cited tool names in `<plan_reasoning verification>` that
+you did not actually call. The unmatched citations are listed under
+`diagnostic.violations` in the gate feedback above.
+
+Pick exactly one path. Single fenced ```` ```markdown file=module.md ```` block
+as your entire response, no prose around it.
+
+1. **Call them now.** Make the tool calls you cited (each one), then re-emit
+   `module.md` with the actual tool results in the verification block. The
+   verification text should reference the result, not the tool name in isolation.
+2. **Remove the false citations.** Delete the unmatched tool names from the
+   verification blocks; replace each removed citation with the verbatim text
+   "verification not performed" so it's auditable.
+
+No third option. Citing the same tools again without calling them = same
+failure, same gate, exhausted retry.
+
+Verbatim citation rule: every tool name you cite in
+`<plan_reasoning verification>` must correspond to a tool call you actually
+made in this turn's trace.
+
 ## Previously-Passing Prose
 
 The following prose passed other gates before this correction. Preserve it
