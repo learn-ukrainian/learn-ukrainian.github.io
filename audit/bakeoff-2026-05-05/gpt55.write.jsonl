@@ -1,0 +1,12 @@
+{"event": "module_start", "ts": "2026-05-06T03:20:32.665408+00:00", "level": "a1", "slug": "my-morning"}
+{"event": "phase_done", "ts": "2026-05-06T03:20:32.668790+00:00", "level": "a1", "slug": "my-morning", "phase": "plan", "duration_s": 0.003}
+{"event": "phase_done", "ts": "2026-05-06T03:20:32.849872+00:00", "level": "a1", "slug": "my-morning", "phase": "knowledge_packet", "duration_s": 0.181}
+{"event": "writer_cot_emit", "ts": "2026-05-06T03:24:58.439599+00:00", "writer": "codex-tools", "module": "a1/20", "section": "Діалоги", "block_present": true, "block_chars": 991, "fields_filled": ["word_budget", "plan_vocab", "register", "teaching_sequence"]}
+{"event": "writer_cot_emit", "ts": "2026-05-06T03:24:58.439652+00:00", "writer": "codex-tools", "module": "a1/20", "section": "Дієслова на -ся", "block_present": true, "block_chars": 914, "fields_filled": ["word_budget", "plan_vocab", "register", "teaching_sequence"]}
+{"event": "writer_cot_emit", "ts": "2026-05-06T03:24:58.439670+00:00", "writer": "codex-tools", "module": "a1/20", "section": "Мій ранок", "block_present": true, "block_chars": 941, "fields_filled": ["word_budget", "plan_vocab", "register", "teaching_sequence"]}
+{"event": "writer_cot_emit", "ts": "2026-05-06T03:24:58.439684+00:00", "writer": "codex-tools", "module": "a1/20", "section": "Підсумок", "block_present": true, "block_chars": 941, "fields_filled": ["word_budget", "plan_vocab", "register", "teaching_sequence"]}
+{"event": "writer_end_gate", "ts": "2026-05-06T03:24:58.439806+00:00", "writer": "codex-tools", "module": "a1/20", "gate_present": true, "gate_actions": ["rescanned_words", "rescanned_sources", "removed_unverified"], "removed_count": 0}
+{"event": "phase_writer_summary", "ts": "2026-05-06T03:24:58.440088+00:00", "writer": "codex-tools", "module": "a1/20", "sections_total": 4, "sections_with_cot": 4, "tool_calls_total": 0, "verify_words_calls": 0, "end_gate_fired": true, "removed_via_gate": 0, "tool_theatre_violations": [], "tool_theatre_violation_count": 0}
+{"event": "phase_done", "ts": "2026-05-06T03:24:58.458677+00:00", "level": "a1", "slug": "my-morning", "phase": "writer", "duration_s": 265.61, "writer": "codex-tools"}
+{"event": "phase_done", "ts": "2026-05-06T03:26:08.823652+00:00", "level": "a1", "slug": "my-morning", "phase": "python_qg", "duration_s": 70.371}
+{"event": "module_failed", "ts": "2026-05-06T03:26:08.823680+00:00", "level": "a1", "slug": "my-morning", "phase": "python_qg", "reason": "Python QG failed after ADR-008 correction paths"}

@@ -6,12 +6,15 @@
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Multi-dispatch arc + slovnyk.me unblock** | **`docs/session-state/2026-05-04-evening-multi-dispatch.md`** | **3 Gemini PRs in flight, all rebased + mergeable, awaiting CI: #1674 (#1669 VESUM arch), #1675 (#1668 PyMorphy3), #1678 (#1658 Грінченко rename). slovnyk.me wired as multi-dictionary aggregator (replaces broken sum20ua.com path; serves СУМ-20, Karavansky, paronyms, 13 more). #1631 confirmed already-shipped (residuals → #1680). #1660 + #1673 + #1659 closed. CoT scaffolding shipped to writer + reviewer prompts. path_safety dual-import-path bug fixed across 18 files. Open: ADR-008 user signoff, then resume Tier A.** |
+| **Discussion converged + Gemini fix shipped + Decision Card refined; channels.html → Slack-alternative ADR mandated** | **`docs/session-state/2026-05-06-morning-discussion-converged-and-channels-ux.md`** | **Yargs argv-bug fix shipped (#1730) — Gemini participates in `ab discuss` again. 3-way discussion CONVERGED [AGREE] on Option A (lock Codex) with three refinements: (1) VESUM gate stays HARD (Gemini condition), (2) concrete rollback criteria — invented -ся / wiki-path-citations / immersion >35% triggers prompt-rework before A1 batch, (3) reframe lock as "default V7 writer until next bakeoff signal" not permanent. Decision Card NOT updated yet — awaits user `go`. Working-tree changes: gemini.py (yargs fix) + tests + channels.html (date format) + index.html (nav swap) + MEMORY.md (rule #0J). NOT committed. **#1731 NEW: channels.html → Slack-alternative for multi-UI human↔agent collaboration; user mandates 3-agent ADR design before implementation.** Open: #1725 (textbook-grounding, two user reframings), #1730 (yargs upstream tracking), #1731 (Slack-alternative ADR-track), #1708 (Gemini adapter stability — independent track).** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Writer-selection bakeoff: Codex wins; Decision Card pending | `2026-05-06-bakeoff-result-codex-wins-decision-pending.md` |
+| Four fixes merged + bakeoff re-running (mid-state) | `2026-05-06-four-fixes-merged-bakeoff-rerunning.md` |
+| Multi-dispatch arc + slovnyk.me unblock | `2026-05-04-evening-multi-dispatch.md` |
 | Tools-before-A1/20 ordering locked + git cleanup completed | `2026-05-04-tools-before-a1-20.md` |
 | MCP verification-layer architecture kickoff + Antonenko ingest incident | `2026-05-04-mcp-verification-architecture-kickoff.md` |
 | #1639/#1644 closed + POC fully unblocked | `2026-05-02-1644-cleanup-and-poc-unblocked.md` |

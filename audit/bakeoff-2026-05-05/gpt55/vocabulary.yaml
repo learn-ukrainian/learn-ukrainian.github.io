@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash up, to wash face or hands
+  pos: verb
+  usage: Я вмиваюся вранці.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Я одягаюся швидко.
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  usage: Я збираюся на роботу.
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  usage: Я повертаюся додому.
+- lemma: навчатися
+  translation: to study, to learn
+  pos: verb
+  usage: Я навчаюся вранці.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: Я не поспішаю.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Потім я снідаю.
+- lemma: йти
+  translation: to go
+  pos: verb
+  usage: Нарешті я йду на роботу.
+- lemma: пити
+  translation: to drink
+  pos: verb
+  usage: Я п’ю каву.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Я п’ю каву.
+- lemma: робота
+  translation: work, job
+  pos: noun
+  usage: Я йду на роботу.
+- lemma: субота
+  translation: Saturday
+  pos: noun
+  usage: У суботу я не поспішаю.
+- lemma: телефон
+  translation: phone
+  pos: noun
+  usage: Я дивлюся телефон.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Мій ранок простий.
+- lemma: рутина
+  translation: routine
+  pos: noun
+  usage: Це моя ранкова рутина.
+- lemma: спочатку
+  translation: first, at first
+  pos: adverb
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then, next
+  pos: adverb
+  usage: Потім я вмиваюся.
+- lemma: після цього
+  translation: after this
+  pos: phrase
+  usage: Після цього я одягаюся.
+- lemma: нарешті
+  translation: finally
+  pos: adverb
+  usage: Нарешті я йду.

@@ -1,0 +1,3 @@
+{"event": "module_start", "ts": "2026-05-06T02:58:28.748912+00:00", "level": "a1", "slug": "my-morning"}
+{"event": "phase_done", "ts": "2026-05-06T02:58:28.752299+00:00", "level": "a1", "slug": "my-morning", "phase": "plan", "duration_s": 0.003}
+{"event": "phase_done", "ts": "2026-05-06T02:58:28.926608+00:00", "level": "a1", "slug": "my-morning", "phase": "knowledge_packet", "duration_s": 0.174}
