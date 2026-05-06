@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import sqlite3
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -55,6 +56,7 @@ _TABLE_NAMES = [
     "puls_cefr",
     "style_guide",
 ]
+_WORD_COUNT_WORKERS = 4
 
 
 def _known_tracks() -> list[str]:
@@ -102,6 +104,7 @@ def _list_article_candidates() -> dict[str, list[dict[str, Any]]]:
             "compiled_at": progress_info.get("compiled_at"),
             "source_count": progress_info.get("source_count"),
             "word_count": progress_info.get("word_count"),
+            "from_progress": True,
         })
 
     known_paths = {candidate["path"] for rows in candidates.values() for candidate in rows}
@@ -122,6 +125,7 @@ def _list_article_candidates() -> dict[str, list[dict[str, Any]]]:
             "compiled_at": None,
             "source_count": None,
             "word_count": None,
+            "from_progress": False,
         })
 
     return candidates
@@ -166,6 +170,49 @@ def _read_article_metrics(path: Path, cache: dict[Path, dict[str, Any]]) -> dict
     return data
 
 
+def _count_article_words(path: Path) -> tuple[Path, int]:
+    try:
+        return path, len(path.read_bytes().split())
+    except OSError:
+        return path, 0
+
+
+def _read_article_word_count(path: Path, cache: dict[Path, int]) -> int:
+    cached = cache.get(path)
+    if cached is not None:
+        return cached
+
+    _, word_count = _count_article_words(path)
+    cache[path] = word_count
+    return word_count
+
+
+def _preload_article_word_counts(
+    candidates_by_slug: dict[str, list[dict[str, Any]]],
+    cache: dict[Path, int],
+) -> None:
+    paths: list[Path] = []
+    seen: set[Path] = set()
+    for candidates in candidates_by_slug.values():
+        for article in candidates:
+            if article.get("word_count") is not None or not article.get("from_progress"):
+                continue
+            article_path = _safe_join(wiki_config.WIKI_DIR, article["path"])
+            if not article_path or not article_path.exists() or article_path in seen:
+                continue
+            seen.add(article_path)
+            paths.append(article_path)
+
+    if len(paths) < 16:
+        for path in paths:
+            _read_article_word_count(path, cache)
+        return
+
+    with ThreadPoolExecutor(max_workers=_WORD_COUNT_WORKERS) as executor:
+        for path, word_count in executor.map(_count_article_words, paths):
+            cache[path] = word_count
+
+
 def _source_count(track: str, slug: str) -> int:
     try:
         data = wiki_sources.gather_discovery_sources_readonly(track, slug)
@@ -185,6 +232,7 @@ def _source_count(track: str, slug: str) -> int:
 def _track_status_rows(
     track: str,
     candidates_by_slug: dict[str, list[dict[str, Any]]] | None = None,
+    word_count_cache: dict[Path, int] | None = None,
 ) -> list[dict[str, Any]]:
     _ensure_track_exists(track)
     slugs = _track_slugs(track)
@@ -200,7 +248,12 @@ def _track_status_rows(
         word_count = 0
 
         if compiled:
-            word_count = int(article.get("word_count") or 0)
+            progress_word_count = article.get("word_count")
+            if progress_word_count is None and article.get("from_progress") and article_path:
+                cache = word_count_cache if word_count_cache is not None else {}
+                word_count = _read_article_word_count(article_path, cache)
+            else:
+                word_count = int(progress_word_count or 0)
 
         rows.append({
             "slug": slug,
@@ -217,19 +270,21 @@ def _track_status_rows(
 async def wiki_status():
     """Per-track wiki compilation status."""
     known_tracks = _known_tracks()
-    cache_key = "wiki_status_" + ",".join(known_tracks)
+    cache_key = f"wiki_status_{wiki_config.WIKI_DIR}_" + ",".join(known_tracks)
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
 
     article_candidates = _list_article_candidates()
+    word_count_cache: dict[Path, int] = {}
+    _preload_article_word_counts(article_candidates, word_count_cache)
     tracks = []
 
     for track in known_tracks:
         slugs = _track_slugs(track)
         if not slugs:
             continue
-        modules = _track_status_rows(track, article_candidates)
+        modules = _track_status_rows(track, article_candidates, word_count_cache)
         total = len(modules)
         compiled = sum(1 for module in modules if module["compiled"])
         total_words = sum(module["word_count"] for module in modules)

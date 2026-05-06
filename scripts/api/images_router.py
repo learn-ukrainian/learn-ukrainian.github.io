@@ -19,6 +19,7 @@ import shutil
 import sys
 from collections import OrderedDict
 from datetime import datetime
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
@@ -59,16 +60,17 @@ class _ImageIndex:
         annotations = {}
 
         # 1. Load per-book structural JSONLs
-        for jsonl_file in sorted(IMAGES_DIR.rglob("*-images.jsonl")):
-            with open(jsonl_file) as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    rec = json.loads(line)
-                    image_id = rec.get("image_id", "")
-                    if image_id:
-                        records[image_id] = rec
+        if IMAGES_DIR.exists():
+            for jsonl_file in sorted(IMAGES_DIR.rglob("*-images.jsonl")):
+                with open(jsonl_file) as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        rec = json.loads(line)
+                        image_id = rec.get("image_id", "")
+                        if image_id:
+                            records[image_id] = rec
 
         # 2. Load global annotations
         if ANNOTATIONS_FILE.exists():
@@ -100,15 +102,16 @@ class _ImageIndex:
 
         # 5. Scan for actual PDFs on disk
         pdf_catalog = {}
-        for grade_dir in sorted(TEXTBOOKS_DIR.iterdir()):
-            if not grade_dir.is_dir() or not grade_dir.name.startswith("grade-"):
-                continue
-            for pdf_file in sorted(grade_dir.glob("*.pdf")):
-                pdf_catalog[pdf_file.stem] = {
-                    "path": str(pdf_file),
-                    "grade_dir": grade_dir.name,
-                    "stem": pdf_file.stem,
-                }
+        if TEXTBOOKS_DIR.exists():
+            for grade_dir in sorted(TEXTBOOKS_DIR.iterdir()):
+                if not grade_dir.is_dir() or not grade_dir.name.startswith("grade-"):
+                    continue
+                for pdf_file in sorted(grade_dir.glob("*.pdf")):
+                    pdf_catalog[pdf_file.stem] = {
+                        "path": str(pdf_file),
+                        "grade_dir": grade_dir.name,
+                        "stem": pdf_file.stem,
+                    }
 
         self._records = records
         self._annotations = annotations
@@ -191,6 +194,7 @@ _pdf_pool = _PDFPool()
 
 _page_cache: OrderedDict[str, bytes] = OrderedDict()
 _PAGE_CACHE_MAX = 100
+_pdf_page_count_cache: dict[str, tuple[float, int, int]] = {}
 
 
 def _cache_page_render(key: str, png_bytes: bytes):
@@ -198,6 +202,31 @@ def _cache_page_render(key: str, png_bytes: bytes):
     _page_cache.move_to_end(key)
     while len(_page_cache) > _PAGE_CACHE_MAX:
         _page_cache.popitem(last=False)
+
+
+def _read_pdf_page_count(pdf_path: str) -> int:
+    try:
+        stat = Path(pdf_path).stat()
+    except OSError:
+        return 0
+
+    cached = _pdf_page_count_cache.get(pdf_path)
+    if cached and cached[0] == stat.st_mtime and cached[1] == stat.st_size:
+        return cached[2]
+
+    try:
+        import pymupdf
+
+        doc = pymupdf.open(pdf_path)
+        try:
+            page_count = len(doc)
+        finally:
+            doc.close()
+    except Exception:
+        page_count = 0
+
+    _pdf_page_count_cache[pdf_path] = (stat.st_mtime, stat.st_size, page_count)
+    return page_count
 
 
 # ── Request/Response models ──────────────────────────────────────────
@@ -261,8 +290,14 @@ async def list_textbooks():
     """List PDFs on disk with image counts and annotation coverage."""
     await _index.ensure_loaded()
 
+    catalog_items = sorted(_index.pdf_catalog.items())
+    page_counts = await asyncio.gather(*(
+        asyncio.to_thread(_read_pdf_page_count, info["path"])
+        for _stem, info in catalog_items
+    ))
+
     result = []
-    for stem, info in sorted(_index.pdf_catalog.items()):
+    for (stem, info), page_count in zip(catalog_items, page_counts, strict=False):
         # Count images from this PDF
         pages_with_images = _index.by_pdf_page.get(stem, {})
         image_count = sum(len(imgs) for imgs in pages_with_images.values())
@@ -271,13 +306,6 @@ async def list_textbooks():
             for img in imgs
             if img.get("description_uk")
         )
-
-        # Get page count from PDF
-        try:
-            doc = await _pdf_pool.get(info["path"])
-            page_count = len(doc)
-        except Exception:
-            page_count = 0
 
         result.append({
             "stem": stem,
