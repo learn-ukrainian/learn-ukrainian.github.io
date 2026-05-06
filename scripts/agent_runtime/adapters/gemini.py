@@ -13,6 +13,10 @@ flag requirements in the codebase:
 - Rate-limit detection: Gemini returns ``RESOURCE_EXHAUSTED``, ``quota
   exceeded``, and occasionally ``No capacity available`` depending on
   backend. Patterns match dispatch.py prior art.
+- Auth precedence: in auto mode, ``GEMINI_API_KEY`` / ``GOOGLE_API_KEY``
+  selects API-key auth first; otherwise the adapter falls back to
+  subscription/OAuth and strips Gemini API env vars from the subprocess.
+  Explicit ``GEMINI_AUTH_MODE=api`` or ``subscription`` still wins.
 - No session IDs. Gemini CLI doesn't expose them, so ``parse_response``
   returns ``session_id=None`` always. Resume policy is ``bridge_only``
   for cost economics, but session IDs come from the bridge's own SQLite
