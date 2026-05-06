@@ -25,6 +25,11 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from scripts.build.citation_matcher import (
+    extract_citation_key,
+    extract_plan_reference_titles,
+    normalize_citation_ref,
+)
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
 from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
@@ -3652,19 +3657,27 @@ def _formatting_standards_gate(text: str) -> dict[str, Any]:
 
 
 def _normalize_citation_ref(value: Any) -> str:
-    normalized = re.sub(r"\s+", " ", str(value or "")).strip()
-    return re.sub(r"\bp\.\s+(\d+)\b", r"p.\1", normalized)
+    return normalize_citation_ref(value)
 
 
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
-    plan_titles = {
-        _normalize_citation_ref(ref["title"]) for ref in plan.get("references", [])
+    plan_reference_titles = extract_plan_reference_titles(plan)
+    plan_titles = {_normalize_citation_ref(title) for title in plan_reference_titles}
+    plan_keys = {
+        key
+        for title in plan_reference_titles
+        if (key := extract_citation_key(title)) is not None
     }
     unknown = []
     for resource in resources:
         source_ref = str(resource.get("source_ref") or resource.get("title") or "")
         normalized_ref = _normalize_citation_ref(source_ref)
-        if normalized_ref not in plan_titles and resource.get("packet_chunk_id") is None:
+        source_key = extract_citation_key(source_ref)
+        if (
+            normalized_ref not in plan_titles
+            and source_key not in plan_keys
+            and resource.get("packet_chunk_id") is None
+        ):
             unknown.append(source_ref)
     return {"passed": not unknown, "unknown": unknown}
 
