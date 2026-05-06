@@ -37,6 +37,26 @@
 | Stress dictionary | `ukrainian-word-stress` lib | 2.7M forms |
 | Wikipedia cache | `data/wiki_cache.db` | Full UK Wiki |
 
+## Deterministic text ingesters
+
+`scripts/ingest/dictionary_ingest.py` adds deterministic, source-specific
+plain-text ingestion for the private dictionary materials tracked by
+issues #1663-#1666. The ingester creates one rich table plus one FTS5 table
+per source:
+
+| Source flag | Tables | Expected rows | Input shape |
+|-----------|--------|---------------|-------------|
+| `antonenko` | `style_antonenko`, `style_antonenko_fts` | ~500-700 | Paragraph usage notes from «Як ми говоримо» |
+| `karavansky` | `karavansky_r2u`, `karavansky_r2u_fts` | ~5K | RU lemma → Ukrainian translations, one entry per line |
+| `holovashchuk` | `style_holovashchuk`, `style_holovashchuk_fts` | ~3K-8K | Ukrainian lemma → usage/register notes |
+| `paronyms` | `paronyms_full`, `paronyms_full_fts` | ~1.5K | Paronym pair → meanings/examples |
+
+Run with:
+
+```bash
+.venv/bin/python -m scripts.ingest.dictionary_ingest --source <source> --input docs/references/private/<file>.txt
+```
+
 ## Remaining gaps
 
 | Gap | Severity | Notes |
