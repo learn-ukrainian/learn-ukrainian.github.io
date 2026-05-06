@@ -2596,6 +2596,40 @@ def test_claude_adapter_bare_when_api_key_set(tmp_path, monkeypatch):
     assert "--bare" in plan.cmd
 
 
+def test_claude_adapter_no_bare_when_oauth_token_set(tmp_path, monkeypatch):
+    """Claude setup-token OAuth works in headless mode, but not with --bare."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "sk-ant-oat01-fake")
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--bare" not in plan.cmd
+
+
+def test_claude_adapter_no_bare_when_api_key_and_oauth_token_set(tmp_path, monkeypatch):
+    """If OAuth is present, avoid bare even when API-key fallback is available."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "sk-ant-oat01-fake")
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--bare" not in plan.cmd
+
+
 def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):
     """--bare is incompatible with resumed or named sessions."""
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
@@ -2780,6 +2814,21 @@ def test_claude_parse_response_rate_limit():
         output_file=None,
     )
     assert result.rate_limited is True
+
+
+def test_claude_parse_response_not_logged_in_has_actionable_error():
+    adapter = ClaudeAdapter()
+    result = adapter.parse_response(
+        stdout="",
+        stderr="Not logged in · Please run /login",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.stderr_excerpt is not None
+    assert "not authenticated for headless dispatch" in result.stderr_excerpt
+    assert "CLAUDE_CODE_OAUTH_TOKEN" in result.stderr_excerpt
+    assert "ANTHROPIC_API_KEY" in result.stderr_excerpt
 
 
 def test_claude_parse_response_url_no_false_positive():

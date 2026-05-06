@@ -155,6 +155,19 @@ environment for each process:
   OpenAI/Codex keys. Cross-provider keys and `GITHUB_TOKEN` stay absent.
 - Gemini also receives `GEMINI_AUTH_MODE` because it is runtime mode
   selection, not a credential; secret-shaped values are still rejected.
+- Claude receives `CLAUDE_CODE_OAUTH_TOKEN` for headless Pro/Max/Team/
+  Enterprise subscription dispatches created with `claude setup-token`.
+  The adapter does not add `--bare` for OAuth-token dispatches because
+  Claude Code bare mode only reads API-key auth. If no Claude auth is
+  available, the runtime reports an actionable error pointing to
+  `claude auth login`, `CLAUDE_CODE_OAUTH_TOKEN`, or `ANTHROPIC_API_KEY`.
+- Claude also receives `ANTHROPIC_AUTH_TOKEN` when present because
+  Claude Code documents it as a bearer-token auth input for gateways or
+  proxies. It remains scoped to Claude dispatches only.
+- Claude may also receive `CLAUDE_CONFIG_DIR` so Linux/Windows dispatches
+  using a non-default Claude config directory can find their documented
+  credential store. This is provider-scoped and is not passed to Gemini,
+  Codex, or bridge helper processes.
 
 Adapters should put per-call environment values in
 `InvocationPlan.env_overrides`; the runner applies overrides, sanitizes,

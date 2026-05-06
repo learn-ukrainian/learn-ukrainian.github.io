@@ -77,6 +77,7 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # to stdout; the caller passes them IN via tool_config. Parser kept for
 # forward compat.)
 _SESSION_ID_RE = re.compile(r"session[_-]?id[:=]\s*([0-9a-f-]{8,})", re.IGNORECASE)
+_NOT_LOGGED_IN_RE = re.compile(r"not logged in|please run /login", re.IGNORECASE)
 _EFFORT_MIN_VERSION = (2, 1, 98)
 _MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
 _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
@@ -221,8 +222,13 @@ class ClaudeAdapter:
         has_session = session_id is not None
         use_bare = tc.get("use_bare")
         if use_bare is None:
-            # Auto-decide: enable if no session and API key is set
-            use_bare = not has_session and bool(os.environ.get("ANTHROPIC_API_KEY"))
+            # Auto-decide: enable only for the API-key-only stateless path.
+            # Claude Code bare mode does not read setup-token OAuth.
+            use_bare = (
+                not has_session
+                and bool(os.environ.get("ANTHROPIC_API_KEY"))
+                and not bool(os.environ.get("CLAUDE_CODE_OAUTH_TOKEN"))
+            )
         if use_bare and not has_session:
             cmd.append("--bare")
 
@@ -341,6 +347,13 @@ class ClaudeAdapter:
         if not ok:
             excerpt_source = stderr.strip() or stdout.strip() or ""
             stderr_excerpt = excerpt_source[:500] or None
+            if stderr_excerpt and _NOT_LOGGED_IN_RE.search(stderr_excerpt):
+                stderr_excerpt = (
+                    "Claude Code is not authenticated for headless dispatch. "
+                    "Run `claude auth login`, set `CLAUDE_CODE_OAUTH_TOKEN` "
+                    "from `claude setup-token`, or set `ANTHROPIC_API_KEY`. "
+                    f"Original stderr: {stderr_excerpt}"
+                )[:500]
 
         # Session ID extraction (rare — caller usually passes it IN)
         session_id: str | None = None

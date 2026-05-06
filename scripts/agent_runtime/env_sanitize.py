@@ -51,8 +51,10 @@ _PROVIDER_SECRET_ALLOWLIST = {
         "GOOGLE_GENERATIVE_AI_API_KEY",
     },
     "claude": {
+        "ANTHROPIC_AUTH_TOKEN",
         "ANTHROPIC_API_KEY",
         "CLAUDE_API_KEY",
+        "CLAUDE_CODE_OAUTH_TOKEN",
     },
     "codex": {
         "CODEX_API_KEY",
@@ -62,6 +64,9 @@ _PROVIDER_SECRET_ALLOWLIST = {
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
+    "claude": {
+        "CLAUDE_CONFIG_DIR",
+    },
     "gemini": {
         "GEMINI_AUTH_MODE",
     },

@@ -53,7 +53,10 @@ def test_build_agent_env_passes_only_current_provider_credentials():
         "GEMINI_API_KEY": "gemini-key",
         "GOOGLE_API_KEY": "google-key",
         "ANTHROPIC_API_KEY": "sk-ant-fake",
+        "ANTHROPIC_AUTH_TOKEN": "anthropic-auth-token",
         "CLAUDE_API_KEY": "sk-claude-fake",
+        "CLAUDE_CODE_OAUTH_TOKEN": "sk-ant-oat01-fake",
+        "CLAUDE_CONFIG_DIR": "/Users/example/.config/claude",
         "OPENAI_API_KEY": "sk-openai-fake",
         "CODEX_API_KEY": "codex-key",
         "GITHUB_TOKEN": "ghp_fakegithubtoken",
@@ -68,10 +71,16 @@ def test_build_agent_env_passes_only_current_provider_credentials():
     assert gemini_env["GEMINI_API_KEY"] == "gemini-key"
     assert gemini_env["GOOGLE_API_KEY"] == "google-key"
     assert "ANTHROPIC_API_KEY" not in gemini_env
+    assert "ANTHROPIC_AUTH_TOKEN" not in gemini_env
+    assert "CLAUDE_CODE_OAUTH_TOKEN" not in gemini_env
+    assert "CLAUDE_CONFIG_DIR" not in gemini_env
     assert "OPENAI_API_KEY" not in gemini_env
 
     assert claude_env["ANTHROPIC_API_KEY"] == "sk-ant-fake"
+    assert claude_env["ANTHROPIC_AUTH_TOKEN"] == "anthropic-auth-token"
     assert claude_env["CLAUDE_API_KEY"] == "sk-claude-fake"
+    assert claude_env["CLAUDE_CODE_OAUTH_TOKEN"] == "sk-ant-oat01-fake"
+    assert claude_env["CLAUDE_CONFIG_DIR"] == "/Users/example/.config/claude"
     assert "GEMINI_API_KEY" not in claude_env
     assert "OPENAI_API_KEY" not in claude_env
 
@@ -79,9 +88,15 @@ def test_build_agent_env_passes_only_current_provider_credentials():
     assert codex_env["CODEX_API_KEY"] == "codex-key"
     assert "GEMINI_API_KEY" not in codex_env
     assert "ANTHROPIC_API_KEY" not in codex_env
+    assert "ANTHROPIC_AUTH_TOKEN" not in codex_env
+    assert "CLAUDE_CODE_OAUTH_TOKEN" not in codex_env
+    assert "CLAUDE_CONFIG_DIR" not in codex_env
 
     assert "GEMINI_API_KEY" not in bridge_env
     assert "ANTHROPIC_API_KEY" not in bridge_env
+    assert "ANTHROPIC_AUTH_TOKEN" not in bridge_env
+    assert "CLAUDE_CODE_OAUTH_TOKEN" not in bridge_env
+    assert "CLAUDE_CONFIG_DIR" not in bridge_env
     assert "OPENAI_API_KEY" not in bridge_env
     assert "GITHUB_TOKEN" not in bridge_env
 
@@ -206,7 +221,9 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
         "GEMINI_API_KEY",
         "GOOGLE_API_KEY",
         "ANTHROPIC_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
         "CLAUDE_API_KEY",
+        "CLAUDE_CODE_OAUTH_TOKEN",
         "OPENAI_API_KEY",
         "CODEX_API_KEY",
         "GITHUB_TOKEN",
@@ -223,7 +240,9 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
         "GEMINI_API_KEY": "gemini-key",
         "GOOGLE_API_KEY": "google-key",
         "ANTHROPIC_API_KEY": "sk-ant-fake",
+        "ANTHROPIC_AUTH_TOKEN": "anthropic-auth-token",
         "CLAUDE_API_KEY": "sk-claude-fake",
+        "CLAUDE_CODE_OAUTH_TOKEN": "sk-ant-oat01-fake",
         "OPENAI_API_KEY": "sk-openai-fake",
         "CODEX_API_KEY": "codex-key",
         "GITHUB_TOKEN": "ghp_fakegithubtoken",
@@ -235,7 +254,9 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
         },
         "claude": {
             "ANTHROPIC_API_KEY": "sk-ant-fake",
+            "ANTHROPIC_AUTH_TOKEN": "anthropic-auth-token",
             "CLAUDE_API_KEY": "sk-claude-fake",
+            "CLAUDE_CODE_OAUTH_TOKEN": "sk-ant-oat01-fake",
         },
         "codex": {
             "OPENAI_API_KEY": "sk-openai-fake",
@@ -268,3 +289,41 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
             assert outcome.parse.ok is True
             assert json.loads(outcome.stdout_text) == expected_env
+
+
+def test_runner_smoke_passes_claude_oauth_token_to_claude_only(tmp_path):
+    script = (
+        "import os; "
+        "token = os.environ.get('CLAUDE_CODE_OAUTH_TOKEN'); "
+        "print('oauth ok' if token == 'sk-ant-oat01-fake' else 'missing oauth')"
+    )
+    parent_env = {
+        "PATH": os.environ.get("PATH", ""),
+        "HOME": str(tmp_path),
+        "CLAUDE_CODE_OAUTH_TOKEN": "sk-ant-oat01-fake",
+    }
+    plan = _SmokePlan(
+        cmd=[_TEST_PYTHON, "-c", script],
+        cwd=tmp_path,
+    )
+
+    with patch.dict("os.environ", parent_env, clear=True), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        outcome = _execute_invocation_plan(
+            agent_name="claude",
+            adapter=_SmokeAdapter(),
+            plan=plan,
+            prompt="env smoke",
+            mode="read-only",
+            cwd=tmp_path,
+            model="smoke-model",
+            task_id="claude-oauth-env-smoke",
+            session_id=None,
+            entrypoint="runtime-test",
+            hard_timeout=10,
+            stall_timeout=10,
+        )
+
+    assert outcome.parse.ok is True
+    assert outcome.stdout_text.strip() == "oauth ok"
