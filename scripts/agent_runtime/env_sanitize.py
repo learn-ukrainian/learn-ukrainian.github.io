@@ -34,8 +34,10 @@ _SAFE_NAME_ALLOWLIST = {
     "AGENT_NO_MERGE",
     "HOME",
     "LANG",
+    "LOGNAME",
     "PATH",
     "TMPDIR",
+    "USER",
 }
 
 _SAFE_NAME_PREFIXES = (
