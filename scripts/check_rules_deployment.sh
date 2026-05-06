@@ -50,6 +50,7 @@ drift=0
 # rsync calls and ORPHAN_PATHS_* declarations in scripts/deploy_prompts.sh.
 check_pair "claude_extensions" ".claude" "scheduled_tasks.lock" "worktrees" || drift=1
 check_pair "claude_extensions" ".agent" "wake" "cache" || drift=1
+check_pair "claude_extensions/skills" ".agents/skills" || drift=1
 check_pair "gemini_extensions" ".gemini" "docs/" || drift=1
 
 exit "$drift"
