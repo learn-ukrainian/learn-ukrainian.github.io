@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import os
 import sqlite3
+import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -255,6 +257,90 @@ def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypa
     }
     assert all(row["delivered_at"] is not None for row in reply_deliveries)
     assert all(row["parent_id"] is not None for row in reply_deliveries)
+
+
+@patch("agent_runtime.runner.invoke")
+def test_discuss_fails_and_warns_when_agent_writes_worktree(
+    mock_invoke,
+    monkeypatch,
+    tmp_path,
+    capsys,
+):
+    _channels.create_channel("shared")
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+    monkeypatch.setattr(_channels_cli, "REPO_ROOT", tmp_path)
+    git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    subprocess.run(
+        ["git", "init"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        env=git_env,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=tmp_path,
+        check=True,
+        env=git_env,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Test User"],
+        cwd=tmp_path,
+        check=True,
+        env=git_env,
+    )
+    (tmp_path / "README.md").write_text("clean\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True, env=git_env)
+    subprocess.run(
+        ["git", "commit", "-m", "initial"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        env=git_env,
+    )
+
+    def _write_attempt(agent: str, *_args, **kwargs) -> Result:
+        assert kwargs["mode"] == "read-only"
+        assert kwargs["tool_config"] == {"discussion_readonly": True}
+        (tmp_path / "unauthorized.txt").write_text("write attempt\n", encoding="utf-8")
+        return Result(
+            ok=True,
+            agent=agent,
+            model="test-model",
+            mode="read-only",
+            response=f"{agent} reply [AGREE]",
+            stderr_excerpt=None,
+            duration_s=0.1,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={},
+        )
+
+    mock_invoke.side_effect = _write_attempt
+
+    exit_code = _run_cli(
+        ["discuss", "shared", "topic", "--with", "claude", "--max-rounds", "1"]
+    )
+
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "DISCUSSION READ-ONLY VIOLATION" in captured.err
+    assert "unauthorized.txt" in captured.err
+
+    messages = _channels.read("shared", tail=10)
+    assert any("DISCUSSION READ-ONLY VIOLATION" in msg["body"] for msg in messages)
+    assert not any(msg["from_agent"] == "claude" for msg in messages)
+    rev_count = subprocess.run(
+        ["git", "rev-list", "--count", "HEAD"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=git_env,
+    ).stdout.strip()
+    assert rev_count == "1"
 
 
 def test_inbox_show_with_pending_and_failed(capsys):

@@ -59,6 +59,15 @@ _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNOREC
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
 _INLINE_PROMPT_LIMIT_CHARS = 100_000
 _PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
+_DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+
+
+def _discussion_readonly_requested(tool_config: dict | None) -> bool:
+    """Return True when the caller is an ab discuss read-only invocation."""
+    return bool(
+        os.environ.get("AB_DISCUSS_READONLY") == "1"
+        or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
+    )
 
 
 def has_gemini_oauth_credentials(home: Path | None = None) -> bool:
@@ -179,6 +188,10 @@ class GeminiAdapter:
         passed inline; prompts over 100K chars use the verified ``-p @PATH``
         file-reference form, with runner cleanup after the subprocess exits.
         """
+        discussion_readonly = _discussion_readonly_requested(tool_config)
+        if discussion_readonly and mode != "read-only":
+            raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
+
         if effort is not None:
             _logger.debug(
                 "gemini effort %r not yet wired through CLI — "
@@ -191,6 +204,12 @@ class GeminiAdapter:
             gemini_bin,
             "-m", model or self.default_model,
         ]
+
+        # Approval mode: discussion calls force Gemini's plan mode because
+        # the historical read-only default still exposed edit-capable tools
+        # in trusted workspaces (#1702).
+        if discussion_readonly:
+            cmd.extend(["--approval-mode", "plan"])
 
         # Approval mode: read-only is the default; yolo for write modes.
         # "danger" is treated identically to "workspace-write" because
@@ -259,7 +278,7 @@ class GeminiAdapter:
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,  # Gemini writes to stdout only.
-            env_overrides={},
+            env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             env_unsets=env_unsets,
             liveness_paths=(),  # stdout streamer is not actually sufficient —
             # see liveness_signal_paths() docstring — but we compute the

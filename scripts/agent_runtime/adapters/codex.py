@@ -27,6 +27,7 @@ Issue: #1184
 from __future__ import annotations
 
 import json as _json
+import os
 import re
 import shutil
 import tempfile
@@ -58,6 +59,15 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # the post-prompt portion for rate-limit pattern matching. MULTILINE
 # so ^/$ match at each line boundary.
 _CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
+_DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+
+
+def _discussion_readonly_requested(tool_config: dict | None) -> bool:
+    """Return True when the caller is an ab discuss read-only invocation."""
+    return bool(
+        os.environ.get("AB_DISCUSS_READONLY") == "1"
+        or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
+    )
 
 
 def _strip_codex_prompt_echo(stderr: str) -> str:
@@ -156,6 +166,10 @@ class CodexAdapter:
         # Codex 2026-04-10 audit.
         self._reset_per_invocation_state()
 
+        discussion_readonly = _discussion_readonly_requested(tool_config)
+        if discussion_readonly and mode != "read-only":
+            raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
+
         # Resolve binary. shutil.which handles PATH lookup; fall back to
         # bare "codex" if not on PATH so subprocess.Popen can report the
         # error clearly.
@@ -199,7 +213,7 @@ class CodexAdapter:
             cwd=cwd,
             stdin_payload=prompt,
             output_file=output_path,
-            env_overrides={},
+            env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             liveness_paths=(output_path,),
         )
 

@@ -112,11 +112,24 @@ _DEFAULT_GLOBAL_RETRY_SECONDS = 120
 _HEARTBEAT_INTERVAL_SECONDS = 60
 _MIN_HARD_TIMEOUT_SECONDS = 60
 _MAX_HARD_TIMEOUT_SECONDS = 3600
+_DISCUSSION_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _SESSION_COLUMNS = {
     "claude": "claude_session_id",
     "gemini": "gemini_session_id",
     "codex": "codex_session_id",
 }
+
+
+def _with_discussion_readonly_tool_config(
+    tool_config: dict | None,
+    *,
+    mode: str,
+) -> dict | None:
+    if mode != "read-only":
+        return tool_config
+    merged = dict(tool_config or {})
+    merged[_DISCUSSION_READONLY_TOOL_CONFIG_KEY] = True
+    return merged
 
 
 @dataclass(frozen=True)
@@ -698,6 +711,7 @@ def _invoke_thread(
     session_to_store: str | None = None
     tool_config: dict[str, object] | None = None
     requested_model = _resolve_model(claimed)
+    mode = _resolve_mode(claimed)
     if agent == "gemini" and requested_model is None:
         requested_model = PRO_MODEL
 
@@ -750,12 +764,15 @@ def _invoke_thread(
             result = runtime_invoke(
                 agent,
                 prompt,
-                mode=_resolve_mode(claimed),
+                mode=mode,
                 cwd=REPO_ROOT,
                 model=requested_model,
                 task_id=task_id,
                 session_id=session_id if agent == "claude" else None,
-                tool_config=tool_config,
+                tool_config=_with_discussion_readonly_tool_config(
+                    tool_config,
+                    mode=mode,
+                ),
                 entrypoint="bridge",
                 hard_timeout=hard_timeout,
                 stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
@@ -784,6 +801,10 @@ def _invoke_gemini_thread_with_fallback(
     mode = _resolve_mode(claimed)
     effective_requested_model = requested_model or PRO_MODEL
     current_model = effective_requested_model
+    tool_config = _with_discussion_readonly_tool_config(
+        {"auth_mode": auth_mode} if auth_mode else None,
+        mode=mode,
+    )
 
     while True:
         try:
@@ -795,7 +816,7 @@ def _invoke_gemini_thread_with_fallback(
                 model=current_model,
                 task_id=task_id,
                 session_id=None,
-                tool_config={"auth_mode": auth_mode} if auth_mode else None,
+                tool_config=tool_config,
                 entrypoint="bridge",
                 hard_timeout=hard_timeout,
                 stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,

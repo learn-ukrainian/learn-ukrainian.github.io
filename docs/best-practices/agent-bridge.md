@@ -41,6 +41,30 @@ captures, at post-time:
 A **reply** is just a new post with `parent_id` set. Replies inherit
 the thread_id and get `round_index = parent.round_index + 1`.
 
+## Discussion vs execution
+
+`ab discuss` is deliberation, not implementation. The bridge invokes
+participants in read-only mode, passes the `AB_DISCUSS_READONLY=1`
+contract through the adapter layer, and fails the round if the git
+working tree changes while participants are running. A failed round
+posts a loud system warning into the thread before returning non-zero.
+
+`ab post` creates channel messages and delivery rows. Its default
+delivery mode is read-only, and the inbox worker applies the same
+discussion read-only adapter contract to those default deliveries. Use
+write-capable modes only when the post is explicitly an execution
+request. Implementation work that needs file edits, commits, pushes, or
+a PR should normally go through `delegate.py dispatch` or
+`ab dispatch-fix`, not through discussion.
+
+Current adapter policy for discussion calls:
+
+- Codex: `read-only` maps to `codex exec -s read-only`.
+- Gemini: discussion calls add `--approval-mode plan`; plain read-only
+  CLI defaults were not enough in trusted workspaces.
+- Claude: discussion calls add `--permission-mode plan` and restrict
+  built-in tools to read/list/search tools.
+
 ## CLI quick reference
 
 ```bash
@@ -89,7 +113,7 @@ delegate worker.
 ## When to use channels vs `ask-*`
 
 | Situation | Use |
-|---|---|
+| --- | --- |
 | One-off question, no history needed | `ask-claude/gemini/codex` |
 | Sustained discussion on a topic | `ab post` to a channel |
 | Need a 2-3 agent debate on a design | `ab discuss` |
@@ -143,15 +167,15 @@ of project rules each time.
 **Measured brief sizes (chars sent from claude → gemini, excluding
 the ~10KB project-rules wrapper the legacy bridge prepends):**
 
-| Review round          | Task ID                        | Brief size |
-|-----------------------|--------------------------------|-----------:|
-| B.3 r1 (initial)      | `bridge-b3-review`             |  6,621     |
-| B.3 r2 (3 new blockers) | `bridge-b3-review-r2`        |  5,304     |
-| B.3 r3 (backslash bug)| `bridge-b3-review-r3`          |  2,683     |
-| B.3 r4 (CLEAN)        | `bridge-b3-review-r4`          |  2,121     |
-| B.4 r1 (4 blockers)   | `bridge-b4-review`             |  4,827     |
-| B.4 r2 (MINOR)        | `bridge-b4-review-r2`          |  3,915     |
-| **Total**             |                                | **25,471** |
+| Review round            | Task ID               | Brief size |
+| ----------------------- | --------------------- | ---------: |
+| B.3 r1 (initial)        | `bridge-b3-review`    |      6,621 |
+| B.3 r2 (3 new blockers) | `bridge-b3-review-r2` |      5,304 |
+| B.3 r3 (backslash bug)  | `bridge-b3-review-r3` |      2,683 |
+| B.3 r4 (CLEAN)          | `bridge-b3-review-r4` |      2,121 |
+| B.4 r1 (4 blockers)     | `bridge-b4-review`    |      4,827 |
+| B.4 r2 (MINOR)          | `bridge-b4-review-r2` |      3,915 |
+| **Total**               |                       | **25,471** |
 
 Every brief in that table would have been ~12KB larger had I
 followed the old convention (manually re-pasting the rules/history
@@ -298,15 +322,17 @@ Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
 
 Example systemd units (documented only, not tested here):
 
-> # ~/.config/systemd/user/learn-ukrainian-codex-inbox.path
-> [Path]
-> PathChanged=%h/projects/learn-ukrainian/.agent/wake/codex
->
-> # ~/.config/systemd/user/learn-ukrainian-codex-inbox.service
-> [Service]
-> Type=oneshot
-> WorkingDirectory=%h/projects/learn-ukrainian
-> ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run codex --until-idle
+```ini
+# ~/.config/systemd/user/learn-ukrainian-codex-inbox.path
+[Path]
+PathChanged=%h/projects/learn-ukrainian/.agent/wake/codex
+
+# ~/.config/systemd/user/learn-ukrainian-codex-inbox.service
+[Service]
+Type=oneshot
+WorkingDirectory=%h/projects/learn-ukrainian
+ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run codex --until-idle
+```
 
 If you do not want OS-level watchers, use the manual fallback:
 
