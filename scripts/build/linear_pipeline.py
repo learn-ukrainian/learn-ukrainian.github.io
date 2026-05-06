@@ -1593,6 +1593,7 @@ def invoke_writer(
     module: str | None = None,
     sections: list[str] | None = None,
     event_sink: Callable[..., None] | None = None,
+    stdout_silence_timeout: int | None = None,
 ) -> str:
     """Call the selected writer through the universal agent runtime."""
     if writer not in WRITER_CHOICES:
@@ -1614,6 +1615,7 @@ def invoke_writer(
         entrypoint="dispatch",
         effort=defaults["effort"],
         tool_config=_runtime_tool_config(writer),
+        stdout_silence_timeout=stdout_silence_timeout,
     )
     response = getattr(result, "response", None)
     if not response:
@@ -2019,6 +2021,7 @@ def invoke_reviewer_dim(
     invoker: Callable[..., Any] | None = None,
     module: str | None = None,
     event_sink: Callable[..., None] | None = None,
+    stdout_silence_timeout: int | None = None,
 ) -> str:
     """Call one per-dimension reviewer and emit response/audit telemetry."""
     if reviewer not in REVIEWER_CHOICES:
@@ -2040,6 +2043,7 @@ def invoke_reviewer_dim(
         entrypoint="dispatch",
         effort=defaults["effort"],
         tool_config=_runtime_tool_config(reviewer),
+        stdout_silence_timeout=stdout_silence_timeout,
     )
     response = getattr(result, "response", None)
     if not response:

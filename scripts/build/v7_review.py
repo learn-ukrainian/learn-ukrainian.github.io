@@ -7,6 +7,9 @@ import argparse
 import re
 import sys
 import time
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -16,9 +19,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
 
+DEFAULT_WRITER_TIMEOUT_S = 1800
 AGENT_ALIASES = {
     "claude": "claude-tools",
     "gemini": "gemini-tools",
@@ -32,8 +37,26 @@ REVIEWER_CHOICES = (*linear_pipeline.REVIEWER_CHOICES, *AGENT_ALIASES)
 FRONTMATTER_RE = re.compile(r"^---\s*\n(?P<body>.*?)\n---\s*(?:\n|\Z)", re.DOTALL)
 
 
+@dataclass(slots=True)
+class LastEventTracker:
+    event_type: str | None = None
+    event_ts: str | None = None
+
+    def emit(self, event: str, **fields: Any) -> None:
+        self.event_type = event
+        self.event_ts = datetime.now(UTC).isoformat()
+        emit_event(event, **fields)
+
+
 def emit_event(event: str, **fields: Any) -> None:
     linear_pipeline.emit_event(event, **fields)
+
+
+def _positive_int(raw: str) -> int:
+    value = int(raw)
+    if value <= 0:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return value
 
 
 def _resolve_project_path(raw: str | None) -> Path | None:
@@ -81,9 +104,10 @@ def _phase_done(
     *,
     level: str,
     slug: str,
+    event_sink: Callable[..., None] = emit_event,
     **fields: Any,
 ) -> None:
-    emit_event(
+    event_sink(
         "phase_done",
         level=level,
         slug=slug,
@@ -117,6 +141,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  0 when every configured LLM QG dimension is reviewed and aggregated.\n"
             "  1 on missing plan, packet, content, self-review, reviewer, or parse failure.\n"
             "  2 on command-line usage errors from argparse.\n\n"
+            "  124 when a reviewer subprocess is killed after --writer-timeout "
+            "seconds of stdout silence.\n\n"
             "Related:\n"
             "  Pipeline: scripts/build/linear_pipeline.py\n"
             "  Reviewer prompt: scripts/build/phases/linear-review-dim.md\n"
@@ -155,6 +181,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--writer-timeout",
+        metavar="SECONDS",
+        type=_positive_int,
+        default=DEFAULT_WRITER_TIMEOUT_S,
+        help=(
+            "Kill each reviewer subprocess and exit 124 if it produces no "
+            f"stdout for SECONDS (default: {DEFAULT_WRITER_TIMEOUT_S})."
+        ),
+    )
+    parser.add_argument(
         "--telemetry-out",
         metavar="PATH",
         default=None,
@@ -183,12 +219,13 @@ def _run(args: argparse.Namespace) -> int:
     phase = "start"
     module_ref = f"{level}/{slug}"
     captured_events: list[dict[str, Any]] = []
+    tracker = LastEventTracker()
 
     def event_sink(event: str, **fields: Any) -> None:
         captured_events.append({"event": event, **fields})
-        emit_event(event, **fields)
+        tracker.emit(event, **fields)
 
-    emit_event("module_start", level=level, slug=slug, reviewer=reviewer)
+    tracker.emit("module_start", level=level, slug=slug, reviewer=reviewer)
 
     try:
         phase = "plan"
@@ -197,12 +234,12 @@ def _run(args: argparse.Namespace) -> int:
         plan_content = plan_path.read_text(encoding="utf-8")
         plan = linear_pipeline.load_plan(plan_path)
         linear_pipeline.validate_plan(plan)
-        _phase_done(phase, started_at, level=level, slug=slug)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
 
         phase = "knowledge_packet"
         started_at = time.monotonic()
         linear_pipeline.build_knowledge_packet(level=level, slug=slug, plan=plan)
-        _phase_done(phase, started_at, level=level, slug=slug)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
 
         phase = "content"
         started_at = time.monotonic()
@@ -223,6 +260,7 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             content=content_path,
             writer_under_review=writer_under_review,
+            event_sink=tracker.emit,
         )
 
         phase = "review"
@@ -243,6 +281,7 @@ def _run(args: argparse.Namespace) -> int:
                 cwd=content_path.parent,
                 module=module_ref,
                 event_sink=event_sink,
+                stdout_silence_timeout=args.writer_timeout,
             )
             report[dim] = linear_pipeline.parse_review_response(response, dim)
 
@@ -281,8 +320,9 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             reviewer=reviewer,
             verdict=aggregate["aggregate"]["verdict"],
+            event_sink=tracker.emit,
         )
-        emit_event(
+        tracker.emit(
             "module_done",
             level=level,
             slug=slug,
@@ -290,8 +330,23 @@ def _run(args: argparse.Namespace) -> int:
             duration_s=round(time.monotonic() - module_started_at, 3),
         )
         return 0
+    except AgentStalledError as exc:
+        tracker.emit(
+            "writer_timeout",
+            level=level,
+            slug=slug,
+            writer=reviewer,
+            reviewer=reviewer,
+            phase=phase,
+            timeout_s=args.writer_timeout,
+            last_event_type=tracker.event_type,
+            last_event_ts=tracker.event_ts,
+            total_wall_time_s=round(time.monotonic() - module_started_at, 3),
+        )
+        print(f"v7_review timed out in phase {phase}: {exc}", file=sys.stderr, flush=True)
+        return 124
     except Exception as exc:
-        emit_event(
+        tracker.emit(
             "module_failed",
             level=level,
             slug=slug,

@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import sys
 import time
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,9 +16,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
 
+DEFAULT_WRITER_TIMEOUT_S = 1800
 WRITER_ALIASES = {
     "claude": "claude-tools",
     "gemini": "gemini-tools",
@@ -25,8 +29,26 @@ WRITER_ALIASES = {
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 
 
+@dataclass(slots=True)
+class LastEventTracker:
+    event_type: str | None = None
+    event_ts: str | None = None
+
+    def emit(self, event: str, **fields: Any) -> None:
+        self.event_type = event
+        self.event_ts = datetime.now(UTC).isoformat()
+        emit_event(event, **fields)
+
+
 def emit_event(event: str, **fields: Any) -> None:
     linear_pipeline.emit_event(event, **fields)
+
+
+def _positive_int(raw: str) -> int:
+    value = int(raw)
+    if value <= 0:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return value
 
 
 def _default_module_dir(level: str, slug: str) -> Path:
@@ -57,9 +79,10 @@ def _phase_done(
     *,
     level: str,
     slug: str,
+    event_sink: Callable[..., None] = emit_event,
     **fields: Any,
 ) -> None:
-    emit_event(
+    event_sink(
         "phase_done",
         level=level,
         slug=slug,
@@ -105,6 +128,7 @@ def _run_llm_qg(
     plan_content: str,
     module_dir: Path,
     writer: str,
+    stdout_silence_timeout: int | None = None,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
@@ -131,6 +155,7 @@ def _run_llm_qg(
             entrypoint="dispatch",
             effort=defaults["effort"],
             tool_config={"output_format": "text"},
+            stdout_silence_timeout=stdout_silence_timeout,
         )
         response = str(getattr(result, "response", "") or "")
         report[dim] = linear_pipeline.parse_review_response(response, dim)
@@ -160,6 +185,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  0 on successful build or dry run.\n"
             "  1 on plan, packet, writer, QG, review, MDX, or filesystem failure.\n"
             "  2 on command-line usage errors from argparse.\n\n"
+            "  124 when a writer subprocess is killed after --writer-timeout "
+            "seconds of stdout silence.\n\n"
             "Related:\n"
             "  Pipeline: scripts/build/linear_pipeline.py\n"
             "  Writer prompt: scripts/build/phases/linear-write.md\n"
@@ -190,6 +217,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "Writer backend for the one-shot V7 write phase "
             "(default: claude-tools; claude/gemini/codex aliases normalize to "
             "claude-tools/gemini-tools/codex-tools)."
+        ),
+    )
+    parser.add_argument(
+        "--writer-timeout",
+        metavar="SECONDS",
+        type=_positive_int,
+        default=DEFAULT_WRITER_TIMEOUT_S,
+        help=(
+            "Kill the writer subprocess and exit 124 if it produces no stdout "
+            f"for SECONDS (default: {DEFAULT_WRITER_TIMEOUT_S})."
         ),
     )
     parser.add_argument(
@@ -235,8 +272,10 @@ def _run(args: argparse.Namespace) -> int:
     writer = _normalize_writer(args.writer)
     module_started_at = time.monotonic()
     phase = "start"
+    timeout_agent = writer
+    tracker = LastEventTracker()
 
-    emit_event("module_start", level=level, slug=slug)
+    tracker.emit("module_start", level=level, slug=slug)
 
     try:
         phase = "plan"
@@ -245,7 +284,7 @@ def _run(args: argparse.Namespace) -> int:
         plan_content = plan_path.read_text(encoding="utf-8")
         plan = linear_pipeline.load_plan(plan_path)
         linear_pipeline.validate_plan(plan)
-        _phase_done(phase, started_at, level=level, slug=slug)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
 
         phase = "knowledge_packet"
         started_at = time.monotonic()
@@ -254,7 +293,7 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             plan=plan,
         )
-        _phase_done(phase, started_at, level=level, slug=slug)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
 
         if args.dry_run:
             sections = [
@@ -268,8 +307,9 @@ def _run(args: argparse.Namespace) -> int:
                 module=f"{level.lower()}/{int(plan['sequence'])}",
                 sections=sections,
                 tool_calls=[],
+                event_sink=tracker.emit,
             )
-            emit_event(
+            tracker.emit(
                 "module_done",
                 level=level,
                 slug=slug,
@@ -281,6 +321,7 @@ def _run(args: argparse.Namespace) -> int:
         module_dir = _resolve_output_dir(args.out, level, slug)
 
         phase = "writer"
+        timeout_agent = writer
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
         prompt = _writer_prompt(
@@ -292,6 +333,7 @@ def _run(args: argparse.Namespace) -> int:
             prompt,
             writer,
             cwd=module_dir,
+            stdout_silence_timeout=args.writer_timeout,
         )
         # Save raw writer output + prompt + knowledge packet BEFORE parse so any
         # parse failure is fully debuggable. Without this, a parse error like
@@ -309,7 +351,14 @@ def _run(args: argparse.Namespace) -> int:
         )
         artifacts = linear_pipeline.parse_writer_output(writer_output)
         linear_pipeline.write_writer_artifacts(module_dir, artifacts)
-        _phase_done(phase, started_at, level=level, slug=slug, writer=writer)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            writer=writer,
+            event_sink=tracker.emit,
+        )
 
         phase = "python_qg"
         started_at = time.monotonic()
@@ -319,7 +368,7 @@ def _run(args: argparse.Namespace) -> int:
             writer=writer,
         )
         linear_pipeline.write_json(module_dir / "python_qg.json", python_qg)
-        _phase_done(phase, started_at, level=level, slug=slug)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
         gates = python_qg.get("gates")
         if not isinstance(gates, Mapping) or gates.get("passed") is not True:
             raise linear_pipeline.LinearPipelineError(
@@ -327,23 +376,25 @@ def _run(args: argparse.Namespace) -> int:
             )
 
         phase = "llm_qg"
+        timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
         llm_qg = _run_llm_qg(
             plan=plan,
             plan_content=plan_content,
             module_dir=module_dir,
             writer=writer,
+            stdout_silence_timeout=args.writer_timeout,
         )
         linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
         aggregate = llm_qg["aggregate"]
-        emit_event(
+        tracker.emit(
             "review_score",
             level=level,
             slug=slug,
             score=aggregate["min_score"],
             verdict=aggregate["verdict"],
         )
-        _phase_done(phase, started_at, level=level, slug=slug)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
         if aggregate["verdict"] != "PASS":
             raise linear_pipeline.LinearPipelineError(
                 f"LLM QG verdict was {aggregate['verdict']}"
@@ -353,17 +404,38 @@ def _run(args: argparse.Namespace) -> int:
         started_at = time.monotonic()
         mdx_path = module_dir / f"{slug}.mdx"
         linear_pipeline.assemble_mdx(module_dir, mdx_path, plan_path)
-        _phase_done(phase, started_at, level=level, slug=slug, output=mdx_path)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            output=mdx_path,
+            event_sink=tracker.emit,
+        )
 
-        emit_event(
+        tracker.emit(
             "module_done",
             level=level,
             slug=slug,
             duration_s=round(time.monotonic() - module_started_at, 3),
         )
         return 0
+    except AgentStalledError as exc:
+        tracker.emit(
+            "writer_timeout",
+            level=level,
+            slug=slug,
+            writer=timeout_agent,
+            phase=phase,
+            timeout_s=args.writer_timeout,
+            last_event_type=tracker.event_type,
+            last_event_ts=tracker.event_ts,
+            total_wall_time_s=round(time.monotonic() - module_started_at, 3),
+        )
+        print(f"v7_build timed out in phase {phase}: {exc}", file=sys.stderr, flush=True)
+        return 124
     except Exception as exc:
-        emit_event(
+        tracker.emit(
             "module_failed",
             level=level,
             slug=slug,

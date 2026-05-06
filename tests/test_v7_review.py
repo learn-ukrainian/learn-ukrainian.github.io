@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline, v7_review
 from scripts.common.thresholds import QG_DIMS
 
@@ -177,3 +178,43 @@ def test_v7_review_telemetry_out_writes_file_not_stdout(
     assert len(fake_reviewer) == len(QG_DIMS)
     assert len(dim_events) == len(QG_DIMS)
     assert events[-1]["event"] == "module_done"
+
+
+def test_v7_review_reviewer_timeout_emits_writer_timeout(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    content = _lesson(tmp_path / "gemini.md", writer="gemini-tools")
+    telemetry = tmp_path / "review-timeout.jsonl"
+
+    def timeout_reviewer(*_args: Any, **_kwargs: Any) -> str:
+        raise AgentStalledError("claude", 1, 1.2)
+
+    monkeypatch.setattr(v7_review.linear_pipeline, "invoke_reviewer_dim", timeout_reviewer)
+
+    exit_code = v7_review.main(
+        [
+            "a1",
+            "my-morning",
+            "--content",
+            str(content),
+            "--reviewer",
+            "claude-tools",
+            "--writer-timeout",
+            "1",
+            "--telemetry-out",
+            str(telemetry),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
+    timeout_event = next(event for event in events if event["event"] == "writer_timeout")
+
+    assert exit_code == 124
+    assert "timed out in phase review" in captured.err
+    assert timeout_event["writer"] == "claude-tools"
+    assert timeout_event["reviewer"] == "claude-tools"
+    assert timeout_event["last_event_type"] == "phase_done"
+    assert timeout_event["last_event_ts"]

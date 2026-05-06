@@ -148,6 +148,67 @@ def test_bakeoff_run_resume_skips_complete_writer(
     assert full_build_writers == ["claude-tools"]
 
 
+def test_bakeoff_run_writer_timeout_continues_next_writer(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    calls: list[list[str]] = []
+    bakeoff_dir = tmp_path / "bakeoff"
+
+    def run(argv: Any) -> subprocess.CompletedProcess[str]:
+        command = [str(part) for part in argv]
+        calls.append(command)
+        script = Path(command[1]).name
+        if script == "v7_build.py" and "--dry-run" not in command:
+            writer = command[command.index("--writer") + 1]
+            if writer == "gemini-tools":
+                return subprocess.CompletedProcess(
+                    command,
+                    124,
+                    stdout="",
+                    stderr="writer_timeout",
+                )
+            out_dir = Path(command[command.index("--out") + 1])
+            telemetry = Path(command[command.index("--telemetry-out") + 1])
+            out_dir.mkdir(parents=True, exist_ok=True)
+            telemetry.parent.mkdir(parents=True, exist_ok=True)
+            (out_dir / "my-morning.mdx").write_text("# Мій ранок\n", encoding="utf-8")
+            telemetry.write_text(
+                json.dumps({"event": "phase_writer_summary"}) + "\n",
+                encoding="utf-8",
+            )
+        return _completed(command)
+
+    monkeypatch.setattr(bakeoff_run, "run_command", run)
+
+    exit_code = bakeoff_run.main(
+        [
+            "--bakeoff-dir",
+            str(bakeoff_dir),
+            "--level",
+            "a1",
+            "--slug",
+            "my-morning",
+            "--writers",
+            "gemini-tools,claude-tools",
+            "--writers-only",
+            "--skip-aggregate",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    full_build_writers = [
+        call[call.index("--writer") + 1]
+        for call in calls
+        if Path(call[1]).name == "v7_build.py" and "--dry-run" not in call
+    ]
+
+    assert exit_code == 1
+    assert full_build_writers == ["gemini-tools", "claude-tools"]
+    assert "timeout: writer_timeout" in captured.err
+
+
 def test_bakeoff_run_preflight_missing_plan_exits_1(
     tmp_path: Path,
     monkeypatch,
