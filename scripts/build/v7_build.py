@@ -257,6 +257,18 @@ def _run(args: argparse.Namespace) -> int:
         _phase_done(phase, started_at, level=level, slug=slug)
 
         if args.dry_run:
+            sections = [
+                str(item.get("section"))
+                for item in plan.get("content_outline", [])
+                if isinstance(item, Mapping) and item.get("section")
+            ]
+            linear_pipeline.emit_writer_response_telemetry(
+                "",
+                writer=writer,
+                module=f"{level.lower()}/{int(plan['sequence'])}",
+                sections=sections,
+                tool_calls=[],
+            )
             emit_event(
                 "module_done",
                 level=level,

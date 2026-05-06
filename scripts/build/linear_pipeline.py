@@ -62,6 +62,7 @@ WRITER_ARTIFACTS = (
 )
 
 PYTHON_QG_GATE_ORDER = (
+    "tool_theatre",
     "word_count",
     "plan_sections",
     "formatting_standards",
@@ -80,6 +81,7 @@ PYTHON_QG_GATE_ORDER = (
 WRITER_CORRECTION_GATES = frozenset(
     {
         "strict_json_parse",
+        "tool_theatre",
         "word_count",
         "plan_sections",
         "formatting_standards",
@@ -167,8 +169,11 @@ WRITER_TOOL_NAMES = frozenset(
         "verify_lemma",
         "search_definitions",
         "search_definitions_slovnyk",
+        "search_esum",
         "search_grinchenko_1907",
+        "search_heritage",
         "search_literary",
+        "search_slovnyk_me",
         "search_style_guide",
         "search_idioms",
         "query_pravopys",
@@ -189,6 +194,7 @@ TELEMETRY_MAX_QUOTES = 5
 TELEMETRY_MAX_QUOTE_CHARS = 240
 TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
+TELEMETRY_MAX_THEATRE_VIOLATIONS = 25
 CORRECTION_PREVIEW_CHARS = 200
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
@@ -1212,6 +1218,79 @@ def _mapping_from_tool_call(call: Any) -> dict[str, Any]:
     return data
 
 
+_PLAN_REASONING_BLOCK_RE = re.compile(
+    r"<plan_reasoning\b[^>]*>(.*?)</plan_reasoning>",
+    re.DOTALL | re.IGNORECASE,
+)
+_PLAN_REASONING_ELEMENT_RE = re.compile(
+    r"<plan_reasoning\b(?P<attrs>[^>]*)>(?P<body>.*?)</plan_reasoning>",
+    re.DOTALL | re.IGNORECASE,
+)
+_TOOL_CITATION_RE = re.compile(
+    r"`?(?P<name>(?:mcp__sources__|search_|verify_|check_|query_|translate_)\w+)`?"
+)
+
+
+def _normalize_tool_citation_name(raw_tool: Any) -> str:
+    tool = str(raw_tool or "").strip()
+    if tool.startswith("mcp__sources__"):
+        tool = tool.removeprefix("mcp__sources__")
+    return tool
+
+
+def _tool_name_from_call(call: Any) -> str:
+    mapped = _mapping_from_tool_call(call)
+    return _normalize_tool_citation_name(
+        mapped.get("tool") or mapped.get("tool_name") or mapped.get("name")
+    )
+
+
+def _markdown_fence_spans(text: str) -> list[tuple[int, int]]:
+    spans: list[tuple[int, int]] = []
+    start: int | None = None
+    for match in re.finditer(r"^```", text, flags=re.MULTILINE):
+        if start is None:
+            start = match.start()
+        else:
+            spans.append((start, match.end()))
+            start = None
+    if start is not None:
+        spans.append((start, len(text)))
+    return spans
+
+
+def _position_in_spans(position: int, spans: list[tuple[int, int]]) -> bool:
+    return any(start <= position < end for start, end in spans)
+
+
+def _cited_plan_reasoning_tools(writer_output: str) -> set[str]:
+    cited: set[str] = set()
+    fenced_spans = _markdown_fence_spans(writer_output)
+    for match in _PLAN_REASONING_ELEMENT_RE.finditer(writer_output):
+        if _position_in_spans(match.start(), fenced_spans):
+            continue
+        searchable = f"{match.group('attrs')} {match.group('body')}"
+        cited.update(
+            _normalize_tool_citation_name(citation)
+            for citation in _TOOL_CITATION_RE.findall(searchable)
+        )
+    return cited
+
+
+def detect_tool_theatre(
+    writer_output: str,
+    tool_calls: list[Mapping[str, Any]],
+) -> list[str]:
+    """Return cited plan-reasoning tool names absent from the actual trace."""
+    cited = _cited_plan_reasoning_tools(writer_output)
+    called = {_tool_name_from_call(call) for call in tool_calls}
+    called.discard("")
+
+    # Canonical-only: aliases/family maps do not count. The writer must cite
+    # the actual tool name it called so telemetry cannot be satisfied by prose.
+    return sorted(cited - called)
+
+
 def _runtime_tool_calls(result: Any) -> list[dict[str, Any]]:
     calls: list[dict[str, Any]] = []
     for attr in ("tool_calls", "mcp_tool_calls"):
@@ -1401,6 +1480,23 @@ def emit_writer_response_telemetry(
         "end_gate_fired": bool(gate["gate_present"]),
         "removed_via_gate": int(gate["removed_count"]),
     }
+    theatre_violations = detect_tool_theatre(output, list(tool_calls or []))
+    capped_theatre_violations = theatre_violations[:TELEMETRY_MAX_THEATRE_VIOLATIONS]
+    summary["tool_theatre_violations"] = capped_theatre_violations
+    summary["tool_theatre_violation_count"] = len(theatre_violations)
+    if theatre_violations:
+        called_tools = {_tool_name_from_call(call) for call in tool_calls or []}
+        called_tools.discard("")
+        _emit(
+            event_sink,
+            "writer_tool_theatre",
+            writer=writer,
+            module=module,
+            violations=capped_theatre_violations,
+            violation_count=len(theatre_violations),
+            cited_count=len(_cited_plan_reasoning_tools(output)),
+            called_count=len(called_tools),
+        )
     _emit(event_sink, "phase_writer_summary", writer=writer, module=module, **summary)
     return summary
 
@@ -2412,9 +2508,9 @@ def _apply_writer_correction(
         return
     if isinstance(response, str):
         # Strict-JSON-parse failures need all 4 artifact blocks back since the
-        # original parse was the failure mode itself. Other gates (word_count,
-        # plan_sections, formatting_standards, mdx_render) are module.md-only
-        # patches per the linear-writer-correction.md output contract.
+        # original parse was the failure mode itself. Other gates are
+        # module.md-only patches per the linear-writer-correction.md output
+        # contract.
         if all(name in response for name in WRITER_ARTIFACTS):
             write_writer_artifacts(module_dir, parse_writer_output_strict_json(response))
             return

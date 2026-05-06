@@ -61,6 +61,16 @@ For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scr
    ran, every cited source for grounding, every quote for literal corpus
    presence. OMIT or rewrite anything unverifiable. Shipping unverified
    output for the reviewer to catch is itself a protocol violation.
+   **Tool-citation honesty (mandatory).** Every tool name you cite inside
+   a `<plan_reasoning verification="...">` attribute or block body MUST
+   correspond to an actual tool call you made on this turn. The pipeline
+   cross-references citations against the trace and treats unmatched citations
+   as a hard fail (`tool_theatre`). Citing a tool you did not call to satisfy
+   the verification rubric — without doing the verification — is the canonical
+   theatre failure and will block publication. If you intend to cite
+   `search_heritage`, call `search_heritage`. If you intend to cite the
+   underlying `search_grinchenko_1907`, call that. Canonical names only —
+   no family aliases.
 
    You MUST record this scan as a visible `<end_gate>...</end_gate>` block
    AFTER the four artifact fences. Required format:

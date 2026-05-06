@@ -176,6 +176,24 @@ def test_writer_prompt_mandates_end_gate_block(level: str, slug: str) -> None:
 
 
 @pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
+def test_writer_prompt_mandates_tool_call_match(level: str, slug: str) -> None:
+    """#1720 strand 1 — visible tool citations must match real calls."""
+    rendered = _writer_prompt(level, slug)
+
+    for text in (
+        "Tool-citation honesty (mandatory)",
+        "Every tool name you cite inside",
+        "actual tool call you made on this turn",
+        "hard fail (`tool_theatre`)",
+        "Canonical names only",
+        "no family aliases",
+    ):
+        assert text in rendered, (
+            f"Writer tool-citation honesty rule missing {text!r} for {level}/{slug}"
+        )
+
+
+@pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
 @pytest.mark.parametrize("dim", QG_DIMS)
 def test_reviewer_prompt_has_cot_block(level: str, slug: str, dim: str) -> None:
     rendered = _reviewer_prompt(level, slug, dim)
