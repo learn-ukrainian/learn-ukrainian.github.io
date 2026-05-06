@@ -333,6 +333,71 @@ class TestBroker:
         assert row[0] == 0
         conn.close()
 
+    def test_broker_retention_cleanup_deletes_acknowledged_rows(self, tmp_path):
+        from scripts.ai_agent_bridge._broker import broker_retention_cleanup
+        db_path = tmp_path / "test.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.executescript("""
+            CREATE TABLE messages (
+                id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT, to_llm TEXT,
+                timestamp TEXT, acknowledged INTEGER DEFAULT 0
+            );
+            CREATE TABLE channel_messages (
+                message_id TEXT PRIMARY KEY, created_at TEXT, parent_id TEXT
+            );
+            CREATE TABLE deliveries (
+                delivery_id TEXT PRIMARY KEY, message_id TEXT, status TEXT
+            );
+        """)
+        old_ts = (datetime.now(UTC) - timedelta(days=45)).isoformat()
+        conn.execute(
+            "INSERT INTO messages (id, task_id, from_llm, to_llm, timestamp, acknowledged) VALUES (?, ?, ?, ?, ?, 1)",
+            (1, "task-1", "claude", "gemini", old_ts),
+        )
+        conn.execute(
+            "INSERT INTO messages (id, task_id, from_llm, to_llm, timestamp, acknowledged) VALUES (?, ?, ?, ?, ?, 0)",
+            (2, "task-2", "claude", "gemini", old_ts),
+        )
+        conn.execute(
+            "INSERT INTO channel_messages (message_id, created_at, parent_id) VALUES (?, ?, NULL)",
+            ("m1", old_ts),
+        )
+        conn.execute(
+            "INSERT INTO deliveries (delivery_id, message_id, status) VALUES (?, ?, ?)",
+            ("d1", "m1", "delivered"),
+        )
+        conn.commit()
+        conn.close()
+        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+            result = broker_retention_cleanup("30d", False)
+        assert result == 3
+        conn = sqlite3.connect(str(db_path))
+        assert conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
+        assert conn.execute("SELECT COUNT(*) FROM channel_messages").fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM deliveries").fetchone()[0] == 0
+        conn.close()
+
+    def test_broker_retention_cleanup_dry_run(self, tmp_path):
+        from scripts.ai_agent_bridge._broker import broker_retention_cleanup
+        db_path = tmp_path / "test.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("""CREATE TABLE messages (
+            id INTEGER PRIMARY KEY, timestamp TEXT, acknowledged INTEGER DEFAULT 0
+        )""")
+        old_ts = (datetime.now(UTC) - timedelta(days=45)).isoformat()
+        conn.execute(
+            "INSERT INTO messages (id, timestamp, acknowledged) VALUES (?, ?, 1)",
+            (1, old_ts),
+        )
+        conn.commit()
+        conn.close()
+        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+            result = broker_retention_cleanup("30d", True)
+        assert result == 1
+        conn = sqlite3.connect(str(db_path))
+        assert conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
+        conn.close()
+
     def test_bridge_status_no_pid_dir(self, tmp_path, capsys):
         from scripts.ai_agent_bridge._broker import bridge_status
         with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path / "nope"):

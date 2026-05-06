@@ -163,6 +163,40 @@ Served by `scripts/api/main.py` at `http://localhost:8765`. The
 browser POST endpoint is `/api/comms/channels/{name}/post` — user-only,
 gated by localhost binding. Agents still post via CLI.
 
+`playgrounds/comms.html` is the legacy operational dashboard for live
+activity, DM-style broker messages, zombie detection, and batch progress.
+Its hot message endpoints are bounded by server-side `limit` defaults
+and keyset cursors; keep client polling paced so heavy views refresh no
+more often than every 30 seconds.
+
+## Broker storage hygiene
+
+SQLite remains the broker store for the localhost-only bridge. The
+performance bottleneck in the comms dashboard was unindexed scans plus
+unbounded result sets, not the engine. Keep the broker in WAL mode so
+readers can continue while a writer commits:
+
+```bash
+sqlite3 .mcp/servers/message-broker/messages.db 'PRAGMA journal_mode'
+```
+
+Expected output is `wal`. Bridge connections also use
+`PRAGMA busy_timeout=5000`, `PRAGMA cache_size=-20000` (about 20 MB),
+and `PRAGMA temp_store=MEMORY` for local dashboard queries.
+
+Run retention explicitly; the API server must not delete broker history
+on startup:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py cleanup --older-than 30d --dry-run
+.venv/bin/python scripts/ai_agent_bridge/__main__.py cleanup --older-than 30d
+```
+
+Recommended schedule: run the dry-run weekly, then run the cleanup if
+the counts look reasonable. Cleanup deletes acknowledged legacy
+messages and terminal channel deliveries/messages older than the
+threshold, then runs `VACUUM` to reclaim disk space.
+
 ## API endpoints (for scripts + dashboards)
 
 Read-only:

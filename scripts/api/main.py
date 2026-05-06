@@ -40,6 +40,7 @@ from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
+from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
 from .config import (
     BATCH_STATE_DIR,
@@ -82,6 +83,7 @@ async def _lifespan(_app: FastAPI):
     See scripts/api/_signal_log.py for the wrapper rationale.
     """
     install_signal_logging()
+    ensure_broker_db_ready()
     yield
 
 
