@@ -152,7 +152,12 @@ environment for each process:
   AWS access-key, and Google `AIza` patterns.
 - Provider credentials pass through only to that provider: Gemini sees
   Gemini/Google keys, Claude sees Anthropic/Claude keys, and Codex sees
-  OpenAI/Codex keys. Cross-provider keys and `GITHUB_TOKEN` stay absent.
+  OpenAI/Codex keys. Cross-provider keys stay absent. `GITHUB_TOKEN`
+  is never passed through directly; `delegate.py` resolves it once from
+  the environment or `~/.bash_secrets` and exposes it as `GH_TOKEN` only
+  for Codex, Claude, and bridge subprocesses so authenticated `gh`
+  commands work without sourcing shell secrets. Gemini subprocesses do
+  not receive `GH_TOKEN`.
 - Gemini also receives `GEMINI_AUTH_MODE` because it is runtime mode
   selection, not a credential; secret-shaped values are still rejected.
 

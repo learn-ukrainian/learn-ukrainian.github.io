@@ -83,6 +83,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import signal
 import subprocess
 import sys
@@ -94,6 +95,63 @@ from typing import Any
 # Resolve repo root from this file's location so we work from any cwd.
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
+_BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
+_GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
+
+
+def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None:
+    """Read GITHUB_TOKEN from a shell env file without executing it."""
+    path = path or _BASH_SECRETS_PATH
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except FileNotFoundError:
+        return None
+    except OSError:
+        return None
+
+    for line in lines:
+        try:
+            parts = shlex.split(line, comments=True, posix=True)
+        except ValueError:
+            continue
+        if not parts:
+            continue
+        if parts[0] == "export":
+            parts = parts[1:]
+        for part in parts:
+            if part.startswith("GITHUB_TOKEN="):
+                value = part.split("=", 1)[1]
+                return value or None
+    return None
+
+
+def _resolve_github_token() -> str | None:
+    """Resolve the GitHub token used for GH_TOKEN pass-through."""
+    return (
+        os.environ.get("GITHUB_TOKEN")
+        or _read_github_token_from_bash_secrets()
+        or os.environ.get("GH_TOKEN")
+    )
+
+
+def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
+    """Expose GH_TOKEN only to agents allowed to run authenticated gh."""
+    worker_env.pop("GITHUB_TOKEN", None)
+    if agent not in _GH_TOKEN_AGENTS:
+        worker_env.pop("GH_TOKEN", None)
+        return
+
+    token = _resolve_github_token()
+    if token:
+        worker_env["GH_TOKEN"] = token
+        return
+
+    worker_env.pop("GH_TOKEN", None)
+    print(
+        f"⚠️  GITHUB_TOKEN not found in environment or {_BASH_SECRETS_PATH}; "
+        f"{agent} dispatch will not receive GH_TOKEN.",
+        file=sys.stderr,
+    )
 
 
 def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
@@ -903,6 +961,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # explicit rather than implicit. Callers that want to scrub
     # secrets from the worker's env can override this here.
     worker_env = os.environ.copy()
+    _inject_gh_token_for_agent(worker_env, args.agent)
     if getattr(args, "allow_merge", False):
         worker_env.pop("AGENT_NO_MERGE", None)
         worker_env["AGENT_ALLOW_MERGE"] = "1"

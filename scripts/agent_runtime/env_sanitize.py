@@ -53,12 +53,16 @@ _PROVIDER_SECRET_ALLOWLIST = {
     "claude": {
         "ANTHROPIC_API_KEY",
         "CLAUDE_API_KEY",
+        "GH_TOKEN",
     },
     "codex": {
         "CODEX_API_KEY",
+        "GH_TOKEN",
         "OPENAI_API_KEY",
     },
-    "bridge": set(),
+    "bridge": {
+        "GH_TOKEN",
+    },
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {

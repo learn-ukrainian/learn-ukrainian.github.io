@@ -835,6 +835,103 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
     assert env["AGENT_ALLOW_MERGE"] == "1"
 
 
+def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    import argparse
+
+    recorded: dict[str, object] = {}
+    secrets_path = tmp_path / ".bash_secrets"
+    secrets_path.write_text("export GITHUB_TOKEN=ghp_fromfile\n")
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24680
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("GH_TOKEN", raising=False)
+    monkeypatch.setattr(delegate, "_BASH_SECRETS_PATH", secrets_path)
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="codex-gh-token",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    assert env["GH_TOKEN"] == "ghp_fromfile"
+    assert "GITHUB_TOKEN" not in env
+
+
+def test_dispatch_gemini_worker_env_strips_gh_token(
+    tmp_tasks_dir, monkeypatch,
+):
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24680
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
+    monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="gemini",
+        task_id="gemini-no-gh-token",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    assert "GH_TOKEN" not in env
+    assert "GITHUB_TOKEN" not in env
+
+
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
     import argparse
 
