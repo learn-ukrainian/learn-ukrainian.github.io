@@ -1,6 +1,6 @@
 # DECISION REQUIRED - Multi-UI content-producing participants in `ab discuss` / channels.html
 
-**Status:** PROPOSED (awaiting Gemini cross-review and user signoff)
+**Status:** PROPOSED (awaiting reviewer cross-review and user signoff)
 **Surfaced:** 2026-05-06 morning, while running the writer-lock 3-way discussion
 **Source:** GH issue #1731 Part B; revised after Codex REJECT review on PR #1732
 **Scope:** Agent bridge channel participation, round claims, multimodal channel messages, and pilot bakeoff dispatch
@@ -32,7 +32,7 @@ In scope: participant identity across multiple surfaces, surface capability prof
 
 Out of scope: remote/cloud auth, multi-user broker federation, live voice/video calls, global task pickup outside discussion threads, final channels.html polish, blob retention/pruning, artifact promotion into curriculum assets, and Desktop vendor preference if both Claude Desktop and Codex Desktop are available.
 
-Implementation should not start until Gemini review and user signoff. The pilot bakeoff should run before the architecture makes Desktop mandatory for graphics-rich module work.
+Implementation should not start until reviewer cross-review and user signoff. The pilot bakeoff should run before the architecture makes Desktop mandatory for graphics-rich module work.
 
 ---
 
@@ -99,15 +99,18 @@ Each question below includes proposal, rationale, tradeoffs, and alternatives co
 
 ### Proposal
 
-A participant is represented by three first-class columns:
+A participant is represented by four first-class columns:
 
 - `agent_family`
 - `ui_surface`
+- `client_id`
 - `instance_id`
 
 Initial `agent_family` values are `claude`, `codex`, `gemini`, and `user`. Initial `ui_surface` values are `cli`, `desktop`, `web`, and `headless`.
 
-`instance_id` is a UUID for one local client identity. It is generated on first run, then persisted locally per `(agent_family, ui_surface)` so brief restarts recover the same identity instead of creating a conflicting same-surface claimant.
+`client_id` is the stable local client identity. It is generated on first run, then persisted locally per `(agent_family, ui_surface)` so brief restarts recover the same client for idempotency, deduplication, and lease-recovery decisions.
+
+`instance_id` is the live surface-session identity. It is generated when a process, window, browser tab, or headless run starts, and it must include session entropy such as a random UUID, PID plus process start-time hash, or equivalent session-scoped random value. It is not reused merely because the same user opens a second Desktop window. Two Codex Desktop windows on the same machine may share `client_id`, but they must have different `instance_id` values.
 
 Recommended local storage path:
 
@@ -119,14 +122,18 @@ Example persisted shape:
 
 ```json
 {
-  "codex:desktop": "8f91c2e0-4c2d-4a74-8e13-2f68f5a70b3b",
-  "claude:desktop": "a6b9d0f7-7ab0-40b2-8b54-9f7b5fbbe807"
+  "codex:desktop": {
+    "client_id": "8f91c2e0-4c2d-4a74-8e13-2f68f5a70b3b"
+  },
+  "claude:desktop": {
+    "client_id": "a6b9d0f7-7ab0-40b2-8b54-9f7b5fbbe807"
+  }
 }
 ```
 
-Headless workers may still generate a fresh UUID per run. Browser tabs should use local storage when available and fall back to session storage only if persistence is unavailable.
+Headless workers may still generate a fresh `client_id` and `instance_id` per run. Browser tabs should use local storage for `client_id` when available and session storage or in-memory state for the per-tab `instance_id`.
 
-`participant_id` may exist only as a generated display/key convenience:
+`participant_id` may exist only as a generated display convenience:
 
 ```text
 {agent_family}:{ui_surface}:{instance_id_short}
@@ -138,23 +145,23 @@ Example:
 codex:desktop:8f91c2
 ```
 
-It must not be the only stored identity. The canonical data model is the three separate columns. If SQLite generated columns are awkward, store `participant_id` as denormalized display text while keeping the three identity columns authoritative.
+It must not be the only stored identity and must not key idempotency, deduplication, or lease management. Short display IDs may collide, and a UI may let a user rename the visible participant label later. The canonical data model is the four separate columns. If SQLite generated columns are awkward, store `participant_id` as denormalized display text while keeping the four identity columns authoritative.
 
-The legacy `from_agent` column remains during migration. Old rows hydrate as `agent_family=from_agent`, `ui_surface=cli`, and `instance_id=legacy`.
+The legacy `from_agent` column remains during migration. Old rows hydrate as `agent_family=from_agent`, `ui_surface=cli`, `client_id=legacy`, and `instance_id=legacy`.
 
 The user is a participant with `agent_family=user`. User surface depends on entry point: channels.html is `web`, `ab post` is `cli`, and future Desktop integration is `desktop`.
 
 ### Rationale
 
-Tuple-in-text is not first-class schema. Quorum checks need `agent_family`; capability routing needs `ui_surface`; lease renewal needs `instance_id`; UI display can use `participant_id`. Encoding everything in one string makes serious queries depend on parsing conventions and weak indexing.
+Tuple-in-text is not first-class schema. Quorum checks need `agent_family`; capability routing needs `ui_surface`; idempotency and dedupe need `client_id`; live claim ownership needs `instance_id`; UI display can use `participant_id`. Encoding everything in one string makes serious queries depend on parsing conventions and weak indexing.
 
 ### Tradeoffs
 
 - Migration touches existing `channel_messages` queries.
 - Backfill needs a legacy mapping rule.
 - UI code needs to display `participant_id` while filtering by individual columns.
-- More indexes are needed, likely on `(channel, thread_id, agent_family)`, `(channel, thread_id, ui_surface)`, and `(channel, thread_id, agent_family, ui_surface, instance_id)`.
-- Clients need small local stable-storage handling and should tolerate missing or corrupt `instance.json` by generating a new UUID.
+- More indexes are needed, likely on `(channel, thread_id, agent_family)`, `(channel, thread_id, ui_surface)`, `(channel, thread_id, client_id)`, and `(channel, thread_id, agent_family, ui_surface, client_id, instance_id)`.
+- Clients need small local stable-storage handling and should tolerate missing or corrupt `instance.json` by generating a new `client_id`.
 
 ### Alternatives considered
 
@@ -162,7 +169,8 @@ Tuple-in-text is not first-class schema. Quorum checks need `agent_family`; capa
 - Distinct families such as `claude-desktop`. Rejected because Desktop and CLI should satisfy the same Claude family slot.
 - Keep only `from_agent` plus `client_app`. Rejected because telemetry is not identity.
 - Participant registry table only. Deferred; message rows still need denormalized identity for historical audit.
-- Purely ephemeral `instance_id` only. Rejected because closing and reopening a Desktop app would strand its active lease until expiry.
+- Persisted `instance_id` only. Rejected because two live Desktop windows from the same user would share a lease holder identity and collide.
+- Purely ephemeral identity only. Rejected because closing and reopening a Desktop app would strand its active lease until expiry and break retry deduplication.
 
 ---
 
@@ -229,6 +237,7 @@ Request fields:
 
 - `agent_family`
 - `ui_surface`
+- `client_id`
 - `instance_id`
 - `round_index`
 - `participant_scope`
@@ -236,11 +245,11 @@ Request fields:
 
 Default claim scope is `participant_scope=family`. This means only one participant per `agent_family` can hold the round slot, while any surface of that family may claim it if capability requirements allow.
 
-Reserve `participant_scope=participant` as a future escape hatch for assignments that truly require one exact `(agent_family, ui_surface, instance_id)`. Do not implement it in the first slice unless a concrete test requires it.
+Reserve `participant_scope=participant` as a future escape hatch for assignments that truly require one exact `(agent_family, ui_surface, client_id, instance_id)`. Do not implement it in the first slice unless a concrete test requires it.
 
 Claims return `claim_id`, holder identity, `round_index`, scope, lease kind, and visible `expires_at`. Conflicts return the current holder and `expires_at`.
 
-Normal brief restarts should recover the same `instance_id` through the Q1 local persistence rule. If persistence failed or the old app instance is dead, a same-surface replacement can seize a stale active lease.
+Normal brief restarts should recover the same `client_id` through the Q1 local persistence rule and present a new live `instance_id`. If the old app instance is dead, a same-client same-surface replacement can seize a stale active lease after missed keepalives.
 
 Lease takeover endpoint:
 
@@ -250,19 +259,19 @@ POST /api/comms/channels/{channel}/threads/{thread_id}/claims/{claim_id}/seize
 
 The broker may accept seize only when all conditions hold:
 
-- requester has the same `(agent_family, ui_surface)` as the active holder
+- requester has the same `(agent_family, ui_surface, client_id)` as the active holder
 - requester presents a different `instance_id`
 - active holder has missed two keepalives
 - claim has not already been consumed by a posted round reply
 - requested `round_index` still matches the active round
 
-On success, the broker updates the claim holder to the new `instance_id`, extends the lease using the holder type's normal lease duration, emits `claim_seized`, and records previous holder identity in the event payload. On failure, return the current holder and `expires_at` like a claim conflict.
+On success, the broker updates the claim holder to the new `instance_id`, keeps the same `client_id`, extends the lease using the holder type's normal lease duration, emits `claim_seized`, and records previous holder identity in the event payload. On failure, return the current holder and `expires_at` like a claim conflict.
 
 ### Rationale
 
 Family-scoped claims preserve the current `--with claude,codex,gemini` contract while allowing Desktop tag-in. The required slot is "Codex", not "this exact Codex CLI subprocess." First-claim-wins prevents duplicate expensive replies.
 
-The persisted `instance_id` rule prevents accidental restart lock-outs in the common case. The seize endpoint covers the recovery case where the persisted ID is missing, corrupt, or unavailable but the old holder has stopped keepaliving.
+The persisted `client_id` rule prevents accidental restart lock-outs in the common case. The per-session `instance_id` rule prevents simultaneous windows from sharing one live holder identity. The seize endpoint covers the recovery case where the old holder has stopped keepaliving.
 
 ### Tradeoffs
 
@@ -317,7 +326,7 @@ Default behavior preserves the existing agent-deliberation contract: users steer
 
 ### Proposal
 
-Initial implementation is localhost-only. Participants self-identify with `agent_family`, `ui_surface`, `instance_id`, and `client_app`. Examples include `codex-cli/5.x`, `codex-desktop/unknown`, `claude-code/2.x`, `claude-desktop/unknown`, `channels-html/local`, and `ab-headless/1`.
+Initial implementation is localhost-only. Participants self-identify with `agent_family`, `ui_surface`, `client_id`, `instance_id`, and `client_app`. Examples include `codex-cli/5.x`, `codex-desktop/unknown`, `claude-code/2.x`, `claude-desktop/unknown`, `channels-html/local`, and `ab-headless/1`.
 
 The broker does not authenticate participants in the first implementation.
 
@@ -402,7 +411,7 @@ A flat 90-second expiry is too brittle for human/UI work. Desktop users may insp
 
 ### Proposal
 
-Claim creation requires an `idempotency_key`. Store each request keyed by at least `(thread_id, idempotency_key)` with canonical request hash, response status, response body, claim ID, and created timestamp.
+Claim creation requires an `idempotency_key`. Store each request keyed by `(client_id, idempotency_key)` with `thread_id`, canonical request hash, response status, response body, claim ID, and created timestamp. `client_id` is the stable retry identity from Q1; `participant_id` is display-only and must not be used for idempotency.
 
 Claim semantics:
 
@@ -423,7 +432,7 @@ POST /api/comms/channels/{name}/threads/{thread_id}/post
 
 Any thread-reply variant must follow the same rule. The client supplies a UUID4 `idempotency_key` for the logical post attempt and reuses it on retries, including retries after a timeout during a large multimodal upload.
 
-Post idempotency is keyed by `(participant_id, idempotency_key)` within a five-minute window. The broker stores canonical body hash, attachment manifest hash, response status, `message_id`, and `expires_at`.
+Post idempotency is keyed by `(client_id, idempotency_key)` within a five-minute window. The broker stores canonical body hash, attachment manifest hash, response status, `message_id`, and `expires_at`.
 
 Conflict semantics:
 
@@ -436,7 +445,7 @@ Implementation shape:
 
 ```sql
 CREATE TABLE post_idempotency (
-  participant_id TEXT NOT NULL,
+  client_id TEXT NOT NULL,
   idempotency_key TEXT NOT NULL,
   body_hash TEXT NOT NULL,
   attachment_manifest_hash TEXT,
@@ -445,11 +454,11 @@ CREATE TABLE post_idempotency (
   response_body TEXT NOT NULL,
   expires_at TEXT NOT NULL,
   created_at TEXT NOT NULL,
-  PRIMARY KEY (participant_id, idempotency_key)
+  PRIMARY KEY (client_id, idempotency_key)
 );
 ```
 
-The post transaction uses `INSERT ... ON CONFLICT(participant_id, idempotency_key) DO NOTHING`, then selects the existing row on conflict. If the stored hashes match and `expires_at` is still in the future, return the stored `message_id`; if hashes differ, return `409`.
+The post transaction uses `INSERT ... ON CONFLICT(client_id, idempotency_key) DO NOTHING`, then selects the existing row on conflict. If the stored hashes match and `expires_at` is still in the future, return the stored `message_id`; if hashes differ, return `409`.
 
 ### Rationale
 
@@ -480,7 +489,7 @@ Posting a round reply must be a single DB transaction. The transaction validates
 
 - `claim_id` exists
 - claim is not expired
-- holder identity matches `agent_family`, `ui_surface`, and `instance_id`
+- holder identity matches `agent_family`, `ui_surface`, `client_id`, and `instance_id`
 - `round_index` matches the active round
 - `agent_family` is required or allowed for the discussion
 - `participant_scope` rules are satisfied
@@ -651,38 +660,47 @@ If Desktop was required because the task needed graphical content, CLI fallback 
 
 ### Proposal
 
-Add first-class message attachments.
+Add first-class message attachments backed by a separate content-addressable blob store.
 
 ```sql
-CREATE TABLE message_attachments (
-  attachment_id TEXT PRIMARY KEY,
-  message_id TEXT NOT NULL,
-  attachment_type TEXT NOT NULL,
-  blob_hash TEXT NOT NULL,
+CREATE TABLE blobs (
+  hash TEXT PRIMARY KEY,
   blob_ext TEXT NOT NULL,
   mime_type TEXT NOT NULL,
   byte_size INTEGER NOT NULL,
+  storage_path TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE message_attachments (
+  message_id TEXT NOT NULL,
+  attachment_id TEXT NOT NULL,
+  attachment_type TEXT NOT NULL,
+  blob_hash TEXT NOT NULL REFERENCES blobs(hash),
   alt_text TEXT,
   caption TEXT,
-  source_participant_id TEXT NOT NULL,
+  source_client_id TEXT NOT NULL,
+  source_instance_id TEXT NOT NULL,
+  provenance_mode TEXT NOT NULL,
+  source_attachment_id TEXT,
   created_at TEXT NOT NULL,
-  UNIQUE(blob_hash),
+  PRIMARY KEY(message_id, attachment_id),
   FOREIGN KEY(message_id) REFERENCES channel_messages(message_id)
 );
 ```
 
 Initial `attachment_type` values are `image` and `audio`.
 
+The same blob may be attached to multiple messages. `blobs.hash` is the dedupe boundary; `message_attachments` is the relation between a message-local attachment ID and a stored blob. Reattaching the same image or audio file to a second message inserts or reuses one `blobs` row and inserts a new `message_attachments` row.
+
 Blob storage decision for localhost:
 
 - store blobs on filesystem
 - path: `.ab/channels/blobs/{sha256}.{ext}`
-- keep metadata in SQLite
+- keep blob metadata in SQLite
 - verify hash before linking
 - insert blob metadata with `INSERT OR IGNORE` semantics so identical uploads dedupe to one row
 - do not use S3-style storage for the local prototype
-
-If the implementation later normalizes blobs into a separate `channel_blobs` table, move the `UNIQUE(blob_hash)` constraint and `INSERT OR IGNORE` behavior to that table while keeping `message_attachments.blob_hash` as the content-addressed reference.
 
 `blob_ext` validation is strict:
 
@@ -706,13 +724,16 @@ Audio refs use the same attachment URI and are rendered by the channel UI as pla
 
 The channel renderer resolves `attachment://...` against the blob store. Export may rewrite refs to relative file paths.
 
-MCP tool surface:
+Atomic post surface:
 
 ```text
-mcp__channels__attach(message_id, file_path, attachment_type, alt_text?, caption?)
+POST /api/comms/channels/{name}/messages-with-attachments
+mcp__channels__post_with_attachments(thread_id, body, attachments[], idempotency_key, claim_id?)
 ```
 
-If atomic message plus attachment creation is needed, use a draft flow: begin message, attach to draft, then post draft. A simpler first slice may post then immediately attach, but message state must show incomplete/broken attachments visibly.
+The endpoint stages the message row, blob metadata, copied blob files, attachment rows, event rows, and idempotency row in one logical transaction. It returns `{message_id, attachment_ids}` only after all required attachments are stored, hashed, MIME-validated, linked, and visible to the renderer. If any attachment fails validation or storage, the endpoint rolls back the message, attachment links, events, and idempotency response.
+
+Round replies that require multimodal anchors must use this atomic endpoint. A separate attach-to-existing-message operation may exist only for non-round notes or administrative repair, and it must not be allowed to satisfy a multimodal-required round reply after the message has already been scored.
 
 Recommended limits:
 
@@ -884,6 +905,115 @@ The architecture should follow evidence. The seven-anchor checklist turns the us
 
 ---
 
+## Round-3 Codex self-review resolutions
+
+Round 3 resolves six design problems found after the round-2 review. These sections supersede any earlier wording in Q1, Q7, Q12, and the Strand 0 gate when there is tension.
+
+### R3.1 `instance_id` must be per live surface session
+
+Resolution: Q1 now splits persisted `client_id` from session-scoped `instance_id`. `client_id` persists per `(agent_family, ui_surface)` and is used for retry identity, deduplication, and lease-recovery decisions. `instance_id` is generated for each live process, window, browser tab, or headless run and must include session entropy.
+
+Reasoning: round 2 over-corrected restart recovery by persisting `instance_id`. That would make two Codex Desktop windows from the same user share a holder identity and collide in claim, keepalive, and fallback audit logic. The new model keeps restart recovery through `client_id` while preserving per-window distinction through `instance_id`.
+
+Cross-references: Q1 defines both IDs. Q3 claim seize requires the same `(agent_family, ui_surface, client_id)` and a different `instance_id`. Q8 validates both IDs at post time.
+
+### R3.2 `client_id` is canonical for idempotency; `participant_id` is display-only
+
+Resolution: Q1 now treats `participant_id` as a display convenience that may collide and must not key broker correctness. Q7 keys claim and post idempotency on `(client_id, idempotency_key)`.
+
+Reasoning: round 2 made `participant_id` non-canonical in Q1 but still used it as the idempotency key in Q7. That was a contradiction. Idempotency, deduplication, and lease management need a stable machine identity; display labels are for UI and transcript readability.
+
+Cross-references: Q1 defines `client_id` and `participant_id`. Q7 defines the idempotency table. Q11 may still show `actual_participant_id` in transcript payloads, but that field is audit display, not broker identity.
+
+### R3.3 Blob storage is separate from message attachment links
+
+Resolution: Q12 now defines `blobs(hash)` as the content-addressable store and `message_attachments(message_id, attachment_id)` as the relation from messages to blobs. The same blob hash may appear in multiple attachment rows.
+
+Reasoning: round 2 put `UNIQUE(blob_hash)` directly on `message_attachments`, which would reject a legitimate second message that attaches the same image or audio file. Deduplication belongs in the blob table; attachment identity belongs in the message relation.
+
+Cross-references: Q12 schema and Strand 5 test focus now require duplicate upload dedupe without blocking same-blob reuse across messages.
+
+### R3.4 Multimodal-required round replies must post atomically with attachments
+
+Resolution: Q12 now requires a single `POST /api/comms/channels/{name}/messages-with-attachments` flow for multimodal-required round replies. The endpoint returns `{message_id, attachment_ids}` only after message and attachment rows are both committed, or rolls back all of them.
+
+Reasoning: "post then attach" creates a scoring race. An evaluator could observe the text message before the image or audio upload finishes and fail the message against a multimodal anchor even though the agent intended to attach the file. Atomic creation makes the scored message state match the participant's submitted state.
+
+Cross-references: Q7 includes attachment manifest hashing in post idempotency. Q8 validates attachment references before accepting a round reply. Q12 defines the atomic endpoint.
+
+### R3.5 Strand 0 non-multimodal anchors need explicit scoring
+
+Resolution: the Strand 0 scoring appendix below defines per-anchor criteria for the four non-multimodal anchors: header structure, inductive opening, concept block, and Q -> A scaffold. The Desktop gate remains `DESKTOP_NON_MM >= CLI_NON_MM`, but each non-multimodal anchor now has concrete pass/fail criteria and evidence requirements.
+
+Reasoning: round 2 defined the multimodal-only gate tightly but left the text/pedagogy anchors underspecified. That could let reviewers disagree about whether Desktop "fell behind CLI" without a shared rubric.
+
+Cross-references: Strand 0 measurement keeps the seven binary anchors. The appendix defines the non-multimodal side of the same scoring sheet.
+
+### R3.6 Audio workflows are distinct: generate, attach, preserve
+
+Resolution: the audio workflow appendix below separates three flows: generating new audio, attaching a pre-existing audio file, and preserving an audio attachment posted by another participant. The broker records provenance for all three but does not itself need to synthesize audio in the first implementation.
+
+Reasoning: adding `attachment_type=audio` did not specify whether the agent creates audio, uploads an existing file, or carries forward another participant's file. Those flows have different provenance, security, licensing, and scoring implications.
+
+Cross-references: Q12 records `attachment_type`, `provenance_mode`, `source_client_id`, `source_instance_id`, and optional `source_attachment_id`. Strand 0 and Strand 5 use the appendix rules.
+
+---
+
+## Appendix: Strand 0 non-multimodal scoring rubric
+
+This appendix scores the four non-multimodal anchors used by `CLI_NON_MM` and `DESKTOP_NON_MM`. Each anchor is binary. Award `1` only when the submitted output contains the required evidence; otherwise award `0`.
+
+### Judge protocol
+
+Use the generated module markdown and any declared artifacts only. Do not score from private notes, hidden prompts, or the writer's design note unless the produced lesson itself contains the feature. Record line references for markdown evidence and artifact references for rendered evidence. If a scorer cannot point to evidence, the anchor fails.
+
+Two reviewers may score independently when time allows. If they disagree, they compare evidence references only, not model reputations or preferred style. If disagreement remains, use the stricter score and add a note explaining the ambiguity.
+
+### Anchor criteria
+
+| Non-multimodal anchor | Pass criteria | Fails when |
+| --- | --- | --- |
+| Header structure | The module has a clear title, level/module framing, and learner-facing section headings that match the lesson flow. | The output is an unstructured essay, lacks a title, or uses headings that do not organize the lesson. |
+| Inductive opening | The lesson starts from examples, noticing, contrast, or a short learner task before giving the rule. | It begins with only an abstract grammar rule or a meta explanation of what the writer intends. |
+| Concept block | The lesson includes a concise learner-facing explanation of possessive-pronoun meaning/use with examples tied to the target Ukrainian forms. | It only lists forms, gives an inaccurate explanation, or leaves the rule implicit. |
+| Q -> A scaffold | The lesson includes a question-to-answer pattern or guided transformation that shows how a learner moves from prompt to possessive-pronoun answer. | It has isolated examples with no prompt/response relation, or the scaffold is described but not actually provided. |
+
+### Tie-break rules
+
+Equivalent Ukrainian/English wording can pass when it satisfies the learner function. Extra polish, length, or richer prose does not earn extra credit. Minor formatting defects do not fail an anchor if the evidence is still clear. Any placeholder such as `TODO`, `[fill later]`, `image TBD`, or `audio TBD` fails the affected anchor.
+
+The Desktop acceptance gate compares only the count of these four anchors after scoring. Desktop passes the non-multimodal side when `DESKTOP_NON_MM >= CLI_NON_MM`; it does not need to beat CLI on text anchors, but it must not trail.
+
+---
+
+## Appendix: Audio workflow
+
+Audio support covers three different workflows. All three use `attachment_type=audio`, but they require different provenance.
+
+### Generate new audio
+
+An agent generates audio when it uses TTS, file synthesis, a local recording tool, or a Desktop audio-generation capability to create a new file for the reply. The broker stores the resulting file as a blob and records `provenance_mode=generated`.
+
+Required provenance: source text or prompt summary, generator/tool name when available, voice or model identifier when available, source client identity, file hash, MIME type, byte size, and any licensing constraint known to the client. The first implementation may accept generated audio only from clients that explicitly advertise audio-generation capability.
+
+### Attach pre-existing audio
+
+An agent attaches audio when it uploads or references an existing local file, course asset, or pre-implementation bakeoff artifact. The broker copies the file into `.ab/channels/blobs`, verifies its hash and MIME type, inserts or reuses the `blobs` row, and records `provenance_mode=attached`.
+
+Required provenance: source client identity, original filename or asset reference when safe to record, content hash, MIME type, byte size, and a client assertion that the file is allowed for local evaluation. This is the default flow for Strand 0 and for pronunciation/audio-paired lesson drafts before a dedicated generation tool is approved.
+
+### Preserve another participant's audio
+
+An agent preserves audio when it cites or carries forward an audio attachment that another participant already posted. The broker creates a new `message_attachments` row pointing to the existing `blob_hash`, records `provenance_mode=preserved`, and stores `source_attachment_id` for the original attachment. It must not rewrite provenance to make the preserving participant look like the creator.
+
+Required provenance: preserving client identity, original `message_id`, original `attachment_id`, original blob hash, and the original source participant fields. Preserve is the preferred flow for review, summary, and follow-up messages that need to keep an audio anchor visible without duplicating files.
+
+### Recommendation by strand
+
+Strand 0 may use generated audio only if the selected Desktop writer already has an explicit generation path; otherwise it should attach a pre-existing audio file and record its hash in the local manifest. Strand 4 should expose attach and atomic post-with-attachments first. Strand 5 should implement blob reuse and preserve semantics with tests. Broker-side audio generation is deferred; the broker records generated provenance but does not synthesize files itself.
+
+---
+
 ## Implementation epic
 
 Run Strand 0 before any implementation code lands. If Strand 0 fails the acceptance gate, abort and revisit the architecture before implementing Strands 1-6.
@@ -900,7 +1030,7 @@ Test focus: missing private notes fail clearly, all seven anchors report, scorer
 
 ### Strand 1: schema and claim mechanism
 
-Scope: add first-class participant identity columns, preserve legacy `from_agent`, add claims table, add claim and post idempotency tables, add lease fields, add claim create/keepalive/release/expire/seize paths, add persisted `instance_id` client handling, and add loopback preflight if missing.
+Scope: add first-class participant identity columns, preserve legacy `from_agent`, add claims table, add claim and post idempotency tables, add lease fields, add claim create/keepalive/release/expire/seize paths, add persisted `client_id` handling, add per-session `instance_id` handling, and add loopback preflight if missing.
 
 Questions covered: Q1, Q3, Q5, Q6, Q7.
 
@@ -924,19 +1054,19 @@ Test focus: default user context, explicit user quorum, user stop/object markers
 
 ### Strand 4: MCP tool family
 
-Scope: add `mcp__channels__list`, `mcp__channels__observe`, `mcp__channels__claim`, `mcp__channels__keepalive`, `mcp__channels__release`, `mcp__channels__post`, and `mcp__channels__attach`.
+Scope: add `mcp__channels__list`, `mcp__channels__observe`, `mcp__channels__claim`, `mcp__channels__keepalive`, `mcp__channels__release`, `mcp__channels__post`, `mcp__channels__post_with_attachments`, and limited `mcp__channels__attach` for non-round repair/admin use.
 
 Questions covered: Q2, Q3, Q6, Q12.
 
-Test focus: Desktop can list, observe through resource reads, claim, post with idempotency, release, attach an image with alt text, attach an audio file, and receive rejection for missing or unsupported files.
+Test focus: Desktop can list, observe through resource reads, claim, post with idempotency, release, atomically post a message with image/audio attachments, and receive rejection for missing or unsupported files.
 
 ### Strand 5: multimodal artifact handling
 
-Scope: add `message_attachments`, add filesystem blob store, validate sha256, MIME, extension allowlist, dedupe identical uploads, support `attachment://{attachment_id}` markdown refs, render image and audio attachments, export attachments for transcript review, and require alt text for images.
+Scope: add `blobs`, add `message_attachments`, add filesystem blob store, validate sha256, MIME, extension allowlist, dedupe identical uploads in `blobs`, allow the same blob to attach to multiple messages, support `attachment://{attachment_id}` markdown refs, render image and audio attachments, export attachments for transcript review, preserve existing audio attachments by reference, and require alt text for images.
 
 Questions covered: Q12, Q8, Q11.
 
-Test focus: attachment-message links, blob hash verification, duplicate upload dedupe, unsafe extension rejection, visibly broken missing blobs, image alt-text rejection, audio size limit, markdown attachment-ref resolution, and storage constrained under `.ab/channels/blobs`.
+Test focus: attachment-message links, blob hash verification, duplicate upload dedupe, same-blob reuse across messages, atomic rollback when an attachment fails, unsafe extension rejection, visibly broken missing blobs, image alt-text rejection, audio size limit, markdown attachment-ref resolution, preserved-audio provenance, and storage constrained under `.ab/channels/blobs`.
 
 ### Strand 6: channels.html UI updates
 
@@ -967,11 +1097,11 @@ Deferred follow-up ADRs may be needed for remote auth, retention and pruning, cr
 
 ---
 
-## Review questions for Gemini
+## Review questions for reviewers
 
 Please review this as an architecture gate, not implementation code.
 
-1. Q1 schema: Are three first-class columns plus local `instance_id` persistence enough, or do we need a participant registry table in the first implementation?
+1. Q1 schema: Are four first-class columns plus local `client_id` persistence and per-session `instance_id` enough, or do we need a participant registry table in the first implementation?
 2. Q2 discovery: Is replayable SSE plus MCP readable resource the right split, or should MCP expose a blocking subscription tool?
 3. Q3 claim scope: Is `participant_scope=family` the correct default, and is same-surface lease seizure after two missed keepalives sufficient for restart recovery?
 4. Q4 user semantics: Does default context mode plus explicit `--with user` quorum mode preserve the current discussion contract?
@@ -982,7 +1112,7 @@ Please review this as an architecture gate, not implementation code.
 9. Q9 dynamic joins: Should late same-family surfaces be eligible claimants by default, or should every late participant be observer-only first?
 10. Q10 event IDs: Is a global broker event sequence preferable to per-channel event sequences?
 11. Q11 fallback identity: Is required-vs-actual identity sufficient for audit and bakeoff analysis?
-12. Q12 attachments: Is filesystem blob storage under `.ab/channels/blobs` the right localhost default, with image/audio types, dedupe, extension sanitization, and image alt text required at attach time?
+12. Q12 attachments: Is filesystem blob storage under `.ab/channels/blobs` the right localhost default, with separate `blobs` and `message_attachments` tables, atomic message-with-attachments posting, image/audio types, dedupe, extension sanitization, and image alt text required at attach time?
 13. Pilot bakeoff: Is the multimodal-specific gate strong enough to justify Desktop-required routing for graphics-rich modules?
 14. Epic split: Is Strand 0 correctly placed as a manual pre-implementation gate before schema work?
 
