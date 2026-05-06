@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 
 from scripts.audit import bakeoff_run
@@ -28,17 +29,13 @@ def _fake_runner(calls: list[list[str]], slug: str = "my-morning"):
                 "---\nlevel: A1\nslug: my-morning\n---\n\n# Мій ранок\n",
                 encoding="utf-8",
             )
-            telemetry.write_text(
-                json.dumps({"event": "phase_writer_summary"}) + "\n",
-                encoding="utf-8",
-            )
+            with telemetry.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps({"event": "phase_writer_summary"}) + "\n")
         elif script == "v7_review.py":
             telemetry = Path(command[command.index("--telemetry-out") + 1])
             telemetry.parent.mkdir(parents=True, exist_ok=True)
-            telemetry.write_text(
-                json.dumps({"event": "phase_review_summary"}) + "\n",
-                encoding="utf-8",
-            )
+            with telemetry.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps({"event": "phase_review_summary"}) + "\n")
         elif script == "bakeoff_aggregate.py":
             bakeoff_dir = Path(command[command.index("--bakeoff-dir") + 1])
             (bakeoff_dir / "REPORT.md").write_text("# Report\n", encoding="utf-8")
@@ -112,14 +109,27 @@ def test_bakeoff_run_invokes_write_and_review_steps_in_order(
     assert calls[4][calls[4].index("--reviewer") + 1] == "gemini-tools"
 
 
-def test_bakeoff_run_resume_skips_complete_writer(
+@pytest.mark.parametrize(
+    ("initial_jsonl", "expected_gemini_rerun"),
+    [
+        (json.dumps({"event": "phase_writer_summary"}) + "\n", False),
+        (json.dumps({"event": "module_start"}) + "\n", True),
+        (None, True),
+        ("", True),
+    ],
+)
+def test_bakeoff_run_resume_writer_requires_terminal_event(
     tmp_path: Path,
     monkeypatch,
+    initial_jsonl: str | None,
+    expected_gemini_rerun: bool,
 ) -> None:
     calls: list[list[str]] = []
     bakeoff_dir = tmp_path / "bakeoff"
     bakeoff_dir.mkdir()
-    (bakeoff_dir / "gemini.write.jsonl").write_text('{"event":"done"}\n', "utf-8")
+    telemetry = bakeoff_dir / "gemini.write.jsonl"
+    if initial_jsonl is not None:
+        telemetry.write_text(initial_jsonl, encoding="utf-8")
     monkeypatch.setattr(bakeoff_run, "run_command", _fake_runner(calls))
 
     exit_code = bakeoff_run.main(
@@ -145,7 +155,73 @@ def test_bakeoff_run_resume_skips_complete_writer(
     ]
 
     assert exit_code == 0
-    assert full_build_writers == ["claude-tools"]
+    assert ("gemini-tools" in full_build_writers) is expected_gemini_rerun
+    assert "claude-tools" in full_build_writers
+    if expected_gemini_rerun:
+        assert telemetry.read_text(encoding="utf-8") == (
+            json.dumps({"event": "phase_writer_summary"}) + "\n"
+        )
+    else:
+        assert full_build_writers == ["claude-tools"]
+
+
+@pytest.mark.parametrize(
+    ("initial_jsonl", "expected_gemini_claude_rerun"),
+    [
+        (json.dumps({"event": "phase_review_summary"}) + "\n", False),
+        (json.dumps({"event": "module_start"}) + "\n", True),
+        (None, True),
+        ("", True),
+    ],
+)
+def test_bakeoff_run_resume_review_requires_terminal_event(
+    tmp_path: Path,
+    monkeypatch,
+    initial_jsonl: str | None,
+    expected_gemini_claude_rerun: bool,
+) -> None:
+    calls: list[list[str]] = []
+    bakeoff_dir = tmp_path / "bakeoff"
+    bakeoff_dir.mkdir()
+    (bakeoff_dir / "gemini.md").write_text("# Gemini module\n", encoding="utf-8")
+    (bakeoff_dir / "claude.md").write_text("# Claude module\n", encoding="utf-8")
+    telemetry = bakeoff_dir / "gemini-claude.review.jsonl"
+    if initial_jsonl is not None:
+        telemetry.write_text(initial_jsonl, encoding="utf-8")
+    monkeypatch.setattr(bakeoff_run, "run_command", _fake_runner(calls))
+
+    exit_code = bakeoff_run.main(
+        [
+            "--bakeoff-dir",
+            str(bakeoff_dir),
+            "--level",
+            "a1",
+            "--slug",
+            "my-morning",
+            "--writers",
+            "gemini-tools,claude-tools",
+            "--resume",
+            "--reviewers-only",
+            "--skip-aggregate",
+        ]
+    )
+
+    review_pairs = [
+        (
+            Path(call[call.index("--content") + 1]).name,
+            call[call.index("--reviewer") + 1],
+        )
+        for call in calls
+        if Path(call[1]).name == "v7_review.py"
+    ]
+
+    assert exit_code == 0
+    assert (("gemini.md", "claude-tools") in review_pairs) is expected_gemini_claude_rerun
+    assert ("claude.md", "gemini-tools") in review_pairs
+    if expected_gemini_claude_rerun:
+        assert telemetry.read_text(encoding="utf-8") == (
+            json.dumps({"event": "phase_review_summary"}) + "\n"
+        )
 
 
 def test_bakeoff_run_preflight_missing_plan_exits_1(

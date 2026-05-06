@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import shutil
 import subprocess
 import sys
@@ -83,8 +84,30 @@ def _short_name(writer: str) -> str:
     return bakeoff_aggregate.normalize_agent(writer)
 
 
-def _nonempty(path: Path) -> bool:
-    return path.exists() and path.stat().st_size > 0
+def _jsonl_has_event(path: Path, event: str) -> bool:
+    if not path.exists() or path.stat().st_size == 0:
+        return False
+    for line in path.read_text(encoding="utf-8").splitlines():
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if payload.get("event") == event:
+            return True
+    return False
+
+
+def _writer_complete(path: Path) -> bool:
+    return _jsonl_has_event(path, "phase_writer_summary")
+
+
+def _review_complete(path: Path) -> bool:
+    return _jsonl_has_event(path, "phase_review_summary")
+
+
+def _truncate_telemetry(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("", encoding="utf-8")
 
 
 def _display_path(path: Path) -> str:
@@ -196,8 +219,9 @@ def _run_writer(
     short = _short_name(writer)
     telemetry = bakeoff_dir / f"{short}.write.jsonl"
     out_dir = bakeoff_dir / short
-    if resume and _nonempty(telemetry):
+    if resume and _writer_complete(telemetry):
         return StepResult(label=f"write {writer}", ok=True, skipped=True)
+    _truncate_telemetry(telemetry)
 
     result = _run_or_report(
         f"write {writer}",
@@ -236,7 +260,7 @@ def _run_review(
     writer_short = _short_name(writer)
     reviewer_short = _short_name(reviewer)
     target = bakeoff_dir / f"{writer_short}-{reviewer_short}.review.jsonl"
-    if resume and _nonempty(target):
+    if resume and _review_complete(target):
         return StepResult(
             label=f"review {writer}->{reviewer}",
             ok=True,
@@ -247,6 +271,7 @@ def _run_review(
         detail = f"missing writer markdown for review: {content}"
         print(f"error: {detail}", file=sys.stderr)
         return StepResult(label=f"review {writer}->{reviewer}", ok=False, detail=detail)
+    _truncate_telemetry(target)
 
     return _run_or_report(
         f"review {writer}->{reviewer}",
@@ -379,7 +404,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "Skip already-complete writer/review JSONL outputs when present "
-            "and non-empty (default: false)."
+            "and marked by a terminal success event (default: false)."
         ),
     )
     parser.add_argument(
