@@ -42,6 +42,7 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 #          stores rules.body/session.body + ETag metadata so cold-start is ~780 B instead of 75 KB.
 #          Runtime-only; NOT source-tracked. rsync --delete must preserve both.
 ORPHAN_PATHS_AGENT="wake cache"
+ORPHAN_PATHS_AGENTS=""
 ORPHAN_PATHS_GEMINI="docs/"
 
 # Build rsync --exclude arguments from a space-separated path list.
@@ -89,6 +90,7 @@ echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
 check_orphans "claude_extensions" ".claude" "$ORPHAN_PATHS_CLAUDE" "claude_extensions → .claude" || orphan_fail=true
 check_orphans "claude_extensions" ".agent" "$ORPHAN_PATHS_AGENT" "claude_extensions → .agent" || orphan_fail=true
+check_orphans "claude_extensions/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "claude_extensions/skills → .agents/skills" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
@@ -101,6 +103,10 @@ echo ""
 # Step 1: Lint prompts (blocks deploy on failure)
 echo "=== Lint prompts ==="
 .venv/bin/python scripts/lint_prompts.py
+echo ""
+
+echo "=== Lint agent skills ==="
+.venv/bin/python scripts/lint/lint_agent_skills.py
 echo ""
 
 # Step 2: Show diffs before sync
@@ -139,6 +145,7 @@ diff_dirs() {
 
 diff_dirs "claude_extensions" ".claude" "claude_extensions → .claude" "$ORPHAN_PATHS_CLAUDE"
 diff_dirs "claude_extensions" ".agent" "claude_extensions → .agent" "$ORPHAN_PATHS_AGENT"
+diff_dirs "claude_extensions/skills" ".agents/skills" "claude_extensions/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
 diff_dirs "gemini_extensions" ".gemini" "gemini_extensions → .gemini" "$ORPHAN_PATHS_GEMINI"
 echo ""
 
@@ -158,6 +165,14 @@ echo "=== Syncing ==="
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE") claude_extensions/ .claude/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") claude_extensions/ .agent/
+# shellcheck disable=SC2046
+# rsync needs the destination's parent dir to exist before it can create
+# `.agents/skills/`. On a clean checkout (e.g. the test fixture in
+# tests/test_deploy_script_idempotency.py) `.agents/` does not exist yet,
+# and rsync fails with `mkdir ".agents/skills" failed: No such file or
+# directory (2)`. Pre-create the parent so a fresh clone works.
+mkdir -p .agents
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") claude_extensions/skills/ .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_GEMINI") gemini_extensions/ .gemini/
 echo ""

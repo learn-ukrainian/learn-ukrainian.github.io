@@ -1,0 +1,168 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "plan_references": [
+    {
+      "title": "Караман Grade 10, p.176",
+      "notes": "Зворотні дієслова: суфікс -ся(-сь) означає дію, спрямовану на себе."
+    },
+    {
+      "title": "Кравцова Grade 4, p.113",
+      "notes": "Вимова: -шся=[с'а], -ться=[ц'а]."
+    },
+    {
+      "title": "Захарійчук Grade 4, p.162",
+      "notes": "Дієслова на -ся: вправи з вимовою та правописом."
+    }
+  ],
+  "gates": {
+    "word_count": {
+      "passed": false,
+      "count": 1122,
+      "target": 1200
+    },
+    "plan_sections": {
+      "passed": false,
+      "missing_headings": [],
+      "word_budgets": [
+        {
+          "section": "Діалоги",
+          "count": 188,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Дієслова на -ся",
+          "count": 180,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Мій ранок",
+          "count": 203,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Підсумок",
+          "count": 144,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        }
+      ]
+    },
+    "formatting_standards": {
+      "passed": true,
+      "malformed_callouts": [],
+      "missing_mandatory_callouts": []
+    },
+    "vesum_verified": {
+      "passed": false,
+      "checked": 123,
+      "whitelisted": 5,
+      "missing": [
+        "йдуся",
+        "снідаюся",
+        "юся"
+      ],
+      "missing_count": 3
+    },
+    "citations_resolve": {
+      "passed": false,
+      "unknown": [
+        "wiki/pedagogy/a1/my-morning.md"
+      ]
+    },
+    "immersion": {
+      "passed": false,
+      "pct": 37.56,
+      "min_pct": 15,
+      "max_pct": 35,
+      "policy": "a1-m15-24",
+      "long_ukrainian_sentences": []
+    },
+    "inject_activity_ids": {
+      "passed": true,
+      "injected": [
+        "act-1",
+        "act-3",
+        "act-6",
+        "act-10"
+      ],
+      "missing": [],
+      "unused": [
+        "act-2",
+        "act-4",
+        "act-5",
+        "act-7",
+        "act-8",
+        "act-9"
+      ]
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "fill-in",
+        "quiz",
+        "fill-in",
+        "match-up",
+        "true-false",
+        "order",
+        "group-sort",
+        "unjumble",
+        "error-correction",
+        "fill-in"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "previously_passed_regression": {
+      "passed": true,
+      "regressions": []
+    },
+    "mdx_render": {
+      "passed": null,
+      "message": "Run after publish stage"
+    },
+    "passed": false,
+    "correction_terminal": {
+      "passed": false,
+      "gate": "word_count",
+      "message": "word_count failed after its single ADR-008 correction attempt"
+    }
+  }
+}

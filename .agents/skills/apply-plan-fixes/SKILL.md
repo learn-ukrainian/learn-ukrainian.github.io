@@ -1,7 +1,7 @@
 ---
 name: apply-plan-fixes
 description: Apply fixes from plan review reports. Reads audit reports, shows proposed changes for approval, then applies them. Respects plan versioning rules.
-argument-hint: <track> [modules: all | 1 | 5-10 | slug-name] [--severity CRITICAL,HIGH | --all-fixes]
+argument-hint: "<track> [modules: all | 1 | 5-10 | slug-name] [--severity CRITICAL,HIGH | --all-fixes]"
 ---
 
 # Apply Plan Fixes: $ARGUMENTS

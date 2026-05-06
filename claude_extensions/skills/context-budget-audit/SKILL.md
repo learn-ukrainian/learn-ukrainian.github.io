@@ -83,7 +83,7 @@ Cross-phase average of `directives_covered / directives_total`. List the top 5 m
 For each phase, compute `prompt_chars / model_context_chars`. Model context windows (as of 2026-04):
 
 | Model | Context (chars, 4 chars/token approx) |
-|---|---|
+| --- | --- |
 | `gemini-3.1-pro-preview` | 4,000,000 (1M tokens) |
 | `gemini-3-flash` | 4,000,000 |
 | `claude-opus-4-6` | 800,000 (200K tokens) |

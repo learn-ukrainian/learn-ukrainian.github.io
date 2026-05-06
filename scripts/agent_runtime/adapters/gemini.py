@@ -228,18 +228,32 @@ class GeminiAdapter:
                 "GOOGLE_API_KEY is set"
             )
 
-        prompt_arg, prompt_file = _prompt_arg_for_cli(prompt)
-        cmd.extend(["-p", prompt_arg])
+        # Gemini CLI 0.40.1 yargs parser bug (#1730 root cause, 2026-05-06):
+        # when the prompt content contains `-p` or `--prompt` substrings
+        # (which happens whenever a prior gemini failure stderr lands in
+        # the channel history seen by `ab discuss`), yargs mis-parses argv
+        # and fails with "Not enough arguments following: p" — even though
+        # subprocess.run passes argv as a list, not via shell.
+        #
+        # Workaround: pass the prompt via stdin instead of argv. Gemini's
+        # `-p` help text states "Appended to input on stdin (if any)", so
+        # we pass a single-space placeholder via -p and pipe the real
+        # prompt via stdin_payload. argv contains no prompt content,
+        # bypassing the yargs bug entirely.
+        #
+        # When upstream fixes yargs, revert to:
+        #     prompt_arg, prompt_file = _prompt_arg_for_cli(prompt)
+        #     cmd.extend(["-p", prompt_arg])
+        cmd.extend(["-p", " "])
         _logger.debug(
-            "gemini prompt length=%d passed via %s",
+            "gemini prompt length=%d passed via stdin (yargs argv bug workaround)",
             len(prompt),
-            "file-ref" if prompt_file is not None else "inline",
         )
 
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            stdin_payload="",
+            stdin_payload=prompt,
             output_file=None,  # Gemini writes to stdout only.
             env_overrides={},
             env_unsets=env_unsets,

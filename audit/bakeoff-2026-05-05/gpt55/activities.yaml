@@ -1,0 +1,329 @@
+- id: act-1
+  type: fill-in
+  title: Add -ся
+  instruction: Complete each form with the correct ending.
+  items:
+  - sentence: Я вмиваю__.
+    answer: ся
+    options:
+    - ся
+    - ти
+    - є
+  - sentence: Ти одягаєш__.
+    answer: ся
+    options:
+    - ся
+    - ю
+    - є
+  - sentence: Він прокидаєть__.
+    answer: ся
+    options:
+    - ся
+    - ти
+    - ю
+  - sentence: Вона збираєть__.
+    answer: ся
+    options:
+    - ся
+    - єш
+    - ю
+  - sentence: Я прокидаю__ о сьомій.
+    answer: ся
+    options:
+    - ся
+    - ти
+    - є
+  - sentence: Ти вмиваєш__ вранці.
+    answer: ся
+    options:
+    - ся
+    - ю
+    - є
+  - sentence: Він одягаєть__ швидко.
+    answer: ся
+    options:
+    - ся
+    - єш
+    - ти
+  - sentence: Я збираю__ на роботу.
+    answer: ся
+    options:
+    - ся
+    - є
+    - ти
+  - sentence: Вона повертаєть__ додому.
+    answer: ся
+    options:
+    - ся
+    - ю
+    - єш
+  - sentence: Ти навчаєш__ вранці.
+    answer: ся
+    options:
+    - ся
+    - є
+    - ю
+- id: act-2
+  type: quiz
+  title: Reflexive or not
+  instruction: Choose the natural Ukrainian form.
+  items:
+  - question: I wash up.
+    options:
+    - text: Я вмиваюся.
+      correct: true
+    - text: Я вмиваю.
+      correct: false
+    explanation: Вмиватися is reflexive.
+  - question: I have breakfast.
+    options:
+    - text: Я снідаюся.
+      correct: false
+    - text: Я снідаю.
+      correct: true
+    explanation: Снідати is not reflexive.
+  - question: You get dressed.
+    options:
+    - text: Ти одягаєшся.
+      correct: true
+    - text: Ти одягаєш.
+      correct: false
+    explanation: Одягатися is reflexive.
+  - question: She wakes up.
+    options:
+    - text: Вона прокидається.
+      correct: true
+    - text: Вона прокидаєшся.
+      correct: false
+    explanation: Вона takes -ється.
+  - question: I go.
+    options:
+    - text: Я йдуся.
+      correct: false
+    - text: Я йду.
+      correct: true
+    explanation: Йти is not reflexive.
+  - question: I study.
+    options:
+    - text: Я навчаюся.
+      correct: true
+    - text: Я навчаєшся.
+      correct: false
+    explanation: Я takes -юся.
+  - question: He gets ready.
+    options:
+    - text: Він збирається.
+      correct: true
+    - text: Він збираюся.
+      correct: false
+    explanation: Він takes -ється.
+  - question: I drink coffee.
+    options:
+    - text: Я п’ю каву.
+      correct: true
+    - text: Я п’юся каву.
+      correct: false
+    explanation: Пити is not reflexive here.
+- id: act-3
+  type: fill-in
+  title: Person endings
+  instruction: Choose the correct present-tense form.
+  items:
+  - sentence: Я ____ о сьомій.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+  - sentence: Ти ____ о восьмій.
+    answer: прокидаєшся
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+  - sentence: Вона ____ пізно.
+    answer: прокидається
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+  - sentence: Я ____ вранці.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - вмиваєшся
+    - вмивається
+  - sentence: Ти ____ швидко.
+    answer: одягаєшся
+    options:
+    - одягаюся
+    - одягаєшся
+    - одягається
+  - sentence: Він ____ на роботу.
+    answer: збирається
+    options:
+    - збираюся
+    - збираєшся
+    - збирається
+- id: act-4
+  type: match-up
+  title: Morning verbs
+  instruction: Match each Ukrainian verb with its English meaning.
+  pairs:
+  - left: прокидатися
+    right: to wake up
+  - left: вмиватися
+    right: to wash up
+  - left: одягатися
+    right: to get dressed
+  - left: снідати
+    right: to have breakfast
+  - left: йти
+    right: to go
+  - left: поспішати
+    right: to hurry
+- id: act-5
+  type: true-false
+  title: Short checks
+  instruction: Decide whether each statement is true.
+  items:
+  - statement: Я вмиваюся is a reflexive verb form.
+    correct: true
+    explanation: The form ends in -ся.
+  - statement: Я снідаюся is the normal form for I have breakfast.
+    correct: false
+    explanation: Use Я снідаю.
+  - statement: Ти одягаєшся uses the ти ending before -ся.
+    correct: true
+    explanation: The ending is -єшся.
+  - statement: Він прокидаюся is correct.
+    correct: false
+    explanation: Use Він прокидається.
+  - statement: Йти has the forms я йду, ти йдеш, він йде.
+    correct: true
+    explanation: These forms are irregular and common.
+- id: act-6
+  type: order
+  title: Morning order
+  instruction: Put the morning routine in a natural order.
+  items:
+  - Спочатку я прокидаюся.
+  - Потім я вмиваюся.
+  - Після цього я одягаюся.
+  - Потім я снідаю.
+  - Нарешті я йду на роботу.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+- id: act-7
+  type: group-sort
+  title: With -ся or without -ся
+  instruction: Sort the forms into two groups.
+  groups:
+  - name: З -ся
+    items:
+    - прокидаюся
+    - вмиваюся
+    - одягаюся
+    - навчаюся
+    - збираюся
+  - name: Без -ся
+    items:
+    - снідаю
+    - йду
+    - п’ю
+    - лежу
+    - гуляю
+- id: act-8
+  type: unjumble
+  title: Build the sentence
+  instruction: Put the words in the correct order.
+  items:
+  - words:
+    - я
+    - спочатку
+    - прокидаюся
+    answer: Спочатку я прокидаюся.
+  - words:
+    - потім
+    - вмиваюся
+    - я
+    answer: Потім я вмиваюся.
+  - words:
+    - я
+    - після цього
+    - одягаюся
+    answer: Після цього я одягаюся.
+  - words:
+    - снідаю
+    - я
+    - потім
+    answer: Потім я снідаю.
+  - words:
+    - нарешті
+    - йду
+    - я
+    answer: Нарешті я йду.
+- id: act-9
+  type: error-correction
+  title: Fix the morning forms
+  instruction: Choose the corrected sentence.
+  items:
+  - sentence: Я прокидаєшся о сьомій.
+    error: прокидаєшся
+    answer: Я прокидаюся о сьомій.
+    options:
+    - Я прокидаюся о сьомій.
+    - Я прокидається о сьомій.
+    - Я прокидаєшся о сьомій.
+    explanation: Я takes -юся.
+  - sentence: Він вмиваюся вранці.
+    error: вмиваюся
+    answer: Він вмивається вранці.
+    options:
+    - Він вмивається вранці.
+    - Він вмиваєшся вранці.
+    - Він вмиваюся вранці.
+    explanation: Він takes -ється.
+  - sentence: Ти одягаюся швидко.
+    error: одягаюся
+    answer: Ти одягаєшся швидко.
+    options:
+    - Ти одягаєшся швидко.
+    - Ти одягається швидко.
+    - Ти одягаюся швидко.
+    explanation: Ти takes -єшся.
+  - sentence: Я йдуся на роботу.
+    error: йдуся
+    answer: Я йду на роботу.
+    options:
+    - Я йду на роботу.
+    - Я йдеш на роботу.
+    - Я йдеться на роботу.
+    explanation: Йти is not reflexive here.
+- id: act-10
+  type: fill-in
+  title: My morning
+  instruction: Complete the short morning story.
+  items:
+  - sentence: Спочатку я ____.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - снідаю
+    - йду
+  - sentence: Потім я ____ і ____.
+    answer: вмиваюся, одягаюся
+    options:
+    - вмиваюся, одягаюся
+    - йду, п’ю
+    - лежу, гуляю
+  - sentence: Нарешті я ____ на роботу.
+    answer: йду
+    options:
+    - йду
+    - вмиваюся
+    - одягаюся

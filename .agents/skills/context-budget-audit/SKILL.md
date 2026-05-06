@@ -83,10 +83,10 @@ Cross-phase average of `directives_covered / directives_total`. List the top 5 m
 For each phase, compute `prompt_chars / model_context_chars`. Model context windows (as of 2026-04):
 
 | Model | Context (chars, 4 chars/token approx) |
-|---|---|
+| --- | --- |
 | `gemini-3.1-pro-preview` | 4,000,000 (1M tokens) |
 | `gemini-3-flash` | 4,000,000 |
-| `Codex-opus-4-6` | 800,000 (200K tokens) |
+| `claude-opus-4-6` | 800,000 (200K tokens) |
 | `gpt-5.5` (Codex) | 1,000,000 |
 
 Flag any phase where prompt_chars exceeds 50% of the model's window — that's a hard rule for this skill. (For all current pipelines, this is ~500K+ chars, which should NEVER happen for a single v6 phase. If it does, something is badly wrong.)
@@ -158,6 +158,6 @@ When given a range or a whole level, also produce `curriculum/l2-uk-en/{track}/a
 
 ## Source of truth
 
-All data comes from `*-session-analysis.yaml` files emitted by `_save_dispatch_log` in `scripts/build/dispatch.py`. The analysis logic lives in `scripts/build/session_analysis.py` and the parser in `scripts/build/gemini_session.py`. If a phase has no `*-session-analysis.yaml` file, skip it silently — that phase either pre-dates #1174 or used a non-Gemini agent (Codex/Codex session parsers are follow-up work).
+All data comes from `*-session-analysis.yaml` files emitted by `_save_dispatch_log` in `scripts/build/dispatch.py`. The analysis logic lives in `scripts/build/session_analysis.py` and the parser in `scripts/build/gemini_session.py`. If a phase has no `*-session-analysis.yaml` file, skip it silently — that phase either pre-dates #1174 or used a non-Gemini agent (Codex/Claude session parsers are follow-up work).
 
 Reference issues: #1076 (this skill), #1174 (the underlying analyzer), #1070 (the original 33K-prompt incident that motivated both).

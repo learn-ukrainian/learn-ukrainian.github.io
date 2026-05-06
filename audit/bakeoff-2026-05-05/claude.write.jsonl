@@ -1,0 +1,10 @@
+{"event": "module_start", "ts": "2026-05-06T02:47:05.517171+00:00", "level": "a1", "slug": "my-morning"}
+{"event": "phase_done", "ts": "2026-05-06T02:47:05.520187+00:00", "level": "a1", "slug": "my-morning", "phase": "plan", "duration_s": 0.003}
+{"event": "phase_done", "ts": "2026-05-06T02:47:05.619966+00:00", "level": "a1", "slug": "my-morning", "phase": "knowledge_packet", "duration_s": 0.1}
+{"event": "writer_cot_emit", "ts": "2026-05-06T02:58:28.573482+00:00", "writer": "claude-tools", "module": "a1/20", "section": "Діалоги", "block_present": false, "block_chars": 0, "fields_filled": []}
+{"event": "writer_cot_emit", "ts": "2026-05-06T02:58:28.573668+00:00", "writer": "claude-tools", "module": "a1/20", "section": "Дієслова на -ся", "block_present": false, "block_chars": 0, "fields_filled": []}
+{"event": "writer_cot_emit", "ts": "2026-05-06T02:58:28.573709+00:00", "writer": "claude-tools", "module": "a1/20", "section": "Мій ранок", "block_present": false, "block_chars": 0, "fields_filled": []}
+{"event": "writer_cot_emit", "ts": "2026-05-06T02:58:28.573737+00:00", "writer": "claude-tools", "module": "a1/20", "section": "Підсумок", "block_present": false, "block_chars": 0, "fields_filled": []}
+{"event": "writer_end_gate", "ts": "2026-05-06T02:58:28.574303+00:00", "writer": "claude-tools", "module": "a1/20", "gate_present": false, "gate_actions": [], "removed_count": 0}
+{"event": "phase_writer_summary", "ts": "2026-05-06T02:58:28.574434+00:00", "writer": "claude-tools", "module": "a1/20", "sections_total": 4, "sections_with_cot": 0, "tool_calls_total": 0, "verify_words_calls": 0, "end_gate_fired": false, "removed_via_gate": 0, "tool_theatre_violations": [], "tool_theatre_violation_count": 0}
+{"event": "module_failed", "ts": "2026-05-06T02:58:28.576509+00:00", "level": "a1", "slug": "my-morning", "phase": "writer", "reason": "Writer output must contain exactly ('module.md', 'activities.yaml', 'vocabulary.yaml', 'resources.yaml'). missing=['module.md', 'activities.yaml', 'vocabulary.yaml', 'resources.yaml'] extra=[]"}

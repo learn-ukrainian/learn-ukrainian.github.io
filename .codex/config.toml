@@ -1,6 +1,3 @@
-[mcp_servers.figma-remote-mcp]
-url = "https://mcp.figma.com/mcp"
-
 [shell_environment_policy]
 inherit = "core"
 
