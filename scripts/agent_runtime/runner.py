@@ -47,6 +47,7 @@ from ai_llm.fallback import (
 )
 
 from .adapters.base import AgentAdapter
+from .env_sanitize import build_agent_env
 from .errors import (
     AgentTimeoutError,
     AgentUnavailableError,
@@ -462,7 +463,7 @@ def _execute_invocation_plan(
     stall_timeout: int,
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
-    env = {**os.environ, **plan.env_overrides}
+    env = build_agent_env(provider=agent_name, overrides=plan.env_overrides)
     for key in plan.env_unsets:
         env.pop(key, None)
     env = _apply_merge_guard(mode=mode, env=env)
