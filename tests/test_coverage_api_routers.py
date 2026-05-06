@@ -220,6 +220,21 @@ class TestCommsMessages:
         assert len(r.json()["messages"]) == 3
         assert r.json()["total"] == 10
 
+    def test_messages_cursor_and_since(self, comms_client, broker_db):
+        old_ts = "2026-01-01T00:00:00+00:00"
+        new_ts = "2026-01-02T00:00:00+00:00"
+        _insert_messages(broker_db, [
+            {"content": "old", "timestamp": old_ts},
+            {"content": "new", "timestamp": new_ts},
+        ])
+        r = comms_client.get(
+            "/api/comms/messages",
+            params={"limit": 10, "cursor": 2, "since": "2026-01-01T12:00:00+00:00"},
+        )
+        data = r.json()
+        assert data["messages"] == []
+        assert data["next_cursor"] is None
+
     def test_messages_combined_filters(self, comms_client, broker_db):
         _insert_messages(broker_db, [
             {"from_llm": "claude", "task_id": "t1", "message_type": "error", "acknowledged": 0},
@@ -277,6 +292,23 @@ class TestCommsConversationDetail:
         data = r.json()
         assert data["task_id"] == "task-X"
         assert data["count"] == 2
+
+    def test_conversation_detail_limited_with_cursor(self, comms_client, broker_db):
+        _insert_messages(broker_db, [
+            {"task_id": "task-X", "content": f"msg{i}"}
+            for i in range(5)
+        ])
+        r = comms_client.get("/api/comms/conversation/task-X", params={"limit": 2})
+        data = r.json()
+        assert data["count"] == 2
+        assert data["total"] == 5
+        assert data["next_cursor"] == 4
+
+        r2 = comms_client.get(
+            "/api/comms/conversation/task-X",
+            params={"limit": 2, "cursor": data["next_cursor"]},
+        )
+        assert [m["id"] for m in r2.json()["messages"]] == [2, 3]
 
     def test_conversation_detail_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
@@ -696,6 +728,13 @@ class TestCommsLiveActivity:
         _insert_messages(broker_db, [{"content": "dispatch test"}])
         r = comms_client.get("/api/comms/live-activity")
         assert len(r.json()["recent_dispatches"]) >= 1
+
+    def test_live_activity_dispatch_limit(self, comms_client, broker_db):
+        _insert_messages(broker_db, [{"content": f"dispatch-{i}"} for i in range(3)])
+        r = comms_client.get("/api/comms/live-activity", params={"limit": 2})
+        data = r.json()
+        assert len(data["recent_dispatches"]) == 2
+        assert data["dispatch_next_cursor"] is not None
 
 
 # ===========================================================================

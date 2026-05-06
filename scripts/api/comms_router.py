@@ -24,6 +24,7 @@ import sqlite3
 import time
 import uuid
 from datetime import UTC, datetime
+from importlib import util as importlib_util
 
 logger = logging.getLogger(__name__)
 
@@ -59,12 +60,43 @@ def _read_tail_text(path, max_bytes: int = BATCH_LOG_TAIL_BYTES) -> tuple[str, b
         return handle.read().decode("utf-8", errors="replace"), True
 
 
+def _tune_db_connection(conn: sqlite3.Connection, *, writable: bool) -> None:
+    """Apply broker read/write PRAGMAs for API connections."""
+    conn.execute("PRAGMA busy_timeout=5000")
+    conn.execute("PRAGMA cache_size=-20000")
+    conn.execute("PRAGMA temp_store=MEMORY")
+    if writable:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA foreign_keys=ON")
+    conn.row_factory = sqlite3.Row
+
+
+def ensure_broker_db_ready() -> None:
+    """Run idempotent broker startup tuning and migrations."""
+    if not MESSAGE_DB.exists():
+        return
+
+    conn = sqlite3.connect(str(MESSAGE_DB))
+    try:
+        _tune_db_connection(conn, writable=True)
+        migration_path = PROJECT_ROOT / "scripts" / "migrations" / "2026-05-06-broker-indexes.py"
+        if migration_path.exists():
+            spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
+            if spec is not None and spec.loader is not None:
+                module = importlib_util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                module.apply(conn)
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def _get_db() -> sqlite3.Connection | None:
     """Get read-only broker DB connection. Returns None if DB missing."""
     if not MESSAGE_DB.exists():
         return None
     conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
+    _tune_db_connection(conn, writable=False)
     return conn
 
 
@@ -73,7 +105,7 @@ def _get_rw_db() -> sqlite3.Connection | None:
     if not MESSAGE_DB.exists():
         return None
     conn = connect_sqlite(str(MESSAGE_DB))
-    conn.row_factory = sqlite3.Row
+    _tune_db_connection(conn, writable=True)
     return conn
 
 
@@ -99,8 +131,10 @@ async def list_messages(
     task_id: str | None = Query(None),
     msg_type: str | None = Query(None),
     unacked_only: bool = Query(False),
-    limit: int = Query(100, ge=1, le=1000),
+    limit: int = Query(100, ge=1, le=500),
     offset: int = Query(0, ge=0),
+    since: str | None = Query(None, description="Only messages with timestamp > this ISO-8601 value"),
+    cursor: int | None = Query(None, ge=1, description="Keyset cursor: return messages older than this id"),
 ):
     """**Deprecated (#1190 B.5).** All broker messages with optional filters.
 
@@ -126,21 +160,35 @@ async def list_messages(
         params.append(msg_type)
     if unacked_only:
         conditions.append("acknowledged = 0")
+    if since:
+        conditions.append("timestamp > ?")
+        params.append(since)
+    if cursor is not None:
+        conditions.append("id < ?")
+        params.append(cursor)
 
     where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
 
     total = conn.execute(f"SELECT COUNT(*) FROM messages {where}", params).fetchone()[0]
+    page_params = [*params, limit]
+    if cursor is None:
+        page_params.append(offset)
+        page_clause = "LIMIT ? OFFSET ?"
+    else:
+        page_clause = "LIMIT ?"
     rows = conn.execute(
         f"SELECT id, task_id, from_llm, to_llm, message_type, "
         f"substr(content, 1, 300) as preview, length(content) as content_len, "
         f"timestamp, acknowledged "
-        f"FROM messages {where} ORDER BY id DESC LIMIT ? OFFSET ?",
-        [*params, limit, offset],
+        f"FROM messages {where} ORDER BY id DESC {page_clause}",
+        page_params,
     ).fetchall()
     conn.close()
 
     return {
         "total": total,
+        "limit": limit,
+        "next_cursor": rows[-1]["id"] if len(rows) == limit else None,
         "messages": [dict(r) for r in rows],
     }
 
@@ -176,7 +224,12 @@ async def list_conversations(limit: int = Query(50, ge=1, le=200)):
 
 
 @router.get("/conversation/{task_id}", deprecated=True)
-async def get_conversation(task_id: str):
+async def get_conversation(
+    task_id: str,
+    limit: int = Query(100, ge=1, le=500),
+    since: str | None = Query(None, description="Only messages with timestamp > this ISO-8601 value"),
+    cursor: int | None = Query(None, ge=1, description="Keyset cursor: return messages older than this id"),
+):
     """**Deprecated (#1190 B.5).** Full broker thread for one task_id.
 
     Use /api/comms/channels/{name}/threads/{thread_id} for
@@ -186,17 +239,47 @@ async def get_conversation(task_id: str):
     if not conn:
         return {"messages": []}
 
-    rows = conn.execute("""
+    conditions = ["task_id = ?"]
+    params: list = [task_id]
+    if since:
+        conditions.append("timestamp > ?")
+        params.append(since)
+    if cursor is not None:
+        conditions.append("id < ?")
+        params.append(cursor)
+
+    where = " AND ".join(conditions)
+    total = conn.execute(
+        f"SELECT COUNT(*) FROM messages WHERE {where}",
+        params,
+    ).fetchone()[0]
+    rows = conn.execute(
+        f"""
         SELECT id, task_id, from_llm, to_llm, message_type,
-               substr(content, 1, 500) as preview, length(content) as content_len,
-               data, timestamp, acknowledged
-        FROM messages
-        WHERE task_id = ?
+               preview, content_len, data, timestamp, acknowledged
+        FROM (
+            SELECT id, task_id, from_llm, to_llm, message_type,
+                   substr(content, 1, 500) as preview, length(content) as content_len,
+                   data, timestamp, acknowledged
+            FROM messages
+            WHERE {where}
+            ORDER BY id DESC
+            LIMIT ?
+        )
         ORDER BY id ASC
-    """, (task_id,)).fetchall()
+        """,
+        [*params, limit],
+    ).fetchall()
     conn.close()
 
-    return {"task_id": task_id, "count": len(rows), "messages": [dict(r) for r in rows]}
+    return {
+        "task_id": task_id,
+        "count": len(rows),
+        "total": total,
+        "limit": limit,
+        "next_cursor": rows[0]["id"] if len(rows) == limit else None,
+        "messages": [dict(r) for r in rows],
+    }
 
 
 # ==================== ACTIVE PROCESSES ====================
@@ -806,6 +889,9 @@ def _scan_recent_completions(minutes: int = 60) -> list[dict]:
 async def live_activity(
     response: Response,
     minutes: int = Query(15, ge=1, le=120),
+    limit: int = Query(30, ge=1, le=500, description="Maximum recent broker dispatches"),
+    since: str | None = Query(None, description="Only dispatches with timestamp > this ISO-8601 value"),
+    cursor: int | None = Query(None, ge=1, description="Keyset cursor: return dispatches older than this id"),
 ):
     """What's being built RIGHT NOW — module-level live feed.
 
@@ -839,14 +925,25 @@ async def live_activity(
     # Also get recent broker messages for the dispatch feed
     conn = _get_db()
     dispatches = []
+    rows = []
     if conn:
-        rows = conn.execute("""
+        conditions = []
+        params: list = []
+        if since:
+            conditions.append("timestamp > ?")
+            params.append(since)
+        if cursor is not None:
+            conditions.append("id < ?")
+            params.append(cursor)
+        where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+        rows = conn.execute(f"""
             SELECT id, task_id, from_llm, to_llm, message_type,
                    substr(content, 1, 200) as preview, timestamp
             FROM messages
+            {where}
             ORDER BY id DESC
-            LIMIT 30
-        """).fetchall()
+            LIMIT ?
+        """, [*params, limit]).fetchall()
         conn.close()
         now_ts = datetime.now(UTC)
         for r in rows:
@@ -870,6 +967,8 @@ async def live_activity(
         "in_progress": acts,
         "recent_completions": completions[:30],
         "recent_dispatches": dispatches,
+        "dispatch_limit": limit,
+        "dispatch_next_cursor": rows[-1]["id"] if len(rows) == limit else None,
     }
 
 

@@ -18,6 +18,8 @@ in the B.1 design round (task bridge-b1-schema-design, 2026-04-11).
 
 import sqlite3
 from datetime import UTC, datetime
+from importlib import util as importlib_util
+from pathlib import Path
 
 from ._config import DB_PATH
 
@@ -171,7 +173,57 @@ def _tune_connection(conn: sqlite3.Connection) -> None:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=5000")
     conn.execute("PRAGMA foreign_keys=ON")
+    conn.execute("PRAGMA cache_size=-20000")
+    conn.execute("PRAGMA temp_store=MEMORY")
     conn.row_factory = sqlite3.Row
+
+
+def _apply_broker_index_migration(conn: sqlite3.Connection) -> None:
+    """Apply the standalone broker-index migration from scripts/migrations."""
+    existing_indexes = {
+        row[0]
+        for row in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='index'"
+        ).fetchall()
+    }
+    existing_tables = {
+        row[0]
+        for row in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'"
+        ).fetchall()
+    }
+    required_by_table = {
+        "messages": {
+            "idx_messages_to_agent_created",
+            "idx_messages_from_agent_created",
+            "idx_messages_task_id",
+        },
+        "channel_messages": {
+            "idx_channel_messages_channel_created",
+            "idx_channel_messages_thread_id",
+        },
+        "deliveries": {"idx_deliveries_to_agent_status"},
+    }
+    if all(
+        required_by_table[table].issubset(existing_indexes)
+        for table in required_by_table
+        if table in existing_tables
+    ):
+        return
+
+    migration_path = (
+        Path(__file__).resolve().parents[1]
+        / "migrations"
+        / "2026-05-06-broker-indexes.py"
+    )
+    if not migration_path.exists():
+        return
+    spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
+    if spec is None or spec.loader is None:
+        return
+    module = importlib_util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.apply(conn)
 
 
 def init_db():
@@ -181,6 +233,7 @@ def init_db():
     _tune_connection(conn)
     conn.executescript(_LEGACY_SCHEMA)
     conn.executescript(_CHANNELS_SCHEMA)
+    _apply_broker_index_migration(conn)
     conn.commit()
     return conn
 
@@ -319,6 +372,7 @@ def get_db():
                         """
                     )
 
+        _apply_broker_index_migration(conn)
         conn.commit()
     except Exception:
         conn.rollback()

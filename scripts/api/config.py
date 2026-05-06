@@ -1,5 +1,6 @@
 """Configuration for the playground API."""
 
+import os
 from pathlib import Path
 
 # Project root
@@ -9,7 +10,12 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 # Message broker database
-MESSAGE_DB = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
+MESSAGE_DB = Path(
+    os.environ.get(
+        "AB_DB_PATH",
+        str(PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"),
+    )
+)
 
 # Playgrounds directory (for static file serving)
 PLAYGROUNDS_DIR = PROJECT_ROOT / "playgrounds"
