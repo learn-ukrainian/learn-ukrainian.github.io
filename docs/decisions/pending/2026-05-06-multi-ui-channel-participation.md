@@ -28,9 +28,9 @@ Patching `ab discuss` ad hoc would silently change the contract for writer-lock 
 
 ## Scope
 
-In scope: participant identity across multiple surfaces, surface capability profiles, discussion discovery, claim/lease/fallback semantics, default user-as-context behavior, explicit user quorum mode, localhost identity assumptions, loopback-binding preflight, idempotent claim retries, atomic round-message validation, dynamic join rules, monotonic event replay, fallback identity, multimodal message attachments, pilot bakeoff design, and the implementation epic split.
+In scope: participant identity across multiple surfaces, surface capability profiles, discussion discovery, claim/lease/fallback semantics, default user-as-context behavior, explicit user quorum mode, localhost identity assumptions, loopback-binding preflight, idempotent claim and post retries, atomic round-message validation, dynamic join rules, monotonic event replay, fallback identity, multimodal message attachments, pilot bakeoff design, and the implementation epic split.
 
-Out of scope: remote/cloud auth, multi-user broker federation, voice/video, global task pickup outside discussion threads, final channels.html polish, blob retention/pruning, artifact promotion into curriculum assets, and Desktop vendor preference if both Claude Desktop and Codex Desktop are available.
+Out of scope: remote/cloud auth, multi-user broker federation, live voice/video calls, global task pickup outside discussion threads, final channels.html polish, blob retention/pruning, artifact promotion into curriculum assets, and Desktop vendor preference if both Claude Desktop and Codex Desktop are available.
 
 Implementation should not start until Gemini review and user signoff. The pilot bakeoff should run before the architecture makes Desktop mandatory for graphics-rich module work.
 
@@ -59,12 +59,14 @@ This is what lets the project later ask whether Desktop actually improved graphi
 
 `ui_surface` is a routing signal, not just display metadata.
 
-| `ui_surface` | Input capabilities | Output capabilities | Runtime affordances | Assign these tasks |
+| Capability dimension | `cli` | `desktop` | `web` | `headless` |
 | --- | --- | --- | --- | --- |
-| `cli` | text stdin, repo files, shell tools | text, file edits, command output | deterministic subprocess, easy logs, low friction | bug fixes, code review, docs edits, text-only module drafts |
-| `desktop` | text, image attach, file drop, screenshots, local context | text, file edits through tools, image generation where available, Artifacts-style render | human-in-loop, visual inspection, multimodal context | graphics-rich modules, image-backed pedagogy, paradigm-table design, register blocks with photos |
-| `web` | text, browser state, iframe messages, uploaded files where enabled | rich rendering, browser DOM changes, iframe-postMessage integration | browser APIs, live preview, visual QA | channels.html participation, rendered lesson review, browser debugging |
-| `headless` | scripted inputs, scheduled files, API payloads | scripted messages, reports, machine-readable logs | no human-in-loop, repeatable automation | nightly checks, status summaries, deterministic validation |
+| Text and files | text stdin, repo files, shell tools | text, file drop, screenshots, local context | text, browser state, iframe messages, uploaded files where enabled | scripted inputs, scheduled files, API payloads |
+| Visual I/O | none except repo files and textual descriptions | image attach, screenshots, visual inspection, image generation where available, Artifacts-style render | rich rendering, browser DOM changes, live preview, visual QA | none except scripted files |
+| Audio I/O | none by default; TTS only through an explicit subprocess/tool bridge | audio input/output through mic/speakers plus audio file attach | WebAudio API playback only | none |
+| Output capabilities | text, file edits, command output | text, file edits through tools, image/audio attachments where available | rich rendering, browser DOM changes, iframe-postMessage integration | scripted messages, reports, machine-readable logs |
+| Runtime affordances | deterministic subprocess, easy logs, low friction | human-in-loop, visual inspection, multimodal context | browser APIs, live preview, visual QA | no human-in-loop, repeatable automation |
+| Assign these tasks | bug fixes, code review, docs edits, text-only module drafts | graphics-rich modules, image-backed pedagogy, pronunciation/audio-paired lessons, paradigm-table design, register blocks with photos | channels.html participation, rendered lesson review, browser debugging, attachment playback QA | nightly checks, status summaries, deterministic validation |
 
 Initial allowed values are `cli`, `desktop`, `web`, and `headless`. Do not add `mobile` until there is a concrete client.
 
@@ -72,6 +74,7 @@ Rationale:
 
 - `claude:cli` and `claude:desktop` can both satisfy a Claude family slot.
 - Only Desktop should satisfy an assignment requiring multimodal output.
+- Pronunciation lessons and audio-paired Ohoiko sub-sections such as `N.1`, `N.2`, and similar listening prompts require first-class audio capability tracking, not prose placeholders.
 - Surface routing makes the user's content-production hypothesis testable.
 
 Tradeoffs:
@@ -104,7 +107,24 @@ A participant is represented by three first-class columns:
 
 Initial `agent_family` values are `claude`, `codex`, `gemini`, and `user`. Initial `ui_surface` values are `cli`, `desktop`, `web`, and `headless`.
 
-`instance_id` is an ephemeral UUID for one process, browser tab, desktop session, or headless worker run.
+`instance_id` is a UUID for one local client identity. It is generated on first run, then persisted locally per `(agent_family, ui_surface)` so brief restarts recover the same identity instead of creating a conflicting same-surface claimant.
+
+Recommended local storage path:
+
+```text
+~/.config/learn-ukrainian/agent-bridge/instance.json
+```
+
+Example persisted shape:
+
+```json
+{
+  "codex:desktop": "8f91c2e0-4c2d-4a74-8e13-2f68f5a70b3b",
+  "claude:desktop": "a6b9d0f7-7ab0-40b2-8b54-9f7b5fbbe807"
+}
+```
+
+Headless workers may still generate a fresh UUID per run. Browser tabs should use local storage when available and fall back to session storage only if persistence is unavailable.
 
 `participant_id` may exist only as a generated display/key convenience:
 
@@ -134,6 +154,7 @@ Tuple-in-text is not first-class schema. Quorum checks need `agent_family`; capa
 - Backfill needs a legacy mapping rule.
 - UI code needs to display `participant_id` while filtering by individual columns.
 - More indexes are needed, likely on `(channel, thread_id, agent_family)`, `(channel, thread_id, ui_surface)`, and `(channel, thread_id, agent_family, ui_surface, instance_id)`.
+- Clients need small local stable-storage handling and should tolerate missing or corrupt `instance.json` by generating a new UUID.
 
 ### Alternatives considered
 
@@ -141,6 +162,7 @@ Tuple-in-text is not first-class schema. Quorum checks need `agent_family`; capa
 - Distinct families such as `claude-desktop`. Rejected because Desktop and CLI should satisfy the same Claude family slot.
 - Keep only `from_agent` plus `client_app`. Rejected because telemetry is not identity.
 - Participant registry table only. Deferred; message rows still need denormalized identity for historical audit.
+- Purely ephemeral `instance_id` only. Rejected because closing and reopening a Desktop app would strand its active lease until expiry.
 
 ---
 
@@ -156,7 +178,7 @@ GET /api/comms/channels/{channel}/events?since={event_id}
 
 Required semantics: every event has monotonic `event_id`; clients may pass `since`; SSE clients may reconnect with `Last-Event-ID`; server replays events where `event_id > since`; if neither `since` nor `Last-Event-ID` is provided, start at now unless explicit replay mode is requested; keepalive comments emit every 30 seconds; idle connections close server-side after a bounded timeout.
 
-Minimum event types are `discussion_started`, `message_appended`, `claim_created`, `claim_extended`, `claim_released`, `claim_expired`, `discussion_aborted`, `attachment_added`, and `discussion_completed`.
+Minimum event types are `discussion_started`, `message_appended`, `claim_created`, `claim_extended`, `claim_released`, `claim_expired`, `claim_seized`, `discussion_aborted`, `attachment_added`, and `discussion_completed`.
 
 The existing pull/inbox route remains a fallback:
 
@@ -218,15 +240,36 @@ Reserve `participant_scope=participant` as a future escape hatch for assignments
 
 Claims return `claim_id`, holder identity, `round_index`, scope, lease kind, and visible `expires_at`. Conflicts return the current holder and `expires_at`.
 
+Normal brief restarts should recover the same `instance_id` through the Q1 local persistence rule. If persistence failed or the old app instance is dead, a same-surface replacement can seize a stale active lease.
+
+Lease takeover endpoint:
+
+```text
+POST /api/comms/channels/{channel}/threads/{thread_id}/claims/{claim_id}/seize
+```
+
+The broker may accept seize only when all conditions hold:
+
+- requester has the same `(agent_family, ui_surface)` as the active holder
+- requester presents a different `instance_id`
+- active holder has missed two keepalives
+- claim has not already been consumed by a posted round reply
+- requested `round_index` still matches the active round
+
+On success, the broker updates the claim holder to the new `instance_id`, extends the lease using the holder type's normal lease duration, emits `claim_seized`, and records previous holder identity in the event payload. On failure, return the current holder and `expires_at` like a claim conflict.
+
 ### Rationale
 
 Family-scoped claims preserve the current `--with claude,codex,gemini` contract while allowing Desktop tag-in. The required slot is "Codex", not "this exact Codex CLI subprocess." First-claim-wins prevents duplicate expensive replies.
+
+The persisted `instance_id` rule prevents accidental restart lock-outs in the common case. The seize endpoint covers the recovery case where the persisted ID is missing, corrupt, or unavailable but the old holder has stopped keepaliving.
 
 ### Tradeoffs
 
 - Same-family surfaces must coordinate through the claim table.
 - Capability requirements need validation in addition to family matching.
 - Participant-scoped behavior is deferred.
+- Seize requires keepalive accounting, such as `last_keepalive_at` and missed-keepalive count, instead of expiry timestamp alone.
 - Claims add API and DB complexity.
 
 ### Alternatives considered
@@ -355,13 +398,13 @@ A flat 90-second expiry is too brittle for human/UI work. Desktop users may insp
 
 ---
 
-## Q7. How are claim retries made idempotent?
+## Q7. How are claim and post retries made idempotent?
 
 ### Proposal
 
 Claim creation requires an `idempotency_key`. Store each request keyed by at least `(thread_id, idempotency_key)` with canonical request hash, response status, response body, claim ID, and created timestamp.
 
-Semantics:
+Claim semantics:
 
 - same key plus same request returns the original response
 - same key plus different request returns `409 idempotency_key_reuse`
@@ -371,21 +414,60 @@ Semantics:
 
 Compatibility rule: old local CLI callers that omit `idempotency_key` may receive a server-generated key for that request, but new clients must send one.
 
+Message posting also requires an idempotency key for:
+
+```text
+POST /api/comms/channels/{name}/post
+POST /api/comms/channels/{name}/threads/{thread_id}/post
+```
+
+Any thread-reply variant must follow the same rule. The client supplies a UUID4 `idempotency_key` for the logical post attempt and reuses it on retries, including retries after a timeout during a large multimodal upload.
+
+Post idempotency is keyed by `(participant_id, idempotency_key)` within a five-minute window. The broker stores canonical body hash, attachment manifest hash, response status, `message_id`, and `expires_at`.
+
+Conflict semantics:
+
+- first request inserts the idempotency row and then creates the message in the same transaction
+- same key plus same body hash before expiry returns `200` with the existing `message_id`
+- same key plus different body hash before expiry returns `409 idempotency_key_reuse`
+- same key after expiry is rejected with `409 idempotency_key_expired` unless the client starts a new logical post with a fresh key
+
+Implementation shape:
+
+```sql
+CREATE TABLE post_idempotency (
+  participant_id TEXT NOT NULL,
+  idempotency_key TEXT NOT NULL,
+  body_hash TEXT NOT NULL,
+  attachment_manifest_hash TEXT,
+  message_id TEXT,
+  response_status INTEGER NOT NULL,
+  response_body TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (participant_id, idempotency_key)
+);
+```
+
+The post transaction uses `INSERT ... ON CONFLICT(participant_id, idempotency_key) DO NOTHING`, then selects the existing row on conflict. If the stored hashes match and `expires_at` is still in the future, return the stored `message_id`; if hashes differ, return `409`.
+
 ### Rationale
 
-Desktop and web clients reconnect. HTTP clients retry. Without idempotency, a retry can create ambiguous holder state or a misleading conflict. The broker must distinguish duplicate success, actual race, and client token reuse bug.
+Desktop and web clients reconnect. HTTP clients retry. Without idempotency, a claim retry can create ambiguous holder state or a misleading conflict, and a post retry can double-post the same multimodal round reply after a timeout. The broker must distinguish duplicate success, actual race, and client token reuse bug.
 
 ### Tradeoffs
 
 - Adds a table or equivalent persisted request log.
 - Clients must persist a token across reconnects.
 - Server needs canonical request hashing.
+- Large multimodal posts need attachment-manifest hashing in addition to body hashing.
 - Old clients need temporary compatibility.
 
 ### Alternatives considered
 
 - Rely on unique claim constraints only. Rejected because retries can look like conflicts.
 - Use `claim_id` as idempotency key. Rejected because the client does not have it before creation.
+- Rely on duplicate-round-reply validation for posts. Rejected because it cannot distinguish retry of the same accepted post from a second logical post that should be rejected differently.
 - Ignore retries because localhost is reliable. Rejected because browser refreshes and Desktop reconnects are normal.
 
 ---
@@ -490,7 +572,7 @@ CREATE TABLE channel_events (
 );
 ```
 
-Events include `discussion_started`, `message_appended`, `claim_created`, `claim_extended`, `claim_released`, `claim_expired`, `discussion_aborted`, `attachment_added`, and `discussion_completed`.
+Events include `discussion_started`, `message_appended`, `claim_created`, `claim_extended`, `claim_released`, `claim_expired`, `claim_seized`, `discussion_aborted`, `attachment_added`, and `discussion_completed`.
 
 Ordering rule: `event_id` is global across the local broker. Clients may filter by channel but retain the global ID. Replay returns `event_id > since`. Timestamps are metadata, not sequence.
 
@@ -576,7 +658,7 @@ CREATE TABLE message_attachments (
   attachment_id TEXT PRIMARY KEY,
   message_id TEXT NOT NULL,
   attachment_type TEXT NOT NULL,
-  blob_sha256 TEXT NOT NULL,
+  blob_hash TEXT NOT NULL,
   blob_ext TEXT NOT NULL,
   mime_type TEXT NOT NULL,
   byte_size INTEGER NOT NULL,
@@ -584,11 +666,12 @@ CREATE TABLE message_attachments (
   caption TEXT,
   source_participant_id TEXT NOT NULL,
   created_at TEXT NOT NULL,
+  UNIQUE(blob_hash),
   FOREIGN KEY(message_id) REFERENCES channel_messages(message_id)
 );
 ```
 
-Initial `attachment_type` values are `image`, `document`, `artifact`, and `data`.
+Initial `attachment_type` values are `image` and `audio`.
 
 Blob storage decision for localhost:
 
@@ -596,7 +679,18 @@ Blob storage decision for localhost:
 - path: `.ab/channels/blobs/{sha256}.{ext}`
 - keep metadata in SQLite
 - verify hash before linking
+- insert blob metadata with `INSERT OR IGNORE` semantics so identical uploads dedupe to one row
 - do not use S3-style storage for the local prototype
+
+If the implementation later normalizes blobs into a separate `channel_blobs` table, move the `UNIQUE(blob_hash)` constraint and `INSERT OR IGNORE` behavior to that table while keeping `message_attachments.blob_hash` as the content-addressed reference.
+
+`blob_ext` validation is strict:
+
+- allowed extensions: `png`, `jpg`, `jpeg`, `webp`, `svg`, `mp3`, `wav`, `ogg`, and `m4a`
+- reject anything containing `/`, `\`, or `..`
+- reject executable or active-content extensions, including `.exe`, `.sh`, `.html`, and `.svg-with-script`
+- treat SVG as static image content only; SVG with script or external active references is rejected
+- MIME sniffing must agree with the extension before the blob is linked
 
 Markdown image refs in message bodies use:
 
@@ -604,12 +698,18 @@ Markdown image refs in message bodies use:
 ![Color-coded possessive pronoun paradigm](attachment://{attachment_id})
 ```
 
+Audio refs use the same attachment URI and are rendered by the channel UI as playback controls:
+
+```markdown
+[Listen to the possessive-pronoun prompt](attachment://{attachment_id})
+```
+
 The channel renderer resolves `attachment://...` against the blob store. Export may rewrite refs to relative file paths.
 
 MCP tool surface:
 
 ```text
-mcp__channels__attach(message_id, file_path, alt_text?, caption?)
+mcp__channels__attach(message_id, file_path, attachment_type, alt_text?, caption?)
 ```
 
 If atomic message plus attachment creation is needed, use a draft flow: begin message, attach to draft, then post draft. A simpler first slice may post then immediately attach, but message state must show incomplete/broken attachments visibly.
@@ -617,13 +717,16 @@ If atomic message plus attachment creation is needed, use a draft flow: begin me
 Recommended limits:
 
 - image max size: 10 MB
-- document max size: 25 MB
+- audio max size: 50 MB
 - max attachments per message: 10
 - alt text required for images
+- pronunciation lessons and audio-paired Ohoiko sub-sections require real `audio` attachments when the task asks for audio scaffolding
+
+These limits are localhost defaults and may be tuned through explicit broker configuration.
 
 ### Rationale
 
-The content-production hypothesis depends on graphical output. A text-only channel cannot test it. Attachments must be persisted, content-addressed, referenced from markdown, rendered in channels.html, exportable, and attributable.
+The content-production hypothesis depends on graphical and pronunciation-linked output. A text-only channel cannot test it. Attachments must be persisted, content-addressed, referenced from markdown, rendered in channels.html, exportable, and attributable.
 
 Filesystem blob storage is the right localhost default because it is inspectable, cheap, and credential-free.
 
@@ -633,6 +736,7 @@ Filesystem blob storage is the right localhost default because it is inspectable
 - Upload needs size and type limits.
 - Rendering must avoid silent broken refs.
 - Alt text is extra required metadata.
+- Audio adds larger local files and playback QA.
 - Draft flow is more robust but more work.
 
 ### Alternatives considered
@@ -681,6 +785,7 @@ Writer A:
 - Codex CLI text-only
 - no image generation
 - no file attach
+- no audio file attach
 - no live visual artifact surface
 
 Writer B:
@@ -688,9 +793,12 @@ Writer B:
 - Claude Code Desktop or Codex Desktop, whichever the user can run
 - multimodal input allowed
 - image generation allowed where the tool surface supports it
+- audio file attach allowed where the tool surface supports it
 - Artifacts/live-preview rendering allowed
 
 If neither Desktop variant is available, the bakeoff is blocked.
+
+This is a manual, human-driven proof of hypothesis and must not depend on new channel infrastructure. Use existing tools: Codex CLI for Writer A, Claude Desktop or Codex Desktop for Writer B, and manual attachment of the Ohoiko reference image or produced artifacts where the surface permits it. The runner records artifact hashes in a simple local manifest for scoring.
 
 ### Measurement
 
@@ -699,7 +807,7 @@ Score seven binary anchors:
 | Anchor | Present? | Evidence |
 | --- | --- | --- |
 | Header structure | yes/no | line refs or artifact refs |
-| Audio scaffolding | yes/no | line refs |
+| Audio scaffolding | yes/no | audio attachment manifest refs |
 | Inductive opening | yes/no | line refs |
 | Concept block | yes/no | line refs |
 | Color-coded paradigm | yes/no | line refs or attachment refs |
@@ -708,24 +816,31 @@ Score seven binary anchors:
 
 Evidence must cite generated output, not the private notes. Score is `anchors_present / 7`.
 
+Scorer rules for multimodal anchors:
+
+- Image attachments count only if they have alt text and a content-hash entry in the blob store or pre-implementation artifact manifest.
+- Audio scaffolding counts only if an actual audio file is present in the channel attachment manifest or pre-implementation artifact manifest. Text placeholders such as `[audio TBD]` do not count.
+- Markdown placeholders such as `![photo](path-tbd)` do not count.
+- A markdown table may show the paradigm text, but it does not satisfy the color-coded paradigm anchor unless the output includes a true gender-coded color visual through a rendered artifact or image attachment.
+
 ### Acceptance gate
 
-Let `CLI_SCORE=N` and `DESKTOP_SCORE=D`.
+Let `CLI_NON_MM` be CLI's count across non-multimodal anchors and `DESKTOP_NON_MM` be Desktop's count across the same non-multimodal anchors.
 
-Desktop locks in graphics-rich routing only if:
+Multimodal-only anchors are:
 
-```text
-D >= N + 2
-```
+- Audio scaffolding (#2), counted only when an actual audio file is attached.
+- Color-coded paradigm (#5), counted only for a true gender-coded color visual.
+- Photo-anchored register block (#6), counted only for a real image/photo attachment with alt text and content hash.
 
-Examples:
+Desktop locks in graphics-rich routing only if it satisfies both conditions:
 
-- CLI 4/7, Desktop 6/7: Desktop advantage accepted.
-- CLI 5/7, Desktop 6/7: insufficient advantage.
-- CLI 6/7, Desktop 7/7: insufficient advantage.
-- CLI 3/7, Desktop 6/7: Desktop advantage accepted.
+- Desktop hits all three multimodal-only anchors.
+- `DESKTOP_NON_MM >= CLI_NON_MM`.
 
-If Desktop does not beat CLI by at least two anchors, ship CLI-first channel participation and keep attachment support optional/deferred. If Desktop wins by at least two anchors, implement surface capability routing, include attachment handling in the first multi-UI epic, and allow module-writing dispatch to require Desktop for graphics-rich modules.
+CLI is structurally barred from the audio anchor in this bakeoff because Writer A has no audio file attach path. CLI is also barred from the color-coded paradigm anchor unless it can produce a rendered inline image or equivalent visual artifact, which Writer A explicitly cannot use here. This makes the gate about what Desktop can do that CLI cannot, rather than a flat two-anchor arithmetic threshold.
+
+If Desktop fails any multimodal-only anchor, or falls behind CLI on non-multimodal anchors, abort Desktop-required routing and revisit the architecture before code lands. If Desktop passes, implement surface capability routing, include attachment handling in the first multi-UI epic, and allow module-writing dispatch to require Desktop for graphics-rich modules.
 
 ### Follow-up issue shape
 
@@ -743,15 +858,15 @@ Outputs:
 - module markdown per writer
 - artifact directory per writer
 - checklist report with 7 binary anchors
-- summary comparing CLI_SCORE and DESKTOP_SCORE
+- summary comparing multimodal-only anchor pass/fail and non-multimodal anchor counts
 
 Gate:
-- Desktop must score at least CLI_SCORE + 2 anchors to make Desktop-required routing mandatory for graphics-rich modules.
+- Desktop must hit all three multimodal-only anchors and must not trail CLI on non-multimodal anchors.
 ```
 
 ### Rationale
 
-The architecture should follow evidence. The seven-anchor checklist turns the user's hypothesis into a dispatchable test. It is pragmatic rather than statistically complete, but strong enough to decide whether Desktop-required routing belongs in the first implementation.
+The architecture should follow evidence. The seven-anchor checklist turns the user's hypothesis into a dispatchable test. The gate is intentionally multimodal-specific so a strong text-only CLI answer cannot mathematically eliminate Desktop before Desktop's unique audio and visual capabilities are evaluated.
 
 ### Tradeoffs
 
@@ -771,23 +886,33 @@ The architecture should follow evidence. The seven-anchor checklist turns the us
 
 ## Implementation epic
 
-After acceptance, split implementation into six strands. Each strand should carry focused tests; generated status, audit, and review artifacts must stay out of code PR diffs.
+Run Strand 0 before any implementation code lands. If Strand 0 fails the acceptance gate, abort and revisit the architecture before implementing Strands 1-6.
+
+After Strand 0 passes and the ADR is accepted, split implementation into six code strands. Each strand should carry focused tests; generated status, audit, and review artifacts must stay out of code PR diffs.
+
+### Strand 0: pre-implementation pilot bakeoff
+
+Scope: run the manual possessive-pronoun bakeoff using existing tools, dispatch the CLI writer, document Desktop writer instructions, collect outputs, record artifact hashes in a local manifest, score seven anchors, and apply the multimodal-specific acceptance gate.
+
+Questions covered: content-production hypothesis, capability-profile routing, and Q12 implementation priority.
+
+Test focus: missing private notes fail clearly, all seven anchors report, scorer rules reject placeholders, Desktop accepted/rejected is explicit, and generated artifacts stay out of PR diffs.
 
 ### Strand 1: schema and claim mechanism
 
-Scope: add first-class participant identity columns, preserve legacy `from_agent`, add claims table, add claim-request idempotency table, add lease fields, add claim create/keepalive/release/expire paths, and add loopback preflight if missing.
+Scope: add first-class participant identity columns, preserve legacy `from_agent`, add claims table, add claim and post idempotency tables, add lease fields, add claim create/keepalive/release/expire/seize paths, add persisted `instance_id` client handling, and add loopback preflight if missing.
 
 Questions covered: Q1, Q3, Q5, Q6, Q7.
 
-Test focus: legacy hydration, same-family claim conflicts, idempotent retry, key reuse failure, expired-claim rejection, keepalive extension, manual release, and loopback binding.
+Test focus: legacy hydration, same-family claim conflicts, idempotent claim and post retry, key reuse failure, expired-claim rejection, keepalive extension, lease seizure after two missed keepalives, manual release, and loopback binding.
 
-### Strand 2: SSE, replay semantics, and MCP shim
+### Strand 2: SSE event stream and replay semantics
 
-Scope: add `channel_events`, emit monotonic events for state changes, add replayable SSE endpoint, support `since`, support `Last-Event-ID`, keep pull endpoint as fallback, and add MCP resource registration for channel events.
+Scope: add `channel_events`, emit monotonic events for state changes, add replayable SSE endpoint, support `since`, support `Last-Event-ID`, and keep pull endpoint as fallback.
 
 Questions covered: Q2, Q10.
 
-Test focus: monotonic event IDs, replay after `since`, `Last-Event-ID` resume, claim/message event order, and MCP readable resource URI.
+Test focus: monotonic event IDs, replay after `since`, `Last-Event-ID` resume, claim/message/seize event order, and attachment event order.
 
 ### Strand 3: discuss orchestrator updates
 
@@ -803,23 +928,23 @@ Scope: add `mcp__channels__list`, `mcp__channels__observe`, `mcp__channels__clai
 
 Questions covered: Q2, Q3, Q6, Q12.
 
-Test focus: Desktop can list, observe through resource reads, claim, post, release, attach an image with alt text, and receive rejection for missing or unsupported files.
+Test focus: Desktop can list, observe through resource reads, claim, post with idempotency, release, attach an image with alt text, attach an audio file, and receive rejection for missing or unsupported files.
 
 ### Strand 5: multimodal artifact handling
 
-Scope: add `message_attachments`, add filesystem blob store, validate sha256 and MIME, support `attachment://{attachment_id}` markdown refs, render attachments in channels.html, export attachments for transcript review, and require alt text for images.
+Scope: add `message_attachments`, add filesystem blob store, validate sha256, MIME, extension allowlist, dedupe identical uploads, support `attachment://{attachment_id}` markdown refs, render image and audio attachments, export attachments for transcript review, and require alt text for images.
 
 Questions covered: Q12, Q8, Q11.
 
-Test focus: attachment-message links, blob hash verification, visibly broken missing blobs, image alt-text rejection, markdown image-ref resolution, and storage constrained under `.ab/channels/blobs`.
+Test focus: attachment-message links, blob hash verification, duplicate upload dedupe, unsafe extension rejection, visibly broken missing blobs, image alt-text rejection, audio size limit, markdown attachment-ref resolution, and storage constrained under `.ab/channels/blobs`.
 
-### Strand 6: pilot bakeoff dispatch and checklist tooling
+### Strand 6: channels.html UI updates
 
-Scope: add bakeoff preflight for the private notes path, dispatch CLI writer, document Desktop writer instructions, collect outputs, score seven anchors, produce comparison report, and apply the acceptance gate.
+Scope: update channels.html for claim status, visible expiry, seized-claim events, attachment rendering, audio playback controls, participant capability badges, and required-vs-actual participant display.
 
-Questions covered: content-production hypothesis, capability-profile routing, and Q12 implementation priority.
+Questions covered: Q1, Q2, Q3, Q6, Q10, Q11, Q12.
 
-Test focus: missing private notes fail clearly, all seven anchors report, score calculation is deterministic, Desktop accepted/rejected is explicit, and generated artifacts stay out of PR diffs.
+Test focus: claim state display, replayed event display, image alt text rendering, audio playback rendering, capability badge accuracy, and fallback identity visibility.
 
 ---
 
@@ -846,19 +971,19 @@ Deferred follow-up ADRs may be needed for remote auth, retention and pruning, cr
 
 Please review this as an architecture gate, not implementation code.
 
-1. Q1 schema: Are three first-class columns enough, or do we need a participant registry table in the first implementation?
+1. Q1 schema: Are three first-class columns plus local `instance_id` persistence enough, or do we need a participant registry table in the first implementation?
 2. Q2 discovery: Is replayable SSE plus MCP readable resource the right split, or should MCP expose a blocking subscription tool?
-3. Q3 claim scope: Is `participant_scope=family` the correct default, with participant scope reserved as an escape hatch?
+3. Q3 claim scope: Is `participant_scope=family` the correct default, and is same-surface lease seizure after two missed keepalives sufficient for restart recovery?
 4. Q4 user semantics: Does default context mode plus explicit `--with user` quorum mode preserve the current discussion contract?
 5. Q5 localhost auth: Is loopback-binding preflight sufficient for the first local prototype, or is token auth mandatory before remote support?
 6. Q6 leases: Are 90 seconds for automated holders and 5 minutes for human/UI holders the right starting values?
-7. Q7 idempotency: Is request-key idempotency on claim creation enough, or do post endpoints also need explicit client tokens in the first implementation?
+7. Q7 idempotency: Are explicit client tokens for both claim creation and message posting specified tightly enough?
 8. Q8 atomic validation: Are the listed post-time invariants complete?
 9. Q9 dynamic joins: Should late same-family surfaces be eligible claimants by default, or should every late participant be observer-only first?
 10. Q10 event IDs: Is a global broker event sequence preferable to per-channel event sequences?
 11. Q11 fallback identity: Is required-vs-actual identity sufficient for audit and bakeoff analysis?
-12. Q12 attachments: Is filesystem blob storage under `.ab/channels/blobs` the right localhost default, and should image alt text be mandatory at attach time?
-13. Pilot bakeoff: Is the `Desktop >= CLI + 2 anchors` gate strong enough to justify Desktop-required routing for graphics-rich modules?
-14. Epic split: Is the six-strand split ordered correctly, or should the bakeoff run before any schema work?
+12. Q12 attachments: Is filesystem blob storage under `.ab/channels/blobs` the right localhost default, with image/audio types, dedupe, extension sanitization, and image alt text required at attach time?
+13. Pilot bakeoff: Is the multimodal-specific gate strong enough to justify Desktop-required routing for graphics-rich modules?
+14. Epic split: Is Strand 0 correctly placed as a manual pre-implementation gate before schema work?
 
 Use `[AGREE]` for sections you accept, or `[REVISE Qn: reason]` for sections that need changes before user signoff.
