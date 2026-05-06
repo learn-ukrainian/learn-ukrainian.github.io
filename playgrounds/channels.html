@@ -55,8 +55,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .msg-time { color: var(--text3); font-size: 11px; }
 .msg-round { font-size: 10px; background: var(--bg3); padding: 1px 6px; border-radius: 4px; color: var(--text2); font-weight: 600; }
 .msg-body { background: var(--bg2); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; color: var(--text); line-height: 1.4; }
-.expand-link { color: var(--blue); cursor: pointer; font-size: 11px; margin-top: 4px; display: inline-block; }
-.expand-link:hover { text-decoration: underline; }
 
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
 .empty-state code { background: var(--bg2); padding: 2px 6px; border-radius: 4px; color: var(--text); }
@@ -88,6 +86,47 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .delivery-item:last-child { border-bottom: none; }
 .d-status { color: var(--yellow); font-weight: 600; text-transform: uppercase; font-size: 10px; }
 .d-agent { color: var(--blue); font-weight: 600; }
+
+/* User-post visual treatment (#1731 pain #4) — orange accent so user
+   contributions stand out from agent posts. The `::before` injects a
+   👤 prefix only when the author class is `user`, so we don't have to
+   touch the per-message render path. */
+.message.from-user { border-left: 3px solid var(--orange); padding-left: 12px; margin-left: -15px; }
+.message.from-user .msg-body { background: rgba(240,136,62,0.06); border-color: rgba(240,136,62,0.4); }
+.msg-author.user { color: var(--orange); }
+.msg-author.user::before { content: "👤 "; }
+
+/* Thread filter bar (#1731 pain #3) — sits between channel header and
+   the messages area, hidden until the channel has at least 2 threads. */
+.thread-bar { padding: 8px 24px; border-bottom: 1px solid var(--border); background: var(--bg); display: none; align-items: center; gap: 12px; font-size: 12px; color: var(--text2); flex-shrink: 0; }
+.thread-bar.shown { display: flex; }
+.thread-bar select { background: var(--bg2); color: var(--text); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-size: 12px; max-width: 480px; font-family: inherit; }
+.thread-bar select:focus { outline: none; border-color: var(--blue); }
+.thread-bar .thread-meta { color: var(--text3); font-size: 11px; }
+.thread-bar .clear-filter { color: var(--blue); cursor: pointer; font-size: 11px; }
+.thread-bar .clear-filter:hover { text-decoration: underline; }
+
+/* Live-discussion strip (#1731 pain #5) — green pulse + per-agent
+   state. Only visible when an `ab discuss` thread is live (most recent
+   activity in last 5 min AND has round_index > 0 messages). */
+.discussion-strip { padding: 10px 24px; background: rgba(63,185,80,0.08); border-bottom: 1px solid var(--green); display: none; align-items: center; gap: 16px; font-size: 12px; flex-shrink: 0; flex-wrap: wrap; }
+.discussion-strip.active { display: flex; }
+.discussion-strip .ds-pulse { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: dsPulse 1.5s ease-in-out infinite; flex-shrink: 0; }
+@keyframes dsPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+.discussion-strip .ds-label { font-weight: 600; color: var(--green); }
+.discussion-strip .ds-progress { color: var(--text2); }
+.discussion-strip .ds-participants { display: flex; gap: 6px; flex-wrap: wrap; }
+.discussion-strip .ds-participant { padding: 2px 8px; border-radius: 10px; font-size: 11px; background: var(--bg2); border: 1px solid var(--border); color: var(--text3); }
+.discussion-strip .ds-participant.done { color: var(--text); border-color: var(--text3); }
+.discussion-strip .ds-participant.agreed { color: var(--green); border-color: var(--green); background: rgba(63,185,80,0.15); font-weight: 600; }
+.discussion-strip .ds-jump { margin-left: auto; cursor: pointer; color: var(--blue); font-size: 11px; }
+.discussion-strip .ds-jump:hover { text-decoration: underline; }
+
+/* Make sure messages-area stays the only flex-grow child below the
+   header/strip/thread-bar stack. Without explicit flex shrink rules
+   on the strips, a multi-line participant list could nudge messages
+   off-screen on narrow viewports. */
+.messages-area { flex: 1 1 0; min-height: 0; }
 </style>
 </head>
 <body>
@@ -108,7 +147,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <div class="channel-header" id="channel-header">
       <!-- header content injected -->
     </div>
-    
+
+    <!-- Live-discussion strip (#1731 pain #5). Hidden by default; the
+         renderer flips `.active` when an `ab discuss` thread is live. -->
+    <div class="discussion-strip" id="discussion-strip"></div>
+
+    <!-- Thread filter (#1731 pain #3). Hidden when the channel has
+         only one thread; auto-shown when ≥2. Selecting a thread
+         filters the messages-area to that thread only. -->
+    <div class="thread-bar" id="thread-bar">
+      <span>Thread:</span>
+      <select id="thread-select">
+        <option value="">All threads</option>
+      </select>
+      <span class="thread-meta" id="thread-meta"></span>
+      <span class="clear-filter" id="thread-clear" style="display:none;" onclick="clearThreadFilter()">Show all</span>
+    </div>
+
     <div class="messages-area" id="messages-area">
       <!-- messages injected -->
     </div>
@@ -152,6 +207,16 @@ let currentMessages = [];
 // both channel-switch races AND same-channel overlap (auto-refresh
 // firing while a manual reload is in flight).
 let currentFetchId = 0;
+// Thread filter (#1731 pain #3). When set, only messages whose
+// thread_id matches are rendered. Cleared on channel switch.
+let activeThreadFilter = null;
+// IDs of messages currently in the DOM. Auto-refresh appends only
+// new IDs (delta-render) instead of repainting innerHTML, so user
+// state — long-message scroll position, expanded sections — survives
+// the 5-second tick. Cleared on channel switch / filter change.
+let renderedMsgIds = new Set();
+// "Discussion in progress" detection threshold (ms). Tunable.
+const DISCUSSION_FRESH_MS = 5 * 60 * 1000;
 
 const DOM = {
   sidebar: document.getElementById('sidebar'),
@@ -168,6 +233,12 @@ const DOM = {
   errorBanner: document.getElementById('error-banner'),
   parentIdContainer: document.getElementById('parent-id-container'),
   postParentId: document.getElementById('post-parent-id'),
+  // #1731 pain #3 + #5
+  threadBar: document.getElementById('thread-bar'),
+  threadSelect: document.getElementById('thread-select'),
+  threadMeta: document.getElementById('thread-meta'),
+  threadClear: document.getElementById('thread-clear'),
+  discussionStrip: document.getElementById('discussion-strip'),
 };
 
 async function api(path, options = {}) {
@@ -187,7 +258,11 @@ async function api(path, options = {}) {
 }
 
 function escapeHTML(str) {
-  return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  // Escape `'` too even though our templates use double-quoted attrs —
+  // future templating switch to single-quoted attrs (common in JS lit
+  // templates) would otherwise silently open an XSS surface. Caught
+  // by Gemini review of #1731 Part A.
+  return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 // Safe for interpolation inside a single-quoted JS string literal that
@@ -252,12 +327,25 @@ async function selectChannel(name) {
   if (activeChannel === name) return;
   activeChannel = name;
   renderSidebar();
-  
+
   DOM.mainEmpty.style.display = 'none';
   DOM.mainPanel.style.display = 'flex';
   DOM.messagesArea.innerHTML = '<div class="empty-state">Loading messages...</div>';
   clearReply();
-  
+  // Each channel switch is a clean slate — drop any thread filter
+  // from the prior channel and forget which DOM nodes we rendered,
+  // otherwise the delta-render in renderMessages would skip messages
+  // it already drew for a DIFFERENT channel. Also drop the cache
+  // signatures used by refreshThreadBar / refreshDiscussionStrip so
+  // a coincidentally-matching new-channel signature can't suppress
+  // the redraw.
+  activeThreadFilter = null;
+  renderedMsgIds = new Set();
+  _lastThreadBarSig = null;
+  _lastDiscussionStripSig = null;
+  DOM.threadSelect.value = '';
+  DOM.threadClear.style.display = 'none';
+
   await loadChannelDetail(name);
 }
 
@@ -376,15 +464,6 @@ window.toggleDeliveries = async function() {
   }
 };
 
-window.expandMessage = function(id) {
-  const msg = currentMessages.find(m => String(m.id) === String(id));
-  if (!msg) return;
-  const el = document.getElementById('msg-body-' + id);
-  el.textContent = msg.body;
-  const link = document.getElementById('expand-' + id);
-  if (link) link.style.display = 'none';
-};
-
 window.replyTo = function(id) {
   DOM.parentIdContainer.style.display = 'flex';
   DOM.postParentId.value = id;
@@ -396,6 +475,53 @@ window.clearReply = function() {
   DOM.postParentId.value = '';
 };
 
+// Render a single message (#1731 pain #2: full body, no 300-char
+// truncation; pain #4: from-user class for orange accent). Pure —
+// returns HTML string, no DOM mutation.
+function renderMessageHTML(m) {
+  const safeAuthor = escapeHTML(m.from_agent || 'unknown');
+  const safeAuthorCls = escapeHTML((m.from_agent || '').toLowerCase());
+  const safeIdHtml = escapeHTML(String(m.id || ''));
+  const safeIdJs = escapeJSAttrString(safeIdHtml);
+  const safeTime = escapeHTML(
+    m.timestamp
+      ? (() => {
+          const d = new Date(m.timestamp);
+          const date = d.toLocaleDateString('sv-SE');
+          const time = d.toLocaleTimeString([], { hour12: false });
+          return `${date} ${time}`;
+        })()
+      : ''
+  );
+  const roundHtml = m.round_index > 0
+    ? `<span class="msg-round">r${m.round_index | 0}</span>`
+    : '';
+  const threadHtml = m.thread_id
+    ? `<span class="msg-thread-id" title="thread_id">${escapeHTML(String(m.thread_id).substring(0,8))}</span>`
+    : '';
+  const isUser = (m.from_agent || '').toLowerCase() === 'user';
+  const userCls = isUser ? ' from-user' : '';
+  // Long agent rounds (~2500 chars) are the norm; truncating to 300
+  // chars (the old behaviour) hid the actual argument and was wiped
+  // by every auto-refresh tick. Render the body in full and let
+  // .messages-area scroll handle vertical real estate.
+  const safeBody = escapeHTML(m.body || '');
+  return `
+    <div class="message${userCls}" data-msg-id="${safeIdHtml}" data-thread-id="${escapeHTML(String(m.thread_id || ''))}">
+      <div class="msg-header">
+        <span class="msg-time">[${safeTime}]</span>
+        <span class="msg-author ${safeAuthorCls}">${safeAuthor}</span>
+        ${roundHtml}
+        ${threadHtml}
+        <span class="msg-reply" onclick="replyTo('${safeIdJs}')">Reply</span>
+      </div>
+      <div>
+        <div class="msg-body" id="msg-body-${safeIdHtml}">${safeBody}</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderMessages(msgs, isBackground) {
   // API returns {message_id, created_at, ...}; normalize to {id, timestamp}
   // so downstream render helpers stay agnostic to the server schema.
@@ -404,60 +530,237 @@ function renderMessages(msgs, isBackground) {
     id: m.message_id || m.id,
     timestamp: m.created_at || m.timestamp,
   }));
-  if (currentMessages.length === 0) {
-    DOM.messagesArea.innerHTML = '<div class="empty-state">No messages in this channel yet.</div>';
+
+  // Group ONCE per tick (Gemini review fix #3). Both the thread bar
+  // and the discussion strip described the channel state, not the
+  // filtered view, and both were calling groupByThread independently
+  // — wasteful at scale. Single grouping, passed through.
+  const groups = groupByThread(currentMessages);
+  refreshThreadBar(currentMessages, groups);
+  refreshDiscussionStrip(currentMessages, groups);
+
+  const filtered = activeThreadFilter
+    ? currentMessages.filter(m => String(m.thread_id || '') === activeThreadFilter)
+    : currentMessages;
+
+  if (filtered.length === 0) {
+    DOM.messagesArea.innerHTML = activeThreadFilter
+      ? '<div class="empty-state">No messages in this thread.</div>'
+      : '<div class="empty-state">No messages in this channel yet.</div>';
+    renderedMsgIds = new Set();
     return;
   }
-  
-  const isAtBottom = DOM.messagesArea.scrollHeight - DOM.messagesArea.scrollTop <= DOM.messagesArea.clientHeight + 50;
-  
-  DOM.messagesArea.innerHTML = currentMessages.map(m => {
-    // Every sink gets HTML-escaped; anything that lands inside a JS
-    // string literal in an onclick attribute gets an additional pass
-    // to neutralise single-quote breakout.
-    const safeAuthor = escapeHTML(m.from_agent || 'unknown');
-    const safeAuthorCls = escapeHTML((m.from_agent || '').toLowerCase());
-    const safeIdHtml = escapeHTML(String(m.id || ''));
-    // Backslash escape FIRST — see escapeJSAttrString rationale.
-    const safeIdJs = escapeJSAttrString(safeIdHtml);
-    const safeTime = escapeHTML(
-      m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour12: false }) : ''
-    );
-    const roundHtml = m.round_index > 0
-      ? `<span class="msg-round">r${m.round_index | 0}</span>`
-      : '';
 
-    let bodyPreview = m.body || '';
-    let isTruncated = false;
-    if (bodyPreview.length > 300) {
-      bodyPreview = bodyPreview.substring(0, 300);
-      isTruncated = true;
+  const isAtBottom = DOM.messagesArea.scrollHeight - DOM.messagesArea.scrollTop <= DOM.messagesArea.clientHeight + 80;
+
+  if (!isBackground) {
+    // Fresh paint — channel switch, filter change, or first load.
+    // Wipe and re-render everything; reset the rendered-id ledger.
+    DOM.messagesArea.innerHTML = filtered.map(renderMessageHTML).join('');
+    renderedMsgIds = new Set(filtered.map(m => String(m.id)));
+  } else {
+    // Background tick (auto-refresh). Append-only: every existing
+    // .message DOM node stays put — preserving scroll position,
+    // text selection, and any in-flight UI (e.g. open dropdowns).
+    const newMsgs = filtered.filter(m => !renderedMsgIds.has(String(m.id)));
+    if (newMsgs.length > 0) {
+      DOM.messagesArea.insertAdjacentHTML('beforeend', newMsgs.map(renderMessageHTML).join(''));
+      newMsgs.forEach(m => renderedMsgIds.add(String(m.id)));
     }
+  }
 
-    const expandHtml = isTruncated
-      ? `<span class="expand-link" id="expand-${safeIdHtml}" onclick="expandMessage('${safeIdJs}')">[${(m.body.length - 300) | 0} more chars]</span>`
-      : '';
-
-    return `
-      <div class="message">
-        <div class="msg-header">
-          <span class="msg-time">[${safeTime}]</span>
-          <span class="msg-author ${safeAuthorCls}">${safeAuthor}</span>
-          ${roundHtml}
-          <span class="msg-reply" onclick="replyTo('${safeIdJs}')">Reply</span>
-        </div>
-        <div>
-          <div class="msg-body" id="msg-body-${safeIdHtml}">${escapeHTML(bodyPreview)}</div>
-          ${expandHtml}
-        </div>
-      </div>
-    `;
-  }).join('');
-  
   if (isAtBottom || !isBackground) {
     DOM.messagesArea.scrollTop = DOM.messagesArea.scrollHeight;
   }
 }
+
+// ---- Thread + discussion helpers (#1731 pain #3 + #5) ------------
+
+// Group messages by thread_id, returning [{thread_id, msgs[], lastTs,
+// rootBody}] sorted by most-recent activity first. Messages without a
+// thread_id are grouped as standalone (one-per-id) so the dropdown
+// surfaces them too rather than dropping them silently.
+function groupByThread(msgs) {
+  const byId = new Map();
+  for (const m of msgs) {
+    const tid = String(m.thread_id || m.id || '');
+    if (!byId.has(tid)) byId.set(tid, []);
+    byId.get(tid).push(m);
+  }
+  const groups = [];
+  for (const [tid, list] of byId) {
+    list.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+    const lastTs = list.length ? new Date(list[list.length - 1].timestamp).getTime() : 0;
+    // Use the earliest message's body (round 0 / kind=post) as the
+    // thread label — that's the "subject line" of the discussion.
+    const root = list.find(m => m.round_index === 0 || m.kind === 'post') || list[0];
+    groups.push({
+      threadId: tid,
+      msgs: list,
+      lastTs,
+      rootBody: (root && root.body) ? root.body : '',
+      maxRound: list.reduce((mx, m) => Math.max(mx, m.round_index | 0), 0),
+      participants: Array.from(new Set(list.map(m => m.from_agent).filter(Boolean))),
+    });
+  }
+  groups.sort((a,b) => b.lastTs - a.lastTs);
+  return groups;
+}
+
+function threadLabel(group) {
+  const stub = (group.rootBody || '').replace(/\s+/g, ' ').trim().substring(0, 60);
+  const tidShort = group.threadId.substring(0, 8);
+  const round = group.maxRound > 0 ? ` · r${group.maxRound}` : '';
+  const parts = group.participants.length ? ` · ${group.participants.join(',')}` : '';
+  return `${tidShort}${round}${parts} — ${stub || '(no body)'}`;
+}
+
+// Cached signature of the last <option> set we built. Comparing this
+// to the freshly computed signature lets us skip the innerHTML rewrite
+// when the set of threads + their labels are unchanged — which is the
+// common case on a 5-second tick. Wiping a dropdown's innerHTML while
+// the user has it open will close the popup mid-click; Gemini review
+// fix #1.
+let _lastThreadBarSig = null;
+
+function refreshThreadBar(msgs, groups) {
+  // Hide bar entirely when there's only one (or zero) thread — no
+  // value in showing a dropdown with a single option, and the
+  // architecture channel routinely has 1 thread per topic.
+  if (groups.length < 2) {
+    DOM.threadBar.classList.remove('shown');
+    if (_lastThreadBarSig !== '__hidden__') {
+      DOM.threadSelect.innerHTML = '<option value="">All threads</option>';
+      _lastThreadBarSig = '__hidden__';
+    }
+    return;
+  }
+  DOM.threadBar.classList.add('shown');
+
+  // Build a signature from (threadId, label, count) so any meaningful
+  // change forces a rebuild but identical-state ticks are cheap.
+  const labels = groups.map(g => `${g.threadId}|${threadLabel(g)}`);
+  const sig = labels.join('§§') + '|n=' + groups.length;
+  if (sig !== _lastThreadBarSig) {
+    const prevValue = DOM.threadSelect.value;
+    const stillExists = groups.some(g => g.threadId === prevValue);
+    const opts = ['<option value="">All threads (' + groups.length + ')</option>'];
+    for (const g of groups) {
+      const safeId = escapeHTML(g.threadId);
+      const safeLabel = escapeHTML(threadLabel(g));
+      opts.push(`<option value="${safeId}">${safeLabel}</option>`);
+    }
+    DOM.threadSelect.innerHTML = opts.join('');
+    if (stillExists) DOM.threadSelect.value = prevValue;
+    _lastThreadBarSig = sig;
+  }
+
+  // Meta + clear-button visibility cheap to set; no caching needed.
+  DOM.threadMeta.textContent = `${groups.length} threads · ${msgs.length} msgs`;
+  DOM.threadClear.style.display = activeThreadFilter ? 'inline' : 'none';
+}
+
+// Detect a "currently live" `ab discuss` thread: any group whose
+// maxRound > 0 and whose most-recent message is within
+// DISCUSSION_FRESH_MS. If multiple match, pick the most recent.
+// Now takes pre-computed groups (Gemini review fix #3) instead of
+// re-grouping internally — saves a pass per refresh tick.
+function detectLiveDiscussion(groups) {
+  const now = Date.now();
+  const live = groups.filter(g => g.maxRound > 0 && (now - g.lastTs) < DISCUSSION_FRESH_MS);
+  return live.length ? live[0] : null;
+}
+
+// Cache the (thread_id, lastTs) signature so we skip the innerHTML
+// rewrite when nothing has changed. Gemini review fix #5 — DOM churn
+// on every 5s tick was small but unnecessary.
+let _lastDiscussionStripSig = null;
+
+function refreshDiscussionStrip(msgs, groups) {
+  const live = detectLiveDiscussion(groups);
+  if (!live) {
+    if (_lastDiscussionStripSig !== '__hidden__') {
+      DOM.discussionStrip.classList.remove('active');
+      DOM.discussionStrip.innerHTML = '';
+      _lastDiscussionStripSig = '__hidden__';
+    }
+    return;
+  }
+  // Per-participant state. For each agent that posted in this thread
+  // (round_index > 0), find their highest-round message; if its body
+  // contains [AGREE] (case-insensitive, end-anchored to avoid mid-
+  // message false positives like "I would [AGREE] in spirit but...")
+  // mark `agreed`, otherwise `done`. Anyone listed as a participant
+  // but whose latest round_index < live.maxRound is `pending`.
+  const roundMsgs = live.msgs.filter(m => (m.round_index | 0) > 0);
+  const participantsSet = new Set(roundMsgs.map(m => m.from_agent).filter(Boolean));
+  const participants = Array.from(participantsSet);
+  const stateByAgent = {};
+  for (const a of participants) {
+    const theirs = roundMsgs.filter(m => m.from_agent === a);
+    theirs.sort((x,y) => (y.round_index | 0) - (x.round_index | 0));
+    const latest = theirs[0];
+    if (!latest) { stateByAgent[a] = 'pending'; continue; }
+    // Case-insensitive end-anchor: tolerates `[Agree]`, `[agree]`,
+    // and `[AGREE]\n\n` while still rejecting mid-message hits.
+    // Gemini review fix #4.
+    const agreed = /\[AGREE\]\s*$/i.test((latest.body || '').trim());
+    if ((latest.round_index | 0) >= live.maxRound) {
+      stateByAgent[a] = agreed ? 'agreed' : 'done';
+    } else {
+      stateByAgent[a] = 'pending';
+    }
+  }
+  // Strip-skip signature: thread + maxRound + per-agent state. Any
+  // meaningful change forces a redraw; identical state is a no-op.
+  const sig = `${live.threadId}|r${live.maxRound}|${live.lastTs}|${
+    participants.sort().map(a => a + ':' + stateByAgent[a]).join(',')
+  }`;
+  if (sig === _lastDiscussionStripSig) return;
+  _lastDiscussionStripSig = sig;
+  const allAgreed = participants.length > 0
+    && participants.every(a => stateByAgent[a] === 'agreed');
+  const pulse = allAgreed
+    ? '<span class="ds-pulse" style="background:var(--green);animation:none;"></span>'
+    : '<span class="ds-pulse"></span>';
+  const label = allAgreed
+    ? `<span class="ds-label">Discussion converged</span>`
+    : `<span class="ds-label">Discussion live</span>`;
+  const progress = `<span class="ds-progress">round ${live.maxRound} · thread ${escapeHTML(live.threadId.substring(0,8))}</span>`;
+  const partsHtml = participants.map(a => {
+    const s = stateByAgent[a];
+    const safeA = escapeHTML(a);
+    const txt = s === 'agreed' ? `${safeA} ✓` : (s === 'done' ? `${safeA} ●` : `${safeA} ⏳`);
+    return `<span class="ds-participant ${s}">${txt}</span>`;
+  }).join('');
+  const safeTid = escapeJSAttrString(escapeHTML(live.threadId));
+  const jump = `<span class="ds-jump" onclick="selectThreadFilter('${safeTid}')">Pin to this thread →</span>`;
+  DOM.discussionStrip.innerHTML = `
+    ${pulse}
+    ${label}
+    ${progress}
+    <span class="ds-participants">${partsHtml}</span>
+    ${jump}
+  `;
+  DOM.discussionStrip.classList.add('active');
+}
+
+window.selectThreadFilter = function(threadId) {
+  activeThreadFilter = threadId || null;
+  DOM.threadSelect.value = threadId || '';
+  DOM.threadClear.style.display = activeThreadFilter ? 'inline' : 'none';
+  // Filter change = full repaint, not a delta — drop the rendered
+  // ledger so renderMessages won't skip messages it "already drew".
+  renderedMsgIds = new Set();
+  // currentMessages is already normalised (id/timestamp set); the
+  // re-spread inside renderMessages is idempotent so passing through
+  // works without a temp re-pack.
+  renderMessages(currentMessages, false);
+};
+
+window.clearThreadFilter = function() {
+  selectThreadFilter('');
+};
 
 // Post Form Handlers
 DOM.postBody.addEventListener('input', () => {
@@ -541,6 +844,13 @@ document.addEventListener('click', (e) => {
   if (panel && panel.classList.contains('open')) {
     panel.classList.remove('open');
   }
+});
+
+// Thread filter dropdown (#1731 pain #3) — change → set filter and
+// repaint. Wired here once at init; the dropdown's <option> children
+// are repopulated by refreshThreadBar on every render tick.
+DOM.threadSelect.addEventListener('change', (e) => {
+  selectThreadFilter(e.target.value);
 });
 
 // Init
