@@ -32,6 +32,7 @@ from .state_helpers import detect_pipeline_version, read_v2_state
 # Simple TTL cache for scan_track results
 _track_cache: dict[str, tuple[float, dict]] = {}
 _TRACK_CACHE_TTL = 30.0  # seconds
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 
 def scan_track_cached(track_id: str, track_path: str, manifest_modules: list) -> dict:
@@ -50,7 +51,7 @@ def load_manifest() -> dict:
     if not manifest_path.exists():
         return {}
     with open(manifest_path) as f:
-        return yaml.safe_load(f) or {}
+        return yaml.load(f, Loader=_YAML_LOADER) or {}
 
 
 def parse_slug(entry) -> str:
@@ -66,7 +67,7 @@ def read_yaml_file(path: Path) -> dict | None:
         return None
     try:
         with open(path) as f:
-            return yaml.safe_load(f)
+            return yaml.load(f, Loader=_YAML_LOADER)
     except Exception:
         return None
 

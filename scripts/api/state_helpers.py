@@ -35,6 +35,11 @@ from pipeline.state import is_complete as _phase_complete
 from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
 
+from .resilience import connect_sqlite
+
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+_content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
+
 # Canonical phase list for the CURRENT pipeline (v6). Imported from
 # the build module so the API and the pipeline can never drift out of
 # sync. If the import fails (e.g. tests running without the build
@@ -377,15 +382,30 @@ def is_content_done(state: dict) -> bool:
 def find_content_file(track_dir: Path, slug: str) -> Path | None:
     """Find the module content .md file."""
     try:
-        safe_join(track_dir, f"{slug}.md")
+        direct_path = safe_join(track_dir, f"{slug}.md")
     except ValueError:
         return None
 
-    for pattern in [f"{slug}.md", f"*-{slug}.md"]:
-        matches = list(track_dir.glob(pattern))
-        if matches:
-            return matches[0]
-    return None
+    if direct_path.exists():
+        return direct_path
+
+    try:
+        track_mtime = track_dir.stat().st_mtime
+    except OSError:
+        return None
+
+    entry = _content_file_index_cache.get(track_dir)
+    if entry and entry[0] == track_mtime:
+        return entry[1].get(slug)
+
+    index: dict[str, Path] = {}
+    for content_path in track_dir.glob("*.md"):
+        stem = content_path.stem
+        index.setdefault(stem, content_path)
+        index.setdefault(to_bare_slug(stem), content_path)
+
+    _content_file_index_cache[track_dir] = (track_mtime, index)
+    return index.get(slug)
 
 
 # ==================== AUDIT STATUS ====================
@@ -474,7 +494,7 @@ def get_word_target_from_plan(track_id: str, slug: str) -> int:
     if not plan_file.exists():
         return 0
     try:
-        data = yaml.safe_load(plan_file.read_text()) or {}
+        data = yaml.load(plan_file.read_text(), Loader=_YAML_LOADER) or {}
         return data.get("word_target", 0)
     except Exception:
         return 0
@@ -526,7 +546,7 @@ def get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
     if not MESSAGE_DB.exists():
         return []
     try:
-        conn = sqlite3.connect(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+        conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             "SELECT id, task_id, from_llm, to_llm, message_type, "

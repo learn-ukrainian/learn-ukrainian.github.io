@@ -36,6 +36,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from .config import MESSAGE_DB, PROJECT_ROOT
+from .resilience import connect_sqlite
 
 router = APIRouter(tags=["admin"])
 
@@ -137,7 +138,7 @@ def _broker_health() -> dict:
     result["status"] = "healthy"
     result["size_bytes"] = MESSAGE_DB.stat().st_size
     try:
-        conn = sqlite3.connect(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+        conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
         result["queue_depth"] = conn.execute(
             "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
         ).fetchone()[0]
@@ -358,7 +359,7 @@ async def vacuum_broker():
 
     size_before = MESSAGE_DB.stat().st_size
     try:
-        conn = sqlite3.connect(str(MESSAGE_DB))
+        conn = connect_sqlite(str(MESSAGE_DB))
         conn.execute("VACUUM")
         conn.close()
     except Exception:

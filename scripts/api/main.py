@@ -61,6 +61,7 @@ from .governance_router import router as governance_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .rag_router import router as rag_router
+from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
 from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
@@ -97,6 +98,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.middleware("http")(resilience_middleware)
 
 
 @app.exception_handler(Exception)
@@ -303,7 +305,9 @@ def _collect_issues_orient_data() -> dict:
             "--json",
             "number,title,labels,createdAt",
         ],
-        timeout=2.0,
+        # /api/orient is part of dashboard cold load. Issue details are useful,
+        # but not important enough to let a slow gh/network path dominate it.
+        timeout=0.25,
     )
 
     if proc.returncode != 0:
@@ -472,6 +476,7 @@ async def health_check():
         "uptime_seconds": int(uptime.total_seconds()),
         "started_at": _SERVER_START.isoformat(),
         "checked_at": now.isoformat(),
+        "resilience": get_resilience_snapshot(),
     }
 
 

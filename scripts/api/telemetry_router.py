@@ -13,6 +13,7 @@ from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from .config import PROJECT_ROOT
+from .resilience import connect_sqlite
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
 
@@ -45,7 +46,7 @@ def _isoformat_z(value: datetime) -> str:
 def _init_db(db_path: Path | None = None) -> None:
     path = db_path or _DB_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
-    with closing(sqlite3.connect(str(path))) as conn:
+    with closing(connect_sqlite(str(path))) as conn:
         conn.executescript("""
             CREATE TABLE IF NOT EXISTS tool_timings (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,7 +87,7 @@ def _window_start(window: str) -> str:
 @router.post("/tool-timings")
 def ingest_tool_timing(payload: ToolTimingIngest) -> dict[str, bool]:
     _init_db()
-    with closing(sqlite3.connect(str(_DB_PATH))) as conn:
+    with closing(connect_sqlite(str(_DB_PATH))) as conn:
         conn.execute(
             """
             INSERT INTO tool_timings (ts, tool_name, duration_ms, tool_use_id, session_id, failed)
@@ -118,7 +119,7 @@ def read_tool_timings(
         params.append(tool)
 
     where = " AND ".join(conditions)
-    with closing(sqlite3.connect(str(_DB_PATH))) as conn:
+    with closing(connect_sqlite(str(_DB_PATH))) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             f"""

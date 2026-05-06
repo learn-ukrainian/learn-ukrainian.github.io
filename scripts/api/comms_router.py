@@ -37,6 +37,7 @@ except ImportError:
 from pydantic import BaseModel
 
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
+from .resilience import connect_sqlite
 from .state_helpers import cache_get, cache_set
 
 router = APIRouter(tags=["comms"])
@@ -62,7 +63,7 @@ def _get_db() -> sqlite3.Connection | None:
     """Get read-only broker DB connection. Returns None if DB missing."""
     if not MESSAGE_DB.exists():
         return None
-    conn = sqlite3.connect(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+    conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -71,7 +72,7 @@ def _get_rw_db() -> sqlite3.Connection | None:
     """Get read-write broker DB connection."""
     if not MESSAGE_DB.exists():
         return None
-    conn = sqlite3.connect(str(MESSAGE_DB))
+    conn = connect_sqlite(str(MESSAGE_DB))
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -420,7 +421,7 @@ async def broker_health():
     if MESSAGE_DB.exists():
         health["db_size_kb"] = round(MESSAGE_DB.stat().st_size / 1024, 1)
         try:
-            conn = sqlite3.connect(str(MESSAGE_DB))
+            conn = connect_sqlite(str(MESSAGE_DB))
             conn.execute("SELECT 1")
             health["db_writable"] = True
             health["queue_depth"] = conn.execute(
