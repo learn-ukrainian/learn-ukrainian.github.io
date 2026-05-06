@@ -166,6 +166,12 @@ rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE") claude_extensions/ .
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") claude_extensions/ .agent/
 # shellcheck disable=SC2046
+# rsync needs the destination's parent dir to exist before it can create
+# `.agents/skills/`. On a clean checkout (e.g. the test fixture in
+# tests/test_deploy_script_idempotency.py) `.agents/` does not exist yet,
+# and rsync fails with `mkdir ".agents/skills" failed: No such file or
+# directory (2)`. Pre-create the parent so a fresh clone works.
+mkdir -p .agents
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") claude_extensions/skills/ .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_GEMINI") gemini_extensions/ .gemini/
