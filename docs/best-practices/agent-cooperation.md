@@ -442,11 +442,14 @@ untrusted output directories such as `/tmp` and exits before writing.
 
 Gemini auth precedence is API first, then subscription/OAuth fallback:
 
-- `GEMINI_AUTH_MODE=api` forces API mode.
+- `GEMINI_AUTH_MODE=api` forces API mode and fails fast if no Gemini API key is
+  configured.
 - `GEMINI_AUTH_MODE=subscription` or `oauth` forces subscription/OAuth mode and
   strips Gemini API env vars from the subprocess.
 - With no override, `GEMINI_API_KEY` or `GOOGLE_API_KEY` selects API mode.
 - With no override and no API key, subscription/OAuth remains the default.
+- The fallback ladder starts on API rungs when API keys are available, then
+  transitions to subscription/OAuth rungs on rate limit or capacity failures.
 
 ---
 

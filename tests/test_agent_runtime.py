@@ -1961,8 +1961,8 @@ def test_gemini_adapter_read_only_no_yolo(tmp_path):
     assert "--approval-mode=yolo" not in plan.cmd
     assert "-m" in plan.cmd
     assert "-p" in plan.cmd
-    assert plan.cmd[plan.cmd.index("-p") + 1] == "hello"
-    assert plan.stdin_payload == ""
+    assert plan.cmd[plan.cmd.index("-p") + 1] == " "
+    assert plan.stdin_payload == "hello"
     assert plan.output_file is None  # Gemini uses stdout, no -o file
     assert plan.liveness_paths == ()
 
