@@ -1,270 +1,864 @@
-# DECISION REQUIRED — Multi-UI agent participation in `ab discuss` / channels.html
+# DECISION REQUIRED - Multi-UI content-producing participants in `ab discuss` / channels.html
 
-**Status:** PROPOSED (awaiting cross-agent review by Gemini + Codex, then user signoff)
+**Status:** PROPOSED (awaiting Gemini cross-review and user signoff)
 **Surfaced:** 2026-05-06 morning, while running the writer-lock 3-way discussion
-**Source:** GH issue #1731 Part B
-**Predecessor ADRs:** None — this is the first ADR on multi-UI participation. Touches the `ab` channel-bridge contract from #1190.
+**Source:** GH issue #1731 Part B; revised after Codex REJECT review on PR #1732
+**Scope:** Agent bridge channel participation, round claims, multimodal channel messages, and pilot bakeoff dispatch
+**Predecessor ADRs:** None. This is the first ADR on multi-UI participation. It touches the `ab` channel-bridge contract from #1190.
 
 ---
 
-## Why this needs an ADR (not just a PR)
+## Why this needs an ADR
 
-`ab discuss` today is a **closed-loop, single-orchestrator** protocol. The agent that calls `ab discuss --with claude,gemini,codex` is a process that:
+`ab discuss` today is a closed-loop, single-orchestrator protocol. The caller runs `ab discuss --with claude,gemini,codex`, spawns each named agent through `scripts/agent_runtime/adapters/*.py`, reads stdout, posts the result to a channel, threads replies through `parent_id`, aggregates `[AGREE]`, and returns a transcript.
 
-1. Spawns each named agent as a subprocess (one per round, per agent) via `scripts/agent_runtime/adapters/*.py`.
-2. Reads each subprocess's stdout, posts the result to the channel, threads via `parent_id`.
-3. Aggregates `[AGREE]` markers; short-circuits when all participants agree, or runs to `--max-rounds`.
-4. Returns the transcript to the caller.
+That closed loop currently gives us three implicit guarantees:
 
-Three properties hold today only because of this closed-loop assumption:
+- **Identity is fixed at dispatch.** The `--with` list is the participant list.
+- **Time is owned by the orchestrator.** A round ends when subprocess replies return.
+- **State is one transcript.** The orchestrator is the only writer of round replies.
 
-- **Identity** is fixed at dispatch. `--with claude,gemini,codex` is the participant list; nothing else can join.
-- **Time** is owned by the orchestrator. A round is "Gemini's reply has returned from `gemini -p ...`" — there's no clock outside the subprocess.
-- **State** is a single transcript. The orchestrator is the only writer of `parent_id` chains; there is no claim/lock for "who responds next."
+The user's original ask was that Claude Code, Claude Desktop, Codex CLI, Codex UI, and the user can all participate. The newer, load-bearing framing is broader: "atm cli agents can use the discussion channel, but it would be nice if codex desktop and claude code desktop could also use them, they are another cli agent just ui, and i have a suspicion that better to create the lesson, to add graphical content."
 
-The user's ask — "Claude Code, Claude Desktop, Codex CLI, Codex UI, AND user can all participate" — breaks ALL THREE properties:
+This reframes the ADR from chat participation to **content-producing participants**. Desktop and web surfaces may create better lesson artifacts because they can attach files, inspect images, generate images, render Artifacts-style previews, or use browser APIs. The channel protocol must preserve which family answered, which surface answered, which instance answered, and which artifacts were produced.
 
-1. Claude Desktop is a separate process. It does not know `ab discuss` was invoked unless it polls or subscribes. → identity becomes dynamic.
-2. Claude Desktop's reply latency is unbounded (user might walk away). → time can no longer be owned by the orchestrator.
-3. If two Claude instances see the same channel post, both could reply. → state needs arbitration.
-
-Patching `ab discuss` ad hoc would silently change the contract for every existing caller (the writer-lock discussion, every channel review, every pipeline review). That's the rule-violation we want to avoid. Hence: ADR first.
+Patching `ab discuss` ad hoc would silently change the contract for writer-lock discussions, channel reviews, pipeline reviews, and future bakeoffs. This ADR defines the contract before implementation.
 
 ---
 
-## Scope of THIS ADR
+## Scope
 
-**In scope:** the participation/identity/round-semantics contract for an `ab discuss`-style multi-agent thread that can include Claude Code (CLI), Claude Desktop, Codex CLI, Codex UI, Gemini CLI, and human user.
+In scope: participant identity across multiple surfaces, surface capability profiles, discussion discovery, claim/lease/fallback semantics, default user-as-context behavior, explicit user quorum mode, localhost identity assumptions, loopback-binding preflight, idempotent claim retries, atomic round-message validation, dynamic join rules, monotonic event replay, fallback identity, multimodal message attachments, pilot bakeoff design, and the implementation epic split.
 
-**Out of scope** (explicitly deferred to follow-up issues, even if the design touches them):
+Out of scope: remote/cloud auth, multi-user broker federation, voice/video, global task pickup outside discussion threads, final channels.html polish, blob retention/pruning, artifact promotion into curriculum assets, and Desktop vendor preference if both Claude Desktop and Codex Desktop are available.
 
-- Real-time UI niceties (typing indicators, presence beyond "live now") — `playgrounds/channels.html` already has the basics, more polish is Part A territory.
-- Authentication of remote/3rd-party agents — this ADR assumes all participants run on `localhost` and trust the `ab` broker DB; remote/cloud agents are a separate ADR.
-- Action arbitration for non-discussion work (e.g. who picks up a `gh issue` to fix) — this ADR scopes "task pickup" to discussion-internal turn-taking only. Cross-channel work-claiming gets its own ADR if/when needed.
-- Voice / video / image sharing in channels — text only.
+Implementation should not start until Gemini review and user signoff. The pilot bakeoff should run before the architecture makes Desktop mandatory for graphics-rich module work.
 
 ---
 
-## Six architectural questions (from #1731 Part B)
+## Content-production reframe
 
-The questions below are quoted from the issue. Each gets a proposed answer with rationale and a tradeoffs subsection. The whole ADR is gated on user + Gemini + Codex agreement (or counter-proposal) on each.
+The prior ADR treated "participant" as chat identity. The revised contract treats a participant as a possible producer of curriculum content and artifacts. A Codex CLI reply and a Codex Desktop reply may satisfy the same `codex` quorum slot, but they do not have the same production capabilities.
 
-### Q1. What is a 'participant'?
+Task routing examples:
 
-> "Currently `ab discuss --with claude,gemini,codex` lists *agents* invoked via the runtime adapter. If Claude Desktop is a participant, is it 'claude' (same agent name) or 'claude-desktop' (distinct)? What about user — is that a participant or an external observer?"
+- Bug-fix dispatch can use CLI.
+- Text-only docs or module prose can use CLI.
+- A module needing a color-coded paradigm table may require Desktop.
+- A module needing generated or attached images may require Desktop.
+- Rendered lesson review may require Web.
+- Nightly deterministic checks may require Headless.
 
-#### Proposal
+The transcript must preserve this distinction. If Desktop was required and CLI fallback answered, the audit trail should show both the required family/surface and the actual participant. If an image was produced, the message should have a persisted attachment row, not an inline prose placeholder.
 
-A **participant** is the tuple `(agent_family, ui_surface, instance_id)`.
-
-- `agent_family`: `claude` | `gemini` | `codex` | `user` — the model/identity class.
-- `ui_surface`: `cli` | `desktop` | `web` | `mobile` | `headless` — the runtime context.
-- `instance_id`: ephemeral UUID for THIS process/session (so two Claude Desktop windows on the same machine don't collide).
-
-Wire format in DB: `agent_id = "{family}:{surface}:{instance_id_short}"`, e.g. `claude:cli:abc123`.
-
-The legacy `from_agent` column stays as `agent_family` (so old queries keep working). New column `participant_id` carries the full tuple. The `ab channel post` API accepts either; the broker normalizes.
-
-**User is a participant.** Family `user`, surface depends on where they post (web for channels.html, cli for `ab post`, desktop later). Treating user as first-class — vs "external observer" — is what makes "user posts mid-discussion" work without a special case.
-
-#### Why this shape (not just a flat string)
-
-Three needs the flat string can't satisfy without re-parsing:
-
-1. **Round arbitration** asks "has every required agent_family replied this round?" That's a family-level question (we don't care if it was `claude:cli` or `claude:desktop`, just that `claude` answered). Family is a first-class column.
-2. **Failure recovery** asks "did the SAME instance that started round N also produce reply N?" That's an instance-level question. Instance_id is a first-class column.
-3. **UI rendering** asks "show the current participants by surface so user knows which window to look at." Surface is a first-class column.
-
-#### Tradeoffs
-
-- **Cost:** schema migration on `channel_messages` (add `participant_id` text col, indexed). Backwards-compat-safe (`from_agent` stays).
-- **Risk:** instance_id collisions across reboots — solved by UUID4 on every process start. instance_id never persists.
-- **Alternative considered (rejected):** "claude-desktop" as a distinct agent_family. Rejected because round-quorum logic ("does Claude agree?") wants the family to be invariant across surfaces — otherwise a `[AGREE]` from `claude-desktop` doesn't satisfy a quorum that listed `claude`.
+This is what lets the project later ask whether Desktop actually improved graphics-rich module quality, which artifacts were produced by which surface, and which assignments silently degraded to text-only.
 
 ---
 
-### Q2. Discovery: how does Claude Desktop know a discussion is happening?
+## Capability profile per surface
 
-> "Polling? Push notification? An MCP server the desktop subscribes to? The desktop is a separate process that doesn't know `ab discuss` was invoked."
+`ui_surface` is a routing signal, not just display metadata.
 
-#### Proposal
+| `ui_surface` | Input capabilities | Output capabilities | Runtime affordances | Assign these tasks |
+| --- | --- | --- | --- | --- |
+| `cli` | text stdin, repo files, shell tools | text, file edits, command output | deterministic subprocess, easy logs, low friction | bug fixes, code review, docs edits, text-only module drafts |
+| `desktop` | text, image attach, file drop, screenshots, local context | text, file edits through tools, image generation where available, Artifacts-style render | human-in-loop, visual inspection, multimodal context | graphics-rich modules, image-backed pedagogy, paradigm-table design, register blocks with photos |
+| `web` | text, browser state, iframe messages, uploaded files where enabled | rich rendering, browser DOM changes, iframe-postMessage integration | browser APIs, live preview, visual QA | channels.html participation, rendered lesson review, browser debugging |
+| `headless` | scripted inputs, scheduled files, API payloads | scripted messages, reports, machine-readable logs | no human-in-loop, repeatable automation | nightly checks, status summaries, deterministic validation |
 
-**Three-tier discovery, layered:**
+Initial allowed values are `cli`, `desktop`, `web`, and `headless`. Do not add `mobile` until there is a concrete client.
 
-1. **Push (preferred):** Server-Sent Events stream at `GET /api/comms/channels/{name}/events` — open connection, receive `message_appended` and `discussion_started` events as they happen. Already runnable via `curl -N`; trivial to wire from any UI surface.
-2. **Pull (fallback):** `GET /api/comms/inbox?agent={family}&since={ts}` — already exists; works for any client that prefers polling. Recommended interval: 5s (matches channels.html auto-refresh; no point going faster than human read speed).
-3. **MCP tool (Claude Desktop / Claude Code specifically):** `mcp__channels__subscribe(channel)` thin wrapper over the SSE endpoint. Returns a resource the model can read on each turn. Lets Claude Desktop "see" channel activity without writing browser-automation code.
+Rationale:
 
-`ab discuss` itself emits a `discussion_started` event with `{thread_id, channel, participants_invited, max_rounds, initiator}` so subscribers know a structured discussion is open vs an ad-hoc thread.
+- `claude:cli` and `claude:desktop` can both satisfy a Claude family slot.
+- Only Desktop should satisfy an assignment requiring multimodal output.
+- Surface routing makes the user's content-production hypothesis testable.
 
-#### Why all three (not just one)
+Tradeoffs:
 
-Different surfaces have different cost profiles:
+- More schema and orchestration complexity.
+- Some tasks need capability requirements in addition to family requirements.
+- First implementation can enforce only coarse surface requirements in the claim layer.
 
-- **CLI / shell agents** can hold an SSE connection cheaply; push is right.
-- **Stateless adapters** (e.g. a one-shot `gemini -p ...` invocation) can't hold a connection across calls; they need pull.
-- **Claude Desktop / Code** through MCP is the cleanest — the model sees subscription as a tool, not infrastructure.
+Alternative considered:
 
-Layering doesn't add server complexity: the SSE endpoint and inbox endpoint share the same DB query; MCP is a thin shim over SSE.
-
-#### Tradeoffs
-
-- **Cost:** new SSE endpoint (~150 LOC FastAPI), new MCP tool (~80 LOC). Pull endpoint already exists.
-- **Risk:** SSE connection leaks if a client crashes — mitigated by a 60s server-side keepalive ping; idle connections auto-close after 10 min.
-- **Alternative considered (rejected):** WebSocket. Rejected because SSE is sufficient (server→client only; we don't need bidirectional), simpler to debug (just `curl -N`), and survives proxies that strip WS headers.
+- Keep all surfaces under flat `from_agent`. Rejected because it cannot distinguish "Claude answered" from "Claude Desktop produced an image-backed answer."
 
 ---
 
-### Q3. Action arbitration: who picks up tasks?
+## Architectural questions
 
-> "If the channel says 'someone please review module X', what stops 3 agents from picking it up simultaneously? Need a claim mechanism (DB-level lock or first-poster-wins)."
+Each question below includes proposal, rationale, tradeoffs, and alternatives considered. Q1-Q6 preserve and revise the original ADR questions. Q7-Q12 add the missing architectural questions from Codex review and the content-production reframe.
 
-#### Proposal (scoped to in-discussion turn-taking — see "out of scope" above for cross-channel claim)
+---
 
-For an active `ab discuss` thread, **the orchestrator owns the turn schedule**, exactly as today. Discovery tells Desktop/UI/etc. "a discussion is happening" but they don't auto-respond — they observe.
+## Q1. What is a participant?
 
-A non-orchestrator participant **must explicitly claim a turn** to contribute. Claim mechanism:
+### Proposal
 
-```
-POST /api/comms/channels/{name}/threads/{tid}/claim
-  body: {participant_id, round_index}
-  → 200 {claim_id, expires_at}  on success
-  → 409 {current_holder, expires_at}  on conflict
+A participant is represented by three first-class columns:
+
+- `agent_family`
+- `ui_surface`
+- `instance_id`
+
+Initial `agent_family` values are `claude`, `codex`, `gemini`, and `user`. Initial `ui_surface` values are `cli`, `desktop`, `web`, and `headless`.
+
+`instance_id` is an ephemeral UUID for one process, browser tab, desktop session, or headless worker run.
+
+`participant_id` may exist only as a generated display/key convenience:
+
+```text
+{agent_family}:{ui_surface}:{instance_id_short}
 ```
 
-Claims are scoped to `(thread_id, round_index, agent_family)`. Two `claude:*` instances cannot both claim round 3 of thread T — first-poster-wins. Claims expire after 90s if no message follows; another instance can re-claim.
+Example:
 
-The orchestrator's existing subprocess-spawn path **also goes through claim** (no special path), so the contract is uniform: "to post a round-N reply, you hold the claim."
+```text
+codex:desktop:8f91c2
+```
 
-#### Why claim per `(thread, round, family)` not per `(thread, round, instance)`
+It must not be the only stored identity. The canonical data model is the three separate columns. If SQLite generated columns are awkward, store `participant_id` as denormalized display text while keeping the three identity columns authoritative.
 
-Family-scoped claim is what makes "Claude Desktop joins instead of Claude Code for round 3" work. The orchestrator says "we need a claude reply in round 3"; whichever claude-instance holds the claim first delivers it. That's the user's mental model: "I'm tagging in for Claude this round."
+The legacy `from_agent` column remains during migration. Old rows hydrate as `agent_family=from_agent`, `ui_surface=cli`, and `instance_id=legacy`.
 
-Instance-scoped would force a deterministic spawner per instance — back to the closed-loop world.
+The user is a participant with `agent_family=user`. User surface depends on entry point: channels.html is `web`, `ab post` is `cli`, and future Desktop integration is `desktop`.
 
-#### Tradeoffs
+### Rationale
 
-- **Cost:** new `claims` table (`thread_id, round_index, agent_family, holder_participant_id, claimed_at, expires_at`); `~80 LOC` for the endpoint + claim-expiry sweep.
-- **Risk:** claim deadlock if the holder never delivers — solved by 90s expiry + re-claim. Keepalive every 30s extends.
-- **Risk:** claim livelock if 5 Claude instances all retry on 409 — solved by exponential backoff + jitter; documented in client lib.
-- **Alternative considered (rejected):** "first-message-wins" with no claim. Rejected because two slow agents racing each other waste tokens producing replies that get rejected. Pre-claim is cheap.
+Tuple-in-text is not first-class schema. Quorum checks need `agent_family`; capability routing needs `ui_surface`; lease renewal needs `instance_id`; UI display can use `participant_id`. Encoding everything in one string makes serious queries depend on parsing conventions and weak indexing.
 
----
+### Tradeoffs
 
-### Q4. Round semantics with mixed participants
+- Migration touches existing `channel_messages` queries.
+- Backfill needs a legacy mapping rule.
+- UI code needs to display `participant_id` while filtering by individual columns.
+- More indexes are needed, likely on `(channel, thread_id, agent_family)`, `(channel, thread_id, ui_surface)`, and `(channel, thread_id, agent_family, ui_surface, instance_id)`.
 
-> "If user posts mid-round, does that count as a round-N reply? Does `[AGREE]` from user terminate the discussion? Or is user input always 'context for next round'?"
+### Alternatives considered
 
-#### Proposal
-
-**User posts are always round-N+1 context, never count as round-N replies, and `[AGREE]` from user is treated as a HARD STOP (not consensus).**
-
-Concretely:
-
-- A user post during round N (i.e. while ≥1 agent_family hasn't yet posted round N) does NOT satisfy that family's round-N obligation.
-- The user post's body IS injected into the round-N+1 prompt for every agent (verbatim, prefixed with `[USER (mid-discussion)]:`), so the next round can react to it.
-- `[AGREE]` from a user post terminates the discussion immediately — but it's recorded as `kind: "user_terminate"` in the DB, not aggregated into the consensus quorum. Discussion outcome = "ended by user," not "converged."
-- `[OBJECT]` (new marker) from user resets convergence; if all agents had said `[AGREE]`, an `[OBJECT]` from user forces a round N+1 with the objection as injected context.
-
-#### Why user posts aren't replies
-
-Two reasons:
-
-1. **Quorum integrity.** The discussion contract is "agents converge on a recommendation." Counting user as a vote conflates "agents agree" with "agents agree AND user happens to also agree" — fundamentally different signals. The user is the consumer of the recommendation, not a producer of it.
-2. **Steering value.** If user posts ARE replies, the user can short-circuit a useful debate by `[AGREE]`-ing with whoever they liked best. We want the user to be able to steer ("I think X is missing, address it") without ending the deliberation.
-
-#### Tradeoffs
-
-- **Cost:** ~30 LOC in the discuss orchestrator to inject user posts into the next round's prompt. Schema is unchanged (already has `kind`, `from_agent`).
-- **Risk:** user spam mid-discussion (10 posts in a row) bloats the next round's prompt. Mitigation: cap the injected user-context block at 2000 chars, oldest-first truncate.
-- **Alternative considered (rejected):** "user posts ARE first-class replies, just from agent_family=user." Rejected because the round-N quorum was specified as "all agents in `--with`" — and `user` isn't in `--with` by default. Adding user to `--with` opens the abuse vectors above.
+- Flat `participant_id` only. Rejected because it repeats the parsing problem.
+- Distinct families such as `claude-desktop`. Rejected because Desktop and CLI should satisfy the same Claude family slot.
+- Keep only `from_agent` plus `client_app`. Rejected because telemetry is not identity.
+- Participant registry table only. Deferred; message rows still need denormalized identity for historical audit.
 
 ---
 
-### Q5. Identity / auth
+## Q2. How does a UI surface discover a discussion?
 
-> "Claude Code, Claude Desktop, Codex CLI, Codex UI — do they share auth tokens? Do they post as distinct identities or as the same 'claude'/'codex'?"
+### Proposal
 
-#### Proposal (localhost-only — remote auth deferred)
+Use replayable SSE as the primary discovery channel:
 
-- All participants run on `localhost`. No auth for now beyond "the broker DB is owned by user `krisztiankoos`."
-- A participant **identifies itself** to the broker via `participant_id` (Q1's tuple). The broker does not verify — it's an honour system on localhost.
-- A participant **identifies its origin** via a `client_app` field (`claude-cli/2.1.131`, `claude-desktop/0.x`, `codex-cli/y.y`, etc.) for telemetry and debugging.
-- Distinct surfaces post under distinct `participant_id`s but share the same `agent_family` for quorum (Q1).
+```text
+GET /api/comms/channels/{channel}/events?since={event_id}
+```
 
-If we later need remote agents or shared multi-user installs, this gets revisited as a separate auth ADR. The localhost-only assumption is explicitly recorded so we don't accidentally expose `:8765` to the network without revisiting.
+Required semantics: every event has monotonic `event_id`; clients may pass `since`; SSE clients may reconnect with `Last-Event-ID`; server replays events where `event_id > since`; if neither `since` nor `Last-Event-ID` is provided, start at now unless explicit replay mode is requested; keepalive comments emit every 30 seconds; idle connections close server-side after a bounded timeout.
 
-#### Why no token auth now
+Minimum event types are `discussion_started`, `message_appended`, `claim_created`, `claim_extended`, `claim_released`, `claim_expired`, `discussion_aborted`, `attachment_added`, and `discussion_completed`.
 
-Adding auth before we have a working multi-UI prototype is premature optimization. The broker DB is already user-readable only (file mode 0600 in `.ab/broker.db`); an attacker on the same machine has bigger problems. When we go remote, JWT or mutual TLS goes here.
+The existing pull/inbox route remains a fallback:
 
-#### Tradeoffs
+```text
+GET /api/comms/inbox?agent_family={family}&since={event_id}
+```
 
-- **Risk:** any local process can post as anyone. Acceptable on a single-user dev machine; documented in `docs/best-practices/agent-bridge.md`.
-- **Risk:** `:8765` is bound to `0.0.0.0` not `127.0.0.1`? Verify and tighten (separate fix).
+MCP decision:
 
----
+- Do not make `mcp__channels__subscribe` a long-running blocking tool call.
+- Implement subscribe as MCP resource registration.
+- Return a readable resource URI such as `channels://{channel}/events?since={event_id}`.
+- Use separate MCP tools for claim, post, keepalive, release, and attach.
 
-### Q6. Failure semantics
+### Rationale
 
-> "If Claude Desktop drops mid-round (user closed the app), does the discussion wait or short-circuit?"
+SSE is the smallest push primitive that fits server-to-client channel updates. Replay matters because Desktop, browser, and CLI clients disconnect and reconnect. `event_id`, `since`, and `Last-Event-ID` prevent clients from guessing whether they missed a claim, message, or abort. MCP resource reads fit Desktop model turns better than an indefinitely open tool call.
 
-#### Proposal
+### Tradeoffs
 
-- A claim expires 90s after issue if no message follows (Q3). If the discussion's `--max-rounds` budget is `M` and we're in round `R`, the orchestrator waits at most `90s × (M − R + 1)` for any pending claim, then either:
-  - re-prompts the SAME agent_family (subprocess-spawn path) if `--auto-fallback=true` (default in `ab discuss`),
-  - or aborts the discussion with `kind: "discussion_aborted"` and `reason: "claim_expired"` if `--auto-fallback=false`.
-- Auto-fallback uses the legacy `agent_runtime` adapter, so a discussion that started with Claude Desktop participating can degrade to Claude CLI without losing thread continuity.
-- Aborts are first-class events; the channel sees `discussion_aborted` so observers don't think it converged.
+- Requires an event log or derivable replay stream.
+- Clients must persist last seen `event_id`.
+- MCP resource reads are less real-time than a held socket, but more robust for model-driven Desktop turns.
+- Replay retention and pruning remain future policy.
 
-#### Why 90s + auto-fallback (not infinite wait)
+### Alternatives considered
 
-Infinite wait makes the channel unusable: a stuck discussion blocks `[AGREE]`-aggregation forever and channels.html's "Discussion live" strip never resolves. 90s is enough for a typical Desktop reply (Anthropic SDK p99 < 30s) plus user think-time; longer human deliberations can be done as multi-thread "post-then-respond" without round semantics.
-
-Auto-fallback to subprocess-spawn preserves the closed-loop as the safety net. We only LOSE the closed-loop when a multi-UI participant successfully claims and replies — exactly the path we want to support.
-
-#### Tradeoffs
-
-- **Cost:** ~60 LOC for claim-expiry sweep + fallback path in `_channels.py`.
-- **Risk:** flaky network on Desktop side causes false fallbacks. Mitigation: keepalive every 30s extends claim; stable connections never expire.
-- **Alternative considered (rejected):** "wait forever, user kicks the discussion manually." Rejected because UX suffers and the "Discussion live" strip becomes a forever-live ghost.
+- Polling only. Rejected as primary path; acceptable fallback.
+- WebSocket. Rejected for first implementation because bidirectional sockets are unnecessary.
+- Blocking MCP subscribe. Rejected because cancellation and model-turn semantics are unclear.
+- channels.html as source of truth. Rejected; broker DB and API remain canonical.
 
 ---
 
-## What this ADR explicitly does NOT decide
+## Q3. Who can claim a turn?
 
-These are downstream questions for follow-up ADRs once the contract above is accepted:
+### Proposal
 
-- **MCP tool surface for Claude Desktop / Code.** `mcp__channels__subscribe` is sketched in Q2 but the full tool family (post, claim, observe, list) needs its own design.
-- **Codex UI integration mechanism.** Codex UI is a web app; whether it polls SSE or uses an iframe-postMessage bridge to channels.html is undecided. Both work; pick after MCP tools land.
-- **Cross-channel task pickup** ("someone fix #1234"). Out of scope — see top of doc.
-- **Persistence beyond `.ab/broker.db`.** Single-DB single-user is fine for now; multi-user / replicated broker is a separate ADR.
+An active discussion round is claim-gated. A participant must hold a valid claim before posting a round reply.
+
+Endpoint:
+
+```text
+POST /api/comms/channels/{channel}/threads/{thread_id}/claims
+```
+
+Request fields:
+
+- `agent_family`
+- `ui_surface`
+- `instance_id`
+- `round_index`
+- `participant_scope`
+- `idempotency_key`
+
+Default claim scope is `participant_scope=family`. This means only one participant per `agent_family` can hold the round slot, while any surface of that family may claim it if capability requirements allow.
+
+Reserve `participant_scope=participant` as a future escape hatch for assignments that truly require one exact `(agent_family, ui_surface, instance_id)`. Do not implement it in the first slice unless a concrete test requires it.
+
+Claims return `claim_id`, holder identity, `round_index`, scope, lease kind, and visible `expires_at`. Conflicts return the current holder and `expires_at`.
+
+### Rationale
+
+Family-scoped claims preserve the current `--with claude,codex,gemini` contract while allowing Desktop tag-in. The required slot is "Codex", not "this exact Codex CLI subprocess." First-claim-wins prevents duplicate expensive replies.
+
+### Tradeoffs
+
+- Same-family surfaces must coordinate through the claim table.
+- Capability requirements need validation in addition to family matching.
+- Participant-scoped behavior is deferred.
+- Claims add API and DB complexity.
+
+### Alternatives considered
+
+- First-message-wins, no claim. Rejected because competing agents waste tokens and produce rejected replies.
+- Instance-scoped claims only. Rejected as the default because it blocks tag-in.
+- Orchestrator-only posting. Rejected because Desktop/Web could not produce channel content.
+- One global claim per thread. Rejected because it serializes all families.
 
 ---
 
-## Implementation epic (only after ACCEPTED)
+## Q4. How do user posts interact with round quorum?
 
-If/when this ADR flips PROPOSED → ACCEPTED, the implementation splits into 4 strands, each filable as its own issue:
+### Proposal
 
-1. **Schema + claim mechanism** (Q1, Q3): `participant_id` column, `claims` table, claim/release endpoints, expiry sweep. ~250 LOC + tests.
-2. **SSE event stream** (Q2): `/api/comms/channels/{name}/events` + `discussion_started`/`message_appended` events. ~150 LOC + tests.
-3. **Discuss orchestrator updates** (Q3, Q4, Q6): claim integration, user-post injection, fallback path. ~200 LOC + tests in `scripts/ai_agent_bridge/_channels.py`.
-4. **MCP tool family** (Q2 follow-up, separate ADR): `mcp__channels__*` tools for Claude surfaces.
+Default mode: user posts are context, do not satisfy agent-family quorum slots, `[AGREE]` from the user ends the discussion as user termination rather than agent consensus, and `[OBJECT]` clears convergence and forces another round if budget allows.
 
-**channels.html** updates (UI rendering of multi-UI participants, claim status indicator, user-post-as-context visual treatment) layer on top once strands 1+2 land.
+User context injection: user posts during round N are injected into round N+1 prompts, prefixed with `[USER_CONTEXT]`, capped by character budget, and visibly marked if truncated.
+
+Explicit quorum mode: `ab discuss --with user` makes `agent_family=user` a required quorum slot. A user post can satisfy the current `user` slot, never a non-user slot, and the transcript records `quorum_role=required_participant`.
+
+For a user post to satisfy the current user slot, the discussion must include `--with user`, the post must reference the active `thread_id`, the post must have the current `round_index`, and the user must hold or be granted the `user` claim.
+
+### Rationale
+
+Default behavior preserves the existing agent-deliberation contract: users steer, object, or terminate, but are not silently counted as model-family consensus. Explicit `--with user` handles real cases where user participation is required, such as sensitive framing choices, private reference input, or approval of a multimodal-to-text fallback.
+
+### Tradeoffs
+
+- Two user modes are more complex than one.
+- UI must show whether user input is context or quorum.
+- Prompt injection must avoid bloat.
+- Claim validation must handle `agent_family=user`.
+
+### Alternatives considered
+
+- User is always context. Rejected as too rigid.
+- User is always a quorum participant. Rejected because it changes existing semantics.
+- User `[AGREE]` counts toward agent consensus. Rejected because consumer signoff is not cross-agent convergence.
+- User posts are ignored until discussion ends. Rejected because it loses steering value.
 
 ---
 
-## Review questions for Gemini + Codex
+## Q5. What identity and auth model is acceptable on localhost?
 
-When this ADR fires for cross-agent review, please critique specifically:
+### Proposal
 
-1. **Q1 schema migration:** is `participant_id` as a tuple-encoded string the right wire format, or should it be 3 separate columns? My choice is single-column for migration simplicity; counter-argue if you see a problem.
-2. **Q2 push-vs-pull:** is layering all three (SSE + inbox-poll + MCP shim) over-engineering? Could we ship pull-only and add SSE later, or is push fundamental to the user-experience?
-3. **Q3 claim scope:** family-scoped vs instance-scoped claim. I argued family-scoped enables the "tag in" use case. Counter-cases?
-4. **Q4 user-as-context:** is "user posts are NEVER replies, always context" too rigid? Steel-man the case for letting user be a first-class quorum participant when they explicitly join `--with`.
-5. **Q5 localhost auth:** is "no auth on localhost, document the assumption" sufficient, or should we ship a token even now?
-6. **Q6 90s claim expiry:** too short (Desktop with slow LLM) or too long (channels.html UI feels frozen)? Propose alternative if you can defend it.
-7. **Anything missing.** Are there architectural questions I didn't raise that you'd want answered before implementation?
+Initial implementation is localhost-only. Participants self-identify with `agent_family`, `ui_surface`, `instance_id`, and `client_app`. Examples include `codex-cli/5.x`, `codex-desktop/unknown`, `claude-code/2.x`, `claude-desktop/unknown`, `channels-html/local`, and `ab-headless/1`.
 
-Use `[AGREE]` to signal acceptance per question, or `[REVISE Q3: <reason>]` to push back on a specific section. The aggregator will collate.
+The broker does not authenticate participants in the first implementation.
+
+Loopback binding is a pre-implementation gate. Before any multi-UI endpoint ships, tests or startup checks must verify:
+
+- API binds to `127.0.0.1` or `::1`
+- API does not bind to `0.0.0.0` by default
+- docs do not instruct remote exposure
+- channel URLs use relative paths or loopback localhost
+- no container-only `/app/...` paths are introduced
+
+If the server currently binds broadly, fix that before implementing the rest of this ADR.
+
+### Rationale
+
+The broker is a single-user local development tool. Tokens are premature for the first prototype, but unauthenticated claim/post endpoints are acceptable only if the service is truly loopback-bound. Treating loopback binding as a later fix is too risky.
+
+### Tradeoffs
+
+- Any local process owned by the user can impersonate an agent.
+- Future remote support will need a separate auth ADR.
+- The preflight may block implementation if current binding is unsafe.
+
+### Alternatives considered
+
+- Token auth now. Deferred until remote or multi-user support.
+- No auth and no bind check. Rejected because `:8765` could be exposed accidentally.
+- Browser same-origin only. Rejected because CLI and Desktop integrations are not browser-only.
+- Per-agent shared secrets in repo config. Rejected for first implementation.
+
+---
+
+## Q6. What happens when a claim holder disappears?
+
+### Proposal
+
+Use stateful claims with leases, keepalives, visible expiry, manual release, and fallback.
+
+| Holder type | Initial lease | Keepalive interval | Extension | Use case |
+| --- | ---: | ---: | ---: | --- |
+| automated/headless/CLI subprocess | 90 seconds | 30 seconds | now + 90 seconds | spawned agents and scripted workers |
+| human/UI/Desktop/Web | 5 minutes | 30 seconds | now + 5 minutes | Desktop, browser, user-in-loop work |
+
+Every claim response and claim event includes `expires_at`. Clients must display or log it.
+
+Endpoints:
+
+```text
+POST /api/comms/channels/{channel}/threads/{thread_id}/claims/{claim_id}/keepalive
+POST /api/comms/channels/{channel}/threads/{thread_id}/claims/{claim_id}/release
+```
+
+Expired claims emit `claim_expired`. Expired holders cannot post round replies. Another participant may claim after expiry. The orchestrator may auto-fallback if configured.
+
+Fallback policy:
+
+- `--auto-fallback=true` remains default for CLI-safe tasks
+- multimodal-required tasks must not silently fallback to CLI
+- if fallback loses a required capability, abort unless degradation was explicitly allowed
+
+### Rationale
+
+A flat 90-second expiry is too brittle for human/UI work. Desktop users may inspect images, drag in files, or wait for generation. Infinite waits are also unacceptable. Leases make waiting explicit, keepalives keep active claims alive, and manual release avoids waiting out accidental claims.
+
+### Tradeoffs
+
+- Two lease classes add policy complexity.
+- Long UI leases can make a discussion feel stuck.
+- Keepalives require client implementation.
+- Fallback must understand capability requirements.
+
+### Alternatives considered
+
+- Fixed 90 seconds for all holders. Rejected because legitimate UI work expires.
+- Fixed five minutes for all holders. Rejected because automated failures become slow.
+- Wait forever. Rejected because it can deadlock the discussion.
+- No manual release. Rejected because accidental claims become expensive.
+
+---
+
+## Q7. How are claim retries made idempotent?
+
+### Proposal
+
+Claim creation requires an `idempotency_key`. Store each request keyed by at least `(thread_id, idempotency_key)` with canonical request hash, response status, response body, claim ID, and created timestamp.
+
+Semantics:
+
+- same key plus same request returns the original response
+- same key plus different request returns `409 idempotency_key_reuse`
+- reconnects and HTTP retries reuse the same key
+- clients generate a new key only for a new logical claim attempt
+- retention lasts at least as long as the discussion plus event replay retention
+
+Compatibility rule: old local CLI callers that omit `idempotency_key` may receive a server-generated key for that request, but new clients must send one.
+
+### Rationale
+
+Desktop and web clients reconnect. HTTP clients retry. Without idempotency, a retry can create ambiguous holder state or a misleading conflict. The broker must distinguish duplicate success, actual race, and client token reuse bug.
+
+### Tradeoffs
+
+- Adds a table or equivalent persisted request log.
+- Clients must persist a token across reconnects.
+- Server needs canonical request hashing.
+- Old clients need temporary compatibility.
+
+### Alternatives considered
+
+- Rely on unique claim constraints only. Rejected because retries can look like conflicts.
+- Use `claim_id` as idempotency key. Rejected because the client does not have it before creation.
+- Ignore retries because localhost is reliable. Rejected because browser refreshes and Desktop reconnects are normal.
+
+---
+
+## Q8. How is posting a round reply validated atomically?
+
+### Proposal
+
+Posting a round reply must be a single DB transaction. The transaction validates:
+
+- `claim_id` exists
+- claim is not expired
+- holder identity matches `agent_family`, `ui_surface`, and `instance_id`
+- `round_index` matches the active round
+- `agent_family` is required or allowed for the discussion
+- `participant_scope` rules are satisfied
+- parent/thread lineage is valid
+- no accepted reply already satisfies the same family slot for that round
+- surface capability requirements are met
+- attachment references exist and belong to the message draft or upload session
+
+Only after validation passes may the broker insert the message row, attachment rows, events, and claim-consumed/released state.
+
+Structured errors should include `claim_missing`, `claim_expired`, `claim_holder_mismatch`, `round_mismatch`, `family_not_required`, `duplicate_round_reply`, `invalid_parent`, `capability_missing`, and `attachment_missing`.
+
+### Rationale
+
+Claims matter only if posting enforces them. Without atomic validation, CLI could post into a slot claimed by Desktop, or a stale UI could post round 1 after round 2 started. Parent lineage alone does not prove claim ownership.
+
+### Tradeoffs
+
+- Post endpoint becomes stricter.
+- Older clients may fail until updated.
+- Race-condition tests are required.
+- Attachment upload may need draft/session state.
+
+### Alternatives considered
+
+- Validate in orchestrator only. Rejected because Desktop/Web can post outside that process.
+- Accept all messages and filter later. Rejected because it corrupts transcript audit.
+- Use `parent_id` only as guard. Rejected because it does not prove holder identity.
+
+---
+
+## Q9. Can participants join after `discussion_started`?
+
+### Proposal
+
+Dynamic join is allowed but constrained. Participant states are:
+
+- `observer`
+- `eligible_claimant`
+- `quorum_member`
+
+Default after `discussion_started`:
+
+- a new surface for an already-required `agent_family` may become an `eligible_claimant`
+- a new `agent_family` becomes `observer`
+- the user becomes context participant unless `--with user` was specified
+
+A late joiner can claim only when its family is already required, the family slot is unclaimed or expired, surface/capability requirements are satisfied, and the discussion is still active.
+
+A late joiner cannot become a new quorum member unless a user or orchestrator explicitly amends the discussion, emits `discussion_quorum_changed`, and all existing participants see that event before the next round. Do not implement quorum expansion in the first slice.
+
+### Rationale
+
+The user wants Desktop tag-in by another surface of the same family. That should work. Adding a new family midstream changes consensus meaning and must be explicit.
+
+### Tradeoffs
+
+- Late tag-in must be visible in UI.
+- Blocking new quorum members reduces flexibility but keeps consensus stable.
+- Future quorum changes need another implementation slice.
+
+### Alternatives considered
+
+- No dynamic joins. Rejected because it blocks Desktop tag-in.
+- Any late participant becomes quorum member. Rejected because it changes consensus silently.
+- Late joiners can post only context. Rejected as the sole mode because it does not solve claim handoff.
+
+---
+
+## Q10. How are events ordered and replayed?
+
+### Proposal
+
+Add a monotonic channel event sequence. Every state-changing broker action writes one event row with a strictly increasing `event_id`.
+
+Minimum event shape:
+
+```sql
+CREATE TABLE channel_events (
+  event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  channel TEXT NOT NULL,
+  thread_id TEXT,
+  event_type TEXT NOT NULL,
+  message_id TEXT,
+  claim_id TEXT,
+  attachment_id TEXT,
+  payload_json TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+```
+
+Events include `discussion_started`, `message_appended`, `claim_created`, `claim_extended`, `claim_released`, `claim_expired`, `discussion_aborted`, `attachment_added`, and `discussion_completed`.
+
+Ordering rule: `event_id` is global across the local broker. Clients may filter by channel but retain the global ID. Replay returns `event_id > since`. Timestamps are metadata, not sequence.
+
+### Rationale
+
+SSE without monotonic event IDs is underspecified. Clients need to know whether a claim expired before a message, whether an abort preceded a late post, and where to resume after reconnect. SQLite autoincrement event IDs are simple and deterministic.
+
+### Tradeoffs
+
+- Adds an event log table.
+- Every state-changing endpoint must write events.
+- Tests must assert event ordering.
+- Pruning policy is deferred.
+
+### Alternatives considered
+
+- Use `created_at` timestamps. Rejected because timestamps are not unique and can be skewed.
+- Per-channel sequence numbers. Rejected for first implementation; global sequence is simpler for multi-channel clients.
+- Derive events from message rows only. Rejected because claims, expiries, aborts, and attachments are not all messages.
+
+---
+
+## Q11. How is fallback identity recorded?
+
+### Proposal
+
+Transcript rows for round replies must record required identity and actual identity:
+
+- `required_agent_family`
+- `required_ui_surface` nullable
+- `required_capability_profile` nullable
+- `actual_agent_family`
+- `actual_ui_surface`
+- `actual_instance_id`
+- `actual_participant_id`
+- `fallback_from_participant_id` nullable
+- `fallback_reason` nullable
+
+If fallback loses a required capability, the message must not be accepted unless degradation was explicitly allowed. Allowed degradation records `capability_degraded=true`, who allowed it, and the degradation reason.
+
+Example:
+
+```json
+{
+  "required_agent_family": "codex",
+  "required_ui_surface": "desktop",
+  "required_capability_profile": "multimodal_output",
+  "actual_agent_family": "codex",
+  "actual_ui_surface": "cli",
+  "actual_participant_id": "codex:cli:2c991a",
+  "fallback_from_participant_id": "codex:desktop:8f91c2",
+  "fallback_reason": "lease_expired"
+}
+```
+
+### Rationale
+
+If Desktop was required because the task needed graphical content, CLI fallback is not equivalent. The transcript must show that. This also supports later analysis of Desktop-created modules, CLI-created modules, fallback modules, and graphics-rich tasks degraded to text-only.
+
+### Tradeoffs
+
+- More message metadata.
+- UI rendering must preserve audit without clutter.
+- Some rows have nullable fields.
+- Capability checks must exist before fallback can be safe.
+
+### Alternatives considered
+
+- Overwrite holder with fallback participant. Rejected because it erases fallback.
+- Record fallback only as prose in message body. Rejected because it is not queryable.
+- Forbid fallback always. Rejected because CLI fallback remains useful for text-only discussions.
+
+---
+
+## Q12. How are graphical and multimodal artifacts produced, attached, and persisted?
+
+### Proposal
+
+Add first-class message attachments.
+
+```sql
+CREATE TABLE message_attachments (
+  attachment_id TEXT PRIMARY KEY,
+  message_id TEXT NOT NULL,
+  attachment_type TEXT NOT NULL,
+  blob_sha256 TEXT NOT NULL,
+  blob_ext TEXT NOT NULL,
+  mime_type TEXT NOT NULL,
+  byte_size INTEGER NOT NULL,
+  alt_text TEXT,
+  caption TEXT,
+  source_participant_id TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY(message_id) REFERENCES channel_messages(message_id)
+);
+```
+
+Initial `attachment_type` values are `image`, `document`, `artifact`, and `data`.
+
+Blob storage decision for localhost:
+
+- store blobs on filesystem
+- path: `.ab/channels/blobs/{sha256}.{ext}`
+- keep metadata in SQLite
+- verify hash before linking
+- do not use S3-style storage for the local prototype
+
+Markdown image refs in message bodies use:
+
+```markdown
+![Color-coded possessive pronoun paradigm](attachment://{attachment_id})
+```
+
+The channel renderer resolves `attachment://...` against the blob store. Export may rewrite refs to relative file paths.
+
+MCP tool surface:
+
+```text
+mcp__channels__attach(message_id, file_path, alt_text?, caption?)
+```
+
+If atomic message plus attachment creation is needed, use a draft flow: begin message, attach to draft, then post draft. A simpler first slice may post then immediately attach, but message state must show incomplete/broken attachments visibly.
+
+Recommended limits:
+
+- image max size: 10 MB
+- document max size: 25 MB
+- max attachments per message: 10
+- alt text required for images
+
+### Rationale
+
+The content-production hypothesis depends on graphical output. A text-only channel cannot test it. Attachments must be persisted, content-addressed, referenced from markdown, rendered in channels.html, exportable, and attributable.
+
+Filesystem blob storage is the right localhost default because it is inspectable, cheap, and credential-free.
+
+### Tradeoffs
+
+- Blob cleanup becomes a maintenance concern.
+- Upload needs size and type limits.
+- Rendering must avoid silent broken refs.
+- Alt text is extra required metadata.
+- Draft flow is more robust but more work.
+
+### Alternatives considered
+
+- Inline base64 images in message body. Rejected because it bloats DB rows and transcripts.
+- S3-style storage now. Rejected because it adds credentials and network failure modes.
+- Commit generated images directly to repo paths. Rejected as the channel default; promotion can be separate.
+- Text-only placeholder descriptions. Rejected because it cannot test graphical pedagogy.
+
+---
+
+## Empirical hypothesis: pilot bakeoff before implementation
+
+### Hypothesis
+
+Desktop or UI surfaces may produce better graphics-rich lesson content than CLI surfaces because they can use multimodal input/output and live rendering. This is plausible but not proven. Run a small bakeoff before making Desktop mandatory for graphics-rich routing.
+
+### Input
+
+Use:
+
+```text
+docs/references/private/ohoiko-june-a1-book/notes/page-068-module-24-possessive-pronouns.md
+```
+
+The file is gitignored and may not exist in all worktrees. The bakeoff runner must fail clearly if it is absent; it must not fabricate the reference.
+
+The brief identifies seven pedagogical anchors from that note:
+
+1. Header structure.
+2. Audio scaffolding.
+3. Inductive opening.
+4. Concept block.
+5. Color-coded paradigm.
+6. Photo-anchored register block.
+7. Q -> A scaffold.
+
+### Task
+
+Produce one A1 module on possessive pronouns matching the pedagogical layout described in the notes. Output must include module markdown, supporting visual artifacts where used, alt text for every visual artifact, and a short design note explaining how each anchor was attempted. Do not copy copyrighted source text; use the notes only as structural/pedagogical observation.
+
+### Writers
+
+Writer A:
+
+- Codex CLI text-only
+- no image generation
+- no file attach
+- no live visual artifact surface
+
+Writer B:
+
+- Claude Code Desktop or Codex Desktop, whichever the user can run
+- multimodal input allowed
+- image generation allowed where the tool surface supports it
+- Artifacts/live-preview rendering allowed
+
+If neither Desktop variant is available, the bakeoff is blocked.
+
+### Measurement
+
+Score seven binary anchors:
+
+| Anchor | Present? | Evidence |
+| --- | --- | --- |
+| Header structure | yes/no | line refs or artifact refs |
+| Audio scaffolding | yes/no | line refs |
+| Inductive opening | yes/no | line refs |
+| Concept block | yes/no | line refs |
+| Color-coded paradigm | yes/no | line refs or attachment refs |
+| Photo-anchored register block | yes/no | line refs or attachment refs |
+| Q -> A scaffold | yes/no | line refs |
+
+Evidence must cite generated output, not the private notes. Score is `anchors_present / 7`.
+
+### Acceptance gate
+
+Let `CLI_SCORE=N` and `DESKTOP_SCORE=D`.
+
+Desktop locks in graphics-rich routing only if:
+
+```text
+D >= N + 2
+```
+
+Examples:
+
+- CLI 4/7, Desktop 6/7: Desktop advantage accepted.
+- CLI 5/7, Desktop 6/7: insufficient advantage.
+- CLI 6/7, Desktop 7/7: insufficient advantage.
+- CLI 3/7, Desktop 6/7: Desktop advantage accepted.
+
+If Desktop does not beat CLI by at least two anchors, ship CLI-first channel participation and keep attachment support optional/deferred. If Desktop wins by at least two anchors, implement surface capability routing, include attachment handling in the first multi-UI epic, and allow module-writing dispatch to require Desktop for graphics-rich modules.
+
+### Follow-up issue shape
+
+```text
+Title: Run possessive-pronoun multimodal bakeoff for #1731 Part B
+
+Inputs:
+- docs/references/private/ohoiko-june-a1-book/notes/page-068-module-24-possessive-pronouns.md
+
+Writers:
+- Codex CLI text-only
+- Claude Code Desktop or Codex Desktop multimodal
+
+Outputs:
+- module markdown per writer
+- artifact directory per writer
+- checklist report with 7 binary anchors
+- summary comparing CLI_SCORE and DESKTOP_SCORE
+
+Gate:
+- Desktop must score at least CLI_SCORE + 2 anchors to make Desktop-required routing mandatory for graphics-rich modules.
+```
+
+### Rationale
+
+The architecture should follow evidence. The seven-anchor checklist turns the user's hypothesis into a dispatchable test. It is pragmatic rather than statistically complete, but strong enough to decide whether Desktop-required routing belongs in the first implementation.
+
+### Tradeoffs
+
+- A single bakeoff is not statistically strong.
+- The private reference limits reproducibility.
+- Desktop availability depends on user setup.
+- Binary anchors may miss qualitative differences, so reviewers may add notes, but the gate remains binary.
+
+### Alternatives considered
+
+- Implement Desktop routing immediately. Rejected because it assumes the hypothesis.
+- Require a large bakeoff suite first. Rejected because it is too slow for this ADR.
+- Use subjective holistic review only. Rejected because it is hard to turn into an implementation gate.
+- Skip image artifacts. Rejected because graphical output is the hypothesis.
+
+---
+
+## Implementation epic
+
+After acceptance, split implementation into six strands. Each strand should carry focused tests; generated status, audit, and review artifacts must stay out of code PR diffs.
+
+### Strand 1: schema and claim mechanism
+
+Scope: add first-class participant identity columns, preserve legacy `from_agent`, add claims table, add claim-request idempotency table, add lease fields, add claim create/keepalive/release/expire paths, and add loopback preflight if missing.
+
+Questions covered: Q1, Q3, Q5, Q6, Q7.
+
+Test focus: legacy hydration, same-family claim conflicts, idempotent retry, key reuse failure, expired-claim rejection, keepalive extension, manual release, and loopback binding.
+
+### Strand 2: SSE, replay semantics, and MCP shim
+
+Scope: add `channel_events`, emit monotonic events for state changes, add replayable SSE endpoint, support `since`, support `Last-Event-ID`, keep pull endpoint as fallback, and add MCP resource registration for channel events.
+
+Questions covered: Q2, Q10.
+
+Test focus: monotonic event IDs, replay after `since`, `Last-Event-ID` resume, claim/message event order, and MCP readable resource URI.
+
+### Strand 3: discuss orchestrator updates
+
+Scope: route subprocess replies through claims, inject user context into next-round prompts, support `--with user`, handle `[AGREE]` and `[OBJECT]`, enforce fallback policy, record fallback identity, and prevent silent capability degradation.
+
+Questions covered: Q3, Q4, Q6, Q8, Q9, Q11.
+
+Test focus: default user context, explicit user quorum, user stop/object markers, required-vs-actual fallback recording, and multimodal-required fallback abort unless degradation is allowed.
+
+### Strand 4: MCP tool family
+
+Scope: add `mcp__channels__list`, `mcp__channels__observe`, `mcp__channels__claim`, `mcp__channels__keepalive`, `mcp__channels__release`, `mcp__channels__post`, and `mcp__channels__attach`.
+
+Questions covered: Q2, Q3, Q6, Q12.
+
+Test focus: Desktop can list, observe through resource reads, claim, post, release, attach an image with alt text, and receive rejection for missing or unsupported files.
+
+### Strand 5: multimodal artifact handling
+
+Scope: add `message_attachments`, add filesystem blob store, validate sha256 and MIME, support `attachment://{attachment_id}` markdown refs, render attachments in channels.html, export attachments for transcript review, and require alt text for images.
+
+Questions covered: Q12, Q8, Q11.
+
+Test focus: attachment-message links, blob hash verification, visibly broken missing blobs, image alt-text rejection, markdown image-ref resolution, and storage constrained under `.ab/channels/blobs`.
+
+### Strand 6: pilot bakeoff dispatch and checklist tooling
+
+Scope: add bakeoff preflight for the private notes path, dispatch CLI writer, document Desktop writer instructions, collect outputs, score seven anchors, produce comparison report, and apply the acceptance gate.
+
+Questions covered: content-production hypothesis, capability-profile routing, and Q12 implementation priority.
+
+Test focus: missing private notes fail clearly, all seven anchors report, score calculation is deterministic, Desktop accepted/rejected is explicit, and generated artifacts stay out of PR diffs.
+
+---
+
+## What this ADR explicitly does not decide
+
+This ADR does not decide:
+
+- remote agent authentication
+- cloud-hosted channels
+- whether Desktop output should be trusted without code review
+- final UX design for channels.html
+- long-term blob retention
+- promotion workflow from channel blob to curriculum asset
+- whether every graphics-rich module must use generated images
+- exact Desktop vendor priority if both Claude Desktop and Codex Desktop are available
+- global task-claiming outside discussion threads
+- mobile participation
+
+Deferred follow-up ADRs may be needed for remote auth, retention and pruning, cross-channel task pickup, artifact promotion into curriculum assets, and a persistent participant registry.
+
+---
+
+## Review questions for Gemini
+
+Please review this as an architecture gate, not implementation code.
+
+1. Q1 schema: Are three first-class columns enough, or do we need a participant registry table in the first implementation?
+2. Q2 discovery: Is replayable SSE plus MCP readable resource the right split, or should MCP expose a blocking subscription tool?
+3. Q3 claim scope: Is `participant_scope=family` the correct default, with participant scope reserved as an escape hatch?
+4. Q4 user semantics: Does default context mode plus explicit `--with user` quorum mode preserve the current discussion contract?
+5. Q5 localhost auth: Is loopback-binding preflight sufficient for the first local prototype, or is token auth mandatory before remote support?
+6. Q6 leases: Are 90 seconds for automated holders and 5 minutes for human/UI holders the right starting values?
+7. Q7 idempotency: Is request-key idempotency on claim creation enough, or do post endpoints also need explicit client tokens in the first implementation?
+8. Q8 atomic validation: Are the listed post-time invariants complete?
+9. Q9 dynamic joins: Should late same-family surfaces be eligible claimants by default, or should every late participant be observer-only first?
+10. Q10 event IDs: Is a global broker event sequence preferable to per-channel event sequences?
+11. Q11 fallback identity: Is required-vs-actual identity sufficient for audit and bakeoff analysis?
+12. Q12 attachments: Is filesystem blob storage under `.ab/channels/blobs` the right localhost default, and should image alt text be mandatory at attach time?
+13. Pilot bakeoff: Is the `Desktop >= CLI + 2 anchors` gate strong enough to justify Desktop-required routing for graphics-rich modules?
+14. Epic split: Is the six-strand split ordered correctly, or should the bakeoff run before any schema work?
+
+Use `[AGREE]` for sections you accept, or `[REVISE Qn: reason]` for sections that need changes before user signoff.
