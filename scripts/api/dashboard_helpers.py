@@ -326,7 +326,6 @@ def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: 
     orch_dir = _safe_join(track_dir, "orchestration", slug)
     pipeline_version = detect_pipeline_version(orch_dir) if orch_dir and orch_dir.exists() else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
-
     return {
         "slug": slug,
         "num": num,

@@ -5,6 +5,7 @@ and ports the browse logic from image_review_server.py.
 """
 
 import re
+import socket
 import sys
 
 from fastapi import APIRouter, Query
@@ -26,6 +27,10 @@ ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 def _qdrant_available() -> bool:
     """Quick check if Qdrant is reachable."""
     try:
+        from rag.config import QDRANT_GRPC_PORT, QDRANT_HOST
+
+        with socket.create_connection((QDRANT_HOST, QDRANT_GRPC_PORT), timeout=0.25):
+            pass
         from rag.query import get_client
         get_client().get_collections()
         return True

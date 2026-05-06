@@ -37,6 +37,7 @@ except ImportError:
 from pydantic import BaseModel
 
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
+from .state_helpers import cache_get, cache_set
 
 router = APIRouter(tags=["comms"])
 
@@ -44,6 +45,17 @@ router = APIRouter(tags=["comms"])
 
 PID_DIR = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "pids"
 LOG_DIR = PROJECT_ROOT / "logs" / "research-preseed"
+BATCH_LOG_TAIL_BYTES = 256 * 1024
+
+
+def _read_tail_text(path, max_bytes: int = BATCH_LOG_TAIL_BYTES) -> tuple[str, bool]:
+    """Read at most the tail of a log file for dashboard polling."""
+    size = path.stat().st_size
+    if size <= max_bytes:
+        return path.read_text(errors="replace"), False
+    with path.open("rb") as handle:
+        handle.seek(-max_bytes, os.SEEK_END)
+        return handle.read().decode("utf-8", errors="replace"), True
 
 
 def _get_db() -> sqlite3.Connection | None:
@@ -459,8 +471,9 @@ def _scan_preseed_logs() -> list[dict]:
         track = lf.name.replace(f"-{latest_ts}.log", "")
         stat = lf.stat()
 
-        # Parse log for progress
-        text = lf.read_text(errors="replace")
+        # Parse a bounded tail for progress. Full historical preseed logs
+        # can be multi-MB and this endpoint is polled by dashboards.
+        text, truncated = _read_tail_text(lf)
         passed = len(re.findall(r"VERDICT: PASS", text))
         failed = len(re.findall(r"VERDICT: FAIL|FAILED —|ERROR:", text))
 
@@ -488,6 +501,7 @@ def _scan_preseed_logs() -> list[dict]:
             "failed": failed,
             "complete": batch_complete,
             "last_line": last_line,
+            "truncated": truncated,
         })
 
     return sorted(results, key=lambda r: r["track"])
@@ -592,6 +606,11 @@ async def batch_progress():
     """
     import asyncio
 
+    cache_key = f"comms_batch_progress_{LOG_DIR}_{PID_DIR}"
+    cached = cache_get(cache_key, ttl=10.0)
+    if cached is not None:
+        return cached
+
     logs, processes = await asyncio.gather(
         asyncio.to_thread(_scan_preseed_logs),
         asyncio.to_thread(_check_build_processes),
@@ -632,11 +651,13 @@ async def batch_progress():
             "process": proc,
         }
 
-    return {
+    result = {
         "generated_at": datetime.now(UTC).isoformat(),
         "running_processes": len(processes),
         "tracks": track_progress,
     }
+    cache_set(cache_key, result)
+    return result
 
 
 @router.get("/batch-progress/{track}")

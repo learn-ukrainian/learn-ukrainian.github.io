@@ -27,6 +27,7 @@ from .dashboard_comms import (
     read_dispatcher_state,
 )
 from .dashboard_helpers import (
+    compute_track_stats,
     default_research_info,
     extract_review_info,
     find_active_builds,
@@ -69,7 +70,8 @@ async def overview():
         if not track_modules:
             continue
 
-        track_data = scan_track_cached(track_id, level_cfg["path"], track_modules)
+        track_data = scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
+        track_data["stats"] = compute_track_stats(track_data["modules"], track_id)
         s = track_data["stats"]
         pct = round(s["pass"] / track_data["module_count"] * 100) if track_data["module_count"] > 0 else 0
 

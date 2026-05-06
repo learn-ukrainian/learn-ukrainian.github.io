@@ -38,6 +38,19 @@ CREATE TABLE IF NOT EXISTS messages (
     status TEXT DEFAULT 'pending'
 );
 
+CREATE INDEX IF NOT EXISTS idx_messages_task_id
+    ON messages(task_id, id);
+CREATE INDEX IF NOT EXISTS idx_messages_acknowledged
+    ON messages(acknowledged, id);
+CREATE INDEX IF NOT EXISTS idx_messages_message_type
+    ON messages(message_type, id);
+CREATE INDEX IF NOT EXISTS idx_messages_timestamp
+    ON messages(timestamp);
+CREATE INDEX IF NOT EXISTS idx_messages_from_llm
+    ON messages(from_llm, id);
+CREATE INDEX IF NOT EXISTS idx_messages_to_llm
+    ON messages(to_llm, id);
+
 CREATE TABLE IF NOT EXISTS sessions (
     task_id TEXT PRIMARY KEY,
     claude_session_id TEXT,
@@ -172,6 +185,24 @@ def init_db():
     return conn
 
 
+def _ensure_legacy_indexes(conn: sqlite3.Connection) -> None:
+    """Create legacy message indexes needed by dashboard polling paths."""
+    conn.executescript("""
+    CREATE INDEX IF NOT EXISTS idx_messages_task_id
+        ON messages(task_id, id);
+    CREATE INDEX IF NOT EXISTS idx_messages_acknowledged
+        ON messages(acknowledged, id);
+    CREATE INDEX IF NOT EXISTS idx_messages_message_type
+        ON messages(message_type, id);
+    CREATE INDEX IF NOT EXISTS idx_messages_timestamp
+        ON messages(timestamp);
+    CREATE INDEX IF NOT EXISTS idx_messages_from_llm
+        ON messages(from_llm, id);
+    CREATE INDEX IF NOT EXISTS idx_messages_to_llm
+        ON messages(to_llm, id);
+    """)
+
+
 def get_db():
     """Get database connection with auto-migration (#604, #1190)."""
     if not DB_PATH.exists():
@@ -191,6 +222,7 @@ def get_db():
         elif "status" not in columns:
             print("🔧 Migrating database: adding 'status' column to 'messages' table")
             conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+        _ensure_legacy_indexes(conn)
 
         # --- Sessions table migration (#604) ---
         conn.execute("""
