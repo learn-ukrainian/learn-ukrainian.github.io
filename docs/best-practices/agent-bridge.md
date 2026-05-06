@@ -112,6 +112,32 @@ agent.** Per channel conventions:
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.
 
+## Spawned-agent env hygiene
+
+The agent runtime does not pass the orchestrator's full `os.environ` to
+spawned CLIs. `scripts/agent_runtime/env_sanitize.py` builds a narrow
+environment for each process:
+
+- Common runtime variables survive only from the safe allowlist:
+  `PATH`, `HOME`, `TMPDIR`, `LANG`, `LC_*`, `AB_*`, and `LU_*`.
+- Variables with secret-shaped names are dropped, including names that
+  contain `TOKEN`, `SECRET`, `PASSWORD`, `PASSWD`, `PRIVATE`,
+  `CREDENTIAL`, `API_KEY`, `ACCESS_KEY`, `AUTH`, or `COOKIE`.
+- Variables with known secret-shaped values are dropped, including
+  GitHub, OpenAI-style `sk-`, Slack `xox-`, Hugging Face `hf_`, npm,
+  AWS access-key, and Google `AIza` patterns.
+- Provider credentials pass through only to that provider: Gemini sees
+  Gemini/Google keys, Claude sees Anthropic/Claude keys, and Codex sees
+  OpenAI/Codex keys. Cross-provider keys and `GITHUB_TOKEN` stay absent.
+- Gemini also receives `GEMINI_AUTH_MODE` because it is runtime mode
+  selection, not a credential; secret-shaped values are still rejected.
+
+Adapters should put per-call environment values in
+`InvocationPlan.env_overrides`; the runner applies overrides, sanitizes,
+then applies explicit `InvocationPlan.env_unsets`. The merge guard runs
+after sanitization so its `gh`/`git` shims still receive the final `PATH`
+and can stamp `AGENT_NO_MERGE`, `AGENT_REAL_GH`, and `AGENT_REAL_GIT`.
+
 ## Context file conventions
 
 `docs/agent-channels/{channel}/context.md` should contain:
