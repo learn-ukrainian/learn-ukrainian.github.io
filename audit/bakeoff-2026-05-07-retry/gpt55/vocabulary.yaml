@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вставати
+  translation: to get up
+  pos: verb
+  usage: Я встаю рано.
+- lemma: вмиватися
+  translation: to wash up
+  pos: verb
+  usage: Я вмиваюся.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Я одягаюся.
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  usage: Я збираюся.
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  usage: Я повертаюся.
+- lemma: навчатися
+  translation: to study
+  pos: verb
+  usage: Я навчаюся вранці.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: Я не поспішаю.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Я снідаю.
+- lemma: йти
+  translation: to go
+  pos: verb
+  usage: Я йду на роботу.
+- lemma: пити
+  translation: to drink
+  pos: verb
+  usage: Я п'ю каву.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Я п'ю каву.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Мій ранок спокійний.
+- lemma: робота
+  translation: work
+  pos: noun
+  usage: Я йду на роботу.
+- lemma: спочатку
+  translation: first
+  pos: adverb
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then
+  pos: adverb
+  usage: Потім я вмиваюся.
+- lemma: після цього
+  translation: after this
+  pos: phrase
+  usage: Після цього я снідаю.
+- lemma: нарешті
+  translation: finally
+  pos: adverb
+  usage: Нарешті я йду.
+- lemma: вранці
+  translation: in the morning
+  pos: adverb
+  usage: Я навчаюся вранці.
+- lemma: пізно
+  translation: late
+  pos: adverb
+  usage: Я прокидаюся пізно.

@@ -1,0 +1,96 @@
+- id: act-1
+  type: fill-in
+  instruction: Додайте правильне закінчення -ся або -сь до дієслів у формі 'я'.
+  items:
+  - sentence: Я вмиваю__.
+    answer: ся
+  - sentence: Я одягаю__.
+    answer: ся
+  - sentence: Я прокидаю__.
+    answer: ся
+  - sentence: Я збираю__.
+    answer: ся
+  - sentence: Я навчаю__.
+    answer: ся
+  - sentence: Я повертаю__.
+    answer: ся
+  - sentence: Я поспішаю__.
+    answer: ся
+  - sentence: Я готую__.
+    answer: ся
+  - sentence: Я мию__.
+    answer: ся
+  - sentence: Я дивлю__.
+    answer: ся
+- id: act-2
+  type: quiz
+  instruction: Оберіть правильну форму дієслова (зворотне чи ні).
+  items:
+  - question: Я (вмиваю / вмиваюся) руки.
+    options:
+    - вмиваю
+    - вмиваюся
+    answer: вмиваю
+  - question: Я (вмиваю / вмиваюся) вранці.
+    options:
+    - вмиваю
+    - вмиваюся
+    answer: вмиваюся
+  - question: Ти (одягаєш / одягаєшся) дитину.
+    options:
+    - одягаєш
+    - одягаєшся
+    answer: одягаєш
+  - question: Ти (одягаєш / одягаєшся) швидко.
+    options:
+    - одягаєш
+    - одягаєшся
+    answer: одягаєшся
+  - question: Він (вмиває / вмивається) обличчя.
+    options:
+    - вмиває
+    - вмивається
+    answer: вмиває
+  - question: Він (вмиває / вмивається) о сьомій.
+    options:
+    - вмиває
+    - вмивається
+    answer: вмивається
+  - question: Ми (вчимо / вчимося) слова.
+    options:
+    - вчимо
+    - вчимося
+    answer: вчимо
+  - question: Ми (вчимо / вчимося) в університеті.
+    options:
+    - вчимо
+    - вчимося
+    answer: вчимося
+- id: act-3
+  type: order
+  instruction: Відновіть правильний порядок ранкової рутини.
+  items:
+  - снідаю
+  - прокидаюся
+  - вмиваюся
+  - йду на роботу
+  - одягаюся
+  - п'ю каву
+  correct_order:
+  - 1
+  - 2
+  - 4
+  - 5
+  - 0
+  - 3
+- id: act-4
+  type: fill-in
+  instruction: Опишіть свій ранок у 3 реченнях, використовуючи слова спочатку, потім,
+    нарешті.
+  items:
+  - sentence: ____ я прокидаюся.
+    answer: Спочатку
+  - sentence: ____ я вмиваюся і снідаю.
+    answer: Потім
+  - sentence: ____ я йду на роботу.
+    answer: Нарешті

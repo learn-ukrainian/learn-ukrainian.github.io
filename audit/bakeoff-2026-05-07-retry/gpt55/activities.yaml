@@ -1,0 +1,237 @@
+- id: act-1
+  type: match-up
+  instruction: Match each Ukrainian line to its English meaning.
+  pairs:
+  - left: Я прокидаюся о сьомій.
+    right: I wake up at seven.
+  - left: Вмиваюся.
+    right: I wash up.
+  - left: Одягаюся.
+    right: I get dressed.
+  - left: Снідаю.
+    right: I have breakfast.
+  - left: Я йду на роботу.
+    right: I go to work.
+- id: act-2
+  type: fill-in
+  instruction: Add the missing reflexive ending.
+  items:
+  - sentence: Я вмиваю__.
+    answer: ся
+    options:
+    - ся
+    - ти
+    - є
+  - sentence: Ти одягаєш__.
+    answer: ся
+    options:
+    - ся
+    - сять
+    - є
+  - sentence: Він прокидаєть__.
+    answer: ся
+    options:
+    - ся
+    - ти
+    - ють
+  - sentence: Вона збираєть__.
+    answer: ся
+    options:
+    - ся
+    - сь
+    - те
+  - sentence: Я повертаю__.
+    answer: ся
+    options:
+    - ся
+    - ш
+    - ть
+- id: act-3
+  type: quiz
+  instruction: Choose the form that fits the sentence.
+  items:
+  - question: Я ____ о сьомій.
+    options:
+    - text: прокидаюся
+      correct: true
+    - text: прокидаєшся
+      correct: false
+    - text: прокидається
+      correct: false
+    explanation: Я takes прокидаюся.
+  - question: Ти швидко ____?
+    options:
+    - text: вмиваюся
+      correct: false
+    - text: вмиваєшся
+      correct: true
+    - text: вмивається
+      correct: false
+    explanation: Ти takes вмиваєшся.
+  - question: Вона ____ пізно.
+    options:
+    - text: прокидаюся
+      correct: false
+    - text: прокидаєшся
+      correct: false
+    - text: прокидається
+      correct: true
+    explanation: Вона takes прокидається.
+  - question: Я ____ на роботу.
+    options:
+    - text: йду
+      correct: true
+    - text: йдеш
+      correct: false
+    - text: йде
+      correct: false
+    explanation: Я takes йду.
+- id: act-4
+  type: order
+  instruction: Put the morning routine in a natural order.
+  items:
+  - Спочатку я прокидаюся.
+  - Потім вмиваюся.
+  - Після цього одягаюся.
+  - Потім снідаю.
+  - Нарешті йду на роботу.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+- id: act-5
+  type: group-sort
+  instruction: Sort the verbs into reflexive and non-reflexive groups.
+  groups:
+  - name: Зворотні
+    items:
+    - прокидатися
+    - вмиватися
+    - одягатися
+    - збиратися
+    - повертатися
+  - name: Незворотні
+    items:
+    - снідати
+    - йти
+    - пити
+    - гуляти
+    - лежати
+- id: act-6
+  type: true-false
+  instruction: Decide whether each statement is true.
+  items:
+  - statement: Я вмиваюся means I wash up.
+    correct: true
+    explanation: The action is directed back to the speaker.
+  - statement: Ти вмиваюся is the correct ти form.
+    correct: false
+    explanation: The ти form is ти вмиваєшся.
+  - statement: Йти is irregular.
+    correct: true
+    explanation: Use я йду, ти йдеш, він/вона йде.
+  - statement: Снідати normally takes -ся.
+    correct: false
+    explanation: Снідати is not reflexive.
+- id: act-7
+  type: unjumble
+  instruction: Put the words in the right order.
+  items:
+  - words:
+    - я
+    - спочатку
+    - прокидаюся
+    answer: Спочатку я прокидаюся.
+  - words:
+    - потім
+    - вмиваюся
+    - я
+    answer: Потім я вмиваюся.
+  - words:
+    - нарешті
+    - йду
+    - я
+    answer: Нарешті я йду.
+- id: act-8
+  type: error-correction
+  instruction: Find the wrong form and choose the correction.
+  items:
+  - sentence: Я прокидаєшся о сьомій.
+    error: прокидаєшся
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - прокидається
+    - прокидатися
+    explanation: Я takes прокидаюся.
+  - sentence: Ти вмиваюся швидко.
+    error: вмиваюся
+    answer: вмиваєшся
+    options:
+    - вмиваєшся
+    - вмивається
+    - вмиватися
+    explanation: Ти takes вмиваєшся.
+  - sentence: Вона йду на роботу.
+    error: йду
+    answer: йде
+    options:
+    - йде
+    - йдеш
+    - йти
+    explanation: Вона takes йде.
+- id: act-9
+  type: translate
+  instruction: Choose the best Ukrainian translation.
+  items:
+  - source: I wake up.
+    options:
+    - text: Я прокидаюся.
+      correct: true
+    - text: Ти прокидаєшся.
+      correct: false
+    - text: Вона прокидається.
+      correct: false
+    explanation: I = я.
+  - source: Then I have breakfast.
+    options:
+    - text: Потім я снідаю.
+      correct: true
+    - text: Спочатку я йду.
+      correct: false
+    - text: Нарешті я лежу.
+      correct: false
+    explanation: Then = потім.
+  - source: Finally I go.
+    options:
+    - text: Нарешті я йду.
+      correct: true
+    - text: Потім я вмиваюся.
+      correct: false
+    - text: Спочатку я прокидаюся.
+      correct: false
+    explanation: Finally = нарешті.
+- id: act-10
+  type: fill-in
+  instruction: Complete a three-sentence morning routine.
+  items:
+  - sentence: Спочатку я ____.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - йду
+    - снідаю
+  - sentence: Потім я ____.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - гуляю
+    - лежу
+  - sentence: Нарешті я ____.
+    answer: йду
+    options:
+    - йду
+    - одягаюся
+    - прокидаюся

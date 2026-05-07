@@ -1,0 +1,276 @@
+- id: act-1
+  type: match-up
+  instruction: Match each English description to the Ukrainian line Ліна or Настя
+    actually says in the dialogues.
+  pairs:
+  - left: Ліна wakes up at 7 on a workday
+    right: Я прокидаюся о сьомій.
+  - left: Ліна's three-step weekday routine
+    right: Вмиваюся, одягаюся і снідаю.
+  - left: Ліна leaves for work at 8
+    right: О восьмій.
+  - left: Ліна's Saturday lie-in
+    right: Прокидаюся пізно, лежу, дивлюся телефон.
+  - left: Настя's Saturday morning study session
+    right: А я навчаюся вранці.
+- id: act-2
+  type: fill-in
+  instruction: Pick the correct form of each verb. Some verbs are reflexive; some
+    are not — read every option carefully.
+  items:
+  - sentence: Я ____ о сьомій.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - прокидаю
+    - прокидаєшся
+  - sentence: Ти швидко ____?
+    answer: вмиваєшся
+    options:
+    - вмиваєшся
+    - вмиваєш
+    - вмиваюся
+  - sentence: Він ____ перед сніданком.
+    answer: одягається
+    options:
+    - одягається
+    - одягаєш
+    - одягаюся
+  - sentence: Ми ____ о пів на восьму.
+    answer: вмиваємося
+    options:
+    - вмиваємося
+    - вмиваємо
+    - вмиваєшся
+  - sentence: Ти ____ на роботу?
+    answer: збираєшся
+    options:
+    - збираєшся
+    - збираєш
+    - збираюся
+  - sentence: Вона ____ з роботи пізно.
+    answer: повертається
+    options:
+    - повертається
+    - повертає
+    - повертаюся
+  - sentence: Я ____ вранці.
+    answer: навчаюся
+    options:
+    - навчаюся
+    - навчаю
+    - навчається
+  - sentence: У суботу я не ____.
+    answer: поспішаю
+    options:
+    - поспішаю
+    - поспішаюся
+    - поспішається
+  - sentence: Ти ____ на роботу о восьмій?
+    answer: поспішаєш
+    options:
+    - поспішаєш
+    - поспішаєшся
+    - поспішаюся
+  - sentence: Вони ____ о сьомій.
+    answer: прокидаються
+    options:
+    - прокидаються
+    - прокидають
+    - прокидаєшся
+- id: act-3
+  type: quiz
+  instruction: Reflexive or not? Choose the verb form that fits the meaning of each
+    sentence.
+  items:
+  - question: Я ____ руки перед сніданком.
+    options:
+    - вмиваю
+    - вмиваюся
+    answer: вмиваю
+  - question: Я ____ холодною водою.
+    options:
+    - вмиваю
+    - вмиваюся
+    answer: вмиваюся
+  - question: Мама ____ дитину в садок.
+    options:
+    - одягає
+    - одягається
+    answer: одягає
+  - question: Ти швидко ____ зранку?
+    options:
+    - одягаєш
+    - одягаєшся
+    answer: одягаєшся
+  - question: Ліна ____ з роботи пізно.
+    options:
+    - повертає
+    - повертається
+    answer: повертається
+  - question: Він ____ книгу в бібліотеку.
+    options:
+    - повертає
+    - повертається
+    answer: повертає
+  - question: Ми ____ українську мову.
+    options:
+    - навчаємо
+    - навчаємося
+    answer: навчаємося
+  - question: Учитель ____ дітей читати.
+    options:
+    - навчає
+    - навчається
+    answer: навчає
+- id: act-4
+  type: order
+  instruction: Put Ліна's weekday morning steps in the correct order, from earliest
+    to latest.
+  items:
+  - прокидаюся о сьомій
+  - вмиваюся холодною водою
+  - одягаюся
+  - снідаю
+  - збираюся на роботу
+  - йду на роботу о восьмій
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+- id: act-5
+  type: group-sort
+  instruction: 'Sort each verb into the correct group: reflexive (ends in -ся) or
+    non-reflexive.'
+  groups:
+  - label: Зворотні (з -ся)
+    items:
+    - прокидатися
+    - вмиватися
+    - одягатися
+    - збиратися
+    - повертатися
+    - навчатися
+  - label: Незворотні (без -ся)
+    items:
+    - снідати
+    - пити
+    - йти
+    - гуляти
+    - поспішати
+    - лежати
+- id: act-6
+  type: true-false
+  instruction: True or false? Decide based on what the lesson actually shows.
+  items:
+  - statement: Reflexive verbs in Ukrainian end with -ся attached to the very end
+      of every personal form.
+    answer: true
+  - statement: The form -шся is pronounced [ш+с'а], with the [ш] kept distinct.
+    answer: false
+  - statement: The form -ться is pronounced [ц':а].
+    answer: true
+  - statement: Йти is a regular Group I verb that follows the same endings as читати.
+    answer: false
+  - statement: Спочатку means 'first, at the start of a sequence'.
+    answer: true
+  - statement: Снідати normally takes -ся to mean 'to have breakfast'.
+    answer: false
+- id: act-7
+  type: unjumble
+  instruction: Reorder each set of words into a correct sentence about the morning
+    routine.
+  items:
+  - jumbled:
+    - Я
+    - прокидаюся
+    - о
+    - сьомій
+    answer: Я прокидаюся о сьомій
+  - jumbled:
+    - Потім
+    - я
+    - вмиваюся
+    - і
+    - одягаюся
+    answer: Потім я вмиваюся і одягаюся
+  - jumbled:
+    - Ліна
+    - снідає
+    - о
+    - восьмій
+    answer: Ліна снідає о восьмій
+  - jumbled:
+    - У
+    - суботу
+    - я
+    - не
+    - поспішаю
+    answer: У суботу я не поспішаю
+  - jumbled:
+    - Нарешті
+    - я
+    - йду
+    - на
+    - роботу
+    answer: Нарешті я йду на роботу
+- id: act-8
+  type: error-correction
+  instruction: Each sentence has one wrong reflexive form. Rewrite the sentence with
+    the correct form.
+  items:
+  - wrong: Я прокидаєшся о сьомій.
+    correct: Я прокидаюся о сьомій.
+  - wrong: Ти вмиваюся швидко.
+    correct: Ти вмиваєшся швидко.
+  - wrong: Він одягаюся перед сніданком.
+    correct: Він одягається перед сніданком.
+  - wrong: Я не поспішаюся в суботу.
+    correct: Я не поспішаю в суботу.
+  - wrong: Ми снідаємося разом.
+    correct: Ми снідаємо разом.
+  - wrong: Ліна повертає з роботи пізно.
+    correct: Ліна повертається з роботи пізно.
+- id: act-9
+  type: translate
+  instruction: Translate each English sentence into Ukrainian. Use a reflexive verb
+    where the action turns back on the speaker.
+  items:
+  - prompt: I wake up at seven.
+    answer: Я прокидаюся о сьомій.
+  - prompt: She washes up quickly.
+    answer: Вона вмивається швидко.
+  - prompt: We get dressed and have breakfast.
+    answer: Ми одягаємося і снідаємо.
+  - prompt: On Saturday I do not hurry.
+    answer: У суботу я не поспішаю.
+  - prompt: Then I go to work.
+    answer: Потім я йду на роботу.
+  - prompt: Finally Ліна returns home.
+    answer: Нарешті Ліна повертається додому.
+- id: act-10
+  type: fill-in
+  instruction: Pick the best ending for each sentence about a typical morning. Then
+    write your own version on paper using at least one reflexive verb.
+  items:
+  - sentence: Спочатку я ____.
+    answer: прокидаюся о сьомій
+    options:
+    - прокидаюся о сьомій
+    - поспішаю на роботу
+    - повертаюся додому
+  - sentence: Потім я ____.
+    answer: вмиваюся і одягаюся
+    options:
+    - вмиваюся і одягаюся
+    - лежу і дивлюся телефон
+    - збираюся на роботу
+  - sentence: Нарешті я ____.
+    answer: йду на роботу
+    options:
+    - йду на роботу
+    - прокидаюся пізно
+    - вмиваюся холодною водою

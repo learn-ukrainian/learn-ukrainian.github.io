@@ -1,0 +1,183 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "plan_references": [
+    {
+      "title": "Караман Grade 10, p.176",
+      "notes": "Зворотні дієслова: суфікс -ся(-сь) означає дію, спрямовану на себе."
+    },
+    {
+      "title": "Кравцова Grade 4, p.113",
+      "notes": "Вимова: -шся=[с'а], -ться=[ц'а]."
+    },
+    {
+      "title": "Захарійчук Grade 4, p.162",
+      "notes": "Дієслова на -ся: вправи з вимовою та правописом."
+    }
+  ],
+  "gates": {
+    "word_count": {
+      "passed": true,
+      "count": 1858,
+      "target": 1200
+    },
+    "plan_sections": {
+      "passed": false,
+      "missing_headings": [],
+      "word_budgets": [
+        {
+          "section": "Діалоги",
+          "count": 198,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Дієслова на -ся",
+          "count": 245,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Мій ранок",
+          "count": 1277,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Підсумок",
+          "count": 80,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        }
+      ]
+    },
+    "formatting_standards": {
+      "passed": true,
+      "malformed_callouts": [],
+      "missing_mandatory_callouts": []
+    },
+    "vesum_verified": {
+      "passed": true,
+      "checked": 238,
+      "whitelisted": 7,
+      "missing": [],
+      "missing_count": 0
+    },
+    "citations_resolve": {
+      "passed": false,
+      "unknown": [
+        "Кравцова Grade 4, p.140",
+        "Захарійчук Grade 4, p.120"
+      ]
+    },
+    "textbook_grounding": {
+      "passed": false,
+      "verdict": "REJECT",
+      "severity": "HARD",
+      "required": 1,
+      "matched": [],
+      "missing": [
+        "Караман Grade 10, p.176",
+        "Кравцова Grade 4, p.113",
+        "Захарійчук Grade 4, p.162"
+      ],
+      "blockquotes_checked": 2,
+      "long_blockquotes_checked": 0,
+      "search_text_calls": 0,
+      "textbook_result_hits": 0,
+      "min_words": 30,
+      "downgraded": [],
+      "missing_corpus": [
+        "Караман Grade 10, p.176",
+        "Кравцова Grade 4, p.113",
+        "Захарійчук Grade 4, p.162"
+      ],
+      "warnings": [
+        "corpus_missing"
+      ],
+      "reason": "corpus_missing",
+      "unattributed_matches": 0
+    },
+    "immersion": {
+      "passed": false,
+      "pct": 24.85,
+      "min_pct": 15,
+      "max_pct": 35,
+      "policy": "a1-m15-24",
+      "long_ukrainian_sentences": [
+        "> Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними",
+        "Потім я йду у ванну кімнату, де я вмиваюся холодною водою і чищу зуби"
+      ]
+    },
+    "inject_activity_ids": {
+      "passed": true,
+      "injected": [
+        "act-1",
+        "act-2",
+        "act-3",
+        "act-4"
+      ],
+      "missing": [],
+      "unused": []
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "fill-in",
+        "quiz",
+        "order",
+        "fill-in"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "previously_passed_regression": {
+      "passed": true,
+      "regressions": []
+    },
+    "mdx_render": {
+      "passed": null,
+      "message": "Run after publish stage"
+    },
+    "passed": false,
+    "correction_terminal": {
+      "passed": false,
+      "gate": "plan_sections",
+      "message": "plan_sections failed after its single ADR-008 correction attempt"
+    }
+  }
+}

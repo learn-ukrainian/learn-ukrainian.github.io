@@ -1,0 +1,96 @@
+[
+  {
+    "name": "ToolSearch",
+    "arguments": {
+      "query": "select:mcp__sources__verify_words,mcp__sources__search_text,mcp__sources__check_modern_form,mcp__sources__search_style_guide,mcp__sources__search_definitions",
+      "max_results": 10
+    },
+    "output_summary": "[{\"tool_name\": \"mcp__sources__verify_words\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_text\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__check_modern_form\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_style_guide\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_definitions\", \"type\": \"tool_reference\"}]",
+    "timestamp": "2026-05-07T18:59:26.659399+00:00"
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "прокидатися",
+        "вмиватися",
+        "одягатися",
+        "снідати",
+        "йти",
+        "спочатку",
+        "потім",
+        "збиратися",
+        "повертатися",
+        "навчатися",
+        "поспішати",
+        "нарешті",
+        "вранці",
+        "пізно",
+        "прокидаюся",
+        "вмиваюся",
+        "одягаюся",
+        "вмиваєшся",
+        "одягається",
+        "лежу",
+        "дивлюся",
+        "гуляю",
+        "ранок",
+        "сьома",
+        "восьма",
+        "сусідка",
+        "вихідний"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 27 words\\n\\nFound: 27/27\\n\\n- **прокидатися** — FOUND (1 match): прокидатися(verb)\\n- **вмиватися** — FOUND (1 match): вмиватися(verb)\\n- **одягатися** — FOUND (1 match): одягатися(verb)\\n- **снідати** — FOUND (1 match): снідати(verb)\\n- **йти** — FOUND (1 match): йти(verb)\\n- **спочатку** — FOUND (1 match): спочатку(adv)\\n- **потім** — FOUND (1 match): потім(adv)\\n- **збиратися** — FOUND (1 match): збиратися(verb)\\n- **повертатися** — FOUND (1 match)[...truncated]",
+    "timestamp": "2026-05-07T18:59:26.660606+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "зворотні дієслова -ся постфікс дія спрямована на себе",
+      "grade": 4,
+      "limit": 5
+    },
+    "output_summary": "[{\"text\": \"Found 5 results for: \\\"зворотні дієслова -ся постфікс дія спрямована на себе\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 112\\n- **Source**: Grade 4, kravtsova\\n- **Chunk ID**: `4-klas-ukrayinska-mova-kravtsova-2021-1_s0110`\\n- **Text**:\\n1\\nНедарма в Стародавній Греції судову справу частенько... (вигра­\\nвати) не постраждалий, а той, хто гарно ... (говорити) і... (схиля­\\nти) публіку на свій бік.\\nЯкщо ти відчуваєш труднощі в спілкуванні з друзями: тебе \\nчасто не розумію[...truncated]",
+    "timestamp": "2026-05-07T18:59:26.661150+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "вмиватися одягатися вимова шся ться правопис",
+      "grade": 4,
+      "limit": 5
+    },
+    "output_summary": "[{\"text\": \"Found 5 results for: \\\"вмиватися одягатися вимова шся ться правопис\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 67\\n- **Source**: Grade 7, avramenko\\n- **Chunk ID**: `7-klas-ukrmova-avramenko-2024_s0075`\\n- **Text**:\\n64\\n2.\\t Прочитайте текст і виконайте завдання. \\nСвітає, а в пітьмі видніються та дедалі більше набувають чітких обри-\\nсів гори. Вони без кінця і краю піднімаються до неба, немов казкові ве-\\n1.\\tПрочитайте речення та виконайте завдання.\\nОлег: Я помию пос[...truncated]",
+    "timestamp": "2026-05-07T18:59:26.662034+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "прокидаюся вмиваюся ранок розповідь рутина",
+      "grade": 4,
+      "limit": 5
+    },
+    "output_summary": "[{\"text\": \"Found 5 results for: \\\"прокидаюся вмиваюся ранок розповідь рутина\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 10\\n- **Source**: Grade 6, avramenko\\n- **Chunk ID**: `6-klas-ukrmova-avramenko-2023_s0009`\\n- **Text**:\\n10\\n1.\\tПрочитайте записи в колонках і виконайте завдання. \\nо сьомій годині \\nкілька вправ \\nконтрастним душем\\nЯ прокидаюсь о сьомій годині.\\nВиконую кілька фізичних вправ. \\nПотім загартовуюся контрастним душем. \\nА.\\t За допомогою записів якої колонки легш[...truncated]",
+    "timestamp": "2026-05-07T18:59:26.662653+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "Захарійчук дієслова на -ся правопис вправи",
+      "grade": 4,
+      "limit": 5
+    },
+    "output_summary": "[{\"text\": \"Found 5 results for: \\\"Захарійчук дієслова на -ся правопис вправи\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 120\\n- **Source**: Grade 4, zaharijchuk\\n- **Chunk ID**: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0118`\\n- **Text**:\\n120\\n\\t Утвори та запиши словосполучення, у яких дієслова означають \\nдію, спрямовану на себе. \\n\\t Запиши підкреслені дієслова у формі 2-ї та 3-ї особи однини \\nтеперішнього часу. Зістав їхню вимову та правопис. Звір свій \\nвисновок із колонкам[...truncated]",
+    "timestamp": "2026-05-07T18:59:26.663375+00:00"
+  },
+  {
+    "name": "mcp__sources__search_style_guide",
+    "arguments": {
+      "query": "приймати душ брати душ",
+      "limit": 3
+    },
+    "output_summary": "[{\"text\": \"No results in Антоненко-Давидович for: \\\"приймати душ брати душ\\\"\", \"type\": \"text\"}]",
+    "timestamp": "2026-05-07T18:59:26.663948+00:00"
+  }
+]

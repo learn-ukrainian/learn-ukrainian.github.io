@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash face/hands
+  pos: verb
+  usage: Я вмиваюся холодною водою.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Я швидко одягаюся.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Ми снідаємо разом.
+- lemma: йти
+  translation: to go
+  pos: verb
+  usage: Я йду на роботу о восьмій.
+- lemma: спочатку
+  translation: first, at first
+  pos: adv
+  usage: Спочатку я п'ю воду.
+- lemma: потім
+  translation: then, next
+  pos: adv
+  usage: Потім я роблю зарядку.
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  usage: Я збираюся на роботу.
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  usage: Він повертається пізно.
+- lemma: навчатися
+  translation: to study/learn
+  pos: verb
+  usage: Ми навчаємося в школі.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: Я не поспішаю сьогодні.
+- lemma: після цього
+  translation: after this
+  pos: phrase
+  usage: Після цього я снідаю.
+- lemma: нарешті
+  translation: finally
+  pos: adv
+  usage: Нарешті я вдома.
+- lemma: вранці
+  translation: in the morning
+  pos: adv
+  usage: Я працюю вранці.
+- lemma: пізно
+  translation: late
+  pos: adv
+  usage: Вже дуже пізно.
+- lemma: зарядка
+  translation: morning exercises
+  pos: noun
+  usage: Я роблю зарядку щодня.
+- lemma: вода
+  translation: water
+  pos: noun
+  usage: Я п'ю холодну воду.
+- lemma: робота
+  translation: work
+  pos: noun
+  usage: Я йду на роботу.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Я люблю пити каву.
+- lemma: телефон
+  translation: phone
+  pos: noun
+  usage: Я дивлюся телефон.

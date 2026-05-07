@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash up (face/hands)
+  pos: verb
+  usage: Я вмиваюся холодною водою.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Ти одягаєшся швидко?
+- lemma: збиратися
+  translation: to get ready (to leave)
+  pos: verb
+  usage: Я збираюся на роботу.
+- lemma: повертатися
+  translation: to return, come back
+  pos: verb
+  usage: Ліна повертається з роботи пізно.
+- lemma: навчатися
+  translation: to study, learn (oneself)
+  pos: verb
+  usage: Я навчаюся вранці.
+- lemma: поспішати
+  translation: to hurry (non-reflexive)
+  pos: verb
+  usage: У суботу я не поспішаю.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Ми снідаємо о восьмій.
+- lemma: йти
+  translation: to go (irregular)
+  pos: verb
+  usage: Я йду на роботу.
+- lemma: дивитися
+  translation: to look, watch
+  pos: verb
+  usage: Ліна дивиться телефон.
+- lemma: лежати
+  translation: to lie (down)
+  pos: verb
+  usage: У суботу я лежу довше.
+- lemma: гуляти
+  translation: to walk, stroll
+  pos: verb
+  usage: Настя гуляє в парку.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Мій ранок починається о сьомій.
+- lemma: вранці
+  translation: in the morning
+  pos: adv
+  usage: Вранці я снідаю.
+- lemma: пізно
+  translation: late
+  pos: adv
+  usage: У суботу я прокидаюся пізно.
+- lemma: спочатку
+  translation: first, at the start
+  pos: adv
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then, next
+  pos: adv
+  usage: Потім я вмиваюся.
+- lemma: нарешті
+  translation: finally
+  pos: adv
+  usage: Нарешті я йду на роботу.
+- lemma: вихідний
+  translation: day off, weekend day
+  pos: adj
+  usage: Сьогодні вихідний — я не поспішаю.
+- lemma: сусідка
+  translation: neighbor / flatmate (f.)
+  pos: noun
+  usage: Моя сусідка теж навчається вранці.
