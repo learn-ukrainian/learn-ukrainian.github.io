@@ -47,13 +47,14 @@ REVIEWER_TIER1_HEADER = (
     "## Tier-1 verification audit (do this DURING evidence search — #1661)"
 )
 
-# The visible <plan_reasoning> block requires these five keys (#1696 Q4).
+# The visible <plan_reasoning> block requires structured XML subnodes.
 WRITER_COT_KEYS = (
     "word_budget",
     "plan_vocab",
     "register",
     "teaching_sequence",
-    "verification",
+    "verification_plan",
+    "verification_trace",
 )
 
 WRITER_TIER1_BULLETS = (
@@ -105,12 +106,12 @@ def test_writer_prompt_has_cot_block(level: str, slug: str) -> None:
     assert rendered.count(WRITER_COT_HEADER) == 1, (
         f"Writer CoT header missing or duplicated for {level}/{slug}"
     )
-    # The mandatory visible-CoT block (#1696 Q4) requires the writer to emit
-    # <plan_reasoning> blocks containing five named keys. Each key MUST appear
+    # The mandatory visible-CoT block requires the writer to emit
+    # <plan_reasoning> blocks containing named XML subnodes. Each key MUST appear
     # at least once in the rendered prompt's instructions.
     for key in WRITER_COT_KEYS:
-        assert f"`{key}`" in rendered, (
-            f"Writer visible-CoT key `{key}` missing for {level}/{slug}"
+        assert f"<{key}>" in rendered, (
+            f"Writer visible-CoT node <{key}> missing for {level}/{slug}"
         )
     # The mandate must explicitly forbid hidden-only thinking: telemetry
     # detects writer CoT via the visible <plan_reasoning> tag.
@@ -168,8 +169,13 @@ def test_writer_prompt_mandates_end_gate_block(level: str, slug: str) -> None:
     assert "<end_gate>" in rendered and "</end_gate>" in rendered, (
         f"Writer end_gate block mandate missing for {level}/{slug}"
     )
-    # The action keys the parser recognizes must be in the example block.
-    for key in ("rescanned_words", "rescanned_sources", "removed_unverified"):
+    # The gate subnodes the parser recognizes must be in the example block.
+    for key in (
+        "rescanned_words",
+        "rescanned_sources",
+        "grammar_claims_grounded",
+        "removed_unverified",
+    ):
         assert key in rendered, (
             f"Writer end_gate action key {key!r} missing for {level}/{slug}"
         )

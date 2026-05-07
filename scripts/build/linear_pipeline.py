@@ -147,27 +147,27 @@ PROMPT_ADHERENCE_FIELDS: tuple[str, ...] = (
     "plan_vocab",
     "register",
     "teaching_sequence",
+    "verification_plan",
+    "verification_trace",
 )
 PROMPT_ADHERENCE_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     "word_budget": (
-        r"word[_\s-]*budget",
-        r"budget\s+per\s+section",
+        r"<word_budget\b[^>]*>.*?\S.*?</word_budget>",
     ),
     "plan_vocab": (
-        r"plan[_\s-]*vocab",
-        r"required[_\s-]*(?:plan[_\s-]*)?vocab",
-        r"required[_\s-]*terms",
-        r"required[_\s-]*vocabulary",
+        r"<plan_vocab\b[^>]*>.*?\S.*?</plan_vocab>",
     ),
     "register": (
-        r"register",
-        r"immersion",
-        r"ukrainian\s+and\s+english",
+        r"<register\b[^>]*>.*?\S.*?</register>",
     ),
     "teaching_sequence": (
-        r"teaching[_\s-]*sequence",
-        r"knowledge\s+packet",
-        r"citation\s+sequence",
+        r"<teaching_sequence\b[^>]*>.*?\S.*?</teaching_sequence>",
+    ),
+    "verification_plan": (
+        r"<verification_plan\b[^>]*>.*?\S.*?</verification_plan>",
+    ),
+    "verification_trace": (
+        r"<verification_trace\b[^>]*>.*?\S.*?</verification_trace>",
     ),
 }
 WRITER_TOOL_NAMES = frozenset(
@@ -1183,7 +1183,7 @@ def _reasoning_fields_filled(body: str) -> list[str]:
     for field in PROMPT_ADHERENCE_FIELDS:
         patterns = PROMPT_ADHERENCE_FIELD_PATTERNS[field]
         for pattern in patterns:
-            if re.search(pattern + r".{0,80}\S", body, flags=re.IGNORECASE | re.DOTALL):
+            if re.search(pattern, body, flags=re.IGNORECASE | re.DOTALL):
                 filled.append(field)
                 break
     return filled
@@ -1295,6 +1295,13 @@ def _extract_writer_gate(output: str) -> dict[str, Any]:
         actions.append("rescanned_words")
     if "rescanned_sources" in lower or ("rescan" in lower and any(token in lower for token in ("source", "citation"))):
         actions.append("rescanned_sources")
+    if re.search(
+        r"<grammar_claims_grounded\b[^>]*>.*?</grammar_claims_grounded>"
+        r"|\bgrammar_claims_grounded\b\s*[:=]",
+        body,
+        flags=re.DOTALL | re.IGNORECASE,
+    ):
+        actions.append("grammar_claims_grounded")
     if "removed_unverified" in lower or ("removed" in lower and "unverified" in lower):
         actions.append("removed_unverified")
 
