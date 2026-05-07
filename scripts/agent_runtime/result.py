@@ -41,6 +41,11 @@ class ParseResult:
         tokens: Prompt+completion token count if the CLI reports it. We
             deliberately leave this None when the CLI doesn't expose tokens,
             rather than invent numbers. Populated opportunistically.
+        tool_calls: PII-bearing tool-call telemetry parsed from the CLI trace.
+            Tool outputs are summarized and capped; callers must still treat
+            names and arguments as sensitive pipeline data. Arguments are
+            source-shaped and may contain synthetic ``_raw`` / ``_value`` keys.
+            Timestamps are provider strings or lenient ISO-8601 fallbacks.
     """
     ok: bool
     response: str
@@ -48,6 +53,7 @@ class ParseResult:
     rate_limited: bool = False
     session_id: str | None = None
     tokens: int | None = None
+    tool_calls: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -80,6 +86,10 @@ class Result:
             process by the telemetry helpers. "unknown" on probe failure.
         usage_record: The exact dict written to batch_state/api_usage/. Callers
             can log or aggregate this. Follows the schema in design doc § 4.5.
+        tool_calls: PII-bearing tool-call telemetry parsed from the CLI trace.
+            Each entry has name, arguments, output_summary, and timestamp.
+            Never contains full raw tool output. Kept in memory only; do not
+            persist or echo arguments to JSONL telemetry without redaction.
     """
     ok: bool
     agent: str
@@ -95,3 +105,4 @@ class Result:
     effort: str = "unknown"
     cli_version: str = "unknown"
     usage_record: dict[str, Any] = field(default_factory=dict)
+    tool_calls: list[dict[str, Any]] = field(default_factory=list)

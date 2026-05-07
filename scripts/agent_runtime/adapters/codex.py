@@ -27,6 +27,7 @@ Issue: #1184
 from __future__ import annotations
 
 import json as _json
+import logging
 import os
 import re
 import shutil
@@ -35,7 +36,10 @@ from pathlib import Path
 from typing import Any
 
 from ..result import ParseResult
+from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
+
+_logger = logging.getLogger(__name__)
 
 # Matches the session id line in Codex stdout. Case-insensitive.
 _SESSION_RE = re.compile(r"session id:\s*([0-9a-f-]{8,})", re.IGNORECASE)
@@ -367,6 +371,16 @@ class CodexAdapter:
         if session_match:
             session_id = session_match.group(1)
 
+        rollout_trace = ""
+        if plan is not None:
+            rollout_trace = self._read_latest_rollout_trace(plan)
+        trace_events = parse_json_events(
+            "\n".join(part for part in (stdout, stderr, rollout_trace) if part),
+            source="codex",
+            logger=_logger,
+        )
+        tool_calls = normalize_tool_calls(trace_events)
+
         # Success classification: we have content (from either -o or the
         # rollout fallback) AND we're not rate-limited. Note that a
         # post-completion hang will have returncode == -9 (because WE
@@ -397,6 +411,7 @@ class CodexAdapter:
             rate_limited=rate_limited,
             session_id=session_id,
             tokens=None,  # codex exec does not expose token counts.
+            tool_calls=tool_calls,
         )
 
     # ---------------------------------------------------------------------
@@ -573,40 +588,9 @@ class CodexAdapter:
         _ = call_start_time  # reserved; currently using snapshot-based binding
         _ = plan  # plan.task_id could be used for tighter matching in future
         try:
-            # 1. The snapshot was taken at build_invocation time (see
-            #    _reset_per_invocation_state). If somehow it's missing
-            #    — e.g. an adapter instance used directly without
-            #    build_invocation, or a race during test setup — fall
-            #    back to an empty snapshot so that ALL current files
-            #    are treated as candidates (degraded to newest-wins).
-            snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
-
-            # 2. If we already bound a specific rollout for this
-            #    invocation, reuse it.
-            bound: Path | None = getattr(self, "_bound_rollout", None)
-            if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
-                rollout_to_scan = bound
-            else:
-                # 3. Find new rollout files (not in snapshot)
-                all_candidates: list[Path] = []
-                for d in self._candidate_rollout_dirs():
-                    try:
-                        all_candidates.extend(d.glob("rollout-*.jsonl"))
-                    except OSError:
-                        continue
-                new_candidates = [p for p in all_candidates if p not in snapshot]
-                if not new_candidates:
-                    return ""
-                rollout_to_scan = None
-                for candidate in sorted(
-                    new_candidates, key=lambda p: p.stat().st_mtime, reverse=True,
-                ):
-                    if self._rollout_matches_plan(candidate, plan):
-                        rollout_to_scan = candidate
-                        break
-                if rollout_to_scan is None:
-                    return ""
-                self._bound_rollout = rollout_to_scan
+            rollout_to_scan = self._select_rollout_for_plan(plan)
+            if rollout_to_scan is None:
+                return ""
 
             # 4. Scan our bound rollout for task_complete
             last_message = ""
@@ -633,6 +617,48 @@ class CodexAdapter:
             # Last-resort fallback: never let a rollout-parse error
             # bubble out of parse_response. Swallow everything and
             # fall back to the primary code path.
+            return ""
+
+    def _select_rollout_for_plan(self, plan: InvocationPlan) -> Path | None:
+        """Return the rollout JSONL scoped to this invocation, if available."""
+        # The snapshot is taken at build_invocation time. If an adapter is used
+        # directly in a unit test, fall back to newest-wins among matching files.
+        snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
+
+        bound: Path | None = getattr(self, "_bound_rollout", None)
+        if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
+            return bound
+
+        all_candidates: list[Path] = []
+        for directory in self._candidate_rollout_dirs():
+            try:
+                all_candidates.extend(directory.glob("rollout-*.jsonl"))
+            except OSError:
+                continue
+        new_candidates = [path for path in all_candidates if path not in snapshot]
+        if not new_candidates:
+            return None
+
+        def mtime(path: Path) -> float:
+            try:
+                return path.stat().st_mtime
+            except OSError:
+                return 0.0
+
+        for candidate in sorted(new_candidates, key=mtime, reverse=True):
+            if self._rollout_matches_plan(candidate, plan):
+                self._bound_rollout = candidate
+                return candidate
+        return None
+
+    def _read_latest_rollout_trace(self, plan: InvocationPlan) -> str:
+        """Read this invocation's Codex rollout JSONL for tool-call telemetry."""
+        rollout = self._select_rollout_for_plan(plan)
+        if rollout is None:
+            return ""
+        try:
+            return rollout.read_text(encoding="utf-8", errors="replace")
+        except OSError:
             return ""
 
     def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:

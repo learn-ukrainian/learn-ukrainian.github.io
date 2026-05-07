@@ -154,7 +154,7 @@ def _run_llm_qg(
             task_id=f"linear-v7-qg-{plan['slug']}-{dim}",
             entrypoint="dispatch",
             effort=defaults["effort"],
-            tool_config={"output_format": "text"},
+            tool_config={"output_format": "stream-json"},
             stdout_silence_timeout=stdout_silence_timeout,
         )
         response = str(getattr(result, "response", "") or "")
