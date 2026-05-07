@@ -71,8 +71,13 @@ YOUTUBE_RECORD_FIELDS = (
     "url",
     "title",
     "description",
+    "channel",
+    "thumbnail",
+    "no_captions",
     "subtitles",
 )
+YOUTUBE_DISCOVERY_DIR = PROJECT_ROOT / "data" / "youtube_discovery"
+YOUTUBE_PATTERN_PATH = YOUTUBE_DISCOVERY_DIR / "patterns.yaml"
 
 
 @dataclass(frozen=True)
@@ -446,6 +451,62 @@ def get_channel_video_urls(
     return urls
 
 
+def _entry_video_url(entry: dict[str, Any]) -> str:
+    """Return a watch URL from a yt-dlp flat playlist entry."""
+    raw_url = str(entry.get("url") or entry.get("webpage_url") or "").strip()
+    if raw_url.startswith("http"):
+        return raw_url
+    video_id = str(entry.get("id") or raw_url).strip()
+    if not video_id:
+        return ""
+    return f"https://www.youtube.com/watch?v={video_id}"
+
+
+def get_channel_video_entries(
+    channel_url: str,
+    *,
+    limiter: YouTubeRequestLimiter,
+    max_videos: int = 500,
+) -> list[dict[str, Any]]:
+    """Get flat video entries from a channel, including IDs and titles."""
+    playlist_url = normalize_channel_url(channel_url, videos_tab=True)
+    print(f"  📡 Scraping channel inventory: {playlist_url}")
+    try:
+        result = _run_yt_dlp(
+            [
+                "--dump-single-json",
+                "--flat-playlist",
+                "--playlist-end",
+                str(max_videos),
+                playlist_url,
+            ],
+            limiter=limiter,
+            label="channel inventory",
+            timeout=120,
+        )
+    except Exception as e:
+        print(f"  ❌ Channel inventory failed: {e}")
+        return []
+
+    if result.returncode != 0 or not result.stdout.strip():
+        stderr = result.stderr.strip()
+        print(f"  ❌ Channel inventory failed: {stderr or 'yt-dlp returned non-zero'}")
+        return []
+
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError as e:
+        print(f"  ❌ Channel inventory parse failed: {e}")
+        return []
+
+    entries = data.get("entries", [])
+    if not isinstance(entries, list):
+        return []
+    videos = [entry for entry in entries if isinstance(entry, dict) and _entry_video_url(entry)]
+    print(f"  📺 Found {len(videos)} videos")
+    return videos
+
+
 def _tor_is_running() -> bool:
     """Check if Tor SOCKS proxy is accepting connections."""
     try:
@@ -665,6 +726,7 @@ def build_youtube_record(
         duration_s = int(duration)
     except (TypeError, ValueError):
         duration_s = 0
+    thumbnail = str(metadata.get("thumbnail") or "").strip()
 
     record = {
         "video_id": video_id,
@@ -677,6 +739,9 @@ def build_youtube_record(
         "url": str(metadata.get("webpage_url") or video_url).strip(),
         "title": title,
         "description": description,
+        "channel": str(metadata.get("channel") or metadata.get("uploader") or channel.description).strip(),
+        "thumbnail": thumbnail,
+        "no_captions": not bool(subtitles),
         "subtitles": subtitles,
         "text": subtitles,
         "char_count": len(subtitles),
@@ -701,8 +766,6 @@ def fetch_youtube_video(
         return None
 
     subtitles = _download_subtitle_text(video_id, limiter=limiter, use_tor=use_tor)
-    if not subtitles:
-        return None
 
     return build_youtube_record(
         channel=channel,
@@ -745,15 +808,71 @@ def fetch_youtube_subtitles(
                 f.flush()
                 existing_ids.add(record["video_id"])
                 new_count += 1
-                print(f"    ✅ {record['title'][:60]} ({record['char_count']} chars)")
+                suffix = "no captions" if record.get("no_captions") else f"{record['char_count']} chars"
+                print(f"    ✅ {record['title'][:60]} ({suffix})")
             else:
                 fail_count += 1
-                print("    ⚠️  No subtitles found")
+                print("    ⚠️  Metadata fetch failed")
 
             limiter.after_video(processed_videos)
 
-    print(f"\n  ✅ Fetched: {new_count} | ⏭️  Skipped: {skip_count} | ❌ No subs: {fail_count}")
+    print(f"\n  ✅ Fetched: {new_count} | ⏭️  Skipped: {skip_count} | ❌ Failed: {fail_count}")
     print(f"  📄 {output_file}")
+
+
+def load_title_pattern_set(pattern_set: str, patterns_path: Path = YOUTUBE_PATTERN_PATH) -> list[re.Pattern[str]]:
+    """Load compiled title regexes from data/youtube_discovery/patterns.yaml."""
+    data = yaml.safe_load(patterns_path.read_text(encoding="utf-8")) or {}
+    raw_sets = data.get("pattern_sets", {})
+    raw_patterns = raw_sets.get(pattern_set)
+    if raw_patterns is None:
+        known = ", ".join(sorted(raw_sets))
+        raise ValueError(f"Unknown pattern set '{pattern_set}'. Available: {known}")
+    if not isinstance(raw_patterns, list) or not all(isinstance(item, str) for item in raw_patterns):
+        raise ValueError(f"Pattern set '{pattern_set}' must be a list of regex strings")
+    return [re.compile(pattern) for pattern in raw_patterns]
+
+
+def discover_by_title_patterns(
+    *,
+    channel: YouTubeChannel,
+    patterns: list[re.Pattern[str]],
+    output_file: Path,
+    limiter: YouTubeRequestLimiter,
+    max_videos: int = 500,
+    fetcher: Callable[..., dict[str, Any] | None] = fetch_youtube_video,
+) -> list[dict[str, Any]]:
+    """Discover channel videos whose titles match regex patterns and append new records."""
+    entries = get_channel_video_entries(channel.playlist_url, limiter=limiter, max_videos=max_videos)
+    matched_entries = [
+        entry for entry in entries
+        if any(pattern.search(str(entry.get("title") or "")) for pattern in patterns)
+    ]
+    print(f"  🔎 Matched {len(matched_entries)} videos by title")
+
+    existing_ids = load_existing_video_ids(output_file)
+    new_records: list[dict[str, Any]] = []
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, "a", encoding="utf-8") as f:
+        for index, entry in enumerate(matched_entries, start=1):
+            video_url = _entry_video_url(entry)
+            video_id = _extract_video_id(video_url)
+            if video_id in existing_ids:
+                continue
+            print(f"  [{index}/{len(matched_entries)}] {str(entry.get('title') or '')[:80]}")
+            record = fetcher(video_url, channel=channel, limiter=limiter)
+            if not record:
+                print("    ⚠️  Metadata fetch failed")
+                continue
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            f.flush()
+            existing_ids.add(record["video_id"])
+            new_records.append(record)
+            suffix = "no captions" if record.get("no_captions") else f"{record['char_count']} chars"
+            print(f"    ✅ {record['video_id']} ({suffix})")
+
+    print(f"\n  ✅ New entries: {len(new_records)} | 📄 {output_file}")
+    return new_records
 
 
 # ── Status ────────────────────────────────────────────────────
