@@ -1,12 +1,13 @@
-# Current — multi-agent index (2026-05-08)
+# Current — multi-agent index (2026-05-09)
 
-> **Repo state:** PR #1781 + #1783 + #1784 merged. Tier-2 warm-cache for `ab discuss` shipped (#1783). Codex adapter mirrors `start-codex.sh` flags so workspace-write writers can use MCP (#1784); legacy V6 paths fixed for parity, `--search` added to launcher per user policy. Bakeoff retry-2 ran fully but produced INVALID writer-discipline signal because pipeline-Codex was MCP-sandbox-blocked (now fixed). All 3 writers also failed at `python_qg` — separate pipeline bug. **A1 unblock now blocked on `python_qg` fix, NOT on writer-selection. Replacement evaluation completed: both Codex + Gemini recommend KEEP Claude with executable guardrails (Codex: "narrow the role: deterministic surfaces → code, judgment → LLM"). Next session enters AUTONOMOUS MODE per user direction 2026-05-08.**
+> **Repo state:** Overnight orchestration shift completed. 1 PR merged (#1788 brief linter), 7 PRs open awaiting morning user decisions. **A1-BLOCKER: #1790** — codex-tools writer still produces 0 tool calls post-#1784. MCP not actually wired in `codex exec` headless mode. **5-minute manual `codex exec` test in morning** is the unblock. See latest handoff for full priority list.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Replacement evaluation done + autonomous mode flip + A1 blocker reframe** | **`docs/session-state/2026-05-08-replacement-evaluation-and-autonomous-mode.md`** | **3 PRs merged (#1781 HARD STOP RULE, #1783 tier-2 warm-cache, #1784 codex MCP). Replacement eval: both Codex+Gemini say KEEP. 7 guardrails identified, 1 shipped, 6 queued. Bakeoff signal on Codex INVALID until re-run post-#1784. python_qg failure is the actual A1 blocker. Next session: AUTONOMOUS — Priority 1 re-fire codex-tools alone, Priority 2 python_qg investigation, Priority 3 ship guardrails 1/3/4/5, Priorities 4-6 follow.** |
+| **Overnight orchestration shift (Codex/Gemini/Claude-headless)** | **`docs/session-state/2026-05-09-night-shift-orchestration.md`** | **1 merged (#1788). 7 open PRs (#1789, #1791, #1792, #1793, #1795, #1796, #1797). 5 issues filed (#1785, #1786, #1787, #1790, #1794). 3 multi-agent reviews shipped via Claude headless. #1790 = A1-blocker escalation. #1791 (Decision Graph ADR) and #1792 await rebase before merge. #1789 + #1791 in flight as REVISE per Claude review.** |
+| Replacement evaluation done + autonomous mode flip + A1 blocker reframe | `docs/session-state/2026-05-08-replacement-evaluation-and-autonomous-mode.md` | 3 PRs merged (#1781 HARD STOP RULE, #1783 tier-2 warm-cache, #1784 codex MCP). Replacement eval: both Codex+Gemini say KEEP. 7 guardrails identified, 1 shipped, 6 queued. Bakeoff signal on Codex INVALID until re-run post-#1784. **2026-05-08 night-shift verified #1784 was insufficient — see #1790.** |
 | Bakeoff blockers cleared + first attempt failed + prompt fix in flight | `docs/session-state/2026-05-07-bakeoff-blockers-cleared-and-first-attempt.md` | 10 PRs merged 2026-05-07 (#1763 #1766 #1767 #1757 #1769 #1772 #1775 #1776 #1777 #1780 + #1760). 6 follow-up issues filed. Bakeoff attempt #1 failed at 1801s — Claude went meta, Gemini stalled, silence-timeout fired. PR #1781 fix landed via this session. |
 
 ## Predecessor chain (most-recent first)
