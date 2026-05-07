@@ -143,7 +143,10 @@ spawned CLIs. `scripts/agent_runtime/env_sanitize.py` builds a narrow
 environment for each process:
 
 - Common runtime variables survive only from the safe allowlist:
-  `PATH`, `HOME`, `TMPDIR`, `LANG`, `LC_*`, `AB_*`, and `LU_*`.
+  `PATH`, `HOME`, `TMPDIR`, `LANG`, `USER`, `LOGNAME`, `LC_*`,
+  `AB_*`, and `LU_*`. `USER` and `LOGNAME` are identity variables, not
+  secrets, and are intentionally allowed for subprocesses that need the
+  local account context.
 - Variables with secret-shaped names are dropped, including names that
   contain `TOKEN`, `SECRET`, `PASSWORD`, `PASSWD`, `PRIVATE`,
   `CREDENTIAL`, `API_KEY`, `ACCESS_KEY`, `AUTH`, or `COOKIE`.
@@ -160,6 +163,16 @@ environment for each process:
   not receive `GH_TOKEN`.
 - Gemini also receives `GEMINI_AUTH_MODE` because it is runtime mode
   selection, not a credential; secret-shaped values are still rejected.
+
+For #1754, Claude Pro/Max OAuth on macOS has one extra gotcha: the
+Claude CLI reads OAuth tokens from the macOS keychain, and the keychain
+lookup depends on the local user identity. A stripped environment like
+`env -i HOME=$HOME PATH=$PATH claude -p "say PONG"` can report `Not
+logged in`, while adding `USER=$USER` lets the same CLI find the
+keychain entry. `LOGNAME` is allowed as defense in depth for libraries
+that prefer it. This does not replace the provider-specific token
+allowlist; `ANTHROPIC_API_KEY` and `CLAUDE_API_KEY` still pass only to
+Claude for API-key users.
 
 Adapters should put per-call environment values in
 `InvocationPlan.env_overrides`; the runner applies overrides, sanitizes,
