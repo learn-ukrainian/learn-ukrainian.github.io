@@ -1,17 +1,19 @@
 # Current — multi-agent index (2026-05-07)
 
-> **Repo state: 14 PRs MERGED in 2026-05-06 evening tech-debt arc; PAT auth blocker resolved via project `.envrc` token.** Resilience layer + dispatch infrastructure (GH_TOKEN pass-through, silence-timeout, OAuth fallback for Claude headless) all shipped. Generic dictionary ingestion replatformed (LLM → deterministic Python). ADR multi-UI participation round-3 merged into pending/ (PROPOSED). Open: **PR #1756** (Claude OAuth fix, awaiting merge), **PR #1757** (verbatim textbook quoting #1725, just opened), **issue #1758** (silence-timeout default too aggressive, just filed). Note: source `./.envrc` not `~/.bash_secrets` for `gh` write-scope on org repos.
+> **Repo state: 10 PRs merged today, all bakeoff blockers cleared; first bakeoff attempt failed on prompt-discipline bug; PR #1781 (HARD STOP RULE fix) awaiting CI.** Trace-capture infrastructure (#1761/#1767), verbatim-quoting gate (#1725/#1757), trace-capture contamination fixes (#1768/#1775), aggregator theatre-aware winner gate (#1773/#1776), structured CoT prompt scaffolding (#1661+#1673/#1772), plan-review-time corpus check (#1765/#1769), silence-timeout default (#1758/#1763), Claude headless OAuth (#1754/#1760), crawler upgrade (#1764/#1766), A1 resource backfill (#1774/#1780) ALL on main. Bakeoff `audit/bakeoff-2026-05-07/` failed: Claude wrote 474-byte meta-summary instead of 4 artifact fences (preserved as evidence). PR #1781 fixes that. **Critical path: merge #1781 → re-fire bakeoff with `--silence-timeout 3600` → REPORT.md → writer-selection proposal → user signoff → A1 builds.**
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Tech-debt arc + dispatch infrastructure cascades + PAT auth blocker** | **`docs/session-state/2026-05-06-evening-tech-debt-arc-and-auth-cascades.md`** | **14 PRs merged: API stability (#1739/#1740), comms.html (#1738), `ab` wrappers (#1742), v7 writer-timeout (#1743), Gemini auth flip (#1744), bakeoff resume (#1745), env scrub (#1746), wiki ingestion bugs (#1747), `ab discuss` sandbox (#1748), ADR round-3 (#1749), GH_TOKEN pass-through (#1752), delegate timeouts (#1753), dictionary ingestion (#1755). 11 issues closed; #1735 closed as superseded. Open: PR #1756 (Claude OAuth), branch `codex/1725-verbatim-quoting` ready, silence-timeout-default issue drafted — all PAT-blocked. Cold-start: `gh auth login` first, then proceed.** |
+| **Bakeoff blockers cleared + first attempt failed + prompt fix in flight** | **`docs/session-state/2026-05-07-bakeoff-blockers-cleared-and-first-attempt.md`** | **10 PRs merged today (#1763 #1766 #1767 #1757 #1769 #1772 #1775 #1776 #1777 #1780 + #1760 from morning). 6 follow-up issues filed (#1762 #1770 #1771-closed-via-#1777 #1773-closed-via-#1776 #1778 #1779). Bakeoff attempt #1 failed at 1801s — Claude went meta, Gemini stalled, silence-timeout fired. Pre-crafted writer-selection template at `/tmp/writer-selection-proposal-template.md`. Open: PR #1781 (HARD STOP RULE). Next: merge → bakeoff retry with `--silence-timeout 3600`.** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Tech-debt arc + dispatch infrastructure cascades + PAT auth blocker | `2026-05-06-evening-tech-debt-arc-and-auth-cascades.md` |
+| Path-A orchestration plan (early 2026-05-07 morning) | `2026-05-06-tonight-path-a-orchestration.md` |
 | Channels rollout + ADR cycles + writer-lock ACCEPTED + orchestrator-discipline reset (afternoon) | `2026-05-06-channels-rollout-adr-cycles-and-orchestrator-discipline.md` |
 | Discussion converged + Gemini fix shipped + channels-UX deferred (this morning's pre-session) | `2026-05-06-morning-discussion-converged-and-channels-ux.md` |
 | Writer-selection bakeoff: Codex wins; Decision Card pending | `2026-05-06-bakeoff-result-codex-wins-decision-pending.md` |
