@@ -110,6 +110,28 @@ Both wrappers support `--dry-run`, which writes the prompt and a
 `batch_state/tasks/<task-id>.json` preview without launching the
 delegate worker.
 
+## Silence-timeout vs hard-timeout
+
+`delegate.py dispatch` has two watchdogs with different jobs.
+`--hard-timeout` is the absolute wall-clock fallback for the worker.
+`--silence-timeout` is narrower: it kills the agent CLI when no stdout
+line arrives within the configured window, then marks the task
+`status="timeout"`.
+
+The default silence timeout is 1800 seconds. This is intentionally
+longer than the old 600-second watchdog because substantive Codex
+dispatches can be quiet for more than 10 minutes during thinking
+phases, multi-file refactors, or long test runs. The #1725
+`1725-verbatim-quoting` dispatch was killed after 12 minutes of stdout
+silence with most work already complete and the last phase still
+salvageable; that is the failure mode this default avoids.
+
+Use `--silence-timeout 600` when you want the tighter 10-minute
+operator watchdog. OAuth or CLI hangs should still show up within
+minutes, while the hard timeout remains the final wall-clock cap.
+Use `--silence-timeout 0` only when stdout silence is expected and the
+hard timeout alone is acceptable.
+
 ## When to use channels vs `ask-*`
 
 | Situation | Use |

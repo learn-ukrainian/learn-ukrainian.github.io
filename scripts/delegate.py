@@ -155,7 +155,7 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
 
 
 DEFAULT_HARD_TIMEOUT_S = 7200
-DEFAULT_SILENCE_TIMEOUT_S = 600
+DEFAULT_SILENCE_TIMEOUT_S = 1800
 
 
 def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
@@ -1369,7 +1369,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  Persists task state under batch_state/tasks/ and streams worker output to task-owned logs.\n\n"
             "Timeouts:\n"
             "  --hard-timeout is the absolute wall-clock fallback for the worker.\n"
-            "  --silence-timeout kills the agent CLI earlier when no stdout line arrives within the window; 0 disables it.\n\n"
+            "  --silence-timeout kills the agent CLI earlier when no stdout line arrives within the window.\n"
+            "    Default is 1800s to tolerate long Codex thinking/test phases; pass 600 for a tighter watchdog; 0 disables it.\n\n"
             "Exit codes:\n"
             "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
             "Related:\n"
@@ -1382,7 +1383,14 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
 
     # dispatch
-    d = sub.add_parser("dispatch", help="Fire a task, return immediately")
+    def _dispatch_help_formatter(prog: str) -> argparse.HelpFormatter:
+        return argparse.HelpFormatter(prog, max_help_position=36, width=120)
+
+    d = sub.add_parser(
+        "dispatch",
+        help="Fire a task, return immediately",
+        formatter_class=_dispatch_help_formatter,
+    )
     d.add_argument("--agent", required=True, choices=["codex", "gemini", "claude"],
                    help="Agent to run for the task: codex, gemini, or claude.")
     d.add_argument("--task-id", required=True,
@@ -1447,18 +1455,22 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Absolute wall-clock seconds for the worker before the runtime "
             f"hard-kills it (default: {DEFAULT_HARD_TIMEOUT_S}). "
-            "This is a fallback; --silence-timeout catches stdout-silent hangs sooner."
+            "--silence-timeout defaults to 1800s and catches stdout-silent "
+            "hangs sooner."
         ),
     )
     d.add_argument(
         "--silence-timeout",
         type=int,
+        metavar="SECS",
         default=DEFAULT_SILENCE_TIMEOUT_S,
         help=(
             "Seconds without a subprocess stdout line before killing the agent "
             "CLI and marking the task status='timeout' "
-            f"(default: {DEFAULT_SILENCE_TIMEOUT_S}; 0 disables). "
-            "--hard-timeout still applies as the absolute wall-clock fallback."
+            f"(default: {DEFAULT_SILENCE_TIMEOUT_S}s; 0 disables). "
+            "The default tolerates long Codex thinking/test phases; pass 600 "
+            "for a tighter watchdog. --hard-timeout still applies as the "
+            "absolute wall-clock fallback."
         ),
     )
     d.set_defaults(func=cmd_dispatch)
