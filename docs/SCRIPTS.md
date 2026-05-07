@@ -336,6 +336,10 @@ At `scripts/audit/checks/`:
 - `outline_compliance.py` - markdown section structure matches `meta.yaml` outline
 - `activity_quality.py` - deterministic activity quality checks
 
+Additional audit guardrails:
+
+- `scripts/audit/lint_dispatch_brief.py` - dispatch brief `.venv/bin/python` worktree guardrail
+
 ### Build pipeline entry point
 
 `.venv/bin/python scripts/build/v6_build.py {level} {num}` is the single end-to-end build entry point. It drives the write -> enrich -> review -> audit -> publish chain.

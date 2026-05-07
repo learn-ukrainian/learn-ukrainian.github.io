@@ -125,3 +125,14 @@ repos:
         pass_filenames: false
         files: ^(starlight/src/components/.*\.(tsx|astro)|scripts/pipeline/config_tables\.py|docs/lesson-contract\.md)$
         stages: [pre-commit]
+
+      - id: lint-dispatch-brief-venv
+        name: dispatch brief .venv worktree guardrail
+        entry: >-
+          bash -c 'python=".venv/bin/python"; if [ ! -x "$python" ]; then
+          common_dir=$(git rev-parse --git-common-dir); python="$(cd "$common_dir/.." &&
+          pwd)/.venv/bin/python"; fi; for f in "$@"; do "$python"
+          scripts/audit/lint_dispatch_brief.py --brief "$f" || exit $?; done' --
+        language: system
+        files: ^docs/dispatch-briefs/.*\.md$
+        stages: [pre-commit]
