@@ -329,7 +329,7 @@ class ClaudeAdapter:
         events = parse_json_events(stdout, source="claude", logger=_logger)
         tool_calls = normalize_tool_calls(events)
         stream_response = _extract_stream_json_response(events)
-        effective_stdout = stream_response or stdout.strip()
+        effective_stdout = stream_response if events else stdout.strip()
 
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit
         # code in `claude --help`, and this runtime currently requests plain

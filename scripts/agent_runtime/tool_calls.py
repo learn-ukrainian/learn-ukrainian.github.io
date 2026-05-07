@@ -15,6 +15,7 @@ from typing import Any
 
 OUTPUT_SUMMARY_LIMIT = 500
 TRUNCATION_SUFFIX = "[...truncated]"
+ARGUMENT_ITEM_LIMIT = 50
 
 
 def summarize_tool_output(value: Any, *, limit: int = OUTPUT_SUMMARY_LIMIT) -> str:
@@ -135,15 +136,24 @@ def _candidate_payloads(event: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         for key in (
             "payload",
             "message",
+            "messages",
             "data",
             "item",
+            "items",
             "tool_call",
+            "tool_calls",
             "toolCall",
+            "toolCalls",
             "functionCall",
+            "parts",
         ):
             nested = payload.get(key)
             if isinstance(nested, Mapping):
                 visit(nested)
+            elif isinstance(nested, list):
+                for item in nested:
+                    if isinstance(item, Mapping):
+                        visit(item)
         content = payload.get("content")
         if isinstance(content, list):
             for item in content:
@@ -211,15 +221,17 @@ def _tool_arguments(payload: Mapping[str, Any]) -> dict[str, Any]:
 
 def _coerce_arguments(value: Any) -> dict[str, Any]:
     if isinstance(value, Mapping):
-        return dict(value)
+        sanitized = _sanitize_argument_value(value)
+        return sanitized if isinstance(sanitized, dict) else {}
     if isinstance(value, str) and value.strip():
         try:
             parsed = json.loads(value)
         except json.JSONDecodeError:
-            return {"_raw": value}
+            return {"_raw": summarize_tool_output(value)}
         if isinstance(parsed, Mapping):
-            return dict(parsed)
-        return {"_value": parsed}
+            sanitized = _sanitize_argument_value(parsed)
+            return sanitized if isinstance(sanitized, dict) else {}
+        return {"_value": _sanitize_argument_value(parsed)}
     return {}
 
 
@@ -228,6 +240,31 @@ def _tool_output(payload: Mapping[str, Any]) -> Any:
         if key in payload:
             return payload.get(key)
     return None
+
+
+def _sanitize_argument_value(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        items = list(value.items())
+        sanitized: dict[str, Any] = {}
+        for key, nested in items[:ARGUMENT_ITEM_LIMIT]:
+            sanitized[str(key)] = _sanitize_argument_value(nested)
+        if len(items) > ARGUMENT_ITEM_LIMIT:
+            sanitized["_truncated_keys"] = len(items) - ARGUMENT_ITEM_LIMIT
+        return sanitized
+    if isinstance(value, list | tuple | set):
+        items = list(value)
+        sanitized_items = [
+            _sanitize_argument_value(item)
+            for item in items[:ARGUMENT_ITEM_LIMIT]
+        ]
+        if len(items) > ARGUMENT_ITEM_LIMIT:
+            sanitized_items.append({"_truncated_items": len(items) - ARGUMENT_ITEM_LIMIT})
+        return sanitized_items
+    if isinstance(value, str):
+        return summarize_tool_output(value)
+    if value is None or isinstance(value, bool | int | float):
+        return value
+    return summarize_tool_output(value)
 
 
 def _tool_call_id(payload: Mapping[str, Any]) -> str:

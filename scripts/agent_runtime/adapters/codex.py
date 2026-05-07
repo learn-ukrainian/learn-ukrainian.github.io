@@ -371,8 +371,11 @@ class CodexAdapter:
         if session_match:
             session_id = session_match.group(1)
 
+        rollout_trace = ""
+        if plan is not None:
+            rollout_trace = self._read_latest_rollout_trace(plan)
         trace_events = parse_json_events(
-            "\n".join(part for part in (stdout, stderr) if part),
+            "\n".join(part for part in (stdout, stderr, rollout_trace) if part),
             source="codex",
             logger=_logger,
         )
@@ -585,40 +588,9 @@ class CodexAdapter:
         _ = call_start_time  # reserved; currently using snapshot-based binding
         _ = plan  # plan.task_id could be used for tighter matching in future
         try:
-            # 1. The snapshot was taken at build_invocation time (see
-            #    _reset_per_invocation_state). If somehow it's missing
-            #    — e.g. an adapter instance used directly without
-            #    build_invocation, or a race during test setup — fall
-            #    back to an empty snapshot so that ALL current files
-            #    are treated as candidates (degraded to newest-wins).
-            snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
-
-            # 2. If we already bound a specific rollout for this
-            #    invocation, reuse it.
-            bound: Path | None = getattr(self, "_bound_rollout", None)
-            if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
-                rollout_to_scan = bound
-            else:
-                # 3. Find new rollout files (not in snapshot)
-                all_candidates: list[Path] = []
-                for d in self._candidate_rollout_dirs():
-                    try:
-                        all_candidates.extend(d.glob("rollout-*.jsonl"))
-                    except OSError:
-                        continue
-                new_candidates = [p for p in all_candidates if p not in snapshot]
-                if not new_candidates:
-                    return ""
-                rollout_to_scan = None
-                for candidate in sorted(
-                    new_candidates, key=lambda p: p.stat().st_mtime, reverse=True,
-                ):
-                    if self._rollout_matches_plan(candidate, plan):
-                        rollout_to_scan = candidate
-                        break
-                if rollout_to_scan is None:
-                    return ""
-                self._bound_rollout = rollout_to_scan
+            rollout_to_scan = self._select_rollout_for_plan(plan)
+            if rollout_to_scan is None:
+                return ""
 
             # 4. Scan our bound rollout for task_complete
             last_message = ""
@@ -645,6 +617,48 @@ class CodexAdapter:
             # Last-resort fallback: never let a rollout-parse error
             # bubble out of parse_response. Swallow everything and
             # fall back to the primary code path.
+            return ""
+
+    def _select_rollout_for_plan(self, plan: InvocationPlan) -> Path | None:
+        """Return the rollout JSONL scoped to this invocation, if available."""
+        # The snapshot is taken at build_invocation time. If an adapter is used
+        # directly in a unit test, fall back to newest-wins among matching files.
+        snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
+
+        bound: Path | None = getattr(self, "_bound_rollout", None)
+        if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
+            return bound
+
+        all_candidates: list[Path] = []
+        for directory in self._candidate_rollout_dirs():
+            try:
+                all_candidates.extend(directory.glob("rollout-*.jsonl"))
+            except OSError:
+                continue
+        new_candidates = [path for path in all_candidates if path not in snapshot]
+        if not new_candidates:
+            return None
+
+        def mtime(path: Path) -> float:
+            try:
+                return path.stat().st_mtime
+            except OSError:
+                return 0.0
+
+        for candidate in sorted(new_candidates, key=mtime, reverse=True):
+            if self._rollout_matches_plan(candidate, plan):
+                self._bound_rollout = candidate
+                return candidate
+        return None
+
+    def _read_latest_rollout_trace(self, plan: InvocationPlan) -> str:
+        """Read this invocation's Codex rollout JSONL for tool-call telemetry."""
+        rollout = self._select_rollout_for_plan(plan)
+        if rollout is None:
+            return ""
+        try:
+            return rollout.read_text(encoding="utf-8", errors="replace")
+        except OSError:
             return ""
 
     def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:
