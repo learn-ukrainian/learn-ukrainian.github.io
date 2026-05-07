@@ -15,6 +15,13 @@ from typing import Any
 
 import yaml
 
+try:
+    from scripts.build.linear_pipeline import _TOOL_CITATION_RE
+except ImportError:
+    _TOOL_CITATION_RE = re.compile(
+        r"`?(?P<name>(?:mcp__sources__|search_|verify_|check_|query_|translate_)\w+)`?"
+    )
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PLANS_ROOT = REPO_ROOT / "curriculum" / "l2-uk-en" / "plans"
 
@@ -163,6 +170,7 @@ class BakeoffData:
     review_runs: list[ReviewRun]
     plan: PlanInfo
     warnings: list[str]
+    reviewer_protocol_broken: list[str] = field(default_factory=list)
 
 
 def normalize_agent(raw: Any) -> str:
@@ -259,6 +267,7 @@ def collect_bakeoff_data(bakeoff_dir: Path, writers: list[str]) -> BakeoffData:
             warn(warnings, f"no writer telemetry events found in: {telemetry_path}")
 
     review_runs: list[ReviewRun] = []
+    protocol_broken: list[str] = []
     seen_pairs: set[tuple[str, str]] = set()
     for path in sorted(bakeoff_dir.glob("*.review.jsonl")):
         match = re.fullmatch(r"(?P<writer>.+)-(?P<reviewer>.+)\.review\.jsonl", path.name)
@@ -278,6 +287,8 @@ def collect_bakeoff_data(bakeoff_dir: Path, writers: list[str]) -> BakeoffData:
             events=read_jsonl(path, warnings),
         )
         review_runs.append(run)
+        if any(event.get("event") == "reviewer_fixes_unparseable" for event in run.events):
+            protocol_broken.append(f"{writer}-{reviewer} ({path.name})")
         if not run.telemetry_present:
             warn(warnings, f"no reviewer telemetry events found in: {path}")
 
@@ -289,6 +300,9 @@ def collect_bakeoff_data(bakeoff_dir: Path, writers: list[str]) -> BakeoffData:
             if (writer, reviewer) not in seen_pairs:
                 warn(warnings, f"missing review JSONL file: {expected}")
 
+    for writer, info in writer_data.items():
+        warn_on_tool_count_drift(writer, info, warnings)
+
     plan = resolve_plan(writer_data.values(), review_runs, warnings)
     return BakeoffData(
         bakeoff_dir=bakeoff_dir,
@@ -297,6 +311,7 @@ def collect_bakeoff_data(bakeoff_dir: Path, writers: list[str]) -> BakeoffData:
         review_runs=review_runs,
         plan=plan,
         warnings=warnings,
+        reviewer_protocol_broken=protocol_broken,
     )
 
 
@@ -425,6 +440,63 @@ def writer_tool_counts(writer: WriterData) -> Counter[str]:
     return Counter(normalize_tool(event.get("tool")) for event in writer_tool_events(writer))
 
 
+def writer_tool_total(writer: WriterData) -> int:
+    summary = event_summary(writer)
+    if summary and isinstance(summary.get("tool_calls_total"), int | float):
+        return int(summary["tool_calls_total"])
+    return sum(writer_tool_counts(writer).values())
+
+
+def warn_on_tool_count_drift(writer_name: str, writer: WriterData, warnings: list[str]) -> None:
+    summary = event_summary(writer)
+    if not summary or not isinstance(summary.get("tool_calls_total"), int | float):
+        return
+    summary_total = int(summary["tool_calls_total"])
+    event_total = sum(writer_tool_counts(writer).values())
+    if summary_total != event_total:
+        warn(
+            warnings,
+            (
+                f"writer tool-call total drift for {writer_name}: "
+                f"phase_writer_summary.tool_calls_total={summary_total}, writer_tool_call events={event_total}"
+            ),
+        )
+
+
+def writer_theatre_violation_count(writer: WriterData) -> int:
+    summary = event_summary(writer)
+    summary_count: int | None = None
+    if summary and isinstance(summary.get("tool_theatre_violation_count"), int | float):
+        summary_count = int(summary["tool_theatre_violation_count"])
+    event_count = 0
+    for event in writer.events:
+        if event.get("event") != "writer_tool_theatre":
+            continue
+        violations = event.get("violations")
+        event_count += len(violations) if isinstance(violations, list) else 1
+    if summary_count is None:
+        return event_count
+    return max(summary_count, event_count)
+
+
+def normalize_tool_citation(raw_tool: Any) -> str:
+    return normalize_tool(str(raw_tool or "").removeprefix("mcp__sources__"))
+
+
+def cited_tool_names(text: str | None) -> set[str]:
+    if not text:
+        return set()
+    return {normalize_tool_citation(citation) for citation in _TOOL_CITATION_RE.findall(text)}
+
+
+def writer_cites_tools_with_zero_calls(writer: WriterData) -> bool:
+    return (
+        writer.telemetry_present
+        and writer_tool_total(writer) == 0
+        and bool(cited_tool_names(writer.text))
+    )
+
+
 def cot_score(writer: WriterData) -> tuple[int | None, str]:
     if not writer.telemetry_present:
         return None, "telemetry absent"
@@ -459,6 +531,8 @@ def verify_density_score(writer: WriterData) -> tuple[int | None, str]:
         calls = writer_tool_counts(writer).get("verify_words", 0)
     density = calls_per_100(calls, writer.word_count)
     if calls <= 0:
+        if writer_cites_tools_with_zero_calls(writer):
+            return 0, "0 calls; cites tool names"
         return 0, "0 calls"
     if density >= 0.25:
         score = 3
@@ -532,6 +606,15 @@ def end_gate_score(writer: WriterData) -> tuple[int | None, str]:
     return (3 if fired else 0), f"end_gate_fired={str(fired).lower()}"
 
 
+def theatre_clean_score(writer: WriterData) -> tuple[int | None, str]:
+    if not writer.telemetry_present:
+        return None, "telemetry absent"
+    violations = writer_theatre_violation_count(writer)
+    if violations:
+        return 0, f"{violations} violation(s)"
+    return 3, "0 violations"
+
+
 def writer_prompt_scores(data: BakeoffData) -> dict[str, dict[str, int | None]]:
     rows = {
         "CoT block usage (writer_cot_emit fields_filled)": cot_score,
@@ -539,6 +622,7 @@ def writer_prompt_scores(data: BakeoffData) -> dict[str, dict[str, int | None]]:
         "Modern-Ukrainian compliance (no archaic forms in output)": modern_ukrainian_score,
         "Source-citation discipline (writer_tool_call success ratio)": source_discipline_score,
         "End-gate fired (writer_end_gate gate_present)": end_gate_score,
+        "Tool-theatre clean": theatre_clean_score,
     }
     scores: dict[str, dict[str, int | None]] = {writer: {} for writer in data.writers}
     for label, scorer in rows.items():
@@ -555,6 +639,7 @@ def writer_prompt_table(data: BakeoffData) -> tuple[str, dict[str, dict[str, int
         "Modern-Ukrainian compliance (no archaic forms in output)": modern_ukrainian_score,
         "Source-citation discipline (writer_tool_call success ratio)": source_discipline_score,
         "End-gate fired (writer_end_gate gate_present)": end_gate_score,
+        "Tool-theatre clean": theatre_clean_score,
     }
     score_map: dict[str, dict[str, int | None]] = {writer: {} for writer in data.writers}
     table_rows: list[list[str]] = []
@@ -847,9 +932,53 @@ def tool_usage_table(data: BakeoffData) -> str:
         if not writer_info.telemetry_present:
             density_row.append("telemetry absent")
         else:
-            density_row.append(f"{calls_per_100(sum(writer_tool_counts(writer_info).values()), writer_info.word_count):.2f}")
+            density_row.append(f"{calls_per_100(writer_tool_total(writer_info), writer_info.word_count):.2f}")
     table_rows.append(density_row)
     return markdown_table(["tool", *data.writers], table_rows)
+
+
+def writer_tool_density(data: BakeoffData, writer: str) -> float:
+    writer_info = data.writer_data[writer]
+    return calls_per_100(writer_tool_total(writer_info), writer_info.word_count)
+
+
+def writer_winner_verdict(data: BakeoffData, writer: str, min_dims: dict[str, tuple[str, float] | None]) -> str:
+    min_dim = min_dims[writer]
+    if min_dim is None:
+        return "blocked: no min_dim"
+    if min_dim[1] < 8:
+        return "blocked: min_dim < 8"
+    if writer_theatre_violation_count(data.writer_data[writer]) > 0:
+        return "blocked: tool theatre"
+    return "eligible"
+
+
+def winner_ranking_table(data: BakeoffData) -> str:
+    min_dims = content_min_dims(data)
+    ranked = sorted(
+        data.writers,
+        key=lambda writer: (
+            writer_winner_verdict(data, writer, min_dims) == "eligible",
+            writer_tool_density(data, writer) * (min_dims[writer][1] if min_dims[writer] else 0),
+            min_dims[writer][1] if min_dims[writer] else -1,
+        ),
+        reverse=True,
+    )
+    table_rows: list[list[str]] = []
+    for writer in ranked:
+        writer_info = data.writer_data[writer]
+        min_dim = min_dims[writer]
+        min_display = "n/a" if min_dim is None else f"{format_float(min_dim[1])} ({min_dim[0]})"
+        table_rows.append(
+            [
+                writer,
+                f"{writer_tool_density(data, writer):.2f}",
+                str(writer_theatre_violation_count(writer_info)),
+                min_display,
+                writer_winner_verdict(data, writer, min_dims),
+            ]
+        )
+    return markdown_table(["writer", "density", "theatre violations", "min_dim", "verdict"], table_rows)
 
 
 def calls_per_100(calls: int, word_count: int) -> float:
@@ -897,42 +1026,81 @@ def generated_findings(
     writer_prompt_score_map: dict[str, dict[str, int | None]],
 ) -> list[list[str]]:
     rows: list[list[str]] = []
-    weighted = content_weighted_scores(data)
+    min_dims = content_min_dims(data)
     prompt_totals = {
         writer: sum(score for score in writer_prompt_score_map[writer].values() if isinstance(score, int))
         for writer in data.writers
     }
+    prompt_max = 3 * len(next(iter(writer_prompt_score_map.values()), {}))
+    eligible_writers = [
+        writer
+        for writer in data.writers
+        if min_dims[writer] is not None
+        and min_dims[writer][1] >= 8
+        and writer_theatre_violation_count(data.writer_data[writer]) == 0
+    ]
 
     content_leader = max(
-        (writer for writer in data.writers if weighted.get(writer) is not None),
-        key=lambda writer: weighted[writer] or -1,
+        eligible_writers,
+        key=lambda writer: (
+            writer_tool_density(data, writer) * (min_dims[writer][1] if min_dims[writer] else 0),
+            min_dims[writer][1] if min_dims[writer] else -1,
+        ),
         default=None,
     )
     adherence_leader = max(data.writers, key=lambda writer: prompt_totals.get(writer, -1), default=None)
-    if content_leader and adherence_leader and content_leader == adherence_leader:
+    if content_leader:
+        adherence_detail = ""
+        if adherence_leader:
+            adherence_detail = (
+                f" Writer prompt adherence: {content_leader}={prompt_totals[content_leader]}/{prompt_max}; "
+                f"adherence leader={adherence_leader} ({prompt_totals[adherence_leader]}/{prompt_max})."
+            )
         rows.append(
             [
                 (
-                    f"Candidate winner: {content_leader} leads weighted content "
-                    f"({format_float(weighted[content_leader])}) and writer prompt adherence "
-                    f"({prompt_totals[content_leader]}/15)."
+                    f"Candidate winner: {content_leader} passes min-dim gate "
+                    f"({format_float(min_dims[content_leader][1] if min_dims[content_leader] else None)}) "
+                    f"and leads eligible writers by tool-call density x min_dim "
+                    f"({writer_tool_density(data, content_leader):.2f}/100w)."
+                    f"{adherence_detail}"
                 ),
                 "Use this writer as the default candidate unless manual review finds a blocking quality issue.",
             ]
         )
-    elif content_leader and adherence_leader:
+    else:
+        rows.append(
+            [
+                "No candidate winner could be computed after the min-dim >= 8 and theatre-clean gates.",
+                "Run at least one writer with passing content dimensions and clean telemetry.",
+            ]
+        )
+
+    blocked = [
+        f"{writer} ({writer_winner_verdict(data, writer, min_dims)})"
+        for writer in data.writers
+        if writer_winner_verdict(data, writer, min_dims) != "eligible"
+    ]
+    if blocked:
+        rows.append(
+            [
+                "Winner gate excluded: " + "; ".join(blocked) + ".",
+                "Do not select excluded writers even when their weighted score is high.",
+            ]
+        )
+
+    suspicious_zero = [writer for writer in data.writers if writer_cites_tools_with_zero_calls(data.writer_data[writer])]
+    if suspicious_zero:
         rows.append(
             [
                 (
-                    f"No single writer leads both axes: content leader is {content_leader} "
-                    f"({format_float(weighted[content_leader])}); adherence leader is {adherence_leader} "
-                    f"({prompt_totals[adherence_leader]}/15)."
+                    "writer cites tools but emitted zero calls - suspect cross-contamination/theatre: "
+                    + ", ".join(suspicious_zero)
+                    + "."
                 ),
-                "Treat the bakeoff as a prompt-diagnosis signal, not a clean winner.",
+                "Treat the writer telemetry as invalid until the raw trace and markdown are reconciled.",
             ]
         )
-    else:
-        rows.append(["No candidate winner could be computed.", "Run at least one writer and one review with telemetry."])
 
     zero_rows = []
     for label in next(iter(writer_prompt_score_map.values()), {}):
@@ -1056,17 +1224,27 @@ def escape_cell(value: Any) -> str:
 def render_report(data: BakeoffData) -> str:
     writer_prompt, writer_prompt_score_map = writer_prompt_table(data)
     warnings_block = "\n".join(f"- {warning}" for warning in data.warnings) if data.warnings else "- none"
-    return "\n\n".join(
+    protocol_broken_block = "\n".join(f"- {item}" for item in data.reviewer_protocol_broken)
+    report_parts = [
+        "# Bakeoff comparison report",
+        "\n".join(
+            [
+                f"- Bakeoff dir: `{data.bakeoff_dir.as_posix()}`",
+                f"- Writers: {', '.join(data.writers)}",
+                f"- Plan: `{data.plan.display_path}`",
+                f"- Word target: {data.plan.word_target if data.plan.word_target else 'unknown'}",
+            ]
+        ),
+        "## Winner ranking by tool-call density\n\n" + winner_ranking_table(data),
+    ]
+    if data.reviewer_protocol_broken:
+        report_parts.append(
+            "## REVIEWER PROTOCOL BROKEN\n\n"
+            + protocol_broken_block
+            + "\n\nReview runs emitted `reviewer_fixes_unparseable`; reviewer correction telemetry is not trustworthy."
+        )
+    report_parts.extend(
         [
-            "# Bakeoff comparison report",
-            "\n".join(
-                [
-                    f"- Bakeoff dir: `{data.bakeoff_dir.as_posix()}`",
-                    f"- Writers: {', '.join(data.writers)}",
-                    f"- Plan: `{data.plan.display_path}`",
-                    f"- Word target: {data.plan.word_target if data.plan.word_target else 'unknown'}",
-                ]
-            ),
             "## Prompt adherence - writers\n\n" + writer_prompt,
             "## Prompt adherence - reviewers\n\n" + reviewer_prompt_table(data),
             "## Content quality - writers\n\n" + content_quality_table(data),
@@ -1075,6 +1253,9 @@ def render_report(data: BakeoffData) -> str:
             "## Findings + recommendations\n\n" + findings_table(data, writer_prompt_score_map),
             "## Warnings\n\n" + warnings_block,
         ]
+    )
+    return "\n\n".join(
+        report_parts
     ) + "\n"
 
 
