@@ -5,6 +5,7 @@ Mounted at /api/decisions/ in main.py.
 
 Endpoints:
   GET  /api/decisions                  All decisions (optional ?status=active filter)
+  GET  /api/decisions/lineage          Decision files with git backlink lineage
   GET  /api/decisions/stale            Expired active decisions
   GET  /api/decisions/budget           Budget status (count, max, warning threshold)
   GET  /api/decisions/{dec_id}         Single decision by ID
@@ -20,6 +21,8 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, HTTPException, Query
 
+from scripts.audit.decision_lineage import build_lineage_response
+
 from .config import PROJECT_ROOT
 
 router = APIRouter(tags=["decisions"])
@@ -34,6 +37,7 @@ _VALID_SCOPES = {"pipeline", "content", "architecture", "tooling", "pedagogy"}
 # ── TTL Cache ─────────────────────────────────────────────────────
 
 _cache: dict = {"data": None, "ts": 0.0}
+_lineage_cache: dict = {"data": None, "ts": 0.0}
 _CACHE_TTL = 60  # seconds
 
 
@@ -66,6 +70,19 @@ def _is_stale(dec: dict) -> bool:
         return date.fromisoformat(str(expires)) <= date.today()
     except (ValueError, TypeError):
         return False
+
+
+def _load_lineage(decision_id: str | None = None) -> dict:
+    """Load decision lineage with a short TTL because git history scans are heavier."""
+    now = time.monotonic()
+    if decision_id is None and _lineage_cache["data"] is not None and (now - _lineage_cache["ts"]) < _CACHE_TTL:
+        return _lineage_cache["data"]
+
+    data = build_lineage_response(PROJECT_ROOT, decision_id=decision_id)
+    if decision_id is None:
+        _lineage_cache["data"] = data
+        _lineage_cache["ts"] = now
+    return data
 
 
 # ── Endpoints ─────────────────────────────────────────────────────
@@ -111,6 +128,14 @@ async def decision_budget():
             else "ok"
         ),
     }
+
+
+@router.get("/lineage")
+async def decision_lineage(
+    decision_id: str | None = Query(None, description="Optional decision ID or alias filter, e.g. ADR-008 or dec-007"),
+):
+    """Decision files with git commit and PR backlink lineage."""
+    return _load_lineage(decision_id=decision_id)
 
 
 @router.get("/scope/{scope}")
