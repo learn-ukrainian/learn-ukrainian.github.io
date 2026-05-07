@@ -60,6 +60,21 @@ _GEMINI_AUTH_CHOICES = ["auto", "subscription", "api-key", "api"]
 _DISCUSSION_READONLY_TOOL_CONFIG = {"discussion_readonly": True}
 
 
+def _build_discuss_round_body(root_body: str, directive: str) -> str:
+    """Render the high-priority body for a discuss round prompt.
+
+    The root question is pinned outside channel history because history
+    truncation is allowed to drop old messages. In later rounds, verbose
+    replies can exceed the history budget before the root is rendered.
+    """
+    return (
+        "--- discussion root question (pinned) ---\n"
+        f"{root_body}\n\n"
+        "--- round directive ---\n"
+        f"{directive}"
+    )
+
+
 def _deadline_seconds_arg(raw_value: str) -> int:
     try:
         seconds = int(raw_value)
@@ -1279,7 +1294,7 @@ def _handle_discuss(args) -> int:
         try:
             prompt_obj = _channels.build_agent_prompt(
                 args.channel,
-                directive,
+                _build_discuss_round_body(body, directive),
                 history_tail=needed_history,
                 review=args.review,
             )

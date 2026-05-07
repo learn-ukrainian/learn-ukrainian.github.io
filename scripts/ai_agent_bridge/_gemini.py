@@ -82,12 +82,12 @@ def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-pre
 
 def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query",
                data: str | None = None, model: str = GEMINI_DEFAULT_MODEL,
-               from_model: str | None = None, async_mode: bool = False,
-               stdout_only: bool = False, output_path: str | None = None,
-               extract_tags: list | None = None, skip_model_check: bool = False,
-               allow_write: bool = False, delimiters: str | None = None,
-               skip_github: bool = False, auth_mode: str | None = None,
-               review: bool = False):
+               from_llm: str | None = None, from_model: str | None = None,
+               async_mode: bool = False, stdout_only: bool = False,
+               output_path: str | None = None, extract_tags: list | None = None,
+               skip_model_check: bool = False, allow_write: bool = False,
+               delimiters: str | None = None, skip_github: bool = False,
+               auth_mode: str | None = None, review: bool = False):
     """Send message to Gemini AND optionally invoke Gemini to process it."""
     # Model cache management
     if skip_model_check and model in _MODEL_CACHE:
@@ -111,8 +111,8 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
     _warn_long_handoff(content, msg_type, task_id)
 
     # Send the message
-    msg_id = _send_gemini_message(content, task_id, msg_type, data, from_model, model,
-                                  stdout_only, output_path)
+    msg_id = _send_gemini_message(content, task_id, msg_type, data, from_llm,
+                                  from_model, model, stdout_only, output_path)
 
     # Invoke Gemini or queue
     if async_mode:
@@ -146,18 +146,34 @@ def _warn_long_handoff(content: str, msg_type: str, task_id: str | None):
         print()
 
 
-def _send_gemini_message(content, task_id, msg_type, data, from_model, model,
+def _send_gemini_message(content, task_id, msg_type, data, from_llm, from_model, model,
                          stdout_only, output_path):
     """Send the message and handle pre-acknowledgement."""
     if output_path:
-        msg_id = send_to_gemini(content, task_id, msg_type, data,
-                                from_model=from_model, to_model=model, quiet=stdout_only)
+        if from_llm:
+            msg_id = send_message(
+                content, task_id, msg_type, data, from_llm=from_llm,
+                to_llm="gemini", from_model=from_model, to_model=model,
+                quiet=stdout_only,
+            )
+        else:
+            msg_id = send_to_gemini(content, task_id, msg_type, data,
+                                    from_model=from_model, to_model=model,
+                                    quiet=stdout_only)
         acknowledge(msg_id, quiet=stdout_only)
         if not stdout_only:
             print("   Pre-acknowledged (file output mode — no broker traffic)")
     else:
-        msg_id = send_to_gemini(content, task_id, msg_type, data,
-                                from_model=from_model, to_model=model, quiet=stdout_only)
+        if from_llm:
+            msg_id = send_message(
+                content, task_id, msg_type, data, from_llm=from_llm,
+                to_llm="gemini", from_model=from_model, to_model=model,
+                quiet=stdout_only,
+            )
+        else:
+            msg_id = send_to_gemini(content, task_id, msg_type, data,
+                                    from_model=from_model, to_model=model,
+                                    quiet=stdout_only)
         if stdout_only:
             acknowledge(msg_id, quiet=stdout_only)
     return msg_id
