@@ -221,6 +221,13 @@ what-is-it-like:
       type: article
       relevance: medium
       verified: true
+  videos:
+    - title: "Introduction to Ukrainian ADJECTIVES - прикметники [Ukrainian Grammar Guide]"
+      type: video
+      youtube_url: https://www.youtube.com/watch?v=t6QpqZRIJPY
+      channel: Ukrainian Lessons
+      no_captions: true
+      include_reason: "A1 adjective introduction for gender and number agreement in basic descriptions."
 
 colors:
   articles:
