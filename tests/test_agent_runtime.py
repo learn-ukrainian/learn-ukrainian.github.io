@@ -1425,7 +1425,9 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     import json as _json
     from unittest.mock import MagicMock
 
-    # Set up a fake $HOME with a Gemini session file for the test project.
+    # Set up fake Gemini state for the test project. The session file is
+    # created by the mocked Popen below, after build_invocation snapshots
+    # pre-existing files.
     fake_home = tmp_path / "home"
     fake_home.mkdir()
     monkeypatch.setenv("HOME", str(fake_home))
@@ -1435,14 +1437,6 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
 
     chats_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
     chats_dir.mkdir(parents=True)
-    (chats_dir / "session-latest.json").write_text(_json.dumps({
-        "sessionId": "x",
-        "messages": [
-            {"type": "user", "content": [{"text": "write a module"}]},
-            {"type": "gemini",
-             "content": "### Skeleton\n\n## Section 1\n...full response..."},
-        ],
-    }), "utf-8")
 
     # Mock Popen so it never really spawns a subprocess. We simulate
     # a hang by NOT setting returncode on the first poll and then
@@ -1471,6 +1465,17 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
 
     mock_kill_tree = MagicMock()
 
+    def _popen_after_session_start(*args, **kwargs):
+        (chats_dir / "session-latest.json").write_text(_json.dumps({
+            "sessionId": "x",
+            "messages": [
+                {"type": "user", "content": [{"text": "write a module"}]},
+                {"type": "gemini",
+                 "content": "### Skeleton\n\n## Section 1\n...full response..."},
+            ],
+        }), "utf-8")
+        return mock_proc
+
     # has_headroom mock: always OK.
     # should_kill mock: fire hard_timeout on every call.
     with patch(
@@ -1480,7 +1485,7 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
         "agent_runtime.runner.write_record",
     ), patch(
         "agent_runtime.runner.subprocess.Popen",
-        return_value=mock_proc,
+        side_effect=_popen_after_session_start,
     ), patch(
         "agent_runtime.runner.should_kill",
         side_effect=lambda *a, **kw: "hard_timeout",
@@ -2285,10 +2290,21 @@ def test_gemini_parse_response_recovers_from_session_file(tmp_path, monkeypatch)
     project_cwd = tmp_path / "learn-ukrainian"
     project_cwd.mkdir()
 
-    # Create a realistic session file with a user message + two gemini
-    # messages (the second one being the final answer).
     chats_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
     chats_dir.mkdir(parents=True)
+
+    plan = adapter.build_invocation(
+        prompt="write a sonnet",
+        mode="read-only",
+        cwd=project_cwd,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    # Create a realistic session file after build_invocation has snapshotted
+    # pre-existing files.
     session_data = {
         "sessionId": "abc-def",
         "startTime": "2026-04-10T20:00:00Z",
@@ -2301,16 +2317,6 @@ def test_gemini_parse_response_recovers_from_session_file(tmp_path, monkeypatch)
     }
     (chats_dir / "session-2026-04-10T20-00-abcdef.json").write_text(
         _json.dumps(session_data), "utf-8",
-    )
-
-    plan = adapter.build_invocation(
-        prompt="x",
-        mode="read-only",
-        cwd=project_cwd,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
     )
 
     # Simulate a hard-timeout kill: stdout empty, returncode -9 (SIGKILL).

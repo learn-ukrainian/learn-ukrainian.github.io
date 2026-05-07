@@ -22,8 +22,8 @@ to land because it has the most special-case logic:
   used by the pipeline reviewers to restrict which MCP tools are
   accessible. Critical for audit gate correctness.
 
-- **``--output-format text``**: Forces plain-text output for machine
-  parsing.
+- **``--output-format stream-json``**: Forces machine-readable output so
+  tool calls can be captured from the CLI trace.
 
 Mode handling:
 - ``read-only``: No sandbox flag (Claude Code has no explicit sandbox
@@ -263,9 +263,14 @@ class ClaudeAdapter:
 
         # Output format
         output_format = str(tc.get("output_format", "stream-json"))
+        if output_format != "stream-json":
+            raise ValueError(
+                "ClaudeAdapter requires tool_config output_format='stream-json' "
+                "so tool-call trace parsing fails closed instead of degrading "
+                f"to text output; got {output_format!r}"
+            )
         cmd.extend(["--output-format", output_format])
-        if output_format == "stream-json":
-            cmd.append("--verbose")
+        cmd.append("--verbose")
 
         if discussion_readonly:
             cmd.extend([
@@ -332,12 +337,10 @@ class ClaudeAdapter:
         effective_stdout = stream_response if events else stdout.strip()
 
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit
-        # code in `claude --help`, and this runtime currently requests plain
-        # text (`--output-format text`), not machine-readable JSON. The safest
-        # remaining signal is a rate-limit phrase on stderr from a failed or
-        # empty-response call. We intentionally ignore stdout here: successful
-        # Claude responses can legitimately discuss "rate limited" without the
-        # task being blocked.
+        # code in `claude --help`. The safest remaining signal is a
+        # rate-limit phrase on stderr from a failed or empty-response call.
+        # We intentionally ignore stdout here: successful Claude responses can
+        # legitimately discuss "rate limited" without the task being blocked.
         usable_response = bool(effective_stdout)
         failed_call = returncode != 0 or not usable_response
         rate_limited = failed_call and bool(_RATE_LIMIT_RE.search(stderr or ""))
