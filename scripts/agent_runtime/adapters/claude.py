@@ -54,6 +54,7 @@ from pathlib import Path
 from typing import Any
 
 from ..result import ParseResult
+from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -153,7 +154,8 @@ class ClaudeAdapter:
               existing). Only meaningful when ``session_id`` is provided.
             - ``mcp_config_path: str`` — path to .mcp.json for tool restrictions
             - ``allowed_tools: str`` — comma-separated list passed to --allowedTools
-            - ``output_format: str`` — defaults to "text"
+            - ``output_format: str`` — defaults to "stream-json" so tool
+              calls can be captured from the CLI trace.
             - ``use_bare: bool`` — explicit opt-out of --bare (default: auto-enable
               when no session + ANTHROPIC_API_KEY is set)
 
@@ -260,7 +262,10 @@ class ClaudeAdapter:
                 )
 
         # Output format
-        cmd.extend(["--output-format", tc.get("output_format", "text")])
+        output_format = str(tc.get("output_format", "stream-json"))
+        cmd.extend(["--output-format", output_format])
+        if output_format == "stream-json":
+            cmd.append("--verbose")
 
         if discussion_readonly:
             cmd.extend([
@@ -321,6 +326,11 @@ class ClaudeAdapter:
         _ = plan
         _ = call_start_time
 
+        events = parse_json_events(stdout, source="claude", logger=_logger)
+        tool_calls = normalize_tool_calls(events)
+        stream_response = _extract_stream_json_response(events)
+        effective_stdout = stream_response or stdout.strip()
+
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit
         # code in `claude --help`, and this runtime currently requests plain
         # text (`--output-format text`), not machine-readable JSON. The safest
@@ -328,18 +338,18 @@ class ClaudeAdapter:
         # empty-response call. We intentionally ignore stdout here: successful
         # Claude responses can legitimately discuss "rate limited" without the
         # task being blocked.
-        usable_response = bool(stdout.strip())
+        usable_response = bool(effective_stdout)
         failed_call = returncode != 0 or not usable_response
         rate_limited = failed_call and bool(_RATE_LIMIT_RE.search(stderr or ""))
 
         # Success classification
         ok = returncode == 0 and usable_response and not rate_limited
-        response = stdout.strip() if ok else ""
+        response = effective_stdout if ok else ""
 
         # Stderr excerpt on failure
         stderr_excerpt: str | None = None
         if not ok:
-            excerpt_source = stderr.strip() or stdout.strip() or ""
+            excerpt_source = stderr.strip() or effective_stdout or stdout.strip() or ""
             stderr_excerpt = excerpt_source[:500] or None
 
         # Session ID extraction (rare — caller usually passes it IN)
@@ -347,6 +357,11 @@ class ClaudeAdapter:
         sid_match = _SESSION_ID_RE.search(stdout or "")
         if sid_match:
             session_id = sid_match.group(1)
+        for event in events:
+            sid = event.get("session_id") or event.get("sessionId")
+            if isinstance(sid, str) and sid:
+                session_id = sid
+                break
 
         return ParseResult(
             ok=ok,
@@ -355,6 +370,7 @@ class ClaudeAdapter:
             rate_limited=rate_limited,
             session_id=session_id,
             tokens=None,  # Claude CLI doesn't expose tokens in text output
+            tool_calls=tool_calls,
         )
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
@@ -396,3 +412,36 @@ class ClaudeAdapter:
             except OSError:
                 pass
         return ()
+
+
+def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
+    """Extract assistant text from Claude ``--output-format stream-json`` events."""
+    result_text = ""
+    text_parts: list[str] = []
+    for event in events:
+        result = event.get("result")
+        if isinstance(result, str) and result.strip():
+            result_text = result.strip()
+        message = event.get("message")
+        if isinstance(message, dict):
+            content = message.get("content")
+            if isinstance(content, list):
+                for item in content:
+                    if not isinstance(item, dict):
+                        continue
+                    if item.get("type") == "text" and isinstance(item.get("text"), str):
+                        text_parts.append(item["text"])
+        content = event.get("content")
+        if isinstance(content, list):
+            for item in content:
+                if (
+                    isinstance(item, dict)
+                    and item.get("type") == "text"
+                    and isinstance(item.get("text"), str)
+                ):
+                    text_parts.append(item["text"])
+        elif isinstance(content, str) and event.get("type") in {"text", "assistant"}:
+            text_parts.append(content)
+    if result_text:
+        return result_text
+    return "\n".join(part.strip() for part in text_parts if part.strip()).strip()

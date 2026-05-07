@@ -1302,6 +1302,8 @@ def detect_tool_theatre(
 
 
 def _runtime_tool_calls(result: Any) -> list[dict[str, Any]]:
+    # Runtime Result.tool_calls is the producer today. usage_record support is
+    # read-only forward compatibility; persisting raw arguments needs redaction.
     calls: list[dict[str, Any]] = []
     for attr in ("tool_calls", "mcp_tool_calls"):
         value = getattr(result, attr, None)
@@ -1574,7 +1576,7 @@ def _render_component_props_schema(allowed_activity_types: str) -> str:
 
 
 def _runtime_tool_config(agent_label: str) -> dict[str, Any]:
-    tool_config: dict[str, Any] = {"output_format": "text"}
+    tool_config: dict[str, Any] = {"output_format": "stream-json"}
     if agent_label == "codex-tools":
         from scripts.agent_runtime.tool_config import build_mcp_tool_config
 

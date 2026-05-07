@@ -27,6 +27,7 @@ Issue: #1184
 from __future__ import annotations
 
 import json as _json
+import logging
 import os
 import re
 import shutil
@@ -35,7 +36,10 @@ from pathlib import Path
 from typing import Any
 
 from ..result import ParseResult
+from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
+
+_logger = logging.getLogger(__name__)
 
 # Matches the session id line in Codex stdout. Case-insensitive.
 _SESSION_RE = re.compile(r"session id:\s*([0-9a-f-]{8,})", re.IGNORECASE)
@@ -367,6 +371,13 @@ class CodexAdapter:
         if session_match:
             session_id = session_match.group(1)
 
+        trace_events = parse_json_events(
+            "\n".join(part for part in (stdout, stderr) if part),
+            source="codex",
+            logger=_logger,
+        )
+        tool_calls = normalize_tool_calls(trace_events)
+
         # Success classification: we have content (from either -o or the
         # rollout fallback) AND we're not rate-limited. Note that a
         # post-completion hang will have returncode == -9 (because WE
@@ -397,6 +408,7 @@ class CodexAdapter:
             rate_limited=rate_limited,
             session_id=session_id,
             tokens=None,  # codex exec does not expose token counts.
+            tool_calls=tool_calls,
         )
 
     # ---------------------------------------------------------------------

@@ -56,11 +56,11 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
     assert calls[0][2]["entrypoint"] == "dispatch"
     assert calls[0][2]["model"] == linear_pipeline.WRITER_DEFAULTS[writer]["model"]
     assert calls[0][2]["effort"] == linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
-    assert calls[0][2]["tool_config"]["output_format"] == "text"
+    assert calls[0][2]["tool_config"]["output_format"] == "stream-json"
     if writer == "codex-tools":
         assert calls[0][2]["tool_config"]["mcp_servers"]["sources"]["url"].endswith("/sse")
     else:
-        assert calls[0][2]["tool_config"] == {"output_format": "text"}
+        assert calls[0][2]["tool_config"] == {"output_format": "stream-json"}
 
 
 def test_v7_build_accepts_codex_alias() -> None:

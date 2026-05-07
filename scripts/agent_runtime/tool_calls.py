@@ -1,0 +1,255 @@
+"""Tool-call telemetry parsing helpers for agent CLI traces.
+
+The normalized records are intentionally small and PII-bearing. Arguments are
+kept because downstream honesty checks need them, but raw tool output is never
+stored: only a capped summary is retained.
+"""
+from __future__ import annotations
+
+import json
+import logging
+import re
+from collections.abc import Iterable, Mapping
+from datetime import UTC, datetime
+from typing import Any
+
+OUTPUT_SUMMARY_LIMIT = 500
+TRUNCATION_SUFFIX = "[...truncated]"
+
+
+def summarize_tool_output(value: Any, *, limit: int = OUTPUT_SUMMARY_LIMIT) -> str:
+    """Return a bounded, human-readable summary of a tool output value."""
+    if value is None:
+        summary = ""
+    elif isinstance(value, str):
+        summary = value
+    else:
+        try:
+            summary = json.dumps(value, ensure_ascii=False, sort_keys=True)
+        except (TypeError, ValueError):
+            summary = str(value)
+    summary = " ".join(summary.split())
+    if len(summary) <= limit:
+        return summary
+    keep = max(0, limit - len(TRUNCATION_SUFFIX))
+    return f"{summary[:keep]}{TRUNCATION_SUFFIX}"
+
+
+def parse_json_events(text: str, *, source: str, logger: logging.Logger) -> list[dict[str, Any]]:
+    """Parse tolerant JSON/JSONL events from CLI output.
+
+    Each line may be a JSON object, or a debug line containing one JSON object.
+    Malformed candidate lines are logged and skipped so CLI version drift does
+    not crash the adapter parse path.
+    """
+    events: list[dict[str, Any]] = []
+    for lineno, raw_line in enumerate(text.splitlines(), start=1):
+        line = raw_line.strip()
+        if not line:
+            continue
+        candidate = line
+        if not candidate.startswith("{"):
+            start = candidate.find("{")
+            end = candidate.rfind("}")
+            if start == -1:
+                continue
+            if end <= start:
+                if _looks_like_tool_line(line):
+                    logger.warning(
+                        "%s tool-call trace line %d was not parseable JSON: incomplete object",
+                        source,
+                        lineno,
+                    )
+                continue
+            candidate = candidate[start:end + 1]
+        try:
+            event = json.loads(candidate)
+        except json.JSONDecodeError as exc:
+            if _looks_like_tool_line(line):
+                logger.warning(
+                    "%s tool-call trace line %d was not parseable JSON: %s",
+                    source,
+                    lineno,
+                    exc,
+                )
+            continue
+        if isinstance(event, dict):
+            events.append(event)
+    return events
+
+
+def normalize_tool_calls(events: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Extract normalized tool-call records from provider-specific events."""
+    calls: list[dict[str, Any]] = []
+    # Tool-result correlation is best-effort and scoped to one parse_response
+    # call. Provider ids are not assumed globally unique across invocations.
+    by_id: dict[str, dict[str, Any]] = {}
+
+    for event in events:
+        for payload in _candidate_payloads(event):
+            if not _is_tool_use_payload(payload):
+                continue
+            name = _tool_name(payload)
+            if not name:
+                continue
+            call = {
+                "name": name,
+                "arguments": _tool_arguments(payload),
+                "output_summary": summarize_tool_output(_tool_output(payload)),
+                "timestamp": _timestamp(payload, event),
+            }
+            calls.append(call)
+            call_id = _tool_call_id(payload)
+            if call_id:
+                by_id[call_id] = call
+
+        result_payloads = [
+            payload
+            for payload in _candidate_payloads(event)
+            if _is_tool_result_payload(payload)
+        ]
+        for payload in result_payloads:
+            call_id = _tool_result_id(payload)
+            if call_id and call_id in by_id:
+                by_id[call_id]["output_summary"] = summarize_tool_output(
+                    _tool_output(payload)
+                )
+
+    return calls
+
+
+def _looks_like_tool_line(line: str) -> bool:
+    return bool(re.search(r"tool[_ -]?(call|use|result)|function[_ -]?call", line, re.I))
+
+
+def _candidate_payloads(event: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    payloads: list[Mapping[str, Any]] = []
+    seen: set[int] = set()
+
+    def visit(payload: Mapping[str, Any]) -> None:
+        marker = id(payload)
+        if marker in seen:
+            return
+        seen.add(marker)
+        payloads.append(payload)
+        for key in (
+            "payload",
+            "message",
+            "data",
+            "item",
+            "tool_call",
+            "toolCall",
+            "functionCall",
+        ):
+            nested = payload.get(key)
+            if isinstance(nested, Mapping):
+                visit(nested)
+        content = payload.get("content")
+        if isinstance(content, list):
+            for item in content:
+                if isinstance(item, Mapping):
+                    visit(item)
+        elif isinstance(content, Mapping):
+            visit(content)
+
+    visit(event)
+    return payloads
+
+def _payload_type(payload: Mapping[str, Any]) -> str:
+    raw = payload.get("type") or payload.get("event") or payload.get("kind") or ""
+    return str(raw).strip().lower()
+
+
+def _is_tool_use_payload(payload: Mapping[str, Any]) -> bool:
+    payload_type = _payload_type(payload)
+    return (
+        payload_type in {
+            "tool_use",
+            "tool_call",
+            "function_call",
+            "mcp_tool_call",
+            "response.function_call_arguments.done",
+        }
+        or "functionCall" in payload
+        or "toolCall" in payload
+        or (
+            bool(_tool_name(payload))
+            and any(key in payload for key in ("arguments", "args", "input", "parameters"))
+            and "result" not in payload_type
+        )
+    )
+
+
+def _is_tool_result_payload(payload: Mapping[str, Any]) -> bool:
+    payload_type = _payload_type(payload)
+    return payload_type in {"tool_result", "tool_output", "function_result"} or (
+        any(key in payload for key in ("tool_use_id", "tool_call_id"))
+        and any(key in payload for key in ("content", "output", "result"))
+    )
+
+
+def _tool_name(payload: Mapping[str, Any]) -> str:
+    function = payload.get("function")
+    if isinstance(function, Mapping) and isinstance(function.get("name"), str):
+        return function["name"]
+    for key in ("name", "tool_name", "toolName", "function_name", "server_tool_name"):
+        value = payload.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return ""
+
+
+def _tool_arguments(payload: Mapping[str, Any]) -> dict[str, Any]:
+    function = payload.get("function")
+    if isinstance(function, Mapping) and "arguments" in function:
+        return _coerce_arguments(function.get("arguments"))
+    for key in ("arguments", "args", "input", "parameters"):
+        if key in payload:
+            return _coerce_arguments(payload.get(key))
+    return {}
+
+
+def _coerce_arguments(value: Any) -> dict[str, Any]:
+    if isinstance(value, Mapping):
+        return dict(value)
+    if isinstance(value, str) and value.strip():
+        try:
+            parsed = json.loads(value)
+        except json.JSONDecodeError:
+            return {"_raw": value}
+        if isinstance(parsed, Mapping):
+            return dict(parsed)
+        return {"_value": parsed}
+    return {}
+
+
+def _tool_output(payload: Mapping[str, Any]) -> Any:
+    for key in ("output", "result", "content", "observation"):
+        if key in payload:
+            return payload.get(key)
+    return None
+
+
+def _tool_call_id(payload: Mapping[str, Any]) -> str:
+    for key in ("id", "tool_call_id", "toolUseId", "call_id"):
+        value = payload.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return ""
+
+
+def _tool_result_id(payload: Mapping[str, Any]) -> str:
+    for key in ("tool_use_id", "tool_call_id", "toolUseId", "call_id", "id"):
+        value = payload.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return ""
+
+
+def _timestamp(payload: Mapping[str, Any], event: Mapping[str, Any]) -> str:
+    for source in (payload, event):
+        for key in ("timestamp", "ts", "time", "created_at"):
+            value = source.get(key)
+            if isinstance(value, str) and value:
+                return value
+    return datetime.now(UTC).isoformat()

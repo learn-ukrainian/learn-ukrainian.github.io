@@ -649,6 +649,7 @@ def _invoke_gemini_with_fallback(
 ) -> Result:
     """Run Gemini through the shared model/auth fallback ladder."""
     last_telemetry: InvocationTelemetry | None = None
+    last_tool_calls: list[dict[str, Any]] = []
 
     def _attempt_runner(
         rung: GeminiRung,
@@ -656,6 +657,7 @@ def _invoke_gemini_with_fallback(
         timeout_s: int | None,
     ) -> AttemptOutcome:
         nonlocal last_telemetry
+        nonlocal last_tool_calls
         attempt_tool_config = _build_gemini_attempt_tool_config(tool_config, rung)
         plan = adapter.build_invocation(
             prompt=prompt,
@@ -689,6 +691,7 @@ def _invoke_gemini_with_fallback(
             stdout_silence_timeout=stdout_silence_timeout,
         )
         parse = execution.parse
+        last_tool_calls = list(parse.tool_calls)
 
         if execution.kill_reason == "stdout_silence_timeout":
             record = _build_usage_record(
@@ -822,6 +825,7 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             returncode=returncode,
             usage_record=record,
+            tool_calls=last_tool_calls,
         )
 
     if call_result.attempts and all(
@@ -907,6 +911,7 @@ def _invoke_gemini_with_fallback(
         stalled=False,
         returncode=returncode,
         usage_record=record,
+        tool_calls=last_tool_calls,
     )
 
 
@@ -1188,4 +1193,5 @@ def invoke(
         stalled=False,
         returncode=execution.returncode,
         usage_record=record,
+        tool_calls=list(parse.tool_calls),
     )

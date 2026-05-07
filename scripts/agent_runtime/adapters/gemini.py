@@ -47,6 +47,7 @@ from pathlib import Path
 from ai_llm.fallback import GEMINI_AUTH_ENV_VARS, is_gemini_rate_limited
 
 from ..result import ParseResult
+from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -326,6 +327,12 @@ class GeminiAdapter:
 
         hard_limit_hit = is_gemini_rate_limited(stderr)
         transient_seen = bool(_TRANSIENT_ERROR_RE.search(f"{stdout}\n{stderr}"))
+        trace_events = parse_json_events(
+            "\n".join(part for part in (stdout, stderr) if part),
+            source="gemini",
+            logger=_logger,
+        )
+        tool_calls = normalize_tool_calls(trace_events)
 
         stdout_response = stdout.strip()
 
@@ -424,6 +431,7 @@ class GeminiAdapter:
             rate_limited=rate_limited,
             session_id=None,  # Gemini CLI doesn't expose session IDs.
             tokens=None,      # Nor tokens.
+            tool_calls=tool_calls,
         )
 
     # ---------------------------------------------------------------------
