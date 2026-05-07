@@ -15,6 +15,7 @@ import signal
 import subprocess
 import sys
 import time
+import urllib.error
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -243,6 +244,114 @@ def test_status_missing_task_returns_error(tmp_tasks_dir, capsys):
     assert rc == 1
     captured = capsys.readouterr()
     assert "no state file" in captured.out
+
+
+class _FakeMonitorResponse:
+    def __init__(self, payload: dict[str, Any]):
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _exc_type, _exc, _tb):
+        return False
+
+    def read(self):
+        return json.dumps(self.payload).encode("utf-8")
+
+
+def _monitor_payload(task_id: str, status: str, *, alive: bool = True) -> dict[str, Any]:
+    return {
+        "task": {
+            "task_id": task_id,
+            "status": status,
+            "started_at": "2026-05-08T00:00:00+00:00",
+        },
+        "alive": alive,
+    }
+
+
+def test_status_or_fail_running_task_exits_zero_quiet(monkeypatch, capsys):
+    import argparse
+
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_args, **_kwargs: _FakeMonitorResponse(
+            _monitor_payload("sleep-task", "running")
+        ),
+    )
+
+    rc = delegate.cmd_status_or_fail(
+        argparse.Namespace(task_id="sleep-task", verbose=False)
+    )
+
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
+def test_status_or_fail_completed_task_exits_one(monkeypatch, capsys):
+    import argparse
+
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_args, **_kwargs: _FakeMonitorResponse(
+            _monitor_payload("sleep-task", "done", alive=False)
+        ),
+    )
+
+    rc = delegate.cmd_status_or_fail(
+        argparse.Namespace(task_id="sleep-task", verbose=False)
+    )
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "task sleep-task is not running (status=done, age=" in captured.err
+    assert captured.err.rstrip().endswith("s)")
+
+
+def test_status_or_fail_unknown_task_exits_one(monkeypatch, capsys):
+    import argparse
+
+    def fake_urlopen(*_args, **_kwargs):
+        raise urllib.error.HTTPError(
+            "http://localhost:8765/api/delegate/tasks/missing",
+            404,
+            "Not Found",
+            {},
+            None,
+        )
+
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", fake_urlopen)
+
+    rc = delegate.cmd_status_or_fail(
+        argparse.Namespace(task_id="missing", verbose=False)
+    )
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "task missing is not running" in captured.err
+    assert "task not found" in captured.err
+
+
+def test_status_or_fail_monitor_api_down_exits_two(monkeypatch, capsys):
+    import argparse
+
+    def fake_urlopen(*_args, **_kwargs):
+        raise urllib.error.URLError("connection refused")
+
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", fake_urlopen)
+
+    rc = delegate.cmd_status_or_fail(
+        argparse.Namespace(task_id="sleep-task", verbose=False)
+    )
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "Monitor API unreachable" in captured.err
 
 
 # ---------------------------------------------------------------------------

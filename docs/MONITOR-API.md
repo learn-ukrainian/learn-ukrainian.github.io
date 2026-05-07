@@ -1106,6 +1106,21 @@ Single task detail plus optional `.result` content.
 }
 ```
 
+### `GET /api/delegate/active`
+
+List delegate tasks that are currently running or spawning with a live PID.
+Use this, or `delegate.py status-or-fail <task-id>`, before reporting async
+task state.
+
+```json
+{
+  "total": 1,
+  "tasks": [
+    {"task_id": "issue-1166", "agent": "codex", "status": "running", "age_s": 45.0}
+  ]
+}
+```
+
 ## Build Events — `/api/build/events/`
 
 ### `GET /api/build/events/recent?level=&slug=&limit=100`

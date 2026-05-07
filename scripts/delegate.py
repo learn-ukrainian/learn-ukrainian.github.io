@@ -22,6 +22,10 @@ CLI:
     → {"status": "failed",  "stderr_excerpt": "...", ...}
     → {"status": "crashed", "reason": "pid 12345 is dead but state says running"}
 
+    # Guardrail check for stale async-task claims.
+    delegate.py status-or-fail my-task
+    → exits 0 only when Monitor API says the task is currently running
+
     # Wait for completion. Polls at 2s intervals.
     delegate.py wait my-task [--timeout 3600]
 
@@ -88,6 +92,9 @@ import signal
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -97,6 +104,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
+_MONITOR_API_BASE_URL = "http://localhost:8765"
 
 
 def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None:
@@ -1157,6 +1165,78 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+class MonitorApiUnavailable(RuntimeError):
+    """Raised when the local Monitor API cannot answer a task status query."""
+
+
+def _monitor_api_base_url() -> str:
+    return os.environ.get("DELEGATE_MONITOR_API", _MONITOR_API_BASE_URL).rstrip("/")
+
+
+def _age_seconds_from_started_at(started_at: Any) -> int:
+    try:
+        started = datetime.fromisoformat(str(started_at).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return 0
+    if started.tzinfo is None:
+        started = started.replace(tzinfo=UTC)
+    return max(0, round((datetime.now(UTC) - started.astimezone(UTC)).total_seconds()))
+
+
+def _fetch_monitor_task(task_id: str) -> dict[str, Any] | None:
+    quoted = urllib.parse.quote(task_id, safe="")
+    url = f"{_monitor_api_base_url()}/api/delegate/tasks/{quoted}"
+    try:
+        with urllib.request.urlopen(url, timeout=2) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return None
+        raise MonitorApiUnavailable(str(exc)) from exc
+    except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
+        raise MonitorApiUnavailable(str(exc)) from exc
+    return payload if isinstance(payload, dict) else {}
+
+
+def _status_or_fail_payload(task_id: str) -> dict[str, Any]:
+    payload = _fetch_monitor_task(task_id)
+    if payload is None:
+        return {"task_id": task_id, "status": "task not found", "age_s": 0}
+
+    task = payload.get("task") if isinstance(payload.get("task"), dict) else {}
+    status = str(task.get("status") or "unknown")
+    if status == "running" and payload.get("alive") is False:
+        status = "stale"
+    return {
+        "task_id": task.get("task_id") or task_id,
+        "status": status,
+        "age_s": _age_seconds_from_started_at(task.get("started_at")),
+        "alive": payload.get("alive"),
+    }
+
+
+def cmd_status_or_fail(args: argparse.Namespace) -> int:
+    """Exit 0 only when Monitor API confirms a task is currently running."""
+    try:
+        status = _status_or_fail_payload(args.task_id)
+    except MonitorApiUnavailable as exc:
+        print(f"Monitor API unreachable: {exc}", file=sys.stderr)
+        return 2
+
+    if getattr(args, "verbose", False):
+        print(json.dumps(status, indent=2, default=str))
+
+    if status["status"] == "running":
+        return 0
+
+    print(
+        f"task {args.task_id} is not running "
+        f"(status={status['status']}, age={status['age_s']}s)",
+        file=sys.stderr,
+    )
+    return 1
+
+
 # ---------------------------------------------------------------------------
 # Wait command — poll until terminal state or timeout
 # ---------------------------------------------------------------------------
@@ -1363,6 +1443,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id review-123 --prompt-file prompt.md --mode workspace-write --cwd .\n"
             "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id pr-123 --prompt-file brief.md --mode danger --worktree .worktrees/codex-pr-123\n"
+            "  .venv/bin/python scripts/delegate.py status-or-fail review-123\n"
             "  .venv/bin/python scripts/delegate.py wait review-123 --timeout 600\n"
             "  .venv/bin/python scripts/delegate.py list --status running\n\n"
             "Outputs:\n"
@@ -1476,9 +1557,29 @@ def build_parser() -> argparse.ArgumentParser:
     d.set_defaults(func=cmd_dispatch)
 
     # status
-    s = sub.add_parser("status", help="Check task status (fast, no block)")
+    s = sub.add_parser(
+        "status",
+        help="Check task status from local state (fast, no block)",
+        description=(
+            "Check task status from local batch_state. For guardrails that "
+            "must fail when a task is no longer running, use status-or-fail."
+        ),
+    )
     s.add_argument("task_id", help="Task ID to inspect, e.g. review-123.")
     s.set_defaults(func=cmd_status)
+
+    # status-or-fail
+    sof = sub.add_parser(
+        "status-or-fail",
+        help="Exit 0 only if Monitor API says task is running",
+    )
+    sof.add_argument("task_id", help="Task ID to verify, e.g. review-123.")
+    sof.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print structured status JSON before exiting.",
+    )
+    sof.set_defaults(func=cmd_status_or_fail)
 
     # wait
     w = sub.add_parser("wait", help="Block until task reaches terminal state")
