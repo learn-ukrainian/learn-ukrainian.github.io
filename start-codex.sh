@@ -17,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$SCRIPT_DIR"
 CODEX_TARGET="${CODEX_TARGET:-worktree}"
 CODEX_ARGS=()
-CODEX_FLAGS=(--dangerously-bypass-approvals-and-sandbox)
+CODEX_FLAGS=(--dangerously-bypass-approvals-and-sandbox --search)
 
 if [ "${CODEX_ENABLE_MULTI_AGENT:-1}" != "0" ]; then
     CODEX_FLAGS+=(--enable multi_agent)
@@ -33,6 +33,7 @@ Learn Ukrainian Codex launcher:
  - runs Codex in .worktrees/codex-interactive by default
  - use --main only when intentionally running in the primary checkout
  - always adds --dangerously-bypass-approvals-and-sandbox
+ - always adds --search (live web search; user-policy 2026-05-08)
  - enables Codex multi-agent support by default
  - set CODEX_ENABLE_MULTI_AGENT=0 to disable multi-agent support
  - forwards all other arguments to codex unchanged
