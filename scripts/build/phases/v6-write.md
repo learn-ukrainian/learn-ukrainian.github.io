@@ -262,7 +262,7 @@ When the shared contract or plan shows `activity_hints[group-sort].items: 18` or
 
 ## Section-Mapped Wiki Teaching Brief
 
-**This is your primary teaching material.** The excerpt packet below was compressed from the project wiki into section-mapped facts with citations. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
+**This is your primary teaching material.** The excerpt packet below was compressed from the project wiki into section-mapped facts with citations. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim, except where a writer mandate explicitly requires verbatim textbook blockquotes.
 
 ### ⚠️ Language contract — brief language ≠ module language
 
@@ -582,7 +582,7 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   BAD (labeling objects): "Це дуб. — А там коза. — Ні, це коса."
   GOOD (real reaction): "Дивись, який великий дуб! — Так, старий. А під ним — коза! — Смішна коза."
 
-  Use the knowledge packet's textbook excerpts for dialogue patterns. Adapt real situations, don't invent drills.
+  Use the knowledge packet's textbook excerpts for dialogue patterns. Quote mandatory textbook-grounding excerpts verbatim in blockquotes; otherwise adapt real situations, don't invent drills.
 - **DIALOGUE VARIETY — CRITICAL.** Only if the contract has non-empty dialogue_acts, each module MUST have DIFFERENT dialogue situations from other modules. Before writing any dialogue, check: have previous modules used this setting? If yes, pick a different one.
 
   BANNED recurring settings (already used in M01-M09): describing a room (кімната), looking at a table/bed/lamp, generic greetings with no context, labeling objects.

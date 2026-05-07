@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import unicodedata
 from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
@@ -73,6 +74,7 @@ PYTHON_QG_GATE_ORDER = (
     "formatting_standards",
     "vesum_verified",
     "citations_resolve",
+    "textbook_grounding",
     "immersion",
     "inject_activity_ids",
     "activity_types",
@@ -200,6 +202,7 @@ TELEMETRY_MAX_QUOTE_CHARS = 240
 TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
 TELEMETRY_MAX_THEATRE_VIOLATIONS = 25
+TEXTBOOK_GROUNDING_MIN_WORDS = 30
 CORRECTION_PREVIEW_CHARS = 200
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
@@ -549,11 +552,13 @@ def build_knowledge_packet(
 
     compressed = compress_wiki_packet(plan_data, wiki_packet)
     dictionary_context = _build_dictionary_context(plan_data)
+    textbook_context = _build_textbook_excerpt_context(plan_data, level_key)
     return _render_wiki_knowledge_packet(
         plan_data,
         wiki_packet,
         compressed,
         dictionary_context,
+        textbook_context,
     )
 
 
@@ -718,6 +723,110 @@ def _truncate_prompt_text(text: str, max_chars: int) -> str:
     return f"{trimmed}..."
 
 
+def _plan_topic_query(plan: Mapping[str, Any]) -> str:
+    parts = [
+        str(plan.get("title") or ""),
+        str(plan.get("subtitle") or ""),
+    ]
+    for section in plan.get("content_outline") or []:
+        if isinstance(section, Mapping):
+            parts.append(str(section.get("section") or ""))
+            points = section.get("points")
+            if isinstance(points, list):
+                parts.extend(str(point) for point in points[:3])
+    return " ".join(part.strip() for part in parts if part and part.strip())
+
+
+def _textbook_hit_text(hit: Mapping[str, Any], max_chars: int = 1400) -> str:
+    for key in ("text", "content", "excerpt", "snippet", "body"):
+        value = hit.get(key)
+        if value:
+            return _truncate_prompt_text(str(value), max_chars)
+    return ""
+
+
+def _textbook_hit_label(hit: Mapping[str, Any]) -> str:
+    title = str(hit.get("title") or hit.get("section_title") or "Textbook").strip()
+    details: list[str] = []
+    author = str(hit.get("author") or "").strip()
+    if author and author not in title:
+        details.append(author)
+    grade = hit.get("grade")
+    if grade not in (None, ""):
+        details.append(f"Grade {grade}")
+    page = hit.get("page")
+    if page not in (None, ""):
+        details.append(f"p.{page}")
+    source_file = str(hit.get("source_file") or hit.get("source") or "").strip()
+    if source_file:
+        details.append(source_file)
+    return title + (f" ({', '.join(details)})" if details else "")
+
+
+def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dict]:
+    try:
+        from wiki.sources_db import search_sources
+    except Exception:
+        return []
+    try:
+        hits = search_sources(query, track=level, limit=max(limit * 4, limit))
+    except Exception:
+        return []
+    textbook_hits = [
+        hit
+        for hit in hits
+        if isinstance(hit, dict)
+        and "textbook" in str(
+            hit.get("source_type") or hit.get("corpus") or hit.get("source") or ""
+        ).casefold()
+    ]
+    return textbook_hits[:limit]
+
+
+def _build_textbook_excerpt_context(
+    plan: Mapping[str, Any],
+    level: str,
+) -> str:
+    references = [
+        str(title).strip()
+        for title in extract_plan_reference_titles(plan)
+        if str(title).strip()
+    ]
+    if not references:
+        return ""
+
+    topic_query = _plan_topic_query(plan)
+    lines = ["## Textbook Excerpts (verbatim, must be cited)", ""]
+    found_any = False
+    for title in references:
+        query = f"{title} {topic_query}".strip()
+        hits = _search_textbook_hits(query, level=level, limit=1)
+        lines.append(f"### {title}")
+        lines.append("")
+        if not hits:
+            for ref in plan.get("references") or []:
+                if isinstance(ref, dict) and str(ref.get("title") or "").strip() == title:
+                    ref["corpus_missing"] = True
+            lines.append("*No textbook excerpt found for this reference.*")
+            lines.append("corpus_missing: true")
+            lines.append("")
+            continue
+        hit = hits[0]
+        text = _textbook_hit_text(hit)
+        if not text:
+            lines.append("*Textbook search returned metadata without excerpt text.*")
+            lines.append("")
+            continue
+        found_any = True
+        lines.append(f"Source: {_textbook_hit_label(hit)}")
+        lines.append("")
+        for quote_line in text.splitlines():
+            lines.append(f"> {quote_line}")
+        lines.append("")
+
+    return "\n".join(lines).rstrip() if found_any or references else ""
+
+
 def _build_wiki_packet(level: str, slug: str) -> str:
     """Build raw wiki context from exact module article(s) and source registries."""
     article_paths = _wiki_article_paths(level, slug)
@@ -810,6 +919,7 @@ def _render_wiki_knowledge_packet(
     wiki_packet: str,
     compressed: Mapping[str, Any],
     dictionary_context: str = "",
+    textbook_context: str = "",
 ) -> str:
     """Render raw and compressed wiki context as the writer packet."""
     lines: list[str] = [
@@ -852,6 +962,9 @@ def _render_wiki_knowledge_packet(
 
     if dictionary_context:
         lines.extend([dictionary_context, ""])
+
+    if textbook_context:
+        lines.extend([textbook_context, ""])
 
     lines.extend(
         [
@@ -1425,6 +1538,27 @@ def _summarize_tool_result(tool: str, result: Any) -> dict[str, Any]:
     return _summarize_generic_tool_result(result)
 
 
+def _bounded_result_excerpt(result: Any, max_chars: int = 4000) -> str:
+    texts: list[str] = []
+
+    def walk(value: Any) -> None:
+        if isinstance(value, Mapping):
+            for key, child in value.items():
+                if key in {"text", "content", "excerpt", "snippet", "quote", "body"}:
+                    texts.append(str(child))
+                else:
+                    walk(child)
+        elif isinstance(value, list | tuple):
+            for item in value:
+                walk(item)
+        elif isinstance(value, str):
+            texts.append(value)
+
+    walk(result)
+    excerpt = re.sub(r"\s+", " ", "\n".join(texts)).strip()
+    return excerpt[:max_chars]
+
+
 def emit_writer_response_telemetry(
     output: str,
     *,
@@ -1461,16 +1595,23 @@ def emit_writer_response_telemetry(
         tool_calls_total += 1
         if tool == "verify_words":
             verify_words_calls += 1
+        fields: dict[str, Any] = {
+            "writer": writer,
+            "module": module,
+            "section": str(call.get("section") or "unknown"),
+            "tool": tool,
+            "args_summary": _summarize_tool_args(tool, args),
+            "result_summary": _summarize_tool_result(tool, result),
+            "duration_ms": _tool_duration_ms(call),
+        }
+        if tool == "search_text":
+            excerpt = _bounded_result_excerpt(result)
+            if excerpt:
+                fields["result_excerpt"] = excerpt
         _emit(
             event_sink,
             "writer_tool_call",
-            writer=writer,
-            module=module,
-            section=str(call.get("section") or "unknown"),
-            tool=tool,
-            args_summary=_summarize_tool_args(tool, args),
-            result_summary=_summarize_tool_result(tool, result),
-            duration_ms=_tool_duration_ms(call),
+            **fields,
         )
 
     gate = _extract_writer_gate(output)
@@ -1595,6 +1736,7 @@ def invoke_writer(
     module: str | None = None,
     sections: list[str] | None = None,
     event_sink: Callable[..., None] | None = None,
+    tool_trace_path: Path | None = None,
     stdout_silence_timeout: int | None = None,
 ) -> str:
     """Call the selected writer through the universal agent runtime."""
@@ -1625,13 +1767,34 @@ def invoke_writer(
     response_text = str(response)
     module_ref = module or _prompt_module_ref(prompt)
     section_names = list(sections) if sections is not None else _prompt_sections(prompt)
+    tool_calls = _runtime_tool_calls(result)
+    if tool_trace_path is not None:
+        tool_trace_path.parent.mkdir(parents=True, exist_ok=True)
+        existing_calls: list[Any] = []
+        if tool_trace_path.exists():
+            try:
+                existing_data = json.loads(tool_trace_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                existing_data = []
+            if isinstance(existing_data, list):
+                existing_calls = existing_data
+        tool_trace_path.write_text(
+            json.dumps(
+                [*existing_calls, *tool_calls],
+                ensure_ascii=False,
+                indent=2,
+                default=str,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     if module_ref and section_names:
         emit_writer_response_telemetry(
             response_text,
             writer=writer,
             module=module_ref,
             sections=section_names,
-            tool_calls=_runtime_tool_calls(result),
+            tool_calls=tool_calls,
             event_sink=event_sink,
         )
     return response_text
@@ -2846,6 +3009,7 @@ def run_python_qg(
         ),
     )
     record("citations_resolve", _citation_gate(resources, plan))
+    record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
     record("immersion", _immersion_gate(module_text, plan))
     record("inject_activity_ids", _inject_activity_gate(module_text, activities))
     record(
@@ -3688,6 +3852,465 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
         ):
             unknown.append(source_ref)
     return {"passed": not unknown, "unknown": unknown}
+
+
+def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
+    quotes: list[dict[str, str]] = []
+    current: list[str] = []
+    current_section = ""
+    quote_section = ""
+    for line in text.splitlines():
+        heading = re.match(r"^\s{0,3}#{1,6}\s+(?P<title>.+?)\s*#*\s*$", line)
+        if heading:
+            current_section = re.sub(r"[*_`~]+", "", heading.group("title")).strip()
+        match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
+        if match:
+            if not current:
+                quote_section = current_section
+            current.append(match.group("body"))
+            continue
+        if current:
+            quotes.append(
+                {
+                    "quote": "\n".join(current).strip(),
+                    "section_title": quote_section,
+                }
+            )
+            current = []
+            quote_section = ""
+    if current:
+        quotes.append(
+            {"quote": "\n".join(current).strip(), "section_title": quote_section}
+        )
+    return [record for record in quotes if record["quote"]]
+
+
+def _extract_blockquotes(text: str) -> list[str]:
+    return [record["quote"] for record in _extract_blockquote_records(text)]
+
+
+def _normalize_match_text(text: str) -> str:
+    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
+    text = re.sub(r"\[[^\]]+\]\([^)]+\)", " ", text)
+    text = text.replace("’", "'").replace("ʼ", "'")
+    decomposed = unicodedata.normalize("NFD", text)
+    return "".join(char for char in decomposed if not unicodedata.combining(char))
+
+
+def _textbook_match_tokens(text: str) -> list[str]:
+    text = _normalize_match_text(text)
+    text = re.sub(r"[*_`~#>|]", " ", text)
+    return re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text.casefold())
+
+
+def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
+    quote_tokens = _textbook_match_tokens(blockquote)
+    if len(quote_tokens) < TEXTBOOK_GROUNDING_MIN_WORDS:
+        return False
+    result_blob = " ".join(_textbook_match_tokens(result_text))
+    if not result_blob:
+        return False
+    for start in range(0, len(quote_tokens) - TEXTBOOK_GROUNDING_MIN_WORDS + 1):
+        window = " ".join(
+            quote_tokens[start : start + TEXTBOOK_GROUNDING_MIN_WORDS]
+        )
+        if window in result_blob:
+            return True
+    return False
+
+
+_TOPIC_STOPWORDS = {
+    "about",
+    "after",
+    "before",
+    "class",
+    "grade",
+    "into",
+    "lesson",
+    "module",
+    "page",
+    "section",
+    "textbook",
+    "that",
+    "this",
+    "with",
+    "без",
+    "для",
+    "про",
+    "та",
+    "але",
+    "або",
+    "його",
+    "її",
+    "які",
+    "яка",
+    "яке",
+    "який",
+    "цей",
+    "ця",
+    "це",
+    "такий",
+    "такі",
+}
+
+
+def _topic_token_keys(text: str) -> set[str]:
+    keys: set[str] = set()
+    for token in _textbook_match_tokens(text):
+        stripped = token.strip("'-")
+        if len(stripped) < 4 or stripped in _TOPIC_STOPWORDS or stripped.isdigit():
+            continue
+        keys.add(stripped[:6] if len(stripped) >= 6 else stripped)
+    return keys
+
+
+def _quote_topic_matches(quote: str, topic_text: str) -> bool:
+    topic_tokens = _topic_token_keys(topic_text)
+    if len(topic_tokens) < 2:
+        return True
+    quote_body = re.sub(r"^\s*(?:\*\*)?[^:\n]{1,120}:\s*", " ", quote, count=1)
+    quote_tokens = _topic_token_keys(quote_body)
+    # Minimal topicality guard: at least one normalized content-word stem from
+    # the quote must also appear in the surrounding section title or
+    # plan_reasoning text. This is intentionally lightweight and tunable.
+    return bool(quote_tokens & topic_tokens)
+
+
+def _plan_reasoning_text(module_text: str) -> str:
+    return " ".join(
+        match.group("body") for match in _PLAN_REASONING_ELEMENT_RE.finditer(module_text)
+    )
+
+
+def _flatten_tool_text(value: Any) -> list[str]:
+    texts: list[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, Mapping):
+            for child in node.values():
+                walk(child)
+        elif isinstance(node, list | tuple):
+            for item in node:
+                walk(item)
+        elif isinstance(node, str):
+            texts.append(node)
+        elif node is not None:
+            texts.append(str(node))
+
+    walk(value)
+    return texts
+
+
+def _load_jsonl_tool_calls(path: Path) -> list[dict[str, Any]]:
+    calls: list[dict[str, Any]] = []
+    if not path.exists():
+        return calls
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, Mapping):
+            continue
+        if event.get("event") != "writer_tool_call":
+            continue
+        call = dict(event)
+        if call.get("result_excerpt") and not call.get("result"):
+            call["result"] = {"text": call["result_excerpt"]}
+        calls.append(call)
+    return calls
+
+
+def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
+    candidates = [
+        module_dir / "writer_tool_calls.json",
+        module_dir / "writer_trace.json",
+        module_dir / "writer_telemetry.jsonl",
+    ]
+    calls: list[dict[str, Any]] = []
+    for path in candidates:
+        if not path.exists():
+            continue
+        if path.suffix == ".jsonl":
+            calls.extend(_load_jsonl_tool_calls(path))
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, list):
+            calls.extend(dict(item) for item in data if isinstance(item, Mapping))
+        elif isinstance(data, Mapping):
+            raw_calls = data.get("tool_calls") or data.get("mcp_tool_calls")
+            if isinstance(raw_calls, list):
+                calls.extend(
+                    dict(item) for item in raw_calls if isinstance(item, Mapping)
+                )
+    for path in sorted(module_dir.glob("*.write.jsonl")):
+        calls.extend(_load_jsonl_tool_calls(path))
+    return calls
+
+
+def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    result = call.get("result", call.get("response"))
+    if result is None and call.get("result_excerpt"):
+        result = {"text": call["result_excerpt"]}
+        if call.get("source_type"):
+            result["source_type"] = call["source_type"]
+    if isinstance(result, list):
+        return [item for item in result if isinstance(item, Mapping)]
+    if isinstance(result, Mapping):
+        result = dict(result)
+        if call.get("source_type") and not result.get("source_type"):
+            result["source_type"] = call["source_type"]
+        raw_hits = result.get("results") or result.get("hits") or result.get("items")
+        if isinstance(raw_hits, list):
+            return [item for item in raw_hits if isinstance(item, Mapping)]
+        return [result]
+    return []
+
+
+def _result_source_type(result: Mapping[str, Any]) -> str:
+    return str(
+        result.get("source_type")
+        or result.get("type")
+        or result.get("corpus")
+        or result.get("source")
+        or ""
+    ).casefold()
+
+
+def _is_textbook_result(result: Mapping[str, Any]) -> bool:
+    return "textbook" in _result_source_type(result)
+
+
+def _result_text_for_match(result: Mapping[str, Any]) -> str:
+    text = _textbook_hit_text(result, max_chars=50_000)
+    if text:
+        return text
+    return "\n".join(_flatten_tool_text(result))
+
+
+def _call_text_parts(call: Mapping[str, Any]) -> tuple[str, str]:
+    args = call.get("args", call.get("arguments", {}))
+    result = call.get("result", call.get("response", call.get("result_excerpt", "")))
+    query_text = "\n".join(_flatten_tool_text(args))
+    result_text = "\n".join(_flatten_tool_text(result))
+    return query_text, result_text
+
+
+def _reference_matches_search_call(reference_title: str, call: Mapping[str, Any]) -> bool:
+    return any(
+        _reference_matches_result(reference_title, result)
+        for result in _result_items_from_call(call)
+    )
+
+
+def _reference_matches_result(
+    reference_title: str,
+    result: Mapping[str, Any],
+) -> bool:
+    result_text = "\n".join(_flatten_tool_text(result))
+    ref_key = extract_citation_key(reference_title)
+    if ref_key is not None and result_text and extract_citation_key(result_text) == ref_key:
+        return True
+    normalized_ref = _normalize_citation_ref(reference_title).casefold()
+    normalized_result = _normalize_citation_ref(result_text).casefold()
+    return bool(normalized_ref and normalized_ref in normalized_result)
+
+
+def _missing_corpus_refs_from_packet(module_dir: Path) -> set[str]:
+    packet_path = module_dir / "knowledge_packet.md"
+    if not packet_path.exists():
+        return set()
+    missing: set[str] = set()
+    current_ref = ""
+    for line in packet_path.read_text(encoding="utf-8").splitlines():
+        heading = re.match(r"^###\s+(?P<title>.+?)\s*$", line)
+        if heading:
+            current_ref = heading.group("title").strip()
+            continue
+        if current_ref and re.search(r"\bcorpus_missing:\s*true\b", line):
+            missing.add(current_ref)
+    return missing
+
+
+def _plan_reference_records(
+    plan: Mapping[str, Any],
+    module_dir: Path,
+) -> list[dict[str, Any]]:
+    missing_from_packet = _missing_corpus_refs_from_packet(module_dir)
+    records: list[dict[str, Any]] = []
+    references = plan.get("references") or plan.get("plan_references") or []
+    if not isinstance(references, list):
+        return records
+    for ref in references:
+        if not isinstance(ref, Mapping) or not ref.get("title"):
+            continue
+        title = str(ref["title"])
+        records.append(
+            {
+                "title": title,
+                "corpus_missing": bool(ref.get("corpus_missing"))
+                or title in missing_from_packet,
+                "verbatim_required": ref.get("verbatim_required") is not False,
+            }
+        )
+    return records
+
+
+def _level_requires_references(level: str) -> bool:
+    return level.casefold() in {"b1", "b2", "c1", "c2", "pro"}
+
+
+def _textbook_grounding_gate(
+    module_text: str,
+    plan: Mapping[str, Any],
+    module_dir: Path,
+) -> dict[str, Any]:
+    level = str(plan.get("level") or "").casefold()
+    reference_records = _plan_reference_records(plan, module_dir)
+    references = [record["title"] for record in reference_records]
+    if not references:
+        if _level_requires_references(level):
+            return {
+                "passed": False,
+                "verdict": "REJECT",
+                "severity": "HARD",
+                "required": 1,
+                "matched": [],
+                "missing": [],
+                "blockquotes_checked": 0,
+                "search_text_calls": 0,
+                "reason": "missing_references",
+            }
+        return {
+            "passed": True,
+            "verdict": "PASS",
+            "required": 0,
+            "matched": [],
+            "missing": [],
+            "blockquotes_checked": 0,
+            "search_text_calls": 0,
+        }
+
+    blockquote_records = _extract_blockquote_records(module_text)
+    plan_reasoning = _plan_reasoning_text(module_text)
+    long_blockquote_records = [
+        record
+        for record in blockquote_records
+        if len(_textbook_match_tokens(record["quote"])) >= TEXTBOOK_GROUNDING_MIN_WORDS
+    ]
+    search_calls = [
+        call
+        for call in _load_writer_tool_calls(module_dir)
+        if _tool_name_from_call(call) == "search_text"
+    ]
+    textbook_results: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
+    for call in search_calls:
+        for result in _result_items_from_call(call):
+            if _is_textbook_result(result):
+                textbook_results.append((call, result))
+
+    matched: dict[str, int] = {}
+    topical_mismatches: list[str] = []
+    unattributed_matches = 0
+    downgraded = [
+        record["title"]
+        for record in reference_records
+        if not record["corpus_missing"] and not record["verbatim_required"]
+    ]
+    missing_corpus = [
+        record["title"] for record in reference_records if record["corpus_missing"]
+    ]
+    for ref in references:
+        if ref in downgraded:
+            continue
+        ref_results = [
+            result
+            for call, result in textbook_results
+            if _reference_matches_result(ref, result)
+        ]
+        for record in long_blockquote_records:
+            quote = record["quote"]
+            if not any(
+                _contains_textbook_quote(quote, _result_text_for_match(result))
+                for result in ref_results
+            ):
+                continue
+            topic_text = f"{record['section_title']} {plan_reasoning}".strip()
+            if not _quote_topic_matches(quote, topic_text):
+                topical_mismatches.append(ref)
+                continue
+            matched[ref] = len(_textbook_match_tokens(quote))
+            break
+
+    for ref in downgraded:
+        matched[ref] = 0
+
+    if level == "a1" and not matched:
+        for record in long_blockquote_records:
+            quote = record["quote"]
+            topic_text = f"{record['section_title']} {plan_reasoning}".strip()
+            for _call, result in textbook_results:
+                if not _contains_textbook_quote(quote, _result_text_for_match(result)):
+                    continue
+                if not _quote_topic_matches(quote, topic_text):
+                    topical_mismatches.append("unattributed")
+                    continue
+                actual_ref = next(
+                    (
+                        ref
+                        for ref in references
+                        if _reference_matches_result(ref, result)
+                    ),
+                    "unattributed",
+                )
+                if actual_ref == "unattributed":
+                    unattributed_matches += 1
+                    continue
+                matched[actual_ref] = len(_textbook_match_tokens(quote))
+                break
+            if matched:
+                break
+
+    required = 1 if level == "a1" else len(references)
+    passed = len(matched) >= required
+    warnings = []
+    if missing_corpus:
+        warnings.append("corpus_missing")
+    if downgraded:
+        warnings.append("corpus_missing_or_verbatim_not_required")
+    reason = (
+        "corpus_missing"
+        if missing_corpus and not passed
+        else "topical_mismatch"
+        if not passed and topical_mismatches
+        else None
+    )
+    # Per #1765, missing-corpus citations get rejected here — the proper fix is
+    # plan-review-time corpus check that prevents plans from getting this far.
+    # Until #1765 lands, this guard prevents shipping false authority.
+    return {
+        "passed": passed,
+        "verdict": "WARN" if passed and warnings else "PASS" if passed else "REJECT",
+        "severity": "WARN" if passed and warnings else "HARD",
+        "required": required,
+        "matched": sorted(matched),
+        "missing": [ref for ref in references if ref not in matched],
+        "blockquotes_checked": len(blockquote_records),
+        "long_blockquotes_checked": len(long_blockquote_records),
+        "search_text_calls": len(search_calls),
+        "textbook_result_hits": len(textbook_results),
+        "min_words": TEXTBOOK_GROUNDING_MIN_WORDS,
+        "downgraded": downgraded,
+        "missing_corpus": missing_corpus,
+        "warnings": warnings,
+        "reason": reason,
+        "unattributed_matches": unattributed_matches,
+    }
 
 
 def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:

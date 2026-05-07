@@ -99,3 +99,65 @@ def test_build_knowledge_packet_appends_dictionary_context(monkeypatch) -> None:
     assert "TAIL_SHOULD_NOT_APPEAR" not in packet
     assert "Definition: довге0 довге1" in packet
     assert "..." in packet
+
+
+def test_build_knowledge_packet_appends_textbook_excerpts(monkeypatch) -> None:
+    from wiki import sources_db
+
+    queries: list[str] = []
+
+    plan = _fixture_plan()
+    plan["title"] = "My Morning"
+    plan["references"] = [
+        {"title": "Караман Grade 10, p.176"},
+        {"title": "Захарійчук Grade 4, p.162"},
+    ]
+
+    def fake_search_sources(query: str, *, track: str, limit: int = 10, **_kwargs):
+        queries.append(query)
+        assert track == "a1"
+        if "Караман" in query:
+            return [
+                {
+                    "source_type": "textbook",
+                    "title": "Українська мова",
+                    "author": "Караман",
+                    "grade": 10,
+                    "page": 176,
+                    "source_file": "10-klas-ukrmova-karaman",
+                    "text": "Зворотна форма дієслова походить від короткої форми займенника себе.",
+                }
+            ]
+        return [
+            {
+                "source_type": "textbook",
+                "title": "Українська мова",
+                "author": "Захарійчук",
+                "grade": 4,
+                "page": 162,
+                "source_file": "4-klas-ukrmova-zakhariichuk",
+                "text": "Умиваюся, одягаюся, вітаюся — ці дієслова називають дію, спрямовану на себе.",
+            }
+        ]
+
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_build_wiki_packet",
+        lambda level, slug: "### Вікі: pedagogy/a1/dictionary-context.md\n\n## Overview\nранок",
+    )
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+
+    packet = linear_pipeline.build_knowledge_packet(
+        level="a1",
+        slug="dictionary-context",
+        plan=plan,
+    )
+
+    assert "## Textbook Excerpts (verbatim, must be cited)" in packet
+    assert "### Караман Grade 10, p.176" in packet
+    assert "Source: Українська мова (Караман, Grade 10, p.176, 10-klas-ukrmova-karaman)" in packet
+    assert "> Зворотна форма дієслова походить" in packet
+    assert "### Захарійчук Grade 4, p.162" in packet
+    assert "> Умиваюся, одягаюся, вітаюся" in packet
+    assert len(queries) == 2
+    assert all("My Morning" in query for query in queries)
