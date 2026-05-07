@@ -58,8 +58,8 @@ Issue: #1790 with full evidence + suggested next steps.
 | **#1792** | Codex | feat(guardrail): handoff verifier | **MERGE CONFLICTS with main** | Claude review verdict: REVISE [OPTION] — closed-world detection misses typos. But ACs met, tests pass. Holding due to conflicts; user merges first or can dispatch rebase. |
 | **#1793** | Codex | feat(guardrail): status-or-fail subcommand + memory rule #0G | OPEN, unmerged | Adds `/api/delegate/active` endpoint (slight scope creep but defensible). 392 LOC, 7 files. Pending Claude review (queue full at time of decision). |
 | **#1795** | Gemini | docs(audit): #1770 plan-references triage (32 plans) | OPEN, unmerged — INFORMATIONAL | 19 INGEST + 9 AMEND + 4 DEFER verdicts. 4 HIGH-priority textbooks identified (Кравцова, Варзацька, Пономарьова, Кравцова Grade 3). User decides ingestion. |
-| **#1796** | Codex | fix(ab-bridge): preserve discuss root and infer ask sender (#1786) | OPEN | Fixes B.1, B.2, B.3 from #1786. 240 additions, 8 files. Pending Claude review (in flight). |
-| **#1797** | Codex | feat(audit): D4 decision-lineage backlink scanner with multi-alias support (#1785) | OPEN | D4 lineage scanner per #1785. Pending Claude review (in flight). |
+| **#1796** | Codex | fix(ab-bridge): preserve discuss root and infer ask sender (#1786) | **OPEN — REVISE [BLOCKING] per Claude review** | Fixes B.1, B.2, B.3 from #1786. 240 additions, 8 files. **Claude headless review found 1 BLOCKING bug**: `tests/test_coverage_misc.py::TestSendGeminiMessage` (×3) fails because the PR widened `_send_gemini_message`'s signature (inserted `from_llm` as 5th positional arg) without updating the 3 existing test calls. **CI confirms** (`actions/runs/25527415468`). Mechanical fix: insert one positional arg in 3 test calls. Plus 2 IMPORTANT issues: huge-root-brief regression (>22KB body would now `ValueError`), fragile `CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS` env proxy. Architecture is sound; merge after CI green. Full review on PR comment. |
+| **#1797** | Codex | feat(audit): D4 decision-lineage backlink scanner with multi-alias support (#1785) | OPEN — **NO REVIEW** (Claude headless review #3 ran out of time after #1796) | D4 lineage scanner per #1785. 546 additions. Tests/CI status unverified by adversarial review. **Morning fix path**: spot-check via `gh pr diff 1797` + run scanner on live repo (`.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008`) before merge. |
 
 ### Issues filed tonight
 
@@ -88,8 +88,8 @@ Issue: #1790 with full evidence + suggested next steps.
 | #1792 | n/a | n/a | ✓ REVISE [OPTION] — recommended merge with followup |
 | #1793 | n/a | n/a | NOT YET (queue was full when reviews fired) |
 | #1795 | n/a | n/a (Gemini authored) | NOT YET — informational triage, low review priority |
-| #1796 | n/a (Codex authored) | n/a | IN-FLIGHT (Claude review #3 dispatched) |
-| #1797 | n/a (Codex authored) | n/a | IN-FLIGHT (Claude review #3 dispatched) |
+| #1796 | n/a (Codex authored) | n/a | ✓ REVISE [BLOCKING] — CI red, signature-change broke 3 existing tests. Plus 2 IMPORTANT, 2 NIT. Posted on PR #1796 |
+| #1797 | n/a (Codex authored) | n/a | NOT COMPLETED — Claude review #3 worker exited rc=0 after only writing #1796 review (`/tmp/claude-review-1796-body.md`). #1797 review never started. Worker had 0 stdout the whole run; cause unclear. |
 
 ---
 
@@ -111,8 +111,8 @@ Issue: #1790 with full evidence + suggested next steps.
 Recommended order (gates the rest):
 
 1. **#1788 (already merged ✓)**
-2. **#1796** — review Claude verdict + merge (Codex has a queued rebase if conflicts arise; check first)
-3. **#1797** — review Claude verdict + merge (D4 unblocks future Decision Graph + decision provenance work)
+2. **#1796** — **BLOCKED on test fix**. Claude review found `tests/test_coverage_misc.py::TestSendGeminiMessage` (×3) failing because Codex widened `_send_gemini_message`'s signature without updating callers. Fix: insert `from_llm` as 5th positional arg in 3 test calls (`tests/test_coverage_misc.py:436, 444, 452`). Could be a 5-LOC inline fix OR re-dispatch Codex with the targeted brief. After CI green, merge.
+3. **#1797** — **NEEDS REVIEW** before merge (Claude review #3 didn't get to it). Spot-check via `gh pr diff 1797` + run scanner on live repo: `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` should show ADR-008's lineage. If scanner works + tests pass, merge.
 4. **#1793** — read body, run Claude review or merge if confident (delegate.py status-or-fail + memory rule #0G is straightforward)
 5. **#1792** — REBASE first (conflicts with #1788). Verdict was OPTION. Merge after rebase. File followup issue from Claude review.
 6. **#1789** — wait for Codex revision PR to update; Claude re-review; merge.
