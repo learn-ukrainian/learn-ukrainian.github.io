@@ -239,7 +239,7 @@ def test_off_topic_quote_rejected(tmp_path: Path) -> None:
     assert result["reason"] == "topical_mismatch"
 
 
-def test_missing_corpus_does_not_permablock(tmp_path: Path) -> None:
+def test_missing_corpus_rejects_to_protect_authority(tmp_path: Path) -> None:
     module_text = (FIXTURES / "bad-module.md").read_text(encoding="utf-8")
 
     result = linear_pipeline._textbook_grounding_gate(
@@ -253,9 +253,10 @@ def test_missing_corpus_does_not_permablock(tmp_path: Path) -> None:
         tmp_path,
     )
 
-    assert result["passed"] is True
-    assert result["verdict"] == "WARN"
-    assert result["downgraded"] == ["Absent Grade 9, p.9"]
+    assert result["passed"] is False
+    assert result["verdict"] == "REJECT"
+    assert result["reason"] == "corpus_missing"
+    assert result["missing"] == ["Absent Grade 9, p.9"]
 
 
 def test_stress_marks_do_not_break_matching(tmp_path: Path) -> None:

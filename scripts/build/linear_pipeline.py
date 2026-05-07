@@ -4218,7 +4218,10 @@ def _textbook_grounding_gate(
     downgraded = [
         record["title"]
         for record in reference_records
-        if record["corpus_missing"] or not record["verbatim_required"]
+        if not record["corpus_missing"] and not record["verbatim_required"]
+    ]
+    missing_corpus = [
+        record["title"] for record in reference_records if record["corpus_missing"]
     ]
     for ref in references:
         if ref in downgraded:
@@ -4274,9 +4277,20 @@ def _textbook_grounding_gate(
     required = 1 if level == "a1" else len(references)
     passed = len(matched) >= required
     warnings = []
+    if missing_corpus:
+        warnings.append("corpus_missing")
     if downgraded:
         warnings.append("corpus_missing_or_verbatim_not_required")
-    reason = "topical_mismatch" if not passed and topical_mismatches else None
+    reason = (
+        "corpus_missing"
+        if missing_corpus and not passed
+        else "topical_mismatch"
+        if not passed and topical_mismatches
+        else None
+    )
+    # Per #1765, missing-corpus citations get rejected here — the proper fix is
+    # plan-review-time corpus check that prevents plans from getting this far.
+    # Until #1765 lands, this guard prevents shipping false authority.
     return {
         "passed": passed,
         "verdict": "WARN" if passed and warnings else "PASS" if passed else "REJECT",
@@ -4290,6 +4304,7 @@ def _textbook_grounding_gate(
         "textbook_result_hits": len(textbook_results),
         "min_words": TEXTBOOK_GROUNDING_MIN_WORDS,
         "downgraded": downgraded,
+        "missing_corpus": missing_corpus,
         "warnings": warnings,
         "reason": reason,
         "unattributed_matches": unattributed_matches,
