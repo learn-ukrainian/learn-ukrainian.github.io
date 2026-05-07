@@ -1,17 +1,18 @@
-# Current — multi-agent index (2026-05-06)
+# Current — multi-agent index (2026-05-07)
 
-> **Repo state: WRITER-LOCK ACCEPTED + 4-WORKER AFTERNOON DISPATCH.** Writer-lock decision (Codex/GPT-5.5/codex-tools as V7 writer) ACCEPTED today with conditions (agents-can-communicate ✅ + Codex-Desktop-can-join ❌ pending). 4 dispatches in flight: 2 Codex (#1736 comms-fix, #1737 API-stability) + 2 Gemini (#1663 Antonenko ingest, #1666 paronyms ingest). Open PR #1735 (multi-UI ADR rounds 1+2; Codex self-review REVISE → round 3 queued). MEMORY.md trimmed 172→122 lines, model-assignment HARD RULE deployed. Issue cleanup pass: 83→20 open. Channels.html shipped + git hygiene PR landed.
+> **Repo state: 14 PRs MERGED in 2026-05-06 evening tech-debt arc; PAT auth blocker resolved via project `.envrc` token.** Resilience layer + dispatch infrastructure (GH_TOKEN pass-through, silence-timeout, OAuth fallback for Claude headless) all shipped. Generic dictionary ingestion replatformed (LLM → deterministic Python). ADR multi-UI participation round-3 merged into pending/ (PROPOSED). Open: **PR #1756** (Claude OAuth fix, awaiting merge), **PR #1757** (verbatim textbook quoting #1725, just opened), **issue #1758** (silence-timeout default too aggressive, just filed). Note: source `./.envrc` not `~/.bash_secrets` for `gh` write-scope on org repos.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Channels rollout + ADR cycles + writer-lock ACCEPTED + orchestrator-discipline reset** | **`docs/session-state/2026-05-06-channels-rollout-adr-cycles-and-orchestrator-discipline.md`** | **PR #1732 (channels.html UX overhaul + ADR draft) merged. PR #1733 (git hygiene, 61 stale issues closed) merged. Decision card moved `pending/` → accepted with conditions. PR #1735 (ADR rounds 1+2) open: Gemini AGREE all 6, Codex self-review REVISE 6 NEW findings (Q1↔Q7 contradiction, Q12 schema bug, instance_id concurrency regression, audio underspec) — round-3 queued. 4 dispatches running through 14-20 CET peak window. Dispatch queue at `docs/dispatch-queue/2026-05-06-afternoon.md`. MEMORY.md trimmed + #M0 model-assignment HARD RULE deployed. Strand 0 bakeoff converged on Option B (CLI text → Desktop visual aids).** |
+| **Tech-debt arc + dispatch infrastructure cascades + PAT auth blocker** | **`docs/session-state/2026-05-06-evening-tech-debt-arc-and-auth-cascades.md`** | **14 PRs merged: API stability (#1739/#1740), comms.html (#1738), `ab` wrappers (#1742), v7 writer-timeout (#1743), Gemini auth flip (#1744), bakeoff resume (#1745), env scrub (#1746), wiki ingestion bugs (#1747), `ab discuss` sandbox (#1748), ADR round-3 (#1749), GH_TOKEN pass-through (#1752), delegate timeouts (#1753), dictionary ingestion (#1755). 11 issues closed; #1735 closed as superseded. Open: PR #1756 (Claude OAuth), branch `codex/1725-verbatim-quoting` ready, silence-timeout-default issue drafted — all PAT-blocked. Cold-start: `gh auth login` first, then proceed.** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Channels rollout + ADR cycles + writer-lock ACCEPTED + orchestrator-discipline reset (afternoon) | `2026-05-06-channels-rollout-adr-cycles-and-orchestrator-discipline.md` |
 | Discussion converged + Gemini fix shipped + channels-UX deferred (this morning's pre-session) | `2026-05-06-morning-discussion-converged-and-channels-ux.md` |
 | Writer-selection bakeoff: Codex wins; Decision Card pending | `2026-05-06-bakeoff-result-codex-wins-decision-pending.md` |
 | Four fixes merged + bakeoff re-running (mid-state) | `2026-05-06-four-fixes-merged-bakeoff-rerunning.md` |
