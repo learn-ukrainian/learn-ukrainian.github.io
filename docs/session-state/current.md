@@ -48,6 +48,19 @@
 
 ## Cross-thread notes (still active)
 
+- **Kubedojo Decision Graph paradigm + persistent listener architecture
+  follow-ups** — Tracking doc:
+  `docs/session-state/2026-05-07-kubedojo-paradigm-followups.md`.
+  - Actions A-D from the morning kubedojo conversation (D4 lineage scanner,
+    3 infra bugs, Decision Graph ADR, kubedojo team reply) remain QUEUED
+    behind bakeoff completion + writer-selection signoff.
+  - **NEW evening additions:** Persistent agent listener architecture
+    (issue **#1782**, `decision-pending` label). Tier-2 warm-cache fix
+    DISPATCHED via Codex (`tier-2-warm-cache`, ~50-100 LOC PR, fixes
+    `ab discuss` cold-cache asymmetry: switches entrypoint `delegate`→`bridge`
+    + per-(agent, discussion) session_id gated by registry resume_policy).
+    Tier-3 daemon listeners DEFERRED until pending Multi-UI ADR ACCEPTED.
+
 - **Phase 4 round 3.5 verification = round-4 bakeoff trigger** —
   shipped via #1621. Gemini-tools writer fails writer-discipline gates
   (word_count short, meta-narration bypass via paragraph-level
@@ -100,8 +113,14 @@
   preventive SessionStart hook now auto-cleans any sentinel >1 min old.
   See `claude_extensions/hooks/session-setup.sh` lines 6–32.
 
-- **`~/.bash_secrets`** is where `GITHUB_TOKEN` lives. Not in any
-  standard rc file. Source it manually before `gh` calls.
+- **`GH_TOKEN` lives in the project root `.envrc`** (loaded by direnv when
+  you `cd` into the project). NOT in `~/.bash_secrets` — that wrong note
+  was in this file for a while and bit several agent sessions including
+  2026-05-07 (corrected by user after Codex's #1783 dispatch hit a 401).
+  The user maintains separate GH tokens per project; the `.envrc` token
+  is the project-scoped one. For `gh` calls inside dispatched subprocesses
+  that don't run direnv, ensure the dispatch wrapper sources `.envrc`
+  explicitly before invoking `gh`. Issue noted in #1782 sub-task list.
 
 - **`experiments/phase-4/round-3.5/`** preserves the failed Gemini
   round-3.5 outputs as evidence (per Codex REVISE finding 5 on PR
