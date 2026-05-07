@@ -136,3 +136,11 @@ repos:
         language: system
         files: ^docs/dispatch-briefs/.*\.md$
         stages: [pre-commit]
+
+      - id: lint-session-state
+        name: lint session-state env references
+        entry: .venv/bin/python scripts/audit/lint_session_state.py --all
+        language: system
+        pass_filenames: false
+        files: ^docs/session-state/.*\.md$
+        stages: [pre-commit]
