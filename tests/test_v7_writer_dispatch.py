@@ -98,6 +98,46 @@ def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
     assert events[-1]["dry_run"] is True
 
 
+def test_v7_writer_trace_capture_clears_tool_theatre(tmp_path: Path) -> None:
+    telemetry = tmp_path / "trace.jsonl"
+    writer_output = (
+        '<plan_reasoning section="vocab">'
+        "Verification: `verify_words` checked the candidate words."
+        "</plan_reasoning>"
+    )
+
+    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        return SimpleNamespace(
+            response=writer_output,
+            tool_calls=[
+                {
+                    "name": "mcp__sources__verify_words",
+                    "arguments": {"words": ["ранок"]},
+                    "output_summary": "verified",
+                    "timestamp": "2026-05-07T10:00:00Z",
+                }
+            ],
+        )
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        response = linear_pipeline.invoke_writer(
+            "Write the module.",
+            writer="claude-tools",
+            cwd=tmp_path,
+            invoker=fake_invoker,
+            module="a1/1",
+            sections=["vocab"],
+        )
+
+    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
+    summary = next(event for event in events if event["event"] == "phase_writer_summary")
+
+    assert response == writer_output
+    assert summary["tool_calls_total"] == 1
+    assert summary["verify_words_calls"] == 1
+    assert summary["tool_theatre_violations"] == []
+
+
 def test_v7_build_writer_timeout_kills_silent_subprocess(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
