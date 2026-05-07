@@ -1,0 +1,3 @@
+pattern_sets:
+  ulp_grammar_guide:
+    - '^(Introduction to Ukrainian|Ukrainian) .* \[Ukrainian Grammar Guide\]$'
