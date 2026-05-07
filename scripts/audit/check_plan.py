@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -27,6 +28,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
+SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 
 # Combining acute accent
 STRESS_MARK = "\u0301"
@@ -100,6 +102,38 @@ _DIALOGUE_DOMAIN_KEYWORDS = {
         "замок", "карта", "кафе", "метро", "місто", "музей", "парк", "площа",
         "пошта", "таксі", "театр", "турист", "потяг", "зупинка",
     },
+}
+_TEXTBOOK_HINT_RE = re.compile(r"\b(?:grade|клас|klas)\b", re.IGNORECASE)
+_GRADE_RE = re.compile(r"(?:grade\s*|^|[^\d])(\d{1,2})(?:\s*(?:клас|klas))?", re.IGNORECASE)
+_YEAR_RE = re.compile(r"\b(20\d{2}|19\d{2})\b")
+_AUTHOR_ALIASES = {
+    "авраменко": "avramenko",
+    "avramenko": "avramenko",
+    "большакова": "bolshakova",
+    "bolshakova": "bolshakova",
+    "вашуленко": "vashulenko",
+    "vashulenko": "vashulenko",
+    "ворон": "voron",
+    "voron": "voron",
+    "глазова": "glazova",
+    "glazova": "glazova",
+    "голуб": "golub",
+    "holub": "golub",
+    "golub": "golub",
+    "заболотний": "zabolotnyi",
+    "zabolotnyi": "zabolotnyi",
+    "zabolotnij": "zabolotnij",
+    "захарійчук": "zaharijchuk",
+    "zaharijchuk": "zaharijchuk",
+    "караман": "karaman",
+    "karaman": "karaman",
+    "кравцова": "kravcova",
+    "kravcova": "kravcova",
+    "литвінова": "litvinova",
+    "літвінова": "litvinova",
+    "litvinova": "litvinova",
+    "онатій": "onatiy",
+    "onatiy": "onatiy",
 }
 
 
@@ -391,6 +425,149 @@ def check_prerequisites(plan: dict, all_slugs: list[str]) -> list[PlanIssue]:
     return issues
 
 
+def _reference_source_name(ref: object) -> str:
+    if not isinstance(ref, dict):
+        return ""
+    for key in ("source", "title"):
+        value = ref.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return ""
+
+
+def _normalize_source_name(text: str) -> str:
+    return re.sub(r"[^a-zа-яґєії0-9]+", " ", text.casefold()).strip()
+
+
+def _textbook_reference_parts(source_name: str) -> tuple[str, int | None, str | None]:
+    normalized = _normalize_source_name(source_name)
+    author = ""
+    for alias, canonical in _AUTHOR_ALIASES.items():
+        if re.search(rf"(?<![a-zа-яґєії]){re.escape(alias)}(?![a-zа-яґєії])", normalized):
+            author = canonical
+            break
+
+    grade = None
+    grade_match = _GRADE_RE.search(normalized)
+    if grade_match:
+        grade = int(grade_match.group(1))
+
+    year = None
+    year_match = _YEAR_RE.search(normalized)
+    if year_match:
+        year = year_match.group(1)
+
+    return author, grade, year
+
+
+def _looks_like_textbook_reference(source_name: str) -> bool:
+    if not source_name:
+        return False
+    normalized = _normalize_source_name(source_name)
+    if _TEXTBOOK_HINT_RE.search(normalized):
+        return True
+    author, grade, _year = _textbook_reference_parts(source_name)
+    return bool(author and grade)
+
+
+def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
+    if not sources_db.exists():
+        raise FileNotFoundError(
+            f"sources_db not found at {sources_db}. "
+            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+        )
+    conn = sqlite3.connect(str(sources_db))
+    try:
+        rows = conn.execute(
+            "SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file"
+        ).fetchall()
+    finally:
+        conn.close()
+    return [
+        {
+            "source_file": str(source_file or ""),
+            "normalized_source_file": _normalize_source_name(str(source_file or "")),
+            "grade": int(grade) if grade is not None else None,
+            "author": str(author or "").casefold(),
+        }
+        for source_file, grade, author in rows
+        if source_file
+    ]
+
+
+def _reference_matches_textbook(source_name: str, textbook: dict[str, object]) -> bool:
+    normalized = _normalize_source_name(source_name)
+    source_file = str(textbook["source_file"])
+    normalized_source_file = str(textbook["normalized_source_file"])
+    if normalized == normalized_source_file or normalized in normalized_source_file:
+        return True
+
+    author, grade, year = _textbook_reference_parts(source_name)
+    if not author or grade is None:
+        return False
+    textbook_author = str(textbook["author"])
+    author_matches = author == textbook_author or (
+        {author, textbook_author} == {"zabolotnyi", "zabolotnij"}
+    )
+    if not author_matches or grade != textbook["grade"]:
+        return False
+    return year is None or year in source_file
+
+
+def check_textbook_references_in_corpus(
+    plan: dict,
+    sources_db: Path = SOURCES_DB,
+) -> list[PlanIssue]:
+    """Reject textbook-looking plan references absent from sources_db."""
+    references = plan.get("references")
+    if not isinstance(references, list) or not references:
+        return []
+
+    textbook_refs = [
+        source_name
+        for ref in references
+        if (source_name := _reference_source_name(ref))
+        and _looks_like_textbook_reference(source_name)
+    ]
+    if not textbook_refs:
+        return []
+
+    try:
+        known = _known_textbooks(sources_db)
+    except (FileNotFoundError, sqlite3.Error) as exc:
+        return [
+            PlanIssue(
+                "TEXTBOOK_CORPUS",
+                "ERROR",
+                f"Cannot validate plan textbook references against sources_db: {exc}",
+            )
+        ]
+
+    missing = [
+        source_name
+        for source_name in textbook_refs
+        if not any(_reference_matches_textbook(source_name, textbook) for textbook in known)
+    ]
+    if not missing:
+        return []
+
+    known_pointer = (
+        f"{len(known)} distinct source_file rows in data/sources.db; "
+        "inspect with `SELECT DISTINCT source_file FROM textbooks ORDER BY source_file`"
+    )
+    return [
+        PlanIssue(
+            "TEXTBOOK_CORPUS",
+            "ERROR",
+            "Plan references unknown textbook: "
+            f"'{source_name}'. Known textbooks in corpus: {known_pointer}. "
+            "To add this textbook, see docs/DICTIONARY-PIPELINE-STATUS.md.",
+            "Use an in-corpus textbook citation or file an ingestion request before module build.",
+        )
+        for source_name in missing
+    ]
+
+
 def check_yaml_safety(plan: dict) -> list[PlanIssue]:
     """Check for YAML issues that cause parse errors."""
     issues = []
@@ -519,6 +696,7 @@ def check_plan(plan_path: Path, all_slugs: list[str] | None = None) -> list[Plan
     issues.extend(check_phase_alignment(plan))
     issues.extend(check_grammar_scope(plan))
     issues.extend(check_plan_internal_consistency(plan))
+    issues.extend(check_textbook_references_in_corpus(plan))
     issues.extend(check_prerequisites(plan, all_slugs or []))
     issues.extend(check_yaml_safety(plan))
     issues.extend(check_vesum_vocabulary(plan))
