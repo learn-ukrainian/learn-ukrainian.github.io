@@ -85,10 +85,11 @@ resources:
       url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
       relevance: high
       source: Infographic with rules and exceptions
-    - title: How to Know Noun Gender
+    - title: 'How to know noun gender in Ukrainian language? Рід іменника [Ukrainian Grammar Guide]'
       url: https://www.ukrainianlessons.com/video-noun-gender/
+      youtube_url: https://www.youtube.com/watch?v=GxHkwA7HllM
       relevance: high
-      source: 8-minute grammar guide
+      source: Anna Ohoiko 8-minute grammar guide (ULP video series)
     - title: 'Dobra Forma: Gender of Nouns'
       url: https://opentext.ku.edu/dobraforma/chapter/1-1/
       relevance: high
@@ -184,7 +185,19 @@ resources:
       relevance: medium
       source: ukrainianlessons.com
   a1-what-is-it-like:
+    youtube:
+    - title: 'Introduction to Ukrainian ADJECTIVES - прикметники [Ukrainian Grammar Guide]'
+      url: https://www.youtube.com/watch?v=t6QpqZRIJPY
+      ulp_page: https://www.ukrainianlessons.com/video-adjectives/
+      relevance: high
+      channel: Ukrainian Lessons (Anna Ohoiko)
+      no_captions: true
+      include_reason: title-and-channel-pedagogically-rich-even-without-cc
     articles:
+    - title: 'Anna adjectives video — ULP page'
+      url: https://www.ukrainianlessons.com/video-adjectives/
+      relevance: high
+      source: Anna Ohoiko video lesson with article context
     - title: Common Adjectives
       url: https://www.ukrainianlessons.com/vocabulary-adjectives/
       relevance: high

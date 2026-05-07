@@ -194,10 +194,14 @@ things-have-gender:
       relevance: high
       verified: true
     - url: https://www.ukrainianlessons.com/video-noun-gender/
-      title: "How to Know Noun Gender (Video)"
-      type: article
+      title: "How to know noun gender in Ukrainian language? 🇺🇦 Рід іменника [Ukrainian Grammar Guide]"
+      type: video
       relevance: high
       verified: true
+      youtube_url: https://www.youtube.com/watch?v=GxHkwA7HllM
+      channel: Ukrainian Lessons (Anna Ohoiko)
+      include_reason: title-and-channel-pedagogically-rich
+      orchestrator_note: "User-flagged 2026-05-07 as part of Anna's grammar-guide series (chef's kiss quality). Same author/series as video-adjectives."
     - url: https://www.ukrainianlessons.com/basic-terms/
       title: "Table of Grammar Terms Used in Learning Ukrainian"
       type: article
@@ -225,9 +229,10 @@ what-is-it-like:
     - title: "Introduction to Ukrainian ADJECTIVES - прикметники [Ukrainian Grammar Guide]"
       type: video
       youtube_url: https://www.youtube.com/watch?v=t6QpqZRIJPY
-      channel: Ukrainian Lessons
+      ulp_page: https://www.ukrainianlessons.com/video-adjectives/
+      channel: Ukrainian Lessons (Anna Ohoiko)
       no_captions: true
-      include_reason: "A1 adjective introduction for gender and number agreement in basic descriptions."
+      include_reason: "A1 adjective introduction for gender and number agreement in basic descriptions. Flagged 'chef's kiss' quality by user 2026-05-07. No CC — pair with transcript for non-listening learners."
 
 colors:
   articles:

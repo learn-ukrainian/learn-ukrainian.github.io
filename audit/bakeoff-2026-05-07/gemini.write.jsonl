@@ -1,0 +1,4 @@
+{"event": "module_start", "ts": "2026-05-07T15:31:40.520130+00:00", "level": "a1", "slug": "my-morning"}
+{"event": "phase_done", "ts": "2026-05-07T15:31:40.523527+00:00", "level": "a1", "slug": "my-morning", "phase": "plan", "duration_s": 0.003}
+{"event": "phase_done", "ts": "2026-05-07T15:31:40.755443+00:00", "level": "a1", "slug": "my-morning", "phase": "knowledge_packet", "duration_s": 0.232}
+{"event": "module_failed", "ts": "2026-05-07T15:45:36.518761+00:00", "level": "a1", "slug": "my-morning", "phase": "writer", "reason": "gemini/gemini-2.5-pro rate limited: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\nYOLO mode is enabled. All tool calls will be automatically appr"}
