@@ -913,8 +913,12 @@ def _build_tool_instructions(writer: str) -> str:
 
     For Codex writers, loads shell-command tool instructions from
     scripts/tools/codex_tool_instructions.md instead of MCP tool references.
-    Codex runs via `codex exec --full-auto` and can execute arbitrary Python
-    via subprocess, so it gets direct shell commands instead of MCP JSON-RPC.
+    Codex runs via `codex exec` with the project's standard sandbox-bypass
+    flags (mirrors start-codex.sh) and can execute arbitrary Python via
+    subprocess, so it gets direct shell commands instead of MCP JSON-RPC.
+    The previous comment said `--full-auto`; that flag is undocumented in
+    `codex exec --help` and was found 2026-05-08 to silently block
+    localhost MCP server connections.
     Issue: #1194
     """
     # Codex uses shell commands, not MCP — load from dedicated markdown file
@@ -4899,9 +4903,13 @@ def step_write(level: str, module_num: int, slug: str,
             mcp_tools=use_tools, allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
         )
     elif writer in ("codex", "codex-tools"):
-        # Codex uses workspace-write sandbox (--full-auto) so it can run
-        # the shell-command verification tools injected into the prompt.
-        # No MCP tools — Codex verifies via subprocess Python calls.
+        # Codex runs with the project's standard sandbox-bypass flags
+        # (mirrors start-codex.sh) so it can run the shell-command
+        # verification tools injected into the prompt and reach the
+        # localhost sources MCP server when allowed. The legacy comment
+        # said `--full-auto`; that flag silently blocks localhost MCP
+        # (verified 2026-05-08). No MCP tools used here — Codex verifies
+        # via subprocess Python calls.
         # Issue: #1194
         ok, raw = dispatch_agent(
             prompt, agent="codex-tools" if use_tools else "codex", phase="write",

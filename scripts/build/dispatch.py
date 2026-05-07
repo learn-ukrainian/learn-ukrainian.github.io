@@ -87,13 +87,27 @@ def _codex_dispatch_mode(agent: str) -> str:
 
 
 def _codex_dispatch_flags(agent: str) -> list[str]:
-    """Translate Codex dispatch mode to CLI flags."""
+    """Translate Codex dispatch mode to CLI flags.
+
+    Mirrors ``start-codex.sh`` for any non-read-only mode. ``--full-auto``
+    (the previous workspace-write mapping) is undocumented in
+    ``codex exec --help`` and silently blocks localhost MCP server
+    connections — verified empirically 2026-05-08, see commit
+    ``fix(codex-adapter): mirror start-codex.sh flags`` for the modern
+    agent_runtime adapter mirror of this same fix. This legacy V6
+    dispatch path is fixed in parity so v6 re-runs do not surface the
+    same MCP-blocked-Codex bug.
+    """
     mode = _codex_dispatch_mode(agent)
-    if mode == "danger":
-        return ["--dangerously-bypass-approvals-and-sandbox"]
-    if mode == "workspace-write":
-        return ["--full-auto"]
-    return ["-s", "read-only"]
+    if mode == "read-only" or mode == "safe":
+        return ["-s", "read-only"]
+    # workspace-write and danger both need the bypass flag for MCP access.
+    # multi_agent matches start-codex.sh defaults.
+    return [
+        "--dangerously-bypass-approvals-and-sandbox",
+        "--enable",
+        "multi_agent",
+    ]
 
 
 def _codex_runtime_mode(agent: str) -> str:

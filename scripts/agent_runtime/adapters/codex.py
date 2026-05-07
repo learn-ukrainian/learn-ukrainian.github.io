@@ -794,12 +794,36 @@ class CodexAdapter:
     def _mode_flags(mode: str) -> list[str]:
         """Map runtime mode → codex exec sandbox flags.
 
+        Mirrors ``start-codex.sh`` (the canonical interactive launcher) for
+        any non-read-only mode. The launcher unconditionally passes
+        ``--dangerously-bypass-approvals-and-sandbox`` AND
+        ``--enable multi_agent`` for every interactive Codex session on
+        this project; the same flags are required for headless writers
+        because Codex's ``--full-auto`` (the previous workspace-write
+        mapping) silently blocks localhost MCP server connections,
+        leaving writers unable to call ``verify_words``, ``search_text``,
+        and other MCP-backed tools. Empirically verified 2026-05-08:
+        codex with ``--full-auto`` returned
+        "Tool unavailable: ``mcp__sources__verify_words`` is not
+        available in this session"; the same prompt with the bypass
+        flag set called the tool successfully.
+
+        The runtime ``mode`` parameter is still retained for gating in
+        higher layers; at the codex CLI level workspace-write and danger
+        produce the same flag set because Codex has no distinct
+        "workspace-write + MCP-allowed" mode. This is the cost of
+        Codex's coarser sandbox model; worktree isolation is the actual
+        security boundary for headless dispatches.
+
         Matches the mapping in _codex.py::_codex_bridge_flags and
         dispatch.py::_codex_dispatch_flags for consistency during migration.
         """
-        if mode == "danger":
-            return ["--dangerously-bypass-approvals-and-sandbox"]
-        if mode == "workspace-write":
-            return ["--full-auto"]
-        # "read-only" default
-        return ["-s", "read-only"]
+        if mode == "read-only":
+            return ["-s", "read-only"]
+        # workspace-write and danger both need the bypass flag for MCP
+        # access. multi_agent is on by default to match start-codex.sh.
+        return [
+            "--dangerously-bypass-approvals-and-sandbox",
+            "--enable",
+            "multi_agent",
+        ]

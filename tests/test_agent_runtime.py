@@ -274,13 +274,37 @@ def test_codex_adapter_mode_flags_read_only():
 
 
 def test_codex_adapter_mode_flags_workspace_write():
-    assert CodexAdapter._mode_flags("workspace-write") == ["--full-auto"]
+    # Mirrors start-codex.sh — --full-auto silently blocked localhost MCP
+    # server connections, leaving writers unable to call verify_words etc.
+    # (verified empirically 2026-05-08). workspace-write now uses the same
+    # flags as the interactive launcher.
+    assert CodexAdapter._mode_flags("workspace-write") == [
+        "--dangerously-bypass-approvals-and-sandbox",
+        "--enable",
+        "multi_agent",
+    ]
 
 
 def test_codex_adapter_mode_flags_danger():
+    # workspace-write and danger map to the same flags at the codex CLI
+    # layer because Codex has no "workspace-write + MCP-allowed" mode.
+    # The runtime mode parameter still differentiates them in higher layers.
     assert CodexAdapter._mode_flags("danger") == [
-        "--dangerously-bypass-approvals-and-sandbox"
+        "--dangerously-bypass-approvals-and-sandbox",
+        "--enable",
+        "multi_agent",
     ]
+
+
+def test_codex_adapter_mode_flags_workspace_write_and_danger_are_equivalent():
+    """Codex CLI has no distinct workspace-write + MCP-allowed mode.
+
+    Regression for 2026-05-08 finding: --full-auto blocks localhost MCP.
+    If a future Codex CLI version adds a real workspace-write mode that
+    permits MCP, this test should be updated and the two flag sets can
+    diverge.
+    """
+    assert CodexAdapter._mode_flags("workspace-write") == CodexAdapter._mode_flags("danger")
 
 
 def test_codex_adapter_build_invocation_read_only(tmp_path):
@@ -354,7 +378,10 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
         session_id=None,
         tool_config=None,
     )
-    assert "--full-auto" in plan.cmd
+    assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
+    assert "--enable" in plan.cmd
+    assert "multi_agent" in plan.cmd
+    assert "--full-auto" not in plan.cmd  # legacy flag must not regress
     assert "gpt-5.5-mini" in plan.cmd  # model override honored
 
 
