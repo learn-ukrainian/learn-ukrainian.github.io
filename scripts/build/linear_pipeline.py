@@ -1724,6 +1724,10 @@ def _runtime_tool_config(agent_label: str) -> dict[str, Any]:
         codex_tools = build_mcp_tool_config("codex", mcp_servers=["sources"])
         if codex_tools:
             tool_config.update(codex_tools)
+    assert tool_config.get("output_format") == "stream-json", (
+        "tool-call writers must keep output_format='stream-json'; "
+        f"got {tool_config.get('output_format')!r}"
+    )
     return tool_config
 
 

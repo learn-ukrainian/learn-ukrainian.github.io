@@ -375,7 +375,7 @@ class CodexAdapter:
         if plan is not None:
             rollout_trace = self._read_latest_rollout_trace(plan)
         trace_events = parse_json_events(
-            "\n".join(part for part in (stdout, stderr, rollout_trace) if part),
+            rollout_trace,
             source="codex",
             logger=_logger,
         )

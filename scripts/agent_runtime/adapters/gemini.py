@@ -36,6 +36,7 @@ Issue: #1184
 from __future__ import annotations
 
 import contextlib
+import json as _json
 import logging
 import os
 import re
@@ -199,6 +200,7 @@ class GeminiAdapter:
                 "using adapter default (#1396 follow-up)",
                 effort,
             )
+        self._reset_per_invocation_state(plan_cwd=cwd)
         gemini_bin = shutil.which("gemini") or "gemini"
 
         cmd: list[str] = [
@@ -477,44 +479,14 @@ class GeminiAdapter:
         are swallowed — this is a last-resort fallback, not a primary
         code path.
         """
-        import json as _json
-        import time as _time
-
         try:
-            chats_dir = Path.home() / ".gemini" / "tmp" / plan.cwd.name / "chats"
-            if not chats_dir.exists():
-                return ""
-
-            candidates = sorted(
-                chats_dir.glob("session-*.json"),
-                key=lambda p: p.stat().st_mtime,
-                reverse=True,
+            session_file = self._select_session_for_plan(
+                plan, call_start_time=call_start_time,
             )
-            if not candidates:
+            if session_file is None:
                 return ""
 
-            # Pick the newest file whose mtime is after the call start.
-            # If call_start_time is unknown, trust the newest file.
-            newest: Path | None = None
-            if call_start_time is None:
-                newest = candidates[0]
-            else:
-                # Compare wall-clock (file mtime) to monotonic (call_start).
-                # Convert monotonic → wall by adding (time.time() - monotonic())
-                # at call time — but we don't have that delta. Approximation:
-                # any file modified in the last 2 hours of wall clock is
-                # acceptable if it's also the newest. This guards against
-                # picking a multi-day-old orphan file.
-                two_hours_ago = _time.time() - 2 * 3600
-                for c in candidates:
-                    if c.stat().st_mtime >= two_hours_ago:
-                        newest = c
-                        break
-
-            if newest is None:
-                return ""
-
-            data = _json.loads(newest.read_text("utf-8"))
+            data = _json.loads(session_file.read_text("utf-8"))
             messages = data.get("messages", [])
             if not isinstance(messages, list):
                 return ""
@@ -546,29 +518,128 @@ class GeminiAdapter:
             return ""
 
     def _read_latest_session_trace(self, plan: InvocationPlan) -> str:
-        """Read the newest Gemini session JSON for tool-call telemetry."""
-        import json as _json
-        import time as _time
-
+        """Read this invocation's Gemini session JSON for tool-call telemetry."""
         try:
-            chats_dir = Path.home() / ".gemini" / "tmp" / plan.cwd.name / "chats"
-            if not chats_dir.exists():
+            session_file = self._select_session_for_plan(plan, call_start_time=None)
+            if session_file is None:
                 return ""
-            candidates = sorted(
-                chats_dir.glob("session-*.json"),
-                key=lambda path: path.stat().st_mtime,
-                reverse=True,
+            data = _json.loads(
+                session_file.read_text(encoding="utf-8", errors="replace")
             )
-            if not candidates:
-                return ""
-            two_hours_ago = _time.time() - 2 * 3600
-            for candidate in candidates:
-                if candidate.stat().st_mtime >= two_hours_ago:
-                    data = _json.loads(candidate.read_text(encoding="utf-8", errors="replace"))
-                    return _json.dumps(data, ensure_ascii=False)
-            return ""
+            return _json.dumps(data, ensure_ascii=False)
         except Exception:
             return ""
+
+    def _reset_per_invocation_state(self, *, plan_cwd: Path) -> None:
+        """Snapshot pre-existing Gemini sessions before launching a call."""
+        self._session_snapshot = self._snapshot_preexisting_sessions(plan_cwd)
+        self._bound_session = None
+
+    def _snapshot_preexisting_sessions(self, cwd: Path) -> set[Path]:
+        chats_dir = Path.home() / ".gemini" / "tmp" / cwd.name / "chats"
+        try:
+            return set(chats_dir.glob("session-*.json"))
+        except OSError:
+            return set()
+
+    def _select_session_for_plan(
+        self,
+        plan: InvocationPlan,
+        *,
+        call_start_time: float | None = None,
+    ) -> Path | None:
+        """Return the Gemini session JSON scoped to this invocation, if any."""
+        import time as _time
+
+        snapshot: set[Path] = getattr(self, "_session_snapshot", None) or set()
+        bound: Path | None = getattr(self, "_bound_session", None)
+        if bound is not None and bound.exists() and self._session_matches_plan(bound, plan):
+            return bound
+
+        chats_dir = Path.home() / ".gemini" / "tmp" / plan.cwd.name / "chats"
+        try:
+            candidates = list(chats_dir.glob("session-*.json"))
+        except OSError:
+            return None
+
+        new_candidates = [path for path in candidates if path not in snapshot]
+        if not new_candidates and not snapshot:
+            # Direct unit tests may construct InvocationPlan by hand instead
+            # of calling build_invocation. Preserve that path while production
+            # calls use the snapshot to avoid stale-session contamination.
+            new_candidates = candidates
+        if not new_candidates:
+            return None
+
+        if call_start_time is not None:
+            two_hours_ago = _time.time() - 2 * 3600
+            new_candidates = [
+                path for path in new_candidates
+                if self._mtime(path) >= two_hours_ago
+            ]
+            if not new_candidates:
+                return None
+
+        for candidate in sorted(new_candidates, key=self._mtime, reverse=True):
+            if self._session_matches_plan(candidate, plan):
+                self._bound_session = candidate
+                return candidate
+        return None
+
+    @staticmethod
+    def _mtime(path: Path) -> float:
+        try:
+            return path.stat().st_mtime
+        except OSError:
+            return 0.0
+
+    def _session_matches_plan(self, session_path: Path, plan: InvocationPlan) -> bool:
+        """Return True when a Gemini session contains this invocation's prompt."""
+        expected = (plan.stdin_payload or "").rstrip()
+        if not expected:
+            return True
+
+        try:
+            data = _json.loads(session_path.read_text(encoding="utf-8", errors="replace"))
+            messages = data.get("messages", [])
+            if not isinstance(messages, list):
+                return False
+
+            user_texts: list[str] = []
+            for msg in messages:
+                if not isinstance(msg, dict) or msg.get("type") != "user":
+                    continue
+                content = msg.get("content")
+                if isinstance(content, str):
+                    user_texts.append(content)
+                elif isinstance(content, list):
+                    parts: list[str] = []
+                    for part in content:
+                        if isinstance(part, dict) and isinstance(part.get("text"), str):
+                            parts.append(part["text"])
+                    if parts:
+                        user_texts.append("\n".join(parts))
+
+            for text in user_texts:
+                normalized = text.rstrip()
+                if normalized == expected:
+                    return True
+                if self._prompt_fingerprint_matches(expected, normalized):
+                    return True
+            return False
+        except Exception:
+            return False
+
+    @staticmethod
+    def _prompt_fingerprint_matches(expected: str, observed: str) -> bool:
+        """Check stable first/last prompt fragments without storing new metadata."""
+        if len(expected) <= 400:
+            return expected in observed
+        # This is a fallback for session formats that wrap the prompt text.
+        # Snapshot filtering already removes pre-existing sessions; the
+        # first/last fragments are an extra guard against concurrent new
+        # sessions in the same repo, not the only binding signal.
+        return expected[:200] in observed and expected[-200:] in observed
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Return filesystem paths the watchdog should poll for mtime bumps.

@@ -145,7 +145,7 @@ def test_gemini_adapter_parses_session_file_tool_calls(
     assert result.tool_calls[0]["arguments"] == {"words": ["ранок"]}
 
 
-def test_codex_adapter_parses_tool_calls(tmp_path: Path) -> None:
+def test_codex_adapter_ignores_stdout_tool_calls(tmp_path: Path) -> None:
     output_file = tmp_path / "codex-output.txt"
     output_file.write_text("Final answer.", encoding="utf-8")
     stdout = "\n".join([
@@ -163,14 +163,10 @@ def test_codex_adapter_parses_tool_calls(tmp_path: Path) -> None:
 
     assert result.ok is True
     assert result.session_id == "00000000-0000-0000-0000-000000000001"
-    assert [call["name"] for call in result.tool_calls] == [
-        "mcp__sources__verify_words",
-        "mcp__sources__search_heritage",
-    ]
-    assert result.tool_calls[0]["arguments"] == {"words": ["мати"]}
+    assert result.tool_calls == []
 
 
-def test_codex_adapter_parses_stderr_tool_calls(tmp_path: Path) -> None:
+def test_codex_adapter_ignores_stderr_tool_calls(tmp_path: Path) -> None:
     output_file = tmp_path / "codex-output.txt"
     output_file.write_text("Final answer.", encoding="utf-8")
 
@@ -182,8 +178,7 @@ def test_codex_adapter_parses_stderr_tool_calls(tmp_path: Path) -> None:
     )
 
     assert result.ok is True
-    assert result.tool_calls[0]["name"] == "mcp__sources__verify_words"
-    assert result.tool_calls[0]["arguments"] == {"words": ["ніч"]}
+    assert result.tool_calls == []
 
 
 def test_codex_adapter_parses_matching_rollout_tool_calls(
@@ -241,21 +236,42 @@ def test_tool_call_output_summary_truncation() -> None:
     assert summary.endswith("[...truncated]")
 
 
-def test_tool_call_arguments_are_bounded(tmp_path: Path) -> None:
+def test_tool_call_arguments_are_bounded(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    today = datetime.now(UTC)
+    rollout_dir = (
+        home
+        / ".codex"
+        / "sessions"
+        / f"{today.year:04d}"
+        / f"{today.month:02d}"
+        / f"{today.day:02d}"
+    )
+    rollout_dir.mkdir(parents=True)
+    monkeypatch.setattr(Path, "home", lambda: home)
     output_file = tmp_path / "codex-output.txt"
     output_file.write_text("Final answer.", encoding="utf-8")
-    stdout = (
-        '{"type":"tool_call","name":"Write",'
-        '"arguments":{"file_path":"lesson.md","content":"'
-        + ("x" * 10_000)
-        + '"},"output":"ok"}'
+    prompt = "Write the module."
+    adapter = CodexAdapter()
+    adapter._reset_per_invocation_state()
+    rollout = rollout_dir / "rollout-test.jsonl"
+    rollout.write_text(
+        "\n".join([
+            '{"type":"event_msg","payload":{"type":"user_message","message":"Write the module."}}',
+            '{"type":"response_item","payload":{"type":"function_call","name":"Write",'
+            '"arguments":{"file_path":"lesson.md","content":"'
+            + ("x" * 10_000)
+            + '"},"call_id":"call-1"}}',
+        ]),
+        encoding="utf-8",
     )
 
-    result = CodexAdapter().parse_response(
-        stdout=stdout,
+    result = adapter.parse_response(
+        stdout="",
         stderr="",
         returncode=0,
         output_file=output_file,
+        plan=InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt),
     )
 
     assert result.ok is True
