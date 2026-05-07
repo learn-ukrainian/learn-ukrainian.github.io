@@ -257,3 +257,13 @@ like `correct_order`, indices are zero-based.
 ## Knowledge Packet
 
 {KNOWLEDGE_PACKET}
+
+## HARD STOP RULE
+
+After emitting all required `<plan_reasoning>` blocks, the 4 artifact fences
+(`module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`), and the
+`<end_gate>` block, STOP. Do not write a summary, status report, completion
+confirmation, or any meta-commentary about what you did. The 4 fences are the
+deliverable. Anything after the `<end_gate>` block will be discarded by the
+parser. If you feel the urge to write "Module drafted under..." or "All forms
+verified...", DON'T. The verification is in the `<end_gate>` block, not in prose.

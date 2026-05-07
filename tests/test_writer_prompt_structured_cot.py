@@ -58,6 +58,19 @@ def test_writer_prompt_locks_structured_end_gate_nodes() -> None:
         assert node in prompt
 
 
+def test_writer_prompt_has_hard_stop_rule_after_artifacts() -> None:
+    prompt = _writer_template()
+
+    assert "## HARD STOP RULE" in prompt
+    assert "After emitting all required `<plan_reasoning>` blocks" in prompt
+    assert "the 4 artifact fences" in prompt
+    assert "Do not write a summary, status report, completion" in prompt
+    assert "confirmation, or any meta-commentary about what you did" in prompt
+    assert "Anything after the `<end_gate>` block will be discarded by the" in prompt
+    assert "parser. If you feel the urge to write" in prompt
+    assert "The verification is in the `<end_gate>` block, not in prose" in prompt
+
+
 def test_plan_reasoning_parser_preserves_nested_xml_body() -> None:
     output = """<plan_reasoning section="intro">
 <word_budget>80 words.</word_budget>
