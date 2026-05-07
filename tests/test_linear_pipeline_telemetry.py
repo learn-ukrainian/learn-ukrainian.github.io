@@ -42,10 +42,12 @@ def _writer_prompt() -> str:
 def _writer_response() -> str:
     reasoning = "\n\n".join(
         f"""<plan_reasoning section="{section}">
-word_budget: allocate 80 words to {section}.
-plan_vocab: place required vocabulary in a concrete Ukrainian sentence.
-register: keep the Ukrainian/English immersion split tight.
-teaching_sequence: anchor the section in the knowledge packet citations.
+<word_budget>Allocate 80 words to {section}.</word_budget>
+<plan_vocab>Place required vocabulary in a concrete Ukrainian sentence.</plan_vocab>
+<register>Keep the Ukrainian/English immersion split tight.</register>
+<teaching_sequence>Anchor the section in the knowledge packet citations.</teaching_sequence>
+<verification_plan>Call MCP tools for section claims.</verification_plan>
+<verification_trace>mcp__sources__verify_words(["привіт"])</verification_trace>
 </plan_reasoning>"""
         for section in WRITER_SECTIONS
     )
@@ -74,12 +76,12 @@ teaching_sequence: anchor the section in the knowledge packet citations.
 ]
 ```
 
-<tier1_self_review>
-rescanned_words: true
-rescanned_sources: true
-removed_unverified: true
-removed_count: 1
-</tier1_self_review>
+<end_gate>
+<rescanned_words>Checked мама, тато, кава, школа, дім, ранок, вечір, взірець against VESUM.</rescanned_words>
+<rescanned_sources>Checked Fixture source against MCP.</rescanned_sources>
+<grammar_claims_grounded>Grounded one grammar note in the Knowledge Packet.</grammar_claims_grounded>
+<removed_unverified>Removed 1 unverified lemma.</removed_unverified>
+</end_gate>
 """
 
 
@@ -214,6 +216,7 @@ def test_writer_telemetry_events_fire_from_invocation_wrapper() -> None:
     assert gate_event["gate_actions"] == [
         "rescanned_words",
         "rescanned_sources",
+        "grammar_claims_grounded",
         "removed_unverified",
     ]
     assert gate_event["removed_count"] == 1

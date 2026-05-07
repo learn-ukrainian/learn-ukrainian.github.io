@@ -12,12 +12,16 @@ authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 
 Before the four artifact fences, you MUST emit one `<plan_reasoning section="...">...</plan_reasoning>` block for each contracted section. This is not optional hidden thinking. If any section lacks this visible block, the writer has failed the protocol.
 
-Each block MUST contain:
-1. `word_budget`: section word allocation and running total check against `{WORD_TARGET}±5%`.
-2. `plan_vocab`: required plan-vocabulary lemmas used in this section, with the exact Ukrainian sentence that grounds each lemma.
-3. `register`: the immersion ratio from the Immersion Rule and how this section preserves it.
-4. `teaching_sequence`: which Knowledge Packet facts/citations this section uses.
-5. `verification`: explicit Tier-1 checks: VESUM/modern-form check for example words, source-grounding check for dictionary/style claims, quote-contiguity check for attributed quotes, and heritage-defense check for possible archaism/historism/dialectism versus Russianism/surzhyk.
+Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
+<word_budget>Section word allocation and running total check against {WORD_TARGET}±5%.</word_budget>
+<plan_vocab>Required plan-vocabulary lemmas used in this section, with the exact Ukrainian sentence that grounds each lemma.</plan_vocab>
+<register>The immersion ratio from the Immersion Rule and how this section preserves it.</register>
+<teaching_sequence>Which Knowledge Packet facts/citations this section uses.</teaching_sequence>
+<verification_plan>Specific MCP tools to be called for this section's claims.</verification_plan>
+<verification_trace>
+List the exact tool call signatures you intend to use for this section. Example: mcp__sources__verify_words(["кіт", "стіл"]). Do not fake results here; this is your plan for the tool calls you will actually trigger.
+Every signature listed here is a commitment to call that exact tool this turn; omit speculative or copied example signatures.
+</verification_trace>
 
 Keep each `<plan_reasoning>` block to 200 words or fewer. Do not use triple backticks inside `<plan_reasoning>` blocks; fenced code belongs only in the four artifact blocks below.
 
@@ -47,6 +51,16 @@ that failure class. Run each check while drafting, not as a separate pass.
    → do NOT cite. Say "modern Ukrainian standardized form" or rephrase
    without attribution. Inventing a citation to look authoritative is a
    hard fail.
+
+   **Grammar claim grounding.** EVERY specific grammar claim (e.g., rules
+   about aspect, case endings, syntax, phonetics, morphology, word formation,
+   stress/prosody, orthography, or learner-facing meaning distinctions) MUST
+   cite an authoritative source from the Knowledge Packet or a specific school
+   textbook. You must explicitly name the source in the text or as an HTML
+   comment with concrete metadata:
+   `<!-- VERIFY: source="..." grade="..." author="..." -->`. If it's a new
+   rule not verbatim in the packet, you MUST verify it via
+   `mcp__sources__search_text` and cite the exact grade and author.
 
    **Verbatim textbook grounding (mandatory).** For each `plan_references` entry, you MUST call `mcp__sources__search_text` with a query targeting that textbook + topic, then quote at least one verbatim block (≥30 words) inline in the relevant section. The citation must include the textbook author + grade + page extracted from the search result, and the quote must be set off as a blockquote so reviewers can verify it. Inventing or paraphrasing in place of retrieving is a hard fail (`textbook_grounding`).
 
@@ -79,16 +93,17 @@ For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scr
 
    ```
    <end_gate>
-   actions: [rescanned_words, rescanned_sources, removed_unverified]
-   removed_count: N
-   summary: brief description of what was rescanned and what was removed.
+   <rescanned_words>List of words actually checked against VESUM.</rescanned_words>
+   <rescanned_sources>List of citations actually checked against MCP.</rescanned_sources>
+   <grammar_claims_grounded>List of grammar rules traced back to the Knowledge Packet or textbook.</grammar_claims_grounded>
+   <removed_unverified>What you deleted because it failed verification.</removed_unverified>
    </end_gate>
    ```
 
-   Drop any action key that did not apply; `actions: []` is allowed when
-   the rescan removed nothing. Pipeline detects `gate_present=true` only
-   when this block exists. A missing block records `gate_present=false`,
-   and the writer is treated as having skipped the protocol.
+   Leave a required sub-node empty only when nothing applied. Pipeline detects
+   `gate_present=true` only when this block exists. A missing block records
+   `gate_present=false`, and the writer is treated as having skipped the
+   protocol.
 
 Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks in the order below, then the `<end_gate>` block. Do not add any other prose anywhere.
 
