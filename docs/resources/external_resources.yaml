@@ -201,6 +201,12 @@ resources:
       url: https://talkukrainian.com/adjectives/
       relevance: high
       source: talkukrainian
+    youtube:
+    - title: Introduction to Ukrainian ADJECTIVES - прикметники [Ukrainian Grammar Guide]
+      url: https://www.youtube.com/watch?v=t6QpqZRIJPY
+      relevance: high
+      channel: Ukrainian Lessons
+      no_captions: true
   a1-colors:
     articles:
     - title: Colors in Ukrainian + Pronunciation Trainer
@@ -7440,6 +7446,124 @@ resources:
       source: dobraforma
     - title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
+      relevance: medium
+      source: ukrainianlessons.com
+  a1-many-things:
+    articles:
+    - title: Plural of Ukrainian Nouns — Special Forms
+      url: https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'FMU 1-46 | Grammar Point: Plural of Nouns in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu46/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'ULP 2-42 | Plural Nouns in Ukrainian'
+      url: https://www.ukrainianlessons.com/episode42/
+      relevance: medium
+      source: ukrainianlessons.com
+  a1-checkpoint-my-world:
+    articles:
+    - title: Noun Genders in Ukrainian (Infographic)
+      url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 100 Most Common Words in Ukrainian
+      url: https://www.ukrainianlessons.com/100words/
+      relevance: medium
+      source: ukrainianlessons.com
+  a1-what-i-like:
+    articles:
+    - title: Praise Words (Vocabulary)
+      url: https://www.ukrainianlessons.com/vocabulary-praise-words/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Emotions in Ukrainian (with Emojis and Audio)
+      url: https://www.ukrainianlessons.com/emotions-in-ukrainian/
+      relevance: medium
+      source: ukrainianlessons.com
+  a1-days-and-months:
+    articles:
+    - title: Дні тижня — Days of the Week in Ukrainian (with Illustrations and Audio)
+      url: https://www.ukrainianlessons.com/vocabulary-days/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Місяці — Months in Ukrainian (with Illustrations and Audio)
+      url: https://www.ukrainianlessons.com/vocabulary-months/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: How to Write Dates in Ukrainian + Useful Time Expressions
+      url: https://www.ukrainianlessons.com/dates-in-ukrainian/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'ULP 1-15 | Days of the Week and Months in Ukrainian'
+      url: https://www.ukrainianlessons.com/episode15/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-euphony:
+    articles:
+    - title: Difference between Ukrainian Prepositions У (В) and На
+      url: https://www.ukrainianlessons.com/prepositions-u-na/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-my-city:
+    articles:
+    - title: У місті — Around Town Vocabulary in Ukrainian (with Illustrations and Audio)
+      url: https://www.ukrainianlessons.com/vocabulary-town/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Phrasebook: Places'
+      url: https://www.ukrainianlessons.com/ph-places/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-checkpoint-food-shopping:
+    articles:
+    - title: The Ultimate Guide to Ukrainian Food
+      url: https://www.ukrainianlessons.com/ukrainian-food/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Phrasebook: Food'
+      url: https://www.ukrainianlessons.com/ph-food/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-linking-ideas:
+    articles:
+    - title: Ukrainian Conjunctions
+      url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian Conjunctions — Complete Guide
+      url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-when-and-where:
+    articles:
+    - title: 'Prepositions of Time in Ukrainian: Table with Cases'
+      url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Прийменники місця — Prepositions of Place in Ukrainian
+      url: https://www.ukrainianlessons.com/prepositions-of-place/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-yesterday:
+    articles:
+    - title: Минулий час — Past Tense in Ukrainian
+      url: https://www.ukrainianlessons.com/grammar-past-tense/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Verb Aspect in Ukrainian: Imperfective vs Perfective'
+      url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+      relevance: medium
+      source: ukrainianlessons.com
+  a1-my-plans:
+    articles:
+    - title: Майбутній час — Future Tense in Ukrainian
+      url: https://www.ukrainianlessons.com/grammar-future/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Verb Aspect in Ukrainian: Imperfective vs Perfective'
+      url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
       relevance: medium
       source: ukrainianlessons.com
 notes: V2→V3 slug remapping applied 2026-03-31 (#1047)
