@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import unicodedata
 from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
@@ -779,8 +780,6 @@ def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dic
             hit.get("source_type") or hit.get("corpus") or hit.get("source") or ""
         ).casefold()
     ]
-    if not textbook_hits:
-        textbook_hits = [hit for hit in hits if isinstance(hit, dict)]
     return textbook_hits[:limit]
 
 
@@ -805,7 +804,11 @@ def _build_textbook_excerpt_context(
         lines.append(f"### {title}")
         lines.append("")
         if not hits:
+            for ref in plan.get("references") or []:
+                if isinstance(ref, dict) and str(ref.get("title") or "").strip() == title:
+                    ref["corpus_missing"] = True
             lines.append("*No textbook excerpt found for this reference.*")
+            lines.append("corpus_missing: true")
             lines.append("")
             continue
         hit = hits[0]
@@ -821,7 +824,7 @@ def _build_textbook_excerpt_context(
             lines.append(f"> {quote_line}")
         lines.append("")
 
-    return "\n".join(lines).rstrip() if found_any else ""
+    return "\n".join(lines).rstrip() if found_any or references else ""
 
 
 def _build_wiki_packet(level: str, slug: str) -> str:
@@ -1765,8 +1768,22 @@ def invoke_writer(
     tool_calls = _runtime_tool_calls(result)
     if tool_trace_path is not None:
         tool_trace_path.parent.mkdir(parents=True, exist_ok=True)
+        existing_calls: list[Any] = []
+        if tool_trace_path.exists():
+            try:
+                existing_data = json.loads(tool_trace_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                existing_data = []
+            if isinstance(existing_data, list):
+                existing_calls = existing_data
         tool_trace_path.write_text(
-            json.dumps(tool_calls, ensure_ascii=False, indent=2, default=str) + "\n",
+            json.dumps(
+                [*existing_calls, *tool_calls],
+                ensure_ascii=False,
+                indent=2,
+                default=str,
+            )
+            + "\n",
             encoding="utf-8",
         )
     if module_ref and section_names:
@@ -3835,27 +3852,53 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
     return {"passed": not unknown, "unknown": unknown}
 
 
-def _extract_blockquotes(text: str) -> list[str]:
-    quotes: list[str] = []
+def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
+    quotes: list[dict[str, str]] = []
     current: list[str] = []
+    current_section = ""
+    quote_section = ""
     for line in text.splitlines():
+        heading = re.match(r"^\s{0,3}#{1,6}\s+(?P<title>.+?)\s*#*\s*$", line)
+        if heading:
+            current_section = re.sub(r"[*_`~]+", "", heading.group("title")).strip()
         match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
         if match:
+            if not current:
+                quote_section = current_section
             current.append(match.group("body"))
             continue
         if current:
-            quotes.append("\n".join(current).strip())
+            quotes.append(
+                {
+                    "quote": "\n".join(current).strip(),
+                    "section_title": quote_section,
+                }
+            )
             current = []
+            quote_section = ""
     if current:
-        quotes.append("\n".join(current).strip())
-    return [quote for quote in quotes if quote]
+        quotes.append(
+            {"quote": "\n".join(current).strip(), "section_title": quote_section}
+        )
+    return [record for record in quotes if record["quote"]]
+
+
+def _extract_blockquotes(text: str) -> list[str]:
+    return [record["quote"] for record in _extract_blockquote_records(text)]
+
+
+def _normalize_match_text(text: str) -> str:
+    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
+    text = re.sub(r"\[[^\]]+\]\([^)]+\)", " ", text)
+    text = text.replace("’", "'").replace("ʼ", "'")
+    decomposed = unicodedata.normalize("NFD", text)
+    return "".join(char for char in decomposed if not unicodedata.combining(char))
 
 
 def _textbook_match_tokens(text: str) -> list[str]:
-    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
-    text = re.sub(r"\[[^\]]+\]\([^)]+\)", " ", text)
+    text = _normalize_match_text(text)
     text = re.sub(r"[*_`~#>|]", " ", text)
-    return re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'ʼ’-]+", text.casefold())
+    return re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text.casefold())
 
 
 def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
@@ -3872,6 +3915,69 @@ def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
         if window in result_blob:
             return True
     return False
+
+
+_TOPIC_STOPWORDS = {
+    "about",
+    "after",
+    "before",
+    "class",
+    "grade",
+    "into",
+    "lesson",
+    "module",
+    "page",
+    "section",
+    "textbook",
+    "that",
+    "this",
+    "with",
+    "без",
+    "для",
+    "про",
+    "та",
+    "але",
+    "або",
+    "його",
+    "її",
+    "які",
+    "яка",
+    "яке",
+    "який",
+    "цей",
+    "ця",
+    "це",
+    "такий",
+    "такі",
+}
+
+
+def _topic_token_keys(text: str) -> set[str]:
+    keys: set[str] = set()
+    for token in _textbook_match_tokens(text):
+        stripped = token.strip("'-")
+        if len(stripped) < 4 or stripped in _TOPIC_STOPWORDS or stripped.isdigit():
+            continue
+        keys.add(stripped[:6] if len(stripped) >= 6 else stripped)
+    return keys
+
+
+def _quote_topic_matches(quote: str, topic_text: str) -> bool:
+    topic_tokens = _topic_token_keys(topic_text)
+    if len(topic_tokens) < 2:
+        return True
+    quote_body = re.sub(r"^\s*(?:\*\*)?[^:\n]{1,120}:\s*", " ", quote, count=1)
+    quote_tokens = _topic_token_keys(quote_body)
+    # Minimal topicality guard: at least one normalized content-word stem from
+    # the quote must also appear in the surrounding section title or
+    # plan_reasoning text. This is intentionally lightweight and tunable.
+    return bool(quote_tokens & topic_tokens)
+
+
+def _plan_reasoning_text(module_text: str) -> str:
+    return " ".join(
+        match.group("body") for match in _PLAN_REASONING_ELEMENT_RE.finditer(module_text)
+    )
 
 
 def _flatten_tool_text(value: Any) -> list[str]:
@@ -3945,6 +4051,46 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
     return calls
 
 
+def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    result = call.get("result", call.get("response"))
+    if result is None and call.get("result_excerpt"):
+        result = {"text": call["result_excerpt"]}
+        if call.get("source_type"):
+            result["source_type"] = call["source_type"]
+    if isinstance(result, list):
+        return [item for item in result if isinstance(item, Mapping)]
+    if isinstance(result, Mapping):
+        result = dict(result)
+        if call.get("source_type") and not result.get("source_type"):
+            result["source_type"] = call["source_type"]
+        raw_hits = result.get("results") or result.get("hits") or result.get("items")
+        if isinstance(raw_hits, list):
+            return [item for item in raw_hits if isinstance(item, Mapping)]
+        return [result]
+    return []
+
+
+def _result_source_type(result: Mapping[str, Any]) -> str:
+    return str(
+        result.get("source_type")
+        or result.get("type")
+        or result.get("corpus")
+        or result.get("source")
+        or ""
+    ).casefold()
+
+
+def _is_textbook_result(result: Mapping[str, Any]) -> bool:
+    return "textbook" in _result_source_type(result)
+
+
+def _result_text_for_match(result: Mapping[str, Any]) -> str:
+    text = _textbook_hit_text(result, max_chars=50_000)
+    if text:
+        return text
+    return "\n".join(_flatten_tool_text(result))
+
+
 def _call_text_parts(call: Mapping[str, Any]) -> tuple[str, str]:
     args = call.get("args", call.get("arguments", {}))
     result = call.get("result", call.get("response", call.get("result_excerpt", "")))
@@ -3954,16 +4100,67 @@ def _call_text_parts(call: Mapping[str, Any]) -> tuple[str, str]:
 
 
 def _reference_matches_search_call(reference_title: str, call: Mapping[str, Any]) -> bool:
-    query_text, result_text = _call_text_parts(call)
-    combined = f"{query_text}\n{result_text}"
+    return any(
+        _reference_matches_result(reference_title, result)
+        for result in _result_items_from_call(call)
+    )
+
+
+def _reference_matches_result(
+    reference_title: str,
+    result: Mapping[str, Any],
+) -> bool:
+    result_text = "\n".join(_flatten_tool_text(result))
     ref_key = extract_citation_key(reference_title)
-    if ref_key is not None:
-        for candidate in [query_text, result_text, combined]:
-            if extract_citation_key(candidate) == ref_key:
-                return True
+    if ref_key is not None and result_text and extract_citation_key(result_text) == ref_key:
+        return True
     normalized_ref = _normalize_citation_ref(reference_title).casefold()
-    normalized_combined = _normalize_citation_ref(combined).casefold()
-    return bool(normalized_ref and normalized_ref in normalized_combined)
+    normalized_result = _normalize_citation_ref(result_text).casefold()
+    return bool(normalized_ref and normalized_ref in normalized_result)
+
+
+def _missing_corpus_refs_from_packet(module_dir: Path) -> set[str]:
+    packet_path = module_dir / "knowledge_packet.md"
+    if not packet_path.exists():
+        return set()
+    missing: set[str] = set()
+    current_ref = ""
+    for line in packet_path.read_text(encoding="utf-8").splitlines():
+        heading = re.match(r"^###\s+(?P<title>.+?)\s*$", line)
+        if heading:
+            current_ref = heading.group("title").strip()
+            continue
+        if current_ref and re.search(r"\bcorpus_missing:\s*true\b", line):
+            missing.add(current_ref)
+    return missing
+
+
+def _plan_reference_records(
+    plan: Mapping[str, Any],
+    module_dir: Path,
+) -> list[dict[str, Any]]:
+    missing_from_packet = _missing_corpus_refs_from_packet(module_dir)
+    records: list[dict[str, Any]] = []
+    references = plan.get("references") or plan.get("plan_references") or []
+    if not isinstance(references, list):
+        return records
+    for ref in references:
+        if not isinstance(ref, Mapping) or not ref.get("title"):
+            continue
+        title = str(ref["title"])
+        records.append(
+            {
+                "title": title,
+                "corpus_missing": bool(ref.get("corpus_missing"))
+                or title in missing_from_packet,
+                "verbatim_required": ref.get("verbatim_required") is not False,
+            }
+        )
+    return records
+
+
+def _level_requires_references(level: str) -> bool:
+    return level.casefold() in {"b1", "b2", "c1", "c2", "pro"}
 
 
 def _textbook_grounding_gate(
@@ -3971,8 +4168,22 @@ def _textbook_grounding_gate(
     plan: Mapping[str, Any],
     module_dir: Path,
 ) -> dict[str, Any]:
-    references = [str(title) for title in extract_plan_reference_titles(plan)]
+    level = str(plan.get("level") or "").casefold()
+    reference_records = _plan_reference_records(plan, module_dir)
+    references = [record["title"] for record in reference_records]
     if not references:
+        if _level_requires_references(level):
+            return {
+                "passed": False,
+                "verdict": "REJECT",
+                "severity": "HARD",
+                "required": 1,
+                "matched": [],
+                "missing": [],
+                "blockquotes_checked": 0,
+                "search_text_calls": 0,
+                "reason": "missing_references",
+            }
         return {
             "passed": True,
             "verdict": "PASS",
@@ -3983,53 +4194,105 @@ def _textbook_grounding_gate(
             "search_text_calls": 0,
         }
 
-    blockquotes = _extract_blockquotes(module_text)
-    long_blockquotes = [
-        quote
-        for quote in blockquotes
-        if len(_textbook_match_tokens(quote)) >= TEXTBOOK_GROUNDING_MIN_WORDS
+    blockquote_records = _extract_blockquote_records(module_text)
+    plan_reasoning = _plan_reasoning_text(module_text)
+    long_blockquote_records = [
+        record
+        for record in blockquote_records
+        if len(_textbook_match_tokens(record["quote"])) >= TEXTBOOK_GROUNDING_MIN_WORDS
     ]
     search_calls = [
         call
         for call in _load_writer_tool_calls(module_dir)
         if _tool_name_from_call(call) == "search_text"
     ]
+    textbook_results: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
+    for call in search_calls:
+        for result in _result_items_from_call(call):
+            if _is_textbook_result(result):
+                textbook_results.append((call, result))
 
     matched: dict[str, int] = {}
+    topical_mismatches: list[str] = []
+    unattributed_matches = 0
+    downgraded = [
+        record["title"]
+        for record in reference_records
+        if record["corpus_missing"] or not record["verbatim_required"]
+    ]
     for ref in references:
-        ref_calls = [
-            call for call in search_calls if _reference_matches_search_call(ref, call)
+        if ref in downgraded:
+            continue
+        ref_results = [
+            result
+            for call, result in textbook_results
+            if _reference_matches_result(ref, result)
         ]
-        for quote in long_blockquotes:
-            if any(
-                _contains_textbook_quote(quote, _call_text_parts(call)[1])
-                for call in ref_calls
+        for record in long_blockquote_records:
+            quote = record["quote"]
+            if not any(
+                _contains_textbook_quote(quote, _result_text_for_match(result))
+                for result in ref_results
             ):
-                matched[ref] = len(_textbook_match_tokens(quote))
+                continue
+            topic_text = f"{record['section_title']} {plan_reasoning}".strip()
+            if not _quote_topic_matches(quote, topic_text):
+                topical_mismatches.append(ref)
+                continue
+            matched[ref] = len(_textbook_match_tokens(quote))
+            break
+
+    for ref in downgraded:
+        matched[ref] = 0
+
+    if level == "a1" and not matched:
+        for record in long_blockquote_records:
+            quote = record["quote"]
+            topic_text = f"{record['section_title']} {plan_reasoning}".strip()
+            for _call, result in textbook_results:
+                if not _contains_textbook_quote(quote, _result_text_for_match(result)):
+                    continue
+                if not _quote_topic_matches(quote, topic_text):
+                    topical_mismatches.append("unattributed")
+                    continue
+                actual_ref = next(
+                    (
+                        ref
+                        for ref in references
+                        if _reference_matches_result(ref, result)
+                    ),
+                    "unattributed",
+                )
+                if actual_ref == "unattributed":
+                    unattributed_matches += 1
+                    continue
+                matched[actual_ref] = len(_textbook_match_tokens(quote))
+                break
+            if matched:
                 break
 
-    level = str(plan.get("level") or "").casefold()
-    if level == "a1" and not matched:
-        for quote in long_blockquotes:
-            if any(
-                _contains_textbook_quote(quote, _call_text_parts(call)[1])
-                for call in search_calls
-            ):
-                matched[references[0]] = len(_textbook_match_tokens(quote))
-                break
     required = 1 if level == "a1" else len(references)
     passed = len(matched) >= required
+    warnings = []
+    if downgraded:
+        warnings.append("corpus_missing_or_verbatim_not_required")
+    reason = "topical_mismatch" if not passed and topical_mismatches else None
     return {
         "passed": passed,
-        "verdict": "PASS" if passed else "REJECT",
-        "severity": "HARD",
+        "verdict": "WARN" if passed and warnings else "PASS" if passed else "REJECT",
+        "severity": "WARN" if passed and warnings else "HARD",
         "required": required,
         "matched": sorted(matched),
         "missing": [ref for ref in references if ref not in matched],
-        "blockquotes_checked": len(blockquotes),
-        "long_blockquotes_checked": len(long_blockquotes),
+        "blockquotes_checked": len(blockquote_records),
+        "long_blockquotes_checked": len(long_blockquote_records),
         "search_text_calls": len(search_calls),
+        "textbook_result_hits": len(textbook_results),
         "min_words": TEXTBOOK_GROUNDING_MIN_WORDS,
+        "downgraded": downgraded,
+        "warnings": warnings,
+        "reason": reason,
+        "unattributed_matches": unattributed_matches,
     }
 
 
