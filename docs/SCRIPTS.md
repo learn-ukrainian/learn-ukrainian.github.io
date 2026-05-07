@@ -509,6 +509,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/consultation_cli.py` | Review consultation proposals | `.venv/bin/python scripts/consultation_cli.py list` |
 | `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
 | `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
+| `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 
 ---
 
@@ -800,6 +801,16 @@ Scans `docs/session-state/*.md` for references to env/config files that do not e
 Known user-scoped paths that are expected but not committed live in
 `scripts/audit/known_user_paths.yaml`. This check is also wired into pre-commit
 for `docs/session-state/*.md`.
+
+### `scripts/audit/lint_anti_menu.py`
+
+Scans markdown for MEMORY #0I anti-menu sign-off prompts while ignoring
+acceptance criteria, code fences, tables, and status/plan lines.
+
+```bash
+.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md
+cat handoff.md | .venv/bin/python scripts/audit/lint_anti_menu.py --stdin
+```
 
 ---
 
