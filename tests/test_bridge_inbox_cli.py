@@ -301,7 +301,11 @@ def test_discuss_fails_and_warns_when_agent_writes_worktree(
 
     def _write_attempt(agent: str, *_args, **kwargs) -> Result:
         assert kwargs["mode"] == "read-only"
-        assert kwargs["tool_config"] == {"discussion_readonly": True}
+        # tool_config now also carries `is_new_session: True` on round 1 for
+        # resumable agents (#1782 tier-2 warm-cache fix). Test the load-bearing
+        # contract — that discuss participants run in read-only — not the
+        # exact dict shape.
+        assert kwargs["tool_config"].get("discussion_readonly") is True
         (tmp_path / "unauthorized.txt").write_text("write attempt\n", encoding="utf-8")
         return Result(
             ok=True,

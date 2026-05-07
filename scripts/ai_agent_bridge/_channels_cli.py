@@ -42,6 +42,7 @@ import shlex
 import subprocess
 import sys
 import time
+import uuid
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -1058,6 +1059,7 @@ def _handle_discuss(args) -> int:
             AgentUnavailableError,
             RateLimitedError,
         )
+        from agent_runtime.registry import get_agent_entry
         from agent_runtime.runner import invoke as runtime_invoke
     except ImportError as e:
         print(f"❌ agent_runtime unavailable: {e}", file=sys.stderr)
@@ -1130,6 +1132,8 @@ def _handle_discuss(args) -> int:
     print(f"   root message: {root_id[:12]} / thread {correlation_id[:12]}")
     print()
 
+    discussion_session_ids: dict[str, str] = {}
+
     def _invoke_one(
         agent_name: str, prompt_text: str, round_idx: int
     ) -> tuple[str, str, bool]:
@@ -1141,6 +1145,23 @@ def _handle_discuss(args) -> int:
         and the dashboard couldn't tell them apart.
         """
         try:
+            resume_policy = get_agent_entry(agent_name).get("resume_policy", "never")
+        except KeyError:
+            resume_policy = "never"
+
+        session_id_to_pass: str | None = None
+        is_new_session = False
+        if resume_policy == "bridge_only":
+            if agent_name not in discussion_session_ids:
+                discussion_session_ids[agent_name] = str(uuid.uuid4())
+                is_new_session = True
+            session_id_to_pass = discussion_session_ids[agent_name]
+
+        tool_config = dict(_DISCUSSION_READONLY_TOOL_CONFIG)
+        if is_new_session:
+            tool_config["is_new_session"] = True
+
+        try:
             result = runtime_invoke(
                 agent_name,
                 prompt_text,
@@ -1149,8 +1170,9 @@ def _handle_discuss(args) -> int:
                 task_id=f"discuss-{correlation_id[:8]}-r{round_idx}-{agent_name}",
                 # TODO(#1701): keep this flag in the sanitized child-env
                 # allowlist when the runner switches to build_agent_env().
-                tool_config=_DISCUSSION_READONLY_TOOL_CONFIG,
-                entrypoint="delegate",
+                tool_config=tool_config,
+                entrypoint="bridge",
+                session_id=session_id_to_pass,
                 hard_timeout=900,
             )
         except RateLimitedError as exc:
