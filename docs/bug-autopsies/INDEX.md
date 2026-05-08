@@ -14,4 +14,5 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-04-23 | EPIC | alignment-contracts | `module_memory` sources_hash updated silently — corpus/rule changes land but old learned constraints persist (`module_memory.py:293-316`) |
 | 2026-04-23 | EPIC | alignment-contracts | Rule-after-incident governance pattern — rules added post-incident are advisory, not CI-enforced; live contradiction between "no-rewrite" decision and `convergence_loop.py` rewrite strategies |
 | 2026-05-05 | #1683 | agent-hallucination | Gemini fabricates verbatim Антоненко-Давидович quote flagging feminine «собака» as Russianism — reproducible across two threads same day, false per VESUM + АД corpus check + СУМ-11 «ч. і рідше ж.» + Мирний 1949 attestation |
+| 2026-05-08 | #1808 | agent-comms | `ab discuss` rounds 2+ silently dropped peer round-1 replies — `build_agent_prompt` pulled channel-wide tail instead of thread-scoped, budget truncator evicted in-thread messages on noisy channels. Fix: `thread_id` parameter + drop monitor/context first when in thread mode (commit 83d08a9604). Detail in `agent-comms.md`. |
 <!-- INDEX-END -->
