@@ -24,6 +24,7 @@ Tools:
 """
 
 import asyncio
+import contextlib
 import json
 import sys
 from pathlib import Path
@@ -1803,23 +1804,35 @@ async def main_stdio():
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
-async def main_sse(host: str = "127.0.0.1", port: int = 8766):
-    """Run the MCP sources server as a standalone SSE daemon."""
-    import uvicorn
+def create_http_app():
+    """Create the standalone HTTP app with SSE and Streamable HTTP transports."""
+    import anyio
     from mcp.server.sse import SseServerTransport
+    from mcp.server.streamable_http import StreamableHTTPServerTransport
     from starlette.applications import Starlette
     from starlette.responses import Response
     from starlette.routing import Mount, Route
 
-    # Verify SQLite sources database exists
-    from wiki.sources_db import source_count
-    try:
-        total = source_count()
-        print(f"SQLite sources database: {total:,} entries ✅")
-    except FileNotFoundError:
-        print("⚠️  Sources database not found. Run: .venv/bin/python scripts/wiki/build_sources_db.py")
-
     sse = SseServerTransport("/messages/")
+
+    def _scope_with_default_accept(scope):
+        method = scope.get("method")
+        default_accept = b"text/event-stream" if method == "GET" else b"application/json"
+        headers = [
+            (name, value)
+            for name, value in scope["headers"]
+            if name.lower() != b"accept"
+        ]
+        accept_values = [
+            value.strip()
+            for name, value in scope["headers"]
+            if name.lower() == b"accept"
+            for value in value.split(b",")
+        ]
+        if not accept_values or accept_values == [b"*/*"]:
+            headers.append((b"accept", default_accept))
+            return {**scope, "headers": headers}
+        return scope
 
     async def handle_health(request):
         return Response('{"status":"ok"}', media_type="application/json")
@@ -1837,16 +1850,62 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
             pass
         return Response()
 
+    class StreamableHTTPEndpoint:
+        async def __call__(self, scope, receive, send):
+            http_transport = StreamableHTTPServerTransport(
+                mcp_session_id=None,
+                is_json_response_enabled=True,
+            )
+            scope = _scope_with_default_accept(scope)
+
+            async with http_transport.connect() as streams:
+                read_stream, write_stream = streams
+
+                async def run_streamable_http_server():
+                    with contextlib.suppress(Exception):
+                        await server.run(
+                            read_stream,
+                            write_stream,
+                            server.create_initialization_options(),
+                            stateless=True,
+                        )
+
+                async with anyio.create_task_group() as tg:
+                    tg.start_soon(run_streamable_http_server)
+                    await http_transport.handle_request(scope, receive, send)
+                    await http_transport.terminate()
+                    tg.cancel_scope.cancel()
+
     app = Starlette(
         routes=[
             Route("/health", endpoint=handle_health),
             Route("/sse", endpoint=handle_sse),
+            Route("/mcp", endpoint=StreamableHTTPEndpoint(), methods=["GET", "POST", "DELETE"]),
             Mount("/messages/", app=sse.handle_post_message),
         ],
     )
 
+    return app
+
+
+async def main_sse(host: str = "127.0.0.1", port: int = 8766):
+    """Run the MCP sources server as a standalone SSE daemon."""
+    import uvicorn
+
+    # Verify SQLite sources database exists
+    from wiki.sources_db import source_count
+    try:
+        total = source_count()
+        print(f"SQLite sources database: {total:,} entries ✅")
+    except FileNotFoundError:
+        print("⚠️  Sources database not found. Run: .venv/bin/python scripts/wiki/build_sources_db.py")
+
+    # create_http_app keeps server.run(..., stateless=True) for HTTP transports.
+    app = create_http_app()
+
     print(f"MCP Sources Server (SSE) running on http://{host}:{port}")
     print(f"  SSE endpoint: http://{host}:{port}/sse")
+    print(f"  Streamable HTTP endpoint: http://{host}:{port}/mcp")
     print(f"  Messages: http://{host}:{port}/messages/")
     sys.stdout.flush()
 
