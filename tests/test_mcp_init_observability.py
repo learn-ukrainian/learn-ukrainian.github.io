@@ -197,6 +197,97 @@ def test_runtime_tool_config_emits_resolution_event_success(
     assert events[0][1]["resolved_servers"] == ["sources"]
 
 
+def test_runtime_tool_config_claude_tools_emits_resolution_event_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    config = linear_pipeline._runtime_tool_config(
+        "claude-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert config["output_format"] == "stream-json"
+    assert config["mcp_config_path"] == str(config_path.resolve())
+    assert config["allowed_tools"] == "mcp__sources__*"
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["writer"] == "claude-tools"
+    assert events[0][1]["resolution_status"] == "ok"
+    assert events[0][1]["resolved_servers"] == ["sources"]
+
+
+def test_runtime_tool_config_claude_tools_raises_when_unconfigured(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
+        linear_pipeline._runtime_tool_config(
+            "claude-tools",
+            event_sink=lambda event, **fields: events.append((event, fields)),
+        )
+
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["writer"] == "claude-tools"
+    assert events[0][1]["resolution_status"] == "config_empty"
+    assert events[0][1]["resolved_servers"] == []
+
+
+def test_runtime_tool_config_gemini_tools_emits_resolution_event_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    config = linear_pipeline._runtime_tool_config(
+        "gemini-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert config["output_format"] == "stream-json"
+    assert config["mcp_server_names"] == ["sources"]
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["writer"] == "gemini-tools"
+    assert events[0][1]["resolution_status"] == "ok"
+    assert events[0][1]["resolved_servers"] == ["sources"]
+
+
+def test_runtime_tool_config_gemini_tools_raises_when_unconfigured(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
+        linear_pipeline._runtime_tool_config(
+            "gemini-tools",
+            event_sink=lambda event, **fields: events.append((event, fields)),
+        )
+
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["writer"] == "gemini-tools"
+    assert events[0][1]["resolution_status"] == "config_empty"
+    assert events[0][1]["resolved_servers"] == []
+
+
+def test_runtime_tool_config_unknown_tools_writer_raises() -> None:
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match="Unknown -tools writer",
+    ):
+        linear_pipeline._runtime_tool_config("phantom-tools")
+
+
 def test_invoke_writer_refuses_tool_less_codex_before_invoker(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

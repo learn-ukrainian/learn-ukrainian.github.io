@@ -18,6 +18,28 @@ from scripts.agent_runtime.telemetry import InvocationTelemetry
 from scripts.build import linear_pipeline, v7_build
 
 
+def _seed_sources_mcp_config(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    mcp_config_path = tmp_path / ".mcp.json"
+    mcp_config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "sources": {
+                        "type": "streamable-http",
+                        "url": "http://127.0.0.1:8766/mcp",
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    tool_config_mod._load_mcp_config.cache_clear()
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", mcp_config_path)
+
+
 @pytest.mark.parametrize(
     ("writer", "agent_name"),
     [
@@ -33,28 +55,11 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
     agent_name: str,
 ) -> None:
     calls: list[tuple[str, str, dict[str, Any]]] = []
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
 
     def fake_invoker(agent: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
         calls.append((agent, prompt, kwargs))
         return SimpleNamespace(response="writer output")
-
-    if writer == "codex-tools":
-        mcp_config_path = tmp_path / ".mcp.json"
-        mcp_config_path.write_text(
-            json.dumps(
-                {
-                    "mcpServers": {
-                        "sources": {
-                            "type": "streamable-http",
-                            "url": "http://127.0.0.1:8766/mcp",
-                        }
-                    }
-                }
-            ),
-            encoding="utf-8",
-        )
-        tool_config_mod._load_mcp_config.cache_clear()
-        monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", mcp_config_path)
 
     response = linear_pipeline.invoke_writer(
         "Write the module.",
@@ -80,8 +85,13 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
     assert calls[0][2]["tool_config"]["output_format"] == "stream-json"
     if writer == "codex-tools":
         assert calls[0][2]["tool_config"]["mcp_servers"]["sources"]["url"].endswith("/mcp")
+    elif writer == "claude-tools":
+        assert calls[0][2]["tool_config"]["mcp_config_path"] == str(
+            (tmp_path / ".mcp.json").resolve()
+        )
+        assert calls[0][2]["tool_config"]["allowed_tools"] == "mcp__sources__*"
     else:
-        assert calls[0][2]["tool_config"] == {"output_format": "stream-json"}
+        assert calls[0][2]["tool_config"]["mcp_server_names"] == ["sources"]
 
 
 def test_v7_build_accepts_codex_alias() -> None:
@@ -119,7 +129,11 @@ def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
     assert events[-1]["dry_run"] is True
 
 
-def test_v7_writer_trace_capture_clears_tool_theatre(tmp_path: Path) -> None:
+def test_v7_writer_trace_capture_clears_tool_theatre(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
     telemetry = tmp_path / "trace.jsonl"
     writer_output = (
         '<plan_reasoning section="vocab">'
