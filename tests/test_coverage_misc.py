@@ -433,7 +433,7 @@ class TestSendGeminiMessage:
         f = self._import()
         with patch("ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st, \
              patch("ai_agent_bridge._gemini.acknowledge") as ack:
-            result = f("content", "task-1", "query", None, None, "model", False, "/out")
+            result = f("content", "task-1", "query", None, None, None, "model", False, "/out")
             assert result == 10
             ack.assert_called_once()
 
@@ -441,7 +441,7 @@ class TestSendGeminiMessage:
         f = self._import()
         with patch("ai_agent_bridge._gemini.send_to_gemini", return_value=11), \
              patch("ai_agent_bridge._gemini.acknowledge") as ack:
-            result = f("content", "task-1", "query", None, None, "model", True, None)
+            result = f("content", "task-1", "query", None, None, None, "model", True, None)
             assert result == 11
             ack.assert_called_once()
 
@@ -449,7 +449,7 @@ class TestSendGeminiMessage:
         f = self._import()
         with patch("ai_agent_bridge._gemini.send_to_gemini", return_value=12), \
              patch("ai_agent_bridge._gemini.acknowledge") as ack:
-            result = f("content", "task-1", "query", None, None, "model", False, None)
+            result = f("content", "task-1", "query", None, None, None, "model", False, None)
             assert result == 12
             ack.assert_not_called()
 

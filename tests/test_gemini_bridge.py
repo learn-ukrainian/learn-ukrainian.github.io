@@ -190,6 +190,7 @@ def test_handle_ask_gemini_passes_auth_mode(monkeypatch):
         type = "query"
         data = None
         model = PRO_MODEL
+        from_llm = "claude"
         from_model = None
         async_mode = False
         stdout_only = False

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -35,6 +36,46 @@ from ._messaging import (
     send_message,
 )
 from ._model import check_model
+
+_CALLER_IDENTITY_ENV_HINTS = (
+    "CLAUDE_AGENT_NAME",
+    "CODEX_SESSION",
+    "CLAUDE_PROJECT_DIR",
+    "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
+    "GEMINI_SESSION",
+)
+
+
+def _detect_caller_identity_from_env() -> str | None:
+    """Infer the sending agent for legacy ask-* commands from wrapper env."""
+    claude_name = os.environ.get("CLAUDE_AGENT_NAME")
+    if claude_name:
+        return claude_name.strip().lower()
+    if os.environ.get("CODEX_SESSION"):
+        return "codex"
+    if (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS")
+    ):
+        return "claude"
+    if os.environ.get("GEMINI_SESSION"):
+        return "gemini"
+    return None
+
+
+def _resolve_from_llm(args) -> str:
+    """Return explicit --from or fail loudly if caller identity is unknown."""
+    explicit = getattr(args, "from_llm", None)
+    if explicit:
+        return explicit
+    detected = _detect_caller_identity_from_env()
+    if detected:
+        return detected
+    hint_list = ", ".join(_CALLER_IDENTITY_ENV_HINTS)
+    raise SystemExit(
+        "Cannot infer sender for ask-* command. Pass --from explicitly or "
+        f"run under a known agent wrapper that sets one of: {hint_list}."
+    )
 
 
 def interactive_mode():
@@ -425,8 +466,8 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
     ask_claude_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                    help="Force new session even if one exists")
-    ask_claude_parser.add_argument("--from", dest="from_llm", default="gemini",
-                                   help="Sender agent family (gemini, claude). Default: gemini")
+    ask_claude_parser.add_argument("--from", dest="from_llm",
+                                   help="Sender agent family. Default: inferred from environment")
     ask_claude_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model",
@@ -442,8 +483,8 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_codex_parser.add_argument("--data", help="Path to data file to attach")
     ask_codex_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                   help="Force new session even if one exists")
-    ask_codex_parser.add_argument("--from", dest="from_llm", default="gemini",
-                                  help="Sender agent family (gemini, claude, codex). Default: gemini")
+    ask_codex_parser.add_argument("--from", dest="from_llm",
+                                  help="Sender agent family. Default: inferred from environment")
     ask_codex_parser.add_argument("--from-model", dest="from_model",
                                   help="Exact sender model ID")
     ask_codex_parser.add_argument("--to-model", dest="to_model",
@@ -466,6 +507,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID")
+    ask_gemini_parser.add_argument("--from", dest="from_llm",
+                                   help="Sender agent family. Default: inferred from environment")
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
                                    help="Queue only, don't invoke Gemini CLI")
     ask_gemini_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
@@ -711,8 +754,9 @@ def _handle_ask_claude(args):
     if args.data:
         data = Path(args.data).read_text()
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    from_llm = _resolve_from_llm(args)
     ask_claude(args.content, args.task_id, args.type, data,
-               args.new_session, args.from_llm, args.from_model, args.to_model,
+               args.new_session, from_llm, args.from_model, args.to_model,
                **kwargs)
 
 
@@ -727,8 +771,9 @@ def _handle_ask_codex(args):
             raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
         try:
             kwargs = {"review": True} if getattr(args, "review", False) else {}
+            from_llm = _resolve_from_llm(args)
             ask_codex_chain(content, args.chain, args.type, data,
-                            args.new_session, args.from_llm, args.from_model,
+                            args.new_session, from_llm, args.from_model,
                             args.to_model, args.no_timeout, **kwargs)
         except ValueError as exc:
             raise SystemExit(str(exc)) from exc
@@ -736,8 +781,9 @@ def _handle_ask_codex(args):
     if not args.task_id:
         raise SystemExit("ask-codex requires --task-id unless --chain is used")
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    from_llm = _resolve_from_llm(args)
     ask_codex(content, args.task_id, args.type, data,
-              args.new_session, args.from_llm, args.from_model,
+              args.new_session, from_llm, args.from_model,
               args.to_model, args.no_timeout, **kwargs)
 
 
@@ -748,7 +794,9 @@ def _handle_ask_gemini(args):
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    from_llm = _resolve_from_llm(args)
     ask_gemini(content, args.task_id, args.type, data, args.model,
+               from_llm,
                getattr(args, 'from_model', None),
                getattr(args, 'async_mode', False),
                getattr(args, 'stdout_only', False),

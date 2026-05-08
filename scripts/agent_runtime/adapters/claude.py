@@ -273,10 +273,7 @@ class ClaudeAdapter:
         cmd.append("--verbose")
 
         if discussion_readonly:
-            cmd.extend([
-                "--permission-mode", "plan",
-                "--tools", "Read,Grep,Glob,LS",
-            ])
+            cmd.extend(["--tools", "Read,Grep,Glob,LS"])
 
         # Mode-specific flags
         if mode == "danger":

@@ -62,8 +62,10 @@ Current adapter policy for discussion calls:
 - Codex: `read-only` maps to `codex exec -s read-only`.
 - Gemini: discussion calls add `--approval-mode plan`; plain read-only
   CLI defaults were not enough in trusted workspaces.
-- Claude: discussion calls add `--permission-mode plan` and restrict
-  built-in tools to read/list/search tools.
+- Claude: discussion calls restrict built-in tools to read/list/search
+  tools. They do not use Claude plan mode because discussion replies are
+  comments, not implementation plans; the restricted tool list plus the
+  bridge's git mutation guard enforce the read-only contract.
 
 ## CLI quick reference
 
@@ -261,8 +263,10 @@ to 40–60KB of copy-pasted transcript.
 one-time cost — the pinned `context.md` + the Monitor API snapshot
 are concatenated into the prompt even if the agent doesn't strictly
 need them. For drive-by one-shots, the legacy `ask-*` commands are
-still cheaper. Use channels when the conversation will have at
-least two turns.
+still cheaper. `ask-*` commands infer `--from` from wrapper environment
+such as `CLAUDE_AGENT_NAME`, `CODEX_SESSION`, or `GEMINI_SESSION`; pass
+`--from` explicitly when running them from a plain shell. Use channels
+when the conversation will have at least two turns.
 
 ## Web dashboard
 

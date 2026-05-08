@@ -2511,7 +2511,7 @@ def test_claude_adapter_basic_stateless(tmp_path):
     assert plan.stdin_payload == ""  # Claude -p takes prompt as positional
 
 
-def test_claude_adapter_discussion_readonly_uses_plan_tools(tmp_path):
+def test_claude_adapter_discussion_readonly_uses_restricted_tools_without_plan_mode(tmp_path):
     adapter = ClaudeAdapter()
     plan = adapter.build_invocation(
         prompt="hello",
@@ -2523,8 +2523,7 @@ def test_claude_adapter_discussion_readonly_uses_plan_tools(tmp_path):
         tool_config={"discussion_readonly": True},
     )
 
-    assert "--permission-mode" in plan.cmd
-    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "plan"
+    assert "--permission-mode" not in plan.cmd
     assert "--tools" in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
     assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
