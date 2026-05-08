@@ -150,6 +150,11 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch):
         # Full track detail performs the first uncached A1 module scan; Linux CI
         # has measured this just above the default smoke budget.
         "/api/dashboard/track/a1": 0.6,
+        # /api/orient is multi-section (git, issues, pipeline, runtime, delegate,
+        # wiki, governance, health, session_hints) with per-section TTL caches;
+        # cold-start path does fs/git/gh queries. CI flake observed at 0.571s on
+        # 2026-05-08 (PR #1813); 0.8s gives headroom without hiding real regressions.
+        "/api/orient": 0.8,
     }
     for dashboard, endpoints in dashboard_loads.items():
         for endpoint in endpoints:
