@@ -4,7 +4,8 @@
 **Date:** 2026-05-09
 **Authors:** Gemini (drafting), Codex (data collection), Claude (orchestration context)
 **Supersedes:** None
-**Blocks/Blocked-by:** Blocks Decision Graph UI implementation; independent of Multi-UI ADR (ADR-008). Integrates with D4 decision-lineage backlink scanner (#1785).
+**Scope:** Decision Graph view in channels.html — UI toggle, marker parser, matrix layout, drawer; not the underlying DB schema or `ab discuss` broker logic.
+**Blocks/Blocked-by:** Blocks Decision Graph UI implementation; independent of docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md. Integrates with D4 decision-lineage backlink scanner (#1785).
 
 ---
 
@@ -26,7 +27,7 @@ Furthermore, Codex gathered data on round-reply body sizes in the `architecture`
 - Average: 2367 chars
 - Maximum: 8349 chars
 
-A standard 3-column body-first grid would be completely unreadable with this volume of text. This justifies an outline-first matrix layout.
+A standard 3-column body-first grid would be completely unreadable with this volume of text. The matrix layout is justified for high-density channels; lighter channels could fall back to body-first or use the same matrix as a uniform UX choice.
 
 This document formalizes the UX and architectural semantics for the Decision Graph view. It is a separate ADR from the pending Multi-UI channel participation ADR because it changes primary IA and marker semantics (meeting the threshold rule for a distinct ADR).
 
@@ -68,7 +69,7 @@ The Decision Graph will use an **outline-first matrix layout**:
 *   **Interaction:** Clicking a cell opens a side drawer with the full message body.
 
 ### Rationale
-Codex's data shows average reply bodies are 2367 chars and max out at 8349 chars. A "body-first" grid (like a traditional Kanban board) would stretch rows to unreadable heights, destroying the visual comparison between agent responses in a given round. An outline matrix optimizes for horizontal scanning of consensus (e.g., seeing three green `[AGREE]` chips in Row 2 immediately signals convergence).
+Codex's data shows average reply bodies are 2367 chars and max out at 8349 chars. A "body-first" grid (like a traditional Kanban board) would stretch rows to unreadable heights, destroying the visual comparison between agent responses in a given round. An outline matrix optimizes for horizontal scanning of consensus (e.g., seeing three green `[AGREE]` chips in Row 2 immediately signals convergence). The matrix layout is justified for high-density channels; lighter channels could fall back to body-first or use the same matrix as a uniform UX choice.
 
 ---
 
@@ -77,7 +78,13 @@ Codex's data shows average reply bodies are 2367 chars and max out at 8349 chars
 ### Proposal
 *   **Target Markers:** `[AGREE]`, `[OPTION]`, `[OBJECT]`, `[DEFER]`.
 *   **Case Sensitivity:** Case-insensitive match (to accommodate human posts or agent casing drift).
-*   **Fuzzy Matching:** Match exact bases and safe adjacent variants using a regex boundary (e.g., matching `[AGREED]` or `[OBJECT - missing context]`).
+*   **Regex Matching:** Use a concrete regex boundary: `\[(AGREE(?:D)?|OPTION|OBJECT(?:[^\]]*)?|DEFER)(?:\b[^\]]*)?\]` (case-insensitive).
+    | Input | Captured | Maps to |
+    |---|---|---|
+    | `[AGREE]` | `AGREE` | `[AGREE]` |
+    | `[AGREED]` | `AGREED` | `[AGREE]` |
+    | `[OBJECT - missing context]` | `OBJECT - missing context` | `[OBJECT]` |
+    | `[OPTION B]` | `OPTION` | `[OPTION]` |
 *   **Position Requirement:** Anywhere in the body. While agents typically place markers at the end, human participants or modified prompts might place them at the top.
 *   **Multiple Markers:** If a single message contains multiple markers (e.g., `[OPTION] ... [DEFER]`), **last-wins** logic is applied. The final marker in the text flow is considered the agent's concluding stance for that round.
 
@@ -89,9 +96,9 @@ Strict regexes break easily when agents append reasoning inside the brackets. Ca
 ## Q4. Convergence detection
 
 ### Proposal
-A thread is considered "decided" (converged) when:
-*   All distinct participating `agent_family` instances in the thread have emitted an `[AGREE]` marker in the **latest round**.
-*   **Looser historical condition:** At least one round must have had an `[OPTION]` or `[OBJECT]` marker, OR it can be an immediate 1-round agreement. We define convergence strictly by the state of the *terminal* round.
+A thread is converged when every distinct `agent_family` that has posted in the thread emits `[AGREE]` in the latest round. Earlier-round content does not factor in.
+
+Edge case (partial participation): if an agent posted earlier but is silent in the latest round, that agent is still considered "participating" — the thread is NOT converged until that agent re-posts with `[AGREE]` or another marker. To exit, an agent must explicitly emit `[DEFER]`.
 
 When convergence is detected, the UI should display a "closing-out indicator" (e.g., a banner at the bottom of the graph) and auto-suggest the creation of a Decision Card if one has not already been emitted.
 
