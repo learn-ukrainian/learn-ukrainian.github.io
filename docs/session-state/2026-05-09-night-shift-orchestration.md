@@ -74,7 +74,9 @@ Issue: #1790 with full evidence + suggested next steps.
 ### Direct main commits
 
 - `b94150a86f` — chore: 2026-05-08 evening hygiene — bakeoff retry-2 evidence + kubedojo follow-ups (committed evidence files: `audit/bakeoff-2026-05-07-retry/`, dispatch briefs, kubedojo follow-up doc)
-- (#1788 squash merge) — feat(guardrail): brief linter
+- `60f9cbdf32` — feat(guardrail): brief linter (#1788 squash merge)
+- `9ab9478e51` + `4fb1be7ad6` — chore: archive root scratch artifacts (user-driven cleanup, separate workstream landed in parallel at 01:20 CEST). Reorganized root-level scratch/review/temp artifacts into `docs/archive/repo-root-scratch-2026-05-08/README.md`. Conservative (<20 changed files); active deps, services, CI, protected configs untouched. Validation: `git diff --check`, markdownlint, protected-file checks, generated-artifact diff checks. Direct push with branch-rule bypass (expected pytest skip).
+- `a23e28d55a` + `e257c12ffb` + `ab1c2074b2` — this handoff doc, three iterations as Claude reviews landed
 
 ---
 
