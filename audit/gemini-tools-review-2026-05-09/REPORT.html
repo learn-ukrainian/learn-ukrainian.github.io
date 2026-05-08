@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gemini-tools deep review - 2026-05-09</title>
+<meta name="report-class" content="audit" />
+<meta name="report-date" content="2026-05-09" />
+<meta name="report-status" content="root-cause" />
+<meta name="report-title" content="Gemini-tools deep review" />
+<meta name="report-kpi-summary" content="Root cause found: Gemini invoked from artifact cwd with no MCP config loaded" />
+<meta name="report-related-issues" content="1809,1810,1811,1813" />
+<meta name="report-agents" content="codex,gemini" />
+<meta name="report-author" content="codex" />
+<meta name="report-template-version" content="0.1" />
+<style type="text/css">
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.62;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+  .hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 28px;
+  }
+  h1 { margin: 0 0 8px; font-size: 30px; line-height: 1.2; font-weight: 650; }
+  h2 { margin: 34px 0 10px; font-size: 20px; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+  h3 { margin: 22px 0 8px; font-size: 16px; font-family: var(--sans); letter-spacing: 0.02em; }
+  .sub { color: var(--ink-soft); font-style: italic; }
+  .meta { font-family: var(--sans); font-size: 12px; color: var(--ink-faint); text-align: right; line-height: 1.8; min-width: 250px; }
+  .provenance {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 12px 16px;
+    margin: 0 0 26px;
+    font-family: var(--sans);
+    font-size: 13px;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-family: var(--sans); font-size: 13px; }
+  th, td { border: 1px solid var(--rule); padding: 9px 10px; vertical-align: top; text-align: left; }
+  th { background: var(--surface-2); font-weight: 650; }
+  tr.ok td:first-child { border-left: 4px solid var(--ok); }
+  tr.warn td:first-child { border-left: 4px solid var(--warn); }
+  tr.fail td:first-child { border-left: 4px solid var(--fail); }
+  tr.info td:first-child { border-left: 4px solid var(--info); }
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code { background: var(--surface-2); padding: 1px 5px; border-radius: 3px; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 13px 15px;
+    overflow-x: auto;
+    line-height: 1.48;
+  }
+  .callout { border: 1px solid var(--rule); background: var(--surface); padding: 14px 16px; margin: 16px 0; }
+  .callout.fail { background: var(--surface-fail); border-left: 4px solid var(--fail); }
+  .callout.warn { background: var(--surface-warn); border-left: 4px solid var(--warn); }
+  .callout.ok { background: var(--surface-ok); border-left: 4px solid var(--ok); }
+  .small { font-family: var(--sans); font-size: 13px; color: var(--ink-soft); }
+  ul { margin-top: 8px; }
+  li { margin: 5px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Gemini-tools deep review</h1>
+      <div class="sub">Root-cause audit for the 2026-05-08 Claude/Gemini diagnostic bakeoff.</div>
+    </div>
+    <div class="meta">
+      <div><b>Date:</b> 2026-05-09</div>
+      <div><b>Thread:</b> gemini-tools-deep-review-2026-05-09</div>
+      <div><b>Status:</b> root cause found</div>
+      <div><b>Scope:</b> report only, no code changes</div>
+    </div>
+  </div>
+
+  <div class="provenance">
+    This is the Gemini-side counterpart to <code>audit/codex-tools-review-2026-05-08/REPORT.md</code>.
+    Codex-tools failed because Codex CLI rejected a Claude-format MCP config field. Gemini-tools failed for a different reason:
+    the writer subprocess ran from an artifact directory where Gemini CLI had no MCP server configured.
+  </div>
+
+  <h2>Executive Summary</h2>
+  <table summary="Executive summary of Gemini-tools MCP investigation by layer, status, and owner.">
+    <thead>
+      <tr><th>Layer</th><th>Status</th><th>Owner</th></tr>
+    </thead>
+    <tbody>
+      <tr class="ok">
+        <td>Knowledge packet ingestion</td>
+        <td>Fine. Gemini, Claude, and Codex packets are byte-identical: 244 lines, SHA256 <code>84e1bc0e...</code>.</td>
+        <td>n/a</td>
+      </tr>
+      <tr class="warn">
+        <td>Prompt artifact capture</td>
+        <td>Incomplete after failure. The Gemini artifact dir has no <code>writer_prompt.md</code>, but the prompt is recoverable from Gemini's session JSONL.</td>
+        <td>v7 failure-path observability</td>
+      </tr>
+      <tr class="fail">
+        <td>Gemini MCP config delivery</td>
+        <td>Broken. v7 invokes the writer with <code>cwd=module_dir</code>. Gemini CLI reads MCP config for that workspace, not the repo root, and the module artifact dir has no <code>.gemini/settings.json</code>.</td>
+        <td><code>scripts/build/v7_build.py</code> writer cwd / Gemini config staging</td>
+      </tr>
+      <tr class="fail">
+        <td>Gemini model-side tool catalog</td>
+        <td>Broken. The matched transcript has exactly one tool call, Gemini's built-in <code>list_directory</code>, and zero <code>mcp__sources__*</code> calls.</td>
+        <td>Gemini runtime invocation</td>
+      </tr>
+      <tr class="warn">
+        <td><code>mcp_config_resolved</code> pre-flight</td>
+        <td>Misleading. It validates server names in repo <code>.mcp.json</code>; it does not prove Gemini loaded repo <code>.gemini/settings.json</code> for the actual subprocess cwd.</td>
+        <td><code>linear_pipeline._runtime_tool_config</code></td>
+      </tr>
+      <tr class="warn">
+        <td>Tool-call telemetry parsing</td>
+        <td>Also broken for Gemini JSONL sessions. The adapter tries <code>json.loads</code> on the whole session file, so it drops the built-in <code>list_directory</code> call too.</td>
+        <td><code>GeminiAdapter._read_latest_session_trace</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout fail">
+    <b>Root cause:</b> <code>--allowed-mcp-server-names sources</code> is only an allow-list. It does not define or load the <code>sources</code> server.
+    Because v7 runs Gemini from <code>audit/.../gemini/</code>, where no Gemini MCP settings file exists, Gemini starts with no MCP servers configured and therefore cannot call <code>mcp__sources__verify_words</code> or <code>mcp__sources__search_text</code>.
+  </div>
+
+  <h2>Evidence</h2>
+
+  <h3>E1. Gemini CLI transcript location and matched session</h3>
+  <p>Gemini persists local transcripts under <code>~/.gemini/tmp/&lt;project&gt;/chats/session-*.jsonl</code>. The bakeoff writer session is:</p>
+  <pre><code>~/.gemini/tmp/gemini-3/chats/session-2026-05-08T19-03-6bac0bfe.jsonl</code></pre>
+  <p>Its project pointer is the bakeoff artifact directory, not repo root:</p>
+  <pre><code>$ cat ~/.gemini/tmp/gemini-3/.project_root
+/Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-08-claude-gemini-diagnostic/gemini</code></pre>
+  <p>The session starts at <code>2026-05-08T19:03:34.435Z</code>, matching <code>gemini.write.jsonl</code> module start at <code>2026-05-08T19:03:29.935494+00:00</code>.</p>
+
+  <h3>E2. Knowledge packet is not the problem</h3>
+  <pre><code>$ wc -l audit/bakeoff-2026-05-08-codex-only/gpt55/knowledge_packet.md \
+       audit/bakeoff-2026-05-08-claude-gemini-diagnostic/claude/knowledge_packet.md \
+       audit/bakeoff-2026-05-08-claude-gemini-diagnostic/gemini/knowledge_packet.md
+244 ...codex-only/gpt55/knowledge_packet.md
+244 ...claude/knowledge_packet.md
+244 ...gemini/knowledge_packet.md
+
+$ sha256sum .../knowledge_packet.md
+84e1bc0edb6385706ca8168585d418bf80d96baed57febafe54a84831f241d0e  all three</code></pre>
+  <p>This refutes the input-layer version of "not using the wiki." The wiki packet reached Gemini.</p>
+
+  <h3>E3. Pipeline telemetry shows the symptom</h3>
+  <pre><code>$ cat audit/bakeoff-2026-05-08-claude-gemini-diagnostic/gemini/writer_tool_calls.json
+[]
+
+$ rg -n "mcp_config_resolved|writer_tool_theatre|phase_writer_summary" \
+  audit/bakeoff-2026-05-08-claude-gemini-diagnostic/gemini.write.jsonl
+4: {"event":"mcp_config_resolved", "writer":"gemini-tools",
+    "requested_servers":["sources"], "resolved_servers":["sources"],
+    "config_path":"/Users/.../learn-ukrainian/.mcp.json", "resolution_status":"ok"}
+10: {"event":"writer_tool_theatre", "violations":["search_text","verify_words"], "called_count":0}
+11: {"event":"phase_writer_summary", "tool_calls_total":0, "verify_words_calls":0}</code></pre>
+  <p>The key defect is in the first line: the "ok" event is about repo <code>.mcp.json</code>, while Gemini's actual config file is <code>.gemini/settings.json</code> in the subprocess workspace.</p>
+
+  <h3>E4. Actual Gemini session: one built-in tool call, zero MCP calls</h3>
+  <pre><code>$ jq -cr 'select(type=="object") |
+  {line:input_line_number,type:.type,hasToolCalls:has("toolCalls"),toolCalls:.toolCalls,tokens:.tokens}' \
+  ~/.gemini/tmp/gemini-3/chats/session-2026-05-08T19-03-6bac0bfe.jsonl
+
+line 6:
+{
+  "type": "gemini",
+  "hasToolCalls": true,
+  "toolCalls": [{
+    "name": "list_directory",
+    "displayName": "ReadFolder",
+    "args": {
+      "dir_path": "/Users/.../audit/bakeoff-2026-05-08-claude-gemini-diagnostic/gemini"
+    },
+    "resultDisplay": "Directory is empty."
+  }]
+}</code></pre>
+  <p>There are no <code>mcp__sources__*</code> calls in the transcript. Gemini did use a tool, but it was a built-in filesystem tool, not the sources MCP server.</p>
+
+  <h3>E5. The artifact cwd has no Gemini MCP config</h3>
+  <pre><code>$ find audit/bakeoff-2026-05-08-claude-gemini-diagnostic/gemini -maxdepth 2 -type f
+knowledge_packet.md
+writer_output.raw.md
+writer_tool_calls.json
+
+$ test -f audit/.../gemini/.gemini/settings.json || echo "no artifact-local .gemini/settings.json"
+no artifact-local .gemini/settings.json
+
+$ gemini mcp list
+# from repo root:
+Configured MCP servers:
+✓ sources: http://127.0.0.1:8766/mcp (http) - Connected
+
+# from audit/.../gemini:
+No MCP servers configured.</code></pre>
+  <p>This is the smoking gun. The known-good config exists and connects at repo root, but the writer process runs in a different workspace where Gemini has no server catalog.</p>
+
+  <h3>E6. Code path that creates the broken delivery</h3>
+  <pre><code># scripts/build/v7_build.py
+module_dir = _resolve_output_dir(args.out, level, slug)
+writer_output = linear_pipeline.invoke_writer(
+    prompt,
+    writer,
+    cwd=module_dir,
+    tool_trace_path=module_dir / "writer_tool_calls.json",
+)
+
+# scripts/build/linear_pipeline.py
+elif agent_label == "gemini-tools":
+    agent_kwargs = {"mcp_servers": ["sources"]}
+...
+mcp_dict, diagnostics = build_mcp_tool_config(canonical_agent, **agent_kwargs)
+
+# scripts/agent_runtime/tool_config.py
+if canonical_agent == "gemini":
+    return (
+        {"mcp_server_names": mcp_servers},
+        diagnostics(... "config_path": "/repo/.mcp.json", "resolution_status": "ok")
+    )
+
+# scripts/agent_runtime/adapters/gemini.py
+cmd.extend(["--allowed-mcp-server-names", joined])</code></pre>
+  <p>The pipeline verifies <code>sources</code> against repo <code>.mcp.json</code>, then passes only <code>--allowed-mcp-server-names sources</code>. It never passes a Gemini settings path, never stages a settings file into <code>module_dir</code>, and never runs Gemini from the repo root.</p>
+
+  <h3>E7. PR #1810's LKG claim is true but incomplete</h3>
+  <p>Commit <code>372760315f</code> changed repo <code>.gemini/settings.json</code> from <code>{"rag", sse, /sse}</code> to <code>{"sources", http, /mcp}</code>, and the May 8 bakeoff happened after that commit.</p>
+  <pre><code>372760315f feat(mcp): wire MCP for claude-tools + gemini-tools writer dispatch (#1809) (#1810)
+AuthorDate: Fri May 8 17:57:42 2026 +0200
+
+gemini.write.jsonl module_start:
+2026-05-08T19:03:29.935494+00:00</code></pre>
+  <p>The problem is not that repo root <code>.gemini/settings.json</code> was stale during the bakeoff. It was correct. The problem is that Gemini was not invoked from a workspace that loaded it.</p>
+
+  <h3>E8. The old experiment confirms config shape, not writer delivery</h3>
+  <p><code>/tmp/gemini-mcp-experiment.log</code> supports the current conclusion:</p>
+  <pre><code>type="streamable-http":
+Invalid enum value. Expected 'stdio' | 'sse' | 'http', received 'streamable-http'
+
+type="sse" + /sse:
+Error executing tool mcp__sources__verify_words: Tool "mcp__sources__verify_words" not found
+exit_code=124
+
+type="http" + /mcp:
+the run reached model capacity / backoff behavior, not a config-enum rejection</code></pre>
+  <p>The experiment explains why <code>.gemini/settings.json</code> must use <code>type=http</code> and <code>/mcp</code>. It does not prove the v7 writer subprocess loaded that file.</p>
+
+  <h3>E9. Telemetry parser misses Gemini JSONL tool calls</h3>
+  <p>Even the built-in <code>list_directory</code> call did not reach <code>writer_tool_calls.json</code>. The adapter reason is visible in code:</p>
+  <pre><code># scripts/agent_runtime/adapters/gemini.py
+def _read_latest_session_trace(self, plan):
+    data = json.loads(session_file.read_text(...))
+    return json.dumps(data, ensure_ascii=False)
+except Exception:
+    return ""</code></pre>
+  <p>Current Gemini sessions are JSONL: the matched file has 8 JSON objects on separate lines. Loading the whole file as one JSON document throws and returns an empty trace. This is a secondary observability bug, not the MCP root cause.</p>
+
+  <h2>Root Cause Statement</h2>
+  <div class="callout fail">
+    Gemini-tools produced <code>writer_tool_calls.json: []</code> because the Gemini writer subprocess was launched from <code>module_dir</code>, an artifact directory with no <code>.gemini/settings.json</code>. Gemini CLI therefore had no configured MCP servers for that workspace. The pipeline's pre-flight checked only that <code>sources</code> exists in repo <code>.mcp.json</code>, then passed <code>--allowed-mcp-server-names sources</code>, which filters a catalog but does not create one. The model-side catalog contained built-in tools such as <code>list_directory</code>, but not <code>mcp__sources__verify_words</code> or <code>mcp__sources__search_text</code>.
+  </div>
+
+  <h2>Recommended Fix</h2>
+  <p><b>Option A - run Gemini writers from repo root and keep artifact paths explicit.</b> For Gemini only, call <code>invoke_writer(..., cwd=PROJECT_ROOT, tool_trace_path=module_dir / "writer_tool_calls.json")</code>. The writer output already returns via stdout and is written by Python, so the artifact directory does not need to be the subprocess cwd. This is likely the smallest fix, but verify that no writer prompt relies on relative output paths.</p>
+
+  <p><b>Option B - stage Gemini MCP config into the module directory before invocation.</b> Copy or synthesize <code>module_dir/.gemini/settings.json</code> from repo root before running Gemini. This preserves the current cwd shape but introduces generated config files in artifact dirs, which must be cleaned or ignored.</p>
+
+  <p><b>Option C - add adapter-level config path support if Gemini CLI exposes it.</b> I did not find a <code>--mcp-config</code> equivalent in <code>gemini --help</code> or <code>gemini mcp --help</code>. If such a hidden/env mechanism exists, use it; otherwise do not build on this assumption.</p>
+
+  <div class="callout ok">
+    Recommended: Option A, plus a positive runtime gate already added by PR #1813 should remain in place for all <code>*-tools</code> writers. The gate is what turns future "configured but no model-side calls" failures into hard failures instead of theatrical output.
+  </div>
+
+  <h2>Patch Sketch</h2>
+  <p>If Option A is accepted, the code patch is small and belongs in a separate fix dispatch:</p>
+  <pre><code># scripts/build/v7_build.py
+writer_cwd = linear_pipeline.PROJECT_ROOT if writer == "gemini-tools" else module_dir
+writer_output = linear_pipeline.invoke_writer(
+    prompt,
+    writer,
+    cwd=writer_cwd,
+    tool_trace_path=module_dir / "writer_tool_calls.json",
+    stdout_silence_timeout=args.writer_timeout,
+)</code></pre>
+  <p>That sketch is intentionally not committed here; this dispatch is report-only.</p>
+
+  <h2>Test Plan</h2>
+  <ul>
+    <li>Unit test: for <code>gemini-tools</code>, assert v7 passes repo root as the invocation cwd while preserving <code>tool_trace_path=module_dir / "writer_tool_calls.json"</code>.</li>
+    <li>Adapter test: create a JSONL Gemini session with a <code>toolCalls</code> entry and assert <code>GeminiAdapter.parse_response(...).tool_calls</code> captures it. This covers the secondary telemetry bug.</li>
+    <li>Smoke check, no full bakeoff: from repo root, <code>gemini mcp list</code> must report <code>sources</code> connected; from a module artifact dir it currently reports no MCP servers, proving the fix must avoid that cwd or stage config there.</li>
+    <li>User-run bakeoff verification after fix: <code>gemini/writer_tool_calls.json</code> should contain at least one <code>mcp__sources__verify_words</code> or <code>mcp__sources__search_text</code> call, and the runtime gate should fail if it does not.</li>
+  </ul>
+
+  <h2>What This Is Not</h2>
+  <ul>
+    <li>Not the Codex <code>type="streamable-http"</code> bug. Gemini's LKG shape is <code>type="http"</code> at repo root.</li>
+    <li>Not a missing wiki packet. The packet is byte-identical across writers.</li>
+    <li>Not primarily sandbox denial. The model had built-in filesystem tools and used <code>list_directory</code>.</li>
+    <li>Not solved by <code>--allowed-mcp-server-names</code>. That flag cannot load a server that the workspace did not configure.</li>
+  </ul>
+
+  <h2>Open Questions</h2>
+  <ul>
+    <li>Does Gemini CLI have an undocumented environment variable or policy setting that points to a non-workspace MCP config? I found no public flag in local help output.</li>
+    <li>Should v7 standardize all writers on repo-root cwd and make artifact paths explicit, or only patch Gemini? I recommend the narrow Gemini-only fix first to avoid disturbing Claude/Codex behavior.</li>
+    <li>Should <code>writer_prompt.md</code> be written before invocation so failed runs still preserve the prompt artifact? The Gemini run lacked it because v7 writes the prompt only after <code>invoke_writer</code> returns.</li>
+  </ul>
+</div>
+</body>
+</html>
