@@ -130,6 +130,7 @@ async def decision_budget():
     }
 
 
+# Keep this route above /{dec_id}; otherwise "lineage" is parsed as a decision ID.
 @router.get("/lineage")
 async def decision_lineage(
     decision_id: str | None = Query(None, description="Optional decision ID or alias filter, e.g. ADR-008 or dec-007"),

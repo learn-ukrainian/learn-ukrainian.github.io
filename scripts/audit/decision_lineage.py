@@ -23,6 +23,8 @@ FIELD_SEP = "\x1f"
 PAYLOAD_SEP = "\x1d"
 GIT_FORMAT = "%x1e%H%x1f%cI%x1f%s%x1f%B%x1d"
 PATCH_SCAN_COMMIT_LIMIT = 200
+NON_DECISION_FILENAMES = {"INDEX.md", "README.md"}
+MATCH_KIND_PRIORITY = {"path": 0, "patch": 1, "message": 2}
 
 
 @dataclass
@@ -34,7 +36,14 @@ class DecisionRecord:
     aliases: list[str]
     commits: dict[str, dict[str, Any]] = field(default_factory=dict)
 
-    def add_commit(self, sha: str, date: str, subject: str, matched_aliases: set[str], text: str) -> None:
+    def add_commit(
+        self,
+        sha: str,
+        date: str,
+        subject: str,
+        matched_aliases: set[str],
+        match_kind: str,
+    ) -> None:
         """Attach one matching commit, merging duplicate path/alias hits."""
         commit = self.commits.setdefault(
             sha,
@@ -42,12 +51,16 @@ class DecisionRecord:
                 "sha": sha,
                 "date": date,
                 "subject": subject,
+                "match_kind": match_kind,
                 "matched_aliases": [],
                 "prs": [],
             },
         )
+        if MATCH_KIND_PRIORITY[match_kind] > MATCH_KIND_PRIORITY[commit["match_kind"]]:
+            commit["match_kind"] = match_kind
         commit["matched_aliases"] = sorted(set(commit["matched_aliases"]) | matched_aliases)
-        commit["prs"] = sorted(set(commit["prs"]) | set(_extract_pr_refs(text)), key=_pr_sort_key)
+        if _matching_aliases(self, subject):
+            commit["prs"] = sorted(set(commit["prs"]) | set(_extract_pr_refs(subject)), key=_pr_sort_key)
 
     def as_dict(self) -> dict[str, Any]:
         commits = sorted(self.commits.values(), key=lambda item: (item["date"], item["sha"]))
@@ -148,6 +161,8 @@ def load_decision_records(project_root: Path = PROJECT_ROOT) -> list[DecisionRec
     records: list[DecisionRecord] = []
 
     for path in sorted((project_root / DECISIONS_DIR).glob("**/*.md")):
+        if path.name in NON_DECISION_FILENAMES:
+            continue
         rel_path = path.relative_to(project_root).as_posix()
         text = path.read_text("utf-8")
         frontmatter = _extract_frontmatter(text)
@@ -229,13 +244,18 @@ def _alias_git_pattern(records: list[DecisionRecord]) -> str:
     for alias in aliases:
         escaped = re.escape(alias)
         escaped = re.sub(r"\\\s+", r"[[:space:]]+", escaped)
-        patterns.append(escaped)
+        patterns.append(r"(^|[^[:alnum:]_.-])" + escaped + r"([^[:alnum:]_.-]|$)")
     return "|".join(patterns)
 
 
+def _alias_python_pattern(alias: str) -> re.Pattern[str]:
+    escaped = re.escape(alias)
+    escaped = re.sub(r"\\\s+", r"\\s+", escaped)
+    return re.compile(rf"(?<![A-Za-z0-9_.-]){escaped}(?![A-Za-z0-9_.-])", re.IGNORECASE)
+
+
 def _matching_aliases(record: DecisionRecord, text: str) -> set[str]:
-    haystack = text.casefold()
-    return {alias for alias in record.aliases if alias.casefold() in haystack}
+    return {alias for alias in record.aliases if _alias_python_pattern(alias).search(text)}
 
 
 def _extract_pr_refs(text: str) -> list[str]:
@@ -254,15 +274,14 @@ def _scan_path_touches(project_root: Path, by_path: dict[str, DecisionRecord]) -
         project_root,
         ["log", "--all", "--name-only", "--date=iso-strict", f"--format={GIT_FORMAT}", "--", str(DECISIONS_DIR)],
     )
-    for sha, date, subject, body, payload in _parse_git_records(output):
-        message = f"{subject}\n{body}\n{payload}"
+    for sha, date, subject, _body, payload in _parse_git_records(output):
         for line in payload.splitlines():
             record = by_path.get(line.strip())
             if record:
-                record.add_commit(sha, date, subject, {"file_path"}, message)
+                record.add_commit(sha, date, subject, set(), "path")
 
 
-def _scan_alias_hits(project_root: Path, records: list[DecisionRecord]) -> None:
+def _scan_alias_hits(project_root: Path, records: list[DecisionRecord], *, with_patch_scan: bool = False) -> None:
     pattern = _alias_git_pattern(records)
     if not pattern:
         return
@@ -277,23 +296,34 @@ def _scan_alias_hits(project_root: Path, records: list[DecisionRecord]) -> None:
         f"--format={GIT_FORMAT}",
     ]
     output = _run_git(project_root, command)
-    for sha, date, subject, body, payload in _parse_git_records(output):
-        text = f"{subject}\n{body}\n{_changed_patch_text(payload)}"
+    for sha, date, subject, body, _payload in _parse_git_records(output):
+        text = f"{subject}\n{body}"
         for record in records:
             matched = _matching_aliases(record, text)
             if matched:
-                record.add_commit(sha, date, subject, matched, text)
+                record.add_commit(sha, date, subject, matched, "message")
 
-    if _commit_count(project_root) > PATCH_SCAN_COMMIT_LIMIT:
+    commit_count = _commit_count(project_root)
+    if commit_count > PATCH_SCAN_COMMIT_LIMIT and not with_patch_scan:
+        print(
+            "decision_lineage: patch-text scan skipped "
+            f"(repo has {commit_count} commits > {PATCH_SCAN_COMMIT_LIMIT} limit); "
+            "add --with-patch-scan to force.",
+            file=sys.stderr,
+        )
         return
     command = ["log", "--all", "-p", "--date=iso-strict", "-G", pattern, f"--format={GIT_FORMAT}", "--", "."]
     output = _run_git(project_root, command)
     for sha, date, subject, body, payload in _parse_git_records(output):
-        text = f"{subject}\n{body}\n{_changed_patch_text(payload)}"
+        message_text = f"{subject}\n{body}"
+        patch_text = _changed_patch_text(payload)
         for record in records:
-            matched = _matching_aliases(record, text)
+            message_matched = _matching_aliases(record, message_text)
+            patch_matched = _matching_aliases(record, patch_text)
+            matched = message_matched | patch_matched
             if matched:
-                record.add_commit(sha, date, subject, matched, text)
+                match_kind = "message" if message_matched else "patch"
+                record.add_commit(sha, date, subject, matched, match_kind)
 
 
 def _filter_records(records: list[DecisionRecord], decision_id: str | None) -> list[DecisionRecord]:
@@ -306,20 +336,30 @@ def _filter_records(records: list[DecisionRecord], decision_id: str | None) -> l
     ]
 
 
-def scan_decision_lineage(project_root: Path = PROJECT_ROOT, decision_id: str | None = None) -> list[dict[str, Any]]:
+def scan_decision_lineage(
+    project_root: Path = PROJECT_ROOT,
+    decision_id: str | None = None,
+    *,
+    with_patch_scan: bool = False,
+) -> list[dict[str, Any]]:
     """Return lineage records for every markdown file under docs/decisions."""
     records = _filter_records(load_decision_records(project_root), decision_id)
     if not records:
         return []
     by_path = {record.file_path: record for record in records}
     _scan_path_touches(project_root, by_path)
-    _scan_alias_hits(project_root, records)
+    _scan_alias_hits(project_root, records, with_patch_scan=with_patch_scan)
     return [record.as_dict() for record in records]
 
 
-def build_lineage_response(project_root: Path = PROJECT_ROOT, decision_id: str | None = None) -> dict[str, Any]:
+def build_lineage_response(
+    project_root: Path = PROJECT_ROOT,
+    decision_id: str | None = None,
+    *,
+    with_patch_scan: bool = False,
+) -> dict[str, Any]:
     """Build the JSON response shared by the CLI and Monitor API."""
-    decisions = scan_decision_lineage(project_root, decision_id=decision_id)
+    decisions = scan_decision_lineage(project_root, decision_id=decision_id, with_patch_scan=with_patch_scan)
     return {"count": len(decisions), "decisions": decisions}
 
 
@@ -353,13 +393,24 @@ Related:
         "--decision-id",
         help="Filter to one decision ID or alias, e.g. ADR-008, dec-007, or a filename slug. Default: all decisions.",
     )
+    parser.add_argument(
+        "--with-patch-scan",
+        action="store_true",
+        help=f"Force git patch-text scan even when repo history exceeds {PATCH_SCAN_COMMIT_LIMIT} commits.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     try:
-        print(json.dumps(build_lineage_response(decision_id=args.decision_id), ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                build_lineage_response(decision_id=args.decision_id, with_patch_scan=args.with_patch_scan),
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
     except RuntimeError as exc:
         print(f"decision_lineage: {exc}", file=sys.stderr)
         return 1
