@@ -95,6 +95,27 @@ def test_tasks_timeout_status_is_distinct_from_failed(tmp_path, monkeypatch):
     assert [task["task_id"] for task in failed_response.json()["tasks"]] == ["failed"]
 
 
+def test_active_lists_only_live_running_tasks(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    def fake_kill(pid: int, sig: int) -> None:
+        if pid == 222:
+            raise ProcessLookupError
+
+    monkeypatch.setattr(delegate_router.os, "kill", fake_kill)
+    _write_task(tasks_dir / "running.json", _task_payload("running", status="running", pid=111))
+    _write_task(tasks_dir / "zombie.json", _task_payload("zombie", status="running", pid=222))
+    _write_task(tasks_dir / "done.json", _task_payload("done", status="done", pid=333))
+
+    response = client.get("/api/delegate/active")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 1
+    assert data["tasks"][0]["task_id"] == "running"
+
+
 def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)

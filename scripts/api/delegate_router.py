@@ -145,12 +145,27 @@ def active_delegate_count() -> int:
     return sum(1 for task in tasks if task["status"] in {"running", "spawning"})
 
 
+def active_delegate_tasks() -> dict[str, Any]:
+    tasks = list_delegate_tasks(status="all", limit=500)["tasks"]
+    active = [
+        task
+        for task in tasks
+        if task["status"] in {"running", "spawning"} and task.get("alive")
+    ]
+    return {"total": len(active), "tasks": active}
+
+
 @router.get("/tasks")
 async def delegate_tasks(
     status: Literal["running", "done", "failed", "timeout", "spawning", "all"] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
 ):
     return await asyncio.to_thread(list_delegate_tasks, status=status, limit=limit)
+
+
+@router.get("/active")
+async def delegate_active():
+    return await asyncio.to_thread(active_delegate_tasks)
 
 
 @router.get("/tasks/{task_id}")

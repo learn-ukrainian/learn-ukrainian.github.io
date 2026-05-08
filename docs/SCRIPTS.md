@@ -959,6 +959,7 @@ When the delegated task may edit files or run git commands:
 ```
 
 `delegate.py status <task-id>` will include the `worktree_path` so operators can inspect or clean it up later.
+Use `delegate.py status-or-fail <task-id>` before reporting async task state from memory; it exits 0 only when the Monitor API confirms the task is currently running, exits 1 when the task is done/missing/stale, and exits 2 when the Monitor API is unreachable.
 
 ### Monitoring
 
@@ -973,6 +974,7 @@ State queries (all agents):
 curl -s http://localhost:8765/api/state/track-health/a1
 curl -s http://localhost:8765/api/state/failing?track=a2
 curl -s http://localhost:8765/api/state/build-status/a1
+curl -s http://localhost:8765/api/delegate/active
 ```
 
 Full Monitor API reference: [`docs/MONITOR-API.md`](MONITOR-API.md).
