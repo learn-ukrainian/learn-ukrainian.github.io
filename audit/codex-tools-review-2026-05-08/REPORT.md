@@ -1,6 +1,6 @@
 # codex-tools deep review — joint Claude + Codex report
 
-**Status:** DRAFT — Claude's independent findings recorded. Codex independent review pending. Convergence + final findings to follow.
+**Status:** CONVERGED — Claude + Codex independent reviews complete and agree on root cause. Fix dispatch is the next step (pending user sign-off).
 
 **Date:** 2026-05-08
 **Trigger:** User hypothesis — "Both codex-tools and gemini-tools have bugs, the agents are running in sandbox and cannot use our tools or do not know about our tools and are not using the wiki."
@@ -186,6 +186,122 @@ selected = {
 
 ---
 
-## Convergence (post-Codex review)
+## Convergence (post-Codex independent review, 2026-05-08T21:38 UTC)
 
-_Pending. Will be filled in after Codex's independent findings land and we run `ab discuss --with claude,codex --max-rounds 2` if there's any disagreement._
+Codex's full reply is preserved in `messages` table id #570 (task `codex-tools-deep-review-2026-05-08`); the exchange unfortunately did not land in the pipeline channel thread because of a tooling miss (see "Bridge tooling note" below).
+
+### Both reviews agree on root cause
+
+| Finding | Claude (independent) | Codex (independent) | Material disagreement? |
+|---|---|---|---|
+| Wiki packet ingestion | ✅ FINE — byte-identical, 244 lines across 3 writers | ✅ FINE — 41,374 bytes, identical SHA256 `84e1bc0e…` | None |
+| Writer prompt content | ✅ FINE — identical 1610 lines | _(not separately checked, but no objection)_ | None |
+| Sandbox blocking MCP | Refuted (`--dangerously-bypass-approvals-and-sandbox` applied for `mode=workspace-write`) | **Stronger refutation:** `turn_context` in rollouts shows `sandbox_policy: danger-full-access`, `permission_profile: disabled`, `approval_policy: never` | None — Codex's evidence is stricter |
+| MCP tools visible to model at writer time | Inferred no — model substitutes `exec_command` shell-grep | **Direct evidence — model itself articulates it:** rollout line 10 in both bakeoff codex sessions says "requested `mcp__sources__...` tools 'are not exposed in this session'" and "`sources` MCP tools 'are not currently exposed in the tool list'" | None — Codex's evidence is direct, mine was inferred |
+| Tool calls in rollout | 39 + 59 = 98 `function_call` events, ALL `exec_command`/`write_stdin` | Same: 38+59 shell, zero `mcp__*` | None |
+| Pre-flight `mcp_config_resolved.resolution_status='ok'` is misleading | YES — only verifies config string resolution | YES — proves config shape, not runtime tool injection | None |
+| Likely root cause: `type="streamable-http"` field | Identified as Claude-format Field codex CLI doesn't understand; user's `~/.codex/config.toml` working shape uses ONLY `url` | Identified same: "successful manual proof used `~/.codex/config.toml` URL, not the v7 `-c type` path"; needs v7-shaped reproducer to confirm | None |
+
+### What Codex contributed that Claude didn't have
+
+1. **Direct rollout-text evidence the model knew the tools were missing** (cited above) — much stronger than Claude's inference-from-behavior.
+2. **Sandbox refutation via `turn_context`** in the rollout JSONL — a cleaner refutation than Claude's "the bypass flag is in the code path."
+3. **Concrete v7-shaped smoke-test reproducer** for confirming the `type` field is the breaking point:
+   ```
+   codex exec -c 'mcp_servers.sources.url="http://127.0.0.1:8766/mcp"' \
+              -c 'mcp_servers.sources.type="streamable-http"' \
+              --skip-git-repo-check -C "$PWD" --color never -m gpt-5.5 \
+              --dangerously-bypass-approvals-and-sandbox --enable multi_agent \
+              "call mcp__sources__verify_words for word 'кіт'"
+   ```
+   Pre-fix expectation: model fails to call MCP, falls back to shell or fabricates.
+   Post-fix expectation (after stripping `type` from codex flags): model calls `mcp__sources__verify_words` and returns a real result.
+4. **Stronger fix recommendation: positive runtime gate**, not just preflight + theatre detection. Specifically: tie into `_McpRuntimeObserver` in `scripts/agent_runtime/runner.py:411-470`, postcondition `tool_calls_total > 0` for `*-tools` writers, treat zero MCP calls as **hard failure** (currently only emits a `tool_theatre` warning).
+
+### What Codex deferred (and why it doesn't block this fix)
+
+- **Gemini-tools root cause not separately verified.** Codex confirmed gemini's `writer_tool_calls.json: []` and packet-identical-to-codex+claude, but didn't open a gemini rollout to confirm the same "tools not exposed" mechanism. Same outcome, unverified root cause.
+- This is consistent with the user's "one at a time, codex first" instruction and the open follow-up issue #1811 (gemini deploy invariant violations) which is a likely contributor to gemini's failure.
+
+---
+
+## Final fix plan (converged)
+
+**Three changes, sized for one Codex dispatch:**
+
+### Change 1: Strip Claude-format fields when emitting codex `-c` flags
+
+`scripts/agent_runtime/tool_config.py` — add a sanitizer that drops `type` (and any other non-codex field) before flattening:
+
+```python
+_CODEX_MCP_SERVER_FIELDS = frozenset({
+    "url", "command", "args", "env", "bearer_token_env_var",
+})
+
+def _codex_sanitize_server_config(server_config: dict) -> dict:
+    """Drop Claude-format fields codex CLI doesn't understand.
+
+    `.mcp.json` includes `type` for Claude's MCP client (e.g.
+    `type="streamable-http"`). Codex CLI auto-detects HTTP transport
+    from the URL scheme and does NOT have `type` in its
+    `mcp_servers.<name>.*` schema. Passing the field silently breaks
+    server registration on the codex side, leaving the model with
+    no MCP tools (#XXXX). Verified empirically 2026-05-08:
+    rollout-2026-05-08T11-54-40-* line 10 says `mcp__sources__*`
+    tools "are not exposed in this session" when the v7 dispatch
+    path is used; the working interactive ~/.codex/config.toml uses
+    ONLY `url` (no `type`).
+    """
+    return {k: v for k, v in server_config.items() if k in _CODEX_MCP_SERVER_FIELDS}
+```
+
+Wire into `_codex_mcp_servers` line 87-91:
+
+```python
+selected = {
+    server_name: _codex_sanitize_server_config(usable_servers[server_name])
+    for server_name in requested
+    if server_name in usable_servers
+}
+```
+
+### Change 2: Add positive runtime gate
+
+In `scripts/build/v7_build.py` writer phase post-condition, fail-loud when a `*-tools` writer produces zero `mcp__sources__*` calls:
+
+- Required check: `phase_writer_summary.tool_calls_total > 0` for any writer ending in `-tools`
+- Failure: `LinearPipelineError("MCP_TOOLS_NEVER_INVOKED", writer=…, expected="≥1 mcp__sources__* call", got=0)`
+- Rationale: catches future regressions (e.g. similar config-shape bugs in gemini-tools, or MCP server downtime mid-build) without depending on string matching the model's prose
+
+### Change 3: Update tests
+
+- `tests/test_agent_runtime_tool_config.py` — add a test that `build_mcp_tool_config("codex", mcp_servers=["sources"])[0]` returns `{"mcp_servers": {"sources": {"url": "..."}}}` (NO `type` field). The current test at lines 66-103 actively verifies the WRONG behavior (asserts `type: streamable-http` is present in the dict — needs flipping).
+- `tests/test_v7_writer_dispatch.py` — same field-presence flip at lines 86-87.
+- New regression test: a smoke test running Codex's reproducer command above, asserting at least one `mcp__*` function_call lands in the rollout.
+
+---
+
+## Verification plan
+
+1. **Unit test:** the codex tool_config emits ONLY `url` (no `type`).
+2. **Integration smoke (Codex's reproducer above):** post-fix, the model calls `mcp__sources__verify_words` and returns a real result.
+3. **Bakeoff re-run:** `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-fix-verify.jsonl`. Pre-fix evidence: `tool_calls_total=0`, `writer_tool_calls.json=[]`. Post-fix expectation: `tool_calls_total>0`, `writer_tool_calls.json` has real `mcp__sources__*` entries (not `exec_command`).
+4. **Negative test:** with the new positive runtime gate, deliberately misconfigure (e.g. point sources URL at port 9999) and confirm v7 fails with `MCP_TOOLS_NEVER_INVOKED` instead of producing theatrical output silently.
+
+---
+
+## Bridge tooling note (for follow-up, not blocking this fix)
+
+Lost ~45 minutes on a tooling miss this session: `ab post pipeline … --to codex` queues a delivery in the `deliveries` table, but **no command processes channel deliveries**. `process-codex-all` only drains the legacy `messages` table. Re-dispatched via `ab ask-codex` which uses `messages` flow correctly. The original channel post `f65152cffec14096b153e07b626326b3` is still pending in `deliveries` and will likely never be processed.
+
+Worth a follow-up issue: either (a) `process-codex-all` should also drain channel deliveries, or (b) `ab post` should auto-trigger dispatch like `ask-codex` does, or (c) docs should clearly say "post-only, no auto-dispatch — use `ab ask-*` for that."
+
+---
+
+## Status
+
+✅ Independent reviews complete (Claude + Codex)
+✅ Findings converged — agree on root cause + fix direction
+⏳ Awaiting user go-ahead to dispatch fix (Codex worktree, mechanical patch, sized for one PR)
+⏳ Bakeoff re-run after fix lands → expect non-zero MCP calls for codex-tools
+⏳ gemini-tools review opens after codex-tools fix is verified (per "one at a time" user direction)
