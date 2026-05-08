@@ -84,7 +84,9 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
     assert calls[0][2]["effort"] == linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
     assert calls[0][2]["tool_config"]["output_format"] == "stream-json"
     if writer == "codex-tools":
-        assert calls[0][2]["tool_config"]["mcp_servers"]["sources"]["url"].endswith("/mcp")
+        sources_cfg = calls[0][2]["tool_config"]["mcp_servers"]["sources"]
+        assert sources_cfg["url"].endswith("/mcp")
+        assert "type" not in sources_cfg
     elif writer == "claude-tools":
         assert calls[0][2]["tool_config"]["mcp_config_path"] == str(
             (tmp_path / ".mcp.json").resolve()
@@ -171,6 +173,44 @@ def test_v7_writer_trace_capture_clears_tool_theatre(
     assert summary["tool_calls_total"] == 1
     assert summary["verify_words_calls"] == 1
     assert summary["tool_theatre_violations"] == []
+
+
+def test_positive_runtime_gate_fires_when_tools_writer_makes_zero_mcp_calls(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """v7 must fail loud when a -tools writer produces 0 MCP calls (#1812)."""
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    events: list[dict[str, Any]] = []
+
+    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        return SimpleNamespace(response="writer output", tool_calls=[])
+
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match="MCP_TOOLS_NEVER_INVOKED",
+    ):
+        linear_pipeline.invoke_writer(
+            "Write the module.",
+            writer="codex-tools",
+            cwd=tmp_path,
+            invoker=fake_invoker,
+            module="a1/1",
+            sections=["vocab"],
+            event_sink=lambda event, **fields: events.append({"event": event, **fields}),
+        )
+
+    summary = next(event for event in events if event["event"] == "phase_writer_summary")
+    assert summary["tool_calls_total"] == 0
+
+
+def test_positive_runtime_gate_does_not_fire_for_non_tools_writer() -> None:
+    """Gate must only apply to *-tools writers, not legacy claude/gemini."""
+    linear_pipeline._enforce_tools_writer_runtime_gate(
+        writer="claude",
+        module="a1/1",
+        phase_writer_summary={"tool_calls_total": 0},
+    )
 
 
 def test_v7_build_writer_timeout_kills_silent_subprocess(

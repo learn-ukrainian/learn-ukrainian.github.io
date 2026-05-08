@@ -1661,6 +1661,28 @@ def emit_writer_response_telemetry(
     return summary
 
 
+def _enforce_tools_writer_runtime_gate(
+    *,
+    writer: str,
+    module: str,
+    phase_writer_summary: Mapping[str, Any],
+) -> None:
+    """Fail when a tools writer resolved MCP config but never invoked a tool."""
+    if not writer.endswith("-tools"):
+        return
+    if phase_writer_summary["tool_calls_total"] != 0:
+        return
+    raise LinearPipelineError(
+        "MCP_TOOLS_NEVER_INVOKED: "
+        f"writer={writer!r} module={module!r} expected='>=1 mcp__sources__* call "
+        "from a -tools writer' got=0. Pre-flight "
+        "mcp_config_resolved.resolution_status='ok' only verifies config string "
+        "resolution. The model must actually invoke at least one MCP tool. If "
+        "this fires, check the rollout JSONL for catalog-visibility errors "
+        "(e.g., 'tools are not exposed in this session')."
+    )
+
+
 def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet: str) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
@@ -1882,13 +1904,18 @@ def invoke_writer(
             encoding="utf-8",
         )
     if module_ref and section_names:
-        emit_writer_response_telemetry(
+        phase_writer_summary = emit_writer_response_telemetry(
             response_text,
             writer=writer,
             module=module_ref,
             sections=section_names,
             tool_calls=tool_calls,
             event_sink=event_sink,
+        )
+        _enforce_tools_writer_runtime_gate(
+            writer=writer,
+            module=module_ref,
+            phase_writer_summary=phase_writer_summary,
         )
     return response_text
 
