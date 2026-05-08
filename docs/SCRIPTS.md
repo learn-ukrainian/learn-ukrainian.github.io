@@ -510,6 +510,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
 | `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
+| `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 
 ---
 
@@ -811,6 +812,19 @@ acceptance criteria, code fences, tables, and status/plan lines.
 .venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md
 cat handoff.md | .venv/bin/python scripts/audit/lint_anti_menu.py --stdin
 ```
+
+### `scripts/audit/decision_lineage.py`
+
+Scans `docs/decisions/**/*.md` plus git history for commits and PR references
+that touch or cite decision files by file path, filename slug, title, ADR ID,
+or declared decision ID.
+
+```bash
+.venv/bin/python scripts/audit/decision_lineage.py
+.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008
+```
+
+The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 
 ---
 
