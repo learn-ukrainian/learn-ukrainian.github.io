@@ -1729,30 +1729,94 @@ def _runtime_tool_config(
     event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     tool_config: dict[str, Any] = {"output_format": "stream-json"}
-    if agent_label == "codex-tools":
-        from scripts.agent_runtime.tool_config import build_mcp_tool_config
+    if not agent_label.endswith("-tools"):
+        return tool_config
 
-        codex_tools, diagnostics = build_mcp_tool_config(
-            "codex",
-            mcp_servers=["sources"],
+    from scripts.agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
+
+    if agent_label == "codex-tools":
+        agent_kwargs = {
+            "mcp_servers": ["sources"],
+        }
+    elif agent_label == "claude-tools":
+        agent_kwargs = {
+            "mcp_servers": ["sources"],
+            "allowed_tools": "mcp__sources__*",
+        }
+    elif agent_label == "gemini-tools":
+        agent_kwargs = {
+            "mcp_servers": ["sources"],
+        }
+    else:
+        raise LinearPipelineError(
+            f"Unknown -tools writer {agent_label!r}; expected one of "
+            "codex-tools / claude-tools / gemini-tools."
         )
-        _emit(event_sink, "mcp_config_resolved", writer=agent_label, **diagnostics)
-        requested = diagnostics["requested_servers"]
-        resolved = diagnostics["resolved_servers"]
-        status = diagnostics["resolution_status"]
-        if agent_label.endswith("-tools") and requested and not resolved:
-            raise LinearPipelineError(
-                f"Writer {agent_label!r} requested MCP servers {requested!r} "
-                f"but resolver returned none ({status}). Refusing to dispatch "
-                "tool-less."
-            )
-        if codex_tools:
-            tool_config.update(codex_tools)
+
+    canonical_agent = agent_label.split("-", 1)[0]
+    mcp_dict, diagnostics = build_mcp_tool_config(canonical_agent, **agent_kwargs)
+    if canonical_agent in {"claude", "gemini"}:
+        diagnostics = _mcp_config_server_name_diagnostics(
+            diagnostics,
+            load_mcp_config=_load_mcp_config,
+        )
+    _emit(event_sink, "mcp_config_resolved", writer=agent_label, **diagnostics)
+
+    requested = diagnostics["requested_servers"]
+    resolved = diagnostics["resolved_servers"]
+    status = diagnostics["resolution_status"]
+    if requested and not resolved:
+        raise LinearPipelineError(
+            f"Writer {agent_label!r} requested MCP servers {requested!r} "
+            f"but resolver returned none ({status}). Refusing to dispatch "
+            "tool-less."
+        )
+    if mcp_dict:
+        tool_config.update(mcp_dict)
     assert tool_config.get("output_format") == "stream-json", (
         "tool-call writers must keep output_format='stream-json'; "
         f"got {tool_config.get('output_format')!r}"
     )
     return tool_config
+
+
+def _mcp_config_server_name_diagnostics(
+    diagnostics: dict[str, Any],
+    *,
+    load_mcp_config: Callable[[Path], dict[str, Any] | None],
+) -> dict[str, Any]:
+    """Validate non-Codex MCP server names against the canonical repo config."""
+    requested = list(diagnostics["requested_servers"])
+    if not requested:
+        return diagnostics
+
+    config_path = Path(diagnostics["config_path"])
+    data = load_mcp_config(config_path)
+    if not data:
+        return {
+            **diagnostics,
+            "resolved_servers": [],
+            "resolution_status": "config_missing",
+            "missing_server_names": requested,
+        }
+
+    servers = data.get("mcpServers")
+    if not isinstance(servers, dict) or not servers:
+        return {
+            **diagnostics,
+            "resolved_servers": [],
+            "resolution_status": "config_empty",
+            "missing_server_names": requested,
+        }
+
+    resolved = [server_name for server_name in requested if server_name in servers]
+    missing = [server_name for server_name in requested if server_name not in servers]
+    return {
+        **diagnostics,
+        "resolved_servers": resolved,
+        "resolution_status": "ok" if resolved else "servers_not_found",
+        "missing_server_names": missing,
+    }
 
 
 def invoke_writer(

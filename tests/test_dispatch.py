@@ -341,11 +341,11 @@ class TestDispatchAgent:
         assert first_call["model"] == "gemini-3.1-pro-preview"
         assert second_call["model"] == "gemini-3-flash-preview"
         assert first_call["tool_config"] == {
-            "mcp_server_names": ["rag"],
+            "mcp_server_names": ["sources"],
             "auth_mode": "subscription",
         }
         assert second_call["tool_config"] == {
-            "mcp_server_names": ["rag"],
+            "mcp_server_names": ["sources"],
             "auth_mode": "subscription",
         }
 

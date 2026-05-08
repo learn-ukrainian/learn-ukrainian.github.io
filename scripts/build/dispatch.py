@@ -587,11 +587,9 @@ def _dispatch_via_runtime(
         # Gemini in the pipeline is always -y (write-enabled) — existing behavior.
         runtime_mode = "workspace-write"
         if mcp_tools:
-            # TODO(#1803): rename "rag" → "sources"; see
-            # .claude/rules/mcp-sources-and-dictionaries.md.
             tool_config, _diagnostics = build_mcp_tool_config(
                 "gemini",
-                mcp_servers=["rag"],
+                mcp_servers=["sources"],
             )
         else:
             tool_config = None
