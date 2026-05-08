@@ -242,5 +242,6 @@ INFO:"
   done
 fi
 
-printf '{"additionalContext": %s}' "$(printf '%s' "$CONTEXT" | jq -Rs '.')"
+jq -n --arg msg "$CONTEXT" \
+  '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":$msg}}'
 exit 0

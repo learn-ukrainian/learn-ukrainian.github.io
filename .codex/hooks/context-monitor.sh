@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hook: PostToolUse — monitors context size and warns Claude before auto-compact
+# Hook: PostToolUse — monitors context size and warns before auto-compact
 # triggers, demanding a session handoff to docs/session-state/current.md instead.
 #
 # Tiers (% of autoCompactWindow):
@@ -18,13 +18,14 @@
 #   * autoCompactWindow default 1000000 to match this project's 1M-context variant
 
 # Skip in non-interactive / subagent / pipeline contexts
-if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UK_PIPELINE" ] || [ -n "$GEMINI_SESSION" ] || [ -n "$CODEX_SESSION" ]; then
+if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UK_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
   exit 0
 fi
 
 # Read hook input (JSON on stdin)
 INPUT=$(cat)
 SESSION_ID=$(printf '%s' "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
+[ -z "$SESSION_ID" ] && SESSION_ID="${CODEX_THREAD_ID:-}"
 [ -z "$SESSION_ID" ] && exit 0
 
 # Resolve project + transcript path
@@ -32,7 +33,11 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 PROJECT_SLUG=$(printf '%s' "$PROJECT_DIR" | sed 's|/|-|g')
 TRANSCRIPT="$HOME/.claude/projects/${PROJECT_SLUG}/${SESSION_ID}.jsonl"
 
-[ ! -f "$TRANSCRIPT" ] && exit 0
+if [ ! -f "$TRANSCRIPT" ]; then
+  TRANSCRIPT=$(find "$HOME/.codex/sessions" -type f -name "*${SESSION_ID}.jsonl" 2>/dev/null | sort | tail -1)
+fi
+
+[ -z "$TRANSCRIPT" ] || [ ! -f "$TRANSCRIPT" ] && exit 0
 
 # Estimate tokens from transcript size: ~7 chars/token for the jsonl transcript.
 # JSON envelope + tool-call metadata pushes the ratio above the 4 chars/token
@@ -45,6 +50,12 @@ SETTINGS_FILE="$PROJECT_DIR/.claude/settings.json"
 WINDOW=1000000
 if [ -f "$SETTINGS_FILE" ]; then
   CONFIGURED=$(jq -r '.autoCompactWindow // empty' "$SETTINGS_FILE" 2>/dev/null)
+  if [ -n "$CONFIGURED" ] && [ "$CONFIGURED" -gt 0 ] 2>/dev/null; then
+    WINDOW=$CONFIGURED
+  fi
+fi
+if [ -f "$HOME/.codex/config.toml" ]; then
+  CONFIGURED=$(awk -F= '/^[[:space:]]*model_auto_compact_token_limit[[:space:]]*=/{gsub(/[[:space:]]/, "", $2); print $2; exit}' "$HOME/.codex/config.toml")
   if [ -n "$CONFIGURED" ] && [ "$CONFIGURED" -gt 0 ] 2>/dev/null; then
     WINDOW=$CONFIGURED
   fi

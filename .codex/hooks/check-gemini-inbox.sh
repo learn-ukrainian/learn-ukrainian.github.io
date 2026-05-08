@@ -10,7 +10,8 @@ if [ "${GEMINI_SESSION:-}" = "1" ] || [ "${LEARN_UKRAINIAN_PIPELINE:-}" = "1" ];
   exit 0
 fi
 
-DB="$CLAUDE_PROJECT_DIR/.mcp/servers/message-broker/messages.db"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
+DB="$PROJECT_DIR/.mcp/servers/message-broker/messages.db"
 
 if [ ! -f "$DB" ]; then
   exit 0
@@ -51,6 +52,7 @@ CONTEXT="${CONTEXT}
 ---
 Use mcp__message-broker__receive_messages to read full messages. Acknowledge after processing."
 
-printf '{"additionalContext": %s}' "$(echo "$CONTEXT" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')"
+jq -n --arg msg "$CONTEXT" \
+  '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":$msg}}'
 
 exit 0
