@@ -698,6 +698,62 @@ def test_build_agent_prompt_respects_budget_when_body_close_to_limit(
     assert body in info["prompt"]
 
 
+def test_build_agent_prompt_thread_id_preserves_thread_replies_under_noisy_channel(
+    isolated_context_root,
+):
+    """Regression for #1808: in `ab discuss` round 2+, peer round-1 replies
+    were silently dropped because the channel-wide tail was truncated by
+    the budget. With thread_id set, the thread is load-bearing and must
+    survive even when the channel has many noisy non-thread messages.
+
+    Setup:
+      - 30 noisy non-thread messages (each ~200 chars) in the channel.
+      - One root post with 3 thread replies (peer responses).
+    Expectation:
+      - All 3 thread replies appear in the prompt.
+      - At least the root question appears too.
+      - Without `thread_id`, the noisy tail dominates and replies may not
+        appear — that's the bug we're fixing.
+    """
+    _channels.create_channel("pipeline")
+
+    # 30 noisy non-thread messages — fills any tail-window read.
+    for i in range(30):
+        _channels.post(
+            "pipeline", "user", f"noise message {i}: {'x' * 200}",
+            auto_snapshot=False,
+        )
+    # Root + 3 peer replies in a thread.
+    root = _channels.post(
+        "pipeline", "user", "the actual discussion question",
+        auto_snapshot=False,
+    )
+    for agent in ("claude", "gemini", "codex"):
+        _channels.post(
+            "pipeline", agent, f"{agent}'s peer round-1 reply with substantive content",
+            parent_id=root["message_id"],
+            auto_snapshot=False,
+        )
+
+    # With thread_id: replies must survive.
+    info = _channels.build_agent_prompt(
+        "pipeline",
+        "round 2 directive: read peer replies and decide",
+        history_tail=20,
+        include_monitor_state=False,
+        thread_id=root["thread_id"],
+    )
+    for agent in ("claude", "gemini", "codex"):
+        assert f"{agent}'s peer round-1 reply" in info["prompt"], (
+            f"{agent}'s reply was dropped from thread-mode prompt — "
+            f"#1808 regression"
+        )
+    assert "the actual discussion question" in info["prompt"]
+    assert info["history_dropped"] == 0, (
+        "thread mode must not report history_dropped > 0; thread is load-bearing"
+    )
+
+
 def test_post_parent_fk_enforcement(isolated_context_root):
     """Foreign key on parent_id: reply to non-existent parent raises."""
     _channels.create_channel("pipeline")

@@ -1284,12 +1284,19 @@ def _handle_discuss(args) -> int:
                 f"short-circuits and stops before round {max_rounds}."
             )
 
-        # history_tail must be big enough to preserve the root
-        # question across every round. `tail` truncates from the
-        # OLDEST end, so older messages can never push the root out —
-        # we just need the window to span (1 root + all in-discussion
-        # replies). The +10 is headroom for some pre-root channel
-        # context so agents see recent project activity too.
+        # `thread_id` (set below) makes `build_agent_prompt` fetch
+        # ALL messages in this discussion's thread instead of pulling
+        # the channel-wide tail. Without that, peer round-1 replies
+        # were silently dropped in round 2+ because non-thread channel
+        # messages filled the history budget and squeezed them out
+        # (#1808 root cause; observed 2026-05-08 in the writer-prompt
+        # theatre discussion where Claude flagged "context still
+        # missing" for two consecutive rounds).
+        #
+        # `history_tail` is now only a fallback bound for non-thread
+        # callers; the thread-mode read fetches the full thread
+        # regardless. Keep the +10 so legacy callers with no thread_id
+        # still get a sensible window.
         needed_history = 1 + len(with_agents) * max_rounds + 10
         try:
             prompt_obj = _channels.build_agent_prompt(
@@ -1297,6 +1304,7 @@ def _handle_discuss(args) -> int:
                 _build_discuss_round_body(body, directive),
                 history_tail=needed_history,
                 review=args.review,
+                thread_id=correlation_id,
             )
         except ValueError as e:
             print(f"❌ prompt build failed: {e}", file=sys.stderr)

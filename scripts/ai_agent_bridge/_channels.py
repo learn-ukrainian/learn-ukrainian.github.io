@@ -441,6 +441,7 @@ def build_agent_prompt(
     max_prompt_chars: int = DEFAULT_MAX_PROMPT_CHARS,
     include_monitor_state: bool = True,
     review: bool = False,
+    thread_id: str | None = None,
 ) -> dict[str, Any]:
     """Assemble the full text an agent sees for a post in this channel.
 
@@ -484,14 +485,30 @@ def build_agent_prompt(
             + "\n"
         )
 
-    # 3. Channel history (newest N, truncated by char budget)
-    raw_history = read(channel, tail=history_tail)
-    kept, dropped = truncate_history_by_budget(
-        raw_history, max_chars=max_history_chars
-    )
+    # 3. Channel history.
+    # When thread_id is given (e.g. by `ab discuss`), every message in
+    # that thread is LOAD-BEARING — peer round replies are why the
+    # discussion exists. Fetch the whole thread, never apply the
+    # tail-window truncator, and let the prompt-budget overflow path
+    # below drop pinned context FIRST instead of dropping these
+    # replies. Without this, multi-round discussions silently lose
+    # peer round-1 replies in round 2 because the channel's older
+    # non-thread messages fill `max_history_chars` first and the
+    # thread replies get squeezed out (#1808 root cause).
+    if thread_id:
+        raw_history = read(channel, thread_id=thread_id)
+        kept = list(raw_history)
+        dropped = 0
+        history_label = f"thread {thread_id[:12]}"
+    else:
+        raw_history = read(channel, tail=history_tail)
+        kept, dropped = truncate_history_by_budget(
+            raw_history, max_chars=max_history_chars
+        )
+        history_label = f"last {len(kept)} messages in {channel}"
     history_text = ""
     if kept:
-        lines = [f"--- history: last {len(kept)} messages in {channel} ---"]
+        lines = [f"--- history: {history_label} ---"]
         if dropped:
             lines.append(f"... [{dropped} older messages omitted] ...")
         for msg in kept:
@@ -515,8 +532,62 @@ def build_agent_prompt(
     prompt = "\n".join(s for s in sections if s.strip())
 
     if len(prompt) > max_prompt_chars:
-        # Drop history first (oldest-first already truncated above,
-        # now drop all of it if needed).
+        # Truncation precedence depends on history mode.
+        #
+        # In `thread_id` mode (called by `ab discuss`), the thread
+        # replies are the entire reason the agent is being prompted —
+        # dropping them silently produces "context still missing"
+        # confessions in round 2+ (#1808 root cause). So drop
+        # MONITOR first, then PINNED CONTEXT, and only as a last
+        # resort drop the thread history.
+        #
+        # In channel-tail mode (legacy / non-discuss callers), keep
+        # the original "drop history first" behavior — history is a
+        # weak signal there, the pinned context is the load-bearing
+        # part.
+        if thread_id and history_text:
+            # Try dropping monitor only.
+            prompt_no_monitor = "\n".join(
+                s
+                for s in [
+                    review_text,
+                    context_text,
+                    history_text,
+                    body_text,
+                ]
+                if s.strip()
+            )
+            if len(prompt_no_monitor) <= max_prompt_chars:
+                prompt = prompt_no_monitor
+                monitor_state = None
+            else:
+                # Drop monitor + pinned context, keep history + body.
+                prompt_thread_only = "\n".join(
+                    s
+                    for s in [review_text, history_text, body_text]
+                    if s.strip()
+                )
+                if len(prompt_thread_only) <= max_prompt_chars:
+                    prompt = prompt_thread_only
+                    monitor_state = None
+                    context_text = ""
+                else:
+                    # Even with no monitor and no context, we're over
+                    # budget. Fall through to the legacy drop-history
+                    # path below as last resort. Better to lose
+                    # peer replies than to truncate the body itself.
+                    history_text = ""
+                    dropped = len(raw_history)
+                    prompt = "\n".join(
+                        s
+                        for s in [
+                            review_text,
+                            context_text,
+                            monitor_text,
+                            body_text,
+                        ]
+                        if s.strip()
+                    )
         prompt_no_history = "\n".join(
             s
             for s in [
@@ -527,11 +598,11 @@ def build_agent_prompt(
             ]
             if s.strip()
         )
-        if len(prompt_no_history) <= max_prompt_chars:
+        if len(prompt) > max_prompt_chars and len(prompt_no_history) <= max_prompt_chars:
             prompt = prompt_no_history
             dropped = len(raw_history)  # all dropped
             history_text = ""
-        else:
+        elif len(prompt) > max_prompt_chars:
             # Even with zero history we're over budget. Drop monitor
             # state AND truncate context. If the body alone is over
             # budget, that's a caller error — raise.
