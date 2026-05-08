@@ -508,6 +508,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/assess_research.py` | Assess and upgrade research | `.venv/bin/python scripts/assess_research.py hist --upgrade` |
 | `scripts/consultation_cli.py` | Review consultation proposals | `.venv/bin/python scripts/consultation_cli.py list` |
 | `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
+| `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
 
 ---
 
@@ -786,6 +787,19 @@ Scans `docs/decisions/decisions.yaml` for expired or near-expiry decisions.
 ```
 
 This is also called by `session-setup.sh`.
+
+### `lint_session_state.py`
+
+Scans `docs/session-state/*.md` for references to env/config files that do not exist locally.
+
+```bash
+.venv/bin/python scripts/audit/lint_session_state.py --all
+.venv/bin/python scripts/audit/lint_session_state.py --file docs/session-state/current.md
+```
+
+Known user-scoped paths that are expected but not committed live in
+`scripts/audit/known_user_paths.yaml`. This check is also wired into pre-commit
+for `docs/session-state/*.md`.
 
 ---
 
