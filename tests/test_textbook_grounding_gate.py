@@ -5,6 +5,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
+import pytest
+
 from scripts.build import linear_pipeline
 
 FIXTURES = Path(__file__).parent / "fixtures" / "textbook_grounding"
@@ -46,6 +48,28 @@ def _write_tool_calls(module_dir: Path, calls: list[dict[str, Any]]) -> None:
         json.dumps(calls, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def _seed_mcp_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Seed a minimal MCP config so codex-tools pre-flight resolves."""
+    config_path = tmp_path / ".mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "sources": {
+                        "type": "streamable-http",
+                        "url": "http://127.0.0.1:8766/mcp",
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    from scripts.agent_runtime import tool_config as tc_mod
+
+    monkeypatch.setattr(tc_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    tc_mod._load_mcp_config.cache_clear()
 
 
 def _search_call(title: str = "Караман Grade 10, p.176") -> dict[str, Any]:
@@ -139,7 +163,11 @@ def test_textbook_grounding_gate_reads_jsonl_writer_trace(tmp_path: Path) -> Non
     assert result["passed"] is True
 
 
-def test_invoke_writer_persists_tool_trace(tmp_path: Path) -> None:
+def test_invoke_writer_persists_tool_trace(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_mcp_config(tmp_path, monkeypatch)
     trace_path = tmp_path / "writer_tool_calls.json"
 
     def invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
@@ -328,7 +356,11 @@ def test_empty_references_rejected_for_b1_plus(tmp_path: Path) -> None:
     assert result["reason"] == "missing_references"
 
 
-def test_invoke_writer_appends_tool_trace(tmp_path: Path) -> None:
+def test_invoke_writer_appends_tool_trace(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_mcp_config(tmp_path, monkeypatch)
     trace_path = tmp_path / "writer_tool_calls.json"
 
     def invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
