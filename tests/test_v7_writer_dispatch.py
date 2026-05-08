@@ -10,6 +10,7 @@ from typing import Any
 
 import pytest
 
+from scripts.agent_runtime import tool_config as tool_config_mod
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.agent_runtime.result import ParseResult
@@ -27,6 +28,7 @@ from scripts.build import linear_pipeline, v7_build
 )
 def test_v7_writer_choices_resolve_to_runtime_adapters(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
     writer: str,
     agent_name: str,
 ) -> None:
@@ -36,11 +38,30 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
         calls.append((agent, prompt, kwargs))
         return SimpleNamespace(response="writer output")
 
+    if writer == "codex-tools":
+        mcp_config_path = tmp_path / ".mcp.json"
+        mcp_config_path.write_text(
+            json.dumps(
+                {
+                    "mcpServers": {
+                        "sources": {
+                            "type": "streamable-http",
+                            "url": "http://127.0.0.1:8766/mcp",
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        tool_config_mod._load_mcp_config.cache_clear()
+        monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", mcp_config_path)
+
     response = linear_pipeline.invoke_writer(
         "Write the module.",
         writer=writer,
         cwd=tmp_path,
         invoker=fake_invoker,
+        event_sink=lambda _event, **_fields: None,
     )
 
     entry = get_agent_entry(agent_name)
@@ -58,7 +79,7 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
     assert calls[0][2]["effort"] == linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
     assert calls[0][2]["tool_config"]["output_format"] == "stream-json"
     if writer == "codex-tools":
-        assert calls[0][2]["tool_config"]["mcp_servers"]["sources"]["url"].endswith("/sse")
+        assert calls[0][2]["tool_config"]["mcp_servers"]["sources"]["url"].endswith("/mcp")
     else:
         assert calls[0][2]["tool_config"] == {"output_format": "stream-json"}
 

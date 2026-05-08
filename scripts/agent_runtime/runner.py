@@ -29,11 +29,13 @@ from __future__ import annotations
 import contextlib
 import importlib
 import os
+import re
 import shutil
 import signal
 import subprocess
 import time
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -71,6 +73,13 @@ from .watchdog import (
 # enough that we don't burn CPU in the wait loop.
 _POLL_INTERVAL_S = 1.0
 _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
+_MCP_RUNTIME_INIT_TIMEOUT_S = 30.0
+_MCP_TOOL_EVENT_RE = re.compile(
+    r"\bmcp:\s+(?P<server>[A-Za-z0-9_.-]+)/(?P<tool>[A-Za-z0-9_.-]+)\s+"
+    r"(?:started|\(completed\))"
+)
+_MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
+_MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -384,6 +393,161 @@ class _ExecutionOutcome:
     liveness_paths: tuple[Path, ...]
 
 
+@dataclass
+class _McpRuntimeObserver:
+    """Emit one MCP runtime-init status per configured Codex server."""
+
+    event_sink: Callable[..., None]
+    agent_name: str
+    task_id: str | None
+    configured_servers: set[str]
+    server_urls: dict[str, str]
+    start_time: float
+    timeout_s: float = _MCP_RUNTIME_INIT_TIMEOUT_S
+    ready_servers: set[str] = field(default_factory=set)
+    failed_servers: set[str] = field(default_factory=set)
+    timed_out_servers: set[str] = field(default_factory=set)
+
+    @classmethod
+    def from_tool_config(
+        cls,
+        *,
+        agent_name: str,
+        task_id: str | None,
+        tool_config: dict | None,
+        event_sink: Callable[..., None] | None,
+        start_time: float,
+    ) -> _McpRuntimeObserver | None:
+        if event_sink is None or agent_name != "codex":
+            return None
+        mcp_servers = (tool_config or {}).get("mcp_servers")
+        if not isinstance(mcp_servers, dict) or not mcp_servers:
+            return None
+        server_urls = {
+            name: str(config.get("url"))
+            for name, config in mcp_servers.items()
+            if isinstance(config, dict) and config.get("url")
+        }
+        return cls(
+            event_sink=event_sink,
+            agent_name=agent_name,
+            task_id=task_id,
+            configured_servers=set(mcp_servers),
+            server_urls=server_urls,
+            start_time=start_time,
+        )
+
+    def observe_lines(
+        self,
+        lines: list[str],
+        *,
+        start_index: int,
+        stream: str,
+    ) -> int:
+        for line in lines[start_index:]:
+            self.observe_line(line, stream=stream)
+        return len(lines)
+
+    def observe_line(self, line: str, *, stream: str) -> None:
+        tool_match = _MCP_TOOL_EVENT_RE.search(line)
+        if tool_match:
+            server = tool_match.group("server")
+            if server in self.configured_servers:
+                self._emit_ready(
+                    server,
+                    tool=tool_match.group("tool"),
+                    stream=stream,
+                    line=line,
+                )
+            return
+
+        failure_match = _MCP_TRANSPORT_FAILURE_RE.search(line)
+        if not failure_match:
+            return
+        url_match = _MCP_FAILURE_URL_RE.search(line)
+        servers = self._servers_for_failed_line(
+            url_match.group("url") if url_match else None
+        )
+        for server in servers:
+            self._emit_failed(server, stream=stream, line=line)
+
+    def maybe_emit_timeout(self, now: float) -> None:
+        if now - self.start_time < self.timeout_s:
+            return
+        unresolved = (
+            self.configured_servers
+            - self.ready_servers
+            - self.failed_servers
+            - self.timed_out_servers
+        )
+        for server in sorted(unresolved):
+            self.timed_out_servers.add(server)
+            self._emit(
+                server=server,
+                status="timeout",
+                stream=None,
+                line=(
+                    f"no mcp runtime init line observed within "
+                    f"{self.timeout_s:.0f}s"
+                ),
+            )
+
+    def _servers_for_failed_line(self, url: str | None) -> list[str]:
+        if url:
+            matched = [
+                server
+                for server, server_url in self.server_urls.items()
+                if server_url == url
+            ]
+            if matched:
+                return matched
+        unresolved = self.configured_servers - self.ready_servers - self.failed_servers
+        return sorted(unresolved) or ["unknown"]
+
+    def _emit_ready(
+        self,
+        server: str,
+        *,
+        tool: str,
+        stream: str,
+        line: str,
+    ) -> None:
+        if server in self.ready_servers:
+            return
+        self.ready_servers.add(server)
+        self._emit(server=server, status="ready", stream=stream, line=line, tool=tool)
+
+    def _emit_failed(self, server: str, *, stream: str, line: str) -> None:
+        if server in self.failed_servers:
+            return
+        self.failed_servers.add(server)
+        self._emit(server=server, status="failed", stream=stream, line=line)
+
+    def _emit(
+        self,
+        *,
+        server: str,
+        status: str,
+        stream: str | None,
+        line: str,
+        tool: str | None = None,
+    ) -> None:
+        fields: dict[str, Any] = {
+            "agent": self.agent_name,
+            "server": server,
+            "status": status,
+            "elapsed_s": round(time.monotonic() - self.start_time, 3),
+            "line": line.strip()[:500],
+        }
+        if self.task_id:
+            fields["task_id"] = self.task_id
+        if stream:
+            fields["stream"] = stream
+        if tool:
+            fields["tool"] = tool
+        self.event_sink("mcp_runtime_init", **fields)
+
+
 def _normalize_gemini_tool_auth_mode(raw: Any) -> str:
     """Mirror Gemini adapter auth-mode normalization for tool_config overrides."""
     value = str(raw or "auto").strip().lower()
@@ -462,6 +626,8 @@ def _execute_invocation_plan(
     entrypoint: str,
     hard_timeout: int,
     stall_timeout: int,
+    tool_config: dict | None = None,
+    event_sink: Callable[..., None] | None = None,
     stdout_silence_timeout: int | None = None,
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
@@ -526,10 +692,32 @@ def _execute_invocation_plan(
         if plan.output_file is not None and plan.output_file not in liveness_paths:
             liveness_paths = (*liveness_paths, plan.output_file)
         watchdog_state, watchdog_threads = start_watchdog(proc, list(liveness_paths))
+        mcp_observer = _McpRuntimeObserver.from_tool_config(
+            agent_name=agent_name,
+            task_id=task_id,
+            tool_config=tool_config,
+            event_sink=event_sink,
+            start_time=start_time,
+        )
+        observed_stdout_lines = 0
+        observed_stderr_lines = 0
 
         early_reap_check = getattr(adapter, "check_early_reap", None)
         kill_reason: str | None = None
         while True:
+            if mcp_observer is not None:
+                observed_stdout_lines = mcp_observer.observe_lines(
+                    watchdog_state.stdout_lines,
+                    start_index=observed_stdout_lines,
+                    stream="stdout",
+                )
+                observed_stderr_lines = mcp_observer.observe_lines(
+                    watchdog_state.stderr_lines,
+                    start_index=observed_stderr_lines,
+                    stream="stderr",
+                )
+                mcp_observer.maybe_emit_timeout(time.monotonic())
+
             returncode = proc.poll()
             if returncode is not None:
                 break
@@ -568,6 +756,19 @@ def _execute_invocation_plan(
         for thread in watchdog_threads:
             if "stdout" in thread.name or "stderr" in thread.name:
                 thread.join(timeout=5.0)
+
+        if mcp_observer is not None:
+            observed_stdout_lines = mcp_observer.observe_lines(
+                watchdog_state.stdout_lines,
+                start_index=observed_stdout_lines,
+                stream="stdout",
+            )
+            observed_stderr_lines = mcp_observer.observe_lines(
+                watchdog_state.stderr_lines,
+                start_index=observed_stderr_lines,
+                stream="stderr",
+            )
+            mcp_observer.maybe_emit_timeout(time.monotonic())
 
         stdout_text = "".join(watchdog_state.stdout_lines)
         stderr_text = "".join(watchdog_state.stderr_lines)
@@ -688,6 +889,7 @@ def _invoke_gemini_with_fallback(
             entrypoint=entrypoint,
             hard_timeout=timeout_s or hard_timeout,
             stall_timeout=stall_timeout,
+            tool_config=attempt_tool_config,
             stdout_silence_timeout=stdout_silence_timeout,
         )
         parse = execution.parse
@@ -933,6 +1135,7 @@ def invoke(
                                  # for the full design rationale.
     stall_timeout: int = 180,  # accepted but ignored; see docstring
     stdout_silence_timeout: int | None = None,
+    event_sink: Callable[..., None] | None = None,
     effort: str | None = None,
 ) -> Result:
     """Single entry point for all agent CLI invocations.
@@ -969,6 +1172,8 @@ def invoke(
         stdout_silence_timeout: Optional per-call stdout silence watchdog in
             seconds. Disabled by default. Use only for protocols where stdout
             bytes are the authoritative liveness signal.
+        event_sink: Optional ``event_sink(event_name, **fields)`` callback for
+            dispatch JSONL observability events.
         effort: Cross-agent reasoning/effort level. First-class peer of
             ``model`` (NOT stuffed into ``tool_config``). Accepted values:
             ``"low" | "medium" | "high" | "xhigh" | "max"``. When ``None``,
@@ -1088,6 +1293,8 @@ def invoke(
         entrypoint=entrypoint,
         hard_timeout=hard_timeout,
         stall_timeout=stall_timeout,
+        tool_config=tool_config,
+        event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
     )
     parse = execution.parse

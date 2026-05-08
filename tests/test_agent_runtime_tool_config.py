@@ -23,7 +23,7 @@ def test_build_mcp_tool_config_claude_with_present_config(tmp_path: Path) -> Non
     config_path = tmp_path / ".mcp.json"
     config_path.write_text("{}", encoding="utf-8")
 
-    tool_config = build_mcp_tool_config(
+    tool_config, diagnostics = build_mcp_tool_config(
         "claude",
         allowed_tools="mcp__sources__*",
         mcp_config_path=config_path,
@@ -33,30 +33,34 @@ def test_build_mcp_tool_config_claude_with_present_config(tmp_path: Path) -> Non
         "mcp_config_path": str(config_path.resolve()),
         "allowed_tools": "mcp__sources__*",
     }
+    assert diagnostics["resolution_status"] == "ok"
 
 
 def test_build_mcp_tool_config_claude_without_config_returns_none(
     tmp_path: Path,
 ) -> None:
-    tool_config = build_mcp_tool_config(
+    tool_config, diagnostics = build_mcp_tool_config(
         "claude",
         allowed_tools="mcp__sources__*",
         mcp_config_path=tmp_path / ".mcp.json",
     )
 
     assert tool_config is None
+    assert diagnostics["resolution_status"] == "config_missing"
 
 
 def test_build_mcp_tool_config_gemini_with_server_list() -> None:
-    tool_config = build_mcp_tool_config("gemini", mcp_servers=["sources"])
+    tool_config, diagnostics = build_mcp_tool_config("gemini", mcp_servers=["sources"])
 
     assert tool_config == {"mcp_server_names": ["sources"]}
+    assert diagnostics["resolution_status"] == "ok"
 
 
 def test_build_mcp_tool_config_gemini_without_servers_returns_none() -> None:
-    tool_config = build_mcp_tool_config("gemini")
+    tool_config, diagnostics = build_mcp_tool_config("gemini")
 
     assert tool_config is None
+    assert diagnostics["resolution_status"] == "config_empty"
 
 
 def test_build_mcp_tool_config_codex_with_mcp_servers(
@@ -67,15 +71,21 @@ def test_build_mcp_tool_config_codex_with_mcp_servers(
         json.dumps(
             {
                 "mcpServers": {
-                    "sources": {"type": "sse", "url": "http://127.0.0.1:8766/sse"},
-                    "other": {"type": "sse", "url": "http://127.0.0.1:9999/sse"},
+                    "sources": {
+                        "type": "streamable-http",
+                        "url": "http://127.0.0.1:8766/mcp",
+                    },
+                    "other": {
+                        "type": "streamable-http",
+                        "url": "http://127.0.0.1:9999/mcp",
+                    },
                 }
             }
         ),
         encoding="utf-8",
     )
 
-    tool_config = build_mcp_tool_config(
+    tool_config, diagnostics = build_mcp_tool_config(
         "codex",
         mcp_servers=["sources"],
         mcp_config_path=config_path,
@@ -83,9 +93,13 @@ def test_build_mcp_tool_config_codex_with_mcp_servers(
 
     assert tool_config == {
         "mcp_servers": {
-            "sources": {"type": "sse", "url": "http://127.0.0.1:8766/sse"},
+            "sources": {
+                "type": "streamable-http",
+                "url": "http://127.0.0.1:8766/mcp",
+            },
         }
     }
+    assert diagnostics["resolution_status"] == "ok"
 
 
 def test_build_mcp_tool_config_codex_without_mcp_servers_key_returns_none(
@@ -94,16 +108,20 @@ def test_build_mcp_tool_config_codex_without_mcp_servers_key_returns_none(
     config_path = tmp_path / ".mcp.json"
     config_path.write_text(json.dumps({"other": "value"}), encoding="utf-8")
 
-    tool_config = build_mcp_tool_config("codex", mcp_config_path=config_path)
+    tool_config, diagnostics = build_mcp_tool_config(
+        "codex",
+        mcp_config_path=config_path,
+    )
 
     assert tool_config is None
+    assert diagnostics["resolution_status"] == "config_empty"
 
 
 def test_build_mcp_tool_config_unknown_agent_returns_none(tmp_path: Path) -> None:
     config_path = tmp_path / ".mcp.json"
     config_path.write_text("{}", encoding="utf-8")
 
-    tool_config = build_mcp_tool_config(
+    tool_config, diagnostics = build_mcp_tool_config(
         "nonexistent",
         mcp_servers=["sources"],
         allowed_tools="mcp__sources__*",
@@ -111,3 +129,4 @@ def test_build_mcp_tool_config_unknown_agent_returns_none(tmp_path: Path) -> Non
     )
 
     assert tool_config is None
+    assert diagnostics["resolution_status"] == "servers_not_found"
