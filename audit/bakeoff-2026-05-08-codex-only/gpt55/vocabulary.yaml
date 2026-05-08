@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash up
+  pos: verb
+  usage: Потім я вмиваюся.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Я одягаюся вранці.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Я снідаю вдома.
+- lemma: йти
+  translation: to go
+  pos: verb
+  usage: Я йду на роботу.
+- lemma: спочатку
+  translation: first, at first
+  pos: adverb
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then, next
+  pos: adverb
+  usage: Потім я вмиваюся.
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  usage: Я збираюся вранці.
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  usage: Я повертаюся додому.
+- lemma: навчатися
+  translation: to study, to learn
+  pos: verb
+  usage: Я навчаюся вранці.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: Я не поспішаю.
+- lemma: після цього
+  translation: after that
+  pos: phrase
+  usage: Після цього я одягаюся.
+- lemma: нарешті
+  translation: finally
+  pos: adverb
+  usage: Нарешті я снідаю.
+- lemma: вранці
+  translation: in the morning
+  pos: adverb
+  usage: Я працюю вранці.
+- lemma: пізно
+  translation: late
+  pos: adverb
+  usage: У суботу я прокидаюся пізно.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Мій ранок простий.
+- lemma: рутина
+  translation: routine
+  pos: noun
+  usage: Це моя рутина.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Я п’ю каву.
+- lemma: робота
+  translation: work
+  pos: noun
+  usage: Я йду на роботу.
+- lemma: субота
+  translation: Saturday
+  pos: noun
+  usage: У суботу я не поспішаю.

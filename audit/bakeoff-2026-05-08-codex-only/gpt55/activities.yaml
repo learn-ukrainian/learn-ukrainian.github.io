@@ -1,0 +1,170 @@
+- id: act-1
+  type: fill-in
+  instruction: Complete the morning dialogue with the correct word.
+  items:
+  - sentence: Я ____ о сьомій.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - йду
+    - снідаю
+  - sentence: Потім я ____.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - пізно
+    - робота
+  - sentence: О восьмій я ____ на роботу.
+    answer: йду
+    options:
+    - йду
+    - одягаюся
+    - лежу
+- id: act-2
+  type: quiz
+  instruction: Choose the natural answer.
+  items:
+  - question: Коли ти прокидаєшся?
+    options:
+    - Я прокидаюся о сьомій.
+    - Я йдеш о сьомій.
+    - Я робота о сьомій.
+    answer: Я прокидаюся о сьомій.
+  - question: Що ти робиш потім?
+    options:
+    - Вмиваюся і снідаю.
+    - Пізно робота.
+    - О сьомій субота.
+    answer: Вмиваюся і снідаю.
+- id: act-3
+  type: fill-in
+  instruction: Add -ся in the right place.
+  items:
+  - sentence: Я вмиваю__.
+    answer: ся
+    options:
+    - ся
+    - ти
+    - він
+  - sentence: Ти одягаєш__.
+    answer: ся
+    options:
+    - ся
+    - ю
+    - є
+  - sentence: Він прокидаєть__.
+    answer: ся
+    options:
+    - ся
+    - еш
+    - ю
+- id: act-4
+  type: quiz
+  instruction: Choose the correct form.
+  items:
+  - question: Я ____ руки.
+    options:
+    - вмиваю
+    - вмиваюся
+    - вмиваєшся
+    answer: вмиваю
+  - question: Я ____ вранці.
+    options:
+    - вмиваюся
+    - вмиваєшся
+    - вмивається
+    answer: вмиваюся
+  - question: Ти ____ пізно.
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+    answer: прокидаєшся
+- id: act-5
+  type: true-false
+  instruction: Mark each sentence true or false.
+  items:
+  - statement: Я вмиваюся means I wash myself.
+    answer: true
+  - statement: Ти вмиваюся is the correct ти form.
+    answer: false
+  - statement: Він вмивається is the correct він form.
+    answer: true
+- id: act-6
+  type: order
+  instruction: Put the morning routine in order.
+  items:
+  - Я йду на роботу.
+  - Я прокидаюся.
+  - Я снідаю.
+  - Я вмиваюся.
+  - Я одягаюся.
+  correct_order:
+  - 1
+  - 3
+  - 4
+  - 2
+  - 0
+- id: act-7
+  type: match-up
+  instruction: Match the Ukrainian word to the English gloss.
+  pairs:
+  - left: спочатку
+    right: first
+  - left: потім
+    right: then
+  - left: після цього
+    right: after that
+  - left: нарешті
+    right: finally
+- id: act-8
+  type: group-sort
+  instruction: Sort the verbs.
+  groups:
+  - name: Зворотні
+    items:
+    - прокидатися
+    - вмиватися
+    - одягатися
+    - збиратися
+  - name: Незворотні
+    items:
+    - снідати
+    - йти
+    - пити
+    - працювати
+- id: act-9
+  type: fill-in
+  instruction: Complete the routine with sequence words.
+  items:
+  - sentence: ____ я прокидаюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Після цього
+    - Нарешті
+  - sentence: ____ я вмиваюся.
+    answer: Потім
+    options:
+    - Потім
+    - Я
+    - Робота
+  - sentence: ____ я йду на роботу.
+    answer: Нарешті
+    options:
+    - Нарешті
+    - Потім
+    - Субота
+- id: act-10
+  type: error-correction
+  instruction: Correct the morning sentence.
+  items:
+  - sentence: Я прокидаєшся о сьомій.
+    error: прокидаєшся
+    correction: прокидаюся
+  - sentence: Ти вмиваюся вранці.
+    error: вмиваюся
+    correction: вмиваєшся
+  - sentence: Він йду на роботу.
+    error: йду
+    correction: йде

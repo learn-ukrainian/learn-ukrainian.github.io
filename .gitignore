@@ -98,9 +98,25 @@ issue_*.json
 
 # Temporary markdown files (root folder)
 temp*.md
+/tmp*.md
+/content.md
+/content_*.md
+/review.md
+/review_*.md
+/testbed.md
+/CODEBASE_QUALITY_REVIEW.md
+/claudes_response.md
 *_BRIEF.md
 *_PROMPT.md
 issue_*_body.md
+
+# Temporary text/html/patch dumps at the repo root
+/content.txt
+/tmp*.txt
+/test.txt
+/response.html
+/*.patch
+/P
 
 # Damage report snapshots from scripts/audit/damage_report.py — generated
 # per-run, timestamped, and can be regenerated any time. Do not version.
