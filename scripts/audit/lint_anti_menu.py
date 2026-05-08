@@ -12,14 +12,15 @@ The detector is intentionally heuristic. It looks for these regex shapes:
   a numbered list.
 
 Exemptions are markdown-aware enough for handoff docs: fenced code blocks,
-tables, ``## Acceptance criteria`` sections, and lines with or immediately
-after ``Done:``, ``Status:``, or ``Plan:`` are skipped.
+tables, ``## Acceptance criteria`` sections, meta-example preambles, and lines
+with or immediately after ``Done:``, ``Status:``, or ``Plan:`` are skipped.
 """
 
 from __future__ import annotations
 
 import argparse
 import re
+import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -57,10 +58,14 @@ SIGNOFF_OPTIONS_RE = re.compile(
     r"\bsign\s+off\s+on\s+these\s+\d+\s+options\s*:?",
     re.IGNORECASE,
 )
-NUMBERED_LIST_LINE_RE = re.compile(r"^\s*(?:[-*]\s*)?\d+\)\s+\S")
+NUMBERED_LIST_LINE_RE = re.compile(r"^\s*(?:[-*]\s*)?\d+[.)]\s+\S")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
-PREFIX_EXEMPT_RE = re.compile(r"^\s*(?:[-*]\s*)?(?:Done|Status|Plan):(?:\s|$)", re.IGNORECASE)
+PREFIX_EXEMPT_RE = re.compile(
+    r"^\s*(?:[-*]\s*)?(?:Done|Status|Plan|Forbidden patterns?):(?:\s|$)",
+    re.IGNORECASE,
+)
+META_EXAMPLE_LOOKBACK_LINES = 3
 
 
 def _is_table_line(line: str) -> bool:
@@ -69,7 +74,9 @@ def _is_table_line(line: str) -> bool:
 
 
 def _normalize_heading(text: str) -> str:
-    return text.rstrip("#").strip().lower().rstrip(":")
+    text = text.rstrip("#").strip().rstrip(":")
+    text = re.sub(r"\s*\([^)]*\)\s*$", "", text).strip().lower()
+    return text.rstrip(":")
 
 
 def _trim_snippet(snippet: str, limit: int = 120) -> str:
@@ -93,6 +100,11 @@ def _find_numbered_list_after(lines: list[str], start_index: int) -> bool:
         if checked >= 4:
             return False
     return False
+
+
+def _has_meta_example_context(lines: list[str], index: int) -> bool:
+    start = max(0, index - META_EXAMPLE_LOOKBACK_LINES)
+    return any(META_EXAMPLE_RE.search(line) for line in lines[start : index + 1])
 
 
 def scan_text(text: str) -> list[Violation]:
@@ -132,7 +144,7 @@ def scan_text(text: str) -> list[Violation]:
             or bool(PREFIX_EXEMPT_RE.match(previous_nonblank))
         )
 
-        if not exempt and not META_EXAMPLE_RE.search(line):
+        if not exempt and not _has_meta_example_context(lines, index):
             paren_match = PAREN_OPTION_RE.search(line)
             if paren_match and PAREN_OPTION_CONTEXT_RE.search(line):
                 violations.append(Violation(index + 1, _trim_snippet(paren_match.group(0))))
@@ -174,6 +186,7 @@ Outputs:
 Exit codes:
   0 = no anti-menu patterns detected
   1 = one or more anti-menu patterns detected
+  2 = input file is not valid UTF-8
 
 Related:
   MEMORY.md rule #0I; issue #1787 sub-task 1.4.
@@ -192,13 +205,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.stdin:
-        import sys
-
         label = "<stdin>"
         text = sys.stdin.read()
     else:
         label = str(args.text)
-        text = args.text.read_text(encoding="utf-8")
+        try:
+            text = args.text.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            print(f"{label}: not utf-8", file=sys.stderr)
+            return 2
 
     violations = scan_text(text)
     for violation in violations:

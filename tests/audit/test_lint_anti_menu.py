@@ -64,6 +64,22 @@ def test_signoff_options_menu_triggers(tmp_path: Path) -> None:
     assert "Sign off on these 3 options" in result.stdout
 
 
+def test_signoff_options_period_numbered_list_triggers(tmp_path: Path) -> None:
+    path = write_fixture(
+        tmp_path,
+        """Sign off on these 3 options:
+1. Ship the guardrail
+2. Wait for another review
+3. Defer the issue
+""",
+    )
+
+    result = run_linter(path)
+
+    assert result.returncode == 1
+    assert "Sign off on these 3 options" in result.stdout
+
+
 def test_acceptance_criteria_numbered_list_does_not_trigger(tmp_path: Path) -> None:
     path = write_fixture(
         tmp_path,
@@ -72,6 +88,37 @@ def test_acceptance_criteria_numbered_list_does_not_trigger(tmp_path: Path) -> N
 1) Detect direct sign-off menus
 2) Ignore status reports
 3) Exit non-zero on violations
+""",
+    )
+
+    result = run_linter(path)
+
+    assert result.returncode == 0
+    assert result.stdout == ""
+
+
+def test_parenthesized_acceptance_criteria_heading_does_not_trigger(tmp_path: Path) -> None:
+    path = write_fixture(
+        tmp_path,
+        """## Acceptance criteria (numbered, all required)
+
+1) Want me to merge now, rerun tests, or wait for another review?
+""",
+    )
+
+    result = run_linter(path)
+
+    assert result.returncode == 0
+    assert result.stdout == ""
+
+
+def test_forbidden_patterns_preamble_exempts_following_examples(tmp_path: Path) -> None:
+    path = write_fixture(
+        tmp_path,
+        """Forbidden patterns:
+
+- Should I merge this now or wait for another review?
+- Want me to rerun tests or open the PR?
 """,
     )
 
@@ -195,3 +242,14 @@ def test_stdin_uses_stdin_label_and_informative_snippet() -> None:
     assert result.returncode == 1
     assert "<stdin>:1: anti-menu pattern detected —" in result.stdout
     assert "Should I merge this now or wait" in result.stdout
+
+
+def test_non_utf8_input_exits_2(tmp_path: Path) -> None:
+    path = tmp_path / "fixture.md"
+    path.write_bytes(b"\xff")
+
+    result = run_linter(path)
+
+    assert result.returncode == 2
+    assert f"{path}: not utf-8" in result.stderr
+    assert result.stdout == ""
