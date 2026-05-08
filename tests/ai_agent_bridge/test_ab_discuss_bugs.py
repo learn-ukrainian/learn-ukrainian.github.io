@@ -17,10 +17,20 @@ def _clear_identity_env(monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv(name, raising=False)
 
 
-def test_discuss_round_four_prompt_pins_root_after_history_truncation(
+def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """Round-4 prompt must include the root question AND every prior-round
+    reply, regardless of how noisy the surrounding channel is.
+
+    Original spec (pre-#1808) was "truncate the tail but pin the root" — see
+    the historical name "...after_history_truncation". After #1808 the discuss
+    code passes `thread_id=correlation_id` to `build_agent_prompt`, which
+    fetches the in-thread messages directly and skips the channel-tail
+    truncator entirely. So the truncation marker is no longer expected;
+    instead we assert that all thread messages survive verbatim.
+    """
     monkeypatch.setattr(_db, "DB_PATH", tmp_path / "bridge.db")
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
@@ -31,6 +41,8 @@ def test_discuss_round_four_prompt_pins_root_after_history_truncation(
     )
 
     _channels.create_channel("architecture", exist_ok=False)
+    # Noisy non-thread messages — would have dominated the channel-tail
+    # window in the pre-#1808 behavior. Thread mode must ignore these.
     for index in range(205):
         _channels.post(
             "architecture",
@@ -41,14 +53,18 @@ def test_discuss_round_four_prompt_pins_root_after_history_truncation(
         )
 
     prompts: list[str] = []
+    round_responses: list[str] = []
 
     def fake_invoke(agent_name: str, prompt: str, **kwargs):
         prompts.append(prompt)
-        return SimpleNamespace(
-            ok=True,
-            response=("x" * 6000) + "\n[DISAGREE]",
-            stderr_excerpt="",
-        )
+        # Each round's reply carries a distinct marker token so we can
+        # assert later rounds see the earlier-round replies in their
+        # prompt history.
+        round_idx = len(prompts)
+        marker = f"ROUND_{round_idx}_REPLY_MARKER_{agent_name.upper()}"
+        body = f"{('x' * 200)} {marker}\n[DISAGREE]"
+        round_responses.append(body)
+        return SimpleNamespace(ok=True, response=body, stderr_excerpt="")
 
     monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
 
@@ -63,8 +79,20 @@ def test_discuss_round_four_prompt_pins_root_after_history_truncation(
 
     assert _channels_cli._handle_discuss(args) == 0
     assert len(prompts) == 4
-    assert "... [" in prompts[3]
+    # Round 4 prompt must include the root.
     assert root_body in prompts[3]
+    # Round 4 prompt must include rounds 1-3 replies (thread-mode
+    # contract — peer round replies are load-bearing, never dropped).
+    for previous_round in (1, 2, 3):
+        marker = f"ROUND_{previous_round}_REPLY_MARKER_CODEX"
+        assert marker in prompts[3], (
+            f"Round 4 prompt is missing ROUND_{previous_round} reply marker — "
+            f"#1808 thread-mode regression"
+        )
+    # Channel noise from before the discussion started must NOT appear
+    # — thread mode skips the channel-wide tail entirely.
+    assert "prior message 0" not in prompts[3]
+    assert "prior message 204" not in prompts[3]
 
 
 def test_discuss_claude_subagent_uses_restricted_tools_without_plan_mode(
