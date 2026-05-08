@@ -1,44 +1,28 @@
-- id: act-1
-  type: fill-in
-  instruction: Complete the morning dialogue with the correct word.
-  items:
-  - sentence: Я ____ о сьомій.
-    answer: прокидаюся
-    options:
-    - прокидаюся
-    - йду
-    - снідаю
-  - sentence: Потім я ____.
-    answer: вмиваюся
-    options:
-    - вмиваюся
-    - пізно
-    - робота
-  - sentence: О восьмій я ____ на роботу.
-    answer: йду
-    options:
-    - йду
-    - одягаюся
-    - лежу
-- id: act-2
+- id: act-dialogue-quiz
   type: quiz
-  instruction: Choose the natural answer.
+  instruction: Choose the line that matches the dialogue.
   items:
-  - question: Коли ти прокидаєшся?
+  - prompt: Коли Настя прокидається?
     options:
-    - Я прокидаюся о сьомій.
-    - Я йдеш о сьомій.
-    - Я робота о сьомій.
-    answer: Я прокидаюся о сьомій.
-  - question: Що ти робиш потім?
+    - о сьомій
+    - о восьмій
+    - у суботу
+    answer: о сьомій
+  - prompt: Що Настя робить потім?
     options:
-    - Вмиваюся і снідаю.
-    - Пізно робота.
-    - О сьомій субота.
-    answer: Вмиваюся і снідаю.
-- id: act-3
+    - вмивається і одягається
+    - гуляє
+    - працює
+    answer: вмивається і одягається
+  - prompt: Коли Ліна йде на роботу?
+    options:
+    - о восьмій
+    - пізно
+    - у суботу
+    answer: о восьмій
+- id: act-add-sia
   type: fill-in
-  instruction: Add -ся in the right place.
+  instruction: Add -ся where the verb needs it.
   items:
   - sentence: Я вмиваю__.
     answer: ся
@@ -52,119 +36,142 @@
     - ся
     - ю
     - є
-  - sentence: Він прокидаєть__.
+  - sentence: Вона прокидаєть__.
     answer: ся
     options:
     - ся
-    - еш
-    - ю
-- id: act-4
-  type: quiz
-  instruction: Choose the correct form.
-  items:
-  - question: Я ____ руки.
+    - ш
+    - є
+  - sentence: Я снідаю__.
+    answer: ''
     options:
-    - вмиваю
-    - вмиваюся
-    - вмиваєшся
-    answer: вмиваю
-  - question: Я ____ вранці.
-    options:
-    - вмиваюся
-    - вмиваєшся
-    - вмивається
-    answer: вмиваюся
-  - question: Ти ____ пізно.
-    options:
-    - прокидаюся
-    - прокидаєшся
-    - прокидається
-    answer: прокидаєшся
-- id: act-5
-  type: true-false
-  instruction: Mark each sentence true or false.
-  items:
-  - statement: Я вмиваюся means I wash myself.
-    answer: true
-  - statement: Ти вмиваюся is the correct ти form.
-    answer: false
-  - statement: Він вмивається is the correct він form.
-    answer: true
-- id: act-6
+    - ''
+    - ся
+    - єш
+- id: act-order-routine
   type: order
-  instruction: Put the morning routine in order.
+  instruction: Put the morning routine in a natural order.
   items:
-  - Я йду на роботу.
-  - Я прокидаюся.
-  - Я снідаю.
-  - Я вмиваюся.
-  - Я одягаюся.
+  - Потім вмиваюся.
+  - Нарешті йду.
+  - Спочатку прокидаюся.
+  - Після цього снідаю.
   correct_order:
-  - 1
-  - 3
-  - 4
   - 2
   - 0
-- id: act-7
+  - 3
+  - 1
+- id: act-self-check
+  type: fill-in
+  instruction: Complete the short morning story.
+  items:
+  - sentence: Спочатку я ____.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - йду
+    - працюю
+  - sentence: Потім я ____.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - школа
+    - кава
+  - sentence: Нарешті я ____ на роботу.
+    answer: йду
+    options:
+    - йду
+    - йдеш
+    - йде
+- id: act-reflexive-or-not
+  type: quiz
+  instruction: Choose the natural Ukrainian verb.
+  items:
+  - prompt: Я (wash up).
+    options:
+    - вмиваюся
+    - вмиваю руки
+    - йду
+    answer: вмиваюся
+  - prompt: Я (have breakfast).
+    options:
+    - снідаю
+    - снідаюся
+    - снідатися
+    answer: снідаю
+  - prompt: Ти (get dressed).
+    options:
+    - одягаєшся
+    - одягаюся
+    - одягається
+    answer: одягаєшся
+- id: act-match-forms
   type: match-up
-  instruction: Match the Ukrainian word to the English gloss.
+  instruction: Match the person with the verb form.
   pairs:
-  - left: спочатку
-    right: first
-  - left: потім
-    right: then
-  - left: після цього
-    right: after that
-  - left: нарешті
-    right: finally
-- id: act-8
+  - left: я
+    right: прокидаюся
+  - left: ти
+    right: прокидаєшся
+  - left: вона
+    right: прокидається
+  - left: я
+    right: йду
+- id: act-group-verbs
   type: group-sort
   instruction: Sort the verbs.
   groups:
-  - name: Зворотні
+  - name: з -ся
     items:
     - прокидатися
     - вмиватися
     - одягатися
     - збиратися
-  - name: Незворотні
+  - name: без -ся
     items:
     - снідати
     - йти
-    - пити
+    - пити каву
     - працювати
-- id: act-9
+- id: act-pronunciation
+  type: true-false
+  instruction: Mark the pronunciation rule true or false.
+  items:
+  - statement: -шся вимовляємо як [с':а].
+    answer: true
+  - statement: -ться вимовляємо як [ц':а].
+    answer: true
+  - statement: вмиваєшся і вмивається звучать однаково.
+    answer: false
+- id: act-fix-errors
+  type: error-correction
+  instruction: Fix the verb form.
+  items:
+  - incorrect: Я прокидаєшся о сьомій.
+    correct: Я прокидаюся о сьомій.
+  - incorrect: Він вмиваюся.
+    correct: Він вмивається.
+  - incorrect: Ти йду на роботу.
+    correct: Ти йдеш на роботу.
+- id: act-sequence-fill
   type: fill-in
-  instruction: Complete the routine with sequence words.
+  instruction: Choose the sequence word.
   items:
   - sentence: ____ я прокидаюся.
     answer: Спочатку
     options:
     - Спочатку
-    - Після цього
     - Нарешті
-  - sentence: ____ я вмиваюся.
-    answer: Потім
+    - Після цього
+  - sentence: ____ я снідаю.
+    answer: Після цього
     options:
-    - Потім
+    - Після цього
     - Я
     - Робота
-  - sentence: ____ я йду на роботу.
+  - sentence: ____ я йду.
     answer: Нарешті
     options:
     - Нарешті
-    - Потім
-    - Субота
-- id: act-10
-  type: error-correction
-  instruction: Correct the morning sentence.
-  items:
-  - sentence: Я прокидаєшся о сьомій.
-    error: прокидаєшся
-    correction: прокидаюся
-  - sentence: Ти вмиваюся вранці.
-    error: вмиваюся
-    correction: вмиваєшся
-  - sentence: Він йду на роботу.
-    error: йду
-    correction: йде
+    - Кава
+    - Сьомій

@@ -20,7 +20,7 @@
   "gates": {
     "word_count": {
       "passed": true,
-      "count": 1668,
+      "count": 1242,
       "target": 1200
     },
     "plan_sections": {
@@ -29,28 +29,28 @@
       "word_budgets": [
         {
           "section": "Діалоги",
-          "count": 276,
+          "count": 295,
           "min": 270,
           "max": 330,
           "passed": true
         },
         {
           "section": "Дієслова на -ся",
-          "count": 245,
+          "count": 329,
           "min": 270,
           "max": 330,
-          "passed": false
+          "passed": true
         },
         {
           "section": "Мій ранок",
-          "count": 248,
+          "count": 280,
           "min": 270,
           "max": 330,
-          "passed": false
+          "passed": true
         },
         {
           "section": "Підсумок",
-          "count": 224,
+          "count": 331,
           "min": 270,
           "max": 330,
           "passed": false
@@ -64,18 +64,23 @@
     },
     "vesum_verified": {
       "passed": false,
-      "checked": 161,
-      "whitelisted": 8,
+      "checked": 234,
+      "whitelisted": 6,
       "missing": [
-        "снідатися",
-        "снідаюся"
+        "юся",
+        "ються",
+        "ємося",
+        "єтеся",
+        "ється",
+        "єшся"
       ],
-      "missing_count": 2
+      "missing_count": 6
     },
     "citations_resolve": {
       "passed": false,
       "unknown": [
-        "Захарійчук Grade 4, p.163"
+        "Караман С. О. та ін. — Українська мова (профільний рівень), 10 клас, с. 187",
+        "Авраменко О. М. — Українська мова, 6 клас, с. 10"
       ]
     },
     "textbook_grounding": {
@@ -89,9 +94,9 @@
         "Кравцова Grade 4, p.113",
         "Захарійчук Grade 4, p.162"
       ],
-      "blockquotes_checked": 3,
-      "long_blockquotes_checked": 0,
-      "search_text_calls": 0,
+      "blockquotes_checked": 10,
+      "long_blockquotes_checked": 5,
+      "search_text_calls": 4,
       "textbook_result_hits": 0,
       "min_words": 30,
       "downgraded": [],
@@ -108,44 +113,48 @@
     },
     "immersion": {
       "passed": false,
-      "pct": 56.25,
+      "pct": 29.64,
       "min_pct": 15,
       "max_pct": 35,
       "policy": "a1-m15-24",
       "long_ukrainian_sentences": [
-        "> Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними"
+        "> «Дієслова на -ся виражають дію, спрямовану на самого виконавця (на самого себе)",
+        "> «Дієслова пасивного стану творяться від дієслів активного стану за допомогою постфікса -ся",
+        "Дієслова зворотного стану позначають дію, спрямовану на дійову особу: Молоді цілуються — люди з них милуються (І",
+        "У дієсловах 3-ї особи однини та множини -ться вимовляють як [ц':а]",
+        "Дієслова на -ся, -сь виражають дію, спрямовану на самого виконавця (на самого себе)"
       ]
     },
     "inject_activity_ids": {
       "passed": true,
       "injected": [
-        "act-dialogue-quiz",
-        "act-add-sia",
-        "act-order-routine",
-        "act-self-check"
+        "act-1",
+        "act-2",
+        "act-5",
+        "act-10"
       ],
       "missing": [],
       "unused": [
-        "act-fix-errors",
-        "act-group-verbs",
-        "act-match-forms",
-        "act-pronunciation",
-        "act-reflexive-or-not",
-        "act-sequence-fill"
+        "act-3",
+        "act-4",
+        "act-6",
+        "act-7",
+        "act-8",
+        "act-9"
       ]
     },
     "activity_types": {
       "passed": true,
       "types": [
-        "quiz",
-        "fill-in",
-        "order",
-        "fill-in",
-        "quiz",
         "match-up",
-        "group-sort",
+        "fill-in",
         "true-false",
-        "error-correction",
+        "group-sort",
+        "order",
+        "unjumble",
+        "quiz",
+        "fill-in",
+        "quiz",
         "fill-in"
       ],
       "disallowed": [],
@@ -180,18 +189,15 @@
       "detections": []
     },
     "previously_passed_regression": {
-      "passed": true,
-      "regressions": []
+      "passed": false,
+      "regressions": [
+        "plan_sections"
+      ]
     },
     "mdx_render": {
       "passed": null,
       "message": "Run after publish stage"
     },
-    "passed": false,
-    "correction_terminal": {
-      "passed": false,
-      "gate": "plan_sections",
-      "message": "plan_sections failed after its single ADR-008 correction attempt"
-    }
+    "passed": false
   }
 }

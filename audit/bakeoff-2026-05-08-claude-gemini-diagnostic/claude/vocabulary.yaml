@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash one's face / hands
+  pos: verb
+  usage: Уранці я вмиваюся холодною водою.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Він одягається швидко.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Я снідаю о пів на восьму.
+- lemma: йти
+  translation: to go (on foot, irregular)
+  pos: verb
+  usage: О восьмій я йду на роботу.
+- lemma: збиратися
+  translation: to get ready, gather oneself
+  pos: verb
+  usage: Я збираюся в бібліотеку.
+- lemma: повертатися
+  translation: to return, come back
+  pos: verb
+  usage: Я повертаюся додому ввечері.
+- lemma: розчісуватися
+  translation: to comb one's hair
+  pos: verb
+  usage: Сестра розчісується перед дзеркалом.
+- lemma: навчатися
+  translation: to study, learn
+  pos: verb
+  usage: Я навчаюся в університеті.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: У суботу я не поспішаю.
+- lemma: чистити
+  translation: to clean, brush (teeth)
+  pos: verb
+  usage: Я чищу зуби двічі на день.
+- lemma: пити
+  translation: to drink
+  pos: verb
+  usage: Я п'ю каву уранці.
+- lemma: спочатку
+  translation: first, at first
+  pos: adverb
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then, next
+  pos: adverb
+  usage: Потім я вмиваюся.
+- lemma: після цього
+  translation: after this
+  pos: phrase
+  usage: Після цього я снідаю.
+- lemma: нарешті
+  translation: finally, at last
+  pos: adverb
+  usage: Нарешті я йду на роботу.
+- lemma: вранці
+  translation: in the morning
+  pos: adverb
+  usage: Вранці я навчаюся.
+- lemma: пізно
+  translation: late
+  pos: adverb
+  usage: У суботу я прокидаюся пізно.
+- lemma: ранок
+  translation: morning (noun)
+  pos: noun
+  usage: Мій ранок починається о сьомій.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Я п'ю каву щоранку.

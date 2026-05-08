@@ -1,0 +1,308 @@
+- id: act-1
+  type: match-up
+  title: Перехідне → Зворотне
+  instruction: Match each non-reflexive verb on the left with its reflexive partner
+    on the right.
+  pairs:
+  - left: вмивати (когось)
+    right: вмиватися
+  - left: одягати (когось)
+    right: одягатися
+  - left: розчісувати (когось)
+    right: розчісуватися
+  - left: збирати (щось)
+    right: збиратися
+  - left: повертати (щось)
+    right: повертатися
+- id: act-2
+  type: fill-in
+  title: Додайте правильне закінчення
+  instruction: Complete each reflexive verb form. Choose the personal ending that
+    matches the subject.
+  items:
+  - sentence: Я вмива___ холодною водою.
+    answer: юся
+    options:
+    - юся
+    - єшся
+    - ється
+  - sentence: Ти прокида___ о сьомій?
+    answer: єшся
+    options:
+    - юся
+    - єшся
+    - ється
+  - sentence: Він одяга___ швидко.
+    answer: ється
+    options:
+    - юся
+    - єшся
+    - ється
+  - sentence: Ми збира___ на роботу разом.
+    answer: ємося
+    options:
+    - ємося
+    - єтеся
+    - ються
+  - sentence: Ви навча___ в університеті?
+    answer: єтеся
+    options:
+    - юся
+    - єшся
+    - єтеся
+  - sentence: Вони повертаю___ додому пізно.
+    answer: ться
+    options:
+    - ться
+    - ємося
+    - єтеся
+  - sentence: Я розчісу___ перед дзеркалом.
+    answer: юся
+    options:
+    - юся
+    - єшся
+    - ється
+  - sentence: Ти збира___ в бібліотеку?
+    answer: єшся
+    options:
+    - юся
+    - єшся
+    - ється
+  - sentence: Вона прокида___ пізно в суботу.
+    answer: ється
+    options:
+    - юся
+    - єшся
+    - ється
+  - sentence: Вони збира___ ввечері додому.
+    answer: ються
+    options:
+    - ються
+    - ємося
+    - єтеся
+- id: act-3
+  type: true-false
+  title: Вимова чи правопис?
+  instruction: Decide whether each statement about pronunciation is true or false.
+  items:
+  - statement: The spelling -шся is pronounced [с':а].
+    answer: true
+  - statement: The spelling -ться is pronounced [ш':а].
+    answer: false
+  - statement: Вмиваєшся is pronounced [вмиваєс':а].
+    answer: true
+  - statement: Вмивається is pronounced [вмиваєц':а].
+    answer: true
+  - statement: The spelling and the pronunciation of -ться are identical.
+    answer: false
+  - statement: The reflexive postfix -ся attaches at the very end of the verb form.
+    answer: true
+- id: act-4
+  type: group-sort
+  title: Зворотне чи незворотне?
+  instruction: 'Sort each verb into the correct group: reflexive (with -ся) or non-reflexive
+    (without -ся).'
+  groups:
+  - label: Зворотні (-ся)
+    items:
+    - прокидатися
+    - вмиватися
+    - одягатися
+    - збиратися
+    - навчатися
+    - повертатися
+    - розчісуватися
+  - label: Незворотні (без -ся)
+    items:
+    - снідати
+    - пити
+    - чистити
+    - поспішати
+    - йти
+- id: act-5
+  type: order
+  title: Послідовність ранку
+  instruction: Put the morning routine in the order it actually happens.
+  items:
+  - Я снідаю і п'ю каву.
+  - Я прокидаюся.
+  - Я йду на роботу.
+  - Я вмиваюся і чищу зуби.
+  - Я одягаюся.
+  correct_order:
+  - 1
+  - 3
+  - 4
+  - 0
+  - 2
+- id: act-6
+  type: unjumble
+  title: Зберіть речення
+  instruction: Reorder the words to form a correct sentence.
+  items:
+  - jumbled:
+    - Я
+    - о
+    - прокидаюся
+    - сьомій
+    answer: Я прокидаюся о сьомій
+  - jumbled:
+    - Потім
+    - одягаюся
+    - вмиваюся
+    - і
+    answer: Потім вмиваюся і одягаюся
+  - jumbled:
+    - восьмій
+    - О
+    - на
+    - йду
+    - роботу
+    - я
+    answer: О восьмій я йду на роботу
+  - jumbled:
+    - в
+    - Я
+    - не
+    - поспішаю
+    - суботу
+    answer: Я не поспішаю в суботу
+- id: act-7
+  type: quiz
+  title: Зворотне чи ні?
+  instruction: 'Choose the correct verb form: with -ся or without.'
+  items:
+  - prompt: Я ___ руки перед сніданком.
+    options:
+    - вмиваю
+    - вмиваюся
+    correct_index: 0
+  - prompt: Уранці я ___ під душем.
+    options:
+    - вмиваю
+    - вмиваюся
+    correct_index: 1
+  - prompt: Мама ___ дитину в куртку.
+    options:
+    - одягає
+    - одягається
+    correct_index: 0
+  - prompt: Старший брат уже сам ___.
+    options:
+    - одягає
+    - одягається
+    correct_index: 1
+  - prompt: Я ___ кота вечорами.
+    options:
+    - розчісую
+    - розчісуюся
+    correct_index: 0
+  - prompt: Сестра ___ перед дзеркалом.
+    options:
+    - розчісує
+    - розчісується
+    correct_index: 1
+  - prompt: Я ___ книжки в портфель.
+    options:
+    - збираю
+    - збираюся
+    correct_index: 0
+  - prompt: Я ___ в бібліотеку.
+    options:
+    - збираю
+    - збираюся
+    correct_index: 1
+- id: act-8
+  type: fill-in
+  title: Слова послідовності
+  instruction: Fill the blank with the right sequence adverb.
+  items:
+  - sentence: ___ я прокидаюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: ___ я вмиваюся і одягаюся.
+    answer: Потім
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: ___ я снідаю і п'ю каву.
+    answer: Після цього
+    options:
+    - Спочатку
+    - Після цього
+    - Нарешті
+  - sentence: ___ я йду на роботу.
+    answer: Нарешті
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: Я ___ п'ю каву, потім снідаю.
+    answer: спочатку
+    options:
+    - спочатку
+    - нарешті
+    - після цього
+  - sentence: Вона повертається додому ___.
+    answer: нарешті
+    options:
+    - спочатку
+    - потім
+    - нарешті
+- id: act-9
+  type: quiz
+  title: Як вимовляти?
+  instruction: Choose the correct pronunciation for each spelled form.
+  items:
+  - prompt: вмиваєшся
+    options:
+    - '[вмиваєшся]'
+    - '[вмиваєс'':а]'
+    - '[вмиваєц'':а]'
+    correct_index: 1
+  - prompt: одягається
+    options:
+    - '[одягаєт''с''а]'
+    - '[одягаєс'':а]'
+    - '[одягаєц'':а]'
+    correct_index: 2
+  - prompt: прокидаються
+    options:
+    - '[прокидаюц'':а]'
+    - '[прокидаютс''а]'
+    - '[прокидаюс'':а]'
+    correct_index: 0
+  - prompt: збираєшся
+    options:
+    - '[збираєшся]'
+    - '[збираєс'':а]'
+    - '[збираєц'':а]'
+    correct_index: 1
+- id: act-10
+  type: fill-in
+  title: Опишіть свій ранок
+  instruction: Complete each sentence about your own morning. Choose the verb that
+    fits the meaning.
+  items:
+  - sentence: Спочатку я ___ о сьомій.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - снідаю
+    - йду
+  - sentence: Потім я ___ і одягаюся.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - повертаюся
+    - поспішаю
+  - sentence: Нарешті я ___ на роботу.
+    answer: йду
+    options:
+    - йду
+    - снідаю
+    - вмиваюся

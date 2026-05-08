@@ -1,0 +1,104 @@
+[
+  {
+    "name": "ToolSearch",
+    "arguments": {
+      "query": "select:mcp__sources__verify_words,mcp__sources__check_modern_form,mcp__sources__search_text,mcp__sources__search_style_guide,mcp__sources__search_definitions,mcp__sources__search_heritage",
+      "max_results": 10
+    },
+    "output_summary": "[{\"tool_name\": \"mcp__sources__verify_words\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__check_modern_form\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_text\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_style_guide\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_definitions\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_heritage\", \"type\": \"tool_reference\"}]",
+    "timestamp": "2026-05-08T19:02:29.253996+00:00"
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "прокидатися",
+        "вмиватися",
+        "одягатися",
+        "снідати",
+        "йти",
+        "спочатку",
+        "потім",
+        "збиратися",
+        "повертатися",
+        "навчатися",
+        "поспішати",
+        "нарешті",
+        "вранці",
+        "пізно",
+        "прокидаюся",
+        "прокидаєшся",
+        "прокидається",
+        "вмиваюся",
+        "вмиваєшся",
+        "вмивається",
+        "одягаюся",
+        "одягаєшся",
+        "одягається",
+        "снідаю",
+        "снідаєш",
+        "снідає",
+        "йду",
+        "йдеш",
+        "йде",
+        "ранок",
+        "сьома",
+        "восьма",
+        "робота",
+        "субота",
+        "телефон",
+        "кава",
+        "лежу",
+        "дивлюся",
+        "гуляю",
+        "поспішаю",
+        "руки",
+        "обличчя",
+        "зуби",
+        "чистити",
+        "після",
+        "цього",
+        "розчісуюся"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 47 words\\n\\nFound: 47/47\\n\\n- **прокидатися** — FOUND (1 match): прокидатися(verb)\\n- **вмиватися** — FOUND (1 match): вмиватися(verb)\\n- **одягатися** — FOUND (1 match): одягатися(verb)\\n- **снідати** — FOUND (1 match): снідати(verb)\\n- **йти** — FOUND (1 match): йти(verb)\\n- **спочатку** — FOUND (1 match): спочатку(adv)\\n- **потім** — FOUND (1 match): потім(adv)\\n- **збиратися** — FOUND (1 match): збиратися(verb)\\n- **повертатися** — FOUND (1 match)[...truncated]",
+    "timestamp": "2026-05-08T19:02:29.254950+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "зворотні дієслова постфікс ся означає дію спрямовану на себе",
+      "limit": 5
+    },
+    "output_summary": "[{\"text\": \"Found 5 results for: \\\"зворотні дієслова постфікс ся означає дію спрямовану на себе\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 162\\n- **Source**: Grade 4, \\n- **Chunk ID**: `4-klas-ukrmova-zaharijchuk_s0161`\\n- **Text**:\\n• Спишіть текст. Підкресліть дієслова. Укажіть у дужках час, \\nособу й число дієслів за зразком у тексті.\\nДієслова на -ся\\n370. Прочитайте вірш Галини Кирпи.\\nДерево трудиться назеленітися.\\nКвіточка трудиться начервонітися.\\nБджілка трудиться налітати[...truncated]",
+    "timestamp": "2026-05-08T19:02:29.255352+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "вимова шся ться правопис подовжений м'який",
+      "limit": 5
+    },
+    "output_summary": "[{\"text\": \"Found 5 results for: \\\"вимова шся ться правопис подовжений м'який\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 67\\n- **Source**: Grade 7, avramenko\\n- **Chunk ID**: `7-klas-ukrmova-avramenko-2024_s0075`\\n- **Text**:\\n64\\n2.\\t Прочитайте текст і виконайте завдання. \\nСвітає, а в пітьмі видніються та дедалі більше набувають чітких обри-\\nсів гори. Вони без кінця і краю піднімаються до неба, немов казкові ве-\\n1.\\tПрочитайте речення та виконайте завдання.\\nОлег: Я помию посуд[...truncated]",
+    "timestamp": "2026-05-08T19:02:29.255784+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "Караман зворотні дієслова постфікс ся утворення",
+      "grade": 10,
+      "limit": 3
+    },
+    "output_summary": "[{\"text\": \"Found 3 results for: \\\"Караман зворотні дієслова постфікс ся утворення\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 96\\n- **Source**: Grade 11, glazova\\n- **Chunk ID**: `11-klas-ukrajinska-mova-glazova-2019_s0137`\\n- **Text**:\\nСинтаксична норма\\n96\\nВід форми пасивного стану треба відрізняти зворотні дієслова, що озна-\\nчають дію, носій якої в реченні виражений підметом-іменником (займенником) \\nу називному відмінку. Зворотні дієслова вживають на позначення дії:\\n \\n спря[...truncated]",
+    "timestamp": "2026-05-08T19:02:29.256251+00:00"
+  },
+  {
+    "name": "mcp__sources__search_text",
+    "arguments": {
+      "query": "розпорядок дня ранок прокидаюся вмиваюся одягаюся",
+      "limit": 3
+    },
+    "output_summary": "[{\"text\": \"Found 3 results for: \\\"розпорядок дня ранок прокидаюся вмиваюся одягаюся\\\"\\n\\n### Result 1\\n- **Section**: Сторінка 10\\n- **Source**: Grade 6, avramenko\\n- **Chunk ID**: `6-klas-ukrmova-avramenko-2023_s0009`\\n- **Text**:\\n10\\n1.\\tПрочитайте записи в колонках і виконайте завдання. \\nо сьомій годині \\nкілька вправ \\nконтрастним душем\\nЯ прокидаюсь о сьомій годині.\\nВиконую кілька фізичних вправ. \\nПотім загартовуюся контрастним душем. \\nА.\\t За допомогою записів якої колон[...truncated]",
+    "timestamp": "2026-05-08T19:02:29.256553+00:00"
+  }
+]
