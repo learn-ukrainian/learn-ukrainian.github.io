@@ -473,14 +473,13 @@ def _dispatch_claude_via_runtime(
     )
     from agent_runtime.runner import invoke as runtime_invoke
 
-    tool_config = (
-        build_mcp_tool_config(
+    if mcp_tools and allowed_tools:
+        tool_config, _diagnostics = build_mcp_tool_config(
             "claude",
             allowed_tools=allowed_tools,
         )
-        if mcp_tools and allowed_tools
-        else None
-    )
+    else:
+        tool_config = None
 
     claude_effort = "xhigh"
     t0 = time.monotonic()
@@ -587,11 +586,15 @@ def _dispatch_via_runtime(
     if is_gemini:
         # Gemini in the pipeline is always -y (write-enabled) — existing behavior.
         runtime_mode = "workspace-write"
-        tool_config = (
-            build_mcp_tool_config("gemini", mcp_servers=["rag"])
-            if mcp_tools
-            else None
-        )
+        if mcp_tools:
+            # TODO(#1803): rename "rag" → "sources"; see
+            # .claude/rules/mcp-sources-and-dictionaries.md.
+            tool_config, _diagnostics = build_mcp_tool_config(
+                "gemini",
+                mcp_servers=["rag"],
+            )
+        else:
+            tool_config = None
     elif runtime_agent_name == "gemma-local":
         runtime_mode = "workspace-write"
         tool_config = None

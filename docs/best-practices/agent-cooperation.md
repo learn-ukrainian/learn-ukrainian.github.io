@@ -453,6 +453,36 @@ Gemini auth precedence is API first, then subscription/OAuth fallback:
 
 ---
 
+## MCP Writer Observability
+
+Codex `*-tools` writer dispatch must fail before model invocation when MCP intent
+cannot be wired. The dispatch path emits:
+
+- `mcp_config_resolved`: emitted after resolving `.mcp.json` into runtime
+  `tool_config`. Check `requested_servers`, `resolved_servers`,
+  `resolution_status`, `missing_server_names`, and `config_path`.
+- `mcp_runtime_init`: emitted by the runner when Codex output shows MCP runtime
+  status. `status=ready` comes from `mcp: <server>/<tool> started` or
+  `(completed)`. `status=failed` comes from Codex `rmcp::transport::worker`
+  transport errors. `status=timeout` means no runtime init line appeared within
+  the init-observation window.
+
+If a writer label ends in `-tools`, requests MCP servers, and resolves none, the
+pipeline raises `LinearPipelineError` and refuses to dispatch tool-less. Codex
+legacy SSE endpoints (`type: sse` or URLs ending `/sse`) are treated as
+unresolved for this path; use the streamable HTTP `/mcp` endpoint.
+
+To debug "writer produced 0 tool calls", start with the writer JSONL:
+
+1. Find `mcp_config_resolved`. If `resolved_servers` is empty, fix `.mcp.json`
+   or the requested server name before rerunning the bakeoff.
+2. Find `mcp_runtime_init`. `failed` usually includes the Codex transport error
+   line; `timeout` means Codex never showed a server/tool init line.
+3. Only inspect prompt/tool-theatre telemetry after both config resolution and
+   runtime init show the expected `sources` server.
+
+---
+
 ## Escalation
 
 If Gemini is stuck (not completing a phase, silently failing):

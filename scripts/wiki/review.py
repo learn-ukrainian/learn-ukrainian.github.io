@@ -255,11 +255,12 @@ def _tool_config_for(agent: str, *, needs_mcp: bool) -> dict | None:
     if not needs_mcp:
         return None
 
-    return build_mcp_tool_config(
+    tool_config, _diagnostics = build_mcp_tool_config(
         agent,
         mcp_servers=["sources"],
         allowed_tools="mcp__sources__*" if agent == "claude" else None,
     )
+    return tool_config
 
 
 def _dim_needs_mcp(dim: str) -> bool:

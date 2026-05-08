@@ -1723,12 +1723,29 @@ def _render_component_props_schema(allowed_activity_types: str) -> str:
     return "\n".join(lines)
 
 
-def _runtime_tool_config(agent_label: str) -> dict[str, Any]:
+def _runtime_tool_config(
+    agent_label: str,
+    *,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
     tool_config: dict[str, Any] = {"output_format": "stream-json"}
     if agent_label == "codex-tools":
         from scripts.agent_runtime.tool_config import build_mcp_tool_config
 
-        codex_tools = build_mcp_tool_config("codex", mcp_servers=["sources"])
+        codex_tools, diagnostics = build_mcp_tool_config(
+            "codex",
+            mcp_servers=["sources"],
+        )
+        _emit(event_sink, "mcp_config_resolved", writer=agent_label, **diagnostics)
+        requested = diagnostics["requested_servers"]
+        resolved = diagnostics["resolved_servers"]
+        status = diagnostics["resolution_status"]
+        if agent_label.endswith("-tools") and requested and not resolved:
+            raise LinearPipelineError(
+                f"Writer {agent_label!r} requested MCP servers {requested!r} "
+                f"but resolver returned none ({status}). Refusing to dispatch "
+                "tool-less."
+            )
         if codex_tools:
             tool_config.update(codex_tools)
     assert tool_config.get("output_format") == "stream-json", (
@@ -1769,7 +1786,8 @@ def invoke_writer(
         task_id="phase-4-a1-20-writer",
         entrypoint="dispatch",
         effort=defaults["effort"],
-        tool_config=_runtime_tool_config(writer),
+        tool_config=_runtime_tool_config(writer, event_sink=event_sink),
+        event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
     )
     response = getattr(result, "response", None)
@@ -2218,7 +2236,8 @@ def invoke_reviewer_dim(
         task_id=f"phase-4-review-{dim}",
         entrypoint="dispatch",
         effort=defaults["effort"],
-        tool_config=_runtime_tool_config(reviewer),
+        tool_config=_runtime_tool_config(reviewer, event_sink=event_sink),
+        event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
     )
     response = getattr(result, "response", None)

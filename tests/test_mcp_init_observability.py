@@ -1,0 +1,295 @@
+from __future__ import annotations
+
+import json
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+
+from scripts.agent_runtime import tool_config as tool_config_mod
+from scripts.agent_runtime.runner import _McpRuntimeObserver
+from scripts.build import linear_pipeline
+
+
+@pytest.fixture(autouse=True)
+def _clear_mcp_config_cache() -> None:
+    tool_config_mod._load_mcp_config.cache_clear()
+    yield
+    tool_config_mod._load_mcp_config.cache_clear()
+
+
+def _write_mcp_config(path: Path, data: dict[str, Any]) -> Path:
+    path.write_text(json.dumps(data), encoding="utf-8")
+    return path
+
+
+def _valid_sources_config(path: Path) -> Path:
+    return _write_mcp_config(
+        path,
+        {
+            "mcpServers": {
+                "sources": {
+                    "type": "streamable-http",
+                    "url": "http://127.0.0.1:8766/mcp",
+                }
+            }
+        },
+    )
+
+
+def test_build_mcp_tool_config_diagnostics_ok(tmp_path: Path) -> None:
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+
+    config, diagnostics = tool_config_mod.build_mcp_tool_config(
+        "codex",
+        mcp_servers=["sources"],
+        mcp_config_path=config_path,
+    )
+
+    assert config == {
+        "mcp_servers": {
+            "sources": {
+                "type": "streamable-http",
+                "url": "http://127.0.0.1:8766/mcp",
+            }
+        }
+    }
+    assert diagnostics == {
+        "requested_servers": ["sources"],
+        "resolved_servers": ["sources"],
+        "config_path": str(config_path.resolve()),
+        "resolution_status": "ok",
+        "missing_server_names": [],
+    }
+
+
+def test_build_mcp_tool_config_diagnostics_config_missing(tmp_path: Path) -> None:
+    config_path = tmp_path / ".mcp.json"
+
+    config, diagnostics = tool_config_mod.build_mcp_tool_config(
+        "codex",
+        mcp_servers=["sources"],
+        mcp_config_path=config_path,
+    )
+
+    assert config is None
+    assert diagnostics["resolution_status"] == "config_missing"
+    assert diagnostics["requested_servers"] == ["sources"]
+    assert diagnostics["resolved_servers"] == []
+
+
+def test_build_mcp_tool_config_diagnostics_config_empty(tmp_path: Path) -> None:
+    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
+
+    config, diagnostics = tool_config_mod.build_mcp_tool_config(
+        "codex",
+        mcp_servers=["sources"],
+        mcp_config_path=config_path,
+    )
+
+    assert config is None
+    assert diagnostics["resolution_status"] == "config_empty"
+    assert diagnostics["requested_servers"] == ["sources"]
+    assert diagnostics["resolved_servers"] == []
+
+
+def test_build_mcp_tool_config_diagnostics_servers_not_found(tmp_path: Path) -> None:
+    config_path = _write_mcp_config(
+        tmp_path / ".mcp.json",
+        {
+            "mcpServers": {
+                "other": {
+                    "type": "streamable-http",
+                    "url": "http://127.0.0.1:9999/mcp",
+                }
+            }
+        },
+    )
+
+    config, diagnostics = tool_config_mod.build_mcp_tool_config(
+        "codex",
+        mcp_servers=["sources"],
+        mcp_config_path=config_path,
+    )
+
+    assert config is None
+    assert diagnostics["resolution_status"] == "servers_not_found"
+    assert diagnostics["missing_server_names"] == ["sources"]
+    assert diagnostics["resolved_servers"] == []
+
+
+def test_build_mcp_tool_config_rejects_legacy_sse_codex_endpoint(
+    tmp_path: Path,
+) -> None:
+    config_path = _write_mcp_config(
+        tmp_path / ".mcp.json",
+        {
+            "mcpServers": {
+                "sources": {
+                    "type": "sse",
+                    "url": "http://127.0.0.1:8766/sse",
+                }
+            }
+        },
+    )
+
+    config, diagnostics = tool_config_mod.build_mcp_tool_config(
+        "codex",
+        mcp_servers=["sources"],
+        mcp_config_path=config_path,
+    )
+
+    assert config is None
+    assert diagnostics["resolution_status"] == "servers_not_found"
+    assert diagnostics["missing_server_names"] == ["sources"]
+
+
+def test_runtime_tool_config_raises_and_emits_resolution_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
+        linear_pipeline._runtime_tool_config(
+            "codex-tools",
+            event_sink=lambda event, **fields: events.append((event, fields)),
+        )
+
+    assert events == [
+        (
+            "mcp_config_resolved",
+            {
+                "writer": "codex-tools",
+                "requested_servers": ["sources"],
+                "resolved_servers": [],
+                "config_path": str(config_path.resolve()),
+                "resolution_status": "config_empty",
+                "missing_server_names": [],
+            },
+        )
+    ]
+
+
+def test_runtime_tool_config_emits_resolution_event_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    config = linear_pipeline._runtime_tool_config(
+        "codex-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert config["output_format"] == "stream-json"
+    assert config["mcp_servers"]["sources"]["url"].endswith("/mcp")
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["resolution_status"] == "ok"
+    assert events[0][1]["resolved_servers"] == ["sources"]
+
+
+def test_invoke_writer_refuses_tool_less_codex_before_invoker(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    def fail_if_called(*_args: Any, **_kwargs: Any) -> None:
+        raise AssertionError("writer invoker should not run without MCP servers")
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
+        linear_pipeline.invoke_writer(
+            "Write the module.",
+            "codex-tools",
+            cwd=tmp_path,
+            invoker=fail_if_called,
+            event_sink=lambda event, **fields: events.append((event, fields)),
+        )
+
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["resolution_status"] == "config_empty"
+
+
+def test_mcp_runtime_observer_emits_ready() -> None:
+    events: list[tuple[str, dict[str, Any]]] = []
+    observer = _McpRuntimeObserver.from_tool_config(
+        agent_name="codex",
+        task_id="writer",
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/mcp"},
+            }
+        },
+        event_sink=lambda event, **fields: events.append((event, fields)),
+        start_time=time.monotonic(),
+    )
+    assert observer is not None
+
+    observer.observe_line("mcp: sources/verify_words started", stream="stdout")
+
+    assert events[0][0] == "mcp_runtime_init"
+    assert events[0][1]["server"] == "sources"
+    assert events[0][1]["status"] == "ready"
+    assert events[0][1]["tool"] == "verify_words"
+
+
+def test_mcp_runtime_observer_emits_failed_for_codex_rmcp_error() -> None:
+    events: list[tuple[str, dict[str, Any]]] = []
+    observer = _McpRuntimeObserver.from_tool_config(
+        agent_name="codex",
+        task_id="writer",
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:9999/sse"},
+            }
+        },
+        event_sink=lambda event, **fields: events.append((event, fields)),
+        start_time=time.monotonic(),
+    )
+    assert observer is not None
+
+    observer.observe_line(
+        "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
+        "worker quit with fatal: Transport channel closed, when "
+        'Client(HttpRequest(HttpRequest("http/request failed: error sending '
+        'request for url (http://127.0.0.1:9999/sse)")))',
+        stream="stderr",
+    )
+
+    assert events[0][0] == "mcp_runtime_init"
+    assert events[0][1]["server"] == "sources"
+    assert events[0][1]["status"] == "failed"
+
+
+def test_mcp_runtime_observer_emits_timeout() -> None:
+    events: list[tuple[str, dict[str, Any]]] = []
+    observer = _McpRuntimeObserver.from_tool_config(
+        agent_name="codex",
+        task_id="writer",
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/mcp"},
+            }
+        },
+        event_sink=lambda event, **fields: events.append((event, fields)),
+        start_time=time.monotonic(),
+    )
+    assert observer is not None
+    observer.timeout_s = 0
+
+    observer.maybe_emit_timeout(time.monotonic())
+
+    assert events[0][0] == "mcp_runtime_init"
+    assert events[0][1]["server"] == "sources"
+    assert events[0][1]["status"] == "timeout"
