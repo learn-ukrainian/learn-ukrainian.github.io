@@ -53,7 +53,6 @@ def test_build_mcp_tool_config_diagnostics_ok(tmp_path: Path) -> None:
     assert config == {
         "mcp_servers": {
             "sources": {
-                "type": "streamable-http",
                 "url": "http://127.0.0.1:8766/mcp",
             }
         }

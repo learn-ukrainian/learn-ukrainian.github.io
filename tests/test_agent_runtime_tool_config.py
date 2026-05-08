@@ -9,7 +9,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
+from agent_runtime.tool_config import (
+    _codex_sanitize_server_config,
+    _load_mcp_config,
+    build_mcp_tool_config,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -63,9 +67,10 @@ def test_build_mcp_tool_config_gemini_without_servers_returns_none() -> None:
     assert diagnostics["resolution_status"] == "config_empty"
 
 
-def test_build_mcp_tool_config_codex_with_mcp_servers(
+def test_codex_tool_config_strips_claude_format_type_field(
     tmp_path: Path,
 ) -> None:
+    """codex CLI doesn't recognize `type` - it must be stripped (#1812)."""
     config_path = tmp_path / ".mcp.json"
     config_path.write_text(
         json.dumps(
@@ -91,15 +96,47 @@ def test_build_mcp_tool_config_codex_with_mcp_servers(
         mcp_config_path=config_path,
     )
 
-    assert tool_config == {
-        "mcp_servers": {
-            "sources": {
-                "type": "streamable-http",
-                "url": "http://127.0.0.1:8766/mcp",
-            },
-        }
-    }
+    assert tool_config is not None
+    assert "mcp_servers" in tool_config
+    sources_cfg = tool_config["mcp_servers"]["sources"]
+    assert sources_cfg["url"] == "http://127.0.0.1:8766/mcp"
+    assert "type" not in sources_cfg, (
+        "codex tool_config must not include the Claude-format `type` field; "
+        f"got {sources_cfg!r}. See #1812."
+    )
     assert diagnostics["resolution_status"] == "ok"
+
+
+def test_codex_sanitize_server_config_drops_unknown_fields() -> None:
+    raw = {
+        "url": "http://127.0.0.1:8766/mcp",
+        "type": "streamable-http",
+        "transport": "http",
+        "headers": {"X-Foo": "bar"},
+    }
+
+    sanitized = _codex_sanitize_server_config(raw)
+
+    assert sanitized == {"url": "http://127.0.0.1:8766/mcp"}
+
+
+def test_codex_sanitize_server_config_preserves_codex_fields() -> None:
+    raw = {
+        "command": "/usr/local/bin/some-mcp",
+        "args": ["--port", "9000"],
+        "env": {"FOO": "bar"},
+        "bearer_token_env_var": "MY_TOKEN",
+        "type": "stdio",
+    }
+
+    sanitized = _codex_sanitize_server_config(raw)
+
+    assert sanitized == {
+        "command": "/usr/local/bin/some-mcp",
+        "args": ["--port", "9000"],
+        "env": {"FOO": "bar"},
+        "bearer_token_env_var": "MY_TOKEN",
+    }
 
 
 def test_build_mcp_tool_config_codex_without_mcp_servers_key_returns_none(

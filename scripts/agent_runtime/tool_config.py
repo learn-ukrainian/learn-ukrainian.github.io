@@ -9,6 +9,15 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_MCP_CONFIG_PATH = _REPO_ROOT / ".mcp.json"
 _RESOLUTION_STATUSES = {"ok", "config_missing", "config_empty", "servers_not_found"}
+_CODEX_MCP_SERVER_FIELDS = frozenset(
+    {
+        "url",
+        "command",
+        "args",
+        "env",
+        "bearer_token_env_var",
+    }
+)
 
 
 def _canonical_agent_name(agent: str) -> str | None:
@@ -25,6 +34,18 @@ def _canonical_agent_name(agent: str) -> str | None:
 def _resolved_mcp_config_path(mcp_config_path: Path | None) -> Path:
     """Return the configured `.mcp.json` path, defaulting to repo root."""
     return (mcp_config_path or _DEFAULT_MCP_CONFIG_PATH).resolve()
+
+
+def _codex_sanitize_server_config(server_config: dict) -> dict:
+    """Drop fields codex CLI's mcp_servers schema does not recognize.
+
+    `.mcp.json` includes Claude-format fields, notably `type` such as
+    `type="streamable-http"`. Codex CLI auto-detects HTTP transport from the
+    URL scheme and does not have `type` in its `mcp_servers.<name>.*` schema;
+    passing the unknown field silently breaks server registration on the codex
+    side and leaves the model with no MCP tools.
+    """
+    return {k: v for k, v in server_config.items() if k in _CODEX_MCP_SERVER_FIELDS}
 
 
 @lru_cache(maxsize=1)
@@ -75,9 +96,15 @@ def _codex_mcp_servers(
 
     if not requested:
         if usable_servers:
-            return usable_servers, diagnostics(
-                resolved_servers=list(usable_servers),
-                resolution_status="ok",
+            return (
+                {
+                    name: _codex_sanitize_server_config(cfg)
+                    for name, cfg in usable_servers.items()
+                },
+                diagnostics(
+                    resolved_servers=list(usable_servers),
+                    resolution_status="ok",
+                ),
             )
         return None, diagnostics(
             resolution_status="servers_not_found",
@@ -85,7 +112,7 @@ def _codex_mcp_servers(
         )
 
     selected = {
-        server_name: usable_servers[server_name]
+        server_name: _codex_sanitize_server_config(usable_servers[server_name])
         for server_name in requested
         if server_name in usable_servers
     }
