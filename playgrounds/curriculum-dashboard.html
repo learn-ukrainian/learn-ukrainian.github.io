@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curriculum Dashboard - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -18,8 +19,8 @@ a:hover { text-decoration: underline; }
 
 .topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
 .topbar h1 { font-size: 18px; font-weight: 600; }
-.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
-.topbar .nav a { color: var(--text2); }
+.topbar .monitor-nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .monitor-nav a { color: var(--text2); }
 .refresh-indicator { font-size: 11px; color: var(--text3); }
 
 .main { display: grid; grid-template-columns: 1fr 400px; height: calc(100vh - 49px); }
@@ -95,21 +96,29 @@ a:hover { text-decoration: underline; }
 .track-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
 .track-stats { display: flex; gap: 12px; font-size: 12px; color: var(--text2); margin-bottom: 12px; }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
 <div class="topbar">
   <h1>Curriculum Dashboard</h1>
+  <div class="spacer"></div>
   <span class="refresh-indicator" id="refresh-info"></span>
-  <div class="nav">
+  <nav class="monitor-nav" aria-label="Monitor sections">
     <a href="/">Home</a>
-    <a href="/audit-dashboard.html">Audit</a>
-    <a href="/progress.html">Progress</a>
-    <a href="/quality.html">Quality</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
     <a href="/comms.html">Comms</a>
-    <a href="/track-health.html">Health</a>
-  </div>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
+<nav class="ops-nav" aria-label="Operations pages">
+  <a href="/audit-dashboard.html">Audit</a>
+  <a href="/progress.html">Progress</a>
+  <a href="/quality.html">Quality</a>
+  <a href="/track-health.html">Health</a>
+</nav>
 
 <div class="main">
   <div class="left-panel" id="left-panel">

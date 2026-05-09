@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Module Quality Dashboard</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -16,8 +17,8 @@ body { font-family: 'Noto Sans', -apple-system, sans-serif; background: var(--bg
 
 .topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
 .topbar h1 { font-size: 18px; font-weight: 600; }
-.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
-.topbar .nav a { color: var(--text2); text-decoration: none; }
+.topbar .monitor-nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .monitor-nav a { color: var(--text2); text-decoration: none; }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
 
@@ -56,17 +57,27 @@ body { font-family: 'Noto Sans', -apple-system, sans-serif; background: var(--bg
 .gate { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
 .gate .icon { width: 16px; text-align: center; }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
 <div class="topbar">
   <h1>Module Quality Dashboard</h1>
-  <div class="nav">
-    <a href="/track-health.html">Track Health</a>
-    <a href="/docs">API Docs</a>
-    <span id="refresh-info" style="color:var(--text3);font-size:11px;"></span>
-  </div>
+  <div class="spacer"></div>
+  <span id="refresh-info" style="color:var(--text3);font-size:11px;"></span>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
+<nav class="ops-nav" aria-label="Operations pages">
+  <a href="/track-health.html">Track Health</a>
+  <a href="/docs">API Docs</a>
+</nav>
 
 <div class="container">
   <div class="stats" id="stats"></div>

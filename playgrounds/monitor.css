@@ -46,8 +46,16 @@ a { color: var(--accent); }
   letter-spacing: 0;
 }
 
+.topbar .spacer,
+.top-bar .spacer {
+  flex: 1 1 auto;
+}
+
 .topbar .sub,
 .topbar .meta,
+.topbar .muted,
+.topbar .refresh-info,
+.topbar .refresh-indicator,
 .top-bar .refresh-info,
 .top-bar a,
 .top-bar span,
@@ -105,6 +113,32 @@ a { color: var(--accent); }
   border-color: var(--accent);
 }
 
+.topbar .monitor-nav,
+.top-bar .monitor-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.topbar .monitor-nav a,
+.top-bar .monitor-nav a {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text2) !important;
+  padding: 5px 8px;
+  text-decoration: none;
+}
+
+.topbar .monitor-nav a:hover,
+.top-bar .monitor-nav a:hover {
+  color: var(--accent) !important;
+  border-color: var(--accent);
+}
+
 .home-link {
   color: var(--accent) !important;
 }
@@ -123,7 +157,27 @@ a { color: var(--accent); }
 .thread-msg,
 .detail-panel,
 .details,
-.detail-overlay.open + .detail-panel {
+.detail-overlay.open + .detail-panel,
+.card,
+.stat-card,
+.status-item,
+.panel,
+.controls,
+.modal,
+.confirm-box,
+.inspector-overlay,
+.inspector-panel,
+.bulk-bar,
+.backup-item,
+.text-result,
+.annotation-card,
+.track-section,
+.track-row,
+.module-row,
+.metric-card,
+.issue-card,
+.coverage-card,
+.score-card {
   background: var(--bg2) !important;
   border-color: var(--border) !important;
 }
@@ -135,7 +189,25 @@ a { color: var(--accent); }
 .kv,
 .health-pill,
 .stat-box,
-.compose-panel {
+.compose-panel,
+.card,
+.stat-card,
+.status-item,
+.panel,
+.controls,
+.modal,
+.confirm-box,
+.bulk-bar,
+.backup-item,
+.text-result,
+.annotation-card,
+.track-section,
+.track-row,
+.module-row,
+.metric-card,
+.issue-card,
+.coverage-card,
+.score-card {
   border-radius: 4px !important;
 }
 
@@ -144,7 +216,11 @@ a { color: var(--accent); }
 .messages-area,
 .thread-bar,
 .discussion-strip,
-.layout {
+.layout,
+.main,
+.container,
+.left-panel,
+.right-panel {
   background: var(--bg) !important;
   border-color: var(--border) !important;
 }
@@ -171,7 +247,10 @@ a { color: var(--accent); }
 .compose-panel input,
 .compose-panel textarea,
 .parent-id-container input,
-.thread-bar select {
+.thread-bar select,
+input,
+select,
+textarea {
   background: #fffaf0 !important;
   border-color: var(--border) !important;
   color: var(--text) !important;
@@ -196,9 +275,16 @@ th,
 td,
 .list li,
 .tabs,
+.tab,
+.track-tabs,
+.track-tab,
 .feed-title,
 .msg-table th,
-.msg-table td {
+.msg-table td,
+table,
+.module-table,
+.module-table th,
+.module-table td {
   border-color: var(--border) !important;
 }
 
