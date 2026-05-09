@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lunch 2026-05-09 — orchestration cascade, 5 PRs merged, 0 admin-bypasses</title>
+
+<meta name="report-class" content="handoff" />
+<meta name="report-date" content="2026-05-09" />
+<meta name="report-status" content="ok" />
+<meta name="report-title" content="Lunch shift: 5 PRs merged + cascade resolution + 0 admin-bypasses" />
+<meta name="report-kpi-summary" content="5 PRs merged · 9 commits · 4 issues filed · 2 cherry-picked audits · 2 inline cascade fixes · 0 admin-bypasses" />
+<meta name="report-related-issues" content="1791,1815,1821,1823,1824,1825,1826,1828,1829,1832" />
+<meta name="report-related-prs" content="1824,1827,1829,1830,1831" />
+<meta name="report-agents" content="claude,codex,codex-desktop,gemini" />
+<meta name="report-author" content="claude" />
+<meta name="report-template-version" content="0.1" />
+
+<style>
+  :root {
+    --bg: #faf6ef; --surface: #f5efde; --surface-2: #ede6d0;
+    --surface-warn: #f3ead0; --surface-fail: #f3dada; --surface-ok: #dde9df;
+    --ink: #1a1a1a; --ink-soft: #4a4540; --ink-faint: #7a736a;
+    --rule: #d4cdb8; --rule-soft: #e3dcc6; --accent: #7a1c20;
+    --warn: #a8842b; --ok: #3d6b4a; --fail: #9c2828; --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--serif); font-size: 16px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 4px;
+    padding: 14px 16px; overflow-x: auto; line-height: 1.5; color: var(--ink-soft); margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px; padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink); margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px; font-size: 28px; font-weight: 600;
+    letter-spacing: -0.012em; line-height: 1.25;
+  }
+  header.hero h1 .session { color: var(--ink-faint); font-weight: 400; }
+  header.hero .sub { color: var(--ink-soft); font-size: 15px; font-style: italic; }
+  header.hero .meta {
+    font-family: var(--sans); font-size: 12px; color: var(--ink-faint); text-align: right;
+    line-height: 1.85; flex: 0 1 280px;
+  }
+  header.hero .meta b { color: var(--ink); font-weight: 600; }
+  header.hero .meta .row { white-space: nowrap; }
+
+  .provenance {
+    background: var(--surface); border-left: 3px solid var(--accent);
+    padding: 12px 16px; margin-bottom: 28px;
+    font-family: var(--sans); font-size: 13px; color: var(--ink-soft);
+  }
+  .provenance b { color: var(--ink); font-weight: 600; }
+
+  .verdict-bar {
+    display: flex; height: 36px; border: 1px solid var(--ink);
+    border-radius: 3px; overflow: hidden; margin-bottom: 8px;
+    font-family: var(--sans); font-size: 12px; font-weight: 600;
+  }
+  .verdict-bar > div {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--bg); padding: 0 8px;
+  }
+  .verdict-bar .b-ok { background: var(--ok); }
+  .verdict-bar .b-warn { background: var(--warn); }
+  .verdict-bar .b-fail { background: var(--fail); }
+  .verdict-bar .b-info { background: var(--info); }
+  .verdict-bar-legend { font-family: var(--sans); font-size: 12px; color: var(--ink-faint); margin-bottom: 28px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 36px; }
+  .kpi { background: var(--surface); border: 1px solid var(--rule); padding: 16px 18px; border-radius: 4px; }
+  .kpi .label { font-family: var(--sans); color: var(--ink-faint); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .kpi .value { font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1.1; color: var(--ink); }
+  .kpi .value.ok { color: var(--ok); }
+  .kpi .value.warn { color: var(--warn); }
+  .kpi .value.info { color: var(--info); }
+  .kpi .sub { font-family: var(--sans); color: var(--ink-faint); font-size: 12px; margin-top: 4px; }
+
+  h2 {
+    font-family: var(--serif); font-size: 21px; font-weight: 600;
+    margin: 44px 0 14px; padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+    letter-spacing: -0.005em; color: var(--ink);
+  }
+  h2 .sub { font-family: var(--sans); font-size: 12px; font-weight: 400; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-left: 12px; }
+  h3 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 18px 0 8px; color: var(--ink); }
+  p { margin: 0 0 14px; }
+
+  .pill {
+    display: inline-block; padding: 2px 9px;
+    border-radius: 999px; font-family: var(--sans);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+    border: 1px solid; white-space: nowrap; line-height: 1.5; vertical-align: 1px;
+  }
+  .pill.ok    { color: var(--ok);    background: var(--surface-ok);   border-color: rgba(61,107,74,0.4); }
+  .pill.warn  { color: var(--warn);  background: var(--surface-warn); border-color: rgba(168,132,43,0.4); }
+  .pill.fail  { color: var(--fail);  background: var(--surface-fail); border-color: rgba(156,40,40,0.4); }
+  .pill.info  { color: var(--info);  background: #dbe5f0;             border-color: rgba(42,86,128,0.4); }
+  .pill.muted { color: var(--ink-faint); background: var(--surface);  border-color: var(--rule); }
+
+  table.threads {
+    width: 100%; table-layout: fixed; border-collapse: collapse;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 4px; overflow: hidden; font-size: 14px;
+  }
+  table.threads th, table.threads td {
+    text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top; word-break: break-word; overflow-wrap: anywhere;
+  }
+  table.threads th {
+    background: var(--surface-2); font-family: var(--sans);
+    font-size: 11px; color: var(--ink-faint); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  table.threads td code.inline { white-space: normal; word-break: break-all; overflow-wrap: anywhere; }
+  table.threads td .pill { white-space: nowrap; }
+  table.threads tr:last-child td { border-bottom: 0; }
+  table.threads td.thread { font-weight: 600; color: var(--ink); }
+  table.threads td.thread .sub { display: block; font-weight: 400; color: var(--ink-faint); font-size: 12px; margin-top: 2px; font-family: var(--sans); }
+
+  .timeline { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 18px 22px; }
+  .timeline ol { list-style: none; padding: 0; margin: 0; position: relative; }
+  .timeline ol::before { content: ""; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 1px; background: var(--rule); }
+  .timeline li { position: relative; padding: 7px 0 7px 32px; font-size: 14px; color: var(--ink); }
+  .timeline li::before {
+    content: ""; position: absolute; left: 4px; top: 14px;
+    width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 2px solid var(--rule);
+  }
+  .timeline li.ok::before   { border-color: var(--ok);   background: var(--surface-ok); }
+  .timeline li.warn::before { border-color: var(--warn); background: var(--surface-warn); }
+  .timeline li.fail::before { border-color: var(--fail); background: var(--surface-fail); }
+  .timeline li.info::before { border-color: var(--info); background: #dbe5f0; }
+  .timeline li .ts { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); margin-right: 10px; }
+  .timeline li .what b { font-weight: 600; }
+  .timeline li .detail { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; font-style: italic; }
+
+  .callout { background: var(--surface); border-left: 3px solid var(--info); padding: 16px 20px; border-radius: 0 4px 4px 0; margin: 18px 0; }
+  .callout.warn   { border-left-color: var(--warn); }
+  .callout.fail   { border-left-color: var(--fail); }
+  .callout.accent { border-left-color: var(--accent); }
+  .callout.ok    { border-left-color: var(--ok); }
+  .callout p { margin: 0 0 8px; font-size: 14px; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h3 { margin-top: 0; }
+
+  footer.report-footer {
+    margin-top: 56px; padding-top: 22px;
+    border-top: 1.5px solid var(--ink);
+    font-family: var(--sans); font-size: 12px; color: var(--ink-faint);
+    display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer.report-footer .left b { color: var(--ink); font-weight: 600; }
+  footer.report-footer a { color: var(--ink-soft); border-bottom-color: var(--rule); }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 24px 18px 60px; }
+    header.hero { flex-direction: column; }
+    header.hero .meta { text-align: left; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    table.threads { font-size: 12.5px; }
+    table.threads th, table.threads td { padding: 8px 10px; }
+    h2 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="title-block">
+    <h1>Lunch 2026-05-09 — <span class="session">5 PRs merged, cascade resolved, zero admin-bypasses</span></h1>
+    <div class="sub">User dispatched the orchestrator with "take care of these, I need to go away" pointing at the morning's P0–P6 priority queue. Result: 4 dispatch briefs fired (3 Codex + 1 Claude headless), Codex Desktop's PR shepherded through, two CI cascade-failures resolved inline (#M0 row 1), perf-flake keystone landed, four follow-up issues filed.</div>
+  </div>
+  <div class="meta">
+    <div class="row"><b>Date:</b> 2026-05-09 (~10:30 → 12:30 CET, ~2 h)</div>
+    <div class="row"><b>Branch state:</b> <code class="inline">main @ 13a97c0ca7</code></div>
+    <div class="row"><b>Agents:</b> claude (orchestrator) · codex (4 dispatches) · claude-headless (2 reviews) · codex-desktop (UI revamp)</div>
+    <div class="row"><b>Predecessor:</b> <a href="2026-05-09-morning-artifacts-route-and-deterministic-rule.html">2026-05-09 morning (/artifacts + #M-4)</a></div>
+  </div>
+</header>
+
+<div class="provenance">
+  <b>HTML-first under #M-2.</b> Fourth handoff under the policy. The user's exact instruction was "please take care of these, i need to go away" — so this report is also the proof-of-work for that delegation. Reachable at <code class="inline">localhost:8765/artifacts/docs/session-state/2026-05-09-lunch-orchestration-cascade-and-clean-merge.html</code>.
+</div>
+
+<section>
+  <div class="verdict-bar" title="Distribution of the lunch shift's outcomes">
+    <div class="b-ok"   style="flex: 2;">5 PRs merged</div>
+    <div class="b-info" style="flex: 1.2;">9 commits</div>
+    <div class="b-info" style="flex: 1;">4 issues filed</div>
+    <div class="b-warn" style="flex: 1;">2 cascade fixes</div>
+    <div class="b-ok"   style="flex: 0.6;">0 bypass</div>
+  </div>
+  <div class="verdict-bar-legend">
+    Net: substantive cleanup of the morning's queue. Five PRs merged through CI gates. <b>Two CI cascade-failures resolved inline</b> per #M0 row 1 (≤5 LOC fixing CI failures I caused by dispatching). The flaky perf test that admin-bypassed PR #1813 is now legitimately stable. <b>#M-0.5 held — zero admin-bypasses.</b>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">PRs merged</div>
+      <div class="value ok">5</div>
+      <div class="sub">#1827 idempotency · #1830 deploy sync · #1831 perf flake · #1829 read-only · #1824 UI revamp</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Commits to main</div>
+      <div class="value info">9</div>
+      <div class="sub">2 brief commits + 2 audit cherry-picks + 5 squash-merges</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Issues filed</div>
+      <div class="value info">4</div>
+      <div class="sub"><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1825">#1825</a> MEMORY · <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1826">#1826</a> perf flake · <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1828">#1828</a> CSS · <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1832">#1832</a> phantom edits</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Open PRs left</div>
+      <div class="value warn">1</div>
+      <div class="sub">#1791 Decision Graph ADR — REVISE per Claude review</div>
+    </div>
+  </div>
+</section>
+
+<h2>What the user asked for vs what shipped <span class="sub">priority-queue closure</span></h2>
+
+<table class="threads">
+  <thead>
+    <tr>
+      <th style="width: 6%;">P</th>
+      <th style="width: 36%;">Morning queue item</th>
+      <th style="width: 14%;">Status</th>
+      <th>Outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>P0</b></td>
+      <td>User-only bakeoff verification of <code class="inline">codex-tools</code> + <code class="inline">gemini-tools</code> writers</td>
+      <td><span class="pill warn">User-only</span></td>
+      <td>Out of orchestrator scope — still on you. Brief in last night's handoff §"Bakeoff verification."</td>
+    </tr>
+    <tr>
+      <td><b>P1</b></td>
+      <td>Review Codex Desktop's UI revamp PR when it lands</td>
+      <td><span class="pill ok">Done</span></td>
+      <td>Found PR #1824 already open. Posted Gemini's PASS-with-architectural-concerns review on her behalf. Dispatched Claude headless adversarial review (APPROVE-WITH-NITS, 5 follow-up findings, 403 lines). Both reviews merged to main as audit artifacts.</td>
+    </tr>
+    <tr>
+      <td><b>P2</b></td>
+      <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1821">#1821</a> — <code class="inline">ab discuss</code> read-only enforcement</td>
+      <td><span class="pill ok">Merged</span></td>
+      <td>Codex CLI dispatch → PR #1829 → squash-merged as <code class="inline">132e5dad99</code>. Per-agent native flags (Codex <code class="inline">--sandbox read-only</code>, Claude <code class="inline">--tools Read,Grep,Glob,LS</code>, Gemini <code class="inline">--approval-mode plan</code>) + Gemini-only post-round git-diff audit. Tests + docs + bridge <code class="inline">discuss --help</code> updated.</td>
+    </tr>
+    <tr>
+      <td><b>P3</b></td>
+      <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1823">#1823</a> — <code class="inline">migrate_to_html.py</code> idempotency</td>
+      <td><span class="pill ok">Merged</span></td>
+      <td>Codex CLI dispatch → PR #1827 → squash-merged as <code class="inline">af17ece46a</code>. <code class="inline">&lt;meta name="report-author"&gt;</code>-marked HTML refused without <code class="inline">--force</code>. 4 tests covering hand-curated/script-output/force/fresh.</td>
+    </tr>
+    <tr>
+      <td><b>P4</b></td>
+      <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1815">#1815</a> — <code class="inline">deploy_prompts.sh</code> <code class="inline">.codex/</code> sync chain</td>
+      <td><span class="pill ok">Merged</span></td>
+      <td>Codex CLI dispatch → PR #1830 → squash-merged as <code class="inline">a92d78cc70</code>. <code class="inline">ORPHAN_PATHS_CODEX</code> declared, preflight + diff verification extended, idempotency test added.</td>
+    </tr>
+    <tr>
+      <td><b>P5</b></td>
+      <td>MEMORY.md repo↔runtime drift</td>
+      <td><span class="pill warn">Decision pending</span></td>
+      <td>Filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1825">#1825</a> with quantified drift (3 missing rules, ASCII vs Unicode, 6-line gap) + 3 options (deploy hook / sync command / accept divergence). Awaiting your A/B/C call.</td>
+    </tr>
+    <tr>
+      <td><b>P6</b></td>
+      <td>#1791 Decision Graph ADR — push REVISE or close</td>
+      <td><span class="pill warn">REVISE recommended</span></td>
+      <td>Claude headless adversarial review dispatched (round 3, 562 s, 347 lines). Verdict: <b>REVISE</b>. Two BLOCKER findings prior reviews missed: (a) marker set conflicts with broker — live DB has 139 <code class="inline">[DISAGREE]</code> vs 4 total <code class="inline">[OPTION]+[OBJECT]+[DEFER]</code>, ADR's parser would silently misrepresent ~40% of replies; (b) <code class="inline">agent_family</code> column doesn't exist; "independent of Multi-UI ADR" claim is false. Revisions estimated at 30–50 LOC. Review file at <code class="inline">audit/claude-review-1791-decision-graph-adr-2026-05-09/REVIEW.md</code>. <b>Awaits your decision: dispatch Codex revisions or close-as.</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>What landed <span class="sub">commits in chronological order</span></h2>
+
+<div class="timeline">
+<ol>
+  <li class="info"><span class="ts">~10:35Z</span><span class="what"><b>Briefs committed.</b> <code class="inline">ce1b7d9565 docs(briefs): morning queue — #1821 + #1823 + #1791 + #1815</code>. Four dispatch briefs landing under the new <code class="inline">briefs/2026-05-09/</code> directory. Each follows the #M-4 dispatch-brief checklist (orientation reading list, verifiable-claims-with-tools table, mandatory worktree, numbered workflow, no auto-merge).</span></li>
+  <li class="info"><span class="ts">~10:35Z</span><span class="what"><b>Three dispatches fired in parallel</b>: <code class="inline">codex-1821</code> (read-only), <code class="inline">codex-1823</code> (idempotency), <code class="inline">claude-1791-adr-review</code> (Opus 4.7 xhigh).</span><span class="detail">Cap-respectful: 2 Codex + 1 Claude.</span></li>
+  <li class="ok"><span class="ts">~10:42Z</span><span class="what"><b>Codex Desktop PR #1824 found already open</b> (<code class="inline">de2edb6994</code>). 17 files / +1,211 / −40 LOC. Posted Gemini's existing review (from Codex Desktop's worktree's <code class="inline">review/PR-1824-design-review.md</code>) as PR comment on her behalf. Filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1828">#1828</a> for the CSS specificity-wars finding.</span></li>
+  <li class="warn"><span class="ts">~10:43Z</span><span class="what"><b>Phantom uncommitted edits in PR #1824 worktree caught.</b> ~8 files modified by an unknown agent (likely <code class="inline">gemini-code-assist</code> applying its own suggestions). Real improvements (<code class="inline">Promise.allSettled</code> defensive error handling) plus one suspicious change (re-adds the <code class="inline">/files</code> alias I explicitly removed this morning in <code class="inline">25484e5dec</code>).</span><span class="detail">Filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1832">#1832</a> for triage. Stash named <code class="inline">phantom-edits-PR-1824-needs-triage</code>.</span></li>
+  <li class="ok"><span class="ts">~10:45Z</span><span class="what"><b><code class="inline">codex-1823</code> done</b> in 391 s → PR #1827. Body has 8/8 ACs ticked with quoted #M-4 evidence (verbatim CLI output for each tool-backed claim). Pre-commit clean.</span></li>
+  <li class="ok"><span class="ts">~10:46Z</span><span class="what"><b><code class="inline">claude-1791</code> done</b> in 562 s → cherry-picked <code class="inline">d99daa11a9</code>. Audit artifact at <code class="inline">audit/claude-review-1791-decision-graph-adr-2026-05-09/REVIEW.md</code>, 347 lines. Verdict <b>REVISE</b> with two BLOCKER independent findings missed by prior 2 review rounds.</span><span class="detail">Live DB query against <code class="inline">channel_messages</code> proved <code class="inline">[DISAGREE]</code> dominance — verdict was tool-backed, not memorised.</span></li>
+  <li class="ok"><span class="ts">~10:46Z</span><span class="what"><b><code class="inline">codex-1815</code> dispatched.</b> Slot opened by codex-1823 finishing. Brief: <code class="inline">deploy_prompts.sh</code> <code class="inline">.codex/</code> sync chain.</span></li>
+  <li class="ok"><span class="ts">~10:48Z</span><span class="what"><b>Cherry-picked Claude #1791 review onto main</b> (<code class="inline">a36da4e0cb</code>) and pushed. Per the brief: review is an audit artifact, NOT a code PR — fast-forward only.</span></li>
+  <li class="info"><span class="ts">~10:48Z</span><span class="what"><b>Filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1826">#1826</a> for the perf flake</b> that admin-bypassed PR #1813 and was now blocking PR #1824 and PR #1827. Three options proposed (relax / mock / p95). Recommendation: relax + p95.</span></li>
+  <li class="ok"><span class="ts">~10:48Z</span><span class="what"><b><code class="inline">claude-1824-pr-review</code> dispatched</b> (Opus 4.7 xhigh, mode danger). Brief built on Gemini's review with extra angles (schema invariants, marker set, path-traversal verification, cache headers).</span></li>
+  <li class="ok"><span class="ts">~10:50Z</span><span class="what"><b>PR #1827 pytest passed.</b> Both runs green. Squash-merged as <code class="inline">af17ece46a</code>. Branch deleted from origin; local cleanup deferred to after-merge worktree removal.</span></li>
+  <li class="ok"><span class="ts">~10:51Z</span><span class="what"><b><code class="inline">codex-1826-perf-flake-fix</code> dispatched.</b> Brief: relax network-bound budgets to 1.5 s, keep <code class="inline">/api/health</code> at 0.1 s, p95-of-3 statistical fixture, regression for un-budgeted endpoints.</span><span class="detail">All three required outputs were tool-evidenced (100/100 local pass loop, budget source quote, p95 fixture pytest output).</span></li>
+  <li class="ok"><span class="ts">~10:54Z</span><span class="what"><b><code class="inline">claude-1824-pr-review</code> done</b> in 532 s. Cherry-picked <code class="inline">c552d8514c</code>. Audit at <code class="inline">audit/claude-review-1824-pr-ui-revamp-2026-05-09/REVIEW.md</code>, 403 lines. Verdict <b>APPROVE-WITH-NITS</b> — 5 follow-up findings, none merge-blocking.</span></li>
+  <li class="ok"><span class="ts">~10:58Z</span><span class="what"><b><code class="inline">codex-1815</code> done</b> in 416 s → PR #1830. <code class="inline">.codex/</code> sync chain landed with <code class="inline">ORPHAN_PATHS_CODEX</code> + idempotency test extended.</span></li>
+  <li class="ok"><span class="ts">~11:05Z</span><span class="what"><b><code class="inline">codex-1826-perf-flake-fix</code> done</b> in 831 s → PR #1831. Body shows the 100/100 local pass loop run as evidence — exactly what the brief asked for.</span></li>
+  <li class="ok"><span class="ts">~11:08Z</span><span class="what"><b>PR #1831 pytest both runs green</b> (the perf fix passes its own intent). Squash-merged as <code class="inline">def7788cd5</code>. The keystone — unblocks #1824/#1829/#1830.</span></li>
+  <li class="info"><span class="ts">~11:09Z</span><span class="what"><b>Cascade trigger: <code class="inline">gh pr update-branch</code> on the 3 blocked PRs.</b> #1829 + #1830 updated cleanly; #1824 had a conflict in <code class="inline">tests/test_playground_api_stability.py</code> because Codex Desktop modernised it for new endpoints while #1831 totally restructured it.</span></li>
+  <li class="warn"><span class="ts">~11:10Z</span><span class="what"><b>Manual rebase of #1824</b> in its worktree. Took main's perf-fix structure (<code class="inline">--ours</code>) — Codex Desktop's new endpoints are thoroughly covered by their own <code class="inline">test_docs_router.py</code>/<code class="inline">test_discussions_router.py</code>. Stashed phantom edits before rebase, kept stash for #1832 triage. Force-pushed as <code class="inline">9a215aa53d</code>.</span></li>
+  <li class="ok"><span class="ts">~11:14Z</span><span class="what"><b>PR #1830 first to clear cascade</b> (no extra fixes needed) — squash-merged as <code class="inline">a92d78cc70</code>.</span></li>
+  <li class="fail"><span class="ts">~11:15Z</span><span class="what"><b>PR #1829 pytest failed</b> on <code class="inline">test_bridge_inbox_cli.py::test_discuss_fails_and_warns_when_agent_writes_worktree</b>. Codex's PR changed the violation banner from "DISCUSSION READ-ONLY VIOLATION" to "READ-ONLY DISCUSSION VIOLATION" (added <code class="inline">⚠️</code>) but missed updating the existing pre-PR test.</span></li>
+  <li class="ok"><span class="ts">~11:16Z</span><span class="what"><b>Inline fix per #M0 row 1.</b> 2-line edit (assertions match new wording). Pre-commit clean. Pulled-rebase + pushed as <code class="inline">42385324f1</code>.</span><span class="detail">"Inline ≤5 LOC fixing CI failure I just caused" — qualified, since I caused the failure by dispatching #1821 with prompt that allowed wording change.</span></li>
+  <li class="fail"><span class="ts">~11:18Z</span><span class="what"><b>PR #1824 pytest also failed</b> on <code class="inline">test_playgrounds.py::test_fetch_calls_in_html</code>. <code class="inline">EXPECTED_ENDPOINTS</code> allowlist missed <code class="inline">/api/artifacts/html</code> (added by Codex Desktop's <code class="inline">artifacts.html</code>).</span></li>
+  <li class="ok"><span class="ts">~11:19Z</span><span class="what"><b>Inline fix per #M0 row 1.</b> 1-line addition to the allowlist. Verified locally → pushed <code class="inline">f83a6af803</code>.</span></li>
+  <li class="ok"><span class="ts">~11:25Z</span><span class="what"><b>PR #1829 + PR #1824 both clear CI re-run.</b> Pytest 2/2 pass on both. <b>Both squash-merged</b> — #1829 as <code class="inline">132e5dad99</code>, #1824 as <code class="inline">13a97c0ca7</code>.</span></li>
+  <li class="ok"><span class="ts">~11:30Z</span><span class="what"><b>Worktrees pruned.</b> 5 worktrees → 1 (just the main checkout). Main pulls clean.</span></li>
+</ol>
+</div>
+
+<h2>Inline orchestrator fixes (post-cascade) <span class="sub">two ≤5-LOC repairs per #M0 row 1</span></h2>
+
+<div class="callout">
+  <p>Both PRs that I dispatched failed CI on minor inconsistencies the dispatched agent missed. <b>Inline ≤5-LOC fix is the canonical pattern</b> per #M0 row 1 ("Inline code edit ≤5 LOC, only when fixing a CI failure I just caused") — qualified because the dispatch is what produced the failure.</p>
+</div>
+
+<table class="threads">
+  <thead>
+    <tr>
+      <th style="width: 18%;">PR</th>
+      <th style="width: 36%;">Failure</th>
+      <th style="width: 36%;">Inline fix</th>
+      <th>Lesson</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>#1829</b> read-only enforcement</td>
+      <td><code class="inline">test_bridge_inbox_cli.py::test_discuss_fails_and_warns_when_agent_writes_worktree</code> asserted on old "DISCUSSION READ-ONLY VIOLATION" wording; PR's banner is now "⚠️ READ-ONLY DISCUSSION VIOLATION".</td>
+      <td>2 lines: replace assertion strings.</td>
+      <td>Codex's brief should have said "if you change a user-visible string, grep for ALL usages of the old string before committing." Now noted in MEMORY drift triage candidate.</td>
+    </tr>
+    <tr>
+      <td><b>#1824</b> UI revamp</td>
+      <td><code class="inline">test_playgrounds.py::test_fetch_calls_in_html</code> caught new <code class="inline">/api/artifacts/html</code> endpoint not in <code class="inline">EXPECTED_ENDPOINTS</code> allowlist.</td>
+      <td>1 line: add <code class="inline">/api/artifacts/html</code> to set literal.</td>
+      <td>Codex Desktop's brief said "tests pass" — they do, on the new tests. The pre-existing playground-coverage test wasn't in their reading list. Brief template should require "run the FULL pytest, not just new tests."</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>What didn't go wrong <span class="sub">deliberate cleanliness</span></h2>
+
+<div class="callout ok">
+  <p><b>Zero admin-bypasses.</b> The morning's #M-0.5 autopsy lesson held even though the perf flake hit FIVE PRs (#1813, #1824, #1827, #1829, #1830, #1831 itself). Each blocked PR waited for #1831 to land first; then cascade-updated; then merged through clean CI.</p>
+  <p><b>The perf-flake keystone.</b> Filing <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1826">#1826</a> + dispatching the fix immediately broke the cycle. By the time the user is back, the test passes 100/100 locally and 2/2 in CI. The admin-bypass exemption from PR #1813 is closed for good.</p>
+  <p><b>Adversarial reviews didn't rubber-stamp.</b> Both Claude reviews (Opus 4.7 xhigh) found load-bearing issues that the gemini-code-assist drive-bys missed: marker-set vs DB drift on #1791, schema dependency mis-claim on #1791, multi-instance column collapse on #1824, marker-semantics divergence between dashboard and bridge. Per project rule #7 ("don't rubber-stamp"), reviews push back hard.</p>
+  <p><b>Tool-grounded claims throughout.</b> Every PR body is #M-4 compliant — quoted CLI output, file/line citations, no opining from priors. The two cascade test fixes also documented their evidence (test name, assertion text, fix line count).</p>
+  <p><b>Phantom edits triaged, not silently committed.</b> PR #1824's worktree had ~8 modified files from an unknown agent. Stashed (named for triage), filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1832">#1832</a>, did NOT auto-attribute to my session. Provenance discipline held.</p>
+</div>
+
+<h2>What's still on you <span class="sub">priority order for next session</span></h2>
+
+<table class="threads">
+  <thead><tr><th>Priority</th><th>Task</th><th>Why this order</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><b>P0</b></td>
+      <td>Fire user-only bakeoff verification of <code class="inline">codex-tools</code> AND <code class="inline">gemini-tools</code> writers</td>
+      <td>Now <b>4 shifts unverified</b>. Both writer fixes shipped weeks ago but the bakeoff command is the only signal that confirms them. ~5 min each, parallel-capable. Command in last night's handoff §"Bakeoff verification."</td>
+    </tr>
+    <tr>
+      <td><b>P1</b></td>
+      <td>Decide on PR #1791 (Decision Graph ADR)</td>
+      <td>Claude review is REVISE with concrete revisions estimated at 30–50 LOC. Two paths: (a) dispatch Codex to apply the 5 revisions (IND-1 + IND-2 + G2 + G3 + G4) → re-review → ACCEPTED; (b) close as superseded by Multi-UI ADR. Path (a) is the orthodox one. Review file: <code class="inline">audit/claude-review-1791-decision-graph-adr-2026-05-09/REVIEW.md</code>.</td>
+    </tr>
+    <tr>
+      <td><b>P2</b></td>
+      <td>Decide on <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1825">#1825</a> MEMORY.md drift — pick A/B/C</td>
+      <td>3 missing rules in the deploy source: <code class="inline">#M-3</code>, <code class="inline">#M-1</code>, <code class="inline">#M-0.5</code>. Every dispatched agent currently boots from stale rules. Recommend B (explicit sync command) — keeps Claude Code's auto-memory live, captures checkpoints to repo on demand.</td>
+    </tr>
+    <tr>
+      <td><b>P3</b></td>
+      <td>Triage <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1832">#1832</a> phantom edits stash</td>
+      <td>Real improvements (<code class="inline">Promise.allSettled</code>, 4 new test cases, defensive UI nav) plus one suspicious <code class="inline">/files</code> alias re-add. Recommend selective pop: drop the <code class="inline">/files</code> change, commit the rest as a follow-up to #1824.</td>
+    </tr>
+    <tr>
+      <td><b>P4</b></td>
+      <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1828">#1828</a> CSS specificity-wars cleanup (post-#1824)</td>
+      <td>Strip legacy dark-theme blocks from <code class="inline">orient.html</code>/<code class="inline">channels.html</code>/<code class="inline">comms.html</code>, retire 33 <code class="inline">!important</code> declarations in <code class="inline">monitor.css</code>. Mechanical Codex CLI dispatch.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Active branches / cleanup <span class="sub">all clean</span></h2>
+
+<table class="threads">
+  <thead><tr><th>Worktree</th><th>State</th></tr></thead>
+  <tbody>
+    <tr><td colspan="2" style="font-size: 13px; color: var(--ink-faint); font-family: var(--sans);"><b>Just main.</b> All 5 dispatch worktrees + the codex-desktop worktree pruned post-merge. <code class="inline">git worktree list</code> shows only <code class="inline">/Users/krisztiankoos/projects/learn-ukrainian 13a97c0ca7 [main]</code>.</td></tr>
+  </tbody>
+</table>
+
+<h2>Pinned references <span class="sub">for the next agent</span></h2>
+
+<ul>
+  <li><b>This handoff:</b> <code class="inline">docs/session-state/2026-05-09-lunch-orchestration-cascade-and-clean-merge.html</code></li>
+  <li><b>Predecessor:</b> <a href="2026-05-09-morning-artifacts-route-and-deterministic-rule.html"><code class="inline">2026-05-09-morning-artifacts-route-and-deterministic-rule.html</code></a></li>
+  <li><b>Audit artifacts merged:</b>
+    <ul>
+      <li><code class="inline">audit/claude-review-1791-decision-graph-adr-2026-05-09/REVIEW.md</code> (347 lines, REVISE verdict)</li>
+      <li><code class="inline">audit/claude-review-1824-pr-ui-revamp-2026-05-09/REVIEW.md</code> (403 lines, APPROVE-WITH-NITS verdict)</li>
+    </ul>
+  </li>
+  <li><b>Briefs landed:</b> <code class="inline">briefs/2026-05-09/codex-1821-ab-discuss-read-only.md</code>, <code class="inline">codex-1823-migrate-html-idempotency.md</code>, <code class="inline">codex-1815-deploy-codex-sync.md</code>, <code class="inline">codex-1826-perf-flake-fix.md</code>, <code class="inline">claude-1791-decision-graph-adr-review.md</code>, <code class="inline">claude-1824-pr-review.md</code></li>
+  <li><b>Open issues (non-PR):</b> <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1825">#1825</a> (MEMORY drift) · <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1828">#1828</a> (CSS debt) · <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1832">#1832</a> (phantom edits) · <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1791">#1791</a> (Decision Graph ADR REVISE)</li>
+  <li><b>Issues closed by merges:</b> #1815 (#1830), #1820/#1822 (#1824), #1821 (#1829), #1823 (#1827), #1826 (#1831)</li>
+  <li><b>Origin tip:</b> <code class="inline">13a97c0ca7</code> · 9 commits ahead of morning's <code class="inline">f6943f0276</code></li>
+</ul>
+
+<footer class="report-footer">
+  <div class="left">Generated <b>2026-05-09 ~12:30 CET</b> · learn-ukrainian orchestrator (claude) · fourth HTML-first handoff under <code>#M-2</code></div>
+  <div class="right">Lunch shift · 5 PRs merged · 9 commits clean · 0 admin-bypasses · 2 inline cascade fixes</div>
+</footer>
+
+</div>
+</body>
+</html>
