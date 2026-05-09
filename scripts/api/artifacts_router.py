@@ -34,6 +34,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
+from .docs_router import collect_html_artifacts
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
     find_content_file,
@@ -110,6 +111,23 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 # ---------------------------------------------------------------------
 # Per-module snapshot
 # ---------------------------------------------------------------------
+
+
+@router.get("/html")
+async def html_artifacts(
+    class_: str | None = Query(None, alias="class"),
+    date_from: str | None = Query(None),
+    status: str | None = Query(None),
+    author: str | None = Query(None),
+):
+    """List authored HTML artifacts with parsed report metadata."""
+    return await asyncio.to_thread(
+        collect_html_artifacts,
+        class_filter=class_,
+        date_from=date_from,
+        status=status,
+        author=author,
+    )
 
 
 def _level_cfg(track: str) -> dict | None:
