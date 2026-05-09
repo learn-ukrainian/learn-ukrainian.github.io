@@ -329,10 +329,14 @@ def _run(args: argparse.Namespace) -> int:
             plan_content=plan_content,
             knowledge_packet=knowledge_packet,
         )
+        # gemini-tools must load .gemini/settings.json from repo root;
+        # module_dir cwd would leave its MCP catalog empty. See
+        # audit/gemini-tools-review-2026-05-09/REPORT.html E5/E6.
+        writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
         writer_output = linear_pipeline.invoke_writer(
             prompt,
             writer,
-            cwd=module_dir,
+            cwd=writer_cwd,
             tool_trace_path=module_dir / "writer_tool_calls.json",
             stdout_silence_timeout=args.writer_timeout,
         )
