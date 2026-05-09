@@ -331,11 +331,19 @@ class GeminiAdapter:
         session_trace = ""
         if plan is not None:
             session_trace = self._read_latest_session_trace(plan)
+        # Parse stdout/stderr (JSONL events) and session_trace (may be a
+        # multi-line single JSON document OR JSONL) separately, then merge.
+        # Concatenating breaks single-document parses for the legacy session
+        # format, which the existing fixtures still exercise.
         trace_events = parse_json_events(
-            "\n".join(part for part in (stdout, stderr, session_trace) if part),
+            "\n".join(part for part in (stdout, stderr) if part),
             source="gemini",
             logger=_logger,
         )
+        if session_trace:
+            trace_events.extend(
+                parse_json_events(session_trace, source="gemini-session", logger=_logger)
+            )
         tool_calls = normalize_tool_calls(trace_events)
 
         stdout_response = stdout.strip()
