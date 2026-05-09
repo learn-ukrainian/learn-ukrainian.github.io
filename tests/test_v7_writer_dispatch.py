@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 
@@ -100,6 +101,64 @@ def test_v7_build_accepts_codex_alias() -> None:
     assert "codex-tools" in v7_build.WRITER_CHOICES
     assert "codex" in v7_build.WRITER_CHOICES
     assert v7_build._normalize_writer("codex") == "codex-tools"
+
+
+@pytest.mark.parametrize(
+    ("writer", "expected_cwd"),
+    [
+        ("gemini-tools", v7_build.PROJECT_ROOT),
+        ("claude-tools", None),
+        ("codex-tools", None),
+    ],
+)
+def test_v7_build_invokes_gemini_tools_from_project_root(
+    tmp_path: Path,
+    writer: str,
+    expected_cwd: Path | None,
+) -> None:
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text("level: a1\nslug: my-morning\nsequence: 1\n", encoding="utf-8")
+    module_dir = tmp_path / "module"
+    plan = {
+        "level": "a1",
+        "slug": "my-morning",
+        "sequence": 1,
+        "content_outline": [],
+    }
+
+    with (
+        patch.object(v7_build.linear_pipeline, "plan_path_for", return_value=plan_path),
+        patch.object(v7_build.linear_pipeline, "load_plan", return_value=plan),
+        patch.object(v7_build.linear_pipeline, "validate_plan"),
+        patch.object(
+            v7_build.linear_pipeline,
+            "build_knowledge_packet",
+            return_value="knowledge packet",
+        ),
+        patch.object(v7_build, "_writer_prompt", return_value="writer prompt"),
+        patch.object(
+            v7_build.linear_pipeline,
+            "invoke_writer",
+            side_effect=linear_pipeline.LinearPipelineError("stop after writer invoke"),
+        ) as invoke_writer,
+    ):
+        exit_code = v7_build.main(
+            [
+                "a1",
+                "my-morning",
+                "--writer",
+                writer,
+                "--out",
+                str(module_dir),
+            ]
+        )
+
+    assert exit_code == 1
+    assert invoke_writer.call_count == 1
+    assert invoke_writer.call_args.kwargs["cwd"] == (expected_cwd or module_dir)
+    assert invoke_writer.call_args.kwargs["tool_trace_path"] == (
+        module_dir / "writer_tool_calls.json"
+    )
 
 
 def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
