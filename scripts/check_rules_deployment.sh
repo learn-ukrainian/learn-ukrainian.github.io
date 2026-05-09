@@ -18,6 +18,9 @@ check_pair() {
     local orphan
     for orphan in "$@"; do
         diff_args+=(-x "${orphan%/}")
+        if [[ "$orphan" == */* ]]; then
+            diff_args+=(-x "${orphan##*/}")
+        fi
     done
 
     if [[ ! -d "$src" ]]; then
@@ -50,6 +53,7 @@ drift=0
 # rsync calls and ORPHAN_PATHS_* declarations in scripts/deploy_prompts.sh.
 check_pair "claude_extensions" ".claude" "scheduled_tasks.lock" "worktrees" || drift=1
 check_pair "claude_extensions" ".agent" "wake" "cache" || drift=1
+check_pair "claude_extensions" ".codex" "agents/curriculum-maintainer.toml" "config.toml" "hooks.json" || drift=1
 check_pair "claude_extensions/skills" ".agents/skills" || drift=1
 check_pair "gemini_extensions" ".gemini" "docs/" || drift=1
 
