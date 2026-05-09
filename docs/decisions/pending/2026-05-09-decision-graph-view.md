@@ -76,7 +76,7 @@ Codex's data shows average reply bodies are 2367 chars and max out at 8349 chars
 ## Q3. Marker parsing semantics
 
 ### Proposal
-*   **Canonical Markers:** `[AGREE]` and `[DISAGREE]`. The broker prompt requires agents to end round replies with one of these markers, and convergence uses strict `[AGREE]` tail matching in `scripts/ai_agent_bridge/_channels_cli.py:1413`.
+*   **Canonical Markers:** `[AGREE]` and `[DISAGREE]`. The broker prompt requires agents to end round replies with one of these markers, and convergence uses strict `[AGREE]` tail matching in `scripts/ai_agent_bridge/_channels_cli.py::_handle_discuss` (the convergence check is `text.strip().endswith("[AGREE]")` -- grep that literal to find current line).
 *   **Future/ADR-specific Markers:** `[OPTION]`, `[OBJECT]`, and `[DEFER]` may be displayed when present, but they are not canonical broker markers today. Current live DB evidence shows `[OPTION]`, `[OBJECT]`, and `[DEFER]` are rare compared with `[DISAGREE]`; `[OBJECT]` is documented in the Multi-UI ADR as a user pushback marker.
 *   **Case Sensitivity:** Case-insensitive match (to accommodate human posts or agent casing drift).
 *   **Regex Matching:** Use a concrete regex boundary for display extraction: `\[(AGREE|DISAGREE|OPTION|OBJECT(?:[^\]]*)?|DEFER)(?:\b[^\]]*)?\]` (case-insensitive). Do not match `[AGREED]`; live DB evidence shows zero occurrences and the broker checks `[AGREE]` literally.
