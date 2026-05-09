@@ -3,6 +3,17 @@
 > **BUDGET: 150 lines (hard limit 200).** Trim BEFORE adding anything.
 > **WHAT BELONGS:** Hard-won behavioral lessons only. Reference content -> topic files in `memory/`.
 
+## #M-2 - HTML/MD BY FLOW DIRECTION (REFINED 2026-05-09 morning)
+**Format depends on the flow, not the file:**
+
+| Flow | Format | Examples |
+|---|---|---|
+| **ai → human** | HTML | session handoffs, audit reports, dashboards, bakeoff comparisons, bug autopsies |
+| **human → ai** | MD | dispatch briefs, prompts, instructions, README, project rules |
+| **ai → ai** | MD | MEMORY, rules, channel context files, agent-to-agent briefs, deliberation transcripts |
+
+User's refinement 2026-05-09: "html is for ai → human, human→ai ai→ai should stay md". Don't force HTML for everything new. Codex's r1 in thread `33d8893f` aligned: machine-readable / agent-loaded source stays MD; HTML is companion for human reading. Plugins: `frontend-design`, `playground`. No `/html` skill.
+
 ## #M-4 - DETERMINISTIC OVER HALLUCINATION (TOP PRIORITY, 2026-05-09)
 **Every verifiable claim must be backed by a tool call.** The pre-trained guess feels right; it's wrong often enough to break Ukrainian curriculum, code, and orchestration. Skipping the tool = hallucinating with confidence. We have VESUM (6.7M forms), SUM-11 (127K), Hrinchenko (67K), ESUM, Monitor API, full code corpus, deterministic scripts. Strict scope: word validity / stress / Russianisms / file contents / SHAs / build status / module gates / word counts / test pass-fail → run the tool. Exempt: creative output generation (narrative, dialogue, design proposals) — but every claim about an artifact inside that output is still tool-backed. Decision test: if you introduce a number, name, path, SHA, or Ukrainian word that wasn't in your very recent tool output — STOP, run a tool. Full rule + anti-patterns + per-agent enforcement: **`docs/best-practices/deterministic-over-hallucination.md`**. Applies to: Claude · Codex · Gemini · all dispatched sub-agents · all sessions.
 
