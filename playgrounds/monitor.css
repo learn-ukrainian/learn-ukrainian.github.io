@@ -83,6 +83,28 @@ a { color: var(--accent); }
   color: var(--accent) !important;
 }
 
+.ops-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: -10px 24px 18px;
+  font-size: 12px;
+}
+
+.ops-nav a {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text2);
+  padding: 5px 8px;
+  text-decoration: none;
+}
+
+.ops-nav a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
 .home-link {
   color: var(--accent) !important;
 }

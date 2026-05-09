@@ -40,27 +40,27 @@ def _latest_agent_states(messages: list[sqlite3.Row], last_round: int) -> dict[s
         if round_index < last_round:
             states[agent] = "pending"
             continue
-        states[agent] = "agreed" if body.upper().endswith("[AGREE]") else "done"
+        states[agent] = "agreed" if body.endswith("[AGREE]") else "done"
     return states
 
 
 def _discussion_status(messages: list[sqlite3.Row], last_message_at: datetime, last_round: int) -> str:
-    bodies = "\n".join(str(row["body"] or "") for row in messages).upper()
-    if "[TIMEOUT]" in bodies:
+    if any(str(row["body"] or "").strip().endswith("[TIMEOUT]") for row in messages):
         return "timed_out"
     if datetime.now(UTC) - last_message_at > timedelta(minutes=30):
         return "timed_out"
     states = _latest_agent_states(messages, last_round)
-    if states and all(state == "agreed" for state in states.values()):
+    if last_round > 1 and states and all(state == "agreed" for state in states.values()):
         return "converged"
     return "running"
 
 
-def collect_active_discussions(limit: int = 25) -> dict[str, Any]:
+def collect_active_discussions(limit: int = 25, lookback_days: int = 7) -> dict[str, Any]:
     """Return recent ab-discuss-style threads grouped from channel messages."""
     if not MESSAGE_DB.exists():
         return {"discussions": [], "count": 0, "error": "Broker DB not found"}
 
+    cutoff = (datetime.now(UTC) - timedelta(days=lookback_days)).isoformat()
     conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
@@ -69,8 +69,10 @@ def collect_active_discussions(limit: int = 25) -> dict[str, Any]:
             SELECT message_id, channel, thread_id, round_index, from_agent, body, created_at
             FROM channel_messages
             WHERE thread_id IS NOT NULL AND thread_id != ''
+              AND created_at >= ?
             ORDER BY created_at ASC
-            """
+            """,
+            (cutoff,),
         ).fetchall()
     finally:
         conn.close()
@@ -109,9 +111,12 @@ def collect_active_discussions(limit: int = 25) -> dict[str, Any]:
 
 
 @router.get("/active")
-async def active_discussions(limit: int = Query(25, ge=1, le=100)):
+async def active_discussions(
+    limit: int = Query(25, ge=1, le=100),
+    lookback_days: int = Query(7, ge=1, le=30),
+):
     """Recent discussion threads with running/converged/timed_out status."""
     try:
-        return collect_active_discussions(limit=limit)
+        return collect_active_discussions(limit=limit, lookback_days=lookback_days)
     except sqlite3.Error as exc:
         return JSONResponse(status_code=500, content={"error": "broker_query_failed", "detail": str(exc)})

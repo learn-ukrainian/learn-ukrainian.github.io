@@ -17,8 +17,36 @@ def test_orient_page_renders_active_discussions_widget():
     html = (ROOT / "playgrounds" / "orient.html").read_text(encoding="utf-8")
     assert "Active Discussions" in html
     assert "/api/discussions/active" in html
+    assert "Promise.allSettled" in html
+    assert "Discussion lookup unavailable" in html
     assert "renderDiscussions" in html
     assert "channels.html?channel=" in html
+
+
+def test_runtime_page_keeps_primary_monitor_nav():
+    html = (ROOT / "playgrounds" / "runtime.html").read_text(encoding="utf-8")
+    assert '<link rel="stylesheet" href="/monitor.css">' in html
+    assert '<a class="active" href="/runtime.html">Runtime</a>' in html
+    for href in [
+        "/orient.html",
+        "/channels.html",
+        "/comms.html",
+        "/artifacts/",
+        "/runtime.html",
+    ]:
+        assert f'href="{href}"' in html
+
+
+def test_comms_page_keeps_secondary_dashboard_links():
+    html = (ROOT / "playgrounds" / "comms.html").read_text(encoding="utf-8")
+    for href in [
+        "/audit-dashboard.html",
+        "/progress.html",
+        "/curriculum-dashboard.html",
+        "/quality.html",
+        "/track-health.html",
+    ]:
+        assert f'href="{href}"' in html
 
 
 def test_artifacts_page_uses_metadata_endpoint_and_filters():
