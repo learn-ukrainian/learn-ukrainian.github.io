@@ -17,6 +17,9 @@ User's refinement 2026-05-09: "html is for ai → human, human→ai ai→ai shou
 ## #M-4 - DETERMINISTIC OVER HALLUCINATION (TOP PRIORITY, 2026-05-09)
 **Every verifiable claim must be backed by a tool call.** The pre-trained guess feels right; it's wrong often enough to break Ukrainian curriculum, code, and orchestration. Skipping the tool = hallucinating with confidence. We have VESUM (6.7M forms), SUM-11 (127K), Hrinchenko (67K), ESUM, Monitor API, full code corpus, deterministic scripts. Strict scope: word validity / stress / Russianisms / file contents / SHAs / build status / module gates / word counts / test pass-fail → run the tool. Exempt: creative output generation (narrative, dialogue, design proposals) — but every claim about an artifact inside that output is still tool-backed. Decision test: if you introduce a number, name, path, SHA, or Ukrainian word that wasn't in your very recent tool output — STOP, run a tool. Full rule + anti-patterns + per-agent enforcement: **`docs/best-practices/deterministic-over-hallucination.md`**. Applies to: Claude · Codex · Gemini · all dispatched sub-agents · all sessions.
 
+## #M-0.5 - AB DISCUSS IS ANALYSIS ONLY (2026-05-09)
+`ab discuss` is analysis-only. Execution paths: `delegate.py dispatch` only. Filesystem writes during discussion = HARD STOP, dispatch the work as a separate brief.
+
 ## #M0 - PER-TASK MODEL ASSIGNMENT (HARD RULE, 2026-05-06)
 Don't pattern-match on principles ("orchestrate when possible") - match the EXACT command. The dispatch determines the model.
 

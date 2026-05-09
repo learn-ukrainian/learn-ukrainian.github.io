@@ -47,7 +47,11 @@ the thread_id and get `round_index = parent.round_index + 1`.
 participants in read-only mode, passes the `AB_DISCUSS_READONLY=1`
 contract through the adapter layer, and fails the round if the git
 working tree changes while participants are running. A failed round
-posts a loud system warning into the thread before returning non-zero.
+posts a loud system warning into the thread before returning non-zero,
+including `READ_ONLY_VIOLATION: <agent>` for the agent family that must
+be treated as the write source. Filesystem writes during discussion are
+a hard stop; dispatch the work as a separate `delegate.py dispatch`
+brief.
 
 `ab post` creates channel messages and delivery rows. Its default
 delivery mode is read-only, and the inbox worker applies the same
@@ -66,6 +70,9 @@ Current adapter policy for discussion calls:
   tools. They do not use Claude plan mode because discussion replies are
   comments, not implementation plans; the restricted tool list plus the
   bridge's git mutation guard enforce the read-only contract.
+- Post-round guard: if the working tree differs after a round, the
+  bridge posts a `⚠️ READ-ONLY DISCUSSION VIOLATION` system message and
+  returns non-zero without accepting that round's agent replies.
 
 ## CLI quick reference
 

@@ -111,23 +111,34 @@ def _git_output(args: list[str]) -> str:
     return result.stdout
 
 
-def _discussion_worktree_snapshot() -> tuple[str, str, str]:
+def _discussion_worktree_snapshot() -> tuple[str, str, str, str]:
     """Capture enough git state to detect mutations during a discuss round."""
     return (
         _git_output(["status", "--short"]),
+        _git_output(["diff", "--stat", "HEAD"]),
         _git_output(["diff", "--no-ext-diff"]),
         _git_output(["diff", "--cached", "--no-ext-diff"]),
     )
 
 
-def _discussion_worktree_changed(before: tuple[str, str, str]) -> tuple[bool, str]:
+def _discussion_worktree_changed(before: tuple[str, str, str, str]) -> tuple[bool, str]:
     after = _discussion_worktree_snapshot()
     if after == before:
         return False, ""
     status = after[0].strip()
     if not status:
         status = "(git diff changed but status output is empty)"
+    diff_stat = after[1].strip()
+    if diff_stat:
+        status = f"{status}\n\nGit diff stat against HEAD:\n{diff_stat}"
     return True, status
+
+
+def _discussion_violation_agents(with_agents: list[str]) -> list[str]:
+    """Return the agents to name when the post-round mutation guard fires."""
+    if "gemini" in with_agents:
+        return ["gemini"]
+    return sorted(with_agents)
 
 
 def _post_preflight_warning(*, body: str, mode: str) -> str | None:
@@ -416,6 +427,10 @@ def register_channel_commands(subparsers: Any) -> None:
     discuss_parser = subparsers.add_parser(
         "discuss",
         help="Multi-agent discussion with round limit (B.4)",
+        description=(
+            "Multi-agent discussion with round limit (B.4). "
+            "Discussion is analysis-only. Use delegate.py dispatch for execution."
+        ),
     )
     discuss_parser.add_argument("channel", help="Channel name")
     discuss_parser.add_argument("body", help="Discussion topic (use '-' for stdin)")
@@ -1352,8 +1367,13 @@ def _handle_discuss(args) -> int:
 
         changed, status_text = _discussion_worktree_changed(pre_round_worktree)
         if changed:
+            violation_agents = _discussion_violation_agents(with_agents)
+            violation_marker = (
+                "READ_ONLY_VIOLATION: " + ", ".join(violation_agents)
+            )
             warning = (
-                "🚨 DISCUSSION READ-ONLY VIOLATION\n\n"
+                "⚠️ READ-ONLY DISCUSSION VIOLATION\n\n"
+                f"{violation_marker}\n\n"
                 f"`ab discuss` round {round_idx} changed the git working tree. "
                 "Discussion rounds are analysis-only; filesystem writes must go "
                 "through an explicit execution path such as `delegate.py dispatch`.\n\n"
@@ -1381,6 +1401,12 @@ def _handle_discuss(args) -> int:
                     file=sys.stderr,
                 )
             print(warning, file=sys.stderr)
+            print()
+            print(
+                f"📊 discuss failed after {round_idx} round(s). "
+                f"{violation_marker}. "
+                f"Full thread: ab channel tail {args.channel} --thread {root_id}"
+            )
             return 1
 
         # ── post each response as a reply to root ─────────────────
