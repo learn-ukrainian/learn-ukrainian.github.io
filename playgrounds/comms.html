@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Comms - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -179,24 +180,23 @@ a.gh-issue:hover { text-decoration: underline; }
 .module-link .ml-slug { font-weight: 600; }
 .module-link .ml-phase { font-size: 10px; color: var(--text3); }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
 <div class="top-bar">
   <div class="top-left">
-    <a class="home-link" href="/index.html">&larr; Home</a>
     <h1>Agent Comms</h1>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
     <span class="refresh-info" id="refresh-info">Loading...</span>
-    <div style="display:flex;gap:12px;font-size:13px;">
-      <a href="/channels.html" style="color:var(--green);font-weight:600;">Channels ↗</a>
-      <a href="/audit-dashboard.html">Audit</a>
-      <a href="/progress.html">Progress</a>
-      <a href="/curriculum-dashboard.html">Curriculum</a>
-      <a href="/quality.html">Quality</a>
-      <a href="/track-health.html">Health</a>
-    </div>
+    <nav class="monitor-nav" aria-label="Monitor sections">
+      <a href="/orient.html">Orient</a>
+      <a href="/channels.html">Channels</a>
+      <a class="active" href="/comms.html">Comms</a>
+      <a href="/artifacts/">Artifacts</a>
+      <a href="/runtime.html">Runtime</a>
+    </nav>
   </div>
 </div>
 

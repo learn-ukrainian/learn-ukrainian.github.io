@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Orient - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -82,6 +83,7 @@ tr:last-child td { border-bottom: none; }
   .issue-age { text-align: left; }
 }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 <div class="topbar">
@@ -95,7 +97,13 @@ tr:last-child td { border-bottom: none; }
     <div id="refresh-status">Auto-refresh every 30s</div>
     <div id="generated-at">Waiting for data...</div>
   </div>
-  <a href="/">Home</a>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a class="active" href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
 
 <div class="container">
@@ -124,6 +132,11 @@ tr:last-child td { border-bottom: none; }
   <section class="section yellow">
     <div class="section-header"><h2>&#129309; Delegate</h2><div class="muted" id="delegate-muted"></div></div>
     <div id="delegate-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section purple">
+    <div class="section-header"><h2>&#128172; Active Discussions</h2><div class="muted" id="discussions-muted"></div></div>
+    <div id="discussions-content" class="empty">Loading...</div>
   </section>
 
   <section class="section green">
@@ -295,6 +308,37 @@ function renderDelegate(delegate) {
   `;
 }
 
+function discussionAge(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'unknown age';
+  const minutes = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  return `${hours}h ago`;
+}
+
+function renderDiscussions(data) {
+  const discussions = Array.isArray(data && data.discussions) ? data.discussions : [];
+  const running = discussions.filter(item => item.status === 'running');
+  document.getElementById('discussions-muted').textContent = `${running.length} running · ${discussions.length} recent`;
+  if (!discussions.length) {
+    document.getElementById('discussions-content').innerHTML = '<div class="empty">0 active discussions</div>';
+    return;
+  }
+  document.getElementById('discussions-content').innerHTML = `<table><thead><tr><th>Thread</th><th>Agents</th><th>Status</th><th>Last activity</th></tr></thead><tbody>${
+    discussions.map(item => {
+      const url = `/channels.html?channel=${encodeURIComponent(item.channel || '')}&thread=${encodeURIComponent(item.thread_id || '')}`;
+      const statusClass = item.status === 'running' ? 'warn' : item.status === 'converged' ? 'ok' : 'gray';
+      return `<tr onclick="location.href='${url}'" style="cursor:pointer">
+        <td><strong>#${escapeHtml(item.channel || '—')}</strong><div class="mono" style="color:var(--text3);font-size:12px">${escapeHtml(String(item.thread_id || '').slice(0, 12))}</div></td>
+        <td>${escapeHtml((item.agents || []).join(', ') || '—')}<div style="color:var(--text3);font-size:12px">round ${item.last_round || 0} · ${item.message_count || 0} messages</div></td>
+        <td><span class="pill ${statusClass}">${escapeHtml(item.status || 'unknown')}</span></td>
+        <td>${discussionAge(item.last_message_at)}</td>
+      </tr>`;
+    }).join('')
+  }</tbody></table>`;
+}
+
 function renderWiki(wiki) {
   const tracks = Object.entries((wiki && wiki.by_track) || {});
   document.getElementById('wiki-muted').textContent = `${tracks.length} tracks`;
@@ -357,7 +401,10 @@ function startRefresh() {
 
 async function loadOrient() {
   try {
-    const data = await fetchJson('/api/orient');
+    const [data, discussions] = await Promise.all([
+      fetchJson('/api/orient'),
+      fetchJson('/api/discussions/active')
+    ]);
     setPageBanner('');
     refreshHalted = false;
     renderGit(data.git || {});
@@ -365,6 +412,7 @@ async function loadOrient() {
     renderPipeline(data.pipeline || {});
     renderRuntime(data.runtime || {});
     renderDelegate(data.delegate || {});
+    renderDiscussions(discussions || {});
     renderWiki(data.wiki || {});
     renderHealth(data.health || {});
     renderSessionHints(Array.isArray(data.session_hints) ? data.session_hints : []);

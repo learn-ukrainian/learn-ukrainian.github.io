@@ -1,0 +1,238 @@
+:root {
+  --bg: #faf6ef;
+  --bg2: #f5efde;
+  --bg3: #ede6d0;
+  --border: #d4cdb8;
+  --text: #1a1a1a;
+  --text2: #4a4540;
+  --text3: #7a736a;
+  --green: #3d6b4a;
+  --blue: #2a5680;
+  --red: #9c2828;
+  --yellow: #a8842b;
+  --gray: #8a8377;
+  --purple: #6c4b7f;
+  --orange: #9c4e1f;
+  --cyan: #2f6f68;
+  --accent: #7a1c20;
+}
+
+body {
+  background:
+    linear-gradient(rgba(26, 26, 26, 0.025) 1px, transparent 1px),
+    var(--bg);
+  background-size: 100% 24px;
+  color: var(--text);
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+a { color: var(--accent); }
+
+.topbar,
+.top-bar {
+  background: rgba(245, 239, 222, 0.96) !important;
+  border-bottom: 1.5px solid var(--text) !important;
+  box-shadow: 0 1px 0 rgba(122, 28, 32, 0.08);
+}
+
+.topbar h1,
+.top-bar h1 {
+  color: var(--text);
+  letter-spacing: 0;
+}
+
+.topbar .sub,
+.topbar .meta,
+.top-bar .refresh-info,
+.top-bar a,
+.top-bar span,
+.top-left span,
+.channel-meta,
+.ch-desc,
+.ch-meta,
+.empty-state,
+.feed-title .count {
+  color: var(--text3) !important;
+}
+
+.monitor-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.monitor-nav a {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text2) !important;
+  padding: 5px 8px;
+  text-decoration: none;
+}
+
+.monitor-nav a:hover,
+.monitor-nav a.active {
+  background: var(--bg3);
+  border-color: var(--border);
+  color: var(--accent) !important;
+}
+
+.home-link {
+  color: var(--accent) !important;
+}
+
+.section,
+.mini-card,
+.kv,
+.track-card,
+.feed-item,
+.health-pill,
+.stat-box,
+.compose-panel,
+.msg-body,
+.channel-header,
+.post-form,
+.thread-msg,
+.detail-panel,
+.details,
+.detail-overlay.open + .detail-panel {
+  background: var(--bg2) !important;
+  border-color: var(--border) !important;
+}
+
+.section,
+.track-card,
+.feed-item,
+.mini-card,
+.kv,
+.health-pill,
+.stat-box,
+.compose-panel {
+  border-radius: 4px !important;
+}
+
+.sidebar,
+.main-panel,
+.messages-area,
+.thread-bar,
+.discussion-strip,
+.layout {
+  background: var(--bg) !important;
+  border-color: var(--border) !important;
+}
+
+.channel-item {
+  border-bottom-color: var(--border) !important;
+}
+
+.channel-item:hover,
+.channel-item.active,
+.tab:hover,
+.tab.active {
+  background: var(--bg2) !important;
+}
+
+.btn,
+.post-btn,
+.compose-btn {
+  border-radius: 4px !important;
+}
+
+.post-textarea,
+.compose-panel select,
+.compose-panel input,
+.compose-panel textarea,
+.parent-id-container input,
+.thread-bar select {
+  background: #fffaf0 !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+.pill,
+.badge,
+.track-badge,
+.msg-round {
+  border-radius: 999px !important;
+}
+
+.msg-body,
+.mono,
+code,
+pre,
+.thread-msg .tm-body {
+  color: var(--text2) !important;
+}
+
+th,
+td,
+.list li,
+.tabs,
+.feed-title,
+.msg-table th,
+.msg-table td {
+  border-color: var(--border) !important;
+}
+
+@media (max-width: 760px) {
+  body {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: auto !important;
+  }
+
+  .topbar,
+  .top-bar {
+    flex-wrap: wrap;
+  }
+
+  .monitor-nav {
+    width: 100%;
+  }
+
+  .layout {
+    flex-direction: column !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .sidebar {
+    width: 100% !important;
+    max-height: 220px;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    flex: 0 0 auto !important;
+  }
+
+  .main-panel {
+    min-height: 560px;
+    overflow: visible !important;
+  }
+
+  .messages-area {
+    overflow: visible !important;
+  }
+
+  .post-row,
+  .post-controls,
+  .post-recipients {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .context-preview,
+  .msg-body,
+  .thread-msg .tm-body,
+  table,
+  td,
+  th {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
