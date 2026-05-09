@@ -7,10 +7,10 @@
 
 <meta name="report-class" content="handoff" />
 <meta name="report-date" content="2026-05-09" />
-<meta name="report-status" content="warn" />
-<meta name="report-title" content="Evening: empirical Codex Desktop comms verdict + 5 PRs merged + 3 in-flight + memory reconciliation" />
-<meta name="report-kpi-summary" content="5 PRs merged · 3 in flight via watcher · 4 issues closed · 1 ADR addendum · 8 dispatches fired · MEMORY reconciled · 1 worktree-rule violation by Codex Desktop · 1 stash-drop incident self-recovered · 0 admin-bypasses" />
-<meta name="report-related-issues" content="1762,1779,1778,1782,1794,1799,1801,1804,1805,1806,1807,1809,1819,1822,1825,1828,1834,1838,1843" />
+<meta name="report-status" content="ok" />
+<meta name="report-title" content="Evening + late-evening: empirical Codex Desktop comms verdict + 8 PRs merged + memory reconciliation + orient HTML-blindness fix" />
+<meta name="report-kpi-summary" content="8 PRs merged · 5 issues closed · 1 ADR addendum · 8 dispatches fired · MEMORY reconciled · #1848 filed and shipped same session · api dev-reload enabled · 1 worktree-rule violation by Codex Desktop (recovered) · 1 stash-drop incident self-recovered · 0 admin-bypasses" />
+<meta name="report-related-issues" content="1762,1779,1778,1782,1794,1799,1801,1804,1805,1806,1807,1809,1819,1822,1825,1828,1834,1838,1843,1848" />
 <meta name="report-related-prs" content="1839,1840,1841,1842,1843,1844,1845,1846,1847" />
 <meta name="report-agents" content="claude,codex,codex-desktop,gemini" />
 <meta name="report-author" content="claude" />
@@ -97,15 +97,25 @@
     <div class="row"><b>Session</b> evening 2026-05-09</div>
     <div class="row"><b>Author</b> claude</div>
     <div class="row"><b>Predecessor</b> afternoon-codex-desktop-comms-mvp</div>
-    <div class="row"><b>Repo HEAD</b> <code class="inline">61afb8e6ca</code></div>
+    <div class="row"><b>Repo HEAD</b> <code class="inline">6d81e694b1</code></div>
   </div>
 </header>
 
 <div class="kpis">
-  <div class="kpi"><div class="label">PRs merged</div><div class="value ok">5</div><div class="sub">#1839, #1840, #1841, #1842, #1844</div></div>
-  <div class="kpi"><div class="label">In flight</div><div class="value warn">3</div><div class="sub">#1845, #1846, #1847 via watcher</div></div>
-  <div class="kpi"><div class="label">Issues closed</div><div class="value ok">4</div><div class="sub">#1804, #1809, #1825, #1834</div></div>
+  <div class="kpi"><div class="label">PRs merged</div><div class="value ok">8</div><div class="sub">#1839, #1840, #1841, #1842, #1844, #1845, #1846, #1847</div></div>
+  <div class="kpi"><div class="label">Issues closed</div><div class="value ok">5</div><div class="sub">#1804, #1809, #1825, #1834, #1848</div></div>
   <div class="kpi"><div class="label">Dispatches fired</div><div class="value info">8</div><div class="sub">7 produced PRs · 1 was already shipped on main</div></div>
+  <div class="kpi"><div class="label">Open PRs</div><div class="value warn">1</div><div class="sub">#1843 — blocked on CodeQL false-positive needing UI dismissal</div></div>
+</div>
+
+<h2>Late-evening closeout <span class="sub">post-handoff-write addendum</span></h2>
+
+<div class="callout ok">
+  <p><b>Watcher succeeded:</b> the merge-when-green watcher (<code class="inline">bp1mya3x7</code>) merged all three in-flight PRs (#1845, #1846, #1847) within minutes of handoff write. Final main HEAD sequence: <code class="inline">d5c9cbe34d</code> (#1845 CSS) → <code class="inline">85d2bc6822</code> (#1847 check_plan) → <code class="inline">f3ee8ccbf1</code> (#1846 bridge TTL). Worktrees + branches pruned. Watcher killed cleanly (it kept retrying because gh's success output was empty — script's grep didn't match — fixable for future runs).</p>
+  <p><b>#1848 filed and shipped same shift:</b> user pointed out the new evening handoff didn't appear in the orient.html UI. Diagnosed: <code class="inline">scripts/api/session_router.py:73</code> globbed only <code class="inline">*.md</code>; HTML handoffs since 2026-05-09 morning all invisible to <code class="inline">/api/orient.session_hints</code>. Filed #1848 with the fix shape, then fixed inline (3-LOC glob change to union <code class="inline">*.md</code> + <code class="inline">*.html</code> + docstring update). Shipped as <code class="inline">3ec02d7fd2</code>. Issue closed same session.</p>
+  <p><b>API auto-reload enabled:</b> user noted the running Monitor API needed restart to pick up the #1848 fix because <code class="inline">npm run api</code> was non-reload. Confirmed dev-only posture; updated <code class="inline">package.json</code> so <code class="inline">api</code> + <code class="inline">api:bg</code> always use <code class="inline">--reload</code> (dropped <code class="inline">--workers 2</code> + <code class="inline">--limit-concurrency</code> which are incompatible). <code class="inline">api:reload</code> kept as alias for backward compat. Shipped as <code class="inline">6d81e694b1</code>. <b>User: kill old PID 16417 + <code class="inline">npm run api:bg</code> once</b> — from then on every source change auto-picks-up.</p>
+  <p><b>PR #1843 (Codex Desktop UI sweep) status update from Codex Desktop:</b> rebased onto current origin/main; dropped the unrelated dispatch-brief commit; fixed Gemini's selector finding (<code class="inline">.topbar .nav</code> → <code class="inline">.topbar .monitor-nav</code>); added regression test. 21/22 checks pass. <b>One blocker:</b> CodeQL flags <code class="inline">playgrounds/admin.html:219</code> "Unvalidated dynamic method call" — <i>same false positive as #1762 entry #19</i>. The line is guarded by <code class="inline">Object.prototype.hasOwnProperty.call(sectionLoaders, section)</code> on the line above. <b>Action:</b> dismiss via UI with rationale "False positive — guarded by hasOwnProperty.call; localhost-only dev tool." PAT lacks <code class="inline">security_events: write</code> so this is a user-only action. Once dismissed, #1843 unblocks.</p>
+  <p><b>Branch-discipline mistake recurred:</b> Codex Desktop checked out <code class="inline">codex/ui-consistency-sweep-2026-05-09</code> in my main checkout TWICE this session. Both times my next commit landed on their branch, not main. Both times recovered via temp-worktree cherry-pick. <b>Required ritual encoded for next session:</b> always run <code class="inline">git rev-parse --abbrev-ref HEAD</code> before committing if there's been any Codex Desktop activity. Better: short-term, work in a separate worktree of my own (e.g. <code class="inline">.worktrees/claude-orchestrator/</code>) so my main checkout's HEAD can't be silently moved by another agent.</p>
 </div>
 
 <div class="callout accent">
