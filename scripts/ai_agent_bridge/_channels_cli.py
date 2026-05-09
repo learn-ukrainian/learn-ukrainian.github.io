@@ -12,6 +12,7 @@ everything else lives here.
 ab channel new <name> [--description D] [--include C,...] [--agents A,...]
 ab channel list
 ab channel info <name>
+ab channel set-ttl <name> <hours>
 ab channel context <name> [--edit] [--show]
 ab channel tail <name> [--n N] [--thread TID]
 ab channel watch <thread_id> [--follow] [--event-stream]
@@ -235,6 +236,18 @@ def register_channel_commands(subparsers: Any) -> None:
         help="Show channel metadata + context preview + pending counts",
     )
     info_parser.add_argument("name", help="Channel name")
+
+    # ab channel set-ttl
+    ttl_parser = channel_sub.add_parser(
+        "set-ttl",
+        help="Set pending-delivery auto-expire TTL for a channel",
+    )
+    ttl_parser.add_argument("name", help="Channel name")
+    ttl_parser.add_argument(
+        "hours",
+        type=int,
+        help="Positive integer TTL in hours",
+    )
 
     # ab channel context
     ctx_parser = channel_sub.add_parser(
@@ -536,6 +549,8 @@ def _dispatch_channel_group(args) -> int:
         return _handle_channel_list(args)
     if sub == "info":
         return _handle_channel_info(args)
+    if sub == "set-ttl":
+        return _handle_channel_set_ttl(args)
     if sub == "context":
         return _handle_channel_context(args)
     if sub == "tail":
@@ -628,6 +643,8 @@ def _print_inbox_run_summary(summary: Any, *, duration_s: float) -> None:
 def _query_inbox_show(agent: str) -> dict[str, Any]:
     """Return read-only inbox status details for one agent."""
     from ._db import get_db
+
+    _channels.expire_stale_deliveries()
 
     now = _now_utc()
     failed_cutoff = (now - timedelta(hours=24)).isoformat()
@@ -815,6 +832,7 @@ def _handle_channel_info(args) -> int:
     print(f"created:     {ch['created_at']}")
     print(f"includes:    {', '.join(ch['include']) or '(none)'}")
     print(f"subscribers: {', '.join(ch['subscribers']) or '(none)'}")
+    print(f"ttl:         {ch['max_age_hours']}h")
 
     # Context preview
     ctx = _channels.load_channel_context(args.name)
@@ -829,6 +847,19 @@ def _handle_channel_info(args) -> int:
         print(f"\ncontext.md:  {ctx_path} (missing)")
     if ctx["missing"]:
         print(f"⚠️  missing context for: {', '.join(ctx['missing'])}")
+    return 0
+
+
+def _handle_channel_set_ttl(args) -> int:
+    if args.hours <= 0:
+        print("❌ hours must be a positive integer", file=sys.stderr)
+        return 2
+    try:
+        ch = _channels.set_channel_ttl(args.name, args.hours)
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
+    print(f"✅ channel '{ch['name']}' TTL set to {ch['max_age_hours']}h")
     return 0
 
 
@@ -1042,6 +1073,8 @@ def _handle_inbox_run(args) -> int:
 
     if _reject_non_cli_agent(args.agent, "ab inbox run"):
         return 1
+
+    _channels.expire_stale_deliveries()
 
     until_idle = not args.once
     if args.until_idle:

@@ -86,6 +86,7 @@ VALID_DELIVERY_STATUSES = (
     "dispatched",
     "delivered",
     "failed",
+    "expired",
 )
 VALID_DELIVERY_ERROR_KINDS = (
     "rate_limited",
@@ -159,6 +160,11 @@ def _parse_iso(value: str) -> datetime:
 
 def _iso_after(value: str, *, seconds: int) -> str:
     return (_parse_iso(value) + timedelta(seconds=seconds)).isoformat()
+
+
+def _age_hours(from_iso: str, *, now: datetime | None = None) -> float:
+    current = now or datetime.now(UTC)
+    return max((current - _parse_iso(from_iso)).total_seconds() / 3600, 0.0)
 
 
 def context_sha256(path: Path) -> str:
@@ -704,7 +710,7 @@ def create_channel(
     conn = get_db()
     try:
         existing = conn.execute(
-            "SELECT name, description, include, subscribers, created_at "
+            "SELECT name, description, include, subscribers, created_at, max_age_hours "
             "FROM channels WHERE name = ?",
             (name,),
         ).fetchone()
@@ -732,6 +738,7 @@ def create_channel(
             "include": include,
             "subscribers": subscribers,
             "created_at": _now_iso(),
+            "max_age_hours": 24,
         }
     finally:
         conn.close()
@@ -742,7 +749,7 @@ def get_channel(name: str) -> dict[str, Any] | None:
     conn = get_db()
     try:
         row = conn.execute(
-            "SELECT name, description, include, subscribers, created_at "
+            "SELECT name, description, include, subscribers, created_at, max_age_hours "
             "FROM channels WHERE name = ?",
             (name,),
         ).fetchone()
@@ -756,7 +763,7 @@ def list_channels() -> list[dict[str, Any]]:
     conn = get_db()
     try:
         rows = conn.execute(
-            "SELECT name, description, include, subscribers, created_at "
+            "SELECT name, description, include, subscribers, created_at, max_age_hours "
             "FROM channels ORDER BY created_at ASC"
         ).fetchall()
         return [_row_to_channel(r) for r in rows]
@@ -776,7 +783,39 @@ def _row_to_channel(row) -> dict[str, Any]:
         "include": [s for s in row["include"].split(",") if s],
         "subscribers": [s for s in row["subscribers"].split(",") if s],
         "created_at": row["created_at"],
+        "max_age_hours": int(row["max_age_hours"] or 24),
     }
+
+
+def set_channel_ttl(name: str, hours: int) -> dict[str, Any]:
+    """Set the pending-delivery TTL for one channel."""
+    if hours <= 0:
+        raise ValueError("max_age_hours must be a positive integer")
+
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        cursor = conn.execute(
+            "UPDATE channels SET max_age_hours = ? WHERE name = ?",
+            (hours, name),
+        )
+        if cursor.rowcount == 0:
+            raise ValueError(f"channel '{name}' does not exist")
+        row = conn.execute(
+            """
+            SELECT name, description, include, subscribers, created_at, max_age_hours
+            FROM channels
+            WHERE name = ?
+            """,
+            (name,),
+        ).fetchone()
+        conn.commit()
+        return _row_to_channel(row)
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 # ── Posting ───────────────────────────────────────────────────────────
@@ -1164,7 +1203,7 @@ def mark_delivery(
                 """,
                 (status, delivered_at or now, error, delivery_id),
             )
-        elif status == "failed":
+        elif status in {"failed", "expired"}:
             conn.execute(
                 """
                 UPDATE deliveries
@@ -1266,7 +1305,7 @@ def mark_delivery_delivered(
         ).fetchone()
         if not row:
             raise ValueError(f"delivery '{delivery_id}' not found")
-        if row["status"] in {"delivered", "failed"}:
+        if row["status"] in {"delivered", "failed", "expired"}:
             if row["attempt_count"] != expected_attempt_count:
                 raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
             conn.commit()
@@ -1321,7 +1360,7 @@ def mark_delivery_failed(
         ).fetchone()
         if not row:
             raise ValueError(f"delivery '{delivery_id}' not found")
-        if row["status"] in {"delivered", "failed"}:
+        if row["status"] in {"delivered", "failed", "expired"}:
             if row["attempt_count"] != expected_attempt_count:
                 raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
             conn.commit()
@@ -1382,6 +1421,48 @@ def release_expired_leases(now: str | None = None) -> int:
                 lease_until=NULL
             WHERE status='processing'
               AND lease_until < ?
+            """,
+            (now,),
+        )
+        conn.commit()
+        return cursor.rowcount
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def expire_stale_deliveries(now: str | None = None) -> int:
+    """Mark pending deliveries older than their channel TTL as expired."""
+    now = now or _now_iso()
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        cursor = conn.execute(
+            """
+            UPDATE deliveries
+            SET status = 'expired',
+                error = (
+                    SELECT 'auto-expired (>' || COALESCE(c.max_age_hours, 24)
+                           || 'h pending, channel=' || cm.channel || ')'
+                    FROM channel_messages cm
+                    JOIN channels c ON c.name = cm.channel
+                    WHERE cm.message_id = deliveries.message_id
+                ),
+                lease_until = NULL,
+                retry_after = NULL,
+                last_error_kind = NULL
+            WHERE status = 'pending'
+              AND EXISTS (
+                    SELECT 1
+                    FROM channel_messages cm
+                    JOIN channels c ON c.name = cm.channel
+                    WHERE cm.message_id = deliveries.message_id
+                      AND (
+                            julianday(?) - julianday(cm.created_at)
+                          ) * 24.0 > COALESCE(c.max_age_hours, 24)
+              )
             """,
             (now,),
         )
@@ -1459,3 +1540,33 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
         return [_row_to_pending_delivery(r) for r in rows]
     finally:
         conn.close()
+
+
+def bridge_pending_summary(now: str | None = None) -> dict[str, dict[str, float | int]]:
+    """Return per-agent pending counts and oldest pending age in hours."""
+    current = _parse_iso(now) if now else datetime.now(UTC)
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            """
+            SELECT d.to_agent, COUNT(*) AS count, MIN(cm.created_at) AS oldest_created_at
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.status = 'pending'
+            GROUP BY d.to_agent
+            ORDER BY d.to_agent ASC
+            """
+        ).fetchall()
+    finally:
+        conn.close()
+
+    summary: dict[str, dict[str, float | int]] = {}
+    for row in rows:
+        oldest = row["oldest_created_at"]
+        if not oldest:
+            continue
+        summary[str(row["to_agent"])] = {
+            "count": int(row["count"]),
+            "oldest_hours": round(_age_hours(str(oldest), now=current), 1),
+        }
+    return summary

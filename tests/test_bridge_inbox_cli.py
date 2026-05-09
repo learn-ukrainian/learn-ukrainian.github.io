@@ -348,6 +348,18 @@ def test_post_from_existing_codex_path_still_works(capsys):
     assert _channels.read("topic")[0]["from_agent"] == "codex"
 
 
+def test_channel_set_ttl_persists(capsys):
+    _channels.create_channel("topic")
+
+    exit_code = _run_cli(["channel", "set-ttl", "topic", "6"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert "TTL set to 6h" in captured.out
+    assert _channels.get_channel("topic")["max_age_hours"] == 6
+
+
 @patch("agent_runtime.runner.invoke")
 def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypatch, capsys):
     _channels.create_channel("shared")

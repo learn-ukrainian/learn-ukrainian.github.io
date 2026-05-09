@@ -890,6 +890,7 @@ def run_inbox(
     if stop_after_seconds is not None and stop_after_seconds <= 0:
         raise ValueError("stop_after_seconds must be > 0 when provided")
     _validate_hard_timeout_seconds(hard_timeout, field_name="hard_timeout")
+    _channels.expire_stale_deliveries()
 
     claimed_total = 0
     delivered_total = 0

@@ -47,6 +47,7 @@ def _patch_orient_sources(monkeypatch) -> None:
         lambda: {"agents": ["codex"], "recent_outcomes": {"ok": 1, "error": 0, "rate_limited": 0}, "headroom": {"codex": True}},
     )
     monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
+    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
     monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}})
     monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda: {"api": True, "mcp_rag": False, "sources_db": True, "message_broker": True})
     monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda: [{"file": "docs/session-state/example.md", "first_line": "# Example"}])
@@ -59,7 +60,18 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
 
     assert response.status_code == 200
     data = response.json()
-    expected = {"generated_at", "git", "issues", "pipeline", "runtime", "delegate", "wiki", "health", "session_hints"}
+    expected = {
+        "generated_at",
+        "git",
+        "issues",
+        "pipeline",
+        "runtime",
+        "delegate",
+        "bridge_pending",
+        "wiki",
+        "health",
+        "session_hints",
+    }
     assert expected <= set(data)
 
 
@@ -77,6 +89,24 @@ def test_orient_swallows_failing_subquery(monkeypatch):
     data = response.json()
     assert data["git"]["error"] == "git failed"
     assert data["runtime"]["agents"] == ["codex"]
+
+
+def test_orient_includes_bridge_pending_field(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+    monkeypatch.setattr(
+        api_main,
+        "_collect_bridge_pending_orient_data",
+        lambda: {"claude": {"count": 1, "oldest_hours": 6.5}},
+    )
+
+    response = client.get("/api/orient")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["bridge_pending"] == {
+        "claude": {"count": 1, "oldest_hours": 6.5}
+    }
+    assert "bridge_pending" in data["meta"]
 
 
 def test_orient_completes_within_500ms(monkeypatch):
