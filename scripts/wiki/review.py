@@ -134,6 +134,11 @@ HARD_TIMEOUT_S = 600
 #: Verdicts a reviewer is allowed to emit. Anything else → treated as ERROR.
 _VALID_VERDICTS: frozenset[str] = frozenset({"PASS", "REVISE", "REJECT"})
 
+
+class WikiReviewError(RuntimeError):
+    """Hard failure in wiki review orchestration."""
+
+
 # ── Dataclasses ────────────────────────────────────────────────────
 
 
@@ -250,16 +255,41 @@ class ReviewReport:
 # ── Tool-config per agent (§3b dim 1+4 need MCP) ───────────────────
 
 
-def _tool_config_for(agent: str, *, needs_mcp: bool) -> dict | None:
+def _emit(
+    event_sink: Callable[..., None] | None,
+    event: str,
+    **fields: Any,
+) -> None:
+    if event_sink is not None:
+        event_sink(event, **fields)
+
+
+def _tool_config_for(
+    agent: str,
+    *,
+    needs_mcp: bool,
+    event_sink: Callable[..., None] | None = None,
+) -> dict | None:
     """Build per-agent tool_config enabling the MCP `sources` server."""
     if not needs_mcp:
         return None
 
-    tool_config, _diagnostics = build_mcp_tool_config(
+    tool_config, diagnostics = build_mcp_tool_config(
         agent,
         mcp_servers=["sources"],
         allowed_tools="mcp__sources__*" if agent == "claude" else None,
     )
+    _emit(event_sink, "mcp_config_resolved", reviewer=agent, **diagnostics)
+
+    requested = diagnostics["requested_servers"]
+    resolved = diagnostics["resolved_servers"]
+    status = diagnostics["resolution_status"]
+    if agent == "codex" and requested and not resolved:
+        raise WikiReviewError(
+            f"Reviewer {agent!r} requested MCP servers {requested!r} "
+            f"but resolver returned none ({status}). Refusing to dispatch "
+            "tool-less."
+        )
     return tool_config
 
 
@@ -433,6 +463,7 @@ def _run_single_dim(
     primary: str,
     fallbacks: tuple[str, ...],
     cwd: Path,
+    event_sink: Callable[..., None] | None = None,
 ) -> DimResult:
     """Run one dim; on primary failure, try fallbacks in order.
 
@@ -450,7 +481,11 @@ def _run_single_dim(
     last_error = ""
 
     for agent in agents_to_try:
-        tool_config = _tool_config_for(agent, needs_mcp=needs_mcp)
+        tool_config = _tool_config_for(
+            agent,
+            needs_mcp=needs_mcp,
+            event_sink=event_sink,
+        )
         if needs_mcp and tool_config is None:
             # Agent can't serve MCP-requiring dim — skip silently
             last_error = f"{agent}: MCP required but unavailable"
@@ -467,6 +502,7 @@ def _run_single_dim(
                 tool_config=tool_config,
                 entrypoint="runtime",
                 hard_timeout=HARD_TIMEOUT_S,
+                event_sink=event_sink,
                 task_id=f"wiki-review-{dim}-{article_path.stem}",
             )
         except (RateLimitedError, AgentTimeoutError, AgentUnavailableError) as exc:
@@ -519,6 +555,7 @@ def _run_round(
     cwd: Path,
     round_num: int = 1,
     progress_logger: Callable[[str], None] | None = None,
+    event_sink: Callable[..., None] | None = None,
 ) -> dict[str, DimResult]:
     """Fire all 4 dim reviews in parallel via ThreadPoolExecutor.
 
@@ -551,6 +588,7 @@ def _run_round(
                 primary=primary_agent,
                 fallbacks=DEFAULT_FALLBACKS[dim],
                 cwd=cwd,
+                event_sink=event_sink,
             )] = dim
         for future in as_completed(futures):
             dim = futures[future]
@@ -560,6 +598,8 @@ def _run_round(
             # it guarantees every dim gets a result entry for _failing_dims.
             try:
                 dr = future.result()
+            except WikiReviewError:
+                raise
             except Exception as exc:  # pragma: no cover
                 dr = DimResult(
                     dim=dim, agent="?", model="", score=0, verdict="ERROR",
@@ -588,6 +628,7 @@ def review_article(
     max_rounds: int = MAX_ROUNDS,
     shadow_mode: bool = False,
     cwd: Path | None = None,
+    event_sink: Callable[..., None] | None = None,
 ) -> tuple[ReviewReport, str]:
     """Run dimensional review on one article.
 
@@ -617,6 +658,7 @@ def review_article(
             agent_overrides=agent_overrides,
             cwd=cwd,
             round_num=round_num,
+            event_sink=event_sink,
         )
 
         all_fixes: list[Fix] = []

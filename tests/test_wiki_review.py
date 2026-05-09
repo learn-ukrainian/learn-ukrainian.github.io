@@ -24,6 +24,7 @@ def test_run_round_emits_per_dim_progress_lines(tmp_path: Path, monkeypatch) -> 
         primary: str,
         fallbacks: tuple[str, ...],
         cwd: Path,
+        event_sink=None,
     ) -> DimResult:
         assert article_path.name == "article.md"
         assert article_text == "# Test\n"
