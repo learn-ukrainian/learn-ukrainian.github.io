@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Codex Desktop comms integration — research + MVP proposal</title>
+
+<meta name="report-class" content="research" />
+<meta name="report-date" content="2026-05-09" />
+<meta name="report-status" content="ok" />
+<meta name="report-title" content="Codex Desktop comms integration — research + MVP proposal" />
+<meta name="report-kpi-summary" content="Multi-UI ADR is the canonical answer (PROPOSED) · Today: Codex Desktop has zero first-class comms surface · MVP unblock: 1 dispatch · Full integration: ~3 dispatches gated on bakeoff + ADR ACCEPTED" />
+<meta name="report-related-issues" content="1731,1782" />
+<meta name="report-related-prs" content="1824,1833,1836" />
+<meta name="report-related-adrs" content="docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md" />
+<meta name="report-agents" content="claude,codex-desktop" />
+<meta name="report-author" content="claude" />
+<meta name="report-template-version" content="0.1" />
+
+<style>
+  :root {
+    --bg: #faf6ef; --surface: #f5efde; --surface-2: #ede6d0;
+    --surface-warn: #f3ead0; --surface-fail: #f3dada; --surface-ok: #dde9df;
+    --ink: #1a1a1a; --ink-soft: #4a4540; --ink-faint: #7a736a;
+    --rule: #d4cdb8; --rule-soft: #e3dcc6; --accent: #7a1c20;
+    --warn: #a8842b; --ok: #3d6b4a; --fail: #9c2828; --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--serif); font-size: 16px; line-height: 1.65; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; overflow-x: auto; line-height: 1.5; color: var(--ink-soft); margin: 14px 0; }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding-bottom: 22px; border-bottom: 1.5px solid var(--ink); margin-bottom: 36px; }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 { margin: 0 0 8px; font-size: 28px; font-weight: 600; letter-spacing: -0.012em; line-height: 1.25; }
+  header.hero h1 .session { color: var(--ink-faint); font-weight: 400; }
+  header.hero .sub { color: var(--ink-soft); font-size: 15px; font-style: italic; }
+  header.hero .meta { font-family: var(--sans); font-size: 12px; color: var(--ink-faint); text-align: right; line-height: 1.85; flex: 0 1 280px; }
+  header.hero .meta b { color: var(--ink); font-weight: 600; }
+
+  .provenance { background: var(--surface); border-left: 3px solid var(--accent); padding: 12px 16px; margin-bottom: 28px; font-family: var(--sans); font-size: 13px; color: var(--ink-soft); }
+  .provenance b { color: var(--ink); font-weight: 600; }
+
+  .verdict-bar { display: flex; height: 36px; border: 1px solid var(--ink); border-radius: 3px; overflow: hidden; margin-bottom: 8px; font-family: var(--sans); font-size: 12px; font-weight: 600; }
+  .verdict-bar > div { display: flex; align-items: center; justify-content: center; color: var(--bg); padding: 0 8px; }
+  .verdict-bar .b-ok { background: var(--ok); }
+  .verdict-bar .b-warn { background: var(--warn); }
+  .verdict-bar .b-fail { background: var(--fail); }
+  .verdict-bar .b-info { background: var(--info); }
+  .verdict-bar-legend { font-family: var(--sans); font-size: 12px; color: var(--ink-faint); margin-bottom: 28px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 36px; }
+  .kpi { background: var(--surface); border: 1px solid var(--rule); padding: 16px 18px; border-radius: 4px; }
+  .kpi .label { font-family: var(--sans); color: var(--ink-faint); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .kpi .value { font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1.1; color: var(--ink); }
+  .kpi .value.ok { color: var(--ok); } .kpi .value.warn { color: var(--warn); } .kpi .value.info { color: var(--info); }
+  .kpi .sub { font-family: var(--sans); color: var(--ink-faint); font-size: 12px; margin-top: 4px; }
+
+  h2 { font-family: var(--serif); font-size: 21px; font-weight: 600; margin: 44px 0 14px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); letter-spacing: -0.005em; color: var(--ink); }
+  h2 .sub { font-family: var(--sans); font-size: 12px; font-weight: 400; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-left: 12px; }
+  h3 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 18px 0 8px; color: var(--ink); }
+  p { margin: 0 0 14px; }
+
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.02em; border: 1px solid; white-space: nowrap; line-height: 1.5; vertical-align: 1px; }
+  .pill.ok    { color: var(--ok);    background: var(--surface-ok);   border-color: rgba(61,107,74,0.4); }
+  .pill.warn  { color: var(--warn);  background: var(--surface-warn); border-color: rgba(168,132,43,0.4); }
+  .pill.fail  { color: var(--fail);  background: var(--surface-fail); border-color: rgba(156,40,40,0.4); }
+  .pill.info  { color: var(--info);  background: #dbe5f0;             border-color: rgba(42,86,128,0.4); }
+  .pill.muted { color: var(--ink-faint); background: var(--surface);  border-color: var(--rule); }
+
+  table.threads { width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; font-size: 14px; }
+  table.threads th, table.threads td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; word-break: break-word; overflow-wrap: anywhere; }
+  table.threads th { background: var(--surface-2); font-family: var(--sans); font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  table.threads td code.inline { white-space: normal; word-break: break-all; overflow-wrap: anywhere; }
+  table.threads tr:last-child td { border-bottom: 0; }
+  table.threads td.thread { font-weight: 600; color: var(--ink); }
+  table.threads td.thread .sub { display: block; font-weight: 400; color: var(--ink-faint); font-size: 12px; margin-top: 2px; font-family: var(--sans); }
+
+  .callout { background: var(--surface); border-left: 3px solid var(--info); padding: 16px 20px; border-radius: 0 4px 4px 0; margin: 18px 0; }
+  .callout.warn   { border-left-color: var(--warn); }
+  .callout.fail   { border-left-color: var(--fail); }
+  .callout.accent { border-left-color: var(--accent); }
+  .callout.ok     { border-left-color: var(--ok); }
+  .callout p { margin: 0 0 8px; font-size: 14px; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h3 { margin-top: 0; }
+
+  footer.report-footer { margin-top: 56px; padding-top: 22px; border-top: 1.5px solid var(--ink); font-family: var(--sans); font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer.report-footer .left b { color: var(--ink); font-weight: 600; }
+  footer.report-footer a { color: var(--ink-soft); border-bottom-color: var(--rule); }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 24px 18px 60px; }
+    header.hero { flex-direction: column; }
+    header.hero .meta { text-align: left; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    table.threads { font-size: 12.5px; }
+    table.threads th, table.threads td { padding: 8px 10px; }
+    h2 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="title-block">
+    <h1>Codex Desktop comms integration — <span class="session">research + MVP proposal</span></h1>
+    <div class="sub">"if you want to orchestrate him you need to figure out how can he join the comms" — user instruction. This report answers what's there today, what's needed to make Codex Desktop a first-class comms participant, and the MVP path that unblocks orchestrator → Codex Desktop today without waiting for the full Multi-UI ADR to land.</div>
+  </div>
+  <div class="meta">
+    <div class="row"><b>Date:</b> 2026-05-09 (~16:30 CET)</div>
+    <div class="row"><b>Branch state:</b> <code class="inline">main @ 73d5316a04</code></div>
+    <div class="row"><b>Author:</b> claude (orchestrator)</div>
+    <div class="row"><b>Audience:</b> user (decision)</div>
+  </div>
+</header>
+
+<div class="provenance">
+  <b>Tool-grounded per #M-4.</b> Every claim about file contents, schema, or registry config was verified by `grep` / `cat` / `git show` against current `main`. No assumptions about Codex Desktop's IPC capabilities — `ab ask-codex` round-trip was attempted but returned empty (silently failed); fallback was reading the canonical Multi-UI ADR which already addresses the question.
+</div>
+
+<section>
+  <div class="verdict-bar" title="Where the integration stands today">
+    <div class="b-fail" style="flex: 2.0;">No first-class Codex Desktop comms surface today</div>
+    <div class="b-info" style="flex: 1.4;">Multi-UI ADR PROPOSED is the design</div>
+    <div class="b-warn" style="flex: 1.2;">ADR gated on bakeoff</div>
+    <div class="b-ok"   style="flex: 1.4;">MVP unblock = 1 dispatch</div>
+  </div>
+  <div class="verdict-bar-legend">
+    Net: Codex Desktop currently participates only via GH PRs/comments. Bridge registry knows 3 agents (claude, codex, gemini); <code class="inline">ab post --from-agent</code> only accepts those plus <code class="inline">user</code>. Multi-UI ADR (`docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md`, PROPOSED) is the canonical design and it's comprehensive, but full implementation is gated on the pilot bakeoff and user signoff.
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">Bridge agents today</div>
+      <div class="value warn">3</div>
+      <div class="sub">claude · codex · gemini · (plus <code class="inline">user</code> as poster). No <code class="inline">codex-desktop</code> or <code class="inline">claude-desktop</code> entries.</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Multi-UI ADR Q&amp;A</div>
+      <div class="value info">12</div>
+      <div class="sub">Q1–Q12 covering identity, discovery, claims, user-quorum, auth, lease recovery, idempotency, atomic posts, dynamic join, replay, fallback, multimodal attachments.</div>
+    </div>
+    <div class="kpi">
+      <div class="label">MVP dispatches</div>
+      <div class="value ok">1</div>
+      <div class="sub">Add <code class="inline">codex-desktop</code> as a registry entry + add it to <code class="inline">--from-agent</code> choices. Unblocks shell-based posting today.</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Full integration</div>
+      <div class="value warn">~3</div>
+      <div class="sub">After bakeoff passes + ADR ACCEPTED: schema migration · claim/SSE endpoints · attachments. Each is its own dispatch.</div>
+    </div>
+  </div>
+</section>
+
+<h2>Current state <span class="sub">what's there today, verified</span></h2>
+
+<table class="threads">
+  <thead>
+    <tr>
+      <th style="width: 28%;">Surface</th>
+      <th style="width: 14%;">Status</th>
+      <th>What's possible today</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="thread">Bridge agent registry
+        <span class="sub"><code class="inline">scripts/agent_runtime/registry.py:37</code></span>
+      </td>
+      <td><span class="pill warn">3 agents</span></td>
+      <td>Only <code class="inline">codex</code>, <code class="inline">claude</code>, <code class="inline">gemini</code> are registered. <code class="inline">codex-desktop</code> is NOT a recognised <code class="inline">agent_family</code>. Adding it is a small registry edit + adapter, but the adapter only exists if Codex Desktop has an invocation-from-CLI surface (it does — Codex Desktop binaries can be triggered from shell).</td>
+    </tr>
+    <tr>
+      <td class="thread">Channel posting (<code class="inline">ab post</code>)
+        <span class="sub"><code class="inline">scripts/ai_agent_bridge/__main__.py</code></span>
+      </td>
+      <td><span class="pill warn">Constrained</span></td>
+      <td><code class="inline">ab post --from-agent</code> argparse <code class="inline">choices=&#123;claude,gemini,codex,user&#125;</code>. Cannot post as <code class="inline">codex-desktop</code> today. Would need to either add <code class="inline">codex-desktop</code> to the choice list OR (per Multi-UI ADR Q1) split into <code class="inline">--agent-family codex --ui-surface desktop</code>.</td>
+    </tr>
+    <tr>
+      <td class="thread">Inbox reading (<code class="inline">ab inbox</code>)
+        <span class="sub">currently per-agent</span>
+      </td>
+      <td><span class="pill warn">Per-agent only</span></td>
+      <td>Inbox is keyed by agent. Codex Desktop has no agent identity, so it has no inbox. Today, Codex Desktop reads instructions only via brief markdown files in <code class="inline">briefs/&lt;date&gt;/</code> + the GitHub PR/issue thread. Round-trip latency = orchestrator commits brief → user nudges Desktop → Desktop opens PR → orchestrator reviews. No real-time channel.</td>
+    </tr>
+    <tr>
+      <td class="thread">Multi-UI ADR (<a href="../../docs/decisions/pending/2026-05-09-decision-graph-view.html">unrelated</a>; this is <code class="inline">2026-05-06-multi-ui-channel-participation.md</code>)
+        <span class="sub"><code class="inline">docs/decisions/pending/</code></span>
+      </td>
+      <td><span class="pill info">PROPOSED</span></td>
+      <td>The canonical design for Codex Desktop / Claude Desktop comms. Defines 4-tuple identity (<code class="inline">agent_family</code>, <code class="inline">ui_surface</code>, <code class="inline">client_id</code>, <code class="inline">instance_id</code>), claim-based round participation, SSE event replay, idempotency, atomic post-with-attachments, lease/keepalive/seize, capability profiles per surface. Implementation gated on pilot bakeoff (#1731 Part B) + user signoff.</td>
+    </tr>
+    <tr>
+      <td class="thread">Pilot bakeoff (#1731 Part B)
+        <span class="sub">A1 possessive-pronouns module</span>
+      </td>
+      <td><span class="pill warn">Not run</span></td>
+      <td>Multi-UI ADR explicitly mandates this bakeoff before Desktop becomes mandatory routing for graphics-rich modules. CLI text-only vs Desktop multimodal, scored against 7 binary pedagogical anchors. Gate: Desktop must hit 3 multimodal-only anchors (audio scaffolding, color-coded paradigm, photo-anchored register block) AND not trail CLI on the 4 non-multimodal anchors.</td>
+    </tr>
+    <tr>
+      <td class="thread">Codex Desktop's effective comms today
+        <span class="sub">via PRs #1824, #1833, #1836</span>
+      </td>
+      <td><span class="pill ok">Working but slow</span></td>
+      <td>Codex Desktop is currently effective via: orchestrator writes brief → user nudges Desktop → Desktop reads brief, does work in worktree, opens PR → orchestrator reviews + cross-agent reviews land as PR comments → orchestrator merges. Round-trip is hours not seconds. No <code class="inline">ab discuss</code> participation. No claim-based turn-taking.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>What the Multi-UI ADR proposes <span class="sub">canonical design, summarised</span></h2>
+
+<table class="threads">
+  <thead><tr><th style="width: 8%;">Q</th><th style="width: 32%;">Topic</th><th>Codex-Desktop-relevant proposal</th></tr></thead>
+  <tbody>
+    <tr><td><b>Q1</b></td><td>What is a participant?</td><td>Four columns: <code class="inline">agent_family=codex</code>, <code class="inline">ui_surface=desktop</code>, persistent <code class="inline">client_id</code>, per-session <code class="inline">instance_id</code>. Display alias <code class="inline">codex:desktop:8f91c2</code> is non-canonical. Persisted at <code class="inline">~/.config/learn-ukrainian/agent-bridge/instance.json</code>.</td></tr>
+    <tr><td><b>Q2</b></td><td>How does Desktop discover a discussion?</td><td>SSE replay: <code class="inline">GET /api/comms/channels/&#123;channel&#125;/events?since=&#123;event_id&#125;</code>. MCP resource registration (NOT long-running tool call) for Desktop's model-turn semantics. Pull/inbox fallback remains.</td></tr>
+    <tr><td><b>Q3</b></td><td>Who can claim a turn?</td><td>Claim-gated round posts. Default <code class="inline">participant_scope=family</code> — Codex CLI and Codex Desktop both satisfy a "Codex" slot, first to claim wins. Restart recovery via persisted <code class="inline">client_id</code>; window-vs-window collision via per-session <code class="inline">instance_id</code>; takeover via <code class="inline">/claims/&#123;id&#125;/seize</code> after missed keepalives.</td></tr>
+    <tr><td><b>Q6</b></td><td>Lease semantics</td><td>Desktop holders get a <b>5-minute lease</b> with 30 s keepalives (vs 90 s for CLI subprocesses) — accommodates human-in-loop visual inspection. Visible <code class="inline">expires_at</code>.</td></tr>
+    <tr><td><b>Q7</b></td><td>Idempotency</td><td>Every post + claim takes <code class="inline">idempotency_key</code> keyed by <code class="inline">(client_id, key)</code>. Survives Desktop reconnect. Required for multimodal uploads (5-min window).</td></tr>
+    <tr><td><b>Q12</b></td><td>Multimodal attachments</td><td>First-class <code class="inline">blobs</code> + <code class="inline">message_attachments</code> tables. Filesystem at <code class="inline">.ab/channels/blobs/&#123;sha256&#125;.&#123;ext&#125;</code>. Atomic <code class="inline">POST /messages-with-attachments</code>. <code class="inline">attachment://&#123;id&#125;</code> markdown URI scheme. Hard-required for round replies that need image/audio.</td></tr>
+  </tbody>
+</table>
+
+<h2>The MVP that unblocks Codex Desktop today <span class="sub">single dispatch, no schema change</span></h2>
+
+<div class="callout ok">
+  <p><b>Goal:</b> Codex Desktop can post to channels and read inbox <em>today</em>, attributed correctly, without waiting for the full Multi-UI ADR to ACCEPT and ship. Real-time orchestrator ↔ Desktop round-trip drops from "hours via GitHub" to "seconds via channel."</p>
+</div>
+
+<table class="threads">
+  <thead><tr><th style="width: 16%;">Change</th><th style="width: 32%;">Where</th><th>What</th></tr></thead>
+  <tbody>
+    <tr>
+      <td class="thread">Add <code class="inline">codex-desktop</code> agent</td>
+      <td><code class="inline">scripts/agent_runtime/registry.py</code> AGENTS dict</td>
+      <td>New entry mirroring <code class="inline">codex</code> with <code class="inline">cli_available: False</code> (it's UI-driven, not subprocess-spawnable from this orchestrator), capabilities <code class="inline">{frontend_design, multimodal, ui_review}</code>, adapter pointer to a thin no-op or a "post-only" adapter.</td>
+    </tr>
+    <tr>
+      <td class="thread">Expand <code class="inline">--from-agent</code></td>
+      <td><code class="inline">scripts/ai_agent_bridge/__main__.py</code> post argparse</td>
+      <td>Add <code class="inline">codex-desktop</code> to the <code class="inline">choices</code> list. Same for <code class="inline">discuss --with</code> if present (so future <code class="inline">ab discuss --with codex-desktop</code> at least parses, even if the discuss runner can't subprocess-spawn it yet).</td>
+    </tr>
+    <tr>
+      <td class="thread">Inbox routing</td>
+      <td><code class="inline">ab inbox</code> + <code class="inline">channel_messages</code> filter</td>
+      <td>Codex Desktop reads its inbox via shell <code class="inline">ab inbox --agent codex-desktop</code>. Tail a channel via <code class="inline">ab channel tail desktop-tasks --follow</code>. Both already work generically; just need <code class="inline">codex-desktop</code> recognised as a valid agent string.</td>
+    </tr>
+    <tr>
+      <td class="thread">Documentation</td>
+      <td><code class="inline">docs/best-practices/agent-bridge.md</code></td>
+      <td>Add a "Codex Desktop participation" section: how to subscribe (<code class="inline">ab channel tail desktop-tasks --follow</code>), how to post (<code class="inline">ab post desktop-tasks "&lt;status&gt;" --from-agent codex-desktop</code>), where briefs land (<code class="inline">briefs/&lt;date&gt;/codex-desktop-*.md</code>).</td>
+    </tr>
+    <tr>
+      <td class="thread">Test coverage</td>
+      <td><code class="inline">tests/test_ab_post.py</code> (or extend existing)</td>
+      <td>Test that <code class="inline">--from-agent codex-desktop</code> writes a row with correct attribution, doesn't break existing <code class="inline">claude/codex/gemini/user</code> paths.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <p><b>What this MVP does NOT do:</b> no 4-tuple identity (still a flat <code class="inline">from_agent</code> string), no claim-based round participation, no SSE replay, no atomic multimodal post, no schema migration. All that's deferred to the full Multi-UI ADR implementation.</p>
+  <p><b>Why the MVP is enough for now:</b> the goal here is orchestrator → Codex Desktop async messaging (briefs in, status out). The MVP delivers that. The full ADR adds turn-taking and multimodal — needed for <code class="inline">ab discuss</code> participation and graphics-rich module work, but neither is on the critical path right now.</p>
+</div>
+
+<h2>What needs to ship for proper integration <span class="sub">post-bakeoff, post-ADR</span></h2>
+
+<ol>
+  <li><b>Pilot bakeoff (#1731 Part B)</b> — gated, must run before Desktop-mandatory routing. Inputs at <code class="inline">docs/references/private/ohoiko-june-a1-book/notes/page-068-module-24-possessive-pronouns.md</code>. Manual, human-driven; not blocked on infrastructure.</li>
+  <li><b>Multi-UI ADR ACCEPTED</b> — user signoff required. Independent reviewer cross-review (Codex CLI + Gemini) suggested.</li>
+  <li><b>Schema migration</b> — add <code class="inline">ui_surface</code>, <code class="inline">client_id</code>, <code class="inline">instance_id</code> columns to <code class="inline">channel_messages</code>; backfill legacy rows; new indexes per Q1.</li>
+  <li><b>Claim + SSE endpoints</b> — Q2/Q3/Q6 endpoints; lease/keepalive/seize logic; loopback-binding preflight (Q5).</li>
+  <li><b>Atomic post-with-attachments</b> — Q12 blob store + atomic transaction; <code class="inline">attachment://</code> renderer; channels.html playback for audio.</li>
+  <li><b>Channel participation in <code class="inline">ab discuss</code></b> — capability-aware routing per Q3 + Q11 fallback.</li>
+</ol>
+
+<h2>What I'm executing next <span class="sub">unless stopped</span></h2>
+
+<div class="callout accent">
+  <p><b>Single MVP dispatch.</b> Codex CLI brief: add <code class="inline">codex-desktop</code> to the bridge registry + <code class="inline">--from-agent</code> choices + minimum docs + 1 test. Surgical, ~30–80 LOC. PR will mirror the discipline used in #1821/#1823/#1827: every AC tool-evidenced, no auto-merge.</p>
+  <p><b>Not dispatching now:</b> the full Multi-UI ADR implementation. That's gated on the bakeoff (still on you to run, P0 from morning) + ADR ACCEPTED signoff. Keeping it out of scope so the MVP doesn't accidentally land schema changes before the design is locked.</p>
+  <p><b>What this means for the next session:</b> as soon as the MVP merges, you can fire <code class="inline">ab post desktop-tasks "next brief here" --from-agent claude</code> and Codex Desktop reads it via <code class="inline">ab channel tail desktop-tasks --follow</code> in its session. Two-way comms in seconds, not hours.</p>
+</div>
+
+<footer class="report-footer">
+  <div class="left">Generated <b>2026-05-09 ~16:30 CET</b> · learn-ukrainian orchestrator (claude) · research artifact under #M-2 ai → human</div>
+  <div class="right">Multi-UI ADR is the canonical design · MVP is single-dispatch unblock · Full integration gated on bakeoff + ADR ACCEPTED</div>
+</footer>
+
+</div>
+</body>
+</html>
