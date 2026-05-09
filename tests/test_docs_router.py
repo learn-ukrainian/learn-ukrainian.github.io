@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
 from scripts.api import artifacts_router, docs_router
@@ -38,6 +38,7 @@ def docs_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
     app = FastAPI()
     app.include_router(artifacts_router.router, prefix="/api/artifacts")
     app.include_router(docs_router.router, prefix="/artifacts")
+    app.include_router(docs_router.router, prefix="/files")
     return TestClient(app, raise_server_exceptions=False)
 
 
@@ -46,7 +47,7 @@ def test_docs_router_serves_allowed_html_roots(docs_client: TestClient, root_key
     response = docs_client.get(f"/artifacts/{root_key}/REPORT.html")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert response.headers["cache-control"] == "max-age=300"
+    assert response.headers["cache-control"] == "max-age=300, must-revalidate"
 
 
 def test_docs_router_root_serves_browser_ui(docs_client: TestClient):
@@ -61,6 +62,12 @@ def test_docs_router_root_json_lists_roots(docs_client: TestClient):
     assert response.status_code == 200
     body = response.json()
     assert len(body["roots"]) == len(docs_router.ALLOWED_ROOTS)
+
+
+def test_docs_router_files_alias_stays_json(docs_client: TestClient):
+    response = docs_client.get("/files/?format=json")
+    assert response.status_code == 200
+    assert len(response.json()["roots"]) == len(docs_router.ALLOWED_ROOTS)
 
 
 def test_docs_router_directory_listing_json(docs_client: TestClient):
@@ -86,18 +93,18 @@ def test_docs_router_blocks_symlink_outside_root(docs_client: TestClient, tmp_pa
     outside.write_text("outside", encoding="utf-8")
     link = tmp_path / "audit" / "linked.html"
     link.symlink_to(outside)
-    assert docs_client.get("/artifacts/audit/linked.html").status_code in {403, 404}
+    assert docs_client.get("/artifacts/audit/linked.html").status_code == 403
 
 
 def test_docs_router_blocks_forbidden_extension(docs_client: TestClient, tmp_path: Path):
     (tmp_path / "audit" / "script.py").write_text("print('no')", encoding="utf-8")
-    assert docs_client.get("/artifacts/audit/script.py").status_code in {403, 404}
+    assert docs_client.get("/artifacts/audit/script.py").status_code == 403
 
 
 def test_docs_router_blocks_unapproved_root(docs_client: TestClient, tmp_path: Path):
     (tmp_path / "scripts" / "api").mkdir(parents=True)
     (tmp_path / "scripts" / "api" / "main.py").write_text("x = 1", encoding="utf-8")
-    assert docs_client.get("/artifacts/scripts/api/main.py").status_code in {403, 404}
+    assert docs_client.get("/artifacts/scripts/api/main.py").status_code == 403
 
 
 def test_docs_router_missing_file_404(docs_client: TestClient):
@@ -108,7 +115,17 @@ def test_docs_router_blocks_hidden_file(docs_client: TestClient, tmp_path: Path)
     hidden_dir = tmp_path / "audit" / ".git"
     hidden_dir.mkdir()
     (hidden_dir / "HEAD").write_text("ref: refs/heads/main", encoding="utf-8")
-    assert docs_client.get("/artifacts/audit/.git/HEAD").status_code in {403, 404}
+    assert docs_client.get("/artifacts/audit/.git/HEAD").status_code == 403
+
+
+def test_docs_router_assert_under_root_blocks_resolved_escape(tmp_path: Path):
+    root = tmp_path / "audit"
+    root.mkdir()
+    outside = tmp_path / "outside.html"
+    outside.write_text("outside", encoding="utf-8")
+    with pytest.raises(HTTPException) as exc_info:
+        docs_router._assert_under_root(outside, root)
+    assert exc_info.value.status_code == 403
 
 
 def test_html_artifact_listing_extracts_metadata_and_filters(docs_client: TestClient):

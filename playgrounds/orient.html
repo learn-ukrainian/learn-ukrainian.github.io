@@ -401,10 +401,15 @@ function startRefresh() {
 
 async function loadOrient() {
   try {
-    const [data, discussions] = await Promise.all([
+    const [orientResult, discussionsResult] = await Promise.allSettled([
       fetchJson('/api/orient'),
       fetchJson('/api/discussions/active')
     ]);
+    if (orientResult.status !== 'fulfilled') throw orientResult.reason;
+    const data = orientResult.value;
+    const discussions = discussionsResult.status === 'fulfilled'
+      ? discussionsResult.value
+      : { discussions: [], error: discussionsResult.reason && discussionsResult.reason.message ? discussionsResult.reason.message : String(discussionsResult.reason || 'Discussion lookup failed') };
     setPageBanner('');
     refreshHalted = false;
     renderGit(data.git || {});
@@ -413,6 +418,9 @@ async function loadOrient() {
     renderRuntime(data.runtime || {});
     renderDelegate(data.delegate || {});
     renderDiscussions(discussions || {});
+    if (discussions && discussions.error) {
+      document.getElementById('discussions-content').innerHTML = `<div class="empty">Discussion lookup unavailable: ${escapeHtml(discussions.error)}</div>`;
+    }
     renderWiki(data.wiki || {});
     renderHealth(data.health || {});
     renderSessionHints(Array.isArray(data.session_hints) ? data.session_hints : []);

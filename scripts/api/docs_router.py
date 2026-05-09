@@ -261,5 +261,5 @@ async def serve_artifact(
     return FileResponse(
         full_path,
         media_type=_MIME_TYPES.get(full_path.suffix.lower(), "application/octet-stream"),
-        headers={"Cache-Control": "max-age=300"},
+        headers={"Cache-Control": "max-age=300, must-revalidate"},
     )
