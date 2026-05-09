@@ -339,3 +339,15 @@ def test_telemetry_event_sink_appends_jsonl(
     assert captured.out == ""
     assert [event["event"] for event in events] == ["first", "second"]
     assert all(event["slug"] == "x" for event in events)
+
+
+def test_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> None:
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match="MCP_TOOLS_NEVER_INVOKED",
+    ):
+        linear_pipeline._enforce_tools_writer_runtime_gate(
+            writer="gemini-tools",
+            module="a1/1",
+            phase_writer_summary={"tool_calls_total": 0},
+        )

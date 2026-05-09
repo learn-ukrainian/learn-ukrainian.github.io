@@ -36,7 +36,6 @@ Issue: #1184
 from __future__ import annotations
 
 import contextlib
-import json as _json
 import logging
 import os
 import re
@@ -310,7 +309,7 @@ class GeminiAdapter:
         """Parse Gemini CLI output into a ParseResult.
 
         Primary source: stdout. Fallback source: the Gemini session file
-        under ``~/.gemini/tmp/<project>/chats/session-*.json``.
+        under ``~/.gemini/tmp/<project>/chats/session-*.json*``.
 
         Why the fallback exists (2026-04-10): the Gemini CLI block-buffers
         stdout when not connected to a TTY. On long calls (MCP tool use +
@@ -332,11 +331,19 @@ class GeminiAdapter:
         session_trace = ""
         if plan is not None:
             session_trace = self._read_latest_session_trace(plan)
+        # Parse stdout/stderr (JSONL events) and session_trace (may be a
+        # multi-line single JSON document OR JSONL) separately, then merge.
+        # Concatenating breaks single-document parses for the legacy session
+        # format, which the existing fixtures still exercise.
         trace_events = parse_json_events(
-            "\n".join(part for part in (stdout, stderr, session_trace) if part),
+            "\n".join(part for part in (stdout, stderr) if part),
             source="gemini",
             logger=_logger,
         )
+        if session_trace:
+            trace_events.extend(
+                parse_json_events(session_trace, source="gemini-session", logger=_logger)
+            )
         tool_calls = normalize_tool_calls(trace_events)
 
         stdout_response = stdout.strip()
@@ -452,9 +459,10 @@ class GeminiAdapter:
         """Extract the assistant's response from the newest Gemini session file.
 
         Gemini CLI writes a file at ``~/.gemini/tmp/<cwd-basename>/chats/
-        session-YYYY-MM-DDTHH-MM-<short>.json`` for every exec. It creates
+        session-YYYY-MM-DDTHH-MM-<short>.json*`` for every exec. It creates
         a new file at call start and keeps updating it throughout the
-        run. The file structure is:
+        run. Older files are a single JSON object; current Gemini CLI
+        sessions are JSONL events. The single-object structure is:
 
             {
               "sessionId": "<uuid>",
@@ -486,47 +494,38 @@ class GeminiAdapter:
             if session_file is None:
                 return ""
 
-            data = _json.loads(session_file.read_text("utf-8"))
-            messages = data.get("messages", [])
-            if not isinstance(messages, list):
-                return ""
+            events = self._read_session_events(session_file)
 
             # Concatenate every gemini message's text content. Skip user
             # messages, skip info/system messages, skip tool-call
             # metadata. Content for gemini messages is a plain string
             # (verified against real session files on disk).
             parts: list[str] = []
-            for msg in messages:
-                if not isinstance(msg, dict):
-                    continue
+            for msg in self._iter_session_messages(events):
                 if msg.get("type") != "gemini":
                     continue
-                content = msg.get("content")
-                if isinstance(content, str) and content.strip():
+                content = self._message_text_content(msg)
+                if content.strip():
                     parts.append(content)
-                elif isinstance(content, list):
-                    # Defensive: some older Gemini CLI versions may use
-                    # list-of-parts format like user messages.
-                    for part in content:
-                        if isinstance(part, dict):
-                            text = part.get("text")
-                            if isinstance(text, str) and text.strip():
-                                parts.append(text)
 
             return "\n\n".join(parts).strip()
         except Exception:
             return ""
 
     def _read_latest_session_trace(self, plan: InvocationPlan) -> str:
-        """Read this invocation's Gemini session JSON for tool-call telemetry."""
+        """Read this invocation's Gemini session trace for tool-call telemetry.
+
+        Current Gemini CLI sessions are JSONL, not one JSON document:
+            {"type":"user","content":[{"text":"..."}]}
+            {"type":"gemini","toolCalls":[{"name":"list_directory","args":{...}}]}
+            {"type":"gemini","toolCalls":[{"name":"mcp__sources__verify_words",
+             "args":{"words":["кіт"]}}]}
+        """
         try:
             session_file = self._select_session_for_plan(plan, call_start_time=None)
             if session_file is None:
                 return ""
-            data = _json.loads(
-                session_file.read_text(encoding="utf-8", errors="replace")
-            )
-            return _json.dumps(data, ensure_ascii=False)
+            return session_file.read_text(encoding="utf-8", errors="replace")
         except Exception:
             return ""
 
@@ -538,7 +537,7 @@ class GeminiAdapter:
     def _snapshot_preexisting_sessions(self, cwd: Path) -> set[Path]:
         chats_dir = Path.home() / ".gemini" / "tmp" / cwd.name / "chats"
         try:
-            return set(chats_dir.glob("session-*.json"))
+            return set(self._session_file_candidates(chats_dir))
         except OSError:
             return set()
 
@@ -548,7 +547,7 @@ class GeminiAdapter:
         *,
         call_start_time: float | None = None,
     ) -> Path | None:
-        """Return the Gemini session JSON scoped to this invocation, if any."""
+        """Return the Gemini session trace scoped to this invocation, if any."""
         import time as _time
 
         snapshot: set[Path] = getattr(self, "_session_snapshot", None) or set()
@@ -558,7 +557,7 @@ class GeminiAdapter:
 
         chats_dir = Path.home() / ".gemini" / "tmp" / plan.cwd.name / "chats"
         try:
-            candidates = list(chats_dir.glob("session-*.json"))
+            candidates = self._session_file_candidates(chats_dir)
         except OSError:
             return None
 
@@ -600,25 +599,14 @@ class GeminiAdapter:
             return True
 
         try:
-            data = _json.loads(session_path.read_text(encoding="utf-8", errors="replace"))
-            messages = data.get("messages", [])
-            if not isinstance(messages, list):
-                return False
-
+            events = self._read_session_events(session_path)
             user_texts: list[str] = []
-            for msg in messages:
-                if not isinstance(msg, dict) or msg.get("type") != "user":
+            for msg in self._iter_session_messages(events):
+                if msg.get("type") != "user":
                     continue
-                content = msg.get("content")
-                if isinstance(content, str):
-                    user_texts.append(content)
-                elif isinstance(content, list):
-                    parts: list[str] = []
-                    for part in content:
-                        if isinstance(part, dict) and isinstance(part.get("text"), str):
-                            parts.append(part["text"])
-                    if parts:
-                        user_texts.append("\n".join(parts))
+                text = self._message_text_content(msg)
+                if text:
+                    user_texts.append(text)
 
             for text in user_texts:
                 normalized = text.rstrip()
@@ -629,6 +617,50 @@ class GeminiAdapter:
             return False
         except Exception:
             return False
+
+    @staticmethod
+    def _session_file_candidates(chats_dir: Path) -> list[Path]:
+        """Return Gemini session files for legacy JSON and current JSONL."""
+        candidates: list[Path] = []
+        seen: set[Path] = set()
+        for pattern in ("session-*.json", "session-*.jsonl"):
+            for path in chats_dir.glob(pattern):
+                if path in seen:
+                    continue
+                seen.add(path)
+                candidates.append(path)
+        return candidates
+
+    @staticmethod
+    def _iter_session_messages(
+        events: list[dict[str, object]],
+    ) -> list[dict[str, object]]:
+        messages: list[dict[str, object]] = []
+        for event in events:
+            nested = event.get("messages")
+            if isinstance(nested, list):
+                messages.extend(item for item in nested if isinstance(item, dict))
+            else:
+                messages.append(event)
+        return messages
+
+    @staticmethod
+    def _message_text_content(msg: Mapping[str, object]) -> str:
+        content = msg.get("content")
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts: list[str] = []
+            for part in content:
+                if isinstance(part, dict) and isinstance(part.get("text"), str):
+                    parts.append(part["text"])
+            return "\n".join(parts)
+        return ""
+
+    @staticmethod
+    def _read_session_events(session_path: Path) -> list[dict[str, object]]:
+        text = session_path.read_text(encoding="utf-8", errors="replace")
+        return parse_json_events(text, source="gemini-session", logger=_logger)
 
     @staticmethod
     def _prompt_fingerprint_matches(expected: str, observed: str) -> bool:
@@ -667,7 +699,7 @@ class GeminiAdapter:
             call or status update (verified: modified during exec).
           - ``~/.gemini/tmp/<project>/chats/`` — directory mtime bumps
             when a new session JSON file is created at the start of exec.
-          - ``~/.gemini/tmp/<project>/chats/session-*.json`` — newest
+          - ``~/.gemini/tmp/<project>/chats/session-*.json*`` — newest
             session file grows as messages stream in.
 
         ``<project>`` is the cwd basename per gemini-cli convention. We
@@ -698,14 +730,14 @@ class GeminiAdapter:
             if chats_dir.exists():
                 paths.append(chats_dir)
 
-                # 3. The newest session-*.json file — grows as messages stream.
+                # 3. The newest session file — grows as messages stream.
                 #    We pick by mtime at adapter build time; the watchdog then
                 #    watches THAT file. If Gemini creates a newer session file
                 #    after we start, the chats/ dir mtime bump (signal #2)
                 #    catches it.
                 try:
                     session_files = sorted(
-                        chats_dir.glob("session-*.json"),
+                        self._session_file_candidates(chats_dir),
                         key=lambda p: p.stat().st_mtime,
                         reverse=True,
                     )
