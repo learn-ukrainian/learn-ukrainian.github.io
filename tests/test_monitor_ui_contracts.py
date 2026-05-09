@@ -57,3 +57,28 @@ def test_artifacts_page_uses_metadata_endpoint_and_filters():
     assert "author-filter" in html
     assert "date-filter" in html
     assert "artifact-card" in html
+
+
+def test_artifacts_page_preserves_legacy_dashboard_links():
+    html = (ROOT / "playgrounds" / "artifacts.html").read_text(encoding="utf-8")
+    assert 'href="/"' in html
+    for href in [
+        "/admin.html",
+        "/channels.html",
+        "/comms.html",
+        "/audit-dashboard.html",
+        "/build-events.html",
+        "/consultation.html",
+        "/cost.html",
+        "/curriculum-dashboard.html",
+        "/delegate.html",
+        "/image-explorer.html",
+        "/orient.html",
+        "/progress.html",
+        "/quality.html",
+        "/runtime.html",
+        "/track-health.html",
+        "/wiki.html",
+    ]:
+        assert f'href="{href}"' in html
+        assert (ROOT / "playgrounds" / href.lstrip("/")).exists()

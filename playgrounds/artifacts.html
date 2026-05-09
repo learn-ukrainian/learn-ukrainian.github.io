@@ -17,6 +17,19 @@ body { min-height: 100vh; }
 .hero-count { background: var(--bg2); border:1px solid var(--border); border-radius:4px; padding:14px 18px; min-width:160px; text-align:right; }
 .hero-count .value { font-family: Charter, Georgia, serif; font-size:34px; font-weight:700; }
 .hero-count .label { color: var(--text3); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
+.ops-directory { margin: 0 0 28px; }
+.ops-directory h3 { font-family: Charter, Georgia, serif; font-size:21px; margin:0 0 6px; }
+.ops-directory p { color: var(--text2); font-size:13px; margin:0 0 14px; max-width:760px; }
+.ops-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap:10px; }
+.ops-card { display:block; background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--text3); border-radius:4px; color:var(--text); padding:12px 13px; text-decoration:none; min-height:98px; }
+.ops-card:hover { border-color:var(--accent); box-shadow:0 6px 18px rgba(122,28,32,.07); }
+.ops-card strong { display:block; font-family: Charter, Georgia, serif; font-size:16px; margin-bottom:5px; }
+.ops-card span { display:block; color:var(--text2); font-size:12px; line-height:1.35; }
+.ops-card.audit { border-left-color:var(--green); }
+.ops-card.pipeline { border-left-color:var(--yellow); }
+.ops-card.agent { border-left-color:var(--accent); }
+.ops-card.curriculum { border-left-color:var(--cyan); }
+.ops-card.runtime { border-left-color:var(--purple); }
 .filters { display:grid; grid-template-columns: 1.2fr repeat(4, minmax(130px, 1fr)); gap:10px; margin-bottom: 26px; }
 .filters input, .filters select { background:#fffaf0; color:var(--text); border:1px solid var(--border); border-radius:4px; padding:9px 10px; font:inherit; font-size:13px; }
 .group { margin: 26px 0 34px; }
@@ -39,9 +52,11 @@ body { min-height: 100vh; }
 @media (max-width: 820px) {
   .hero { grid-template-columns: 1fr; }
   .hero-count { text-align:left; }
+  .ops-grid { grid-template-columns: 1fr 1fr; }
   .filters { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 560px) {
+  .ops-grid { grid-template-columns: 1fr; }
   .filters { grid-template-columns: 1fr; }
 }
 </style>
@@ -50,6 +65,7 @@ body { min-height: 100vh; }
 <div class="top-bar">
   <div class="top-left"><h1>Artifacts</h1></div>
   <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
     <a href="/orient.html">Orient</a>
     <a href="/channels.html">Channels</a>
     <a href="/comms.html">Comms</a>
@@ -67,6 +83,29 @@ body { min-height: 100vh; }
     <div class="hero-count">
       <div class="value" id="total-count">—</div>
       <div class="label">artifacts</div>
+    </div>
+  </section>
+
+  <section class="ops-directory" aria-label="Operational dashboards">
+    <h3>Operational dashboards</h3>
+    <p>The legacy home dashboard remains the full operations launchpad. These links keep the old working surfaces close while browsing reports and handoffs.</p>
+    <div class="ops-grid">
+      <a class="ops-card runtime" href="/admin.html"><strong>Admin</strong><span>Backups, health checks, disk usage, broker vacuum, log cleanup.</span></a>
+      <a class="ops-card agent" href="/channels.html"><strong>Agent Channels</strong><span>Topic-scoped multi-agent discussion threads.</span></a>
+      <a class="ops-card agent" href="/comms.html"><strong>Agent Comms</strong><span>Live activity, direct messages, batch progress, zombie monitor.</span></a>
+      <a class="ops-card audit" href="/audit-dashboard.html"><strong>Audit Dashboard</strong><span>Track overview, module heatmaps, QA gate breakdowns.</span></a>
+      <a class="ops-card pipeline" href="/build-events.html"><strong>Build Events</strong><span>Active module builds and dispatch meta events.</span></a>
+      <a class="ops-card runtime" href="/consultation.html"><strong>Consultation Loop</strong><span>Template proposals, review queue, history, metrics.</span></a>
+      <a class="ops-card runtime" href="/cost.html"><strong>Cost</strong><span>Per-module, per-phase, per-model token and USD spend.</span></a>
+      <a class="ops-card curriculum" href="/curriculum-dashboard.html"><strong>Curriculum Dashboard</strong><span>Track plans, module plans, word targets, outlines.</span></a>
+      <a class="ops-card pipeline" href="/delegate.html"><strong>Delegate</strong><span>Delegation tasks, zombie detection, task detail modal.</span></a>
+      <a class="ops-card curriculum" href="/image-explorer.html"><strong>Images</strong><span>Page context, bounding boxes, annotation editor, RAG search.</span></a>
+      <a class="ops-card runtime" href="/orient.html"><strong>Orient</strong><span>Session snapshot: git, issues, pipeline, runtime, health.</span></a>
+      <a class="ops-card pipeline" href="/progress.html"><strong>Progress</strong><span>Pipeline state across tracks from research through MDX.</span></a>
+      <a class="ops-card audit" href="/quality.html"><strong>Quality</strong><span>Research coverage, review scores, weak modules, fix queue.</span></a>
+      <a class="ops-card runtime" href="/runtime.html"><strong>Runtime</strong><span>Agent binaries, usage, headroom, recent runtime calls.</span></a>
+      <a class="ops-card audit" href="/track-health.html"><strong>Track Health</strong><span>Build progress, audits, enrichment, reviews, ETA.</span></a>
+      <a class="ops-card curriculum" href="/wiki.html"><strong>Wiki</strong><span>Wiki compilation progress, quality failures, build logs.</span></a>
     </div>
   </section>
 
