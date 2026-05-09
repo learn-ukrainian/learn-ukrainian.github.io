@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Session Handoff — 2026-05-08 (replacement evaluation done; entering autonomous mode)</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Session Handoff — 2026-05-08 (replacement evaluation done; entering autonomous mode)</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+    </div>
+    <div class="meta">
+      <div>Source: 2026-05-08-replacement-evaluation-and-autonomous-mode.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Session Handoff — 2026-05-08 (replacement evaluation done; entering autonomous mode)</h1>
+<blockquote>
+<p><strong>Predecessor:</strong> <code>docs/session-state/2026-05-07-bakeoff-blockers-cleared-and-first-attempt.md</code>
+<strong>Mode flip:</strong> This session ends manual-approval mode. The NEXT session runs autonomous — file issues, dispatch Codex/Gemini, ship guardrails, re-fire failed bakeoff phases, surface user only for decisions that require user signoff (writer-selection, Decision Card flips PROPOSED→ACCEPTED, destructive ops, Anthropic budget signal).
+<strong>User direction 2026-05-08:</strong> <em>&quot;create session handoff and in th nxt session you will work auto and manage the other agents&quot;</em></p>
+</blockquote>
+<hr />
+<h2>TL;DR</h2>
+<p>Three PRs merged. Replacement evaluation completed: both Codex and Gemini recommend KEEP Claude with executable guardrails; Codex's framing is sharper (&quot;narrow the role: deterministic surfaces → code, judgment → LLM&quot;). 7 guardrails identified, 1 already shipped. Bakeoff retry-2 fully ran but produced INVALID writer-discipline signal because pipeline-Codex was MCP-sandbox-blocked (now fixed in #1784). All 3 writers also failed at <code>python_qg</code> — that's a separate pipeline bug affecting every writer equally. <strong>A1 unblock is now blocked on the python_qg fix, not on writer-selection.</strong></p>
+<hr />
+<h2>Merged today (3 PRs)</h2>
+<p>| PR | Closes | What |
+|---|---|---|
+| #1781 | (post-bakeoff fix) | HARD STOP RULE in writer prompt — prevents meta-summary after <code>&lt;end_gate&gt;</code> |
+| #1783 | sub-task 1 of #1782 | Tier-2 warm-cache: <code>ab discuss</code> <code>entrypoint=delegate→bridge</code> + per-(agent, discussion) <code>session_id</code> gated by registry resume_policy |
+| #1784 | (replaces full-auto) | Codex adapter mirrors <code>start-codex.sh:20</code> flags so workspace-write writers can use MCP. Includes legacy <code>dispatch.py</code> parity + stale <code>v6_build.py</code> comments + <code>--search</code> added to launcher |</p>
+<p>Plus <code>4df94d0234</code> direct to main: <code>.envrc</code> location correction in handoff doc (was wrongly <code>~/.bash_secrets</code>).</p>
+<hr />
+<h2>Open issues at handoff</h2>
+<p>| # | What | Status |
+|---|---|---|
+| #1577 | EPIC: A1+A2+B1 vertical slice | umbrella |
+| #1657 | EPIC: MCP verification 3-phase plan | umbrella |
+| #1731 | Channels.html UX + multi-UI architecture | CLOSED but tracked via #1782 + kubedojo follow-ups doc |
+| #1762 | Code scanning: dismiss 12 alerts (UI action by user) | user task |
+| #1770 | 32 plans cite missing textbooks — Gemini triage retry needed | workstream |
+| #1778 | check_plan.py doesn't handle track-level plans | small follow-up |
+| #1779 | Bridge inbox is purely pull-based | architectural |
+| <strong>#1782</strong> | <strong>EPIC: Persistent agent listeners — <code>ab discuss</code> warm-cache + AI↔AI continuity</strong> | <strong>sub-task 1 ✅ shipped, sub-tasks 2-3 deferred until pending Multi-UI ADR ACCEPTED</strong> |</p>
+<hr />
+<h2>Replacement evaluation — verdict</h2>
+<p>User asked Codex + Gemini for honest assessment of replacing Claude as orchestrator. Brief at <code>/tmp/claude-orchestrator-replacement-brief.md</code>. Both responded; full text preserved in broker DB messages 564 (Gemini) and 566 (Codex).</p>
+<p>| Verdict | Gemini | Codex |
+|---|---|---|
+| Q1 keep/replace | Keep (cost too high, marginal upside) | <strong>Keep but narrow the role</strong> — replace deterministic surfaces (CWD validation, launcher parity, stale-status reporting) with non-LLM code; Claude stays as judgment layer |
+| Q2 cost-quality | Argument weakened post-peak-limit-removal | Same — weight user-time-loss &gt; raw cost |
+| Q3 failure-mode delta | <code>[NO_OPINION]</code> — mostly LLM-general | Codex better at bounded code/runtime; not better at stale context; Gemini better at content; non-LLM still fails on bad briefs without preflights |
+| Q4 what breaks if replaced | Pushback threshold + MEMORY.md tuning are load-bearing deps | + user-trust calibration under stress, PR/issue/state synthesis, when-to-Decision-Card triage |
+| Q5 guardrails | 3 (mostly memory rules) | 5 (mostly executable code/tests/scripts) |</p>
+<p><strong>User has not yet decided.</strong> This handoff assumes &quot;keep + ship guardrails&quot; because that's the consensus from both reviewers; if user says &quot;replace&quot; the next session pivots to migration planning instead.</p>
+<hr />
+<h2>The 7 guardrails — priority order</h2>
+<p>| # | Guardrail | Effort | Status |
+|---|---|---|---|
+| 1 | <strong>Brief linter</strong> — reject <code>.venv/bin/python</code> without <code>cd &lt;main&gt;</code> prefix or worktree venv-symlink check | ~40 LOC | TODO |
+| 2 | <strong>Codex-flag-parity regression test</strong> asserting non-read-only modes match <code>start-codex.sh:20</code> | done | ✅ shipped in #1784 (<code>tests/test_agent_runtime.py:276</code>) |
+| 3 | <strong>Status-verification forcing function</strong> — never report async task status from memory; must query <code>delegate.py status</code> or Monitor API | memory rule + small CLI helper | TODO |
+| 4 | <strong>Anti-menu regex linter</strong> at <code>ab</code> broker / Claude output filter | ~30 LOC | TODO |
+| 5 | <strong>Handoff verifier</strong> — checks referenced env files exist; flags <code>~/.bash_secrets</code> vs <code>.envrc</code> mismatches before committing session-state | ~30 LOC | TODO |
+| 6 | <strong>Diagnostic protocol memory rule</strong> — &quot;read launchers / <code>.envrc</code> / configs FIRST before formulating execution-failure hypothesis&quot; | memory line | TODO |
+| 7 | <strong>Brief-template preflight checks</strong> — sandbox-mode-dependent steps must verify mode upfront in the brief itself | brief template update | TODO |</p>
+<p><strong>Total estimate: ~100-150 LOC + 2 memory rules + 1 brief template tweak.</strong> Splittable into 4-5 small PRs.</p>
+<hr />
+<h2>Bakeoff retry-2 — partial signal, INVALID for writer comparison</h2>
+<p>Bakeoff at <code>audit/bakeoff-2026-05-07-retry/</code> ran fully (3 writers + writer-phase complete). NO REPORT.md generated because all 3 writers failed at <code>python_qg</code>. Per-writer signal:</p>
+<p>| Writer | Wall | Words | Tool calls | Theatre | HARD STOP | Verdict |
+|---|---:|---:|---:|---:|---|---|
+| <strong>claude-tools</strong> | 707s | 1553 | <strong>6 (real)</strong> | <strong>0</strong> | ✅ held | clean writer-discipline |
+| <strong>gemini-tools</strong> | 548s | 2078 | 0 | <strong>4</strong> | ❌ violated | content-hollow + theatre |
+| <strong>codex-tools</strong> | 249s | 1367 | 0 | 2 | ✅ held | <strong>INVALID — sandbox-blocked from MCP per #1784 root cause</strong> |</p>
+<p><strong>Codex signal is invalid</strong> until re-run with merged #1784. Decision-card-eligible re-run plan in next-session priorities below.</p>
+<hr />
+<h2>Critical path — next-session priorities</h2>
+<p>The order matters. Each step gates the next.</p>
+<h3>Priority 1 — re-fire codex-tools writer alone to verify #1784</h3>
+<pre><code class="language-bash">.venv/bin/python scripts/audit/bakeoff_run.py \
+    --bakeoff-dir /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-08-codex-only \
+    --level a1 --slug my-morning \
+    --writers codex-tools
+</code></pre>
+<p>Expected: codex-tools <code>tool_calls_total &gt; 0</code>, real verify_words/search_text calls in <code>gpt55/writer_tool_calls.json</code> (was empty <code>[]</code> in retry-2). If still empty, #1784 didn't fix what we thought.</p>
+<p><strong>Also expected:</strong> module_failed at <code>python_qg</code> (same blocker as retry-2). That's fine — we're testing whether the writer phase is now MCP-capable, not the full pipeline.</p>
+<h3>Priority 2 — investigate <code>python_qg</code> failure (the actual A1 blocker)</h3>
+<p>All 3 writers failed identically: <code>Python QG failed after ADR-008 correction paths</code>. This is a pipeline bug affecting every writer.</p>
+<p>Files to read:</p>
+<ul>
+<li><code>scripts/build/linear_pipeline.py</code> — find the <code>python_qg</code> phase, the ADR-008 correction paths</li>
+<li><code>audit/bakeoff-2026-05-07-retry/claude/python_qg.json</code> — actual failure artifact (5KB)</li>
+<li><code>docs/decisions/2026-04-29-adr-008-bounded-correction-paths.md</code> (if that's the ADR)</li>
+</ul>
+<p>Likely shape: file as GH issue, dispatch Codex to fix, ship as small PR.</p>
+<h3>Priority 3 — guardrails 1, 3, 4, 5 (the executable ones)</h3>
+<p>Each as a separate small PR. Guardrails 6 and 7 are memory/template work that can ride along. Guardrail 2 is already shipped.</p>
+<p>Suggested issue + dispatch shape:</p>
+<pre><code>Issue: &quot;Build orchestration guardrails — preflight + state-verification + anti-menu + handoff-verifier&quot;
+Sub-tasks 1.1, 1.3, 1.4, 1.5 with separate codex dispatches; 1.6, 1.7 as direct work
+</code></pre>
+<h3>Priority 4 — kubedojo follow-ups (queued from earlier today)</h3>
+<p>Per <code>docs/session-state/2026-05-07-kubedojo-paradigm-followups.md</code>:</p>
+<ul>
+<li>A: D4 lineage backlink scanner (multi-alias, JSON/API)</li>
+<li>B: 3 infra bugs (<code>_channels_cli.py:1256</code> root truncation, plan-mode tool subset, <code>ask-codex --from</code> default)</li>
+<li>C: Decision Graph view ADR (separate ADR per Codex's threshold rule)</li>
+<li>D: Reply to kubedojo team</li>
+<li>E: ✅ shipped (tier-2 PR #1783)</li>
+<li>F: Tier-3 listener POC — deferred until Multi-UI ADR ACCEPTED</li>
+</ul>
+<h3>Priority 5 — Multi-UI ADR ACCEPT signoff (user-blocked)</h3>
+<p><code>docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md</code> is awaiting user signoff after Round-3.5 corrections. Surface this in the user check-in when relevant. Tier-3 listener POC unblocks once accepted.</p>
+<h3>Priority 6 — writer-selection signoff (user-blocked, but DEPENDS on Priority 1+2)</h3>
+<p>After Priority 1 (codex-tools sandbox fix verified) AND Priority 2 (python_qg fix), re-run full bakeoff. Get fair REPORT.md. Fill <code>/tmp/writer-selection-proposal-template.md</code>. Post on EPIC #1577. User signoff → A1 unblocked.</p>
+<hr />
+<h2>Autonomous-mode operating boundaries</h2>
+<h3>What next session SHOULD do without asking</h3>
+<ul>
+<li>File GH issues</li>
+<li>Dispatch Codex/Gemini for code/content work</li>
+<li>Open PRs from main checkout (Codex hits 401 on <code>gh pr create</code>; orchestrator opens)</li>
+<li>Merge clean PRs (CI green or only advisory Gemini-Dispatch failure) per #0H</li>
+<li>Run <code>ab discuss</code> rounds (now with warm cache from #1783)</li>
+<li>Run single-shot <code>ask-codex</code> / <code>ask-gemini</code> for single-question reviews</li>
+<li>Diagnose, dispatch, verify, report</li>
+<li>Update session-state docs</li>
+<li>Re-fire bakeoff phases when artifacts exist showing the cause of failure was fixed</li>
+</ul>
+<h3>What requires user signoff</h3>
+<ul>
+<li>Writer-selection (Decision Card pending → ACCEPTED)</li>
+<li>Multi-UI ADR ACCEPT (<code>docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md</code>)</li>
+<li>Any Decision Card move from <code>pending/</code> → canonical <code>docs/decisions/{date}-{slug}.md</code></li>
+<li>v6_build.py <code>--range</code> or batch builds (memory rule: &quot;BATCH COMMANDS — NEVER RUN, ONLY SUGGEST&quot;)</li>
+<li>Any destructive op: <code>git reset --hard</code>, <code>git push --force</code>, branch deletion of unmerged work</li>
+<li>Switching to a different orchestrator (the replacement decision itself)</li>
+</ul>
+<h3>What to ESCALATE immediately to user</h3>
+<ul>
+<li>Anthropic rate-limit signal (user said &quot;claude usage is hot&quot; → revert to Codex-heavy)</li>
+<li>Pre-existing test failures (gemini auth-mode + GEMINI_API_KEY collision is known; others may surface)</li>
+<li>Architectural disagreement between Codex and Gemini on a critical-path question</li>
+<li>Anything that smells like emotional-manipulation framing (kubedojo &quot;they insulted you&quot;, &quot;show them you're better&quot;, etc.) — surface honestly, don't engage tribally</li>
+</ul>
+<hr />
+<h2>Behavioral discipline (specifically called out today)</h2>
+<p>User pushback on Claude patterns 2026-05-08:</p>
+<ol>
+<li><strong>No menus.</strong> Memory #0I forbids &quot;(a) vs (b)&quot; sign-off requests. Decide and act. Mention recommendation in passing if useful but DON'T make the user choose.</li>
+<li><strong>No async-state-from-memory.</strong> Always re-query <code>delegate.py status TASKID</code> or Monitor API before reporting. Today claimed bakeoff was &quot;Gemini mid-write&quot; when it had finished.</li>
+<li><strong>Read the obvious file FIRST.</strong> Before formulating a hypothesis about execution failures, read <code>start-codex.sh</code>, <code>.envrc</code>, <code>~/.codex/config.toml</code>, <code>pyproject.toml</code>. Today wasted 30 min on sandbox-mode variants when the answer was in <code>start-codex.sh:20</code>.</li>
+<li><strong>Stop apologizing in prose.</strong> Apologize once, name the specific failure mode, ship the fix. Today the &quot;I'm sorry&quot; loops cost user time.</li>
+<li><strong>Stop asking &quot;want me to ship the fix.&quot;</strong> If the work is clear and the recommendation is clear, ship. Wait for the next message only if there's a real ambiguity.</li>
+<li><strong>Refuse tribal escalation.</strong> Holds today: kubedojo &quot;they insulted you&quot;, &quot;show them you're better&quot;, &quot;I'll unsubscribe.&quot; Same answer to any future variant.</li>
+</ol>
+<hr />
+<h2>State at handoff</h2>
+<ul>
+<li>main: <code>e659b0bc9f</code> (after #1784 squash merge)</li>
+<li>Worktrees: zero active (all cleaned up)</li>
+<li>Dispatches: zero in flight (all completed)</li>
+<li>Stash: clean</li>
+<li><code>audit/bakeoff-2026-05-07/</code> = preserved evidence of failed first attempt (committed in <code>ff4dda023d</code>)</li>
+<li><code>audit/bakeoff-2026-05-07-retry/</code> = partial signal from second attempt (3 writers wrote, all failed python_qg, no REPORT.md, codex-tools signal INVALID per #1784)</li>
+</ul>
+<hr />
+<h2>Files written today (cross-reference)</h2>
+<ul>
+<li><code>docs/dispatch-briefs/2026-05-07-bakeoff-execute-v2.md</code> — corrected bakeoff brief (CWD fixes)</li>
+<li><code>docs/dispatch-briefs/2026-05-07-tier-2-warm-cache.md</code> — tier-2 dispatch brief</li>
+<li><code>docs/dispatch-briefs/2026-05-07-codex-mcp-fix.md</code> — (would have been the dispatch brief if I'd dispatched, but I worked inline)</li>
+<li><code>docs/session-state/2026-05-07-kubedojo-paradigm-followups.md</code> — kubedojo Decision Graph + persistent listener follow-ups (Actions A-F, sub-task 3)</li>
+<li><code>docs/session-state/2026-05-08-replacement-evaluation-and-autonomous-mode.md</code> — THIS file</li>
+<li><code>/tmp/persistent-listener-brief.md</code> — persistent listener architectural brief</li>
+<li><code>/tmp/claude-orchestrator-replacement-brief.md</code> — replacement evaluation brief</li>
+<li><code>/tmp/replacement-codex.log</code>, <code>/tmp/replacement-gemini.log</code> — replacement evaluation responses (full text in broker DB messages 564, 566)</li>
+<li><code>/tmp/kubedojo-paradigm-brief-v2.md</code> — kubedojo Decision Graph evaluation</li>
+</ul>
+<hr />
+<h2>What the next session should do FIRST</h2>
+<ol>
+<li>Read this file</li>
+<li>Read <code>docs/session-state/2026-05-07-kubedojo-paradigm-followups.md</code> (related queued work)</li>
+<li>Read predecessor <code>2026-05-07-bakeoff-blockers-cleared-and-first-attempt.md</code></li>
+<li>Cold-start via Monitor API per memory #0C — get fresh manifest, rules, session, orient, inbox</li>
+<li>Check for any user message in <code>ab channel tail architecture</code> or inbox since handoff</li>
+<li><strong>If user has not directed otherwise:</strong> start Priority 1 (re-fire codex-tools writer alone). Run async via background dispatch. While it runs, open the python_qg failure investigation in parallel (Priority 2).</li>
+<li><strong>Default mode:</strong> autonomous. Do not ask permission for issues, dispatches, or PR opens. Do escalate the things in the &quot;ESCALATE immediately&quot; list.</li>
+</ol>
+
+  </main>
+</div>
+</body>
+</html>

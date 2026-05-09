@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>V6 Pipeline Architecture Review</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>V6 Pipeline Architecture Review</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+    </div>
+    <div class="meta">
+      <div>Source: v6-pipeline-review.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>V6 Pipeline Architecture Review</h1>
+<blockquote>
+<p>Full code review of v6_build.py (3,660 lines) + dispatch.py (236 lines) + enrich.py (730 lines) + 6 prompt templates (840 lines total)</p>
+<p>Issue: #1073 | Date: 2026-03-27</p>
+</blockquote>
+<hr />
+<h2>1. Architecture Diagram</h2>
+<pre><code>CLI: v6_build.py a1 2 --writer gemini --reviewer claude-tools
+
+main()
+  |
+  v
+[RESOLVE SLUG] ── curriculum.yaml → slug = &quot;reading-ukrainian&quot;
+  |
+  v
+[PREFLIGHT] ── RAG server health check (if --writer ends with -tools)
+  |
+  v
+[CLEAN] ── _clean_build_artifacts() (only --step all)
+  |
+  +──────────────────────────────────────────────────────────────+
+  |  PIPELINE PHASES (sequential)                                |
+  |                                                              |
+  |  1. CHECK ─── step_check()                                   |
+  |     └─ check_plan() + auto_fix_plan() + fix_russianisms()    |
+  |                                                              |
+  |  2. RESEARCH ─── step_research()                             |
+  |     └─ build_packet() → {slug}-knowledge-packet.md           |
+  |     └─ assess_research_compat() → research-quality.json      |
+  |                                                              |
+  |  3. SKELETON ─── step_skeleton()                             |
+  |     └─ Dispatch: Sonnet/Gemini → &lt;skeleton&gt; → skeleton.md    |
+  |                                                              |
+  |  4. WRITE ─── step_write_with_retry()                        |
+  |     ├─ Attempt 1: step_write() with writer                   |
+  |     │    ├─ Chunking gate: wt≥2000 + ≥2 sections             |
+  |     │    │    └─ step_write_chunked() (section-by-section)    |
+  |     │    └─ Single-call mode                                 |
+  |     ├─ quick_verify() → pass/retry                           |
+  |     ├─ Attempt 2: same writer + correction directive         |
+  |     └─ Attempt 3: opposite writer (circuit breaker)          |
+  |                                                              |
+  |  5a. EXERCISES (legacy) ─── step_exercises()                 |
+  |     └─ Skipped in --step all (ACTIVITIES replaces it)        |
+  |                                                              |
+  |  5b. ACTIVITIES ─── step_activities()                        |
+  |     └─ Dispatch: Gemini-tools/Claude-tools → YAML            |
+  |     └─ JSON Schema validation + retry loop                   |
+  |     └─ _inject_abetka_activities() (A1 deterministic inject) |
+  |                                                              |
+  |  5c. VERIFY EXERCISES ─── step_verify_exercises()            |
+  |     └─ Grounding check (informational, non-blocking)         |
+  |                                                              |
+  |  6. POST-PROCESS ─── _post_process_content()                 |
+  |     └─ Strip: dup summary, content notes, stress marks,      |
+  |        tab markers, stray quotes                             |
+  |                                                              |
+  |  5d. VOCAB ─── step_vocab()                                  |
+  |     └─ Dispatch: Flash-Lite/Sonnet → vocabulary YAML         |
+  |     └─ Dedupe against previous modules                       |
+  |                                                              |
+  |  7a. ENRICH ─── step_enrich()                                |
+  |     └─ enrich.py: tabs, slovnyk, videos, resources, dialogue |
+  |                                                              |
+  |  7b. VERIFY ─── step_verify()                                |
+  |     └─ VESUM check, Russicism scan, IPA scan                 |
+  |     └─ VERIFY flag resolution                                |
+  |                                                              |
+  |  8. REVIEW ─── step_review()                                 |
+  |     ├─ Cross-agent: Claude wrote → Gemini reviews (or vice)  |
+  |     ├─ VESUM report injected, VERIFY flags injected          |
+  |     ├─ Parse scores (9 dimensions, weighted)                 |
+  |     ├─ Two gates: score ≥ 8.0 AND verdict == PASS            |
+  |     └─ Fix loop (if REVISE):                                 |
+  |          ├─ Score ≥ 9.0: rewrite + accept (no re-review)     |
+  |          └─ Score &lt; 9.0: rewrite → re-enrich → re-review     |
+  |               └─ Max 2 rounds, stop if score doesn't improve |
+  |                                                              |
+  |  8b. ANNOTATE ─── step_annotate()                            |
+  |     └─ Stress marks via stress_annotator.py                  |
+  |                                                              |
+  |  9. PUBLISH ─── step_publish()                               |
+  |     └─ Load activities YAML, strip legacy DSL                |
+  |     └─ Inject inline activities at markers                   |
+  |     └─ Build 4-tab MDX (Урок/Словник/Зошит/Ресурси)         |
+  |     └─ Write frontmatter + imports + MDX to starlight/       |
+  |                                                              |
+  +──────────────────────────────────────────────────────────────+
+</code></pre>
+<hr />
+<h2>2. Dispatch Table — Every LLM Call</h2>
+<p>| Phase | Default Agent | Default Model | Timeout | MCP Tools | Notes |
+|-------|--------------|---------------|---------|-----------|-------|
+| skeleton | writer base (strip -tools) | <code>claude-sonnet-4-6</code> (Claude) / Gemini PRO | 300s | No | Structure planning, cheap model OK |
+| write (single) | writer flag | Inherited from dispatch | 600s (900s w/tools) | If -tools | Full content generation |
+| write (chunked) | writer base | Inherited from dispatch | 300s/section | No | <strong>BUG: no tools in chunks</strong> |
+| activities | gemini-tools / claude-tools | Gemini PRO / <code>claude-sonnet-4-6</code> | 300s | Yes | JSON Schema validated |
+| vocab | writer base | <code>FLASH_LITE_MODEL</code> (Gemini) / <code>claude-sonnet-4-6</code> | 180s | No | Dictionary-like structured output |
+| review | cross-agent | Gemini PRO / <code>claude-opus-4-6</code> | 600s | Yes | Adversarial, opposite of writer |
+| section-rewrite | writer family-tools | Inherited from dispatch | 300s | Yes (Claude) / Yes (Gemini) | Fix weak sections |</p>
+<h3>Model resolution flow:</h3>
+<pre><code>dispatch_agent(model=None)
+  → is_gemini? → from batch_gemini_config import PRO_MODEL → &quot;gemini-3.1-pro-preview&quot;
+  → is_claude? → from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT → claude-opus-4-6
+  → BUT many callers pass model= explicitly, bypassing this default
+</code></pre>
+<hr />
+<h2>3. File I/O Map — Every File Read/Written During a Build</h2>
+<h3>Read:</h3>
+<p>| File | Phase | Purpose |
+|------|-------|---------|
+| <code>curriculum.yaml</code> | main, check, publish | Module ordering, slug resolution |
+| <code>plans/{level}/{slug}.yaml</code> | check, skeleton, write, activities, vocab, review, enrich | Source of truth |
+| <code>{level}/research/{slug}-knowledge-packet.md</code> | skeleton, write | RAG excerpts |
+| <code>{level}/{slug}.md</code> | exercises, annotate, enrich, verify, review, publish | Content |
+| <code>{level}/activities/{slug}.yaml</code> | publish | Activity data |
+| <code>{level}/vocabulary/{slug}.yaml</code> | enrich | Словник data |
+| <code>{level}/orchestration/{slug}/skeleton.md</code> | write (single-step mode) | Existing skeleton |
+| <code>{level}/orchestration/{slug}/verify-flags.yaml</code> | review | Writer uncertainty flags |
+| <code>docs/rules/global-friction.yaml</code> | write retry | Cross-build learnings |
+| <code>{level}/orchestration/*/friction.yaml</code> | write retry | Module friction files |
+| <code>docs/rules/pedagogy-patterns.yaml</code> | activities | Exercise patterns |
+| <code>docs/resources/external_resources.yaml</code> | enrich | External links |
+| <code>docs/resources/miyklas-url-index.yaml</code> | enrich | МійКлас URLs |
+| <code>docs/resources/ulp-articles-index.yaml</code> | enrich | ULP article URLs |
+| <code>schemas/activity-v2.schema.json</code> | activities | Validation schema |
+| <code>data/vesum.db</code> | enrich, verify, review | VESUM SQLite |</p>
+<h3>Written:</h3>
+<p>| File | Phase | Purpose |
+|------|-------|---------|
+| <code>{level}/research/{slug}-knowledge-packet.md</code> | research | RAG packet |
+| <code>{level}/orchestration/{slug}/research-quality.json</code> | research | Quality score |
+| <code>{level}/orchestration/{slug}/skeleton.md</code> | skeleton | Structure plan |
+| <code>{level}/orchestration/{slug}/v6-skeleton-prompt.md</code> | skeleton | Saved prompt |
+| <code>{level}/orchestration/{slug}/v6-prompt.md</code> | write | Saved prompt |
+| <code>{level}/orchestration/{slug}/pacing-plan.txt</code> | write | Pacing plan extract |
+| <code>{level}/{slug}.md</code> | write | <strong>Content (main output)</strong> |
+| <code>{level}/activities/{slug}.yaml</code> | activities | Activity data |
+| <code>{level}/orchestration/{slug}/v6-activities-prompt.md</code> | activities | Saved prompt |
+| <code>{level}/vocabulary/{slug}.yaml</code> | vocab | Vocabulary YAML |
+| <code>{level}/review/{slug}-review-r{N}.md</code> | review | Versioned review |
+| <code>{level}/review/{slug}-review.md</code> | review | Latest review |
+| <code>{level}/orchestration/{slug}/review-structured-r{N}.yaml</code> | review | Parsed scores |
+| <code>{level}/orchestration/{slug}/v6-review-prompt.md</code> | review | Saved prompt |
+| <code>{level}/orchestration/{slug}/verify-flags.yaml</code> | verify | VERIFY flags |
+| <code>{level}/orchestration/{slug}/exercise-verification.json</code> | verify-exercises | Grounding |
+| <code>{level}/orchestration/{slug}/quick-verify.json</code> | write | Quick verify results |
+| <code>{level}/orchestration/{slug}/state.json</code> | all phases | Pipeline state |
+| <code>{level}/orchestration/{slug}/dispatch/*-meta.json</code> | all dispatches | Dispatch logs |
+| <code>{level}/orchestration/{slug}/dispatch/*.stderr.log</code> | all dispatches | Stderr capture |
+| <code>{level}/build-stats.jsonl</code> | write | Retry statistics |
+| <code>{level}/build-errors/{slug}-errors.md</code> | write (exhausted) | Error report |
+| <code>{level}/orchestration/{slug}/friction.yaml</code> | write (exhausted) | Auto-friction |
+| <code>{level}/orchestration/{slug}/correction-attempt-{N}.md</code> | write retry | Directive |
+| <code>starlight/src/content/docs/{level}/{slug}.mdx</code> | publish | <strong>MDX output</strong> |
+| <code>{level}/orchestration/{slug}/index.md</code> | final | Orchestration index |</p>
+<hr />
+<h2>4. Bug List</h2>
+<h3>CRITICAL (will cause incorrect behavior)</h3>
+<p><strong>BUG-01: Chunked write mode never enables MCP tools</strong></p>
+<ul>
+<li>Location: <code>step_write_chunked()</code> line 756</li>
+<li>The chunked writer dispatches with <code>agent=base_writer</code> (e.g., &quot;gemini&quot;) but never passes <code>mcp_tools=True</code> or <code>allowed_tools</code>. Even if the user specified <code>--writer claude-tools</code>, the tools suffix is stripped at line 722 (<code>base_writer = &quot;gemini&quot; if &quot;gemini&quot; in writer else &quot;claude&quot;</code>).</li>
+<li>Impact: Modules built with chunking (word_target ≥ 2000) never get MCP tool verification during writing.</li>
+<li>Fix: Pass the original <code>writer</code> to dispatch, not <code>base_writer</code>, when tools are requested.</li>
+</ul>
+<p><strong>BUG-02: Chunked write injects correction directive only on chunk 0</strong></p>
+<ul>
+<li>Location: <code>step_write_chunked()</code> line 748</li>
+<li>If a correction directive exists (from retry loop), it's only prepended to the first chunk's prompt. Chunks 2-N don't see the corrections.</li>
+<li>Impact: Errors in later sections aren't corrected on retry.</li>
+<li>Note: The retry flow calls <code>step_write()</code> which gates into <code>step_write_chunked()</code>, so this is the actual retry path for large modules.</li>
+</ul>
+<p><strong>BUG-03: <code>_build_review_correction()</code> is dead code</strong></p>
+<ul>
+<li>Location: Lines 2911-2997</li>
+<li>This function is defined but NEVER called anywhere. It was replaced by <code>_rewrite_weak_sections()</code> but wasn't removed.</li>
+<li>Impact: No functional impact, but 86 lines of dead code.</li>
+</ul>
+<p><strong>BUG-04: <code>_parse_review_fixes()</code> is dead code</strong></p>
+<ul>
+<li>Location: Lines 3000-3038</li>
+<li>This function parses <code>&lt;fixes&gt;</code> blocks from reviews but is NEVER called. The pipeline switched from find/replace to section rewriting.</li>
+<li>Impact: No functional impact, but 38 lines of dead code.</li>
+</ul>
+<p><strong>BUG-05: <code>step_exercises()</code> is dead code in the main pipeline</strong></p>
+<ul>
+<li>Location: Lines 1371-1408, called at 3505-3508</li>
+<li>Only runs in <code>--step exercises</code> single-step mode. In <code>--step all</code>, it's explicitly skipped (line 3509-3512) but still saves state for &quot;exercises&quot; phase. The <code>step_activities()</code> function replaced it entirely.</li>
+<li>Impact: Confusing. The &quot;exercises&quot; state is saved twice — once from the skip message, once from activities.</li>
+</ul>
+<p><strong>BUG-06: Step numbering is inconsistent and confusing</strong></p>
+<ul>
+<li>The docstring (line 2-16) says: CHECK=2, RESEARCH=3, SKELETON=4, WRITE=5, EXERCISES=5b, VERIFY_EXERCISES=5d, ANNOTATE=6, ENRICH=7b, VERIFY=7, REVIEW=8, PUBLISH=9</li>
+<li>But in main() the actual order is: CHECK → RESEARCH → SKELETON → WRITE → EXERCISES(skip) → ACTIVITIES → VERIFY_EXERCISES → POST_PROCESS → VOCAB → ENRICH → VERIFY → REVIEW → ANNOTATE → PUBLISH</li>
+<li>POST_PROCESS happens at &quot;step 6&quot; but is not in the docstring steps</li>
+<li>VOCAB happens between POST_PROCESS and ENRICH but is listed as &quot;5c&quot;</li>
+<li>ACTIVITIES is &quot;5e&quot; but runs after &quot;5b&quot; (EXERCISES)</li>
+<li>Impact: Impossible to understand the pipeline from the docstring. The actual execution order is the source of truth.</li>
+</ul>
+<p><strong>BUG-07: <code>_post_process_content()</code> strips ALL TAB markers unconditionally</strong></p>
+<ul>
+<li>Location: Lines 1454-1458</li>
+<li>If writer output contains <code>&lt;!-- TAB:</code> anywhere, everything from that point is removed. But <code>_post_process_content</code> runs in <code>--step all</code> mode BEFORE enrich, so this shouldn't cause data loss... unless someone runs <code>--step annotate</code> on already-enriched content.</li>
+<li>The step_annotate docstring (line 1478-1482) explicitly warns about this: &quot;Does NOT call _post_process_content&quot;.</li>
+<li>Impact: Fragile. The ordering dependency is correct but undocumented in code flow comments.</li>
+</ul>
+<p><strong>BUG-08: Section rewrite accepts results even when rewrite is rejected</strong></p>
+<ul>
+<li>Location: Lines 3589-3595</li>
+<li>When score ≥ 9.0 and rewrite fails validation (too short, dropped sections), the code falls through to <code>passed = True</code> with message &quot;rewrite rejected but score sufficient&quot;.</li>
+<li>This means a 9.0-scoring module with identified errors passes without any fix attempt.</li>
+<li>Impact: Known errors ship to learners. The logic should at minimum log the specific errors that went unfixed.</li>
+</ul>
+<p><strong>BUG-09: Seminar write template has unreplaced placeholders</strong></p>
+<ul>
+<li>Location: <code>v6-write-seminar.md</code> lines 127-129</li>
+<li>Contains <code>{SKELETON_SECTION}</code> and <code>{CORRECTION_SECTION}</code> placeholders, but <code>step_write()</code> never replaces these — it only replaces <code>{PLAN_CONTENT}</code>, <code>{KNOWLEDGE_PACKET}</code>, and <code>{GOLDEN_FRAGMENT}</code>.</li>
+<li>For core modules, the skeleton is injected by code in <code>step_write()</code> (lines 928-952). For seminar modules, the template expects it in a different placeholder.</li>
+<li>Impact: Seminar modules get literal <code>{SKELETON_SECTION}</code> text in their prompts.</li>
+<li>Fix: Either add replacement logic in step_write for seminar templates, or standardize both templates.</li>
+</ul>
+<h3>MAJOR (quality/maintenance issues)</h3>
+<p><strong>BUG-10: Model resolution is scattered across 6+ locations</strong></p>
+<ul>
+<li>Skeleton: hardcoded <code>claude-sonnet-4-6</code> (line 483)</li>
+<li>Write: dispatcher defaults from <code>batch_gemini_config</code> (dispatch.py line 174-178)</li>
+<li>Activities Claude: hardcoded <code>claude-sonnet-4-6</code> (line 2068)</li>
+<li>Vocab Gemini: <code>FLASH_LITE_MODEL</code> from config (line 1549)</li>
+<li>Vocab Claude: hardcoded <code>claude-sonnet-4-6</code> (line 1552)</li>
+<li>Review Claude: hardcoded <code>claude-opus-4-6</code> (line 2669)</li>
+<li>Review Gemini: dispatcher default (PRO_MODEL)</li>
+<li>Impact: Changing a model requires editing 6+ places. This is exactly what #1072 (ModelFamily refactor) addresses.</li>
+</ul>
+<p><strong>BUG-11: <code>_build_review_correction()</code> has stale block-parsing logic</strong></p>
+<ul>
+<li>Already dead code (BUG-03), but the block parser at lines 2940-2958 uses <code>[DIMENSION</code> to detect block starts, but the review template uses <code>[DIMENSION] [SEVERITY: ...]</code> format. The detection regex would never match.</li>
+<li>Impact: No functional impact (dead code), but worth noting for future reference.</li>
+</ul>
+<p><strong>BUG-12: Friction file scanning is O(N*M) across ALL modules in ALL levels</strong></p>
+<ul>
+<li>Location: <code>_query_friction_for_errors()</code> lines 1158-1240</li>
+<li>Iterates every orchestration directory in the current level AND all other levels.</li>
+<li>With 1,735 modules, this could scan hundreds of directories on every write retry.</li>
+<li>Impact: Slow retries. Should be cached or indexed.</li>
+</ul>
+<p><strong>BUG-13: VESUM lookup in enrich.py opens/closes SQLite connection per word</strong></p>
+<ul>
+<li>Location: <code>enrich.py</code> <code>_vesum_lookup()</code> lines 50-81</li>
+<li>Called once per vocabulary item. Each call opens a new SQLite connection.</li>
+<li>Impact: Slow enrichment for modules with many vocab items. Should use a connection pool or pass the connection.</li>
+</ul>
+<p><strong>BUG-14: <code>_build_resources_tab()</code> in v6_build.py duplicates logic from enrich.py</strong></p>
+<ul>
+<li>Location: Lines 3156-3206 (v6_build.py) vs lines 282-378 (enrich.py)</li>
+<li>Both build a resources section from plan references + external_resources.yaml.</li>
+<li>The enrich.py version is more complete (includes ULP, МійКлас auto-matching).</li>
+<li>Impact: If resources are updated in enrich logic, the publish step may overwrite with a simpler version. In practice, <code>step_publish</code> prefers the existing enriched resources (line 3318-3319).</li>
+</ul>
+<p><strong>BUG-15: Chunk prompt says &quot;Write exercises directly in DSL format&quot;</strong></p>
+<ul>
+<li>Location: <code>_build_chunk_prompt()</code> line 663</li>
+<li>The chunk prompt says: &quot;Write exercises directly in DSL format (:::quiz, :::fill-in, etc.) if the skeleton places them in this section.&quot;</li>
+<li>But the main write prompt says: &quot;Do NOT write exercises directly. Place <code>&lt;!-- INJECT_ACTIVITY: {id} --&gt;</code> markers.&quot;</li>
+<li>Impact: Chunked writes get contradictory instructions about exercises. The ACTIVITIES step generates exercises separately, so DSL blocks from the writer would be stripped anyway, but it wastes writer tokens.</li>
+</ul>
+<h3>MINOR (cleanup/style)</h3>
+<p><strong>BUG-16: Multiple <code>import re</code> statements scattered throughout</strong></p>
+<ul>
+<li>Lines 40, 494, 1004, 1249, 1391, 1419, 2534, 2697, 2791, 2921, 3013, 3068 — 12 instances of <code>import re</code> inside functions.</li>
+<li><code>re</code> is already imported at the module level (line 40).</li>
+<li>Impact: No functional impact, but cluttered code.</li>
+</ul>
+<p><strong>BUG-17: <code>_log()</code> is defined twice</strong></p>
+<ul>
+<li>Lines 24 (dispatch.py) and 246 (v6_build.py) — both are identical <code>print(msg, flush=True)</code>.</li>
+<li>Impact: No functional impact, but should be shared.</li>
+</ul>
+<p><strong>BUG-18: Comment references non-existent code</strong></p>
+<ul>
+<li>Line 2907-2908: Comment says functions were &quot;REMOVED&quot; but the comment itself is orphaned (indented under <code>_rewrite_weak_sections</code> which already returned).</li>
+<li>Impact: Confusing. This is the remnant of the dead code removal.</li>
+</ul>
+<p><strong>BUG-19: <code>step_check</code> numbering mismatch</strong></p>
+<ul>
+<li>The function docstring says &quot;Step 2&quot; but it's actually the first pipeline step (CHECK).</li>
+<li>Impact: Confusing when reading code.</li>
+</ul>
+<hr />
+<h2>5. Prompt Template Analysis</h2>
+<h3>Placeholders by template</h3>
+<p>| Template | Placeholders |
+|----------|-------------|
+| v6-skeleton.md | TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_OVERSHOOT, PLAN_CONTENT, KNOWLEDGE_PACKET, SUMMARY_HEADING |
+| v6-write.md | TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_CEILING, PLAN_CONTENT, KNOWLEDGE_PACKET, EXACT_SECTION_TITLES, IMMERSION_RULE, PEDAGOGICAL_CONSTRAINTS, LEVEL_CONSTRAINTS, VOCABULARY_HINTS, PRONUNCIATION_VIDEOS, GOLDEN_FRAGMENT, SUMMARY_HEADING |
+| v6-write-seminar.md | TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_CEILING, PLAN_CONTENT, KNOWLEDGE_PACKET, GOLDEN_FRAGMENT, <strong>SKELETON_SECTION</strong>, <strong>CORRECTION_SECTION</strong> |
+| v6-activities.md | MODULE_NUM, TOPIC_TITLE, LEVEL, MODULE_SLUG, INJECTION_MARKERS, PLAN_ACTIVITY_HINTS, PLAN_VOCABULARY, MODULE_CONTENT, TOOL_INSTRUCTIONS, LEVEL_CONTEXT, PEDAGOGY_PATTERNS |
+| v6-vocab.md | PLAN_VOCABULARY, MODULE_CONTENT |
+| v6-review.md | MODULE_NUM, TOPIC_TITLE, LEVEL, PHASE, WRITER_MODEL, WORD_TARGET, PLAN_CONTENT, GENERATED_CONTENT |</p>
+<h3>Contradictions between prompts</h3>
+<ol>
+<li>
+<p><strong>Write vs Chunk: exercise format</strong> (BUG-15 above)</p>
+<ul>
+<li>Write: &quot;Do NOT write exercises directly. Place <code>&lt;!-- INJECT_ACTIVITY: {id} --&gt;</code> markers.&quot;</li>
+<li>Chunk: &quot;Write exercises directly in DSL format (:::quiz, :::fill-in, etc.)&quot;</li>
+</ul>
+</li>
+<li>
+<p><strong>Write vs Seminar: skeleton injection</strong></p>
+<ul>
+<li>Core write prompt: skeleton injected by Python code before <code>## Output Format</code></li>
+<li>Seminar write prompt: expects <code>{SKELETON_SECTION}</code> placeholder (never replaced — BUG-09)</li>
+</ul>
+</li>
+<li>
+<p><strong>Write prompt: &quot;NO IPA&quot; rule (rule 2) vs knowledge packet</strong></p>
+<ul>
+<li>Rule says no IPA or Latin transliteration. Knowledge packet may contain IPA from textbooks.</li>
+<li>Not a bug — the writer should describe sounds by comparison, not copy IPA from the packet.</li>
+</ul>
+</li>
+<li>
+<p><strong>Review prompt: &quot;Do NOT check for stress marks&quot; vs actual content</strong></p>
+<ul>
+<li>Review says stress marks should be absent (correct — added after review).</li>
+<li>But if <code>--step review</code> is run after <code>--step annotate</code>, content WILL have stress marks.</li>
+<li>The reviewer correctly ignores them, but could falsely flag words with combining acute.</li>
+</ul>
+</li>
+</ol>
+<h3>Stale instructions</h3>
+<ol>
+<li>
+<p><strong>v6-write.md line 164-167</strong>: Dialogue format example uses <code>&gt; **Оленка:**</code> blockquote style, but the <code>_format_dialogues()</code> in enrich.py converts these to <code>&lt;div class=&quot;dialogue&quot;&gt;</code>. Not stale per se, but the writer doesn't need to know about the final format.</p>
+</li>
+<li>
+<p><strong>v6-review.md line 67</strong>: &quot;List every exercise block (:::quiz, :::fill-in...)&quot; — but V6 activities are YAML-based, not DSL blocks. The review prompt hasn't been updated to describe YAML activities.</p>
+</li>
+<li>
+<p><strong>v6-write-seminar.md line 35</strong>: &quot;Write exercises directly&quot; — but the activities step should handle this. Seminar prompts lag behind core prompts.</p>
+</li>
+</ol>
+<hr />
+<h2>6. State Machine: state.json</h2>
+<h3>Fields</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;v6&quot;,
+  &quot;track&quot;: &quot;a1&quot;,
+  &quot;slug&quot;: &quot;reading-ukrainian&quot;,
+  &quot;phases&quot;: {
+    &quot;check&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;research&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;skeleton&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;write&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;exercises&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;activities&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;verify-exercises&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;annotate&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;vocab&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;enrich&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;verify&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;review&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;stress&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; },
+    &quot;publish&quot;: { &quot;status&quot;: &quot;complete&quot;, &quot;ts&quot;: &quot;...&quot; }
+  }
+}
+</code></pre>
+<h3>Issues</h3>
+<ul>
+<li>Status is always &quot;complete&quot; — no &quot;failed&quot; or &quot;in_progress&quot; states recorded</li>
+<li><code>_save_v6_state</code> is called AFTER success, so failure leaves the previous state</li>
+<li>&quot;annotate&quot; and &quot;stress&quot; are separate state entries for the same conceptual step</li>
+<li>&quot;exercises&quot; state is saved even when skipped (line 3513)</li>
+</ul>
+<hr />
+<h2>7. Silent Failure Points</h2>
+<p>| Location | What can fail | What happens |
+|----------|--------------|--------------|
+| <code>step_research</code> research_quality import | <code>assess_research_compat</code> missing | Warning logged, continues |
+| <code>step_verify</code> VESUM check | <code>_run_vesum_verify</code> import fails | Warning, continues |
+| <code>step_verify</code> IPA scan | <code>_run_ipa_scan</code> import fails | Warning, continues |
+| <code>step_vocab</code> YAML parse | Writer returns non-YAML | Returns None, logged |
+| <code>step_enrich</code> enrichment | Exception in enrich_file | Returns empty list, logged |
+| <code>step_annotate</code> stress marks | Import or runtime error | Warning, continues |
+| <code>_resolve_verify_flags</code> | VESUM DB missing | Returns unresolved flags |
+| <code>_query_friction_for_errors</code> | YAML parse errors in friction files | Silent continue per file |
+| <code>_save_structured_findings</code> | Regex doesn't match review format | Empty YAML saved |
+| <code>enrich.py</code> <code>_vesum_lookup</code> | SQLite error | Returns (&quot;&quot;, &quot;&quot;), silent |
+| <code>_build_vesum_report</code> | SQLite error | Returns &quot;&quot; |</p>
+<h3>Content corruption risk</h3>
+<p>| Scenario | Risk | Mitigation |
+|----------|------|------------|
+| <code>_rewrite_weak_sections</code> produces truncated output | <strong>MEDIUM</strong> — checked at line 2893-2896 (reject if &lt;70% of original) |
+| Enrichment shrinks content | <strong>LOW</strong> — checked at line 704 (reject if &lt;50% of original) |
+| <code>_post_process_content</code> strips valid tab markers | <strong>LOW</strong> — only runs in full pipeline before enrich adds tabs |
+| Review fix loop worsens score | <strong>LOW</strong> — stopped if score doesn't improve (line 3627-3632) |
+| Section rewrite drops sections | <strong>LOW</strong> — checked at line 2888-2889 |</p>
+<hr />
+<h2>8. Refactor Recommendations</h2>
+<h3>P0: Fix before next build</h3>
+<ol>
+<li>
+<p><strong>Fix BUG-09</strong>: Add <code>{SKELETON_SECTION}</code> and <code>{CORRECTION_SECTION}</code> replacement in <code>step_write()</code> for seminar templates, or standardize templates.</p>
+</li>
+<li>
+<p><strong>Fix BUG-01</strong>: Pass original <code>writer</code> (with -tools suffix) through chunked write path.</p>
+</li>
+<li>
+<p><strong>Fix BUG-15</strong>: Align chunk prompt with main prompt — use <code>&lt;!-- INJECT_ACTIVITY --&gt;</code> markers, not DSL format.</p>
+</li>
+<li>
+<p><strong>Fix BUG-08</strong>: When score ≥ 9.0 and rewrite fails, log the specific unfixed errors. Don't silently accept.</p>
+</li>
+</ol>
+<h3>P1: ModelFamily refactor (#1072)</h3>
+<ol start="5">
+<li><strong>Replace scattered model constants</strong> (BUG-10) with a <code>ModelFamily</code> dataclass:</li>
+</ol>
+<pre><code class="language-python">@dataclass
+class ModelFamily:
+    name: str           # &quot;claude&quot; or &quot;gemini&quot;
+    thinking: str       # opus / pro
+    fast: str           # sonnet / flash
+    tools_prefix: str   # &quot;mcp__rag__&quot; / &quot;rag_&quot;
+
+CLAUDE = ModelFamily(&quot;claude&quot;, &quot;claude-opus-4-6&quot;, &quot;claude-sonnet-4-6&quot;, &quot;mcp__rag__&quot;)
+GEMINI = ModelFamily(&quot;gemini&quot;, &quot;gemini-3.1-pro-preview&quot;, &quot;gemini-3-flash-preview&quot;, &quot;rag_&quot;)
+</code></pre>
+<p>Then each phase picks <code>family.thinking</code> or <code>family.fast</code> based on phase type:</p>
+<ul>
+<li>Skeleton, Activities, Vocab → <code>fast</code></li>
+<li>Write, Review → <code>thinking</code></li>
+<li>Section rewrite → <code>thinking</code> (same family as writer)</li>
+</ul>
+<h3>P2: Clean up dead code</h3>
+<ol start="6">
+<li>
+<p><strong>Remove dead functions</strong>: <code>_build_review_correction()</code>, <code>_parse_review_fixes()</code>, the orphan comment at 2907-2908.</p>
+</li>
+<li>
+<p><strong>Remove <code>step_exercises()</code></strong>: It's fully replaced by <code>step_activities()</code>. Keep it only if someone needs <code>--step exercises</code> for backward compat, but mark it clearly as legacy.</p>
+</li>
+<li>
+<p><strong>Clean up module-level re-imports</strong>: Remove all 12 <code>import re</code> inside functions since <code>re</code> is already imported at module level.</p>
+</li>
+</ol>
+<h3>P3: Structural improvements</h3>
+<ol start="9">
+<li>
+<p><strong>Fix step numbering</strong>: Renumber all steps to match actual execution order. Update docstring.</p>
+</li>
+<li>
+<p><strong>Extract prompt building into separate module</strong>: <code>_build_chunk_prompt</code>, <code>_build_tool_instructions</code>, <code>_build_activity_level_context</code>, <code>_build_pedagogy_patterns</code> could all live in a <code>prompt_builder.py</code> module (~500 lines extracted).</p>
+</li>
+<li>
+<p><strong>Cache friction file scanning</strong>: Build an in-memory index of active frictions at startup instead of O(N*M) directory scanning on every retry.</p>
+</li>
+<li>
+<p><strong>Connection pooling for VESUM</strong>: Pass a single SQLite connection through enrich functions instead of opening per-word.</p>
+</li>
+<li>
+<p><strong>Standardize seminar vs core templates</strong>: The seminar template is significantly less developed than core. Either bring it to parity (injection markers, MCP tool instructions, exercise format) or document the differences.</p>
+</li>
+</ol>
+<hr />
+<h2>9. Function Reference (42 functions)</h2>
+<h3>Pipeline steps (public):</h3>
+<p>| Function | Lines | Purpose |
+|----------|-------|---------|
+| <code>step_check</code> | 284-358 | Plan validation + auto-fix |
+| <code>step_research</code> | 361-409 | RAG knowledge packet |
+| <code>step_skeleton</code> | 412-511 | Paragraph-level structure |
+| <code>step_write</code> | 797-1034 | Single-call content generation |
+| <code>step_write_chunked</code> | 677-794 | Section-by-section generation |
+| <code>step_write_with_retry</code> | 1037-1155 | Write + quick_verify + retry loop |
+| <code>step_exercises</code> | 1371-1408 | <strong>LEGACY</strong> — fill exercise placeholders |
+| <code>step_activities</code> | 1935-2154 | Structured activity YAML generation |
+| <code>step_vocab</code> | 1504-1604 | Writer-generated vocabulary |
+| <code>step_enrich</code> | 2278-2301 | Deterministic enrichment |
+| <code>step_verify</code> | 2304-2421 | VESUM + Russicism + IPA checks |
+| <code>step_verify_exercises</code> | 1703-1751 | Exercise grounding check |
+| <code>step_annotate</code> | 1477-1501 | Stress mark annotation |
+| <code>step_review</code> | 2502-2777 | Cross-agent adversarial review |
+| <code>step_publish</code> | 3209-3385 | MDX generation with 4 tabs |
+| <code>main</code> | 3388-3660 | CLI + orchestration |</p>
+<h3>Support functions (private):</h3>
+<p>| Function | Lines | Purpose |
+|----------|-------|---------|
+| <code>_build_tool_instructions</code> | 58-148 | MCP tool prompt section |
+| <code>_extract_body</code> | 158-180 | Split prose from enrichment tabs |
+| <code>_clean_build_artifacts</code> | 183-243 | Remove previous build files |
+| <code>_log</code> | 246-247 | Print with flush |
+| <code>_save_v6_state</code> | 250-281 | Write state.json |
+| <code>_parse_skeleton_sections</code> | 514-551 | Parse skeleton H2 sections |
+| <code>_extract_word_budget</code> | 554-557 | Parse word budget from heading |
+| <code>_build_section_summary</code> | 560-575 | Rolling summary for chunks |
+| <code>_build_chunk_prompt</code> | 578-674 | Build prompt for one section |
+| <code>_query_friction_for_errors</code> | 1158-1240 | Search friction files for patterns |
+| <code>_save_structured_findings</code> | 1243-1286 | Parse review scores → YAML |
+| <code>_generate_friction</code> | 1289-1328 | Auto-generate friction on failure |
+| <code>_log_stats</code> | 1331-1347 | Append retry stats to JSONL |
+| <code>_save_quick_verify</code> | 1350-1368 | Persist quick verify results |
+| <code>_post_process_content</code> | 1411-1474 | Strip LLM artifacts |
+| <code>_extract_verify_flags</code> | 1607-1625 | Parse <code>&lt;!-- VERIFY --&gt;</code> markers |
+| <code>_resolve_verify_flags</code> | 1628-1685 | VESUM lookup for flags |
+| <code>_save_verify_flags</code> | 1688-1700 | Write flags YAML |
+| <code>_check_activity_semantics</code> | 1754-1771 | Check inline activity ids |
+| <code>_build_activity_level_context</code> | 1774-1853 | Level-aware activity context |
+| <code>_build_pedagogy_patterns</code> | 1856-1932 | Match pedagogy patterns |
+| <code>_inject_abetka_activities</code> | 2157-2275 | Deterministic alphabet activities |
+| <code>_build_vesum_report</code> | 2424-2499 | Pre-verify words for reviewer |
+| <code>_rewrite_weak_sections</code> | 2780-2904 | Section-level content rewrite |
+| <code>_build_review_correction</code> | 2911-2997 | <strong>DEAD CODE</strong> — correction directive |
+| <code>_parse_review_fixes</code> | 3000-3038 | <strong>DEAD CODE</strong> — parse <code>&lt;fixes&gt;</code> block |
+| <code>_strip_dsl_blocks</code> | 3041-3057 | Remove legacy DSL exercises |
+| <code>_convert_tab_markers</code> | 3060-3093 | Tab markers → MDX components |
+| <code>_load_activities</code> | 3096-3108 | Load activities YAML |
+| <code>_inject_inline_activities</code> | 3111-3132 | Replace markers with JSX |
+| <code>_build_workbook_tab</code> | 3135-3153 | Render workbook activities |
+| <code>_build_resources_tab</code> | 3156-3206 | Build resources from plan |</p>
+<hr />
+<h2>10. Supporting File Analysis (AC20-AC23)</h2>
+<h3>activity_renderer.py (AC21)</h3>
+<ul>
+<li><strong>Input</strong>: Parsed activity YAML dicts (from <code>activities/{slug}.yaml</code>)</li>
+<li><strong>Processing</strong>: Maps YAML structure to React component props via <code>_RENDERERS</code> registry</li>
+<li><strong>Output</strong>: JSX strings for MDX insertion; HTML comments for unknown types</li>
+<li><strong>37 component types</strong>: 14 core (Quiz, FillIn, MatchUp, GroupSort, TrueFalse, ErrorCorrection, Anagram, Translate, Unjumble, Observe, Classify, LetterGrid, WatchAndRepeat, etc.) + 13 seminar (CriticalAnalysis, EssayResponse, SourceEvaluation, EtymologyTrace, etc.)</li>
+<li><strong><code>get_required_imports()</code></strong>: Returns deduplicated, sorted import statements for only the components actually used</li>
+</ul>
+<h3>audit/core.py (AC23)</h3>
+<ul>
+<li><strong>Gates</strong>: Structure (outline compliance, tone), core (word count, engagement, required activity types), pedagogy (blocking violations), immersion score</li>
+<li><strong>Pass/fail</strong>: Fails on critical template violations, missing required activity types, critical pedagogy violations (blocking=True), self-review detection</li>
+<li><strong>V6 interaction</strong>: Skips template compliance when plan data exists (plan-based metadata). Loads sidecar metadata from <code>meta.yaml</code> or plan YAML. Merges plan fields (title, content_outline, word_target, objectives, grammar) into metadata if missing.</li>
+<li><strong>Flow</strong>: Load → Resolve metadata → Template check → Structure/outline → Word count → YAML activity validation → Core gates → Pedagogical checks → Immersion → Report</li>
+</ul>
+<h3>stress_annotator.py (AC22)</h3>
+<ul>
+<li><strong>Input</strong>: Content .md file path</li>
+<li><strong>Processing</strong>: Extracts Ukrainian words from body text (skips headings, code blocks, HTML tags), looks up stress position in <code>ukrainian-word-stress</code> library (2.7M forms), adds combining acute (U+0301) after stressed vowel</li>
+<li><strong>Body-only check</strong>: Only annotates prose between first H2 and TAB:Словник marker (5% threshold — skips if &lt;5% of words get stress marks, indicating the file isn't Ukrainian prose)</li>
+<li><strong>Output</strong>: Modified file with stress marks in-place, returns count of annotated words</li>
+</ul>
+<hr />
+<h2>11. Summary</h2>
+<p>The V6 pipeline is functional but shows clear signs of incremental patching. The core flow (check → research → skeleton → write → activities → enrich → review → publish) works correctly for single-call builds. The main issues are:</p>
+<ol>
+<li><strong>Seminar template broken</strong> (BUG-09) — unreplaced placeholders</li>
+<li><strong>Chunked writes lack tools</strong> (BUG-01) — no MCP verification for large modules</li>
+<li><strong>~125 lines of dead code</strong> (BUGs 03, 04, 05) — confusion risk</li>
+<li><strong>Model resolution scattered</strong> (BUG-10) — change requires editing 6+ places</li>
+<li><strong>Prompt contradictions</strong> (BUG-15) — chunk prompt says write DSL, main says markers only</li>
+</ol>
+<p>The review confirms #1072 (ModelFamily refactor) is the right next step. After that, fix the seminar template and chunk prompt contradictions.</p>
+
+  </main>
+</div>
+</body>
+</html>

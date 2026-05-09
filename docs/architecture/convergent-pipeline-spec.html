@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Convergent Pipeline — Implementation Spec (final, patched)</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Convergent Pipeline — Implementation Spec (final, patched)</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+    </div>
+    <div class="meta">
+      <div>Source: convergent-pipeline-spec.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Convergent Pipeline — Implementation Spec (final, patched)</h1>
+<blockquote>
+<p>v4.1. Consolidates v2 + v3 + final-spec-review adversarial passes (Codex + Gemini). All 12 original patches + 7 final-round patches integrated. <strong>Ship scope: everything together, one implementation, one end-to-end review round, test on the stuck A1/M1 module before merge.</strong></p>
+</blockquote>
+<h2>Goal</h2>
+<p>v6 build pipeline must converge to <code>pass</code> or one of two honest human-dependent terminals. <code>needs-human-review.yaml</code> is deleted. No fake-autonomous dead-ends.</p>
+<h2>Non-goals</h2>
+<ul>
+<li>Removing cross-agent review (ADR-001:35 invariant preserved)</li>
+<li>Removing deterministic <code>&lt;fixes&gt;</code> machinery (kept for patch tier)</li>
+<li>Making plan mutable from pipeline (plan stays user-approved source of truth)</li>
+<li>Training the reviewer (reviewer prompt stays static and global; module-memory feeds writer only)</li>
+</ul>
+<h2>State machine</h2>
+<pre><code>write (attempt 0) → review
+  ↓
+  pass?        → publish                           [autonomous terminal]
+  fail?        → ladder decides next attempt (1..5 max)
+
+  tier 1: patch            deterministic &lt;fixes&gt;; only if reviewer emitted them
+                           and findings are local to prose
+  tier 2: section_rewrite  section-local findings only; skip to tier 3 if any
+                           finding touches global budgets, dialogue arc,
+                           vocabulary pacing, or activity order
+  tier 3: full_rewrite     full module regeneration; learned constraints
+                           injected into writer prompt
+  tier 4: writer_swap      cross-family writer swap; reviewer matrix below
+  tier 5: plan_revision    emits plan-revision-request.yaml  [human terminal]
+
+HARD CAP: 5 escalation attempts after initial write.
+Cap hit without pass → budget_exhausted.yaml              [human terminal]
+</code></pre>
+<p>Ladder does NOT march sequentially. Tier selection is per-attempt, based on finding topology. See &quot;Tier selection logic&quot; below.</p>
+<h2>Stall signals (primary; score delta is secondary only)</h2>
+<p>Escalate when ANY fires:</p>
+<ol>
+<li><strong>Hard-floor dimension persists</strong> — any dimension scored &lt; 9 with error evidence (<code>dim_floor_fail</code> set; <code>v6_build.py:1531</code>) remains sub-9 after the last attempt.</li>
+<li><strong>Top-3 normalized findings overlap</strong> — ≥ 2 of top-3 normalized findings from round N-1 remain in round N (overlap by normalized ID, not prose string).</li>
+<li><strong>Content hash repeat</strong> — rewrite output hash == previous attempt hash.</li>
+<li><strong>Zero-mutation patch</strong> — applied <code>&lt;fixes&gt;</code> produced 0 content changes.</li>
+</ol>
+<p>Score delta is recorded but never the sole trigger.</p>
+<h2>Finding normalization (required for stall signals to work)</h2>
+<p>Every reviewer finding gets normalized to a stable ID:</p>
+<pre><code>{dimension, error_class, scope}
+  dimension:   one of {linguistic_accuracy, pedagogical_quality, ...}
+  error_class: canonical enum (e.g. calque, register_drift, notation_error,
+               missing_vocab, paronym_mismatch, stress_error, ...)
+  scope:       {section_title, speaker?, target_lexeme?}
+</code></pre>
+<p>Normalizer implementation: lookup table (error_class by reviewer keyword pattern) + deterministic scope extraction from finding YAML. Unrecognized → <code>error_class: unclassified</code> with the original prose preserved; logged for human review of the normalization rules (the rules improve over time, not the reviewer).</p>
+<p>Current findings are prose blobs (<code>review-structured-r3.yaml:52</code>). Normalization is a hard prerequisite — without it, signals 2 and 4 don't function.</p>
+<h2>Tier selection logic</h2>
+<p><strong>Requires a topology classifier.</strong> Current structured findings carry <code>dimension/severity/location/issue/fix</code> — nothing that reliably signals <code>local_to_prose</code> / <code>section_local</code> / <code>cross_section</code> / <code>plan_level</code>. Without topology classification, tier 1 vs 2 vs 3 collapses to heuristic guessing.</p>
+<p><strong>Topology classifier — required new module:</strong> <code>scripts/build/finding_topology.py</code></p>
+<ul>
+<li>Input: normalized finding with <code>location</code> field</li>
+<li>Output: <code>topology: local_to_prose | section_local | cross_section | plan_level</code></li>
+<li>Deterministic rules:
+<ul>
+<li><code>local_to_prose</code>: <code>location</code> points at a single paragraph or sentence, <code>fix</code> includes <code>&lt;fixes&gt;</code> patch</li>
+<li><code>section_local</code>: <code>location</code> references single H2 section, no other-section references in <code>issue</code> text</li>
+<li><code>cross_section</code>: <code>location</code> or <code>issue</code> references multiple H2 sections, dialogue arc, vocabulary pacing, activity order, or budget distribution</li>
+<li><code>plan_level</code>: error_class ∈ {<code>vocab_density</code>, <code>pedagogical_sequence</code>, <code>scenario_grammar_misalignment</code>, <code>plan_contradiction</code>} (the Gemini/Codex-defined plan-revision categories)</li>
+</ul>
+</li>
+</ul>
+<pre><code>if patch tier available AND reviewer emitted &lt;fixes&gt; AND all findings.topology == local_to_prose:
+  → tier 1 (patch)
+elif all findings.topology ∈ {local_to_prose, section_local}:
+  → tier 2 (section_rewrite)
+elif any finding.topology == plan_level AND tier 3 already attempted:
+  → tier 5 (plan_revision_request)  [fast-path: skip wasted full_rewrite]
+elif top-3 findings have not yet been targeted by full_rewrite:
+  → tier 3 (full_rewrite)
+elif top-finding-dimension persists AND writer not yet swapped AND allowed reviewer available:
+  → tier 4 (writer_swap)
+else:
+  → tier 5 (plan_revision_request)
+</code></pre>
+<h2>Hard-floor priority (critical)</h2>
+<p>Before selecting tier, reorder findings:</p>
+<ul>
+<li>Any finding tied to a <code>dim_floor_fail</code> dimension is auto-elevated to <code>critical</code> severity, <strong>ahead of otherwise-higher-severity findings on non-floor dimensions</strong>.</li>
+<li>This prevents chasing a pedagogy 8.5 while linguistic accuracy sits at 7.0 and then hitting <code>budget_exhausted</code> with the floor still failing.</li>
+</ul>
+<h2>Reviewer assignment matrix (hard invariant, feature-flagged)</h2>
+<p>| Writer | Reviewer allowed |
+|---|---|
+| gemini | claude, codex |
+| claude | gemini, codex |
+| codex  | claude, gemini |</p>
+<p><strong>This is NEW code in Phase B, not reuse.</strong> Only default routing exists in <code>_determine_reviewer()</code> (<code>v6_build.py:4855</code>). <code>SELF_REVIEW_DETECTED</code> audit check is not currently a hard gate (consistent with ongoing Gemini-only capacity workaround).</p>
+<p><strong>Feature flag: <code>CONVERGENCE_MATRIX_ENFORCED</code> (default OFF at ship time).</strong></p>
+<ul>
+<li>OFF (default during Gemini-only capacity): falls back to <code>_determine_reviewer()</code> current routing; self-review allowed, identical behavior to today.</li>
+<li>ON (flip when Claude/Codex review capacity returns): matrix enforced. <code>writer_swap</code> at tier 4 picks fresh cross-family reviewer. If no allowed reviewer available → <strong>skip tier 4, escalate to tier 5 (plan_revision_request)</strong>. Never self-review as dormant fallback.</li>
+</ul>
+<p>Re-run <code>review-style</code> after writer_swap (advisory, per <code>v6_build.py:8555</code>). <code>stuck-modules.yaml</code> surfaces any module hitting tier 5 because of capacity unavailability — single-pane visibility for the operator to know when to flip the flag.</p>
+<h2>module-memory.yaml schema</h2>
+<p>Path: <code>curriculum/l2-uk-en/{level}/orchestration/{slug}/module-memory.yaml</code></p>
+<pre><code class="language-yaml">plan_hash: &lt;sha256 of plans/{slug}.yaml&gt;
+plan_version: &lt;int&gt;                         # from plan file
+sources_hash: &lt;sha256 of source manifest&gt;   # for replay determinism
+                                            # manifest = content hashes (NOT mtimes) of:
+                                            #   - VESUM lemma+form tables
+                                            #   - FTS5 textbook/literary/dictionary indexes
+                                            #   - Правопис file contents
+                                            #   - Wiki packet for this slug (curriculum/l2-uk-en/wiki/{level}/{slug}/)
+                                            #   - Base writer template file
+
+constraints:                                 # fed to WRITER only (not reviewer)
+  - id: c_a1_m1_001                          # normalized, not prose
+    dimension: linguistic_accuracy
+    error_class: register_drift
+    scope:                                   # scope-aware conflict detection
+      speaker: teacher
+      section: &quot;Привітання в класі&quot;
+      target_lexeme: null
+    directive: &quot;Teacher uses formal register (ви) in direct address&quot;
+    severity: major
+    recur_count: 2
+    status: active | quarantined | promoted
+    learned_at:
+      round: 3
+      strategy: full_rewrite
+      date: 2026-04-18
+    source_finding_ids: [f_a1_m1_reg_drift_r2, f_a1_m1_reg_drift_r3]
+    conflicts_with_plan: false               # true → auto-quarantine + event
+    override_track_level: false              # true if this overrides a promoted constraint
+
+history:                                     # append-only replay log
+  - attempt: 1
+    strategy: write
+    writer: gemini
+    writer_model_version: gemini-3.1-pro-preview
+    reviewer: claude
+    reviewer_model_version: claude-opus-4-6
+    score_overall: 8.33
+    scores_per_dimension:
+      linguistic_accuracy: 7.0
+      pedagogical_quality: 8.5
+      ...
+    dim_floor_fail: [linguistic_accuracy]
+    verdict: revise
+    content_hash: &lt;sha&gt;
+    prompt_hash: &lt;sha&gt;
+    contract_snapshot_hash: &lt;sha&gt;
+    findings_normalized: [c_a1_m1_001, c_a1_m1_002]
+    mutation_summary: null
+    decision_reason: initial
+    artifacts:
+      prompt_path: orchestration/.../write-prompt-r1.md
+      review_path: a1/review/sounds-letters-and-hello-review-r1.md
+    timestamps:
+      started: 2026-04-18T00:00:00Z
+      finished: 2026-04-18T00:02:14Z
+    cost:
+      input_tokens: 45200
+      output_tokens: 8300
+      wall_clock_s: 134
+</code></pre>
+<h3>Quarantine heuristic (scope-aware)</h3>
+<p>A new or existing constraint is auto-quarantined when:</p>
+<ol>
+<li><strong>Same-scope opposite directive</strong> — another active constraint has equal <code>{speaker, section, target_lexeme}</code> tuple but contradictory directive. Deterministic, cheap.</li>
+<li><strong>Immediate-next-review floor fail on plan-adherence dimension</strong> after the constraint was injected — reactive quarantine.</li>
+<li><strong>Fallback: third-agent semantic check</strong> — only for same-scope ambiguity neither rule above catches. Expensive; used sparingly.</li>
+</ol>
+<h2>Constraint → writer directive mapping (what can be learned vs plan-revised)</h2>
+<p>| Category | Writer-addressable | Route to plan-revision |
+|---|---|---|
+| Forbidden lexicon / calques (<code>приймати→брати участь</code>) | ✓ | |
+| Register / pronoun rules per speaker | ✓ | |
+| Required dialogue acts (<code>А у тебе?</code>) | ✓ | |
+| Typographical / notation fixes (<code>[=]</code> notation) | ✓ | |
+| Context-free aspect / paronym / stress rules | | ✓ |
+| Vocabulary density / mandatory list scope | | ✓ |
+| Pedagogical sequence of sections | | ✓ |
+| Plan-level register contradiction | | ✓ |
+| Scenario ↔ grammar alignment | | ✓ |</p>
+<p>If a normalized finding maps to a plan-revision category, the ladder SHOULD bias toward tier 5 faster (don't waste full_rewrite on it).</p>
+<h2>--force semantics</h2>
+<p><strong>Current state (before this spec):</strong> <code>_clean_build_artifacts()</code> (<code>v6_build.py:954</code>) only preserves <code>index.md</code> + <code>friction.yaml</code>. <code>--force</code> would DELETE <code>module-memory.yaml</code> today. This is a spec-required code change, not just policy.</p>
+<p><strong>After this spec:</strong></p>
+<ul>
+<li><code>--force</code> → wipes chunks, dispatches, review rounds, contracts. <strong>Preserves</strong> <code>module-memory.yaml</code>. Requires explicit addition to preserve list in <code>_clean_build_artifacts()</code>.</li>
+<li><code>--force --reset-memory</code> (new flag) → also wipes <code>module-memory.yaml</code>. Used for corrupted constraints or post-plan-revision lineage cuts. Must be wired through BOTH single-module path AND <code>--range</code> child invocations (<code>v6_build.py:9399</code>).</li>
+<li><strong>Plan-hash mismatch at boot</strong> → auto-clears <code>constraints</code> block (keeps <code>history</code> for audit), logs <code>plan_hash_invalidation</code> event.</li>
+</ul>
+<h2>Terminal states</h2>
+<pre><code>pass                       → publish
+plan_revision_request.yaml → HUMAN TERMINAL. Structured proposal:
+                             {dimension, persistent_finding, suggested_plan_edit}.
+                             User approves → plan version bumps → pipeline
+                             restarts with cleared constraints + fresh plan_hash.
+budget_exhausted.yaml      → HUMAN TERMINAL. Emits full history trail for
+                             diagnosis. User decides: extend budget / force
+                             plan revision / abandon.
+</code></pre>
+<p><strong>Terminal-state migration is broader than deleting one emission site.</strong> <code>needs-human-review.yaml</code> is baked into:</p>
+<ul>
+<li>emission (<code>v6_build.py:10106</code>)</li>
+<li>state cleanup (<code>v6_build.py:1219</code>)</li>
+<li>contradiction checks (<code>v6_build.py:1256</code>)</li>
+<li>state flag reads (<code>v6_build.py:10028</code>)</li>
+</ul>
+<p>All four must be replaced atomically — the <code>state[&quot;needs_human_review&quot;]</code> contract migrates to <code>state[&quot;terminal&quot;]</code> with values in <code>{&quot;pass&quot;, &quot;plan_revision_request&quot;, &quot;budget_exhausted&quot;}</code>. Otherwise resume/consistency logic drifts and old-flag readers race new-flag writers.</p>
+<h2>Downstream invalidation discipline</h2>
+<p>Every tier that regenerates prose (section_rewrite, full_rewrite, writer_swap) MUST refresh the full sidecar chain:</p>
+<pre><code>annotate → activities → repair → verify → verify-exercises → vocab
+</code></pre>
+<p>Not just activities + vocab (v3 undersold this). Precedent: <code>_refresh_post_patch_sidecars</code> (<code>v6_build.py:8590-8603</code>).</p>
+<p><strong>Sidecar validation against plan</strong>: sidecar regeneration must validate output against plan requirements (mandatory vocab list, required activity types, word count target per section). Not just &quot;extract what writer produced.&quot; Fails loudly on missing mandatory items.</p>
+<h2>Constraint hierarchy</h2>
+<p>Module-level constraints (<code>module-memory.yaml</code>) override track-level constraints (<code>learned-constraints-track.yaml</code>) in prompt assembly. Explicit <code>override_track_level: true</code> flag; logged on every injection for audit.</p>
+<h2>Track-level promotion (phase C)</h2>
+<p>Promotion bar (all required):</p>
+<ul>
+<li>Normalized constraint ID appears in ≥ 8 modules × ≥ 2 levels with <code>status: active</code></li>
+<li>Zero <code>conflicts_with_plan</code> across those modules</li>
+<li>Measured improvement after rollout, defined as ALL of:
+<ul>
+<li>Statistically significant increase in <strong>Attempt-0 first-review pass rate</strong> across ≥ 5 post-rollout modules</li>
+<li>Reduction in hard-floor failures on the target dimension</li>
+<li>Reduction in recurrence of the specific normalized finding on Attempt 0</li>
+</ul>
+</li>
+</ul>
+<p>Promotion ≠ overall score delta. Overall score masked real problems in the A1 macro report (<code>shopping</code> 10/10 overall / 5/10 dialogue).</p>
+<h2>Success criteria</h2>
+<p>Pipeline health = rate of honest human terminals, split:</p>
+<ul>
+<li><strong><code>budget_exhausted</code> → near-zero steady state</strong> (≥ 99% of modules exit via <code>pass</code> or <code>plan_revision_request</code>)</li>
+<li><strong><code>plan_revision_request</code> → 3-5% healthy floor</strong> (plans are human-authored; some will be flawed once expanded)</li>
+<li><strong><code>needs-human-review.yaml</code> → 0</strong> (removed from codebase)</li>
+</ul>
+<p>Success is &quot;zero fake autonomy + shrinking human-terminal rate&quot;, not &quot;zero human terminals.&quot;</p>
+<h2>Implementation plan — ship everything together</h2>
+<p>Single implementation pass, ~800 LOC total (revised up from 700 after topology classifier + preserve/reset plumbing + state contract migration). Delegated to Codex. <strong>One end-to-end adversarial review round after implementation complete, before merge.</strong> Test on the stuck A1/M1 <code>sounds-letters-and-hello</code> module as the motivating convergence case.</p>
+<h3>Deliverables (all in one pass)</h3>
+<p><strong>New modules:</strong></p>
+<ul>
+<li><code>scripts/build/module_memory.py</code> — schema, load/save, plan-hash invalidation, <code>--reset-memory</code> plumbing</li>
+<li><code>scripts/build/finding_normalizer.py</code> — hand-written enum + lookup tables, <code>unclassified</code> fallback, growth log</li>
+<li><code>scripts/build/finding_topology.py</code> — deterministic <code>local_to_prose</code>/<code>section_local</code>/<code>cross_section</code>/<code>plan_level</code> classifier</li>
+<li><code>scripts/build/convergence_loop.py</code> — replaces <code>_run_review_heal_loop</code>. Tier selection, hard-floor priority reorder, stall signals, terminal emission, sidecar refresh orchestration.</li>
+<li><code>scripts/build/track_constraints.py</code> — track-level promotion pipeline, override precedence, base template assembly</li>
+</ul>
+<p><strong>Modified:</strong></p>
+<ul>
+<li><code>v6_build.py:954</code> — <code>_clean_build_artifacts()</code> preserves <code>module-memory.yaml</code> by default</li>
+<li><code>v6_build.py:9399</code> — <code>--range</code> child invocations propagate <code>--reset-memory</code></li>
+<li><code>v6_build.py:1219, 1256, 10028, 10106</code> — replace <code>state[&quot;needs_human_review&quot;]</code> contract with <code>state[&quot;terminal&quot;]</code> across cleanup / contradiction checks / reads / emission</li>
+<li><code>v6_build.py:4855</code> — <code>_determine_reviewer()</code> honors <code>CONVERGENCE_MATRIX_ENFORCED</code> feature flag</li>
+<li><code>v6_build.py:8590-8603</code> — generalize <code>_refresh_post_patch_sidecars</code> to full chain (<code>annotate → activities → repair → verify → verify-exercises → vocab</code>), add plan-requirements validation</li>
+<li><code>audit/checks/review_gaming.py:675-683</code> — no change (flag gates in <code>_determine_reviewer</code>, audit stays warning-level)</li>
+</ul>
+<p><strong>Removed:</strong></p>
+<ul>
+<li><code>needs-human-review.yaml</code> emission path (replaced by <code>plan_revision_request.yaml</code> / <code>budget_exhausted.yaml</code>)</li>
+<li><code>_run_review_heal_loop</code> (replaced by <code>_run_convergence_loop</code>)</li>
+</ul>
+<p><strong>Generated files (runtime):</strong></p>
+<ul>
+<li><code>orchestration/{slug}/module-memory.yaml</code></li>
+<li><code>orchestration/{slug}/plan_revision_request.yaml</code> (on tier 5 terminal)</li>
+<li><code>orchestration/{slug}/budget_exhausted.yaml</code> (on 5-attempt cap hit)</li>
+<li><code>curriculum/l2-uk-en/stuck-modules.yaml</code> (single-pane aggregator, Monitor API-consumable)</li>
+<li><code>curriculum/l2-uk-en/learned-constraints-track.yaml</code> (populated after track promotion pipeline runs)</li>
+</ul>
+<h3>Test suite (required before review gate)</h3>
+<ul>
+<li>Unit: schema round-trip, plan-hash invalidation, conflict detection true/false positives, <code>--reset-memory</code> behavior, normalizer deterministic output, topology classifier deterministic output</li>
+<li>Integration: each tier triggers correctly on synthetic findings; hard-floor priority correct; terminals emit with structured payload; sidecar refresh invokes full chain + plan validation catches missing mandatory items</li>
+<li>End-to-end: <strong>stuck A1/M1 <code>sounds-letters-and-hello</code> converges to <code>pass</code> OR hits <code>plan_revision_request</code> within 5 attempts.</strong> This is the motivating case; if it hits <code>budget_exhausted</code>, the design needs another look.</li>
+<li>Regression: running convergence loop on a previously-passing A1 module produces identical output (tier 1 patch or immediate pass)</li>
+</ul>
+<h3>Single review gate (before merge)</h3>
+<p>Gemini + Codex adversarial on complete implementation. No merge until both approve and end-to-end test on stuck module succeeds.</p>
+<h2>Resolved (from final review round)</h2>
+<ol>
+<li><strong>Finding normalization</strong> → hand-written enum (15-20 initial error classes: <code>calque</code>, <code>register_drift</code>, <code>surzhyk</code>, <code>missing_vocab</code>, <code>stress_error</code>, <code>notation_error</code>, <code>dialogue_arc_fail</code>, etc.). <code>unclassified</code> fallback grows the table over time from logged unclassified findings.</li>
+<li><strong><code>sources_hash</code></strong> → content-hash manifest (NOT mtimes): VESUM lemma+form tables, FTS5 textbook/literary/dict indexes, Правопис file contents, wiki packet for slug, base writer template.</li>
+<li><strong>Reviewer matrix</strong> → <code>CONVERGENCE_MATRIX_ENFORCED</code> feature flag, default OFF. Flipped ON when cross-agent review capacity returns. Self-review allowed under OFF (today's behavior); tier 5 escalation on reviewer-unavailable under ON.</li>
+<li><strong><code>plan_revision_request.yaml</code> format</strong> → structured <code>{dimension, persistent_finding_id, proposed_plan_edit_summary}</code>. Not a diff; plan stays human-authored source of truth.</li>
+<li><strong><code>stuck-modules.yaml</code></strong> → single-pane aggregator at <code>curriculum/l2-uk-en/stuck-modules.yaml</code>, consumed by Monitor API <code>GET /api/state/failing</code>. Both terminals (<code>plan_revision_request</code> + <code>budget_exhausted</code>) append.</li>
+</ol>
+<p>(Artifacts + file changes listed under &quot;Deliverables&quot; above.)</p>
+
+  </main>
+</div>
+</body>
+</html>

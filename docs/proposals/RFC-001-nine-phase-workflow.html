@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RFC-001: Nine-Phase Module Workflow</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>RFC-001: Nine-Phase Module Workflow</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+    </div>
+    <div class="meta">
+      <div>Source: RFC-001-nine-phase-workflow.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>RFC-001: Nine-Phase Module Workflow</h1>
+<p><strong>Status:</strong> Implemented
+<strong>Author:</strong> Claude (with user direction)
+<strong>Created:</strong> 2026-01-21
+<strong>Target:</strong> Tracks (hist, bio, lit) + C2 levels</p>
+<hr />
+<h2>Executive Summary</h2>
+<p>Replace the current 4-stage module workflow with a 9-phase workflow for content-heavy modules. The primary goal is creating smaller, focused prompts that LLMs actually read and follow.</p>
+<p><strong>Key changes:</strong></p>
+<ul>
+<li>Split monolithic Stage 4 (900+ lines) into 4 focused QA phases</li>
+<li>Lock each phase's output before proceeding (no retroactive modifications)</li>
+<li>Add integration phase to verify cross-file alignment</li>
+<li>Parallel rollout: new workflow for tracks + C2 only</li>
+</ul>
+<hr />
+<h2>Problem Statement</h2>
+<h3>Current State</h3>
+<p>| File | Lines | Purpose |
+|------|-------|---------|
+| stage-1-skeleton.md | 160 | Create meta |
+| stage-2-content.md | 296 | Write prose |
+| stage-3-activities.md | 858 | Create activities |
+| stage-4-review-fix.md | 868 | Validate EVERYTHING |
+| module-stage-<em>.md | 808 | Command wrappers |
+| review-content</em>.md | 2,879 | Quality checks |
+| <strong>TOTAL</strong> | <strong>~6,400</strong> | |</p>
+<h3>Core Issues</h3>
+<ol>
+<li>
+<p><strong>Stage 4 is monolithic</strong> - 900+ lines trying to validate everything at once. LLMs don't read it all, leading to missed checks.</p>
+</li>
+<li>
+<p><strong>No phase locking</strong> - Agents have modified meta.yaml to pass audit checks, which is unacceptable. Once a phase is finalized, it must be immutable.</p>
+</li>
+<li>
+<p><strong>Review-content features scattered</strong> - Quality checks split across multiple files with unclear ownership.</p>
+</li>
+<li>
+<p><strong>No integration verification</strong> - No explicit check that meta, content, activities, and vocabulary align with each other.</p>
+</li>
+</ol>
+<hr />
+<h2>Proposed Solution</h2>
+<h3>9-Phase Workflow</h3>
+<pre><code>┌─────────────────┐     ┌─────────────────┐
+│  module-meta    │────▶│  module-meta-qa │
+└─────────────────┘     └────────┬────────┘
+                                 │ LOCKED
+                                 ▼
+┌─────────────────┐     ┌─────────────────┐
+│  module-lesson  │────▶│ module-lesson-qa│
+└─────────────────┘     └────────┬────────┘
+                                 │ LOCKED
+                                 ▼
+┌─────────────────┐     ┌─────────────────┐
+│  module-act     │────▶│  module-act-qa  │
+└─────────────────┘     └────────┬────────┘
+                                 │ LOCKED
+                                 ▼
+                        ┌─────────────────┐
+                        │ module-integrate│
+                        └────────┬────────┘
+                                 │ DEPLOYED
+                                 ▼
+┌─────────────────┐     ┌─────────────────┐
+│  module-vocab   │────▶│ module-vocab-qa │
+└─────────────────┘     └─────────────────┘
+</code></pre>
+<h3>Phase Descriptions</h3>
+<p>| Phase | Creates | Reads | Validates |
+|-------|---------|-------|-----------|
+| <strong>1. module-meta</strong> | <code>meta/{slug}.yaml</code> | Curriculum plan, outline | - |
+| <strong>2. module-meta-qa</strong> | - | meta.yaml | Required fields, word targets, objectives, activity hints |
+| <strong>3. module-lesson</strong> | <code>{slug}.md</code> | meta.yaml (LOCKED) | - |
+| <strong>4. module-lesson-qa</strong> | - | meta.yaml, {slug}.md | Word count, sections, richness, naturalness, no AI contamination |
+| <strong>5. module-act</strong> | <code>activities/{slug}.yaml</code> | meta + content (LOCKED) | - |
+| <strong>6. module-act-qa</strong> | - | All above | Schema, counts, density, types, format rules |
+| <strong>7. module-integrate</strong> | MDX | All above (LOCKED) | Cross-file alignment, MDX generation |
+| <strong>8. module-vocab</strong> | <code>vocabulary/{slug}.yaml</code> | All files | - |
+| <strong>9. module-vocab-qa</strong> | - | All files | Schema, counts, integration, uniqueness |</p>
+<h3>Locking Mechanism</h3>
+<p><strong>Implementation:</strong> Instruction-based, not tooling-based.</p>
+<p>Each phase prompt explicitly states:</p>
+<blockquote>
+<p>&quot;The following files are LOCKED and must NOT be modified: [list]. If you cannot pass validation without modifying locked files, STOP and report the issue.&quot;</p>
+</blockquote>
+<p>Rationale: If an agent cannot follow this simple instruction, the problem is the agent, not the tooling. Adding hash checks or write blockers adds complexity without solving the root cause.</p>
+<h3>Phase Rewind Protocol</h3>
+<p>When a fundamental flaw is found in a locked file that blocks progress:</p>
+<ol>
+<li>Agent outputs: <strong>&quot;PHASE UNLOCK REQUIRED: [reason]&quot;</strong></li>
+<li>Agent identifies which upstream phase needs correction</li>
+<li>Agent fixes the upstream file</li>
+<li>Agent re-runs the QA phase for that upstream file</li>
+<li>Only after upstream QA passes, agent resumes the blocked phase</li>
+</ol>
+<p>Example:</p>
+<pre><code>PHASE UNLOCK REQUIRED: meta.yaml activity_hints specify &quot;quiz&quot; but
+content has no factual recall material suitable for quiz questions.
+
+Rewinding to: module-meta
+Fix: Update activity_hints to match actual content possibilities
+Re-running: module-meta-qa
+</code></pre>
+<p>This ensures locked files are only modified through explicit, auditable rewind - not silently edited to pass validation.</p>
+<hr />
+<h2>Design Details</h2>
+<h3>Phase 1: module-meta</h3>
+<p><strong>Creates:</strong> <code>meta/{slug}.yaml</code></p>
+<p><strong>Input:</strong></p>
+<ul>
+<li>Curriculum plan for the level</li>
+<li>Module position in sequence</li>
+<li>Previous modules' vocabulary (for cumulative tracking)</li>
+</ul>
+<p><strong>Output structure:</strong></p>
+<pre><code class="language-yaml">module_type: history  # or: grammar, vocabulary, cultural, biography, integration
+title: &quot;Трипільська культура&quot;
+slug: trypillian-civilization
+level: B2
+word_target: 1200
+estimated_duration_minutes: 45
+
+objectives:
+  - Describe Trypillia settlements and artifacts
+  - Explain agricultural practices of Trypillian culture
+  - Analyze significance of Trypillia for Ukrainian identity
+
+content_outline:
+  - heading: &quot;Відкриття Трипілля&quot;
+    word_target: 200
+    key_points:
+      - Discovery by Vikentiy Khvoyka
+      - Dating and geographical extent
+  - heading: &quot;Побут та господарство&quot;
+    word_target: 350
+    key_points:
+      - Agriculture and animal husbandry
+      - Pottery and crafts
+
+vocabulary_hints:
+  - городище
+  - розкопки
+  - кераміка
+
+activity_hints:
+  - type: reading
+    focus: Primary source excerpt
+  - type: quiz
+    focus: Factual recall
+  - type: essay-response
+    focus: Significance analysis
+
+sources:
+  - &quot;Археологія України&quot; - standard reference
+  - National Museum of History resources
+</code></pre>
+<h3>Phase 2: module-meta-qa</h3>
+<p><strong>Validates:</strong></p>
+<p>| Check | Source | Pass Criteria |
+|-------|--------|---------------|
+| Required fields | schema | All present |
+| word_target | config.py | Within level range (B2: 1000-1500) |
+| objectives | manual | Use measurable verbs (describe, explain, analyze, compare) |
+| content_outline | check_outline_compliance | Each section has word_target |
+| activity_hints | check_seminar_meta_requirements | Match pedagogy for module type |
+| sources | manual | At least 2 listed |</p>
+<p><strong>Output:</strong> PASS or list of violations with fix instructions.</p>
+<h3>Phase 3: module-lesson</h3>
+<p><strong>Creates:</strong> <code>{slug}.md</code></p>
+<p><strong>Input:</strong> meta.yaml (LOCKED)</p>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>Follow content_outline exactly (headings, order, approximate word counts)</li>
+<li>Use vocabulary from vocabulary_hints</li>
+<li>Meet word_target (±10%)</li>
+<li>No activities in this file</li>
+</ul>
+<p><strong>Output:</strong> Markdown prose following template structure.</p>
+<h3>Phase 4: module-lesson-qa</h3>
+<p><strong>Validates:</strong></p>
+<p>| Check | Source | Pass Criteria |
+|-------|--------|---------------|
+| Word count | evaluate_word_count | Within 10% of target |
+| Sections | check_outline_compliance | Match meta.content_outline |
+| Cultural callouts | evaluate_engagement | Present for cultural/history modules |
+| Russianisms | check_content_quality | None detected |
+| AI contamination | AI_CONTAMINATION_PATTERNS | None detected |
+| Political errors | validate_tone | No &quot;The Ukraine&quot;, &quot;Kiev&quot; |
+| Richness | evaluate_richness | Score ≥ 7/10 |
+| Naturalness | evaluate_naturalness | Score ≥ 8/10 |
+| Markdown | check_markdown_format | Valid structure |
+| Section order | check_section_order | Matches template |
+| Forbidden patterns | check_content_quality | None present |
+| State standard | check_state_standard_compliance | Compliant |</p>
+<p><strong>NOT validated here (no activities yet):</strong></p>
+<ul>
+<li>Activity counts</li>
+<li>Activity schemas</li>
+<li>Immersion % (B2+ is 100% immersed by definition)</li>
+</ul>
+<h3>Phase 5: module-act</h3>
+<p><strong>Creates:</strong> <code>activities/{slug}.yaml</code></p>
+<p><strong>Input:</strong> meta.yaml + {slug}.md (LOCKED)</p>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>Activity types follow activity_hints from meta</li>
+<li>Content references lesson material</li>
+<li>Item counts meet minimums per MODULE-RICHNESS-GUIDELINES-v2.md</li>
+<li>Reading activities properly linked to analysis activities</li>
+</ul>
+<h3>Phase 6: module-act-qa</h3>
+<p><strong>Validates:</strong></p>
+<p>| Check | Source | Pass Criteria |
+|-------|--------|---------------|
+| YAML schema | check_activity_yaml_schema | Valid |
+| Activity count | evaluate_activity_count | Meets minimum |
+| Item density | evaluate_density | Per guidelines |
+| Type variety | evaluate_unique_types | Required types present |
+| Priority types | evaluate_priority_types | Level-appropriate |
+| mark-the-words | check_mark_the_words_format | Correct format |
+| error-correction | check_error_correction_format | Correct format |
+| cloze syntax | check_cloze_syntax_errors | Valid |
+| unjumble | check_unjumble_word_match | Words match |
+| reading-analysis | check_seminar_reading_pairing | Properly linked |
+| external URLs | check_external_resources | Valid and accessible |
+| naturalness | evaluate_naturalness | Score ≥ 7/10 |
+| English hints | check_english_hints_in_activities | None in B2+ |
+| morpheme patterns | check_morpheme_patterns | Valid |</p>
+<h3>Phase 7: module-integrate</h3>
+<blockquote>
+<p><strong>CRITICAL:</strong> This phase deploys the module to the website. Activities and content are LOCKED at this point. Vocabulary enrichment happens after deployment, allowing batch processing across modules.</p>
+</blockquote>
+<p><strong>Creates:</strong> MDX for Docusaurus</p>
+<p><strong>Input:</strong> meta.yaml, {slug}.md, activities.yaml (all LOCKED)</p>
+<p><strong>Validates:</strong></p>
+<p>| Check | Description |
+|-------|-------------|
+| Meta-content alignment | content_outline headings match {slug}.md sections |
+| Meta-activities alignment | activity_hints types present in activities.yaml |
+| Content-activities alignment | Activities reference content appropriately |
+| File completeness | All 3 files exist and are non-empty |
+| MDX generation | <code>npm run pipeline</code> succeeds |</p>
+<p><strong>Output:</strong> PASS (deployed to website) or FAIL with specific alignment issues.</p>
+<h3>Phase 8: module-vocab</h3>
+<p><strong>Creates:</strong> <code>vocabulary/{slug}.yaml</code></p>
+<p><strong>Input:</strong> All previous files (DEPLOYED)</p>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>Extract vocabulary appearing in content AND activities</li>
+<li>Check against cumulative vocabulary database</li>
+<li>Only include words NEW to this level</li>
+<li>Follow schema: lemma, ipa, translation, pos, gender (if applicable)</li>
+</ul>
+<p><strong>Cumulative dependency:</strong></p>
+<ul>
+<li>Tracks (hist, bio, lit): A1 → B2 core vocabulary</li>
+<li>C2: A1 → C1 core vocabulary</li>
+</ul>
+<p><strong>Note:</strong> Vocabulary extraction can be done in batch across multiple modules since it happens after deployment. This allows working on modules out of sequence.</p>
+<h3>Phase 9: module-vocab-qa</h3>
+<p><strong>Validates:</strong></p>
+<p>| Check | Source | Pass Criteria |
+|-------|--------|---------------|
+| Schema | vocabulary schema | Valid structure |
+| Count | evaluate_vocab | Within range for level |
+| Integration | check_vocabulary_integration | Words appear in content or activities |
+| Uniqueness | cumulative DB check | Words are NEW to level |
+| IPA format | format check | Valid IPA |
+| Duplicates | script | None |</p>
+<p><strong>Output:</strong> PASS (vocabulary complete) or FAIL with specific issues.</p>
+<hr />
+<h2>Check Distribution</h2>
+<h3>From Current stage-4-review-fix.md</h3>
+<p>| Current Location | New Phase |
+|------------------|-----------|
+| Required metadata validation | module-meta-qa |
+| Word count checks | module-lesson-qa |
+| Outline compliance | module-lesson-qa |
+| Content quality (Russianisms, AI) | module-lesson-qa |
+| Richness/naturalness | module-lesson-qa |
+| Activity schema | module-act-qa |
+| Activity counts/density | module-act-qa |
+| Activity format checks | module-act-qa |
+| Cross-file alignment | module-integrate |
+| Vocabulary schema | module-vocab-qa |
+| Vocabulary integration | module-vocab-qa |</p>
+<h3>From review-content.md</h3>
+<p>| Current Section | New Phase |
+|-----------------|-----------|
+| §0 Template compliance | module-meta-qa + module-lesson-qa |
+| §1-§6 Quality scores | module-lesson-qa |
+| §7 Word salad check | module-lesson-qa |
+| §8a-§8g Activity checks | module-act-qa |
+| §9 Red flags | module-lesson-qa + module-act-qa |
+| §10-§15 Richness checks | module-lesson-qa |</p>
+<hr />
+<h2>Implementation Plan</h2>
+<h3>File Changes</h3>
+<p><strong>New files to create:</strong></p>
+<pre><code>claude_extensions/
+├── phases/
+│   ├── module-meta.md          # Phase 1 prompt
+│   ├── module-meta-qa.md       # Phase 2 prompt
+│   ├── module-lesson.md        # Phase 3 prompt
+│   ├── module-lesson-qa.md     # Phase 4 prompt
+│   ├── module-act.md           # Phase 5 prompt
+│   ├── module-act-qa.md        # Phase 6 prompt
+│   ├── module-vocab.md         # Phase 7 prompt
+│   ├── module-vocab-qa.md      # Phase 8 prompt
+│   └── module-integrate.md     # Phase 9 prompt
+├── commands/
+│   ├── module-meta.md          # /module-meta command
+│   ├── module-meta-qa.md       # /module-meta-qa command
+│   ├── module-lesson.md        # /module-lesson command
+│   ├── module-lesson-qa.md     # /module-lesson-qa command
+│   ├── module-act.md           # /module-act command
+│   ├── module-act-qa.md        # /module-act-qa command
+│   ├── module-vocab.md         # /module-vocab command
+│   ├── module-vocab-qa.md      # /module-vocab-qa command
+│   └── module-integrate.md     # /module-integrate command
+</code></pre>
+<p><strong>Script changes:</strong></p>
+<pre><code>scripts/
+├── audit_module.py             # Add --phase flag for phase-specific audits
+└── audit/
+    └── checks/
+        ├── meta_validation.py  # Extract meta-specific checks
+        ├── lesson_validation.py # Extract lesson-specific checks
+        ├── activity_validation.py # Extract activity-specific checks
+        └── vocab_validation.py # Extract vocab-specific checks
+</code></pre>
+<h3>Task Breakdown</h3>
+<p>| Task | Effort | Dependency |
+|------|--------|------------|
+| Create phase directory structure | S | - |
+| Write module-meta phase prompt | M | - |
+| Write module-meta-qa phase prompt | M | module-meta |
+| Write module-lesson phase prompt | M | - |
+| Write module-lesson-qa phase prompt | L | module-lesson |
+| Write module-act phase prompt | M | - |
+| Write module-act-qa phase prompt | L | module-act |
+| Write module-vocab phase prompt | M | - |
+| Write module-vocab-qa phase prompt | M | module-vocab |
+| Write module-integrate phase prompt | M | All above |
+| Create 9 command wrappers | S | All prompts |
+| Add --phase flag to audit_module.py | M | - |
+| Extract check modules | L | --phase flag |
+| Test on 3 hist modules | L | All above |
+| Document new workflow | M | Testing complete |
+| Update CLAUDE.md | S | Documentation |</p>
+<p><strong>Effort key:</strong> S = Small (&lt; 1 hour), M = Medium (1-3 hours), L = Large (3+ hours)</p>
+<hr />
+<h2>Migration Plan</h2>
+<h3>Scope</h3>
+<p><strong>ALL LEVELS</strong> - New workflow applies everywhere, but in phases:</p>
+<p><strong>Rollout Phase 1 - New Content:</strong></p>
+<ul>
+<li>hist (new modules)</li>
+<li>bio (new modules)</li>
+<li>lit (new modules)</li>
+<li>C2 (new modules)</li>
+<li>Any new modules in core levels (B1, B2, C1)</li>
+</ul>
+<p><strong>Rollout Phase 2 - Migration:</strong></p>
+<ul>
+<li>A1 (34 modules)</li>
+<li>A2 (57 modules)</li>
+<li>B1 (91 modules)</li>
+<li>B2 core (94 modules)</li>
+<li>C1 core</li>
+</ul>
+<blockquote>
+<p><strong>Why migrate existing content?</strong> Current review process misses errors. Example: A1 Module 12 had heading &quot;Masculine Nouns Ending in -а&quot; with examples ending in -о. Caught by human contributor in PR #443, not by AI review. Smaller, focused QA prompts will catch what monolithic reviews miss.</p>
+</blockquote>
+<h3>Rollout Strategy</h3>
+<ol>
+<li>
+<p><strong>Phase 1: Pilot</strong></p>
+<ul>
+<li>Test new workflow on 3 hist modules (existing, not new)</li>
+<li>Compare results with current workflow</li>
+<li>Refine prompts based on findings</li>
+</ul>
+</li>
+<li>
+<p><strong>Phase 2: Tracks + C2</strong></p>
+<ul>
+<li>Apply new workflow to all track modules and C2</li>
+<li>Collect metrics: time to complete, audit pass rate, revision count</li>
+</ul>
+</li>
+<li>
+<p><strong>Phase 3: Core Level Migration</strong></p>
+<ul>
+<li>Run <code>module-lesson-qa</code> and <code>module-act-qa</code> on existing A1-C1 modules</li>
+<li>Fix issues found</li>
+<li>No full rebuild required - just QA pass and fixes</li>
+</ul>
+</li>
+</ol>
+<h3>Coexistence (Temporary)</h3>
+<p>During migration, both workflows exist:</p>
+<ul>
+<li><code>/module-stage-1</code> through <code>/module-stage-4</code> - legacy, being phased out</li>
+<li><code>/module-meta</code> through <code>/module-integrate</code> - new standard</li>
+</ul>
+<p>After migration completes, legacy commands will be deprecated.</p>
+<hr />
+<h2>Success Criteria</h2>
+<h3>Quantitative</h3>
+<p>| Metric | Target |
+|--------|--------|
+| Prompt size (each phase) | &lt; 200 lines |
+| First-pass audit rate | &gt; 70% (vs current ~40%) |
+| Meta modification attempts | 0 (locked phases) |
+| Average revisions per module | &lt; 3 (vs current ~5) |</p>
+<h3>Qualitative</h3>
+<ul>
+<li>Agents read and follow complete phase prompts</li>
+<li>Clear ownership of each validation check</li>
+<li>Easier debugging when issues occur</li>
+<li>Work can be delegated per phase</li>
+</ul>
+<hr />
+<h2>Risks and Mitigations</h2>
+<p>| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| More overhead for simple modules | Medium | Low | Only apply to content-heavy tracks |
+| Prompt duplication across phases | Medium | Medium | Shared reference docs, not inline content |
+| Phase locking feels restrictive | Low | Medium | Clear escalation path for genuine blockers |
+| Integration phase catches many issues | Medium | High | Strong QA in earlier phases |</p>
+<hr />
+<h2>Design Decisions</h2>
+<ol>
+<li>
+<p><strong>No orchestrator command (for now).</strong> Keep phases manual so agent/user validates each gate individually. Chaining can be automated later once prompts are stable.</p>
+</li>
+<li>
+<p><strong>Partial phase runs allowed.</strong> If module-lesson-qa finds issues, re-run module-lesson without starting from module-meta. Use Phase Rewind Protocol only when upstream file itself is flawed.</p>
+</li>
+</ol>
+<h2>Open Questions</h2>
+<ol>
+<li><strong>Cumulative vocab database format?</strong> Current per-level YAMLs vs unified database for cross-level queries.</li>
+</ol>
+<hr />
+<h2>Appendix: Check Mapping Reference</h2>
+<p>See <code>docs/dev/PHASE-WORKFLOW-ANALYSIS.md</code> for the complete mapping of all 42 current checks to the proposed 9 phases.</p>
+<hr />
+<h2>Changelog</h2>
+<p>| Date | Change |
+|------|--------|
+| 2026-01-21 | Initial draft |
+| 2026-01-21 | Add Phase Rewind Protocol (Gemini feedback) |
+| 2026-01-21 | Decide: no orchestrator command for now (Gemini feedback) |
+| 2026-01-21 | Emphasize Phase 9 as critical addition (Gemini feedback) |
+| 2026-01-21 | Update migration: all levels will migrate, not just tracks |
+| 2026-01-24 | Reorder phases: integrate at 7, vocab at 8-9 (enables batch vocab after deploy) |
+| 2026-01-24 | Status: Draft → Implemented |</p>
+
+  </main>
+</div>
+</body>
+</html>

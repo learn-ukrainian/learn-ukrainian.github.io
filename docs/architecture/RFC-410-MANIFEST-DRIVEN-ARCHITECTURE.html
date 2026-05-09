@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RFC #410: Manifest-Driven Architecture</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>RFC #410: Manifest-Driven Architecture</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+    </div>
+    <div class="meta">
+      <div>Source: RFC-410-MANIFEST-DRIVEN-ARCHITECTURE.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>RFC #410: Manifest-Driven Architecture</h1>
+<blockquote>
+<p><strong>Status</strong>: Approved (decisions finalized 2026-01-17)
+<strong>Author</strong>: Claude (AI Assistant)
+<strong>Created</strong>: 2026-01-14
+<strong>GitHub Issue</strong>: <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/410">#410</a></p>
+</blockquote>
+<h2>Executive Summary</h2>
+<p>This RFC proposes replacing the current numbered-filename system with a <strong>manifest-driven architecture</strong> where:</p>
+<ol>
+<li><strong><code>curriculum.yaml</code></strong> defines module order (single source of truth)</li>
+<li><strong>Slug-based filenames</strong> replace numbered prefixes (<code>the-cyrillic-code-i.md</code> not <code>01-the-cyrillic-code-i.md</code>)</li>
+<li><strong>Build-time resolution</strong> handles links between modules via <code>slug:</code> prefix</li>
+</ol>
+<p>This eliminates &quot;renumbering hell&quot; when inserting, moving, or reordering modules.</p>
+<hr />
+<h2>Problem Statement</h2>
+<h3>Current Pain Points</h3>
+<p>| Scenario | Current Impact | Files Affected |
+|----------|---------------|----------------|
+| Insert module at A1 position 5 | Rename 29 files + all sidecars | 120+ files |
+| Move B2 history modules to track | Rename 61 modules | 244+ files |
+| Reorder 3 modules in sequence | Rename all subsequent modules | Variable |
+| Fix broken links after rename | Manual search/replace | All MD files |</p>
+<h3>Why This Matters Now</h3>
+<p>RFC #409 (Curriculum Reorganization) requires:</p>
+<ul>
+<li>Adding 10+ practical modules to A1</li>
+<li>Adding 12+ practical modules to A2</li>
+<li>Moving 61 B2 history modules to a separate track</li>
+<li>Moving 96 C1 biography modules to a separate track</li>
+</ul>
+<p>Without manifest-driven architecture, this would require renaming <strong>300+ files</strong> and fixing countless internal links.</p>
+<hr />
+<h2>Proposed Solution</h2>
+<h3>1. Manifest File: <code>curriculum.yaml</code></h3>
+<p>Single file per language pair defining all course structure:</p>
+<pre><code class="language-yaml"># curriculum/l2-uk-en/curriculum.yaml
+version: &quot;2.0&quot;
+language_pair: uk-en
+name: &quot;Ukrainian for English Speakers&quot;
+
+# Global settings
+settings:
+  default_transliteration: true  # A1-A2
+
+# =============================================================================
+# CORE PATH - Required for all learners
+# =============================================================================
+core:
+  a1:
+    name: &quot;A1 - Beginner&quot;
+    modules:
+      # Phase A1.1 - First Contact
+      - slug: the-cyrillic-code-i
+        title: &quot;The Cyrillic Code I&quot;
+        phase: A1.1
+        focus: grammar
+
+      - slug: the-cyrillic-code-ii
+        title: &quot;The Cyrillic Code II&quot;
+        phase: A1.1
+        focus: grammar
+
+      - slug: the-gender-code
+        title: &quot;The Gender Code&quot;
+        phase: A1.1
+        focus: grammar
+
+      # ... more modules
+
+      - slug: checkpoint-first-contact
+        title: &quot;Checkpoint - First Contact&quot;
+        phase: A1.1
+        focus: checkpoint
+
+      # Phase A1.2 - Navigation
+      - slug: the-accusative-i-things
+        title: &quot;The Accusative I - Things&quot;
+        phase: A1.2
+        focus: grammar
+
+      # Practical modules (NEW - from #409)
+      - slug: at-the-cafe
+        title: &quot;At the Café&quot;
+        phase: A1.2
+        focus: practical
+
+      # ... etc
+
+  a2:
+    name: &quot;A2 - Elementary&quot;
+    modules:
+      - slug: the-dative-i-pronouns
+        # ...
+
+  b1:
+    name: &quot;B1 - Intermediate&quot;
+    modules:
+      # ...
+
+  b2:
+    name: &quot;B2 - Upper Intermediate&quot;
+    modules:
+      # Core B2 only - history moved to track
+      - slug: passive-voice-system
+        # ...
+
+  c1:
+    name: &quot;C1 - Advanced&quot;
+    modules:
+      # Core C1 only - biographies moved to track
+      # ...
+
+  c2:
+    name: &quot;C2 - Mastery&quot;
+    modules:
+      # ...
+
+# =============================================================================
+# SPECIALIZED TRACKS - Optional paths
+# =============================================================================
+tracks:
+  hist:
+    name: &quot;B2 History Track&quot;
+    description: &quot;Ukrainian History from Kyivan Rus' to Independence&quot;
+    prerequisite: b2  # Must complete B2 core first
+    modules:
+      - slug: kyivan-rus-origins
+        # ...
+
+  bio:
+    name: &quot;C1 Biography Track&quot;
+    description: &quot;Famous Ukrainians Throughout History&quot;
+    prerequisite: c1
+    modules:
+      - slug: taras-shevchenko
+        # ...
+
+  b2-pro:
+    name: &quot;B2 Professional Track&quot;
+    description: &quot;Business and Professional Ukrainian&quot;
+    prerequisite: b2
+    modules:
+      - slug: business-email-formal
+        # ...
+
+  lit:
+    name: &quot;Literature Track&quot;
+    description: &quot;Classical Ukrainian Literature&quot;
+    prerequisite: c1
+    modules:
+      # ...
+</code></pre>
+<h3>2. File Structure Changes</h3>
+<p><strong>Before (numbered):</strong></p>
+<pre><code>curriculum/l2-uk-en/a1/
+├── 01-the-cyrillic-code-i.md
+├── 02-the-cyrillic-code-ii.md
+├── 03-the-gender-code.md
+├── activities/
+│   ├── 01-the-cyrillic-code-i.yaml
+│   ├── 02-the-cyrillic-code-ii.yaml
+├── meta/
+│   ├── 01-the-cyrillic-code-i.yaml
+├── vocabulary/
+│   ├── 01-the-cyrillic-code-i.yaml
+</code></pre>
+<p><strong>After (slug-based):</strong></p>
+<pre><code>curriculum/l2-uk-en/a1/
+├── the-cyrillic-code-i.md
+├── the-cyrillic-code-ii.md
+├── the-gender-code.md
+├── activities/
+│   ├── the-cyrillic-code-i.yaml
+│   ├── the-cyrillic-code-ii.yaml
+├── meta/
+│   ├── the-cyrillic-code-i.yaml
+├── vocabulary/
+│   ├── the-cyrillic-code-i.yaml
+</code></pre>
+<h3>3. Module Ordering</h3>
+<p>Order is <strong>defined in <code>curriculum.yaml</code></strong>, not by filesystem sorting.</p>
+<pre><code class="language-python"># Before: Order by filename
+module_files = sorted(level_path.glob('*.md'))  # 01, 02, 03...
+
+# After: Order by manifest
+def get_modules(level: str) -&gt; list[Module]:
+    manifest = load_manifest()
+    return manifest['core'][level]['modules']
+</code></pre>
+<h3>4. Link Resolution</h3>
+<p><strong>Current approach (fragile):</strong></p>
+<pre><code class="language-markdown">See [Module 5](/a1/module-05) for details.
+</code></pre>
+<p><strong>New approach (stable):</strong></p>
+<pre><code class="language-markdown">See [slug:my-world-objects] for details.
+</code></pre>
+<p>Build-time transformer resolves <code>slug:</code> links:</p>
+<pre><code class="language-python">def resolve_slug_links(content: str, manifest: dict) -&gt; str:
+    &quot;&quot;&quot;Replace slug:xxx with actual path/title.&quot;&quot;&quot;
+    def replace_slug(match):
+        slug = match.group(1)
+        module = find_module_by_slug(manifest, slug)
+        if module:
+            return f&quot;[{module['title']}]({module['path']})&quot;
+        else:
+            raise ValueError(f&quot;Unknown slug: {slug}&quot;)
+
+    return re.sub(r'\[slug:([a-z0-9-]+)\]', replace_slug, content)
+</code></pre>
+<h3>5. Module Number Assignment</h3>
+<p>Numbers are computed at build time based on position in manifest:</p>
+<pre><code class="language-python">def assign_numbers(manifest: dict) -&gt; dict:
+    &quot;&quot;&quot;Add localNum and globalNum to each module.&quot;&quot;&quot;
+    global_num = 0
+
+    for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
+        local_num = 0
+        for module in manifest['core'][level]['modules']:
+            global_num += 1
+            local_num += 1
+            module['globalNum'] = global_num
+            module['localNum'] = local_num
+            module['path'] = f&quot;/{level}/module-{local_num:02d}&quot;
+
+    return manifest
+</code></pre>
+<hr />
+<h2>Migration Strategy</h2>
+<h3>Phase 1: Preparation (Non-Breaking)</h3>
+<ol>
+<li><strong>Create <code>curriculum.yaml</code></strong> with current structure</li>
+<li><strong>Update scripts</strong> to read from manifest (fallback to filesystem)</li>
+<li><strong>Add <code>slug:</code> link support</strong> (alongside existing links)</li>
+<li><strong>Validate</strong> manifest matches filesystem state</li>
+</ol>
+<h3>Phase 2: File Rename (Breaking)</h3>
+<ol>
+<li><strong>Snapshot current state</strong> (git tag: <code>pre-manifest-migration</code>)</li>
+<li><strong>Rename all files</strong> to remove number prefixes:<pre><code class="language-bash"># Script: scripts/migrate_to_slugs.py
+for file in curriculum/l2-uk-en/*/[0-9][0-9]-*.md:
+    new_name=$(echo $file | sed 's|/[0-9][0-9]-|/|')
+    git mv &quot;$file&quot; &quot;$new_name&quot;
+done
+</code></pre>
+</li>
+<li><strong>Rename sidecars</strong> (activities, meta, vocabulary)</li>
+<li><strong>Update all internal links</strong> to use <code>slug:</code> format</li>
+<li><strong>Run full validation</strong> pipeline</li>
+</ol>
+<h3>Phase 3: Script Updates</h3>
+<p>Update all scripts to use manifest:</p>
+<p>| Script | Change |
+|--------|--------|
+| <code>generate_mdx.py</code> | Read module order from manifest |
+| <code>audit_module.py</code> | Resolve paths via manifest |
+| <code>pipeline.py</code> | Use manifest for discovery |
+| <code>validate_mdx.py</code> | Validate slug links |</p>
+<h3>Phase 4: Documentation</h3>
+<ol>
+<li>Update <code>CLAUDE.md</code> with new conventions</li>
+<li>Update all workflow docs</li>
+<li>Update templates to use <code>slug:</code> links</li>
+</ol>
+<hr />
+<h2>Schema Details</h2>
+<h3>Module Entry Schema</h3>
+<pre><code class="language-yaml"># Required fields
+- slug: string          # URL-safe identifier (a-z, 0-9, hyphens)
+  title: string         # Display title
+
+# Optional fields
+  phase: string         # e.g., &quot;A1.1&quot;, &quot;B2.3&quot;
+  focus: enum           # grammar | vocabulary | cultural | checkpoint | practical | integration
+  prerequisites: list   # [slug, slug, ...]
+  tags: list            # [tag, tag, ...]
+
+# Computed at build time (not in YAML)
+  localNum: int         # Position within level
+  globalNum: int        # Position in entire course
+  path: string          # URL path
+</code></pre>
+<h3>Validation Rules</h3>
+<pre><code class="language-python">VALIDATION_RULES = {
+    'slug': {
+        'pattern': r'^[a-z0-9]+(-[a-z0-9]+)*$',
+        'unique': True,  # Across entire curriculum
+        'max_length': 50
+    },
+    'title': {
+        'required': True,
+        'max_length': 100
+    },
+    'focus': {
+        'allowed': ['grammar', 'vocabulary', 'cultural', 'checkpoint',
+                    'practical', 'integration', 'history', 'biography']
+    }
+}
+</code></pre>
+<hr />
+<h2>Impact Analysis</h2>
+<h3>Files to Modify</h3>
+<p>| Category | Count | Notes |
+|----------|-------|-------|
+| Module MD files | ~570 | Rename only |
+| Activity YAML files | ~570 | Rename only |
+| Meta YAML files | ~570 | Rename only |
+| Vocabulary YAML files | ~400 | Rename only |
+| Python scripts | ~15 | Update path resolution |
+| Workflow docs | ~10 | Update examples |
+| Templates | ~8 | Update link format |</p>
+<h3>Breaking Changes</h3>
+<ol>
+<li><strong>All file paths change</strong> - but commit atomic</li>
+<li><strong>Link format changes</strong> - but <code>slug:</code> is additive first</li>
+<li><strong>Script APIs change</strong> - module number param → slug param</li>
+</ol>
+<h3>Rollback Plan</h3>
+<pre><code class="language-bash"># If migration fails, rollback to snapshot
+git checkout pre-manifest-migration
+git checkout -b post-manifest-rollback
+</code></pre>
+<hr />
+<h2>Success Metrics</h2>
+<p>| Metric | Before | After |
+|--------|--------|-------|
+| Files renamed to insert 1 module | N-1 files | 0 files |
+| Time to reorder 10 modules | ~2 hours | ~5 minutes |
+| Risk of broken links | High | Near zero |
+| Single source of truth | No (filesystem) | Yes (manifest) |</p>
+<hr />
+<h2>Implementation Checklist</h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>[ ] All levels A1-C2 in stable state</li>
+<li>[ ] No pending major content changes</li>
+</ul>
+<h3>Phase 1: Preparation</h3>
+<ul>
+<li>[ ] Create <code>curriculum.yaml</code> from current state</li>
+<li>[ ] Write <code>scripts/manifest_utils.py</code> with loader/validator</li>
+<li>[ ] Add <code>slug:</code> link resolver to <code>generate_mdx.py</code></li>
+<li>[ ] Test with subset of modules</li>
+</ul>
+<h3>Phase 2: Migration</h3>
+<ul>
+<li>[ ] Create git tag <code>pre-manifest-migration</code></li>
+<li>[ ] Write <code>scripts/migrate_to_slugs.py</code></li>
+<li>[ ] Run migration on all levels</li>
+<li>[ ] Verify no broken links</li>
+</ul>
+<h3>Phase 3: Script Updates</h3>
+<ul>
+<li>[ ] Update <code>generate_mdx.py</code></li>
+<li>[ ] Update <code>audit_module.py</code></li>
+<li>[ ] Update <code>pipeline.py</code></li>
+<li>[ ] Update all path-dependent scripts</li>
+</ul>
+<h3>Phase 4: Documentation</h3>
+<ul>
+<li>[ ] Update <code>CLAUDE.md</code></li>
+<li>[ ] Update workflow docs</li>
+<li>[ ] Update templates</li>
+<li>[ ] Create migration guide for contributors</li>
+</ul>
+<hr />
+<h2>Decisions (Finalized 2026-01-17)</h2>
+<h3>1. Single vs per-level manifests?</h3>
+<p><strong>Decision: Single <code>curriculum.yaml</code></strong></p>
+<p>Rationale: With ~600 modules it's ~2000 lines - manageable. Merge conflicts are rare since module ordering rarely changes. One source of truth is cleaner.</p>
+<h3>2. Track module numbering?</h3>
+<p><strong>Decision: Slug-only for tracks (no numbers)</strong></p>
+<p>Tracks (hist, bio, b2-pro, c1-pro, lit) use:</p>
+<ul>
+<li><code>slug:</code> field only in meta YAML</li>
+<li>No <code>module:</code> field with numbers</li>
+<li>Order determined by manifest, not by numbering</li>
+</ul>
+<p>Core levels (a1, a2, b1, b2, c1, c2) retain numbered format until full migration.</p>
+<p><strong>Cleanup required:</strong></p>
+<p>| Track | Files with <code>module:</code> to remove |
+|-------|-------------------------------|
+| HIST | 63 |
+| BIO | 101 |
+| LIT | 23 |
+| <strong>Total</strong> | <strong>187</strong> |</p>
+<h3>3. Backward compatibility period?</h3>
+<p><strong>Decision: Hard cutover</strong></p>
+<p>Single atomic migration commit with git tag <code>pre-manifest-migration</code> for rollback. No dual-format support needed since this is a single-developer project.</p>
+<hr />
+<h2>Appendix A: Current File Counts</h2>
+<pre><code>Level   Modules   Activities   Meta    Vocab    Total Files
+A1      34        34          34      34       136
+A2      57        57          57      57       228
+B1      91        91          91      91       364
+B2      145       145         145     120      555
+C1      202       202         202     150      756
+C2      100       100         100     80       380
+---------------------------------------------------
+Total   629       629         629     532      2419
+</code></pre>
+<hr />
+<h2>Appendix B: Example Migration Script</h2>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;
+Migrate from numbered filenames to slug-based filenames.
+
+Usage:
+    python scripts/migrate_to_slugs.py --dry-run  # Preview changes
+    python scripts/migrate_to_slugs.py            # Execute migration
+&quot;&quot;&quot;
+
+import re
+import subprocess
+from pathlib import Path
+
+CURRICULUM_DIR = Path(&quot;curriculum/l2-uk-en&quot;)
+LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+SIDECAR_DIRS = ['activities', 'meta', 'vocabulary', 'audit', 'review']
+
+def extract_slug(filename: str) -&gt; str:
+    &quot;&quot;&quot;Extract slug from numbered filename.&quot;&quot;&quot;
+    # 01-the-cyrillic-code-i.md -&gt; the-cyrillic-code-i
+    match = re.match(r'^\d{2,3}-(.+)\.(md|yaml)$', filename)
+    if match:
+        return match.group(1)
+    return None
+
+def migrate_level(level: str, dry_run: bool = True):
+    &quot;&quot;&quot;Migrate all files in a level.&quot;&quot;&quot;
+    level_dir = CURRICULUM_DIR / level
+
+    # Migrate main .md files
+    for md_file in level_dir.glob('[0-9][0-9]*.md'):
+        slug = extract_slug(md_file.name)
+        if slug:
+            new_path = level_dir / f&quot;{slug}.md&quot;
+            if dry_run:
+                print(f&quot;  {md_file.name} -&gt; {new_path.name}&quot;)
+            else:
+                subprocess.run(['git', 'mv', str(md_file), str(new_path)])
+
+    # Migrate sidecars
+    for sidecar_dir in SIDECAR_DIRS:
+        sidecar_path = level_dir / sidecar_dir
+        if sidecar_path.exists():
+            for yaml_file in sidecar_path.glob('[0-9][0-9]*.yaml'):
+                slug = extract_slug(yaml_file.name)
+                if slug:
+                    new_path = sidecar_path / f&quot;{slug}.yaml&quot;
+                    if dry_run:
+                        print(f&quot;  {sidecar_dir}/{yaml_file.name} -&gt; {new_path.name}&quot;)
+                    else:
+                        subprocess.run(['git', 'mv', str(yaml_file), str(new_path)])
+
+def main():
+    import sys
+    dry_run = '--dry-run' in sys.argv
+
+    print(f&quot;Migration mode: {'DRY RUN' if dry_run else 'EXECUTE'}\n&quot;)
+
+    for level in LEVELS:
+        print(f&quot;\n=== {level.upper()} ===&quot;)
+        migrate_level(level, dry_run)
+
+    if not dry_run:
+        print(&quot;\nMigration complete. Run validation pipeline.&quot;)
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<hr />
+<h2>Appendix C: Manifest Loader</h2>
+<pre><code class="language-python"># scripts/manifest_utils.py
+&quot;&quot;&quot;Utilities for working with curriculum manifest.&quot;&quot;&quot;
+
+import yaml
+from pathlib import Path
+from functools import lru_cache
+
+MANIFEST_PATH = Path(&quot;curriculum/l2-uk-en/curriculum.yaml&quot;)
+
+@lru_cache
+def load_manifest() -&gt; dict:
+    &quot;&quot;&quot;Load and cache curriculum manifest.&quot;&quot;&quot;
+    with open(MANIFEST_PATH) as f:
+        return yaml.safe_load(f)
+
+def get_module_by_slug(slug: str) -&gt; dict | None:
+    &quot;&quot;&quot;Find module by slug across all levels and tracks.&quot;&quot;&quot;
+    manifest = load_manifest()
+
+    # Search core levels
+    for level, data in manifest.get('core', {}).items():
+        for module in data.get('modules', []):
+            if module.get('slug') == slug:
+                module['level'] = level
+                module['track'] = 'core'
+                return module
+
+    # Search tracks
+    for track, data in manifest.get('tracks', {}).items():
+        for module in data.get('modules', []):
+            if module.get('slug') == slug:
+                module['level'] = track
+                module['track'] = track
+                return module
+
+    return None
+
+def get_modules_for_level(level: str) -&gt; list[dict]:
+    &quot;&quot;&quot;Get ordered list of modules for a level.&quot;&quot;&quot;
+    manifest = load_manifest()
+    return manifest.get('core', {}).get(level, {}).get('modules', [])
+
+def validate_manifest() -&gt; list[str]:
+    &quot;&quot;&quot;Validate manifest integrity. Returns list of errors.&quot;&quot;&quot;
+    errors = []
+    manifest = load_manifest()
+    seen_slugs = set()
+
+    def check_modules(modules: list, context: str):
+        for i, module in enumerate(modules):
+            slug = module.get('slug')
+
+            # Required fields
+            if not slug:
+                errors.append(f&quot;{context}[{i}]: missing slug&quot;)
+            elif not module.get('title'):
+                errors.append(f&quot;{context}[{i}] ({slug}): missing title&quot;)
+
+            # Unique slugs
+            if slug in seen_slugs:
+                errors.append(f&quot;{context}: duplicate slug '{slug}'&quot;)
+            seen_slugs.add(slug)
+
+            # Slug format
+            if slug and not re.match(r'^[a-z0-9]+(-[a-z0-9]+)*$', slug):
+                errors.append(f&quot;{context}: invalid slug format '{slug}'&quot;)
+
+    # Check core
+    for level, data in manifest.get('core', {}).items():
+        check_modules(data.get('modules', []), f&quot;core.{level}&quot;)
+
+    # Check tracks
+    for track, data in manifest.get('tracks', {}).items():
+        check_modules(data.get('modules', []), f&quot;tracks.{track}&quot;)
+
+    return errors
+</code></pre>
+
+  </main>
+</div>
+</body>
+</html>

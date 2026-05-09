@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kubedojo Decision Graph paradigm + persistent listener architecture — follow-up actions</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Kubedojo Decision Graph paradigm + persistent listener architecture — follow-up actions</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+    </div>
+    <div class="meta">
+      <div>Source: 2026-05-07-kubedojo-paradigm-followups.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Kubedojo Decision Graph paradigm + persistent listener architecture — follow-up actions</h1>
+<blockquote>
+<p><strong>Status update 2026-05-07 evening:</strong></p>
+<ul>
+<li>PR #1781 MERGED (HARD STOP RULE)</li>
+<li>Bakeoff retry v2 RUNNING (<code>bakeoff-2026-05-07-retry-2</code>, ~50min in at this update)</li>
+<li>Issue #1782 FILED (persistent agent listeners umbrella)</li>
+<li>Tier-2 warm-cache fix DISPATCHED (Codex <code>tier-2-warm-cache</code>, fires PR for #1782 sub-task 1)</li>
+</ul>
+<p>Original direction 2026-05-07 morning: &quot;save these and do it after the bakeoff.&quot;
+Refined direction 2026-05-07 evening: &quot;prepare th tasks and do 2 right away.&quot; → Tier-2 dispatched immediately; everything else still queued behind bakeoff completion.</p>
+</blockquote>
+<h2>Context</h2>
+<p>The kubedojo team (sister project) compared their dashboard to ours and pitched
+inverting <code>channels.html</code> from chat-primary to <strong>Decision Graph</strong>-primary, with
+chat as a toggle. They also offered to upstream their D3 (Decision Graph) PR
+to us after they implement it in their own repo.</p>
+<p>3-way agent review converged on a <strong>modified version</strong>:</p>
+<ul>
+<li>✅ Decision Graph as a <strong>TOGGLE</strong> that auto-engages when a thread has ≥2
+distinct <code>agent_family</code> responses with <code>[AGREE]</code>/<code>[OPTION]</code>/<code>[OBJECT]</code>/
+<code>[DEFER]</code> markers. Chat stays primary.</li>
+<li>✅ D4 (decision-lineage backlink scanner) is paradigm-independent and ships
+standalone, ahead of any UI work.</li>
+<li>✅ Decision Graph proposal warrants its own ADR — distinct category from
+the existing pending Multi-UI ADR (which is about identity / claims / blob
+storage, not deliberation visualization).</li>
+</ul>
+<p>Codex did real evidence-gathering (file:line refs + DB statistics); Gemini
+rubber-stamped without citations. Codex's pushback is what shaped the final
+position.</p>
+<h2>Codex's data (verbatim, verifiable)</h2>
+<p><strong>Channel marker-thread density</strong> (from local <code>channel_messages</code> snapshot
+2026-05-07):</p>
+<p>| Channel | Marker threads | Total threads | % |
+|---|---:|---:|---:|
+| <code>architecture</code> | 32 | 39 | 82% |
+| <code>pipeline</code> | 2 | 11 | 18% |
+| <code>reviews</code> | 19 | 83 | 23% |</p>
+<p>Confirms: the inversion would be wrong for ~75-80% of our channel traffic.
+Toggle is the right paradigm.</p>
+<p><strong>Round-reply body sizes</strong> (architecture channel):</p>
+<ul>
+<li>Average: 2367 chars</li>
+<li>Maximum: 8349 chars</li>
+</ul>
+<p>Confirms: 3-column body-first grid is unreadable. Codex's framing of
+<strong>&quot;outline-first matrix + side drawer&quot;</strong> is the right shape — see action C
+below.</p>
+<h2>The 4 queued actions</h2>
+<h3>A — File issue: D4 lineage backlink scanner</h3>
+<p><strong>Scope</strong>: Standalone read-only tool that walks <code>docs/decisions/*.md</code> + scans
+<code>git log</code> to populate &quot;Influenced&quot; backlinks per decision.</p>
+<p><strong>Improvement over my initial pitch</strong> (per Codex): scan multiple alias forms,
+not just literal ADR ID:</p>
+<ul>
+<li>Filename (e.g. <code>2026-05-06-multi-ui-channel-participation</code>)</li>
+<li>Title (from <code># heading</code> line)</li>
+<li><code>ADR-00N</code> shorthand</li>
+<li>Decision IDs (whatever convention the file declares)</li>
+<li>PR references that touch the file path</li>
+</ul>
+<p><strong>Output</strong>: JSON/API endpoint + console-printable summary. UI consumption
+deferred. Estimated ~150-200 LOC.</p>
+<p><strong>Issue title</strong>: <code>Add decision-lineage backlink scanner (multi-alias) with JSON/API output</code></p>
+<p><strong>Acceptance criteria</strong>:</p>
+<ol>
+<li>Walk <code>docs/decisions/**/*.md</code> and emit one record per file</li>
+<li>For each file, scan <code>git log --all -p</code> for commits that touched the file
+path OR mention any of the alias forms above</li>
+<li>Output JSON: <code>{decision_id, file_path, aliases[], commits[], prs[], first_cited_at, last_cited_at}</code></li>
+<li>Expose via Monitor API endpoint <code>/api/decisions/lineage</code> (read-only)</li>
+<li>CLI: <code>.venv/bin/python scripts/audit/decision_lineage.py [--decision-id X]</code></li>
+<li>Add a test fixture with 2 decision files + 3 fake commits referencing
+them in different alias forms, assert the scanner finds all 3</li>
+<li>Update <code>docs/SCRIPTS.md</code> with the new script</li>
+</ol>
+<p><strong>Reference files</strong>:</p>
+<ul>
+<li><code>docs/decisions/INDEX.md</code> — existing decision index</li>
+<li><code>scripts/audit/check_decisions.py</code> — existing decision-staleness checker
+(use the same module conventions)</li>
+<li><code>docs/decisions/pending/README.md</code> — pending-decision protocol</li>
+</ul>
+<h3>B — File 3 infrastructure bugs surfaced by the failed <code>ab discuss</code></h3>
+<p><strong>B.1 — <code>ab discuss</code> truncates root message out of round-2+ prompts</strong></p>
+<p>The fresh-Claude subagent in the failed discussion correctly diagnosed this:</p>
+<blockquote>
+<p>&quot;In round 2 my prompt shows <code>... [15 older messages omitted] ...</code> — the root
+message was truncated out entirely from my view. With <code>needed_history = 1 + N*max_rounds + 10</code> (see <code>scripts/ai_agent_bridge/_channels_cli.py:1256</code>),
+the design is to preserve the root, so the truncation happened at the
+prompt-render boundary, not from history sizing.&quot;</p>
+</blockquote>
+<p><strong>Symptom</strong>: Round 2+ agents in any <code>ab discuss</code> operate on a brief that has
+the original question stripped out, especially in busy channels (architecture
+has 157 prior messages → high truncation pressure).</p>
+<p><strong>Fix scope</strong>: in <code>_channels_cli.py:1256</code> (or the prompt-render boundary
+nearby), pin the root message into the prompt unconditionally — it's the
+question, it must always be visible. Do the truncation against history,
+not the root.</p>
+<p><strong>Test</strong>: discussion with N=4 max-rounds in a channel with 200+ prior msgs;
+assert root message appears in round-4 prompt verbatim.</p>
+<p><strong>B.2 — Fresh Claude subprocess in <code>ab discuss</code> is instantiated in plan
+mode WITHOUT writer tools</strong></p>
+<p><strong>Symptom</strong>: Round-1 and round-2 Claude replies in the failed discussion
+were both &quot;I have a tooling problem&quot; complaints — Claude correctly refused
+to fake responses, but couldn't engage with the brief.</p>
+<p><strong>Available tools observed</strong>: <code>Glob</code>, <code>Grep</code>, <code>LSP</code>, <code>Read</code>, MCP <code>sources</code>,
+MCP <code>claude_ai_Google_Drive</code>. Missing: <code>Write</code>, <code>Edit</code>, <code>Bash</code>, <code>Agent</code>,
+<code>ExitPlanMode</code>, <code>AskUserQuestion</code>.</p>
+<p><strong>Two possible fixes</strong> (investigate which is right):</p>
+<ol>
+<li>Don't put discuss subagents in plan mode (they're commenting, not planning)</li>
+<li>If plan mode is intentional, attach <code>Write</code> + <code>ExitPlanMode</code> so the
+subagent can complete the workflow</li>
+</ol>
+<p><strong>Reference</strong>: claude subagent's round-2 reply has full diagnosis with file
+refs (preserved in <code>architecture</code> thread <code>1c1b5d54966742ffacd1bf60e0893c1c</code>).</p>
+<p><strong>B.3 — <code>ask-codex</code> / <code>ask-gemini</code> defaults <code>--from</code> to &quot;gemini&quot;</strong></p>
+<p><strong>Symptom</strong>: When Claude (this orchestrator) calls <code>ask-codex</code> without
+<code>--from claude</code>, the broker logs <code>From: gemini → To: codex</code>. Cosmetic but
+misleading for telemetry / channel attribution / future audit reports.</p>
+<p><strong>Fix</strong>: detect caller identity from environment (or require explicit <code>--from</code>)
+instead of defaulting to &quot;gemini&quot;.</p>
+<p><strong>Issue title</strong>: <code>ab discuss + ask-* infrastructure bugs (root truncation, plan-mode tool subset, --from default)</code></p>
+<h3>C — Decision Graph ADR</h3>
+<p><strong>Decision required FIRST</strong>: separate ADR vs fold into existing pending
+Multi-UI ADR's Strand 6?</p>
+<p><strong>Codex's threshold rule</strong>: ADR is needed if the work changes &quot;the dashboard's
+primary information architecture, marker semantics, or API contract&quot;
+(<a href="../decisions/pending/README.md">docs/decisions/pending/README.md:203</a>).</p>
+<p><strong>Application</strong>: Decision Graph view changes (a) primary IA — adds a new
+view alongside chat, (b) marker semantics — auto-detects convergence from
+<code>[AGREE]</code>/<code>[OPTION]</code>/<code>[DEFER]</code> patterns. Both criteria met → <strong>separate
+ADR right</strong>, not Strand 6 fold.</p>
+<p><strong>The existing Multi-UI ADR Strand 6</strong> is &quot;claim status, visible expiry,
+attachment rendering, capability badges, fallback identity visibility&quot; —
+that's about multi-UI identity, not deliberation visualization. Different
+category.</p>
+<p><strong>Recommended ADR scope</strong>:</p>
+<ul>
+<li>File: <code>docs/decisions/pending/2026-05-XX-decision-graph-view.md</code></li>
+<li>Status: PROPOSED</li>
+<li>Q1: When does Decision Graph view auto-engage? (Marker-density threshold,
+participant-count threshold, manual toggle override)</li>
+<li>Q2: Layout — outline-first matrix per Codex (rows=rounds, cols=agent_family,
+cell=marker + first-line summary, click→side drawer with full body)</li>
+<li>Q3: Marker parsing semantics — what counts as <code>[AGREE]</code>/<code>[OPTION]</code>/
+<code>[OBJECT]</code>/<code>[DEFER]</code>? Case-sensitive? Embedded in body or required at end?</li>
+<li>Q4: Convergence detection — when is a thread &quot;decided&quot;? (All agents
+<code>[AGREE]</code> in same round?)</li>
+<li>Q5: Side drawer UX — single-message vs full-thread transcript? Modal vs
+pinnable rail?</li>
+<li>Q6: Decision provenance — does Decision Graph link out to ADR file when
+one exists? (Hooks into D4 from action A)</li>
+</ul>
+<p><strong>3-agent review</strong> before user signoff (per workflow rule). Use <code>ab discuss architecture</code> ONLY AFTER B.1 (root truncation) is fixed — otherwise round-2
+loses the brief again.</p>
+<p><strong>Issue title (for tracker)</strong>: <code>EPIC: Decision Graph view ADR + implementation</code></p>
+<h3>D — Reply to kubedojo team</h3>
+<p><strong>When</strong>: After A is filed AND C ADR has user direction.</p>
+<p><strong>Content shape</strong>:</p>
+<ul>
+<li>Acknowledge their analysis (chat shell parity, paradigm pitch)</li>
+<li>Accept their offer to upstream D3, with constraints:
+<ul>
+<li>We want toggle, not primary inversion (data: 18-23% marker density on
+non-architecture channels)</li>
+<li>We want outline-first matrix layout (data: 2367-char avg / 8349-char
+max round bodies make body-first grid unreadable)</li>
+<li>We will implement D4 ourselves (multi-alias scanning, JSON/API output)</li>
+</ul>
+</li>
+<li>Confirm they take from us: per-domain <code>scripts/api/*_router.py</code> split,
+delta-rendering, monotonic fetch counter, post-form-as-<code>agent:&quot;human&quot;</code></li>
+<li>Pointer to our pending Decision Graph ADR (link once C is filed)</li>
+</ul>
+<p><strong>Channel</strong>: their preferred (probably their issue tracker or a shared
+channel — TBD).</p>
+<h3>E — Tier-2 warm-cache fix for <code>ab discuss</code> (DISPATCHED 2026-05-07 evening)</h3>
+<p><strong>Status:</strong> in flight as Codex dispatch <code>tier-2-warm-cache</code> (PID 34738 at dispatch
+time). Closes sub-task 1 of #1782.</p>
+<p><strong>Origin:</strong> User flagged that AI↔AI is fake (cold subprocess per round). 3-agent
+review (Codex + Gemini) confirmed:</p>
+<ul>
+<li><code>ab discuss</code> calls <code>runtime_invoke</code> with <code>entrypoint=&quot;delegate&quot;</code> and no
+<code>session_id</code> (<code>scripts/ai_agent_bridge/_channels_cli.py:1144-1155</code>)</li>
+<li>Resume policy at <code>scripts/agent_runtime/runner.py:288-324</code> forbids resume on
+delegate entrypoint AND forbids Codex resume entirely</li>
+<li>Tier-2 fix: switch entrypoint to <code>&quot;bridge&quot;</code>, gate session_id by registry
+policy (Claude/Gemini opt-in, Codex stays fresh)</li>
+</ul>
+<p><strong>Brief:</strong> <code>docs/dispatch-briefs/2026-05-07-tier-2-warm-cache.md</code>. Numbered steps
+include test, ruff, commit, push, PR — no auto-merge.</p>
+<p><strong>Expected outcome:</strong> PR opens against main with ~50-100 LOC change. Test asserts
+session_id behavior per agent. Round-2 root truncation likely fixed as side
+effect.</p>
+<h3>F — Tier-3 persistent agent listener POC (DEFERRED)</h3>
+<p><strong>Status:</strong> queued behind tier-2 + pending Multi-UI ADR ACCEPTED. Sub-task 2 of
+#1782.</p>
+<p><strong>Why deferred:</strong> Tier 3 is weeks of architecture, requires the pending Multi-UI
+ADR's identity/claim/lease/keepalive contracts to be ACCEPTED first. Tier 2
+delivers most of the cache-warmth win without architectural dependency.</p>
+<p><strong>Architecture (when it ships):</strong></p>
+<ul>
+<li>Build minimal Python daemon <code>scripts/listener/codex_listener.py</code></li>
+<li>4-column identity per ADR Q1 (<code>agent_family/ui_surface/client_id/instance_id</code>)</li>
+<li>Subscribe to bridge inbox via SSE per ADR Q2</li>
+<li>Hold OpenAI Responses API conversation with persistent message history</li>
+<li>Heartbeat 30s per Q6, release lease on SIGTERM</li>
+<li>Why Codex first: cold-process spawn + cold API call is its biggest pain (CLI
+startup is slow); also bypasses the registry's <code>resume_policy=&quot;never&quot;</code> for
+Codex by routing through API daemon instead of CLI subprocess</li>
+</ul>
+<p><strong>Real ceiling Codex surfaced:</strong> Codex (the AI agent) is structurally barred
+from prompt-cache reuse by project policy. Daemon listeners can keep the
+process warm (avoid spawn cost) but each call still pays full prompt-cache
+creation. Worth knowing for capacity planning.</p>
+<h3>Sub-task 3 of #1782 — Discuss orchestrator routes to listener with fallback</h3>
+<p><strong>Status:</strong> queued behind F. Per pending Multi-UI ADR Q11, route <code>ab discuss</code>
+round to live listener if claim succeeds; if listener unreachable (2 missed
+keepalives, lease expired, capability missing), fall back to subprocess and
+record <code>fallback_reason</code> in the channel transcript.</p>
+<h2>Execution checklist (for whoever picks this up)</h2>
+<pre><code class="language-text">[x] PR #1781 merged (HARD STOP RULE)
+[ ] Bakeoff retry-2 fired and REPORT.md landed
+[ ] Writer-selection proposal posted on EPIC #1577
+[ ] User signoff received → A1 unblocked
+[x] Issue #1782 filed (persistent listeners umbrella)
+[ ] Action E — Tier-2 PR lands (in flight, dispatch tier-2-warm-cache)
+[ ] Action A — File D4 issue (use AC list above)
+[ ] Action B — File infrastructure-bugs issue (3 sub-bugs)
+[ ] Action C — Get user direction on separate-ADR vs Strand-6 fold,
+    then file ADR or Strand 6 amendment
+[ ] Action C — Run 3-agent review on the ADR (after B.1 is fixed)
+[ ] Action D — Reply to kubedojo team
+[ ] Action F — Tier-3 listener POC (deferred until ADR ACCEPTED + tier 2 ships)
+[ ] Sub-task 3 of #1782 — discuss orchestrator routes to listener with fallback
+</code></pre>
+<h2>Don't lose this evidence</h2>
+<p>The full <code>architecture</code> thread <code>1c1b5d54966742ffacd1bf60e0893c1c</code> (root
+2026-05-07T18:08:26) preserves the failed discussion + Codex's diagnosis
+of B.1. Pull via:</p>
+<pre><code class="language-bash">.venv/bin/python -c &quot;
+import sys; sys.path.insert(0, 'scripts')
+from ai_agent_bridge._config import DB_PATH
+import sqlite3
+db = sqlite3.connect(str(DB_PATH))
+db.row_factory = sqlite3.Row
+for r in db.execute(\&quot;\&quot;\&quot;SELECT from_agent, round_index, body, created_at
+    FROM channel_messages
+    WHERE thread_id = '1c1b5d54966742ffacd1bf60e0893c1c'
+    ORDER BY created_at ASC, message_id ASC\&quot;\&quot;\&quot;).fetchall():
+    print('='*80); print(f\&quot;[{r['created_at']}] {r['from_agent']} (r{r['round_index']})\&quot;); print(r['body']); print()
+&quot;
+</code></pre>
+<p>Codex's clean single-shot reply (the actually-useful one) is in the
+<code>messages</code> table, ID 558, also pulled via the same DB:</p>
+<pre><code class="language-bash">.venv/bin/python -c &quot;
+import sys; sys.path.insert(0, 'scripts')
+from ai_agent_bridge._config import DB_PATH
+import sqlite3
+db = sqlite3.connect(str(DB_PATH))
+print(db.execute('SELECT content FROM messages WHERE id=558').fetchone()[0])
+&quot;
+</code></pre>
+<p>Original brief at <code>/tmp/kubedojo-paradigm-brief-v2.md</code> (may be cleared by
+OS — copy preserved here in this file's &quot;Codex's data&quot; + &quot;The 4 queued
+actions&quot; sections).</p>
+
+  </main>
+</div>
+</body>
+</html>
