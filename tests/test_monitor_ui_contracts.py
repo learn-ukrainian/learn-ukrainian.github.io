@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -30,6 +32,26 @@ def test_index_page_uses_shared_parchment_monitor_design():
         "/wiki.html",
     ]:
         assert f'href="{href}"' in html
+
+
+@pytest.mark.parametrize(
+    ("filename", "active_link", "heading"),
+    [
+        ("orient.html", '<a class="active" href="/orient.html">Orient</a>', "One-page session orientation snapshot"),
+        ("channels.html", '<a class="active" href="/channels.html">Channels</a>', "Agent Channels"),
+        ("comms.html", '<a class="active" href="/comms.html">Comms</a>', "Agent Comms"),
+    ],
+)
+def test_playground_page_uses_shared_parchment_monitor_design(filename, active_link, heading):
+    html = (ROOT / "playgrounds" / filename).read_text(encoding="utf-8")
+    assert '<link rel="stylesheet" href="/monitor.css">' in html
+    assert 'class="monitor-nav"' in html
+    assert 'aria-label="Monitor sections"' in html
+    assert active_link in html
+    assert heading in html
+    assert ":root" not in html
+    assert "!important" not in html
+    assert "#0d1117" not in html
 
 
 def test_channels_page_has_shareable_deeplink_contract():

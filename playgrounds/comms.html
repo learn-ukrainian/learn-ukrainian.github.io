@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Comms - ukraine-ops</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="/monitor.css">
 <style>
-:root {
-  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
-  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
-  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
-  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
-}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
 
@@ -20,7 +15,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .top-bar h1 { font-size: 24px; font-weight: 700; }
 .top-bar a { color: var(--text2); text-decoration: none; font-size: 13px; }
 .top-bar a:hover { color: var(--text); }
-.home-link { color: var(--blue) !important; font-weight: 600; white-space: nowrap; }
+.home-link { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .top-bar .refresh-info { font-size: 12px; color: var(--text3); }
 
 /* Health summary bar */
@@ -69,7 +64,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .feed-title .count { font-size: 11px; color: var(--text3); font-weight: 400; }
 
 .feed-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; font-size: 12px; }
-.feed-item:hover { border-color: var(--blue); }
+.feed-item:hover { border-color: var(--accent); }
 .feed-item .fi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .feed-item .fi-track { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg3); color: var(--text2); }
 .feed-item .fi-age { font-size: 10px; color: var(--text3); }
@@ -94,7 +89,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .zombie-alert.warning { border-left: 3px solid var(--yellow); }
 .zombie-type { font-size: 12px; font-weight: 600; min-width: 120px; }
 .zombie-detail { font-size: 12px; color: var(--text2); flex: 1; }
-.zombie-action { font-size: 11px; color: var(--blue); cursor: pointer; white-space: nowrap; }
+.zombie-action { font-size: 11px; color: var(--accent); cursor: pointer; white-space: nowrap; }
 .zombie-action:hover { text-decoration: underline; }
 .no-zombies { font-size: 13px; color: var(--text3); padding: 12px; }
 
@@ -106,11 +101,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
   background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 6px 10px; font-size: 12px; font-family: inherit;
 }
 .compose-panel textarea { resize: vertical; min-height: 36px; }
-.compose-btn { background: var(--blue); color: #fff; border: none; border-radius: 4px; padding: 8px 20px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.compose-btn { background: var(--accent); color: #fff; border: none; border-radius: 4px; padding: 8px 20px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .compose-btn:hover { opacity: 0.85; }
 
 /* GitHub issue links */
-a.gh-issue { color: var(--blue); text-decoration: none; font-weight: 600; }
+a.gh-issue { color: var(--accent); text-decoration: none; font-weight: 600; }
 a.gh-issue:hover { text-decoration: underline; }
 
 /* Messages table */
@@ -133,7 +128,7 @@ a.gh-issue:hover { text-decoration: underline; }
 .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
 .tab { padding: 8px 16px; font-size: 13px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
 .tab:hover { color: var(--text); }
-.tab.active { color: var(--text); border-bottom-color: var(--blue); font-weight: 600; }
+.tab.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
@@ -180,7 +175,6 @@ a.gh-issue:hover { text-decoration: underline; }
 .module-link .ml-slug { font-weight: 600; }
 .module-link .ml-phase { font-size: 10px; color: var(--text3); }
 </style>
-<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
@@ -259,7 +253,7 @@ a.gh-issue:hover { text-decoration: underline; }
     <div style="color:var(--text2);">
       This tab still shows the raw broker-messages table used by the <code>ask-claude</code> / <code>ask-gemini</code> / <code>ask-codex</code> CLI commands. Those commands are NOT deprecated and will keep working.
       <br><br>
-      For sustained multi-agent conversations, code reviews, design debates, and anything that benefits from pinned context + threaded history, use the new <a href="/channels.html" style="color:var(--blue);">Channels dashboard</a>. See <code>docs/best-practices/agent-bridge.md</code> for when to use each. (#1190)
+      For sustained multi-agent conversations, code reviews, design debates, and anything that benefits from pinned context + threaded history, use the new <a href="/channels.html" style="color:var(--accent);">Channels dashboard</a>. See <code>docs/best-practices/agent-bridge.md</code> for when to use each. (#1190)
     </div>
   </div>
   <!-- Compose panel -->
