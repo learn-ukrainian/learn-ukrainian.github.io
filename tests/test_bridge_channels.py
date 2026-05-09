@@ -174,6 +174,40 @@ def test_post_creates_delivery_row_per_recipient():
     assert all(d["status"] == "pending" for d in dlvs)
 
 
+def test_channel_post_does_not_fanout_to_sender():
+    """Posting to subscribers including self must not create self-deliveries."""
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic",
+        "gemini",
+        "hello",
+        to_agents=["gemini", "claude"],
+        auto_snapshot=False,
+    )
+
+    dlvs = _channels.deliveries_for_message(res["message_id"])
+    assert len(res["delivery_ids"]) == 1
+    assert {d["to_agent"] for d in dlvs} == {"claude"}
+    assert not any(d["to_agent"] == "gemini" for d in dlvs)
+
+
+def test_channel_post_still_fans_out_to_other_subscribers():
+    """Skipping self-fanout must preserve deliveries for every other target."""
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic",
+        "gemini",
+        "hello",
+        to_agents=["claude", "gemini", "codex"],
+        auto_snapshot=False,
+    )
+
+    dlvs = _channels.deliveries_for_message(res["message_id"])
+    assert len(res["delivery_ids"]) == 2
+    assert {d["to_agent"] for d in dlvs} == {"claude", "codex"}
+    assert all(d["status"] == "pending" for d in dlvs)
+
+
 def test_post_routes_to_desktop_agent_identity():
     """Desktop identities are first-class delivery targets for manual pull."""
     _channels.create_channel("topic")

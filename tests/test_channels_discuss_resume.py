@@ -83,6 +83,55 @@ def test_discuss_passes_session_id_for_resumable_agents(monkeypatch):
     assert all(kwargs["entrypoint"] == "bridge" for _, kwargs in captured_invokes)
 
 
+def test_discuss_acks_its_own_deliveries_on_convergence(monkeypatch, capsys):
+    _channels.create_channel("shared")
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+
+    def fake_runtime_invoke(agent, _prompt, **_kwargs):
+        return _successful_result(agent)
+
+    monkeypatch.setattr("agent_runtime.runner.invoke", fake_runtime_invoke)
+
+    exit_code = _run_cli(
+        ["discuss", "shared", "topic", "--with", "claude,codex", "--max-rounds", "2"]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "✅ converged at round 2" in captured.out
+
+    conn = _db.get_db()
+    try:
+        rows = conn.execute(
+            """
+            SELECT d.status, d.error, d.to_agent, cm.from_agent
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE cm.channel = 'shared'
+            ORDER BY cm.created_at ASC, d.delivery_id ASC
+            """
+        ).fetchall()
+        pending_count = conn.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE cm.channel = 'shared' AND d.status = 'pending'
+            """
+        ).fetchone()["count"]
+    finally:
+        conn.close()
+
+    assert pending_count == 0
+    assert len(rows) == 4
+    assert all(row["status"] == "delivered" for row in rows)
+    assert all(
+        row["error"].startswith("acked by ab discuss orchestrator")
+        for row in rows
+    )
+    assert not any(row["to_agent"] == row["from_agent"] for row in rows)
+
+
 def test_discuss_entrypoint_is_bridge_not_delegate(monkeypatch):
     """The entrypoint switch is the load-bearing change for the resume policy gate."""
     _channels.create_channel("shared")

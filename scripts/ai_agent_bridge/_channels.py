@@ -975,7 +975,13 @@ def post(
         )
 
         delivery_ids = []
+        delivery_agents = []
         for agent in to_agents or []:
+            # Skip sender self-fanout: an agent does not need to "process"
+            # its own reply. Channel deliveries are for other subscribers.
+            if agent == from_agent:
+                continue
+            delivery_agents.append(agent)
             dlv_id = _new_id()
             delivery_ids.append(dlv_id)
             if pre_delivered:
@@ -1016,7 +1022,7 @@ def post(
         conn.commit()
 
         if not pre_delivered:
-            for agent in set(to_agents or []):
+            for agent in set(delivery_agents):
                 _touch_wake_file(agent)
 
         return {
