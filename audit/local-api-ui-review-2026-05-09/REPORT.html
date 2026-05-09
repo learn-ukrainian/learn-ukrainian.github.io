@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Local API UI review + revamp — 2026-05-09</title>
+
+<meta name="report-class" content="audit" />
+<meta name="report-date" content="2026-05-09" />
+<meta name="report-status" content="ok" />
+<meta name="report-title" content="Local API UI review + revamp" />
+<meta name="report-kpi-summary" content="4 key pages audited · /artifacts route restored · active discussions endpoint added · deep links verified · 26 targeted tests passed" />
+<meta name="report-related-issues" content="1814,1820,1822" />
+<meta name="report-related-prs" content="" />
+<meta name="report-agents" content="codex" />
+<meta name="report-author" content="codex" />
+<meta name="report-template-version" content="0.1" />
+
+<style>
+  :root {
+    --bg: #faf6ef; --surface: #f5efde; --surface-2: #ede6d0;
+    --surface-warn: #f3ead0; --surface-fail: #f3dada; --surface-ok: #dde9df;
+    --ink: #1a1a1a; --ink-soft: #4a4540; --ink-faint: #7a736a;
+    --rule: #d4cdb8; --rule-soft: #e3dcc6; --accent: #7a1c20;
+    --warn: #a8842b; --ok: #3d6b4a; --fail: #9c2828; --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--serif); line-height:1.62; }
+  a { color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(122,28,32,.25); }
+  code { font-family:var(--mono); background:var(--surface-2); border:1px solid var(--rule-soft); padding:1px 5px; border-radius:3px; }
+  pre { background:var(--surface); border:1px solid var(--rule); padding:12px 14px; overflow:auto; font-family:var(--mono); font-size:12px; }
+  .wrap { max-width:1120px; margin:0 auto; padding:40px 28px 80px; }
+  header { display:flex; justify-content:space-between; gap:22px; flex-wrap:wrap; border-bottom:1.5px solid var(--ink); padding-bottom:22px; margin-bottom:30px; }
+  h1 { font-size:30px; line-height:1.18; margin:0 0 8px; }
+  h2 { font-size:22px; border-bottom:1px solid var(--rule); padding-bottom:6px; margin:36px 0 14px; }
+  h3 { font-size:16px; margin:18px 0 8px; }
+  .sub, .meta { font-family:var(--sans); color:var(--ink-faint); font-size:13px; }
+  .meta { text-align:right; line-height:1.8; }
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:24px 0 34px; }
+  .kpi { background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:15px 16px; }
+  .kpi .label { font-family:var(--sans); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; }
+  .kpi .value { font-size:30px; font-weight:700; line-height:1.1; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .fail { color:var(--fail); } .info { color:var(--info); }
+  .pill { display:inline-block; border:1px solid; border-radius:999px; padding:2px 8px; font-family:var(--sans); font-size:11px; font-weight:700; }
+  .pill.ok { background:var(--surface-ok); color:var(--ok); border-color:rgba(61,107,74,.35); }
+  .pill.warn { background:var(--surface-warn); color:var(--warn); border-color:rgba(168,132,43,.35); }
+  .pill.fail { background:var(--surface-fail); color:var(--fail); border-color:rgba(156,40,40,.35); }
+  table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--rule); font-size:14px; }
+  th, td { text-align:left; vertical-align:top; padding:10px 12px; border-bottom:1px solid var(--rule-soft); }
+  th { font-family:var(--sans); font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; background:var(--surface-2); }
+  .shot-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+  figure { margin:0; background:var(--surface); border:1px solid var(--rule); padding:10px; border-radius:4px; }
+  figure img { width:100%; display:block; border:1px solid var(--rule-soft); }
+  figcaption { font-family:var(--sans); font-size:12px; color:var(--ink-faint); margin-top:8px; }
+  .callout { background:var(--surface); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; }
+  @media (max-width:760px){ .kpis{grid-template-columns:1fr 1fr;} .meta{text-align:left;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Local API UI review + revamp</h1>
+    <div class="sub">Working-state audit first, then implementation pass for Monitor API UI surfaces.</div>
+  </div>
+  <div class="meta">
+    <div><b>Date:</b> 2026-05-09</div>
+    <div><b>Branch:</b> <code>codex/desktop-ui-review-revamp-2026-05-09</code></div>
+    <div><b>Evidence:</b> inline command output + screenshot contact sheets</div>
+  </div>
+</header>
+
+<div class="callout">
+  <b>Aggregate verdict:</b> baseline was <span class="pill warn">NEEDS-POLISH</span> with one <span class="pill fail">BROKEN</span> route. After the revamp, the four key surfaces are <span class="pill ok">OK</span> in the worktree server smoke: all returned HTTP 200, no request failures, and shared navigation rendered on each page.
+</div>
+
+<section class="kpis">
+  <div class="kpi"><div class="label">Baseline /artifacts</div><div class="value fail">404</div><div class="sub">curl + Puppeteer, see baseline evidence</div></div>
+  <div class="kpi"><div class="label">After /artifacts</div><div class="value ok">200</div><div class="sub">text/html on port 8767</div></div>
+  <div class="kpi"><div class="label">Targeted tests</div><div class="value ok">26</div><div class="sub">passed in 3.29s</div></div>
+  <div class="kpi"><div class="label">Mobile overflow</div><div class="value ok">0</div><div class="sub">390px checks for 3 pages</div></div>
+</section>
+
+<h2>Evidence Commands</h2>
+<pre><code>curl -s -w '\nHTTP:%{http_code} TIME:%{time_total}\n' http://localhost:8765/api/health
+# HTTP:200 TIME:0.003544
+
+curl http://localhost:8765/artifacts/
+# HTTP:404 TYPE:application/json TIME:0.002048
+
+curl http://127.0.0.1:8767/artifacts/
+# HTTP:200 TYPE:text/html; charset=utf-8 TIME:0.002858
+
+.venv/bin/python -m pytest tests/test_docs_router.py tests/test_discussions_router.py tests/test_monitor_ui_contracts.py tests/test_playground_api_stability.py -q
+# 26 passed in 3.29s</code></pre>
+
+<h2>Per-Page Audit</h2>
+<table>
+  <thead><tr><th>Page</th><th>Baseline verdict</th><th>Evidence</th><th>After-state</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>/orient.html</code></td>
+      <td><span class="pill warn">NEEDS-POLISH</span></td>
+      <td>Baseline Puppeteer: HTTP 200, load 1047ms, one favicon 404 console error, no active-discussion widget. Screenshot: <code>screenshots/baseline-contact.png</code>.</td>
+      <td>After Puppeteer: HTTP 200, 1932ms, no request failures, 25 discussion rows, 5 nav links. Screenshot: <code>screenshots/after-contact.png</code>.</td>
+    </tr>
+    <tr>
+      <td><code>/channels.html</code></td>
+      <td><span class="pill warn">NEEDS-POLISH</span></td>
+      <td>Baseline DOM check on <code>?channel=architecture&amp;thread=33d8893f</code>: active channel null, main panel hidden, message count 0.</td>
+      <td>After DOM check: active channel <code>#architecture</code>, thread value expanded to <code>33d8893f8f4d44f0b47a0833f61c806e</code>, message count 6, URL updated via <code>history.replaceState</code>.</td>
+    </tr>
+    <tr>
+      <td><code>/comms.html</code></td>
+      <td><span class="pill warn">NEEDS-POLISH</span></td>
+      <td>Baseline Puppeteer: HTTP 200, load 589ms, no console errors or request failures. Visual style did not match the new HTML report direction.</td>
+      <td>After Puppeteer: HTTP 200, 620ms, no console errors or request failures, shared parchment nav present.</td>
+    </tr>
+    <tr>
+      <td><code>/artifacts/</code></td>
+      <td><span class="pill fail">BROKEN</span></td>
+      <td>Baseline curl: <code>/artifacts/</code> returned HTTP 404; <code>/files/</code> returned JSON, proving the docs router was mounted at the wrong public prefix.</td>
+      <td>After curl: <code>/artifacts/</code> returns HTML; <code>/api/artifacts/html?class=handoff</code> returns 2 handoff artifacts; after browser state found 21 cards.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Screenshots</h2>
+<div class="shot-grid">
+  <figure><img src="screenshots/baseline-contact.png" alt="Baseline contact sheet"><figcaption>Baseline contact sheet: orient, channels deep link, comms, artifacts.</figcaption></figure>
+  <figure><img src="screenshots/after-contact.png" alt="After contact sheet"><figcaption>After contact sheet: active-discussions widget, deep link, shared nav, artifacts browser.</figcaption></figure>
+  <figure><img src="screenshots/mobile-contact.png" alt="Mobile contact sheet"><figcaption>Mobile contact sheet: 390px orient, channels, and artifacts checks with no horizontal overflow.</figcaption></figure>
+</div>
+
+<h2>Implementation Summary</h2>
+<ul>
+  <li><b>#1820 A/B/C:</b> added <code>GET /api/discussions/active</code>, the orient active-discussions widget, and shareable <code>channels.html?channel=&amp;thread=</code> deep links.</li>
+  <li><b>#1814 B/C:</b> added <code>GET /api/artifacts/html</code> metadata listing and a parchment browse UI at <code>/artifacts/</code>.</li>
+  <li><b>#1822:</b> added docs-router tests for happy paths, traversal, symlink escape, forbidden extensions, hidden files, missing files, root index, and metadata filters.</li>
+  <li><b>Consistency pass:</b> added shared <code>playgrounds/monitor.css</code> and shared nav across orient/channels/comms/artifacts.</li>
+</ul>
+
+<h2>Residual Notes</h2>
+<p>The live database classified the issue-triggering <code>33d8893f...</code> discussion as <code>timed_out</code> during this run because its last message was more than 30 minutes old when the endpoint was queried. The endpoint still surfaces it with status, and the deep link opens the thread deterministically.</p>
+
+<footer class="meta" style="text-align:left;margin-top:42px;border-top:1px solid var(--rule);padding-top:14px;">
+  Generated by Codex Desktop with deterministic curl, Puppeteer, Browser plugin, pytest, and source inspection evidence.
+</footer>
+</div>
+</body>
+</html>
