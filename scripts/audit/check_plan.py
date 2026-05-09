@@ -32,6 +32,7 @@ SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 
 # Combining acute accent
 STRESS_MARK = "\u0301"
+TRACK_LEVEL_KEYS = ("phases", "linguistic_evolution")
 
 # Known Russicisms (subset — full list in semantic_russianisms.py)
 _RUSSICISMS = {
@@ -152,6 +153,32 @@ class PlanIssue:
         if self.fix:
             s += f"\n     FIX: {self.fix}"
         return s
+
+
+def detect_plan_type(plan: dict) -> str:
+    """Classify a loaded plan as module-level, track-level, or unknown."""
+    if isinstance(plan.get("modules"), list) or "module" in plan:
+        return "module-level"
+    if any(key in plan for key in TRACK_LEVEL_KEYS):
+        return "track-level"
+    return "unknown"
+
+
+def _format_top_level_keys(plan: dict) -> str:
+    keys = sorted(str(key) for key in plan)
+    return ", ".join(keys) if keys else "(none)"
+
+
+def _load_plan_yaml(plan_path: Path) -> tuple[dict | None, PlanIssue | None]:
+    try:
+        plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    except Exception as e:
+        return None, PlanIssue("YAML", "ERROR", f"YAML parse error: {e}")
+
+    if not isinstance(plan, dict):
+        return None, PlanIssue("YAML", "ERROR", "Plan is not a YAML mapping")
+
+    return plan, None
 
 
 def _flatten_strings(value) -> list[str]:
@@ -677,16 +704,8 @@ def check_vesum_vocabulary(plan: dict) -> list[PlanIssue]:
     return issues
 
 
-def check_plan(plan_path: Path, all_slugs: list[str] | None = None) -> list[PlanIssue]:
-    """Run all checks on a single plan file."""
-    try:
-        plan = yaml.safe_load(plan_path.read_text("utf-8"))
-    except Exception as e:
-        return [PlanIssue("YAML", "ERROR", f"YAML parse error: {e}")]
-
-    if not isinstance(plan, dict):
-        return [PlanIssue("YAML", "ERROR", "Plan is not a YAML mapping")]
-
+def _check_module_plan(plan: dict, all_slugs: list[str] | None = None) -> list[PlanIssue]:
+    """Run module-level checks on a single module plan mapping."""
     issues = []
     issues.extend(check_required_fields(plan))
     issues.extend(check_word_budgets(plan))
@@ -703,13 +722,84 @@ def check_plan(plan_path: Path, all_slugs: list[str] | None = None) -> list[Plan
     return issues
 
 
-def main():
+def check_plan(plan_path: Path, all_slugs: list[str] | None = None) -> list[PlanIssue]:
+    """Run all checks on a single plan file."""
+    plan, load_issue = _load_plan_yaml(plan_path)
+    if load_issue is not None:
+        return [load_issue]
+    assert plan is not None
+
+    plan_type = detect_plan_type(plan)
+    if plan_type == "track-level":
+        return []
+    if plan_type == "unknown":
+        present_keys = _format_top_level_keys(plan)
+        expected = "'module' or list-valued 'modules' for module-level plans; 'phases' or 'linguistic_evolution' for track-level plans"
+        return [
+            PlanIssue(
+                "SCHEMA",
+                "ERROR",
+                f"Unknown plan schema in {plan_path}: top-level keys present: {present_keys}",
+                f"Add one of the expected markers: {expected}.",
+            )
+        ]
+
+    modules = plan.get("modules")
+    if isinstance(modules, list) and "module" not in plan:
+        issues = []
+        for index, module in enumerate(modules, start=1):
+            if not isinstance(module, dict):
+                issues.append(
+                    PlanIssue(
+                        "SCHEMA",
+                        "ERROR",
+                        f"modules[{index}] is not a YAML mapping",
+                    )
+                )
+                continue
+            issues.extend(_check_module_plan(module, all_slugs))
+        return issues
+
+    return _check_module_plan(plan, all_slugs)
+
+
+def _print_single_plan_result(plan_path: Path) -> int:
+    plan, load_issue = _load_plan_yaml(plan_path)
+    if load_issue is not None:
+        print(str(load_issue))
+        return 1
+    assert plan is not None
+
+    plan_type = detect_plan_type(plan)
+    issues = check_plan(plan_path)
+    errors = [issue for issue in issues if issue.severity == "ERROR"]
+    warnings = [issue for issue in issues if issue.severity == "WARNING"]
+
+    if issues:
+        status = "FAIL" if errors else "WARN"
+        print(f"{plan_path}: {status} ({len(errors)} error(s), {len(warnings)} warning(s))")
+        for issue in issues:
+            print(str(issue))
+        return 1 if errors else 0
+
+    if plan_type == "track-level":
+        print(f"{plan_path}: track-level plan validated")
+    else:
+        print(f"{plan_path}: module-level plan validated")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Deterministic plan quality checker")
     parser.add_argument("level", help="Level to check (e.g., a1)")
     parser.add_argument("--first", type=int, default=0, help="Check only first N modules")
     parser.add_argument("--module", type=int, default=0, help="Check single module by number")
     parser.add_argument("--failing-only", action="store_true", help="Only show plans with issues")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+
+    single_plan_path = Path(args.level)
+    if single_plan_path.is_file():
+        return _print_single_plan_result(single_plan_path)
 
     # Load curriculum order
     manifest = CURRICULUM_ROOT / "curriculum.yaml"
@@ -717,12 +807,12 @@ def main():
     slugs = data.get("levels", {}).get(args.level, {}).get("modules", [])
     if not slugs:
         print(f"No modules found for level {args.level}")
-        sys.exit(1)
+        return 1
 
     if args.module > 0:
         if args.module > len(slugs):
             print(f"Module {args.module} not found (max {len(slugs)})")
-            sys.exit(1)
+            return 1
         slugs = [slugs[args.module - 1]]
         start_num = args.module
     else:
@@ -771,8 +861,8 @@ def main():
     print(f"  Summary: {plans_passed}/{plans_checked} passed, {total_errors} error(s), {total_issues - total_errors} warning(s)")
     print(f"{'=' * 70}\n")
 
-    sys.exit(1 if total_errors > 0 else 0)
+    return 1 if total_errors > 0 else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
