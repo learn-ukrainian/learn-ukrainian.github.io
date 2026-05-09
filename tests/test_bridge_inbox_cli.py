@@ -330,11 +330,11 @@ def test_discuss_fails_and_warns_when_agent_writes_worktree(
 
     assert exit_code == 1
     captured = capsys.readouterr()
-    assert "DISCUSSION READ-ONLY VIOLATION" in captured.err
+    assert "READ-ONLY DISCUSSION VIOLATION" in captured.err
     assert "unauthorized.txt" in captured.err
 
     messages = _channels.read("shared", tail=10)
-    assert any("DISCUSSION READ-ONLY VIOLATION" in msg["body"] for msg in messages)
+    assert any("READ-ONLY DISCUSSION VIOLATION" in msg["body"] for msg in messages)
     assert not any(msg["from_agent"] == "claude" for msg in messages)
     rev_count = subprocess.run(
         ["git", "rev-list", "--count", "HEAD"],

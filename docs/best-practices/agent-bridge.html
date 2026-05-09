@@ -93,11 +93,11 @@
 
   h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   h3 { font-size: 18px; margin-top: 32px; }
-  
+
   table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
   th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
   td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
-  
+
   .callout {
     padding: 16px;
     border-radius: 4px;
@@ -170,7 +170,11 @@ the thread_id and get <code>round_index = parent.round_index + 1</code>.</p>
 participants in read-only mode, passes the <code>AB_DISCUSS_READONLY=1</code>
 contract through the adapter layer, and fails the round if the git
 working tree changes while participants are running. A failed round
-posts a loud system warning into the thread before returning non-zero.</p>
+posts a loud system warning into the thread before returning non-zero,
+including <code>READ_ONLY_VIOLATION: &lt;agent&gt;</code> for the agent family that must
+be treated as the write source. Filesystem writes during discussion are
+a hard stop; dispatch the work as a separate <code>delegate.py dispatch</code>
+brief.</p>
 <p><code>ab post</code> creates channel messages and delivery rows. Its default
 delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
@@ -187,6 +191,9 @@ CLI defaults were not enough in trusted workspaces.</li>
 tools. They do not use Claude plan mode because discussion replies are
 comments, not implementation plans; the restricted tool list plus the
 bridge's git mutation guard enforce the read-only contract.</li>
+<li>Post-round guard: if the working tree differs after a round, the
+bridge posts a <code>⚠️ READ-ONLY DISCUSSION VIOLATION</code> system message and
+returns non-zero without accepting that round's agent replies.</li>
 </ul>
 <h2>CLI quick reference</h2>
 <pre><code class="language-bash"># Channel management
