@@ -116,6 +116,7 @@ class TestApiEndpoints:
 
     # All endpoints referenced in playground HTML files
     EXPECTED_ENDPOINTS: ClassVar[set[str]] = {
+        "/api/artifacts/html",
         "/api/comms/batch-progress",
         "/api/comms/health",
         "/api/comms/live-activity",
