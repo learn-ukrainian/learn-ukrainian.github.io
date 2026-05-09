@@ -9,7 +9,7 @@
 <meta name="report-date" content="2026-05-09" />
 <meta name="report-status" content="ok" />
 <meta name="report-title" content="Local API UI review + revamp" />
-<meta name="report-kpi-summary" content="4 key pages audited · /artifacts route restored · active discussions endpoint added · deep links verified · 26 targeted tests passed" />
+<meta name="report-kpi-summary" content="4 key pages audited · artifacts browser added · active discussions endpoint added · deep links verified · 26 targeted tests passed" />
 <meta name="report-related-issues" content="1814,1820,1822" />
 <meta name="report-related-prs" content="" />
 <meta name="report-agents" content="codex" />
@@ -123,7 +123,7 @@ curl http://127.0.0.1:8767/artifacts/
       <td><code>/artifacts/</code></td>
       <td><span class="pill fail">BROKEN</span></td>
       <td>Baseline curl: <code>/artifacts/</code> returned HTTP 404; <code>/files/</code> returned JSON, proving the docs router was mounted at the wrong public prefix.</td>
-      <td>After curl: <code>/artifacts/</code> returns HTML; <code>/api/artifacts/html?class=handoff</code> returns 2 handoff artifacts; after browser state found 21 cards.</td>
+      <td>After curl: <code>/artifacts/</code> returns HTML; <code>/api/artifacts/html?class=handoff</code> returns 3 handoff artifacts after rebase; after browser state found 21 cards before the rebase added one more handoff.</td>
     </tr>
   </tbody>
 </table>
