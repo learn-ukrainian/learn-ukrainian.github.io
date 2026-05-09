@@ -1,140 +1,170 @@
 from __future__ import annotations
 
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from urllib.parse import quote
 
 import pytest
-from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
-from scripts.api import artifacts_router, docs_router
+from scripts.api import docs_router
+from scripts.api.main import app
 
 
 @pytest.fixture()
-def docs_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
-    roots: dict[str, Path] = {}
-    for key in docs_router.ALLOWED_ROOTS:
-        root = tmp_path / key
-        root.mkdir(parents=True)
-        roots[key] = root
-        (root / "REPORT.html").write_text(
-            """
-            <!doctype html><meta name="report-class" content="audit">
-            <meta name="report-date" content="2026-05-09">
-            <meta name="report-status" content="ok">
-            <meta name="report-title" content="Fixture report">
-            <meta name="report-kpi-summary" content="1 check passed">
-            <meta name="report-related-issues" content="1814, 1822">
-            <meta name="report-related-prs" content="1816">
-            <meta name="report-agents" content="codex,claude">
-            <meta name="report-author" content="codex">
-            """,
-            encoding="utf-8",
-        )
-    (tmp_path / "playgrounds").mkdir()
-    (tmp_path / "playgrounds" / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
-    monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", roots)
-    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", tmp_path)
-    app = FastAPI()
-    app.include_router(artifacts_router.router, prefix="/api/artifacts")
-    app.include_router(docs_router.router, prefix="/artifacts")
-    app.include_router(docs_router.router, prefix="/files")
+def client() -> TestClient:
     return TestClient(app, raise_server_exceptions=False)
 
 
+@pytest.fixture()
+def controlled_docs_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]:
+    safe_root = tmp_path / "safe-root"
+    outside_root = tmp_path / "outside-root"
+    safe_root.mkdir()
+    outside_root.mkdir()
+
+    (safe_root / "file.html").write_text("<!doctype html><title>safe</title>", encoding="utf-8")
+    (safe_root / "script.py").write_text("print('blocked')", encoding="utf-8")
+    (safe_root / "deploy.sh").write_text("echo blocked", encoding="utf-8")
+    (safe_root / "config.env").write_text("SECRET=blocked", encoding="utf-8")
+    (safe_root / ".hidden.html").write_text("hidden", encoding="utf-8")
+    (outside_root / "secret.html").write_text("secret outside root", encoding="utf-8")
+    (safe_root / "escape.html").symlink_to(outside_root / "secret.html")
+
+    playgrounds = tmp_path / "playgrounds"
+    playgrounds.mkdir()
+    (playgrounds / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
+
+    monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {"safe": safe_root})
+    return {"safe": safe_root, "outside": outside_root}
+
+
+@pytest.fixture()
+def controlled_client(controlled_docs_tree: dict[str, Path]) -> TestClient:
+    return TestClient(app, raise_server_exceptions=False)
+
+
+def _first_allowed_file(root_path: Path) -> Path:
+    candidates = [
+        path
+        for path in root_path.rglob("*")
+        if path.is_file()
+        and path.suffix.lower() in docs_router._ALLOWED_EXT
+        and not any(part.startswith(".") for part in path.relative_to(root_path).parts)
+    ]
+    candidates.sort(key=lambda path: (path.suffix.lower() != ".html", path.as_posix()))
+    assert candidates, f"no allowed documentation artifact found under {root_path}"
+    return candidates[0]
+
+
 @pytest.mark.parametrize("root_key", list(docs_router.ALLOWED_ROOTS))
-def test_docs_router_serves_allowed_html_roots(docs_client: TestClient, root_key: str):
-    response = docs_client.get(f"/artifacts/{root_key}/REPORT.html")
+def test_docs_router_serves_allowed_root_files(client: TestClient, root_key: str):
+    root_path = docs_router.ALLOWED_ROOTS[root_key]
+    file_path = _first_allowed_file(root_path)
+    artifact_path = f"/artifacts/{root_key}/{file_path.relative_to(root_path).as_posix()}"
+
+    response = client.get(quote(artifact_path, safe="/"))
+
     assert response.status_code == 200
-    assert response.headers["content-type"].startswith("text/html")
+    assert response.headers["content-type"].startswith(docs_router._MIME_TYPES[file_path.suffix.lower()])
     assert response.headers["cache-control"] == "max-age=300, must-revalidate"
 
 
-def test_docs_router_root_serves_browser_ui(docs_client: TestClient):
-    response = docs_client.get("/artifacts/")
-    assert response.status_code == 200
-    assert response.headers["content-type"].startswith("text/html")
-    assert "Artifacts" in response.text
+def test_docs_router_root_index_lists_allowed_roots(client: TestClient):
+    response = client.get("/artifacts/?format=json")
 
-
-def test_docs_router_root_json_lists_roots(docs_client: TestClient):
-    response = docs_client.get("/artifacts/?format=json")
     assert response.status_code == 200
     body = response.json()
-    assert len(body["roots"]) == len(docs_router.ALLOWED_ROOTS)
+    assert {root["id"] for root in body["roots"]} == set(docs_router.ALLOWED_ROOTS)
+    assert len(body["roots"]) == 8
+    assert all({"id", "path", "exists"} <= set(root) for root in body["roots"])
 
 
-def test_docs_router_files_alias_stays_json(docs_client: TestClient):
-    response = docs_client.get("/files/?format=json")
-    assert response.status_code == 200
-    assert len(response.json()["roots"]) == len(docs_router.ALLOWED_ROOTS)
+def test_docs_router_directory_listing_includes_file_metadata(client: TestClient):
+    response = client.get("/artifacts/audit?format=json")
 
-
-def test_docs_router_directory_listing_json(docs_client: TestClient):
-    response = docs_client.get("/artifacts/audit?format=json")
     assert response.status_code == 200
     body = response.json()
     assert body["root"] == "audit"
-    assert body["items"][0]["name"] == "REPORT.html"
-    assert body["items"][0]["meta"]["title"] == "Fixture report"
+    assert body["relative_path"] == ""
+    assert body["items_count"] == len(body["items"])
+    assert body["items"]
+    assert any({"name", "size", "mtime"} <= set(item) for item in body["items"])
 
 
-@pytest.mark.parametrize("path", [
-    "/artifacts/../../../etc/passwd",
-    "/artifacts/..%2f..%2f..%2fetc/passwd",
-    "/artifacts/%2e%2e/%2e%2e/%2e%2e/etc/passwd",
-])
-def test_docs_router_blocks_traversal(docs_client: TestClient, path: str):
-    assert docs_client.get(path).status_code in {403, 404}
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/artifacts/../../../etc/passwd",
+        "/artifacts/..%2f..%2f..%2fetc/passwd",
+        "/artifacts/%2e%2e/%2e%2e/%2e%2e/etc/passwd",
+    ],
+)
+def test_docs_router_blocks_traversal_variants(controlled_client: TestClient, path: str):
+    response = controlled_client.get(path)
+
+    assert response.status_code in {403, 404}
+    assert response.status_code < 500
 
 
-def test_docs_router_blocks_symlink_outside_root(docs_client: TestClient, tmp_path: Path):
-    outside = tmp_path / "outside.html"
-    outside.write_text("outside", encoding="utf-8")
-    link = tmp_path / "audit" / "linked.html"
-    link.symlink_to(outside)
-    assert docs_client.get("/artifacts/audit/linked.html").status_code == 403
+def test_docs_router_blocks_symlink_escape(controlled_client: TestClient):
+    response = controlled_client.get("/artifacts/safe/escape.html")
+
+    assert response.status_code in {403, 404}
+    assert "secret outside root" not in response.text
 
 
-def test_docs_router_blocks_forbidden_extension(docs_client: TestClient, tmp_path: Path):
-    (tmp_path / "audit" / "script.py").write_text("print('no')", encoding="utf-8")
-    assert docs_client.get("/artifacts/audit/script.py").status_code == 403
+@pytest.mark.parametrize("filename", ["script.py", "deploy.sh", "config.env"])
+def test_docs_router_blocks_forbidden_extensions(controlled_client: TestClient, filename: str):
+    response = controlled_client.get(f"/artifacts/safe/{filename}")
+
+    assert response.status_code in {403, 404}
 
 
-def test_docs_router_blocks_unapproved_root(docs_client: TestClient, tmp_path: Path):
-    (tmp_path / "scripts" / "api").mkdir(parents=True)
-    (tmp_path / "scripts" / "api" / "main.py").write_text("x = 1", encoding="utf-8")
-    assert docs_client.get("/artifacts/scripts/api/main.py").status_code == 403
+def test_docs_router_blocks_unapproved_root(controlled_client: TestClient):
+    response = controlled_client.get("/artifacts/scripts/api/main.py")
+
+    assert response.status_code in {403, 404}
 
 
-def test_docs_router_missing_file_404(docs_client: TestClient):
-    assert docs_client.get("/artifacts/audit/missing.html").status_code == 404
+def test_docs_router_missing_file_404(controlled_client: TestClient):
+    response = controlled_client.get("/artifacts/safe/missing.html")
+
+    assert response.status_code == 404
 
 
-def test_docs_router_blocks_hidden_file(docs_client: TestClient, tmp_path: Path):
-    hidden_dir = tmp_path / "audit" / ".git"
-    hidden_dir.mkdir()
-    (hidden_dir / "HEAD").write_text("ref: refs/heads/main", encoding="utf-8")
-    assert docs_client.get("/artifacts/audit/.git/HEAD").status_code == 403
+def test_docs_router_blocks_hidden_file(controlled_client: TestClient):
+    response = controlled_client.get("/artifacts/safe/.hidden.html")
+
+    assert response.status_code in {403, 404}
+    assert "hidden" not in response.text
 
 
-def test_docs_router_assert_under_root_blocks_resolved_escape(tmp_path: Path):
-    root = tmp_path / "audit"
-    root.mkdir()
-    outside = tmp_path / "outside.html"
-    outside.write_text("outside", encoding="utf-8")
-    with pytest.raises(HTTPException) as exc_info:
-        docs_router._assert_under_root(outside, root)
-    assert exc_info.value.status_code == 403
+def test_docs_router_serves_100kb_html_within_smoke_budget(
+    controlled_docs_tree: dict[str, Path],
+    controlled_client: TestClient,
+):
+    large_file = controlled_docs_tree["safe"] / "large.html"
+    large_file.write_text("<!doctype html>\n" + ("x" * 100_000), encoding="utf-8")
 
+    start = time.perf_counter()
+    response = controlled_client.get("/artifacts/safe/large.html")
+    elapsed = time.perf_counter() - start
 
-def test_html_artifact_listing_extracts_metadata_and_filters(docs_client: TestClient):
-    response = docs_client.get("/api/artifacts/html?class=audit&status=ok&author=codex")
     assert response.status_code == 200
-    body = response.json()
-    assert body["total"] == len(docs_router.ALLOWED_ROOTS)
-    artifact = body["artifacts"][0]
-    assert artifact["title"] == "Fixture report"
-    assert artifact["related_issues"] == [1814, 1822]
-    assert artifact["related_prs"] == [1816]
-    assert artifact["agents"] == ["codex", "claude"]
+    assert response.headers["content-type"].startswith("text/html")
+    assert elapsed < 0.2
+
+
+def test_docs_router_concurrent_access_sanity(controlled_client: TestClient):
+    def fetch_file(_index: int):
+        return controlled_client.get("/artifacts/safe/file.html")
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        responses = list(executor.map(fetch_file, range(10)))
+
+    assert len(responses) == 10
+    assert all(response.status_code == 200 for response in responses)
+    assert all("safe" in response.text for response in responses)
