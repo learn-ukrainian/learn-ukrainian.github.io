@@ -22,6 +22,7 @@ for forensic archaeology.
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
@@ -60,20 +61,22 @@ def _read_current_session() -> str:
 
 
 def _recent_handoff_paths() -> list[str]:
-    """Return the N most-recent ``docs/session-state/*.md`` by filename.
+    """Return the N most-recent ``docs/session-state/*.{md,html}`` by filename.
 
-    The convention is ``YYYY-MM-DD-<topic>.md``, which lexicographically
+    The convention is ``YYYY-MM-DD-<topic>.{md,html}``, which lexicographically
     sorts newest-last. We exclude ``current.md`` because it's returned
-    as the main payload.
+    as the main payload. Both extensions are indexed because the #M-2 rule
+    (2026-05-09) shifted handoff bodies to HTML for ai → human consumption,
+    while keeping the same filename convention for machine discovery.
     """
     session_dir = PROJECT_ROOT / "docs" / "session-state"
     if not session_dir.is_dir():
         return []
-    all_md = sorted(
-        p for p in session_dir.glob("*.md")
-        if p.name != "current.md"
-    )
-    latest = all_md[-_RECENT_HANDOFFS_N:] if all_md else []
+    candidates: list[Path] = []
+    for pattern in ("*.md", "*.html"):
+        candidates.extend(session_dir.glob(pattern))
+    all_handoffs = sorted(p for p in candidates if p.name != "current.md")
+    latest = all_handoffs[-_RECENT_HANDOFFS_N:] if all_handoffs else []
     latest.reverse()  # newest first
     return [str(p.relative_to(PROJECT_ROOT)) for p in latest]
 
