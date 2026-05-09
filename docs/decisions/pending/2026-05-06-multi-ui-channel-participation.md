@@ -1117,3 +1117,76 @@ Please review this as an architecture gate, not implementation code.
 14. Epic split: Is Strand 0 correctly placed as a manual pre-implementation gate before schema work?
 
 Use `[AGREE]` for sections you accept, or `[REVISE Qn: reason]` for sections that need changes before user signoff.
+
+---
+
+## Empirical findings — 2026-05-09 (post-MVP test)
+
+PR #1837 shipped the MVP subset (`codex-desktop` / `claude-desktop` as flat-string identities + `cli_available=False` guards). The 8-step test plan in the afternoon handoff was executed, and the **rule-based polling counter-proposal** (`UserPromptSubmit` hook injecting `inbox show codex-desktop` results as `additionalContext`) was empirically tested in Codex Desktop. **Result: NEGATIVE.**
+
+### What was tested
+
+Smoke hook `/tmp/desktop-hook-smoke.sh` registered as a second `UserPromptSubmit` entry in `.codex/hooks.json`. Hook emitted unmistakable JSON-shaped `additionalContext` with a unique timestamp marker. User prompted Codex Desktop twice. Codex Desktop reported **no marker visible** in its session context either time.
+
+Crucially, Codex Desktop's UI **did show "UserPromptSubmit hook" labels** on both prompts — so the hook process executed; only the `additionalContext` injection path is dropped. This is a Desktop-side design choice (hooks are gates/guards, not context injectors) distinct from how Codex CLI honors the same `hookSpecificOutput.additionalContext` field.
+
+### What this means for this ADR
+
+Three implications:
+
+1. **Tier-2 mid-step via UserPromptSubmit hooks is dead.** The "extend `.codex/hooks/` with a Desktop inbox poller" idea proposed mid-shift cannot work as designed. Desktop accepts hook *exit codes* but ignores hook *context output*.
+2. **The MVP's "hours → seconds" claim is human-mediated only.** The PR #1837 MVP enables async messaging IF a human shuttles "check your inbox" prompts between the orchestrator session and the Desktop session. There is no autonomous orchestrator → Desktop path on `cli_available=False` agents today.
+3. **External infra (cron/launchd/daemon) is NOT the only path forward.** See "Codex Desktop Automations" finding below — Desktop has a native scheduler that supersedes external polling infrastructure. Tier-3 daemon listener (#1782) remains useful long-term for sub-second latency but is no longer a blocker for autonomous Desktop participation.
+
+### Verification artifact
+
+Channel transcript at thread `a014100d9dc6473ab09879ac708451bb` on `#desktop-tasks` captures the full design consultation, smoke test prep, and negative result. Codex Desktop's own response (`cb6fc90c8b6c4033a6404d93646753bc`) flagged hook viability as an empirical prerequisite before this consultation began — that skepticism was vindicated.
+
+### Action
+
+Cross-thread note for any future agent picking up the Desktop comms strand: **do not propose UserPromptSubmit hook-based polling for Desktop without first re-running this empirical test.** If Desktop semantics change in a future Codex CLI release, the smoke is reproducible from this finding's description.
+
+---
+
+## Codex Desktop Automations — the canonical Desktop-side polling primitive (2026-05-09 update)
+
+Per [https://developers.openai.com/codex/app/automations](https://developers.openai.com/codex/app/automations), Codex Desktop has a **built-in Automations** feature that supersedes external polling infrastructure for the autonomous-orchestrator-to-Desktop strand.
+
+### What it is
+
+- **Standalone automations** run on a schedule (minute-based, daily, weekly, or full cron syntax). Each run is independent and exits. Findings appear in the Desktop "Triage" inbox.
+- **Thread automations** are heartbeat wake-up calls attached to a specific thread — useful when context must persist across runs.
+- Both run in the background. For Git repos, can choose worktree mode (isolated) or local-project mode.
+- Use the same skills + plugins available to the Codex Desktop session, so an automation can call MCP tools and project scripts.
+
+### How it solves the bridge polling problem
+
+A 5-minute standalone automation in Codex Desktop with a prompt like:
+
+> *"Check `.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show codex-desktop`. If there are pending deliveries, fetch each via `channel tail desktop-tasks` (or the relevant channel), process the brief, post a reply via `ab post ... --from-agent codex-desktop --parent <message_id>`, then ack the delivery. If no pending deliveries, exit silently (Codex auto-archives empty findings)."*
+
+…provides autonomous orchestrator → Desktop participation with ~5 min worst-case latency. No external cron, no launchd, no hook tricks, no rule-based agent-compliance bet.
+
+### Tradeoffs vs. hypothetical Tier-3 daemon listener (#1782)
+
+| Property | Codex Desktop Automation | Tier-3 SSE daemon (#1782) |
+|---|---|---|
+| Setup | One Automation entry in Desktop UI | Background daemon process + listener API + lifecycle management |
+| Latency | ~5 min (or whatever cron cadence) | Sub-second (event-driven SSE replay) |
+| Failure mode | Run fails → next run retries; user sees in Triage | Daemon dies silently → no events received until restart |
+| Multimodal | Full Desktop capability per run | Same — both invoke Desktop's tools |
+| Scope | Per-Desktop-app | Could service multiple agents |
+| Cost | None (uses Desktop's standard run budget) | Daemon process running 24/7 |
+
+For the orchestrator's async-brief use case (which is the original "hours → seconds" claim that motivated #1837), the 5-min latency is fine. Tier-3 only matters if we want sub-minute round-trips — which is not on the current roadmap.
+
+### Implications for this ADR's scope
+
+The ADR's Tier-3 daemon-listener strand can be **deprioritized**, not removed. Sections that reasoned around "agents must subscribe via SSE because there's no other way to receive events" should be re-read with the Automations option on the table. Specifically:
+
+- **Q2 (discovery):** the "MCP readable resource + replayable SSE" framing was justified partly by the assumption that agents need an active subscription mechanism. Codex Desktop's Automations show that *scheduled pull* is sufficient for the multimodal-producer case. The SSE strand should target only the bakeoff-relevant low-latency cases (writer-lock discussion rounds, etc.), not Desktop participation in general.
+- **Pilot bakeoff (Q13):** can be re-scoped to use a Desktop Automation rather than requiring SSE infrastructure. Quicker path to first signal.
+
+### Required orchestrator-side support
+
+`ab inbox ack <delivery_id>` (planned in #1838) becomes load-bearing — without it, every Automation run leaves the delivery `pending` and the inbox warning recurs. The CLI is small (~10 LOC) and unblocks this whole pattern.
