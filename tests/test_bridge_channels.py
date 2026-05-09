@@ -96,7 +96,7 @@ def test_create_channel_rejects_user_subscriber():
 
 def test_validate_recipient_agent_accepts_non_user_agents():
     """Delivery targets still accept the real agent inboxes."""
-    for agent in ("claude", "gemini", "codex"):
+    for agent in ("claude", "gemini", "codex", "claude-desktop", "codex-desktop"):
         _channels._validate_recipient_agent(agent)
 
 def test_create_channel_invalid_name_raises():
@@ -172,6 +172,23 @@ def test_post_creates_delivery_row_per_recipient():
     assert len(dlvs) == 2
     assert {d["to_agent"] for d in dlvs} == {"claude", "codex"}
     assert all(d["status"] == "pending" for d in dlvs)
+
+
+def test_post_routes_to_desktop_agent_identity():
+    """Desktop identities are first-class delivery targets for manual pull."""
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic",
+        "claude",
+        "desktop brief",
+        to_agents=["codex-desktop"],
+        auto_snapshot=False,
+    )
+
+    dlvs = _channels.deliveries_for_message(res["message_id"])
+    assert len(dlvs) == 1
+    assert dlvs[0]["to_agent"] == "codex-desktop"
+    assert dlvs[0]["status"] == "pending"
 
 
 def test_post_rejects_user_as_delivery_target():
@@ -1133,4 +1150,3 @@ class TestDeliveryLeasing:
         second = _channels.claim_next_delivery("claude", now=_iso_at(1))
         assert second is not None
         assert _delivery_row(delivery_id)["attempt_count"] == 2
-

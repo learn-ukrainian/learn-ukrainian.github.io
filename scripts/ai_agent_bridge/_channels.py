@@ -70,7 +70,13 @@ class StaleClaimError(Exception):
 
 # ── Constants ──────────────────────────────────────────────────────────
 
-VALID_AGENTS = ("claude", "gemini", "codex")
+VALID_AGENTS = (
+    "claude",
+    "gemini",
+    "codex",
+    "claude-desktop",
+    "codex-desktop",
+)
 VALID_POST_AGENTS = (*VALID_AGENTS, "user")
 VALID_RECIPIENT_AGENTS = VALID_AGENTS
 VALID_KINDS = ("post", "reply", "system", "fanout_start", "fanout_end")

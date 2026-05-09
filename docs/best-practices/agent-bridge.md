@@ -94,6 +94,44 @@ ab post pipeline "reply" --parent MESSAGE_ID
 ab discuss architecture "should we refactor X?" --with claude,gemini,codex --max-rounds 2
 ```
 
+## Desktop Participation
+
+Desktop participation is currently an MVP flat-string identity, not the
+full Multi-UI identity model. The bridge accepts `codex-desktop` and
+`claude-desktop` as post authors and delivery targets, but it does not
+spawn them as subprocesses. Their registry entries have
+`cli_available=False`, so Desktop participation is human-invoked from
+the Desktop session.
+
+Orchestrator dispatch to Codex Desktop:
+
+```bash
+ab post desktop-tasks "<brief>" --to codex-desktop --from-agent claude
+```
+
+Codex Desktop watches the task channel from its own session:
+
+```bash
+ab channel tail desktop-tasks --follow
+```
+
+Codex Desktop can also pull its pending inbox:
+
+```bash
+ab inbox show codex-desktop
+```
+
+Codex Desktop posts replies with its own sender identity:
+
+```bash
+ab post desktop-tasks "<status>" --from-agent codex-desktop
+```
+
+Limitation: this MVP stores a flat sender/recipient string. The pending
+Multi-UI ADR remains the future design for 4-tuple identity
+(`agent_family`, `ui_surface`, `client_id`, `instance_id`), claims,
+SSE replay, and attachments.
+
 ## Dispatch wrappers
 
 Use these wrappers when the task needs the project-standard model/mode
