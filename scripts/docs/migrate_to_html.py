@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Convert Markdown documentation to high-fidelity HTML (#1814).
 
-Usage:
-    python scripts/docs/migrate_to_html.py path/to/file.md [output/path.html]
+By default, the converter refuses to overwrite hand-curated HTML: an existing
+destination with a populated ``<meta name="report-author" content="...">`` is
+treated as human-authored. Pass ``--force`` only when the overwrite has explicit
+user signoff.
 """
 
 import argparse
 import sys
 from datetime import datetime
+from html.parser import HTMLParser
 from pathlib import Path
 
 try:
@@ -148,7 +151,50 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def migrate(input_path: Path, output_path: Path):
+
+class ReportAuthorParser(HTMLParser):
+    """Extract a populated report-author meta tag from an HTML document."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.report_author: str | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "meta":
+            return
+
+        attr_map = {name.lower(): value for name, value in attrs if value is not None}
+        if attr_map.get("name") != "report-author":
+            return
+
+        content = (attr_map.get("content") or "").strip()
+        if content:
+            self.report_author = content
+
+
+def find_report_author(html_text: str) -> str | None:
+    parser = ReportAuthorParser()
+    parser.feed(html_text)
+    return parser.report_author
+
+
+def existing_report_author(output_path: Path) -> str | None:
+    if not output_path.exists():
+        return None
+
+    return find_report_author(output_path.read_text(encoding="utf-8"))
+
+
+def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool:
+    report_author = existing_report_author(output_path)
+    if report_author and not force:
+        print(
+            f"REFUSE: {output_path} appears hand-curated (report-author={report_author}); "
+            "pass --force to overwrite.",
+            file=sys.stderr,
+        )
+        return False
+
     md_text = input_path.read_text(encoding="utf-8")
 
     # Extract title (first H1)
@@ -162,7 +208,7 @@ def migrate(input_path: Path, output_path: Path):
     metadata = {
         "class": "documentation",
         "date": datetime.now().strftime("%Y-%m-%d"),
-        "status": "migrated"
+        "status": "migrated",
     }
 
     md = MarkdownIt()
@@ -175,24 +221,61 @@ def migrate(input_path: Path, output_path: Path):
         migrated_at=datetime.now().strftime("%Y-%m-%d %H:%M"),
         source_file=input_path.name,
         author="Gemini (Yellow Team)",
-        content=content_html
+        content=content_html,
     )
 
     output_path.write_text(final_html, encoding="utf-8")
     print(f"Migrated {input_path} to {output_path}")
+    return True
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Migrate Markdown to HTML")
-    parser.add_argument("input", help="Input Markdown file")
-    parser.add_argument("output", nargs="?", help="Output HTML file (optional)")
 
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Convert a Markdown document to the project's high-fidelity HTML report style.\n"
+            "Use for bulk MD->HTML migration; do not overwrite hand-curated HTML unless explicitly approved."
+        ),
+        epilog="""Examples:
+  .venv/bin/python scripts/docs/migrate_to_html.py docs/example.md
+  .venv/bin/python scripts/docs/migrate_to_html.py docs/example.md audit/example/REPORT.html
+  .venv/bin/python scripts/docs/migrate_to_html.py --force docs/example.md audit/example/REPORT.html
+
+Outputs:
+  Writes the destination HTML file. If output is omitted, writes next to the input with a .html suffix.
+
+Exit codes:
+  0  HTML was written.
+  1  Input was missing, dependencies were missing, or the destination appears hand-curated and --force was not used.
+
+Related:
+  GH issue #1823; claude_extensions/memory/MEMORY.md #M-2; cli-help-standard.md.
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("input", help="Input Markdown file to convert; example: docs/example.md")
+    parser.add_argument(
+        "output",
+        nargs="?",
+        help="Optional output HTML file; default: input path with .html suffix",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite hand-curated HTML marked by report-author; default: refuse and exit 1",
+    )
     args = parser.parse_args()
     input_path = Path(args.input)
 
     if not input_path.exists():
-        print(f"Error: {input_path} not found")
-        sys.exit(1)
+        print(f"Error: {input_path} not found", file=sys.stderr)
+        return 1
 
     output_path = Path(args.output) if args.output else input_path.with_suffix(".html")
 
-    migrate(input_path, output_path)
+    if not migrate(input_path, output_path, force=args.force):
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
