@@ -16,6 +16,7 @@ All rules are hard requirements. Partial compliance = failure.
 | Plan can't be met | STOP building. Report to user. Propose new plan version (rule 7) |
 | Review verdict REVISE | Reviewer outputs `<fixes>` find/replace pairs → pipeline applies them (rule 4) |
 | Creating JSONL/data | Add ingestion flag + update tracking doc in SAME commit (rule 11) |
+| Making any verifiable claim | Run a tool — VESUM/Monitor API/grep/etc. (rule 12) |
 
 </critical>
 
@@ -181,6 +182,36 @@ Every operation must be finished end-to-end in the same commit:
 
 ---
 
+## 11. Tool-grounded claims — deterministic over hallucination (TOP PRIORITY, 2026-05-09)
+
+<critical>
+
+**Every verifiable claim must be backed by a tool call.** The pre-trained guess feels right; it's wrong often enough to break Ukrainian curriculum, code, and orchestration. Skipping the tool = hallucinating with confidence.
+
+The project has VESUM (6.7M forms), СУМ-11 (127K), Грінченко (67K), ЕСУМ, Monitor API, full code corpus, deterministic scripts. **Use them.**
+
+| Domain | Don't recall — run | |
+|---|---|---|
+| Ukrainian word | `mcp__sources__verify_word(s)`, `verify_lemma`, `check_modern_form` |
+| Russianism / surzhyk | `mcp__sources__search_style_guide`, `check_russian_shadow` |
+| Heritage defense | `mcp__sources__search_heritage` |
+| Definitions / etymology | `search_definitions`, `search_grinchenko_1907`, `search_esum`, `search_slovnyk_me` |
+| File contents / signatures | `Read`, `grep` / `ugrep`, `wc` |
+| Build status / module gates / git state | Monitor API at `localhost:8765/api/...` |
+| Word counts | `scripts/audit/audit_module.py` + `config.py` |
+| Stress marks | `ukrainian-word-stress` annotator (NEVER hand-write) |
+| Test pass / lint clean | `pytest`, `ruff check` |
+
+**Decision test:** if you introduce a number, name, path, SHA, or Ukrainian word that wasn't in your very recent tool output and you didn't run a tool to confirm — STOP, run it.
+
+**Exempt (creative output):** narrative writing, dialogue invention from textbook situation, design proposals, brainstorming. But every CLAIM about an artifact inside that creative output is still tool-backed.
+
+Full rule + anti-pattern catalog + per-agent enforcement: **`docs/best-practices/deterministic-over-hallucination.md`**. Applies to Claude · Codex · Gemini · all dispatched sub-agents.
+
+</critical>
+
+---
+
 ## Enforcement
 
-Negotiating requirements down, skipping audit gates, producing under-length modules, shipping without references, leaving incomplete work, or giving up before PASS = task failure.
+Negotiating requirements down, skipping audit gates, producing under-length modules, shipping without references, leaving incomplete work, giving up before PASS, **or making verifiable claims without running the tool** = task failure.
