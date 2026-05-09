@@ -49,6 +49,18 @@ def _delivery_row(delivery_id: str) -> sqlite3.Row:
         conn.close()
 
 
+def _set_message_created_at(message_id: str, created_at: str) -> None:
+    conn = _db.get_db()
+    try:
+        conn.execute(
+            "UPDATE channel_messages SET created_at = ? WHERE message_id = ?",
+            (created_at, message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 # 1. Channel CRUD
 
 def test_create_channel_basic():
@@ -60,6 +72,51 @@ def test_create_channel_basic():
     listed = _channels.list_channels()
     assert len(listed) == 1
     assert listed[0]["name"] == "my-topic"
+
+
+def test_get_db_migrates_channel_max_age_hours(isolate_db):
+    """Existing bridge DBs gain the default channel TTL column."""
+    for suffix in ("", "-wal", "-shm"):
+        path = Path(f"{isolate_db}{suffix}")
+        if path.exists():
+            path.unlink()
+    conn = sqlite3.connect(isolate_db)
+    try:
+        conn.execute(
+            """
+            CREATE TABLE channels (
+                name TEXT PRIMARY KEY,
+                created_at TEXT NOT NULL,
+                description TEXT DEFAULT '',
+                include TEXT DEFAULT '',
+                subscribers TEXT DEFAULT '',
+                context_sha256 TEXT DEFAULT ''
+            )
+            """
+        )
+        conn.execute(
+            "INSERT INTO channels (name, created_at) VALUES ('legacy', ?)",
+            (_iso_at(0),),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    migrated = _db.get_db()
+    try:
+        columns = [
+            row["name"]
+            for row in migrated.execute("PRAGMA table_info(channels)").fetchall()
+        ]
+        ttl = migrated.execute(
+            "SELECT max_age_hours FROM channels WHERE name = 'legacy'"
+        ).fetchone()["max_age_hours"]
+    finally:
+        migrated.close()
+
+    assert "max_age_hours" in columns
+    assert ttl == 24
+
 
 def test_create_channel_duplicate_exist_ok_returns_existing():
     """Verify idempotent creation returns the existing channel unmodified."""
@@ -431,6 +488,73 @@ def test_pending_deliveries_for_agent_ordered_oldest_first():
     assert len(q) == 2
     assert q[0]["body"] == "msg1"
     assert q[1]["body"] == "msg2"
+
+
+def test_expire_stale_deliveries_marks_aged_pending_as_expired():
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic",
+        "user",
+        "stale",
+        to_agents=["claude"],
+        auto_snapshot=False,
+    )
+    _set_message_created_at(str(res["message_id"]), _iso_at(0))
+
+    expired = _channels.expire_stale_deliveries(now=_iso_at(25 * 3600))
+
+    assert expired == 1
+    row = _delivery_row(str(res["delivery_ids"][0]))
+    assert row["status"] == "expired"
+    assert row["error"] == "auto-expired (>24h pending, channel=topic)"
+
+
+def test_expire_stale_deliveries_respects_channel_ttl():
+    _channels.create_channel("short-ttl")
+    _channels.create_channel("long-ttl")
+    _channels.set_channel_ttl("short-ttl", 2)
+    _channels.set_channel_ttl("long-ttl", 48)
+    short = _channels.post(
+        "short-ttl",
+        "user",
+        "short",
+        to_agents=["claude"],
+        auto_snapshot=False,
+    )
+    long = _channels.post(
+        "long-ttl",
+        "user",
+        "long",
+        to_agents=["claude"],
+        auto_snapshot=False,
+    )
+    _set_message_created_at(str(short["message_id"]), _iso_at(0))
+    _set_message_created_at(str(long["message_id"]), _iso_at(0))
+
+    expired = _channels.expire_stale_deliveries(now=_iso_at(3 * 3600))
+
+    assert expired == 1
+    assert _delivery_row(str(short["delivery_ids"][0]))["status"] == "expired"
+    assert _delivery_row(str(long["delivery_ids"][0]))["status"] == "pending"
+
+
+def test_expire_stale_deliveries_skips_already_delivered():
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic",
+        "user",
+        "handled",
+        to_agents=["claude"],
+        auto_snapshot=False,
+    )
+    delivery_id = str(res["delivery_ids"][0])
+    _set_message_created_at(str(res["message_id"]), _iso_at(0))
+    _channels.mark_delivery(delivery_id, "delivered")
+
+    expired = _channels.expire_stale_deliveries(now=_iso_at(25 * 3600))
+
+    assert expired == 0
+    assert _delivery_row(delivery_id)["status"] == "delivered"
 
 # 6. Concurrency
 

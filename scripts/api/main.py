@@ -197,6 +197,7 @@ ORIENT_SECTION_TTLS: dict[str, float] = {
     "pipeline": 0.0,
     "runtime": 60.0,
     "delegate": 30.0,
+    "bridge_pending": 15.0,
     "wiki": 120.0,
     "governance": 120.0,
     "health": 15.0,
@@ -209,6 +210,7 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
     "pipeline": "fs",
     "runtime": "fs",
     "delegate": "fs",
+    "bridge_pending": "sqlite",
     "wiki": "fs",
     "governance": "fs",
     "health": "probe",
@@ -370,6 +372,12 @@ def _collect_delegate_orient_data() -> dict:
         "active_count": delegate_api.active_delegate_count(),
         "recent": recent["tasks"],
     }
+
+
+def _collect_bridge_pending_orient_data() -> dict:
+    from scripts.ai_agent_bridge import _channels
+
+    return _channels.bridge_pending_summary()
 
 
 def _collect_wiki_orient_data() -> dict:
@@ -586,6 +594,7 @@ async def orient(fresh: bool = False):
         (pipeline_info, pipeline_meta),
         (runtime_info, runtime_meta),
         (delegate_info, delegate_meta),
+        (bridge_pending_info, bridge_pending_meta),
         (wiki_info, wiki_meta),
         (governance_info, governance_meta),
         (health_info, health_meta),
@@ -604,6 +613,11 @@ async def orient(fresh: bool = False):
             "delegate",
             _collect_delegate_orient_data,
             {"active_count": 0, "recent": []},
+        ),
+        _cached_orient_section(
+            "bridge_pending",
+            _collect_bridge_pending_orient_data,
+            {},
         ),
         _cached_orient_section("wiki", _collect_wiki_orient_data, {"by_track": {}}),
         _cached_orient_section(
@@ -628,6 +642,7 @@ async def orient(fresh: bool = False):
         "pipeline": pipeline_meta,
         "runtime": runtime_meta,
         "delegate": delegate_meta,
+        "bridge_pending": bridge_pending_meta,
         "wiki": wiki_meta,
         "governance": {**governance_meta, **governance_info},
         "health": health_meta,
@@ -656,6 +671,7 @@ async def orient(fresh: bool = False):
         "pipeline": pipeline_info,
         "runtime": runtime_info,
         "delegate": delegate_info,
+        "bridge_pending": bridge_pending_info,
         "wiki": wiki_info,
         "governance": governance_info,
         "health": health_info,

@@ -134,6 +134,11 @@ tr:last-child td { border-bottom: none; }
     <div id="delegate-content" class="empty">Loading...</div>
   </section>
 
+  <section class="section orange">
+    <div class="section-header"><h2>&#128229; Bridge Inbox</h2><div class="muted" id="bridge-muted"></div></div>
+    <div id="bridge-content" class="empty">Loading...</div>
+  </section>
+
   <section class="section purple">
     <div class="section-header"><h2>&#128172; Active Discussions</h2><div class="muted" id="discussions-muted"></div></div>
     <div id="discussions-content" class="empty">Loading...</div>
@@ -176,6 +181,12 @@ function formatTimestamp(value) {
 function formatAgeDays(days) {
   if (typeof days !== 'number') return '—';
   return days === 0 ? '0d' : `${days}d`;
+}
+
+function formatAgeHours(hours) {
+  if (typeof hours !== 'number') return '—';
+  if (hours < 1) return `${Math.round(hours * 60)}m`;
+  return `${hours.toFixed(1)}h`;
 }
 
 function truncate(value, max) {
@@ -308,6 +319,25 @@ function renderDelegate(delegate) {
   `;
 }
 
+function renderBridgePending(bridgePending) {
+  const rows = Object.entries(bridgePending || {})
+    .filter(([, item]) => item && typeof item.count === 'number' && item.count > 0)
+    .sort((a, b) => (b[1].oldest_hours || 0) - (a[1].oldest_hours || 0));
+  const total = rows.reduce((sum, [, item]) => sum + (item.count || 0), 0);
+  document.getElementById('bridge-muted').textContent = `${total} pending`;
+  if (!rows.length) {
+    document.getElementById('bridge-content').innerHTML = '<div class="empty">No pending bridge deliveries</div>';
+    return;
+  }
+  document.getElementById('bridge-content').innerHTML = `<table><thead><tr><th>Agent</th><th>Pending</th><th>Oldest</th></tr></thead><tbody>${
+    rows.map(([agent, item]) => `<tr>
+      <td class="mono">${escapeHtml(agent)}</td>
+      <td><span class="pill ${item.oldest_hours >= 12 ? 'err' : item.oldest_hours >= 2 ? 'warn' : 'ok'}">${item.count}</span></td>
+      <td>${formatAgeHours(item.oldest_hours)}</td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
 function discussionAge(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return 'unknown age';
@@ -417,6 +447,7 @@ async function loadOrient() {
     renderPipeline(data.pipeline || {});
     renderRuntime(data.runtime || {});
     renderDelegate(data.delegate || {});
+    renderBridgePending(data.bridge_pending || {});
     renderDiscussions(discussions || {});
     if (discussions && discussions.error) {
       document.getElementById('discussions-content').innerHTML = `<div class="empty">Discussion lookup unavailable: ${escapeHtml(discussions.error)}</div>`;

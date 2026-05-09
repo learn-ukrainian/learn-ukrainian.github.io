@@ -85,7 +85,8 @@ CREATE TABLE IF NOT EXISTS channels (
     description TEXT DEFAULT '',
     include TEXT DEFAULT '',          -- comma-sep channels to auto-include (e.g. "shared")
     subscribers TEXT DEFAULT '',      -- comma-sep agents (e.g. "claude,gemini,codex")
-    context_sha256 TEXT DEFAULT ''    -- last-seen sha256 of {channel}/context.md
+    context_sha256 TEXT DEFAULT '',   -- last-seen sha256 of {channel}/context.md
+    max_age_hours INTEGER DEFAULT 24  -- TTL for pending deliveries before auto-expire
 );
 
 CREATE TABLE IF NOT EXISTS channel_messages (
@@ -122,7 +123,7 @@ CREATE TABLE IF NOT EXISTS deliveries (
     message_id TEXT NOT NULL,             -- FK → channel_messages.message_id
     to_agent TEXT NOT NULL,               -- claude/gemini/codex
     to_model TEXT,                        -- target model (nullable)
-    status TEXT DEFAULT 'pending',        -- pending/processing/dispatched/delivered/failed
+    status TEXT DEFAULT 'pending',        -- pending/processing/dispatched/delivered/failed/expired
     dispatched_at TEXT,
     delivered_at TEXT,
     error TEXT,
@@ -309,6 +310,13 @@ def get_db():
         if not cursor.fetchone():
             conn.executescript(_CHANNELS_SCHEMA)
         else:
+            cursor.execute("PRAGMA table_info(channels)")
+            channel_columns = [row[1] for row in cursor.fetchall()]
+            if "max_age_hours" not in channel_columns:
+                conn.execute(
+                    "ALTER TABLE channels ADD COLUMN max_age_hours INTEGER DEFAULT 24"
+                )
+
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='deliveries'"
             )
