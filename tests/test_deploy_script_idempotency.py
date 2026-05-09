@@ -12,6 +12,7 @@ PROJECT_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 DRIFT_TARGET = Path(".claude/rules/critical-rules.md")
+CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
 
 
 def _copy_repo_subset(target: Path) -> None:
@@ -58,6 +59,16 @@ def _run(repo: Path, script: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _run_command(repo: Path, command: list[str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command,
+        cwd=repo,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     """A clean checkout should deploy successfully and pass drift checks."""
     repo = _init_checkout(tmp_path)
@@ -72,6 +83,48 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         "drift check failed after fresh deploy:\n"
         f"stdout: {check_result.stdout}\nstderr: {check_result.stderr}"
     )
+    assert (repo / CODEX_HOOK_TARGET).exists()
+
+    codex_hooks_diff = _run_command(
+        repo,
+        ["diff", "-rq", "claude_extensions/hooks", ".codex/hooks"],
+    )
+    assert codex_hooks_diff.returncode == 0, (
+        "Codex hooks drift after fresh deploy:\n"
+        f"stdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
+    )
+
+
+def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
+    """Two consecutive deploys should leave the Codex target unchanged."""
+    repo = _init_checkout(tmp_path)
+
+    first_result = _run(repo, DEPLOY_SCRIPT)
+    assert first_result.returncode == 0, (
+        f"first deploy failed:\nstdout: {first_result.stdout}\nstderr: {first_result.stderr}"
+    )
+
+    second_result = _run(repo, DEPLOY_SCRIPT)
+    assert second_result.returncode == 0, (
+        f"second deploy failed:\nstdout: {second_result.stdout}\nstderr: {second_result.stderr}"
+    )
+    assert "claude_extensions → .codex: no changes" in second_result.stdout
+    assert "No changes to deploy." in second_result.stdout
+
+
+def test_codex_orphan_is_caught(tmp_path: Path) -> None:
+    """Undeclared destination-only Codex paths must abort the deploy."""
+    repo = _init_checkout(tmp_path)
+    orphan = repo / ".codex" / "stale-only.txt"
+    orphan.parent.mkdir(parents=True)
+    orphan.write_text("stale\n", encoding="utf-8")
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    combined_output = f"{deploy_result.stdout}\n{deploy_result.stderr}"
+
+    assert deploy_result.returncode != 0
+    assert "claude_extensions → .codex" in combined_output
+    assert "undeclared orphan 'stale-only.txt'" in combined_output
 
 
 def test_drift_is_caught(tmp_path: Path) -> None:

@@ -43,6 +43,9 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 #          Runtime-only; NOT source-tracked. rsync --delete must preserve both.
 ORPHAN_PATHS_AGENT="wake cache"
 ORPHAN_PATHS_AGENTS=""
+# agents/curriculum-maintainer.toml — Codex agent definition with no claude_extensions equivalent.
+# config.toml and hooks.json — Codex CLI configuration files managed directly by Codex.
+ORPHAN_PATHS_CODEX="agents/curriculum-maintainer.toml config.toml hooks.json"
 ORPHAN_PATHS_GEMINI="docs/"
 
 # Build rsync --exclude arguments from a space-separated path list.
@@ -91,6 +94,7 @@ orphan_fail=false
 check_orphans "claude_extensions" ".claude" "$ORPHAN_PATHS_CLAUDE" "claude_extensions → .claude" || orphan_fail=true
 check_orphans "claude_extensions" ".agent" "$ORPHAN_PATHS_AGENT" "claude_extensions → .agent" || orphan_fail=true
 check_orphans "claude_extensions/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "claude_extensions/skills → .agents/skills" || orphan_fail=true
+check_orphans "claude_extensions" ".codex" "$ORPHAN_PATHS_CODEX" "claude_extensions → .codex" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
@@ -126,6 +130,9 @@ diff_dirs() {
     for p in $orphans; do
         # Strip trailing slash for diff --exclude
         diff_args+=(--exclude="${p%/}")
+        if [[ "$p" == */* ]]; then
+            diff_args+=(--exclude="${p##*/}")
+        fi
     done
     local diff_out
     diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null || true)
@@ -146,6 +153,7 @@ diff_dirs() {
 diff_dirs "claude_extensions" ".claude" "claude_extensions → .claude" "$ORPHAN_PATHS_CLAUDE"
 diff_dirs "claude_extensions" ".agent" "claude_extensions → .agent" "$ORPHAN_PATHS_AGENT"
 diff_dirs "claude_extensions/skills" ".agents/skills" "claude_extensions/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
+diff_dirs "claude_extensions" ".codex" "claude_extensions → .codex" "$ORPHAN_PATHS_CODEX"
 diff_dirs "gemini_extensions" ".gemini" "gemini_extensions → .gemini" "$ORPHAN_PATHS_GEMINI"
 echo ""
 
@@ -165,6 +173,8 @@ echo "=== Syncing ==="
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE") claude_extensions/ .claude/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") claude_extensions/ .agent/
+# shellcheck disable=SC2046
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX") claude_extensions/ .codex/
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create
 # `.agents/skills/`. On a clean checkout (e.g. the test fixture in

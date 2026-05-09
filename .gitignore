@@ -27,6 +27,7 @@ service-account*.json
 # AI assistant configs
 #.gemini/
 .claude/
+.codex/
 
 
 # Python
