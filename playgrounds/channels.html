@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Channels - #1190</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="/monitor.css">
 <style>
-:root {
-  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
-  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
-  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
-  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
-}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -21,7 +16,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .top-bar h1 { font-size: 18px; font-weight: 600; }
 .top-bar a { color: var(--text2); text-decoration: none; font-size: 13px; }
 .top-bar a:hover { color: var(--text); }
-.home-link { color: var(--blue) !important; font-weight: 600; white-space: nowrap; }
+.home-link { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .banner { display: none; background: var(--red); color: white; padding: 8px 24px; font-size: 13px; text-align: center; }
 
 /* Main layout */
@@ -32,7 +27,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 /* Sidebar items */
 .channel-item { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; display: block; border-left: 3px solid transparent; }
 .channel-item:hover { background: var(--bg3); }
-.channel-item.active { border-left-color: var(--blue); background: var(--bg2); }
+.channel-item.active { border-left-color: var(--accent); background: var(--bg2); }
 .channel-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; display: flex; justify-content: space-between; }
 .channel-meta { font-size: 11px; color: var(--text2); }
 .badge { background: var(--bg3); color: var(--text2); padding: 2px 6px; border-radius: 12px; font-size: 10px; font-weight: 600; }
@@ -53,7 +48,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .messages-area { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 .message { display: flex; flex-direction: column; gap: 4px; }
 .msg-header { display: flex; gap: 8px; align-items: baseline; font-size: 12px; margin-bottom: 2px; }
-.msg-author { font-weight: 600; color: var(--blue); }
+.msg-author { font-weight: 600; color: var(--accent); }
 .msg-author.gemini { color: var(--green); }
 .msg-author.claude { color: var(--purple); }
 .msg-author.user { color: var(--text); }
@@ -70,17 +65,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .post-success { color: var(--green); font-size: 12px; margin-bottom: 8px; display: none; }
 .post-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: flex-end; }
 .post-textarea { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical; min-height: 70px; }
-.post-textarea:focus { outline: none; border-color: var(--blue); }
+.post-textarea:focus { outline: none; border-color: var(--accent); }
 .post-controls { display: flex; justify-content: space-between; align-items: center; }
 .post-recipients { display: flex; gap: 12px; font-size: 12px; color: var(--text2); align-items: center; }
 .recipient-cb { display: flex; align-items: center; gap: 4px; cursor: pointer; }
-.post-btn { background: var(--blue); color: #fff; border: none; padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.post-btn { background: var(--accent); color: #fff; border: none; padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .post-btn:hover:not(:disabled) { opacity: 0.9; }
 .parent-id-container { font-size: 12px; color: var(--text3); display: flex; align-items: center; gap: 8px; }
 .parent-id-container input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; width: 80px; font-family: monospace; font-size: 11px; }
 .msg-reply { font-size: 10px; color: var(--text3); cursor: pointer; }
-.msg-reply:hover { color: var(--blue); text-decoration: underline; }
+.msg-reply:hover { color: var(--accent); text-decoration: underline; }
 
 /* Deliveries Dropdown */
 .deliveries-toggle { cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; color: var(--text2); }
@@ -90,7 +85,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .delivery-item { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 11px; }
 .delivery-item:last-child { border-bottom: none; }
 .d-status { color: var(--yellow); font-weight: 600; text-transform: uppercase; font-size: 10px; }
-.d-agent { color: var(--blue); font-weight: 600; }
+.d-agent { color: var(--accent); font-weight: 600; }
 
 /* User-post visual treatment (#1731 pain #4) — orange accent so user
    contributions stand out from agent posts. The `::before` injects a
@@ -106,9 +101,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .thread-bar { padding: 8px 24px; border-bottom: 1px solid var(--border); background: var(--bg); display: none; align-items: center; gap: 12px; font-size: 12px; color: var(--text2); flex-shrink: 0; }
 .thread-bar.shown { display: flex; }
 .thread-bar select { background: var(--bg2); color: var(--text); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-size: 12px; max-width: 480px; font-family: inherit; }
-.thread-bar select:focus { outline: none; border-color: var(--blue); }
+.thread-bar select:focus { outline: none; border-color: var(--accent); }
 .thread-bar .thread-meta { color: var(--text3); font-size: 11px; }
-.thread-bar .clear-filter { color: var(--blue); cursor: pointer; font-size: 11px; }
+.thread-bar .clear-filter { color: var(--accent); cursor: pointer; font-size: 11px; }
 .thread-bar .clear-filter:hover { text-decoration: underline; }
 
 /* Live-discussion strip (#1731 pain #5) — green pulse + per-agent
@@ -124,7 +119,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .discussion-strip .ds-participant { padding: 2px 8px; border-radius: 10px; font-size: 11px; background: var(--bg2); border: 1px solid var(--border); color: var(--text3); }
 .discussion-strip .ds-participant.done { color: var(--text); border-color: var(--text3); }
 .discussion-strip .ds-participant.agreed { color: var(--green); border-color: var(--green); background: rgba(63,185,80,0.15); font-weight: 600; }
-.discussion-strip .ds-jump { margin-left: auto; cursor: pointer; color: var(--blue); font-size: 11px; }
+.discussion-strip .ds-jump { margin-left: auto; cursor: pointer; color: var(--accent); font-size: 11px; }
 .discussion-strip .ds-jump:hover { text-decoration: underline; }
 
 /* Make sure messages-area stays the only flex-grow child below the
@@ -133,7 +128,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
    off-screen on narrow viewports. */
 .messages-area { flex: 1 1 0; min-height: 0; }
 </style>
-<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
