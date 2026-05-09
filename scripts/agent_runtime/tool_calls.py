@@ -42,7 +42,23 @@ def parse_json_events(text: str, *, source: str, logger: logging.Logger) -> list
     Each line may be a JSON object, or a debug line containing one JSON object.
     Malformed candidate lines are logged and skipped so CLI version drift does
     not crash the adapter parse path.
+
+    Gemini session traces are JSONL in current CLI versions, for example:
+        {"type":"user","content":[{"text":"..."}]}
+        {"type":"gemini","toolCalls":[{"name":"mcp__sources__verify_words",
+         "args":{"words":["кіт"]}}]}
     """
+    stripped = text.strip()
+    if stripped:
+        try:
+            parsed = json.loads(stripped)
+        except json.JSONDecodeError:
+            parsed = None
+        if isinstance(parsed, dict):
+            return [parsed]
+        if isinstance(parsed, list):
+            return [item for item in parsed if isinstance(item, dict)]
+
     events: list[dict[str, Any]] = []
     for lineno, raw_line in enumerate(text.splitlines(), start=1):
         line = raw_line.strip()
