@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Activity Pedagogy — Type System and Allowlist Matrix</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Activity Pedagogy — Type System and Allowlist Matrix</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: activity-pedagogy.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Activity Pedagogy — Type System and Allowlist Matrix</h1>
+<blockquote>
+<p><strong>Scope:</strong> WHICH activity types belong at WHICH CEFR level, and why.
+<strong>Complementary doc:</strong> <a href="vocabulary-activity-standards.md"><code>vocabulary-activity-standards.md</code></a> covers YAML format, property names, quoting, and validation. This doc covers pedagogical progression and the level → type allowlist.
+<strong>Source of truth:</strong> <a href="../../scripts/pipeline/config_tables.py"><code>scripts/pipeline/config_tables.py</code></a> — <code>ACTIVITY_CONFIGS</code>, <code>INLINE_ONLY_TYPES</code>, <code>WORKBOOK_ONLY_TYPES</code>.
+<strong>Enforcement:</strong> <a href="../../scripts/build/activity_repair.py"><code>scripts/build/activity_repair.py</code></a> drops out-of-allowlist activities and moves misplaced ones between inline/workbook.</p>
+</blockquote>
+<hr />
+<h2>1. The 8+1 Pedagogical Principles</h2>
+<p>These are the rules that govern the level → type allowlist matrix in <code>ACTIVITY_CONFIGS</code>. Every change to the matrix must keep all eight principles intact. The +1 is a known gap (dictation) that is tracked separately.</p>
+<h3>Principle 1 — Puzzle-gamification fades with level</h3>
+<p>Pure puzzle types — <code>anagram</code>, <code>unjumble</code>, <code>order</code>, <code>odd-one-out</code>, <code>observe</code>, <code>phrase-table</code>, <code>classify</code> — are beginner dopamine hits. They decrease as the learner matures.</p>
+<p>| Level | Puzzle density |
+|---|---|
+| A1, A2 | Heavy |
+| B1 | Present (sparingly, one per module for variety) |
+| B2 and above | Gone |</p>
+<p><code>match-up</code> and <code>group-sort</code> are <strong>not</strong> puzzle-gamification — they are legitimate comprehension checks used in Ukrainian academic materials and ZNO exams through C2.</p>
+<h3>Principle 2 — A1 phonetics never reappear</h3>
+<p><code>image-to-letter</code>, <code>letter-grid</code>, <code>watch-and-repeat</code>, <code>divide-words</code>, <code>count-syllables</code>, <code>pick-syllables</code> are A1-only tools for learning to read Cyrillic. Forbidden at A2 and above — the learner already decodes fluently.</p>
+<h3>Principle 3 — Metalinguistic analysis earns in at B1</h3>
+<p>| Type | First allowed |
+|---|---|
+| <code>mark-the-words</code> | A2 (sparingly, grammar spotting) |
+| <code>grammar-identify</code> | B1 |
+| <code>highlight-morphemes</code> | B1 |</p>
+<p>These require naming grammatical categories in Ukrainian — wait until the learner has the metalanguage.</p>
+<h3>Principle 4 — Production-long earns in at B1</h3>
+<p>| Type | First allowed | Rationale |
+|---|---|---|
+| <code>essay-response</code> | B1 | Learner has enough morphology to write a paragraph |
+| <code>reading</code> (long passage) | B2 | Learner can process 200+ word passages |
+| <code>translation-critique</code> | B2 | Requires register awareness |
+| <code>critical-analysis</code> | C1 | Requires academic Ukrainian |</p>
+<p>These take 10–15 minutes each. They live in the workbook, never inline.</p>
+<h3>Principle 5 — Zero gamification in seminars</h3>
+<p>HIST, BIO, ISTORIO, LIT, OES, RUTH are <strong>content tracks</strong>. Zero puzzle types. Only reading → evaluation → writing. The &quot;tab&quot; metaphor (inline/workbook) stays; the puzzle metaphor goes.</p>
+<p>Inline checks use only <code>quiz</code>, <code>true-false</code>, <code>fill-in</code>, <code>mark-the-words</code>, <code>match-up</code> — just enough to verify comprehension without breaking scholarly tone.</p>
+<h3>Principle 6 — No seminar in early language levels</h3>
+<p><code>essay-response</code>, <code>reading</code>, <code>critical-analysis</code> are <strong>never</strong> allowed at A1 (not enough Ukrainian to read a passage).</p>
+<ul>
+<li><code>essay-response</code> — from B1</li>
+<li><code>reading</code> — from B2</li>
+<li><code>critical-analysis</code> — from C1</li>
+</ul>
+<h3>Principle 7 — Philological types are track-gated</h3>
+<p>| Type | Allowed tracks |
+|---|---|
+| <code>etymology-trace</code> | C1, C2 (as &quot;word history&quot;), OES, RUTH (as discipline) |
+| <code>paleography-analysis</code> | OES, RUTH only |
+| <code>transcription</code> | OES, RUTH only |
+| <code>dialect-comparison</code> | RUTH only |</p>
+<h3>Principle 8 — ZNO (TODO, deferred schema)</h3>
+<p>Issue <a href="https://github.com/anthropics/learn-ukrainian/issues/715">#715</a> tracks ZNO integration. The plan is a dedicated <code>zno</code> type with 8 subcategories (наголос, пароніми, орфографія, case endings, lexical choice, phonetics, word formation, punctuation), added at the schema level before the B2 content build. When the type lands, append it to the WORKBOOK allowlists for B2, C1, C2, B2-PRO, C1-PRO.</p>
+<p>Interim: ZNO questions are generated as <code>quiz</code> with a ZNO-style question bank.</p>
+<h3>Principle +1 — Dictation (диктант) is a known gap</h3>
+<p>Ukrainian pedagogy's most iconic exercise has no schema type yet. A <code>dictation</code> type (audio → text input with stress and orthography checking) is required and will be central at A1–B1. Tracked separately from <a href="https://github.com/anthropics/learn-ukrainian/issues/1185">#1185</a>; file a schema ticket before the next A1 revision batch.</p>
+<hr />
+<h2>2. Activity Types Classified by Pedagogical DNA</h2>
+<p>37 types total (36 active + 1 deprecated). Each entry: purpose, level range.</p>
+<h3>Phonetics / Alphabet (A1 only)</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>image-to-letter</code> | Click the picture whose name starts with a given Cyrillic letter | A1 inline |
+| <code>letter-grid</code> | Alphabet reference grid with hover/click audio | A1 inline |
+| <code>watch-and-repeat</code> | Pronunciation video with repeat prompt | A1 inline |
+| <code>divide-words</code> | Split a word into syllables visually | A1 inline + workbook |
+| <code>count-syllables</code> | Count syllables in a word | A1 inline + workbook |
+| <code>pick-syllables</code> | Choose the correct syllable to complete a word | A1 inline + workbook |</p>
+<p>Gone forever from A2 onward. Principle 2.</p>
+<h3>Puzzle-gamification (fades by B2)</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>anagram</code> | Unscramble letters into a word | A1 workbook only |
+| <code>unjumble</code> | Reorder shuffled words into a correct sentence | A1–B1 |
+| <code>order</code> | Put items in correct sequence (chronological, logical) | A1–B1 |
+| <code>odd-one-out</code> | Pick the item that doesn't belong with the rest | A1–B1 |
+| <code>observe</code> | Study a picture/diagram and answer | A1–A2 |
+| <code>phrase-table</code> | Fill cells in a substitution table | A1–A2 |
+| <code>classify</code> | Assign items to categories (listed in comment, not currently in any allowlist; deprecated in favor of <code>group-sort</code>) | — |</p>
+<h3>Sort / Match (not gamification, runs through C2)</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>match-up</code> | Pair items between two columns (word↔translation, question↔answer, term↔definition) | A1 through seminars and C1-core |
+| <code>group-sort</code> | Assign items to 2+ bins (gender, case, aspect, register) | A1 through B2-PRO |</p>
+<p>These survive because Ukrainian school materials and ZNO exams use them at every level. They are comprehension, not puzzle.</p>
+<h3>Core comprehension checks</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>quiz</code> | Multiple-choice question with 2–5 options | All tracks, all levels |
+| <code>true-false</code> | Judge a statement against the text | A1–B2, all seminars except C1/C2-core |
+| <code>fill-in</code> | Short-answer blank in a single sentence | All tracks, all levels |
+| <code>mark-the-words</code> | Click every word matching a criterion in a passage | A2 onward, all tracks |</p>
+<h3>Production (short → long)</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>error-correction</code> | Find and fix errors in given sentences | A1 workbook onward, core tracks only |
+| <code>cloze</code> | Multi-blank passage, 14+ gaps | A2–C1, workbook only (Principle 4) |
+| <code>translate</code> | Translate sentences between UK and EN | A1–C1, workbook only. <strong>Gone at C2</strong> — at C2 translation is professional, not exercise; use <code>translation-critique</code> |</p>
+<h3>Metalinguistic (earns in at B1)</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>grammar-identify</code> | Name the grammatical category of a highlighted form (case, aspect, tense) | B1–C2 core, B2/C1-PRO, OES, RUTH |
+| <code>highlight-morphemes</code> | Mark prefix/root/suffix/ending in words | B1 onward in core, central in OES/RUTH |</p>
+<h3>Academic / long-form</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>essay-response</code> | 50–500 word free writing to a prompt | B1+ and all seminars, workbook only |
+| <code>reading</code> | Long passage (200+ words) + comprehension questions | B2+ and all seminars, workbook only |
+| <code>critical-analysis</code> | Deep argumentative response to a claim or source | C1+, all seminars, workbook only |
+| <code>translation-critique</code> | Compare two translations of the same Ukrainian text | B2+, LIT, workbook only |
+| <code>comparative-study</code> | Multi-text comparison | C1+, all seminars except pure HIST early, workbook only |</p>
+<h3>Seminar-specific</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>source-evaluation</code> | Scholarly evaluation of a primary source's reliability | HIST, BIO, ISTORIO, workbook only |
+| <code>authorial-intent</code> | Analyze why an author wrote something a particular way | C2, BIO, LIT, workbook only |
+| <code>debate</code> | Multi-turn argumentative exchange on a thesis | C2, LIT, workbook only |</p>
+<h3>Philological (OES / RUTH)</h3>
+<p>| Type | Purpose | Where |
+|---|---|---|
+| <code>etymology-trace</code> | Trace a word through historical stages | C1, C2, OES, RUTH, workbook only |
+| <code>paleography-analysis</code> | Analyze script / manuscript features | OES, RUTH, workbook only |
+| <code>transcription</code> | Transcribe from old orthography to modern | OES, RUTH, workbook only |
+| <code>dialect-comparison</code> | Compare forms across Ukrainian dialects | RUTH only, workbook only |</p>
+<h3>Deprecated</h3>
+<p>| Type | Status |
+|---|---|
+| <code>select</code> | Legacy, subsumed by <code>mark-the-words</code>. Listed in every level's <code>FORBIDDEN_ACTIVITY_TYPES</code>. New content must not produce it. |</p>
+<hr />
+<h2>3. Full Allowlist Matrix</h2>
+<p>Rows = levels, columns = activity types. Cell legend:</p>
+<ul>
+<li><code>B</code> — allowed in <strong>b</strong>oth inline and workbook</li>
+<li><code>I</code> — <strong>i</strong>nline only</li>
+<li><code>W</code> — <strong>w</strong>orkbook only</li>
+<li><code>-</code> — not allowed at this level</li>
+</ul>
+<p>This matrix is generated directly from <code>ACTIVITY_CONFIGS</code>. To regenerate, see the script in section 5.</p>
+<h3>Counts per level</h3>
+<p>| Level | Total | Inline min–max | Workbook min–max | Items min | Vocab target |
+|---|---|---|---|---|---|
+| a1 | 10 | 4–6 | 6–9 | 6 | 20 |
+| a2 | 12 | 4–6 | 8–11 | 8 | 25 |
+| b1-core | 16 | 5–7 | 11–15 | 8 | 30 |
+| b2 | 16 | 5–7 | 11–15 | 8 | 30 |
+| c1-core | 16 | 5–7 | 11–15 | 8 | 30 |
+| c2 | 12 | 4–5 | 8–10 | 6 | 30 |
+| hist | 10 | 3–4 | 7–9 | 4 | 25 |
+| bio | 10 | 3–4 | 7–9 | 4 | 30 |
+| istorio | 10 | 3–4 | 7–9 | 4 | 30 |
+| lit | 10 | 3–4 | 7–9 | 4 | 0 (no vocab gate) |
+| b2-pro | 12 | 4–5 | 8–10 | 6 | 35 |
+| c1-pro | 12 | 4–5 | 8–10 | 6 | 40 |
+| oes | 10 | 3–4 | 7–9 | 4 | 35 |
+| ruth | 10 | 3–4 | 7–9 | 4 | 35 |</p>
+<h3>Type → level matrix</h3>
+<p>| Type | a1 | a2 | b1-core | b2 | c1-core | c2 | hist | bio | istorio | lit | b2-pro | c1-pro | oes | ruth |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| image-to-letter      | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| letter-grid          | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| watch-and-repeat     | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| divide-words         | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| count-syllables      | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| pick-syllables       | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| anagram              | W | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| unjumble             | B | B | B | - | - | - | - | - | - | - | - | - | - | - |
+| order                | B | B | B | - | - | - | - | - | - | - | - | - | - | - |
+| odd-one-out          | B | B | W | - | - | - | - | - | - | - | - | - | - | - |
+| observe              | B | B | - | - | - | - | - | - | - | - | - | - | - | - |
+| phrase-table         | B | W | - | - | - | - | - | - | - | - | - | - | - | - |
+| classify             | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| match-up             | B | B | B | B | I | - | I | I | I | I | B | I | - | - |
+| group-sort           | B | B | B | B | - | - | - | - | - | - | W | - | - | - |
+| quiz                 | B | B | B | I | I | I | I | I | I | I | I | I | I | I |
+| true-false           | B | B | B | B | - | - | I | I | I | I | I | - | I | I |
+| fill-in              | B | B | B | B | B | I | I | I | I | I | B | B | I | I |
+| mark-the-words       | - | B | B | B | B | I | B | B | B | B | B | B | B | B |
+| error-correction     | W | B | B | B | B | W | - | - | - | - | B | B | - | - |
+| cloze                | - | W | W | W | W | W | - | - | - | - | W | W | - | - |
+| translate            | W | W | W | W | W | - | - | - | - | - | W | W | - | - |
+| grammar-identify     | - | - | B | B | B | B | - | - | - | - | B | B | B | B |
+| highlight-morphemes  | - | - | B | B | B | B | - | - | - | - | B | B | B | B |
+| essay-response       | - | - | W | W | W | W | W | W | W | W | W | W | W | W |
+| reading              | - | - | - | W | W | W | W | W | W | W | W | W | W | W |
+| critical-analysis    | - | - | - | - | W | W | W | W | W | W | - | W | W | W |
+| translation-critique | - | - | - | W | W | W | - | - | - | W | W | W | - | - |
+| comparative-study    | - | - | - | - | W | W | W | W | W | W | - | W | W | W |
+| source-evaluation    | - | - | - | - | - | - | W | W | W | - | - | - | - | - |
+| authorial-intent     | - | - | - | - | - | W | - | W | - | W | - | - | - | - |
+| debate               | - | - | - | - | - | W | - | - | - | W | - | - | - | - |
+| etymology-trace      | - | - | - | - | W | W | - | - | - | - | - | - | W | W |
+| paleography-analysis | - | - | - | - | - | - | - | - | - | - | - | - | W | W |
+| dialect-comparison   | - | - | - | - | - | - | - | - | - | - | - | - | - | W |
+| transcription        | - | - | - | - | - | - | - | - | - | - | - | - | W | W |</p>
+<p>Reading the matrix:</p>
+<ul>
+<li>A column full of <code>-</code> except for A1 means a phonetics type (Principle 2).</li>
+<li>Puzzle-gamification types (<code>anagram</code>, <code>unjumble</code>, <code>order</code>, <code>odd-one-out</code>, <code>observe</code>, <code>phrase-table</code>) form a triangle shrinking from A1 to B1, then empty from B2 onward (Principle 1).</li>
+<li><code>quiz</code>, <code>fill-in</code>, <code>mark-the-words</code>, <code>match-up</code> are the backbone rows — present at almost every level.</li>
+<li>The bottom block (<code>essay-response</code> through <code>transcription</code>) is strictly workbook-only production/academic types, earning in at progressively higher levels (Principles 4, 6, 7).</li>
+</ul>
+<hr />
+<h2>4. Special Rules (Semantic Placement)</h2>
+<p>Two sets in <code>config_tables.py</code> override the per-level allowlist for <strong>placement only</strong>. A type in these sets is restricted regardless of level config.</p>
+<h3><code>INLINE_ONLY_TYPES</code></h3>
+<pre><code>image-to-letter, letter-grid, watch-and-repeat
+</code></pre>
+<p>These are short visual aids that cannot work inside the workbook tab. If a writer puts one in workbook, the repair step (<code>activity_repair.py</code> FIX 4) moves it to inline.</p>
+<h3><code>WORKBOOK_ONLY_TYPES</code></h3>
+<pre><code>essay-response, reading, cloze, critical-analysis,
+source-evaluation, debate, comparative-study,
+authorial-intent, translation-critique,
+etymology-trace, paleography-analysis,
+transcription, dialect-comparison
+</code></pre>
+<p>These are long-form types that would break prose flow if placed inline. The repair step moves them to workbook.</p>
+<h3>How <code>activity_repair.py</code> enforces the allowlist</h3>
+<p>See <a href="../../scripts/build/activity_repair.py"><code>scripts/build/activity_repair.py</code></a>. The relevant fixes:</p>
+<ol>
+<li><strong>FIX 4 — Section placement.</strong> Walks inline list; any activity whose type is in <code>WORKBOOK_ONLY_TYPES</code> is moved to the workbook list. Walks workbook list; any activity whose type is in <code>INLINE_ONLY_TYPES</code> is moved to inline and assigned a stable id.</li>
+<li><strong>FIX 5 — Allowlist violations.</strong> Collects every activity whose type is not in the per-level <code>INLINE_ALLOWED_TYPES</code> or <code>WORKBOOK_ALLOWED_TYPES</code> for its section. Drops them from the YAML.</li>
+<li><strong>Regen trigger.</strong> After drops, if <code>len(inline) &lt; INLINE_MIN</code> or <code>len(workbook) &lt; WORKBOOK_MIN</code>, the module is marked <code>needs_regen</code> and the pipeline re-runs the activities step. Otherwise the repaired YAML ships as-is.</li>
+</ol>
+<p>The writer is never asked to &quot;please respect the allowlist&quot; in the prompt — the prompt ships the allowed set as the complete list of options, and the repair step deterministically corrects any drift. This is faster, cheaper, and more reliable than nagging an LLM.</p>
+<hr />
+<h2>5. How to Change the System</h2>
+<p><strong>There is one place to edit: <code>ACTIVITY_CONFIGS</code> in <a href="../../scripts/pipeline/config_tables.py"><code>scripts/pipeline/config_tables.py</code></a>.</strong> Do not scatter allowlists into writer prompts, review prompts, or schema files. The config loader resolves level-aware settings from this single dict.</p>
+<h3>Change workflow</h3>
+<ol>
+<li><strong>Edit the config.</strong> Change <code>INLINE_ALLOWED_TYPES</code>, <code>WORKBOOK_ALLOWED_TYPES</code>, <code>FORBIDDEN_ACTIVITY_TYPES</code>, and <code>INLINE_PRIORITY_TYPES</code> / <code>WORKBOOK_PRIORITY_TYPES</code> together. Keep the legacy <code>ALLOWED_ACTIVITY_TYPES</code> field as the union of inline + workbook. Verify all 8 principles still hold.</li>
+<li><strong>Run the in-wild survey script</strong> (below) to see which existing activity YAMLs would be affected. This reports how many activities per level would be dropped under the new allowlist.</li>
+<li><strong>Verify no unintended drops.</strong> Any drop should match a principle. If the script reports a drop you didn't expect, investigate whether the existing YAML is wrong or your config change is too strict.</li>
+<li>If the change adds a new level, add the full entry to <code>ACTIVITY_CONFIGS</code> — the loader reads it by key. If the change adds a new activity type, also update the schema file (<code>schemas/activities-*.schema.json</code>) and the type list in section 2 of this doc.</li>
+</ol>
+<h3>In-wild survey script</h3>
+<p>Save as a one-off or run from a REPL. Walks all activity YAMLs under <code>curriculum/l2-uk-en/{level}/activities/</code>, counts types per section, and reports gaps against the current config.</p>
+<pre><code class="language-python">&quot;&quot;&quot;Survey activity YAMLs against the current allowlist.
+
+Reports, per level:
+- total modules
+- inline/workbook types currently in use
+- types that would be dropped under the live config
+- modules that would fall below INLINE_MIN/WORKBOOK_MIN after drops
+&quot;&quot;&quot;
+import sys, collections, pathlib, yaml
+sys.path.insert(0, 'scripts')
+from pipeline.config_tables import (
+    ACTIVITY_CONFIGS, INLINE_ONLY_TYPES, WORKBOOK_ONLY_TYPES,
+)
+
+CURRICULUM = pathlib.Path(&quot;curriculum/l2-uk-en&quot;)
+
+def parse_types(csv: str) -&gt; set[str]:
+    return {t.strip() for t in csv.split(&quot;,&quot;) if t.strip()}
+
+def survey(level: str) -&gt; None:
+    cfg = ACTIVITY_CONFIGS.get(level)
+    if not cfg:
+        print(f&quot;[{level}] no config — skipping&quot;)
+        return
+    inline_allowed = parse_types(cfg[&quot;INLINE_ALLOWED_TYPES&quot;])
+    wb_allowed = parse_types(cfg[&quot;WORKBOOK_ALLOWED_TYPES&quot;])
+    imin = int(cfg[&quot;INLINE_MIN&quot;])
+    wmin = int(cfg[&quot;WORKBOOK_MIN&quot;])
+
+    act_dir = CURRICULUM / level / &quot;activities&quot;
+    if not act_dir.is_dir():
+        print(f&quot;[{level}] no activities dir&quot;)
+        return
+
+    inline_counter: collections.Counter = collections.Counter()
+    wb_counter: collections.Counter = collections.Counter()
+    drops_inline: collections.Counter = collections.Counter()
+    drops_wb: collections.Counter = collections.Counter()
+    under_min = []
+
+    files = sorted(act_dir.glob(&quot;*.yaml&quot;))
+    for f in files:
+        try:
+            data = yaml.safe_load(f.read_text()) or {}
+        except yaml.YAMLError:
+            continue
+        inline = [a for a in (data.get(&quot;inline&quot;) or []) if isinstance(a, dict)]
+        workbook = [a for a in (data.get(&quot;workbook&quot;) or []) if isinstance(a, dict)]
+
+        kept_inline = 0
+        for a in inline:
+            t = a.get(&quot;type&quot;, &quot;&quot;)
+            inline_counter[t] += 1
+            # Simulate repair: WORKBOOK_ONLY moves to workbook, else check allowlist
+            if t in WORKBOOK_ONLY_TYPES:
+                if t in wb_allowed:
+                    pass  # would be moved, still kept
+                else:
+                    drops_wb[t] += 1
+            elif t not in inline_allowed:
+                drops_inline[t] += 1
+            else:
+                kept_inline += 1
+
+        kept_wb = 0
+        for a in workbook:
+            t = a.get(&quot;type&quot;, &quot;&quot;)
+            wb_counter[t] += 1
+            if t in INLINE_ONLY_TYPES:
+                if t in inline_allowed:
+                    pass
+                else:
+                    drops_inline[t] += 1
+            elif t not in wb_allowed:
+                drops_wb[t] += 1
+            else:
+                kept_wb += 1
+
+        if kept_inline &lt; imin or kept_wb &lt; wmin:
+            under_min.append((f.stem, kept_inline, kept_wb))
+
+    print(f&quot;\n[{level}] {len(files)} modules&quot;)
+    print(f&quot;  inline types in use:   {dict(inline_counter)}&quot;)
+    print(f&quot;  workbook types in use: {dict(wb_counter)}&quot;)
+    if drops_inline:
+        print(f&quot;  WOULD DROP inline:   {dict(drops_inline)}&quot;)
+    if drops_wb:
+        print(f&quot;  WOULD DROP workbook: {dict(drops_wb)}&quot;)
+    if under_min:
+        print(f&quot;  WOULD FALL BELOW MIN ({imin}i + {wmin}w):&quot;)
+        for slug, i, w in under_min:
+            print(f&quot;    {slug}: {i} inline, {w} workbook&quot;)
+
+for lvl in [&quot;a1&quot;, &quot;a2&quot;, &quot;b1-core&quot;, &quot;b2&quot;, &quot;c1-core&quot;, &quot;c2&quot;,
+            &quot;hist&quot;, &quot;bio&quot;, &quot;istorio&quot;, &quot;lit&quot;, &quot;b2-pro&quot;, &quot;c1-pro&quot;,
+            &quot;oes&quot;, &quot;ruth&quot;]:
+    survey(lvl)
+</code></pre>
+<p>A clean run prints zero <code>WOULD DROP</code> lines. If any appear, decide case-by-case: drop is intentional (content is stale under the new rules → regen those modules) or unintentional (config is too strict → relax).</p>
+<hr />
+<h2>6. History</h2>
+<ul>
+<li><strong>2026-04-10 (issue <a href="https://github.com/anthropics/learn-ukrainian/issues/1185">#1185</a>)</strong> — One-shot comprehensive tuning of <code>ACTIVITY_CONFIGS</code> for all 14 levels. Adversarial review by Gemini (<code>gemini-3.1-pro-preview</code>) found 7 fixable issues plus a schema gap (dictation). All 7 fixes applied; dictation tracked separately as a schema ticket.</li>
+</ul>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plan References Triage - 2026-05-08</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Plan References Triage - 2026-05-08</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: plan-references-triage-2026-05-08.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Plan References Triage - 2026-05-08</h1>
+<p><strong>Issue:</strong> #1770
+<strong>Scope:</strong> Triage 32 plans citing missing textbooks.
+<strong>Goal:</strong> Unblock plan review by deciding whether to ingest the textbook, amend the plan to an in-corpus equivalent, or defer.</p>
+<h2>Per-Textbook Ingestion Priority</h2>
+<p>| Textbook | Priority | Availability | Rationale / Recommendation |
+| --- | --- | --- | --- |
+| <strong>Кравцова Grade 4</strong> | HIGH | ✅ PDF in <code>data/textbooks/grade-04/</code> | Cited by 11 A1-B1 plans. Critical to unblock. Option A (Ingest). |
+| <strong>Варзацька Grade 4</strong> | HIGH | ✅ PDF + TXT available | Cited by 5 A1-B1 plans. Already partially in <code>docs/references/textbooks-txt/</code>. Option A (Ingest). |
+| <strong>Пономарьова Grade 3 &amp; 4</strong> | HIGH | ✅ PDFs in <code>data/textbooks/</code> | Cited by 3 A1/A2 plans. Option A (Ingest). |
+| <strong>Кравцова 3 клас</strong> | HIGH | ✅ PDF in <code>data/textbooks/grade-03/</code> | Cited by 1 B1 plan. Option A (Ingest). |
+| <strong>Заболотний 4 клас / 4-5 клас</strong> | LOW | ❌ Not in <code>data/textbooks/</code> | Заболотний generally doesn't write Grade 4 textbooks. Likely a hallucinated author attribution for generic grammar. Option B (Amend to Захарійчук 4 клас). |
+| <strong>Большакова Grade 2 &amp; 4</strong> | MED | ❓ TBD | Not found in <code>data/textbooks/</code>. Cited by 3 plans. Option B (Amend to Захарійчук or Кравцова) is faster, or Option A if user fetches PDF. |
+| <strong>Вашуленко Grade 4</strong> | MED | ❓ TBD | Not found in <code>grade-04</code> list (though Grade 3 is present). Option B (Amend) or C (Defer) until fetched. |
+| <strong>Заболотний 7 клас (2015)</strong> | LOW | ❓ TBD | Cited by B2 plans (not a priority per #1577). Option C (Defer) or A (Ingest) later. |
+| <strong>Таблиця відмінків за 4 клас</strong> | LOW | N/A | Generic reference. Option B (Amend to a real textbook). |</p>
+<h2>Per-Plan Verdict</h2>
+<h3>A — Ingest Textbook (19 plans)</h3>
+<p>The textbook is real, available offline, and highly cited. We should ingest it into <code>data/sources.db</code>.</p>
+<p>| Plan | Target Textbook | Tag |
+| --- | --- | --- |
+| <code>a1/my-morning</code> | Кравцова Grade 4 | <code>[A1-PRIORITY]</code> |
+| <code>a2/checkpoint-dative</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/dative-nouns</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/instrumental-means</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/instrumental-profession</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/plural-other-cases</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/services-and-communication</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/work-and-food</code> | Кравцова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>b1/b1-baseline-future-aspect</code> | Кравцова Grade 4 | <code>[B1-PRIORITY]</code> |
+| <code>b1/instrumental-nuances</code> | Кравцова Grade 4 | <code>[B1-PRIORITY]</code> |
+| <code>b1/reflexive-verbs-nuances</code> | Кравцова Grade 4 | <code>[B1-PRIORITY]</code> |
+| <code>a1/questions</code> | Варзацька Grade 4 | <code>[A1-PRIORITY]</code> |
+| <code>a1/verbs-group-one</code> | Варзацька Grade 4 | <code>[A1-PRIORITY]</code> |
+| <code>a2/all-cases-practice</code> | Варзацька Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>a2/checkpoint-cases</code> | Варзацька Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>b1/narrative-mastery</code> | Варзацька Grade 4 | <code>[B1-PRIORITY]</code> |
+| <code>a1/things-have-gender</code> | Пономарьова Grade 3 | <code>[A1-PRIORITY]</code> |
+| <code>a1/what-is-it-like</code> | Пономарьова Grade 3 | <code>[A1-PRIORITY]</code> |
+| <code>a2/instrumental-accompaniment</code> | Пономарьова Grade 4 | <code>[A2-PRIORITY]</code> |
+| <code>b1/traveling-ukraine</code> | Кравцова 3 клас | <code>[B1-PRIORITY]</code> |</p>
+<h3>B — Amend Plan (9 plans)</h3>
+<p>The textbook citation is dubious, generic, or an equivalent in-corpus textbook exists. We should edit the YAML to point to an ingested book like <code>Захарійчук Grade 4</code> (or <code>Кравцова</code> once ingested).</p>
+<p>| Plan | Current Citation | Recommendation | Tag |
+| --- | --- | --- | --- |
+| <code>a1/hey-friend</code> | Заболотний 4 клас (Кличний) | Amend to <code>Захарійчук Grade 4</code> (or <code>Варзацька</code>). | <code>[A1-PRIORITY]</code> |
+| <code>a1/i-eat-i-drink</code> | Заболотний 4 клас (Знахідний) | Amend to <code>Захарійчук Grade 4</code>. | <code>[A1-PRIORITY]</code> |
+| <code>a1/people-around-me</code> | Заболотний 4 клас (Знахідний) | Amend to <code>Захарійчук Grade 4</code>. | <code>[A1-PRIORITY]</code> |
+| <code>a1/linking-ideas</code> | Заболотний 4-5 клас (Сполучники) | Amend to <code>Захарійчук Grade 4</code> or <code>Літвінова 5 клас</code>. | <code>[A1-PRIORITY]</code> |
+| <code>a1/where-to</code> | Таблиця відмінків за 4 клас | Amend to <code>Захарійчук Grade 4</code> (or <code>Кравцова</code>). | <code>[A1-PRIORITY]</code> |
+| <code>a2/metalanguage-sentences-and-classroom</code> | Большакова Grade 4 | Amend to <code>Захарійчук Grade 4</code>. Большакова is missing. | <code>[A2-PRIORITY]</code> |
+| <code>a2/metalanguage-words-and-cases</code> | Большакова Grade 4 | Amend to <code>Захарійчук Grade 4</code>. | <code>[A2-PRIORITY]</code> |
+| <code>b1/nature-and-environment</code> | Большакова Grade 2 | Amend to <code>Цепова 2 клас</code> (which is in <code>txt</code> format). | <code>[B1-PRIORITY]</code> |
+| <code>a2/metalanguage-verbs-and-time</code> | Вашуленко Grade 4 | Amend to <code>Захарійчук Grade 4</code> or ingest if found. | <code>[A2-PRIORITY]</code> |</p>
+<h3>C — Defer Plan (3 plans)</h3>
+<p>The module is not a priority right now (B2+) and the textbook is missing or needs later ingestion.</p>
+<p>| Plan | Missing Textbook | Rationale | Tag |
+| --- | --- | --- | --- |
+| <code>b2/kharchuvannia-i-kukhnia</code> | Заболотний, 7 клас (2015) | B2 is not an immediate priority. Needs ingestion. | <code>[B2]</code> |
+| <code>b2/pobut-shchodenne</code> | Заболотний, 7 клас (2015) | Same as above. | <code>[B2]</code> |
+| <code>b2/sport-i-dozvillia</code> | Заболотний, 7 клас (2015) | Same as above. | <code>[B2]</code> |</p>
+<h2>Recommended Action Plan</h2>
+<ol>
+<li><strong>Immediate Unblock (A1/A2/B1):</strong>
+<ul>
+<li>Run dictionary pipeline ingestion for <code>Кравцова Grade 4</code>, <code>Кравцова 3 клас</code>, <code>Варзацька Grade 4</code>, and <code>Пономарьова Grade 3 &amp; 4</code>. This single action will rescue 20 priority plans.</li>
+</ul>
+</li>
+<li><strong>YAML Fixes:</strong>
+<ul>
+<li>Open a PR to amend the 9 Option B plans to cite <code>Захарійчук Grade 4</code> or other fully-ingested alternatives. This eliminates the ghost citations (like the hallucinated &quot;Заболотний 4 клас&quot;).</li>
+</ul>
+</li>
+<li><strong>Defer B2:</strong>
+<ul>
+<li>Keep the 3 B2 plans blocked/deferred until B2 scaling begins.</li>
+</ul>
+</li>
+</ol>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1852,6 +1852,55 @@ store summaries rather than full arguments or raw tool results.
 
 ---
 
+## Documentation Artifacts — `/artifacts/` (#1814)
+
+> **Mounted prefix:** `/artifacts` (NOT `/api/artifacts` and NOT `/files`).
+> Browser-friendly: `localhost:8765/artifacts/docs/session-state/2026-05-09-late-night-gemini-tools-cwd-fix.html` renders the HTML directly. The `/api/` prefix is reserved for JSON endpoints.
+
+Local API serving for project documentation, reports, and session state. Supports
+both directory listings and raw file serving (HTML, MD, assets).
+
+### `GET /artifacts/`
+
+List all approved documentation roots. Returns a list of root IDs and their
+filesystem status.
+
+```json
+{
+  "roots": [
+    {"id": "audit", "path": "audit", "exists": true},
+    {"id": "docs/session-state", "path": "docs/session-state", "exists": true},
+    ...
+  ]
+}
+```
+
+### `GET /artifacts/{path:path}`
+
+Serve a documentation artifact or list a subdirectory.
+
+- **Directory listing**: If the path resolves to a directory, returns a JSON
+  object with root metadata and a list of items (name, size, mtime).
+- **File serving**: If the path resolves to a file, serves the raw content with
+  appropriate MIME type and `Cache-Control: max-age=300`.
+
+**Approved Roots:**
+- `audit/`
+- `docs/session-state/`
+- `docs/handoffs/`
+- `docs/reports/`
+- `docs/architecture/`
+- `docs/best-practices/`
+- `docs/decisions/`
+- `docs/references/external/`
+
+**Supported Extensions:**
+- `.html`, `.md`, `.txt`
+- `.png`, `.jpg`, `.jpeg`, `.svg`, `.webp`
+- `.pdf`
+
+---
+
 ## Local Agent Deterministic State — `/api/agent/`
 
 Read-only deterministic endpoints for agent coordination and deep debugging. Used to avoid repeated shell polling (e.g., `rg`, `ps`, `git status`).

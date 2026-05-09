@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ADR-008: Targeted gate-specific correction paths</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>ADR-008: Targeted gate-specific correction paths</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: 2026-04-28-targeted-gate-correction-paths.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>ADR-008: Targeted gate-specific correction paths</h1>
+<p><strong>Status</strong>: ACCEPTED 2026-05-05 (implementation shipped via PR #1636 on 2026-05-02; supersession question reviewed 2026-05-05 and resolved KEEP — see &quot;Supersession review&quot; below).
+<strong>Date</strong>: 2026-04-28 (proposed); 2026-05-05 (accepted).
+<strong>Deciders</strong>: Engineering (Krisztian K.) + cross-agent review (Gemini-3.1-pro-preview, Codex-gpt-5.5; broker task <code>adr-008-review</code>).
+<strong>Related</strong>: ADR-007 (<code>docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.html</code>), EPIC #1577 (curriculum reboot), #1620 (round-3.5 verification surfaced the no-correction-path tension), #1622 (round-4 bakeoff), PR #1636 (implementation), <code>docs/decisions/2026-05-05-adr-008-supersession-resolved-keep.md</code> (supersession review).
+<strong>Refines</strong>: ADR-007 (does not supersede; preserves all of ADR-007's kills).</p>
+<h2>Supersession review (2026-05-05)</h2>
+<p>After the multi-agent deliberation protocol shipped (commit <code>872d8376b0</code>), an open question was whether ADR-008's per-gate correction loop became redundant. Outcome: <strong>KEEP ADR-008 as-is, no scope-down</strong>. Deliberation operates on pre-review channel posts (design / framing / linguistic decisions) and prevents bad CONTENT from reaching the writer; ADR-008 operates on post-write module artifacts and corrects mechanical gate output (word count, VESUM, calques). They live at different layers and address different failure modes — the handoff that suggested supersession conflated layers. Full rationale in <code>docs/decisions/2026-05-05-adr-008-supersession-resolved-keep.md</code>.</p>
+<hr />
+<h2>Context</h2>
+<p>ADR-007 (2026-04-23) killed V6's rewrite ladder — <code>section_rewrite</code>, <code>full_rewrite</code>, <code>writer_swap</code>, auto-heal for word-budget shortfall. Empirical justification: a1/colors regressed via <code>full_rewrite</code> after <code>&lt;fixes&gt;</code> had already corrected the flag-color hallucination. Gemini measured 9.6 → 9.2 → 8.4 across rewrite rounds. Rewrites <em>destroyed converged work</em>.</p>
+<p>ADR-007's enforcement in <code>scripts/build/linear_pipeline.py</code> is currently strict-fail-fast: when Python QG flags a content gate (e.g. <code>word_count</code> short, <code>vesum_verified</code> failed, <code>russianisms_clean</code> hit), the build terminals. No reviewer is called. No <code>&lt;fixes&gt;</code> are emitted. No second writer pass.</p>
+<p>This is too brittle for the 1700-module Phase-5 fan-out target. <strong>Round-3.5 verification (#1620, PR #1621) terminated on <code>word_count</code> failure (1020/1200) before LLM QG ever ran.</strong> At fan-out scale, marginal Python QG failures will dominate the failure mode and require human triage. The user has stated explicitly (2026-04-28): <em>&quot;human triage is not feasible we have to be able to fix detected errors and mistakes.&quot;</em></p>
+<p>The question this ADR answers: <strong>how does the pipeline autonomously fix detected errors without re-introducing ADR-007's failure pattern?</strong></p>
+<p>The answer rests on a distinction ADR-007 did not draw explicitly: <em>blind regeneration</em> (run the writer again with the same prompt, hoping for stochastic improvement — empirically destroys content) versus <em>targeted gate-specific correction with explicit feedback</em> (run the writer or reviewer with the specific gate diagnostic + a bounded change directive — adds information between attempts). V7's existing strict-JSON corrective redispatch on parse failure is already an instance of the latter pattern; this ADR generalises it across content gates.</p>
+<hr />
+<h2>Decision</h2>
+<p><strong>Each detected gate failure MAY trigger one targeted correction attempt, bounded by hard architectural constraints that prevent the correction sliding into ADR-007's killed pattern.</strong></p>
+<h3>Hard constraints (all four MUST hold for any gate's correction path)</h3>
+<ol>
+<li>
+<p><strong>Patch-bounded.</strong> Writer corrective redispatch is <strong>append/insert-only</strong>. The writer's correction prompt template MUST include the previously-passing prose verbatim, plus an explicit instruction to <em>modify in place via append/insert, never re-author or regenerate</em>. Forbidden phrases in the prompt include &quot;regenerate&quot;, &quot;rewrite&quot;, &quot;produce again&quot;, &quot;start over&quot;. Reviewer corrections emit only <code>&lt;fixes&gt;</code> find/replace blocks, never <code>&lt;rewrite&gt;</code> directives (per ADR-007).</p>
+</li>
+<li>
+<p><strong>Full revalidation.</strong> After ANY correction, ALL Python QG gates re-run, not just the failed one. A new <code>previously_passed_regression</code> meta-gate fires terminal if any prior-passing gate now fails — this is the explicit ladder-prevention guard. (Codex finding, ADR-008 review.)</p>
+</li>
+<li>
+<p><strong>Pipeline-assisted dictionary.</strong> For lexical gates (<code>vesum_verified</code>, <code>russianisms_clean</code>, <code>surzhyk_clean</code>, <code>calques_clean</code>, <code>paronym_clean</code>, <code>citations_resolve</code>), the pipeline performs deterministic dictionary lookup against VESUM / Антоненко-Давидович / sources registry and proposes verified replacement candidates. The reviewer's role is to <strong>select among proposed candidates</strong> and emit <code>&lt;fixes&gt;</code> find/replace; the reviewer does NOT invent replacements (hallucination risk per Codex finding).</p>
+</li>
+<li>
+<p><strong>One attempt per gate.</strong> Each Python QG gate gets ONE correction attempt. If correction fails verification, the build terminals with a structured diagnostic. No tier escalation, no second-strategy fallback. The LLM QG <code>&lt;fixes&gt;</code> 2-round budget from ADR-007 is preserved unchanged.</p>
+</li>
+</ol>
+<h3>Per-gate correction paths</h3>
+<p>| Gate | Correction path | Cognition | Mechanism | Notes |
+|---|---|---|---|---|
+| <code>strict_json_parse</code> | corrective redispatch | writer | feedback prompt with parse error | EXISTS in V7 (round-3 contract) |
+| <code>word_count</code> | corrective redispatch | writer | feedback: section budget gap, max-words bound, <code>insert_after</code> location | append-only |
+| <code>plan_sections</code> | corrective redispatch | writer | feedback: per-section budget gap, plan points to address | append-only, section-targeted |
+| <code>immersion</code> | reviewer <code>&lt;fixes&gt;</code> | reviewer | find English instructional phrasing, replace with Ukrainian equivalent | local lexical change (Gemini finding) |
+| <code>formatting_standards</code> | corrective redispatch | writer | feedback: missing mandatory callouts (e.g. <code>&gt; [!model-answer]</code>) | append-only insert (Gemini finding) |
+| <code>mdx_render</code> | corrective redispatch | writer | feedback: render error + line | append-only fix unless deterministic repair available |
+| <code>vesum_verified</code> | reviewer <code>&lt;fixes&gt;</code> | reviewer + pipeline | pipeline proposes VESUM-verified alternatives; reviewer selects | deterministic candidate generation |
+| <code>russianisms_clean</code> / <code>surzhyk_clean</code> / <code>calques_clean</code> / <code>paronym_clean</code> | reviewer <code>&lt;fixes&gt;</code> | reviewer + pipeline | pipeline proposes Антоненко-Давидович alternatives; reviewer selects | deterministic candidate generation |
+| <code>citations_resolve</code> | reviewer <code>&lt;fixes&gt;</code> | reviewer + pipeline | pipeline proposes from sources registry; reviewer selects | deterministic candidate generation |
+| <code>inject_activity_ids</code> | deterministic pipeline insert | pipeline | mechanical insertion of <code>&lt;!-- INJECT_ACTIVITY: id --&gt;</code> markers | no LLM call |
+| <code>ai_slop_clean</code> | reviewer <code>&lt;fixes&gt;</code> | reviewer | find banlist hit, replace with natural phrasing | banlist-driven |
+| <code>component_props</code> | terminal (zero retry) | none | failure indicates writer cannot follow schema = template/plan fault | per Codex finding |
+| <code>previously_passed_regression</code> (META) | terminal (zero retry) | none | any prior-passing gate now failing after correction | ladder-regression guard |
+| LLM QG REVISE on per-dim score | reviewer <code>&lt;fixes&gt;</code> | reviewer | find/replace per dim feedback | UNCHANGED from ADR-007, max 2 rounds |</p>
+<h3>What this ADR does NOT do</h3>
+<ul>
+<li>Does NOT revive any of ADR-007's killed strategies (<code>section_rewrite</code>, <code>full_rewrite</code>, <code>writer_swap</code>, auto-heal).</li>
+<li>Does NOT change the LLM QG fix-loop budget (still 2 rounds per ADR-007).</li>
+<li>Does NOT change the reviewer-as-fixer policy for content quality (still <code>&lt;fixes&gt;</code> find/replace, never blind regen).</li>
+<li>Does NOT introduce a tiered escalation — every correction is a single targeted shot.</li>
+<li>Does NOT enumerate all V7 gates. Additional gates (vocab consistency, activity ID uniqueness, citation provenance, forbidden-language leakage, asset/link existence, duplicate detection) are separate gate-inventory work, tracked as follow-up issues, not part of this ADR.</li>
+</ul>
+<hr />
+<h2>Consequences</h2>
+<h3>Positive</h3>
+<ul>
+<li><strong>Phase 5 fan-out becomes feasible.</strong> Marginal Python QG failures (12% short on word count, one stray russianism) are autonomously corrected with bounded cognition, not human-triaged.</li>
+<li><strong>Round-4 bakeoff (#1622) measures something predictive.</strong> Phase 5 will run with corrections; bakeoff under ADR-008 measures first-pass quality + correction-responsiveness, the actual signal we need to choose claude-tools vs gemini-tools.</li>
+<li><strong>ADR-007 evidence holds.</strong> All four killed strategies remain killed. The 9.6 → 8.4 regression pattern cannot recur because (a) writer is patch-bounded, (b) reviewer doesn't invent dictionary replacements, (c) <code>previously_passed_regression</code> terminals on any backslide, (d) one attempt per gate.</li>
+</ul>
+<h3>Negative</h3>
+<ul>
+<li><strong>More complexity in the pipeline.</strong> Each gate now has a per-type correction handler instead of a uniform terminal path.</li>
+<li><strong>Test surface grows.</strong> Need test coverage per gate × correction path, plus the meta-gate for regression detection.</li>
+<li><strong>Bakeoff timing.</strong> Round-4 bakeoff (#1622) is blocked on ADR-008 implementation (in addition to wiki integration migration). Sequencing: wiki migration + ADR-008 implementation in parallel, both ship before bakeoff fires.</li>
+</ul>
+<h3>Risks</h3>
+<ul>
+<li><strong>Drift back to ladder.</strong> Mitigated by: structural test asserting no second-strategy fallback exists; <code>previously_passed_regression</code> meta-gate; explicit forbidden-phrase audit on writer correction prompt template.</li>
+<li><strong>Pipeline-assisted dictionary lookup quality.</strong> If the candidate generator is weak, reviewer has nothing good to select from and emits a poor <code>&lt;fixes&gt;</code> block. Mitigated by: dictionary lookups are well-tested in MCP <code>sources</code> (VESUM, Антоненко-Давидович, СУМ-11); gate is verifiable.</li>
+<li><strong>Patch-bound enforcement.</strong> If the writer ignores the &quot;modify in place&quot; directive and re-authors, <code>previously_passed_regression</code> fires terminal. The recovery path is a new dispatch with a tighter prompt — not a heavier correction.</li>
+</ul>
+<hr />
+<h2>Sequencing</h2>
+<ol>
+<li><strong>ADR-008 (this document)</strong>: PROPOSED → ACCEPTED on user signoff.</li>
+<li><strong>Wiki integration migration</strong> (independent): port V6's <code>_build_wiki_packet</code> + <code>compress_wiki_packet</code> into <code>linear_pipeline</code>; replace deprecated Qdrant call. Tracked as a separate issue (TBD #).</li>
+<li><strong>ADR-008 implementation</strong>: per-gate correction handlers + <code>previously_passed_regression</code> meta-gate + structural drift-prevention tests. Tracked as a separate issue (TBD #).</li>
+<li><strong>Round-4 bakeoff (#1622)</strong>: fires after both (2) and (3) merge to main. Bakeoff brief updated to capture first-pass gate-failure rate as a sub-metric.</li>
+</ol>
+<p>ADR-008 implementation and the wiki migration are independent and can ship in parallel.</p>
+<hr />
+<h2>Cross-agent review summary</h2>
+<p>Both reviewers (Gemini-3.1-pro-preview and Codex-gpt-5.5) returned <strong>REVISE</strong> on the v1 proposal of this ADR; v2 (this version) incorporates their findings. Strong agreement across both reviews on:</p>
+<ul>
+<li>Patch-bound constraint on writer redispatch (CRITICAL)</li>
+<li>Full revalidation after correction (HIGH)</li>
+<li>Pipeline-assisted dictionary candidates rather than reviewer-invented replacements (HIGH)</li>
+<li>One attempt per gate; no tier escalation</li>
+</ul>
+<p>Codex contributed: zero-retry list (<code>component_props</code>, etc.); <code>previously_passed_regression</code> meta-gate; gate-inventory misses (filed as separate follow-ups).</p>
+<p>Gemini contributed: <code>immersion</code> reassigned writer → reviewer (lexical change discipline); <code>formatting_standards</code> new gate; explicit &quot;modify in place&quot; prompt-template directive.</p>
+<p>Disagreement on sequencing: Codex preferred ADR-008 <em>after</em> round-4 bakeoff (clean V7 baseline); Gemini preferred ADR-008 <em>before</em> (predictive signal for Phase 5). This ADR resolves in favour of Gemini's position — the bakeoff is meant to inform Phase 5 fan-out, and Phase 5 will run with corrections.</p>
+<p>Review messages preserved in <code>.mcp/servers/message-broker/messages.db</code> under <code>task_id='adr-008-review'</code>.</p>
+<hr />
+<h2>Implementation pointers</h2>
+<ul>
+<li><code>scripts/build/linear_pipeline.py:run_python_qg</code> — current strict-fail-fast path; this is where per-gate correction routing lives.</li>
+<li><code>scripts/build/linear_pipeline.invoke_writer</code> — already supports corrective redispatch via the strict-JSON parse-fail path; pattern extends to other gates with feedback construction.</li>
+<li><code>scripts/build/phases/v6-review</code> — V6's <code>&lt;fixes&gt;</code> apply path; pattern transfers to per-gate reviewer corrections.</li>
+<li><code>scripts/audit/check_self_review.py</code> — <code>SELF_REVIEW_DETECTED</code> gate; reviewer for <code>&lt;fixes&gt;</code> must be different from writer.</li>
+<li><code>claude_extensions/rules/non-negotiable-rules.md</code> §4 — reviewer-as-fixer rule; ADR-008 refines the scope to include pre-LLM-QG gates.</li>
+<li><code>claude_extensions/rules/pipeline.md</code> — needs an ADR-008 reference once accepted.</li>
+</ul>
+<hr />
+<h2>Drift prevention</h2>
+<p>The following structural tests MUST exist after ADR-008 implementation, paralleling <code>tests/test_no_rewrite_contract.py</code> from ADR-007:</p>
+<ol>
+<li><code>test_no_writer_rewrite_in_correction</code> — asserts the writer correction prompt template contains the &quot;modify in place&quot; directive and the forbidden-phrase list (&quot;regenerate&quot;, &quot;rewrite&quot;, &quot;produce again&quot;, &quot;start over&quot;).</li>
+<li><code>test_correction_fully_revalidates</code> — feeds an artifact with deliberate <code>word_count</code> short through the correction path; asserts ALL Python QG gates run after correction, not just <code>word_count</code>.</li>
+<li><code>test_correction_does_not_regress_passing_gates</code> — feeds an artifact where correction reintroduces a russianism; asserts <code>previously_passed_regression</code> fires terminal.</li>
+<li><code>test_one_attempt_per_gate</code> — asserts each Python QG gate has at most one corrective handler invocation per build, and no second-tier escalation logic exists.</li>
+<li><code>test_pipeline_proposes_dictionary_candidates</code> — asserts that for <code>vesum_verified</code> / <code>russianisms_clean</code> / etc., pipeline-side candidate generation runs before the reviewer is invoked.</li>
+</ol>
+
+  </main>
+</div>
+</body>
+</html>

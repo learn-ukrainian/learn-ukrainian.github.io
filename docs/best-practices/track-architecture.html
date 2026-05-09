@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Track & Level Architecture</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Track & Level Architecture</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: track-architecture.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Track &amp; Level Architecture</h1>
+<blockquote>
+<p><strong>Scope:</strong> How tracks and levels are structured, what makes seminar tracks different from core, and pedagogy per level.</p>
+</blockquote>
+<hr />
+<h2>Track Overview</h2>
+<p>| Track | Level | Type | Modules | Word Target | Pedagogy |
+|-------|-------|------|---------|-------------|---------|
+| <code>a1</code> | A1 | Core | 64 | 2000w | PPP |
+| <code>a2</code> | A2 | Core | 76 | 3000w | PPP |
+| <code>b1</code> | B1 | Core | 100 | 4000w | TTT |
+| <code>b2</code> | B2 | Core | 85 | 4000w | TTT |
+| <code>c1</code> | C1 | Core | 106 | 4000w | CLIL |
+| <code>c2</code> | C2 | Core | 91 | 5000w | CLIL |
+| <code>b2-pro</code> | B2 | Core (professional) | 40 | 4000w | CLIL |
+| <code>c1-pro</code> | C1 | Core (professional) | 50 | 4000w | CLIL |
+| <code>hist</code> | C1 | Seminar | 140 | 5000w | CBI |
+| <code>bio</code> | C1 | Seminar | 176 | 5000w | CBI |
+| <code>istorio</code> | C1 | Seminar | 136 | 5000w | CBI |
+| <code>lit</code> | C1+ | Seminar | 221 | 5000w | CBI |
+| <code>oes</code> | C2 | Seminar | 103 | 5000w | CBI |
+| <code>ruth</code> | C2 | Seminar | 115 | 5000w | CBI |</p>
+<hr />
+<h2>Core vs Seminar: Key Differences</h2>
+<p>| Dimension | Core tracks | Seminar tracks |
+|-----------|-------------|----------------|
+| <strong>Purpose</strong> | Grammar/vocabulary acquisition | Content-based deep learning |
+| <strong>Pedagogy</strong> | PPP / TTT / CLIL | CBI (Content-Based Instruction) |
+| <strong>Module topics</strong> | Sequential grammar/vocab progression | Independent topics (history, biography) |
+| <strong>Consistency need</strong> | High — vocabulary must build | Low — each module is standalone |
+| <strong>Track context</strong> | Inject last 5 modules | <strong>Empty — omit entirely</strong> |
+| <strong>Research phase</strong> | Lightweight | Deep (3+ academic sources) |
+| <strong>Activities</strong> | Drills, grammar, matching | Reading, essays, critical analysis |
+| <strong>Immersion</strong> | Graduated (A1: 10-40%, B2: 100%) | 98-100% always |
+| <strong>Primary sources</strong> | Optional | Required (2+) |</p>
+<hr />
+<h2>Retrieval Architecture Notes</h2>
+<ul>
+<li>A1/A2 now have a dedicated compile-layer bootstrap corpus, <code>ukrainian_wiki</code>, alongside the existing five-corpus retrieval stack in <code>data/sources.db</code>.</li>
+<li>That corpus is retrieval-only infrastructure for English-speaker early levels. It is <strong>not</strong> a published <code>l1-uk</code> tree and <strong>not</strong> a separate module-generation step.</li>
+<li>Priors stay soft, not hard-gated: <code>ukrainian_wiki</code> is high-weight for <code>a1</code> / <code>a2</code> and near-zero for <code>b1+</code>.</li>
+<li>Corpus design, schema, admission gates, and rollback details live in <a href="/Users/krisztiankoos/projects/learn-ukrainian/docs/architecture/ukrainian-wiki-corpus-design.md">ukrainian-wiki-corpus-design.md</a>.</li>
+</ul>
+<hr />
+<h2>Pedagogy Models</h2>
+<h3>PPP (Presentation–Practice–Production)</h3>
+<p>Used for: A1, A2</p>
+<p>Structure:</p>
+<ol>
+<li><strong>Presentation</strong> — introduce grammar/vocab in context</li>
+<li><strong>Practice</strong> — controlled exercises</li>
+<li><strong>Production</strong> — free use in context</li>
+</ol>
+<p>Immersion: graduated from English-heavy (A1) to mostly Ukrainian (A2).</p>
+<h3>TTT (Test–Teach–Test)</h3>
+<p>Used for: B1, B2</p>
+<p>Structure:</p>
+<ol>
+<li><strong>Diagnostic</strong> — test what students already know</li>
+<li><strong>Teaching</strong> — fill the gaps</li>
+<li><strong>Verification</strong> — test again with harder items</li>
+</ol>
+<p>Immersion: 90-100% Ukrainian.</p>
+<h3>CLIL (Content and Language Integrated Learning)</h3>
+<p>Used for: C1, C2, B2-PRO, C1-PRO</p>
+<p>Structure:</p>
+<ul>
+<li>Language learned through authentic content</li>
+<li>Grammar points emerge from real text</li>
+<li>No artificial drills — language in context only</li>
+</ul>
+<p>Immersion: 100% Ukrainian.</p>
+<h3>CBI (Content-Based Instruction)</h3>
+<p>Used for: All seminar tracks</p>
+<p>Structure:</p>
+<ul>
+<li>Content drives everything</li>
+<li>Language is the medium, not the subject</li>
+<li>University seminar style — reading, analysis, discussion</li>
+</ul>
+<p>Immersion: 98-100%. No grammar scaffolding. Full literary Ukrainian.</p>
+<hr />
+<h2>Plan → Meta → Content → Activities: The Build Chain</h2>
+<pre><code>plans/{track}/{slug}.yaml          ← SOURCE OF TRUTH
+    ↓ Phase A reads
+{track}/meta/{slug}.yaml           ← STRUCTURAL BLUEPRINT
+    ↓ Phase B reads
+{track}/{slug}.md                  ← CONTENT (lesson prose)
+    ↓ Phase C reads
+{track}/activities/{slug}.yaml     ← ACTIVITIES
+{track}/vocabulary/{slug}.yaml     ← VOCABULARY
+    ↓ Phase D reads
+{track}/review/{slug}-review.md    ← ADVERSARIAL REVIEW
+    ↓ Phase E reads
+starlight/src/content/docs/{track}/{slug}.mdx ← PUBLISHED OUTPUT
+</code></pre>
+<p><strong>Never write content without first reading the plan.</strong> The plan defines vocabulary scope, section names, objectives — everything Phase B must respect.</p>
+<hr />
+<h2>Module Numbering</h2>
+<p>Modules are numbered within their track. Numbers are stable references (do not change when modules are added/reordered at the end).</p>
+<pre><code class="language-bash"># Get slug for a number
+.venv/bin/python -c &quot;
+import sys; sys.path.insert(0, 'scripts')
+from batch_gemini_config import slug_for_num
+print(slug_for_num('bio', 28))  # → 'danylo-apostol'
+&quot;
+</code></pre>
+<hr />
+<h2>Directory Structure</h2>
+<pre><code>curriculum/l2-uk-en/
+├── plans/{track}/{slug}.yaml         # Plan (source of truth)
+├── {track}/
+│   ├── meta/{slug}.yaml              # Build config
+│   ├── {slug}.md                     # Content prose
+│   ├── activities/{slug}.yaml        # Activities
+│   ├── vocabulary/{slug}.yaml        # Vocabulary
+│   ├── research/{slug}-research.md   # Research notes (seminar only)
+│   ├── review/{slug}-review.md       # Adversarial review
+│   ├── audit/{slug}-audit.md         # Audit report
+│   ├── status/{slug}.json            # Cached audit result
+│   └── orchestration/{slug}/         # Build state
+│       ├── state-v3.json             # v3 pipeline state
+│       ├── state.json                # v2 pipeline state
+│       └── placeholders.yaml         # Template variables
+</code></pre>
+<hr />
+<h2>CEFR Level Mapping</h2>
+<p>| Level | Description | Ukrainian learner profile |
+|-------|-------------|--------------------------|
+| A1 | Beginner | First exposure to Ukrainian, Cyrillic alphabet |
+| A2 | Elementary | Basic communication, simple sentences |
+| B1 | Intermediate | Can navigate everyday situations in Ukrainian |
+| B2 | Upper-intermediate | Can discuss abstract topics, read news |
+| C1 | Advanced | Near-native fluency, complex academic discourse |
+| C2 | Mastery | Full professional and academic proficiency |</p>
+<hr />
+<h2>Seminar Track Specifics</h2>
+<h3>hist (C1 History)</h3>
+<ul>
+<li>Ukrainian history from proto-Slavic period to modern day</li>
+<li>Decolonization perspective mandatory</li>
+<li>140 modules, ~700,000 words total when complete</li>
+</ul>
+<h3>bio (C1 Biography)</h3>
+<ul>
+<li>172 Ukrainian historical and cultural figures</li>
+<li>Biographical narrative arc required (birth → impact → legacy)</li>
+<li>Living people: &quot;Значення&quot; / &quot;Вплив&quot; sections; deceased: &quot;Спадщина&quot; / &quot;Наслідки&quot;</li>
+</ul>
+<h3>istorio (C1 History)</h3>
+<ul>
+<li>Advanced historiographical analysis</li>
+<li>Multiple perspectives, contested narratives</li>
+<li>Higher linguistic sophistication than hist</li>
+</ul>
+<h3>lit (Literature)</h3>
+<ul>
+<li>Ukrainian literary works, essays, criticism</li>
+<li>100% Ukrainian, no grammar scaffolding</li>
+<li>Essay and reflection format, not drills</li>
+</ul>
+<h3>oes (Old East Slavic)</h3>
+<ul>
+<li>Primary source literacy (Kyivan Rus texts)</li>
+<li>Grammar reconstruction and paleography</li>
+<li>University-level philological approach</li>
+</ul>
+<h3>ruth (Ruthenian / Middle Ukrainian)</h3>
+<ul>
+<li>XIV-XVIII century documents</li>
+<li>Legal, administrative, religious texts</li>
+<li>Cossack-era language forms</li>
+</ul>
+
+  </main>
+</div>
+</body>
+</html>

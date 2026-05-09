@@ -55,6 +55,7 @@ from .cost_router import router as cost_router
 from .dashboard_router import router as dashboard_router
 from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
+from .docs_router import router as docs_router
 from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
@@ -123,6 +124,7 @@ app.include_router(cost_router, prefix="/api/analytics/cost")
 app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
 app.include_router(delegate_router, prefix="/api/delegate")
+app.include_router(docs_router, prefix="/files")
 app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Bridge — Channel Communication</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Agent Bridge — Channel Communication</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: agent-bridge.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Agent Bridge — Channel Communication</h1>
+<p>The agent bridge is how Claude, Gemini, and Codex (and you, the
+human) communicate across invocations. The new <strong>channel bridge</strong>
+(added in #1190) replaces the old 1:1 <code>ask-*</code> pattern with topic-
+scoped channels, pinned context, and character-budget history
+truncation — the token waste from re-explaining project setup on
+every delegation drops from ~15KB to ~6KB per post.</p>
+<blockquote>
+<p><strong>Note on the legacy <code>ask-*</code> commands.</strong> They still work and are
+the simplest way to fire a one-shot delegation with no history
+tracking. They're <strong>not deprecated</strong> and won't be. Channels are
+the right primitive for sustained, topic-scoped conversations;
+<code>ask-*</code> is the right primitive for one-off questions. Use both.</p>
+</blockquote>
+<h2>Mental model</h2>
+<p>A <strong>channel</strong> is a topic — <code>pipeline</code>, <code>content</code>, <code>architecture</code>,
+<code>reviews</code>, <code>shared</code>. Each channel has:</p>
+<ul>
+<li>A <strong>pinned context</strong> file at <code>docs/agent-channels/{channel}/context.md</code>
+that holds stable project state (rules, conventions, file paths).
+Auto-prepended to every post.</li>
+<li>A <strong>message history</strong> in SQLite (<code>channel_messages</code> table). Replies
+link to parents via <code>parent_id</code>; all messages in a thread share a
+<code>thread_id</code>.</li>
+<li>An <strong>include chain</strong> — channel A can include channel B, so posts
+to A also carry B's pinned context. The <code>shared</code> channel is
+typically included by everything.</li>
+<li>A <strong>subscribers</strong> list — the default recipients for broadcast posts.</li>
+</ul>
+<p>A <strong>post</strong> is a message from one agent to zero or more others. It
+captures, at post-time:</p>
+<ul>
+<li>The sha256 of every context.md file seen</li>
+<li>A snapshot of the Monitor API project state (<code>/api/state/summary</code>)</li>
+<li>The assembled prompt with history truncated to a character budget</li>
+<li>A delivery row per recipient (separate from the message — delivery
+is an outbound state machine, replies are new messages with parent_id)</li>
+</ul>
+<p>A <strong>reply</strong> is just a new post with <code>parent_id</code> set. Replies inherit
+the thread_id and get <code>round_index = parent.round_index + 1</code>.</p>
+<h2>Discussion vs execution</h2>
+<p><code>ab discuss</code> is deliberation, not implementation. The bridge invokes
+participants in read-only mode, passes the <code>AB_DISCUSS_READONLY=1</code>
+contract through the adapter layer, and fails the round if the git
+working tree changes while participants are running. A failed round
+posts a loud system warning into the thread before returning non-zero.</p>
+<p><code>ab post</code> creates channel messages and delivery rows. Its default
+delivery mode is read-only, and the inbox worker applies the same
+discussion read-only adapter contract to those default deliveries. Use
+write-capable modes only when the post is explicitly an execution
+request. Implementation work that needs file edits, commits, pushes, or
+a PR should normally go through <code>delegate.py dispatch</code> or
+<code>ab dispatch-fix</code>, not through discussion.</p>
+<p>Current adapter policy for discussion calls:</p>
+<ul>
+<li>Codex: <code>read-only</code> maps to <code>codex exec -s read-only</code>.</li>
+<li>Gemini: discussion calls add <code>--approval-mode plan</code>; plain read-only
+CLI defaults were not enough in trusted workspaces.</li>
+<li>Claude: discussion calls restrict built-in tools to read/list/search
+tools. They do not use Claude plan mode because discussion replies are
+comments, not implementation plans; the restricted tool list plus the
+bridge's git mutation guard enforce the read-only contract.</li>
+</ul>
+<h2>CLI quick reference</h2>
+<pre><code class="language-bash"># Channel management
+ab channel new pipeline --include shared --agents claude,gemini,codex
+ab channel list
+ab channel info pipeline
+ab channel context pipeline --edit     # opens $EDITOR on context.md
+ab channel tail pipeline -n 20         # last 20 messages
+ab channel tail pipeline --thread ABC  # full thread
+
+# Posting (short + long form)
+ab p pipeline gemini &quot;quick question about X&quot;
+ab post pipeline &quot;full form with --to options&quot; --to gemini,codex
+ab post pipeline &quot;reply&quot; --parent MESSAGE_ID
+
+# Multi-agent discussion (B.4)
+ab discuss architecture &quot;should we refactor X?&quot; --with claude,gemini,codex --max-rounds 2
+</code></pre>
+<h2>Dispatch wrappers</h2>
+<p>Use these wrappers when the task needs the project-standard model/mode
+assignment enforced by tooling instead of memory.</p>
+<p><code>ab dispatch-fix &lt;issue-or-task-id&gt; [--brief-file PATH]</code> dispatches a
+Codex worktree implementation run for &quot;fix this and ship a PR&quot; tasks.
+It hardcodes <code>delegate.py dispatch --agent codex --mode danger --worktree --base origin/main --effort high</code>, and every generated
+brief includes the commit, push, and PR checklist. If <code>--brief-file</code>
+is omitted, the wrapper builds <code>/tmp/dispatch-fix-&lt;task-id&gt;.md</code> from
+<code>gh issue view &lt;issue&gt; --json title,body</code>.</p>
+<p><code>ab review-deep &lt;PR-or-path&gt; [--effort xhigh]</code> dispatches an
+adversarial Claude review run. It hardcodes <code>--agent claude --mode read-only --model claude-opus-4-7 --effort xhigh</code> unless an explicit
+effort override is passed, then builds a review prompt from either
+<code>gh pr view</code> plus <code>gh pr diff</code> or the target file/directory contents.
+Use it for blocking logic/security/test review, not for stylistic
+preferences.</p>
+<p>Both wrappers support <code>--dry-run</code>, which writes the prompt and a
+<code>batch_state/tasks/&lt;task-id&gt;.json</code> preview without launching the
+delegate worker.</p>
+<h2>Silence-timeout vs hard-timeout</h2>
+<p><code>delegate.py dispatch</code> has two watchdogs with different jobs.
+<code>--hard-timeout</code> is the absolute wall-clock fallback for the worker.
+<code>--silence-timeout</code> is narrower: it kills the agent CLI when no stdout
+line arrives within the configured window, then marks the task
+<code>status=&quot;timeout&quot;</code>.</p>
+<p>The default silence timeout is 1800 seconds. This is intentionally
+longer than the old 600-second watchdog because substantive Codex
+dispatches can be quiet for more than 10 minutes during thinking
+phases, multi-file refactors, or long test runs. The #1725
+<code>1725-verbatim-quoting</code> dispatch was killed after 12 minutes of stdout
+silence with most work already complete and the last phase still
+salvageable; that is the failure mode this default avoids.</p>
+<p>Use <code>--silence-timeout 600</code> when you want the tighter 10-minute
+operator watchdog. OAuth or CLI hangs should still show up within
+minutes, while the hard timeout remains the final wall-clock cap.
+Use <code>--silence-timeout 0</code> only when stdout silence is expected and the
+hard timeout alone is acceptable.</p>
+<h2>When to use channels vs <code>ask-*</code></h2>
+<p>| Situation | Use |
+| --- | --- |
+| One-off question, no history needed | <code>ask-claude/gemini/codex</code> |
+| Sustained discussion on a topic | <code>ab post</code> to a channel |
+| Need a 2-3 agent debate on a design | <code>ab discuss</code> |
+| Sharing context across many delegations | Pin it in <code>docs/agent-channels/{topic}/context.md</code> |
+| Code review with adversarial feedback | <code>ab post reviews ...</code> |
+| Want the post visible in the dashboard | Channels only (the legacy <code>messages</code> table has its own UI) |</p>
+<h2>The hygiene rule</h2>
+<p><strong>Nothing commits or merges without adversarial review from another
+agent.</strong> Per channel conventions:</p>
+<ol>
+<li>Write code → stage with <code>git add</code></li>
+<li><code>git diff --cached &gt; /tmp/diff.txt</code></li>
+<li><code>ab post reviews &quot;Review request for #NNN&quot; --to gemini</code> (or ask-gemini with the diff attached)</li>
+<li>Apply feedback or argue back in writing</li>
+<li>Commit only after the review is CLEAN or BLOCKING is resolved</li>
+<li>Commit message includes <code>Reviewed-By: gemini-3.1-pro-preview (task-id)</code> trailer</li>
+</ol>
+<p>This rule is non-negotiable. Bypassing it was the #1 reason review
+quality degraded on earlier commits.</p>
+<h2>Spawned-agent env hygiene</h2>
+<p>The agent runtime does not pass the orchestrator's full <code>os.environ</code> to
+spawned CLIs. <code>scripts/agent_runtime/env_sanitize.py</code> builds a narrow
+environment for each process:</p>
+<ul>
+<li>Common runtime variables survive only from the safe allowlist:
+<code>PATH</code>, <code>HOME</code>, <code>TMPDIR</code>, <code>LANG</code>, <code>USER</code>, <code>LOGNAME</code>, <code>LC_*</code>,
+<code>AB_*</code>, and <code>LU_*</code>. <code>USER</code> and <code>LOGNAME</code> are identity variables, not
+secrets, and are intentionally allowed for subprocesses that need the
+local account context.</li>
+<li>Variables with secret-shaped names are dropped, including names that
+contain <code>TOKEN</code>, <code>SECRET</code>, <code>PASSWORD</code>, <code>PASSWD</code>, <code>PRIVATE</code>,
+<code>CREDENTIAL</code>, <code>API_KEY</code>, <code>ACCESS_KEY</code>, <code>AUTH</code>, or <code>COOKIE</code>.</li>
+<li>Variables with known secret-shaped values are dropped, including
+GitHub, OpenAI-style <code>sk-</code>, Slack <code>xox-</code>, Hugging Face <code>hf_</code>, npm,
+AWS access-key, and Google <code>AIza</code> patterns.</li>
+<li>Provider credentials pass through only to that provider: Gemini sees
+Gemini/Google keys, Claude sees Anthropic/Claude keys, and Codex sees
+OpenAI/Codex keys. Cross-provider keys stay absent. <code>GITHUB_TOKEN</code>
+is never passed through directly; <code>delegate.py</code> resolves it once from
+the environment or <code>~/.bash_secrets</code> and exposes it as <code>GH_TOKEN</code> only
+for Codex, Claude, and bridge subprocesses so authenticated <code>gh</code>
+commands work without sourcing shell secrets. Gemini subprocesses do
+not receive <code>GH_TOKEN</code>.</li>
+<li>Gemini also receives <code>GEMINI_AUTH_MODE</code> because it is runtime mode
+selection, not a credential; secret-shaped values are still rejected.</li>
+</ul>
+<p>For #1754, Claude Pro/Max OAuth on macOS has one extra gotcha: the
+Claude CLI reads OAuth tokens from the macOS keychain, and the keychain
+lookup depends on the local user identity. A stripped environment like
+<code>env -i HOME=$HOME PATH=$PATH claude -p &quot;say PONG&quot;</code> can report <code>Not logged in</code>, while adding <code>USER=$USER</code> lets the same CLI find the
+keychain entry. <code>LOGNAME</code> is allowed as defense in depth for libraries
+that prefer it. This does not replace the provider-specific token
+allowlist; <code>ANTHROPIC_API_KEY</code> and <code>CLAUDE_API_KEY</code> still pass only to
+Claude for API-key users.</p>
+<p>Adapters should put per-call environment values in
+<code>InvocationPlan.env_overrides</code>; the runner applies overrides, sanitizes,
+then applies explicit <code>InvocationPlan.env_unsets</code>. The merge guard runs
+after sanitization so its <code>gh</code>/<code>git</code> shims still receive the final <code>PATH</code>
+and can stamp <code>AGENT_NO_MERGE</code>, <code>AGENT_REAL_GH</code>, and <code>AGENT_REAL_GIT</code>.</p>
+<h2>Context file conventions</h2>
+<p><code>docs/agent-channels/{channel}/context.md</code> should contain:</p>
+<ul>
+<li><strong>Stable</strong> project knowledge: conventions, file layouts, non-negotiables</li>
+<li><strong>Reference</strong> data that doesn't change per-commit: auth rules, API surfaces</li>
+<li><strong>Clarifying</strong> context the agents need but you don't want to re-type</li>
+</ul>
+<p>It should NOT contain:</p>
+<ul>
+<li><strong>Volatile</strong> state (current sprint, recent commits) — that comes from
+the Monitor API snapshot automatically</li>
+<li><strong>Secrets</strong> — context.md is git-tracked</li>
+<li><strong>Per-conversation</strong> details — those belong in the post itself</li>
+</ul>
+<p>Revisions to <code>context.md</code> are tracked via sha256 — every message
+stores which revision it saw, so you can replay a conversation
+deterministically even if the context drifts later.</p>
+<h2>Token savings (measured on the #1190 review trail)</h2>
+<p>The channel bridge was built over four phases (B.1–B.4) with six
+adversarial review rounds handed to Gemini. The review briefs were
+written by hand against explicit AC lists — no bulk context paste —
+which means the numbers below under-sell the savings for typical
+&quot;please review this diff&quot; delegations that normally repeat 10–35KB
+of project rules each time.</p>
+<p><strong>Measured brief sizes (chars sent from claude → gemini, excluding
+the ~10KB project-rules wrapper the legacy bridge prepends):</strong></p>
+<p>| Review round            | Task ID               | Brief size |
+| ----------------------- | --------------------- | ---------: |
+| B.3 r1 (initial)        | <code>bridge-b3-review</code>    |      6,621 |
+| B.3 r2 (3 new blockers) | <code>bridge-b3-review-r2</code> |      5,304 |
+| B.3 r3 (backslash bug)  | <code>bridge-b3-review-r3</code> |      2,683 |
+| B.3 r4 (CLEAN)          | <code>bridge-b3-review-r4</code> |      2,121 |
+| B.4 r1 (4 blockers)     | <code>bridge-b4-review</code>    |      4,827 |
+| B.4 r2 (MINOR)          | <code>bridge-b4-review-r2</code> |      3,915 |
+| <strong>Total</strong>               |                       | <strong>25,471</strong> |</p>
+<p>Every brief in that table would have been ~12KB larger had I
+followed the old convention (manually re-pasting the rules/history
+that channels would otherwise pin). Six rounds × ~12KB = <strong>~72KB
+of repeated context avoided</strong> on this one issue alone — and the
+savings grow roughly linearly with round count.</p>
+<p><strong>Compound wins on multi-round debates:</strong> the same trick applies to
+<code>ab discuss</code> round 2+. When an agent is handed their own prior
+response via <code>_channels.build_agent_prompt</code> it doesn't need to be
+re-typed. The B.2 prompt assembler caps history at 5KB (configurable
+via <code>DEFAULT_MAX_HISTORY_CHARS</code>), so even a 4-round, 4-agent
+discussion stays inside a ~12KB budget per call instead of exploding
+to 40–60KB of copy-pasted transcript.</p>
+<p><strong>Tradeoff:</strong> the first round of any new channel pays a small
+one-time cost — the pinned <code>context.md</code> + the Monitor API snapshot
+are concatenated into the prompt even if the agent doesn't strictly
+need them. For drive-by one-shots, the legacy <code>ask-*</code> commands are
+still cheaper. <code>ask-*</code> commands infer <code>--from</code> from wrapper environment
+such as <code>CLAUDE_AGENT_NAME</code>, <code>CODEX_SESSION</code>, or <code>GEMINI_SESSION</code>; pass
+<code>--from</code> explicitly when running them from a plain shell. Use channels
+when the conversation will have at least two turns.</p>
+<h2>Web dashboard</h2>
+<p><code>playgrounds/channels.html</code> — read-only monitor plus post form,
+localhost only. Shows:</p>
+<ul>
+<li>All channels with message counts + pending deliveries + last activity</li>
+<li>Per-channel message feed (auto-refresh every 5s)</li>
+<li>Context preview with sha256 short-hash</li>
+<li>Post form for dropping messages in from the browser</li>
+</ul>
+<p>Served by <code>scripts/api/main.py</code> at <code>http://localhost:8765</code>. The
+browser POST endpoint is <code>/api/comms/channels/{name}/post</code> — user-only,
+gated by localhost binding. Agents still post via CLI.</p>
+<p><code>playgrounds/comms.html</code> is the legacy operational dashboard for live
+activity, DM-style broker messages, zombie detection, and batch progress.
+Its hot message endpoints are bounded by server-side <code>limit</code> defaults
+and keyset cursors; keep client polling paced so heavy views refresh no
+more often than every 30 seconds.</p>
+<h2>Broker storage hygiene</h2>
+<p>SQLite remains the broker store for the localhost-only bridge. The
+performance bottleneck in the comms dashboard was unindexed scans plus
+unbounded result sets, not the engine. Keep the broker in WAL mode so
+readers can continue while a writer commits:</p>
+<pre><code class="language-bash">sqlite3 .mcp/servers/message-broker/messages.db 'PRAGMA journal_mode'
+</code></pre>
+<p>Expected output is <code>wal</code>. Bridge connections also use
+<code>PRAGMA busy_timeout=5000</code>, <code>PRAGMA cache_size=-20000</code> (about 20 MB),
+and <code>PRAGMA temp_store=MEMORY</code> for local dashboard queries.</p>
+<p>Run retention explicitly; the API server must not delete broker history
+on startup:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py cleanup --older-than 30d --dry-run
+.venv/bin/python scripts/ai_agent_bridge/__main__.py cleanup --older-than 30d
+</code></pre>
+<p>Recommended schedule: run the dry-run weekly, then run the cleanup if
+the counts look reasonable. Cleanup deletes acknowledged legacy
+messages and terminal channel deliveries/messages older than the
+threshold, then runs <code>VACUUM</code> to reclaim disk space.</p>
+<h2>API endpoints (for scripts + dashboards)</h2>
+<p>Read-only:</p>
+<ul>
+<li><code>GET /api/comms/channels</code> — list all channels</li>
+<li><code>GET /api/comms/channels/{name}</code> — channel metadata + context preview</li>
+<li><code>GET /api/comms/channels/{name}/messages?tail=N</code> — recent messages</li>
+<li><code>GET /api/comms/channels/{name}/threads/{thread_id}</code> — full thread</li>
+<li><code>GET /api/comms/channels/{name}/deliveries?status=pending</code> — routing state</li>
+</ul>
+<p>Write (user-only, localhost-gated):</p>
+<ul>
+<li><code>POST /api/comms/channels/{name}/post</code> — drop a new post</li>
+</ul>
+<h2>When channels drift</h2>
+<p>If <code>context.md</code> for a channel goes stale (the rules no longer match
+reality), fix it immediately:</p>
+<pre><code class="language-bash">ab channel context pipeline --edit
+</code></pre>
+<p>This bumps the sha256, and the next post will record the new rev.
+Older messages still have their original <code>context_rev_*</code> values for
+deterministic replay — the update doesn't retroactively rewrite
+history.</p>
+<h2>Wake integration (C.3)</h2>
+<p>The inbox worker now supports a simple filesystem wake hint at
+<code>.agent/wake/{agent}</code>. Whenever <code>_channels.post()</code> commits delivery
+rows for one or more recipients, it replaces each recipient's wake
+file atomically. That write is best-effort only: a wake-file failure
+does not roll back the message or delivery insert.</p>
+<p>Who writes:</p>
+<ul>
+<li><code>scripts/ai_agent_bridge/_channels.py</code> after a successful post commit</li>
+</ul>
+<p>Who reads:</p>
+<ul>
+<li>Any external watcher you configure locally</li>
+<li><code>ab sync</code> if you prefer manual draining instead of OS integration</li>
+</ul>
+<p>Recommended mental model:</p>
+<ul>
+<li>The SQLite <code>deliveries</code> table is the source of truth</li>
+<li>Wake files are only a nudge to run <code>ab inbox run &lt;agent&gt;</code></li>
+<li>Missing a wake is safe because the work is still pending in SQLite</li>
+</ul>
+<p>Example launchd <code>.plist</code> (<code>docs/examples/learn-ukrainian.codex-inbox.plist</code>):</p>
+<blockquote>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>learn-ukrainian.codex-inbox</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/your-user/projects/learn-ukrainian/.venv/bin/python</string>
+    <string>/Users/your-user/projects/learn-ukrainian/scripts/ai_agent_bridge/__main__.py</string>
+    <string>inbox</string>
+    <string>run</string>
+    <string>codex</string>
+    <string>--until-idle</string>
+  </array>
+  <key>WatchPaths</key>
+  <array>
+    <string>/Users/your-user/projects/learn-ukrainian/.agent/wake/codex</string>
+  </array>
+</dict>
+</plist>
+</blockquote>
+<p>Example systemd units (documented only, not tested here):</p>
+<pre><code class="language-ini"># ~/.config/systemd/user/learn-ukrainian-codex-inbox.path
+[Path]
+PathChanged=%h/projects/learn-ukrainian/.agent/wake/codex
+
+# ~/.config/systemd/user/learn-ukrainian-codex-inbox.service
+[Service]
+Type=oneshot
+WorkingDirectory=%h/projects/learn-ukrainian
+ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run codex --until-idle
+</code></pre>
+<p>If you do not want OS-level watchers, use the manual fallback:</p>
+<pre><code class="language-bash">ab sync claude
+ab sync --all
+</code></pre>
+<p>That path reads the same <code>deliveries</code> queue and drains it on demand.</p>
+<h2>See also</h2>
+<ul>
+<li>Issue #1190 — the channel bridge spec and implementation history</li>
+<li><code>scripts/ai_agent_bridge/_channels.py</code> — storage primitives</li>
+<li><code>scripts/ai_agent_bridge/_channels_cli.py</code> — CLI commands</li>
+<li><code>scripts/api/comms_router.py</code> — HTTP endpoints</li>
+<li><code>docs/MONITOR-API.md</code> — the Monitor API used for volatile state snapshots</li>
+</ul>
+
+  </main>
+</div>
+</body>
+</html>

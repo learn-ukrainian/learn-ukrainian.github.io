@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Review-and-Lock: Wiki + Plan</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Review-and-Lock: Wiki + Plan</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: wiki-plan-review-and-lock.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Review-and-Lock: Wiki + Plan</h1>
+<blockquote>
+<p><strong>Purpose.</strong> Bring a <code>(wiki, plan)</code> pair to a known-clean, reproducible state that the build pipeline (A.8 canary, A.9 scale batch, module build) can trust as input. &quot;Locked&quot; means: the two artifacts have passed a structured review, every cited dictionary fact is traceable, the plan directs the writer toward the wiki's content (not away from it), and the pair is clearly marked so future agents know not to re-litigate it without cause.</p>
+<p><strong>Scope.</strong> L2-UK-EN A1 and A2 tracks. 54 slugs in A1, ~54 in A2. This document is the template the remaining 106 (wiki, plan) pairs follow.</p>
+<p><strong>Worked example.</strong> <code>at-the-cafe</code> (L2-UK-EN A1/M38). PR #1412.</p>
+</blockquote>
+<hr />
+<h2>When to apply this procedure</h2>
+<p>Run review-and-lock when <strong>any</strong> of the following is true:</p>
+<ul>
+<li>The slug is the target of an upcoming build (canary or scale batch) and has not yet been locked.</li>
+<li>The latest wiki review is below 9/10 on any dimension, OR older than 30 days and content has since been edited.</li>
+<li>The plan has never had an adversarial review (<code>lifecycle: &lt;unset&gt;</code> or absent).</li>
+<li>A systemic audit (e.g. #1392) flagged a class of defects that could plausibly hide in this pair.</li>
+<li>A prior locked review has been invalidated by one of the <strong>unlock triggers</strong> below.</li>
+</ul>
+<p>Do <strong>not</strong> re-lock a slug that is already <code>lifecycle: locked</code> and current unless one of the above applies. Locking is expensive; the point is to stop re-reviewing.</p>
+<hr />
+<h2>Step 0 — Intake (5–10 min)</h2>
+<p>Read, in order, before touching any file:</p>
+<ol>
+<li><code>wiki/pedagogy/{level}/{slug}.md</code> — the current wiki</li>
+<li><code>wiki/pedagogy/{level}/{slug}.sources.yaml</code> — the source registry (sidecar)</li>
+<li><code>wiki/.reviews/pedagogy/{level}/{slug}-review-*.md</code> — all prior review rounds, newest first</li>
+<li><code>curriculum/l2-uk-en/plans/{level}/{slug}.yaml</code> — the plan</li>
+<li>Any GitHub issue driving this lock (e.g. #1412). The issue's AC list overrides this template when in doubt.</li>
+<li>The most recent systemic plan-audit issue (e.g. #1392). If a defect class is known, this pair is <strong>not</strong> exempt — check explicitly.</li>
+</ol>
+<p><strong>Do not skip the review history.</strong> A current wiki may have been re-compiled after the final review, meaning the documented gaps may or may not still be present. Re-read and verify against the actual file state.</p>
+<hr />
+<h2>AC-1 — Wiki to ≥9/10 (the 5-dimension rubric)</h2>
+<h3>The rubric</h3>
+<p>Score each dimension 1–10. All five must be ≥9 to lock. The thresholds and rationales are the same as the standard wiki review rubric used in <code>wiki/.reviews/.../*.md</code>:</p>
+<p>| # | Dimension | Focus | Auto-cap trigger |
+|---|-----------|-------|------------------|
+| 1 | <strong>Factual accuracy</strong> | Every claim sourced (inline citation or <code>sources.yaml</code> entry). Vague / unsourced claims → deduct. | ≤ 7 if any claim references a source that doesn't support it. |
+| 2 | <strong>Ukrainian language quality</strong> | Russianisms (кон→кін), Surzhyk (шо→що), calques (приймати душ→брати душ), paronyms. Four <strong>separate</strong> checks. | ≤ 7 if ANY Russianism in instructional text. |
+| 3 | <strong>Decolonization</strong> | Ukrainian on its own terms. No &quot;like Russian but...&quot; framing. Russian-origin calques explicitly named when discussed. | ≤ 6 if any &quot;like Russian&quot; comparison. |
+| 4 | <strong>Completeness</strong> | Covers all aspects a module writer needs: sequence, core dialogue, modern pragmatics, L2-specific errors, vocab boundaries. | ≤ 7 if a writer would have to invent a section that should exist. |
+| 5 | <strong>Actionable guidance</strong> | A writer can lift sentences directly. Generic advice (&quot;teach it well&quot;) does not count. | ≤ 5 if section is pure high-level strategy. |</p>
+<h3>Checklist for AC-1</h3>
+<ol>
+<li><strong>Apply any outstanding <code>&lt;fixes&gt;</code> block</strong> from the latest review round (check <code>git log -p</code> on the wiki to confirm they haven't already landed — compilation regenerates files and can silently drop fixes).</li>
+<li><strong>Close documented gaps</strong> (the specific deficits named in the review's dimension-4 and dimension-5 deductions). These are typically 1–3 items per round.</li>
+<li><strong>Verify every new vocabulary item</strong>. Four-authority hierarchy from <code>.claude/rules/ukrainian-linguistics.md</code>:
+<ul>
+<li><strong>VESUM</strong> (<code>data/vesum.db</code>, or MCP <code>mcp__sources__verify_word</code> / <code>verify_lemma</code>) — does this word form exist?</li>
+<li><strong>Правопис 2019</strong> (MCP <code>query_pravopys</code>) — orthography edge cases</li>
+<li><strong>Горох</strong> / stress dictionary — pronunciation</li>
+<li><strong>Антоненко-Давидович</strong> (<code>data/sources.db</code> <code>style_guide</code> table, MCP <code>search_style_guide</code>) — is it a calque?</li>
+<li><strong>Грінченко</strong> (MCP <code>search_grinchenko_1907</code>) — historical lexicographic evidence; use <code>search_esum</code> for true etymology</li>
+</ul>
+</li>
+<li><strong>If a right-column Surzhyk replacement cannot be verified in at least VESUM + СУМ-11</strong>, do NOT add it — flag with <code>&lt;!-- VERIFY --&gt;</code> instead. Hallucinated café vocab breaks the whole drill.</li>
+<li><strong>Emit a LOCKED review file</strong> at <code>wiki/.reviews/pedagogy/{level}/{slug}-review-LOCKED.md</code> with:
+<ul>
+<li>Per-dimension scores with evidence</li>
+<li>Overall score</li>
+<li>Definition of &quot;LOCKED&quot; for this artifact</li>
+<li>Unlock triggers</li>
+<li>Residual non-blockers (issues known but below the bar for blocking)</li>
+</ul>
+</li>
+<li><strong>Update the wiki's meta block</strong> with <code>lifecycle: locked</code>, <code>last_reviewed: YYYY-MM-DD</code>, <code>reviewed_by: &lt;agent-id&gt;</code>.</li>
+</ol>
+<h3>Escalation</h3>
+<p>If two rounds of review cannot get the wiki to 9/10 on any dimension:</p>
+<ul>
+<li>Do NOT block the scale batch on this one slug.</li>
+<li>Leave the wiki at its current state (<code>lifecycle: reviewed</code>, NOT <code>locked</code>).</li>
+<li>Open a follow-up issue labelled <code>blocked-review-and-lock</code> with the specific dimension that's stuck and the concrete sub-problem.</li>
+<li>Continue with the next slug.</li>
+</ul>
+<hr />
+<h2>AC-2 — Plan reviewed + LOCKED</h2>
+<p>The plan is often less scrutinized than the wiki because it is smaller and appears to &quot;just mirror&quot; the wiki. In practice plans drift in dangerous ways. Check explicitly:</p>
+<h3>Plan-review checklist</h3>
+<ol>
+<li><strong>Pragmatic precision</strong> (per #1392 Defect 2)
+<ul>
+<li>Context-blind reciprocals: e.g. <code>А у тебе?</code> mandated for a name-exchange where only <code>А тебе?</code> is natural.</li>
+<li>Context-inappropriate registers: formal <code>Ви</code> in a peer-to-peer setting, or vice-versa.</li>
+<li>Setting-requirement mismatch: does the <code>setting</code> of each <code>dialogue_situations[]</code> actually motivate the grammar listed in <code>grammar:</code>?</li>
+</ul>
+</li>
+<li><strong>Russianisms in plan prose</strong> (anywhere — <code>motivation</code>, <code>setting</code>, <code>points[]</code>, <code>focus</code> strings of activity items)
+<ul>
+<li><code>приймати замовлення</code> → <code>брати замовлення</code></li>
+<li><code>на винос</code> → <code>із собою</code></li>
+<li><code>вкусний</code> → <code>смачний</code></li>
+<li><code>Давайте + 1pl</code> → synthetic imperative (<code>-імо</code>/<code>-ймо</code>) — per #1392 Phase 2 Gemini findings</li>
+<li>Homoglyph scan: Latin letters inside Cyrillic tokens (<code>ЗМI</code> with Latin <code>I</code>) — per #1392 Phase 2</li>
+</ul>
+</li>
+<li><strong>Calques in <code>vocabulary_hints</code></strong>
+<ul>
+<li>Every item must pass Антоненко-Давидович silently (no flagged entry in <code>style_guide</code>).</li>
+<li>If a calque appears, either replace with the native form or explicitly mark it as the &quot;wrong&quot; side of a contrast pair the module teaches against.</li>
+</ul>
+</li>
+<li><strong>Plan-internal contradictions</strong>
+<ul>
+<li><code>grammar:</code> list vs <code>objectives:</code> — every grammar item should map to an objective and vice-versa.</li>
+<li><code>content_outline[].words</code> sum == <code>word_target</code> (or close).</li>
+<li><code>activity_hints</code> cover the <code>grammar:</code> targets.</li>
+<li><code>dialogue_situations[].motivation</code> actually produces the grammar in <code>grammar:</code>.</li>
+</ul>
+</li>
+<li><strong>References present and specific</strong>
+<ul>
+<li>At least one reference that is specific enough to verify (not just &quot;Ukrainian textbooks&quot;).</li>
+<li>If the paired wiki is locked, <strong>add a back-reference</strong> to the wiki in <code>references:</code>.</li>
+</ul>
+</li>
+<li><strong>Alignment with locked wiki</strong>
+<ul>
+<li>Anything new in the wiki (new steps, new vocab) should have a plan-side hook (new activity, new vocabulary_hint, new content_outline point). Otherwise the writer will read the plan and never look at the wiki's new content.</li>
+</ul>
+</li>
+</ol>
+<h3>Apply or VERIFY-flag</h3>
+<p>For every finding: either fix it directly in the plan, or insert a <code>&lt;!-- VERIFY: &lt;description&gt; --&gt;</code> comment in the closest YAML key. Do not leave a finding unaddressed.</p>
+<h3>Lifecycle field convention (net-new top-level fields)</h3>
+<p>Add these keys to the plan YAML (schema <code>module-plan.schema.json</code> is <code>additionalProperties: true</code>, so no schema change is required):</p>
+<pre><code class="language-yaml">lifecycle: locked              # enum: draft | reviewed | locked
+reviewed_at: '2026-04-22T00:00:00Z'   # ISO-8601 UTC
+reviewed_by: claude-opus-4-7-xhigh-&lt;issue-number&gt;
+review_notes: &gt;-
+  Short prose — what was reviewed, what findings, where to see the full
+  report (PR body / review file / commit message).
+</code></pre>
+<p>Bump the plan's <code>version</code> (minor for content addition, patch for fix-only). Add a <code>changelog</code> entry describing the review-and-lock pass.</p>
+<h3>Escalation</h3>
+<p>Same rules as AC-1 — if 2 review rounds can't clear blockers, stop at <code>lifecycle: reviewed</code> and file a follow-up issue. Do not block the batch.</p>
+<hr />
+<h2>AC-3 — Cross-pair verification (the drift check)</h2>
+<p>The most common failure mode at scale is <strong>wiki-plan drift</strong>: wiki says one thing, plan says something subtly different, learner-facing content ends up averaging them. Before declaring the pair locked:</p>
+<ol>
+<li>Open both files side by side.</li>
+<li>For each new wiki section / step, confirm a plan-side hook exists.</li>
+<li>For each plan dialogue, confirm the wiki has an example or pedagogical note that motivates the dialogue's content.</li>
+<li>Specifically for Surzhyk/calque tables: every pair on the wiki's table should appear as either a quiz item, a fill-in distractor, or a match-up pair in the plan's <code>activity_hints</code>.</li>
+<li>For terminology that differs between wiki and plan (e.g. <code>кав'ярня</code> vs <code>кафе</code>) — flag as a writer-facing note in the plan, not as a defect. Two standard Ukrainian words are not a drift; two <em>conflicting</em> words are.</li>
+</ol>
+<hr />
+<h2>AC-4 — Adversarial review (Gemini) before PR</h2>
+<p>Spawn Gemini via the bridge:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+  &quot;Adversarial review of #&lt;N&gt; review-and-lock for &lt;slug&gt; wiki + plan. \
+   Read the diff. Look for: \
+   (1) wiki fixes that introduce NEW gaps while closing documented ones, \
+   (2) lifecycle field naming colliding with existing plan schema fields, \
+   (3) plan-review checklist missing categories that the latest systemic audit would have caught, \
+   (4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step), \
+   (5) hallucinated vocab not verifiable in VESUM.&quot; \
+  --task-id &lt;N&gt;-review --model gemini-3.1-pro-preview
+</code></pre>
+<p>Address findings. If non-trivial, a second round is expected — don't short-circuit.</p>
+<hr />
+<h2>AC-5 — PR + merge</h2>
+<ul>
+<li>PR title: <code>feat(quality): review-and-lock &lt;slug&gt; wiki + plan (#&lt;N&gt;)</code></li>
+<li>Do NOT merge the PR yourself. The user merges.</li>
+<li>Do NOT use <code>gh pr merge --admin</code>.</li>
+</ul>
+<hr />
+<h2>Worked example: at-the-cafe (PR #1412)</h2>
+<p>This section shows the template applied step-for-step. If anything in the rubric above is unclear, the answer is: &quot;do what #1412 did.&quot;</p>
+<h3>AC-1 (wiki)</h3>
+<ul>
+<li><strong>Prior state.</strong> <code>wiki/pedagogy/a1/at-the-cafe.md</code>, last review 8/10 (final review 2026-04-05). Documented gaps:
+<ol>
+<li>Modern café vocab: no <code>тут чи із собою</code>, no size collocations.</li>
+<li>Surzhyk table: generic items (<code>приймати участь</code>, <code>відчиняти двері</code>) not café-specific.</li>
+</ol>
+</li>
+<li><strong>Fixes applied:</strong>
+<ol>
+<li>Added <strong>Step 5: Сучасна кав'ярня</strong> with <code>Вам тут чи із собою?</code>, sizes <code>велику каву</code> / <code>маленьку каву</code>, plus minimal dialogue.</li>
+<li>Added new <strong>Типові помилки L2 (café-specific Surzhyk)</strong> section with 8 café-specific pairs (счёт/рахунок, на винос/із собою, пірожене/тістечко, кулечок/пакетик, трубочка/соломинка, чашка кофе/чашка кави, вкусна/смачна, приймати замовлення/брати замовлення).</li>
+<li>Every right-column token verified in VESUM (<code>data/vesum.db</code>). Left-column Russianisms confirmed absent from VESUM (пірожене, кулечок, кофе) or independently flagged in Антоненко-Давидович (приймати X → брати X).</li>
+<li>Rewrote &quot;Приклади з підручників&quot; exercise 3 from generic pairs to café-specific ones, so the writer can drill exactly these.</li>
+<li>Added writer-note after vocabulary table pinning <code>велику каву</code> / <code>Тут, будь ласка</code> / <code>Із собою, будь ласка</code> as indivisible chunks (prevents the writer from over-teaching adjective declension at A1).</li>
+</ol>
+</li>
+<li><strong>LOCKED review file:</strong> <code>wiki/.reviews/pedagogy/a1/at-the-cafe-review-LOCKED.md</code>. All 5 dimensions at 9. Overall 9/10. Unlock triggers listed.</li>
+</ul>
+<h3>AC-2 (plan)</h3>
+<ul>
+<li><strong>Prior state.</strong> <code>lifecycle</code> absent. Never adversarially reviewed.</li>
+<li><strong>Findings &amp; fixes:</strong>
+<ul>
+<li><em>Pragmatic:</em> No context-blind reciprocals. (#1392 Defect 2 clean.)</li>
+<li><em>Russianism in prose:</em> None. Added author-note warning against <code>Кава на винос</code> in Діалог 3 description.</li>
+<li><em>Calque in vocabulary:</em> None in prior state. New additions (<code>тут</code>, <code>із собою</code>, <code>велику каву</code>, <code>маленьку каву</code>) all VESUM-verified.</li>
+<li><em>Contradiction:</em> None. Word-count sum cleanly matches target (300×4 = 1200 = word_target).</li>
+<li><em>References:</em> Added wiki back-reference.</li>
+<li><em>Wiki-plan alignment:</em> Plan had no hook for wiki's new Step 5. Closed by adding Діалог 3 (takeaway) + new <code>content_outline</code> point under &quot;Як замовити&quot; + extended <code>vocabulary_hints</code> + new Surzhyk fill-in activity mirroring the wiki's new table.</li>
+</ul>
+</li>
+<li><strong>Lifecycle markers added.</strong> <code>version</code> bumped 1.2.2 → 1.3.0. <code>changelog</code> entry.</li>
+</ul>
+<h3>AC-3 (drift check)</h3>
+<ul>
+<li>Wiki Step 5 → plan Діалог 3 + new section-point + new vocab_hints ✓</li>
+<li>Wiki &quot;Типові помилки L2&quot; table → plan new fill-in activity (7 of 8 pairs; <code>приймати замовлення</code> left implicit because the plan doesn't use the verb <code>приймати</code> for orders anywhere) ✓</li>
+<li>Wiki uses <code>кав'ярня</code>, plan uses <code>кафе</code>. Both standard. Added <code>кав'ярня</code> to plan's <code>recommended</code> vocab as near-synonym with writer-note. ✓</li>
+</ul>
+<h3>AC-4 (Gemini)</h3>
+<p>See PR #1412 body for the Gemini round(s) and what was addressed.</p>
+<hr />
+<h2>Lint / verification commands</h2>
+<p>These commands should pass before the PR lands:</p>
+<pre><code class="language-bash"># plan YAML + schema
+.venv/bin/python scripts/validate/validate_plans.py &lt;level&gt;
+
+# lifecycle markers present
+yq '.lifecycle' curriculum/l2-uk-en/plans/&lt;level&gt;/&lt;slug&gt;.yaml   # → &quot;locked&quot;
+
+# VESUM verification (for any new right-column Surzhyk replacement)
+.venv/bin/python -c &quot;
+import sqlite3
+db = sqlite3.connect('data/vesum.db')
+for w in [&lt;each new word&gt;]:
+    hits = db.execute('SELECT count(*) FROM forms WHERE word_form=?', (w,)).fetchone()[0]
+    assert hits &gt; 0, f'{w} not in VESUM'
+    print(f'{w} ✓')
+&quot;
+</code></pre>
+<hr />
+<h2>Why this document exists</h2>
+<p>At A.8 we run the canary against a single locked pair. At A.9 we batch the remaining ~106 pairs. Without this template each agent would invent their own review procedure and the 106 outputs would be inconsistent. This file is the contract. Every future &quot;review-and-lock&quot; PR for A1 / A2 should be reviewable against this doc in one pass: &quot;does it do what §AC-1…AC-5 say? yes/no.&quot;</p>
+<p>The worked example (#1412, <code>at-the-cafe</code>) is the ground truth. If this doc and the #1412 diff disagree, <strong>the #1412 diff wins</strong> and this doc should be updated to match, not the other way round — the template drifts, the applied artifact is what the pipeline actually consumes.</p>
+
+  </main>
+</div>
+</body>
+</html>

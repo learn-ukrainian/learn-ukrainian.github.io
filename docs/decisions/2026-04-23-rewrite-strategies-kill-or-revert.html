@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ADR-007: Kill the rewrite strategies — enforce reviewer-as-fixer parity</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>ADR-007: Kill the rewrite strategies — enforce reviewer-as-fixer parity</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: 2026-04-23-rewrite-strategies-kill-or-revert.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>ADR-007: Kill the rewrite strategies — enforce reviewer-as-fixer parity</h1>
+<p><strong>Status</strong>: ACCEPTED 2026-04-24 (flipped after P2-A #1454 + PR-A #1500, PR-B #1499, PR-C #1506, PR-D #1509, PR-F #1508 all merged).
+<strong>Date</strong>: 2026-04-23
+<strong>Deciders</strong>: Engineering (Krisztian K. — signed off 2026-04-23)
+<strong>Related</strong>: EPIC #1451 (Phase 2-C), closer #1456, pipeline rule <code>claude_extensions/rules/pipeline.md</code>, decision <code>dec-001</code> (reviewer-as-fixer, active since 2026-03-24)
+<strong>Supersedes</strong>: #1268, #1277, #1288, #1322</p>
+<hr />
+<h2>Context</h2>
+<p>Decision <code>dec-001</code> (active in <code>docs/decisions/decisions.yaml:14-32</code>, logged 2026-03-24) records: <em>&quot;V6 uses reviewer-as-fixer, not full rewrite. Reviewer outputs exact find/replace pairs in <code>&lt;fixes&gt;</code> block. Pipeline applies them deterministically. No LLM regeneration, no rewriting.&quot;</em> Supporting empirical evidence: Gemini showed FROM-SCRATCH rewrites degrade content across rounds (9.6 → 9.2 → 8.4).</p>
+<p>Non-negotiable rule §4 (<code>claude_extensions/rules/non-negotiable-rules.md</code>) restates this as the project's authoritative stance, as does the pipeline rule, which flags the contradiction explicitly:</p>
+<blockquote>
+<p>⚠️ Live contradiction (tracked as #1456): <code>scripts/build/convergence_loop.py:595-607</code> still has <code>section_rewrite</code> / <code>full_rewrite</code> / <code>writer_swap</code> strategies despite the no-rewrite decision.</p>
+</blockquote>
+<p>The contradiction has been live for ~1 month. During the <code>a1/colors</code> AI-only smoke (2026-04-23, logged in <code>docs/decisions/2026-04-23-ai-only-build-infeasible.md</code>) the pipeline exercised exactly this path: R1 REJECT → <code>full_rewrite</code> → R2 REJECT with <strong>the same flag-color hallucination reintroduced by the rewrite</strong> after the <code>&lt;fixes&gt;</code> block had already corrected it. Rewrite-driven regression then burned the convergence budget and forced a <code>plan_revision_request</code> terminal. That run is both a live-fire validation of the empirical claim from <code>dec-001</code> and the immediate trigger for this ADR.</p>
+<p>The alignment-pipeline audit (<code>docs/architecture/2026-04-23-alignment-pipeline-audit.md</code>, §2 layer 12 and §3 A3) classifies this as <em>the</em> canonical instance of decisions being advisory rather than executable — &quot;two different systems under one name.&quot; Phase 2-C of the resulting EPIC #1451 is the remediation.</p>
+<p>The question this ADR answers is narrow: <strong>which of the two sides of the contradiction changes?</strong> Either the code stops rewriting (ADR-007 KILL path) or the decision admits rewrites with documented constraints (REVERT path).</p>
+<p>The evidence supports KILL. The REVERT path has no new data in its favour — the empirical degradation pattern that drove <code>dec-001</code> (9.6 → 8.4) reproduced on <code>a1/colors</code> this week.</p>
+<hr />
+<h2>Decision</h2>
+<p><strong>Enforce <code>dec-001</code> at the code level. Kill every mechanism that lets an LLM regenerate content during review, contract, or style heal loops. Keep exactly one write path (the initial <code>step_write</code>) and exactly one fix path (the deterministic <code>&lt;fixes&gt;</code> find/replace loop).</strong></p>
+<ul>
+<li>All tiered rewrite strategies in the convergence loop — <code>section_rewrite</code>, <code>full_rewrite</code>, <code>writer_swap</code> — are removed.</li>
+<li>The reviewer-emitted <code>&lt;rewrite-block section=&quot;...&quot;&gt;</code> directive protocol is removed. Reviewers output <code>&lt;fixes&gt;</code> only.</li>
+<li>Auto-heal rewrites for <code>WORD_BUDGET</code> contract violations are removed. Word-budget shortfalls that the writer cannot repair via <code>&lt;fixes&gt;</code> <code>insert_after:</code> become a <code>plan_revision_request</code> or <code>budget_exhausted</code> terminal — an honest signal that the plan or the writer is under-specified.</li>
+<li>The fix-loop remains as designed: reviewer verdict REVISE emits <code>&lt;fixes&gt;</code>, pipeline applies find/replace, re-review. Max 2 fix rounds. Score should go up, never down.</li>
+<li>The convergence ladder collapses from five tiers to two: <strong>tier 1 (patch)</strong> and <strong>tier 5 (plan_revision_request terminal)</strong>. Tiers 2–4 are deleted, not stubbed — stubs invite revival.</li>
+</ul>
+<p>This ADR does <strong>not</strong> change <code>dec-001</code>. It enforces it. <code>dec-001</code> remains the authoritative statement of the policy; this ADR is the implementation-parity pass.</p>
+<hr />
+<h2>Rewrite-mechanism inventory</h2>
+<p>Brief framed this as &quot;four overlapping strategies.&quot; The actual footprint is larger — <strong>seven call sites across two loops and four supporting helper layers</strong> — but they all reduce to the same class: <em>LLM regeneration triggered by a review verdict or contract violation.</em> The verdict for the whole class is the same: <strong>KILL</strong>.</p>
+<p>| # | Name | Location | What it does | Why it contradicts dec-001 | Verdict | Closes |
+|---|---|---|---|---|---|---|
+| M1 | <code>section_rewrite</code> tier | <code>scripts/build/convergence_loop.py:233-234, 597-600</code>; directive builder <code>scripts/build/v6_build.py:9000-9013</code>; dispatch <code>scripts/build/v6_build.py:9115-9144</code> | Tier-2 escalation: groups findings by <code>scope.section_title</code> and regenerates each section via <code>_rewrite_block_section</code>. | LLM regenerates content on REVISE. | <strong>KILL</strong> | #1288 (partial) |
+| M2 | <code>full_rewrite</code> tier | <code>scripts/build/convergence_loop.py:239-242, 601-605</code>; directive <code>scripts/build/v6_build.py:9016-9027</code>; dispatch <code>scripts/build/v6_build.py:9146-9170</code> | Tier-3 escalation: full <code>step_write</code> re-run with a <code>correction_directive</code> listing top-3 persistent findings. | Exactly the FROM-SCRATCH rewrite that <code>dec-001</code> rejected on empirical evidence. Re-demonstrated on <code>a1/colors</code> (2026-04-23). | <strong>KILL</strong> | #1322 |
+| M3 | <code>writer_swap</code> tier | <code>scripts/build/convergence_loop.py:243-246, 606-641</code>; dispatch <code>scripts/build/v6_build.py:9172-9189</code> | Tier-4 escalation: rotates writer family (gemini → claude → codex) and invokes <code>_full_rewrite_round</code> under the new writer. Guarded by reviewer-matrix feature flag. | Uses M2 under the hood; inherits the same degradation class. Writer-swap by itself doesn't violate <code>dec-001</code>, but the only way it currently exercises is through a full rewrite. | <strong>KILL</strong> (see Open Question 1 on operational knob) | #1322 (partial) |
+| M4 | Reviewer-emitted <code>&lt;rewrite-block&gt;</code> directive | Prompt contract <code>scripts/build/phases/v6-review.md:160, 169-173, 205-208</code>; parser <code>scripts/build/v6_build.py:8146-8173</code>; applier <code>scripts/build/v6_build.py:8682-8706</code>; invoker <code>scripts/build/v6_build.py:9302-9313</code> | Review prompt tells the reviewer: <em>&quot;if a problem cannot be fixed safely with surface edits, emit one or more <code>&lt;rewrite-block section=&quot;...&quot;&gt;</code> directives so the pipeline can regenerate that section.&quot;</em> Runs inside the deprecated <code>_run_review_heal_loop</code>. | Gives the reviewer a second lever beyond <code>&lt;fixes&gt;</code> — specifically the lever <code>dec-001</code> forbids. | <strong>KILL</strong> | #1277 |
+| M5 | <code>WORD_BUDGET</code> auto-heal rewrite | <code>scripts/build/v6_build.py:8825-8902</code>; invoker <code>scripts/build/v6_build.py:9328-9346</code> | When contract compliance flags ERROR-severity <code>WORD_BUDGET</code> violations, loops each offending section and triggers <code>_rewrite_block_section</code> to expand it. | LLM regeneration driven by a contract-violation signal. Exactly the heal-loop pattern #1322 set out to eliminate. | <strong>KILL</strong> | #1288 |
+| M6 | Rewrite-block infrastructure (shared by M1, M4, M5) | <code>scripts/build/v6_build.py:8383-8464</code> (<code>_dispatch_rewrite_prompt</code>, <code>_rewrite_block_guardrails</code>, <code>_extract_rewrite_block_auxiliary_forbidden_literals</code>); <code>:8466-8542</code> (<code>_rewrite_block_prompt_manifest</code>, <code>_audit_rewrite_block_prompt</code>); <code>:8544-8679</code> (<code>_rewrite_block_section</code>) | Shared machinery: prompt assembly, deterministic prompt audit, dispatch, post-rewrite validation (word-ratio floor, H2 preservation, activity-type contract check). | Sole purpose is to serve M1/M4/M5. Zero legitimate consumers after those are removed. | <strong>KILL</strong> (removed with M1/M4/M5) | #1268 (per-call Gemini budget cap becomes moot), #1277 (prompt-audit guards become moot) |
+| M7 | Style-review heal loop | <code>scripts/build/v6_build.py:9596-9642</code> | Historical rewrite loop. <strong>Already reverted to advisory-only</strong> (2026-04-23; comment at <code>:9608-9609</code>: <em>&quot;Instead of looping (churn), we save advice to the contract for next time&quot;</em>). Current behavior: run style review once, persist blocking issues as contract advice, continue. | Was a rewrite loop; is now compliant. | <strong>KEEP AS-IS</strong> (no change) | — |</p>
+<h3>Cross-cutting observations</h3>
+<ul>
+<li><strong><code>_run_review_heal_loop</code> (<code>v6_build.py:9244-9594</code>) appears to be dead code.</strong> <!-- VERIFY --> The main build path at <code>v6_build.py:11349</code> calls <code>_run_convergence_loop</code>, not <code>_run_review_heal_loop</code>. <code>_run_review_heal_loop</code> is where M4 and M5 are invoked. If it is truly unreachable in the production code path, M4 and M5 are already quiescent and the KILL is a removal of dead code rather than a behavioural change. Resolution: grep the repo for any remaining callers of <code>_run_review_heal_loop</code> and confirm. If genuinely dead, Phase 2-C gains a freebie — remove the loop and its rewrite callers in one commit with no runtime consequence. If a caller exists (resume path, test harness, CLI flag), the KILL has real blast radius and must be sequenced after users of that path are migrated.</li>
+<li><strong><code>CONVERGENCE_MATRIX_ENFORCED</code> feature flag</strong> (<code>v6_build.py:186, 5653, 9236</code>): governs whether writer_swap is reviewer-matrix-gated. Becomes irrelevant once M3 is removed; the flag can be retired in the same commit that removes the writer-swap code.</li>
+<li><strong>Orphan tests after the kill.</strong> <code>tests/test_convergence_loop.py</code> contains ≥7 assertions on <code>section_rewrite</code> / <code>full_rewrite</code> / <code>writer_swap</code> tier firing. <code>tests/test_rewrite_safety.py</code> exercises <code>_rewrite_block_section</code> backup/restore. Both become orphans. The fix-loop tests in <code>tests/test_v6_contract_flow.py</code>, <code>tests/test_v6_review_regression_guard.py</code>, <code>tests/test_v6_insert_after_fix.py</code> remain live and continue to cover the retained <code>&lt;fixes&gt;</code> path.</li>
+</ul>
+<h3>Scope framing — honest disagreement with the brief</h3>
+<p>The brief described &quot;four rewrite strategies.&quot; I found seven mechanisms spread across two loops. The spirit of the framing is correct: there is one fundamental contradiction with <code>dec-001</code>, not four. But the remediation is wider than editing three lines of <code>convergence_loop.py</code> — it deletes the <code>&lt;rewrite-block&gt;</code> protocol from the reviewer prompt, the <code>WORD_BUDGET</code> auto-heal, and ~400 LOC of rewrite-block infrastructure. An implementer who scoped only to <code>convergence_loop.py:595-607</code> would leave half the contradiction in place.</p>
+<hr />
+<h2>Consequences</h2>
+<h3>Positive</h3>
+<ul>
+<li><strong><code>dec-001</code> becomes executable.</strong> The decision journal stops being advisory at this surface.</li>
+<li><strong>Empirical quality degradation path closes.</strong> The 9.6 → 8.4 regression pattern that <code>dec-001</code> documented, re-demonstrated on <code>a1/colors</code> this week, has no remaining code path.</li>
+<li><strong>Fewer moving parts.</strong> ~400 LOC of rewrite-block infrastructure, three tier strategies, one protocol extension in the reviewer prompt, and one feature flag are removed. Surface area for drift-class bugs (EPIC #1451's central concern) drops materially.</li>
+<li><strong>Terminal honesty.</strong> Plan-level and writer-level failures flow to <code>plan_revision_request</code> or <code>budget_exhausted</code> instead of being masked by 2–3 automatic rewrite retries that often regress. This matches the convergent-pipeline spec's &quot;honest human-dependent terminals&quot; contract (#1322).</li>
+<li><strong>Closes four open issues</strong> (#1268, #1277, #1288, #1322) without per-issue work. One architectural decision, four closures.</li>
+</ul>
+<h3>Negative / risks</h3>
+<ul>
+<li><strong>No more in-loop recovery for cross-section findings.</strong> Before: a cross-section finding triggered M2 (full rewrite) and sometimes converged. After: same finding → <code>plan_revision_request</code> terminal, human fixes plan, re-fire module. Throughput on stuck modules drops; convergence budget is shorter.</li>
+<li><strong><code>WORD_BUDGET</code> ERRORs become hard failures.</strong> Writer that undershoots on a section must either be fixed by <code>&lt;fixes&gt;</code> <code>insert_after:</code> entries from the reviewer, or the module fails review. This is structurally correct (the plan's word budget is a contract) but operationally stricter than today. See Open Question 2.</li>
+<li><strong>Threshold split-brain amplifies the consequence.</strong> Module review threshold is 8.0 (<code>v6_build.py:112</code>); audit naturalness threshold is 9.0 (<code>audit/config.py:46-56</code>). With rewrites killed, modules that sit in the 8.0–8.9 band more often hit <code>plan_revision_request</code> rather than getting auto-repaired. P2-A (unified threshold table) is therefore a <strong>hard prerequisite</strong> for ACCEPTED status — see Migration Plan. See Open Question 3.</li>
+<li><strong>Writer-model-variance resilience drops.</strong> M3 (writer_swap) was the only mechanism that could react to a single-writer bad-sampling day. After KILL, a sampling-variance failure fails the module. The alternative mitigation is a small writer-side naturalness pre-check (already tracked as a follow-up in the AI-only brief) that runs BEFORE review rather than rewriting AFTER it.</li>
+<li><strong>~8 orphan tests to remove or re-purpose.</strong> Quantified above. Non-trivial but bounded.</li>
+</ul>
+<h3>Neutral / follow-ups</h3>
+<ul>
+<li>Prompt-audit guards (#1277's deliverable) are preserved at the architectural level — they just won't guard rewrite prompts any more, because rewrite prompts cease to exist. If a future ADR revives a narrower rewrite mechanism, the prompt-audit pattern is still the correct way to govern it.</li>
+<li><code>dec-001</code> stays live. This ADR is an <em>enforcement</em> event, not a supersession of the underlying policy.</li>
+</ul>
+<hr />
+<h2>Migration plan</h2>
+<p>PRs land in this order. Each PR is independently revertable. No PR leaves the tree in a mixed state.</p>
+<p><strong>PR-A — Remove M1, M2, M3 from the convergence loop.</strong> Owner: Codex. Scope: <code>scripts/build/convergence_loop.py</code> (delete tier-2/3/4 branches in <code>select_strategy</code> and the corresponding <code>try:</code> arms in <code>run_convergence_loop</code>; simplify <code>ConvergenceContext</code> to drop <code>section_rewrite_round</code>, <code>full_rewrite_round</code>, <code>writer_swap_round</code>, <code>style_review_after_swap</code>, <code>reviewer_matrix_enforced</code>). <code>scripts/build/v6_build.py</code> (delete <code>_section_rewrite_round</code>, <code>_full_rewrite_round</code>, <code>_writer_swap_round</code>, <code>_build_section_rewrite_directive</code>, <code>_build_full_rewrite_directive</code>; simplify the <code>_run_convergence_loop</code> wiring). Tests: prune <code>tests/test_convergence_loop.py</code> to the patch + terminal cases; delete tier-2/3/4 assertions.</p>
+<p><strong>PR-B — Remove M4 (reviewer <code>&lt;rewrite-block&gt;</code> protocol).</strong> Owner: Codex. Scope: <code>scripts/build/phases/v6-review.md</code> (strike lines 160, 169-173, 205-208 — the &quot;rewrite-block&quot; emission contract). <code>scripts/build/v6_build.py</code> (delete <code>_parse_rewrite_blocks</code>, <code>_apply_review_rewrite_blocks</code>, and the call at <code>:9302-9313</code> inside <code>_run_review_heal_loop</code>). Regenerate any cached review-prompt fixtures.</p>
+<p><strong>PR-C — Remove M5 (WORD_BUDGET auto-heal).</strong> Owner: Codex. Scope: <code>scripts/build/v6_build.py</code> (delete <code>_apply_contract_word_budget_rewrites</code> and its invoker at <code>:9328-9346</code>). Move WORD_BUDGET ERROR handling into the standard contract-violation path: ERROR-severity WORD_BUDGET now surfaces as a review finding and can be addressed only via <code>&lt;fixes&gt;</code> <code>insert_after:</code> entries — if the reviewer can't emit a repair, the module fails.</p>
+<p><strong>PR-D — Remove M6 (rewrite-block infrastructure) and dead code cleanup.</strong> Owner: Codex. Scope: <code>scripts/build/v6_build.py</code> — after PRs A/B/C land, the rewrite-block helpers (<code>_rewrite_block_section</code>, <code>_rewrite_block_prompt_manifest</code>, <code>_audit_rewrite_block_prompt</code>, <code>_dispatch_rewrite_prompt</code>, <code>_rewrite_block_guardrails</code>, <code>_extract_rewrite_block_auxiliary_forbidden_literals</code>) have zero remaining callers. Delete them. Delete <code>CONVERGENCE_MATRIX_ENFORCED</code> feature flag and its test wiring. Delete <code>tests/test_rewrite_safety.py</code>. Verify <code>_run_review_heal_loop</code> callers (see Cross-cutting observation above) — if zero, delete the loop. Remove the <code>rewrite_blocks</code> field from the <code>per_dim_review</code> result tuple and any downstream consumers.</p>
+<p><strong>PR-E — Supersede closure and decision-journal alignment.</strong> Owner: Claude. Scope: comment on #1268, #1277, #1288, #1322 with pointers to this ADR + the merged PRs; close each with <code>superseded</code> label. Update <code>docs/decisions/INDEX.md</code> to add this ADR. Add a <code>dec-007</code> entry in <code>docs/decisions/decisions.yaml</code> that references dec-001 via <code>depends_on</code> and records the enforcement. Update <code>claude_extensions/rules/pipeline.md</code> — remove the &quot;live contradiction&quot; warning block; redeploy via <code>npm run claude:deploy</code>.</p>
+<p><strong>PR-F — Invariant test (Phase 4-E precursor).</strong> Owner: Codex. Scope: <code>tests/test_no_rewrite_contract.py</code> — fails CI if any of the deleted symbol names reappear in <code>scripts/build/</code> or if the string <code>&lt;rewrite-block</code> reappears in a phase prompt. This is a structural guard against reintroduction and functions as the &quot;validation&quot; side of the ADR.</p>
+<p><strong>Gating with P2-A (unified thresholds):</strong> PRs A–D can land concurrently with P2-A but must NOT flip to ACCEPTED status until P2-A merges. Rationale: under today's 8.0-vs-9.0 split-brain thresholds, a KILLed rewrite ladder will fire <code>plan_revision_request</code> on modules that would have passed under unified thresholds. Sequencing: P2-A lands first, then PR-E (decision-journal flip) lands, then the ADR status moves PROPOSED → ACCEPTED.</p>
+<hr />
+<h2>Validation</h2>
+<p>After the migration plan lands, the ADR's intent holds if and only if:</p>
+<ol>
+<li><strong>Grep invariant:</strong> <code>grep -RE 'section_rewrite|full_rewrite|writer_swap|_rewrite_block_section|&lt;rewrite-block' scripts/build/ scripts/build/phases/</code> returns zero matches, with the single possible exception of comments explicitly referencing this ADR. Enforced by the PR-F test.</li>
+<li><strong>Runtime invariant:</strong> <code>scripts/build/convergence_loop.py:select_strategy</code> returns exactly two strategies across all inputs: <code>&quot;patch&quot;</code> and <code>&quot;plan_revision_request&quot;</code>. No test path should be able to coax it into another strategy. Enforced by pruning <code>tests/test_convergence_loop.py</code> down to those two cases plus error paths.</li>
+<li><strong>Policy invariant:</strong> <code>scripts/check_decisions.py</code> runs clean (no staleness on dec-001 or the new dec-007). The rules-deployment invariant (EPIC #1451 Phase 4-E) keeps <code>claude_extensions/rules/pipeline.md</code> and <code>.claude/rules/pipeline.md</code> in sync so the &quot;live contradiction&quot; warning doesn't silently reappear in <code>.claude/</code>.</li>
+<li><strong>Observable behavior on <code>a1/colors</code> rebuild:</strong> when Phase 5 re-fires the module (per #1451 Phase 5), the run produces either a single R1 PASS or at most 2 fix rounds (R1 REVISE → <code>&lt;fixes&gt;</code> → R2 PASS). No <code>full_rewrite</code> trace entries in <code>orchestration/colors/state.json</code>. A regression that reintroduces the flag-color hallucination (as in the 2026-04-23 smoke) now fails the module outright rather than being masked by a rewrite loop.</li>
+<li><strong>Orphan-symbol check:</strong> CI fails if any of the removed function names or the <code>&lt;rewrite-block&gt;</code> prompt string reappear in <code>scripts/build/</code> — the PR-F test.</li>
+</ol>
+<hr />
+<h2>Supersedes</h2>
+<ul>
+<li><strong>#1268</strong> — Cap per-call Gemini runtime budget for section rewrite blocks → <em>obsolete</em>: section rewrites removed.</li>
+<li><strong>#1277</strong> — Slim v6 rewrite-block prompts and add deterministic prompt-audit guards → <em>obsolete</em>: rewrite prompts removed; prompt-audit pattern preserved as architectural reference for any future ADR that narrows scope.</li>
+<li><strong>#1288</strong> — Auto-heal review-loop WORD_BUDGET contract violations with section rewrites → <em>rejected</em>: WORD_BUDGET auto-heal directly contradicts dec-001; failures surface as terminals or require <code>&lt;fixes&gt;</code> <code>insert_after:</code> repairs.</li>
+<li><strong>#1322</strong> — Convergent pipeline — replace heal loop, eliminate needs-human-review.yaml → <em>partially shipped, now tightened</em>: the &quot;convergent pipeline&quot; ships without the three rewrite tiers it originally proposed. Terminals (<code>pass</code>, <code>plan_revision_request</code>, <code>budget_exhausted</code>) and <code>stuck-modules.yaml</code> emission remain; the in-loop rewrite ladder does not.</li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li>EPIC #1451 (Phase 2-C of Alignment-Pipeline Runtime Contracts)</li>
+<li>Closer issue #1456</li>
+<li>Active decision <code>dec-001</code> (reviewer-as-fixer, no rewrite)</li>
+<li>Non-negotiable rule §4 (<code>claude_extensions/rules/non-negotiable-rules.md</code>)</li>
+<li>Pipeline rule (<code>claude_extensions/rules/pipeline.md</code>) — carries the &quot;live contradiction&quot; warning that this ADR retires</li>
+<li>Alignment-pipeline audit <code>docs/architecture/2026-04-23-alignment-pipeline-audit.md</code> §2 layer 12, §3 A3</li>
+<li>AI-only decision brief <code>docs/decisions/2026-04-23-ai-only-build-infeasible.md</code> — live-fire evidence that <code>full_rewrite</code> regresses on content already corrected by <code>&lt;fixes&gt;</code></li>
+<li><code>docs/bug-autopsies/alignment-contracts.md</code> §3 (expected update after this ADR lands)</li>
+</ul>
+<h2>Expiry</h2>
+<p><strong>Review by 2027-04-23</strong> (12 months). The reason for a longer-than-default window: this ADR enforces a policy (dec-001) that has been re-validated twice already by independent empirical evidence (Gemini's original 9.6→8.4 data; the 2026-04-23 colors smoke). Short expiries invite premature revival on insufficient data. If someone proposes reintroducing any rewrite mechanism before 2027-04-23, the burden is new empirical evidence that FROM-SCRATCH rewrites do NOT degrade content in the project's current configuration — not a new theory about why they should work.</p>
+<hr />
+<h2>Open questions — answered 2026-04-23</h2>
+<p>Signed off by Krisztian K. on 2026-04-23.</p>
+<ol>
+<li>
+<p><strong>Writer-swap as an operational knob — keep or delete?</strong> → <strong>Y (delete entirely).</strong> No <code>--writer-override</code> CLI escape hatch. Manual re-fire under a different writer uses the existing <code>--writer</code> flag on a fresh module invocation, which is already a clean <code>step_write</code> path.</p>
+</li>
+<li>
+<p><strong>WORD_BUDGET ERROR → terminal, OK?</strong> → <strong>Y.</strong> Unrepairable WORD_BUDGET ERROR fails the module to <code>plan_revision_request</code>. The plan's budget is a contract; chronic undershoot is a plan or writer-prompt signal, not a thing to auto-heal over.</p>
+</li>
+<li>
+<p><strong>Hold ACCEPTED status until P2-A (unified thresholds) merges?</strong> → <strong>Y.</strong> PRs A–D can land concurrently with P2-A. PR-E (decision-journal flip + status transition to ACCEPTED) sequences AFTER P2-A merges. Rationale: under today's 8.0-vs-9.0 split-brain thresholds, KILLed rewrites would fire <code>plan_revision_request</code> on modules that would pass under unified thresholds.</p>
+</li>
+</ol>
+<p><strong>Implementation status at sign-off:</strong> APPROVED. PRs A/B/C/D may be dispatched to Codex (tier deletion + prompt surgery + dead-code cleanup + invariant test). PR-E held until P2-A (#1454) lands and this ADR flips to ACCEPTED.</p>
+
+  </main>
+</div>
+</body>
+</html>

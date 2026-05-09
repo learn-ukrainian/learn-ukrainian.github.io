@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Audit & Verification Standards</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Audit & Verification Standards</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: audit-standards.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Audit &amp; Verification Standards</h1>
+<blockquote>
+<p><strong>Scope:</strong> What PASS/FAIL means, gate hierarchy, and how to interpret audit results.
+Authoritative thresholds: <code>scripts/audit/config.py</code></p>
+</blockquote>
+<hr />
+<h2>Gate Hierarchy</h2>
+<p>Modules pass through gates in order. All must pass for a module to be &quot;fully complete.&quot;</p>
+<pre><code>Content Gates (automated)
+├── 1. Word count gate        — prose meets target
+├── 2. Outline compliance     — all plan sections present as H2s
+├── 3. Activities gate        — correct types, counts, valid YAML
+├── 4. Vocabulary gate        — correct count, valid YAML
+└── 5. Naturalness gate       — no AI slop patterns detected
+
+Review Gate (LLM — informational only)
+└── 6. Adversarial review     — qualitative assessment (does NOT block pass)
+
+MDX Gate (deterministic)
+└── 7. MDX generation         — always last, always succeeds if content passes
+</code></pre>
+<p><strong>Shippable = all content gates PASS + review ≥ 8/10.</strong> The review gate is enforced by the module dashboard (<code>scripts/module_dashboard.py</code>), not by the automated audit.</p>
+<hr />
+<h2>Review Lifecycle (#970)</h2>
+<h3>Artifacts</h3>
+<ul>
+<li><strong>Review findings</strong> → <code>orchestration/{slug}/review-*.md</code> (raw outputs, prompts, results)</li>
+<li><strong>Friction log</strong> → <code>orchestration/{slug}/friction.yaml</code> (curated learnings that survive rebuilds)</li>
+<li><strong>Global friction</strong> → <code>docs/rules/global-friction.yaml</code> (project-wide linguistic constraints)</li>
+<li><strong>Dashboard</strong> → <code>scripts/module_dashboard.py</code> (aggregated view of all modules)</li>
+</ul>
+<h3>Friction logs</h3>
+<p>Friction files use YAML with <code>id</code>, <code>status</code> (active/resolved), <code>type</code>, <code>description</code>.
+Active frictions are injected into content and review prompts automatically.
+When a friction is fixed (in code or templates), set <code>status: resolved</code> — it stays in the log for history but stops being injected into prompts.</p>
+<p>Global frictions apply to ALL modules (e.g., &quot;сес-тра is valid per Правопис §49&quot;).
+Module frictions are specific to one module (e.g., &quot;M02: сір is not a word&quot;).</p>
+<h3>No more GH review tickets</h3>
+<p>The pipeline no longer auto-creates GH issues for review passes. Review artifacts live in orchestration folders. GH issues are for work items only.</p>
+<h3>Dashboard</h3>
+<pre><code class="language-bash">.venv/bin/python scripts/module_dashboard.py a1           # all A1 modules
+.venv/bin/python scripts/module_dashboard.py a1 --first 6  # first 6 only
+.venv/bin/python scripts/module_dashboard.py a1 --failing-only
+</code></pre>
+<hr />
+<h2>Word Count Gate</h2>
+<h3>Thresholds by level</h3>
+<p>| Level | Min words (audit passes) |
+|-------|--------------------------|
+| A1 M01-05 | 300w |
+| A1 M06-10 | 500w |
+| A1 M11+ | 750w |
+| A2 | 1000w |
+| B1 | 1500w |
+| B2 | 1750w |
+| C1 | 3000w |
+| C2 | 3000w |
+| HIST | 5000w |
+| BIO | 5000w |
+| ISTORIO | 5000w |
+| LIT | 2500w |</p>
+<p><strong>Word target in meta file overrides the above.</strong> If meta sets <code>word_target: 4000</code>, that's the gate.</p>
+<h3>Word count failures</h3>
+<p>If the content phase produces &lt;80% of target: automatic retry (up to 3 attempts).
+If still failing after retries: the review phase (review+fix) should add content.</p>
+<hr />
+<h2>Outline Compliance Gate</h2>
+<p>Every section name in the plan's <code>content_outline</code> must appear as an H2 (<code>##</code>) heading in the content file. Names must match exactly (or very closely).</p>
+<p><strong>Most common audit failure.</strong> Root cause: the research phase generates meta sections that don't match plan section names, then the content phase writes wrong H2 headings.</p>
+<p>Fix: research phase template explicitly says &quot;section names must match plan exactly.&quot;</p>
+<hr />
+<h2>Activities Gate</h2>
+<p>| Metric | Seminar (hist, bio, etc.) | Core (a1-c2) |
+|--------|----------------------------------|--------------|
+| Min activities | 3 | 8 (A1), 10 (A2+) |
+| Max activities | 9 (soft cap) | varies (soft cap) |
+| Required types | reading, essay-response, critical-analysis | varies by level |
+| Forbidden types | match-up, fill-in, cloze, mark-the-words | — |
+| Min items per activity | 1 | varies |</p>
+<p>YAML must validate against <code>schemas/activities-{level}.schema.json</code>.</p>
+<h3>MIN/MAX philosophy (#1550 unit 4)</h3>
+<p>Activity counts and word counts are <strong>MINIMUMS, never maximums</strong>. The audit
+follows this rule:</p>
+<p>| Direction | Behaviour | Example |
+|-----------|-----------|---------|
+| Below MIN floor | Hard <code>FAIL</code> | A1 module with 3 activities (floor 4) |
+| At or above MIN | <code>PASS</code> | A1 module with 4-15 activities |
+| Above soft MAX cap | <code>WARN</code> only | A1 module with 17 activities |</p>
+<p>The <code>*_MAX</code> keys (<code>max_activities</code>, <code>INLINE_MAX</code>, <code>WORKBOOK_MAX</code>) are
+guidance for the writer — they are <em>not</em> hard ceilings. CLAUDE.md is
+explicit: word-count and activity-count targets are MINIMUMS. Going over
+emits a soft warning; the audit does <strong>not</strong> fail the module.</p>
+<p>The MIN gates (<code>min_activities</code>, <code>min_types_unique</code>,
+<code>min_items_per_activity</code>, <code>min_vocab</code>, word-count target) remain hard
+fails — those are the contracts.</p>
+<h3><code>letter_module: true</code> exception class</h3>
+<p>Plans for alphabet/letter-driven modules (<code>A1.1</code> phonetics) may declare
+<code>letter_module: true</code> at the top level. When set, the audit:</p>
+<ul>
+<li><strong>Drops</strong> the activity-count soft <code>WARN</code> entirely (letter modules
+legitimately need ~33 letter-recognition items spread across 4–6
+activities, so the level cap of 9 doesn't apply).</li>
+<li><strong>Keeps</strong> the activity-count MIN floor — letter modules still need at
+least the level minimum.</li>
+<li><strong>Keeps</strong> the word-count target — prose length expectations are
+level-standard.</li>
+<li><strong>Keeps</strong> the type-diversity MIN — letter modules still need 3–4
+distinct types (image-to-letter, match-up, fill-in, watch-and-repeat).</li>
+</ul>
+<p>Wired into <code>evaluate_content_heavy(..., letter_module=True)</code> in
+<code>scripts/audit/gates.py</code>.</p>
+<h3>Two-layer config map</h3>
+<p>There are two parallel config layers with different consumers:</p>
+<p>| Layer | File | Consumer | Canonical for |
+|-------|------|----------|---------------|
+| <strong>Audit</strong> | <code>scripts/audit/config.py</code> <code>LEVEL_CONFIG</code> | Post-build audit gates | Word target, naturalness min, activity-count MIN, type-diversity MIN, <code>forbidden_types</code>, <code>priority_types</code>, <code>required_types</code>, <code>allowed_types</code> |
+| <strong>Pipeline</strong> | <code>scripts/pipeline/config_tables.py</code> <code>ACTIVITY_CONFIGS</code> | Build-time writer prompt placeholders | <code>INLINE_MIN</code>/<code>INLINE_MAX</code> (dynamic from injection markers), <code>TOTAL_TARGET</code>, prompt-template strings, <code>INLINE_*</code>/<code>WORKBOOK_*</code> allowed-type partitioning |</p>
+<p>For shared concepts (forbidden / allowed / priority type lists), the
+audit layer is canonical; the pipeline layer should reflect those sets
+in its prompt-facing format. Where the two have intentionally drifted
+(e.g. seminar tracks where audit forbids inline drill types but
+pipeline allows them as inline-only checks), the divergence is captured
+in <code>tests/audit/test_config_invariants.py::_KNOWN_DIVERGENT_LEVELS</code>.</p>
+<p>Cross-layer invariants (enforced by tests):</p>
+<ul>
+<li>Pipeline <code>ITEMS_MIN</code> ≥ audit <code>min_items_per_activity</code> for the same level.</li>
+<li>Audit <code>priority_types</code> ⊆ pipeline <code>INLINE_ALLOWED ∪ WORKBOOK_ALLOWED ∪ ALLOWED_ACTIVITY_TYPES</code> (no dead-weight priorities).</li>
+<li>Pipeline <code>REQUIRED_TYPES</code> ⊆ audit <code>priority_types ∪ required_types</code>
+(no force-feeding what audit doesn't even prefer).</li>
+<li>Within audit: <code>forbidden_types ∩ (priority_types ∪ required_types ∪ allowed_types) == ∅</code>.</li>
+<li>Every level has <code>min_activities &gt; 0</code> and <code>min_types_unique &gt;= 2</code>.</li>
+</ul>
+<hr />
+<h2>Naturalness Gate</h2>
+<p>Detects AI slop patterns that make content feel machine-generated.</p>
+<h3>Detected patterns (any of these → FAIL)</h3>
+<ul>
+<li>Generic opening: &quot;In this module we will...&quot;</li>
+<li>Textbook passive: &quot;It should be noted that...&quot;</li>
+<li>Orphan facts: &quot;Interestingly, they also...&quot;</li>
+<li>Wall of facts without interpretation (&gt;3 facts in sequence)</li>
+<li>Formulaic transitions: &quot;Furthermore,&quot;, &quot;Moreover,&quot;, &quot;In conclusion,&quot;</li>
+<li>Missing narrative arc (just facts, no story)</li>
+</ul>
+<h3>Naturalness score threshold</h3>
+<ul>
+<li>Seminar tracks: ≥9.0</li>
+<li>Core tracks: ≥7.5</li>
+</ul>
+<hr />
+<h2>Anti-Gaming Detection</h2>
+<p>Two check suites detect LLM content-generation and review-gaming patterns. All checks are deterministic (no LLM calls). Source: <code>scripts/audit/checks/</code>.</p>
+<h3>Content Gaming (<code>content_gaming.py</code> + <code>content_purity.py</code>)</h3>
+<p>| Check | Type | Severity | Trigger |
+|-------|------|----------|---------|
+| Cross-module plagiarism | <code>CROSS_MODULE_PLAGIARISM</code> | warn &gt;3 / crit &gt;8 | Sentences duplicated across modules in same track |
+| Content-vocabulary alignment | <code>VOCAB_NOT_IN_CONTENT</code> | warn &lt;70% / crit &lt;50% | Vocab YAML words missing from prose+activities |
+| Example diversity | <code>TEMPLATE_EXAMPLE_RUN</code> | warn ≥3 / crit ≥5 | Consecutive examples with &gt;70% word overlap (B1+) |
+| Filler phrase density | <code>FILLER_PHRASE_OVERUSE</code> | warn &gt;5 / crit &gt;10 | LLM hedging phrases (level-aware: higher for C1/C2) |
+| Section depth (min words) | <code>SECTION_HEADER_PADDING</code> | warn any / crit ≥3 | H2 sections below 50w (A1-A2) or 100w (B1+) |
+| Section balance (max %) | <code>SECTION_BALANCE_BLOATED</code> | warn &gt;40% / crit &gt;60% | Any H2 section exceeding 40% of total word count |
+| IPA density cap | <code>IPA_DENSITY_EXCESSIVE</code> | warn &gt;5% / crit &gt;10% | Inline IPA tokens as fraction of total words |
+| Duplicate sentences | <code>DUPLICATE_SENTENCES</code> | warn &gt;3 / crit &gt;6 | Sentences with ≥70% fuzzy overlap within module |
+| Robotic sentence starters | <code>ROBOTIC_SENTENCE_STARTERS</code> | warn &gt;30% / crit &gt;50% | Same first word starting too many sentences |</p>
+<h3>Review Gaming (<code>review_gaming.py</code>)</h3>
+<p>| Check | Type | Severity | Trigger |
+|-------|------|----------|---------|
+| Score uniformity | <code>SCORE_UNIFORMITY</code> | warn &lt;0.5 SD / crit all 10 | Dimension scores too similar (rubber-stamp) |
+| Citation density | <code>LOW_CITATION_DENSITY</code> | warn &lt;1/300w / crit &lt;1/500w | Review doesn't cite enough specific content |
+| Section coverage | <code>LOW_SECTION_COVERAGE</code> | warn &lt;60% / crit &lt;40% | Review skips too many H2 sections |
+| Score drift | <code>REVIEW_SCORE_DRIFT</code> | warn avg&gt;8.5 / crit avg&gt;9.0 | Track-wide inflation across multiple modules |
+| Review boilerplate | <code>REVIEW_BOILERPLATE</code> | warn &gt;50% / crit &gt;70% | Recycled critique language across reviews |
+| Phantom section refs | <code>PHANTOM_SECTION_REFERENCE</code> | warn any | Review references non-existent section headers |
+| Cross-agent enforcement | <code>SELF_REVIEW_DETECTED</code> | critical | Same agent wrote content and review |</p>
+<h3>Legacy patterns (still active in review gate)</h3>
+<p>These patterns trigger <strong>GAMING_LANGUAGE_DETECTED</strong> (critical):</p>
+<ul>
+<li><code>&quot;ensuring a high score&quot;</code></li>
+<li><code>&quot;reflecting the fixes made&quot;</code></li>
+<li><code>&quot;designed to pass&quot;</code></li>
+<li><code>&quot;as I improved&quot;</code></li>
+</ul>
+<p>A flagged review is <strong>invalid</strong>. Request a new review via cross-agent review (Claude reviews Gemini's content, not Gemini reviewing its own).</p>
+<hr />
+<h2>Running Audits</h2>
+<pre><code class="language-bash"># Full audit (saves log automatically)
+scripts/audit_module.sh curriculum/l2-uk-en/{track}/{file}.md
+
+# Content-only audit (skip activities/vocab gates)
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{track}/{file}.md
+
+# Verify module without rebuilding
+.venv/bin/python scripts/build_module_v5.py {track} {num} --verify
+
+# Batch verification
+.venv/bin/python scripts/verify_track.py {track}
+.venv/bin/python scripts/verify_track.py {track} --quick   # use cached status
+.venv/bin/python scripts/verify_track.py {track} --full    # require full pass
+</code></pre>
+<hr />
+<h2>Status JSON Structure</h2>
+<p>Each module has <code>curriculum/l2-uk-en/{track}/status/{slug}.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;slug&quot;: &quot;slavic-tribes&quot;,
+  &quot;track&quot;: &quot;hist&quot;,
+  &quot;timestamp&quot;: &quot;2026-02-19T10:00:00Z&quot;,
+  &quot;overall&quot;: &quot;PASS&quot;,
+  &quot;gates&quot;: {
+    &quot;word_count&quot;: {&quot;status&quot;: &quot;PASS&quot;, &quot;value&quot;: 5123, &quot;threshold&quot;: 5000},
+    &quot;outline_compliance&quot;: {&quot;status&quot;: &quot;PASS&quot;},
+    &quot;activities&quot;: {&quot;status&quot;: &quot;PASS&quot;, &quot;count&quot;: 6},
+    &quot;vocabulary&quot;: {&quot;status&quot;: &quot;PASS&quot;, &quot;count&quot;: 32},
+    &quot;naturalness&quot;: {&quot;status&quot;: &quot;PASS&quot;, &quot;score&quot;: 9.2}
+  }
+}
+</code></pre>
+<p>Check status without re-auditing:</p>
+<pre><code class="language-bash">curl -s http://localhost:8765/api/blue/live-status   # all tracks
+curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}  # specific module
+</code></pre>
+<hr />
+<h2>Interpreting PASS vs Content-Complete</h2>
+<p>| Status | Meaning |
+|--------|---------|
+| <code>PASS</code> | All 5 content gates pass |
+| <code>content-complete</code> | Prose passes but activities/vocab missing |
+| <code>FAIL</code> | One or more gates fail |
+| <code>in-progress</code> | Build currently running |</p>
+<p>A module is only &quot;done&quot; when status is <code>PASS</code>.</p>
+
+  </main>
+</div>
+</body>
+</html>

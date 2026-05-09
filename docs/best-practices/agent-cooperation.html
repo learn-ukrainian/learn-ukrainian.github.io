@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Cooperation Best Practices</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+  
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Agent Cooperation Best Practices</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+    </div>
+    <div class="meta">
+      <div>Source: agent-cooperation.html</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Agent Cooperation Best Practices</h1>
+<blockquote>
+<p><strong>Scope:</strong> How Claude, Gemini, and Codex work together without degrading each other's output quality.
+Full protocol: <code>docs/CLAUDE-GEMINI-COOPERATION.md</code>
+Review evidence contract: <a href="../review-protocol.md"><code>docs/review-protocol.md</code></a></p>
+<p><strong>Runtime layer:</strong> All agent CLI invocations route through <code>scripts/agent_runtime/</code>.
+If you're touching an agent subprocess, read <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a> first.</p>
+</blockquote>
+<hr />
+<h2>Team Structure</h2>
+<p>| Team | Agent | Role |
+|------|-------|------|
+| 💙 <strong>Синя команда</strong> (Blue) | Claude | Architect, reviewer, quality gate |
+| 💛 <strong>Жовта команда</strong> (Gold) | Gemini | Content builder, implementer |
+| 🟢 <strong>Зелена команда</strong> (Green) | Codex | Adversarial reviewer, bug finder, code improver |</p>
+<p><strong>Both teams are adversarial by design.</strong> The purpose is quality through finding mistakes, not agreement. An approved module means both teams couldn't find serious problems — not that both teams were polite.</p>
+<hr />
+<h2>The Non-Negotiable Rule</h2>
+<p><strong>An LLM must NEVER review its own work.</strong></p>
+<p>Self-review produces inflated scores. Observed in production: Gemini reviewing its own content gave 9.9/10 scores with language like &quot;ensuring a high score&quot; and &quot;reflecting the fixes made.&quot; This was not bias in the model — it was a structural failure: the same agent that wrote the content reviewed it.</p>
+<h3>Valid review paths</h3>
+<ul>
+<li>✅ Claude reviews Gemini's content</li>
+<li>✅ Gemini reviews Claude's architecture proposals</li>
+<li>✅ Codex reviews Claude or Gemini implementation work</li>
+<li>✅ Automated audit gates (no LLM bias)</li>
+<li>❌ Gemini reviews its own content</li>
+<li>❌ Claude reviews its own code without external validation</li>
+<li>❌ Codex reviews its own code without external validation</li>
+</ul>
+<hr />
+<h2>Communication Channels</h2>
+<h3>GitHub-first (primary)</h3>
+<p>All substantive discussion happens on GitHub where it is persistent and searchable.</p>
+<p>| Channel | Use For | Max Length |
+|---------|---------|------------|
+| <strong>GitHub issues</strong> | Task specs, proposals, architecture plans | Unlimited |
+| <strong>GitHub comments</strong> | Reviews, feedback, progress, disagreements | Unlimited |
+| <strong>Broker messages</strong> | Short notifications pointing to GitHub | &lt;200 chars |</p>
+<p><strong>Never put full reviews or code in broker messages.</strong> Post on GitHub, then ping with &quot;review posted on #559.&quot;</p>
+<h3>Runtime layer — single source of truth for agent CLI calls</h3>
+<p>As of #1184 (April 2026), all three agents (Claude, Gemini, Codex) are
+invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies to:</p>
+<ul>
+<li><code>scripts/ai_agent_bridge/</code> — bridge messaging (<code>ask-gemini</code>, <code>ask-codex</code>, <code>process-claude</code>, etc.)</li>
+<li><code>scripts/build/dispatch.py</code> — pipeline phase dispatch (<code>skeleton</code>, <code>write</code>, <code>review</code>, etc.)</li>
+<li><code>scripts/delegate.py</code> (future) — ad-hoc coding task delegation</li>
+<li><code>scripts/consult.py</code> (future) — multi-agent consultation</li>
+</ul>
+<p><strong>If you find yourself writing <code>subprocess.Popen([... &quot;claude&quot;, ...])</code> or similar — stop.</strong> Use <code>runner.invoke()</code>. The runtime owns stall detection, usage logging, rate-limit headroom checks, mode validation, and resume-policy enforcement uniformly across all agents.</p>
+<p>Full guide: <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a>.</p>
+<h3>Claude Code version gotchas (affects <code>delegate.py dispatch --agent claude</code>)</h3>
+<ul>
+<li><strong>CC 2.1.119+: <code>--print</code> mode honors subagent <code>tools:</code> / <code>disallowedTools:</code> frontmatter.</strong> Previously print mode ignored those restrictions — they only applied in interactive subagent invocations. Our dispatched-Claude pattern (<code>delegate.py dispatch --agent claude</code> → <code>claude -p ...</code>) now enforces them. Current subagents (<code>claude_extensions/agents/curriculum-maintainer.md</code>) declare <code>tools: &quot;*&quot;</code> so dispatches are unaffected today. <strong>But</strong> any new subagent that restricts tools will apply those restrictions in dispatch mode. Don't declare <code>tools: [Read, Grep]</code> on a subagent you plan to dispatch unless that limit is intentional for dispatched runs too.</li>
+<li><strong>CC 2.1.119+: <code>--agent &lt;name&gt;</code> honors agent definition's <code>permissionMode</code> for built-in agents.</strong> We pass <code>--mode danger</code> explicitly on every dispatch, so this is a no-op for us. Don't remove the explicit <code>--mode danger</code> and expect the agent definition to carry it — not every dispatch target is a built-in agent.</li>
+<li><strong>CC 2.1.119+: <code>Agent</code> tool with <code>isolation: &quot;worktree&quot;</code> no longer reuses stale worktrees from prior sessions.</strong> Until this fix we avoided the built-in Agent-tool isolation and hand-rolled <code>git worktree add</code> (see <code>.claude/rules/delegate-must-use-worktree.md</code>). The hand-rolled pattern is still correct — it survives across sessions, shows up in <code>git worktree list</code>, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.</li>
+</ul>
+<h3>Direct dispatch (ask-gemini / ask-codex)</h3>
+<p>For requests needing immediate response:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+  &quot;Review posted on #559. Please read and respond.&quot; \
+  --task-id issue-559
+
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
+  &quot;Bug report posted on #560. Please read and respond.&quot; \
+  --task-id issue-560
+</code></pre>
+<h3>Multi-turn conversations (converse)</h3>
+<p>For iterative co-design, planning, or prompt optimization:</p>
+<pre><code class="language-bash"># Start a conversation
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  &quot;Let's plan the A1/1 build. Here's the plan: ...&quot; \
+  --task-id &quot;a1-1-planning&quot;
+
+# Continue (Gemini sees full history)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  &quot;Good points. What about the dialogue examples?&quot; \
+  --task-id &quot;a1-1-planning&quot;
+</code></pre>
+<p>Each turn includes full conversation history. Oldest messages truncated first if history exceeds 30K chars. Use <code>--model gemini-3.1-pro-preview</code> for design conversations.</p>
+<h3>How the bridge works (architecture)</h3>
+<p>The bridge is <strong>not</strong> an MCP tool. MCP is one-directional (client→server). The bridge uses a different architecture:</p>
+<ol>
+<li><strong>SQLite broker DB</strong> (<code>data/broker.db</code>) — shared message queue</li>
+<li><strong>CLI wrapper</strong> spawns the target agent CLI (<code>gemini</code>, <code>claude</code>, or <code>codex</code>) as a subprocess with the message as prompt</li>
+<li>The target agent runs, output is captured and stored back in the broker DB</li>
+<li>Reviews auto-posted to GitHub issues (when task_id matches <code>issue-NNN</code>)</li>
+</ol>
+<p>This means the broker can route among Claude, Gemini, and Codex. In practice, GitHub remains the source of truth and broker messages should stay short.</p>
+<h3>Automatic Review Persistence</h3>
+<p>Reviews dispatched via <code>ask-gemini</code> are automatically posted to GitHub:</p>
+<p>| task_id pattern | Behavior |
+|-----------------|----------|
+| <code>issue-NNN</code> / <code>gh-NNN</code> | Posted as comment on issue #NNN |
+| Any other value | New issue created with <code>review-result</code> label |
+| None | New issue created titled <code>Review: {timestamp}</code> |</p>
+<p>Reviews &gt;65K chars are split into multiple comments. To skip: <code>--no-github</code>.</p>
+<p>Only applies to <strong>standard mode</strong> (not <code>--stdout-only</code> or <code>--output-path</code>).</p>
+<h3>Passive notification (MCP send_message)</h3>
+<p>For non-blocking FYI messages Gemini sees at next session start:</p>
+<pre><code class="language-python">mcp__message-broker__send_message(
+    to=&quot;gemini&quot;, content=&quot;FYI: bio Phase A complete. See #560.&quot;,
+    from_llm=&quot;claude&quot;, message_type=&quot;context&quot;
+)
+</code></pre>
+<hr />
+<h2>Multi-Agent Deliberation (<code>ab discuss</code>)</h2>
+<p><strong>This section was added 2026-05-02 after recognizing systematic underutilization</strong> of <code>ab discuss</code> for design/framing/architecture decisions. We were defaulting to single-shot Gemini reviews and Claude-alone-reasoning where distributed deliberation would have caught more.</p>
+<h3>What <code>ab discuss</code> is — and isn't</h3>
+<p><code>ab discuss</code> runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with <code>[AGREE]</code>. Transcript lands in the named channel with <code>parent_id</code> threading.</p>
+<p><strong>It is NOT a quorum mechanism.</strong> Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have <strong>correlated blind spots</strong> (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.</p>
+<p><strong>What it actually delivers:</strong></p>
+<ul>
+<li><strong>More angles per decision</strong> — Gemini catches content/citation gaps, Codex catches code edge cases, Claude catches architecture</li>
+<li><strong>Adversarial pressure</strong> — agents are prompted to challenge each other, which surfaces hidden assumptions one agent alone wouldn't pressure-test</li>
+<li><strong>Documented deliberation</strong> — channel transcript = referenceable context for future sessions, not &quot;trust me, I thought about it&quot;</li>
+</ul>
+<h3>When to use which tool</h3>
+<p>| Use <code>ab discuss</code> | Use <code>ask-gemini</code> (single-shot) | Don't use either |
+|---|---|---|
+| Architectural trade-offs (e.g., module_type categories, retrieval strategy) | Mechanical PR review with green CI | Trivial fixes (delete leftover file) |
+| Pedagogy/framing decisions (POC scope, anchor choice, decolonization audits) | Adversarial review of a single PR | Implementation tasks (Codex codes alone) |
+| Brief pre-flight before dispatch (catch ambiguities before Codex burns 8 min) | Quick disambiguation question | When the answer is obvious |
+| Cross-agent deadlock (Gemini APPROVE, Codex REVISE on same artifact) | Spot-check an output against a rule | Time-sensitive merge decisions (3-min discussion latency stacks) |
+| Quality review of foundational content (M1-M3 modules, ADRs) | One-off domain question | |</p>
+<h3>Budget angle</h3>
+<ul>
+<li><code>ab discuss --with gemini,codex</code> (Claude excluded) is FREE for orchestrator — Gemini subscription unmetered, Codex on OpenAI subscription. Use aggressively when Anthropic budget is tight.</li>
+<li><code>ab discuss --with claude,gemini,codex</code> burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).</li>
+</ul>
+<h3>Concrete example — what we missed today (2026-05-02)</h3>
+<p>When proposing the POC anchor module, Claude reasoned alone and offered A1/M10 colors as a &quot;neutral steady-state baseline.&quot; User had to catch the Russian-imperial-propaganda angle on colors that invalidated &quot;neutral.&quot; If we had run:</p>
+<pre><code class="language-bash">ab discuss content &quot;POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1&quot; --with claude,gemini,codex --max-rounds 2
+</code></pre>
+<p>…Gemini or Codex might have surfaced the colors angle independently. The deliberation transcript would also exist as a referenceable record on the <code>content</code> channel, not buried in a Claude session that compaction would eventually destroy. <strong>Pattern: when picking among options that touch decolonization, framing, or pedagogy — discuss, don't decide alone.</strong></p>
+<h3>Decision Card pattern (when <code>ab discuss</code> surfaces a CHOICE)</h3>
+<p>Most <code>ab discuss</code> runs converge with <code>[AGREE]</code> — orchestrator just executes the consensus. But when discussion surfaces <strong>disagreement OR multi-option output</strong>, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.</p>
+<p><strong>Template:</strong></p>
+<pre><code class="language-markdown">## DECISION REQUIRED — {one-line question}
+
+**Agents:** claude, gemini, codex (R rounds, channel: {name}, thread: {id})
+
+**Options surfaced:**
+- **Option A:** {description}  *(proposed by: gemini)*
+- **Option B:** {description}  *(proposed by: codex)*
+- **Option C:** {description}  *(proposed by: claude)*
+
+**Votes (with 1-line rationale):**
+- claude → A: {rationale}
+- gemini → B: {rationale}
+- codex → A: {rationale}
+
+**Real disagreement (not surface-level):** {what they actually differ on — the underlying assumption gap, not just which letter they picked}
+
+**Scope:** {what this pending decision blocks and what remains safe}
+  - Tracks/levels blocked: {e.g., a1 zero-onset modules; a2 unaffected}
+  - Issues blocked: {e.g., #1622 round-4 bakeoff downstream}
+  - Paths/dirs blocked: {e.g., scripts/build/v7_build.py changes}
+  - Safe to proceed: {e.g., dependabot triage, wiki cleanup, A2/B1/B2 module fixes, infrastructure}
+
+**Orchestrator recommendation:** A — {1-3 line rationale weighing the votes against project priors}
+
+**Awaiting:** user override (`go with B because…`) or `go` to proceed with the recommendation
+</code></pre>
+<h3>High-risk-track override (false-consensus failsafe)</h3>
+<p>When all participating agents share the same underlying bias on a topic (e.g., Russian-imperial framing on Ukrainian topics, Western centrism on decolonization), an <code>[AGREE]</code> consensus is NOT a green light. It is exactly when the Decision Card mechanism is most needed and most likely to be bypassed.</p>
+<p>For high-risk tracks — <strong>HIST, BIO, ISTORIO, LIT, OES, RUTH</strong> (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:</p>
+<ul>
+<li><strong>Mechanism A (Force-emit Decision Card on <code>[AGREE]</code>):</strong> If <code>ab discuss</code> runs on a topic touching any high-risk track and converges with <code>[AGREE]</code>, the orchestrator emits a Decision Card anyway. The question is framed as &quot;agents converged on X — but consensus on this track is suspect; user should sanity-check.&quot; The user can quickly approve or override.</li>
+<li><strong>Mechanism B (Inject domain-specific bias checklist):</strong> For high-risk tracks, the <code>ab discuss</code> prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
+<ul>
+<li><em>Example for HIST:</em> &quot;Did you check the proposed framing against canonical decolonized sources? Bulgakov-as-Ukrainian, Gogol-as-Ukrainian, Akhmatova-as-Ukrainian, etc., are the 'Kyiv-born equals Ukrainian writer' trap — flag if you see it. Did you check whether the historical actor is being framed in Russian-imperial categories versus Ukrainian native categories?&quot;</li>
+</ul>
+</li>
+</ul>
+<p><strong>Recommendation:</strong> Prefer <strong>Mechanism B</strong> (proactive — catches bias during discussion) for any new <code>ab discuss</code> on high-risk tracks. Fall back to <strong>Mechanism A</strong> (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.</p>
+<p><strong>Pattern:</strong> Consensus on high-risk tracks is a SIGNAL TO CHECK, not a signal to proceed.</p>
+<h3>Where Decision Cards land</h3>
+<p>Three locations depending on user availability:</p>
+<p>| Situation | Location | Why |
+|---|---|---|
+| User online, mid-session | Inline in chat reply | Immediate visibility, user can <code>go</code> in next message |
+| User AFK, no live session | <code>docs/decisions/pending/{YYYY-MM-DD}-{slug}.md</code> | Durable, scannable on return; cold-start protocol checks this dir |
+| Multi-week architectural call | New GH issue with <code>decision-pending</code> label + Decision Card as body | Long-lived discussion needs an issue thread, not a markdown file |</p>
+<p>Note: High-risk-track Decision Cards (the ones force-emitted by Mechanism A) should ALWAYS be routed inline-or-pending, never silently auto-resolved, even when the user appears online.</p>
+<p>Every Decision Card MUST include a <code>Scope</code> field. The scope declares exactly which tracks, issues, and paths are blocked by the pending decision and which work can continue independently. If a Decision Card omits scope, agents must use the conservative interpretation that it blocks everything — precisely the failure mode this field is meant to avoid.</p>
+<p>When the user decides:</p>
+<ul>
+<li><code>pending/</code> file → moves to <code>docs/decisions/{date}-{slug}.md</code> with the chosen option recorded + closed</li>
+<li>GH issue → updated with chosen option, label flipped from <code>decision-pending</code> to <code>decided</code></li>
+<li>Inline chat → orchestrator simply executes the choice, no further file movement needed</li>
+</ul>
+<h3>Cold-start integration</h3>
+<p>The session-start checklist below now includes <code>docs/decisions/pending/</code> as a required scan. If pending decisions exist, the cold-start surface them before the user asks. This closes the &quot;decisions buried in transcripts&quot; gap — pending decisions are first-class state, not deliberation noise.</p>
+<h3>Citation provenance check (#1683, shipped 2026-05-05)</h3>
+<p>The bridge runs a citation-provenance check on every channel post and reply before commit. Verbatim attributions to authoritative sources (Антоненко-Давидович, Грінченко 1907, Правопис 2019, СУМ-11, ЕСУМ) are verified against <code>data/sources.db</code>. Unverified citations get an inline <code>&lt;!-- CITATION-UNVERIFIED ... --&gt;</code> marker; verified citations and citations to sources without an automated verifier (VESUM, Шевельов, Вихованець, Пономарів) pass through silently.</p>
+<p><strong>Annotate-mode, not block-mode.</strong> The check never refuses a post — it surfaces the doubt. This keeps the cost of a false-positive low (the channel still flows; reviewers see the marker and can dismiss it) and the cost of a true-positive a clear breadcrumb for downstream consumers (reviewer prompts, content modules, students never inherit a forged citation).</p>
+<p><strong>Why this exists.</strong> On 2026-05-05, two <code>ab discuss</code> runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation (&quot;Антоненко-Давидович categorizes feminine собака as a calque/Russianism&quot;) in Gemini's reply. АД has no entry on собака per <code>mcp__sources__search_style_guide</code>; the model's prior was the bug, not the source. The deliberation-protocol fix (commit <code>872d8376b0</code>) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of <code>[AGREE]</code>, it would have shipped to curriculum. This check closes that gap.</p>
+<p><strong>Detection scope (v1):</strong> verbatim source-name match (with permissive inflection across Cyrillic case endings) + headword extraction from the local window (italicized, code-fenced, quoted, or &quot;іменник X&quot; / &quot;слово X&quot; patterns). Multi-pattern same-source mentions within ~200 chars are de-duplicated to one citation. Out of scope (deferred): fuzzy-match of quoted text against source body content; LLM-based attribution detection; block-mode rejection. The v1 catches outright fabrication where the headword does not exist anywhere in the source corpus.</p>
+<p><strong>Implementation:</strong> <code>scripts/ai_agent_bridge/_citation_check.py</code> (detection + verification + annotation). Hook lives in <code>_channels.py:post()</code> — controlled by <code>verify_citations: bool = True</code> keyword. System/audit kinds (anything other than <code>post</code>/<code>reply</code>) skip verification automatically.</p>
+<p><strong>Graceful degradation:</strong> the verifier soft-skips if <code>data/sources.db</code> is missing (worktree without the data dir, fresh checkout, CI minimal env). Soft-skips never produce flags — they're recorded internally as &quot;verifier unavailable&quot; so a deployment problem cannot manufacture false positives.</p>
+<hr />
+<h2>Session Start Checklist</h2>
+<p><strong>Canonical path (GH #1309):</strong> call the Monitor API. Do not open
+rule files, session-state handoffs, or CLAUDE.md directly — they
+are what the API serves.</p>
+<pre><code class="language-bash"># 1. Tiny index of per-component hashes. ~1 KB.
+curl -s http://localhost:8765/api/state/manifest
+
+# 2. Only fetch components whose hash changed since last session.
+curl -s http://localhost:8765/api/rules?format=markdown
+curl -s http://localhost:8765/api/session/current
+
+# 3. Always-fresh: git state, pipeline, runtime, wiki, health, hints.
+curl -s http://localhost:8765/api/orient
+
+# 4. Do I have unread channel deliveries?
+curl -s &quot;http://localhost:8765/api/comms/inbox?agent=claude&quot;
+# (agent=gemini / agent=codex for the other workers)
+
+# 5. Are there pending decisions awaiting user input?
+ls docs/decisions/pending/ 2&gt;/dev/null
+# If non-empty: read each, surface to user before any other work.
+# Pending decisions block only their declared scope; check Scope before assuming work is blocked.
+</code></pre>
+<p>Agents running Python should use the SDK instead — one call, caching
+built in:</p>
+<pre><code class="language-python">from ai_agent_bridge.monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+rules_md = boot[&quot;rules&quot;].body
+session_md = boot[&quot;session&quot;].body
+# boot[...].source tells you why (&quot;cache&quot; / &quot;not-modified&quot; / &quot;network&quot;).
+</code></pre>
+<p>Both <code>/api/rules</code> and <code>/api/session/current</code> support
+<code>If-None-Match: &quot;&lt;hash&gt;&quot;</code> and return <code>304 Not Modified</code> when the hash
+matches. The on-disk cache under <code>.agent/cache/monitor/</code> persists
+across sessions so repeat cold-starts pay near-zero bytes for the
+rule + session payloads.</p>
+<h3>Scoped queries during work</h3>
+<p>Once bootstrapped, prefer these deterministic endpoints over
+filesystem spelunking:</p>
+<p>| Question | Endpoint |
+|---|---|
+| What's module <code>{slug}</code> doing right now? | <code>GET /api/state/module/{track}/slug/{slug}</code> |
+| Per-module dashboard for N..M on {track} | <code>GET /api/state/range/{track}?start=N&amp;end=M</code> |
+| Which files would <code>--force</code> delete? | <code>GET /api/artifacts/{track}/{slug}/force-preview</code> |
+| Classified file manifest (source/generated/published/stale) | <code>GET /api/artifacts/{track}/{slug}/files</code> |
+| Main + style review + empty-findings flag | <code>GET /api/artifacts/{track}/{slug}/review-snapshot</code> |
+| state.json vs reality cross-check | <code>GET /api/artifacts/{track}/{slug}/drift</code> |
+| Ship-ready snapshot for one module | <code>GET /api/artifacts/{track}/{slug}</code> |
+| Aggregate ship-ready list | <code>GET /api/artifacts/ship-ready[?track=...]</code> |
+| Public site reachability + freshness | <code>GET /api/site/health</code> |
+| Recent GH Pages deployments | <code>GET /api/site/deployments</code> |
+| Active worktrees | <code>GET /api/worktrees</code> |
+| Open issues grouped + supersede metadata | <code>GET /api/issues/map</code> |
+| Per-agent auth mode | <code>GET /api/runtime/auth</code> |</p>
+<p>Full endpoint reference: <a href="../MONITOR-API.md"><code>docs/MONITOR-API.md</code></a>.</p>
+<p>Legacy steps that remain useful if the API is unreachable:</p>
+<ol>
+<li>
+<p><strong>Load memory</strong> — what was in progress last session:</p>
+<pre><code class="language-python">mcp__memory__search_nodes(query=&quot;in progress current session&quot;)
+mcp__memory__search_nodes(query=&quot;next session todo&quot;)
+</code></pre>
+</li>
+<li>
+<p><strong>Check inbox</strong> — notifications from other agents:</p>
+<pre><code class="language-python">mcp__message-broker__check_inbox(for_llm=&quot;claude&quot;)
+</code></pre>
+</li>
+<li>
+<p><strong>Read unread messages</strong> — respond on GitHub if substantive</p>
+</li>
+</ol>
+<p>At session end: save progress summary to memory.</p>
+<hr />
+<h2>Issue Claiming Protocol</h2>
+<p><strong>Agents never self-assign.</strong> Only the user or orchestrator assigns work.</p>
+<p>When starting an issue:</p>
+<pre><code class="language-bash">gh issue edit {N} --add-label &quot;working:{agent}&quot;
+gh issue comment {N} --body &quot;Starting work on X&quot;
+</code></pre>
+<p>When done:</p>
+<pre><code class="language-bash">gh issue edit {N} --remove-label &quot;working:{agent}&quot;
+gh issue edit {N} --add-label &quot;review:{reviewer}&quot;  # or review:human
+# or: gh issue close {N}
+</code></pre>
+<hr />
+<h2>Cross-Review Requirements</h2>
+<p>When reviewing Gemini's content or Gemini's review of Claude's work:</p>
+<p><strong>Required elements:</strong></p>
+<ul>
+<li>Point out specific problems (not &quot;looks good overall&quot;)</li>
+<li>Quote the problematic content</li>
+<li>Suggest a concrete fix</li>
+<li>Score honestly — never rubber-stamp</li>
+</ul>
+<p><strong>Red flags in a review to reject:</strong></p>
+<ul>
+<li>All dimensions 9-10/10 with no substantive issues</li>
+<li>Empty &quot;issues&quot; section</li>
+<li>Language like &quot;ensuring a high score&quot;, &quot;reflecting the fixes&quot;</li>
+<li>Praise without specifics</li>
+</ul>
+<p>If you see these: the review is invalid. Request a new review from a different perspective.</p>
+<hr />
+<h2>Skill-Based Dispatch</h2>
+<p>Use Gemini's skill files instead of verbose prompts. Each skill encodes the full protocol.</p>
+<pre><code class="language-bash"># Seminar track rebuild
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini &quot;/full-rebuild-bio 5&quot; \
+  --task-id rebuild-bio-5
+
+# Core track rebuild
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini &quot;/full-rebuild-core-a a1 3&quot; \
+  --task-id rebuild-a1-3
+</code></pre>
+<p><strong>Always use skills for content work.</strong> Ad-hoc prompts miss critical protocol steps.</p>
+<hr />
+<h2>Builder Notes (Gemini→Claude structured handoff)</h2>
+<p>After every content or activity build, Gemini outputs a <code>===BUILDER_NOTES_START===</code> block with:</p>
+<ul>
+<li><strong>status</strong>: SUCCESS / PARTIAL / BLOCKED</li>
+<li><strong>deviations</strong>: where and why Gemini deviated from the plan</li>
+<li><strong>frictions</strong>: template/schema issues encountered</li>
+<li><strong>unverified_terms</strong>: Ukrainian words Gemini couldn't verify via sources tools / VESUM (compile-layer retrieval architecture: ADR-006)</li>
+<li><strong>review_focus</strong>: specific items that need reviewer attention</li>
+</ul>
+<p>The pipeline extracts this to <code>orchestration/{slug}/builder-notes.yaml</code>. The review prompt injects it via <code>{BUILDER_NOTES_BLOCK}</code> so Claude knows where to focus the review.</p>
+<hr />
+<h2>Gemini Output Handling</h2>
+<p>Gemini outputs verbose thinking tokens (10-100K chars). All structured output uses <code>===TAG_START===</code> / <code>===TAG_END===</code> delimiters. Content outside delimiters is noise.</p>
+<pre><code class="language-python"># Extraction utility
+from pipeline_lib import _extract_delimiter
+research = _extract_delimiter(output, &quot;===RESEARCH_START===&quot;, &quot;===RESEARCH_END===&quot;)
+</code></pre>
+<p>Never parse Gemini's prose output for structured data.</p>
+<h3>Gemini CLI Auth and Prompt Passing</h3>
+<p>As of 2026-05-05 (#1709/#1710), the runtime invokes Gemini CLI with <code>-p</code>
+instead of piping prompts on stdin. Gemini CLI v0.40.1 treats non-TTY stdin as
+REPL input and can ignore or hang on piped prompts. Small prompts are passed
+inline with <code>-p PROMPT</code>; prompts over 100K chars use the verified file-reference
+form <code>-p @PATH</code>.</p>
+<p>For write-mode runtime calls, keep <code>--approval-mode=yolo</code> and include
+<code>--skip-trust</code>; Gemini CLI v0.40.1 otherwise downgrades approval mode in
+untrusted output directories such as <code>/tmp</code> and exits before writing.</p>
+<p>Gemini auth precedence is API first, then subscription/OAuth fallback:</p>
+<ul>
+<li><code>GEMINI_AUTH_MODE=api</code> forces API mode and fails fast if no Gemini API key is
+configured.</li>
+<li><code>GEMINI_AUTH_MODE=subscription</code> or <code>oauth</code> forces subscription/OAuth mode and
+strips Gemini API env vars from the subprocess.</li>
+<li>With no override, <code>GEMINI_API_KEY</code> or <code>GOOGLE_API_KEY</code> selects API mode.</li>
+<li>With no override and no API key, subscription/OAuth remains the default.</li>
+<li>The fallback ladder starts on API rungs when API keys are available, then
+transitions to subscription/OAuth rungs on rate limit or capacity failures.</li>
+</ul>
+<hr />
+<h2>MCP Writer Observability</h2>
+<p>Codex <code>*-tools</code> writer dispatch must fail before model invocation when MCP intent
+cannot be wired. The dispatch path emits:</p>
+<ul>
+<li><code>mcp_config_resolved</code>: emitted after resolving <code>.mcp.json</code> into runtime
+<code>tool_config</code>. Check <code>requested_servers</code>, <code>resolved_servers</code>,
+<code>resolution_status</code>, <code>missing_server_names</code>, and <code>config_path</code>.</li>
+<li><code>mcp_runtime_init</code>: emitted by the runner when Codex output shows MCP runtime
+status. <code>status=ready</code> comes from <code>mcp: &lt;server&gt;/&lt;tool&gt; started</code> or
+<code>(completed)</code>. <code>status=failed</code> comes from Codex <code>rmcp::transport::worker</code>
+transport errors. <code>status=timeout</code> means no runtime init line appeared within
+the init-observation window.</li>
+</ul>
+<p>If a writer label ends in <code>-tools</code>, requests MCP servers, and resolves none, the
+pipeline raises <code>LinearPipelineError</code> and refuses to dispatch tool-less. Codex
+legacy SSE endpoints (<code>type: sse</code> or URLs ending <code>/sse</code>) are treated as
+unresolved for this path; use the streamable HTTP <code>/mcp</code> endpoint.</p>
+<p>To debug &quot;writer produced 0 tool calls&quot;, start with the writer JSONL:</p>
+<ol>
+<li>Find <code>mcp_config_resolved</code>. If <code>resolved_servers</code> is empty, fix <code>.mcp.json</code>
+or the requested server name before rerunning the bakeoff.</li>
+<li>Find <code>mcp_runtime_init</code>. <code>failed</code> usually includes the Codex transport error
+line; <code>timeout</code> means Codex never showed a server/tool init line.</li>
+<li>Only inspect prompt/tool-theatre telemetry after both config resolution and
+runtime init show the expected <code>sources</code> server.</li>
+</ol>
+<hr />
+<h2>Escalation</h2>
+<p>If Gemini is stuck (not completing a phase, silently failing):</p>
+<!-- TODO(#1394): classify --force usage -->
+<pre><code class="language-bash">.venv/bin/python scripts/build_module_v5.py {track} {num} --force-phase {research|content|activities|validate|review}
+</code></pre>
+<p>Or use the process-escalations skill:</p>
+<pre><code>/process-escalations
+</code></pre>
+<p>Post on the relevant GH issue explaining what was stuck and why.</p>
+
+  </main>
+</div>
+</body>
+</html>
