@@ -153,6 +153,21 @@ def _oldest_pending_delivery_id(agent: str) -> str | None:
     return str(row["delivery_id"]) if row is not None else None
 
 
+def _delivery_detail(delivery_id: str) -> sqlite3.Row:
+    conn = _db.get_db()
+    try:
+        return conn.execute(
+            """
+            SELECT delivery_id, status, error, delivered_at
+            FROM deliveries
+            WHERE delivery_id = ?
+            """,
+            (delivery_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+
 def _install_fake_inbox_module(monkeypatch, run_inbox) -> None:
     fake_inbox_module = ModuleType("ai_agent_bridge._inbox")
     fake_inbox_module.run_inbox = run_inbox
@@ -213,6 +228,57 @@ def test_inbox_show_accepts_codex_desktop(capsys):
     assert captured.err == ""
     assert "codex-desktop inbox:" in captured.out
     assert "pending:    0" in captured.out
+
+
+def test_inbox_ack_marks_delivery_delivered(capsys):
+    thread = _make_thread("claude", count=1)
+    delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0][
+        "delivery_id"
+    ]
+
+    exit_code = _run_cli(
+        [
+            "inbox",
+            "ack",
+            delivery_id,
+            "--error",
+            "processed by codex-desktop automation",
+        ]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert f"✅ delivery {delivery_id} → delivered" in captured.out
+    detail = _delivery_detail(delivery_id)
+    assert detail["status"] == "delivered"
+    assert detail["error"] == "processed by codex-desktop automation"
+    assert detail["delivered_at"] is not None
+
+
+def test_inbox_ack_unknown_delivery_id_errors(capsys):
+    exit_code = _run_cli(["inbox", "ack", "missing-delivery-id"])
+
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "delivery_id 'missing-delivery-id' not found" in captured.err
+
+
+def test_inbox_ack_already_delivered_is_noop(capsys):
+    thread = _make_thread("claude", count=1)
+    delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0][
+        "delivery_id"
+    ]
+    assert _run_cli(["inbox", "ack", delivery_id]) == 0
+    capsys.readouterr()
+
+    exit_code = _run_cli(["inbox", "ack", delivery_id])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert f"delivery {delivery_id} is already 'delivered' (no-op)" in captured.out
 
 
 def test_post_from_codex_desktop_is_accepted(capsys):

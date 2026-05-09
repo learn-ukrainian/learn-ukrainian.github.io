@@ -21,6 +21,7 @@ ab p <channel> <agent> <body>                    # shorthand
 
 ab inbox run <agent> [--once] [--max-messages N] [--stop-after-seconds N] [--deadline SECONDS]
 ab inbox show <agent>
+ab inbox ack <delivery_id> [--error NOTE]
 ab reconcile [--dry-run]
 ab sync <agent> | ab sync --all
 
@@ -429,6 +430,26 @@ def register_channel_commands(subparsers: Any) -> None:
             choices=list(_channels.VALID_AGENTS),
             help="Agent inbox to inspect",
         )
+        inbox_ack = inbox_sub.add_parser(
+            "ack",
+            help=(
+                "Mark a delivery as delivered without spawning the agent "
+                "(manual operator drain or post-handling ack from automations / "
+                "external workers)"
+            ),
+        )
+        inbox_ack.add_argument(
+            "delivery_id",
+            help="Delivery ID to mark delivered (long form, from `ab inbox show <agent>`)",
+        )
+        inbox_ack.add_argument(
+            "--error",
+            default=None,
+            help=(
+                "Optional ack note recorded in deliveries.error "
+                "(e.g. 'processed by codex-desktop automation')"
+            ),
+        )
 
     # ── top-level: sync ───────────────────────────────────────────
     sync_parser = subparsers.add_parser(
@@ -532,6 +553,8 @@ def _dispatch_inbox_command(args) -> int:
         return _handle_inbox_run(args)
     if sub == "show":
         return _handle_inbox_show(args)
+    if sub == "ack":
+        return _handle_inbox_ack(args)
     print("unknown subcommand: inbox", file=sys.stderr)
     return 2
 
@@ -1070,6 +1093,39 @@ def _handle_inbox_show(args) -> int:
     return 0
 
 
+def _handle_inbox_ack(args) -> int:
+    """Explicit ack of one delivery for automations or manual operator drain."""
+    from ._db import get_db
+
+    conn = get_db()
+    try:
+        row = conn.execute(
+            """
+            SELECT delivery_id, status, to_agent, message_id
+            FROM deliveries
+            WHERE delivery_id = ?
+            """,
+            (args.delivery_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+    if row is None:
+        print(f"❌ delivery_id {args.delivery_id!r} not found", file=sys.stderr)
+        return 1
+    if row["status"] == "delivered":
+        print(f"⚠️  delivery {args.delivery_id} is already 'delivered' (no-op)")
+        return 0
+
+    note = args.error or "explicitly acked via `ab inbox ack`"
+    _channels.mark_delivery(args.delivery_id, "delivered", error=note)
+    print(
+        f"✅ delivery {args.delivery_id} → delivered  "
+        f"(to={row['to_agent']}, message={row['message_id']})"
+    )
+    return 0
+
+
 def _handle_reconcile(args) -> int:
     from ._reconcile import reconcile_deliveries
 
@@ -1492,24 +1548,32 @@ def _handle_discuss(args) -> int:
         # fetches + context file reads + extra storage. The reply's
         # context is implicit from its parent_id anyway.
         for agent in with_agents:
-            text, ok = responses[agent]
-            reply_recipients = [name for name in with_agents if name != agent]
+            text, _ok = responses[agent]
             try:
-                _channels.post(
+                reply = _channels.post(
                     args.channel,
                     agent,
                     text,
-                    to_agents=reply_recipients,
+                    to_agents=with_agents,
                     parent_id=root_id,
                     correlation_id=correlation_id,
                     kind="reply",
                     auto_snapshot=False,
-                    pre_delivered=True,
                 )
             except ValueError as e:
                 print(
                     f"⚠️  failed to store {agent} response: {e}",
                     file=sys.stderr,
+                )
+                continue
+            for delivery_id in reply["delivery_ids"]:
+                _channels.mark_delivery(
+                    delivery_id,
+                    "delivered",
+                    error=(
+                        "acked by ab discuss orchestrator "
+                        f"(thread={correlation_id[:8]}, round={round_idx})"
+                    ),
                 )
 
         # ── convergence check ─────────────────────────────────────

@@ -121,6 +121,19 @@ Codex Desktop can also pull its pending inbox:
 ab inbox show codex-desktop
 ```
 
+### Explicit ack: `ab inbox ack <delivery_id>`
+
+When an external worker processes a delivery without going through
+`ab inbox run`, ack it explicitly:
+
+```bash
+ab inbox ack <delivery_id> [--error "processed by <thing>"]
+```
+
+Without an explicit ack, deliveries stay `pending` forever and the inbox
+warning recurs. `ab discuss` acks its own deliveries on round convergence
+automatically, so no manual intervention is needed for that path.
+
 Codex Desktop posts replies with its own sender identity:
 
 ```bash
