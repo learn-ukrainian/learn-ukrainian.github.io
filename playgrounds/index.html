@@ -4,52 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ukraine-ops</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/monitor.css">
 <style>
-:root {
-  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
-  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
-  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
-  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
-}
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-.header { text-align: center; margin-bottom: 40px; }
-.header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-.header p { color: var(--text2); font-size: 16px; }
-
-.stats-row { display: flex; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
-.stat { text-align: center; }
-.stat .value { font-size: 36px; font-weight: 700; }
-.stat .label { font-size: 12px; color: var(--text2); text-transform: uppercase; }
-
-.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1000px; width: 100%; padding: 0 24px; }
-@media (max-width: 900px) { .cards { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
-
-.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-decoration: none; color: var(--text); transition: all 0.2s; display: block; }
-.card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); text-decoration: none; }
-.card .icon { font-size: 28px; margin-bottom: 8px; }
-.card h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-.card p { color: var(--text2); font-size: 13px; line-height: 1.4; }
-.card .card-stat { margin-top: 12px; font-size: 12px; color: var(--text3); }
-
-.card.audit { border-left: 3px solid var(--green); }
-.card.progress { border-left: 3px solid var(--orange); }
-.card.curriculum { border-left: 3px solid var(--blue); }
-.card.quality { border-left: 3px solid var(--purple); }
-.card.api { border-left: 3px solid var(--gray); }
-.card.comms { border-left: 3px solid var(--yellow); }
-
-.footer { margin-top: 40px; font-size: 12px; color: var(--text3); }
+body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+.top-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 24px; position:sticky; top:0; z-index:10; }
+.top-left h1 { font-size:24px; margin:0; }
+.top-left span { display:block; font-size:12px; margin-top:2px; }
+.wrap { max-width:1180px; margin:0 auto; padding:28px 24px 72px; width:100%; }
+.hero { border-bottom:1.5px solid var(--text); display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end; margin-bottom:24px; padding-bottom:18px; }
+.hero h2 { font-family: Charter, Georgia, serif; font-size:34px; line-height:1.1; margin:0 0 8px; }
+.hero p { color:var(--text2); font-size:15px; line-height:1.45; max-width:680px; }
+.footer { color:var(--text3); font-size:12px; margin-top:32px; text-align:center; }
+.stats-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:10px; margin-bottom:24px; }
+.stat { background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:14px 16px; }
+.stat .value { color:var(--accent); font-family: Charter, Georgia, serif; font-size:30px; font-weight:700; line-height:1; }
+.stat .label { color:var(--text3); font-size:11px; letter-spacing:.08em; margin-top:7px; text-transform:uppercase; }
+.cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(245px, 1fr)); gap:12px; width:100%; }
+.card { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--text3); border-radius:4px; color:var(--text); display:block; min-height:154px; padding:16px 17px; text-decoration:none; transition:border-color .15s, box-shadow .15s; }
+.card:hover { border-color:var(--accent); box-shadow:0 8px 24px rgba(122,28,32,.08); text-decoration:none; }
+.card .icon { color:var(--accent); font-size:24px; margin-bottom:8px; }
+.card h2 { font-family: Charter, Georgia, serif; font-size:18px; line-height:1.2; margin-bottom:6px; }
+.card p { color:var(--text2); font-size:13px; line-height:1.4; }
+.card .card-stat { color:var(--text3); font-size:12px; margin-top:12px; }
+.card.audit { border-left-color:var(--green); }
+.card.progress { border-left-color:var(--orange); }
+.card.curriculum { border-left-color:var(--cyan); }
+.card.quality { border-left-color:var(--purple); }
+.card.api { border-left-color:var(--gray); }
+.card.comms { border-left-color:var(--accent); }
+@media (max-width: 820px) {
+  .hero { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>ukraine-ops</h1>
-  <p>Operational dashboards for the Ukrainian curriculum pipeline</p>
+<div class="top-bar">
+  <div class="top-left">
+    <h1>ukraine-ops</h1>
+    <span>Operational dashboards for the Ukrainian curriculum pipeline</span>
+  </div>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a class="active" href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
+
+<main class="wrap">
+<section class="hero">
+  <div>
+    <h2>Operations launchpad</h2>
+    <p>All Monitor API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues.</p>
+  </div>
+</section>
 
 <div class="stats-row" id="stats-row"></div>
 
@@ -108,6 +121,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Delegation task list with zombie detection, manual refresh, and full task detail modal.</p>
     <div class="card-stat" id="card-stat-delegate"></div>
   </a>
+  <a class="card" href="/artifacts/" style="border-left: 3px solid var(--accent);">
+    <div class="icon">&#128196;</div>
+    <h2>Artifacts</h2>
+    <p>HTML reports, audit evidence, session handoffs, decisions, and best-practice companions.</p>
+    <div class="card-stat">HTML reports</div>
+  </a>
   <a class="card" href="/image-explorer.html" style="border-left: 3px solid var(--yellow);">
     <div class="icon">&#128444;</div>
     <h2>Images</h2>
@@ -153,6 +172,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 </div>
 
 <div class="footer">Serving from localhost:8765</div>
+</main>
 
 <script>
 const API_TIMEOUT_MS = 5000;

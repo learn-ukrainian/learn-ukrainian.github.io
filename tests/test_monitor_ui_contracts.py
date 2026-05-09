@@ -3,6 +3,35 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_index_page_uses_shared_parchment_monitor_design():
+    html = (ROOT / "playgrounds" / "index.html").read_text(encoding="utf-8")
+    assert '<link rel="stylesheet" href="/monitor.css">' in html
+    assert '<a class="active" href="/">Home</a>' in html
+    assert "Operations launchpad" in html
+    assert 'href="/artifacts/"' in html
+    assert "#0d1117" not in html
+    for href in [
+        "/admin.html",
+        "/channels.html",
+        "/comms.html",
+        "/audit-dashboard.html",
+        "/build-events.html",
+        "/consultation.html",
+        "/cost.html",
+        "/curriculum-dashboard.html",
+        "/delegate.html",
+        "/artifacts/",
+        "/image-explorer.html",
+        "/orient.html",
+        "/progress.html",
+        "/quality.html",
+        "/runtime.html",
+        "/track-health.html",
+        "/wiki.html",
+    ]:
+        assert f'href="{href}"' in html
+
+
 def test_channels_page_has_shareable_deeplink_contract():
     html = (ROOT / "playgrounds" / "channels.html").read_text(encoding="utf-8")
     assert "new URLSearchParams(location.search)" in html
