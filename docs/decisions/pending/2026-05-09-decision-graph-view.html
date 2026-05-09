@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DECISION REQUIRED - Decision Graph View Paradigm and Layout</title>
+
+
+<meta name="report-class" content="documentation" />
+
+<meta name="report-date" content="2026-05-09" />
+
+<meta name="report-status" content="migrated" />
+
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 14px 0;
+  }
+  pre code { background: none; padding: 0; border: 0; white-space: pre; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+  .callout.warn { border-left: 4px solid var(--warn); background: var(--surface-warn); }
+  .callout.ok { border-left: 4px solid var(--ok); background: var(--surface-ok); }
+  .callout.fail { border-left: 4px solid var(--fail); background: var(--surface-fail); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>DECISION REQUIRED - Decision Graph View Paradigm and Layout</h1>
+      <div class="sub">Migrated from Markdown on 2026-05-09 19:14</div>
+    </div>
+    <div class="meta">
+      <div>Source: 2026-05-09-decision-graph-view.md</div>
+      <div>Author: Gemini (Yellow Team)</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>DECISION REQUIRED - Decision Graph View Paradigm and Layout</h1>
+<p><strong>Status:</strong> PROPOSED (awaiting user signoff to ACCEPTED)
+<strong>Date:</strong> 2026-05-09
+<strong>Authors:</strong> Gemini (drafting), Codex (data collection), Claude (orchestration context)
+<strong>Supersedes:</strong> None
+<strong>Scope:</strong> Decision Graph view in channels.html — UI toggle, marker parser, matrix layout, drawer; not the underlying DB schema or <code>ab discuss</code> broker logic.
+<strong>Blocks/Blocked-by:</strong> Blocks Decision Graph UI implementation; ships today against the current <code>from_agent</code> schema and remains forward-compatible with docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md participant identity fields. Integrates with D4 decision-lineage backlink scanner (#1785).</p>
+<hr />
+<h2>Context</h2>
+<p>The kubedojo team (a sister project) recently compared their dashboard to ours and pitched inverting our <code>channels.html</code> UI from being <strong>chat-primary</strong> to being <strong>Decision Graph-primary</strong>, where chat would become a secondary toggle. They offered to upstream their D3 (Decision Graph) PR after implementing it in their own repository.</p>
+<p>A 3-way agent review (Codex + Gemini, 2026-05-07) was conducted to evaluate this paradigm shift. The review converged on adopting a <strong>modified version</strong> of their proposal. Specifically, Codex provided verifiable data from our <code>channel_messages</code> snapshot (2026-05-07) demonstrating channel marker-thread density:</p>
+<p>| Channel | Marker threads | Total threads | % |
+|---|---:|---:|---:|
+| <code>architecture</code> | 32 | 39 | 82% |
+| <code>pipeline</code> | 2 | 11 | 18% |
+| <code>reviews</code> | 19 | 83 | 23% |</p>
+<p>This data strongly confirms that for ~75-80% of our general channel traffic, a Decision Graph-primary view would be the wrong paradigm. Therefore, the Decision Graph must be implemented as a <strong>toggle</strong>, not as an inversion of the primary IA.</p>
+<p>Furthermore, Codex gathered data on round-reply body sizes in the <code>architecture</code> channel:</p>
+<ul>
+<li>Average: 2367 chars</li>
+<li>Maximum: 8349 chars</li>
+</ul>
+<p>A standard 3-column body-first grid would be completely unreadable with this volume of text. The matrix layout is justified for high-density channels; lighter channels could fall back to body-first or use the same matrix as a uniform UX choice.</p>
+<p>This document formalizes the UX and architectural semantics for the Decision Graph view. It is a separate ADR from the pending Multi-UI channel participation ADR because it changes primary IA and marker semantics (meeting the threshold rule for a distinct ADR).</p>
+<hr />
+<h2>Decision</h2>
+<p>The Decision Graph view will be implemented under the following paradigm:</p>
+<ul>
+<li><strong>Toggle-not-inversion:</strong> Chat remains the primary view. The Decision Graph is a toggleable view that auto-engages under specific conditions.</li>
+<li><strong>Outline-first matrix layout:</strong> The graph uses a dense matrix representation (rounds as rows, participants as columns) displaying only markers and brief summaries to accommodate our large average message sizes.</li>
+<li><strong>Side drawer UX:</strong> Reading full message bodies relies on a pinnable side drawer to avoid disrupting the matrix context.</li>
+<li><strong>Explicit marker semantics:</strong> Deliberation state is strictly derived from standard <code>[AGREE]</code> and <code>[DISAGREE]</code> markers, with <code>[OPTION]</code>, <code>[OBJECT]</code>, and <code>[DEFER]</code> reserved for future or ADR-specific display.</li>
+</ul>
+<hr />
+<h2>Q1. When does Decision Graph view auto-engage?</h2>
+<h3>Proposal</h3>
+<p>The Decision Graph view should auto-engage (switch automatically from the chat view) when a thread meets <strong>both</strong> of the following conditions:</p>
+<ol>
+<li><strong>Participant-count threshold:</strong> The thread contains messages from <strong>≥2 distinct <code>from_agent</code> participants</strong> in the current schema (e.g., <code>claude</code> and <code>codex</code>; user/human posts count as participants when they use the same channel-message path).</li>
+<li><strong>Marker-density threshold:</strong> The thread contains <strong>≥2 messages</strong> carrying formal deliberation markers (<code>[AGREE]</code>, <code>[DISAGREE]</code>, or future display markers <code>[OPTION]</code>, <code>[OBJECT]</code>, <code>[DEFER]</code>).</li>
+</ol>
+<p>The manual toggle to switch between Chat and Decision Graph views is <strong>always available</strong> on every thread, regardless of whether the auto-engage criteria are met.</p>
+<h3>Rationale</h3>
+<p>Our channel statistics show that marker threads only dominate the <code>architecture</code> channel (82%), while <code>reviews</code> (23%) and <code>pipeline</code> (18%) are predominantly standard chat or single-shot interactions. Auto-engaging requires sufficient signal (multiple agents + multiple markers) to ensure the graph view is only presented when actual deliberation is taking place. Relying on a manual toggle for edge cases provides an escape hatch without enforcing the wrong default paradigm on 80% of threads.</p>
+<hr />
+<h2>Q2. Layout</h2>
+<h3>Proposal</h3>
+<p>The Decision Graph will use an <strong>outline-first matrix layout</strong>:</p>
+<ul>
+<li><strong>Rows:</strong> Rounds (1..N).</li>
+<li><strong>Columns:</strong> current implementation keys columns by <code>from_agent</code> because <code>channel_messages</code> currently has <code>from_agent</code> but no <code>agent_family</code>/<code>participant_id</code> columns. After the Multi-UI ADR lands, columns should re-key to the exact participant identity, preferably <code>participant_id</code> or the tuple <code>(agent_family, ui_surface, instance_id_short)</code>, with labels such as <code>claude:cli</code> and <code>claude:desktop</code>.</li>
+<li><strong>Cell Content:</strong> A marker chip (color-coded, e.g., Green for <code>[AGREE]</code>) + a first-line summary truncated to ~80 characters.</li>
+<li><strong>Empty Cells:</strong> If an agent didn't respond in a specific round, the cell displays a visible empty state (e.g., a dashed outline or &quot;No response&quot;).</li>
+<li><strong>Interaction:</strong> Clicking a cell opens a side drawer with the full message body.</li>
+</ul>
+<h3>Rationale</h3>
+<p>Codex's data shows average reply bodies are 2367 chars and max out at 8349 chars. A &quot;body-first&quot; grid (like a traditional Kanban board) would stretch rows to unreadable heights, destroying the visual comparison between agent responses in a given round. An outline matrix optimizes for horizontal scanning of consensus (e.g., seeing three green <code>[AGREE]</code> chips in Row 2 immediately signals convergence). The matrix layout is justified for high-density channels; lighter channels could fall back to body-first or use the same matrix as a uniform UX choice.</p>
+<hr />
+<h2>Q3. Marker parsing semantics</h2>
+<h3>Proposal</h3>
+<ul>
+<li><strong>Canonical Markers:</strong> <code>[AGREE]</code> and <code>[DISAGREE]</code>. The broker prompt requires agents to end round replies with one of these markers, and convergence uses strict <code>[AGREE]</code> tail matching in <code>scripts/ai_agent_bridge/_channels_cli.py::_handle_discuss</code> (the convergence check is <code>text.strip().endswith(&quot;[AGREE]&quot;)</code> -- grep that literal to find current line).</li>
+<li><strong>Future/ADR-specific Markers:</strong> <code>[OPTION]</code>, <code>[OBJECT]</code>, and <code>[DEFER]</code> may be displayed when present, but they are not canonical broker markers today. Current live DB evidence shows <code>[OPTION]</code>, <code>[OBJECT]</code>, and <code>[DEFER]</code> are rare compared with <code>[DISAGREE]</code>; <code>[OBJECT]</code> is documented in the Multi-UI ADR as a user pushback marker.</li>
+<li><strong>Case Sensitivity:</strong> Case-insensitive match (to accommodate human posts or agent casing drift).</li>
+<li><strong>Regex Matching:</strong> Use a concrete regex boundary for display extraction: <code>\[(AGREE|DISAGREE|OPTION|OBJECT(?:[^\]]*)?|DEFER)(?:\b[^\]]*)?\]</code> (case-insensitive). Do not match <code>[AGREED]</code>; live DB evidence shows zero occurrences and the broker checks <code>[AGREE]</code> literally.
+| Input | Captured | Maps to |
+|---|---|---|
+| <code>[AGREE]</code> | <code>AGREE</code> | <code>[AGREE]</code> |
+| <code>[DISAGREE]</code> | <code>DISAGREE</code> | <code>[DISAGREE]</code> |
+| <code>[OBJECT - missing context]</code> | <code>OBJECT - missing context</code> | <code>[OBJECT]</code> |
+| <code>[OPTION B]</code> | <code>OPTION</code> | <code>[OPTION]</code> |</li>
+<li><strong>Position Requirement:</strong> Display extraction may find markers anywhere in the body, but convergence uses the broker-compatible rule: the latest round message must end with literal <code>[AGREE]</code> after <code>.strip()</code>.</li>
+<li><strong>Multiple Markers:</strong> If a single message contains multiple markers, the final marker in text flow may be used for the display chip. Protocol convergence still follows strict tail-anchored <code>[AGREE]</code>, so a message such as <code>I don't [AGREE] with that. [DISAGREE]</code> is not converged.</li>
+</ul>
+<h3>Rationale</h3>
+<p>Strict regexes break easily when agents append reasoning inside the brackets, so the display parser tolerates annotated future markers such as <code>[OBJECT - missing context]</code>. Convergence is stricter than display because the broker intentionally uses <code>text.strip().endswith(&quot;[AGREE]&quot;)</code> to avoid false positives when a message mentions <code>[AGREE]</code> while concluding with <code>[DISAGREE]</code>.</p>
+<hr />
+<h2>Q4. Convergence detection</h2>
+<h3>Proposal</h3>
+<p>A thread is converged when every distinct current-schema participant (<code>from_agent</code>) that has posted in the thread has a latest round-N message whose stripped body ends with literal <code>[AGREE]</code>. Earlier-round content does not factor in.</p>
+<p>Edge case (partial participation): if an agent posted earlier but is silent in the latest round, that agent is still considered &quot;participating&quot; — the thread is NOT converged until that agent re-posts with <code>[AGREE]</code> at the tail or another marker. In the current broker, <code>[DISAGREE]</code> is the canonical non-converging marker; <code>[DEFER]</code> remains a future display marker unless a later broker change gives it protocol meaning.</p>
+<p>When convergence is detected, the UI should display a &quot;closing-out indicator&quot; (e.g., a banner at the bottom of the graph) and auto-suggest the creation of a Decision Card if one has not already been emitted.</p>
+<p>Exception: for threads tagged with a high-risk track (HIST, BIO, ISTORIO, LIT, OES, or RUTH), convergence triggers a forced Decision Card prompt rather than a soft auto-suggest, per <code>docs/best-practices/agent-cooperation.md:210-222</code> Mechanism A.</p>
+<h3>Rationale</h3>
+<p>If Claude, Gemini, and Codex all end round 2 with <code>[AGREE]</code>, the deliberation protocol considers the issue resolved. Stricter conditions (requiring an explicit <code>[OBJECT]</code> first) would arbitrarily keep immediate-consensus threads marked as &quot;unresolved.&quot; The Decision Graph's closing-out indicator must treat the broker's strict <code>endswith(&quot;[AGREE]&quot;)</code> rule as authoritative for protocol convergence.</p>
+<hr />
+<h2>Q5. Side drawer UX</h2>
+<h3>Proposal</h3>
+<ul>
+<li><strong>Format:</strong> A pinnable side rail (drawer) that persists alongside the matrix graph. It does NOT use a modal that interrupts the page and blocks the graph.</li>
+<li><strong>Content:</strong> Defaults to the same-round transcript across all agents plus the clicked participant's prior posts in earlier rounds, highlighting the specific single-message cell clicked. A per-agent filter toggle lets readers narrow the drawer when they want a single participant's history.</li>
+<li><strong>Rendering:</strong> Uses the exact same Markdown rendering pipeline as the main <code>channels.html</code> view (including image attachments, code blocks, etc.).</li>
+<li><strong>Actions:</strong> Includes standard &quot;Quote&quot;, &quot;Copy&quot;, and &quot;Reply&quot; actions within the drawer.</li>
+</ul>
+<h3>Rationale</h3>
+<p>A modal blocks the matrix, preventing the user from reading Codex's full argument while looking at Gemini's summary chip. A pinnable side rail allows side-by-side comparison. Showing same-round all-agent context preserves the antagonist/proponent relationship for objections, while the clicked participant's prior posts show how that participant arrived at its conclusion over multiple rounds.</p>
+<hr />
+<h2>Q6. Decision provenance</h2>
+<h3>Proposal</h3>
+<ul>
+<li>The Decision Graph will integrate directly with <strong>D4</strong> (decision-lineage backlink scanner, #1785).</li>
+<li>When D4 detects that a thread's ID or URL has been cited in an ADR file (e.g., inside <code>docs/decisions/</code>), the Decision Graph UI will display a <strong>&quot;This thread became ADR-NNN&quot;</strong> badge at the top of the matrix.</li>
+<li>Clicking the badge links out to the compiled ADR Markdown file or its GitHub equivalent.</li>
+</ul>
+<h3>Rationale</h3>
+<p>Deliberation is ephemeral; decisions are permanent. Linking the Decision Graph to the D4 lineage scanner bridges the gap between the <code>ab discuss</code> transcript and the final, accepted architectural rule. It fulfills the workflow rule where deliberation must result in referenceable documentation.</p>
+<hr />
+<h2>Implementation Notes</h2>
+<ul>
+<li><strong>What changes:</strong> The <code>channels.html</code> frontend, adding a toggle for graph view, implementing the marker parser, and building the matrix/drawer UI.</li>
+<li><strong>What doesn't change:</strong> The underlying DB schema, the <code>ab discuss</code> Python broker logic, or the Multi-UI blob storage schema. D3 and D4 are strictly read-oriented presentation layers.</li>
+<li><strong>Identity migration:</strong> Before Multi-UI lands, Decision Graph reads <code>from_agent</code> as the participant key. Once Multi-UI adds first-class identity, the view can re-key columns by <code>participant_id</code> or <code>(agent_family, ui_surface, instance_id_short)</code> without changing the current DB schema first.</li>
+<li><strong>Convergence authority:</strong> The broker's strict <code>text.strip().endswith(&quot;[AGREE]&quot;)</code> check is authoritative for <code>ab discuss</code> short-circuit behavior. The Decision Graph may show display markers found elsewhere in the body, but it must not label a thread converged unless the latest round messages satisfy the broker-compatible tail rule.</li>
+</ul>
+<hr />
+<h2>Cross-Agent Review</h2>
+<ul>
+<li><strong>Codex (Green Team):</strong> <em>(Pending review)</em></li>
+<li><strong>Claude (Blue Team):</strong> <em>(Pending review)</em></li>
+</ul>
+<hr />
+<h2>Open Questions for User</h2>
+<ol>
+<li><strong>D4 Integration Timing:</strong> Should the Decision Graph UI ship with a placeholder for the ADR badge, or should it be held until D4 (#1785) is fully merged and its JSON API is available?</li>
+<li><strong>Thread Filtering in Drawer:</strong> Resolved by Q5: default to same-round all-agents plus clicked participant prior posts, with a per-agent filter toggle.</li>
+</ol>
+<hr />
+<h2>Supersedes/Refines</h2>
+<ul>
+<li><strong>Refines:</strong> <code>docs/best-practices/agent-cooperation.md</code> (Provides UI realization of the Deliberation Protocol).</li>
+<li><strong>Complements:</strong> <code>docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md</code> (Multi-UI sets up future identity primitives; this ADR defines the visualization and uses current <code>from_agent</code> until those primitives land).</li>
+</ul>
+
+  </main>
+</div>
+</body>
+</html>
