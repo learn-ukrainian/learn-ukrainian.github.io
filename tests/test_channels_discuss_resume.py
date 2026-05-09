@@ -114,6 +114,12 @@ def test_discuss_unknown_agent_defaults_to_no_resume(monkeypatch):
         "VALID_POST_AGENTS",
         (*_channels.VALID_POST_AGENTS, "mystery"),
     )
+    # Register `mystery` as cli_available so the new _reject_non_cli_agent gate
+    # in _channels_cli (added in this PR) passes. The assertion below still
+    # validates the resume-policy fallback for an agent without an explicit
+    # resume_policy entry.
+    from agent_runtime import registry as _registry
+    monkeypatch.setitem(_registry.AGENTS, "mystery", {"cli_available": True})
     captured_invokes = []
 
     def fake_runtime_invoke(agent, _prompt, **kwargs):

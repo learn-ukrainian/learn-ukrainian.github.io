@@ -48,6 +48,19 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "codex-desktop": {
+        "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
+        "default_model": "gpt-5.5",
+        "cost_tier": "high",
+        "capabilities": frozenset({
+            "frontend_design",
+            "ui_review",
+            "multimodal",
+            "visual_inspection",
+        }),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
     "claude": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
         "default_model": "claude-opus-4-7",
@@ -60,6 +73,19 @@ AGENTS: dict[str, AgentEntry] = {
         }),
         "cli_available": True,
         "resume_policy": "bridge_only",
+    },
+    "claude-desktop": {
+        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "default_model": "claude-opus-4-7",
+        "cost_tier": "high",
+        "capabilities": frozenset({
+            "frontend_design",
+            "ui_review",
+            "multimodal",
+            "visual_inspection",
+        }),
+        "cli_available": False,
+        "resume_policy": "never",
     },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",

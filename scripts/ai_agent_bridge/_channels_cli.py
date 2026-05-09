@@ -60,6 +60,31 @@ _GEMINI_AUTH_CHOICES = ["auto", "subscription", "api-key", "api"]
 _DISCUSSION_READONLY_TOOL_CONFIG = {"discussion_readonly": True}
 
 
+def _cli_available_agent(agent: str) -> bool:
+    """Return whether the agent can be spawned by the local runtime."""
+    try:
+        from agent_runtime.registry import get_agent_entry
+    except ImportError:
+        return agent in {"claude", "codex", "gemini"}
+
+    try:
+        return bool(get_agent_entry(agent)["cli_available"])
+    except KeyError:
+        return False
+
+
+def _reject_non_cli_agent(agent: str, command: str) -> bool:
+    if _cli_available_agent(agent):
+        return False
+    print(
+        f"❌ {command} cannot spawn {agent!r}: registry has cli_available=False. "
+        "Use `ab inbox show` / `ab channel tail` from the Desktop session, "
+        "or post to its inbox with `ab post --to`.",
+        file=sys.stderr,
+    )
+    return True
+
+
 def _build_discuss_round_body(root_body: str, directive: str) -> str:
     """Render the high-priority body for a discuss round prompt.
 
@@ -242,6 +267,11 @@ def register_channel_commands(subparsers: Any) -> None:
     tail_parser.add_argument(
         "--json", action="store_true",
         help="Output as JSON instead of human-readable",
+    )
+    tail_parser.add_argument(
+        "--follow",
+        action="store_true",
+        help="Keep polling for newly appended channel messages",
     )
 
     # ab channel watch
@@ -834,6 +864,9 @@ def _handle_channel_tail(args) -> int:
     if _channels.get_channel(args.name) is None:
         print(f"❌ channel '{args.name}' does not exist", file=sys.stderr)
         return 1
+    if args.follow and args.json:
+        print("❌ --follow does not support --json output", file=sys.stderr)
+        return 2
 
     try:
         if args.thread:
@@ -851,10 +884,11 @@ def _handle_channel_tail(args) -> int:
         return 0
 
     print(f"=== {header} ===")
+    seen_ids = set()
     if not msgs:
         print("(no messages)")
-        return 0
     for m in msgs:
+        seen_ids.add(m["message_id"])
         ts = m["created_at"][:19]
         parent_str = f" ← {m['parent_id'][:8]}" if m["parent_id"] else ""
         print(
@@ -863,6 +897,31 @@ def _handle_channel_tail(args) -> int:
         )
         if len(m["body"]) > 200:
             print(f"   ... [{len(m['body']) - 200} more chars]")
+    if not args.follow:
+        return 0
+
+    try:
+        while True:
+            time.sleep(2)
+            if args.thread:
+                next_msgs = _channels.read(args.name, thread_id=args.thread)
+            else:
+                next_msgs = _channels.read(args.name, tail=args.limit)
+            for m in next_msgs:
+                if m["message_id"] in seen_ids:
+                    continue
+                seen_ids.add(m["message_id"])
+                ts = m["created_at"][:19]
+                parent_str = f" ← {m['parent_id'][:8]}" if m["parent_id"] else ""
+                print(
+                    f"[{ts}] {m['from_agent']}"
+                    f" (r{m['round_index']}{parent_str}): {m['body'][:200]}",
+                    flush=True,
+                )
+                if len(m["body"]) > 200:
+                    print(f"   ... [{len(m['body']) - 200} more chars]", flush=True)
+    except KeyboardInterrupt:
+        return 0
     return 0
 
 
@@ -958,6 +1017,9 @@ def _handle_inbox_run(args) -> int:
     """Handle `ab inbox run <agent>`."""
     from ._inbox import run_inbox
 
+    if _reject_non_cli_agent(args.agent, "ab inbox run"):
+        return 1
+
     until_idle = not args.once
     if args.until_idle:
         until_idle = True
@@ -1035,7 +1097,11 @@ def _handle_sync(args) -> int:
         print("❌ sync requires an agent or --all", file=sys.stderr)
         return 2
 
-    agents = list(_channels.VALID_AGENTS) if args.all else [args.agent]
+    agents = (
+        [agent for agent in _channels.VALID_AGENTS if _cli_available_agent(agent)]
+        if args.all
+        else [args.agent]
+    )
     worst_exit_code = 0
     for agent in agents:
         class _Args:
@@ -1115,6 +1181,16 @@ def _handle_discuss(args) -> int:
         print(
             f"❌ unknown agent(s): {', '.join(unknown)} "
             f"(valid: {', '.join(sorted(_channels.VALID_AGENTS))})",
+            file=sys.stderr,
+        )
+        return 1
+    non_cli_agents = [agent for agent in with_agents if not _cli_available_agent(agent)]
+    if non_cli_agents:
+        print(
+            "❌ ab discuss cannot spawn non-CLI participant(s): "
+            f"{', '.join(non_cli_agents)}. "
+            "Use channel posts/inbox show for Desktop participation until "
+            "the Multi-UI ADR lands.",
             file=sys.stderr,
         )
         return 1

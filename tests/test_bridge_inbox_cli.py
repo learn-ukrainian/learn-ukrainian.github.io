@@ -205,6 +205,83 @@ def test_inbox_show_empty(capsys):
     assert "    (none)" in captured.out
 
 
+def test_inbox_show_accepts_codex_desktop(capsys):
+    exit_code = _run_cli(["inbox", "show", "codex-desktop"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert "codex-desktop inbox:" in captured.out
+    assert "pending:    0" in captured.out
+
+
+def test_post_from_codex_desktop_is_accepted(capsys):
+    _channels.create_channel("topic")
+
+    exit_code = _run_cli(
+        [
+            "post",
+            "topic",
+            "desktop status",
+            "--from-agent",
+            "codex-desktop",
+            "--no-snapshot",
+        ]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert "✅ posted to #topic" in captured.out
+    assert _channels.read("topic")[0]["from_agent"] == "codex-desktop"
+
+
+def test_post_to_codex_desktop_routes_delivery(capsys):
+    _channels.create_channel("topic")
+
+    exit_code = _run_cli(
+        [
+            "post",
+            "topic",
+            "desktop brief",
+            "--to",
+            "codex-desktop",
+            "--from-agent",
+            "claude",
+            "--no-snapshot",
+        ]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert "→ codex-desktop  (1 deliveries)" in captured.out
+    delivery = _channels.deliveries_for_message(
+        _channels.read("topic")[0]["message_id"]
+    )[0]
+    assert delivery["to_agent"] == "codex-desktop"
+
+
+def test_post_from_existing_codex_path_still_works(capsys):
+    _channels.create_channel("topic")
+
+    exit_code = _run_cli(
+        [
+            "post",
+            "topic",
+            "codex status",
+            "--from-agent",
+            "codex",
+            "--no-snapshot",
+        ]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert _channels.read("topic")[0]["from_agent"] == "codex"
+
+
 @patch("agent_runtime.runner.invoke")
 def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypatch, capsys):
     _channels.create_channel("shared")
@@ -414,6 +491,7 @@ def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
 def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     for agent in _channels.VALID_AGENTS:
         _make_thread(agent, channel=f"{agent}-topic", count=1)
+    cli_agents = ["claude", "gemini", "codex"]
 
     calls: list[tuple[str, dict[str, object]]] = []
 
@@ -436,10 +514,19 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     assert exit_code == 0
     captured = capsys.readouterr()
     assert captured.err == ""
-    assert [call[0] for call in calls] == list(_channels.VALID_AGENTS)
+    assert [call[0] for call in calls] == cli_agents
     assert captured.out.count("processed: 1 deliveries | 1 threads | 0 failed | duration:") == len(
-        _channels.VALID_AGENTS
+        cli_agents
     )
+
+
+def test_inbox_run_rejects_codex_desktop(capsys):
+    exit_code = _run_cli(["inbox", "run", "codex-desktop", "--once"])
+
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "cli_available=False" in captured.err
+    assert "ab inbox show" in captured.err
 
 
 def test_backlog_banner_triggers_for_old_pending_delivery(monkeypatch, capsys):

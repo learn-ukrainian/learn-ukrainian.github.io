@@ -163,12 +163,39 @@ def _stub_claude_cli_version_gate(monkeypatch, request):
 # Registry + adapter loading
 # ---------------------------------------------------------------------------
 
-def test_registry_has_four_agents():
-    assert set(AGENTS.keys()) == {"codex", "claude", "gemini", "gemma-local", "grok"}
+def test_registry_has_known_agents():
+    assert set(AGENTS.keys()) == {
+        "codex",
+        "codex-desktop",
+        "claude",
+        "claude-desktop",
+        "gemini",
+        "gemma-local",
+        "grok",
+    }
 
 
 def test_codex_entry_has_never_resume_policy():
     assert get_agent_entry("codex")["resume_policy"] == "never"
+
+
+def test_codex_desktop_entry_is_human_invoked():
+    entry = get_agent_entry("codex-desktop")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.codex:CodexAdapter"
+    assert entry["default_model"] == "gpt-5.5"
+    assert entry["cost_tier"] == "high"
+    assert entry["cli_available"] is False
+    assert entry["resume_policy"] == "never"
+    assert {"frontend_design", "ui_review", "multimodal", "visual_inspection"} <= entry[
+        "capabilities"
+    ]
+
+
+def test_claude_desktop_entry_is_human_invoked():
+    entry = get_agent_entry("claude-desktop")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.claude:ClaudeAdapter"
+    assert entry["cli_available"] is False
+    assert entry["resume_policy"] == "never"
 
 
 def test_claude_entry_has_bridge_only_resume_policy():
