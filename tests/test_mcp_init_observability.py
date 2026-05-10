@@ -459,6 +459,43 @@ def test_mcp_runtime_observer_matches_failed_url_with_trailing_slash() -> None:
     assert events[0][1]["status"] == "failed"
 
 
+@pytest.mark.parametrize(
+    "line",
+    [
+        "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
+        "worker quit with fatal: Transport channel closed",
+        "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
+        "worker quit with fatal: Transport channel closed, when "
+        'Client(HttpRequest(HttpRequest("http/request failed: error sending '
+        'request for url (http://127.0.0.1:4444/mcp)")))',
+    ],
+)
+def test_mcp_runtime_observer_warns_for_unattributed_failure(line: str) -> None:
+    events: list[tuple[str, dict[str, Any]]] = []
+    observer = _McpRuntimeObserver.from_tool_config(
+        agent_name="codex",
+        task_id="writer",
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/mcp"},
+                "wikipedia": {"url": "http://127.0.0.1:8767/mcp"},
+            }
+        },
+        event_sink=lambda event, **fields: events.append((event, fields)),
+        start_time=time.monotonic(),
+    )
+    assert observer is not None
+
+    observer.observe_line(line, stream="stderr")
+
+    assert [event for event, _fields in events] == [
+        "mcp_runtime_unattributed_failure"
+    ]
+    assert events[0][1]["raw_line"] == line[:500]
+    assert events[0][1]["task_id"] == "writer"
+    assert events[0][1]["stream"] == "stderr"
+
+
 def test_mcp_runtime_observer_emits_timeout() -> None:
     events: list[tuple[str, dict[str, Any]]] = []
     observer = _McpRuntimeObserver.from_tool_config(

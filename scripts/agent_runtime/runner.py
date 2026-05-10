@@ -473,6 +473,9 @@ class _McpRuntimeObserver:
         servers = self._servers_for_failed_line(
             url_match.group("url") if url_match else None
         )
+        if not servers:
+            self._emit_unattributed_failure(stream=stream, line=line)
+            return
         for server in servers:
             self._emit_failed(server, stream=stream, line=line)
 
@@ -498,17 +501,14 @@ class _McpRuntimeObserver:
             )
 
     def _servers_for_failed_line(self, url: str | None) -> list[str]:
-        if url:
-            normalized_url = _normalize_mcp_url(url)
-            matched = [
-                server
-                for server, server_url in self.server_urls.items()
-                if _normalize_mcp_url(server_url) == normalized_url
-            ]
-            if matched:
-                return matched
-        unresolved = self.configured_servers - self.ready_servers - self.failed_servers
-        return sorted(unresolved) or ["unknown"]
+        normalized_url = _normalize_mcp_url(url)
+        if not normalized_url:
+            return []
+        return [
+            server
+            for server, server_url in self.server_urls.items()
+            if _normalize_mcp_url(server_url) == normalized_url
+        ]
 
     def _emit_ready(
         self,
@@ -528,6 +528,17 @@ class _McpRuntimeObserver:
             return
         self.failed_servers.add(server)
         self._emit(server=server, status="failed", stream=stream, line=line)
+
+    def _emit_unattributed_failure(self, *, stream: str, line: str) -> None:
+        fields: dict[str, Any] = {
+            "agent": self.agent_name,
+            "raw_line": line[:500],
+        }
+        if self.task_id:
+            fields["task_id"] = self.task_id
+        if stream:
+            fields["stream"] = stream
+        self.event_sink("mcp_runtime_unattributed_failure", **fields)
 
     def _emit(
         self,
