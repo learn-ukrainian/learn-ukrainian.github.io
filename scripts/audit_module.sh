@@ -61,7 +61,8 @@ fi
 # Extract level and slug from path
 # Path format: curriculum/l2-uk-en/{level}/{num}-{slug}.md (relative or absolute)
 # Strip everything up to and including "curriculum/l2-uk-en/" to normalize
-REL_PATH=$(echo "$MODULE_PATH" | sed 's|.*/curriculum/l2-uk-en/|curriculum/l2-uk-en/|; s|^curriculum/l2-uk-en/||')
+CURRICULUM_REL="${LU_CURRICULUM_ROOT:-curriculum/l2-uk-en}"
+REL_PATH=$(echo "$MODULE_PATH" | sed "s|.*/$CURRICULUM_REL/|$CURRICULUM_REL/|; s|^$CURRICULUM_REL/||")
 LEVEL=$(echo "$REL_PATH" | cut -d'/' -f1)
 FILENAME=$(basename "$MODULE_PATH" .md)
 
@@ -70,7 +71,7 @@ FILENAME=$(basename "$MODULE_PATH" .md)
 SLUG=$(echo "$FILENAME" | sed 's/^[0-9]*-//')
 
 # Create audit directory if it doesn't exist
-AUDIT_DIR="curriculum/l2-uk-en/$LEVEL/audit"
+AUDIT_DIR="$CURRICULUM_REL/$LEVEL/audit"
 mkdir -p "$AUDIT_DIR"
 
 # Audit log path

@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 """delegate.py — async task dispatch over agent_runtime.
 
@@ -98,6 +99,8 @@ import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from config import SOURCES_DB, VESUM_DB
 
 # Resolve repo root from this file's location so we work from any cwd.
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -505,7 +508,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     gates open them relative to the running checkout. Use symlinks so each
     delegated worktree sees the same local data without copying multi-GB files.
     """
-    for relative_path in ("data/vesum.db", "data/sources.db"):
+    for relative_path in (VESUM_DB, SOURCES_DB):
         source = main_repo_root / relative_path
         if not source.exists():
             print(

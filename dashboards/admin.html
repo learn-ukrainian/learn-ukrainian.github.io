@@ -111,7 +111,7 @@ table.stats-table tr:hover { background: var(--bg3); }
 <div class="layout">
   <div class="sidebar">
     <a href="#health" class="active" data-section="health">Health</a>
-    <a href="#backup" data-section="backup">Backup</a>
+    
     <a href="#maintenance" data-section="maintenance">Maintenance</a>
     <a href="#stats" data-section="stats">Stats</a>
     <a href="#collections" data-section="collections">Collections</a>
@@ -131,71 +131,7 @@ table.stats-table tr:hover { background: var(--bg3); }
       </div>
     </div>
 
-    <!-- Backup Section -->
-    <div class="section" id="section-backup">
-      <h2>Qdrant Backups</h2>
-      <div class="card">
-        <h3>Create Backup</h3>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
-          Creates a Qdrant snapshot and downloads it to the backup directory.
-        </p>
-        <button class="action-btn" id="btn-backup" onclick="createBackup()">Create Qdrant Backup</button>
-        <div class="result-box" id="backup-result"></div>
-      </div>
-      <div class="card">
-        <h3>Existing Backups</h3>
-        <div id="backup-list" class="backup-list">Loading...</div>
-      </div>
-    </div>
-
-    <!-- Maintenance Section -->
-    <div class="section" id="section-maintenance">
-      <h2>Maintenance</h2>
-      <div class="card">
-        <h3>Vacuum Broker DB</h3>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
-          Runs SQLite VACUUM on the message broker database to reclaim space.
-        </p>
-        <button class="action-btn" id="btn-vacuum" onclick="vacuumBroker()">Vacuum Broker DB</button>
-        <div class="result-box" id="vacuum-result"></div>
-      </div>
-      <div class="card">
-        <h3>Clean Old Logs</h3>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
-          Delete log files older than the specified number of days.
-        </p>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <label style="font-size:13px;color:var(--text2)">Max age (days):</label>
-          <input type="number" id="log-age" value="30" min="1" max="365"
-            style="width:60px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:13px">
-        </div>
-        <button class="action-btn" id="btn-logs" onclick="cleanLogs()">Clean Old Logs</button>
-        <div class="result-box" id="logs-result"></div>
-      </div>
-      <div class="card">
-        <h3>Verify Collections</h3>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
-          Compare Qdrant point counts vs on-disk chunk/file counts.
-        </p>
-        <button class="action-btn" id="btn-verify" onclick="verifyCollections()">Verify Collections</button>
-        <div class="result-box" id="verify-result"></div>
-      </div>
-    </div>
-
-    <!-- Stats Section -->
-    <div class="section" id="section-stats">
-      <h2>Stats</h2>
-      <div class="card">
-        <h3>Embedding Cache</h3>
-        <div id="embed-stats">Loading...</div>
-      </div>
-      <div class="card">
-        <h3>Image Annotations</h3>
-        <div id="annotation-stats">Loading...</div>
-      </div>
-    </div>
-
-    <!-- Collections Section -->
+    
     <div class="section" id="section-collections">
       <h2>Qdrant Collections</h2>
       <div id="collections-table">Loading...</div>

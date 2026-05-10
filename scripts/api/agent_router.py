@@ -7,6 +7,8 @@ import uuid
 import yaml
 from fastapi import APIRouter, HTTPException
 
+from .config import CURRICULUM_ROOT, PROJECT_ROOT
+
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
@@ -160,7 +162,7 @@ def get_worktree():
         is_artifact = False
         if (
             (
-                path.startswith("curriculum/l2-uk-en/")
+                path.startswith(str(CURRICULUM_ROOT.relative_to(PROJECT_ROOT)) + "/")
                 and ("/orchestration/" in path or "/status/" in path or path.endswith("-audit.md"))
             )
             or path.startswith("wiki/")
