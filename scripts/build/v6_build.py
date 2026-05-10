@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""V6 Pipeline Build — two-call Skeleton->Flesh content generation.
+"""V6 Pipeline Build — OBSOLETE (retired 2026-05-10).
+
+Use ``scripts/build/v7_build.py`` for all new builds. This file is kept on
+disk for forensic reference only — do not invoke, extend, or import.
+
+--- Historical docstring preserved below ---
+
+V6 Pipeline Build — two-call Skeleton->Flesh content generation.
 
 Orchestrates the V6 pipeline:
 1. CHECK: Plan checker validation

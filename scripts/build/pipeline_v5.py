@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Pipeline v5 — Clean pipeline implementation (no v2/v3 legacy code).
+"""Pipeline v5 — OBSOLETE (retired 2026-05-10).
+
+Use ``scripts/build/v7_build.py`` for all new builds. This file is kept on
+disk for forensic reference only — do not invoke, extend, or import.
+V5 was retired well before V6; superseded first by V6 and now V7.
+
+--- Historical docstring preserved below ---
+
+Pipeline v5 — Clean pipeline implementation (no v2/v3 legacy code).
 
 Phase implementations + state management + all phase-specific helpers.
 Imported by build_module_v5.py.

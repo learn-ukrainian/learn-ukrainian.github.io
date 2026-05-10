@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""E2E Module Builder v5 — clean pipeline CLI (no v2/v3 legacy).
+"""E2E Module Builder v5 — OBSOLETE (retired 2026-05-10).
+
+Use ``scripts/build/v7_build.py`` for all new builds. This file is kept on
+disk for forensic reference only — do not invoke, extend, or import.
+V5 was retired well before V6.
+
+--- Historical docstring preserved below ---
+
+E2E Module Builder v5 — clean pipeline CLI (no v2/v3 legacy).
 
 Usage:
     %(prog)s a1 12                           # Full build (review on by default)
