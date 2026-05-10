@@ -20,7 +20,7 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import
 
-from .config import PROJECT_ROOT
+from .config import DASHBOARDS_DIR, PROJECT_ROOT
 
 router = APIRouter(tags=["docs"])
 
@@ -36,11 +36,12 @@ ALLOWED_ROOTS = {
     "docs/references/external": PROJECT_ROOT / "docs" / "references" / "external",
 }
 
-_ALLOWED_EXT = {".html", ".md", ".txt", ".png", ".jpg", ".jpeg", ".svg", ".webp", ".pdf"}
+_ALLOWED_EXT = {".html", ".md", ".txt", ".json", ".png", ".jpg", ".jpeg", ".svg", ".webp", ".pdf"}
 _MIME_TYPES = {
     ".html": "text/html",
     ".md": "text/markdown",
     ".txt": "text/plain",
+    ".json": "application/json",
     ".png": "image/png",
     ".jpg": "image/jpeg",
     ".jpeg": "image/jpeg",
@@ -207,7 +208,7 @@ def collect_html_artifacts(
 async def list_roots(request: Request, format: str | None = Query(None, pattern="^(json)$")):
     """List all approved documentation roots."""
     if request.url.path.startswith("/artifacts") and format != "json":
-        return FileResponse(PROJECT_ROOT / "playgrounds" / "artifacts.html", media_type="text/html")
+        return FileResponse(DASHBOARDS_DIR / "artifacts.html", media_type="text/html")
     return {
         "roots": [
             {
@@ -248,7 +249,7 @@ async def serve_artifact(
 
     if full_path.is_dir():
         if request.url.path.startswith("/artifacts") and format != "json":
-            return FileResponse(PROJECT_ROOT / "playgrounds" / "artifacts.html", media_type="text/html")
+            return FileResponse(DASHBOARDS_DIR / "artifacts.html", media_type="text/html")
         return _directory_listing(path, root_key, root_path, remainder)
 
     # File serving

@@ -1,4 +1,4 @@
-"""Tests for playground data generation and HTML validation."""
+"""Tests for dashboard data generation and HTML validation."""
 from __future__ import annotations
 
 import re
@@ -9,7 +9,7 @@ from typing import ClassVar
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-PLAYGROUNDS_DIR = ROOT / "playgrounds"
+DASHBOARDS_DIR = ROOT / "dashboards"
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "generate_mdx"))
 
@@ -72,9 +72,9 @@ class TestParseNaturalness:
 # ── HTML validation tests ───────────────────────────────────────
 
 class TestHtmlValidation:
-    """Validate playground HTML files have valid structure."""
+    """Validate dashboard HTML files have valid structure."""
 
-    HTML_FILES = sorted(PLAYGROUNDS_DIR.glob("*.html"))
+    HTML_FILES = sorted(DASHBOARDS_DIR.glob("*.html"))
 
     @pytest.mark.parametrize("html_file", HTML_FILES, ids=lambda p: p.name)
     def test_has_doctype(self, html_file):
@@ -114,7 +114,7 @@ class TestHtmlValidation:
 class TestApiEndpoints:
     """Verify dashboard API endpoints are defined in the API server."""
 
-    # All endpoints referenced in playground HTML files
+    # All endpoints referenced in dashboard HTML files
     EXPECTED_ENDPOINTS: ClassVar[set[str]] = {
         "/api/artifacts/html",
         "/api/comms/batch-progress",
@@ -171,7 +171,7 @@ class TestApiEndpoints:
     def test_fetch_calls_in_html(self):
         """Verify all fetch calls reference known endpoints."""
         all_endpoints = set()
-        for html_file in PLAYGROUNDS_DIR.glob("*.html"):
+        for html_file in DASHBOARDS_DIR.glob("*.html"):
             text = html_file.read_text()
             # Extract fetch URLs, strip query params
             fetches = re.findall(r"fetch\(['\"]([^'\"]+)['\"]", text)
@@ -181,7 +181,7 @@ class TestApiEndpoints:
 
         # All found endpoints should be in our known set
         unknown = all_endpoints - self.EXPECTED_ENDPOINTS
-        assert not unknown, f"Unknown API endpoints in playgrounds: {unknown}"
+        assert not unknown, f"Unknown API endpoints in dashboards: {unknown}"
 
 
 # ── Dashboard inventory ─────────────────────────────────────────
@@ -201,13 +201,13 @@ class TestDashboardInventory:
     }
 
     def test_expected_dashboards_exist(self):
-        actual = {f.name for f in PLAYGROUNDS_DIR.glob("*.html")}
+        actual = {f.name for f in DASHBOARDS_DIR.glob("*.html")}
         missing = self.EXPECTED_DASHBOARDS - actual
         assert not missing, f"Missing dashboards: {missing}"
 
     def test_index_links_to_other_dashboards(self):
         """Index page should link to other dashboards."""
-        index = PLAYGROUNDS_DIR / "index.html"
+        index = DASHBOARDS_DIR / "index.html"
         if not index.exists():
             pytest.skip("No index.html")
         text = index.read_text()

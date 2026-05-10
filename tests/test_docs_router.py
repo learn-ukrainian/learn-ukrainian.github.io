@@ -32,9 +32,9 @@ def controlled_docs_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dic
     (outside_root / "secret.html").write_text("secret outside root", encoding="utf-8")
     (safe_root / "escape.html").symlink_to(outside_root / "secret.html")
 
-    playgrounds = tmp_path / "playgrounds"
-    playgrounds.mkdir()
-    (playgrounds / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
+    dashboards = tmp_path / "dashboards"
+    dashboards.mkdir()
+    (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
 
     monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {"safe": safe_root})

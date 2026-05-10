@@ -21,7 +21,7 @@ from scripts.api.main import app
 
 client = TestClient(app)
 
-DASHBOARD_PATH = Path(__file__).resolve().parent.parent / "playgrounds" / "v2-blue" / "batch-monitor.html"
+DASHBOARD_PATH = Path(__file__).resolve().parent.parent / "dashboards" / "v2-blue" / "batch-monitor.html"
 _DASHBOARD_MISSING = not DASHBOARD_PATH.exists()
 
 
@@ -201,13 +201,13 @@ class TestStaticServing:
         assert r.status_code in (200, 404)
 
     def test_static_path_traversal_is_rejected(self, tmp_path, monkeypatch):
-        playgrounds_dir = tmp_path / "playgrounds"
-        playgrounds_dir.mkdir()
-        (playgrounds_dir / "index.html").write_text("ok", "utf-8")
+        dashboards_dir = tmp_path / "dashboards"
+        dashboards_dir.mkdir()
+        (dashboards_dir / "index.html").write_text("ok", "utf-8")
         outside_file = tmp_path / "secret.txt"
         outside_file.write_text("secret", "utf-8")
 
-        monkeypatch.setattr("scripts.api.main.PLAYGROUNDS_DIR", playgrounds_dir)
+        monkeypatch.setattr("scripts.api.main.DASHBOARDS_DIR", dashboards_dir)
 
         r = client.get("/%2e%2e/secret.txt")
 
