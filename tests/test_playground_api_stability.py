@@ -1,4 +1,4 @@
-"""Smoke tests for playground dashboard API stability."""
+"""Smoke tests for dashboard API stability."""
 
 from __future__ import annotations
 

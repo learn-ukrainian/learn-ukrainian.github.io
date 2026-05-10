@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-PLAYGROUNDS = ROOT / "playgrounds"
+DASHBOARDS = ROOT / "dashboards"
 PRIMARY_NAV_HREFS = [
     "/",
     "/orient.html",
@@ -15,7 +15,7 @@ PRIMARY_NAV_HREFS = [
 
 
 def test_index_page_uses_shared_parchment_monitor_design():
-    html = (PLAYGROUNDS / "index.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert '<a class="active" href="/">Home</a>' in html
     assert "Operations launchpad" in html
@@ -52,7 +52,7 @@ def test_index_page_uses_shared_parchment_monitor_design():
     ],
 )
 def test_playground_page_uses_shared_parchment_monitor_design(filename, active_link, heading):
-    html = (ROOT / "playgrounds" / filename).read_text(encoding="utf-8")
+    html = (ROOT / "dashboards" / filename).read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert 'class="monitor-nav"' in html
     assert 'aria-label="Monitor sections"' in html
@@ -64,7 +64,7 @@ def test_playground_page_uses_shared_parchment_monitor_design(filename, active_l
 
 
 def test_channels_page_has_shareable_deeplink_contract():
-    html = (PLAYGROUNDS / "channels.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "channels.html").read_text(encoding="utf-8")
     assert "new URLSearchParams(location.search)" in html
     assert "params.get('channel')" in html
     assert "params.get('thread')" in html
@@ -74,7 +74,7 @@ def test_channels_page_has_shareable_deeplink_contract():
 
 
 def test_orient_page_renders_active_discussions_widget():
-    html = (PLAYGROUNDS / "orient.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "orient.html").read_text(encoding="utf-8")
     assert "Active Discussions" in html
     assert "/api/discussions/active" in html
     assert "Promise.allSettled" in html
@@ -84,7 +84,7 @@ def test_orient_page_renders_active_discussions_widget():
 
 
 def test_runtime_page_keeps_primary_monitor_nav():
-    html = (PLAYGROUNDS / "runtime.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert '<a class="active" href="/runtime.html">Runtime</a>' in html
     for href in [
@@ -98,14 +98,14 @@ def test_runtime_page_keeps_primary_monitor_nav():
 
 
 def test_shared_monitor_css_targets_unified_nav_classes():
-    css = (PLAYGROUNDS / "monitor.css").read_text(encoding="utf-8")
+    css = (DASHBOARDS / "monitor.css").read_text(encoding="utf-8")
     assert ".topbar .nav" not in css
     assert ".topbar .monitor-nav" in css
     assert ".top-bar .monitor-nav" in css
 
 
 def test_comms_page_keeps_secondary_dashboard_links():
-    html = (PLAYGROUNDS / "comms.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "comms.html").read_text(encoding="utf-8")
     for href in [
         "/audit-dashboard.html",
         "/progress.html",
@@ -117,7 +117,7 @@ def test_comms_page_keeps_secondary_dashboard_links():
 
 
 def test_artifacts_page_uses_metadata_endpoint_and_filters():
-    html = (PLAYGROUNDS / "artifacts.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "artifacts.html").read_text(encoding="utf-8")
     assert "/api/artifacts/html" in html
     assert "class-filter" in html
     assert "status-filter" in html
@@ -127,7 +127,7 @@ def test_artifacts_page_uses_metadata_endpoint_and_filters():
 
 
 def test_artifacts_page_preserves_legacy_dashboard_links():
-    html = (PLAYGROUNDS / "artifacts.html").read_text(encoding="utf-8")
+    html = (DASHBOARDS / "artifacts.html").read_text(encoding="utf-8")
     assert 'href="/"' in html
     for href in [
         "/admin.html",
@@ -148,11 +148,11 @@ def test_artifacts_page_preserves_legacy_dashboard_links():
         "/wiki.html",
     ]:
         assert f'href="{href}"' in html
-        assert (PLAYGROUNDS / href.lstrip("/")).exists()
+        assert (DASHBOARDS / href.lstrip("/")).exists()
 
 
 def test_all_playground_pages_use_single_monitor_shell():
-    for path in sorted(PLAYGROUNDS.glob("*.html")):
+    for path in sorted(DASHBOARDS.glob("*.html")):
         html = path.read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/monitor.css">' in html, path.name
         assert 'class="monitor-nav"' in html, path.name
@@ -182,7 +182,7 @@ def test_operations_pages_keep_secondary_navigation():
         ],
     }
     for page, hrefs in pages_to_hrefs.items():
-        html = (PLAYGROUNDS / page).read_text(encoding="utf-8")
+        html = (DASHBOARDS / page).read_text(encoding="utf-8")
         assert 'class="ops-nav"' in html, page
         for href in hrefs:
             assert f'href="{href}"' in html, page
