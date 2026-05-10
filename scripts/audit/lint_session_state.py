@@ -15,21 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
 ALLOWLIST_FILE = Path(__file__).with_name("known_user_paths.yaml")
 
-PATH_PATTERN = re.compile(
-    r"(?<![\w/.-])("
-    r"~/\.claude/settings\.json|"
-    r"~/\.codex/config\.toml|"
-    r"~/\.gemini/settings\.json|"
-    r"~/\.bash_secrets|"
-    r"~/\.zprofile|"
-    r"~/\.bashrc|"
-    r"~/\.profile|"
-    r"~/\.zshrc|"
-    r"\.env\.local|"
-    r"\.envrc|"
-    r"\.env"
-    r")(?![\w/.-])"
-)
+PATH_PATTERN = re.compile(r"(\B~/\.[\w./_-]+\b|\B(?<!\.)\.env(?:\.[\w-]+)?\b)")
 FENCE_PATTERN = re.compile(r"^\s*(```|~~~)(.*)$")
 
 

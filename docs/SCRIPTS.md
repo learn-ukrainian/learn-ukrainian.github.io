@@ -803,6 +803,10 @@ Known user-scoped paths that are expected but not committed live in
 `scripts/audit/known_user_paths.yaml`. This check is also wired into pre-commit
 for `docs/session-state/*.md`.
 
+**Capabilities and Limitations:**
+- ✅ Catches: missing-file references for tilde-rooted dotfiles (`~/.bash_secrets`, etc.) + `.env*` variants.
+- ❌ Does NOT catch: typos that resolve to a different *existing* file, or verify content-correctness *inside* referenced files.
+
 ### `scripts/audit/lint_anti_menu.py`
 
 Scans markdown for MEMORY #0I anti-menu sign-off prompts while ignoring

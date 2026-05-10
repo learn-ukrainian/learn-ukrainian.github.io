@@ -74,3 +74,31 @@ source ~/.notreal
     )
 
     assert lint_session_state.main(["--file", str(handoff)]) == 0
+
+
+@pytest.mark.parametrize(
+    "typo_path",
+    [
+        "~/.bash_secret",
+        "~/.totally_not_a_real_file_xyz",
+        ".env.foofake",
+        ".env.production",
+        ".env.development",
+        ".env.staging",
+        ".env.example",
+    ],
+)
+def test_closed_world_typos_and_variants_are_flagged(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    typo_path: str,
+) -> None:
+    _isolate_cli(monkeypatch, tmp_path)
+    handoff = _write(tmp_path / "handoff.md", f"Check {typo_path} for secrets.\n")
+
+    exit_code = lint_session_state.main(["--file", str(handoff)])
+    output = capsys.readouterr().out
+
+    assert exit_code == 1
+    assert typo_path in output
