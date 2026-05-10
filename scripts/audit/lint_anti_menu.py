@@ -211,9 +211,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         label = str(args.text)
         try:
             text = args.text.read_text(encoding="utf-8")
-        except UnicodeDecodeError as e:
-            print(f"Error: {label} is not a valid UTF-8 file ({e})", file=sys.stderr)
-            return 1
+        except UnicodeDecodeError:
+            print(f"{label}: not utf-8", file=sys.stderr)
+            return 2
 
     violations = scan_text(text)
     for violation in violations:
