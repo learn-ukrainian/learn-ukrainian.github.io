@@ -1572,6 +1572,20 @@ def build_parser() -> argparse.ArgumentParser:
     sof = sub.add_parser(
         "status-or-fail",
         help="Exit 0 only if Monitor API says task is running",
+        description=(
+            "Verify a delegated task through the Monitor API and exit 0 only when it is running.\n"
+            "Use it in guardrails before trusting stale async-task claims; do not use it when the API may be offline."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py status-or-fail review-123\n"
+            "  .venv/bin/python scripts/delegate.py status-or-fail review-123 --verbose\n\n"
+            "Exit codes:\n"
+            "  0 Monitor API confirms the task is running.\n"
+            "  1 Task is not running, done, missing, or stale.\n"
+            "  2 Monitor API is unreachable.\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sof.add_argument("task_id", help="Task ID to verify, e.g. review-123.")
     sof.add_argument(
