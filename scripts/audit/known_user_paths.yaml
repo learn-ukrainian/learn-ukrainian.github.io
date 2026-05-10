@@ -1,3 +1,17 @@
 paths:
   - ~/.codex/config.toml
   - ~/.gemini/settings.json
+  - ~/.envrc
+  - ~/.bashrc
+  - ~/.zshrc
+  - ~/.profile
+  - ~/.zprofile
+  - ~/.pyenv/shims/.pyenv-shim
+  - ~/.codex/sessions/YYYY/MM/DD/rollout
+  - ~/.codex/sessions/2026/04/24/rollout
+  - ~/.claude/projects/.../memory/MEMORY.md
+  - ~/.claude/projects/.../memory
+  - ~/.claude/.../memory/fact-corrections.md
+  - ~/.claude/.../memory
+  - ~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian--worktrees-dispatch-claude-adr007-prf-invariant-test
+  - ~/.agents/skills/graphify
