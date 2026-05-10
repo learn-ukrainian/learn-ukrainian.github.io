@@ -412,6 +412,7 @@ class _McpRuntimeObserver:
     ready_servers: set[str] = field(default_factory=set)
     failed_servers: set[str] = field(default_factory=set)
     timed_out_servers: set[str] = field(default_factory=set)
+    pending_ready_events: dict[str, dict[str, str]] = field(default_factory=dict)
 
     @classmethod
     def from_tool_config(
@@ -518,16 +519,50 @@ class _McpRuntimeObserver:
         stream: str,
         line: str,
     ) -> None:
+        """Record ready as pending; failed is terminal and suppresses it.
+
+        Ordering is intentionally "failed trumps ready": a later transport
+        failure for the same server wins over an earlier Codex
+        ``mcp: server/tool started`` or ``(completed)`` line.
+        """
+        if server in self.failed_servers or server in self.timed_out_servers:
+            return
         if server in self.ready_servers:
             return
         self.ready_servers.add(server)
-        self._emit(server=server, status="ready", stream=stream, line=line, tool=tool)
+        self.pending_ready_events[server] = {
+            "tool": tool,
+            "stream": stream,
+            "line": line,
+        }
 
     def _emit_failed(self, server: str, *, stream: str, line: str) -> None:
+        """Emit failed immediately; failed is terminal and suppresses ready.
+
+        If Codex prints both a ready line and a later transport failure for
+        the same server, consumers see one final ``failed`` status rather
+        than a ready/failed flap.
+        """
         if server in self.failed_servers:
             return
         self.failed_servers.add(server)
+        self.pending_ready_events.pop(server, None)
         self._emit(server=server, status="failed", stream=stream, line=line)
+
+    def finalize(self) -> None:
+        """Emit pending ready statuses that were not superseded by failures."""
+        for server in sorted(self.pending_ready_events):
+            if server in self.failed_servers:
+                continue
+            event = self.pending_ready_events[server]
+            self._emit(
+                server=server,
+                status="ready",
+                stream=event["stream"],
+                line=event["line"],
+                tool=event["tool"],
+            )
+        self.pending_ready_events.clear()
 
     def _emit_unattributed_failure(self, *, stream: str, line: str) -> None:
         fields: dict[str, Any] = {
@@ -786,6 +821,7 @@ def _execute_invocation_plan(
                 stream="stderr",
             )
             mcp_observer.maybe_emit_timeout(time.monotonic())
+            mcp_observer.finalize()
 
         stdout_text = "".join(watchdog_state.stdout_lines)
         stderr_text = "".join(watchdog_state.stderr_lines)

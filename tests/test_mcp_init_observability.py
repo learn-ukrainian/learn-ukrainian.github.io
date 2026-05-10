@@ -396,6 +396,7 @@ def test_mcp_runtime_observer_emits_ready() -> None:
     assert observer is not None
 
     observer.observe_line("mcp: sources/verify_words started", stream="stdout")
+    observer.finalize()
 
     assert events[0][0] == "mcp_runtime_init"
     assert events[0][1]["server"] == "sources"
@@ -494,6 +495,39 @@ def test_mcp_runtime_observer_warns_for_unattributed_failure(line: str) -> None:
     assert events[0][1]["raw_line"] == line[:500]
     assert events[0][1]["task_id"] == "writer"
     assert events[0][1]["stream"] == "stderr"
+
+
+def test_mcp_runtime_observer_failed_suppresses_prior_ready() -> None:
+    events: list[tuple[str, dict[str, Any]]] = []
+    observer = _McpRuntimeObserver.from_tool_config(
+        agent_name="codex",
+        task_id="writer",
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/mcp"},
+            }
+        },
+        event_sink=lambda event, **fields: events.append((event, fields)),
+        start_time=time.monotonic(),
+    )
+    assert observer is not None
+
+    observer.observe_lines(
+        [
+            "mcp: sources/verify_words started",
+            "2026-05-08T11:37:32.975327Z ERROR rmcp::transport::worker: "
+            "worker quit with fatal: Transport channel closed, when "
+            'Client(HttpRequest(HttpRequest("http/request failed: error sending '
+            'request for url (http://127.0.0.1:8766/mcp)")))',
+        ],
+        start_index=0,
+        stream="stdout",
+    )
+    observer.finalize()
+
+    assert [event for event, _fields in events] == ["mcp_runtime_init"]
+    assert events[0][1]["server"] == "sources"
+    assert events[0][1]["status"] == "failed"
 
 
 def test_mcp_runtime_observer_emits_timeout() -> None:
