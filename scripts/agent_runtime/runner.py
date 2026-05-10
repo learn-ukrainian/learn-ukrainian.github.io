@@ -86,6 +86,11 @@ _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
 
 
+def _normalize_mcp_url(url: str | None) -> str:
+    """Normalize MCP endpoint URLs for observer attribution."""
+    return str(url or "").strip().rstrip("/")
+
+
 def _validate_agent_name(agent_name: str) -> None:
     """Reject legacy public labels before registry lookup."""
     if agent_name.endswith("-tools") and agent_name not in AGENTS:
@@ -494,10 +499,11 @@ class _McpRuntimeObserver:
 
     def _servers_for_failed_line(self, url: str | None) -> list[str]:
         if url:
+            normalized_url = _normalize_mcp_url(url)
             matched = [
                 server
                 for server, server_url in self.server_urls.items()
-                if server_url == url
+                if _normalize_mcp_url(server_url) == normalized_url
             ]
             if matched:
                 return matched
