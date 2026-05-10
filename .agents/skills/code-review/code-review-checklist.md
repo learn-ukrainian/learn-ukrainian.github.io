@@ -33,30 +33,37 @@ If ruff finds unfixable issues, report them. If `--fix` resolves them, note what
 For each changed Python file, check for:
 
 ### 3a. Model constants
+
 - Any hardcoded model strings (`"claude-opus-4-6"`, `"claude-sonnet-4-6"`, `"gemini-3.1-pro-preview"`, `"gemini-3-flash-preview"`)?
 - Should they come from `batch_gemini_config.py` instead?
 
 ### 3b. Import hygiene
+
 - Any `import re` or `import json` inside a function when already imported at module level?
 - Any unused imports?
 
 ### 3c. SQLite connection management
+
 - Any `sqlite3.connect()` calls that open a new connection per invocation instead of reusing?
 - Any connections not closed in a `finally` block or context manager?
 
 ### 3d. Silent failures
+
 - Any bare `except: pass` or `except Exception: pass` that swallows errors?
 - Any functions that return `None` on failure without logging?
 
 ### 3e. Dead code
+
 - Any functions defined but never called? (Check with grep for the function name across the codebase)
 - Any unreachable branches (code after `return`)?
 
 ### 3f. Type hints
+
 - Do new/changed functions have return type annotations?
 - Do function parameters have type annotations?
 
 ### 3g. Test coverage
+
 - Does every new/changed function have a corresponding test?
 - If not, flag which functions need tests.
 
@@ -93,7 +100,7 @@ If Gemini is available, send the diff for adversarial review:
 ```
 
 Find relevant tests by matching changed file names to test files:
-- `scripts/build/v6_build.py` → `tests/test_v6_build.py`
+- `scripts/build/v7_build.py` → `tests/test_v7_writer_dispatch.py`
 - `scripts/audit/core.py` → `tests/test_audit_core.py`
 - etc.
 

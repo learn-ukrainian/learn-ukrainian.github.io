@@ -12,7 +12,7 @@ The user provides one of:
 
 1. **No args or "diff"**: Review only files changed since last commit (`git diff --name-only` + `git diff --cached --name-only`)
 2. **"all"**: Review all staged + unstaged changes
-3. **Specific files**: `scripts/build/v6_build.py scripts/build/dispatch.py`
+3. **Specific files**: `scripts/build/v7_build.py scripts/build/linear_pipeline.py`
 
 ## Execute
 

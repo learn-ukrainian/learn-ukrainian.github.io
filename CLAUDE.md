@@ -23,7 +23,7 @@
 Detailed standards in `docs/best-practices/`. Read the relevant doc before working in that area.
 
 | Topic | Doc |
-|-------|-----|
+| --- | --- |
 | Prompt engineering | [`prompt-engineering.md`](docs/best-practices/prompt-engineering.md) |
 | Context engineering | [`context-engineering.md`](docs/best-practices/context-engineering.md) |
 | Code quality | [`code-quality.md`](docs/best-practices/code-quality.md) |
@@ -48,7 +48,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
 - **Module manifest**: `curriculum/l2-uk-en/curriculum.yaml` — source of truth for module ordering and slug mapping
-- **Build pipeline**: `.venv/bin/python scripts/build/v6_build.py {level} {num} [--step {step}] [--writer {gemini|claude}]`
+- **Build pipeline**: `.venv/bin/python scripts/build/v7_build.py {level} {slug} [--writer {claude-tools|gemini-tools|codex-tools}]`
 - **Decision journal**: [`docs/decisions/`](docs/decisions/) — architectural decisions with expiry dates. Check: `.venv/bin/python scripts/check_decisions.py`
 
 ---
@@ -74,8 +74,8 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 ### Claude Code Power Features
 
 | Feature | How | When |
-|---------|-----|------|
-| `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** NEVER poll manually — use Monitor with `grep --line-buffered` to filter v6_build.py JSONL events. See below. |
+| --- | --- | --- |
+| `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** Use when the USER runs a V7 build; agents never invoke `v7_build.py`. Filter JSONL events with `grep --line-buffered '^{\"event\"'`. See below. |
 | `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`. `low`: config/typo fixes. `medium`: code fixes (default). `xhigh`: content review, plan review, module building, linguistic analysis on Opus 4.7 — Anthropic notes Opus 4.7 at `high` is weaker than prior versions, so **use `xhigh` where we previously used `high`**. `max`: reserve for deep architecture / adversarial reviews where cost is justified. |
 | Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
@@ -89,16 +89,18 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 **NEVER poll builds with ScheduleWakeup or manual loops.** Use the `Monitor` tool:
 
+Only used when monitoring a user-run V7 build; agents do not invoke `v7_build.py` themselves.
+
 ```
 Monitor(
-    command=".venv/bin/python -u scripts/build/v6_build.py {level} {start} --range {end} --resume 2>&1 | grep --line-buffered '^{\"event\"'",
-    description="{level} build events",
+    command=".venv/bin/python -u scripts/build/v7_build.py {level} {slug} 2>&1 | grep --line-buffered '^{\"event\"'",
+    description="V7 build events for {level}/{slug}",
     persistent=True,
     timeout_ms=3600000
 )
 ```
 
-v6_build.py emits JSONL events: `module_start`, `phase_done`, `review_score`, `module_done`, `module_failed`, `batch_done`. Each line becomes a notification — zero polling overhead.
+`v7_build.py` emits JSONL events from the wrapper and `linear_pipeline.py`: single-module lifecycle notifications such as `phase_done`, `review_score`, and `module_done`; writer/reviewer telemetry such as `writer_cot_emit`, `writer_tool_call`, `writer_end_gate`, `writer_tool_theatre`, `phase_writer_summary`, `mcp_config_resolved`, `reviewer_dim_evidence`, `reviewer_audit_call`, and `phase_review_summary`; and correction diagnostics `writer_correction_unparseable`, `reviewer_fixes_unparseable`, `reviewer_fixes_anchor_unmatched`. Each line becomes a notification — zero polling overhead.
 
 For state queries without running builds, use the Monitor API (`docs/MONITOR-API.md`):
 - Track health: `curl -s http://localhost:8765/api/state/track-health/a1`
