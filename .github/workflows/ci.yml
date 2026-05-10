@@ -297,25 +297,21 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         with:
           python-version: '3.12'
-
-      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        if: needs.changes.outputs.code == 'true'
-        with:
-          path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ hashFiles('requirements-lock.txt', 'pyproject.toml') }}
-          restore-keys: |
-            pip-${{ runner.os }}-
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements-lock.txt
+            pyproject.toml
 
       - name: Install dependencies
         if: needs.changes.outputs.code == 'true'
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
-          .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
-          .venv/bin/python -m pip install --no-deps --force-reinstall \
+          .venv/bin/python -m pip install --no-deps \
             --index-url https://download.pytorch.org/whl/cpu \
             torch==2.11.0 torchvision==0.26.0
+          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
+          .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
 
       - name: Run tests
         if: needs.changes.outputs.code == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
