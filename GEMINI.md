@@ -133,3 +133,13 @@ You will sometimes be invoked via `ab discuss` for design / framing / pedagogy /
 **Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING only for the scope declared in their `Scope` field.** Surface them before any new work that could invalidate them, and check the field before assuming a decision blocks your work.
 
 Full protocol: `docs/best-practices/agent-cooperation.md` "Multi-Agent Deliberation" section.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- ALWAYS read graphify-out/GRAPH_REPORT.md before reading any source files, running grep/glob searches, or answering codebase questions. The graph is your primary map of the codebase.
+- IF graphify-out/wiki/index.md EXISTS, navigate it instead of reading raw files
+- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

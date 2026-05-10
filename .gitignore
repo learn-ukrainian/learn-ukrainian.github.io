@@ -244,3 +244,11 @@ data/*.db.bak
 /*.patch
 
 .envrc
+
+# graphify outputs — knowledge graph artifacts written by `/graphify <path>` or
+# `graphify extract`. Includes graph.json (queryable), graph.html (viz),
+# GRAPH_REPORT.md, Obsidian vault, wiki/, cache/ (SHA256 extraction cache). All
+# re-derivable from source via `graphify update <path>` (AST-only, free).
+# Single full graph can be 50MB+; vault has 100s of files. Never in VCS.
+graphify-out/
+**/graphify-out/
