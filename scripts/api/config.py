@@ -17,8 +17,8 @@ MESSAGE_DB = Path(
     )
 )
 
-# Playgrounds directory (for static file serving)
-PLAYGROUNDS_DIR = PROJECT_ROOT / "playgrounds"
+# Dashboards directory (for static file serving)
+DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
 
 # Levels configuration — keep in sync with:
 #   assess_research.py (TRACKS), batch_dispatcher_config.py (TRACKS), manifest_utils.py (CORE_LEVELS/TRACKS)

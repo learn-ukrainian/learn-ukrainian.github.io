@@ -45,9 +45,9 @@ from .comms_router import router as comms_router
 from .config import (
     BATCH_STATE_DIR,
     CURRICULUM_ROOT,
+    DASHBOARDS_DIR,
     LEVELS,
     MESSAGE_DB,
-    PLAYGROUNDS_DIR,
     PROJECT_ROOT,
 )
 from .consultation_router import router as consultation_router
@@ -854,13 +854,13 @@ async def serve_image(path: str):
 @app.get("/{path:path}")
 async def serve_static(path: str):
     if not path or path == "/":
-        return FileResponse(PLAYGROUNDS_DIR / "index.html")
-    file_path = _safe_join(PLAYGROUNDS_DIR, path)
+        return FileResponse(DASHBOARDS_DIR / "index.html")
+    file_path = _safe_join(DASHBOARDS_DIR, path)
     if file_path is None:
         raise HTTPException(status_code=403, detail="Path traversal not allowed")
-    playgrounds_root = PLAYGROUNDS_DIR.resolve()
+    dashboards_root = DASHBOARDS_DIR.resolve()
     # Keep explicit traversal guard if relative path join bypassed via symlink tricks.
-    if not file_path.resolve().is_relative_to(playgrounds_root):
+    if not file_path.resolve().is_relative_to(dashboards_root):
         raise HTTPException(status_code=403, detail="Path traversal not allowed")
     if file_path.is_file():
         return FileResponse(file_path)

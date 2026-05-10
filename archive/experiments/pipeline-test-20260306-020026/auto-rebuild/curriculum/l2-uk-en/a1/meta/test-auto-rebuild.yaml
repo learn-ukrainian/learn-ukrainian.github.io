@@ -1,0 +1,19 @@
+content_outline:
+- points:
+  - Welcome to the test module.
+  section: Introduction
+  slug: introduction
+  words: 300
+- points:
+  - Core content.
+  section: Main Content
+  slug: main-content
+  words: 600
+- points:
+  - Review.
+  section: Summary
+  slug: summary
+  words: 300
+slug: test-auto-rebuild
+title: Test Alphabet
+word_target: 1200

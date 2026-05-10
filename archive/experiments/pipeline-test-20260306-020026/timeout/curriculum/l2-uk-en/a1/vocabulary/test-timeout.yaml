@@ -1,0 +1,30 @@
+- word: мама
+  translation: mom
+  gender: f
+  pos: noun
+  example: Це мама.
+  example_translation: This is mom.
+- word: тато
+  translation: dad
+  gender: m
+  pos: noun
+  example: Це тато.
+  example_translation: This is dad.
+- word: брат
+  translation: brother
+  gender: m
+  pos: noun
+  example: Це брат.
+  example_translation: This is brother.
+- word: сестра
+  translation: sister
+  gender: f
+  pos: noun
+  example: Це сестра.
+  example_translation: This is sister.
+- word: дім
+  translation: house
+  gender: m
+  pos: noun
+  example: Це дім.
+  example_translation: This is a house.

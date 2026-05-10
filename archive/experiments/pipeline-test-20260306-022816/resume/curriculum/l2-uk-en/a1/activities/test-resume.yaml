@@ -1,0 +1,84 @@
+- type: quiz
+  title: Check Your Understanding
+  instruction: Test your knowledge of basic Ukrainian concepts.
+  items:
+    - question: How many letters does the Ukrainian alphabet have?
+      options: ['26', '33', '30', '28']
+      answer: '33'
+    - question: What is "мама" in English?
+      options: ['dad', 'mom', 'sister', 'brother']
+      answer: mom
+    - question: What is "дім" in English?
+      options: ['house', 'car', 'tree', 'book']
+      answer: house
+    - question: What is "тато" in English?
+      options: ['mom', 'sister', 'dad', 'brother']
+      answer: dad
+    - question: How many vowels does Ukrainian have?
+      options: ['5', '8', '10', '12']
+      answer: '10'
+    - question: What is "брат" in English?
+      options: ['sister', 'mom', 'dad', 'brother']
+      answer: brother
+    - question: Are there silent letters in Ukrainian?
+      options: ['Yes, many', 'No, every letter is pronounced', 'Sometimes', 'Only vowels']
+      answer: No, every letter is pronounced
+    - question: What is "сестра" in English?
+      options: ['brother', 'mom', 'sister', 'dad']
+      answer: sister
+- type: match-up
+  title: Match Ukrainian to English
+  instruction: Match each Ukrainian word with its English translation.
+  items:
+    - left: мама
+      right: mom
+    - left: тато
+      right: dad
+    - left: брат
+      right: brother
+    - left: сестра
+      right: sister
+    - left: дім
+      right: house
+    - left: слово
+      right: word
+- type: fill-blank
+  title: Complete the Sentence
+  instruction: Fill in the missing Ukrainian word.
+  items:
+    - sentence: "Це ___. (This is mom.)"
+      answer: мама
+    - sentence: "Це ___. (This is dad.)"
+      answer: тато
+    - sentence: "Це ___. (This is a house.)"
+      answer: дім
+    - sentence: "___ тут. (Brother is here.)"
+      answer: Брат
+    - sentence: "___ там. (Sister is there.)"
+      answer: Сестра
+    - sentence: "Це ___. (This is a word.)"
+      answer: слово
+    - sentence: "Це ___. (This is a letter.)"
+      answer: літера
+    - sentence: "Це ___. (This is a sound.)"
+      answer: звук
+- type: word-bank
+  title: Build a Sentence
+  instruction: Arrange the words to form a correct Ukrainian sentence.
+  items:
+    - words: ['Це', 'мама', 'і', 'тато']
+      answer: Це мама і тато
+    - words: ['Брат', 'і', 'сестра', 'тут']
+      answer: Брат і сестра тут
+    - words: ['Це', 'мій', 'дім']
+      answer: Це мій дім
+    - words: ['Тато', 'там']
+      answer: Тато там
+    - words: ['Це', 'слово']
+      answer: Це слово
+    - words: ['Мама', 'тут']
+      answer: Мама тут
+    - words: ['Це', 'літера']
+      answer: Це літера
+    - words: ['Це', 'звук']
+      answer: Це звук

@@ -103,7 +103,7 @@ def find_pravopys_files(project_root: Path) -> list[Path]:
     if candidates:
         return candidates
 
-    fallback = project_root / "pravopys.html"
+    fallback = project_root / "data" / "raw" / "pravopys.html"
     return [fallback] if fallback.exists() else []
 
 

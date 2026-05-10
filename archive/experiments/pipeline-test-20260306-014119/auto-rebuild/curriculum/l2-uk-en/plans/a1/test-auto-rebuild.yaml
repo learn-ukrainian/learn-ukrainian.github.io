@@ -1,0 +1,38 @@
+content_outline:
+- points:
+  - Welcome to the test module.
+  - This tests pipeline behavior.
+  section: Introduction
+  words: 300
+- points:
+  - Core content goes here.
+  - Examples and practice.
+  section: Main Content
+  words: 600
+- points:
+  - Review key concepts.
+  - Self-check questions.
+  section: Summary
+  words: 300
+focus: grammar
+level: A1
+module: test-001
+objectives:
+- Learner can recognize test letters
+- Learner can read simple test words
+pedagogy: PPP
+phase: A1.1 [First Contact]
+sequence: 1
+slug: test-auto-rebuild
+subtitle: Testing the pipeline
+title: Test Alphabet
+version: '1.0'
+vocabulary_hints:
+  required:
+  - мама
+  - тато
+  - брат
+  suggested:
+  - сестра
+  - дім
+word_target: 1200
