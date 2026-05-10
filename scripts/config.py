@@ -1,15 +1,96 @@
 """
 Learn Ukrainian Project - Central Configuration Brain
 
-This file stores track-level constants, model mappings, pedagogical floors,
-and live immersion policy. It is the source of truth for the dispatcher,
-watcher, writer, and audit scripts.
+This file stores project-wide paths, track-level constants, model mappings,
+pedagogical floors, and live immersion policy. It is the source of truth
+for the dispatcher, watcher, writer, and audit scripts.
 """
 
+import os
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any
 
 from batch_gemini_config import FLASH_MODEL, PRO_MODEL
+
+# =============================================================================
+# PROJECT LAYOUT (CORE PATHS)
+# =============================================================================
+
+# Project root (absolute path)
+PROJECT_ROOT = Path(__file__).parent.parent.resolve()
+
+# Curriculum source root
+CURRICULUM_ROOT = Path(
+    os.environ.get(
+        "LU_CURRICULUM_ROOT",
+        str(PROJECT_ROOT / "curriculum" / "l2-uk-en"),
+    )
+)
+
+# Dashboards directory (for static file serving and generated data)
+DASHBOARDS_DIR = Path(
+    os.environ.get(
+        "LU_DASHBOARDS_DIR",
+        str(PROJECT_ROOT / "dashboards"),
+    )
+)
+
+# Sources database (SQLite FTS5)
+SOURCES_DB = Path(
+    os.environ.get(
+        "LU_SOURCES_DB",
+        str(PROJECT_ROOT / "data" / "sources.db"),
+    )
+)
+
+# VESUM morphological dictionary (SQLite)
+VESUM_DB = Path(
+    os.environ.get(
+        "LU_VESUM_DB",
+        str(PROJECT_ROOT / "data" / "vesum.db"),
+    )
+)
+
+# Compiled wiki articles directory
+WIKI_DIR = Path(
+    os.environ.get(
+        "LU_WIKI_DIR",
+        str(PROJECT_ROOT / "wiki"),
+    )
+)
+
+# Textbook images directory
+TEXTBOOK_IMAGES_DIR = Path(
+    os.environ.get(
+        "LU_TEXTBOOK_IMAGES_DIR",
+        str(PROJECT_ROOT / "data" / "textbook_images"),
+    )
+)
+
+# Message broker database
+MESSAGE_DB = Path(
+    os.environ.get(
+        "AB_DB_PATH",
+        str(PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"),
+    )
+)
+
+# Batch state directory
+BATCH_STATE_DIR = Path(
+    os.environ.get(
+        "LU_BATCH_STATE_DIR",
+        str(PROJECT_ROOT / "batch_state"),
+    )
+)
+
+# Logs directory
+LOGS_DIR = Path(
+    os.environ.get(
+        "LU_LOGS_DIR",
+        str(PROJECT_ROOT / "logs"),
+    )
+)
 
 # =============================================================================
 # TRACK CONFIGURATION

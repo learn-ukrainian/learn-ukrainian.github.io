@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate aggregated status data for playground dashboards."""
+"""Generate aggregated status data for dashboard visualizations."""
 
 import json
 import sys
@@ -7,31 +7,12 @@ from datetime import datetime
 from pathlib import Path
 
 # Ensure scripts/ is importable
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+_scripts_dir = str(Path(__file__).resolve().parent.parent)
+if _scripts_dir not in sys.path:
+    sys.path.insert(0, _scripts_dir)
+
+from api.config import CURRICULUM_ROOT, DASHBOARDS_DIR, LEVELS
 from audit.status_cache import read_status
-
-CURRICULUM_ROOT = Path(__file__).parent.parent.parent / "curriculum" / "l2-uk-en"
-
-LEVELS = [
-    {"id": "a1", "name": "A1 - Beginner", "path": "a1"},
-    {"id": "a2", "name": "A2 - Elementary", "path": "a2"},
-    {"id": "b1", "name": "B1 - Intermediate", "path": "b1"},
-    {"id": "b2", "name": "B2 - Upper Intermediate", "path": "b2"},
-    {"id": "c1", "name": "C1 - Advanced", "path": "c1"},
-    {"id": "c2", "name": "C2 - Mastery", "path": "c2"},
-    {"id": "hist", "name": "HIST - History Track", "path": "hist"},
-    {"id": "bio", "name": "BIO - Biography Track", "path": "bio"},
-    {"id": "lit", "name": "LIT - Literature Track", "path": "lit"},
-    {"id": "lit-essay", "name": "LIT-ESSAY", "path": "lit-essay"},
-    {"id": "lit-fantastika", "name": "LIT-FANTASTIKA", "path": "lit-fantastika"},
-    {"id": "lit-hist-fic", "name": "LIT-HIST-FIC", "path": "lit-hist-fic"},
-    {"id": "lit-humor", "name": "LIT-HUMOR", "path": "lit-humor"},
-    {"id": "lit-youth", "name": "LIT-YOUTH", "path": "lit-youth"},
-    {"id": "lit-doc", "name": "LIT-DOC", "path": "lit-doc"},
-    {"id": "lit-drama", "name": "LIT-DRAMA", "path": "lit-drama"},
-    {"id": "lit-crimea", "name": "LIT-CRIMEA", "path": "lit-crimea"},
-    {"id": "lit-war", "name": "LIT-WAR", "path": "lit-war"},
-]
 
 
 def parse_word_count(message: str) -> tuple[int, int]:
@@ -176,8 +157,8 @@ def main():
         "total_pending": total_modules - total_pass - total_fail,
     }
 
-    # Write to playgrounds directory
-    output_path = Path(__file__).parent.parent / "playgrounds" / "data" / "status.json"
+    # Write to dashboards directory (using central config)
+    output_path = DASHBOARDS_DIR / "data" / "status.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w") as f:

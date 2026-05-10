@@ -1,20 +1,30 @@
-"""SQLite interface for ALL source content — replaces Qdrant RAG entirely."""
+"""SQLite interface for ALL source content — replaces Qdrant RAG entirely.
+
+FTS5 tables (prose search):
+- search_textbooks() — textbook chunks
+- search_external() — external articles (ULP, blogs, YouTube)
+- search_literary() — literary texts (chronicles, poetry, legal)
+
+Indexed tables (dictionary headword lookup):
+- search_definitions() — СУМ-11
+- search_grinchenko_1907() — Грінченко
+- search_esum() — ЕСУМ etymological dictionary
+- search_idioms() — Фразеологічний
+- search_synonyms() — Ukrajinet WordNet
+- translate_en_uk() — Балла EN→UK
+- query_cefr_level() — PULS CEFR
+- search_style_guide() — Антоненко-Давидович
+- search_slovnyk_me() — curated slovnyk.me verification snapshots / live lookup
+- search_heritage() — merged Ukrainian heritage-defense lookup
+- lookup_by_url() — external article URL lookup
+"""
 
 import sqlite3
-import sys
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import yaml
-
-# Ensure scripts/ is importable
-_scripts_dir = str(Path(__file__).resolve().parent.parent)
-if _scripts_dir not in sys.path:
-    sys.path.insert(0, _scripts_dir)
-
-from config import PROJECT_ROOT
-from config import SOURCES_DB as SOURCES_DB_PATH
 
 from . import slovnyk_me
 from .channels import rank_external_hits
@@ -22,6 +32,8 @@ from .chunking import chunk_text, policy_for
 from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections
 from .query_builder import build_query_buckets
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
 
 _conn: sqlite3.Connection | None = None
@@ -86,6 +98,8 @@ def _get_conn() -> sqlite3.Connection:
         # comment on `_SQLITE_BUSY_TIMEOUT_MS` above.
         _conn.execute(f"PRAGMA busy_timeout = {_SQLITE_BUSY_TIMEOUT_MS}")
     return _conn
+
+
 def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
     """Build FTS5 MATCH query from keywords. Returns None if no valid terms."""
     terms = []

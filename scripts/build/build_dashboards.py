@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
-"""Build playground HTML files with embedded real data."""
+"""Build dashboard HTML files with embedded real data."""
 
 import json
+import sys
 from pathlib import Path
 
-PLAYGROUNDS_DIR = Path(__file__).parent.parent.parent / "playgrounds"
-DATA_FILE = PLAYGROUNDS_DIR / "data" / "status.json"
+# Ensure scripts/ is importable
+_scripts_dir = str(Path(__file__).resolve().parent.parent)
+if _scripts_dir not in sys.path:
+    sys.path.insert(0, _scripts_dir)
+
+from api.config import DASHBOARDS_DIR
+
+DATA_FILE = DASHBOARDS_DIR / "data" / "status.json"
 
 
 def build_status_dashboard():
     """Build the module status dashboard with real data."""
 
     # Load real data
+    if not DATA_FILE.exists():
+        print(f"Error: Data file {DATA_FILE} not found. Run generate_dashboard_data.py first.")
+        return
+
     with open(DATA_FILE) as f:
         data = json.load(f)
 
@@ -409,7 +420,7 @@ def build_status_dashboard():
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-link">← Back to Playgrounds</a>
+  <a href="index.html" class="back-link">← Back to Dashboards</a>
 
   <div class="header">
     <h1>📊 Module Status Dashboard</h1>
@@ -736,7 +747,7 @@ Click a module cell to see detailed audit results.\\`;
 </body>
 </html>'''
 
-    output_path = PLAYGROUNDS_DIR / "playground-module-status.html"
+    output_path = DASHBOARDS_DIR / "dashboard-module-status.html"
     with open(output_path, "w") as f:
         f.write(html)
 
@@ -744,10 +755,10 @@ Click a module cell to see detailed audit results.\\`;
 
 
 def main():
-    """Build all playgrounds."""
-    print("Building playgrounds with real data...\n")
+    """Build all dashboards."""
+    print("Building dashboards with real data...\n")
     build_status_dashboard()
-    print("\nDone! Open playgrounds/index.html to see the landing page.")
+    print(f"\nDone! Open {DASHBOARDS_DIR}/index.html to see the landing page.")
 
 
 if __name__ == "__main__":

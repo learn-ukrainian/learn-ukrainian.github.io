@@ -1,5 +1,5 @@
 """
-FastAPI server for playground dashboards.
+FastAPI server for dashboard visualizations and curriculum management.
 
 Architecture:
   - main.py: shared endpoints (config, batch state, dispatcher, websocket, static files)
@@ -46,9 +46,12 @@ from .config import (
     BATCH_STATE_DIR,
     CURRICULUM_ROOT,
     DASHBOARDS_DIR,
+    DISPATCHER_LOG,
     LEVELS,
     MESSAGE_DB,
     PROJECT_ROOT,
+    SOURCES_DB,
+    TEXTBOOK_IMAGES_DIR,
 )
 from .consultation_router import router as consultation_router
 from .cost_router import router as cost_router
@@ -79,18 +82,14 @@ from .worktrees_router import router as worktrees_router
 
 @asynccontextmanager
 async def _lifespan(_app: FastAPI):
-    """Lifespan hook — wrap uvicorn signal handlers so we record WHO killed us.
-
-    Without this, "Shutting down" lines in logs/api.log have no provenance.
-    See scripts/api/_signal_log.py for the wrapper rationale.
-    """
+    """Lifespan hook — wrap uvicorn signal handlers so we record WHO killed us."""
     install_signal_logging()
     ensure_broker_db_ready()
     yield
 
 
 app = FastAPI(
-    title="Playground API",
+    title="Dashboard API",
     version="2.0.0",
     lifespan=_lifespan,
 )
@@ -114,7 +113,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Mount team routers — each team owns their own file
+# Mount team routers
 app.include_router(admin_router, prefix="/api/admin")
 app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
 app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
@@ -135,8 +134,6 @@ app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
 app.include_router(rag_router, prefix="/api/rag")
-# GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
-# can discover it alongside the other state-query endpoints.
 app.include_router(
     reviewer_ghosts_router,
     prefix="/api/state/reviewer-ghosts",
@@ -154,46 +151,11 @@ app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"]
 
 # Server start time for uptime calculation
 _SERVER_START = datetime.now(UTC)
-SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
 
-# --- /api/orient caching + failure isolation (GH #1309) ----------------
-#
-# Per-section TTLs (seconds). Tuned for each collector's cost + change
-# frequency. Shared in-memory cache lives in state_helpers.cache_*; keys
-# are prefixed with "orient_" so ``?fresh=true`` can invalidate exactly
-# this router's keys (and nothing else's).
-#
-# A TTL of ``0`` means "never cache at the orient layer" — the collector
-# is called on every request. Use it for sections that already carry
-# their own downstream cache (e.g. ``pipeline`` wraps
-# ``/api/state/summary`` which has its own 60 s TTL — an orient-layer
-# cache on top would stack the two windows and label up-to-119 s old
-# data as fresh, reviewer BLOCKER #1309).
-#
-# Hard per-section timeout caps one wedged async collector. See the
-# first entry in docs/monitor-api/cold-start-baseline.md for the
-# incident that motivated this.
-#
-# Scope caveat on the hard timeout: only the ``pipeline`` collector is
-# a true async coroutine; ``asyncio.wait_for`` properly cancels it. For
-# the sync collectors run via ``asyncio.to_thread`` the hard timeout is
-# advisory — Python threads are not cancellable once started. Real
-# protection per sync collector:
-#   - ``git``, ``issues``     — subprocess timeout 2 s (``_run_command``)
-#   - ``runtime``, ``delegate``, ``wiki``, ``health``, ``session_hints``
-#                            — pure-Python / filesystem, no inner
-#                              timeout; they rely on being cheap.
-# If a sync collector ever starts to block (e.g. a network FS hang), it
-# will tie up a threadpool slot past the hard timeout. See
-# MONITOR-API.md for the full breakdown.
 ORIENT_SECTION_TTLS: dict[str, float] = {
     "git": 30.0,
     "issues": 120.0,
-    # Pipeline has TTL 0 on purpose — ``_collect_pipeline_orient_data``
-    # calls ``state_summary()`` which has its own 60 s cache. Stacking
-    # caches produced staleness up to 119 s with ``generated_at``
-    # labelled fresh (reviewer BLOCKER #1309 / B2).
     "pipeline": 0.0,
     "runtime": 60.0,
     "delegate": 30.0,
@@ -219,11 +181,6 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
 
 ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
 
-# Orient sync collectors use a dedicated executor instead of the loop's
-# shared default pool. This isolates cheap orient reads from unrelated
-# ``asyncio.to_thread()`` backlog elsewhere in the process, which was
-# causing false ``section_timeout_0.1s`` fallbacks for ``runtime`` under
-# the hard-timeout test path on loaded CI runners.
 _ORIENT_SYNC_EXECUTOR = ThreadPoolExecutor(
     max_workers=8,
     thread_name_prefix="orient-sync",
@@ -294,14 +251,7 @@ def _collect_git_orient_data() -> dict:
 
 
 def _collect_issues_orient_data() -> dict:
-    """Fetch open GitHub issues via ``gh``.
-
-    Raises ``RuntimeError`` on any failure (subprocess error, non-zero
-    exit, malformed JSON). Raising is important — ``_cached_orient_section``
-    only caches successful returns, so a transient ``gh`` blip must
-    not poison the issues cache for the full TTL window (reviewer
-    BLOCKER, GH #1309).
-    """
+    """Fetch open GitHub issues via ``gh``."""
     proc = _run_command(
         [
             "gh",
@@ -314,8 +264,6 @@ def _collect_issues_orient_data() -> dict:
             "--json",
             "number,title,labels,createdAt",
         ],
-        # /api/orient is part of dashboard cold load. Issue details are useful,
-        # but not important enough to let a slow gh/network path dominate it.
         timeout=0.25,
     )
 
@@ -381,21 +329,10 @@ def _collect_bridge_pending_orient_data() -> dict:
 
 
 def _collect_wiki_orient_data() -> dict:
-    """Per-track compiled article counts.
-
-    The previous implementation called ``_resolve_article`` inside the per-slug
-    loop (~22 tracks × ~80 slugs = ~1776 calls). Each ``_resolve_article``
-    rebuilds the full slug→candidates index from a wiki-tree scan, so the
-    1776 calls × ~4 ms = ~7 s consistently exceeded the 5 s
-    ``ORIENT_SECTION_HARD_TIMEOUT_S`` cap and the section returned
-    ``error: section_timeout_5.0s`` on every cold cache miss.
-
-    Fix: build the candidates index once (~6 ms) and resolve in pure dict
-    lookups + Path.exists() checks. Same answer, ~50× faster.
-    """
+    """Per-track compiled article counts."""
     wiki_api.wiki_state.get_status_summary()
 
-    candidates = wiki_api._list_article_candidates()  # one full-tree scan
+    candidates = wiki_api._list_article_candidates()
     wiki_dir = wiki_api.wiki_config.WIKI_DIR
 
     by_track: dict[str, dict[str, Any]] = {}
@@ -408,9 +345,6 @@ def _collect_wiki_orient_data() -> dict:
             slug_cands = candidates.get(slug)
             if not slug_cands:
                 continue
-            # Mirror _resolve_article: prefer domain-matching candidates,
-            # fall back to any candidate. Take the lexicographically-first
-            # path within the chosen group, then check it actually exists.
             domain_matches = [
                 c for c in slug_cands
                 if wiki_api._matches_track_domain(track, c["path"])
@@ -450,7 +384,7 @@ def _collect_health_orient_data() -> dict:
     return {
         "api": True,
         "mcp_rag": _port_open("127.0.0.1", 8766, 0.2),
-        "sources_db": _readable_file(SOURCES_DB_PATH),
+        "sources_db": _readable_file(SOURCES_DB),
         "message_broker": _readable_file(MESSAGE_DB),
     }
 
@@ -502,23 +436,11 @@ async def _cached_orient_section(
     *,
     is_async: bool = False,
 ) -> tuple[Any, dict]:
-    """Run one orient collector with TTL cache + hard timeout + fallback.
-
-    Returns (value, meta). Meta always includes ``generated_at``,
-    ``stale_after_s``, ``source``, and ``cache`` ("hit" / "miss"); it
-    adds ``error`` on failure so callers can tell a populated section
-    from a degraded one.
-
-    Errors are NOT cached — the next call retries. This is intentional:
-    a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
-    """
+    """Run one orient collector with TTL cache + hard timeout + fallback."""
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")
     cache_key = f"orient_{key}"
 
-    # ttl == 0 means "don't cache at the orient layer". Skip both the
-    # cache read AND the cache write paths so callers never see stale
-    # data and no zombie entries linger in the dict.
     if ttl > 0:
         cached = cache_get(cache_key, ttl=ttl)
         if cached is not None:
@@ -554,15 +476,12 @@ async def _cached_orient_section(
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
     except TimeoutError:
-        # Short, machine-readable code in the value; richer detail in meta.
         short_err = f"section_timeout_{ORIENT_SECTION_HARD_TIMEOUT_S}s"
         meta["error"] = short_err
         if isinstance(fallback, dict):
             return {**fallback, "error": short_err}, meta
         return fallback, meta
     except Exception as exc:
-        # Preserve original API contract: value error = str(exc). Meta
-        # gets the richer "TypeName: msg" form for debugging.
         short_err = str(exc)
         meta["error"] = f"{type(exc).__name__}: {exc}"
         if isinstance(fallback, dict):
@@ -576,15 +495,7 @@ async def _cached_orient_section(
 
 @app.get("/api/orient")
 async def orient(fresh: bool = False):
-    """One-shot agent orientation.
-
-    Query params:
-        fresh: if true, invalidate every ``orient_*`` cache entry before
-            gathering. Use it when an agent just committed, renamed a
-            file, or otherwise needs to see a change it made moments
-            ago without waiting for the longest section TTL (up to
-            120 s for ``issues``/``wiki``). Reviewer BLOCKER B3 / #1309.
-    """
+    """One-shot agent orientation."""
     if fresh:
         cache_invalidate("orient_")
 
@@ -649,12 +560,6 @@ async def orient(fresh: bool = False):
         "session_hints": session_hints_meta,
     }
 
-    # Top-level ``generated_at`` is the FLOOR across sections, not the
-    # request time. On a full cache hit it reflects the oldest piece of
-    # data the caller is looking at; on an all-miss it equals the
-    # collector timestamp (which is also "now"). Reviewer CONCERN C1 /
-    # #1309: request-time was misleading consumers into thinking a
-    # 119-s-old payload was fresh.
     generated_candidates: list[str] = [
         ts for m in section_metas.values()
         if isinstance(ts := m.get("generated_at"), str)
@@ -679,12 +584,6 @@ async def orient(fresh: bool = False):
         "meta": section_metas,
     }
 
-    # ``_collect_issues_orient_data`` raises on failure now. The error
-    # branch of ``_cached_orient_section`` writes the short
-    # ``str(exc)`` form into the fallback payload and the richer
-    # ``TypeName: msg`` form into meta. Keep the top-level
-    # ``issues_error`` key on the short form for back-compat with
-    # clients that were reading it before per-section meta existed.
     if isinstance(issues_info, dict) and issues_info.get("error"):
         response["issues_error"] = issues_info["error"]
     return response
@@ -785,7 +684,6 @@ async def run_dispatcher_scan():
         str(PROJECT_ROOT / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]
-    # Use asyncio.to_thread to avoid blocking the event loop
     result = await asyncio.to_thread(subprocess.run, cmd, cwd=PROJECT_ROOT)
     if result.returncode != 0:
         raise HTTPException(status_code=500, detail="Dispatcher scan failed")
@@ -794,10 +692,9 @@ async def run_dispatcher_scan():
 
 @app.get("/api/batch/dispatcher/logs")
 async def get_dispatcher_logs(lines: int = 50):
-    log_file = PROJECT_ROOT / "logs" / "dispatcher.log"
-    if not log_file.exists():
+    if not DISPATCHER_LOG.exists():
         return {"lines": []}
-    return {"lines": log_file.read_text().splitlines()[-lines:]}
+    return {"lines": DISPATCHER_LOG.read_text().splitlines()[-lines:]}
 
 
 # ==================== WEBSOCKET ====================
@@ -815,7 +712,6 @@ async def batch_websocket(websocket: WebSocket):
 
 # ==================== IMAGE SERVING ====================
 
-_IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
 _ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 _MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
 
@@ -829,8 +725,8 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
 
 @app.get("/images/{path:path}")
 async def serve_image(path: str):
-    """Serve textbook images with caching. Path relative to data/textbook_images/."""
-    file_path = _safe_join(_IMAGE_DIR, path)
+    """Serve textbook images with caching. Path relative to TEXTBOOK_IMAGES_DIR."""
+    file_path = _safe_join(TEXTBOOK_IMAGES_DIR, path)
     if file_path is None:
         raise HTTPException(status_code=403, detail="Invalid image path")
     if file_path.suffix.lower() not in _ALLOWED_IMG_EXT:
@@ -839,7 +735,7 @@ async def serve_image(path: str):
         raise HTTPException(status_code=404)
     # Prevent path traversal
     try:
-        file_path.resolve().relative_to(_IMAGE_DIR.resolve())
+        file_path.resolve().relative_to(TEXTBOOK_IMAGES_DIR.resolve())
     except ValueError as e:
         raise HTTPException(status_code=403, detail="Path traversal not allowed") from e
     return FileResponse(

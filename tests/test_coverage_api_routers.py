@@ -796,61 +796,6 @@ class TestAdminHelpers:
         assert result["status"] == "healthy"
 
 
-class TestAdminBackup:
-    """Tests for backup endpoints."""
-
-    def test_list_backups_empty(self, admin_client, mock_project_root):
-        r = admin_client.get("/api/admin/backup/list")
-        data = r.json()
-        assert data["count"] == 0
-        assert data["backups"] == []
-
-    def test_list_backups_no_dir(self, admin_client):
-        with patch("scripts.api.admin_router.BACKUP_DIR", Path("/nonexistent")):
-            r = admin_client.get("/api/admin/backup/list")
-        assert r.json()["backups"] == []
-
-    def test_list_backups_with_files(self, admin_client, mock_project_root):
-        backup_dir = mock_project_root / "data" / "backups"
-        (backup_dir / "snapshot-1.tar").write_bytes(b"x" * 100)
-        (backup_dir / "snapshot-2.tar").write_bytes(b"y" * 200)
-        r = admin_client.get("/api/admin/backup/list")
-        data = r.json()
-        assert data["count"] == 2
-        assert data["total_size_bytes"] == 300
-
-    def test_delete_backup(self, admin_client, mock_project_root):
-        backup_dir = mock_project_root / "data" / "backups"
-        (backup_dir / "delete-me.tar").write_bytes(b"x" * 50)
-        r = admin_client.delete("/api/admin/backup/delete-me.tar")
-        assert r.status_code == 200
-        assert r.json()["deleted"] == "delete-me.tar"
-        assert r.json()["freed_bytes"] == 50
-
-    def test_delete_backup_not_found(self, admin_client, mock_project_root):
-        r = admin_client.delete("/api/admin/backup/nonexistent.tar")
-        assert r.status_code == 404
-
-    def test_delete_backup_traversal(self, admin_client, mock_project_root, tmp_path):
-        # Path traversal in the filename component is rejected by the
-        # path_safety.safe_join guard inside admin_router (replacement
-        # for the old _safe_within bool-returning helper). Filenames
-        # containing path separators or .. fail with ValueError →
-        # router returns 400 "Invalid filename".
-        r = admin_client.delete("/api/admin/backup/..%2Fevil.tar")
-        assert r.status_code in (400, 404)
-
-    def test_create_qdrant_backup_unreachable(self, admin_client):
-        with patch("scripts.api.admin_router._qdrant_post", new_callable=AsyncMock, return_value=None):
-            r = admin_client.post("/api/admin/backup/qdrant")
-        assert r.status_code == 503
-
-    def test_create_qdrant_backup_no_snapshot_name(self, admin_client):
-        with patch("scripts.api.admin_router._qdrant_post", new_callable=AsyncMock, return_value={"result": {}}):
-            r = admin_client.post("/api/admin/backup/qdrant")
-        assert r.status_code == 500
-
-
 class TestAdminHealth:
     """Tests for /api/admin/health endpoint."""
 
@@ -870,20 +815,22 @@ class TestAdminHealth:
 
     def test_health_all_ok(self, admin_client, mock_project_root):
         mock_start = datetime.now(UTC)
-        qdrant_info = {"result": {"collections": [{"name": "test"}]}}
+        mock_sources = MagicMock()
+        mock_sources.exists.return_value = True
+        mock_vesum = MagicMock()
+        mock_vesum.exists.return_value = True
+
         with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._docker_status", new_callable=AsyncMock, return_value="running"),
+            patch("scripts.api.admin_router.SOURCES_DB", mock_sources),
+            patch("scripts.api.admin_router.VESUM_DB", mock_vesum),
             patch("scripts.api.admin_router._broker_health", return_value={"status": "healthy", "size_bytes": 1024, "queue_depth": 0}),
             patch("scripts.api.admin_router._dir_size", return_value=5000),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value={"test": {"result": {"points_count": 100}}}),
             patch.dict("sys.modules", {"scripts.api.main": MagicMock(_SERVER_START=mock_start)}),
         ):
             r = admin_client.get("/api/admin/health")
         data = r.json()
         assert data["status"] == "ok"
-        assert data["qdrant"]["status"] == "healthy"
-
+        assert data["broker"]["status"] == "healthy"
 
 class TestAdminDiskUsage:
     """Tests for /api/admin/disk-usage endpoint."""
@@ -1003,112 +950,6 @@ class TestAdminMaintenance:
         (grade_dir / "annotations.json").write_text("not json!")
         r = admin_client.get("/api/admin/maintenance/annotation-stats")
         assert r.status_code == 200
-
-
-class TestAdminCollections:
-    """Tests for collection management endpoints."""
-
-    def test_collections_unreachable(self, admin_client):
-        with patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=None):
-            r = admin_client.get("/api/admin/collections")
-        assert r.status_code == 503
-
-    def test_collections_with_data(self, admin_client):
-        qdrant_info = {"result": {"collections": [{"name": "coll1"}]}}
-        details = {"coll1": {"result": {"points_count": 10, "vectors_count": 10, "indexed_vectors_count": 10, "status": "green", "config": {"params": {"vectors": {"size": 384}}}}}}
-        with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value=details),
-        ):
-            r = admin_client.get("/api/admin/collections")
-        data = r.json()
-        assert data["count"] == 1
-        assert data["collections"][0]["points_count"] == 10
-
-    def test_collections_detail_none(self, admin_client):
-        qdrant_info = {"result": {"collections": [{"name": "bad"}]}}
-        with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value={"bad": None}),
-        ):
-            r = admin_client.get("/api/admin/collections")
-        assert r.json()["collections"][0]["error"] == "could not fetch details"
-
-    def test_verify_collections_unreachable(self, admin_client):
-        with patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=None):
-            r = admin_client.post("/api/admin/collections/verify")
-        assert r.status_code == 503
-
-    def test_verify_collections_ok(self, admin_client, mock_project_root):
-        qdrant_info = {"result": {"collections": [{"name": "textbook_chunks"}]}}
-        details = {"textbook_chunks": {"result": {"points_count": 5}}}
-        # Create 5 JSONL lines
-        chunks_dir = mock_project_root / "data" / "textbook_chunks"
-        chunks_dir.mkdir(parents=True, exist_ok=True)
-        lines = "\n".join([json.dumps({"id": i}) for i in range(5)])
-        (chunks_dir / "test.jsonl").write_text(lines)
-        with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value=details),
-        ):
-            r = admin_client.post("/api/admin/collections/verify")
-        data = r.json()
-        assert data["results"][0]["status"] == "ok"
-
-
-class TestAdminQdrantHelpers:
-    """Tests for qdrant helper functions."""
-
-    @pytest.mark.anyio
-    async def test_qdrant_get_failure(self):
-        import httpx
-
-        from scripts.api.admin_router import _qdrant_get
-        with patch("scripts.api.admin_router._qdrant_client") as mock_client:
-            mock_client.get = AsyncMock(side_effect=httpx.ConnectError("fail"))
-            result = await _qdrant_get("/test")
-        assert result is None
-
-    @pytest.mark.anyio
-    async def test_qdrant_post_failure(self):
-        import httpx
-
-        from scripts.api.admin_router import _qdrant_post
-        with patch("scripts.api.admin_router._qdrant_client") as mock_client:
-            mock_client.post = AsyncMock(side_effect=httpx.ConnectError("fail"))
-            result = await _qdrant_post("/test")
-        assert result is None
-
-    @pytest.mark.anyio
-    async def test_qdrant_get_success(self):
-        from scripts.api.admin_router import _qdrant_get
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {"result": "ok"}
-        mock_resp.raise_for_status = MagicMock()
-        with patch("scripts.api.admin_router._qdrant_client") as mock_client:
-            mock_client.get = AsyncMock(return_value=mock_resp)
-            result = await _qdrant_get("/test")
-        assert result == {"result": "ok"}
-
-    @pytest.mark.anyio
-    async def test_qdrant_post_success(self):
-        from scripts.api.admin_router import _qdrant_post
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {"result": "snapshot"}
-        mock_resp.raise_for_status = MagicMock()
-        # _qdrant_post creates its own AsyncClient (not _qdrant_client)
-        mock_client = AsyncMock()
-        mock_client.post = AsyncMock(return_value=mock_resp)
-        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-        mock_client.__aexit__ = AsyncMock(return_value=False)
-        with patch("scripts.api.admin_router.httpx.AsyncClient", return_value=mock_client):
-            result = await _qdrant_post("/test")
-        assert result == {"result": "snapshot"}
-
-
-# ===========================================================================
-# IMAGES ROUTER TESTS
-# ===========================================================================
 
 
 class TestImageIndex:
@@ -1614,53 +1455,6 @@ class TestPDFPool:
 # ===========================================================================
 
 
-class TestAdminDockerStatus:
-    """Tests for _docker_status helper."""
-
-    @pytest.mark.anyio
-    async def test_docker_status_success(self):
-        from scripts.api.admin_router import _docker_status
-        mock_proc = AsyncMock()
-        mock_proc.communicate = AsyncMock(return_value=(b"running\n", b""))
-        mock_proc.returncode = 0
-        with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await _docker_status("qdrant")
-        assert result == "running"
-
-    @pytest.mark.anyio
-    async def test_docker_status_not_found(self):
-        from scripts.api.admin_router import _docker_status
-        mock_proc = AsyncMock()
-        mock_proc.communicate = AsyncMock(return_value=(b"", b"error"))
-        mock_proc.returncode = 1
-        with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await _docker_status("qdrant")
-        assert result == "not found"
-
-    @pytest.mark.anyio
-    async def test_docker_status_unavailable(self):
-        from scripts.api.admin_router import _docker_status
-        with patch("asyncio.create_subprocess_exec", side_effect=FileNotFoundError("docker")):
-            result = await _docker_status("qdrant")
-        assert result == "docker unavailable"
-
-
-class TestAdminCollectionDetails:
-    """Tests for _qdrant_collection_details helper."""
-
-    @pytest.mark.anyio
-    async def test_collection_details_parallel(self):
-        from scripts.api.admin_router import _qdrant_collection_details
-        with patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock) as mock_get:
-            mock_get.side_effect = [
-                {"result": {"points_count": 10}},
-                {"result": {"points_count": 20}},
-            ]
-            result = await _qdrant_collection_details(["coll1", "coll2"])
-        assert result["coll1"]["result"]["points_count"] == 10
-        assert result["coll2"]["result"]["points_count"] == 20
-
-
 class TestCommsCleanupEdgeCases:
     """Additional edge case tests for cleanup."""
 
@@ -1703,57 +1497,6 @@ class TestCommsLiveActivityEdgeCases:
         r = comms_client.get("/api/comms/live-activity")
         # Should not crash, invalid timestamps handled gracefully
         assert r.status_code == 200
-
-
-class TestAdminVerifyCollectionsStatuses:
-    """Test various verify status outcomes."""
-
-    def test_verify_surplus(self, admin_client, mock_project_root):
-        qdrant_info = {"result": {"collections": [{"name": "textbook_chunks"}]}}
-        details = {"textbook_chunks": {"result": {"points_count": 100}}}
-        # Create only 5 JSONL lines (fewer than qdrant has)
-        chunks_dir = mock_project_root / "data" / "textbook_chunks"
-        (chunks_dir / "test.jsonl").write_text("\n".join([json.dumps({"id": i}) for i in range(5)]))
-        with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value=details),
-        ):
-            r = admin_client.post("/api/admin/collections/verify")
-        result = r.json()["results"][0]
-        assert result["status"] == "surplus"
-
-    def test_verify_deficit(self, admin_client, mock_project_root):
-        qdrant_info = {"result": {"collections": [{"name": "textbook_chunks"}]}}
-        details = {"textbook_chunks": {"result": {"points_count": 2}}}
-        chunks_dir = mock_project_root / "data" / "textbook_chunks"
-        (chunks_dir / "test.jsonl").write_text("\n".join([json.dumps({"id": i}) for i in range(10)]))
-        with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value=details),
-        ):
-            r = admin_client.post("/api/admin/collections/verify")
-        result = r.json()["results"][0]
-        assert result["status"] == "deficit"
-
-    def test_verify_no_source_mapping(self, admin_client, mock_project_root):
-        qdrant_info = {"result": {"collections": [{"name": "unknown_collection"}]}}
-        details = {"unknown_collection": {"result": {"points_count": 5}}}
-        with (
-            patch("scripts.api.admin_router._qdrant_get", new_callable=AsyncMock, return_value=qdrant_info),
-            patch("scripts.api.admin_router._qdrant_collection_details", new_callable=AsyncMock, return_value=details),
-        ):
-            r = admin_client.post("/api/admin/collections/verify")
-        result = r.json()["results"][0]
-        assert result["status"] == "no_source_mapping"
-
-
-class TestAdminVacuumFailure:
-    """Test vacuum error handling."""
-
-    def test_vacuum_exception(self, admin_client, broker_db):
-        with patch("sqlite3.connect", side_effect=sqlite3.OperationalError("locked")):
-            r = admin_client.post("/api/admin/maintenance/vacuum-broker")
-        assert r.status_code == 500
 
 
 class TestImageIndexReload:

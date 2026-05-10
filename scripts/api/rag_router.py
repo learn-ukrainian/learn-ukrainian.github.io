@@ -1,48 +1,29 @@
 """RAG search and image browse endpoints.
 
-Mounts at /api/rag/ — wraps scripts/rag/query.py functions
-and ports the browse logic from image_review_server.py.
+Mounts at /api/rag/ — wraps scripts/wiki/sources_db.py functions.
+This router is FTS5-backed (SQLite), not vector-backed.
 """
 
 import re
-import socket
 import sys
+from pathlib import Path
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
-from .config import PROJECT_ROOT
+from .config import DASHBOARDS_DIR, PROJECT_ROOT, TEXTBOOK_IMAGES_DIR
 
-# Ensure scripts/ is importable for rag.query
+# Ensure scripts/ is importable
 _scripts_dir = str(PROJECT_ROOT / "scripts")
 if _scripts_dir not in sys.path:
     sys.path.insert(0, _scripts_dir)
 
+from wiki import sources_db as sdb
+
 router = APIRouter(tags=["rag"])
 
-IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
+IMAGE_DIR = TEXTBOOK_IMAGES_DIR
 ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
-
-
-def _qdrant_available() -> bool:
-    """Quick check if Qdrant is reachable."""
-    try:
-        from rag.config import QDRANT_GRPC_PORT, QDRANT_HOST
-
-        with socket.create_connection((QDRANT_HOST, QDRANT_GRPC_PORT), timeout=0.25):
-            pass
-        from rag.query import get_client
-        get_client().get_collections()
-        return True
-    except Exception:
-        return False
-
-
-def _qdrant_503():
-    return JSONResponse(
-        status_code=503,
-        content={"error": "Qdrant is unavailable. Start it with: docker start qdrant"},
-    )
 
 
 # ── Search endpoints ──────────────────────────────────────────────
@@ -51,52 +32,43 @@ def _qdrant_503():
 @router.get("/search_text")
 async def search_text(
     q: str = Query(..., description="Search query in Ukrainian"),
-    grade: int | None = Query(None, description="Filter by grade (1-11)"),
-    subject: str | None = Query(None, description="Filter by subject"),
-    trust_tier: int | None = Query(None, description="Trust tier (1 or 2)"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    if not _qdrant_available():
-        return _qdrant_503()
-    from rag.query import search_text as _search_text
-    return _search_text(q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit)
-
-
-@router.get("/search_images")
-async def search_images(
-    q: str = Query(..., description="Image search query in Ukrainian"),
-    grade: int | None = Query(None, description="Filter by grade (1-11)"),
-    limit: int = Query(5, ge=1, le=20),
-):
-    if not _qdrant_available():
-        return _qdrant_503()
-    from rag.query import search_images as _search_images
-    return _search_images(q, grade=grade, limit=limit)
+    """FTS5 search across textbooks."""
+    keywords = {w for w in q.lower().split() if len(w) >= 3}
+    if not keywords:
+        return []
+    try:
+        return sdb.search_textbooks(keywords, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/search_literary")
 async def search_literary(
     q: str = Query(..., description="Search query in Ukrainian"),
-    work: str | None = Query(None, description="Filter by work title"),
-    genre: str | None = Query(None, description="Filter by genre"),
-    period: str | None = Query(None, description="Filter by language period"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    if not _qdrant_available():
-        return _qdrant_503()
-    from rag.query import search_literary as _search_literary
-    return _search_literary(q, work=work, genre=genre, period=period, limit=limit)
+    """FTS5 search across literary texts."""
+    keywords = {w for w in q.lower().split() if len(w) >= 3}
+    if not keywords:
+        return []
+    try:
+        return sdb.search_literary(keywords, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/stats")
 async def collection_stats():
-    if not _qdrant_available():
-        return _qdrant_503()
-    from rag.query import collection_stats as _collection_stats
-    return _collection_stats()
+    """Returns database table statistics."""
+    try:
+        return sdb.list_tables()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-# ── Browse images (disk scan, ported from image_review_server.py) ─
+# ── Browse images (disk scan) ───────────────────────────────────
 
 
 @router.get("/browse_images")
@@ -109,6 +81,9 @@ async def browse_images(
     min_size: int | None = Query(None, description="Min file size in bytes"),
 ):
     """Browse textbook images on disk with filtering and pagination."""
+    if not IMAGE_DIR.exists():
+        return {"images": [], "total": 0, "page": page, "per_page": per_page, "total_pages": 0, "grade_stats": {}}
+
     if grade:
         # Validate grade format to prevent path traversal
         if not re.match(r"^grade-\d{2}$", grade):

@@ -1,13 +1,30 @@
-"""Configuration for the playground API."""
+"""Configuration for the local API server.
+
+Imports project-wide paths from scripts.config and adds API-specific settings.
+"""
 
 import os
+import sys
 from pathlib import Path
 
-# Project root
-PROJECT_ROOT = Path(__file__).parent.parent.parent
+# Add scripts/ to path if not already there (for standalone run)
+_scripts_dir = str(Path(__file__).resolve().parent.parent)
+if _scripts_dir not in sys.path:
+    sys.path.insert(0, _scripts_dir)
 
-# Curriculum paths
-CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+from config import (
+    BATCH_STATE_DIR,
+    CURRICULUM_ROOT,
+    DASHBOARDS_DIR,
+    LOGS_DIR,
+    PROJECT_ROOT,
+    SOURCES_DB,
+    TEXTBOOK_IMAGES_DIR,
+    VESUM_DB,
+    WIKI_DIR,
+)
+
+# ==================== API SPECIFIC ====================
 
 # Message broker database
 MESSAGE_DB = Path(
@@ -17,8 +34,8 @@ MESSAGE_DB = Path(
     )
 )
 
-# Dashboards directory (for static file serving)
-DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
+# Dispatcher log file
+DISPATCHER_LOG = LOGS_DIR / "dispatcher.log"
 
 # Levels configuration — keep in sync with:
 #   assess_research.py (TRACKS), batch_dispatcher_config.py (TRACKS), manifest_utils.py (CORE_LEVELS/TRACKS)
@@ -61,9 +78,7 @@ SEMINAR_TRACK_IDS = {
     "oes", "ruth", "folk",
 }
 
-# Batch state directory
-BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
+# ==================== SERVER CONFIG ====================
 
-# Server settings
-API_HOST = "127.0.0.1"  # nosec B104 — bind to localhost only
-API_PORT = 8765
+API_HOST = os.environ.get("LU_API_HOST", "127.0.0.1")  # nosec B104 — bind to localhost only
+API_PORT = int(os.environ.get("LU_API_PORT", 8765))

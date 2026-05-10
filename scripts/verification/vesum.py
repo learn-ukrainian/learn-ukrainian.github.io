@@ -8,17 +8,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS_DIR = PROJECT_ROOT / "scripts"
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+# Ensure scripts/ is importable
+_scripts_dir = str(Path(__file__).resolve().parent.parent)
+if _scripts_dir not in sys.path:
+    sys.path.insert(0, _scripts_dir)
 
-from scripts.rag.config import VESUM_DB_PATH
+from config import VESUM_DB as VESUM_DB_PATH
 
 _vesum_conn = None
 
@@ -27,8 +26,6 @@ def get_vesum_conn():
     """Lazy-load SQLite connection to VESUM dictionary."""
     global _vesum_conn
     if _vesum_conn is None:
-        import sqlite3
-
         if not VESUM_DB_PATH.exists():
             raise FileNotFoundError(
                 f"VESUM database not found at {VESUM_DB_PATH}. "
