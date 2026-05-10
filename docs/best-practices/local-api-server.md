@@ -6,22 +6,18 @@ filesystem and SQLite endpoints from one browser session.
 
 ## Process Model
 
-Normal API commands should run with multiple workers and explicit admission
-limits:
+Normal API commands launch uvicorn in dev-reload mode:
 
 ```bash
 .venv/bin/python -m uvicorn scripts.api.main:app \
   --host 0.0.0.0 \
   --port 8765 \
-  --workers 2 \
-  --limit-concurrency 32 \
-  --timeout-keep-alive 5 \
+  --reload \
   --log-config scripts/api/logging.json
 ```
 
 `npm run api` and `npm run api:bg` use this shape. `npm run api:reload`
-intentionally stays single-worker because uvicorn reload mode and worker mode
-are not compatible.
+is an alias for backward compatibility.
 
 The FastAPI app also installs `scripts/api/resilience.py` middleware:
 
