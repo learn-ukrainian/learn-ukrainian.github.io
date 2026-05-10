@@ -86,6 +86,11 @@ _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
 
 
+def _normalize_mcp_url(url: str | None) -> str:
+    """Normalize MCP endpoint URLs for observer attribution."""
+    return str(url or "").strip().rstrip("/")
+
+
 def _validate_agent_name(agent_name: str) -> None:
     """Reject legacy public labels before registry lookup."""
     if agent_name.endswith("-tools") and agent_name not in AGENTS:
@@ -407,6 +412,7 @@ class _McpRuntimeObserver:
     ready_servers: set[str] = field(default_factory=set)
     failed_servers: set[str] = field(default_factory=set)
     timed_out_servers: set[str] = field(default_factory=set)
+    pending_ready_events: dict[str, dict[str, str]] = field(default_factory=dict)
 
     @classmethod
     def from_tool_config(
@@ -468,6 +474,9 @@ class _McpRuntimeObserver:
         servers = self._servers_for_failed_line(
             url_match.group("url") if url_match else None
         )
+        if not servers:
+            self._emit_unattributed_failure(stream=stream, line=line)
+            return
         for server in servers:
             self._emit_failed(server, stream=stream, line=line)
 
@@ -493,16 +502,14 @@ class _McpRuntimeObserver:
             )
 
     def _servers_for_failed_line(self, url: str | None) -> list[str]:
-        if url:
-            matched = [
-                server
-                for server, server_url in self.server_urls.items()
-                if server_url == url
-            ]
-            if matched:
-                return matched
-        unresolved = self.configured_servers - self.ready_servers - self.failed_servers
-        return sorted(unresolved) or ["unknown"]
+        normalized_url = _normalize_mcp_url(url)
+        if not normalized_url:
+            return []
+        return [
+            server
+            for server, server_url in self.server_urls.items()
+            if _normalize_mcp_url(server_url) == normalized_url
+        ]
 
     def _emit_ready(
         self,
@@ -512,16 +519,61 @@ class _McpRuntimeObserver:
         stream: str,
         line: str,
     ) -> None:
+        """Record ready as pending; failed is terminal and suppresses it.
+
+        Ordering is intentionally "failed trumps ready": a later transport
+        failure for the same server wins over an earlier Codex
+        ``mcp: server/tool started`` or ``(completed)`` line.
+        """
+        if server in self.failed_servers or server in self.timed_out_servers:
+            return
         if server in self.ready_servers:
             return
         self.ready_servers.add(server)
-        self._emit(server=server, status="ready", stream=stream, line=line, tool=tool)
+        self.pending_ready_events[server] = {
+            "tool": tool,
+            "stream": stream,
+            "line": line,
+        }
 
     def _emit_failed(self, server: str, *, stream: str, line: str) -> None:
+        """Emit failed immediately; failed is terminal and suppresses ready.
+
+        If Codex prints both a ready line and a later transport failure for
+        the same server, consumers see one final ``failed`` status rather
+        than a ready/failed flap.
+        """
         if server in self.failed_servers:
             return
         self.failed_servers.add(server)
+        self.pending_ready_events.pop(server, None)
         self._emit(server=server, status="failed", stream=stream, line=line)
+
+    def finalize(self) -> None:
+        """Emit pending ready statuses that were not superseded by failures."""
+        for server in sorted(self.pending_ready_events):
+            if server in self.failed_servers:
+                continue
+            event = self.pending_ready_events[server]
+            self._emit(
+                server=server,
+                status="ready",
+                stream=event["stream"],
+                line=event["line"],
+                tool=event["tool"],
+            )
+        self.pending_ready_events.clear()
+
+    def _emit_unattributed_failure(self, *, stream: str, line: str) -> None:
+        fields: dict[str, Any] = {
+            "agent": self.agent_name,
+            "raw_line": line[:500],
+        }
+        if self.task_id:
+            fields["task_id"] = self.task_id
+        if stream:
+            fields["stream"] = stream
+        self.event_sink("mcp_runtime_unattributed_failure", **fields)
 
     def _emit(
         self,
@@ -769,6 +821,7 @@ def _execute_invocation_plan(
                 stream="stderr",
             )
             mcp_observer.maybe_emit_timeout(time.monotonic())
+            mcp_observer.finalize()
 
         stdout_text = "".join(watchdog_state.stdout_lines)
         stderr_text = "".join(watchdog_state.stderr_lines)

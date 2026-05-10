@@ -1,0 +1,22 @@
+Reading additional input from stdin...
+OpenAI Codex v0.130.0
+--------
+workdir: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1805-mcp-observer
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: high
+reasoning summaries: none
+session id: 019e129f-8e3c-73d0-ae0a-ccd84822064f
+--------
+user
+Use the sources MCP tool verify_word for the Ukrainian word кіт, then answer with exactly: done
+mcp: sources/verify_word started
+mcp: sources/verify_word (completed)
+codex
+done
+hook: Stop
+hook: Stop Completed
+tokens used
+18,798
