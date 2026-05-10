@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cost - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -37,6 +38,7 @@ th { color: var(--text2); font-size: 11px; text-transform: uppercase; }
 .empty { color: var(--text2); font-size: 13px; }
 @media (max-width: 720px) { .topbar { flex-wrap: wrap; } }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 <div class="topbar">
@@ -45,7 +47,14 @@ th { color: var(--text2); font-size: 11px; text-transform: uppercase; }
     <div class="sub">Estimated token usage and USD spend from dispatch meta logs</div>
   </div>
   <div class="spacer"></div>
-  <a href="/">Home</a>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
 
 <div class="container">

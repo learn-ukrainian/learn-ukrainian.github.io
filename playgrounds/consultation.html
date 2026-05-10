@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Consultation Loop - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -122,14 +123,22 @@ tr:hover td { background: var(--bg2); }
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.6s linear infinite; margin-left: 8px; vertical-align: middle; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
 <div class="topbar">
   <h1>Consultation Loop</h1>
   <div class="spacer"></div>
-  <a href="/">Back to Hub</a>
   <span class="refresh-info" id="refresh-info"></span>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
 
 <div class="tabs">

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin &amp; Maintenance</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -89,6 +90,7 @@ table.stats-table tr:hover { background: var(--bg3); }
 .bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
 .bar-value { font-size: 12px; color: var(--text3); min-width: 70px; text-align: right; }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 
@@ -96,7 +98,14 @@ table.stats-table tr:hover { background: var(--bg3); }
   <h1>Admin &amp; Maintenance</h1>
   <div class="spacer"></div>
   <span class="refresh-info" id="last-refresh"></span>
-  <a href="/">Back to Hub</a>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
 
 <div class="layout">
@@ -227,10 +236,6 @@ document.querySelectorAll('.sidebar a').forEach(a => {
   });
 });
 
-// Restore section from hash or default to health
-const hash = location.hash.slice(1);
-activateSection(hash || 'health');
-
 // ── API helpers ─────────────────────────────────────
 
 function escapeHtml(s) {
@@ -250,6 +255,10 @@ async function apiFetch(path, opts) {
 const apiGet = (path) => apiFetch(path);
 const apiPost = (path) => apiFetch(path, { method: 'POST' });
 const apiDelete = (path) => apiFetch(path, { method: 'DELETE' });
+
+// Restore section from hash or default to health after API helpers exist.
+const hash = location.hash.slice(1);
+activateSection(hash || 'health');
 
 function showResult(id, data) {
   const el = document.getElementById(id);

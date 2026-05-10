@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Progress - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -18,9 +19,9 @@ a:hover { text-decoration: underline; }
 
 .topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
 .topbar h1 { font-size: 18px; font-weight: 600; }
-.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
-.topbar .nav a { color: var(--text2); }
-.topbar .nav a:hover { color: var(--text); }
+.topbar .monitor-nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .monitor-nav a { color: var(--text2); }
+.topbar .monitor-nav a:hover { color: var(--text); }
 
 .stats-bar { display: flex; gap: 24px; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .stat-card { text-align: center; min-width: 100px; }
@@ -88,6 +89,7 @@ a:hover { text-decoration: underline; }
 
 .error-msg { color: var(--red); font-size: 13px; padding: 8px 0; }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 <div id="tooltip"></div>
@@ -95,15 +97,22 @@ a:hover { text-decoration: underline; }
 <div class="topbar">
   <h1>&#9654; Progress</h1>
   <div style="font-size:12px;color:var(--text3);" id="topbar-subtitle">Pipeline state across all tracks</div>
-  <div class="nav">
+  <div class="spacer"></div>
+  <nav class="monitor-nav" aria-label="Monitor sections">
     <a href="/">Home</a>
-    <a href="/audit-dashboard.html">Audit</a>
-    <a href="/quality.html">Quality</a>
-    <a href="/docs">API</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
     <a href="/comms.html">Comms</a>
-    <a href="/track-health.html">Health</a>
-  </div>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
+<nav class="ops-nav" aria-label="Operations pages">
+  <a href="/audit-dashboard.html">Audit</a>
+  <a href="/quality.html">Quality</a>
+  <a href="/track-health.html">Health</a>
+  <a href="/docs">API</a>
+</nav>
 
 <div class="stats-bar" id="stats-bar">
   <div class="stat-card"><div class="value" id="total-modules">—</div><div class="label">Total Modules</div></div>

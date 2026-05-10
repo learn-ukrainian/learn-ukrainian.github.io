@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Track Health - ukraine-ops</title>
+<link rel="icon" href="data:,">
 <style>
 :root {
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
@@ -18,9 +19,9 @@ a:hover { text-decoration: underline; }
 
 .topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
 .topbar h1 { font-size: 18px; font-weight: 600; }
-.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
-.topbar .nav a { color: var(--text2); }
-.topbar .nav a:hover { color: var(--text); }
+.topbar .monitor-nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .monitor-nav a { color: var(--text2); }
+.topbar .monitor-nav a:hover { color: var(--text); }
 
 .container { padding: 16px 24px; max-width: 1400px; }
 
@@ -87,8 +88,8 @@ a:hover { text-decoration: underline; }
 .attention-item.clickable:hover { background: var(--bg3); }
 
 /* Module inspector panel */
-.inspector-overlay { position: fixed; top: 0; right: 0; width: 520px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); z-index: 1000; transform: translateX(100%); transition: transform 0.25s ease; overflow-y: auto; box-shadow: -4px 0 20px rgba(0,0,0,0.5); }
-.inspector-overlay.open { transform: translateX(0); }
+.inspector-overlay { position: fixed; top: 0; right: 0; width: 520px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); z-index: 1000; transform: translateX(100%); visibility: hidden; pointer-events: none; transition: transform 0.25s ease, visibility 0.25s ease; overflow-y: auto; box-shadow: -4px 0 20px rgba(0,0,0,0.5); }
+.inspector-overlay.open { transform: translateX(0); visibility: visible; pointer-events: auto; }
 .inspector-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg2); z-index: 1; }
 .inspector-header h2 { font-size: 15px; font-weight: 600; flex: 1; }
 .inspector-close { background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--text2); font-size: 16px; cursor: pointer; padding: 2px 8px; }
@@ -124,33 +125,30 @@ a:hover { text-decoration: underline; }
 .comms-content { color: var(--text2); line-height: 1.5; word-break: break-word; }
 .comms-empty { color: var(--text3); font-size: 12px; padding: 12px; text-align: center; }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
-
-<!-- Module inspector slide-in panel -->
-<div class="inspector-overlay" id="inspector">
-  <div class="inspector-header">
-    <h2 id="inspector-title">Module Inspector</h2>
-    <button class="inspector-close" onclick="closeInspector()">&times;</button>
-  </div>
-  <div class="inspector-body" id="inspector-body">
-    <div class="loading">Select a module...</div>
-  </div>
-</div>
 
 <div class="topbar">
   <h1>&#x1F3E5; Track Health</h1>
   <div style="font-size:12px;color:var(--text3);">Build progress, quality, enrichment — one view per track</div>
-  <div class="nav">
+  <div class="spacer"></div>
+  <nav class="monitor-nav" aria-label="Monitor sections">
     <a href="/">Home</a>
-    <a href="/progress.html">Progress</a>
-    <a href="/audit-dashboard.html">Audit</a>
-    <a href="/quality.html">Quality</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
     <a href="/comms.html">Comms</a>
-    <a href="/curriculum-dashboard.html">Curriculum</a>
-    <a href="/docs">API</a>
-  </div>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
+<nav class="ops-nav" aria-label="Operations pages">
+  <a href="/progress.html">Progress</a>
+  <a href="/audit-dashboard.html">Audit</a>
+  <a href="/quality.html">Quality</a>
+  <a href="/curriculum-dashboard.html">Curriculum</a>
+  <a href="/docs">API</a>
+</nav>
 
 <div class="container">
   <!-- All-tracks overview -->
@@ -163,6 +161,17 @@ a:hover { text-decoration: underline; }
 
   <!-- Health dashboard for selected track -->
   <div id="health-container"></div>
+</div>
+
+<!-- Module inspector slide-in panel -->
+<div class="inspector-overlay" id="inspector" aria-hidden="true">
+  <div class="inspector-header">
+    <h2 id="inspector-title">Module Inspector</h2>
+    <button class="inspector-close" onclick="closeInspector()">&times;</button>
+  </div>
+  <div class="inspector-body" id="inspector-body">
+    <div class="loading">Select a module...</div>
+  </div>
 </div>
 
 <script>
@@ -395,6 +404,7 @@ const inspectorBody = document.getElementById('inspector-body');
 
 function closeInspector() {
   inspector.classList.remove('open');
+  inspector.setAttribute('aria-hidden', 'true');
 }
 
 // Close on Escape
@@ -402,6 +412,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInspect
 
 async function inspectModule(trackId, num) {
   inspector.classList.add('open');
+  inspector.setAttribute('aria-hidden', 'false');
   inspectorTitle.textContent = `#${num} — Loading...`;
   inspectorBody.innerHTML = '<div class="loading">Fetching module data...</div>';
 
