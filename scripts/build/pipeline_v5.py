@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Pipeline v5 — Clean pipeline implementation (no v2/v3 legacy code).
+"""Pipeline v5 — OBSOLETE.
 
-Phase implementations + state management + all phase-specific helpers.
-Imported by build_module_v5.py.
+V5 was retired well before 2026-05-10 (superseded first by V6 and now V7).
+Use ``scripts/build/v7_build.py`` + ``scripts/build/linear_pipeline.py`` for
+all new work. Kept on disk for forensic reference only — do not invoke,
+extend, or import.
 
-Pipeline: research (+ discover) → content → validate → activities → review → mdx
-(Sandbox phase removed in #820 — VESUM post-validation replaces it.)
-(Discover merged into research — phase_discover() is a passthrough.)
-
-State file: state.json (plain phase keys, mode: "v5").
+Original purpose (historical): clean pipeline implementation; phase
+implementations + state management + phase-specific helpers; imported by
+``build_module_v5.py``.
 """
 
 from __future__ import annotations

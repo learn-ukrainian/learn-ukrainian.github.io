@@ -1,38 +1,12 @@
 #!/usr/bin/env python3
-"""V6 Pipeline Build — two-call Skeleton->Flesh content generation.
+"""V6 Pipeline Build — OBSOLETE.
 
-Orchestrates the V6 pipeline:
-1. CHECK: Plan checker validation
-2. RESEARCH: Build knowledge packet from RAG
-3. SKELETON: Paragraph-level structure plan (always on, --no-skeleton to skip)
-4. WRITE: LLM session constrained by skeleton (prose + exercises)
-5b. EXERCISES: Fill placeholders with DSL
-5d. VERIFY EXERCISES: Check exercise items grounded in prose (#1016)
-6. ANNOTATE: Stress marks + deterministic fixes
-7. VERIFY: VESUM + grammar scope
-8. REVIEW: Cross-agent adversarial review
-9. PUBLISH: Assemble 4-tab MDX from prose (.md) + vocabulary YAML + activities YAML + resources
+V6 was retired on 2026-05-10. Use ``scripts/build/v7_build.py`` (which drives
+``scripts/build/linear_pipeline.py``) for all new builds. This file is kept
+on disk for forensic reference only — do not invoke, extend, or import.
 
-The Skeleton->Flesh architecture (#998) splits content generation into two calls
-for all modules (use --no-skeleton to skip):
-- Call 1 (Skeleton): Short output (~500-800 words) planning every paragraph
-- Call 2 (Flesh): Full prose following the skeleton exactly
-
-This prevents frontloading early sections and rushing later ones.
-Use --no-skeleton to skip for quick iteration.
-
-Usage:
-    .venv/bin/python scripts/build/v6_build.py a1 1
-    .venv/bin/python scripts/build/v6_build.py b1 1 --skeleton    # force skeleton
-    .venv/bin/python scripts/build/v6_build.py b1 1 --no-skeleton # skip skeleton
-    .venv/bin/python scripts/build/v6_build.py a1 1 --step write  # run single step
-    .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude-tools  # V6-LEGACY default (2026-04-23). Reboot: NOT YET DECIDED — see docs/decisions/2026-04-26-reboot-agent-responsibilities.md §3.
-    .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools  # research/exercises
-    .venv/bin/python scripts/build/v6_build.py a1 1 --resume       # resume from last completed phase
-    .venv/bin/python scripts/build/v6_build.py a1 1 --range 14     # batch (skips complete, rebuilds partial)
-    .venv/bin/python scripts/build/v6_build.py a1 1 --range 14 --resume  # batch + resume partial modules
-
-Issue: #993, #998
+Original purpose (historical): two-call Skeleton->Flesh content generation
+through a Plan-checker / Skeleton / Flesh / Activities / Audit pipeline.
 """
 
 from __future__ import annotations
@@ -11947,4 +11921,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(0 if main() is not False else 1)
-

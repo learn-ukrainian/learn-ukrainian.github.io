@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""E2E Module Builder v5 — clean pipeline CLI (no v2/v3 legacy).
+"""E2E Module Builder v5 — OBSOLETE.
+
+This v5 CLI is kept for forensic reference only; use
+``scripts/build/v7_build.py`` for all new builds.
 
 Usage:
     %(prog)s a1 12                           # Full build (review on by default)
