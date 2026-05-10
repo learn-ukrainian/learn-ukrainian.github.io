@@ -150,7 +150,7 @@ def active_delegate_tasks() -> dict[str, Any]:
     active = [
         task
         for task in tasks
-        if task["status"] in {"running", "spawning"} and task.get("alive")
+        if task["status"] in {"running", "spawning"}
     ]
     return {"total": len(active), "tasks": active}
 
