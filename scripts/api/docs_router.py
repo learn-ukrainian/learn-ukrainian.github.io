@@ -107,6 +107,8 @@ def _is_hidden_path(remainder: str) -> bool:
 
 
 def _assert_under_root(full_path: Path, root_path: Path) -> None:
+    # codeql[py/path-injection] -- this IS the path-traversal validator; full_path
+    # has already been validated by safe_join (commonpath) upstream. See #1860.
     try:
         full_path.resolve().relative_to(root_path.resolve())
     except ValueError as e:
@@ -244,9 +246,11 @@ async def serve_artifact(
         raise HTTPException(status_code=403, detail=str(e)) from e
     _assert_under_root(full_path, root_path)
 
+    # codeql[py/path-injection] -- full_path validated via safe_join + _assert_under_root above. See #1860.
     if not full_path.exists():
         raise HTTPException(status_code=404, detail="Artifact not found")
 
+    # codeql[py/path-injection] -- full_path validated via safe_join + _assert_under_root above. See #1860.
     if full_path.is_dir():
         if request.url.path.startswith("/artifacts") and format != "json":
             return FileResponse(DASHBOARDS_DIR / "artifacts.html", media_type="text/html")
@@ -259,6 +263,7 @@ async def serve_artifact(
             detail=f"File extension {full_path.suffix} not allowed for documentation artifacts",
         )
 
+    # codeql[py/path-injection] -- full_path validated via safe_join + _assert_under_root + extension allowlist above. See #1860.
     return FileResponse(
         full_path,
         media_type=_MIME_TYPES.get(full_path.suffix.lower(), "application/octet-stream"),
