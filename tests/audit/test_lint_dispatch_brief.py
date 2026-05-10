@@ -22,6 +22,12 @@ cd /Users/krisztiankoos/projects/learn-ukrainian
 # venv symlinked
 .venv/bin/python scripts/delegate.py dispatch --task-id example
 ```""",
+        "This is an inline `.venv/bin/python scripts/delegate.py` mention in prose.",
+        """```bash
+cd /some/dir
+.venv/bin/pytest tests/
+.venv/bin/ruff check .
+```""",
     ],
 )
 def test_brief_passes_with_required_venv_guard(tmp_path: Path, body: str) -> None:
@@ -46,6 +52,19 @@ cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/examp
 .venv/bin/python scripts/delegate.py dispatch --task-id example
 ```""",
             5,
+        ),
+        (
+            """```bash
+cd /Users/krisztiankoos/projects/learn-ukrainian
+.venv/bin/python scripts/delegate.py dispatch --task-id 1
+echo "1"
+echo "2"
+echo "3"
+echo "4"
+echo "5"
+.venv/bin/python scripts/delegate.py dispatch --task-id 2
+```""",
+            11,
         ),
     ],
 )
