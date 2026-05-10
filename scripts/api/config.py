@@ -49,6 +49,8 @@ LEVELS = [
     # Historical language tracks
     {"id": "oes", "name": "OES - Old East Slavic", "path": "oes"},
     {"id": "ruth", "name": "RUTH - Ruthenian", "path": "ruth"},
+    # Specialized culture tracks
+    {"id": "folk", "name": "FOLK - Folk Culture", "path": "folk"},
 ]
 
 # Seminar tracks (require Phase 0 research)
@@ -56,7 +58,7 @@ SEMINAR_TRACK_IDS = {
     "hist", "istorio", "bio",
     "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
     "lit-doc", "lit-drama", "lit-crimea",
-    "oes", "ruth",
+    "oes", "ruth", "folk",
 }
 
 # Batch state directory

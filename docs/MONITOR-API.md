@@ -59,7 +59,7 @@ Sample response:
   "generated_at": "2026-04-11T00:15:00Z",
   "git": {"branch": "main", "head": "cb5f47d19"},
   "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
-  "pipeline": {"summary": {"totals": {"total": 1500}}},
+  "pipeline": {"summary": {"totals": {"total": 1778}}},
   "runtime": {"agents": ["claude", "gemini", "codex"]},
   "delegate": {"active_count": 2},
   "wiki": {"by_track": {"hist": {"compiled": 15, "total": 140, "pct": 10.7}}},
@@ -151,7 +151,7 @@ Sample response:
       "audit_passing": 4, "final_review_done": 4
     }
   },
-  "totals": { "total": 1500, "research_done": 400, ... }
+  "totals": { "total": 1778, "research_done": 400, ... }
 }
 ```
 

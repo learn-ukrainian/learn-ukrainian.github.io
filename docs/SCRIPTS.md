@@ -836,8 +836,8 @@ The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 
 | Entry | Purpose |
 |---|---|
-| `scripts/generate_playground_data.py` | Aggregate audit cache into playground data |
-| `scripts/build_playgrounds.py` | Build HTML dashboards with embedded data |
+| `scripts/generate_dashboard_data.py` | Aggregate audit cache into dashboard data |
+| `scripts/build_dashboards.py` | Build HTML dashboards with embedded data |
 | `npm run dashboards:data` | Regenerate `dashboards/data/status.json` |
 | `npm run dashboards:build` | Rebuild dashboard HTML |
 
