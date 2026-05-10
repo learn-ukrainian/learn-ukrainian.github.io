@@ -72,11 +72,17 @@ def _has_guard(rows: list[tuple[int, str, int | None]], index: int) -> bool:
 
 
 def lint_brief(path: Path) -> list[tuple[Path, int]]:
-    rows = _contexts(path.read_text(encoding="utf-8"))
+    try:
+        content = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as e:
+        print(f"Error: {path} is not a valid UTF-8 file ({e})", file=sys.stderr)
+        sys.exit(1)
+
+    rows = _contexts(content)
     return [
         (path, line_number)
-        for index, (line_number, line, _) in enumerate(rows)
-        if PYTHON_RE.search(line) and not _has_guard(rows, index)
+        for index, (line_number, line, fence_id) in enumerate(rows)
+        if fence_id is not None and PYTHON_RE.search(line) and not _has_guard(rows, index)
     ]
 
 
