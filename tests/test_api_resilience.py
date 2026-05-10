@@ -100,15 +100,24 @@ def test_slow_request_and_sql_events_surface_in_health(monkeypatch, tmp_path):
     assert "CREATE TABLE sample" in resilience["recent_slow_sql"][0]["query"]
 
 
-def test_normal_api_launch_uses_workers_and_uvicorn_limits():
+def test_normal_api_launch_uses_uvicorn_with_reload():
+    """package.json scripts.api / scripts.api:bg launch uvicorn in dev-reload mode.
+
+    Pinned 2026-05-10 after commit 6d81e694b1 ("api auto-reload"). The previous
+    contract (--workers 2 --limit-concurrency 32 --timeout-keep-alive 5) was a
+    production-style launcher; the project does not run a production API and
+    has standardized on --reload for the localhost:8765 dev server.
+    """
     scripts = json.loads((ROOT / "package.json").read_text())["scripts"]
 
     for name in ("api", "api:bg"):
         command = scripts[name]
         assert ".venv/bin/python -m uvicorn" in command
-        assert "--workers 2" in command
-        assert "--limit-concurrency 32" in command
-        assert "--timeout-keep-alive 5" in command
+        assert "scripts.api.main:app" in command
+        assert "--host 0.0.0.0" in command
+        assert "--port 8765" in command
+        assert "--reload" in command
+        assert "--log-config scripts/api/logging.json" in command
 
-    assert "--reload" in scripts["api:reload"]
-    assert "--workers" not in scripts["api:reload"]
+    # api:reload is now an alias of api (legacy name preserved for muscle memory).
+    assert scripts["api:reload"] == "npm run api"
