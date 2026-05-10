@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime import tool_config as wiki_tool_config_mod
 
 from scripts.agent_runtime import tool_config as tool_config_mod
-from scripts.agent_runtime.runner import _McpRuntimeObserver
+from scripts.agent_runtime.runner import _MCP_TOOL_EVENT_RE, _McpRuntimeObserver
 from scripts.build import linear_pipeline
 from scripts.wiki import review as wiki_review
 
@@ -551,3 +552,22 @@ def test_mcp_runtime_observer_emits_timeout() -> None:
     assert events[0][0] == "mcp_runtime_init"
     assert events[0][1]["server"] == "sources"
     assert events[0][1]["status"] == "timeout"
+
+
+def test_mcp_tool_event_regex_matches_real_codex_fixture() -> None:
+    fixture = (
+        Path(__file__).parent
+        / "fixtures"
+        / "codex_mcp_init_stdout.txt"
+    ).read_text(encoding="utf-8")
+
+    matches = list(_MCP_TOOL_EVENT_RE.finditer(fixture))
+
+    assert len(matches) == 2
+    assert Counter(
+        (match.group("server"), match.group("tool")) for match in matches
+    ) == {("sources", "verify_word"): 2}
+    assert [match.group(0) for match in matches] == [
+        "mcp: sources/verify_word started",
+        "mcp: sources/verify_word (completed)",
+    ]
