@@ -5,6 +5,7 @@ permissions:
 
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/ci.yml'
       - 'requirements*.txt'
@@ -301,7 +302,7 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         with:
           path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt', 'requirements-lock.txt', 'pyproject.toml') }}
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements-lock.txt', 'pyproject.toml') }}
           restore-keys: |
             pip-${{ runner.os }}-
 
@@ -340,7 +341,15 @@ jobs:
             --ignore=tests/wiki/test_grade_filter.py
             --ignore=tests/wiki/test_mlx_fault_injection.py
             --ignore=tests/wiki/test_t1_t2_pipeline.py
+            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix
+            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all
           )
+          # These tests assert exact invalidation counts for a module-global cache.
+          # Run them in a fresh process so earlier orient API tests cannot leak keys.
+          .venv/bin/python -m pytest \
+            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
+            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
+            -v --tb=short
           .venv/bin/python -m pytest "${common_args[@]}"
 
       - name: Run tests with coverage
@@ -376,13 +385,20 @@ jobs:
             --ignore=tests/wiki/test_grade_filter.py
             --ignore=tests/wiki/test_mlx_fault_injection.py
             --ignore=tests/wiki/test_t1_t2_pipeline.py
+            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix
+            --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all
           )
           coverage_args=(
             --cov=scripts
+            --cov-append
             --cov-report=term-missing
             --cov-report=xml:coverage.xml
             --cov-fail-under=35
           )
+          .venv/bin/python -m pytest \
+            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
+            tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
+            -v --tb=short --cov=scripts --cov-append --cov-report=
           .venv/bin/python -m pytest "${common_args[@]}" "${coverage_args[@]}"
 
       - name: Upload coverage
