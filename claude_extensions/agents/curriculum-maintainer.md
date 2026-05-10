@@ -106,41 +106,13 @@ An open-source Ukrainian language curriculum for teens and adults. Decolonized p
 
 **This is education, not software.** Real people with zero Ukrainian knowledge will use these modules as their first contact with the language. Bad pedagogy means bad habits that are hard to undo. There is no "ship and iterate" for someone's foundation in a language. 5 excellent modules beat 55 mediocre ones.
 
-## What you never do (learned from real failures)
+## Curriculum-specific failure modes (encoded lessons)
+
+Generic "never X" rules are auto-loaded (#M-0.5, #M-4, INVESTIGATE BEFORE ACTING, PRE-COMMIT AUTO, GH ISSUE HYGIENE). Curriculum-specific traps to keep in working memory:
 
 - **Never act on a file/directory without understanding what it's for.** Session 2026-04-06: deleted wiki articles that were validated 9.8/10 output from the previous session because "cleanup B1" was misread as "delete everything in B1."
-- **Never ask "want me to do X?" when the task is clear.** Do the work. Report results, not proposals.
-- **Never propose options.** Pick the right one yourself. You are the engineer, not a waiter.
-- **Never skip pre-commit steps** (ruff per edit, `/simplify` + Gemini review on final commit). The user should never have to remind you.
-- **Never leave GH issues open when all ACs are met.** Close them immediately.
-- **Never modify a pipeline without reading the design docs first.** "I already know how it works" has been wrong every single time.
-- **Never use `--admin` to bypass blocking CI.** See #M-0.5.
-- **Never invent a Ukrainian word, SHA, file path, or score.** See #M-4.
-
-## How you work
-
-### Understand before acting
-Before ANY non-trivial change: read the relevant design docs, trace the affected flow end-to-end. "I already know how it works" is ALWAYS wrong — re-read anyway. This is the #1 source of mistakes in this project.
-
-### Quality above all
-- Do NOT lower thresholds when the content should meet them
-- Do NOT skip steps because they're expensive
-- Do NOT suggest "for now" or "good enough" — there is no "for now"
-- If the right solution costs compute/time/effort — pay it
-- Word targets are MINIMUMS — expand content, never lower the target
-
-### Sequence discipline
-- One working end-to-end example FIRST, then scale
-- Never build components in isolation — verify the full flow before scaling
-- Never modify a pipeline without tracing it end-to-end first
-
-### Commit often, don't hoard changes
-Commit after each logical unit of work — don't accumulate a massive diff. For each commit:
-- **Always:** ruff per edit (catch errors immediately, not at commit)
-- **Final commit before closing an issue:** `/simplify` + Gemini adversarial review
-
-### GH issues = persistent memory
-Issues survive session expiry — your memory doesn't. Full protocol: `docs/best-practices/issue-tracking.md`. In commits: always reference the issue — `fix: correct score parsing (#1161)`.
+- **Never modify a pipeline without reading the design docs first.** "I already know how it works" has been wrong every single time on this project (#1 source of mistakes).
+- **Word targets are MINIMUMS** — expand content, never lower the target. Hardcoding from memory caused 270 ISTORIO plans short by 500 words (Jan 2026).
 
 ## Agent roster (curriculum-specific routing)
 
@@ -155,14 +127,12 @@ Per #M0 (auto-loaded): inline-Claude is orchestrator, not coder. The 3:3:3 dispa
 
 `frontend-design` (UI components), `playground` (interactive HTML), `code-review` / `code-review:code-review` (PR review), `simplify` (pre-commit cleanup), `init` / `review` / `security-review`. The full skill list loads automatically — check the system reminder when you need one.
 
-## Critical operational rules
+## Curriculum-specific operational rules
 
-- Edit in `claude_extensions/`, run `npm run claude:deploy` to sync to `.claude/`, `.agent/`, `.codex/`, `.gemini/`. **NEVER** edit those output dirs directly.
-- Always `.venv/bin/python`, **never** bare `python3` or `python`.
-- All work on `main`. Use `git worktree` for isolation. `git add` only files YOU modified.
-- Word targets from `scripts/audit/config.py` — always read, never hardcode from memory.
-- **V7 only.** v5/v6 builds (`build_module_v5.py`, `v6_build.py`) are obsolete — never invoke them, never reference them. Current entry point is `scripts/build/v7_build.py {level} {slug}` (single module per invocation; no `--range`, no `--step`, no batch).
-- V7 builds are USER-RUN ONLY. Never trigger them yourself, even for a single module. Dry-runs (`--dry-run`) are safe but the user typically runs those too.
+(Generic ones — `claude_extensions/` source-vs-deploy, `.venv/bin/python`, worktree-isolation, git-add-only-yours, config.py word targets — are auto-loaded from `critical-rules.md` + `non-negotiable-rules.md` + `delegate-must-use-worktree.md`.)
+
+- **V7 only.** v5/v6 (`build_module_v5.py`, `v6_build.py`, `pipeline_v5.py`) are OBSOLETE — never invoke, never reference. Entry point is `scripts/build/v7_build.py {level} {slug}` (single module per invocation; no `--range`, no `--step`, no batch).
+- **V7 builds are USER-RUN ONLY.** Never trigger them yourself, even for a single module. Dry-runs (`--dry-run`) are safe but the user typically runs those too.
 
 ## Service troubleshooting (`./services.sh`)
 
