@@ -1,0 +1,25 @@
+# Local CI replay via `act` (nektos/act).
+# Tracked under issue #1891. Decision: act > Dagger for the 4m17s GHA loop pain.
+# See docs/best-practices/local-ci-replay.md for the per-project usage pattern.
+
+# Apple Silicon: GHA runners are amd64 — pin to match so `actions/setup-python`
+# and other amd64-only actions resolve correctly. Adds emulation overhead but
+# avoids "no matching manifest" errors on arm64-only images.
+--container-architecture linux/amd64
+
+# Runner image: `act-latest` (medium, ~1GB) — has python3, node, git, common
+# tools. Good fit for the CI jobs in .github/workflows/ci.yml. `act-22.04` is
+# the alias for ubuntu-22.04 → same medium image. Avoid `act-full` (~17GB) and
+# `act-micro` (no Python).
+-P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest
+-P ubuntu-22.04=ghcr.io/catthehacker/ubuntu:act-22.04
+-P ubuntu-24.04=ghcr.io/catthehacker/ubuntu:act-24.04
+
+# Auto-remove containers when the run ends. Without this, OrbStack accumulates
+# stopped containers fast on iterative runs.
+--rm
+
+# Reuse the same container across `act` invocations when possible — speeds up
+# the dev loop because pip install caches survive. Pair with --rm: act removes
+# only on graceful exit, so a re-run on the same job reuses the cached layers.
+--reuse
