@@ -12,13 +12,21 @@
 #   (branch*)      git branch + `*` if dirty
 #   [ctx: UK/BK (N%)] context window — color-coded green<50, yellow 50-79,
 #                    red 80+. U=used Ktokens, B=budget Ktokens, N=percent.
-#                    Used tokens read from .context_window.used_tokens (or
-#                    .input_tokens / .tokens.used as fallbacks). Budget read
-#                    from .context_window.budget (or .max_tokens), else the
-#                    CLAUDE_CODE_AUTO_COMPACT_WINDOW env var, else 1000000.
-#                    Falls back to percent-only if token counts unavailable.
-#                    Omitted entirely until the first API call populates the
-#                    field.
+#                    Used tokens read with three-tier degradation:
+#                      1) PRIMARY: .transcript_path → tail JSONL → sum
+#                         .message.usage.{input_tokens, cache_read_input_tokens,
+#                         cache_creation_input_tokens} from latest assistant
+#                         turn. Most reliable — .transcript_path is in the
+#                         official statusline schema.
+#                      2) FALLBACK: .context_window.used_tokens (or
+#                         .input_tokens / .tokens.used). Works on clients
+#                         that populate the context_window block directly.
+#                      3) BARE: .context_window.used_percentage as the last
+#                         resort if no token count is available.
+#                    Budget read from .context_window.budget (or .max_tokens
+#                    / .total_tokens), else the CLAUDE_CODE_AUTO_COMPACT_WINDOW
+#                    env var, else 1000000. Omitted entirely until the first
+#                    API call populates usage.
 #   [effort: ...]  .effort.level — low/medium default, high/xhigh bold,
 #                    max red. Omitted for pre-2.1.119 clients.
 #   [think]        .thinking.enabled — emitted only when true. Omitted for
@@ -88,18 +96,53 @@ if git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   [ -n "$branch" ] && branch_seg="($branch$dirty)"
 fi
 
-# Context window — UK/BK (N%) format with graceful degradation to percent-only.
-# Field-name fallbacks because the Claude Code statusline schema varies
-# between client versions (.context_window has shipped under several keys).
+# Context window — UK/BK (N%) format with three-tier degradation.
+#
+# Tier 1 (primary): .transcript_path → tail the JSONL → sum the latest
+#   assistant turn's .message.usage.{input_tokens, cache_read_input_tokens,
+#   cache_creation_input_tokens}. This is the documented, stable path —
+#   .transcript_path is in the official statusline schema and the usage
+#   shape is the Anthropic API contract.
+# Tier 2 (fallback): direct .context_window.* JSON reads, in case a
+#   future client version populates that block.
+# Tier 3 (bare): .context_window.used_percentage with no K/K, if neither
+#   tier produced a token count.
 ctx_seg=""
 ctx_pct=$(json_get '.context_window.used_percentage')
-ctx_used=$(json_get '.context_window.used_tokens')
+ctx_used=""
+
+# Tier 1: transcript-JSONL parsing.
+transcript_path=$(json_get '.transcript_path')
+if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
+  usage_json=$(tail -200 "$transcript_path" 2>/dev/null \
+    | jq -s '[.[] | select(.type == "assistant" and .message.usage != null)] | last | .message.usage // empty' 2>/dev/null)
+  if [ -n "$usage_json" ] && [ "$usage_json" != "null" ] && [ "$usage_json" != "empty" ]; then
+    inp=$(printf '%s' "$usage_json" | jq -r '.input_tokens // 0' 2>/dev/null)
+    cr=$(printf '%s'  "$usage_json" | jq -r '.cache_read_input_tokens // 0' 2>/dev/null)
+    cc=$(printf '%s'  "$usage_json" | jq -r '.cache_creation_input_tokens // 0' 2>/dev/null)
+    ctx_used=$(( ${inp:-0} + ${cr:-0} + ${cc:-0} ))
+    [ "$ctx_used" = "0" ] && ctx_used=""    # no usage yet → treat as missing
+  fi
+fi
+
+# Tier 2: direct JSON field reads.
+[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.used_tokens')
 [ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.input_tokens')
 [ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.tokens.used')
+
+# Budget — same precedence as before.
 ctx_budget=$(json_get '.context_window.budget')
 [ -z "$ctx_budget" ] && ctx_budget=$(json_get '.context_window.max_tokens')
 [ -z "$ctx_budget" ] && ctx_budget=$(json_get '.context_window.total_tokens')
 [ -z "$ctx_budget" ] && ctx_budget="${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-1000000}"
+
+# If JSON didn't give us a percent but we have used+budget numerics, compute it.
+if [ -z "$ctx_pct" ] && [ -n "$ctx_used" ] && [ -n "$ctx_budget" ] \
+   && printf '%d' "$ctx_used"   >/dev/null 2>&1 \
+   && printf '%d' "$ctx_budget" >/dev/null 2>&1 \
+   && [ "$ctx_budget" -gt 0 ]; then
+  ctx_pct=$(( ctx_used * 100 / ctx_budget ))
+fi
 
 if [ -n "$ctx_pct" ]; then
   ctx_int=$(printf '%.0f' "$ctx_pct" 2>/dev/null) || ctx_int=""
@@ -108,7 +151,7 @@ if [ -n "$ctx_pct" ]; then
     elif [ "$ctx_int" -ge 50 ]; then ctx_color="\033[33m"   # yellow
     else                             ctx_color="\033[32m"   # green
     fi
-    # If we have a numeric used_tokens count, render UK/BK (N%); else fall back to N%.
+    # Render UK/BK (N%) when we have numeric token counts; else bare N%.
     if [ -n "$ctx_used" ] && printf '%d' "$ctx_used" >/dev/null 2>&1 \
        && [ -n "$ctx_budget" ] && printf '%d' "$ctx_budget" >/dev/null 2>&1; then
       # Round to nearest thousand: (x + 500) / 1000.
