@@ -28,7 +28,7 @@ List the exact tool call signatures you intend to use for this section.
 - For modernity / archaism: `mcp__sources__check_modern_form(word="...")` — ONE call returns modernity flags. Do not infer from raw VESUM tags.
 - For Russian-shadow detection: `mcp__sources__check_russian_shadow(word="...")` — ONE call returns Russian-morphology confidence.
 
-Use the compose-pattern (`search_literary` / `search_grinchenko_1907` / `search_style_guide` etc.) ONLY when you need to retrieve evidence chunks for inclusion in the artifact (e.g., quoting a textbook passage). For verification (`matched/discusses/modern/russian-shadow` boolean questions), the single-primitive call is mandatory.
+Use the compose-pattern (`mcp__sources__search_literary` / `search_grinchenko_1907` / `search_style_guide` etc.) ONLY when you need to retrieve evidence chunks for inclusion in the artifact (e.g., quoting a textbook passage). For verification (`matched/discusses/modern/russian-shadow` boolean questions), the single-primitive call is mandatory.
 
 Example: `mcp__sources__verify_quote(author="Шевченко", text="загнали в Сибір неісходиму")`. Do not fake results here; this is your plan for the tool calls you will actually trigger.
 Every signature listed here is a commitment to call that exact tool this turn; omit speculative or copied example signatures.
