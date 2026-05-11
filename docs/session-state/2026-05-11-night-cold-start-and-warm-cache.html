@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Session Handoff — 2026-05-11 night — cold-start −94.5% + Gemini warm-cache dispatched</title>
+<style>
+  :root {
+    --bg: #0e1116; --fg: #e6e6e6; --muted: #9aa4af; --accent: #58a6ff;
+    --good: #3fb950; --warn: #d29922; --bad: #f85149; --kbd: #1f2329;
+  }
+  body { max-width: 920px; margin: 2em auto; padding: 0 1.5em; background: var(--bg); color: var(--fg);
+         font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+  h1 { font-size: 1.7em; border-bottom: 1px solid #30363d; padding-bottom: .35em; }
+  h2 { font-size: 1.25em; margin-top: 2em; }
+  h3 { font-size: 1.05em; color: var(--muted); }
+  a { color: var(--accent); }
+  code, kbd, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                     background: var(--kbd); padding: .12em .35em; border-radius: 3px; font-size: .92em; }
+  pre { background: var(--kbd); padding: 1em; border-radius: 6px; overflow-x: auto; }
+  pre code { background: transparent; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .94em; }
+  th, td { border: 1px solid #30363d; padding: .55em .8em; text-align: left; vertical-align: top; }
+  th { background: #161b22; }
+  tr:nth-child(2n) td { background: #0d1117; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+              gap: .8em; margin: 1.2em 0; }
+  .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 1em; }
+  .kpi .label { color: var(--muted); font-size: .82em; text-transform: uppercase; letter-spacing: .05em; }
+  .kpi .value { font-size: 1.6em; font-weight: 600; margin-top: .25em; }
+  .kpi .delta { font-size: .85em; color: var(--good); margin-top: .15em; }
+  .kpi .delta.warn { color: var(--warn); }
+  .callout { border-left: 3px solid var(--accent); background: #161b22; padding: .8em 1em;
+             border-radius: 0 6px 6px 0; margin: 1em 0; }
+  .callout.warn { border-left-color: var(--warn); }
+  .callout.good { border-left-color: var(--good); }
+  .tag { display: inline-block; padding: .12em .55em; border-radius: 10px;
+         font-size: .78em; font-weight: 600; background: #1f6feb33; color: var(--accent); }
+  .tag.good { background: #3fb95033; color: var(--good); }
+  .tag.warn { background: #d2992233; color: var(--warn); }
+  .tag.bad { background: #f8514933; color: var(--bad); }
+  .meta { color: var(--muted); font-size: .9em; }
+</style>
+</head>
+<body>
+
+<h1>Session Handoff — 2026-05-11 night</h1>
+<p class="meta">Cold-start tax cut 94.5%. Gemini warm-cache dispatched. Dagger queued at #4. Companion brief: <a href="./2026-05-11-night-cold-start-and-warm-cache-brief.md"><code>2026-05-11-night-cold-start-and-warm-cache-brief.md</code></a>.</p>
+
+<h2>Headline numbers</h2>
+
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="label">Cold-start payload</div>
+    <div class="value">1,658 B</div>
+    <div class="delta">↓ from 30,072 B (−94.5%)</div>
+  </div>
+  <div class="kpi">
+    <div class="label">PRs merged this session</div>
+    <div class="value">1</div>
+    <div class="delta">#1886 hook trim</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Direct commits to main</div>
+    <div class="value">3</div>
+    <div class="delta">statusline + writer-prompt + (PR sq-merge)</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Issues filed</div>
+    <div class="value">4</div>
+    <div class="delta">#1883 (✅ closed), #1884, #1885, #1887</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Active dispatches</div>
+    <div class="value">1</div>
+    <div class="delta warn">codex/1887 — running</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Codex weekly burn</div>
+    <div class="value">~2%</div>
+    <div class="delta">2 dispatches; resets 01:07 May 12</div>
+  </div>
+</div>
+
+<h2>Story of the session</h2>
+
+<h3>1 — Statusline regression caught (carry-over from prior turn)</h3>
+<p>
+Previous session shipped <code>a275e8fe14</code> with the K-tokens statusline change but the user reported
+<code>[ctx: N%]</code> still rendering — the new format never appeared. Root cause: the project hook reads
+<code>.context_window.used_tokens</code> from the statusline-event JSON, but Claude Code 2.1.139 doesn't populate
+that field. The script silently degraded to bare percent.
+</p>
+<p>
+Fix shipped as <code>d899868e12</code>: three-tier degradation with <strong>transcript-JSONL parsing as Tier 1</strong>.
+<code>.transcript_path</code> is in the official statusline schema and the
+<code>.message.usage.{input_tokens, cache_read_input_tokens, cache_creation_input_tokens}</code> shape is the
+Anthropic API contract — both stable. Approach borrowed from the user's own <code>~/.claude/statusline.sh</code>
+(working since 2026-04-22). Verified with 5 synthetic JSONs covering all three tiers + no-data + zero-usage edges.
+</p>
+
+<h3>2 — The 30 KB cold-start tax</h3>
+<p>
+User flagged: "the curriculum maintainer startup is using way too much tokens for cold start" and
+"it disappoints me that you did not notice the important new features we could integrate our workflow.
+in kubedojo you spotted them."
+</p>
+<p>
+Two-part finding:
+</p>
+<ul>
+  <li>
+    <strong>v2.1.139 features I should have caught:</strong> <code>claude agents</code> view (replaces our
+    <code>/api/delegate/active</code> + <code>gh pr list</code> polling); native <code>/goal</code> (parallel to
+    Codex's <code>/goal</code> for the bakeoff plan); <code>claude plugin details &lt;name&gt;</code> per-session
+    token cost; <code>/context all</code> per-skill token estimates;
+    <code>/mcp Reconnect</code> picks up <code>.mcp.json</code> edits without service restart;
+    MCP stdio servers now receive <code>CLAUDE_PROJECT_DIR</code>; hook <code>args: string[]</code> exec form;
+    <code>continueOnBlock</code> for PostToolUse.
+  </li>
+  <li>
+    <strong>Cold-start measurement:</strong> SessionStart hook dumps <code>30,072 bytes</code> of
+    <code>current.md</code> verbatim into <code>hookSpecificOutput.additionalContext</code> on every spawn —
+    <em>completely defeating</em> the two-tier brief format epic <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1865">#1865</a> item #1
+    shipped two days prior. The brief (~4 KB) was supposed to be the cold-start entry point;
+    the hook was still loading the full body.
+  </li>
+</ul>
+
+<div class="callout warn">
+<strong>Cold-start tax breakdown (before fix):</strong>
+<ul style="margin: .5em 0 0 0;">
+<li>SessionStart hook output: <strong>30,072 B</strong></li>
+<li><code>claude_extensions/rules/*.md</code> (10 files auto-loaded): 47,210 B</li>
+<li><code>CLAUDE.md</code>: 7,814 B</li>
+<li><code>curriculum-maintainer.md</code> agent def: ~15,400 B</li>
+<li><code>memory/MEMORY.md</code>: ~12,000 B</li>
+<li><strong>Total ≈ 112,500 B ≈ 30 K tokens before user input.</strong></li>
+</ul>
+</div>
+
+<h3>3 — Codex consult on hook-trim design (kubedojo pattern)</h3>
+<p>
+User pointed at the kubedojo consultation transcript: <em>"in kubedojo you consulter goal with codex"</em>.
+The pattern: design rules/protocols with Codex tightening review before shipping. Applied to the hook patch.
+</p>
+<p>
+Codex consult (task <code>hook-trim-design</code>, msgs #588/#589) voted <strong>Option A</strong> (pointer-only,
+no inline frontmatter — keep hook as a pointer not a transport layer) with explicit fallback warnings on
+every degradation path. Then proposed an <strong>Option C</strong> I should adopt:
+</p>
+<blockquote style="border-left: 3px solid var(--accent); padding-left: 1em; color: var(--muted);">
+"Instead of regexing arbitrary markdown, make <code>current.md</code> expose a stable one-line marker like
+<code>Latest-Brief: docs/session-state/2026-05-11-foo-brief.md</code>. Then §13 parses that first, falls back to
+the existing regex for compatibility, then falls back to <code>head -200</code>. That gives you A's low cost
+with less future table-format fragility."
+</blockquote>
+<p>
+Option C was strictly better. Filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1883">#1883</a> under epic #1865, dispatched Codex, PR #1886 landed with all 4 fallback
+paths covered by a shell-level fixture test (<code>scripts/audit/test_session_setup_hook.sh</code>).
+</p>
+<p>
+<strong>Measured result:</strong> <code>30,072 B → 1,658 B = −94.5%</code>, compounding on every cold-start, every session, every
+sub-agent spawn forever.
+</p>
+
+<h3>4 — The CI-rebase dance + pre-existing main red</h3>
+<p>
+PR #1886's first CI run had <code>Test (pytest):fail</code>. Investigated:
+</p>
+<ul>
+  <li>Failure was in <code>tests/test_prompt_cot_tier1_scaffolding.py::test_writer_prompt_has_tier1_discipline</code>,
+      asserting <code>mcp__sources__search_literary</code> appears verbatim in the rendered writer prompt.</li>
+  <li>Confirmed via <code>gh run list --branch main</code> that main's last 3 CI runs all failed
+      — pre-existing red since <code>6b29b0e673</code>.</li>
+  <li>Caused by my own <code>28417cc3cb</code> writer-prompt rewrite (yesterday) — replaced
+      <code>search_literary + grep + reason</code> compose-pattern with <code>verify_quote</code> single-call,
+      but dropped the fully-qualified <code>mcp__sources__search_literary</code> string the test enforces.</li>
+</ul>
+<p>
+Per <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/main/memory/MEMORY.md">#M-0.5</a>
+no admin-bypass on blocking pytest, even though pre-existing. Fixed inline as <strong>1-LOC re-qualify</strong>
+(<code>search_literary</code> → <code>mcp__sources__search_literary</code> in
+<code>scripts/build/phases/linear-write.md:31</code>) — fits the ≤5-LOC CI-failure-I-caused inline scope.
+Shipped as <code>4637511615</code>, then rebased PR #1886 onto new main, force-pushed, re-ran CI,
+all real checks green, merged.
+</p>
+
+<h3>5 — delegate.py infra bug surfaced</h3>
+<p>
+First Codex dispatch for #1883 crashed at <code>scripts/delegate.py:1029</code>:
+</p>
+<pre><code>FileNotFoundError: [Errno 2] No such file or directory:
+  '.../batch_state/tasks/logs/codex/1883-hook-trim.stdout.log'</code></pre>
+<p>
+Worktree was already created before the crash. Root cause: <code>delegate.py</code> doesn't
+<code>mkdir -p</code> the agent-subtree log directory before opening the file handle. Previously
+dispatches stored flat (<code>logs/codex-1657-foo.stdout.log</code>); a recent refactor switched to
+subtree (<code>logs/codex/1657-foo.stdout.log</code>) but the directory was gitignored and never created.
+</p>
+<p>
+Workaround tonight: <code>mkdir -p batch_state/tasks/logs/{codex,claude,gemini}</code> + cleanup orphan worktree
++ retry dispatch. Filed <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1885">#1885</a> for the proper fix (one-line <code>parent.mkdir(parents=True, exist_ok=True)</code>).
+</p>
+
+<h3>6 — Warm-resume diagnostic from kubedojo, refined</h3>
+<p>
+User shared kubedojo's adapter-by-adapter diagnostic showing Claude has warm resume wired, Codex has
+<code>resume_policy="never"</code> by design, Gemini has stale "no <code>--resume</code>" comment that is
+factually wrong. Audited our adapters and found:
+</p>
+<table>
+<tr><th>Adapter</th><th>Registry policy</th><th>Adapter behavior</th><th>Reality</th></tr>
+<tr><td><code>claude</code></td><td><code>bridge_only</code></td><td>Honors session_id (L235-237)</td><td><span class="tag good">Works</span></td></tr>
+<tr><td><code>codex</code></td><td><code>never</code></td><td>Defensively drops session_id (L162-165)</td><td><span class="tag">Correct per worktree-isolation; bridge case is a separate question</span></td></tr>
+<tr><td><code>gemini</code></td><td><strong><code>bridge_only</code></strong></td><td><strong>Drops session_id, stale "no --resume" comment</strong></td><td><span class="tag bad">Bug — registry enables warm-cache, adapter doesn't honor</span></td></tr>
+</table>
+
+<p>
+The actual P0 turned out to be <strong>tighter</strong> than the kubedojo diagnostic: Tier-2 PR #1783
+(2026-05-07) set Gemini's registry policy to <code>bridge_only</code> but never updated the adapter. So
+bridge multi-turn always cold-starts despite policy saying it shouldn't.
+</p>
+
+<h3>7 — User-supplied deterministic CLI proof</h3>
+<p>
+I framed the Gemini adapter fix design with a Codex-consult question: "<code>gemini --resume</code> takes an index
+not a UUID per <code>gemini --help</code> — how should the adapter handle UUID-to-index mapping?" User responded
+with two pieces of evidence:
+</p>
+<ol>
+  <li>Gemini docs explicitly support UUID resume: <code>gemini --resume &lt;session-id&gt;</code>, <code>gemini --resume 1</code>, <code>gemini --resume latest</code> all work.</li>
+  <li>On session quit, Gemini CLI itself prints: <code>To resume this session: gemini --resume 2c8337b6-35da-415d-806d-91d10b5b1381</code> — the canonical pattern its own UI promotes.</li>
+</ol>
+
+<div class="callout good">
+<strong>#M-3 lesson reinforced:</strong> <code>gemini --help</code>'s example text only mentioned <code>latest</code>
+and index — incomplete. Don't take help-text-only as authoritative; verify via docs or actual behavior.
+The fix design collapsed from "needs UUID-to-index mapping with <code>--list-sessions</code> lookup" to
+"mirror Claude's pattern exactly." Codex consult skipped (would have been overhead for a now-mechanical change).
+</div>
+
+<h3>8 — #1887 dispatched, watcher armed</h3>
+<p>
+Issue <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1887">#1887</a>
+filed with full diagnostic, design (mirror <code>claude.py:153-237</code>), and 5 verifiable claims
+(#M-4: every claim a tool call). Codex dispatched on
+<code>.worktrees/dispatch/codex/1887-gemini-warm-cache/</code>. Watcher <code>b14m499rc</code>
+polls <code>/api/delegate/active</code> every 30s, exits when task transitions out of <code>running</code>,
+dumps terminal status + worktree commits + PR URL.
+</p>
+
+<h2>What shipped</h2>
+<table>
+<tr><th>Ref</th><th>Title</th><th>Source</th></tr>
+<tr><td><strong>PR #1886</strong></td><td>fix(hooks): parse Latest-Brief marker in SessionStart, save ~29KB/cold-start (#1883)</td><td>Codex dispatch → 1st CI rebase after main fix → merged. Issue #1883 closed.</td></tr>
+<tr><td><code>d899868e12</code></td><td>fix(statusline): parse transcript JSONL as primary path for token count</td><td>Orchestrator-inline. 3-tier degradation.</td></tr>
+<tr><td><code>4637511615</code></td><td>fix(prompts): re-qualify search_literary as mcp__sources__search_literary in linear-write.md</td><td>Orchestrator-inline ≤1-LOC CI-failure-I-caused fix.</td></tr>
+<tr><td><strong>Issue #1884</strong></td><td>Ship goal-driven-runs.md rule — decided in kubedojo consult, never landed; v2.1.139 makes urgent</td><td>Filed.</td></tr>
+<tr><td><strong>Issue #1885</strong></td><td>delegate.py crashes on missing batch_state/tasks/logs/{agent}/ subtree</td><td>Filed.</td></tr>
+<tr><td><strong>Issue #1887</strong></td><td>Gemini bridge warm-cache: adapter drops session_id despite resume_policy="bridge_only" (Tier-2 #1783 unfinished)</td><td>Filed; Codex dispatched.</td></tr>
+</table>
+
+<h2>Carry-over queue (user-stated priority, 2026-05-11 night)</h2>
+<ol>
+  <li>
+    <strong>#1887 Gemini bridge warm-cache</strong> — <span class="tag warn">⏳ in flight</span>
+    Codex dispatched on <code>codex/1887-gemini-warm-cache</code>. Watcher <code>b14m499rc</code> active.
+    Real token saver: every <code>ab discuss</code> round with Gemini currently cold-starts.
+  </li>
+  <li>
+    <strong><code>claude agents</code> view integration</strong> — v2.1.139 native consolidated session view.
+    Replaces our <code>/api/delegate/active</code> + <code>gh pr list</code> polling pattern.
+    Workflow.md rule update + likely cold-start orient enhancement.
+  </li>
+  <li>
+    <strong><code>goal-driven-runs.md</code> rule</strong> — issue #1884. Draft body from kubedojo Option B convergence
+    + v2.1.139 native <code>/goal</code> deltas → one Codex tightening review → ship inline.
+  </li>
+  <li>
+    <strong>Dagger local CI ⭐ NEW (user, 2026-05-11 night)</strong> — 4m17s pytest on GHA vs 0.19s local = 1300× tax.
+    Investigate Dagger (or <code>act</code>) for local replay of the GHA pipeline so we don't push-and-pray.
+    User-bumped from #6 to #4.
+  </li>
+  <li>
+    <strong>Codex <code>resume_policy="never"</code> bridge case</strong> — out of scope for #1887. Current
+    <code>never</code> is justified for dispatch (worktree isolation per <code>codex.py:10-23</code>) but
+    <code>bridge_only</code> may be warranted for <code>ab discuss</code> multi-turn. Separate design question.
+  </li>
+  <li>
+    <strong>#1885 delegate.py mkdir</strong> — tiny infra fix; mechanical dispatch-shape.
+  </li>
+</ol>
+
+<h2>Decisions encoded</h2>
+<ul>
+  <li><strong>Two-tier brief format is now activated end-to-end.</strong> Format spec from #1876 + hook wiring from #1886 = both halves live. Cold-start cost is now bounded by brief size (~4 KB).</li>
+  <li><strong><code>Latest-Brief: &lt;path&gt;</code> marker is the canonical anchor.</strong> <code>current.md</code> carries it; <code>workflow.md</code> mandates updates on every new handoff; hook parses it first with explicit loud-warning fallbacks.</li>
+  <li><strong>kubedojo consult pattern reinforced.</strong> Codex tightening review (msgs #588/#589) produced Option C, strictly better than my Option A. When designing new protocols, consult before shipping.</li>
+  <li><strong>Mirror-Claude pattern for Gemini adapter.</strong> User-supplied deterministic CLI evidence collapsed the design — no consult needed.</li>
+  <li><strong>#M0 inline-≤5-LOC scope re-affirmed.</strong> Three inline commits this session each fit the rule.</li>
+  <li><strong>#M-3 lesson reinforced.</strong> <code>gemini --help</code> summary was incomplete; verify CLI capabilities against docs or actual behavior, not help-text-only.</li>
+</ul>
+
+<h2>Cold-start orientation for next agent</h2>
+<ol>
+  <li>Read the <a href="./2026-05-11-night-cold-start-and-warm-cache-brief.md">brief</a> first. The new SessionStart hook will point you at it directly via the <code>Latest-Brief:</code> marker — no more 30 KB regurgitation.</li>
+  <li>
+    <strong>Check watcher <code>b14m499rc</code></strong> for #1887 Codex dispatch completion. If PR landed:
+    review (mirror-Claude-adapter test passes, X-Agent trailer present, in-scope files only, pytest green) and merge.
+    If Codex hit a snag (e.g. #1885 mkdir bug resurfacing), check stdout log + retry.
+  </li>
+  <li><strong>Then proceed in user-stated order:</strong> agents view → /goal rule → Dagger → Codex bridge resume → #1885.</li>
+  <li>
+    <strong>Codex weekly burn this session:</strong> ~2% (one dispatch on #1886, one running on #1887).
+    Codex weekly resets <strong>01:07 May 12</strong> — may already have reset if next session is late.
+  </li>
+  <li>
+    <strong>Inherited P0 from prior session</strong> (prompt-validation bakeoff on <code>a1/my-morning</code>) is still gated on Codex quota.
+    Now that this session burned only ~2%, the bakeoff is unblocked from a quota standpoint.
+  </li>
+</ol>
+
+<h2>Pending decisions (still PROPOSED — not blocking)</h2>
+<ul>
+  <li><code>docs/decisions/pending/2026-05-09-decision-graph-view.md</code> — channels.html UI toggle.</li>
+  <li><code>docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md</code> — agent bridge multi-surface identity.</li>
+  <li><code>docs/architecture/adr/adr-010-mcp-verification-phase3.md</code> — Phase 3 MCP verification design (PROPOSED on prior session).</li>
+</ul>
+
+<hr style="margin: 3em 0; border: 0; border-top: 1px solid #30363d;">
+<p class="meta">
+Format spec: <code>claude_extensions/rules/workflow.md</code> § "Two-tier handoffs".<br>
+Companion brief: <a href="./2026-05-11-night-cold-start-and-warm-cache-brief.md"><code>2026-05-11-night-cold-start-and-warm-cache-brief.md</code></a>
+</p>
+
+</body>
+</html>
