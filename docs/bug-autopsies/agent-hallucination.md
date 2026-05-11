@@ -32,6 +32,33 @@ Each entry below documents:
 
 **Date discovered:** 2026-05-05
 
+## Symptom
+
+Gemini, in `ab discuss` deliberation rounds on the gender of «собака», cited Антоненко-Давидович with a fabricated verbatim Ukrainian quote claiming feminine adjectival agreement is a Russianism. Reproduced **twice in one day** with the same fake quote (threads `482884ca054e` morning, `7c6e401053bb` afternoon). The hallucination would have shipped to the `linguistics` channel record as cross-agent-validated curriculum guidance had the round-1 short-circuit not been disabled in `872d8376b0` between the two threads.
+
+## Root cause
+
+Gemini's training-data prior conflates "Ukrainian gender ≠ Russian gender → Antonenko-Davydovych will have flagged it" into "AD flags feminine собака," and confidently generates a fake direct quote consistent with that prior. The actual academic position is the **opposite**: VESUM, СУМ-11, Грінченко 1907, Орфографічний, slovnyk.me (6 dictionaries) all codify собака as `двородовий іменник` (dual-gender) — masculine primary, feminine attested and pre-Soviet (Грінченко 1907 alone falsifies the Russianism theory because it predates Soviet language policy). The base-rate of this hallucination class is high enough to reproduce with the same fake quote hours apart.
+
+## Prevention
+
+1. **Round-1 short-circuit fix** (`872d8376b0`) — without this, morning thread would have committed `[AGREE]` consensus and the fabrication would have entered the channel record as "three-agent-consensus-validated." Currently merged + active.
+2. **Cross-agent verification at round 2** — Codex and Claude both independently run MCP queries and refuse to `[AGREE]` until retractions are on record. Behavioral pattern, not enforced by code; relies on each agent honoring #M-4.
+3. **Citation-provenance check** (issue #1683, OPEN) — bridge auto-runs verbatim citations against the corresponding MCP tool and blocks/annotates if the quote isn't in the source corpus. Strongest mechanical prevention; not yet shipped.
+4. **Pre-pinned known-fabrications list** in the linguistic channel context so any future agent sees this entry on every post.
+5. **Curriculum-side false-positive Russianism rule**: feminine собака is **NOT** a Russianism. Add to reviewer's "false-positive Russianism list."
+
+## Links
+
+- Issue: #1683 (citation-provenance check, OPEN)
+- Round-1 short-circuit fix: `872d8376b0`
+- Threads: `482884ca054e` (morning, AGREE-on-fabrication averted), `7c6e401053bb` (afternoon, Gemini conceded after Codex+Claude counter-evidence)
+- MCP corroboration: `mcp__sources__verify_lemma собака` (22 forms, both genders); `mcp__sources__search_grinchenko_1907 собака` (pre-Soviet dual-gender attestation)
+
+---
+
+## Narrative detail (preserved for context)
+
 **The fabrication.** Gemini, in `ab discuss` deliberation rounds on
 the gender of the noun «собака», cited Антоненко-Давидович «Як ми
 говоримо» as flagging feminine adjectival agreement on «собака» as a

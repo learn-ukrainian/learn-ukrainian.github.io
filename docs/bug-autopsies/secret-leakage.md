@@ -164,3 +164,14 @@ probes were the obvious next failure mode and weren't covered.
 - INDEX entry: `docs/bug-autopsies/INDEX.md` (2026-05-12)
 - MEMORY rule: `memory/MEMORY.md` #M-5 — needs generalization update to
   cover live-env probes (file-only wording was too narrow)
+
+---
+
+## Links
+
+- Tracking issue: #1896 (Secret-leak prevention follow-ups)
+- Prior incident reference: `docs/bug-autopsies/secret-leakage.md#2026-05-10`
+- Recurrence reference: `docs/bug-autopsies/secret-leakage.md#2026-05-12`
+- Fix commit (rule expansion): `e64f021fb5 docs(autopsy): 2026-05-12 DAGGER_CLOUD_TOKEN leak — extend #M-5 to live-env probes`
+- MEMORY rule: `memory/MEMORY.md` #M-5 (expanded 2026-05-12 to cover live-env probes — file-only wording was too narrow)
+- Critical rules: `claude_extensions/rules/critical-rules.md`
