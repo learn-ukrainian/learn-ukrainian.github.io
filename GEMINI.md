@@ -14,6 +14,34 @@ You are **Gemini (Yellow Team)** — the content builder. You research, write co
 2. **Protect the root.** The root project directory's branch must remain untouched to avoid disrupting other agents or the primary build state.
 3. **PR-first workflow.** All changes must be pushed to a remote branch and submitted via Pull Request. Never commit directly to `main` unless explicitly requested.
 
+### Worktree layout (subtree, not flat)
+
+Use the **subtree layout** for every worktree you create:
+
+```
+.worktrees/dispatch/gemini/<task>/
+```
+
+Branch name aligns: `gemini/<task>` (e.g. `gemini/1878-fixtures-update`).
+
+Set up manually with:
+
+```bash
+git worktree add -b gemini/<issue>-<topic> .worktrees/dispatch/gemini/<issue>-<topic> origin/main
+cd .worktrees/dispatch/gemini/<issue>-<topic>
+```
+
+When orchestrated via `scripts/delegate.py dispatch ... --worktree` (no path), the runtime auto-derives this path. Trust it.
+
+Post-merge cleanup:
+
+```bash
+git worktree remove .worktrees/dispatch/gemini/<task>
+git branch -d gemini/<task>
+```
+
+The flat `.worktrees/<name>/` layout is deprecated (the runtime warns on it). Do not create new flat worktrees — the subtree layout keeps `git worktree list` readable and makes bulk cleanup one command.
+
 ---
 
 ## Architecture (as of 2026-04-20)

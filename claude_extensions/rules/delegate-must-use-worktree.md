@@ -23,25 +23,47 @@ Codex ran `git checkout -b feature/gemini-fallback-ladder` inside the
 main checkout. Cleanup was awkward (user had running scripts, couldn't
 switch HEAD). The rule exists so this never happens again.
 
+## Layout: prefer the `dispatch/` subtree (new default)
+
+`scripts/delegate.py` supports two worktree layouts:
+
+| Layout | Path | How invoked |
+|---|---|---|
+| **Subtree (preferred)** | `.worktrees/dispatch/{agent}/{task}/` | bare `--worktree` (no path) — runtime auto-derives |
+| **Flat (deprecated, back-compat)** | `.worktrees/<task-name>` | `--worktree <explicit-path>` |
+
+Use the **subtree** layout for all new dispatches. The runtime prints a
+`⚠️ DEPRECATED flat worktree layout` warning on the flat form. The
+subtree layout has cleaner cleanup (`rm -rf .worktrees/dispatch/codex/`
+nukes all Codex leftovers at once) and aligns the branch name
+(`codex/1657p2-verify-quote`) with the path
+(`.worktrees/dispatch/codex/1657p2-verify-quote/`).
+
 ## MANDATORY in every dispatch brief
 
-Every Codex / Gemini dispatch prompt MUST include wording equivalent to:
+Every Codex / Gemini / Claude-headless dispatch prompt MUST include
+wording equivalent to:
 
 ```
 ## Worktree instructions (mandatory)
 
-Work in a git worktree at `.worktrees/<task-name>`. Do NOT create a
-feature branch in the main checkout. Concrete setup:
+Work in a git worktree under `.worktrees/dispatch/<agent>/<task>/`
+(auto-created by the runtime when you pass bare `--worktree`). Do NOT
+create a feature branch in the main checkout. Concrete dispatch:
 
-    git worktree add -b <task-branch-name> .worktrees/<task-name>
-    cd .worktrees/<task-name>
-    # do work, commit, push
+    .venv/bin/python scripts/delegate.py dispatch \
+        --agent codex \
+        --task-id <task-id> \
+        --mode danger \
+        --worktree \
+        --base origin/main \
+        --prompt-file brief.md
 
     # For dispatches that warrant peak Opus 4.7 reasoning:
-    #   .venv/bin/python scripts/delegate.py dispatch \
-    #       --agent claude --effort xhigh --model claude-opus-4-7 \
-    #       --task-id <task-name> --worktree .worktrees/<task-name> \
-    #       --mode danger --prompt-file brief.md
+    .venv/bin/python scripts/delegate.py dispatch \
+        --agent claude --model claude-opus-4-7 --effort xhigh \
+        --task-id <task-id> --mode danger --worktree \
+        --base origin/main --prompt-file brief.md
     # Accepted --effort levels: low | medium | high | xhigh | max
     # (Omit --effort to use the agent's own CLI/config default.)
 
@@ -49,16 +71,17 @@ The main checkout (wherever the user is working) stays untouched on
 `main`. After the PR merges, the worktree is cleaned up by the user
 or the next agent session:
 
-    git worktree remove .worktrees/<task-name>
-    git branch -d <task-branch-name>
+    git worktree remove .worktrees/dispatch/<agent>/<task>
+    git branch -d <agent>/<task>
 
 If the work truly cannot be done in a worktree (extremely rare —
 usually only repo-wide mass migrations), STOP and ask for approval
 before creating any branch.
 ```
 
-Use descriptive names: `codex-<issue-number>-<short-topic>`,
-`gemini-<issue-number>-<topic>`. Not generic names like `feature/*`.
+Use descriptive task-ids: `<agent>-<issue-number>-<short-topic>`
+(e.g. `codex-1877-verify-quote`). The runtime derives the branch name
+and worktree path from the task-id + agent.
 
 ## Post-merge cleanup
 
@@ -70,17 +93,23 @@ Check with:
 
     git worktree list
 
-Remove with:
+Remove with (subtree layout — new):
+
+    git worktree remove .worktrees/dispatch/<agent>/<task>
+    git branch -d <agent>/<task>
+
+Remove with (flat layout — back-compat for older worktrees):
 
     git worktree remove .worktrees/<name>
     git branch -d <branch>
 
 ## When YOU (not a delegated agent) need isolation
 
-Same rule — use a worktree. Don't branch in the main checkout.
+Same rule — use a worktree. Don't branch in the main checkout. Use the
+subtree layout:
 
-    git worktree add -b claude-<issue>-<topic> .worktrees/claude-<issue>-<topic>
-    cd .worktrees/claude-<issue>-<topic>
+    git worktree add -b claude/<issue>-<topic> .worktrees/dispatch/claude/<issue>-<topic>
+    cd .worktrees/dispatch/claude/<issue>-<topic>
 
 ## Enforcement
 

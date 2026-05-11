@@ -129,7 +129,45 @@ One PR = one concern. Do NOT:
 
 If you find something unrelated that needs fixing, create a separate issue.
 
-### 10. NEVER Use Container Paths
+### 10. ALWAYS Use the Worktree Subtree Layout
+
+When you create a worktree (whether the orchestrator set it up for you or you're acting directly), use the **subtree layout**:
+
+```
+.worktrees/dispatch/<agent>/<task>/
+```
+
+Concrete examples:
+- `.worktrees/dispatch/codex/1877-verify-quote/`
+- `.worktrees/dispatch/gemini/1878-fixtures-update/`
+- `.worktrees/dispatch/claude/1657-adr-010/`
+
+The branch name aligns: `<agent>/<task>` (e.g. `codex/1877-verify-quote`).
+
+**Why this matters:**
+- Cleaner cleanup — `rm -rf .worktrees/dispatch/codex/` nukes all your leftovers at once instead of grepping names.
+- Aligned branch + path makes `git worktree list` readable as the directory fills up.
+- `scripts/delegate.py` emits a `⚠️ DEPRECATED flat worktree layout` warning on the old `.worktrees/<name>/` form.
+
+**When the orchestrator dispatches you:** the runtime auto-derives the subtree path when invoked with bare `--worktree` (no path). Trust it.
+
+**When you set up a worktree yourself (no orchestrator):** use the subtree layout manually:
+
+```bash
+git worktree add -b codex/<issue>-<topic> .worktrees/dispatch/codex/<issue>-<topic> origin/main
+cd .worktrees/dispatch/codex/<issue>-<topic>
+```
+
+After the PR merges, clean up:
+
+```bash
+git worktree remove .worktrees/dispatch/<agent>/<task>
+git branch -d <agent>/<task>
+```
+
+The flat `.worktrees/<name>/` layout still works for back-compat but is being phased out. Do not create new flat worktrees.
+
+### 11. NEVER Use Container Paths
 
 This project runs **locally with pyenv**, NOT in Docker. Do not use:
 - `/app/curriculum/...` — use relative paths or real local paths
