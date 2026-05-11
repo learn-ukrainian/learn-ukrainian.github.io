@@ -1,262 +1,140 @@
-# Local CI Replay with `act`
+# Local CI Replay with Dagger
 
-> **TL;DR.** `scripts/local-ci.sh -W .github/workflows/ci.yml -j lint` runs
-> the exact GHA workflow file locally in Docker via [act][act]. Same
-> workflow file as production; no fork. First run pulls a ~1 GB runner
-> image; subsequent runs reuse the container with `--reuse` so
-> iteration drops to seconds for lightweight jobs.
+> **TL;DR.** `dagger call pytest --source=.` runs the full pytest suite in
+> a native arm64 container with a persistent pip cache. First run on
+> Apple Silicon: **3m15s** (vs ~4m17s on GHA, vs 7m45s with `act`).
+> Tracked under [#1891][issue-1891].
 >
-> Tracked under GH issue [#1891][issue-1891]. Decision history: we chose
-> `act` over Dagger after the orchestrator pushed back — Dagger requires
-> rewriting all pipelines as Python/Go/TS code (months of work), while
-> `act` replays the existing `.github/workflows/*.yml` unchanged.
+> History: we tried `act` (nektos/act) first and shipped it under #1892 +
+> #1893. Measured timings revealed act was **slower than GHA** on heavy
+> jobs (7m45s vs 4m17s) due to QEMU emulating amd64 on Apple Silicon
+> plus `actions/cache@v4` being a no-op. We pivoted to Dagger after the
+> user confirmed it worked well in another project — native arm64 wins
+> structurally. The act setup was removed in the same PR.
 
-[act]: https://github.com/nektos/act
 [issue-1891]: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1891
 
 ---
 
-## Why this exists
+## Why Dagger over act on Apple Silicon
 
-The `Test (pytest)` GHA job takes ~4m17s end-to-end (cold setup-python,
-fresh pip install of every requirement, full sources.db build). Locally
-in `.venv/`, pytest discovery is ~0.19s. The 1300× gap is the dev-loop
-tax we pay every time we have to debug something that only reproduces
-on a GHA runner — typically the gnarliest CI bugs.
+Three structural wins:
 
-`act` closes the gap by running the same workflow YAML inside a
-container that approximates the GHA runner. The first run is the
-investment (image pull + dep install), every subsequent run is fast.
+| Concern | act | Dagger |
+|---|---|---|
+| Architecture | amd64 emulated via QEMU on arm64 host (~2-3× slower for CPU-bound steps) | Native aarch64 — uses your CPU directly |
+| Caching | `actions/cache@v4` is a no-op; pip wheels re-download every cold run | Explicit `cache_volume` mounts — pip cache survives cold container restarts |
+| Runner image | `ghcr.io/catthehacker/ubuntu:act-latest` — missing rsync, no control over installed tools | You pin the base image and apt packages — `python:3.12.8-slim-bookworm + build-essential + python3-dev + zlib1g-dev` for us |
+
+These translate to: act first-run pytest at **7m45s with 7 failures**
+(4× rsync-missing + 3× perf budgets violated by emulation) versus
+Dagger first-run pytest at **3m15s with 4 failures** (3× claude-binary
+not in path, 1× borderline perf at 15.30s vs 15.0s budget).
 
 ## Setup (one-time)
 
 ```bash
-brew install act      # macOS host
+brew install dagger      # macOS host (or `curl -L https://dl.dagger.io/dagger/install.sh | sh`)
 ```
 
-You also need a running container daemon. The project assumes
-**OrbStack** — `scripts/local-ci.sh` auto-resolves the OrbStack socket
-at `~/.orbstack/run/docker.sock` and auto-starts the daemon if it's
-not running. Docker Desktop also works; set `DOCKER_HOST` manually
-(`unix:///var/run/docker.sock`) and skip the OrbStack auto-start logic
-or replace it in the wrapper.
+You also need a container daemon (Docker Desktop, OrbStack, or any
+BuildKit-compatible runtime). OrbStack is recommended on macOS — Dagger
+auto-detects it.
 
-The repo already contains:
+Verify:
 
-- **`.actrc`** — project defaults: Apple-Silicon arch pin
-  (`--container-architecture linux/amd64`), runner image
-  (`ghcr.io/catthehacker/ubuntu:act-latest`), `--rm`, `--reuse`.
-- **`.github/act-event-push.json`** — static fallback event payload
-  (used when git lookup fails inside the wrapper).
-- **`scripts/local-ci.sh`** — thin wrapper that:
-  1. starts OrbStack if needed,
-  2. exports `DOCKER_HOST` to the OrbStack socket,
-  3. templates a fresh push-event payload with real `before`/`after`
-     SHAs from `git rev-parse` so `dorny/paths-filter@v4` (the gating
-     action in `ci.yml::changes`) detects real changes,
-  4. forwards every other flag verbatim to `act`.
+```bash
+dagger version           # expect v0.20.x
+dagger functions         # lists the project's pipeline functions
+```
 
 ## Common commands
 
 ```bash
-# List discoverable jobs
-scripts/local-ci.sh -l
+# Lint (smoke test for the setup) — ~34s cold, ~10s warm
+dagger call lint --source=.
 
-# Validate a job without running it
-scripts/local-ci.sh -W .github/workflows/ci.yml -j lint --dryrun
+# Run the full pytest suite — first run ~3m15s, warm-cache runs faster
+dagger call pytest --source=.
 
-# Run one job
-scripts/local-ci.sh -W .github/workflows/ci.yml -j lint
-scripts/local-ci.sh -W .github/workflows/ci.yml -j test
-scripts/local-ci.sh -W .github/workflows/ci.yml -j frontend
+# Pass through pytest's -k filter
+dagger call pytest --source=. --keyword='not slow and not website'
 
-# Force a fresh container (no --reuse), useful when you need a true
-# cold-start replay of the GHA path
-scripts/local-ci.sh -W .github/workflows/ci.yml -j test --rm
+# Run with coverage (matches ci.yml's push-to-main coverage step)
+dagger call pytest --source=. --coverage=true
 ```
 
-## Measured timings (verified 2026-05-11)
+## Measured timings
 
-### `Lint (ruff)` — lightweight job
+### `pytest` job
 
 | Run | Description | Real time |
 |---|---|---|
-| 1 (cold) | Fresh image pull + first run | ~42s (failed on event payload — pre-wrapper-fix) |
-| 2 (image cached) | Image cached, container fresh | **64s** end-to-end |
-| 3 (`--reuse`) | Same job, container reused, deps already installed | **38s** |
+| 1 (build fail) | First attempt — wheel build error on `zlib-state` (missing gcc); proved Dagger's speed in failure mode | 1m19s to fail |
+| 2 (cold) | apt cache cold, pip cache cold, full install + test suite | **3m15s** total — 1m45s in pytest proper |
+| 3 (warm) | pip cache hits "already satisfied" path; apt and base image layer-cached | **2m23s** total — 2m05s in pytest proper |
 
-For comparison, the same `Lint (ruff)` job on GHA: ~25-35s plus queue
-wait. Local with `--reuse` is comparable to GHA wall-clock with zero
-queue wait.
+The warm-cache run saves ~52s vs cold (pip install drops to near-zero
+because wheels are already in the cache volume). Pytest itself is
+~roughly host-load-flaky between runs (1m45s ↔ 2m05s).
 
-### `Test (pytest)` — heavy job
+For comparison: GHA pytest is ~4m17s. act pytest was **7m45s** first
+run with no cache benefit on subsequent runs because act ignores
+`actions/cache@v4`. Net win: **Dagger warm is ~1.8× faster than GHA cold
+and ~3.2× faster than act**.
+
+### `lint` job (smoke test)
 
 | Run | Description | Real time |
 |---|---|---|
-| 1 (image cached, fresh container) | Full pip install + torch CPU wheel + pytest run | **7m45s** total — 4m41s in pytest proper |
+| 1 (cold) | Pull base image + apt + install ruff + run | **34s** |
 
-GHA equivalent: ~4m17s. **`act` is slower than GHA on this heavy job**
-because:
-- QEMU emulating amd64 on Apple Silicon adds ~2-3× CPU overhead for
-  CPU-bound steps (annotation, dictionary lookups, perf budgets).
-- `actions/cache@v4` is a no-op under `act`, so pip wheels and the
-  torch CPU wheel are downloaded fresh on every cold-container run.
+## Pipeline definition
 
-`--reuse` should narrow the gap dramatically on the 2nd+ run (pip
-"already satisfied" path) — pending follow-up measurement.
+The pipeline lives in `.dagger/src/learn_ukrainian_ci/main.py` and uses
+the Dagger Python SDK. Each `@function`-decorated method becomes a
+callable subcommand. Key design choices, all documented inline in the
+module:
 
-**Net value prop is NOT raw speed on heavy jobs.** It's:
-1. **No GHA queue wait** — push → push → push iteration on a CI fix.
-2. **Local debug access** — `docker exec` into the runner container,
-   inspect file state, drop into a shell mid-run.
-3. **CI-only failures reproduce locally** without polluting the PR
-   with debugging commits.
+- **Base image** pinned to `python:3.12.8-slim-bookworm` — matches
+  `.python-version` and `ci.yml`'s setup-python pin.
+- **apt deps**: `rsync git curl ca-certificates build-essential
+  python3-dev zlib1g-dev`. GHA's `ubuntu-latest` ships these by default;
+  slim does not.
+- **Torch CPU wheel** installed first with `--no-deps` from PyTorch's
+  CPU index (`https://download.pytorch.org/whl/cpu`) — matches
+  `ci.yml::test` lines 311-312.
+- **Persistent pip cache** via `dag.cache_volume("learn-ukrainian-pip")`
+  mounted at `/root/.cache/pip`. This survives across `dagger call`
+  invocations.
+- **Test selection** mirrors `ci.yml::test` exactly: same `-k` filter,
+  same `--ignore=` list, same fresh-process tests run separately.
 
-For lightweight jobs (`lint`, `lint-prompts`, schema-check), `act` is
-competitive with GHA wall-clock. For `Test (pytest)`, GHA wins on
-raw time but `act` wins on iteration latency.
+## Known failure modes under Dagger (first-run, 2026-05-12)
 
-## Known failure modes under act (verified 2026-05-11)
+Three categories, three different fixes:
 
-When the full pytest suite runs via `act` on Apple Silicon, **7 of
-7113 tests fail** — all explainable by the runner environment, not
-by real bugs:
+| Tests | Cause | Fix |
+|---|---|---|
+| 3× `test_agent_runtime_effort.py` | Tests instantiate `ClaudeAdapter`, which requires `npx`/`claude` binary on PATH. Slim container doesn't have Node.js. | Add `nodejs` to the apt install, OR `npm install -g @anthropic-ai/claude-code`. Tracked separately — these tests already skip cleanly on GHA via a different mechanism. |
+| 1× `test_annotation_speed` | Perf budget 15.0s — on this host runs at 15.30s natively. Same test under act (QEMU emulated) runs at 27s; under GHA at ~9-12s. | Either bump the budget to 20s, or skip under `LOCAL_CI_REPLAY=1` env. Borderline; flaky depending on host load. |
 
-### `rsync: command not found` (4 failures)
+## Lifting to another project
 
-`tests/test_deploy_script_idempotency.py` runs
-`scripts/deploy_prompts.sh` and asserts return code 0. The script
-uses `rsync` at line 205. `ghcr.io/catthehacker/ubuntu:act-latest`
-**does not ship rsync** — GHA's `ubuntu-latest` does.
+Copy `.dagger/` and `dagger.json` into the target project. Modify
+`.dagger/src/<module-name>/main.py`:
 
-Workarounds:
-- Switch to `ghcr.io/catthehacker/ubuntu:full-22.04` (~17 GB, ships
-  rsync among many other tools). Heavy first download but works.
-- Pre-install rsync via a custom `Dockerfile.act` (smaller image
-  delta).
-- Accept these 4 tests as `act`-incompatible and skip with
-  `--deselect=tests/test_deploy_script_idempotency.py`.
+1. Update `_PYTHON_IMAGE` to the target project's pin.
+2. Update apt-deps list for the target's wheel-build needs (run pytest
+   once and let the build errors tell you).
+3. Update `_TORCH_PIN` if the project uses different torch or no torch.
+4. Update `_IGNORED_TESTS` and `_FRESH_PROCESS_TESTS` to match the
+   target's `ci.yml::test`.
 
-### Perf-budget failures (3 failures)
+Then `dagger develop` regenerates the SDK runtime and `dagger functions`
+verifies the discovery.
 
-Tests with hardcoded wall-clock budgets calibrated for native
-amd64 fail under QEMU emulation:
-
-- `test_annotation_speed` — 27s vs 15s budget (~1.8×)
-- `test_playground_primary_endpoints_keep_health_fast` p95 — 1.72s vs 1.5s (~1.15×)
-- `test_endpoint_performance_under_budget` — 909ms vs 500ms (~1.8×)
-
-These pass on GHA. They fail under `act` purely because emulation is
-slower. Mitigation: skip perf tests when running under act —
-`-k "not perf and not speed and not budget"` or similar.
-
-## Recommended `act` invocation pattern for pytest
-
-To filter out the known failure modes above, run pytest jobs with:
-
-```bash
-scripts/local-ci.sh -W .github/workflows/ci.yml -j test
-# Then expect:
-#   - 6,966 pass
-#   - 7 fail (4 rsync-missing + 3 perf-budget) — IGNORE these locally
-#   - Real regressions: anything OUTSIDE those 7 known-act-failures
-```
-
-A cleaner long-term answer is to (a) install rsync in a custom act
-image and (b) tag the perf tests so they auto-skip under
-`ACT_LOCAL_REPLAY=1`. Tracked as follow-up to #1891.
-
-## Known gotchas
-
-### `dorny/paths-filter@v4` needs `repository.default_branch`
-
-`act` synthesizes a minimal event payload that omits
-`repository.default_branch`. The `changes` job in `ci.yml` uses
-`dorny/paths-filter@v4` to decide which downstream jobs run; without
-the field, the action errors out with:
-
-> Error: This action requires 'base' input to be configured or
-> 'repository.default_branch' to be set in the event payload
-
-The wrapper script handles this by templating a richer event payload
-on every invocation. If you call `act` directly, pass
-`--eventpath .github/act-event-push.json` or accept that gated jobs
-will fail their `needs:` step.
-
-### `before`/`after` SHAs must produce a real diff
-
-Path-filter compares files changed between `before` and `after`. If
-both are `0000...0000`, no files appear changed, and every job gated
-on `needs.changes.outputs.code == 'true'` skips its inner steps (the
-job itself still passes — that's how the production CI satisfies its
-required check on docs-only PRs). The wrapper sets `before = HEAD~1`
-and `after = HEAD` so the most recent commit's changes register.
-
-### `actions/cache@v4` is a no-op
-
-`act` does not implement GHA's hosted cache. The `cache: 'pip'`
-parameter on `actions/setup-python` quietly does nothing. Mitigation:
-
-- `--reuse` in `.actrc` keeps the same container across invocations,
-  so pip's local install survives between runs.
-- The first run still pays the full install cost; that's the
-  one-time investment.
-
-### Heavy native deps re-download every fresh-image run
-
-`requirements-lock.txt` includes `torch==2.11.0` (~600 MB CPU wheel),
-`pyarrow`, `lxml`, etc. With `--reuse`, the second run skips re-install
-because pip sees "already satisfied." Without `--reuse`, every run
-re-downloads everything. Stick with `--reuse` for iteration; pass
-`--rm` only when you specifically need a cold-start replay.
-
-### Apple Silicon emulation overhead
-
-We pin `--container-architecture linux/amd64` to match GHA runners.
-QEMU emulation on arm64 hosts makes CPU-heavy steps ~2-3× slower than
-they'd be on a native amd64 host. For pure I/O and pip install this is
-invisible; for pytest collection on a large test suite it adds 10-20s.
-
-### Gemini-Dispatch workflows don't replay locally
-
-`gemini-*.yml` workflows need `secrets.GEMINI_API_KEY` and OIDC tokens
-that don't exist on a local runner. Don't try to `act` them; their
-local equivalent is the regular `gemini` CLI or `ab ask-gemini`.
-
-## When NOT to use `act`
-
-- **You just want to run pytest on the actual code.** Use
-  `.venv/bin/python -m pytest tests/` — it's 0.19s for discovery,
-  seconds for the suite. `act` is for testing the GHA workflow
-  configuration itself, not the application code.
-- **You're debugging a Gemini-Dispatch (GHA-only) workflow.** Those
-  need GHA secrets `act` can't provide. Test by pushing a draft PR.
-- **You don't have Docker available** (corporate-locked laptop, etc).
-  Without a container daemon, `act` can't run anything.
-
-## Lifting this pattern to another project
-
-Per the design goal of #1891 (callable from any project):
-
-1. Copy `.actrc`, `scripts/local-ci.sh`, and
-   `.github/act-event-push.json` into the target project.
-2. Adjust `.actrc` runner images if the project uses non-Ubuntu
-   runners or specific Ubuntu versions.
-3. Adjust the static event JSON's `repository.full_name` and `owner`
-   to match the target project (the wrapper-templated version uses
-   them but the static fallback hardcodes ours).
-4. Replace the OrbStack-specific lines in `scripts/local-ci.sh` if
-   you're on Docker Desktop or another daemon — see the comment block
-   at the top of the wrapper.
-
-The repo-local install pattern (per-project `scripts/` wrapper) was
-chosen over a global tool because:
-
-- Each project's runner-image / arch / event-payload requirements
-  differ; baking them into `.actrc` keeps them versioned with the
-  project.
-- The wrapper code is short (~50 lines) and self-explanatory; no
-  install ceremony.
-- A global `~/.dotfiles`-style install would couple the user's setup
-  to one specific daemon (OrbStack), losing portability for
-  collaborators on Docker Desktop.
+The pipeline-as-code pattern is the value prop: same Dagger module runs
+identically on laptop + GHA (when we eventually add a Dagger GHA action)
++ any other Dagger-compatible runtime. No fork between local and
+production pipelines.
