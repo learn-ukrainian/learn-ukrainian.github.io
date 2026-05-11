@@ -10,9 +10,15 @@
 #   cwd-basename   basename(.workspace.current_dir), pwd fallback
 #   [wt:...]       basename(.workspace.git_worktree), omitted if not in a worktree
 #   (branch*)      git branch + `*` if dirty
-#   [ctx: N%]      .context_window.used_percentage — color-coded:
-#                    green <50, yellow 50–79, red 80+. Omitted until the
-#                    first API call populates the field.
+#   [ctx: UK/BK (N%)] context window — color-coded green<50, yellow 50-79,
+#                    red 80+. U=used Ktokens, B=budget Ktokens, N=percent.
+#                    Used tokens read from .context_window.used_tokens (or
+#                    .input_tokens / .tokens.used as fallbacks). Budget read
+#                    from .context_window.budget (or .max_tokens), else the
+#                    CLAUDE_CODE_AUTO_COMPACT_WINDOW env var, else 1000000.
+#                    Falls back to percent-only if token counts unavailable.
+#                    Omitted entirely until the first API call populates the
+#                    field.
 #   [effort: ...]  .effort.level — low/medium default, high/xhigh bold,
 #                    max red. Omitted for pre-2.1.119 clients.
 #   [think]        .thinking.enabled — emitted only when true. Omitted for
@@ -82,9 +88,19 @@ if git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   [ -n "$branch" ] && branch_seg="($branch$dirty)"
 fi
 
-# Context window %
+# Context window — UK/BK (N%) format with graceful degradation to percent-only.
+# Field-name fallbacks because the Claude Code statusline schema varies
+# between client versions (.context_window has shipped under several keys).
 ctx_seg=""
 ctx_pct=$(json_get '.context_window.used_percentage')
+ctx_used=$(json_get '.context_window.used_tokens')
+[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.input_tokens')
+[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.tokens.used')
+ctx_budget=$(json_get '.context_window.budget')
+[ -z "$ctx_budget" ] && ctx_budget=$(json_get '.context_window.max_tokens')
+[ -z "$ctx_budget" ] && ctx_budget=$(json_get '.context_window.total_tokens')
+[ -z "$ctx_budget" ] && ctx_budget="${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-1000000}"
+
 if [ -n "$ctx_pct" ]; then
   ctx_int=$(printf '%.0f' "$ctx_pct" 2>/dev/null) || ctx_int=""
   if [ -n "$ctx_int" ]; then
@@ -92,7 +108,16 @@ if [ -n "$ctx_pct" ]; then
     elif [ "$ctx_int" -ge 50 ]; then ctx_color="\033[33m"   # yellow
     else                             ctx_color="\033[32m"   # green
     fi
-    ctx_seg="${ctx_color}[ctx: ${ctx_int}%]\033[0m"
+    # If we have a numeric used_tokens count, render UK/BK (N%); else fall back to N%.
+    if [ -n "$ctx_used" ] && printf '%d' "$ctx_used" >/dev/null 2>&1 \
+       && [ -n "$ctx_budget" ] && printf '%d' "$ctx_budget" >/dev/null 2>&1; then
+      # Round to nearest thousand: (x + 500) / 1000.
+      ctx_used_k=$(( (ctx_used + 500) / 1000 ))
+      ctx_budget_k=$(( (ctx_budget + 500) / 1000 ))
+      ctx_seg="${ctx_color}[ctx: ${ctx_used_k}K/${ctx_budget_k}K (${ctx_int}%)]\033[0m"
+    else
+      ctx_seg="${ctx_color}[ctx: ${ctx_int}%]\033[0m"
+    fi
   fi
 fi
 
