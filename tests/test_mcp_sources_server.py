@@ -312,34 +312,46 @@ class TestVerifySourceAttributionHandler:
     """Test verify_source_attribution handler routing and verdicts."""
 
     def test_grinchenko_1907_discusses_koza(self, server_module):
-        result = _run(
-            server_module.handle_verify_source_attribution(
-                {"source": "grinchenko_1907", "claim": "коза"}
+        with patch(
+            "wiki.sources_db.search_grinchenko_1907",
+            return_value=[{"headword": "коза", "definition": "коза — свійська тварина"}],
+        ) as mock:
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "grinchenko_1907", "claim": "коза"}
+                )
             )
-        )
 
+        mock.assert_called_once_with("коза", 5)
         data = json.loads(result[0].text)
         assert data["discusses"] is True
         assert data["evidence_count"] >= 1
 
     def test_antonenko_fake_claim_returns_completeness_note(self, server_module):
-        result = _run(
-            server_module.handle_verify_source_attribution(
-                {"source": "antonenko_davydovych", "claim": "thisisdefinitelyfake999"}
+        with patch("wiki.sources_db.search_style_guide", return_value=[]) as mock:
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "antonenko_davydovych", "claim": "thisisdefinitelyfake999"}
+                )
             )
-        )
 
+        mock.assert_called_once_with("thisisdefinitelyfake999", 5)
         data = json.loads(result[0].text)
         assert data["discusses"] is False
         assert "completeness_note" in data
 
     def test_sum11_leninizm_discusses_with_sovietization_note(self, server_module):
-        result = _run(
-            server_module.handle_verify_source_attribution(
-                {"source": "sum11", "claim": "ленінізм"}
+        with patch(
+            "wiki.sources_db.search_definitions",
+            return_value=[{"headword": "ленінізм", "definition": "ленінізм — політичне вчення"}],
+        ) as mock:
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "sum11", "claim": "ленінізм"}
+                )
             )
-        )
 
+        mock.assert_called_once_with("ленінізм", 5)
         data = json.loads(result[0].text)
         assert data["discusses"] is True
         assert "sovietization_risk" in data["completeness_note"]
@@ -380,6 +392,20 @@ class TestVerifySourceAttributionHandler:
 
         mock.assert_called_once_with({"query": "тест", "mode": "search", "limit": 2})
         assert json.loads(result[0].text)["discusses"] is True
+
+    def test_wikipedia_route_failure_returns_completeness_note(self, server_module):
+        with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
+            mock.side_effect = RuntimeError("network down")
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "wikipedia", "claim": "тест", "limit": 2}
+                )
+            )
+
+        data = json.loads(result[0].text)
+        assert data["discusses"] is False
+        assert data["evidence_count"] == 0
+        assert data["completeness_note"] == "Wikipedia query failed: network down"
 
 
 class TestSearchSourcesHandler:

@@ -33,6 +33,8 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
+import requests
+
 # Add repo root and scripts/ to path so both scripts.* and legacy top-level
 # packages are importable.
 PROJECT_ROOT = Path(__file__).resolve().parents[2].parent
@@ -1126,6 +1128,10 @@ def _parse_wikipedia_search_hits(text: str) -> list[dict[str, Any]]:
     return hits
 
 
+def _looks_like_wikipedia_search_response(text: str) -> bool:
+    return text.startswith(("Wikipedia search:", "No Wikipedia results"))
+
+
 async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     source = str(args.get("source", ""))
     claim = str(args.get("claim", "")).strip()
@@ -1139,6 +1145,7 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
 
     from wiki import sources_db as sdb
 
+    completeness_note = None
     if source == "grinchenko_1907":
         hits = await asyncio.to_thread(sdb.search_grinchenko_1907, claim, limit)
     elif source == "esum":
@@ -1153,8 +1160,21 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     elif source == "heritage":
         hits = await asyncio.to_thread(sdb.search_heritage, claim, limit, include_live_slovnyk=True)
     elif source == "wikipedia":
-        wiki_result = await handle_query_wikipedia({"query": claim, "mode": "search", "limit": limit})
-        hits = _parse_wikipedia_search_hits(wiki_result[0].text if wiki_result else "")
+        try:
+            wiki_result = await handle_query_wikipedia({"query": claim, "mode": "search", "limit": limit})
+            wiki_text = wiki_result[0].text if wiki_result else ""
+            hits = _parse_wikipedia_search_hits(wiki_text)
+            if not hits and not _looks_like_wikipedia_search_response(wiki_text):
+                completeness_note = "Wikipedia returned unexpected response format"
+        except requests.RequestException as exc:
+            hits = []
+            completeness_note = f"Wikipedia query failed: {exc}"
+        except TimeoutError as exc:
+            hits = []
+            completeness_note = f"Wikipedia query failed: {exc}"
+        except Exception as exc:
+            hits = []
+            completeness_note = f"Wikipedia query failed: {exc}"
     else:
         hits = await asyncio.to_thread(sdb.search_style_guide, claim, limit)
 
@@ -1173,7 +1193,9 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
         "evidence_count": len(evidence),
         "evidence": evidence,
     }
-    if source in COMPLETENESS_NOTES:
+    if completeness_note:
+        payload["completeness_note"] = completeness_note
+    elif source in COMPLETENESS_NOTES:
         payload["completeness_note"] = COMPLETENESS_NOTES[source]
 
     return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
