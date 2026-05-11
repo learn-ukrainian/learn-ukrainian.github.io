@@ -905,6 +905,25 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
+    # Set up log files before provisioning a worktree. If this cheap
+    # filesystem setup fails, dispatch exits before leaving worktree/branch
+    # side effects behind.
+    log_dir = _TASKS_DIR / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    stdout_log = log_dir / f"{task_id}.stdout.log"
+    stderr_log = log_dir / f"{task_id}.stderr.log"
+    # task_id may contain "/" (for example "codex/1885-foo"), which makes
+    # the log path live under a per-agent subdir that log_dir.mkdir above
+    # does not cover.
+    stdout_log.parent.mkdir(parents=True, exist_ok=True)
+    stderr_log.parent.mkdir(parents=True, exist_ok=True)
+    # These file descriptors MUST outlive this function — Popen keeps
+    # them open for the child process. A context manager would close
+    # them the instant Popen returns, breaking the worker's output.
+    # SIM115 doesn't understand this case.
+    stdout_fd = open(stdout_log, "ab", buffering=0)  # noqa: SIM115
+    stderr_fd = open(stderr_log, "ab", buffering=0)  # noqa: SIM115
+
     worktree_path: Path | None = None
     worktree_branch: str | None = None
     worktree_telemetry: dict[str, Any] = {}
@@ -1018,17 +1037,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # Pipe the prompt via stdin so it doesn't hit argv length limits.
     # start_new_session=True detaches from our process group — the
     # worker survives our exit, which is what we want.
-    log_dir = _TASKS_DIR / "logs"
-    log_dir.mkdir(parents=True, exist_ok=True)
-    stdout_log = log_dir / f"{task_id}.stdout.log"
-    stderr_log = log_dir / f"{task_id}.stderr.log"
-    # These file descriptors MUST outlive this function — Popen keeps
-    # them open for the child process. A context manager would close
-    # them the instant Popen returns, breaking the worker's output.
-    # SIM115 doesn't understand this case.
-    stdout_fd = open(stdout_log, "ab", buffering=0)  # noqa: SIM115
-    stderr_fd = open(stderr_log, "ab", buffering=0)  # noqa: SIM115
-
     # Explicit env=os.environ.copy() — makes the inherited env
     # explicit rather than implicit. Callers that want to scrub
     # secrets from the worker's env can override this here.
