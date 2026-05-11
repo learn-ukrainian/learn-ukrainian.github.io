@@ -572,6 +572,43 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
     assert state["cli_version"] == "0.123.0"
 
 
+def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeypatch):
+    """task_id may include an agent prefix, e.g. codex/test-mkdir-1885."""
+    import argparse
+
+    class _FakeStdin:
+        def write(self, _data): pass
+        def close(self): pass
+
+    class _FakeProc:
+        pid = 12345
+        stdin = _FakeStdin()
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="codex/test-mkdir-1885",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+        effort=None,
+    )
+
+    assert not (tmp_tasks_dir / "logs" / "codex").exists()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    assert (tmp_tasks_dir / "logs" / "codex" / "test-mkdir-1885.stdout.log").exists()
+    assert (tmp_tasks_dir / "logs" / "codex" / "test-mkdir-1885.stderr.log").exists()
+
+
 def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
     """Regression (Codex 2026-04-10 audit): cmd_cancel must refuse to
     signal a PID whose task is already in a terminal state. The OS may
