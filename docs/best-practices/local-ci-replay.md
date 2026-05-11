@@ -75,7 +75,9 @@ scripts/local-ci.sh -W .github/workflows/ci.yml -j frontend
 scripts/local-ci.sh -W .github/workflows/ci.yml -j test --rm
 ```
 
-## Measured timings (`Lint (ruff)`)
+## Measured timings (verified 2026-05-11)
+
+### `Lint (ruff)` — lightweight job
 
 | Run | Description | Real time |
 |---|---|---|
@@ -85,11 +87,84 @@ scripts/local-ci.sh -W .github/workflows/ci.yml -j test --rm
 
 For comparison, the same `Lint (ruff)` job on GHA: ~25-35s plus queue
 wait. Local with `--reuse` is comparable to GHA wall-clock with zero
-queue wait, and the diff is closing for repeat-iteration scenarios.
+queue wait.
 
-The pytest job pays a much steeper first-run cost (torch CPU wheel
-~600 MB, full requirements-lock install) but should benefit much more
-from `--reuse` since pip cache survives across runs.
+### `Test (pytest)` — heavy job
+
+| Run | Description | Real time |
+|---|---|---|
+| 1 (image cached, fresh container) | Full pip install + torch CPU wheel + pytest run | **7m45s** total — 4m41s in pytest proper |
+
+GHA equivalent: ~4m17s. **`act` is slower than GHA on this heavy job**
+because:
+- QEMU emulating amd64 on Apple Silicon adds ~2-3× CPU overhead for
+  CPU-bound steps (annotation, dictionary lookups, perf budgets).
+- `actions/cache@v4` is a no-op under `act`, so pip wheels and the
+  torch CPU wheel are downloaded fresh on every cold-container run.
+
+`--reuse` should narrow the gap dramatically on the 2nd+ run (pip
+"already satisfied" path) — pending follow-up measurement.
+
+**Net value prop is NOT raw speed on heavy jobs.** It's:
+1. **No GHA queue wait** — push → push → push iteration on a CI fix.
+2. **Local debug access** — `docker exec` into the runner container,
+   inspect file state, drop into a shell mid-run.
+3. **CI-only failures reproduce locally** without polluting the PR
+   with debugging commits.
+
+For lightweight jobs (`lint`, `lint-prompts`, schema-check), `act` is
+competitive with GHA wall-clock. For `Test (pytest)`, GHA wins on
+raw time but `act` wins on iteration latency.
+
+## Known failure modes under act (verified 2026-05-11)
+
+When the full pytest suite runs via `act` on Apple Silicon, **7 of
+7113 tests fail** — all explainable by the runner environment, not
+by real bugs:
+
+### `rsync: command not found` (4 failures)
+
+`tests/test_deploy_script_idempotency.py` runs
+`scripts/deploy_prompts.sh` and asserts return code 0. The script
+uses `rsync` at line 205. `ghcr.io/catthehacker/ubuntu:act-latest`
+**does not ship rsync** — GHA's `ubuntu-latest` does.
+
+Workarounds:
+- Switch to `ghcr.io/catthehacker/ubuntu:full-22.04` (~17 GB, ships
+  rsync among many other tools). Heavy first download but works.
+- Pre-install rsync via a custom `Dockerfile.act` (smaller image
+  delta).
+- Accept these 4 tests as `act`-incompatible and skip with
+  `--deselect=tests/test_deploy_script_idempotency.py`.
+
+### Perf-budget failures (3 failures)
+
+Tests with hardcoded wall-clock budgets calibrated for native
+amd64 fail under QEMU emulation:
+
+- `test_annotation_speed` — 27s vs 15s budget (~1.8×)
+- `test_playground_primary_endpoints_keep_health_fast` p95 — 1.72s vs 1.5s (~1.15×)
+- `test_endpoint_performance_under_budget` — 909ms vs 500ms (~1.8×)
+
+These pass on GHA. They fail under `act` purely because emulation is
+slower. Mitigation: skip perf tests when running under act —
+`-k "not perf and not speed and not budget"` or similar.
+
+## Recommended `act` invocation pattern for pytest
+
+To filter out the known failure modes above, run pytest jobs with:
+
+```bash
+scripts/local-ci.sh -W .github/workflows/ci.yml -j test
+# Then expect:
+#   - 6,966 pass
+#   - 7 fail (4 rsync-missing + 3 perf-budget) — IGNORE these locally
+#   - Real regressions: anything OUTSIDE those 7 known-act-failures
+```
+
+A cleaner long-term answer is to (a) install rsync in a custom act
+image and (b) tag the perf tests so they auto-skip under
+`ACT_LOCAL_REPLAY=1`. Tracked as follow-up to #1891.
 
 ## Known gotchas
 
