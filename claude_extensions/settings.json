@@ -707,6 +707,16 @@
             "timeout": 30
           }
         ]
+      },
+      {
+        "matcher": "claude_extensions/**",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-deploy-claude-extensions.sh",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "StopFailure": [
