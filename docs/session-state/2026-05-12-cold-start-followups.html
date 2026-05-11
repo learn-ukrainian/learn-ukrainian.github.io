@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Session Handoff — 2026-05-12 late night — cold-start rule dedupe + act local CI</title>
+<title>Session Handoff — 2026-05-12 late night — cold-start rule dedupe + act→Dagger pivot</title>
 <style>
   :root {
     --bg: #0e1116; --fg: #e6e6e6; --muted: #9aa4af; --accent: #58a6ff;
@@ -46,7 +46,7 @@
 <body>
 
 <h1>Session Handoff — 2026-05-12 late night</h1>
-<p class="meta">Cold-start rule dedupe (~7.5 K tokens saved) · <code>act</code> local CI shipped + measured · Codex bridge resume queued at #1894. Companion brief: <a href="./2026-05-12-cold-start-followups-brief.md"><code>2026-05-12-cold-start-followups-brief.md</code></a>.</p>
+<p class="meta">Night shift. Cold-start rule dedupe (~7.5 K tokens saved) · <code>act</code> shipped, measured, deleted in favour of Dagger after data overruled the procedural pushback · Codex bridge resume queued at #1894. Companion brief: <a href="./2026-05-12-cold-start-followups-brief.md"><code>2026-05-12-cold-start-followups-brief.md</code></a>.</p>
 
 <h2>Headline numbers</h2>
 
@@ -63,34 +63,35 @@
   </div>
   <div class="kpi">
     <div class="label">PRs merged this session</div>
-    <div class="value">4</div>
-    <div class="delta">#1889 · #1890 · #1892 · #1893</div>
+    <div class="value">5</div>
+    <div class="delta">#1889 · #1890 · #1892 · #1893 · #1895</div>
   </div>
   <div class="kpi">
-    <div class="label">act lint --reuse</div>
-    <div class="value">38 s</div>
-    <div class="delta">vs ~30 s GHA + queue</div>
+    <div class="label">Dagger pytest (cold / warm)</div>
+    <div class="value">3m15s / 2m23s</div>
+    <div class="delta">faster than GHA (4m17s) and act (7m45s)</div>
   </div>
   <div class="kpi">
     <div class="label">act pytest first-run</div>
     <div class="value">7m45s</div>
-    <div class="delta warn">slower than GHA (4m17s)</div>
+    <div class="delta warn">deleted in #1895 — slower than GHA</div>
   </div>
   <div class="kpi">
     <div class="label">Main SHA</div>
-    <div class="value mono">e76c152f36</div>
+    <div class="value mono">a10524a983</div>
     <div class="delta">green</div>
   </div>
 </div>
 
 <h2>Session arc</h2>
 
-<p>Three threads intertwined over five hours:</p>
+<p>Four threads over the night shift:</p>
 
 <ol>
   <li><strong>The 65 K cold-start complaint.</strong> User opened with "65k cold start i did not see improvements" — a real callout. PR #1886 had only trimmed the SessionStart-hook block (30 KB → 1.6 KB); the larger slice (47.5 KB of <code>.claude/rules/</code> static autoload) was untouched and was being <em>duplicated</em> by the Monitor API that was supposed to <em>replace</em> it. Diagnosed, dispatched, rescued, merged → PR #1890.</li>
-  <li><strong>The "Dagger" pivot.</strong> User asked for Dagger urgently for local CI replay. Orchestrator pushed back — Dagger requires rewriting all pipelines as Python/Go/TS code (months of work) for a problem (4m17s GHA loop tax) better served by <code>act</code> (5 min setup, no pipeline rewrites). User accepted the pushback with "ok if act is better do act." Shipped #1892 + follow-up doc PR #1893.</li>
-  <li><strong>The Codex resume revelation.</strong> Near the end, user shared the <code>codex resume</code> CLI help. This directly maps to carry-over item #5: extend the Gemini-#1887 warm-cache pattern to Codex bridge invocations. Filed #1894 with the design; dispatch deferred to morning since we'd already shipped four PRs and were past midnight CET.</li>
+  <li><strong>The "Dagger urgent" pushback → act → measurement → re-pivot to Dagger.</strong> User asked for Dagger urgently. Orchestrator pushed back — Dagger requires pipeline rewrites (months); <code>act</code> replays existing YAML in 5 min setup. User accepted: "ok if act is better do act." Shipped act in #1892 + doc #1893. Then measurement landed: pytest 7m45s on act vs 4m17s on GHA, with 7 environmental failures (rsync missing, QEMU perf budgets). User re-pivoted: "i think we have to try dagger then, i used it in the kaizen project and worked fine." Shipped Dagger in #1895 — 3m15s cold / 2m23s warm, faster than both. act setup deleted in the same PR.</li>
+  <li><strong>Secret leak #M-5 recurrence.</strong> While probing for the Dagger Cloud token, an <code>env | grep -i DAGGER | grep -v -i secret</code> printed <code>DAGGER_CLOUD_TOKEN</code> verbatim. The substring-name filter only catches lines literally containing "secret"; real token vars rarely do. Second leak in 6 weeks. #M-5 expanded to cover live-env probes (was file-only before). User said the token was probably expired and they don't use Dagger Cloud, so no rotation — but the lesson is now properly encoded.</li>
+  <li><strong>The Codex resume revelation.</strong> Near the end, user shared the <code>codex resume</code> CLI help. This directly maps to carry-over item #5: extend the Gemini-#1887 warm-cache pattern to Codex bridge invocations. Filed #1894 with the design; dispatch deferred to morning since we'd shipped five PRs and were well past midnight CET.</li>
 </ol>
 
 <h2>What shipped</h2>
@@ -108,19 +109,29 @@
     <td>Codex dispatch died silently without committing; orchestrator rescued the uncommitted worktree work. Closed #1888. <strong>−30 KB / ~7.5 K tokens off cold-start</strong>, verified.</td>
   </tr>
   <tr>
-    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1892">PR #1892</a></td>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1892">PR #1892</a> <span class="tag warn">superseded</span></td>
     <td><code>feat(local-ci): act-based local CI replay</code></td>
-    <td>Orchestrator-inline. Added <code>.actrc</code>, <code>scripts/local-ci.sh</code>, event JSON fallback, docs.</td>
+    <td>Orchestrator-inline. Added <code>.actrc</code>, <code>scripts/local-ci.sh</code>, event JSON fallback, docs. Setup deleted later in #1895 after Dagger pivot.</td>
   </tr>
   <tr>
-    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1893">PR #1893</a></td>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1893">PR #1893</a> <span class="tag warn">superseded</span></td>
     <td><code>docs(local-ci): pytest verification — real timings + known act failure modes</code></td>
-    <td>Follow-up after pytest run in background revealed environmental failures.</td>
+    <td>Follow-up after pytest run in background revealed environmental failures. Doc rewritten for Dagger in #1895.</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1895">PR #1895</a> <span class="tag good">pivot</span></td>
+    <td><code>feat(local-ci): switch from act to Dagger — native arm64 + cache control</code></td>
+    <td>Orchestrator-inline. Added <code>.dagger/</code> module (Python SDK) with <code>pytest</code> + <code>lint</code> functions; removed all act artifacts; rewrote the doc. Dagger pytest <strong>3m15s cold / 2m23s warm</strong> — faster than GHA AND act.</td>
+  </tr>
+  <tr>
+    <td>Direct commit <code>e64f021fb5</code></td>
+    <td><code>docs(autopsy): 2026-05-12 DAGGER_CLOUD_TOKEN leak — extend #M-5 to live-env probes</code></td>
+    <td>Recurrence of the 2026-05-10 lesson. Generalizes the rule to cover live-env probes, not just file grep.</td>
   </tr>
   <tr>
     <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1894">Issue #1894</a></td>
     <td>Codex bridge warm-cache (mirror Gemini #1887)</td>
-    <td>Design captured. Dispatch deferred — clock past midnight CET; would be the 5th in-flight item before handoff.</td>
+    <td>Design captured. Dispatch deferred — would be the 6th in-flight item before handoff.</td>
   </tr>
 </table>
 
@@ -134,52 +145,42 @@
   <code>/api/rules?format=markdown</code> already served some of this content (22.3 KB, 3 of 6 unscoped files) but the Claude Code harness was reading the source files <em>and</em> the API was serving them in parallel. The fix: add the 3 missing files to <code>RULE_SOURCES</code>, drop a tiny stub into <code>.claude/rules/_load-via-api.md</code> pointing at the API, and skip the 6 unscoped files from the <code>.claude/</code> rsync target only (Codex's <code>.codex/rules/</code> and Gemini's <code>.gemini/rules/</code> still get them — those agents' cold-start budgets aren't the Anthropic-quota pressure point).
 </div>
 
-<h3>act is slower than GHA on heavy jobs, faster on iteration</h3>
+<h3>act lost to Dagger after the data came in</h3>
 
 <div class="callout warn">
-  First-run pytest under act: <strong>7m45s</strong> end-to-end, 4m41s in pytest proper. Same job on GHA: <strong>~4m17s</strong>. act loses on raw wall-clock for two reasons:
+  <strong>First read (procedural):</strong> Dagger is a bigger upfront cost (pipeline rewrites in Python) than act (which replays existing YAML in 5 min setup). For the named pain (4m17s GHA loop), act looked like the right answer.
+  <br><br>
+  <strong>The data overruled.</strong> act's measured pytest cost was 7m45s — slower than GHA's 4m17s. Two structural reasons:
   <ul>
     <li>QEMU emulating amd64 on Apple Silicon adds ~2-3× CPU overhead for CPU-bound steps.</li>
-    <li><code>actions/cache@v4</code> is a no-op under act, so pip wheels (including the ~600 MB torch CPU wheel) re-download on every cold-container run.</li>
+    <li><code>actions/cache@v4</code> is a no-op under act, so pip wheels (~600 MB torch CPU wheel included) re-download on every cold-container run.</li>
   </ul>
-  The real value prop, now documented in <code>docs/best-practices/local-ci-replay.md</code>:
-  <ol>
-    <li>No GHA queue wait (push → push → push iteration on a CI fix).</li>
-    <li>Local debug access — <code>docker exec</code> into the runner, inspect file state, drop into a shell mid-run.</li>
-    <li>CI-only failures reproduce locally without polluting the PR with debugging commits.</li>
-  </ol>
-  For lightweight jobs (lint, prompt-lint, schema-check), act with <code>--reuse</code> is competitive with GHA wall-clock. For pytest, GHA wins on time but act wins on latency.
+  Plus 7 environmental failures (4× rsync missing in the catthehacker image; 3× perf budgets violated under emulation).
+  <br><br>
+  <strong>Dagger trade differently:</strong> native aarch64 (no QEMU), explicit <code>cache_volume</code> mounts (pip survives across calls), pinned base image (you control what's installed — no missing rsync). First-run pytest <strong>3m15s</strong>, warm-cache <strong>2m23s</strong>. Faster than both GHA and act. 4 failures, three of which are missing <code>npx</code>/<code>claude</code> binary (fixable: add Node.js to the runner) and one borderline perf budget (15.30s vs 15s).
+  <br><br>
+  <strong>Lesson:</strong> the procedural pushback was correct given the cost difference; the data overruled. Both pushback and pivot were right at the time they happened. Net: act setup deleted in #1895; doc rewritten for Dagger.
 </div>
 
-<h2>Known failure modes under act</h2>
+<h2>Known failure modes (Dagger, post-pivot)</h2>
 
-<p>When the full pytest suite runs via act on this host (Apple Silicon, OrbStack daemon), <strong>7 of 7113 tests fail</strong> — all environmental, not real bugs:</p>
+<p>Dagger pytest passes 6969/6973 tests. Four failures, three different fixes — all environmental, not real bugs:</p>
 
 <table>
   <tr><th>Category</th><th>Tests</th><th>Reason</th></tr>
   <tr>
     <td><span class="tag bad">tooling</span></td>
-    <td>4× <code>test_deploy_script_idempotency.py</code></td>
-    <td><code>rsync: command not found</code> — <code>ghcr.io/catthehacker/ubuntu:act-latest</code> doesn't ship rsync. GHA's <code>ubuntu-latest</code> does.</td>
+    <td>3× <code>test_agent_runtime_effort.py</code></td>
+    <td>Tests instantiate <code>ClaudeAdapter</code> which requires <code>npx</code>/<code>claude</code> on PATH. Slim-bookworm doesn't have Node.js. Fix: add <code>nodejs</code> to the apt install, OR <code>npm install -g @anthropic-ai/claude-code</code>.</td>
   </tr>
   <tr>
     <td><span class="tag warn">perf</span></td>
-    <td><code>test_annotation_speed</code></td>
-    <td>27 s under emulation, budget 15 s.</td>
-  </tr>
-  <tr>
-    <td><span class="tag warn">perf</span></td>
-    <td><code>test_playground_primary_endpoints_keep_health_fast</code></td>
-    <td>p95 1.72 s under emulation, budget 1.5 s.</td>
-  </tr>
-  <tr>
-    <td><span class="tag warn">perf</span></td>
-    <td><code>test_endpoint_performance_under_budget</code></td>
-    <td>909 ms under emulation, budget 500 ms.</td>
+    <td>1× <code>test_annotation_speed</code></td>
+    <td>15.30s vs 15.0s budget. On act under QEMU this was 27s. On GHA it runs ~9-12s. Native arm64 hits the budget — flaky on host load. Fix: bump budget to 20s or skip under <code>LOCAL_CI_REPLAY=1</code>.</td>
   </tr>
 </table>
 
-<p>Long-term fix tracked as follow-up to #1891: install rsync in a custom act image; tag perf tests so they auto-skip under <code>ACT_LOCAL_REPLAY=1</code>.</p>
+<p>Tracked as follow-ups to #1891.</p>
 
 <h2>The Codex dispatch rescue</h2>
 
@@ -217,13 +218,8 @@
   </tr>
   <tr>
     <td>5</td>
-    <td>act follow-ups (rsync in image · perf-test auto-skip)</td>
-    <td>📋 New, opened by tonight's pytest run</td>
-  </tr>
-  <tr>
-    <td>6</td>
-    <td>Dagger</td>
-    <td>📋 De-prioritized; revisit only if act hits a real limit</td>
+    <td>Dagger follow-ups (Node.js in runner image · perf-budget bump · Dagger GHA action)</td>
+    <td>📋 Three small wins: add nodejs to apt for <code>test_agent_runtime_effort.py</code>; bump <code>test_annotation_speed</code> budget 15s→20s or env-gate; eventually use the Dagger GHA action so the same <code>.dagger/</code> module runs on laptop + GHA</td>
   </tr>
 </table>
 
@@ -233,8 +229,9 @@
   <li><strong>Read the brief first</strong> — <code>2026-05-12-cold-start-followups-brief.md</code>. SessionStart hook will point you there via the <code>Latest-Brief:</code> marker.</li>
   <li><strong>Verify the cold-start win.</strong> Run <code>wc -c .claude/rules/*.md</code> on a fresh checkout after <code>npm run claude:deploy</code>. Expected total: ~17.4 KB. If you see 47.5 KB, deploy hasn't run yet on your checkout.</li>
   <li><strong>Next P0 is #1894 dispatch.</strong> Brief shape: mirror the #1888 dispatch brief (tool-grounded verification block, pre-submit checklist, explicit step-8 PR creation — #1888 forgot to <code>gh pr create</code>; orchestrator filed it manually). Core code change is small: registry policy <code>never</code> → <code>bridge_only</code> on the bridge code path; dispatch path still ignores <code>session_id</code> entirely (worktree-isolation is non-negotiable for dispatch). Read <code>scripts/agent_runtime/adapters/codex.py:1-30</code> first for the rationale.</li>
-  <li><strong>act tooling is shipped.</strong> <code>scripts/local-ci.sh -W .github/workflows/ci.yml -j lint</code> works. <code>--reuse</code> drops second-run lint to 38 s. Pytest first-run is 7m45s. Ignore the 7 known-act-failures listed in the doc.</li>
+  <li><strong>Dagger tooling is shipped.</strong> <code>dagger call pytest --source=.</code> runs the full suite natively (3m15s cold / 2m23s warm). <code>dagger call lint --source=.</code> for the smoke test. See <code>docs/best-practices/local-ci-replay.md</code>. act was removed in #1895; reference the act setup via git history if needed.</li>
   <li><strong>Worktrees:</strong> 0 open. All session worktrees cleaned up post-merge.</li>
+  <li><strong>Watch your sanitization.</strong> Two secret-leak incidents in 6 weeks (2026-05-10 GEMINI_API_KEY, 2026-05-12 DAGGER_CLOUD_TOKEN). The #M-5 rule now explicitly covers live-env probes; <code>grep -v -i secret</code> filters are safety theater. Use <code>cut -d= -f1</code> (keys only) or <code>[ -n "${X:-}" ]</code> when checking if an env var is set.</li>
 </ol>
 
 <p class="meta">Format spec: <code>claude_extensions/rules/workflow.md</code> § "Two-tier handoffs". HTML is the ai → human read; the brief is the ai → ai read.</p>
