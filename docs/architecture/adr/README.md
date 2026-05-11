@@ -30,6 +30,7 @@ The threshold for writing an ADR: **would a new engineer need to know this to un
 | [ADR-007](adr-007-no-hard-grade-filter-for-cefr-retrieval.md) | No hard grade filter for CEFR-track retrieval | Accepted |
 | [ADR-008](adr-008-uk-native-track-destination.md) | Draft — UK-Native Track Destination & Naming | DRAFT — awaiting Krisztian decision 2026-04-21 |
 | [ADR-009](adr-009-dispatch-timeout-unification-and-liveness.md) | Dispatch `hard_timeout` is a leak guard, not a productivity heuristic | Accepted |
+| [ADR-010](adr-010-mcp-verification-phase3.md) | MCP verification layer — Phase 3 architectural redesign | PROPOSED |
 <!-- ADR-INDEX-END -->
 
 ## Template
