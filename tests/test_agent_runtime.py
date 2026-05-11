@@ -2230,8 +2230,7 @@ def test_gemini_adapter_ignores_unknown_tool_config_keys(tmp_path):
     assert "another_future_field" not in cmd_str
 
 
-def test_gemini_adapter_ignores_session_id(tmp_path):
-    """Gemini CLI has no --resume equivalent; session_id must be silently dropped."""
+def test_gemini_adapter_stateless_dispatch_omits_session_flags(tmp_path):
     adapter = GeminiAdapter()
     plan = adapter.build_invocation(
         prompt="hello",
@@ -2239,11 +2238,45 @@ def test_gemini_adapter_ignores_session_id(tmp_path):
         cwd=tmp_path,
         model=None,
         task_id=None,
-        session_id="some-uuid",
+        session_id=None,
         tool_config=None,
     )
     assert "--resume" not in plan.cmd
-    assert "some-uuid" not in " ".join(plan.cmd)
+    assert "--session-id" not in plan.cmd
+
+
+def test_gemini_adapter_new_named_session(tmp_path):
+    adapter = GeminiAdapter()
+    session_id = "2c8337b6-35da-415d-806d-91d10b5b1381"
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id=session_id,
+        tool_config={"is_new_session": True},
+    )
+    assert "--session-id" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--session-id") + 1] == session_id
+    assert "--resume" not in plan.cmd
+
+
+def test_gemini_adapter_resume_existing_session(tmp_path):
+    adapter = GeminiAdapter()
+    session_id = "2c8337b6-35da-415d-806d-91d10b5b1381"
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id=session_id,
+        tool_config=None,
+    )
+    assert "--resume" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--resume") + 1] == session_id
+    assert "--session-id" not in plan.cmd
 
 
 def test_gemini_parse_response_success():
@@ -2259,6 +2292,22 @@ def test_gemini_parse_response_success():
     assert result.rate_limited is False
     assert result.session_id is None
     assert result.tokens is None
+
+
+def test_gemini_parse_response_extracts_session_uuid_from_resume_hint():
+    adapter = GeminiAdapter()
+    session_id = "2c8337b6-35da-415d-806d-91d10b5b1381"
+    result = adapter.parse_response(
+        stdout=(
+            "Done.\n\n"
+            f"To resume this session: gemini --resume {session_id}\n"
+        ),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.session_id == session_id
 
 
 def test_gemini_parse_response_rate_limit_resource_exhausted():
