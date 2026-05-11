@@ -11,8 +11,23 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 PROJECT_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
-DRIFT_TARGET = Path(".claude/rules/critical-rules.md")
+DRIFT_TARGET = Path(".claude/rules/pipeline.md")
 CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
+UNSCOPED_RULE_FILES = (
+    "critical-rules.md",
+    "non-negotiable-rules.md",
+    "workflow.md",
+    "delegate-must-use-worktree.md",
+    "cli-help-standard.md",
+    "model-assignment.md",
+)
+CLAUDE_RULE_FILES = (
+    "_load-via-api.md",
+    "activity-yaml.md",
+    "mcp-sources-and-dictionaries.md",
+    "pipeline.md",
+    "ukrainian-linguistics.md",
+)
 
 
 def _copy_repo_subset(target: Path) -> None:
@@ -84,6 +99,15 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         f"stdout: {check_result.stdout}\nstderr: {check_result.stderr}"
     )
     assert (repo / CODEX_HOOK_TARGET).exists()
+    deployed_claude_rules = sorted(
+        path.name for path in (repo / ".claude" / "rules").glob("*.md")
+    )
+    assert deployed_claude_rules == sorted(CLAUDE_RULE_FILES)
+    for filename in UNSCOPED_RULE_FILES:
+        assert not (repo / ".claude" / "rules" / filename).exists()
+        assert (repo / ".agent" / "rules" / filename).exists()
+        assert (repo / ".gemini" / "rules" / filename).exists()
+        assert (repo / ".codex" / "rules" / filename).exists()
 
     codex_hooks_diff = _run_command(
         repo,
@@ -93,6 +117,13 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         "Codex hooks drift after fresh deploy:\n"
         f"stdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
     )
+
+
+def test_claude_rule_exclusion_list_covers_unscoped_files() -> None:
+    """The Claude-only exclusion list must cover every always-load rule."""
+    script = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
+    for filename in UNSCOPED_RULE_FILES:
+        assert f'"rules/{filename}"' in script
 
 
 def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
@@ -147,4 +178,4 @@ def test_drift_is_caught(tmp_path: Path) -> None:
     combined_output = f"{check_result.stdout}\n{check_result.stderr}"
     assert check_result.returncode != 0
     assert "Deploy-script drift between claude_extensions and .claude" in combined_output
-    assert "critical-rules.md" in combined_output
+    assert "pipeline.md" in combined_output

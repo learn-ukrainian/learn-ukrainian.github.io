@@ -7,11 +7,11 @@
 Use the Monitor API instead of reading files. One-shot bootstrap:
 
 ```python
-# Python one-liner equivalent — see scripts/monitor_client.py
+  # Python one-liner equivalent — see scripts/monitor_client.py
 from ai_agent_bridge.monitor_client import MonitorClient
 boot = MonitorClient().bootstrap()
-# boot["rules"].body    — condensed rules markdown
-# boot["session"].body  — condensed session summary
+  # boot["rules"].body    — condensed rules markdown
+  # boot["session"].body  — condensed session summary
 ```
 
 Shell equivalent:
@@ -29,6 +29,11 @@ curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 the source of truth the endpoints above serve. Reading them separately
 costs 5+ tool calls and ignores the hash-based cache. If an endpoint
 is unreachable (API server down), THEN fall back to files.
+
+For Claude specifically, `.claude/rules/` now carries only a small API
+pointer plus path-scoped rules. The canonical always-load rule set for
+Claude is `/api/rules?format=markdown`; use the source files directly
+only as the offline fallback above.
 
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
@@ -173,19 +178,19 @@ those.
 
 **Quick reference**:
 ```bash
-# List / inspect
+  # List / inspect
 ab channel list
 ab channel info pipeline
 ab channel tail reviews -n 20
 ab channel tail reviews --thread THREAD_ID
 
-# Post (short form — single recipient)
+  # Post (short form — single recipient)
 ab p reviews gemini "quick question about module X"
 
-# Post (long form — multi-recipient, threading, parent/corr ids)
+  # Post (long form — multi-recipient, threading, parent/corr ids)
 ab post reviews "Review of #NNN" --to gemini,codex --parent MSG_ID
 
-# Multi-agent bounded discussion
+  # Multi-agent bounded discussion
 ab discuss architecture "Should we extract the V6 god object?" \
     --with claude,gemini,codex --max-rounds 2
 ```

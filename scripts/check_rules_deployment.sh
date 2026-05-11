@@ -51,10 +51,21 @@ drift=0
 
 # These pairs and orphan exclusions must stay in lock-step with the
 # rsync calls and ORPHAN_PATHS_* declarations in scripts/deploy_prompts.sh.
-check_pair "claude_extensions" ".claude" "scheduled_tasks.lock" "worktrees" || drift=1
+check_pair \
+    "claude_extensions" \
+    ".claude" \
+    "scheduled_tasks.lock" \
+    "worktrees" \
+    "rules/critical-rules.md" \
+    "rules/non-negotiable-rules.md" \
+    "rules/workflow.md" \
+    "rules/delegate-must-use-worktree.md" \
+    "rules/cli-help-standard.md" \
+    "rules/model-assignment.md" || drift=1
 check_pair "claude_extensions" ".agent" "wake" "cache" || drift=1
 check_pair "claude_extensions" ".codex" "agents/curriculum-maintainer.toml" "config.toml" "hooks.json" || drift=1
 check_pair "claude_extensions/skills" ".agents/skills" || drift=1
-check_pair "gemini_extensions" ".gemini" "docs/" || drift=1
+check_pair "gemini_extensions" ".gemini" "docs/" "rules/" || drift=1
+check_pair "claude_extensions/rules" ".gemini/rules" || drift=1
 
 exit "$drift"
