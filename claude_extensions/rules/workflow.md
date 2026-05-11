@@ -33,6 +33,62 @@ is unreachable (API server down), THEN fall back to files.
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
 
+## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
+
+Every new session handoff ships as a **PAIR**:
+
+- **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start entry point. YAML frontmatter + bullet-list body. Agents read THIS.
+- **`docs/session-state/<date>-<slug>.html`** (~20-40KB) — rich human-readable. Narrative, tables, KPIs, callouts. Humans read THIS. Agents only open it if the brief flags something they need narrative for.
+
+**Cold-start rule:** after the Monitor API bootstrap above, locate the top row of `current.md` § "Latest handoff" and read its **Brief** link. Do NOT read the `.html` unless the brief is missing (older rows pre-split) or the brief tells you to.
+
+### Brief frontmatter schema (required fields)
+
+```yaml
+---
+date: 2026-05-10                              # YYYY-MM-DD
+session: "Evening — short title"              # human-readable session label
+status: ok                                    # ok | warn | fail
+detail: <date>-<slug>.html                    # paired HTML filename, relative to docs/session-state/
+main_sha: 99d3844e9                           # short SHA at end-of-session
+main_green: true                              # CI state on main
+open_prs: 0                                   # count at end-of-session
+active_dispatches: 0                          # count at end-of-session
+merged_today: [1861, 1863, 1864]              # PR numbers
+rejected_today: [1862]                        # PR numbers (closed without merge)
+filed_today: [1860, 1863, 1865]               # issue + PR numbers filed
+closed_today: [1762, 1860]                    # issues closed
+in_flight: []                                 # list of {pr/issue/dispatch} still active
+blocked: []                                   # list of {item, reason}
+next_p0: "one-line description of next priority"
+agents: [claude, codex, gemini]               # agents that participated
+---
+```
+
+Optional/extensible fields are allowed (e.g. `ci_notes`, `worktrees_open`, `incidents`) but the required block above MUST be present for cold-start parsing.
+
+### Brief body shape
+
+After the frontmatter, the body is a **bullet-list summary**, NOT narrative. Recommended sections:
+
+1. `## TL;DR` — 2-4 lines.
+2. `## What shipped` — table of PR/issue with one-line "what".
+3. `## What rejected` (if any) — short reason + lesson encoded.
+4. `## Carry-over queue` — priority-ordered list of items NOT done.
+5. `## Decisions encoded` — short bullets.
+6. `## Pending decisions` (if any) — links to `docs/decisions/pending/*`.
+7. `## Cold-start orientation for next agent` — explicit instructions to the next session.
+
+Reserve all narrative, anecdotes, KPIs, and rich rationale for the `.html` companion. The brief is a state snapshot, not a story.
+
+### Pair authoring rule
+
+Brief and HTML are authored together in the same orchestrator turn. Never ship one without the other for sessions going forward.
+
+### Backfill policy
+
+Older `current.md` rows are HTML-only. Backfill is OPTIONAL — only worth it if a future thread needs to re-pickup that session. The cold-start fallback handles the missing-brief case.
+
 ## Scoped queries — call the API instead of filesystem spelunking
 
 When you need deterministic answers about a specific module / range /
