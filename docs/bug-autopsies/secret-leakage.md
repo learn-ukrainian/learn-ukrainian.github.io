@@ -85,3 +85,82 @@ enforced by Claude's training/memory, not a code change.
 - Critical rules: `claude_extensions/rules/critical-rules.md` (rule 4 — no
   direct API keys, OAuth via gemini-cli only — supports the broader posture)
 - MEMORY rule: see `memory/MEMORY.md` "secret-handling" section
+
+---
+
+## 2026-05-12 — `DAGGER_CLOUD_TOKEN` printed during Dagger probe
+
+### Symptom
+
+While investigating local Dagger setup, Claude ran an environment probe to
+check if `DAGGER_CLOUD_TOKEN` was set (left over from a prior kaizen-project
+session). The probe used `env | grep -i DAGGER | grep -v -i secret | head -5`
+intending to filter sensitive lines. The token value (`dag_graphtrek_...`)
+was printed verbatim to stdout. User flagged the leak and confirmed the token
+was probably expired and they don't use Dagger Cloud, but the principle stood
+— another credential ended up in the transcript.
+
+### Root cause
+
+The filter `grep -v -i secret` only excludes lines containing the literal
+substring "secret". Token variables like `DAGGER_CLOUD_TOKEN`, `API_KEY`,
+`*_PAT`, etc. do **not** contain the word "secret" in their name. The filter
+was theatrically safety-coded but functionally a no-op for this variable
+class.
+
+This is the **same failure mode as 2026-05-10** (inconsistent / shallow
+sanitization) — recurrence proves the 2026-05-10 lesson didn't generalize.
+The 2026-05-10 fix focused on grepping FILES; this incident shows the same
+trap applies to grepping the LIVE ENV.
+
+### Why naive filters fail
+
+The previous incident's MEMORY rule said "never print matched lines
+verbatim" for grep on credential FILES. It did not extend to:
+
+- `env | grep <prefix>` (live process env)
+- `printenv VARNAME` (one-shot lookup)
+- `set | grep <prefix>` (shell builtins + env)
+- `cat /proc/$$/environ | tr '\0' '\n'` (raw env dump)
+
+All of these will leak credentials whose **NAME doesn't contain the word
+"secret"**, "token", or "key" — and most don't.
+
+### Prevention
+
+#### Generalized rule (extends MEMORY.md #M-5)
+
+> Any command that reads credential-bearing state — including the LIVE
+> ENV, not just files — must be wrapped in a value-stripper BEFORE
+> stdout. `grep -v -i secret` / `grep -v password` filters are
+> **insufficient** because they only catch substring matches in variable
+> names. Real-world credential variables are named `DAGGER_CLOUD_TOKEN`,
+> `GEMINI_API_KEY`, `ANTHROPIC_KEY`, `GH_TOKEN`, `*_PAT`, `*_AUTH`, etc.
+> — none contain the word "secret".
+
+#### Decision tree for "is env var X set?" (revised)
+
+| Need | Safe command |
+|---|---|
+| Just whether it's set (env) | `[ -n "${X:-}" ] && echo SET \|\| echo UNSET` |
+| List which env vars match a prefix | `env \| cut -d= -f1 \| grep -i "^DAGGER"` (keys only, value never read) |
+| Sanitized env dump for a prefix | `env \| grep -i "^DAGGER" \| sed 's/=.*/=<REDACTED>/'` |
+| Just whether it's set (file) | `env -i bash -c 'source ~/.bash_secrets; [ -n "${X:-}" ] && echo SET \|\| echo UNSET'` |
+
+**The cut-keys-only pattern is the safest default.** If you only need to
+know names, never read values.
+
+#### Sibling-check rule
+
+When fixing a sanitization bug, scan for the **failure pattern**
+("printing secret-bearing output") across ALL output sources, not just
+the one that leaked. The 2026-05-10 fix only covered file-grep; live-env
+probes were the obvious next failure mode and weren't covered.
+
+### Links
+
+- Prior incident: `docs/bug-autopsies/secret-leakage.md#2026-05-10`
+- This autopsy: `docs/bug-autopsies/secret-leakage.md#2026-05-12`
+- INDEX entry: `docs/bug-autopsies/INDEX.md` (2026-05-12)
+- MEMORY rule: `memory/MEMORY.md` #M-5 — needs generalization update to
+  cover live-env probes (file-only wording was too narrow)
