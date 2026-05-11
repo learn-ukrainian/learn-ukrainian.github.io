@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2026-05-11 — Two-tier handoffs shipped (epic #1865 item #1)</title>
+
+<meta name="report-class" content="handoff" />
+<meta name="report-date" content="2026-05-11" />
+<meta name="report-status" content="ok" />
+<meta name="report-title" content="First two-tier handoff session · #1876 merged · #1875 closed · −81% on handoff tier · next P0 = #1657 then #1577" />
+<meta name="report-kpi-summary" content="1 PR opened+merged (#1876) · 1 sub-issue filed+closed (#1875) · 1 epic comment posted (#1865) · 0 admin-bypasses · 0 active dispatches · 4.3KB PoC brief written · 18KB saved per cold-start" />
+<meta name="report-related-issues" content="1657,1577,1865,1875" />
+<meta name="report-related-prs" content="1876" />
+<meta name="report-agents" content="claude" />
+<meta name="report-author" content="claude" />
+<meta name="report-template-version" content="0.1" />
+
+<style>
+  :root {
+    --bg: #faf6ef; --surface: #f5efde; --surface-2: #ede6d0;
+    --surface-warn: #f3ead0; --surface-fail: #f3dada; --surface-ok: #dde9df;
+    --ink: #1a1a1a; --ink-soft: #4a4540; --ink-faint: #7a736a;
+    --rule: #d4cdb8; --accent: #7a1c20;
+    --warn: #a8842b; --ok: #3d6b4a; --fail: #9c2828;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--serif); font-size: 16px; line-height: 1.65; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule); color: var(--ink-soft); white-space: nowrap; }
+  pre { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; overflow-x: auto; color: var(--ink-soft); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 36px 28px 70px; }
+  header.hero { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding-bottom: 22px; border-bottom: 1.5px solid var(--ink); margin-bottom: 32px; }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; letter-spacing: -0.012em; line-height: 1.25; }
+  header.hero h1 .session { color: var(--ink-faint); font-weight: 400; }
+  header.hero .sub { color: var(--ink-soft); font-size: 15px; font-style: italic; }
+  header.hero .meta { font-family: var(--sans); font-size: 12px; color: var(--ink-faint); text-align: right; line-height: 1.85; flex: 0 1 260px; }
+  header.hero .meta b { color: var(--ink); font-weight: 600; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+  .kpi { background: var(--surface); border: 1px solid var(--rule); padding: 14px 16px; border-radius: 4px; }
+  .kpi .label { font-family: var(--sans); color: var(--ink-faint); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .kpi .value { font-family: var(--serif); font-size: 28px; font-weight: 600; line-height: 1.1; color: var(--ink); }
+  .kpi .value.ok { color: var(--ok); } .kpi .value.warn { color: var(--warn); }
+  .kpi .sub { font-family: var(--sans); color: var(--ink-faint); font-size: 12px; margin-top: 4px; }
+  h2 { font-family: var(--serif); font-size: 21px; font-weight: 600; margin: 34px 0 12px; color: var(--ink); border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+  h3 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 20px 0 8px; color: var(--ink-soft); }
+  p { margin: 10px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: var(--sans); font-size: 12.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1.5px solid var(--rule); }
+  td.commit { font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+  .callout { background: var(--surface); border-left: 3px solid var(--accent); padding: 12px 18px; margin: 16px 0; border-radius: 0 4px 4px 0; }
+  .callout.warn { background: var(--surface-warn); border-left-color: var(--warn); }
+  .callout.ok { background: var(--surface-ok); border-left-color: var(--ok); }
+  ul { padding-left: 24px; margin: 10px 0; }
+  li { margin: 4px 0; }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: var(--sans); font-size: 12px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="title-block">
+    <h1>2026-05-11 <span class="session">— Two-tier handoffs shipped (epic #1865 item #1)</span></h1>
+    <div class="sub">Single-PR session. Meta-deliverable: the handoff format used by this very document. −81% on the handoff tier per future cold-start.</div>
+  </div>
+  <div class="meta">
+    <b>Author:</b> claude<br />
+    <b>Date:</b> 2026-05-11<br />
+    <b>PR merged:</b> #1876<br />
+    <b>Issues closed:</b> #1875<br />
+    <b>Status:</b> main clean, 0 PRs of mine
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="label">PRs merged</div><div class="value ok">1</div><div class="sub">+0 admin-bypass</div></div>
+  <div class="kpi"><div class="label">KB saved</div><div class="value ok">18</div><div class="sub">per cold-start (−81%)</div></div>
+  <div class="kpi"><div class="label">CI fails</div><div class="value">1</div><div class="sub"><code class="inline">review/review</code> — advisory</div></div>
+  <div class="kpi"><div class="label">Active in-flight</div><div class="value ok">0</div><div class="sub">clean handoff state</div></div>
+</div>
+
+<h2>What shipped</h2>
+
+<table>
+  <thead><tr><th>PR / Issue</th><th>Title</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td class="commit">PR #1876</td><td>docs(handoff): two-tier handoffs (brief.md + .html) — #1865 item #1</td><td>Inline, worktree <code class="inline">claude-1875-two-tier-handoffs</code> (now cleaned)</td></tr>
+    <tr><td class="commit">Issue #1875</td><td>Sub-issue under epic #1865 item #1 (auto-closed by #1876)</td><td>Inline filing</td></tr>
+    <tr><td class="commit">#1865 comment</td><td>Epic status comment: item #1 SHIPPED with measurement</td><td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1865#issuecomment-4422457286">issue link</a></td></tr>
+  </tbody>
+</table>
+
+<h2>Three artifacts now in the codebase</h2>
+
+<table>
+  <thead><tr><th>File</th><th>What</th></tr></thead>
+  <tbody>
+    <tr><td><code class="inline">claude_extensions/rules/workflow.md</code></td><td>+56 lines: new "Two-tier handoffs" section. Required YAML frontmatter schema (15 fields enumerated), body shape (7 recommended sections), pair-authoring rule, backfill policy.</td></tr>
+    <tr><td><code class="inline">docs/session-state/2026-05-10-evening-…-brief.md</code></td><td>4.3KB proof-of-concept paired with yesterday's evening HTML. First brief ever written.</td></tr>
+    <tr><td><code class="inline">docs/session-state/current.md</code></td><td>Top row of "Latest handoff" now links Brief + Detail with explicit labels. Cold-start protocol steps 2 + 5 updated. Older rows preserve HTML-only format — fallback handles them.</td></tr>
+  </tbody>
+</table>
+
+<h2>Measurement</h2>
+
+<table>
+  <thead><tr><th>Stage</th><th>Before (HTML)</th><th>After (brief)</th><th>Δ</th></tr></thead>
+  <tbody>
+    <tr><td>API bootstrap (manifest + rules + session + orient + inbox)</td><td>~57 KB</td><td>~57 KB</td><td>0</td></tr>
+    <tr><td>Handoff document</td><td>22 KB (.html)</td><td>4.3 KB (brief.md)</td><td><b>−18 KB (−81%)</b></td></tr>
+    <tr><td><b>Total cold-start</b></td><td><b>~79 KB</b></td><td><b>~61 KB</b></td><td><b>−18 KB</b></td></tr>
+  </tbody>
+</table>
+
+<div class="callout ok">
+<p>Handoff-tier savings hit the predicted 80%. The remaining ~57 KB API-bootstrap chunk is what <strong>item #2 (lazy orient)</strong> tackles in the same epic. Compound effect: every future session ramps faster than the last, starting from the very next.</p>
+</div>
+
+<h2>Three threads</h2>
+
+<h3>1. Plan → schema → PoC</h3>
+
+<p>Read epic #1865 body for design intent, drafted the frontmatter schema (15 required fields covering date, session metadata, repo state, churn, in-flight, blocked, next P0, agents), wrote the body-shape spec (7 recommended sections), and produced one PoC brief paired with yesterday's evening HTML.</p>
+
+<p>Brief size landed at 4.3 KB — slightly over the originally-suggested 2-3 KB target in the epic body. Decision: ship at 4 KB rather than trim. Lost information (carry-over queue, decisions encoded) wouldn't be worth re-fetching for the next session.</p>
+
+<h3>2. Worktree + PR cycle</h3>
+
+<p>Stashed inline changes to preserve the phantom-edits stash at <code class="inline">stash@{0}</code>, created worktree <code class="inline">.worktrees/claude-1875-two-tier-handoffs</code> from main HEAD, popped the stash inside, committed cleanly with conventional message. PR #1876 opened with full AC table, KB measurement, and out-of-scope list.</p>
+
+<p>CI: 13 PASS + 1 SKIPPING→PASS (CodeQL) + 1 PASS (Test pytest via inner-skip per #1644 design) + 1 FAIL (<code class="inline">review/review</code> advisory non-blocking). Squash-merged at <code class="inline">9860cdb92a</code>. Worktree + branches pruned.</p>
+
+<h3>3. CI tooling refinement</h3>
+
+<p>Mid-session, switched from <code class="inline">gh pr checks --watch</code> in a background Bash to a <code class="inline">Monitor</code> emitting one notification per check terminal state. The watch-table-on-every-refresh pattern produces high-noise low-signal events; the per-check-delta pattern is what the Monitor tool was designed for.</p>
+
+<p>Filter emitted only PASS/FAIL/SKIPPING lines (not pending) plus a final "ALL CHECKS TERMINATED" sentinel. Worked cleanly: 4 notifications total across the run.</p>
+
+<h2>Side traffic (not in scope)</h2>
+
+<p>9 dependabot PRs (#1866-#1874) arrived during the session: <code class="inline">starlight/</code> bumps (react 19.2.5→19.2.6, astro 6.2.1→6.3.1, @astrojs/starlight 0.38.4→0.39.2), pip bumps (lxml 5.4.0→6.1.0, mcp-memory-service 10.29.1→10.54.0, joserfc, attrs, markdown2). Not triaged. Queued for next session — recommend batch-review approach, merge the clean ones, defer non-trivial multi-minor jumps.</p>
+
+<h2>Decisions encoded</h2>
+
+<table>
+  <thead><tr><th>Decision</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>Two-tier handoff format is mandatory for new sessions. Pair (brief.md + .html) must ship in a single orchestrator turn.</td><td>PR #1876, <code class="inline">workflow.md</code> § "Two-tier handoffs"</td></tr>
+    <tr><td>Frontmatter schema has 15 required fields; optional fields allowed but required block must be parseable.</td><td><code class="inline">workflow.md</code> Brief frontmatter schema</td></tr>
+    <tr><td>Older HTML-only rows in <code class="inline">current.md</code> stay as-is. Backfill is optional, only worth it if a thread needs re-pickup.</td><td>Backfill policy section in <code class="inline">workflow.md</code></td></tr>
+    <tr><td><b>Next session focus order: #1657 first, then #1577.</b> #1657 (MCP verification-layer Phase 1) ships better primitives that V7 reviewer/writer work depends on.</td><td>User-stated 2026-05-11</td></tr>
+    <tr><td><b>#1787 = background parallel-dispatch.</b> 4 small Codex PRs, independent, fire from any session, no orchestrator attention required while running.</td><td>User-confirmed 2026-05-11</td></tr>
+    <tr><td><b>#1782 stays active.</b> Despite premise partially superseded by Codex Desktop Automations + already-shipped Tier-2 warm-cache, user explicitly chose to keep the issue open and triage personally later. Orchestrator must NOT close or rescope.</td><td>User-stated 2026-05-11</td></tr>
+  </tbody>
+</table>
+
+<h2>Active in flight</h2>
+
+<p><strong>None.</strong> PR merged. Worktree removed. Local + remote branches gone. Main at <code class="inline">9860cdb92a</code>. Working tree clean. Phantom-edits stash preserved at <code class="inline">stash@{0}</code> (do not touch).</p>
+
+<h2>P0 next session</h2>
+
+<div class="callout">
+<p><strong>Orchestrator attention queue (user-stated 2026-05-11):</strong></p>
+<ol>
+  <li><strong>Epic #1657</strong> — MCP verification-layer improvements (3-phase plan). Phase 1 quick wins listed in issue body: rename <code class="inline">search_etymology</code> → <code class="inline">search_grinchenko_1907</code>, add <code class="inline">sovietization_risk</code> column to СУМ-11 entries, add quote-verification + source-attribution primitives. Likely small-PR sized.</li>
+  <li><strong>Epic #1577</strong> — Curriculum reboot via 3-agent contract design (A1+A2+B1 vertical slice). V7 linear pipeline. 6 phases. Re-read issue body fully + last 2-3 V7-related session-states for V6→V7 reboot context. Benefits from #1657's primitives.</li>
+</ol>
+<p><strong>Parallel background dispatches (no orchestrator attention needed):</strong> Epic <strong>#1787</strong> — 4 small orchestration-guardrail sub-tasks (~30-40 LOC each, independent). Fire all 4 as Codex dispatches from any session. Sub-task 1.1 (brief linter) is most directly useful given we now generate briefs per session.</p>
+<p><strong>Tracked but no orchestrator action:</strong> Epic <strong>#1782</strong> — kept active per user direction. Premise partially obsolete (Codex Desktop Automations supersedes Tier-3 daemon per Multi-UI ADR's 2026-05-09 empirical findings; Tier-2 warm-cache already shipped). User will triage themselves later — orchestrator should NOT close or rescope.</p>
+<p><strong>Self-test on cold-start:</strong> measure your KB after reading the brief. Should land at ~61 KB total. Report the number in your first reply so we can validate the savings empirically across sessions.</p>
+</div>
+
+<h2>Meta-observations</h2>
+
+<div class="callout">
+<p><strong>The brief format already proved its value on the very session that shipped it.</strong> Yesterday's handoff narrative was 22 KB; today's brief is 4 KB. A next-session cold-start on this handoff will be measurably cheaper than yesterday's — direct quota-burn reduction starting immediately, no extra deploy step required.</p>
+</div>
+
+<div class="callout ok">
+<p><strong>Single-PR sessions are appropriate use of orchestrator time when the deliverable compounds.</strong> Item #1 wasn't picked because it was urgent — it was picked because it's the only item in epic #1865 whose benefits accrue per-session-thereafter rather than once. Time-discounting the benefit over the next ~30 sessions justifies an unusually narrow session focus.</p>
+</div>
+
+<footer>
+  Handoff template v0.1 · written by claude · 2026-05-11 · main at <code class="inline">9860cdb92a</code> · 1 PR merged · 0 open PRs of mine · 0 active dispatches · brief companion: <code class="inline">2026-05-11-two-tier-handoffs-shipped-brief.md</code>
+</footer>
+
+</div>
+</body>
+</html>
