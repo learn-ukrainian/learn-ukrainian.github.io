@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Session Handoff — 2026-05-12 late night — cold-start rule dedupe + act local CI</title>
+<style>
+  :root {
+    --bg: #0e1116; --fg: #e6e6e6; --muted: #9aa4af; --accent: #58a6ff;
+    --good: #3fb950; --warn: #d29922; --bad: #f85149; --kbd: #1f2329;
+  }
+  body { max-width: 920px; margin: 2em auto; padding: 0 1.5em; background: var(--bg); color: var(--fg);
+         font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+  h1 { font-size: 1.7em; border-bottom: 1px solid #30363d; padding-bottom: .35em; }
+  h2 { font-size: 1.25em; margin-top: 2em; }
+  h3 { font-size: 1.05em; color: var(--muted); }
+  a { color: var(--accent); }
+  code, kbd, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+                     background: var(--kbd); padding: .12em .35em; border-radius: 3px; font-size: .92em; }
+  pre { background: var(--kbd); padding: 1em; border-radius: 6px; overflow-x: auto; }
+  pre code { background: transparent; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .94em; }
+  th, td { border: 1px solid #30363d; padding: .55em .8em; text-align: left; vertical-align: top; }
+  th { background: #161b22; }
+  tr:nth-child(2n) td { background: #0d1117; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+              gap: .8em; margin: 1.2em 0; }
+  .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 1em; }
+  .kpi .label { color: var(--muted); font-size: .82em; text-transform: uppercase; letter-spacing: .05em; }
+  .kpi .value { font-size: 1.6em; font-weight: 600; margin-top: .25em; }
+  .kpi .delta { font-size: .85em; color: var(--good); margin-top: .15em; }
+  .kpi .delta.warn { color: var(--warn); }
+  .callout { border-left: 3px solid var(--accent); background: #161b22; padding: .8em 1em;
+             border-radius: 0 6px 6px 0; margin: 1em 0; }
+  .callout.warn { border-left-color: var(--warn); }
+  .callout.good { border-left-color: var(--good); }
+  .callout.bad { border-left-color: var(--bad); }
+  .tag { display: inline-block; padding: .12em .55em; border-radius: 10px;
+         font-size: .78em; font-weight: 600; background: #1f6feb33; color: var(--accent); }
+  .tag.good { background: #3fb95033; color: var(--good); }
+  .tag.warn { background: #d2992233; color: var(--warn); }
+  .tag.bad { background: #f8514933; color: var(--bad); }
+  .meta { color: var(--muted); font-size: .9em; }
+</style>
+</head>
+<body>
+
+<h1>Session Handoff — 2026-05-12 late night</h1>
+<p class="meta">Cold-start rule dedupe (~7.5 K tokens saved) · <code>act</code> local CI shipped + measured · Codex bridge resume queued at #1894. Companion brief: <a href="./2026-05-12-cold-start-followups-brief.md"><code>2026-05-12-cold-start-followups-brief.md</code></a>.</p>
+
+<h2>Headline numbers</h2>
+
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="label">.claude/rules/ post-deploy</div>
+    <div class="value">17.4 KB</div>
+    <div class="delta">↓ from 47.5 KB (−63%)</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Token est. saved/cold-start</div>
+    <div class="value">~7.5 K</div>
+    <div class="delta">on top of PR #1886 win</div>
+  </div>
+  <div class="kpi">
+    <div class="label">PRs merged this session</div>
+    <div class="value">4</div>
+    <div class="delta">#1889 · #1890 · #1892 · #1893</div>
+  </div>
+  <div class="kpi">
+    <div class="label">act lint --reuse</div>
+    <div class="value">38 s</div>
+    <div class="delta">vs ~30 s GHA + queue</div>
+  </div>
+  <div class="kpi">
+    <div class="label">act pytest first-run</div>
+    <div class="value">7m45s</div>
+    <div class="delta warn">slower than GHA (4m17s)</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Main SHA</div>
+    <div class="value mono">e76c152f36</div>
+    <div class="delta">green</div>
+  </div>
+</div>
+
+<h2>Session arc</h2>
+
+<p>Three threads intertwined over five hours:</p>
+
+<ol>
+  <li><strong>The 65 K cold-start complaint.</strong> User opened with "65k cold start i did not see improvements" — a real callout. PR #1886 had only trimmed the SessionStart-hook block (30 KB → 1.6 KB); the larger slice (47.5 KB of <code>.claude/rules/</code> static autoload) was untouched and was being <em>duplicated</em> by the Monitor API that was supposed to <em>replace</em> it. Diagnosed, dispatched, rescued, merged → PR #1890.</li>
+  <li><strong>The "Dagger" pivot.</strong> User asked for Dagger urgently for local CI replay. Orchestrator pushed back — Dagger requires rewriting all pipelines as Python/Go/TS code (months of work) for a problem (4m17s GHA loop tax) better served by <code>act</code> (5 min setup, no pipeline rewrites). User accepted the pushback with "ok if act is better do act." Shipped #1892 + follow-up doc PR #1893.</li>
+  <li><strong>The Codex resume revelation.</strong> Near the end, user shared the <code>codex resume</code> CLI help. This directly maps to carry-over item #5: extend the Gemini-#1887 warm-cache pattern to Codex bridge invocations. Filed #1894 with the design; dispatch deferred to morning since we'd already shipped four PRs and were past midnight CET.</li>
+</ol>
+
+<h2>What shipped</h2>
+
+<table>
+  <tr><th>Ref</th><th>Title</th><th>Notes</th></tr>
+  <tr>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1889">PR #1889</a></td>
+    <td><code>fix(gemini-adapter): honor bridge_only session resume</code></td>
+    <td>Codex dispatch from prior session, completed mid-session here, merged. Closed #1887.</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1890">PR #1890</a> <span class="tag warn">rescued</span></td>
+    <td><code>fix(rules): dedupe Claude .claude/rules/ autoload, serve via /api/rules</code></td>
+    <td>Codex dispatch died silently without committing; orchestrator rescued the uncommitted worktree work. Closed #1888. <strong>−30 KB / ~7.5 K tokens off cold-start</strong>, verified.</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1892">PR #1892</a></td>
+    <td><code>feat(local-ci): act-based local CI replay</code></td>
+    <td>Orchestrator-inline. Added <code>.actrc</code>, <code>scripts/local-ci.sh</code>, event JSON fallback, docs.</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1893">PR #1893</a></td>
+    <td><code>docs(local-ci): pytest verification — real timings + known act failure modes</code></td>
+    <td>Follow-up after pytest run in background revealed environmental failures.</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1894">Issue #1894</a></td>
+    <td>Codex bridge warm-cache (mirror Gemini #1887)</td>
+    <td>Design captured. Dispatch deferred — clock past midnight CET; would be the 5th in-flight item before handoff.</td>
+  </tr>
+</table>
+
+<h2>The two non-obvious diagnoses</h2>
+
+<h3>Cold-start was dominated by static autoload, not the SessionStart hook</h3>
+
+<div class="callout">
+  Six <code>.claude/rules/*.md</code> files load automatically into every Claude system prompt: <code>critical-rules.md</code>, <code>non-negotiable-rules.md</code>, <code>workflow.md</code>, <code>delegate-must-use-worktree.md</code>, <code>cli-help-standard.md</code>, <code>model-assignment.md</code> — 30.7 KB of always-load text. Plus four scoped rules that load when their paths get touched (which is "always" for active development). Total: 47.5 KB on every cold start.
+  <br><br>
+  <code>/api/rules?format=markdown</code> already served some of this content (22.3 KB, 3 of 6 unscoped files) but the Claude Code harness was reading the source files <em>and</em> the API was serving them in parallel. The fix: add the 3 missing files to <code>RULE_SOURCES</code>, drop a tiny stub into <code>.claude/rules/_load-via-api.md</code> pointing at the API, and skip the 6 unscoped files from the <code>.claude/</code> rsync target only (Codex's <code>.codex/rules/</code> and Gemini's <code>.gemini/rules/</code> still get them — those agents' cold-start budgets aren't the Anthropic-quota pressure point).
+</div>
+
+<h3>act is slower than GHA on heavy jobs, faster on iteration</h3>
+
+<div class="callout warn">
+  First-run pytest under act: <strong>7m45s</strong> end-to-end, 4m41s in pytest proper. Same job on GHA: <strong>~4m17s</strong>. act loses on raw wall-clock for two reasons:
+  <ul>
+    <li>QEMU emulating amd64 on Apple Silicon adds ~2-3× CPU overhead for CPU-bound steps.</li>
+    <li><code>actions/cache@v4</code> is a no-op under act, so pip wheels (including the ~600 MB torch CPU wheel) re-download on every cold-container run.</li>
+  </ul>
+  The real value prop, now documented in <code>docs/best-practices/local-ci-replay.md</code>:
+  <ol>
+    <li>No GHA queue wait (push → push → push iteration on a CI fix).</li>
+    <li>Local debug access — <code>docker exec</code> into the runner, inspect file state, drop into a shell mid-run.</li>
+    <li>CI-only failures reproduce locally without polluting the PR with debugging commits.</li>
+  </ol>
+  For lightweight jobs (lint, prompt-lint, schema-check), act with <code>--reuse</code> is competitive with GHA wall-clock. For pytest, GHA wins on time but act wins on latency.
+</div>
+
+<h2>Known failure modes under act</h2>
+
+<p>When the full pytest suite runs via act on this host (Apple Silicon, OrbStack daemon), <strong>7 of 7113 tests fail</strong> — all environmental, not real bugs:</p>
+
+<table>
+  <tr><th>Category</th><th>Tests</th><th>Reason</th></tr>
+  <tr>
+    <td><span class="tag bad">tooling</span></td>
+    <td>4× <code>test_deploy_script_idempotency.py</code></td>
+    <td><code>rsync: command not found</code> — <code>ghcr.io/catthehacker/ubuntu:act-latest</code> doesn't ship rsync. GHA's <code>ubuntu-latest</code> does.</td>
+  </tr>
+  <tr>
+    <td><span class="tag warn">perf</span></td>
+    <td><code>test_annotation_speed</code></td>
+    <td>27 s under emulation, budget 15 s.</td>
+  </tr>
+  <tr>
+    <td><span class="tag warn">perf</span></td>
+    <td><code>test_playground_primary_endpoints_keep_health_fast</code></td>
+    <td>p95 1.72 s under emulation, budget 1.5 s.</td>
+  </tr>
+  <tr>
+    <td><span class="tag warn">perf</span></td>
+    <td><code>test_endpoint_performance_under_budget</code></td>
+    <td>909 ms under emulation, budget 500 ms.</td>
+  </tr>
+</table>
+
+<p>Long-term fix tracked as follow-up to #1891: install rsync in a custom act image; tag perf tests so they auto-skip under <code>ACT_LOCAL_REPLAY=1</code>.</p>
+
+<h2>The Codex dispatch rescue</h2>
+
+<div class="callout">
+  Codex's #1888 dispatch made all the requested changes (and several beyond-brief improvements — added an integration test that runs <code>npm run claude:deploy</code> in a tmpdir and asserts the exact post-deploy file layout across all four target directories), but the process exited without committing.
+  <br><br>
+  Diagnosis: stdout/stderr logs were 0 bytes at the expected path <code>batch_state/tasks/logs/codex/1888-rule-autoload-dedupe.{stdout,stderr}.log</code> — but actual logs ended up at the parent dir <code>batch_state/tasks/logs/1888-rule-autoload-dedupe.{stdout,stderr}.log</code>. This matches the symptom #1885 already tracks: <em>"delegate.py crashes on first dispatch when batch_state/tasks/logs/{agent}/ subtree missing."</em> More evidence for that fix.
+  <br><br>
+  Orchestrator pattern for rescue: verify all code (ruff + pytest), then commit inline with trailer <code>X-Agent: claude-inline/&lt;task&gt;-rescue</code> and an explicit authorship note in the commit body crediting Codex for the code work. Used for PR #1890.
+</div>
+
+<h2>Carry-over queue (priority order)</h2>
+
+<table>
+  <tr><th>#</th><th>Item</th><th>State</th></tr>
+  <tr>
+    <td>1</td>
+    <td><strong>#1894 Codex bridge warm-cache</strong> ⭐ NEW P0 — mirror #1887 pattern</td>
+    <td>📋 Filed; dispatch shape is captured in the issue body</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><code>claude agents</code> view integration (v2.1.139)</td>
+    <td>📋 Unchanged from prior brief</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><code>goal-driven-runs.md</code> rule (#1884)</td>
+    <td>📋 Unchanged</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>#1885 <code>delegate.py</code> mkdir gap</td>
+    <td>📋 More evidence accumulated this session; small fix</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>act follow-ups (rsync in image · perf-test auto-skip)</td>
+    <td>📋 New, opened by tonight's pytest run</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Dagger</td>
+    <td>📋 De-prioritized; revisit only if act hits a real limit</td>
+  </tr>
+</table>
+
+<h2>Cold-start orientation for next agent</h2>
+
+<ol>
+  <li><strong>Read the brief first</strong> — <code>2026-05-12-cold-start-followups-brief.md</code>. SessionStart hook will point you there via the <code>Latest-Brief:</code> marker.</li>
+  <li><strong>Verify the cold-start win.</strong> Run <code>wc -c .claude/rules/*.md</code> on a fresh checkout after <code>npm run claude:deploy</code>. Expected total: ~17.4 KB. If you see 47.5 KB, deploy hasn't run yet on your checkout.</li>
+  <li><strong>Next P0 is #1894 dispatch.</strong> Brief shape: mirror the #1888 dispatch brief (tool-grounded verification block, pre-submit checklist, explicit step-8 PR creation — #1888 forgot to <code>gh pr create</code>; orchestrator filed it manually). Core code change is small: registry policy <code>never</code> → <code>bridge_only</code> on the bridge code path; dispatch path still ignores <code>session_id</code> entirely (worktree-isolation is non-negotiable for dispatch). Read <code>scripts/agent_runtime/adapters/codex.py:1-30</code> first for the rationale.</li>
+  <li><strong>act tooling is shipped.</strong> <code>scripts/local-ci.sh -W .github/workflows/ci.yml -j lint</code> works. <code>--reuse</code> drops second-run lint to 38 s. Pytest first-run is 7m45s. Ignore the 7 known-act-failures listed in the doc.</li>
+  <li><strong>Worktrees:</strong> 0 open. All session worktrees cleaned up post-merge.</li>
+</ol>
+
+<p class="meta">Format spec: <code>claude_extensions/rules/workflow.md</code> § "Two-tier handoffs". HTML is the ai → human read; the brief is the ai → ai read.</p>
+
+</body>
+</html>
