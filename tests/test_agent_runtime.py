@@ -175,8 +175,8 @@ def test_registry_has_known_agents():
     }
 
 
-def test_codex_entry_has_never_resume_policy():
-    assert get_agent_entry("codex")["resume_policy"] == "never"
+def test_codex_entry_has_bridge_only_resume_policy():
+    assert get_agent_entry("codex")["resume_policy"] == "bridge_only"
 
 
 def test_codex_desktop_entry_is_human_invoked():
@@ -267,9 +267,6 @@ def test_load_adapter_cached():
 
 def test_resume_policy_never_rejects_session_id():
     with pytest.raises(ValueError, match="resume_policy='never'"):
-        _enforce_resume_policy("codex", session_id="some-uuid", entrypoint="bridge")
-
-    with pytest.raises(ValueError, match="resume_policy='never'"):
         _enforce_resume_policy("gemma-local", session_id="some-uuid", entrypoint="bridge")
 
 
@@ -280,11 +277,14 @@ def test_resume_policy_never_allows_none():
 
 def test_resume_policy_bridge_only_allows_bridge():
     _enforce_resume_policy("claude", session_id="uuid", entrypoint="bridge")
+    _enforce_resume_policy("codex", session_id="uuid", entrypoint="bridge")
 
 
 def test_resume_policy_bridge_only_rejects_dispatch():
     with pytest.raises(ValueError, match="bridge_only"):
         _enforce_resume_policy("claude", session_id="uuid", entrypoint="dispatch")
+    with pytest.raises(ValueError, match="bridge_only"):
+        _enforce_resume_policy("codex", session_id="uuid", entrypoint="dispatch")
 
 
 def test_resume_policy_bridge_only_rejects_delegate():
@@ -376,22 +376,34 @@ def test_codex_adapter_discussion_readonly_sets_env(tmp_path):
     assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
 
 
-def test_codex_adapter_build_invocation_ignores_session_id(tmp_path):
-    """Defensive: Codex adapter MUST ignore session_id even when passed."""
+def test_codex_adapter_bridge_creates_then_resumes(tmp_path):
     adapter = CodexAdapter()
-    plan = adapter.build_invocation(
+    first = adapter.build_invocation(
         prompt="hello",
         mode="read-only",
         cwd=tmp_path,
         model=None,
         task_id=None,
-        session_id="should-be-ignored-uuid",
+        session_id=None,
         tool_config=None,
     )
-    # No --resume flag anywhere in the command
-    assert "--resume" not in plan.cmd
-    # No "resume" subcommand
-    assert "resume" not in plan.cmd
+    assert first.cmd[1] == "exec"
+    assert "resume" not in first.cmd[1:3]
+    assert first.cmd[-1] == "-"
+
+    session_id = "2c8337b6-35da-415d-806d-91d10b5b1381"
+    second = adapter.build_invocation(
+        prompt="hello again",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=session_id,
+        tool_config=None,
+    )
+    assert second.cmd[1:3] == ["exec", "resume"]
+    assert second.cmd[-2:] == [session_id, "-"]
+    assert second.stdin_payload == "hello again"
 
 
 def test_codex_adapter_build_invocation_workspace_write(tmp_path):
@@ -1269,15 +1281,18 @@ def test_invoke_requires_cwd_for_danger_mode():
         invoke("codex", "hello", mode="danger", cwd=None)
 
 
-def test_invoke_codex_rejects_session_id(tmp_path):
-    with pytest.raises(ValueError, match="resume_policy='never'"):
-        invoke(
-            "codex",
-            "hello",
-            mode="read-only",
-            cwd=tmp_path,
-            session_id="some-uuid",
-        )
+def test_codex_adapter_dispatch_ignores_session_id_via_runner_policy(tmp_path):
+    with patch("agent_runtime.runner.subprocess.Popen") as mock_popen:
+        with pytest.raises(ValueError, match="bridge_only"):
+            invoke(
+                "codex",
+                "hello",
+                mode="read-only",
+                cwd=tmp_path,
+                session_id="some-uuid",
+                entrypoint="delegate",
+            )
+    mock_popen.assert_not_called()
 
 
 def test_invoke_rate_limit_short_circuit(tmp_path):

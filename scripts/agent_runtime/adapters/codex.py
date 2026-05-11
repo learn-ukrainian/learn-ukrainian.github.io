@@ -7,10 +7,10 @@ routed through the unified runtime.
 
 Key design points:
 
-- **Fresh session always.** CodexAdapter has ``resume_policy="never"`` in
-  the registry AND defensively ignores ``session_id`` even if passed.
-  Belt + suspenders against the cross-worktree contamination footgun that
-  Codex flagged in his own consultation (msg #28506).
+- **Bridge-only warm resume.** CodexAdapter has ``resume_policy="bridge_only"``
+  in the registry: dispatch/delegate invocations stay fresh-session via the
+  runner policy gate, while ``ab discuss`` bridge rounds may resume a prior
+  Codex CLI session for prompt-cache reuse (#1894).
 - **All three modes supported:** read-only, workspace-write, danger.
   Mode → flag mapping matches ``_codex.py::_codex_bridge_flags`` and
   ``dispatch.py::_codex_dispatch_flags``.
@@ -19,8 +19,8 @@ Key design points:
   goes into ``liveness_signal_paths`` so the runner's mtime poller catches
   Codex writing progress even when stdout is quiet.
 - **Session ID parsed from stdout.** The CLI prints "session id: <uuid>"
-  somewhere in stdout; we extract it for the usage record even though
-  we never resume it.
+  somewhere in stdout; we extract it so bridge callers can feed it into
+  later rounds.
 
 Issue: #1184
 """
@@ -146,8 +146,9 @@ class CodexAdapter:
     ) -> InvocationPlan:
         """Build the codex exec invocation.
 
-        Defensively ignores ``session_id`` regardless of value — Codex
-        is always fresh-session (registry resume_policy="never").
+        Uses ``codex exec`` for fresh calls and ``codex exec resume`` when a
+        bridge caller passes ``session_id``. The runner rejects non-bridge
+        session reuse before the adapter is invoked.
         Supports Codex MCP config overrides via ``tool_config``:
             - ``{"mcp_servers": {"sources": {"url": "http://127.0.0.1:8766/sse"}}}``
               → ``-c 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"'``
@@ -159,11 +160,6 @@ class CodexAdapter:
         Codex falls through to the config default (currently ``high``).
         See #1396.
         """
-        # Defensively drop session_id — Codex is always fresh-session by
-        # design (see class docstring). Local `_ =` rebind silences the
-        # "unused parameter" linter without changing semantics.
-        _ = session_id
-
         # Reset per-invocation state so _read_latest_rollout_task_complete
         # uses a fresh rollout snapshot (prevents cross-contamination
         # between consecutive calls on the same adapter instance).
@@ -197,7 +193,11 @@ class CodexAdapter:
         ) as output_fd:
             output_path = Path(output_fd.name)
 
+        has_session_to_resume = session_id is not None
+
         cmd: list[str] = [codex_bin, "exec"]
+        if has_session_to_resume:
+            cmd.append("resume")
         cmd.extend(self._tool_config_flags(tool_config))
         if effort is not None:
             # Per-invocation override of ~/.codex/config.toml (#1396).
@@ -210,6 +210,8 @@ class CodexAdapter:
             "-m", model or self.default_model,
         ])
         cmd.extend(self._mode_flags(mode))
+        if has_session_to_resume:
+            cmd.append(session_id)
         cmd.append("-")  # Read prompt from stdin.
 
         return InvocationPlan(

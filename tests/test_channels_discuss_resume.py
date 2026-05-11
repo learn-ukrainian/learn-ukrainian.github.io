@@ -36,18 +36,22 @@ def _successful_result(agent: str) -> MagicMock:
     result = MagicMock()
     result.ok = True
     result.response = f"[reply from {agent}] [AGREE]"
+    result.session_id = None
     return result
 
 
 def test_discuss_passes_session_id_for_resumable_agents(monkeypatch):
-    """Claude + Gemini get a session_id; Codex does not (registry policy)."""
+    """Claude/Gemini get named IDs; Codex reuses the CLI-generated ID."""
     _channels.create_channel("shared")
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     captured_invokes = []
 
     def fake_runtime_invoke(agent, _prompt, **kwargs):
         captured_invokes.append((agent, kwargs))
-        return _successful_result(agent)
+        result = _successful_result(agent)
+        if agent == "codex":
+            result.session_id = "2c8337b6-35da-415d-806d-91d10b5b1381"
+        return result
 
     monkeypatch.setattr("agent_runtime.runner.invoke", fake_runtime_invoke)
 
@@ -76,9 +80,11 @@ def test_discuss_passes_session_id_for_resumable_agents(monkeypatch):
         assert first["tool_config"]["is_new_session"] is True
         assert "is_new_session" not in second["tool_config"]
 
-    for call in by_agent["codex"]:
-        assert call["session_id"] is None
-        assert "is_new_session" not in call["tool_config"]
+    first, second = by_agent["codex"]
+    assert first["session_id"] is None
+    assert second["session_id"] == "2c8337b6-35da-415d-806d-91d10b5b1381"
+    assert "is_new_session" not in first["tool_config"]
+    assert "is_new_session" not in second["tool_config"]
 
     assert all(kwargs["entrypoint"] == "bridge" for _, kwargs in captured_invokes)
 

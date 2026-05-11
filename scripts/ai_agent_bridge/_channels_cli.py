@@ -1347,10 +1347,14 @@ def _handle_discuss(args) -> int:
         session_id_to_pass: str | None = None
         is_new_session = False
         if resume_policy == "bridge_only":
-            if agent_name not in discussion_session_ids:
+            if agent_name == "codex":
+                session_id_to_pass = discussion_session_ids.get(agent_name)
+            elif agent_name not in discussion_session_ids:
                 discussion_session_ids[agent_name] = str(uuid.uuid4())
                 is_new_session = True
-            session_id_to_pass = discussion_session_ids[agent_name]
+                session_id_to_pass = discussion_session_ids[agent_name]
+            else:
+                session_id_to_pass = discussion_session_ids[agent_name]
 
         tool_config = dict(_DISCUSSION_READONLY_TOOL_CONFIG)
         if is_new_session:
@@ -1388,6 +1392,13 @@ def _handle_discuss(args) -> int:
                 f"[failed: {result.stderr_excerpt or 'no response'}]",
                 False,
             )
+        if (
+            resume_policy == "bridge_only"
+            and agent_name == "codex"
+            and agent_name not in discussion_session_ids
+            and result.session_id
+        ):
+            discussion_session_ids[agent_name] = result.session_id
         return (agent_name, result.response.strip(), True)
 
     completed_rounds = 0
