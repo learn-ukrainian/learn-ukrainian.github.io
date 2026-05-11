@@ -46,7 +46,22 @@ ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-maintainer.toml — Codex agent definition with no claude_extensions equivalent.
 # config.toml and hooks.json — Codex CLI configuration files managed directly by Codex.
 ORPHAN_PATHS_CODEX="agents/curriculum-maintainer.toml config.toml hooks.json"
-ORPHAN_PATHS_GEMINI="docs/"
+ORPHAN_PATHS_GEMINI="docs/ rules/"
+
+# Claude Code auto-loads every unscoped file in `.claude/rules/` into
+# the system prompt. These six always-load rules are now served by the
+# Monitor API (`/api/rules?format=markdown`) and must not be deployed
+# to the Claude target. Other targets still receive them from
+# claude_extensions unchanged.
+CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
+    "rules/critical-rules.md"
+    "rules/non-negotiable-rules.md"
+    "rules/workflow.md"
+    "rules/delegate-must-use-worktree.md"
+    "rules/cli-help-standard.md"
+    "rules/model-assignment.md"
+)
+CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 
 # Build rsync --exclude arguments from a space-separated path list.
 build_excludes() {
@@ -56,6 +71,13 @@ build_excludes() {
         args+=" --exclude=$p"
     done
     echo "$args"
+}
+
+remove_claude_autoload_rules() {
+    local p
+    for p in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
+        rm -f ".claude/$p"
+    done
 }
 
 # Preflight assertion: warn if an undeclared orphan is in the destination
@@ -96,6 +118,7 @@ check_orphans "claude_extensions" ".agent" "$ORPHAN_PATHS_AGENT" "claude_extensi
 check_orphans "claude_extensions/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "claude_extensions/skills → .agents/skills" || orphan_fail=true
 check_orphans "claude_extensions" ".codex" "$ORPHAN_PATHS_CODEX" "claude_extensions → .codex" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
+check_orphans "claude_extensions/rules" ".gemini/rules" "" "claude_extensions/rules → .gemini/rules" || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
     echo "❌ Deploy aborted: undeclared orphan paths would be deleted."
@@ -112,6 +135,10 @@ echo ""
 echo "=== Lint agent skills ==="
 .venv/bin/python scripts/lint/lint_agent_skills.py
 echo ""
+
+if [[ "$DRY_RUN" == false ]]; then
+    remove_claude_autoload_rules
+fi
 
 # Step 2: Show diffs before sync
 echo "=== Deploy diff ==="
@@ -150,11 +177,16 @@ diff_dirs() {
     fi
 }
 
-diff_dirs "claude_extensions" ".claude" "claude_extensions → .claude" "$ORPHAN_PATHS_CLAUDE"
+diff_dirs \
+    "claude_extensions" \
+    ".claude" \
+    "claude_extensions → .claude" \
+    "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
 diff_dirs "claude_extensions" ".agent" "claude_extensions → .agent" "$ORPHAN_PATHS_AGENT"
 diff_dirs "claude_extensions/skills" ".agents/skills" "claude_extensions/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
 diff_dirs "claude_extensions" ".codex" "claude_extensions → .codex" "$ORPHAN_PATHS_CODEX"
 diff_dirs "gemini_extensions" ".gemini" "gemini_extensions → .gemini" "$ORPHAN_PATHS_GEMINI"
+diff_dirs "claude_extensions/rules" ".gemini/rules" "claude_extensions/rules → .gemini/rules" ""
 echo ""
 
 if [[ "$has_changes" == false ]]; then
@@ -170,7 +202,7 @@ fi
 # Step 3: Sync — with per-target --exclude for declared orphan paths
 echo "=== Syncing ==="
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE") claude_extensions/ .claude/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") claude_extensions/ .claude/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") claude_extensions/ .agent/
 # shellcheck disable=SC2046
@@ -185,5 +217,6 @@ mkdir -p .agents
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") claude_extensions/skills/ .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_GEMINI") gemini_extensions/ .gemini/
+rsync -av --delete claude_extensions/rules/ .gemini/rules/
 echo ""
 echo "Deploy complete."

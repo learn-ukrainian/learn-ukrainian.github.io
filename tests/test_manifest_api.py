@@ -26,6 +26,19 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 # ---------------------------------------------------------------------
 
 
+def test_rule_sources_includes_all_unscoped_files():
+    """All 6 always-load Claude rule files must be served by /api/rules."""
+    expected = {
+        "claude_extensions/rules/critical-rules.md",
+        "claude_extensions/rules/non-negotiable-rules.md",
+        "claude_extensions/rules/workflow.md",
+        "claude_extensions/rules/delegate-must-use-worktree.md",
+        "claude_extensions/rules/cli-help-standard.md",
+        "claude_extensions/rules/model-assignment.md",
+    }
+    assert set(rules_router.RULE_SOURCES) == expected
+
+
 def test_rules_markdown_default(monkeypatch, tmp_path):
     """GET /api/rules returns text/markdown with an X-Rules-Hash header."""
     # Redirect the router at synthetic rule files so the test is hermetic.
