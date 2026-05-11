@@ -26,7 +26,9 @@ Tools:
 import asyncio
 import contextlib
 import json
+import re
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -332,6 +334,33 @@ async def list_tools() -> list[Tool]:
                     },
                 },
                 "required": ["word"]
+            },
+        ),
+        Tool(
+            name="verify_quote",
+            description=(
+                "Verify whether a Ukrainian literary quote is genuinely attested in the corpus for a given author. "
+                "Returns boolean verdict + matched line(s) with work/year provenance + confidence score. "
+                "Use INSTEAD of search_literary + grep + manual line reading when checking a quotation."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "author": {
+                        "type": "string",
+                        "description": "Author name in Ukrainian (e.g., 'Шевченко', 'Леся Українка'). Matched against the literary corpus author column with normalization.",
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "The quoted text to verify, in Ukrainian. Accents/stress marks and punctuation differences tolerated.",
+                    },
+                    "min_confidence": {
+                        "type": "number",
+                        "description": "Minimum fuzzy-match confidence to count as 'matched' (0.0-1.0). Default 0.80.",
+                        "default": 0.80,
+                    },
+                },
+                "required": ["author", "text"],
             },
         ),
         Tool(
@@ -891,6 +920,79 @@ async def handle_check_russian_shadow(args: dict):
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
 
 
+def _normalize_quote_text(value: str) -> str:
+    text = "".join(
+        ch for ch in unicodedata.normalize("NFKD", str(value).lower())
+        if not "\u0300" <= ch <= "\u036f"
+    )
+    text = text.translate(str.maketrans({ch: " " for ch in "«»“”„\"'`"}))
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _normalize_author_name(value: str) -> str:
+    text = _normalize_quote_text(str(value).replace(".", " "))
+    tokens = [t for t in text.split() if len(t) > 1]
+    patronymics = ("ович", "евич", "ич", "івна", "ївна", "овна", "евна")
+    tokens = [t for t in tokens if not t.endswith(patronymics)]
+    return tokens[-1] if tokens else text
+
+
+def _best_quote_excerpt(text_query: str, chunk_text: str) -> str:
+    from rapidfuzz import fuzz
+
+    lines = [line.strip() for line in str(chunk_text).splitlines() if line.strip()]
+    windows = [" ".join(lines[i:i + width]) for i in range(len(lines)) for width in range(1, 5)]
+    if not windows:
+        windows = [str(chunk_text)]
+    return max(windows, key=lambda line: fuzz.partial_ratio(text_query, _normalize_quote_text(line)))
+
+
+async def handle_verify_quote(args: dict) -> list[TextContent]:
+    author_query = _normalize_author_name(args.get("author", ""))
+    text_query = _normalize_quote_text(args.get("text", ""))
+    if not author_query:
+        raise ValueError("author is required")
+    if not text_query:
+        raise ValueError("text is required")
+
+    min_confidence = max(0.0, min(float(args.get("min_confidence", 0.80)), 1.0))
+    keywords = {word for word in text_query.split() if len(word) >= 3}
+
+    from wiki.sources_db import search_literary
+
+    hits = await asyncio.to_thread(search_literary, keywords, 20)
+    candidates = []
+    from rapidfuzz import fuzz
+
+    for hit in hits:
+        if _normalize_author_name(hit.get("author", "")) != author_query:
+            continue
+        chunk_text = hit.get("text", "")
+        line = _best_quote_excerpt(text_query, chunk_text)
+        confidence = fuzz.partial_ratio(text_query, _normalize_quote_text(chunk_text)) / 100
+        candidates.append({
+            "line": line,
+            "work": hit.get("title") or hit.get("source_file") or "",
+            "year": hit.get("year"),
+            "confidence": round(confidence, 4),
+            "context_chunk_id": hit.get("chunk_id"),
+        })
+
+    candidates.sort(key=lambda item: item["confidence"], reverse=True)
+    matched = bool(candidates and candidates[0]["confidence"] >= min_confidence)
+    result = {
+        "matched": matched,
+        "best_confidence": candidates[0]["confidence"] if candidates else 0.0,
+        "matched_lines": [item for item in candidates if item["confidence"] >= min_confidence][:3]
+        if matched else candidates[:3],
+        "search_normalized": {
+            "author_query": author_query,
+            "text_query": text_query,
+        },
+    }
+    return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
+
+
 @server.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
@@ -909,6 +1011,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "collection_stats": lambda: handle_collection_stats(arguments),
             "check_russian_shadow": lambda: handle_check_russian_shadow(arguments),
             "check_modern_form": lambda: handle_check_modern_form(arguments),
+            "verify_quote": lambda: handle_verify_quote(arguments),
             "verify_word": lambda: handle_verify_word(arguments),
             "verify_words": lambda: handle_verify_words(arguments),
             "verify_lemma": lambda: handle_verify_lemma(arguments),
