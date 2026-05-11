@@ -85,6 +85,8 @@ Reserve all narrative, anecdotes, KPIs, and rich rationale for the `.html` compa
 
 Brief and HTML are authored together in the same orchestrator turn. Never ship one without the other for sessions going forward.
 
+Every update to `docs/session-state/current.md` MUST also update the top-level `Latest-Brief: docs/session-state/<date>-<slug>-brief.md` marker to the new brief path. The SessionStart hook parses this marker before falling back to table regex; table-format drift would silently reintroduce the old cold-start budget tax.
+
 ### Backfill policy
 
 Older `current.md` rows are HTML-only. Backfill is OPTIONAL — only worth it if a future thread needs to re-pickup that session. The cold-start fallback handles the missing-brief case.

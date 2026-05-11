@@ -197,29 +197,93 @@ if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
   fi
 fi
 
-# 13. Session handoff — load docs/session-state/current.md if present.
-# This is the zero-touch rehydrate: the previous session's context-monitor.sh
-# (or user-written handoff) landed in that file. Pull it in verbatim so
-# Claude never has to be told "read current.md first."
+# 13. Session handoff — point at docs/session-state/current.md latest brief.
+# This is the zero-touch rehydrate: current.md keeps a stable Latest-Brief
+# marker so the hook can inject a compact pointer instead of dumping the index.
 HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
-HANDOFF_CONTENT=""
+HANDOFF_CONTEXT=""
+HANDOFF_WARNINGS=""
+
+build_handoff_pointer() {
+  local brief_path="$1"
+  cat <<EOF
+PREVIOUS-SESSION HANDOFF — read this brief first, then orient via Monitor API.
+
+Brief: $brief_path
+Read with: Read tool. The brief is ~4KB, YAML frontmatter + bullet body.
+Cold-start protocol: claude_extensions/rules/workflow.md § "Two-tier handoffs"
+
+---
+EOF
+}
+
+build_handoff_fallback() {
+  local warning_text="$1"
+  local handoff_head="$2"
+  local prefix=""
+
+  if [ -n "$warning_text" ]; then
+    prefix="$warning_text
+
+"
+  fi
+
+  cat <<EOF
+${prefix}PREVIOUS-SESSION HANDOFF (from docs/session-state/current.md — read this FIRST before anything else):
+
+$handoff_head
+
+---
+EOF
+}
+
 if [ -f "$HANDOFF_FILE" ]; then
-  # Cap at 200 lines — handoff should be compact; truncate if it sprawls.
-  HANDOFF_CONTENT=$(head -200 "$HANDOFF_FILE" 2>/dev/null)
+  MARKER_BRIEF=$(grep -m1 '^Latest-Brief:' "$HANDOFF_FILE" 2>/dev/null | sed 's/^Latest-Brief:[[:space:]]*//; s/[[:space:]]*$//')
+
+  if [ -n "$MARKER_BRIEF" ]; then
+    if [ -f "$PROJECT_DIR/$MARKER_BRIEF" ]; then
+      HANDOFF_CONTEXT=$(build_handoff_pointer "$MARKER_BRIEF")
+    else
+      HANDOFF_WARNINGS="WARN: Latest-Brief pointed to $MARKER_BRIEF but file missing on disk."
+    fi
+  fi
+
+  if [ -z "$HANDOFF_CONTEXT" ]; then
+    TABLE_BRIEF=$(sed -n 's/.*\*\*Brief (read first):\*\* `\([^`]*\)`.*/\1/p' "$HANDOFF_FILE" 2>/dev/null | head -1)
+
+    if [ -n "$TABLE_BRIEF" ]; then
+      if [ -f "$PROJECT_DIR/$TABLE_BRIEF" ]; then
+        if [ -z "$MARKER_BRIEF" ]; then
+          HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+}WARN: Latest-Brief marker missing in current.md — fell back to table regex. Add the marker to fix."
+        fi
+        HANDOFF_CONTEXT="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+
+}$(build_handoff_pointer "$TABLE_BRIEF")"
+      else
+        HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+}WARN: Latest-Brief pointed to $TABLE_BRIEF but file missing on disk."
+      fi
+    fi
+  fi
+
+  if [ -z "$HANDOFF_CONTEXT" ]; then
+    HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+}WARN: Could not locate latest brief in current.md — dumping head -200 verbatim. Cold-start budget tax: ~30KB. Fix current.md format."
+    # Cap at 200 lines — this is the last-resort compatibility path.
+    HANDOFF_HEAD=$(head -200 "$HANDOFF_FILE" 2>/dev/null)
+    HANDOFF_CONTEXT=$(build_handoff_fallback "$HANDOFF_WARNINGS" "$HANDOFF_HEAD")
+  fi
 fi
 
 # Build output
-if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ] && [ -z "$HANDOFF_CONTENT" ]; then
+if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ] && [ -z "$HANDOFF_CONTEXT" ]; then
   exit 0
 fi
 
 CONTEXT=""
-if [ -n "$HANDOFF_CONTENT" ]; then
-  CONTEXT="PREVIOUS-SESSION HANDOFF (from docs/session-state/current.md — read this FIRST before anything else):
-
-$HANDOFF_CONTENT
-
----
+if [ -n "$HANDOFF_CONTEXT" ]; then
+  CONTEXT="$HANDOFF_CONTEXT
 "
 fi
 CONTEXT="${CONTEXT}SESSION SETUP CHECK:"
