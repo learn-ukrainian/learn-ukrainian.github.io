@@ -64,7 +64,7 @@ def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
         marker = f"ROUND_{round_idx}_REPLY_MARKER_{agent_name.upper()}"
         body = f"{('x' * 200)} {marker}\n[DISAGREE]"
         round_responses.append(body)
-        return SimpleNamespace(ok=True, response=body, stderr_excerpt="")
+        return SimpleNamespace(ok=True, response=body, stderr_excerpt="", session_id=None)
 
     monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
 
