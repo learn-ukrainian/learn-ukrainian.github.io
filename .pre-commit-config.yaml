@@ -144,3 +144,15 @@ repos:
         pass_filenames: false
         files: ^docs/session-state/.*\.md$
         stages: [pre-commit]
+
+      - id: lint-agent-trailer
+        name: warn on commits missing an X-Agent trailer
+        # Warn-only during rollout (2026-05-11). Lint reports missing trailers
+        # but does NOT block the push. Flip to blocking after all in-flight
+        # PRs and orchestrator inline commits adopt the trailer.
+        entry: >-
+          bash -c '.venv/bin/python scripts/audit/lint_agent_trailer.py
+          || echo "(warn-only — push allowed; will be blocking after rollout)"'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]

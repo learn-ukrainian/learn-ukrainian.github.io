@@ -111,6 +111,36 @@ subtree layout:
     git worktree add -b claude/<issue>-<topic> .worktrees/dispatch/claude/<issue>-<topic>
     cd .worktrees/dispatch/claude/<issue>-<topic>
 
+## Required commit trailer: `X-Agent`
+
+Every commit produced inside a dispatch worktree (or by the orchestrator
+inline) MUST carry an `X-Agent: <agent>/<task-id>` trailer. This is the
+only deterministic signal of which agent authored a commit — the git
+`committer` field is the user's local config and is identical across
+all locally-dispatched agents.
+
+In the dispatch brief, instruct the agent explicitly:
+
+```
+Add the X-Agent trailer to every commit you make:
+
+    git commit -m "feat(...): ..." --trailer "X-Agent: <agent>/<task-id>"
+
+Where <agent> ∈ {claude, codex, gemini} and <task-id> is the dispatch
+task identifier you were given (e.g. codex/1879-fix-ci-and-wikipedia).
+
+Before pushing, verify with:
+
+    .venv/bin/python scripts/audit/lint_agent_trailer.py
+```
+
+For orchestrator-inline commits I make myself: use `claude-inline/orchestrator`
+(or a more specific topic like `claude-inline/agent-trailer-fix`).
+
+Forward-only enforcement — do NOT rewrite history of already-merged
+commits. The lint runs over `origin/main..HEAD` so each PR is checked
+in isolation.
+
 ## Enforcement
 
 The rule lives in both `claude_extensions/rules/` (this file) and will

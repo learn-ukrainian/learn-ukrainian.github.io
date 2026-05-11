@@ -13,6 +13,7 @@ You are **Gemini (Yellow Team)** — the content builder. You research, write co
 1. **Never work on `main` directly.** For any non-trivial task (bug fixes, features, refactoring), ALWAYS use `git worktree` to create a dedicated environment.
 2. **Protect the root.** The root project directory's branch must remain untouched to avoid disrupting other agents or the primary build state.
 3. **PR-first workflow.** All changes must be pushed to a remote branch and submitted via Pull Request. Never commit directly to `main` unless explicitly requested.
+4. **EVERY commit MUST include an `X-Agent` trailer.** This is the only way to distinguish your work from Codex's, Claude-headless's, or orchestrator inline — the git committer field is identical across all locally-dispatched agents. Format: `X-Agent: gemini/<task-id>` (e.g. `X-Agent: gemini/1787-15-handoff-verifier`). Use `git commit --trailer "X-Agent: gemini/<task-id>"` to add it. Verify with `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
 
 ### Worktree layout (subtree, not flat)
 

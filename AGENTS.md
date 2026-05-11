@@ -167,7 +167,55 @@ git branch -d <agent>/<task>
 
 The flat `.worktrees/<name>/` layout still works for back-compat but is being phased out. Do not create new flat worktrees.
 
-### 11. NEVER Use Container Paths
+### 11. ALWAYS Add an `X-Agent` Trailer to Every Commit
+
+Every commit you create MUST include an `X-Agent` trailer identifying which agent + task produced it. This is the ONLY way to distinguish Codex / Gemini / Claude-headless / orchestrator-inline work — the git `committer` field is the user's local config and is identical across all locally-dispatched agents.
+
+**Format:**
+
+```
+X-Agent: <agent>/<task-id>
+```
+
+Where `<agent>` ∈ {`claude-inline`, `claude`, `codex`, `gemini`, `dependabot`} and `<task-id>` is your dispatch task identifier OR the literal `orchestrator` / `inline` for orchestrator-side commits.
+
+**Examples:**
+
+```
+X-Agent: codex/1879-fix-ci-and-wikipedia
+X-Agent: claude/1657-adr-010
+X-Agent: gemini/1787-15-handoff-verifier
+X-Agent: claude-inline/orchestrator
+```
+
+**How to add it:**
+
+```bash
+# Preferred: use --trailer on commit (auto-formats)
+git commit -m "feat(foo): bar" --trailer "X-Agent: codex/1879-fix-ci-and-wikipedia"
+
+# Or include it directly in the commit message body (separated by blank line):
+git commit -m "$(cat <<EOF
+feat(foo): bar
+
+Implementation details here.
+
+X-Agent: codex/1879-fix-ci-and-wikipedia
+EOF
+)"
+```
+
+**Enforcement:**
+
+`scripts/audit/lint_agent_trailer.py` checks every commit in `origin/main..HEAD` for the trailer. Run it before pushing:
+
+```bash
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+```
+
+Dependabot squash-merges are auto-skipped (recognized by subject `deps: ...` / `Bump ...` or `dependabot` in committer/author). Merge commits are skipped via `git log --no-merges`.
+
+### 12. NEVER Use Container Paths
 
 This project runs **locally with pyenv**, NOT in Docker. Do not use:
 - `/app/curriculum/...` — use relative paths or real local paths
