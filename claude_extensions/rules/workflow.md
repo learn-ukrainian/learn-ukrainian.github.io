@@ -127,6 +127,22 @@ were trying to reconstruct.
 
 **Full reference:** [`docs/MONITOR-API.md`](../../docs/MONITOR-API.md).
 
+### Don't confuse `claude agents` with active-dispatch state
+
+The Claude Code v2.1.139 `claude agents` command is a **static
+configuration lister**, not a live-session view. Its output lists
+loaded agent DEFINITIONS (e.g. `curriculum-maintainer`, `Explore`,
+`Plan`, `claude`) and labels them "active" — meaning "loaded into the
+current process," NOT "running a session." Verified 2026-05-12 against
+Claude Code 2.1.139 (`claude agents --format json` is rejected with
+`unknown option`; only the plaintext lister exists).
+
+To check ACTIVE DISPATCHES, use `/api/delegate/active` (Monitor API).
+To check OPEN PRs, use `gh pr list`. To check IN-FLIGHT WORKTREES,
+use `/api/worktrees`. `claude agents` does not replace any of these.
+
+(Encoded 2026-05-12 after queue item #2 in `2026-05-12-cold-start-followups-brief.md` was filed under the wrong assumption.)
+
 ---
 
 ## Mandatory task workflow
