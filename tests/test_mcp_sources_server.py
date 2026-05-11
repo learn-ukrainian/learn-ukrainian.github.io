@@ -49,7 +49,7 @@ class TestListTools:
         expected = {
             "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
-            "verify_word", "verify_words", "verify_lemma", "check_modern_form",
+            "verify_word", "verify_words", "verify_lemma", "verify_quote", "check_modern_form",
             "query_wikipedia", "query_grac", "query_ulif",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
             "query_pravopys", "query_cefr_level",
@@ -85,6 +85,12 @@ class TestListTools:
         assert props["type"] == "array"
         assert props["items"]["type"] == "string"
 
+    def test_verify_quote_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        vq = next(t for t in tools if t.name == "verify_quote")
+        assert vq.inputSchema["required"] == ["author", "text"]
+        assert vq.inputSchema["properties"]["min_confidence"]["default"] == 0.80
+
 
 class TestCallToolDispatch:
     """Test that call_tool routes to correct handlers."""
@@ -105,6 +111,12 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("verify_words", {"words": ["тест"]}))
             mock.assert_called_once_with({"words": ["тест"]})
+
+    def test_verify_quote_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_quote", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("verify_quote", {"author": "Шевченко", "text": "Та в Сибір загнали"}))
+            mock.assert_called_once_with({"author": "Шевченко", "text": "Та в Сибір загнали"})
 
     def test_search_sources_dispatches(self, server_module):
         with patch.object(server_module, "handle_search_sources", new_callable=AsyncMock) as mock:
@@ -189,6 +201,89 @@ class TestVerifyWordsHandler:
             assert "Found: 1/2" in text
             assert "**стій** — FOUND" in text
             assert "**взяйте** — NOT FOUND" in text
+
+
+def _shevchenko_quote_hits():
+    # Known-good source confirmed with mcp__sources__search_literary:
+    # query="загнали в Сибір", chunk_id=d1b5c8a6_c0084, author="Шевченко Т."
+    return [
+        {
+            "chunk_id": "d1b5c8a6_c0084",
+            "title": "",
+            "author": "Шевченко Т.",
+            "year": 1814,
+            "source_file": "ukrlib-shevchenko",
+            "text": (
+                "Що розлили з річку крові\n\n"
+                "Та в Сибір загнали\n\n"
+                "Свою шляхту, то вже й годі,\n\n"
+                "Уже й запишались."
+            ),
+        },
+        {
+            "chunk_id": "9976239a_c0473",
+            "title": "",
+            "author": "Шевченко Т.",
+            "year": 1961,
+            "source_file": "wave10-shevchenko-tvory-t1",
+            "text": "Сибір неісходима,\n\nА тюрм, а люду! що й казать!",
+        },
+        {
+            "chunk_id": "other_shevchenko",
+            "title": "Садок вишневий коло хати",
+            "author": "Т. Г. Шевченко",
+            "year": 1847,
+            "source_file": "fixture",
+            "text": "Садок вишневий коло хати,\n\nХрущі над вишнями гудуть.",
+        },
+    ]
+
+
+class TestVerifyQuoteHandler:
+    """Test verify_quote fuzzy attribution checks."""
+
+    def test_known_good_shevchenko_line_matches(self, server_module):
+        with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
+            result = _run(
+                server_module.handle_verify_quote(
+                    {"author": "Шевченко", "text": "Та в Сибір загнали Свою шляхту"}
+                )
+            )
+        data = json.loads(result[0].text)
+        assert data["matched"] is True
+        assert data["best_confidence"] >= 0.90
+        assert data["matched_lines"][0]["context_chunk_id"] == "d1b5c8a6_c0084"
+
+    def test_fabricated_fused_quote_returns_near_misses(self, server_module):
+        with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
+            result = _run(
+                server_module.handle_verify_quote(
+                    {"author": "Шевченко", "text": "Загнали в Сибір неісходиму"}
+                )
+            )
+        data = json.loads(result[0].text)
+        assert data["matched"] is False
+        assert len(data["matched_lines"]) == 3
+        assert data["matched_lines"][0]["confidence"] < 0.80
+
+    def test_author_variants_find_same_line(self, server_module):
+        matched_ids = []
+        for author in ["Шевченко", "Т. Г. Шевченко", "Тарас Шевченко"]:
+            with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
+                result = _run(
+                    server_module.handle_verify_quote(
+                        {"author": author, "text": "Та в Сибір загнали Свою шляхту"}
+                    )
+                )
+            data = json.loads(result[0].text)
+            assert data["matched"] is True
+            matched_ids.append(data["matched_lines"][0]["context_chunk_id"])
+        assert matched_ids == ["d1b5c8a6_c0084"] * 3
+
+    def test_empty_text_returns_clean_error(self, server_module):
+        result = _run(server_module.call_tool("verify_quote", {"author": "Шевченко", "text": ""}))
+        assert "ValueError: text is required" in result[0].text
+        assert "Traceback" not in result[0].text
 
 
 class TestSearchSourcesHandler:
