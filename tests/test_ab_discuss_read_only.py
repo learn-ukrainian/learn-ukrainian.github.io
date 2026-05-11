@@ -110,7 +110,7 @@ def test_discuss_posts_normal_reply_when_worktree_is_unchanged(
     def fake_invoke(agent_name: str, prompt: str, **kwargs):
         assert agent_name == "codex"
         assert kwargs["mode"] == "read-only"
-        return SimpleNamespace(ok=True, response="Normal analysis only. [DISAGREE]")
+        return SimpleNamespace(ok=True, response="Normal analysis only. [DISAGREE]", session_id=None)
 
     monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
     args = SimpleNamespace(
