@@ -19,7 +19,18 @@ Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not wri
 <teaching_sequence>Which Knowledge Packet facts/citations this section uses.</teaching_sequence>
 <verification_plan>Specific MCP tools to be called for this section's claims.</verification_plan>
 <verification_trace>
-List the exact tool call signatures you intend to use for this section. Example: mcp__sources__verify_words(["кіт", "стіл"]). Do not fake results here; this is your plan for the tool calls you will actually trigger.
+List the exact tool call signatures you intend to use for this section.
+
+**Prefer single-primitive calls over compose-patterns.** The pipeline ships four single-call verifiers that collapse multi-step compositions:
+
+- For Ukrainian quotes: `mcp__sources__verify_quote(author="...", text="...")` — ONE call returns `matched: bool, best_confidence: float`. Do not compose `search_literary + grep + reason`.
+- For source attribution: `mcp__sources__verify_source_attribution(source="grinchenko_1907"|"esum"|"sum11"|"antonenko_davydovych"|"literary"|"heritage"|"wikipedia"|"style_guide", claim="...")` — ONE call returns `discusses: bool, evidence: [...]`. Do not compose multiple per-source `search_*` calls.
+- For modernity / archaism: `mcp__sources__check_modern_form(word="...")` — ONE call returns modernity flags. Do not infer from raw VESUM tags.
+- For Russian-shadow detection: `mcp__sources__check_russian_shadow(word="...")` — ONE call returns Russian-morphology confidence.
+
+Use the compose-pattern (`search_literary` / `search_grinchenko_1907` / `search_style_guide` etc.) ONLY when you need to retrieve evidence chunks for inclusion in the artifact (e.g., quoting a textbook passage). For verification (`matched/discusses/modern/russian-shadow` boolean questions), the single-primitive call is mandatory.
+
+Example: `mcp__sources__verify_quote(author="Шевченко", text="загнали в Сибір неісходиму")`. Do not fake results here; this is your plan for the tool calls you will actually trigger.
 Every signature listed here is a commitment to call that exact tool this turn; omit speculative or copied example signatures.
 </verification_trace>
 
@@ -44,13 +55,11 @@ that failure class. Run each check while drafting, not as a separate pass.
 2. **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys standard forms for learner-facing standard Ukrainian. However, NEVER classify a word as Russianism, surzhyk, or calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. For any non-modern or suspicious form, verify with `mcp__sources__check_modern_form` (VESUM) plus available historical/etymological evidence (`mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, literary/wiki source context). If authentic but non-standard, keep it only when pedagogically required, tag it `[Archaism]`, `[Historism]`, or `[Dialectism]`, give the modern standard equivalent, and briefly state its Ukrainian heritage. If unverified, omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
 3. **Source-citation discipline.** Every dictionary / style-guide / author
-   citation MUST be groundable in MCP via the matching tool
-   (`search_definitions` for СУМ-11, `search_style_guide` for
-   Антоненко-Давидович, `search_grinchenko_1907` for Грінченко,
-   `query_pravopys` for Правопис, `search_esum` for ЕСУМ). Cannot ground
-   → do NOT cite. Say "modern Ukrainian standardized form" or rephrase
-   without attribution. Inventing a citation to look authoritative is a
-   hard fail.
+   citation MUST be groundable in MCP. **Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive** — it returns a `discusses: bool` verdict in one call. Allowed `source` enum values: `grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`. If `discusses=false`, do NOT cite that source for that claim.
+
+   The compose-pattern (calling `search_definitions` for СУМ-11, `search_style_guide` for Антоненко-Давидович, `search_grinchenko_1907` for Грінченко, `query_pravopys` for Правопис, `search_esum` for ЕСУМ separately) is still allowed when you need the actual evidence chunks to QUOTE in the artifact, but for the boolean "does X discuss Y?" verification step, `verify_source_attribution` is the single-call mandate.
+
+   Cannot ground via `verify_source_attribution` → do NOT cite. Say "modern Ukrainian standardized form" or rephrase without attribution. Inventing a citation to look authoritative is a hard fail.
 
    **Grammar claim grounding.** EVERY specific grammar claim (e.g., rules
    about aspect, case endings, syntax, phonetics, morphology, word formation,
@@ -67,10 +76,7 @@ that failure class. Run each check while drafting, not as a separate pass.
 For heritage defense, route lookups through the canonical MCP tools in this order: (1) `mcp__sources__search_heritage` is the primary entry point — it merges Грінченко 1907, ЕСУМ, slovnyk.me modern/regional dictionaries, and Антоненко-Давидович style warnings, ranking pre-Soviet attestations above modern-only rows. (2) Use `mcp__sources__search_slovnyk_me` only when you specifically need a slovnyk.me single-source result (e.g. СУМ-20 or a regional dictionary not surfaced by `search_heritage`). (3) Standard tools — `check_modern_form` (VESUM), `search_grinchenko_1907`, `search_esum`, literary corpus, and compiled wiki/source citations — remain valid evidence sources alongside the merged heritage tool. Cite the tool name and the dictionary slug in your `<plan_reasoning verification="...">` block. Do not claim heritage verification without naming a concrete tool result.
 For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scripts/wiki/slovnyk_me.py`, especially heritage slugs `newsum`, `holoskevych`, `obsolete_words`, `bukovina`, `franko`, and `slang_lviv`; for merged `search_heritage` rows without `dictionary_slug`, cite `source_family`, `source`, and `classification`. Include the first 80 characters of the raw tool-result `text` verbatim in `<plan_reasoning>`. If `search_heritage` returns empty, emit `<!-- VERIFY: heritage status for "X" unresolved -->` rather than asserting heritage status.
 
-4. **Quote attribution discipline.** Every attributed quote must be a
-   contiguous string findable via `mcp__sources__search_literary`. Never
-   fuse two separate sources into one attributed line. Exact line not
-   found → drop the quote or paraphrase without attribution.
+4. **Quote attribution discipline.** Every attributed Ukrainian literary quote MUST be verified via a single `mcp__sources__verify_quote(author, text)` call BEFORE you paste the quote into the artifact. Required verdict: `matched=true` AND `best_confidence ≥ 0.85`. Verdict false or confidence below threshold → drop the quote or paraphrase without attribution. Never fuse two separate sources into one attributed line — `verify_quote` will return `matched=false` on fused composites, that is the canonical detection signal. The compose-pattern (`search_literary` + grep + reason) is forbidden for this verification step; use `verify_quote` exclusively.
 
 5. **End-of-output gate.** Before emitting the four fenced blocks, scan
    the draft once more: every example word against the verification you

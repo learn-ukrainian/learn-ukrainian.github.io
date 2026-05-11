@@ -45,18 +45,9 @@ that touches dimension `{DIM}`. The audit feeds the evidence list above:
 unverified items become FLAG strings in your evidence and weigh the score
 down, not silent passes.
 
-A. **Source-attribution audit (all dims).** For every dictionary /
-   style-guide / author cited in the Generated Content, verify via the
-   matching MCP tool (`search_definitions` for СУМ-11,
-   `search_style_guide` for Антоненко-Давидович,
-   `search_grinchenko_1907` for Грінченко, `query_pravopys` for Правопис,
-   `search_esum` for ЕСУМ). No matching hit → FLAG `unverified citation`,
-   treat as score-against.
+A. **Source-attribution audit (all dims).** For every dictionary / style-guide / author cited in the Generated Content, use the single-call primitive `mcp__sources__verify_source_attribution(source, claim)` where `source` ∈ {`grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`}. Verdict `discusses=false` → FLAG `unverified citation`, treat as score-against. The compose-pattern (calling `search_definitions` / `search_style_guide` / `search_grinchenko_1907` / `query_pravopys` / `search_esum` separately) is acceptable only when you need to inspect specific evidence chunks beyond the boolean verdict; for the audit pass itself, the single-call primitive is mandatory.
 
-B. **Quote verification (all dims).** For every authored quote attributed
-   to a literary source, run `mcp__sources__search_literary` for the exact
-   line. Line not found as a contiguous string → FLAG `fabricated quote`.
-   Two sources fused into one attributed line is the same failure.
+B. **Quote verification (all dims).** For every authored quote attributed to a literary source, call `mcp__sources__verify_quote(author, text)`. Required: `matched=true` AND `best_confidence ≥ 0.85`. Verdict false or confidence below threshold → FLAG `fabricated quote`. The tool detects fused composites (two real sources stitched into one attributed line) by returning `matched=false` with non-zero near-misses — flag those as `fused quote`. The compose-pattern (`mcp__sources__search_literary` + grep) is forbidden for this audit; use `verify_quote` exclusively.
 
 C. **Sovietization flag (decolonization, naturalness).** When the content
    draws from `search_definitions` (СУМ-11) for politically loaded
