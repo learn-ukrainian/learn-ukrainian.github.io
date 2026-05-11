@@ -17,11 +17,10 @@ flag requirements in the codebase:
   selects API-key auth first; otherwise the adapter falls back to
   subscription/OAuth and strips Gemini API env vars from the subprocess.
   Explicit ``GEMINI_AUTH_MODE=api`` or ``subscription`` still wins.
-- No session IDs. Gemini CLI doesn't expose them, so ``parse_response``
-  returns ``session_id=None`` always. Resume policy is ``bridge_only``
-  for cost economics, but session IDs come from the bridge's own SQLite
-  ``sessions`` table and are passed in as ``session_id=...`` — we just
-  ignore it here because the CLI has no ``--resume`` equivalent anyway.
+- **``--resume`` vs ``--session-id``**: Gemini CLI accepts UUID resume.
+  ``--resume <uuid>`` resumes an existing session and ``--session-id
+  <uuid>`` starts a NEW named session with that UUID. The bridge passes
+  ``tool_config={"is_new_session": bool}``, matching ClaudeAdapter.
 
 Key differences from CodexAdapter:
 - Output to stdout (no ``-o <file>``); ``output_file`` stays None.
@@ -61,6 +60,11 @@ _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
 _INLINE_PROMPT_LIMIT_CHARS = 100_000
 _PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+_UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+_SESSION_ID_RE = re.compile(
+    rf"(?:session[_-]?id[:=]\s*|gemini\s+--resume\s+)({_UUID_PATTERN})",
+    re.IGNORECASE,
+)
 
 
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
@@ -145,6 +149,19 @@ def _cleanup_prompt_file(path: Path | None) -> None:
         path.unlink()
 
 
+def _extract_session_id(stdout: str, events: list[Mapping[str, object]]) -> str | None:
+    """Extract Gemini's resumable UUID from stdout or parsed trace events."""
+    match = _SESSION_ID_RE.search(stdout or "")
+    if match:
+        return match.group(1)
+
+    for event in events:
+        raw = event.get("session_id") or event.get("sessionId")
+        if isinstance(raw, str) and re.fullmatch(_UUID_PATTERN, raw, re.IGNORECASE):
+            return raw
+    return None
+
+
 class GeminiAdapter:
     """Adapter for the ``gemini`` CLI (Google Gemini)."""
 
@@ -169,12 +186,10 @@ class GeminiAdapter:
     ) -> InvocationPlan:
         """Build the ``gemini`` CLI invocation.
 
-        Defensively ignores ``session_id``: Gemini CLI has no ``--resume``
-        equivalent. The bridge tracks session IDs in its own SQLite table
-        and uses them for conversation-context injection into the prompt,
-        not for CLI-level resume. We silently drop it here.
-
         Supports ``tool_config``:
+            - ``is_new_session: bool`` — if True, use ``--session-id`` (new
+              named session); if False or absent, use ``--resume`` (resume
+              existing). Only meaningful when ``session_id`` is provided.
             - ``{"mcp_server_names": ["rag", "other"]}`` → appended as
               ``--allowed-mcp-server-names rag,other``
             - Any other keys are ignored (forward-compatible).
@@ -230,11 +245,19 @@ class GeminiAdapter:
                     joined = str(mcp_server_names)
                 cmd.extend(["--allowed-mcp-server-names", joined])
 
-        # Silently ignore session_id (CLI has no equivalent) and task_id
-        # (runner already logs it via usage record). cwd IS stamped into
-        # the plan — liveness_signal_paths() needs it to derive the
-        # ~/.gemini/tmp/<basename>/ project dir without reading os.getcwd().
-        _ = session_id
+        # Session handling mirrors ClaudeAdapter: --session-id creates the
+        # named session on the first bridge call, --resume reuses it later.
+        has_session = session_id is not None
+        if has_session:
+            is_new = bool((tool_config or {}).get("is_new_session", False))
+            if is_new:
+                cmd.extend(["--session-id", session_id])
+            else:
+                cmd.extend(["--resume", session_id])
+
+        # task_id is logged by the runner. cwd IS stamped into the plan —
+        # liveness_signal_paths() needs it to derive the ~/.gemini/tmp/
+        # <basename>/ project dir without reading os.getcwd().
         _ = task_id
         requested_auth_mode = None
         if tool_config:
@@ -436,12 +459,14 @@ class GeminiAdapter:
             # do NOT mark rate_limited.
             stderr_excerpt = "transient retry resolved by CLI backoff"
 
+        session_id = _extract_session_id(stdout, trace_events)
+
         return ParseResult(
             ok=ok,
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
-            session_id=None,  # Gemini CLI doesn't expose session IDs.
+            session_id=session_id,
             tokens=None,      # Nor tokens.
             tool_calls=tool_calls,
         )
