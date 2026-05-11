@@ -49,7 +49,7 @@ class TestListTools:
         expected = {
             "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
-            "verify_word", "verify_words", "verify_lemma", "verify_quote", "check_modern_form",
+            "verify_word", "verify_source_attribution", "verify_words", "verify_lemma", "verify_quote", "check_modern_form",
             "query_wikipedia", "query_grac", "query_ulif",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
             "query_pravopys", "query_cefr_level",
@@ -91,6 +91,21 @@ class TestListTools:
         assert vq.inputSchema["required"] == ["author", "text"]
         assert vq.inputSchema["properties"]["min_confidence"]["default"] == 0.80
 
+    def test_verify_source_attribution_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(t for t in tools if t.name == "verify_source_attribution")
+        assert tool.inputSchema["required"] == ["source", "claim"]
+        assert set(tool.inputSchema["properties"]["source"]["enum"]) == {
+            "grinchenko_1907",
+            "esum",
+            "sum11",
+            "antonenko_davydovych",
+            "literary",
+            "heritage",
+            "wikipedia",
+            "style_guide",
+        }
+
 
 class TestCallToolDispatch:
     """Test that call_tool routes to correct handlers."""
@@ -105,6 +120,13 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("verify_word", {"word": "тест"}))
             mock.assert_called_once_with({"word": "тест"})
+
+    def test_verify_source_attribution_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_source_attribution", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            args = {"source": "grinchenko_1907", "claim": "коза"}
+            _run(server_module.call_tool("verify_source_attribution", args))
+            mock.assert_called_once_with(args)
 
     def test_verify_words_dispatches(self, server_module):
         with patch.object(server_module, "handle_verify_words", new_callable=AsyncMock) as mock:
@@ -284,6 +306,106 @@ class TestVerifyQuoteHandler:
         result = _run(server_module.call_tool("verify_quote", {"author": "Шевченко", "text": ""}))
         assert "ValueError: text is required" in result[0].text
         assert "Traceback" not in result[0].text
+
+
+class TestVerifySourceAttributionHandler:
+    """Test verify_source_attribution handler routing and verdicts."""
+
+    def test_grinchenko_1907_discusses_koza(self, server_module):
+        with patch(
+            "wiki.sources_db.search_grinchenko_1907",
+            return_value=[{"headword": "коза", "definition": "коза — свійська тварина"}],
+        ) as mock:
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "grinchenko_1907", "claim": "коза"}
+                )
+            )
+
+        mock.assert_called_once_with("коза", 5)
+        data = json.loads(result[0].text)
+        assert data["discusses"] is True
+        assert data["evidence_count"] >= 1
+
+    def test_antonenko_fake_claim_returns_completeness_note(self, server_module):
+        with patch("wiki.sources_db.search_style_guide", return_value=[]) as mock:
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "antonenko_davydovych", "claim": "thisisdefinitelyfake999"}
+                )
+            )
+
+        mock.assert_called_once_with("thisisdefinitelyfake999", 5)
+        data = json.loads(result[0].text)
+        assert data["discusses"] is False
+        assert "completeness_note" in data
+
+    def test_sum11_leninizm_discusses_with_sovietization_note(self, server_module):
+        with patch(
+            "wiki.sources_db.search_definitions",
+            return_value=[{"headword": "ленінізм", "definition": "ленінізм — політичне вчення"}],
+        ) as mock:
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "sum11", "claim": "ленінізм"}
+                )
+            )
+
+        mock.assert_called_once_with("ленінізм", 5)
+        data = json.loads(result[0].text)
+        assert data["discusses"] is True
+        assert "sovietization_risk" in data["completeness_note"]
+
+    def test_invalid_source_returns_clean_error(self, server_module):
+        result = _run(
+            server_module.call_tool(
+                "verify_source_attribution",
+                {"source": "not_a_source", "claim": "коза"},
+            )
+        )
+
+        assert len(result) == 1
+        assert "Invalid source" in result[0].text
+        assert "Traceback" not in result[0].text
+
+    def test_empty_claim_returns_clean_error(self, server_module):
+        result = _run(
+            server_module.call_tool(
+                "verify_source_attribution",
+                {"source": "grinchenko_1907", "claim": " "},
+            )
+        )
+
+        assert len(result) == 1
+        assert "claim must be a non-empty string" in result[0].text
+        assert "Traceback" not in result[0].text
+
+    def test_wikipedia_route_uses_query_wikipedia_handler(self, server_module):
+        text = "Wikipedia search: 'тест' — 1 results\n\n1. **Тест** — тестова сторінка"
+        with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text=text)]
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "wikipedia", "claim": "тест", "limit": 2}
+                )
+            )
+
+        mock.assert_called_once_with({"query": "тест", "mode": "search", "limit": 2})
+        assert json.loads(result[0].text)["discusses"] is True
+
+    def test_wikipedia_route_failure_returns_completeness_note(self, server_module):
+        with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
+            mock.side_effect = RuntimeError("network down")
+            result = _run(
+                server_module.handle_verify_source_attribution(
+                    {"source": "wikipedia", "claim": "тест", "limit": 2}
+                )
+            )
+
+        data = json.loads(result[0].text)
+        assert data["discusses"] is False
+        assert data["evidence_count"] == 0
+        assert data["completeness_note"] == "Wikipedia query failed: network down"
 
 
 class TestSearchSourcesHandler:
