@@ -29,6 +29,7 @@ import json
 import re
 import sys
 import unicodedata
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +52,31 @@ except ImportError:
 # Server ID published to MCP clients. Matches the key in .mcp.json
 # ("sources"). Agent tool prefixes become mcp__sources__*.
 server = Server("sources")
+
+VERIFY_SOURCE_ATTRIBUTION_SOURCES = (
+    "grinchenko_1907",
+    "esum",
+    "sum11",
+    "antonenko_davydovych",
+    "literary",
+    "heritage",
+    "wikipedia",
+    "style_guide",
+)
+
+COMPLETENESS_NOTES = {
+    "antonenko_davydovych": (
+        "Антоненко-Давидович: 279 of ~600+ entries indexed — incomplete; "
+        "if discusses=false here, Tier 2 escalation may still find it."
+    ),
+    "sum11": (
+        "СУМ-11: 127K entries; Soviet-era political/ideological coverage "
+        "flagged via sovietization_risk metadata."
+    ),
+    "grinchenko_1907": "Грінченко 1907: 67K entries; lexicographic snapshot circa 1907, NOT etymology.",
+    "esum": "ЕСУМ: etymological dictionary; coverage skewed toward inherited vocabulary.",
+    "wikipedia": "Live source; results reflect current uk.wikipedia.org state.",
+}
 
 
 @server.list_tools()
@@ -361,6 +387,37 @@ async def list_tools() -> list[Tool]:
                     },
                 },
                 "required": ["author", "text"],
+            },
+        ),
+        Tool(
+            name="verify_source_attribution",
+            description=(
+                "Verify whether a named authoritative source discusses a given claim/topic/headword. "
+                "Returns boolean verdict + supporting evidence chunks with provenance. "
+                "Use INSTEAD of dispatching sub-agents or composing multiple search tools manually."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "string",
+                        "description": "Source identifier. Must be one of the allowed values.",
+                        "enum": list(VERIFY_SOURCE_ATTRIBUTION_SOURCES),
+                    },
+                    "claim": {
+                        "type": "string",
+                        "description": (
+                            "The headword, claim, or topic in Ukrainian "
+                            "(e.g., 'Сибір', 'давноминулий час')."
+                        ),
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max evidence chunks to return (default 5).",
+                        "default": 5,
+                    },
+                },
+                "required": ["source", "claim"],
             },
         ),
         Tool(
@@ -993,6 +1050,135 @@ async def handle_verify_quote(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
 
 
+def _normalize_attribution_text(value: str) -> str:
+    decomposed = unicodedata.normalize("NFKD", value.casefold())
+    without_marks = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return re.sub(r"[^\w]+", " ", without_marks, flags=re.UNICODE).strip()
+
+
+def _attribution_chunk(hit: dict[str, Any]) -> str:
+    for key in ("definition", "definitions", "etymology_text", "snippet", "text"):
+        value = hit.get(key)
+        if value:
+            return str(value)
+    title = hit.get("title") or hit.get("word") or hit.get("lemma") or ""
+    return str(title)
+
+
+def _attribution_confidence(claim: str, hit: dict[str, Any]) -> float:
+    claim_norm = _normalize_attribution_text(claim)
+    if not claim_norm:
+        return 0.0
+
+    haystack_parts = [
+        str(hit.get(key, ""))
+        for key in ("word", "lemma", "title", "definition", "definitions", "etymology_text", "snippet", "text")
+        if hit.get(key)
+    ]
+    haystack_norm = _normalize_attribution_text(" ".join(haystack_parts))
+    if not haystack_norm:
+        return 0.0
+    if claim_norm in haystack_norm:
+        return 1.0
+
+    claim_token_count = max(1, len(claim_norm.split()))
+    tokens = haystack_norm.split()
+    candidates = tokens[:]
+    if claim_token_count > 1:
+        candidates.extend(
+            " ".join(tokens[i:i + claim_token_count])
+            for i in range(0, max(0, len(tokens) - claim_token_count + 1))
+        )
+    return max((SequenceMatcher(None, claim_norm, candidate).ratio() for candidate in candidates), default=0.0)
+
+
+def _attribution_evidence(hit: dict[str, Any], confidence: float) -> dict[str, Any]:
+    section = (
+        hit.get("section")
+        or hit.get("source")
+        or hit.get("source_family")
+        or hit.get("title")
+        or hit.get("work")
+        or None
+    )
+    return {
+        "chunk": _attribution_chunk(hit),
+        "section": section,
+        "page": hit.get("page"),
+        "confidence": round(confidence, 3),
+    }
+
+
+def _parse_wikipedia_search_hits(text: str) -> list[dict[str, Any]]:
+    if text.startswith("No Wikipedia results"):
+        return []
+    hits = []
+    for line in text.splitlines():
+        match = re.match(r"\d+\.\s+\*\*(.*?)\*\*\s+—\s+(.*)", line)
+        if match:
+            title, snippet = match.groups()
+            hits.append({
+                "title": title,
+                "snippet": snippet,
+                "text": f"{title} — {snippet}",
+                "source": "uk.wikipedia.org",
+            })
+    return hits
+
+
+async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
+    source = str(args.get("source", ""))
+    claim = str(args.get("claim", "")).strip()
+    limit = max(1, min(int(args.get("limit", 5)), 20))
+
+    if source not in VERIFY_SOURCE_ATTRIBUTION_SOURCES:
+        allowed = ", ".join(VERIFY_SOURCE_ATTRIBUTION_SOURCES)
+        raise ValueError(f"Invalid source '{source}'. Expected one of: {allowed}")
+    if not claim:
+        raise ValueError("claim must be a non-empty string")
+
+    from wiki import sources_db as sdb
+
+    if source == "grinchenko_1907":
+        hits = await asyncio.to_thread(sdb.search_grinchenko_1907, claim, limit)
+    elif source == "esum":
+        hits = await asyncio.to_thread(sdb.search_esum, claim, None, limit)
+    elif source == "sum11":
+        hits = await asyncio.to_thread(sdb.search_definitions, claim, limit)
+    elif source == "antonenko_davydovych":
+        hits = await asyncio.to_thread(sdb.search_style_guide, claim, limit)
+    elif source == "literary":
+        keywords = {word for word in claim.lower().split() if len(word) >= 3}
+        hits = await asyncio.to_thread(sdb.search_literary, keywords, limit)
+    elif source == "heritage":
+        hits = await asyncio.to_thread(sdb.search_heritage, claim, limit, include_live_slovnyk=True)
+    elif source == "wikipedia":
+        wiki_result = await handle_query_wikipedia({"query": claim, "mode": "search", "limit": limit})
+        hits = _parse_wikipedia_search_hits(wiki_result[0].text if wiki_result else "")
+    else:
+        hits = await asyncio.to_thread(sdb.search_style_guide, claim, limit)
+
+    scored = [
+        (hit, _attribution_confidence(claim, hit))
+        for hit in hits
+    ]
+    scored.sort(key=lambda item: item[1], reverse=True)
+    evidence = [
+        _attribution_evidence(hit, confidence)
+        for hit, confidence in scored[:limit]
+    ]
+    payload: dict[str, Any] = {
+        "discusses": any(confidence >= 0.85 for _, confidence in scored),
+        "source": source,
+        "evidence_count": len(evidence),
+        "evidence": evidence,
+    }
+    if source in COMPLETENESS_NOTES:
+        payload["completeness_note"] = COMPLETENESS_NOTES[source]
+
+    return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
+
+
 @server.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
@@ -1013,6 +1199,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "check_modern_form": lambda: handle_check_modern_form(arguments),
             "verify_quote": lambda: handle_verify_quote(arguments),
             "verify_word": lambda: handle_verify_word(arguments),
+            "verify_source_attribution": lambda: handle_verify_source_attribution(arguments),
             "verify_words": lambda: handle_verify_words(arguments),
             "verify_lemma": lambda: handle_verify_lemma(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
