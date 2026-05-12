@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>#1900 — Codex MCP catalog visibility investigation</title>
+<style>
+  :root { --fg: #1c1c1e; --muted: #5b5b62; --accent: #1f5cb0; --bad: #b4243a; --good: #1b7340; --warn: #a85d00; --bg-soft: #f5f5f7; --bg-code: #f3f3f5; --border: #d8d8de; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; color: var(--fg); max-width: 1080px; margin: 28px auto 80px; padding: 0 28px; line-height: 1.55; font-size: 15.5px; }
+  h1 { font-size: 26px; margin-bottom: 6px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+  h2 { font-size: 20px; margin: 32px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  h3 { font-size: 16.5px; margin: 22px 0 8px; }
+  code, pre { font-family: "SF Mono", "Menlo", "Consolas", monospace; font-size: 13px; }
+  code { background: var(--bg-code); padding: 1px 5px; border-radius: 3px; }
+  pre { background: var(--bg-code); padding: 12px 14px; border-radius: 6px; overflow-x: auto; border: 1px solid var(--border); line-height: 1.45; }
+  .meta { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+  .tldr { background: var(--bg-soft); border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 4px; margin: 14px 0 24px; }
+  .tldr strong { color: var(--accent); }
+  .verdict { font-weight: 600; padding: 2px 8px; border-radius: 3px; font-size: 13px; }
+  .verdict.in { background: #fce8ec; color: var(--bad); }
+  .verdict.out { background: #e5f1eb; color: var(--good); }
+  .verdict.inc { background: #fbf2e1; color: var(--warn); }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 22px; }
+  th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; font-size: 14px; }
+  th { background: var(--bg-soft); font-weight: 600; }
+  .yes { color: var(--good); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  blockquote { border-left: 3px solid var(--border); margin: 8px 0; padding: 4px 14px; color: var(--muted); }
+  details { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; margin: 8px 0; }
+  details > summary { cursor: pointer; font-weight: 600; }
+  .anchor { color: var(--accent); text-decoration: none; }
+  .hyp-meta { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .root-cause { background: #fce8ec; border-left: 4px solid var(--bad); padding: 14px 18px; border-radius: 4px; margin: 14px 0; }
+  .fix-design { background: #e5f1eb; border-left: 4px solid var(--good); padding: 14px 18px; border-radius: 4px; margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<h1>#1900 — Codex MCP catalog visibility investigation</h1>
+<div class="meta">
+  <strong>Investigator:</strong> Claude Opus 4.7 (headless dispatch, read-only) ·
+  <strong>Mode:</strong> diagnosis-only (NO code changes) ·
+  <strong>Dispatch SHA at run:</strong> <code>30dfc4ab6b</code> ·
+  <strong>Bakeoff SHA under test:</strong> <code>5a72a31f9b</code> ·
+  <strong>Date:</strong> 2026-05-13
+</div>
+
+<div class="tldr">
+  <strong>TL;DR.</strong>
+  <ol style="margin: 6px 0 0; padding-left: 22px;">
+    <li>Codex-tools <em>did</em> call MCP tools — <strong>8 successful calls</strong> (<code>verify_words</code>×5 verifying 121 Ukrainian forms, all FOUND in VESUM; <code>search_text</code>×3 retrieving the exact textbook pages the build cited). It out-tool-called claude-tools by 2× in this bakeoff.</li>
+    <li>The pipeline reported <code>tool_calls_total=0</code> because of a <strong>rollout-binding bug</strong> in <code>scripts/agent_runtime/adapters/codex.py::_rollout_matches_plan</code>: the matcher returns <code>False</code> on the FIRST <code>response_item/message role=user</code> whose text does not equal <code>plan.stdin_payload</code>. Codex CLI 0.130.0 injects <code>AGENTS.md</code> as such a message <em>before</em> the real user prompt, so the matcher always trips on AGENTS.md and never reaches the actual prompt.</li>
+    <li>The fix is mechanical (~10–20 LOC): change the matcher from fail-fast-on-first-mismatch to iterate-all-user-messages-and-return-true-on-any-match. Symptom is fully consistent with the 3-bakeoff <code>tool_calls_total=0</code> pattern; nothing about the writer prompt, Codex catalog, or MCP config is broken.</li>
+  </ol>
+</div>
+
+<h2>Decision-grade question — answered</h2>
+
+<blockquote><em>"Is <code>tool_calls_total=0</code> because (a) Codex never received the MCP tool definitions, (b) Codex received them but ignored them, OR (c) Codex called the tools but the telemetry collector missed them?"</em></blockquote>
+
+<p><strong>Answer: (c) — telemetry collector missed them.</strong> Specifically, the codex adapter's rollout-binding logic fails to associate the writer's rollout JSONL with the writer's <code>InvocationPlan</code>, so <code>parse_response</code> returns <code>tool_calls=[]</code> even though the rollout on disk contains 8 successful MCP function calls.</p>
+
+<h2>Side-by-side: what each writer saw and did (night bakeoff)</h2>
+
+<table>
+<thead><tr><th>Field</th><th>claude-tools</th><th>codex-tools</th><th>Source</th></tr></thead>
+<tbody>
+<tr>
+  <td>MCP config delivered (<code>mcp_config_resolved</code> event)</td>
+  <td><code>status=ok, resolved=[sources]</code></td>
+  <td><code>status=ok, resolved=[sources]</code></td>
+  <td><code>claude.write.jsonl:4</code> / <code>codex.write.jsonl:4</code></td>
+</tr>
+<tr>
+  <td>Tool catalog at writer-startup</td>
+  <td>Deferred tools loaded via <code>ToolSearch</code> (1st call in trace)</td>
+  <td>Native function-call tools (<code>verify_words</code>, <code>search_text</code>) visible directly</td>
+  <td><code>writer_tool_calls.json:1–10</code> / rollout <code>response_item/function_call</code> events</td>
+</tr>
+<tr>
+  <td>Tool names invoked (sample of 3)</td>
+  <td><code>mcp__sources__verify_words</code>, <code>mcp__sources__search_text</code></td>
+  <td><code>verify_words</code>, <code>search_text</code> (Codex strips MCP prefix in rollout)</td>
+  <td>writer_tool_calls.json &amp; rollout JSONL</td>
+</tr>
+<tr>
+  <td>Tool invocations in writer body</td>
+  <td>4 (verify_words×2 → 43 words; search_text×2)</td>
+  <td><span class="yes">8 (verify_words×5 → 121 words verified, 121/121 FOUND; search_text×3)</span></td>
+  <td>Rollout grep below</td>
+</tr>
+<tr>
+  <td>Counted in <code>tool_calls_total</code></td>
+  <td><span class="yes">4 ✓</span></td>
+  <td><span class="no">0 ✗ — rollout-binding failure</span></td>
+  <td><code>phase_writer_summary</code> events</td>
+</tr>
+<tr>
+  <td>Per-call duration in telemetry</td>
+  <td><code>duration_ms: 0</code>, <code>result_summary: {}</code> (claude adapter populates name+args but not roundtrip data)</td>
+  <td>n/a (events never reach the telemetry counter)</td>
+  <td><code>writer_tool_call</code> events</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>Note:</em> The duration_ms=0 / empty result_summary on the claude side is itself a separate telemetry-richness gap — claude's adapter extracts <code>name</code>+<code>arguments</code> from stream-json but does not currently record per-call duration or summarize output. Not the load-bearing finding here, but worth filing as a Tier-2 follow-up so reviewers can audit what each tool returned.</p>
+
+<h2>Hypotheses — verdicts &amp; evidence</h2>
+
+<h3>H1 — Codex CLI MCP bridge config is wrong on this machine <span class="verdict out">RULED OUT</span></h3>
+<p class="hyp-meta">Premise: pipeline emits <code>mcp_config_resolved=ok</code> but Codex CLI loads MCP servers from its own config, which may not match.</p>
+
+<p><strong>Test:</strong> read <code>~/.codex/config.toml</code> + <code>.mcp.json</code> in the worktree.</p>
+<pre>$ cat ~/.codex/config.toml | grep -A1 -i "mcp_servers"
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[mcp_servers.sources]
+url = "http://127.0.0.1:8766/mcp"</pre>
+<pre>$ cat .mcp.json
+{
+  "mcpServers": {
+    "sources": {
+      "type": "streamable-http",
+      "url": "http://127.0.0.1:8766/mcp"
+    }
+  }
+}</pre>
+<p><strong>Verdict:</strong> Codex CLI sees the <code>sources</code> server BOTH from <code>~/.codex/config.toml</code> AND from the pipeline-injected <code>-c mcp_servers.sources.url=...</code> overrides. Config is correct. <strong>Confirmed by direct evidence from the rollout JSONL itself</strong> — see H6.</p>
+
+<h3>H2 — Pipeline doesn't pass MCP config to Codex (only to Claude) <span class="verdict out">RULED OUT</span></h3>
+<p class="hyp-meta">Premise: writer-specific MCP-config injection might only fire for the claude-tools branch.</p>
+
+<p><strong>Test:</strong> read <code>_runtime_tool_config</code> in <code>scripts/build/linear_pipeline.py:1748–1802</code> and <code>build_mcp_tool_config</code> for codex in <code>scripts/agent_runtime/tool_config.py:163–231</code>.</p>
+<pre>linear_pipeline.py:1759–1762
+    if agent_label == "codex-tools":
+        agent_kwargs = {
+            "mcp_servers": ["sources"],
+        }</pre>
+<pre>tool_config.py:230–231 (codex branch)
+    codex_servers, diagnostics = _codex_mcp_servers(resolved_config_path, mcp_servers)
+    return ({"mcp_servers": codex_servers} if codex_servers else None), diagnostics</pre>
+<p>The codex adapter's <code>_tool_config_flags</code> (codex.py:226–239) translates this into <code>-c mcp_servers.sources.url="..."</code> CLI flags on every <code>codex exec</code> invocation. The <code>mcp_config_resolved</code> event in <code>codex.write.jsonl</code> confirms <code>resolution_status="ok"</code> and <code>resolved_servers=["sources"]</code>.</p>
+<p><strong>Verdict:</strong> Codex absolutely receives the MCP config. Also confirmed empirically — Codex called the tools (see H6).</p>
+
+<h3>H3 — Codex CLI catalog API doesn't recognize SSE-mode MCP servers <span class="verdict out">RULED OUT</span></h3>
+<p class="hyp-meta">Premise: if <code>.mcp.json</code> registered <code>sources</code> with <code>type=sse</code>, Codex CLI 0.130.0 might silently drop it.</p>
+
+<p><strong>Test:</strong> read <code>_codex_server_is_usable</code> in <code>tool_config.py:132–142</code>, compare to <code>.mcp.json</code>.</p>
+<pre>def _codex_server_is_usable(server_config: Any) -> bool:
+    ...
+    server_type = str(server_config.get("type") or "").strip().lower()
+    url = str(server_config.get("url") or "").strip()
+    if server_type == "sse":
+        return False
+    if url.rstrip("/").endswith("/sse"):
+        return False
+    return bool(url)</pre>
+<p>Project's <code>.mcp.json</code> uses <code>type="streamable-http"</code> and URL <code>http://127.0.0.1:8766/mcp</code> (not <code>/sse</code>). Both checks pass.</p>
+<p><strong>Verdict:</strong> Not the cause. Codex 0.130.0 saw a streamable-http endpoint and used it (confirmed by 8 successful MCP roundtrips in the rollout — see H6).</p>
+
+<h3>H4 — Single-primitive prompt rewrite (28417cc3cb) named tools incorrectly <span class="verdict out">RULED OUT</span></h3>
+<p class="hyp-meta">Premise: prompt may say <code>mcp__sources__verify_word</code> but Codex sees <code>verify_word</code> after server-prefix stripping, so explicit invocation example fails to match.</p>
+
+<p><strong>Test:</strong> compare tool names in <code>scripts/build/phases/linear-write.md</code> vs what each writer's runtime actually used.</p>
+<pre>$ grep -n "mcp__sources__" scripts/build/phases/linear-write.md | head -3
+(prompt uses fully-qualified mcp__sources__verify_words form throughout)</pre>
+<p>From the rollout (H6 below): Codex's <code>response_item/function_call</code> payloads have <code>name="verify_words"</code> — i.e. Codex naturally strips the <code>mcp__sources__</code> prefix when emitting function-call events. The pipeline's own <code>_normalize_tool_name</code> in <code>linear_pipeline.py:1441–1445</code> strips the same prefix:</p>
+<pre>def _normalize_tool_name(raw_tool: Any) -> str:
+    tool = str(raw_tool or "").strip()
+    if "__" in tool:
+        tool = tool.rsplit("__", 1)[-1]
+    return tool</pre>
+<p>And <code>WRITER_TOOL_NAMES</code> in the pipeline uses unprefixed names. So the prompt → CLI → counter name normalization is symmetric.</p>
+<p><strong>Verdict:</strong> Not the cause. Tool names match end-to-end.</p>
+
+<h3>H5 — Codex CLI tool catalog has a hard cap that squeezes out the MCP slot <span class="verdict out">RULED OUT</span></h3>
+<p class="hyp-meta">Premise: too many native + MCP tools may exceed a CLI cap.</p>
+<p><strong>Test:</strong> direct evidence from H6 — Codex made 8 MCP tool invocations in the writer call. If a cap had squeezed MCP out, zero would have succeeded. Hypothesis is empirically falsified.</p>
+<p><strong>Verdict:</strong> Not the cause.</p>
+
+<h3>H6 — Telemetry collector misses Codex's tool calls <span class="verdict in">RULED IN — this is the root cause</span></h3>
+<p class="hyp-meta">Premise: Codex may emit tool-use in an envelope the pipeline doesn't count.</p>
+
+<p><strong>Step 1 — locate the rollout for the failed codex writer call.</strong> The codex.write.jsonl shows the writer ran 00:24:04 → 00:27:04 UTC. Codex rollout filenames are in <em>local time</em> (CEST = UTC+2 in May), so the file is named <code>02-24-04…</code>:</p>
+<pre>$ ls ~/.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04* &amp;&amp; wc -l !$
+/Users/krisztiankoos/.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04-019e1991-c63e-7a33-8641-b8c35c36fbc7.jsonl
+      41  ...rollout-2026-05-12T02-24-04-...jsonl</pre>
+<p>cwd from <code>session_meta</code> line 1: <code>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night/audit/bakeoff-2026-05-12-night/codex</code> — confirmed the right rollout.</p>
+
+<p><strong>Step 2 — categorize events in the rollout.</strong></p>
+<pre>Event type breakdown (41 events):
+    8  response_item/function_call           ← Codex DID call tools
+    8  event_msg/mcp_tool_call_end           ← all 8 returned successfully
+    8  response_item/function_call_output    ← outputs delivered to Codex
+    4  response_item/message                 ← role-tagged messages (see Step 4)
+    4  event_msg/token_count
+    3  response_item/reasoning
+    1  session_meta
+    1  event_msg/task_started
+    1  turn_context
+    1  event_msg/user_message
+    1  event_msg/agent_message
+    1  event_msg/task_complete</pre>
+
+<p><strong>Step 3 — what Codex actually invoked.</strong></p>
+<pre>$ python -c "..."  # extracted from response_item/function_call events
+  [9]  name=verify_words   args.words=[прокидатися, прокидаюся, прокидаєшся, прокидається, вмиватися, вмиваюся, ... 65 words total]
+  [10] name=search_text    args.query="Караман 10 клас сторінка 176 зворотні дієслова суфікс ся сь дія спрямована на себе"
+  [11] name=search_text    args.query="Кравцова 4 клас сторінка 113 вимова шся ться с'а ц'а зворотні дієслова"
+  [12] name=search_text    args.query="Захарійчук 4 клас сторінка 162 дієслова на ся вимова правопис"
+  [23] name=verify_words   args.words=[прокидатися, прокидаюся, прокидаєшся, вмиваюся, ... 12 words]
+  [24] name=verify_words   args.words=[вмивати, вмиватися, одягати, одягатися, ... 10 words]
+  [25] name=verify_words   args.words=[прокидатися, вмиватися, одягатися, ... 19 words]
+  [26] name=verify_words   args.words=[зворотні, дієслова, звичайне, дієслово, ... 15 words]
+
+mcp_tool_call_end outcomes (all 8 succeeded):
+  verify_words → "Batch verification: 65 words\n\nFound: 65/65"
+  search_text  → "Found 5 results for: \"Караман 10 клас сторінка 176 ...\""
+  search_text  → "Found 5 results for: \"Кравцова 4 клас сторінка 113 ...\""
+  search_text  → "Found 5 results for: \"Захарійчук 4 клас сторінка 162 ...\""
+  verify_words → "Batch verification: 12 words\n\nFound: 12/12"
+  verify_words → "Batch verification: 10 words\n\nFound: 10/10"
+  verify_words → "Batch verification: 19 words\n\nFound: 19/19"
+  verify_words → "Batch verification: 15 words\n\nFound: 15/15"</pre>
+
+<p>Codex verified <strong>121 words across 5 batches, all found in VESUM</strong>, and pulled the exact 3 textbook citations the bakeoff's <code>citations_resolve</code> gate had flagged as drift. The empirical pattern of "codex-tools is tool-blind" was always false.</p>
+
+<p><strong>Step 4 — run the pipeline's OWN parser against this rollout.</strong></p>
+<pre>$ .venv/bin/python -c "
+from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
+text = open('.../rollout-2026-05-12T02-24-04-...jsonl').read()
+events = parse_json_events(text, source='codex', logger=logger)
+print('events:', len(events))
+calls = normalize_tool_calls(events)
+print('tool_calls:', len(calls))
+for c in calls: print(' -', c['name'])
+"
+events: 41
+tool_calls: 8
+  - verify_words
+  - search_text
+  - search_text
+  - search_text
+  - verify_words
+  - verify_words
+  - verify_words
+  - verify_words</pre>
+<p>The pipeline's parser extracts all 8 calls correctly <strong>if given the rollout text</strong>. So the parser is not the bug — the bug is in the upstream step that decides which rollout file to read.</p>
+
+<p><strong>Step 5 — pinpoint the upstream failure: <code>_rollout_matches_plan</code>.</strong></p>
+<p>Code path: <code>codex.parse_response</code> → <code>_read_latest_rollout_trace(plan)</code> → <code>_select_rollout_for_plan(plan)</code> → iterates candidate rollouts, calls <code>_rollout_matches_plan(rollout, plan)</code> per candidate. Body in <code>scripts/agent_runtime/adapters/codex.py:666–717</code>:</p>
+<pre>def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:
+    expected = (plan.stdin_payload or "").rstrip()
+    if not expected:
+        return True
+    try:
+        with open(rollout_path, encoding="utf-8", errors="replace") as f:
+            for line in f:
+                ...
+                payload = event.get("payload") or {}
+                if not isinstance(payload, dict): continue
+
+                if (event.get("type") == "event_msg"
+                    and payload.get("type") == "user_message"
+                    and isinstance(payload.get("message"), str)):
+                    return payload["message"].rstrip() == expected            ← fail-fast
+
+                if (event.get("type") == "response_item"
+                    and payload.get("type") == "message"
+                    and payload.get("role") == "user"):
+                    content = payload.get("content")
+                    if isinstance(content, list):
+                        parts = [...]
+                        if parts:
+                            return "\n".join(parts).rstrip() == expected      ← fail-fast
+            return False
+    except Exception:
+        return False</pre>
+
+<p>Both <code>return</code> statements run on the <strong>FIRST</strong> matching event-shape. Once any role=user message is seen, the result of the equality test is returned without scanning further.</p>
+
+<p><strong>Step 6 — what Codex 0.130.0 emits.</strong> The first role=user events in the rollout:</p>
+<pre>line 3: response_item/message role=developer   ← skipped (correct)
+line 4: response_item/message role=user        ← MATCHER TRIPS HERE
+        content[0]: type=input_text len=15849
+          first 80 chars: "# AGENTS.md instructions for /Users/krisztiankoos/projects/learn-ukrainian/.work…"
+        content[1]: type=input_text len=295
+          first 80 chars: "&lt;environment_context&gt;\n  &lt;cwd&gt;/Users/krisztiankoos/projects/learn-ukrainian/.work…"
+line 5: event_msg/user_message                 ← never reached
+line 6: response_item/message role=user        ← never reached
+        content[0]: "# North Star — Curriculum Reboot (#1577 Phase 0 draft)…"  (the REAL prompt)</pre>
+
+<p>Line 4 is Codex CLI 0.130.0's auto-injection of <code>AGENTS.md</code> + <code>&lt;environment_context&gt;</code> as a synthetic user-role message. The matcher hits this first, compares 16 KB of AGENTS.md content to the 98 KB writer prompt, returns <strong>False</strong>, and stops scanning. The real prompt at lines 5 + 6 is never inspected.</p>
+
+<p><strong>Step 7 — direct repro.</strong> Construct an InvocationPlan with the rollout's own <code>event_msg/user_message</code> as <code>stdin_payload</code>; the matcher should return True if it works correctly:</p>
+<pre>$ .venv/bin/python -c "
+from scripts.agent_runtime.adapters.codex import CodexAdapter
+from scripts.agent_runtime.adapters.base import InvocationPlan
+import json
+rollout = '.../rollout-2026-05-12T02-24-04-...jsonl'
+# Extract event_msg/user_message text from the rollout
+expected = (the 97789-char writer prompt)
+plan = InvocationPlan(cmd=[...], cwd=..., stdin_payload=expected, output_file=None, env_overrides={}, liveness_paths=())
+print(CodexAdapter()._rollout_matches_plan(Path(rollout), plan))
+"
+False</pre>
+
+<p>Returns <strong>False</strong> even when fed the rollout's own ground-truth user prompt as stdin_payload. Definitive: the matcher is wrong.</p>
+
+<p><strong>Step 8 — verify the fix path.</strong> Replace fail-fast with iterate-all:</p>
+<pre>$ .venv/bin/python -c "
+# Pseudo-fix: scan EVERY user-role event; return True if ANY matches expected.
+matched = False
+for line in rollout_lines:
+    e = json.loads(line)
+    p = e.get('payload', {})
+    if not isinstance(p, dict): continue
+    if e.get('type') == 'event_msg' and p.get('type') == 'user_message':
+        if p.get('message','').rstrip() == expected: matched = True; break
+    if e.get('type') == 'response_item' and p.get('type') == 'message' and p.get('role') == 'user':
+        content = p.get('content') or []
+        parts = [i.get('text','') for i in content if isinstance(i, dict) and isinstance(i.get('text'), str)]
+        if parts and '\n'.join(parts).rstrip() == expected: matched = True; break
+print(matched)
+"
+True   ← matches at line 6 (response_item/message role=user with the real writer prompt)</pre>
+
+<p><strong>Verdict — RULED IN.</strong> Codex's CLI 0.130.0 injects <code>AGENTS.md</code> as a <code>response_item/message role=user</code> before the user's actual prompt; the pipeline's <code>_rollout_matches_plan</code> matcher returns False on this first synthetic user-role message; <code>_select_rollout_for_plan</code> therefore returns None; <code>_read_latest_rollout_trace</code> returns empty; <code>parse_response</code> returns <code>tool_calls=[]</code>; the pipeline fires <code>MCP_TOOLS_NEVER_INVOKED</code> despite Codex having called 8 MCP tools successfully.</p>
+
+<h2>Why the existing test missed this</h2>
+
+<p>In <code>tests/test_agent_runtime.py:1377–1396</code> the rollout fixture contains ONLY <code>event_msg/user_message</code> + <code>event_msg/task_complete</code>. No <code>response_item/message role=user</code> AGENTS.md envelope. Production Codex CLI 0.130.0 ALWAYS emits the AGENTS.md envelope first (it is part of the codex-exec startup contract — if an <code>AGENTS.md</code> exists in cwd or its parents, Codex injects it). The test fixture exercises only the happy path.</p>
+
+<p>Sibling-bug check: <code>gemini.py</code> adapter has its own session-file recovery but uses a different format (<code>type:"gemini", toolCalls:[…]</code> per <code>scripts/agent_runtime/tool_calls.py:46–49</code>), not Codex's nested-event shape. No equivalent rollout-matching matcher to misbehave. Bug is Codex-specific.</p>
+
+<div class="root-cause">
+<h2 style="margin-top: 0; border: none;">Root cause</h2>
+<p><code>scripts/agent_runtime/adapters/codex.py::_rollout_matches_plan</code> uses fail-fast return-on-first-match logic. Codex CLI 0.130.0 emits an <code>AGENTS.md</code>-bearing <code>response_item/message role=user</code> event before the user's actual prompt. The matcher trips on AGENTS.md, sees the text differs from <code>plan.stdin_payload</code>, and returns False before ever reaching the real prompt event — so <code>_select_rollout_for_plan</code> reports no match, <code>parse_response</code> falls back to <code>tool_calls=[]</code>, and the pipeline's <code>MCP_TOOLS_NEVER_INVOKED</code> guard fires despite Codex having successfully invoked 8 MCP tools.</p>
+<p>This explains all 3 bakeoff occurrences (2026-05-06, 2026-05-08, 2026-05-12) — none of the prompt iterations could ever clear the gate, because the failure is in the runtime adapter's telemetry collection, not the prompt or the writer behavior.</p>
+</div>
+
+<div class="fix-design">
+<h2 style="margin-top: 0; border: none;">Proposed fix design</h2>
+<p>Change <code>_rollout_matches_plan</code> to iterate ALL candidate user-role messages and return True if ANY of them match <code>plan.stdin_payload</code> (rstripped); only return False if the whole file has been scanned without a match. Optional refinement: prefer the canonical <code>event_msg/user_message</code> branch over <code>response_item/message role=user</code> (only the former is guaranteed to be a real user prompt; the latter is a stream-replay format Codex uses for both injected context AND the real prompt).</p>
+<p><strong>Required test additions:</strong></p>
+<ul>
+  <li>Augment the existing fixture in <code>tests/test_agent_runtime.py</code> with a <code>response_item/message role=user</code> AGENTS.md envelope <em>before</em> the <code>event_msg/user_message</code>. Test should still match.</li>
+  <li>Add a regression case where a rollout has TWO <code>response_item/message role=user</code> events (AGENTS.md + real prompt) and stdin_payload matches the second. Test should match.</li>
+  <li>Add a fingerprint test using a real rollout snippet from a recent Codex 0.130.0 dispatch as a checked-in fixture so future Codex CLI envelope changes break the test loudly.</li>
+</ul>
+<p>Scope: ~10–20 LOC in the matcher + ~30 LOC of test fixtures. Mechanical fix — suitable for a Codex dispatch with full reproducer in the brief. No architectural decision required.</p>
+</div>
+
+<h2>What I did NOT verify</h2>
+<ul>
+  <li><strong>Are reviewer/dispatch calls affected?</strong> The same matcher is used by every Codex invocation through <code>scripts/agent_runtime/runner.py</code>. So any non-writer Codex call (codex reviewer in pipeline, <code>delegate.py dispatch --agent codex</code>, <code>ab discuss</code> codex rounds) that depends on extracting <code>tool_calls</code> from the rollout is silently dropping those telemetry events. I did not enumerate every dispatch site and verify the impact on each — but the code path is shared, so the bug is broad. <em>This is a key follow-up question for the orchestrator.</em></li>
+  <li><strong>Why the early bakeoffs (2026-05-06, 2026-05-08) also showed <code>tool_calls_total=0</code></strong> — was the matcher already buggy on those SHAs, or was the original buggy version a different codepath? Git blame on the matcher block (<code>codex.py:670–717</code>) points to <code>a5f96a2d28 "fix: harden v6 style-heal and verify pipeline"</code> dated <strong>2026-04-15</strong>. That is before all three bakeoffs, so the bug has been in production since mid-April. I did not separately re-check 2026-05-06 / 2026-05-08 rollouts to confirm Codex was already calling tools on those bakeoffs — strongly likely given identical adapter + identical Codex CLI version (0.130.0) — but the evidence base is the night bakeoff.</li>
+  <li><strong>Whether the AGENTS.md injection is conditional</strong> on the cwd's filesystem layout (i.e. does Codex skip the injection when no <code>AGENTS.md</code> is found upward from cwd?). The bakeoff cwd was a worktree where AGENTS.md likely <em>was</em> present in the parent tree, so this rollout always has the envelope. I did not test the no-AGENTS.md case — if Codex skips the envelope there, the bug might not manifest in those calls. But the writer cwd in normal builds (<code>curriculum/</code>) does have AGENTS.md upward, so the writer pipeline always trips.</li>
+  <li><strong>Whether the same rollout binding works for the bakeoff's claude-tools writer</strong> — claude doesn't use rollout binding (its tool_calls come from stream-json stdout), so the bug is exclusively codex-side. I did not look for an analogous bug in <code>gemini.py</code> session-file recovery, but the data shape there is different (<code>type:gemini, toolCalls:[…]</code>), so unlikely to share the same root cause.</li>
+</ul>
+
+<h2>References</h2>
+<ul>
+  <li>Issue: <a class="anchor" href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1900">#1900</a></li>
+  <li>Bakeoff REPORT: <code>audit/bakeoff-2026-05-12-night/REPORT.md</code></li>
+  <li>Bakeoff codex telemetry: <code>audit/bakeoff-2026-05-12-night/codex.write.jsonl</code></li>
+  <li>Codex rollout (8 successful MCP calls): <code>~/.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04-019e1991-c63e-7a33-8641-b8c35c36fbc7.jsonl</code></li>
+  <li>Matcher source: <code>scripts/agent_runtime/adapters/codex.py:666–717</code></li>
+  <li>Matcher introduction: commit <code>a5f96a2d28</code> (2026-04-15)</li>
+  <li>Existing matcher test (missing AGENTS.md fixture): <code>tests/test_agent_runtime.py:1377–1396</code></li>
+  <li>ADR under revision: <code>docs/decisions/2026-05-06-writer-selection-codex-gpt55.md</code></li>
+</ul>
+
+</body>
+</html>
