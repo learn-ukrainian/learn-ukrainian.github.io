@@ -1,0 +1,120 @@
+[
+  {
+    "id": "act-1-quiz-reflexive-ending",
+    "type": "quiz",
+    "title": "Pick the correct reflexive ending",
+    "instruction": "Choose the form that matches the subject.",
+    "questions": [
+      {
+        "prompt": "Я ___ о сьомій.",
+        "options": ["прокидаюся", "прокидаєшся", "прокидається", "прокидаються"],
+        "answer": "прокидаюся"
+      },
+      {
+        "prompt": "Ти ___ швидко.",
+        "options": ["вмиваюся", "вмиваєшся", "вмивається", "вмиваємося"],
+        "answer": "вмиваєшся"
+      },
+      {
+        "prompt": "Він ___ і йде на роботу.",
+        "options": ["одягаюся", "одягаєшся", "одягається", "одягаємося"],
+        "answer": "одягається"
+      },
+      {
+        "prompt": "Ми ___ вранці.",
+        "options": ["навчаюся", "навчаєшся", "навчається", "навчаємося"],
+        "answer": "навчаємося"
+      }
+    ]
+  },
+  {
+    "id": "act-2-fillin-yty",
+    "type": "fill-in",
+    "title": "Conjugate йти",
+    "instruction": "Fill the blank with the correct present-tense form of йти.",
+    "items": [
+      { "prompt": "Я ___ на роботу.", "answer": "йду" },
+      { "prompt": "Ти ___ до університету?", "answer": "йдеш" },
+      { "prompt": "Вона ___ додому.", "answer": "йде" },
+      { "prompt": "Ми ___ разом.", "answer": "йдемо" },
+      { "prompt": "Ви ___ зараз?", "answer": "йдете" },
+      { "prompt": "Вони ___ повільно.", "answer": "йдуть" }
+    ]
+  },
+  {
+    "id": "act-3-match-translation",
+    "type": "match-up",
+    "title": "Match the Ukrainian verb to its English meaning",
+    "instruction": "Pair each infinitive with its translation.",
+    "pairs": [
+      { "left": "прокидатися", "right": "to wake up" },
+      { "left": "вмиватися", "right": "to wash up" },
+      { "left": "одягатися", "right": "to get dressed" },
+      { "left": "снідати", "right": "to have breakfast" },
+      { "left": "поспішати", "right": "to hurry" },
+      { "left": "повертатися", "right": "to return" }
+    ]
+  },
+  {
+    "id": "act-4-order-morning",
+    "type": "order",
+    "title": "Order your morning",
+    "instruction": "Put the four steps into a natural sequence.",
+    "items": [
+      "Спочатку я прокидаюся.",
+      "Потім вмиваюся і одягаюся.",
+      "Після цього снідаю.",
+      "Нарешті йду на роботу."
+    ],
+    "answer": [
+      "Спочатку я прокидаюся.",
+      "Потім вмиваюся і одягаюся.",
+      "Після цього снідаю.",
+      "Нарешті йду на роботу."
+    ]
+  },
+  {
+    "id": "act-5-unjumble",
+    "type": "unjumble",
+    "title": "Reorder the words",
+    "instruction": "Rearrange the words to form a correct sentence.",
+    "items": [
+      { "jumbled": ["о", "я", "сьомій", "прокидаюся"], "answer": "Я прокидаюся о сьомій." },
+      { "jumbled": ["суботу", "не", "у", "я", "поспішаю"], "answer": "У суботу я не поспішаю." },
+      { "jumbled": ["вранці", "навчаюся", "я"], "answer": "Я навчаюся вранці." }
+    ]
+  },
+  {
+    "id": "act-6-truefalse",
+    "type": "true-false",
+    "title": "Listen to the dialogue and decide",
+    "instruction": "Mark each statement true or false based on Dialogue 1.",
+    "items": [
+      { "statement": "Настя прокидається о сьомій.", "answer": true },
+      { "statement": "Настя йде на роботу о дев'ятій.", "answer": false },
+      { "statement": "Настя снідає вранці.", "answer": true }
+    ]
+  },
+  {
+    "id": "act-7-translate",
+    "type": "translate",
+    "title": "Translate into Ukrainian",
+    "instruction": "Translate each English sentence into Ukrainian using vocabulary from this module.",
+    "items": [
+      { "prompt": "I wake up at seven.", "answer": "Я прокидаюся о сьомій." },
+      { "prompt": "Then I wash up and get dressed.", "answer": "Потім я вмиваюся і одягаюся." },
+      { "prompt": "Finally I go to work.", "answer": "Нарешті я йду на роботу." }
+    ]
+  },
+  {
+    "id": "act-8-error-correction",
+    "type": "error-correction",
+    "title": "Fix the reflexive ending",
+    "instruction": "Each sentence has one wrong ending. Rewrite it correctly.",
+    "items": [
+      { "wrong": "Я прокидаєшся о сьомій.", "correct": "Я прокидаюся о сьомій." },
+      { "wrong": "Ти вмивається швидко.", "correct": "Ти вмиваєшся швидко." },
+      { "wrong": "Вони навчаюся вранці.", "correct": "Вони навчаються вранці." }
+    ]
+  }
+]

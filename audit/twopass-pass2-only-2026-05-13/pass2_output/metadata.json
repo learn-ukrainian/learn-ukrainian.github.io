@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "agent": "claude",
+  "model": "claude-opus-4-7",
+  "effort": "xhigh",
+  "cli_version": "2.1.139",
+  "duration_s": 77.706,
+  "usage_record": {
+    "ts": "2026-05-12T14:56:25.772812+00:00",
+    "agent": "claude",
+    "entrypoint": "dispatch",
+    "task_id": "pass2-only-contract-test-2026-05-13",
+    "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/pass2-only-contract-test-2026-05-13",
+    "model": "claude-opus-4-7",
+    "mode": "workspace-write",
+    "session_id": null,
+    "duration_s": 71.28,
+    "input_chars": 20318,
+    "output_chars": 14253,
+    "returncode": 0,
+    "outcome": "ok",
+    "rate_limited": false,
+    "stalled": false,
+    "stderr_excerpt": null,
+    "tokens": null
+  },
+  "tokens": null,
+  "input_chars": 20318,
+  "output_chars": 14253
+}

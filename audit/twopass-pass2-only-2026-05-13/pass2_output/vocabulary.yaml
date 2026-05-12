@@ -1,0 +1,22 @@
+[
+  { "lemma": "прокидатися", "translation": "to wake up", "pos": "verb", "usage": "Я прокидаюся о сьомій." },
+  { "lemma": "вмиватися", "translation": "to wash up", "pos": "verb", "usage": "Потім я вмиваюся." },
+  { "lemma": "одягатися", "translation": "to get dressed", "pos": "verb", "usage": "Він одягається швидко." },
+  { "lemma": "збиратися", "translation": "to get ready", "pos": "verb", "usage": "Після цього я збираюся." },
+  { "lemma": "повертатися", "translation": "to return, come back", "pos": "verb", "usage": "Я повертаюся додому ввечері." },
+  { "lemma": "навчатися", "translation": "to study, to learn", "pos": "verb", "usage": "Я навчаюся вранці." },
+  { "lemma": "снідати", "translation": "to have breakfast", "pos": "verb", "usage": "Я снідаю о восьмій." },
+  { "lemma": "йти", "translation": "to go (on foot)", "pos": "verb", "usage": "Я йду на роботу." },
+  { "lemma": "поспішати", "translation": "to hurry", "pos": "verb", "usage": "У суботу я не поспішаю." },
+  { "lemma": "дивитися", "translation": "to look, to watch", "pos": "verb", "usage": "Я дивлюся в телефон." },
+  { "lemma": "лежати", "translation": "to lie, to be lying down", "pos": "verb", "usage": "У суботу я лежу довго." },
+  { "lemma": "спочатку", "translation": "at first, to begin with", "pos": "adverb", "usage": "Спочатку я прокидаюся." },
+  { "lemma": "потім", "translation": "then, afterwards", "pos": "adverb", "usage": "Потім я снідаю." },
+  { "lemma": "після цього", "translation": "after that", "pos": "phrase", "usage": "Після цього я йду на роботу." },
+  { "lemma": "нарешті", "translation": "finally", "pos": "adverb", "usage": "Нарешті я готовий." },
+  { "lemma": "вранці", "translation": "in the morning", "pos": "adverb", "usage": "Я навчаюся вранці." },
+  { "lemma": "пізно", "translation": "late", "pos": "adverb", "usage": "У суботу я прокидаюся пізно." },
+  { "lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "Доброго ранку!" },
+  { "lemma": "сніданок", "translation": "breakfast", "pos": "noun", "usage": "Сніданок о восьмій." },
+  { "lemma": "субота", "translation": "Saturday", "pos": "noun", "usage": "У суботу я відпочиваю." }
+]

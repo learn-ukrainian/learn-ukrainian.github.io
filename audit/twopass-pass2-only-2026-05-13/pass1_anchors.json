@@ -1,0 +1,449 @@
+{
+  "anchor_count": 74,
+  "anchors": [
+    {
+      "id": "uk-dlg-1",
+      "kind": "uk-dlg",
+      "sha256": "e97b9635696e5bb3717da860c86b5ff839129b67c5901ce0754e324e7326a59f",
+      "content": "**Ліна:** Коли ти прокидаєшся?"
+    },
+    {
+      "id": "uk-dlg-2",
+      "kind": "uk-dlg",
+      "sha256": "ae0de812f97eb512b037a54353346471a9ecc697f8a4232b0da72575226783e3",
+      "content": "**Настя:** Я прокидаюся о сьомій."
+    },
+    {
+      "id": "uk-dlg-3",
+      "kind": "uk-dlg",
+      "sha256": "632b629f93ee654932645e0086c84a04ead524556148ef46d82d2f085e71f3ff",
+      "content": "**Ліна:** Що ти робиш потім?"
+    },
+    {
+      "id": "uk-dlg-4",
+      "kind": "uk-dlg",
+      "sha256": "658a76e91a6031b1c32f2ecfd1bad7fdd16bc948afe5aceabf28f37a0097e6a4",
+      "content": "**Настя:** Вмиваюся, одягаюся і снідаю."
+    },
+    {
+      "id": "uk-dlg-5",
+      "kind": "uk-dlg",
+      "sha256": "bada88fcdab28751f6e36c7667833e9075c61fbc520debfe5cff324a6eeaa99c",
+      "content": "**Ліна:** А коли ти йдеш на роботу?"
+    },
+    {
+      "id": "uk-dlg-6",
+      "kind": "uk-dlg",
+      "sha256": "cabecfd1ed01e218d1a6e28759844be3ce94f96789d136a3db18326223c41311",
+      "content": "**Настя:** О восьмій."
+    },
+    {
+      "id": "uk-dlg-7",
+      "kind": "uk-dlg",
+      "sha256": "a1c2575145f32ea8be773216698f170526b19fe5efc4bd7e8e9249985d1ae0f3",
+      "content": "**Настя:** У суботу я не поспішаю."
+    },
+    {
+      "id": "uk-dlg-8",
+      "kind": "uk-dlg",
+      "sha256": "d1665d2281e303ddb0476b48ca1c5fb869aaa5b79b90858a2ebc6c5aaae57ea5",
+      "content": "**Настя:** Прокидаюся пізно. Лежу. Дивлюся в телефон."
+    },
+    {
+      "id": "uk-dlg-9",
+      "kind": "uk-dlg",
+      "sha256": "60e9797718b3e6a6dfbb2844006d57c0ec3520ca45f41cb5a5d9e06bc8132e3a",
+      "content": "**Ліна:** А я навчаюся вранці."
+    },
+    {
+      "id": "uk-dlg-10",
+      "kind": "uk-dlg",
+      "sha256": "1dd03c86ce5c6f998eccaed6d81ed3086818adef4db2bf2d578f3ac66aed48ff",
+      "content": "**Ліна:** Потім гуляю."
+    },
+    {
+      "id": "uk-ex-1",
+      "kind": "uk-ex",
+      "sha256": "b1e13943c0f9d986173b7572aab2a35ee200921398c7169aa0726f5f8cbf8388",
+      "content": "Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними: навчатися, закохатися. Сучасний дієслівний суфікс -ся(-сь) — це давня коротка форма зворотного займенника себе в Зн. в. однини: Я не боюся. — Я ся не бою (діал.). Уживається -ся(-сь) після інфінітивного суфікса -ти(-ть) або закінчення в особових формах дієслова: вмивати — вмиватися, взувати — взуватися."
+    },
+    {
+      "id": "uk-tbl-1",
+      "kind": "uk-tbl",
+      "sha256": "fe47eda1faa7003a97acf6d78a21da1af1e92ba06ffabb8b0fad1c6cee16e836",
+      "content": "прокидатися"
+    },
+    {
+      "id": "uk-tbl-2",
+      "kind": "uk-tbl",
+      "sha256": "1c9ec192d2a4008f254ebf79f8e7f97b2a888f102b6eb8d4ce4adeb2c8cae1a5",
+      "content": "вмиватися"
+    },
+    {
+      "id": "uk-tbl-3",
+      "kind": "uk-tbl",
+      "sha256": "9b21f5cf014c9efb35110dcccf3a74eab7fb903d1ca2f4054b3dad9ffabb7727",
+      "content": "я"
+    },
+    {
+      "id": "uk-tbl-4",
+      "kind": "uk-tbl",
+      "sha256": "aec4dc24aa34ce1e9561861214455a165c9366542b859eaf710bf969d1f0dd43",
+      "content": "прокидаюся"
+    },
+    {
+      "id": "uk-tbl-5",
+      "kind": "uk-tbl",
+      "sha256": "016e83ea62f6efa3167fc82994a69766aca5f9a0b30085e2c1938f70a084ef3d",
+      "content": "вмиваюся"
+    },
+    {
+      "id": "uk-tbl-6",
+      "kind": "uk-tbl",
+      "sha256": "a7980a84d5d8774916a0829a055e49b7896841115397b1a4ff3a7cbcc59ad4fe",
+      "content": "ти"
+    },
+    {
+      "id": "uk-tbl-7",
+      "kind": "uk-tbl",
+      "sha256": "5fe14b8c3f5c311e1b8f35c70378d273d04ae9ba0c7b57c2a1add948e2aedca2",
+      "content": "прокидаєшся"
+    },
+    {
+      "id": "uk-tbl-8",
+      "kind": "uk-tbl",
+      "sha256": "bf31d41f76022c084437faa0c24985b3113727ac8f376f8da67d554aa0277270",
+      "content": "вмиваєшся"
+    },
+    {
+      "id": "uk-tbl-9",
+      "kind": "uk-tbl",
+      "sha256": "0285ac8d73e561d315c04cbd0a600b598297bffcbec0def102c6242e32d9aeea",
+      "content": "він / вона"
+    },
+    {
+      "id": "uk-tbl-10",
+      "kind": "uk-tbl",
+      "sha256": "0e8d4b3fffced34b749ae162b1942089bcfe95c240bacf6e2d6c7f5b13530dcf",
+      "content": "прокидається"
+    },
+    {
+      "id": "uk-tbl-11",
+      "kind": "uk-tbl",
+      "sha256": "98f24f2e766b4402ccbf9c9750601d1430f69f59c3f9556dcac6f08a3132fd5d",
+      "content": "вмивається"
+    },
+    {
+      "id": "uk-tbl-12",
+      "kind": "uk-tbl",
+      "sha256": "89a46a478e1fcd226ba845b746177fcac104772f5cfe5e016423adbe3dc7db8e",
+      "content": "ми"
+    },
+    {
+      "id": "uk-tbl-13",
+      "kind": "uk-tbl",
+      "sha256": "7c7b31fb8bba13b9ba32a4f218929035f1d7b707fa9d13e36f54839aadd82a25",
+      "content": "прокидаємося"
+    },
+    {
+      "id": "uk-tbl-14",
+      "kind": "uk-tbl",
+      "sha256": "b27cdf2690dd74bfabd6b31ed7b1b36b152b2fe6802171660ed9010260f6806d",
+      "content": "вмиваємося"
+    },
+    {
+      "id": "uk-tbl-15",
+      "kind": "uk-tbl",
+      "sha256": "e6fd95940cc2bb2b1b3f676621368ecc717cadc3df5873938a73b32a44953349",
+      "content": "ви"
+    },
+    {
+      "id": "uk-tbl-16",
+      "kind": "uk-tbl",
+      "sha256": "2e3725dfcf364853421996ae486bebac52b67ddc6d83d9f3bb12546d69ad59a9",
+      "content": "прокидаєтеся"
+    },
+    {
+      "id": "uk-tbl-17",
+      "kind": "uk-tbl",
+      "sha256": "7cd7d68dc2fabd480d9b1af37f18c104237f078a20d36b6eb8f060ea1462deaf",
+      "content": "вмиваєтеся"
+    },
+    {
+      "id": "uk-tbl-18",
+      "kind": "uk-tbl",
+      "sha256": "5afa0c210342bd03ec1901fa829e09356c6ee4e986ea5353beeac2131027c2a5",
+      "content": "вони"
+    },
+    {
+      "id": "uk-tbl-19",
+      "kind": "uk-tbl",
+      "sha256": "c8a98a5201081233836ee053885ce1b19a90797362f3047b0868bbefe539e077",
+      "content": "прокидаються"
+    },
+    {
+      "id": "uk-tbl-20",
+      "kind": "uk-tbl",
+      "sha256": "83ef114041ecafd3e2b6fc7fb6db9245edf98da05797c80e98d9a47576140c8a",
+      "content": "вмиваються"
+    },
+    {
+      "id": "uk-ex-2",
+      "kind": "uk-ex",
+      "sha256": "3b3846ca2da32ea98a801e7f732a18524e3497e30f2d92c0d3736206b5a6bc05",
+      "content": "Вимовляємо | Пишемо"
+    },
+    {
+      "id": "uk-ex-3",
+      "kind": "uk-ex",
+      "sha256": "b45d57eeceaedab10f02f9107b9bd8fdd4bdfccdb48a48d2aab4128514c7768c",
+      "content": "[прокидайец′:а] | прокидається"
+    },
+    {
+      "id": "uk-ex-4",
+      "kind": "uk-ex",
+      "sha256": "104e12814c6af06f3a921773029a36e9986be61841c16a1df6b18d5e7a2a3e60",
+      "content": "[хл'упайец′:а] | хлюпається"
+    },
+    {
+      "id": "uk-ex-5",
+      "kind": "uk-ex",
+      "sha256": "f63e0d32309393a368b709cdc5705d81c9232035805e7771d79f03c5699e3774",
+      "content": "[спиен айес′:а] | спиняєшся"
+    },
+    {
+      "id": "uk-ex-6",
+      "kind": "uk-ex",
+      "sha256": "37c4e2659b810ff3d4da7615963d6eebd1d649ce5a2ef81a38c264e7af922873",
+      "content": "[навчайес′:а] | навчаєшся"
+    },
+    {
+      "id": "uk-tbl-21",
+      "kind": "uk-tbl",
+      "sha256": "d2c35728b87483a654e0f8bcc9a3a099f737a9a42a60fc97e5c8059a88134ace",
+      "content": "йти"
+    },
+    {
+      "id": "uk-tbl-22",
+      "kind": "uk-tbl",
+      "sha256": "96bba5a37b4a5bc0e90ebca00cad8c99e036eac9807c18e2b9e80b6c55bcd95e",
+      "content": "йду"
+    },
+    {
+      "id": "uk-tbl-23",
+      "kind": "uk-tbl",
+      "sha256": "5122d6b78129164047ded7c607b5bb462b66e092f9bb5eb14d7a285ad8c794bb",
+      "content": "йдеш"
+    },
+    {
+      "id": "uk-tbl-24",
+      "kind": "uk-tbl",
+      "sha256": "6458013a110106742b92305f3fe3c98d07caa6ae4aefaa28e563c0420f670ed9",
+      "content": "йде"
+    },
+    {
+      "id": "uk-tbl-25",
+      "kind": "uk-tbl",
+      "sha256": "b9deab4557cab071925b25818bccdf1e328f91c0dc5ac5438c3e70356a19d923",
+      "content": "йдемо"
+    },
+    {
+      "id": "uk-tbl-26",
+      "kind": "uk-tbl",
+      "sha256": "9201cc74d0166fa1971eceb3e4b29e8035179937e0904c0c3c8645ed01b7dedb",
+      "content": "йдете"
+    },
+    {
+      "id": "uk-tbl-27",
+      "kind": "uk-tbl",
+      "sha256": "e2f47c65a825043b189919598ba7447fb6132fc73d8c549617217f918dd133bd",
+      "content": "йдуть"
+    },
+    {
+      "id": "uk-ex-7",
+      "kind": "uk-ex",
+      "sha256": "a63076535b853acffde22b68e45895752f460d90aaf15b78a96fe780673cd79b",
+      "content": "**після цього**"
+    },
+    {
+      "id": "uk-ex-8",
+      "kind": "uk-ex",
+      "sha256": "a0e4883bb117a5e52c0b4e84163ad81968a950cc01d6a43c9bcae2ba0f594be8",
+      "content": "Спочатку я прокидаюся."
+    },
+    {
+      "id": "uk-ex-9",
+      "kind": "uk-ex",
+      "sha256": "630a44af7638c9b1fc1dd404091b7e470a3692742d04c069b862fc5a1c4634ea",
+      "content": "Потім вмиваюся і одягаюся."
+    },
+    {
+      "id": "uk-ex-10",
+      "kind": "uk-ex",
+      "sha256": "87465eeb00f78c65996b72db099d692756c4409277213453dec258bba8dd8450",
+      "content": "Після цього снідаю."
+    },
+    {
+      "id": "uk-ex-11",
+      "kind": "uk-ex",
+      "sha256": "c80c8bc7b7c4040d3ceff4037dd1744cc7603cbfe19022b18fce30bd20e1360a",
+      "content": "Нарешті йду на роботу."
+    },
+    {
+      "id": "uk-ex-12",
+      "kind": "uk-ex",
+      "sha256": "8afbfc59d404b7c840b15f34a9b0bb5688f2fb2aa065b67024fda76507d65d4e",
+      "content": "я + **-юся** → **прокидаюся**"
+    },
+    {
+      "id": "uk-ex-13",
+      "kind": "uk-ex",
+      "sha256": "c1d1c88654582eafb9fbd389ccbba891f44b9ccadb1e3060df259454e55fecec",
+      "content": "ти + **-єшся** → **прокидаєшся**"
+    },
+    {
+      "id": "uk-ex-14",
+      "kind": "uk-ex",
+      "sha256": "c5a82194c658a67d9b3c9d72d810b242601536dbd06b40d9c87f683771423c05",
+      "content": "він / вона + **-ється** → **прокидається**"
+    },
+    {
+      "id": "uk-ex-15",
+      "kind": "uk-ex",
+      "sha256": "ae618acaa82351e1f1c32ab1e96f26cc0b917fc14cb773554126e7734d00f50f",
+      "content": "Спочатку я прокидаюся о сьомій."
+    },
+    {
+      "id": "uk-ex-16",
+      "kind": "uk-ex",
+      "sha256": "d79d8496d0e72c9f5403c9a15ce390b4efba5bda4e37f46d61abb1d423051c42",
+      "content": "Після цього снідаю і збираюся."
+    },
+    {
+      "id": "uk-ex-17",
+      "kind": "uk-ex",
+      "sha256": "e80f1171271fa95b960bc34c81097cb88250aebee5e69bbd7848817a998e268a",
+      "content": "Нарешті йду до університету."
+    },
+    {
+      "id": "uk-vocab-1",
+      "kind": "uk-vocab",
+      "sha256": "fe47eda1faa7003a97acf6d78a21da1af1e92ba06ffabb8b0fad1c6cee16e836",
+      "content": "прокидатися"
+    },
+    {
+      "id": "uk-vocab-2",
+      "kind": "uk-vocab",
+      "sha256": "1c9ec192d2a4008f254ebf79f8e7f97b2a888f102b6eb8d4ce4adeb2c8cae1a5",
+      "content": "вмиватися"
+    },
+    {
+      "id": "uk-vocab-3",
+      "kind": "uk-vocab",
+      "sha256": "39c2c4153f800b31a4e8b9c675df1c399a65cd129f9f7c50d50c3663deb44044",
+      "content": "одягатися"
+    },
+    {
+      "id": "uk-vocab-4",
+      "kind": "uk-vocab",
+      "sha256": "4e4acb8e0f84e0fc01f9a06e490b0feca9373d1e40e37580aa08510a8ae8a0fa",
+      "content": "збиратися"
+    },
+    {
+      "id": "uk-vocab-5",
+      "kind": "uk-vocab",
+      "sha256": "97571ee469690f475529de7240b17a15fe4765da24cf06c2ee7015904b5e2328",
+      "content": "повертатися"
+    },
+    {
+      "id": "uk-vocab-6",
+      "kind": "uk-vocab",
+      "sha256": "eea89dc4df9bf8330ffe4164258aaaf67a460e0c329ea2513db109ce71dcf843",
+      "content": "навчатися"
+    },
+    {
+      "id": "uk-vocab-7",
+      "kind": "uk-vocab",
+      "sha256": "d13721bca381b8e54330bc6fcc6eb41d2a904cb3181caf4413d75fcaeed725ce",
+      "content": "снідати"
+    },
+    {
+      "id": "uk-vocab-8",
+      "kind": "uk-vocab",
+      "sha256": "d2c35728b87483a654e0f8bcc9a3a099f737a9a42a60fc97e5c8059a88134ace",
+      "content": "йти"
+    },
+    {
+      "id": "uk-vocab-9",
+      "kind": "uk-vocab",
+      "sha256": "e278a0b33f981cd50bed3a3817ea5ef0f037972e5228a5ea6e8bd0343dcb1375",
+      "content": "поспішати"
+    },
+    {
+      "id": "uk-vocab-10",
+      "kind": "uk-vocab",
+      "sha256": "4c7885c2fc64bf94ccb310c5215d46ec5253b1940063091c2de1def2d4aa3b3b",
+      "content": "дивитися"
+    },
+    {
+      "id": "uk-vocab-11",
+      "kind": "uk-vocab",
+      "sha256": "1d9bbb47050fffe46f0e4a18d01cfc7188a4bb50edf944c6264cd48175e928e1",
+      "content": "лежати"
+    },
+    {
+      "id": "uk-vocab-12",
+      "kind": "uk-vocab",
+      "sha256": "6a7b6a344dc575df928285e0f2a6c53b3c9b70b231268e4e0a533d3b51a50c45",
+      "content": "спочатку"
+    },
+    {
+      "id": "uk-vocab-13",
+      "kind": "uk-vocab",
+      "sha256": "d7110d347efff2954b047bae183435adc5eddabc0b751e2c47e43122116761bd",
+      "content": "потім"
+    },
+    {
+      "id": "uk-vocab-14",
+      "kind": "uk-vocab",
+      "sha256": "3bb5dea18f502633245dde4d7f3a9a44cd38e31832f34f82eb234c60f80ff628",
+      "content": "після цього"
+    },
+    {
+      "id": "uk-vocab-15",
+      "kind": "uk-vocab",
+      "sha256": "37ef719397980f403af7fb00343d46632475f5ac7855fff5cd7ca7f66d2724be",
+      "content": "нарешті"
+    },
+    {
+      "id": "uk-vocab-16",
+      "kind": "uk-vocab",
+      "sha256": "19da9225fb1a696249709f3359d3849457421ec8c7e9fbebe299cbfa775a653e",
+      "content": "вранці"
+    },
+    {
+      "id": "uk-vocab-17",
+      "kind": "uk-vocab",
+      "sha256": "0b7a3f781bcfdc1a5c4bcd1ea7c55f5c8763df2c38c2a215b83f7f27dc1e8f04",
+      "content": "пізно"
+    },
+    {
+      "id": "uk-vocab-18",
+      "kind": "uk-vocab",
+      "sha256": "fdf39ad1193ef9e2ffe2cbe2004c131eb08e77663c4651179d6b0ba0e4dd5392",
+      "content": "ранок"
+    },
+    {
+      "id": "uk-vocab-19",
+      "kind": "uk-vocab",
+      "sha256": "f0b308b077d06cf1d7bb5dc28f66cdef473ed31d9341252ed5ed583aaa643683",
+      "content": "сніданок"
+    },
+    {
+      "id": "uk-vocab-20",
+      "kind": "uk-vocab",
+      "sha256": "a28d439453cea227e77869e6afa1595f4198188aff83b38c8e5a5435ab1f19eb",
+      "content": "субота"
+    }
+  ]
+}

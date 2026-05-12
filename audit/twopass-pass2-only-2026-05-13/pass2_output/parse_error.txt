@@ -1,0 +1,1 @@
+activities.yaml schema validation failed: item 1 has unexpected fields ['questions']; allowed: ['id', 'instruction', 'items', 'notes', 'title', 'type']
