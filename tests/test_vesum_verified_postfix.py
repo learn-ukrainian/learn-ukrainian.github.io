@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import yaml
 
-from scripts.build.linear_pipeline import _iter_vesum_word_surfaces, _vesum_gate
+from scripts.build.linear_pipeline import (
+    _iter_vesum_word_surfaces,
+    _normalize_for_vesum,
+    _vesum_gate,
+)
 
 
 def test_reflexive_verb_not_split() -> None:
@@ -39,6 +43,51 @@ def test_em_dash_splits_sentences() -> None:
     tokens = _iter_vesum_word_surfaces(text)
 
     assert tokens == ["Привіт", "як", "справи"]
+
+
+def test_normalize_for_vesum_strips_stress_and_markdown() -> None:
+    assert _normalize_for_vesum("вмива́ю**ся**") == "вмиваюся"
+    assert _normalize_for_vesum("вмива́ю") == "вмиваю"
+    assert _normalize_for_vesum("**ся**") == "ся"
+    assert _normalize_for_vesum("чу́до**в**") == "чудов"
+
+
+def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {"вмиваюся", "вмиваю", "ся", "чудов"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="вмива́ю**ся** вмива́ю **ся** чу́до**в**",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert seen == [["вмиваю", "вмиваюся", "ся", "чудов"]]
+    assert gate["missing"] == []
+
+
+def test_vesum_gate_missing_report_preserves_decorated_surface() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        assert words == ["вмиваюся"]
+        return {word: [] for word in words}
+
+    gate = _vesum_gate(
+        module_text="вмива́ю**ся**",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["вмива́ю**ся**"]
 
 
 def test_proper_noun_genitive_resolves() -> None:
