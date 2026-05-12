@@ -354,11 +354,17 @@ QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
 
 _WORD_RE = re.compile(r"[A-Za-zА-ЯІЇЄҐа-яіїєґ][A-Za-zА-ЯІЇЄҐа-яіїєґ'ʼ-]*")
 _UK_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ-]*")
+# Bounded markdown-decoration quantifiers to avoid ReDoS (py/redos).
+# Decoration markers (`*`, `_`, `` ` ``) appear at most twice contiguously in
+# real markdown (`**bold**`, single `*italic*`, `_italic_`, backtick code).
+# Bounding the leading/trailing decoration to {0,2} chars and the inner
+# repetition to {0,4} word-segment boundaries makes the match linear-time
+# while still catching every realistic decorated Ukrainian surface form.
 _VESUM_DECORATED_WORD_RE = re.compile(
-    r"(?:\*\*|[*_`])*"
+    r"[*_`]{0,2}"
     r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ\-\u0300\u0301]*"
-    r"(?:(?:\*\*|[*_`]+)[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ\-\u0300\u0301]*)*"
-    r"(?:\*\*|[*_`])*"
+    r"(?:[*_`]{1,2}[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ\-\u0300\u0301]*){0,4}"
+    r"[*_`]{0,2}"
 )
 _INJECT_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->")
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
