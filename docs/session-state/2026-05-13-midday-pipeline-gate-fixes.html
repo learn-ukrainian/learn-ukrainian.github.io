@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Session handoff — 2026-05-13 midday: pipeline gate fixes</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; max-width: 880px; margin: 2rem auto; padding: 0 1.5rem; line-height: 1.55; color: #1a1a1a; background: #fafafa; }
+  @media (prefers-color-scheme: dark) { body { color: #e8e8e8; background: #0f0f0f; } code { background: #2a2a2a; } table { background: #1a1a1a; } th { background: #2a2a2a; } }
+  h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+  h2 { font-size: 1.2rem; margin-top: 2rem; border-bottom: 1px solid currentColor; padding-bottom: 0.3rem; opacity: 0.9; }
+  h3 { font-size: 1.05rem; margin-top: 1.4rem; }
+  .meta { color: #777; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f0f0f0; padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.9em; }
+  pre { background: #f0f0f0; padding: 0.8rem; border-radius: 5px; overflow-x: auto; font-size: 0.85em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; background: #fff; }
+  th, td { border: 1px solid #d0d0d0; padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; font-size: 0.92rem; }
+  th { background: #f0f0f0; font-weight: 600; }
+  .ok { color: #2a7f2a; font-weight: 600; }
+  .warn { color: #b58900; font-weight: 600; }
+  .blocked { color: #b03030; font-weight: 600; }
+  .running { color: #1e5fb8; font-weight: 600; }
+  .callout { border-left: 4px solid #4e87d1; padding: 0.6rem 1rem; background: rgba(78, 135, 209, 0.08); margin: 1rem 0; border-radius: 0 5px 5px 0; }
+  .big { font-size: 1.1rem; }
+  ul li { margin-bottom: 0.25rem; }
+</style>
+</head>
+<body>
+
+<h1>Session handoff — 2026-05-13 midday</h1>
+<p class="meta">Companion to <code>2026-05-13-midday-pipeline-gate-fixes-brief.md</code> · Predecessor: <code>2026-05-13-morning-actual-outcomes-brief.md</code> · main: <code>ae82644c1c</code> · 2 dispatches in flight, 1 PR awaiting CI re-run.</p>
+
+<div class="callout big">
+<strong>The headline:</strong> The #1900 investigation revealed <strong>codex was working all along</strong>. Three bakeoffs reporting <code>tool_calls_total=0</code> for codex-tools were measurement artifacts of our own rollout-matcher bug, not a codex problem. Codex's night-bakeoff rollout has 8 successful MCP calls; it out-tool-called Claude (4) by 2×. The ADR-REVISED → claude-tools verdict was based on false evidence and will need reconsideration once the fixes land.
+</div>
+
+<h2>What shipped (5 commits)</h2>
+<table>
+<tr><th>SHA</th><th>What</th></tr>
+<tr><td><code>492d781dfd</code></td><td>fix(hooks): session-setup.sh deploy-drift check now excludes the 6 API-served rule files. Was crying wolf every cold start.</td></tr>
+<tr><td><code>c6bb2faabb</code></td><td>docs(rules): pipeline.md writer policy synced to REVISED ADR (claude-tools, with #1900-pending caveat).</td></tr>
+<tr><td><code>30dfc4ab6b</code></td><td>docs(dispatch-briefs): #1901 _prepare_query OSError fix brief.</td></tr>
+<tr><td><code>2c38ebd11c</code></td><td>fix(sources_db): bound <code>Path(query).exists()</code> probe (#1901 OSError fix) — merged via PR #1902 (Codex dispatch, 12.7 min).</td></tr>
+<tr><td><code>ae82644c1c</code></td><td>docs(dispatch-briefs): vesum-gate + writer-telemetry fix briefs.</td></tr>
+</table>
+
+<p>Plus issue #1905 filed (pipeline replay-mode regression suite, under #1865 EPIC).</p>
+
+<h2>The 4 bugs surfaced today + their fix status</h2>
+<table>
+<tr><th>Bug</th><th>Status</th><th>How it would have been caught earlier</th></tr>
+<tr><td><strong>#1901</strong> <code>_prepare_query</code> OSError on &gt;255-byte Cyrillic query → false <code>corpus_missing</code> on every plan reference</td><td class="ok">Merged (PR #1902)</td><td>Unit test on <code>_prepare_query</code> with a long-string fixture. 5 LOC. (Now exists.)</td></tr>
+<tr><td><strong>vesum gate distractor blindness</strong> — 4 MC distractors + 2 pronunciation transcriptions flagged as invented forms</td><td class="warn">PR #1904 open, transient gitleaks fail (Docker GHCR timeout, not a real leak)</td><td>Activity fixture with <code>correct: false</code> options. ~15 LOC test.</td></tr>
+<tr><td><strong>writer telemetry</strong> <code>result_summary={}</code> for <code>search_text</code> → <code>textbook_grounding</code> gate has nothing to verify</td><td class="running">Codex dispatch in flight</td><td>Synthetic <code>search_text</code> result fixture asserted through the telemetry pipeline.</td></tr>
+<tr><td><strong>#1903</strong> codex rollout-matcher fail-fast on AGENTS.md envelope → all 3 bakeoffs reported codex <code>tool_calls_total=0</code> falsely</td><td class="running">Codex dispatch in flight (filed by #1900 investigation, fix patch ready)</td><td>Rollout fixture including AGENTS.md envelope. ~30 LOC. Would have caught the bug the day it landed (2026-04-15).</td></tr>
+</table>
+
+<h2>In-flight dispatches (need monitoring on resume)</h2>
+<table>
+<tr><th>task_id</th><th>Agent</th><th>Started</th><th>Expected</th></tr>
+<tr><td><code>writer-telemetry-result-summary</code></td><td>codex / gpt-5.5 high</td><td>09:56:43Z</td><td>60-120 min total</td></tr>
+<tr><td><code>1903-rollout-matcher-fix</code></td><td>codex / gpt-5.5 high</td><td>10:06:55Z (approx)</td><td>30-60 min</td></tr>
+</table>
+
+<p>#1900 Claude investigation already done (737s). Deliverables: <code>audit/2026-05-13-codex-mcp-visibility-investigation.html</code> (29 KB), comment on #1900, fix-implementation issue #1903 with reproducer.</p>
+
+<h2>PR #1904 — needs gitleaks re-run</h2>
+
+<p>All blocking checks pass except <strong>Secret Scanning (gitleaks)</strong>, which failed on <code>docker: Error response from daemon: Get &quot;https://ghcr.io/v2/&quot;: net/http: request canceled (Client.Timeout exceeded while awaiting headers)</code> — exit 125 from Docker trying to pull the TruffleHog image. <strong>Transient infrastructure failure, not a real secret detection.</strong> PR diff is gate-logic only, no credential-like content.</p>
+
+<p>Orchestrator token lacks <code>gh run rerun</code> permission. Re-run options:</p>
+<ol>
+<li>GitHub UI: Actions → workflow run → re-run failed jobs.</li>
+<li>Empty-commit push: <code>cd .worktrees/dispatch/codex/vesum-gate-distractor-awareness &amp;&amp; git commit --allow-empty -m &quot;ci: rerun gitleaks (transient ghcr timeout)&quot; &amp;&amp; git push</code></li>
+</ol>
+
+<p>After re-run passes: <code>gh pr merge 1904 --squash --delete-branch</code>.</p>
+
+<h2>The #1900 finding in depth</h2>
+
+<p>Root cause: <code>scripts/agent_runtime/adapters/codex.py::_rollout_matches_plan</code> (lines 666-717) uses <em>fail-fast return-on-first-match</em> logic. Codex CLI 0.130.0 emits an <code>AGENTS.md</code> + <code>&lt;environment_context&gt;</code> envelope as a <code>user</code>-role message <strong>before</strong> the user's actual prompt. The matcher trips on this envelope, sees text ≠ <code>plan.stdin_payload</code>, returns <code>False</code>, and stops scanning. Never reaches the real prompt.</p>
+
+<p>Chain reaction: <code>_select_rollout_for_plan</code> → <code>None</code> → <code>_read_latest_rollout_trace</code> → empty → <code>parse_response</code> returns <code>tool_calls=[]</code> → pipeline reports <code>tool_calls_total=0</code>. Has been happening since commit <code>a5f96a2d28</code> on 2026-04-15.</p>
+
+<p>Empirical evidence: codex's night-bakeoff rollout at <code>~/.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04-019e1991-c63e-7a33-8641-b8c35c36fbc7.jsonl</code> has 8 successful <code>response_item/function_call</code> events + 8 successful <code>event_msg/mcp_tool_call_end</code> events. <strong>Codex was always working.</strong></p>
+
+<p>Fix design: change matcher from fail-fast to iterate-all-user-role-events. Mechanical, codex-dispatchable. In-flight.</p>
+
+<h2>Carry-over P0 queue</h2>
+<ol>
+<li><strong>Re-run gitleaks on PR #1904</strong>, merge if green.</li>
+<li><strong>Merge writer-telemetry PR</strong> when it lands + CI green.</li>
+<li><strong>Merge #1903 rollout-matcher PR</strong> when it lands + CI green.</li>
+<li><strong>Re-eval night-bakeoff artifacts</strong> against fixed pipeline. Two candidate modules: claude-tools (1224 words, already inspected by orchestrator — content quality good, just gate-logic issues) and codex-tools (rollout has 8 MCP calls, need to re-process through fixed matcher to extract them).</li>
+<li><strong>Update ADR</strong> <code>2026-05-06-writer-selection-codex-gpt55.md</code> with truthful state once both artifacts re-eval'd. REVISED verdict was based on false evidence.</li>
+<li><strong>Decide a1/my-morning publication source</strong> — winning artifact from re-eval, OR fresh rebuild if neither is publishable. <span class="blocked">PUBLICATION STILL BLOCKED.</span></li>
+<li><strong>Start work on #1905</strong> (replay-mode regression suite) — structural fix preventing this class of bug from burning quota again. #1865 EPIC scope.</li>
+<li>Cleanup: 3 dispatch worktrees still open (vesum-gate, writer-telemetry, 1903). Remove after PRs merge.</li>
+</ol>
+
+<h2>Pending Decision Cards (unchanged)</h2>
+<ul>
+<li><code>2026-05-12-autonomous-codex-dispatch-narrow-class.md</code> — PROPOSED, awaiting A/B/C/wait pick.</li>
+<li><code>2026-05-09-decision-graph-view.md</code> — PROPOSED.</li>
+<li><code>2026-05-06-multi-ui-channel-participation.md</code> — PROPOSED.</li>
+</ul>
+
+<h2>Meta: handoff economics (user feedback this session)</h2>
+
+<p>Each handoff costs ~20-35K tokens (write brief + cold-start next session + re-orient). Current MEMORY #2 thresholds (300K early signal, 400K handoff zone) are too aggressive when the next action is just "monitor dispatches" — ScheduleWakeup in the same session is zero-cost.</p>
+
+<p>Proposed update to MEMORY #2 (encoding before final yield):</p>
+<ul>
+<li>Below 400K: stay in session, use ScheduleWakeup. No handoff.</li>
+<li>400-500K: handoff only at natural breaks.</li>
+<li>500K+: handoff zone.</li>
+<li>Auto-compact at 750K still strictly forbidden (destructive).</li>
+</ul>
+
+<p>This brief is an exception — written on explicit user request, not budget-triggered.</p>
+
+</body>
+</html>
