@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import scripts.audit.wiki_coverage_gate as gate
 from scripts.audit.wiki_coverage_gate import check_wiki_coverage, parse_implementation_map
 
 
@@ -159,3 +160,67 @@ def test_check_wiki_coverage_fails_missing_phonetic_rule() -> None:
     assert report["passed"] is False
     assert any(item["reason"] == "phonetic_rule_missing" for item in report["obligations"])
 
+
+def test_check_wiki_coverage_hard_fails_missing_phonetic_spoken_target_when_advisory(
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(gate, "WIKI_COVERAGE_HARD_FAIL", False)
+
+    report = check_wiki_coverage(
+        manifest=_manifest(),
+        implementation_map=_implementation_map(),
+        module_md="## Дієслова на -ся\nпрокидатися вмиватися одягатися -шся",
+        activities_yaml=(
+            "- id: act-1\n"
+            "  type: select\n"
+            "  items:\n"
+            "    - prompt: Choose the correct form.\n"
+            "      options: [Я прокидаєшся., Я прокидаюся.]\n"
+            "      answer: Я прокидаюся.\n"
+        ),
+        level="a1",
+    )
+
+    phonetic_failures = [
+        item
+        for item in report["obligations"]
+        if item["category"] == "phonetic_rules" and item["status"] == "FAIL"
+    ]
+    assert report["passed"] is False
+    assert report["hard_fail"] is True
+    assert report["phonetic_hard_fail"] is True
+    assert phonetic_failures[0]["spoken_target"] == "[с':а]"
+    assert phonetic_failures[0]["spoken_present"] is False
+
+
+def test_check_wiki_coverage_passes_phonetic_rule_with_one_manifest_example_pair() -> None:
+    manifest = _manifest()
+    manifest["phonetic_rules"][0]["example_pairs"] = [
+        {"written": "смієшся", "spoken": "[с'м'ійес':а]"},
+        {"written": "вітаєшся", "spoken": "[в'ітайес':а]"},
+    ]
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=_implementation_map(),
+        module_md=(
+            "## Дієслова на -ся\n"
+            "The morning pattern uses **прокидатися**, **вмиватися**, and **одягатися**. "
+            "The written ending **-шся** is pronounced **[с':а]**. "
+            "Example: **смієшся [с'м'ійес':а]**."
+        ),
+        activities_yaml=(
+            "- id: act-1\n"
+            "  type: select\n"
+            "  items:\n"
+            "    - prompt: Choose the correct form.\n"
+            "      options: [Я прокидаєшся., Я прокидаюся.]\n"
+            "      answer: Я прокидаюся.\n"
+        ),
+        level="a1",
+    )
+
+    phonetic_result = next(item for item in report["obligations"] if item["category"] == "phonetic_rules")
+    assert report["passed"] is True
+    assert phonetic_result["example_pairs_required"] is True
+    assert phonetic_result["example_pairs_present"] is True

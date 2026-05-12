@@ -195,6 +195,25 @@ single largest reason A1 modules under-teach.
 
 {WIKI_MANIFEST}
 
+### Phonetic rules — MUST emit IPA notation
+
+For every entry under `phonetic_rules:` in the Wiki Obligations Manifest, the
+module MUST include the spoken target verbatim in square brackets (e.g.
+`[с':а]`, `[ц':а]`) alongside the written form (e.g. `-шся`, `-ться`). The IPA
+notation is what teaches the pronunciation contrast for English-speaking
+learners — emitting only the written form leaves the rule pedagogically useless.
+
+Format requirements:
+- Spoken target appears inside `[...]` brackets (single-character square
+  brackets, not Unicode look-alikes).
+- Pair the written and spoken form in close lexical proximity (same sentence or
+  adjacent bullet), so the contrast is visible to the learner.
+- If the wiki provides example word pairs (e.g. `сміється [с'м'ійец':а]`), copy
+  at least one example verbatim into a vocabulary card or example sentence.
+
+The deterministic wiki-coverage gate hard-fails when any phonetic_rule has
+`spoken_present=false`. There is no advisory-mode escape for this category.
+
 ## Knowledge Packet
 
 {KNOWLEDGE_PACKET}
