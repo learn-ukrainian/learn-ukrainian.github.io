@@ -152,6 +152,8 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
 # IMMERSION POLICY
 # =============================================================================
 
+USE_ULP_IMMERSION_DERIVATION: bool = False  # Phase 3 default; flipped after Phase 4 calibration.
+
 # One authoritative source for live immersion policy across prompt generation
 # and audit gates. A band defines:
 # - the module range it covers
@@ -600,6 +602,37 @@ IMMERSION_POLICIES = {
     for family, bands in IMMERSION_POLICIES.items()
 }
 
+_ULP_VOCAB_KNEE_PER_BAND: dict[str, tuple[tuple[int, str], ...]] = {
+    # PHASE_4_PLACEHOLDER: empirical ULP S1-S6 replay will calibrate thresholds.
+    "a1": (
+        (0, "a1-m01-03"),
+        (25, "a1-m04-06"),
+        (55, "a1-m07-14"),
+        (120, "a1-m15-24"),
+        (220, "a1-m25-34"),
+        (360, "a1-m35-54"),
+        (560, "a1-m55+"),
+    ),
+    # PHASE_4_PLACEHOLDER: empirical ULP S1-S6 replay will calibrate thresholds.
+    "a2": (
+        (0, "a2-bridge"),
+        (80, "a2-ramp"),
+        (160, "a2-m01-20"),
+        (360, "a2-m21-50"),
+        (700, "a2-m51-70"),
+    ),
+    # PHASE_4_PLACEHOLDER: B1+ remains full immersion pending replay.
+    "b1": ((0, "b1-core"),),
+    "default": ((0, "b2+"),),
+}
+
+_RECYCLE_CADENCE_DEFAULTS: dict[str, dict[str, int]] = {
+    # PHASE_4_PLACEHOLDER: cadence/floor will be calibrated from ULP replay.
+    "a1": {"recycle_window": 6, "recycle_floor": 3},
+    "a2": {"recycle_window": 8, "recycle_floor": 5},
+    "default": {"recycle_window": 10, "recycle_floor": 6},
+}
+
 # =============================================================================
 # GLOBAL CONSTRAINTS
 # =============================================================================
@@ -659,20 +692,86 @@ def _find_immersion_band(track: str, module_num: int) -> dict[str, Any]:
     return bands[-1]
 
 
-def get_immersion_policy(track: str, module_num: int) -> dict[str, Any]:
+def _find_immersion_band_by_key(track: str, band_key: str) -> dict[str, Any]:
+    family = _immersion_track_key(track)
+    for band in IMMERSION_POLICIES[family]:
+        if band["key"] == band_key:
+            return band
+    for band in IMMERSION_POLICIES["default"]:
+        if band["key"] == band_key:
+            return band
+    return _find_immersion_band(track, 10_000)
+
+
+def _learner_vocab_count(learner_state: dict | None) -> int:
+    if not learner_state:
+        return 0
+    cumulative = learner_state.get("cumulative_vocabulary", [])
+    if isinstance(cumulative, int):
+        return cumulative
+    if isinstance(cumulative, (list, tuple, set)):
+        return len(cumulative)
+    return 0
+
+
+def compute_immersion_band(
+    track: str,
+    module_num: int,
+    learner_state: dict | None = None,
+) -> dict[str, Any]:
+    """Compute the immersion band for module N derived from cumulative-vocab state.
+
+    When USE_ULP_IMMERSION_DERIVATION is False, this is a thin shim around the
+    static IMMERSION_POLICIES fallback. When True, it derives the band from
+    learner_state's cumulative_vocabulary count using calibration constants.
+    """
+    if not USE_ULP_IMMERSION_DERIVATION:
+        return dict(_find_immersion_band(track, module_num))
+
+    family = _immersion_track_key(track)
+    knees = _ULP_VOCAB_KNEE_PER_BAND.get(family, _ULP_VOCAB_KNEE_PER_BAND["default"])
+    vocab_count = _learner_vocab_count(learner_state)
+    selected_key = knees[0][1]
+    for threshold, band_key in knees:
+        if vocab_count >= threshold:
+            selected_key = band_key
+        else:
+            break
+    return dict(_find_immersion_band_by_key(track, selected_key))
+
+
+def get_recycle_cadence_policy(track: str) -> dict[str, int]:
+    """Return placeholder recycle-cadence policy for a track."""
+    family = _immersion_track_key(track)
+    return dict(_RECYCLE_CADENCE_DEFAULTS.get(family, _RECYCLE_CADENCE_DEFAULTS["default"]))
+
+
+def get_immersion_policy(
+    track: str,
+    module_num: int,
+    learner_state: dict | None = None,
+) -> dict[str, Any]:
     """Return the full immersion policy dict for a track/module pair."""
-    return dict(_find_immersion_band(track, module_num))
+    return compute_immersion_band(track, module_num, learner_state)
 
 
-def get_immersion_range(track: str, module_num: int) -> tuple[int, int]:
+def get_immersion_range(
+    track: str,
+    module_num: int,
+    learner_state: dict | None = None,
+) -> tuple[int, int]:
     """Return advisory immersion percent telemetry range for a track/module pair."""
-    band = _find_immersion_band(track, module_num)
+    band = compute_immersion_band(track, module_num, learner_state)
     return int(band["advisory_pct_min"]), int(band["advisory_pct_max"])
 
 
-def get_immersion_structural(track: str, module_num: int) -> dict[str, Any]:
+def get_immersion_structural(
+    track: str,
+    module_num: int,
+    learner_state: dict | None = None,
+) -> dict[str, Any]:
     """Return structural immersion thresholds for a track/module pair."""
-    band = _find_immersion_band(track, module_num)
+    band = compute_immersion_band(track, module_num, learner_state)
     return {
         key: band[key]
         for key in (
@@ -687,9 +786,13 @@ def get_immersion_structural(track: str, module_num: int) -> dict[str, Any]:
     }
 
 
-def get_immersion_rule(track: str, module_num: int) -> str:
+def get_immersion_rule(
+    track: str,
+    module_num: int,
+    learner_state: dict | None = None,
+) -> str:
     """Return the writer-facing immersion instruction for a track/module pair."""
-    return str(_find_immersion_band(track, module_num)["rule"])
+    return str(compute_immersion_band(track, module_num, learner_state)["rule"])
 
 if __name__ == "__main__":
     # Simple CLI test

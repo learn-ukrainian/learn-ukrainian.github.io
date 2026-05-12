@@ -91,6 +91,17 @@ vocabulary_hints:
   - бібліотека (library) — 5 syllables
   - фотографія (photography) — long word with Ф
   - шоколад (chocolate) — Ш + О + К combination
+targets:
+  new_vocabulary:
+    - "яблуко"
+    - "молоко"
+    - "людина"
+    - "вулиця"
+    - "столиця"
+    - "каша"
+    - "пісня"
+  new_grammar: []
+  recycle_vocabulary: []
 activity_hints:
 - type: divide-words
   focus: 'Поділи слова на склади: мо-ло-ко, ап-те-ка, у-ні-вер-си-тет'

@@ -1920,6 +1920,7 @@ def writer_context(
 ) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
+    learner_state = build_learner_state(level.lower(), sequence)
     activity_config = _activity_config(level, sequence, str(plan["slug"]))
     if wiki_manifest is None:
         wiki_manifest_text = build_wiki_manifest(level=level.lower(), slug=str(plan["slug"]), plan=plan)
@@ -1937,8 +1938,8 @@ def writer_context(
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
         "WIKI_MANIFEST": wiki_manifest_text,
-        "LEARNER_STATE": format_learner_state(build_learner_state(level.lower(), sequence)),
-        "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence),
+        "LEARNER_STATE": format_learner_state(learner_state),
+        "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence, learner_state=learner_state),
         "CONTRACT_YAML": _contract_yaml(plan),
         "ALLOWED_ACTIVITY_TYPES": activity_config["ALLOWED_ACTIVITY_TYPES"],
         "FORBIDDEN_ACTIVITY_TYPES": activity_config["FORBIDDEN_ACTIVITY_TYPES"],
