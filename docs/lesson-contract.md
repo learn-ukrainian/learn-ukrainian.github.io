@@ -54,6 +54,32 @@ Pipeline inputs the writer DOES NOT produce:
 - **Wiki packet** — context the writer reads but does not author. Owned by Phase 5+ wiki retrieval.
 - **Annotation pass** — stress marks added deterministically AFTER review by `ukrainian-word-stress`, not by the writer.
 
+### Plan Targets (PR2)
+
+Plan YAML may declare an optional `targets` block. This is the unified,
+machine-readable source for what a module introduces and deliberately
+recycles:
+
+```yaml
+targets:
+  new_vocabulary:
+    - lemma1
+    - lemma2
+  new_grammar:
+    - topic1
+    - topic2
+  recycle_vocabulary:
+    - earlier-lemma
+```
+
+`targets.new_vocabulary` lists lemmas this module introduces.
+`targets.new_grammar` lists grammar topics this module introduces.
+`targets.recycle_vocabulary` is optional and names earlier lemmas the
+module intentionally brings back. During PR2 migration, plans without
+`targets` remain valid; tooling falls back to
+`vocabulary_hints.required` for `new_vocabulary` so legacy plans keep
+building while the explicit schema rolls out.
+
 ## 2. Published MDX shape
 
 The pipeline's MDX assembler (today: `scripts/generate_mdx/core.py:267-364`)

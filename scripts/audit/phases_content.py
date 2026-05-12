@@ -20,6 +20,7 @@ from .checks.content_purity import check_content_purity
 from .checks.imperial_terminology import check_imperial_terminology
 from .checks.learner_state import check_learner_state
 from .checks.prose_quality import check_prose_quality
+from .checks.recycle_cadence import check_recycle_cadence
 from .checks.russicism_detection import check_russicisms, check_semantic_false_friends
 from .checks.state_standard_compliance import check_state_standard_compliance
 from .checks.vocabulary import (
@@ -211,6 +212,21 @@ def run_content_quality_checks(ctx: AuditContext, state: AuditState) -> None:
             'type': violation['type'].upper(),
             'severity': 'critical' if gate_severity == 'HARD' else 'warning',
             'blocking': gate_severity == 'HARD',
+            'issue': violation['issue'],
+            'fix': violation['fix'],
+        })
+
+    recycle_cadence_violations = check_recycle_cadence(
+        ctx.content,
+        ctx.level_code,
+        ctx.module_num,
+        Path(ctx.file_path).parent,
+    )
+    for violation in recycle_cadence_violations:
+        state.pedagogical_violations.append({
+            'type': violation['type'].upper(),
+            'severity': 'warning',
+            'blocking': False,
             'issue': violation['issue'],
             'fix': violation['fix'],
         })

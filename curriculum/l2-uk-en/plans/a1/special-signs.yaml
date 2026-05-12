@@ -91,6 +91,22 @@ vocabulary_hints:
   - Мар'яна (given name) - transfer model `Мар'-яна`
   - дерев'яний (wooden) - transfer model `дере-в'яний`
   - ложка (spoon) - counterexample against mechanical `льожка`
+targets:
+  new_vocabulary:
+    - "день"
+    - "кінь"
+    - "сіль"
+    - "вчитель"
+    - "сім'я"
+    - "м'ясо"
+    - "п'ять"
+    - "комп'ютер"
+    - "буряк"
+    - "бур'ян"
+    - "свято"
+    - "цвях"
+  new_grammar: []
+  recycle_vocabulary: []
 activity_hints:
 - type: fill-in
   focus: 'Додай `ь` або апостроф: сім_я, ден_, п_ять, комп_ютер, бур_ян, мален_кий'
