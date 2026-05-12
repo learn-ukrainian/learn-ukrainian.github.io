@@ -26,7 +26,7 @@ Inside worktree, `.venv/` is gitignored. Use `/Users/krisztiankoos/projects/lear
 
 Run Phase A's three new gates (`_l2_exposure_floor_gate`, `_long_uk_ceiling_gate`, `_component_density_gate`) against:
 
-1. **All 55 deployed A1 modules** in `_archive/a1-backup-2026-04-08/content/` (the deployed-A1 single-page MD corpus — read 5 of these in the 2026-05-13 evening session and characterized them as following correct structural patterns; this run validates that empirically across the full set)
+1. **All 55 deployed A1 modules** in `curriculum/l2-uk-en/_archive/a1-backup-2026-04-08/content/` (verified: 55 `*.md` files at that path; deployed-A1 single-page MD corpus — read 5 of these in the 2026-05-13 evening session and characterized them as following correct structural patterns; this run validates that empirically across the full set)
 2. **Today's bakeoff artifacts** at `audit/bakeoff-2026-05-13-midday/{claude,codex}/module.md`
 3. **The just-built `a1/my-morning` V7 module** (if it exists at `curriculum/l2-uk-en/a1/my-morning/module.md`)
 
@@ -42,7 +42,7 @@ Output: a calibration report at `audit/immersion-gate-calibration-2026-05-13/REP
 
 | Claim | Deterministic tool | Output format |
 |---|---|---|
-| "All 55 deployed A1 modules read & gated" | `ls _archive/a1-backup-2026-04-08/content/*.md \| wc -l` (cross-check count) + gate-run log per module | quote `ls` count + show summary table per band |
+| "All 55 deployed A1 modules read & gated" | `ls curriculum/l2-uk-en/_archive/a1-backup-2026-04-08/content/*.md \| wc -l` (cross-check count) + gate-run log per module | quote `ls` count + show summary table per band |
 | "Today's bakeoff artifacts gated" | `ls audit/bakeoff-2026-05-13-midday/{claude,codex}/module.md` + gate-run log | quote `ls` output + show gate JSON per writer |
 | "Threshold values updated in IMMERSION_POLICIES" | `git diff scripts/config.py` shows per-band threshold changes | quote a unified diff snippet per band |
 | "Deployed corpus pass rate ≥95% under tuned thresholds" | the per-band pass-rate aggregation logic | quote the aggregation output table |
@@ -82,7 +82,7 @@ Quote stdout. If ImportError, ABORT.
 
 Create `scripts/audit/immersion_gate_calibration.py` (new file). It:
 
-1. Walks `_archive/a1-backup-2026-04-08/content/*.md` (or wherever the deployed A1 corpus actually lives — verify path; if different, document)
+1. Walks `curriculum/l2-uk-en/_archive/a1-backup-2026-04-08/content/*.md` (verified: 55 files at that path; sibling dirs at same parent are `activities/`, `vocabulary/`, `orchestration/`, `research/`, `status/` — only `content/` is the module-MD corpus)
 2. For each `.md`, parses out level + sequence (from frontmatter OR from filename pattern — verify what's stable)
 3. Constructs a `plan` dict with `level=a1`, `sequence=N`
 4. Calls each of the three gates + advisory_pct against the body text
