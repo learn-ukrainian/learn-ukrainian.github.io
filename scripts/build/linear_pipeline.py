@@ -434,7 +434,10 @@ _SENTENCE_SPLIT_RE = re.compile(
 # Activity fields whose values are intentionally misspelled — students correct
 # them. Excluded from VESUM lookup only for error-correction activities.
 _ERROR_CORRECTION_TYPE = "error-correction"
-_ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset({"error", "errorWord", "error_word"})
+_ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset(
+    {"error", "errors", "errorWord", "error_word", "sentence"}
+)
+_VESUM_ABBREVIATION_RE = re.compile(r"\bдіал\.", re.IGNORECASE)
 
 # String fields whose values are user-facing prose (subject to AI-slop checks).
 # YAML structural keys like `correction:` and `correctAnswer:` are deliberately
@@ -3945,6 +3948,7 @@ def _strip_metalinguistic(text: str) -> str:
       `**-ться**`. The `\\B` lookbehind protects legitimate hyphenated
       compounds (`темно-синій`) where the char before `-` is a word char.
     - `sounds like **...**` — cue-prefixed bold pronunciation transcriptions.
+    - `діал.` — textbook abbreviation for `діалектне`, not a lemma.
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.
@@ -3955,6 +3959,7 @@ def _strip_metalinguistic(text: str) -> str:
     text = _BRACES_RE.sub(" ", text)
     text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
     text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
+    text = _VESUM_ABBREVIATION_RE.sub(" ", text)
     return text
 
 
@@ -3982,11 +3987,11 @@ def _build_vesum_text(
 def _activity_vesum_text(activity: dict[str, Any]) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
-    For `error-correction` activities, fields like `error:` and `errorWord:`
-    hold the typo the student must fix; verifying them against VESUM would
-    always fail. The skip is at the dict (subtree) level so even a future
-    nested shape like `error: { text: "...", note: "..." }` would be entirely
-    excluded.
+    For `error-correction` activities, fields like `error:`, `errorWord:`,
+    and `sentence:` hold the typo the student must fix; verifying them against
+    VESUM would always fail. The skip is at the dict (subtree) level so even a
+    future nested shape like `error: { text: "...", note: "..." }` would be
+    entirely excluded.
 
     For multiple-choice-style `options: [{text, correct}]` lists, `text` on
     options with falsy `correct` is an intentional wrong answer. Skip only that
@@ -4150,6 +4155,12 @@ def _extract_blockquotes(text: str) -> list[str]:
 def _normalize_match_text(text: str) -> str:
     text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
     text = re.sub(r"\[[^\]]+\]\([^)]+\)", " ", text)
+    text = text.replace("\xad", "")
+    text = re.sub(
+        r"(?<=[A-Za-zА-Яа-яҐґЄєІіЇї])-\s+(?=[A-Za-zА-Яа-яҐґЄєІіЇї])",
+        "",
+        text,
+    )
     text = text.replace("’", "'").replace("ʼ", "'")
     decomposed = unicodedata.normalize("NFD", text)
     return "".join(char for char in decomposed if not unicodedata.combining(char))
@@ -4311,6 +4322,53 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
     return calls
 
 
+_MCP_SEARCH_TEXT_RESULT_RE = re.compile(
+    r"(?ms)^###\s+Result\s+\d+\s*$"
+    r"(?P<body>.*?)(?=^###\s+Result\s+\d+\s*$|\Z)"
+)
+
+
+def _parse_mcp_search_text_markdown(text: str) -> list[Mapping[str, Any]]:
+    """Parse sources.search_text markdown output into textbook result items."""
+    items: list[Mapping[str, Any]] = []
+    for match in _MCP_SEARCH_TEXT_RESULT_RE.finditer(text):
+        body = match.group("body").strip()
+        source_match = re.search(r"(?m)^-\s+\*\*Source\*\*:\s*(?P<source>.+?)\s*$", body)
+        text_match = re.search(r"(?ms)^-\s+\*\*Text\*\*:\s*\n(?P<text>.*)\Z", body)
+        if source_match is None or text_match is None:
+            continue
+
+        source = source_match.group("source").strip()
+        grade_match = re.search(r"(?i)\bgrade\s+(?P<grade>1[01]|[1-9])\b", source)
+        page_match = re.search(
+            r"(?im)^-\s+\*\*Section\*\*:\s*(?:Сторінка|Page|p\.?)\s*(?P<page>\d+)\b",
+            body,
+        )
+        author = re.sub(r"(?i)\bgrade\s+(?:1[01]|[1-9])\b", "", source)
+        author = author.strip(" ,;:-")
+        title = source
+        if author and grade_match and page_match:
+            title = (
+                f"{author[:1].upper()}{author[1:]} "
+                f"Grade {grade_match.group('grade')}, p.{page_match.group('page')}"
+            )
+
+        item: dict[str, Any] = {
+            "source_type": "textbook",
+            "source": source,
+            "title": title,
+            "text": text_match.group("text").strip(),
+        }
+        if author:
+            item["author"] = author
+        if grade_match:
+            item["grade"] = int(grade_match.group("grade"))
+        if page_match:
+            item["page"] = int(page_match.group("page"))
+        items.append(item)
+    return items
+
+
 def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     result = call.get("result", call.get("response"))
     result_summary = call.get("result_summary")
@@ -4326,7 +4384,21 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         if call.get("source_type"):
             result["source_type"] = call["source_type"]
     if isinstance(result, list):
-        return [item for item in result if isinstance(item, Mapping)]
+        items: list[Mapping[str, Any]] = []
+        for item in result:
+            if not isinstance(item, Mapping):
+                continue
+            if (
+                _tool_name_from_call(call) == "search_text"
+                and item.get("type") == "text"
+                and isinstance(item.get("text"), str)
+            ):
+                parsed = _parse_mcp_search_text_markdown(item["text"])
+                if parsed:
+                    items.extend(parsed)
+                    continue
+            items.append(item)
+        return items
     if isinstance(result, Mapping):
         result = dict(result)
         if call.get("source_type") and not result.get("source_type"):
@@ -4334,6 +4406,14 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         raw_hits = result.get("results") or result.get("hits") or result.get("items")
         if isinstance(raw_hits, list):
             return [item for item in raw_hits if isinstance(item, Mapping)]
+        if (
+            _tool_name_from_call(call) == "search_text"
+            and result.get("type") == "text"
+            and isinstance(result.get("text"), str)
+        ):
+            parsed = _parse_mcp_search_text_markdown(result["text"])
+            if parsed:
+                return parsed
         return [result]
     return []
 
@@ -4380,8 +4460,14 @@ def _reference_matches_result(
 ) -> bool:
     result_text = "\n".join(_flatten_tool_text(result))
     ref_key = extract_citation_key(reference_title)
-    if ref_key is not None and result_text and extract_citation_key(result_text) == ref_key:
-        return True
+    if ref_key is not None:
+        citation_texts = [
+            str(result.get("title") or ""),
+            str(result.get("source_ref") or ""),
+            result_text,
+        ]
+        if any(extract_citation_key(text) == ref_key for text in citation_texts if text):
+            return True
     normalized_ref = _normalize_citation_ref(reference_title).casefold()
     normalized_result = _normalize_citation_ref(result_text).casefold()
     return bool(normalized_ref and normalized_ref in normalized_result)
