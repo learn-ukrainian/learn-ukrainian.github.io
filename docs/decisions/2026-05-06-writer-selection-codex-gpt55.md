@@ -1,6 +1,8 @@
-# ACCEPTED — Codex (GPT-5.5 / codex-tools) is the V7 module writer (default until next bakeoff signal)
+# REVISED-AGAIN 2026-05-13 — claude-tools is the V7 module writer for A1+A2 (empirical fair-env verdict)
 
-**Status:** ACCEPTED 2026-05-06 (user signoff, conditional on Part B)
+**Status:** ACCEPTED 2026-05-06 → REVISED 2026-05-12 night (false evidence) → **REVISED-AGAIN 2026-05-13 midday** (fair-env evidence): claude-tools wins A1/A2 on content merit; codex-tools remains viable, deferred re-bakeoff for B1+/seminar scope.
+
+**Original status:** ACCEPTED 2026-05-06 (user signoff, conditional on Part B)
 **Surfaced:** 2026-05-06 (overnight, user AFK)
 **Source:** Bakeoff `bakeoff-validation-2026-05-06` — `audit/bakeoff-2026-05-05/REPORT.md` + per-writer JSONLs and python_qg.json
 **ADR clause:** `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` §3 (writer-selection via strict bakeoff)
@@ -115,9 +117,28 @@ Meanwhile, the *prior* loser **claude-tools** — which in the original 2026-05-
 
 ### Decision (orchestrator-acted 2026-05-12 night follow-up)
 
-- **Status:** ACCEPTED → **REVISED**. New ACCEPTED default writer: **claude-tools**. Effective immediately for any new V7 build dispatches.
-- **codex-tools** remains a valid `--writer` choice but is no longer the default. Use only with explicit operator opt-in.
-- **Rationale:** the 2026-05-06 lock was conditional on Option A's prompt-iteration premise. That premise is falsified. The bakeoff signal (claude-tools = 4 tool calls + full artifact set, codex-tools = 0 tool calls + writer phase abort) is decision-grade.
+- **Status:** ACCEPTED → REVISED (night) → **REVISED-AGAIN 2026-05-13 midday on empirical fair-env evidence**. New ACCEPTED default writer for **A1 + A2 scope: claude-tools**. Effective immediately.
+- **codex-tools** remains a valid `--writer` choice but is no longer the default for A1/A2. **NOT disqualified.** Re-bakeoff at B1+/seminar scope is encouraged once A1/A2 lock is shipped — codex's verbosity/density profile may suit higher levels better.
+- **Rationale (revised again):** the night-bakeoff "codex tool_calls_total=0" verdict was based on **false evidence** — issue #1900 investigation (claude-headless adversarial, 737s) found the fail-fast rollout-matcher bug in `scripts/agent_runtime/adapters/codex.py::_rollout_matches_plan` that rejected ALL codex tool-call telemetry events since 2026-04-15. Codex's actual MCP usage across the 3 pre-fix bakeoffs is in the rollout JSONLs and was always there. PR #1907 fixed the matcher; today's 2026-05-13 midday bakeoff (`audit/bakeoff-2026-05-13-midday/`) is the first fair retest. Codex made **11 successful MCP tool calls** in retry 1 and produced a full artifact set in retry 2 (post the `author`/`role` schema fix). The verdict is now on real-content merit, not false telemetry.
+
+### Empirical bakeoff verdict — 2026-05-13 midday (fair env)
+
+Both writers produced complete artifacts in the now-fixed pipeline (#1901 OSError, #1903 rollout matcher, #1906 writer telemetry, #1904 vesum distractor exclusion all merged). Audit dir: `audit/bakeoff-2026-05-13-midday/`.
+
+| Metric | claude-tools | codex-tools |
+|---|---|---|
+| Module word count (target 1200) | 1205 ✅ | **996 (−204)** |
+| Section budget adherence (4 sections, 270-330 each) | 1 over (336w) | **All 4 under (152-172w)** |
+| Formatting (model-answer callout) | ✅ | ❌ missing |
+| Immersion vs `a1-m15-24` cap 24% | 25.4% (1.4 over) | **51.77% (27 over — 2× cap)** |
+| MCP tool calls captured | 9 with populated items | 5 with empty `result_summary` (codex-side capture gap, separate followup) |
+| Truncation artifacts | none | `равцова` instead of `Кравцова` |
+
+Claude-tools wins A1/my-morning **on content merit**: closer to target word count, better budget adherence, vastly better immersion adherence (codex would overwhelm A1 learners at 52% Ukrainian density), all formatting requirements met, no truncation. Codex-tools is functional but writer-prompt-adherence is weaker at A1.
+
+### Reframe of the 3 pre-fix bakeoffs
+
+The 2026-05-06 / 2026-05-08 / 2026-05-12-night bakeoffs that claimed "codex tool_calls_total=0" are **explicitly disqualified as evidence**. They measured a reporting bug (rollout matcher), not writer capability. Future bakeoff design must include a synthetic rollout-fixture replay test in `tests/replay/` (per #1905) so this class of false-evidence verdict cannot recur silently.
 
 ### Follow-ups filed
 

@@ -1,0 +1,197 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "plan_references": [
+    {
+      "title": "Караман Grade 10, p.176",
+      "notes": "Зворотні дієслова: суфікс -ся(-сь) означає дію, спрямовану на себе."
+    },
+    {
+      "title": "Кравцова Grade 4, p.113",
+      "notes": "Вимова: -шся=[с'а], -ться=[ц'а]."
+    },
+    {
+      "title": "Захарійчук Grade 4, p.162",
+      "notes": "Дієслова на -ся: вправи з вимовою та правописом."
+    }
+  ],
+  "gates": {
+    "word_count": {
+      "passed": true,
+      "count": 1259,
+      "target": 1200
+    },
+    "plan_sections": {
+      "passed": false,
+      "missing_headings": [],
+      "word_budgets": [
+        {
+          "section": "Діалоги",
+          "count": 304,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Дієслова на -ся",
+          "count": 336,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Мій ранок",
+          "count": 330,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Підсумок",
+          "count": 282,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        }
+      ]
+    },
+    "formatting_standards": {
+      "passed": true,
+      "malformed_callouts": [],
+      "missing_mandatory_callouts": []
+    },
+    "vesum_verified": {
+      "passed": false,
+      "checked": 193,
+      "whitelisted": 6,
+      "missing": [
+        "діал",
+        "йдуся",
+        "снідаюся"
+      ],
+      "missing_count": 3
+    },
+    "citations_resolve": {
+      "passed": false,
+      "unknown": [
+        "Захарійчук, 4 клас, с. 162-163",
+        "Кравцова, 4 клас, с. 112-113",
+        "Авраменко, 7 клас, с. 67"
+      ]
+    },
+    "textbook_grounding": {
+      "passed": false,
+      "verdict": "REJECT",
+      "severity": "HARD",
+      "required": 1,
+      "matched": [],
+      "missing": [
+        "Караман Grade 10, p.176",
+        "Кравцова Grade 4, p.113",
+        "Захарійчук Grade 4, p.162"
+      ],
+      "blockquotes_checked": 6,
+      "long_blockquotes_checked": 5,
+      "search_text_calls": 5,
+      "textbook_result_hits": 0,
+      "min_words": 30,
+      "downgraded": [],
+      "missing_corpus": [],
+      "warnings": [],
+      "reason": null,
+      "unattributed_matches": 0
+    },
+    "immersion": {
+      "passed": false,
+      "pct": 25.4,
+      "min_pct": 15,
+      "max_pct": 35,
+      "policy": "a1-m15-24",
+      "long_ukrainian_sentences": [
+        "> Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними: навчатися, закохатися",
+        "Сучасний дієслівний суфікс -ся(-сь) — це давня коротка форма зворотного займенника себе в Зн",
+        "Уживається -ся(-сь) після інфінітивного суфікса -ти(-ть) або закінчення в особових формах дієслова: вмивати — вмиватися, взувати — взуватися",
+        "Pair it with the same four sequence words: *Спочатку повертаюся додому, потім вечеряю, після цього відпочиваю, нарешті лягаю спати* (*First I come back home, then I have dinner, after that I rest, finally I go to bed*)"
+      ]
+    },
+    "inject_activity_ids": {
+      "passed": true,
+      "injected": [
+        "act-2",
+        "act-1",
+        "act-5",
+        "act-3",
+        "act-6",
+        "act-7",
+        "act-8"
+      ],
+      "missing": [],
+      "unused": [
+        "act-10",
+        "act-4",
+        "act-9"
+      ]
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "fill-in",
+        "quiz",
+        "fill-in",
+        "fill-in",
+        "match-up",
+        "order",
+        "unjumble",
+        "true-false",
+        "error-correction",
+        "translate"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "previously_passed_regression": {
+      "passed": true,
+      "regressions": []
+    },
+    "mdx_render": {
+      "passed": null,
+      "message": "Run after publish stage"
+    },
+    "passed": false,
+    "correction_terminal": {
+      "passed": false,
+      "gate": "plan_sections",
+      "message": "plan_sections failed after its single ADR-008 correction attempt"
+    }
+  }
+}

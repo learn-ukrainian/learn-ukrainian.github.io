@@ -1,0 +1,295 @@
+- id: act-01
+  type: quiz
+  instruction: Оберіть правильну форму.
+  items:
+  - prompt: Коли ти ___?
+    options:
+    - прокидаєшся
+    - прокидаюся
+    - прокидається
+    answer: прокидаєшся
+  - prompt: Я ___ о сьомій.
+    options:
+    - прокидаюся
+    - прокидаєшся
+    - прокидається
+    answer: прокидаюся
+  - prompt: Вона ___ швидко.
+    options:
+    - одягаюся
+    - одягаєшся
+    - одягається
+    answer: одягається
+  - prompt: Я ___ на роботу.
+    options:
+    - йду
+    - йдеш
+    - йде
+    answer: йду
+  - prompt: Ти ___ каву.
+    options:
+    - п'ю
+    - п'єш
+    - п'є
+    answer: п'єш
+  - prompt: Він ___ пізно.
+    options:
+    - встаю
+    - встаєш
+    - встає
+    answer: встає
+  - prompt: Настя ___ вранці.
+    options:
+    - навчаюся
+    - навчаєшся
+    - навчається
+    answer: навчається
+  - prompt: Ліна не ___.
+    options:
+    - поспішаю
+    - поспішаєш
+    - поспішає
+    answer: поспішає
+- id: act-02
+  type: fill-in
+  instruction: Додайте -ся або правильну частину форми.
+  items:
+  - sentence: Я вмиваю__.
+    answer: ся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Ти одягає__.
+    answer: шся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Він прокидає__.
+    answer: ться
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Вона збирає__.
+    answer: ться
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Я навчаю__.
+    answer: ся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Ти вітає__.
+    answer: шся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Я розчісую__.
+    answer: ся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Він повертає__.
+    answer: ться
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Ти вмиває__ швидко.
+    answer: шся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Вона одягає__ вранці.
+    answer: ться
+    options:
+    - ся
+    - шся
+    - ться
+- id: act-03
+  type: order
+  instruction: Поставте ранкові дії у правильному порядку.
+  items:
+  - Потім вмиваюся.
+  - Нарешті йду на роботу.
+  - Спочатку прокидаюся.
+  - Після цього снідаю.
+  correct_order:
+  - 2
+  - 0
+  - 3
+  - 1
+- id: act-04
+  type: fill-in
+  instruction: Опишіть свій ранок трьома короткими реченнями.
+  items:
+  - sentence: Спочатку я ____.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - йду
+    - снідаю
+  - sentence: Потім я ____.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - йду
+    - лежу
+  - sentence: Нарешті я ____.
+    answer: йду
+    options:
+    - йду
+    - прокидаюся
+    - одягаюся
+- id: act-05
+  type: quiz
+  instruction: Зворотне чи незворотне?
+  items:
+  - prompt: Я вмиваю руки.
+    options:
+    - незворотне
+    - зворотне
+    answer: незворотне
+  - prompt: Я вмиваюся.
+    options:
+    - зворотне
+    - незворотне
+    answer: зворотне
+  - prompt: Вона снідає.
+    options:
+    - незворотне
+    - зворотне
+    answer: незворотне
+  - prompt: Ти одягаєшся.
+    options:
+    - зворотне
+    - незворотне
+    answer: зворотне
+  - prompt: Я йду.
+    options:
+    - незворотне
+    - зворотне
+    answer: незворотне
+  - prompt: Він збирається.
+    options:
+    - зворотне
+    - незворотне
+    answer: зворотне
+  - prompt: Я п'ю каву.
+    options:
+    - незворотне
+    - зворотне
+    answer: незворотне
+  - prompt: Вона навчається.
+    options:
+    - зворотне
+    - незворотне
+    answer: зворотне
+- id: act-06
+  type: fill-in
+  instruction: Вставте слово послідовності.
+  items:
+  - sentence: ____ я прокидаюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Нарешті
+    - Після цього
+  - sentence: ____ вмиваюся.
+    answer: Потім
+    options:
+    - Потім
+    - Нарешті
+    - Спочатку
+  - sentence: ____ снідаю.
+    answer: Після цього
+    options:
+    - Після цього
+    - Спочатку
+    - Нарешті
+  - sentence: ____ йду на роботу.
+    answer: Нарешті
+    options:
+    - Нарешті
+    - Потім
+    - Спочатку
+  - sentence: ____ я одягаюся.
+    answer: Потім
+    options:
+    - Потім
+    - Нарешті
+    - Спочатку
+  - sentence: ____ я п'ю каву.
+    answer: Після цього
+    options:
+    - Після цього
+    - Нарешті
+    - Спочатку
+- id: act-07
+  type: match-up
+  instruction: З'єднайте українську форму з англійським значенням.
+  pairs:
+  - left: я прокидаюся
+    right: I wake up
+  - left: ти вмиваєшся
+    right: you wash up
+  - left: вона одягається
+    right: she gets dressed
+  - left: я снідаю
+    right: I have breakfast
+  - left: я йду
+    right: I go
+- id: act-08
+  type: true-false
+  instruction: 'Позначте: правда чи ні.'
+  items:
+  - statement: Я прокидаюся о сьомій.
+    answer: true
+  - statement: Ти прокидаюся о сьомій.
+    answer: false
+  - statement: Вона вмивається.
+    answer: true
+  - statement: Він одягаєшся.
+    answer: false
+  - statement: Я йду на роботу.
+    answer: true
+  - statement: Ти йду на роботу.
+    answer: false
+- id: act-09
+  type: group-sort
+  instruction: Розподіліть слова на дві групи.
+  groups:
+  - name: Зворотні
+    items:
+    - прокидаюся
+    - вмиваюся
+    - одягаюся
+    - збираюся
+  - name: Незворотні
+    items:
+    - снідаю
+    - йду
+    - п'ю
+    - лежу
+- id: act-10
+  type: error-correction
+  instruction: Виправте помилку.
+  items:
+  - incorrect: Я прокидаєшся.
+    correct: Я прокидаюся.
+  - incorrect: Ти вмиваюся.
+    correct: Ти вмиваєшся.
+  - incorrect: Він одягаєшся.
+    correct: Він одягається.
+  - incorrect: Я йдеш на роботу.
+    correct: Я йду на роботу.
+  - incorrect: Вона снідаю.
+    correct: Вона снідає.

@@ -1,0 +1,195 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "plan_references": [
+    {
+      "title": "Караман Grade 10, p.176",
+      "notes": "Зворотні дієслова: суфікс -ся(-сь) означає дію, спрямовану на себе."
+    },
+    {
+      "title": "Кравцова Grade 4, p.113",
+      "notes": "Вимова: -шся=[с'а], -ться=[ц'а]."
+    },
+    {
+      "title": "Захарійчук Grade 4, p.162",
+      "notes": "Дієслова на -ся: вправи з вимовою та правописом."
+    }
+  ],
+  "gates": {
+    "word_count": {
+      "passed": false,
+      "count": 996,
+      "target": 1200
+    },
+    "plan_sections": {
+      "passed": false,
+      "missing_headings": [],
+      "word_budgets": [
+        {
+          "section": "Діалоги",
+          "count": 172,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Дієслова на -ся",
+          "count": 168,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Мій ранок",
+          "count": 158,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        },
+        {
+          "section": "Підсумок",
+          "count": 152,
+          "min": 270,
+          "max": 330,
+          "passed": false
+        }
+      ]
+    },
+    "formatting_standards": {
+      "passed": false,
+      "malformed_callouts": [],
+      "missing_mandatory_callouts": [
+        "> [!model-answer]"
+      ]
+    },
+    "vesum_verified": {
+      "passed": false,
+      "checked": 182,
+      "whitelisted": 5,
+      "missing": [
+        "йдуся",
+        "равцова",
+        "снідаюся"
+      ],
+      "missing_count": 3
+    },
+    "citations_resolve": {
+      "passed": false,
+      "unknown": [
+        "Knowledge Packet: pedagogy/a1/my-morning.md"
+      ]
+    },
+    "textbook_grounding": {
+      "passed": false,
+      "verdict": "REJECT",
+      "severity": "HARD",
+      "required": 1,
+      "matched": [],
+      "missing": [
+        "Караман Grade 10, p.176",
+        "Кравцова Grade 4, p.113",
+        "Захарійчук Grade 4, p.162"
+      ],
+      "blockquotes_checked": 4,
+      "long_blockquotes_checked": 0,
+      "search_text_calls": 3,
+      "textbook_result_hits": 0,
+      "min_words": 30,
+      "downgraded": [],
+      "missing_corpus": [],
+      "warnings": [],
+      "reason": null,
+      "unattributed_matches": 0
+    },
+    "immersion": {
+      "passed": false,
+      "pct": 51.77,
+      "min_pct": 15,
+      "max_pct": 35,
+      "policy": "a1-m15-24",
+      "long_ukrainian_sentences": [
+        "> Дієслова із суфіксом -ся(-сь), які виражають зворотну дію, називаються зворотними",
+        "> У дієсловах 3-ї особи однини та множини -ться вимовляють як [ц':а]"
+      ]
+    },
+    "inject_activity_ids": {
+      "passed": true,
+      "injected": [
+        "act-01",
+        "act-02",
+        "act-03",
+        "act-04"
+      ],
+      "missing": [],
+      "unused": [
+        "act-05",
+        "act-06",
+        "act-07",
+        "act-08",
+        "act-09",
+        "act-10"
+      ]
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "quiz",
+        "fill-in",
+        "order",
+        "fill-in",
+        "quiz",
+        "fill-in",
+        "match-up",
+        "true-false",
+        "group-sort",
+        "error-correction"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "previously_passed_regression": {
+      "passed": true,
+      "regressions": []
+    },
+    "mdx_render": {
+      "passed": null,
+      "message": "Run after publish stage"
+    },
+    "passed": false,
+    "correction_terminal": {
+      "passed": false,
+      "gate": "word_count",
+      "message": "word_count failed after its single ADR-008 correction attempt"
+    }
+  }
+}

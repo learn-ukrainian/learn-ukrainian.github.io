@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash one's face and hands
+  pos: verb
+  usage: Я вмиваюся холодною водою.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Я одягаюся швидко.
+- lemma: збиратися
+  translation: to get ready, gather one's things
+  pos: verb
+  usage: Я збираюся на роботу.
+- lemma: повертатися
+  translation: to come back, to return
+  pos: verb
+  usage: Я повертаюся пізно.
+- lemma: навчатися
+  translation: to study, to learn
+  pos: verb
+  usage: Я навчаюся вранці.
+- lemma: снідати
+  translation: to have breakfast (not reflexive)
+  pos: verb
+  usage: Я снідаю о восьмій.
+- lemma: йти
+  translation: to go (on foot — irregular)
+  pos: verb
+  usage: Я йду на роботу.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: У суботу я не поспішаю.
+- lemma: дивитися
+  translation: to look, to watch
+  pos: verb
+  usage: Я дивлюся в телефон.
+- lemma: лежати
+  translation: to lie down, to be lying
+  pos: verb
+  usage: Я лежу і дивлюся в телефон.
+- lemma: спочатку
+  translation: first, at first
+  pos: adv
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then, next
+  pos: adv
+  usage: Потім вмиваюся.
+- lemma: після цього
+  translation: after that
+  pos: phrase
+  usage: Після цього я снідаю.
+- lemma: нарешті
+  translation: finally, at last
+  pos: adv
+  usage: Нарешті йду на роботу.
+- lemma: вранці
+  translation: in the morning
+  pos: adv
+  usage: Я навчаюся вранці.
+- lemma: пізно
+  translation: late
+  pos: adv
+  usage: У суботу я прокидаюся пізно.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Доброго ранку!
+- lemma: сніданок
+  translation: breakfast
+  pos: noun
+  usage: Сніданок о восьмій.
+- lemma: субота
+  translation: Saturday
+  pos: noun
+  usage: У суботу я не поспішаю.

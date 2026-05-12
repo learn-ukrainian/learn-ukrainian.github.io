@@ -297,6 +297,10 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
         required_item_fields={
             "title": str,
         },
+        # `author` and `role` added 2026-05-13 after codex-tools bakeoff
+        # produced these fields naturally for textbook references (e.g.,
+        # author="Караман", role="grammar-source"). Both are semantically
+        # useful and don't harm downstream consumers.
         optional_item_fields=frozenset({
             "notes",
             "source_ref",
@@ -304,6 +308,8 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
             "url",
             "section",
             "page",
+            "author",
+            "role",
         }),
     ),
 }

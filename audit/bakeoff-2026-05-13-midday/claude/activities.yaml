@@ -1,0 +1,291 @@
+- id: act-1
+  type: fill-in
+  title: Suffix -ся or no suffix
+  instruction: Add -ся to the verb stem if the action is reflexive (turning back on
+    the speaker). Choose — (no suffix) if the verb is not reflexive.
+  items:
+  - sentence: Я вмиваю__ холодною водою.
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Ти одягаєш__ швидко.
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Я прокидаю__ о сьомій.
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Я снідаю__ о восьмій.
+    answer: —
+    options:
+    - ся
+    - —
+  - sentence: Ти збираєш__ на роботу.
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Я навчаю__ вранці.
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Ти повертаєш__ пізно.
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Я мию__ руки.
+    answer: —
+    options:
+    - ся
+    - —
+  - sentence: Ти прокидаєш__ рано?
+    answer: ся
+    options:
+    - ся
+    - —
+  - sentence: Я йду__ на роботу.
+    answer: —
+    options:
+    - ся
+    - —
+- id: act-2
+  type: quiz
+  title: Reflexive or transitive?
+  instruction: Choose the verb form that fits each sentence — the transitive form
+    (action on someone else) or the reflexive form (action on oneself).
+  items:
+  - question: Мама ____ дитину.
+    options:
+    - вмиває
+    - вмивається
+    answer: вмиває
+  - question: Мама ____ перед роботою.
+    options:
+    - вмиває
+    - вмивається
+    answer: вмивається
+  - question: Я ____ сина о сьомій.
+    options:
+    - прокидаю
+    - прокидаюся
+    answer: прокидаю
+  - question: Я ____ о сьомій.
+    options:
+    - прокидаю
+    - прокидаюся
+    answer: прокидаюся
+  - question: Тато ____ доньку.
+    options:
+    - одягає
+    - одягається
+    answer: одягає
+  - question: Тато ____ швидко.
+    options:
+    - одягає
+    - одягається
+    answer: одягається
+  - question: Учитель ____ учнів.
+    options:
+    - навчає
+    - навчається
+    answer: навчає
+  - question: Я ____ вдома вранці.
+    options:
+    - навчаю
+    - навчаюся
+    answer: навчаюся
+- id: act-3
+  type: fill-in
+  title: Sequence words
+  instruction: Fill in each gap with the correct sequence word.
+  items:
+  - sentence: ____ я прокидаюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: ____ вмиваюся.
+    answer: Потім
+    options:
+    - Потім
+    - Спочатку
+    - Нарешті
+  - sentence: ____ одягаюся.
+    answer: Після цього
+    options:
+    - Після цього
+    - Спочатку
+    - Нарешті
+  - sentence: ____ снідаю.
+    answer: Потім
+    options:
+    - Потім
+    - Спочатку
+    - Нарешті
+  - sentence: ____ йду на роботу.
+    answer: Нарешті
+    options:
+    - Нарешті
+    - Спочатку
+    - Потім
+  - sentence: ____ збираюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Нарешті
+    - Після цього
+- id: act-4
+  type: fill-in
+  title: Describe your morning
+  instruction: Complete each frame to describe your own morning. Use a verb from this
+    module in the я-form.
+  items:
+  - sentence: Спочатку я ____ о сьомій.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - вмиваюся
+    - снідаю
+  - sentence: Потім я ____ і одягаюся.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - снідаю
+    - йду
+  - sentence: Нарешті я ____ до університету.
+    answer: йду
+    options:
+    - йду
+    - вмиваюся
+    - снідаю
+- id: act-5
+  type: match-up
+  title: Transitive ↔ reflexive pairs
+  instruction: Match each transitive verb with its reflexive partner.
+  pairs:
+  - left: вмивати
+    right: вмиватися
+  - left: одягати
+    right: одягатися
+  - left: прокидати
+    right: прокидатися
+  - left: навчати
+    right: навчатися
+- id: act-6
+  type: order
+  title: Morning in order
+  instruction: Put the morning steps into the correct chronological order.
+  items:
+  - Йду на роботу.
+  - Прокидаюся.
+  - Снідаю.
+  - Одягаюся.
+  - Вмиваюся.
+  - Збираюся.
+  correct_order:
+  - 1
+  - 4
+  - 3
+  - 2
+  - 5
+  - 0
+- id: act-7
+  type: unjumble
+  title: Restore the sentence
+  instruction: Reorder the words to form a correct Ukrainian sentence.
+  items:
+  - words:
+    - о
+    - Я
+    - сьомій
+    - прокидаюся
+    correct: Я прокидаюся о сьомій
+  - words:
+    - вмиваюся
+    - холодною
+    - Я
+    - водою
+    correct: Я вмиваюся холодною водою
+  - words:
+    - до
+    - Нарешті
+    - йду
+    - університету
+    correct: Нарешті йду до університету
+  - words:
+    - швидко
+    - Тато
+    - одягається
+    correct: Тато одягається швидко
+- id: act-8
+  type: true-false
+  title: Pronunciation and spelling
+  instruction: Decide whether each statement about Ukrainian pronunciation and morphology
+    is true or false.
+  items:
+  - statement: Written -шся is pronounced as a single long soft [с':а].
+    answer: true
+  - statement: Written -ться is pronounced as a single long soft [ц':а].
+    answer: true
+  - statement: The verb прокидається is pronounced [прокидайец':а].
+    answer: true
+  - statement: The verb навчаєшся is pronounced with a clearly separate [ш] and [с].
+    answer: false
+  - statement: The reflexive suffix -ся is etymologically a short form of the pronoun
+      себе.
+    answer: true
+  - statement: Снідати is a reflexive verb that ends in -ся.
+    answer: false
+- id: act-9
+  type: error-correction
+  title: Fix the verb form
+  instruction: Each sentence contains an error in the verb form. Rewrite the sentence
+    with the correct form.
+  items:
+  - sentence: Я вмивається о сьомій.
+    errors:
+    - вмивається
+    corrected: Я вмиваюся о сьомій.
+  - sentence: Ти прокидаюся рано.
+    errors:
+    - прокидаюся
+    corrected: Ти прокидаєшся рано.
+  - sentence: Він одягаюся швидко.
+    errors:
+    - одягаюся
+    corrected: Він одягається швидко.
+  - sentence: Я снідаюся о восьмій.
+    errors:
+    - снідаюся
+    corrected: Я снідаю о восьмій.
+  - sentence: Ми навчаюся вдома.
+    errors:
+    - навчаюся
+    corrected: Ми навчаємося вдома.
+  - sentence: Я йдуся на роботу.
+    errors:
+    - йдуся
+    corrected: Я йду на роботу.
+- id: act-10
+  type: translate
+  title: Translate the morning
+  instruction: Translate each English sentence into Ukrainian using verbs from this
+    module.
+  items:
+  - source: I wake up at seven.
+    target: Я прокидаюся о сьомій.
+  - source: First I wash and get dressed.
+    target: Спочатку я вмиваюся і одягаюся.
+  - source: Then I have breakfast.
+    target: Потім я снідаю.
+  - source: Finally I head to work.
+    target: Нарешті я йду на роботу.
+  - source: On Saturday I wake up late.
+    target: У суботу я прокидаюся пізно.
