@@ -98,3 +98,35 @@ User signoff:
 ## What's already on main regardless
 
 The 4 prerequisite fixes are shipped — main at `5a03385139`. Re-running this bakeoff won't change those. Whatever writer choice happens, the pipeline is structurally healthier than it was before this session.
+
+---
+
+## 2026-05-12 night bakeoff — REVISED (signal in, ACCEPTED flipped)
+
+**Run:** `audit/bakeoff-2026-05-12-night/REPORT.md`. Dispatch `claude/bakeoff-2026-05-12-night` (Claude-headless `/goal`, opus-4-7, xhigh), duration 1033s.
+
+**Signal:** the single-primitive prompt rewrite at `28417cc3cb` (2026-05-11 evening) — designed to eliminate codex-tools' `<verification_trace>` theatre by replacing compose-pattern citations with single calls to `verify_quote` / `verify_source_attribution` / `check_modern_form` / `check_russian_shadow` — did **not** fix codex-tools' theatre. Re-bakeoff on `a1/my-morning` with `--writer codex-tools` produced `phase_writer_summary.tool_calls_total=0` and triggered the pipeline's `MCP_TOOLS_NEVER_INVOKED` guard before any module artifact was written.
+
+Meanwhile, the *prior* loser **claude-tools** — which in the original 2026-05-06 bakeoff produced a 485-byte meta-summary with 0/4 CoT events — now produces a full artifact set with 4 real MCP tool calls (`verify_words` ×2 on 21 + 22 Ukrainian forms, `search_text` ×2), `vesum_verified.passed=true` (159/159 forms, **0 invented `-ся` forms**), and 14-of-18 python_qg gates passing. claude-tools still commits partial theatre on the two newly-introduced single-call verifiers (`verify_quote`, `verify_source_attribution` — cited but uncalled), but strand-1 detection catches it (`writer_tool_theatre.violation_count=2`) and the structural contract is satisfied for the first time.
+
+**Roles have reversed.** Per the original ranking rule (`tool_calls_total > 0` AND fewest hard-gate fails), claude-tools wins this bakeoff outright.
+
+**Empirical pattern over three bakeoffs (2026-05-06 / 2026-05-08 / 2026-05-12 night):** codex-tools cannot reliably invoke MCP tools in this pipeline. Two prompt iterations (theatre detection + single-primitive rewrite) have not moved `tool_calls_total` off zero. The original Option A premise — that codex's failures are *"addressable by prompt iteration"* — has now been falsified twice.
+
+### Decision (orchestrator-acted 2026-05-12 night follow-up)
+
+- **Status:** ACCEPTED → **REVISED**. New ACCEPTED default writer: **claude-tools**. Effective immediately for any new V7 build dispatches.
+- **codex-tools** remains a valid `--writer` choice but is no longer the default. Use only with explicit operator opt-in.
+- **Rationale:** the 2026-05-06 lock was conditional on Option A's prompt-iteration premise. That premise is falsified. The bakeoff signal (claude-tools = 4 tool calls + full artifact set, codex-tools = 0 tool calls + writer phase abort) is decision-grade.
+
+### Follow-ups filed
+
+- **#1807 (existing, writer-prompt tool-theatre):** add a stronger gate to force `verify_quote` / `verify_source_attribution` invocation when the writer cites them in `<verification_trace>` (mirror the strand-1 detection but block in pipeline, not just log).
+- **NEW issue (file on wake):** codex MCP catalog visibility investigation. Per the pipeline guard's own hint, `mcp_config_resolved.status=ok` only verifies config string resolution; the model must actually invoke at least one tool. Check codex rollout JSONL for `tools are not exposed in this session` errors. Until resolved, codex-tools is structurally unable to satisfy `tool_calls_total > 0`.
+- **NEW issue (file on wake):** textbook_grounding `corpus_missing` HARD fail. claude-tools cited Караман Grade 10 p.176, Кравцова Grade 4 p.113, Захарійчук Grade 4 p.162; none of those pages are in the textbook corpus. Either (a) ingest the missing pages, (b) constrain the writer prompt to cite textbooks that ARE in the corpus, or (c) treat `corpus_missing` as a softer signal than `corpus_mismatch`. Pre-A1-batch-build blocker.
+
+### What is NOT being changed by this revision
+
+- `curriculum/l2-uk-en/a1/my-morning/` is **not** flipped to the new claude-tools artifacts. The 2026-04-26 incumbent (codex-run committed in `c91ae3bbe1`) remains the published module. The claude-tools 2026-05-12 night build still failed `correction_terminal` on `citations_resolve` + HARD `textbook_grounding` (`corpus_missing`). Publication is blocked until a green build lands.
+- A1 batch build remains parked pending the corpus_missing investigation + the verify_quote / verify_source_attribution force-invoke gate.
+
