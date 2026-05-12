@@ -104,9 +104,24 @@ if [ -f "$MEMORY_FILE" ]; then
 fi
 
 # 7. Check claude_extensions/ → .claude/ sync drift
+# Excludes must match scripts/deploy_prompts.sh:
+#   - 6 rule files served by Monitor API (CLAUDE_RULE_AUTOLOAD_EXCLUDES) — intentionally
+#     removed from .claude/rules/ by remove_claude_autoload_rules() after sync.
+#   - ORPHAN_PATHS_CLAUDE: scheduled_tasks.lock (Claude scheduler state) + worktrees/.
+# Without these, every cold start flags a false-positive drift. Hook bug fix 2026-05-13.
 if [ -d "$PROJECT_DIR/claude_extensions" ] && [ -d "$PROJECT_DIR/.claude" ]; then
   DRIFT=$(diff -rq "$PROJECT_DIR/claude_extensions/" "$PROJECT_DIR/.claude/" \
-    --exclude='.DS_Store' --exclude='settings.local.json' 2>/dev/null | head -5)
+    --exclude='.DS_Store' \
+    --exclude='settings.local.json' \
+    --exclude='scheduled_tasks.lock' \
+    --exclude='worktrees' \
+    --exclude='critical-rules.md' \
+    --exclude='non-negotiable-rules.md' \
+    --exclude='workflow.md' \
+    --exclude='delegate-must-use-worktree.md' \
+    --exclude='cli-help-standard.md' \
+    --exclude='model-assignment.md' \
+    2>/dev/null | head -5)
   if [ -n "$DRIFT" ]; then
     DRIFT_COUNT=$(echo "$DRIFT" | wc -l | tr -d ' ')
     ISSUES+=("DEPLOY DRIFT: $DRIFT_COUNT file(s) differ between claude_extensions/ and .claude/. Run: npm run claude:deploy")
