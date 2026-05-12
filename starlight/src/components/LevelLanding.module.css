@@ -172,9 +172,25 @@
   font-weight: 600;
 }
 
+/* English translation appended to the Ukrainian title with a middle dot.
+   Subtler weight + color so the Ukrainian remains the visual primary. */
+.moduleTitleEn {
+  font-weight: 500;
+  color: var(--sl-color-gray-2, #555);
+}
+
 .moduleSub {
   font-size: 0.75rem;
   color: var(--sl-color-gray-3);
+}
+
+/* English sub line under the Ukrainian sub. Italic + slightly lighter
+   to mark it as a translation aid, not separate content. */
+.moduleSubEn {
+  font-size: 0.7rem;
+  color: var(--sl-color-gray-4, #999);
+  font-style: italic;
+  margin-top: 0.1rem;
 }
 
 .moduleStatus {

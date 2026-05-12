@@ -6,8 +6,10 @@ import LiveStatus from './LiveStatus';
 type ModuleItem = {
   num: number;
   title: string;
+  titleEn?: string;   // Optional English title shown beneath the Ukrainian one
   slug: string;
   sub?: string;
+  subEn?: string;     // Optional English sub shown beneath the Ukrainian one
   status: 'done' | 'active' | 'todo' | 'locked';
 };
 
@@ -70,8 +72,12 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
         {String(mod.num).padStart(2, '0')}
       </div>
       <div className={styles.moduleInfo}>
-        <div className={styles.moduleTitle}>{mod.title}</div>
+        <div className={styles.moduleTitle}>
+          {mod.title}
+          {mod.titleEn && <span className={styles.moduleTitleEn}> · {mod.titleEn}</span>}
+        </div>
         {mod.sub && <div className={styles.moduleSub}>{mod.sub}</div>}
+        {mod.subEn && <div className={styles.moduleSubEn}>{mod.subEn}</div>}
       </div>
       <div className={styles.moduleStatus}>
         {level.toLowerCase() === 'a1' && (mod.status === 'done' || mod.status === 'active')
