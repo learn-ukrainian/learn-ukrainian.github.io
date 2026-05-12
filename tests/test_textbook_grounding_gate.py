@@ -163,6 +163,43 @@ def test_textbook_grounding_gate_reads_jsonl_writer_trace(tmp_path: Path) -> Non
     assert result["passed"] is True
 
 
+def test_textbook_grounding_gate_reads_mcp_markdown_result(tmp_path: Path) -> None:
+    _write_tool_calls(
+        tmp_path,
+        [
+            {
+                "name": "mcp__sources__search_text",
+                "arguments": {"query": "Караман Grade 10 reflexive verbs"},
+                "result": [
+                    {
+                        "type": "text",
+                        "text": (
+                            'Found 1 results for: "reflexive verbs"\n\n'
+                            "### Result 1\n"
+                            "- **Section**: Сторінка 176\n"
+                            "- **Source**: Grade 10, karaman\n"
+                            "- **Chunk ID**: `10-klas-ukrmova-karaman-2018_s0315`\n"
+                            "- **Text**:\n"
+                            f"{SEARCH_TEXT}\n"
+                        ),
+                    }
+                ],
+            }
+        ],
+    )
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+    assert result["textbook_result_hits"] == 1
+
+
 def test_invoke_writer_persists_tool_trace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

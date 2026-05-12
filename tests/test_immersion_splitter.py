@@ -186,6 +186,17 @@ def test_immersion_gate_fails_real_long_sentence() -> None:
             "build",
             "pipeline",
             "today",
+            "and",
+            "extra",
+            "plain",
+            "English",
+            "setup",
+            "keeps",
+            "the",
+            "new",
+            "policy",
+            "cap",
+            "covered",
         ]
     )
     long_sentence = " ".join(
@@ -216,6 +227,16 @@ def test_immersion_gate_fails_real_long_sentence() -> None:
     assert result["long_ukrainian_sentences"] == [long_sentence]
 
 
+def test_immersion_gate_reports_a1_m15_24_policy_cap() -> None:
+    result = _immersion_gate(
+        "English scaffold with **ранок** and **вмиваюся**.",
+        PLAN,
+    )
+
+    assert result["policy"] == "a1-m15-24"
+    assert result["max_pct"] == 24
+
+
 def test_my_morning_immersion_passes() -> None:
     fixture = Path("audit/bakeoff-2026-05-05/claude/module.md")
     if fixture.exists():
@@ -227,6 +248,8 @@ Learners read the examples, notice the endings, compare the forms, and then
 practice the dialogue aloud with a partner before writing their own version.
 The surrounding English is intentionally present because early A1 modules need
 clear scaffolding and should not become full immersion lessons yet.
+Additional English teacher notes keep this compact fixture inside the stricter
+policy cap while the Ukrainian examples remain available for sentence checks.
 
 Що ти робиш потім?**
 — **Вмиваюся, одягаюся, снідаю.**

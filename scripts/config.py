@@ -203,9 +203,9 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "key": "a1-m15-24",
             "max_module": 24,
             "min_pct": 15,
-            "max_pct": 35,
+            "max_pct": 24,
             "rule": (
-                "TARGET: 15-35% Ukrainian.\n"
+                "TARGET: 15-24% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
                 "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"

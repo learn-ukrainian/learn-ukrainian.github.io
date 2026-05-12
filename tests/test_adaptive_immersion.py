@@ -33,8 +33,8 @@ class TestA1ImmersionRange:
 
     def test_sentence_building_band(self):
         """M15-24: verbs, questions, possessives."""
-        assert get_a1_immersion_range(15) == (15, 35)
-        assert get_a1_immersion_range(24) == (15, 35)
+        assert get_a1_immersion_range(15) == (15, 24)
+        assert get_a1_immersion_range(24) == (15, 24)
 
     def test_cases_band(self):
         """M25-34: accusative, locative, genitive."""
