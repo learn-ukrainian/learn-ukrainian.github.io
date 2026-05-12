@@ -15,6 +15,38 @@ A2_RAMP_PLAN = {"level": "a2", "sequence": 4}
 
 
 def _happy_path_text() -> str:
+    dialogue_lines = [
+        '    { speaker: "Ліна", text: "Я прокидаюся рано." },',
+        '    { speaker: "Марко", text: "Я снідаю вдома." },',
+        '    { speaker: "Ліна", text: "Я вмиваюся швидко." },',
+        '    { speaker: "Марко", text: "Я одягаюся вдома." },',
+        '    { speaker: "Ліна", text: "Я йду на роботу." },',
+        '    { speaker: "Марко", text: "Я читаю вранці." },',
+        '    { speaker: "Ліна", text: "Я пишу повідомлення." },',
+        '    { speaker: "Марко", text: "Я слухаю музику." },',
+        "    { speaker: \"Ліна\", text: \"Я п'ю воду.\" },",
+        '    { speaker: "Марко", text: "Я їм кашу." },',
+        '    { speaker: "Ліна", text: "Я беру сумку." },',
+        '    { speaker: "Марко", text: "Я виходжу рано." },',
+        '    { speaker: "Ліна", text: "Я чекаю автобус." },',
+        '    { speaker: "Марко", text: "Я працюю сьогодні." },',
+    ]
+    example_lines = [
+        "- **Я прокидаюся рано.** — I wake up early.",
+        "- **Я вмиваюся швидко.** — I wash up quickly.",
+        "- **Я одягаюся вдома.** — I get dressed at home.",
+        "- **Я снідаю вдома.** — I eat breakfast at home.",
+        "- **Я йду на роботу.** — I go to work.",
+        "- **Я читаю вранці.** — I read in the morning.",
+        "- **Я пишу повідомлення.** — I write a message.",
+        "- **Я слухаю музику.** — I listen to music.",
+        "- **Я п'ю воду.** — I drink water.",
+        "- **Я їм кашу.** — I eat porridge.",
+        "- **Я беру сумку.** — I take a bag.",
+        "- **Я виходжу рано.** — I leave early.",
+        "- **Я чекаю автобус.** — I wait for the bus.",
+        "- **Я працюю сьогодні.** — I work today.",
+    ]
     return "\n".join(
         [
             "English setup explains the pattern before learners practice.",
@@ -23,8 +55,7 @@ def _happy_path_text() -> str:
             "",
             "<DialogueBox",
             "  lines={[",
-            '    { speaker: "Ліна", text: "Я прокидаюся рано." },',
-            '    { speaker: "Марко", text: "Я снідаю вдома." },',
+            *dialogue_lines,
             "  ]}",
             "/>",
             "",
@@ -36,12 +67,11 @@ def _happy_path_text() -> str:
             "| снідаю | I eat breakfast |",
             "| вдома | at home |",
             "",
-            "- **Я прокидаюся рано.** — I wake up early.",
-            "- **Я вмиваюся швидко.** — I wash up quickly.",
-            "- **Я одягаюся вдома.** — I get dressed at home.",
-            "- **Я снідаю вдома.** — I eat breakfast at home.",
+            *example_lines,
             "",
             "<!-- INJECT_ACTIVITY: act-1 -->",
+            "<!-- INJECT_ACTIVITY: act-2 -->",
+            "<!-- INJECT_ACTIVITY: act-3 -->",
         ]
     )
 
