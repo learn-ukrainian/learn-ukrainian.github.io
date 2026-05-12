@@ -98,6 +98,7 @@ _TEST_PYTHON = _resolve_test_python()
 via :func:`_resolve_test_python`. See that helper's docstring for the
 full resolution order and rationale (#1685)."""
 
+from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
@@ -1113,6 +1114,89 @@ def test_codex_parse_response_ignores_unrelated_new_rollout(
     assert "UNRELATED durable output" not in (result.stderr_excerpt or "")
 
 
+def _rollout_match_plan(tmp_path: Path, prompt: str) -> InvocationPlan:
+    return InvocationPlan(
+        cmd=["codex", "exec"],
+        cwd=tmp_path,
+        stdin_payload=prompt,
+    )
+
+
+def test_codex_rollout_matches_response_item_prompt_after_envelope(tmp_path):
+    """Codex 0.130 emits an AGENTS/env user envelope before the real prompt."""
+    import json as _json
+
+    adapter = CodexAdapter()
+    rollout = tmp_path / "rollout-envelope-then-prompt.jsonl"
+    prompt = "Run the actual task\nwith the requested context."
+    envelope = (
+        "# AGENTS.md instructions\n\n"
+        "<environment_context><cwd>/repo</cwd></environment_context>"
+    )
+    events = [
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "message",
+                "role": "user",
+                "content": [{"type": "input_text", "text": envelope}],
+            },
+        },
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "message",
+                "role": "user",
+                "content": [{"type": "input_text", "text": prompt}],
+            },
+        },
+    ]
+    rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
+
+    assert adapter._rollout_matches_plan(
+        rollout, _rollout_match_plan(tmp_path, prompt),
+    ) is True
+
+
+def test_codex_rollout_does_not_match_envelope_without_prompt(tmp_path):
+    import json as _json
+
+    adapter = CodexAdapter()
+    rollout = tmp_path / "rollout-envelope-only.jsonl"
+    prompt = "Run the actual task"
+    events = [
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "message",
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": (
+                            "# AGENTS.md instructions\n\n"
+                            "<environment_context><cwd>/repo</cwd>"
+                            "</environment_context>"
+                        ),
+                    },
+                ],
+            },
+        },
+        {
+            "type": "event_msg",
+            "payload": {
+                "type": "user_message",
+                "message": "A different prompt",
+            },
+        },
+    ]
+    rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
+
+    assert adapter._rollout_matches_plan(
+        rollout, _rollout_match_plan(tmp_path, prompt),
+    ) is False
+
+
 def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
     """Regression (Gemini 2026-04-10 review): a user prompt containing
     a legitimate dashes-only line (code block, horizontal rule) used to
@@ -1380,6 +1464,23 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     # task_complete event (so the early-reap detector finds a result).
     rollout_payload = (
         _json.dumps({
+            "type": "response_item",
+            "payload": {
+                "type": "message",
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": (
+                            "# AGENTS.md instructions\n\n"
+                            "<environment_context><cwd>/repo</cwd>"
+                            "</environment_context>"
+                        ),
+                    },
+                ],
+            },
+        }) + "\n"
+        + _json.dumps({
             "type": "event_msg",
             "payload": {
                 "type": "user_message",
