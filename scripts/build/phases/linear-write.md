@@ -17,6 +17,15 @@ Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not wri
 <plan_vocab>Required plan-vocabulary lemmas used in this section, with the exact Ukrainian sentence that grounds each lemma.</plan_vocab>
 <register>The immersion ratio from the Immersion Rule and how this section preserves it.</register>
 <teaching_sequence>Which Knowledge Packet facts/citations this section uses.</teaching_sequence>
+<implementation_map>
+For each obligation_id in the Wiki Obligations Manifest, list:
+  - obligation_id: <id>
+  - artifact: <module.md | activities.yaml | vocabulary.yaml | resources.yaml>
+  - location: <section name or activity id>
+  - treatment: <how the obligation is addressed, for example "contrast_pair in activity act-3"
+                or "prose explanation in section §Дієслова на -ся paragraph 2">
+Do not defer. Every obligation must be implemented in THIS module, not a later one.
+</implementation_map>
 <verification_plan>Specific MCP tools to be called for this section's claims.</verification_plan>
 <verification_trace>
 List the exact tool call signatures you intend to use for this section.
@@ -173,6 +182,23 @@ lists, or tables instead. Triple backticks inside the artifact will be parsed as
 a closing fence and break the artifact boundary. Single backticks for inline code
 spans (e.g., `verify_words`) are fine — only triple backticks are forbidden.
 
+## LESSON SOURCE — synthesize this wiki content into the 4-tab format
+
+The wiki content below is the LESSON SOURCE you must translate into the
+four artifacts. It is not background reference. Every obligation listed in
+the Wiki Obligations Manifest must be implemented in the artifacts you
+produce. Failure to address a wiki-named L2 error, sequence step, or
+phonetic rule is the project's most common writer failure and is the
+single largest reason A1 modules under-teach.
+
+## Wiki Obligations Manifest
+
+{WIKI_MANIFEST}
+
+## Knowledge Packet
+
+{KNOWLEDGE_PACKET}
+
 ## Module Context
 
 - Level: {LEVEL}
@@ -260,7 +286,7 @@ like `correct_order`, indices are zero-based.
 {PLAN_CONTENT}
 ```
 
-## Knowledge Packet
+## Full Wiki Context (source of truth for citations)
 
 {KNOWLEDGE_PACKET}
 

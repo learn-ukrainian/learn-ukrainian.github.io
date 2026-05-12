@@ -79,6 +79,8 @@ DOWNSTREAM_TOKENS = frozenset(
         "WORKBOOK_MIN",
         "WORKBOOK_PRIORITY_TYPES",
         "WRITER_MODEL",
+        "WIKI_COVERAGE_GATE",
+        "WIKI_MANIFEST",
     }
 )
 

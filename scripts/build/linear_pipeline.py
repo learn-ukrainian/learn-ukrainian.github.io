@@ -580,6 +580,71 @@ def build_knowledge_packet(
     )
 
 
+def build_wiki_manifest_data(
+    plan_path: Path | None = None,
+    *,
+    level: str | None = None,
+    slug: str | None = None,
+    plan: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build the deterministic Wiki Obligations Manifest for one module."""
+    if plan is None:
+        if plan_path is None:
+            if level is None or slug is None:
+                raise LinearPipelineError(
+                    "build_wiki_manifest_data requires plan_path or level+slug"
+                )
+            plan_path = plan_path_for(level.lower(), slug)
+        plan_data = load_plan(plan_path)
+    else:
+        plan_data = dict(plan)
+    validate_plan(plan_data)
+
+    level_key = str(level or plan_data["level"]).lower()
+    slug_key = str(slug or plan_data["slug"]).strip()
+    article_paths = _wiki_article_paths(level_key, slug_key)
+    if not article_paths:
+        raise LinearPipelineError(
+            f"No wiki article found for level={level_key!r}, slug={slug_key!r}"
+        )
+    from scripts.build.phases.wiki_manifest import extract_manifest
+
+    # Current module wiki layout resolves to one canonical article. If future
+    # tracks add siblings, preserve deterministic order by merging list fields.
+    merged: dict[str, Any] | None = None
+    for article_path in article_paths:
+        manifest = extract_manifest(article_path)
+        if merged is None:
+            merged = manifest
+            continue
+        for key in (
+            "sequence_steps",
+            "l2_errors",
+            "phonetic_rules",
+            "decolonization_bans",
+        ):
+            merged.setdefault(key, [])
+            for item in manifest.get(key, []):
+                copied = dict(item)
+                prefix = str(copied.get("id") or "").split("-", 1)[0] or key[:4]
+                copied["id"] = f"{prefix}-{len(merged[key]) + 1}"
+                merged[key].append(copied)
+        merged["wiki_path"] = f"{merged['wiki_path']}; {manifest['wiki_path']}"
+    return merged or {}
+
+
+def build_wiki_manifest(
+    plan_path: Path | None = None,
+    *,
+    level: str | None = None,
+    slug: str | None = None,
+    plan: Mapping[str, Any] | None = None,
+) -> str:
+    """Return compact JSON for the writer/reviewer manifest slot."""
+    manifest = build_wiki_manifest_data(plan_path, level=level, slug=slug, plan=plan)
+    return json.dumps(manifest, ensure_ascii=False, indent=2)
+
+
 def _extract_dictionary_lemmas(plan: Mapping[str, Any]) -> list[str]:
     """Return required vocabulary lemmas for dictionary-context enrichment."""
     candidates: list[Any] = []
@@ -1800,10 +1865,21 @@ def _enforce_tools_writer_runtime_gate(
     )
 
 
-def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet: str) -> dict[str, str]:
+def writer_context(
+    plan: Mapping[str, Any],
+    plan_content: str,
+    knowledge_packet: str,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     activity_config = _activity_config(level, sequence, str(plan["slug"]))
+    if wiki_manifest is None:
+        wiki_manifest_text = build_wiki_manifest(level=level.lower(), slug=str(plan["slug"]), plan=plan)
+    elif isinstance(wiki_manifest, str):
+        wiki_manifest_text = wiki_manifest
+    else:
+        wiki_manifest_text = json.dumps(wiki_manifest, ensure_ascii=False, indent=2)
     return {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
@@ -1813,6 +1889,7 @@ def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet:
         "WORD_TARGET": str(plan["word_target"]),
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
+        "WIKI_MANIFEST": wiki_manifest_text,
         "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence),
         "CONTRACT_YAML": _contract_yaml(plan),
         "ALLOWED_ACTIVITY_TYPES": activity_config["ALLOWED_ACTIVITY_TYPES"],
@@ -2210,6 +2287,23 @@ def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> No
         (module_dir / name).write_text(str(artifacts[name]), encoding="utf-8")
 
 
+def run_wiki_coverage_gate(
+    *,
+    manifest: Mapping[str, Any] | str | Path,
+    writer_output: str,
+    module_dir: Path,
+    level: str | None = None,
+) -> dict[str, Any]:
+    from scripts.audit.wiki_coverage_gate import check_wiki_coverage_paths
+
+    return check_wiki_coverage_paths(
+        manifest=manifest,
+        implementation_map=writer_output,
+        module_dir=module_dir,
+        level=level,
+    )
+
+
 def review_context(
     plan: Mapping[str, Any],
     plan_content: str,
@@ -2243,6 +2337,56 @@ def render_review_prompt(
     return render_phase_prompt(
         PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-dim.md",
         review_context(plan, plan_content, generated_content, dim),
+    )
+
+
+def wiki_coverage_review_context(
+    plan: Mapping[str, Any],
+    plan_content: str,
+    generated_content: str,
+    wiki_manifest: str | Mapping[str, Any],
+    wiki_coverage_gate: Mapping[str, Any],
+) -> dict[str, str]:
+    level = str(plan["level"])
+    sequence = int(plan["sequence"])
+    manifest_text = (
+        wiki_manifest
+        if isinstance(wiki_manifest, str)
+        else json.dumps(wiki_manifest, ensure_ascii=False, indent=2)
+    )
+    return {
+        "LEVEL": level,
+        "MODULE_NUM": str(sequence),
+        "MODULE_SLUG": str(plan["slug"]),
+        "WORD_TARGET": str(plan["word_target"]),
+        "PLAN_CONTENT": plan_content,
+        "GENERATED_CONTENT": generated_content,
+        "WIKI_MANIFEST": manifest_text,
+        "WIKI_COVERAGE_GATE": json.dumps(
+            dict(wiki_coverage_gate),
+            ensure_ascii=False,
+            indent=2,
+            default=str,
+        ),
+    }
+
+
+def render_wiki_coverage_review_prompt(
+    plan: Mapping[str, Any],
+    plan_content: str,
+    generated_content: str,
+    wiki_manifest: str | Mapping[str, Any],
+    wiki_coverage_gate: Mapping[str, Any],
+) -> str:
+    return render_phase_prompt(
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-wiki-coverage.md",
+        wiki_coverage_review_context(
+            plan,
+            plan_content,
+            generated_content,
+            wiki_manifest,
+            wiki_coverage_gate,
+        ),
     )
 
 
@@ -2605,6 +2749,26 @@ def parse_review_response(
             event_sink=event_sink,
         )
     return entry
+
+
+def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
+    payload = parse_json_or_yaml_mapping(response)
+    verdicts = payload.get("verdicts")
+    if not isinstance(verdicts, list):
+        raise LinearPipelineError("Wiki coverage review response missing verdicts list")
+    for item in verdicts:
+        if not isinstance(item, Mapping):
+            raise LinearPipelineError("Wiki coverage review verdict entries must be mappings")
+        if str(item.get("verdict") or "").upper() not in {"PASS", "PARTIAL", "FAIL"}:
+            raise LinearPipelineError("Wiki coverage review verdict must be PASS, PARTIAL, or FAIL")
+        if not str(item.get("obligation_id") or "").strip():
+            raise LinearPipelineError("Wiki coverage review verdict missing obligation_id")
+        if not str(item.get("evidence") or "").strip():
+            raise LinearPipelineError("Wiki coverage review verdict missing evidence")
+    overall = str(payload.get("overall_verdict") or "").upper()
+    if overall not in {"PASS", "PARTIAL", "FAIL"}:
+        raise LinearPipelineError("Wiki coverage review overall_verdict must be PASS, PARTIAL, or FAIL")
+    return {**payload, "overall_verdict": overall}
 
 
 def validate_llm_review_report(report: Mapping[str, Any]) -> None:
