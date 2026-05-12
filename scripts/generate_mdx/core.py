@@ -159,10 +159,10 @@ def _inject_inline_activities(
     body: str,
     yaml_activities: list[Activity] | None,
     is_ukrainian_forced: bool,
-) -> str:
+) -> tuple[str, set[str]]:
     """Replace Tab 1 INJECT_ACTIVITY markers with matching component JSX."""
     if not yaml_activities or "INJECT_ACTIVITY" not in body:
-        return body
+        return body, set()
 
     parser = ActivityParser()
     by_id = {
@@ -170,15 +170,17 @@ def _inject_inline_activities(
         for activity in yaml_activities
         if getattr(activity, 'id', '')
     }
+    injected_ids: set[str] = set()
 
     def replace_marker(match: re.Match[str]) -> str:
         activity_id = match.group(1)
         activity = by_id.get(activity_id)
         if activity is None:
             raise ValueError(f"Unresolved INJECT_ACTIVITY id: {activity_id}")
+        injected_ids.add(activity_id)
         return parser._activity_to_mdx(activity, is_ukrainian_forced)
 
-    return _INJECT_ACTIVITY_RE.sub(replace_marker, body)
+    return _INJECT_ACTIVITY_RE.sub(replace_marker, body), injected_ids
 
 
 def generate_mdx(
@@ -307,6 +309,12 @@ sidebar:
 
     # --- TAB 1: Lesson (prose only) ---
     lesson_content = body
+    lesson_content = embed_youtube_video_links(lesson_content)
+    lesson_content, injected_activity_ids = _inject_inline_activities(
+        lesson_content,
+        yaml_activities,
+        is_ukrainian_forced,
+    )
 
     # --- TAB 2: Vocabulary ---
     if vocab_items:
@@ -319,8 +327,19 @@ sidebar:
         vocab_content = f"*{no_vocab_msg}*"
 
     # --- TAB 3: Activities ---
-    if yaml_activities:
-        activities_content = yaml_activities_to_jsx(yaml_activities, is_ukrainian_forced)
+    tab3_activities = [
+        activity for activity in (yaml_activities or [])
+        if str(getattr(activity, 'id', '')) not in injected_activity_ids
+    ]
+    if tab3_activities:
+        activities_content = yaml_activities_to_jsx(tab3_activities, is_ukrainian_forced)
+    elif yaml_activities and injected_activity_ids:
+        no_workbook_msg = (
+            "Немає окремих вправ у робочому зошиті; дивіться вкладку «Урок»."
+            if is_ukrainian_forced
+            else "No workbook activities for this module; see the Lesson tab."
+        )
+        activities_content = f"*{no_workbook_msg}*"
     elif activity_plans:
         activities_content = _activity_plans_to_jsx(activity_plans)
     else:
@@ -338,14 +357,6 @@ sidebar:
     # =========================================================================
     # Process lesson content (Tab 1 only)
     # =========================================================================
-
-    # Embed YouTube video links as clickable thumbnails (lesson prose only)
-    lesson_content = embed_youtube_video_links(lesson_content)
-    lesson_content = _inject_inline_activities(
-        lesson_content,
-        yaml_activities,
-        is_ukrainian_forced,
-    )
 
     # =========================================================================
     # Apply shared transforms to all content blocks

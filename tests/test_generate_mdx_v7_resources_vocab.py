@@ -28,6 +28,7 @@ def test_vocab_items_to_components_emits_flashcards_and_vocab_card():
 
     assert "<FlashcardDeck" in mdx
     assert "<VocabCard" in mdx
+    assert mdx.index("<VocabCard") < mdx.index("<FlashcardDeck")
     assert '"front":"прокидатися"' in mdx
     assert '"translation":"to wake up"' in mdx
     assert '"example":"Я прокидаюся о сьомій."' in mdx

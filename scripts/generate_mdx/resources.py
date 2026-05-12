@@ -436,8 +436,8 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
     word_json = json.dumps(words, ensure_ascii=False, separators=(',', ':')).replace('`', '\\`').replace('${', '\\${')
     return (
         f"## {header_text}\n\n"
-        f"<FlashcardDeck client:only=\"react\" cards={{JSON.parse(`{card_json}`)}} />\n\n"
-        f"<VocabCard client:only=\"react\" words={{JSON.parse(`{word_json}`)}} title=\"{escape_jsx(header_text)}\" />"
+        f"<VocabCard client:only=\"react\" words={{JSON.parse(`{word_json}`)}} title=\"{escape_jsx(header_text)}\" />\n\n"
+        f"<FlashcardDeck client:only=\"react\" cards={{JSON.parse(`{card_json}`)}} />"
     )
 
 
