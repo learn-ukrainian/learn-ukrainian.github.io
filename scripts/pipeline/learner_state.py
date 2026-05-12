@@ -42,7 +42,14 @@ def _load_vocab(track: str, slug: str) -> list[str]:
 
 
 def _load_grammar(track: str, slug: str) -> list[str]:
-    """Load grammar topics from a module's plan."""
+    """Load grammar topics from a module's plan.
+
+    Plans store `grammar:` as a list of mixed shapes:
+    - plain strings (most A1 plans), e.g. "Мені + знахідний відмінок"
+    - single-key dicts (review/checkpoint plans), e.g. {"Повторення": "усі три часи"}
+    Both shapes normalize to strings here so consumers (format_learner_state)
+    can `', '.join(...)` safely.
+    """
     path = CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml"
     if not path.exists():
         return []
@@ -51,7 +58,15 @@ def _load_grammar(track: str, slug: str) -> list[str]:
             plan = yaml.safe_load(f)
         if not plan or not isinstance(plan, dict):
             return []
-        return plan.get("grammar", []) or []
+        raw = plan.get("grammar", []) or []
+        normalized: list[str] = []
+        for item in raw:
+            if isinstance(item, str):
+                normalized.append(item)
+            elif isinstance(item, dict):
+                for key, value in item.items():
+                    normalized.append(f"{key}: {value}")
+        return normalized
     except Exception:
         return []
 

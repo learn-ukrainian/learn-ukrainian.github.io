@@ -9,13 +9,34 @@ from typing import Any
 import yaml
 
 try:
-    from scripts.build.linear_pipeline import _iter_vesum_word_surfaces, _normalize_for_vesum
     from scripts.config import get_immersion_structural
     from scripts.pipeline.learner_state import build_learner_state
 except ModuleNotFoundError:  # pragma: no cover - CLI path compatibility
-    from build.linear_pipeline import _iter_vesum_word_surfaces, _normalize_for_vesum
     from config import get_immersion_structural
     from pipeline.learner_state import build_learner_state
+
+
+def _vesum_helpers():
+    """Lazy import of linear_pipeline VESUM helpers.
+
+    Deferred to call time because importing scripts.build.linear_pipeline at
+    module-load time pulls in scripts.build.citation_matcher and other deeply
+    qualified imports that fail under bare-cwd script invocation (see
+    test_vocab_progression.py::test_cli_smoke). Lazy import lets the audit
+    package load cleanly in CLI contexts; the import only fires when the
+    audit check actually runs (always under fully-qualified entry points).
+    """
+    try:
+        from scripts.build.linear_pipeline import (
+            _iter_vesum_word_surfaces,
+            _normalize_for_vesum,
+        )
+    except ModuleNotFoundError:  # pragma: no cover
+        from build.linear_pipeline import (
+            _iter_vesum_word_surfaces,
+            _normalize_for_vesum,
+        )
+    return _iter_vesum_word_surfaces, _normalize_for_vesum
 
 
 def _strip_non_body_prose(content: str) -> str:
@@ -28,6 +49,7 @@ def _strip_non_body_prose(content: str) -> str:
 
 
 def _extract_ukrainian_surfaces(content: str) -> list[str]:
+    _iter_vesum_word_surfaces, _normalize_for_vesum = _vesum_helpers()
     words = _iter_vesum_word_surfaces(_normalize_for_vesum(_strip_non_body_prose(content)))
     seen: set[str] = set()
     ordered: list[str] = []
