@@ -26,12 +26,22 @@ def test_writer_prompt_places_manifest_before_module_context() -> None:
         plan,
         plan_path.read_text(encoding="utf-8"),
         "Knowledge packet stub.",
-        {"slug": "my-morning", "sequence_steps": [], "l2_errors": [], "phonetic_rules": [], "decolonization_bans": []},
+        {
+            "slug": "my-morning",
+            "sequence_steps": [],
+            "l2_errors": [],
+            "phonetic_rules": [],
+            "decolonization_bans": [],
+            "external_resources": [],
+        },
     )
     rendered = linear_pipeline.render_phase_prompt(WRITER_TEMPLATE, context)
 
     assert rendered.index("## LESSON SOURCE") < rendered.index("## Module Context")
     assert rendered.index("## Wiki Obligations Manifest") < rendered.index("## Module Context")
+    assert "External Resources — multimedia search obligation" in rendered
+    assert "resources_search_attempted" in rendered
+    assert "mcp__sources__search_external" in rendered
     assert "<implementation_map>" in rendered
     assert "Full Wiki Context (source of truth for citations)" in rendered
 
@@ -42,6 +52,7 @@ def test_build_wiki_manifest_renders_my_morning_json() -> None:
     assert '"slug": "my-morning"' in manifest
     assert '"id": "err-1"' in manifest
     assert '"id": "step-5"' in manifest
+    assert '"external_resources": []' in manifest
 
 
 def test_wiki_coverage_review_prompt_receives_manifest_and_gate() -> None:

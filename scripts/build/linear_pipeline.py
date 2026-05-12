@@ -76,6 +76,7 @@ PYTHON_QG_GATE_ORDER = (
     "vesum_verified",
     "citations_resolve",
     "textbook_grounding",
+    "resources_search_attempted",
     "immersion_advisory",
     "l2_exposure_floor",
     "long_uk_ceiling",
@@ -122,6 +123,7 @@ TERMINAL_ZERO_RETRY_GATES = frozenset(
     {
         "component_props",
         "previously_passed_regression",
+        "resources_search_attempted",
     }
 )
 
@@ -191,8 +193,32 @@ WRITER_TOOL_NAMES = frozenset(
         "search_idioms",
         "query_pravopys",
         "query_wikipedia",
+        "search_external",
+        "search_images",
         "search_text",
         "check_modern_form",
+    }
+)
+RESOURCE_ROLES = frozenset(
+    {
+        "textbook",
+        "youtube",
+        "video",
+        "blog",
+        "podcast",
+        "audio",
+        "article",
+        "wiki",
+    }
+)
+MULTIMEDIA_SEARCH_TOOLS = frozenset(
+    {
+        "query_wikipedia",
+        "search_external",
+        "search_images",
+        "browser_search",
+        "search_query",
+        "web_search",
     }
 )
 REVIEW_AUDIT_TYPES = frozenset(
@@ -302,20 +328,21 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
         root_type=list,
         required_item_fields={
             "title": str,
+            "role": str,
         },
-        # `author` and `role` added 2026-05-13 after codex-tools bakeoff
-        # produced these fields naturally for textbook references (e.g.,
-        # author="Караман", role="grammar-source"). Both are semantically
-        # useful and don't harm downstream consumers.
         optional_item_fields=frozenset({
             "notes",
+            "description",
             "source_ref",
             "packet_chunk_id",
             "url",
             "section",
             "page",
+            "pages",
             "author",
-            "role",
+            "channel",
+            "source",
+            "match_reason",
         }),
     ),
 }
@@ -622,7 +649,7 @@ def build_wiki_manifest_data(
         raise LinearPipelineError(
             f"No wiki article found for level={level_key!r}, slug={slug_key!r}"
         )
-    from scripts.build.phases.wiki_manifest import extract_manifest
+    from scripts.build.phases.wiki_manifest import extract_manifest, validate_manifest
 
     # Current module wiki layout resolves to one canonical article. If future
     # tracks add siblings, preserve deterministic order by merging list fields.
@@ -644,7 +671,11 @@ def build_wiki_manifest_data(
                 prefix = str(copied.get("id") or "").split("-", 1)[0] or key[:4]
                 copied["id"] = f"{prefix}-{len(merged[key]) + 1}"
                 merged[key].append(copied)
+        merged.setdefault("external_resources", [])
+        merged["external_resources"].extend(manifest.get("external_resources", []))
         merged["wiki_path"] = f"{merged['wiki_path']}; {manifest['wiki_path']}"
+    if merged is not None:
+        validate_manifest(merged)
     return merged or {}
 
 
@@ -3457,6 +3488,10 @@ def run_python_qg(
     )
     record("citations_resolve", _citation_gate(resources, plan))
     record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
+    record(
+        "resources_search_attempted",
+        _resources_search_attempted_gate(_load_writer_tool_calls(module_dir)),
+    )
     record("immersion_advisory", _advisory_immersion_pct(module_text, plan))
     record("l2_exposure_floor", _l2_exposure_floor_gate(module_text, plan))
     record("long_uk_ceiling", _long_uk_ceiling_gate(module_text, plan))
@@ -3658,6 +3693,18 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} "
                     f"requires {field} as a non-empty string (got empty/whitespace)"
+                )
+        if artifact == "resources.yaml":
+            role = str(item.get("role") or "").strip()
+            if role not in RESOURCE_ROLES:
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"has invalid role {role!r}; allowed: {sorted(RESOURCE_ROLES)}"
+                )
+            if role != "textbook" and not str(item.get("url") or "").strip():
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"role {role!r} requires url"
                 )
 
 
@@ -4393,6 +4440,9 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
     }
     unknown = []
     for resource in resources:
+        role = str(resource.get("role") or "textbook").strip()
+        if role != "textbook":
+            continue
         source_ref = str(resource.get("source_ref") or resource.get("title") or "")
         normalized_ref = _normalize_citation_ref(source_ref)
         source_key = extract_citation_key(source_ref)
@@ -4608,6 +4658,24 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
     for path in sorted(module_dir.glob("*.write.jsonl")):
         calls.extend(_load_jsonl_tool_calls(path))
     return calls
+
+
+def _resources_search_attempted_gate(
+    writer_tool_calls: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """HARD gate: writer must attempt at least one external-resource search."""
+    attempted = [
+        call
+        for call in writer_tool_calls
+        if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS
+    ]
+    search_tools_used = sorted({_tool_name_from_call(call) for call in attempted})
+    return {
+        "passed": bool(attempted),
+        "severity": "HARD",
+        "search_attempt_count": len(attempted),
+        "search_tools_used": search_tools_used,
+    }
 
 
 _MCP_SEARCH_TEXT_RESULT_RE = re.compile(

@@ -163,6 +163,7 @@ just because the example looks shorter that way.
 [
   {
     "title": "Караман Grade 10, p.176",
+    "role": "textbook",
     "notes": "Зворотні дієслова: суфікс -ся означає дію, спрямовану на себе."
   }
 ]
@@ -194,6 +195,29 @@ single largest reason A1 modules under-teach.
 ## Wiki Obligations Manifest
 
 {WIKI_MANIFEST}
+
+### External Resources — multimedia search obligation
+
+Every module MUST attempt to find at least one multimedia external resource
+(YouTube clip, blog post, podcast episode, video documentary, image gallery)
+relevant to the lesson topic. The agent MUST make at least ONE call to:
+- `mcp__sources__query_wikipedia` for Ukrainian Wikipedia context, OR
+- `mcp__sources__search_external` for blog/article search, OR
+- `mcp__sources__search_images` for image/gallery discovery, OR
+- browser-based search if available in this dispatch's tool set.
+
+If the Wiki Obligations Manifest's `external_resources` section is non-empty,
+those URLs are AUTHORITATIVE — include all of them in `resources.yaml` with the
+supplied role.
+
+If the search returns nothing usable, that is acceptable — but the search
+attempt MUST be recorded in the writer telemetry. The deterministic
+`resources_search_attempted` gate fails the build if the writer skipped the
+search entirely.
+
+In `resources.yaml`, every entry MUST have a `role` field. Valid roles:
+`textbook` (📚), `youtube` (📺), `video` (🎥), `blog` (📝), `podcast` (🎧),
+`audio` (🎧), `article` (📄), `wiki` (🔗).
 
 ### Phonetic rules — MUST emit IPA notation
 
