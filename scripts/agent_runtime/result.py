@@ -42,10 +42,12 @@ class ParseResult:
             deliberately leave this None when the CLI doesn't expose tokens,
             rather than invent numbers. Populated opportunistically.
         tool_calls: PII-bearing tool-call telemetry parsed from the CLI trace.
-            Tool outputs are summarized and capped; callers must still treat
-            names and arguments as sensitive pipeline data. Arguments are
-            source-shaped and may contain synthetic ``_raw`` / ``_value`` keys.
-            Timestamps are provider strings or lenient ISO-8601 fallbacks.
+            Tool outputs include a capped summary and may include the raw
+            in-memory result for downstream grounding checks. Callers must
+            still treat names, arguments, and results as sensitive pipeline
+            data. Arguments are source-shaped and may contain synthetic
+            ``_raw`` / ``_value`` keys. Timestamps are provider strings or
+            lenient ISO-8601 fallbacks.
     """
     ok: bool
     response: str
@@ -87,9 +89,9 @@ class Result:
         usage_record: The exact dict written to batch_state/api_usage/. Callers
             can log or aggregate this. Follows the schema in design doc § 4.5.
         tool_calls: PII-bearing tool-call telemetry parsed from the CLI trace.
-            Each entry has name, arguments, output_summary, and timestamp.
-            Never contains full raw tool output. Kept in memory only; do not
-            persist or echo arguments to JSONL telemetry without redaction.
+            Each entry has name, arguments, output_summary, timestamp, and
+            may have result. Kept in memory only; do not persist or echo
+            arguments or results to JSONL telemetry without redaction.
     """
     ok: bool
     agent: str

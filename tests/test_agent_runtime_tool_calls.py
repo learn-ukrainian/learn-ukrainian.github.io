@@ -49,5 +49,12 @@ def test_normalize_tool_calls_extracts_gemini_toolcalls_shape() -> None:
 
     assert calls[0]["name"] == "mcp__sources__verify_words"
     assert calls[0]["arguments"] == {"words": ["кіт"]}
+    assert calls[0]["result"] == [
+        {
+            "functionResponse": {
+                "name": "mcp__sources__verify_words",
+                "response": {"output": "ok"},
+            }
+        }
+    ]
     assert calls[0]["timestamp"] == "2026-05-09T19:20:01Z"
-
