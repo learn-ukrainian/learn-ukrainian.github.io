@@ -1,6 +1,8 @@
-# DECISION REQUIRED — Should we replace the global-% immersion gate with tab-aware structural gates?
+# DECISION — Replace the global-% immersion gate with tab-aware structural gates (ACCEPTED)
 
-**Status:** PROPOSED (orchestrator-surfaced, awaiting user signoff)
+**Status:** ACCEPTED 2026-05-13
+**Decided:** Accept Card 1 now; fire Phase A; defer companion Card 2 (`2026-05-13-writer-split-by-tab.md`) until Phase B replay tells us whether V7 rebuild for A1 is needed. Reason: Phase B is the cheap empirical step (~zero LLM quota) that changes what Card 2 should target; running Card 2's PoC under the current misshapen gate would create measurement artifacts.
+**Decided on:** 2026-05-13 (orchestrator-surfaced; user signoff via cold-start AskUserQuestion recommendation acceptance)
 **Surfaced:** 2026-05-13 evening, after a session-long conversation that walked the framing from "tune the immersion %" → "ramp the immersion %" → "structural failure modes, not %" → empirical validation against all 6 ULP seasons + 5 deployed A1 modules + the new 4-tab Lesson Contract format
 **Source:** User's pushback on the immersion gate as misshapen ("pedagogy is more important than immersion"); multi-agent discussion `immersion-reframe-2026-05-13` (Codex + Gemini converged at round 2, both `[AGREE]`); empirical reading of `_archive/a1-backup-2026-04-08/content/` + ULP S1-S6 lesson notes
 **Scope:** V7 pipeline gate logic (`scripts/build/linear_pipeline.py:4582-4624`) + immersion policy config (`scripts/config.py:152+`) + Lesson Contract §4.6 amendment. **Does NOT touch:** writer-choice (separate proposal), reviewer phase, plan schema, decolonization rules, B1+ Latin-character ratio rule (already structural, correct)
