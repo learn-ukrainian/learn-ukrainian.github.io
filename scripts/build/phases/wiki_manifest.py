@@ -6,6 +6,7 @@ import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import urlparse
 
 EXTERNAL_RESOURCE_ROLES = frozenset(
     {
@@ -239,8 +240,13 @@ def _normalize_external_role(raw_role: str | None, *, url: str | None = None) ->
     }
     if role in aliases:
         return aliases[role]
-    if url and ("youtube.com" in url or "youtu.be" in url):
-        return "youtube"
+    if url:
+        try:
+            host = (urlparse(url).hostname or "").lower()
+        except (ValueError, TypeError):
+            host = ""
+        if host == "youtube.com" or host.endswith(".youtube.com") or host == "youtu.be":
+            return "youtube"
     return "article" if url else "textbook"
 
 

@@ -2,9 +2,27 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.build.phases.wiki_manifest import WIKI_MANIFEST_SCHEMA, extract_manifest
+from scripts.build.phases.wiki_manifest import (
+    WIKI_MANIFEST_SCHEMA,
+    _normalize_external_role,
+    extract_manifest,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_normalize_external_role_rejects_substring_only_youtube_match() -> None:
+    """py/incomplete-url-substring-sanitization regression: use host check, not substring."""
+    # Real YouTube hosts → "youtube"
+    assert _normalize_external_role(None, url="https://www.youtube.com/watch?v=x") == "youtube"
+    assert _normalize_external_role(None, url="https://youtube.com/watch?v=x") == "youtube"
+    assert _normalize_external_role(None, url="https://youtu.be/abc") == "youtube"
+    # Attack patterns where "youtube.com" appears in path or query → must NOT match
+    assert _normalize_external_role(None, url="https://evil.com/youtube.com/watch") != "youtube"
+    assert _normalize_external_role(None, url="https://evil.com?host=youtube.com") != "youtube"
+    assert _normalize_external_role(None, url="https://youtube.com.evil.com/") != "youtube"
+    # Malformed URLs must not crash; fall through to article since URL is non-empty
+    assert _normalize_external_role(None, url="not a url") == "article"
 
 
 def test_my_morning_manifest_extracts_required_obligations() -> None:
