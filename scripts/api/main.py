@@ -72,6 +72,7 @@ from .session_router import router as session_router
 from .site_router import router as site_router
 from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
+from .telemetry.response import add_json_telemetry
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
 from .worktrees_router import router as worktrees_router
@@ -687,7 +688,7 @@ async def orient(fresh: bool = False):
     # clients that were reading it before per-section meta existed.
     if isinstance(issues_info, dict) and issues_info.get("error"):
         response["issues_error"] = issues_info["error"]
-    return response
+    return add_json_telemetry(response)
 
 
 @app.get("/api/config")

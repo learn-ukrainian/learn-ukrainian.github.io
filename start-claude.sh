@@ -116,6 +116,7 @@ echo ""
 # Balances: using the 1M window we pay for vs. leaving buffer before degradation
 # Subagents handle isolated work in their own windows, so main thread stays clean
 export CLAUDE_CODE_AUTO_COMPACT_WINDOW=750000
+export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
 echo "Launching Claude Code via npx (cache-safe)..."
