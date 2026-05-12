@@ -377,6 +377,10 @@ _BRACES_RE = re.compile(r"\{[А-ЯІЇЄҐа-яіїєґ'ʼ]{1,12}\}")
 _MORPHEME_FRAGMENT_RE = re.compile(
     r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
 )
+_PRONUNCIATION_CUE_PATTERN = re.compile(
+    r"(?:sounds?\s+like|звучить\s+як|вимовляється\s+як|вимова[:\s])\s*\*\*[^*]+\*\*",
+    re.IGNORECASE,
+)
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset(
     {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
 )
@@ -3648,7 +3652,7 @@ def _vesum_gate(
 ) -> dict[str, Any]:
     """Verify Ukrainian words against VESUM, walking artifacts structurally.
 
-    Three classes of false positives are deliberately excluded:
+    Four classes of false positives are deliberately excluded:
 
     1. **Phonetic transcriptions and inline code** — `[с':а]`, `[ц':а]`, and
        backticked fragments like `` `вмиваєс':а` `` are metalinguistic notation
@@ -3656,7 +3660,10 @@ def _vesum_gate(
     2. **Intentional misspellings in `error-correction` activities** —
        `error:`, `errorWord:`, and `error_word:` fields contain the typo the
        student must fix (e.g. `прокидаєштся`). Verifying them would always fail.
-    3. **Sentence-initial capitalization** — VESUM is case-sensitive, so
+    3. **Wrong multiple-choice options** — `options: [{text, correct}]` values
+       with `correct: false` are author-labeled distractors. They may include
+       intentionally non-standard forms that test overgeneralization.
+    4. **Sentence-initial capitalization** — VESUM is case-sensitive, so
        `Спочатку` (capitalized first word) returns no matches even though
        `спочатку` does. Lookup is performed in lowercase; the report keeps
        original casing for evidence.
@@ -3824,7 +3831,7 @@ def _walk_artifact_strings(
 def _strip_metalinguistic(text: str) -> str:
     """Strip phonetic transcriptions, code, blank syntax, and morpheme labels.
 
-    Four categories of metalinguistic content are removed before VESUM lookup:
+    Five categories of metalinguistic content are removed before VESUM lookup:
 
     - `[...]` — phonetic notation like `[с':а]`, `[ц':а]`
     - `` `...` `` and ` ``` ... ``` ` — inline/fenced code
@@ -3832,6 +3839,7 @@ def _strip_metalinguistic(text: str) -> str:
     - `\\B-морфема` — hyphen-prefixed conjugation labels like `**-шся**`,
       `**-ться**`. The `\\B` lookbehind protects legitimate hyphenated
       compounds (`темно-синій`) where the char before `-` is a word char.
+    - `sounds like **...**` — cue-prefixed bold pronunciation transcriptions.
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.
@@ -3841,6 +3849,7 @@ def _strip_metalinguistic(text: str) -> str:
     text = _BRACKETS_RE.sub(" ", text)
     text = _BRACES_RE.sub(" ", text)
     text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
+    text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
     return text
 
 
@@ -3873,18 +3882,41 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
     always fail. The skip is at the dict (subtree) level so even a future
     nested shape like `error: { text: "...", note: "..." }` would be entirely
     excluded.
+
+    For multiple-choice-style `options: [{text, correct}]` lists, `text` on
+    options with falsy `correct` is an intentional wrong answer. Skip only that
+    option's text leaf so correct options and surrounding prompts are still
+    verified.
     """
     if activity.get("type") == _ERROR_CORRECTION_TYPE:
         skip_subtree = _ERROR_CORRECTION_INTENTIONAL_FIELDS
     else:
         skip_subtree = frozenset()
 
-    def keep(_parent_key: str | None, value: str) -> str | None:
-        return value
+    out: list[str] = []
 
-    return "\n".join(
-        _walk_artifact_strings(activity, keep=keep, skip_subtree_keys=skip_subtree)
-    )
+    def walk(node: Any, parent_key: str | None, *, in_options_list: bool = False) -> None:
+        if isinstance(node, dict):
+            wrong_option = (
+                in_options_list
+                and isinstance(node.get("text"), str)
+                and "correct" in node
+                and not node.get("correct", False)
+            )
+            for key, child in node.items():
+                if key in skip_subtree:
+                    continue
+                if wrong_option and key == "text":
+                    continue
+                walk(child, key)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item, parent_key, in_options_list=parent_key == "options")
+        elif isinstance(node, str):
+            out.append(node)
+
+    walk(activity, None)
+    return "\n".join(out)
 
 
 def _extract_prose_text(
