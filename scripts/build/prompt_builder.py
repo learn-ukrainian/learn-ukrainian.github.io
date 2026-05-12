@@ -41,6 +41,7 @@ DOWNSTREAM_TOKENS = frozenset(
         "ITEM_MINIMUMS_TABLE",
         "KNOWLEDGE_PACKET",
         "LETTER_MODULE_ACTIVE",
+        "LEARNER_STATE",
         "LEVEL",
         "LEVEL_CONSTRAINTS",
         "LEVEL_CONTEXT",

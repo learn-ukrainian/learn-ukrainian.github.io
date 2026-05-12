@@ -25,7 +25,7 @@ def _load_curriculum() -> dict:
 
 def _load_vocab(track: str, slug: str) -> list[str]:
     """Load vocabulary lemmas for a module."""
-    path = CURRICULUM_ROOT / track / "vocabulary" / f"{slug}.yaml"
+    path = CURRICULUM_ROOT / track / slug / "vocabulary.yaml"
     if not path.exists():
         return []
     try:

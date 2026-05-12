@@ -35,9 +35,9 @@ class TestBuildLearnerState:
         (root / "curriculum.yaml").write_text(yaml.dump(curriculum, allow_unicode=True))
 
         # Vocab for mod-1
-        vocab_dir = root / "test" / "vocabulary"
-        vocab_dir.mkdir(parents=True)
-        (vocab_dir / "mod-1.yaml").write_text(yaml.dump({
+        vocab_dir = root / "test"
+        (vocab_dir / "mod-1").mkdir(parents=True)
+        (vocab_dir / "mod-1" / "vocabulary.yaml").write_text(yaml.dump({
             "items": [
                 {"lemma": "кіт", "translation": "cat", "pos": "noun"},
                 {"lemma": "мама", "translation": "mom", "pos": "noun"},
@@ -45,7 +45,8 @@ class TestBuildLearnerState:
         }, allow_unicode=True))
 
         # Vocab for mod-2
-        (vocab_dir / "mod-2.yaml").write_text(yaml.dump({
+        (vocab_dir / "mod-2").mkdir(parents=True)
+        (vocab_dir / "mod-2" / "vocabulary.yaml").write_text(yaml.dump({
             "items": [
                 {"lemma": "тато", "translation": "dad", "pos": "noun"},
                 {"lemma": "кіт", "translation": "cat", "pos": "noun"},  # duplicate
@@ -86,12 +87,13 @@ class TestBuildLearnerState:
         (root).mkdir(parents=True)
         (root / "curriculum.yaml").write_text(yaml.dump(curriculum, allow_unicode=True))
 
-        vocab_dir = root / "test" / "vocabulary"
-        vocab_dir.mkdir(parents=True)
-        (vocab_dir / "mod-1.yaml").write_text(yaml.dump({
+        vocab_dir = root / "test"
+        (vocab_dir / "mod-1").mkdir(parents=True)
+        (vocab_dir / "mod-1" / "vocabulary.yaml").write_text(yaml.dump({
             "items": [{"lemma": "так", "translation": "yes", "pos": "particle"}]
         }, allow_unicode=True))
-        (vocab_dir / "mod-2.yaml").write_text(yaml.dump({
+        (vocab_dir / "mod-2").mkdir(parents=True)
+        (vocab_dir / "mod-2" / "vocabulary.yaml").write_text(yaml.dump({
             "items": [{"lemma": "ні", "translation": "no", "pos": "particle"}]
         }, allow_unicode=True))
 

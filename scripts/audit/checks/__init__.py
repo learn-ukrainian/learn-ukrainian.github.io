@@ -73,6 +73,11 @@ from .grammar import (
 from .imperial_terminology import (
     check_imperial_terminology,
 )
+from .learner_state import (
+    check_known_grammar_re_explanation,
+    check_learner_state,
+    check_unknown_vocabulary,
+)
 from .markdown_format import (
     check_markdown_format,
 )
@@ -141,6 +146,8 @@ __all__ = [
     'check_grammar_violations',
     # Imperial Terminology
     'check_imperial_terminology',
+    'check_known_grammar_re_explanation',
+    'check_learner_state',
     'check_mark_the_words_answers_in_text',
     'check_mark_the_words_format',
     # Markdown Format
@@ -169,6 +176,7 @@ __all__ = [
     'check_unjumble_out_of_scope_dative',
     'check_unjumble_runon_answer',
     'check_unjumble_word_match',
+    'check_unknown_vocabulary',
     'check_vocab_violations',
     'check_yaml_activity_types',
     'check_yaml_cloze_year_blanks',

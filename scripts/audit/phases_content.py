@@ -6,6 +6,8 @@ imperial terminology, russicisms, colonial framing, euphony, prose quality),
 and pedagogical compliance.
 """
 
+from pathlib import Path
+
 from .checks import (
     check_content_quality,
     check_markdown_format,
@@ -16,6 +18,7 @@ from .checks.colonial_framing import check_colonial_framing
 from .checks.content_gaming import check_content_gaming
 from .checks.content_purity import check_content_purity
 from .checks.imperial_terminology import check_imperial_terminology
+from .checks.learner_state import check_learner_state
 from .checks.prose_quality import check_prose_quality
 from .checks.russicism_detection import check_russicisms, check_semantic_false_friends
 from .checks.state_standard_compliance import check_state_standard_compliance
@@ -195,6 +198,22 @@ def run_content_quality_checks(ctx: AuditContext, state: AuditState) -> None:
                 'issue': f"Only {integration_data['activity_rate']:.1f}% of core vocabulary used in activities.",
                 'fix': f"Add activities using: {', '.join(integration_data['missing'][:5])}..."
             })
+
+    learner_state_violations = check_learner_state(
+        ctx.content,
+        ctx.level_code,
+        ctx.module_num,
+        Path(ctx.file_path).parent,
+    )
+    for violation in learner_state_violations:
+        gate_severity = violation["severity"]
+        state.pedagogical_violations.append({
+            'type': violation['type'].upper(),
+            'severity': 'critical' if gate_severity == 'HARD' else 'warning',
+            'blocking': gate_severity == 'HARD',
+            'issue': violation['issue'],
+            'fix': violation['fix'],
+        })
 
     run_vocab_and_format_checks(ctx, state)
     run_content_detectors(ctx, state)
