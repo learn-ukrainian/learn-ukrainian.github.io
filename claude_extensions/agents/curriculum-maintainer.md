@@ -73,7 +73,7 @@ self-review prohibition, deliberation protocol) is auto-loaded from
 
 The two highest-priority anchors to internalize:
 
-- **#M-4 — Deterministic over hallucination.** Every verifiable claim is tool-backed. For Ukrainian: `mcp__sources__verify_word(s)`, `search_style_guide`, `search_grinchenko_1907`, `search_esum`, `check_modern_form`. For build/module/git state: Monitor API at `:8765`. Pre-trained verbatim Ukrainian quotes (especially Антоненко-Давидович, Грінченко, ЕСУМ, СУМ-11) are the highest hallucination class — retrieve via MCP before pasting. Full anchor: `docs/best-practices/deterministic-over-hallucination.md`.
+- **#M-4 — Deterministic over hallucination.** Every verifiable claim is tool-backed. For Ukrainian: `mcp__sources__verify_word(s)`, `search_style_guide`, `search_grinchenko_1907`, `search_esum`, `check_modern_form`. For build/module/git state: Monitor API at `:8765`. Pre-trained verbatim Ukrainian quotes (especially Антоненко-Давидович, Грінченко, ЕСУМ, СУМ-11) are the highest hallucination class — retrieve via MCP before pasting. **Multi-agent `ab discuss` convergence is high-confidence FRAMING, not verification** — agents can `[AGREE]` on evidence neither verified (failure 2026-05-13: agreed anchor-episode picks included Review episodes none had read). Open the file before forwarding their picks. Full anchor: `docs/best-practices/deterministic-over-hallucination.md`.
 - **#M0 — Per-task model assignment + 3:3:3 dispatch.** Inline-Claude code = ≤5 LOC CI fixup ONLY. Anything else → dispatch (Codex / Claude-headless / Gemini, routing target 3:3:3). Gemini NOT for: ambiguous cross-file refactor, security/concurrency, GH-auth, mass mechanical. Cap: 2 of each in flight; check `/api/delegate/active` first.
 
 ## Proactive Protocol (trigger-based checklists)
@@ -113,6 +113,7 @@ Generic "never X" rules are auto-loaded (#M-0.5, #M-4, INVESTIGATE BEFORE ACTING
 - **Never act on a file/directory without understanding what it's for.** Session 2026-04-06: deleted wiki articles that were validated 9.8/10 output from the previous session because "cleanup B1" was misread as "delete everything in B1."
 - **Never modify a pipeline without reading the design docs first.** "I already know how it works" has been wrong every single time on this project (#1 source of mistakes).
 - **Word targets are MINIMUMS** — expand content, never lower the target. Hardcoding from memory caused 270 ISTORIO plans short by 500 words (Jan 2026).
+- **Deployed ≠ V7 target.** `starlight/dist/` + `curriculum/l2-uk-en/_archive/` = pre-V7 single-page MD; V7 targets the **4-tab** module structure (Урок / Словник / Вправи / Ресурси) per `docs/lesson-contract.md`. Pedagogical principles translate; structural shape does NOT.
 
 ## Agent roster (curriculum-specific routing)
 
@@ -129,8 +130,9 @@ Per #M0 (auto-loaded): inline-Claude is orchestrator, not coder. The 3:3:3 dispa
 
 ## Curriculum-specific operational rules
 
-(Generic ones — `claude_extensions/` source-vs-deploy, `.venv/bin/python`, worktree-isolation, git-add-only-yours, config.py word targets — are auto-loaded from `critical-rules.md` + `non-negotiable-rules.md` + `delegate-must-use-worktree.md`.)
+(Generic ones — `claude_extensions/` source-vs-deploy, `.venv/bin/python`, worktree-isolation, git-add-only-yours — auto-loaded from `critical-rules.md` + `non-negotiable-rules.md` + `delegate-must-use-worktree.md`.)
 
+- **`scripts/config.py` + `scripts/audit/config.py` = SSOT for ALL quality-gate numbers** (word counts, immersion bands, severity thresholds, exposure floors). Decision Cards / ADRs / specs reference config KEYS; never duplicate VALUES in prose. Calibrating numbers = code change (PR + tests), not doc change.
 - **V7 only.** v5/v6 (`build_module_v5.py`, `v6_build.py`, `pipeline_v5.py`) are OBSOLETE — never invoke, never reference. Entry point is `scripts/build/v7_build.py {level} {slug}` (single module per invocation; no `--range`, no `--step`, no batch).
 - **V7 builds are USER-RUN ONLY.** Never trigger them yourself, even for a single module. Dry-runs (`--dry-run`) are safe but the user typically runs those too.
 
@@ -169,6 +171,9 @@ When dispatching to Codex/Gemini, paste this checklist into the brief. They've e
 | Scripts & commands reference | `docs/SCRIPTS.md` |
 | Monitor API endpoints | `docs/MONITOR-API.md` |
 | Module manifest (slugs ↔ ordering) | `curriculum/l2-uk-en/curriculum.yaml` |
+| **Lesson Contract (4-tab module spec, AUTHORITY)** | `docs/lesson-contract.md` |
+| Lesson schema (per-component prop spec) | `docs/lesson-schema-design.md` |
+| Activity type matrix (CEFR level → allowed) | `docs/best-practices/activity-pedagogy.md` |
 | Build pipeline (V7 only) | `scripts/build/v7_build.py` + `scripts/build/linear_pipeline.py` |
 | V7 phase prompts | `scripts/build/phases/linear-{write,review-dim}.md` |
 | Wiki compiler | `scripts/wiki/compile.py` (default `--writer gemini`) |
