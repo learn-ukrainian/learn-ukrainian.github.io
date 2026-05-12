@@ -434,57 +434,65 @@ _A1_COMPONENT_DENSITY = {"DialogueBox": (95, 100), "RuleBox": (0, 30)}
 _A2_COMPONENT_DENSITY = {"DialogueBox": (95, 100), "RuleBox": (0, 40)}
 
 _IMMERSION_STRUCTURAL_OVERRIDES: dict[str, dict[str, Any]] = {
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
     "a1-m01-03": {
-        "min_vocab_entries": 5,
-        "min_uk_example_sentences": 3,
+        "min_vocab_entries": 0,
+        "min_uk_example_sentences": 0,
+        "min_uk_tab3_activities": 5,
         "max_unsupported_uk_words": 10,
         "required_components": _A1_COMPONENT_DENSITY,
     },
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
     "a1-m04-06": {
-        "min_uk_dialogue_lines": 1,
-        "min_vocab_entries": 5,
-        "min_uk_example_sentences": 3,
-        "min_uk_tab3_activities": 1,
-        "max_unsupported_uk_words": 10,
+        "min_uk_dialogue_lines": 10,
+        "min_vocab_entries": 0,
+        "min_uk_example_sentences": 0,
+        "min_uk_tab3_activities": 4,
+        "max_unsupported_uk_words": 36,
         "required_components": _A1_COMPONENT_DENSITY,
     },
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
     "a1-m07-14": {
-        "min_uk_dialogue_lines": 1,
-        "min_vocab_entries": 5,
-        "min_uk_example_sentences": 4,
-        "min_uk_tab3_activities": 1,
-        "max_unsupported_uk_words": 10,
-        "required_components": _A1_COMPONENT_DENSITY,
-    },
-    "a1-m15-24": {
-        "min_uk_dialogue_lines": 1,
-        "min_vocab_entries": 5,
-        "min_uk_example_sentences": 4,
-        "min_uk_tab3_activities": 1,
-        "max_unsupported_uk_words": 10,
-        "required_components": _A1_COMPONENT_DENSITY,
-    },
-    "a1-m25-34": {
-        "min_uk_dialogue_lines": 1,
-        "min_vocab_entries": 5,
-        "min_uk_example_sentences": 5,
-        "min_uk_tab3_activities": 1,
-        "max_unsupported_uk_words": 12,
-        "required_components": _A1_COMPONENT_DENSITY,
-    },
-    "a1-m35-54": {
-        "min_uk_dialogue_lines": 3,
-        "min_vocab_entries": 8,
-        "min_uk_example_sentences": 5,
-        "min_uk_tab3_activities": 1,
-        "max_unsupported_uk_words": 14,
-        "required_components": _A1_COMPONENT_DENSITY,
-    },
-    "a1-m55+": {
-        "min_uk_dialogue_lines": 4,
-        "min_vocab_entries": 8,
+        "min_uk_dialogue_lines": 13,
+        "min_vocab_entries": 0,
         "min_uk_example_sentences": 6,
-        "min_uk_tab3_activities": 1,
+        "min_uk_tab3_activities": 3,
+        "max_unsupported_uk_words": 68,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
+    "a1-m15-24": {
+        "min_uk_dialogue_lines": 14,
+        "min_vocab_entries": 0,
+        "min_uk_example_sentences": 14,
+        "min_uk_tab3_activities": 3,
+        "max_unsupported_uk_words": 28,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
+    "a1-m25-34": {
+        "min_uk_dialogue_lines": 9,
+        "min_vocab_entries": 0,
+        "min_uk_example_sentences": 6,
+        "min_uk_tab3_activities": 3,
+        "max_unsupported_uk_words": 71,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
+    "a1-m35-54": {
+        "min_uk_dialogue_lines": 8,
+        "min_vocab_entries": 0,
+        "min_uk_example_sentences": 13,
+        "min_uk_tab3_activities": 3,
+        "max_unsupported_uk_words": 20,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
+    "a1-m55+": {
+        "min_uk_dialogue_lines": 42,
+        "min_vocab_entries": 0,
+        "min_uk_example_sentences": 8,
+        "min_uk_tab3_activities": 4,
         "max_unsupported_uk_words": 16,
         "required_components": _A1_COMPONENT_DENSITY,
     },

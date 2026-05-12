@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Immersion Gate Calibration - 2026-05-13</title>
+<style>
+body{font-family:system-ui,sans-serif;line-height:1.45;max-width:1180px;margin:32px auto;padding:0 24px;color:#1f2933}
+table{border-collapse:collapse;width:100%;margin:16px 0 28px}
+th,td{border:1px solid #cbd2d9;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#eef2f6}
+code{background:#f5f7fa;padding:1px 4px;border-radius:3px}
+.pass{color:#0f7b45;font-weight:700}.fail{color:#b42318;font-weight:700}
+</style>
+</head>
+<body>
+<h1>Immersion Gate Calibration - 2026-05-13</h1>
+<h2>Executive summary</h2>
+<ul>
+<li>Replay covered <strong>55</strong> deployed A1 modules, <strong>2</strong> bakeoff artifacts, and <strong>1</strong> current V7 module.</li>
+<li>Active calibrated thresholds pass <strong>54/55</strong> deployed A1 modules across all three structural gates.</li>
+<li>The calibrated policy targets at least 95% deployed-corpus pass rate while preserving the long-UK ceiling signal on both bakeoff artifacts.</li>
+<li>Raw per-module gate results are written to <code>raw.jsonl</code>.</li>
+</ul>
+<h2>Methodology</h2>
+<p>The replay driver derived A1 sequence numbers from <code>curriculum/l2-uk-en/curriculum.yaml</code>, then called Phase A's deterministic gate functions directly from <code>scripts.build.linear_pipeline</code>. No generated content or LLM calls were used.</p>
+<h2>Band a1-m01-03</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>0</td><td>0</td><td>7</td><td>7</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>2</td><td>2</td></tr>
+<tr><td>uk_example_sentences</td><td>0</td><td>0</td><td>15</td><td>15</td></tr>
+<tr><td>uk_tab3_activities</td><td>5</td><td>5</td><td>7</td><td>7</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>Band a1-m04-06</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>10</td><td>10</td><td>20</td><td>20</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>7</td><td>7</td></tr>
+<tr><td>uk_example_sentences</td><td>0</td><td>0</td><td>16</td><td>16</td></tr>
+<tr><td>uk_tab3_activities</td><td>4</td><td>4</td><td>4</td><td>4</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>36</td><td>36</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>Band a1-m07-14</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>13</td><td>13</td><td>23</td><td>23</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>17</td><td>17</td></tr>
+<tr><td>uk_example_sentences</td><td>6</td><td>6</td><td>27</td><td>27</td></tr>
+<tr><td>uk_tab3_activities</td><td>3</td><td>3</td><td>4</td><td>4</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>68</td><td>68</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>Band a1-m15-24</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>14</td><td>14</td><td>19</td><td>22</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>6</td><td>8</td></tr>
+<tr><td>uk_example_sentences</td><td>14</td><td>14</td><td>35</td><td>40</td></tr>
+<tr><td>uk_tab3_activities</td><td>3</td><td>3</td><td>4</td><td>4</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>12</td><td>87</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>Band a1-m25-34</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>9</td><td>9</td><td>17</td><td>29</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>6</td><td>11</td></tr>
+<tr><td>uk_example_sentences</td><td>6</td><td>6</td><td>42</td><td>45</td></tr>
+<tr><td>uk_tab3_activities</td><td>3</td><td>3</td><td>4</td><td>5</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>48</td><td>71</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>Band a1-m35-54</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>8</td><td>12</td><td>24</td><td>33</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>8</td><td>12</td></tr>
+<tr><td>uk_example_sentences</td><td>13</td><td>14</td><td>45</td><td>54</td></tr>
+<tr><td>uk_tab3_activities</td><td>3</td><td>3</td><td>4</td><td>4</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>14</td><td>20</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>Band a1-m55+</h2>
+<table><thead><tr><th>Metric</th><th>Min</th><th>P10</th><th>P90</th><th>Max</th></tr></thead><tbody>
+<tr><td>uk_dialogue_lines</td><td>42</td><td>42</td><td>42</td><td>42</td></tr>
+<tr><td>vocab_entries</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>uk_example_sentences</td><td>8</td><td>8</td><td>8</td><td>8</td></tr>
+<tr><td>uk_tab3_activities</td><td>4</td><td>4</td><td>4</td><td>4</td></tr>
+<tr><td>max_unsupported_uk_run_words</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>component observed_pct</td><td colspan="4">No non-VocabCard JSX components observed.</td></tr>
+</tbody></table>
+<h2>False-fail analysis under active calibrated thresholds</h2>
+<p>1 deployed modules fail at least one active structural gate.</p>
+<table><thead><tr><th>Module</th><th>Band</th><th>Failed gates</th><th>Observed</th></tr></thead><tbody>
+<tr><td>checkpoint-actions</td><td>a1-m15-24</td><td>long_uk_ceiling: long_uk_without_gloss</td><td><code>{&quot;exposure&quot;: {&quot;uk_dialogue_lines&quot;: 19, &quot;uk_example_sentences&quot;: 25, &quot;uk_tab3_activities&quot;: 4, &quot;vocab_entries&quot;: 1}, &quot;max_unsupported&quot;: 87}</code></td></tr>
+</tbody></table>
+<h2>Bakeoff failure-mode validation</h2>
+<table><thead><tr><th>Writer</th><th>Gate</th><th>Status</th><th>Reason / observed</th></tr></thead><tbody>
+<tr><td>claude</td><td>l2_exposure_floor</td><td><span class="pass">pass</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 55, &quot;unsupported_uk_run_count&quot;: 11}, &quot;observed&quot;: {&quot;uk_dialogue_lines&quot;: 26, &quot;uk_example_sentences&quot;: 18, &quot;uk_tab3_activities&quot;: 7, &quot;vocab_entries&quot;: 0}, &quot;reason&quot;: null}</code></td></tr>
+<tr><td>claude</td><td>long_uk_ceiling</td><td><span class="fail">fail</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 55, &quot;unsupported_uk_run_count&quot;: 11}, &quot;observed&quot;: {&quot;offending_runs&quot;: 1}, &quot;reason&quot;: &quot;long_uk_without_gloss&quot;}</code></td></tr>
+<tr><td>claude</td><td>component_density</td><td><span class="pass">pass</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 55, &quot;unsupported_uk_run_count&quot;: 11}, &quot;observed&quot;: [], &quot;reason&quot;: null}</code></td></tr>
+<tr><td>codex</td><td>l2_exposure_floor</td><td><span class="fail">fail</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 29, &quot;unsupported_uk_run_count&quot;: 11}, &quot;observed&quot;: {&quot;uk_dialogue_lines&quot;: 4, &quot;uk_example_sentences&quot;: 0, &quot;uk_tab3_activities&quot;: 4, &quot;vocab_entries&quot;: 11}, &quot;reason&quot;: &quot;too_few_uk_dialogue_lines,too_few_uk_example_sentences&quot;}</code></td></tr>
+<tr><td>codex</td><td>long_uk_ceiling</td><td><span class="fail">fail</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 29, &quot;unsupported_uk_run_count&quot;: 11}, &quot;observed&quot;: {&quot;offending_runs&quot;: 1}, &quot;reason&quot;: &quot;long_uk_without_gloss&quot;}</code></td></tr>
+<tr><td>codex</td><td>component_density</td><td><span class="pass">pass</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 29, &quot;unsupported_uk_run_count&quot;: 11}, &quot;observed&quot;: [], &quot;reason&quot;: null}</code></td></tr>
+</tbody></table>
+<h2>Current V7 module</h2>
+<table><thead><tr><th>Gate</th><th>Status</th><th>Observed</th></tr></thead><tbody>
+<tr><td>l2_exposure_floor</td><td><span class="pass">pass</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 17, &quot;unsupported_uk_run_count&quot;: 21}, &quot;observed&quot;: {&quot;uk_dialogue_lines&quot;: 14, &quot;uk_example_sentences&quot;: 25, &quot;uk_tab3_activities&quot;: 4, &quot;vocab_entries&quot;: 0}, &quot;reason&quot;: null}</code></td></tr>
+<tr><td>long_uk_ceiling</td><td><span class="pass">pass</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 17, &quot;unsupported_uk_run_count&quot;: 21}, &quot;observed&quot;: {&quot;offending_runs&quot;: 0}, &quot;reason&quot;: null}</code></td></tr>
+<tr><td>component_density</td><td><span class="pass">pass</span></td><td><code>{&quot;long_uk_metrics&quot;: {&quot;max_unsupported_uk_run_words&quot;: 17, &quot;unsupported_uk_run_count&quot;: 21}, &quot;observed&quot;: [], &quot;reason&quot;: null}</code></td></tr>
+</tbody></table>
+<h2>Threshold recommendations</h2>
+<p>Minimum-count gates use the deployed-corpus minimum. The long-UK ceiling usually uses the deployed-corpus maximum; <code>a1-m15-24</code> is intentionally capped at 28 so both bakeoff artifacts still fail the wall-of-UK pattern. That leaves one deployed checkpoint outlier for human review while preserving a 98.2% deployed pass rate.</p>
+<table><thead><tr><th>Band</th><th>Active exposure floors</th><th>Active long-UK ceiling</th><th>Empirical reference</th></tr></thead><tbody>
+<tr><td>a1-m01-03</td><td><code>{&quot;uk_dialogue_lines&quot;: 0, &quot;uk_example_sentences&quot;: 0, &quot;uk_tab3_activities&quot;: 5, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 10, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 0, &quot;p90&quot;: 0.0}</code></td></tr>
+<tr><td>a1-m04-06</td><td><code>{&quot;uk_dialogue_lines&quot;: 10, &quot;uk_example_sentences&quot;: 0, &quot;uk_tab3_activities&quot;: 4, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 36, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 36, &quot;p90&quot;: 36.0}</code></td></tr>
+<tr><td>a1-m07-14</td><td><code>{&quot;uk_dialogue_lines&quot;: 13, &quot;uk_example_sentences&quot;: 6, &quot;uk_tab3_activities&quot;: 3, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 68, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 68, &quot;p90&quot;: 68.0}</code></td></tr>
+<tr><td>a1-m15-24</td><td><code>{&quot;uk_dialogue_lines&quot;: 14, &quot;uk_example_sentences&quot;: 14, &quot;uk_tab3_activities&quot;: 3, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 28, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 87, &quot;p90&quot;: 12.0}</code></td></tr>
+<tr><td>a1-m25-34</td><td><code>{&quot;uk_dialogue_lines&quot;: 9, &quot;uk_example_sentences&quot;: 6, &quot;uk_tab3_activities&quot;: 3, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 71, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 71, &quot;p90&quot;: 48.0}</code></td></tr>
+<tr><td>a1-m35-54</td><td><code>{&quot;uk_dialogue_lines&quot;: 8, &quot;uk_example_sentences&quot;: 13, &quot;uk_tab3_activities&quot;: 3, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 20, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 20, &quot;p90&quot;: 14.0}</code></td></tr>
+<tr><td>a1-m55+</td><td><code>{&quot;uk_dialogue_lines&quot;: 42, &quot;uk_example_sentences&quot;: 8, &quot;uk_tab3_activities&quot;: 4, &quot;vocab_entries&quot;: 0}</code></td><td><code>{&quot;max_unsupported_uk_words&quot;: 16, &quot;support_proximity&quot;: 8}</code></td><td><code>{&quot;max&quot;: 0, &quot;p90&quot;: 0.0}</code></td></tr>
+</tbody></table>
+<h2>Recommendation</h2>
+<p>Accept the calibrated A1 thresholds and proceed to Phase C. The tuned gate set passes 54/55 deployed A1 modules (98.2%) and catches 2/2 bakeoff artifacts. The one remaining deployed false-fail is a checkpoint module with an 87-word unsupported Ukrainian reading run, which should be reviewed as a content outlier rather than used to relax the my-morning band ceiling.</p>
+<p>A2 thresholds were not recalibrated in this replay because the requested corpus is A1-only.</p>
+<h2>Raw records</h2><p><code>raw.jsonl</code> contains 174 one-row-per-module-gate records.</p>
+</body>
+</html>
