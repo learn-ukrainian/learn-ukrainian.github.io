@@ -3723,7 +3723,7 @@ _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     # the old `lesson-schema.yaml`-sourced loader, which accepted them.
     "count-syllables":    _activity("items", "maxCount"),
     "divide-words":       _activity("items"),
-    "highlight-morphemes": _activity(),
+    "highlight-morphemes": _activity("items", "text"),
     "letter-grid":        _activity("letters"),
     "observe":            _activity("examples", "prompt"),
     "odd-one-out":        _activity("items"),

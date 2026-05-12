@@ -22,10 +22,9 @@ from .converters import (
     yaml_activities_to_jsx,
 )
 from .resources import (
-    b1_vocab_items_to_markdown,
     embed_youtube_video_links,
     format_resources_for_mdx,
-    vocab_items_to_markdown,
+    vocab_items_to_components,
 )
 from .utils import CURRICULUM_DIR, PROJECT_ROOT, SCRIPT_DIR, STARLIGHT_DOCS_DIR, escape_jsx, fix_html_for_jsx
 
@@ -153,6 +152,35 @@ def _activity_plans_to_jsx(plans: list[dict]) -> str:
     return '\n\n'.join(parts)
 
 
+_INJECT_ACTIVITY_RE = re.compile(r'<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->')
+
+
+def _inject_inline_activities(
+    body: str,
+    yaml_activities: list[Activity] | None,
+    is_ukrainian_forced: bool,
+) -> str:
+    """Replace Tab 1 INJECT_ACTIVITY markers with matching component JSX."""
+    if not yaml_activities or "INJECT_ACTIVITY" not in body:
+        return body
+
+    parser = ActivityParser()
+    by_id = {
+        str(getattr(activity, 'id', '')): activity
+        for activity in yaml_activities
+        if getattr(activity, 'id', '')
+    }
+
+    def replace_marker(match: re.Match[str]) -> str:
+        activity_id = match.group(1)
+        activity = by_id.get(activity_id)
+        if activity is None:
+            raise ValueError(f"Unresolved INJECT_ACTIVITY id: {activity_id}")
+        return parser._activity_to_mdx(activity, is_ukrainian_forced)
+
+    return _INJECT_ACTIVITY_RE.sub(replace_marker, body)
+
+
 def generate_mdx(
     md_content: str,
     module_num: int,
@@ -234,6 +262,15 @@ import DialectComparison from '@site/src/components/DialectComparison';
 import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -274,10 +311,7 @@ sidebar:
     # --- TAB 2: Vocabulary ---
     if vocab_items:
         vocab_header = "\u0421\u043b\u043e\u0432\u043d\u0438\u043a" if is_ukrainian_forced else "Vocabulary"
-        if is_ukrainian_forced:
-            vocab_content = b1_vocab_items_to_markdown(vocab_items, vocab_header)
-        else:
-            vocab_content = vocab_items_to_markdown(vocab_items, vocab_header)
+        vocab_content = vocab_items_to_components(vocab_items, vocab_header)
         # Strip the H2 header - the tab label serves as the header
         vocab_content = re.sub(r'^## [^\n]+\n+', '', vocab_content)
     else:
@@ -307,6 +341,11 @@ sidebar:
 
     # Embed YouTube video links as clickable thumbnails (lesson prose only)
     lesson_content = embed_youtube_video_links(lesson_content)
+    lesson_content = _inject_inline_activities(
+        lesson_content,
+        yaml_activities,
+        is_ukrainian_forced,
+    )
 
     # =========================================================================
     # Apply shared transforms to all content blocks
