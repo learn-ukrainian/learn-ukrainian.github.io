@@ -56,6 +56,61 @@ def test_format_resources_for_mdx_uses_author_description_and_role_icon():
     })
 
     assert "by Unknown" not in mdx
+    assert "📚 Books" in mdx
+    assert "🔗 Online resources" in mdx
     assert "📚 **Караман Grade 10, p.176**" in mdx
     assert "Reflexive verbs with -ся." in mdx
-    assert "🔗 **Вікіпедія — Ukrainian Wikipedia**" in mdx
+    assert "🔗 **Wikipedia overview**" in mdx
+
+
+def test_format_resources_for_mdx_groups_mixed_roles_with_icons():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "Караман Grade 10, p.176",
+            "author": "Караман",
+            "pages": "176",
+            "description": "Reflexive verbs with -ся.",
+            "role": "textbook",
+        },
+        {
+            "title": "Morning routine clip",
+            "url": "https://www.youtube.com/watch?v=abc12345678",
+            "channel": "Speak Ukrainian",
+            "role": "youtube",
+        },
+        {
+            "title": "Grammar documentary",
+            "url": "https://example.com/video",
+            "description": "Documentary excerpt.",
+            "role": "video",
+        },
+        {
+            "title": "Morning vocabulary blog",
+            "url": "https://example.com/blog",
+            "description": "Blog post.",
+            "role": "blog",
+        },
+        {
+            "title": "Audio drill",
+            "url": "https://example.com/audio",
+            "description": "Pronunciation practice.",
+            "role": "audio",
+        },
+        {
+            "title": "Wikipedia article",
+            "url": "https://uk.wikipedia.org/wiki/Ранок",
+            "role": "wiki",
+        },
+    ])
+
+    assert "📚 Books" in mdx
+    assert "📺 Videos" in mdx
+    assert "📝 Articles" in mdx
+    assert "🎧 Audio" in mdx
+    assert "🔗 Online resources" in mdx
+    assert "📚 **Караман Grade 10, p.176**" in mdx
+    assert "📺 [Morning routine clip](https://www.youtube.com/watch?v=abc12345678)" in mdx
+    assert "🎥 [Grammar documentary](https://example.com/video)" in mdx
+    assert "📝 [Morning vocabulary blog](https://example.com/blog)" in mdx
+    assert "🎧 [Audio drill](https://example.com/audio)" in mdx
+    assert "🔗 [Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx

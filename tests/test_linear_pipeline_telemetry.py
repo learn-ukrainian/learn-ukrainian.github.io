@@ -72,7 +72,7 @@ def _writer_response() -> str:
 
 ```json file=resources.yaml
 [
-  {{"title": "Fixture source", "notes": "Test source."}}
+  {{"title": "Fixture source", "role": "textbook", "notes": "Test source."}}
 ]
 ```
 

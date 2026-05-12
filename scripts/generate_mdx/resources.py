@@ -245,133 +245,142 @@ def merge_resources(curated: dict, discovery: dict) -> dict:
     return merged
 
 
-def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False) -> str:
-    """Format external resources for MDX output (emoji template).
+RESOURCE_ROLE_ICONS = {
+    'textbook': '📚',
+    'book': '📚',
+    'youtube': '📺',
+    'video': '🎥',
+    'blog': '📝',
+    'podcast': '🎧',
+    'audio': '🎧',
+    'article': '📄',
+    'wiki': '🔗',
+    'website': '🔗',
+}
 
-    Args:
-        resources: Dict with keys: podcasts, youtube, articles, books, websites
-        is_ukrainian_forced: Whether to force Ukrainian headers
+RESOURCE_GROUPS = (
+    ('books', '📚', 'Books', 'Книги', {'textbook', 'book'}),
+    ('videos', '📺', 'Videos', 'Відео', {'youtube', 'video'}),
+    ('articles', '📝', 'Articles', 'Статті', {'blog', 'article'}),
+    ('audio', '🎧', 'Audio', 'Аудіо', {'podcast', 'audio'}),
+    ('online', '🔗', 'Online resources', 'Онлайн-ресурси', {'wiki', 'website'}),
+)
 
-    Returns:
-        Formatted markdown string for [!resources] callout block
-    """
-    if not resources or not any(resources.get(t) for t in ['podcasts', 'youtube', 'articles', 'books', 'websites']):
+LEGACY_RESOURCE_ROLE = {
+    'podcasts': 'podcast',
+    'youtube': 'youtube',
+    'articles': 'article',
+    'books': 'textbook',
+    'websites': 'wiki',
+}
+
+
+def _resource_role(item: dict, legacy_bucket: str | None = None) -> str:
+    role = str(item.get('role') or '').strip().lower()
+    if role:
+        return role
+    if legacy_bucket is not None:
+        return LEGACY_RESOURCE_ROLE.get(legacy_bucket, legacy_bucket)
+    return 'textbook'
+
+
+def _iter_resources_by_role(resources: dict | list) -> dict[str, list[dict]]:
+    grouped: dict[str, list[dict]] = {group_id: [] for group_id, *_ in RESOURCE_GROUPS}
+    if isinstance(resources, list):
+        iterable = [(None, resources)]
+    else:
+        iterable = [(key, value) for key, value in resources.items()]
+
+    role_to_group = {
+        role: group_id
+        for group_id, _icon, _en, _uk, roles in RESOURCE_GROUPS
+        for role in roles
+    }
+    for bucket, items in iterable:
+        if not isinstance(items, list):
+            continue
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            role = _resource_role(item, bucket)
+            group_id = role_to_group.get(role, 'online')
+            grouped[group_id].append({**item, 'role': role})
+    return grouped
+
+
+def _resource_sort_key(item: dict) -> tuple[int, int, str]:
+    priority_map = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1, None: 0}
+    relevance_priority = {'high': 3, 'medium': 2, 'low': 1}
+    return (
+        -priority_map.get(item.get('priority'), 0),
+        -relevance_priority.get(item.get('relevance', 'low'), 0),
+        str(item.get('title', '')).lower(),
+    )
+
+
+def _format_textbook_resource(item: dict) -> list[str]:
+    title = str(item.get('title') or 'Unknown').strip()
+    author = str(item.get('author') or '').strip()
+    pages = item.get('pages') or item.get('page') or ''
+    desc = str(item.get('description') or item.get('notes') or '').strip()
+    source_ref = str(item.get('source_ref') or title).strip()
+
+    display_title = source_ref
+    if pages and str(pages) not in display_title:
+        display_title = f"{display_title}, p. {pages}"
+    if author and not display_title.startswith(author):
+        display_title = f"{author} — {display_title}"
+
+    lines = [f"> - 📚 **{display_title}**"]
+    if desc:
+        lines.append(f">   {desc}")
+    return lines
+
+
+def _format_linked_resource(item: dict) -> str:
+    role = _resource_role(item)
+    icon = RESOURCE_ROLE_ICONS.get(role, '🔗')
+    title = str(item.get('title') or 'Unknown').strip()
+    url = validate_and_clean_url(str(item.get('url') or ''), title)
+    desc = (
+        item.get('match_reason')
+        or item.get('description')
+        or item.get('notes')
+        or item.get('channel')
+        or item.get('source')
+        or ''
+    )
+    label = f"[{title}]({url})" if url else f"**{title}**"
+    suffix = f" — {desc}" if desc else ""
+    return f"> - {icon} {label}{suffix}"
+
+
+def format_resources_for_mdx(resources: dict | list, is_ukrainian_forced: bool = False) -> str:
+    """Format external resources for MDX output, grouped by resource role."""
+    if not resources:
+        return ""
+
+    grouped = _iter_resources_by_role(resources)
+    if not any(grouped.values()):
         return ""
 
     header_title = "Зовнішні ресурси" if is_ukrainian_forced else "External Resources"
 
-    lines = []
-    lines.append(f"> [!resources] \U0001f517 {header_title}")
-    lines.append(">")
+    lines = [f"> [!resources] 🔗 {header_title}", ">"]
 
-    # Emoji icons per resource type
-    display_names = {
-        'Podcasts': 'Подкасти',
-        'YouTube': 'YouTube',
-        'Articles': 'Статті',
-        'Books': 'Книги',
-        'Websites': 'Сайти'
-    }
-
-    resource_config = [
-        ('podcasts', '\U0001f3a7', 'Podcasts'),
-        ('youtube', '\U0001f4fa', 'YouTube'),
-        ('articles', '\U0001f4d6', 'Articles'),
-        ('books', '\U0001f4da', 'Books'),
-        ('websites', '\U0001f310', 'Websites')
-    ]
-    role_icons = {
-        'textbook': '\U0001f4da',
-        'book': '\U0001f4da',
-        'wiki': '\U0001f517',
-        'website': '\U0001f310',
-        'article': '\U0001f4d6',
-        'audio': '\U0001f3a7',
-        'podcast': '\U0001f3a7',
-        'video': '\U0001f4fa',
-        'youtube': '\U0001f4fa',
-    }
-
-    # Priority and relevance maps for sorting
-    priority_map = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1, None: 0}
-    relevance_priority = {'high': 3, 'medium': 2, 'low': 1}
-
-    for resource_type, icon, display_name in resource_config:
-        items = resources.get(resource_type, [])
+    for group_id, icon, english_name, ukrainian_name, _roles in RESOURCE_GROUPS:
+        items = grouped[group_id]
         if not items:
             continue
-
-        final_display_name = display_names.get(display_name, display_name) if is_ukrainian_forced else display_name
-
-        # Sort by: priority (1->5, highest first) -> relevance (high->low) -> title (A->Z)
-        sorted_items = sorted(
-            items,
-            key=lambda x: (
-                -priority_map.get(x.get('priority'), 0),
-                -relevance_priority.get(x.get('relevance', 'low'), 0),
-                x.get('title', '').lower()
-            )
-        )
-
-        # Add section header
-        lines.append(f"> **{icon} {final_display_name}:**")
-
-        # Format each item
-        for item in sorted_items:
-            title = item.get('title', 'Unknown')
-            url = validate_and_clean_url(item.get('url', ''), title)
-
-            if resource_type == 'podcasts':
-                desc = item.get('match_reason') or item.get('description', '')
-                if desc:
-                    lines.append(f"> - [{title}]({url}) \u2014 {desc}")
-                else:
-                    lines.append(f"> - [{title}]({url})")
-
-            elif resource_type == 'articles':
-                source = item.get('source', '')
-                desc = item.get('description', source)
-                if desc:
-                    lines.append(f"> - [{title}]({url}) \u2014 {desc}")
-                else:
-                    lines.append(f"> - [{title}]({url})")
-
-            elif resource_type == 'books':
-                role = item.get('role') or 'textbook'
-                item_icon = role_icons.get(str(role).lower(), icon)
-                author = item.get('author', '').strip()
-                pages = item.get('pages', '')
-                desc = item.get('description', '')
-                source_ref = item.get('source_ref') or title
-
-                display_title = source_ref
-                if pages and str(pages) not in display_title:
-                    display_title = f"{display_title}, p. {pages}"
-                if author and not display_title.startswith(author):
-                    display_title = f"{author} \u2014 {display_title}"
-                lines.append(f"> - {item_icon} **{display_title}**")
-                if desc:
-                    lines.append(f">   {desc}")
-
-            elif resource_type == 'youtube':
-                channel = item.get('channel', '')
-                if channel:
-                    lines.append(f"> - [{title}]({url}) \u2014 {channel}")
-                else:
-                    lines.append(f"> - [{title}]({url})")
-
-            elif resource_type == 'websites':
-                source = item.get('source', '')
-                desc = item.get('description', source)
-                if desc:
-                    lines.append(f"> - [{title}]({url}) \u2014 {desc}")
-                else:
-                    lines.append(f"> - [{title}]({url})")
-
-        # Add blank line between sections
+        display_name = ukrainian_name if is_ukrainian_forced else english_name
+        lines.append(f"> **{icon} {display_name}:**")
+        for item in sorted(items, key=_resource_sort_key):
+            if _resource_role(item) in {'textbook', 'book'}:
+                lines.extend(_format_textbook_resource(item))
+            else:
+                lines.append(_format_linked_resource(item))
         lines.append(">")
 
-    # Remove trailing blank line
     if lines and lines[-1] == ">":
         lines.pop()
 
