@@ -36,6 +36,7 @@ from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_pro
 from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
+from scripts.pipeline.learner_state import build_learner_state, format_learner_state
 
 PLAN_REQUIRED_KEYS = {
     "module",
@@ -1936,6 +1937,7 @@ def writer_context(
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
         "WIKI_MANIFEST": wiki_manifest_text,
+        "LEARNER_STATE": format_learner_state(build_learner_state(level.lower(), sequence)),
         "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence),
         "CONTRACT_YAML": _contract_yaml(plan),
         "ALLOWED_ACTIVITY_TYPES": activity_config["ALLOWED_ACTIVITY_TYPES"],

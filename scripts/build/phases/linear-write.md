@@ -251,6 +251,12 @@ The deterministic wiki-coverage gate hard-fails when any phonetic_rule has
 - Phase: {PHASE}
 - Word target: {WORD_TARGET}
 
+## Learner State
+
+Words and grammar listed in **Cumulative vocabulary** / **Grammar already taught** are the floor of what this module's prose may assume. Do not re-explain already-taught grammar; do not introduce vocabulary that is not in the cumulative list or in this module's declared `vocabulary.yaml` (any unknown UK lemma in body prose without inline gloss is a HARD audit failure from m04 onward; WARN m01-m03).
+
+{LEARNER_STATE}
+
 ## Immersion Rule
 
 {IMMERSION_RULE}
