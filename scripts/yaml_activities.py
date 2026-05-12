@@ -457,6 +457,105 @@ class WatchAndRepeatActivity:
     items: list[WatchAndRepeatItem] = field(default_factory=list)
 
 
+@dataclass
+class ObserveActivity:
+    type: str = "observe"
+    title: str = ""
+    instruction: str = ""
+    examples: list[str] = field(default_factory=list)
+    prompt: str = ""
+
+
+@dataclass
+class OrderActivity:
+    type: str = "order"
+    title: str = ""
+    instruction: str = ""
+    items: list[str] = field(default_factory=list)
+    correct_order: list[int] = field(default_factory=list)
+
+
+@dataclass
+class CountSyllablesItem:
+    word: str
+    correct: int
+    translation: str | None = None
+
+
+@dataclass
+class CountSyllablesActivity:
+    type: str = "count-syllables"
+    title: str = ""
+    instruction: str = ""
+    items: list[CountSyllablesItem] = field(default_factory=list)
+    max_count: int | None = None
+
+
+@dataclass
+class DivideWordsItem:
+    word: str
+    answer: str
+    hint: str | None = None
+
+
+@dataclass
+class DivideWordsActivity:
+    type: str = "divide-words"
+    title: str = ""
+    instruction: str = ""
+    items: list[DivideWordsItem] = field(default_factory=list)
+
+
+@dataclass
+class HighlightMorphemeItem:
+    word: str
+    morpheme: str
+    type: str = "unknown"
+
+
+@dataclass
+class HighlightMorphemesActivity:
+    type: str = "highlight-morphemes"
+    title: str = ""
+    instruction: str = ""
+    text: str = ""
+    morphemes: list[HighlightMorphemeItem] = field(default_factory=list)
+
+
+@dataclass
+class LetterGridActivity:
+    type: str = "letter-grid"
+    title: str = ""
+    instruction: str = ""
+    letters: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
+class OddOneOutItem:
+    words: list[str]
+    correct: int
+    explanation: str
+
+
+@dataclass
+class OddOneOutActivity:
+    type: str = "odd-one-out"
+    title: str = ""
+    instruction: str = ""
+    items: list[OddOneOutItem] = field(default_factory=list)
+
+
+@dataclass
+class PickSyllablesActivity:
+    type: str = "pick-syllables"
+    title: str = ""
+    instruction: str = ""
+    syllables: list[str] = field(default_factory=list)
+    correct_indices: list[int] = field(default_factory=list)
+    category: str = ""
+    explanation: str = ""
+
+
 # Type alias
 Activity = Union[  # noqa: UP007
     QuizActivity, SelectActivity, TrueFalseActivity, FillInActivity,
@@ -468,6 +567,9 @@ Activity = Union[  # noqa: UP007
     SourceEvaluationActivity, DebateActivity,
     EtymologyTraceActivity, GrammarIdentifyActivity,
     ClassifyActivity, ImageToLetterActivity, WatchAndRepeatActivity,
+    ObserveActivity, OrderActivity, CountSyllablesActivity,
+    DivideWordsActivity, HighlightMorphemesActivity, LetterGridActivity,
+    OddOneOutActivity, PickSyllablesActivity,
 ]
 
 
@@ -570,11 +672,21 @@ class ActivityParser:
             'classify': self._parse_classify,
             'image-to-letter': self._parse_image_to_letter,
             'watch-and-repeat': self._parse_watch_and_repeat,
+            'observe': self._parse_observe,
+            'order': self._parse_order,
+            'count-syllables': self._parse_count_syllables,
+            'divide-words': self._parse_divide_words,
+            'highlight-morphemes': self._parse_highlight_morphemes,
+            'letter-grid': self._parse_letter_grid,
+            'odd-one-out': self._parse_odd_one_out,
+            'pick-syllables': self._parse_pick_syllables,
         }
         parser = parsers.get(activity_type)
         if not parser:
             raise ValueError(f"unknown activity type {activity_type!r}")
-        return parser(data)
+        activity = parser(data)
+        activity.id = data.get('id', '')
+        return activity
 
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
@@ -985,6 +1097,193 @@ class ActivityParser:
             items=items,
         )
 
+    def _parse_observe(self, data: dict) -> ObserveActivity:
+        raw_examples = data.get('examples')
+        if not isinstance(raw_examples, list) or not raw_examples:
+            raise ValueError("observe requires non-empty examples list")
+        examples = [
+            str(item.get('text', '')) if isinstance(item, dict) else str(item)
+            for item in raw_examples
+        ]
+        if not all(example.strip() for example in examples):
+            raise ValueError("observe examples must be non-empty strings")
+        prompt = data.get('prompt')
+        if not isinstance(prompt, str) or not prompt.strip():
+            raise ValueError("observe requires non-empty prompt")
+        return ObserveActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            examples=examples,
+            prompt=prompt,
+        )
+
+    def _parse_order(self, data: dict) -> OrderActivity:
+        items = data.get('items')
+        correct_order = data.get('correct_order')
+        if not isinstance(items, list) or not items:
+            raise ValueError("order requires non-empty items list")
+        if not isinstance(correct_order, list) or not correct_order:
+            raise ValueError("order requires non-empty correct_order list")
+        if not all(isinstance(index, int) for index in correct_order):
+            raise TypeError("order correct_order must contain integers")
+        if any(index < 0 or index >= len(items) for index in correct_order):
+            raise ValueError("order correct_order index out of range")
+        return OrderActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=[str(item) for item in items],
+            correct_order=correct_order,
+        )
+
+    def _parse_count_syllables(self, data: dict) -> CountSyllablesActivity:
+        items = []
+        for item in data.get('items', []):
+            if 'word' not in item or 'correct' not in item:
+                raise KeyError("count-syllables item requires word and correct")
+            if not isinstance(item['correct'], int):
+                raise TypeError("count-syllables item correct must be an integer")
+            items.append(CountSyllablesItem(
+                word=str(item['word']),
+                correct=item['correct'],
+                translation=str(item['translation']) if item.get('translation') else None,
+            ))
+        if not items:
+            raise ValueError("count-syllables requires non-empty items list")
+        max_count = data.get('maxCount')
+        if max_count is not None and not isinstance(max_count, int):
+            raise TypeError("count-syllables maxCount must be an integer")
+        return CountSyllablesActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items,
+            max_count=max_count,
+        )
+
+    def _parse_divide_words(self, data: dict) -> DivideWordsActivity:
+        items = []
+        for item in data.get('items', []):
+            if 'word' not in item or 'answer' not in item:
+                raise KeyError("divide-words item requires word and answer")
+            items.append(DivideWordsItem(
+                word=str(item['word']),
+                answer=str(item['answer']),
+                hint=str(item['hint']) if item.get('hint') else None,
+            ))
+        if not items:
+            raise ValueError("divide-words requires non-empty items list")
+        return DivideWordsActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items,
+        )
+
+    def _parse_highlight_morphemes(self, data: dict) -> HighlightMorphemesActivity:
+        items = data.get('items', [])
+        text = data.get('text', '')
+        morphemes = []
+        for item in items:
+            word = str(item.get('word', '')).strip()
+            if not word:
+                raise ValueError("highlight-morphemes item requires word")
+            raw_morphemes = item.get('morphemes', [])
+            if isinstance(raw_morphemes, list) and raw_morphemes:
+                for raw in raw_morphemes:
+                    if isinstance(raw, dict):
+                        morpheme = str(raw.get('morpheme') or raw.get('text') or '').strip()
+                        mtype = str(raw.get('type', 'unknown'))
+                    else:
+                        morpheme = str(raw).strip()
+                        mtype = 'unknown'
+                    if not morpheme:
+                        raise ValueError("highlight-morphemes morpheme must be non-empty")
+                    morphemes.append(HighlightMorphemeItem(word=word, morpheme=morpheme, type=mtype))
+            elif item.get('morpheme'):
+                morphemes.append(HighlightMorphemeItem(
+                    word=word,
+                    morpheme=str(item['morpheme']),
+                    type=str(item.get('type', 'unknown')),
+                ))
+            else:
+                raise ValueError("highlight-morphemes item requires morphemes")
+        if not morphemes:
+            raise ValueError("highlight-morphemes requires non-empty items list")
+        if not text:
+            text = " ".join(item.word for item in morphemes)
+        return HighlightMorphemesActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            text=str(text),
+            morphemes=morphemes,
+        )
+
+    def _parse_letter_grid(self, data: dict) -> LetterGridActivity:
+        letters = data.get('letters')
+        if not isinstance(letters, list) or not letters:
+            raise ValueError("letter-grid requires non-empty letters list")
+        normalized = []
+        for letter in letters:
+            if not isinstance(letter, dict):
+                raise TypeError("letter-grid letters must be dictionaries")
+            required = ('upper', 'lower', 'emoji', 'key_word')
+            missing = [key for key in required if not letter.get(key)]
+            if missing:
+                raise KeyError(f"letter-grid letter missing required fields: {missing}")
+            normalized.append({key: letter[key] for key in letter if key in {'upper', 'lower', 'emoji', 'key_word', 'note', 'sound_type'}})
+        return LetterGridActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            letters=normalized,
+        )
+
+    def _parse_odd_one_out(self, data: dict) -> OddOneOutActivity:
+        items = []
+        for item in data.get('items', []):
+            if not isinstance(item.get('words'), list) or not item['words']:
+                raise ValueError("odd-one-out item requires non-empty words list")
+            correct = item.get('correct')
+            if not isinstance(correct, int):
+                raise TypeError("odd-one-out item correct must be an integer")
+            if correct < 0 or correct >= len(item['words']):
+                raise ValueError("odd-one-out item correct index out of range")
+            explanation = item.get('explanation')
+            if not isinstance(explanation, str) or not explanation.strip():
+                raise ValueError("odd-one-out item requires explanation")
+            items.append(OddOneOutItem(
+                words=[str(word) for word in item['words']],
+                correct=correct,
+                explanation=explanation,
+            ))
+        if not items:
+            raise ValueError("odd-one-out requires non-empty items list")
+        return OddOneOutActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items,
+        )
+
+    def _parse_pick_syllables(self, data: dict) -> PickSyllablesActivity:
+        syllables = data.get('syllables')
+        correct_indices = data.get('correctIndices')
+        category = data.get('category')
+        if not isinstance(syllables, list) or not syllables:
+            raise ValueError("pick-syllables requires non-empty syllables list")
+        if not isinstance(correct_indices, list) or not correct_indices:
+            raise ValueError("pick-syllables requires non-empty correctIndices list")
+        if not all(isinstance(index, int) for index in correct_indices):
+            raise TypeError("pick-syllables correctIndices must contain integers")
+        if any(index < 0 or index >= len(syllables) for index in correct_indices):
+            raise ValueError("pick-syllables correctIndices index out of range")
+        if not isinstance(category, str) or not category.strip():
+            raise ValueError("pick-syllables requires non-empty category")
+        return PickSyllablesActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            syllables=[str(syllable) for syllable in syllables],
+            correct_indices=correct_indices,
+            category=category,
+            explanation=str(data.get('explanation', '')),
+        )
+
     def _escape_jsx(self, text: str) -> str:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
         if not text:
@@ -1078,6 +1377,95 @@ class ActivityParser:
             return self._image_to_letter_to_mdx(activity)
         if isinstance(activity, WatchAndRepeatActivity):
             return self._watch_and_repeat_to_mdx(activity)
+        if isinstance(activity, ObserveActivity):
+            return self._observe_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, OrderActivity):
+            return self._order_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, CountSyllablesActivity):
+            return self._count_syllables_to_mdx(activity)
+        if isinstance(activity, DivideWordsActivity):
+            return self._divide_words_to_mdx(activity)
+        if isinstance(activity, HighlightMorphemesActivity):
+            return self._highlight_morphemes_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, LetterGridActivity):
+            return self._letter_grid_to_mdx(activity)
+        if isinstance(activity, OddOneOutActivity):
+            return self._odd_one_out_to_mdx(activity)
+        if isinstance(activity, PickSyllablesActivity):
+            return self._pick_syllables_to_mdx(activity)
+        activity_type = getattr(activity, 'type', '')
+        if activity_type == 'quiz':
+            return self._quiz_to_mdx(activity)
+        if activity_type == 'select':
+            return self._select_to_mdx(activity)
+        if activity_type == 'true-false':
+            return self._true_false_to_mdx(activity)
+        if activity_type == 'fill-in':
+            return self._fill_in_to_mdx(activity)
+        if activity_type == 'cloze':
+            return self._cloze_to_mdx(activity)
+        if activity_type == 'match-up':
+            return self._match_up_to_mdx(activity)
+        if activity_type == 'group-sort':
+            return self._group_sort_to_mdx(activity)
+        if activity_type == 'unjumble':
+            return self._unjumble_to_mdx(activity)
+        if activity_type == 'error-correction':
+            return self._error_correction_to_mdx(activity)
+        if activity_type == 'mark-the-words':
+            return self._mark_the_words_to_mdx(activity)
+        if activity_type == 'translate':
+            return self._translate_to_mdx(activity)
+        if activity_type == 'anagram':
+            return self._anagram_to_mdx(activity)
+        if activity_type == 'reading':
+            return self._reading_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'essay-response':
+            return self._essay_response_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'critical-analysis':
+            return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'comparative-study':
+            return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'authorial-intent':
+            return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'source-evaluation':
+            return self._source_evaluation_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'debate':
+            return self._debate_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'etymology-trace':
+            return self._etymology_trace_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'grammar-identify':
+            return self._grammar_identify_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'transcription':
+            return self._transcription_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'paleography-analysis':
+            return self._paleography_analysis_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'dialect-comparison':
+            return self._dialect_comparison_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'translation-critique':
+            return self._translation_critique_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'classify':
+            return self._classify_to_mdx(activity)
+        if activity_type == 'image-to-letter':
+            return self._image_to_letter_to_mdx(activity)
+        if activity_type == 'watch-and-repeat':
+            return self._watch_and_repeat_to_mdx(activity)
+        if activity_type == 'observe':
+            return self._observe_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'order':
+            return self._order_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'count-syllables':
+            return self._count_syllables_to_mdx(activity)
+        if activity_type == 'divide-words':
+            return self._divide_words_to_mdx(activity)
+        if activity_type == 'highlight-morphemes':
+            return self._highlight_morphemes_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'letter-grid':
+            return self._letter_grid_to_mdx(activity)
+        if activity_type == 'odd-one-out':
+            return self._odd_one_out_to_mdx(activity)
+        if activity_type == 'pick-syllables':
+            return self._pick_syllables_to_mdx(activity)
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
@@ -1312,3 +1700,87 @@ class ActivityParser:
             props += f' title="{self._escape_jsx(activity.title)}"'
         heading = activity.title or 'Watch and Repeat'
         return f"### {self._escape_jsx(heading)}\n\n<WatchAndRepeat client:only='react' {props} />"
+
+    def _observe_to_mdx(self, activity: ObserveActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or activity.instruction or 'Observe'
+        props = (
+            f"examples={{JSON.parse(`{self._dump_safe_json(activity.examples)}`)}} "
+            f"prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} "
+            f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}"
+        )
+        return f"### {self._escape_jsx(heading)}\n\n<Observe client:only='react' {props} />"
+
+    def _order_to_mdx(self, activity: OrderActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or activity.instruction or 'Order'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<Order client:only='react' items={{JSON.parse(`{self._dump_safe_json(activity.items)}`)}} "
+            f"correct_order={{JSON.parse(`{self._dump_safe_json(activity.correct_order)}`)}}"
+            f"{instruction_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        )
+
+    def _count_syllables_to_mdx(self, activity: CountSyllablesActivity) -> str:
+        heading = activity.title or activity.instruction or 'Count Syllables'
+        items = []
+        for item in activity.items:
+            payload: dict[str, Any] = {'word': item.word, 'correct': item.correct}
+            if item.translation:
+                payload['translation'] = item.translation
+            items.append(payload)
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        max_prop = f' maxCount={{{activity.max_count}}}' if activity.max_count is not None else ''
+        return f"### {self._escape_jsx(heading)}\n\n<CountSyllables client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{max_prop} />"
+
+    def _divide_words_to_mdx(self, activity: DivideWordsActivity) -> str:
+        heading = activity.title or activity.instruction or 'Divide Words'
+        items = []
+        for item in activity.items:
+            payload = {'word': item.word, 'answer': item.answer}
+            if item.hint:
+                payload['hint'] = item.hint
+            items.append(payload)
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return f"### {self._escape_jsx(heading)}\n\n<DivideWords client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+
+    def _highlight_morphemes_to_mdx(self, activity: HighlightMorphemesActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or activity.instruction or 'Highlight Morphemes'
+        morphemes = [
+            {'word': item.word, 'morpheme': item.morpheme, 'type': item.type}
+            for item in activity.morphemes
+        ]
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<HighlightMorphemes client:only='react' isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>\n"
+            f"  <HighlightMorphemesActivity{instruction_prop} text={{{json.dumps(activity.text, ensure_ascii=False)}}} "
+            f"morphemes={{JSON.parse(`{self._dump_safe_json(morphemes)}`)}} "
+            f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />\n"
+            f"</HighlightMorphemes>"
+        )
+
+    def _letter_grid_to_mdx(self, activity: LetterGridActivity) -> str:
+        heading = activity.title or 'Letter Grid'
+        title_prop = f' title="{self._escape_jsx(activity.title)}"' if activity.title else ''
+        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}}{title_prop} />"
+
+    def _odd_one_out_to_mdx(self, activity: OddOneOutActivity) -> str:
+        heading = activity.title or activity.instruction or 'Odd One Out'
+        items = [
+            {'words': item.words, 'correct': item.correct, 'explanation': item.explanation}
+            for item in activity.items
+        ]
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        return f"### {self._escape_jsx(heading)}\n\n<OddOneOut client:only='react'{instruction_prop} items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+
+    def _pick_syllables_to_mdx(self, activity: PickSyllablesActivity) -> str:
+        heading = activity.title or activity.instruction or 'Pick Syllables'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        explanation_prop = f' explanation={{{json.dumps(activity.explanation, ensure_ascii=False)}}}' if activity.explanation else ''
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<PickSyllables client:only='react'{instruction_prop} "
+            f"syllables={{JSON.parse(`{self._dump_safe_json(activity.syllables)}`)}} "
+            f"correctIndices={{JSON.parse(`{self._dump_safe_json(activity.correct_indices)}`)}} "
+            f"category={{{json.dumps(activity.category, ensure_ascii=False)}}}{explanation_prop} />"
+        )

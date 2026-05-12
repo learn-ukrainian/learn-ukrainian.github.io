@@ -6,6 +6,7 @@ resource merging/deduplication, and vocabulary table formatting.
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -279,6 +280,17 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
         ('books', '\U0001f4da', 'Books'),
         ('websites', '\U0001f310', 'Websites')
     ]
+    role_icons = {
+        'textbook': '\U0001f4da',
+        'book': '\U0001f4da',
+        'wiki': '\U0001f517',
+        'website': '\U0001f310',
+        'article': '\U0001f4d6',
+        'audio': '\U0001f3a7',
+        'podcast': '\U0001f3a7',
+        'video': '\U0001f4fa',
+        'youtube': '\U0001f4fa',
+    }
 
     # Priority and relevance maps for sorting
     priority_map = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1, None: 0}
@@ -325,16 +337,21 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
                     lines.append(f"> - [{title}]({url})")
 
             elif resource_type == 'books':
-                author = item.get('author', 'Unknown')
+                role = item.get('role') or 'textbook'
+                item_icon = role_icons.get(str(role).lower(), icon)
+                author = item.get('author', '').strip()
                 pages = item.get('pages', '')
                 desc = item.get('description', '')
+                source_ref = item.get('source_ref') or title
 
-                parts = [f"{title} by {author}"]
-                if pages:
-                    parts.append(f"(pages: {pages})")
+                display_title = source_ref
+                if pages and str(pages) not in display_title:
+                    display_title = f"{display_title}, p. {pages}"
+                if author and not display_title.startswith(author):
+                    display_title = f"{author} \u2014 {display_title}"
+                lines.append(f"> - {item_icon} **{display_title}**")
                 if desc:
-                    parts.append(f"\u2014 {desc}")
-                lines.append(f"> - {' '.join(parts)}")
+                    lines.append(f">   {desc}")
 
             elif resource_type == 'youtube':
                 channel = item.get('channel', '')
@@ -387,6 +404,41 @@ def vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary") 
         lines.append(line)
 
     return '\n'.join(lines)
+
+
+def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary") -> str:
+    """Tier 1/2 (A1/A2): flashcards plus browsable vocabulary cards."""
+    cards = []
+    words = []
+    for item in items:
+        lemma = str(item.get('lemma') or item.get('word') or '').strip()
+        translation = str(item.get('translation') or '').strip()
+        example = str(item.get('example') or item.get('usage') or '').strip()
+        if not lemma:
+            continue
+
+        cards.append({
+            "front": lemma,
+            "back": translation,
+        })
+
+        entry = {
+            "word": lemma,
+            "translation": translation,
+            "pos": item.get('pos', ''),
+            "gender": item.get('gender', ''),
+            "example": example,
+            "examples": [value for value in (translation, example) if value],
+        }
+        words.append({key: value for key, value in entry.items() if value not in (None, "", [])})
+
+    card_json = json.dumps(cards, ensure_ascii=False, separators=(',', ':')).replace('`', '\\`').replace('${', '\\${')
+    word_json = json.dumps(words, ensure_ascii=False, separators=(',', ':')).replace('`', '\\`').replace('${', '\\${')
+    return (
+        f"## {header_text}\n\n"
+        f"<FlashcardDeck client:only=\"react\" cards={{JSON.parse(`{card_json}`)}} />\n\n"
+        f"<VocabCard client:only=\"react\" words={{JSON.parse(`{word_json}`)}} title=\"{escape_jsx(header_text)}\" />"
+    )
 
 
 def b1_vocab_items_to_markdown(items: list[dict], header_text: str = "\u0421\u043b\u043e\u0432\u043d\u0438\u043a") -> str:

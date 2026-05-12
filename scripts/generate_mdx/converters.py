@@ -7,6 +7,7 @@ and MDX normalization.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -321,12 +322,7 @@ def process_story_sections(content: str) -> str:
 
 
 def process_dialogues(content: str) -> str:
-    """Group consecutive dialog lines into conversation blocks.
-
-    Detects sequences of lines starting with em-dash and wraps
-    them in a styled conversation container. Separates Ukrainian
-    from English translations (they're separated by blank lines).
-    """
+    """Group consecutive V6/V7 dialogue blockquotes into DialogueBox components."""
     lines = content.split('\n')
     result = []
     i = 0
@@ -346,36 +342,70 @@ def process_dialogues(content: str) -> str:
         if re.match(r'^</[A-Z]', stripped):
             inside_jsx = max(0, inside_jsx - 1)
 
-        # Check if this starts a dialog sequence (outside JSX)
-        if stripped.startswith('\u2014') and inside_jsx == 0 and '`' not in line:
+        # Check if this starts a dialogue sequence (outside JSX)
+        first_exchange = _parse_dialogue_line(stripped)
+        if first_exchange and inside_jsx == 0 and '`' not in line:
             # Collect consecutive dialog lines (stop at blank line)
-            dialog_lines = []
+            start = i
+            exchanges = []
             while i < len(lines):
                 current = lines[i].strip()
-                if current.startswith('\u2014') and '`' not in lines[i]:
-                    dialog_lines.append(lines[i])
+                parsed = _parse_dialogue_line(current)
+                if parsed and '`' not in lines[i]:
+                    exchanges.append(parsed)
+                    i += 1
+                elif re.match(r'^>\s*$', current):
                     i += 1
                 else:
                     # Stop at any non-dialog line (including blank)
                     break
 
             # Only wrap if we have 2+ dialog lines (actual conversation)
-            if len(dialog_lines) >= 2:
-                result.append('<div className="conversation">')
-                result.append('')
-                for dl in dialog_lines:
-                    result.append(dl)
-                    result.append('')
-                result.append('</div>')
+            if len(exchanges) >= 2:
+                result.append(_dialogue_box_mdx(exchanges, _dialogue_title(result)))
             else:
                 # Single line - just keep as-is
-                for dl in dialog_lines:
-                    result.append(dl)
+                result.extend(lines[start:i])
         else:
             result.append(line)
             i += 1
 
     return '\n'.join(result)
+
+
+_DIALOGUE_LINE_RE = re.compile(
+    r'^>\s*(?:\u2014\s*)?\*\*(?P<speaker>[^:*]+):\*\*\s*(?P<text>.+?)\s*$'
+)
+
+
+def _parse_dialogue_line(stripped_line: str) -> dict[str, str] | None:
+    match = _DIALOGUE_LINE_RE.match(stripped_line)
+    if not match:
+        return None
+    text = re.sub(r'\s*\*\([^)]*\)\*\s*$', '', match.group('text')).strip()
+    return {"speaker": match.group('speaker').strip(), "text": text}
+
+
+def _dialogue_title(previous_lines: list[str]) -> str:
+    for line in reversed(previous_lines[-3:]):
+        stripped = line.strip()
+        match = re.match(r'^\*\*(Діалог\s+\d+\s+[\u2014-]\s+.+?)\*\*$', stripped)
+        if match:
+            return match.group(1)
+    return "Діалог"
+
+
+def _dialogue_box_mdx(exchanges: list[dict[str, str]], title: str) -> str:
+    payload = json.dumps(exchanges, ensure_ascii=False, separators=(',', ':'))
+    payload = payload.replace('\\', '\\\\').replace("'", "\\'")
+    safe_title = title.replace('"', '&quot;')
+    return (
+        '<DialogueBox\n'
+        '  client:only="react"\n'
+        f'  title="{safe_title}"\n'
+        f"  exchanges={{JSON.parse('{payload}')}}\n"
+        '/>'
+    )
 
 
 def resolve_slug_links(content: str) -> str:
