@@ -1,7 +1,8 @@
 from pathlib import Path
 
 from scripts.build.linear_pipeline import (
-    _immersion_gate,
+    _advisory_immersion_pct,
+    _long_uk_ceiling_gate,
     _long_ukrainian_sentences,
     _split_immersion_sentences,
 )
@@ -142,63 +143,7 @@ def test_real_long_sentence_still_caught() -> None:
     assert _long_ukrainian_sentences(long_sentence) == [long_sentence]
 
 
-def test_immersion_gate_fails_real_long_sentence() -> None:
-    english_scaffold = " ".join(
-        [
-            "English",
-            "scaffolding",
-            "keeps",
-            "the",
-            "ratio",
-            "inside",
-            "the",
-            "A1",
-            "range",
-            "while",
-            "the",
-            "Ukrainian",
-            "paragraph",
-            "below",
-            "remains",
-            "a",
-            "single",
-            "overlong",
-            "sentence",
-            "for",
-            "the",
-            "gate",
-            "to",
-            "catch",
-            "during",
-            "integration",
-            "testing",
-            "without",
-            "depending",
-            "on",
-            "external",
-            "fixtures",
-            "or",
-            "generated",
-            "status",
-            "files",
-            "from",
-            "the",
-            "build",
-            "pipeline",
-            "today",
-            "and",
-            "extra",
-            "plain",
-            "English",
-            "setup",
-            "keeps",
-            "the",
-            "new",
-            "policy",
-            "cap",
-            "covered",
-        ]
-    )
+def test_long_uk_ceiling_gate_fails_real_long_sentence() -> None:
     long_sentence = " ".join(
         [
             "Український",
@@ -220,21 +165,22 @@ def test_immersion_gate_fails_real_long_sentence() -> None:
         ]
     )
 
-    result = _immersion_gate(f"{english_scaffold}\n\n{long_sentence}", PLAN)
+    result = _long_uk_ceiling_gate(long_sentence, PLAN)
 
-    assert result["min_pct"] <= result["pct"] <= result["max_pct"]
     assert result["passed"] is False
-    assert result["long_ukrainian_sentences"] == [long_sentence]
+    assert result["reason"] == "long_uk_without_gloss"
+    assert result["offending_runs"] == [long_sentence]
 
 
-def test_immersion_gate_reports_a1_m15_24_policy_cap() -> None:
-    result = _immersion_gate(
+def test_advisory_immersion_pct_reports_a1_m15_24_policy_cap() -> None:
+    result = _advisory_immersion_pct(
         "English scaffold with **ранок** and **вмиваюся**.",
         PLAN,
     )
 
     assert result["policy"] == "a1-m15-24"
     assert result["max_pct"] == 24
+    assert result["passed"] is True
 
 
 def test_my_morning_immersion_passes() -> None:
@@ -263,7 +209,6 @@ policy cap while the Ukrainian examples remain available for sentence checks.
 | вона | прокидається |
 """
 
-    result = _immersion_gate(text, PLAN)
+    result = _advisory_immersion_pct(text, PLAN)
 
     assert result["min_pct"] <= result["pct"] <= result["max_pct"]
-    assert result["long_ukrainian_sentences"] == []

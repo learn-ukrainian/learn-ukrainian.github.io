@@ -75,7 +75,10 @@ PYTHON_QG_GATE_ORDER = (
     "vesum_verified",
     "citations_resolve",
     "textbook_grounding",
-    "immersion",
+    "immersion_advisory",
+    "l2_exposure_floor",
+    "long_uk_ceiling",
+    "component_density",
     "inject_activity_ids",
     "activity_types",
     "ai_slop_clean",
@@ -107,7 +110,9 @@ DICTIONARY_CANDIDATE_GATES = frozenset(
 )
 REVIEWER_FIX_GATES = DICTIONARY_CANDIDATE_GATES | frozenset(
     {
-        "immersion",
+        "l2_exposure_floor",
+        "long_uk_ceiling",
+        "component_density",
         "ai_slop_clean",
     }
 )
@@ -3243,7 +3248,10 @@ def run_python_qg(
     )
     record("citations_resolve", _citation_gate(resources, plan))
     record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
-    record("immersion", _immersion_gate(module_text, plan))
+    record("immersion_advisory", _advisory_immersion_pct(module_text, plan))
+    record("l2_exposure_floor", _l2_exposure_floor_gate(module_text, plan))
+    record("long_uk_ceiling", _long_uk_ceiling_gate(module_text, plan))
+    record("component_density", _component_density_gate(module_text, plan))
     record("inject_activity_ids", _inject_activity_gate(module_text, activities))
     record(
         "activity_types",
@@ -4665,32 +4673,22 @@ def _textbook_grounding_gate(
     }
 
 
-def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
-    """Check Ukrainian immersion ratio + flag overly long Ukrainian sentences.
+def _advisory_immersion_pct(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Compute advisory Ukrainian immersion ratio telemetry.
 
-    Both the percent calculation AND the long-sentence check operate on a
-    JSX-stripped view of the body. Without that, prop KEYS (`speaker`,
-    `text`, `translation`) and English translation strings inside dialogue
-    components are counted as English tokens, deflating the immersion
-    percentage. To still credit Ukrainian-bearing dialogue text, we
-    separately extract string values from JSX (`text="..."` / `text: "..."`)
-    and add their tokens back. Net effect: only learner-facing Ukrainian
-    text inside JSX counts toward immersion, structural prop syntax doesn't.
-
-    The long-sentence check splits on Ukrainian-aware sentence punctuation
-    (`. ! ? … ‼ ⁇ ⁈ ⁉`) and markdown structure starts: dialogue dashes,
-    table rows, bullets, numbered list items, blockquotes, and headers. This
-    keeps dialogue turns and table rows from being joined into one giant run.
+    This is the demoted form of the old immersion gate. It still strips JSX
+    syntax before counting body tokens and adds learner-facing JSX strings
+    back into the numerator/denominator, but it never hard-fails. Structural
+    pass/fail decisions live in the L2 exposure, long-UK ceiling, and component
+    density gates.
     """
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
     min_pct, max_pct = get_immersion_range(level, sequence)
     comment_stripped = _strip_comments(text)
     body = _strip_frontmatter_and_headings(comment_stripped)
-    sentence_body = _strip_frontmatter(comment_stripped)
 
     body_no_jsx = _JSX_BLOCK_RE.sub(" ", body)
-    sentence_body_no_jsx = _JSX_BLOCK_RE.sub(" ", sentence_body)
     jsx_string_props: list[str] = []
     for jsx_block in _JSX_BLOCK_RE.findall(body):
         jsx_string_props.extend(_JSX_STRING_VALUE_RE.findall(jsx_block))
@@ -4700,15 +4698,254 @@ def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     uk_tokens = [token for token in tokens if _UK_WORD_RE.search(token)]
     pct = round((len(uk_tokens) / len(tokens) * 100), 2) if tokens else 0.0
 
-    long_sentences = _long_ukrainian_sentences(sentence_body_no_jsx)
     return {
-        "passed": min_pct <= pct <= max_pct and not long_sentences,
+        "passed": True,
         "pct": pct,
         "min_pct": min_pct,
         "max_pct": max_pct,
         "policy": get_immersion_policy(level, sequence)["key"],
-        "long_ukrainian_sentences": long_sentences[:20],
     }
+
+
+def _l2_exposure_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    policy = get_immersion_policy(str(plan["level"]).lower(), int(plan["sequence"]))
+    body = _strip_frontmatter_and_headings(_strip_comments(text))
+    observed = {
+        "uk_dialogue_lines": _count_uk_dialogue_lines(body),
+        "vocab_entries": _count_vocab_entries(body),
+        "uk_example_sentences": _count_uk_example_bullets(body),
+        "uk_tab3_activities": len(_INJECT_RE.findall(text)),
+    }
+    required = {
+        "uk_dialogue_lines": int(policy["min_uk_dialogue_lines"]),
+        "vocab_entries": int(policy["min_vocab_entries"]),
+        "uk_example_sentences": int(policy["min_uk_example_sentences"]),
+        "uk_tab3_activities": int(policy["min_uk_tab3_activities"]),
+    }
+    reasons = [
+        f"too_few_{key}"
+        for key, required_count in required.items()
+        if observed[key] < required_count
+    ]
+    return {
+        "passed": not reasons,
+        "required": required,
+        "observed": observed,
+        "reason": reasons[0] if len(reasons) == 1 else ",".join(reasons) or None,
+        "policy": policy["key"],
+    }
+
+
+def _count_uk_dialogue_lines(text: str) -> int:
+    count = sum(
+        1
+        for line in text.splitlines()
+        if re.match(r"^\s*>\s", line) and _UK_WORD_RE.search(line)
+    )
+    for jsx_block in _JSX_BLOCK_RE.findall(text):
+        if _jsx_tag(jsx_block) != "DialogueBox":
+            continue
+        count += sum(
+            1
+            for value in _jsx_text_values(jsx_block)
+            if _UK_WORD_RE.search(value)
+        )
+    return count
+
+
+def _count_vocab_entries(text: str) -> int:
+    count = 0
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not (stripped.startswith("|") and stripped.endswith("|")):
+            continue
+        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        if set(cells) <= {"", "---", ":---", "---:", ":---:"}:
+            continue
+        if any(_UK_WORD_RE.search(cell) for cell in cells) and any(
+            re.search(r"[A-Za-z]", cell) for cell in cells
+        ):
+            count += 1
+    count += sum(1 for block in _JSX_BLOCK_RE.findall(text) if _jsx_tag(block) == "VocabCard")
+    return count
+
+
+def _count_uk_example_bullets(text: str) -> int:
+    return sum(
+        1
+        for line in text.splitlines()
+        if re.match(r"^\s*[-*]\s+", line) and _UK_WORD_RE.search(line)
+    )
+
+
+def _long_uk_ceiling_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    policy = get_immersion_policy(str(plan["level"]).lower(), int(plan["sequence"]))
+    max_unsupported = int(policy["max_unsupported_uk_words"])
+    support_proximity = int(policy["support_proximity"])
+    runs = _unsupported_uk_runs(text, max_unsupported, support_proximity)
+    return {
+        "passed": not runs,
+        "required": {
+            "max_unsupported_uk_words": max_unsupported,
+            "support_proximity": support_proximity,
+        },
+        "observed": {"offending_runs": len(runs)},
+        "reason": "long_uk_without_gloss" if runs else None,
+        "offending_runs": runs[:5],
+        "policy": policy["key"],
+    }
+
+
+def _unsupported_uk_runs(
+    text: str,
+    max_unsupported: int,
+    support_proximity: int,
+) -> list[str]:
+    text = _strip_frontmatter_and_headings(_strip_comments(text))
+    text = _FENCED_CODE_RE.sub(" ", text)
+    text = _JSX_BLOCK_RE.sub(" ", text)
+    text = re.sub(r"(?m)^\s*\|.*\|\s*$", " ", text)
+    offending: list[str] = []
+    for segment in _unsupported_run_segments(text):
+        tokens = list(_WORD_RE.finditer(segment))
+        run_start: int | None = None
+        run_end: int | None = None
+        for index, token in enumerate(tokens):
+            value = token.group(0)
+            if _UK_WORD_RE.search(value):
+                if run_start is None:
+                    run_start = index
+                run_end = index
+                continue
+            if run_start is not None and run_end is not None:
+                _append_unsupported_run(
+                    offending,
+                    tokens,
+                    run_start,
+                    run_end,
+                    max_unsupported,
+                    support_proximity,
+                )
+            run_start = None
+            run_end = None
+        if run_start is not None and run_end is not None:
+            _append_unsupported_run(
+                offending, tokens, run_start, run_end, max_unsupported, support_proximity
+            )
+    return offending[:5]
+
+
+def _unsupported_run_segments(text: str) -> list[str]:
+    segments: list[str] = []
+    prose_lines: list[str] = []
+    for line in text.splitlines():
+        if re.match(r"^\s*(?:[-*]\s+|>\s*)", line):
+            if prose_lines:
+                segments.append("\n".join(prose_lines))
+                prose_lines = []
+            segments.append(line)
+            continue
+        if not line.strip():
+            if prose_lines:
+                segments.append("\n".join(prose_lines))
+                prose_lines = []
+            continue
+        prose_lines.append(line)
+    if prose_lines:
+        segments.append("\n".join(prose_lines))
+    return segments
+
+
+def _append_unsupported_run(
+    offending: list[str],
+    tokens: list[re.Match[str]],
+    start: int,
+    end: int,
+    max_unsupported: int,
+    support_proximity: int,
+) -> None:
+    run_len = end - start + 1
+    if run_len <= max_unsupported or _has_english_support(tokens, start, end, support_proximity):
+        return
+    words = [token.group(0) for token in tokens[start : min(end + 1, start + 40)]]
+    suffix = " ..." if run_len > len(words) else ""
+    offending.append(" ".join(words) + suffix)
+
+
+def _has_english_support(
+    tokens: list[re.Match[str]],
+    start: int,
+    end: int,
+    support_proximity: int,
+) -> bool:
+    before = tokens[max(0, start - support_proximity) : start]
+    after = tokens[end + 1 : min(len(tokens), end + 1 + support_proximity)]
+    return any(re.search(r"[A-Za-z]", token.group(0)) for token in (*before, *after))
+
+
+def _component_density_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    policy = get_immersion_policy(str(plan["level"]).lower(), int(plan["sequence"]))
+    required = dict(policy["required_components"])
+    mismatches: list[dict[str, Any]] = []
+    observed: list[dict[str, Any]] = []
+    ignored_components: list[str] = []
+    for jsx_block in _JSX_BLOCK_RE.findall(_strip_comments(text)):
+        tag = _jsx_tag(jsx_block)
+        if tag is None or tag == "VocabCard":
+            continue
+        if tag not in required:
+            ignored_components.append(tag)
+            continue
+        min_pct, max_pct = required[tag]
+        component_text = _component_language_text(tag, jsx_block)
+        tokens = _WORD_RE.findall(component_text)
+        if not tokens:
+            continue
+        uk_pct = round(
+            len([token for token in tokens if _UK_WORD_RE.search(token)]) / len(tokens) * 100,
+            2,
+        )
+        record = {
+            "component_tag": tag,
+            "observed_pct": uk_pct,
+            "expected_range": [int(min_pct), int(max_pct)],
+        }
+        observed.append(record)
+        if uk_pct < int(min_pct) or uk_pct > int(max_pct):
+            mismatches.append(record)
+    return {
+        "passed": not mismatches,
+        "required": required,
+        "observed": observed,
+        "reason": "component_density_mismatch" if mismatches else None,
+        "mismatches": mismatches,
+        "ignored_components": sorted(set(ignored_components)),
+        "policy": policy["key"],
+    }
+
+
+def _jsx_tag(jsx_block: str) -> str | None:
+    match = re.match(r"<([A-Z][A-Za-z0-9]*)\b", jsx_block.strip())
+    return match.group(1) if match else None
+
+
+def _jsx_text_values(jsx_block: str) -> list[str]:
+    return re.findall(r"\btext\s*(?:=|:)\s*\"([^\"\n]*)\"", jsx_block)
+
+
+def _component_language_text(tag: str, jsx_block: str) -> str:
+    if tag == "DialogueBox":
+        text_values = _jsx_text_values(jsx_block)
+        if text_values:
+            return "\n".join(text_values)
+    paired = re.match(
+        r"<([A-Z][A-Za-z0-9]*)\b[^>]*>(.*)</\1>",
+        jsx_block.strip(),
+        flags=re.DOTALL,
+    )
+    if paired:
+        return paired.group(2)
+    return "\n".join(_JSX_STRING_VALUE_RE.findall(jsx_block))
 
 
 def _split_immersion_sentences(text: str) -> list[str]:

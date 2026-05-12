@@ -27,15 +27,15 @@ def _small_plan() -> dict:
         "slug": "my-morning",
         "title": "Мій ранок",
         "subtitle": "Зворотні дієслова",
-        "word_target": 20,
+        "word_target": 89,
         "content_outline": [
             {
                 "section": "Діалоги",
-                "words": 20,
+                "words": 89,
                 "points": ["Introduce a morning dialogue."],
             }
         ],
-        "references": [{"title": "Караман Grade 10, p.176"}],
+        "references": [{"title": "Караман Grade 10, p.176", "verbatim_required": False}],
     }
 
 
@@ -76,7 +76,7 @@ def test_render_phase_prompt_fills_registered_tokens() -> None:
     assert "{NORTH_STAR}" not in rendered
     assert "{LESSON_CONTRACT}" not in rendered
     assert "{LEVEL}" not in rendered
-    assert "TARGET: 15-35% Ukrainian." in rendered
+    assert "STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):" in rendered
 
 
 @pytest.mark.parametrize(
@@ -115,7 +115,11 @@ def test_invoke_writer_routes_supported_writers(
     assert calls[0][2]["entrypoint"] == "dispatch"
     assert calls[0][2]["model"] == linear_pipeline.WRITER_DEFAULTS[writer]["model"]
     assert calls[0][2]["effort"] == linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
-    assert calls[0][2]["tool_config"] == {"output_format": "text"}
+    tool_config = calls[0][2]["tool_config"]
+    assert tool_config["output_format"] == "stream-json"
+    if writer == "claude-tools":
+        assert tool_config["mcp_config_path"].endswith(".mcp.json")
+        assert tool_config["allowed_tools"] == "mcp__sources__*"
 
 
 def test_invoke_writer_rejects_unknown_writer(tmp_path: Path) -> None:
@@ -923,6 +927,26 @@ def _passing_qg_fixture(tmp_path: Path) -> tuple[Path, Path, Callable]:
                 "learners. Use **прокидаюся**, **вмиваюся**, **одягаюся**,",
                 "and **снідаю** before breakfast today clearly.",
                 "",
+                "<DialogueBox",
+                "  lines={[",
+                '    { speaker: "Ліна", text: "Я прокидаюся рано." },',
+                '    { speaker: "Марко", text: "Я снідаю вдома." },',
+                "  ]}",
+                "/>",
+                "",
+                "| Українською | English |",
+                "|---|---|",
+                "| прокидаюся | I wake up |",
+                "| вмиваюся | I wash up |",
+                "| одягаюся | I get dressed |",
+                "| снідаю | I eat breakfast |",
+                "| вдома | at home |",
+                "",
+                "- **Я прокидаюся рано.** — I wake up early.",
+                "- **Я вмиваюся швидко.** — I wash up quickly.",
+                "- **Я одягаюся вдома.** — I get dressed at home.",
+                "- **Я снідаю вдома.** — I eat breakfast at home.",
+                "",
                 "<!-- INJECT_ACTIVITY: act-1 -->",
             ]
         ),
@@ -1523,9 +1547,9 @@ def test_immersion_gate_recognizes_unicode_sentence_boundaries(
 
     # Without the `…` boundary, all 4 short sentences would join into one
     # 12-Ukrainian-word run, exceeding the >10 threshold.
-    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+    assert report["gates"]["long_uk_ceiling"]["offending_runs"] == [], (
         f"Ukrainian ellipsis was not treated as sentence boundary: "
-        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+        f"{report['gates']['long_uk_ceiling']['offending_runs']}"
     )
 
 
@@ -1566,7 +1590,7 @@ def test_immersion_gate_credits_ukrainian_in_jsx_text_props(tmp_path: Path) -> N
         module_dir, plan_path, verify_words_fn=fake_verify
     )
 
-    pct = report["gates"]["immersion"]["pct"]
+    pct = report["gates"]["immersion_advisory"]["pct"]
     # The body has effectively no English prose (one heading, one comment).
     # All counted tokens come from Ukrainian dialogue text. Prop keys
     # (`speaker`, `text`, `lines`, `characters`) are excluded; English
@@ -1615,10 +1639,10 @@ def test_immersion_gate_strips_jsx_blocks_with_gt_in_prop_expressions(
         module_dir, plan_path, verify_words_fn=fake_verify
     )
 
-    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+    assert report["gates"]["long_uk_ceiling"]["offending_runs"] == [], (
         "JSX with `>` in a prop expression broke the regex strip and the "
         "DialogueBox lines were re-read as one giant sentence: "
-        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+        f"{report['gates']['long_uk_ceiling']['offending_runs']}"
     )
 
 
@@ -1655,9 +1679,9 @@ def test_immersion_gate_recognizes_start_of_string_bullets(tmp_path: Path) -> No
     # Each individual bullet contains <10 Ukrainian words — neither should
     # trip the long-sentence rule. If `^`-anchor were absent, the two bullets
     # plus their surrounding text might join into one >10-word run.
-    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+    assert report["gates"]["long_uk_ceiling"]["offending_runs"] == [], (
         f"start-of-string bullets joined into a long sentence: "
-        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+        f"{report['gates']['long_uk_ceiling']['offending_runs']}"
     )
 
 
@@ -1701,13 +1725,13 @@ def test_immersion_gate_strips_jsx_blocks_before_long_sentence_check(
         module_dir, plan_path, verify_words_fn=fake_verify
     )
 
-    immersion = report["gates"]["immersion"]
+    long_uk_ceiling = report["gates"]["long_uk_ceiling"]
     # The dialogue text inside JSX still counts toward the percent (Ukrainian
     # tokens were tokenized from the raw body), but the JSX block is no longer
     # treated as one giant sentence.
-    assert immersion["long_ukrainian_sentences"] == [], (
+    assert long_uk_ceiling["offending_runs"] == [], (
         f"JSX block was incorrectly read as a long sentence: "
-        f"{immersion['long_ukrainian_sentences']}"
+        f"{long_uk_ceiling['offending_runs']}"
     )
 
 

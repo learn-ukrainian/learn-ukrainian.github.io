@@ -6,10 +6,18 @@ and live immersion policy. It is the source of truth for the dispatcher,
 watcher, writer, and audit scripts.
 """
 
+import sys
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any
 
-from batch_gemini_config import FLASH_MODEL, PRO_MODEL
+try:
+    from batch_gemini_config import FLASH_MODEL, PRO_MODEL
+except ModuleNotFoundError:
+    _SCRIPTS_DIR = Path(__file__).resolve().parent
+    if str(_SCRIPTS_DIR) not in sys.path:
+        sys.path.insert(0, str(_SCRIPTS_DIR))
+    from batch_gemini_config import FLASH_MODEL, PRO_MODEL
 
 # =============================================================================
 # TRACK CONFIGURATION
@@ -147,7 +155,8 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
 # One authoritative source for live immersion policy across prompt generation
 # and audit gates. A band defines:
 # - the module range it covers
-# - the quantitative audit threshold (min/max immersion)
+# - advisory immersion-percent telemetry
+# - structural audit thresholds for deterministic immersion gates
 # - the qualitative writer instruction injected into prompts
 IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
     "a1": (
@@ -410,6 +419,154 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
     ),
 }
 
+
+_IMMERSION_STRUCTURAL_DEFAULTS: dict[str, Any] = {
+    "min_uk_dialogue_lines": 0,
+    "min_vocab_entries": 0,
+    "min_uk_example_sentences": 0,
+    "min_uk_tab3_activities": 0,
+    "max_unsupported_uk_words": 10_000,
+    "support_proximity": 8,
+    "required_components": {},
+}
+
+_A1_COMPONENT_DENSITY = {"DialogueBox": (95, 100), "RuleBox": (0, 30)}
+_A2_COMPONENT_DENSITY = {"DialogueBox": (95, 100), "RuleBox": (0, 40)}
+
+_IMMERSION_STRUCTURAL_OVERRIDES: dict[str, dict[str, Any]] = {
+    "a1-m01-03": {
+        "min_vocab_entries": 5,
+        "min_uk_example_sentences": 3,
+        "max_unsupported_uk_words": 10,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a1-m04-06": {
+        "min_uk_dialogue_lines": 1,
+        "min_vocab_entries": 5,
+        "min_uk_example_sentences": 3,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 10,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a1-m07-14": {
+        "min_uk_dialogue_lines": 1,
+        "min_vocab_entries": 5,
+        "min_uk_example_sentences": 4,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 10,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a1-m15-24": {
+        "min_uk_dialogue_lines": 1,
+        "min_vocab_entries": 5,
+        "min_uk_example_sentences": 4,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 10,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a1-m25-34": {
+        "min_uk_dialogue_lines": 1,
+        "min_vocab_entries": 5,
+        "min_uk_example_sentences": 5,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 12,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a1-m35-54": {
+        "min_uk_dialogue_lines": 3,
+        "min_vocab_entries": 8,
+        "min_uk_example_sentences": 5,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 14,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a1-m55+": {
+        "min_uk_dialogue_lines": 4,
+        "min_vocab_entries": 8,
+        "min_uk_example_sentences": 6,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 16,
+        "required_components": _A1_COMPONENT_DENSITY,
+    },
+    "a2-bridge": {
+        "min_uk_dialogue_lines": 2,
+        "min_vocab_entries": 5,
+        "min_uk_example_sentences": 5,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 15,
+        "required_components": _A2_COMPONENT_DENSITY,
+    },
+    "a2-ramp": {
+        "min_uk_dialogue_lines": 3,
+        "min_vocab_entries": 6,
+        "min_uk_example_sentences": 5,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 15,
+        "required_components": _A2_COMPONENT_DENSITY,
+    },
+    "a2-m01-20": {
+        "min_uk_dialogue_lines": 3,
+        "min_vocab_entries": 8,
+        "min_uk_example_sentences": 6,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 18,
+        "required_components": _A2_COMPONENT_DENSITY,
+    },
+    "a2-m21-50": {
+        "min_uk_dialogue_lines": 4,
+        "min_vocab_entries": 8,
+        "min_uk_example_sentences": 8,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 24,
+        "required_components": _A2_COMPONENT_DENSITY,
+    },
+    "a2-m51-70": {
+        "min_uk_dialogue_lines": 4,
+        "min_vocab_entries": 8,
+        "min_uk_example_sentences": 8,
+        "min_uk_tab3_activities": 1,
+        "max_unsupported_uk_words": 30,
+        "required_components": _A2_COMPONENT_DENSITY,
+    },
+}
+
+
+def _structural_immersion_rule(band: dict[str, Any]) -> str:
+    old_rule = str(band["rule"])
+    language_roles = old_rule
+    if old_rule.startswith("TARGET:") and "\n" in old_rule:
+        language_roles = old_rule.split("\n", 1)[1]
+    structural = (
+        "STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):\n"
+        f"- At least N UK dialogue lines (band: {band['min_uk_dialogue_lines']})\n"
+        f"- At least N vocab entries (band: {band['min_vocab_entries']})\n"
+        "- At least N UK example sentences in bulleted lists "
+        f"(band: {band['min_uk_example_sentences']})\n"
+        "- No UK-only run longer than K words without inline English support "
+        f"(band: {band['max_unsupported_uk_words']})\n"
+    )
+    return structural + language_roles
+
+
+def _extend_immersion_band(raw_band: dict[str, Any]) -> dict[str, Any]:
+    band = dict(raw_band)
+    band["advisory_pct_min"] = int(band.pop("min_pct"))
+    band["advisory_pct_max"] = int(band.pop("max_pct"))
+    structural = {
+        **_IMMERSION_STRUCTURAL_DEFAULTS,
+        **_IMMERSION_STRUCTURAL_OVERRIDES.get(str(band["key"]), {}),
+    }
+    band.update(structural)
+    band["required_components"] = dict(band["required_components"])
+    band["rule"] = _structural_immersion_rule(band)
+    return band
+
+
+IMMERSION_POLICIES = {
+    family: tuple(_extend_immersion_band(band) for band in bands)
+    for family, bands in IMMERSION_POLICIES.items()
+}
+
 # =============================================================================
 # GLOBAL CONSTRAINTS
 # =============================================================================
@@ -475,9 +632,26 @@ def get_immersion_policy(track: str, module_num: int) -> dict[str, Any]:
 
 
 def get_immersion_range(track: str, module_num: int) -> tuple[int, int]:
-    """Return the quantitative immersion gate range for a track/module pair."""
+    """Return advisory immersion percent telemetry range for a track/module pair."""
     band = _find_immersion_band(track, module_num)
-    return int(band["min_pct"]), int(band["max_pct"])
+    return int(band["advisory_pct_min"]), int(band["advisory_pct_max"])
+
+
+def get_immersion_structural(track: str, module_num: int) -> dict[str, Any]:
+    """Return structural immersion thresholds for a track/module pair."""
+    band = _find_immersion_band(track, module_num)
+    return {
+        key: band[key]
+        for key in (
+            "min_uk_dialogue_lines",
+            "min_vocab_entries",
+            "min_uk_example_sentences",
+            "min_uk_tab3_activities",
+            "max_unsupported_uk_words",
+            "support_proximity",
+            "required_components",
+        )
+    }
 
 
 def get_immersion_rule(track: str, module_num: int) -> str:
