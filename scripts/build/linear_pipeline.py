@@ -12,6 +12,7 @@ import json
 import re
 import sys
 import unicodedata
+import xml.etree.ElementTree as ET
 from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
@@ -353,8 +354,22 @@ QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
 
 _WORD_RE = re.compile(r"[A-Za-zА-ЯІЇЄҐа-яіїєґ][A-Za-zА-ЯІЇЄҐа-яіїєґ'ʼ-]*")
 _UK_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ-]*")
+# Bounded markdown-decoration quantifiers to avoid ReDoS (py/redos).
+# Decoration markers (`*`, `_`, `` ` ``) appear at most twice contiguously in
+# real markdown (`**bold**`, single `*italic*`, `_italic_`, backtick code).
+# Bounding the leading/trailing decoration to {0,2} chars and the inner
+# repetition to {0,4} word-segment boundaries makes the match linear-time
+# while still catching every realistic decorated Ukrainian surface form.
+_VESUM_DECORATED_WORD_RE = re.compile(
+    r"[*_`]{0,2}"
+    r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ\-\u0300\u0301]*"
+    r"(?:[*_`]{1,2}[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ\-\u0300\u0301]*){0,4}"
+    r"[*_`]{0,2}"
+)
 _INJECT_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->")
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
+_VESUM_SHORT_DECORATED_WORDS = frozenset({"ся", "сь"})
+_VESUM_STRESS_MARKS = frozenset({"\u0300", "\u0301"})
 
 # Metalinguistic content that must be stripped before VESUM lookup:
 # phonetic transcriptions like [с':а] and inline code in backticks contain
@@ -3196,6 +3211,9 @@ def _parse_reviewer_fixes(review_text: str) -> list[dict[str, str]]:
     if not match:
         return []
     body = match.group(1).strip()
+    xml_fixes = _parse_reviewer_fixes_xml(body)
+    if xml_fixes:
+        return xml_fixes
     try:
         parsed = yaml.safe_load(body)
     except yaml.YAMLError:
@@ -3215,6 +3233,33 @@ def _parse_reviewer_fixes(review_text: str) -> list[dict[str, str]]:
             fixes.append({
                 "find": str(item["find"]),
                 "replace": str(item["replace"]),
+            })
+    return fixes
+
+
+def _parse_reviewer_fixes_xml(body: str) -> list[dict[str, str]]:
+    if "<fix" not in body:
+        return []
+    try:
+        root = ET.fromstring(f"<fixes>{body}</fixes>")
+    except ET.ParseError:
+        return []
+    fixes: list[dict[str, str]] = []
+    for node in root.findall("fix"):
+        find_node = node.find("find")
+        replace_node = node.find("replace")
+        if find_node is not None and replace_node is not None:
+            fixes.append({
+                "find": "".join(find_node.itertext()),
+                "replace": "".join(replace_node.itertext()),
+            })
+            continue
+        insert_after_node = node.find("insert_after")
+        text_node = node.find("text")
+        if insert_after_node is not None and text_node is not None:
+            fixes.append({
+                "insert_after": "".join(insert_after_node.itertext()),
+                "text": "".join(text_node.itertext()),
             })
     return fixes
 
@@ -3952,19 +3997,15 @@ def _vesum_gate(
 
     text = _build_vesum_text(module_text, activities, vocabulary, resources)
 
-    # Pair each surface form with its lowercase lookup key once, so subsequent
-    # whitelist + missing computations don't re-`.lower()` repeatedly.
+    # Pair each surface form with its normalized lowercase lookup key once, so
+    # subsequent whitelist + missing computations don't re-normalize repeatedly.
     surface_pairs = sorted(
-        {
-            (word, word.lower())
-            for word in _iter_vesum_word_surfaces(text)
-            if len(word) >= VESUM_MIN_WORD_LENGTH
-        }
+        _iter_vesum_lookup_surface_pairs(text, min_word_length=VESUM_MIN_WORD_LENGTH)
     )
     whitelist_lc = _proper_name_whitelist_lc()
     unchecked_pairs = [
-        (surface, lower)
-        for surface, lower in surface_pairs
+        (surface, lower, original_case_lookup)
+        for surface, lower, original_case_lookup in surface_pairs
         if lower not in whitelist_lc
     ]
     if verify_words_fn is None:
@@ -3972,7 +4013,7 @@ def _vesum_gate(
 
     # VESUM is case-sensitive — lowercase before lookup so sentence-initial
     # words like "Спочатку" match the lemma "спочатку".
-    lookup_words = sorted({lower for _surface, lower in unchecked_pairs})
+    lookup_words = sorted({lower for _surface, lower, _original in unchecked_pairs})
     try:
         verified = verify_words_fn(lookup_words)
     except Exception as exc:
@@ -3982,23 +4023,24 @@ def _vesum_gate(
     if missing_lc:
         original_case_words = sorted(
             {
-                surface
-                for surface, lower in unchecked_pairs
-                if lower in missing_lc and surface != lower
+                original_case_lookup
+                for _surface, lower, original_case_lookup in unchecked_pairs
+                if lower in missing_lc and original_case_lookup != lower
             }
         )
-        try:
-            original_case_verified = verify_words_fn(original_case_words)
-        except Exception as exc:
-            return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
-        resolved_lc = {
-            surface.lower()
-            for surface, matches in original_case_verified.items()
-            if matches
-        }
-        missing_lc -= resolved_lc
+        if original_case_words:
+            try:
+                original_case_verified = verify_words_fn(original_case_words)
+            except Exception as exc:
+                return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
+            resolved_lc = {
+                surface.lower()
+                for surface, matches in original_case_verified.items()
+                if matches
+            }
+            missing_lc -= resolved_lc
     missing = sorted(
-        {surface for surface, lower in unchecked_pairs if lower in missing_lc}
+        {surface for surface, lower, _original in unchecked_pairs if lower in missing_lc}
     )
     return {
         "passed": not missing,
@@ -4007,6 +4049,80 @@ def _vesum_gate(
         "missing": missing[:100],
         "missing_count": len(missing),
     }
+
+
+def _normalize_for_vesum(lemma: str) -> str:
+    """Strip stress marks and Markdown wrappers before VESUM lookup.
+
+    Writer output may contain combining accents such as U+0301 and local
+    emphasis like `вмива́ю**ся**`. The QG report still keeps the original
+    surface form; this helper is only for the VESUM lookup key.
+    """
+    text = unicodedata.normalize("NFD", lemma)
+    text = "".join(char for char in text if char not in _VESUM_STRESS_MARKS)
+    text = unicodedata.normalize("NFC", text)
+    previous = None
+    while previous != text:
+        previous = text
+        text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+        text = re.sub(r"(?<!\*)\*(?!\*)([^*]+)\*(?!\*)", r"\1", text)
+        text = re.sub(r"`([^`]+)`", r"\1", text)
+        text = re.sub(
+            r"(?<![_A-Za-z0-9А-ЯІЇЄҐа-яіїєґ])_([^_]+)_(?![_A-Za-z0-9А-ЯІЇЄҐа-яіїєґ])",
+            r"\1",
+            text,
+        )
+    return text.strip()
+
+
+def _iter_vesum_lookup_surface_pairs(
+    text: str,
+    *,
+    min_word_length: int,
+) -> set[tuple[str, str, str]]:
+    normalized_words = {
+        word
+        for word in _iter_vesum_word_surfaces(_normalize_for_vesum(text))
+        if len(word) >= min_word_length
+    }
+    decorated_by_lower: dict[str, set[tuple[str, str]]] = {}
+    for match in _VESUM_DECORATED_WORD_RE.finditer(text):
+        raw = match.group(0).strip("-'ʼ")
+        if not raw or "__" in raw or not _has_vesum_lookup_decoration(raw):
+            continue
+        normalized = _normalize_for_vesum(raw)
+        for word in _iter_vesum_candidate_words(normalized):
+            lower = word.lower()
+            if len(word) < min_word_length and lower not in _VESUM_SHORT_DECORATED_WORDS:
+                continue
+            decorated_by_lower.setdefault(lower, set()).add((raw, word))
+
+    pairs: set[tuple[str, str, str]] = set()
+    for word in normalized_words:
+        lower = word.lower()
+        decorated = decorated_by_lower.pop(lower, set())
+        if decorated:
+            pairs.update((surface, lower, original_case) for surface, original_case in decorated)
+        else:
+            pairs.add((word, lower, word))
+    for lower, decorated in decorated_by_lower.items():
+        pairs.update((surface, lower, original_case) for surface, original_case in decorated)
+    return pairs
+
+
+def _has_vesum_lookup_decoration(text: str) -> bool:
+    return any(char in text for char in "*_`") or any(
+        char in _VESUM_STRESS_MARKS for char in unicodedata.normalize("NFD", text)
+    )
+
+
+def _iter_vesum_candidate_words(text: str) -> list[str]:
+    words: list[str] = []
+    for match in _UK_WORD_RE.finditer(text):
+        word = match.group(0).strip("-'ʼ")
+        if word:
+            words.append(word)
+    return words
 
 
 def _iter_vesum_word_surfaces(text: str) -> list[str]:
