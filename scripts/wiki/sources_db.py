@@ -35,6 +35,11 @@ from .query_builder import build_query_buckets
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
+# Per-component path length limit is ~255 bytes on macOS HFS+/APFS and most
+# Linux filesystems. Long Cyrillic plan-topic concatenations (>1 KB) trigger
+# OSError "File name too long" inside Path.exists(). Caller fallbacks can
+# swallow that and falsely mark plan references as corpus_missing (#1901).
+_MAX_PATH_PROBE_BYTES = 255
 
 _conn: sqlite3.Connection | None = None
 
@@ -343,7 +348,13 @@ def _build_dense_query(bucket_a_phrases: list[str], bucket_b_keywords: set[str],
 
 def _prepare_query(query: str | Path, track: str) -> tuple[list[str], set[str], str]:
     candidate_path = Path(query)
-    if candidate_path.exists():
+    is_path = False
+    if isinstance(query, Path) or len(str(query).encode("utf-8")) <= _MAX_PATH_PROBE_BYTES:
+        try:
+            is_path = candidate_path.exists()
+        except OSError:
+            is_path = False
+    if is_path:
         bucket_a_phrases, bucket_b_keywords = build_query_buckets(candidate_path, track)
         return bucket_a_phrases, bucket_b_keywords, _build_dense_query(
             bucket_a_phrases,

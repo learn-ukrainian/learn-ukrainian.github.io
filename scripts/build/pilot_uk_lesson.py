@@ -36,12 +36,12 @@ def retrieval_context(plan: dict, level: str, limit: int = 12) -> str:
     query_parts.extend(plan.get("objectives", []))
     for sec in plan.get("content_outline", []):
         query_parts.append(sec.get("section", ""))
-    # search_sources' _prepare_query does Path(query).exists() which raises
-    # OSError on strings longer than the filesystem filename limit (~255 bytes).
-    # Bug filed separately. Workaround: cap to 120 chars.
+    # search_sources' _prepare_query now bounds the Path(query).exists() probe
+    # by byte length (#1901 fix), so no 120-char workaround is needed. Still
+    # cap the query length for relevance: very long queries dilute FTS scoring.
     query = " ".join(p.strip() for p in query_parts if p)
     query = " ".join(query.split())  # collapse whitespace
-    query = query[:120]
+    query = query[:120]  # keep for FTS relevance, not for OSError avoidance
 
     # Prefer the discovery YAML (that's what build_query_buckets actually parses)
     discovery_path = REPO / "curriculum" / "l2-uk-en" / level / "discovery" / f"{plan.get('slug')}.yaml"
