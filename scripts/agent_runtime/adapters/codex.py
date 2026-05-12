@@ -694,8 +694,9 @@ class CodexAdapter:
                         event.get("type") == "event_msg"
                         and payload.get("type") == "user_message"
                         and isinstance(payload.get("message"), str)
+                        and payload["message"].rstrip() == expected
                     ):
-                        return payload["message"].rstrip() == expected
+                        return True
 
                     if (
                         event.get("type") == "response_item"
@@ -710,8 +711,8 @@ class CodexAdapter:
                                     text = item.get("text")
                                     if isinstance(text, str):
                                         parts.append(text)
-                            if parts:
-                                return "\n".join(parts).rstrip() == expected
+                            if parts and "\n".join(parts).rstrip() == expected:
+                                return True
             return False
         except Exception:
             return False
