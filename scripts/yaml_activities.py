@@ -523,14 +523,23 @@ class ActivityParser:
         for i, item in enumerate(raw_data):
             try:
                 activity = self._parse_activity(item)
-                if activity:
-                    activities.append(activity)
+                activities.append(activity)
             except Exception as e:
-                activity_type = item.get('type', 'unknown') if isinstance(item, dict) else 'unknown'
-                print(f"  ⚠️ Skipping activity {i} (type={activity_type!r}): {e}")
+                raise ValueError(f"Failed to parse {self._activity_context(i, item)}: {e}") from e
         return activities
 
-    def _parse_activity(self, data: dict) -> Activity | None:
+    def _activity_context(self, index: int, data: Any) -> str:
+        if not isinstance(data, dict):
+            return f"activity {index} (non-dict {type(data).__name__})"
+        parts = [f"activity {index}"]
+        if data.get('id'):
+            parts.append(f"id={data['id']!r}")
+        parts.append(f"type={data.get('type', 'unknown')!r}")
+        return " ".join(parts)
+
+    def _parse_activity(self, data: dict) -> Activity:
+        if not isinstance(data, dict):
+            raise TypeError(f"activity must be a dict, got {type(data).__name__}")
         activity_type = data.get('type')
         parsers = {
             'quiz': self._parse_quiz,
@@ -563,7 +572,9 @@ class ActivityParser:
             'watch-and-repeat': self._parse_watch_and_repeat,
         }
         parser = parsers.get(activity_type)
-        return parser(data) if parser else None
+        if not parser:
+            raise ValueError(f"unknown activity type {activity_type!r}")
+        return parser(data)
 
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
@@ -649,16 +660,27 @@ class ActivityParser:
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
         items = []
-        for item_data in data.get('items', []):
-            words = item_data.get('words', [])
-            if not words and 'jumbled' in item_data:
-                words = [w.strip() for w in item_data['jumbled'].split('/')]
-            if not words and 'prompt' in item_data:
-                words = [w.strip() for w in item_data['prompt'].split('/')]
-            if not words and 'scrambled' in item_data:
-                words = [w.strip() for w in item_data['scrambled'].split('/')]
+        for item_index, item_data in enumerate(data.get('items', [])):
+            words = self._unjumble_words(item_data, item_index)
             items.append(UnjumbleItem(words=words, answer=item_data['answer']))
         return UnjumbleActivity(title=data.get('title', ''), items=items)
+
+    def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
+        for field_name in ('words', 'jumbled', 'prompt', 'scrambled'):
+            if field_name in item_data:
+                return self._tokens_from_unjumble_field(item_data[field_name], field_name, item_index)
+        raise KeyError(f"unjumble item {item_index} missing one of: words, jumbled, prompt, scrambled")
+
+    def _tokens_from_unjumble_field(self, value: Any, field_name: str, item_index: int) -> list[str]:
+        if isinstance(value, list):
+            return [str(token) for token in value]
+        if isinstance(value, str):
+            separator = '/' if '/' in value else None
+            return [token.strip() for token in value.split(separator) if token.strip()]
+        raise TypeError(
+            f"unjumble item {item_index} field {field_name!r} must be str or list, "
+            f"got {type(value).__name__}"
+        )
 
     def _parse_error_correction(self, data: dict) -> ErrorCorrectionActivity:
         items = [ErrorCorrectionItem(
@@ -718,7 +740,7 @@ class ActivityParser:
         items = []
         for i in data.get('items', []):
             # Support V2 schema ('letters' array) and legacy ('scrambled' string).
-            # If neither key is present, KeyError propagates → activity skipped by caller.
+            # If neither key is present, KeyError propagates with activity context.
             if 'letters' in i:
                 scrambled = ' '.join(str(ch) for ch in i['letters'])
             elif 'scrambled' in i:
