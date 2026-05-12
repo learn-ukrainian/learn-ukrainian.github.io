@@ -36,6 +36,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Vocabulary & activities | [`vocabulary-activity-standards.md`](docs/best-practices/vocabulary-activity-standards.md) |
 | Activity pedagogy (level→type matrix) | [`activity-pedagogy.md`](docs/best-practices/activity-pedagogy.md) |
 | Track architecture | [`track-architecture.md`](docs/best-practices/track-architecture.md) |
+| Harness engineering | [`harness-engineering.md`](docs/best-practices/harness-engineering.md) |
 | Dialogue situations | [`dialogue-situations.md`](docs/best-practices/dialogue-situations.md) |
 
 ---
