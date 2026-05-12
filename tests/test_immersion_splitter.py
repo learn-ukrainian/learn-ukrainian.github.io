@@ -165,7 +165,11 @@ def test_long_uk_ceiling_gate_fails_real_long_sentence() -> None:
         ]
     )
 
-    result = _long_uk_ceiling_gate(long_sentence, PLAN)
+    # Use an early A1 band (a1-m01-03, calibrated max_unsupported_uk_words=10)
+    # so the 16-word unsupported UK run trips the gate. The module-level PLAN
+    # sits in a1-m15-24 (calibrated cap=28) where 16 words is within ceiling.
+    early_plan = {"level": "a1", "sequence": 1}
+    result = _long_uk_ceiling_gate(long_sentence, early_plan)
 
     assert result["passed"] is False
     assert result["reason"] == "long_uk_without_gloss"
