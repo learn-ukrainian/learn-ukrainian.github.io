@@ -419,6 +419,31 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
     ),
 }
 
+# =============================================================================
+# WIKI COVERAGE
+# =============================================================================
+
+# Placeholder thresholds for the Wiki Obligations Manifest gate. Calibrate with
+# a Phase-B-style replay after the gate has real build telemetry.
+WIKI_COVERAGE_HARD_FAIL = True
+WIKI_COVERAGE_DEFAULT_MIN_PCT = 0.80
+WIKI_COVERAGE_MIN_PCT_BY_LEVEL: dict[str, float] = {
+    "a1": 0.80,
+    "a2": 0.80,
+    "b1": 0.80,
+    "b2": 0.80,
+    "c1": 0.80,
+    "c2": 0.80,
+    "b2-pro": 0.80,
+    "c1-pro": 0.80,
+    "hist": 0.80,
+    "istorio": 0.80,
+    "bio": 0.80,
+    "lit": 0.80,
+    "oes": 0.80,
+    "ruth": 0.80,
+}
+
 
 _IMMERSION_STRUCTURAL_DEFAULTS: dict[str, Any] = {
     "min_uk_dialogue_lines": 0,

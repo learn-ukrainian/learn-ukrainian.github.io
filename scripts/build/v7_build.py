@@ -97,10 +97,11 @@ def _writer_prompt(
     plan: Mapping[str, Any],
     plan_content: str,
     knowledge_packet: str,
+    wiki_manifest: str | Mapping[str, Any],
 ) -> str:
     return linear_pipeline.render_phase_prompt(
         PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-write.md",
-        linear_pipeline.writer_context(plan, plan_content, knowledge_packet),
+        linear_pipeline.writer_context(plan, plan_content, knowledge_packet, wiki_manifest),
     )
 
 
@@ -161,6 +162,45 @@ def _run_llm_qg(
         report[dim] = linear_pipeline.parse_review_response(response, dim)
 
     return linear_pipeline.aggregate_llm_review(report, str(plan["level"]))
+
+
+def _run_wiki_coverage_review(
+    *,
+    plan: Mapping[str, Any],
+    plan_content: str,
+    module_dir: Path,
+    writer: str,
+    wiki_manifest: str | Mapping[str, Any],
+    wiki_coverage_gate: Mapping[str, Any],
+    stdout_silence_timeout: int | None = None,
+) -> dict[str, Any]:
+    from scripts.agent_runtime.runner import invoke
+
+    reviewer = _reviewer_for_writer(writer)
+    defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
+    agent_name = reviewer.split("-", 1)[0]
+    generated_content = _generated_content(module_dir)
+    prompt = linear_pipeline.render_wiki_coverage_review_prompt(
+        plan,
+        plan_content,
+        generated_content,
+        wiki_manifest,
+        wiki_coverage_gate,
+    )
+    result = invoke(
+        agent_name,
+        prompt,
+        mode="read-only",
+        cwd=module_dir,
+        model=defaults["model"],
+        task_id=f"linear-v7-wiki-coverage-{plan['slug']}",
+        entrypoint="dispatch",
+        effort=defaults["effort"],
+        tool_config={"output_format": "stream-json"},
+        stdout_silence_timeout=stdout_silence_timeout,
+    )
+    response = str(getattr(result, "response", "") or "")
+    return linear_pipeline.parse_wiki_coverage_review_response(response)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -293,6 +333,11 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             plan=plan,
         )
+        wiki_manifest = linear_pipeline.build_wiki_manifest(
+            level=level,
+            slug=slug,
+            plan=plan,
+        )
         _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
 
         if args.dry_run:
@@ -328,6 +373,7 @@ def _run(args: argparse.Namespace) -> int:
             plan=plan,
             plan_content=plan_content,
             knowledge_packet=knowledge_packet,
+            wiki_manifest=wiki_manifest,
         )
         # gemini-tools must load .gemini/settings.json from repo root;
         # module_dir cwd would leave its MCP catalog empty. See
@@ -352,6 +398,10 @@ def _run(args: argparse.Namespace) -> int:
         (module_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
         (module_dir / "knowledge_packet.md").write_text(
             knowledge_packet,
+            encoding="utf-8",
+        )
+        (module_dir / "wiki_manifest.json").write_text(
+            wiki_manifest,
             encoding="utf-8",
         )
         artifacts = linear_pipeline.parse_writer_output(writer_output)
@@ -379,6 +429,39 @@ def _run(args: argparse.Namespace) -> int:
             raise linear_pipeline.LinearPipelineError(
                 "Python QG failed after ADR-008 correction paths"
             )
+
+        phase = "wiki_coverage_gate"
+        started_at = time.monotonic()
+        wiki_coverage_gate = linear_pipeline.run_wiki_coverage_gate(
+            manifest=wiki_manifest,
+            writer_output=writer_output,
+            module_dir=module_dir,
+            level=level,
+        )
+        linear_pipeline.write_json(module_dir / "wiki_coverage_gate.json", wiki_coverage_gate)
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        if wiki_coverage_gate.get("passed") is not True:
+            raise linear_pipeline.LinearPipelineError("Wiki coverage gate failed")
+
+        phase = "wiki_coverage_review"
+        timeout_agent = _reviewer_for_writer(writer)
+        started_at = time.monotonic()
+        wiki_coverage_review = _run_wiki_coverage_review(
+            plan=plan,
+            plan_content=plan_content,
+            module_dir=module_dir,
+            writer=writer,
+            wiki_manifest=wiki_manifest,
+            wiki_coverage_gate=wiki_coverage_gate,
+            stdout_silence_timeout=args.writer_timeout,
+        )
+        linear_pipeline.write_json(
+            module_dir / "wiki_coverage_review.json",
+            wiki_coverage_review,
+        )
+        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        if wiki_coverage_review["overall_verdict"] == "FAIL":
+            raise linear_pipeline.LinearPipelineError("Wiki coverage review failed")
 
         phase = "llm_qg"
         timeout_agent = _reviewer_for_writer(writer)
