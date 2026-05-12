@@ -91,13 +91,13 @@ def check_wiki_coverage(
         obligation_id = str(obligation.get("id") or "")
         claim = map_entries.get(obligation_id)
         if not claim:
-            obligation_results.append(_result(obligation, "FAIL", "implementation_map_missing"))
+            obligation_results.append(_result(obligation, "FAIL", "implementation_map_missing", evidence_text=""))
             continue
 
         artifact = str(claim.get("artifact") or "").strip()
         location = str(claim.get("location") or "").strip()
         if artifact not in artifacts:
-            obligation_results.append(_result(obligation, "FAIL", "unknown_artifact", claim))
+            obligation_results.append(_result(obligation, "FAIL", "unknown_artifact", claim, evidence_text=""))
             continue
 
         target_text = (
@@ -106,11 +106,11 @@ def check_wiki_coverage(
             else _location_text(artifacts[artifact], location)
         )
         if not target_text.strip():
-            obligation_results.append(_result(obligation, "FAIL", "claimed_location_missing", claim))
+            obligation_results.append(_result(obligation, "FAIL", "claimed_location_missing", claim, evidence_text=""))
             continue
 
         status, reason = _check_obligation_text(obligation, target_text, artifact)
-        obligation_results.append(_result(obligation, status, reason, claim))
+        obligation_results.append(_result(obligation, status, reason, claim, evidence_text=target_text))
 
     covered = sum(1 for item in obligation_results if item["status"] == "PASS")
     total = len(obligation_results)
@@ -119,11 +119,16 @@ def check_wiki_coverage(
         str(level or "").lower(),
         WIKI_COVERAGE_DEFAULT_MIN_PCT,
     )
+    phonetic_hard_failed = any(
+        item["category"] == "phonetic_rules" and item.get("spoken_present") is False
+        for item in obligation_results
+    )
     hard_failed = any(item["status"] == "FAIL" for item in obligation_results)
-    passed = not hard_failed if WIKI_COVERAGE_HARD_FAIL else coverage_pct >= min_pct
+    passed = False if phonetic_hard_failed else (not hard_failed if WIKI_COVERAGE_HARD_FAIL else coverage_pct >= min_pct)
     return {
         "passed": passed,
-        "hard_fail": hard_failed and WIKI_COVERAGE_HARD_FAIL,
+        "hard_fail": phonetic_hard_failed or (hard_failed and WIKI_COVERAGE_HARD_FAIL),
+        "phonetic_hard_fail": phonetic_hard_failed,
         "coverage_pct": round(coverage_pct, 4),
         "covered": covered,
         "total": total,
@@ -222,7 +227,13 @@ def _check_obligation_text(obligation: Mapping[str, Any], target_text: str, arti
     if obligation_type == "phonetic_rule":
         written = str(obligation.get("written") or "")
         spoken = str(obligation.get("spoken") or "")
-        if _contains(target_text, written) and _contains(target_text, spoken):
+        if (
+            bool(written)
+            and bool(spoken)
+            and _contains(target_text, written)
+            and _contains(target_text, spoken)
+            and _phonetic_examples_present(obligation, target_text)
+        ):
             return "PASS", "phonetic_rule_present"
         return "FAIL", "phonetic_rule_missing"
 
@@ -246,18 +257,84 @@ def _result(
     status: str,
     reason: str,
     claim: Mapping[str, str] | None = None,
+    evidence_text: str | None = None,
 ) -> dict[str, Any]:
-    return {
+    obligation_type = str(obligation.get("type") or "")
+    result = {
         "obligation_id": obligation.get("id"),
-        "type": obligation.get("type"),
+        "type": obligation_type,
+        "category": _category_for_obligation_type(obligation_type),
         "status": status,
         "reason": reason,
         "claim": dict(claim or {}),
     }
+    if obligation_type == "phonetic_rule":
+        written = str(obligation.get("written") or "")
+        spoken = str(obligation.get("spoken") or "")
+        target_text = evidence_text or ""
+        example_pairs = _phonetic_example_pairs(obligation)
+        result.update(
+            {
+                "written": written,
+                "spoken_target": spoken,
+                "written_present": bool(written) and _contains(target_text, written),
+                "spoken_present": bool(spoken) and _contains(target_text, spoken),
+                "example_pairs_present": _phonetic_examples_present(obligation, target_text),
+                "example_pairs_required": bool(example_pairs),
+            }
+        )
+    return result
+
+
+def _category_for_obligation_type(obligation_type: str) -> str:
+    if obligation_type == "l2_error":
+        return "l2_errors"
+    if obligation_type == "phonetic_rule":
+        return "phonetic_rules"
+    if obligation_type == "sequence_step":
+        return "sequence_steps"
+    if obligation_type == "decolonization_ban":
+        return "decolonization_bans"
+    return obligation_type
 
 
 def _contains(text: str, marker: str) -> bool:
     return _normalize(marker) in _normalize(text)
+
+
+def _phonetic_examples_present(obligation: Mapping[str, Any], text: str) -> bool:
+    pairs = _phonetic_example_pairs(obligation)
+    if not pairs:
+        return True
+    return any(all(_contains(text, marker) for marker in pair) for pair in pairs)
+
+
+def _phonetic_example_pairs(obligation: Mapping[str, Any]) -> list[tuple[str, ...]]:
+    pairs: list[tuple[str, ...]] = []
+    for key in ("example_pairs", "examples"):
+        raw_examples = obligation.get(key) or []
+        if not isinstance(raw_examples, Sequence) or isinstance(raw_examples, (str, bytes)):
+            continue
+        for raw_example in raw_examples:
+            if isinstance(raw_example, str):
+                example = raw_example.strip()
+                if example:
+                    pairs.append((example,))
+                continue
+            if not isinstance(raw_example, Mapping):
+                continue
+            written = str(
+                raw_example.get("written")
+                or raw_example.get("word")
+                or raw_example.get("surface")
+                or raw_example.get("example")
+                or ""
+            ).strip()
+            spoken = str(raw_example.get("spoken") or raw_example.get("ipa") or raw_example.get("pronunciation") or "").strip()
+            pair = tuple(marker for marker in (written, spoken) if marker)
+            if pair:
+                pairs.append(pair)
+    return pairs
 
 
 def _normalize(text: str) -> str:
