@@ -109,12 +109,15 @@ def normalize_tool_calls(events: Iterable[Mapping[str, Any]]) -> list[dict[str, 
             name = _tool_name(payload)
             if not name:
                 continue
+            output = _tool_output(payload)
             call = {
                 "name": name,
                 "arguments": _tool_arguments(payload),
-                "output_summary": summarize_tool_output(_tool_output(payload)),
+                "output_summary": summarize_tool_output(output),
                 "timestamp": _timestamp(payload, event),
             }
+            if output is not None:
+                call["result"] = output
             calls.append(call)
             call_id = _tool_call_id(payload)
             if call_id:
@@ -128,9 +131,10 @@ def normalize_tool_calls(events: Iterable[Mapping[str, Any]]) -> list[dict[str, 
         for payload in result_payloads:
             call_id = _tool_result_id(payload)
             if call_id and call_id in by_id:
-                by_id[call_id]["output_summary"] = summarize_tool_output(
-                    _tool_output(payload)
-                )
+                output = _tool_output(payload)
+                by_id[call_id]["output_summary"] = summarize_tool_output(output)
+                if output is not None:
+                    by_id[call_id]["result"] = output
 
     return calls
 

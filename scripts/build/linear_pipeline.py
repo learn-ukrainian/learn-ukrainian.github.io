@@ -1539,9 +1539,108 @@ def _summarize_generic_tool_result(result: Any) -> dict[str, Any]:
     return {"text_chars": len(str(result))}
 
 
+SEARCH_TEXT_RESULT_ITEM_LIMIT = 10
+SEARCH_TEXT_RESULT_TEXT_LIMIT = 500
+
+
+def _maybe_parse_json_string(value: str) -> Any:
+    stripped = value.strip()
+    if not stripped or stripped[0] not in "[{":
+        return value
+    try:
+        return json.loads(stripped)
+    except json.JSONDecodeError:
+        return value
+
+
+def _search_text_result_items(result: Any) -> list[Mapping[str, Any]]:
+    result = _maybe_parse_json_string(result) if isinstance(result, str) else result
+    if isinstance(result, Mapping):
+        for key in ("structuredContent", "structured_content"):
+            structured = result.get(key)
+            if structured is not None:
+                structured_items = _search_text_result_items(structured)
+                if structured_items:
+                    return structured_items
+        raw_hits = result.get("results") or result.get("hits") or result.get("items")
+        if isinstance(raw_hits, list):
+            return [item for item in raw_hits if isinstance(item, Mapping)]
+        content = result.get("content")
+        if isinstance(content, list | tuple):
+            content_items = _search_text_result_items(content)
+            if content_items:
+                return content_items
+        text = result.get("text")
+        if (
+            result.get("type") == "text"
+            and isinstance(text, str)
+            and (parsed := _maybe_parse_json_string(text)) is not text
+        ):
+            return _search_text_result_items(parsed)
+        return [result]
+    if isinstance(result, list | tuple):
+        items: list[Mapping[str, Any]] = []
+        for item in result:
+            if (
+                isinstance(item, Mapping)
+                and item.get("type") == "text"
+                and isinstance(item.get("text"), str)
+            ):
+                parsed = _maybe_parse_json_string(item["text"])
+                if parsed is not item["text"]:
+                    items.extend(_search_text_result_items(parsed))
+                    continue
+            if isinstance(item, Mapping):
+                items.append(item)
+        return items
+    return []
+
+
+def _summarize_search_text_result(result: Any) -> dict[str, Any]:
+    items = _search_text_result_items(result)
+    if not items:
+        return _summarize_generic_tool_result(result)
+
+    summary_items: list[dict[str, Any]] = []
+    for item in items[:SEARCH_TEXT_RESULT_ITEM_LIMIT]:
+        summary_item: dict[str, Any] = {}
+        for key in (
+            "source_type",
+            "corpus",
+            "type",
+            "source",
+            "author",
+            "grade",
+            "page",
+            "title",
+            "section_title",
+            "chunk_id",
+        ):
+            value = item.get(key)
+            if value not in (None, ""):
+                summary_item[key] = _clean_telemetry_text(str(value), 160)
+        text = _textbook_hit_text(item, max_chars=SEARCH_TEXT_RESULT_TEXT_LIMIT)
+        if text:
+            summary_item["text"] = _clean_telemetry_text(
+                text,
+                SEARCH_TEXT_RESULT_TEXT_LIMIT,
+            )
+        if summary_item:
+            summary_items.append(summary_item)
+
+    summary: dict[str, Any] = {"count": len(items)}
+    if summary_items:
+        summary["items"] = summary_items
+    if len(items) > SEARCH_TEXT_RESULT_ITEM_LIMIT:
+        summary["truncated_items"] = len(items) - SEARCH_TEXT_RESULT_ITEM_LIMIT
+    return summary
+
+
 def _summarize_tool_result(tool: str, result: Any) -> dict[str, Any]:
     if tool == "verify_words":
         return _summarize_verify_words_result(result)
+    if tool == "search_text":
+        return _summarize_search_text_result(result)
     return _summarize_generic_tool_result(result)
 
 
@@ -4176,6 +4275,14 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
 
 def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     result = call.get("result", call.get("response"))
+    result_summary = call.get("result_summary")
+    has_summary_items = isinstance(result_summary, Mapping) and isinstance(
+        result_summary.get("items"),
+        list,
+    )
+    result_is_excerpt_only = isinstance(result, Mapping) and set(result) <= {"text"}
+    if has_summary_items and (result is None or result_is_excerpt_only):
+        result = result_summary
     if result is None and call.get("result_excerpt"):
         result = {"text": call["result_excerpt"]}
         if call.get("source_type"):
