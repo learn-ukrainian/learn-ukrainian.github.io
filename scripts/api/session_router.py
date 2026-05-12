@@ -30,6 +30,11 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 from .config import PROJECT_ROOT
 from .rules_router import _matches_etag  # shared ETag parser
+from .telemetry.response import (
+    add_json_telemetry,
+    append_telemetry_footer,
+    telemetry_footer_enabled,
+)
 
 router = APIRouter(tags=["session"])
 
@@ -125,7 +130,7 @@ def session_current(
     markdown, sections, digest = _assemble_session()
     etag = f'"{digest}"'
 
-    if _matches_etag(request.headers.get("If-None-Match"), digest):
+    if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
         return Response(
             status_code=304,
             headers={"ETag": etag, "X-Session-Hash": digest},
@@ -133,20 +138,27 @@ def session_current(
 
     if format == "json":
         return JSONResponse(
-            content={
+            content=add_json_telemetry({
                 "hash": digest,
                 "bytes": len(markdown.encode("utf-8")),
                 "sections": sections,
                 "markdown": markdown,
-            },
-            headers={"ETag": etag, "X-Session-Hash": digest},
+            }),
+            headers=_cache_headers(etag, digest),
         )
 
     return PlainTextResponse(
-        content=markdown,
+        content=append_telemetry_footer(markdown),
         media_type="text/markdown; charset=utf-8",
-        headers={"ETag": etag, "X-Session-Hash": digest},
+        headers=_cache_headers(etag, digest),
     )
+
+
+def _cache_headers(etag: str, digest: str) -> dict[str, str]:
+    headers = {"X-Session-Hash": digest}
+    if not telemetry_footer_enabled():
+        headers["ETag"] = etag
+    return headers
 
 
 def session_hash() -> str:

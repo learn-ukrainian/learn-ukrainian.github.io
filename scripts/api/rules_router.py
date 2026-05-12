@@ -28,6 +28,11 @@ from typing import Literal
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 
 from .config import PROJECT_ROOT
+from .telemetry.response import (
+    add_json_telemetry,
+    append_telemetry_footer,
+    telemetry_footer_enabled,
+)
 
 router = APIRouter(tags=["rules"])
 
@@ -136,7 +141,7 @@ def get_rules(
     markdown, sources, digest = _assemble_rules()
     etag = f'"{digest}"'
 
-    if _matches_etag(request.headers.get("If-None-Match"), digest):
+    if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
         return Response(
             status_code=304,
             headers={"ETag": etag, "X-Rules-Hash": digest},
@@ -151,9 +156,9 @@ def get_rules(
     from fastapi.responses import PlainTextResponse
 
     return PlainTextResponse(
-        content=markdown,
+        content=append_telemetry_footer(markdown),
         media_type="text/markdown; charset=utf-8",
-        headers={"ETag": etag, "X-Rules-Hash": digest},
+        headers=_cache_headers(etag, digest, "X-Rules-Hash"),
     )
 
 
@@ -161,14 +166,21 @@ def _rules_json_response(markdown: str, sources, digest: str, etag: str):
     from fastapi.responses import JSONResponse
 
     return JSONResponse(
-        content={
+        content=add_json_telemetry({
             "hash": digest,
             "bytes": len(markdown.encode("utf-8")),
             "sources": sources,
             "markdown": markdown,
-        },
-        headers={"ETag": etag, "X-Rules-Hash": digest},
+        }),
+        headers=_cache_headers(etag, digest, "X-Rules-Hash"),
     )
+
+
+def _cache_headers(etag: str, digest: str, hash_header: str) -> dict[str, str]:
+    headers = {hash_header: digest}
+    if not telemetry_footer_enabled():
+        headers["ETag"] = etag
+    return headers
 
 
 def rules_hash() -> str:

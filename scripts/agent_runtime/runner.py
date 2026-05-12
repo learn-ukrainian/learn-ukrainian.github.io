@@ -686,6 +686,7 @@ def _execute_invocation_plan(
     env = build_agent_env(provider=agent_name, overrides=plan.env_overrides)
     for key in plan.env_unsets:
         env.pop(key, None)
+    env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
     env = _apply_merge_guard(mode=mode, env=env)
 
     start_time = time.monotonic()

@@ -1042,6 +1042,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # secrets from the worker's env can override this here.
     worker_env = os.environ.copy()
     _inject_gh_token_for_agent(worker_env, args.agent)
+    worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
     if getattr(args, "allow_merge", False):
         worker_env.pop("AGENT_NO_MERGE", None)
         worker_env["AGENT_ALLOW_MERGE"] = "1"

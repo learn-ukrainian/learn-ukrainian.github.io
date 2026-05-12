@@ -715,8 +715,9 @@ async def manifest():
 
     from .rules_router import rules_hash
     from .session_router import session_hash
+    from .telemetry.response import add_json_telemetry
 
-    return {
+    return add_json_telemetry({
         "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
         "rules": {
             "hash": rules_hash(),
@@ -739,4 +740,4 @@ async def manifest():
             "url_template": "/api/comms/inbox?agent={name}",
             "note": "Read-only view of unread channel deliveries for one agent.",
         },
-    }
+    })

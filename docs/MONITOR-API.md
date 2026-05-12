@@ -6,6 +6,55 @@ FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
 ---
 
+## Optional Context Telemetry Footer
+
+Set `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1` on the Monitor API process to
+include live context-window telemetry in cold-start responses. Dispatched
+subprocesses set `AGENT_NO_TELEMETRY_FOOTER=1`, which suppresses the
+footer even if the parent process has the opt-in variable set.
+
+The token source is the same deterministic transcript-JSONL path used by
+the Claude statusline: parse assistant `message.usage` records and sum
+`input_tokens`, `cache_read_input_tokens`, and
+`cache_creation_input_tokens` from the latest assistant turn. The
+previous assistant usage record supplies the per-turn delta, and the
+assistant usage record count supplies the monotonic turn number. The
+`.context_window.used_tokens` field is not used because Claude Code
+2.1.139 did not populate it; API headers are unavailable to server-side
+Monitor endpoints.
+
+Text responses append a tail footer:
+
+```text
+[ctx: 187K (+22K this turn), tier: base, 13K to premium, turn: 47]
+```
+
+JSON responses add a top-level `_telemetry` object instead of changing
+the response text:
+
+```json
+{
+  "_telemetry": {
+    "ctx": 187000,
+    "prev_ctx": 165000,
+    "delta": 22000,
+    "tier": "base",
+    "distance_tokens": 13000,
+    "distance_label": "to premium",
+    "turn": 47,
+    "source": "transcript-jsonl"
+  }
+}
+```
+
+When telemetry is enabled, `/api/rules` and `/api/session/current`
+continue to expose `X-Rules-Hash` / `X-Session-Hash` for the underlying
+stable markdown, but dynamic telemetry responses do not use `304 Not
+Modified` or strong `ETag` headers. With telemetry disabled, existing
+ETag and cache semantics are unchanged.
+
+---
+
 ## Agent Quick Start
 
 **Recommended cold-start sequence (GH #1309, since P1):**
@@ -1168,6 +1217,10 @@ One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, heal
 }
 ```
 
+When `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1`, the JSON response includes
+top-level `_telemetry` with the same context-window fields documented
+above.
+
 #### Per-section caching + freshness metadata (#1309)
 
 Each section is computed by an independent collector. Most have a
@@ -1289,6 +1342,9 @@ hashes against its local cache and only refetches what changed.
   already carries per-section `meta` with its own `generated_at` +
   `cache` + `source` fields, and `/api/comms/inbox` is always
   point-in-time.
+- When `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1`, this JSON response also
+  includes top-level `_telemetry` derived from transcript JSONL. It
+  never appends text to the manifest body.
 
 ### `GET /api/rules?format={markdown,json}`
 
@@ -1298,9 +1354,11 @@ checked-in files so a fresh clone or worktree that hasn't deployed
 to `.claude/rules/` still gets correct content.
 
 - `format=markdown` (default) → `text/markdown; charset=utf-8` with
-  an `X-Rules-Hash` header. Drop-in for a system prompt.
+  an `X-Rules-Hash` header. Drop-in for a system prompt. With telemetry
+  enabled, a context footer is appended after the markdown body.
 - `format=json` → `{hash, bytes, sources[], markdown}`. Use this when
-  an SDK needs to reconcile the hash against its on-disk cache.
+  an SDK needs to reconcile the hash against its on-disk cache. With
+  telemetry enabled, the response also includes top-level `_telemetry`.
 
 ### `GET /api/session/current?format={markdown,json}`
 
@@ -1308,6 +1366,9 @@ to `.claude/rules/` still gets correct content.
 filenames (newest first). Kept intentionally small — the endpoint
 answers "what do I need to know RIGHT NOW to keep working", not
 "give me the full history".
+
+With telemetry enabled, `format=markdown` appends the context footer and
+`format=json` adds top-level `_telemetry`.
 
 ### `GET /api/comms/inbox?agent={claude,gemini,codex}&limit=10`
 
