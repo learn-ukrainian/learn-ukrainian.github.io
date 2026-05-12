@@ -4,7 +4,7 @@ generated_from:
   components_dir: starlight/src/components/{*.tsx, *.astro}
   components_sha256: 99c48b8fa082924310cdac58f2973805d521b6a734751daf610b0cf75cedfa2f
   config_tables_sha256: 281df19989601f0312fb944fec0a8fb4ec3cb7275de338d8d158e042705a2c8a
-  lesson_contract_sha256: 89bd2db9731bdc5d811cd6b166d9e7d1e250e08f1e01a9120127593c78223727
+  lesson_contract_sha256: 550a93301ee2c20e786e51f3c8addcb2d2348cf18f18fbec90b17d9d239f6590
 components:
   Anagram:
     tab: activities
