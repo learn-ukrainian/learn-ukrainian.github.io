@@ -490,7 +490,23 @@ def _run(args: argparse.Namespace) -> int:
 
         phase = "mdx"
         started_at = time.monotonic()
-        mdx_path = module_dir / f"{slug}.mdx"
+        # MDX is the BUILT artifact and goes where Starlight reads it. Source
+        # artifacts (.md, *.yaml) stay in curriculum/ as authoring source. When
+        # --out is set (test/sandbox builds), MDX colocates with the artifact
+        # dump so the test stays self-contained.
+        if args.out is None:
+            starlight_dir = (
+                PROJECT_ROOT
+                / "starlight"
+                / "src"
+                / "content"
+                / "docs"
+                / level.lower()
+            )
+            starlight_dir.mkdir(parents=True, exist_ok=True)
+            mdx_path = starlight_dir / f"{slug}.mdx"
+        else:
+            mdx_path = module_dir / f"{slug}.mdx"
         linear_pipeline.assemble_mdx(module_dir, mdx_path, plan_path)
         _phase_done(
             phase,

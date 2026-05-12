@@ -1741,6 +1741,12 @@ def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
     Acts as the canary for run_python_qg. If a future change breaks the basic
     happy-path module shape, this test surfaces it before any of the targeted
     bugfix tests run.
+
+    `l2_exposure_floor` is excluded from the aggregate assertion: Phase B
+    (2026-05-13) calibrated its floors against deployed-corpus-scale content
+    (~14 dialogue lines for a1-m15-24), which a 30-line synthetic fixture
+    intentionally does not satisfy. That gate has dedicated coverage in
+    `tests/test_immersion_gates.py`; the canary's job is the other 17 gates.
     """
     module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
 
@@ -1748,11 +1754,19 @@ def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
         module_dir, plan_path, verify_words_fn=fake_verify
     )
 
-    assert report["gates"]["passed"] is True
-    assert report["gates"]["russianisms_clean"]["passed"] is True
-    assert report["gates"]["surzhyk_clean"]["passed"] is True
-    assert report["gates"]["calques_clean"]["passed"] is True
-    assert report["gates"]["paronym_clean"]["passed"] is True
+    gates = report["gates"]
+    failures = [
+        name
+        for name, g in gates.items()
+        if isinstance(g, dict)
+        and g.get("passed") is False
+        and name != "l2_exposure_floor"
+    ]
+    assert failures == [], f"Unexpected gate failures: {failures}"
+    assert gates["russianisms_clean"]["passed"] is True
+    assert gates["surzhyk_clean"]["passed"] is True
+    assert gates["calques_clean"]["passed"] is True
+    assert gates["paronym_clean"]["passed"] is True
 
 
 # ---------------------------------------------------------------------------
