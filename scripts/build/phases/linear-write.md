@@ -73,6 +73,13 @@ that failure class. Run each check while drafting, not as a separate pass.
 
    **Verbatim textbook grounding (mandatory).** For each `plan_references` entry, you MUST call `mcp__sources__search_text` with a query targeting that textbook + topic, then quote at least one verbatim block (≥30 words) inline in the relevant section. The citation must include the textbook author + grade + page extracted from the search result, and the quote must be set off as a blockquote so reviewers can verify it. Inventing or paraphrasing in place of retrieving is a hard fail (`textbook_grounding`).
 
+   <!-- CITATION DISCIPLINE -->
+   **`resources.yaml` ↔ `plan_references` parity (the `citations_resolve` gate).** Every entry you emit in `resources.yaml` MUST resolve to an entry in this prompt's `plan_references` list (rendered under "Plan" below). The gate resolves via either:
+   (a) whitespace-normalized title match, or
+   (b) an (author, grade, page) triple match — where **`page` MUST be a single integer**. A page range like `с. 162-163` or `p.176-177` fails key extraction and the gate marks the entry unknown.
+
+   Concrete contract: if `plan_references` carries `Захарійчук Grade 4, p.162`, your `resources.yaml` title MUST be `Захарійчук, 4 клас, с. 162` (same single page) — NOT `Захарійчук, 4 клас, с. 162-163` (widened page range fails). Do NOT add `resources.yaml` entries for sources absent from `plan_references`; the gate has no path to resolve them. If you want to cite a supporting source inline, quote it in prose with proper attribution, but do not list it in `resources.yaml`. The canonical reference form is the same one the plan uses — copy the plan's `title` verbatim into `resources.yaml.title` and the citation can never desync.
+
 For heritage defense, route lookups through the canonical MCP tools in this order: (1) `mcp__sources__search_heritage` is the primary entry point — it merges Грінченко 1907, ЕСУМ, slovnyk.me modern/regional dictionaries, and Антоненко-Давидович style warnings, ranking pre-Soviet attestations above modern-only rows. (2) Use `mcp__sources__search_slovnyk_me` only when you specifically need a slovnyk.me single-source result (e.g. СУМ-20 or a regional dictionary not surfaced by `search_heritage`). (3) Standard tools — `check_modern_form` (VESUM), `search_grinchenko_1907`, `search_esum`, literary corpus, and compiled wiki/source citations — remain valid evidence sources alongside the merged heritage tool. Cite the tool name and the dictionary slug in your `<plan_reasoning verification="...">` block. Do not claim heritage verification without naming a concrete tool result.
 For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scripts/wiki/slovnyk_me.py`, especially heritage slugs `newsum`, `holoskevych`, `obsolete_words`, `bukovina`, `franko`, and `slang_lviv`; for merged `search_heritage` rows without `dictionary_slug`, cite `source_family`, `source`, and `classification`. Include the first 80 characters of the raw tool-result `text` verbatim in `<plan_reasoning>`. If `search_heritage` returns empty, emit `<!-- VERIFY: heritage status for "X" unresolved -->` rather than asserting heritage status.
 
@@ -103,6 +110,9 @@ For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scr
    <rescanned_sources>List of citations actually checked against MCP.</rescanned_sources>
    <grammar_claims_grounded>List of grammar rules traced back to the Knowledge Packet or textbook.</grammar_claims_grounded>
    <removed_unverified>What you deleted because it failed verification.</removed_unverified>
+   <section_word_counts>One line per `## H2` section: "Section name — N words (band X-Y, status: in-band|over-by-K|under-by-K)". For any section outside its band, trim or expand it now (cut one example or compress one sentence; add one example or expand one explanation) BEFORE this end_gate block is emitted, and re-state the post-fix count. The `plan_sections` gate is a HARD GATE — even 6 words over fails.</section_word_counts>
+   <resources_match_plan>One line per `resources.yaml` entry: "Title — resolves to plan_references[K] via [normalized|triple]". For any entry with no resolution path (page range vs the plan's single page, or a source absent from `plan_references`), remove it from `resources.yaml` now and re-state. The `citations_resolve` gate fails closed on any unmatched entry.</resources_match_plan>
+   <long_uk_sentences>List any Ukrainian-bearing sentence in `module.md` whose UK-word count exceeds 10. For each, split the sentence across structural breaks (separate `> ` lines, list items, paragraphs) or shorten the Ukrainian clause now, then re-state with the post-fix count. An empty list confirms the immersion long-sentence check is clean.</long_uk_sentences>
    </end_gate>
    ```
 
@@ -221,6 +231,31 @@ for a teacher narrating their own lesson plan. Hold to this register:
 - **Section length is bounded by the contract YAML.** If you find yourself
   expanding an English bridge sentence, cut it instead. Word budgets are
   authoritative.
+<!-- BUDGET DISCIPLINE -->
+- **Section word budgets are HARD GATES, not soft targets.** The
+  `plan_sections` gate counts words per `## H2` section and fails the
+  build if any section is outside its `min..max` band. The `<word_budget>`
+  block in `<plan_reasoning>` is your pre-write plan; the `<end_gate>` is
+  where you verify reality. Before emitting fences, count each section
+  and trim/expand to land inside its band. A single section 6 words over
+  fails the gate just as hard as one 60 over.
+<!-- IMMERSION DISCIPLINE -->
+- **No single sentence may contain more than 10 Ukrainian words.** The
+  immersion gate's `long_ukrainian_sentences` check flags any sentence
+  whose UK-word count exceeds 10 — this includes mixed English-and-Ukrainian
+  sentences (an English bridge followed by a long Ukrainian example
+  counts together). Break long Ukrainian content into separate sentences
+  across multiple blockquote lines, list items, table rows, or paragraphs;
+  the gate treats those structural breaks as sentence boundaries. If a
+  textbook passage you want to verbatim-quote has a single sentence with
+  >10 Ukrainian words, prefer (a) quoting a shorter excerpt, or (b)
+  splitting the quote into clauses on separate `> ` lines so each clause
+  is its own sentence. The `textbook_grounding` gate requires only one
+  ≥30-token verbatim block somewhere in the module — it does NOT require
+  every cited source to be pasted as a full-sentence quote.
+- **Aim for the middle of the Immersion Rule's percent band**, not the top
+  edge. If the rule says 15-35%, target ~20-25% so you have headroom
+  against per-section drift and the long-sentence check has slack.
 
 ## Activity Types
 
