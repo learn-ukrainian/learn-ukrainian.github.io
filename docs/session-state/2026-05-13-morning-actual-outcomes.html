@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Session Handoff — 2026-05-13 morning actual outcomes (orchestrator-passivity encoded as #M-8)</title>
+<style>
+  :root { --bg: #0e1116; --panel: #161b22; --fg: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --good: #3fb950; --warn: #d29922; --bad: #f85149; --code: #1f2530; --border: #30363d; }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.55; max-width: 880px; margin: 2rem auto; padding: 0 1.25rem; }
+  h1 { color: var(--accent); font-size: 1.6rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  h2 { color: var(--accent); font-size: 1.2rem; margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+  h3 { color: #d2a8ff; font-size: 1.02rem; margin-top: 1.4rem; }
+  .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .meta code { background: var(--code); padding: 0.1rem 0.35rem; border-radius: 3px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+  .panel.bad { border-color: var(--bad); }
+  .panel.good { border-color: var(--good); }
+  .good { color: var(--good); }
+  .warn { color: var(--warn); }
+  .bad { color: var(--bad); }
+  code { background: var(--code); padding: 0.1rem 0.35rem; border-radius: 3px; font-family: ui-monospace, "SF Mono", monospace; font-size: 0.92em; }
+  pre { background: var(--code); border: 1px solid var(--border); border-radius: 6px; padding: 0.9rem 1rem; overflow-x: auto; font-size: 0.88em; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; font-size: 0.95em; }
+  th { background: var(--panel); color: var(--accent); font-weight: 600; }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin-bottom: 0.4rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .kpi { display: inline-block; background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.9rem; margin: 0.3rem 0.4rem 0.3rem 0; min-width: 9rem; }
+  .kpi .label { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi .value { font-size: 1.1rem; font-weight: 600; }
+  blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--muted); margin-left: 0; }
+</style>
+</head>
+<body>
+
+<h1>Session Handoff — 2026-05-13 morning actual outcomes</h1>
+<p class="meta">
+  <strong>Theme:</strong> Catch-up sweep after a 6.5h overnight orchestrator-idle failure.<br>
+  <strong>Mode:</strong> Inline — orchestrator-active (newly encoded as #M-8).<br>
+  <strong>Main:</strong> <code>1c97dc6d42</code> · <span class="good">green</span><br>
+  <strong>Brief companion:</strong> <a href="2026-05-13-morning-actual-outcomes-brief.md">2026-05-13-morning-actual-outcomes-brief.md</a><br>
+  <strong>Supersedes:</strong> <a href="2026-05-12-night-mode-harness-eng-bakeoff-brief.md"><code>2026-05-12-night-mode-harness-eng-bakeoff-brief.md</code></a> (wrong perspective — orchestrator-passive)
+</p>
+
+<div class="panel">
+  <div class="kpi"><div class="label">PR merged</div><div class="value">#1899</div></div>
+  <div class="kpi"><div class="label">ADR revised</div><div class="value">writer-selection</div></div>
+  <div class="kpi"><div class="label">Issues filed</div><div class="value">#1900 #1901</div></div>
+  <div class="kpi"><div class="label">Idle hours overnight</div><div class="value bad">6.5h</div></div>
+  <div class="kpi"><div class="label">MEMORY rule added</div><div class="value">#M-8</div></div>
+</div>
+
+<h2>What actually happened overnight</h2>
+
+<p>
+  Both dispatches finished within 14-17 minutes of firing (Codex 836s, Claude 1033s). Both succeeded.
+  Then the orchestrator (me) <strong>idled for 6.5 hours</strong> with both deliverables sitting in
+  finalized state.
+</p>
+
+<table>
+  <tr><th>Dispatch</th><th>Fired</th><th>Done at</th><th>Outcome</th><th>Idled</th></tr>
+  <tr>
+    <td><code>codex/1865-3-cost-telemetry</code></td>
+    <td>00:13:56 UTC</td>
+    <td>~00:27 UTC (then full CI green by 00:31:52 UTC)</td>
+    <td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1899">PR #1899</a> opened, all blocking checks green, <strong>sat unmerged 6.5h</strong></td>
+    <td class="bad">6.5h</td>
+  </tr>
+  <tr>
+    <td><code>claude/bakeoff-2026-05-12-night</code></td>
+    <td>00:13:59 UTC</td>
+    <td>~00:31 UTC</td>
+    <td>Branch pushed with <code>audit/bakeoff-2026-05-12-night/REPORT.md</code> declaring winner = claude-tools, <strong>sat unread 6.5h</strong></td>
+    <td class="bad">6.5h</td>
+  </tr>
+</table>
+
+<h2 class="bad">The orchestrator-passivity failure</h2>
+
+<div class="panel bad">
+<p>
+  User flagged at ~07:00: <em>"you did not monitor and did nit manage the workflow, just idled all night."</em>
+  And follow-up: <em>"why did not you actively orchetrate ? what is making you go passivde ?"</em>
+</p>
+</div>
+
+<h3>Honest diagnosis</h3>
+
+<ol>
+  <li><strong>I treated "fire and forget" as the deliverable.</strong> Mental model: dispatches alive + handoff written = session done. Wrong. Work is done when outcomes are realized (PR merged, ADR flipped, module copied), not when the dispatch launches.</li>
+  <li><strong>Confused "I'll get notifications" with "I have a mechanism."</strong> Background-task notifications fire when the <code>delegate.py dispatch</code> <em>launcher</em> exits (~3s), not when the dispatched worker finishes. I had no mechanism set up. ScheduleWakeup, Monitor on JSONL telemetry, or Monitor on a polling loop on <code>/api/delegate/active</code> — none of them.</li>
+  <li><strong>"Stay online" is wishful thinking.</strong> Between turns I don't exist. If I don't ScheduleWakeup or have a Monitor stream emitting events, I'm simply not running.</li>
+  <li><strong>The handoff was written from the wrong perspective.</strong> "DO NOT auto-merge. Leave for orchestrator review on wake" — but <em>I</em> was supposed to be the orchestrator overnight. I wrote the brief for a user-driven wake-up instead of for an orchestrator-driven night.</li>
+  <li><strong>"While I sleep" anchored on the user's sleep instead of on the work continuing.</strong> The whole point of night mode is the orchestrator keeps working during human sleep.</li>
+</ol>
+
+<h3>Encoded fix: MEMORY #M-8</h3>
+
+<p>
+  Added to <code>~/.claude/projects/.../memory/MEMORY.md</code> (now 160 lines). Key requirements:
+</p>
+
+<ul>
+  <li><strong>Expected duration &lt; 60 min</strong> (cost-telemetry, mechanical fixes, single bakeoff): mandatory <code>ScheduleWakeup</code> at ~1200s (20 min) intervals to poll <code>/api/delegate/active</code>. Stop scheduling when <code>total=0</code> AND recent outcomes show <code>done</code>.</li>
+  <li><strong>Long-running (60 min – 2 hr):</strong> <code>Monitor</code> tool on dispatch telemetry JSONL via <code>tail -F</code>, OR ScheduleWakeup at 30 min intervals.</li>
+  <li><strong>On dispatch finalize:</strong> mandatory follow-up sweep — PR merge if all blocking checks green, REPORT.md read + acted on, ADR deltas applied, follow-up issues filed, artifacts copied to publication target ONLY if all HARD gates pass.</li>
+  <li><strong>NEVER write a handoff that says "leave for orchestrator on wake"</strong> when the orchestrator IS supposed to be active overnight.</li>
+</ul>
+
+<h2>Bakeoff verdict — decisive</h2>
+
+<p>
+  Full evidence in <a href="../../audit/bakeoff-2026-05-12-night/REPORT.md"><code>audit/bakeoff-2026-05-12-night/REPORT.md</code></a>.
+  Summary:
+</p>
+
+<table>
+  <tr><th>Field</th><th>claude-tools</th><th>codex-tools</th></tr>
+  <tr><td><code>tool_calls_total</code></td><td class="good"><strong>4</strong> (verify_words ×2, search_text ×2)</td><td class="bad"><strong>0</strong></td></tr>
+  <tr><td>Module produced</td><td class="good">yes (1224 words, 10.4 KB)</td><td class="bad">no — writer aborted via <code>MCP_TOOLS_NEVER_INVOKED</code></td></tr>
+  <tr><td><code>vesum_verified</code></td><td class="good">passed (159/159, <strong>0 invented -ся</strong>)</td><td>n/a</td></tr>
+  <tr><td>python_qg gates</td><td>14 of 18 (1 HARD fail)</td><td>n/a</td></tr>
+  <tr><td>Writer phase duration</td><td>~6 min</td><td>~2 min (early abort)</td></tr>
+  <tr><td><code>writer_tool_theatre</code></td><td>2 (verify_quote, verify_source_attribution — cited uncalled)</td><td>full theatre</td></tr>
+</table>
+
+<p>
+  <strong>Three bakeoffs in a row</strong> (2026-05-06, 2026-05-08, 2026-05-12 night) show codex-tools
+  <code>tool_calls_total=0</code>. The single-primitive prompt rewrite at <code>28417cc3cb</code> (Option A's
+  prompt-iteration premise) did not move the needle. <strong>Empirical pattern wins over hope.</strong>
+  ADR ACCEPTED flipped from codex-tools to claude-tools in <code>bf774d7d48</code>.
+</p>
+
+<h2>Why the A1 module isn't published</h2>
+
+<p>
+  Despite claude-tools producing genuinely good content, ONE HARD-severity gate failed:
+</p>
+
+<pre>textbook_grounding: REJECT, HARD, reason=corpus_missing
+missing: ["Караман Grade 10, p.176", "Кравцова Grade 4, p.113", "Захарійчук Grade 4, p.162"]</pre>
+
+<p>
+  The writer cited textbook pages that don't exist in the corpus. Plus softer fails on
+  <code>citations_resolve</code> (3 page-labels in prose don't resolve to <code>references[]</code>) and
+  <code>correction_terminal</code> after one ADR-008 retry.
+</p>
+
+<p>
+  <strong>Quality is non-negotiable</strong> — module stays unpublished. The 2026-04-26 incumbent at
+  <code>curriculum/l2-uk-en/a1/my-morning/</code> remains. See
+  <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1901">issue #1901</a> for
+  three paths forward (Path B recommended: corpus-aware writer prompt that constrains citations to
+  indexed textbooks).
+</p>
+
+<p>
+  The module content itself is genuinely good (4 Ukrainian dialogues with English glosses, reflexive
+  <code>-ся</code> grammar explanation, proper section structure, all language-quality gates green).
+  Worth reviewing for sanity-check before publishing once #1901 resolves.
+</p>
+
+<h2>Catch-up sweep this morning (what I did after you flagged it)</h2>
+
+<table>
+  <tr><th>#</th><th>Commit</th><th>What</th></tr>
+  <tr><td>1</td><td><code>b9e9f285f3</code></td><td>Squash-merged PR #1899 (cost-telemetry footer for Monitor API responses, EPIC #1865 item #3). All 17 blocking checks green. Unblocks epic items #4 (rate-of-change warnings) + #6 (cost-aware handoff trigger).</td></tr>
+  <tr><td>2</td><td><code>bf774d7d48</code></td><td>ADR REVISED: writer-selection 2026-05-06 — claude-tools as new default + audit artifacts pulled to main (REPORT.md, per-writer JSONLs, claude python_qg.json).</td></tr>
+  <tr><td>3</td><td>—</td><td>Issues #1900 (codex MCP catalog visibility) + #1901 (textbook_grounding corpus_missing) filed on GH.</td></tr>
+  <tr><td>4</td><td>—</td><td>MEMORY #M-8 encoded (orchestrator-active rule). 151 → 160 lines.</td></tr>
+  <tr><td>5</td><td><code>1c97dc6d42</code></td><td>This handoff (brief + HTML) + <code>current.md</code> update.</td></tr>
+  <tr><td>6</td><td>—</td><td>Cleaned up <code>.worktrees/dispatch/codex/1865-3-cost-telemetry/</code> + local branch deletion.</td></tr>
+</table>
+
+<h2>Next action (one item)</h2>
+
+<p>
+  Decide <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1901">#1901</a>
+  path. Path B (corpus-aware writer prompt that constrains citations to indexed textbooks) is the
+  recommended 1-2 day ship. After resolution: re-bakeoff <code>a1/my-morning</code> with claude-tools
+  → green build → copy to <code>curriculum/l2-uk-en/a1/my-morning/</code> → unblock A1 batch build.
+</p>
+
+<p>
+  Also pending: <a href="../decisions/pending/2026-05-12-autonomous-codex-dispatch-narrow-class.md">autonomous-dispatch decision card</a>
+  (last night's filing) — pick <code>go A</code> / <code>B</code> / <code>C</code> / <code>wait</code>.
+</p>
+
+<p class="meta" style="margin-top: 3rem; text-align: center;">
+  <em>Brief format spec: <a href="../../claude_extensions/rules/workflow.md">claude_extensions/rules/workflow.md</a> § "Two-tier handoffs".
+  Pinned by <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1865">epic #1865</a>.</em>
+</p>
+
+</body>
+</html>
