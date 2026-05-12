@@ -213,15 +213,16 @@ class TestParserEdgeCases:
         with pytest.raises(ValueError, match="Expected list"):
             parser.parse(yaml_file)
 
-    def test_unknown_activity_type_skipped(self, parser, tmp_path):
-        """Unknown activity types are silently skipped."""
+    def test_unknown_activity_type_raises(self, parser, tmp_path):
+        """Unknown activity types fail loudly."""
         yaml_file = tmp_path / "unknown.yaml"
         yaml_file.write_text(
-            "- type: nonexistent-type\n"
+            "- id: ghost-act\n"
+            "  type: nonexistent-type\n"
             "  title: Ghost\n"
         )
-        activities = parser.parse(yaml_file)
-        assert len(activities) == 0
+        with pytest.raises(ValueError, match=r"ghost-act.*unknown activity type 'nonexistent-type'"):
+            parser.parse(yaml_file)
 
     def test_parse_true_false(self, parser, tmp_path):
         yaml_file = tmp_path / "tf.yaml"
@@ -285,6 +286,51 @@ class TestParserEdgeCases:
         assert activities[0].type == "translate"
 
 
+class TestUnjumbleParsing:
+    def test_parse_unjumble_list_shape_round_trips_to_mdx(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble_list.yaml"
+        yaml_file.write_text(
+            "- id: act-7\n"
+            "  type: unjumble\n"
+            "  title: Складіть речення\n"
+            "  items:\n"
+            "    - jumbled: [о, я, прокидаюся, сьомій]\n"
+            "      answer: Я прокидаюся о сьомій\n"
+        )
+        activities = parser.parse(yaml_file)
+        mdx = parser.to_mdx(activities)
+        assert "о / я / прокидаюся / сьомій" in mdx
+        assert "Я прокидаюся о сьомій" in mdx
+
+    def test_parse_unjumble_string_shape_still_round_trips_to_mdx(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble_string.yaml"
+        yaml_file.write_text(
+            "- id: legacy-unjumble\n"
+            "  type: unjumble\n"
+            "  title: Складіть речення\n"
+            "  items:\n"
+            "    - jumbled: Я / вранці / читаю\n"
+            "      answer: Я читаю вранці\n"
+        )
+        activities = parser.parse(yaml_file)
+        mdx = parser.to_mdx(activities)
+        assert "Я / вранці / читаю" in mdx
+        assert "Я читаю вранці" in mdx
+
+    def test_parse_unjumble_bad_shape_raises_with_context(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble_bad.yaml"
+        yaml_file.write_text(
+            "- id: bad-unjumble\n"
+            "  type: unjumble\n"
+            "  title: Bad\n"
+            "  items:\n"
+            "    - jumbled: 42\n"
+            "      answer: Я читаю вранці\n"
+        )
+        with pytest.raises(ValueError, match=r"bad-unjumble.*field 'jumbled'.*str or list.*int"):
+            parser.parse(yaml_file)
+
+
 class TestAnagramParsing:
     """Tests for anagram activity parsing — both V2 (letters array) and legacy (scrambled string)."""
 
@@ -330,8 +376,8 @@ class TestAnagramParsing:
         assert activities[0].items[0].scrambled == "к і т"
         assert activities[0].items[0].answer == "кіт"
 
-    def test_parse_anagram_error_does_not_crash_other_activities(self, parser, tmp_path):
-        """A bad activity should be skipped, not crash the whole file."""
+    def test_parse_anagram_error_raises_with_context(self, parser, tmp_path):
+        """A bad activity should fail loudly instead of being dropped."""
         yaml_file = tmp_path / "mixed.yaml"
         yaml_file.write_text(
             "- type: quiz\n"
@@ -339,7 +385,8 @@ class TestAnagramParsing:
             "    - question: Що це?\n"
             "      options: [кіт, собака]\n"
             "      correct: 0\n"
-            "- type: anagram\n"
+            "- id: bad-anagram\n"
+            "  type: anagram\n"
             "  items:\n"
             "    - bad_key: something_invalid\n"
             "      answer: кіт\n"
@@ -348,13 +395,8 @@ class TestAnagramParsing:
             "    - statement: Кіт — тварина.\n"
             "      correct: true\n"
         )
-        # Should parse quiz and true-false; anagram skipped with warning
-        activities = parser.parse(yaml_file)
-        types = [a.type for a in activities]
-        assert "quiz" in types
-        assert "true-false" in types
-        # Anagram with bad key is skipped (no scrambled and no letters key)
-        assert len(activities) == 2
+        with pytest.raises(ValueError, match=r"bad-anagram.*missing both 'letters' and 'scrambled'"):
+            parser.parse(yaml_file)
 
     def test_parse_v2_activities_file_with_anagram(self, parser, tmp_path):
         """V2 format (inline/workbook split) with anagram in workbook parses all sections."""
