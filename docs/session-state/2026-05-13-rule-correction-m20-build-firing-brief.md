@@ -1,21 +1,46 @@
 ---
 date: 2026-05-13
-session: "Mid-session correction — user reminded that agents are allowed to run V7 builds during autonomous orchestration. Rule layer updated across 4 files; m20 (a1/my-morning) build fired via Monitor with `--worktree` per the new rule."
-status: ok
-main_sha: 18cbafcb4d  # pre-rule-correction; rule change PR pending
+session: "Mid-session correction — user reminded agents may run V7 builds during autonomous orchestration. Rule layer updated across 4 surfaces; m20 (a1/my-morning) build fired via Monitor with `--worktree`. **Build FAILED at writer-output parse (not Card 1) — Tier 1 verification was clean; writer-output-format bug is the blocker for re-run.**"
+status: failed_with_partial_success
+main_sha: 18cbafcb4d  # pre-rule-correction; rule change PR pending in this same PR (#1955)
 main_green: true
 agents: [claude]
-worktrees_open: 5  # adding +1 for the m20 build worktree once it lands
+worktrees_open: 6  # main + codex-interactive + 2 held-PR + this rule-fix worktree + the failed m20 build worktree
 ci_notes: "Rule-change PR is docs/config only; pytest unaffected."
+m20_build_result: failed
+m20_build_failure_reason: "Writer output has mismatched artifact label and fence name at line 96: label='activities.yaml' but fence info has 'module.md'"
+m20_build_worktree: .worktrees/builds/a1-my-morning-20260513-122043/
+m20_tier1_verification: GREEN (Card 1 worked — all tool_calls in mcp__sources__* family, infra_context_contamination quiet, 0 removals via end_gate)
 next_p0: |
-  m20 (a1/my-morning) build is in progress under Monitor (task bryvbox3l).
-  When module_done fires:
-    (1) Read the regenerated MDX at .worktrees/builds/a1-my-morning-{stamp}/starlight/src/content/docs/a1/my-morning.mdx
-    (2) Run the visual-contract predicate script from Phase 2a brief — verify P1-P5 SATISFIED
-    (3) Confirm Tier 1 (writer isolation: infra_context_contamination + MCP_TOOLS_NEVER_INVOKED both quiet, no denylist Reads) — read writer_tool_calls.json in the worktree
-    (4) Confirm Tier 2 (student-aware: {LEARNER_STATE} present, band=a1-m15-24, unknown_vocabulary quiet, recycle_cadence quiet)
-    (5) On success: open PR for the rebuilt module from the build worktree; advance to Phase 2b (m01-m07 batch)
-    (6) On gate fail: surface gate name + diagnose; do NOT improvise content fixes (Card 2 territory)
+  m20 build FAILED at writer-output parse (NOT a Card 1 failure — Tier 1 was green).
+  Build worktree preserved at .worktrees/builds/a1-my-morning-20260513-122043/.
+
+  Root cause: writer emitted code-fence with mismatched label/fence-info pairing.
+  At line 96 of writer_output.raw.md: ```markdown file=module.md but the
+  preceding section label was 'activities.yaml'. Parser refused.
+
+  Card 1 verification was clean — phase_writer_summary shows:
+    tool_calls_total=12, verify_words_calls=5, tool_theatre_violations=[],
+    end_gate_fired=true, removed_via_gate=0.
+  All tool calls were in the mcp__sources__* family. The new
+  curriculum-writer agent worked exactly as designed.
+
+  Next session actions:
+    (1) Inspect writer_output.raw.md at .worktrees/builds/a1-my-morning-20260513-122043/curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md
+        (46KB) for the full fence/label mismatch pattern. Diagnose: is this
+        a one-off writer hallucination of fence syntax, or a systematic
+        prompt/parser mismatch that would affect other modules?
+    (2) File GH issue for v7_build writer-output parser strictness vs
+        writer prompt fence-info format. Likely Card 2 follow-up territory.
+    (3) Decide: tighten writer prompt (force ```yaml or ```markdown without
+        file= attribute and use a separate section header for the label) OR
+        loosen parser (accept fence info string as the label, ignoring an
+        external label header). Parser-side fix is probably cheaper.
+    (4) Re-run m20 build after fix lands. If green: advance to Phase 2b
+        (m01-m07 batch) per docs/dispatch-briefs/2026-05-13-phase-2b-m1-m7-warmup-batch.md.
+    (5) Do NOT remove the failed build worktree until you've inspected
+        writer_output.raw.md + writer_tool_calls.json. They are the
+        primary evidence for the parser-vs-prompt diagnosis.
 ---
 
 # Session 2026-05-13 — Mid-session rule correction + m20 build firing
@@ -57,6 +82,45 @@ Monitor(
 ```
 
 Task: `bryvbox3l`. `module_start` event at 12:20:48 UTC. Expected duration: 30-45 minutes per the Phase 2a brief. The build runs under Monitor so JSONL events arrive as notifications throughout the build lifecycle — `phase_done`, `review_score`, writer/reviewer telemetry, finally `module_done` (or a halt event if any HARD gate fires).
+
+### m20 build OUTCOME — FAILED at writer-output parse (NOT Card 1)
+
+Build ran for ~6 minutes (12:20:48 → 12:26:48 UTC), failed at writer-output parsing. **Card 1 verification was clean — Tier 1 GREEN.**
+
+**Failure event (verbatim):**
+```json
+{"event": "module_failed", "ts": "2026-05-13T12:26:48.404708+00:00", "level": "a1", "slug": "my-morning", "phase": "writer", "reason": "Writer output has mismatched artifact label and fence name at line 96: label='activities.yaml' but fence info has 'module.md'"}
+```
+
+**Writer-phase summary (verbatim from `phase_writer_summary` event):**
+- `sections_total=4`, `sections_with_cot=4` (all 4 sections — Діалоги, Дієслова на -ся, Мій ранок, Підсумок — produced CoT, sizes 2293/3267/2309/3663 chars)
+- `tool_calls_total=12`, `verify_words_calls=5` (plus `search_text`, `search_style_guide`)
+- `tool_theatre_violations=[]` — **Card 1's `infra_context_contamination` gate stayed quiet** ✓
+- `end_gate_fired=true`, `removed_via_gate=0` — writer's self-policing pass found nothing to remove
+- All tool calls in the `mcp__sources__*` family. No Bash, no Read of denylist paths.
+
+**Root cause at line 96 of `writer_output.raw.md`:**
+```
+```markdown file=module.md
+```
+
+The writer used a code-fence with info string `markdown file=module.md`. The parser expected the **label** (from a preceding `## activities.yaml` section header or similar) to MATCH the **fence info string** (here `markdown file=module.md`). The two disagreed → parse failed at line 96. This is a writer-prompt-format-vs-parser mismatch — either:
+
+- Writer should not include `file=...` attributes in the fence info string (use bare ```` ```markdown ```` or ```` ```yaml ```` ); OR
+- Parser should treat the fence info string as the label and ignore the external header label.
+
+**Build worktree preserved** (per `--worktree` flag's no-auto-cleanup-on-failure behavior): `.worktrees/builds/a1-my-morning-20260513-122043/`. Contents:
+- 4 source yamls (activities/module/resources/vocabulary) — created at 14:20 from worktree base
+- 5 telemetry files at 14:26: `knowledge_packet.md` (41K), `wiki_manifest.json` (16K), `writer_output.raw.md` (46K — the malformed output), `writer_prompt.md` (196K), `writer_tool_calls.json` (85K — primary evidence for Tier 1)
+- Telemetry files are gitignored at `curriculum/l2-uk-en/*/*/` (per PR #1949)
+
+**What this proves about Card 1 (writer isolation):**
+1. The new `curriculum-writer` agent does NOT contaminate orchestrator context (zero Bash / Read of handoff files / ScheduleWakeup calls)
+2. The `infra_context_contamination` gate's classifier works correctly on a real writer trace
+3. The `--allowedTools mcp__sources__*` spawn-layer enforcement holds end-to-end
+4. The writer makes substantive use of source tools (5× verify_words + multiple search_text calls grounding the morphology + dialogue content in textbook corpus)
+
+The failure is **adjacent to** Card 1, not caused by it. The malformed fence may be a pre-existing writer-prompt-format bug surfaced for the first time by m20's complex 4-artifact-emit pattern.
 
 ## Why m20 first (not m1-m7) — recap from Phase 2a brief
 
@@ -101,9 +165,11 @@ Full predicate set in `docs/dispatch-briefs/2026-05-13-phase-2a-m20-my-morning-r
 
 ## Open items
 
+- **Writer-output-format bug (NEW, P0 blocker for Phase 2)** — line 96 of `.worktrees/builds/a1-my-morning-20260513-122043/curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md` shows ```` ```markdown file=module.md ```` fence info that the parser couldn't reconcile with the section's `activities.yaml` label. Either tighten writer prompt OR loosen parser. Re-run m20 blocked on this. File GH issue.
 - **PR #1873 starlight 0.38→0.39.2** — held, Frontend build fail. User decision.
-- **Card 2 (V7 rollout failure taxonomy + writer fix-loop)** — not yet drafted; depends on m20 build telemetry validating the Card 1 class boundary.
-- **Phase 2b m01-m07 batch** — queued; brief ready; fires after m20 passes.
+- **Card 2 (V7 rollout failure taxonomy + writer fix-loop)** — drafted after m20 telemetry validates the Card 1 class boundary. **Card 1 validation: ACHIEVED on this build** (Tier 1 green; writer isolation works on a real failed-build case). Card 2 can start drafting now.
+- **Phase 2b m01-m07 batch** — queued; brief ready; fires after m20 re-run passes (which requires the writer-output-format fix first).
+- **Failed m20 build worktree** at `.worktrees/builds/a1-my-morning-20260513-122043/` — preserve until the format diagnosis is complete. Holds the primary evidence (`writer_output.raw.md` + `writer_tool_calls.json` + `writer_prompt.md`).
 - **3 inherited worktrees** — `claude/bakeoff-2026-05-12-night`, `claude/writer-prompt-tune-2026-05-13`, `codex/pass2-only-contract-test-2026-05-13`. Held for user disposition.
 
 ## Predecessor brief
@@ -112,4 +178,4 @@ Full predicate set in `docs/dispatch-briefs/2026-05-13-phase-2a-m20-my-morning-r
 
 ---
 
-*Format spec: `claude_extensions/rules/workflow.md` § "Two-tier handoffs". Opening action for next session: read this brief + check `gh pr list` for the rule-correction PR's status + check m20 build state via the Monitor task `bryvbox3l` (if still running) or `gh pr list` for the build's auto-opened PR (if the build completed cleanly during the gap).*
+*Format spec: `claude_extensions/rules/workflow.md` § "Two-tier handoffs". Opening action for next session: read this brief + check the failed m20 build worktree at `.worktrees/builds/a1-my-morning-20260513-122043/curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md` line 96 — that's the primary evidence for the writer-output-format bug. Once the format issue is understood, file a GH issue + decide between parser fix or prompt fix + re-run m20.*
