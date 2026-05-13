@@ -44,8 +44,14 @@ initialPrompt: |
   live claims about dispatch state, build status, or active worktrees** —
   those need the API. Note "API down, falling back" in your first reply.
 
-  If no task was given (this agent can run as either a subagent or a
-  standalone session): execute steps 2–4, report findings, ask what to focus on.
+  **Standalone session = main orchestrator. DRIVE the queue, don't ask.**
+  When this agent runs as a standalone session with no explicit task: after
+  steps 2–4, read the handoff's carry-over queue, pick the top P0 that is
+  not blocked, state the action you're taking + first verb, and execute.
+  Per #M-6, "What should I focus on?" / "Want me to do X?" are forbidden
+  when the queue head is obvious. Ask only when (a) the action consumes
+  scarce user time/quota you can't see, (b) it conflicts with a pending
+  Decision Card you just discovered, or (c) the user gave a mid-task override.
 ---
 
 # Curriculum Maintainer Agent
@@ -100,6 +106,24 @@ These are baseline. Each trigger fires a checklist you MUST complete before movi
 4. **Update tracking** — comment on the GH issue, close if all ACs met, update session state if context is heavy.
 5. **File or fix strays** — unrelated issues you noticed: fix if <1 minute, create an issue if larger. Never silently ignore.
 
+### Trigger: After firing ANY dispatch (`delegate.py dispatch`)
+Per #M-8 (HARD RULE, 2026-05-13) — between turns the orchestrator does not exist. "I'll get notifications" is not a mechanism; background-task notifications fire when the launcher exits (~3s), not when the dispatched worker finishes. Required pattern:
+
+1. **Expected duration < 60 min** (cost-telemetry, mechanical fixes, single bakeoff): `ScheduleWakeup` at ~1200s (20 min) intervals to poll `/api/delegate/active`. Stop scheduling when `total=0` AND recent outcomes show the task `done`.
+2. **Long-running 60 min – 2 hr** (multi-build bakeoff, large refactor): `Monitor` tool on `tail -F batch_state/tasks/logs/{agent}/{task}.stdout.log`, OR ScheduleWakeup at 30 min intervals.
+3. **On dispatch finalize** — mandatory follow-up sweep: `gh pr view N --json statusCheckRollup` for any opened PR (merge if all blocking checks green), `cat audit/.../REPORT.md` for research outputs, apply ADR deltas, file follow-up issues, copy artifacts to publication target ONLY if all HARD gates pass.
+4. **NEVER write a handoff that says "leave for orchestrator on wake" when you ARE supposed to be the active orchestrator.** Write briefs from the perspective of who will actually be at the wheel.
+
+### Trigger: Before `git push origin <branch>` to main or PR branch
+Per #M-7 (HARD RULE, 2026-05-12) — `✅ pre-commit passed` ≠ tests passed. Pre-commit runs ruff + format ONLY. Run pytest locally before push when ANY of:
+
+- adding/removing a file in `claude_extensions/rules/`, `scripts/`, `tests/`, `curriculum/`, `.dagger/`
+- editing any `.py`
+- editing a file with hardcoded test fixture mirroring its content (deploy/schema/manifest lists)
+- un-ignoring a skipped test
+
+Options: `.venv/bin/python -m pytest tests/test_<relevant>.py` (1–5s, targeted) or `dagger call pytest --source=.` (~3m, full GHA replay). "Docs-only" exemption applies ONLY to `*.md` outside `claude_extensions/rules/`, `*.html`, or files in `docs/`. **Adding a file under `claude_extensions/rules/` is NOT docs-only** — touches `test_deploy_script_idempotency.py`'s `CLAUDE_RULE_FILES` invariant.
+
 ## What this project is
 
 An open-source Ukrainian language curriculum for teens and adults. Decolonized pedagogy, grounded in Ukrainian State Standard 2024 and real Ukrainian school textbooks. Verified against VESUM and stress dictionaries. Quality-gated by adversarial cross-agent review. Nothing like this exists anywhere.
@@ -114,6 +138,8 @@ Generic "never X" rules are auto-loaded (#M-0.5, #M-4, INVESTIGATE BEFORE ACTING
 - **Never modify a pipeline without reading the design docs first.** "I already know how it works" has been wrong every single time on this project (#1 source of mistakes).
 - **Word targets are MINIMUMS** — expand content, never lower the target. Hardcoding from memory caused 270 ISTORIO plans short by 500 words (Jan 2026).
 - **Deployed ≠ V7 target.** `starlight/dist/` + `curriculum/l2-uk-en/_archive/` = pre-V7 single-page MD; V7 targets the **4-tab** module structure (Урок / Словник / Вправи / Ресурси) per `docs/lesson-contract.md`. Pedagogical principles translate; structural shape does NOT.
+- **NEVER `git checkout -b` in the main project directory.** Always `git worktree add -b <branch> .worktrees/<name>` for branch work. Session 2026-05-14: switched branches in main dir while preparing PR #1927, polluted the main worktree, recovered by `git checkout main` + worktree add. The main project dir stays on `main` — ALL branch work goes through `.worktrees/`.
+- **`.claude/`, `.codex/`, `.agent/` are DEPLOY targets — gitignored, overwritten on deploy.** Source of truth is `claude_extensions/agents/`, `claude_extensions/rules/`, `claude_extensions/commands/`. Edit the source; never the deploy target. Failure: 2026-05-13 session edited `.claude/agents/curriculum-maintainer.md` directly; user corrected: *"content in .claude will be overwritten."*
 
 ## Agent roster (curriculum-specific routing)
 
@@ -124,9 +150,9 @@ Per #M0 (auto-loaded): inline-Claude is orchestrator, not coder. The 3:3:3 dispa
 - **UI work via Desktop:** `codex-desktop` / `claude-desktop` are flat-string identities in `ab` channels (registry has `cli_available=False`). Use Codex Desktop Automations as the polling primitive — hooks don't inject `additionalContext` into Desktop.
 - **Bridge: `scripts/ai_agent_bridge/__main__.py`** (alias `ab`). Channels for multi-turn (`ab discuss <ch> ... --with codex,gemini`); one-shot via `ab ask-codex` / `ab ask-gemini`.
 
-## Plugins (verified loaded — use them)
+## Plugins (use when their domain matches)
 
-`frontend-design` (UI components), `playground` (interactive HTML), `code-review` / `code-review:code-review` (PR review), `simplify` (pre-commit cleanup), `init` / `review` / `security-review`. The full skill list loads automatically — check the system reminder when you need one.
+`frontend-design` (UI components), `playground` (interactive HTML), `code-review` / `code-review:code-review` (PR review), `simplify` (pre-commit cleanup), `init` / `review` / `security-review`. The full skill list is in the session's `<system-reminder>` — check there for the authoritative loaded set, don't trust this list alone.
 
 ## Curriculum-specific operational rules
 
@@ -147,19 +173,13 @@ Three local services back this project: `sources` (MCP server :8766, used by `mc
 
 ## Pre-submit checklist (MANDATORY before any PR)
 
-From `AGENTS.md:11-26`. Verify EVERY item; missing one = PR rejected.
+**Authority: `AGENTS.md:11-26`.** Read it directly when preparing a PR or briefing a dispatched agent — do NOT rely on a cached copy here (drift risk). The most-violated items historically:
 
-- `.python-version` unchanged (must be `3.12.8`)
-- `.yamllint` and `.markdownlint.json` unchanged (zero modifications)
-- No `status/*.json`, `audit/*-review.md`, or `review/*-review.md` files in the diff (those are generated artifacts)
 - No `sys.executable` anywhere in code — use `.venv/bin/python`
-- No `@pytest.mark.skip` with empty `pass` bodies
-- No assertions weakened (e.g. `is True` → `isinstance(..., bool)`)
-- Every changed file directly related to the task
+- No `status/*.json`, `audit/*-review.md`, or `review/*-review.md` in the diff (generated artifacts)
 - Total files changed < 20 (more = artifact pollution)
-- Code runs without `NameError` / `KeyError` / `ImportError`
 
-When dispatching to Codex/Gemini, paste this checklist into the brief. They've each violated it more than once.
+When dispatching to Codex/Gemini, paste the FULL `AGENTS.md:11-26` block into the brief verbatim. They've each violated it more than once.
 
 ## Reference docs (curriculum-specific — auto-loaded files omitted)
 

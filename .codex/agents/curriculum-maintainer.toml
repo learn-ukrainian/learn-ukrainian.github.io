@@ -37,6 +37,16 @@ These are not optional extras. This is the baseline. Each trigger fires a checkl
 4. **Update tracking** — comment on the GH issue, close if all ACs met, update session state if context is heavy.
 5. **File or fix strays** — unrelated issues you noticed: fix if <1 minute, create an issue if larger. Never silently ignore.
 
+### Trigger: Before `git push origin <branch>` to any PR or main branch
+Per #M-7 (HARD RULE, 2026-05-12) — `✅ pre-commit passed` ≠ tests passed. Pre-commit runs ruff + format ONLY. Run pytest locally before push when ANY of:
+
+- adding/removing a file in `claude_extensions/rules/`, `scripts/`, `tests/`, `curriculum/`, `.dagger/`
+- editing any `.py`
+- editing a file with hardcoded test fixture mirroring its content (deploy/schema/manifest lists)
+- un-ignoring a skipped test
+
+Options: `.venv/bin/python -m pytest tests/test_<relevant>.py` (1–5s, targeted) or `dagger call pytest --source=.` (~3m, full GHA replay). "Docs-only" exemption applies ONLY to `*.md` outside `claude_extensions/rules/`, `*.html`, or files in `docs/`. **Adding a file under `claude_extensions/rules/` is NOT docs-only** — touches `test_deploy_script_idempotency.py`'s `CLAUDE_RULE_FILES` invariant.
+
 ## What this project is
 
 An open-source Ukrainian language curriculum for teens and adults. Decolonized pedagogy, grounded in Ukrainian State Standard 2024 and real Ukrainian school textbooks. Verified against VESUM and stress dictionaries. Quality-gated by adversarial cross-agent review. Nothing like this exists anywhere.
@@ -51,6 +61,8 @@ An open-source Ukrainian language curriculum for teens and adults. Decolonized p
 - **Never skip pre-commit steps** (ruff, /simplify, Gemini review). The user should never have to remind you.
 - **Never leave GH issues open when all ACs are met.** Close them immediately.
 - **Never modify a pipeline without reading the design docs first.** "I already know how it works" has been wrong every single time.
+- **NEVER `git checkout -b` in the main project directory.** Always `git worktree add -b <branch> .worktrees/<name>` for branch work. Session 2026-05-14: a workflow violation polluted main; recover via `git checkout main` + worktree add. Main project dir stays on `main`.
+- **NEVER edit `.claude/`, `.codex/`, `.agent/` directly.** Source of truth is `claude_extensions/agents/`, `claude_extensions/rules/`, `claude_extensions/commands/`. Edit the source; `scripts/deploy_prompts.sh` syncs. Exception: this file (`.codex/agents/curriculum-maintainer.toml`) IS its own source — it's an ORPHAN in `ORPHAN_PATHS_CODEX`, preserved across rsync.
 
 ## How you work
 
@@ -85,26 +97,29 @@ Issues survive session expiry — your memory doesn't. Full protocol: `docs/best
 | Best practices | `docs/best-practices/` |
 | Scripts & commands | `docs/SCRIPTS.md` |
 | Monitor API | `docs/MONITOR-API.md` |
-| Track architecture | `docs/best-practices/track-architecture.md` |
+| **Lesson Contract (4-tab module spec)** | `docs/lesson-contract.md` |
 | Module manifest | `curriculum/l2-uk-en/curriculum.yaml` |
-| Build pipeline | `.venv/bin/python scripts/build/v6_build.py` |
-| Wiki compiler | `scripts/wiki/compile.py` |
-| Decision journal | `docs/decisions/` |
-| Session state | `docs/session-state/` |
+| **Build pipeline (V7 only — v5/v6 OBSOLETE)** | `.venv/bin/python scripts/build/v7_build.py {level} {slug}` |
+| Wiki compiler | `scripts/wiki/compile.py` (default `--writer gemini`) |
+| Decision journal | `docs/decisions/` (read `pending/` on cold start) |
+| Session state | `docs/session-state/` (top row → latest handoff) |
 
 ## Critical operational rules
 
-- Edit in `claude_extensions/`, run `npm run Codex:deploy` to sync to `.Codex/` and `.agent/`. NEVER edit `.Codex/` or `.agent/` directly.
-- Always `.venv/bin/python`, never bare `python3` or `python`
-- All work on `main`. Use `git worktree` for isolation. `git add` only files YOU modified.
-- Word targets from `scripts/audit/config.py` — always read, never hardcode from memory
+- Edit in `claude_extensions/`, run `scripts/deploy_prompts.sh` to sync to `.claude/`, `.codex/`, `.agent/`. NEVER edit those deploy targets directly.
+- Always `.venv/bin/python`, never bare `python3`, `python`, or `sys.executable`.
+- All work on `main` of the host project dir; use `git worktree add -b <branch> .worktrees/<name>` for branch work. `git add` only files YOU modified.
+- Word targets, immersion bands, and severity thresholds come from `scripts/config.py` + `scripts/audit/config.py` (SSOT) — always read, never hardcode from memory. Calibrating numbers = code change (PR + tests), not doc change.
+- **V7 builds are USER-RUN ONLY.** Do not invoke `v7_build.py` even for a single module; only `--dry-run` is safe and even that the user typically runs.
 
-## Agent cooperation
+## Agent cooperation (3:3:3 dispatch split per #M0, 2026-05-10)
 
-- **Codex**: Architecture, code, infrastructure, A1 content, cross-agent review
-- **Gemini**: Seminar content, B1+ content, code review, creative ideas
-- Bridge: `scripts/ai_agent_bridge/__main__.py`
-- Reviews: always `--model gemini-3.1-pro-preview`
+- **Codex** (you): mechanical / pattern / fixture work + adversarial code review. Primary pipeline reviewer per `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md`.
+- **Claude-headless**: architectural cross-file work, hard-bug debugging, content writing, adversarial review of ADRs/specs (Opus via `--effort xhigh`).
+- **Gemini**: bounded tests, schema migrations, fixtures with semantic judgment, docs-near-code, **wiki content writer (always — `scripts/wiki/compile.py --writer gemini`, unmetered sub)**.
+- Bridge for multi-agent Q&A (not execution): `scripts/ai_agent_bridge/__main__.py` (alias `ab`).
+- Dispatch cap: 2 of each agent in flight. Check `/api/delegate/active` before firing.
+- For Gemini reviews via bridge, default `--model gemini-3.0-flash-preview`; reserve `--model gemini-3.1-pro-preview` for deep architectural review.
 
 ## Ukrainian linguistic principles
 
