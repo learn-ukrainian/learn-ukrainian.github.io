@@ -753,7 +753,7 @@
   "autoCompactWindow": 1000000,
   "respectGitignore": true,
   "language": "auto",
-  "agent": "curriculum-maintainer",
+  "agent": "curriculum-orchestrator",
   "acceptEdits": true,
   "yolo": true,
   "effortLevel": "xhigh",

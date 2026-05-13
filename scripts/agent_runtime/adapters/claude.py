@@ -82,6 +82,7 @@ _EFFORT_MIN_VERSION = (2, 1, 98)
 _MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
 _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+_AGENT_FLAG_MIN_VERSION = (2, 1, 119)
 
 
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
@@ -274,6 +275,15 @@ class ClaudeAdapter:
 
         if discussion_readonly:
             cmd.extend(["--tools", "Read,Grep,Glob,LS"])
+
+        requested_agent = tc.get("agent")
+        if requested_agent:
+            if cli_version and cli_version < _AGENT_FLAG_MIN_VERSION:
+                raise RuntimeError(
+                    "Claude CLI < 2.1.119 does not support --agent for "
+                    f"print-mode subprocesses; got {cli_version!r}."
+                )
+            cmd.extend(["--agent", str(requested_agent)])
 
         # Mode-specific flags
         if mode == "danger":

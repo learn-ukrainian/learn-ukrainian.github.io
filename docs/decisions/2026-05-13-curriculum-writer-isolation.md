@@ -1,6 +1,7 @@
-# DECISION — Split `curriculum-maintainer` → `curriculum-orchestrator` + new `curriculum-writer`; add spawn-layer isolation gate (PENDING)
+# DECISION — Split `curriculum-maintainer` → `curriculum-orchestrator` + new `curriculum-writer`; add spawn-layer isolation gate
 
-**Status:** PENDING — surfaced for user signoff to unblock #1944.
+**Status:** ACCEPTED — user signed off on the recommended answers 2026-05-13.
+**Decided:** 2026-05-13.
 **Surfaced:** 2026-05-13 — discussion `v7-e2e-rollout-design-2026-05-13` (channel/thread `88ca87e57d`), 3-way convergence at `[AGREE]` round 2.
 **Source:** #1944 BLOCKER — claude-tools writer subprocess inherited orchestrator system-prompt context, made 14 tool calls (10× Bash polling `/api/delegate/active`, 3× Read of orchestrator handoff/current.md/build-queue-script, 1× ScheduleWakeup) and zero `mcp__sources__*` calls before the `MCP_TOOLS_NEVER_INVOKED` HARD gate halted module 1/7 of the overnight Plan A build queue. Diagnostic artifact preserved at `audit/incidents/2026-05-13-1944-writer-tool-calls.json`.
 **Scope:** v7_build writer-phase agent layer + spawn-layer runtime isolation + new HARD gate for `infra_context_contamination` failure class. **Does NOT touch:** writer fix-loops (deferred to Card 2), reviewer phase, IMMERSION_POLICIES, decolonization rules, plan schema, decision cards for ULP / writer-split-by-tab, the broader rollout failure taxonomy (deferred to Card 2).

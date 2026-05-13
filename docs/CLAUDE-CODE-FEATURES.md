@@ -22,7 +22,7 @@ All hooks skip in non-interactive mode (`CLAUDE_NON_INTERACTIVE`, `LEARN_UKRAINI
 
 ## Agent
 
-**curriculum-maintainer** — the default agent for all subagent work.
+**curriculum-orchestrator** — the default agent for curriculum orchestration work.
 
 | Setting | Value |
 |---------|-------|
@@ -30,7 +30,7 @@ All hooks skip in non-interactive mode (`CLAUDE_NON_INTERACTIVE`, `LEARN_UKRAINI
 | Model | `inherit` |
 | Initial prompt | Auto-fetches: Monitor API summary, failing modules, open GH issues |
 
-Spawned with `subagent_type: "curriculum-maintainer"`. The `initialPrompt` means every subagent starts with project context automatically.
+Spawned with `subagent_type: "curriculum-orchestrator"`. The `initialPrompt` means every orchestration subagent starts with project context automatically.
 
 ---
 
@@ -89,7 +89,7 @@ Subagent worktrees get only the files they need — no `node_modules/`, no `data
 |---------|-------|-----|
 | `plansDirectory` | `docs/plans` | Plan mode saves to this directory |
 | `respectGitignore` | `true` | Don't index gitignored files |
-| `agent` | `curriculum-maintainer` | Default agent for the project |
+| `agent` | `curriculum-orchestrator` | Default agent for the project |
 | `acceptEdits` | `true` | Auto-apply edits |
 | `yolo` | `true` | Less confirmation prompts |
 
@@ -203,7 +203,7 @@ Context gets compacted (long session)
   └── post-compact.sh → restores modules, issues, reminders
 
 Subagent spawned
-  └── curriculum-maintainer initialPrompt → fetches project state
+  └── curriculum-orchestrator initialPrompt → fetches project state
   └── worktree.sparsePaths → fast sparse clone (no node_modules)
 
 Review skill invoked

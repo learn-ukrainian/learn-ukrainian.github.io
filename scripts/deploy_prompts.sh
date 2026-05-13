@@ -43,9 +43,10 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 #          Runtime-only; NOT source-tracked. rsync --delete must preserve both.
 ORPHAN_PATHS_AGENT="wake cache"
 ORPHAN_PATHS_AGENTS=""
-# agents/curriculum-maintainer.toml — Codex agent definition with no claude_extensions equivalent.
+# agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
+# Codex agent definitions with no claude_extensions equivalent.
 # config.toml and hooks.json — Codex CLI configuration files managed directly by Codex.
-ORPHAN_PATHS_CODEX="agents/curriculum-maintainer.toml config.toml hooks.json"
+ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml hooks.json"
 ORPHAN_PATHS_GEMINI="docs/ rules/"
 
 # Claude Code auto-loads every unscoped file in `.claude/rules/` into
