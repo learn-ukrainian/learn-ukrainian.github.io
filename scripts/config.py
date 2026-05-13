@@ -152,7 +152,7 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
 # IMMERSION POLICY
 # =============================================================================
 
-USE_ULP_IMMERSION_DERIVATION: bool = False  # Phase 3 default; flipped after Phase 4 calibration.
+USE_ULP_IMMERSION_DERIVATION: bool = True  # Calibrated 2026-05-13 from ULP S1-S6 replay.
 
 # One authoritative source for live immersion policy across prompt generation
 # and audit gates. A band defines:
@@ -603,34 +603,34 @@ IMMERSION_POLICIES = {
 }
 
 _ULP_VOCAB_KNEE_PER_BAND: dict[str, tuple[tuple[int, str], ...]] = {
-    # PHASE_4_PLACEHOLDER: empirical ULP S1-S6 replay will calibrate thresholds.
+    # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
     "a1": (
         (0, "a1-m01-03"),
-        (25, "a1-m04-06"),
-        (55, "a1-m07-14"),
-        (120, "a1-m15-24"),
-        (220, "a1-m25-34"),
-        (360, "a1-m35-54"),
-        (560, "a1-m55+"),
+        (140, "a1-m04-06"),
+        (242, "a1-m07-14"),
+        (573, "a1-m15-24"),
+        (593, "a1-m25-34"),
+        (621, "a1-m35-54"),
+        (647, "a1-m55+"),
     ),
-    # PHASE_4_PLACEHOLDER: empirical ULP S1-S6 replay will calibrate thresholds.
+    # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
     "a2": (
         (0, "a2-bridge"),
-        (80, "a2-ramp"),
-        (160, "a2-m01-20"),
-        (360, "a2-m21-50"),
-        (700, "a2-m51-70"),
+        (1153, "a2-ramp"),
+        (1292, "a2-m01-20"),
+        (3622, "a2-m21-50"),
+        (4470, "a2-m51-70"),
     ),
-    # PHASE_4_PLACEHOLDER: B1+ remains full immersion pending replay.
+    # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
     "b1": ((0, "b1-core"),),
     "default": ((0, "b2+"),),
 }
 
 _RECYCLE_CADENCE_DEFAULTS: dict[str, dict[str, int]] = {
-    # PHASE_4_PLACEHOLDER: cadence/floor will be calibrated from ULP replay.
+    # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
     "a1": {"recycle_window": 6, "recycle_floor": 3},
-    "a2": {"recycle_window": 8, "recycle_floor": 5},
-    "default": {"recycle_window": 10, "recycle_floor": 6},
+    "a2": {"recycle_window": 8, "recycle_floor": 6},
+    "default": {"recycle_window": 21, "recycle_floor": 12},
 }
 
 # =============================================================================
@@ -714,6 +714,10 @@ def _learner_vocab_count(learner_state: dict | None) -> int:
     return 0
 
 
+def _has_learner_vocab_signal(learner_state: dict | None) -> bool:
+    return isinstance(learner_state, dict) and "cumulative_vocabulary" in learner_state
+
+
 def compute_immersion_band(
     track: str,
     module_num: int,
@@ -725,7 +729,7 @@ def compute_immersion_band(
     static IMMERSION_POLICIES fallback. When True, it derives the band from
     learner_state's cumulative_vocabulary count using calibration constants.
     """
-    if not USE_ULP_IMMERSION_DERIVATION:
+    if not USE_ULP_IMMERSION_DERIVATION or not _has_learner_vocab_signal(learner_state):
         return dict(_find_immersion_band(track, module_num))
 
     family = _immersion_track_key(track)
