@@ -1,3 +1,4 @@
+---
 channels:
   # Template for future additions:
   # - id: new_source
@@ -58,6 +59,31 @@ channels:
       istorio: 0.1
     description: "Professional pedagogy and culture explainers for beginner-to-intermediate Ukrainian learners."
 
+  - id: pohribnyi_pronunciation
+    name: "Українська літературна вимова (3LP, 1992)"
+    host: "Микола Погрібний"
+    url: "https://www.youtube.com/playlist?list=PLKTBLqy7kMugWc9_dOpw18zaIlhuBVtgz"
+    source_file: pohribnyi_pronunciation
+    register_tag: scripted
+    decolonization_tag: strong
+    quality_tier: 1
+    language_purity: vetted
+    track_affinity:  # phonetic-foundation modules benefit most
+      a1: 1.0      # phonetic foundations
+      a2: 1.0      # continued phonetic refinement
+      b1: 0.7      # advanced phonetic awareness
+      b2: 0.4
+      c1: 0.3
+      c2: 0.3
+      hist: 0.1    # only narrative segments useful
+      bio: 0.1
+      ruth: 0.5    # heritage-context phonetic reference
+    description: >-
+      Canonical Ukrainian literary pronunciation reference recording (3LP vinyl
+      rip, 1992) by linguist Mykola Pohribnyi. Gold-standard phonetic /
+      orthoepic source for A1-A2 phonetic gates. Vetted, scripted reading
+      register.
+
   - id: imtgsh
     name: "Історія України ім. Т.Г. Шевченка"
     host: "Редакційний голос каналу"  # REVIEW: host name needs confirmation
@@ -76,7 +102,9 @@ channels:
       ruth: 0.1
       b2: 0.1
       c1: 0.2
-    description: "Accessible Ukrainian history explainers with strong anti-imperial framing and current-affairs tie-ins."
+    description: >-
+      Accessible Ukrainian history explainers with strong anti-imperial framing
+      and current-affairs tie-ins.
 
   - id: istoria_movy
     name: "Історія Мови"
@@ -113,7 +141,9 @@ channels:
       lit-hist-fic: 0.4
       folk: 0.2
       b2: 0.1
-    description: "Conversational public-history podcast pairing a comedian with a historian for accessible historical storytelling."
+    description: >-
+      Conversational public-history podcast pairing a comedian with a historian
+      for accessible historical storytelling.
 
   - id: ulp_blogs
     name: "Ukrainian Lessons Blog"
@@ -154,4 +184,6 @@ channels:
       lit: 0.1
       oes: 0.2
       ruth: 0.2
-    description: "Mixed background corpus spanning blogs, reference pages, and a small amount of miscellaneous web content."
+    description: >-
+      Mixed background corpus spanning blogs, reference pages, and a small
+      amount of miscellaneous web content.

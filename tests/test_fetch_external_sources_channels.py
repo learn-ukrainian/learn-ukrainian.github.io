@@ -62,6 +62,12 @@ def test_registry_lookup_by_channel_name(fetcher_module) -> None:
     assert channel.speaker == "Akím Galímov"
 
 
+def test_playlist_urls_are_not_normalized_to_videos_tab(fetcher_module) -> None:
+    playlist_url = "https://www.youtube.com/playlist?list=PLKTBLqy7kMugWc9_dOpw18zaIlhuBVtgz"
+
+    assert fetcher_module.normalize_channel_url(playlist_url, videos_tab=True) == playlist_url
+
+
 def test_unknown_channel_name_raises_clear_error(fetcher_module) -> None:
     with pytest.raises(ValueError, match="Unknown channel-name 'missing-channel'"):
         fetcher_module.resolve_named_channel("missing-channel")
