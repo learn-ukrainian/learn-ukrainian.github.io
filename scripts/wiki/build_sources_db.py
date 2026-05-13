@@ -294,6 +294,78 @@ def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
     return len(batch)
 
 
+def _ingest_external_articles(conn: sqlite3.Connection, ext_dir: Path) -> int:
+    """Ingest data/external_articles/*.jsonl into the external_articles table.
+
+    The external_articles schema has 16 columns; older blog JSONLs only
+    populate (url, title, text, char_count). Newer audio/video JSONLs
+    (e.g. ``pohribnyi_pronunciation``, future YT channels) also carry
+    ``channel_id`` / ``speaker`` / ``video_id`` / ``publish_date`` /
+    ``duration_s``.
+
+    Channel-id policy:
+    - Always derive ``channel_id`` from the JSONL filename stem (canonical
+      identifier used by ``channels.yaml`` registry + retrieval filters).
+      The filename stem wins over the per-record ``channel_id`` field,
+      which can drift in punctuation between ingestion runs (Codex's
+      2026-05-13 pohribnyi ingest wrote ``pohribnyi-pronunciation`` with
+      a hyphen while the filename used an underscore — picking the
+      filename keeps retrieval keys stable).
+    - Audio/video metadata is surfaced when present; otherwise the fields
+      stay empty / 0 so older blog rows are unchanged.
+
+    Returns the count of rows inserted. URL dedup is per-call (a single
+    ``seen_urls`` set across all JSONLs in this directory) to preserve the
+    historical behaviour of the inline loop.
+
+    See ``data/sources.db`` 2026-05-14 audit: all 1199 pre-existing rows
+    had ``channel_id=''`` because the prior 8-column INSERT silently
+    dropped the field.
+    """
+    ext_sql = """INSERT INTO external_articles
+                 (chunk_id, url, url_normalized, title, text,
+                  source_file, domain, char_count,
+                  channel_id, speaker, video_id,
+                  publish_date, duration_s)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+    ext_files = sorted(ext_dir.glob("*.jsonl")) if ext_dir.exists() else []
+    seen_urls: set[str] = set()
+    total = 0
+    for jsonl_path in ext_files:
+        source_file = jsonl_path.stem
+        channel_id = source_file  # canonical: filename stem is the channel id
+        batch: list[tuple] = []
+        with open(jsonl_path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                entry = json.loads(line)
+                url = entry.get("url", "")
+                if not url or url in seen_urls:
+                    continue
+                seen_urls.add(url)
+                batch.append((
+                    f"ext-{source_file}-{len(batch)}",
+                    url, _normalize_url(url),
+                    entry.get("title", ""), entry.get("text", ""),
+                    source_file, entry.get("domain", ""),
+                    entry.get("char_count", len(entry.get("text", ""))),
+                    channel_id,
+                    entry.get("speaker", "") or "",
+                    entry.get("video_id", "") or "",
+                    entry.get("publish_date", "") or "",
+                    entry.get("duration_s", 0) or 0,
+                ))
+        if batch:
+            conn.executemany(ext_sql, batch)
+        total += len(batch)
+        print(f"  📥 {source_file}: {len(batch)} entries "
+              f"(channel_id={channel_id!r})")
+    return total
+
+
+
 def _db_is_populated(db: Path) -> tuple[bool, int]:
     """True (plus row count) if the DB exists and has real content.
 
@@ -507,36 +579,7 @@ def build(db_path: Path | None = None,
 
     # --- External articles ---
     print("\n📰 External articles")
-    seen_urls: set[str] = set()
-    ext_sql = """INSERT INTO external_articles
-                 (chunk_id, url, url_normalized, title, text,
-                  source_file, domain, char_count)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
-    ext_files = sorted(ext_dir.glob("*.jsonl")) if ext_dir.exists() else []
-    for jsonl_path in ext_files:
-        source_file = jsonl_path.stem
-        batch: list[tuple] = []
-        with open(jsonl_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                entry = json.loads(line)
-                url = entry.get("url", "")
-                if not url or url in seen_urls:
-                    continue
-                seen_urls.add(url)
-                batch.append((
-                    f"ext-{source_file}-{len(batch)}",
-                    url, _normalize_url(url),
-                    entry.get("title", ""), entry.get("text", ""),
-                    source_file, entry.get("domain", ""),
-                    entry.get("char_count", len(entry.get("text", ""))),
-                ))
-        if batch:
-            conn.executemany(ext_sql, batch)
-        total += len(batch)
-        print(f"  📥 {source_file}: {len(batch)} entries")
+    total += _ingest_external_articles(conn, ext_dir)
 
     # --- Textbook chunks ---
     print("\n📖 Textbooks")
