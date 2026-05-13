@@ -1451,6 +1451,68 @@ def test_vesum_gate_skips_error_word_field_of_error_correction_activity(
     assert "одягаєшся" in forwarded
 
 
+def test_vesum_gate_skips_fill_in_answer_suffix_without_options_field(
+    tmp_path: Path,
+) -> None:
+    """Fill-in `answer:` fragments must be skipped even when `options:` absent.
+
+    Regression for #1967: build #4 of m20 (`a1/my-morning`) emitted fill-in
+    activities with item shape `{sentence, answer}` (no `options:` list — the
+    student types the suffix). #1963's logic at `_activity_vesum_text` skipped
+    the `answer` field only when its value appeared in a sibling `options:`
+    list; with no `options:` present, the suffix fragments (-юся, -ються,
+    -єшся, etc.) fell through to VESUM and were reported missing, halting the
+    build. The fix makes the skip unconditional for fill-in activities since
+    the pedagogical rationale (answer IS a morphological fragment) doesn't
+    depend on whether an options list is present.
+    """
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "items": [
+                    {"sentence": "Я вмива____ о сьомій.", "answer": "юся"},
+                    {"sentence": "Ти одяга____ швидко.", "answer": "єшся"},
+                    {"sentence": "Він прокида____ пізно.", "answer": "ється"},
+                    {"sentence": "Ми збира____ на роботу.", "answer": "ємося"},
+                    {"sentence": "Ви поверта____ додому?", "answer": "єтеся"},
+                    {"sentence": "Вони навча____ вранці.", "answer": "ються"},
+                ],
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        # Sentence fragments (whole UK words) verify fine; suffixes do not.
+        # But the fix should mean the suffixes never reach this function.
+        return {
+            word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words
+        }
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    forwarded = received[0]
+    # None of the bare reflexive suffix fragments should be in the VESUM scope.
+    suffix_fragments = {"юся", "єшся", "ється", "ємося", "єтеся", "ються"}
+    leaked = suffix_fragments & set(forwarded)
+    assert not leaked, (
+        f"fill-in `answer` suffix fragments leaked into VESUM scope: {leaked}"
+    )
+    # And the sentence-shell tokens around the blank still get verified
+    # (sanity: we didn't accidentally skip too much).
+    assert "вмива" in forwarded or "сьомій" in forwarded
+    assert report["gates"]["vesum_verified"]["passed"] is True
+
+
 def test_vesum_gate_still_checks_correct_form_in_error_correction_activity(
     tmp_path: Path,
 ) -> None:

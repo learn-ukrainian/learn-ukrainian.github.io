@@ -4619,9 +4619,17 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
                 if activity_type == "fill-in" and key == "options":
                     continue
                 if activity_type == "fill-in" and key == "answer":
-                    options = node.get("options")
-                    if isinstance(options, list) and child in options:
-                        continue
+                    # Fill-in answers are morphological suffix fragments by
+                    # design (e.g. -юся, -ються, -єшся) — they are never
+                    # standalone VESUM lemmas. #1963 skipped them only when
+                    # the answer was also listed in `options:`; in build #4
+                    # (m20 a1-m15-24 contract) the writer emits fill-in items
+                    # with a `sentence` + `answer` pair and no `options` list,
+                    # so the conditional skip didn't fire. The pedagogical
+                    # rationale doesn't change with shape: a fill-in answer
+                    # is always a suffix fragment.  Skip unconditionally.
+                    # See #1967.
+                    continue
                 if key == "options" and "answer" in node:
                     walk_answer_options(child, answer_values(node.get("answer")))
                     continue
