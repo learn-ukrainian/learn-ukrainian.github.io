@@ -76,7 +76,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 | Feature | How | When |
 | --- | --- | --- |
-| `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** Use when the USER runs a V7 build; agents never invoke `v7_build.py`. Filter JSONL events with `grep --line-buffered '^{\"event\"'`. See below. |
+| `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** Agents may run V7 builds during autonomous orchestration (per user direction 2026-05-13) — always pass `--worktree`. Filter JSONL events with `grep --line-buffered '^{\"event\"'`. See below. |
 | `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`. `low`: config/typo fixes. `medium`: code fixes (default). `xhigh`: content review, plan review, module building, linguistic analysis on Opus 4.7 — Anthropic notes Opus 4.7 at `high` is weaker than prior versions, so **use `xhigh` where we previously used `high`**. `max`: reserve for deep architecture / adversarial reviews where cost is justified. |
 | Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
@@ -90,7 +90,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 **NEVER poll builds with ScheduleWakeup or manual loops.** Use the `Monitor` tool:
 
-Only used when monitoring a user-run V7 build; agents do not invoke `v7_build.py` themselves.
+Agents may run V7 builds during autonomous orchestration — always pass `--worktree` (PR #1952) so the build runs in `.worktrees/builds/{level}-{slug}-{stamp}/` and main stays clean.
 
 ```
 Monitor(
