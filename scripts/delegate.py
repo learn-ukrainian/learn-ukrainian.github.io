@@ -905,6 +905,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
+    if getattr(args, "check_budget", False) and not getattr(args, "force_agent", False):
+        _check_routing_budget_for_dispatch(args.agent)
+
+    if getattr(args, "dry_run", False):
+        print(task_id)
+        return 0
+
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
@@ -1205,6 +1212,46 @@ def _fetch_monitor_task(task_id: str) -> dict[str, Any] | None:
     except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
         raise MonitorApiUnavailable(str(exc)) from exc
     return payload if isinstance(payload, dict) else {}
+
+
+def _fetch_routing_budget() -> dict[str, Any]:
+    url = f"{_monitor_api_base_url()}/api/state/routing-budget"
+    try:
+        with urllib.request.urlopen(url, timeout=3) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
+        raise MonitorApiUnavailable(str(exc)) from exc
+    return payload if isinstance(payload, dict) else {}
+
+
+def _check_routing_budget_for_dispatch(agent: str) -> None:
+    try:
+        payload = _fetch_routing_budget()
+    except MonitorApiUnavailable:
+        print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
+        return
+
+    recommendation = payload.get("recommendation")
+    if not isinstance(recommendation, dict):
+        return
+    recommended = recommendation.get("primary_agent_for_code")
+    if not recommended or recommended == agent:
+        return
+
+    print(
+        f"⚠ ROUTING WARNING: budget recommends --agent {recommended}, "
+        f"you passed --agent {agent}.",
+        file=sys.stderr,
+    )
+    print(
+        f"Rationale: {recommendation.get('rationale') or 'No rationale provided.'}",
+        file=sys.stderr,
+    )
+    print(
+        "Proceed anyway? (use --force-agent to suppress this check, or Ctrl+C to abort.)",
+        file=sys.stderr,
+    )
+    time.sleep(3)
 
 
 def _status_or_fail_payload(task_id: str) -> dict[str, Any]:
@@ -1537,6 +1584,24 @@ def build_parser() -> argparse.ArgumentParser:
             "Opt in to allow PR approval/merge and pushes to main inside the "
             "delegated subprocess. Default is off: AGENT_NO_MERGE=1 is set."
         ),
+    )
+    d.add_argument(
+        "--check-budget",
+        action="store_true",
+        help=(
+            "Query /api/state/routing-budget before spawning and warn when "
+            "budget telemetry recommends a different agent."
+        ),
+    )
+    d.add_argument(
+        "--force-agent",
+        action="store_true",
+        help="Suppress --check-budget routing warnings and dispatch with the requested agent.",
+    )
+    d.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Run dispatch pre-flight checks and print task-id without spawning a worker.",
     )
     d.add_argument(
         "--hard-timeout",

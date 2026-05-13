@@ -122,6 +122,7 @@ app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"]
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")
+app.include_router(cost_router, prefix="/api/cost")
 app.include_router(cost_router, prefix="/api/analytics/cost")
 app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])

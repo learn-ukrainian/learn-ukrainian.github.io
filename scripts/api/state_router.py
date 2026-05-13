@@ -16,6 +16,7 @@ Endpoints:
   GET /api/state/research/{track}    Per-module research quality + dimensions + upgrade queue
   GET /api/state/review-coverage      Per-track review completeness + quality
   GET /api/state/issues               Aggregated outstanding issues
+  GET /api/state/routing-budget       Per-agent capacity burn + routing recommendation
 
 Performance notes:
   - Heavy endpoints run their sync I/O in asyncio.to_thread().
@@ -23,16 +24,22 @@ Performance notes:
 """
 
 import asyncio
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
+from pathlib import Path
+from typing import Any
 
+import yaml
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
+
+from scripts.analytics.cost_report import CostRecord, load_cost_records
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+from . import delegate_router as delegate_api
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_build import (
     compute_build_stats,
@@ -78,8 +85,336 @@ _is_content_done = is_content_done
 
 router = APIRouter(tags=["state"])
 
+BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
+AGENT_NAMES = ("claude", "codex", "gemini")
+
+
+def _isoformat_z(value: datetime) -> str:
+    return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _parse_iso_date(value: Any) -> date | None:
+    if isinstance(value, date):
+        return value
+    if not value:
+        return None
+    try:
+        return date.fromisoformat(str(value))
+    except ValueError:
+        return None
+
+
+def _load_agent_budgets() -> tuple[dict[str, Any], list[str]]:
+    try:
+        loaded = yaml.safe_load(BUDGET_CONFIG_PATH.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError) as exc:
+        return {}, [f"budget config unavailable: {type(exc).__name__}"]
+    if not isinstance(loaded, dict):
+        return {}, ["budget config unavailable: root is not a mapping"]
+    return loaded, []
+
+
+def _agent_key(raw_agent: str | None) -> str | None:
+    agent = (raw_agent or "").lower().strip()
+    for name in AGENT_NAMES:
+        if agent == name or agent.startswith(f"{name} ") or agent.startswith(f"{name}("):
+            return name
+    return None
+
+
+def _record_has_cost(record: CostRecord) -> bool:
+    return (
+        float(getattr(record, "cost_usd_est", 0.0) or 0.0) > 0
+        or int(getattr(record, "prompt_tokens_est", 0) or 0) > 0
+        or int(getattr(record, "response_tokens_est", 0) or 0) > 0
+    )
+
+
+def _sum_agent_spend(
+    records: list[CostRecord],
+    *,
+    agent: str,
+    since: datetime,
+) -> tuple[float, int]:
+    spent = 0.0
+    missing = 0
+    for record in records:
+        if _agent_key(getattr(record, "agent", None)) != agent:
+            continue
+        if getattr(record, "mtime", datetime.min.replace(tzinfo=UTC)) < since:
+            continue
+        if not _record_has_cost(record):
+            missing += 1
+            continue
+        spent += float(getattr(record, "cost_usd_est", 0.0) or 0.0)
+    return spent, missing
+
+
+def _status_from_burn(burn_pct: float | None) -> str:
+    if burn_pct is None:
+        return "pre_launch"
+    if burn_pct < 50:
+        return "cool"
+    if burn_pct < 75:
+        return "warm"
+    if burn_pct <= 90:
+        return "hot"
+    return "near_cap"
+
+
+def _burn_pct(spent_usd: float | None, cap_usd: float | None) -> float | None:
+    if spent_usd is None or not cap_usd:
+        return None
+    return round((spent_usd / cap_usd) * 100, 1)
+
+
+def _round_money(value: float | None) -> float | None:
+    if value is None:
+        return None
+    return round(float(value), 2)
+
+
+def _format_pct(value: float | None) -> str:
+    if value is None:
+        return "unknown"
+    return f"{value:.1f}".rstrip("0").rstrip(".")
+
+
+def _days_until(today: date, target: date | None) -> int | None:
+    if target is None:
+        return None
+    return (target - today).days
+
+
+def _in_flight_by_agent() -> dict[str, int]:
+    in_flight = {agent: 0 for agent in AGENT_NAMES}
+    try:
+        tasks = delegate_api.list_delegate_tasks(status="all", limit=500)["tasks"]
+    except Exception:
+        return in_flight
+    for task in tasks:
+        if task.get("status") not in {"running", "spawning"}:
+            continue
+        agent = _agent_key(task.get("agent"))
+        if agent:
+            in_flight[agent] += 1
+    return in_flight
+
+
+def _recommend_agent(agents: dict[str, Any], warnings: list[str]) -> dict[str, Any]:
+    status_by_agent = {
+        "claude": agents["claude"]["interactive"]["status"],
+        "codex": agents["codex"]["status"],
+        "gemini": agents["gemini"]["status"],
+    }
+    burn_by_agent = {
+        "claude": agents["claude"]["interactive"]["burn_pct_7d"],
+        "codex": agents["codex"]["burn_pct_7d"],
+        "gemini": agents["gemini"]["burn_pct_7d"],
+    }
+
+    if all(status in {"hot", "near_cap"} for status in status_by_agent.values()):
+        warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
+        return {
+            "primary_agent_for_code": "inline_orchestrator",
+            "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
+            "warnings": warnings,
+        }
+
+    if "near_cap" in status_by_agent.values():
+        candidates = [
+            agent for agent, status in status_by_agent.items()
+            if status in {"cool", "warm"}
+        ]
+        if candidates:
+            recommended = min(candidates, key=lambda agent: burn_by_agent[agent] or 0.0)
+            return {
+                "primary_agent_for_code": recommended,
+                "rationale": (
+                    f"At least one agent is near cap; {recommended} has the lowest "
+                    f"available 7d burn ({_format_pct(burn_by_agent[recommended])}%)."
+                ),
+                "warnings": warnings,
+            }
+
+    agentic_pool = agents["claude"]["agentic_pool"]
+    if agentic_pool.get("active") and agentic_pool.get("status") == "cool":
+        return {
+            "primary_agent_for_code": "claude",
+            "rationale": "Claude agentic pool is active and cool; drain the separate monthly pool first.",
+            "warnings": warnings,
+        }
+
+    if all(status in {"cool", "warm"} for status in status_by_agent.values()):
+        codex_burn = burn_by_agent["codex"]
+        return {
+            "primary_agent_for_code": "codex",
+            "rationale": (
+                "All agents cool or warm; default 3:3:3 split applies. "
+                f"Codex 7d burn is {_format_pct(codex_burn)}%. "
+                "Claude agentic pool "
+                + (
+                    "active."
+                    if agentic_pool.get("active")
+                    else "pre-launch — interactive pool used for claude headless."
+                )
+            ),
+            "warnings": warnings,
+        }
+
+    recommended = min(status_by_agent, key=lambda agent: burn_by_agent[agent] or 0.0)
+    return {
+        "primary_agent_for_code": recommended,
+        "rationale": (
+            f"Mixed routing state; {recommended} currently has the lowest 7d burn "
+            f"({_format_pct(burn_by_agent[recommended])}%)."
+        ),
+        "warnings": warnings,
+    }
+
+
+def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
+    current_time = (now or datetime.now(UTC)).astimezone(UTC)
+    today = current_time.date()
+    window_start = current_time - timedelta(days=7)
+    budgets, warnings = _load_agent_budgets()
+    if not budgets:
+        agents = {
+            "claude": {
+                "interactive": {
+                    "spent_7d_usd": None,
+                    "weekly_cap_usd": None,
+                    "burn_pct_7d": None,
+                    "promo_active": False,
+                    "status": "pre_launch",
+                },
+                "agentic_pool": {
+                    "spent_cycle_usd": None,
+                    "monthly_cap_usd": None,
+                    "burn_pct_cycle": None,
+                    "active": False,
+                    "starts_on": None,
+                    "status": "pre_launch",
+                },
+            },
+            "codex": {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "pre_launch"},
+            "gemini": {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "pre_launch"},
+        }
+        return {
+            "generated_at": _isoformat_z(current_time),
+            "agents": agents,
+            "in_flight": _in_flight_by_agent(),
+            "recommendation": {
+                "primary_agent_for_code": "inline_orchestrator",
+                "rationale": "Budget config could not be loaded; routing recommendation is unavailable.",
+                "warnings": warnings,
+            },
+            "diagnostics": {
+                "records_loaded": 0,
+                "missing_cost_records": 0,
+                "window_start": _isoformat_z(window_start),
+            },
+        }
+
+    records = load_cost_records()
+    agents: dict[str, Any] = {}
+    missing_cost_records = 0
+
+    claude_config = budgets.get("claude") if isinstance(budgets.get("claude"), dict) else {}
+    interactive_config = claude_config.get("interactive") if isinstance(claude_config.get("interactive"), dict) else {}
+    agentic_config = claude_config.get("agentic_pool") if isinstance(claude_config.get("agentic_pool"), dict) else {}
+    promo_through = _parse_iso_date(interactive_config.get("promo_through"))
+    promo_active = bool(promo_through and today <= promo_through)
+    claude_cap = float(
+        interactive_config.get("promo_weekly_cap_usd" if promo_active else "weekly_cap_usd") or 0.0
+    )
+    claude_spent, missing = _sum_agent_spend(records, agent="claude", since=window_start)
+    missing_cost_records += missing
+    claude_burn = _burn_pct(claude_spent, claude_cap)
+
+    starts_on = _parse_iso_date(agentic_config.get("starts_on"))
+    agentic_active = bool(starts_on and today >= starts_on)
+    agentic_cap = float(agentic_config.get("monthly_cap_usd") or 0.0)
+    if agentic_active and starts_on:
+        cycle_start = datetime.combine(starts_on, datetime.min.time(), tzinfo=UTC)
+        agentic_spent, missing = _sum_agent_spend(records, agent="claude", since=cycle_start)
+        missing_cost_records += missing
+        agentic_burn = _burn_pct(agentic_spent, agentic_cap)
+        agentic_status = _status_from_burn(agentic_burn)
+    else:
+        agentic_spent = None
+        agentic_burn = None
+        agentic_status = "pre_launch"
+
+    agents["claude"] = {
+        "interactive": {
+            "spent_7d_usd": _round_money(claude_spent),
+            "weekly_cap_usd": _round_money(claude_cap),
+            "burn_pct_7d": claude_burn,
+            "promo_active": promo_active,
+            "status": _status_from_burn(claude_burn),
+        },
+        "agentic_pool": {
+            "spent_cycle_usd": _round_money(agentic_spent),
+            "monthly_cap_usd": _round_money(agentic_cap),
+            "burn_pct_cycle": agentic_burn,
+            "active": agentic_active,
+            "starts_on": starts_on.isoformat() if starts_on else None,
+            "status": agentic_status,
+        },
+        "spent_7d_usd": _round_money(claude_spent),
+        "weekly_cap_usd": _round_money(claude_cap),
+        "burn_pct_7d": claude_burn,
+        "status": _status_from_burn(claude_burn),
+    }
+
+    for agent in ("codex", "gemini"):
+        agent_config = budgets.get(agent) if isinstance(budgets.get(agent), dict) else {}
+        cap = float(agent_config.get("weekly_cap_usd") or 0.0)
+        spent, missing = _sum_agent_spend(records, agent=agent, since=window_start)
+        missing_cost_records += missing
+        burn = _burn_pct(spent, cap)
+        agents[agent] = {
+            "spent_7d_usd": _round_money(spent),
+            "weekly_cap_usd": _round_money(cap),
+            "burn_pct_7d": burn,
+            "status": _status_from_burn(burn),
+        }
+
+    claude_burn_pct = agents["claude"]["interactive"]["burn_pct_7d"]
+    if agents["claude"]["interactive"]["status"] in {"hot", "near_cap"}:
+        warnings.append(
+            f"claude.interactive at {_format_pct(claude_burn_pct)}% — consider --agent codex for next mechanical fix"
+        )
+    starts_in_days = _days_until(today, starts_on)
+    if starts_in_days is not None and 0 <= starts_in_days <= 14:
+        warnings.append(f"agentic_pool launches in {starts_in_days} days")
+    promo_days = _days_until(today, promo_through)
+    if promo_days is not None and 0 <= promo_days <= 14:
+        warnings.append(
+            f"promo expires in {promo_days} days; +50% bonus capacity ends {promo_through.isoformat()}"
+        )
+
+    return {
+        "generated_at": _isoformat_z(current_time),
+        "agents": agents,
+        "in_flight": _in_flight_by_agent(),
+        "recommendation": _recommend_agent(agents, warnings),
+        "diagnostics": {
+            "records_loaded": len(records),
+            "missing_cost_records": missing_cost_records,
+            "window_start": _isoformat_z(window_start),
+        },
+    }
+
 
 # ==================== ENDPOINTS ====================
+
+
+@router.get("/routing-budget")
+async def routing_budget():
+    """Per-agent soft-cap burn and routing recommendation for dispatch planning."""
+    return await asyncio.to_thread(compute_routing_budget)
 
 
 @router.get("/summary")

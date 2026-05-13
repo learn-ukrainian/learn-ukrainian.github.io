@@ -1,0 +1,25 @@
+# Agent budget soft-caps used by /api/state/routing-budget for burn% computation.
+# These are SOFT caps — the router warns when burn% approaches; it does not block.
+# Update when Anthropic announces tier or promo changes.
+#
+# Effective windows (anchored to user's billing cycle, treated as ISO weeks for now):
+#   - claude.interactive: Max 20× = ~$2000/mo API-equivalent. +50% promo until 2026-07-13.
+#   - claude.agentic_pool: $200/mo from 2026-06-15 (Anthropic Pro+/Max agentic credit).
+#   - codex: ~$1000/wk effective weekly quota (rough; revise from observed cap-hits).
+#   - gemini: ~$500/wk effective daily quota aggregated (rough).
+#
+# All caps are dollar-denominated. Records that lack a cost estimate are excluded
+# from burn% (counted in "missing_cost_records" diagnostic).
+
+claude:
+  interactive:
+    weekly_cap_usd: 460  # $2000/mo ÷ 4.33 weeks; this is the "shared with chat" pool
+    promo_through: "2026-07-13"
+    promo_weekly_cap_usd: 690  # +50%
+  agentic_pool:
+    monthly_cap_usd: 200
+    starts_on: "2026-06-15"
+codex:
+  weekly_cap_usd: 1000
+gemini:
+  weekly_cap_usd: 500
