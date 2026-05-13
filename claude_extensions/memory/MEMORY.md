@@ -115,6 +115,7 @@ DO NOT run `v6_build.py --range` or `--step all`. Only user runs builds. Heal: `
 - `ai_agent_bridge` → COMMUNICATION (discussions, reviews, Q&A). NOT execution. `ab discuss` is analysis-only — filesystem writes during discussion = HARD STOP, dispatch the work as a separate brief.
 - `Monitor` → watch long-running. Never ScheduleWakeup loops.
 - Monitor API `localhost:8765` → state queries. One curl > custom scripts.
+- `/api/state/routing-budget` → pre-dispatch capacity check. Add `--check-budget` to delegate.py for warnings. Soft-fail when API down.
 - `ugrep` → prefer over grep (faster, parallel, binary-safe).
 
 ## INVESTIGATE BEFORE ACTING

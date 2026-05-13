@@ -47,6 +47,15 @@ def test_cost_summary_empty_payload(tmp_path, monkeypatch):
     assert payload["windows"]["all_time"]["records_total"] == 0
 
 
+def test_cost_summary_compat_alias(tmp_path, monkeypatch):
+    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", tmp_path)
+
+    response = client.get("/api/cost")
+
+    assert response.status_code == 200
+    assert response.json()["windows"]["all_time"]["records_total"] == 0
+
+
 def test_cost_module_route_returns_windows(tmp_path, monkeypatch):
     monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", tmp_path)
     _write_meta(tmp_path, "a1", "my-family", "01-write-meta.json", "write", 3800, 380)
