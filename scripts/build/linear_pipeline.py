@@ -70,6 +70,11 @@ WRITER_ARTIFACTS = (
     "vocabulary.yaml",
     "resources.yaml",
 )
+_LABEL_LINE_RE = re.compile(
+    r"^[\s>#\-*]*(?P<name>"
+    + "|".join(re.escape(name) for name in WRITER_ARTIFACTS)
+    + r")\s*:?\s*$"
+)
 
 PYTHON_QG_GATE_ORDER = (
     "tool_theatre",
@@ -2426,7 +2431,7 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
             fence_lines.append(line)
             continue
 
-        name = _artifact_name_from_text(line)
+        name = _artifact_name_from_label_line(line)
         if name in WRITER_ARTIFACTS:
             pending_name = name
 
@@ -3764,6 +3769,19 @@ def _artifact_name_from_text(text: str) -> str | None:
         if re.search(rf"(?<![\w.-]){re.escape(artifact)}(?![\w.-])", text):
             return artifact
     return None
+
+
+def _artifact_name_from_label_line(line: str) -> str | None:
+    """Return the artifact name if `line` is a standalone label line.
+
+    This is intentionally narrower than `_artifact_name_from_text`, which
+    finds artifact names embedded in fence info strings like
+    `markdown file=module.md`. Preceding labels should only count when the
+    artifact name is the line's dominant content, not when it appears in
+    prose such as `<plan_reasoning>` implementation-map rows.
+    """
+    match = _LABEL_LINE_RE.match(line)
+    return match.group("name") if match else None
 
 
 def _fence_language(info: str) -> str | None:

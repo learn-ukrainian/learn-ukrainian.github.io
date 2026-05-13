@@ -153,6 +153,7 @@ def test_parse_writer_output_strict_json() -> None:
 [
   {
     "title": "Караман Grade 10, p.176",
+    "role": "textbook",
     "notes": "Зворотні дієслова: суфікс -ся означає дію на себе."
   }
 ]
@@ -437,6 +438,116 @@ activities.yaml
         match=r"mismatched artifact label and fence name.*activities\.yaml.*vocabulary\.yaml",
     ):
         linear_pipeline.parse_writer_output_strict_json(output)
+
+
+def test_parse_writer_output_accepts_plan_reasoning_with_artifact_mentions() -> None:
+    """Regression for #1956: CoT artifact mentions are not label headers."""
+    output = '''<plan_reasoning section="Діалоги">
+<implementation_map>
+- act-5 (match-up verb-pairs) | activities.yaml | INJECT_ACTIVITY end of §Діалоги | inline match-up
+- step-2 | module.md | §Діалоги paragraphs 2-3 | prose with я/ти reflexive forms
+</implementation_map>
+</plan_reasoning>
+
+```markdown file=module.md
+# Module body
+Some prose.
+```
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "title": "Match-up",
+    "type": "match-up",
+    "instruction": "Match these.",
+    "pairs": [
+      {"left": "вмивати", "right": "вмиватися"},
+      {"left": "одягати", "right": "одягатися"}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176", "role": "textbook"}
+]
+```
+'''
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+    assert set(artifacts) == {
+        "module.md",
+        "activities.yaml",
+        "vocabulary.yaml",
+        "resources.yaml",
+    }
+    assert "Module body" in artifacts["module.md"]
+    assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
+
+
+def test_parse_writer_output_handles_real_m20_plan_reasoning_prefix() -> None:
+    """Replay the 2026-05-13 m20 prefix that triggered #1956."""
+    repo_root = Path(__file__).resolve().parents[2]
+    raw_path = (
+        repo_root
+        / ".worktrees/builds/a1-my-morning-20260513-122043/"
+        "curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md"
+    )
+    if not raw_path.exists():
+        worktrees_root = next(
+            (parent for parent in repo_root.parents if parent.name == ".worktrees"),
+            None,
+        )
+        if worktrees_root is not None:
+            raw_path = (
+                worktrees_root
+                / "builds/a1-my-morning-20260513-122043/"
+                "curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md"
+            )
+    if not raw_path.exists():
+        pytest.skip(
+            "Failed m20 build worktree not present; this optional replay "
+            "fixture preserves the real-world repro for #1956"
+        )
+
+    raw = raw_path.read_text(encoding="utf-8")
+    module_start = raw.find("```markdown file=module.md")
+    module_end = raw.find("\n```\n", module_start)
+    if module_start == -1 or module_end == -1:
+        pytest.skip("Real m20 artifact shape changed; refresh fixture")
+    prefix = raw[: module_end + len("\n```\n")]
+    completion = (
+        '\n```json file=activities.yaml\n'
+        '[{"id":"a","title":"x","type":"match-up",'
+        '"instruction":"x","pairs":[{"left":"x","right":"y"}]}]\n'
+        '```\n\n'
+        '```json file=vocabulary.yaml\n'
+        '[{"lemma":"ранок","translation":"morning","pos":"noun","usage":"x"}]\n'
+        '```\n\n'
+        '```json file=resources.yaml\n'
+        '[{"title":"x","role":"textbook"}]\n'
+        '```\n'
+    )
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(prefix + completion)
+    assert set(artifacts) == {
+        "module.md",
+        "activities.yaml",
+        "vocabulary.yaml",
+        "resources.yaml",
+    }
 
 
 def test_activity_type_field_whitelist_uses_authoring_shape() -> None:
@@ -982,7 +1093,17 @@ def _passing_qg_fixture(tmp_path: Path) -> tuple[Path, Path, Callable]:
     )
     _write_yaml(
         module_dir / "resources.yaml",
-        [{"title": "Караман Grade 10, p.176", "source_ref": "Караман Grade 10, p.176"}],
+        [
+            {
+                "title": "Караман Grade 10, p.176",
+                "role": "textbook",
+                "source_ref": "Караман Grade 10, p.176",
+            }
+        ],
+    )
+    (module_dir / "writer_tool_calls.json").write_text(
+        json.dumps([{"tool": "search_images", "args": {"query": "ранок"}}]) + "\n",
+        encoding="utf-8",
     )
 
     def fake_verify(words: list[str]) -> dict[str, list[dict]]:
