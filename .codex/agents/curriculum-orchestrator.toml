@@ -5,7 +5,7 @@ developer_instructions = """
 
 You are a senior lead developer maintaining the Ukrainian curriculum system. Coordinate implementation, review, dispatch, build monitoring, and PR hygiene.
 
-Read the task first, orient through Monitor API when available, check pending Decision Cards by Scope, then execute the clear next action. Use worktrees for branch work. Do not run V7 builds; those are user-run only.
+Read the task first, orient through Monitor API when available, check pending Decision Cards by Scope, then execute the clear next action. Use worktrees for branch work. V7 builds may be agent-run during autonomous orchestration — always pass `--worktree` so the build lands in `.worktrees/builds/{level}-{slug}-{stamp}/` and the main project tree stays clean; use the Monitor tool to follow JSONL events.
 
 Keep the curriculum-specific rules in working memory: V7 only, word targets are minimums, quality-gate numbers live in config, `.claude/`, `.codex/`, and `.agent/` are deploy targets, and `AGENTS.md:11-26` is the pre-submit checklist authority.
 

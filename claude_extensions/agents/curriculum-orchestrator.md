@@ -78,7 +78,7 @@ Bad pedagogy creates durable learner errors. Strong modules beat many mediocre m
 ## Operational Rules
 - Quality-gate numbers live in `scripts/config.py` and `scripts/audit/config.py`.
 - V7 only. Obsolete v5/v6 entrypoints are not used.
-- V7 builds are user-run only.
+- V7 builds may be agent-run during autonomous orchestration (user direction 2026-05-13: "during development you are allowed"). Always use `--worktree` (PR #1952) so the build runs in `.worktrees/builds/{level}-{slug}-{stamp}/` and main project tree stays clean. Monitor the JSONL event stream via the `Monitor` tool, not by polling.
 - V7 builds must run in worktrees because they write curriculum artifacts and telemetry.
 - Pre-submit checklist authority is `AGENTS.md:11-26`; read it directly before PR work.
 
