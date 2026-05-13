@@ -507,7 +507,7 @@ _SENTENCE_SPLIT_RE = re.compile(
 # them. Excluded from VESUM lookup only for error-correction activities.
 _ERROR_CORRECTION_TYPE = "error-correction"
 _ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset(
-    {"error", "errors", "errorWord", "error_word", "sentence"}
+    {"error", "errors", "errorWord", "error_word", "explanation", "sentence"}
 )
 _VESUM_ABBREVIATION_RE = re.compile(r"\bдіал\.", re.IGNORECASE)
 
@@ -4510,6 +4510,20 @@ def _strip_metalinguistic(text: str) -> str:
     return text
 
 
+_USAGE_PARENTHETICAL_RE = re.compile(r"\([^()]*\)")
+
+
+def _strip_usage_parentheticals(text: str) -> str:
+    """Strip vocabulary-usage parentheticals before VESUM lookup.
+
+    Vocabulary `usage:` fields sometimes append English or grammatical notes
+    after the Ukrainian sample sentence, e.g. `(стем + -л- ...)`. Those notes
+    are not asserted Ukrainian prose, while parentheticals in module prose can
+    be meaningful learner-facing Ukrainian, so this is usage-field specific.
+    """
+    return _USAGE_PARENTHETICAL_RE.sub(" ", text)
+
+
 def _build_vesum_text(
     module_text: str,
     activities: list[dict[str, Any]],
@@ -4523,7 +4537,8 @@ def _build_vesum_text(
     for entry in vocabulary:
         if isinstance(entry, dict):
             parts.append(_strip_metalinguistic(str(entry.get("lemma", ""))))
-            parts.append(_strip_metalinguistic(str(entry.get("usage", ""))))
+            usage = _strip_usage_parentheticals(str(entry.get("usage", "")))
+            parts.append(_strip_metalinguistic(usage))
     for entry in resources:
         if isinstance(entry, dict):
             parts.append(_strip_metalinguistic(str(entry.get("title", ""))))
@@ -4544,13 +4559,42 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
     options with falsy `correct` is an intentional wrong answer. Skip only that
     option's text leaf so correct options and surrounding prompts are still
     verified.
+
+    For fill-in activities, bare-list `options:` values are suffix fragments,
+    not VESUM lemmas. For quiz-like item dicts with `options:` plus `answer:`,
+    only the option equal to the answer is verified; sibling distractors can be
+    fabricated wrong forms.
     """
-    if activity.get("type") == _ERROR_CORRECTION_TYPE:
-        skip_subtree = _ERROR_CORRECTION_INTENTIONAL_FIELDS
-    else:
-        skip_subtree = frozenset()
+    activity_type = activity.get("type")
+    skip_subtree = (
+        _ERROR_CORRECTION_INTENTIONAL_FIELDS
+        if activity_type == _ERROR_CORRECTION_TYPE
+        else frozenset()
+    )
 
     out: list[str] = []
+
+    def answer_values(answer: Any) -> set[str]:
+        if isinstance(answer, str):
+            return {answer}
+        if isinstance(answer, list):
+            return {item for item in answer if isinstance(item, str)}
+        return set()
+
+    def walk_answer_options(options: Any, answers: set[str]) -> None:
+        if not answers:
+            return
+        if isinstance(options, list):
+            for option in options:
+                if isinstance(option, str):
+                    if option in answers:
+                        walk(option, "options")
+                elif isinstance(option, dict):
+                    text = option.get("text")
+                    if isinstance(text, str) and text in answers:
+                        walk(option, "options", in_options_list=True)
+        elif isinstance(options, str) and options in answers:
+            walk(options, "options")
 
     def walk(node: Any, parent_key: str | None, *, in_options_list: bool = False) -> None:
         if isinstance(node, dict):
@@ -4562,6 +4606,15 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
             )
             for key, child in node.items():
                 if key in skip_subtree:
+                    continue
+                if activity_type == "fill-in" and key == "options":
+                    continue
+                if activity_type == "fill-in" and key == "answer":
+                    options = node.get("options")
+                    if isinstance(options, list) and child in options:
+                        continue
+                if key == "options" and "answer" in node:
+                    walk_answer_options(child, answer_values(node.get("answer")))
                     continue
                 if wrong_option and key == "text":
                     continue
