@@ -101,6 +101,63 @@ def test_l2_exposure_floor_pass() -> None:
     assert result["observed"]["vocab_entries"] >= result["required"]["vocab_entries"]
 
 
+def test_l2_exposure_floor_credits_dialoguebox_uk_prop() -> None:
+    dialogue_lines = [
+        '<DialogueBox uk="Я прокидаюся о сьомій." en="I wake up at seven." />',
+        '<DialogueBox uk="Я вмиваюся швидко." en="I wash up quickly." />',
+        '<DialogueBox uk="Я одягаюся вдома." en="I get dressed at home." />',
+        '<DialogueBox uk="Я снідаю на кухні." en="I eat breakfast in the kitchen." />',
+        '<DialogueBox uk="Я пʼю теплу воду." en="I drink warm water." />',
+        '<DialogueBox uk="Я читаю повідомлення." en="I read messages." />',
+        '<DialogueBox uk="Я беру синю сумку." en="I take a blue bag." />',
+        '<DialogueBox uk="Я йду до зупинки." en="I go to the stop." />',
+        '<DialogueBox uk="Я чекаю автобус." en="I wait for the bus." />',
+        '<DialogueBox uk="Я слухаю подкаст." en="I listen to a podcast." />',
+        '<DialogueBox uk="Я повторюю нові слова." en="I repeat new words." />',
+        '<DialogueBox uk="Я пишу короткий план." en="I write a short plan." />',
+        '<DialogueBox uk="Я працюю після кави." en="I work after coffee." />',
+        '<DialogueBox uk="Я повертаюся ввечері." en="I return in the evening." />',
+    ]
+    example_lines = [
+        "- **Я прокидаюся о сьомій.** — I wake up at seven.",
+        "- **Я вмиваюся швидко.** — I wash up quickly.",
+        "- **Я одягаюся вдома.** — I get dressed at home.",
+        "- **Я снідаю на кухні.** — I eat breakfast in the kitchen.",
+        "- **Я пʼю теплу воду.** — I drink warm water.",
+        "- **Я читаю повідомлення.** — I read messages.",
+        "- **Я беру синю сумку.** — I take a blue bag.",
+        "- **Я йду до зупинки.** — I go to the stop.",
+        "- **Я чекаю автобус.** — I wait for the bus.",
+        "- **Я слухаю подкаст.** — I listen to a podcast.",
+        "- **Я повторюю нові слова.** — I repeat new words.",
+        "- **Я пишу короткий план.** — I write a short plan.",
+        "- **Я працюю після кави.** — I work after coffee.",
+        "- **Я повертаюся ввечері.** — I return in the evening.",
+    ]
+    text = "\n".join(
+        [
+            "English setup introduces a morning routine.",
+            *dialogue_lines,
+            "| Українською | English |",
+            "|---|---|",
+            "| прокидаюся | I wake up |",
+            "| вмиваюся | I wash up |",
+            "| одягаюся | I get dressed |",
+            "| снідаю | I eat breakfast |",
+            "| вдома | at home |",
+            *example_lines,
+            "<!-- INJECT_ACTIVITY: act-1 -->",
+            "<!-- INJECT_ACTIVITY: act-2 -->",
+            "<!-- INJECT_ACTIVITY: act-3 -->",
+        ]
+    )
+
+    result = _l2_exposure_floor_gate(text, A1_PLAN)
+
+    assert result["passed"] is True
+    assert result["observed"]["uk_dialogue_lines"] == 14
+
+
 def test_l2_exposure_floor_fail_dialogue_lines() -> None:
     text = "\n".join(
         [
@@ -189,6 +246,23 @@ def test_component_density_dialoguebox_pass() -> None:
     result = _component_density_gate('<DialogueBox text="Привіт!" />', A1_EARLY_PLAN)
 
     assert result["passed"] is True
+
+
+def test_component_density_dialoguebox_uk_prop_pass() -> None:
+    result = _component_density_gate(
+        '<DialogueBox uk="Привіт, як справи?" en="Hi, how are you?" />',
+        A1_EARLY_PLAN,
+    )
+
+    assert result["passed"] is True
+    assert result["observed"][0]["observed_pct"] == 100.0
+
+
+def test_component_density_dialoguebox_legacy_text_prop_still_passes() -> None:
+    result = _component_density_gate('<DialogueBox text="Привіт!" />', A1_EARLY_PLAN)
+
+    assert result["passed"] is True
+    assert result["observed"][0]["observed_pct"] == 100.0
 
 
 def test_component_density_rulebox_fail_at_a1_early() -> None:
