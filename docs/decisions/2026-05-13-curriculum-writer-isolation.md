@@ -1,7 +1,9 @@
-# DECISION — Split `curriculum-maintainer` → `curriculum-orchestrator` + new `curriculum-writer`; add spawn-layer isolation gate
+# DECISION — Split `curriculum-maintainer` → `curriculum-orchestrator` + new `curriculum-writer`; add spawn-layer isolation gate (ACCEPTED)
 
-**Status:** ACCEPTED — user signed off on the recommended answers 2026-05-13.
-**Decided:** 2026-05-13.
+**Status:** ACCEPTED 2026-05-13.
+**Decided:** Approve as recommended — all 4 internal open questions take the author's lean: (Q1) same PR for all components (atomicity); (Q2) curriculum-writer mirrors curriculum-maintainer's distribution across `claude_extensions/`, `.claude/`, `.codex/`, `.agent/` (plus a Codex `.toml` orphan); (Q3) bloat trim of `curriculum-orchestrator.md` included in the same PR; (Q4) argv assertion via mocked `subprocess.Popen`, not the live CLI.
+**Decided on:** 2026-05-13 (user signoff via mid-session AskUserQuestion — "Sign off — dispatch full Card 1 to Codex").
+**Dispatched:** 2026-05-13 — Codex task `curriculum-writer-isolation-2026-05-13` against base `ab3212c30f` (post-Phase-4 ULP calibration); brief at `docs/dispatch-briefs/2026-05-13-curriculum-writer-isolation.md`.
 **Surfaced:** 2026-05-13 — discussion `v7-e2e-rollout-design-2026-05-13` (channel/thread `88ca87e57d`), 3-way convergence at `[AGREE]` round 2.
 **Source:** #1944 BLOCKER — claude-tools writer subprocess inherited orchestrator system-prompt context, made 14 tool calls (10× Bash polling `/api/delegate/active`, 3× Read of orchestrator handoff/current.md/build-queue-script, 1× ScheduleWakeup) and zero `mcp__sources__*` calls before the `MCP_TOOLS_NEVER_INVOKED` HARD gate halted module 1/7 of the overnight Plan A build queue. Diagnostic artifact preserved at `audit/incidents/2026-05-13-1944-writer-tool-calls.json`.
 **Scope:** v7_build writer-phase agent layer + spawn-layer runtime isolation + new HARD gate for `infra_context_contamination` failure class. **Does NOT touch:** writer fix-loops (deferred to Card 2), reviewer phase, IMMERSION_POLICIES, decolonization rules, plan schema, decision cards for ULP / writer-split-by-tab, the broader rollout failure taxonomy (deferred to Card 2).
