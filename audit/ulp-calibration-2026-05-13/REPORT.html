@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ULP Immersion Calibration 2026-05-13</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111827; margin: 32px; line-height: 1.45; }
+h1, h2 { line-height: 1.15; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0 24px; font-size: 14px; }
+th, td { border: 1px solid #d1d5db; padding: 6px 8px; vertical-align: top; }
+th { background: #f3f4f6; text-align: left; }
+pre { background: #0f172a; color: #e5e7eb; padding: 12px; overflow-x: auto; font-size: 12px; }
+.note { background: #f8fafc; border-left: 4px solid #0f766e; padding: 10px 12px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.card { border: 1px solid #d1d5db; padding: 12px; }
+</style>
+</head>
+<body>
+<h1>ULP Immersion Calibration Replay — 2026-05-13</h1>
+<p class="note">Source corpus: six gitignored ULP TXT extracts read from <code>/Users/krisztiankoos/projects/learn-ukrainian/docs/references/private/</code>. Outputs in this audit directory were generated inside the dispatch worktree. Ukrainian density uses VESUM-resolved Ukrainian tokens only; rejected Cyrillic fragments are reported below and excluded from density numerators.</p>
+
+<h2>Executive Summary</h2>
+<div class="grid">
+  <div class="card"><strong>Lessons analyzed</strong><br>240</div>
+  <div class="card"><strong>Final cumulative VESUM lemmas</strong><br>12358</div>
+  <div class="card"><strong>Median revisit lag</strong><br>2 lessons</div>
+</div>
+<p>Season mapping used for constants: S1 → A1, S2-S3 → A2, S4-S6 → B1+ full-immersion reference. This follows the observed curve: S1 is controlled beginner material with English scaffolding, S2-S3 hold a stable lower-intermediate 50% median density, and S4-S6 jump to Ukrainian-dominant lesson notes.</p>
+
+<h2>Season Density Curve</h2>
+<svg viewBox="0 0 920 280" role="img" aria-label="ULP UK density by lesson">
+<rect width="920" height="280" fill="#fff"/>
+<line x1="36" x2="884" y1="244.0" y2="244.0" stroke="#e5e7eb"/>
+<text x="6" y="248.0" font-size="11" fill="#475569">0%</text>
+<line x1="36" x2="884" y1="192.0" y2="192.0" stroke="#e5e7eb"/>
+<text x="6" y="196.0" font-size="11" fill="#475569">25%</text>
+<line x1="36" x2="884" y1="140.0" y2="140.0" stroke="#e5e7eb"/>
+<text x="6" y="144.0" font-size="11" fill="#475569">50%</text>
+<line x1="36" x2="884" y1="88.0" y2="88.0" stroke="#e5e7eb"/>
+<text x="6" y="92.0" font-size="11" fill="#475569">75%</text>
+<line x1="36" x2="884" y1="36.0" y2="36.0" stroke="#e5e7eb"/>
+<text x="6" y="40.0" font-size="11" fill="#475569">100%</text>
+<polyline points="36.0,186.4 57.7,194.9 79.5,186.6 101.2,183.0 123.0,180.9 144.7,161.5 166.5,172.9 188.2,172.6 209.9,169.8 231.7,130.1 253.4,163.6 275.2,183.1 296.9,178.9 318.7,170.9 340.4,181.1 362.2,170.7 383.9,170.6 405.6,180.2 427.4,169.6 449.1,143.9 470.9,158.4 492.6,143.9 514.4,168.4 536.1,148.6 557.8,193.8 579.6,164.1 601.3,151.9 623.1,158.3 644.8,159.2 666.6,139.0 688.3,135.8 710.1,150.9 731.8,168.3 753.5,169.7 775.3,146.0 797.0,155.6 818.8,139.9 840.5,147.2 862.3,135.7 884.0,147.3" fill="none" stroke="#0f766e" stroke-width="2"/>
+<text x="36" y="272" font-size="12" fill="#0f766e">S1</text>
+<polyline points="36.0,160.7 57.7,141.4 79.5,150.0 101.2,148.7 123.0,156.1 144.7,135.1 166.5,145.5 188.2,140.0 209.9,154.8 231.7,134.3 253.4,143.3 275.2,140.0 296.9,131.8 318.7,144.5 340.4,154.1 362.2,126.5 383.9,124.2 405.6,132.4 427.4,132.7 449.1,141.5 470.9,120.6 492.6,139.9 514.4,123.5 536.1,137.3 557.8,137.4 579.6,129.8 601.3,143.9 623.1,139.3 644.8,132.2 666.6,151.4 688.3,127.4 710.1,150.0 731.8,147.7 753.5,153.1 775.3,150.0 797.0,148.3 818.8,146.1 840.5,144.8 862.3,148.9 884.0,95.2" fill="none" stroke="#b45309" stroke-width="2"/>
+<text x="132" y="272" font-size="12" fill="#b45309">S2</text>
+<polyline points="36.0,143.4 57.7,153.2 79.5,150.1 101.2,143.6 123.0,136.4 144.7,147.0 166.5,154.7 188.2,133.1 209.9,144.7 231.7,125.4 253.4,135.3 275.2,136.8 296.9,137.5 318.7,135.6 340.4,133.1 362.2,134.0 383.9,128.3 405.6,141.2 427.4,126.6 449.1,125.9 470.9,139.7 492.6,145.4 514.4,130.0 536.1,130.1 557.8,133.7 579.6,129.1 601.3,127.7 623.1,137.9 644.8,154.7 666.6,137.2 688.3,138.2 710.1,143.9 731.8,130.9 753.5,143.5 775.3,118.5 797.0,146.1 818.8,135.1 840.5,142.1 862.3,150.4 884.0,140.1" fill="none" stroke="#2563eb" stroke-width="2"/>
+<text x="228" y="272" font-size="12" fill="#2563eb">S3</text>
+<polyline points="36.0,58.5 57.7,56.6 79.5,61.1 101.2,54.8 123.0,57.1 144.7,60.6 166.5,60.5 188.2,62.4 209.9,60.9 231.7,54.0 253.4,56.3 275.2,53.9 296.9,56.7 318.7,56.6 340.4,56.2 362.2,59.5 383.9,52.7 405.6,55.5 427.4,61.4 449.1,55.9 470.9,60.3 492.6,64.9 514.4,58.9 536.1,53.0 557.8,58.2 579.6,64.1 601.3,52.3 623.1,65.6 644.8,57.7 666.6,60.0 688.3,57.2 710.1,58.8 731.8,55.6 753.5,57.6 775.3,55.6 797.0,61.6 818.8,63.8 840.5,55.1 862.3,54.2 884.0,60.5" fill="none" stroke="#be123c" stroke-width="2"/>
+<text x="324" y="272" font-size="12" fill="#be123c">S4</text>
+<polyline points="36.0,67.4 57.7,66.3 79.5,69.8 101.2,70.1 123.0,70.3 144.7,67.6 166.5,78.5 188.2,74.3 209.9,74.8 231.7,80.5 253.4,72.2 275.2,71.2 296.9,70.3 318.7,76.3 340.4,65.1 362.2,74.5 383.9,70.6 405.6,68.7 427.4,68.7 449.1,67.4 470.9,71.2 492.6,70.3 514.4,69.4 536.1,73.1 557.8,78.2 579.6,71.4 601.3,67.9 623.1,69.2 644.8,70.5 666.6,69.9 688.3,71.0 710.1,63.5 731.8,64.0 753.5,62.1 775.3,67.5 797.0,64.7 818.8,68.6 840.5,64.2 862.3,66.2 884.0,55.4" fill="none" stroke="#6d28d9" stroke-width="2"/>
+<text x="420" y="272" font-size="12" fill="#6d28d9">S5</text>
+<polyline points="36.0,84.0 57.7,70.2 79.5,80.1 101.2,78.1 123.0,76.7 144.7,75.4 166.5,71.5 188.2,78.0 209.9,66.2 231.7,66.1 253.4,68.9 275.2,87.3 296.9,70.0 318.7,76.9 340.4,79.7 362.2,79.5 383.9,76.8 405.6,85.9 427.4,86.7 449.1,83.4 470.9,77.5 492.6,89.4 514.4,98.1 536.1,83.6 557.8,96.2 579.6,84.4 601.3,82.8 623.1,90.0 644.8,89.6 666.6,86.8 688.3,85.0 710.1,83.9 731.8,97.2 753.5,86.1 775.3,80.2 797.0,89.4 818.8,90.1 840.5,88.1 862.3,88.3 884.0,80.7" fill="none" stroke="#15803d" stroke-width="2"/>
+<text x="516" y="272" font-size="12" fill="#15803d">S6</text>
+</svg>
+<table>
+<thead><tr><th>Season</th><th>Lessons</th><th>Lesson range</th><th>Median UK %</th><th>Mean UK %</th><th>Min-Max UK %</th><th>Cumulative vocab range</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>40</td><td>1-40</td><td>37.41</td><td>38.79</td><td>23.6–54.78</td><td>44–1106</td></tr>
+<tr><td>2</td><td>40</td><td>41-80</td><td>49.33</td><td>49.95</td><td>40.04–71.55</td><td>1122–2858</td></tr>
+<tr><td>3</td><td>40</td><td>81-120</td><td>51.27</td><td>50.96</td><td>42.91–60.34</td><td>2903–4470</td></tr>
+<tr><td>4</td><td>40</td><td>121-160</td><td>89.61</td><td>89.35</td><td>85.77–92.16</td><td>4592–7998</td></tr>
+<tr><td>5</td><td>40</td><td>161-200</td><td>83.72</td><td>83.86</td><td>78.59–90.69</td><td>8044–10094</td></tr>
+<tr><td>6</td><td>40</td><td>201-240</td><td>77.15</td><td>77.78</td><td>70.13–85.51</td><td>10135–12358</td></tr>
+</tbody>
+</table>
+
+<h2>Chosen Vocab Knees</h2>
+<p>The A1 first transition is anchored at S1 lesson 4 (cumulative vocab 140) so a hypothetical S1-style learner progression keeps lessons/modules 1-3 in the old warm-up band while allowing the empirical ULP density rise at lesson 4 to select the next band. Later knees use the first observed S1 cumulative-vocab points where the smoothed density slice changes shape. A2 knees use S2-S3 transition points.</p>
+<table>
+<thead><tr><th>Family</th><th>Threshold cumulative vocab</th><th>Band</th><th>Source lesson</th><th>Lesson UK %</th><th>Band advisory %</th></tr></thead>
+<tbody>
+<tr><td>a1</td><td>0</td><td>a1-m01-03</td><td>1</td><td>27.69</td><td>5-25</td></tr>
+<tr><td>a1</td><td>140</td><td>a1-m04-06</td><td>4</td><td>29.35</td><td>8-30</td></tr>
+<tr><td>a1</td><td>242</td><td>a1-m07-14</td><td>7</td><td>34.18</td><td>10-38</td></tr>
+<tr><td>a1</td><td>573</td><td>a1-m15-24</td><td>20</td><td>48.12</td><td>15-24</td></tr>
+<tr><td>a1</td><td>593</td><td>a1-m25-34</td><td>21</td><td>41.15</td><td>15-40</td></tr>
+<tr><td>a1</td><td>621</td><td>a1-m35-54</td><td>22</td><td>48.14</td><td>20-40</td></tr>
+<tr><td>a1</td><td>647</td><td>a1-m55+</td><td>23</td><td>36.36</td><td>25-48</td></tr>
+</tbody>
+</table>
+<table>
+<thead><tr><th>Family</th><th>Threshold cumulative vocab</th><th>Band</th><th>Source lesson</th><th>Lesson UK %</th><th>Band advisory %</th></tr></thead>
+<tbody>
+<tr><td>a2</td><td>0</td><td>a2-bridge</td><td>41</td><td>40.04</td><td>20-48</td></tr>
+<tr><td>a2</td><td>1153</td><td>a2-ramp</td><td>42</td><td>49.35</td><td>30-55</td></tr>
+<tr><td>a2</td><td>1292</td><td>a2-m01-20</td><td>47</td><td>49.9</td><td>40-70</td></tr>
+<tr><td>a2</td><td>3622</td><td>a2-m21-50</td><td>99</td><td>56.46</td><td>50-80</td></tr>
+<tr><td>a2</td><td>4470</td><td>a2-m51-70</td><td>120</td><td>49.95</td><td>65-90</td></tr>
+</tbody>
+</table>
+
+<h2>JSONL Evidence Slice</h2>
+<p>Selected raw rows around knee transitions:</p>
+<table>
+<thead><tr><th>Season</th><th>Lesson</th><th>Cumulative vocab</th><th>New lemmas</th><th>Recycled lemmas</th><th>UK tokens</th><th>EN tokens</th><th>UK %</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>1</td><td>44</td><td>44</td><td>0</td><td>221</td><td>577</td><td>27.69</td></tr>
+<tr><td>1</td><td>2</td><td>84</td><td>40</td><td>23</td><td>189</td><td>612</td><td>23.6</td></tr>
+<tr><td>1</td><td>3</td><td>106</td><td>22</td><td>30</td><td>208</td><td>545</td><td>27.62</td></tr>
+<tr><td>1</td><td>4</td><td>140</td><td>34</td><td>47</td><td>312</td><td>751</td><td>29.35</td></tr>
+<tr><td>1</td><td>5</td><td>190</td><td>50</td><td>30</td><td>189</td><td>434</td><td>30.34</td></tr>
+<tr><td>1</td><td>6</td><td>219</td><td>29</td><td>39</td><td>280</td><td>426</td><td>39.66</td></tr>
+<tr><td>1</td><td>7</td><td>242</td><td>23</td><td>57</td><td>308</td><td>593</td><td>34.18</td></tr>
+<tr><td>1</td><td>20</td><td>573</td><td>39</td><td>131</td><td>409</td><td>441</td><td>48.12</td></tr>
+<tr><td>1</td><td>21</td><td>593</td><td>20</td><td>52</td><td>300</td><td>429</td><td>41.15</td></tr>
+<tr><td>1</td><td>22</td><td>621</td><td>28</td><td>77</td><td>518</td><td>558</td><td>48.14</td></tr>
+<tr><td>1</td><td>23</td><td>647</td><td>26</td><td>53</td><td>192</td><td>336</td><td>36.36</td></tr>
+<tr><td>2</td><td>41</td><td>1122</td><td>16</td><td>165</td><td>446</td><td>668</td><td>40.04</td></tr>
+<tr><td>2</td><td>42</td><td>1153</td><td>31</td><td>162</td><td>419</td><td>430</td><td>49.35</td></tr>
+<tr><td>2</td><td>47</td><td>1292</td><td>28</td><td>150</td><td>478</td><td>531</td><td>47.37</td></tr>
+<tr><td>2</td><td>80</td><td>2858</td><td>48</td><td>359</td><td>870</td><td>346</td><td>71.55</td></tr>
+<tr><td>3</td><td>81</td><td>2903</td><td>45</td><td>206</td><td>819</td><td>875</td><td>48.35</td></tr>
+<tr><td>3</td><td>99</td><td>3622</td><td>38</td><td>382</td><td>1298</td><td>1001</td><td>56.46</td></tr>
+<tr><td>3</td><td>120</td><td>4470</td><td>24</td><td>280</td><td>1009</td><td>1011</td><td>49.95</td></tr>
+</tbody>
+</table>
+<p>ULP S1 lesson 1 numerator/denominator evidence: <strong>221 VESUM Ukrainian tokens</strong> / <strong>798 counted language tokens</strong> = <strong>27.69%</strong>.</p>
+<pre>{
+  &quot;cumulative_vocab_count&quot;: 44,
+  &quot;en_density_pct&quot;: 72.31,
+  &quot;en_token_count&quot;: 577,
+  &quot;lesson_num&quot;: 1,
+  &quot;new_lemma_samples&quot;: [
+    &quot;а&quot;,
+    &quot;баба&quot;,
+    &quot;бачити&quot;,
+    &quot;бе&quot;,
+    &quot;бити&quot;,
+    &quot;бре&quot;,
+    &quot;в&quot;,
+    &quot;ви&quot;,
+    &quot;во&quot;,
+    &quot;все&quot;,
+    &quot;він&quot;,
+    &quot;го&quot;,
+    &quot;до&quot;,
+    &quot;добрий&quot;,
+    &quot;ж&quot;,
+    &quot;же&quot;,
+    &quot;ко&quot;,
+    &quot;любити&quot;,
+    &quot;мама&quot;,
+    &quot;мора&quot;
+  ],
+  &quot;new_lemmas&quot;: 44,
+  &quot;non_vesum_surface_count&quot;: 107,
+  &quot;non_vesum_surface_samples&quot;: [
+    &quot;анна&quot;,
+    &quot;ву&quot;,
+    &quot;гара&quot;,
+    &quot;да&quot;,
+    &quot;дий&quot;,
+    &quot;ду&quot;,
+    &quot;зва&quot;,
+    &quot;зд&quot;,
+    &quot;зеле&quot;,
+    &quot;зиво&quot;,
+    &quot;ий&quot;,
+    &quot;к&quot;,
+    &quot;ка&quot;,
+    &quot;катя&quot;,
+    &quot;ки&quot;,
+    &quot;кож&quot;,
+    &quot;льно&quot;,
+    &quot;лю&quot;,
+    &quot;марічка&quot;,
+    &quot;непога&quot;
+  ],
+  &quot;raw_uk_surface_count&quot;: 328,
+  &quot;recycled_lemma_samples&quot;: [],
+  &quot;recycled_lemmas&quot;: 0,
+  &quot;season&quot;: 1,
+  &quot;source_file&quot;: &quot;ULP 1-00 Lesson Notes (all in one file) (2023).txt&quot;,
+  &quot;uk_density_pct&quot;: 27.69,
+  &quot;uk_token_count&quot;: 221
+}</pre>
+
+<h2>Recycle Cadence</h2>
+<p>Consecutive lemma revisit lag distribution across all six seasons:</p>
+<pre>{
+  &quot;lag_observation_count&quot;: 96821,
+  &quot;lemma_count_with_revisits&quot;: 7062,
+  &quot;mean_lag&quot;: 7.9,
+  &quot;median_lag&quot;: 2,
+  &quot;p25_lag&quot;: 1.0,
+  &quot;p75_lag&quot;: 6.0,
+  &quot;p90_lag&quot;: 21
+}</pre>
+<p>Chosen defaults: A1 uses the replay p75 revisit lag (6 lessons) and a conservative floor of 3 recycled occurrences, derived by scaling the S1 lower-decile recycled-lemma count (30) to the project module scale. A2 adds two lessons of spacing and doubles the practical floor; B1+ uses the replay p90 lag and a scaled S4-S6 lower-bound floor.</p>
+<pre>{
+  &quot;a1&quot;: {
+    &quot;recycle_floor&quot;: 3,
+    &quot;recycle_window&quot;: 6
+  },
+  &quot;a2&quot;: {
+    &quot;recycle_floor&quot;: 6,
+    &quot;recycle_window&quot;: 8
+  },
+  &quot;default&quot;: {
+    &quot;recycle_floor&quot;: 12,
+    &quot;recycle_window&quot;: 21
+  }
+}</pre>
+
+<h2>Sensitivity Analysis</h2>
+<table>
+<thead><tr><th>Family</th><th>Band</th><th>Chosen knee</th><th>Order-preserving interval</th><th>Sensitivity note</th></tr></thead>
+<tbody>
+<tr><td>a1</td><td>a1-m01-03</td><td>0</td><td>fixed floor</td><td>First band anchor; moving it would remove the zero-vocab state.</td></tr>
+<tr><td>a1</td><td>a1-m04-06</td><td>140</td><td>1–241</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a1</td><td>a1-m07-14</td><td>242</td><td>141–572</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a1</td><td>a1-m15-24</td><td>573</td><td>243–592</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a1</td><td>a1-m25-34</td><td>593</td><td>574–620</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a1</td><td>a1-m35-54</td><td>621</td><td>594–646</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a1</td><td>a1-m55+</td><td>647</td><td>622–∞</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a2</td><td>a2-bridge</td><td>0</td><td>fixed floor</td><td>First band anchor; moving it would remove the zero-vocab state.</td></tr>
+<tr><td>a2</td><td>a2-ramp</td><td>1153</td><td>1–1291</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a2</td><td>a2-m01-20</td><td>1292</td><td>1154–3621</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a2</td><td>a2-m21-50</td><td>3622</td><td>1293–4469</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+<tr><td>a2</td><td>a2-m51-70</td><td>4470</td><td>3623–∞</td><td>Neighboring values inside this interval preserve threshold order; ±10 was checked against the representative slice.</td></tr>
+</tbody>
+</table>
+
+<h2>Backward Compatibility: A1 m01-m03</h2>
+<p>Static flag-off output versus ULP-derived flag-on output for a hypothetical S1-style cumulative progression. All advisory deltas are 0 pp, within the ±2 pp acceptance tolerance.</p>
+<table>
+<thead><tr><th>Module</th><th>Cumulative vocab</th><th>Before band</th><th>Before %</th><th>After band</th><th>After %</th><th>Delta min/max pp</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>0</td><td>a1-m01-03</td><td>5-25</td><td>a1-m01-03</td><td>5-25</td><td>0/0</td></tr>
+<tr><td>2</td><td>44</td><td>a1-m01-03</td><td>5-25</td><td>a1-m01-03</td><td>5-25</td><td>0/0</td></tr>
+<tr><td>3</td><td>84</td><td>a1-m01-03</td><td>5-25</td><td>a1-m01-03</td><td>5-25</td><td>0/0</td></tr>
+</tbody>
+</table>
+<pre>[
+  {
+    &quot;after&quot;: {
+      &quot;advisory_pct_max&quot;: 25,
+      &quot;advisory_pct_min&quot;: 5,
+      &quot;key&quot;: &quot;a1-m01-03&quot;
+    },
+    &quot;before&quot;: {
+      &quot;advisory_pct_max&quot;: 25,
+      &quot;advisory_pct_min&quot;: 5,
+      &quot;key&quot;: &quot;a1-m01-03&quot;
+    },
+    &quot;delta_max_pp&quot;: 0,
+    &quot;delta_min_pp&quot;: 0,
+    &quot;hypothetical_cumulative_vocab&quot;: 0,
+    &quot;module_num&quot;: 1
+  },
+  {
+    &quot;after&quot;: {
+      &quot;advisory_pct_max&quot;: 25,
+      &quot;advisory_pct_min&quot;: 5,
+      &quot;key&quot;: &quot;a1-m01-03&quot;
+    },
+    &quot;before&quot;: {
+      &quot;advisory_pct_max&quot;: 25,
+      &quot;advisory_pct_min&quot;: 5,
+      &quot;key&quot;: &quot;a1-m01-03&quot;
+    },
+    &quot;delta_max_pp&quot;: 0,
+    &quot;delta_min_pp&quot;: 0,
+    &quot;hypothetical_cumulative_vocab&quot;: 44,
+    &quot;module_num&quot;: 2
+  },
+  {
+    &quot;after&quot;: {
+      &quot;advisory_pct_max&quot;: 25,
+      &quot;advisory_pct_min&quot;: 5,
+      &quot;key&quot;: &quot;a1-m01-03&quot;
+    },
+    &quot;before&quot;: {
+      &quot;advisory_pct_max&quot;: 25,
+      &quot;advisory_pct_min&quot;: 5,
+      &quot;key&quot;: &quot;a1-m01-03&quot;
+    },
+    &quot;delta_max_pp&quot;: 0,
+    &quot;delta_min_pp&quot;: 0,
+    &quot;hypothetical_cumulative_vocab&quot;: 84,
+    &quot;module_num&quot;: 3
+  }
+]</pre>
+
+<h2>Rejected Non-VESUM Surfaces</h2>
+<p>Most rejected surfaces are PDF extraction fragments, names, abbreviations, or stress-split syllables. They are excluded from density counts.</p>
+<table>
+<thead><tr><th>Surface</th><th>Count</th></tr></thead>
+<tbody>
+<tr><td>тися</td><td>1247</td></tr>
+<tr><td>украї</td><td>1090</td></tr>
+<tr><td>ю</td><td>914</td></tr>
+<tr><td>бу</td><td>794</td></tr>
+<tr><td>ду</td><td>678</td></tr>
+<tr><td>анна</td><td>640</td></tr>
+<tr><td>ння</td><td>605</td></tr>
+<tr><td>н</td><td>566</td></tr>
+<tr><td>ва</td><td>551</td></tr>
+<tr><td>ї</td><td>545</td></tr>
+<tr><td>п</td><td>504</td></tr>
+<tr><td>к</td><td>492</td></tr>
+<tr><td>ли</td><td>479</td></tr>
+<tr><td>христина</td><td>435</td></tr>
+<tr><td>ро</td><td>426</td></tr>
+<tr><td>ки</td><td>418</td></tr>
+<tr><td>ра</td><td>416</td></tr>
+<tr><td>д</td><td>414</td></tr>
+<tr><td>ни</td><td>414</td></tr>
+<tr><td>р</td><td>358</td></tr>
+</tbody>
+</table>
+
+<h2>Final Constants</h2>
+<pre>{
+  &quot;USE_ULP_IMMERSION_DERIVATION&quot;: true,
+  &quot;_RECYCLE_CADENCE_DEFAULTS&quot;: {
+    &quot;a1&quot;: {
+      &quot;recycle_floor&quot;: 3,
+      &quot;recycle_window&quot;: 6
+    },
+    &quot;a2&quot;: {
+      &quot;recycle_floor&quot;: 6,
+      &quot;recycle_window&quot;: 8
+    },
+    &quot;default&quot;: {
+      &quot;recycle_floor&quot;: 12,
+      &quot;recycle_window&quot;: 21
+    }
+  },
+  &quot;_ULP_VOCAB_KNEE_PER_BAND&quot;: {
+    &quot;a1&quot;: [
+      [
+        0,
+        &quot;a1-m01-03&quot;
+      ],
+      [
+        140,
+        &quot;a1-m04-06&quot;
+      ],
+      [
+        242,
+        &quot;a1-m07-14&quot;
+      ],
+      [
+        573,
+        &quot;a1-m15-24&quot;
+      ],
+      [
+        593,
+        &quot;a1-m25-34&quot;
+      ],
+      [
+        621,
+        &quot;a1-m35-54&quot;
+      ],
+      [
+        647,
+        &quot;a1-m55+&quot;
+      ]
+    ],
+    &quot;a2&quot;: [
+      [
+        0,
+        &quot;a2-bridge&quot;
+      ],
+      [
+        1153,
+        &quot;a2-ramp&quot;
+      ],
+      [
+        1292,
+        &quot;a2-m01-20&quot;
+      ],
+      [
+        3622,
+        &quot;a2-m21-50&quot;
+      ],
+      [
+        4470,
+        &quot;a2-m51-70&quot;
+      ]
+    ],
+    &quot;b1&quot;: [
+      [
+        0,
+        &quot;b1-core&quot;
+      ]
+    ],
+    &quot;default&quot;: [
+      [
+        0,
+        &quot;b2+&quot;
+      ]
+    ]
+  }
+}</pre>
+</body>
+</html>
