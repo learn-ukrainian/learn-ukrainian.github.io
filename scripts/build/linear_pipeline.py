@@ -5629,7 +5629,14 @@ def _jsx_tag(jsx_block: str) -> str | None:
 
 
 def _jsx_text_values(jsx_block: str) -> list[str]:
-    return re.findall(r"\btext\s*(?:=|:)\s*\"([^\"\n]*)\"", jsx_block)
+    """Extract canonical UK-content attributes from V7 components.
+
+    `text=` is the legacy convention; `uk=` is the V7 DialogueBox convention
+    introduced by the a1-m15-24 shape contract (#1964 / PR #1962).
+    """
+    text_attrs = re.findall(r"\btext\s*(?:=|:)\s*\"([^\"\n]*)\"", jsx_block)
+    uk_attrs = re.findall(r"\buk\s*(?:=|:)\s*\"([^\"\n]*)\"", jsx_block)
+    return text_attrs + uk_attrs
 
 
 def _component_language_text(tag: str, jsx_block: str) -> str:

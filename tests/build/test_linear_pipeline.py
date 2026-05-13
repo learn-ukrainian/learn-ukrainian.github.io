@@ -59,6 +59,37 @@ def test_plan_check_rejects_missing_required_key(tmp_path: Path) -> None:
         linear_pipeline.plan_check(path)
 
 
+def test_jsx_text_values_extracts_uk_attribute() -> None:
+    result = linear_pipeline._jsx_text_values(
+        '<DialogueBox uk="привіт" en="hi" />'
+    )
+
+    assert result == ["привіт"]
+
+
+def test_jsx_text_values_extracts_legacy_text_attribute() -> None:
+    result = linear_pipeline._jsx_text_values('<DialogueBox text="привіт" />')
+
+    assert result == ["привіт"]
+
+
+def test_jsx_text_values_extracts_both_when_present() -> None:
+    result = linear_pipeline._jsx_text_values(
+        '<DialogueBox text="доброго ранку" /><DialogueBox uk="як справи?" en="how are you?" />'
+    )
+
+    assert result == ["доброго ранку", "як справи?"]
+
+
+def test_component_language_text_dialoguebox_uk_prop() -> None:
+    result = linear_pipeline._component_language_text(
+        "DialogueBox",
+        '<DialogueBox uk="привіт" en="hi" />',
+    )
+
+    assert result == "привіт"
+
+
 def test_render_phase_prompt_fills_registered_tokens() -> None:
     plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
     plan = linear_pipeline.plan_check(plan_path)
