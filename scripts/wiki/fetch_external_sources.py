@@ -30,19 +30,23 @@ import os
 import re
 import socket
 import subprocess
+import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 import requests
 import yaml
 from bs4 import BeautifulSoup
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
 EXT_RESOURCES = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
 VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
@@ -113,6 +117,13 @@ YOUTUBE_CHANNELS: dict[str, YouTubeChannel] = {
         output_filename="realna_istoria.jsonl",
         speaker="Akím Galímov",
         description="Реальна Історія — HIST, BIO, ISTORIO",
+    ),
+    "pohribnyi-pronunciation": YouTubeChannel(
+        key="pohribnyi-pronunciation",
+        url="https://www.youtube.com/playlist?list=PLKTBLqy7kMugWc9_dOpw18zaIlhuBVtgz",
+        output_filename="pohribnyi_pronunciation.jsonl",
+        speaker="Микола Погрібний",
+        description="Українська літературна вимова (3LP, 1992) — canonical pronunciation reference",
     ),
     "imtgsh": YouTubeChannel(
         key="imtgsh",
@@ -309,6 +320,9 @@ def normalize_channel_url(channel_url: str, *, videos_tab: bool = False) -> str:
 
     parsed = urlparse(normalized)
     if parsed.netloc not in {"youtube.com", "www.youtube.com"}:
+        return normalized
+
+    if parsed.path == "/playlist" and parse_qs(parsed.query).get("list"):
         return normalized
 
     parts = [part for part in parsed.path.split("/") if part]
