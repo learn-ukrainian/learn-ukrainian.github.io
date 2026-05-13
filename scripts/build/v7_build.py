@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import re
+import subprocess
 import sys
 import time
 from collections.abc import Callable, Mapping
@@ -21,6 +23,8 @@ from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
+FETCH_TIMEOUT_S = 30
+WORKTREE_AUTO = "auto"
 WRITER_ALIASES = {
     "claude": "claude-tools",
     "gemini": "gemini-tools",
@@ -38,6 +42,30 @@ class LastEventTracker:
         self.event_type = event
         self.event_ts = datetime.now(UTC).isoformat()
         emit_event(event, **fields)
+
+
+@dataclass(slots=True)
+class BuildWorktree:
+    path: Path
+    branch: str
+    base_sha: str
+    repo_root: Path
+
+
+class WorktreeSetupError(RuntimeError):
+    exit_code = 1
+
+
+class WorktreeRepoError(WorktreeSetupError):
+    exit_code = 2
+
+
+class WorktreePathExists(WorktreeSetupError):
+    exit_code = 3
+
+
+class WorktreeAddFailed(WorktreeSetupError):
+    exit_code = 4
 
 
 def emit_event(event: str, **fields: Any) -> None:
@@ -71,6 +99,288 @@ def _resolve_project_path(raw: str | None) -> Path | None:
     if not path.is_absolute():
         path = PROJECT_ROOT / path
     return path
+
+
+def _run_git(
+    args: list[str],
+    *,
+    cwd: Path,
+    timeout: int | None = None,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+    )
+
+
+def _repo_root_from_cwd() -> Path:
+    try:
+        proc = _run_git(["rev-parse", "--show-toplevel"], cwd=Path.cwd())
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise WorktreeRepoError(
+            f"cwd must be inside the repository to use --worktree: {exc}"
+        ) from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "not a git repository").strip()
+        raise WorktreeRepoError(
+            f"cwd must be inside the repository to use --worktree: {detail}"
+        )
+    repo_root = Path((proc.stdout or "").strip()).resolve()
+    if repo_root != PROJECT_ROOT:
+        raise WorktreeRepoError(
+            "cwd must be inside this repository to use --worktree "
+            f"(got {repo_root}, expected {PROJECT_ROOT})"
+        )
+    return repo_root
+
+
+def _main_checkout_root(repo_root: Path) -> Path:
+    proc = _run_git(["rev-parse", "--git-common-dir"], cwd=repo_root)
+    if proc.returncode != 0:
+        return repo_root
+    common_dir = Path((proc.stdout or "").strip())
+    if not common_dir.is_absolute():
+        common_dir = repo_root / common_dir
+    common_dir = common_dir.resolve()
+    if common_dir.name == ".git":
+        return common_dir.parent
+    return repo_root
+
+
+def _python_executable(repo_root: Path) -> Path:
+    main_checkout = _main_checkout_root(repo_root)
+    main_python = main_checkout / ".venv" / "bin" / "python"
+    if main_python.exists():
+        return main_python
+    return repo_root / ".venv" / "bin" / "python"
+
+
+def _safe_component(raw: str) -> str:
+    safe = re.sub(r"[^A-Za-z0-9._/-]+", "-", raw).strip("./-")
+    safe = re.sub(r"/{2,}", "/", safe)
+    return safe
+
+
+def _safe_path_component(raw: str) -> str:
+    return re.sub(r"[^A-Za-z0-9._-]+", "-", raw).strip("./-")
+
+
+def _utc_timestamp() -> str:
+    return datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
+
+
+def _has_timestamp_suffix(raw: str) -> bool:
+    return re.search(r"\d{8}-\d{6}$", raw) is not None
+
+
+def _default_worktree_path(repo_root: Path, level: str, slug: str, timestamp: str) -> Path:
+    safe_level = _safe_path_component(level) or "level"
+    safe_slug = _safe_path_component(slug) or "module"
+    return repo_root / ".worktrees" / "builds" / f"{safe_level}-{safe_slug}-{timestamp}"
+
+
+def _derive_build_branch(
+    *,
+    level: str,
+    slug: str,
+    timestamp: str,
+    path: Path,
+    explicit_path: bool,
+) -> str:
+    safe_level = _safe_component(level) or "level"
+    default_suffix = f"{_safe_component(slug) or 'module'}-{timestamp}"
+    if explicit_path:
+        path_suffix = _safe_component(path.name)
+        if not path_suffix:
+            suffix = default_suffix
+        elif _has_timestamp_suffix(path_suffix):
+            suffix = path_suffix
+        else:
+            suffix = f"{path_suffix}-{timestamp}"
+    else:
+        suffix = default_suffix
+    return f"build/{safe_level}/{suffix}"
+
+
+def _fetch_origin_main(repo_root: Path) -> bool:
+    try:
+        fetch = _run_git(["fetch", "origin"], cwd=repo_root, timeout=FETCH_TIMEOUT_S)
+    except subprocess.TimeoutExpired:
+        print(
+            f"Warning: git fetch origin timed out after {FETCH_TIMEOUT_S}s; "
+            "falling back to local main.",
+            file=sys.stderr,
+        )
+        return False
+    except OSError as exc:
+        print(
+            f"Warning: git fetch origin failed ({exc}); falling back to local main.",
+            file=sys.stderr,
+        )
+        return False
+    if fetch.returncode != 0:
+        detail = (fetch.stderr or fetch.stdout or "git fetch origin failed").strip()
+        print(
+            f"Warning: {detail}; falling back to local main.",
+            file=sys.stderr,
+        )
+        return False
+    verify = _run_git(["rev-parse", "--verify", "origin/main"], cwd=repo_root)
+    if verify.returncode == 0:
+        return True
+    detail = (verify.stderr or verify.stdout or "origin/main is unavailable").strip()
+    print(
+        f"Warning: {detail}; falling back to local main.",
+        file=sys.stderr,
+    )
+    return False
+
+
+def _resolve_short_sha(repo_root: Path, ref: str) -> str:
+    proc = _run_git(["rev-parse", "--short", ref], cwd=repo_root)
+    if proc.returncode != 0:
+        return ref
+    return (proc.stdout or "").strip() or ref
+
+
+def _provision_data_symlinks(worktree_path: Path, main_checkout_root: Path) -> None:
+    for relative in (Path("data") / "sources.db", Path("data") / "vesum.db"):
+        source = main_checkout_root / relative
+        if not source.exists():
+            print(
+                f"Warning: skipping worktree data link for missing {source}",
+                file=sys.stderr,
+            )
+            continue
+        target = worktree_path / relative
+        if target.exists() or target.is_symlink():
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.symlink_to(source.resolve())
+
+
+def _setup_worktree(level: str, slug: str, raw_path: str | None) -> BuildWorktree:
+    repo_root = _repo_root_from_cwd()
+    timestamp = _utc_timestamp()
+    explicit_path = raw_path not in (None, WORKTREE_AUTO)
+    if explicit_path:
+        path = Path(str(raw_path)).expanduser()
+        if not path.is_absolute():
+            path = repo_root / path
+        worktree_path = path.resolve()
+    else:
+        worktree_path = _default_worktree_path(repo_root, level, slug, timestamp)
+    branch = _derive_build_branch(
+        level=level,
+        slug=slug,
+        timestamp=timestamp,
+        path=worktree_path,
+        explicit_path=explicit_path,
+    )
+
+    if worktree_path.exists():
+        raise WorktreePathExists(
+            f"Worktree path {worktree_path} exists; remove with "
+            f"`git worktree remove {worktree_path}` or pass a different "
+            "`--worktree PATH`."
+        )
+
+    base_ref = "origin/main" if _fetch_origin_main(repo_root) else "main"
+    base_sha = _resolve_short_sha(repo_root, base_ref)
+    worktree_path.parent.mkdir(parents=True, exist_ok=True)
+    proc = _run_git(
+        ["worktree", "add", "-b", branch, str(worktree_path), base_ref],
+        cwd=repo_root,
+    )
+    if proc.returncode != 0:
+        raise WorktreeAddFailed(
+            (proc.stderr or proc.stdout or "git worktree add failed").strip()
+        )
+
+    _provision_data_symlinks(worktree_path, _main_checkout_root(repo_root))
+    return BuildWorktree(
+        path=worktree_path,
+        branch=branch,
+        base_sha=base_sha,
+        repo_root=repo_root,
+    )
+
+
+def _strip_worktree_args(argv: list[str]) -> list[str]:
+    stripped: list[str] = []
+    skip_next = False
+    for idx, item in enumerate(argv):
+        if skip_next:
+            skip_next = False
+            continue
+        if item == "--worktree":
+            if idx + 1 < len(argv) and not argv[idx + 1].startswith("-"):
+                skip_next = True
+            continue
+        if item.startswith("--worktree="):
+            continue
+        stripped.append(item)
+    return stripped
+
+
+def _print_worktree_summary(
+    worktree: BuildWorktree,
+    *,
+    level: str,
+    slug: str,
+    result: str,
+) -> None:
+    print(f"BUILD_WORKTREE={worktree.path}")
+    print(f"BUILD_BRANCH={worktree.branch}")
+    print(f"BUILD_BASE={worktree.base_sha}")
+    print(f"BUILD_RESULT={result}")
+    print("Next steps if successful:")
+    print(f"  cd {worktree.path}")
+    print("  git status")
+    print(
+        "  git add "
+        f"curriculum/l2-uk-en/{level}/{slug}/*.yaml "
+        f"starlight/src/content/docs/{level}/{slug}.mdx"
+    )
+    print('  git commit -m "feat(content): build module"')
+    print(f"  git push -u origin {worktree.branch}")
+    print('  gh pr create --title "feat(content): build module" --body "..."')
+    print("Next steps if you want to discard:")
+    print(f"  git worktree remove {worktree.path}")
+    print(f"  git branch -D {worktree.branch}")
+
+
+def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
+    level = args.level.lower()
+    slug = args.slug
+    try:
+        worktree = _setup_worktree(level, slug, args.worktree)
+    except WorktreeSetupError as exc:
+        print(str(exc), file=sys.stderr)
+        return exc.exit_code
+
+    result = "failed"
+    child_argv = _strip_worktree_args(raw_argv)
+    command = [
+        str(_python_executable(worktree.repo_root)),
+        "scripts/build/v7_build.py",
+        *child_argv,
+    ]
+    try:
+        proc = subprocess.run(command, cwd=worktree.path, check=False)
+        exit_code = proc.returncode
+        if exit_code == 0:
+            result = "success"
+    except OSError as exc:
+        print(f"v7_build worktree child failed to start: {exc}", file=sys.stderr)
+        exit_code = 1
+    finally:
+        _print_worktree_summary(worktree, level=level, slug=slug, result=result)
+    return exit_code
 
 
 def _phase_done(
@@ -213,6 +523,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run\n"
+            "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --worktree\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-05/gpt55.write.jsonl\n"
             "  .venv/bin/python scripts/build/v7_build.py b1-pro intro --out /tmp/v7-intro\n\n"
@@ -221,10 +532,18 @@ def build_parser() -> argparse.ArgumentParser:
             "artifacts, knowledge_packet.md, writer_prompt.md, python_qg.json, "
             "llm_qg.json, and {slug}.mdx under --out or "
             "curriculum/l2-uk-en/{level}/{slug}/. Dry runs do not write files.\n\n"
+            "Worktrees:\n"
+            "  Pass --worktree to create .worktrees/builds/{level}-{slug}-{timestamp}/ "
+            "and run this build there on a build/{level}/{slug}-{timestamp} branch. "
+            "Pass --worktree PATH to choose the worktree path; relative paths "
+            "resolve from the repository root. If --out is also passed, relative "
+            "--out paths resolve inside the build worktree.\n\n"
             "Exit codes:\n"
             "  0 on successful build or dry run.\n"
             "  1 on plan, packet, writer, QG, review, MDX, or filesystem failure.\n"
-            "  2 on command-line usage errors from argparse.\n\n"
+            "  2 on command-line usage errors from argparse or --worktree outside this repo.\n"
+            "  3 when the requested --worktree path already exists.\n"
+            "  4 when git worktree add fails.\n\n"
             "  124 when a writer subprocess is killed after --writer-timeout "
             "seconds of stdout silence.\n\n"
             "Related:\n"
@@ -284,7 +603,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help=(
             "Output directory for full-build artifacts (default: "
             "curriculum/l2-uk-en/{level}/{slug}/). Relative paths resolve "
-            "from the repository root."
+            "from the repository root, or from the build worktree root when "
+            "--worktree is used."
+        ),
+    )
+    parser.add_argument(
+        "--worktree",
+        nargs="?",
+        const=WORKTREE_AUTO,
+        default=None,
+        metavar="PATH",
+        help=(
+            "Create a fresh git worktree and run the build inside it. With no "
+            "PATH, uses .worktrees/builds/{level}-{slug}-{YYYYMMDD-HHMMSS}/ "
+            "and branch build/{level}/{slug}-{YYYYMMDD-HHMMSS}. With PATH, "
+            "uses that path and derives the branch from its basename when "
+            "possible."
         ),
     )
     parser.add_argument(
@@ -300,7 +634,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    args = parse_args(raw_argv)
+    if args.worktree is not None:
+        return _run_in_worktree(args, raw_argv)
     telemetry_out = _resolve_project_path(args.telemetry_out)
     with linear_pipeline.telemetry_event_sink(telemetry_out):
         return _run(args)
