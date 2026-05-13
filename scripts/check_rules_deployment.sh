@@ -63,7 +63,13 @@ check_pair \
     "rules/cli-help-standard.md" \
     "rules/model-assignment.md" || drift=1
 check_pair "claude_extensions" ".agent" "wake" "cache" || drift=1
-check_pair "claude_extensions" ".codex" "agents/curriculum-maintainer.toml" "config.toml" "hooks.json" || drift=1
+check_pair \
+    "claude_extensions" \
+    ".codex" \
+    "agents/curriculum-orchestrator.toml" \
+    "agents/curriculum-writer.toml" \
+    "config.toml" \
+    "hooks.json" || drift=1
 check_pair "claude_extensions/skills" ".agents/skills" || drift=1
 check_pair "gemini_extensions" ".gemini" "docs/" "rules/" || drift=1
 check_pair "claude_extensions/rules" ".gemini/rules" || drift=1

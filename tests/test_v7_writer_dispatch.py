@@ -247,7 +247,7 @@ def test_positive_runtime_gate_fires_when_tools_writer_makes_zero_mcp_calls(
 
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
-        match="MCP_TOOLS_NEVER_INVOKED",
+        match="mcp_tools_never_invoked",
     ):
         linear_pipeline.invoke_writer(
             "Write the module.",

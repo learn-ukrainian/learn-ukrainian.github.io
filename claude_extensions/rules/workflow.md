@@ -131,7 +131,7 @@ were trying to reconstruct.
 
 The Claude Code v2.1.139 `claude agents` command is a **static
 configuration lister**, not a live-session view. Its output lists
-loaded agent DEFINITIONS (e.g. `curriculum-maintainer`, `Explore`,
+loaded agent DEFINITIONS (e.g. `curriculum-orchestrator`, `Explore`,
 `Plan`, `claude`) and labels them "active" — meaning "loaded into the
 current process," NOT "running a session." Verified 2026-05-12 against
 Claude Code 2.1.139 (`claude agents --format json` is rejected with

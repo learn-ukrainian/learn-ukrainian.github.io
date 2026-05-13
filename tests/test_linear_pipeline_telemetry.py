@@ -98,14 +98,14 @@ def _writer_tool_calls() -> list[dict[str, Any]]:
             "duration_ms": 421,
         },
         {
-            "tool": "search_definitions",
+            "tool": "mcp__sources__search_definitions",
             "section": "vocabulary",
             "args": {"query": "кава", "limit": 1},
             "result": [{"definition": "Fixture definition"}],
             "duration_ms": 88,
         },
         {
-            "tool": "verify_lemma",
+            "tool": "mcp__sources__verify_lemma",
             "section": "practice",
             "args": {"lemma": "привіт"},
             "result": [{"word_form": "привіт"}],

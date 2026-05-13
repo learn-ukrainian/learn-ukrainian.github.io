@@ -17,6 +17,7 @@ from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +28,7 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.build.citation_matcher import (
     extract_citation_key,
     extract_plan_reference_titles,
@@ -199,6 +201,23 @@ WRITER_TOOL_NAMES = frozenset(
         "search_text",
         "check_modern_form",
     }
+)
+WRITER_ALLOWED_TOOL_PREFIX = "mcp__sources__"
+WRITER_INFRA_DENYLIST_PATHS = (
+    "docs/session-state/**",
+    "docs/decisions/**",
+    "docs/dispatch-briefs/**",
+    "memory/MEMORY.md",
+    "~/.claude/CLAUDE.md",
+    "CLAUDE.md",
+    "scripts/delegate.py",
+    "scripts/ai_agent_bridge/**",
+    "claude_extensions/agents/curriculum-orchestrator.md",
+    "claude_extensions/rules/**",
+    ".claude/rules/**",
+    "*handoff*",
+    "*orchestration*",
+    "*dispatch*",
 )
 RESOURCE_ROLES = frozenset(
     {
@@ -1505,6 +1524,108 @@ def _tool_name_from_call(call: Any) -> str:
     )
 
 
+def _raw_tool_name_from_call(call: Any) -> str:
+    mapped = _mapping_from_tool_call(call)
+    return str(mapped.get("tool") or mapped.get("tool_name") or mapped.get("name") or "").strip()
+
+
+def _tool_args_from_call(call: Mapping[str, Any]) -> Mapping[str, Any]:
+    args = call.get("args", call.get("arguments", {}))
+    return args if isinstance(args, Mapping) else {}
+
+
+def _normalize_trace_path(value: Any) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+    home = str(Path.home())
+    if raw.startswith(f"{home}/"):
+        raw = "~/" + raw[len(home) + 1 :]
+    root = str(PROJECT_ROOT)
+    if raw.startswith(f"{root}/"):
+        raw = raw[len(root) + 1 :]
+    return raw.replace("\\", "/")
+
+
+def _read_path_from_call(call: Mapping[str, Any]) -> str:
+    args = _tool_args_from_call(call)
+    for key in ("file_path", "path", "filename"):
+        if args.get(key):
+            return _normalize_trace_path(args[key])
+    return ""
+
+
+def _is_writer_infra_path(path: str) -> bool:
+    if not path:
+        return False
+    return any(fnmatch(path, pattern) for pattern in WRITER_INFRA_DENYLIST_PATHS)
+
+
+def _failure_record_to_event(record: FailureRecord) -> dict[str, Any]:
+    payload = asdict(record)
+    payload["failure_class"] = record.failure_class.value
+    return payload
+
+
+def classify_writer_trace(
+    writer_tool_calls: list[Mapping[str, Any]],
+) -> list[FailureRecord]:
+    """Classify raw writer trace violations before normalized filtering hides them."""
+    wrong_family_calls: list[dict[str, Any]] = []
+    handoff_reads: list[dict[str, Any]] = []
+
+    for index, raw_call in enumerate(writer_tool_calls):
+        call = _mapping_from_tool_call(raw_call)
+        tool_name = _raw_tool_name_from_call(call)
+        if not tool_name:
+            continue
+        if not tool_name.startswith(WRITER_ALLOWED_TOOL_PREFIX):
+            wrong_family_calls.append(
+                {
+                    "index": index,
+                    "name": tool_name,
+                    "arguments": dict(_tool_args_from_call(call)),
+                }
+            )
+        if tool_name == "Read":
+            read_path = _read_path_from_call(call)
+            if _is_writer_infra_path(read_path):
+                handoff_reads.append(
+                    {
+                        "index": index,
+                        "name": tool_name,
+                        "path": read_path,
+                    }
+                )
+
+    failures: list[FailureRecord] = []
+    if wrong_family_calls:
+        failures.append(
+            FailureRecord(
+                failure_class=FailureClass.INFRA_CONTEXT_CONTAMINATION,
+                sub_class="wrong_tool_family",
+                gate="writer_trace_isolation",
+                severity="TERMINAL",
+                recovery_action="none",
+                evidence={"offending_tool_calls": wrong_family_calls},
+                terminal=True,
+            )
+        )
+    if handoff_reads:
+        failures.append(
+            FailureRecord(
+                failure_class=FailureClass.INFRA_CONTEXT_CONTAMINATION,
+                sub_class="handoff_or_orchestrator_file",
+                gate="writer_trace_isolation",
+                severity="TERMINAL",
+                recovery_action="none",
+                evidence={"offending_reads": handoff_reads},
+                terminal=True,
+            )
+        )
+    return failures
+
+
 def _markdown_fence_spans(text: str) -> list[tuple[int, int]]:
     spans: list[tuple[int, int]] = []
     start: int | None = None
@@ -1912,6 +2033,72 @@ def _enforce_tools_writer_runtime_gate(
     )
 
 
+def _mcp_tools_never_invoked_failure(
+    *,
+    writer: str,
+    module: str,
+    phase_writer_summary: Mapping[str, Any],
+) -> FailureRecord | None:
+    if not writer.endswith("-tools"):
+        return None
+    if phase_writer_summary["tool_calls_total"] != 0:
+        return None
+    return FailureRecord(
+        failure_class=FailureClass.MCP_TOOLS_NEVER_INVOKED,
+        sub_class=None,
+        gate="tools_writer_runtime_gate",
+        severity="HARD",
+        recovery_action="none",
+        evidence={
+            "writer": writer,
+            "module": module,
+            "phase_writer_summary": dict(phase_writer_summary),
+        },
+        terminal=True,
+    )
+
+
+def _enforce_writer_runtime_gates(
+    *,
+    writer: str,
+    module: str,
+    phase_writer_summary: Mapping[str, Any],
+    tool_calls: list[Mapping[str, Any]],
+    event_sink: Callable[..., None] | None = None,
+) -> None:
+    failures = [
+        *classify_writer_trace(tool_calls),
+    ]
+    mcp_failure = _mcp_tools_never_invoked_failure(
+        writer=writer,
+        module=module,
+        phase_writer_summary=phase_writer_summary,
+    )
+    if mcp_failure is not None:
+        failures.append(mcp_failure)
+    if not failures:
+        return
+
+    for record in failures:
+        _emit(
+            event_sink,
+            "writer_failure_class",
+            writer=writer,
+            module=module,
+            **_failure_record_to_event(record),
+        )
+
+    classes = ", ".join(
+        f"{record.failure_class.value}"
+        + (f":{record.sub_class}" if record.sub_class else "")
+        for record in failures
+    )
+    raise LinearPipelineError(
+        f"WRITER_RUNTIME_GATE_FAILED: writer={writer!r} module={module!r} "
+        f"failures=[{classes}]"
+    )
+
+
 def writer_context(
     plan: Mapping[str, Any],
     plan_content: str,
@@ -2038,6 +2225,8 @@ def _runtime_tool_config(
         )
     if mcp_dict:
         tool_config.update(mcp_dict)
+    if agent_label == "claude-tools":
+        tool_config["agent"] = "curriculum-writer"
     assert tool_config.get("output_format") == "stream-json", (
         "tool-call writers must keep output_format='stream-json'; "
         f"got {tool_config.get('output_format')!r}"
@@ -2155,10 +2344,12 @@ def invoke_writer(
             tool_calls=tool_calls,
             event_sink=event_sink,
         )
-        _enforce_tools_writer_runtime_gate(
+        _enforce_writer_runtime_gates(
             writer=writer,
             module=module_ref,
             phase_writer_summary=phase_writer_summary,
+            tool_calls=tool_calls,
+            event_sink=event_sink,
         )
     return response_text
 
