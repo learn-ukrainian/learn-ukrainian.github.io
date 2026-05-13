@@ -96,12 +96,15 @@ def test_plan_references_field_is_supported() -> None:
 
 
 def test_my_morning_module_passes_citations_resolve() -> None:
+    # Source refs must match the LIVE plan_references at curriculum/l2-uk-en/
+    # plans/a1/my-morning.yaml (corrected by PR #1972: Караман p.176 → p.187,
+    # Кравцова Grade 4 p.113 removed as redundant with Захарійчук p.162's
+    # Білоус verse coverage of the same -шся/-ться pronunciation rule).
     plan_path = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en/plans/a1/my-morning.yaml"
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
     result = linear_pipeline._citation_gate(
         [
-            {"source_ref": "Караман, Українська мова, 10 клас, с. 176"},
-            {"source_ref": "Кравцова, Українська мова, 4 клас, с. 113"},
+            {"source_ref": "Караман, Українська мова, 10 клас, с. 187"},
             {"source_ref": "Захарійчук, Українська мова, 4 клас, с. 162"},
         ],
         plan,
