@@ -82,6 +82,12 @@ that failure class. Run each check while drafting, not as a separate pass.
 
    **Verbatim textbook grounding (mandatory).** For each `plan_references` entry, you MUST call `mcp__sources__search_text` with a query targeting that textbook + topic, then quote at least one verbatim block (≥30 words) inline in the relevant section. The citation must include the textbook author + grade + page extracted from the search result, and the quote must be set off as a blockquote so reviewers can verify it. Inventing or paraphrasing in place of retrieving is a hard fail (`textbook_grounding`).
 
+   **Citation discipline.** Sources cited in `module.md` blockquotes and listed in `resources.yaml` MUST be either:
+   1. Listed in the module's `plan_references` (the matcher allows fuzzy match on author + grade + small page drift), OR
+   2. Grounded in a Knowledge Packet retrieval the writer's `mcp__sources__search_text` call actually returned. Cite the chunk's textbook + grade + page verbatim from the search result.
+
+   Do NOT add textbook references outside `plan_references` unless option 2 holds and the citation appears in your `writer_tool_calls.json` evidence. Adding ungrounded out-of-plan citations causes `citations_resolve` to fail and the build to halt.
+
 For heritage defense, route lookups through the canonical MCP tools in this order: (1) `mcp__sources__search_heritage` is the primary entry point — it merges Грінченко 1907, ЕСУМ, slovnyk.me modern/regional dictionaries, and Антоненко-Давидович style warnings, ranking pre-Soviet attestations above modern-only rows. (2) Use `mcp__sources__search_slovnyk_me` only when you specifically need a slovnyk.me single-source result (e.g. СУМ-20 or a regional dictionary not surfaced by `search_heritage`). (3) Standard tools — `check_modern_form` (VESUM), `search_grinchenko_1907`, `search_esum`, literary corpus, and compiled wiki/source citations — remain valid evidence sources alongside the merged heritage tool. Cite the tool name and the dictionary slug in your `<plan_reasoning verification="...">` block. Do not claim heritage verification without naming a concrete tool result.
 For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scripts/wiki/slovnyk_me.py`, especially heritage slugs `newsum`, `holoskevych`, `obsolete_words`, `bukovina`, `franko`, and `slang_lviv`; for merged `search_heritage` rows without `dictionary_slug`, cite `source_family`, `source`, and `classification`. Include the first 80 characters of the raw tool-result `text` verbatim in `<plan_reasoning>`. If `search_heritage` returns empty, emit `<!-- VERIFY: heritage status for "X" unresolved -->` rather than asserting heritage status.
 
@@ -311,6 +317,22 @@ for a teacher narrating their own lesson plan. Hold to this register:
 - **Section length is bounded by the contract YAML.** If you find yourself
   expanding an English bridge sentence, cut it instead. Word budgets are
   authoritative.
+
+**Dialogue format (REQUIRED for gate counting).** All Ukrainian dialogue lines MUST be emitted as one of:
+
+- `<DialogueBox uk="..." en="...">` JSX component (preferred for V7 rendering), or
+- `> `-prefixed Markdown blockquote (Markdown fallback)
+
+The `l2_exposure_floor` gate counts only these two forms. **Em-dash dialogue lines (e.g. `— Привіт, Насте!`) under a `## Діалоги` heading WITHOUT `<DialogueBox>` or `> ` wrapping are an anti-pattern** — the gate cannot count them and the module will fail the dialogue-line floor even when the dialogue is pedagogically present.
+
+Default to `<DialogueBox>` for new modules; `> ` blockquote acceptable when a multi-line dialogue is more naturally rendered as quoted prose.
+
+**Inline gloss for dialogue lines (REQUIRED to clear `long_uk_ceiling`).** Each Ukrainian dialogue line MUST have an inline English gloss within 8 tokens of proximity. Two valid shapes:
+
+- Italic gloss directly after the UK line: `— Привіт, Насте! *(Hi, Nastia!)*`
+- Inside the same DialogueBox prop: `<DialogueBox uk="..." en="...">`
+
+**Anti-pattern: block-bottom gloss.** Do NOT emit all UK dialogue lines first and then a separate "translation:" / "English:" block at the bottom. This causes `long_uk_ceiling` to flag the entire UK run as one unsupported segment, even when every line has a corresponding English translation farther down.
 
 ## Activity Types
 

@@ -30,6 +30,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.build.citation_matcher import (
+    CitationKey,
+    citation_keys_match,
     extract_citation_key,
     extract_plan_reference_titles,
     normalize_citation_ref,
@@ -3693,7 +3695,14 @@ def run_python_qg(
     )
     record("immersion_advisory", _advisory_immersion_pct(module_text, plan))
     record("l2_exposure_floor", _l2_exposure_floor_gate(module_text, plan))
-    record("long_uk_ceiling", _long_uk_ceiling_gate(module_text, plan))
+    record(
+        "long_uk_ceiling",
+        _long_uk_ceiling_gate(
+            module_text,
+            plan,
+            grounding_evidence=gates.get("textbook_grounding"),
+        ),
+    )
     record("component_density", _component_density_gate(module_text, plan))
     record("inject_activity_ids", _inject_activity_gate(module_text, activities))
     record(
@@ -4713,7 +4722,10 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
         source_key = extract_citation_key(source_ref)
         if (
             normalized_ref not in plan_titles
-            and source_key not in plan_keys
+            and (
+                source_key is None
+                or not any(citation_keys_match(source_key, plan_key) for plan_key in plan_keys)
+            )
             and resource.get("packet_chunk_id") is None
         ):
             unknown.append(source_ref)
@@ -5087,8 +5099,10 @@ def _reference_matches_result(
             str(result.get("source_ref") or ""),
             result_text,
         ]
-        if any(extract_citation_key(text) == ref_key for text in citation_texts if text):
-            return True
+        for text in citation_texts:
+            result_key = extract_citation_key(text)
+            if result_key is not None and citation_keys_match(result_key, ref_key):
+                return True
     normalized_ref = _normalize_citation_ref(reference_title).casefold()
     normalized_result = _normalize_citation_ref(result_text).casefold()
     return bool(normalized_ref and normalized_ref in normalized_result)
@@ -5391,11 +5405,21 @@ def _count_uk_example_bullets(text: str) -> int:
     )
 
 
-def _long_uk_ceiling_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+def _long_uk_ceiling_gate(
+    text: str,
+    plan: Mapping[str, Any],
+    *,
+    grounding_evidence: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     policy = get_immersion_policy(str(plan["level"]).lower(), int(plan["sequence"]))
     max_unsupported = int(policy["max_unsupported_uk_words"])
     support_proximity = int(policy["support_proximity"])
-    runs = _unsupported_uk_runs(text, max_unsupported, support_proximity)
+    runs = _unsupported_uk_runs(
+        text,
+        max_unsupported,
+        support_proximity,
+        grounding_evidence=grounding_evidence,
+    )
     return {
         "passed": not runs,
         "required": {
@@ -5413,13 +5437,18 @@ def _unsupported_uk_runs(
     text: str,
     max_unsupported: int,
     support_proximity: int,
+    *,
+    grounding_evidence: Mapping[str, Any] | None = None,
 ) -> list[str]:
     text = _strip_frontmatter_and_headings(_strip_comments(text))
     text = _FENCED_CODE_RE.sub(" ", text)
     text = _JSX_BLOCK_RE.sub(" ", text)
     text = re.sub(r"(?m)^\s*\|.*\|\s*$", " ", text)
     offending: list[str] = []
-    for segment in _unsupported_run_segments(text):
+    for segment in _unsupported_run_segments(
+        text,
+        grounding_evidence=grounding_evidence,
+    ):
         tokens = list(_WORD_RE.finditer(segment))
         run_start: int | None = None
         run_end: int | None = None
@@ -5448,25 +5477,82 @@ def _unsupported_uk_runs(
     return offending[:5]
 
 
-def _unsupported_run_segments(text: str) -> list[str]:
+def _unsupported_run_segments(
+    text: str,
+    *,
+    grounding_evidence: Mapping[str, Any] | None = None,
+) -> list[str]:
+    """Return UK runs that lack inline English support.
+
+    Citation-grounded source blockquotes are exempted as textbook grounding,
+    not learner-target prose. Learner practice blockquotes remain in scope.
+    """
+    grounded_keys = _grounded_citation_keys(grounding_evidence)
     segments: list[str] = []
     prose_lines: list[str] = []
+    quote_lines: list[str] = []
+
+    def flush_prose() -> None:
+        nonlocal prose_lines
+        if prose_lines:
+            segments.append("\n".join(prose_lines))
+            prose_lines = []
+
+    def flush_quote() -> None:
+        nonlocal quote_lines
+        if quote_lines:
+            quote_text = "\n".join(quote_lines)
+            if not _is_grounded_source_blockquote(quote_text, grounded_keys):
+                segments.append(quote_text)
+            quote_lines = []
+
     for line in text.splitlines():
-        if re.match(r"^\s*(?:[-*]\s+|>\s*)", line):
-            if prose_lines:
-                segments.append("\n".join(prose_lines))
-                prose_lines = []
+        quote_match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
+        if quote_match:
+            flush_prose()
+            quote_lines.append(quote_match.group("body"))
+            continue
+        if re.match(r"^\s*[-*]\s+", line):
+            flush_prose()
+            flush_quote()
             segments.append(line)
             continue
         if not line.strip():
-            if prose_lines:
-                segments.append("\n".join(prose_lines))
-                prose_lines = []
+            flush_prose()
+            flush_quote()
             continue
+        flush_quote()
         prose_lines.append(line)
-    if prose_lines:
-        segments.append("\n".join(prose_lines))
+    flush_prose()
+    flush_quote()
     return segments
+
+
+def _grounded_citation_keys(
+    grounding_evidence: Mapping[str, Any] | None,
+) -> set[CitationKey]:
+    if not isinstance(grounding_evidence, Mapping):
+        return set()
+    matched = grounding_evidence.get("matched")
+    if not isinstance(matched, list):
+        return set()
+    return {
+        key
+        for value in matched
+        if (key := extract_citation_key(value)) is not None
+    }
+
+
+def _is_grounded_source_blockquote(
+    quote_text: str,
+    grounded_keys: set[CitationKey],
+) -> bool:
+    if not grounded_keys:
+        return False
+    quote_key = extract_citation_key(quote_text)
+    if quote_key is None:
+        return False
+    return any(citation_keys_match(quote_key, grounded_key) for grounded_key in grounded_keys)
 
 
 def _append_unsupported_run(

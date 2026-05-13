@@ -2091,6 +2091,80 @@ def test_immersion_gate_strips_jsx_blocks_before_long_sentence_check(
     )
 
 
+def test_long_uk_ceiling_exempts_citation_grounded_source_blockquote() -> None:
+    """#1962: source blockquotes cited by textbook_grounding are exempt."""
+    text = (
+        "## Дієслова на -ся\n\n"
+        "> **Караман, 10 клас, с. 176:** *Дієслова із суфіксом -ся(-сь), "
+        "які виражають зворотну дію, називаються зворотними: навчатися, "
+        "закохатися. Сучасний дієслівний суфікс -ся(-сь) — це давня "
+        "коротка форма зворотного займенника себе в Зн. в. однини: "
+        "Я не боюся. — Я ся не бою (діал.). Уживається -ся(-сь) після "
+        "інфінітивного суфікса.*\n\n"
+        "## Мій ранок\n\n"
+        "> Спочатку прокидаюся, потім вмиваюся і одягаюся, після цього "
+        "снідаю і п'ю каву, нарешті йду на роботу — це мій типовий "
+        "ранковий розпорядок без жодних відхилень.\n"
+    )
+    grounding_evidence = {
+        "matched": ["Караман Grade 10, p.176"],
+        "blockquotes_checked": 2,
+    }
+    plan = {"level": "a1", "sequence": 20, "word_target": 1200}
+
+    report = linear_pipeline._long_uk_ceiling_gate(
+        text,
+        plan,
+        grounding_evidence=grounding_evidence,
+    )
+
+    assert not any("Караман" in run for run in report.get("offending_runs", [])), (
+        f"Karaman source blockquote should be exempt; got {report['offending_runs']}"
+    )
+
+
+def test_long_uk_ceiling_still_flags_uncited_learner_blockquote() -> None:
+    """Without citation grounding, learner practice blockquotes stay in scope."""
+    text = (
+        "## Мій ранок\n\n"
+        "> Спочатку прокидаюся о сьомій ранку коли ще темно за вікном "
+        "потім швидко вмиваюся холодною водою бо нагрівач зламався і "
+        "одягаюся в найтепліший одяг щоб не змерзнути коли поспішаю "
+        "до автобуса о восьмій тридцять.\n"
+    )
+    plan = {"level": "a1", "sequence": 20, "word_target": 1200}
+
+    report = linear_pipeline._long_uk_ceiling_gate(
+        text,
+        plan,
+        grounding_evidence={"matched": [], "blockquotes_checked": 1},
+    )
+
+    assert report.get("offending_runs") or report.get("passed") is False
+
+
+def test_citation_matcher_allows_small_page_drift_same_author_grade() -> None:
+    """#1962: same author + grade may drift by a few pages."""
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Кравцова, Українська мова, 4 клас, с. 112"}],
+        {"references": [{"title": "Кравцова Grade 4, p.113"}]},
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_citation_matcher_rejects_different_grade_even_small_page() -> None:
+    """Different grade means a different lesson, even with nearby pages."""
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Аврамченко, Українська мова, 6 клас, с. 112"}],
+        {"references": [{"title": "Аврамченко Grade 4, p.113"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Аврамченко, Українська мова, 6 клас, с. 112"]
+
+
 def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
     """Smoke test: the baseline `_passing_qg_fixture` produces a green report.
 
@@ -2278,6 +2352,40 @@ def test_linear_write_prompt_documents_non_textbook_role_url_requirement() -> No
         "requires url" in normalized_prompt
         or "require a non-empty `url:`" in normalized_prompt
     ), "Template should explicitly state non-textbook roles require url"
+
+
+def test_linear_write_prompt_mandates_dialoguebox_or_blockquote_for_dialogues() -> None:
+    """#1962: writer must emit dialogues in gate-countable form."""
+    template = (
+        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+    ).read_text(encoding="utf-8")
+
+    assert "DialogueBox" in template
+    assert "blockquote" in template.lower() or "`> `" in template
+    assert "em-dash" in template.lower() or "anti-pattern" in template.lower()
+
+
+def test_linear_write_prompt_requires_inline_gloss_within_8_tokens() -> None:
+    """#1962: each dialogue line needs inline English gloss."""
+    template = (
+        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+    ).read_text(encoding="utf-8")
+    lower_template = template.lower()
+
+    assert "inline gloss" in lower_template or "inline english" in lower_template
+    assert "8 tokens" in template or "8 words" in template or "within 8" in template
+    assert "block-bottom" in lower_template or "block bottom" in lower_template
+
+
+def test_linear_write_prompt_restricts_non_plan_citations() -> None:
+    """#1962: writer must not invent out-of-plan citations."""
+    template = (
+        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+    ).read_text(encoding="utf-8")
+
+    assert "plan_references" in template
+    assert "Knowledge Packet" in template or "writer_tool_calls" in template
+    assert "citations_resolve" in template
 
 
 def test_linear_write_prompt_references_component_props_schema_token() -> None:

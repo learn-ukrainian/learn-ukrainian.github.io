@@ -109,3 +109,16 @@ def extract_citation_key(value: Any) -> CitationKey | None:
 
 def fold_citation_author(author: str) -> str:
     return re.sub(r"[^a-z]", "", author.casefold().translate(_CYRILLIC_TO_LATIN))
+
+
+def citation_keys_match(
+    citation: CitationKey,
+    plan_reference: CitationKey,
+    *,
+    page_tolerance: int = 5,
+) -> bool:
+    return (
+        citation.author == plan_reference.author
+        and citation.grade == plan_reference.grade
+        and abs(citation.page - plan_reference.page) <= page_tolerance
+    )
