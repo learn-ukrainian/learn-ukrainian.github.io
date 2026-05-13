@@ -49,7 +49,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
 - **Module manifest**: `curriculum/l2-uk-en/curriculum.yaml` — source of truth for module ordering and slug mapping
-- **Build pipeline**: `.venv/bin/python scripts/build/v7_build.py {level} {slug} [--writer {claude-tools|gemini-tools|codex-tools}]`
+- **Build pipeline**: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree [--writer {claude-tools|gemini-tools|codex-tools}]`
 - **Decision journal**: [`docs/decisions/`](docs/decisions/) — architectural decisions with expiry dates. Check: `.venv/bin/python scripts/check_decisions.py`
 
 ---
