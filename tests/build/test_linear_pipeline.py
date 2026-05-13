@@ -2020,6 +2020,31 @@ def test_linear_write_prompt_carries_anti_meta_narration_directive() -> None:
         )
 
 
+def test_linear_write_prompt_documents_non_textbook_role_url_requirement() -> None:
+    """Regression for #1959: non-textbook resource entries require url:.
+
+    The writer prompt lists valid roles, but the deterministic schema only
+    allows `role: textbook` without a URL. This guards the direct instruction
+    that unverifiable non-textbook entries should be omitted, not emitted with
+    missing or placeholder URLs.
+    """
+    prompt_text = (
+        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+    ).read_text(encoding="utf-8")
+
+    assert "role: textbook" in prompt_text, (
+        "Template should reference role: textbook in the schema-rule explanation"
+    )
+    assert "OMIT THE ENTRY" in prompt_text, (
+        "Template should instruct the writer to omit entries without verifiable URL"
+    )
+    normalized_prompt = prompt_text.lower()
+    assert (
+        "requires url" in normalized_prompt
+        or "require a non-empty `url:`" in normalized_prompt
+    ), "Template should explicitly state non-textbook roles require url"
+
+
 def test_linear_write_prompt_references_component_props_schema_token() -> None:
     """The writer prompt must consume `{COMPONENT_PROPS_SCHEMA}` somewhere.
 

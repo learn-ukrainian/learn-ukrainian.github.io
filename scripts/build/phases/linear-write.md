@@ -219,6 +219,21 @@ In `resources.yaml`, every entry MUST have a `role` field. Valid roles:
 `textbook` (📚), `youtube` (📺), `video` (🎥), `blog` (📝), `podcast` (🎧),
 `audio` (🎧), `article` (📄), `wiki` (🔗).
 
+**Schema rule for non-textbook roles: `url:` is REQUIRED.**
+
+The deterministic schema enforces:
+- `role: textbook` entries do NOT require `url:`.
+- All other roles (`youtube`, `video`, `blog`, `podcast`, `audio`, `article`, `wiki`) REQUIRE a non-empty `url:` field. Schema validation halts the build on any missing URL for these roles.
+
+If you cannot provide a **verified** URL for a non-textbook entry — e.g. the multimedia search returned no usable URL, or the wiki source registry shows only a placeholder identifier like `ext-article-N` with no real title and no URL — **OMIT THE ENTRY ENTIRELY**. Do not emit:
+
+- `url: null`
+- `url: ""`
+- `url: TBD`
+- the entry without the `url:` field
+
+All four patterns fail schema validation. The `resources_search_attempted` gate counts the multimedia search **attempt** in your telemetry, so honest omission of an unverifiable entry does NOT regress the search-obligation gate. Truthful omission is preferred over schema violation (compare MEMORY #M-4: deterministic over hallucination).
+
 ### Phonetic rules — MUST emit IPA notation
 
 For every entry under `phonetic_rules:` in the Wiki Obligations Manifest, the
