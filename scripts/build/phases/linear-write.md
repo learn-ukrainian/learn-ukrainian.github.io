@@ -376,6 +376,30 @@ like `correct_order`, indices are zero-based.
 
 {KNOWLEDGE_PACKET}
 
+## Pre-emit verification (run BEFORE you write any artifact)
+
+Before emitting the four fenced blocks and the `<end_gate>` block, confirm
+you have made AT LEAST one of each of the following tool calls during this
+turn. If any line below is FALSE, make the call now before emitting.
+
+1. `mcp__sources__search_text` — at least one call per `plan_references`
+   textbook entry (textbook grounding obligation; gate
+   `textbook_grounding`).
+2. `mcp__sources__query_wikipedia` OR `mcp__sources__search_external` OR
+   `mcp__sources__search_images` — at least one call (multimedia search
+   obligation; gate `resources_search_attempted`). Honest "no result"
+   counts — the attempt is what the gate counts.
+3. `mcp__sources__verify_words` (or `verify_word` / `verify_lemma`) — at
+   least one call on novel Ukrainian forms before writing them
+   (verification obligation; reviewer evidence requirement).
+4. `mcp__sources__search_style_guide` — at least one call on a Russianism
+   or paronym candidate from the topic vocabulary (heritage-defense
+   obligation; reviewer evidence requirement).
+
+This checklist is not a substitute for the per-mandate instructions above;
+it is a final cross-check that no mandate was forgotten under the attention
+budget of the early-prompt contract directives.
+
 ## HARD STOP RULE
 
 After emitting all required `<plan_reasoning>` blocks, the 4 artifact fences
