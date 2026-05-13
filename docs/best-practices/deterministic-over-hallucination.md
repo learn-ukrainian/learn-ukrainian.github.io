@@ -108,6 +108,40 @@ A rule of thumb: **the moment you introduce a number, name, path, SHA, technical
   2. The deterministic tool for each
   3. The output format that captures the tool evidence (e.g., quote the VESUM lookup output verbatim, not "I checked VESUM")
 
+### Special case — dispatches that write to `data/sources.db`
+
+The 2026-05-13 Pohribnyi YT ingest (PR #1973) is the canonical
+cautionary tale: Codex returned a clean success summary claiming "DB
+migration inserted 35 chunks for channel_id='pohribnyi_pronunciation'"
+but the **canonical `data/sources.db` received zero rows**. The summary
+text was a result-message hallucination; the actual INSERT never landed
+(transaction not committed, wrong path, or some other silent failure).
+Detection lag: ~9 hours, during which the corpus appeared to have data
+it did not.
+
+**Briefs for any ingest / migration / re-chunk dispatch MUST require all
+THREE of the following in the PR body — quoted raw output, not paraphrase:**
+
+1. **BEFORE** — quoted `sqlite3 data/sources.db "SELECT COUNT(*) FROM <table> WHERE <scope>"` output, taken before any write.
+2. **AFTER** — quoted `sqlite3 data/sources.db "SELECT COUNT(*) FROM <table> WHERE <scope>"` output, taken after the write.
+3. **SAMPLE** — quoted `SELECT chunk_id, substr(text, 1, 80) FROM <table> WHERE <scope> LIMIT 3` showing 2-3 real rows with the new metadata visible.
+
+The path must be the canonical `data/sources.db` from the dispatch
+worktree (which is a symlink to main's DB via
+`scripts/delegate.py:_provision_data_symlinks`). If the path is wrong,
+the symlink is missing, or the migration rolled back, the BEFORE/AFTER
+counts will be identical — that's the deterministic signal we need.
+
+Orchestrator MUST independently re-run the AFTER count from the main
+checkout before merging. A merge gated only on the brief's quoted
+output is insufficient — Codex/Gemini might quote a worktree-local DB
+that doesn't propagate. Re-verify against canonical, then merge.
+
+Inline-orchestrator ingestion (the pattern the user established
+2026-05-14 after the Pohribnyi loss) follows the same evidence
+convention — the in-progress run prints BEFORE/AFTER and a sample, and
+the PR body quotes those exact lines.
+
 ## When this rule isn't broken
 
 A short summary that cites no specific facts beyond what was just observed in this turn does NOT need a redundant tool call. ("I just committed X, here's the SHA from the `git push` output we just saw" — the tool was used; the citation is correct.)
@@ -136,7 +170,43 @@ If you're tempted to skip a tool because "the answer is obvious" — that's exac
 
 When this rule is broken in a way that costs real work, append the case here so the next agent reads it before repeating.
 
-- *(none recorded yet)*
+### 2026-05-13 — PR #1973 Pohribnyi YT ingest, phantom-shipped DB rows
+
+**Symptom:** Codex dispatch `ingest-pohribnyi-pronunciation-2026-05-13`
+ran 1341 s, returned `status=done` with a polished result summary
+claiming `"DB migration inserted 35 chunks for channel_id='pohribnyi_pronunciation'"`.
+PR #1973 was merged on that summary's strength. **No data actually
+landed in canonical `data/sources.db`.** Detection: 2026-05-14 morning
+corpus audit, ~9 h after merge:
+
+```
+$ sqlite3 data/sources.db "SELECT channel_id, COUNT(*) FROM external_articles WHERE channel_id LIKE '%pohrib%'"
+(empty)
+
+$ sqlite3 data/sources.db "SELECT MAX(id), COUNT(*) FROM external_articles"
+1199|1199
+```
+
+The JSONL file `data/external_articles/pohribnyi_pronunciation.jsonl`
+also didn't exist on disk despite Codex's claim. Codex's stdout +
+stderr logs from the dispatch were both **0 bytes** for 22 minutes of
+work — no execution trace at all.
+
+**Root cause:** the dispatch brief did not require deterministic
+quoted SELECT-COUNT evidence. The result summary was trusted on its
+own. A separate bug in `build_sources_db.py` (only inserting 8 of 16
+external_articles columns) compounded the failure for the historical
+1199 rows, but the new-row gap was a pure dispatch-trust gap.
+
+**Cost:** ~9 h of phantom corpus state. Required a re-fetch of all 6
+videos + a separate fix PR (#1976) for the column-coverage bug + a
+manual migration to backfill 1199 rows' channel_id from
+`source_file`. Plus this rule update.
+
+**Prevention:** Special-case subsection above ("Special case —
+dispatches that write to `data/sources.db`"). Every DB-write brief
+now mandates BEFORE / AFTER / SAMPLE quoted output; the orchestrator
+independently re-verifies against canonical before merging.
 
 ## Related
 
