@@ -253,3 +253,16 @@ data/*.db.bak
 # Single full graph can be 50MB+; vault has 100s of files. Never in VCS.
 graphify-out/
 **/graphify-out/
+
+# V7 build telemetry — intermediate artifacts emitted per module by
+# scripts/build/v7_build.py. These are large, machine-regenerated on every
+# build, and forbidden in PRs by the AGENTS.md pre-submit checklist
+# ("generated artifacts"). Scoped to the curriculum tree so unrelated files
+# elsewhere with the same names aren't affected. Added 2026-05-13 after a
+# stash containing the dirty post-build tree was dropped and ~30min of
+# validated build output was lost — recurrence prevention.
+curriculum/l2-uk-en/*/*/python_qg.json
+curriculum/l2-uk-en/*/*/wiki_manifest.json
+curriculum/l2-uk-en/*/*/writer_output.raw.md
+curriculum/l2-uk-en/*/*/writer_tool_calls.json
+curriculum/l2-uk-en/*/*/knowledge_packet.md

@@ -111,6 +111,7 @@ Issues survive session expiry — your memory doesn't. Full protocol: `docs/best
 - All work on `main` of the host project dir; use `git worktree add -b <branch> .worktrees/<name>` for branch work. `git add` only files YOU modified.
 - Word targets, immersion bands, and severity thresholds come from `scripts/config.py` + `scripts/audit/config.py` (SSOT) — always read, never hardcode from memory. Calibrating numbers = code change (PR + tests), not doc change.
 - **V7 builds are USER-RUN ONLY.** Do not invoke `v7_build.py` even for a single module; only `--dry-run` is safe and even that the user typically runs.
+- **V7 builds MUST run in a worktree, not in the main project dir.** Pattern: `git worktree add -b build/{level}/{slug}-{date} .worktrees/builds/{level}-{slug}-{date} main`, then `cd` there and run `v7_build.py {level} {slug}` (PROJECT_ROOT auto-resolves). Builds write to `curriculum/l2-uk-en/{level}/{slug}/*.yaml` + assembled MDX; if these land in main tree, the user must stash/commit/discard before pulling, and stash-and-lose has happened (2026-05-13 incident). Telemetry files (`python_qg.json`, `wiki_manifest.json`, `writer_output.raw.md`, `writer_tool_calls.json`, `knowledge_packet.md`) are gitignored at `curriculum/l2-uk-en/*/*/`.
 
 ## Agent cooperation (3:3:3 dispatch split per #M0, 2026-05-10)
 
