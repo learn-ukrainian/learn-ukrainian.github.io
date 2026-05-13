@@ -1112,6 +1112,20 @@ def _passing_qg_fixture(tmp_path: Path) -> tuple[Path, Path, Callable]:
     return module_dir, plan_path, fake_verify
 
 
+def _build_fake_verify_words(
+    known: dict[str, bool],
+) -> Callable[[list[str]], dict[str, list[dict]]]:
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        return {
+            word: [{"lemma": word, "pos": "x", "tags": ""}]
+            if known.get(word, False)
+            else []
+            for word in words
+        }
+
+    return fake_verify
+
+
 def test_ai_slop_gate_ignores_correction_field_in_error_correction_activity(
     tmp_path: Path,
 ) -> None:
@@ -1644,6 +1658,227 @@ def test_vesum_gate_skips_nested_error_subtree_in_error_correction(
     assert "прокидаєштся" not in forwarded, (
         f"intentional typo leaked from nested error: subtree: {forwarded}"
     )
+
+
+def test_vesum_gate_skips_fillin_options_bare_list() -> None:
+    """Regression for #1962 gate 1 leak 1. fill-in options are fragments."""
+    activities = [
+        {
+            "id": "act-2",
+            "type": "fill-in",
+            "items": [
+                {
+                    "sentence": "Я вмива___ о сьомій.",
+                    "answer": "юся",
+                    "options": ["юся", "єшся", "ється"],
+                }
+            ],
+        }
+    ]
+    fake_verify = _build_fake_verify_words(known={"вмива": True, "сьомій": True})
+    report = linear_pipeline._vesum_gate(
+        module_text="",
+        activities=activities,
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    assert "юся" not in report["missing"]
+    assert "єшся" not in report["missing"]
+    assert "ється" not in report["missing"]
+    assert report["passed"] is True
+
+
+def test_vesum_gate_skips_quiz_options_distractors() -> None:
+    """Regression for #1962 gate 1 leak 2. quiz non-answer options are distractors."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "quiz",
+            "items": [
+                {
+                    "question": "Я ___ каву.",
+                    "options": ["п'юся", "п'ю"],
+                    "answer": "п'ю",
+                }
+            ],
+        }
+    ]
+    fake_verify = _build_fake_verify_words(known={"каву": True, "п'ю": True})
+    report = linear_pipeline._vesum_gate(
+        module_text="",
+        activities=activities,
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    assert "п'юся" not in report["missing"]
+    assert report["passed"] is True
+
+
+def test_vesum_gate_skips_error_correction_explanation() -> None:
+    """Regression for #1962 gate 1 leak 3. explanations cite wrong forms."""
+    activities = [
+        {
+            "id": "act-8",
+            "type": "error-correction",
+            "items": [
+                {
+                    "sentence": "На сніданок я завжди їм завтрак.",
+                    "error": "завтрак",
+                    "correction": "сніданок",
+                    "explanation": (
+                        "«Завтрак» is a Russianism. Standard Ukrainian: сніданок."
+                    ),
+                }
+            ],
+        }
+    ]
+    fake_verify = _build_fake_verify_words(known={"сніданок": True})
+    report = linear_pipeline._vesum_gate(
+        module_text="",
+        activities=activities,
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    assert "Завтрак" not in report["missing"]
+    assert "завтрак" not in report["missing"]
+    assert report["passed"] is True
+
+
+def test_vesum_gate_strips_vocabulary_usage_parentheticals() -> None:
+    """Regression for #1962 gate 1 leak 4. usage parentheticals can be meta."""
+    vocabulary = [
+        {
+            "lemma": "дивлюся",
+            "pos": "verb",
+            "usage": "Я дивлюся у дзеркало (стем + -л- у 1-й особі однини).",
+        }
+    ]
+    fake_verify = _build_fake_verify_words(
+        known={"дивлюся": True, "дзеркало": True}
+    )
+    report = linear_pipeline._vesum_gate(
+        module_text="",
+        activities=[],
+        vocabulary=vocabulary,
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    assert "стем" not in report["missing"]
+    assert report["passed"] is True
+
+
+def test_vesum_gate_passes_m20_build_3_artifacts() -> None:
+    """Replay m20 build #3 leak forms without requiring the build worktree."""
+    build_dir = (
+        Path(__file__).resolve().parents[2]
+        / ".worktrees/builds/a1-my-morning-20260513-164953"
+        / "curriculum/l2-uk-en/a1/my-morning"
+    )
+    if build_dir.exists():
+        module_text = (build_dir / "module.md").read_text(encoding="utf-8")
+        activities = yaml.safe_load(
+            (build_dir / "activities.yaml").read_text(encoding="utf-8")
+        )
+        vocabulary = yaml.safe_load(
+            (build_dir / "vocabulary.yaml").read_text(encoding="utf-8")
+        )
+        resources = yaml.safe_load(
+            (build_dir / "resources.yaml").read_text(encoding="utf-8")
+        )
+    else:
+        module_text = ""
+        activities = [
+            {
+                "id": "act-1",
+                "type": "quiz",
+                "items": [
+                    {
+                        "question": "Я ___ каву о восьмій.",
+                        "options": ["п'юся", "п'ю"],
+                        "answer": "п'ю",
+                    }
+                ],
+            },
+            {
+                "id": "act-2",
+                "type": "fill-in",
+                "items": [
+                    {
+                        "sentence": "Я вмива___ о сьомій.",
+                        "answer": "юся",
+                        "options": ["юся", "єшся", "ється"],
+                    },
+                    {
+                        "sentence": "Ми збира___ швидко.",
+                        "answer": "ємося",
+                        "options": ["теся", "ємося", "єтеся", "ються"],
+                    },
+                ],
+            },
+            {
+                "id": "act-8",
+                "type": "error-correction",
+                "items": [
+                    {
+                        "sentence": "На сніданок я завжди їм завтрак.",
+                        "error": "завтрак",
+                        "correction": "сніданок",
+                        "explanation": (
+                            "«Завтрак» is a Russianism; do not use користу- here."
+                        ),
+                    }
+                ],
+            },
+        ]
+        vocabulary = [
+            {
+                "lemma": "дивлюся",
+                "pos": "verb",
+                "usage": "Я дивлюся у дзеркало (стем + -л- у 1-й особі однини).",
+            }
+        ]
+        resources = []
+
+    leaked_forms = {
+        "Завтрак",
+        "користу",
+        "п'юся",
+        "стем",
+        "теся",
+        "юся",
+        "ються",
+        "ємося",
+        "єтеся",
+        "ється",
+        "єшся",
+    }
+    known = {
+        "восьмій": True,
+        "вмива": True,
+        "дзеркало": True,
+        "дивлюся": True,
+        "збира": True,
+        "каву": True,
+        "о": True,
+        "п'ю": True,
+        "сніданок": True,
+        "сьомій": True,
+        "швидко": True,
+    }
+    report = linear_pipeline._vesum_gate(
+        module_text=module_text,
+        activities=activities,
+        vocabulary=vocabulary,
+        resources=resources,
+        verify_words_fn=_build_fake_verify_words(known=known),
+    )
+
+    assert leaked_forms.isdisjoint(report["missing"])
+    if not build_dir.exists():
+        assert report["passed"] is True
 
 
 def test_immersion_gate_recognizes_unicode_sentence_boundaries(
