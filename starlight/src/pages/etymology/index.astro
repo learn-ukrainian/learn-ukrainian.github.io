@@ -23,13 +23,18 @@ const data = manifest as {
   };
 };
 
+// Featured lemmas — each slug VERIFIED present in the manifest before commit.
+// Verification: scripts/etymology/transliterate.py emits the slug; we check
+// it's in manifest.slug_groups. (Failed once with 'хата' — hand-picked, not
+// an ESUM headword; closest real entries are 'хати' / 'хатьма'. Replaced
+// with 'хліб'.)
 const featured: Array<{ slug: string; lemma: string; gloss: string }> = [
-  { slug: 'sertse', lemma: 'серце', gloss: "Том 5 — псл. *sьrdьce, ие-корінь *kerd-" },
-  { slug: 'maty', lemma: 'мати', gloss: 'Три статті: іменник, дієслово, прислівник' },
-  { slug: 'dim', lemma: 'дім', gloss: 'Том 2 — псл. *domъ, ие-корінь *dem-' },
-  { slug: 'zhinka', lemma: 'жінка', gloss: 'Том 2 — псл. *žena, споріднене з гр. γυνή' },
-  { slug: 'khata', lemma: 'хата', gloss: "Том 6 — праслов'янське або іранське походження" },
-  { slug: 'voda', lemma: 'вода', gloss: 'Том 1 — псл. *voda, ие-корінь *wedōr-' },
+  { slug: 'sertse', lemma: 'серце', gloss: 'Том 5, с. 222 — серце як орган і символ' },
+  { slug: 'maty', lemma: 'мати', gloss: "5 статей в ЕСУМ — іменник, дієслово, прислівник" },
+  { slug: 'dim', lemma: 'дім', gloss: 'Том 2, с. 90 — псл. *domъ, споріднене з лат. domus' },
+  { slug: 'zhinka', lemma: 'жінка', gloss: 'Том 2, с. 200 — псл. *žena, споріднене з гр. γυνή' },
+  { slug: 'khlib', lemma: 'хліб', gloss: 'Том 6, с. 180 — давнє запозичення з широким розгалуженням' },
+  { slug: 'voda', lemma: 'вода', gloss: 'Том 1, с. 413 — псл. *voda, ие-корінь *wed-' },
 ];
 
 const fmtCount = (n: number) => n.toLocaleString('uk-UA');
