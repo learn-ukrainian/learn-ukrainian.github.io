@@ -41,7 +41,7 @@ def test_no_writer_rewrite_in_correction() -> None:
         / "linear-writer-correction.md"
     ).read_text(encoding="utf-8")
 
-    assert "modify in place via append/insert, never re-author or regenerate" in template
+    assert "Modify in place via append/insert. Never re-author or regenerate." in template
     for phrase in ("regenerate", "rewrite", "produce again", "start over"):
         assert phrase in template
 

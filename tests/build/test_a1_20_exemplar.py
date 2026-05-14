@@ -15,7 +15,7 @@ def test_a1_20_plan_context_matches_phase_4_contract() -> None:
 
     assert context["LEVEL"] == "A1"
     assert context["MODULE_NUM"] == "20"
-    assert "TARGET: 15-35% Ukrainian." in context["IMMERSION_RULE"]
+    assert "STRUCTURAL TARGETS" in context["IMMERSION_RULE"]
     assert "classify" in context["FORBIDDEN_ACTIVITY_TYPES"]
     assert "select" in context["FORBIDDEN_ACTIVITY_TYPES"]
     assert "fill-in" in context["ALLOWED_ACTIVITY_TYPES"]
