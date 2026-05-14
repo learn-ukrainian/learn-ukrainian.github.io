@@ -1,7 +1,69 @@
 # DECISION REQUIRED — Claude Agent SDK adoption for V7 pipeline (parallel-shim with CLI subprocess)
 
-**Status:** PROPOSED — pending architecture review.
+**Status:** RECONSIDER — surfaced 2026-05-13, demoted same day after user routing direction shifted the cost premise. Adoption is not cancelled; the sequencing and the "wins" framing both need a rethink before re-PROPOSED.
 **Surfaced:** 2026-05-13, user direction "we will have to plan this claude sdk route" after Anthropic announced the agentic credit pool launch effective 2026-06-15.
+
+## Status update — 2026-05-13 late evening (RECONSIDER rationale)
+
+The original proposal below assumed the $200/mo agentic credit pool would
+fund Claude SDK dispatches from the V7 build pipeline. Two corrections
+landed the same day that undermine that assumption:
+
+1. **Pool economics — no multiplier.** $200 is metered at real API rates,
+   yielding ~3–6 Opus-xhigh dispatches OR ~20–40 Sonnet-high dispatches per
+   month. Not a subscription-equivalent bonus.
+2. **User direction (HARD, encoded in MEMORY #M0):** *"delegate only to
+   codex and gemini after june 15th."* The $200/mo pool is reserved for the
+   user's own cold-start interactive Claude review sessions, NOT for
+   orchestrator `delegate.py --agent claude` invocations. **NO OVERAGE**:
+   *"i spend enough for you, not going to spend more."*
+
+Implication for this Decision Card:
+
+- **Axis 1 (adapter layer)** — still buildable, still useful as a code
+  artifact, but cannot ship as the V7 writer-phase runtime if the writer
+  phase post-June-15 is forbidden from calling Claude programmatically.
+  Pre-June-15 it would only run on Anthropic API key with paid metered
+  usage (a real dev cost the user has not authorised).
+- **Axis 2 (writer-phase wiring)** — premise of "flip default to `sdk` on
+  2026-06-15" is dead. The post-June-15 writer-phase default needs an
+  entirely different design (likely: orchestrator-inline via the
+  `curriculum-writer` subagent + manual gate runs — the pre-multi-agent
+  pattern that historically produced shippable modules).
+- **Axis 3 (mid-stream gate hooks)** — the structural payoff is real
+  (catch gate misalignment mid-generation, not post-hoc) but only relevant
+  if there is a Claude-runtime writer phase to hook into. With the writer
+  phase moving off Claude post-June-15, Axis 3 has no host process.
+- **Axis 4 (pool-aware routing)** — superseded by the new
+  `/api/state/routing-budget` endpoint (PR #1971) + `agent_fallback_substitutions.yaml`
+  config. That work shipped without needing the SDK adoption.
+
+The architectural framing of this card is still worth keeping (it cleanly
+distinguishes "in-process agentic loop with mid-stream hooks" from
+"fire-and-forget subprocess dispatch" — a useful primitive even if the
+host model is Codex or Gemini, not Claude). But the specific implementation
+plan above assumes Claude SDK, Claude pool funding, Claude writer phase —
+all three are now hold.
+
+**Re-PROPOSE path:** rewrite the card as "host-agnostic in-process agentic
+runtime with mid-stream gate hooks" — Codex SDK or Gemini SDK or local
+inference as the host — and re-evaluate whether the mid-stream-hook
+architecture is worth the refactor cost against THOSE hosts. Or shelve
+entirely if the orchestrator-inline writer phase per the pre-multi-agent
+pattern proves shippable on its own.
+
+**Companion canonical source:** `scripts/config/agent_fallback_substitutions.yaml`
+(routing fallback chains), `scripts/config/agent_budgets.yaml` (pool
+budgets), MEMORY #M0 (per-task model assignment, post-June-15 rule).
+
+*Status set RECONSIDER 2026-05-13 late evening by orchestrator per
+predecessor brief `docs/session-state/2026-05-13-late-routing-economics-corpus-expansion-brief.md`
+§ "Architectural / policy shifts" item 4.*
+
+---
+
+## Original proposal (PROPOSED 2026-05-13, kept for context)
+
 **Source:**
 - Anthropic announcement: $200/mo agentic credit pool from 2026-06-15 (refreshes monthly), separate from Claude Code interactive limits, covers Claude Agent SDK + `claude -p` + Claude Code GitHub Actions + 3rd-party SDK apps.
 - User stated 2026-05-13: "always" hits Max 20× interactive weekly cap → no slack to absorb dispatched work onto interactive bucket; every capacity lever matters.
