@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from audit.checks.cross_file_integrity import extract_ukrainian_words
-from audit.checks.russicism_detection import check_russicisms
+from audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
 from rag.rag_batch_verify import vesum_batch_lookup
 from rag.source_query import pravopys_lookup
 
@@ -520,11 +520,15 @@ def _citation_gate(article_path: Path, article_text: str) -> GateResult:
 
 
 def _surzhyk_gate(article_text: str, article_path: Path) -> GateResult:
-    violations = check_russicisms(article_text, str(article_path))
+    violations = [
+        *check_russicisms(article_text, str(article_path)),
+        *check_ua_gec_calques(article_text, str(article_path)),
+    ]
+    blocking = [violation for violation in violations if violation.get("severity") != "info"]
     return GateResult(
         name="surzhyk_linter",
-        passed=not violations,
-        detail="no russicism/surzhyk findings" if not violations else violations[0]["issue"],
+        passed=not blocking,
+        detail="no blocking russicism/surzhyk findings" if not blocking else blocking[0]["issue"],
         metadata={"violations": violations},
     )
 

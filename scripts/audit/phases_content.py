@@ -21,7 +21,7 @@ from .checks.imperial_terminology import check_imperial_terminology
 from .checks.learner_state import check_learner_state
 from .checks.prose_quality import check_prose_quality
 from .checks.recycle_cadence import check_recycle_cadence
-from .checks.russicism_detection import check_russicisms, check_semantic_false_friends
+from .checks.russicism_detection import check_russicisms, check_semantic_false_friends, check_ua_gec_calques
 from .checks.state_standard_compliance import check_state_standard_compliance
 from .checks.vocabulary import (
     check_metalanguage_scaffolding,
@@ -115,6 +115,12 @@ def run_content_detectors(ctx: AuditContext, state: AuditState) -> None:
             sev_icon = "\u274c" if v['severity'] == 'critical' else "\u26a0\ufe0f"
             print(f"     {sev_icon} [{v['type']}] {v['issue']}")
         content_quality_violations.extend(russicism_violations)
+
+    ua_gec_calque_violations = check_ua_gec_calques(ctx.content, ctx.file_path)
+    if ua_gec_calque_violations:
+        for v in ua_gec_calque_violations:
+            print(f"     \u2139\ufe0f [{v['type']}] {v['issue']}")
+        content_quality_violations.extend(ua_gec_calque_violations)
 
     false_friend_violations = check_semantic_false_friends(ctx.content, ctx.file_path)
     if false_friend_violations:

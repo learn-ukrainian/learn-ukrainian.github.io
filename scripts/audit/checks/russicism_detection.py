@@ -10,7 +10,9 @@ No LLM calls — pure regex matching.
 Issue: #596, #912
 """
 
+import csv
 import re
+from pathlib import Path
 
 from .prose_quality import _split_narrative_zones
 
@@ -300,6 +302,135 @@ _COMPILED_RUSSICISMS = [
 # Tracks where Russicisms might appear in quoted historical sources
 _EXEMPT_TRACKS = {"oes", "ruth"}
 
+_UA_GEC_CALQUE_CSV = Path(__file__).resolve().parents[3] / "data" / "russianism-patterns-ua-gec.csv"
+_UA_GEC_ATTRIBUTION = "UA-GEC v2 (CC-BY-4.0)"
+_UA_GEC_TOKEN_RE = re.compile(r"\b[\w'’ʼ-]+\b")
+_UA_GEC_BOUNDARY_CHARS = r"\w'’ʼ\-"
+_UA_GEC_GIVEN_FORMS = {
+    "даний",
+    "дана",
+    "дане",
+    "дані",
+    "даного",
+    "даному",
+    "даним",
+    "даній",
+    "даною",
+    "даної",
+}
+_UA_GEC_GIVEN_CONTEXT_RE = re.compile(
+    r"\s+(?:метод|кут|вектор|відрізок|трикутник|функці[яї]|точк[аиіїу]|"
+    r"прям[аоїу]|рівняння|умов[аиюі])\b",
+    re.IGNORECASE,
+)
+
+
+def _load_ua_gec_calques() -> tuple[dict[str, list[dict]], list[dict]]:
+    """Load the UA-GEC F/Calque CSV into single-token and phrase lookup tables."""
+    if not _UA_GEC_CALQUE_CSV.exists():
+        return {}, []
+
+    by_bad: dict[str, list[dict]] = {}
+    with _UA_GEC_CALQUE_CSV.open(encoding="utf-8", newline="") as fh:
+        reader = csv.DictReader(line for line in fh if not line.startswith("#"))
+        for row in reader:
+            bad = (row.get("bad") or "").strip().casefold()
+            good = (row.get("good") or "").strip().casefold()
+            if not bad or not good:
+                continue
+            entry = {
+                "bad": bad,
+                "good": good,
+                "frequency": int(row.get("frequency") or 0),
+                "source": row.get("source") or "UA-GEC v2",
+                "license": row.get("license") or "CC-BY-4.0",
+                "attribution": row.get("attribution") or "Syvokon et al., UNLP 2023",
+            }
+            by_bad.setdefault(bad, []).append(entry)
+
+    for entries in by_bad.values():
+        entries.sort(key=lambda entry: (-entry["frequency"], entry["good"]))
+
+    multiword = [entries[0] for bad, entries in by_bad.items() if " " in bad]
+    multiword.sort(key=lambda entry: (-len(entry["bad"]), -entry["frequency"], entry["bad"]))
+    return by_bad, multiword
+
+
+def _build_ua_gec_automaton(entries: list[dict]):
+    """Build an optional pyahocorasick automaton for phrase calques."""
+    try:
+        import ahocorasick
+    except ImportError:
+        return None
+
+    automaton = ahocorasick.Automaton()
+    for entry in entries:
+        automaton.add_word(entry["bad"], entry)
+    automaton.make_automaton()
+    return automaton
+
+
+def _ua_gec_phrase_regex(bad: str) -> re.Pattern:
+    body = re.escape(bad).replace(r"\ ", r"\s+")
+    return re.compile(
+        rf"(?<![{_UA_GEC_BOUNDARY_CHARS}]){body}(?![{_UA_GEC_BOUNDARY_CHARS}])",
+        re.IGNORECASE,
+    )
+
+
+_UA_GEC_CALQUES_BY_BAD, _UA_GEC_MULTIWORD_CALQUES = _load_ua_gec_calques()
+_UA_GEC_MULTIWORD_AUTOMATON = _build_ua_gec_automaton(_UA_GEC_MULTIWORD_CALQUES)
+_UA_GEC_MULTIWORD_REGEXES = [
+    (_ua_gec_phrase_regex(entry["bad"]), entry)
+    for entry in _UA_GEC_MULTIWORD_CALQUES
+]
+
+
+def _is_ua_gec_word_boundary(text: str, index: int) -> bool:
+    if index < 0 or index >= len(text):
+        return True
+    char = text[index]
+    return not (char.isalnum() or char == "_" or char in "'’ʼ-")
+
+
+def _iter_ua_gec_multiword_matches(text: str):
+    folded = text.casefold()
+    if _UA_GEC_MULTIWORD_AUTOMATON is not None:
+        for end_index, entry in _UA_GEC_MULTIWORD_AUTOMATON.iter(folded):
+            end = end_index + 1
+            start = end - len(entry["bad"])
+            if _is_ua_gec_word_boundary(folded, start - 1) and _is_ua_gec_word_boundary(folded, end):
+                yield start, end, entry
+        return
+
+    for regex, entry in _UA_GEC_MULTIWORD_REGEXES:
+        for match in regex.finditer(folded):
+            yield match.start(), match.end(), entry
+
+
+def _should_skip_ua_gec_context(bad: str, text: str, start: int, end: int) -> bool:
+    """Suppress a few known grammatical uses of otherwise broad UA-GEC forms."""
+    if bad in _UA_GEC_GIVEN_FORMS:
+        return bool(_UA_GEC_GIVEN_CONTEXT_RE.match(text[end:]))
+    return False
+
+
+def _ua_gec_violation(entry: dict, matched: str) -> dict:
+    return {
+        "type": "UA_GEC_CALQUE_DETECTED",
+        "severity": "info",
+        "issue": (
+            f"UA-GEC F/Calque suggestion: '{matched}' may be a calque for "
+            f"'{entry['good']}' (frequency {entry['frequency']})."
+        ),
+        "fix": (
+            f"Consider replacing '{entry['bad']}' with '{entry['good']}' "
+            "when the context matches this UA-GEC F/Calque pair."
+        ),
+        "matched": matched,
+        "attribution": _UA_GEC_ATTRIBUTION,
+    }
+
 
 def _is_in_quote_context(text: str, match_start: int) -> bool:
     """Check if a match position is inside guillemets or a blockquote."""
@@ -314,6 +445,53 @@ def _is_in_quote_context(text: str, match_start: int) -> bool:
     line_start = before.rfind('\n') + 1
     line = text[line_start:match_start].lstrip()
     return bool(line.startswith('>'))
+
+
+def check_ua_gec_calques(content: str, file_path: str = '') -> list[dict]:
+    """Detect UA-GEC F/Calque lookup-table suggestions.
+
+    This is intentionally an info-only tier: entries are mined from human
+    corrections, but many are context-dependent and should not block builds.
+    """
+    path_lower = file_path.lower()
+    for exempt in _EXEMPT_TRACKS:
+        if f'/{exempt}/' in path_lower:
+            return []
+
+    narrative_zones = _split_narrative_zones(content)
+    narrative_text = '\n'.join(narrative_zones)
+    if not narrative_text or not _UA_GEC_CALQUES_BY_BAD:
+        return []
+
+    violations: list[dict] = []
+    seen_bad: set[str] = set()
+
+    for match in _UA_GEC_TOKEN_RE.finditer(narrative_text):
+        bad = match.group().casefold()
+        if " " in bad or bad in seen_bad:
+            continue
+        entries = _UA_GEC_CALQUES_BY_BAD.get(bad)
+        if not entries:
+            continue
+        if _is_in_quote_context(narrative_text, match.start()):
+            continue
+        if _should_skip_ua_gec_context(bad, narrative_text, match.start(), match.end()):
+            continue
+        seen_bad.add(bad)
+        violations.append(_ua_gec_violation(entries[0], match.group()))
+
+    for start, end, entry in _iter_ua_gec_multiword_matches(narrative_text):
+        bad = entry["bad"]
+        if bad in seen_bad:
+            continue
+        if _is_in_quote_context(narrative_text, start):
+            continue
+        if _should_skip_ua_gec_context(bad, narrative_text, start, end):
+            continue
+        seen_bad.add(bad)
+        violations.append(_ua_gec_violation(entry, narrative_text[start:end]))
+
+    return violations
 
 
 def check_russicisms(content: str, file_path: str = '') -> list[dict]:

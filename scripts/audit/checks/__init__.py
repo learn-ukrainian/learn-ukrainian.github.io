@@ -92,6 +92,7 @@ from .review_gaming import (
 from .russicism_detection import (
     check_russicisms,
     check_semantic_false_friends,
+    check_ua_gec_calques,
 )
 from .section_order import (
     check_section_order,
@@ -171,6 +172,7 @@ __all__ = [
     'check_sentence_complexity',
     'check_topic_consistency',
     'check_translate_single_correct',
+    'check_ua_gec_calques',
     # Activity Validation
     'check_unjumble_empty_jumbled',
     'check_unjumble_out_of_scope_dative',
