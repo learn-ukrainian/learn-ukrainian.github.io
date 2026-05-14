@@ -17,6 +17,8 @@ import time
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 # ==================== review_parsing ====================
 
 
@@ -279,7 +281,24 @@ class TestParsePhaseStatus:
 
 
 class TestCacheFunctions:
-    """TTL cache get/set."""
+    """TTL cache get/set.
+
+    `_ttl_cache` is a module-global singleton; tests in this class assert
+    exact key counts after invalidation. To keep them robust against
+    pollution from earlier tests in the full pytest sweep (which can
+    populate `orient_*`-prefixed keys via the `/api/orient` test suite),
+    we clear the cache before AND after every test in this class.
+
+    See issue #2002 — replaces the prior CI workaround that re-ran these
+    tests in a fresh subprocess.
+    """
+
+    @pytest.fixture(autouse=True)
+    def _clear_ttl_cache(self):
+        from scripts.api.state_helpers import _ttl_cache
+        _ttl_cache.clear()
+        yield
+        _ttl_cache.clear()
 
     def test_cache_hit(self):
         from scripts.api.state_helpers import cache_get, cache_set
