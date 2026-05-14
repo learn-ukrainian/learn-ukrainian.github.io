@@ -159,10 +159,142 @@ _RUSSICISMS: list[dict] = [
     },
 ]
 
+# ---------------------------------------------------------------------------
+# Calque patterns mined from UA-GEC v2 F/Calque annotations
+#
+# Source: github.com/grammarly/ua-gec (CC-BY-4.0, Syvokon et al., UNLP 2023).
+# Each pattern below appears ≥5 times in 2,397 human-validated F/Calque
+# annotations from professional Ukrainian proofreaders (two annotators per
+# document). Patterns selected for LOW false-positive risk: discourse
+# markers, fixed expressions, and lexical Russianisms with no legitimate
+# Ukrainian use in the matched form.
+#
+# Higher-frequency patterns from UA-GEC that were intentionally NOT added
+# here due to context-dependence or legitimate dual usage:
+#   - доктор → лікар (academic title vs. medical context disambiguation)
+#   - даний → цей (acceptable as participle in math/scientific contexts)
+#   - наступні → такі (валід у багатьох контекстах: "наступні дні")
+#   - задача → завдання (broadly used; pedagogical-judgment territory)
+#   - дозволяє → дає змогу (correct in "permits" sense)
+# Full mining analysis: docs/decisions or PR description.
+# ---------------------------------------------------------------------------
+_RUSSICISMS_FROM_UA_GEC: list[dict] = [
+    # --- Discourse-marker calques (universal: no legitimate dual usage) ---
+    {
+        "pattern": r"\bтаким\s+чином\b",
+        "term": "таким чином",
+        "fix": "отже / у такий спосіб",
+        "note": "RU 'таким образом' calque (UA-GEC top F/Calque, 25× occurrences)",
+    },
+    {
+        "pattern": r"\bтак\s+як\b",
+        "term": "так як",
+        "fix": "оскільки",
+        "note": "RU 'так как' calque",
+    },
+    {
+        "pattern": r"\bв\s+цілому\b",
+        "term": "в цілому",
+        "fix": "загалом",
+        "note": "RU 'в целом' calque",
+    },
+    {
+        "pattern": r"\bв\s+першу\s+чергу\b",
+        "term": "в першу чергу",
+        "fix": "передусім / насамперед",
+        "note": "RU 'в первую очередь' calque",
+    },
+    {
+        "pattern": r"\bз\s+(?:іншої|однієї)\s+сторони\b",
+        "term": "з іншої / однієї сторони",
+        "fix": "з іншого / одного боку",
+        "note": "RU 'с другой / одной стороны' discourse calque",
+    },
+    {
+        # Discourse-marker `значить,` — verbal `значить` (= 'means') is fine
+        "pattern": r"\bзначить\b(?=\s*,)",
+        "term": "значить, (як вступне слово)",
+        "fix": "отже / тобто",
+        "note": "RU 'значит,' as parenthetical calque (verbal 'значить' is correct)",
+    },
+    # --- Lexical Russianisms (VESUM-verified absent or definitely calque) ---
+    {
+        "pattern": r"\bспівпада(?:є|ють|ло|ла|ли|в|ала)\b",
+        "term": "співпадати",
+        "fix": "збігатися",
+        "note": "RU 'совпадать' calque — VESUM-verified absent",
+    },
+    {
+        "pattern": r"\bбормот(?:ати|ів|ала|али|ять|ить)\b",
+        "term": "бормотати",
+        "fix": "бурмотіти",
+        "note": "RU 'бормотать' phonology (о→у) — VESUM-verified absent",
+    },
+    {
+        "pattern": r"\bбуфетчик[аеуіою]?\b",
+        "term": "буфетчик",
+        "fix": "буфетник",
+        "note": "RU agentive suffix '-чик' on Ukrainian root",
+    },
+    {
+        "pattern": r"\bприйшлось\b",
+        "term": "прийшлось",
+        "fix": "довелося",
+        "note": "RU 'пришлось' calque (impersonal past)",
+    },
+    {
+        "pattern": r"\bповезе(?:ться)?\b",
+        "term": "повезе(ться)",
+        "fix": "пощастить",
+        "note": "RU 'повезёт' calque (luck sense)",
+    },
+    {
+        "pattern": r"\bвідправ(?:ився|илась|илися|ились)\b",
+        "term": "відправився",
+        "fix": "вирушив",
+        "note": "RU 'отправился' reflexive — UK uses 'вирушив' for departure",
+    },
+    {
+        "pattern": r"\bвідношення\b",
+        "term": "відношення",
+        "fix": "стосунок / ставлення",
+        "note": "RU 'отношение' calque (relationship / attitude senses)",
+    },
+    # --- Fixed-expression calques ---
+    {
+        "pattern": r"\bроби(?:в|ла|ли|ть)\s+вигляд\b",
+        "term": "робив вигляд",
+        "fix": "вдавав",
+        "note": "RU 'делал вид' fixed-expression calque",
+    },
+    {
+        "pattern": r"\bна\s+фоні\b",
+        "term": "на фоні",
+        "fix": "на тлі",
+        "note": "RU 'на фоне' calque",
+    },
+    {
+        "pattern": r"\bсправа\s+[ув]\s+тому\b",
+        "term": "справа в тому",
+        "fix": "річ у тому",
+        "note": "RU 'дело в том' fixed-expression calque",
+    },
+    # --- Numerical-sense calque ---
+    {
+        # `пару` as a numeral ("a couple of X") — Russian usage.
+        # `пару` as a noun ("a pair of shoes") is correct UK; lookahead
+        # for temporal nouns isolates the numerical sense.
+        "pattern": r"\bпару\s+(?:днів|годин|хвилин|секунд|тижнів|місяців|років|разів)\b",
+        "term": "пару (як числівник)",
+        "fix": "кілька",
+        "note": "RU 'пару дней / часов' numerical calque (UK 'пара' = noun only)",
+    },
+]
+
 # Pre-compile patterns
 _COMPILED_RUSSICISMS = [
     {**r, "_compiled": re.compile(r["pattern"], re.IGNORECASE)}
-    for r in _RUSSICISMS
+    for r in (_RUSSICISMS + _RUSSICISMS_FROM_UA_GEC)
 ]
 
 # Tracks where Russicisms might appear in quoted historical sources
