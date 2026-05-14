@@ -1,0 +1,92 @@
+version: 1
+description: Starter Russianism eval prompts for bridge model comparison.
+prompts:
+  - id: translation_a2_email
+    category: translation
+    prompt_text: |-
+      You are writing for a Ukrainian-language email at A2 level. Translate the
+      following English text into idiomatic standard Ukrainian. Avoid Russianisms.
+
+      "Hello! I am writing to let you know that I will be taking part in the
+      meeting next week. I want to receive the documents in advance so I can
+      prepare. Generally, I think the following points are the most important:
+      budget, timeline, and the next steps. Please send everything by any moment
+      that works for you. Thanks!"
+
+      Output ONLY the Ukrainian translation -- no commentary.
+    expected_calque_categories:
+      - participation calque
+      - receive/get calque
+      - following/next calque
+      - any moment false friend
+    notes: A2 business-adjacent email engineered to elicit "pryimaty uchast", "poluchaty", "sliduiuchyi", and "liubyi moment" patterns.
+
+  - id: translation_literary_mixed
+    category: translation
+    prompt_text: |-
+      Translate to standard literary Ukrainian. Avoid Russianisms, calques, and
+      Surzhyk. Output only the translation.
+
+      "In the first place, the following points concern us. The doctor said that
+      in general the situation is improving. Pretty much everyone takes part in
+      the discussion. As soon as we receive the documents, we will send them to
+      you. From one side it looks fine, from another it does not. We made a
+      couple of decisions and decided to act accordingly."
+    expected_calque_categories:
+      - following/next calque
+      - direct Russian borrowing
+      - participation calque
+      - receive/get calque
+      - from one side calque
+    notes: Longer mixed-domain translation with several English phrases that often trigger Russian-pattern Ukrainian.
+
+  - id: medical_patient_update
+    category: medical_generation
+    prompt_text: |-
+      Write a short standard-Ukrainian message from a clinic nurse to a patient.
+      Avoid Russianisms, calques, and Surzhyk. Keep it clear and polite.
+
+      Include these ideas: the next appointment, receiving test results, eating
+      before the visit, the patient's condition in general, and which symptoms
+      concern the doctor. Output only the Ukrainian message.
+    expected_calque_categories:
+      - following/next calque
+      - receive/get calque
+      - eating lexical Russianism
+      - concern/relate calque
+      - direct Russian borrowing
+    notes: Medical domain prompt where literal generation can drift toward "sliduiuchyi", "poluchaty", "kushaty", "vidnosytysia", or "voobsche".
+
+  - id: business_project_email
+    category: business_generation
+    prompt_text: |-
+      Write a concise standard-Ukrainian business email to a project team.
+      Avoid Russianisms, calques, and Surzhyk. Output only the email.
+
+      The message should say that everyone should take part in the planning
+      meeting, the next steps are attached, documents will be received today,
+      and the team can add comments at any moment before Friday.
+    expected_calque_categories:
+      - participation calque
+      - following/next calque
+      - receive/get calque
+      - add lexical Russianism
+      - any moment false friend
+    notes: Business email prompt targeting high-frequency project-management calques.
+
+  - id: social_media_cafe_post
+    category: social_media_generation
+    prompt_text: |-
+      Write a friendly standard-Ukrainian social-media post about meeting
+      friends at a cafe after work. Avoid Russianisms, calques, and Surzhyk.
+      Output only the post.
+
+      Mention that the place is cool, you miss your friends, people can join at
+      any time, everyone will eat together, and the next meetup will be soon.
+    expected_calque_categories:
+      - Russian slang borrowing
+      - miss/feel bored Russianism
+      - any time false friend
+      - eating lexical Russianism
+      - following/next calque
+    notes: Informal register prompt that probes slang and casual lexical Russianisms without asking for Surzhyk.

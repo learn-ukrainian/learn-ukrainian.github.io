@@ -14,6 +14,7 @@ fire-and-forget path's logging. They will be deleted in Phase 6 cleanup.
 
 import atexit
 import contextlib
+import json
 import subprocess
 import sys
 import uuid
@@ -132,12 +133,13 @@ def _run_claude_sync_via_runtime(
 
     _response_sent = False
     try:
+        target_model = _extract_target_model(msg)
         result = runtime_invoke(
             "claude",
             build_claude_prompt(msg, review),
             mode="read-only",
             cwd=REPO_ROOT,
-            model=None,  # Bridge uses Claude's default
+            model=target_model,
             task_id=msg.get('task_id'),
             session_id=session_id_to_pass,
             tool_config=tool_config,
@@ -166,7 +168,8 @@ def _run_claude_sync_via_runtime(
 
         reply_id = send_message(
             content=response, task_id=msg['task_id'], msg_type="response",
-            from_llm="claude", to_llm=msg['from'], from_model=None, to_model=None,
+            from_llm="claude", to_llm=msg['from'],
+            from_model=result.model, to_model=None,
         )
         _response_sent = True
 
@@ -244,6 +247,19 @@ def _fetch_claude_message(message_id: int) -> dict | None:
         "data": row[6],
         "timestamp": row[7]
     }
+
+
+def _extract_target_model(msg: dict) -> str | None:
+    """Read optional to_model from message metadata JSON."""
+    data = msg.get("data")
+    if not data:
+        return None
+    try:
+        payload = json.loads(data)
+    except json.JSONDecodeError:
+        return None
+    value = payload.get("to_model")
+    return str(value) if value else None
 
 
 def _print_claude_message_info(msg, fire_and_forget, no_timeout, claude_session_id):
