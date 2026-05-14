@@ -27,17 +27,24 @@ describe('Astro build renders all pages', () => {
   // Run build once for all tests.
   //
   // IMPORTANT: the third arg to `it()` is the test timeout. vitest
-  // defaults to 5000ms, which is far shorter than an Astro build (~15s
-  // on this repo). Without an explicit override the test hits vitest's
-  // SIGTERM before `execSync` even returns, so the `timeout: 60000`
-  // option inside execSync never gets a chance to fire. Match the
-  // external timeout to keep the outer bound consistent.
+  // defaults to 5000ms, which is far shorter than an Astro build.
+  // Without an explicit override the test hits vitest's SIGTERM before
+  // `execSync` even returns, so the timeout inside execSync never gets
+  // a chance to fire. Match the external timeout to keep the outer
+  // bound consistent.
+  //
+  // Build scope: ~22 base pages + 31,336 etymology dynamic-route pages
+  // (PR #1998, /etymology/[slug].astro). Local 8GB heap on M-series:
+  // ~56s. CI runner (Ubuntu x86, slower per-core): allow 4 min, with
+  // 5 min vitest outer bound. Bump these if etymology corpus grows
+  // significantly.
   it('astro build succeeds with zero errors', () => {
     try {
       buildOutput = execSync('npm run build 2>&1', {
         cwd: STARLIGHT_DIR,
-        timeout: 60000,
+        timeout: 240000,
         encoding: 'utf-8',
+        maxBuffer: 50 * 1024 * 1024, // 50MB: full build output for 31k pages exceeds default 1MB
       });
       buildExitCode = 0;
     } catch (e: any) {
@@ -53,7 +60,7 @@ describe('Astro build renders all pages', () => {
       .split('\n')
       .filter(line => line.includes('[ERROR]'));
     expect(errorLines).toEqual([]);
-  }, 120000);
+  }, 300000);
 
   it('generates expected page count', () => {
     const distDir = join(STARLIGHT_DIR, 'dist');
