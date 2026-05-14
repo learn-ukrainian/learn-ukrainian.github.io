@@ -385,6 +385,19 @@ def ingest_lessons(
     in which case existing rows are DELETED for the source_file before
     re-insert.
     """
+    # Section coverage (added 2026-05-14 per #1981 follow-up): each
+    # lesson also produces a ``textbook_sections`` row so the chunk is
+    # visible to ``_search_sections_fts5`` in scripts/wiki/sources_db.py.
+    # Without this, the lesson's chunk is FTS-searchable but invisible
+    # to section-level retrieval. See ``_section_coverage.py``.
+    from scripts.ingest._section_coverage import (
+        LessonSection,
+        ensure_section_schema,
+        link_lesson_sections,
+    )
+
+    ensure_section_schema(conn)
+
     cur = conn.cursor()
     existing_ids: set[str] = set()
     if not force:
@@ -395,6 +408,11 @@ def ingest_lessons(
         existing_ids = {r[0] for r in rows}
 
     if force:
+        # Reset both textbooks rows and their section parents.
+        cur.execute(
+            "DELETE FROM textbook_sections WHERE source_file = ?",
+            (book.source_file,),
+        )
         cur.execute(
             "DELETE FROM textbooks WHERE source_file = ?",
             (book.source_file,),
@@ -403,6 +421,7 @@ def ingest_lessons(
     inserted = 0
     skipped = 0
     batch: list[tuple] = []
+    new_sections: list[LessonSection] = []
     for lesson in lessons:
         chunk_id = f"{book.source_file}_l{lesson.number:04d}"
         if chunk_id in existing_ids:
@@ -416,9 +435,17 @@ def ingest_lessons(
                 title,
                 text,
                 book.source_file,
-                "",  # grade
+                "",  # grade (textbooks.grade is TEXT; sections use sentinel 0)
                 AUTHOR,
                 len(text),
+            )
+        )
+        new_sections.append(
+            LessonSection(
+                chunk_id=chunk_id,
+                section_title=title,
+                section_number=str(lesson.number),
+                full_text=text,
             )
         )
         inserted += 1
@@ -429,6 +456,11 @@ def ingest_lessons(
                   (chunk_id, title, text, source_file, grade, author, char_count)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
             batch,
+        )
+        link_lesson_sections(
+            conn,
+            source_file=book.source_file,
+            sections=new_sections,
         )
 
     return inserted, skipped
