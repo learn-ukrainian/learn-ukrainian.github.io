@@ -206,6 +206,8 @@ data/wiktionary/
 data/puls/
 data/literary_texts/*.jsonl
 data/external_articles/
+data/antonenko-davydovych/
+data/ua-gec/
 .build.lock
 
 # Corpus gap audit working files — only the human-reviewed deliverables land in git
