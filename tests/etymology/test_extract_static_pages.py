@@ -63,7 +63,7 @@ def test_single_entry_page_output_structure(tmp_path):
     _make_db(db_path)
 
     summary = generate_pages(db_path, output_dir)
-    page = output_dir / "dim.html"
+    page = output_dir / "dim" / "index.html"
     text = page.read_text(encoding="utf-8")
 
     # files_written = 6 (5 entry pages + 1 polysemy landing for "мати")
@@ -94,14 +94,14 @@ def test_polysemy_landing_and_subpages(tmp_path):
 
     generate_pages(db_path, output_dir)
 
-    landing = (output_dir / "maty.html").read_text(encoding="utf-8")
+    landing = (output_dir / "maty" / "index.html").read_text(encoding="utf-8")
     assert "кілька статей в ЕСУМ" in landing
     assert 'href="maty-2-48/"' in landing
     assert 'href="maty-3-412/"' in landing
     assert 'href="maty-3-413/"' in landing
-    assert (output_dir / "maty-2-48.html").exists()
-    assert (output_dir / "maty-3-412.html").exists()
-    assert (output_dir / "maty-3-413.html").exists()
+    assert (output_dir / "maty-2-48" / "index.html").exists()
+    assert (output_dir / "maty-3-412" / "index.html").exists()
+    assert (output_dir / "maty-3-413" / "index.html").exists()
 
 
 def test_html_escaping_for_special_chars(tmp_path):
@@ -110,7 +110,7 @@ def test_html_escaping_for_special_chars(tmp_path):
     _make_db(db_path)
 
     generate_pages(db_path, output_dir)
-    page = output_dir / "piat.html"
+    page = output_dir / "piat" / "index.html"
     text = page.read_text(encoding="utf-8")
 
     # Title in <h1> contains the apostrophe-bearing lemma
@@ -118,7 +118,7 @@ def test_html_escaping_for_special_chars(tmp_path):
     # Curly-brace text in etymology body is escaped (HTML-safe — & < > " ' but { } pass through)
     assert "{фігурними}" in text  # curly braces are safe in HTML
     # Angle-bracket text in body is HTML-escaped
-    body = (output_dir / "maty-3-412.html").read_text(encoding="utf-8")
+    body = (output_dir / "maty-3-412" / "index.html").read_text(encoding="utf-8")
     assert "&lt;мати&gt;" in body
 
 
@@ -128,12 +128,12 @@ def test_proto_form_block_when_present(tmp_path):
     _make_db(db_path)
 
     generate_pages(db_path, output_dir)
-    page_with_proto = (output_dir / "maty-3-413.html").read_text(encoding="utf-8")
+    page_with_proto = (output_dir / "maty-3-413" / "index.html").read_text(encoding="utf-8")
     assert 'class="proto"' in page_with_proto
     assert "Праслов'янське:" in page_with_proto
     assert "*mati" in page_with_proto
 
-    page_without_proto = (output_dir / "dim.html").read_text(encoding="utf-8")
+    page_without_proto = (output_dir / "dim" / "index.html").read_text(encoding="utf-8")
     assert 'class="proto"' not in page_without_proto
 
 

@@ -47,6 +47,10 @@ const linguisticTracks = [
   { href: '/ruth/', label: 'Ruthenian', icon: '🏛', count: s.ruth?.modules },
 ];
 
+const referenceTools = [
+  { href: '/etymology/', label: 'Етимологія', icon: '📖' },
+];
+
 const seminarActive = seminarTracks.some(t => 'href' in t && t.href && isActive(t.href));
 const lingActive = linguisticTracks.some(t => isActive(t.href));
 ---
@@ -100,6 +104,14 @@ const lingActive = linguisticTracks.some(t => isActive(t.href));
           ))}
         </div>
       </div>
+
+      <div class="lu-nav-divider" aria-hidden="true"></div>
+
+      {referenceTools.map(item => (
+        <a href={item.href} class:list={['lu-nav-pill', { active: isActive(item.href) }]} title="Етимологічний словник">
+          <span aria-hidden="true">{item.icon}</span> {item.label}
+        </a>
+      ))}
     </nav>
 
     <div class="lu-header-right">

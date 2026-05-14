@@ -294,6 +294,17 @@ def _write_css(output_dir: Path) -> None:
     (output_dir / "etymology.css").write_text(ETYMOLOGY_CSS, encoding="utf-8")
 
 
+def _write_page(output_dir: Path, slug: str, html_content: str) -> None:
+    """Write an etymology page as <slug>/index.html so the URL is /etymology/<slug>/.
+
+    Matches Astro's `trailingSlash: 'always'` config; both per-Starlight MDX
+    pages and these static reference pages get clean trailing-slash URLs.
+    """
+    slug_dir = output_dir / slug
+    slug_dir.mkdir(parents=True, exist_ok=True)
+    (slug_dir / "index.html").write_text(html_content, encoding="utf-8")
+
+
 def generate_pages(db_path: Path, output_dir: Path) -> dict[str, int]:
     entries = load_entries(db_path)
     grouped: dict[str, list[Entry]] = defaultdict(list)
@@ -309,20 +320,14 @@ def generate_pages(db_path: Path, output_dir: Path) -> dict[str, int]:
     files_written = 0
     for slug, slug_entries in sorted(grouped.items()):
         if len(slug_entries) == 1:
-            (output_dir / f"{slug}.html").write_text(
-                render_entry_page(slug_entries[0]), encoding="utf-8"
-            )
+            _write_page(output_dir, slug, render_entry_page(slug_entries[0]))
             files_written += 1
             continue
 
-        (output_dir / f"{slug}.html").write_text(
-            render_landing_page(slug_entries), encoding="utf-8"
-        )
+        _write_page(output_dir, slug, render_landing_page(slug_entries))
         files_written += 1
         for entry in slug_entries:
-            (output_dir / f"{entry.page_slug}.html").write_text(
-                render_entry_page(entry), encoding="utf-8"
-            )
+            _write_page(output_dir, entry.page_slug, render_entry_page(entry))
             files_written += 1
 
     return {
