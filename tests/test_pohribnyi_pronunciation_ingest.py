@@ -34,7 +34,6 @@ import pytest
 
 from scripts.ingest import pohribnyi_pronunciation_ingest as pohribnyi
 
-
 # ---------------------------------------------------------------------------
 # Fixtures — a 3-page synthetic fixture mirroring the real OCR layout
 # (the real file leads with a form-feed and uses form-feed between pages)
