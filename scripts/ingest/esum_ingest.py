@@ -35,8 +35,26 @@ REPO = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = REPO / "data" / "raw" / "esum" / "vol1.txt"
 DEFAULT_OUTPUT = REPO / "data" / "processed" / "esum_vol1.jsonl"
 
-BODY_START_RE = re.compile(r"^а\s*1\s*\(")
-BODY_END_RE = re.compile(r"^АКАДЕМИЯ НАУК УКРАИНСКОЙ ССР$")
+# Body-start anchor: a homonym-marked single-letter opener that begins
+# the dictionary body for each volume. Vol 1 opens with ``а 1 (``; vol 2
+# with ``да 1 «``; vol 4 with ``о 1 (``; vol 6 with ``у 1 (``. Vols 3
+# and 5 don't have a homonym-1 marker on the first body entry, so the
+# match falls through and the parser starts from line 0; downstream
+# entry validation filters out front-matter prose.
+BODY_START_RE = re.compile(
+    r"^[а-яґіїє]{1,3}\s+1\s+[«\(]",
+    re.IGNORECASE,
+)
+
+# Body-end anchor: Russian-language colophon header that immediately
+# follows the dictionary body in vols 1-3. Vol 3 OCR has a typo
+# ``СЄР`` instead of ``ССР``. Vols 4-6 print the colophon broken across
+# multiple lines (``АКАДЕМІЯ НАУК\nУКРАЇНИ``); the regex misses and the
+# parser falls back to processing to EOF, with entry validation rejecting
+# back-matter prose.
+BODY_END_RE = re.compile(
+    r"^АКАДЕМИЯ\s+НАУК\s+УКРАИНСКОЙ\s+(?:ССР|СЄР)\s*$",
+)
 PAGE_RE = re.compile(r"^\d{1,3}$")
 WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
@@ -100,9 +118,27 @@ def _extract_pre_if_html(text: str) -> str:
 
 
 def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
+    """Trim cover/foreword/bibliography from the head and Russian
+    colophon / errata from the tail.
+
+    Body-start: first line matching BODY_START_RE (a homonym-marked
+    short headword like ``а 1 (`` or ``да 1 «``). Volume 1 has ~3,000
+    lines of front matter; volumes 2-6 have ~100-250 lines. The earlier
+    ``index > 3_000`` cutoff was a volume-1 anti-false-positive guard
+    that prevented body-start detection on every other volume — removed.
+    If no body-start match exists (vols 3 and 5 open with multi-char
+    lemmas instead of homonym-1), ``start`` stays at 0 and the
+    paragraph-level entry validator handles filtering downstream.
+
+    Body-end: optional. Only vols 1-3 have the ``АКАДЕМИЯ НАУК
+    УКРАИНСКОЙ ССР`` (or vol-3-typo ``СЄР``) header on a single line.
+    Vols 4-6 print the same colophon broken across lines, the regex
+    misses, and we process to EOF; back-matter prose is filtered by
+    the entry validator.
+    """
     start = 0
     for index, line in enumerate(lines):
-        if index > 3_000 and BODY_START_RE.match(line.strip()):
+        if BODY_START_RE.match(line.strip()):
             start = index
             break
     end = len(lines)
@@ -176,10 +212,54 @@ def _paragraphs(cleaned_lines: Iterable[tuple[int | None, str]]) -> list[tuple[i
 
 
 def _canonical_lemma(head: str) -> str:
+    """Extract the canonical headword from the merged entry's head.
+
+    Vol 1 OCR puts the headword followed by inline metadata on the same
+    line: ``серце, ст. серьдьце; — р. серце, ...`` — the comma split
+    captures only ``серце``. Vols 4-6 print bare headwords on their own
+    line, which the parser merges with the next body line:
+    ``серце ст. серьдьце; — р. серце, ...`` — without a comma to bound
+    the head, the previous version captured the multi-word
+    ``серце ст. серьдьце``, which then tripped the ``.``-in-lemma filter
+    and the entry got dropped.
+
+    Fix: after the optional comma split, also take only the first
+    whitespace-delimited word. The first word is the canonical lemma
+    in both layouts.
+    """
     first = head.split(",", 1)[0].strip()
+    words = first.split()
+    if words:
+        first = words[0]
     first = first.strip("[]() ")
     first = re.sub(r"\s+[0-9]+$", "", first)
     return SPACE_RE.sub(" ", first).strip().lower()
+
+
+def _looks_like_ocr_garbage(lemma: str) -> bool:
+    """Reject lemmas whose character composition signals OCR noise.
+
+    A clean Ukrainian lemma is mostly Cyrillic letters with optional
+    hyphens, apostrophes, and (rare) homonym-digit suffixes. OCR artifacts
+    in the multi-volume body — author-name fragments like ``вгйскпег``
+    (intended: ``Brückner``), citation tags like ``зі. §г. ii``, and
+    column-gutter line-fragments — fail this check.
+
+    Heuristics:
+    - At least 75% of letter characters must be Ukrainian Cyrillic.
+    - Reject lemmas containing ``§``, ``^``, or ASCII letters following
+      an opening Cyrillic letter (signals mid-word OCR break or Latin
+      bibliography fragment).
+    """
+    if not lemma:
+        return True
+    letters = [c for c in lemma if c.isalpha()]
+    if not letters:
+        return True
+    cyrillic = sum(1 for c in letters if "Ѐ" <= c <= "ӿ")
+    if cyrillic / len(letters) < 0.75:
+        return True
+    return bool(any(ch in lemma for ch in ("§", "^", ".")))
 
 
 def _extract_headword(paragraph: str) -> str | None:
@@ -198,7 +278,9 @@ def _extract_headword(paragraph: str) -> str | None:
         return None
     if len(lemma.split()) > 4:
         return None
-    if not re.match(r"^[\[\(]?[абвгґАБВГҐ]", lemma):
+    if not re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma):
+        return None
+    if _looks_like_ocr_garbage(lemma):
         return None
     return lemma
 
@@ -228,7 +310,7 @@ def _looks_like_head_candidate(line: str) -> bool:
         return False
     if any(lemma.startswith(prefix) for prefix in LEADING_LANGUAGE_ABBREVIATIONS):
         return False
-    return bool(re.match(r"^[\[\(]?[абвгґАБВГҐ]", lemma))
+    return bool(re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma))
 
 
 def _looks_like_complete_entry(paragraph: str) -> bool:
@@ -238,9 +320,30 @@ def _looks_like_complete_entry(paragraph: str) -> bool:
 
 
 def _is_page_header_fragment(paragraph: str) -> bool:
+    """Detect column-pair page running headers and short non-entry artifacts.
+
+    Vols 4-6 print bare headwords on their own line (``серце``,
+    ``хата``, ``поле``) with the entry body on the next line. The
+    earlier heuristic ``short line + no entry punctuation = page header``
+    over-rejected those bare-headword lines and the parser glued them
+    onto the previous entry's body — losing thousands of common-word
+    entries (вуглець, мова, поле, серце, хата, …) from search_esum.
+
+    Page running headers in this corpus are column-pair lines like
+    ``да-ба   даві`` (two headwords side by side from the page's two
+    columns). Single-word lines are not running headers — they're real
+    headwords. The fix is the ``len(words) < 2`` early-return below.
+    """
     if len(paragraph) > 40:
         return False
     if ENTRY_PUNCT_RE.search(paragraph):
+        return False
+    words = paragraph.split()
+    if len(words) < 2:
+        # Single word on its own line. Could be a bare-headword line
+        # (real entry coming on the next line) — don't reject as page
+        # header. Promotion to entry happens via _looks_like_head_candidate
+        # plus the body-merge in parse_esum's main loop.
         return False
     if paragraph.lower().startswith(("ще ", "див. ", "пор. ")):
         return False
@@ -270,21 +373,78 @@ def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
             merged.append((current_page, SPACE_RE.sub(" ", " ".join(current_parts)).strip()))
         current_parts = []
 
-    for page, line in cleaned_lines:
+    # Materialize for look-ahead — needed to detect page-running-header
+    # pairs (vols 4-6 print two short single-word lines back-to-back at
+    # the top of each page: left-column-first-headword and
+    # right-column-last-headword). Without look-ahead, the parser
+    # promotes both as bare-headword entry starts and silently drops
+    # them because no body follows.
+    rows = list(cleaned_lines)
+
+    def _next_nonblank_index(start: int) -> int | None:
+        for j in range(start, len(rows)):
+            if rows[j][1]:
+                return j
+        return None
+
+    def _is_bare_head_only(text: str) -> bool:
+        """A line that's a head candidate AND a single short word —
+        the shape of running-header lines in vols 4-6. Distinct from
+        an inline entry-start which already has body content on the
+        same line."""
+        if not text or len(text) > 30:
+            return False
+        if len(text.split()) != 1:
+            return False
+        return _looks_like_head_candidate(text)
+
+    i = 0
+    while i < len(rows):
+        page, line = rows[i]
         if not line:
             after_blank = True
+            i += 1
             continue
+
         if after_blank and (
             _looks_like_entry_start(line)
             or _looks_like_cross_reference_entry(line)
             or _looks_like_head_candidate(line)
         ):
+            # Page-running-header detection: two consecutive bare-headword
+            # lines back to back (with optional blanks between) are
+            # column-pair running headers, NOT real entries. Skip both
+            # if pattern matches; the real entries reappear deeper in
+            # the page with proper bodies.
+            if _is_bare_head_only(line):
+                j = _next_nonblank_index(i + 1)
+                if j is not None and _is_bare_head_only(rows[j][1]):
+                    k = _next_nonblank_index(j + 1)
+                    # Confirm: the NEXT line after the pair must not be
+                    # body of either bare head (otherwise we'd be
+                    # falsely skipping a real entry). Heuristic: if
+                    # the third line is itself a head candidate or
+                    # starts with the typical body marker `[`/`|`, the
+                    # first two were running headers.
+                    if k is not None:
+                        third = rows[k][1]
+                        if (
+                            third.startswith(("[", "|"))
+                            or _is_bare_head_only(third)
+                            or _looks_like_entry_start(third)
+                            or _looks_like_head_candidate(third)
+                        ):
+                            i = j + 1  # skip past both bare headers
+                            after_blank = True
+                            continue
+
             flush_current()
             current_page = page or current_page
             current_parts = [line]
         elif current_parts and not _is_page_header_fragment(line):
             current_parts.append(line)
         after_blank = False
+        i += 1
     flush_current()
 
     entries: list[dict[str, object]] = []
