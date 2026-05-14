@@ -208,6 +208,13 @@ data/literary_texts/*.jsonl
 data/external_articles/
 data/antonenko-davydovych/
 data/ua-gec/
+
+# ESUM re-OCR feasibility (issue #2001) — raw JP2 scans pulled from
+# Archive.org and intermediate per-engine OCR outputs. The committed
+# deliverable is audit/etymology-ocr-feasibility/REPORT.md only.
+data/raw/esum/jp2-staging/
+audit/etymology-ocr-feasibility/raw-outputs/
+
 .build.lock
 
 # Corpus gap audit working files — only the human-reviewed deliverables land in git
