@@ -35,8 +35,26 @@ REPO = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = REPO / "data" / "raw" / "esum" / "vol1.txt"
 DEFAULT_OUTPUT = REPO / "data" / "processed" / "esum_vol1.jsonl"
 
-BODY_START_RE = re.compile(r"^а\s*1\s*\(")
-BODY_END_RE = re.compile(r"^АКАДЕМИЯ НАУК УКРАИНСКОЙ ССР$")
+# Body-start anchor: a homonym-marked single-letter opener that begins
+# the dictionary body for each volume. Vol 1 opens with ``а 1 (``; vol 2
+# with ``да 1 «``; vol 4 with ``о 1 (``; vol 6 with ``у 1 (``. Vols 3
+# and 5 don't have a homonym-1 marker on the first body entry, so the
+# match falls through and the parser starts from line 0; downstream
+# entry validation filters out front-matter prose.
+BODY_START_RE = re.compile(
+    r"^[а-яґіїє]{1,3}\s+1\s+[«\(]",
+    re.IGNORECASE,
+)
+
+# Body-end anchor: Russian-language colophon header that immediately
+# follows the dictionary body in vols 1-3. Vol 3 OCR has a typo
+# ``СЄР`` instead of ``ССР``. Vols 4-6 print the colophon broken across
+# multiple lines (``АКАДЕМІЯ НАУК\nУКРАЇНИ``); the regex misses and the
+# parser falls back to processing to EOF, with entry validation rejecting
+# back-matter prose.
+BODY_END_RE = re.compile(
+    r"^АКАДЕМИЯ\s+НАУК\s+УКРАИНСКОЙ\s+(?:ССР|СЄР)\s*$",
+)
 PAGE_RE = re.compile(r"^\d{1,3}$")
 WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
@@ -100,9 +118,27 @@ def _extract_pre_if_html(text: str) -> str:
 
 
 def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
+    """Trim cover/foreword/bibliography from the head and Russian
+    colophon / errata from the tail.
+
+    Body-start: first line matching BODY_START_RE (a homonym-marked
+    short headword like ``а 1 (`` or ``да 1 «``). Volume 1 has ~3,000
+    lines of front matter; volumes 2-6 have ~100-250 lines. The earlier
+    ``index > 3_000`` cutoff was a volume-1 anti-false-positive guard
+    that prevented body-start detection on every other volume — removed.
+    If no body-start match exists (vols 3 and 5 open with multi-char
+    lemmas instead of homonym-1), ``start`` stays at 0 and the
+    paragraph-level entry validator handles filtering downstream.
+
+    Body-end: optional. Only vols 1-3 have the ``АКАДЕМИЯ НАУК
+    УКРАИНСКОЙ ССР`` (or vol-3-typo ``СЄР``) header on a single line.
+    Vols 4-6 print the same colophon broken across lines, the regex
+    misses, and we process to EOF; back-matter prose is filtered by
+    the entry validator.
+    """
     start = 0
     for index, line in enumerate(lines):
-        if index > 3_000 and BODY_START_RE.match(line.strip()):
+        if BODY_START_RE.match(line.strip()):
             start = index
             break
     end = len(lines)
@@ -182,6 +218,32 @@ def _canonical_lemma(head: str) -> str:
     return SPACE_RE.sub(" ", first).strip().lower()
 
 
+def _looks_like_ocr_garbage(lemma: str) -> bool:
+    """Reject lemmas whose character composition signals OCR noise.
+
+    A clean Ukrainian lemma is mostly Cyrillic letters with optional
+    hyphens, apostrophes, and (rare) homonym-digit suffixes. OCR artifacts
+    in the multi-volume body — author-name fragments like ``вгйскпег``
+    (intended: ``Brückner``), citation tags like ``зі. §г. ii``, and
+    column-gutter line-fragments — fail this check.
+
+    Heuristics:
+    - At least 75% of letter characters must be Ukrainian Cyrillic.
+    - Reject lemmas containing ``§``, ``^``, or ASCII letters following
+      an opening Cyrillic letter (signals mid-word OCR break or Latin
+      bibliography fragment).
+    """
+    if not lemma:
+        return True
+    letters = [c for c in lemma if c.isalpha()]
+    if not letters:
+        return True
+    cyrillic = sum(1 for c in letters if "Ѐ" <= c <= "ӿ")
+    if cyrillic / len(letters) < 0.75:
+        return True
+    return bool(any(ch in lemma for ch in ("§", "^", ".")))
+
+
 def _extract_headword(paragraph: str) -> str | None:
     match = HEAD_END_RE.search(paragraph)
     if not match:
@@ -198,7 +260,9 @@ def _extract_headword(paragraph: str) -> str | None:
         return None
     if len(lemma.split()) > 4:
         return None
-    if not re.match(r"^[\[\(]?[абвгґАБВГҐ]", lemma):
+    if not re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma):
+        return None
+    if _looks_like_ocr_garbage(lemma):
         return None
     return lemma
 
