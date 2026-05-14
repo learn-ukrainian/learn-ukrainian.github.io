@@ -212,7 +212,25 @@ def _paragraphs(cleaned_lines: Iterable[tuple[int | None, str]]) -> list[tuple[i
 
 
 def _canonical_lemma(head: str) -> str:
+    """Extract the canonical headword from the merged entry's head.
+
+    Vol 1 OCR puts the headword followed by inline metadata on the same
+    line: ``серце, ст. серьдьце; — р. серце, ...`` — the comma split
+    captures only ``серце``. Vols 4-6 print bare headwords on their own
+    line, which the parser merges with the next body line:
+    ``серце ст. серьдьце; — р. серце, ...`` — without a comma to bound
+    the head, the previous version captured the multi-word
+    ``серце ст. серьдьце``, which then tripped the ``.``-in-lemma filter
+    and the entry got dropped.
+
+    Fix: after the optional comma split, also take only the first
+    whitespace-delimited word. The first word is the canonical lemma
+    in both layouts.
+    """
     first = head.split(",", 1)[0].strip()
+    words = first.split()
+    if words:
+        first = words[0]
     first = first.strip("[]() ")
     first = re.sub(r"\s+[0-9]+$", "", first)
     return SPACE_RE.sub(" ", first).strip().lower()
@@ -292,7 +310,7 @@ def _looks_like_head_candidate(line: str) -> bool:
         return False
     if any(lemma.startswith(prefix) for prefix in LEADING_LANGUAGE_ABBREVIATIONS):
         return False
-    return bool(re.match(r"^[\[\(]?[абвгґАБВГҐ]", lemma))
+    return bool(re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma))
 
 
 def _looks_like_complete_entry(paragraph: str) -> bool:
@@ -302,9 +320,30 @@ def _looks_like_complete_entry(paragraph: str) -> bool:
 
 
 def _is_page_header_fragment(paragraph: str) -> bool:
+    """Detect column-pair page running headers and short non-entry artifacts.
+
+    Vols 4-6 print bare headwords on their own line (``серце``,
+    ``хата``, ``поле``) with the entry body on the next line. The
+    earlier heuristic ``short line + no entry punctuation = page header``
+    over-rejected those bare-headword lines and the parser glued them
+    onto the previous entry's body — losing thousands of common-word
+    entries (вуглець, мова, поле, серце, хата, …) from search_esum.
+
+    Page running headers in this corpus are column-pair lines like
+    ``да-ба   даві`` (two headwords side by side from the page's two
+    columns). Single-word lines are not running headers — they're real
+    headwords. The fix is the ``len(words) < 2`` early-return below.
+    """
     if len(paragraph) > 40:
         return False
     if ENTRY_PUNCT_RE.search(paragraph):
+        return False
+    words = paragraph.split()
+    if len(words) < 2:
+        # Single word on its own line. Could be a bare-headword line
+        # (real entry coming on the next line) — don't reject as page
+        # header. Promotion to entry happens via _looks_like_head_candidate
+        # plus the body-merge in parse_esum's main loop.
         return False
     if paragraph.lower().startswith(("ще ", "див. ", "пор. ")):
         return False
@@ -334,21 +373,78 @@ def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
             merged.append((current_page, SPACE_RE.sub(" ", " ".join(current_parts)).strip()))
         current_parts = []
 
-    for page, line in cleaned_lines:
+    # Materialize for look-ahead — needed to detect page-running-header
+    # pairs (vols 4-6 print two short single-word lines back-to-back at
+    # the top of each page: left-column-first-headword and
+    # right-column-last-headword). Without look-ahead, the parser
+    # promotes both as bare-headword entry starts and silently drops
+    # them because no body follows.
+    rows = list(cleaned_lines)
+
+    def _next_nonblank_index(start: int) -> int | None:
+        for j in range(start, len(rows)):
+            if rows[j][1]:
+                return j
+        return None
+
+    def _is_bare_head_only(text: str) -> bool:
+        """A line that's a head candidate AND a single short word —
+        the shape of running-header lines in vols 4-6. Distinct from
+        an inline entry-start which already has body content on the
+        same line."""
+        if not text or len(text) > 30:
+            return False
+        if len(text.split()) != 1:
+            return False
+        return _looks_like_head_candidate(text)
+
+    i = 0
+    while i < len(rows):
+        page, line = rows[i]
         if not line:
             after_blank = True
+            i += 1
             continue
+
         if after_blank and (
             _looks_like_entry_start(line)
             or _looks_like_cross_reference_entry(line)
             or _looks_like_head_candidate(line)
         ):
+            # Page-running-header detection: two consecutive bare-headword
+            # lines back to back (with optional blanks between) are
+            # column-pair running headers, NOT real entries. Skip both
+            # if pattern matches; the real entries reappear deeper in
+            # the page with proper bodies.
+            if _is_bare_head_only(line):
+                j = _next_nonblank_index(i + 1)
+                if j is not None and _is_bare_head_only(rows[j][1]):
+                    k = _next_nonblank_index(j + 1)
+                    # Confirm: the NEXT line after the pair must not be
+                    # body of either bare head (otherwise we'd be
+                    # falsely skipping a real entry). Heuristic: if
+                    # the third line is itself a head candidate or
+                    # starts with the typical body marker `[`/`|`, the
+                    # first two were running headers.
+                    if k is not None:
+                        third = rows[k][1]
+                        if (
+                            third.startswith(("[", "|"))
+                            or _is_bare_head_only(third)
+                            or _looks_like_entry_start(third)
+                            or _looks_like_head_candidate(third)
+                        ):
+                            i = j + 1  # skip past both bare headers
+                            after_blank = True
+                            continue
+
             flush_current()
             current_page = page or current_page
             current_parts = [line]
         elif current_parts and not _is_page_header_fragment(line):
             current_parts.append(line)
         after_blank = False
+        i += 1
     flush_current()
 
     entries: list[dict[str, object]] = []
