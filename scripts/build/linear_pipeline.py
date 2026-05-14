@@ -9,7 +9,9 @@ any LLM rewrite or regeneration loop.
 from __future__ import annotations
 
 import json
+import logging
 import re
+import sqlite3
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
@@ -23,10 +25,12 @@ from typing import Any
 
 import yaml
 
+LOGGER = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
+TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.build.citation_matcher import (
@@ -919,7 +923,153 @@ def _textbook_hit_label(hit: Mapping[str, Any]) -> str:
     return title + (f" ({', '.join(details)})" if details else "")
 
 
+_TEXTBOOK_REFERENCE_TITLE_RE = re.compile(
+    r"^(?P<author>\S+)\s+Grade\s+(?P<grade>\d+),\s*p\.\s*(?P<page>\d+)$",
+    re.IGNORECASE,
+)
+_TEXTBOOK_AUTHOR_TRANSLITS = {
+    "Караман": ["karaman"],
+    "Захарійчук": ["zakhariychuk", "zaharijchuk", "zahariichuk"],
+    "Кравцова": ["kravcova", "kravtsova"],
+    "Авраменко": ["avramenko"],
+    "Глазова": ["glazova", "hlazova"],
+    "Заболотний": ["zabolotnyi", "zabolotnij"],
+    "Захарчук": ["zakharchuk"],
+    "Вашуленко": ["vashulenko"],
+    "Большакова": ["bolshakova"],
+    "Міщенко": ["mishhenko", "mishchenko"],
+}
+
+
+def _parse_textbook_reference_title(title: str) -> tuple[str, int, int] | None:
+    match = _TEXTBOOK_REFERENCE_TITLE_RE.match(title.strip())
+    if not match:
+        return None
+    return (
+        match.group("author"),
+        int(match.group("grade")),
+        int(match.group("page")),
+    )
+
+
+def _textbook_source_year(source_file: str) -> int:
+    years = [int(year) for year in re.findall(r"(?:^|-)(\d{4})(?:-|$)", source_file)]
+    return max(years) if years else 0
+
+
+def _source_files_for_textbook_reference(
+    conn: sqlite3.Connection,
+    author: str,
+    grade: int,
+) -> list[str] | None:
+    translits = _TEXTBOOK_AUTHOR_TRANSLITS.get(author)
+    if not translits:
+        return None
+
+    author_clauses = " OR ".join("source_file LIKE ?" for _ in translits)
+    rows = conn.execute(
+        f"""
+        SELECT DISTINCT source_file
+        FROM textbooks
+        WHERE source_file LIKE ?
+          AND ({author_clauses})
+        """,
+        (f"{grade}-klas-%", *(f"%-{translit}-%" for translit in translits)),
+    ).fetchall()
+    return sorted(
+        (str(row["source_file"]) for row in rows),
+        key=lambda source_file: (_textbook_source_year(source_file), source_file),
+        reverse=True,
+    )
+
+
+def _lookup_textbook_reference_chunk(
+    title: str,
+    *,
+    limit: int = 1,
+    missing_reason: list[str] | None = None,
+) -> list[dict] | None:
+    parsed = _parse_textbook_reference_title(title)
+    if parsed is None:
+        return None
+    author, grade, page = parsed
+    if not TEXTBOOK_SOURCES_DB_PATH.exists():
+        return None
+
+    try:
+        with sqlite3.connect(str(TEXTBOOK_SOURCES_DB_PATH)) as conn:
+            conn.row_factory = sqlite3.Row
+            source_files = _source_files_for_textbook_reference(conn, author, grade)
+            if source_files is None:
+                return None
+            if not source_files:
+                if missing_reason is not None:
+                    missing_reason.append(
+                        f"source_file not in corpus for {author} Grade {grade}"
+                    )
+                return []
+            quoted_sources = ",".join("?" for _ in source_files)
+            rows: list[sqlite3.Row] = []
+            for width in (4, 3):
+                suffix = f"\\_s{page:0{width}d}"
+                rows = conn.execute(
+                    f"""
+                    SELECT chunk_id, title, text, source_file, grade, author
+                    FROM textbooks
+                    WHERE source_file IN ({quoted_sources})
+                      AND chunk_id LIKE ? ESCAPE '\\'
+                    ORDER BY source_file DESC, chunk_id
+                    """,
+                    (*source_files, f"%{suffix}"),
+                ).fetchall()
+                if rows:
+                    break
+    except sqlite3.Error:
+        return None
+
+    if not rows:
+        if missing_reason is not None:
+            missing_reason.append(
+                f"page {page} not in corpus for {', '.join(source_files)}"
+            )
+        return []
+
+    source_file_count = len({str(row["source_file"]) for row in rows})
+    if source_file_count > 1:
+        LOGGER.warning(
+            "Ambiguous textbook source_file candidates for %s: %s; using most recent",
+            title,
+            ", ".join(sorted({str(row["source_file"]) for row in rows})),
+        )
+    sorted_rows = sorted(
+        rows,
+        key=lambda row: (
+            _textbook_source_year(str(row["source_file"])),
+            str(row["source_file"]),
+            str(row["chunk_id"]),
+        ),
+        reverse=True,
+    )
+    return [
+        {
+            "chunk_id": str(row["chunk_id"]),
+            "title": str(row["title"]),
+            "text": str(row["text"]),
+            "source_file": str(row["source_file"]),
+            "source_type": "textbook",
+            "grade": str(row["grade"]),
+            "author": str(row["author"] or author),
+            "page": page,
+        }
+        for row in sorted_rows[:limit]
+    ]
+
+
 def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dict]:
+    direct_hits = _lookup_textbook_reference_chunk(query, limit=limit)
+    if direct_hits is not None:
+        return direct_hits
+
     try:
         from wiki.sources_db import search_sources
     except Exception:
@@ -956,15 +1106,30 @@ def _build_textbook_excerpt_context(
     found_any = False
     for title in references:
         query = f"{title} {topic_query}".strip()
-        hits = _search_textbook_hits(query, level=level, limit=1)
+        missing_reasons: list[str] = []
+        direct_hits = _lookup_textbook_reference_chunk(
+            title,
+            limit=1,
+            missing_reason=missing_reasons,
+        )
+        hits = (
+            direct_hits
+            if direct_hits is not None
+            else _search_textbook_hits(query, level=level, limit=1)
+        )
         lines.append(f"### {title}")
         lines.append("")
         if not hits:
+            missing_reason = missing_reasons[0] if missing_reasons else ""
             for ref in plan.get("references") or []:
                 if isinstance(ref, dict) and str(ref.get("title") or "").strip() == title:
                     ref["corpus_missing"] = True
+                    if missing_reason:
+                        ref["corpus_missing_reason"] = missing_reason
             lines.append("*No textbook excerpt found for this reference.*")
             lines.append("corpus_missing: true")
+            if missing_reason:
+                lines.append(f"corpus_missing_reason: {missing_reason}")
             lines.append("")
             continue
         hit = hits[0]
