@@ -1,0 +1,253 @@
+---
+/**
+ * Dynamic route for ESUM etymology entries.
+ *
+ * `getStaticPaths` reads the build-time manifest at
+ * `src/data/etymology-manifest.json` and emits one Astro page per slug.
+ * Three URL patterns are produced:
+ *
+ *   /etymology/<slug>/           — single-entry page (24,765 - 2,142 paths)
+ *   /etymology/<slug>/           — polysemy landing for slugs with >1 entry (2,142 paths)
+ *   /etymology/<slug>-<vol>-<page>(-N)?/   — individual disambig entry under a polysemy slug
+ *
+ * Wraps content in <StarlightPage> so every page has full Starlight chrome
+ * (top nav, search, theme toggle) and respects the site theme system.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import manifest from '../../data/etymology-manifest.json';
+
+interface EtymEntry {
+  id: number;
+  lemma: string;
+  vol: number;
+  page: number;
+  slug: string;
+  page_slug: string;
+  etymology_text: string;
+  cognate_forms: Record<string, string>;
+  proto_form: string | null;
+}
+
+interface Manifest {
+  version: string;
+  generated_at: string;
+  stats: Record<string, number>;
+  entries: EtymEntry[];
+  slug_groups: Record<string, string[]>;
+}
+
+const MARKER_LABELS: Record<string, string> = {
+  'ав.': 'Авестійська',
+  'болг.': 'Болгарська',
+  'бр.': 'Білоруська',
+  'гот.': 'Готська',
+  'гр.': 'Грецька',
+  'дінд.': 'Давньоіндійська',
+  'др.': 'Давньоруська',
+  'іє.': 'Індоєвропейська',
+  'лат.': 'Латинська',
+  'лит.': 'Литовська',
+  'п.': 'Польська',
+  'псл.': "Праслов'янська",
+  'р.': 'Російська',
+  'слн.': 'Словенська',
+  'слц.': 'Словацька',
+  'стел.': "Старослов'янська",
+  'схв.': 'Сербохорватська',
+  'ч.': 'Чеська',
+};
+
+type EntryProps = {
+  kind: 'entry';
+  entry: EtymEntry;
+};
+type LandingProps = {
+  kind: 'landing';
+  slug: string;
+  entries: EtymEntry[];
+};
+type RouteProps = EntryProps | LandingProps;
+
+export async function getStaticPaths() {
+  const data = manifest as Manifest;
+  const byPageSlug = new Map<string, EtymEntry>();
+  for (const e of data.entries) byPageSlug.set(e.page_slug, e);
+
+  const paths: Array<{ params: { slug: string }; props: RouteProps }> = [];
+
+  for (const [slug, page_slugs] of Object.entries(data.slug_groups)) {
+    if (page_slugs.length === 1) {
+      // Unique slug → canonical URL maps to the only entry.
+      const entry = byPageSlug.get(page_slugs[0])!;
+      paths.push({ params: { slug }, props: { kind: 'entry', entry } });
+    } else {
+      // Polysemy: canonical slug renders a landing; each disambig slug renders its own entry.
+      const entries = page_slugs.map((ps) => byPageSlug.get(ps)!);
+      paths.push({ params: { slug }, props: { kind: 'landing', slug, entries } });
+      for (const entry of entries) {
+        paths.push({
+          params: { slug: entry.page_slug },
+          props: { kind: 'entry', entry },
+        });
+      }
+    }
+  }
+
+  return paths;
+}
+
+const props = Astro.props as RouteProps;
+
+const ARCHIVE_URL =
+  'https://archive.org/search?query=Етимологічний%20словник%20української%20мови';
+
+// Build the StarlightPage frontmatter + content body based on the route kind.
+function entryFrontmatter(entry: EtymEntry) {
+  return {
+    title: entry.lemma,
+    description: `Етимологія слова «${entry.lemma}» — ЕСУМ, том ${entry.vol}, с. ${entry.page}`,
+    template: 'doc' as const,
+    pagefind: true,
+  };
+}
+
+function landingFrontmatter(slug: string, entries: EtymEntry[]) {
+  const lemmas = Array.from(new Set(entries.map((e) => e.lemma))).slice(0, 3).join(' / ');
+  return {
+    title: lemmas,
+    description: `Етимологія слова «${lemmas}» — кілька статей в ЕСУМ`,
+    template: 'doc' as const,
+    pagefind: true,
+  };
+}
+
+const summary = (text: string, length = 90): string => {
+  const collapsed = text.replace(/\s+/g, ' ').trim();
+  return collapsed.length > length ? collapsed.slice(0, length) + '…' : collapsed;
+};
+---
+
+{props.kind === 'entry' ? (
+  <StarlightPage frontmatter={entryFrontmatter(props.entry)}>
+    <p class="esum-ref">
+      <strong>Том {props.entry.vol}, с. {props.entry.page}</strong> • Етимологічний словник української мови (ЕСУМ)
+    </p>
+
+    <h2>Когнати</h2>
+    {Object.keys(props.entry.cognate_forms).length > 0 ? (
+      <table class="esum-cognates">
+        <thead>
+          <tr>
+            <th>Мова</th>
+            <th>Форма</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(props.entry.cognate_forms)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([marker, form]) => (
+              <tr>
+                <td>{MARKER_LABELS[marker] ?? marker} <span class="esum-marker">({marker})</span></td>
+                <td>{form}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    ) : (
+      <p class="esum-muted"><em>Структурованих форм когнатів для цієї статті не вилучено.</em></p>
+    )}
+
+    {props.entry.proto_form && (
+      <p class="esum-proto"><strong>Праслов'янське:</strong> {props.entry.proto_form}</p>
+    )}
+
+    <h2>Етимологія</h2>
+    <div class="esum-body">{props.entry.etymology_text}</div>
+
+    <h2>Джерело</h2>
+    <p>
+      ЕСУМ, том {props.entry.vol}, с. {props.entry.page}.
+      {' '}<a href={ARCHIVE_URL}>Архів вікі-ресурсів</a>
+    </p>
+
+    <hr />
+    <p class="esum-muted">
+      <a href="/etymology/">← Усі статті</a>
+    </p>
+  </StarlightPage>
+) : (
+  <StarlightPage frontmatter={landingFrontmatter(props.slug, props.entries)}>
+    <p class="esum-ref">
+      Це слово має <strong>{props.entries.length}</strong> статей в ЕСУМ — від різних коренів
+      або різних значень.
+    </p>
+
+    <ul class="esum-entry-list">
+      {props.entries.map((entry) => (
+        <li>
+          <a href={`/etymology/${entry.page_slug}/`}>
+            <strong>Том {entry.vol}, с. {entry.page}</strong>
+          </a>
+          {' '}— <span class="esum-muted">{summary(entry.etymology_text)}</span>
+        </li>
+      ))}
+    </ul>
+
+    <hr />
+    <p class="esum-muted">
+      <a href="/etymology/">← Усі статті</a>
+    </p>
+  </StarlightPage>
+)}
+
+<style>
+  .esum-ref {
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-sm);
+    margin-top: 0;
+  }
+  .esum-cognates {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  .esum-cognates th,
+  .esum-cognates td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+  .esum-cognates th {
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .esum-marker {
+    color: var(--sl-color-gray-3);
+    font-weight: normal;
+  }
+  .esum-body {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 1rem 0;
+  }
+  .esum-proto {
+    background: var(--sl-color-gray-6);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+  .esum-muted {
+    color: var(--sl-color-gray-3);
+  }
+  .esum-entry-list {
+    list-style: none;
+    padding: 0;
+  }
+  .esum-entry-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+</style>

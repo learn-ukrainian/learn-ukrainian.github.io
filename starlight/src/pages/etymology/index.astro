@@ -1,0 +1,114 @@
+---
+/**
+ * Etymology landing page at /etymology/.
+ *
+ * Single Astro page using <StarlightPage> for chrome consistency with the
+ * curriculum. Reads stats from the build manifest; links to a handful of
+ * featured high-frequency lemmas as try-it-now entry points.
+ *
+ * Phase 2 will add client-side search/typeahead + alphabetical browse here.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import manifest from '../../data/etymology-manifest.json';
+
+const data = manifest as {
+  version: string;
+  generated_at: string;
+  stats: {
+    total_entries: number;
+    unique_slugs: number;
+    polysemy_slugs: number;
+    entries_with_cognate_forms: number;
+  };
+};
+
+const featured: Array<{ slug: string; lemma: string; gloss: string }> = [
+  { slug: 'sertse', lemma: 'серце', gloss: "Том 5 — псл. *sьrdьce, ие-корінь *kerd-" },
+  { slug: 'maty', lemma: 'мати', gloss: 'Три статті: іменник, дієслово, прислівник' },
+  { slug: 'dim', lemma: 'дім', gloss: 'Том 2 — псл. *domъ, ие-корінь *dem-' },
+  { slug: 'zhinka', lemma: 'жінка', gloss: 'Том 2 — псл. *žena, споріднене з гр. γυνή' },
+  { slug: 'khata', lemma: 'хата', gloss: "Том 6 — праслов'янське або іранське походження" },
+  { slug: 'voda', lemma: 'вода', gloss: 'Том 1 — псл. *voda, ие-корінь *wedōr-' },
+];
+
+const fmtCount = (n: number) => n.toLocaleString('uk-UA');
+---
+
+<StarlightPage frontmatter={{
+  title: 'Етимологія',
+  description: `Етимологічний словник української мови — ${data.stats.total_entries.toLocaleString('uk-UA')} статей з ЕСУМ, томи 1–6`,
+  template: 'doc',
+  pagefind: true,
+}}>
+  <p class="lead">
+    {fmtCount(data.stats.total_entries)} статей з <strong>Етимологічного словника української мови</strong>
+    (ЕСУМ, томи 1–6) — походження слів, праслов'янські корені, когнати в інших слов'янських мовах.
+    Дані індексовано локально; жодних зовнішніх запитів під час перегляду.
+  </p>
+
+  <h2>Спробувати</h2>
+
+  <CardGrid>
+    {featured.map((f) => (
+      <LinkCard title={f.lemma} href={`/etymology/${f.slug}/`} description={f.gloss} />
+    ))}
+  </CardGrid>
+
+  <h2>Як шукати</h2>
+
+  <p>
+    Поки що — за URL: <code>/etymology/&lt;слово-латиницею&gt;/</code>. Транслітерація проста
+    (BGN/PCGN спрощена): <code>серце → sertse</code>, <code>жінка → zhinka</code>,
+    <code>хата → khata</code>. Слова з омонімією (наприклад, <code>мати</code>) ведуть на сторінку
+    розгалуження, де перелічено всі статті з посиланнями на конкретні томи/сторінки.
+  </p>
+
+  <p>Інтерактивний пошук, абетковий перелік та дослідник дерев когнатів — у наступних фазах.</p>
+
+  <h2>Покриття</h2>
+
+  <table class="esum-stats">
+    <tbody>
+      <tr><th>Унікальних статей</th><td>{fmtCount(data.stats.total_entries)}</td></tr>
+      <tr><th>Унікальних лем (після транслітерації)</th><td>{fmtCount(data.stats.unique_slugs)}</td></tr>
+      <tr><th>Сторінок розгалуження (омонімія)</th><td>{fmtCount(data.stats.polysemy_slugs)}</td></tr>
+      <tr><th>Статей із витягнутими формами когнатів</th><td>{fmtCount(data.stats.entries_with_cognate_forms)}</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Джерело</h2>
+
+  <p>
+    <em>Етимологічний словник української мови</em>, томи 1–6 (видавництво «Наукова думка»,
+    Київ, 1982–2012). Текст оцифровано з архівних PDF; OCR-артефакти можуть зустрічатися
+    у щільніх блоках транскрипції та квадратних дужок.
+  </p>
+</StarlightPage>
+
+<style>
+  .lead {
+    font-size: var(--sl-text-lg);
+    color: var(--sl-color-gray-2);
+  }
+  .esum-stats {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  .esum-stats th,
+  .esum-stats td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+  .esum-stats th {
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+    width: 60%;
+  }
+  .esum-stats td {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+</style>
