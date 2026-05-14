@@ -35,6 +35,7 @@ Reference:
 - ``docs/references/private/1000-Ukrainian-Words-2.0-Ukrainian-Lessons-PDF-4mwsom.txt``
 - ``docs/references/private/500+ Ukrainian Verbs - Ukrainian Lessons - PDF.txt``
 """
+
 from __future__ import annotations
 
 import argparse
@@ -50,9 +51,7 @@ REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 
 # Page-furniture patterns that should be stripped from entry bodies.
 # These match Ohoiko's PDF-extracted text exactly; do not over-generalise.
-_PAGE_FOOTER_RE = re.compile(
-    r"^\s*Inspiring resources for learning Ukrainian — UkrainianLessons\.com\s+\d+\s*$"
-)
+_PAGE_FOOTER_RE = re.compile(r"^\s*Inspiring resources for learning Ukrainian — UkrainianLessons\.com\s+\d+\s*$")
 _BARE_PAGE_NUMBER_RE = re.compile(r"^\s*\d+\s*$")
 # Page header is a single right-aligned word (the running headword). It
 # follows the page footer line and precedes the next entry. We detect it
@@ -84,11 +83,11 @@ _MAX_BODY_LINES = 25
 # accumulating. Matched as a substring on the stripped body line so we
 # tolerate leading spacing variation.
 _SECTION_TERMINATORS = (
-    "Кросворд",          # "Crossword №N" section headers (post-1000)
-    "Хай щастить",        # Author's closing line before back-matter
-    "Find out more at",   # Promotional back-matter URLs
+    "Кросворд",  # "Crossword №N" section headers (post-1000)
+    "Хай щастить",  # Author's closing line before back-matter
+    "Find out more at",  # Promotional back-matter URLs
     "Most Useful Ukrainian Words",  # Repeating header in back-matter pages
-    "My New Ukrainian Words",       # Blank-journal section header
+    "My New Ukrainian Words",  # Blank-journal section header
 )
 
 
@@ -289,12 +288,27 @@ def ingest_entries(
     *,
     force: bool = False,
 ) -> tuple[int, int]:
-    """Insert each entry as one row in textbooks. Returns (inserted, skipped).
+    """Insert each entry as one row in textbooks AND link a 1:1
+    ``textbook_sections`` row. Returns (inserted, skipped).
 
     Idempotent: skips chunk_ids that already exist unless ``force=True``,
     in which case existing rows are DELETED before re-insert (the FTS5
-    AFTER-INSERT trigger handles the index).
+    AFTER-INSERT trigger handles the FTS index).
+
+    Section coverage (added 2026-05-14 per #1981 follow-up): each entry
+    also produces a ``textbook_sections`` row so the chunk is visible to
+    ``_search_sections_fts5`` in scripts/wiki/sources_db.py. Without
+    this, the entry's chunk is FTS-searchable but invisible to
+    section-level retrieval. See ``_section_coverage.py`` for details.
     """
+    from scripts.ingest._section_coverage import (
+        LessonSection,
+        ensure_section_schema,
+        link_lesson_sections,
+    )
+
+    ensure_section_schema(conn)
+
     cur = conn.cursor()
     existing_ids: set[str] = set()
     if not force:
@@ -305,6 +319,11 @@ def ingest_entries(
         existing_ids = {r[0] for r in rows}
 
     if force:
+        # Reset both textbooks rows and their section parents.
+        cur.execute(
+            "DELETE FROM textbook_sections WHERE source_file = ?",
+            (book.source_file,),
+        )
         cur.execute(
             "DELETE FROM textbooks WHERE source_file = ?",
             (book.source_file,),
@@ -313,21 +332,36 @@ def ingest_entries(
     inserted = 0
     skipped = 0
     batch: list[tuple] = []
+    new_sections: list[LessonSection] = []
     for e in entries:
         chunk_id = f"{book.source_file}_e{e.number:04d}"
         if chunk_id in existing_ids:
             skipped += 1
             continue
         text = e.full_text()
-        batch.append((
-            chunk_id,
-            e.headword,
-            text,
-            book.source_file,
-            book.grade,
-            book.author,
-            len(text),
-        ))
+        batch.append(
+            (
+                chunk_id,
+                e.headword,
+                text,
+                book.source_file,
+                book.grade,
+                book.author,
+                len(text),
+            )
+        )
+        # Section title format: ``Entry N: <headword>`` — N
+        # disambiguates collisions (e.g. ``мати`` as both "mother" and
+        # "to have" could share a headword in some books). The unique
+        # constraint on (source_file, section_title) keeps this safe.
+        new_sections.append(
+            LessonSection(
+                chunk_id=chunk_id,
+                section_title=f"Entry {e.number}: {e.headword}",
+                section_number=str(e.number),
+                full_text=text,
+            )
+        )
         inserted += 1
 
     if batch:
@@ -336,6 +370,11 @@ def ingest_entries(
                   (chunk_id, title, text, source_file, grade, author, char_count)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
             batch,
+        )
+        link_lesson_sections(
+            conn,
+            source_file=book.source_file,
+            sections=new_sections,
         )
 
     return inserted, skipped
@@ -399,8 +438,7 @@ def main(argv: list[str] | None = None) -> int:
             (book.source_file,),
         ).fetchone()[0]
         total_before = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
-        print(f"   BEFORE: {before} rows for {book.source_file!r} "
-              f"(table total: {total_before:,})")
+        print(f"   BEFORE: {before} rows for {book.source_file!r} (table total: {total_before:,})")
 
         inserted, skipped = ingest_entries(conn, book, entries, force=args.force)
         conn.commit()
@@ -411,8 +449,10 @@ def main(argv: list[str] | None = None) -> int:
         ).fetchone()[0]
         total_after = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
         print(f"   inserted: {inserted}, skipped: {skipped}")
-        print(f"   AFTER: {after} rows for {book.source_file!r} "
-              f"(table total: {total_after:,}, delta +{total_after - total_before})")
+        print(
+            f"   AFTER: {after} rows for {book.source_file!r} "
+            f"(table total: {total_after:,}, delta +{total_after - total_before})"
+        )
 
         # Sample row evidence
         sample = conn.execute(
