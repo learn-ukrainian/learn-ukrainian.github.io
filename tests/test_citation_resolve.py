@@ -97,15 +97,20 @@ def test_plan_references_field_is_supported() -> None:
 
 def test_my_morning_module_passes_citations_resolve() -> None:
     # Source refs must match the LIVE plan_references at curriculum/l2-uk-en/
-    # plans/a1/my-morning.yaml (corrected by PR #1972: Караман p.176 → p.187,
-    # Кравцова Grade 4 p.113 removed as redundant with Захарійчук p.162's
-    # Білоус verse coverage of the same -шся/-ться pronunciation rule).
+    # plans/a1/my-morning.yaml. PR #2014 swapped two bad citations:
+    #   - Караман Grade 10 p.187 (off-topic — that page is "Розмовна,
+    #     просторічна лексика. Сленг", not reflexive verbs)
+    #   - Кравцова Grade 4 p.113 (ghost source — corpus has only Grade 2
+    #     Кравцова, not Grade 4)
+    # Both replaced with Захарійчук Grade 4 pages — the actual "Дієслова
+    # на -ся" lesson. The matcher LIKE-pattern fix in PR #2012 enabled
+    # 4-klas-ukrmova-zaharijchuk (no -year suffix) to resolve.
     plan_path = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en/plans/a1/my-morning.yaml"
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
     result = linear_pipeline._citation_gate(
         [
-            {"source_ref": "Караман, Українська мова, 10 клас, с. 187"},
             {"source_ref": "Захарійчук, Українська мова, 4 клас, с. 162"},
+            {"source_ref": "Захарійчук, Українська мова, 4 клас, с. 163"},
         ],
         plan,
     )
