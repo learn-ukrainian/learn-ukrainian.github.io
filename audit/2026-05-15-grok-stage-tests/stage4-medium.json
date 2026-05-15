@@ -1,0 +1,15 @@
+{
+  "stage": 4,
+  "effort": "medium",
+  "model": "grok-4.3",
+  "timestamp_utc": "2026-05-15T21:51:09Z",
+  "prompt": "You are the per-dim reviewer for the V7 curriculum pipeline.\n\nReviewing ``a1/my-morning``'s ``activities.yaml`` for the\n``vesum_verified`` dimension. The python_qg gate failed with:\n\n  vesum_verified: { passed: false, missing: [\"дивюся\", \"користуювася\"] }\n\nThe malformed forms appear inside ``error-correction`` activity items.\nThe canonical schema for those items REQUIRES these inner field names:\n\n  sentence:    the sentence containing the deliberate error\n  error:       the malformed token (excluded from VESUM gate)\n  correction:  the corrected token\n\nThe writer instead emitted ``incorrect:`` and ``correct:`` (non-canonical\naliases), which the gate does NOT recognize as intentional-error fields,\nso the deliberate malformations ``дивюся`` and ``користуювася`` leak\ninto ``vesum_verified`` as false positives.\n\nExcerpt from the failing artifact:\n\n```yaml\n- id: act-10\n  type: error-correction\n  items:\n    - incorrect: Я дивюся в дзеркало.\n      correct: Я дивлюся в дзеркало.\n    - incorrect: Я користуювася телефоном.\n      correct: Я користуюся телефоном.\n```\n\nYour task: output a ``<fixes>`` block containing find/replace pairs that\ncorrect the field names (NOT the content). The pipeline applies fixes\ndeterministically — each pair must be unambiguous (no regex, no globs).\n\nRequired output shape (literally; this is the format the pipeline parses):\n\n```\n<fixes>\n<fix>\n<find>incorrect: Я дивюся в дзеркало.</find>\n<replace>sentence: Я дивюся в дзеркало.\n      error: дивюся\n      correction: Я дивлюся в дзеркало.</replace>\n</fix>\n... more fixes ...\n</fixes>\n```\n\nOutput ONLY the <fixes>...</fixes> block. No prose. No markdown fences.\nThe fixes must:\n\n1. Replace each ``incorrect:`` field with the canonical ``sentence:`` field\n   plus an ``error:`` field naming the specific malformed token, plus a\n   ``correction:`` field with the corrected sentence.\n2. Remove the now-redundant ``correct:`` field.\n3. Preserve YAML indentation (the items are nested under ``items:`` at\n   4-space indent; the inner fields are at 6-space).\n4. Be deterministically applicable — no fuzzy matching.",
+  "result": {
+    "ok": true,
+    "returncode": 0,
+    "stdout": "<fixes>\n<fix>\n<find>incorrect: Я дивюся в дзеркало.\n      correct: Я дивлюся в дзеркало.</find>\n<replace>sentence: Я дивюся в дзеркало.\n      error: дивюся\n      correction: Я дивлюся в дзеркало.</replace>\n</fix>\n<fix>\n<find>incorrect: Я користуювася телефоном.\n      correct: Я користуюся телефоном.</find>\n<replace>sentence: Я користуювася телефоном.\n      error: користуювася\n      correction: Я користуюся телефоном.</replace>\n</fix>\n</fixes>\n",
+    "stderr": "",
+    "duration_s": 27.557183027267456
+  },
+  "parsed_verdict": null
+}

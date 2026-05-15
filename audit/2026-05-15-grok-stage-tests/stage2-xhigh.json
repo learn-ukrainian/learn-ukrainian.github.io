@@ -1,0 +1,15 @@
+{
+  "stage": 2,
+  "effort": "xhigh",
+  "model": "grok-4.3",
+  "timestamp_utc": "2026-05-15T21:50:42Z",
+  "prompt": "You are reviewing this project's Python codebase.\n\nThe file ``scripts/build/linear_pipeline.py`` defines a regex\n``_ITALIC_EMPHASIS_RE`` that unwraps single-asterisk markdown italics\nbefore the morpheme regex runs:\n\n    _ITALIC_EMPHASIS_RE = re.compile(r\"(?<!\\*)\\*(?!\\*)([^*\\n]+)\\*(?!\\*)\")\n\nIt is exercised inside ``_strip_metalinguistic`` via:\n\n    text = _ITALIC_EMPHASIS_RE.sub(r\"\\1\", text)\n\nThis regex has ZERO test coverage in ``tests/build/test_linear_pipeline.py``,\neven though three sibling tests exist for the avoid-marker regex and the\nbold-emphasis regex (search for ``test_strip_metalinguistic_``).\n\nYour task: write a single pytest test function that adds regression\ncoverage for ``_ITALIC_EMPHASIS_RE`` via ``_strip_metalinguistic``.\nCover the parallel case to the bold test — a hyphenated morpheme suffix\nwrapped in single asterisks (e.g., ``-*юся*``) must collapse to ``-юся``\nso the morpheme regex can strip it.\n\nOutput ONLY the Python test function code, ready to paste at the end of\nthe test file. No commentary, no markdown fences, no explanation.\nThe function must:\n\n- Be named ``test_strip_metalinguistic_collapses_italic_wrapped_morpheme_labels``\n- Use ``linear_pipeline._strip_metalinguistic`` (the module is already imported)\n- Assert that italic-wrapped morpheme suffixes are stripped\n- Include a docstring matching the existing style\n\nOutput the function only.",
+  "result": {
+    "ok": true,
+    "returncode": 0,
+    "stdout": "def test_strip_metalinguistic_collapses_italic_wrapped_morpheme_labels() -> None:\n    \"\"\"Single-asterisk italics around a morpheme suffix (`*-юся*`) must unwrap to `-юся`.\n\n    The italic unwrap runs before `_MORPHEME_FRAGMENT_RE`, allowing the\n    hyphen-prefixed fragment to be stripped exactly as the bold case does.\n    \"\"\"\n    result = linear_pipeline._strip_metalinguistic(\"The ending -*юся* marks reflexive.\")\n    assert \"юся\" not in result\n    assert \"-юся\" not in result\n",
+    "stderr": "",
+    "duration_s": 55.0609290599823
+  },
+  "parsed_verdict": null
+}

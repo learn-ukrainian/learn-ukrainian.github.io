@@ -1,0 +1,10 @@
+{
+  "judge": "grok-4.3",
+  "via": "hermes-oauth",
+  "n": 12,
+  "f1": 0.7586,
+  "precision": 0.8462,
+  "recall": 0.6875,
+  "case_accuracy": 0.9167,
+  "tested_at": "2026-05-15T21:25:38Z"
+}
