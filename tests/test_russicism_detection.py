@@ -225,3 +225,124 @@ class TestCaseInsensitivity:
         content = _wrap("ВООБЩЕ це дивно.")
         violations = check_russicisms(content)
         assert len(violations) == 1
+
+
+# =============================================================================
+# UA-GEC CALQUE PATTERNS — added 2026-05-14 from UA-GEC v2 F/Calque mining
+# (CC-BY-4.0, github.com/grammarly/ua-gec)
+# =============================================================================
+
+class TestUaGecCalquePatterns:
+    """Each new pattern: positive case + negative (legitimate use) where applicable."""
+
+    # --- Discourse-marker calques ---
+
+    def test_таким_чином_caught(self):
+        violations = check_russicisms(_wrap("Таким чином, ми розглянули проблему."))
+        assert violations and "таким чином" in violations[0]["issue"]
+
+    def test_так_як_caught(self):
+        violations = check_russicisms(_wrap("Це питання так як і інші не вирішено."))
+        assert violations and "так як" in violations[0]["issue"]
+
+    def test_в_цілому_caught(self):
+        violations = check_russicisms(_wrap("В цілому ситуація стабільна."))
+        assert violations and "в цілому" in violations[0]["issue"]
+
+    def test_в_першу_чергу_caught(self):
+        violations = check_russicisms(_wrap("В першу чергу слід згадати про це."))
+        assert violations and "в першу чергу" in violations[0]["issue"]
+
+    def test_з_іншої_сторони_caught(self):
+        violations = check_russicisms(_wrap("З іншої сторони, це не зовсім так."))
+        assert violations and "сторони" in violations[0]["issue"]
+
+    def test_з_однієї_сторони_caught(self):
+        violations = check_russicisms(_wrap("З однієї сторони, це добре."))
+        assert violations and "сторони" in violations[0]["issue"]
+
+    def test_значить_discourse_marker_caught(self):
+        """`Значить,` as parenthetical — calque."""
+        violations = check_russicisms(_wrap("Значить, ми маємо рацію."))
+        assert violations and "значить" in violations[0]["issue"]
+
+    def test_значить_verbal_use_clean(self):
+        """`значить` as verb (= 'means') — correct UK, must NOT flag."""
+        violations = check_russicisms(_wrap("Це слово багато значить для мене."))
+        assert violations == []
+
+    # --- Lexical Russianisms ---
+
+    def test_співпадають_caught(self):
+        violations = check_russicisms(_wrap("Числа співпадають точно."))
+        assert violations and "співпада" in violations[0]["issue"]
+
+    def test_бормотати_caught(self):
+        violations = check_russicisms(_wrap("Він почав бормотати щось незрозуміле."))
+        assert violations and "бормот" in violations[0]["issue"]
+
+    def test_буфетчик_caught(self):
+        violations = check_russicisms(_wrap("Буфетчик подав каву."))
+        assert violations and "буфетчик" in violations[0]["issue"]
+
+    def test_прийшлось_caught(self):
+        violations = check_russicisms(_wrap("Прийшлось довго чекати."))
+        assert violations and "прийшлось" in violations[0]["issue"]
+
+    def test_повезе_caught(self):
+        violations = check_russicisms(_wrap("Може повезе наступного разу."))
+        assert violations and "повезе" in violations[0]["issue"]
+
+    def test_відправився_reflexive_caught(self):
+        """Reflexive `відправився` (= departed) is RU calque."""
+        violations = check_russicisms(_wrap("Він відправився у дорогу рано-вранці."))
+        assert violations and "відправ" in violations[0]["issue"]
+
+    def test_відправляється_transitive_clean(self):
+        """Transitive `відправляється` (= is sent) is correct UK."""
+        violations = check_russicisms(_wrap("Поїзд відправляється о шостій."))
+        assert violations == []
+
+    def test_відношення_caught(self):
+        violations = check_russicisms(_wrap("Це важливе відношення між нами."))
+        assert violations and "відношення" in violations[0]["issue"]
+
+    # --- Fixed-expression calques ---
+
+    def test_робив_вигляд_caught(self):
+        violations = check_russicisms(_wrap("Він робив вигляд, що читає."))
+        assert violations and "робив вигляд" in violations[0]["issue"]
+
+    def test_на_фоні_caught(self):
+        violations = check_russicisms(_wrap("На фоні цих подій настав спокій."))
+        assert violations and "на фоні" in violations[0]["issue"]
+
+    def test_справа_в_тому_caught(self):
+        violations = check_russicisms(_wrap("Справа в тому, що ми не готові."))
+        assert violations and "справа в тому" in violations[0]["issue"]
+
+    def test_справа_у_тому_caught(self):
+        """`Справа у тому` — variant spelling of same calque."""
+        violations = check_russicisms(_wrap("Справа у тому, що часу немає."))
+        assert violations and "справа в тому" in violations[0]["issue"]
+
+    def test_справа_other_sense_clean(self):
+        """`справа` in 'matter / case' sense — correct UK, must NOT flag."""
+        violations = check_russicisms(_wrap("Кожна справа важлива для людей."))
+        assert violations == []
+
+    # --- Numerical-sense calque ---
+
+    def test_пару_numerical_caught(self):
+        """`пару` as numeral ('a couple of days') — RU calque."""
+        violations = check_russicisms(_wrap("Зустрінемось через пару днів."))
+        assert violations and "пару" in violations[0]["issue"]
+
+    def test_пару_numerical_hours_caught(self):
+        violations = check_russicisms(_wrap("Чекай пару годин."))
+        assert violations and "пару" in violations[0]["issue"]
+
+    def test_пару_noun_clean(self):
+        """`пара / пару` as noun ('a pair of shoes') — correct UK."""
+        violations = check_russicisms(_wrap("Купив нову пару взуття."))
+        assert violations == []
