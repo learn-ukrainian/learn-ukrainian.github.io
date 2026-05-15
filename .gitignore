@@ -299,3 +299,4 @@ curriculum/l2-uk-en/*/*/knowledge_packet.md
 #
 # Regenerate when ESUM data changes:
 #   .venv/bin/python scripts/etymology/build_data_manifest.py
+data/eval-archive/
