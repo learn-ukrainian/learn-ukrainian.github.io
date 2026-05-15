@@ -34,7 +34,8 @@ def attribution_db(tmp_path, monkeypatch):
             title TEXT NOT NULL DEFAULT '',
             source_file TEXT NOT NULL DEFAULT '',
             grade TEXT DEFAULT '',
-            author TEXT DEFAULT ''
+            author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT ''
         );
 
         CREATE TABLE literary_texts (
@@ -43,6 +44,7 @@ def attribution_db(tmp_path, monkeypatch):
             title TEXT NOT NULL DEFAULT '',
             source_file TEXT NOT NULL DEFAULT '',
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             work TEXT DEFAULT ''
         );
 

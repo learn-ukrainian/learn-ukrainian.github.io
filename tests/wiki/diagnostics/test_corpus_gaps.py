@@ -29,6 +29,7 @@ def _make_db(path: Path) -> sqlite3.Connection:
             source_file TEXT NOT NULL,
             grade TEXT,
             author TEXT,
+            author_uk TEXT DEFAULT '',
             char_count INTEGER
         )
         """

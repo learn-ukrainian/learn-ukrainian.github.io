@@ -161,6 +161,7 @@ def _make_full_db(path: Path) -> sqlite3.Connection:
             source_file TEXT NOT NULL DEFAULT '',
             grade TEXT DEFAULT '',
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             char_count INTEGER DEFAULT 0,
             parent_section_id INTEGER REFERENCES textbook_sections(section_id)
         );

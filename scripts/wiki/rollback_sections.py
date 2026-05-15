@@ -18,6 +18,7 @@ CREATE TABLE textbooks (
     source_file TEXT NOT NULL DEFAULT '',
     grade TEXT DEFAULT '',
     author TEXT DEFAULT '',
+    author_uk TEXT DEFAULT '',
     char_count INTEGER DEFAULT 0
 )
 """
@@ -37,8 +38,10 @@ def rebuild_textbooks_without_parent(conn: sqlite3.Connection) -> None:
     conn.execute(ORIGINAL_TEXTBOOKS_SCHEMA)
     conn.execute(
         """
-        INSERT INTO textbooks (id, chunk_id, title, text, source_file, grade, author, char_count)
-        SELECT id, chunk_id, title, text, source_file, grade, author, char_count
+        INSERT INTO textbooks (
+            id, chunk_id, title, text, source_file, grade, author, author_uk, char_count
+        )
+        SELECT id, chunk_id, title, text, source_file, grade, author, author_uk, char_count
         FROM textbooks__before_parent_rollback
         """
     )

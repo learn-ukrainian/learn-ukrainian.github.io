@@ -63,6 +63,7 @@ def _conn(tmp_path: Path) -> sqlite3.Connection:
             source_file TEXT NOT NULL,
             grade TEXT DEFAULT '',
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             char_count INTEGER DEFAULT 0,
             parent_section_id INTEGER
         );
@@ -92,6 +93,7 @@ def _conn(tmp_path: Path) -> sqlite3.Connection:
             text TEXT NOT NULL,
             source_file TEXT NOT NULL,
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             work TEXT DEFAULT '',
             work_id TEXT DEFAULT '',
             year INTEGER,

@@ -84,6 +84,9 @@ REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
 TXT_FILENAME = "antonenko-davydovych-yak-my-hovorymo-1991.txt"
 AUTHOR = "Borys Antonenko-Davydovych"
+# Canonical Cyrillic author; populates textbooks.author_uk so the
+# Cyrillic-native matcher resolves citations.
+AUTHOR_UK = "Борис Антоненко-Давидович"
 EXPECTED_PAGES = 169
 
 
@@ -170,7 +173,16 @@ def ingest_pages(
         text = page.render()
         title = f"Antonenko-Davydovych «Як ми говоримо», p. {page.number}"
         batch.append(
-            (chunk_id, title, text, SOURCE_FILE, "", AUTHOR, len(text))
+            (
+                chunk_id,
+                title,
+                text,
+                SOURCE_FILE,
+                "",
+                AUTHOR,
+                AUTHOR_UK,
+                len(text),
+            )
         )
         new_sections.append(
             LessonSection(
@@ -185,8 +197,9 @@ def ingest_pages(
     if batch:
         cur.executemany(
             """INSERT INTO textbooks
-                  (chunk_id, title, text, source_file, grade, author, char_count)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                  (chunk_id, title, text, source_file, grade, author,
+                   author_uk, char_count)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             batch,
         )
         link_lesson_sections(

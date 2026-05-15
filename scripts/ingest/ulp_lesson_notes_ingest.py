@@ -68,6 +68,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 AUTHOR = "Ukrainian Lessons Podcast"
+# Cyrillic canonical form; populated into textbooks.author_uk so the
+# Cyrillic-native matcher resolves citations. The ULP brand name has no
+# direct Cyrillic translation, so we keep it as-is — the canonical form
+# is the brand. See ADR docs/decisions/2026-05-15-cyrillic-native-matcher.md.
+AUTHOR_UK = "Ukrainian Lessons Podcast"
 
 # ---------------------------------------------------------------------------
 # Marker patterns
@@ -437,6 +442,7 @@ def ingest_lessons(
                 book.source_file,
                 "",  # grade (textbooks.grade is TEXT; sections use sentinel 0)
                 AUTHOR,
+                AUTHOR_UK,
                 len(text),
             )
         )
@@ -453,8 +459,9 @@ def ingest_lessons(
     if batch:
         cur.executemany(
             """INSERT INTO textbooks
-                  (chunk_id, title, text, source_file, grade, author, char_count)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                  (chunk_id, title, text, source_file, grade, author,
+                   author_uk, char_count)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             batch,
         )
         link_lesson_sections(

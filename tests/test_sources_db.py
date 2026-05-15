@@ -53,7 +53,8 @@ def sample_data(tmp_path):
              "лексичного значення слова. Правильне вживання відмінкових форм є ознакою "
              "грамотного мовлення."
          ),
-         "grade": "5", "author": "avramenko", "token_count": 50},
+         "grade": "5", "author": "avramenko", "author_uk": "Авраменко",
+         "token_count": 50},
     ]
     with open(tb_dir / "5-klas-test.jsonl", "w") as f:
         for c in chunks:

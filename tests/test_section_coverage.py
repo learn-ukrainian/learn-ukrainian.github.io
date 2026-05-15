@@ -46,6 +46,7 @@ def _make_textbooks_db(path: Path, *, with_parent_col: bool = False) -> sqlite3.
             source_file TEXT NOT NULL DEFAULT '',
             grade TEXT DEFAULT '',
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             char_count INTEGER DEFAULT 0
             {parent_col_sql}
         );
@@ -206,6 +207,7 @@ def test_ohoiko_ingest_produces_zero_orphans(tmp_path: Path) -> None:
         source_file="test-ohoiko",
         txt_filename="ohoiko-fixture.txt",
         author="Anna Ohoiko",
+        author_uk="Анна Огоїко",
         grade="",
         max_entry_number=10,
     )
@@ -286,6 +288,7 @@ def test_ohoiko_force_rerun_keeps_zero_orphans(tmp_path: Path) -> None:
         source_file="t-ohoiko",
         txt_filename="f.txt",
         author="A",
+        author_uk="А",
         grade="",
         max_entry_number=10,
     )

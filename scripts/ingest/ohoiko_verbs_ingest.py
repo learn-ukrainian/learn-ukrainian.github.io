@@ -66,6 +66,9 @@ REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 SOURCE_FILE = "anna-ohoiko-500-verbs"
 TXT_FILENAME = "500+ Ukrainian Verbs - Ukrainian Lessons - PDF.txt"
 AUTHOR = "Anna Ohoiko"
+# Canonical Cyrillic author; populates textbooks.author_uk so the
+# Cyrillic-native matcher resolves citations.
+AUTHOR_UK = "Анна Огоїко"
 MAX_VERB_NUMBER = 500  # hard cap; book advertises "500+ verbs" but the
 # numbered series ends at exactly #500.
 
@@ -315,6 +318,7 @@ def ingest_verbs(
                 SOURCE_FILE,
                 "",  # grade
                 AUTHOR,
+                AUTHOR_UK,
                 len(text),
             )
         )
@@ -331,8 +335,9 @@ def ingest_verbs(
     if batch:
         cur.executemany(
             """INSERT INTO textbooks
-                  (chunk_id, title, text, source_file, grade, author, char_count)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                  (chunk_id, title, text, source_file, grade, author,
+                   author_uk, char_count)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             batch,
         )
         link_lesson_sections(
