@@ -9,6 +9,7 @@ Run: ``.venv/bin/pytest tests/test_plan_references_audit.py -v``
 
 from __future__ import annotations
 
+import argparse
 import sqlite3
 import sys
 from pathlib import Path
@@ -19,11 +20,14 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from audit.plan_references_audit import (
+    LEVEL_THRESHOLDS,
     PAGED_CITATION_RE,
     Citation,
     _audit_citation,
     _classify_level_mismatch,
+    _parse_tracks,
     _source_files_for,
+    main,
 )
 
 
@@ -108,6 +112,29 @@ def test_level_mismatch_thresholds():
     assert _classify_level_mismatch("a2", 10) is True
     assert _classify_level_mismatch("a2", 9) is False
     assert _classify_level_mismatch("b1", 10) is False
+
+
+def test_level_mismatch_uses_per_track_threshold_table():
+    """The threshold table is the single source of truth: B1 with
+    Grade 10 must NOT flag (B1 threshold is 11), while A1 with Grade 10
+    DOES flag (A1 threshold is 7)."""
+    assert LEVEL_THRESHOLDS["a1"] == 7
+    assert LEVEL_THRESHOLDS["b1"] == 11
+    assert _classify_level_mismatch("a1", 10) is True
+    assert _classify_level_mismatch("b1", 10) is False
+    assert _classify_level_mismatch("b1", 11) is True
+    assert _classify_level_mismatch("b2", 10) is False
+    # Unknown track defaults to never-flag (defensive).
+    assert _classify_level_mismatch("seminars", 11) is False
+
+
+def test_parse_tracks_rejects_unknown_and_accepts_csv():
+    assert _parse_tracks("a1,a2") == ["a1", "a2"]
+    assert _parse_tracks("B1, B2") == ["b1", "b2"]
+    with pytest.raises(argparse.ArgumentTypeError):
+        _parse_tracks("a1,xyz")
+    with pytest.raises(argparse.ArgumentTypeError):
+        _parse_tracks("")
 
 
 def test_source_files_for_fixed_pattern_catches_no_year_file(fake_db: Path):
@@ -215,3 +242,59 @@ def test_audit_citation_ghost_source(fake_db: Path):
         finding = _audit_citation(cite, "test plan text", conn)
     # Міщенко exists in TRANSLITS but not for Grade 4 in our fixture
     assert finding.mode == "GHOST_SOURCE"
+
+
+def test_main_with_tracks_b1_against_synthetic_plan(
+    fake_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """End-to-end: ``--tracks b1`` should walk a synthetic B1 plan
+    directory, resolve citations against the fake DB, and emit a
+    deterministic findings.json + REPORT.md naming B1 (not A1/A2)."""
+    plans_root = tmp_path / "plans"
+    b1_dir = plans_root / "b1"
+    b1_dir.mkdir(parents=True)
+    (b1_dir / "synthetic-module.yaml").write_text(
+        "title: Synthetic B1 module about reflexive verbs\n"
+        "subtitle: ''\n"
+        "objectives:\n"
+        "  - вмиватися одягатися чесатися зворотні дієслова на -ся\n"
+        "grammar: []\n"
+        "references:\n"
+        "  - title: 'Захарійчук Grade 4, p.162'\n"
+        "    notes: ''\n"
+        "content_outline: []\n",
+        encoding="utf-8",
+    )
+    # The audit script reads PLANS_ROOT module-level constant.
+    monkeypatch.setattr(
+        "audit.plan_references_audit.PLANS_ROOT", plans_root
+    )
+
+    out_dir = tmp_path / "out"
+    rc = main(
+        [
+            "--db",
+            str(fake_db),
+            "--out-dir",
+            str(out_dir),
+            "--tracks",
+            "b1",
+        ]
+    )
+    assert rc == 0
+
+    findings_json = (out_dir / "findings.json").read_text(encoding="utf-8")
+    report_md = (out_dir / "REPORT.md").read_text(encoding="utf-8")
+
+    # Report titled for B1 specifically — no A1/A2 leakage.
+    assert "B1 plan_references audit" in report_md
+    assert "A1 + A2 plan_references audit" not in report_md
+    # Threshold table line lists B1.
+    assert "B1: Grade >= 11" in report_md
+
+    # Citation resolved OK (topic words match the fixture chunk).
+    assert '"mode": "OK"' in findings_json
+    assert '"level": "b1"' in findings_json
+    # plans_by_track recorded.
+    assert '"plans_by_track": {' in findings_json
+    assert '"b1": 1' in findings_json
