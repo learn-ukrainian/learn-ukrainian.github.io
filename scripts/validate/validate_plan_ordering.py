@@ -58,8 +58,7 @@ def find_plan_dir(level: str) -> Path | None:
 def _level_variants(level_key: str) -> set[str]:
     """Generate acceptable level field values for a curriculum.yaml key.
 
-    e.g., "b1" -> {"B1"}, "lit-essay" -> {"LIT-ESSAY", "LIT.ESSAY", "LIT"},
-    "c1-pro" -> {"C1-PRO", "C1"}
+    e.g., "b1" -> {"B1"}, "lit-essay" -> {"LIT-ESSAY", "LIT.ESSAY", "LIT"}.
     """
     upper = level_key.upper()
     variants = {upper, upper.replace("-", ".")}

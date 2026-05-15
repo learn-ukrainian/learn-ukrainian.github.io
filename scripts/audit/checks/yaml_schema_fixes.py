@@ -210,8 +210,7 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
 def _detect_track_schema(yaml_path: Path) -> dict | None:
     """Detect and load track-specific schema from the file path."""
     track_levels = ('a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit',
-                    'hist', 'bio', 'istorio', 'oes', 'ruth',
-                    'b2-pro', 'c1-pro')
+                    'hist', 'bio', 'istorio', 'oes', 'ruth')
     for parent in yaml_path.parents:
         if parent.name in track_levels:
             track_path = get_schemas_dir() / f"activities-{parent.name}.schema.json"

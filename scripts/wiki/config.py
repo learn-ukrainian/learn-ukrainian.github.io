@@ -151,7 +151,7 @@ ALL_TRACKS = [
     "oes", "ruth",
     # NOT included: lit-doc, lit-crimea (merged into other lit-* tracks; no longer
     #   in curriculum.yaml). Stale discovery dirs may still exist on disk.
-    # NOT included: b2-pro, c1-pro (professional tracks, no wiki needed)
+    # NOT included: archived professional tracks, which do not need wiki.
 ]
 
 # Legacy alias

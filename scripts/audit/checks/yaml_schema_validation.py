@@ -350,10 +350,10 @@ def validate_activity_yaml_file(yaml_path: Path) -> tuple[bool, list[str]]:
         return True, []  # No YAML file is OK (module might use embedded activities)
 
     # Detect level from path to load correct schema
-    # Includes track levels: lit, hist, bio, b2-pro, c1-pro
+    # Includes track levels: lit, hist, bio, istorio, oes, ruth
     level_match = None
     for parent in yaml_path.parents:
-        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio', 'oes', 'ruth', 'b2-pro', 'c1-pro']:
+        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio', 'oes', 'ruth']:
             level_match = parent.name
             break
 

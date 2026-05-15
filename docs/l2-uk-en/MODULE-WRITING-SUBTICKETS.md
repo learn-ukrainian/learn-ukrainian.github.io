@@ -187,46 +187,7 @@ This is a large ticket that should be broken into sub-tickets:
 
 ---
 
-## Priority 3: Professional Tracks (90 modules)
-
-### Ticket B2-PRO-FULL: B2 Professional Track (M01-40)
-
-**Level:** B2-PRO
-**Modules:** 40
-**Status:** Not started (0/40 written)
-
-**Phases:**
-- **B2-PRO.1:** Business Communication (M01-15) — 15 modules
-- **B2-PRO.2:** Technical & Domain-Specific (M16-30) — 15 modules
-- **B2-PRO.3:** Media & Public Discourse (M31-40) — 10 modules
-
-**Instructions:**
-- Read `docs/l2-uk-en/B2-PRO-CURRICULUM-PLAN.md`
-- Immersion: 100% Ukrainian
-- Activity count: 12+ per module
-
----
-
-### Ticket C1-PRO-FULL: C1 Professional Mastery Track (M01-50)
-
-**Level:** C1-PRO
-**Modules:** 50
-**Status:** Not started (0/50 written)
-
-**Phases:**
-- **C1-PRO.1:** Executive Communication (M01-15) — 15 modules
-- **C1-PRO.2:** Academic Publishing (M16-30) — 15 modules
-- **C1-PRO.3:** Industry Specialization (M31-40) — 10 modules
-- **C1-PRO.4:** Translation & Cross-Cultural (M41-50) — 10 modules
-
-**Instructions:**
-- Read `docs/l2-uk-en/C1-PRO-CURRICULUM-PLAN.md`
-- Immersion: 100% Ukrainian
-- Activity count: 16+ per module
-
----
-
-## Priority 4: Literature Track (16 remaining modules)
+## Priority 3: Literature Track (16 remaining modules)
 
 ### Ticket LIT-REMAINING: Literature Track Completion
 
@@ -255,10 +216,8 @@ This is a large ticket that should be broken into sub-tickets:
 | B1-SKILLS | B1 | 8 | 1 | Medium |
 | B2-COMM | B2 | 10 | 1 | Medium |
 | C2-CORE | C2 | 100 | 2 | Very High |
-| B2-PRO-FULL | B2-PRO | 40 | 3 | High |
-| C1-PRO-FULL | C1-PRO | 50 | 3 | High |
-| LIT-REMAINING | LIT | 16 | 4 | Medium |
-| **TOTAL** | — | **246** | — | — |
+| LIT-REMAINING | LIT | 16 | 3 | Medium |
+| **TOTAL** | — | **156** | — | — |
 
 ---
 

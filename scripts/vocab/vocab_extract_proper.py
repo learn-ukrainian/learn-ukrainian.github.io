@@ -359,7 +359,7 @@ def process_module(md_path: Path, output_dir: Path | None = None,
     # Try to detect level from path
     level = "UNKNOWN"
     for part in md_path.parts:
-        if part.lower() in ['a1', 'a2', 'b1', 'b2', 'hist', 'b2-pro', 'c1', 'bio', 'c1-pro', 'lit']:
+        if part.lower() in ['a1', 'a2', 'b1', 'b2', 'hist', 'c1', 'bio', 'lit']:
             level = part.upper()
             break
 

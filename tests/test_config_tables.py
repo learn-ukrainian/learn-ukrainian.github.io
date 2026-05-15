@@ -105,7 +105,7 @@ class TestEdgeCases:
         result = get_golden_fragment("d1", 1)
         assert result == GOLDEN_FRAGMENTS["advanced"]
 
-    # b2-pro / c1-pro tests removed 2026-04-10 — tracks deleted.
+    # Professional-track golden fragment tests removed 2026-04-10 — tracks deleted.
 
 
 # ---------------------------------------------------------------------------

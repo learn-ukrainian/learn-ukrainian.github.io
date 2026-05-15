@@ -45,8 +45,6 @@ A comprehensive Ukrainian language curriculum with 1,778 modules across 22 track
 | [**BIO**](https://learn-ukrainian.github.io/bio/) | 180 | Notable Ukrainians through history |
 | [**LIT**](https://learn-ukrainian.github.io/lit/) | 232 | Ukrainian classics and literary analysis |
 | [**FOLK**](https://learn-ukrainian.github.io/folk/) | 27 | Folk Culture -- music, crafts, traditions, mythology |
-| [**B2-PRO**](https://learn-ukrainian.github.io/b2-pro/) | 40 | Professional -- business communication, technical domains |
-| [**C1-PRO**](https://learn-ukrainian.github.io/c1-pro/) | 50 | Professional mastery -- executive, academic, specialized |
 | [**OES**](https://learn-ukrainian.github.io/oes/) | 102 | Old East Slavic -- historical linguistics (X--XIII century) |
 | [**RUTH**](https://learn-ukrainian.github.io/ruth/) | 115 | Ruthenian -- Middle Ukrainian (XIV--XVIII century) |
 

@@ -78,10 +78,9 @@ _PIPELINE_PHASE_LABELS = _V6_PHASE_LABELS
 CURRICULUM_YAML = CURRICULUM_ROOT / "curriculum.yaml"
 PLANS_ROOT = CURRICULUM_ROOT / "plans"
 
-# Track → profile mapping. ``b2-pro`` / ``c1-pro`` were deleted
-# 2026-04-10 (STEM will eventually replace the pro tracks; that work
-# is not in this issue). The entries are intentionally absent — do
-# not re-add them without a curriculum decision.
+# Track -> profile mapping. Professional tracks were deleted 2026-04-10
+# (STEM will eventually replace them; that work is not in this issue).
+# The entries are intentionally absent.
 PROFILE_MAP = {
     "a1": "core", "a2": "core", "b1": "core", "b2": "core",
     "c1": "core", "c2": "core",

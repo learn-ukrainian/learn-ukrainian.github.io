@@ -117,3 +117,5 @@ Verdicts:
 | #1586 | `reboot-blocker` | Per-level per-dimension LLM QG threshold schema is needed before Phase 4 QG. |
 | #1585 | `mvp-deferred` | Legacy activity registries still need a schema cleanup pass after live matrix alignment. |
 | #1587 | `backlog` | Unused global `MAX_SENTENCE_LENGTH` should be removed or replaced with a per-band helper. |
+
+*Note: b2-pro/c1-pro archived 2026-05-15 in `curriculum/l2-uk-en/_archive/` by the archive PR.*

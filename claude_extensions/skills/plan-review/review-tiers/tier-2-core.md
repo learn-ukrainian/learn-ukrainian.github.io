@@ -1,7 +1,7 @@
-# Tier 2: Core Levels (B1/B2 Core/B2-PRO)
+# Tier 2: Core Levels (B1/B2 Core)
 
-> **Target:** B1, B2 Core, and B2-PRO modules (NOT HIST, NOT seminar tracks)
-> **Pedagogy:** TTT (Test-Teach-Test) for grammar; ESP for B2-PRO
+> **Target:** B1 and B2 Core modules (NOT HIST, NOT seminar tracks)
+> **Pedagogy:** TTT (Test-Teach-Test) for grammar
 > **Immersion:** 85-100% Ukrainian
 > **Experience Goal:** Serious teaching — learner is challenged and grows
 
@@ -108,7 +108,7 @@ HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
 
 ## Dimension Rubrics (Tier 2 Adaptations)
 
-### Immersion Targets (B1/B2/B2-PRO)
+### Immersion Targets (B1/B2)
 
 | Level | Target Range | Notes |
 |-------|--------------|-------|
@@ -117,7 +117,6 @@ HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
 | B1.3 | 90-100% | Near full immersion |
 | B2.1 | 95-100% | Full immersion |
 | B2.2 | 98-100% | Full immersion |
-| B2-PRO | 100% | Full professional immersion |
 
 ### Language Quality (Core Level)
 

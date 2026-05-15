@@ -40,8 +40,6 @@ Plans are NOT created from thin air. They must be grounded in authoritative sour
 | **istorio** (Historiography) | Ukrainian university history programs (TBD), Ukrainian Wikipedia | ⚠️ Needs planning - specific sources to be identified |
 | **bio** (Biographies) | Claude's training data + Ukrainian internet verification (each person researched individually) | ✅ Almost done |
 | **lit** (Literature) | **ukrlib** (Ukrainian digital library) | ✅ Done |
-| **b2-pro** (Professional) | TBD - domain-specific Ukrainian resources | ⚠️ Needs planning - scope and sources to be defined |
-| **c1-pro** (Professional) | TBD - domain-specific Ukrainian resources | ⚠️ Needs planning - scope and sources to be defined |
 
 **Note on Ukrainian Wikipedia:** The Ukrainian Wikipedia editorial team maintains high standards. While vigilance is always needed, it's considered a reliable source for Ukrainian historical and biographical content.
 

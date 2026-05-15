@@ -55,8 +55,6 @@ PUBLIC_LEVELS = [
     "bio",
     "istorio",
     "lit",
-    "b2-pro",
-    "c1-pro",
     "oes",
     "ruth",
 ]
@@ -72,8 +70,6 @@ LEVEL_KEY_MAP = {
     "bio": "bio",
     "istorio": "istorio",
     "lit": "lit",
-    "b2-pro": "b2-pro",
-    "c1-pro": "c1-pro",
     "oes": "oes",
     "ruth": "ruth",
 }

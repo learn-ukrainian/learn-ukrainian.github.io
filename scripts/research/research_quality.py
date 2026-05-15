@@ -83,14 +83,6 @@ RUBRIC_REGISTRY = {
                         "source_verification", "claim_grounding",
                         "discovery_integration", "specificity"],
     },
-    "professional": {
-        "tracks": {"b2-pro", "c1-pro"},
-        "max_score": 17,
-        "dimensions": ["sources", "terminology", "language_norms",
-                        "authentic_examples", "engagement_hooks", "section_notes",
-                        "source_verification", "claim_grounding",
-                        "discovery_integration", "specificity"],
-    },
 }
 
 # Short labels for CLI column headers
@@ -710,7 +702,7 @@ def _score_history(text: str) -> dict:
 
 
 def _score_professional(text: str) -> dict:
-    """Score a research file using the professional rubric (B2-PRO, C1-PRO)."""
+    """Score a research file using the professional rubric."""
     dims = {}
 
     # sources (max 2): Ukrainian professional/official sources

@@ -1,0 +1,56 @@
+# Extracted from curriculum/l2-uk-en/curriculum.yaml on 2026-05-15.
+# The track child block is preserved under `tracks:` so this archive is parseable.
+tracks:
+  c1-pro:
+    type: track
+    modules:
+      - executive-email
+      - stakeholder-communication
+      - board-presentations
+      - strategic-reports
+      - crisis-communication
+      - change-management
+      - leadership-rhetoric
+      - negotiation-advanced
+      - conflict-resolution
+      - mentoring-coaching
+      - executive-networking
+      - media-relations
+      - executive-checkpoint
+      - executive-integration
+      - executive-capstone
+      - academic-writing-structure
+      - literature-review-academic
+      - methodology-writing
+      - results-presentation
+      - discussion-writing
+      - peer-review-process
+      - conference-abstracts
+      - conference-presentations
+      - grant-writing
+      - academic-correspondence
+      - citation-referencing
+      - thesis-dissertation
+      - academic-checkpoint
+      - academic-integration
+      - academic-capstone
+      - it-management
+      - it-architecture
+      - fintech-banking
+      - investment-analysis
+      - corporate-law
+      - international-law
+      - healthcare-management
+      - pharmaceutical
+      - energy-sector
+      - agriculture-agribusiness
+      - translation-basics
+      - interpretation-basics
+      - cross-cultural-communication
+      - industry-checkpoint
+      - industry-integration
+      - professional-portfolio
+      - personal-branding
+      - career-development
+      - c1-pro-integration
+      - c1-pro-capstone

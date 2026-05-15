@@ -525,3 +525,5 @@ Total: ~2800 words (minimum audit gate: 2500)
 - Build 2 pilot modules per track end-to-end
 - Review, fix template/rubric issues
 - Retrospective before batch build
+
+*Note: b2-pro/c1-pro archived 2026-05-15 in `curriculum/l2-uk-en/_archive/` by the archive PR.*

@@ -25,7 +25,6 @@ PLANS_DIR = CURRICULUM_PATH / "plans"
 ALL_LEVELS = [
     "a1", "a2", "b1", "b2", "c1", "c2",
     "hist", "bio", "istorio", "lit", "oes", "ruth",
-    "b2-pro", "c1-pro",
 ]
 
 STUB_TEMPLATE = """\

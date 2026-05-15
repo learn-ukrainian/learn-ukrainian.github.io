@@ -477,7 +477,8 @@ class TestBatchDispatcherConfig:
 
     def test_tracks_list(self):
         from batch.batch_dispatcher_config import TRACK_BY_NAME, TRACKS
-        assert len(TRACKS) == 20
+        # b2-pro and c1-pro archived 2026-05-15 (#2009); was 20, now 18.
+        assert len(TRACKS) == 18
         assert "a1" in TRACK_BY_NAME
         assert TRACK_BY_NAME["a1"][0] == 1  # priority
 

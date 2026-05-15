@@ -125,7 +125,7 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
         "immersion_range": [1.0, 1.0],
     },
 
-    # --- Scholar Tracks (Ancient/Professional) ---
+    # --- Scholar Tracks ---
     "ruth": {
         "model": PRO_MODEL,
         "persona": "The Baroque Scholar",
@@ -134,16 +134,6 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     "oes": {
         "model": PRO_MODEL,
         "persona": "The Paleographer",
-        "immersion_range": [1.0, 1.0],
-    },
-    "b2-pro": {
-        "model": PRO_MODEL,
-        "persona": "The Professional Coach",
-        "immersion_range": [1.0, 1.0],
-    },
-    "c1-pro": {
-        "model": PRO_MODEL,
-        "persona": "The Corporate Strategist",
         "immersion_range": [1.0, 1.0],
     },
 }
@@ -436,8 +426,6 @@ WIKI_COVERAGE_MIN_PCT_BY_LEVEL: dict[str, float] = {
     "b2": 0.80,
     "c1": 0.80,
     "c2": 0.80,
-    "b2-pro": 0.80,
-    "c1-pro": 0.80,
     "hist": 0.80,
     "istorio": 0.80,
     "bio": 0.80,

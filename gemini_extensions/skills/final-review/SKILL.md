@@ -45,7 +45,7 @@ description: Adversarial final review for otaman-built modules. Runs in a NEW se
 ```
 
 **Required parameters:**
-- `{track}` -- Track identifier (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro, hist, bio, istorio, lit, lit-*, oes, ruth)
+- `{track}` -- Track identifier (a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, lit-*, oes, ruth)
 - `{num}` -- 1-indexed module number within the track
 
 **Constants:**
@@ -448,7 +448,7 @@ Apply the appropriate tier based on track:
 - Complex Ukrainian sentence structures
 - Abrupt ending without encouragement
 
-### Tier 2: Core Levels (B1/B2/B2-PRO)
+### Tier 2: Core Levels (B1/B2)
 
 **Experience Goal:** Effective teaching -- learner is challenged and grows.
 
@@ -492,7 +492,7 @@ Apply the appropriate tier based on track:
 - No emotional engagement
 - Academic passive tone throughout
 
-### Tier 4: Advanced Levels (C1/C1-PRO/C2 Core)
+### Tier 4: Advanced Levels (C1/C2 Core)
 
 **Experience Goal:** Sophisticated, nuanced, intellectually stimulating.
 

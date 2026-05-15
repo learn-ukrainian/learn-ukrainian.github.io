@@ -163,7 +163,7 @@ optional-with-default, polymorphic, JSX children).
 ```yaml
 Quiz:
   tab: activities
-  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, b2-pro, c1-pro, oes, ruth]
+  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, oes, ruth]
   activity_type: quiz
   placement: both
   props:
@@ -211,7 +211,7 @@ Quiz:
 ```yaml
 FillIn:
   tab: activities
-  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, b2-pro, c1-pro, oes, ruth]
+  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, oes, ruth]
   activity_type: fill-in
   placement: both
   props:
@@ -250,7 +250,7 @@ FillIn:
 ```yaml
 VocabCard:
   tab: vocabulary
-  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, b2-pro, c1-pro, oes, ruth]
+  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, oes, ruth]
   activity_type: null
   placement: n/a
   props:
@@ -305,7 +305,7 @@ VocabCard:
 ```yaml
 RuleBox:
   tab: lesson
-  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, b2-pro, c1-pro, oes, ruth]
+  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, oes, ruth]
   activity_type: null
   placement: n/a
   props:
@@ -333,7 +333,7 @@ RuleBox:
 ```yaml
 SourceBox:
   tab: resources
-  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, b2-pro, c1-pro, oes, ruth]
+  level_scope: [a1, a2, b1, b2, c1, c2, hist, bio, istorio, lit, oes, ruth]
   activity_type: null
   placement: n/a
   props:

@@ -947,23 +947,6 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
-    'B2-professional': {
-        # B2-PRO Professional Track (M01-40) - Seminar style
-        # ESP (English for Specific Purposes adapted for Ukrainian)
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 30,  # Domain-specific terminology
-        'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'translation-critique'},
-        'essay_min_words': 150,
-        'essay_max_words': 300
-    },
     'C1': {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
@@ -989,23 +972,6 @@ LEVEL_CONFIG = {
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'reading', 'essay-response', 'critical-analysis', 'error-correction'}  # Seminar + grammar
-    },
-    'C1-professional': {
-        # C1-PRO Professional Mastery Track (M01-50) - Seminar style
-        # ESP + CLIL approach for executives, academics, specialists
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 35,  # Advanced domain-specific terminology
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
-        'essay_min_words': 250,
-        'essay_max_words': 400
     },
     'C1-stylistics': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+

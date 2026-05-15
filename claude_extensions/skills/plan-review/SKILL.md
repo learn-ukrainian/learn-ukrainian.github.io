@@ -7,7 +7,7 @@ effort: xhigh
 
 # Plan Review (Core): $ARGUMENTS
 
-**Scope: A1, A2, B1, B2, C1, C2, B2-PRO, C1-PRO only.** For seminar tracks (HIST, BIO, ISTORIO, LIT, OES, RUTH), use `/plan-review-seminar`.
+**Scope: A1, A2, B1, B2, C1, C2 only.** For seminar tracks (HIST, BIO, ISTORIO, LIT, OES, RUTH), use `/plan-review-seminar`.
 
 ## Parse Arguments
 

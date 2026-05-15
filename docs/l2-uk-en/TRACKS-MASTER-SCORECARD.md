@@ -253,3 +253,5 @@ Priority ranking based on effort-to-impact ratio:
 - Core level plans: `docs/l2-uk-en/{LEVEL}-10-10-IMPROVEMENT-PLAN.md`
 - Track plans: Listed above
 - Status files: `docs/{TRACK}-STATUS.md`
+
+*Note: b2-pro/c1-pro archived 2026-05-15 in `curriculum/l2-uk-en/_archive/` by the archive PR.*

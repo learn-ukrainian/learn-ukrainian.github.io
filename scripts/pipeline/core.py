@@ -442,13 +442,11 @@ TIER_MAP: dict[str, str] = {
     "a2": "tier-1-beginner.md",
     "b1": "tier-2-core.md",
     "b2": "tier-2-core.md",
-    "b2-pro": "tier-2-core.md",
     "hist": "tier-3-seminar.md",
     "bio": "tier-3-seminar.md",
     "istorio": "tier-3-seminar.md",
     "lit": "tier-3-seminar.md",
     "c1": "tier-4-advanced.md",
-    "c1-pro": "tier-4-advanced.md",
     "c2": "tier-4-advanced.md",
 }
 

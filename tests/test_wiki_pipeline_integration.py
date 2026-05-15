@@ -42,7 +42,7 @@ class TestIsSeminarTrack:
     def test_core_tracks_not_seminar(self):
         from build.v6_build import _is_seminar_track
 
-        for track in ("a1", "a2", "b1", "b2", "c1", "c2", "b2-pro", "c1-pro"):
+        for track in ("a1", "a2", "b1", "b2", "c1", "c2"):
             assert not _is_seminar_track(track), f"{track} should NOT be seminar"
 
     def test_case_insensitive(self):
