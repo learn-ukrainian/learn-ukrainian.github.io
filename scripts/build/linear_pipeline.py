@@ -455,16 +455,30 @@ _BRACES_RE = re.compile(r"\{[А-ЯІЇЄҐа-яіїєґ'ʼ]{1,12}\}")
 # Latin letter or digit — i.e., the hyphen must sit at a non-linguistic
 # boundary (markdown `*`/`_`, paren, whitespace, line start). This protects
 # legitimate hyphenated compounds like `темно-синій` (preceded by `о`) while
-# stripping morpheme labels in `**-шся**` and `__-шся__` (markdown bold). We
-# don't use Python's `\B` because `_` is a word character there, which would
-# make `__-шся__` un-strippable.
+# stripping morpheme labels in `**-шся**`, `__-шся__`, and `-**юся**`
+# (markdown emphasis around all or part of the label). We don't use Python's
+# `\B` because `_` is a word character there, which would make `__-шся__`
+# un-strippable.
 _MORPHEME_FRAGMENT_RE = re.compile(
-    r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
+    r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])[*_`]{0,2}-[*_`]{0,2}"
+    r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*[*_`]{0,2}"
 )
 _PRONUNCIATION_CUE_PATTERN = re.compile(
     r"(?:sounds?\s+like|звучить\s+як|вимовляється\s+як|вимова[:\s])\s*\*\*[^*]+\*\*",
     re.IGNORECASE,
 )
+
+# Pedagogical "bad form" marker for prose Russianism / surzhyk / calque
+# callouts. Patterns like `<!-- bad -->завтрак<!-- /bad -->` deliberately
+# show a non-standard form for learner contrast (e.g. "stick to сніданок,
+# not the Russian-borrowed завтрак"). The bad form is intentionally absent
+# from VESUM — flagging it would be a false positive. The HTML comments
+# don't render in MDX, so the learner still sees `завтрак` in plain prose.
+# Bounded by `re.DOTALL` so multi-line callouts are still caught; the
+# inner-content alternation `.+?` is non-greedy so adjacent `<!-- bad -->`
+# spans don't fuse.
+_AVOID_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(.+?)<!--\s*/bad\s*-->", re.DOTALL)
+
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset(
     {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
 )
@@ -4690,11 +4704,18 @@ def _strip_metalinguistic(text: str) -> str:
     - `[...]` — phonetic notation like `[с':а]`, `[ц':а]`
     - `` `...` `` and ` ``` ... ``` ` — inline/fenced code
     - `{...}` — fill-in blank syntax like `Я вмиваю{ся}. Він прокидає{ться}.`
-    - `\\B-морфема` — hyphen-prefixed conjugation labels like `**-шся**`,
-      `**-ться**`. The `\\B` lookbehind protects legitimate hyphenated
-      compounds (`темно-синій`) where the char before `-` is a word char.
+    - `-морфема` — hyphen-prefixed conjugation labels like `**-шся**`,
+      `**-ться**`, and `-**юся**`. The regex lookbehind protects legitimate
+      hyphenated compounds (`темно-синій`) where the char before `-` is a
+      word char.
     - `sounds like **...**` — cue-prefixed bold pronunciation transcriptions.
     - `діал.` — textbook abbreviation for `діалектне`, not a lemma.
+    - `<!-- bad -->форма<!-- /bad -->` — pedagogical Russianism / surzhyk /
+      calque callouts in prose (e.g. "stick to сніданок, not the
+      Russian-borrowed `<!-- bad -->завтрак<!-- /bad -->`"). The bad form
+      is deliberately non-VESUM and would otherwise be a false positive;
+      HTML comments don't render in MDX, so the learner still sees the
+      bad form in plain prose for contrast.
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.
@@ -4703,8 +4724,9 @@ def _strip_metalinguistic(text: str) -> str:
     text = _INLINE_CODE_RE.sub(" ", text)
     text = _BRACKETS_RE.sub(" ", text)
     text = _BRACES_RE.sub(" ", text)
-    text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
     text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
+    text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
+    text = _AVOID_MARKER_RE.sub(" ", text)
     text = _VESUM_ABBREVIATION_RE.sub(" ", text)
     return text
 

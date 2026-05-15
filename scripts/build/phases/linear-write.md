@@ -63,6 +63,16 @@ that failure class. Run each check while drafting, not as a separate pass.
 
 2. **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys standard forms for learner-facing standard Ukrainian. However, NEVER classify a word as Russianism, surzhyk, or calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. For any non-modern or suspicious form, verify with `mcp__sources__check_modern_form` (VESUM) plus available historical/etymological evidence (`mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, literary/wiki source context). If authentic but non-standard, keep it only when pedagogically required, tag it `[Archaism]`, `[Historism]`, or `[Dialectism]`, give the modern standard equivalent, and briefly state its Ukrainian heritage. If unverified, omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
+   **Russianism / surzhyk / calque callout markup (mandatory).** When a sentence in prose demonstrates a *bad form* for learner contrast (the "stick to X, not the Russian-borrowed Y" pattern), the bad form is deliberately NOT in VESUM and would trip the `vesum_verified` gate as a false positive. Wrap the bad form in HTML comments so the gate strips it but the learner still sees it in rendered MDX:
+
+   ```markdown
+   Stick to **сніданок** (not the Russian-borrowed <!-- bad -->завтрак<!-- /bad -->),
+   **рушник** (not <!-- bad -->полотенце<!-- /bad -->), and **одягатися** (not the
+   surzhyk <!-- bad -->одіватися<!-- /bad -->).
+   ```
+
+   The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX, so the bad form is still visible in plain prose. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. The marker is specifically for Russianisms, surzhyk forms, calques, and paronyms shown *to be avoided*. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
+
 3. **Source-citation discipline.** Every dictionary / style-guide / author
    citation MUST be groundable in MCP. **Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive** — it returns a `discusses: bool` verdict in one call. Allowed `source` enum values: `grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`. If `discusses=false`, do NOT cite that source for that claim.
 
@@ -80,7 +90,17 @@ that failure class. Run each check while drafting, not as a separate pass.
    rule not verbatim in the packet, you MUST verify it via
    `mcp__sources__search_text` and cite the exact grade and author.
 
-   **Verbatim textbook grounding (mandatory).** For each `plan_references` entry, you MUST call `mcp__sources__search_text` with a query targeting that textbook + topic, then quote at least one verbatim block (≥30 words) inline in the relevant section. The citation must include the textbook author + grade + page extracted from the search result, and the quote must be set off as a blockquote so reviewers can verify it. Inventing or paraphrasing in place of retrieving is a hard fail (`textbook_grounding`).
+   **Verbatim textbook grounding (mandatory; 2-step retrieval).** For each `plan_references` entry, follow this exact 2-step pattern. A topic-only search that returns the wrong page produces a HARD `textbook_grounding` REJECT even when your blockquote content happens to be accurate — the matcher does string-containment against the exact `text` of the chunk you retrieved.
+
+   **Step A — find the chunk_id.** Call `mcp__sources__search_text` with a query containing the **author surname AND the page number as plain digits** (e.g. `Захарійчук 162`, `Караман 176`, `Захарійчук 163`). The chunk_id pattern is `<source_file>_s<PAGE>` where `<PAGE>` is the zero-padded 4-digit page (`p.162` → `_s0162`). Scan the top results for a `Chunk ID:` ending in the right page suffix. If none match, refine: try different word orders, add a Ukrainian phrase distinctive to that page (from the Knowledge Packet), narrow to one author. Don't stop until you've identified the exact chunk_id.
+
+   **Step B — fetch the verbatim text.** Once you have the matching chunk_id (e.g. `4-klas-ukrmova-zaharijchuk_s0162`), call `mcp__sources__get_chunk_context(chunk_id="4-klas-ukrmova-zaharijchuk_s0162")` (or pass the chunk_id positionally as documented in the tool's signature). Then copy-paste ≥30 contiguous words from THAT chunk's returned `text` into a blockquote in `module.md`, preserving punctuation and Cyrillic letter forms exactly. Paraphrasing, composing from memory, fusing snippets from multiple chunks, summarizing, "improving" punctuation, or substituting equivalent phrases is a hard fail — take a contiguous block verbatim.
+
+   **Citation line format (mandatory; `citations_resolve` enforces it).** Immediately below the blockquote add `*— <Author>, Grade <N>, p.<PAGE>*` using the **exact** strings from the plan_references entry (e.g. `*— Захарійчук, Grade 4, p.162*`). Do NOT add the textbook title ("Українська мова") — that breaks the matcher because the plan_references format is `<Author> Grade <N>, p.<PAGE>` and the matcher requires that exact shape.
+
+   **Topic placement.** The blockquote must appear in the section whose pedagogical topic matches the reference's intent (mismatched placement triggers `topical_mismatch`).
+
+   **Corpus truly lacks the page.** If after refined queries you cannot surface a chunk_id with the cited page suffix, do NOT fabricate a blockquote. Emit a `<!-- VERIFY: chunk for the cited page not retrievable -->` comment in place of the quote and flag the plan_references entry for revision.
 
    **Citation discipline.** Sources cited in `module.md` blockquotes and listed in `resources.yaml` MUST be either:
    1. Listed in the module's `plan_references` (the matcher allows fuzzy match on author + grade + small page drift), OR
@@ -365,6 +385,38 @@ field `items`; do NOT use the React/component prop name `questions`.
 
 For item-bearing types, include a non-empty `items` array. For numeric arrays
 like `correct_order`, indices are zero-based.
+
+**`error-correction` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside an `error-correction` activity's `items:` list MUST use these EXACT inner field names — they are the schema consumed by `scripts/yaml_activities.py: _parse_error_correction` AND the only fields the `vesum_verified` gate treats as containing intentional misspellings:
+
+```yaml
+- type: error-correction
+  title: ...
+  instruction: ...
+  items:
+    - sentence: "Вона дивюся в дзеркало."  # the sentence with the deliberate error
+      error: дивюся                        # the malformed token (excluded from VESUM)
+      correction: дивиться                 # the corrected token
+      explanation: "Reflexive 3rd person singular is дивиться."   # optional
+```
+
+The complete VESUM-exclusion list is exactly:
+`{sentence, error, errors, errorWord, error_word, explanation}`.
+
+**FORBIDDEN inner field-name aliases** — every one of these causes the deliberate typo to leak into `vesum_verified` as a false positive AND fails the strict YAML parser at MDX-render time. The build WILL fail at python_qg:
+- `wrong:` ❌
+- `incorrect:` ❌
+- `mistake:` ❌
+- `bad:` ❌
+- `original:` ❌
+- `wrong_form:` ❌
+- `incorrect_form:` ❌
+- `correct:` ❌ (use `correction:` instead)
+- `correctAnswer:` ❌ for error-correction items (it's for other types)
+- `right:` ❌
+- `fix:` ❌
+- `fixed:` ❌
+
+Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word, explanation, correction, answer, options}` for an error-correction item, you are inventing an alias. Stop, use `sentence` + `error` + `correction` exactly as above.
 
 ## Plan
 
