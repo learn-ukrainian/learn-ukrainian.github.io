@@ -2844,3 +2844,80 @@ def test_component_prop_gate_consistent_with_strict_json_parser_for_a1_20() -> N
         f"A1/20 activity list must pass BOTH gates without contradiction. "
         f"Errors: {report['errors']}"
     )
+
+
+def test_strip_metalinguistic_removes_avoid_markers() -> None:
+    """`<!-- bad -->X<!-- /bad -->` callouts get stripped before VESUM lookup.
+
+    Russianism / surzhyk / calque pedagogical callouts in prose (e.g.,
+    "stick to сніданок, not the Russian-borrowed завтрак") deliberately
+    show a non-VESUM form for learner contrast. The HTML-comment marker
+    keeps the bad form visible in rendered MDX (comments don't render)
+    while preventing the `vesum_verified` gate from flagging it as a
+    false positive.
+    """
+    text = (
+        "Stick to сніданок (not the Russian-borrowed "
+        "<!-- bad -->завтрак<!-- /bad -->), рушник "
+        "(not <!-- bad -->полотенце<!-- /bad -->)."
+    )
+    stripped = linear_pipeline._strip_metalinguistic(text)
+    assert "завтрак" not in stripped
+    assert "полотенце" not in stripped
+    # The Ukrainian-preferred forms must survive.
+    assert "сніданок" in stripped
+    assert "рушник" in stripped
+
+
+def test_strip_metalinguistic_avoid_marker_handles_multiline_and_spacing() -> None:
+    """The marker tolerates surrounding whitespace and a multi-line span."""
+    text = (
+        "Avoid the surzhyk form <!--   bad   -->\nодіватися\n<!--   /bad   -->\n"
+        "and use одягатися instead."
+    )
+    stripped = linear_pipeline._strip_metalinguistic(text)
+    assert "одіватися" not in stripped
+    assert "одягатися" in stripped
+
+
+def test_strip_metalinguistic_avoid_marker_keeps_adjacent_callouts_separate() -> None:
+    """Two adjacent `<!-- bad -->` spans don't fuse via greedy matching."""
+    text = "<!-- bad -->завтрак<!-- /bad --> та <!-- bad -->полотенце<!-- /bad -->"
+    stripped = linear_pipeline._strip_metalinguistic(text)
+    assert "завтрак" not in stripped
+    assert "полотенце" not in stripped
+    # The Ukrainian connector word "та" survives between the two stripped spans.
+    assert "та" in stripped
+
+
+def test_strip_metalinguistic_collapses_bold_wrapped_morpheme_labels() -> None:
+    """`-**юся**` collapses to `-юся` so the morpheme regex can strip it.
+
+    Conjugation-table rows like `| -**юся** | -**єшся** | -**ється** |`
+    pair a hyphen with a bold-wrapped morpheme suffix. The morpheme regex
+    requires the hyphen to sit directly next to a Cyrillic letter, so the
+    `**` between them previously blocked the strip and the suffix
+    surfaced as a non-VESUM token (`юся` is not a lemma).
+    """
+    text = "| -**юся** | -**єшся** | -**ється** | -ємося | -єтеся | -ються |"
+    stripped = linear_pipeline._strip_metalinguistic(text)
+    # All six morpheme suffix forms should be gone after stripping.
+    for fragment in ("юся", "єшся", "ється", "ємося", "єтеся", "ються"):
+        assert fragment not in stripped, (
+            f"morpheme fragment '{fragment}' should be stripped from the gate "
+            f"text but survived: {stripped!r}"
+        )
+
+
+def test_strip_metalinguistic_preserves_bold_lemmas_in_running_prose() -> None:
+    """Plain bold-emphasized Ukrainian lemmas still reach VESUM lookup intact.
+
+    Bold-unwrap in `_strip_metalinguistic` is for the morpheme-regex
+    pass-through. After the regex runs, the unwrapped lemma must still
+    appear in the gate text so a real misspelling inside `**...**`
+    (e.g. `**прокидаюсь**`) is still verified.
+    """
+    text = "Stick to **сніданок** and **рушник**, not **полотенце**."
+    stripped = linear_pipeline._strip_metalinguistic(text)
+    for lemma in ("сніданок", "рушник", "полотенце"):
+        assert lemma in stripped, f"bold-unwrapped lemma '{lemma}' should survive"

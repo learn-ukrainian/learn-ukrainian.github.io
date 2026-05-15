@@ -465,6 +465,28 @@ _PRONUNCIATION_CUE_PATTERN = re.compile(
     r"(?:sounds?\s+like|звучить\s+як|вимовляється\s+як|вимова[:\s])\s*\*\*[^*]+\*\*",
     re.IGNORECASE,
 )
+
+# Pedagogical "bad form" marker for prose Russianism / surzhyk / calque
+# callouts. Patterns like `<!-- bad -->завтрак<!-- /bad -->` deliberately
+# show a non-standard form for learner contrast (e.g. "stick to сніданок,
+# not the Russian-borrowed завтрак"). The bad form is intentionally absent
+# from VESUM — flagging it would be a false positive. The HTML comments
+# don't render in MDX, so the learner still sees `завтрак` in plain prose.
+# Bounded by `re.DOTALL` so multi-line callouts are still caught; the
+# inner-content alternation `.+?` is non-greedy so adjacent `<!-- bad -->`
+# spans don't fuse.
+_AVOID_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(.+?)<!--\s*/bad\s*-->", re.DOTALL)
+
+# Markdown emphasis stripping for the gate text. `_normalize_for_vesum`
+# strips emphasis per-lemma, but `_MORPHEME_FRAGMENT_RE` runs at the TEXT
+# level and requires a hyphen adjacent to a Cyrillic letter — so a writer's
+# `-**юся**` (bold-wrapped morpheme suffix in a conjugation-table row)
+# survives morpheme stripping and then surfaces as a non-VESUM token. Strip
+# at the text level so the morpheme regex sees `-юся` and can collapse it.
+# Bold first (paired `**`), italic second (single `*` not adjacent to `*`).
+_BOLD_EMPHASIS_RE = re.compile(r"\*\*([^*]+)\*\*")
+_ITALIC_EMPHASIS_RE = re.compile(r"(?<!\*)\*(?!\*)([^*\n]+)\*(?!\*)")
+
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset(
     {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
 )
@@ -4695,6 +4717,19 @@ def _strip_metalinguistic(text: str) -> str:
       compounds (`темно-синій`) where the char before `-` is a word char.
     - `sounds like **...**` — cue-prefixed bold pronunciation transcriptions.
     - `діал.` — textbook abbreviation for `діалектне`, not a lemma.
+    - `<!-- bad -->форма<!-- /bad -->` — pedagogical Russianism / surzhyk /
+      calque callouts in prose (e.g. "stick to сніданок, not the
+      Russian-borrowed `<!-- bad -->завтрак<!-- /bad -->`"). The bad form
+      is deliberately non-VESUM and would otherwise be a false positive;
+      HTML comments don't render in MDX, so the learner still sees the
+      bad form in plain prose for contrast.
+
+    Markdown emphasis (`**bold**`, `*italic*`) is unwrapped before the
+    morpheme-fragment regex runs, so a writer's bold-wrapped morpheme suffix
+    like `-**юся**` collapses to `-юся` and gets stripped by the morpheme
+    regex — otherwise the `**` between the hyphen and the Cyrillic letter
+    keeps the morpheme regex from matching, and `юся` surfaces as a
+    non-VESUM false positive.
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.
@@ -4703,8 +4738,13 @@ def _strip_metalinguistic(text: str) -> str:
     text = _INLINE_CODE_RE.sub(" ", text)
     text = _BRACKETS_RE.sub(" ", text)
     text = _BRACES_RE.sub(" ", text)
+    # Unwrap markdown emphasis BEFORE morpheme detection so bold-wrapped
+    # morpheme labels (e.g. `-**юся**`) collapse to `-юся` and get caught.
+    text = _BOLD_EMPHASIS_RE.sub(r"\1", text)
+    text = _ITALIC_EMPHASIS_RE.sub(r"\1", text)
     text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
     text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
+    text = _AVOID_MARKER_RE.sub(" ", text)
     text = _VESUM_ABBREVIATION_RE.sub(" ", text)
     return text
 
