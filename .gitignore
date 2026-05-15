@@ -235,6 +235,11 @@ data/*.db-wal
 test_*.db-shm
 test_*.db-wal
 
+# Session-state handoffs that authors marked KEEP_UNTRACKED_UNTIL_PUBLIC_OK
+# (e.g. eval results pending validation) live under a `private/` subdir,
+# matching the existing `docs/references/private/` convention.
+docs/session-state/private/
+
 # the native reviewer's teaching material (large, local-only, IP-sensitive)
 data/native-reviewer-lessons/
 
