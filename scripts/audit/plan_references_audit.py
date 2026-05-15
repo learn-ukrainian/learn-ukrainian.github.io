@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Audit plan_references in A1 + A2 module plans.
+"""Audit plan_references in module plans for one or more CEFR tracks.
 
-Walks every plan YAML under curriculum/l2-uk-en/plans/{a1,a2}/, extracts
-"Author Grade N, p.M" citations from the `references` field and
-`content_outline` points, resolves each against data/sources.db, and
-emits a deterministic JSON + Markdown report classifying failure modes:
+Walks every plan YAML under curriculum/l2-uk-en/plans/{track}/ for each
+requested track, extracts "Author Grade N, p.M" citations from the
+`references` field and `content_outline` points, resolves each against
+data/sources.db, and emits a deterministic JSON + Markdown report
+classifying failure modes:
 
     GHOST_SOURCE      source_file for (author, grade) not in corpus
     GHOST_PAGE        source_file exists but no chunk for that page
     TOPIC_MISMATCH    chunk exists but text is unrelated to the plan topic
-    LEVEL_MISMATCH    A1 cites Grade >=7 OR A2 cites Grade >=10
+    LEVEL_MISMATCH    grade >= PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS[track] (per-track policy)
     UNKNOWN_AUTHOR    author not in _TEXTBOOK_AUTHOR_TRANSLITS (canonical 10)
     OK                resolves cleanly with on-topic chunk
 
@@ -20,7 +21,9 @@ GHOST_SOURCE flags.
 
 Usage:
     .venv/bin/python scripts/audit/plan_references_audit.py
-    .venv/bin/python scripts/audit/plan_references_audit.py --out-dir audit/foo
+    .venv/bin/python scripts/audit/plan_references_audit.py --tracks a1,a2
+    .venv/bin/python scripts/audit/plan_references_audit.py \\
+        --tracks b1,b2 --out-dir audit/b1-b2-plan-references-2026-05-15
 
 Issue: #1975
 """
@@ -43,6 +46,21 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_OUT_DIR = PROJECT_ROOT / "audit" / "a1-a2-plan-references-2026-05-15"
+DEFAULT_TRACKS = ("a1", "a2")
+
+# LEVEL_MISMATCH thresholds per track. A citation flags when its
+# textbook Grade is >= the track's threshold. Ukrainian school grades
+# cap at 11, so B1/B2/C1/C2 set to 11 means "only flag literal Grade 11
+# citations" — a low-rate signal kept for completeness rather than a
+# common failure mode at higher CEFR levels.
+PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS: dict[str, int] = {
+    "a1": 7,
+    "a2": 10,
+    "b1": 11,
+    "b2": 11,
+    "c1": 11,
+    "c2": 11,
+}
 
 # Mirror of scripts/build/linear_pipeline.py:_TEXTBOOK_AUTHOR_TRANSLITS.
 # Edit there, not here — this is the audit's reference snapshot.
@@ -101,7 +119,7 @@ UK_STOPWORDS = frozenset(
 @dataclass(frozen=True)
 class Citation:
     plan_slug: str
-    level: str  # "a1" | "a2"
+    level: str  # one of PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS keys, e.g. "a1" | "a2" | "b1"
     raw: str
     author: str
     grade: int
@@ -286,9 +304,15 @@ def _nearby_pages(
 
 
 def _classify_level_mismatch(level: str, grade: int) -> bool:
-    if level == "a1" and grade >= 7:
-        return True
-    return level == "a2" and grade >= 10
+    """Flag when ``grade`` is at/above the track's threshold.
+
+    Tracks not listed in :data:`PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS` never flag (defensive
+    default for unknown tracks); tests assert this behavior.
+    """
+    threshold = PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(level)
+    if threshold is None:
+        return False
+    return grade >= threshold
 
 
 def _audit_citation(
@@ -378,21 +402,27 @@ def _audit_citation(
         )
 
     if level_warn:
+        threshold = PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(cite.level)
+        if cite.level in ("a1", "a2"):
+            fix_hint = "prefer Grade <=6 source if available"
+        else:
+            fix_hint = (
+                f"verify Grade {cite.grade} content is genuinely "
+                f"{cite.level.upper()}-appropriate"
+            )
         return Finding(
             citation=cite,
             mode="LEVEL_MISMATCH",
             detail=(
                 f"{cite.level.upper()} plan cites Grade {cite.grade} "
-                "textbook (above level)"
+                f"textbook (threshold: Grade >= {threshold})"
             ),
             chunk_preview=(chunk.get("text") or "")[:300].replace("\n", " "),
             resolved_source_file=chunk["source_file"],
             chunk_title=str(chunk.get("title") or ""),
             overlap=overlap_count,
             topic_keywords=sorted(overlap),
-            suggested_fix=(
-                "verify pedagogical level fit; prefer Grade <=6 source if available"
-            ),
+            suggested_fix=f"verify pedagogical level fit; {fix_hint}",
         )
 
     return Finding(
@@ -418,9 +448,12 @@ def _collect(level: str) -> tuple[list[Citation], dict[str, str]]:
     return cites, plan_text_by_slug
 
 
-def _render_markdown(findings: list[Finding], totals: dict) -> str:
+def _render_markdown(
+    findings: list[Finding], totals: dict, tracks: list[str]
+) -> str:
     lines: list[str] = []
-    lines.append("# A1 + A2 plan_references audit")
+    track_label = " + ".join(t.upper() for t in tracks)
+    lines.append(f"# {track_label} plan_references audit")
     lines.append("")
     lines.append(
         f"Generated: {dt.datetime.now(dt.UTC).strftime('%Y-%m-%d')}"
@@ -429,8 +462,8 @@ def _render_markdown(findings: list[Finding], totals: dict) -> str:
     lines.append("## Summary")
     lines.append("")
     lines.append(f"- Plans audited: **{totals['plans']}**")
-    lines.append(f"  - A1: {totals['plans_a1']}")
-    lines.append(f"  - A2: {totals['plans_a2']}")
+    for t in tracks:
+        lines.append(f"  - {t.upper()}: {totals['plans_by_track'].get(t, 0)}")
     lines.append(
         f"- Paged citations extracted: **{totals['citations']}**"
     )
@@ -444,6 +477,11 @@ def _render_markdown(findings: list[Finding], totals: dict) -> str:
         "UNKNOWN_AUTHOR",
     ):
         lines.append(f"  - {mode}: {totals['by_mode'].get(mode, 0)}")
+    lines.append("- LEVEL_MISMATCH thresholds (grade >= threshold flags):")
+    for t in tracks:
+        lines.append(
+            f"  - {t.upper()}: Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}"
+        )
     lines.append("")
     lines.append(
         "Failure modes are reported separately: a single citation may be both "
@@ -453,7 +491,7 @@ def _render_markdown(findings: list[Finding], totals: dict) -> str:
     )
     lines.append("")
 
-    for level in ("a1", "a2"):
+    for level in tracks:
         level_findings = [
             f
             for f in findings
@@ -535,7 +573,11 @@ def _render_markdown(findings: list[Finding], totals: dict) -> str:
                 f"| {lvl.upper()} | {author} | Grade {grade} | {cnt} |"
             )
     else:
-        lines.append("_No A1 plan cites Grade >=7; no A2 plan cites Grade >=10._")
+        threshold_phrase = "; ".join(
+            f"{t.upper()} Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}"
+            for t in tracks
+        )
+        lines.append(f"_No citations crossed thresholds: {threshold_phrase}._")
     lines.append("")
 
     lines.append("### Ghost sources by author + grade")
@@ -564,8 +606,11 @@ def _render_markdown(findings: list[Finding], totals: dict) -> str:
         "and the resolved chunk's title + body. False positives are expected; "
         "verify each row before editing the plan."
     )
+    threshold_summary = ", ".join(
+        f"{t.upper()} Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}" for t in tracks
+    )
     lines.append(
-        "- LEVEL_MISMATCH is policy: A1 cites Grade >= 7, A2 cites Grade >= 10. "
+        f"- LEVEL_MISMATCH is policy: {threshold_summary}. "
         "Not always wrong (school textbooks include simple paradigm tables at "
         "any level), but flagged for orchestrator review."
     )
@@ -576,6 +621,18 @@ def _render_markdown(findings: list[Finding], totals: dict) -> str:
     )
     lines.append("")
     return "\n".join(lines)
+
+
+def _parse_tracks(raw: str) -> list[str]:
+    tracks = [t.strip().lower() for t in raw.split(",") if t.strip()]
+    if not tracks:
+        raise argparse.ArgumentTypeError("--tracks must list >=1 track")
+    unknown = [t for t in tracks if t not in PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS]
+    if unknown:
+        raise argparse.ArgumentTypeError(
+            f"unknown track(s) {unknown}; valid: {sorted(PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS)}"
+        )
+    return tracks
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -592,16 +649,32 @@ def main(argv: list[str] | None = None) -> int:
         default=SOURCES_DB,
         help="Path to data/sources.db.",
     )
+    parser.add_argument(
+        "--tracks",
+        type=_parse_tracks,
+        default=list(DEFAULT_TRACKS),
+        help=(
+            "Comma-separated track list (default: a1,a2). Valid: "
+            f"{sorted(PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS)}."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if not args.db.exists():
         print(f"ERROR: sources.db not found at {args.db}", file=sys.stderr)
         return 2
 
-    a1_cites, a1_text = _collect("a1")
-    a2_cites, a2_text = _collect("a2")
-    all_cites = a1_cites + a2_cites
-    plan_text_by_slug = {**a1_text, **a2_text}
+    tracks: list[str] = args.tracks
+    all_cites: list[Citation] = []
+    plan_text_by_slug: dict[str, str] = {}
+    plans_by_track: dict[str, int] = {}
+    for track in tracks:
+        cites, text_map = _collect(track)
+        all_cites.extend(cites)
+        plan_text_by_slug.update(text_map)
+        plans_by_track[track] = len(
+            list((PLANS_ROOT / track).glob("*.yaml"))
+        )
 
     findings: list[Finding] = []
     with sqlite3.connect(str(args.db)) as conn:
@@ -616,12 +689,10 @@ def main(argv: list[str] | None = None) -> int:
     for f in findings:
         by_mode[f.mode] = by_mode.get(f.mode, 0) + 1
 
-    a1_plan_count = len(list((PLANS_ROOT / "a1").glob("*.yaml")))
-    a2_plan_count = len(list((PLANS_ROOT / "a2").glob("*.yaml")))
     totals = {
-        "plans": a1_plan_count + a2_plan_count,
-        "plans_a1": a1_plan_count,
-        "plans_a2": a2_plan_count,
+        "plans": sum(plans_by_track.values()),
+        "plans_by_track": plans_by_track,
+        "tracks": tracks,
         "citations": len(all_cites),
         "by_mode": by_mode,
     }
@@ -665,7 +736,7 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     (args.out_dir / "REPORT.md").write_text(
-        _render_markdown(findings_sorted, totals), encoding="utf-8"
+        _render_markdown(findings_sorted, totals, tracks), encoding="utf-8"
     )
 
     summary = (
