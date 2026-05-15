@@ -164,12 +164,19 @@ def test_audit_citation_ok_when_topic_matches(fake_db: Path):
     assert finding.mode == "OK", (finding.mode, finding.detail, finding.overlap)
 
 
-def test_audit_citation_unknown_author_flags_suggested_translits(fake_db: Path):
+def test_audit_citation_unknown_author_for_uncatalogued_name(fake_db: Path):
+    """An author absent from CANONICAL_TRANSLITS flags UNKNOWN_AUTHOR.
+
+    Previously this test exercised the SUGGESTED_TRANSLITS path with
+    `Літвінова`, but those entries have since been promoted into
+    CANONICAL_TRANSLITS — a fictional name preserves the regression on
+    the UNKNOWN_AUTHOR mode.
+    """
     cite = Citation(
         plan_slug="euphony",
         level="a1",
-        raw="Літвінова Grade 5, p.174",
-        author="Літвінова",
+        raw="Неіснуючий Grade 5, p.174",
+        author="Неіснуючий",
         grade=5,
         page=174,
         field_source="references",
@@ -179,7 +186,6 @@ def test_audit_citation_unknown_author_flags_suggested_translits(fake_db: Path):
         conn.row_factory = sqlite3.Row
         finding = _audit_citation(cite, "Милозвучність", conn)
     assert finding.mode == "UNKNOWN_AUTHOR"
-    assert "litvinova" in finding.detail
 
 
 def test_audit_citation_ghost_page(fake_db: Path):

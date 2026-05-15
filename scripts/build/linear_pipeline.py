@@ -938,6 +938,12 @@ _TEXTBOOK_AUTHOR_TRANSLITS = {
     "Вашуленко": ["vashulenko"],
     "Большакова": ["bolshakova"],
     "Міщенко": ["mishhenko", "mishchenko"],
+    "Літвінова": ["litvinova"],
+    "Литвінова": ["litvinova"],
+    "Голуб": ["golub"],
+    "Варзацька": ["varzatska"],
+    "Пономарова": ["ponomarova"],
+    "Пономарьова": ["ponomarova"],
 }
 
 

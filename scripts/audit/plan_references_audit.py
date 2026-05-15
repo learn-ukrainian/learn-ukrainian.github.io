@@ -57,19 +57,18 @@ CANONICAL_TRANSLITS: dict[str, list[str]] = {
     "Вашуленко": ["vashulenko"],
     "Большакова": ["bolshakova"],
     "Міщенко": ["mishhenko", "mishchenko"],
+    "Літвінова": ["litvinova"],
+    "Литвінова": ["litvinova"],
+    "Голуб": ["golub"],
+    "Варзацька": ["varzatska"],
+    "Пономарова": ["ponomarova"],
+    "Пономарьова": ["ponomarova"],
 }
 
 # Authors observed in plans but not in CANONICAL_TRANSLITS. Used to
 # suggest extensions to _TEXTBOOK_AUTHOR_TRANSLITS in the aggregate
 # findings section — never to silently resolve UNKNOWN_AUTHOR citations.
-SUGGESTED_TRANSLITS: dict[str, list[str]] = {
-    "Варзацька": ["varzatska"],
-    "Голуб": ["golub"],
-    "Литвінова": ["litvinova"],
-    "Літвінова": ["litvinova"],
-    "Пономарова": ["ponomarova"],
-    "Пономарьова": ["ponomarova"],
-}
+SUGGESTED_TRANSLITS: dict[str, list[str]] = {}
 
 # "Author Grade N, p.M" / "с. M" / "стор. M". Cyrillic author block,
 # Grade integer, then a page-style marker followed by digits.
