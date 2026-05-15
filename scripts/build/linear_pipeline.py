@@ -84,6 +84,7 @@ _LABEL_LINE_RE = re.compile(
 
 PYTHON_QG_GATE_ORDER = (
     "tool_theatre",
+    "activity_schema",
     "word_count",
     "plan_sections",
     "formatting_standards",
@@ -106,6 +107,7 @@ PYTHON_QG_GATE_ORDER = (
 )
 WRITER_CORRECTION_GATES = frozenset(
     {
+        "activity_schema",
         "strict_json_parse",
         "tool_theatre",
         "word_count",
@@ -529,6 +531,41 @@ _ERROR_CORRECTION_TYPE = "error-correction"
 _ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset(
     {"error", "errors", "errorWord", "error_word", "explanation", "sentence"}
 )
+_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS = frozenset({"sentence", "error"})
+_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS = frozenset(
+    {"answer", "correction", "options", "explanation"}
+)
+_ACTIVITY_ITEM_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
+    _ERROR_CORRECTION_TYPE: (
+        _ERROR_CORRECTION_REQUIRED_ITEM_FIELDS
+        | _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS
+    ),
+}
+_ACTIVITY_ITEM_REQUIRED_FIELDS: dict[str, frozenset[str]] = {
+    _ERROR_CORRECTION_TYPE: _ERROR_CORRECTION_REQUIRED_ITEM_FIELDS,
+}
+_ACTIVITY_ITEM_FORBIDDEN_ALIASES: dict[str, dict[str, str]] = {
+    _ERROR_CORRECTION_TYPE: {
+        "wrong": "error",
+        "incorrect": "error",
+        "mistake": "error",
+        "bad": "error",
+        "original": "error",
+        "wrong_form": "error",
+        "incorrect_form": "error",
+        "correct": "correction",
+        "correctAnswer": "correction",
+        "right": "correction",
+        "fix": "correction",
+        "fixed": "correction",
+    },
+}
+_ACTIVITY_ITEM_FIELD_PURPOSES: dict[str, str] = {
+    "sentence": "the sentence containing the error",
+    "error": "the misspelled form",
+    "correction": "the corrected form",
+    "answer": "the corrected form",
+}
 _VESUM_ABBREVIATION_RE = re.compile(r"\bдіал\.", re.IGNORECASE)
 
 # String fields whose values are user-facing prose (subject to AI-slop checks).
@@ -3878,6 +3915,11 @@ def run_python_qg(
             gate_observer(name)
         gates[name] = report
 
+    record("activity_schema", _activity_schema_gate(activities))
+    if gates["activity_schema"].get("passed") is False:
+        gates["passed"] = False
+        return _python_qg_report(plan, gates)
+
     record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
     record("plan_sections", _section_gate(module_text, plan))
     record("formatting_standards", _formatting_standards_gate(module_text))
@@ -3929,13 +3971,20 @@ def run_python_qg(
         for key, gate in gates.items()
         if isinstance(gate, dict) and key != "mdx_render"
     )
+    return _python_qg_report(plan, gates)
+
+
+def _python_qg_report(
+    plan: Mapping[str, Any],
+    gates: Mapping[str, Any],
+) -> dict[str, Any]:
     return {
         "module": plan["module"],
         "level": plan["level"],
         "slug": plan["slug"],
         "pipeline": "linear-phase-4",
         "plan_references": plan.get("references", []),
-        "gates": gates,
+        "gates": dict(gates),
     }
 
 
@@ -4234,6 +4283,18 @@ def _activity_type_field_whitelist() -> dict[str, frozenset[str]]:
     return _ACTIVITY_AUTHORING_FIELDS
 
 
+def _activity_item_schema_whitelist() -> dict[str, frozenset[str]]:
+    """Return per-activity-type allowed item fields in authoring YAML.
+
+    V1 is intentionally narrow: `error-correction` is the only strict
+    item-level schema needed for #2018. Its required fields come directly from
+    `ActivityParser._parse_error_correction`, which indexes `sentence` and
+    `error`, while `answer`/`correction`/`options`/`explanation` are optional
+    parser-supported fields.
+    """
+    return _ACTIVITY_ITEM_AUTHORING_FIELDS
+
+
 # Per-type aliases mapping React COMPONENT prop names (as declared
 # in `docs/lesson-schema.yaml`) to AUTHORING YAML field names (as
 # emitted by writers and consumed by `scripts/yaml_activities.py`
@@ -4385,6 +4446,149 @@ def _load_bare_activity_list(path: Path) -> list[dict[str, Any]]:
     if not all(isinstance(item, dict) for item in data):
         raise LinearPipelineError("Every activity must be a mapping")
     return data
+
+
+def _activity_schema_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate strict item-level authoring schemas before content gates run."""
+    item_fields_by_type = _activity_item_schema_whitelist()
+    violations: list[dict[str, Any]] = []
+    checked = 0
+
+    for activity_index, activity in enumerate(activities, start=1):
+        if not isinstance(activity, Mapping):
+            continue
+        activity_type = str(activity.get("type") or "")
+        allowed_fields = item_fields_by_type.get(activity_type)
+        if allowed_fields is None:
+            continue
+        aliases = _ACTIVITY_ITEM_FORBIDDEN_ALIASES.get(activity_type, {})
+        required_fields = _ACTIVITY_ITEM_REQUIRED_FIELDS.get(activity_type, frozenset())
+        activity_id = str(activity.get("id") or f"#{activity_index}")
+        items = activity.get("items", [])
+        if not isinstance(items, list):
+            continue
+
+        for item_index, item in enumerate(items, start=1):
+            if not isinstance(item, Mapping):
+                continue
+            checked += 1
+            item_fields = {str(field) for field in item}
+            aliased_required = {
+                expected
+                for field in item_fields
+                if (expected := aliases.get(field)) in required_fields
+            }
+
+            for field in sorted(item_fields):
+                if field in allowed_fields:
+                    continue
+                expected = aliases.get(field)
+                violations.append(
+                    _activity_schema_violation(
+                        activity_id=activity_id,
+                        activity_index=activity_index,
+                        item_index=item_index,
+                        activity_type=activity_type,
+                        offending_field=field,
+                        expected_field=expected,
+                    )
+                )
+
+            for required_field in sorted(required_fields - item_fields - aliased_required):
+                violations.append(
+                    _activity_schema_violation(
+                        activity_id=activity_id,
+                        activity_index=activity_index,
+                        item_index=item_index,
+                        activity_type=activity_type,
+                        offending_field=None,
+                        expected_field=required_field,
+                    )
+                )
+
+    report = {
+        "passed": not violations,
+        "checked": checked,
+        "violations": violations,
+    }
+    if violations:
+        report["message"] = _format_activity_schema_diagnostic(violations)
+    return report
+
+
+def _activity_schema_violation(
+    *,
+    activity_id: str,
+    activity_index: int,
+    item_index: int,
+    activity_type: str,
+    offending_field: str | None,
+    expected_field: str | None,
+) -> dict[str, Any]:
+    if offending_field is None:
+        purpose = _ACTIVITY_ITEM_FIELD_PURPOSES.get(expected_field or "", "this item")
+        message = (
+            f"{activity_type} items must include '{expected_field}:' for {purpose}"
+        )
+    elif expected_field is not None:
+        purpose = _ACTIVITY_ITEM_FIELD_PURPOSES.get(expected_field, "this value")
+        message = (
+            f"{activity_type} items must use '{expected_field}:' for {purpose}, "
+            f"not '{offending_field}:'"
+        )
+    else:
+        message = f"{activity_type} items do not allow field '{offending_field}:'"
+
+    return {
+        "activity_id": activity_id,
+        "activity_index": activity_index,
+        "item_index": item_index,
+        "activity_type": activity_type,
+        "offending_field": offending_field,
+        "expected_field": expected_field,
+        "message": message,
+    }
+
+
+def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
+    lines = [
+        f"ACTIVITY_SCHEMA_GATE FAILED: {len(violations)} violations",
+        "",
+    ]
+    for violation in violations[:10]:
+        activity_id = violation["activity_id"]
+        activity_index = violation["activity_index"]
+        item_index = violation["item_index"]
+        lines.append(
+            f"  activity #{activity_index} '{activity_id}' (item {item_index}):"
+        )
+        offending = violation.get("offending_field")
+        expected = violation.get("expected_field")
+        if offending is None:
+            lines.append(f"    missing required field '{expected}:'")
+        elif expected is None:
+            lines.append(f"    forbidden field '{offending}'")
+        else:
+            purpose = _ACTIVITY_ITEM_FIELD_PURPOSES.get(str(expected), "this value")
+            lines.append(
+                f"    forbidden field '{offending}' - use '{expected}:' for {purpose}"
+            )
+        lines.append("")
+
+    remaining = len(violations) - 10
+    if remaining > 0:
+        lines.append(f"  ... ({remaining} more)")
+        lines.append("")
+
+    lines.extend(
+        [
+            "Canonical 'error-correction' item shape:",
+            '  - sentence: "Я <error> вранці."',
+            '    error: "вмиваюся"',
+            '    correction: "вмиваюся"',
+        ]
+    )
+    return "\n".join(lines)
 
 
 def _word_count(text: str) -> int:
