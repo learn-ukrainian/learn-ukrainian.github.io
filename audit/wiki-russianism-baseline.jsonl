@@ -1,0 +1,1804 @@
+{"page": ".reviews/academic/c1/abstract-writing-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/abstract-writing-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/academic-style-markers-review-final.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/academic-style-markers-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/academic-style-markers-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/academic-style-markers-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/advanced-punctuation-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/advanced-punctuation-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/advanced-punctuation-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/academic/c1/advanced-punctuation-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/diagnostics/a1-sounds-letters-and-hello-diagnosis.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/diagnostics/a1-sounds-letters-comparison.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/diagnostics/a1-sounds-letters-playback.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/diagnostics/a1-sounds-letters-playback.modern.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/figures/ahatanhel-krymskyi-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/figures/ahatanhel-krymskyi-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/figures/knyahynia-olha-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/figures/knyahynia-olha-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/bohatyri-illiya-dobrynia-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/bohatyri-illiya-dobrynia-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/bylyny-kyivskoho-tsyklu-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/bylyny-kyivskoho-tsyklu-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/dumy-lytsarski-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/dumy-lytsarski-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/dumy-lytsarski-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/dumy-lytsarski-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/folk/genres/dumy-lytsarski-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/abstract-concepts-ideas-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/abstract-concepts-ideas-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/abstract-concepts-ideas-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/active-participles-phrases-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/active-participles-phrases-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/active-participles-phrases-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b1/adjective-comparison-review-final.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/grammar/b1/adjective-comparison-review-r1.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/grammar/b1/adjective-comparison-review-r2.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/grammar/b1/adjective-comparison-review-r3.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/grammar/b1/adjective-comparison-review-r4.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/grammar/b1/adjective-comparison-review.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/grammar/b2/academic-writing-review-final.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/academic-writing-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/academic-writing-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/academic-writing-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/academic-writing-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/academic-writing-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/active-participles-past-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/active-participles-past-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/active-participles-past-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/active-participles-past-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/active-participles-past-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/advanced-case-semantics-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/advanced-case-semantics-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/advanced-case-semantics-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/grammar/b2/advanced-case-semantics-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/linguistics/oes/walls-speak-intro-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/linguistics/oes/walls-speak-intro-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/literature/works/introduction-to-kotliarevsky-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/literature/works/introduction-to-kotliarevsky-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/academic-publishing-review-final.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/academic-publishing-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/academic-publishing-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/academic-publishing-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/academic-publishing-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/academic-publishing-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/advanced-rhetoric-review-final.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/advanced-rhetoric-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/advanced-rhetoric-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/advanced-rhetoric-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/advanced-rhetoric-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/advanced-rhetoric-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/building-domain-expertise-review-final.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/building-domain-expertise-review-r1.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/mastery/c2/building-domain-expertise-review-r2.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/mastery/c2/building-domain-expertise-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/building-domain-expertise-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/mastery/c2/building-domain-expertise-review.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review-LOCKED.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review-final.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review-r1.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review-r2.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review-r3.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review-r4.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/pedagogy/a1/at-the-cafe-review.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": ".reviews/pedagogy/a1/checkpoint-first-contact-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/colors-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/food-and-drink-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/hey-friend-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/holidays-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/how-many-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/my-day-review-LOCKED.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": ".reviews/pedagogy/a1/my-family-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/my-family-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/my-family-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/my-family-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/my-family-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/my-family-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/reading-ukrainian-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/shopping-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review-final.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review-r2.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review-r3.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review-r4.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/sounds-letters-and-hello-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/special-signs-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/stress-and-melody-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/things-have-gender-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/this-and-that-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/what-is-it-like-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/pedagogy/a1/who-am-i-review-LOCKED.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/periods/afhanistan-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/periods/afhanistan-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/periods/andrusivske-peremyrya-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/periods/andrusivske-peremyrya-review.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/periods/trypillian-civilization-review-r1.md", "n_findings": 0, "severities": {}}
+{"page": ".reviews/periods/trypillian-civilization-review.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/abstract-writing.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/academic-style-markers.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/advanced-punctuation.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/analiz-poezii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/analysis-vocabulary.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/aspect-pairs-mastery-c1.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/asyndetic-semantics.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/b2-review-bridge.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/balet-i-tanets.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/business-etiquette.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/c1-0-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/c1-1-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/c1-2-checkpoint.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/c1-final-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/case-studies.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/checkpoint-c1-5.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/checkpoint-complex-sentences.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/checkpoint-fine-arts.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/checkpoint-folk-culture.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/checkpoint-folk-music.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/checkpoint-folk-traditions.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/checkpoint-movoznavstvo.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/citation-reference.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/combined-complex-sentences.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/complex-sentence-practice.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/counterarguments.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/cv-resume-writing.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/davalnyi-vidminok-systema.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/degrees-of-certainty.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/deverbatyvni-imennyky.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/dialects-of-ukrainian.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/diaspora-ukrainian.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/digital-communication.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/economics-vocabulary-c1.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/essay-structure.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/essay-writing-practice.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/euphemism-taboo.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/fonetychni-stylistychni-zasoby.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/frazeolohichni-stylistychni-zasoby.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/global-context.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/halychyna.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/hedging-modality.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/high-formal-register.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/history-of-language.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/honcharstvo-ta-rizbyarstvo.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/hopak-i-kozachok.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/hyperbole-litotes.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/imperative-mastery.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/intimate-register.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/irony-sarcasm.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/irregular-verbs-complete.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/istoriia-ukrainskoi-literatury.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/job-interview.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/kazky-ta-prytchi.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/kharchuvannia-ta-kulinariia.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/khrestyny-ta-vesillia.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/klasychna-muzyka-1-vytoky.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/klasychna-muzyka-2-natsionalna-shkola.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/klasychna-muzyka-3-modernizm-i-suchasnist.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/kobzari-bandura.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/kolyskovi-ta-dumy.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/kozatski-lehendy.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/kupivlia-ta-posluhy.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/leksykolohiia-c1.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/literature-review.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/literaturoznavcha-terminolohiia.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/logical-connectors.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/media-landscape.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/metaphor-simile.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/mistsia-ta-urbanistyka.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/morfolohichna-norma-c1.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/morfolohichni-stylistychni-zasoby.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/narodna-medytsyna.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/narodna-mifolohiia.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/nominatyvnyi-vidminok-funktsiyi.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/numeral-mastery-c1.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/obrazotvorche-mystetstvo-1.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/obrazotvorche-mystetstvo-2.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/one-member-sentences-c1.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/operne-mystetstvo.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/oral-presentations.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/osvita-nauka-samovdoskonalennia.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/persuasive-speech.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/pobut-ta-domashnie-hospodarstvo.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/podillia-ta-volyn.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/podorozhi-ta-turyzm.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/politeness-strategies.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/political-system.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/pomynalni-obriady.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/practice-ii-article-critique.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/praktyka-1-narodna-kultura.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/praktyka-2-vysoke-mystetstvo.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/professional-scenarios.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/pryroda-ta-ekologiia.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/pysanky.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/rehionalni-tantsi.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/research-article.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/research-verbs.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/review-c1-5.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/review-c1-6.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/review.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/rhetorical-questions.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/ritual-songs.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/rodovyi-vidminok-systema.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/science-technology-c1.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/skladnopidriadne-obstavynne.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/skladnopidriadne-oznachalne-zyasuvalne.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/skladnosuriadne-rechennia.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/slang-youth.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/speaking-practice.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/sport-ta-zdorovia.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/stylistic-phonetics-euphony.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/stylistic-syntax-figures.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/suchasna-muzyka.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/summary-paraphrase.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/surzhyk.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/syntaksychni-stylistychni-zasoby.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/teatralne-mystetstvo-1.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/teatralne-mystetstvo-2.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/tekstoznavstvo.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/thesis-development.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/traditional-clothing.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/ukrainian-avant-garde.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/ukrainian-cuisine-traditions.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/ukrainian-house.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/ukrainska-arkhitektura.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/ukrainske-kino.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/umovnyi-sposib-irrealis.md", "n_findings": 0, "severities": {}}
+{"page": "academic/c1/vesna-ta-lito.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/vokalne-mystetstvo.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "academic/c1/vyshyvanka.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/zahalne-movoznavstvo.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "academic/c1/zymovi-obriady.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "figures/ahatanhel-krymskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/alla-horska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/anatol-petrytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/anatolii-dimarov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/andrey-sheptytsky.md", "n_findings": 0, "severities": {}}
+{"page": "figures/andrii-chaikovskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/andriy-pilshchykov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/berta-rapoport.md", "n_findings": 0, "severities": {}}
+{"page": "figures/bohdan-ihor-antonych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/bohdan-khmelnytskyy.md", "n_findings": 0, "severities": {}}
+{"page": "figures/bohdan-stupka.md", "n_findings": 0, "severities": {}}
+{"page": "figures/borys-hrinchenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/borys-liatoshynskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/borys-paton.md", "n_findings": 0, "severities": {}}
+{"page": "figures/danylo-apostol.md", "n_findings": 0, "severities": {}}
+{"page": "figures/danylo-halytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/dmytro-bortnyanskyy.md", "n_findings": 0, "severities": {}}
+{"page": "figures/dmytro-dontsov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/dmytro-falkivskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/dmytro-kotsyubailo.md", "n_findings": 0, "severities": {}}
+{"page": "figures/dmytro-pavlychko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/dmytro-vyshnevetsky.md", "n_findings": 0, "severities": {}}
+{"page": "figures/george-shevelov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/halyna-pahutyak.md", "n_findings": 0, "severities": {}}
+{"page": "figures/hanna-barvinok.md", "n_findings": 0, "severities": {}}
+{"page": "figures/heo-shkurupii.md", "n_findings": 0, "severities": {}}
+{"page": "figures/hnat-khotkevych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/hryhorii-kosynka.md", "n_findings": 0, "severities": {}}
+{"page": "figures/hryhoriy-kvitka-osnovianenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/hryhoriy-skovoroda.md", "n_findings": 0, "severities": {}}
+{"page": "figures/illia-chernilevskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/iov-boretskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/iryna-vilde.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-dziuba.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-franko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-kotliarevskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-lypa.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-mazepa.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-mykolaichuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-nechuy-levytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-ohienko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-puliui.md", "n_findings": 0, "severities": {}}
+{"page": "figures/ivan-sirko.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "figures/ivan-vyhovskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/josyf-slipyj.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kateryna-bilokur.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kateryna-handziuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kateryna-yushchenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kazimir-malevich.md", "n_findings": 0, "severities": {}}
+{"page": "figures/klavdiya-latysheva.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kniaz-sviatoslav.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kniaz-yaroslav-mudryi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/knyahynia-olha.md", "n_findings": 0, "severities": {}}
+{"page": "figures/knyazhna-anna-yaroslavna.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kost-hordiyenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kostiantyn-ostrozky-elder.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kostiantyn-vasyl-ostrozky.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kuzma-skryabin.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kvitka-tsisyk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/kyrylo-trylovskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/leonid-kadenyuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/les-kurbas.md", "n_findings": 0, "severities": {}}
+{"page": "figures/lesya-ukrainka.md", "n_findings": 0, "severities": {}}
+{"page": "figures/lev-danylovych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/levko-lukyanenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/lina-kostenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/liubomyr-huzar.md", "n_findings": 0, "severities": {}}
+{"page": "figures/liudmyla-starytska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/maik-yohansen.md", "n_findings": 0, "severities": {}}
+{"page": "figures/maksym-berezovskyy.md", "n_findings": 0, "severities": {}}
+{"page": "figures/maksym-kryvtsov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mariia-prymachenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mariia-voiakovska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mariya-matios.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mariya-pavlova.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mariya-zankovetska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/marko-kropyvnytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/marko-vovchok.md", "n_findings": 0, "severities": {}}
+{"page": "figures/meletii-smotrytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/milena-rudnytska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/moisei-fishbein.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-boichuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-chernihivskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-drahomanov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-hrushevskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-kotsiubynsky.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-starytsky.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykhailo-yangel.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-amosov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-khvylovyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-kulish.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-leontovych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-lysenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-mikhnovskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-pohribnyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-vasylenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/mykola-zerov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/myroslav-marynovych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/natalia-yakovenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/nataliia-polonska-vasylenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/nataliya-kobrynska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/nestor-litopysets.md", "n_findings": 0, "severities": {}}
+{"page": "figures/nina-matviyenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oksana-zabuzhko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleg-antonov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleg-sentsov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleh-olzhych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksa-slisarenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksander-potebnya.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksandr-arkhypenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksandr-bohomazov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksandr-dovzhenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksandr-hrekiv.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oleksandra-matviichuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/olena-pchilka.md", "n_findings": 0, "severities": {}}
+{"page": "figures/olena-stepaniv.md", "n_findings": 0, "severities": {}}
+{"page": "figures/olena-teliha.md", "n_findings": 0, "severities": {}}
+{"page": "figures/oles-honchar.md", "n_findings": 0, "severities": {}}
+{"page": "figures/olha-basarab.md", "n_findings": 0, "severities": {}}
+{"page": "figures/olha-kobylianska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/panteleimon-kulish.md", "n_findings": 0, "severities": {}}
+{"page": "figures/pavlo-fylypovych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/pavlo-polubotok.md", "n_findings": 0, "severities": {}}
+{"page": "figures/pavlo-sheremet.md", "n_findings": 0, "severities": {}}
+{"page": "figures/petro-bolbochan.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "figures/petro-kalnyshevskyy.md", "n_findings": 0, "severities": {}}
+{"page": "figures/petro-mohyla.md", "n_findings": 0, "severities": {}}
+{"page": "figures/petro-sahaidachny.md", "n_findings": 0, "severities": {}}
+{"page": "figures/petro-veskliaov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/pylyp-orlyk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/roksolana.md", "n_findings": 0, "severities": {}}
+{"page": "figures/roman-mstyslavych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/roman-ratushny.md", "n_findings": 0, "severities": {}}
+{"page": "figures/roman-shukhevych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/semen-hulak-artemovskyy.md", "n_findings": 0, "severities": {}}
+{"page": "figures/serge-lifar.md", "n_findings": 0, "severities": {}}
+{"page": "figures/serhii-plokhy.md", "n_findings": 0, "severities": {}}
+{"page": "figures/serhiy-korolyov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/serhiy-zhadan.md", "n_findings": 0, "severities": {}}
+{"page": "figures/severyn-nalyvaiko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/sofiya-okunevska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/solomiya-krushelnytska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/sylvestr-kosiv.md", "n_findings": 0, "severities": {}}
+{"page": "figures/symon-petliura.md", "n_findings": 0, "severities": {}}
+{"page": "figures/taras-prokhasko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/taras-shevchenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/valentyna-radzymovska.md", "n_findings": 0, "severities": {}}
+{"page": "figures/valerian-pidmohylnyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-kuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-shkliar.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-stefanyk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-stus.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-sukhomlynskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-symonenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vasyl-vyshyvanyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/viacheslav-chornovil.md", "n_findings": 0, "severities": {}}
+{"page": "figures/viacheslav-lypynskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/victoria-amelina.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vira-kholodna.md", "n_findings": 0, "severities": {}}
+{"page": "figures/vitaly-portnikov.md", "n_findings": 0, "severities": {}}
+{"page": "figures/volodymyr-ivasyuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/volodymyr-monomakh.md", "n_findings": 0, "severities": {}}
+{"page": "figures/volodymyr-samiilenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/volodymyr-vakulenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/volodymyr-velykii.md", "n_findings": 0, "severities": {}}
+{"page": "figures/volodymyr-vernadskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yaroslav-hrytsak.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yevhen-chykalenko.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yevhen-konovalets.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yevhen-paton.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yevhen-pluzhnyk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yevhen-sverstiuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yulian-bachynskyi.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yuri-andrukhovych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yurii-lypa.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yuriy-kondratiuk.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yuriy-lvovych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yuriy-nemyrych.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yuriy-ruf.md", "n_findings": 0, "severities": {}}
+{"page": "figures/yuriy-vynnychuk.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/bohatyri-illiya-dobrynia.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/bylyny-kyivskoho-tsyklu.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/bylyny-sotsialni.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/charivni-kazky.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/dumy-lytsarski.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/dumy-nevilnytski.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/dumy-sotsialno-pobutovi.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/kazky-pro-tvaryn.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/pokhodzhennia-dum.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/sotsialno-pobutovi-kazky.md", "n_findings": 0, "severities": {}}
+{"page": "folk/genres/zastavy-bohatyrski.md", "n_findings": 0, "severities": {}}
+{"page": "folk/lyric/chumatski-burlatski-pisni.md", "n_findings": 0, "severities": {}}
+{"page": "folk/lyric/rodynna-liryka-kolomyiky.md", "n_findings": 0, "severities": {}}
+{"page": "folk/prose/istorychni-perekazy.md", "n_findings": 0, "severities": {}}
+{"page": "folk/prose/narodni-anekdoty.md", "n_findings": 0, "severities": {}}
+{"page": "folk/prose/narodni-balady.md", "n_findings": 0, "severities": {}}
+{"page": "folk/prose/narodni-lehendy.md", "n_findings": 0, "severities": {}}
+{"page": "folk/ritual/koliadky-shchedrivky.md", "n_findings": 0, "severities": {}}
+{"page": "folk/ritual/kupalski-pisni.md", "n_findings": 0, "severities": {}}
+{"page": "folk/ritual/obzhynkovi-pisni.md", "n_findings": 0, "severities": {}}
+{"page": "folk/ritual/rusalni-pisni.md", "n_findings": 0, "severities": {}}
+{"page": "folk/ritual/vesilni-pisni.md", "n_findings": 0, "severities": {}}
+{"page": "folk/ritual/vesnianky-hayivky.md", "n_findings": 0, "severities": {}}
+{"page": "folk/short-forms/prykazky-ta-pryslivia.md", "n_findings": 0, "severities": {}}
+{"page": "folk/short-forms/zahadky.md", "n_findings": 0, "severities": {}}
+{"page": "folk/tradition/holosinnya.md", "n_findings": 0, "severities": {}}
+{"page": "folk/tradition/kobzarstvo-fenomen.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/a2-bridge.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/a2-comprehensive-review.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/a2-finale.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/a2-practice-exam.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/all-cases-practice.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/aspect-concept.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/aspect-in-past.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/aspect-in-vocabulary.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/aspect-mastery.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/because-and-although.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/checkpoint-cases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/checkpoint-dative.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/checkpoint-foundations.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/a2/checkpoint-genitive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/checkpoint-instrumental.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/checkpoint-syntax.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/checkpoint-verbs.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/comparison.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/dative-adjectives-pronouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/dative-nouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/dative-pronouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/dative-verbs.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/dozvillia-i-khobi.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/a2/education-and-work.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/euphony-advanced.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/foundations-practice.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-adjectives-pronouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-dates-numbers.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-intro.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-plural.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-prepositions-direction.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-prepositions-purpose.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/genitive-prepositions-source.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/home-and-daily-life.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/imperative-complete.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/indefinite-negative-pronouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/instrumental-accompaniment.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/instrumental-adjectives-pronouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/instrumental-means.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/instrumental-prepositions.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/instrumental-profession.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/liudyna-i-stosunky.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/locative-expanded.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/metalanguage-morphology.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/metalanguage-phonetics.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/metalanguage-sentences-and-classroom.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/metalanguage-syntax-cases.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/a2/metalanguage-verbs-and-time.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/metalanguage-words-and-cases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/motion-verbs.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/nature-and-traditions.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/numerals-and-cases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/plural-genitive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/plural-nominative-accusative.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/plural-other-cases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/preferences-and-choices.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/purpose-clauses.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/real-conditionals.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/relative-clauses.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/services-and-communication.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/shopping-and-health.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/sviy-and-sebe.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/synonyms-antonyms-style.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/synthetic-future.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/telling-stories-and-travel.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/a2/vocative-expanded.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/which-case-when.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/word-order-emphasis.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/a2/work-and-food.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/adjectives-comparative.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/adjectives-superlative.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/advanced-pronouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/adverbs-comparison-formation.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/alternation-consonants-nouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/alternation-consonants-verbs.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/alternation-vowels.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/aspect-future-tense.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/aspect-in-conditionals.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/aspect-in-imperatives.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/aspect-in-narration.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/aspect-in-negation.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/aspect-past-tense.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/b1-baseline-future-aspect.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/b1-baseline-past-present.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/cases-with-ordinal-numerals.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/cases-with-quantity-expressions.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/checkpoint-aspect.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/checkpoint-cases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/checkpoint-comparison.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/checkpoint-morphophonemics.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/checkpoint-motion.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/checkpoint-participles.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/checkpoint-syntax.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/checkpoint-text-register.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/checkpoint-verbs.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-compound.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-concess.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-condition.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-object.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-purpose.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-reason.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-relative.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/complex-subordinate-time.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/comprehensive-b1-review.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/conditionals-real.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/conditionals-unreal.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/daily-life-and-routines.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/dative-nuances.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/debate-and-opinion.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "grammar/b1/education-and-university.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/figurative-motion.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/genitive-nuances.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/gerund-phrases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/gerunds-imperfective.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/gerunds-perfective.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/health-at-the-doctor.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/homogeneous-members.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/housing-and-renting.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/imperative-nuances.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/instrumental-nuances.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/introductory-words.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/leisure-culture-festivals.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/motion-base-review.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/motion-flight-swim.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/motion-prefixes-arrival.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/motion-prefixes-departure.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/motion-prefixes-in-out.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/motion-prefixes-transit.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/narrative-mastery.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/nature-and-environment.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/noun-subclasses-feminine.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/noun-subclasses-hissing.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/noun-subclasses-masculine.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/participle-phrases.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/participles-active.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/participles-passive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/passive-voice-intro.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/people-and-relationships.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/places-and-locations.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/pluralia-tantum.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/possessive-adjectives.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/practice-exam.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/prepositions-cause-purpose.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/prepositions-spatial-review.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/prepositions-temporal.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/reading-literature.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/reflexive-verbs-nuances.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/reported-speech.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/restaurant-and-food.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/shopping-and-services.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/short-form-adjectives.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/simplification-consonants.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/society-and-media.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/text-compression.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/text-register-formal.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b1/text-register-informal.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/traveling-ukraine.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/verb-formation-suffixes.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/verbal-nouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/vocative-formal.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/word-formation-adjectives.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/word-formation-nouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b1/work-and-career.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/academic-writing.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "grammar/b2/active-participles-past.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/active-participles-present.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/advanced-case-semantics.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/advanced-conjunctions-i.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/advanced-conjunctions-ii.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/aspect-nuances-imperative-infinitive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/aspect-nuances-secondary-imperfectivization.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/b2-final-exam.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/b2-impersonal-passive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/b2-one-member-sentences.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-cases-morphology.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-communication.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/checkpoint-lexicology-i.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-lexicology-ii.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-morphology.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-passive-voice.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-register-domain.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/checkpoint-syntax-i.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/checkpoint-syntax-ii.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/complex-syntax-ellipsis-parcelling.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/conditional-mood-particles.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/correlative-constructions.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/dative-advanced.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/detached-members.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/dim-zhytlo.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/direct-indirect-speech.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/discussion-debate.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/economics-business-vocabulary.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/emphasis-and-inversion.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/genitive-advanced.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/homogeneous-members.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/idioms-animals.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/idioms-nature.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/idioms-somatic.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/instrumental-advanced.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/kharchuvannia-i-kukhnia.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/kupivlia-i-servisy.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/law-justice-vocabulary.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/lexical-stylistic-devices.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/mistsia-i-oriientyry.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/modern-diaspora.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/multi-clause-sentences.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/mystetstvo-i-literatura.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "grammar/b2/nauka-i-doslidzhennia.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/neologisms-borrowings.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/news-analysis.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/numeral-declension-compound-numbers.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/numeral-declension-time-dates.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/parenthetical-expressions.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/participles-vs-relative-clauses.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/passive-in-context.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/passive-voice-system.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/past-passive-participles.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/phonetic-stylistic-devices.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/phrases-word-combinations.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/pluperfect-tense.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/pobut-shchodenne.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/politics-government-vocabulary.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/predicate-types.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/presentation-skills.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "grammar/b2/professional-email-advanced.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/professional-email-basics.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/professional-reports.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/pronoun-system-advanced.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/proverbs-nature-time-caution.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/proverbs-work-wisdom-character.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/questions-deliberative-rhetorical.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/reflexive-passive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/register-business-ukrainian.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/register-formal-informal.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/register-formal-written.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/register-literary-ukrainian.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/register-practice-cross-register-rewriting.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/register-public-discourse.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/religion-in-ukraine.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/secondary-sentence-members.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/set-expressions-combined.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/sport-i-dozvillia.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/stylistic-connectors.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/synonymy-in-registers.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/synonymy-practice-precision.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/synonymy-types-and-rows.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/syntactic-stylistic-devices.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "grammar/b2/tekhnolohii-ta-shi.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/text-analysis.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "grammar/b2/third-person-plural-passive.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/tradytsii-i-zvychai.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/word-formation-abstract-nouns.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/word-formation-adjective-adverbs.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/word-formation-person-suffixes.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/word-formation-place-object-names.md", "n_findings": 0, "severities": {}}
+{"page": "grammar/b2/zdorovya-i-medytsyna.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/1918-1920-viina-i-soiuz.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/1991-referendum.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/2004-krymska-kryza.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/2004-vs-2014.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/akt-nezalezhnosti-1991.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/akt-zluki.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/beresteyska-uniia-analiz.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/bukovyna-mizh-imperiiamy.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/chicken-kyiv.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/chomu-2022-spratsiuvalo.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/chornomorskyi-flot.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/continuity-of-cultural-genocide.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/diaspora-naukovtsi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/diaspora-orhanizatsiyi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/diaspora-ta-zakhidni-istoriky.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/donbas-industrializatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/druha-khvylia-politychna.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/ekonomika-imperii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/emskyi-ukaz-tekst.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/finalnyi-syntez.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/franko-politychni-ese.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/halychyna-natsionalnyi-rukh.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/halychyna-pid-avstriieyu.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/halytsko-volynskyi-litopys-i.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/halytsko-volynskyi-litopys-ii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/hazova-zbroia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-ekonomika.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-heohrafiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-istorio.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-mekhanizmy-i.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-mekhanizmy-ii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-svidky.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holodomor-vyznannia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/holokost-v-ukraini.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/hramoty-ta-akty.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/hranitna-revoliutsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/hreko-katolytska-tserkva.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/hromadianske-suspilstvo.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/istorychna-pamiat-i-polityka.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/khreshchennia-spadshchyna.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/khrushchov-shelest-tsykl.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/khvylovyi-kulish-debaty.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/knyhy-butiia-shevchenko.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/konstytutsiia-orlyka.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/kozatski-litopysy-ohliad.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/krym-bahatosharovyi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/krytyka-dzherel.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/kulturna-rezystentsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/kyievo-pecherskyi-pateryk.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/literaturna-dyskusiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/litopys-hrabianky.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/litopys-samovidtsia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/litopys-velychka.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/lysty-mazepy.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/lysty-stusa.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/malorosiia-konstrukt.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/mazepa-tsykl.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/mekhanizm-kooptatsii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/mekhanizm-znyshchennia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/memorandum-uhh.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/metodolohiia-dekolonizatsii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/nova-ukrainska-istorio.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/pereiaslav-alternatyvy.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/pereiaslav-tsykl.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "historiography/pereyaslavski-statti.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/persha-khvylia-emihratsiyi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/pislya-emsa-halychyna.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/pislya-stalina-shistdesiatnyky.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/pivden-kolonizatsiia-mify.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/polska-i-ukraina-symbioz.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/polskyi-pohliad.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/poltava-naslidky.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/povist-mynulykh-lit-i.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/povist-mynulykh-lit-ii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/pravoslavna-identychnist.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/radianska-antyrelihiyna-polityka.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/radianska-industrializatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/radianska-propaganda.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/radianska-ukrainizatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/radianski-antysemityzm.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/radyanska-istorio.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/rosiiska-imperialna-istorio.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/rozstriliane-kontekst.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/rozumovskyi-tsykl.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/samvydav-shcho-tse.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/shcho-take-istorio.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/sich-dokumenty.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/slobozhanshchyna-identychnist.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/slovo-o-polku-ihorevim.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/suchasna-dezinformatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/svidchennia-holodomoru-i.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/svidchennia-holodomoru-ii.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-ahentsnist.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-diaspora.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-dysydentski-dzherela.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-ekonomichna-kolonizatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-holodomor-studiyi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-informatsiina-viina.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-kozatski-dzherela.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-moderni-dzherela.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-pislya-2014.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-polska-ukraina-2022.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-rehionalna-riznomanitnist.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-relihiina-identychnist.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-rozdorizhzhia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-rozstriliane.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-serednovichni-dzherela.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-tsykl-zrady.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-yevrei-ukraina.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-zakhid-2022.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/syntez-zakhidni-rehiony.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/teatr-kurbasa.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/tretia-khvylia-dipivtsi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/tsykl-kulturnykh-vidrodzhen.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/ukrainska-istoriohrafichna-tradytsiia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/ukrainska-m-iaka-syla.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/ukrainske-pytannia-xxi.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/ukrainski-kontrnararyvy.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/ukrayinskyi-visnyk.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/universaly-khmelnytkoho.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/universaly-unr.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/unr-vybory.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/valuevskyi-tsyrkuliar-tekst.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/volyn-i-pamiat.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/volyn-pamiat-i-travma.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/yanukovych-tsykl.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/yevrei-v-ukraini-do-1917.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakarpattia-tysiacholittia.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakhid-1918.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakhid-1945.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakhid-1994.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakhid-2008.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakhid-2014.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zakhidni-media.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zapovit-ta-lysty-shevchenka.md", "n_findings": 0, "severities": {}}
+{"page": "historiography/zhinky-v-revoiuutsiiakh.md", "n_findings": 0, "severities": {}}
+{"page": "index.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/adjectives-agreement.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/alphabet-glagolitic-cyrillic.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/assault-battery.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/bankrupt-merchants.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/battle-of-kalka.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/body-injury-dual.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/bridge-builders.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/building-of-lavra.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/cheliadin-slaves.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/crimes-abroad.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/daily-life-vocabulary.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/daniel-the-exile.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/davni-teksty-zbirka.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/death-of-monomakh.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/demonology.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/dual-number-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/fall-of-kyiv.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/family-kinship.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/galytsko-volynskyi-literary-art.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/greetings-invocations.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/guardianship.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/hagiography-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/ihor-campaign-chronicle.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/ilarion-sermon-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/inheritance-law.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/izyaslav-mstyslavych.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/kyrylo-turovskyi-propovidi.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/kyrylo-turovskyi-prytchi-molytvy.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/lab-death-of-tsar.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/lab-thief-kuzma.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/lab-zvenyhorod-1.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/law-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/legal-language-debt.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/monomakh-instruction.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/monomakh-statute-usury.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/murder-blood-revenge.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/names-identity.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/nouns-o-a-stems.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/numbers-currency.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/oes-capstone.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/olgovychi-monomakhovychi.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/orthography-yers.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pateryk-literary-form.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/phonology-lab-yers.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pleophony-sound-of-rus.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/prepositions-space.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/princely-administration.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pronouns-self-other.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/property-boundaries.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-baptism-of-rus.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-blinding-vasylko.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-death-of-igor.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-intro-geography.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-lyubech-congress.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-oleg-campaign.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-olga-revenge.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-polovtsian-wars.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-sviatoslav.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-three-brothers.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-varangians.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-volodymyr-choice.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/pvl-yaroslav-wise.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/restitution.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/review-princely-cycle.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/review-social-pyramid.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/roman-mstyslavych.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/rus-panegyric.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/sack-of-kyiv.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/saint-anthony.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/saint-theodosius.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-authenticity-debate.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-bard-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-defeat.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-escape.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-first-battle.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-golden-word.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-hapax-legomena.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-mustering.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-mythology.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-poetic-syntax-lab.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-return.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-review.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-solar-eclipse.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-svyatoslav-dream.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/slovo-yaroslavna-lament.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/smerd-peasants.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/sviatoslav-vsevolodovych.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/syntax-simple-sentences.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/theft-property.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/trade-rights.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/treaty-911-oleg.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/treaty-944-igor.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/verbs-aorist.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/verbs-perfect.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/verbs-present-tense.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/vocative-case.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/walls-speak-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/weaponry-laws.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/witnesses-oaths.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/women-in-law.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/yat-mystery.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/oes/zakup-indentured.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/administrative-reform.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/advanced-property.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/affinity-srodna-pratsia.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/apostasy.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/art-orthography.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/attack-on-bishops.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/bajky-xvii-xviii.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/baroque-letters.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/baroque-lists.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/baroque-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/baroque-syntax.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/battle-descriptions.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/beatitudes-matthew.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/berynda-leksykon.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/black-council.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/chancery-formulae-dating.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/chronicle-lab.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/civil-liberties.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/comparative-lab-parallel.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/constitution-preamble.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/cossack-hierarchy.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/courts-basic.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/criminal-law-murder.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/dialogue-with-latins.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/diplomatic-language.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/divine-songs.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/document-types.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/epistle-to-ostrozky.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/epistles-romans.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/eyewitness-samovydets.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/fables-kharkiv.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/fedorovych-bukvar.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/genesis-creation.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/glorifying-host.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/grammar-lab-parsing.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/guardianship-ruth.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/herasym-smotrytsky-poems.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/holy-mountain-athos.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/hrabianka-heroic-chronicle.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/hramoty-xiv.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/hramoty-xvi-volyn.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/intermedii-xvii-xviii.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/intro-to-ruth.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/judicial-procedure.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/kyievo-mohylianska-shkilna-drama.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/kyiv-mohyla-rhetoric.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/land-law-basics.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/latinisms.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/legal-personhood.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/legal-profession.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/likarski-poradnyky.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/lords-prayer.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/meletiy-smotrytsky-apologia.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/misterii-ta-moralite.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/monumental-style.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/mother-church-weeps.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/nativity-luke.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/need-for-norms.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/nt-contrast-logos.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/orlyk-latin-comparison.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/orthography-letters.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/ostrih-legacy.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/paleography-lab-skoropys.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/panegyric-style.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/parable-prodigal-son.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/parable-sower.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/parts-of-speech.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/pedagogy-brotherhood.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/philosophical-lab.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/poetic-history.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/poeziia-baroko.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/polonisms-in-law.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/prince-ostrozky.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/printing-vocabulary.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "linguistics/ruthenian/prophets-isaiah.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/prosody-meter.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/psalms-liturgical.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/pysovnyk-lystuvannia.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/revelations.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/ruth-capstone.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/separation-of-powers.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/simple-tongue-vyshensky.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/skovoroda-language.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/smotrytsky-grammar-intro.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/social-contract.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/social-critique.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/sovereign-state.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/sovereignty-1588.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/stylistic-contrast-gospel.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/stylistic-levels.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/synonima-slaveno-roska.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/syntax-agreement.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/syntax-complex.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/szlachta-nobility.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/the-heart.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/the-passion.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/the-resurrection.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/the-ruin.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/the-seim.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/the-verb-conjugation.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/transition-to-modern.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/translators-dedication.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/treason.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/two-natures.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/uzhevych-hramatyka.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/velychko-ruin-baroque-1.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/velychko-ruin-baroque-2.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/vernacular-glosses.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/vertep-ukrainskyi-teatr.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/vyshensky-epistles.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/vyshensky-legacy.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/wandering-philosopher.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/wills-testaments.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/womens-rights.md", "n_findings": 0, "severities": {}}
+{"page": "linguistics/ruthenian/zyzaniy-leksys.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/aliev-musayeva-crimean-tatar-ukrainian.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/amelina-new-renaissance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/amelina-renaissance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/anatolii-dimarov-filosofski-kazky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andijewska-magic-realism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrian-kashchenko-cossack-myth.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrii-chaikovskyi-za-sestroiu.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrukhovych-essays.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrukhovych-moscoviad.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrukhovych-perverzion.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrukhovych-postmodern-irony.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrukhovych-recreations.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrusyak-adventures.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/andrusyak-rabbits.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/antonenko-davydovych-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/antonenko-davydovych-smert.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/antonych-green-gospel.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/antonych-mythology.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/antonych-urbanism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/arenev-powder.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/arenev-soul-traps.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/arie-chornobyl.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/artem-chekh-absolute-zero.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/artem-chekh-district-d.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/artem-chekh-who-are-you.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/babenko-witch.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/babich-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bachynsky-140-decibels.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bahrianyi-garden-gethsemane.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bahrianyi-man-runs.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bahrianyi-tiger-trappers.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/barka-yellow-prince.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/barka-zhovtyi-kniaz.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/baroque-poetry-velychkovsky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bazhan-idols.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bazhan-quiet-step.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/berdnyk-prometheus.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/berdnyk-star-corsair-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/berdnyk-star-corsair-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/biblical-themes.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bilozerska-diary.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bilyk-sword-ares.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/black-council-history.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/black-council-plot.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/blyznets-zemlyanyk.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bohdan-zholdak-ukry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/borys-hrinchenko.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bu-ba-bu-carnival.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/bu-ba-bu-the-end-of-soviet.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/chekh-absolute-zero.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/chekh-point-zero.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/chmut-institutions.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/chyzhevsky-baroque-history.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/cult-of-shevchenko.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/cyrillo-methodian-brotherhood.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/decolonization-theory-literature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/deresh-arche.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/deresh-cult-psychotropic.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/deresh-cult.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/deresh-intention.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dermansky-chu-drove.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dermansky-monsters.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/diaspora-connections.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/diaspora-consciousness-mur.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/diaspora-modern-lit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/domontovych-dr-seraphicus.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/domontovych-girl-bear.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/domontovych-intellectuals.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dontsov-chaos.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dontsov-nationalism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dovzhenko-cinema-as-literature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dovzhenko-enchanted-desna.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dovzhenko-ukraine-flames.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/drach-ballads.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/drach-knife-sun.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/drahomanov-chudatski-dumky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/drahomanov-shevchenko.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dray-khmara-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dziuba-internationalism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/dziuba-literature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/emma-andiyevska-new-york-group.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/eneida-feast.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/eneida-part-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/eneida-war.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/essay-origins-polemics.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/essay-synthesis-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/essay-synthesis-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ethnography.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/fantastika-anthology.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/fantastika-synthesis.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-biography.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-fox-mykyta.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-historical-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-letters.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-lviv-period.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-moses.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-social-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-some-words.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-stolen-happiness.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-what-is-progress.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/franko-zakhar-berkut.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/fylypovych-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/gorlis-gorsky-kholodnyi-yar.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/grabowicz-myth-shevchenko.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/grabowicz-poet-prophet.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/haidamaky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/hist-fic-synthesis.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/hlazovyi-satire.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/holoborodko-flying-window.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/holodomor-in-literature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/honchar-banners.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/honchar-cathedral.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/hrushevsky-essayist.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/hrytsak-history-ukraine.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/hrytsak-overcoming-past.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/humor-synthesis.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/hundorova-post-chornobyl-library.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ilchenko-cossack-mamai.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/illia-chernilevskyi-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/introduction-to-kotliarevsky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/iryna-vilde-sestry-richynski.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/istoriia-rusiv-forgery-and-genius.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/istoriia-rusiv-romantics-reception.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ivanychuk-malvy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ivanychuk-scar.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ivanychuk-water.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/izdryk-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/izdryk-votsatsek.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/juvenile-synthesis.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kaidash-family-characters.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kaidash-family-conflict.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kalynets-dissident-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kalytko-borders-lit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/karpenko-karyi-theatre.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kateryna-kalytko-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kateryna-kalytko-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khiba-revut-voly-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khiba-revut-voly-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khiba-revut-voly-style.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khotkevych-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khvylovy-i-am-romance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khvylovy-intro.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khvylovy-pamphlets.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khvylovy-thoughts-current.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khvylovy-ukraine-or-little-russia.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/khvylovy-woodsnipes.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kidruk-bot-thriller.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kidruk-bots.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kidruk-colony-hard-scifi.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kidruk-colony.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kids-folklore.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kids-poetry-anthology.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kipiani-case-of-stus.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kis-survival-as-victory.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/klen-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kobrynska-pershyi-vinok.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kobylianska-nature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kobylianska-persona.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kobylianska-tsarivna.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kobylianska-zemlya.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kokotyukha-chervonyi.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kokotyukha-red.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/konotop-witch.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/korniy-chimaeras.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/korniy-forest.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kostenko-garden-of-unthawed-sculptures.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kostenko-marusia-churai-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kostenko-marusia-churai-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kostenko-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kostomarov-two-rus-nationalities.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kosynka-short-fiction.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotliarevsky-drama-tradition.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotliarevsky-laughter.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsiubynsky-apple-blossom.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsiubynsky-fata-morgana.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsiubynsky-intermezzo.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsiubynsky-shadows-forgotten.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsiubynsky-shadows-revisit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsyubailo-legacy-lit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kotsyubailo-legacy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/koval-prose-renaissance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/koval-storinky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-black-council-revisit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-dramaturgy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-literary-legacy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-myna-mazailo.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-narodnyi-malahii.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-panteleimon-essayist.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kulish-pathetique.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kurbas-berezil-theater.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kurbas-legacy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kurbas-philosophy.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "literature/works/kvitka-bio.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kvitka-dead-mans-easter.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kvitka-language.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/kyiv-school-of-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/language-of-realism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/language-question-linguistics.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/leonid-hlibov.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lepkyi-mazepa-trilogy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lepkyi-mazepa.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-blue-rose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-cassandra.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-forest-song-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-forest-song-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-in-the-catacombs.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-stone-guest.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-ukrainka-dramatic-legacy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-ukrainka-intro.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lesia-ukrainka-voice.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lozko-poetry-of-maidan.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lukash-translation-as-resistance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lutsky-diaspora-bridge.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lutsyshyna-whale.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lypynsky-ham-japheth.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lypynsky-letters-brothers.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lys-century-jacob.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lysiah-rudnytsky-history.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/lyubka-carbide-satire.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/maksym-kryvtsov-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/malaniuk-little-russianism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/malaniuk-poetry.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "literature/works/malkovych-poems.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/malyk-alice.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/malyshko-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/malyshko-songs.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mariia-berlinska-dignity.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/marko-vovchok-instytutka.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/marko-vovchok-marusya.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/markus-infantry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/markus-traces-on-road.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/marusya.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/marynovych-universe-barbed-wire.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/matios-bukovina-trauma.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/matios-sweet-darusia.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mikhnovsky-independent-ukraine.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/modern-memes-as-folklore.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/moisei-fishbein-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mokryk-rebellion-against-empire.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mykhailo-petrenko-romantyka.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mykhailo-starytsky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mykhailo-stelmakh-shchedryi-vechir.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/mykola-dzherya.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nariman-dzhelyal-publicistics.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/natalena-koroleva-lehendy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/natalka-poltavka.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nechuy-levytsky-kaidash-humor.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nechuy-levytsky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nestayko-fantasy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nestayko-forest-school.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nestayko-toreadors-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nestayko-toreadors-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nestayko-toreadors-3.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/new-prose-displacement.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/new-prose-resistance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/new-york-group-poets.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/nezdana-contemporary-women-drama.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/oksenyk-forest-valley.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/oles-oleksandr-liryka.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/oles-the-nightingale.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/olzhych-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/osmachka-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ostap-vyshnia-prison.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ostap-vyshnia-smiles-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ostap-vyshnia-smiles-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/oxana-hundorova-postcolonialism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pachlovska-diaspora-theory.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/panas-myrny-intro.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pavliuk-flesh.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pavliuk-rytm.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pavlo-vyshebaba-soldier-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pchilka-fables.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pidmohylny-city-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pidmohylny-city-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pidmohylny-small-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/plokhy-frontline.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/plokhy-gates-of-europe.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pluzhnyk-galileo.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/pluzhnyk-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/poderviansky-hamlet-critique.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/polozhiy-ilovaisk.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/portnikov-bells.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/portnikov-conclusion.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/prokhasko-fm-halychyna.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/prokhasko-magical-carpathians.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/prokhasko-unsimple.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/prokopovych-baroque-oratory.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rafeyenko-long-times.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/riabchuk-two-ukraines.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rosokhovatsky-cyborgs.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rozstriliane-vidrodzennia-phenomenon.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rudansky-spivomovky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ruthenian-triad-rusalka-dnistrova.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rutkivsky-dzhury-1.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "literature/works/rutkivsky-dzhury-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rutkivsky-dzhury-3.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rutkivsky-dzhury.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rylsky-liryka.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rylsky-neoclassicism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/rylsky-translations.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/samchuk-maria.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/samchuk-mariya-holodomor.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/samvydav-underground-publishing.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sandarmokh-tragedy-erasure.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sashko-dermanskyi-chudove-chudovysko.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/semenko-futurism-manifesto.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/semenko-kobzar-burning.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sherekh-fifth-kharkiv.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shestydesiatnyky-as-phenomenon.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shevchenkos-diary.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shevchuk-three-leaves.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shevelov-history-language.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shevelov-moscow-maros.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shklyar-black-raven-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shklyar-black-raven-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shklyar-marusia.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/shumuk-memoirs.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sich-riflemen-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/skovoroda-baroque-philosophy.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/skovoroda-dialogues-theatre.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/smolych-beautiful-catastrophes.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/snyder-dialogues.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sofia-andrukhovych-amados.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sofia-andrukhovych-felix-austria.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/solomea-pavlychko-modernism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/son.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sosiura-internal-conflict.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sosiura-love-ukraine.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sosiura-red-winter.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/starovyt-my-kyiv.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/starytsky-bohdan.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stefanyk-blue-book.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stefanyk-novellas.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stefanyk-stone-cross.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stepan-rudansky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/storozhenko-devil.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stus-letters-to-son.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stus-moral-imperative.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stus-palimpsests.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stus-phenomenon.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/stus-vertical-of-spirit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sverstiuk-cathedral.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sverstiuk-moral-resistance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/sverstiuk-prodigal-sons-lit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/svitlychny-prison-lyrics.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/symonenko-knights.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/symonenko-truth.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/synthesis-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/synthesis-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/synthesis-3.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/synthesis-4.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/synthesis-5.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tanja-maljartschuk-biography.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tanja-maljartschuk-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/teliha-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/the-artist.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/the-ballads.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/the-testament.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tiutiunnyk-novella-mastery.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tiutiunnyk-three-cuckoos.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/translation-as-cultural-weapon.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tsilyk-cinematic-script.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tychyna-clarinets.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tychyna-soviet-period.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/tychyna-tragic-turn.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/ukrainian-drama-origins.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/unr-war-literature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/upa-underground-literature.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/valeriy-shevchuk-dim-na-hori.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/valeriy-shevchuk-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vaplite-literary-avant-garde.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vinhranovskyi-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vinhranovskyi-prose.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vira-ageyeva-canon.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/voronyi-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/voronyi-symbolism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/voronyna-agent-000.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vorozhbyt-bad-roads.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychenko-black-panther.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychenko-european-stage.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychenko-honesty.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychenko-solar-machine-revisit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychenko-solar-machine.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychuk-hoaxes.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychuk-lviv-tales.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychuk-night-maiden.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/vynnychuk-tango-death.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/war-lit-origins-2014.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/war-lit-synthesis.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/war-literature-as-movement.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/war-poetry-2014-2022.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/war-poetry-full-scale.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/women-in-kobzar.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/women-writers-resistance.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/wwii-bahrianyi-samchuk-war.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/wwii-malaniuk-war-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yakimchuk-apricots-war.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yakovenko-mirror-of-history.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yanovsky-four-sabres.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yanovsky-master-of-the-ship.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yaryna-chornohuz-war.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yefremov-literary-criticism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yermolenko-fluid-ideologies.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yevhen-hutsalo-shistdesiatnyky.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yohansen-doctor-leonardo.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yohansen-experimental.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/young-shevchenko.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yuriy-ruf-steel.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/yuriy-tarnavsky-new-york-group.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabila-poems.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabuzhko-fieldwork.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabuzhko-fortinbras.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabuzhko-longest-journey.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabuzhko-museum.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabuzhko-notre-dame-lit.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zabuzhko-notre-dame.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zahrebelny-death-in-kyiv.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zahrebelny-dyvo.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zahrebelny-roksolana-1.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zahrebelny-roksolana-2.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zavadovych-adventures.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zernya-dotsya.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zerov-ad-fontes.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zerov-criticism.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zerov-kyiv-parnassus.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zerov-sonnets.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-depeche-mode.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-internat-war.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-kharkiv-landscape.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-life-maria.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-orphanage.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-poetry.md", "n_findings": 0, "severities": {}}
+{"page": "literature/works/zhadan-voroshilovgrad.md", "n_findings": 0, "severities": {}}
+{"page": "mastery/c2/academic-publishing.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/advanced-rhetoric.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/building-domain-expertise.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c1-bridge-assessment.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-1-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-1-practice-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-1-practice-ii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/c2-1-review.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-2-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-2-practice-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-2-practice-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-2-review.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-3-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-3-midpoint-checkpoint.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-3-review.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/c2-4-checkpoint.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/c2-4-practice.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-certification-preparation.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/c2-riven-zaversheno.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/capstone-defense.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/capstone-drafting.md", "n_findings": 0, "severities": {}}
+{"page": "mastery/c2/capstone-polish.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/capstone-research-project.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/capstone-revision.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/capstone-topic-selection.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/complete-grammar-review.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/conference-thesis-notes.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/contemporary-literature.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/corpus-linguistics.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/creative-writing-nonfiction.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/creative-writing-poetry.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/creative-writing-prose.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/cross-domain-communication.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/digital-literature.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/dim-i-zhytlovyi-prostir.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/ekolohiya-i-klimat.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/ekonomika-i-dobrobut.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/epistolyarnyi-styl.md", "n_findings": 0, "severities": {}}
+{"page": "mastery/c2/error-analysis.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/final-exam-integrated-skills.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/final-review-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/final-review-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/final-review-iii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/identychnist-tradytsiyi-simya.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/individual-voice-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/individual-voice-ii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/interpretation-advanced.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/intertextuality.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/kharchuvannia-i-kultura-yizhi.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/khudozhniy-styl.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/language-policy-decolonization.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/lexical-stylistics.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/literary-community.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/literary-prizes-canon.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/literary-theory.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/literary-translation-i.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/literary-translation-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/liudyna-i-suspilna-rol.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/media-i-dezinformatsiya.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/milozvuchnist-complete.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/misto-selo-prostir.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/narratology.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/native-like-fluency.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/naukovyi-styl-mastery.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/ofitsiynyi-styl-mastery.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/osvita-nauka-innovatsiyi.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/podoroz-dozvillya-kultura.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/practical-rhetoric.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/professional-correspondence.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/professional-discussions.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/professional-document-types.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/professional-identity.md", "n_findings": 0, "severities": {}}
+{"page": "mastery/c2/professional-language-overview.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/professional-oral-communication.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/professional-portfolio-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/professional-portfolio-ii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/professional-research-skills.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/publitsystychnyi-styl.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/rare-archaic-forms.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/reading-professional-texts-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/reading-professional-texts-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/regional-varieties.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/relihiynyi-styl.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/rhythm-prosody.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/rozmovnyi-styl.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/sociolinguistic-mastery.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/sport-i-liudskyi-potentsial.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/spozhyvannya-i-posluhy.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/style-blending.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/style-transformation-i.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/style-transformation-ii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/stylistic-devices-mastery.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/suspilstvo-i-hromadyanstvo.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/syntactic-stylistics.md", "n_findings": 0, "severities": {}}
+{"page": "mastery/c2/teaching-ukrainian-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/teaching-ukrainian-ii.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/teaching-ukrainian-iii.md", "n_findings": 0, "severities": {}}
+{"page": "mastery/c2/terminology-acquisition-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/terminology-acquisition-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/text-coherence.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/translation-practice-i.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/translation-practice-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/translation-theory-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/translation-theory.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/writing-literary-essays.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/writing-professional-documents-i.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/writing-professional-documents-ii.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "mastery/c2/zdorovya-i-medytsyna.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "mastery/c2/zovnishnia-polityka-i-diaspora.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "pedagogy/a1/a1-finale.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/around-the-city.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/at-the-cafe.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-actions.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-communication.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-first-contact.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-food-shopping.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-my-world.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-places.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/checkpoint-time-nature.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/colors.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/days-and-months.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/emergencies.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/euphony.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/food-and-drink.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/free-time.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/health.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/hey-friend.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/holidays.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/how-many.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/i-eat-i-drink.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/i-want-i-can.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/linking-ideas.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/many-things.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/my-city.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/my-day.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/my-family.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/my-morning.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/my-plans.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/my-story.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/people-around-me.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/please-do-this.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/questions.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/reading-ukrainian.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/shopping.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/sounds-letters-and-hello.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/special-signs.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/stress-and-melody.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/things-have-gender.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/this-and-that.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/transport.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/verbs-group-one.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/verbs-group-two.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/weather.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/what-happened.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/what-i-like.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "pedagogy/a1/what-is-it-like.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/what-time.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/what-will-happen.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/when-and-where.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/where-from.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/where-is-it.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/where-to.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/who-am-i.md", "n_findings": 0, "severities": {}}
+{"page": "pedagogy/a1/yesterday.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "periods/afhanistan.md", "n_findings": 0, "severities": {}}
+{"page": "periods/andrusivske-peremyrya.md", "n_findings": 0, "severities": {}}
+{"page": "periods/aneksiia-krymu.md", "n_findings": 0, "severities": {}}
+{"page": "periods/babyn-yar.md", "n_findings": 0, "severities": {}}
+{"page": "periods/beresteyska-uniia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/bilshovytsko-ukrainska-viyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/bitva-pid-zhovtymy-vodamy.md", "n_findings": 0, "severities": {}}
+{"page": "periods/bohdan-khmelnytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/boiare-i-shliakhta.md", "n_findings": 0, "severities": {}}
+{"page": "periods/bratstva-i-osvita.md", "n_findings": 0, "severities": {}}
+{"page": "periods/bucha-irpin.md", "n_findings": 0, "severities": {}}
+{"page": "periods/bukovyna-zakarpattia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/chornobyl.md", "n_findings": 0, "severities": {}}
+{"page": "periods/danylo-apostol.md", "n_findings": 0, "severities": {}}
+{"page": "periods/danylo-halytskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/deportatsii-ukraintsiv.md", "n_findings": 0, "severities": {}}
+{"page": "periods/destalinizatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/diaspora.md", "n_findings": 0, "severities": {}}
+{"page": "periods/dmytro-vyshnevetskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/drahomanov.md", "n_findings": 0, "severities": {}}
+{"page": "periods/druha-svitova-pochatok.md", "n_findings": 0, "severities": {}}
+{"page": "periods/dyrektoriia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/franko-lesia-hrinchenko.md", "n_findings": 0, "severities": {}}
+{"page": "periods/galytsko-volynska-derzhava.md", "n_findings": 0, "severities": {}}
+{"page": "periods/greeks-crimea-olbia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/habsburzka-halichyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/holodomor-mekhanizm.md", "n_findings": 0, "severities": {}}
+{"page": "periods/holodomor-pamiat.md", "n_findings": 0, "severities": {}}
+{"page": "periods/hromadske-suspilstvo.md", "n_findings": 0, "severities": {}}
+{"page": "periods/hromady.md", "n_findings": 0, "severities": {}}
+{"page": "periods/hrushevskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/hryhorii-skovoroda.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ivan-mazepa-derzhavnyk.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ivan-mazepa-kultura.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ivan-mazepa-poltava.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ivan-sirko.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "periods/kakhovska-hes.md", "n_findings": 0, "severities": {}}
+{"page": "periods/karpatska-ukraina.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "periods/khmelnychchyna-prychyny.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kholodnyi-yar.md", "n_findings": 0, "severities": {}}
+{"page": "periods/khotynska-viyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/khozary-i-sloviany.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kinets-halytsko-volyni.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kinets-hetmanshchyny.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kniazivski-usobiytsi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/koliivshchyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kost-hordiyenko-sich.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "periods/kozatska-derzhava.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kozatska-kultura.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kozatske-viisko.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kozatski-povstannia-16.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kozatstvo-vytoky.md", "n_findings": 0, "severities": {}}
+{"page": "periods/krym-1954.md", "n_findings": 0, "severities": {}}
+{"page": "periods/krymske-khanstvo.md", "n_findings": 0, "severities": {}}
+{"page": "periods/krymski-tatary-pislia-2014.md", "n_findings": 1, "severities": {"warning": 1}}
+{"page": "periods/krypatsvo-selo.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kultura-kyivskoi-rusi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/kyrylo-mefodiivtsi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/liublinska-uniia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/liudy-ricchi-pospolytoi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ludy-rusi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/mariupol-azovstal.md", "n_findings": 0, "severities": {}}
+{"page": "periods/mekhanizm-teroru.md", "n_findings": 0, "severities": {}}
+{"page": "periods/mizhnarodna-pidtrymka.md", "n_findings": 0, "severities": {}}
+{"page": "periods/mongolska-navala.md", "n_findings": 0, "severities": {}}
+{"page": "periods/morski-pokhody.md", "n_findings": 0, "severities": {}}
+{"page": "periods/movna-polityka.md", "n_findings": 0, "severities": {}}
+{"page": "periods/mykhailo-chernigivskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/nezalezhnist-1991.md", "n_findings": 0, "severities": {}}
+{"page": "periods/nova-serbiya.md", "n_findings": 0, "severities": {}}
+{"page": "periods/oleh-ihor.md", "n_findings": 0, "severities": {}}
+{"page": "periods/olha-sviatoslav.md", "n_findings": 0, "severities": {}}
+{"page": "periods/opryshky.md", "n_findings": 0, "severities": {}}
+{"page": "periods/oun.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pacyfikatsiia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pavlo-polubotok.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pereyaslavska-uhoda.md", "n_findings": 0, "severities": {}}
+{"page": "periods/persha-svitova.md", "n_findings": 0, "severities": {}}
+{"page": "periods/petro-kalnyshevskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/petro-mohyla.md", "n_findings": 0, "severities": {}}
+{"page": "periods/petro-sahaidachnyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pivden-novorosiia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pomarancheva-revoliutsiia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/povnomasshtabne-vtorhnessnia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/povoienne-vidbudova.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pravoslavna-tserkva-17.md", "n_findings": 0, "severities": {}}
+{"page": "periods/pylyp-orlyk-konstytutsiia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/revoliutsiia-hidnosti.md", "n_findings": 0, "severities": {}}
+{"page": "periods/rich-pospolyta.md", "n_findings": 0, "severities": {}}
+{"page": "periods/rosiiska-imperiia-ukraina.md", "n_findings": 0, "severities": {}}
+{"page": "periods/rozstriliane-vidrodzennia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ruina-i.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ruina-ii.md", "n_findings": 0, "severities": {}}
+{"page": "periods/rukh.md", "n_findings": 0, "severities": {}}
+{"page": "periods/rus-ta-susidy.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ruska-pravda.md", "n_findings": 0, "severities": {}}
+{"page": "periods/scythians-sarmatians.md", "n_findings": 0, "severities": {}}
+{"page": "periods/shevchenko-awakening.md", "n_findings": 0, "severities": {}}
+{"page": "periods/shistdesiatnyky.md", "n_findings": 0, "severities": {}}
+{"page": "periods/shliakh-nezalezhnosti.md", "n_findings": 0, "severities": {}}
+{"page": "periods/sichovi-striltsi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/skoropadskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/slavic-tribes.md", "n_findings": 0, "severities": {}}
+{"page": "periods/slobozhanshchyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/sloviany-origins.md", "n_findings": 0, "severities": {}}
+{"page": "periods/sofiya-kyivska.md", "n_findings": 0, "severities": {}}
+{"page": "periods/surgunlik.md", "n_findings": 0, "severities": {}}
+{"page": "periods/symon-petliura-revolution.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-dvokniazivstvo.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-imperska-doba.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-khmelnychchyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-kozatstvo-vytoky.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-kyivska-rus.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-lytva-polska.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-nezalezhnist.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-revoliutsiia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-trahedii.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-viyna.md", "n_findings": 0, "severities": {}}
+{"page": "periods/syntez-vytoky-1.md", "n_findings": 0, "severities": {}}
+{"page": "periods/tomos.md", "n_findings": 0, "severities": {}}
+{"page": "periods/trypillian-civilization.md", "n_findings": 0, "severities": {}}
+{"page": "periods/tsentralna-rada.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ukraine-90s.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ukrainska-helsinska-hrupa.md", "n_findings": 0, "severities": {}}
+{"page": "periods/ukrainski-zemli-u-vkl.md", "n_findings": 0, "severities": {}}
+{"page": "periods/upa.md", "n_findings": 0, "severities": {}}
+{"page": "periods/valuevskyi-emskyi.md", "n_findings": 0, "severities": {}}
+{"page": "periods/velyke-kniazivstvo-lytovske.md", "n_findings": 0, "severities": {}}
+{"page": "periods/viyna-donbas.md", "n_findings": 1, "severities": {"critical": 1}}
+{"page": "periods/voienna-ekonomika.md", "n_findings": 0, "severities": {}}
+{"page": "periods/volodymyr-khreshchennia.md", "n_findings": 0, "severities": {}}
+{"page": "periods/volodymyr-monomakh.md", "n_findings": 0, "severities": {}}
+{"page": "periods/yanukovych.md", "n_findings": 0, "severities": {}}
+{"page": "periods/yaroslav-wise.md", "n_findings": 0, "severities": {}}
+{"page": "periods/yurii-nemyrych.md", "n_findings": 0, "severities": {}}
+{"page": "periods/zaporizka-sich.md", "n_findings": 0, "severities": {}}
+{"page": "periods/zasnuvannia-kyieva.md", "n_findings": 0, "severities": {}}
+{"page": "periods/zborivska-bila-tserkva.md", "n_findings": 0, "severities": {}}
+{"page": "periods/zlochyny-stiikist.md", "n_findings": 0, "severities": {}}
+{"page": "periods/zunr.md", "n_findings": 0, "severities": {}}
