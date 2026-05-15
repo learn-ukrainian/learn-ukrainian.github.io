@@ -213,6 +213,7 @@ data/ua-gec/
 # Archive.org and intermediate per-engine OCR outputs. The committed
 # deliverable is audit/etymology-ocr-feasibility/REPORT.md only.
 data/raw/esum/jp2-staging/
+data/raw/esum/gemini-ocr/
 audit/etymology-ocr-feasibility/raw-outputs/
 
 .build.lock
