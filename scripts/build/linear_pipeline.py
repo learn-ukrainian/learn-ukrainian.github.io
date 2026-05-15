@@ -927,24 +927,33 @@ _TEXTBOOK_REFERENCE_TITLE_RE = re.compile(
     r"^(?P<author>\S+)\s+Grade\s+(?P<grade>\d+),\s*p\.\s*(?P<page>\d+)$",
     re.IGNORECASE,
 )
-_TEXTBOOK_AUTHOR_TRANSLITS = {
-    "Караман": ["karaman"],
-    "Захарійчук": ["zakhariychuk", "zaharijchuk", "zahariichuk"],
-    "Кравцова": ["kravcova", "kravtsova"],
-    "Авраменко": ["avramenko"],
-    "Глазова": ["glazova", "hlazova"],
-    "Заболотний": ["zabolotnyi", "zabolotnij"],
-    "Захарчук": ["zakharchuk"],
-    "Вашуленко": ["vashulenko"],
-    "Большакова": ["bolshakova"],
-    "Міщенко": ["mishhenko", "mishchenko"],
-    "Літвінова": ["litvinova"],
-    "Литвінова": ["litvinova"],
-    "Голуб": ["golub"],
-    "Варзацька": ["varzatska"],
-    "Пономарова": ["ponomarova"],
-    "Пономарьова": ["ponomarova"],
+
+# Cyrillic spelling-variant canonicalization. Maps non-canonical Cyrillic
+# author spellings (regional/historical variants like Литвінова or the
+# soft-sign-bearing Пономарьова) to the canonical form stored in
+# textbooks.author_uk. This is NOT transliteration — it never crosses
+# writing systems. Add entries only when a real plan citation surfaces a
+# variant spelling not in textbooks.author_uk.
+_CYRILLIC_AUTHOR_CANONICAL: dict[str, str] = {
+    "Литвінова": "Літвінова",
+    "Пономарьова": "Пономарова",
 }
+
+# Historical: an _TEXTBOOK_AUTHOR_TRANSLITS dict lived here and mapped
+# Cyrillic plan-author names to Latin source_file fragments. It is gone:
+# the matcher now queries textbooks.author_uk directly (Cyrillic-native).
+# The Latin→Cyrillic bridge survives only in
+# scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py for the
+# one-time back-fill of historical rows. See ADR
+# docs/decisions/2026-05-15-cyrillic-native-matcher.md.
+
+
+def _canonicalize_author_uk(author: str) -> str:
+    """Map a Cyrillic author name to its canonical form (handles spelling variants).
+
+    Pure Cyrillic-to-Cyrillic mapping; never crosses writing systems.
+    """
+    return _CYRILLIC_AUTHOR_CANONICAL.get(author, author)
 
 
 def _parse_textbook_reference_title(title: str) -> tuple[str, int, int] | None:
@@ -968,24 +977,29 @@ def _source_files_for_textbook_reference(
     author: str,
     grade: int,
 ) -> list[str] | None:
-    translits = _TEXTBOOK_AUTHOR_TRANSLITS.get(author)
-    if not translits:
+    """Resolve source_files for a Cyrillic-author + grade citation.
+
+    Queries textbooks.author_uk directly — no transliteration, no
+    LIKE patterns. Returns None if the author has no rows at any grade
+    (treated as "unknown author"), [] if rows exist for the author but
+    not at this grade, or a non-empty list of source_files.
+    """
+    canonical = _canonicalize_author_uk(author)
+    has_any_rows = conn.execute(
+        "SELECT 1 FROM textbooks WHERE author_uk = ? LIMIT 1",
+        (canonical,),
+    ).fetchone()
+    if has_any_rows is None:
         return None
 
-    patterns = [
-        pattern
-        for translit in translits
-        for pattern in (f"%-{translit}-%", f"%-{translit}")
-    ]
-    author_clauses = " OR ".join("source_file LIKE ?" for _ in patterns)
     rows = conn.execute(
-        f"""
+        """
         SELECT DISTINCT source_file
         FROM textbooks
-        WHERE source_file LIKE ?
-          AND ({author_clauses})
+        WHERE author_uk = ?
+          AND grade = ?
         """,
-        (f"{grade}-klas-%", *patterns),
+        (canonical, str(grade)),
     ).fetchall()
     return sorted(
         (str(row["source_file"]) for row in rows),

@@ -140,6 +140,7 @@ def _make_textbooks_db(path: Path) -> sqlite3.Connection:
             source_file TEXT NOT NULL DEFAULT '',
             grade TEXT DEFAULT '',
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             char_count INTEGER DEFAULT 0
         );
         """
@@ -161,6 +162,7 @@ def test_ingest_entries_round_trip(tmp_path: Path) -> None:
         source_file="test-fixture-source",
         txt_filename="fixture.txt",
         author="Anna Ohoiko",
+        author_uk="Анна Огоїко",
         grade="",
         max_entry_number=10,
     )
@@ -198,6 +200,7 @@ def test_ingest_entries_idempotent(tmp_path: Path) -> None:
         source_file="t",
         txt_filename="fixture.txt",
         author="A",
+        author_uk="А",
         grade="",
         max_entry_number=10,
     )
@@ -225,6 +228,7 @@ def test_ingest_entries_force_overwrites(tmp_path: Path) -> None:
         source_file="t",
         txt_filename="fixture.txt",
         author="A",
+        author_uk="А",
         grade="",
         max_entry_number=10,
     )

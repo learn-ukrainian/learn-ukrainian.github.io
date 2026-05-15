@@ -45,12 +45,13 @@ def fake_db(tmp_path: Path) -> Path:
             source_file TEXT NOT NULL DEFAULT '',
             grade TEXT DEFAULT '',
             author TEXT DEFAULT '',
+            author_uk TEXT DEFAULT '',
             char_count INTEGER DEFAULT 0
         );
         """
     )
     rows = [
-        # year-suffix file — matched by `%-translit-%`
+        # year-suffix textbook
         (
             "4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0162",
             "Сторінка 100",
@@ -59,8 +60,11 @@ def fake_db(tmp_path: Path) -> Path:
             "4-klas-ukrayinska-mova-zaharijchuk-2021-1",
             "4",
             "zaharijchuk",
+            "Захарійчук",
         ),
-        # no-year-suffix file — matched only by `%-translit`
+        # no-year-suffix textbook (legacy ingest left author empty;
+        # post-migration the orphan back-fill still populates author_uk
+        # via source_file pattern)
         (
             "4-klas-ukrmova-zaharijchuk_s0050",
             "Сторінка 50",
@@ -68,6 +72,7 @@ def fake_db(tmp_path: Path) -> Path:
             "4-klas-ukrmova-zaharijchuk",
             "4",
             "",
+            "Захарійчук",
         ),
         # Grade 10 textbook for level-mismatch + topic-mismatch cases
         (
@@ -77,11 +82,12 @@ def fake_db(tmp_path: Path) -> Path:
             "10-klas-ukrmova-karaman-2018",
             "10",
             "karaman",
+            "Караман",
         ),
     ]
     conn.executemany(
         "INSERT INTO textbooks (chunk_id, title, text, source_file, "
-        "grade, author) VALUES (?, ?, ?, ?, ?, ?)",
+        "grade, author, author_uk) VALUES (?, ?, ?, ?, ?, ?, ?)",
         rows,
     )
     conn.commit()
@@ -137,14 +143,41 @@ def test_parse_tracks_rejects_unknown_and_accepts_csv():
         _parse_tracks("")
 
 
-def test_source_files_for_fixed_pattern_catches_no_year_file(fake_db: Path):
-    """The FIXED matcher must find `4-klas-ukrmova-zaharijchuk` (no
-    year suffix) alongside the dated 2021 file."""
+def test_source_files_for_cyrillic_query_finds_both_files(fake_db: Path):
+    """The Cyrillic-native matcher resolves both the dated and undated
+    source_files when their author_uk = 'Захарійчук' and grade = '4'."""
     with sqlite3.connect(str(fake_db)) as conn:
         conn.row_factory = sqlite3.Row
-        files = _source_files_for(conn, ["zaharijchuk"], 4)
+        files = _source_files_for(conn, "Захарійчук", 4)
     assert "4-klas-ukrmova-zaharijchuk" in files
     assert "4-klas-ukrayinska-mova-zaharijchuk-2021-1" in files
+
+
+def test_source_files_for_canonicalizes_spelling_variants(fake_db: Path):
+    """Литвінова → Літвінова canonicalization in the audit's matcher."""
+    # Insert a Літвінова grade-7 row inline (the fake_db fixture covers
+    # only Захарійчук + Караман; this test extends it).
+    with sqlite3.connect(str(fake_db)) as conn:
+        conn.execute(
+            "INSERT INTO textbooks "
+            "(chunk_id, title, text, source_file, grade, author, author_uk) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                "7-klas-ukrmova-litvinova-2024_s0055",
+                "Сторінка 51",
+                "Лексика. Прочитайте.",
+                "7-klas-ukrmova-litvinova-2024",
+                "7",
+                "litvinova",
+                "Літвінова",
+            ),
+        )
+        conn.commit()
+        conn.row_factory = sqlite3.Row
+        primary = _source_files_for(conn, "Літвінова", 7)
+        variant = _source_files_for(conn, "Литвінова", 7)
+    assert primary == variant
+    assert "7-klas-ukrmova-litvinova-2024" in primary
 
 
 def test_audit_citation_topic_mismatch(fake_db: Path):
@@ -233,6 +266,24 @@ def test_audit_citation_ghost_page(fake_db: Path):
 
 
 def test_audit_citation_ghost_source(fake_db: Path):
+    # Add a Міщенко row at Grade 7 so the author IS in the corpus, just
+    # not at Grade 4 — this is the GHOST_SOURCE semantic.
+    with sqlite3.connect(str(fake_db)) as conn:
+        conn.execute(
+            "INSERT INTO textbooks (chunk_id, title, text, source_file, "
+            "grade, author, author_uk) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                "7-klas-ukrmova-mishhenko-2024_s0050",
+                "Сторінка 50",
+                "Фразеологізми.",
+                "7-klas-ukrmova-mishhenko-2024",
+                "7",
+                "mishhenko",
+                "Міщенко",
+            ),
+        )
+        conn.commit()
+
     cite = Citation(
         plan_slug="x",
         level="a1",
@@ -246,7 +297,7 @@ def test_audit_citation_ghost_source(fake_db: Path):
     with sqlite3.connect(str(fake_db)) as conn:
         conn.row_factory = sqlite3.Row
         finding = _audit_citation(cite, "test plan text", conn)
-    # Міщенко exists in TRANSLITS but not for Grade 4 in our fixture
+    # Міщенко exists in textbooks.author_uk (Grade 7) but not Grade 4.
     assert finding.mode == "GHOST_SOURCE"
 
 

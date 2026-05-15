@@ -8,6 +8,12 @@ from scripts.build import linear_pipeline
 
 
 def _seed_textbook_db(path: Path, rows: list[dict[str, Any]]) -> None:
+    """Seed a textbooks table that matches the post-migration schema.
+
+    Rows MUST provide ``author_uk`` (Cyrillic). The legacy Latin
+    ``author`` field is optional and unused by the runtime matcher; it
+    is kept for backwards compatibility with archived analytics.
+    """
     with sqlite3.connect(str(path)) as conn:
         conn.execute(
             """
@@ -19,6 +25,7 @@ def _seed_textbook_db(path: Path, rows: list[dict[str, Any]]) -> None:
                 source_file TEXT NOT NULL,
                 grade TEXT,
                 author TEXT,
+                author_uk TEXT DEFAULT '',
                 char_count INTEGER DEFAULT 0,
                 parent_section_id INTEGER
             )
@@ -28,9 +35,9 @@ def _seed_textbook_db(path: Path, rows: list[dict[str, Any]]) -> None:
             conn.execute(
                 """
                 INSERT INTO textbooks (
-                    id, chunk_id, title, text, source_file, grade, author
+                    id, chunk_id, title, text, source_file, grade, author, author_uk
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     index,
@@ -40,6 +47,7 @@ def _seed_textbook_db(path: Path, rows: list[dict[str, Any]]) -> None:
                     row["source_file"],
                     row.get("grade", ""),
                     row.get("author", ""),
+                    row["author_uk"],
                 ),
             )
 
@@ -60,6 +68,7 @@ def test_karaman_grade10_p187_resolves_to_chunk(
                 "source_file": "10-klas-ukrmova-karaman-2018",
                 "grade": "10",
                 "author": "karaman",
+                "author_uk": "Караман",
             }
         ],
     )
@@ -91,6 +100,7 @@ def test_zakhariychuk_grade4_p162_reports_corpus_missing_deterministically(
                 "source_file": "4-klas-ukrayinska-mova-zaharijchuk-2021-1",
                 "grade": "4",
                 "author": "zaharijchuk",
+                "author_uk": "Захарійчук",
             }
         ],
     )
@@ -121,6 +131,7 @@ def test_zakhariychuk_grade4_p162_matches_source_file_without_suffix(
                 "source_file": "4-klas-ukrayinska-mova-zaharijchuk-2021-1",
                 "grade": "4",
                 "author": "zaharijchuk",
+                "author_uk": "Захарійчук",
             },
             {
                 "chunk_id": "4-klas-ukrmova-zaharijchuk_s0162",
@@ -129,6 +140,7 @@ def test_zakhariychuk_grade4_p162_matches_source_file_without_suffix(
                 "source_file": "4-klas-ukrmova-zaharijchuk",
                 "grade": "4",
                 "author": "zaharijchuk",
+                "author_uk": "Захарійчук",
             },
         ],
     )
@@ -193,6 +205,7 @@ def test_litvinova_grade7_p55_resolves_to_chunk(
                 "source_file": "7-klas-ukrmova-litvinova-2024",
                 "grade": "7",
                 "author": "litvinova",
+                "author_uk": "Літвінова",
             }
         ],
     )
@@ -227,6 +240,7 @@ def test_litvinova_cyrillic_variant_resolves_same_as_primary(
                 "source_file": "5-klas-ukrmova-litvinova-2022",
                 "grade": "5",
                 "author": "litvinova",
+                "author_uk": "Літвінова",
             }
         ],
     )
@@ -262,6 +276,7 @@ def test_golub_grade6_p179_resolves_to_chunk(
                 "source_file": "6-klas-ukrmova-golub-2023",
                 "grade": "6",
                 "author": "golub",
+                "author_uk": "Голуб",
             }
         ],
     )
@@ -293,6 +308,7 @@ def test_varzatska_grade4_p38_resolves_to_chunk(
                 "source_file": "4-klas-ukrayinska-mova-varzatska-2021-1",
                 "grade": "4",
                 "author": "varzatska",
+                "author_uk": "Варзацька",
             }
         ],
     )
@@ -327,6 +343,7 @@ def test_ponomarova_grade3_p86_resolves_to_chunk(
                 "source_file": "3-klas-ukrainska-mova-ponomarova-2020-1",
                 "grade": "3",
                 "author": "ponomarova",
+                "author_uk": "Пономарова",
             }
         ],
     )
@@ -364,6 +381,7 @@ def test_ponomarova_cyrillic_variant_resolves_same_as_primary(
                 "source_file": "4-klas-ukrayinska-mova-ponomarova-2021-1",
                 "grade": "4",
                 "author": "ponomarova",
+                "author_uk": "Пономарова",
             }
         ],
     )
@@ -397,6 +415,7 @@ def test_textbook_excerpt_context_uses_reference_title_for_direct_lookup(
                 "source_file": "10-klas-ukrmova-karaman-2018",
                 "grade": "10",
                 "author": "karaman",
+                "author_uk": "Караман",
             }
         ],
     )

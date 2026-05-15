@@ -11,13 +11,14 @@ classifying failure modes:
     GHOST_PAGE        source_file exists but no chunk for that page
     TOPIC_MISMATCH    chunk exists but text is unrelated to the plan topic
     LEVEL_MISMATCH    grade >= PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS[track] (per-track policy)
-    UNKNOWN_AUTHOR    author not in _TEXTBOOK_AUTHOR_TRANSLITS (canonical 10)
+    UNKNOWN_AUTHOR    author not present in textbooks.author_uk
     OK                resolves cleanly with on-topic chunk
 
-The resolver uses the FIXED LIKE pattern (both `%-{translit}-%` AND
-`%-{translit}`) so the matcher bug for source_files without a year
-suffix (e.g. `4-klas-ukrmova-zaharijchuk`) does not produce spurious
-GHOST_SOURCE flags.
+The resolver queries ``textbooks.author_uk`` directly (Cyrillic-native).
+Spelling variants are canonicalized via ``_canonicalize_author_uk``
+(Литвінова ≡ Литвінова, Пономарьова ≡ Пономарова). See
+``docs/decisions/2026-05-15-cyrillic-native-matcher.md`` for the
+decolonization rationale.
 
 Usage:
     .venv/bin/python scripts/audit/plan_references_audit.py
@@ -36,7 +37,6 @@ import json
 import re
 import sqlite3
 import sys
-from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -62,31 +62,20 @@ PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS: dict[str, int] = {
     "c2": 11,
 }
 
-# Mirror of scripts/build/linear_pipeline.py:_TEXTBOOK_AUTHOR_TRANSLITS.
-# Edit there, not here — this is the audit's reference snapshot.
-CANONICAL_TRANSLITS: dict[str, list[str]] = {
-    "Караман": ["karaman"],
-    "Захарійчук": ["zakhariychuk", "zaharijchuk", "zahariichuk"],
-    "Кравцова": ["kravcova", "kravtsova"],
-    "Авраменко": ["avramenko"],
-    "Глазова": ["glazova", "hlazova"],
-    "Заболотний": ["zabolotnyi", "zabolotnij"],
-    "Захарчук": ["zakharchuk"],
-    "Вашуленко": ["vashulenko"],
-    "Большакова": ["bolshakova"],
-    "Міщенко": ["mishhenko", "mishchenko"],
-    "Літвінова": ["litvinova"],
-    "Литвінова": ["litvinova"],
-    "Голуб": ["golub"],
-    "Варзацька": ["varzatska"],
-    "Пономарова": ["ponomarova"],
-    "Пономарьова": ["ponomarova"],
+# Cyrillic spelling-variant canonicalization. Pure Cyrillic-to-Cyrillic
+# mapping for plan citations that use a non-canonical spelling
+# (Литвінова → Літвінова; Пономарьова → Пономарова). Mirrors
+# scripts/build/linear_pipeline.py:_CYRILLIC_AUTHOR_CANONICAL. Edit
+# there, not here — this is the audit's reference snapshot.
+_CYRILLIC_AUTHOR_CANONICAL: dict[str, str] = {
+    "Литвінова": "Літвінова",
+    "Пономарьова": "Пономарова",
 }
 
-# Authors observed in plans but not in CANONICAL_TRANSLITS. Used to
-# suggest extensions to _TEXTBOOK_AUTHOR_TRANSLITS in the aggregate
-# findings section — never to silently resolve UNKNOWN_AUTHOR citations.
-SUGGESTED_TRANSLITS: dict[str, list[str]] = {}
+
+def _canonicalize_author_uk(author: str) -> str:
+    """Canonical-form lookup; pass-through on miss."""
+    return _CYRILLIC_AUTHOR_CANONICAL.get(author, author)
 
 # "Author Grade N, p.M" / "с. M" / "стор. M". Cyrillic author block,
 # Grade integer, then a page-style marker followed by digits.
@@ -225,26 +214,34 @@ def _extract_citations(
 
 
 def _source_files_for(
-    conn: sqlite3.Connection, translits: Iterable[str], grade: int
+    conn: sqlite3.Connection, author_uk: str, grade: int
 ) -> list[str]:
-    """FIXED matcher: matches `%-translit-%` (year suffix present) OR
-    `%-translit` (no year suffix, e.g. 4-klas-ukrmova-zaharijchuk)."""
-    translits = list(translits)
-    if not translits:
+    """Cyrillic-native matcher: queries textbooks.author_uk + grade directly.
+
+    Applies _canonicalize_author_uk to handle spelling variants
+    (Литвінова ≡ Літвінова, Пономарьова ≡ Пономарова).
+    """
+    if not author_uk:
         return []
-    clauses = []
-    params: list[str] = [f"{grade}-klas-%"]
-    for t in translits:
-        clauses.append("source_file LIKE ?")
-        params.append(f"%-{t}-%")
-        clauses.append("source_file LIKE ?")
-        params.append(f"%-{t}")
-    sql = (
-        "SELECT DISTINCT source_file FROM textbooks "
-        f"WHERE source_file LIKE ? AND ({' OR '.join(clauses)})"
-    )
-    rows = conn.execute(sql, params).fetchall()
+    canonical = _canonicalize_author_uk(author_uk)
+    rows = conn.execute(
+        (
+            "SELECT DISTINCT source_file FROM textbooks "
+            "WHERE author_uk = ? AND grade = ?"
+        ),
+        (canonical, str(grade)),
+    ).fetchall()
     return sorted(str(r[0]) for r in rows)
+
+
+def _author_uk_exists(conn: sqlite3.Connection, author_uk: str) -> bool:
+    """True iff at least one row exists with this Cyrillic author at any grade."""
+    canonical = _canonicalize_author_uk(author_uk)
+    row = conn.execute(
+        "SELECT 1 FROM textbooks WHERE author_uk = ? LIMIT 1",
+        (canonical,),
+    ).fetchone()
+    return row is not None
 
 
 def _fetch_chunk(
@@ -318,39 +315,21 @@ def _classify_level_mismatch(level: str, grade: int) -> bool:
 def _audit_citation(
     cite: Citation, plan_text: str, conn: sqlite3.Connection
 ) -> Finding:
-    canonical = CANONICAL_TRANSLITS.get(cite.author)
-
-    if canonical is None:
-        # UNKNOWN_AUTHOR — note if SUGGESTED_TRANSLITS would resolve it.
-        suggested = SUGGESTED_TRANSLITS.get(cite.author)
-        if suggested:
-            files = _source_files_for(conn, suggested, cite.grade)
-            if files:
-                fix = (
-                    f"add {cite.author!r}: {suggested!r} to "
-                    f"_TEXTBOOK_AUTHOR_TRANSLITS (corpus has {files[0]})"
-                )
-            else:
-                fix = (
-                    f"add {cite.author!r}: {suggested!r} to "
-                    f"_TEXTBOOK_AUTHOR_TRANSLITS — but Grade "
-                    f"{cite.grade} not in corpus"
-                )
-        else:
-            fix = (
-                f"unknown author {cite.author!r}; verify against "
-                "data/sources.db"
-            )
+    if not _author_uk_exists(conn, cite.author):
+        fix = (
+            f"unknown author {cite.author!r}; not present in "
+            "textbooks.author_uk (verify spelling or add to corpus)"
+        )
         return Finding(citation=cite, mode="UNKNOWN_AUTHOR", detail=fix)
 
-    files = _source_files_for(conn, canonical, cite.grade)
+    files = _source_files_for(conn, cite.author, cite.grade)
     if not files:
         return Finding(
             citation=cite,
             mode="GHOST_SOURCE",
             detail=(
                 f"{cite.author} Grade {cite.grade} not in corpus "
-                f"(translits tried: {canonical})"
+                f"(canonical: {_canonicalize_author_uk(cite.author)!r})"
             ),
             suggested_fix="drop citation or replace with a grade in corpus",
         )
@@ -534,7 +513,7 @@ def _render_markdown(
 
     lines.append("## Aggregate findings")
     lines.append("")
-    lines.append("### Authors to add to `_TEXTBOOK_AUTHOR_TRANSLITS`")
+    lines.append("### Authors absent from `textbooks.author_uk`")
     lines.append("")
     unknown_by_author: dict[str, int] = {}
     for f in findings:
@@ -543,19 +522,14 @@ def _render_markdown(
                 unknown_by_author.get(f.citation.author, 0) + 1
             )
     if unknown_by_author:
-        lines.append(
-            "| author | citations affected | suggested translits | corpus has it? |"
-        )
-        lines.append("| --- | --- | --- | --- |")
+        lines.append("| author | citations affected |")
+        lines.append("| --- | --- |")
         for author in sorted(unknown_by_author):
-            translits = SUGGESTED_TRANSLITS.get(author, [])
-            in_corpus = "yes" if translits else "unknown"
-            lines.append(
-                f"| {author} | {unknown_by_author[author]} | "
-                f"{translits or '—'} | {in_corpus} |"
-            )
+            lines.append(f"| {author} | {unknown_by_author[author]} |")
     else:
-        lines.append("_All cited authors are in `_TEXTBOOK_AUTHOR_TRANSLITS`._")
+        lines.append(
+            "_All cited authors resolve against `textbooks.author_uk`._"
+        )
     lines.append("")
 
     lines.append("### Level-mismatch summary")
@@ -616,8 +590,9 @@ def _render_markdown(
     )
     lines.append(
         "- GHOST_SOURCE and GHOST_PAGE are deterministic against "
-        "`data/sources.db` using the FIXED LIKE pattern "
-        "(`%-translit-%` OR `%-translit`)."
+        "`data/sources.db` via direct `textbooks.author_uk = ? AND grade = ?` "
+        "queries (Cyrillic-native matcher; see ADR "
+        "`docs/decisions/2026-05-15-cyrillic-native-matcher.md`)."
     )
     lines.append("")
     return "\n".join(lines)

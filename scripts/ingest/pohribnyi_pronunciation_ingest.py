@@ -84,6 +84,9 @@ REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
 SOURCE_FILE = "pohribnyi-ukrainska-literaturna-vymova-1992"
 TXT_FILENAME = "pohribnyi-ukrainska-literaturna-vymova-1992.txt"
 AUTHOR = "Mykola Pohribnyi"
+# Canonical Cyrillic author; populates textbooks.author_uk so the
+# Cyrillic-native matcher resolves citations.
+AUTHOR_UK = "Микола Погрібний"
 EXPECTED_PAGES = 28  # Verified against pdfinfo of the 1992 booklet.
 
 
@@ -205,6 +208,7 @@ def ingest_pages(
                 SOURCE_FILE,
                 "",  # grade (TEXT-typed on textbooks; sections use sentinel 0)
                 AUTHOR,
+                AUTHOR_UK,
                 len(text),
             )
         )
@@ -221,8 +225,9 @@ def ingest_pages(
     if batch:
         cur.executemany(
             """INSERT INTO textbooks
-                  (chunk_id, title, text, source_file, grade, author, char_count)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                  (chunk_id, title, text, source_file, grade, author,
+                   author_uk, char_count)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             batch,
         )
         link_lesson_sections(

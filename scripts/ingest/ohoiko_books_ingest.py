@@ -97,6 +97,9 @@ class BookConfig:
     source_file: str  # textbooks.source_file value
     txt_filename: str  # relative to REFERENCES_DIR
     author: str
+    # Canonical Cyrillic author (populates textbooks.author_uk; required
+    # by the Cyrillic-native matcher).
+    author_uk: str
     grade: str  # left empty for Ohoiko books; reserved for CEFR mapping later
     max_entry_number: int  # advertised entry count (hard cap)
 
@@ -107,6 +110,7 @@ BOOKS: dict[str, BookConfig] = {
         source_file="anna-ohoiko-1000-words-2nd-ed",
         txt_filename="1000-Ukrainian-Words-2.0-Ukrainian-Lessons-PDF-4mwsom.txt",
         author="Anna Ohoiko",
+        author_uk="Анна Огоїко",
         grade="",
         # The 2nd edition advertises "1000 Most Useful Ukrainian Words"
         # and the alphabetical entries run #1..#1000 exactly. After
@@ -347,6 +351,7 @@ def ingest_entries(
                 book.source_file,
                 book.grade,
                 book.author,
+                book.author_uk,
                 len(text),
             )
         )
@@ -367,8 +372,9 @@ def ingest_entries(
     if batch:
         cur.executemany(
             """INSERT INTO textbooks
-                  (chunk_id, title, text, source_file, grade, author, char_count)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                  (chunk_id, title, text, source_file, grade, author,
+                   author_uk, char_count)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             batch,
         )
         link_lesson_sections(

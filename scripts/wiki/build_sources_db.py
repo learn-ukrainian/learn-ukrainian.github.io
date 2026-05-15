@@ -77,6 +77,10 @@ CREATE TABLE IF NOT EXISTS textbooks (
     source_file TEXT NOT NULL DEFAULT '',
     grade TEXT DEFAULT '',
     author TEXT DEFAULT '',
+    -- author_uk: canonical Cyrillic form of the author. Populated by
+    -- ingestion or back-filled via scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py.
+    -- Matcher queries this column directly (Cyrillic-native).
+    author_uk TEXT DEFAULT '',
     char_count INTEGER DEFAULT 0
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS textbooks_fts USING fts5(
@@ -265,6 +269,42 @@ CREATE TABLE IF NOT EXISTS wikipedia_negative_cache (
 
 def _normalize_url(url: str) -> str:
     return url.replace("://www.", "://")
+
+
+def _build_textbook_row(
+    entry: dict,
+    *,
+    source_file: str,
+    grade: str,
+    chunk_index: int,
+) -> tuple:
+    """Assemble a textbooks-table row tuple from a JSONL entry.
+
+    Requires ``author_uk`` (canonical Cyrillic author form) in every entry
+    that supplies a non-empty ``author``. Raises ``ValueError`` otherwise.
+    The matcher in ``scripts/build/linear_pipeline.py`` queries
+    ``author_uk`` directly — silently inserting rows with empty
+    ``author_uk`` would break textbook citation resolution.
+    """
+    author = str(entry.get("author") or "").strip()
+    author_uk = str(entry.get("author_uk") or "").strip()
+    if author and not author_uk:
+        raise ValueError(
+            f"Textbook entry in {source_file} (chunk {chunk_index}) has "
+            f"author={author!r} but no author_uk. Ingestion paths must "
+            "supply the canonical Cyrillic author form. See ADR "
+            "docs/decisions/2026-05-15-cyrillic-native-matcher.md."
+        )
+    return (
+        entry.get("chunk_id", f"tb-{source_file}-{chunk_index}"),
+        entry.get("section_title", ""),
+        entry.get("text", ""),
+        source_file,
+        entry.get("grade", grade),
+        author,
+        author_uk,
+        entry.get("token_count", len(entry.get("text", ""))),
+    )
 
 
 def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
@@ -584,8 +624,9 @@ def build(db_path: Path | None = None,
     # --- Textbook chunks ---
     print("\n📖 Textbooks")
     tb_sql = """INSERT INTO textbooks
-                (chunk_id, title, text, source_file, grade, author, char_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?)"""
+                (chunk_id, title, text, source_file, grade, author,
+                 author_uk, char_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
     if tb_dir.exists():
         for grade_dir in sorted(tb_dir.glob("grade-*")):
             grade = grade_dir.name
@@ -598,14 +639,11 @@ def build(db_path: Path | None = None,
                         if not line:
                             continue
                         entry = json.loads(line)
-                        batch.append((
-                            entry.get("chunk_id", f"tb-{source_file}-{len(batch)}"),
-                            entry.get("section_title", ""),
-                            entry.get("text", ""),
-                            source_file,
-                            entry.get("grade", grade),
-                            entry.get("author", ""),
-                            entry.get("token_count", len(entry.get("text", ""))),
+                        batch.append(_build_textbook_row(
+                            entry,
+                            source_file=source_file,
+                            grade=grade,
+                            chunk_index=len(batch),
                         ))
                 if batch:
                     conn.executemany(tb_sql, batch)
