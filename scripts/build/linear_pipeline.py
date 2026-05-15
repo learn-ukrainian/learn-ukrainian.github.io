@@ -966,7 +966,12 @@ def _source_files_for_textbook_reference(
     if not translits:
         return None
 
-    author_clauses = " OR ".join("source_file LIKE ?" for _ in translits)
+    patterns = [
+        pattern
+        for translit in translits
+        for pattern in (f"%-{translit}-%", f"%-{translit}")
+    ]
+    author_clauses = " OR ".join("source_file LIKE ?" for _ in patterns)
     rows = conn.execute(
         f"""
         SELECT DISTINCT source_file
@@ -974,7 +979,7 @@ def _source_files_for_textbook_reference(
         WHERE source_file LIKE ?
           AND ({author_clauses})
         """,
-        (f"{grade}-klas-%", *(f"%-{translit}-%" for translit in translits)),
+        (f"{grade}-klas-%", *patterns),
     ).fetchall()
     return sorted(
         (str(row["source_file"]) for row in rows),
