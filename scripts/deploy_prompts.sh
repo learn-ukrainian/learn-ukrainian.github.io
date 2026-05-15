@@ -47,7 +47,9 @@ ORPHAN_PATHS_AGENTS=""
 # Codex agent definitions with no claude_extensions equivalent.
 # config.toml and hooks.json — Codex CLI configuration files managed directly by Codex.
 ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml hooks.json"
-ORPHAN_PATHS_GEMINI="docs/ rules/"
+# tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);
+#        local working state, NOT a deploy artifact. Preserve across rsync --delete.
+ORPHAN_PATHS_GEMINI="docs/ rules/ tmp/"
 
 # Claude Code auto-loads every unscoped file in `.claude/rules/` into
 # the system prompt. These six always-load rules are now served by the
