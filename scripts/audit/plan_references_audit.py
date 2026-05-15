@@ -10,7 +10,7 @@ classifying failure modes:
     GHOST_SOURCE      source_file for (author, grade) not in corpus
     GHOST_PAGE        source_file exists but no chunk for that page
     TOPIC_MISMATCH    chunk exists but text is unrelated to the plan topic
-    LEVEL_MISMATCH    grade >= LEVEL_THRESHOLDS[track] (per-track policy)
+    LEVEL_MISMATCH    grade >= PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS[track] (per-track policy)
     UNKNOWN_AUTHOR    author not in _TEXTBOOK_AUTHOR_TRANSLITS (canonical 10)
     OK                resolves cleanly with on-topic chunk
 
@@ -53,7 +53,7 @@ DEFAULT_TRACKS = ("a1", "a2")
 # cap at 11, so B1/B2/C1/C2 set to 11 means "only flag literal Grade 11
 # citations" — a low-rate signal kept for completeness rather than a
 # common failure mode at higher CEFR levels.
-LEVEL_THRESHOLDS: dict[str, int] = {
+PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS: dict[str, int] = {
     "a1": 7,
     "a2": 10,
     "b1": 11,
@@ -120,7 +120,7 @@ UK_STOPWORDS = frozenset(
 @dataclass(frozen=True)
 class Citation:
     plan_slug: str
-    level: str  # one of LEVEL_THRESHOLDS keys, e.g. "a1" | "a2" | "b1"
+    level: str  # one of PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS keys, e.g. "a1" | "a2" | "b1"
     raw: str
     author: str
     grade: int
@@ -307,10 +307,10 @@ def _nearby_pages(
 def _classify_level_mismatch(level: str, grade: int) -> bool:
     """Flag when ``grade`` is at/above the track's threshold.
 
-    Tracks not listed in :data:`LEVEL_THRESHOLDS` never flag (defensive
+    Tracks not listed in :data:`PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS` never flag (defensive
     default for unknown tracks); tests assert this behavior.
     """
-    threshold = LEVEL_THRESHOLDS.get(level)
+    threshold = PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(level)
     if threshold is None:
         return False
     return grade >= threshold
@@ -403,7 +403,7 @@ def _audit_citation(
         )
 
     if level_warn:
-        threshold = LEVEL_THRESHOLDS.get(cite.level)
+        threshold = PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(cite.level)
         if cite.level in ("a1", "a2"):
             fix_hint = "prefer Grade <=6 source if available"
         else:
@@ -481,7 +481,7 @@ def _render_markdown(
     lines.append("- LEVEL_MISMATCH thresholds (grade >= threshold flags):")
     for t in tracks:
         lines.append(
-            f"  - {t.upper()}: Grade >= {LEVEL_THRESHOLDS.get(t, '—')}"
+            f"  - {t.upper()}: Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}"
         )
     lines.append("")
     lines.append(
@@ -575,7 +575,7 @@ def _render_markdown(
             )
     else:
         threshold_phrase = "; ".join(
-            f"{t.upper()} Grade >= {LEVEL_THRESHOLDS.get(t, '—')}"
+            f"{t.upper()} Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}"
             for t in tracks
         )
         lines.append(f"_No citations crossed thresholds: {threshold_phrase}._")
@@ -608,7 +608,7 @@ def _render_markdown(
         "verify each row before editing the plan."
     )
     threshold_summary = ", ".join(
-        f"{t.upper()} Grade >= {LEVEL_THRESHOLDS.get(t, '—')}" for t in tracks
+        f"{t.upper()} Grade >= {PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS.get(t, '—')}" for t in tracks
     )
     lines.append(
         f"- LEVEL_MISMATCH is policy: {threshold_summary}. "
@@ -628,10 +628,10 @@ def _parse_tracks(raw: str) -> list[str]:
     tracks = [t.strip().lower() for t in raw.split(",") if t.strip()]
     if not tracks:
         raise argparse.ArgumentTypeError("--tracks must list >=1 track")
-    unknown = [t for t in tracks if t not in LEVEL_THRESHOLDS]
+    unknown = [t for t in tracks if t not in PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS]
     if unknown:
         raise argparse.ArgumentTypeError(
-            f"unknown track(s) {unknown}; valid: {sorted(LEVEL_THRESHOLDS)}"
+            f"unknown track(s) {unknown}; valid: {sorted(PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS)}"
         )
     return tracks
 
@@ -656,7 +656,7 @@ def main(argv: list[str] | None = None) -> int:
         default=list(DEFAULT_TRACKS),
         help=(
             "Comma-separated track list (default: a1,a2). Valid: "
-            f"{sorted(LEVEL_THRESHOLDS)}."
+            f"{sorted(PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS)}."
         ),
     )
     args = parser.parse_args(argv)

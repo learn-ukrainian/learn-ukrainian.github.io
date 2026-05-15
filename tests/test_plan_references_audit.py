@@ -20,8 +20,8 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from audit.plan_references_audit import (
-    LEVEL_THRESHOLDS,
     PAGED_CITATION_RE,
+    PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS,
     Citation,
     _audit_citation,
     _classify_level_mismatch,
@@ -118,8 +118,8 @@ def test_level_mismatch_uses_per_track_threshold_table():
     """The threshold table is the single source of truth: B1 with
     Grade 10 must NOT flag (B1 threshold is 11), while A1 with Grade 10
     DOES flag (A1 threshold is 7)."""
-    assert LEVEL_THRESHOLDS["a1"] == 7
-    assert LEVEL_THRESHOLDS["b1"] == 11
+    assert PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS["a1"] == 7
+    assert PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS["b1"] == 11
     assert _classify_level_mismatch("a1", 10) is True
     assert _classify_level_mismatch("b1", 10) is False
     assert _classify_level_mismatch("b1", 11) is True
