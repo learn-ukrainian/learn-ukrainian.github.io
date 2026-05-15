@@ -51,7 +51,7 @@ When you read aloud, keep **-ся** attached to the verb. It is not a separate w
 
 ## Дієслова на -ся
 
-Ukrainian school grammar describes verbs with **-ся** as actions connected with the subject. The plan cites Караман Grade 10, p. 176 for this core point: **вмивати когось** means "to wash someone"; **вмиватися** means "to wash oneself." The grammar is not exotic. You take the normal present-tense form and add **-ся** at the end.
+Ukrainian school grammar practices verbs with **-ся** as a regular written and spoken pattern. **Вмивати когось** means "to wash someone"; **вмиватися** means "to wash oneself." The grammar is not exotic. You take the normal present-tense form and add **-ся** at the end.
 
 Here is the first-person pattern:
 
@@ -67,7 +67,7 @@ Here is the same pattern with **ти** and **він / вона**:
 - **вона вмивається** — she washes.
 - **ти одягаєшся** — you get dressed.
 
-The spelling shows **-шся** and **-ться**, but pronunciation is smoother than the spelling suggests. The plan cites Кравцова Grade 4, p. 113 for this pronunciation rule. In everyday speech, **вмиваєшся** sounds like **вмиваєсся**, and **вмивається** sounds like **вмиваєцця**. At A1, do not overthink the phonetics. Your job is to recognize the written form and say it without inserting a hard pause before **-ся**.
+The spelling shows **-шся** and **-ться**, but pronunciation is smoother than the spelling suggests. Захарійчук Grade 4, p. 162 gives practice comparing the written forms with their pronunciation. In everyday speech, **вмиваєшся** sounds like **вмиваєсся**, and **вмивається** sounds like **вмиваєцця**. At A1, do not overthink the phonetics. Your job is to recognize the written form and say it without inserting a hard pause before **-ся**.
 
 The contrast matters. **Одягаю дитину** means "I dress the child." **Одягаюся** means "I get dressed." **Вмиваю руки** means "I wash my hands." **Вмиваюся** means "I wash myself" in the routine sense. This is why a morning module is a good first home for the pattern: the meaning is visible.
 

@@ -105,6 +105,45 @@ def test_zakhariychuk_grade4_p162_reports_corpus_missing_deterministically(
     assert hits == []
 
 
+def test_zakhariychuk_grade4_p162_matches_source_file_without_suffix(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """Author slugs may end at the author token, without a trailing suffix."""
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0161",
+                "title": "Сторінка 161",
+                "text": "Сусідня сторінка є в корпусі.",
+                "source_file": "4-klas-ukrayinska-mova-zaharijchuk-2021-1",
+                "grade": "4",
+                "author": "zaharijchuk",
+            },
+            {
+                "chunk_id": "4-klas-ukrmova-zaharijchuk_s0162",
+                "title": "Сторінка 162",
+                "text": "Дієслова на -ся. Зіставте їх вимову й правопис.",
+                "source_file": "4-klas-ukrmova-zaharijchuk",
+                "grade": "4",
+                "author": "zaharijchuk",
+            },
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+
+    hits = linear_pipeline._search_textbook_hits(
+        "Захарійчук Grade 4, p.162 ",
+        level="a1",
+        limit=1,
+    )
+
+    assert len(hits) == 1
+    assert hits[0]["chunk_id"] == "4-klas-ukrmova-zaharijchuk_s0162"
+
+
 def test_free_form_title_falls_back_to_fts5(monkeypatch) -> None:
     """Titles without 'Grade N, p.M' format use the existing FTS5 path."""
     from wiki import sources_db
