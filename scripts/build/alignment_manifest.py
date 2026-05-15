@@ -242,7 +242,7 @@ def _freeze(value: Any) -> Any:
 
 
 def _plan_path(level: str, slug: str) -> Path:
-    # Curriculum plan directories are lowercase on disk (a1, b2-pro, hist, …).
+    # Curriculum plan directories are lowercase on disk (a1, b2, hist, ...).
     # Canonicalize `level` so callers can pass "A1" or "B2-Pro" without
     # breaking on case-sensitive filesystems. Flagged by gemini-review on
     # PR #1468.

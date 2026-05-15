@@ -41,16 +41,6 @@ TRACKS = {
         'description': 'Biographies of notable Ukrainian figures',
         'prerequisite': 'hist-61'
     },
-    'b2-pro': {
-        'name': 'B2 Professional Track - Business Ukrainian',
-        'description': 'Business and professional communication at B2 level',
-        'prerequisite': 'b2-core-70'
-    },
-    'c1-pro': {
-        'name': 'C1 Professional Track - Professional Mastery',
-        'description': 'Executive and academic professional communication',
-        'prerequisite': 'b2-pro-40'
-    },
     'lit': {
         'name': 'LIT Track - Classical Ukrainian Literature',
         'description': 'Literary analysis seminar from Kotliarevsky to Shevchenko',

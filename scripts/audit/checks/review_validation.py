@@ -3,9 +3,9 @@ Check for valid content review files across all tiers.
 
 Four review tiers with different standards:
   Tier 1 (Beginner): A1, A2 — v5/v6 review phase + tier-1-beginner
-  Tier 2 (Core):     B1, B2, B2-PRO — v5/v6 review phase + tier-2-core
+  Tier 2 (Core):     B1, B2 — v5/v6 review phase + tier-2-core
   Tier 3 (Seminar):  HIST, ISTORIO, BIO, LIT, OES, RUTH — v5/v6 review phase + tier-3-seminar
-  Tier 4 (Advanced): C1, C1-PRO, C2 — v5/v6 review phase + tier-4-advanced
+  Tier 4 (Advanced): C1, C2 — v5/v6 review phase + tier-4-advanced
 
 Detection heuristics:
   - Missing review file
@@ -81,7 +81,7 @@ TIER_CONFIG = {
     2: {
         'name': 'Core',
         'levels': {'B1', 'B2'},
-        'tracks': {'b2-pro'},
+        'tracks': set(),
         'review_cmd': 'the matching v5/v6 review phase',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-2-core.md',
         'min_chars': 800,
@@ -113,7 +113,7 @@ TIER_CONFIG = {
     4: {
         'name': 'Advanced',
         'levels': {'C1', 'C2'},
-        'tracks': {'c1-pro', 'c2-pro'},
+        'tracks': {'c2-pro'},
         'review_cmd': 'the matching v5/v6 review phase',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-4-advanced.md',
         'min_chars': 800,

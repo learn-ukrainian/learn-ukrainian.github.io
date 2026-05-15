@@ -171,7 +171,7 @@ Shared rules (prefixed `_shared-`) apply across phases: activity rules, content 
 `claude_extensions/quick-ref/` — 22 reference documents injected into prompts:
 
 - **By level**: a1, a2, b1, b2, c1, c2
-- **By track**: b2-hist, b2-pro, c1-bio, c1-hist, c1-pro, FOLK, LIT, OES, RUTH
+- **By track**: b2-hist, c1-bio, c1-hist, FOLK, LIT, OES, RUTH
 - **Technical**: ACTIVITY-SCHEMAS, monitor-api, error-correction-extended, literary-rag
 
 ---

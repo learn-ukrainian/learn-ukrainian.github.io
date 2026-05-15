@@ -145,8 +145,6 @@ components:
     - b2
     - c1
     - c2
-    - b2-pro
-    - c1-pro
     activity_type: cloze
     placement: workbook
     props:
@@ -200,7 +198,6 @@ components:
     - bio
     - istorio
     - lit
-    - c1-pro
     - oes
     - ruth
     activity_type: comparative-study
@@ -296,7 +293,6 @@ components:
     - bio
     - istorio
     - lit
-    - c1-pro
     - oes
     - ruth
     activity_type: critical-analysis
@@ -497,8 +493,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: null
@@ -585,8 +579,6 @@ components:
     - b2
     - c1
     - c2
-    - b2-pro
-    - c1-pro
     activity_type: error-correction
     placement: both
     props:
@@ -646,8 +638,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: essay-response
@@ -745,8 +735,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: fill-in
@@ -833,8 +821,6 @@ components:
     - b2
     - c1
     - c2
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: grammar-identify
@@ -887,7 +873,6 @@ components:
     - a2
     - b1
     - b2
-    - b2-pro
     activity_type: group-sort
     placement: both
     props:
@@ -919,8 +904,6 @@ components:
     - b2
     - c1
     - c2
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: highlight-morphemes
@@ -1049,8 +1032,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: mark-the-words
@@ -1084,8 +1065,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     activity_type: match-up
     placement: both
     props:
@@ -1394,8 +1373,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: quiz
@@ -1444,8 +1421,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
-    - c1-pro
     - oes
     - ruth
     activity_type: reading
@@ -1708,8 +1683,6 @@ components:
     - b1
     - b2
     - c1
-    - b2-pro
-    - c1-pro
     activity_type: translate
     placement: workbook
     props:
@@ -1761,8 +1734,6 @@ components:
     - c1
     - c2
     - lit
-    - b2-pro
-    - c1-pro
     activity_type: translation-critique
     placement: workbook
     props:
@@ -1830,7 +1801,6 @@ components:
     - bio
     - istorio
     - lit
-    - b2-pro
     - oes
     - ruth
     activity_type: true-false

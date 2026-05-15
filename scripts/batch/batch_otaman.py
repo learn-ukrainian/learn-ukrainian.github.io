@@ -25,7 +25,7 @@ Usage:
 
     # Filter tracks
     --include-tracks a1 a2 b1
-    --exclude-tracks c2 b2-pro
+    --exclude-tracks c2
 
     # Parallelism
     --workers 2  (default, max 2)

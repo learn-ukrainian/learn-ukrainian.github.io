@@ -27,7 +27,7 @@ LEVEL_STATUS_FILE = PROJECT_ROOT / "docs" / "l2-uk-en" / "level-status.yaml"
 
 # Core levels and specialized tracks
 CORE_LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]
-SPECIALIZED_TRACKS = ["hist", "bio", "istorio", "b2-pro", "c1-pro", "lit", "oes", "ruth"]
+SPECIALIZED_TRACKS = ["hist", "bio", "istorio", "lit", "oes", "ruth"]
 
 # Ukrainian level names
 LEVEL_NAMES_UK = {
@@ -40,8 +40,6 @@ LEVEL_NAMES_UK = {
     "hist": "HIST - Історія України",
     "bio": "BIO - Біографії українців",
     "istorio": "ISTORIO - Історіографія",
-    "b2-pro": "B2-PRO - Професійна українська",
-    "c1-pro": "C1-PRO - Фахова українська",
     "lit": "LIT - Українська література",
     "oes": "OES - Давньоруська мова",
     "ruth": "RUTH - Руська мова XIV-XVIII",
@@ -58,8 +56,6 @@ LEVEL_NAMES_EN = {
     "hist": "History Track",
     "bio": "Biography Track",
     "istorio": "Historiography Track",
-    "b2-pro": "Professional Track",
-    "c1-pro": "Professional Mastery",
     "lit": "Literature Track",
     "oes": "Old East Slavic Track",
     "ruth": "Ruthenian Track",
@@ -243,8 +239,7 @@ import Home from '@site/src/components/Home';
 LEVEL_POSITIONS = {
     "a1": 2, "a2": 3, "b1": 4, "b2": 5, "c1": 6, "c2": 7,
     "hist": 8, "bio": 9, "istorio": 10,
-    "b2-pro": 11, "c1-pro": 12,
-    "lit": 13, "oes": 14, "ruth": 15,
+    "lit": 11, "oes": 12, "ruth": 13,
 }
 
 # Descriptions for _category.json (with module count placeholder {n})
@@ -258,8 +253,6 @@ CATEGORY_DESCRIPTIONS = {
     "hist": "Ukrainian history from Trypillia to modern independence. {n} modules at B2 level.",
     "bio": "Notable Ukrainians through history — poets, scientists, warriors, artists. {n} biographical modules.",
     "istorio": "Primary sources, historiography, and analytical history. {n} modules at academic level.",
-    "b2-pro": "Business communication and professional domains. {n} modules for the workplace.",
-    "c1-pro": "Executive, academic, and specialized professional Ukrainian. {n} modules.",
     "lit": "Ukrainian literature from Kotliarevsky to contemporary authors. {n} modules.",
     "oes": "Old East Slavic historical linguistics and primary sources X-XIII century. {n} modules.",
     "ruth": "Ruthenian / Middle Ukrainian language and documents XIV-XVIII century. {n} modules.",
@@ -273,8 +266,6 @@ CATEGORY_LABELS = {
     "hist": "HIST - Історія України",
     "bio": "BIO - Біографії українців",
     "istorio": "ISTORIO - Історіографія",
-    "b2-pro": "B2-PRO - Професійна українська",
-    "c1-pro": "C1-PRO - Фахова українська",
     "lit": "LIT - Literature",
     "oes": "OES - Old East Slavic",
     "ruth": "RUTH - Ruthenian",

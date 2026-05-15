@@ -254,34 +254,6 @@ mappings:
     description: 'BIO biography track modules'
 
   # =============================================================================
-  # B2-PRO: Professional Track (new)
-  # =============================================================================
-  - meta_field: focus
-    value: checkpoint
-    level: b2-pro
-    template: b2-checkpoint-module-template.md
-    description: 'B2-PRO checkpoint modules'
-
-  - pattern: '^b2-pro-'
-    level: b2-pro
-    template: b2-pro-module-template.md
-    description: 'B2-PRO professional track modules'
-
-  # =============================================================================
-  # C1-PRO: Professional Track (new)
-  # =============================================================================
-  - meta_field: focus
-    value: checkpoint
-    level: c1-pro
-    template: c1-checkpoint-module-template.md
-    description: 'C1-PRO checkpoint modules'
-
-  - pattern: '^c1-pro-'
-    level: c1-pro
-    template: c1-pro-module-template.md
-    description: 'C1-PRO professional track modules'
-
-  # =============================================================================
   # LIT: Single template
   # =============================================================================
   - pattern: '^lit-'

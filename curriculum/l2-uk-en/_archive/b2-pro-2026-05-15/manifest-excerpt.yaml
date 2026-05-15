@@ -1,0 +1,46 @@
+# Extracted from curriculum/l2-uk-en/curriculum.yaml on 2026-05-15.
+# The track child block is preserved under `tracks:` so this archive is parseable.
+tracks:
+  b2-pro:
+    type: track
+    modules:
+      - business-email-foundations
+      - email-requests-proposals
+      - email-followups-threads
+      - reports-writing
+      - reports-analysis
+      - meeting-participation
+      - meeting-minutes
+      - presentations-structure
+      - presentations-delivery
+      - negotiations-basics
+      - negotiations-tactics
+      - small-talk-networking
+      - business-checkpoint
+      - business-writing-integration
+      - business-communication-capstone
+      - it-vocabulary-1
+      - it-vocabulary-2
+      - technical-documentation
+      - finance-vocabulary
+      - financial-reports
+      - legal-vocabulary
+      - contract-reading
+      - medical-vocabulary
+      - medical-consultation
+      - hr-vocabulary
+      - job-applications
+      - scientific-writing-basics
+      - technical-checkpoint
+      - cross-domain-practice
+      - technical-integration
+      - news-analysis-1
+      - news-analysis-2
+      - journalism-writing
+      - public-speaking-1
+      - public-speaking-2
+      - debate-skills-advanced
+      - interview-skills
+      - media-checkpoint
+      - b2-pro-integration
+      - b2-pro-capstone

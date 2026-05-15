@@ -139,9 +139,7 @@ SEMINAR_TRACKS = {
     "lit-drama",
 }
 
-# Professional tracks: need external research (not covered by State Standard)
-# Use research-pro.md (terminology, ДСТУ norms, authentic examples) not research-seminar.md
-PRO_TRACKS = {"b2-pro", "c1-pro"}
+PRO_TRACKS: set[str] = set()
 
 # --- Shared template sets (DRY: defined once, reused across all track configs) ---
 _COMMON_TEMPLATES = {

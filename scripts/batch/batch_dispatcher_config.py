@@ -1,7 +1,7 @@
 """
 Batch Dispatcher Configuration.
 
-Defines all 20 curriculum tracks with their priority order, dependencies,
+Defines all 18 curriculum tracks with their priority order, dependencies,
 module counts, and scoring weights for autonomous batch processing.
 
 Track priority order is user-specified (not computed). Dependencies define
@@ -33,9 +33,7 @@ TRACKS = [
     (15, "lit-youth",      30,  "seminar", [("lit", 0.80)]),
     (16, "oes",           103,  "seminar", [("c1", 0.80)]),
     (17, "ruth",          115,  "seminar", [("c1", 0.80)]),
-    (18, "b2-pro",         40,  "core",    [("b1", 0.80)]),
-    (19, "c1-pro",         50,  "core",    [("c1", 0.80)]),
-    (20, "c2",             91,  "core",    [("c1", 0.80)]),
+    (18, "c2",             91,  "core",    [("c1", 0.80)]),
 ]
 
 # Lookup by track name

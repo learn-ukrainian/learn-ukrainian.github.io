@@ -18,7 +18,7 @@ from config import get_immersion_rule as shared_get_immersion_rule
 
 # ── Writer personas ──────────────────────────────────────────
 # Single source of truth for all track personas.
-# Tracks MUST match curriculum/l2-uk-en/curriculum.yaml (22 tracks).
+# Tracks MUST match curriculum/l2-uk-en/curriculum.yaml.
 # Used by: v6_build.py (write prompts), Gemini skills, review prompts.
 TRACK_PERSONAS: dict[str, tuple[str, str]] = {
     # Core levels — ONE teacher, evolving tone.
@@ -30,9 +30,6 @@ TRACK_PERSONAS: dict[str, tuple[str, str]] = {
     "b2": ("Lead Ukrainian Instructor", "The Senior Specialist"),
     "c1": ("Lead Ukrainian Instructor", "The Academic Advisor"),
     "c2": ("Lead Ukrainian Instructor", "The Demanding Colleague"),
-    # Professional tracks (legacy — will be replaced by STEMS courses, see #862)
-    "b2-pro": ("Lead Ukrainian Instructor", "The Professional Mentor"),
-    "c1-pro": ("Lead Ukrainian Instructor", "The Professional Academic"),
     # Seminar tracks — distinct specialist voices (different people, different subjects)
     "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
     "bio": ("Professor of Ukrainian Biography", "The Archival Detective"),
@@ -55,8 +52,8 @@ DEFAULT_PERSONA: tuple[str, str] = ("Lead Ukrainian Instructor", "The Dedicated 
 _SKILL_FILES: dict[str, str] = {
     "a1": "full-rebuild-core-a", "a2": "full-rebuild-core-a",
     "b1": "full-rebuild-core-a",  # early B1
-    "b2": "full-rebuild-core-b", "b2-pro": "full-rebuild-core-b",
-    "c1": "full-rebuild-core-b", "c1-pro": "full-rebuild-core-b",
+    "b2": "full-rebuild-core-b",
+    "c1": "full-rebuild-core-b",
     "c2": "full-rebuild-core-b",
     "bio": "full-rebuild-bio", "hist": "full-rebuild-hist",
     "istorio": "full-rebuild-istorio", "lit": "full-rebuild-lit",
@@ -1132,41 +1129,6 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "PRIORITY_TYPES": "reading, critical-analysis, essay-response, authorial-intent",
     },
     # =====================================================================
-    # Professional tracks (B2-PRO, C1-PRO) — workplace Ukrainian
-    # =====================================================================
-    "b2-pro": {
-        "TOTAL_TARGET": "12",
-        "INLINE_MIN": "4", "INLINE_MAX": "5",
-        "WORKBOOK_MIN": "8", "WORKBOOK_MAX": "10",
-        "ITEMS_MIN": "6",
-        "VOCAB_COUNT_TARGET": "35",
-        "INLINE_ALLOWED_TYPES": "match-up, quiz, true-false, fill-in, mark-the-words, error-correction, grammar-identify, highlight-morphemes",
-        "WORKBOOK_ALLOWED_TYPES": "match-up, group-sort, fill-in, mark-the-words, error-correction, cloze, translate, grammar-identify, highlight-morphemes, essay-response, reading, translation-critique",
-        "INLINE_PRIORITY_TYPES": "fill-in, match-up, quiz",
-        "WORKBOOK_PRIORITY_TYPES": "essay-response, translate, reading, translation-critique",
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14",
-        "ALLOWED_ACTIVITY_TYPES": "match-up, group-sort, quiz, true-false, fill-in, mark-the-words, error-correction, cloze, translate, grammar-identify, highlight-morphemes, essay-response, reading, translation-critique",
-        "FORBIDDEN_ACTIVITY_TYPES": "image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, anagram, unjumble, order, odd-one-out, observe, phrase-table, classify, critical-analysis, comparative-study, source-evaluation, authorial-intent, debate, etymology-trace, paleography-analysis, dialect-comparison, transcription, select",
-        "REQUIRED_TYPES": "",
-        "PRIORITY_TYPES": "essay-response, translate, reading, translation-critique",
-    },
-    "c1-pro": {
-        "TOTAL_TARGET": "12",
-        "INLINE_MIN": "4", "INLINE_MAX": "5",
-        "WORKBOOK_MIN": "8", "WORKBOOK_MAX": "10",
-        "ITEMS_MIN": "6",
-        "VOCAB_COUNT_TARGET": "40",
-        "INLINE_ALLOWED_TYPES": "match-up, quiz, fill-in, mark-the-words, error-correction, grammar-identify, highlight-morphemes",
-        "WORKBOOK_ALLOWED_TYPES": "fill-in, mark-the-words, error-correction, cloze, translate, grammar-identify, highlight-morphemes, essay-response, reading, critical-analysis, translation-critique, comparative-study",
-        "INLINE_PRIORITY_TYPES": "mark-the-words, fill-in, match-up",
-        "WORKBOOK_PRIORITY_TYPES": "essay-response, critical-analysis, translation-critique, reading",
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14",
-        "ALLOWED_ACTIVITY_TYPES": "match-up, quiz, fill-in, mark-the-words, error-correction, cloze, translate, grammar-identify, highlight-morphemes, essay-response, reading, critical-analysis, translation-critique, comparative-study",
-        "FORBIDDEN_ACTIVITY_TYPES": "image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, anagram, unjumble, order, odd-one-out, observe, phrase-table, classify, group-sort, true-false, source-evaluation, authorial-intent, debate, etymology-trace, paleography-analysis, dialect-comparison, transcription, select",
-        "REQUIRED_TYPES": "",
-        "PRIORITY_TYPES": "essay-response, critical-analysis, translation-critique, reading",
-    },
-    # =====================================================================
     # OES / RUTH — Old East Slavonic / Ruthenian philology
     # Specialized types: transcription, paleography-analysis, etymology-trace
     # =====================================================================
@@ -1232,7 +1194,7 @@ def get_golden_fragment(track: str, module_num: int) -> str:
     5 bands: early-beginner (A1.1-A1.2), late-beginner (A1.3-A2),
     intermediate (B1), advanced (B2-C2), seminar (HIST/BIO/LIT/etc.).
     """
-    base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
+    base = track.split("-")[0] if track not in ("hist", "bio", "istorio") else track
     if base in ("hist", "bio", "istorio", "lit", "oes", "ruth"):
         return GOLDEN_FRAGMENTS["seminar"]
     if base == "a1":
@@ -1401,7 +1363,6 @@ def get_item_minimums_table(track: str, module_num: int) -> str:
     _TRACK_TO_AUDIT = {
         "hist": "history", "bio": "B2-biography", "istorio": "istorio",
         "lit": "lit", "oes": "C2", "ruth": "C2",
-        "b2-pro": "B2", "c1-pro": "C1",
     }
     level_key = _TRACK_TO_AUDIT.get(track, track.upper().replace("-BRIDGE", "").replace("-CORE", ""))
     if track == "b1" and module_num <= 5:
@@ -1435,8 +1396,6 @@ _TRACK_FOCUS_MAP: dict[str, tuple[str, str | None]] = {
     "hist": ("B2", "history"),
     "bio": ("C1", "biography"),
     "istorio": ("C1", "history"),
-    "b2-pro": ("B2", "professional"),
-    "c1-pro": ("C1", "professional"),
     "lit": ("C1", "literature"),
     "oes": ("C2", "seminar"),
     "ruth": ("C2", "seminar"),

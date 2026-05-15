@@ -121,9 +121,9 @@ class TestFilterChannels:
         assert len(filter_channels(channels, "a1")) == 0
 
     def test_base_track_extraction(self):
-        """b2-pro should match channels tagged with 'b2'."""
+        """Hyphenated B2 subtracks should match channels tagged with 'b2'."""
         channels = [{"name": "Test", "handle": "@test", "tracks": ["b2"]}]
-        assert len(filter_channels(channels, "b2-pro")) == 1
+        assert len(filter_channels(channels, "b2-grammar")) == 1
 
     def test_default_channels_have_wildcard(self):
         """At least one channel should match any track via wildcard."""

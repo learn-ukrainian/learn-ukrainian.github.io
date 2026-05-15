@@ -65,7 +65,7 @@ workbook:
 
 **Why:** Seminar tracks are CBI (Content-Based Instruction). Activities must require comprehension and analysis, not pattern matching.
 
-### Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro)
+### Core tracks (a1, a2, b1, b2, c1, c2)
 
 All activity types allowed. Required types vary by level — check `scripts/audit/config.py`.
 

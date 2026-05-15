@@ -149,14 +149,6 @@ tracks:
       - slug: taras-shevchenko
         # ...
 
-  b2-pro:
-    name: "B2 Professional Track"
-    description: "Business and Professional Ukrainian"
-    prerequisite: b2
-    modules:
-      - slug: business-email-formal
-        # ...
-
   lit:
     name: "Literature Track"
     description: "Classical Ukrainian Literature"
@@ -437,7 +429,7 @@ Rationale: With ~600 modules it's ~2000 lines - manageable. Merge conflicts are 
 
 **Decision: Slug-only for tracks (no numbers)**
 
-Tracks (hist, bio, b2-pro, c1-pro, lit) use:
+Tracks (hist, bio, istorio, lit) use:
 - `slug:` field only in meta YAML
 - No `module:` field with numbers
 - Order determined by manifest, not by numbering

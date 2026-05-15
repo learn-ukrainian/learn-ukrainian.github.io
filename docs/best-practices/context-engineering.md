@@ -86,7 +86,7 @@ Plan sections with 5+ bullet points must become multiple meta sections. Bullets 
 | Track type | Track context | Rationale |
 |-----------|---------------|-----------|
 | Seminar (hist, bio, istorio, lit, oes, ruth) | **Empty** | Topics are independent. Plans + research + meta are sufficient. |
-| Core (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro) | Last 5 modules | Needed for vocabulary/grammar consistency across sequential modules. |
+| Core (a1, a2, b1, b2, c1, c2) | Last 5 modules | Needed for vocabulary/grammar consistency across sequential modules. |
 
 **Never include full-track context for seminar tracks.** Even 50KB of context costs output budget and adds no consistency value when topics are independent (Bohdan Khmelnytskyi has nothing to do with Lesya Ukrainka).
 

@@ -41,7 +41,7 @@ LEVEL_CHAIN = {
 
 # Levels that get navigation wiring
 CORE_LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]
-SEMINAR_LEVELS = ["hist", "bio", "istorio", "lit", "oes", "ruth", "b2-pro", "c1-pro"]
+SEMINAR_LEVELS = ["hist", "bio", "istorio", "lit", "oes", "ruth"]
 
 
 def load_curriculum_order():

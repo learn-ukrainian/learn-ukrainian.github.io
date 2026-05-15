@@ -40,8 +40,6 @@ PIPELINE_TO_AUDIT_KEY: dict[str, str] = {
     "bio": "biography",
     "istorio": "istorio",
     "lit": "LIT",
-    "b2-pro": "B2-professional",
-    "c1-pro": "C1-professional",
     "oes": "OES",
     "ruth": "RUTH",
 }
@@ -133,4 +131,3 @@ def test_pipeline_required_subset_of_audit_required_or_priority(
         f"priority_types/required_types: {sorted(leaks)}. Either drop the pipeline "
         "requirement or add to audit priority."
     )
-

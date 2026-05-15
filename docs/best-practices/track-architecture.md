@@ -14,8 +14,6 @@
 | `b2` | B2 | Core | 85 | 4000w | TTT |
 | `c1` | C1 | Core | 106 | 4000w | CLIL |
 | `c2` | C2 | Core | 91 | 5000w | CLIL |
-| `b2-pro` | B2 | Core (professional) | 40 | 4000w | CLIL |
-| `c1-pro` | C1 | Core (professional) | 50 | 4000w | CLIL |
 | `hist` | C1 | Seminar | 140 | 5000w | CBI |
 | `bio` | C1 | Seminar | 176 | 5000w | CBI |
 | `istorio` | C1 | Seminar | 136 | 5000w | CBI |
@@ -73,7 +71,7 @@ Structure:
 Immersion: 90-100% Ukrainian.
 
 ### CLIL (Content and Language Integrated Learning)
-Used for: C1, C2, B2-PRO, C1-PRO
+Used for: C1, C2
 
 Structure:
 - Language learned through authentic content

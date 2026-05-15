@@ -73,7 +73,7 @@ Inline checks use only `quiz`, `true-false`, `fill-in`, `mark-the-words`, `match
 
 ### Principle 8 — ZNO (TODO, deferred schema)
 
-Issue [#715](https://github.com/anthropics/learn-ukrainian/issues/715) tracks ZNO integration. The plan is a dedicated `zno` type with 8 subcategories (наголос, пароніми, орфографія, case endings, lexical choice, phonetics, word formation, punctuation), added at the schema level before the B2 content build. When the type lands, append it to the WORKBOOK allowlists for B2, C1, C2, B2-PRO, C1-PRO.
+Issue [#715](https://github.com/anthropics/learn-ukrainian/issues/715) tracks ZNO integration. The plan is a dedicated `zno` type with 8 subcategories (наголос, пароніми, орфографія, case endings, lexical choice, phonetics, word formation, punctuation), added at the schema level before the B2 content build. When the type lands, append it to the WORKBOOK allowlists for B2, C1, C2.
 
 Interim: ZNO questions are generated as `quiz` with a ZNO-style question bank.
 
@@ -117,7 +117,7 @@ Gone forever from A2 onward. Principle 2.
 | Type | Purpose | Where |
 |---|---|---|
 | `match-up` | Pair items between two columns (word↔translation, question↔answer, term↔definition) | A1 through seminars and C1-core |
-| `group-sort` | Assign items to 2+ bins (gender, case, aspect, register) | A1 through B2-PRO |
+| `group-sort` | Assign items to 2+ bins (gender, case, aspect, register) | A1 through B2 |
 
 These survive because Ukrainian school materials and ZNO exams use them at every level. They are comprehension, not puzzle.
 
@@ -142,7 +142,7 @@ These survive because Ukrainian school materials and ZNO exams use them at every
 
 | Type | Purpose | Where |
 |---|---|---|
-| `grammar-identify` | Name the grammatical category of a highlighted form (case, aspect, tense) | B1–C2 core, B2/C1-PRO, OES, RUTH |
+| `grammar-identify` | Name the grammatical category of a highlighted form (case, aspect, tense) | B1-C2 core, OES, RUTH |
 | `highlight-morphemes` | Mark prefix/root/suffix/ending in words | B1 onward in core, central in OES/RUTH |
 
 ### Academic / long-form
@@ -205,51 +205,49 @@ This matrix is generated directly from `ACTIVITY_CONFIGS`. To regenerate, see th
 | bio | 10 | 3–4 | 7–9 | 4 | 30 |
 | istorio | 10 | 3–4 | 7–9 | 4 | 30 |
 | lit | 10 | 3–4 | 7–9 | 4 | 0 (no vocab gate) |
-| b2-pro | 12 | 4–5 | 8–10 | 6 | 35 |
-| c1-pro | 12 | 4–5 | 8–10 | 6 | 40 |
 | oes | 10 | 3–4 | 7–9 | 4 | 35 |
 | ruth | 10 | 3–4 | 7–9 | 4 | 35 |
 
 ### Type → level matrix
 
-| Type | a1 | a2 | b1-core | b2 | c1-core | c2 | hist | bio | istorio | lit | b2-pro | c1-pro | oes | ruth |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| image-to-letter      | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| letter-grid          | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| watch-and-repeat     | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| divide-words         | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| count-syllables      | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| pick-syllables       | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| anagram              | W | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| unjumble             | B | B | B | - | - | - | - | - | - | - | - | - | - | - |
-| order                | B | B | B | - | - | - | - | - | - | - | - | - | - | - |
-| odd-one-out          | B | B | W | - | - | - | - | - | - | - | - | - | - | - |
-| observe              | B | B | - | - | - | - | - | - | - | - | - | - | - | - |
-| phrase-table         | B | W | - | - | - | - | - | - | - | - | - | - | - | - |
-| classify             | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| match-up             | B | B | B | B | I | - | I | I | I | I | B | I | - | - |
-| group-sort           | B | B | B | B | - | - | - | - | - | - | W | - | - | - |
-| quiz                 | B | B | B | I | I | I | I | I | I | I | I | I | I | I |
-| true-false           | B | B | B | B | - | - | I | I | I | I | I | - | I | I |
-| fill-in              | B | B | B | B | B | I | I | I | I | I | B | B | I | I |
-| mark-the-words       | - | B | B | B | B | I | B | B | B | B | B | B | B | B |
-| error-correction     | W | B | B | B | B | W | - | - | - | - | B | B | - | - |
-| cloze                | - | W | W | W | W | W | - | - | - | - | W | W | - | - |
-| translate            | W | W | W | W | W | - | - | - | - | - | W | W | - | - |
-| grammar-identify     | - | - | B | B | B | B | - | - | - | - | B | B | B | B |
-| highlight-morphemes  | - | - | B | B | B | B | - | - | - | - | B | B | B | B |
-| essay-response       | - | - | W | W | W | W | W | W | W | W | W | W | W | W |
-| reading              | - | - | - | W | W | W | W | W | W | W | W | W | W | W |
-| critical-analysis    | - | - | - | - | W | W | W | W | W | W | - | W | W | W |
-| translation-critique | - | - | - | W | W | W | - | - | - | W | W | W | - | - |
-| comparative-study    | - | - | - | - | W | W | W | W | W | W | - | W | W | W |
-| source-evaluation    | - | - | - | - | - | - | W | W | W | - | - | - | - | - |
-| authorial-intent     | - | - | - | - | - | W | - | W | - | W | - | - | - | - |
-| debate               | - | - | - | - | - | W | - | - | - | W | - | - | - | - |
-| etymology-trace      | - | - | - | - | W | W | - | - | - | - | - | - | W | W |
-| paleography-analysis | - | - | - | - | - | - | - | - | - | - | - | - | W | W |
-| dialect-comparison   | - | - | - | - | - | - | - | - | - | - | - | - | - | W |
-| transcription        | - | - | - | - | - | - | - | - | - | - | - | - | W | W |
+| Type | a1 | a2 | b1-core | b2 | c1-core | c2 | hist | bio | istorio | lit | oes | ruth |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| image-to-letter      | I | - | - | - | - | - | - | - | - | - | - | - |
+| letter-grid          | I | - | - | - | - | - | - | - | - | - | - | - |
+| watch-and-repeat     | I | - | - | - | - | - | - | - | - | - | - | - |
+| divide-words         | B | - | - | - | - | - | - | - | - | - | - | - |
+| count-syllables      | B | - | - | - | - | - | - | - | - | - | - | - |
+| pick-syllables       | B | - | - | - | - | - | - | - | - | - | - | - |
+| anagram              | W | - | - | - | - | - | - | - | - | - | - | - |
+| unjumble             | B | B | B | - | - | - | - | - | - | - | - | - |
+| order                | B | B | B | - | - | - | - | - | - | - | - | - |
+| odd-one-out          | B | B | W | - | - | - | - | - | - | - | - | - |
+| observe              | B | B | - | - | - | - | - | - | - | - | - | - |
+| phrase-table         | B | W | - | - | - | - | - | - | - | - | - | - |
+| classify             | - | - | - | - | - | - | - | - | - | - | - | - |
+| match-up             | B | B | B | B | I | - | I | I | I | I | - | - |
+| group-sort           | B | B | B | B | - | - | - | - | - | - | - | - |
+| quiz                 | B | B | B | I | I | I | I | I | I | I | I | I |
+| true-false           | B | B | B | B | - | - | I | I | I | I | I | I |
+| fill-in              | B | B | B | B | B | I | I | I | I | I | I | I |
+| mark-the-words       | - | B | B | B | B | I | B | B | B | B | B | B |
+| error-correction     | W | B | B | B | B | W | - | - | - | - | - | - |
+| cloze                | - | W | W | W | W | W | - | - | - | - | - | - |
+| translate            | W | W | W | W | W | - | - | - | - | - | - | - |
+| grammar-identify     | - | - | B | B | B | B | - | - | - | - | B | B |
+| highlight-morphemes  | - | - | B | B | B | B | - | - | - | - | B | B |
+| essay-response       | - | - | W | W | W | W | W | W | W | W | W | W |
+| reading              | - | - | - | W | W | W | W | W | W | W | W | W |
+| critical-analysis    | - | - | - | - | W | W | W | W | W | W | W | W |
+| translation-critique | - | - | - | W | W | W | - | - | - | W | - | - |
+| comparative-study    | - | - | - | - | W | W | W | W | W | W | W | W |
+| source-evaluation    | - | - | - | - | - | - | W | W | W | - | - | - |
+| authorial-intent     | - | - | - | - | - | W | - | W | - | W | - | - |
+| debate               | - | - | - | - | - | W | - | - | - | W | - | - |
+| etymology-trace      | - | - | - | - | W | W | - | - | - | - | W | W |
+| paleography-analysis | - | - | - | - | - | - | - | - | - | - | W | W |
+| dialect-comparison   | - | - | - | - | - | - | - | - | - | - | - | W |
+| transcription        | - | - | - | - | - | - | - | - | - | - | W | W |
 
 Reading the matrix:
 
@@ -406,8 +404,7 @@ def survey(level: str) -> None:
             print(f"    {slug}: {i} inline, {w} workbook")
 
 for lvl in ["a1", "a2", "b1-core", "b2", "c1-core", "c2",
-            "hist", "bio", "istorio", "lit", "b2-pro", "c1-pro",
-            "oes", "ruth"]:
+            "hist", "bio", "istorio", "lit", "oes", "ruth"]:
     survey(lvl)
 ```
 

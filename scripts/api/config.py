@@ -28,9 +28,7 @@ LEVELS = [
     {"id": "a2", "name": "A2 - Elementary", "path": "a2"},
     {"id": "b1", "name": "B1 - Intermediate", "path": "b1"},
     {"id": "b2", "name": "B2 - Upper Intermediate", "path": "b2"},
-    {"id": "b2-pro", "name": "B2-PRO - Professional", "path": "b2-pro"},
     {"id": "c1", "name": "C1 - Advanced", "path": "c1"},
-    {"id": "c1-pro", "name": "C1-PRO - Professional", "path": "c1-pro"},
     {"id": "c2", "name": "C2 - Mastery", "path": "c2"},
     # Seminar tracks
     {"id": "hist", "name": "HIST - History Track", "path": "hist"},

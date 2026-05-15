@@ -33,8 +33,8 @@ MANIFEST_PATH = Path(__file__).parent.parent / "curriculum" / "l2-uk-en" / "curr
 # All tracks that should exist in the docs directory
 ALL_TRACKS = [
     "a1", "a2", "b1", "b2", "c1", "c2",
-    "hist", "b2-pro",
-    "bio", "istorio", "c1-pro",
+    "hist",
+    "bio", "istorio",
     "lit", "oes", "ruth",
 ]
 

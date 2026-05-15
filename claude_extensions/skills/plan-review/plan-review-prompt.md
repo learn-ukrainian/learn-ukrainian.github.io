@@ -1,6 +1,6 @@
 # Plan Review Prompt — Core Levels (A1-C2)
 
-You are reviewing a Ukrainian language course plan YAML file for core levels (A1, A2, B1, B2, C1, C2, B2-PRO, C1-PRO). Your job is to find errors, weaknesses, and gaps BEFORE content is built from this plan.
+You are reviewing a Ukrainian language course plan YAML file for core levels (A1, A2, B1, B2, C1, C2). Your job is to find errors, weaknesses, and gaps BEFORE content is built from this plan.
 
 ## Authority Sources
 
