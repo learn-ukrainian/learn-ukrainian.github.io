@@ -669,6 +669,25 @@ def _build_parser() -> argparse.ArgumentParser:
     # status
     subparsers.add_parser("status", help="Show running bridge processes")
 
+    # serve
+    serve_parser = subparsers.add_parser("serve", help="Serve local HTTP bridge surfaces")
+    serve_parser.add_argument(
+        "--openai",
+        action="store_true",
+        help="Serve the OpenAI-compatible proxy",
+    )
+    serve_parser.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Host for --openai (default: 127.0.0.1)",
+    )
+    serve_parser.add_argument(
+        "--port",
+        type=int,
+        default=8767,
+        help="Port for --openai (default: 8767)",
+    )
+
     # interactive
     subparsers.add_parser("interactive", help="Interactive mode")
 
@@ -736,6 +755,14 @@ def _dispatch_command(args):
         broker_cleanup(args.max_age, args.dry_run, args.older_than)
     elif args.command == "status":
         bridge_status()
+    elif args.command == "serve":
+        if not args.openai:
+            raise SystemExit("serve currently requires --openai")
+        import uvicorn
+
+        from .openai_proxy import app
+
+        uvicorn.run(app, host=args.host, port=args.port, log_level="info")
     elif args.command == "interactive":
         interactive_mode()
     elif args.command in ("channel", "post", "p", "reconcile", "sync", "discuss"):
