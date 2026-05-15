@@ -231,6 +231,9 @@ data/corpus_audit/*
 # SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
 data/*.db-shm
 data/*.db-wal
+# Test-only SQLite WAL/SHM sidecars (e.g. test_wal.db-* from pytest fixtures)
+test_*.db-shm
+test_*.db-wal
 
 # the native reviewer's teaching material (large, local-only, IP-sensitive)
 data/native-reviewer-lessons/
