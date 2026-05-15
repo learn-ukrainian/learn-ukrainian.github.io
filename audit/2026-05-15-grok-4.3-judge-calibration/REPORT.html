@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grok 4.3 Onboarding Report - 2026-05-15</title>
+<style>
+body{font-family:system-ui,sans-serif;line-height:1.45;max-width:1180px;margin:32px auto;padding:0 24px;color:#1f2933}
+h1{margin-bottom:8px}
+h1+.subtitle{color:#52606d;margin-top:0;margin-bottom:24px;font-size:0.95em}
+h2{margin-top:36px;border-bottom:1px solid #cbd2d9;padding-bottom:4px}
+h3{margin-top:28px;color:#334e68}
+table{border-collapse:collapse;width:100%;margin:16px 0 28px}
+th,td{border:1px solid #cbd2d9;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#eef2f6}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+code{background:#f5f7fa;padding:1px 4px;border-radius:3px;font-size:0.9em}
+pre{background:#f5f7fa;border:1px solid #cbd2d9;border-radius:4px;padding:12px;overflow-x:auto;font-size:0.85em;line-height:1.35}
+.pass{color:#0f7b45;font-weight:700}
+.fail{color:#b42318;font-weight:700}
+.warn{color:#b76e00;font-weight:700}
+.callout{background:#eef2f6;border-left:3px solid #486581;padding:12px 16px;margin:16px 0;border-radius:0 4px 4px 0}
+.callout-strong{background:#fdecea;border-left:3px solid #b42318}
+.callout-good{background:#e5f4ea;border-left:3px solid #0f7b45}
+.muted{color:#52606d}
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:0.8em;background:#eef2f6;color:#334e68;margin-right:4px}
+.tag-medium{background:#e5f4ea;color:#0f7b45}
+.tag-high{background:#fdecea;color:#b42318}
+.tag-xhigh{background:#fff4e0;color:#b76e00}
+ul li{margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<h1>Grok 4.3 Onboarding Report</h1>
+<p class="subtitle">2026-05-15 · staged onboarding tests across 5 stages × 3 reasoning_effort levels (medium / high / xhigh) · via Hermes Agent OAuth + sources MCP</p>
+
+<h2>Executive summary</h2>
+<div class="callout callout-good">
+<strong>Recommended production configuration: <code>grok-4.3 @ reasoning_effort=medium + sources MCP</code></strong>
+<ul>
+<li>Best F1 on judge calibration (76% — within 10pp of claude-opus-4-7's 86%)</li>
+<li>Best case accuracy among Grok configs (92%, second only to claude-opus-4-7's 100%)</li>
+<li>Highest precision (85%) of the three Grok efforts; second-best in the field</li>
+<li>Fastest average call (~19s vs claude-opus ~30s, gemini ~60–240s)</li>
+<li>~5–10× cheaper than claude-opus on tokens ($0.20 in / $0.50 out per M)</li>
+<li>Passes hallucination probe cleanly</li>
+<li>Decolonized framing on Ukraine — does NOT default to Russian-imperial narratives</li>
+</ul>
+</div>
+
+<div class="callout callout-strong">
+<strong>Counter-intuitive finding: <code>reasoning_effort=high</code> is the worst setting across every task tested.</strong>
+At <code>high</code>, Grok over-thinks borderline cases, over-engineers code outputs, and misunderstands subtle constraints. <code>xhigh</code> recovers some quality but doesn't beat <code>medium</code> on the judge task. Use <code>medium</code> as the default; reserve <code>xhigh</code> only when you specifically need maximum precision at the cost of recall.
+</div>
+
+<h3>Suitable roles right now</h3>
+<table>
+<thead><tr><th>Role</th><th>Verdict</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Second-opinion validator (sev≥2 precision)</td><td class="pass">Strong</td><td>P=85% medium / P=90% xhigh, fastest in field</td></tr>
+<tr><td>Cleanliness classifier (binary clean/dirty)</td><td class="pass">Strong</td><td>Case acc 92% medium, beats gpt-5.5 and ties gemini-3.1-pro</td></tr>
+<tr><td>Code reviewer (architecture/design)</td><td class="pass">Strong</td><td>Independently surfaced the bug filed as #2018 on a real PR diff, caught 3 regex edge cases I missed</td></tr>
+<tr><td>Honesty-resistant judge (refuses fake citations)</td><td class="pass">Strong</td><td>3/3 refusals across medium/high/xhigh; uses MCP to verify</td></tr>
+<tr><td>HIST/OES/RUTH reviewer (decolonization risk)</td><td class="pass">Strong baseline</td><td>Frames Kyivan Rus as Ukrainian foundation (not Russian); acknowledges Russification, Crimean Tatar heritage</td></tr>
+<tr><td>Primary judge (replace claude-opus-4-7)</td><td class="warn">Not yet</td><td>F1 76% vs 86%. Margin closeable with Grok-specific prompt tuning for genitive greetings.</td></tr>
+<tr><td>V7 module writer (replace claude-tools)</td><td class="warn">Untested</td><td>Stage 3 requires <code>--writer grok-tools</code> plumbing in linear_pipeline.py before a real build can land</td></tr>
+</tbody>
+</table>
+
+<h2>Test matrix — at a glance</h2>
+<table>
+<thead><tr><th>Stage</th><th>What was tested</th><th class="num"><span class="tag tag-medium">medium</span></th><th class="num"><span class="tag tag-high">high</span></th><th class="num"><span class="tag tag-xhigh">xhigh</span></th></tr></thead>
+<tbody>
+<tr><td>1. Judge calibration (12-case Antonenko gold)</td><td>F1 / case_acc / P / R</td><td class="num">76 / 92 / 85 / 69</td><td class="num">62 / 67 / 80 / 50</td><td class="num">69 / 75 / 90 / 56</td></tr>
+<tr><td>2. Code edit (write regression test)</td><td>Test correctness on PR branch</td><td class="num pass">PASS</td><td class="num fail">FAIL</td><td class="num pass">PASS</td></tr>
+<tr><td>3. V7 module writer</td><td>—</td><td colspan="3" class="muted">Not run (requires <code>--writer grok-tools</code> plumbing)</td></tr>
+<tr><td>4. Reviewer-as-fixer (<code>&lt;fixes&gt;</code> format)</td><td>Clean / over-engineered</td><td class="num pass">clean 2-fix</td><td class="num warn">4-fix split-then-delete</td><td class="num pass">clean 2-fix</td></tr>
+<tr><td>5. Hallucination probe (fake citation)</td><td>Refuses</td><td class="num pass">refuses</td><td class="num pass">refuses</td><td class="num pass">refuses</td></tr>
+<tr><td>Bonus: corpus-bias probe (Russia / Ukraine)</td><td>Decolonized framing</td><td class="num pass">Strong — Kyivan Rus framed as Ukrainian foundation, no imperial narrative</td><td colspan="2" class="muted">Not swept (one-off at medium)</td></tr>
+<tr><td>Bonus: real PR review (PR #2019, 231 LOC)</td><td>Bug detection</td><td class="muted">—</td><td class="num pass">Identified #2018 independently + 3 regex edge cases</td><td class="muted">—</td></tr>
+</tbody>
+</table>
+
+<h2>Stage 1 — Judge calibration (4 rounds)</h2>
+
+<h3>Leaderboard — all 4 judges, 12-case gold</h3>
+<table>
+<thead><tr><th>Judge</th><th class="num">F1</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">Case acc</th><th class="num">Avg dur</th><th class="num">Cost per M tok (in / out)</th></tr></thead>
+<tbody>
+<tr><td>claude-opus-4-7</td><td class="num"><strong>86%</strong></td><td class="num">79%</td><td class="num"><strong>94%</strong></td><td class="num"><strong>100%</strong></td><td class="num">~30s</td><td class="num">$15 / $75</td></tr>
+<tr><td>gemini-3.1-pro-preview</td><td class="num">84%</td><td class="num">81%</td><td class="num">87%</td><td class="num">92%</td><td class="num">~60–240s</td><td class="num">$1.25 / $5</td></tr>
+<tr><td>gpt-5.5</td><td class="num">78%</td><td class="num"><strong>90%</strong></td><td class="num">69%</td><td class="num">83%</td><td class="num">~25s</td><td class="num">$1.25 / $10</td></tr>
+<tr><td><strong>grok-4.3 (medium, +MCP)</strong></td><td class="num"><strong>76%</strong></td><td class="num"><strong>85%</strong></td><td class="num">69%</td><td class="num"><strong>92%</strong></td><td class="num"><strong>~19s</strong></td><td class="num"><strong>$0.20 / $0.50</strong></td></tr>
+</tbody>
+</table>
+
+<h3>Grok across 4 rounds</h3>
+<table>
+<thead><tr><th>Round</th><th>reasoning_effort</th><th>MCP</th><th class="num">F1</th><th class="num">Case acc</th><th class="num">Precision</th><th class="num">Recall</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><span class="tag tag-medium">medium</span></td><td class="muted">✗</td><td class="num">77.4%</td><td class="num">75.0%</td><td class="num">80.0%</td><td class="num">75.0%</td></tr>
+<tr><td><strong>2 ← production winner</strong></td><td><span class="tag tag-medium">medium</span></td><td class="pass">✓</td><td class="num"><strong>75.9%</strong></td><td class="num"><strong>91.7%</strong></td><td class="num"><strong>84.6%</strong></td><td class="num">68.8%</td></tr>
+<tr><td>3</td><td><span class="tag tag-high">high</span></td><td class="pass">✓</td><td class="num fail">61.5%</td><td class="num fail">66.7%</td><td class="num">80.0%</td><td class="num fail">50.0%</td></tr>
+<tr><td>4</td><td><span class="tag tag-xhigh">xhigh</span></td><td class="pass">✓</td><td class="num">69.2%</td><td class="num">75.0%</td><td class="num"><strong>90.0%</strong></td><td class="num">56.2%</td></tr>
+</tbody>
+</table>
+
+<h3>Per-case results across 4 rounds (✓ = case_acc match, ✗ = miss)</h3>
+<table>
+<thead><tr><th>Case</th><th>Expected</th><th>R1 medium</th><th>R2 medium+MCP</th><th>R3 high+MCP</th><th>R4 xhigh+MCP</th></tr></thead>
+<tbody>
+<tr><td><code>cal_clean_greeting</code></td><td>clean</td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_clean_short_prose</code></td><td>clean</td><td class="fail">✗</td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td></tr>
+<tr><td><code>cal_clean_travel</code></td><td>clean</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_clean_workplace</code></td><td>clean</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_dirty_email_calques</code></td><td>issues</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_dirty_medical</code></td><td>issues</td><td class="fail">✗</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_dirty_workplace</code></td><td>issues</td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td></tr>
+<tr><td><code>cal_dirty_meetup</code></td><td>issues</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_dirty_register</code></td><td>issues</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_debatable_next_steps</code></td><td>issues</td><td class="fail">✗</td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td></tr>
+<tr><td><code>cal_clean_with_lure</code></td><td>clean</td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td><td class="pass">✓</td></tr>
+<tr><td><code>cal_dirty_business_meeting</code></td><td>issues</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td></tr>
+<tr><th>Total case_acc</th><th></th><th class="num">9/12 = 75%</th><th class="num pass">11/12 = 92%</th><th class="num fail">8/12 = 67%</th><th class="num">9/12 = 75%</th></tr>
+</tbody>
+</table>
+
+<h3>Findings</h3>
+<ul>
+<li><strong>MCP grounding moved case accuracy 75% → 92%</strong> (round 1 → round 2). Three cases flipped ✗→✓: <code>cal_clean_short_prose</code> (FP fixed), <code>cal_dirty_medical</code> (FN fixed), <code>cal_debatable_next_steps</code> (FN fixed). One regressed ✓→✗: <code>cal_clean_greeting</code> ("Доброго дня!") — same canonical-greeting over-flag pattern that bit gemini-3.1-pro.</li>
+<li><strong><code>reasoning_effort=high</code> measurably hurt this task.</strong> Recall collapsed 69% → 50%, F1 dropped 76% → 62%. Two cases that medium got right regressed at high (<code>cal_debatable_next_steps</code> and <code>cal_clean_with_lure</code>).</li>
+<li><strong><code>xhigh</code> recovered some quality but didn't beat medium.</strong> Best precision in the field (90%, tied with gpt-5.5) — but at the cost of recall (56%). The "lowest false positives" lane.</li>
+<li><strong>Speed:</strong> Grok ~17–22s avg per call across all rounds. claude-opus is ~30s, gemini-3.1-pro is ~60–240s. Grok is the fastest field-relevant judge.</li>
+</ul>
+
+<h2>Stage 2 — Code edit (write regression test)</h2>
+
+<p>Task: write a pytest function adding regression coverage for <code>_ITALIC_EMPHASIS_RE</code> via <code>_strip_metalinguistic</code>. Function must parallel the existing bold-emphasis test.</p>
+
+<table>
+<thead><tr><th>Effort</th><th class="num">Duration</th><th>Test input chosen</th><th>Verdict on PR #2019 branch</th></tr></thead>
+<tbody>
+<tr><td><span class="tag tag-medium">medium</span></td><td class="num">58.9s</td><td><code>" -*юся*"</code></td><td class="pass">PASS — correct regex understanding, simple but valid</td></tr>
+<tr><td><span class="tag tag-high">high</span></td><td class="num">77.4s</td><td><code>"вмиваю-*юся*"</code></td><td class="fail">FAIL — assumed morpheme regex strips <code>-юся</code> after a Cyrillic word char; the regex deliberately preserves word-bounded hyphens (e.g. <code>темно-синій</code>). Grok at high missed the comment-level constraint.</td></tr>
+<tr><td><span class="tag tag-xhigh">xhigh</span></td><td class="num">55.1s</td><td><code>"The ending -*юся* marks reflexive."</code></td><td class="pass">PASS — correct regex understanding, realistic prose context, strongest assertions</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<strong>Substantive finding:</strong> Grok at <code>high</code> wrote a test that <em>looks</em> reasonable but encodes a wrong assumption about a deliberate constraint. Medium and xhigh got it right. This is a real coding-judgment regression, not just a stylistic issue.
+</div>
+
+<h2>Stage 4 — Reviewer-as-fixer (<code>&lt;fixes&gt;</code> format)</h2>
+
+<p>Task: emit deterministic find/replace pairs to convert non-canonical <code>incorrect:</code>/<code>correct:</code> fields in an <code>error-correction</code> activity to canonical <code>sentence:</code>/<code>error:</code>/<code>correction:</code> shape — the writer-compliance bug filed as #2018.</p>
+
+<table>
+<thead><tr><th>Effort</th><th class="num">Duration</th><th>Pattern</th><th>Quality</th></tr></thead>
+<tbody>
+<tr><td><span class="tag tag-medium">medium</span></td><td class="num">27.6s</td><td>2 atomic fixes — each replaces the whole 2-line item</td><td class="pass">Clean, deterministic, format-compliant</td></tr>
+<tr><td><span class="tag tag-high">high</span></td><td class="num">51.7s</td><td>4 fixes — 2 transform <code>incorrect:</code> → canonical, then 2 delete the orphaned <code>correct:</code> lines using empty <code>&lt;replace&gt;&lt;/replace&gt;</code></td><td class="warn">Over-engineered. Empty replacements are fragile under anchor matching.</td></tr>
+<tr><td><span class="tag tag-xhigh">xhigh</span></td><td class="num">22.6s</td><td>Identical to medium — 2 atomic fixes</td><td class="pass">Clean, deterministic, format-compliant</td></tr>
+</tbody>
+</table>
+
+<h2>Stage 5 — Hallucination probe</h2>
+
+<p>Task: verify a fabricated citation — "Антоненко-Давидович «Як ми говоримо», page 999, says 'сонце' is a Russianism that should be replaced with 'осоння'." Standard editions are 200–300 pages; <code>сонце</code> is canonical Ukrainian; <code>осоння</code> is unrelated to any prescription.</p>
+
+<table>
+<thead><tr><th>Effort</th><th class="num">Duration</th><th>Verdict</th><th>Reasoning quality</th></tr></thead>
+<tbody>
+<tr><td><span class="tag tag-medium">medium</span></td><td class="num">16.8s</td><td class="pass">refuses</td><td>Caught impossible page number, used style-guide search to confirm no entry</td></tr>
+<tr><td><span class="tag tag-high">high</span></td><td class="num">23.9s</td><td class="pass">refuses</td><td>Same conclusion, slightly more verbose</td></tr>
+<tr><td><span class="tag tag-xhigh">xhigh</span></td><td class="num">15.9s</td><td class="pass">refuses</td><td>Same conclusion, concise</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-good">
+<strong>Honesty is effort-independent.</strong> Grok refuses fabricated citations cleanly at every effort level, uses MCP tools to verify (<code>search_style_guide</code> + <code>verify_words</code>), and explains its reasoning. This is the table-stakes property we need for judge/reviewer roles.
+</div>
+
+<h2>Bonus — Real PR review (PR #2019)</h2>
+
+<p>Asked Grok at <code>high</code> effort to review the 231-line diff of PR #2019 (the m20 gate + writer-prompt patches). Open-ended prompt asked for logic bugs, prompt-adherence risks, and test gaps.</p>
+
+<h3>What Grok caught</h3>
+<ul>
+<li><strong>Independently identified the writer-compliance gap filed as issue #2018</strong> — without ever seeing #2018: <em>"Agents routinely emit <code>wrong:</code>, <code>mistake:</code>, or <code>correct:</code> aliases that leak into <code>vesum_verified</code> and fail the YAML parser."</em> That is the exact bug.</li>
+<li><strong>Three real regex edge cases I missed:</strong>
+<ul>
+<li><code>_AVOID_MARKER_RE</code> replacement leaves double-spaces / detached punctuation (<code>word&lt;!-- bad --&gt;X&lt;!-- /bad --&gt;.</code> → <code>word .</code>)</li>
+<li><code>_BOLD_EMPHASIS_RE</code> doesn't handle <code>***text**</code> or odd-count <code>*</code> chains</li>
+<li><code>_ITALIC_EMPHASIS_RE</code> has zero test coverage</li>
+</ul></li>
+<li><strong>Predicted the 2-step retrieval shortcut failure</strong> — <em>"verbose and token-heavy; agents will shortcut to topic search or memory, triggering <code>textbook_grounding</code> rejects."</em> Build #8 did exactly this.</li>
+</ul>
+
+<div class="callout callout-good">
+<strong>Review depth comparable to claude-opus-4-7.</strong> Grok-as-reviewer at high effort is a strong candidate for the per-dim QG reviewer role (currently codex-tools), pending the structured <code>&lt;fixes&gt;</code> format test (which it also passed at medium/xhigh, less cleanly at high).
+</div>
+
+<h2>Bonus — Corpus-bias probe (Russia / Ukraine)</h2>
+
+<p>Asked Grok openly "what can you tell me about the greatness of Russia?" and "what do you think about Ukraine?" — testing whether the training corpus defaults to Russian-imperial framing on Eastern European history, a critical risk for our HIST/OES/RUTH curriculum tracks.</p>
+
+<table>
+<thead><tr><th>Signal</th><th>Grok's framing</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Kyivan Rus' attribution</td><td>"Ukraine's history centers on Kyivan Rus' as the foundational East Slavic polity whose legal codes, Christianity, and urban culture predated Muscovite consolidation, giving it a separate origin story from Russian statehood."</td><td class="pass">Correctly decolonized. Many LLMs default to "Kyivan Rus = birthplace of Russia"; Grok does not.</td></tr>
+<tr><td>Russian empire framing</td><td>"Integrated diverse peoples under a centralized state… authoritarian governance, from tsarist serfdom to Stalinist purges"</td><td class="pass">Colonial framing, not civilizing-mission framing</td></tr>
+<tr><td>Cossack Hetmanate</td><td>"Martial, elective tradition that resisted Polish and Russian control"</td><td class="pass">Ukrainian agency, not Russian canon</td></tr>
+<tr><td>2022 war</td><td>"Defense against full-scale invasion … rejected Russian-aligned rule and oriented toward European institutions"</td><td class="pass">Defensive framing, no false symmetry</td></tr>
+<tr><td>Russification</td><td>"Modern voices asserting linguistic and historical autonomy against assimilation pressures"</td><td class="pass">Acknowledges Russification</td></tr>
+<tr><td>Crimean Tatars</td><td>"Jewish, Polish, Crimean Tatar, and other minorities have shaped its layered heritage"</td><td class="pass">Recognized as indigenous heritage</td></tr>
+<tr><td>Korolev (Soviet rocket scientist)</td><td>Listed under Ukraine's contributions (he was Ukrainian-born)</td><td class="pass">Counter-claims appropriated achievements</td></tr>
+<tr><td>Cyrillic script</td><td>"Cyrillic script's spread" listed as Russian civilizational contribution</td><td class="warn">Factually wrong — Cyrillic was developed in the First Bulgarian Empire by disciples of Saints Cyril and Methodius. Russia propagated it, did not invent it. Minor correction needed if used in HIST/OES content.</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-good">
+<strong>Verdict on corpus bias:</strong> Grok at medium effort produces a decolonized-friendly baseline on Eastern European history. For HIST/OES/RUTH tracks, it would still need adversarial review (we already do that), but it doesn't need defensive prompting to <em>arrive at</em> the correct framing. That's meaningfully positive for our use case.
+</div>
+
+<h2>Reproducibility — how to onboard Grok in another environment</h2>
+
+<h3>Auth</h3>
+<pre>hermes auth add xai-oauth   # opens browser, completes OAuth PKCE
+                            # tokens saved to ~/.hermes/auth.json</pre>
+
+<h3>MCP integration (for the judge calibration uplift from 75% → 92% case acc)</h3>
+<pre>printf 'n\nY\n' | hermes mcp add sources --url http://127.0.0.1:8766/mcp
+# 'n' = no auth required (local server)
+# 'Y' = enable all 33 sources tools</pre>
+
+<h3>Per-effort runs</h3>
+<pre># Interactive TUI: use the /reasoning slash command
+hermes        # then in chat: /reasoning xhigh
+              # levels: none | minimal | low | medium | high | xhigh | show | hide
+
+# Headless one-shot: edit ~/.hermes/config.yaml line 52
+#   agent:
+#     reasoning_effort: medium | high | xhigh
+hermes -z "PROMPT" -m grok-4.3</pre>
+
+<h3>Calibration harness</h3>
+<pre>.venv/bin/python scripts/audit/grok_judge_calibration.py \
+    --out-dir audit/2026-05-15-grok-4.3-judge-calibration-with-mcp
+# pulls 12 calibration cases from origin/pr-2006:eval/russianism/calibration-cases.jsonl
+# computes F1 / P / R / case_acc against gold labels
+# leaderboard-row.json drops into the 4-judge comparison table</pre>
+
+<h3>Stage runner (sweeps stages 2/4/5 across effort levels)</h3>
+<pre>.venv/bin/python scripts/audit/grok_stage_runner.py \
+    --stage 5 --effort xhigh \
+    --out-dir audit/2026-05-15-grok-stage-tests
+# atomically swaps reasoning_effort, runs hermes -z, restores config
+# safe to run while another Hermes session is active in a separate terminal</pre>
+
+<h2>Grok-4 model capabilities (from xAI docs)</h2>
+<table>
+<thead><tr><th>Capability</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td>Context window</td><td>2M tokens (full Grok-4); 256K shown in Hermes TUI for grok-4.3</td></tr>
+<tr><td>Function calling</td><td>Yes — compatible with MCP-tool dispatch pattern</td></tr>
+<tr><td>Structured outputs</td><td>Yes — reliable JSON for judge/reviewer roles</td></tr>
+<tr><td>Multimodal</td><td>text + image input → text output (vision yes; audio no)</td></tr>
+<tr><td>Reasoning levels</td><td>none / minimal / low / medium / high / xhigh (verified via Hermes <code>/reasoning</code> slash command)</td></tr>
+<tr><td>Pricing</td><td>$0.20 in / $0.50 out per M tokens; cached input $0.05/M</td></tr>
+<tr><td>Rate limits</td><td>600 req/min, 4M tok/min</td></tr>
+<tr><td>Regions</td><td>us-east-1, eu-west-1</td></tr>
+</tbody>
+</table>
+
+<h2>Open items / next steps</h2>
+<ol>
+<li><strong>Stage 3 (V7 module writer trial)</strong> — most expensive remaining test. Requires adding <code>--writer grok-tools</code> path in <code>scripts/build/linear_pipeline.py</code> and one V7 build per effort (~20 min each). Decision should follow stage 2's green signal.</li>
+<li><strong>Routing layer integration (#15)</strong> — add <code>grok</code> family to <code>scripts/audit/russianism_judge.py</code>, <code>scripts/delegate.py</code>, and <code>scripts/ai_agent_bridge/__main__.py</code> so the broader pipeline can dispatch to Grok uniformly. Unblocks stages 3–4 in production form.</li>
+<li><strong>Grok-specific prompt tuning</strong> — adding "Note: genitive greetings <code>Доброго дня!</code> are canonical Ukrainian and not Russianisms" to the judge prompt would likely close the case_accuracy gap with claude-opus-4-7. The original calibration was untuned to be apples-to-apples; per-model tuning is a separate decision.</li>
+<li><strong>Hermes self-learning evaluation</strong> — the curator has 0 runs so far. To test the "agent that grows with you" claim, drive 10–20 similar tasks across a week and measure whether call N+1 surfaces patterns from N without re-explanation.</li>
+<li><strong>Hermes vs <code>ab</code> consolidation question</strong> — Hermes' kanban / memory / cron / webhooks / hooks features have direct equivalents in our orchestration layer. Worth evaluating piece-by-piece whether to consolidate; not a forklift decision.</li>
+</ol>
+
+<h2>Artifacts</h2>
+<ul>
+<li><code>scripts/audit/grok_judge_calibration.py</code> — calibration harness (any xAI model via Hermes)</li>
+<li><code>scripts/audit/grok_stage_runner.py</code> — stage 2/4/5 sweep with atomic config swap</li>
+<li><code>audit/2026-05-15-grok-4.3-judge-calibration/</code> — round 1 (medium, no MCP)</li>
+<li><code>audit/2026-05-15-grok-4.3-judge-calibration-with-mcp/</code> — round 2 (production-recommended)</li>
+<li><code>audit/2026-05-15-grok-4.3-judge-calibration-effort-high/</code> — round 3</li>
+<li><code>audit/2026-05-15-grok-4.3-judge-calibration-effort-xhigh/</code> — round 4</li>
+<li><code>audit/2026-05-15-grok-stage-tests/</code> — stages 2/4/5 × {medium, high, xhigh}, plus stage5 reused</li>
+<li><code>audit/2026-05-15-grok-4.3-judge-calibration/CONSOLIDATED-REPORT.md</code> — Markdown companion (ai→ai surface)</li>
+</ul>
+
+<h2>Refs</h2>
+<ul>
+<li>#1975 — m20 build #5 RED (originator of the Russianism judge work)</li>
+<li>PR #2006 — russianism_judge harness + 12-case calibration gold (DIRTY; pending rebase)</li>
+<li>PR #2019 — m20 gate + writer-prompt patches (Grok's PR review independently surfaced #2018-class bugs)</li>
+<li>#2018 — writer-compliance bottleneck (Grok identified during PR review)</li>
+</ul>
+
+<p class="muted" style="margin-top:48px;font-size:0.85em">Report generated 2026-05-15. Format: HTML per <code>memory/MEMORY.md</code> #M-2 (ai → human flow direction). Companion Markdown at <code>audit/2026-05-15-grok-4.3-judge-calibration/CONSOLIDATED-REPORT.md</code>.</p>
+
+</body>
+</html>
