@@ -16,22 +16,33 @@ p{margin:6px 0}
 </head>
 <body>
 <h1>Code Review Benchmark Matrix</h1>
-<p>Generated: 2026-05-16T19:37:32Z</p>
+<p>Generated: 2026-05-16T20:13:06Z</p>
 <h2>Summary</h2>
-<p>- Cells scored: 30</p>
-<p>- Cells n/a: 0</p>
-<p>- Cells with harness errors: 16</p>
-<p>- Best F1: 34.8% (claude-sonnet-4-6 / native_cli)</p>
+<p>- Cells scored: 44</p>
+<p>- Cells n/a: 12</p>
+<p>- Cells with harness errors: 19</p>
+<p>- Best F1: 61.5% (gpt-5.5 / native_cli)</p>
 <h2>Leaderboard</h2>
 <table><thead><tr><th>family</th><th>model</th><th>harness</th><th>effort</th><th>mcp_state</th><th>F1</th><th>P</th><th>R</th><th>HIGH R</th><th>strong-match-count</th><th>cat-miss</th><th>avg_dur</th></tr></thead><tbody>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>medium</td><td>with_mcp</td><td>61.5%</td><td>80.0%</td><td>50.0%</td><td>40.0%</td><td>4</td><td>3</td><td>209.6s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>with_mcp</td><td>46.2%</td><td>60.0%</td><td>37.5%</td><td>40.0%</td><td>3</td><td>3</td><td>231.5s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>low</td><td>without_mcp</td><td>46.2%</td><td>60.0%</td><td>37.5%</td><td>40.0%</td><td>3</td><td>3</td><td>72.8s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>medium</td><td>without_mcp</td><td>46.2%</td><td>60.0%</td><td>37.5%</td><td>40.0%</td><td>3</td><td>3</td><td>122.6s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>high</td><td>without_mcp</td><td>42.9%</td><td>50.0%</td><td>37.5%</td><td>40.0%</td><td>3</td><td>3</td><td>301.1s</td></tr>
+<tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>xhigh</td><td>with_mcp</td><td>41.7%</td><td>31.2%</td><td>62.5%</td><td>60.0%</td><td>5</td><td>2</td><td>503.9s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>low</td><td>with_mcp</td><td>40.0%</td><td>42.9%</td><td>37.5%</td><td>40.0%</td><td>3</td><td>3</td><td>153.2s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>low</td><td>with_mcp</td><td>36.4%</td><td>66.7%</td><td>25.0%</td><td>20.0%</td><td>2</td><td>4</td><td>61.0s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>low</td><td>without_mcp</td><td>34.8%</td><td>26.7%</td><td>50.0%</td><td>40.0%</td><td>4</td><td>3</td><td>142.9s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>high</td><td>with_mcp</td><td>30.8%</td><td>40.0%</td><td>25.0%</td><td>20.0%</td><td>2</td><td>4</td><td>142.8s</td></tr>
 <tr><td>anthropic</td><td>claude-opus-4-7</td><td>native_cli</td><td>low</td><td>with_mcp</td><td>28.6%</td><td>23.1%</td><td>37.5%</td><td>40.0%</td><td>3</td><td>3</td><td>87.8s</td></tr>
 <tr><td>anthropic</td><td>claude-opus-4-7</td><td>native_cli</td><td>medium</td><td>without_mcp</td><td>28.6%</td><td>23.1%</td><td>37.5%</td><td>20.0%</td><td>3</td><td>4</td><td>107.6s</td></tr>
 <tr><td>anthropic</td><td>claude-opus-4-7</td><td>native_cli</td><td>low</td><td>without_mcp</td><td>27.3%</td><td>21.4%</td><td>37.5%</td><td>20.0%</td><td>3</td><td>4</td><td>90.1s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>high</td><td>with_mcp</td><td>26.7%</td><td>28.6%</td><td>25.0%</td><td>20.0%</td><td>2</td><td>4</td><td>204.4s</td></tr>
 <tr><td>anthropic</td><td>claude-opus-4-7</td><td>native_cli</td><td>high</td><td>without_mcp</td><td>26.1%</td><td>20.0%</td><td>37.5%</td><td>20.0%</td><td>3</td><td>4</td><td>137.6s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>low</td><td>with_mcp</td><td>24.0%</td><td>17.6%</td><td>37.5%</td><td>20.0%</td><td>3</td><td>4</td><td>134.7s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>medium</td><td>without_mcp</td><td>24.0%</td><td>17.6%</td><td>37.5%</td><td>20.0%</td><td>3</td><td>4</td><td>274.0s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>high</td><td>with_mcp</td><td>21.4%</td><td>15.0%</td><td>37.5%</td><td>20.0%</td><td>3</td><td>4</td><td>419.7s</td></tr>
+<tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>xhigh</td><td>without_mcp</td><td>16.0%</td><td>11.8%</td><td>25.0%</td><td>20.0%</td><td>2</td><td>4</td><td>340.7s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>high</td><td>without_mcp</td><td>14.8%</td><td>10.5%</td><td>25.0%</td><td>20.0%</td><td>2</td><td>4</td><td>558.1s</td></tr>
 <tr><td>anthropic</td><td>claude-opus-4-7</td><td>native_cli</td><td>medium</td><td>with_mcp</td><td>8.3%</td><td>6.2%</td><td>12.5%</td><td>0.0%</td><td>1</td><td>5</td><td>111.5s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>native_cli</td><td>medium</td><td>with_mcp</td><td>7.4%</td><td>5.3%</td><td>12.5%</td><td>20.0%</td><td>1</td><td>4</td><td>339.0s</td></tr>
@@ -54,6 +65,9 @@ p{margin:6px 0}
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0</td><td>5</td><td>0.6s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>hermes</td><td>xhigh</td><td>with_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0</td><td>5</td><td>7.3s</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>hermes</td><td>xhigh</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0</td><td>5</td><td>0.6s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>high</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0</td><td>5</td><td>0.5s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>low</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0</td><td>5</td><td>0.6s</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0</td><td>5</td><td>0.5s</td></tr>
 </tbody></table>
 <h2>Harness Comparison</h2>
 <table><thead><tr><th>model</th><th>effort</th><th>mcp_state</th><th>native_cli F1</th><th>hermes F1</th><th>delta</th></tr></thead><tbody>
@@ -71,6 +85,14 @@ p{margin:6px 0}
 <tr><td>claude-sonnet-4-6</td><td>low</td><td>without_mcp</td><td>34.8%</td><td>0.0%</td><td>-34.8pp</td></tr>
 <tr><td>claude-sonnet-4-6</td><td>medium</td><td>with_mcp</td><td>7.4%</td><td>0.0%</td><td>-7.4pp</td></tr>
 <tr><td>claude-sonnet-4-6</td><td>medium</td><td>without_mcp</td><td>24.0%</td><td>0.0%</td><td>-24.0pp</td></tr>
+<tr><td>claude-sonnet-4-6</td><td>xhigh</td><td>with_mcp</td><td>41.7%</td><td>0.0%</td><td>-41.7pp</td></tr>
+<tr><td>claude-sonnet-4-6</td><td>xhigh</td><td>without_mcp</td><td>16.0%</td><td>0.0%</td><td>-16.0pp</td></tr>
+<tr><td>gpt-5.5</td><td>high</td><td>with_mcp</td><td>26.7%</td><td>30.8%</td><td>+4.1pp</td></tr>
+<tr><td>gpt-5.5</td><td>high</td><td>without_mcp</td><td>42.9%</td><td>0.0%</td><td>-42.9pp</td></tr>
+<tr><td>gpt-5.5</td><td>low</td><td>with_mcp</td><td>36.4%</td><td>40.0%</td><td>+3.6pp</td></tr>
+<tr><td>gpt-5.5</td><td>low</td><td>without_mcp</td><td>46.2%</td><td>0.0%</td><td>-46.2pp</td></tr>
+<tr><td>gpt-5.5</td><td>medium</td><td>with_mcp</td><td>61.5%</td><td>46.2%</td><td>-15.4pp</td></tr>
+<tr><td>gpt-5.5</td><td>medium</td><td>without_mcp</td><td>46.2%</td><td>0.0%</td><td>-46.2pp</td></tr>
 </tbody></table>
 <h2>MCP Impact</h2>
 <table><thead><tr><th>model</th><th>harness</th><th>effort</th><th>without F1</th><th>with F1</th><th>delta</th></tr></thead><tbody>
@@ -89,6 +111,13 @@ p{margin:6px 0}
 <tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>high</td><td>14.8%</td><td>21.4%</td><td>+6.6pp</td></tr>
 <tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>low</td><td>34.8%</td><td>24.0%</td><td>-10.8pp</td></tr>
 <tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>medium</td><td>24.0%</td><td>7.4%</td><td>-16.6pp</td></tr>
+<tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>xhigh</td><td>16.0%</td><td>41.7%</td><td>+25.7pp</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>high</td><td>0.0%</td><td>30.8%</td><td>+30.8pp</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>low</td><td>0.0%</td><td>40.0%</td><td>+40.0pp</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>0.0%</td><td>46.2%</td><td>+46.2pp</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>high</td><td>42.9%</td><td>26.7%</td><td>-16.2pp</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>low</td><td>46.2%</td><td>36.4%</td><td>-9.8pp</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>medium</td><td>46.2%</td><td>61.5%</td><td>+15.4pp</td></tr>
 </tbody></table>
 <h2>Effort Scaling</h2>
 <table><thead><tr><th>model</th><th>harness</th><th>mcp_state</th><th>F1 by effort</th></tr></thead><tbody>
@@ -98,8 +127,12 @@ p{margin:6px 0}
 <tr><td>claude-opus-4-7</td><td>native_cli</td><td>without_mcp</td><td>high=26.1%, low=27.3%, medium=28.6%, xhigh=0.0%</td></tr>
 <tr><td>claude-sonnet-4-6</td><td>hermes</td><td>with_mcp</td><td>high=0.0%, low=0.0%, medium=0.0%, xhigh=0.0%</td></tr>
 <tr><td>claude-sonnet-4-6</td><td>hermes</td><td>without_mcp</td><td>high=0.0%, low=0.0%, medium=0.0%, xhigh=0.0%</td></tr>
-<tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>with_mcp</td><td>high=21.4%, low=24.0%, medium=7.4%</td></tr>
-<tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>without_mcp</td><td>high=14.8%, low=34.8%, medium=24.0%</td></tr>
+<tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>with_mcp</td><td>high=21.4%, low=24.0%, medium=7.4%, xhigh=41.7%</td></tr>
+<tr><td>claude-sonnet-4-6</td><td>native_cli</td><td>without_mcp</td><td>high=14.8%, low=34.8%, medium=24.0%, xhigh=16.0%</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>with_mcp</td><td>high=30.8%, low=40.0%, medium=46.2%</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>without_mcp</td><td>high=0.0%, low=0.0%, medium=0.0%</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>with_mcp</td><td>high=26.7%, low=36.4%, medium=61.5%</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>without_mcp</td><td>high=42.9%, low=46.2%, medium=46.2%</td></tr>
 </tbody></table>
 <h2>Failure Log</h2>
 <table><thead><tr><th>family</th><th>model</th><th>harness</th><th>effort</th><th>mcp_state</th><th>reason</th></tr></thead><tbody>
@@ -119,6 +152,21 @@ p{margin:6px 0}
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;pr-2025-openai-proxy&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_acti</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>hermes</td><td>xhigh</td><td>with_mcp</td><td>[{&quot;case_id&quot;: &quot;pr-2025-openai-proxy&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 0, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;&quot;}, {&quot;case_id&quot;: &quot;pr-2031-activity-schema&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 0, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;&quot;}, {&quot;case_id&quot;: &quot;pr-2038-m20-three-fixes&quot;, &quot;verd</td></tr>
 <tr><td>anthropic</td><td>claude-sonnet-4-6</td><td>hermes</td><td>xhigh</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;pr-2025-openai-proxy&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_acti</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>high</td><td>with_mcp</td><td>gemini-3.1-pro-preview does not accept effort=high via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>high</td><td>without_mcp</td><td>gemini-3.1-pro-preview does not accept effort=high via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>low</td><td>with_mcp</td><td>gemini-3.1-pro-preview does not accept effort=low via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>low</td><td>without_mcp</td><td>gemini-3.1-pro-preview does not accept effort=low via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>medium</td><td>with_mcp</td><td>gemini-3.1-pro-preview does not accept effort=medium via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>medium</td><td>without_mcp</td><td>gemini-3.1-pro-preview does not accept effort=medium via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>xhigh</td><td>with_mcp</td><td>gemini-3.1-pro-preview does not accept effort=xhigh via native_cli; configured palette: default</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>xhigh</td><td>without_mcp</td><td>gemini-3.1-pro-preview does not accept effort=xhigh via native_cli; configured palette: default</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>high</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;pr-2025-openai-proxy&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_acti</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>low</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;pr-2025-openai-proxy&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_acti</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;pr-2025-openai-proxy&quot;, &quot;verdict&quot;: &quot;review_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_acti</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>xhigh</td><td>with_mcp</td><td>gpt-5.5 does not accept effort=xhigh via hermes; configured palette: low, medium, high</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>xhigh</td><td>without_mcp</td><td>gpt-5.5 does not accept effort=xhigh via hermes; configured palette: low, medium, high</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>xhigh</td><td>with_mcp</td><td>gpt-5.5 does not accept effort=xhigh via native_cli; configured palette: low, medium, high</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>xhigh</td><td>without_mcp</td><td>gpt-5.5 does not accept effort=xhigh via native_cli; configured palette: low, medium, high</td></tr>
 </tbody></table>
 </body>
 </html>

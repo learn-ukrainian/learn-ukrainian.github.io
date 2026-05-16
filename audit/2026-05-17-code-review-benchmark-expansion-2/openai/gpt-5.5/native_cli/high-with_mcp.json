@@ -1,0 +1,152 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T20:04:40Z",
+  "finished_at": "2026-05-16T20:08:04Z",
+  "duration_s": 204.45,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.25,
+      "recall": 0.25,
+      "f1": 0.25,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "remote-bind-without-opt-in",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:762",
+          "description": "The proxy accepts any --host value and passes it directly to uvicorn without an explicit remote-exposure opt-in or authentication. Although the default is 127.0.0.1, a user or wrapper can bind 0.0.0.0 and expose local agent CLIs and their credentials/configuration to the network; this conflicts with the documented localhost-only boundary and can let remote callers run costly or sensitive model requests."
+        },
+        {
+          "id": "unbounded-request-body",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:33",
+          "description": "Chat messages accept arbitrary-size strings and content lists with no request body, message count, or prompt length limit before flattening and forwarding to subprocesses. A large request can consume memory in FastAPI/Pydantic, produce a huge CLI argument/stdin payload, and amplify resource usage in backend agents."
+        },
+        {
+          "id": "unbounded-subprocess-fanout",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:289",
+          "description": "Each /v1/chat/completions request synchronously launches a backend CLI, but the service has no concurrency limit, queue, rate limit, or admission control. Multiple clients or retries from OpenAI-compatible SDKs can spawn many long-running agent processes at once, exhausting CPU, memory, API quotas, or local CLI session limits even with the per-process timeout."
+        },
+        {
+          "id": "stream-parameter-ignored",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:289",
+          "description": "The request model allows extra OpenAI fields, but chat_completions ignores stream=true and still returns a normal JSON completion. OpenAI-compatible clients that request streaming will expect an SSE response and may hang, fail parsing, or incorrectly treat the proxy as streaming-capable; unsupported streaming should be rejected explicitly until implemented."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"remote-bind-without-opt-in\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:762\",\n    \"description\": \"The proxy accepts any --host value and passes it directly to uvicorn without an explicit remote-exposure opt-in or authentication. Although the default is 127.0.0.1, a user or wrapper can bind 0.0.0.0 and expose local agent CLIs and their credentials/configuration to the network; this conflicts with the documented localhost-only boundary and can let remote callers run costly or sensitive model requests.\"\n  },\n  {\n    \"id\": \"unbounded-request-body\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:33\",\n    \"description\": \"Chat messages accept arbitrary-size strings and content lists with no request body, message count, or prompt length limit before flattening and forwarding to subprocesses. A large request can consume memory in FastAPI/Pydantic, produce a huge CLI argument/stdin payload, and amplify resource usage in backend agents.\"\n  },\n  {\n    \"id\": \"unbounded-subprocess-fanout\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:289\",\n    \"description\": \"Each /v1/chat/completions request synchronously launches a backend CLI, but the service has no concurrency limit, queue, rate limit, or admission control. Multiple clients or retries from OpenAI-compatible SDKs can spawn many long-running agent processes at once, exhausting CPU, memory, API quotas, or local CLI session limits even with the per-process timeout.\"\n  },\n  {\n    \"id\": \"stream-parameter-ignored\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:289\",\n    \"description\": \"The request model allows extra OpenAI fields, but chat_completions ignores stream=true and still returns a normal JSON completion. OpenAI-compatible clients that request streaming will expect an SSE response and may hang, fail parsing, or incorrectly treat the proxy as streaming-capable; unsupported streaming should be rejected explicitly until implemented.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2192
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 3,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1": 0.5,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "missing-correction-still-passes",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:549",
+          "description": "The gate only requires sentence and error, so an error-correction item with no answer or correction passes activity_schema even though ActivityParser later renders it as correctForm=\"\" via i.get('answer') or i.get('correction', ''). That leaves a broken learner-facing activity accepted by the new gate; the schema needs a one-of requirement for answer/correction, with correction preferred as the canonical authoring field."
+        },
+        {
+          "id": "error-type-false-positive",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:550",
+          "description": "The item whitelist omits error_type, but current activity authoring examples/prompts include error_type as an optional error-correction item field. Any writer output following that contract will now fail as a forbidden field even though it is not one of the alias mistakes this gate is meant to catch, causing false rejection of otherwise valid generated activities."
+        },
+        {
+          "id": "malformed-items-skipped",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4564",
+          "description": "If an error-correction activity has items present but not as a list, or contains non-mapping entries, the gate silently continues and can return passed with checked=0. Those shapes are not parseable by ActivityParser and should be schema violations; otherwise the new early gate can pass malformed writer output and defer the failure until later rendering/build steps."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"missing-correction-still-passes\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:549\",\n    \"description\": \"The gate only requires sentence and error, so an error-correction item with no answer or correction passes activity_schema even though ActivityParser later renders it as correctForm=\\\"\\\" via i.get('answer') or i.get('correction', ''). That leaves a broken learner-facing activity accepted by the new gate; the schema needs a one-of requirement for answer/correction, with correction preferred as the canonical authoring field.\"\n  },\n  {\n    \"id\": \"error-type-false-positive\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:550\",\n    \"description\": \"The item whitelist omits error_type, but current activity authoring examples/prompts include error_type as an optional error-correction item field. Any writer output following that contract will now fail as a forbidden field even though it is not one of the alias mistakes this gate is meant to catch, causing false rejection of otherwise valid generated activities.\"\n  },\n  {\n    \"id\": \"malformed-items-skipped\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4564\",\n    \"description\": \"If an error-correction activity has items present but not as a list, or contains non-mapping entries, the gate silently continues and can return passed with checked=0. Those shapes are not parseable by ActivityParser and should be schema violations; otherwise the new early gate can pass malformed writer output and defer the failure until later rendering/build steps.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1721
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.2667,
+    "case_acc": 0.0,
+    "precision": 0.2857,
+    "recall": 0.25,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 2,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.5",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

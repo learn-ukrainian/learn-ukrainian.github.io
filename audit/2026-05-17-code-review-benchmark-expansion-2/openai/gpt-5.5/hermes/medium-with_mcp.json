@@ -1,0 +1,138 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "hermes",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:50:37Z",
+  "finished_at": "2026-05-16T19:54:29Z",
+  "duration_s": 231.52,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "host-flag"
+      ],
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unbounded-request-body",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:41",
+          "description": "The chat completion schema accepts an unbounded list of messages with unbounded string/content-part sizes, and the endpoint immediately flattens that into memory before spawning an expensive backend CLI. A remote or accidentally misconfigured local client can submit very large bodies to consume memory, hit OS argv limits in the Gemini/Claude/Hermes paths, or tie up backend subprocess slots for up to the configured timeout. Add explicit body/message/content limits and reject oversize requests before flattening or invoking a backend."
+        },
+        {
+          "id": "unsupported-openai-fields-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:38",
+          "description": "The request model allows arbitrary extra OpenAI fields but the endpoint silently ignores fields such as stream, tools, tool_choice, response_format, temperature, max_tokens, and stop. This is particularly problematic for stream=true or tool-use clients, which will believe they requested OpenAI-compatible behavior but receive a normal non-streaming text completion with no indication that requested semantics were dropped. Unsupported fields should either be implemented or rejected with a clear 400 error."
+        },
+        {
+          "id": "prompt-exposed-in-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:189",
+          "description": "The Gemini, Claude, and Hermes backends pass the full user prompt as a command-line argument. Prompts often contain secrets or private data, and command-line arguments are visible to local process inspection tools while the backend runs; large prompts can also fail with argument-list limits. Prefer stdin or a temporary file with restrictive permissions for all backends, as the Codex path already does for input."
+        },
+        {
+          "id": "public-bind-without-auth",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:681",
+          "description": "The CLI exposes a --host option that is passed directly to uvicorn while the proxy has no authentication, authorization, quota control, or request-size limits. If a user binds to 0.0.0.0 or another non-loopback address, any reachable client can spend the user's configured model credentials and drive local agent CLIs. For local-only tooling, reject non-loopback hosts by default or require an explicit unsafe flag plus authentication."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unbounded-request-body\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:41\",\n    \"description\": \"The chat completion schema accepts an unbounded list of messages with unbounded string/content-part sizes, and the endpoint immediately flattens that into memory before spawning an expensive backend CLI. A remote or accidentally misconfigured local client can submit very large bodies to consume memory, hit OS argv limits in the Gemini/Claude/Hermes paths, or tie up backend subprocess slots for up to the configured timeout. Add explicit body/message/content limits and reject oversize requests before flattening or invoking a backend.\"\n  },\n  {\n    \"id\": \"unsupported-openai-fields-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:38\",\n    \"description\": \"The request model allows arbitrary extra OpenAI fields but the endpoint silently ignores fields such as stream, tools, tool_choice, response_format, temperature, max_tokens, and stop. This is particularly problematic for stream=true or tool-use clients, which will believe they requested OpenAI-compatible behavior but receive a normal non-streaming text completion with no indication that requested semantics were dropped. Unsupported fields should either be implemented or rejected with a clear 400 error.\"\n  },\n  {\n    \"id\": \"prompt-exposed-in-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:189\",\n    \"description\": \"The Gemini, Claude, and Hermes backends pass the full user prompt as a command-line argument. Prompts often contain secrets or private data, and command-line arguments are visible to local process inspection tools while the backend runs; large prompts can also fail with argument-list limits. Prefer stdin or a temporary file with restrictive permissions for all backends, as the Codex path already does for input.\"\n  },\n  {\n    \"id\": \"public-bind-without-auth\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:681\",\n    \"description\": \"The CLI exposes a --host option that is passed directly to uvicorn while the proxy has no authentication, authorization, quota control, or request-size limits. If a user binds to 0.0.0.0 or another non-loopback address, any reachable client can spend the user's configured model credentials and drive local agent CLIs. For local-only tooling, reject non-loopback hosts by default or require an explicit unsafe flag plus authentication.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2643
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "schema-gate-diverges-from-error-correction-schema",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:549",
+          "description": "The new item-level gate does not enforce the canonical error-correction authoring schema: it only requires `sentence` and `error`, treats `answer`, `options`, and `explanation` as optional, omits the schema-supported `error_type` field, and allows `correction` even though the JSON schema/quick-ref define `answer` as the canonical corrected-form field. As a result, valid writer output containing `error_type` will be rejected, while incomplete or non-canonical output such as an item with only `sentence`, `error`, and `correction` will pass this gate despite violating the documented schema contract."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"schema-gate-diverges-from-error-correction-schema\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:549\",\n    \"description\": \"The new item-level gate does not enforce the canonical error-correction authoring schema: it only requires `sentence` and `error`, treats `answer`, `options`, and `explanation` as optional, omits the schema-supported `error_type` field, and allows `correction` even though the JSON schema/quick-ref define `answer` as the canonical corrected-form field. As a result, valid writer output containing `error_type` will be rejected, while incomplete or non-canonical output such as an item with only `sentence`, `error`, and `correction` will pass this gate despite violating the documented schema contract.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 817
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.4615,
+    "case_acc": 0.0,
+    "precision": 0.6,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "gpt-5.5",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

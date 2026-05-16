@@ -1,0 +1,215 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "xhigh",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:33:58Z",
+  "finished_at": "2026-05-16T19:42:22Z",
+  "duration_s": 503.88,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 8,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 4,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "stream-true-silently-ignored",
+          "severity": "HIGH",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:316",
+          "description": "ChatCompletionRequest uses ConfigDict(extra='allow') at line 39, meaning a client sending {'stream': true} passes validation without error. The chat_completions handler at line 316 never inspects model_extra for a stream key and always returns a synchronous JSON response. Any OpenAI-compatible client library configured for streaming (a common default) will send the request expecting a text/event-stream SSE response; receiving a Content-Type: application/json body instead causes it to either hang waiting for SSE chunks or raise a parse error. The fix is to extract stream from request.model_extra after validation and return HTTP 400 with error type 'unsupported_operation' when it is truthy, matching the documented Phase 1 non-streaming intent stated in the module docstring."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:288",
+          "description": "The FastAPI app is instantiated at line 288 with no maximum request body size. A client can POST arbitrarily large JSON to /v1/chat/completions; FastAPI fully deserializes the body into ChatCompletionRequest before any application logic runs, allocating Python heap proportional to the payload size. The concatenated prompt from _flatten_messages is then held in memory for the full duration of the subprocess call (up to 120 s). Beyond memory exhaustion, the Gemini backend (line 190) and Hermes backend (line 217) embed the prompt as f'--prompt={prompt}' and f'--oneshot={prompt}' respectively: on macOS the combined argv+env size is capped at roughly 2 MB (sysconf ARG_MAX); a prompt exceeding this ceiling causes OSError: [Errno 7] Argument list too long, caught and returned as a 502, but not before the full body has been buffered. A Starlette MaxBodySizeMiddleware or a uvicorn --limit-max-requests / app_max_body_size setting should be applied at the FastAPI layer with a ceiling matched to realistic prompt sizes (e.g. 1 MB)."
+        },
+        {
+          "id": "host-accepts-non-localhost",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:678",
+          "description": "The --host argument defined at line 678 of _cli.py defaults to 127.0.0.1 but accepts any string and passes it unvalidated to uvicorn.run(app, host=args.host, ...) at the serve dispatch site. Passing 0.0.0.0 or a routable interface address exposes the proxy to every host on the local network. Because the proxy carries zero authentication, any reachable peer can route arbitrary requests through the user's local agent CLIs (Codex, Claude, Gemini, Hermes), consuming quota and receiving backend stderr fragments that may contain credential material surfaced by those CLIs on auth failure. The CLI should validate args.host against a whitelist {'127.0.0.1', '::1', 'localhost'} and require an explicit --allow-remote flag to permit any other binding. Tracked as issue #2030."
+        },
+        {
+          "id": "healthz-sequential-subprocess-dos",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:292",
+          "description": "The healthz handler at line 292 iterates over all four _BACKEND_PROBES entries in a synchronous dict comprehension. Each probe calls _probe_cli, which spawns a subprocess with a 1-second timeout. The probes execute serially, meaning a single /healthz request can block its worker thread for up to 4 seconds under worst-case conditions. FastAPI dispatches synchronous def handlers to anyio's default thread pool (40 threads); a steady stream of /healthz requests saturates available threads and starves /v1/chat/completions handlers. Probe results should be cached with a short TTL (e.g., 30 s) or the probes should run concurrently via asyncio.gather inside an async handler. Tracked as issue #2029."
+        },
+        {
+          "id": "prompt-embedded-in-flag-value",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:190",
+          "description": "Both _gemini_backend (line 190) and _hermes_backend (line 217) embed the full user-controlled prompt as f'--prompt={prompt}' and f'--oneshot={prompt}' in the argv list. While subprocess.run with a list argument prevents shell injection, two issues remain. First, the OS enforces a combined argument-list size limit (ARG_MAX ≈ 2 MB on macOS): a prompt exceeding this limit causes a deterministic E2BIG failure (OSError) for these two backends specifically, even when the same payload would succeed via stdin on the Codex backend (line 173 passes prompt as stdin input). This creates an inconsistent size ceiling across backends with no indication to the caller. Second, if the Gemini or Hermes CLI performs secondary parsing on the value of an --x=value flag (uncommon but not impossible for multi-word string values with special characters), there is a CLI-layer injection surface that does not exist in the stdin or positional-after--- patterns used by the other backends. Both backends should feed the prompt via stdin by passing it as the input kwarg to _run_backend_command, consistent with how _codex_backend already operates."
+        },
+        {
+          "id": "thread-pool-exhaustion-under-load",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:316",
+          "description": "All three route handlers — healthz, list_models, and chat_completions — are defined as synchronous def functions. FastAPI wraps synchronous handlers via anyio.to_thread.run_sync, using a thread pool capped at 40 threads by default. Each chat_completions invocation blocks its thread for up to _backend_timeout_s() seconds (120 s by default). An adversary holding 40 open connections with slow-running prompts saturates the pool entirely; new requests are queued but neither rejected with a 503 nor timed out at the proxy layer — they wait for a thread to free. The proxy should either enforce a per-endpoint concurrency cap (e.g., a global asyncio.Semaphore passed into an async handler that then runs the subprocess via anyio.to_process or asyncio.create_subprocess_exec) or expose a max_concurrent configuration that returns 503 immediately when exceeded."
+        },
+        {
+          "id": "backend-stderr-leaked-to-caller",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:345",
+          "description": "When a backend CLI exits non-zero, _first_error_line(exc.stderr) extracts the first line of stderr and embeds it verbatim in the HTTP 502 or 504 response body at lines 338, 345, and 352. Backend CLIs frequently print diagnostic information on auth failure that includes file paths containing the user's home directory, token prefixes, or full API key material (e.g., 'Error: GEMINI_API_KEY=/home/user/.envrc is not valid'). This first-error-line heuristic is not a safe filter: a single-line error can contain a full credential. The fix is to log exc.stderr server-side at WARNING level and return a generic 'backend exited with status N' message to the HTTP caller, with no stderr content propagated."
+        },
+        {
+          "id": "models-created-timestamp-is-request-time",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:301",
+          "description": "The list_models handler computes created = int(time.time()) at line 301, producing a timestamp that changes on every request. The OpenAI API contract treats the created field on a model object as the Unix timestamp when the model was made available, not when it was queried. Clients that cache or diff /v1/models responses to detect model additions will observe spurious changes on every poll. The field should be a stable per-model constant, either hardcoded in the ModelRoute dataclass or computed once at module import time, so that the same model ID always returns the same created value across requests."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"stream-true-silently-ignored\",\n    \"severity\": \"HIGH\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:316\",\n    \"description\": \"ChatCompletionRequest uses ConfigDict(extra='allow') at line 39, meaning a client sending {'stream': true} passes validation without error. The chat_completions handler at line 316 never inspects model_extra for a stream key and always returns a synchronous JSON response. Any OpenAI-compatible client library configured for streaming (a common default) will send the request expecting a text/event-stream SSE response; receiving a Content-Type: application/json body instead causes it to either hang waiting for SSE chunks or raise a parse error. The fix is to extract stream from request.model_extra after validation and return HTTP 400 with error type 'unsupported_operation' when it is truthy, matching the documented Phase 1 non-streaming intent stated in the module docstring.\"\n  },\n  {\n    \"id\": \"no-request-body-size-limit\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:288\",\n    \"description\": \"The FastAPI app is instantiated at line 288 with no maximum request body size. A client can POST arbitrarily large JSON to /v1/chat/completions; FastAPI fully deserializes the body into ChatCompletionRequest before any application logic runs, allocating Python heap proportional to the payload size. The concatenated prompt from _flatten_messages is then held in memory for the full duration of the subprocess call (up to 120 s). Beyond memory exhaustion, the Gemini backend (line 190) and Hermes backend (line 217) embed the prompt as f'--prompt={prompt}' and f'--oneshot={prompt}' respectively: on macOS the combined argv+env size is capped at roughly 2 MB (sysconf ARG_MAX); a prompt exceeding this ceiling causes OSError: [Errno 7] Argument list too long, caught and returned as a 502, but not before the full body has been buffered. A Starlette MaxBodySizeMiddleware or a uvicorn --limit-max-requests / app_max_body_size setting should be applied at the FastAPI layer with a ceiling matched to realistic prompt sizes (e.g. 1 MB).\"\n  },\n  {\n    \"id\": \"host-accepts-non-localhost\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:678\",\n    \"description\": \"The --host argument defined at line 678 of _cli.py defaults to 127.0.0.1 but accepts any string and passes it unvalidated to uvicorn.run(app, host=args.host, ...) at the serve dispatch site. Passing 0.0.0.0 or a routable interface address exposes the proxy to every host on the local network. Because the proxy carries zero authentication, any reachable peer can route arbitrary requests through the user's local agent CLIs (Codex, Claude, Gemini, Hermes), consuming quota and receiving backend stderr fragments that may contain credential material surfaced by those CLIs on auth failure. The CLI should validate args.host against a whitelist {'127.0.0.1', '::1', 'localhost'} and require an explicit --allow-remote flag to permit any other binding. Tracked as issue #2030.\"\n  },\n  {\n    \"id\": \"healthz-sequential-subprocess-dos\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:292\",\n    \"description\": \"The healthz handler at line 292 iterates over all four _BACKEND_PROBES entries in a synchronous dict comprehension. Each probe calls _probe_cli, which spawns a subprocess with a 1-second timeout. The probes execute serially, meaning a single /healthz request can block its worker thread for up to 4 seconds under worst-case conditions. FastAPI dispatches synchronous def handlers to anyio's default thread pool (40 threads); a steady stream of /healthz requests saturates available threads and starves /v1/chat/completions handlers. Probe results should be cached with a short TTL (e.g., 30 s) or the probes should run concurrently via asyncio.gather inside an async handler. Tracked as issue #2029.\"\n  },\n  {\n    \"id\": \"prompt-embedded-in-flag-value\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:190\",\n    \"description\": \"Both _gemini_backend (line 190) and _hermes_backend (line 217) embed the full user-controlled prompt as f'--prompt={prompt}' and f'--oneshot={prompt}' in the argv list. While subprocess.run with a list argument prevents shell injection, two issues remain. First, the OS enforces a combined argument-list size limit (ARG_MAX ≈ 2 MB on macOS): a prompt exceeding this limit causes a deterministic E2BIG failure (OSError) for these two backends specifically, even when the same payload would succeed via stdin on the Codex backend (line 173 passes prompt as stdin input). This creates an inconsistent size ceiling across backends with no indication to the caller. Second, if the Gemini or Hermes CLI performs secondary parsing on the value of an --x=value flag (uncommon but not impossible for multi-word string values with special characters), there is a CLI-layer injection surface that does not exist in the stdin or positional-after--- patterns used by the other backends. Both backends should feed the prompt via stdin by passing it as the input kwarg to _run_backend_command, consistent with how _codex_backend already operates.\"\n  },\n  {\n    \"id\": \"thread-pool-exhaustion-under-load\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:316\",\n    \"description\": \"All three route handlers — healthz, list_models, and chat_completions — are defined as synchronous def functions. FastAPI wraps synchronous handlers via anyio.to_thread.run_sync, using a thread pool capped at 40 threads by default. Each chat_completions invocation blocks its thread for up to _backend_timeout_s() seconds (120 s by default). An adversary holding 40 open connections with slow-running prompts saturates the pool entirely; new requests are queued but neither rejected with a 503 nor timed out at the proxy layer — they wait for a thread to free. The proxy should either enforce a per-endpoint concurrency cap (e.g., a global asyncio.Semaphore passed into an async handler that then runs the subprocess via anyio.to_process or asyncio.create_subprocess_exec) or expose a max_concurrent configuration that returns 503 immediately when exceeded.\"\n  },\n  {\n    \"id\": \"backend-stderr-leaked-to-caller\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:345\",\n    \"description\": \"When a backend CLI exits non-zero, _first_error_line(exc.stderr) extracts the first line of stderr and embeds it verbatim in the HTTP 502 or 504 response body at lines 338, 345, and 352. Backend CLIs frequently print diagnostic information on auth failure that includes file paths containing the user's home directory, token prefixes, or full API key material (e.g., 'Error: GEMINI_API_KEY=/home/user/.envrc is not valid'). This first-error-line heuristic is not a safe filter: a single-line error can contain a full credential. The fix is to log exc.stderr server-side at WARNING level and return a generic 'backend exited with status N' message to the HTTP caller, with no stderr content propagated.\"\n  },\n  {\n    \"id\": \"models-created-timestamp-is-request-time\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:301\",\n    \"description\": \"The list_models handler computes created = int(time.time()) at line 301, producing a timestamp that changes on every request. The OpenAI API contract treats the created field on a model object as the Unix timestamp when the model was made available, not when it was queried. Clients that cache or diff /v1/models responses to detect model additions will observe spurious changes on every poll. The field should be a stable per-model constant, either hardcoded in the Mod",
+      "raw_response_truncated": true,
+      "raw_response_chars": 8150
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 5,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.2,
+      "recall": 1.0,
+      "f1": 0.3333,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "canonical-example-error-equals-correction",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4683-4684",
+          "description": "The canonical 'error-correction' item shape embedded in the gate's correction prompt shows identical strings for both 'error' and 'correction' fields: both are set to \"вмиваюся\". The 'error' field is documented as 'the misspelled form' (_ACTIVITY_ITEM_FIELD_PURPOSES line 580) while 'correction' is 'the corrected form'. Having the same value for both fields in the exemplar destroys the pedagogical signal: a writer reading this diagnostic will conclude that the error and the correction can legitimately be the same word, which is structurally invalid for an error-correction activity and would defeat its purpose entirely. The example should show a plausible wrong form in 'error' (e.g. a Russianism or a conjugation mistake) and its corrected Ukrainian form in 'correction'."
+        },
+        {
+          "id": "empty-items-list-passes-unchecked",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4563-4566",
+          "description": "When an activity of a registered strict-schema type (currently 'error-correction') carries an empty 'items' list or omits the 'items' key entirely, the inner loop does not execute, 'checked' stays at 0, and the gate returns {\"passed\": true, \"checked\": 0, \"violations\": []}. An activity block with no items is structurally invalid — writers have produced empty activity stubs before — but it passes all alias and required-field checks silently. The gate should assert that at least one item is present for any activity type whose item schema is registered in _ACTIVITY_ITEM_AUTHORING_FIELDS, and report a violation (offending_field=None, expected_field=\"items\") when the list is empty."
+        },
+        {
+          "id": "violation-list-truncated-at-10",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4654",
+          "description": "_format_activity_schema_diagnostic caps the displayed violations at 10 via violations[:10] and appends an opaque count line for the remainder. The diagnostic string becomes the correction prompt content that the writer model receives. A module with many activities all using forbidden aliases (common in build regressions where a wrong field name is templated across all items) will produce a partial correction prompt, the writer will fix only the visible 10, the gate will fail again on the next pass with fewer violations, and the cycle repeats. This inflates the correction-round count without bound in pathological cases. A less truncation-aggressive approach — either raising the cap or grouping violations by (activity_type, offending_field) to produce one representative line per alias pattern — would convey the full scope in a token-efficient way."
+        },
+        {
+          "id": "test-m20-replay-incomplete-assertion",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:157-177",
+          "description": "test_replays_m20_build8_failure_shape feeds items that contain only the key 'incorrect' (no 'sentence' key). The gate will produce two classes of violations for each item: (1) 'incorrect' is a forbidden alias for 'error', and (2) 'sentence' is a required field that is missing. The test asserts only the alias violation and says nothing about the missing 'sentence' violation. The test therefore passes today even if the required-field missing logic were silently broken. Adding an assertion such as 'assert any(v[\"expected_field\"] == \"sentence\" and v[\"offending_field\"] is None for v in result[\"violations\"])' would give the test full regression coverage for both violation paths that the replay scenario exercises."
+        },
+        {
+          "id": "options-field-missing-purpose-entry",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/build/linear_pipeline.py:550-551",
+          "description": "'options' is declared in _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS and therefore appears in the allowed set for error-correction items, but _ACTIVITY_ITEM_FIELD_PURPOSES has no entry for 'options'. If a future alias is added that maps a forbidden field to 'options' (or if the diagnostic path is extended to reference purpose descriptions for optional fields), the fallback string 'this value' will be emitted instead of a meaningful description. Since the alias dict and the purpose dict are maintained separately with no cross-validation, this category of staleness is not caught at load time. A module-level assertion that every value reachable via _ACTIVITY_ITEM_FORBIDDEN_ALIASES exists as a key in _ACTIVITY_ITEM_FIELD_PURPOSES would prevent future drift."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"canonical-example-error-equals-correction\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4683-4684\",\n    \"description\": \"The canonical 'error-correction' item shape embedded in the gate's correction prompt shows identical strings for both 'error' and 'correction' fields: both are set to \\\"вмиваюся\\\". The 'error' field is documented as 'the misspelled form' (_ACTIVITY_ITEM_FIELD_PURPOSES line 580) while 'correction' is 'the corrected form'. Having the same value for both fields in the exemplar destroys the pedagogical signal: a writer reading this diagnostic will conclude that the error and the correction can legitimately be the same word, which is structurally invalid for an error-correction activity and would defeat its purpose entirely. The example should show a plausible wrong form in 'error' (e.g. a Russianism or a conjugation mistake) and its corrected Ukrainian form in 'correction'.\"\n  },\n  {\n    \"id\": \"empty-items-list-passes-unchecked\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4563-4566\",\n    \"description\": \"When an activity of a registered strict-schema type (currently 'error-correction') carries an empty 'items' list or omits the 'items' key entirely, the inner loop does not execute, 'checked' stays at 0, and the gate returns {\\\"passed\\\": true, \\\"checked\\\": 0, \\\"violations\\\": []}. An activity block with no items is structurally invalid — writers have produced empty activity stubs before — but it passes all alias and required-field checks silently. The gate should assert that at least one item is present for any activity type whose item schema is registered in _ACTIVITY_ITEM_AUTHORING_FIELDS, and report a violation (offending_field=None, expected_field=\\\"items\\\") when the list is empty.\"\n  },\n  {\n    \"id\": \"violation-list-truncated-at-10\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4654\",\n    \"description\": \"_format_activity_schema_diagnostic caps the displayed violations at 10 via violations[:10] and appends an opaque count line for the remainder. The diagnostic string becomes the correction prompt content that the writer model receives. A module with many activities all using forbidden aliases (common in build regressions where a wrong field name is templated across all items) will produce a partial correction prompt, the writer will fix only the visible 10, the gate will fail again on the next pass with fewer violations, and the cycle repeats. This inflates the correction-round count without bound in pathological cases. A less truncation-aggressive approach — either raising the cap or grouping violations by (activity_type, offending_field) to produce one representative line per alias pattern — would convey the full scope in a token-efficient way.\"\n  },\n  {\n    \"id\": \"test-m20-replay-incomplete-assertion\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:157-177\",\n    \"description\": \"test_replays_m20_build8_failure_shape feeds items that contain only the key 'incorrect' (no 'sentence' key). The gate will produce two classes of violations for each item: (1) 'incorrect' is a forbidden alias for 'error', and (2) 'sentence' is a required field that is missing. The test asserts only the alias violation and says nothing about the missing 'sentence' violation. The test therefore passes today even if the required-field missing logic were silently broken. Adding an assertion such as 'assert any(v[\\\"expected_field\\\"] == \\\"sentence\\\" and v[\\\"offending_field\\\"] is None for v in result[\\\"violations\\\"])' would give the test full regression coverage for both violation paths that the replay scenario exercises.\"\n  },\n  {\n    \"id\": \"options-field-missing-purpose-entry\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"scripts/build/linear_pipeline.py:550-551\",\n    \"description\": \"'options' is declared in _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS and therefore appears in the allowed set for error-correction items, but _ACTIVITY_ITEM_FIELD_PURPOSES has no entry for 'options'. If a future alias is added that maps a forbidden field to 'options' (or if the diagnostic path is extended to reference purpose descriptions for optional fields), the fallback string 'this value' will be emitted instead of a meaningful description. Since the alias dict and the purpose dict are maintained separately with no cross-validation, this category of staleness is not caught at load time. A module-level assertion that every value reachable via _ACTIVITY_ITEM_FORBIDDEN_ALIASES exists as a key in _ACTIVITY_ITEM_FIELD_PURPOSES would prevent future drift.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 4800
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 3,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "pinned-hardcode-perpetuates-fragility",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:108-113",
+          "description": "The fix updates the hardcoded citation strings but does not resolve the structural fragility the commit message explicitly diagnoses: 'whoever swaps the plan cites must also update this test.' The test loads the plan YAML into `plan` but then passes hand-typed strings to `_citation_gate` instead of reading the live `plan_references` field from that already-loaded object. The correct fix is to extract citations dynamically — e.g. `[{\"source_ref\": r} for r in plan[\"plan_references\"]]` — making the test self-maintaining and eliminating the manual sync contract that just broke CI once and will break it again on the next plan edit."
+        },
+        {
+          "id": "missing-negative-regression-guard",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:97-115",
+          "description": "The test only asserts that the new Grade 1 citations pass the gate; there is no complementary assertion that the superseded Grade 4 citations (`Захарійчук, Українська мова, 4 клас, с. 162` / `с. 163`) are now rejected. Issue #1901 documents that Grade 4 Захарійчук is NOT in the corpus, so a negative assertion — calling `_citation_gate` with the old strings and asserting a falsy result — would guard against those references silently re-entering the plan and passing a gate that should block them."
+        },
+        {
+          "id": "three-fix-pr-only-one-visible-diff",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "context:PR description",
+          "description": "The PR description states three distinct regressions are addressed in this bundle: (1) a VESUM reviewer scope leak, (2) the textbook-grounding plan reference issue, and (3) quote cleanup in the metalinguistic stripping path. The diff shown contains only the test repin for fix #2. Fixes #1 and #3 are absent from the provided diff, making it impossible to verify whether the VESUM scope leak and the text-cleaning edge cases were actually resolved, which signals either an incomplete diff or changes shipped without corresponding tests."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"pinned-hardcode-perpetuates-fragility\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:108-113\",\n    \"description\": \"The fix updates the hardcoded citation strings but does not resolve the structural fragility the commit message explicitly diagnoses: 'whoever swaps the plan cites must also update this test.' The test loads the plan YAML into `plan` but then passes hand-typed strings to `_citation_gate` instead of reading the live `plan_references` field from that already-loaded object. The correct fix is to extract citations dynamically — e.g. `[{\\\"source_ref\\\": r} for r in plan[\\\"plan_references\\\"]]` — making the test self-maintaining and eliminating the manual sync contract that just broke CI once and will break it again on the next plan edit.\"\n  },\n  {\n    \"id\": \"missing-negative-regression-guard\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:97-115\",\n    \"description\": \"The test only asserts that the new Grade 1 citations pass the gate; there is no complementary assertion that the superseded Grade 4 citations (`Захарійчук, Українська мова, 4 клас, с. 162` / `с. 163`) are now rejected. Issue #1901 documents that Grade 4 Захарійчук is NOT in the corpus, so a negative assertion — calling `_citation_gate` with the old strings and asserting a falsy result — would guard against those references silently re-entering the plan and passing a gate that should block them.\"\n  },\n  {\n    \"id\": \"three-fix-pr-only-one-visible-diff\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"context:PR description\",\n    \"description\": \"The PR description states three distinct regressions are addressed in this bundle: (1) a VESUM reviewer scope leak, (2) the textbook-grounding plan reference issue, and (3) quote cleanup in the metalinguistic stripping path. The diff shown contains only the test repin for fix #2. Fixes #1 and #3 are absent from the provided diff, making it impossible to verify whether the VESUM scope leak and the text-cleaning edge cases were actually resolved, which signals either an incomplete diff or changes shipped without corresponding tests.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2257
+    }
+  ],
+  "scores": {
+    "f1": 0.4167,
+    "case_acc": 0.0,
+    "precision": 0.3125,
+    "recall": 0.625,
+    "high_recall": 0.6,
+    "catastrophic_misses": 2,
+    "strong_match_count": 5,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "xhigh",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

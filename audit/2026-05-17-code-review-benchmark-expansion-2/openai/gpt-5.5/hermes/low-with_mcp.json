@@ -1,0 +1,153 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "hermes",
+    "effort": "low",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:48:03Z",
+  "finished_at": "2026-05-16T19:50:36Z",
+  "duration_s": 153.18,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "host-flag"
+      ],
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unauthenticated-nonlocal-bind",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:764",
+          "description": "The proxy is described as localhost-only, but the CLI accepts any --host value and passes it directly to uvicorn with no guard and no authentication. If a user runs `ab serve --openai --host 0.0.0.0`, the service exposes an unauthenticated endpoint that launches local agent CLIs with the caller-provided prompt, which can consume paid quotas, access local agent configuration, and potentially expose local command outputs to the network. Reject non-loopback hosts unless an explicit unsafe flag and authentication mechanism are added."
+        },
+        {
+          "id": "unbounded-request-body-to-subprocess",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:31",
+          "description": "The request model accepts unbounded message counts and unbounded string/list content, then flattens the whole body and sends it to subprocess-backed CLIs while capturing stdout/stderr in memory. A local or accidentally exposed client can submit very large payloads that drive high memory use, expensive model invocations, long subprocess lifetimes, or argument-size failures. Add explicit body/message/content limits at the HTTP boundary and reject over-limit requests with a 4xx response before spawning any backend."
+        },
+        {
+          "id": "prompt-passed-via-argv",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:177",
+          "description": "The Gemini, Claude, and Hermes backends pass the entire user prompt as a command-line argument (`--prompt=...`, positional prompt, or `--oneshot=...`). Large but otherwise valid chat prompts can exceed the platform ARG_MAX limit and fail before reaching the model, and command-line arguments may also be visible through process listings while the backend is running. Prefer stdin or a temporary prompt file for all backends, as the Codex path already does."
+        },
+        {
+          "id": "unsupported-openai-fields-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:35",
+          "description": "The request schema allows arbitrary extra OpenAI fields, but the endpoint silently ignores compatibility-sensitive options such as `stream`, `tools`, `tool_choice`, response formats, and sampling parameters. For example, an OpenAI client sending `stream: true` will expect an SSE stream but will receive a normal JSON completion, which can hang or break client integrations. Unsupported fields should either be implemented or explicitly rejected with a clear 400 error, especially for `stream` and tool-use envelopes."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unauthenticated-nonlocal-bind\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:764\",\n    \"description\": \"The proxy is described as localhost-only, but the CLI accepts any --host value and passes it directly to uvicorn with no guard and no authentication. If a user runs `ab serve --openai --host 0.0.0.0`, the service exposes an unauthenticated endpoint that launches local agent CLIs with the caller-provided prompt, which can consume paid quotas, access local agent configuration, and potentially expose local command outputs to the network. Reject non-loopback hosts unless an explicit unsafe flag and authentication mechanism are added.\"\n  },\n  {\n    \"id\": \"unbounded-request-body-to-subprocess\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:31\",\n    \"description\": \"The request model accepts unbounded message counts and unbounded string/list content, then flattens the whole body and sends it to subprocess-backed CLIs while capturing stdout/stderr in memory. A local or accidentally exposed client can submit very large payloads that drive high memory use, expensive model invocations, long subprocess lifetimes, or argument-size failures. Add explicit body/message/content limits at the HTTP boundary and reject over-limit requests with a 4xx response before spawning any backend.\"\n  },\n  {\n    \"id\": \"prompt-passed-via-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:177\",\n    \"description\": \"The Gemini, Claude, and Hermes backends pass the entire user prompt as a command-line argument (`--prompt=...`, positional prompt, or `--oneshot=...`). Large but otherwise valid chat prompts can exceed the platform ARG_MAX limit and fail before reaching the model, and command-line arguments may also be visible through process listings while the backend is running. Prefer stdin or a temporary prompt file for all backends, as the Codex path already does.\"\n  },\n  {\n    \"id\": \"unsupported-openai-fields-silently-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:35\",\n    \"description\": \"The request schema allows arbitrary extra OpenAI fields, but the endpoint silently ignores compatibility-sensitive options such as `stream`, `tools`, `tool_choice`, response formats, and sampling parameters. For example, an OpenAI client sending `stream: true` will expect an SSE stream but will receive a normal JSON completion, which can hang or break client integrations. Unsupported fields should either be implemented or explicitly rejected with a clear 400 error, especially for `stream` and tool-use envelopes.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2806
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 2,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "schema-gate-rejects-error-type",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:535",
+          "description": "The new item whitelist for error-correction omits the existing canonical `error_type` field even though the repository's activity schemas define it for error-correction items and authoring prompts already instruct writers to emit it. Any otherwise-valid writer output containing `error_type: word` will now fail the early activity_schema gate as a forbidden field, so this change can block schema-compliant activities rather than only rejecting aliases such as `incorrect` or `wrong`."
+        },
+        {
+          "id": "malformed-items-pass-schema-gate",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4463",
+          "description": "The gate silently skips error-correction activities whose `items` value is not a list, and also skips non-mapping entries inside the list. That makes the gate report `passed: true` with `checked: 0` for malformed writer output such as `items: 12`, `items: {incorrect: ...}`, or a list of strings, even though those shapes violate the parser contract and will fail later with less targeted errors. A strict schema gate should report these as activity_schema violations instead of treating them as not applicable."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"schema-gate-rejects-error-type\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:535\",\n    \"description\": \"The new item whitelist for error-correction omits the existing canonical `error_type` field even though the repository's activity schemas define it for error-correction items and authoring prompts already instruct writers to emit it. Any otherwise-valid writer output containing `error_type: word` will now fail the early activity_schema gate as a forbidden field, so this change can block schema-compliant activities rather than only rejecting aliases such as `incorrect` or `wrong`.\"\n  },\n  {\n    \"id\": \"malformed-items-pass-schema-gate\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4463\",\n    \"description\": \"The gate silently skips error-correction activities whose `items` value is not a list, and also skips non-mapping entries inside the list. That makes the gate report `passed: true` with `checked: 0` for malformed writer output such as `items: 12`, `items: {incorrect: ...}`, or a list of strings, even though those shapes violate the parser contract and will fail later with less targeted errors. A strict schema gate should report these as activity_schema violations instead of treating them as not applicable.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1381
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 1,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "citation-test-allows-stale-plan-refs",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:110",
+          "description": "The updated regression test only checks that the new Grade 1 source_refs resolve somewhere in the live plan; it does not assert that the obsolete Grade 4 references were removed from the plan. Because _citation_gate accepts any matching plan reference, the test would still pass if plans/a1/my-morning.yaml kept both the new p.24/p.52 citations and the off-corpus Grade 4 p.162/p.163 citations, so it does not fully guard the textbook-grounding regression described in the comment."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"citation-test-allows-stale-plan-refs\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:110\",\n    \"description\": \"The updated regression test only checks that the new Grade 1 source_refs resolve somewhere in the live plan; it does not assert that the obsolete Grade 4 references were removed from the plan. Because _citation_gate accepts any matching plan reference, the test would still pass if plans/a1/my-morning.yaml kept both the new p.24/p.52 citations and the off-corpus Grade 4 p.162/p.163 citations, so it does not fully guard the textbook-grounding regression described in the comment.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 676
+    }
+  ],
+  "scores": {
+    "f1": 0.4,
+    "case_acc": 0.0,
+    "precision": 0.4286,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "gpt-5.5",
+    "effort_actual": "low",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

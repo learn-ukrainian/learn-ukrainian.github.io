@@ -1,0 +1,12 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "hermes",
+    "effort": "xhigh",
+    "mcp_state": "without_mcp"
+  },
+  "result": "n/a",
+  "reason": "gpt-5.5 does not accept effort=xhigh via hermes; configured palette: low, medium, high",
+  "checked_at": "2026-05-16T19:56:54Z"
+}

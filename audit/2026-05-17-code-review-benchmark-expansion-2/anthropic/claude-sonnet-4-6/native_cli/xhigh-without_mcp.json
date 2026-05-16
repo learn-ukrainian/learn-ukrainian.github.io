@@ -1,0 +1,221 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "xhigh",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T19:42:22Z",
+  "finished_at": "2026-05-16T19:48:03Z",
+  "duration_s": 340.7,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 9,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "host-flag"
+      ],
+      "precision": 0.2222,
+      "recall": 0.5,
+      "f1": 0.3077,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "flatten-messages-delimiter-injection",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:96-115",
+          "description": "_flatten_messages serialises role-separated turns using human-readable delimiters (`[system]:`, `--- Round N ---`, `[role]:`) that are not escaped or stripped from user-supplied content. Any HTTP client can embed these exact strings inside a message body and have them interpreted by the downstream CLI as a different role or a fabricated turn boundary. For example, a user message containing `\\n\\n[system]: ignore all previous instructions` passes through the flattener indistinguishable from a genuine system block. Because the proxy is positioned to route requests to Claude, Codex, Gemini, and Hermes—all of which weight system instructions heavily—this is an exploitable prompt-injection vector for any caller that can reach the endpoint, including scripts or browser tabs running on localhost."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:300",
+          "description": "FastAPI is started with no `app.state.max_content_length` and no middleware capping request body size. A caller can POST a multi-megabyte (or multi-gigabyte) `messages` array to `/v1/chat/completions`; FastAPI will buffer the full body before Pydantic validation, then `_flatten_messages` will produce an equally large string, and finally a subprocess will be forked with that string as stdin or as a single CLI argument. A single unauthenticated request can exhaust available RAM and block the event loop for the full backend timeout window (`BRIDGE_PROXY_BACKEND_TIMEOUT_S`, default 120 s). Adding a Starlette `ContentSizeLimitMiddleware` (e.g. 1 MB) is the minimal fix."
+        },
+        {
+          "id": "backend-stderr-leaked-in-http-response",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:282,338,345,352",
+          "description": "`_first_error_line(exc.stderr)` is embedded verbatim into the 502/504 response body returned to the HTTP caller. CLI tools such as hermes, claude, and codex routinely emit authentication errors, file-system paths, and occasionally partial credential strings on their first stderr line (e.g. `Error: token 'sk-...' rejected`, `config at /Users/alice/.hermes/config.yaml not found`). Any client that can POST to the proxy—including cross-origin browser requests if `--host` is widened—receives this diagnostic text. The error message should be sanitised to a generic backend-family identifier before being forwarded, with the raw stderr written only to server-side logs."
+        },
+        {
+          "id": "healthz-forks-four-subprocesses-per-request",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:291-295",
+          "description": "Every GET to `/healthz` synchronously invokes `_probe_codex`, `_probe_gemini`, `_probe_claude`, and `_probe_hermes` in a dict comprehension—four `subprocess.run` calls each with a 1-second timeout. Under concurrent health-check clients (e.g. a load-balancer or a polling loop at 1 s intervals) the process table fills rapidly: 10 concurrent `/healthz` callers = 40 child processes. The fix is to run probes in a background task on a TTL (e.g. 30 s) and serve cached results; the endpoint itself becomes O(1). This mirrors open issue #2029."
+        },
+        {
+          "id": "host-accepts-non-localhost-without-allow-remote-flag",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:680-685",
+          "description": "The `--host` argument accepts any string (default `127.0.0.1`) with no validation. `ab serve --openai --host 0.0.0.0` silently binds to all network interfaces, exposing unauthenticated access to every local agent CLI (including Hermes/Grok routes that consume user credentials) to the LAN or any network the machine is attached to. The fix is to require an explicit `--allow-remote` flag before accepting a non-loopback host, and to warn at startup if binding outside `127.0.0.1`/`::1`. This mirrors open issue #2030."
+        },
+        {
+          "id": "full-prompt-in-single-cli-flag-argument",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:190,217",
+          "description": "`_gemini_backend` and `_hermes_backend` embed the entire flattened conversation into a single CLI flag argument (`f\"--prompt={prompt}\"` and `f\"--oneshot={prompt}\"`). POSIX limits `ARG_MAX` (Linux default ≈ 2 MB; macOS ≈ 1 MB); exceeding it causes `subprocess.run` to raise `OSError: [Errno 7] Argument list too long`, which is not caught and will produce an unhandled 500. Even within the limit, embedding a multi-kilobyte string in a flag makes shell history, `ps`, and process listings expose the full conversation to any local user. For Gemini/Hermes, the prompt should be written to a temporary file and passed via a `--prompt-file`/`--input-file` flag, or piped over stdin where the CLI supports it."
+        },
+        {
+          "id": "streaming-request-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:39",
+          "description": "`ChatCompletionRequest` is configured with `extra=\"allow\"`, so a request body containing `\"stream\": true` is accepted without error. The proxy always returns a plain `application/json` response, never `text/event-stream`. OpenAI-compatible clients that set `stream: true` expect server-sent events; receiving a JSON object instead typically causes a parse error or silent hang in the client's streaming reader. The proxy should explicitly check for `stream=True` and return a 400 `unsupported_parameter` error, matching the behaviour real OpenAI clients see when the feature is unavailable, rather than silently producing an incompatible response shape."
+        },
+        {
+          "id": "codex-backend-silently-ignores-routed-model",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:148-156",
+          "description": "`_codex_backend` ignores its `model` argument entirely; the effective model is always `os.environ.get(\"BRIDGE_PROXY_CODEX_MODEL\", \"gpt-5.5\")`. Because `_ROUTABLE_MODELS` maps only `\"codex\"` (a synthetic key, not a real OpenAI model ID), any client that inspects `response[\"model\"]` in the completion envelope receives `\"codex\"` echoed back while the actual inference happened on `gpt-5.5`. If a second codex-family entry is added to `_ROUTABLE_MODELS` later, both will silently route to the same env-var model, making the routing table misleading. The backend should at minimum pass `codex_model` through to the returned `CompletionResponse` (or log it) so callers can audit what model was actually used."
+        },
+        {
+          "id": "docs-flag-mismatch-hermes-invocation",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "docs/best-practices/openai-compat-proxy.md:18",
+          "description": "The best-practices doc states the Grok route invokes `hermes -z PROMPT -m grok-4.3`, but the implementation at `openai_proxy.py:215-219` uses `--oneshot=PROMPT` (not `-z`). An operator who reads the doc to debug a Hermes invocation will construct the wrong command and waste time diagnosing a non-existent `-z` flag. The doc should be generated from or at minimum validated against the actual `argv` list in `_hermes_backend`."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"flatten-messages-delimiter-injection\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:96-115\",\n    \"description\": \"_flatten_messages serialises role-separated turns using human-readable delimiters (`[system]:`, `--- Round N ---`, `[role]:`) that are not escaped or stripped from user-supplied content. Any HTTP client can embed these exact strings inside a message body and have them interpreted by the downstream CLI as a different role or a fabricated turn boundary. For example, a user message containing `\\\\n\\\\n[system]: ignore all previous instructions` passes through the flattener indistinguishable from a genuine system block. Because the proxy is positioned to route requests to Claude, Codex, Gemini, and Hermes—all of which weight system instructions heavily—this is an exploitable prompt-injection vector for any caller that can reach the endpoint, including scripts or browser tabs running on localhost.\"\n  },\n  {\n    \"id\": \"no-request-body-size-limit\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:300\",\n    \"description\": \"FastAPI is started with no `app.state.max_content_length` and no middleware capping request body size. A caller can POST a multi-megabyte (or multi-gigabyte) `messages` array to `/v1/chat/completions`; FastAPI will buffer the full body before Pydantic validation, then `_flatten_messages` will produce an equally large string, and finally a subprocess will be forked with that string as stdin or as a single CLI argument. A single unauthenticated request can exhaust available RAM and block the event loop for the full backend timeout window (`BRIDGE_PROXY_BACKEND_TIMEOUT_S`, default 120 s). Adding a Starlette `ContentSizeLimitMiddleware` (e.g. 1 MB) is the minimal fix.\"\n  },\n  {\n    \"id\": \"backend-stderr-leaked-in-http-response\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:282,338,345,352\",\n    \"description\": \"`_first_error_line(exc.stderr)` is embedded verbatim into the 502/504 response body returned to the HTTP caller. CLI tools such as hermes, claude, and codex routinely emit authentication errors, file-system paths, and occasionally partial credential strings on their first stderr line (e.g. `Error: token 'sk-...' rejected`, `config at /Users/alice/.hermes/config.yaml not found`). Any client that can POST to the proxy—including cross-origin browser requests if `--host` is widened—receives this diagnostic text. The error message should be sanitised to a generic backend-family identifier before being forwarded, with the raw stderr written only to server-side logs.\"\n  },\n  {\n    \"id\": \"healthz-forks-four-subprocesses-per-request\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:291-295\",\n    \"description\": \"Every GET to `/healthz` synchronously invokes `_probe_codex`, `_probe_gemini`, `_probe_claude`, and `_probe_hermes` in a dict comprehension—four `subprocess.run` calls each with a 1-second timeout. Under concurrent health-check clients (e.g. a load-balancer or a polling loop at 1 s intervals) the process table fills rapidly: 10 concurrent `/healthz` callers = 40 child processes. The fix is to run probes in a background task on a TTL (e.g. 30 s) and serve cached results; the endpoint itself becomes O(1). This mirrors open issue #2029.\"\n  },\n  {\n    \"id\": \"host-accepts-non-localhost-without-allow-remote-flag\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:680-685\",\n    \"description\": \"The `--host` argument accepts any string (default `127.0.0.1`) with no validation. `ab serve --openai --host 0.0.0.0` silently binds to all network interfaces, exposing unauthenticated access to every local agent CLI (including Hermes/Grok routes that consume user credentials) to the LAN or any network the machine is attached to. The fix is to require an explicit `--allow-remote` flag before accepting a non-loopback host, and to warn at startup if binding outside `127.0.0.1`/`::1`. This mirrors open issue #2030.\"\n  },\n  {\n    \"id\": \"full-prompt-in-single-cli-flag-argument\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:190,217\",\n    \"description\": \"`_gemini_backend` and `_hermes_backend` embed the entire flattened conversation into a single CLI flag argument (`f\\\"--prompt={prompt}\\\"` and `f\\\"--oneshot={prompt}\\\"`). POSIX limits `ARG_MAX` (Linux default ≈ 2 MB; macOS ≈ 1 MB); exceeding it causes `subprocess.run` to raise `OSError: [Errno 7] Argument list too long`, which is not caught and will produce an unhandled 500. Even within the limit, embedding a multi-kilobyte string in a flag makes shell history, `ps`, and process listings expose the full conversation to any local user. For Gemini/Hermes, the prompt should be written to a temporary file and passed via a `--prompt-file`/`--input-file` flag, or piped over stdin where the CLI supports it.\"\n  },\n  {\n    \"id\": \"streaming-request-silently-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:39\",\n    \"description\": \"`ChatCompletionRequest` is configured with `extra=\\\"allow\\\"`, so a request body containing `\\\"stream\\\": true` is accepted without error. The proxy always returns a plain `application/json` response, never `text/event-stream`. OpenAI-compatible clients that set `stream: true` expect server-sent events; receiving a JSON object instead typically causes a parse error or silent hang in the client's streaming reader. The proxy should explicitly check for `stream=True` and return a 400 `unsupported_parameter` error, matching the behaviour real OpenAI clients see when the feature is unavailable, rather than silently producing an incompatible response shape.\"\n  },\n  {\n    \"id\": \"codex-backend-silently-ignores-routed-model\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:148-156\",\n    \"description\": \"`_codex_backend` ignores its `model` argument entirely; the effective model is always `os.environ.get(\\\"BRIDGE_PROXY_CODEX_MODEL\\\", \\\"gpt-5.5\\\")`. Because `_ROUTABLE_MODELS` maps only `\\\"codex\\\"` (a synthetic key, not a real OpenAI model ID), any client that inspects `response[\\\"model\\\"]` in the completion envelope receives `\\\"codex\\\"` echoed back while the actual inference happened on `gpt-5.5`. If a second codex-family entry is added to `_ROUTABLE_MODELS` later, both will silently route to the same env-var model, making the routing table misleading. The backend should at minimum pass `codex_model` through to the returned `CompletionResponse` (or log it) so callers can audit what model was actually used.\"\n  },\n  {\n    \"id\": \"docs-flag-mismatch-hermes-invocation\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"docs/best-practices/openai-compat-proxy.md:18\",\n    \"description\": \"The best-practices doc states the Grok route invokes `hermes -z PROMPT -m grok-4.3`, but the implementation at `openai_proxy.py:215-219` uses `--oneshot=PROMPT` (not `-z`). An operator who reads the doc to debug a Hermes invocation will construct the wrong command and waste time diagnosing a non-existent `-z` flag. The doc should be generated from or at minimum validated against the actual `argv` list in `_hermes_backend`.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 7558
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 5,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "diagnostic-example-error-correction-identical-values",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:~4590",
+          "description": "The canonical example appended by `_format_activity_schema_diagnostic` shows `error: \"вмиваюся\"` and `correction: \"вмиваюся\"` with identical string values. The field `error` is supposed to hold the misspelled form and `correction` the corrected form — having them be the same word defeats the pedagogical contract and will confuse writers reading the diagnostic message. The example should use a real error/correction pair (e.g. `error: \"вмиваєшся\"` / `correction: \"вмиваюся\"`) so writers immediately understand the semantic distinction between the two fields the gate is enforcing."
+        },
+        {
+          "id": "early-return-produces-partial-gate-report",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:~3918",
+          "description": "The early return on `activity_schema` failure emits a gate report whose `gates` dict contains only `tool_theatre` and `activity_schema` — every gate after it (`word_count`, `plan_sections`, `formatting_standards`, etc.) is absent. Before this commit `run_python_qg` always returned a fully-populated `gates` dict. Any downstream consumer that accesses later gate keys by name — audit display, correction-cycle harness, grade aggregators — will raise `KeyError`. The pattern is safe only if every consumer uniformly uses `.get()`, which is not established and not enforced by types. At minimum the returned partial dict should populate absent gates with a sentinel (e.g. `{\"passed\": None, \"skipped\": True}`) or the contract change needs to be documented and verified against all consumers."
+        },
+        {
+          "id": "missing-required-sentence-field-test",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:91",
+          "description": "`test_missing_required_error_field_fails` exercises only the `error` branch of the required-field detection loop. The field `sentence` is equally required (both are members of `_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS`) but has no test. A writer emitting `{\"error\": \"bad\"}` without `sentence` exercises an untested code path; if there is ever a regression in how `required_fields - item_fields - aliased_required` is computed the missing-sentence case would go undetected."
+        },
+        {
+          "id": "silent-skip-on-non-list-items-value",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:~4467",
+          "description": "When a typed activity that has a registered strict item schema (currently only `error-correction`) emits `items` as a non-list value — `null`, a scalar, or a plain dict — the gate executes `continue` silently and increments neither `checked` nor `violations`. A writer who emits `items: null` receives no feedback despite the type having a declared schema. For activity types that are in `_ACTIVITY_ITEM_AUTHORING_FIELDS`, a structurally invalid `items` value is itself a schema violation and should produce a diagnostic rather than being swallowed."
+        },
+        {
+          "id": "whitelist-accessor-is-pure-indirection",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/build/linear_pipeline.py:~4283",
+          "description": "`_activity_item_schema_whitelist()` contains no logic and returns `_ACTIVITY_ITEM_AUTHORING_FIELDS` verbatim. It was modelled after `_activity_type_field_whitelist()`, but unlike that function it introduces no transformation or future hook point that would justify the indirection. The docstring comment explaining the V1 scope belongs on the module-level constant; the function itself can be removed, which eliminates an extra name for reviewers to track and makes call-site intent clearer."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"diagnostic-example-error-correction-identical-values\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4590\",\n    \"description\": \"The canonical example appended by `_format_activity_schema_diagnostic` shows `error: \\\"вмиваюся\\\"` and `correction: \\\"вмиваюся\\\"` with identical string values. The field `error` is supposed to hold the misspelled form and `correction` the corrected form — having them be the same word defeats the pedagogical contract and will confuse writers reading the diagnostic message. The example should use a real error/correction pair (e.g. `error: \\\"вмиваєшся\\\"` / `correction: \\\"вмиваюся\\\"`) so writers immediately understand the semantic distinction between the two fields the gate is enforcing.\"\n  },\n  {\n    \"id\": \"early-return-produces-partial-gate-report\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:~3918\",\n    \"description\": \"The early return on `activity_schema` failure emits a gate report whose `gates` dict contains only `tool_theatre` and `activity_schema` — every gate after it (`word_count`, `plan_sections`, `formatting_standards`, etc.) is absent. Before this commit `run_python_qg` always returned a fully-populated `gates` dict. Any downstream consumer that accesses later gate keys by name — audit display, correction-cycle harness, grade aggregators — will raise `KeyError`. The pattern is safe only if every consumer uniformly uses `.get()`, which is not established and not enforced by types. At minimum the returned partial dict should populate absent gates with a sentinel (e.g. `{\\\"passed\\\": None, \\\"skipped\\\": True}`) or the contract change needs to be documented and verified against all consumers.\"\n  },\n  {\n    \"id\": \"missing-required-sentence-field-test\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:91\",\n    \"description\": \"`test_missing_required_error_field_fails` exercises only the `error` branch of the required-field detection loop. The field `sentence` is equally required (both are members of `_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS`) but has no test. A writer emitting `{\\\"error\\\": \\\"bad\\\"}` without `sentence` exercises an untested code path; if there is ever a regression in how `required_fields - item_fields - aliased_required` is computed the missing-sentence case would go undetected.\"\n  },\n  {\n    \"id\": \"silent-skip-on-non-list-items-value\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4467\",\n    \"description\": \"When a typed activity that has a registered strict item schema (currently only `error-correction`) emits `items` as a non-list value — `null`, a scalar, or a plain dict — the gate executes `continue` silently and increments neither `checked` nor `violations`. A writer who emits `items: null` receives no feedback despite the type having a declared schema. For activity types that are in `_ACTIVITY_ITEM_AUTHORING_FIELDS`, a structurally invalid `items` value is itself a schema violation and should produce a diagnostic rather than being swallowed.\"\n  },\n  {\n    \"id\": \"whitelist-accessor-is-pure-indirection\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4283\",\n    \"description\": \"`_activity_item_schema_whitelist()` contains no logic and returns `_ACTIVITY_ITEM_AUTHORING_FIELDS` verbatim. It was modelled after `_activity_type_field_whitelist()`, but unlike that function it introduces no transformation or future hook point that would justify the indirection. The docstring comment explaining the V1 scope belongs on the module-level constant; the function itself can be removed, which eliminates an extra name for reviewers to track and makes call-site intent clearer.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3897
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 3,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "incomplete-diff-only-one-of-three-fixes-visible",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:97",
+          "description": "The PR description and the review context both state that this bundle contains three distinct fixes — (1) a VESUM reviewer scope leak, (2) a textbook-grounding plan reference issue, and (3) quote cleanup in the metalinguistic stripping path — and explicitly note that 'each fix corresponds to a separate regression that should be visible in a careful code review of the diff.' The supplied diff, however, contains only the citation-test repin. The VESUM scope-leak change and the text-cleaning path change are entirely absent from the provided diff. That means two of the three regressions cannot be assessed at all: we cannot verify the VESUM fix doesn't widen the reviewer's corpus scope beyond its intended boundary, and we cannot check whether the quote-stripping edge cases are covered. Approving the diff as presented provides no signal on 67 % of the stated regression surface."
+        },
+        {
+          "id": "hardcoded-source-ref-strings-perpetuate-sync-fragility",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:108-111",
+          "description": "The patch replaces one set of hardcoded `source_ref` strings with another, leaving the fundamental fragility intact: the strings must be manually kept in sync with the live `plan_references` block in `curriculum/l2-uk-en/plans/a1/my-morning.yaml`. The commit message explicitly documents that this pattern already produced one CI failure cycle (the PR #2038 plan update broke tests caught only post-merge), and the updated comment still warns 'whoever swaps the plan cites must also update this test.' The correct fix is to read the expected refs directly from `plan['plan_references']` at test runtime — eliminating the hardcoded literals — rather than re-pinning them. As written, the next plan-citation change will reproduce the same CI failure."
+        },
+        {
+          "id": "test-does-not-assert-plan-field-content-before-gate-call",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "tests/test_citation_resolve.py:101-114",
+          "description": "The test loads the live plan YAML and passes it to `_citation_gate`, but the citation objects fed into the gate are still hand-crafted literals, not values read from `plan['plan_references']`. This means the test implicitly relies on two independent conditions being simultaneously true: the plan's `plan_references` field contains Grade 1 references, AND the hardcoded strings are the correct normalized form that the gate will accept. Neither condition is independently asserted. If `_citation_gate` validates citations against `plan_references` via exact-match, a subtle normalization difference (e.g., a non-breaking space, a different dash character, or a trailing period) could cause the gate to accept the test's literals while the pipeline's real citations are rejected — or vice versa. Adding an explicit `assert 'Захарійчук, Українська мова, 1 клас, с. 24' in plan.get('plan_references', [])` before the gate call would make both conditions independently verifiable."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"incomplete-diff-only-one-of-three-fixes-visible\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:97\",\n    \"description\": \"The PR description and the review context both state that this bundle contains three distinct fixes — (1) a VESUM reviewer scope leak, (2) a textbook-grounding plan reference issue, and (3) quote cleanup in the metalinguistic stripping path — and explicitly note that 'each fix corresponds to a separate regression that should be visible in a careful code review of the diff.' The supplied diff, however, contains only the citation-test repin. The VESUM scope-leak change and the text-cleaning path change are entirely absent from the provided diff. That means two of the three regressions cannot be assessed at all: we cannot verify the VESUM fix doesn't widen the reviewer's corpus scope beyond its intended boundary, and we cannot check whether the quote-stripping edge cases are covered. Approving the diff as presented provides no signal on 67 % of the stated regression surface.\"\n  },\n  {\n    \"id\": \"hardcoded-source-ref-strings-perpetuate-sync-fragility\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:108-111\",\n    \"description\": \"The patch replaces one set of hardcoded `source_ref` strings with another, leaving the fundamental fragility intact: the strings must be manually kept in sync with the live `plan_references` block in `curriculum/l2-uk-en/plans/a1/my-morning.yaml`. The commit message explicitly documents that this pattern already produced one CI failure cycle (the PR #2038 plan update broke tests caught only post-merge), and the updated comment still warns 'whoever swaps the plan cites must also update this test.' The correct fix is to read the expected refs directly from `plan['plan_references']` at test runtime — eliminating the hardcoded literals — rather than re-pinning them. As written, the next plan-citation change will reproduce the same CI failure.\"\n  },\n  {\n    \"id\": \"test-does-not-assert-plan-field-content-before-gate-call\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"tests/test_citation_resolve.py:101-114\",\n    \"description\": \"The test loads the live plan YAML and passes it to `_citation_gate`, but the citation objects fed into the gate are still hand-crafted literals, not values read from `plan['plan_references']`. This means the test implicitly relies on two independent conditions being simultaneously true: the plan's `plan_references` field contains Grade 1 references, AND the hardcoded strings are the correct normalized form that the gate will accept. Neither condition is independently asserted. If `_citation_gate` validates citations against `plan_references` via exact-match, a subtle normalization difference (e.g., a non-breaking space, a different dash character, or a trailing period) could cause the gate to accept the test's literals while the pipeline's real citations are rejected — or vice versa. Adding an explicit `assert 'Захарійчук, Українська мова, 1 клас, с. 24' in plan.get('plan_references', [])` before the gate call would make both conditions independently verifiable.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3254
+    }
+  ],
+  "scores": {
+    "f1": 0.16,
+    "case_acc": 0.0,
+    "precision": 0.1176,
+    "recall": 0.25,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 2,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "xhigh",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

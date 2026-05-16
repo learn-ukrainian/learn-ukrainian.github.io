@@ -1,0 +1,136 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "low",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T19:57:55Z",
+  "finished_at": "2026-05-16T19:59:08Z",
+  "duration_s": 72.78,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "remote-bind-without-opt-in",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:681",
+          "description": "`ab serve --openai --host 0.0.0.0` exposes an unauthenticated proxy that can invoke local agent CLIs with the user's credentials/config, but the CLI accepts any host string without a separate explicit remote-exposure flag or warning. For local-only tooling, remote binding should require an intentional opt-in such as `--allow-remote`, or reject non-loopback hosts by default."
+        },
+        {
+          "id": "unbounded-request-body",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:31",
+          "description": "The request schema accepts arbitrarily large `messages` and content values, then flattens them and passes the result into subprocesses. A client can send a very large JSON body that consumes memory/CPU during validation and prompt construction, or triggers oversized subprocess inputs/argv, tying up the service until timeout. Add request/body and prompt-size limits before crossing the subprocess boundary."
+        },
+        {
+          "id": "prompt-passed-via-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:153",
+          "description": "Gemini, Claude, and Hermes prompts are passed as command-line arguments (`--prompt=...`, positional prompt, `--oneshot=...`). Request contents can therefore be exposed through process listings and can fail with argv-size limits for large prompts. Pass prompt text through stdin or a temporary file consistently instead of argv."
+        },
+        {
+          "id": "stream-requests-silently-ignored",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:285",
+          "description": "The request model allows extra fields, but `chat_completions` does not inspect unsupported OpenAI options such as `stream: true`; it returns a normal non-streaming 200 response. Many OpenAI-compatible clients rely on streaming semantics and will mis-handle this. Reject unsupported streaming requests with a clear 400/422 error until streaming is implemented."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"remote-bind-without-opt-in\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:681\",\n    \"description\": \"`ab serve --openai --host 0.0.0.0` exposes an unauthenticated proxy that can invoke local agent CLIs with the user's credentials/config, but the CLI accepts any host string without a separate explicit remote-exposure flag or warning. For local-only tooling, remote binding should require an intentional opt-in such as `--allow-remote`, or reject non-loopback hosts by default.\"\n  },\n  {\n    \"id\": \"unbounded-request-body\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:31\",\n    \"description\": \"The request schema accepts arbitrarily large `messages` and content values, then flattens them and passes the result into subprocesses. A client can send a very large JSON body that consumes memory/CPU during validation and prompt construction, or triggers oversized subprocess inputs/argv, tying up the service until timeout. Add request/body and prompt-size limits before crossing the subprocess boundary.\"\n  },\n  {\n    \"id\": \"prompt-passed-via-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:153\",\n    \"description\": \"Gemini, Claude, and Hermes prompts are passed as command-line arguments (`--prompt=...`, positional prompt, `--oneshot=...`). Request contents can therefore be exposed through process listings and can fail with argv-size limits for large prompts. Pass prompt text through stdin or a temporary file consistently instead of argv.\"\n  },\n  {\n    \"id\": \"stream-requests-silently-ignored\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:285\",\n    \"description\": \"The request model allows extra fields, but `chat_completions` does not inspect unsupported OpenAI options such as `stream: true`; it returns a normal non-streaming 200 response. Many OpenAI-compatible clients rely on streaming semantics and will mis-handle this. Reject unsupported streaming requests with a clear 400/422 error until streaming is implemented.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2218
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "alias-suppresses-required-field",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4497",
+          "description": "The missing-required-field check subtracts aliased_required, so an error-correction item that uses a forbidden alias like `incorrect:` without the canonical `error:` will not also report the required `error:` field as missing. The gate still fails, but the diagnostic under-reports the actual schema violation and can steer the writer to rename only one field while leaving malformed item shapes, especially for failure cases where the alias value is a full sentence rather than the misspelled form."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"alias-suppresses-required-field\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4497\",\n    \"description\": \"The missing-required-field check subtracts aliased_required, so an error-correction item that uses a forbidden alias like `incorrect:` without the canonical `error:` will not also report the required `error:` field as missing. The gate still fails, but the diagnostic under-reports the actual schema violation and can steer the writer to rename only one field while leaving malformed item shapes, especially for failure cases where the alias value is a full sentence rather than the misspelled form.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 692
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.4615,
+    "case_acc": 0.3333,
+    "precision": 0.6,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.5",
+    "effort_actual": "low",
+    "mcp_servers": [],
+    "errors": []
+  }
+}
