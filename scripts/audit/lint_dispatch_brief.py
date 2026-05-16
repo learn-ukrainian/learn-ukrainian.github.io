@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint dispatch briefs for unsafe worktree-local venv usage."""
+"""Lint dispatch briefs for unsafe worktree-local venv usage and pytest -x."""
 
 from __future__ import annotations
 
@@ -12,12 +12,59 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 BRIEFS_GLOB = "docs/dispatch-briefs/**/*.md"
 
 PYTHON_RE = re.compile(r"\.venv/bin/python\b")
+PYTEST_X_RE = re.compile(r"\bpytest\b.*\s(?:-x|--exitfirst)\b", re.IGNORECASE)
 FENCE_RE = re.compile(r"^\s*(```+|~~~+)")
 CD_RE = re.compile(r"\bcd\s+(\"[^\"]+\"|'[^']+'|[^;&|#\s]+)")
 SYMLINK_RE = re.compile(
     r"ln\s+-s\s+.*\.venv|#\s*venv\s+symlinked\b|\.venv\b.*\bsymlink(?:ed)?\b",
     re.IGNORECASE,
 )
+NEGATIVE_MARKER_RE = re.compile(r"//\s*(?:BAD|NOT THIS)\b", re.IGNORECASE)
+
+ALLOWLIST_PYTEST_X = {
+    "docs/dispatch-briefs/2026-05-05-1665-holovashchuk-ingest.md",
+    "docs/dispatch-briefs/2026-05-05-1673-1661-cot-tier1-prompts.md",
+    "docs/dispatch-briefs/2026-05-05-1679-search-etymology-removal.md",
+    "docs/dispatch-briefs/2026-05-05-1680-vesum-split-and-mcp-wiki-packet.md",
+    "docs/dispatch-briefs/2026-05-05-1682-test-delegate-isolation.md",
+    "docs/dispatch-briefs/2026-05-05-1687-codeql-suppression-rework.md",
+    "docs/dispatch-briefs/2026-05-05-bakeoff-aggregator-script.md",
+    "docs/dispatch-briefs/2026-05-05-bakeoff-telemetry-instrumentation.md",
+    "docs/dispatch-briefs/2026-05-05-codeql-A-path-injection.md",
+    "docs/dispatch-briefs/2026-05-05-codeql-B-secrets-exposure.md",
+    "docs/dispatch-briefs/2026-05-05-codeql-C-url-tag-validation.md",
+    "docs/dispatch-briefs/2026-05-05-codeql-cleanup-gemini.md",
+    "docs/dispatch-briefs/2026-05-08-night/1785-d4-decision-lineage.md",
+    "docs/dispatch-briefs/2026-05-08-night/1786-ab-discuss-bugs.md",
+    "docs/dispatch-briefs/2026-05-08-night/1787-1.1-brief-linter.md",
+    "docs/dispatch-briefs/2026-05-08-night/1787-1.3-status-verifier.md",
+    "docs/dispatch-briefs/2026-05-08-night/1787-1.4-anti-menu-linter.md",
+    "docs/dispatch-briefs/2026-05-08-night/1787-1.5-handoff-verifier.md",
+    "docs/dispatch-briefs/2026-05-08-night/1789-anti-menu-revise-v2.md",
+    "docs/dispatch-briefs/2026-05-08-night/1789-anti-menu-revise.md",
+    "docs/dispatch-briefs/2026-05-08-night/1790-mcp-streamable-http.md",
+    "docs/dispatch-briefs/2026-05-08-night/1797-d4-revise.md",
+    "docs/dispatch-briefs/2026-05-13-1965-jsx-uk-attribute-extraction.md",
+    "docs/dispatch-briefs/2026-05-13-immersion-gate-phase-a.md",
+    "docs/dispatch-briefs/2026-05-13-immersion-gate-phase-b.md",
+    "docs/dispatch-briefs/2026-05-13-ingest-pohribnyi-pronunciation-corpus.md",
+    "docs/dispatch-briefs/2026-05-13-pipeline-gate-trio.md",
+    "docs/dispatch-briefs/2026-05-13-pr1-learner-state-v7-wiring.md",
+    "docs/dispatch-briefs/2026-05-13-pr2-ulp-immersion-model.md",
+    "docs/dispatch-briefs/2026-05-13-routing-budget-observability.md",
+    "docs/dispatch-briefs/2026-05-13-wiki-obligations-manifest.md",
+    "docs/dispatch-briefs/2026-05-13-writer-prompt-tune.md",
+    "docs/dispatch-briefs/2026-05-14-assembler-tab3-dedupe-vocab-order.md",
+    "docs/dispatch-briefs/2026-05-14-multimedia-resources-search.md",
+    "docs/dispatch-briefs/2026-05-14-v7-mdx-assembler-alignment.md",
+    "docs/dispatch-briefs/2026-05-14-vesum-norm-and-fixblock-parser.md",
+    "docs/dispatch-briefs/2026-05-14-writer-phonetic-ipa-directive.md",
+    "docs/dispatch-briefs/2026-05-14-yaml-activities-unjumble.md",
+    "docs/dispatch-briefs/2026-05-16-2018-activity-schema-gate-codex.md",
+    "docs/dispatch-briefs/2026-05-16-grok-stage-3-writer-plumbing-codex.md",
+    "docs/dispatch-briefs/2026-05-16-pr2019-vesum-gate-test-failures-codex.md",
+    "docs/dispatch-briefs/2026-05-17-judge-calibration-matrix-codex.md",
+}
 
 
 def _contexts(text: str) -> list[tuple[int, str, int | None]]:
@@ -71,7 +118,13 @@ def _has_guard(rows: list[tuple[int, str, int | None]], index: int) -> bool:
     return False
 
 
-def lint_brief(path: Path) -> list[tuple[Path, int]]:
+def _is_negative_fence(rows: list[tuple[int, str, int | None]], fence_id: int | None) -> bool:
+    if fence_id is None:
+        return False
+    return any(fid == fence_id and NEGATIVE_MARKER_RE.search(line) for _, line, fid in rows)
+
+
+def lint_brief(path: Path) -> list[tuple[Path, int, str]]:
     try:
         content = path.read_text(encoding="utf-8")
     except UnicodeDecodeError as e:
@@ -79,18 +132,30 @@ def lint_brief(path: Path) -> list[tuple[Path, int]]:
         sys.exit(1)
 
     rows = _contexts(content)
-    return [
-        (path, line_number)
-        for index, (line_number, line, fence_id) in enumerate(rows)
-        if fence_id is not None and PYTHON_RE.search(line) and not _has_guard(rows, index)
-    ]
+    violations = []
+
+    try:
+        path_str = str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        path_str = str(path)
+
+    for index, (line_number, line, fence_id) in enumerate(rows):
+        if fence_id is not None and PYTHON_RE.search(line) and not _has_guard(rows, index):
+            violations.append((path, line_number, "missing cd-to-main or symlinked-venv before .venv/bin/python"))
+
+        if PYTEST_X_RE.search(line) and path_str not in ALLOWLIST_PYTEST_X and not _is_negative_fence(rows, fence_id):
+            violations.append(
+                (path, line_number, "forbid pytest -x in dispatch briefs (masks downstream failures, see #1942)")
+            )
+
+    return violations
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Lint dispatch briefs for `.venv/bin/python` commands that would break in "
-            "unsymlinked worktrees.\n"
+            "unsymlinked worktrees, and for `pytest -x` usage.\n"
             "Use this before committing dispatch briefs; do not use it for general shell-script linting."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -99,16 +164,16 @@ def build_parser() -> argparse.ArgumentParser:
   .venv/bin/python scripts/audit/lint_dispatch_brief.py --all
 
 Outputs:
-  Prints one `path:line: message` row per unsafe `.venv/bin/python` invocation.
+  Prints one `path:line: message` row per unsafe invocation.
   Does not write files or modify briefs.
 
 Exit codes:
   0 = all scanned briefs are clean
-  1 = one or more unsafe `.venv/bin/python` invocations were found
+  1 = one or more violations were found
   2 = CLI usage error or unreadable input
 
 Related:
-  docs/dispatch-briefs/ authoring guardrail for issue #1787.
+  docs/dispatch-briefs/ authoring guardrail for issue #1787 and #1942.
   .pre-commit-config.yaml local hook `lint-dispatch-brief-venv`.
 """,
     )
@@ -137,8 +202,9 @@ def main(argv: list[str] | None = None) -> int:
             parser.error(f"brief does not exist or is not a file: {path}")
         violations.extend(lint_brief(path))
 
-    for path, line_number in violations:
-        print(f"{path}:{line_number}: missing cd-to-main or symlinked-venv before .venv/bin/python")
+    for path, line_number, msg in violations:
+        print(f"{path}:{line_number}: {msg}")
+
     return 1 if violations else 0
 
 

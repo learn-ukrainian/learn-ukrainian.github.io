@@ -75,3 +75,66 @@ def test_brief_fails_without_required_venv_guard(tmp_path: Path, capsys, body: s
     assert lint_dispatch_brief.main(["--brief", str(brief)]) == 1
     output = capsys.readouterr().out
     assert f"{brief}:{line}: missing cd-to-main or symlinked-venv before .venv/bin/python" in output
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        """```bash
+// BAD
+pytest tests/ -x
+```""",
+        """```bash
+// NOT THIS
+pytest -x
+```""",
+        """```markdown
+// BAD
+pytest --exitfirst
+```""",
+        "This test suite uses `pytest tests/ -v`.",
+        "We also run `pytest tests/ --maxfail=5`.",
+        "Another check: `pytest tests/test_foo.py -q`.",
+    ],
+)
+def test_brief_passes_with_pytest_x_guard_or_no_x(tmp_path: Path, body: str) -> None:
+    brief = tmp_path / "pass_pytest.md"
+    brief.write_text(f"# Brief\n\n{body}\n", encoding="utf-8")
+
+    assert lint_dispatch_brief.main(["--brief", str(brief)]) == 0
+
+
+@pytest.mark.parametrize(
+    "body,line",
+    [
+        (
+            """```bash
+pytest tests/ -x
+```""",
+            4,
+        ),
+        (
+            """```bash
+pytest -x tests/
+```""",
+            4,
+        ),
+        (
+            "Avoid using `pytest -x`.",
+            3,
+        ),
+        (
+            """```bash
+pytest --exitfirst
+```""",
+            4,
+        ),
+    ],
+)
+def test_brief_fails_with_pytest_x(tmp_path: Path, capsys, body: str, line: int) -> None:
+    brief = tmp_path / "fail_pytest.md"
+    brief.write_text(f"# Brief\n\n{body}\n", encoding="utf-8")
+
+    assert lint_dispatch_brief.main(["--brief", str(brief)]) == 1
+    output = capsys.readouterr().out
+    assert f"{brief}:{line}: forbid pytest -x in dispatch briefs" in output
