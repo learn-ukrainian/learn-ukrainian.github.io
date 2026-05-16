@@ -17,9 +17,12 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DB = PROJECT_ROOT / "data" / "sources.db"
+VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
 
 PR_2006_REF = "origin/pr-2006"
 CALIBRATION_BLOB = "eval/russianism/calibration-cases.jsonl"
+
+CYRILLIC_TOKEN_RE = re.compile(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+")
 
 
 def utc_timestamp() -> str:
@@ -97,8 +100,157 @@ def retrieve_antonenko(text: str, k: int = 8, *, db_path: Path = DB) -> list[dic
     ]
 
 
+def _text_tokens(text: str, *, min_len: int = 3) -> list[str]:
+    """Lowercased Cyrillic tokens of length >= ``min_len``, deduplicated, sorted."""
+    return sorted({m for m in (t.lower() for t in CYRILLIC_TOKEN_RE.findall(text)) if len(m) >= min_len})
+
+
+def _proper_noun_tokens(text: str) -> set[str]:
+    """Lowercased tokens that appear capitalized in non-sentence-initial position.
+
+    Used to exclude proper nouns from VESUM-unknown / Russian-shadow checks.
+    ``Львова`` (Lviv-gen) is morphologically valid Ukrainian but absent from
+    VESUM's common-form table, so a naive check creates fake Russianism
+    candidates on clean travel prose.
+    """
+    proper_nouns: set[str] = set()
+    sentence_boundary = True
+    for match in re.finditer(r"\S+", text):
+        token = match.group(0)
+        cyrillic_match = CYRILLIC_TOKEN_RE.match(token)
+        if cyrillic_match and cyrillic_match.group(0)[0].isupper() and not sentence_boundary:
+            proper_nouns.add(cyrillic_match.group(0).lower())
+        sentence_boundary = token[-1] in ".!?…"
+    return proper_nouns
+
+
+def _heritage_check(text: str, *, db_path: Path = DB) -> list[dict[str, Any]]:
+    """Tokens with attestation in Grinchenko (1907) or ESUM etymology.
+
+    Single-word attestation in pre-Soviet / etymological dictionaries is strong
+    evidence that the form is canonical Ukrainian, NOT a Russianism.
+    """
+    tokens = _text_tokens(text)
+    if not tokens:
+        return []
+    conn = sqlite3.connect(db_path)
+    try:
+        placeholders = ",".join("?" * len(tokens))
+        grinchenko = {
+            r[0].lower()
+            for r in conn.execute(
+                f"SELECT word FROM grinchenko WHERE lower(word) IN ({placeholders})",
+                tokens,
+            ).fetchall()
+        }
+        esum = {
+            r[0].lower()
+            for r in conn.execute(
+                f"SELECT lemma FROM esum_etymology WHERE lower(lemma) IN ({placeholders})",
+                tokens,
+            ).fetchall()
+        }
+    finally:
+        conn.close()
+    attested = []
+    for token in tokens:
+        sources = []
+        if token in grinchenko:
+            sources.append("Grinchenko 1907")
+        if token in esum:
+            sources.append("ESUM etymology")
+        if sources:
+            attested.append({"token": token, "sources": sources})
+    return attested
+
+
+def _russian_shadow_check(text: str) -> dict[str, Any]:
+    """Run pymorphy3-based Russian-shadow heuristic over Cyrillic tokens.
+
+    Returns ``{"available": bool, "triggered_tokens": [{token, ru_lemma, confidence}]}``.
+    ``check_ru_morph.is_russian_pattern`` short-circuits on VESUM hits, so this
+    only fires on tokens that are NOT valid Ukrainian forms AND look Russian.
+    Proper nouns are excluded to avoid flagging place/person names.
+    """
+    try:
+        from scripts.verification.check_ru_morph import is_russian_pattern
+    except ImportError:
+        return {"available": False, "triggered_tokens": []}
+    proper_nouns = _proper_noun_tokens(text)
+    triggered = []
+    for token in _text_tokens(text):
+        if token in proper_nouns:
+            continue
+        try:
+            result = is_russian_pattern(token)
+        except Exception:
+            continue
+        if result.get("matches_russian"):
+            triggered.append(
+                {
+                    "token": token,
+                    "ru_lemma": result.get("russian_lemma"),
+                    "confidence": round(float(result.get("confidence", 0.0)), 2),
+                }
+            )
+    return {"available": True, "triggered_tokens": triggered}
+
+
+def _vesum_unknown(text: str, *, db_path: Path = VESUM_DB) -> list[str]:
+    """Cyrillic tokens NOT present in VESUM as a known word_form.
+
+    Proper nouns are excluded — place and person names are typically absent
+    from VESUM's common-form table even when morphologically valid Ukrainian.
+    """
+    tokens = _text_tokens(text)
+    if not tokens:
+        return []
+    if not db_path.exists():
+        return []
+    proper_nouns = _proper_noun_tokens(text)
+    candidate_tokens = [t for t in tokens if t not in proper_nouns]
+    if not candidate_tokens:
+        return []
+    conn = sqlite3.connect(db_path)
+    try:
+        placeholders = ",".join("?" * len(candidate_tokens))
+        known = {
+            r[0]
+            for r in conn.execute(
+                f"SELECT DISTINCT word_form FROM forms WHERE word_form IN ({placeholders})",
+                candidate_tokens,
+            ).fetchall()
+        }
+    finally:
+        conn.close()
+    return sorted(set(candidate_tokens) - known)
+
+
+def retrieve_evidence(text: str) -> dict[str, Any]:
+    """Aggregate all evidence signals for one judge prompt.
+
+    Combines Antonenko-Davydovych entries (style guide), Grinchenko/ESUM
+    token attestation (heritage defense), pymorphy3 Russian-shadow morphology
+    detection, and VESUM-unknown token enumeration.
+    """
+    return {
+        "antonenko": retrieve_antonenko(text),
+        "heritage_attested": _heritage_check(text),
+        "russian_shadow": _russian_shadow_check(text),
+        "vesum_unknown_tokens": _vesum_unknown(text),
+    }
+
+
 def build_judge_prompt(target_text: str, antonenko_entries: list[dict[str, Any]]) -> str:
-    """Universal Russianism-judge prompt, identical across model families."""
+    """Universal Russianism-judge prompt, identical across model families.
+
+    Preserved at main as the production baseline. The H1 evidence-rich variant
+    documented in ``audit/2026-05-17-judge-calibration-h1/COMPARISON.md`` was
+    falsified on the current 12-case calibration set (recall collapsed because
+    the evidence catalog couldn't anchor 14 of 16 sev>=2 flags). The
+    ``retrieve_evidence`` helper below is preserved for H2c use (typed
+    calibration set authoring + per-channel coverage metrics).
+    """
     if antonenko_entries:
         rules_section = (
             "## Relevant Antonenko-Davydovych entries "
