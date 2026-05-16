@@ -15,7 +15,7 @@ import sqlite3
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Collection, Mapping
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -298,6 +298,12 @@ class CorrectionContext:
 
 
 @dataclass(frozen=True, slots=True)
+class ReviewerFixApplyResult:
+    text: str
+    unmatched_anchors: frozenset[str]
+
+
+@dataclass(frozen=True, slots=True)
 class JsonArtifactSchema:
     """Minimal runtime schema for writer JSON artifacts.
 
@@ -482,6 +488,7 @@ _PRONUNCIATION_CUE_PATTERN = re.compile(
 # inner-content alternation `.+?` is non-greedy so adjacent `<!-- bad -->`
 # spans don't fuse.
 _AVOID_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(.+?)<!--\s*/bad\s*-->", re.DOTALL)
+_WARNING_QUOTE_RE = re.compile(r'\bnot\s+["«][^"»]+["»]', re.IGNORECASE)
 
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset(
     {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
@@ -3409,6 +3416,7 @@ def run_python_qg_with_corrections(
     FAIL triggers the ``previously_passed_regression`` terminal meta-gate.
     """
     attempts: set[str] = set()
+    vesum_missing_exclusions: set[str] = set()
 
     def _run_qg() -> dict[str, Any]:
         if qg_runner is not None:
@@ -3417,6 +3425,7 @@ def run_python_qg_with_corrections(
             module_dir,
             plan_path,
             verify_words_fn=verify_words_fn,
+            ignored_vesum_missing_surfaces=vesum_missing_exclusions,
         )
 
     report = _run_qg()
@@ -3434,7 +3443,7 @@ def run_python_qg_with_corrections(
         attempts.add(failed_gate)
 
         before = report
-        handled = _apply_python_qg_correction(
+        handled, unmatched_anchors = _apply_python_qg_correction(
             failed_gate,
             report,
             module_dir=module_dir,
@@ -3453,7 +3462,10 @@ def run_python_qg_with_corrections(
             )
             return report
 
+        if failed_gate == "vesum_verified":
+            vesum_missing_exclusions.update(unmatched_anchors)
         report = _run_qg()
+        vesum_missing_exclusions.clear()
         regressions = _previously_passing_regressions(before, report)
         if regressions:
             gates = report.setdefault("gates", {})
@@ -3504,18 +3516,18 @@ def _apply_python_qg_correction(
     dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None,
     writer: str,
     invoker: Callable[..., Any] | None,
-) -> bool:
+) -> tuple[bool, frozenset[str]]:
     gates = qg_report.get("gates")
     if not isinstance(gates, Mapping):
-        return False
+        return False, frozenset()
     gate_report = gates.get(gate)
     if not isinstance(gate_report, Mapping):
-        return False
+        return False, frozenset()
     if gate in TERMINAL_ZERO_RETRY_GATES:
-        return False
+        return False, frozenset()
     if gate in PIPELINE_INSERT_GATES:
         _apply_activity_id_inserts(module_dir / "module.md", gate_report)
-        return True
+        return True, frozenset()
     if gate in WRITER_CORRECTION_GATES:
         _apply_writer_correction(
             gate,
@@ -3527,7 +3539,7 @@ def _apply_python_qg_correction(
             writer=writer,
             invoker=invoker,
         )
-        return True
+        return True, frozenset()
     if gate in REVIEWER_FIX_GATES:
         candidates = ()
         if gate in DICTIONARY_CANDIDATE_GATES:
@@ -3537,7 +3549,7 @@ def _apply_python_qg_correction(
                 qg_report=qg_report,
                 dictionary_lookup_fn=dictionary_lookup_fn,
             )
-        _apply_reviewer_correction(
+        unmatched_anchors = _apply_reviewer_correction(
             gate,
             gate_report,
             qg_report=qg_report,
@@ -3547,8 +3559,8 @@ def _apply_python_qg_correction(
             reviewer_corrector=reviewer_corrector,
             invoker=invoker,
         )
-        return True
-    return False
+        return True, unmatched_anchors
+    return False, frozenset()
 
 
 def _apply_writer_correction(
@@ -3623,7 +3635,7 @@ def _apply_reviewer_correction(
     candidates: tuple[CorrectionCandidate, ...],
     reviewer_corrector: Callable[[CorrectionContext], str | None] | None,
     invoker: Callable[..., Any] | None,
-) -> None:
+) -> frozenset[str]:
     module_path = module_dir / "module.md"
     module_text = _read_required(module_path)
     prompt = render_reviewer_correction_prompt(
@@ -3672,8 +3684,8 @@ def _apply_reviewer_correction(
             ),
             response_preview=_correction_preview(response),
         )
-        return
-    updated = _apply_reviewer_fixes(
+        return frozenset()
+    result = _apply_reviewer_fixes(
         module_text,
         fixes,
         gate=gate,
@@ -3681,7 +3693,8 @@ def _apply_reviewer_correction(
         plan_path=plan_path,
     )
     if fixes:
-        module_path.write_text(updated, encoding="utf-8")
+        module_path.write_text(result.text, encoding="utf-8")
+    return result.unmatched_anchors
 
 
 def _apply_activity_id_inserts(module_path: Path, gate_report: Mapping[str, Any]) -> None:
@@ -3758,14 +3771,16 @@ def _apply_reviewer_fixes(
     gate: str | None = None,
     module_dir: Path | None = None,
     plan_path: Path | None = None,
-) -> str:
+) -> ReviewerFixApplyResult:
     updated = text
+    unmatched_anchors: set[str] = set()
     for fix in fixes:
         if "insert_after" in fix and "text" in fix:
             anchor = fix["insert_after"]
             if anchor in updated:
                 updated = updated.replace(anchor, anchor + fix["text"], 1)
             else:
+                unmatched_anchors.add(anchor)
                 emit_event(
                     "reviewer_fixes_anchor_unmatched",
                     **_correction_event_fields(
@@ -3784,6 +3799,7 @@ def _apply_reviewer_fixes(
         if find and replace is not None and find in updated:
             updated = updated.replace(find, replace, 1)
         elif find:
+            unmatched_anchors.add(find)
             emit_event(
                 "reviewer_fixes_anchor_unmatched",
                 **_correction_event_fields(
@@ -3796,7 +3812,7 @@ def _apply_reviewer_fixes(
                 anchor_preview=_correction_preview(find),
                 text_preview=_correction_preview(replace),
             )
-    return updated
+    return ReviewerFixApplyResult(updated, frozenset(unmatched_anchors))
 
 
 def _previously_passing_regressions(
@@ -3900,6 +3916,7 @@ def run_python_qg(
     *,
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
     gate_observer: Callable[[str], None] | None = None,
+    ignored_vesum_missing_surfaces: Collection[str] = (),
 ) -> dict[str, Any]:
     """Run deterministic Phase 4 quality gates for one module directory."""
     plan = plan_check(plan_path)
@@ -3945,6 +3962,7 @@ def run_python_qg(
             vocabulary=vocabulary,
             resources=resources,
             verify_words_fn=verify_words_fn,
+            ignored_missing_surfaces=ignored_vesum_missing_surfaces,
         ),
     )
     record("citations_resolve", _citation_gate(resources, plan))
@@ -4664,6 +4682,7 @@ def _vesum_gate(
     vocabulary: list[dict[str, Any]],
     resources: list[dict[str, Any]],
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None,
+    ignored_missing_surfaces: Collection[str] = (),
 ) -> dict[str, Any]:
     """Verify Ukrainian words against VESUM, walking artifacts structurally.
 
@@ -4732,6 +4751,16 @@ def _vesum_gate(
     missing = sorted(
         {surface for surface, lower, _original in unchecked_pairs if lower in missing_lc}
     )
+    ignored_missing_lc = _vesum_missing_exclusion_keys(
+        ignored_missing_surfaces,
+        min_word_length=VESUM_MIN_WORD_LENGTH,
+    )
+    if ignored_missing_lc:
+        missing = [
+            surface
+            for surface in missing
+            if _normalize_for_vesum(surface).lower() not in ignored_missing_lc
+        ]
     return {
         "passed": not missing,
         "checked": len(unchecked_pairs),
@@ -4763,6 +4792,20 @@ def _normalize_for_vesum(lemma: str) -> str:
             text,
         )
     return text.strip()
+
+
+def _vesum_missing_exclusion_keys(
+    surfaces: Collection[str],
+    *,
+    min_word_length: int,
+) -> frozenset[str]:
+    keys: set[str] = set()
+    for surface in surfaces:
+        normalized = _normalize_for_vesum(str(surface))
+        for word in _iter_vesum_word_surfaces(normalized):
+            if len(word) >= min_word_length:
+                keys.add(word.lower())
+    return frozenset(keys)
 
 
 def _iter_vesum_lookup_surface_pairs(
@@ -4917,7 +4960,7 @@ def _walk_artifact_strings(
 def _strip_metalinguistic(text: str) -> str:
     """Strip phonetic transcriptions, code, blank syntax, and morpheme labels.
 
-    Five categories of metalinguistic content are removed before VESUM lookup:
+    These categories of metalinguistic content are removed before VESUM lookup:
 
     - `[...]` — phonetic notation like `[с':а]`, `[ц':а]`
     - `` `...` `` and ` ``` ... ``` ` — inline/fenced code
@@ -4934,6 +4977,8 @@ def _strip_metalinguistic(text: str) -> str:
       is deliberately non-VESUM and would otherwise be a false positive;
       HTML comments don't render in MDX, so the learner still sees the
       bad form in plain prose for contrast.
+    - `not "форма"` / `not «форма»` — prose-quoted warning examples where the
+      quoted form is explicitly marked as wrong.
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.
@@ -4945,6 +4990,7 @@ def _strip_metalinguistic(text: str) -> str:
     text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
     text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
     text = _AVOID_MARKER_RE.sub(" ", text)
+    text = _WARNING_QUOTE_RE.sub(" ", text)
     text = _VESUM_ABBREVIATION_RE.sub(" ", text)
     return text
 

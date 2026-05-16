@@ -97,15 +97,18 @@ def test_plan_references_field_is_supported() -> None:
 
 def test_my_morning_module_passes_citations_resolve() -> None:
     # Source refs must match the LIVE plan_references at curriculum/l2-uk-en/
-    # plans/a1/my-morning.yaml. PR #2014 (2026-05-15) replaced the off-level
-    # `Караман Grade 10, p.187` citation with on-level `Захарійчук Grade 4,
-    # p.163`; this test is pinned to that current state.
+    # plans/a1/my-morning.yaml. Citation history on this plan:
+    # - PR #2014 (2026-05-15) replaced off-level `Караман Grade 10, p.187`
+    #   with `Захарійчук Grade 4, p.162/163`.
+    # - PR #2038 (2026-05-16, this commit) replaced Захарійчук Grade 4 (NOT
+    #   in corpus per #1901) with MCP-grounded Grade 1 chunks at p.24/p.52.
+    # Pinned to the current Grade 1 state.
     plan_path = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en/plans/a1/my-morning.yaml"
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
     result = linear_pipeline._citation_gate(
         [
-            {"source_ref": "Захарійчук, Українська мова, 4 клас, с. 162"},
-            {"source_ref": "Захарійчук, Українська мова, 4 клас, с. 163"},
+            {"source_ref": "Захарійчук, Українська мова, 1 клас, с. 24"},
+            {"source_ref": "Захарійчук, Українська мова, 1 клас, с. 52"},
         ],
         plan,
     )

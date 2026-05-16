@@ -1603,6 +1603,47 @@ def test_vesum_gate_checks_error_word_outside_error_correction_activity(
     assert gate["missing"] == ["вмиваєця"]
 
 
+def test_reviewer_unmatched_anchor_not_in_vesum_missing_list(
+    tmp_path: Path,
+) -> None:
+    """Failed reviewer fix anchors are not learner-facing VESUM evidence."""
+    with linear_pipeline.telemetry_event_sink(tmp_path / "events.jsonl"):
+        apply_result = linear_pipeline._apply_reviewer_fixes(
+            "## Діалоги\n\nЦе вже двоколонна вправа.",
+            [{"find": "двоколонкова", "replace": "двоколонна"}],
+            gate="vesum_verified",
+        )
+
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        return {
+            word: []
+            if word == "двоколонкова"
+            else [{"lemma": word, "pos": "x", "tags": ""}]
+            for word in words
+        }
+
+    baseline = linear_pipeline._vesum_gate(
+        module_text="## Діалоги\n\nдвоколонкова",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    report = linear_pipeline._vesum_gate(
+        module_text="## Діалоги\n\nдвоколонкова",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+        ignored_missing_surfaces=apply_result.unmatched_anchors,
+    )
+
+    assert apply_result.unmatched_anchors == frozenset({"двоколонкова"})
+    assert baseline["missing"] == ["двоколонкова"]
+    assert "двоколонкова" not in report["missing"]
+    assert report["passed"] is True
+
+
 def test_vesum_gate_preserves_markdown_link_text(tmp_path: Path) -> None:
     """Markdown link text `[слово](url)` must reach VESUM, not be stripped.
 
@@ -2899,6 +2940,19 @@ def test_strip_metalinguistic_avoid_marker_keeps_adjacent_callouts_separate() ->
     assert "полотенце" not in stripped
     # The Ukrainian connector word "та" survives between the two stripped spans.
     assert "та" in stripped
+
+
+def test_strip_metalinguistic_warning_quote_pattern() -> None:
+    """Negative examples after `not` are warning prose, not VESUM claims."""
+    ascii_quote = linear_pipeline._strip_metalinguistic('я дивлюся, not "дивюся"')
+    guillemet_quote = linear_pipeline._strip_metalinguistic("кажуть, not «дивюся»")
+    legitimate_quote = linear_pipeline._strip_metalinguistic(
+        'the word "ранок" means morning'
+    )
+
+    assert "дивюся" not in ascii_quote
+    assert "дивюся" not in guillemet_quote
+    assert "ранок" in legitimate_quote
 
 
 def test_strip_metalinguistic_collapses_bold_wrapped_morpheme_labels() -> None:
