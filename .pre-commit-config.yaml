@@ -2,19 +2,26 @@
 #
 # Install:
 #   pip install pre-commit
-#   pre-commit install
+#   pre-commit install                       # installs pre-commit + commit-msg + pre-push
 #
 # Or run manually on all files:
 #   pre-commit run --all-files
+#   pre-commit run --hook-stage pre-push --all-files
 #
 # These hooks mirror the checks CI runs on every push. Keeping them
 # local means bad code never leaves the laptop. CI is slower and
 # more expensive than catching a ruff error on save.
 #
+# Pre-push stage runs the full GHA-replay pytest via Dagger (~2-3 min
+# warm) when scripts/, tests/, .dagger/, or any .py is changed. Bypass
+# with `git push --no-verify` if you know what you're doing (e.g.
+# docs-only pushes the path-filter caught wrong).
+#
 # Reference issue: #1081
 default_install_hook_types:
   - pre-commit
   - commit-msg
+  - pre-push
 
 repos:
 
@@ -155,4 +162,19 @@ repos:
           || echo "(warn-only — push allowed; will be blocking after rollout)"'
         language: system
         pass_filenames: false
+        stages: [pre-push]
+
+      # Full GHA-replay pytest via Dagger. Runs when scripts/, tests/,
+      # .dagger/, or any .py is in the push. ~2-3 min warm; replicates
+      # the CI Test (pytest) job byte-for-byte using the .dagger/ pipeline.
+      # If `dagger` is not installed locally, the hook skips with a
+      # warning (CI will catch failures). Bypass with --no-verify.
+      # Reference: MEMORY.md #M-7 (pytest locally before push to main).
+      - id: dagger-pytest
+        name: full pytest via Dagger (GHA replay)
+        entry: scripts/pre_push/dagger_pytest.sh
+        language: system
+        pass_filenames: false
+        # Only run when something pytest-relevant is in the push.
+        files: ^(scripts/|tests/|\.dagger/|.*\.py$)
         stages: [pre-push]
