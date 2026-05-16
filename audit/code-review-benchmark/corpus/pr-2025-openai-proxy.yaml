@@ -1,0 +1,44 @@
+case_id: pr-2025-openai-proxy
+pr_number: 2025
+title: "OpenAI-compat HTTP proxy at :8767"
+diff_path: corpus/pr-2025-openai-proxy.diff
+context: |
+  This PR adds an OpenAI-compatible HTTP proxy for routing model requests
+  through local agent CLIs, with support for chat/completions-style requests,
+  a health endpoint, and command-line configuration.
+
+  Reviewers should focus on proxy boundary risks: large untrusted request
+  bodies crossing subprocess boundaries, API shape compatibility with OpenAI
+  clients, accidental denial-of-service surfaces, and whether network binding
+  choices are explicit enough for local-only tooling.
+gold_findings:
+  - id: arg-max
+    severity: HIGH
+    category: security
+    location: scripts/ai_agent_bridge/openai_proxy.py
+    description: >
+      Prompts larger than the OS argv limit hit ARG_MAX/E2BIG because the
+      proxy passes prompt text through command-line arguments to the upstream
+      CLI. The prompt should be sent over stdin or another streaming channel.
+  - id: error-envelope
+    severity: HIGH
+    category: spec-compliance
+    location: scripts/ai_agent_bridge/openai_proxy.py
+    description: >
+      FastAPI validation failures return the framework default
+      {detail: [...]} response instead of OpenAI's required
+      {error: {message, type, code}} envelope.
+  - id: healthz-fork
+    severity: MEDIUM
+    category: dos-surface
+    location: scripts/ai_agent_bridge/openai_proxy.py
+    description: >
+      /healthz forks multiple subprocess probes on every request, making the
+      endpoint a trivial denial-of-service amplifier.
+  - id: host-flag
+    severity: LOW
+    category: security
+    location: scripts/ai_agent_bridge/openai_proxy.py
+    description: >
+      --host accepts non-localhost bind addresses without requiring an
+      explicit --allow-remote acknowledgement.

@@ -1,0 +1,22 @@
+case_id: pr-2031-activity-schema
+pr_number: 2031
+title: "Activity schema gate rejects forbidden field aliases"
+diff_path: corpus/pr-2031-activity-schema.diff
+context: |
+  This PR adds an activity-schema gate intended to block writer output that
+  uses non-canonical YAML fields in generated activities. The target failure
+  mode came from prior module-generation regressions where aliases looked
+  plausible but bypassed the expected schema contract.
+
+  Reviewers should check whether the gate rejects real writer mistakes rather
+  than only the exact canonical examples covered by tests.
+gold_findings:
+  - id: forbidden-field-aliases
+    severity: HIGH
+    category: correctness
+    location: scripts/build/linear_pipeline.py
+    description: >
+      The schema gate must reject non-canonical writer aliases such as
+      error_field: when the schema expects error:. If alias handling is missed,
+      invalid activity YAML can pass the gate and recreate the #2018 class of
+      failures.

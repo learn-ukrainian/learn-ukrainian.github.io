@@ -1,0 +1,35 @@
+case_id: pr-2038-m20-three-fixes
+pr_number: 2038
+title: "m20 three fixes for vesum_verified and textbook_grounding"
+diff_path: corpus/pr-2038-m20-three-fixes.diff
+context: |
+  This PR bundles three small fixes for the m20 pipeline: a VESUM reviewer
+  scope leak, a textbook-grounding plan reference issue, and quote cleanup in
+  metalinguistic stripping. Each fix corresponds to a separate regression that
+  should be visible in a careful code review of the diff.
+
+  Reviewers should look for whether the patch fully addresses each regression
+  without moving the checks to a weaker signal or leaving edge cases in the
+  text-cleaning path.
+gold_findings:
+  - id: vesum-reviewer-anchor-leak
+    severity: HIGH
+    category: correctness
+    location: scripts/build/linear_pipeline.py
+    description: >
+      The VESUM verification path can leak reviewer anchor text into the word
+      extraction scope, causing non-answer prose to be checked as vocabulary.
+  - id: textbook-grounding-plan-reference-swap
+    severity: HIGH
+    category: correctness
+    location: curriculum/l2-uk-en/plans/a1/my-morning.yaml
+    description: >
+      The plan reference swap must use the corrected textbook grounding source
+      instead of the stale citation that caused the m20 failure.
+  - id: warning-quote-strip
+    severity: MEDIUM
+    category: correctness
+    location: scripts/build/linear_pipeline.py
+    description: >
+      _strip_metalinguistic must strip warning quotes and related markers so
+      metalinguistic notes do not contaminate checked learner-facing text.
