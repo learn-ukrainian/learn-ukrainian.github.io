@@ -1,0 +1,136 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T20:02:37Z",
+  "finished_at": "2026-05-16T20:04:40Z",
+  "duration_s": 122.6,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unauthenticated-remote-bind",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:678",
+          "description": "The new proxy is documented as localhost-only, but the CLI exposes `--host` directly to `uvicorn.run` without rejecting non-loopback values or requiring an explicit remote-access opt-in. Since the service has no authentication and can launch local agent CLIs from incoming requests, `ab serve --openai --host 0.0.0.0` can expose a local subprocess execution bridge to the network by accident."
+        },
+        {
+          "id": "unbounded-request-spawns-subprocess",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:41",
+          "description": "The chat request model accepts an unbounded `messages` list with unbounded string content, and each accepted request starts a backend subprocess that may run for up to 120 seconds. A client can submit very large prompts or many-message payloads to consume memory, CPU, process slots, and backend quota; the proxy should enforce request and prompt size limits before flattening and dispatching to local CLIs."
+        },
+        {
+          "id": "prompt-in-process-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:165",
+          "description": "The Gemini, Claude, and Hermes backends pass the full user prompt as command-line arguments (`--prompt=...`, positional prompt, or `--oneshot=...`). This exposes potentially sensitive request content through local process listings and also makes large requests fail at OS argument-length limits; these backends should pass prompt content through stdin or a temporary file with controlled permissions."
+        },
+        {
+          "id": "stream-flag-silently-ignored",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:38",
+          "description": "The request model allows arbitrary extra OpenAI fields but the endpoint ignores `stream=true` and still returns a normal non-streaming completion with HTTP 200. OpenAI-compatible clients that request streaming will receive an unexpected response shape; the proxy should either implement streaming or reject `stream=true` with a clear unsupported-parameter error."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unauthenticated-remote-bind\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:678\",\n    \"description\": \"The new proxy is documented as localhost-only, but the CLI exposes `--host` directly to `uvicorn.run` without rejecting non-loopback values or requiring an explicit remote-access opt-in. Since the service has no authentication and can launch local agent CLIs from incoming requests, `ab serve --openai --host 0.0.0.0` can expose a local subprocess execution bridge to the network by accident.\"\n  },\n  {\n    \"id\": \"unbounded-request-spawns-subprocess\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:41\",\n    \"description\": \"The chat request model accepts an unbounded `messages` list with unbounded string content, and each accepted request starts a backend subprocess that may run for up to 120 seconds. A client can submit very large prompts or many-message payloads to consume memory, CPU, process slots, and backend quota; the proxy should enforce request and prompt size limits before flattening and dispatching to local CLIs.\"\n  },\n  {\n    \"id\": \"prompt-in-process-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:165\",\n    \"description\": \"The Gemini, Claude, and Hermes backends pass the full user prompt as command-line arguments (`--prompt=...`, positional prompt, or `--oneshot=...`). This exposes potentially sensitive request content through local process listings and also makes large requests fail at OS argument-length limits; these backends should pass prompt content through stdin or a temporary file with controlled permissions.\"\n  },\n  {\n    \"id\": \"stream-flag-silently-ignored\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:38\",\n    \"description\": \"The request model allows arbitrary extra OpenAI fields but the endpoint ignores `stream=true` and still returns a normal non-streaming completion with HTTP 200. OpenAI-compatible clients that request streaming will receive an unexpected response shape; the proxy should either implement streaming or reject `stream=true` with a clear unsupported-parameter error.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2319
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "missing-correction-passes",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:549",
+          "description": "The new gate only requires `sentence` and `error`, while treating both `answer` and `correction` as optional. That means an `error-correction` item with `sentence:` and `error:` but no corrected form passes `activity_schema`, even though the existing activity schema test rejects this shape and the parser/renderer will emit `correctForm=\"\"`. This misses a real writer mistake rather than only enforcing the alias contract."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"missing-correction-passes\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:549\",\n    \"description\": \"The new gate only requires `sentence` and `error`, while treating both `answer` and `correction` as optional. That means an `error-correction` item with `sentence:` and `error:` but no corrected form passes `activity_schema`, even though the existing activity schema test rejects this shape and the parser/renderer will emit `correctForm=\\\"\\\"`. This misses a real writer mistake rather than only enforcing the alias contract.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 611
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.4615,
+    "case_acc": 0.3333,
+    "precision": 0.6,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.5",
+    "effort_actual": "medium",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

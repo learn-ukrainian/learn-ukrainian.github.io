@@ -1,0 +1,138 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "hermes",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:54:30Z",
+  "finished_at": "2026-05-16T19:56:53Z",
+  "duration_s": 142.81,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "host-flag"
+      ],
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unauthenticated-nonlocal-bind",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:762",
+          "description": "The new `serve --openai` command defaults to localhost, but `--host` allows binding the unauthenticated proxy to any interface and then passes requests directly to local agent CLIs that run with the user's environment and credentials. That contradicts the documented localhost-only boundary and makes `--host 0.0.0.0` an accidental remote code/cost/credential exposure surface. If non-local binding is supported at all, it should require explicit authentication and prominent opt-in naming; otherwise reject hosts other than loopback."
+        },
+        {
+          "id": "unbounded-request-body-to-agent-cli",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:300",
+          "description": "The chat completions endpoint accepts unbounded `messages` and arbitrary extra request fields, then eagerly flattens all message content into a single prompt before invoking a subprocess. A large local HTTP request can consume substantial memory/CPU during validation and flattening, and for Gemini/Claude/Hermes the prompt is placed directly in argv, which can also exceed OS argument limits. Add explicit request-size/message-count/content-length limits and return a structured 4xx error before constructing the prompt or spawning a backend."
+        },
+        {
+          "id": "unbounded-concurrent-backend-spawns",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:312",
+          "description": "Every chat completion request synchronously spawns a potentially heavy agent CLI with a default 120-second timeout, but the proxy has no concurrency limit, queue, cancellation policy, or per-client throttling. Even on localhost, a misbehaving OpenAI client retry loop can fan out many Codex/Gemini/Claude/Hermes processes and exhaust CPU, memory, file descriptors, or provider quota. Gate backend execution with a small bounded semaphore/queue and return 429/503 when saturated."
+        },
+        {
+          "id": "stream-true-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:284",
+          "description": "The request model allows unknown OpenAI fields but the endpoint silently ignores `stream: true` and still returns a non-streaming JSON response. Many OpenAI-compatible clients switch parsing paths when they request streaming and will expect SSE chunks, so this creates hard-to-debug client failures. Since Phase 1 is intentionally non-streaming, the proxy should explicitly parse `stream` and reject `true` with a clear OpenAI-style 400 error."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unauthenticated-nonlocal-bind\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:762\",\n    \"description\": \"The new `serve --openai` command defaults to localhost, but `--host` allows binding the unauthenticated proxy to any interface and then passes requests directly to local agent CLIs that run with the user's environment and credentials. That contradicts the documented localhost-only boundary and makes `--host 0.0.0.0` an accidental remote code/cost/credential exposure surface. If non-local binding is supported at all, it should require explicit authentication and prominent opt-in naming; otherwise reject hosts other than loopback.\"\n  },\n  {\n    \"id\": \"unbounded-request-body-to-agent-cli\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:300\",\n    \"description\": \"The chat completions endpoint accepts unbounded `messages` and arbitrary extra request fields, then eagerly flattens all message content into a single prompt before invoking a subprocess. A large local HTTP request can consume substantial memory/CPU during validation and flattening, and for Gemini/Claude/Hermes the prompt is placed directly in argv, which can also exceed OS argument limits. Add explicit request-size/message-count/content-length limits and return a structured 4xx error before constructing the prompt or spawning a backend.\"\n  },\n  {\n    \"id\": \"unbounded-concurrent-backend-spawns\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:312\",\n    \"description\": \"Every chat completion request synchronously spawns a potentially heavy agent CLI with a default 120-second timeout, but the proxy has no concurrency limit, queue, cancellation policy, or per-client throttling. Even on localhost, a misbehaving OpenAI client retry loop can fan out many Codex/Gemini/Claude/Hermes processes and exhaust CPU, memory, file descriptors, or provider quota. Gate backend execution with a small bounded semaphore/queue and return 429/503 when saturated.\"\n  },\n  {\n    \"id\": \"stream-true-silently-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:284\",\n    \"description\": \"The request model allows unknown OpenAI fields but the endpoint silently ignores `stream: true` and still returns a non-streaming JSON response. Many OpenAI-compatible clients switch parsing paths when they request streaming and will expect SSE chunks, so this creates hard-to-debug client failures. Since Phase 1 is intentionally non-streaming, the proxy should explicitly parse `stream` and reject `true` with a clear OpenAI-style 400 error.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2779
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "malformed-items-skip-schema-gate",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4564",
+          "description": "The new activity_schema gate silently skips an error-correction activity when items is not a list, and also skips any non-mapping entries inside the list. That means malformed writer output such as items: {incorrect: ...} or a scalar list item can produce passed: true with checked: 0, even though it violates the same item-level schema this gate is meant to enforce and will later be ignored or fail in ActivityParser._parse_error_correction. For a schema gate, non-list items and non-mapping item entries should be reported as violations rather than pass-through cases."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"malformed-items-skip-schema-gate\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4564\",\n    \"description\": \"The new activity_schema gate silently skips an error-correction activity when items is not a list, and also skips any non-mapping entries inside the list. That means malformed writer output such as items: {incorrect: ...} or a scalar list item can produce passed: true with checked: 0, even though it violates the same item-level schema this gate is meant to enforce and will later be ignored or fail in ActivityParser._parse_error_correction. For a schema gate, non-list items and non-mapping item entries should be reported as violations rather than pass-through cases.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 769
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.3077,
+    "case_acc": 0.0,
+    "precision": 0.4,
+    "recall": 0.25,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 2,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "gpt-5.5",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

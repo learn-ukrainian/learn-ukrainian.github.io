@@ -1,0 +1,143 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T20:08:04Z",
+  "finished_at": "2026-05-16T20:13:06Z",
+  "duration_s": 301.15,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "host-binding-exposes-unauthenticated-cli-proxy",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:759",
+          "description": "`ab serve --openai --host 0.0.0.0` is accepted without any explicit remote-access guard, despite the docs describing this as localhost-only tooling. Because the endpoint has no authentication and each `/v1/chat/completions` request can launch local agent CLIs in the repository environment, an accidental non-loopback bind exposes a powerful local execution surface to the network. Require loopback hosts by default and gate non-localhost binds behind an explicit opt-in such as `--allow-remote`."
+        },
+        {
+          "id": "unbounded-requests-spawn-expensive-subprocesses",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:294",
+          "description": "`chat_completions` accepts arbitrarily large request bodies and message lists, flattens them into memory, and then starts a backend subprocess with a 120 second timeout and captured output for every request. There is no request-size cap, prompt-size cap, output cap, queueing, or concurrency limit, so a client can consume memory and worker threads or fan out many long-running CLI invocations. Add explicit limits at the proxy boundary before flattening and enforce a bounded execution queue or concurrency semaphore."
+        },
+        {
+          "id": "prompt-passed-via-command-arguments",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:170",
+          "description": "The Gemini, Claude, and Hermes backends pass the full user prompt through command-line arguments (`--prompt=...`, positional prompt, and `--oneshot=...`). Prompt text can contain sensitive user data and becomes visible to local process inspection, and large prompts can fail with OS argument-size errors before the backend runs. Send prompts through stdin or a temporary file with restrictive permissions instead of argv."
+        },
+        {
+          "id": "streaming-requests-silently-return-nonstreaming-response",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:294",
+          "description": "The request model allows extra OpenAI fields, but `stream: true` is ignored and the endpoint returns a normal non-streaming `chat.completion` response. OpenAI-compatible clients that request streaming expect an SSE stream of chat completion chunks and may hang or fail when they receive JSON instead. Since Phase 1 is intentionally non-streaming, reject `stream=true` with a clear 400 error rather than silently changing the response shape."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"host-binding-exposes-unauthenticated-cli-proxy\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:759\",\n    \"description\": \"`ab serve --openai --host 0.0.0.0` is accepted without any explicit remote-access guard, despite the docs describing this as localhost-only tooling. Because the endpoint has no authentication and each `/v1/chat/completions` request can launch local agent CLIs in the repository environment, an accidental non-loopback bind exposes a powerful local execution surface to the network. Require loopback hosts by default and gate non-localhost binds behind an explicit opt-in such as `--allow-remote`.\"\n  },\n  {\n    \"id\": \"unbounded-requests-spawn-expensive-subprocesses\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:294\",\n    \"description\": \"`chat_completions` accepts arbitrarily large request bodies and message lists, flattens them into memory, and then starts a backend subprocess with a 120 second timeout and captured output for every request. There is no request-size cap, prompt-size cap, output cap, queueing, or concurrency limit, so a client can consume memory and worker threads or fan out many long-running CLI invocations. Add explicit limits at the proxy boundary before flattening and enforce a bounded execution queue or concurrency semaphore.\"\n  },\n  {\n    \"id\": \"prompt-passed-via-command-arguments\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:170\",\n    \"description\": \"The Gemini, Claude, and Hermes backends pass the full user prompt through command-line arguments (`--prompt=...`, positional prompt, and `--oneshot=...`). Prompt text can contain sensitive user data and becomes visible to local process inspection, and large prompts can fail with OS argument-size errors before the backend runs. Send prompts through stdin or a temporary file with restrictive permissions instead of argv.\"\n  },\n  {\n    \"id\": \"streaming-requests-silently-return-nonstreaming-response\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:294\",\n    \"description\": \"The request model allows extra OpenAI fields, but `stream: true` is ignored and the endpoint returns a normal non-streaming `chat.completion` response. OpenAI-compatible clients that request streaming expect an SSE stream of chat completion chunks and may hang or fail when they receive JSON instead. Since Phase 1 is intentionally non-streaming, reject `stream=true` with a clear 400 error rather than silently changing the response shape.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2707
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 2,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "missing-correction-not-required",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:549",
+          "description": "The new item schema only requires `sentence` and `error`, while `answer`/`correction` are optional. Existing schema coverage treats an error-correction item without a corrected form as invalid, and the renderer maps the authoring `answer`/`correction` value into the component's required `correctForm`. As written, a writer can emit `sentence` plus `error` with no corrected answer, pass this gate, and produce a broken activity with an empty correction."
+        },
+        {
+          "id": "activity-schema-correction-targets-module",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:118",
+          "description": "`activity_schema` is added to `WRITER_CORRECTION_GATES`, but the writer-correction path for non-`strict_json_parse` gates is documented and implemented as `module.md`-only: the prompt receives only module content and `_apply_writer_correction` accepts a single `module.md` fence. Activity-schema failures live in `activities.yaml`, so the correction loop will route them to a path that normally cannot update the failing artifact, burn the single retry, and terminate with the same schema failure."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"missing-correction-not-required\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:549\",\n    \"description\": \"The new item schema only requires `sentence` and `error`, while `answer`/`correction` are optional. Existing schema coverage treats an error-correction item without a corrected form as invalid, and the renderer maps the authoring `answer`/`correction` value into the component's required `correctForm`. As written, a writer can emit `sentence` plus `error` with no corrected answer, pass this gate, and produce a broken activity with an empty correction.\"\n  },\n  {\n    \"id\": \"activity-schema-correction-targets-module\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:118\",\n    \"description\": \"`activity_schema` is added to `WRITER_CORRECTION_GATES`, but the writer-correction path for non-`strict_json_parse` gates is documented and implemented as `module.md`-only: the prompt receives only module content and `_apply_writer_correction` accepts a single `module.md` fence. Activity-schema failures live in `activities.yaml`, so the correction loop will route them to a path that normally cannot update the failing artifact, burn the single retry, and terminate with the same schema failure.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1346
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.4286,
+    "case_acc": 0.0,
+    "precision": 0.5,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.5",
+    "effort_actual": "high",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

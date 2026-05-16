@@ -1,0 +1,12 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "xhigh",
+    "mcp_state": "without_mcp"
+  },
+  "result": "n/a",
+  "reason": "gpt-5.5 does not accept effort=xhigh via native_cli; configured palette: low, medium, high",
+  "checked_at": "2026-05-16T20:13:06Z"
+}
