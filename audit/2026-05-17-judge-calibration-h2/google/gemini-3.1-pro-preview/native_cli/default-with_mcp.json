@@ -1,0 +1,242 @@
+{
+  "cell": {
+    "family": "google",
+    "model": "gemini-3.1-pro-preview",
+    "harness": "native_cli",
+    "effort": "default",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T20:20:43Z",
+  "finished_at": "2026-05-16T20:23:29Z",
+  "duration_s": 166.35,
+  "n_cases": 12,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 41,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_clean_short_prose",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 41,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_clean_travel",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 41,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_clean_workplace",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 41,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_dirty_email_calques",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 941,
+      "case_acc": true,
+      "judge_sev2_plus_count": 3,
+      "expected_flags_count": 4,
+      "raw_issues": [
+        {
+          "phrase": "На наступному тижні",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Синтаксична калька з російської 'на следующей неделе'. Часові проміжки українською передаються родовим відмінком без прийменника: наступного тижня.",
+          "severity": 3
+        },
+        {
+          "phrase": "у вкладенні",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Калька з російського діловодного штампу 'во вложении'. Українською правильно 'у додатку' або 'у прикріпленому файлі'.",
+          "severity": 2
+        },
+        {
+          "phrase": "в будь-який момент",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Калька з російської 'в любой момент'. Природні українські відповідники — 'будь-коли' або 'у будь-який час'.",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_dirty_medical",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 627,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 3,
+      "raw_issues": [
+        {
+          "phrase": "забір крові",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Медичний термін є калькою з російського 'забор крови'; нормативний український відповідник — 'взяття крові' або 'аналіз крові'.",
+          "severity": 2
+        },
+        {
+          "phrase": "прийом",
+          "evidence_type": "vesum_unknown",
+          "evidence_quote": "Позначено як vesum_unknown; у контексті відвідування лікаря є калькою з російського 'прием' (краще: візит, огляд, консультація).",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_dirty_workplace",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 438,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 2,
+      "raw_issues": [
+        {
+          "phrase": "викликають занепокоєння у працівників",
+          "evidence_type": "general_principle",
+          "evidence_quote": "The construction 'викликати' + abstract emotion noun is a frequent calque from Russian ('вызывать беспокойство'). Natural Ukrainian prefers direct verbs like 'непокоять' or 'турбують'.",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_dirty_meetup",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 259,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 2,
+      "raw_issues": [
+        {
+          "phrase": "не виходить",
+          "evidence_type": "ua_gec_calque",
+          "evidence_quote": "[F/Calque] виходить → ",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_dirty_register",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 640,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 2,
+      "raw_issues": [
+        {
+          "phrase": "в найближчий час",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Calque from Russian 'в ближайшее время'; Ukrainian uses the instrumental case for this temporal expression.",
+          "severity": 3
+        },
+        {
+          "phrase": "приділений час",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Calque from Russian 'уделенное время'; in Ukrainian, the verb 'приділяти' is naturally combined with 'увагу', not 'час'.",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_debatable_next_steps",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 241,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 1,
+      "raw_issues": [
+        {
+          "phrase": "Наступні",
+          "evidence_type": "ua_gec_calque",
+          "evidence_quote": "[F/Calque] наступні → такі",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_clean_with_lure",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 41,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_dirty_business_meeting",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 435,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 2,
+      "raw_issues": [
+        {
+          "phrase": "Слідуючим",
+          "evidence_type": "vesum_unknown",
+          "evidence_quote": "слідуючим",
+          "severity": 3
+        },
+        {
+          "phrase": "на повістці дня",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Calque from Russian 'на повестке дня'",
+          "severity": 3
+        }
+      ]
+    }
+  ],
+  "scores": {
+    "f1": 0.8571,
+    "case_acc": 1.0,
+    "precision": 1.0,
+    "recall": 0.75
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "0.42.0",
+    "model_id": "gemini-3.1-pro-preview",
+    "effort_actual": "default",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

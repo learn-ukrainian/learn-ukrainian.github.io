@@ -21,10 +21,10 @@ try:
     from _judge_eval_lib import (
         PROJECT_ROOT,
         aggregate,
-        build_judge_prompt,
+        build_judge_prompt_h2,
         parse_json_verdict,
         pull_calibration_cases,
-        retrieve_antonenko,
+        retrieve_evidence,
         score_case,
         utc_timestamp,
     )
@@ -32,10 +32,10 @@ except ModuleNotFoundError:
     from scripts.audit._judge_eval_lib import (
         PROJECT_ROOT,
         aggregate,
-        build_judge_prompt,
+        build_judge_prompt_h2,
         parse_json_verdict,
         pull_calibration_cases,
-        retrieve_antonenko,
+        retrieve_evidence,
         score_case,
         utc_timestamp,
     )
@@ -467,7 +467,7 @@ def run_cell(
 
     for case in cases:
         target = case["output_text"]
-        prompt = build_judge_prompt(target, retrieve_antonenko(target))
+        prompt = build_judge_prompt_h2(target, retrieve_evidence(target))
         call = harness_runner(cell, prompt)
         verdict = verdict_from_call(call)
         score = score_case(verdict, case["gold"])
@@ -486,6 +486,19 @@ def run_cell(
             )
 
         true_label = "clean" if score["expected_clean"] else "issues_found"
+        # Capture evidence_type usage from H2 prompt verdicts. Older prompts
+        # don't emit this field; rows then carry an empty list. Truncate each
+        # issue dict so the per-cell JSON stays small.
+        raw_issues = []
+        for item in (verdict.get("issues") or []):
+            if not isinstance(item, dict):
+                continue
+            raw_issues.append({
+                "phrase": str(item.get("phrase", ""))[:200],
+                "evidence_type": item.get("evidence_type"),
+                "evidence_quote": str(item.get("evidence_quote", ""))[:200],
+                "severity": item.get("severity"),
+            })
         judgments.append(
             {
                 "case_id": case["prompt_id"],
@@ -496,6 +509,7 @@ def run_cell(
                 "case_acc": score["case_acc"],
                 "judge_sev2_plus_count": score["judge_sev2_plus_count"],
                 "expected_flags_count": score["expected_flags_count"],
+                "raw_issues": raw_issues,
             }
         )
 
