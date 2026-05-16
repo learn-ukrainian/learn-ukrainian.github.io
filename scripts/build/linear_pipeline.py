@@ -65,6 +65,12 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
 }
+PROMPT_BY_WRITER = {
+    "grok-tools": "linear-write-grok.md",
+}
+CORRECTION_PROMPT_BY_WRITER = {
+    "grok-tools": "linear-writer-correction-grok.md",
+}
 REVIEWER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools", "grok-tools")
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
@@ -1438,6 +1444,33 @@ def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:
     return rendered
 
 
+def writer_prompt_path(writer_family: str) -> Path:
+    prompt_filename = PROMPT_BY_WRITER.get(writer_family, "linear-write.md")
+    return PROJECT_ROOT / "scripts" / "build" / "phases" / prompt_filename
+
+
+def writer_correction_prompt_path(writer_family: str) -> Path:
+    prompt_filename = CORRECTION_PROMPT_BY_WRITER.get(
+        writer_family,
+        "linear-writer-correction.md",
+    )
+    return PROJECT_ROOT / "scripts" / "build" / "phases" / prompt_filename
+
+
+def render_writer_prompt(
+    *,
+    plan: Mapping[str, Any],
+    plan_content: str,
+    knowledge_packet: str,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    writer: str = "claude-tools",
+) -> str:
+    return render_phase_prompt(
+        writer_prompt_path(writer),
+        writer_context(plan, plan_content, knowledge_packet, wiki_manifest),
+    )
+
+
 def emit_event(event: str, **fields: Any) -> None:
     """Emit one monitor-friendly JSONL event using the V6 event shape."""
     if _TELEMETRY_EVENT_SINK is not None:
@@ -1626,6 +1659,30 @@ def _extract_plan_reasoning_blocks(output: str) -> list[dict[str, str | None]]:
             "section": raw_section or _reasoning_section_from_body(body),
             "body": body,
         })
+    thinking_re = re.compile(
+        r"<plan_thinking\b[^>]*>(?P<body>.*?)</plan_thinking>",
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    sections_re = re.compile(
+        r"<sections\b[^>]*>(?P<body>.*?)</sections>",
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    for match in thinking_re.finditer(output):
+        body = match.group("body").strip()
+        sections_match = sections_re.search(body)
+        section_lines = []
+        if sections_match:
+            section_lines = [
+                line.strip()
+                for line in sections_match.group("body").splitlines()
+                if line.strip() and not line.lstrip().startswith("<")
+            ]
+        if not section_lines:
+            blocks.append({"section": None, "body": body})
+            continue
+        for line in section_lines:
+            section = line.split(":", 1)[0].strip(" *`\"'") if ":" in line else None
+            blocks.append({"section": section, "body": line})
     return blocks
 
 
@@ -1760,6 +1817,10 @@ _PLAN_REASONING_BLOCK_RE = re.compile(
 )
 _PLAN_REASONING_ELEMENT_RE = re.compile(
     r"<plan_reasoning\b(?P<attrs>[^>]*)>(?P<body>.*?)</plan_reasoning>",
+    re.DOTALL | re.IGNORECASE,
+)
+_PLAN_THINKING_ELEMENT_RE = re.compile(
+    r"<plan_thinking\b(?P<attrs>[^>]*)>(?P<body>.*?)</plan_thinking>",
     re.DOTALL | re.IGNORECASE,
 )
 _TOOL_CITATION_RE = re.compile(
@@ -1904,14 +1965,15 @@ def _position_in_spans(position: int, spans: list[tuple[int, int]]) -> bool:
 def _cited_plan_reasoning_tools(writer_output: str) -> set[str]:
     cited: set[str] = set()
     fenced_spans = _markdown_fence_spans(writer_output)
-    for match in _PLAN_REASONING_ELEMENT_RE.finditer(writer_output):
-        if _position_in_spans(match.start(), fenced_spans):
-            continue
-        searchable = f"{match.group('attrs')} {match.group('body')}"
-        cited.update(
-            _normalize_tool_citation_name(citation)
-            for citation in _TOOL_CITATION_RE.findall(searchable)
-        )
+    for element_re in (_PLAN_REASONING_ELEMENT_RE, _PLAN_THINKING_ELEMENT_RE):
+        for match in element_re.finditer(writer_output):
+            if _position_in_spans(match.start(), fenced_spans):
+                continue
+            searchable = f"{match.group('attrs')} {match.group('body')}"
+            cited.update(
+                _normalize_tool_citation_name(citation)
+                for citation in _TOOL_CITATION_RE.findall(searchable)
+            )
     return cited
 
 
@@ -3133,10 +3195,11 @@ def render_writer_correction_prompt(
     gate: str,
     gate_report: Mapping[str, Any],
     module_text: str,
+    writer: str = "claude-tools",
 ) -> str:
     """Render the ADR-008 patch-bounded writer correction prompt."""
     return render_phase_prompt(
-        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-writer-correction.md",
+        writer_correction_prompt_path(writer),
         {
             "MODULE_CONTENT": module_text,
             "CORRECTION_SECTION": yaml.safe_dump(
@@ -3580,6 +3643,7 @@ def _apply_writer_correction(
         gate=gate,
         gate_report=gate_report,
         module_text=module_text,
+        writer=writer,
     )
     context = CorrectionContext(
         gate=gate,
@@ -5347,6 +5411,8 @@ def _quote_topic_matches(quote: str, topic_text: str) -> bool:
 def _plan_reasoning_text(module_text: str) -> str:
     return " ".join(
         match.group("body") for match in _PLAN_REASONING_ELEMENT_RE.finditer(module_text)
+    ) + " " + " ".join(
+        match.group("body") for match in _PLAN_THINKING_ELEMENT_RE.finditer(module_text)
     )
 
 

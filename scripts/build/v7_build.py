@@ -409,10 +409,14 @@ def _writer_prompt(
     plan_content: str,
     knowledge_packet: str,
     wiki_manifest: str | Mapping[str, Any],
+    writer: str,
 ) -> str:
-    return linear_pipeline.render_phase_prompt(
-        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-write.md",
-        linear_pipeline.writer_context(plan, plan_content, knowledge_packet, wiki_manifest),
+    return linear_pipeline.render_writer_prompt(
+        plan=plan,
+        plan_content=plan_content,
+        knowledge_packet=knowledge_packet,
+        wiki_manifest=wiki_manifest,
+        writer=writer,
     )
 
 
@@ -551,7 +555,7 @@ def build_parser() -> argparse.ArgumentParser:
             "seconds of stdout silence.\n\n"
             "Related:\n"
             "  Pipeline: scripts/build/linear_pipeline.py\n"
-            "  Writer prompt: scripts/build/phases/linear-write.md\n"
+            "  Writer prompts: scripts/build/phases/linear-write*.md\n"
             "  Reviewer prompt: scripts/build/phases/linear-review-dim.md\n"
             "  ADR-007: docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md\n"
             "  ADR-008: docs/decisions/2026-04-28-targeted-gate-correction-paths.md\n"
@@ -714,6 +718,7 @@ def _run(args: argparse.Namespace) -> int:
             plan_content=plan_content,
             knowledge_packet=knowledge_packet,
             wiki_manifest=wiki_manifest,
+            writer=writer,
         )
         # gemini-tools must load .gemini/settings.json from repo root;
         # module_dir cwd would leave its MCP catalog empty. See
