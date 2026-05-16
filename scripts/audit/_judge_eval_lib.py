@@ -37,6 +37,23 @@ CALIBRATION_BLOB = "eval/russianism/calibration-cases.jsonl"
 CYRILLIC_TOKEN_RE = re.compile(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+")
 
 ANTONENKO_SOURCE = "antonenko-davydovych-yak-my-hovorymo"
+# Marker words that empirically signal russianism-rule discussion inside an
+# Antonenko-Davydovych prose chunk. Validated against the 169-chunk corpus
+# (#2049 H3a narrowing): each marker fires on a high-precision subset of
+# chunks (8 markers combined cover ~30-40% of chunks). "не слід" was
+# considered but excluded — it fires on 97/169 chunks (57%), generic enough
+# to be useless as a filter. See `docs/best-practices/audit-standards.md`
+# for the calibration cell metrics that motivated this narrowing.
+ANTONENKO_PROSE_MARKERS = (
+    "правильно",
+    "неправильно",
+    "не варто",
+    "не вживайте",
+    "натомість",
+    "калька",
+    "русизм",
+    "російською",
+)
 UA_GEC_RELEVANT_TAGS = ("F/Calque", "F/Style", "F/Collocation", "G/Case", "G/Gender")
 UA_GEC_ANN_RE = re.compile(r"\{([^{}=]*?)=>([^{}]*?):::error_type=([^}]+)\}")
 
@@ -270,9 +287,25 @@ def _antonenko_fulltext_search(
     in ``style_guide``: many calques and register rules are discussed in
     the prose body but never lifted into a structured headword entry.
 
+    Two-step retrieval (#2049 H3a narrowing):
+
+    1. **Narrowed query** — token prefixes AND ``ANTONENKO_PROSE_MARKERS``.
+       Returns only chunks that contain BOTH a token-overlap AND at least
+       one russianism-discussion marker word. High precision: the H2
+       calibration measured 0 prose-chunk citations because the prefix-OR
+       FTS was too broad (matched on tangential tokens like ``тижні``);
+       requiring a marker word ensures the chunk is actually discussing
+       a rule, not just incidentally containing the same token.
+
+    2. **Fallback query** — token prefixes only (the pre-H3a behavior).
+       Activated when the narrowed query returns zero hits, so we never
+       lose recall relative to H2; the cost is the marker filter is
+       skipped on those cases. Each hit carries ``marker_narrowed: bool``
+       so downstream consumers can see whether the filter fired.
+
     Strategy: tokenize input → drop tokens <4 chars (Ukrainian function
-    words) → prefix-truncate at 5 chars (handle inflection) → FTS5 OR
-    query against ``textbooks_fts`` restricted to ``source_file =
+    words) → prefix-truncate at 5 chars (handle inflection) → FTS5 query
+    against ``textbooks_fts`` restricted to ``source_file =
     antonenko-davydovych-yak-my-hovorymo``. Returns up to ``k`` hits
     ordered by FTS5 default ranking, with snippets centered on the first
     matched substring.
@@ -283,24 +316,43 @@ def _antonenko_fulltext_search(
     prefixes = sorted({t[:5] for t in tokens if len(t) >= 5})
     if not prefixes:
         return []
-    fts_query = " OR ".join(f'"{p}"*' for p in prefixes)
-    conn = sqlite3.connect(db_path)
+
+    prefix_or = " OR ".join(f'"{p}"*' for p in prefixes)
+    marker_or = " OR ".join(f'"{m}"' for m in ANTONENKO_PROSE_MARKERS)
+    narrowed_query = f"({prefix_or}) AND ({marker_or})"
+
+    def _run_query(fts_query: str) -> list[tuple[str, str]]:
+        conn = sqlite3.connect(db_path)
+        try:
+            return conn.execute(
+                """
+                SELECT t.title, t.text
+                FROM textbooks_fts f
+                JOIN textbooks t ON t.id = f.rowid
+                WHERE f.textbooks_fts MATCH ?
+                  AND t.source_file = ?
+                LIMIT ?
+                """,
+                (fts_query, ANTONENKO_SOURCE, k * 4),  # over-fetch then snippet-rank
+            ).fetchall()
+        finally:
+            conn.close()
+
+    marker_narrowed = True
     try:
-        rows = conn.execute(
-            """
-            SELECT t.title, t.text
-            FROM textbooks_fts f
-            JOIN textbooks t ON t.id = f.rowid
-            WHERE f.textbooks_fts MATCH ?
-              AND t.source_file = ?
-            LIMIT ?
-            """,
-            (fts_query, ANTONENKO_SOURCE, k * 4),  # over-fetch then snippet-rank
-        ).fetchall()
+        rows = _run_query(narrowed_query)
     except sqlite3.OperationalError:
         return []
-    finally:
-        conn.close()
+    if not rows:
+        # Fallback: token prefixes only. Preserves H2-level recall when no
+        # chunk has both token overlap AND a russianism marker.
+        marker_narrowed = False
+        try:
+            rows = _run_query(prefix_or)
+        except sqlite3.OperationalError:
+            return []
+        if not rows:
+            return []
 
     hits: list[dict[str, Any]] = []
     for title, chunk_text in rows:
@@ -322,6 +374,7 @@ def _antonenko_fulltext_search(
             "page": int(page_match.group(1)) if page_match else None,
             "matched_token": best_token,
             "snippet": snippet,
+            "marker_narrowed": marker_narrowed,
         })
         if len(hits) >= k:
             break
@@ -588,9 +641,31 @@ def _render_evidence_section(evidence: dict[str, Any]) -> str:
 
     ant_ft = evidence.get("antonenko_fulltext") or []
     if ant_ft:
+        # Hits are uniformly marker-narrowed or uniformly fallback (the
+        # search function makes that choice once per call). Read the flag
+        # off the first hit; missing/legacy hits without the flag default
+        # to non-narrowed for back-compatible rendering.
+        narrowed = bool(ant_ft[0].get("marker_narrowed", False))
+        if narrowed:
+            preamble = (
+                "**Narrowed retrieval (H3a):** every chunk below contains both "
+                "a token-overlap with the target text AND a russianism-discussion "
+                "marker word (`правильно`, `неправильно`, `не варто`, `не вживайте`, "
+                "`натомість`, `калька`, `русизм`, `російською`) — i.e. the chunk is "
+                "discussing a specific rule, not just incidentally sharing a token. "
+                "These are higher-precision cites than the H2 prefix-only retrieval."
+            )
+        else:
+            preamble = (
+                "**Fallback retrieval:** the H3a marker-narrowed query returned zero "
+                "chunks for this text, so we fell back to the H2 prefix-only matcher. "
+                "Chunks below share a token-prefix with the target but may be "
+                "discussing an unrelated rule — verify before citing."
+            )
         sections.append(
             "### Antonenko-Davydovych — full-book prose hits (textbooks table, 169 page chunks)\n"
             "Complements the 342 headwords above. May surface register rules and discussion absent from the keyed index.\n\n"
+            f"{preamble}\n\n"
             + "\n".join(
                 f"- p.{h['page']} (matched on `{h['matched_token']}`): {h['snippet']}"
                 for h in ant_ft[:4]
