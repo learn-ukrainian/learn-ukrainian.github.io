@@ -30,11 +30,14 @@ def test_search_ua_gec_errors_schema(server_module):
     assert "tag_filter" in tool.inputSchema["properties"]
     assert "require_native_author" in tool.inputSchema["properties"]
 
-@pytest.mark.asyncio
-async def test_search_ua_gec_errors_execution(server_module):
-    # Test execution against the real database
+def test_search_ua_gec_errors_execution(server_module):
+    # Test execution against the real database.
+    # Project pytest config has no pytest-asyncio plugin, so use the
+    # _run() helper above (already used by the sibling list/schema tests)
+    # rather than `async def` + @pytest.mark.asyncio (which silently no-ops
+    # without the plugin — the CI failure that blocked this PR).
     arguments = {"query": "коментарій", "limit": 5}
-    result = await server_module.call_tool("search_ua_gec_errors", arguments)
+    result = _run(server_module.call_tool("search_ua_gec_errors", arguments))
 
     assert len(result) == 1
     assert result[0].type == "text"

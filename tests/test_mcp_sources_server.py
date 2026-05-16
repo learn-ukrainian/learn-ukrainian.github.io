@@ -56,6 +56,7 @@ class TestListTools:
             "search_style_guide", "search_definitions", "search_grinchenko_1907",
             "search_idioms", "search_synonyms", "translate_en_uk",
             "search_esum", "search_slovnyk_me", "search_heritage", "check_russian_shadow",
+            "search_ua_gec_errors",
         }
         missing = expected - tool_names
         extra = tool_names - expected
