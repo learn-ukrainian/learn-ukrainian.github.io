@@ -28,6 +28,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "gemini"
     if agent.startswith("codex"):
         return "codex"
+    if agent.startswith("grok"):
+        return "grok"
     return None
 
 
@@ -221,6 +223,24 @@ def build_mcp_tool_config(
             {"mcp_server_names": mcp_servers},
             _basic_diagnostics(
                 mcp_config_path=resolved_config_path,
+                requested_servers=mcp_servers,
+                resolved_servers=mcp_servers,
+                resolution_status="ok",
+            ),
+        )
+
+    if canonical_agent == "grok":
+        if not mcp_servers:
+            return None, _basic_diagnostics(
+                mcp_config_path=Path.home() / ".hermes" / "config.yaml",
+                requested_servers=mcp_servers,
+                resolved_servers=None,
+                resolution_status="config_empty",
+            )
+        return (
+            {"hermes_mcp_servers": mcp_servers},
+            _basic_diagnostics(
+                mcp_config_path=Path.home() / ".hermes" / "config.yaml",
                 requested_servers=mcp_servers,
                 resolved_servers=mcp_servers,
                 resolution_status="ok",

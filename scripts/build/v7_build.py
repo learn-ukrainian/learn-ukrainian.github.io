@@ -29,6 +29,7 @@ WRITER_ALIASES = {
     "claude": "claude-tools",
     "gemini": "gemini-tools",
     "codex": "codex-tools",
+    "grok": "grok-tools",
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 
@@ -426,6 +427,8 @@ def _generated_content(module_dir: Path) -> str:
 def _reviewer_for_writer(writer: str) -> str:
     if writer == "claude-tools":
         return "gemini-tools"
+    if writer == "grok-tools":
+        return "claude-tools"
     return "claude-tools"
 
 
@@ -574,8 +577,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="claude-tools",
         help=(
             "Writer backend for the one-shot V7 write phase "
-            "(default: claude-tools; claude/gemini/codex aliases normalize to "
-            "claude-tools/gemini-tools/codex-tools)."
+            "(default: claude-tools; claude/gemini/codex/grok aliases normalize to "
+            "claude-tools/gemini-tools/codex-tools/grok-tools)."
         ),
     )
     parser.add_argument(
@@ -715,6 +718,8 @@ def _run(args: argparse.Namespace) -> int:
         # gemini-tools must load .gemini/settings.json from repo root;
         # module_dir cwd would leave its MCP catalog empty. See
         # audit/gemini-tools-review-2026-05-09/REPORT.html E5/E6.
+        # grok-tools gets MCP from ~/.hermes/config.yaml and can run from
+        # the module directory like claude-tools/codex-tools.
         writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
         writer_output = linear_pipeline.invoke_writer(
             prompt,

@@ -10,3 +10,7 @@ authors should copy as a starting point.
 Issue: #1184
 """
 from __future__ import annotations
+
+from .hermes_grok import HermesGrokAdapter
+
+__all__ = ["HermesGrokAdapter"]

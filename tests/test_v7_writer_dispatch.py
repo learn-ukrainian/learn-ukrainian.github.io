@@ -47,6 +47,7 @@ def _seed_sources_mcp_config(
         ("claude-tools", "claude"),
         ("gemini-tools", "gemini"),
         ("codex-tools", "codex"),
+        ("grok-tools", "grok"),
     ],
 )
 def test_v7_writer_choices_resolve_to_runtime_adapters(
@@ -93,14 +94,19 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
             (tmp_path / ".mcp.json").resolve()
         )
         assert calls[0][2]["tool_config"]["allowed_tools"] == "mcp__sources__*"
-    else:
+    elif writer == "gemini-tools":
         assert calls[0][2]["tool_config"]["mcp_server_names"] == ["sources"]
+    else:
+        assert calls[0][2]["tool_config"]["hermes_mcp_servers"] == ["sources"]
 
 
 def test_v7_build_accepts_codex_alias() -> None:
     assert "codex-tools" in v7_build.WRITER_CHOICES
     assert "codex" in v7_build.WRITER_CHOICES
     assert v7_build._normalize_writer("codex") == "codex-tools"
+    assert "grok-tools" in v7_build.WRITER_CHOICES
+    assert "grok" in v7_build.WRITER_CHOICES
+    assert v7_build._normalize_writer("grok") == "grok-tools"
 
 
 @pytest.mark.parametrize(
@@ -109,6 +115,7 @@ def test_v7_build_accepts_codex_alias() -> None:
         ("gemini-tools", v7_build.PROJECT_ROOT),
         ("claude-tools", None),
         ("codex-tools", None),
+        ("grok-tools", None),
     ],
 )
 def test_v7_build_invokes_gemini_tools_from_project_root(
@@ -261,6 +268,37 @@ def test_positive_runtime_gate_fires_when_tools_writer_makes_zero_mcp_calls(
 
     summary = next(event for event in events if event["event"] == "phase_writer_summary")
     assert summary["tool_calls_total"] == 0
+
+
+def test_grok_unknown_tool_telemetry_is_not_treated_as_zero(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    events: list[dict[str, Any]] = []
+
+    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        return SimpleNamespace(
+            response="writer output",
+            tool_calls=[],
+            tool_calls_total=None,
+        )
+
+    response = linear_pipeline.invoke_writer(
+        "Write the module.",
+        writer="grok-tools",
+        cwd=tmp_path,
+        invoker=fake_invoker,
+        module="a1/1",
+        sections=["vocab"],
+        event_sink=lambda event, **fields: events.append({"event": event, **fields}),
+    )
+
+    summary = next(event for event in events if event["event"] == "phase_writer_summary")
+    assert response == "writer output"
+    assert summary["tool_calls_total"] is None
+    assert summary["verify_words_calls"] is None
+    assert summary["tool_call_telemetry_available"] is False
 
 
 def test_positive_runtime_gate_does_not_fire_for_non_tools_writer() -> None:

@@ -92,6 +92,9 @@ class Result:
             Each entry has name, arguments, output_summary, timestamp, and
             may have result. Kept in memory only; do not persist or echo
             arguments or results to JSONL telemetry without redaction.
+        tool_calls_total: Total tool calls surfaced by the provider trace.
+            ``None`` means the provider/CLI did not expose telemetry, not
+            "verified zero".
     """
     ok: bool
     agent: str
@@ -108,3 +111,4 @@ class Result:
     cli_version: str = "unknown"
     usage_record: dict[str, Any] = field(default_factory=dict)
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
+    tool_calls_total: int | None = 0

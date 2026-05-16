@@ -221,6 +221,7 @@ def test_load_adapter_unknown_raises():
         ("codex-tools", "codex"),
         ("claude-tools", "claude"),
         ("gemini-tools", "gemini"),
+        ("grok-tools", "grok"),
     ],
 )
 def test_validate_agent_name_rejects_tools_suffix(agent_name, bare_name):
@@ -242,9 +243,11 @@ def test_invoke_rejects_tools_suffix_before_adapter_load():
         invoke("codex-tools", "hello", mode="read-only")
 
 
-def test_load_adapter_grok_stub_unavailable():
-    with pytest.raises(AgentUnavailableError, match="cli_available=False"):
-        _load_adapter("grok")
+def test_load_adapter_grok():
+    adapter = _load_adapter("grok")
+    assert adapter.__class__.__name__ == "HermesGrokAdapter"
+    assert adapter.name == "grok"
+    assert adapter.default_model == "grok-4.3"
 
 
 def test_load_adapter_gemma_local():
