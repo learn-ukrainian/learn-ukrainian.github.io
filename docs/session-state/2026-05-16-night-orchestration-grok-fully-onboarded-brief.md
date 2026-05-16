@@ -14,6 +14,83 @@ closed_today: [2024]
 opened_today: [2025, 2026, 2031, 2033, 2020, 2021]
 hermes_config: medium
 next_p0: |
+  PARALLEL DISPATCHES + INTERLEAVED MATRIX RUN.
+
+  Late-night addition after the original handoff: user wants to (a)
+  expand the Russianism judge calibration matrix across Claude/GPT/
+  Gemini families × per-model efforts × ±MCP × native-CLI vs Hermes
+  harness, and (b) empirically evaluate Hermes as a potential
+  replacement harness for our agent fleet. Hermes auth is now
+  configured for anthropic + openai-codex (Grok already in place).
+  Gemini-via-Hermes is FORBIDDEN by Google ToS.
+
+  Dispatch brief for the matrix harness ready at
+  `docs/dispatch-briefs/2026-05-17-judge-calibration-matrix-codex.md`.
+
+  ### Sequence (matrix runs UNATTENDED in background; interleaves cleanly with m20)
+
+  1. **Pre-flight (~5 min)** — Debug Claude-via-Hermes empty-output.
+     2026-05-16 night probe: `hermes -z "..." -m claude-opus-4-7`
+     returned rc=0 but EMPTY stdout, while `gpt-5.5` PONG'd cleanly.
+     Run the 4-probe debug recipe from §"Debug recipe for orchestrator"
+     of the matrix brief. If unfixable, fall back to native-CLI-only
+     for Claude in the matrix.
+
+  2. **Fire 2 Codex dispatches in parallel** (different files, zero
+     conflict):
+     - 2a: m20 fixes per #2032 (~15-20 min)
+     - 2b: judge-calibration-matrix harness (~30-60 min)
+
+  3. **As each PR opens**: review + merge. Apply the refined #M-8
+     rescue protocol — 5 min wait + 2-3 re-checks before pushing
+     yourself (lesson encoded tonight from PR #2024 incident).
+
+  4. **Post m20-fixes merge** → re-run m20 build with claude-tools
+     (`--worktree`, Monitor tool on JSONL stream). If GREEN → ship
+     to `curriculum/l2-uk-en/a1/my-morning/`.
+
+  5. **Post calibration-harness merge** → kick off the matrix in
+     background per the runbook (`docs/runbooks/judge-calibration-matrix-runbook.md`,
+     created by the harness PR). Per-family commands; redirect to log;
+     Monitor on the log. Runs ~3-6 hr wall-clock UNATTENDED.
+
+  6. **In parallel with matrix** → A/B m20 build with `--writer
+     grok-tools` (Stage 3 end-to-end validation).
+
+  7. **Then** → Phase 2b A1 m01-m07 batch.
+
+  8. **At session end** → Read
+     `audit/2026-05-17-judge-calibration-matrix/REPORT.html`. Update
+     #M0 routing if findings warrant. Specifically watch for:
+     - Does "medium beats high" (Grok finding) replicate across
+       Claude/GPT? If yes → global #M0 routing update
+     - Does MCP grounding always move case_acc materially? If yes
+       → priority for the proxy tool-use translation (#2027/2028)
+     - Does Hermes-as-harness beat native CLIs on the same model?
+       If yes → strategic investment in Hermes integration;
+       potential deprecation of our PR #2025 proxy
+     - Which model+effort+MCP combo is the new champion per role
+       (judge / cleanliness classifier / second-opinion validator
+       / code reviewer)
+
+  ### Hermes auth state (configured 2026-05-16 night):
+  - anthropic: claude_code OAuth ← uses Claude Code subscription pool
+  - openai-codex: device_code OAuth ← Codex subscription
+  - xai-oauth: loopback_pkce (Grok, proven)
+  - copilot: gh CLI token (not used for matrix)
+  - **Default**: claude-opus-4-7 @ medium
+
+  ### Available models per provider via Hermes:
+  - Anthropic (8): claude-opus-4-7, claude-opus-4-6, claude-sonnet-4-6,
+    claude-opus-4-5-20251101, claude-sonnet-4-5-20250929,
+    claude-opus-4-20250514, claude-sonnet-4-20250514,
+    claude-haiku-4-5-20251001
+  - OpenAI (6): gpt-5.5, gpt-5.4, gpt-5.4-mini, gpt-5.3-codex,
+    gpt-5.3-codex-spark, gpt-5.2
+  - xAI (1): grok-4.3 (existing)
+
+  ### CARRY-OVER from original goal (m20 GREEN):
+
   THREE SMALL FIXES TO GET m20 GREEN — concrete fix paths in #2032.
 
   All 3 fixes total ~25 LOC + 2 tests. One Codex dispatch can ship them.
