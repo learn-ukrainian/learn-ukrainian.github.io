@@ -4714,13 +4714,18 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         section_text = _extract_section_text(text, title)
         count = _word_count(_strip_comments(section_text))
         min_words = int(target * 0.9)
-        max_words = int(target * 1.1)
+        # Per user direction (2026-05-17, repeated multiple times across
+        # sessions): word targets are MINIMUMS. Overshoot is welcome, never
+        # an error. We retain a `max` field in the output for diagnostic
+        # visibility (so we can still SEE if a section has drifted far from
+        # plan) but it does NOT fail the gate.
+        max_words = int(target * 1.1)  # diagnostic-only
         budgets.append({
             "section": title,
             "count": count,
             "min": min_words,
             "max": max_words,
-            "passed": min_words <= count <= max_words,
+            "passed": count >= min_words,
         })
     return {
         "passed": not missing and all(item["passed"] for item in budgets),
@@ -4847,12 +4852,20 @@ def _normalize_for_vesum(lemma: str) -> str:
     previous = None
     while previous != text:
         previous = text
-        text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
-        text = re.sub(r"(?<!\*)\*(?!\*)([^*]+)\*(?!\*)", r"\1", text)
-        text = re.sub(r"`([^`]+)`", r"\1", text)
+        # Strip hyphens INSIDE emphasis (bold/italic/code) — pedagogical
+        # morpheme breaks like `прокида**ю-ся**` and `**-ться**` are
+        # display-only segmentation, not VESUM tokens. Real compound
+        # hyphens (`темно-синій`) sit outside emphasis and survive.
+        text = re.sub(r"\*\*(.+?)\*\*", lambda m: m.group(1).replace("-", ""), text)
+        text = re.sub(
+            r"(?<!\*)\*(?!\*)([^*]+)\*(?!\*)",
+            lambda m: m.group(1).replace("-", ""),
+            text,
+        )
+        text = re.sub(r"`([^`]+)`", lambda m: m.group(1).replace("-", ""), text)
         text = re.sub(
             r"(?<![_A-Za-z0-9А-ЯІЇЄҐа-яіїєґ])_([^_]+)_(?![_A-Za-z0-9А-ЯІЇЄҐа-яіїєґ])",
-            r"\1",
+            lambda m: m.group(1).replace("-", ""),
             text,
         )
     return text.strip()
