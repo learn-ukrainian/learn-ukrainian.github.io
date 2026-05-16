@@ -1,0 +1,41 @@
+{
+  "cell": {
+    "family": "google",
+    "model": "gemini-3.1-pro-preview",
+    "harness": "native_cli",
+    "effort": "default",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T12:30:24Z",
+  "finished_at": "2026-05-16T12:30:49Z",
+  "duration_s": 25.05,
+  "n_cases": 1,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 553,
+      "case_acc": false,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 0
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.0,
+    "precision": 0.0,
+    "recall": 0.0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "0.42.0",
+    "model_id": "gemini-3.1-pro-preview",
+    "effort_actual": "default",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

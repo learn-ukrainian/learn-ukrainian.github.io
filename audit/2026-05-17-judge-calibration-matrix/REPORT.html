@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Russianism Judge Calibration Matrix</title>
+<style>
+body{font-family:system-ui,sans-serif;line-height:1.45;max-width:1180px;margin:32px auto;padding:0 24px;color:#1f2933}
+h1{margin-bottom:8px}
+h2{margin-top:32px;border-bottom:1px solid #cbd2d9;padding-bottom:4px}
+table{border-collapse:collapse;width:100%;margin:16px 0 28px}
+th,td{border:1px solid #cbd2d9;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#eef2f6}
+td{font-variant-numeric:tabular-nums}
+p{margin:6px 0}
+</style>
+</head>
+<body>
+<h1>Russianism Judge Calibration Matrix</h1>
+<p>Generated: 2026-05-16T13:20:43Z</p>
+<h2>Summary</h2>
+<p>- Cells scored: 30</p>
+<p>- Cells n/a: 0</p>
+<p>- Cells with harness errors: 13</p>
+<h2>Leaderboard</h2>
+<table><thead><tr><th>family</th><th>model</th><th>harness</th><th>effort</th><th>mcp_state</th><th>F1</th><th>P</th><th>R</th><th>case_acc</th><th>avg_dur</th><th>n/a-count</th></tr></thead><tbody>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>default</td><td>with_mcp</td><td>80.0%</td><td>85.7%</td><td>75.0%</td><td>91.7%</td><td>342.6s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>xhigh</td><td>with_mcp</td><td>78.6%</td><td>91.7%</td><td>68.8%</td><td>100.0%</td><td>220.5s</td><td>0</td></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>default</td><td>without_mcp</td><td>77.4%</td><td>80.0%</td><td>75.0%</td><td>91.7%</td><td>299.2s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>with_mcp</td><td>76.9%</td><td>100.0%</td><td>62.5%</td><td>91.7%</td><td>491.7s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>high</td><td>with_mcp</td><td>76.9%</td><td>100.0%</td><td>62.5%</td><td>83.3%</td><td>435.9s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>low</td><td>with_mcp</td><td>73.3%</td><td>78.6%</td><td>68.8%</td><td>75.0%</td><td>416.4s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>medium</td><td>with_mcp</td><td>72.0%</td><td>100.0%</td><td>56.2%</td><td>100.0%</td><td>243.2s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>native_cli</td><td>medium</td><td>with_mcp</td><td>66.7%</td><td>100.0%</td><td>50.0%</td><td>75.0%</td><td>308.5s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>high</td><td>without_mcp</td><td>66.7%</td><td>100.0%</td><td>50.0%</td><td>83.3%</td><td>277.7s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>medium</td><td>without_mcp</td><td>66.7%</td><td>100.0%</td><td>50.0%</td><td>100.0%</td><td>260.6s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>medium</td><td>with_mcp</td><td>66.7%</td><td>81.8%</td><td>56.2%</td><td>75.0%</td><td>435.0s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>minimal</td><td>with_mcp</td><td>64.0%</td><td>88.9%</td><td>50.0%</td><td>66.7%</td><td>401.9s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>native_cli</td><td>high</td><td>with_mcp</td><td>58.3%</td><td>87.5%</td><td>43.8%</td><td>83.3%</td><td>282.1s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>native_cli</td><td>high</td><td>with_mcp</td><td>54.5%</td><td>100.0%</td><td>37.5%</td><td>75.0%</td><td>379.2s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>native_cli</td><td>medium</td><td>without_mcp</td><td>54.5%</td><td>100.0%</td><td>37.5%</td><td>75.0%</td><td>352.9s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>high</td><td>with_mcp</td><td>52.2%</td><td>85.7%</td><td>37.5%</td><td>91.7%</td><td>472.9s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>native_cli</td><td>high</td><td>without_mcp</td><td>31.6%</td><td>100.0%</td><td>18.8%</td><td>66.7%</td><td>467.5s</td><td>0</td></tr>
+<tr><td>google</td><td>gemini-3.0-flash-preview</td><td>native_cli</td><td>default</td><td>with_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>181.9s</td><td>0</td></tr>
+<tr><td>google</td><td>gemini-3.0-flash-preview</td><td>native_cli</td><td>default</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>181.6s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>high</td><td>with_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>19.6s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>high</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>4.5s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>medium</td><td>with_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>19.2s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>4.3s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>high</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>468.9s</td><td>0</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>474.7s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>high</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>436.0s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>low</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>417.1s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>420.8s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>minimal</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>416.7s</td><td>0</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>xhigh</td><td>without_mcp</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>58.3%</td><td>220.6s</td><td>0</td></tr>
+</tbody></table>
+<h2>Harness Comparison</h2>
+<table><thead><tr><th>model</th><th>effort</th><th>mcp_state</th><th>native_cli F1</th><th>hermes F1</th><th>delta</th></tr></thead><tbody>
+<tr><td>gpt-5.4-mini</td><td>high</td><td>with_mcp</td><td>54.5%</td><td>0.0%</td><td>-54.5pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>high</td><td>without_mcp</td><td>31.6%</td><td>0.0%</td><td>-31.6pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>medium</td><td>with_mcp</td><td>66.7%</td><td>0.0%</td><td>-66.7pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>medium</td><td>without_mcp</td><td>54.5%</td><td>0.0%</td><td>-54.5pp</td></tr>
+<tr><td>gpt-5.5</td><td>high</td><td>with_mcp</td><td>58.3%</td><td>52.2%</td><td>-6.2pp</td></tr>
+<tr><td>gpt-5.5</td><td>high</td><td>without_mcp</td><td>66.7%</td><td>0.0%</td><td>-66.7pp</td></tr>
+<tr><td>gpt-5.5</td><td>medium</td><td>with_mcp</td><td>72.0%</td><td>76.9%</td><td>+4.9pp</td></tr>
+<tr><td>gpt-5.5</td><td>medium</td><td>without_mcp</td><td>66.7%</td><td>0.0%</td><td>-66.7pp</td></tr>
+</tbody></table>
+<h2>MCP Impact</h2>
+<table><thead><tr><th>model</th><th>harness</th><th>effort</th><th>without case_acc</th><th>with case_acc</th><th>delta</th></tr></thead><tbody>
+<tr><td>gemini-3.0-flash-preview</td><td>native_cli</td><td>default</td><td>58.3%</td><td>58.3%</td><td>+0.0pp</td></tr>
+<tr><td>gemini-3.1-pro-preview</td><td>native_cli</td><td>default</td><td>91.7%</td><td>91.7%</td><td>+0.0pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>hermes</td><td>high</td><td>58.3%</td><td>58.3%</td><td>+0.0pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>hermes</td><td>medium</td><td>58.3%</td><td>58.3%</td><td>+0.0pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>native_cli</td><td>high</td><td>66.7%</td><td>75.0%</td><td>+8.3pp</td></tr>
+<tr><td>gpt-5.4-mini</td><td>native_cli</td><td>medium</td><td>75.0%</td><td>75.0%</td><td>+0.0pp</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>high</td><td>58.3%</td><td>91.7%</td><td>+33.3pp</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>58.3%</td><td>91.7%</td><td>+33.3pp</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>high</td><td>83.3%</td><td>83.3%</td><td>+0.0pp</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>medium</td><td>100.0%</td><td>100.0%</td><td>+0.0pp</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>high</td><td>58.3%</td><td>83.3%</td><td>+25.0pp</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>low</td><td>58.3%</td><td>75.0%</td><td>+16.7pp</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>medium</td><td>58.3%</td><td>75.0%</td><td>+16.7pp</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>minimal</td><td>58.3%</td><td>66.7%</td><td>+8.3pp</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>xhigh</td><td>58.3%</td><td>100.0%</td><td>+41.7pp</td></tr>
+</tbody></table>
+<h2>Effort Scaling</h2>
+<table><thead><tr><th>model</th><th>harness</th><th>mcp_state</th><th>F1 by effort</th></tr></thead><tbody>
+<tr><td>gpt-5.4-mini</td><td>hermes</td><td>with_mcp</td><td>high=0.0%, medium=0.0%</td></tr>
+<tr><td>gpt-5.4-mini</td><td>hermes</td><td>without_mcp</td><td>high=0.0%, medium=0.0%</td></tr>
+<tr><td>gpt-5.4-mini</td><td>native_cli</td><td>with_mcp</td><td>high=54.5%, medium=66.7%</td></tr>
+<tr><td>gpt-5.4-mini</td><td>native_cli</td><td>without_mcp</td><td>high=31.6%, medium=54.5%</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>with_mcp</td><td>high=52.2%, medium=76.9%</td></tr>
+<tr><td>gpt-5.5</td><td>hermes</td><td>without_mcp</td><td>high=0.0%, medium=0.0%</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>with_mcp</td><td>high=58.3%, medium=72.0%</td></tr>
+<tr><td>gpt-5.5</td><td>native_cli</td><td>without_mcp</td><td>high=66.7%, medium=66.7%</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>with_mcp</td><td>high=76.9%, low=73.3%, medium=66.7%, minimal=64.0%, xhigh=78.6%</td></tr>
+<tr><td>grok-4.3</td><td>hermes</td><td>without_mcp</td><td>high=0.0%, low=0.0%, medium=0.0%, minimal=0.0%, xhigh=0.0%</td></tr>
+</tbody></table>
+<h2>Failure Log</h2>
+<table><thead><tr><th>family</th><th>model</th><th>harness</th><th>effort</th><th>mcp_state</th><th>reason</th></tr></thead><tbody>
+<tr><td>google</td><td>gemini-3.0-flash-preview</td><td>native_cli</td><td>default</td><td>with_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 1, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;Ripgrep is not available. Falling back to GrepTool.\nError when talking to Gemini API Full report available at: /var/folders/pd/wvj52r1j3bd4z9y3dfc2k4180000gn/T/gemini-client-error</td></tr>
+<tr><td>google</td><td>gemini-3.0-flash-preview</td><td>native_cli</td><td>default</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 1, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;Ripgrep is not available. Falling back to GrepTool.\nError when talking to Gemini API Full report available at: /var/folders/pd/wvj52r1j3bd4z9y3dfc2k4180000gn/T/gemini-client-error</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>high</td><td>with_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 1, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\&quot;, line 10, in &lt;module&gt;\n    sys.exit(main())\n             ^^^^^^\n  File \&quot;</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>high</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>medium</td><td>with_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 1, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\&quot;, line 10, in &lt;module&gt;\n    sys.exit(main())\n             ^^^^^^\n  File \&quot;</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>high</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>openai</td><td>gpt-5.5</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>high</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>low</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>medium</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>minimal</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+<tr><td>xai</td><td>grok-4.3</td><td>hermes</td><td>xhigh</td><td>without_mcp</td><td>[{&quot;case_id&quot;: &quot;cal_clean_greeting&quot;, &quot;verdict&quot;: &quot;judge_error&quot;, &quot;error&quot;: null, &quot;returncode&quot;: 2, &quot;stdout&quot;: null, &quot;stderr&quot;: &quot;usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action:</td></tr>
+</tbody></table>
+</body>
+</html>

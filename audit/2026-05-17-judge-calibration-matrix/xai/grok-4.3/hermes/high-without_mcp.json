@@ -1,0 +1,246 @@
+{
+  "cell": {
+    "family": "xai",
+    "model": "grok-4.3",
+    "harness": "hermes",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T12:38:41Z",
+  "finished_at": "2026-05-16T12:45:57Z",
+  "duration_s": 435.96,
+  "n_cases": 12,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_short_prose",
+      "true_label": "clean",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_travel",
+      "true_label": "clean",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_workplace",
+      "true_label": "clean",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_dirty_email_calques",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 4
+    },
+    {
+      "case_id": "cal_dirty_medical",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 3
+    },
+    {
+      "case_id": "cal_dirty_workplace",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_dirty_meetup",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_dirty_register",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_debatable_next_steps",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 1
+    },
+    {
+      "case_id": "cal_clean_with_lure",
+      "true_label": "clean",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_dirty_business_meeting",
+      "true_label": "issues_found",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 0,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.5833,
+    "precision": 0.0,
+    "recall": 0.0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "grok-4.3",
+    "effort_actual": "high",
+    "mcp_servers": [],
+    "errors": [
+      {
+        "case_id": "cal_clean_greeting",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_clean_short_prose",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_clean_travel",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_clean_workplace",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_dirty_email_calques",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_dirty_medical",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_dirty_workplace",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_dirty_meetup",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_dirty_register",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_debatable_next_steps",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_clean_with_lure",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "cal_dirty_business_meeting",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      }
+    ]
+  }
+}

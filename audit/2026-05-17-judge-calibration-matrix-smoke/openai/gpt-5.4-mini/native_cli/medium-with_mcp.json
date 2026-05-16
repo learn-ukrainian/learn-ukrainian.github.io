@@ -1,0 +1,41 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.4-mini",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T12:30:09Z",
+  "finished_at": "2026-05-16T12:30:24Z",
+  "duration_s": 14.24,
+  "n_cases": 1,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 32,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 1.0,
+    "precision": 0.0,
+    "recall": 0.0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.4-mini",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

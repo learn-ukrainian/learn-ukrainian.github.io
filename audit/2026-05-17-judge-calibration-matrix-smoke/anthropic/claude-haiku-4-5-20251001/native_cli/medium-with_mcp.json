@@ -1,0 +1,50 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T12:30:09Z",
+  "finished_at": "2026-05-16T12:30:09Z",
+  "duration_s": 0.72,
+  "n_cases": 1,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "judge_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 34,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.0,
+    "precision": 0.0,
+    "recall": 0.0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-haiku-4-5-20251001",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": [
+      {
+        "case_id": "cal_clean_greeting",
+        "verdict": "judge_error",
+        "error": null,
+        "returncode": 1,
+        "stdout": "Not logged in · Please run /login\n",
+        "stderr": ""
+      }
+    ]
+  }
+}
