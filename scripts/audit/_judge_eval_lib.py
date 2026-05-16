@@ -18,11 +18,16 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DB = PROJECT_ROOT / "data" / "sources.db"
 VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
+UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
 
 PR_2006_REF = "origin/pr-2006"
 CALIBRATION_BLOB = "eval/russianism/calibration-cases.jsonl"
 
 CYRILLIC_TOKEN_RE = re.compile(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+")
+
+ANTONENKO_SOURCE = "antonenko-davydovych-yak-my-hovorymo"
+UA_GEC_RELEVANT_TAGS = ("F/Calque", "F/Style", "F/Collocation", "G/Case", "G/Gender")
+UA_GEC_ANN_RE = re.compile(r"\{([^{}=]*?)=>([^{}]*?):::error_type=([^}]+)\}")
 
 
 def utc_timestamp() -> str:
@@ -226,18 +231,190 @@ def _vesum_unknown(text: str, *, db_path: Path = VESUM_DB) -> list[str]:
     return sorted(set(candidate_tokens) - known)
 
 
+def _substantive_tokens(text: str, *, min_len: int = 4) -> list[str]:
+    """Lowercased Cyrillic tokens of length >= ``min_len``, deduplicated and
+    sorted. Skips short function words so prefix scans stay tight."""
+    return sorted({t for t in (m.lower() for m in CYRILLIC_TOKEN_RE.findall(text)) if len(t) >= min_len})
+
+
+def _antonenko_fulltext_search(
+    text: str,
+    k: int = 4,
+    *,
+    db_path: Path = DB,
+    snippet_chars: int = 200,
+) -> list[dict[str, Any]]:
+    """Search the full-text Antonenko corpus (169 page chunks) for phrases
+    overlapping with the input text. Complements the 342 keyed headwords
+    in ``style_guide``: many calques and register rules are discussed in
+    the prose body but never lifted into a structured headword entry.
+
+    Strategy: tokenize input → drop tokens <4 chars (Ukrainian function
+    words) → prefix-truncate at 5 chars (handle inflection) → FTS5 OR
+    query against ``textbooks_fts`` restricted to ``source_file =
+    antonenko-davydovych-yak-my-hovorymo``. Returns up to ``k`` hits
+    ordered by FTS5 default ranking, with snippets centered on the first
+    matched substring.
+    """
+    tokens = _substantive_tokens(text)
+    if not tokens:
+        return []
+    prefixes = sorted({t[:5] for t in tokens if len(t) >= 5})
+    if not prefixes:
+        return []
+    fts_query = " OR ".join(f'"{p}"*' for p in prefixes)
+    conn = sqlite3.connect(db_path)
+    try:
+        rows = conn.execute(
+            """
+            SELECT t.title, t.text
+            FROM textbooks_fts f
+            JOIN textbooks t ON t.id = f.rowid
+            WHERE f.textbooks_fts MATCH ?
+              AND t.source_file = ?
+            LIMIT ?
+            """,
+            (fts_query, ANTONENKO_SOURCE, k * 4),  # over-fetch then snippet-rank
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+    hits: list[dict[str, Any]] = []
+    for title, chunk_text in rows:
+        chunk_lower = chunk_text.lower()
+        best_pos = None
+        best_token = None
+        for tok in tokens:
+            pos = chunk_lower.find(tok[:5])
+            if pos >= 0 and (best_pos is None or pos < best_pos):
+                best_pos = pos
+                best_token = tok
+        if best_pos is None:
+            continue
+        start = max(0, best_pos - snippet_chars // 4)
+        snippet = chunk_text[start:start + snippet_chars].strip().replace("\n", " ")
+        # extract page number from title like "Antonenko-Davydovych «Як ми говоримо», p. 142"
+        page_match = re.search(r"p\.\s*(\d+)", title or "")
+        hits.append({
+            "page": int(page_match.group(1)) if page_match else None,
+            "matched_token": best_token,
+            "snippet": snippet,
+        })
+        if len(hits) >= k:
+            break
+    return hits
+
+
+_UA_GEC_INDEX: list[tuple[frozenset[str], str, str, str]] | None = None
+
+
+def _ua_gec_load_index(*, root: Path = UA_GEC_ROOT) -> list[tuple[frozenset[str], str, str, str]]:
+    """Lazy-build an in-memory index of UA-GEC annotation triples.
+
+    Scans every ``*.ann`` file under ``{gec-only,gec-fluency}/{train,test}/annotated/``,
+    extracts ``{ERROR=>CORRECT:::error_type=TAG}`` triples, keeps only the
+    russianism-adjacent tags in :data:`UA_GEC_RELEVANT_TAGS`, and stores
+    them as ``(error_token_set, error_str, correct_str, tag)`` tuples.
+
+    Skipped: empty-error insertions (``error_str == ""``) — those carry no
+    token signal for retrieval and would match every input. The index is
+    built once per process; subsequent calls return the cached list.
+    """
+    global _UA_GEC_INDEX
+    if _UA_GEC_INDEX is not None:
+        return _UA_GEC_INDEX
+    if not root.exists():
+        _UA_GEC_INDEX = []
+        return _UA_GEC_INDEX
+    index: list[tuple[frozenset[str], str, str, str]] = []
+    seen: set[tuple[str, str, str]] = set()
+    relevant = set(UA_GEC_RELEVANT_TAGS)
+    for ann_path in root.glob("data/gec-*/*/annotated/*.ann"):
+        try:
+            content = ann_path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for match in UA_GEC_ANN_RE.finditer(content):
+            error_str = match.group(1).strip()
+            correct_str = match.group(2).strip()
+            tag = match.group(3).strip()
+            if tag not in relevant or not error_str:
+                continue
+            key = (error_str, correct_str, tag)
+            if key in seen:
+                continue
+            seen.add(key)
+            error_tokens = frozenset(
+                t.lower() for t in CYRILLIC_TOKEN_RE.findall(error_str) if len(t) >= 3
+            )
+            if not error_tokens:
+                continue
+            index.append((error_tokens, error_str, correct_str, tag))
+    _UA_GEC_INDEX = index
+    return _UA_GEC_INDEX
+
+
+def _ua_gec_calque_search(
+    text: str,
+    k: int = 4,
+    *,
+    min_overlap: int = 2,
+) -> list[dict[str, Any]]:
+    """Find UA-GEC annotation triples whose error tokens overlap the input.
+
+    Returns up to ``k`` triples ranked by overlap count. ``min_overlap``
+    defaults to 2 so single-token false positives (one frequent word
+    matching half the corpus) are suppressed. For single-token UA-GEC
+    errors, the threshold is relaxed to 1 (single-token annotations are
+    rare and tend to be high-precision substitutions like
+    ``повістку → порядок``).
+
+    UA-GEC is the Grammarly Ukraine team's gold-standard learner-error
+    corpus (MIT-licensed). Tags retrieved: F/Calque, F/Style,
+    F/Collocation, G/Case, G/Gender — the russianism-adjacent error
+    classes per ``UA_GEC_RELEVANT_TAGS``.
+    """
+    input_tokens = {t.lower() for t in CYRILLIC_TOKEN_RE.findall(text) if len(t) >= 3}
+    if not input_tokens:
+        return []
+    index = _ua_gec_load_index()
+    scored: list[tuple[int, tuple[frozenset[str], str, str, str]]] = []
+    for entry in index:
+        error_tokens = entry[0]
+        overlap = len(error_tokens & input_tokens)
+        effective_min = 1 if len(error_tokens) == 1 else min_overlap
+        if overlap >= effective_min:
+            scored.append((overlap, entry))
+    scored.sort(key=lambda item: (-item[0], item[1][3], item[1][1]))
+    return [
+        {
+            "error": entry[1],
+            "correct": entry[2],
+            "tag": entry[3],
+            "overlap": overlap,
+        }
+        for overlap, entry in scored[:k]
+    ]
+
+
 def retrieve_evidence(text: str) -> dict[str, Any]:
     """Aggregate all evidence signals for one judge prompt.
 
-    Combines Antonenko-Davydovych entries (style guide), Grinchenko/ESUM
-    token attestation (heritage defense), pymorphy3 Russian-shadow morphology
-    detection, and VESUM-unknown token enumeration.
+    Combines Antonenko-Davydovych structured headwords (style_guide table)
+    AND full-book prose chunks (textbooks table), Grinchenko/ESUM token
+    attestation (heritage defense), pymorphy3 Russian-shadow morphology
+    detection, VESUM-unknown token enumeration, and UA-GEC professional-
+    annotator calque/style/collocation triples.
     """
     return {
         "antonenko": retrieve_antonenko(text),
+        "antonenko_fulltext": _antonenko_fulltext_search(text),
         "heritage_attested": _heritage_check(text),
         "russian_shadow": _russian_shadow_check(text),
         "vesum_unknown_tokens": _vesum_unknown(text),
+        "ua_gec_calques": _ua_gec_calque_search(text),
     }
 
 
@@ -293,6 +470,170 @@ Otherwise output JSON with this exact shape:
   "verdict": "issues_found",
   "issues": [
     {{"phrase": "...", "rule": "...", "correct": "...", "severity": 1-3}}
+  ]
+}}
+```
+
+Output ONLY the JSON object — no commentary, no markdown fences, no preamble."""
+
+
+def _render_evidence_section(evidence: dict[str, Any]) -> str:
+    """Render the six H2 evidence channels as Markdown sections."""
+    sections: list[str] = []
+
+    ant_kw = evidence.get("antonenko") or []
+    if ant_kw:
+        sections.append(
+            "### Antonenko-Davydovych — keyed headword entries (style_guide table)\n"
+            "These are the 342 structured entries. Each is a canonical rule.\n\n"
+            + "\n".join(
+                f"- **{e['headword']}** (p.{e['page']}): {e['text'][:400]}"
+                for e in ant_kw[:6]
+            )
+        )
+    else:
+        sections.append("### Antonenko-Davydovych — keyed headword entries\n(no headword hits)")
+
+    ant_ft = evidence.get("antonenko_fulltext") or []
+    if ant_ft:
+        sections.append(
+            "### Antonenko-Davydovych — full-book prose hits (textbooks table, 169 page chunks)\n"
+            "Complements the 342 headwords above. May surface register rules and discussion absent from the keyed index.\n\n"
+            + "\n".join(
+                f"- p.{h['page']} (matched on `{h['matched_token']}`): {h['snippet']}"
+                for h in ant_ft[:4]
+            )
+        )
+    else:
+        sections.append("### Antonenko-Davydovych — full-book prose hits\n(no prose hits)")
+
+    heritage = evidence.get("heritage_attested") or []
+    if heritage:
+        sections.append(
+            "### Heritage attestation (Grinchenko 1907 + ESUM etymology)\n"
+            "Single-word attestation in pre-Soviet / etymological dictionaries is strong "
+            "evidence that the form is canonical Ukrainian, **not** a Russianism. Do not "
+            "flag attested forms below as Russianisms without overriding evidence.\n\n"
+            + "\n".join(
+                f"- `{e['token']}` — attested in: {', '.join(e['sources'])}"
+                for e in heritage[:12]
+            )
+        )
+    else:
+        sections.append("### Heritage attestation\n(no Grinchenko/ESUM attestations)")
+
+    rs = evidence.get("russian_shadow") or {}
+    rs_tokens = rs.get("triggered_tokens") if rs.get("available") else None
+    if rs_tokens:
+        sections.append(
+            "### Russian-shadow morphology hits (pymorphy3, fires only on non-VESUM tokens)\n"
+            + "\n".join(
+                f"- `{t['token']}` → ru lemma `{t['ru_lemma']}` (confidence {t['confidence']})"
+                for t in rs_tokens[:8]
+            )
+        )
+    elif rs.get("available"):
+        sections.append("### Russian-shadow morphology hits\n(no Russian-pattern tokens)")
+    else:
+        sections.append("### Russian-shadow morphology hits\n(pymorphy3 unavailable in this environment)")
+
+    vu = evidence.get("vesum_unknown_tokens") or []
+    if vu:
+        sections.append(
+            "### VESUM-unknown Cyrillic tokens (not in 6.7M form table; proper nouns filtered)\n"
+            + ", ".join(f"`{t}`" for t in vu[:20])
+        )
+    else:
+        sections.append("### VESUM-unknown Cyrillic tokens\n(every Cyrillic token is a known Ukrainian form)")
+
+    ua_gec = evidence.get("ua_gec_calques") or []
+    if ua_gec:
+        sections.append(
+            "### UA-GEC corpus — professionally-annotated learner errors (~7K triples across F/Calque, F/Style, F/Collocation, G/Case, G/Gender)\n"
+            "Source: Grammarly Ukraine team, MIT-licensed gold-standard error-correction corpus.\n"
+            "**Interpretation rules:**\n"
+            "- `F/Calque` and `F/Collocation` hits are **strong** evidence of a russianism / unnatural pairing.\n"
+            "- `F/Style` hits are **weaker** — they often record stylistic preferences (e.g. an annotator may prefer `Добрий день` over the equally-correct canonical greeting `Доброго дня!`). Do **not** flag a phrase as a Russianism on F/Style evidence alone unless the substitution is also supported by Antonenko or your independent knowledge.\n"
+            "- `G/Case` and `G/Gender` hits indicate Russian-pattern grammar, but require that the target text actually contains the exact `error` form (or a close inflection) — verify before citing.\n\n"
+            + "\n".join(
+                f"- [{h['tag']}] `{h['error']}` → `{h['correct']}` (overlap={h['overlap']})"
+                for h in ua_gec[:6]
+            )
+        )
+    else:
+        sections.append("### UA-GEC corpus matches\n(no overlapping annotation triples)")
+
+    return "\n\n".join(sections)
+
+
+def build_judge_prompt_h2(target_text: str, evidence: dict[str, Any]) -> str:
+    """H2 evidence-rich judge prompt with cite-or-forbid + UA-GEC + Antonenko prose.
+
+    Differences vs ``build_judge_prompt`` (baseline preserved on
+    ``main``/``grok_judge_calibration.py``):
+
+    1. Six evidence channels (was: only Antonenko headwords).
+    2. Cite-or-forbid: every issue must include ``evidence_type`` ∈
+       ``{antonenko_headword, antonenko_prose, ua_gec_calque,
+       vesum_unknown, russian_shadow, general_principle}`` and a
+       ``evidence_quote`` field naming the specific source.
+    3. ``general_principle`` is allowed but reserved for cases the
+       judge can defend without retrieval evidence — encourages the
+       model to mark uncertain calls explicitly.
+    4. Canonical-greeting protection: explicit instruction not to flag
+       ``Доброго дня!``, ``Добрий день!``, ``Як ваші справи?``,
+       ``будь ласка``, ``дякую`` as Russianisms (preserves the H1
+       FP fix even when UA-GEC F/Style fuzzes a greeting hit).
+    """
+    evidence_block = _render_evidence_section(evidence)
+
+    return f"""You are an expert Ukrainian-language proofreader specializing in Russianisms (русизми), calques (кальки), Surzhyk (суржик), and unnatural Ukrainian phrasing.
+
+## Default verdict: CLEAN
+
+Modern Ukrainian has many regional, colloquial, and stylistic variants that are NOT Russianisms. Default to `clean` and flag only when you have concrete, citeable evidence.
+
+The following forms are **canonical Ukrainian** and must NEVER be flagged as Russianisms regardless of any retrieved evidence below:
+
+- Greetings: `Доброго дня!`, `Добрий день!`, `Доброго ранку!`, `Добрий вечір!`, `Привіт!`
+- Polite formulas: `Як ваші справи?`, `Будь ласка`, `Дякую`, `Перепрошую`
+- Standard pronoun forms in their normal grammatical roles: `вас`, `вам`, `вами`, `усе`, `гаразд`
+
+If a UA-GEC F/Style entry below substitutes one of these, treat it as a stylistic preference of the annotator and ignore it.
+
+## Text to evaluate
+
+```
+{target_text}
+```
+
+## Retrieved evidence (six channels)
+
+{evidence_block}
+
+## Your task
+
+Identify Russianisms, calques, Surzhyk, or unnatural Ukrainian only when you can cite specific evidence. Apply the **cite-or-forbid rule**: every issue must reference one concrete evidence anchor.
+
+For each issue:
+
+- `phrase` — exact problematic substring from the target text (must appear literally).
+- `correct` — the natural Ukrainian alternative.
+- `severity` — 1=minor/debatable, 2=clear Russianism, 3=blatant calque or borrowing.
+- `evidence_type` — one of: `antonenko_headword`, `antonenko_prose`, `ua_gec_calque`, `vesum_unknown`, `russian_shadow`, `general_principle`.
+- `evidence_quote` — short fragment naming the source (headword + page, prose-page snippet, UA-GEC `error→correct` pair, VESUM-unknown token, or a one-sentence general principle).
+
+If you cite `general_principle`, you are stating that no retrieved evidence directly supports the flag and you are calling it on your own judgment. Use sparingly.
+
+If the text is genuinely clean Ukrainian with NO Russianisms, output `{{"verdict": "clean", "issues": []}}`.
+
+Otherwise output JSON with this exact shape:
+
+```json
+{{
+  "verdict": "issues_found",
+  "issues": [
+    {{"phrase": "...", "correct": "...", "severity": 1-3, "evidence_type": "antonenko_headword|antonenko_prose|ua_gec_calque|vesum_unknown|russian_shadow|general_principle", "evidence_quote": "..."}}
   ]
 }}
 ```

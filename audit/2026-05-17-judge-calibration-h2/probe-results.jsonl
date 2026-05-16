@@ -1,0 +1,1 @@
+{"family": "anthropic", "model": "claude-haiku-4-5-20251001", "harness": "native_cli", "effort": "high", "mcp_state": "without_mcp", "result": "valid_response", "reason": null}

@@ -1,0 +1,214 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T20:20:29Z",
+  "finished_at": "2026-05-16T20:21:35Z",
+  "duration_s": 65.3,
+  "n_cases": 12,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_clean_short_prose",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_clean_travel",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_clean_workplace",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_dirty_email_calques",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 295,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 4,
+      "raw_issues": [
+        {
+          "phrase": "На наступному тижні",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Calque of Russian 'на следующей неделе'; standard Ukrainian uses genitive without preposition: 'наступного тижня'.",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_dirty_medical",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 525,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 3,
+      "raw_issues": [
+        {
+          "phrase": "забір крові",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Медичний термін українською — «взяття крові»; «забір» у цьому значенні є калькою з рос. «забор крови».",
+          "severity": 2
+        },
+        {
+          "phrase": "прийом",
+          "evidence_type": "vesum_unknown",
+          "evidence_quote": "VESUM-unknown token: прийом — у медичному контексті усталеною є форма «приймання» / «на прийом до лікаря» допустима, але стилістично слабша.",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "case_id": "cal_dirty_workplace",
+      "true_label": "issues_found",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_dirty_meetup",
+      "true_label": "issues_found",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_dirty_register",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 702,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 2,
+      "raw_issues": [
+        {
+          "phrase": "в найближчий час",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Ukrainian expresses 'in the near future' with the bare instrumental (найближчим часом); 'в + accusative час' replicates Russian 'в ближайшее время' and is a standard calque flagged in style guides.",
+          "severity": 2
+        },
+        {
+          "phrase": "дякую за приділений час",
+          "evidence_type": "general_principle",
+          "evidence_quote": "Nominal calque on Russian 'спасибо за уделённое время'; natural Ukrainian uses a verbal subordinate clause (дякую, що приділили час) rather than the passive participle phrase.",
+          "severity": 1
+        }
+      ]
+    },
+    {
+      "case_id": "cal_debatable_next_steps",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 190,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 1,
+      "raw_issues": [
+        {
+          "phrase": "Наступні кроки",
+          "evidence_type": "ua_gec_calque",
+          "evidence_quote": "UA-GEC F/Calque: наступні → такі",
+          "severity": 2
+        }
+      ]
+    },
+    {
+      "case_id": "cal_clean_with_lure",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0,
+      "raw_issues": []
+    },
+    {
+      "case_id": "cal_dirty_business_meeting",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 474,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 2,
+      "raw_issues": [
+        {
+          "phrase": "Слідуючим питанням",
+          "evidence_type": "vesum_unknown",
+          "evidence_quote": "VESUM-unknown token: слідуючим (active participle calque from Russian следующий)",
+          "severity": 3
+        },
+        {
+          "phrase": "на повістці дня",
+          "evidence_type": "general_principle",
+          "evidence_quote": "'повістка дня' is a direct calque of Russian 'повестка дня'; standard Ukrainian is 'порядок денний'",
+          "severity": 3
+        }
+      ]
+    }
+  ],
+  "scores": {
+    "f1": 0.5455,
+    "case_acc": 0.8333,
+    "precision": 1.0,
+    "recall": 0.375
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "high",
+    "mcp_servers": [],
+    "errors": []
+  }
+}
