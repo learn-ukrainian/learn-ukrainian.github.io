@@ -7,6 +7,7 @@ import contextlib
 import fcntl
 import html
 import json
+import os
 import shutil
 import subprocess
 import time
@@ -279,16 +280,30 @@ def run_subprocess(cmd: list[str], *, timeout_s: int, stdin: str | None = None) 
 def build_native_command(cell: Cell, prompt: str) -> list[str]:
     """Build the native CLI command for one prompt."""
     if cell.family == "anthropic":
-        # `--bare` is REQUIRED here: it's the only mode that runs fast enough
-        # for matrix-scale (12 cases × N cells). Without it `claude -p` does
-        # full session init (hooks + LSP + plugin sync + CLAUDE.md autoload)
-        # and times out at >30s per call. The tradeoff is `--bare` forbids
-        # OAuth + keychain reads (per `claude --help`), so this lane requires
-        # ANTHROPIC_API_KEY in env. Without the key, the Anthropic family is
-        # skipped — operators see "Not logged in · Please run /login" in cell
-        # output and should drop `--families anthropic` until #2036 (Hermes
-        # path) is fixed or an ANTHROPIC_API_KEY is provided.
-        cmd = ["claude", "-p", "--bare", "--model", cell.model]
+        # Two operating modes for the anthropic native_cli lane:
+        #
+        # (1) CLAUDE_MATRIX_USE_BARE=1 (legacy fast path): `--bare` skips
+        #     session init (hooks + LSP + plugin sync + CLAUDE.md autoload).
+        #     Saves ~30s per call but FORBIDS OAuth + keychain reads (per
+        #     `claude --help`), so this lane requires ANTHROPIC_API_KEY in
+        #     env. Without the key, calls return "Not logged in · Please
+        #     run /login".
+        #
+        # (2) DEFAULT (OAuth-inherit path, added 2026-05-17): drop `--bare`
+        #     so the subprocess inherits the parent session's OAuth from
+        #     ~/.claude/. No API key needed when invoked from a logged-in
+        #     Claude Code context (e.g. dispatched headless worker). Costs
+        #     ~30s extra init per call but eliminates the API-key
+        #     requirement.
+        #
+        # See #2036 for the Hermes-anthropic silent-drop bug that makes the
+        # hermes lane unusable as of 2026-05-17 (status reports `logged in`
+        # but calls return empty stdout).
+        use_bare = os.environ.get("CLAUDE_MATRIX_USE_BARE") == "1"
+        cmd = ["claude", "-p"]
+        if use_bare:
+            cmd.append("--bare")
+        cmd.extend(["--model", cell.model])
         if cell.effort != "default":
             cmd.extend(["--effort", cell.effort])
         if cell.mcp_state == "with_mcp" and (PROJECT_ROOT / ".mcp.json").exists():
