@@ -1,0 +1,138 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:34:28Z",
+  "finished_at": "2026-05-16T18:38:54Z",
+  "duration_s": 265.28,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 3,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.3333,
+      "recall": 0.25,
+      "f1": 0.2857,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "remote-bind-without-guard",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:677",
+          "description": "The new `--host` option accepts arbitrary bind addresses while the proxy has no authentication or authorization. Running `ab serve --openai --host 0.0.0.0` exposes local agent CLIs and the user's inherited environment-driven credentials to the network, contradicting the documented localhost-only boundary. Remote binding should require an explicit unsafe opt-in such as `--allow-remote`, or the command should reject non-loopback hosts."
+        },
+        {
+          "id": "healthz-spawns-subprocesses",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:257",
+          "description": "`GET /healthz` runs every backend probe on each request, and each probe forks a CLI subprocess with a one-second timeout. A cheap unauthenticated endpoint can therefore create repeated `codex`, `gemini`, `claude`, and `hermes` processes, consuming CPU/process slots and tying up FastAPI workers. Health checks should use cached probe results, a lightweight static liveness response, or a separate expensive readiness endpoint."
+        },
+        {
+          "id": "unbounded-prompt-argv",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:154",
+          "description": "Request message content is unbounded and is flattened directly into subprocess arguments for Gemini, Claude, and Hermes. Large chat requests can exceed OS argument limits, trigger repeated backend failures, consume memory during JSON parsing/prompt construction, or expose prompt contents through process listings. The proxy should enforce request size/message limits and pass prompts via stdin or temporary files instead of argv where possible."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"remote-bind-without-guard\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:677\",\n    \"description\": \"The new `--host` option accepts arbitrary bind addresses while the proxy has no authentication or authorization. Running `ab serve --openai --host 0.0.0.0` exposes local agent CLIs and the user's inherited environment-driven credentials to the network, contradicting the documented localhost-only boundary. Remote binding should require an explicit unsafe opt-in such as `--allow-remote`, or the command should reject non-loopback hosts.\"\n  },\n  {\n    \"id\": \"healthz-spawns-subprocesses\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:257\",\n    \"description\": \"`GET /healthz` runs every backend probe on each request, and each probe forks a CLI subprocess with a one-second timeout. A cheap unauthenticated endpoint can therefore create repeated `codex`, `gemini`, `claude`, and `hermes` processes, consuming CPU/process slots and tying up FastAPI workers. Health checks should use cached probe results, a lightweight static liveness response, or a separate expensive readiness endpoint.\"\n  },\n  {\n    \"id\": \"unbounded-prompt-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:154\",\n    \"description\": \"Request message content is unbounded and is flattened directly into subprocess arguments for Gemini, Claude, and Hermes. Large chat requests can exceed OS argument limits, trigger repeated backend failures, consume memory during JSON parsing/prompt construction, or expose prompt contents through process listings. The proxy should enforce request size/message limits and pass prompts via stdin or temporary files instead of argv where possible.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1866
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 2,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "activity-schema-correction-cannot-patch-yaml",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:118",
+          "description": "Adding `activity_schema` to `WRITER_CORRECTION_GATES` routes failures through `_apply_writer_correction`, whose default prompt and parser are explicitly module.md-only for every gate except `strict_json_parse`. The new gate detects bad fields in `activities.yaml`, but the correction prompt forbids returning or patching `activities.yaml`, so a real alias failure like `incorrect:` will be detected and then sent to a correction path that cannot fix the artifact that failed."
+        },
+        {
+          "id": "invalid-canonical-error-correction-example",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4682",
+          "description": "The diagnostic's canonical example uses `sentence: \"Я <error> вранці.\"` and sets both `error` and `correction` to `\"вмиваюся\"`. That example is not a valid pedagogical error-correction item: the sentence contains a placeholder instead of the actual wrong form, and the wrong and corrected forms are identical. Because this message is used as gate feedback, it can steer the writer toward malformed/no-op items that still satisfy the field-name gate."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"activity-schema-correction-cannot-patch-yaml\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:118\",\n    \"description\": \"Adding `activity_schema` to `WRITER_CORRECTION_GATES` routes failures through `_apply_writer_correction`, whose default prompt and parser are explicitly module.md-only for every gate except `strict_json_parse`. The new gate detects bad fields in `activities.yaml`, but the correction prompt forbids returning or patching `activities.yaml`, so a real alias failure like `incorrect:` will be detected and then sent to a correction path that cannot fix the artifact that failed.\"\n  },\n  {\n    \"id\": \"invalid-canonical-error-correction-example\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4682\",\n    \"description\": \"The diagnostic's canonical example uses `sentence: \\\"Я <error> вранці.\\\"` and sets both `error` and `correction` to `\\\"вмиваюся\\\"`. That example is not a valid pedagogical error-correction item: the sentence contains a placeholder instead of the actual wrong form, and the wrong and corrected forms are identical. Because this message is used as gate feedback, it can steer the writer toward malformed/no-op items that still satisfy the field-name gate.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1331
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.3077,
+    "case_acc": 0.0,
+    "precision": 0.4,
+    "recall": 0.25,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 2,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.5",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

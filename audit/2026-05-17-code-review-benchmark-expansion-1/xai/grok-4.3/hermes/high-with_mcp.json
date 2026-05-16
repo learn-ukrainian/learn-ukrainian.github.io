@@ -1,0 +1,137 @@
+{
+  "cell": {
+    "family": "xai",
+    "model": "grok-4.3",
+    "harness": "hermes",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:27:01Z",
+  "finished_at": "2026-05-16T18:28:43Z",
+  "duration_s": 102.46,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 5,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.2,
+      "recall": 0.25,
+      "f1": 0.2222,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "prompt-argv-embedding",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:178",
+          "description": "Gemini and Hermes backends embed the entire prompt (potentially multi-kilobyte) into argv via f\"--prompt={prompt}\" and f\"--oneshot={prompt}\"; this risks OS ARG_MAX failures, argument parsing breakage on newlines/equals signs, and is inconsistent with the safer stdin approach used by Codex and the post-\"--\" positional arg used by Claude."
+        },
+        {
+          "id": "unbounded-request-body",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:340",
+          "description": "ChatCompletionRequest accepts arbitrary message lists and content without length, count, or total-size constraints; combined with synchronous subprocess spawning and 120s backend timeout, this creates a straightforward DoS vector via large or numerous requests before any uvicorn/FastAPI defaults intervene."
+        },
+        {
+          "id": "host-binding-exposure",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:765",
+          "description": "The --host argument defaults to 127.0.0.1 but is fully configurable; nothing prevents a user from supplying 0.0.0.0, and the resulting server has no authentication, TLS, or request-origin checks, silently exposing all agent CLIs to the network despite documentation claiming localhost-only operation."
+        },
+        {
+          "id": "missing-concurrency-limits",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:1",
+          "description": "FastAPI app and uvicorn invocation impose no worker, semaphore, or queue limits on concurrent /v1/chat/completions calls; each request forks a full CLI subprocess with its own 120s timeout, allowing resource exhaustion under modest parallel load."
+        },
+        {
+          "id": "token-usage-always-zero",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:370",
+          "description": "The OpenAI-compatible response always returns usage with zero tokens regardless of actual backend output; while documented, this deviates from the spec expectation that real token counts are supplied when available and may break clients that rely on usage fields for budgeting or logging."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"prompt-argv-embedding\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:178\",\n    \"description\": \"Gemini and Hermes backends embed the entire prompt (potentially multi-kilobyte) into argv via f\\\"--prompt={prompt}\\\" and f\\\"--oneshot={prompt}\\\"; this risks OS ARG_MAX failures, argument parsing breakage on newlines/equals signs, and is inconsistent with the safer stdin approach used by Codex and the post-\\\"--\\\" positional arg used by Claude.\"\n  },\n  {\n    \"id\": \"unbounded-request-body\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:340\",\n    \"description\": \"ChatCompletionRequest accepts arbitrary message lists and content without length, count, or total-size constraints; combined with synchronous subprocess spawning and 120s backend timeout, this creates a straightforward DoS vector via large or numerous requests before any uvicorn/FastAPI defaults intervene.\"\n  },\n  {\n    \"id\": \"host-binding-exposure\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:765\",\n    \"description\": \"The --host argument defaults to 127.0.0.1 but is fully configurable; nothing prevents a user from supplying 0.0.0.0, and the resulting server has no authentication, TLS, or request-origin checks, silently exposing all agent CLIs to the network despite documentation claiming localhost-only operation.\"\n  },\n  {\n    \"id\": \"missing-concurrency-limits\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:1\",\n    \"description\": \"FastAPI app and uvicorn invocation impose no worker, semaphore, or queue limits on concurrent /v1/chat/completions calls; each request forks a full CLI subprocess with its own 120s timeout, allowing resource exhaustion under modest parallel load.\"\n  },\n  {\n    \"id\": \"token-usage-always-zero\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:370\",\n    \"description\": \"The OpenAI-compatible response always returns usage with zero tokens regardless of actual backend output; while documented, this deviates from the spec expectation that real token counts are supplied when available and may break clients that rely on usage fields for budgeting or logging.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2412
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 0,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.1538,
+    "case_acc": 0.0,
+    "precision": 0.2,
+    "recall": 0.125,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 1,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "grok-4.3",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

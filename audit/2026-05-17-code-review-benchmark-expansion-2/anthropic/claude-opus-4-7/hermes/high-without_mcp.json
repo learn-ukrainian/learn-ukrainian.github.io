@@ -1,0 +1,123 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "hermes",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T18:44:24Z",
+  "finished_at": "2026-05-16T18:44:25Z",
+  "duration_s": 0.54,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 0,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "",
+      "raw_response_truncated": false,
+      "raw_response_chars": 0
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 0,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "",
+      "raw_response_truncated": false,
+      "raw_response_chars": 0
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "",
+      "raw_response_truncated": false,
+      "raw_response_chars": 0
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 0,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "high",
+    "mcp_servers": [],
+    "errors": [
+      {
+        "case_id": "pr-2025-openai-proxy",
+        "verdict": "review_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "pr-2031-activity-schema",
+        "verdict": "review_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      },
+      {
+        "case_id": "pr-2038-m20-three-fixes",
+        "verdict": "review_error",
+        "error": null,
+        "returncode": 2,
+        "stdout": null,
+        "stderr": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"
+      }
+    ]
+  }
+}

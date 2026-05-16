@@ -1,0 +1,219 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "xhigh",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T18:59:11Z",
+  "finished_at": "2026-05-16T19:02:19Z",
+  "duration_s": 187.83,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 9,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "healthz-subprocess-fanout-dos",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:227-234",
+          "description": "GET /healthz fans out to four `_probe_*` functions, each spawning a `<cli> --version` subprocess with a 1s timeout. Every health probe therefore forks four processes synchronously with no rate limiting, no caching, and no authentication. A single unauthenticated client can sustain 4×N subprocesses per second simply by polling /healthz, trivially saturating CPU/PID/fd budget and starving real chat-completions requests. This is the same class of issue called out by open ticket #2029 and is amplified here because the new `serve` subcommand is the first surface that actually exposes it to network clients. Cache the probe result for at least a few seconds, gate it behind a token, and/or convert it into a no-fork liveness check that only confirms the server itself is up."
+        },
+        {
+          "id": "host-flag-accepts-any-interface",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:680-687",
+          "description": "`--host` defaults to 127.0.0.1 but silently accepts any value, including `0.0.0.0` or a routable LAN IP, with no `--allow-remote` confirmation flag and no warning. Because the proxy executes local agent CLIs (codex, claude, gemini, hermes) with full filesystem access under `_PARENT_ENV` (which propagates API keys), binding to a non-loopback address effectively exposes arbitrary local-tool execution to anyone reachable on that interface. The companion doc explicitly advertises 'localhost-only' as a property of the service, but nothing in the code enforces it. Reject non-loopback hosts unless an explicit `--allow-remote` flag is provided, mirroring the existing posture documented in #2030."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:228-240",
+          "description": "The FastAPI app applies no upper bound on the chat-completions request body, the number of messages, or the cumulative content length. `_flatten_messages` happily concatenates arbitrarily large `content` arrays, which are then passed wholesale to a subprocess (via stdin for codex/claude or, worse, as a single argv element for gemini/hermes). A client can submit a multi-megabyte payload that pins a worker for the full 120s backend timeout while consuming memory in both Python and the spawned CLI. Add a max body size (e.g. via a Starlette middleware), a `len(messages)` cap, and a per-message content-length cap, and reject anything above them with 413."
+        },
+        {
+          "id": "prompt-leaked-via-argv-to-gemini-and-hermes",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:147-156, 169-177",
+          "description": "`_gemini_backend` passes the flattened prompt as `--prompt={prompt}` and `_hermes_backend` as `--oneshot={prompt}` — both as a single argv element. Argv is world-readable via `ps`, `/proc/<pid>/cmdline`, and macOS process accounting, so any local user (or any process that can read the parent's children) can observe full prompts, including system messages and embedded secrets that callers may treat as private. Codex and Claude already use stdin (`prompt=prompt`) and avoid this — gemini and hermes should be aligned. Most CLIs accept stdin or a `--prompt-file` form; use one of those instead of putting prompt content on argv."
+        },
+        {
+          "id": "hermes-flag-mismatch-with-docs",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:169-177",
+          "description": "`docs/best-practices/openai-compat-proxy.md` states the Grok route uses `hermes -z PROMPT -m grok-4.3`, but the implementation invokes `hermes --oneshot={prompt} -m grok-4.3`. Either the docs or the code is wrong; given that #2036 already flags the Hermes/Claude lane as silently returning empty stdout when auth is missing, a divergent flag here makes it impossible to tell whether failures are auth-related, flag-related, or content-related. Reconcile the doc and the code with a single canonical Hermes invocation and add a unit test that asserts the argv shape so future drift is caught."
+        },
+        {
+          "id": "stream-parameter-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:34-41, 246-303",
+          "description": "`ChatCompletionRequest` is declared with `model_config = ConfigDict(extra=\"allow\")`, so OpenAI clients that pass `stream: true` (the default for many SDKs and IDE integrations) are accepted without error but receive a non-streaming `chat.completion` envelope instead of the expected `text/event-stream` `chat.completion.chunk` sequence. Spec-conformant clients will hang waiting for SSE framing or misparse the buffered JSON. Either reject `stream=true` with a 400 (`stream_not_supported`) so callers fail fast, or implement an SSE adapter — silently dropping the parameter breaks the contract advertised by `/v1/chat/completions`."
+        },
+        {
+          "id": "stderr-leak-in-error-message",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:217-222, 285-303",
+          "description": "On backend failure the proxy returns `f\"{family} backend failed: {_first_error_line(exc.stderr)}\"` to the client. CLI stderr commonly includes absolute filesystem paths, internal CLI flags, environment hints, or auth-related diagnostics (Hermes auth being a current sore spot per #2036). Even though only the first line is exposed, that first line is often a stack-trace header or `Error: /Users/<user>/.config/...`. For a service intended to be local-only this is borderline, but the moment `--host` is widened (see related finding) it becomes a real information-disclosure vector. Log the full stderr server-side and return a redacted, category-level message (`'backend failed'`) to clients."
+        },
+        {
+          "id": "backend-timeout-env-unbounded",
+          "severity": "LOW",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:62-69",
+          "description": "`BRIDGE_PROXY_BACKEND_TIMEOUT_S` is parsed and accepted as-is for any positive integer. A misconfigured deployment (or a hostile environment variable injected via shell rc) can set the value to e.g. 86400, after which a single malicious request will hold a worker for a day. Cap the configurable timeout at a sane upper bound (a few minutes is plenty for chat completions) and clamp values exceeding it back down to that ceiling, with a log line indicating the clamp."
+        },
+        {
+          "id": "tempfile-not-cleaned-on-process-exit",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:118-145",
+          "description": "`_codex_backend` opens a `NamedTemporaryFile(delete=False)` then unlinks it in a `finally`. If the process is killed (SIGTERM during shutdown, OOM, uvicorn worker recycle) between the create and the unlink, the file is left in `/tmp` indefinitely with the codex output content. Either use a per-server temp directory created at startup and recursively cleaned at shutdown, or write to a `tempfile.TemporaryDirectory()` whose context manager handles atexit cleanup. Not security-critical (default perms are 0600) but accumulates over time on long-lived deployments."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"healthz-subprocess-fanout-dos\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:227-234\",\n    \"description\": \"GET /healthz fans out to four `_probe_*` functions, each spawning a `<cli> --version` subprocess with a 1s timeout. Every health probe therefore forks four processes synchronously with no rate limiting, no caching, and no authentication. A single unauthenticated client can sustain 4×N subprocesses per second simply by polling /healthz, trivially saturating CPU/PID/fd budget and starving real chat-completions requests. This is the same class of issue called out by open ticket #2029 and is amplified here because the new `serve` subcommand is the first surface that actually exposes it to network clients. Cache the probe result for at least a few seconds, gate it behind a token, and/or convert it into a no-fork liveness check that only confirms the server itself is up.\"\n  },\n  {\n    \"id\": \"host-flag-accepts-any-interface\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:680-687\",\n    \"description\": \"`--host` defaults to 127.0.0.1 but silently accepts any value, including `0.0.0.0` or a routable LAN IP, with no `--allow-remote` confirmation flag and no warning. Because the proxy executes local agent CLIs (codex, claude, gemini, hermes) with full filesystem access under `_PARENT_ENV` (which propagates API keys), binding to a non-loopback address effectively exposes arbitrary local-tool execution to anyone reachable on that interface. The companion doc explicitly advertises 'localhost-only' as a property of the service, but nothing in the code enforces it. Reject non-loopback hosts unless an explicit `--allow-remote` flag is provided, mirroring the existing posture documented in #2030.\"\n  },\n  {\n    \"id\": \"no-request-body-size-limit\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:228-240\",\n    \"description\": \"The FastAPI app applies no upper bound on the chat-completions request body, the number of messages, or the cumulative content length. `_flatten_messages` happily concatenates arbitrarily large `content` arrays, which are then passed wholesale to a subprocess (via stdin for codex/claude or, worse, as a single argv element for gemini/hermes). A client can submit a multi-megabyte payload that pins a worker for the full 120s backend timeout while consuming memory in both Python and the spawned CLI. Add a max body size (e.g. via a Starlette middleware), a `len(messages)` cap, and a per-message content-length cap, and reject anything above them with 413.\"\n  },\n  {\n    \"id\": \"prompt-leaked-via-argv-to-gemini-and-hermes\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:147-156, 169-177\",\n    \"description\": \"`_gemini_backend` passes the flattened prompt as `--prompt={prompt}` and `_hermes_backend` as `--oneshot={prompt}` — both as a single argv element. Argv is world-readable via `ps`, `/proc/<pid>/cmdline`, and macOS process accounting, so any local user (or any process that can read the parent's children) can observe full prompts, including system messages and embedded secrets that callers may treat as private. Codex and Claude already use stdin (`prompt=prompt`) and avoid this — gemini and hermes should be aligned. Most CLIs accept stdin or a `--prompt-file` form; use one of those instead of putting prompt content on argv.\"\n  },\n  {\n    \"id\": \"hermes-flag-mismatch-with-docs\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:169-177\",\n    \"description\": \"`docs/best-practices/openai-compat-proxy.md` states the Grok route uses `hermes -z PROMPT -m grok-4.3`, but the implementation invokes `hermes --oneshot={prompt} -m grok-4.3`. Either the docs or the code is wrong; given that #2036 already flags the Hermes/Claude lane as silently returning empty stdout when auth is missing, a divergent flag here makes it impossible to tell whether failures are auth-related, flag-related, or content-related. Reconcile the doc and the code with a single canonical Hermes invocation and add a unit test that asserts the argv shape so future drift is caught.\"\n  },\n  {\n    \"id\": \"stream-parameter-silently-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:34-41, 246-303\",\n    \"description\": \"`ChatCompletionRequest` is declared with `model_config = ConfigDict(extra=\\\"allow\\\")`, so OpenAI clients that pass `stream: true` (the default for many SDKs and IDE integrations) are accepted without error but receive a non-streaming `chat.completion` envelope instead of the expected `text/event-stream` `chat.completion.chunk` sequence. Spec-conformant clients will hang waiting for SSE framing or misparse the buffered JSON. Either reject `stream=true` with a 400 (`stream_not_supported`) so callers fail fast, or implement an SSE adapter — silently dropping the parameter breaks the contract advertised by `/v1/chat/completions`.\"\n  },\n  {\n    \"id\": \"stderr-leak-in-error-message\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:217-222, 285-303\",\n    \"description\": \"On backend failure the proxy returns `f\\\"{family} backend failed: {_first_error_line(exc.stderr)}\\\"` to the client. CLI stderr commonly includes absolute filesystem paths, internal CLI flags, environment hints, or auth-related diagnostics (Hermes auth being a current sore spot per #2036). Even though only the first line is exposed, that first line is often a stack-trace header or `Error: /Users/<user>/.config/...`. For a service intended to be local-only this is borderline, but the moment `--host` is widened (see related finding) it becomes a real information-disclosure vector. Log the full stderr server-side and return a redacted, category-level message (`'backend failed'`) to clients.\"\n  },\n  {\n    \"id\": \"backend-timeout-env-unbounded\",\n    \"severity\": \"LOW\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:62-69\",\n    \"description\": \"`BRIDGE_PROXY_BACKEND_TIMEOUT_S` is parsed and accepted as-is for any positive integer. A misconfigured deployment (or a hostile environment variable injected via shell rc) can set the value to e.g. 86400, after which a single malicious request will hold a worker for a day. Cap the configurable timeout at a sane upper bound (a few minutes is plenty for chat completions) and clamp values exceeding it back down to that ceiling, with a log line indicating the clamp.\"\n  },\n  {\n    \"id\": \"tempfile-not-cleaned-on-process-exit\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:118-145\",\n    \"description\": \"`_codex_backend` opens a `NamedTemporaryFile(delete=False)` then unlinks it in a `finally`. If the process is killed (SIGTERM during shutdown, OOM, uvicorn worker recycle) between the create and the unlink, the file is left in `/tmp` indefinitely with the codex output content. Either use a per-server temp directory created at startup and recursively cleaned at shutdown, or write to a `tempfile.TemporaryDirectory()` whose context manager handles atexit cleanup. Not security-critical (default perms are 0600) but accumulates over time on long-lived deployments.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 7519
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 8,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "diagnostic-canonical-example-both-fields-identical",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:~4590 (_format_activity_schema_diagnostic)",
+          "description": "The canonical example printed back to writers on failure shows `error: \"вмиваюся\"` and `correction: \"вмиваюся\"` with IDENTICAL values. The whole point of error-correction is that `error` is the wrong form and `correction` is the right form; the gate's own tests demonstrate this (`error: \"прокидаєшся\"`, `correction: \"прокидаюся\"`). Writers reading the diagnostic will conclude the two fields are duplicates and either omit `correction` or copy the same value — exactly the regression this gate is meant to prevent. Fix the example so the two values differ, mirroring the test fixture."
+        },
+        {
+          "id": "answer-and-correction-both-allowed-synonyms",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:534-540 (_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS) and 567-570 (_ACTIVITY_ITEM_FIELD_PURPOSES)",
+          "description": "Both `answer` and `correction` are in the optional whitelist, and both map to the same purpose string \"the corrected form\". Meanwhile `correctAnswer` is FORBIDDEN and aliased to `correction`. This produces a confused contract: writers can pick `answer` OR `correction` and pass the gate, but downstream consumers (lesson-schema renderers, ActivityParser) read only one canonical key. The gate that exists specifically to prevent alias drift is itself permitting alias drift between two of its own approved fields. Pick one canonical optional name (preferably the one ActivityParser._parse_error_correction actually indexes) and alias the other under _ACTIVITY_ITEM_FORBIDDEN_ALIASES."
+        },
+        {
+          "id": "early-return-skips-downstream-gates",
+          "severity": "MEDIUM",
+          "category": "performance",
+          "location": "scripts/build/linear_pipeline.py:3918-3922 (run_python_qg)",
+          "description": "On schema failure the function early-returns via `_python_qg_report` before word_count, plan_sections, formatting_standards, vesum_verified, etc. are recorded. Since `activity_schema` is in WRITER_CORRECTION_GATES the writer-correction loop will retry, but each retry now surfaces only one class of issue at a time — a module with schema failures AND a word-count miss AND a VESUM violation will need at least 3 writer iterations instead of one. For a 30-minute build that materially extends wall-clock time. Consider recording the failure but continuing to run the remaining (cheap, schema-independent) gates so the writer sees the full report."
+        },
+        {
+          "id": "narrow-scope-only-error-correction-covered",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:535-544 (_ACTIVITY_ITEM_AUTHORING_FIELDS) and 4286-4295 (_activity_item_schema_whitelist)",
+          "description": "The gate validates `error-correction` only — every other activity type (fill-blank, multiple-choice, matching, dialogue, ordering, transformation, etc.) falls through `allowed_fields is None` and is not checked. The PR description says reviewers should verify the gate catches \"real writer mistakes rather than only the exact canonical examples\"; today it catches them only inside a single activity type. The docstring acknowledges \"V1 is intentionally narrow,\" but there is no follow-up issue or TODO linked. File a tracking issue (or add #2018 follow-up note) listing the other activity types whose item schemas must be added, otherwise this gate will quietly stop being load-bearing as activity-type usage shifts."
+        },
+        {
+          "id": "alias-map-misses-common-writer-variants",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:546-560 (_ACTIVITY_ITEM_FORBIDDEN_ALIASES)",
+          "description": "Plausible writer variants are absent from the alias map: `correct_answer` (snake-case sibling of the listed `correctAnswer`), `corrected`, `corrected_form`, `target`, `target_form`, `solution`, `expected`, `right_answer`, `original_form`. The strict-whitelist fallback still rejects these fields, but the diagnostic degrades to the generic \"forbidden field 'X'\" message with no `expected:` hint, so writers cannot self-correct on the first retry. Add the obvious snake_case/camelCase variants of every existing alias and the most likely synonyms (`solution`, `corrected`, `target`)."
+        },
+        {
+          "id": "alias-lookup-case-sensitive",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:~4480 (_activity_schema_gate, `aliases.get(field)`)",
+          "description": "Alias matching is case-sensitive. `Incorrect`, `INCORRECT`, `Wrong`, `correctanswer` all bypass the alias dict and surface as generic forbidden fields, losing the targeted \"use 'error:' instead\" hint. Either normalize `field.lower()` before the alias lookup (and store keys lowercased) or extend the alias dict with realistic case variants. Same applies to required-field membership and allowed-field comparisons if writers occasionally emit `Sentence:` or `Error:`."
+        },
+        {
+          "id": "test-misses-sentence-missing-violation-in-m20-replay",
+          "severity": "LOW",
+          "category": "other",
+          "location": "tests/test_activity_schema_gate.py (test_replays_m20_build8_failure_shape)",
+          "description": "The M20 replay test asserts only that the `incorrect → error` violation is emitted, but each item also lacks the required `sentence` field. The gate should be emitting (and the test should be asserting) the corresponding missing-`sentence` violations. Without that assertion a future refactor that quietly drops missing-required reporting for sibling-alias rows would still pass this test. Add `assert any(v[\"offending_field\"] is None and v[\"expected_field\"] == \"sentence\" for v in result[\"violations\"])`."
+        },
+        {
+          "id": "gates-passed-flag-not-reset-on-schema-early-return",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:3919-3922 (run_python_qg early return)",
+          "description": "The early-return path sets `gates[\"passed\"] = False` directly. The unchanged tail of `run_python_qg` later computes `gates[\"passed\"]` as `all(...)` over all gates — but on the early-return branch that aggregation never runs, so `gates[\"passed\"]` is a manually-set bool while in the normal branch it is derived. Two different code paths producing the same key with different semantics is exactly the kind of subtle drift that bites later (e.g., when a future gate is added with non-bool `passed` semantics). Either route both paths through the same aggregation helper or add a comment + assertion in `_python_qg_report` that `gates[\"passed\"]` is a bool computed identically on both paths."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"diagnostic-canonical-example-both-fields-identical\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4590 (_format_activity_schema_diagnostic)\",\n    \"description\": \"The canonical example printed back to writers on failure shows `error: \\\"вмиваюся\\\"` and `correction: \\\"вмиваюся\\\"` with IDENTICAL values. The whole point of error-correction is that `error` is the wrong form and `correction` is the right form; the gate's own tests demonstrate this (`error: \\\"прокидаєшся\\\"`, `correction: \\\"прокидаюся\\\"`). Writers reading the diagnostic will conclude the two fields are duplicates and either omit `correction` or copy the same value — exactly the regression this gate is meant to prevent. Fix the example so the two values differ, mirroring the test fixture.\"\n  },\n  {\n    \"id\": \"answer-and-correction-both-allowed-synonyms\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:534-540 (_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS) and 567-570 (_ACTIVITY_ITEM_FIELD_PURPOSES)\",\n    \"description\": \"Both `answer` and `correction` are in the optional whitelist, and both map to the same purpose string \\\"the corrected form\\\". Meanwhile `correctAnswer` is FORBIDDEN and aliased to `correction`. This produces a confused contract: writers can pick `answer` OR `correction` and pass the gate, but downstream consumers (lesson-schema renderers, ActivityParser) read only one canonical key. The gate that exists specifically to prevent alias drift is itself permitting alias drift between two of its own approved fields. Pick one canonical optional name (preferably the one ActivityParser._parse_error_correction actually indexes) and alias the other under _ACTIVITY_ITEM_FORBIDDEN_ALIASES.\"\n  },\n  {\n    \"id\": \"early-return-skips-downstream-gates\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"performance\",\n    \"location\": \"scripts/build/linear_pipeline.py:3918-3922 (run_python_qg)\",\n    \"description\": \"On schema failure the function early-returns via `_python_qg_report` before word_count, plan_sections, formatting_standards, vesum_verified, etc. are recorded. Since `activity_schema` is in WRITER_CORRECTION_GATES the writer-correction loop will retry, but each retry now surfaces only one class of issue at a time — a module with schema failures AND a word-count miss AND a VESUM violation will need at least 3 writer iterations instead of one. For a 30-minute build that materially extends wall-clock time. Consider recording the failure but continuing to run the remaining (cheap, schema-independent) gates so the writer sees the full report.\"\n  },\n  {\n    \"id\": \"narrow-scope-only-error-correction-covered\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:535-544 (_ACTIVITY_ITEM_AUTHORING_FIELDS) and 4286-4295 (_activity_item_schema_whitelist)\",\n    \"description\": \"The gate validates `error-correction` only — every other activity type (fill-blank, multiple-choice, matching, dialogue, ordering, transformation, etc.) falls through `allowed_fields is None` and is not checked. The PR description says reviewers should verify the gate catches \\\"real writer mistakes rather than only the exact canonical examples\\\"; today it catches them only inside a single activity type. The docstring acknowledges \\\"V1 is intentionally narrow,\\\" but there is no follow-up issue or TODO linked. File a tracking issue (or add #2018 follow-up note) listing the other activity types whose item schemas must be added, otherwise this gate will quietly stop being load-bearing as activity-type usage shifts.\"\n  },\n  {\n    \"id\": \"alias-map-misses-common-writer-variants\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:546-560 (_ACTIVITY_ITEM_FORBIDDEN_ALIASES)\",\n    \"description\": \"Plausible writer variants are absent from the alias map: `correct_answer` (snake-case sibling of the listed `correctAnswer`), `corrected`, `corrected_form`, `target`, `target_form`, `solution`, `expected`, `right_answer`, `original_form`. The strict-whitelist fallback still rejects these fields, but the diagnostic degrades to the generic \\\"forbidden field 'X'\\\" message with no `expected:` hint, so writers cannot self-correct on the first retry. Add the obvious snake_case/camelCase variants of every existing alias and the most likely synonyms (`solution`, `corrected`, `target`).\"\n  },\n  {\n    \"id\": \"alias-lookup-case-sensitive\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4480 (_activity_schema_gate, `aliases.get(field)`)\",\n    \"description\": \"Alias matching is case-sensitive. `Incorrect`, `INCORRECT`, `Wrong`, `correctanswer` all bypass the alias dict and surface as generic forbidden fields, losing the targeted \\\"use 'error:' instead\\\" hint. Either normalize `field.lower()` before the alias lookup (and store keys lowercased) or extend the alias dict with realistic case variants. Same applies to required-field membership and allowed-field comparisons if writers occasionally emit `Sentence:` or `Error:`.\"\n  },\n  {\n    \"id\": \"test-misses-sentence-missing-violation-in-m20-replay\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"tests/test_activity_schema_gate.py (test_replays_m20_build8_failure_shape)\",\n    \"description\": \"The M20 replay test asserts only that the `incorrect → error` violation is emitted, but each item also lacks the required `sentence` field. The gate should be emitting (and the test should be asserting) the corresponding missing-`sentence` violations. Without that assertion a future refactor that quietly drops missing-required reporting for sibling-alias rows would still pass this test. Add `assert any(v[\\\"offending_field\\\"] is None and v[\\\"expected_field\\\"] == \\\"sentence\\\" for v in result[\\\"violations\\\"])`.\"\n  },\n  {\n    \"id\": \"gates-passed-flag-not-reset-on-schema-early-return\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:3919-3922 (run_python_qg early return)\",\n    \"description\": \"The early-return path sets `gates[\\\"passed\\\"] = False` directly. The unchanged tail of `run_python_qg` later computes `gates[\\\"passed\\\"]` as `all(...)` over all gates — but on the early-return branch that aggregation never runs, so `gates[\\\"passed\\\"]` is a manually-set bool while in the normal branch it is derived. Two different code paths producing the same key with different semantics is exactly the kind of subtle drift that bites later (e.g., when a future gate is added with non-bool `passed` semantics). Either route both paths through the same aggregation helper or add a comment + assertion in `_python_qg_report` that `gates[\\\"passed\\\"]` is a bool computed identically on both paths.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 6898
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 0,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "xhigh",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

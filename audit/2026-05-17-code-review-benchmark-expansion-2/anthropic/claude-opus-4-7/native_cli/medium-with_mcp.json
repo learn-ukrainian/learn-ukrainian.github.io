@@ -1,0 +1,215 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:47:30Z",
+  "finished_at": "2026-05-16T18:49:22Z",
+  "duration_s": 111.5,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 9,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.1111,
+      "recall": 0.25,
+      "f1": 0.1538,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "host-binds-non-loopback-without-guard",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:681",
+          "description": "The `serve --openai` subcommand accepts an arbitrary `--host` value (defaults to 127.0.0.1 but freely accepts 0.0.0.0 or any external interface) and passes it straight to `uvicorn.run`. The proxy spawns local CLI subprocesses with the user's credentials (Claude, Codex, Gemini, hermes) and accepts arbitrary prompt strings, so binding to a non-loopback interface effectively exposes shell-equivalent capability to anyone reachable on that interface. Issue #2030 already tracks this as LOW, but combined with the subprocess fan-out it's effectively a remote code execution surface. Reject any non-loopback host unless an explicit `--allow-remote` flag is passed, or drop the `--host` flag entirely in Phase 1."
+        },
+        {
+          "id": "healthz-spawns-four-subprocesses-per-request",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:268-273",
+          "description": "`GET /healthz` invokes `_probe_cli` for every backend on every request, each forking a CLI with a 1s timeout. A trivial unauthenticated GET flood (or a misconfigured liveness probe) forks 4 subprocesses per request and can saturate CPU/file descriptors quickly. Issue #2029 already flags this MEDIUM; given the endpoint is unauthenticated and the CLIs (claude, codex, gemini, hermes) are not lightweight, cache probe results for ~5-10s, or move probing behind an explicit `?refresh=1` flag."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:316",
+          "description": "`ChatCompletionRequest` accepts arbitrarily large `messages` arrays and arbitrarily long `content` strings with no size cap. The flattened prompt is then piped via stdin/argv to subprocess CLIs (with hermes/gemini passing the entire prompt as a single CLI argument — `--oneshot=PROMPT` and `--prompt=PROMPT`), which on Linux is bounded by `ARG_MAX` (~128KB-2MB) and will crash with E2BIG, and on macOS even sooner. A single 10MB JSON request can also exhaust the 120s backend timeout while the CLI spins. Add a max-body-size middleware (e.g. 256KB) and a max-messages count before invoking the backend."
+        },
+        {
+          "id": "prompt-as-cli-arg-leaks-via-ps",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:200-210,213-222",
+          "description": "The hermes and gemini backends pass the full user prompt as a single CLI argument (`--oneshot={prompt}`, `--prompt={prompt}`). Any local user on the machine can `ps auxww` and read the entire prompt — which may include secrets, private data, or system prompt text the API caller assumed was confidential. Pass prompts via stdin (as the codex backend does) when the CLI supports it, or via a temp file with 0600 perms."
+        },
+        {
+          "id": "tempfile-leak-on-codex-crash",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:160-187",
+          "description": "`_codex_backend` creates a NamedTemporaryFile with `delete=False`, then unlinks it in the `finally`. If the process is killed (SIGKILL, OOM) between the `NamedTemporaryFile` create and the `finally`, the temp file leaks. Low impact but accumulates over time; consider `tempfile.TemporaryDirectory()` context manager or letting the OS reap via `delete=True` + reading from the handle before close on platforms that allow it."
+        },
+        {
+          "id": "openai-spec-missing-fields",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:328-353",
+          "description": "The chat completion response omits `system_fingerprint` and `service_tier`, and the `choices[].message` object lacks `refusal: null` and `tool_calls`. Strict OpenAI clients (the official Python SDK after v1.30, LangChain's `ChatOpenAI` in some modes) validate these fields and will reject the response. Either add the fields as nulls/empty arrays or document the strict subset in the best-practices doc."
+        },
+        {
+          "id": "streaming-stream-param-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:97-104",
+          "description": "`ChatCompletionRequest` uses `extra='allow'`, so a client sending `\"stream\": true` (the default for many OpenAI clients including the `openai` SDK chat helpers) will be silently ignored and receive a non-SSE JSON body, hanging clients that wait for `data: [DONE]`. Either reject `stream=true` with a clear 400 (`\"streaming not supported in Phase 1\"`) or document loudly. The current behavior produces opaque integration failures."
+        },
+        {
+          "id": "shutil-which-hermes-resolved-per-call",
+          "severity": "LOW",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:227,288",
+          "description": "`shutil.which(\"hermes\") or \"hermes\"` is evaluated on every request and every probe. Cache the resolved path at module load (like `CLAUDE_CMD`/`CODEX_CLI`/`GEMINI_CLI` already are) so a missing hermes binary fails predictably and doesn't pay the PATH-walk cost per request."
+        },
+        {
+          "id": "_parent_env-private-import",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:23",
+          "description": "Importing `_PARENT_ENV` (leading underscore = private) from `._config` reaches across module boundaries into private API. If `_config` ever refactors this name, the proxy breaks silently. Either promote `_PARENT_ENV` to a public name in `_config` or expose a `get_parent_env()` accessor."
+        }
+      ],
+      "raw_response": "[\n  {\"id\":\"host-binds-non-loopback-without-guard\",\"severity\":\"HIGH\",\"category\":\"security\",\"location\":\"scripts/ai_agent_bridge/_cli.py:681\",\"description\":\"The `serve --openai` subcommand accepts an arbitrary `--host` value (defaults to 127.0.0.1 but freely accepts 0.0.0.0 or any external interface) and passes it straight to `uvicorn.run`. The proxy spawns local CLI subprocesses with the user's credentials (Claude, Codex, Gemini, hermes) and accepts arbitrary prompt strings, so binding to a non-loopback interface effectively exposes shell-equivalent capability to anyone reachable on that interface. Issue #2030 already tracks this as LOW, but combined with the subprocess fan-out it's effectively a remote code execution surface. Reject any non-loopback host unless an explicit `--allow-remote` flag is passed, or drop the `--host` flag entirely in Phase 1.\"},\n  {\"id\":\"healthz-spawns-four-subprocesses-per-request\",\"severity\":\"HIGH\",\"category\":\"dos-surface\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:268-273\",\"description\":\"`GET /healthz` invokes `_probe_cli` for every backend on every request, each forking a CLI with a 1s timeout. A trivial unauthenticated GET flood (or a misconfigured liveness probe) forks 4 subprocesses per request and can saturate CPU/file descriptors quickly. Issue #2029 already flags this MEDIUM; given the endpoint is unauthenticated and the CLIs (claude, codex, gemini, hermes) are not lightweight, cache probe results for ~5-10s, or move probing behind an explicit `?refresh=1` flag.\"},\n  {\"id\":\"no-request-body-size-limit\",\"severity\":\"HIGH\",\"category\":\"dos-surface\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:316\",\"description\":\"`ChatCompletionRequest` accepts arbitrarily large `messages` arrays and arbitrarily long `content` strings with no size cap. The flattened prompt is then piped via stdin/argv to subprocess CLIs (with hermes/gemini passing the entire prompt as a single CLI argument — `--oneshot=PROMPT` and `--prompt=PROMPT`), which on Linux is bounded by `ARG_MAX` (~128KB-2MB) and will crash with E2BIG, and on macOS even sooner. A single 10MB JSON request can also exhaust the 120s backend timeout while the CLI spins. Add a max-body-size middleware (e.g. 256KB) and a max-messages count before invoking the backend.\"},\n  {\"id\":\"prompt-as-cli-arg-leaks-via-ps\",\"severity\":\"MEDIUM\",\"category\":\"security\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:200-210,213-222\",\"description\":\"The hermes and gemini backends pass the full user prompt as a single CLI argument (`--oneshot={prompt}`, `--prompt={prompt}`). Any local user on the machine can `ps auxww` and read the entire prompt — which may include secrets, private data, or system prompt text the API caller assumed was confidential. Pass prompts via stdin (as the codex backend does) when the CLI supports it, or via a temp file with 0600 perms.\"},\n  {\"id\":\"tempfile-leak-on-codex-crash\",\"severity\":\"LOW\",\"category\":\"correctness\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:160-187\",\"description\":\"`_codex_backend` creates a NamedTemporaryFile with `delete=False`, then unlinks it in the `finally`. If the process is killed (SIGKILL, OOM) between the `NamedTemporaryFile` create and the `finally`, the temp file leaks. Low impact but accumulates over time; consider `tempfile.TemporaryDirectory()` context manager or letting the OS reap via `delete=True` + reading from the handle before close on platforms that allow it.\"},\n  {\"id\":\"openai-spec-missing-fields\",\"severity\":\"LOW\",\"category\":\"spec-compliance\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:328-353\",\"description\":\"The chat completion response omits `system_fingerprint` and `service_tier`, and the `choices[].message` object lacks `refusal: null` and `tool_calls`. Strict OpenAI clients (the official Python SDK after v1.30, LangChain's `ChatOpenAI` in some modes) validate these fields and will reject the response. Either add the fields as nulls/empty arrays or document the strict subset in the best-practices doc.\"},\n  {\"id\":\"streaming-stream-param-silently-ignored\",\"severity\":\"MEDIUM\",\"category\":\"spec-compliance\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:97-104\",\"description\":\"`ChatCompletionRequest` uses `extra='allow'`, so a client sending `\\\"stream\\\": true` (the default for many OpenAI clients including the `openai` SDK chat helpers) will be silently ignored and receive a non-SSE JSON body, hanging clients that wait for `data: [DONE]`. Either reject `stream=true` with a clear 400 (`\\\"streaming not supported in Phase 1\\\"`) or document loudly. The current behavior produces opaque integration failures.\"},\n  {\"id\":\"shutil-which-hermes-resolved-per-call\",\"severity\":\"LOW\",\"category\":\"performance\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:227,288\",\"description\":\"`shutil.which(\\\"hermes\\\") or \\\"hermes\\\"` is evaluated on every request and every probe. Cache the resolved path at module load (like `CLAUDE_CMD`/`CODEX_CLI`/`GEMINI_CLI` already are) so a missing hermes binary fails predictably and doesn't pay the PATH-walk cost per request.\"},\n  {\"id\":\"_parent_env-private-import\",\"severity\":\"LOW\",\"category\":\"other\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:23\",\"description\":\"Importing `_PARENT_ENV` (leading underscore = private) from `._config` reaches across module boundaries into private API. If `_config` ever refactors this name, the proxy breaks silently. Either promote `_PARENT_ENV` to a public name in `_config` or expose a `get_parent_env()` accessor.\"}\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5523
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 7,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "early-return-drops-other-gates",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:3915-3922",
+          "description": "When activity_schema fails, the function early-returns a report whose `gates` dict contains only `activity_schema` (plus whatever ran in the loop above, but none of word_count/plan_sections/formatting_standards/vesum_verified/etc.). Any downstream consumer that iterates `gates` looking for specific keys (telemetry summaries, writer-correction diff assembly, dashboards, JSONL `phase_review_summary` emitters) will see KeyError or silently report missing gates as passed. The prior contract was that `gates` always contained the full PYTHON_QG_GATE_ORDER set. Either run all gates and let the aggregator decide pass/fail, or document the new shape and audit consumers."
+        },
+        {
+          "id": "non-list-items-silently-pass",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4470-4472",
+          "description": "If an error-correction activity's `items` is missing, null, or a non-list (e.g. a dict, a string of YAML that failed to parse into a list, or the writer emitted `items: error-correction examples here`), the gate `continue`s without recording any violation and `checked` stays 0. The gate then reports `passed: True`. This is exactly the kind of writer mistake the gate is meant to catch — a malformed top-level shape masquerading as success. Treat 'error-correction without a list of items' as a violation."
+        },
+        {
+          "id": "non-mapping-items-skipped",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4477-4479",
+          "description": "Inside the items loop, non-Mapping entries (`isinstance(item, Mapping)` false) are silently skipped. A writer that emits items as a flat list of strings (`items: ['Я прокидаєшся.', 'Він дивюся.']`) — a real prior failure mode where the writer collapsed the structured shape — will pass with `checked: 0, passed: True`. Record a violation for each non-Mapping item instead of skipping."
+        },
+        {
+          "id": "alias-list-is-finite-and-case-sensitive",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:548-561",
+          "description": "The forbidden-alias map enumerates 12 specific lowercase tokens. Plausible writer mistakes not covered include camelCase/PascalCase variants the writer may invent under tool pressure (`wrongAnswer`, `errorText`, `mistakeWord`, `target`, `original_form`, `sentence_with_error`, `bad_form`, Ukrainian-language field names like `помилка`/`виправлення`), and the existing aliases are case-sensitive (`WRONG`, `Incorrect` won't match). The whitelist fallback still flags them as forbidden, but without the actionable 'use X instead' hint that gives the writer a fix-it signal. Consider lowercasing field names before alias lookup and broadening the alias map (or, conversely, document that the alias hint is best-effort and the canonical block at the bottom of the diagnostic carries the real guidance)."
+        },
+        {
+          "id": "empty-items-list-passes",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4474",
+          "description": "An error-correction activity with `items: []` increments nothing and yields no violations. An empty exercise is a pedagogical bug the gate should catch; require at least one item per error-correction activity."
+        },
+        {
+          "id": "diagnostic-canonical-example-identical-strings",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/build/linear_pipeline.py:4588-4592",
+          "description": "The canonical example printed on failure shows `error: \"вмиваюся\"` and `correction: \"вмиваюся\"` — the same form. The writer reading this gets no signal about which form goes where. Use distinct forms (e.g. `error: \"вмиваєшся\"`, `correction: \"вмиваюся\"`, matching the 'Я ...' subject) so the example actually teaches the contract."
+        },
+        {
+          "id": "options-field-shape-unchecked",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:533-536",
+          "description": "`options` is in the allowed set but its shape is not validated (must be a list of strings of length ≥2 to be a meaningful multiple-choice). A writer emitting `options: \"вмиваюся\"` (string) or `options: []` would pass this gate. V1 scope is acknowledged narrow; flag as a known gap for v2."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"early-return-drops-other-gates\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:3915-3922\",\n    \"description\": \"When activity_schema fails, the function early-returns a report whose `gates` dict contains only `activity_schema` (plus whatever ran in the loop above, but none of word_count/plan_sections/formatting_standards/vesum_verified/etc.). Any downstream consumer that iterates `gates` looking for specific keys (telemetry summaries, writer-correction diff assembly, dashboards, JSONL `phase_review_summary` emitters) will see KeyError or silently report missing gates as passed. The prior contract was that `gates` always contained the full PYTHON_QG_GATE_ORDER set. Either run all gates and let the aggregator decide pass/fail, or document the new shape and audit consumers.\"\n  },\n  {\n    \"id\": \"non-list-items-silently-pass\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4470-4472\",\n    \"description\": \"If an error-correction activity's `items` is missing, null, or a non-list (e.g. a dict, a string of YAML that failed to parse into a list, or the writer emitted `items: error-correction examples here`), the gate `continue`s without recording any violation and `checked` stays 0. The gate then reports `passed: True`. This is exactly the kind of writer mistake the gate is meant to catch — a malformed top-level shape masquerading as success. Treat 'error-correction without a list of items' as a violation.\"\n  },\n  {\n    \"id\": \"non-mapping-items-skipped\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4477-4479\",\n    \"description\": \"Inside the items loop, non-Mapping entries (`isinstance(item, Mapping)` false) are silently skipped. A writer that emits items as a flat list of strings (`items: ['Я прокидаєшся.', 'Він дивюся.']`) — a real prior failure mode where the writer collapsed the structured shape — will pass with `checked: 0, passed: True`. Record a violation for each non-Mapping item instead of skipping.\"\n  },\n  {\n    \"id\": \"alias-list-is-finite-and-case-sensitive\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:548-561\",\n    \"description\": \"The forbidden-alias map enumerates 12 specific lowercase tokens. Plausible writer mistakes not covered include camelCase/PascalCase variants the writer may invent under tool pressure (`wrongAnswer`, `errorText`, `mistakeWord`, `target`, `original_form`, `sentence_with_error`, `bad_form`, Ukrainian-language field names like `помилка`/`виправлення`), and the existing aliases are case-sensitive (`WRONG`, `Incorrect` won't match). The whitelist fallback still flags them as forbidden, but without the actionable 'use X instead' hint that gives the writer a fix-it signal. Consider lowercasing field names before alias lookup and broadening the alias map (or, conversely, document that the alias hint is best-effort and the canonical block at the bottom of the diagnostic carries the real guidance).\"\n  },\n  {\n    \"id\": \"empty-items-list-passes\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4474\",\n    \"description\": \"An error-correction activity with `items: []` increments nothing and yields no violations. An empty exercise is a pedagogical bug the gate should catch; require at least one item per error-correction activity.\"\n  },\n  {\n    \"id\": \"diagnostic-canonical-example-identical-strings\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"scripts/build/linear_pipeline.py:4588-4592\",\n    \"description\": \"The canonical example printed on failure shows `error: \\\"вмиваюся\\\"` and `correction: \\\"вмиваюся\\\"` — the same form. The writer reading this gets no signal about which form goes where. Use distinct forms (e.g. `error: \\\"вмиваєшся\\\"`, `correction: \\\"вмиваюся\\\"`, matching the 'Я ...' subject) so the example actually teaches the contract.\"\n  },\n  {\n    \"id\": \"options-field-shape-unchecked\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:533-536\",\n    \"description\": \"`options` is in the allowed set but its shape is not validated (must be a list of strings of length ≥2 to be a meaningful multiple-choice). A writer emitting `options: \\\"вмиваюся\\\"` (string) or `options: []` would pass this gate. V1 scope is acknowledged narrow; flag as a known gap for v2.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 4557
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.0833,
+    "case_acc": 0.0,
+    "precision": 0.0625,
+    "recall": 0.125,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 1,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

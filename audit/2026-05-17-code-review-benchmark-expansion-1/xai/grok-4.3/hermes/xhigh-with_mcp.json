@@ -1,0 +1,130 @@
+{
+  "cell": {
+    "family": "xai",
+    "model": "grok-4.3",
+    "harness": "hermes",
+    "effort": "xhigh",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:28:44Z",
+  "finished_at": "2026-05-16T18:30:31Z",
+  "duration_s": 106.83,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.25,
+      "recall": 0.25,
+      "f1": 0.25,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "host-binding-exposure",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:755",
+          "description": "The `serve --openai` command accepts any `--host` value (default 127.0.0.1) without validation, warning, or enforcement of localhost-only binding. Because the FastAPI app has no authentication or rate limiting, binding to 0.0.0.0 exposes the subprocess backends (Codex, Claude, Gemini, Hermes) to the network."
+        },
+        {
+          "id": "missing-input-size-limits",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:58",
+          "description": "ChatCompletionRequest.messages and Message.content accept unbounded lists and strings with no max_length or request-size limits in Pydantic or FastAPI. Large untrusted payloads are flattened via _flatten_messages and passed via stdin or --oneshot to long-running backends, creating an easy local (or misbound) denial-of-service vector."
+        },
+        {
+          "id": "ignored-stream-parameter",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:330",
+          "description": "The chat_completions handler declares model_config extra='allow' and therefore silently accepts stream=true (and other OpenAI parameters) but always executes a blocking non-streaming backend call and returns a completed JSON response, breaking clients that expect SSE streaming behavior."
+        },
+        {
+          "id": "hermes-invocation-doc-mismatch",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "docs/best-practices/openai-compat-proxy.md:15",
+          "description": "Documentation states that the grok-4.3 route invokes `hermes -z PROMPT -m grok-4.3`, yet the actual _hermes_backend implementation uses `--oneshot={prompt}`; the mismatch will confuse anyone trying to reproduce or extend the proxy from the docs."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"host-binding-exposure\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:755\",\n    \"description\": \"The `serve --openai` command accepts any `--host` value (default 127.0.0.1) without validation, warning, or enforcement of localhost-only binding. Because the FastAPI app has no authentication or rate limiting, binding to 0.0.0.0 exposes the subprocess backends (Codex, Claude, Gemini, Hermes) to the network.\"\n  },\n  {\n    \"id\": \"missing-input-size-limits\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:58\",\n    \"description\": \"ChatCompletionRequest.messages and Message.content accept unbounded lists and strings with no max_length or request-size limits in Pydantic or FastAPI. Large untrusted payloads are flattened via _flatten_messages and passed via stdin or --oneshot to long-running backends, creating an easy local (or misbound) denial-of-service vector.\"\n  },\n  {\n    \"id\": \"ignored-stream-parameter\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:330\",\n    \"description\": \"The chat_completions handler declares model_config extra='allow' and therefore silently accepts stream=true (and other OpenAI parameters) but always executes a blocking non-streaming backend call and returns a completed JSON response, breaking clients that expect SSE streaming behavior.\"\n  },\n  {\n    \"id\": \"hermes-invocation-doc-mismatch\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"docs/best-practices/openai-compat-proxy.md:15\",\n    \"description\": \"Documentation states that the grok-4.3 route invokes `hermes -z PROMPT -m grok-4.3`, yet the actual _hermes_backend implementation uses `--oneshot={prompt}`; the mismatch will confuse anyone trying to reproduce or extend the proxy from the docs.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1927
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 0,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.1667,
+    "case_acc": 0.0,
+    "precision": 0.25,
+    "recall": 0.125,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 1,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "grok-4.3",
+    "effort_actual": "xhigh",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

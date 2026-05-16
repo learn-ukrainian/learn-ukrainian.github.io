@@ -1,0 +1,5 @@
+{"family": "xai", "model": "grok-4.3", "harness": "hermes", "effort": "medium", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-haiku-4-5-20251001", "harness": "native_cli", "effort": "medium", "mcp_state": "with_mcp", "result": "error", "reason": "Not logged in · Please run /login\n"}
+{"family": "openai", "model": "gpt-5.5", "harness": "hermes", "effort": "medium", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "openai", "model": "gpt-5.4-mini", "harness": "native_cli", "effort": "medium", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "google", "model": "gemini-3.1-pro-preview", "harness": "native_cli", "effort": "default", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}

@@ -1,0 +1,12 @@
+{
+  "cell": {
+    "family": "xai",
+    "model": "grok-4.3",
+    "harness": "native_cli",
+    "effort": "xhigh",
+    "mcp_state": "with_mcp"
+  },
+  "result": "n/a",
+  "reason": "xai does not have a native_cli route",
+  "checked_at": "2026-05-16T18:30:32Z"
+}

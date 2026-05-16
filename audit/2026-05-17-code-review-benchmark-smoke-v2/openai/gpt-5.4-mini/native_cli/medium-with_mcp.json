@@ -1,0 +1,131 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.4-mini",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T17:52:52Z",
+  "finished_at": "2026-05-16T17:58:16Z",
+  "duration_s": 323.53,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 3,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.3333,
+      "recall": 0.25,
+      "f1": 0.2857,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "prompt-on-argv",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:184",
+          "description": "The Gemini, Claude, and Hermes backends pass the entire flattened request body on the command line (`--prompt=...`, `-- ...`, `--oneshot=...`) instead of via stdin or a temp file. That makes the proxy vulnerable to OS argv-length limits and turns a large chat request into an immediate subprocess failure, while also exposing user content in the process table. For an HTTP endpoint intended to accept untrusted payloads, this is the wrong boundary."
+        },
+        {
+          "id": "healthz-spawns-probes",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:291",
+          "description": "The `/healthz` handler executes four separate `--version` subprocess probes on every request. Health checks are commonly polled by supervisors and load balancers, so this endpoint converts a cheap liveness check into repeated process creation and can easily become a local DoS surface, especially because the probes run sequentially and each can block for up to a second."
+        },
+        {
+          "id": "unrestricted-bind-host",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:679",
+          "description": "Although the new proxy is documented as localhost-only by default, the CLI accepts any `--host` value with no explicit guard or `--allow-remote` confirmation. Running `ab serve --openai --host 0.0.0.0` would silently expose a prompt-forwarding bridge to the network, which is risky for a local agent tool that shells out to other CLIs. The server should either reject non-loopback binds by default or require an explicit remote-access opt-in."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"prompt-on-argv\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:184\",\n    \"description\": \"The Gemini, Claude, and Hermes backends pass the entire flattened request body on the command line (`--prompt=...`, `-- ...`, `--oneshot=...`) instead of via stdin or a temp file. That makes the proxy vulnerable to OS argv-length limits and turns a large chat request into an immediate subprocess failure, while also exposing user content in the process table. For an HTTP endpoint intended to accept untrusted payloads, this is the wrong boundary.\"\n  },\n  {\n    \"id\": \"healthz-spawns-probes\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:291\",\n    \"description\": \"The `/healthz` handler executes four separate `--version` subprocess probes on every request. Health checks are commonly polled by supervisors and load balancers, so this endpoint converts a cheap liveness check into repeated process creation and can easily become a local DoS surface, especially because the probes run sequentially and each can block for up to a second.\"\n  },\n  {\n    \"id\": \"unrestricted-bind-host\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:679\",\n    \"description\": \"Although the new proxy is documented as localhost-only by default, the CLI accepts any `--host` value with no explicit guard or `--allow-remote` confirmation. Running `ab serve --openai --host 0.0.0.0` would silently expose a prompt-forwarding bridge to the network, which is risky for a local agent tool that shells out to other CLIs. The server should either reject non-loopback binds by default or require an explicit remote-access opt-in.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1803
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "missing-error-type-whitelist",
+          "severity": "HIGH",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:550",
+          "description": "The new item whitelist omits `error_type`, even though it is a valid `error-correction` item property in the current activity schema and already appears in existing fixtures such as `tests/test_step_activities.py`. Because `_activity_schema_gate()` rejects any field not present in `_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS`, any otherwise valid activity item that specifies `error_type` will now fail this gate as an unknown field, creating a false negative for real writer output."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"missing-error-type-whitelist\",\n    \"severity\": \"HIGH\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:550\",\n    \"description\": \"The new item whitelist omits `error_type`, even though it is a valid `error-correction` item property in the current activity schema and already appears in existing fixtures such as `tests/test_step_activities.py`. Because `_activity_schema_gate()` rejects any field not present in `_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS`, any otherwise valid activity item that specifies `error_type` will now fail this gate as an unknown field, creating a false negative for real writer output.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 671
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.1667,
+    "case_acc": 0.0,
+    "precision": 0.25,
+    "recall": 0.125,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 1,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.4-mini",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

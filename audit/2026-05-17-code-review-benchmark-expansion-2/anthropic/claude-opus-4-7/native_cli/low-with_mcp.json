@@ -1,0 +1,194 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "low",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:44:32Z",
+  "finished_at": "2026-05-16T18:46:00Z",
+  "duration_s": 87.84,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 9,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "host-flag"
+      ],
+      "precision": 0.3333,
+      "recall": 0.75,
+      "f1": 0.4615,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "host-bind-no-allow-remote",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:680",
+          "description": "The `serve` subcommand accepts arbitrary `--host` values (including `0.0.0.0`) with no `--allow-remote` gate. Issue #2030 already tracks this for the bridge proxy; this new surface repeats the mistake. The proxy executes local CLI subprocesses (codex/claude/gemini/hermes) with the user's credentials and shell env, so binding to a non-loopback interface exposes RCE-equivalent capability to anyone on the network. Reject non-127.0.0.1/::1 hosts unless an explicit opt-in flag is passed."
+        },
+        {
+          "id": "unbounded-request-body",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "description": "`ChatCompletionRequest` uses `extra='allow'` and accepts `messages: list[Message]` with no max length, and `content` has no size cap. A client can POST a multi-megabyte payload that gets flattened into a single subprocess stdin string, blocking a worker for up to `_DEFAULT_BACKEND_TIMEOUT_S` (120s) per request. Combined with no concurrency limits and subprocess fan-out, a handful of large requests will pin CPU/RAM and exhaust file descriptors. Enforce max messages, max total content bytes, and a global concurrency semaphore.",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:30"
+        },
+        {
+          "id": "healthz-subprocess-fanout",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:233",
+          "description": "`/healthz` forks four `--version` subprocesses on every request (codex/gemini/claude/hermes), each with a 1s timeout — worst case ~4s wall time and 4 processes per probe. This duplicates the exact DoS surface flagged in issue #2029 for the existing bridge proxy. Cache probe results with a short TTL (e.g. 5–10s) or expose a `?deep=1` variant and return cached state by default."
+        },
+        {
+          "id": "sync-endpoint-blocks-event-loop",
+          "severity": "MEDIUM",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:258",
+          "description": "`chat_completions` is defined as a regular `def` (not `async def`) and calls `subprocess.run` with up to 120s timeout. FastAPI runs sync endpoints in a bounded threadpool (default 40 threads); a small burst of slow requests will exhaust the pool and starve `/healthz` and `/v1/models`. Either make the handler async with `asyncio.create_subprocess_exec` plus a semaphore, or document and enforce a low max-concurrency."
+        },
+        {
+          "id": "gemini-prompt-on-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:148",
+          "description": "`_gemini_backend` passes the entire flattened prompt via `--prompt=<prompt>` on argv. argv lengths are bounded by ARG_MAX (~256KB on macOS, ~2MB on Linux), so large legitimate prompts will fail with E2BIG, and the full prompt is visible in process listings (`ps`) to other local users. Codex/claude/hermes correctly use stdin; gemini should too (or `--prompt-file` with a temp file)."
+        },
+        {
+          "id": "hermes-flag-mismatch-with-docs",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:175",
+          "description": "The companion doc states the Grok route uses `hermes -z PROMPT -m grok-4.3`, but the code invokes `hermes --oneshot=PROMPT -m model`. Either the doc or the code is wrong; given issue #2036 reports hermes auth/output problems already, this inconsistency will make debugging harder. Reconcile flags and add a test that asserts the actual argv shape (mock subprocess), not just the response."
+        },
+        {
+          "id": "tempfile-race-and-leak",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:113",
+          "description": "`_codex_backend` creates a NamedTemporaryFile with `delete=False`, closes it, then passes the path to codex `-o`. If the process is killed between tempfile creation and the `finally` unlink (e.g. uvicorn worker SIGKILL), the file leaks into `/tmp`. Low impact but accumulates. Consider `tempfile.TemporaryDirectory()` context or registering an atexit cleanup."
+        },
+        {
+          "id": "backend-timeout-env-no-validation",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:73",
+          "description": "`_backend_timeout_s` silently falls back to default on any non-int or non-positive value but logs nothing. An operator setting `BRIDGE_PROXY_BACKEND_TIMEOUT_S=600s` (with unit) will get 120s with no warning. Log a warning on parse failure."
+        },
+        {
+          "id": "missing-stream-rejection",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:38",
+          "description": "The model is OpenAI-compatible but `extra='allow'` silently accepts `stream: true` and returns a non-streaming response, which will hang or confuse OpenAI SDK clients expecting SSE. Explicitly reject `stream=true` with a 400 in v1, matching what the doc claims (\"intentionally non-streaming\")."
+        }
+      ],
+      "raw_response": "[\n  {\"id\":\"host-bind-no-allow-remote\",\"severity\":\"HIGH\",\"category\":\"security\",\"location\":\"scripts/ai_agent_bridge/_cli.py:680\",\"description\":\"The `serve` subcommand accepts arbitrary `--host` values (including `0.0.0.0`) with no `--allow-remote` gate. Issue #2030 already tracks this for the bridge proxy; this new surface repeats the mistake. The proxy executes local CLI subprocesses (codex/claude/gemini/hermes) with the user's credentials and shell env, so binding to a non-loopback interface exposes RCE-equivalent capability to anyone on the network. Reject non-127.0.0.1/::1 hosts unless an explicit opt-in flag is passed.\"},\n  {\"id\":\"unbounded-request-body\",\"severity\":\"HIGH\",\"category\":\"dos-surface\",\"description\":\"`ChatCompletionRequest` uses `extra='allow'` and accepts `messages: list[Message]` with no max length, and `content` has no size cap. A client can POST a multi-megabyte payload that gets flattened into a single subprocess stdin string, blocking a worker for up to `_DEFAULT_BACKEND_TIMEOUT_S` (120s) per request. Combined with no concurrency limits and subprocess fan-out, a handful of large requests will pin CPU/RAM and exhaust file descriptors. Enforce max messages, max total content bytes, and a global concurrency semaphore.\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:30\"},\n  {\"id\":\"healthz-subprocess-fanout\",\"severity\":\"MEDIUM\",\"category\":\"dos-surface\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:233\",\"description\":\"`/healthz` forks four `--version` subprocesses on every request (codex/gemini/claude/hermes), each with a 1s timeout — worst case ~4s wall time and 4 processes per probe. This duplicates the exact DoS surface flagged in issue #2029 for the existing bridge proxy. Cache probe results with a short TTL (e.g. 5–10s) or expose a `?deep=1` variant and return cached state by default.\"},\n  {\"id\":\"sync-endpoint-blocks-event-loop\",\"severity\":\"MEDIUM\",\"category\":\"performance\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:258\",\"description\":\"`chat_completions` is defined as a regular `def` (not `async def`) and calls `subprocess.run` with up to 120s timeout. FastAPI runs sync endpoints in a bounded threadpool (default 40 threads); a small burst of slow requests will exhaust the pool and starve `/healthz` and `/v1/models`. Either make the handler async with `asyncio.create_subprocess_exec` plus a semaphore, or document and enforce a low max-concurrency.\"},\n  {\"id\":\"gemini-prompt-on-argv\",\"severity\":\"MEDIUM\",\"category\":\"security\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:148\",\"description\":\"`_gemini_backend` passes the entire flattened prompt via `--prompt=<prompt>` on argv. argv lengths are bounded by ARG_MAX (~256KB on macOS, ~2MB on Linux), so large legitimate prompts will fail with E2BIG, and the full prompt is visible in process listings (`ps`) to other local users. Codex/claude/hermes correctly use stdin; gemini should too (or `--prompt-file` with a temp file).\"},\n  {\"id\":\"hermes-flag-mismatch-with-docs\",\"severity\":\"MEDIUM\",\"category\":\"spec-compliance\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:175\",\"description\":\"The companion doc states the Grok route uses `hermes -z PROMPT -m grok-4.3`, but the code invokes `hermes --oneshot=PROMPT -m model`. Either the doc or the code is wrong; given issue #2036 reports hermes auth/output problems already, this inconsistency will make debugging harder. Reconcile flags and add a test that asserts the actual argv shape (mock subprocess), not just the response.\"},\n  {\"id\":\"tempfile-race-and-leak\",\"severity\":\"LOW\",\"category\":\"correctness\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:113\",\"description\":\"`_codex_backend` creates a NamedTemporaryFile with `delete=False`, closes it, then passes the path to codex `-o`. If the process is killed between tempfile creation and the `finally` unlink (e.g. uvicorn worker SIGKILL), the file leaks into `/tmp`. Low impact but accumulates. Consider `tempfile.TemporaryDirectory()` context or registering an atexit cleanup.\"},\n  {\"id\":\"backend-timeout-env-no-validation\",\"severity\":\"LOW\",\"category\":\"correctness\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:73\",\"description\":\"`_backend_timeout_s` silently falls back to default on any non-int or non-positive value but logs nothing. An operator setting `BRIDGE_PROXY_BACKEND_TIMEOUT_S=600s` (with unit) will get 120s with no warning. Log a warning on parse failure.\"},\n  {\"id\":\"missing-stream-rejection\",\"severity\":\"LOW\",\"category\":\"spec-compliance\",\"location\":\"scripts/ai_agent_bridge/openai_proxy.py:38\",\"description\":\"The model is OpenAI-compatible but `extra='allow'` silently accepts `stream: true` and returns a non-streaming response, which will hang or confuse OpenAI SDK clients expecting SSE. Explicitly reject `stream=true` with a 400 in v1, matching what the doc claims (\\\"intentionally non-streaming\\\").\"}\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 4879
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 4,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "canonical-example-identical-error-correction",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:~4590 (_format_activity_schema_diagnostic)",
+          "description": "The canonical 'error-correction' example printed in the failure diagnostic has identical values for `error` and `correction` ('вмиваюся' / 'вмиваюся'). A writer that copies this exemplar will produce a semantically broken item (the error and the fix are the same string). Use distinct values, e.g. `error: \"вмиваюсь\"` vs `correction: \"вмиваюся\"`, so the example actually demonstrates a corrected mistake."
+        },
+        {
+          "id": "non-list-items-silently-skipped",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:~4470 (_activity_schema_gate)",
+          "description": "When `activity.get('items')` is not a list (dict, None, scalar, or missing for a type that requires items), the gate does `continue` without recording a violation and without incrementing `checked`. A writer emitting `items: {...}` or omitting `items` entirely on an error-correction activity will pass the schema gate silently, defeating the fail-fast intent. Either require `items` to be a non-empty list for typed activities or emit an explicit violation for malformed `items` containers."
+        },
+        {
+          "id": "alias-coverage-too-narrow",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:~545 (_ACTIVITY_ITEM_FORBIDDEN_ALIASES)",
+          "description": "The alias map enumerates a finite list of plausible-looking field names (wrong/incorrect/mistake/correctAnswer/right/fix/...). Real writer regressions also produce variants like `errorForm`, `wrongAnswer`, `corrected`, `solution`, `target`, `expected`, `fixed_form`. These are still rejected as forbidden (good — they're not in the whitelist), but without the helpful 'use X: instead' remediation hint, so the writer correction loop loses the most useful signal. Consider expanding the alias map, or adding a fuzzy/regex fallback that maps any field containing 'wrong|incorrect|mistake|error' → 'error' and 'correct|fix|right|answer|solution' → 'correction' for diagnostics."
+        },
+        {
+          "id": "activity-schema-not-in-correction-context-doc",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/build/linear_pipeline.py:108 (WRITER_CORRECTION_GATES)",
+          "description": "`activity_schema` is added to WRITER_CORRECTION_GATES, but there is no visible update to the writer-correction prompt template or context builder in this diff that explains the new gate's canonical schema to the model. Verify that the correction-round prompt actually surfaces `_format_activity_schema_diagnostic`'s message (it should, since it's stored in `report['message']`), and that the prompt template doesn't filter it out. Otherwise the writer will see 'activity_schema failed' with no remediation guidance."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"canonical-example-identical-error-correction\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4590 (_format_activity_schema_diagnostic)\",\n    \"description\": \"The canonical 'error-correction' example printed in the failure diagnostic has identical values for `error` and `correction` ('вмиваюся' / 'вмиваюся'). A writer that copies this exemplar will produce a semantically broken item (the error and the fix are the same string). Use distinct values, e.g. `error: \\\"вмиваюсь\\\"` vs `correction: \\\"вмиваюся\\\"`, so the example actually demonstrates a corrected mistake.\"\n  },\n  {\n    \"id\": \"non-list-items-silently-skipped\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:~4470 (_activity_schema_gate)\",\n    \"description\": \"When `activity.get('items')` is not a list (dict, None, scalar, or missing for a type that requires items), the gate does `continue` without recording a violation and without incrementing `checked`. A writer emitting `items: {...}` or omitting `items` entirely on an error-correction activity will pass the schema gate silently, defeating the fail-fast intent. Either require `items` to be a non-empty list for typed activities or emit an explicit violation for malformed `items` containers.\"\n  },\n  {\n    \"id\": \"alias-coverage-too-narrow\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:~545 (_ACTIVITY_ITEM_FORBIDDEN_ALIASES)\",\n    \"description\": \"The alias map enumerates a finite list of plausible-looking field names (wrong/incorrect/mistake/correctAnswer/right/fix/...). Real writer regressions also produce variants like `errorForm`, `wrongAnswer`, `corrected`, `solution`, `target`, `expected`, `fixed_form`. These are still rejected as forbidden (good — they're not in the whitelist), but without the helpful 'use X: instead' remediation hint, so the writer correction loop loses the most useful signal. Consider expanding the alias map, or adding a fuzzy/regex fallback that maps any field containing 'wrong|incorrect|mistake|error' → 'error' and 'correct|fix|right|answer|solution' → 'correction' for diagnostics.\"\n  },\n  {\n    \"id\": \"activity-schema-not-in-correction-context-doc\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"scripts/build/linear_pipeline.py:108 (WRITER_CORRECTION_GATES)\",\n    \"description\": \"`activity_schema` is added to WRITER_CORRECTION_GATES, but there is no visible update to the writer-correction prompt template or context builder in this diff that explains the new gate's canonical schema to the model. Verify that the correction-round prompt actually surfaces `_format_activity_schema_diagnostic`'s message (it should, since it's stored in `report['message']`), and that the prompt template doesn't filter it out. Otherwise the writer will see 'activity_schema failed' with no remediation guidance.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2988
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.2857,
+    "case_acc": 0.0,
+    "precision": 0.2308,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "low",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

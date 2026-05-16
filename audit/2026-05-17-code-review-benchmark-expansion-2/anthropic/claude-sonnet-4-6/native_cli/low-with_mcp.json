@@ -1,0 +1,223 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "low",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:02:49Z",
+  "finished_at": "2026-05-16T19:05:04Z",
+  "duration_s": 134.73,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 8,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork",
+        "host-flag"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope"
+      ],
+      "precision": 0.25,
+      "recall": 0.5,
+      "f1": 0.3333,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "healthz-subprocess-dos",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:262-268",
+          "description": "GET /healthz unconditionally forks four subprocesses on every request (codex --version, gemini --version, claude --version, hermes --version via _probe_cli). There is no caching, no debounce, and no rate-limit. A trivial HTTP flood from any local process can saturate the process table and stall the host. This is a known surface (issue #2029) that the PR reproduces verbatim. Fix: cache probe results with a TTL (e.g. 30 s) so the subprocess fan-out is amortised, and return the cached state on subsequent calls within the window."
+        },
+        {
+          "id": "unbounded-request-body",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:330",
+          "description": "POST /v1/chat/completions accepts an unbounded request body. FastAPI / Starlette have no default body-size cap, so a client can submit a multi-megabyte messages array that is fully parsed and held in memory before any backend is invoked. Combined with the fact that the flattened prompt is then passed to a subprocess, an adversarial or buggy client can cause memory exhaustion. Add a Starlette ContentSizeLimitMiddleware (or equivalent) with a sane cap (e.g. 1 MB) and reject oversized payloads with 413."
+        },
+        {
+          "id": "host-accepts-non-localhost",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:678",
+          "description": "The --host argument defaults to 127.0.0.1 but accepts any value without validation. Passing --host 0.0.0.0 silently exposes the proxy on all interfaces, contradicting the 'localhost-only' guarantee stated in the docs and surfacing every local agent CLI to the network. This matches the open issue #2030. The argument parser should either reject values that are not loopback addresses (127.0.0.1 / ::1) or require an explicit --allow-remote flag before binding to non-loopback addresses, raising SystemExit with a clear warning otherwise."
+        },
+        {
+          "id": "prompt-injection-inline-arg",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:196,209",
+          "description": "_gemini_backend passes the user-controlled prompt as f\"--prompt={prompt}\" and _hermes_backend passes it as f\"--oneshot={prompt}\", both as a single argv element. Although subprocess.run with a list avoids shell injection, many CLI parsers (argparse, click, getopt) re-split on = in the value or treat embedded newlines as flag boundaries when the underlying tool accepts multi-value arguments. A prompt containing =, --, or newlines can cause the downstream CLI to misparse its own flags. The safe pattern is to pass the prompt value as a separate positional argument or via stdin (as _codex_backend already does), keeping the flag name and user data in distinct argv slots."
+        },
+        {
+          "id": "stderr-internal-info-leak",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:348,354",
+          "description": "502 and 504 error responses echo the first line of the backend process's stderr verbatim into the OpenAI-shaped JSON body (via _first_error_line). Backend CLIs routinely emit absolute file paths, internal hostnames, API-key prefixes, or stack-trace fragments in their first error line. Since the proxy is localhost-only for now this is lower risk, but any future --allow-remote mode or reverse-proxy setup would expose these details to remote callers. Sanitise the error string to a generic upstream failure message and log the raw stderr at DEBUG level server-side instead."
+        },
+        {
+          "id": "arg-max-large-prompts",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:196,209",
+          "description": "Both _gemini_backend and _hermes_backend embed the flattened prompt inline in an argv element. Linux ARG_MAX is typically 2 MB; macOS is 1 MB per argument. A long conversation history (or a single large system prompt) can silently exceed this limit, causing execve to fail with E2BIG. The resulting OSError is caught and re-raised as a 502, but the error message will be confusing. _codex_backend correctly passes the prompt via stdin; _gemini_backend and _hermes_backend should do the same, writing the prompt to a temp file or using Popen with stdin=PIPE as codex does."
+        },
+        {
+          "id": "models-created-not-stable",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:274",
+          "description": "GET /v1/models returns created: int(time.time()) on every call, so two successive requests return different timestamps for the same model. The OpenAI spec treats the created field as a stable Unix epoch for when the model was made available; clients that cache or diff the models list will see spurious changes on every poll. Replace with a module-level constant (e.g. the epoch of the proxy's own release date) or omit the field rather than fabricating a moving value."
+        },
+        {
+          "id": "tempfile-world-readable",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:161",
+          "description": "tempfile.NamedTemporaryFile is created with default permissions (0o600 on most POSIX systems) but the delete=False pattern leaves a window between creation and unlink where the file exists with its output content. On macOS the default umask produces 0o644, making the temp file world-readable. Under concurrent load multiple such files accumulate in /tmp until finally{} runs. Use tempfile.TemporaryDirectory or pass mode='w+b' with an explicit os.chmod(0o600) immediately after creation to harden this."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"healthz-subprocess-dos\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:262-268\",\n    \"description\": \"GET /healthz unconditionally forks four subprocesses on every request (codex --version, gemini --version, claude --version, hermes --version via _probe_cli). There is no caching, no debounce, and no rate-limit. A trivial HTTP flood from any local process can saturate the process table and stall the host. This is a known surface (issue #2029) that the PR reproduces verbatim. Fix: cache probe results with a TTL (e.g. 30 s) so the subprocess fan-out is amortised, and return the cached state on subsequent calls within the window.\"\n  },\n  {\n    \"id\": \"unbounded-request-body\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:330\",\n    \"description\": \"POST /v1/chat/completions accepts an unbounded request body. FastAPI / Starlette have no default body-size cap, so a client can submit a multi-megabyte messages array that is fully parsed and held in memory before any backend is invoked. Combined with the fact that the flattened prompt is then passed to a subprocess, an adversarial or buggy client can cause memory exhaustion. Add a Starlette ContentSizeLimitMiddleware (or equivalent) with a sane cap (e.g. 1 MB) and reject oversized payloads with 413.\"\n  },\n  {\n    \"id\": \"host-accepts-non-localhost\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:678\",\n    \"description\": \"The --host argument defaults to 127.0.0.1 but accepts any value without validation. Passing --host 0.0.0.0 silently exposes the proxy on all interfaces, contradicting the 'localhost-only' guarantee stated in the docs and surfacing every local agent CLI to the network. This matches the open issue #2030. The argument parser should either reject values that are not loopback addresses (127.0.0.1 / ::1) or require an explicit --allow-remote flag before binding to non-loopback addresses, raising SystemExit with a clear warning otherwise.\"\n  },\n  {\n    \"id\": \"prompt-injection-inline-arg\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:196,209\",\n    \"description\": \"_gemini_backend passes the user-controlled prompt as f\\\"--prompt={prompt}\\\" and _hermes_backend passes it as f\\\"--oneshot={prompt}\\\", both as a single argv element. Although subprocess.run with a list avoids shell injection, many CLI parsers (argparse, click, getopt) re-split on = in the value or treat embedded newlines as flag boundaries when the underlying tool accepts multi-value arguments. A prompt containing =, --, or newlines can cause the downstream CLI to misparse its own flags. The safe pattern is to pass the prompt value as a separate positional argument or via stdin (as _codex_backend already does), keeping the flag name and user data in distinct argv slots.\"\n  },\n  {\n    \"id\": \"stderr-internal-info-leak\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:348,354\",\n    \"description\": \"502 and 504 error responses echo the first line of the backend process's stderr verbatim into the OpenAI-shaped JSON body (via _first_error_line). Backend CLIs routinely emit absolute file paths, internal hostnames, API-key prefixes, or stack-trace fragments in their first error line. Since the proxy is localhost-only for now this is lower risk, but any future --allow-remote mode or reverse-proxy setup would expose these details to remote callers. Sanitise the error string to a generic upstream failure message and log the raw stderr at DEBUG level server-side instead.\"\n  },\n  {\n    \"id\": \"arg-max-large-prompts\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:196,209\",\n    \"description\": \"Both _gemini_backend and _hermes_backend embed the flattened prompt inline in an argv element. Linux ARG_MAX is typically 2 MB; macOS is 1 MB per argument. A long conversation history (or a single large system prompt) can silently exceed this limit, causing execve to fail with E2BIG. The resulting OSError is caught and re-raised as a 502, but the error message will be confusing. _codex_backend correctly passes the prompt via stdin; _gemini_backend and _hermes_backend should do the same, writing the prompt to a temp file or using Popen with stdin=PIPE as codex does.\"\n  },\n  {\n    \"id\": \"models-created-not-stable\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:274\",\n    \"description\": \"GET /v1/models returns created: int(time.time()) on every call, so two successive requests return different timestamps for the same model. The OpenAI spec treats the created field as a stable Unix epoch for when the model was made available; clients that cache or diff the models list will see spurious changes on every poll. Replace with a module-level constant (e.g. the epoch of the proxy's own release date) or omit the field rather than fabricating a moving value.\"\n  },\n  {\n    \"id\": \"tempfile-world-readable\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:161\",\n    \"description\": \"tempfile.NamedTemporaryFile is created with default permissions (0o600 on most POSIX systems) but the delete=False pattern leaves a window between creation and unlink where the file exists with its output content. On macOS the default umask produces 0o644, making the temp file world-readable. Under concurrent load multiple such files accumulate in /tmp until finally{} runs. Use tempfile.TemporaryDirectory or pass mode='w+b' with an explicit os.chmod(0o600) immediately after creation to harden this.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5883
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 6,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.1667,
+      "recall": 1.0,
+      "f1": 0.2857,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "aliased-required-field-not-suppressed",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4484",
+          "description": "The `aliased_required` set is computed to suppress missing-required-field violations when an alias is present, but the suppression logic is incomplete. `aliased_required` contains the *canonical* field name (e.g. `'error'`) when the alias maps to a required field — however the subtraction `required_fields - item_fields - aliased_required` does correctly exclude it. The bug is subtler: the alias-field violation is also emitted for that same alias in the forbidden-field loop immediately above, so an item like `{'sentence': '...', 'incorrect': 'x', 'correction': 'y'}` produces both a 'forbidden field incorrect' violation AND a 'missing required field error' violation. The reader of the report then sees a doubled signal: one saying 'use error not incorrect' and a second saying 'error is missing', which is redundant and contradictory. The forbidden-field violation is the informative one; the missing-required one should be suppressed whenever an alias that maps to that required field is already flagged. Fix: when building `aliased_required`, also suppress the corresponding missing-required entry unconditionally — not only from the subtraction but also by pre-filtering from the 'required_fields' set that drives the missing-field loop."
+        },
+        {
+          "id": "diagnostic-example-correction-equals-error",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4589",
+          "description": "The canonical shape printed in the diagnostic message shows `correction: \"вмиваюся\"` and `error: \"вмиваюся\"` with identical values, which is pedagogically nonsensical — an error-correction item where the error and correction are the same word provides no useful information to a learner and would be flagged by content review. This was likely a copy-paste mistake. The example should demonstrate a real correction, e.g. `error: \"вмивуся\"` / `correction: \"вмиваюся\"`, to guide writers toward producing valid content rather than accidentally normalising degenerate items."
+        },
+        {
+          "id": "gate-short-circuits-before-all-gates-run",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:3918",
+          "description": "The `activity_schema` gate is placed at the very top of `run_python_qg` and returns immediately on failure via the early `_python_qg_report` call, skipping every downstream gate including `word_count`, `plan_sections`, `vesum_verified`, etc. This means a module with both activity-schema violations and, say, a word-count shortfall will only surface the schema error in the QG report; the writer correction loop therefore has no visibility into the other failures and may fix the schema issue and re-submit a module that still has word-count or VESUM failures, wasting a correction round. The gate should accumulate failures rather than short-circuit, consistent with how other non-fatal gates are handled. If early exit is intentional for performance, it must be documented and the correction-loop prompt must explicitly instruct the writer that additional gates will be checked after schema passes."
+        },
+        {
+          "id": "no-schema-coverage-for-other-activity-types",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4293",
+          "description": "`_ACTIVITY_ITEM_AUTHORING_FIELDS` and the gate logic only cover `error-correction`. All other activity types (fill-in-the-blank, matching, multiple-choice, dialogue, etc.) silently pass through with `allowed_fields is None` and are never validated. The docstring says 'V1 is intentionally narrow' but there is no follow-up issue reference or TODO to expand coverage. Given that the motivating regression was a field-alias problem that could equally occur in other activity types, the gate gives a false sense of completeness. At minimum, add a TODO with an issue number or a comment that explicitly names the activity types currently unguarded."
+        },
+        {
+          "id": "non-mapping-items-silently-skipped",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4479",
+          "description": "When an individual item inside `items` is not a `Mapping` (e.g. a plain string or integer), the gate silently skips it via `continue` without recording any violation and without incrementing `checked`. A writer that emits `items: [\"wrong string\", ...]` will pass the gate with `checked=0` for those entries, masking a structural error. The gate should either flag non-Mapping items as violations or at minimum increment `checked` so the caller can see that some items were not inspected."
+        },
+        {
+          "id": "test-replays-missing-sentence-field",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:163",
+          "description": "In `test_replays_m20_build8_failure_shape`, each item contains only `{'incorrect': '...'}` — the required `sentence` field is absent. The test asserts only that `incorrect → error` aliasing is flagged, but does not assert that a missing `sentence` violation is also reported. As a result the test does not fully characterise the real failure shape from build #8, and a regression that stops detecting the missing `sentence` would not be caught by this test. The test should also assert that a missing-required `sentence` violation is present in the results."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"aliased-required-field-not-suppressed\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4484\",\n    \"description\": \"The `aliased_required` set is computed to suppress missing-required-field violations when an alias is present, but the suppression logic is incomplete. `aliased_required` contains the *canonical* field name (e.g. `'error'`) when the alias maps to a required field — however the subtraction `required_fields - item_fields - aliased_required` does correctly exclude it. The bug is subtler: the alias-field violation is also emitted for that same alias in the forbidden-field loop immediately above, so an item like `{'sentence': '...', 'incorrect': 'x', 'correction': 'y'}` produces both a 'forbidden field incorrect' violation AND a 'missing required field error' violation. The reader of the report then sees a doubled signal: one saying 'use error not incorrect' and a second saying 'error is missing', which is redundant and contradictory. The forbidden-field violation is the informative one; the missing-required one should be suppressed whenever an alias that maps to that required field is already flagged. Fix: when building `aliased_required`, also suppress the corresponding missing-required entry unconditionally — not only from the subtraction but also by pre-filtering from the 'required_fields' set that drives the missing-field loop.\"\n  },\n  {\n    \"id\": \"diagnostic-example-correction-equals-error\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4589\",\n    \"description\": \"The canonical shape printed in the diagnostic message shows `correction: \\\"вмиваюся\\\"` and `error: \\\"вмиваюся\\\"` with identical values, which is pedagogically nonsensical — an error-correction item where the error and correction are the same word provides no useful information to a learner and would be flagged by content review. This was likely a copy-paste mistake. The example should demonstrate a real correction, e.g. `error: \\\"вмивуся\\\"` / `correction: \\\"вмиваюся\\\"`, to guide writers toward producing valid content rather than accidentally normalising degenerate items.\"\n  },\n  {\n    \"id\": \"gate-short-circuits-before-all-gates-run\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:3918\",\n    \"description\": \"The `activity_schema` gate is placed at the very top of `run_python_qg` and returns immediately on failure via the early `_python_qg_report` call, skipping every downstream gate including `word_count`, `plan_sections`, `vesum_verified`, etc. This means a module with both activity-schema violations and, say, a word-count shortfall will only surface the schema error in the QG report; the writer correction loop therefore has no visibility into the other failures and may fix the schema issue and re-submit a module that still has word-count or VESUM failures, wasting a correction round. The gate should accumulate failures rather than short-circuit, consistent with how other non-fatal gates are handled. If early exit is intentional for performance, it must be documented and the correction-loop prompt must explicitly instruct the writer that additional gates will be checked after schema passes.\"\n  },\n  {\n    \"id\": \"no-schema-coverage-for-other-activity-types\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4293\",\n    \"description\": \"`_ACTIVITY_ITEM_AUTHORING_FIELDS` and the gate logic only cover `error-correction`. All other activity types (fill-in-the-blank, matching, multiple-choice, dialogue, etc.) silently pass through with `allowed_fields is None` and are never validated. The docstring says 'V1 is intentionally narrow' but there is no follow-up issue reference or TODO to expand coverage. Given that the motivating regression was a field-alias problem that could equally occur in other activity types, the gate gives a false sense of completeness. At minimum, add a TODO with an issue number or a comment that explicitly names the activity types currently unguarded.\"\n  },\n  {\n    \"id\": \"non-mapping-items-silently-skipped\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4479\",\n    \"description\": \"When an individual item inside `items` is not a `Mapping` (e.g. a plain string or integer), the gate silently skips it via `continue` without recording any violation and without incrementing `checked`. A writer that emits `items: [\\\"wrong string\\\", ...]` will pass the gate with `checked=0` for those entries, masking a structural error. The gate should either flag non-Mapping items as violations or at minimum increment `checked` so the caller can see that some items were not inspected.\"\n  },\n  {\n    \"id\": \"test-replays-missing-sentence-field\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:163\",\n    \"description\": \"In `test_replays_m20_build8_failure_shape`, each item contains only `{'incorrect': '...'}` — the required `sentence` field is absent. The test asserts only that `incorrect → error` aliasing is flagged, but does not assert that a missing `sentence` violation is also reported. As a result the test does not fully characterise the real failure shape from build #8, and a regression that stops detecting the missing `sentence` would not be caught by this test. The test should also assert that a missing-required `sentence` violation is present in the results.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5612
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 3,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "citation-test-hardcoded-strings",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:112-115",
+          "description": "The test constructs the citation list by hardcoding page numbers rather than reading `plan_references` from the YAML file it already loads into `plan`. This creates a permanent manual-sync obligation: every time the plan changes, both the YAML and this test must be updated in lockstep, and the commit message explicitly encodes this as a lesson-learned. The robust fix is to derive the input list directly from the plan: `[{\"source_ref\": r} for r in plan.get(\"plan_references\", [])]`. That way the test always reflects the live plan state, and a drift between the YAML and the test becomes impossible by construction. The current pattern survived this PR only because CI caught the mismatch — next time it may not be noticed until after merge."
+        },
+        {
+          "id": "citation-test-no-negative-case",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:107-118",
+          "description": "The test only exercises the passing path (correct citations → gate returns truthy). There is no assertion that a deliberately wrong citation — e.g. the now-retired `Захарійчук Grade 4, с. 162` string — would cause `_citation_gate` to return falsy. Without a negative case the test cannot distinguish a correctly-working gate from a gate that always returns True, and gives no regression coverage for the exact defect this PR fixed (#1901: off-level reference accepted)."
+        },
+        {
+          "id": "pr-diff-incomplete-three-fixes-one-diff",
+          "severity": "LOW",
+          "category": "other",
+          "location": "commit a2ff0db8",
+          "description": "The PR description states it bundles three distinct fixes — VESUM reviewer scope leak, textbook-grounding plan reference issue, and metalinguistic-stripping quote cleanup — but the diff supplied for review contains only the test re-pin for the citation fix. The plan YAML change that motivated this test update (`a1/my-morning.yaml` `plan_references` swap) and both other regression fixes are absent. Reviewing an incomplete diff means the VESUM scope leak and text-cleaning edge cases cannot be assessed; if those fixes were committed separately they should each carry their own test evidence per the project's deterministic-over-hallucination policy."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"citation-test-hardcoded-strings\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:112-115\",\n    \"description\": \"The test constructs the citation list by hardcoding page numbers rather than reading `plan_references` from the YAML file it already loads into `plan`. This creates a permanent manual-sync obligation: every time the plan changes, both the YAML and this test must be updated in lockstep, and the commit message explicitly encodes this as a lesson-learned. The robust fix is to derive the input list directly from the plan: `[{\\\"source_ref\\\": r} for r in plan.get(\\\"plan_references\\\", [])]`. That way the test always reflects the live plan state, and a drift between the YAML and the test becomes impossible by construction. The current pattern survived this PR only because CI caught the mismatch — next time it may not be noticed until after merge.\"\n  },\n  {\n    \"id\": \"citation-test-no-negative-case\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:107-118\",\n    \"description\": \"The test only exercises the passing path (correct citations → gate returns truthy). There is no assertion that a deliberately wrong citation — e.g. the now-retired `Захарійчук Grade 4, с. 162` string — would cause `_citation_gate` to return falsy. Without a negative case the test cannot distinguish a correctly-working gate from a gate that always returns True, and gives no regression coverage for the exact defect this PR fixed (#1901: off-level reference accepted).\"\n  },\n  {\n    \"id\": \"pr-diff-incomplete-three-fixes-one-diff\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"commit a2ff0db8\",\n    \"description\": \"The PR description states it bundles three distinct fixes — VESUM reviewer scope leak, textbook-grounding plan reference issue, and metalinguistic-stripping quote cleanup — but the diff supplied for review contains only the test re-pin for the citation fix. The plan YAML change that motivated this test update (`a1/my-morning.yaml` `plan_references` swap) and both other regression fixes are absent. Reviewing an incomplete diff means the VESUM scope leak and text-cleaning edge cases cannot be assessed; if those fixes were committed separately they should each carry their own test evidence per the project's deterministic-over-hallucination policy.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2429
+    }
+  ],
+  "scores": {
+    "f1": 0.24,
+    "case_acc": 0.0,
+    "precision": 0.1765,
+    "recall": 0.375,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "low",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

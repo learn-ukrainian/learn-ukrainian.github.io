@@ -1,0 +1,206 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T18:53:40Z",
+  "finished_at": "2026-05-16T18:55:58Z",
+  "duration_s": 137.57,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 10,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "missed_gold_ids": [
+        "error-envelope"
+      ],
+      "precision": 0.3,
+      "recall": 0.75,
+      "f1": 0.4286,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unbounded-request-body",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:283",
+          "description": "ChatCompletionRequest has no size limits on messages content or count. A client can POST an arbitrarily large JSON body (tens or hundreds of MB), which FastAPI will buffer fully into memory, then _flatten_messages concatenates the entire string, then it is piped to a subprocess via stdin. With no max_length on Message.content, no maxItems on messages, and no Content-Length cap in uvicorn config, this is a trivial OOM/DoS vector even on localhost (cross-origin browser POSTs can reach 127.0.0.1). Add per-field length caps, a total-message-count cap, and reject oversized prompts before invoking a backend."
+        },
+        {
+          "id": "host-binding-accepts-any-address",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:684",
+          "description": "The --host flag defaults to 127.0.0.1 but silently accepts any value (e.g. 0.0.0.0, a LAN IP). The docs claim the proxy is 'localhost-only' but nothing enforces that. Since the proxy executes local CLIs with the user's credentials (Claude, Codex, Gemini, hermes/Grok) and can read repository files (cwd=REPO_ROOT, read-only sandbox in Codex but not in others), exposing it on a non-loopback interface is effectively remote code execution as the user. This is the existing open issue #2030 'LOW' but the rating is wrong — given backend capabilities it is HIGH. Require an explicit --allow-remote flag (or reject non-loopback bind addresses) before binding to anything other than 127.0.0.1/::1."
+        },
+        {
+          "id": "healthz-fork-storm",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:295",
+          "description": "GET /healthz invokes four subprocess.run probes (codex --version, gemini --version, claude --version, hermes --version), each with a 1s timeout but no caching. An unauthenticated client (or a misconfigured monitor hitting it once per second) forks 4 processes per request. Under concurrent requests this becomes a self-inflicted fork bomb that competes with the curriculum build for laptop resources (cf. #M-9 'local fanout' rule). Cache probe results for ~30s, or move the probes off the request path entirely and just return a static ok with a separately-refreshed snapshot. This is open issue #2029."
+        },
+        {
+          "id": "no-request-concurrency-limit",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:339",
+          "description": "Each /v1/chat/completions request spawns a long-running local CLI (Claude/Codex/Gemini/hermes) for up to 120s with no proxy-level concurrency cap. The proxy will happily start N concurrent backend processes for N concurrent requests, which directly violates the project's local-fanout-one-at-a-time rule (#M-9, encoded after a laptop crash on 2026-05-16). Add a per-backend semaphore (concurrency=1) and either queue or 429 over the limit. This is the same class of failure that caused the original incident."
+        },
+        {
+          "id": "prompt-via-argv-leaks-and-overflows",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:194",
+          "description": "_gemini_backend passes the entire flattened prompt as --prompt={prompt} on argv, and _hermes_backend does the same with --oneshot={prompt}. Argv is visible in `ps`/procfs to other local users, has an OS-level length cap (ARG_MAX, typically 256KB–2MB), and leaks every system/user message verbatim. Codex and Claude pipe via stdin and do not have this problem. Switch Gemini and Hermes to stdin-based prompt delivery (matching the codex/claude pattern) to avoid both the disclosure and the silent truncation/E2BIG failure mode at large prompts."
+        },
+        {
+          "id": "tempfile-not-securely-created",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:158",
+          "description": "_codex_backend uses NamedTemporaryFile(delete=False) then immediately closes it and passes the path to codex -o. On a shared-tmp system this is a mild TOCTOU window (the file exists, is owned by the user, but another local process could symlink/replace between close and codex open). Lower risk because /tmp is sticky-bit on macOS/Linux, but consider using a per-request mkdtemp() with 0700 and writing inside it, then unlinking the directory in the finally block."
+        },
+        {
+          "id": "stderr-leak-in-error-response",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:357",
+          "description": "On CalledProcessError/TimeoutExpired, the first line of the backend stderr is echoed back to the HTTP client. Backend CLIs may print authentication errors containing token prefixes, file paths, or environment hints (per #M-5 'never print secrets', this has bitten the project before with DAGGER_CLOUD_TOKEN and GEMINI_API_KEY). Even on localhost the response can be logged by a calling client. Sanitize/redact common credential patterns, or replace with a generic 'backend X failed' and log the detail server-side."
+        },
+        {
+          "id": "no-auth-on-proxy",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:281",
+          "description": "The proxy has no authentication. On localhost this is conventionally acceptable, but any process on the machine — including a browser tab via DNS rebinding or a CORS-permissive fetch to http://127.0.0.1:8767/v1/chat/completions — can drive the backends and incur metered API costs (Claude/Codex programmatic-pool quota explicitly called out in #M0 and #0). At minimum: require a Host header check (reject anything other than 127.0.0.1:8767 / localhost:8767) to defeat DNS rebinding, and optionally require a token from BRIDGE_PROXY_TOKEN env var."
+        },
+        {
+          "id": "claude-cmd-shell-quoting",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:181",
+          "description": "_claude_backend passes the prompt as a trailing positional argv element after `--`. If CLAUDE_CMD resolves to a wrapper shell script that doesn't honor `--` correctly, a prompt beginning with `-` or `--help` could be reinterpreted as a flag. Lower risk if CLAUDE_CMD is the real binary, but worth verifying or piping via stdin to remove the ambiguity entirely (and to align with the other backends after the gemini/hermes fix)."
+        },
+        {
+          "id": "model-listing-created-timestamp-churns",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:312",
+          "description": "/v1/models returns `created: int(time.time())` for every model on every request. The OpenAI spec treats `created` as a stable model creation timestamp; clients that cache or diff model metadata will see every model 'change' on every poll. Use a fixed timestamp (e.g. process start or a constant per-model value) instead of wall-clock at request time."
+        }
+      ],
+      "raw_response": "[\n  {\"id\": \"unbounded-request-body\", \"severity\": \"HIGH\", \"category\": \"dos-surface\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:283\", \"description\": \"ChatCompletionRequest has no size limits on messages content or count. A client can POST an arbitrarily large JSON body (tens or hundreds of MB), which FastAPI will buffer fully into memory, then _flatten_messages concatenates the entire string, then it is piped to a subprocess via stdin. With no max_length on Message.content, no maxItems on messages, and no Content-Length cap in uvicorn config, this is a trivial OOM/DoS vector even on localhost (cross-origin browser POSTs can reach 127.0.0.1). Add per-field length caps, a total-message-count cap, and reject oversized prompts before invoking a backend.\"},\n  {\"id\": \"host-binding-accepts-any-address\", \"severity\": \"HIGH\", \"category\": \"security\", \"location\": \"scripts/ai_agent_bridge/_cli.py:684\", \"description\": \"The --host flag defaults to 127.0.0.1 but silently accepts any value (e.g. 0.0.0.0, a LAN IP). The docs claim the proxy is 'localhost-only' but nothing enforces that. Since the proxy executes local CLIs with the user's credentials (Claude, Codex, Gemini, hermes/Grok) and can read repository files (cwd=REPO_ROOT, read-only sandbox in Codex but not in others), exposing it on a non-loopback interface is effectively remote code execution as the user. This is the existing open issue #2030 'LOW' but the rating is wrong — given backend capabilities it is HIGH. Require an explicit --allow-remote flag (or reject non-loopback bind addresses) before binding to anything other than 127.0.0.1/::1.\"},\n  {\"id\": \"healthz-fork-storm\", \"severity\": \"MEDIUM\", \"category\": \"dos-surface\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:295\", \"description\": \"GET /healthz invokes four subprocess.run probes (codex --version, gemini --version, claude --version, hermes --version), each with a 1s timeout but no caching. An unauthenticated client (or a misconfigured monitor hitting it once per second) forks 4 processes per request. Under concurrent requests this becomes a self-inflicted fork bomb that competes with the curriculum build for laptop resources (cf. #M-9 'local fanout' rule). Cache probe results for ~30s, or move the probes off the request path entirely and just return a static ok with a separately-refreshed snapshot. This is open issue #2029.\"},\n  {\"id\": \"no-request-concurrency-limit\", \"severity\": \"MEDIUM\", \"category\": \"dos-surface\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:339\", \"description\": \"Each /v1/chat/completions request spawns a long-running local CLI (Claude/Codex/Gemini/hermes) for up to 120s with no proxy-level concurrency cap. The proxy will happily start N concurrent backend processes for N concurrent requests, which directly violates the project's local-fanout-one-at-a-time rule (#M-9, encoded after a laptop crash on 2026-05-16). Add a per-backend semaphore (concurrency=1) and either queue or 429 over the limit. This is the same class of failure that caused the original incident.\"},\n  {\"id\": \"prompt-via-argv-leaks-and-overflows\", \"severity\": \"MEDIUM\", \"category\": \"security\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:194\", \"description\": \"_gemini_backend passes the entire flattened prompt as --prompt={prompt} on argv, and _hermes_backend does the same with --oneshot={prompt}. Argv is visible in `ps`/procfs to other local users, has an OS-level length cap (ARG_MAX, typically 256KB–2MB), and leaks every system/user message verbatim. Codex and Claude pipe via stdin and do not have this problem. Switch Gemini and Hermes to stdin-based prompt delivery (matching the codex/claude pattern) to avoid both the disclosure and the silent truncation/E2BIG failure mode at large prompts.\"},\n  {\"id\": \"tempfile-not-securely-created\", \"severity\": \"LOW\", \"category\": \"security\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:158\", \"description\": \"_codex_backend uses NamedTemporaryFile(delete=False) then immediately closes it and passes the path to codex -o. On a shared-tmp system this is a mild TOCTOU window (the file exists, is owned by the user, but another local process could symlink/replace between close and codex open). Lower risk because /tmp is sticky-bit on macOS/Linux, but consider using a per-request mkdtemp() with 0700 and writing inside it, then unlinking the directory in the finally block.\"},\n  {\"id\": \"stderr-leak-in-error-response\", \"severity\": \"LOW\", \"category\": \"security\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:357\", \"description\": \"On CalledProcessError/TimeoutExpired, the first line of the backend stderr is echoed back to the HTTP client. Backend CLIs may print authentication errors containing token prefixes, file paths, or environment hints (per #M-5 'never print secrets', this has bitten the project before with DAGGER_CLOUD_TOKEN and GEMINI_API_KEY). Even on localhost the response can be logged by a calling client. Sanitize/redact common credential patterns, or replace with a generic 'backend X failed' and log the detail server-side.\"},\n  {\"id\": \"no-auth-on-proxy\", \"severity\": \"MEDIUM\", \"category\": \"security\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:281\", \"description\": \"The proxy has no authentication. On localhost this is conventionally acceptable, but any process on the machine — including a browser tab via DNS rebinding or a CORS-permissive fetch to http://127.0.0.1:8767/v1/chat/completions — can drive the backends and incur metered API costs (Claude/Codex programmatic-pool quota explicitly called out in #M0 and #0). At minimum: require a Host header check (reject anything other than 127.0.0.1:8767 / localhost:8767) to defeat DNS rebinding, and optionally require a token from BRIDGE_PROXY_TOKEN env var.\"},\n  {\"id\": \"claude-cmd-shell-quoting\", \"severity\": \"LOW\", \"category\": \"correctness\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:181\", \"description\": \"_claude_backend passes the prompt as a trailing positional argv element after `--`. If CLAUDE_CMD resolves to a wrapper shell script that doesn't honor `--` correctly, a prompt beginning with `-` or `--help` could be reinterpreted as a flag. Lower risk if CLAUDE_CMD is the real binary, but worth verifying or piping via stdin to remove the ambiguity entirely (and to align with the other backends after the gemini/hermes fix).\"},\n  {\"id\": \"model-listing-created-timestamp-churns\", \"severity\": \"LOW\", \"category\": \"spec-compliance\", \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:312\", \"description\": \"/v1/models returns `created: int(time.time())` for every model on every request. The OpenAI spec treats `created` as a stable model creation timestamp; clients that cache or diff model metadata will see every model 'change' on every poll. Use a fixed timestamp (e.g. process start or a constant per-model value) instead of wall-clock at request time.\"}\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 6904
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 5,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "empty-items-bypass",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:_activity_schema_gate",
+          "description": "An `error-correction` activity with `items: []`, `items: null`, or `items` missing entirely silently passes the gate (the loop is skipped and `checked` stays 0). Real writer regressions of the kind this gate is meant to block — e.g., an activity declared `type: error-correction` with no items, or with items coerced to a non-list — get a clean pass. The gate should explicitly fail when an enforced activity type has zero conforming items, or at minimum surface a `checked=0 but type expected items` warning. Currently the test `test_non_error_correction_activities_pass_through` documents the empty-checked path is considered 'pass', which masks this hole."
+        },
+        {
+          "id": "alias-coverage-too-narrow-vs-pr-intent",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:_ACTIVITY_ITEM_FORBIDDEN_ALIASES",
+          "description": "The PR description asks reviewers to confirm the gate catches 'real writer mistakes rather than only the exact canonical examples'. The alias dict covers `wrong/incorrect/mistake/bad/original/wrong_form/incorrect_form` → `error` and `correct/correctAnswer/right/fix/fixed` → `correction`, but omits several plausible writer outputs observed in prior failures: `errorWord`, `error_word` (both listed in the existing `_ERROR_CORRECTION_INTENTIONAL_FIELDS` set immediately above, implying the codebase already treats these as known writer variants), `wrongAnswer`, `bad_form`, `corrected`, `corrected_form`, `solution`, `target`, `right_answer`. These still fail the gate (they aren't in `allowed_fields`), but the error message degrades to the generic 'do not allow field X' branch with no `use Y instead` hint — exactly the friendly-rename UX the gate is designed for. Either add them to `_ACTIVITY_ITEM_FORBIDDEN_ALIASES` or document why `_ERROR_CORRECTION_INTENTIONAL_FIELDS` and the alias map disagree about `errorWord`/`error_word`."
+        },
+        {
+          "id": "case-sensitive-field-matching",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:_activity_schema_gate (item_fields construction)",
+          "description": "Field comparison is strictly case-sensitive: `item_fields = {str(field) for field in item}` followed by membership tests against literal lowercase keys. A writer that emits `Error:`, `ERROR:`, `Sentence:`, or `Correction:` (LLM YAML emission frequently capitalizes) gets the generic 'forbidden field' branch even though the intent is identical to the canonical name. Consider lowercasing for the alias/required lookup while preserving the original casing in the diagnostic — otherwise the gate punishes casing drift with the same opaque message as a genuine unknown field."
+        },
+        {
+          "id": "no-placeholder-or-empty-value-check",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:_activity_schema_gate",
+          "description": "The gate validates field NAMES only; it does not check that `sentence` contains the `<error>` placeholder, nor that `error`/`correction`/`sentence` are non-empty strings. A writer that renames its aliased output to the canonical names but leaves them empty (`error: \"\"`, `correction: \"\"`), or strips the `<error>` marker from `sentence`, satisfies this gate while still breaking `ActivityParser._parse_error_correction` downstream — which is exactly the class of regression the gate's docstring claims to protect. The canonical example in the diagnostic message shows `<error>` in the sentence; that contract should be enforced, not just illustrated."
+        },
+        {
+          "id": "intentional-fields-set-divergence",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/build/linear_pipeline.py:529-541 vs new schema dicts",
+          "description": "`_ERROR_CORRECTION_INTENTIONAL_FIELDS` (pre-existing) contains `{error, errors, errorWord, error_word, explanation, sentence}` and is used by other validators in this file as the canonical 'intentional' surface for error-correction. The new `_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS | _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS` set omits `errors`, `errorWord`, and `error_word`. Either the older set is now stale (in which case it should be reconciled in this PR or a follow-up note added), or the new gate will reject inputs that other checks have historically treated as 'intentional'. The relationship between these two field inventories should be made explicit, ideally with one set derived from the other, to prevent future drift."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"empty-items-bypass\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:_activity_schema_gate\",\n    \"description\": \"An `error-correction` activity with `items: []`, `items: null`, or `items` missing entirely silently passes the gate (the loop is skipped and `checked` stays 0). Real writer regressions of the kind this gate is meant to block — e.g., an activity declared `type: error-correction` with no items, or with items coerced to a non-list — get a clean pass. The gate should explicitly fail when an enforced activity type has zero conforming items, or at minimum surface a `checked=0 but type expected items` warning. Currently the test `test_non_error_correction_activities_pass_through` documents the empty-checked path is considered 'pass', which masks this hole.\"\n  },\n  {\n    \"id\": \"alias-coverage-too-narrow-vs-pr-intent\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:_ACTIVITY_ITEM_FORBIDDEN_ALIASES\",\n    \"description\": \"The PR description asks reviewers to confirm the gate catches 'real writer mistakes rather than only the exact canonical examples'. The alias dict covers `wrong/incorrect/mistake/bad/original/wrong_form/incorrect_form` → `error` and `correct/correctAnswer/right/fix/fixed` → `correction`, but omits several plausible writer outputs observed in prior failures: `errorWord`, `error_word` (both listed in the existing `_ERROR_CORRECTION_INTENTIONAL_FIELDS` set immediately above, implying the codebase already treats these as known writer variants), `wrongAnswer`, `bad_form`, `corrected`, `corrected_form`, `solution`, `target`, `right_answer`. These still fail the gate (they aren't in `allowed_fields`), but the error message degrades to the generic 'do not allow field X' branch with no `use Y instead` hint — exactly the friendly-rename UX the gate is designed for. Either add them to `_ACTIVITY_ITEM_FORBIDDEN_ALIASES` or document why `_ERROR_CORRECTION_INTENTIONAL_FIELDS` and the alias map disagree about `errorWord`/`error_word`.\"\n  },\n  {\n    \"id\": \"case-sensitive-field-matching\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:_activity_schema_gate (item_fields construction)\",\n    \"description\": \"Field comparison is strictly case-sensitive: `item_fields = {str(field) for field in item}` followed by membership tests against literal lowercase keys. A writer that emits `Error:`, `ERROR:`, `Sentence:`, or `Correction:` (LLM YAML emission frequently capitalizes) gets the generic 'forbidden field' branch even though the intent is identical to the canonical name. Consider lowercasing for the alias/required lookup while preserving the original casing in the diagnostic — otherwise the gate punishes casing drift with the same opaque message as a genuine unknown field.\"\n  },\n  {\n    \"id\": \"no-placeholder-or-empty-value-check\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:_activity_schema_gate\",\n    \"description\": \"The gate validates field NAMES only; it does not check that `sentence` contains the `<error>` placeholder, nor that `error`/`correction`/`sentence` are non-empty strings. A writer that renames its aliased output to the canonical names but leaves them empty (`error: \\\"\\\"`, `correction: \\\"\\\"`), or strips the `<error>` marker from `sentence`, satisfies this gate while still breaking `ActivityParser._parse_error_correction` downstream — which is exactly the class of regression the gate's docstring claims to protect. The canonical example in the diagnostic message shows `<error>` in the sentence; that contract should be enforced, not just illustrated.\"\n  },\n  {\n    \"id\": \"intentional-fields-set-divergence\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"scripts/build/linear_pipeline.py:529-541 vs new schema dicts\",\n    \"description\": \"`_ERROR_CORRECTION_INTENTIONAL_FIELDS` (pre-existing) contains `{error, errors, errorWord, error_word, explanation, sentence}` and is used by other validators in this file as the canonical 'intentional' surface for error-correction. The new `_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS | _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS` set omits `errors`, `errorWord`, and `error_word`. Either the older set is now stale (in which case it should be reconciled in this PR or a follow-up note added), or the new gate will reject inputs that other checks have historically treated as 'intentional'. The relationship between these two field inventories should be made explicit, ideally with one set derived from the other, to prevent future drift.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 4722
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.2609,
+    "case_acc": 0.0,
+    "precision": 0.2,
+    "recall": 0.375,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "high",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

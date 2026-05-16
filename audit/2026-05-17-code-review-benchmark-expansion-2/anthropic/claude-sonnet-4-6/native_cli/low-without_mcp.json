@@ -1,0 +1,207 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "low",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T19:05:04Z",
+  "finished_at": "2026-05-16T19:07:27Z",
+  "duration_s": 142.94,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 7,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "missed_gold_ids": [
+        "error-envelope"
+      ],
+      "precision": 0.4286,
+      "recall": 0.75,
+      "f1": 0.5455,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "host-binding-unrestricted",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:678",
+          "description": "The `--host` argument defaults to `127.0.0.1` but accepts any value without validation, allowing `ab serve --openai --host 0.0.0.0` to bind the proxy to all interfaces. Since the proxy has no authentication and forwards arbitrary prompts to local agent CLIs (claude, codex, gemini, hermes), any host on the network that can reach the machine gains full access to those backends. The fix is to reject non-loopback values unless an explicit `--allow-remote` flag is also passed, matching the pattern flagged in issue #2030."
+        },
+        {
+          "id": "healthz-subprocess-fanout-dos",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:278",
+          "description": "The `GET /healthz` handler calls all four `_probe_*` functions synchronously, each of which spawns a subprocess via `subprocess.run(..., timeout=1)`. A single request forks four processes; N concurrent requests fork 4N processes. Because the handler is synchronous and FastAPI runs it in a threadpool, concurrent callers are not serialized — each thread independently executes all four probes. This is exactly the DoS surface described in open issue #2029. Mitigation: cache probe results with a short TTL (e.g. 30 s) at the module level, or make the endpoint return a 503 when a rate-limit is hit."
+        },
+        {
+          "id": "stderr-leak-in-error-body",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:292",
+          "description": "`_first_error_line` extracts the first line of backend stderr and embeds it verbatim in the HTTP response body returned to the caller. Backend CLIs (claude, codex, hermes) commonly echo authentication state, file paths, API keys, or partial token values on stderr when they fail. A caller that provokes a deliberate failure (e.g. by sending a payload the backend rejects) receives that first stderr line in the JSON error response. The fix is to log the raw stderr at DEBUG level server-side and return only a generic backend-family label to the HTTP caller."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:307",
+          "description": "FastAPI / uvicorn apply no default body-size cap. A caller can send a `messages` array with arbitrarily large content strings; `_flatten_messages` concatenates all of it into a single `prompt` string that is then passed to a subprocess (as stdin for codex, as `--prompt=…` for gemini, as a CLI argument for claude/hermes). This inflates memory usage proportional to request size and, in the gemini case, produces a single oversized argument whose length is bounded only by OS limits. A `max_body_size` middleware (e.g. via a `@app.middleware('http')` guard checking `Content-Length`) or a Pydantic field `max_length` on `content` would cap the surface."
+        },
+        {
+          "id": "tempfile-toctou-codex",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:153",
+          "description": "In `_codex_backend` the output tempfile is created with `delete=False`, the file handle is closed at the end of the `with` block, and then the path is handed to codex via `-o`. Between handle close and codex open there is a TOCTOU window during which another process on the same machine could replace the file with a symlink pointing to an arbitrary path, causing codex to overwrite that target. On a single-user dev machine the risk is low, but on a shared host it is a real vector. Prefer `tempfile.mkstemp` and pass the fd directly, or keep the `NamedTemporaryFile` open until after the subprocess has finished writing."
+        },
+        {
+          "id": "hermes-prompt-arg-injection",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:197",
+          "description": "`_hermes_backend` constructs the argv element as `f'--oneshot={prompt}'`, embedding the full prompt as the value of a long-form flag. Because `subprocess.run` receives a list (no shell expansion), there is no shell-injection risk, but hermes may impose its own parsing rules on that flag value. Prompts containing newlines, null bytes, or sequences that look like additional flags (e.g. a prompt that starts with `--`) will be passed as a single argument but how hermes tokenises the value is CLI-specific and untested here. The equivalent pattern used for claude (`--`, prompt as a positional) is safer and should be adopted for hermes as well, if its CLI supports a stdin or positional-argument mode."
+        },
+        {
+          "id": "missing-test-for-multipart-message-content",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/ai_agent_bridge/test_openai_proxy.py:1",
+          "description": "`_message_content_to_text` contains a branch that handles `content` as a `list[dict]` (multi-part content blocks), but every test case in the suite passes only plain string content. The list-of-dicts branch is exercised by real OpenAI clients that attach images or structured inputs; an off-by-one or wrong key name in that branch would silently produce empty strings in the prompt without any test catching it. At minimum one test should send a `messages` payload where `content` is `[{\"type\": \"text\", \"text\": \"hello\"}]` and assert the flattened prompt contains the expected text."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"host-binding-unrestricted\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:678\",\n    \"description\": \"The `--host` argument defaults to `127.0.0.1` but accepts any value without validation, allowing `ab serve --openai --host 0.0.0.0` to bind the proxy to all interfaces. Since the proxy has no authentication and forwards arbitrary prompts to local agent CLIs (claude, codex, gemini, hermes), any host on the network that can reach the machine gains full access to those backends. The fix is to reject non-loopback values unless an explicit `--allow-remote` flag is also passed, matching the pattern flagged in issue #2030.\"\n  },\n  {\n    \"id\": \"healthz-subprocess-fanout-dos\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:278\",\n    \"description\": \"The `GET /healthz` handler calls all four `_probe_*` functions synchronously, each of which spawns a subprocess via `subprocess.run(..., timeout=1)`. A single request forks four processes; N concurrent requests fork 4N processes. Because the handler is synchronous and FastAPI runs it in a threadpool, concurrent callers are not serialized — each thread independently executes all four probes. This is exactly the DoS surface described in open issue #2029. Mitigation: cache probe results with a short TTL (e.g. 30 s) at the module level, or make the endpoint return a 503 when a rate-limit is hit.\"\n  },\n  {\n    \"id\": \"stderr-leak-in-error-body\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:292\",\n    \"description\": \"`_first_error_line` extracts the first line of backend stderr and embeds it verbatim in the HTTP response body returned to the caller. Backend CLIs (claude, codex, hermes) commonly echo authentication state, file paths, API keys, or partial token values on stderr when they fail. A caller that provokes a deliberate failure (e.g. by sending a payload the backend rejects) receives that first stderr line in the JSON error response. The fix is to log the raw stderr at DEBUG level server-side and return only a generic backend-family label to the HTTP caller.\"\n  },\n  {\n    \"id\": \"no-request-body-size-limit\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:307\",\n    \"description\": \"FastAPI / uvicorn apply no default body-size cap. A caller can send a `messages` array with arbitrarily large content strings; `_flatten_messages` concatenates all of it into a single `prompt` string that is then passed to a subprocess (as stdin for codex, as `--prompt=…` for gemini, as a CLI argument for claude/hermes). This inflates memory usage proportional to request size and, in the gemini case, produces a single oversized argument whose length is bounded only by OS limits. A `max_body_size` middleware (e.g. via a `@app.middleware('http')` guard checking `Content-Length`) or a Pydantic field `max_length` on `content` would cap the surface.\"\n  },\n  {\n    \"id\": \"tempfile-toctou-codex\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:153\",\n    \"description\": \"In `_codex_backend` the output tempfile is created with `delete=False`, the file handle is closed at the end of the `with` block, and then the path is handed to codex via `-o`. Between handle close and codex open there is a TOCTOU window during which another process on the same machine could replace the file with a symlink pointing to an arbitrary path, causing codex to overwrite that target. On a single-user dev machine the risk is low, but on a shared host it is a real vector. Prefer `tempfile.mkstemp` and pass the fd directly, or keep the `NamedTemporaryFile` open until after the subprocess has finished writing.\"\n  },\n  {\n    \"id\": \"hermes-prompt-arg-injection\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:197\",\n    \"description\": \"`_hermes_backend` constructs the argv element as `f'--oneshot={prompt}'`, embedding the full prompt as the value of a long-form flag. Because `subprocess.run` receives a list (no shell expansion), there is no shell-injection risk, but hermes may impose its own parsing rules on that flag value. Prompts containing newlines, null bytes, or sequences that look like additional flags (e.g. a prompt that starts with `--`) will be passed as a single argument but how hermes tokenises the value is CLI-specific and untested here. The equivalent pattern used for claude (`--`, prompt as a positional) is safer and should be adopted for hermes as well, if its CLI supports a stdin or positional-argument mode.\"\n  },\n  {\n    \"id\": \"missing-test-for-multipart-message-content\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/ai_agent_bridge/test_openai_proxy.py:1\",\n    \"description\": \"`_message_content_to_text` contains a branch that handles `content` as a `list[dict]` (multi-part content blocks), but every test case in the suite passes only plain string content. The list-of-dicts branch is exercised by real OpenAI clients that attach images or structured inputs; an off-by-one or wrong key name in that branch would silently produce empty strings in the prompt without any test catching it. At minimum one test should send a `messages` payload where `content` is `[{\\\"type\\\": \\\"text\\\", \\\"text\\\": \\\"hello\\\"}]` and assert the flattened prompt contains the expected text.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5580
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 6,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.1667,
+      "recall": 1.0,
+      "f1": 0.2857,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "aliased-required-field-not-clearing-missing-violation",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4480",
+          "description": "The `aliased_required` set is computed to suppress a 'missing required field' violation when a forbidden alias satisfies it, but the alias field itself is *also* emitted as a forbidden-field violation in the loop below. This means a writer using `incorrect:` instead of `error:` with no `error:` key will receive two violations — one for the forbidden alias AND one for the missing required field — rather than the intended single 'use X instead of Y' message. The two loops are not coordinated: the missing-field loop sees `error` absent from `item_fields` and `aliased_required`, so it fires even though the alias violation message already conveys the same information. Worse, when both violations appear in the gate report the correction guidance is contradictory: 'use error:' (from the alias violation) and 'must include error:' (from the missing-field violation). Fix: when an alias is detected for a required field, suppress the corresponding missing-field violation by tracking which required fields are covered by any alias, regardless of whether the alias is in `required_fields`."
+        },
+        {
+          "id": "canonical-example-wrong-correction",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4582",
+          "description": "The canonical `error-correction` item shape printed in the diagnostic message has identical values for `error:` and `correction:` — both are `\"вмиваюся\"`. This is copy-paste error: an error-correction item where the error and the correction are the same string is semantically invalid and would confuse writers who read the message. The `error:` value should be the incorrect form (e.g. `\"вмиваєшся\"`) and `correction:` the correct form (`\"вмиваюся\"`). This same incorrect example is also echoed in the test file's `test_replays_m20_build8_failure_shape` items which supply no `correction:` key, so the canonical shape shown in diagnostics is inconsistent with what the gate itself accepts."
+        },
+        {
+          "id": "item-fields-whitelist-includes-answer-and-correction-as-interchangeable",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:537",
+          "description": "`answer` and `correction` are both listed as optional allowed fields in `_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS`, and `_ACTIVITY_ITEM_FIELD_PURPOSES` describes them both as 'the corrected form'. This means a writer can legally emit an item with both `answer:` and `correction:` present with different values, or omit both, and the gate will pass. Neither condition should be valid: one canonical field should be required (or at minimum exactly one of the two must be present). The gate also lists `correctAnswer` as a forbidden alias for `correction`, yet `correctAnswer` is a camelCase React prop name — the risk is that writers who emit `correctAnswer` get rejected but writers who emit `answer` (which is allowed) silently produce ambiguous payloads that `ActivityParser` may or may not resolve consistently."
+        },
+        {
+          "id": "gate-short-circuits-before-other-gates-run",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:3918",
+          "description": "When `activity_schema` fails the function returns immediately via `_python_qg_report`, skipping all subsequent gates (`word_count`, `plan_sections`, `formatting_standards`, `vesum_verified`, etc.). This means the report returned to the writer contains only the `activity_schema` gate result; all other gate keys are absent. Downstream code that iterates `gates` and expects every gate key to be present (e.g. dashboard rendering, audit scripts that check `gates['word_count']['passed']`) will encounter `KeyError` or incorrect null-pass assumptions. A less disruptive design would be to let all gates run and mark `gates['passed'] = False` without early return, reserving early exit for gates that are prerequisites for *running* later gates (e.g. parse failures)."
+        },
+        {
+          "id": "no-test-for-both-answer-and-correction-absent",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:1",
+          "description": "No test covers the case where an `error-correction` item has neither `answer:` nor `correction:` but does have `error:` and `sentence:`. Since `answer` and `correction` are both optional per the schema, this item passes the gate, but `ActivityParser._parse_error_correction` may fail or silently produce an empty correction at render time. A test documenting the expected gate behavior (pass-through vs. explicit warning) is needed to pin the contract."
+        },
+        {
+          "id": "diagnostic-cap-at-10-hides-systematic-failures",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4559",
+          "description": "`_format_activity_schema_diagnostic` caps displayed violations at 10 and appends `(N more)` but the `violations` list in the gate report still contains all violations. The cap is only cosmetic. However, if a writer has 50+ alias violations (e.g. a module with many error-correction items all using `incorrect:`) the truncated message may be read as 'a few isolated problems' rather than 'systematic schema violation across the whole activity block'. Consider including the total count prominently in the first line (already done: `{len(violations)} violations`) but also add a per-activity breakdown so the writer understands the scope without counting the truncated list."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"aliased-required-field-not-clearing-missing-violation\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4480\",\n    \"description\": \"The `aliased_required` set is computed to suppress a 'missing required field' violation when a forbidden alias satisfies it, but the alias field itself is *also* emitted as a forbidden-field violation in the loop below. This means a writer using `incorrect:` instead of `error:` with no `error:` key will receive two violations — one for the forbidden alias AND one for the missing required field — rather than the intended single 'use X instead of Y' message. The two loops are not coordinated: the missing-field loop sees `error` absent from `item_fields` and `aliased_required`, so it fires even though the alias violation message already conveys the same information. Worse, when both violations appear in the gate report the correction guidance is contradictory: 'use error:' (from the alias violation) and 'must include error:' (from the missing-field violation). Fix: when an alias is detected for a required field, suppress the corresponding missing-field violation by tracking which required fields are covered by any alias, regardless of whether the alias is in `required_fields`.\"\n  },\n  {\n    \"id\": \"canonical-example-wrong-correction\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4582\",\n    \"description\": \"The canonical `error-correction` item shape printed in the diagnostic message has identical values for `error:` and `correction:` — both are `\\\"вмиваюся\\\"`. This is copy-paste error: an error-correction item where the error and the correction are the same string is semantically invalid and would confuse writers who read the message. The `error:` value should be the incorrect form (e.g. `\\\"вмиваєшся\\\"`) and `correction:` the correct form (`\\\"вмиваюся\\\"`). This same incorrect example is also echoed in the test file's `test_replays_m20_build8_failure_shape` items which supply no `correction:` key, so the canonical shape shown in diagnostics is inconsistent with what the gate itself accepts.\"\n  },\n  {\n    \"id\": \"item-fields-whitelist-includes-answer-and-correction-as-interchangeable\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:537\",\n    \"description\": \"`answer` and `correction` are both listed as optional allowed fields in `_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS`, and `_ACTIVITY_ITEM_FIELD_PURPOSES` describes them both as 'the corrected form'. This means a writer can legally emit an item with both `answer:` and `correction:` present with different values, or omit both, and the gate will pass. Neither condition should be valid: one canonical field should be required (or at minimum exactly one of the two must be present). The gate also lists `correctAnswer` as a forbidden alias for `correction`, yet `correctAnswer` is a camelCase React prop name — the risk is that writers who emit `correctAnswer` get rejected but writers who emit `answer` (which is allowed) silently produce ambiguous payloads that `ActivityParser` may or may not resolve consistently.\"\n  },\n  {\n    \"id\": \"gate-short-circuits-before-other-gates-run\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:3918\",\n    \"description\": \"When `activity_schema` fails the function returns immediately via `_python_qg_report`, skipping all subsequent gates (`word_count`, `plan_sections`, `formatting_standards`, `vesum_verified`, etc.). This means the report returned to the writer contains only the `activity_schema` gate result; all other gate keys are absent. Downstream code that iterates `gates` and expects every gate key to be present (e.g. dashboard rendering, audit scripts that check `gates['word_count']['passed']`) will encounter `KeyError` or incorrect null-pass assumptions. A less disruptive design would be to let all gates run and mark `gates['passed'] = False` without early return, reserving early exit for gates that are prerequisites for *running* later gates (e.g. parse failures).\"\n  },\n  {\n    \"id\": \"no-test-for-both-answer-and-correction-absent\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:1\",\n    \"description\": \"No test covers the case where an `error-correction` item has neither `answer:` nor `correction:` but does have `error:` and `sentence:`. Since `answer` and `correction` are both optional per the schema, this item passes the gate, but `ActivityParser._parse_error_correction` may fail or silently produce an empty correction at render time. A test documenting the expected gate behavior (pass-through vs. explicit warning) is needed to pin the contract.\"\n  },\n  {\n    \"id\": \"diagnostic-cap-at-10-hides-systematic-failures\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4559\",\n    \"description\": \"`_format_activity_schema_diagnostic` caps displayed violations at 10 and appends `(N more)` but the `violations` list in the gate report still contains all violations. The cap is only cosmetic. However, if a writer has 50+ alias violations (e.g. a module with many error-correction items all using `incorrect:`) the truncated message may be read as 'a few isolated problems' rather than 'systematic schema violation across the whole activity block'. Consider including the total count prominently in the first line (already done: `{len(violations)} violations`) but also add a per-activity breakdown so the writer understands the scope without counting the truncated list.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5739
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 2,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "hardcoded-citations-decoupled-from-plan",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:111-116",
+          "description": "The test loads the live plan YAML into `plan` but then passes a hand-typed citation list to `_citation_gate` instead of extracting `plan['plan_references']` (or equivalent) from the loaded document. This means the two sources of truth — the YAML file and the test's hardcoded strings — can silently diverge: if a future commit changes `my-morning.yaml` without touching this test, `_citation_gate` will still be called with the old strings and may still return True (depending on gate permissiveness), producing a false-green. The fix only re-pins the strings; it does not close the structural gap. The correct repair is to derive the citation list from the already-loaded `plan` object so the test cannot drift from the file it claims to guard."
+        },
+        {
+          "id": "recurring-pin-and-forget-pattern",
+          "severity": "LOW",
+          "category": "other",
+          "location": "tests/test_citation_resolve.py:98-101",
+          "description": "This is the second time within 24 hours (PR #2014, then PR #2038) that a citation swap in `my-morning.yaml` has forced a manual re-pin of this test. The commit message and the updated comment both acknowledge the pattern ('whoever swaps the plan cites must also update this test'), but neither the test nor the plan YAML has been changed to enforce that coupling automatically — e.g. a cross-check assertion, a fixture that reads citations from the YAML, or a CI lint rule verifying test strings match the plan. Without that enforcement the same breakage will recur on the next citation rotation."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"hardcoded-citations-decoupled-from-plan\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:111-116\",\n    \"description\": \"The test loads the live plan YAML into `plan` but then passes a hand-typed citation list to `_citation_gate` instead of extracting `plan['plan_references']` (or equivalent) from the loaded document. This means the two sources of truth — the YAML file and the test's hardcoded strings — can silently diverge: if a future commit changes `my-morning.yaml` without touching this test, `_citation_gate` will still be called with the old strings and may still return True (depending on gate permissiveness), producing a false-green. The fix only re-pins the strings; it does not close the structural gap. The correct repair is to derive the citation list from the already-loaded `plan` object so the test cannot drift from the file it claims to guard.\"\n  },\n  {\n    \"id\": \"recurring-pin-and-forget-pattern\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"tests/test_citation_resolve.py:98-101\",\n    \"description\": \"This is the second time within 24 hours (PR #2014, then PR #2038) that a citation swap in `my-morning.yaml` has forced a manual re-pin of this test. The commit message and the updated comment both acknowledge the pattern ('whoever swaps the plan cites must also update this test'), but neither the test nor the plan YAML has been changed to enforce that coupling automatically — e.g. a cross-check assertion, a fixture that reads citations from the YAML, or a CI lint rule verifying test strings match the plan. Without that enforcement the same breakage will recur on the next citation rotation.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1737
+    }
+  ],
+  "scores": {
+    "f1": 0.3478,
+    "case_acc": 0.0,
+    "precision": 0.2667,
+    "recall": 0.5,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 4,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "low",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

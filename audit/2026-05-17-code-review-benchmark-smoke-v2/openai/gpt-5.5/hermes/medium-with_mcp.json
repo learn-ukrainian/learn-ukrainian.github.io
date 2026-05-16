@@ -1,0 +1,138 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "hermes",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T17:52:52Z",
+  "finished_at": "2026-05-16T17:55:04Z",
+  "duration_s": 131.26,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "host-flag"
+      ],
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unbounded-subprocess-fanout",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:254",
+          "description": "The chat-completions endpoint accepts arbitrarily large message bodies and, for every request, synchronously spawns a heavyweight agent CLI with a 120-second default timeout and no concurrency limit, queue, rate limit, or prompt-size cap. A local client, browser-accessible localhost page, or accidentally exposed bind can submit many large requests and exhaust process slots, memory, backend quotas, or CPU for minutes at a time. The boundary should enforce request-size and prompt-length limits before flattening, and cap concurrent backend invocations."
+        },
+        {
+          "id": "prompts-exposed-in-process-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:157",
+          "description": "The Gemini, Claude, and Hermes backends pass the full user prompt as a command-line argument (`--prompt=...`, positional prompt, or `--oneshot=...`) rather than via stdin or a temporary file. On macOS and Linux, process arguments can be visible through process inspection tools and may also be captured by logs or crash diagnostics, leaking potentially sensitive chat content to other local processes/users; very large prompts can also fail with OS argument-length errors. Codex already uses stdin, and the other backends should use an equivalent non-argv transport where possible."
+        },
+        {
+          "id": "stream-requests-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:254",
+          "description": "The request model allows arbitrary OpenAI fields, but `/v1/chat/completions` silently ignores `stream: true` and still returns a normal non-streaming JSON response after the backend completes. OpenAI-compatible clients commonly switch parsing behavior when `stream` is true and expect an SSE `text/event-stream` response, so this will hang, fail parsing, or misbehave in standard clients. Since Phase 1 is intentionally non-streaming, the endpoint should reject `stream: true` with a clear 400/422 error instead of accepting it."
+        },
+        {
+          "id": "unsafe-bind-option",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:681",
+          "description": "The documentation describes the proxy as localhost-only, but the CLI exposes `--host` and passes it directly to uvicorn without any warning or guard. Running `ab serve --openai --host 0.0.0.0` exposes an unauthenticated endpoint that can spend local agent/API quota and run backend CLIs on behalf of network clients. If non-local binding is intentionally supported, the CLI and docs should make that risk explicit; otherwise reject non-loopback hosts by default or require a deliberate unsafe flag."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unbounded-subprocess-fanout\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:254\",\n    \"description\": \"The chat-completions endpoint accepts arbitrarily large message bodies and, for every request, synchronously spawns a heavyweight agent CLI with a 120-second default timeout and no concurrency limit, queue, rate limit, or prompt-size cap. A local client, browser-accessible localhost page, or accidentally exposed bind can submit many large requests and exhaust process slots, memory, backend quotas, or CPU for minutes at a time. The boundary should enforce request-size and prompt-length limits before flattening, and cap concurrent backend invocations.\"\n  },\n  {\n    \"id\": \"prompts-exposed-in-process-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:157\",\n    \"description\": \"The Gemini, Claude, and Hermes backends pass the full user prompt as a command-line argument (`--prompt=...`, positional prompt, or `--oneshot=...`) rather than via stdin or a temporary file. On macOS and Linux, process arguments can be visible through process inspection tools and may also be captured by logs or crash diagnostics, leaking potentially sensitive chat content to other local processes/users; very large prompts can also fail with OS argument-length errors. Codex already uses stdin, and the other backends should use an equivalent non-argv transport where possible.\"\n  },\n  {\n    \"id\": \"stream-requests-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:254\",\n    \"description\": \"The request model allows arbitrary OpenAI fields, but `/v1/chat/completions` silently ignores `stream: true` and still returns a normal non-streaming JSON response after the backend completes. OpenAI-compatible clients commonly switch parsing behavior when `stream` is true and expect an SSE `text/event-stream` response, so this will hang, fail parsing, or misbehave in standard clients. Since Phase 1 is intentionally non-streaming, the endpoint should reject `stream: true` with a clear 400/422 error instead of accepting it.\"\n  },\n  {\n    \"id\": \"unsafe-bind-option\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:681\",\n    \"description\": \"The documentation describes the proxy as localhost-only, but the CLI exposes `--host` and passes it directly to uvicorn without any warning or guard. Running `ab serve --openai --host 0.0.0.0` exposes an unauthenticated endpoint that can spend local agent/API quota and run backend CLIs on behalf of network clients. If non-local binding is intentionally supported, the CLI and docs should make that risk explicit; otherwise reject non-loopback hosts by default or require a deliberate unsafe flag.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2909
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "activity-schema-correction-targets-wrong-file",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:107",
+          "description": "Adding `activity_schema` to `WRITER_CORRECTION_GATES` routes failures through `_apply_writer_correction`, but that correction path renders a prompt with only `module.md` content and, for non-`strict_json_parse` gates, only accepts/writes a patched `module.md`. The new gate validates `activities.yaml`, so the default correction attempt cannot see or modify the failing YAML fields; `run_python_qg_with_corrections` will spend its one ADR-008 retry on a doomed module-only patch and then terminal-fail even for straightforward alias fixes. Either route this gate through an activities-aware correction path or leave it out of writer-correctable gates."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"activity-schema-correction-targets-wrong-file\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:107\",\n    \"description\": \"Adding `activity_schema` to `WRITER_CORRECTION_GATES` routes failures through `_apply_writer_correction`, but that correction path renders a prompt with only `module.md` content and, for non-`strict_json_parse` gates, only accepts/writes a patched `module.md`. The new gate validates `activities.yaml`, so the default correction attempt cannot see or modify the failing YAML fields; `run_python_qg_with_corrections` will spend its one ADR-008 retry on a doomed module-only patch and then terminal-fail even for straightforward alias fixes. Either route this gate through an activities-aware correction path or leave it out of writer-correctable gates.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 857
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.6154,
+    "case_acc": 0.3333,
+    "precision": 0.8,
+    "recall": 0.5,
+    "high_recall": 0.6,
+    "catastrophic_misses": 2,
+    "strong_match_count": 4,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "gpt-5.5",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

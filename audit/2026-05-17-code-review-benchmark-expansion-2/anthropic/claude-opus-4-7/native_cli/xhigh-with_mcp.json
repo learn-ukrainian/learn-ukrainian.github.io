@@ -1,0 +1,221 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "xhigh",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:55:58Z",
+  "finished_at": "2026-05-16T18:59:11Z",
+  "duration_s": 193.05,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 10,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "prompt-on-command-line-leak-and-arg-max-dos",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:153-186",
+          "description": "Three of four backends pass the user-supplied prompt as an argv element rather than over stdin: `_gemini_backend` uses `f\"--prompt={prompt}\"`, `_claude_backend` appends `prompt` as a positional arg, and `_hermes_backend` uses `f\"--oneshot={prompt}\"`. Only `_codex_backend` writes through stdin. This has two consequences. (1) Information leak: any other local user / process can read the full prompt via `ps`, `/proc/<pid>/cmdline`, or accounting logs — including credentials, PII, or proprietary content that callers reasonably assumed stayed within the chat envelope. (2) DoS / hard-failure surface: argv is bounded by `ARG_MAX` (~256 KB on macOS, ~128 KB-2 MB on Linux). A moderately sized chat history will silently `E2BIG` the exec and the client gets an opaque 502. Pipe prompts through stdin for all backends, as already done for codex."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:281-300",
+          "description": "`ChatCompletionRequest` has `extra=\"allow\"` and `messages: list[Message]` with no upper bound, and the FastAPI app applies no body-size middleware. A single POST can carry hundreds of MB which the proxy will dutifully load, flatten into one giant string, and either (a) try to push through ARG_MAX-limited argv (see prompt-on-command-line finding) or (b) blow process memory before subprocess.run even runs. Add a `Content-Length` cap (e.g. 1 MiB) at the FastAPI layer plus a max `len(messages)` and per-message size validator on the Pydantic model."
+        },
+        {
+          "id": "streaming-requests-silently-downgraded",
+          "severity": "HIGH",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:286-360",
+          "description": "`ChatCompletionRequest` declares `model_config = ConfigDict(extra=\"allow\")`, so a client sending `stream: true` (the default for many OpenAI SDKs and most chat UIs) gets silently treated as non-streaming. The proxy returns a single `application/json` blob instead of the `text/event-stream` the client opened a streaming reader on, which surfaces as a hung connection or a parse error rather than a useful failure. Phase 1 docs say streaming is intentionally absent — fine — but the proxy must then reject `stream=true` with HTTP 400 and an OpenAI-shaped error (`type=\"invalid_request_error\", code=\"streaming_not_supported\"`) rather than pretend to honor it."
+        },
+        {
+          "id": "no-authentication-on-proxy",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:672-689",
+          "description": "The proxy has zero auth: no `Authorization: Bearer ...` check, no shared-secret, no UDS option. That is defensible while bound to `127.0.0.1`, but the `--host` arg accepts arbitrary values without an explicit opt-in flag (open issue #2030), so a typo (`--host 0.0.0.0`) hands every model CLI on the developer's machine to anything on the LAN — at which point the lack of auth becomes RCE-adjacent (each backend can call shells, edit files, etc., depending on `--approval-mode`). At minimum, refuse to bind to non-loopback addresses unless an explicit `--allow-remote` flag is set, and require a token when remote binding is enabled."
+        },
+        {
+          "id": "stderr-leaked-verbatim-to-client",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:339-360",
+          "description": "On `CalledProcessError`, `TimeoutExpired`, and `OSError`, the proxy returns `_first_error_line(exc.stderr)` directly in the error message body. Agent CLIs routinely emit stack traces containing absolute repo paths, env-var-derived diagnostics, model API endpoint URLs, and occasionally bearer tokens or path-of-config-file hints in error frames. A remote (or browser-tab-via-CORS-misconfig) caller can fuzz request shapes to harvest filesystem and account topology. Strip stderr to a static taxonomy of error codes for the client; log the raw stderr only to server-side logs."
+        },
+        {
+          "id": "codex-model-param-ignored",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:153-180",
+          "description": "`_codex_backend` accepts `model` but ignores it and uses `os.environ.get(\"BRIDGE_PROXY_CODEX_MODEL\", \"gpt-5.5\")` instead. The `/v1/models` endpoint advertises `\"codex\"` as a single id, so a caller who picks `\"codex\"` has no way to influence which underlying model runs — and a server-side env-var change silently re-routes their traffic. Either (a) drop the env var and pick a fixed model, or (b) expose distinct public model ids per codex variant in `_ROUTABLE_MODELS` and pass them through to `-m`."
+        },
+        {
+          "id": "image-url-content-parts-silently-dropped",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:73-87",
+          "description": "`_message_content_to_text` keeps only items whose `type` is in `{None, \"text\", \"input_text\", \"output_text\"}`. The OpenAI envelope also carries `image_url`, `input_audio`, `file`, and tool-result parts. Those are dropped silently, which produces wrong-but-plausible completions (the model answers a vision question on text-only context). Phase 1 documents non-support of tool envelopes; extend that statement and either (a) reject requests containing unsupported content parts with HTTP 400, or (b) flag them in a per-request log. Silent data loss is the worst of the three options."
+        },
+        {
+          "id": "healthz-forks-four-subprocesses-per-request",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:253-258",
+          "description": "`/healthz` invokes `_probe_*` for every backend on every hit, each of which runs `<cli> --version` with a 1-second timeout. That is 4 forks + execs per request, up to 4 s of wall time, and routes that have hung CLIs (the issue #2036 hermes/anthropic logout scenario) penalize every health probe. Cache probe results for ~10 s, or split the heavy probe into `/healthz/deep` and have `/healthz` return only the proxy's own status."
+        },
+        {
+          "id": "inconsistent-sandbox-posture-across-backends",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:153-200",
+          "description": "Codex runs with `-s read-only`, Gemini with `--approval-mode plan`, Claude with `--bare` (no sandbox flag), and Hermes with no constraint at all. The proxy is documented as a chat-completions surface — none of these backends should be writing files or executing shells in response to proxy traffic. Pass an explicit non-mutating flag to each backend (claude `--permission-mode read` or equivalent; hermes whatever the analog is) so an attacker who lands a prompt-injection cannot escalate to disk writes via the chattier backends."
+        },
+        {
+          "id": "unknown-openai-fields-silently-ignored",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:34-43",
+          "description": "`extra=\"allow\"` on `ChatCompletionRequest` causes `temperature`, `max_tokens`, `top_p`, `tools`, `tool_choice`, `response_format`, etc., to be accepted and ignored. Clients tuning a request will see their parameters have zero effect with no warning. Either thread the common ones through to backend CLIs where they map cleanly, or switch to `extra=\"forbid\"` plus a documented allowlist so callers learn early that the proxy is narrower than OpenAI."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"prompt-on-command-line-leak-and-arg-max-dos\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:153-186\",\n    \"description\": \"Three of four backends pass the user-supplied prompt as an argv element rather than over stdin: `_gemini_backend` uses `f\\\"--prompt={prompt}\\\"`, `_claude_backend` appends `prompt` as a positional arg, and `_hermes_backend` uses `f\\\"--oneshot={prompt}\\\"`. Only `_codex_backend` writes through stdin. This has two consequences. (1) Information leak: any other local user / process can read the full prompt via `ps`, `/proc/<pid>/cmdline`, or accounting logs — including credentials, PII, or proprietary content that callers reasonably assumed stayed within the chat envelope. (2) DoS / hard-failure surface: argv is bounded by `ARG_MAX` (~256 KB on macOS, ~128 KB-2 MB on Linux). A moderately sized chat history will silently `E2BIG` the exec and the client gets an opaque 502. Pipe prompts through stdin for all backends, as already done for codex.\"\n  },\n  {\n    \"id\": \"no-request-body-size-limit\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:281-300\",\n    \"description\": \"`ChatCompletionRequest` has `extra=\\\"allow\\\"` and `messages: list[Message]` with no upper bound, and the FastAPI app applies no body-size middleware. A single POST can carry hundreds of MB which the proxy will dutifully load, flatten into one giant string, and either (a) try to push through ARG_MAX-limited argv (see prompt-on-command-line finding) or (b) blow process memory before subprocess.run even runs. Add a `Content-Length` cap (e.g. 1 MiB) at the FastAPI layer plus a max `len(messages)` and per-message size validator on the Pydantic model.\"\n  },\n  {\n    \"id\": \"streaming-requests-silently-downgraded\",\n    \"severity\": \"HIGH\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:286-360\",\n    \"description\": \"`ChatCompletionRequest` declares `model_config = ConfigDict(extra=\\\"allow\\\")`, so a client sending `stream: true` (the default for many OpenAI SDKs and most chat UIs) gets silently treated as non-streaming. The proxy returns a single `application/json` blob instead of the `text/event-stream` the client opened a streaming reader on, which surfaces as a hung connection or a parse error rather than a useful failure. Phase 1 docs say streaming is intentionally absent — fine — but the proxy must then reject `stream=true` with HTTP 400 and an OpenAI-shaped error (`type=\\\"invalid_request_error\\\", code=\\\"streaming_not_supported\\\"`) rather than pretend to honor it.\"\n  },\n  {\n    \"id\": \"no-authentication-on-proxy\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:672-689\",\n    \"description\": \"The proxy has zero auth: no `Authorization: Bearer ...` check, no shared-secret, no UDS option. That is defensible while bound to `127.0.0.1`, but the `--host` arg accepts arbitrary values without an explicit opt-in flag (open issue #2030), so a typo (`--host 0.0.0.0`) hands every model CLI on the developer's machine to anything on the LAN — at which point the lack of auth becomes RCE-adjacent (each backend can call shells, edit files, etc., depending on `--approval-mode`). At minimum, refuse to bind to non-loopback addresses unless an explicit `--allow-remote` flag is set, and require a token when remote binding is enabled.\"\n  },\n  {\n    \"id\": \"stderr-leaked-verbatim-to-client\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:339-360\",\n    \"description\": \"On `CalledProcessError`, `TimeoutExpired`, and `OSError`, the proxy returns `_first_error_line(exc.stderr)` directly in the error message body. Agent CLIs routinely emit stack traces containing absolute repo paths, env-var-derived diagnostics, model API endpoint URLs, and occasionally bearer tokens or path-of-config-file hints in error frames. A remote (or browser-tab-via-CORS-misconfig) caller can fuzz request shapes to harvest filesystem and account topology. Strip stderr to a static taxonomy of error codes for the client; log the raw stderr only to server-side logs.\"\n  },\n  {\n    \"id\": \"codex-model-param-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:153-180\",\n    \"description\": \"`_codex_backend` accepts `model` but ignores it and uses `os.environ.get(\\\"BRIDGE_PROXY_CODEX_MODEL\\\", \\\"gpt-5.5\\\")` instead. The `/v1/models` endpoint advertises `\\\"codex\\\"` as a single id, so a caller who picks `\\\"codex\\\"` has no way to influence which underlying model runs — and a server-side env-var change silently re-routes their traffic. Either (a) drop the env var and pick a fixed model, or (b) expose distinct public model ids per codex variant in `_ROUTABLE_MODELS` and pass them through to `-m`.\"\n  },\n  {\n    \"id\": \"image-url-content-parts-silently-dropped\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:73-87\",\n    \"description\": \"`_message_content_to_text` keeps only items whose `type` is in `{None, \\\"text\\\", \\\"input_text\\\", \\\"output_text\\\"}`. The OpenAI envelope also carries `image_url`, `input_audio`, `file`, and tool-result parts. Those are dropped silently, which produces wrong-but-plausible completions (the model answers a vision question on text-only context). Phase 1 documents non-support of tool envelopes; extend that statement and either (a) reject requests containing unsupported content parts with HTTP 400, or (b) flag them in a per-request log. Silent data loss is the worst of the three options.\"\n  },\n  {\n    \"id\": \"healthz-forks-four-subprocesses-per-request\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:253-258\",\n    \"description\": \"`/healthz` invokes `_probe_*` for every backend on every hit, each of which runs `<cli> --version` with a 1-second timeout. That is 4 forks + execs per request, up to 4 s of wall time, and routes that have hung CLIs (the issue #2036 hermes/anthropic logout scenario) penalize every health probe. Cache probe results for ~10 s, or split the heavy probe into `/healthz/deep` and have `/healthz` return only the proxy's own status.\"\n  },\n  {\n    \"id\": \"inconsistent-sandbox-posture-across-backends\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:153-200\",\n    \"description\": \"Codex runs with `-s read-only`, Gemini with `--approval-mode plan`, Claude with `--bare` (no sandbox flag), and Hermes with no constraint at all. The proxy is documented as a chat-completions surface — none of these backends should be writing files or executing shells in response to proxy traffic. Pass an explicit non-mutating flag to each backend (claude `--permission-mode read` or equivalent; hermes whatever the analog is) so an attacker who lands a prompt-injection cannot escalate to disk writes via the chattier backends.\"\n  },\n  {\n    \"id\": \"unknown-openai-fields-silently-ignored\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:34-43\",\n    \"description\": \"`extra=\\\"allow\\\"` on `ChatCompletionRequest` causes `temperature`, `max_tokens`, `top_p`, `tools`, `tool_choice`, `response_format`, etc., to be accepted and ignored. Clients tuning a request will see their parameters have zero effect with no warning. Either thread the common ones through to backend CLIs where they map cleanly, or switch to `extra=\\\"forbid\\\"` plus a documented allowlist so callers learn early that the proxy is narrower than OpenAI.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 7792
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 7,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "diagnostic-example-degenerate",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4585-4593",
+          "description": "The diagnostic block printed back to the writer on failure shows `error: \"вмиваюся\"` and `correction: \"вмиваюся\"` — identical values for the wrong form and the corrected form. The whole point of an error-correction item is that the two differ; a writer that copies this canonical example into its self-correction will produce a semantically broken item that still passes the schema gate. Use distinct forms (e.g. `error: \"вмиваюшся\"`, `correction: \"вмиваюся\"`)."
+        },
+        {
+          "id": "items-non-list-silent-pass",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4470-4472",
+          "description": "When `items` is not a list (e.g. a writer emits `items: {...}` as a mapping, or `items: null`, or omits it entirely so the `.get(\"items\", [])` default yields `[]`), the gate silently `continue`s with zero checked items and returns `passed=True`. An error-correction activity with no parseable items or with a structurally wrong items container should fail the gate, not pass it — otherwise a writer can suppress every alias violation by malforming the container."
+        },
+        {
+          "id": "activity-type-alias-bypass",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4459-4463",
+          "description": "Activity-type matching is exact-string lowercase: only `type: \"error-correction\"` triggers the schema. Plausible writer mistakes like `errorCorrection`, `error_correction`, `Error-Correction`, or `errorcorrection` cause `allowed_fields is None` and the gate skips the activity entirely. The gate's stated purpose is to catch writer mistakes that look plausible but bypass the schema contract — type-name aliases fall squarely in that class and are not covered. Either normalize `activity_type` (lowercase + hyphenate) or add a sibling check that flags unknown-but-similar types for `error-correction`."
+        },
+        {
+          "id": "alias-list-incomplete",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:548-561",
+          "description": "The forbidden-alias map covers single-word variants (`wrong`, `incorrect`, `mistake`, `bad`, `correct`, `right`, `fix`, `fixed`) but is missing the obvious compound variants writers tend to produce: `wrongAnswer`, `bad_word`, `mistake_word`, `incorrect_word`, `correct_form`, `right_answer`, `corrected`, `corrected_form`, `proper`, `properForm`. Note also that `errorWord` / `error_word` are listed in `_ERROR_CORRECTION_INTENTIONAL_FIELDS` (line 532) yet are NOT in the optional item fields nor in the alias map, so they get flagged as a bare 'forbidden field' with no `expected:` hint — inconsistent with the rest of the policy. Add the common compounds and decide whether `errorWord`/`error_word` are aliases of `error` or genuinely forbidden."
+        },
+        {
+          "id": "alias-target-inconsistency",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:556-561",
+          "description": "Both `answer` and `correction` are accepted optional fields with identical declared purpose ('the corrected form' per `_ACTIVITY_ITEM_FIELD_PURPOSES`). The alias map routes `correct`, `correctAnswer`, `right`, `fix`, `fixed` → `correction`, but a writer using `correctAnswer` is more naturally pointed at `answer:` (semantic match) than `correction:`. This is cosmetic but the diagnostic message will tell the writer to use `correction:` when `answer:` would also satisfy the schema. Consider documenting that both are accepted in the diagnostic, or pick one canonical target and stop accepting the other."
+        },
+        {
+          "id": "gate-order-test-checks-constant-not-behavior",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:178-182",
+          "description": "`test_activity_schema_gate_precedes_vesum_verified` asserts the index of `activity_schema` in the `PYTHON_QG_GATE_ORDER` tuple, but actual gate execution order is driven by the explicit sequence of `record(...)` calls inside `run_python_qg`, not by iteration over the tuple. A future refactor that re-orders `record(...)` calls but leaves the constant alone will pass this test while breaking the intended early-fail ordering. Either drive execution from the tuple, or rewrite the test to inspect the keys of `gates` after a real `run_python_qg` invocation with a failing fixture."
+        },
+        {
+          "id": "early-return-hides-cooccurring-failures",
+          "severity": "LOW",
+          "category": "performance",
+          "location": "scripts/build/linear_pipeline.py:3918-3922",
+          "description": "On `activity_schema` failure the function early-returns, so the writer's correction loop only sees the activity schema violation and cannot fix word-count, plan-sections, or vesum issues in the same round. This forces an extra writer iteration (and another expensive build round) when the writer could have addressed multiple problems at once. Activity_schema is cheap and deterministic — once a writer fixes it, the next round will catch the rest — but if iteration cost matters here, consider letting the cheap structural gates all run and only short-circuiting before the expensive VESUM/RAG-style gates."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"diagnostic-example-degenerate\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4585-4593\",\n    \"description\": \"The diagnostic block printed back to the writer on failure shows `error: \\\"вмиваюся\\\"` and `correction: \\\"вмиваюся\\\"` — identical values for the wrong form and the corrected form. The whole point of an error-correction item is that the two differ; a writer that copies this canonical example into its self-correction will produce a semantically broken item that still passes the schema gate. Use distinct forms (e.g. `error: \\\"вмиваюшся\\\"`, `correction: \\\"вмиваюся\\\"`).\"\n  },\n  {\n    \"id\": \"items-non-list-silent-pass\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4470-4472\",\n    \"description\": \"When `items` is not a list (e.g. a writer emits `items: {...}` as a mapping, or `items: null`, or omits it entirely so the `.get(\\\"items\\\", [])` default yields `[]`), the gate silently `continue`s with zero checked items and returns `passed=True`. An error-correction activity with no parseable items or with a structurally wrong items container should fail the gate, not pass it — otherwise a writer can suppress every alias violation by malforming the container.\"\n  },\n  {\n    \"id\": \"activity-type-alias-bypass\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4459-4463\",\n    \"description\": \"Activity-type matching is exact-string lowercase: only `type: \\\"error-correction\\\"` triggers the schema. Plausible writer mistakes like `errorCorrection`, `error_correction`, `Error-Correction`, or `errorcorrection` cause `allowed_fields is None` and the gate skips the activity entirely. The gate's stated purpose is to catch writer mistakes that look plausible but bypass the schema contract — type-name aliases fall squarely in that class and are not covered. Either normalize `activity_type` (lowercase + hyphenate) or add a sibling check that flags unknown-but-similar types for `error-correction`.\"\n  },\n  {\n    \"id\": \"alias-list-incomplete\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:548-561\",\n    \"description\": \"The forbidden-alias map covers single-word variants (`wrong`, `incorrect`, `mistake`, `bad`, `correct`, `right`, `fix`, `fixed`) but is missing the obvious compound variants writers tend to produce: `wrongAnswer`, `bad_word`, `mistake_word`, `incorrect_word`, `correct_form`, `right_answer`, `corrected`, `corrected_form`, `proper`, `properForm`. Note also that `errorWord` / `error_word` are listed in `_ERROR_CORRECTION_INTENTIONAL_FIELDS` (line 532) yet are NOT in the optional item fields nor in the alias map, so they get flagged as a bare 'forbidden field' with no `expected:` hint — inconsistent with the rest of the policy. Add the common compounds and decide whether `errorWord`/`error_word` are aliases of `error` or genuinely forbidden.\"\n  },\n  {\n    \"id\": \"alias-target-inconsistency\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:556-561\",\n    \"description\": \"Both `answer` and `correction` are accepted optional fields with identical declared purpose ('the corrected form' per `_ACTIVITY_ITEM_FIELD_PURPOSES`). The alias map routes `correct`, `correctAnswer`, `right`, `fix`, `fixed` → `correction`, but a writer using `correctAnswer` is more naturally pointed at `answer:` (semantic match) than `correction:`. This is cosmetic but the diagnostic message will tell the writer to use `correction:` when `answer:` would also satisfy the schema. Consider documenting that both are accepted in the diagnostic, or pick one canonical target and stop accepting the other.\"\n  },\n  {\n    \"id\": \"gate-order-test-checks-constant-not-behavior\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:178-182\",\n    \"description\": \"`test_activity_schema_gate_precedes_vesum_verified` asserts the index of `activity_schema` in the `PYTHON_QG_GATE_ORDER` tuple, but actual gate execution order is driven by the explicit sequence of `record(...)` calls inside `run_python_qg`, not by iteration over the tuple. A future refactor that re-orders `record(...)` calls but leaves the constant alone will pass this test while breaking the intended early-fail ordering. Either drive execution from the tuple, or rewrite the test to inspect the keys of `gates` after a real `run_python_qg` invocation with a failing fixture.\"\n  },\n  {\n    \"id\": \"early-return-hides-cooccurring-failures\",\n    \"severity\": \"LOW\",\n    \"category\": \"performance\",\n    \"location\": \"scripts/build/linear_pipeline.py:3918-3922\",\n    \"description\": \"On `activity_schema` failure the function early-returns, so the writer's correction loop only sees the activity schema violation and cannot fix word-count, plan-sections, or vesum issues in the same round. This forces an extra writer iteration (and another expensive build round) when the writer could have addressed multiple problems at once. Activity_schema is cheap and deterministic — once a writer fixes it, the next round will catch the rest — but if iteration cost matters here, consider letting the cheap structural gates all run and only short-circuiting before the expensive VESUM/RAG-style gates.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5433
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 0,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "xhigh",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

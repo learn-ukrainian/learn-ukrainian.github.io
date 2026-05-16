@@ -1,0 +1,12 @@
+{
+  "cell": {
+    "family": "google",
+    "model": "gemini-3.1-pro-preview",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "result": "n/a",
+  "reason": "gemini-3.1-pro-preview does not accept effort=high via native_cli; configured palette: default",
+  "checked_at": "2026-05-16T18:41:09Z"
+}

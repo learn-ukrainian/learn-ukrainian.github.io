@@ -1,0 +1,135 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T18:38:54Z",
+  "finished_at": "2026-05-16T18:41:09Z",
+  "duration_s": 135.09,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 5,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "host-flag"
+      ],
+      "precision": 0.6,
+      "recall": 0.75,
+      "f1": 0.6667,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "remote-bind-without-guard",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:763",
+          "description": "`ab serve --openai --host 0.0.0.0` exposes an unauthenticated proxy that can launch local agent CLIs using the user's environment and credentials. For a local-only bridge, non-loopback binding should require an explicit opt-in such as `--allow-remote` or be rejected entirely."
+        },
+        {
+          "id": "healthz-forks-subprocesses",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:293",
+          "description": "`GET /healthz` runs every backend probe on each request, which forks four subprocesses with one-second timeouts. An unauthenticated health endpoint is commonly polled and easy to hit repeatedly, so this creates an avoidable process-spawn denial-of-service surface; cache probe results or make healthz a cheap in-process check."
+        },
+        {
+          "id": "unbounded-chat-spawns-backends",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:331",
+          "description": "`/v1/chat/completions` accepts arbitrary-size message bodies, flattens the full request into one prompt, and immediately launches a backend process with a 120-second timeout and no concurrency or payload limit. A few large or parallel requests can consume memory, saturate subprocess slots, and tie up the service; enforce request size/message limits and add backpressure around backend execution."
+        },
+        {
+          "id": "prompt-leaked-in-process-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:190",
+          "description": "Gemini, Claude, and Hermes prompts are passed as command-line arguments (`--prompt=...`, positional prompt, and `--oneshot=...`). User prompts may contain secrets and can be visible to other local processes through process listings while the backend runs, and large prompts can also hit OS argument-size limits; pass prompt content via stdin or a protected temporary file instead."
+        },
+        {
+          "id": "stream-requests-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:39",
+          "description": "The request model allows extra OpenAI fields, but the endpoint does not reject or implement `stream=true`. OpenAI-compatible clients that request streaming will receive a normal JSON completion instead of an SSE stream, which can break client parsers; explicitly reject unsupported streaming requests or implement the streaming response shape."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"remote-bind-without-guard\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:763\",\n    \"description\": \"`ab serve --openai --host 0.0.0.0` exposes an unauthenticated proxy that can launch local agent CLIs using the user's environment and credentials. For a local-only bridge, non-loopback binding should require an explicit opt-in such as `--allow-remote` or be rejected entirely.\"\n  },\n  {\n    \"id\": \"healthz-forks-subprocesses\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:293\",\n    \"description\": \"`GET /healthz` runs every backend probe on each request, which forks four subprocesses with one-second timeouts. An unauthenticated health endpoint is commonly polled and easy to hit repeatedly, so this creates an avoidable process-spawn denial-of-service surface; cache probe results or make healthz a cheap in-process check.\"\n  },\n  {\n    \"id\": \"unbounded-chat-spawns-backends\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:331\",\n    \"description\": \"`/v1/chat/completions` accepts arbitrary-size message bodies, flattens the full request into one prompt, and immediately launches a backend process with a 120-second timeout and no concurrency or payload limit. A few large or parallel requests can consume memory, saturate subprocess slots, and tie up the service; enforce request size/message limits and add backpressure around backend execution.\"\n  },\n  {\n    \"id\": \"prompt-leaked-in-process-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:190\",\n    \"description\": \"Gemini, Claude, and Hermes prompts are passed as command-line arguments (`--prompt=...`, positional prompt, and `--oneshot=...`). User prompts may contain secrets and can be visible to other local processes through process listings while the backend runs, and large prompts can also hit OS argument-size limits; pass prompt content via stdin or a protected temporary file instead.\"\n  },\n  {\n    \"id\": \"stream-requests-silently-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:39\",\n    \"description\": \"The request model allows extra OpenAI fields, but the endpoint does not reject or implement `stream=true`. OpenAI-compatible clients that request streaming will receive a normal JSON completion instead of an SSE stream, which can break client parsers; explicitly reject unsupported streaming requests or implement the streaming response shape.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2681
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 0,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.4615,
+    "case_acc": 0.0,
+    "precision": 0.6,
+    "recall": 0.375,
+    "high_recall": 0.4,
+    "catastrophic_misses": 3,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "codex-cli 0.130.0",
+    "model_id": "gpt-5.5",
+    "effort_actual": "high",
+    "mcp_servers": [],
+    "errors": []
+  }
+}

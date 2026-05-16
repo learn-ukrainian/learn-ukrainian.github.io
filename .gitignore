@@ -215,6 +215,7 @@ data/ua-gec/
 data/raw/esum/jp2-staging/
 data/raw/esum/gemini-ocr/
 audit/etymology-ocr-feasibility/raw-outputs/
+audit/etymology-ocr-feasibility/bulk-run-log.jsonl
 
 # OCR temporary PNG staging directory (bulk_ocr_gemini.py uses this as
 # scratch; cleared between runs; never committed).

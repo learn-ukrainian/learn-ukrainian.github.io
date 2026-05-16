@@ -1,0 +1,236 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:07:27Z",
+  "finished_at": "2026-05-16T19:13:06Z",
+  "duration_s": 338.99,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 10,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "healthz-subprocess-fanout",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:healthz",
+          "description": "The `/healthz` handler evaluates `{name: probe() for name, probe in _BACKEND_PROBES.items()}` synchronously, which forks up to four child processes (codex, gemini, claude, hermes) — each with a 1-second timeout — on every request. Because FastAPI executes synchronous route handlers in a thread pool, concurrent healthcheck calls multiply that fanout directly: N simultaneous callers produce 4N child processes. A monitoring loop polling at 5-second intervals with even two concurrent probers sustains 8 live processes continuously. This is the defect surface already tracked in issue #2029 and is the same class of failure documented in memory rule #M-9 (parallel-subprocess laptop crash). The probes must be cached with a short TTL (e.g., 30 s) and refreshed lazily or via a background task; the per-request fork is unacceptable for a health endpoint."
+        },
+        {
+          "id": "gemini-hermes-prompt-as-flag-value",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_gemini_backend,_hermes_backend",
+          "description": "Both `_gemini_backend` (line using `f\"--prompt={prompt}\"`) and `_hermes_backend` (line using `f\"--oneshot={prompt}\"`) embed the full flattened conversation as a single CLI flag value in the argv list. On macOS `ARG_MAX` is 262,144 bytes; Linux defaults are higher but container and shell environments often lower it. A five-turn conversation with a substantive system prompt and long user messages easily exceeds the macOS limit. When `subprocess.run` hits `E2BIG` it raises `OSError`, which the `chat_completions` handler does catch and converts to a 502, but the error message surfaced to the client (`[Errno 7] Argument list too long`) is opaque and gives no recovery guidance. More critically, `_run_backend_command` raises before any process is spawned, so the `CalledProcessError` path is never exercised and the test suite does not cover this failure mode. Both backends should pipe the prompt via stdin (matching the `_codex_backend` approach) or write it to a temp file to eliminate the OS argument-length boundary entirely."
+        },
+        {
+          "id": "host-accepts-non-localhost",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:serve_parser.add_argument(--host)",
+          "description": "The `--host` argument defaults to `127.0.0.1` but accepts any string value without validation or an explicit acknowledgement flag (e.g., `--allow-remote`). Supplying `0.0.0.0` or an external interface address binds the proxy on all interfaces, exposing the ability to invoke local AI agent CLIs (codex, claude, gemini, hermes) to any network peer. The proxy has no authentication layer (see separate finding), so a remote peer that can reach the bound port can immediately dispatch arbitrary prompts to any registered backend. This is already tracked as issue #2030. The parser should reject non-loopback host values unless an explicit `--allow-remote` flag is also present, and uvicorn should not be started without that guard."
+        },
+        {
+          "id": "no-request-body-size-limit",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:chat_completions",
+          "description": "FastAPI/Starlette imposes no default maximum request body size. A `POST /v1/chat/completions` payload with a deeply nested or very long `messages` array is fully buffered into RAM during JSON parsing and Pydantic validation before any application code runs. An adversarial or misbehaving client sending a multi-gigabyte body could exhaust available memory on a developer laptop, killing the uvicorn process or triggering OOM before the `OSError` handler in `chat_completions` is ever reached. A body-size middleware (`from starlette.middleware import Middleware` + `ContentSizeLimitMiddleware`) or a `Content-Length` guard at the start of the route should be added as a first line of defence."
+        },
+        {
+          "id": "no-backend-concurrency-limit",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:chat_completions",
+          "description": "There is no cap on simultaneous subprocess-backed completions. With the default 120-second backend timeout, N concurrent clients produce N live agent subprocesses each holding a file descriptor pair and a thread-pool slot. The failure mode is identical to the one encoded in memory rule #M-9: unbounded local process fanout has already crashed the developer machine once. A simple asyncio semaphore (or a `ThreadPoolExecutor` with a fixed worker count of 2–4) in front of the blocking `_run_backend_command` calls would enforce the back-pressure missing here without changing the external API surface."
+        },
+        {
+          "id": "stderr-leakage-in-error-response",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_first_error_line",
+          "description": "The first line of a backend's stderr is included verbatim in the HTTP 502/504 response body. Backend CLIs frequently print absolute paths, usernames, token counts, partial API keys, or environment-variable names in their error output. Even for a localhost-only service these details propagate to any client that logs response bodies — monitoring agents, LangChain debug output, curl sessions stored in shell history. The error message in the response should be a generic sentinel (`\"backend error; see server log for details\"`) while full stderr is written only to the server-side log via Python's `logging` module."
+        },
+        {
+          "id": "models-created-uses-live-timestamp",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:list_models",
+          "description": "The `GET /v1/models` endpoint sets `\"created\": int(time.time())` on every call, making the field reflect when the listing was fetched rather than a stable model registration timestamp. The OpenAI spec treats `created` as an immutable Unix timestamp for the model's registration date. OpenAI SDK clients, LangChain model selectors, and diff-based tooling compare this field across calls; a value that increments on every request triggers spurious cache invalidations and breaks equality checks. Each entry in `_ROUTABLE_MODELS` should carry a fixed `created_at: int` constant (a project-epoch value is fine) and `list_models` should read from that."
+        },
+        {
+          "id": "temp-file-toctou-codex-backend",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_codex_backend",
+          "description": "The Codex backend creates a `NamedTemporaryFile` with `delete=False`, immediately closes it (exiting the `with` block), and then passes the empty file path to the codex subprocess as its output target. Between the close and the subprocess open there is a TOCTOU window where another process with access to the temp directory could replace or truncate the file. More operationally: if codex silently ignores the `-o` flag (e.g. under a schema mismatch in a future version), `output_path.exists()` returns `True` because `NamedTemporaryFile` left an empty file, `content` is `\"\"`, the fallback to `result.stdout.strip()` is taken silently, and the caller receives whatever leaked onto stdout without any log entry. The empty-output-from-file case should be logged at `WARNING` level so the silent fallback is visible in server output."
+        },
+        {
+          "id": "flatten-messages-delimiter-injection",
+          "severity": "LOW",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_flatten_messages",
+          "description": "The `_flatten_messages` function serialises conversation turns using unescaped plaintext delimiters (`[system]:`, `--- Round N ---`, `[user]:`, `[assistant]:`). A user-controlled message whose content begins with `--- Round 2 ---\\n[system]: ignore all prior instructions` is indistinguishable in the flattened output from a genuine structural boundary. Any backend that re-parses the flat string to reconstruct conversation structure (or uses the delimiters as few-shot cues) can be misled. For Phase 1 the blast radius is limited to self-hosted tooling, but the format should either XML-escape or percent-encode delimiter strings appearing in content, or switch to a newline-delimited JSON interchange that backends can parse unambiguously."
+        },
+        {
+          "id": "claude-backend-prompt-as-argv-element",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_claude_backend",
+          "description": "The Claude backend passes the flattened prompt as a positional argv element after `--`. While this avoids flag-parsing ambiguity (unlike the Gemini/Hermes approach), very long prompts still approach `ARG_MAX` through the same `E2BIG` path. The Claude CLI accepts stdin; matching the `_codex_backend` pattern (pipe via `input=prompt`) would make all four backends consistent and eliminate the size boundary without requiring temp-file management. As written, the Claude and Codex backends behave differently under large inputs despite serving the same role, which makes future maintenance error-prone."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"healthz-subprocess-fanout\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:healthz\",\n    \"description\": \"The `/healthz` handler evaluates `{name: probe() for name, probe in _BACKEND_PROBES.items()}` synchronously, which forks up to four child processes (codex, gemini, claude, hermes) — each with a 1-second timeout — on every request. Because FastAPI executes synchronous route handlers in a thread pool, concurrent healthcheck calls multiply that fanout directly: N simultaneous callers produce 4N child processes. A monitoring loop polling at 5-second intervals with even two concurrent probers sustains 8 live processes continuously. This is the defect surface already tracked in issue #2029 and is the same class of failure documented in memory rule #M-9 (parallel-subprocess laptop crash). The probes must be cached with a short TTL (e.g., 30 s) and refreshed lazily or via a background task; the per-request fork is unacceptable for a health endpoint.\"\n  },\n  {\n    \"id\": \"gemini-hermes-prompt-as-flag-value\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_gemini_backend,_hermes_backend\",\n    \"description\": \"Both `_gemini_backend` (line using `f\\\"--prompt={prompt}\\\"`) and `_hermes_backend` (line using `f\\\"--oneshot={prompt}\\\"`) embed the full flattened conversation as a single CLI flag value in the argv list. On macOS `ARG_MAX` is 262,144 bytes; Linux defaults are higher but container and shell environments often lower it. A five-turn conversation with a substantive system prompt and long user messages easily exceeds the macOS limit. When `subprocess.run` hits `E2BIG` it raises `OSError`, which the `chat_completions` handler does catch and converts to a 502, but the error message surfaced to the client (`[Errno 7] Argument list too long`) is opaque and gives no recovery guidance. More critically, `_run_backend_command` raises before any process is spawned, so the `CalledProcessError` path is never exercised and the test suite does not cover this failure mode. Both backends should pipe the prompt via stdin (matching the `_codex_backend` approach) or write it to a temp file to eliminate the OS argument-length boundary entirely.\"\n  },\n  {\n    \"id\": \"host-accepts-non-localhost\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:serve_parser.add_argument(--host)\",\n    \"description\": \"The `--host` argument defaults to `127.0.0.1` but accepts any string value without validation or an explicit acknowledgement flag (e.g., `--allow-remote`). Supplying `0.0.0.0` or an external interface address binds the proxy on all interfaces, exposing the ability to invoke local AI agent CLIs (codex, claude, gemini, hermes) to any network peer. The proxy has no authentication layer (see separate finding), so a remote peer that can reach the bound port can immediately dispatch arbitrary prompts to any registered backend. This is already tracked as issue #2030. The parser should reject non-loopback host values unless an explicit `--allow-remote` flag is also present, and uvicorn should not be started without that guard.\"\n  },\n  {\n    \"id\": \"no-request-body-size-limit\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:chat_completions\",\n    \"description\": \"FastAPI/Starlette imposes no default maximum request body size. A `POST /v1/chat/completions` payload with a deeply nested or very long `messages` array is fully buffered into RAM during JSON parsing and Pydantic validation before any application code runs. An adversarial or misbehaving client sending a multi-gigabyte body could exhaust available memory on a developer laptop, killing the uvicorn process or triggering OOM before the `OSError` handler in `chat_completions` is ever reached. A body-size middleware (`from starlette.middleware import Middleware` + `ContentSizeLimitMiddleware`) or a `Content-Length` guard at the start of the route should be added as a first line of defence.\"\n  },\n  {\n    \"id\": \"no-backend-concurrency-limit\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:chat_completions\",\n    \"description\": \"There is no cap on simultaneous subprocess-backed completions. With the default 120-second backend timeout, N concurrent clients produce N live agent subprocesses each holding a file descriptor pair and a thread-pool slot. The failure mode is identical to the one encoded in memory rule #M-9: unbounded local process fanout has already crashed the developer machine once. A simple asyncio semaphore (or a `ThreadPoolExecutor` with a fixed worker count of 2–4) in front of the blocking `_run_backend_command` calls would enforce the back-pressure missing here without changing the external API surface.\"\n  },\n  {\n    \"id\": \"stderr-leakage-in-error-response\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_first_error_line\",\n    \"description\": \"The first line of a backend's stderr is included verbatim in the HTTP 502/504 response body. Backend CLIs frequently print absolute paths, usernames, token counts, partial API keys, or environment-variable names in their error output. Even for a localhost-only service these details propagate to any client that logs response bodies — monitoring agents, LangChain debug output, curl sessions stored in shell history. The error message in the response should be a generic sentinel (`\\\"backend error; see server log for details\\\"`) while full stderr is written only to the server-side log via Python's `logging` module.\"\n  },\n  {\n    \"id\": \"models-created-uses-live-timestamp\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:list_models\",\n    \"description\": \"The `GET /v1/models` endpoint sets `\\\"created\\\": int(time.time())` on every call, making the field reflect when the listing was fetched rather than a stable model registration timestamp. The OpenAI spec treats `created` as an immutable Unix timestamp for the model's registration date. OpenAI SDK clients, LangChain model selectors, and diff-based tooling compare this field across calls; a value that increments on every request triggers spurious cache invalidations and breaks equality checks. Each entry in `_ROUTABLE_MODELS` should carry a fixed `created_at: int` constant (a project-epoch value is fine) and `list_models` should read from that.\"\n  },\n  {\n    \"id\": \"temp-file-toctou-codex-backend\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_codex_backend\",\n    \"description\": \"The Codex backend creates a `NamedTemporaryFile` with `delete=False`, immediately closes it (exiting the `with` block), and then passes the empty file path to the codex subprocess as its output target. Between the close and the subprocess open there is a TOCTOU window where another process with access to the temp directory could replace or truncate the file. More operationally: if codex silently ignores the `-o` flag (e.g. under a schema mismatch in a future version), `output_path.exists()` returns `True` because `NamedTemporaryFile` left an empty file, `content` is `\\\"\\\"`, the fallback to `result.stdout.strip()` is taken silently, and the caller receives whatever leaked onto stdout without any log entry. The empty-output-from-file case should be logged at `WARNING` level so the silent fallback is visible in server output.\"\n  },\n  {\n    \"id\": \"flatten-messages-delimiter-injection\",\n    \"severity\": \"LOW\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_flatten_messages\",\n    \"description\": \"The `_flatten_messages` function serialises conversation turns using unescaped plaintext delimiters (`[system]:`, `--- Round",
+      "raw_response_truncated": true,
+      "raw_response_chars": 9441
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 6,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 0.1667,
+      "recall": 1.0,
+      "f1": 0.2857,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "diagnostic-example-identical-error-correction",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4424",
+          "description": "The canonical example emitted by `_format_activity_schema_diagnostic` shows `error: \"вмиваюся\"` and `correction: \"вмиваюся\"` with identical values. In a real error-correction activity these must differ — the `error` field holds the misspelled form and `correction` holds the fixed form. AI writers that receive this diagnostic as a correction cue will model their fix on the example; an example where error == correction teaches the writer that emitting a no-op correction is acceptable, perpetuating the exact regression the gate is meant to stop. The example values should be a contrasting pair, e.g. `error: \"вмиваєшся\"` / `correction: \"вмиваюся\"`."
+        },
+        {
+          "id": "partial-gate-report-on-early-return",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:3915",
+          "description": "When `activity_schema` fails the function returns immediately via `_python_qg_report`, producing a `gates` dict that contains only `activity_schema` (plus `passed: false`). All subsequent gates (`word_count`, `plan_sections`, `formatting_standards`, `vesum_verified`, etc.) are absent. Any downstream consumer — CI parser, audit dashboard, `audit_module.py`, correction-prompt renderer — that iterates over the fixed gate set or references a gate by key will silently receive `None`/KeyError or a structurally incomplete report. The contract for the return value of `run_python_qg` is implicitly \"all gates present\"; the early-return path violates it without a schema version bump or explicit partial-report marker. At minimum the report should include stub entries (e.g. `{\"passed\": null, \"skipped\": true}`) for every gate listed in `PYTHON_QG_GATE_ORDER` that was not reached."
+        },
+        {
+          "id": "regression-replay-test-incomplete-sentence-missing",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:163",
+          "description": "`test_replays_m20_build8_failure_shape` constructs items that contain only `incorrect` (no `sentence` key). The `aliased_required` logic correctly suppresses a spurious `error`-missing violation (since `incorrect` aliases `error`), but `sentence` is still required and unaliased — the gate will emit a `sentence`-missing violation for every item in addition to the `incorrect`-alias violation. The test only asserts that the alias violation is present and `passed is False`; it never asserts the `sentence`-missing violations, so the regression replay does not actually verify the full expected failure shape. A future change that accidentally stops reporting missing required fields when an alias is present would pass this test."
+        },
+        {
+          "id": "dual-canonical-field-names-answer-correction",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:535",
+          "description": "`_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS` includes both `answer` and `correction`, and `_ACTIVITY_ITEM_FIELD_PURPOSES` documents both as \"the corrected form\". The gate therefore permits writers to emit either name without error. This means a single module can contain activities with `correction` items alongside activities with `answer` items, and the gate cannot detect this inconsistency. The `ActivityParser` downstream may handle both, but the inconsistency will make writer correction messages ambiguous (the diagnostic example uses `correction`, yet `answer` is equally valid). The spec should canonicalize one preferred name and demote the other to a tracked alias, or at least document the dual-name policy explicitly in a comment."
+        },
+        {
+          "id": "null-null-violation-malformed-message",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4530",
+          "description": "In `_activity_schema_violation`, when `offending_field is None` the branch computes `_ACTIVITY_ITEM_FIELD_PURPOSES.get(expected_field or \"\", \"this item\")`. If a caller somehow passes `expected_field=None` as well (the \"missing required\" branch in `_activity_schema_gate` always supplies a real field name today, but the function signature does not enforce this), the message becomes `\"{type} items must include '':' for this item\"` — a syntactically malformed string with an empty field name. The function should guard with `assert expected_field is not None` or raise `ValueError` when both arguments are `None` rather than silently producing a broken diagnostic string."
+        },
+        {
+          "id": "sentence-field-has-no-alias-coverage",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:547",
+          "description": "`sentence` is a required field in `_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS` but has no entries in `_ACTIVITY_ITEM_FORBIDDEN_ALIASES`. Writers that emit the sentence under a plausible alternative key (`text`, `prompt`, `stem`, `question`) will receive two separate violations — the alternative key is forbidden AND `sentence` is reported missing — instead of the more actionable alias-redirect message that `error`/`correction` violations produce. This is a coverage gap in the alias table: common writer substitutions for the sentence slot should be mapped to `sentence` just as `incorrect`→`error` and `correct`→`correction` are, so the correction prompt gives the writer a concrete rename instruction rather than two independent errors."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"diagnostic-example-identical-error-correction\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4424\",\n    \"description\": \"The canonical example emitted by `_format_activity_schema_diagnostic` shows `error: \\\"вмиваюся\\\"` and `correction: \\\"вмиваюся\\\"` with identical values. In a real error-correction activity these must differ — the `error` field holds the misspelled form and `correction` holds the fixed form. AI writers that receive this diagnostic as a correction cue will model their fix on the example; an example where error == correction teaches the writer that emitting a no-op correction is acceptable, perpetuating the exact regression the gate is meant to stop. The example values should be a contrasting pair, e.g. `error: \\\"вмиваєшся\\\"` / `correction: \\\"вмиваюся\\\"`.\"\n  },\n  {\n    \"id\": \"partial-gate-report-on-early-return\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:3915\",\n    \"description\": \"When `activity_schema` fails the function returns immediately via `_python_qg_report`, producing a `gates` dict that contains only `activity_schema` (plus `passed: false`). All subsequent gates (`word_count`, `plan_sections`, `formatting_standards`, `vesum_verified`, etc.) are absent. Any downstream consumer — CI parser, audit dashboard, `audit_module.py`, correction-prompt renderer — that iterates over the fixed gate set or references a gate by key will silently receive `None`/KeyError or a structurally incomplete report. The contract for the return value of `run_python_qg` is implicitly \\\"all gates present\\\"; the early-return path violates it without a schema version bump or explicit partial-report marker. At minimum the report should include stub entries (e.g. `{\\\"passed\\\": null, \\\"skipped\\\": true}`) for every gate listed in `PYTHON_QG_GATE_ORDER` that was not reached.\"\n  },\n  {\n    \"id\": \"regression-replay-test-incomplete-sentence-missing\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:163\",\n    \"description\": \"`test_replays_m20_build8_failure_shape` constructs items that contain only `incorrect` (no `sentence` key). The `aliased_required` logic correctly suppresses a spurious `error`-missing violation (since `incorrect` aliases `error`), but `sentence` is still required and unaliased — the gate will emit a `sentence`-missing violation for every item in addition to the `incorrect`-alias violation. The test only asserts that the alias violation is present and `passed is False`; it never asserts the `sentence`-missing violations, so the regression replay does not actually verify the full expected failure shape. A future change that accidentally stops reporting missing required fields when an alias is present would pass this test.\"\n  },\n  {\n    \"id\": \"dual-canonical-field-names-answer-correction\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:535\",\n    \"description\": \"`_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS` includes both `answer` and `correction`, and `_ACTIVITY_ITEM_FIELD_PURPOSES` documents both as \\\"the corrected form\\\". The gate therefore permits writers to emit either name without error. This means a single module can contain activities with `correction` items alongside activities with `answer` items, and the gate cannot detect this inconsistency. The `ActivityParser` downstream may handle both, but the inconsistency will make writer correction messages ambiguous (the diagnostic example uses `correction`, yet `answer` is equally valid). The spec should canonicalize one preferred name and demote the other to a tracked alias, or at least document the dual-name policy explicitly in a comment.\"\n  },\n  {\n    \"id\": \"null-null-violation-malformed-message\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4530\",\n    \"description\": \"In `_activity_schema_violation`, when `offending_field is None` the branch computes `_ACTIVITY_ITEM_FIELD_PURPOSES.get(expected_field or \\\"\\\", \\\"this item\\\")`. If a caller somehow passes `expected_field=None` as well (the \\\"missing required\\\" branch in `_activity_schema_gate` always supplies a real field name today, but the function signature does not enforce this), the message becomes `\\\"{type} items must include '':' for this item\\\"` — a syntactically malformed string with an empty field name. The function should guard with `assert expected_field is not None` or raise `ValueError` when both arguments are `None` rather than silently producing a broken diagnostic string.\"\n  },\n  {\n    \"id\": \"sentence-field-has-no-alias-coverage\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:547\",\n    \"description\": \"`sentence` is a required field in `_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS` but has no entries in `_ACTIVITY_ITEM_FORBIDDEN_ALIASES`. Writers that emit the sentence under a plausible alternative key (`text`, `prompt`, `stem`, `question`) will receive two separate violations — the alternative key is forbidden AND `sentence` is reported missing — instead of the more actionable alias-redirect message that `error`/`correction` violations produce. This is a coverage gap in the alias table: common writer substitutions for the sentence slot should be mapped to `sentence` just as `incorrect`→`error` and `correct`→`correction` are, so the correction prompt gives the writer a concrete rename instruction rather than two independent errors.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 5646
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 3,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "hardcoded-citations-still-fragile",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:110-115",
+          "description": "The test reads `plan_path` and loads the YAML into `plan`, then immediately discards the `plan_references` field in favour of two hardcoded `source_ref` strings. This is structurally identical to the bug this commit fixes: the next person who edits `curriculum/l2-uk-en/plans/a1/my-morning.yaml`'s `plan_references` will again produce a silent test/source divergence until CI catches it post-merge. The fix is one line: replace the hardcoded list with `[{\"source_ref\": r} for r in plan[\"plan_references\"]]`, making the test self-updating. The commit message's own 'Lesson:' block names this failure mode but does not close it structurally."
+        },
+        {
+          "id": "no-negative-citation-assertion",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:97",
+          "description": "The test asserts only the positive path: the new Grade 1 citations pass `_citation_gate`. It does not assert that the retired Grade 4 strings (`Захарійчук, Українська мова, 4 клас, с. 162/163`) now fail the gate. Without the negative case, a regression where `_citation_gate` becomes a no-op (or accepts any string) would leave this test green. A single additional `assert result_old is False` call with the old refs would make the gate's discriminating behaviour load-bearing in CI."
+        },
+        {
+          "id": "diff-scope-covers-one-of-three-stated-fixes",
+          "severity": "LOW",
+          "category": "other",
+          "location": "tests/test_citation_resolve.py:97",
+          "description": "The PR description states three distinct regressions were addressed in this bundle (VESUM reviewer scope leak, textbook-grounding plan reference issue, metalinguistic-stripping quote cleanup), but the diff presented for review covers only the citation-repinning test. The VESUM scope-leak fix and the text-cleaning path changes—including any edge cases in the metalinguistic stripping—are not visible here. Reviewers cannot verify that the other two patches are correct, fully covered by tests, or that they don't reintroduce a weaker signal for the checks they replace. These should be reviewed in the full PR diff before merge."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"hardcoded-citations-still-fragile\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:110-115\",\n    \"description\": \"The test reads `plan_path` and loads the YAML into `plan`, then immediately discards the `plan_references` field in favour of two hardcoded `source_ref` strings. This is structurally identical to the bug this commit fixes: the next person who edits `curriculum/l2-uk-en/plans/a1/my-morning.yaml`'s `plan_references` will again produce a silent test/source divergence until CI catches it post-merge. The fix is one line: replace the hardcoded list with `[{\\\"source_ref\\\": r} for r in plan[\\\"plan_references\\\"]]`, making the test self-updating. The commit message's own 'Lesson:' block names this failure mode but does not close it structurally.\"\n  },\n  {\n    \"id\": \"no-negative-citation-assertion\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:97\",\n    \"description\": \"The test asserts only the positive path: the new Grade 1 citations pass `_citation_gate`. It does not assert that the retired Grade 4 strings (`Захарійчук, Українська мова, 4 клас, с. 162/163`) now fail the gate. Without the negative case, a regression where `_citation_gate` becomes a no-op (or accepts any string) would leave this test green. A single additional `assert result_old is False` call with the old refs would make the gate's discriminating behaviour load-bearing in CI.\"\n  },\n  {\n    \"id\": \"diff-scope-covers-one-of-three-stated-fixes\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"tests/test_citation_resolve.py:97\",\n    \"description\": \"The PR description states three distinct regressions were addressed in this bundle (VESUM reviewer scope leak, textbook-grounding plan reference issue, metalinguistic-stripping quote cleanup), but the diff presented for review covers only the citation-repinning test. The VESUM scope-leak fix and the text-cleaning path changes—including any edge cases in the metalinguistic stripping—are not visible here. Reviewers cannot verify that the other two patches are correct, fully covered by tests, or that they don't reintroduce a weaker signal for the checks they replace. These should be reviewed in the full PR diff before merge.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2334
+    }
+  ],
+  "scores": {
+    "f1": 0.0741,
+    "case_acc": 0.0,
+    "precision": 0.0526,
+    "recall": 0.125,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 1,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

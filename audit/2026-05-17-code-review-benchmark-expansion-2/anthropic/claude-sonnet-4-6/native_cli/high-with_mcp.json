@@ -1,0 +1,244 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T19:17:40Z",
+  "finished_at": "2026-05-16T19:24:40Z",
+  "duration_s": 419.74,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 11,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "missed_gold_ids": [
+        "error-envelope"
+      ],
+      "precision": 0.2727,
+      "recall": 0.75,
+      "f1": 0.4,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "prompt-role-injection",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:96",
+          "description": "_flatten_messages serializes all messages into a flat string using literal role markers such as '[system]:' and '--- Round N ---'. No escaping or sanitization is applied to message content before embedding it. A user-controlled message body whose content string begins with '\\n\\n[system]: override previous instructions' is indistinguishable from a genuine system-role message in the resulting prompt sent to the backend. Because the proxy has no authentication layer, every caller — including unauthenticated local processes — can inject arbitrary role changes and override operator-supplied system instructions. Role delimiters must be escaped in user-turn content, or the prompt format must be made structurally un-spoofable (e.g. using XML tags instead of freeform bracket markers)."
+        },
+        {
+          "id": "unbounded-request-body-dos",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:317",
+          "description": "FastAPI imposes no default request body size limit, and ChatCompletionRequest.messages has no upper bound on list length or individual content length. A malicious client can POST a multi-megabyte or multi-gigabyte body; the server parses the entire payload into memory, flattens it into an equally large prompt string, optionally writes it to a temp file (the Codex path), and passes it to a subprocess. This can exhaust available RAM, exceed OS ARG_MAX limits (triggering unhandled E2BIG), and hold a worker thread open for the full backend timeout. A Starlette middleware body-size cap (e.g. 1 MB) should be registered on the FastAPI app before any route handler fires."
+        },
+        {
+          "id": "backend-stderr-verbatim-disclosure",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:338",
+          "description": "When a backend subprocess fails or times out, the first line of its stderr is embedded verbatim in the JSON error body returned to the client via _first_error_line (lines 338, 345, 352). Backend CLIs may write sensitive information to that first line: absolute file paths, partial API key values from authentication failures, internal system prompt fragments echoed on error, or environment variable names. Any API consumer receives this content directly in the OpenAI-shaped error envelope. The correct pattern is to log the full stderr server-side with a correlation ID, and return only a generic client-facing message ('backend process failed') together with the correlation ID so operators can cross-reference without leaking internals."
+        },
+        {
+          "id": "host-binding-no-allow-remote-guard",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:680",
+          "description": "The --host argument defaults to 127.0.0.1 but silently accepts any value, including 0.0.0.0, without emitting a warning or requiring an explicit --allow-remote flag. The proxy has no authentication layer; binding to a non-loopback address exposes all local agent CLIs (Codex, Gemini, Claude, Hermes) to any peer on the same network segment. This is already tracked as issue #2030 but this diff ships no mitigation. A minimal guard in _dispatch_command should reject any host that is not a loopback address unless a separate --allow-remote flag is also supplied, and should print a prominent warning even then."
+        },
+        {
+          "id": "healthz-subprocess-fanout-per-request",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:292",
+          "description": "GET /healthz calls every entry in _BACKEND_PROBES synchronously on each request (line 295). Each probe forks a subprocess with a 1-second timeout, so a single health check can block for up to N seconds (currently 4, one per backend). Under rapid polling or when a backend binary is slow to initialize, repeated health probes saturate the shared FastAPI thread pool, degrading or fully blocking the /v1/chat/completions path. This matches the DoS surface flagged in issue #2029, which this diff leaves unresolved. The fix is to refresh backend availability on a background timer (e.g. every 30 s via asyncio) and serve the cached result from /healthz without forking any process."
+        },
+        {
+          "id": "gemini-prompt-as-cli-flag-argmax",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:190",
+          "description": "_gemini_backend constructs f'--prompt={prompt}' (line 190) and inserts it directly into the subprocess argv list. While subprocess.run with a list avoids shell injection at the OS level, two risks remain: (1) Gemini CLI's internal option parser may misinterpret embedded '=' characters, NUL bytes, or newlines in the prompt value; (2) if the combined argv exceeds the OS ARG_MAX limit (~2 MB on Linux; as low as 256 KB on older macOS builds), execve raises OSError(E2BIG). chat_completions catches subprocess.CalledProcessError and subprocess.TimeoutExpired but not bare OSError (only the innermost OSError catch covers non-subprocess exceptions, not the E2BIG path which is raised before the process starts), so this surfaces as an unhandled 500. The fix is to pass the prompt via stdin, consistent with how _codex_backend and _claude_backend handle their input."
+        },
+        {
+          "id": "hermes-prompt-as-cli-flag-argmax",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:217",
+          "description": "_hermes_backend has the identical ARG_MAX and option-parser exposure as _gemini_backend: the user-controlled prompt is injected as f'--oneshot={prompt}' (line 217). An oversized or specially crafted prompt can trigger an unhandled E2BIG OSError or be misparsed by Hermes's argument parser. Prompts should be delivered via stdin. Additionally, shutil.which('hermes') is evaluated on every call (lines 216 and 264) rather than once at module load, deferring PATH misconfiguration errors to request time and adding a redundant filesystem walk per invocation; the result should be resolved into a module-level constant."
+        },
+        {
+          "id": "backend-timeout-no-upper-cap",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:67",
+          "description": "_backend_timeout_s validates that BRIDGE_PROXY_BACKEND_TIMEOUT_S is a positive integer but enforces no upper bound. An operator who sets this variable to an extreme value (e.g. 86400) allows a single stalled backend subprocess to hold a worker thread open for hours. With FastAPI's default thread pool size (~40 threads), roughly 40 concurrent slow requests fully exhaust the pool, making the service completely unresponsive to all subsequent traffic. A reasonable ceiling (e.g. 600 s) should be enforced and documented in the best-practices doc."
+        },
+        {
+          "id": "synchronous-backends-exhaust-thread-pool",
+          "severity": "MEDIUM",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:208",
+          "description": "All four backend functions call subprocess.run, a blocking call. FastAPI runs synchronous path functions in a shared starlette thread pool (default ~40 threads). With a default timeout of 120 s, approximately 40 concurrent long-running requests saturate the pool and block all subsequent requests — including /healthz — until a slot frees. Either the backend calls should be made truly async (using asyncio.create_subprocess_exec with await proc.communicate()) or the path functions should be declared async with anyio.to_thread.run_sync behind a CapacityLimiter, so the main pool remains available for lightweight requests."
+        },
+        {
+          "id": "list-models-dynamic-created-timestamp",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:301",
+          "description": "list_models sets the 'created' field on each model object to int(time.time()), which changes on every response. The OpenAI spec defines 'created' as the Unix timestamp at which the model was created — a static property of the model identity, not the response timestamp. Clients that cache the model list, diff successive responses, or use 'created' to detect model rollouts will observe spurious changes on every poll. Each entry in _ROUTABLE_MODELS should carry a fixed epoch constant (e.g. a field on ModelRoute, or a module-level dict), or the field should be omitted entirely if no meaningful creation date is tracked."
+        },
+        {
+          "id": "shutil-which-hermes-per-call",
+          "severity": "LOW",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:216",
+          "description": "shutil.which('hermes') is called inside both _hermes_backend (line 216) and _probe_hermes (line 264) on every invocation, triggering a full PATH filesystem walk per request. The result should be resolved once at module load time into a module-level constant (e.g. _HERMES_CMD = shutil.which('hermes') or 'hermes'). Beyond the performance overhead, deferring the PATH lookup to request time masks startup misconfiguration: if hermes is absent from PATH, the error is silently swallowed by _probe_hermes returning False rather than surfacing at service startup where it is cheapest to diagnose."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"prompt-role-injection\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:96\",\n    \"description\": \"_flatten_messages serializes all messages into a flat string using literal role markers such as '[system]:' and '--- Round N ---'. No escaping or sanitization is applied to message content before embedding it. A user-controlled message body whose content string begins with '\\\\n\\\\n[system]: override previous instructions' is indistinguishable from a genuine system-role message in the resulting prompt sent to the backend. Because the proxy has no authentication layer, every caller — including unauthenticated local processes — can inject arbitrary role changes and override operator-supplied system instructions. Role delimiters must be escaped in user-turn content, or the prompt format must be made structurally un-spoofable (e.g. using XML tags instead of freeform bracket markers).\"\n  },\n  {\n    \"id\": \"unbounded-request-body-dos\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:317\",\n    \"description\": \"FastAPI imposes no default request body size limit, and ChatCompletionRequest.messages has no upper bound on list length or individual content length. A malicious client can POST a multi-megabyte or multi-gigabyte body; the server parses the entire payload into memory, flattens it into an equally large prompt string, optionally writes it to a temp file (the Codex path), and passes it to a subprocess. This can exhaust available RAM, exceed OS ARG_MAX limits (triggering unhandled E2BIG), and hold a worker thread open for the full backend timeout. A Starlette middleware body-size cap (e.g. 1 MB) should be registered on the FastAPI app before any route handler fires.\"\n  },\n  {\n    \"id\": \"backend-stderr-verbatim-disclosure\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:338\",\n    \"description\": \"When a backend subprocess fails or times out, the first line of its stderr is embedded verbatim in the JSON error body returned to the client via _first_error_line (lines 338, 345, 352). Backend CLIs may write sensitive information to that first line: absolute file paths, partial API key values from authentication failures, internal system prompt fragments echoed on error, or environment variable names. Any API consumer receives this content directly in the OpenAI-shaped error envelope. The correct pattern is to log the full stderr server-side with a correlation ID, and return only a generic client-facing message ('backend process failed') together with the correlation ID so operators can cross-reference without leaking internals.\"\n  },\n  {\n    \"id\": \"host-binding-no-allow-remote-guard\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:680\",\n    \"description\": \"The --host argument defaults to 127.0.0.1 but silently accepts any value, including 0.0.0.0, without emitting a warning or requiring an explicit --allow-remote flag. The proxy has no authentication layer; binding to a non-loopback address exposes all local agent CLIs (Codex, Gemini, Claude, Hermes) to any peer on the same network segment. This is already tracked as issue #2030 but this diff ships no mitigation. A minimal guard in _dispatch_command should reject any host that is not a loopback address unless a separate --allow-remote flag is also supplied, and should print a prominent warning even then.\"\n  },\n  {\n    \"id\": \"healthz-subprocess-fanout-per-request\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:292\",\n    \"description\": \"GET /healthz calls every entry in _BACKEND_PROBES synchronously on each request (line 295). Each probe forks a subprocess with a 1-second timeout, so a single health check can block for up to N seconds (currently 4, one per backend). Under rapid polling or when a backend binary is slow to initialize, repeated health probes saturate the shared FastAPI thread pool, degrading or fully blocking the /v1/chat/completions path. This matches the DoS surface flagged in issue #2029, which this diff leaves unresolved. The fix is to refresh backend availability on a background timer (e.g. every 30 s via asyncio) and serve the cached result from /healthz without forking any process.\"\n  },\n  {\n    \"id\": \"gemini-prompt-as-cli-flag-argmax\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:190\",\n    \"description\": \"_gemini_backend constructs f'--prompt={prompt}' (line 190) and inserts it directly into the subprocess argv list. While subprocess.run with a list avoids shell injection at the OS level, two risks remain: (1) Gemini CLI's internal option parser may misinterpret embedded '=' characters, NUL bytes, or newlines in the prompt value; (2) if the combined argv exceeds the OS ARG_MAX limit (~2 MB on Linux; as low as 256 KB on older macOS builds), execve raises OSError(E2BIG). chat_completions catches subprocess.CalledProcessError and subprocess.TimeoutExpired but not bare OSError (only the innermost OSError catch covers non-subprocess exceptions, not the E2BIG path which is raised before the process starts), so this surfaces as an unhandled 500. The fix is to pass the prompt via stdin, consistent with how _codex_backend and _claude_backend handle their input.\"\n  },\n  {\n    \"id\": \"hermes-prompt-as-cli-flag-argmax\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:217\",\n    \"description\": \"_hermes_backend has the identical ARG_MAX and option-parser exposure as _gemini_backend: the user-controlled prompt is injected as f'--oneshot={prompt}' (line 217). An oversized or specially crafted prompt can trigger an unhandled E2BIG OSError or be misparsed by Hermes's argument parser. Prompts should be delivered via stdin. Additionally, shutil.which('hermes') is evaluated on every call (lines 216 and 264) rather than once at module load, deferring PATH misconfiguration errors to request time and adding a redundant filesystem walk per invocation; the result should be resolved into a module-level constant.\"\n  },\n  {\n    \"id\": \"backend-timeout-no-upper-cap\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:67\",\n    \"description\": \"_backend_timeout_s validates that BRIDGE_PROXY_BACKEND_TIMEOUT_S is a positive integer but enforces no upper bound. An operator who sets this variable to an extreme value (e.g. 86400) allows a single stalled backend subprocess to hold a worker thread open for hours. With FastAPI's default thread pool size (~40 threads), roughly 40 concurrent slow requests fully exhaust the pool, making the service completely unresponsive to all subsequent traffic. A reasonable ceiling (e.g. 600 s) should be enforced and documented in the best-practices doc.\"\n  },\n  {\n    \"id\": \"synchronous-backends-exhaust-thread-pool\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"performance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:208\",\n    \"description\": \"All four backend functions call subprocess.run, a blocking call. FastAPI runs synchronous path functions in a shared starlette thread pool (default ~40 threads). With a default timeout of 120 s, approximately 40 concurrent long-running requests saturate the pool and block all subsequent requests — including /healthz — until a slot frees. Either the backend calls should be made truly async (using asyncio.create_subprocess_exec with await proc.communicate()) or the path functions should be declared async with anyio.to_thread.run_sync behind a CapacityLimiter, so the main pool remains available for lightweight requests.\"\n  },\n  {\n    \"id\": \"list-models-dynamic-created-timestamp\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"",
+      "raw_response_truncated": true,
+      "raw_response_chars": 9494
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 5,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "diagnostic-example-error-equals-correction",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:_format_activity_schema_diagnostic",
+          "description": "The canonical shape example appended to every gate-failure diagnostic message shows both 'error:' and 'correction:' with the identical value '\"вмиваюся\"'. A real error-correction item must show the misspelled form under 'error' and the repaired form under 'correction' — they must differ. Any writer that receives this diagnostic and uses it as a template will produce activities where the error word equals the correction word, creating pedagogically broken content that would fool word-count and VESUM gates while being completely unusable as a learning exercise. The example should read something like: error: \"вмиваюся\" / correction: \"вмиваюся\" → e.g. error: \"дивюся\" / correction: \"дивлюся\"."
+        },
+        {
+          "id": "early-return-partial-gate-report",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:run_python_qg",
+          "description": "When the activity_schema gate fails the function returns immediately via the new '_python_qg_report' helper, producing a report whose 'gates' dict contains only the gates recorded so far (tool_theatre + activity_schema). All subsequent gates — word_count, plan_sections, formatting_standards, vesum_verified, etc. — are absent. Any downstream consumer that key-accesses a specific gate by name (e.g. 'report[\"gates\"][\"word_count\"]') will raise KeyError. The writer-correction loop in WRITER_CORRECTION_GATES is particularly at risk: if it parses the QG report assuming all registered gates are present before deciding which corrections to request, it will fail silently or crash on the truncated report. At minimum, the partial report should zero-fill the missing gates with a sentinel value like {'passed': None, 'skipped': True}."
+        },
+        {
+          "id": "replay-test-missing-sentence-violation-unasserted",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:test_replays_m20_build8_failure_shape",
+          "description": "The regression replay test uses items of shape {'incorrect': '...'} which lack both 'error' (satisfied by the alias) and 'sentence' (a required field with no alias). The alias resolution logic correctly computes aliased_required = {'error'}, so 'sentence' remains in 'required_fields - item_fields - aliased_required' and a missing-field violation should be emitted for it. The test only asserts the incorrect→error alias violation and never checks that the 'sentence' missing-field violation is present. This means the gate's behavior on this exact production-failure shape — the one the test is named after — is only half-specified, and a future refactor that silently drops the missing-field path would not be caught."
+        },
+        {
+          "id": "silent-passthrough-unregistered-activity-types",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:_activity_schema_gate",
+          "description": "Activity types not present in '_ACTIVITY_ITEM_AUTHORING_FIELDS' are silently skipped with 'continue' and contribute nothing to 'checked'. When a new activity type is added to the writer prompt but its strict item schema is not yet registered, the gate counts zero checked items and returns passed=True — providing false confidence. There is no log line, no warning gate, and no counter for 'unregistered_types_skipped'. A lightweight telemetry record of skipped types in the gate report (even just a 'skipped_types' list) would make coverage gaps visible in the QG output without adding policy burden."
+        },
+        {
+          "id": "dual-canonical-names-answer-correction",
+          "severity": "LOW",
+          "category": "other",
+          "location": "scripts/build/linear_pipeline.py:_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS",
+          "description": "Both 'answer' and 'correction' are admitted as canonical optional fields for the corrected form in error-correction items, and '_ACTIVITY_ITEM_FIELD_PURPOSES' describes both as 'the corrected form'. The alias table maps 'correctAnswer' → 'correction' but does not map 'answer' → 'correction', meaning a writer can produce items mixing 'answer' and 'correction' across activities in the same module and the gate will accept both. Without a canonical single name the schema gate cannot enforce consistency within a module, and the reviewer prompt cannot reliably describe what the correct output shape is. Consider deprecating one (likely 'answer') and adding a low-severity per-module consistency check, or document the intended semantic distinction between them."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"diagnostic-example-error-equals-correction\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:_format_activity_schema_diagnostic\",\n    \"description\": \"The canonical shape example appended to every gate-failure diagnostic message shows both 'error:' and 'correction:' with the identical value '\\\"вмиваюся\\\"'. A real error-correction item must show the misspelled form under 'error' and the repaired form under 'correction' — they must differ. Any writer that receives this diagnostic and uses it as a template will produce activities where the error word equals the correction word, creating pedagogically broken content that would fool word-count and VESUM gates while being completely unusable as a learning exercise. The example should read something like: error: \\\"вмиваюся\\\" / correction: \\\"вмиваюся\\\" → e.g. error: \\\"дивюся\\\" / correction: \\\"дивлюся\\\".\"\n  },\n  {\n    \"id\": \"early-return-partial-gate-report\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:run_python_qg\",\n    \"description\": \"When the activity_schema gate fails the function returns immediately via the new '_python_qg_report' helper, producing a report whose 'gates' dict contains only the gates recorded so far (tool_theatre + activity_schema). All subsequent gates — word_count, plan_sections, formatting_standards, vesum_verified, etc. — are absent. Any downstream consumer that key-accesses a specific gate by name (e.g. 'report[\\\"gates\\\"][\\\"word_count\\\"]') will raise KeyError. The writer-correction loop in WRITER_CORRECTION_GATES is particularly at risk: if it parses the QG report assuming all registered gates are present before deciding which corrections to request, it will fail silently or crash on the truncated report. At minimum, the partial report should zero-fill the missing gates with a sentinel value like {'passed': None, 'skipped': True}.\"\n  },\n  {\n    \"id\": \"replay-test-missing-sentence-violation-unasserted\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:test_replays_m20_build8_failure_shape\",\n    \"description\": \"The regression replay test uses items of shape {'incorrect': '...'} which lack both 'error' (satisfied by the alias) and 'sentence' (a required field with no alias). The alias resolution logic correctly computes aliased_required = {'error'}, so 'sentence' remains in 'required_fields - item_fields - aliased_required' and a missing-field violation should be emitted for it. The test only asserts the incorrect→error alias violation and never checks that the 'sentence' missing-field violation is present. This means the gate's behavior on this exact production-failure shape — the one the test is named after — is only half-specified, and a future refactor that silently drops the missing-field path would not be caught.\"\n  },\n  {\n    \"id\": \"silent-passthrough-unregistered-activity-types\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:_activity_schema_gate\",\n    \"description\": \"Activity types not present in '_ACTIVITY_ITEM_AUTHORING_FIELDS' are silently skipped with 'continue' and contribute nothing to 'checked'. When a new activity type is added to the writer prompt but its strict item schema is not yet registered, the gate counts zero checked items and returns passed=True — providing false confidence. There is no log line, no warning gate, and no counter for 'unregistered_types_skipped'. A lightweight telemetry record of skipped types in the gate report (even just a 'skipped_types' list) would make coverage gaps visible in the QG output without adding policy burden.\"\n  },\n  {\n    \"id\": \"dual-canonical-names-answer-correction\",\n    \"severity\": \"LOW\",\n    \"category\": \"other\",\n    \"location\": \"scripts/build/linear_pipeline.py:_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS\",\n    \"description\": \"Both 'answer' and 'correction' are admitted as canonical optional fields for the corrected form in error-correction items, and '_ACTIVITY_ITEM_FIELD_PURPOSES' describes both as 'the corrected form'. The alias table maps 'correctAnswer' → 'correction' but does not map 'answer' → 'correction', meaning a writer can produce items mixing 'answer' and 'correction' across activities in the same module and the gate will accept both. Without a canonical single name the schema gate cannot enforce consistency within a module, and the reviewer prompt cannot reliably describe what the correct output shape is. Consider deprecating one (likely 'answer') and adding a low-severity per-module consistency check, or document the intended semantic distinction between them.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 4756
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 4,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "missing-two-of-three-fixes",
+          "severity": "HIGH",
+          "category": "spec-compliance",
+          "location": "tests/test_citation_resolve.py:97-114",
+          "description": "The PR context explicitly states that three regressions are bundled: (1) a VESUM reviewer scope leak, (2) the textbook-grounding plan reference issue, and (3) quote cleanup in metalinguistic stripping. This diff addresses only the test repin for fix #2. Fixes #1 (VESUM scope leak) and #3 (metalinguistic quote cleanup) are entirely absent from the diff provided. If this is the complete diff for the PR, two of three declared regressions are unpatched. If those changes exist in other commits in the same PR, the diff supplied to this review is incomplete, making it impossible to verify those patches or their edge-case coverage."
+        },
+        {
+          "id": "plan-yaml-not-in-diff",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "curriculum/l2-uk-en/plans/a1/my-morning.yaml:(absent)",
+          "description": "The commit message states that a1/my-morning.yaml's plan_references were swapped from Grade 4 to Grade 1 citations, but the diff contains no change to that YAML file. The test reads the live plan via plan_path.read_text() and passes it to _citation_gate alongside hardcoded source_ref strings — so if the YAML was not actually updated, the citation gate will be evaluated against stale plan content, the new hardcoded strings will not resolve, and the test will fail in CI even if it passed locally (suggesting the reviewer ran against a manually-edited local file). If the YAML change is in a prior commit within the same PR, that commit must be included in the review surface; as presented, the critical artifact being fixed is invisible."
+        },
+        {
+          "id": "pinned-test-structural-fragility",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:100-114",
+          "description": "The test maintains a hardcoded list of source_ref strings that must be kept manually in sync with the live plan YAML. The commit message itself documents that this exact failure has now happened twice in rapid succession (PR #2014, then this PR), and the mitigation offered is a comment (\"whoever swaps the plan cites must also update this test\") with no enforcement mechanism. A structurally sound alternative would be to derive the expected citations directly from the parsed plan (e.g., extract plan['plan_references'] and feed those into _citation_gate), so the test always reflects actual plan state without a separate manual update. The current pattern is guaranteed to produce another CI break the next time plan_references changes."
+        },
+        {
+          "id": "no-negative-assertion-stale-refs-removed",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:97-114",
+          "description": "The test only asserts that the two new Grade 1 citations (с. 24, с. 52) pass the citation gate; it does not assert that the old Grade 4 strings (с. 162, с. 163) are absent from the plan. If the plan YAML was accidentally left with both old and new references, the new strings would still resolve and the test would pass, silently masking the stale Grade 4 entries that are not in the corpus (per issue #1901). A complementary negative assertion — reading plan['plan_references'] and asserting neither of the Grade 4 strings appears — would close this gap."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"missing-two-of-three-fixes\",\n    \"severity\": \"HIGH\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"tests/test_citation_resolve.py:97-114\",\n    \"description\": \"The PR context explicitly states that three regressions are bundled: (1) a VESUM reviewer scope leak, (2) the textbook-grounding plan reference issue, and (3) quote cleanup in metalinguistic stripping. This diff addresses only the test repin for fix #2. Fixes #1 (VESUM scope leak) and #3 (metalinguistic quote cleanup) are entirely absent from the diff provided. If this is the complete diff for the PR, two of three declared regressions are unpatched. If those changes exist in other commits in the same PR, the diff supplied to this review is incomplete, making it impossible to verify those patches or their edge-case coverage.\"\n  },\n  {\n    \"id\": \"plan-yaml-not-in-diff\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"curriculum/l2-uk-en/plans/a1/my-morning.yaml:(absent)\",\n    \"description\": \"The commit message states that a1/my-morning.yaml's plan_references were swapped from Grade 4 to Grade 1 citations, but the diff contains no change to that YAML file. The test reads the live plan via plan_path.read_text() and passes it to _citation_gate alongside hardcoded source_ref strings — so if the YAML was not actually updated, the citation gate will be evaluated against stale plan content, the new hardcoded strings will not resolve, and the test will fail in CI even if it passed locally (suggesting the reviewer ran against a manually-edited local file). If the YAML change is in a prior commit within the same PR, that commit must be included in the review surface; as presented, the critical artifact being fixed is invisible.\"\n  },\n  {\n    \"id\": \"pinned-test-structural-fragility\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:100-114\",\n    \"description\": \"The test maintains a hardcoded list of source_ref strings that must be kept manually in sync with the live plan YAML. The commit message itself documents that this exact failure has now happened twice in rapid succession (PR #2014, then this PR), and the mitigation offered is a comment (\\\"whoever swaps the plan cites must also update this test\\\") with no enforcement mechanism. A structurally sound alternative would be to derive the expected citations directly from the parsed plan (e.g., extract plan['plan_references'] and feed those into _citation_gate), so the test always reflects actual plan state without a separate manual update. The current pattern is guaranteed to produce another CI break the next time plan_references changes.\"\n  },\n  {\n    \"id\": \"no-negative-assertion-stale-refs-removed\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:97-114\",\n    \"description\": \"The test only asserts that the two new Grade 1 citations (с. 24, с. 52) pass the citation gate; it does not assert that the old Grade 4 strings (с. 162, с. 163) are absent from the plan. If the plan YAML was accidentally left with both old and new references, the new strings would still resolve and the test would pass, silently masking the stale Grade 4 entries that are not in the corpus (per issue #1901). A complementary negative assertion — reading plan['plan_references'] and asserting neither of the Grade 4 strings appears — would close this gap.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3451
+    }
+  ],
+  "scores": {
+    "f1": 0.2143,
+    "case_acc": 0.0,
+    "precision": 0.15,
+    "recall": 0.375,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 3,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

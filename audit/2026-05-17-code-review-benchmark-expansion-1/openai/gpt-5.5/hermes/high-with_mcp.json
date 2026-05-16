@@ -1,0 +1,146 @@
+{
+  "cell": {
+    "family": "openai",
+    "model": "gpt-5.5",
+    "harness": "hermes",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:30:32Z",
+  "finished_at": "2026-05-16T18:34:27Z",
+  "duration_s": 235.17,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "host-flag"
+      ],
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 3,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "host-can-bind-publicly-without-auth",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:762",
+          "description": "The new `serve --openai` command advertises local-only tooling but accepts arbitrary `--host` values and passes them directly to `uvicorn.run` with no authentication or loopback validation. A user or wrapper can bind this proxy to `0.0.0.0`, exposing local agent CLIs and the user's Hermes/Codex/Gemini/Claude credentials/config to any network client that can reach the port. For a proxy that executes paid/local agent commands from request bodies, non-loopback binds should be rejected unless an explicit authenticated remote mode is added."
+        },
+        {
+          "id": "prompts-leak-through-process-argv",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:188",
+          "description": "Several backends pass the flattened user prompt as a command-line argument (`--prompt=...`, `-- ...`, or `--oneshot=...`) instead of stdin or a protected temp file. Chat prompts often contain source code, credentials, or private user data, and command-line arguments are observable via process listings by other local processes/users while the backend runs; very large prompts can also hit OS argument-length limits before the backend starts. Codex already uses stdin, and the other routes should use the same pattern or another non-argv transport."
+        },
+        {
+          "id": "unsupported-stream-silently-ignored",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:286",
+          "description": "The request model allows arbitrary extra OpenAI fields, but `/v1/chat/completions` does not inspect or reject `stream: true`; it always returns a normal `chat.completion` JSON object. Many OpenAI-compatible clients switch to SSE parsing when they send `stream: true`, so silently ignoring the flag produces a protocol mismatch rather than a clear unsupported-feature error. Since Phase 1 is intentionally non-streaming, the handler should return a 400-style OpenAI error for `stream: true` until streaming is implemented."
+        },
+        {
+          "id": "unbounded-request-fanout-to-expensive-subprocesses",
+          "severity": "MEDIUM",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:299",
+          "description": "Each chat completion request is flattened and immediately launches a backend CLI with up to a 120-second timeout, but there is no request body size limit, message count/content limit, or concurrency limiter around backend execution. A client can submit many large requests that consume memory during JSON parsing/prompt construction and tie up threadpool workers plus expensive agent subprocesses until timeout. Even for localhost tooling, this should have bounded input sizes and a semaphore/rate limit around subprocess launches."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"host-can-bind-publicly-without-auth\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:762\",\n    \"description\": \"The new `serve --openai` command advertises local-only tooling but accepts arbitrary `--host` values and passes them directly to `uvicorn.run` with no authentication or loopback validation. A user or wrapper can bind this proxy to `0.0.0.0`, exposing local agent CLIs and the user's Hermes/Codex/Gemini/Claude credentials/config to any network client that can reach the port. For a proxy that executes paid/local agent commands from request bodies, non-loopback binds should be rejected unless an explicit authenticated remote mode is added.\"\n  },\n  {\n    \"id\": \"prompts-leak-through-process-argv\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:188\",\n    \"description\": \"Several backends pass the flattened user prompt as a command-line argument (`--prompt=...`, `-- ...`, or `--oneshot=...`) instead of stdin or a protected temp file. Chat prompts often contain source code, credentials, or private user data, and command-line arguments are observable via process listings by other local processes/users while the backend runs; very large prompts can also hit OS argument-length limits before the backend starts. Codex already uses stdin, and the other routes should use the same pattern or another non-argv transport.\"\n  },\n  {\n    \"id\": \"unsupported-stream-silently-ignored\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:286\",\n    \"description\": \"The request model allows arbitrary extra OpenAI fields, but `/v1/chat/completions` does not inspect or reject `stream: true`; it always returns a normal `chat.completion` JSON object. Many OpenAI-compatible clients switch to SSE parsing when they send `stream: true`, so silently ignoring the flag produces a protocol mismatch rather than a clear unsupported-feature error. Since Phase 1 is intentionally non-streaming, the handler should return a 400-style OpenAI error for `stream: true` until streaming is implemented.\"\n  },\n  {\n    \"id\": \"unbounded-request-fanout-to-expensive-subprocesses\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:299\",\n    \"description\": \"Each chat completion request is flattened and immediately launches a backend CLI with up to a 120-second timeout, but there is no request body size limit, message count/content limit, or concurrency limiter around backend execution. A client can submit many large requests that consume memory during JSON parsing/prompt construction and tie up threadpool workers plus expensive agent subprocesses until timeout. Even for localhost tooling, this should have bounded input sizes and a semaphore/rate limit around subprocess launches.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2945
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 1,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "missed_gold_ids": [],
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "high_recall": 1.0,
+      "catastrophic_misses": 0,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "activity-schema-correction-cannot-edit-activities",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:107",
+          "description": "Adding activity_schema to WRITER_CORRECTION_GATES routes this failure through the existing writer-correction path, but that path renders a module.md-only prompt and accepts module.md-only patches for every gate except strict_json_parse. The activity_schema diagnostic points at activities.yaml item fields, yet the correction prompt explicitly forbids returning or patching activities.yaml, so an auto-correction retry cannot fix the failed gate and may instead rewrite module.md uselessly until the pipeline exhausts retries. This gate needs an artifact-aware correction path, or it should be excluded from WRITER_CORRECTION_GATES until corrections can modify activities.yaml."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"activity-schema-correction-cannot-edit-activities\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:107\",\n    \"description\": \"Adding activity_schema to WRITER_CORRECTION_GATES routes this failure through the existing writer-correction path, but that path renders a module.md-only prompt and accepts module.md-only patches for every gate except strict_json_parse. The activity_schema diagnostic points at activities.yaml item fields, yet the correction prompt explicitly forbids returning or patching activities.yaml, so an auto-correction retry cannot fix the failed gate and may instead rewrite module.md uselessly until the pipeline exhausts retries. This gate needs an artifact-aware correction path, or it should be excluded from WRITER_CORRECTION_GATES until corrections can modify activities.yaml.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 885
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 1,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "synthetic-citations-mask-stale-resources",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:108",
+          "description": "The test now feeds _citation_gate two synthetic Grade 1 source_ref values instead of loading the module's actual resources, so it can pass while the real my-morning resources remain stale. In the current tree curriculum/l2-uk-en/a1/my-morning/resources.yaml still cites Захарійчук Grade 4 p.162/p.163, which no longer matches the updated plan references; this patch therefore weakens the regression test rather than proving the module's citations resolve."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"synthetic-citations-mask-stale-resources\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:108\",\n    \"description\": \"The test now feeds _citation_gate two synthetic Grade 1 source_ref values instead of loading the module's actual resources, so it can pass while the real my-morning resources remain stale. In the current tree curriculum/l2-uk-en/a1/my-morning/resources.yaml still cites Захарійчук Grade 4 p.162/p.163, which no longer matches the updated plan references; this patch therefore weakens the regression test rather than proving the module's citations resolve.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 654
+    }
+  ],
+  "scores": {
+    "f1": 0.5714,
+    "case_acc": 0.3333,
+    "precision": 0.6667,
+    "recall": 0.5,
+    "high_recall": 0.6,
+    "catastrophic_misses": 2,
+    "strong_match_count": 4,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "gpt-5.5",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

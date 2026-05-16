@@ -1,0 +1,145 @@
+{
+  "cell": {
+    "family": "google",
+    "model": "gemini-3.1-pro-preview",
+    "harness": "native_cli",
+    "effort": "default",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T17:58:16Z",
+  "finished_at": "2026-05-16T18:03:06Z",
+  "duration_s": 290.11,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "error-envelope",
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "host-flag"
+      ],
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "high_recall": 0.5,
+      "catastrophic_misses": 1,
+      "strong_match_count": 2,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "invalid-decorator-syntax",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:46",
+          "description": "The decorator '@scripts/generate_mdx/dataclasses_.py(frozen=True)' applied to the 'CompletionResponse' and 'ModelRoute' classes is invalid Python syntax and will predictably cause a SyntaxError on import. It appears to be an artifact of an erroneous find-and-replace operation and must be reverted to the standard '@dataclass(frozen=True)'."
+        },
+        {
+          "id": "missing-stream-rejection",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:317",
+          "description": "The proxy explicitly omits streaming support but allows extra fields on 'ChatCompletionRequest' via 'extra=\"allow\"'. If an OpenAI client sends 'stream: true', the proxy silently ignores the flag and returns a fully aggregated JSON response instead of the requested Server-Sent Events (SSE) stream. This violates the OpenAI specification and breaks downstream parsers. The endpoint should explicitly detect 'stream' and return a 400 Bad Request error if it is enabled."
+        },
+        {
+          "id": "unbounded-payload-dos",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:37",
+          "description": "The 'ChatCompletionRequest' and 'Message' models do not enforce any limits on the size or number of messages, exposing the server to denial-of-service via memory exhaustion. Furthermore, because backends like Gemini and Claude accept the entire aggregated prompt as a command-line argument rather than via stdin, sending moderately large contexts will abruptly crash the subprocess call with an OS-level 'E2BIG' (Argument list too long) exception before execution even begins."
+        },
+        {
+          "id": "expensive-health-probes",
+          "severity": "MEDIUM",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:284",
+          "description": "The 'healthz' endpoint synchronously executes four separate CLI subprocesses (e.g., 'gemini --version', 'claude --version') on every single GET request. Because health endpoints are typically polled every few seconds by infrastructure or clients, continuously spawning four processes per ping is highly inefficient and will rapidly consume CPU and Starlette threadpool workers. The backend availability results should be cached with a reasonable TTL."
+        }
+      ],
+      "raw_response": "```json\n[\n  {\n    \"id\": \"invalid-decorator-syntax\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:46\",\n    \"description\": \"The decorator '@scripts/generate_mdx/dataclasses_.py(frozen=True)' applied to the 'CompletionResponse' and 'ModelRoute' classes is invalid Python syntax and will predictably cause a SyntaxError on import. It appears to be an artifact of an erroneous find-and-replace operation and must be reverted to the standard '@dataclass(frozen=True)'.\"\n  },\n  {\n    \"id\": \"missing-stream-rejection\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:317\",\n    \"description\": \"The proxy explicitly omits streaming support but allows extra fields on 'ChatCompletionRequest' via 'extra=\\\"allow\\\"'. If an OpenAI client sends 'stream: true', the proxy silently ignores the flag and returns a fully aggregated JSON response instead of the requested Server-Sent Events (SSE) stream. This violates the OpenAI specification and breaks downstream parsers. The endpoint should explicitly detect 'stream' and return a 400 Bad Request error if it is enabled.\"\n  },\n  {\n    \"id\": \"unbounded-payload-dos\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:37\",\n    \"description\": \"The 'ChatCompletionRequest' and 'Message' models do not enforce any limits on the size or number of messages, exposing the server to denial-of-service via memory exhaustion. Furthermore, because backends like Gemini and Claude accept the entire aggregated prompt as a command-line argument rather than via stdin, sending moderately large contexts will abruptly crash the subprocess call with an OS-level 'E2BIG' (Argument list too long) exception before execution even begins.\"\n  },\n  {\n    \"id\": \"expensive-health-probes\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"performance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:284\",\n    \"description\": \"The 'healthz' endpoint synchronously executes four separate CLI subprocesses (e.g., 'gemini --version', 'claude --version') on every single GET request. Because health endpoints are typically polled every few seconds by infrastructure or clients, continuously spawning four processes per ping is highly inefficient and will rapidly consume CPU and Starlette threadpool workers. The backend availability results should be cached with a reasonable TTL.\"\n  }\n]\n```\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 2500
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 0,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 2,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "missing-pr-fixes",
+          "severity": "HIGH",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:97",
+          "description": "The PR context states this patch bundles three fixes (VESUM reviewer scope leak, textbook-grounding plan references, and quote cleanup). However, the provided diff only contains the test update for the textbook citation resolve. The actual implementation fixes for the VESUM scope leak and the quote cleanup are entirely missing from the diff, failing to address the regressions mentioned in the PR context."
+        },
+        {
+          "id": "brittle-live-data-test",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_citation_resolve.py:106",
+          "description": "The test is structurally brittle because it reads a live production plan (`my-morning.yaml`) from the file system but asserts against hardcoded `source_ref` values. This tightly couples the test to mutable live data, guaranteeing it will break whenever routine curriculum content updates occur (as evidenced by this very commit). The test should either use a static, mocked YAML payload or avoid pinning expectations to live data."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"missing-pr-fixes\",\n    \"severity\": \"HIGH\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:97\",\n    \"description\": \"The PR context states this patch bundles three fixes (VESUM reviewer scope leak, textbook-grounding plan references, and quote cleanup). However, the provided diff only contains the test update for the textbook citation resolve. The actual implementation fixes for the VESUM scope leak and the quote cleanup are entirely missing from the diff, failing to address the regressions mentioned in the PR context.\"\n  },\n  {\n    \"id\": \"brittle-live-data-test\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_citation_resolve.py:106\",\n    \"description\": \"The test is structurally brittle because it reads a live production plan (`my-morning.yaml`) from the file system but asserts against hardcoded `source_ref` values. This tightly couples the test to mutable live data, guaranteeing it will break whenever routine curriculum content updates occur (as evidenced by this very commit). The test should either use a static, mocked YAML payload or avoid pinning expectations to live data.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1184
+    }
+  ],
+  "scores": {
+    "f1": 0.2857,
+    "case_acc": 0.0,
+    "precision": 0.3333,
+    "recall": 0.25,
+    "high_recall": 0.2,
+    "catastrophic_misses": 4,
+    "strong_match_count": 2,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "0.42.0",
+    "model_id": "gemini-3.1-pro-preview",
+    "effort_actual": "default",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

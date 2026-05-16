@@ -1,0 +1,214 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-opus-4-7",
+    "harness": "native_cli",
+    "effort": "high",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T18:51:10Z",
+  "finished_at": "2026-05-16T18:53:40Z",
+  "duration_s": 150.55,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 11,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "healthz-fork",
+        "host-flag"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unbounded-request-body-to-subprocess",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:282-310 (chat_completions)",
+          "description": "The proxy applies no size limit to the incoming `messages` array or to individual message `content`. A local-or-LAN client can POST a multi-megabyte prompt that is then flattened into a single string and handed to a subprocess (stdin for codex/claude, or argv for gemini/hermes). Combined with the 120s default backend timeout and the fact that every handler is sync (`def`, runs in Starlette's default 40-worker threadpool), a handful of large concurrent requests can saturate the threadpool and pin CPU/memory. Add a max-message-count, max-total-prompt-bytes, and per-content-part cap, and reject early with HTTP 413 before invoking the backend."
+        },
+        {
+          "id": "large-prompt-passed-via-argv",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_gemini_backend (~165), _hermes_backend (~195), _claude_backend (~180)",
+          "description": "The gemini, hermes, and claude backends embed the full flattened prompt into argv via `--prompt={prompt}`, `--oneshot={prompt}`, and a trailing positional arg after `--`. This (a) exposes user prompt contents to any local process via `/proc/<pid>/cmdline` and `ps`, (b) risks E2BIG once a prompt nears `ARG_MAX` (~256KB on macOS, ~2MB on Linux) producing an opaque OSError rather than a clean 4xx, and (c) makes shell-history / audit-log leakage more likely than the stdin path codex uses. Switch these backends to feed the prompt through stdin (matching the codex pattern) or via a temp file, so prompts never appear on argv."
+        },
+        {
+          "id": "healthz-fork-amplification",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:251-256 (healthz) + 220-235 (_probe_cli)",
+          "description": "Every `GET /healthz` request synchronously spawns four CLI subprocesses (codex, gemini, claude, hermes) with a 1s timeout each. An unauthenticated probe at a few requests per second can sustain dozens of subprocess forks per second on the user's laptop, and worst-case a single request blocks for up to 4s if probes serialise. This is the exact surface called out in open issue #2029. Cache probe results for at least a few seconds, run probes concurrently, or split into `/healthz` (cheap liveness) vs `/readyz` (full probe, rate-limited)."
+        },
+        {
+          "id": "no-authentication-on-proxy",
+          "severity": "HIGH",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:248-376 (all routes); scripts/ai_agent_bridge/_cli.py:672-688",
+          "description": "The proxy exposes `/v1/chat/completions` with zero authentication. The default binding is `127.0.0.1`, which limits exposure to local processes, but `--host` accepts arbitrary values (open issue #2030) — meaning a one-character typo by the user (`--host 0.0.0.0`) immediately publishes a credential-bearing model gateway to the LAN, and even on localhost any user-level process can invoke arbitrary backend models, burn the user's API quota, and exfiltrate the prompts. At minimum: require an `OPENAI_PROXY_API_KEY` env var, reject requests whose `Authorization: Bearer ...` does not match, and refuse to start with a non-loopback `--host` unless an explicit `--allow-remote` flag is also passed (ties into issue #2030)."
+        },
+        {
+          "id": "parent-env-leaks-to-backends",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_run_backend_command (~127-135)",
+          "description": "`_run_backend_command` copies the full `_PARENT_ENV` (i.e. the bridge process environment) into every backend subprocess. Per MEMORY #M-5 the parent env routinely contains `DAGGER_CLOUD_TOKEN`, `*_API_KEY`, `*_PAT`, `GH_TOKEN` — any of which the called CLI (or a future malicious CLI shim on PATH) can read and echo back into its stdout, which is returned verbatim as the chat completion `content`. Allowlist a minimal env (PATH, HOME, TERM, COLORTERM, and the few model-API keys each backend genuinely needs) instead of forwarding everything."
+        },
+        {
+          "id": "sync-handlers-block-threadpool",
+          "severity": "MEDIUM",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:294-310 (chat_completions)",
+          "description": "Both `chat_completions` and `healthz` are declared as plain `def`, so FastAPI dispatches them to the AnyIO threadpool (default 40 threads). Each invocation then performs a blocking `subprocess.run` that can run for the full 120s timeout. ~40 slow concurrent clients can fully starve the threadpool, after which `/healthz`, `/v1/models`, and every new completion request stall. Either make the handlers `async def` and use `asyncio.create_subprocess_exec`, or add an explicit `asyncio.Semaphore` cap (e.g. 4) with a 429 response when over capacity."
+        },
+        {
+          "id": "openai-content-parts-silently-dropped",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_message_content_to_text (~75-90)",
+          "description": "OpenAI clients commonly send `content` as a list including `image_url`, `input_audio`, `file`, or tool-call envelopes. The current filter only keeps items whose `type` is in `{None, 'text', 'input_text', 'output_text'}` and silently drops everything else, producing an empty/partial prompt with no error. That's worse than rejecting: the backend produces a confidently wrong answer to a question whose images were stripped. Either (a) return 400 `unsupported_content_type` for non-text parts in Phase 1, or (b) emit an explicit `[unsupported content omitted: image_url]` placeholder so the caller can tell."
+        },
+        {
+          "id": "finish-reason-and-usage-always-stop-zero",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:357-376",
+          "description": "`finish_reason` is hard-coded to `\"stop\"` for every successful response, even when the backend was truncated, ran out of tokens, or hit a tool-stop. Clients that key retry/continuation logic on `finish_reason == 'length'` (LangChain, LiteLLM, llamaindex) will silently misbehave. Similarly, `usage` is always zero — the docstring justifies this for prompt/completion tokens, but OpenAI clients commonly use `total_tokens` for rate-limit accounting and will report '0 tokens' dashboards. Either populate from backend telemetry where available, or omit the `usage` key entirely so clients fall back to their own estimators rather than trusting a zero."
+        },
+        {
+          "id": "codex-tempfile-leak-on-process-kill",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_codex_backend (~140-165)",
+          "description": "The codex backend creates a NamedTemporaryFile with `delete=False`, hands its path to `codex exec -o`, and cleans up in a `finally`. If the proxy process is killed (SIGKILL, OOM, laptop power-loss) between create and cleanup, an `/tmp/openai-proxy-codex-*.txt` file containing the model output is left behind permanently. Either use `tempfile.TemporaryDirectory()` registered with `weakref.finalize`, or stamp the files into a known directory under `/tmp/openai-proxy-codex/` and sweep stale entries on startup."
+        },
+        {
+          "id": "shutil-which-hermes-called-per-request",
+          "severity": "LOW",
+          "category": "performance",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:_hermes_backend (~190), _probe_hermes (~245)",
+          "description": "`shutil.which(\"hermes\")` is invoked on every chat-completion and every healthz call. PATH lookup is cheap but not free (stat per PATH entry), and if hermes is missing the fallback string `\"hermes\"` is silently passed to subprocess, producing a confusing FileNotFoundError instead of a clear 503. Resolve once at module import, cache the result, and return a structured `backend_unavailable` 503 if the CLI cannot be located."
+        },
+        {
+          "id": "model-min-length-allows-control-chars",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:ChatCompletionRequest (~50-56)",
+          "description": "`model: str = Field(min_length=1)` accepts any non-empty string — including newlines, NUL bytes, or shell metacharacters. While the lookup `_ROUTABLE_MODELS.get(request.model)` safely returns 404 for unknown IDs, the unknown-model branch echoes the raw user-supplied model name into the error message, which is then returned to the client. That's not directly exploitable today, but it's a footgun for any downstream log aggregator that doesn't sanitise its inputs. Constrain `model` with a regex (e.g. `^[A-Za-z0-9._-]{1,64}$`) at the schema layer."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unbounded-request-body-to-subprocess\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:282-310 (chat_completions)\",\n    \"description\": \"The proxy applies no size limit to the incoming `messages` array or to individual message `content`. A local-or-LAN client can POST a multi-megabyte prompt that is then flattened into a single string and handed to a subprocess (stdin for codex/claude, or argv for gemini/hermes). Combined with the 120s default backend timeout and the fact that every handler is sync (`def`, runs in Starlette's default 40-worker threadpool), a handful of large concurrent requests can saturate the threadpool and pin CPU/memory. Add a max-message-count, max-total-prompt-bytes, and per-content-part cap, and reject early with HTTP 413 before invoking the backend.\"\n  },\n  {\n    \"id\": \"large-prompt-passed-via-argv\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_gemini_backend (~165), _hermes_backend (~195), _claude_backend (~180)\",\n    \"description\": \"The gemini, hermes, and claude backends embed the full flattened prompt into argv via `--prompt={prompt}`, `--oneshot={prompt}`, and a trailing positional arg after `--`. This (a) exposes user prompt contents to any local process via `/proc/<pid>/cmdline` and `ps`, (b) risks E2BIG once a prompt nears `ARG_MAX` (~256KB on macOS, ~2MB on Linux) producing an opaque OSError rather than a clean 4xx, and (c) makes shell-history / audit-log leakage more likely than the stdin path codex uses. Switch these backends to feed the prompt through stdin (matching the codex pattern) or via a temp file, so prompts never appear on argv.\"\n  },\n  {\n    \"id\": \"healthz-fork-amplification\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:251-256 (healthz) + 220-235 (_probe_cli)\",\n    \"description\": \"Every `GET /healthz` request synchronously spawns four CLI subprocesses (codex, gemini, claude, hermes) with a 1s timeout each. An unauthenticated probe at a few requests per second can sustain dozens of subprocess forks per second on the user's laptop, and worst-case a single request blocks for up to 4s if probes serialise. This is the exact surface called out in open issue #2029. Cache probe results for at least a few seconds, run probes concurrently, or split into `/healthz` (cheap liveness) vs `/readyz` (full probe, rate-limited).\"\n  },\n  {\n    \"id\": \"no-authentication-on-proxy\",\n    \"severity\": \"HIGH\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:248-376 (all routes); scripts/ai_agent_bridge/_cli.py:672-688\",\n    \"description\": \"The proxy exposes `/v1/chat/completions` with zero authentication. The default binding is `127.0.0.1`, which limits exposure to local processes, but `--host` accepts arbitrary values (open issue #2030) — meaning a one-character typo by the user (`--host 0.0.0.0`) immediately publishes a credential-bearing model gateway to the LAN, and even on localhost any user-level process can invoke arbitrary backend models, burn the user's API quota, and exfiltrate the prompts. At minimum: require an `OPENAI_PROXY_API_KEY` env var, reject requests whose `Authorization: Bearer ...` does not match, and refuse to start with a non-loopback `--host` unless an explicit `--allow-remote` flag is also passed (ties into issue #2030).\"\n  },\n  {\n    \"id\": \"parent-env-leaks-to-backends\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_run_backend_command (~127-135)\",\n    \"description\": \"`_run_backend_command` copies the full `_PARENT_ENV` (i.e. the bridge process environment) into every backend subprocess. Per MEMORY #M-5 the parent env routinely contains `DAGGER_CLOUD_TOKEN`, `*_API_KEY`, `*_PAT`, `GH_TOKEN` — any of which the called CLI (or a future malicious CLI shim on PATH) can read and echo back into its stdout, which is returned verbatim as the chat completion `content`. Allowlist a minimal env (PATH, HOME, TERM, COLORTERM, and the few model-API keys each backend genuinely needs) instead of forwarding everything.\"\n  },\n  {\n    \"id\": \"sync-handlers-block-threadpool\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"performance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:294-310 (chat_completions)\",\n    \"description\": \"Both `chat_completions` and `healthz` are declared as plain `def`, so FastAPI dispatches them to the AnyIO threadpool (default 40 threads). Each invocation then performs a blocking `subprocess.run` that can run for the full 120s timeout. ~40 slow concurrent clients can fully starve the threadpool, after which `/healthz`, `/v1/models`, and every new completion request stall. Either make the handlers `async def` and use `asyncio.create_subprocess_exec`, or add an explicit `asyncio.Semaphore` cap (e.g. 4) with a 429 response when over capacity.\"\n  },\n  {\n    \"id\": \"openai-content-parts-silently-dropped\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_message_content_to_text (~75-90)\",\n    \"description\": \"OpenAI clients commonly send `content` as a list including `image_url`, `input_audio`, `file`, or tool-call envelopes. The current filter only keeps items whose `type` is in `{None, 'text', 'input_text', 'output_text'}` and silently drops everything else, producing an empty/partial prompt with no error. That's worse than rejecting: the backend produces a confidently wrong answer to a question whose images were stripped. Either (a) return 400 `unsupported_content_type` for non-text parts in Phase 1, or (b) emit an explicit `[unsupported content omitted: image_url]` placeholder so the caller can tell.\"\n  },\n  {\n    \"id\": \"finish-reason-and-usage-always-stop-zero\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:357-376\",\n    \"description\": \"`finish_reason` is hard-coded to `\\\"stop\\\"` for every successful response, even when the backend was truncated, ran out of tokens, or hit a tool-stop. Clients that key retry/continuation logic on `finish_reason == 'length'` (LangChain, LiteLLM, llamaindex) will silently misbehave. Similarly, `usage` is always zero — the docstring justifies this for prompt/completion tokens, but OpenAI clients commonly use `total_tokens` for rate-limit accounting and will report '0 tokens' dashboards. Either populate from backend telemetry where available, or omit the `usage` key entirely so clients fall back to their own estimators rather than trusting a zero.\"\n  },\n  {\n    \"id\": \"codex-tempfile-leak-on-process-kill\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_codex_backend (~140-165)\",\n    \"description\": \"The codex backend creates a NamedTemporaryFile with `delete=False`, hands its path to `codex exec -o`, and cleans up in a `finally`. If the proxy process is killed (SIGKILL, OOM, laptop power-loss) between create and cleanup, an `/tmp/openai-proxy-codex-*.txt` file containing the model output is left behind permanently. Either use `tempfile.TemporaryDirectory()` registered with `weakref.finalize`, or stamp the files into a known directory under `/tmp/openai-proxy-codex/` and sweep stale entries on startup.\"\n  },\n  {\n    \"id\": \"shutil-which-hermes-called-per-request\",\n    \"severity\": \"LOW\",\n    \"category\": \"performance\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:_hermes_backend (~190), _probe_hermes (~245)\",\n    \"description\": \"`shutil.which(\\\"hermes\\\")` is invoked on every chat-completion and every healthz call. PATH lookup is cheap but not free (stat per PATH entry), and if hermes is missing the fallback string `\\\"hermes\\\"` is silently passed to subprocess, producing a confusing FileNotFoundError instead of a clear 503. Resolve once at module",
+      "raw_response_truncated": true,
+      "raw_response_chars": 8889
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 5,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "diagnostic-example-identical-error-and-correction",
+          "severity": "MEDIUM",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4585-4591",
+          "description": "The canonical shape printed in the failure diagnostic shows `error: \"вмиваюся\"` and `correction: \"вмиваюся\"` — the same Ukrainian form for both fields. The whole point of `error-correction` is that the two values differ (one wrong, one right). A writer that reads this diagnostic and faithfully copies the shape will produce a syntactically valid but semantically degenerate item, exactly the kind of plausible-looking schema mistake this gate is meant to prevent. Use distinguishable example values (e.g., `error: \"вмиваюсь\"`, `correction: \"вмиваюся\"`)."
+        },
+        {
+          "id": "activity-type-matched-by-exact-string-only",
+          "severity": "MEDIUM",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:4470-4476",
+          "description": "Type matching is `activity.get(\"type\") == \"error-correction\"` (exact lowercase, hyphenated). Real writer mistakes have included `error_correction`, `errorCorrection`, `Error-Correction`, leading/trailing whitespace, and stringly-typed list wrappers. Any of those values short-circuits the gate via the `allowed_fields is None` branch and the activity passes silently with whatever alias fields it likes. Since the gate's stated job is rejecting writer schema drift, the type field itself should be normalized (lowercased, stripped, dashes-vs-underscores reconciled) before lookup, and an unknown-but-similar type should be flagged rather than ignored."
+        },
+        {
+          "id": "no-value-level-validation",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/build/linear_pipeline.py:4488-4514",
+          "description": "The gate only checks field NAMES; it does not check that required fields have non-empty string values. An item like `{sentence: \"\", error: null, correction: \"вмиваюся\"}` passes the schema gate because `sentence` and `error` keys are present. Given the gate runs before downstream content gates and explicitly short-circuits on failure, allowing empty/None values to pass here means the failure surfaces deeper in the pipeline (or, worse, in `ActivityParser._parse_error_correction`) instead of being caught at the same authoring layer. A minimal non-empty string check would close this loop."
+        },
+        {
+          "id": "no-integration-test-for-early-short-circuit",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "tests/test_activity_schema_gate.py:1-182",
+          "description": "All seven tests exercise `_activity_schema_gate` directly. None drives `run_python_qg`, which is where the new `gates[\"passed\"] = False; return _python_qg_report(...)` early-exit branch lives. If a future refactor moves the gate insertion point, drops the early return, or breaks the aggregation contract (e.g., forgets to mark `gates[\"passed\"] = False`), the unit tests stay green while the gate stops blocking failed builds. One integration test that runs `run_python_qg` with a failing activity and asserts both the early return and `gates[\"passed\"] is False` would protect the actual production behavior."
+        },
+        {
+          "id": "options-field-allowed-without-citation",
+          "severity": "LOW",
+          "category": "spec-compliance",
+          "location": "scripts/build/linear_pipeline.py:535-537",
+          "description": "`_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS` lists `options` as a parser-supported optional field, but the docstring on `_activity_item_schema_whitelist` only enumerates `answer`, `correction`, `options`, `explanation` as supported, citing `ActivityParser._parse_error_correction`. If the parser does not actually consume `options` for `error-correction` items, the gate is silently whitelisting a field that downstream code ignores — a real authoring-vs-runtime drift the gate is supposed to catch. Worth confirming directly against the parser before this lands so the whitelist matches actual parser support, not assumed support."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"diagnostic-example-identical-error-and-correction\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4585-4591\",\n    \"description\": \"The canonical shape printed in the failure diagnostic shows `error: \\\"вмиваюся\\\"` and `correction: \\\"вмиваюся\\\"` — the same Ukrainian form for both fields. The whole point of `error-correction` is that the two values differ (one wrong, one right). A writer that reads this diagnostic and faithfully copies the shape will produce a syntactically valid but semantically degenerate item, exactly the kind of plausible-looking schema mistake this gate is meant to prevent. Use distinguishable example values (e.g., `error: \\\"вмиваюсь\\\"`, `correction: \\\"вмиваюся\\\"`).\"\n  },\n  {\n    \"id\": \"activity-type-matched-by-exact-string-only\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:4470-4476\",\n    \"description\": \"Type matching is `activity.get(\\\"type\\\") == \\\"error-correction\\\"` (exact lowercase, hyphenated). Real writer mistakes have included `error_correction`, `errorCorrection`, `Error-Correction`, leading/trailing whitespace, and stringly-typed list wrappers. Any of those values short-circuits the gate via the `allowed_fields is None` branch and the activity passes silently with whatever alias fields it likes. Since the gate's stated job is rejecting writer schema drift, the type field itself should be normalized (lowercased, stripped, dashes-vs-underscores reconciled) before lookup, and an unknown-but-similar type should be flagged rather than ignored.\"\n  },\n  {\n    \"id\": \"no-value-level-validation\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/build/linear_pipeline.py:4488-4514\",\n    \"description\": \"The gate only checks field NAMES; it does not check that required fields have non-empty string values. An item like `{sentence: \\\"\\\", error: null, correction: \\\"вмиваюся\\\"}` passes the schema gate because `sentence` and `error` keys are present. Given the gate runs before downstream content gates and explicitly short-circuits on failure, allowing empty/None values to pass here means the failure surfaces deeper in the pipeline (or, worse, in `ActivityParser._parse_error_correction`) instead of being caught at the same authoring layer. A minimal non-empty string check would close this loop.\"\n  },\n  {\n    \"id\": \"no-integration-test-for-early-short-circuit\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"tests/test_activity_schema_gate.py:1-182\",\n    \"description\": \"All seven tests exercise `_activity_schema_gate` directly. None drives `run_python_qg`, which is where the new `gates[\\\"passed\\\"] = False; return _python_qg_report(...)` early-exit branch lives. If a future refactor moves the gate insertion point, drops the early return, or breaks the aggregation contract (e.g., forgets to mark `gates[\\\"passed\\\"] = False`), the unit tests stay green while the gate stops blocking failed builds. One integration test that runs `run_python_qg` with a failing activity and asserts both the early return and `gates[\\\"passed\\\"] is False` would protect the actual production behavior.\"\n  },\n  {\n    \"id\": \"options-field-allowed-without-citation\",\n    \"severity\": \"LOW\",\n    \"category\": \"spec-compliance\",\n    \"location\": \"scripts/build/linear_pipeline.py:535-537\",\n    \"description\": \"`_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS` lists `options` as a parser-supported optional field, but the docstring on `_activity_item_schema_whitelist` only enumerates `answer`, `correction`, `options`, `explanation` as supported, citing `ActivityParser._parse_error_correction`. If the parser does not actually consume `options` for `error-correction` items, the gate is silently whitelisting a field that downstream code ignores — a real authoring-vs-runtime drift the gate is supposed to catch. Worth confirming directly against the parser before this lands so the whitelist matches actual parser support, not assumed support.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 4068
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.0,
+    "case_acc": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 0,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-opus-4-7",
+    "effort_actual": "high",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}

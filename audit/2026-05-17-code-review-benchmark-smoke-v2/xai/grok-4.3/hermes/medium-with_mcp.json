@@ -1,0 +1,130 @@
+{
+  "cell": {
+    "family": "xai",
+    "model": "grok-4.3",
+    "harness": "hermes",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T17:51:10Z",
+  "finished_at": "2026-05-16T17:52:50Z",
+  "duration_s": 100.26,
+  "n_cases": 3,
+  "judgments": [
+    {
+      "case_id": "pr-2025-openai-proxy",
+      "model_findings_count": 4,
+      "gold_findings_count": 4,
+      "matched_gold_ids": [
+        "healthz-fork"
+      ],
+      "missed_gold_ids": [
+        "arg-max",
+        "error-envelope",
+        "host-flag"
+      ],
+      "precision": 0.25,
+      "recall": 0.25,
+      "f1": 0.25,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 1,
+      "weak_match_count": 0,
+      "model_findings": [
+        {
+          "id": "unbounded-prompt-size",
+          "severity": "HIGH",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:312",
+          "description": "chat_completions accepts arbitrary-length messages/content with no max_length, request-size middleware, or truncation; the resulting prompt is passed verbatim via stdin or embedded in argv (e.g. _gemini_backend line 280, _hermes_backend line 290, _claude_backend line 270) to long-running subprocesses, enabling trivial memory exhaustion or ARG_MAX failures from a single HTTP POST."
+        },
+        {
+          "id": "non-localhost-binding",
+          "severity": "MEDIUM",
+          "category": "security",
+          "location": "scripts/ai_agent_bridge/_cli.py:755",
+          "description": "serve --openai accepts any --host (default 127.0.0.1) without enforcement, warning, or documentation that the proxy is unauthenticated; nothing prevents an operator from passing --host 0.0.0.0 and exposing the full agent surface to the network."
+        },
+        {
+          "id": "healthz-probe-cost",
+          "severity": "LOW",
+          "category": "dos-surface",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:220",
+          "description": "healthz invokes every _BACKEND_PROBE (each a 1-second subprocess --version) on every request with no caching, rate limit, or cheap static response, allowing an unauthenticated caller to trivially amplify CPU and process-table usage."
+        },
+        {
+          "id": "tempfile-leak-on-crash",
+          "severity": "LOW",
+          "category": "correctness",
+          "location": "scripts/ai_agent_bridge/openai_proxy.py:240",
+          "description": "_codex_backend creates a delete=False NamedTemporaryFile before the try/finally that unlinks it; any exception between the with statement and the try (or an abrupt interpreter exit) leaves the file on disk."
+        }
+      ],
+      "raw_response": "[\n  {\n    \"id\": \"unbounded-prompt-size\",\n    \"severity\": \"HIGH\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:312\",\n    \"description\": \"chat_completions accepts arbitrary-length messages/content with no max_length, request-size middleware, or truncation; the resulting prompt is passed verbatim via stdin or embedded in argv (e.g. _gemini_backend line 280, _hermes_backend line 290, _claude_backend line 270) to long-running subprocesses, enabling trivial memory exhaustion or ARG_MAX failures from a single HTTP POST.\"\n  },\n  {\n    \"id\": \"non-localhost-binding\",\n    \"severity\": \"MEDIUM\",\n    \"category\": \"security\",\n    \"location\": \"scripts/ai_agent_bridge/_cli.py:755\",\n    \"description\": \"serve --openai accepts any --host (default 127.0.0.1) without enforcement, warning, or documentation that the proxy is unauthenticated; nothing prevents an operator from passing --host 0.0.0.0 and exposing the full agent surface to the network.\"\n  },\n  {\n    \"id\": \"healthz-probe-cost\",\n    \"severity\": \"LOW\",\n    \"category\": \"dos-surface\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:220\",\n    \"description\": \"healthz invokes every _BACKEND_PROBE (each a 1-second subprocess --version) on every request with no caching, rate limit, or cheap static response, allowing an unauthenticated caller to trivially amplify CPU and process-table usage.\"\n  },\n  {\n    \"id\": \"tempfile-leak-on-crash\",\n    \"severity\": \"LOW\",\n    \"category\": \"correctness\",\n    \"location\": \"scripts/ai_agent_bridge/openai_proxy.py:240\",\n    \"description\": \"_codex_backend creates a delete=False NamedTemporaryFile before the try/finally that unlinks it; any exception between the with statement and the try (or an abrupt interpreter exit) leaves the file on disk.\"\n  }\n]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 1790
+    },
+    {
+      "case_id": "pr-2031-activity-schema",
+      "model_findings_count": 0,
+      "gold_findings_count": 1,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "forbidden-field-aliases"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 1,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    },
+    {
+      "case_id": "pr-2038-m20-three-fixes",
+      "model_findings_count": 0,
+      "gold_findings_count": 3,
+      "matched_gold_ids": [],
+      "missed_gold_ids": [
+        "vesum-reviewer-anchor-leak",
+        "textbook-grounding-plan-reference-swap",
+        "warning-quote-strip"
+      ],
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "high_recall": 0.0,
+      "catastrophic_misses": 2,
+      "strong_match_count": 0,
+      "weak_match_count": 0,
+      "model_findings": [],
+      "raw_response": "[]\n",
+      "raw_response_truncated": false,
+      "raw_response_chars": 3
+    }
+  ],
+  "scores": {
+    "f1": 0.1667,
+    "case_acc": 0.0,
+    "precision": 0.25,
+    "recall": 0.125,
+    "high_recall": 0.0,
+    "catastrophic_misses": 5,
+    "strong_match_count": 1,
+    "weak_match_count": 0
+  },
+  "raw_telemetry": {
+    "harness": "hermes",
+    "harness_version": "Hermes Agent v0.13.0 (2026.5.7)",
+    "model_id": "grok-4.3",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}
