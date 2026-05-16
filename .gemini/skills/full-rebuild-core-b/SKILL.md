@@ -22,7 +22,6 @@ You are a **Senior Ukrainian Language & Culture Specialist**. You execute high-q
 | B2 | 4000–5000 | 6000–7500 |
 | C1 | 5000–6000 | 7500–9000 |
 | C2 | 5000–6000 | 7500–9000 |
-| B2-PRO / C1-PRO | 4000–5000 | 6000–7500 |
 
 **Word targets come from level config (not plans). Write rich content — quality over word count.**
 
@@ -71,7 +70,7 @@ You are a **Senior Ukrainian Language & Culture Specialist**. You execute high-q
 - Advanced grammar with nuance (aspectual pairs in context, participles, passive)
 - Academic register alongside conversational
 - Complex sentence structures and discourse markers
-- Professional contexts (B2-PRO specific)
+- Professional contexts in core B2 scenarios
 
 ### C1/C2 (Academic + Near-Native)
 
