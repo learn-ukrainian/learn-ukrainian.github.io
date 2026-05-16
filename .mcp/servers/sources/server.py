@@ -598,6 +598,26 @@ async def list_tools() -> list[Tool]:
         ),
         # ── Dictionary / reference collections (#1022) ──
         Tool(
+            name="search_ua_gec_errors",
+            description=(
+                "Search UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA team, MIT). "
+                "Returns human-annotated error→correction pairs, filtered to russianism-relevant "
+                "tags (F/Calque, F/Collocation, G/Case, G/Gender). Highest-signal evidence for "
+                "register/phraseological calques that aren't in Antonenko. Pair with search_style_guide "
+                "for the complete russianism evidence layer."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "FTS search query (e.g. 'повістка дня')"},
+                    "tag_filter": {"type": "array", "items": {"type": "string"}, "description": "Optional list of tags to filter by (e.g. ['F/Calque'])"},
+                    "limit": {"type": "integer", "description": "Max results (default 10)", "default": 10},
+                    "require_native_author": {"type": "boolean", "description": "If true, only return errors from native speakers", "default": False},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
             name="search_style_guide",
             description=(
                 "Search Антоненко-Давидович «Як ми говоримо» style guide. "
@@ -1234,6 +1254,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_pravopys": lambda: handle_query_pravopys(arguments),
             "search_slovnyk_me": lambda: handle_search_slovnyk_me(arguments),
             "search_heritage": lambda: handle_search_heritage(arguments),
+            "search_ua_gec_errors": lambda: handle_search_ua_gec_errors(arguments),
             "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
             "search_definitions": lambda: handle_dict_search(arguments, "sum11", "СУМ-11"),
@@ -1370,6 +1391,38 @@ async def handle_search_external(args: dict) -> list[TextContent]:
         for hit in hits
     ]
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False, indent=2))]
+
+
+async def handle_search_ua_gec_errors(args: dict) -> list[TextContent]:
+    """Handle UA-GEC error pair search."""
+    query = args["query"]
+    limit = min(args.get("limit", 10), 20)
+    tag_filter = args.get("tag_filter")
+    require_native_author = args.get("require_native_author", False)
+
+    from wiki.sources_db import search_ua_gec_errors
+    hits = await asyncio.to_thread(
+        search_ua_gec_errors,
+        query,
+        tag_filter=tag_filter,
+        limit=limit,
+        require_native_author=require_native_author
+    )
+
+    if not hits:
+        return [TextContent(type="text", text=f"No UA-GEC results found for: \"{query}\"")]
+
+    lines = [f"Found {len(hits)} human-annotated error pairs for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        native_flag = " (native author)" if hit.get("is_native") else ""
+        lines.append(f"### Result {i}{native_flag}")
+        lines.append(f"- **Error**: {hit.get('error')}")
+        lines.append(f"- **Correction**: {hit.get('correct')}")
+        lines.append(f"- **Type**: {hit.get('error_type')}")
+        lines.append(f"- **Source**: `{hit.get('doc_id')}` ({hit.get('source_lang', 'uk')})")
+        lines.append("")
+
+    return [TextContent(type="text", text="\n".join(lines))]
 
 
 async def handle_get_full_text(args: dict) -> list[TextContent]:

@@ -1472,6 +1472,50 @@ def search_style_guide(word: str, limit: int = 5) -> list[dict]:
     return _dict_lookup("style_guide", word, limit)
 
 
+def search_ua_gec_errors(
+    query: str,
+    *,
+    tag_filter: list[str] | None = None,
+    limit: int = 10,
+    require_native_author: bool = False,
+) -> list[dict]:
+    """Look up russianisms/calques in UA-GEC corpus."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    where_clauses = ["ua_gec_errors_fts MATCH ?"]
+    params = [query]
+
+    if tag_filter:
+        placeholders = ",".join("?" for _ in tag_filter)
+        where_clauses.append(f"error_type IN ({placeholders})")
+        params.extend(tag_filter)
+
+    if require_native_author:
+        where_clauses.append("is_native = 1")
+
+    where_stmt = " AND ".join(where_clauses)
+
+    # We join with main table using rowid if needed, but FTS5 content table
+    # queries can be done directly on the FTS table if it has all columns?
+    # Wait, fts table only has error, correct, error_type. We should join with ua_gec_errors.
+
+    sql = f"""
+        SELECT m.error, m.correct, m.error_type, m.doc_id, m.is_native, m.source_lang
+        FROM ua_gec_errors_fts f
+        JOIN ua_gec_errors m ON f.rowid = m.id
+        WHERE f.{where_stmt}
+        ORDER BY f.rank
+        LIMIT ?
+    """
+    params.append(limit)
+
+    rows = conn.execute(sql, tuple(params)).fetchall()
+    return [dict(r) for r in rows]
+
+
 def _normalize_slovnyk_row(row: dict, query: str) -> dict:
     row = dict(row)
     row["is_modern"] = bool(row.get("is_modern"))

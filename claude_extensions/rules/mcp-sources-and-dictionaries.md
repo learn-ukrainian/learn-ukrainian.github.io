@@ -30,6 +30,7 @@ paths:
 
 ## Dictionary tools (for quality and vocabulary)
 - `mcp__sources__check_russian_shadow` — Detects Russian-pattern morphology (Surzhyk / false forms) in Ukrainian text without ingesting Russian text. Uses `pymorphy3` heuristic modeling.
+- `mcp__sources__search_ua_gec_errors` — UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA team, MIT). Returns human-annotated error→correction pairs from 8,937 rows, filtered to russianism-relevant tags (F/Calque, F/Collocation, G/Case, G/Gender). Highest-signal evidence for register/phraseological calques that aren't in Antonenko. Pair with `search_style_guide` (structured Antonenko) and `search_text source=antonenko-davydovych-yak-my-hovorymo` (full-text Antonenko prose) for the complete russianism evidence layer.
 - `mcp__sources__search_style_guide` — Антоненко-Давидович **structured entries** (342 keyed headwords). **Calques and Russianisms.** HIGH PRIORITY. **Pair with `mcp__sources__search_text` against `source_file='antonenko-davydovych-yak-my-hovorymo'`** to also search the **full-book prose corpus (169 chunks)** — the structured index misses extensive rules, examples, and discussion present in the prose. For any Russianism verification, **query BOTH**: a phrase absent from `style_guide` may still be condemned in the prose body. Failing to do so was the H1 prompt bug (`audit/2026-05-17-judge-calibration-h1/COMPARISON.md`) — F1 collapsed because retrieval only hit the structured 342.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.
@@ -104,6 +105,7 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | Dictionary | Entries | Type | Collection/File |
 |-----------|---------|------|-----------------|
 | **VESUM** | 409K lemmas, 6.7M forms | Morphological (POS, gender, inflections) | `data/vesum.db` (SQLite) |
+| **UA-GEC** | 8.9K high-signal pairs | Human-annotated errors (calques, cases, etc.) | `data/sources.db` FTS5 |
 | **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |
 | **Грінченко** | 67K | Historical Ukrainian (1907, lexicographic) | `data/sources.db` FTS5 |
 | **ЕСУМ** | vol. 1 (А–Г) PoC | Etymological dictionary | `data/sources.db` FTS5 via `search_esum` |
