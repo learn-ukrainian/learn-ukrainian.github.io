@@ -1,10 +1,10 @@
 # Russianism Judge Calibration Matrix
 
-Generated: 2026-05-16T17:34:10Z
+Generated: 2026-05-16T18:55:36Z
 
 ## Summary
 
-- Cells scored: 42
+- Cells scored: 44
 - Cells n/a: 0
 - Cells with harness errors: 16
 
@@ -12,8 +12,10 @@ Generated: 2026-05-16T17:34:10Z
 
 | family | model | harness | effort | mcp_state | F1 | P | R | case_acc | avg_dur | n/a-count |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| anthropic | claude-opus-4-7 | native_cli | xhigh | with_mcp | 83.9% | 86.7% | 81.2% | 91.7% | 94.7s | 0 |
 | anthropic | claude-opus-4-7 | native_cli | high | without_mcp | 82.8% | 92.3% | 75.0% | 91.7% | 98.7s | 0 |
 | anthropic | claude-opus-4-7 | native_cli | medium | with_mcp | 82.8% | 92.3% | 75.0% | 91.7% | 86.0s | 0 |
+| anthropic | claude-opus-4-7 | native_cli | xhigh | without_mcp | 80.0% | 85.7% | 75.0% | 91.7% | 90.2s | 0 |
 | google | gemini-3.1-pro-preview | native_cli | default | with_mcp | 80.0% | 85.7% | 75.0% | 91.7% | 342.6s | 0 |
 | xai | grok-4.3 | hermes | xhigh | with_mcp | 78.6% | 91.7% | 68.8% | 100.0% | 220.5s | 0 |
 | anthropic | claude-opus-4-7 | native_cli | high | with_mcp | 77.4% | 80.0% | 75.0% | 91.7% | 101.8s | 0 |
@@ -76,6 +78,7 @@ Generated: 2026-05-16T17:34:10Z
 | claude-haiku-4-5-20251001 | native_cli | medium | 66.7% | 75.0% | +8.3pp |
 | claude-opus-4-7 | native_cli | high | 91.7% | 91.7% | +0.0pp |
 | claude-opus-4-7 | native_cli | medium | 91.7% | 91.7% | +0.0pp |
+| claude-opus-4-7 | native_cli | xhigh | 91.7% | 91.7% | +0.0pp |
 | claude-sonnet-4-6 | native_cli | high | 83.3% | 91.7% | +8.3pp |
 | claude-sonnet-4-6 | native_cli | medium | 91.7% | 91.7% | +0.0pp |
 | gemini-3.0-flash-preview | native_cli | default | 58.3% | 58.3% | +0.0pp |
@@ -100,8 +103,8 @@ Generated: 2026-05-16T17:34:10Z
 | --- | --- | --- | --- |
 | claude-haiku-4-5-20251001 | native_cli | with_mcp | high=38.1%, medium=47.6% |
 | claude-haiku-4-5-20251001 | native_cli | without_mcp | high=54.5%, medium=45.5% |
-| claude-opus-4-7 | native_cli | with_mcp | high=77.4%, medium=82.8% |
-| claude-opus-4-7 | native_cli | without_mcp | high=82.8%, medium=75.9% |
+| claude-opus-4-7 | native_cli | with_mcp | high=77.4%, medium=82.8%, xhigh=83.9% |
+| claude-opus-4-7 | native_cli | without_mcp | high=82.8%, medium=75.9%, xhigh=80.0% |
 | claude-sonnet-4-6 | native_cli | with_mcp | high=71.4%, medium=54.5% |
 | claude-sonnet-4-6 | native_cli | without_mcp | high=74.1%, medium=64.0% |
 | gpt-5.4-mini | hermes | with_mcp | high=0.0%, medium=0.0% |
