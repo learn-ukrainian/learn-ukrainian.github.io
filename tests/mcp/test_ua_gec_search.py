@@ -1,4 +1,5 @@
 import asyncio
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -7,6 +8,36 @@ import pytest
 # Add the server directory to path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / ".mcp" / "servers" / "sources"))
+
+# CI's sources.db doesn't ship the ua_gec_errors_fts table (the ingest is
+# run locally + the table is committed in the canonical sources.db via
+# GDrive sync, not regenerated in CI). Skip data-dependent tests when
+# the table is absent rather than fail; structural tests (list/schema)
+# still run and catch tool-registration regressions.
+_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+
+
+def _ua_gec_table_present() -> bool:
+    if not _DB_PATH.exists():
+        return False
+    try:
+        conn = sqlite3.connect(_DB_PATH)
+        try:
+            row = conn.execute(
+                "SELECT name FROM sqlite_master "
+                "WHERE type IN ('table', 'view') AND name = 'ua_gec_errors_fts'",
+            ).fetchone()
+        finally:
+            conn.close()
+        return row is not None
+    except sqlite3.Error:
+        return False
+
+
+requires_ua_gec_data = pytest.mark.skipif(
+    not _ua_gec_table_present(),
+    reason="ua_gec_errors_fts not present in sources.db (CI / fresh checkout)",
+)
 
 @pytest.fixture
 def server_module():
@@ -30,6 +61,7 @@ def test_search_ua_gec_errors_schema(server_module):
     assert "tag_filter" in tool.inputSchema["properties"]
     assert "require_native_author" in tool.inputSchema["properties"]
 
+@requires_ua_gec_data
 def test_search_ua_gec_errors_execution(server_module):
     # Test execution against the real database.
     # Project pytest config has no pytest-asyncio plugin, so use the
