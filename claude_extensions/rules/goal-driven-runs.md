@@ -117,6 +117,32 @@ The final turn of an aborted goal MUST include:
 
 The point is to make goal-abort recovery cheap. A bare `GOAL_ABORT reason="failed"` is worse than no abort line at all because it lies about being informative.
 
+## Sizing the M cap
+
+The `M` in `turn=N/M` is the abort threshold. Picking it by gut on the 2026-05-14 V7 MDX run went `30 → 40 → 50 → 60` mid-flight — under-sized, then over-sized after recovery. Use the auto-sizing formula instead:
+
+```
+M = clamp(15, queue_depth * 2 + 5 + async_waits, 200)
+```
+
+- **2 turns per queue item** — one to advance, one to verify. Tighter loses the verification turn (re-learns #M-4 "deterministic over hallucination").
+- **+5 buffer** — per-run setup + the final `GOAL_DONE` turn + 1-2 retry slots when a verification fails on first attempt.
+- **+1 per expected async wait** — out-of-band signal (CI green, dispatch land, PR merge). Defaults to 0; name a number when you know the goal will suspend that many times.
+- **floor 15** — under 15 the counter stops being informative. Predicate work that small should ship without `/goal`.
+- **ceiling 200** — anything bigger is a planning failure that should split into multiple goals.
+
+For long-running async-heavy goals the operator can set the cap to dynamic — the predicate becomes the sole termination condition and turn count is unbounded. Pair with `GOAL_WAIT` for the suspends.
+
+CLI:
+
+```bash
+.venv/bin/python -m scripts.goal_driver.size_cap --queue-depth 8 --async-waits 2
+# → 23
+
+.venv/bin/python -m scripts.goal_driver.size_cap --dynamic
+# → infinity
+```
+
 ## Terminal-status state cleanup
 
 `GOAL_DONE` and `GOAL_ABORT` are **both** terminal and **both** clear hook state. Specifically, the project Stop hook (`claude_extensions/hooks/goal-driver-stop.sh`) maintains a per-session file at `.claude/goal-state/<session_id>.json` recording any pending `GOAL_WAIT` watcher. On detecting either terminal status the hook deletes that file so the next `/goal` invocation in the same session starts with a clean slate.
