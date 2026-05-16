@@ -14,3 +14,15 @@
 {"family": "openai", "model": "gpt-5.4-mini", "harness": "hermes", "effort": "high", "mcp_state": "without_mcp", "result": "error", "reason": "usage: hermes mcp [-h] [--accept-hooks]\n                  {serve,add,remove,rm,list,ls,test,configure,config,login}\n                  ...\nhermes mcp: error: argument mcp_action: invalid choice: 'disable' (choose from 'serve', 'add', 'remove', 'rm', 'list', 'ls', 'test', 'configure', 'config', 'login')\n"}
 {"family": "openai", "model": "gpt-5.4-mini", "harness": "native_cli", "effort": "high", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
 {"family": "openai", "model": "gpt-5.4-mini", "harness": "native_cli", "effort": "high", "mcp_state": "without_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-opus-4-7", "harness": "native_cli", "effort": "medium", "mcp_state": "without_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-opus-4-7", "harness": "native_cli", "effort": "medium", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-opus-4-7", "harness": "native_cli", "effort": "high", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-opus-4-7", "harness": "native_cli", "effort": "high", "mcp_state": "without_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-sonnet-4-6", "harness": "native_cli", "effort": "medium", "mcp_state": "with_mcp", "result": "error", "reason": "Expecting ',' delimiter: line 7 column 42 (char 338)"}
+{"family": "anthropic", "model": "claude-sonnet-4-6", "harness": "native_cli", "effort": "medium", "mcp_state": "without_mcp", "result": "error", "reason": "Expecting ',' delimiter: line 7 column 37 (char 290)"}
+{"family": "anthropic", "model": "claude-sonnet-4-6", "harness": "native_cli", "effort": "high", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-sonnet-4-6", "harness": "native_cli", "effort": "high", "mcp_state": "without_mcp", "result": "error", "reason": "Expecting ',' delimiter: line 7 column 37 (char 237)"}
+{"family": "anthropic", "model": "claude-haiku-4-5-20251001", "harness": "native_cli", "effort": "medium", "mcp_state": "without_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-haiku-4-5-20251001", "harness": "native_cli", "effort": "medium", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-haiku-4-5-20251001", "harness": "native_cli", "effort": "high", "mcp_state": "with_mcp", "result": "valid_response", "reason": null}
+{"family": "anthropic", "model": "claude-haiku-4-5-20251001", "harness": "native_cli", "effort": "high", "mcp_state": "without_mcp", "result": "valid_response", "reason": null}

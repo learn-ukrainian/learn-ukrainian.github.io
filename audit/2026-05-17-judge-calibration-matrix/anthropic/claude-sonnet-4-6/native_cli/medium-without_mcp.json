@@ -1,0 +1,158 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "without_mcp"
+  },
+  "started_at": "2026-05-16T17:17:58Z",
+  "finished_at": "2026-05-16T17:21:06Z",
+  "duration_s": 187.91,
+  "n_cases": 12,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_short_prose",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_travel",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_workplace",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 35,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_dirty_email_calques",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 684,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 4
+    },
+    {
+      "case_id": "cal_dirty_medical",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 344,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 3
+    },
+    {
+      "case_id": "cal_dirty_workplace",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 1047,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_dirty_meetup",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 401,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_dirty_register",
+      "true_label": "issues_found",
+      "model_label": "json_parse_error",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 648,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_debatable_next_steps",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 371,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 1
+    },
+    {
+      "case_id": "cal_clean_with_lure",
+      "true_label": "clean",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 384,
+      "case_acc": false,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_dirty_business_meeting",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 868,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 2
+    }
+  ],
+  "scores": {
+    "f1": 0.64,
+    "case_acc": 0.9167,
+    "precision": 0.8889,
+    "recall": 0.5
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-sonnet-4-6",
+    "effort_actual": "medium",
+    "mcp_servers": [],
+    "errors": [
+      {
+        "case_id": "cal_dirty_register",
+        "verdict": "json_parse_error",
+        "error": "Expecting ',' delimiter: line 7 column 37 (char 290)",
+        "returncode": null,
+        "stdout": "{\n  \"verdict\": \"issues_found\",\n  \"issues\": [\n    {\n      \"phrase\": \"в найближчий час\",\n      \"rule\": \"Калька з рос. «в ближайшее время». Українська норма уникає прийменника «в» з цим зворотом — замість нього вживається орудний відмінок або прислівник.\",\n      \"correct\": \"найближчим часом\" або \"незабаром\",\n      \"severity\": 2\n    },\n    {\n      \"phrase\": \"за приділений час\",\n      \"rule\": \"Калька з рос. «за уделённое время» (уделить время → приділити час). Усталений канцелярський русизм. Автентич",
+        "stderr": null
+      }
+    ]
+  }
+}

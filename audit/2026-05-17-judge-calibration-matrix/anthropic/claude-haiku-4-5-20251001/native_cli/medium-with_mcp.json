@@ -1,0 +1,151 @@
+{
+  "cell": {
+    "family": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "harness": "native_cli",
+    "effort": "medium",
+    "mcp_state": "with_mcp"
+  },
+  "started_at": "2026-05-16T17:23:27Z",
+  "finished_at": "2026-05-16T17:29:51Z",
+  "duration_s": 384.46,
+  "n_cases": 12,
+  "judgments": [
+    {
+      "case_id": "cal_clean_greeting",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 53,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_short_prose",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 53,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_travel",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 47,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_clean_workplace",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 47,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_dirty_email_calques",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 441,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 4
+    },
+    {
+      "case_id": "cal_dirty_medical",
+      "true_label": "issues_found",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 53,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 3
+    },
+    {
+      "case_id": "cal_dirty_workplace",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 413,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_dirty_meetup",
+      "true_label": "issues_found",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 53,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_dirty_register",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 572,
+      "case_acc": true,
+      "judge_sev2_plus_count": 2,
+      "expected_flags_count": 2
+    },
+    {
+      "case_id": "cal_debatable_next_steps",
+      "true_label": "issues_found",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 47,
+      "case_acc": false,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 1
+    },
+    {
+      "case_id": "cal_clean_with_lure",
+      "true_label": "clean",
+      "model_label": "clean",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 53,
+      "case_acc": true,
+      "judge_sev2_plus_count": 0,
+      "expected_flags_count": 0
+    },
+    {
+      "case_id": "cal_dirty_business_meeting",
+      "true_label": "issues_found",
+      "model_label": "issues_found",
+      "model_confidence": "unspecified",
+      "raw_response_chars": 621,
+      "case_acc": true,
+      "judge_sev2_plus_count": 1,
+      "expected_flags_count": 2
+    }
+  ],
+  "scores": {
+    "f1": 0.4762,
+    "case_acc": 0.75,
+    "precision": 1.0,
+    "recall": 0.3125
+  },
+  "raw_telemetry": {
+    "harness": "native_cli",
+    "harness_version": "2.1.143 (Claude Code)",
+    "model_id": "claude-haiku-4-5-20251001",
+    "effort_actual": "medium",
+    "mcp_servers": [
+      "sources"
+    ],
+    "errors": []
+  }
+}
