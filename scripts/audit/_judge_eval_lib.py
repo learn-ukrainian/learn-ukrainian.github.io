@@ -16,6 +16,17 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
+# Ensure cross-package absolute imports (e.g. `scripts.verification.*`) resolve
+# regardless of how this module is loaded. When the matrix runner is invoked
+# as `python scripts/audit/judge_calibration_matrix.py`, Python sets
+# `sys.path[0]` to `scripts/audit/`, so the absolute import
+# `from scripts.verification.check_ru_morph import is_russian_pattern` inside
+# `_russian_shadow_check` would raise `ModuleNotFoundError` without this
+# shim — silently disabling the Russian-shadow morphology channel. See #2050.
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 DB = PROJECT_ROOT / "data" / "sources.db"
 VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
 UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
@@ -179,7 +190,17 @@ def _russian_shadow_check(text: str) -> dict[str, Any]:
     """
     try:
         from scripts.verification.check_ru_morph import is_russian_pattern
-    except ImportError:
+    except ImportError as exc:
+        # Silent-disable is the existing contract (the channel renders as
+        # "(pymorphy3 unavailable in this environment)" in the prompt),
+        # but the failure must be visible in CLI output so missing/broken
+        # installs do not bias future calibration runs.
+        print(
+            f"[_judge_eval_lib._russian_shadow_check] ImportError: {exc}; "
+            "channel will render as 'pymorphy3 unavailable'. Fix sys.path "
+            "or install pymorphy3 to restore the russian_shadow signal.",
+            file=sys.stderr,
+        )
         return {"available": False, "triggered_tokens": []}
     proper_nouns = _proper_noun_tokens(text)
     triggered = []
