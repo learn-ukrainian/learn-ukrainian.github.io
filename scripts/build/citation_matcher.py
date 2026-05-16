@@ -108,7 +108,34 @@ def extract_citation_key(value: Any) -> CitationKey | None:
 
 
 def fold_citation_author(author: str) -> str:
-    return re.sub(r"[^a-z]", "", author.casefold().translate(_CYRILLIC_TO_LATIN))
+    """Canonicalize an author token so the BGN-style transliteration used by
+    plan references ("Захарійчук" → "zakhariichuk") matches the
+    Wikipedia/chunk-id transliteration used by textbook source records
+    ("Zaharijchuk" → "zaharijchuk").
+
+    Two real-world transliteration schemes appear in the pipeline:
+
+    - **Plan references** are written in Cyrillic and translated by
+      ``_CYRILLIC_TO_LATIN`` (BGN/PCGN-style: х → "kh", й → "i").
+    - **Textbook chunk-ids** (and the ``source`` field synthesized from
+      them in ``_parse_mcp_search_text_markdown``) use Wikipedia-style
+      Latin: х → "h", й → "j", и/і → either "y" or "i".
+
+    Without canonicalization, "zakhariichuk" and "zaharijchuk" compare
+    unequal even though both refer to *Захарійчук*, which silently broke
+    ``textbook_grounding`` on a1/m20 (build 2026-05-16 23:01).
+
+    The fold pipeline:
+      1. casefold + ``_CYRILLIC_TO_LATIN`` (existing behaviour)
+      2. strip non-letters
+      3. ``kh`` → ``h`` (collapse to the Wikipedia variant)
+      4. ``j`` → ``i``, ``y`` → ``i`` (й/и/і all collapse to ``i``)
+      5. squeeze any consecutive duplicates introduced by the collapses
+         (e.g. "zahariichuk" → "zaharichuk")
+    """
+    folded = re.sub(r"[^a-z]", "", author.casefold().translate(_CYRILLIC_TO_LATIN))
+    folded = folded.replace("kh", "h").replace("j", "i").replace("y", "i")
+    return re.sub(r"(.)\1+", r"\1", folded)
 
 
 def citation_keys_match(

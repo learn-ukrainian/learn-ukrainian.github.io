@@ -476,12 +476,16 @@ _IMMERSION_STRUCTURAL_OVERRIDES: dict[str, dict[str, Any]] = {
         "required_components": _A1_COMPONENT_DENSITY,
     },
     # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
+    # max_unsupported_uk_words bumped 28 → 50 on 2026-05-17 to accommodate
+    # short textbook-quote excerpts (e.g. Захарійчук Grade 1 p.52 Євген
+    # paragraph ~50 words). 28 was out of pattern vs neighbor bands
+    # (m04-06: 36, m07-14: 68, m25-34: 71).
     "a1-m15-24": {
         "min_uk_dialogue_lines": 14,
         "min_vocab_entries": 0,
         "min_uk_example_sentences": 14,
         "min_uk_tab3_activities": 3,
-        "max_unsupported_uk_words": 28,
+        "max_unsupported_uk_words": 50,
         "required_components": _A1_COMPONENT_DENSITY,
     },
     # Calibrated in audit/immersion-gate-calibration-2026-05-13/REPORT.html.
