@@ -30,7 +30,7 @@ paths:
 
 ## Dictionary tools (for quality and vocabulary)
 - `mcp__sources__check_russian_shadow` — Detects Russian-pattern morphology (Surzhyk / false forms) in Ukrainian text without ingesting Russian text. Uses `pymorphy3` heuristic modeling.
-- `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries indexed of ~600+ in source — completion tracked in #1663) — **calques and Russianisms**. HIGH PRIORITY.
+- `mcp__sources__search_style_guide` — Антоненко-Давидович **structured entries** (342 keyed headwords). **Calques and Russianisms.** HIGH PRIORITY. **Pair with `mcp__sources__search_text` against `source_file='antonenko-davydovych-yak-my-hovorymo'`** to also search the **full-book prose corpus (169 chunks)** — the structured index misses extensive rules, examples, and discussion present in the prose. For any Russianism verification, **query BOTH**: a phrase absent from `style_guide` may still be condemned in the prose body. Failing to do so was the H1 prompt bug (`audit/2026-05-17-judge-calibration-h1/COMPARISON.md`) — F1 collapsed because retrieval only hit the structured 342.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.
 - `mcp__sources__search_grinchenko_1907` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. Use for pre-Soviet usage attestation; **NOT for word origins/etymology** — that's a separate concern handled by `search_esum` below.
@@ -109,7 +109,7 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | **ЕСУМ** | vol. 1 (А–Г) PoC | Etymological dictionary | `data/sources.db` FTS5 via `search_esum` |
 | **slovnyk.me** | bounded per-word rows + live direct lookup | Modern/regional dictionary aggregator; no bulk mirror | `data/sources.db` `slovnyk_me_entries` + live `/dict/{slug}/{word}` |
 | **Балла EN→UK** | 79K | English→Ukrainian translations | `data/sources.db` FTS5 |
-| **Антоненко-Давидович** | 279 | Style guide (calques, Russianisms) | `data/sources.db` FTS5 |
+| **Антоненко-Давидович** | 342 structured + 169 prose chunks | Style guide (calques, Russianisms) — `style_guide` table (keyed entries) + `textbooks` table (source_file=`antonenko-davydovych-yak-my-hovorymo`, full-book prose) | `data/sources.db` FTS5 |
 | **Фразеологічний** | 25K | Ukrainian idioms and expressions | `data/sources.db` FTS5 |
 | **Stress dictionary** | 2.7M forms | Word stress for annotation | via `ukrainian-word-stress` |
 
