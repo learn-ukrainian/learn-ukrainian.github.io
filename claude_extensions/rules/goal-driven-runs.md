@@ -117,6 +117,12 @@ The final turn of an aborted goal MUST include:
 
 The point is to make goal-abort recovery cheap. A bare `GOAL_ABORT reason="failed"` is worse than no abort line at all because it lies about being informative.
 
+## Terminal-status state cleanup
+
+`GOAL_DONE` and `GOAL_ABORT` are **both** terminal and **both** clear hook state. Specifically, the project Stop hook (`claude_extensions/hooks/goal-driver-stop.sh`) maintains a per-session file at `.claude/goal-state/<session_id>.json` recording any pending `GOAL_WAIT` watcher. On detecting either terminal status the hook deletes that file so the next `/goal` invocation in the same session starts with a clean slate.
+
+This closes the issue #1933 item 3 gap where an emitted `GOAL_ABORT` did not actually scrub the hook fingerprint — the next `/goal` could resume the dead watcher. **If you are emitting `GOAL_ABORT`, trust that the cleanup runs**: do not also try to delete the file manually inside the goal body.
+
 ## Claude vs Codex `/goal` — pick the right one
 
 | Driver | Mode | Use for |

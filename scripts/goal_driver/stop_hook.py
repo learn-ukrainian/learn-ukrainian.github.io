@@ -8,13 +8,14 @@ for the next turn:
   next turn is reminded "active dispatch detected" so it does NOT
   increment ``no_progress`` (issue #1933 item 2).
 * GOAL_WAIT signal=... → annotation pointing the next turn at the
-  watcher (issue #1933 item 1).
-* GOAL_DONE / GOAL_ABORT → no extra context (terminal). State-file
-  cleanup ships in commit 3 of this PR.
+  watcher AND persists a session-state file naming the signal
+  (issue #1933 item 1).
+* GOAL_DONE / GOAL_ABORT → deletes the session-state file so the next
+  /goal in this project starts with a clean slate (issue #1933 item 3).
 
 The hook NEVER blocks Stop. /goal's native predicate enforcement is
 unchanged; this hook only annotates state so the agent's own counters
-stay honest under async work.
+stay honest under async work and stale state never leaks across runs.
 
 Output: a single JSON object on stdout iff there is something useful
 to tell the next turn; empty stdout otherwise. Always exits 0 — a hook
@@ -28,12 +29,15 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
 
 from scripts.goal_driver.status_lines import (
+    ABORT_KIND,
+    DONE_KIND,
     STATUS_KIND,
     WAIT_KIND,
     StatusLine,
@@ -44,6 +48,7 @@ MONITOR_API = os.environ.get("MONITOR_API_URL", "http://localhost:8765")
 DELEGATE_ACTIVE_PATH = "/api/delegate/active"
 TRANSCRIPT_TAIL_BYTES = 64 * 1024  # last 64KB is plenty for the most recent turn
 DELEGATE_HTTP_TIMEOUT_S = 2.0
+STATE_DIR_NAME = "goal-state"
 
 
 def main(stdin: str | None = None) -> int:
@@ -62,6 +67,10 @@ def main(stdin: str | None = None) -> int:
     if last is None:
         return 0
 
+    session_id = _session_id_from_payload(payload, transcript_path)
+    state_path = _state_path(payload, session_id)
+    _apply_state_transitions(last, state_path)
+
     annotation = _build_annotation(last)
     if annotation:
         json.dump(
@@ -74,6 +83,55 @@ def main(stdin: str | None = None) -> int:
             sys.stdout,
         )
     return 0
+
+
+def _session_id_from_payload(payload: dict[str, Any], transcript_path: Path) -> str:
+    session_id = payload.get("session_id")
+    if isinstance(session_id, str) and session_id:
+        return session_id
+    return transcript_path.stem
+
+
+def _state_path(payload: dict[str, Any], session_id: str) -> Path | None:
+    """Resolve the session-state file path under .claude/goal-state/.
+
+    Returns ``None`` if neither ``payload['cwd']`` nor ``CLAUDE_PROJECT_DIR`` is
+    set — in that case there is no project root to anchor the state file.
+    """
+    project_dir = payload.get("cwd") or os.environ.get("CLAUDE_PROJECT_DIR")
+    if not isinstance(project_dir, str) or not project_dir:
+        return None
+    return Path(project_dir) / ".claude" / STATE_DIR_NAME / f"{session_id}.json"
+
+
+def _apply_state_transitions(last: StatusLine, state_path: Path | None) -> None:
+    """Persist on GOAL_WAIT; clear on GOAL_DONE / GOAL_ABORT.
+
+    Best-effort: any OS error is swallowed so a permissions glitch on the
+    state dir cannot prevent /goal from stopping.
+    """
+    if state_path is None:
+        return
+    try:
+        if last.kind == WAIT_KIND:
+            state_path.parent.mkdir(parents=True, exist_ok=True)
+            state_path.write_text(
+                json.dumps(
+                    {
+                        "kind": WAIT_KIND,
+                        "signal": last.signal,
+                        "eta_s": last.fields.get("eta_s"),
+                        "reason": last.fields.get("reason"),
+                        "saved_at": int(time.time()),
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+        elif last.kind in (DONE_KIND, ABORT_KIND):
+            state_path.unlink(missing_ok=True)
+    except OSError:
+        return
 
 
 def _resolve_transcript_path(payload: dict[str, Any]) -> Path | None:
