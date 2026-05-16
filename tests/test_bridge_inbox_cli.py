@@ -569,7 +569,12 @@ def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
 def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     for agent in _channels.VALID_AGENTS:
         _make_thread(agent, channel=f"{agent}-topic", count=1)
-    cli_agents = ["claude", "gemini", "codex"]
+    # Mirrors the live `cmd_sync --all` iteration order, which is
+    # `[agent for agent in _channels.VALID_AGENTS if _cli_available_agent(agent)]`.
+    # When a new CLI agent is registered (e.g. grok via #1934), this list
+    # tracks the registry — the test guards the iteration order, not a
+    # frozen subset.
+    cli_agents = ["claude", "gemini", "codex", "grok"]
 
     calls: list[tuple[str, dict[str, object]]] = []
 
