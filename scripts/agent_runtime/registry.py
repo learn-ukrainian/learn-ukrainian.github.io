@@ -111,11 +111,15 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "grok": {
-        "adapter": "scripts.agent_runtime.adapters.grok:GrokAdapter",
-        "default_model": None,
-        "cost_tier": "unknown",
-        "capabilities": frozenset(),
-        "cli_available": False,
+        "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
+        "default_model": "grok-4.3",
+        "cost_tier": "low",
+        "capabilities": frozenset({
+            "content_writing",
+            "content_review",
+            "adversarial_review",
+        }),
+        "cli_available": True,
         "resume_policy": "never",
     },
 }

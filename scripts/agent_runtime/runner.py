@@ -1082,6 +1082,7 @@ def _invoke_gemini_with_fallback(
             returncode=returncode,
             usage_record=record,
             tool_calls=last_tool_calls,
+            tool_calls_total=len(last_tool_calls),
         )
 
     if call_result.attempts and all(
@@ -1168,6 +1169,7 @@ def _invoke_gemini_with_fallback(
         returncode=returncode,
         usage_record=record,
         tool_calls=last_tool_calls,
+        tool_calls_total=len(last_tool_calls),
     )
 
 
@@ -1455,4 +1457,5 @@ def invoke(
         returncode=execution.returncode,
         usage_record=record,
         tool_calls=list(parse.tool_calls),
+        tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
     )

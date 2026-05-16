@@ -58,17 +58,19 @@ PLAN_REQUIRED_KEYS = {
     "references",
 }
 
-WRITER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools")
+WRITER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools", "grok-tools")
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
+    "grok-tools": {"model": "grok-4.3", "effort": "medium"},
 }
-REVIEWER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools")
+REVIEWER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools", "grok-tools")
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
+    "grok-tools": {"model": "grok-4.3", "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",
@@ -1920,7 +1922,9 @@ def detect_tool_theatre(
     return sorted(cited - called)
 
 
-def _runtime_tool_calls(result: Any) -> list[dict[str, Any]]:
+def _runtime_tool_calls(result: Any) -> list[dict[str, Any]] | None:
+    if getattr(result, "tool_calls_total", "known") is None:
+        return None
     # Runtime Result.tool_calls is the producer today. usage_record support is
     # read-only forward compatibility; persisting raw arguments needs redaction.
     calls: list[dict[str, Any]] = []
@@ -2187,8 +2191,9 @@ def emit_writer_response_telemetry(
             fields_filled=result["fields_filled"],
         )
 
-    tool_calls_total = 0
-    verify_words_calls = 0
+    telemetry_unavailable = tool_calls is None
+    tool_calls_total: int | None = None if telemetry_unavailable else 0
+    verify_words_calls: int | None = None if telemetry_unavailable else 0
     for call in tool_calls or []:
         tool = _normalize_tool_name(
             call.get("tool") or call.get("tool_name") or call.get("name")
@@ -2197,8 +2202,10 @@ def emit_writer_response_telemetry(
             continue
         args = call.get("args", call.get("arguments", {}))
         result = call.get("result", call.get("response"))
+        assert tool_calls_total is not None
         tool_calls_total += 1
         if tool == "verify_words":
+            assert verify_words_calls is not None
             verify_words_calls += 1
         fields: dict[str, Any] = {
             "writer": writer,
@@ -2235,10 +2242,13 @@ def emit_writer_response_telemetry(
         "sections_with_cot": sum(1 for result in cot_results if result["block_present"]),
         "tool_calls_total": tool_calls_total,
         "verify_words_calls": verify_words_calls,
+        "tool_call_telemetry_available": not telemetry_unavailable,
         "end_gate_fired": bool(gate["gate_present"]),
         "removed_via_gate": int(gate["removed_count"]),
     }
-    theatre_violations = detect_tool_theatre(output, list(tool_calls or []))
+    theatre_violations = (
+        [] if telemetry_unavailable else detect_tool_theatre(output, list(tool_calls or []))
+    )
     capped_theatre_violations = theatre_violations[:TELEMETRY_MAX_THEATRE_VIOLATIONS]
     summary["tool_theatre_violations"] = capped_theatre_violations
     summary["tool_theatre_violation_count"] = len(theatre_violations)
@@ -2268,6 +2278,8 @@ def _enforce_tools_writer_runtime_gate(
     """Fail when a tools writer resolved MCP config but never invoked a tool."""
     if not writer.endswith("-tools"):
         return
+    if phase_writer_summary["tool_calls_total"] is None:
+        return
     if phase_writer_summary["tool_calls_total"] != 0:
         return
     raise LinearPipelineError(
@@ -2288,6 +2300,8 @@ def _mcp_tools_never_invoked_failure(
     phase_writer_summary: Mapping[str, Any],
 ) -> FailureRecord | None:
     if not writer.endswith("-tools"):
+        return None
+    if phase_writer_summary["tool_calls_total"] is None:
         return None
     if phase_writer_summary["tool_calls_total"] != 0:
         return None
@@ -2311,11 +2325,11 @@ def _enforce_writer_runtime_gates(
     writer: str,
     module: str,
     phase_writer_summary: Mapping[str, Any],
-    tool_calls: list[Mapping[str, Any]],
+    tool_calls: list[Mapping[str, Any]] | None,
     event_sink: Callable[..., None] | None = None,
 ) -> None:
     failures = [
-        *classify_writer_trace(tool_calls),
+        *classify_writer_trace(tool_calls or []),
     ]
     mcp_failure = _mcp_tools_never_invoked_failure(
         writer=writer,
@@ -2443,14 +2457,14 @@ def _runtime_tool_config(
             "mcp_servers": ["sources"],
             "allowed_tools": "mcp__sources__*",
         }
-    elif agent_label == "gemini-tools":
+    elif agent_label in {"gemini-tools", "grok-tools"}:
         agent_kwargs = {
             "mcp_servers": ["sources"],
         }
     else:
         raise LinearPipelineError(
             f"Unknown -tools writer {agent_label!r}; expected one of "
-            "codex-tools / claude-tools / gemini-tools."
+            "codex-tools / claude-tools / gemini-tools / grok-tools."
         )
 
     canonical_agent = agent_label.split("-", 1)[0]
@@ -2563,7 +2577,7 @@ def invoke_writer(
     module_ref = module or _prompt_module_ref(prompt)
     section_names = list(sections) if sections is not None else _prompt_sections(prompt)
     tool_calls = _runtime_tool_calls(result)
-    if tool_trace_path is not None:
+    if tool_trace_path is not None and tool_calls is not None:
         tool_trace_path.parent.mkdir(parents=True, exist_ok=True)
         existing_calls: list[Any] = []
         if tool_trace_path.exists():
