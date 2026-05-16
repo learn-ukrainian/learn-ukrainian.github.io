@@ -36,6 +36,34 @@ FAMILIES = ("xai", "anthropic", "openai", "google")
 HARNESSES = ("native_cli", "hermes")
 MCP_STATES = ("with_mcp", "without_mcp")
 SEVERITIES = ("HIGH", "MEDIUM", "LOW")
+SEVERITY_ORDER = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+RAW_RESPONSE_TRUNCATE = 8000
+TOKEN_STOPWORDS = {
+    "the",
+    "a",
+    "an",
+    "is",
+    "are",
+    "of",
+    "to",
+    "in",
+    "on",
+    "for",
+    "and",
+    "or",
+    "by",
+    "with",
+    "this",
+    "that",
+    "be",
+    "as",
+    "at",
+    "it",
+    "from",
+    "has",
+    "have",
+    "not",
+}
 
 FAMILY_MODELS: dict[str, tuple[str, ...]] = {
     "xai": ("grok-4.3",),
@@ -544,46 +572,105 @@ def location_file(location: Any) -> str:
     return raw
 
 
-def finding_key(finding: dict[str, Any]) -> tuple[str, str, str]:
-    """Return the tuple used for file-level finding matching."""
-    return (
-        str(finding.get("category", "")).strip().lower(),
-        str(finding.get("severity", "")).strip().upper(),
-        location_file(finding.get("location")),
-    )
+def _tokenize(s: Any) -> list[str]:
+    """Split text into normalized content tokens for lightweight similarity."""
+    toks = re.findall(r"\w{3,}", str(s or "").lower())
+    return [token for token in toks if token not in TOKEN_STOPWORDS]
 
 
-def _high_gold_keys(gold_findings: list[dict[str, Any]]) -> set[tuple[str, str, str]]:
-    return {finding_key(item) for item in gold_findings if str(item.get("severity")).upper() == "HIGH"}
+def _severity_value(finding: dict[str, Any]) -> int:
+    return SEVERITY_ORDER.get(str(finding.get("severity", "")).strip().upper(), 1)
+
+
+def _semantic_match_candidate(
+    model_finding: dict[str, Any],
+    gold_findings: list[dict[str, Any]],
+    matched_already: set[str],
+) -> tuple[str, str] | None:
+    model_category = str(model_finding.get("category", "")).strip().lower()
+    model_loc_file = location_file(model_finding.get("location"))
+    model_sev = _severity_value(model_finding)
+    model_desc_tokens = set(_tokenize(model_finding.get("description", "")))
+
+    best: str | None = None
+    best_score = 0.0
+    for gold in gold_findings:
+        gold_id = str(gold.get("id", ""))
+        if gold_id in matched_already:
+            continue
+        gold_category = str(gold.get("category", "")).strip().lower()
+        if model_category != gold_category:
+            continue
+
+        gold_loc_file = location_file(gold.get("location"))
+        gold_sev = _severity_value(gold)
+        same_file = bool(model_loc_file) and model_loc_file == gold_loc_file
+
+        if same_file:
+            if abs(model_sev - gold_sev) <= 1:
+                return gold_id, "strong"
+            continue
+
+        gold_desc_tokens = set(_tokenize(gold.get("description", "")))
+        jaccard = len(model_desc_tokens & gold_desc_tokens) / max(len(model_desc_tokens | gold_desc_tokens), 1)
+        if jaccard > 0.4 and jaccard > best_score:
+            best = gold_id
+            best_score = jaccard
+
+    if best is not None:
+        return best, "weak"
+    return None
+
+
+def find_semantic_match(
+    model_finding: dict[str, Any],
+    gold_findings: list[dict[str, Any]],
+    matched_already: set[str],
+) -> str | None:
+    """
+    Find the best gold finding that matches a model finding semantically.
+
+    Match criteria, in priority order:
+    1. category + file-location match -> strong match, with severity tolerated +/-1 step
+    2. category match + description token-set Jaccard > 0.4 -> weak match
+    3. otherwise no match
+    """
+    match = _semantic_match_candidate(model_finding, gold_findings, matched_already)
+    return match[0] if match else None
 
 
 def score_case(verdict: dict[str, Any], gold: dict[str, Any]) -> dict[str, Any]:
-    """Score one case by exact category/severity/location-file tuple matching."""
+    """Score one case by semantic finding matching."""
     model_findings = [item for item in verdict.get("findings", []) if isinstance(item, dict)]
     gold_findings = [item for item in gold.get("gold_findings", []) if isinstance(item, dict)]
-    gold_keys = [finding_key(item) for item in gold_findings]
-    remaining_gold_keys = set(gold_keys)
-    matched_keys: set[tuple[str, str, str]] = set()
+    gold_ids = [str(item["id"]) for item in gold_findings]
+    high_gold_ids = {str(item["id"]) for item in gold_findings if str(item.get("severity")).upper() == "HIGH"}
+    matched_gold_ids: set[str] = set()
+    strong_match_count = 0
+    weak_match_count = 0
     fp = 0
     for item in model_findings:
-        key = finding_key(item)
-        if key in remaining_gold_keys:
-            matched_keys.add(key)
-            remaining_gold_keys.remove(key)
-        else:
+        match = _semantic_match_candidate(item, gold_findings, matched_gold_ids)
+        if match is None:
             fp += 1
-    high_gold_keys = _high_gold_keys(gold_findings)
-    high_matched = matched_keys & high_gold_keys
+            continue
+        gold_id, strength = match
+        matched_gold_ids.add(gold_id)
+        if strength == "strong":
+            strong_match_count += 1
+        else:
+            weak_match_count += 1
 
-    tp = len(matched_keys)
-    fn = len(remaining_gold_keys)
+    tp = len(matched_gold_ids)
+    fn = len(gold_ids) - tp
+    high_matched_ids = matched_gold_ids & high_gold_ids
     precision = tp / (tp + fp) if (tp + fp) else 0.0
     recall = tp / (tp + fn) if (tp + fn) else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0.0
-    high_recall = len(high_matched) / len(high_gold_keys) if high_gold_keys else 1.0
+    high_recall = len(high_matched_ids) / len(high_gold_ids) if high_gold_ids else 1.0
 
     return {
-        "case_acc": tp == len(gold_keys) and fp == 0,
+        "case_acc": tp == len(gold_ids) and fp == 0,
         "tp": tp,
         "fp": fp,
         "fn": fn,
@@ -591,21 +678,16 @@ def score_case(verdict: dict[str, Any], gold: dict[str, Any]) -> dict[str, Any]:
         "recall": round(recall, 4),
         "f1": round(f1, 4),
         "high_recall": round(high_recall, 4),
-        "high_gold_count": len(high_gold_keys),
-        "high_matched_count": len(high_matched),
-        "catastrophic_misses": len(high_gold_keys - matched_keys),
-        "matched_gold_ids": [
-            item["id"]
-            for item in gold_findings
-            if finding_key(item) in matched_keys
-        ],
-        "missed_gold_ids": [
-            item["id"]
-            for item in gold_findings
-            if finding_key(item) not in matched_keys
-        ],
+        "high_gold_count": len(high_gold_ids),
+        "high_matched_count": len(high_matched_ids),
+        "catastrophic_misses": len(high_gold_ids - matched_gold_ids),
+        "strong_match_count": strong_match_count,
+        "weak_match_count": weak_match_count,
+        "matched_gold_ids": [gold_id for gold_id in gold_ids if gold_id in matched_gold_ids],
+        "missed_gold_ids": [gold_id for gold_id in gold_ids if gold_id not in matched_gold_ids],
+        "model_findings": model_findings,
         "model_findings_count": len(model_findings),
-        "gold_findings_count": len(gold_keys),
+        "gold_findings_count": len(gold_ids),
     }
 
 
@@ -617,6 +699,8 @@ def aggregate(scores: list[dict[str, Any]]) -> dict[str, Any]:
     n = len(scores)
     case_acc = sum(1 for s in scores if s["case_acc"]) / n if n else 0.0
     catastrophic_misses = sum(int(s["catastrophic_misses"]) for s in scores)
+    strong_match_count = sum(int(s.get("strong_match_count", 0)) for s in scores)
+    weak_match_count = sum(int(s.get("weak_match_count", 0)) for s in scores)
     high_total = sum(int(s["high_gold_count"]) for s in scores)
     high_matched = sum(int(s["high_matched_count"]) for s in scores)
     high_recall = high_matched / high_total if high_total else 1.0
@@ -631,6 +715,8 @@ def aggregate(scores: list[dict[str, Any]]) -> dict[str, Any]:
         "f1": round(f1, 4),
         "high_recall": round(high_recall, 4),
         "catastrophic_misses": catastrophic_misses,
+        "strong_match_count": strong_match_count,
+        "weak_match_count": weak_match_count,
         "tp": tp,
         "fp": fp,
         "fn": fn,
@@ -662,6 +748,7 @@ def run_cell(
         verdict = verdict_from_call(call)
         score = score_case(verdict, case)
         scores.append(score)
+        raw_response = call.stdout or verdict.get("raw", "") or ""
 
         if verdict.get("verdict") in {"review_error", "json_parse_error"}:
             errors.append(
@@ -687,7 +774,12 @@ def run_cell(
                 "f1": score["f1"],
                 "high_recall": score["high_recall"],
                 "catastrophic_misses": score["catastrophic_misses"],
-                "raw_response_chars": len(call.stdout or verdict.get("raw", "") or ""),
+                "strong_match_count": score["strong_match_count"],
+                "weak_match_count": score["weak_match_count"],
+                "model_findings": score["model_findings"],
+                "raw_response": raw_response[:RAW_RESPONSE_TRUNCATE],
+                "raw_response_truncated": len(raw_response) > RAW_RESPONSE_TRUNCATE,
+                "raw_response_chars": len(raw_response),
             }
         )
 
@@ -706,6 +798,8 @@ def run_cell(
             "recall": agg["recall"],
             "high_recall": agg["high_recall"],
             "catastrophic_misses": agg["catastrophic_misses"],
+            "strong_match_count": agg["strong_match_count"],
+            "weak_match_count": agg["weak_match_count"],
         },
         "raw_telemetry": {
             "harness": cell.harness,
@@ -922,15 +1016,29 @@ def build_markdown_report(results: list[dict[str, Any]]) -> str:
                 pct(scores.get("precision")),
                 pct(scores.get("recall")),
                 pct(scores.get("high_recall")),
+                str(scores.get("strong_match_count", 0)),
                 str(scores.get("catastrophic_misses", 0)),
                 f"{result.get('duration_s', 0):.1f}s",
             ]
         )
     lines.extend(
         table(
-            ["family", "model", "harness", "effort", "mcp_state", "F1", "P", "R", "HIGH R", "cat-miss", "avg_dur"],
+            [
+                "family",
+                "model",
+                "harness",
+                "effort",
+                "mcp_state",
+                "F1",
+                "P",
+                "R",
+                "HIGH R",
+                "strong-match-count",
+                "cat-miss",
+                "avg_dur",
+            ],
             leaderboard_rows
-            or [["n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", str(len(na_results)), "n/a"]],
+            or [["n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "0", str(len(na_results)), "n/a"]],
         )
     )
 
