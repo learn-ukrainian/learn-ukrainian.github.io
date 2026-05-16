@@ -48,6 +48,26 @@ All six fields are required. `last_cmd` MUST be the literal command executed, no
 - `GOAL_ABORT reason="blocked_rounds=3" last_cmd=".venv/bin/pytest tests/test_x.py" last_cwd="/Users/k/projects/learn-ukrainian" last_output="FAILED: assertion mismatch line 47" next_action="rebase against origin/main, re-run, file issue if still red" queue_head=fix-test-x`
 - `GOAL_ABORT reason="no_progress=3" last_cmd="git log -1 --oneline origin/main" last_cwd="/Users/k/projects/learn-ukrainian/.worktrees/foo" last_output="0e97806d7 docs(handoff)..." next_action="confirm correct base branch, then resume" queue_head=verify-base`
 
+### Wait status — for async-dispatch work
+
+```
+GOAL_WAIT signal=<watcher_id> reason="<why>" [eta_s=<int>]
+```
+
+Terminal-but-not-final. Use when the predicate cannot advance until an out-of-band event fires (a `delegate.py dispatch` lands, a PR's CI turns green, a long-running Monitor stream emits a specific event). The status-line evaluator and the project Stop hook (`claude_extensions/hooks/goal-driver-stop.sh`) treat this as legitimate suspension — NOT as a `no_progress` round.
+
+- `signal=<watcher_id>` — short kebab-case ID matching either (a) a Bash `run_in_background` task name, (b) a `Monitor` tool subscription, or (c) a `/api/delegate/active` task ID. The next turn re-enters when this signal fires.
+- `reason="..."` — quoted human reason ("Codex dispatch ETA 30 min", "PR #1930 CI awaiting merge").
+- `eta_s=<int>` — optional integer ETA in seconds. Useful for the hook to size its watchdog timeout.
+
+Example:
+
+```
+GOAL_WAIT signal=watcher-b6v1j-codex-dispatch-done reason="in-flight Codex dispatch — V7 MDX assembler ETA 30 min" eta_s=1800
+```
+
+This is the highest-leverage harness improvement (filed as #1933 wishlist item 1). For the V7 MDX shipping run on 2026-05-14 it would have saved ~30K context tokens by replacing ~40 empty `GOAL_STATUS no_progress=N/M` cycles with one `GOAL_WAIT` suspend + one resume turn.
+
 **The goal prompt MUST reference these tokens explicitly** so any downstream evaluator (Haiku judge, log-grepper, regression-detector) reads from a fixed grammar, not from English-paraphrase guess. Example goal prompt fragment:
 
 > *Halt the run when you can emit `GOAL_DONE reason="..."` with the predicate satisfied. Halt early with `GOAL_ABORT reason="..."` if `blocked` or `no_progress` reaches their thresholds. Every turn must end with a `GOAL_STATUS` line — no exceptions.*
