@@ -418,7 +418,63 @@ def retrieve_evidence(text: str) -> dict[str, Any]:
     }
 
 
-def build_judge_prompt(target_text: str, antonenko_entries: list[dict[str, Any]]) -> str:
+def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[str, Any]]:
+    """Find UA-GEC error pairs matching words in ``text``.
+
+    Searches the ``ua_gec_errors`` FTS5 table for error→correction triples
+    whose ``error`` substring overlaps any word in the input. UA-GEC is
+    Grammarly UA's MIT-licensed human-annotated learner-error corpus
+    (8,937 rows filtered to russianism-relevant tags: F/Calque, F/Collocation,
+    G/Case, G/Gender). Densest evidence source for phraseological and
+    register calques that don't have Antonenko-Davydovych headword entries.
+    """
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
+        if not words:
+            return []
+
+        query_parts = []
+        for word in words:
+            if len(word) >= 3:
+                # Escape double quotes for FTS5
+                safe_word = word.replace('"', '""')
+                query_parts.append(f'"{safe_word}"')
+
+        if not query_parts:
+            return []
+
+        fts_query = " OR ".join(query_parts)
+        rows = conn.execute(
+            """
+            SELECT m.error, m.correct, m.error_type, m.doc_id
+            FROM ua_gec_errors_fts f
+            JOIN ua_gec_errors m ON f.rowid = m.id
+            WHERE f.error MATCH ?
+            ORDER BY f.rank
+            LIMIT ?
+            """,
+            (fts_query, k),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        # ua_gec_errors table may not yet exist on every checkout (e.g.
+        # before this PR's ingest landed); fail soft.
+        return []
+    finally:
+        conn.close()
+
+    return [
+        {"error": r["error"], "correct": r["correct"], "type": r["error_type"], "doc_id": r["doc_id"]}
+        for r in rows
+    ]
+
+
+def build_judge_prompt(
+    target_text: str,
+    antonenko_entries: list[dict[str, Any]],
+    ua_gec_entries: list[dict[str, Any]] | None = None,
+) -> str:
     """Universal Russianism-judge prompt, identical across model families.
 
     Preserved at main as the production baseline. The H1 evidence-rich variant
@@ -427,22 +483,37 @@ def build_judge_prompt(target_text: str, antonenko_entries: list[dict[str, Any]]
     the evidence catalog couldn't anchor 14 of 16 sev>=2 flags). The
     ``retrieve_evidence`` helper below is preserved for H2c use (typed
     calibration set authoring + per-channel coverage metrics).
+
+    The optional ``ua_gec_entries`` parameter renders human-annotated UA-GEC
+    error→correction pairs as additional evidence. Backward-compatible: when
+    omitted or None, the prompt body is byte-identical to the 2-argument form.
     """
+    evidence = ""
     if antonenko_entries:
-        rules_section = (
+        evidence += (
             "## Relevant Antonenko-Davydovych entries "
             "(potentially applicable rules):\n\n"
         )
         for i, entry in enumerate(antonenko_entries[:8], 1):
-            rules_section += f"### Rule {i}: {entry['headword']}\n{entry['text']}\n\n"
-    else:
-        rules_section = (
-            "(No directly-keyed Antonenko entries found for words in this text. "
+            evidence += f"### Antonenko Rule {i}: {entry['headword']}\n{entry['text']}\n\n"
+
+    if ua_gec_entries:
+        evidence += "## UA-GEC human-annotated error pairs matching text:\n\n"
+        for entry in ua_gec_entries[:8]:
+            evidence += (
+                f"- Error: \"{entry['error']}\" → Correction: "
+                f"\"{entry['correct']}\" (Type: {entry['type']})\n"
+            )
+        evidence += "\n"
+
+    if not evidence:
+        evidence = (
+            "(No directly-keyed Antonenko entries or UA-GEC pairs found for words in this text. "
             "Apply general knowledge of Ukrainian register and Russianism patterns.)\n"
         )
 
     return f"""You are an expert Ukrainian-language proofreader specializing in identifying Russianisms (русизми), calques (кальки), Surzhyk (суржик), and unnatural Ukrainian phrasing.
-Your authority is Антоненко-Давидович «Як ми говоримо» — the canonical Ukrainian reference for Russianism identification and correction.
+Your primary authorities are Антоненко-Давидович «Як ми говоримо» and UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA, MIT-licensed).
 
 ## Text to evaluate
 
@@ -450,14 +521,14 @@ Your authority is Антоненко-Давидович «Як ми говори
 {target_text}
 ```
 
-{rules_section}
+{evidence}
 
 ## Your task
 
 Identify EVERY Russianism, calque, Surzhyk, or unnatural Ukrainian construction in the text above. For each issue:
 
 - Quote the exact problematic phrase
-- Cite the relevant Antonenko rule by its headword (if applicable from the rules above) or general principle
+- Cite the relevant authority (Antonenko rule by headword or UA-GEC pattern) or general principle
 - Provide the correct Ukrainian alternative
 - Severity: 1=minor (debatable), 2=clear Russianism, 3=blatant calque or borrowing
 
