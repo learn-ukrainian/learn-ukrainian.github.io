@@ -74,6 +74,7 @@ VALID_AGENTS = (
     "claude",
     "gemini",
     "codex",
+    "grok",
     "claude-desktop",
     "codex-desktop",
 )
