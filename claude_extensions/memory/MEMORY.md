@@ -107,7 +107,7 @@ DO NOT run `v6_build.py --range` or `--step all`. Only user runs builds. Heal: `
 - NEVER `/compact` (rewrites context, loses fidelity).
 - NEVER `--resume`/`--continue` (1.117 auto-summarizes, cache miss).
 - Diary handoff: `docs/session-state/YYYY-MM-DD-<slug>.md`.
-- 14:00–20:00 CET PEAK = MINIMAL inline. Overnight = orchestrator-only, ALL execution dispatched.
+- Overnight = orchestrator-only, ALL execution dispatched. (The earlier 14:00–20:00 CET peak-throttle rule has been CANCELED — Anthropic doubled weekly limits through mid-July 2026.)
 - Subagents = 74% of token volume. Prefer inline. Batch into FEWER subagents.
 
 ## TOOL SELECTION
