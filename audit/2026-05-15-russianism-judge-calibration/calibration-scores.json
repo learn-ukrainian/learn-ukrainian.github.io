@@ -1,0 +1,58 @@
+{
+  "_meta": {
+    "date": "2026-05-15",
+    "gold_set_size": 12,
+    "scoring": "sev1-tolerant phrase F1 + case-level confusion matrix",
+    "note": "Reconstructed from session transcript after worktree force-remove. Raw judgments-*.jsonl files are gone but the aggregate scores were observed and recorded during the session via scripts/audit/score_judge_calibration.py."
+  },
+  "claude-opus-4-7": {
+    "family": "claude",
+    "n_cases": 12,
+    "case_tp": 7,
+    "case_tn": 5,
+    "case_fp": 0,
+    "case_fn": 0,
+    "case_accuracy": 1.0,
+    "phrase_tp": 15,
+    "phrase_fp": 4,
+    "phrase_fn": 1,
+    "phrase_precision": 0.7895,
+    "phrase_recall": 0.9375,
+    "phrase_f1": 0.8571
+  },
+  "gemini-3.1-pro-preview": {
+    "family": "gemini",
+    "n_cases": 12,
+    "case_tp": 7,
+    "case_tn": 4,
+    "case_fp": 1,
+    "case_fn": 0,
+    "case_accuracy": 0.9167,
+    "phrase_tp": 13,
+    "phrase_fp": 3,
+    "phrase_fn": 2,
+    "phrase_precision": 0.8125,
+    "phrase_recall": 0.8667,
+    "phrase_f1": 0.8387
+  },
+  "gpt-5.5": {
+    "family": "codex",
+    "n_cases": 12,
+    "case_tp": 5,
+    "case_tn": 5,
+    "case_fp": 0,
+    "case_fn": 2,
+    "case_accuracy": 0.8333,
+    "phrase_tp": 9,
+    "phrase_fp": 1,
+    "phrase_fn": 4,
+    "phrase_precision": 0.9000,
+    "phrase_recall": 0.6923,
+    "phrase_f1": 0.7826
+  },
+  "gemini-3-pro-preview": {
+    "family": "gemini",
+    "status": "DNF",
+    "reason": "Single judge calls regularly exceed 240s timeout; one cell at 136s smoke + first eval cell timed out at 240s. Unfit for production review at any scale."
+  }
+}

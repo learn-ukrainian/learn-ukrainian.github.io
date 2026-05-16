@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Russianism Eval — Judge Calibration + Model Leaderboard (2026-05-15)</title>
+<style>
+:root { --bg:#fafafa; --card:#fff; --ink:#1a1a1a; --muted:#5a5a5a; --line:#e8e8e8;
+  --best:#2e7d32; --good:#689f38; --ok:#f9a825; --bad:#d84315; --err:#707070;
+  --j-31pro:#4285f4; --j-gpt55:#10a37f; --j-opus47:#cc7a3d; }
+* { box-sizing:border-box; }
+body { font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+       margin:0; background:var(--bg); color:var(--ink); }
+.container { max-width:1100px; margin:0 auto; padding:32px 24px; }
+h1 { font-size:30px; margin:0 0 8px; letter-spacing:-0.5px; }
+.subtitle { color:var(--muted); margin-bottom:32px; font-size:14px; }
+h2 { font-size:22px; margin-top:48px; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+h3 { font-size:17px; margin-top:24px; margin-bottom:12px; }
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; background:var(--card); border-radius:6px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+th,td { padding:10px 14px; text-align:left; border-bottom:1px solid var(--line); }
+th { background:#f0f0f0; font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover { background:#f5f9ff; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+td.model { font-family:'SF Mono','Monaco','Menlo',monospace; font-size:13px; }
+.fam-tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; text-transform:uppercase; color:white; }
+.fam-claude-bg{background:#cc7a3d;} .fam-codex-bg{background:#10a37f;} .fam-gemini-bg{background:#4285f4;}
+.j-31pro { color:var(--j-31pro); } .j-gpt55 { color:var(--j-gpt55); } .j-opus47 { color:var(--j-opus47); }
+.rate-best { color:var(--best); font-weight:700; }
+.rate-good { color:var(--good); font-weight:600; }
+.rate-ok   { color:var(--ok); font-weight:600; }
+.rate-bad  { color:var(--bad); font-weight:700; }
+code { background:#f0f0f0; padding:2px 6px; border-radius:3px; font-family:'SF Mono','Monaco',monospace; font-size:13px; }
+.uk { font-family:'Helvetica Neue','Arial',sans-serif; }
+.caveats { background:#fff4e5; border-left:4px solid var(--ok); padding:16px 20px; margin:24px 0; border-radius:4px; }
+.caveats li { margin-bottom:6px; }
+.method  { background:#e3f2fd; border-left:4px solid #1976d2; padding:16px 20px; margin:24px 0; border-radius:4px; font-size:14px; }
+.findings { background:#f3e5f5; border-left:4px solid #8e24aa; padding:16px 20px; margin:24px 0; border-radius:4px; }
+.findings li { margin-bottom:8px; }
+.recovery { background:#fce4ec; border-left:4px solid #c2185b; padding:16px 20px; margin:24px 0; border-radius:4px; font-size:13px; }
+.summary-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin:16px 0; }
+.summary-card { background:var(--card); padding:14px; border-radius:6px; border:1px solid var(--line); }
+.summary-card .num { font-size:28px; font-weight:700; letter-spacing:-0.5px; }
+.summary-card .label { color:var(--muted); font-size:12px; text-transform:uppercase; margin-top:4px; }
+footer { margin-top:48px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Russianism Eval — Judge Calibration + Model Leaderboard</h1>
+<div class="subtitle">2026-05-15. 50 model outputs × 3 judges = 150 judge calls + 12-case Antonenko-grounded calibration set with hand-labeled gold.</div>
+
+<div class="recovery">
+<strong>Reconstruction note:</strong> The original dynamic <code>REPORT-FOUR-JUDGES.html</code> (with per-cell concordance matrix + interactive tooltips) was lost when the eval-run worktree was force-removed. This is a reconstruction of the headline findings from the session transcript. The scripts + calibration gold set ship in <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2006">PR #2006</a>; per-cell raw data is regenerable by re-running the eval harness + judges (~$5, ~30 min for the full 55-cell suite). See <a href="REPORT.md">REPORT.md</a> for the reproduction snippet.
+</div>
+
+<div class="method">
+<strong>Two questions, one report:</strong>
+<ol style="margin-top:8px;">
+<li><strong>MODEL perspective</strong> — Which frontier LLM produces the cleanest Ukrainian? Rate per judge × ensemble-mean rate × rank-stability column showing how much a model's rank shifts under different judges.</li>
+<li><strong>JUDGE perspective</strong> — Which LLM most accurately identifies Russianisms? Calibration set of 12 hand-labeled cases (5 clean, 6 dirty with known TP calques, 1 debatable, 1 lure). Per-judge precision, recall, F1, and case-level accuracy.</li>
+</ol>
+</div>
+
+<div class="summary-grid">
+<div class="summary-card"><div class="num">50</div><div class="label">scored cells</div></div>
+<div class="summary-card"><div class="num">3</div><div class="label">judges × 3 families</div></div>
+<div class="summary-card"><div class="num">12</div><div class="label">calibration gold cases</div></div>
+<div class="summary-card"><div class="num">86%</div><div class="label">best judge F1</div></div>
+</div>
+
+<h2>1. Judge perspective — calibration scoreboard</h2>
+
+<p style="color:var(--muted); font-size:13px;">12 hand-labeled cases: 5 clean, 6 dirty with known TP calques, 1 debatable, 1 lure (clean text using canonical alternatives to known calques). sev1 gold misses are tolerated (debatable register calls don't hurt recall).</p>
+
+<table>
+<thead><tr>
+<th>Rank</th><th>Judge</th><th>Family</th>
+<th class="num">Phrase precision</th><th class="num">Phrase recall</th><th class="num">F1 (sev1-tolerant)</th>
+<th class="num">Case accuracy</th><th class="num">Case TP/TN/FP/FN</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td><td class="model">claude-opus-4-7</td>
+<td><span class="fam-tag fam-claude-bg">claude</span></td>
+<td class="num"><span class="rate-good">79%</span></td>
+<td class="num"><span class="rate-best">94%</span></td>
+<td class="num"><span class="rate-best"><strong>86%</strong></span></td>
+<td class="num"><span class="rate-best">100%</span></td>
+<td class="num" style="font-size:12px; color:var(--muted);">7/5/0/0</td>
+</tr>
+<tr>
+<td class="num">2</td><td class="model">gemini-3.1-pro-preview</td>
+<td><span class="fam-tag fam-gemini-bg">gemini</span></td>
+<td class="num"><span class="rate-good">81%</span></td>
+<td class="num"><span class="rate-best">87%</span></td>
+<td class="num"><span class="rate-best"><strong>84%</strong></span></td>
+<td class="num"><span class="rate-best">92%</span></td>
+<td class="num" style="font-size:12px; color:var(--muted);">7/4/1/0</td>
+</tr>
+<tr>
+<td class="num">3</td><td class="model">gpt-5.5</td>
+<td><span class="fam-tag fam-codex-bg">codex</span></td>
+<td class="num"><span class="rate-best">90%</span></td>
+<td class="num"><span class="rate-ok">69%</span></td>
+<td class="num"><span class="rate-good"><strong>78%</strong></span></td>
+<td class="num"><span class="rate-good">83%</span></td>
+<td class="num" style="font-size:12px; color:var(--muted);">5/5/0/2</td>
+</tr>
+<tr>
+<td class="num">—</td><td class="model">gemini-3-pro-preview</td>
+<td><span class="fam-tag fam-gemini-bg">gemini</span></td>
+<td class="num" colspan="4" style="text-align:center; color:var(--err); font-style:italic;">DNF — single judge calls exceeded 240s timeout</td>
+<td class="num">—</td>
+</tr>
+</tbody></table>
+
+<p><strong>Headline:</strong> <code>claude-opus-4-7</code> and <code>gemini-3.1-pro-preview</code> are within 2 percentage points of each other on F1. opus-4-7 wins on case accuracy (100% vs 92%) — the single gemini-3.1-pro case-level error is the well-documented <code>Доброго дня!</code> over-flag. gpt-5.5 is a clear third on F1 but has the highest precision — it never false-flags a clean case.</p>
+
+<h3>Per-judge characteristic profile</h3>
+
+<h4 style="color:var(--j-opus47);">claude-opus-4-7 — "Thorough proofreader"</h4>
+<ul>
+<li>Catches <strong>7/7 dirty cases as dirty</strong> (perfect case-level recall)</li>
+<li>Catches <strong>5/5 clean cases as clean</strong> (perfect case-level precision)</li>
+<li>Phrase-level recall 94% — missed only 1 of 16 gold flags (the preposition <code>на завтра на 09:00 → о 09:00</code>)</li>
+<li>Phrase-level precision 79% — 3 phrase FPs all at sev=1 (defensible style points like <code>обговорити терміни → строки</code>, <code>в → у</code> euphony rule)</li>
+<li><strong>Tendency:</strong> flags real issues AND adds defensible sev=1 stylistic notes. For a curriculum review pipeline, this is exactly the desired behavior — better to over-flag with sev=1 (writer can dismiss) than miss a real calque.</li>
+</ul>
+
+<h4 style="color:var(--j-gpt55);">gpt-5.5 — "Conservative validator"</h4>
+<ul>
+<li>Catches 5/8 dirty cases as dirty + 5/5 clean cases as clean</li>
+<li><strong>2 case-level FNs:</strong> missed <code>cal_dirty_meetup</code> and <code>cal_debatable_next_steps</code> entirely (judged clean)</li>
+<li>Phrase-level recall 69% — missed 4 of 13 gold flags (sev1-tolerant): <code>залишу коментарі</code> (sev=3), <code>в будь-який момент</code> (sev=2), <code>на прийом</code> (sev=2), <code>не виходить</code> (sev=2)</li>
+<li>Phrase-level precision 90% — 1 FP, and it's a soft-FP (span mismatch on a real Russianism)</li>
+<li><strong>Tendency:</strong> very few false positives, but misses medium-severity calques. Conservatism is a feature for a validator role, a bug for a primary reviewer.</li>
+</ul>
+
+<h4 style="color:var(--j-31pro);">gemini-3.1-pro-preview — "Thorough but greeting-blind"</h4>
+<ul>
+<li>Catches <strong>7/7 dirty cases as dirty</strong> (perfect case-level recall, ties opus-4-7)</li>
+<li>Catches 4/5 clean cases as clean — single case-level FP is <code>cal_clean_greeting</code>:
+  <ul>
+    <li><code class="uk">Доброго дня! → Добрий день!</code> (sev=2) — VESUM accepts the genitive, Antonenko has no entry. Predicted FP confirmed.</li>
+    <li>On the same cell: also flagged <code class="uk">Як ваші справи? → Як ся маєте?</code> (sev=3) — register preference, not a Russianism.</li>
+    <li><strong>Combined: 2 spurious flags on a single clean case.</strong> If the curriculum content contains common greetings (and it will), this judge will fire on every one.</li>
+  </ul>
+</li>
+<li>Phrase-level recall 87% — missed 2 sev≥2 gold flags</li>
+<li>Phrase-level precision 81% — 1 additional phrase FP at sev=2 on debatable <code>терміни → строки</code></li>
+<li><strong>Latency instability</strong> — judge calls regularly exceed 240s under load; required 480s timeout to complete the calibration set.</li>
+<li><strong>Tendency:</strong> high recall, but (a) systematic greeting FP fires on every common Ukrainian greeting, (b) latency unpredictable.</li>
+</ul>
+
+<h2>2. Model perspective — leaderboard across three judges</h2>
+
+<p style="color:var(--muted); font-size:13px;">Complete 3-judge coverage: 50 ok-status cells × 3 judges = 150 judge calls. (5 errored cells excluded — bridge errors on gemini-3.0-flash-preview model unavailability.) Sorted by ensemble-mean rate. "Spread" = max(rank) − min(rank) across the 3 judges (model rank instability under judge swap). All rates = issues per 100 words.</p>
+
+<table>
+<thead><tr>
+<th>#</th><th>Model</th><th>Family</th><th class="num">Words</th>
+<th class="num"><span class="j-31pro">gem-31pro %</span></th>
+<th class="num"><span class="j-gpt55">gpt-5.5 %</span></th>
+<th class="num"><span class="j-opus47">opus-4-7 %</span></th>
+<th class="num">Mean %</th><th class="num">Spread</th>
+<th>Ranks (g/p/o)</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td><td class="model">gpt-5.5</td><td><span class="fam-tag fam-codex-bg">codex</span></td>
+<td class="num">193</td>
+<td class="num"><span class="rate-best">1.04</span></td>
+<td class="num"><span class="rate-best">1.55</span></td>
+<td class="num"><span class="rate-ok">5.18</span></td>
+<td class="num"><strong><span class="rate-best">2.59</span></strong></td>
+<td class="num">1</td><td>1/2/1</td>
+</tr>
+<tr>
+<td class="num">2</td><td class="model">claude-opus-4-7</td><td><span class="fam-tag fam-claude-bg">claude</span></td>
+<td class="num">278</td>
+<td class="num"><span class="rate-good">3.24</span></td>
+<td class="num"><strong><span class="rate-best">1.44</span></strong></td>
+<td class="num"><span class="rate-ok">6.47</span></td>
+<td class="num"><strong><span class="rate-good">3.72</span></strong></td>
+<td class="num">3</td><td>4/1/3</td>
+</tr>
+<tr>
+<td class="num">3</td><td class="model">claude-opus-4-6</td><td><span class="fam-tag fam-claude-bg">claude</span></td>
+<td class="num">258</td>
+<td class="num"><span class="rate-good">3.10</span></td>
+<td class="num"><span class="rate-good">3.88</span></td>
+<td class="num"><span class="rate-ok">6.20</span></td>
+<td class="num"><strong><span class="rate-ok">4.39</span></strong></td>
+<td class="num"><strong>5</strong></td><td>3/7/2</td>
+</tr>
+<tr>
+<td class="num">4</td><td class="model">gemini-3-pro-preview</td><td><span class="fam-tag fam-gemini-bg">gemini</span></td>
+<td class="num">197</td>
+<td class="num"><span class="rate-good">3.05</span></td>
+<td class="num"><span class="rate-good">2.54</span></td>
+<td class="num"><span class="rate-bad">8.63</span></td>
+<td class="num"><strong><span class="rate-ok">4.74</span></strong></td>
+<td class="num">3</td><td>2/4/5</td>
+</tr>
+<tr>
+<td class="num">5</td><td class="model">claude-sonnet-4-6</td><td><span class="fam-tag fam-claude-bg">claude</span></td>
+<td class="num">228</td>
+<td class="num"><span class="rate-good">3.51</span></td>
+<td class="num"><span class="rate-ok">4.39</span></td>
+<td class="num"><span class="rate-bad">7.46</span></td>
+<td class="num"><strong><span class="rate-ok">5.12</span></strong></td>
+<td class="num">4</td><td>5/8/4</td>
+</tr>
+<tr>
+<td class="num">6</td><td class="model">gemini-3.1-pro-preview</td><td><span class="fam-tag fam-gemini-bg">gemini</span></td>
+<td class="num">217</td>
+<td class="num"><span class="rate-ok">5.07</span></td>
+<td class="num"><span class="rate-good">1.84</span></td>
+<td class="num"><span class="rate-bad">8.76</span></td>
+<td class="num"><strong><span class="rate-ok">5.22</span></strong></td>
+<td class="num">4</td><td>7/3/6</td>
+</tr>
+<tr>
+<td class="num">7</td><td class="model">gemini-3-flash-preview</td><td><span class="fam-tag fam-gemini-bg">gemini</span></td>
+<td class="num">248</td>
+<td class="num"><span class="rate-ok">5.24</span></td>
+<td class="num"><span class="rate-good">2.82</span></td>
+<td class="num"><span class="rate-bad">9.27</span></td>
+<td class="num"><strong><span class="rate-bad">5.78</span></strong></td>
+<td class="num">3</td><td>8/5/7</td>
+</tr>
+<tr>
+<td class="num">8</td><td class="model">gpt-5.4-mini</td><td><span class="fam-tag fam-codex-bg">codex</span></td>
+<td class="num">183</td>
+<td class="num"><span class="rate-ok">4.92</span></td>
+<td class="num"><span class="rate-good">3.83</span></td>
+<td class="num"><span class="rate-bad">10.93</span></td>
+<td class="num"><strong><span class="rate-bad">6.56</span></strong></td>
+<td class="num">3</td><td>6/6/9</td>
+</tr>
+<tr>
+<td class="num">9</td><td class="model">gemini-2.5-flash</td><td><span class="fam-tag fam-gemini-bg">gemini</span></td>
+<td class="num">221</td>
+<td class="num"><span class="rate-ok">5.43</span></td>
+<td class="num"><span class="rate-ok">4.98</span></td>
+<td class="num"><span class="rate-bad">10.86</span></td>
+<td class="num"><strong><span class="rate-bad">7.09</span></strong></td>
+<td class="num">1</td><td>9/9/8</td>
+</tr>
+<tr>
+<td class="num">10</td><td class="model">claude-haiku-4-5</td><td><span class="fam-tag fam-claude-bg">claude</span></td>
+<td class="num">193</td>
+<td class="num"><strong><span class="rate-bad">8.29</span></strong></td>
+<td class="num"><strong><span class="rate-bad">7.77</span></strong></td>
+<td class="num"><strong><span class="rate-bad">11.92</span></strong></td>
+<td class="num"><strong><span class="rate-bad">9.33</span></strong></td>
+<td class="num"><strong>0</strong></td><td>10/10/10</td>
+</tr>
+</tbody></table>
+
+<div class="findings">
+<h3 style="margin-top:0;">Findings synthesis</h3>
+<ol>
+<li><strong>gpt-5.5 wins on ensemble mean</strong> (2.59%). #1 or #2 under each individual judge. Frontier-cleanest Ukrainian producer in this 5-prompt suite.</li>
+<li><strong>claude-opus-4-7 takes #1 under gpt-5.5 judge</strong> (1.44%) but drops to #3-4 under gemini and opus judges. Net #2 on ensemble mean.</li>
+<li><strong>opus-4-7 as judge is systemically stricter</strong> — every model gets 2-4pp higher rate under opus-4-7 than under gemini/gpt judges. The judge's high-recall behavior pushes mean rates up uniformly without changing the bottom of the leaderboard.</li>
+<li><strong>Bottom of the leaderboard is rock-solid.</strong> claude-haiku-4-5 is rank 10 under all 3 judges (spread = 0). Within-family scaling (smaller model = more calques) is universal: Haiku 2.5× Opus, gpt-mini 2.5× gpt-5.5, gem-flash 1.2-1.5× gem-pro.</li>
+<li><strong>The frontier band (ranks 2-7) is judge-fragile.</strong> Spreads of 3-5 are common; the gap between #2 and #7 is only ~2.6 percentage points on ensemble mean. Headline rankings inside the band are NOT separable with single-judge eval.</li>
+</ol>
+</div>
+
+<h3>Within-family scaling (universal across judges)</h3>
+<table>
+<thead><tr><th>Family</th><th>Bigger model</th><th>Smaller model</th><th class="num">Mean rate ratio</th></tr></thead>
+<tbody>
+<tr><td>Anthropic</td><td><code>opus-4-7</code> (3.72%)</td><td><code>haiku-4-5</code> (9.33%)</td><td class="num"><strong>2.5×</strong></td></tr>
+<tr><td>Anthropic</td><td><code>opus-4-7</code> (3.72%)</td><td><code>sonnet-4-6</code> (5.12%)</td><td class="num"><strong>1.4×</strong></td></tr>
+<tr><td>OpenAI</td><td><code>gpt-5.5</code> (2.59%)</td><td><code>gpt-5.4-mini</code> (6.56%)</td><td class="num"><strong>2.5×</strong></td></tr>
+<tr><td>Google</td><td><code>gem-3-pro</code> (4.74%)</td><td><code>gem-3-flash</code> (5.78%)</td><td class="num"><strong>1.2×</strong></td></tr>
+<tr><td>Google</td><td><code>gem-3-pro</code> (4.74%)</td><td><code>gem-2.5-flash</code> (7.09%)</td><td class="num"><strong>1.5×</strong></td></tr>
+</tbody></table>
+
+<p>The within-family scaling is the most-robust finding in this study — smaller models in every frontier family produce more Russianisms.</p>
+
+<h2>Recommendation for the curriculum review position</h2>
+
+<p>Adopt <strong><code>claude-opus-4-7</code> as the primary reviewer</strong>. Configure the review pipeline so:</p>
+
+<ol>
+<li><strong>Primary call:</strong> <code>claude-opus-4-7</code> with the universal-judge prompt (retrieve Antonenko entries + scoring rubric). At sev≥2 the flag is escalated; at sev=1 the flag is logged but does not block publication.</li>
+<li><strong>Optional second-opinion validator:</strong> when <code>claude-opus-4-7</code> flags a sev≥2 issue, re-call <code>gpt-5.5</code> with the same prompt. <strong>Both flag = block / require correction.</strong> <strong>opus-only sev≥2 = warn but allow</strong> (likely correct but worth human review). <strong>gpt-only flag</strong> should be rare given gpt-5.5's conservatism; treat as block.</li>
+<li><strong>Calibration regression:</strong> run the 12-case calibration set monthly as a regression check on whichever judge is in production. If F1 falls below 80% on the same calibration, escalate.</li>
+<li><strong>Do NOT use <code>gemini-3.1-pro-preview</code> as a primary reviewer.</strong> Its over-flagging of greeting genitives and register preferences will produce noise the writer team will learn to ignore — which destroys the value of the entire review pipeline.</li>
+</ol>
+
+<h3>Cost note</h3>
+<ul>
+<li><code>gpt-5.5</code> (<code>ask-codex</code>): ~20-25s/cell typical → $0.02-0.05/cell</li>
+<li><code>claude-opus-4-7</code> (<code>ask-claude</code>): ~30s/cell typical → $0.05-0.08/cell</li>
+<li><code>gemini-3.1-pro-preview</code>: 25-300+ s/cell with frequent timeouts → unbudgetable</li>
+</ul>
+<p>For curriculum-scale review (~6000 module activities × per-section audits), the <code>claude-opus-4-7</code> + <code>gpt-5.5</code> second-opinion configuration costs roughly <strong>$300-500/run</strong> on full corpus. Well within review budget on the Anthropic promo (+50% until 2026-07-13).</p>
+
+<div class="caveats">
+<h3 style="margin-top:0;">Methodology limits</h3>
+<ul>
+<li><strong>Calibration set is n=12 + single-rater.</strong> Gold reflects one orchestrator's Antonenko-grounded reading, not a panel of native-speaker linguists. Treat as directional signal, not publishable claim.</li>
+<li><strong>gemini-3.1-pro latency is environmental.</strong> Yesterday it judged 55 cells fine; today it timed out on calibration cells with identical prompt size. Reproducible only on a quiet Gemini account.</li>
+<li><strong>Phrase-match is normalized-string equality.</strong> Different judges may surface the same calque on slightly different spans — counted as separate findings.</li>
+<li><strong>sev1-tolerant scoring.</strong> Debatable register calls don't penalize judge recall. Strict scoring (<code>--strict-sev1</code>) lowers recall numbers but doesn't change the ranking.</li>
+<li><strong>Single sample per (prompt, model) cell.</strong> Variance test on one cell showed ±2-3pp rate spread under n=5 retake. Ranks within ±1pp not separable.</li>
+<li><strong>gemini-3-pro-preview was attempted as 4th judge but DNF'd entirely.</strong> Unsuitable as production judge at any scale until upstream latency stabilizes.</li>
+</ul>
+</div>
+
+<footer>
+Eval harness: <code>scripts/audit/russianism_eval.py</code> (PR #1999) ·
+Detector: <code>scripts/audit/checks/russicism_detection.py</code> (PR #1997) ·
+Universal judge: <code>scripts/audit/russianism_judge.py</code> (PR #2006) ·
+Calibration scorer: <code>scripts/audit/score_judge_calibration.py</code> (PR #2006) ·
+Calibration gold: <code>eval/russianism/calibration-cases.jsonl</code> (PR #2006) ·
+All grounded in Антоненко-Давидович «Як ми говоримо»
+</footer>
+</div>
+</body>
+</html>

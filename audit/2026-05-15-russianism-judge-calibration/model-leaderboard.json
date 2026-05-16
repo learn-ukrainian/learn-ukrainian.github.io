@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "date": "2026-05-15",
+    "n_cells_total": 55,
+    "n_cells_scored": 50,
+    "n_cells_errored": 5,
+    "prompts": 5,
+    "models": 10,
+    "judges": ["gemini-3.1-pro-preview", "gpt-5.5", "claude-opus-4-7"],
+    "rate_units": "issues per 100 words",
+    "note": "Reconstructed from session transcript after worktree force-remove. Per-cell raw judgment data is gone. Full coverage (3 judges × 50 cells) was completed during the session."
+  },
+  "rates_by_judge": {
+    "gemini-3.1-pro-preview": {
+      "gpt-5.5": 1.04, "claude-opus-4-7": 3.24, "claude-opus-4-6": 3.10,
+      "gemini-3-pro-preview": 3.05, "claude-sonnet-4-6": 3.51,
+      "gemini-3.1-pro-preview": 5.07, "gemini-3-flash-preview": 5.24,
+      "gpt-5.4-mini": 4.92, "gemini-2.5-flash": 5.43, "claude-haiku-4-5": 8.29
+    },
+    "gpt-5.5": {
+      "gpt-5.5": 1.55, "claude-opus-4-7": 1.44, "claude-opus-4-6": 3.88,
+      "gemini-3-pro-preview": 2.54, "claude-sonnet-4-6": 4.39,
+      "gemini-3.1-pro-preview": 1.84, "gemini-3-flash-preview": 2.82,
+      "gpt-5.4-mini": 3.83, "gemini-2.5-flash": 4.98, "claude-haiku-4-5": 7.77
+    },
+    "claude-opus-4-7": {
+      "gpt-5.5": 5.18, "claude-opus-4-7": 6.47, "claude-opus-4-6": 6.20,
+      "gemini-3-pro-preview": 8.63, "claude-sonnet-4-6": 7.46,
+      "gemini-3.1-pro-preview": 8.76, "gemini-3-flash-preview": 9.27,
+      "gpt-5.4-mini": 10.93, "gemini-2.5-flash": 10.86, "claude-haiku-4-5": 11.92
+    }
+  },
+  "leaderboard_by_mean_rate": [
+    {"rank": 1, "model": "gpt-5.5",                  "rates": {"gemini-3.1-pro": 1.04, "gpt-5.5": 1.55, "claude-opus-4-7": 5.18}, "mean": 2.59, "rank_spread": 1, "ranks": {"gem": 1, "gpt": 2, "opus": 1}},
+    {"rank": 2, "model": "claude-opus-4-7",          "rates": {"gemini-3.1-pro": 3.24, "gpt-5.5": 1.44, "claude-opus-4-7": 6.47}, "mean": 3.72, "rank_spread": 3, "ranks": {"gem": 4, "gpt": 1, "opus": 3}},
+    {"rank": 3, "model": "claude-opus-4-6",          "rates": {"gemini-3.1-pro": 3.10, "gpt-5.5": 3.88, "claude-opus-4-7": 6.20}, "mean": 4.39, "rank_spread": 5, "ranks": {"gem": 3, "gpt": 7, "opus": 2}},
+    {"rank": 4, "model": "gemini-3-pro-preview",     "rates": {"gemini-3.1-pro": 3.05, "gpt-5.5": 2.54, "claude-opus-4-7": 8.63}, "mean": 4.74, "rank_spread": 3, "ranks": {"gem": 2, "gpt": 4, "opus": 5}},
+    {"rank": 5, "model": "claude-sonnet-4-6",        "rates": {"gemini-3.1-pro": 3.51, "gpt-5.5": 4.39, "claude-opus-4-7": 7.46}, "mean": 5.12, "rank_spread": 4, "ranks": {"gem": 5, "gpt": 8, "opus": 4}},
+    {"rank": 6, "model": "gemini-3.1-pro-preview",   "rates": {"gemini-3.1-pro": 5.07, "gpt-5.5": 1.84, "claude-opus-4-7": 8.76}, "mean": 5.22, "rank_spread": 4, "ranks": {"gem": 7, "gpt": 3, "opus": 6}},
+    {"rank": 7, "model": "gemini-3-flash-preview",   "rates": {"gemini-3.1-pro": 5.24, "gpt-5.5": 2.82, "claude-opus-4-7": 9.27}, "mean": 5.78, "rank_spread": 3, "ranks": {"gem": 8, "gpt": 5, "opus": 7}},
+    {"rank": 8, "model": "gpt-5.4-mini",             "rates": {"gemini-3.1-pro": 4.92, "gpt-5.5": 3.83, "claude-opus-4-7": 10.93}, "mean": 6.56, "rank_spread": 3, "ranks": {"gem": 6, "gpt": 6, "opus": 9}},
+    {"rank": 9, "model": "gemini-2.5-flash",         "rates": {"gemini-3.1-pro": 5.43, "gpt-5.5": 4.98, "claude-opus-4-7": 10.86}, "mean": 7.09, "rank_spread": 1, "ranks": {"gem": 9, "gpt": 9, "opus": 8}},
+    {"rank": 10, "model": "claude-haiku-4-5",        "rates": {"gemini-3.1-pro": 8.29, "gpt-5.5": 7.77, "claude-opus-4-7": 11.92}, "mean": 9.33, "rank_spread": 0, "ranks": {"gem": 10, "gpt": 10, "opus": 10}}
+  ],
+  "within_family_scaling": {
+    "anthropic_haiku_vs_opus": "2.5×",
+    "anthropic_sonnet_vs_opus": "1.4×",
+    "openai_mini_vs_full": "2.5×",
+    "google_flash_vs_pro_high": "1.5×",
+    "google_flash_vs_pro_low": "1.2×",
+    "note": "Smaller-model-more-calques pattern holds under all 3 judges"
+  }
+}
