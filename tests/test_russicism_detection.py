@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from audit.checks.russicism_detection import (
     _is_in_quote_context,
     check_russicisms,
+    check_ua_gec_calques,
 )
 
 # =============================================================================
@@ -346,3 +347,70 @@ class TestUaGecCalquePatterns:
         """`пара / пару` as noun ('a pair of shoes') — correct UK."""
         violations = check_russicisms(_wrap("Купив нову пару взуття."))
         assert violations == []
+
+
+# =============================================================================
+# UA-GEC BULK LOOKUP TABLE — info-only F/Calque suggestions
+# =============================================================================
+
+class TestUaGecBulkLookup:
+    """Bulk CSV lookup catches high-frequency UA-GEC calques as non-blocking info."""
+
+    def test_detects_коментарій(self):
+        violations = check_ua_gec_calques(_wrap("Автор залишив коментарій до тексту."))
+        assert violations and violations[0]["matched"].casefold() == "коментарій"
+
+    def test_detects_підписників(self):
+        violations = check_ua_gec_calques(_wrap("У блогу вже багато підписників."))
+        assert violations and violations[0]["matched"].casefold() == "підписників"
+
+    def test_detects_посту(self):
+        violations = check_ua_gec_calques(_wrap("Після посту автор відповів на питання."))
+        assert violations and violations[0]["matched"].casefold() == "посту"
+
+    def test_detects_лайки(self):
+        violations = check_ua_gec_calques(_wrap("Цей текст швидко зібрав лайки."))
+        assert violations and violations[0]["matched"].casefold() == "лайки"
+
+    def test_detects_вірно(self):
+        violations = check_ua_gec_calques(_wrap("Вірно пояснити правило важливо."))
+        assert violations and violations[0]["matched"].casefold() == "вірно"
+
+    def test_detects_дозволяє(self):
+        violations = check_ua_gec_calques(_wrap("Цей підхід дозволяє краще бачити структуру."))
+        assert violations and violations[0]["matched"].casefold() == "дозволяє"
+
+    def test_detects_як_тільки(self):
+        violations = check_ua_gec_calques(_wrap("Як тільки учень читає, він бачить приклад."))
+        assert violations and violations[0]["matched"].casefold() == "як тільки"
+
+    def test_detects_у_якості(self):
+        violations = check_ua_gec_calques(_wrap("Це слово використано у якості прикладу."))
+        assert violations and violations[0]["matched"].casefold() == "у якості"
+
+    def test_пара_взуття_not_flagged(self):
+        violations = check_ua_gec_calques(_wrap("На полиці стоїть пара взуття."))
+        assert violations == []
+
+    def test_справа_generic_not_flagged(self):
+        violations = check_ua_gec_calques(_wrap("Кожна справа важлива для громади."))
+        assert violations == []
+
+    def test_наступний_krok_not_flagged(self):
+        violations = check_ua_gec_calques(_wrap("Будь-який наступний крок потребує уваги."))
+        assert violations == []
+
+    def test_даний_math_context_not_flagged(self):
+        violations = check_ua_gec_calques(_wrap("Даний метод у геометрії допомагає довести теорему."))
+        assert violations == []
+
+    def test_all_matches_are_info(self):
+        violations = check_ua_gec_calques(_wrap("Коментарій до посту отримав лайки."))
+        assert violations
+        assert {violation["severity"] for violation in violations} == {"info"}
+
+    def test_quotes_and_blockquotes_skipped(self):
+        quoted = check_ua_gec_calques(_wrap("Він написав: «Коментарій до посту отримав лайки»."))
+        blockquoted = check_ua_gec_calques(_wrap("> Коментарій до посту отримав лайки."))
+        assert quoted == []
+        assert blockquoted == []

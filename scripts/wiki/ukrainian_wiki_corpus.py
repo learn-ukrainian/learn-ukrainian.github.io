@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from audit.checks.cross_file_integrity import extract_ukrainian_words
-from audit.checks.russicism_detection import check_russicisms
+from audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
 from rag.rag_batch_verify import vesum_batch_lookup
 from rag.source_query import pravopys_lookup
 
@@ -520,11 +520,15 @@ def _citation_gate(article_path: Path, article_text: str) -> GateResult:
 
 
 def _surzhyk_gate(article_text: str, article_path: Path) -> GateResult:
-    violations = check_russicisms(article_text, str(article_path))
+    violations = [
+        *check_russicisms(article_text, str(article_path)),
+        *check_ua_gec_calques(article_text, str(article_path)),
+    ]
+    blocking = [violation for violation in violations if violation.get("severity") != "info"]
     return GateResult(
         name="surzhyk_linter",
-        passed=not violations,
-        detail="no russicism/surzhyk findings" if not violations else violations[0]["issue"],
+        passed=not blocking,
+        detail="no blocking russicism/surzhyk findings" if not blocking else blocking[0]["issue"],
         metadata={"violations": violations},
     )
 
@@ -558,9 +562,18 @@ def _pravopys_gate(article_text: str, article_title: str, headings: list[str]) -
 
 
 def _antonenko_gate(surzhyk_result: GateResult) -> GateResult:
+    # Only validate suspect terms that came from warning/critical violations.
+    # Info-severity flags (e.g. UA-GEC F/Calque mined suggestions at frequency >= 2)
+    # are advisory by design — they should not be required to have direct
+    # Antonenko-Davydovych headword backing, since the 342-entry style_guide
+    # covers ~50% of the book and many phraseological calques are absent.
+    # Treating info flags as blocking would gate-fail admission for any UA-GEC
+    # suggestion the structured Antonenko index doesn't echo — exactly the
+    # cascade #2000's test_round_trip_insert_preserves_a2_track surfaced.
     suspect_terms = [
         term
         for violation in surzhyk_result.metadata.get("violations", [])
+        if str(violation.get("severity", "")).lower() != "info"
         for term in _QUOTE_TERM_RE.findall(str(violation.get("issue", "")))
     ]
     if not suspect_terms:

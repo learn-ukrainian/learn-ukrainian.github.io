@@ -315,8 +315,11 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
 
 def _run_russicism_scan(content_text: str, content_path: str) -> list[dict]:
     """Scan content for Russicisms. Returns list of issue dicts."""
-    from audit.checks.russicism_detection import check_russicisms
-    russicism_issues = check_russicisms(content_text, content_path)
+    from audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
+    russicism_issues = [
+        *check_russicisms(content_text, content_path),
+        *check_ua_gec_calques(content_text, content_path),
+    ]
     return [
         {
             "type": "RUSSIANISM",
