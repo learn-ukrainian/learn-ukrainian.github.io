@@ -719,6 +719,17 @@
         ]
       }
     ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/goal-driver-stop.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "StopFailure": [
       {
         "hooks": [

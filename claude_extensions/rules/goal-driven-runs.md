@@ -48,6 +48,26 @@ All six fields are required. `last_cmd` MUST be the literal command executed, no
 - `GOAL_ABORT reason="blocked_rounds=3" last_cmd=".venv/bin/pytest tests/test_x.py" last_cwd="/Users/k/projects/learn-ukrainian" last_output="FAILED: assertion mismatch line 47" next_action="rebase against origin/main, re-run, file issue if still red" queue_head=fix-test-x`
 - `GOAL_ABORT reason="no_progress=3" last_cmd="git log -1 --oneline origin/main" last_cwd="/Users/k/projects/learn-ukrainian/.worktrees/foo" last_output="0e97806d7 docs(handoff)..." next_action="confirm correct base branch, then resume" queue_head=verify-base`
 
+### Wait status — for async-dispatch work
+
+```
+GOAL_WAIT signal=<watcher_id> reason="<why>" [eta_s=<int>]
+```
+
+Terminal-but-not-final. Use when the predicate cannot advance until an out-of-band event fires (a `delegate.py dispatch` lands, a PR's CI turns green, a long-running Monitor stream emits a specific event). The status-line evaluator and the project Stop hook (`claude_extensions/hooks/goal-driver-stop.sh`) treat this as legitimate suspension — NOT as a `no_progress` round.
+
+- `signal=<watcher_id>` — short kebab-case ID matching either (a) a Bash `run_in_background` task name, (b) a `Monitor` tool subscription, or (c) a `/api/delegate/active` task ID. The next turn re-enters when this signal fires.
+- `reason="..."` — quoted human reason ("Codex dispatch ETA 30 min", "PR #1930 CI awaiting merge").
+- `eta_s=<int>` — optional integer ETA in seconds. Useful for the hook to size its watchdog timeout.
+
+Example:
+
+```
+GOAL_WAIT signal=watcher-b6v1j-codex-dispatch-done reason="in-flight Codex dispatch — V7 MDX assembler ETA 30 min" eta_s=1800
+```
+
+This is the highest-leverage harness improvement (filed as #1933 wishlist item 1). For the V7 MDX shipping run on 2026-05-14 it would have saved ~30K context tokens by replacing ~40 empty `GOAL_STATUS no_progress=N/M` cycles with one `GOAL_WAIT` suspend + one resume turn.
+
 **The goal prompt MUST reference these tokens explicitly** so any downstream evaluator (Haiku judge, log-grepper, regression-detector) reads from a fixed grammar, not from English-paraphrase guess. Example goal prompt fragment:
 
 > *Halt the run when you can emit `GOAL_DONE reason="..."` with the predicate satisfied. Halt early with `GOAL_ABORT reason="..."` if `blocked` or `no_progress` reaches their thresholds. Every turn must end with a `GOAL_STATUS` line — no exceptions.*
@@ -96,6 +116,38 @@ The final turn of an aborted goal MUST include:
 5. The recommended manual next action — concrete enough that a human can execute it without re-reading the transcript.
 
 The point is to make goal-abort recovery cheap. A bare `GOAL_ABORT reason="failed"` is worse than no abort line at all because it lies about being informative.
+
+## Sizing the M cap
+
+The `M` in `turn=N/M` is the abort threshold. Picking it by gut on the 2026-05-14 V7 MDX run went `30 → 40 → 50 → 60` mid-flight — under-sized, then over-sized after recovery. Use the auto-sizing formula instead:
+
+```
+M = clamp(15, queue_depth * 2 + 5 + async_waits, 200)
+```
+
+- **2 turns per queue item** — one to advance, one to verify. Tighter loses the verification turn (re-learns #M-4 "deterministic over hallucination").
+- **+5 buffer** — per-run setup + the final `GOAL_DONE` turn + 1-2 retry slots when a verification fails on first attempt.
+- **+1 per expected async wait** — out-of-band signal (CI green, dispatch land, PR merge). Defaults to 0; name a number when you know the goal will suspend that many times.
+- **floor 15** — under 15 the counter stops being informative. Predicate work that small should ship without `/goal`.
+- **ceiling 200** — anything bigger is a planning failure that should split into multiple goals.
+
+For long-running async-heavy goals the operator can set the cap to dynamic — the predicate becomes the sole termination condition and turn count is unbounded. Pair with `GOAL_WAIT` for the suspends.
+
+CLI:
+
+```bash
+.venv/bin/python -m scripts.goal_driver.size_cap --queue-depth 8 --async-waits 2
+# → 23
+
+.venv/bin/python -m scripts.goal_driver.size_cap --dynamic
+# → infinity
+```
+
+## Terminal-status state cleanup
+
+`GOAL_DONE` and `GOAL_ABORT` are **both** terminal and **both** clear hook state. Specifically, the project Stop hook (`claude_extensions/hooks/goal-driver-stop.sh`) maintains a per-session file at `.claude/goal-state/<session_id>.json` recording any pending `GOAL_WAIT` watcher. On detecting either terminal status the hook deletes that file so the next `/goal` invocation in the same session starts with a clean slate.
+
+This closes the issue #1933 item 3 gap where an emitted `GOAL_ABORT` did not actually scrub the hook fingerprint — the next `/goal` could resume the dead watcher. **If you are emitting `GOAL_ABORT`, trust that the cleanup runs**: do not also try to delete the file manually inside the goal body.
 
 ## Claude vs Codex `/goal` — pick the right one
 
