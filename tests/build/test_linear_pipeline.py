@@ -1397,10 +1397,17 @@ def test_vesum_gate_skips_error_field_of_error_correction_activity(
     assert "прокидаєшся" in forwarded
 
 
-def test_vesum_gate_skips_error_word_field_of_error_correction_activity(
+def test_vesum_gate_skips_error_field_of_error_correction_items_shape(
     tmp_path: Path,
 ) -> None:
-    """`errorWord` stores a deliberate typo and must not fail VESUM."""
+    """`error:` in the `items:` shape stores a deliberate typo and must not fail VESUM.
+
+    Companion to `test_vesum_gate_skips_error_field_of_error_correction_activity`
+    (which covers the `sentences:` shape). Post-PR #2031, the canonical fields
+    for `error-correction` items are `error:` (the misspelled form) and
+    `correction:` (the corrected form). Legacy aliases `errorWord` / `error_word`
+    / `correctForm` trip the new `_activity_schema_gate` before this gate runs.
+    """
     module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
     _write_yaml(
         module_dir / "activities.yaml",
@@ -1412,14 +1419,14 @@ def test_vesum_gate_skips_error_word_field_of_error_correction_activity(
                 "items": [
                     {
                         "sentence": "Він ____ щодня.",
-                        "errorWord": "вмиваєця",
-                        "correctForm": "вмивається",
+                        "error": "вмиваєця",
+                        "correction": "вмивається",
                         "explanation": "Потрібна форма -ться.",
                     },
                     {
                         "sentence": "Ти ____ швидко.",
-                        "error_word": "одягаєся",
-                        "correctForm": "одягаєшся",
+                        "error": "одягаєся",
+                        "correction": "одягаєшся",
                         "explanation": "Потрібна форма -шся.",
                     }
                 ],
@@ -1513,10 +1520,14 @@ def test_vesum_gate_skips_fill_in_answer_suffix_without_options_field(
     assert report["gates"]["vesum_verified"]["passed"] is True
 
 
-def test_vesum_gate_still_checks_correct_form_in_error_correction_activity(
+def test_vesum_gate_still_checks_correction_in_error_correction_activity(
     tmp_path: Path,
 ) -> None:
-    """`correctForm` is the learner's answer and must stay VESUM-verified."""
+    """`correction:` is the learner's answer and must stay VESUM-verified.
+
+    Post-PR #2031, the canonical fields are `error:` + `correction:` —
+    legacy `errorWord` / `correctForm` trip the activity_schema gate.
+    """
     module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
     _write_yaml(
         module_dir / "activities.yaml",
@@ -1528,8 +1539,8 @@ def test_vesum_gate_still_checks_correct_form_in_error_correction_activity(
                 "items": [
                     {
                         "sentence": "Він ____ щодня.",
-                        "errorWord": "вмиваєця",
-                        "correctForm": "вмиваєцявигадка",
+                        "error": "вмиваєця",
+                        "correction": "вмиваєцявигадка",
                         "explanation": "Потрібна форма -ться.",
                     }
                 ],
