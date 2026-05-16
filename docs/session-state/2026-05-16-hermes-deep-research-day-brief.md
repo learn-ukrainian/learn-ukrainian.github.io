@@ -339,4 +339,82 @@ Build-Monitoring section).
 
 ---
 
+## Addendum — 2026-05-16 ~20:50 CEST (post-handoff developments before user `/clear`)
+
+### Updated judge leaderboard (from another agent's report mid-session)
+
+The expansion of the judge calibration matrix surfaced more cells. Current leaderboard:
+
+| Rank | Model / config | F1 | P | R | case_acc |
+|---|---|---|---|---|---|
+| 🥇 | claude-opus-4-7 / high / no_mcp | 0.828 | 0.923 | 0.75 | 0.917 |
+| 🥇 | claude-opus-4-7 / medium / with_mcp | 0.828 | 0.923 | 0.75 | 0.917 |
+| 🥈 | gemini-3.1-pro / with_mcp | 0.800 | 0.857 | 0.75 | 0.917 |
+| 🥉 | grok-4.3 / xhigh / hermes / with_mcp | 0.786 | 0.917 | 0.688 | **1.000** ← perfect case_acc |
+| 4 | claude-opus-4-7 / high / with_mcp | 0.774 | 0.80 | 0.75 | 0.917 |
+| 5 | gemini-3.1-pro / no_mcp | 0.774 | 0.80 | 0.75 | 0.917 |
+
+### Two-metric tension surfaced
+
+"Don't make mistakes" disambiguates into different winners depending on metric:
+- **F1 (token-level precision of flags)**: Opus 0.828 wins
+- **case_acc (sentence-level binary verdict)**: Grok at xhigh wins outright at 1.000 (only model with perfect case-level accuracy on the 12-case set)
+
+These are NOT the same signal. The other agent's framing called this out clearly — it's the discipline I missed in my earlier "Grok matrix STRONG" reports.
+
+### Asymmetric error-cost (added by orchestrator post-leaderboard)
+
+For a decolonized Ukrainian curriculum, error costs are not symmetric:
+- **False positive** (flag *кобета* / *гречно* as Russianism when it's authentic regionalism/Polonism/historicism) → SEVERE: corrupts the very signal we're establishing. Indistinguishable from Russification by erasure
+- **False negative** (miss a real Russianism) → RECOVERABLE: cross-agent review catches it; learner re-encounters
+
+That argues precision-first routing. Opus and Grok are essentially tied on precision (0.923 vs 0.917 — within noise on 12 cases). Opus wins F1 by recall margin. Grok wins case_acc outright.
+
+### Routing recommendation (pending Opus xhigh/max cells)
+
+Two-stage routing IF Opus xhigh/max doesn't take case_acc to 1.000:
+
+| Stage | Question | Model | Why |
+|---|---|---|---|
+| 1 (gate) | "Does this sentence contain ANY Russianism?" | grok-4.3 / xhigh / hermes / with_mcp | case_acc=1.000 — never misses binary call |
+| 2 (annotate) | "Which specific tokens are the Russianisms?" | claude-opus-4-7 / high / no_mcp | F1=0.828, P=0.923 — most precise token marking |
+
+If Opus xhigh or max hits case_acc=1.0 → Opus becomes unambiguous single-model champion; two-stage routing is overhead.
+
+### In-flight when user `/clear`s
+
+- **Other agent is firing 4 cells**: claude-opus-4-7 × {xhigh, max} × {with_mcp, without_mcp} on the judge matrix. Should land in `audit/2026-05-17-judge-calibration-matrix/anthropic/claude-opus-4-7/native_cli/{xhigh,max}-{with,without}_mcp.json` and update `REPORT.md`. Watch for these files.
+- **Expansion-2 (code-review benchmark, ~3-6h)**: pid 67097, parent is the Monitor bash. NOT nohup'd. Likely dies on `/clear` losing partial data. ~10 cell-JSONs written; full re-run takes 3-6h. Accept the loss OR resume from disk by re-firing with `--resume` flag (harness supports this).
+- **OCR vol3**: pid 43229, nohup'd. Survives `/clear`. Re-arm Monitor on JSONL after clear.
+
+### User's open writing test (pre-`/clear` pause)
+
+User asked to test claude-tools writer at xhigh AND max effort. Discovered: claude-tools is **already at xhigh by default** (`linear_pipeline.py:63`). The only untested effort point is `max`. Need a small env-var override (e.g. `V7_CLAUDE_WRITER_EFFORT`) in `linear_pipeline.py` to test `max` without main-branch source edit. User said "don't fire it yet" — NOT fired. Pending direction.
+
+### Pre-clear state at this addendum
+
+- Main: `3b0089515d` (handoff committed earlier this turn)
+- OCR: pid 43229 alive, vol3 at p0186 (~176/553 done)
+- Expansion-2: pid 67097 alive, ~10 cells written
+- No edits to `linear_pipeline.py` (writer xhigh test deferred per user pause)
+- Hermes config still has `reasoning_effort: xhigh` + `display.personality: kawaii` cosmetic
+- `~/.hermes/SOUL.md` still customized (project identity)
+
+### What next session must do FIRST after cold-start
+
+1. Read this brief end-to-end (including this addendum).
+2. Re-arm OCR Monitor:
+   ```
+   Monitor: tail -F audit/etymology-ocr-feasibility/bulk-run-log.jsonl |
+     grep --line-buffered -E '"event":"(QUOTA_HALT|BULK_QUALITY_HALT|summary|page_done|fatal|exit)"'
+   ```
+3. Check expansion-2 state:
+   - `pgrep -fl code_review_benchmark` — alive? (probably not, post-clear)
+   - `ls audit/2026-05-17-code-review-benchmark-expansion-2/` — what cells landed?
+   - If incomplete, re-fire with `--resume` flag to skip already-completed cells.
+4. Check for Opus xhigh/max cell files from the other agent — `ls audit/2026-05-17-judge-calibration-matrix/anthropic/claude-opus-4-7/native_cli/`. If they exist, the judge champion question is settled — read `REPORT.md`.
+5. Ask user about the m20 writing test at max effort (pending their pre-clear pause).
+
+---
+
 *Format: MD per #M-2 (ai→ai). Companion: this session's `docs/best-practices/hermes-usage.md` is the Hermes survey. `~/.hermes/SOUL.md` is the live persona.*
