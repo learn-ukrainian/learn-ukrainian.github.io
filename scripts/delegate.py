@@ -154,12 +154,11 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
         worker_env["GH_TOKEN"] = token
         return
 
+    # No GH_TOKEN env var available — that's fine. Codex/Claude inherit the
+    # user's interactive `gh auth` via the gh CLI keyring; the env var is a
+    # belt-and-suspenders extra, not a requirement. User confirmed 2026-05-16:
+    # the previous warning was noise. Removing it.
     worker_env.pop("GH_TOKEN", None)
-    print(
-        f"⚠️  GITHUB_TOKEN not found in environment or {_BASH_SECRETS_PATH}; "
-        f"{agent} dispatch will not receive GH_TOKEN.",
-        file=sys.stderr,
-    )
 
 
 DEFAULT_HARD_TIMEOUT_S = 7200
