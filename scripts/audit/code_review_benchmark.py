@@ -7,6 +7,7 @@ import contextlib
 import fcntl
 import html
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -387,7 +388,25 @@ def run_subprocess(cmd: list[str], *, timeout_s: int, stdin: str | None = None) 
 def build_native_command(cell: Cell, prompt: str) -> list[str]:
     """Build the native CLI command for one prompt."""
     if cell.family == "anthropic":
-        cmd = ["claude", "-p", "--bare", "--model", cell.model]
+        # Two paths controlled by CLAUDE_MATRIX_USE_BARE (mirrors the
+        # judge_calibration_matrix.py convention added 2026-05-17 in PR #2044):
+        #
+        # (1) CLAUDE_MATRIX_USE_BARE=1 (legacy fast path): `--bare` skips
+        #     session init. Saves ~30s/call but FORBIDS OAuth + keychain
+        #     reads, so this lane requires ANTHROPIC_API_KEY in env.
+        #     Without the key, calls return "Not logged in · Please run /login".
+        #
+        # (2) DEFAULT (OAuth-inherit path): drop `--bare` so the subprocess
+        #     inherits the parent session's OAuth from ~/.claude/. No API
+        #     key needed when invoked from a logged-in Claude Code context.
+        #
+        # See #2036 for the Hermes-anthropic silent-drop bug that makes the
+        # hermes lane unusable as of 2026-05-17.
+        use_bare = os.environ.get("CLAUDE_MATRIX_USE_BARE") == "1"
+        cmd = ["claude", "-p"]
+        if use_bare:
+            cmd.append("--bare")
+        cmd.extend(["--model", cell.model])
         if cell.effort != "default":
             cmd.extend(["--effort", cell.effort])
         if cell.mcp_state == "with_mcp" and (PROJECT_ROOT / ".mcp.json").exists():
