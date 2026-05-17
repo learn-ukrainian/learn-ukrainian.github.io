@@ -159,10 +159,25 @@ def check_wiki_coverage_paths(
 def _load_manifest(manifest: Mapping[str, Any] | str | Path) -> Mapping[str, Any]:
     if isinstance(manifest, Mapping):
         return manifest
-    path = Path(manifest)
-    if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
-    return json.loads(str(manifest))
+    # If the string clearly looks like a JSON blob, parse it directly. This
+    # avoids passing the entire blob to `Path(...).exists()`, which on macOS
+    # APFS raises `OSError: [Errno 63] ENAMETOOLONG` when the would-be
+    # filename component exceeds 255 bytes. Linux returns False silently in
+    # the same scenario, which is why the bug only surfaced on darwin
+    # (2026-05-17 m20 build #12 — first build to reach the wiki_coverage_gate
+    # phase via the macOS Dagger-less local path).
+    text = str(manifest)
+    if text.lstrip().startswith(("{", "[")):
+        return json.loads(text)
+    try:
+        path = Path(manifest)
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+    except OSError:
+        # Defensive: any path-related OSError (ENAMETOOLONG, ENOENT in
+        # an unusual form, EACCES) falls through to the json.loads path.
+        pass
+    return json.loads(text)
 
 
 def _read_optional(path: Path) -> str:
