@@ -5244,7 +5244,11 @@ def _build_vesum_text(
     for entry in resources:
         if isinstance(entry, dict):
             parts.append(_strip_metalinguistic(str(entry.get("title", ""))))
-            parts.append(_strip_metalinguistic(str(entry.get("notes", ""))))
+            # Resource `notes` field is descriptive metadata (textbook
+            # attribution, sourcing context) — proper-noun inflections
+            # like "за Ларисою Ніцою" trip VESUM with false positives.
+            # The notes field is NOT learner-facing content. Skip from
+            # VESUM scope. Keep title / lemma / usage in scope (#2098).
     return "\n".join(part for part in parts if part)
 
 

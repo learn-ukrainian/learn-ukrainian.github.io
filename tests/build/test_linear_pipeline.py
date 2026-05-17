@@ -2053,6 +2053,33 @@ def test_vesum_gate_passes_m20_build_3_artifacts() -> None:
         assert report["passed"] is True
 
 
+def test_vesum_gate_skips_resource_notes_field() -> None:
+    """Regression for #2098: resources notes field excluded, title kept."""
+    resources = [
+        {
+            "title": "Текст Фабрикація",
+            "notes": "за Ларисою Ніцою",
+            "lemma": "слово",
+            "usage": "вживання",
+        }
+    ]
+    fake_verify = _build_fake_verify_words(
+        known={"текст": True, "слово": True, "вживання": True, "за": True, "ларисою": True}
+    )
+    report = linear_pipeline._vesum_gate(
+        module_text="",
+        activities=[],
+        vocabulary=[],
+        resources=resources,
+        verify_words_fn=fake_verify,
+    )
+    # Notes field skipped, so "Ніцою" should not be missing
+    assert "ніцою" not in report["missing"]
+    assert "Ніцою" not in report["missing"]
+    # Title field included, so "Фабрикація" should be missing
+    assert "фабрикація" in report["missing"] or "Фабрикація" in report["missing"]
+
+
 def test_immersion_gate_recognizes_unicode_sentence_boundaries(
     tmp_path: Path,
 ) -> None:
