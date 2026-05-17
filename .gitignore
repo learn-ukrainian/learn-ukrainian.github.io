@@ -227,6 +227,12 @@ data/raw/grinchenko-1907/
 # scratch; cleared between runs; never committed).
 gemini_ocr_images/
 
+# Unidentified-source OCR scratch landing — when an agent or run drops
+# `transcription.md` at repo root without a known dictionary destination,
+# move it here pending triage. See follow-up issue tracking source-identification.
+data/raw/orphan-ocr/
+/transcription.md
+
 .build.lock
 
 # Corpus gap audit working files — only the human-reviewed deliverables land in git
