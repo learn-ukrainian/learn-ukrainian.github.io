@@ -344,6 +344,7 @@ def main():
 
     # Run audit
     passed, failed, failed_modules, slug_results = run_audit(files, fix=args.fix, verbose=args.verbose, skip_activities=args.skip_activities)
+    audited = passed + failed
 
     # Sync batch state (unless --no-sync or auditing a subset)
     if not args.no_sync and slug_results:
@@ -368,6 +369,13 @@ def main():
     if missing and args.check_missing:
         print(f"MISSING MODULES: {', '.join(missing)}")
         print()
+
+    if audited == 0:
+        if missing and not args.check_missing:
+            print(f"Missing modules: {', '.join(missing)}")
+            print()
+        print("Error: No modules were audited.")
+        sys.exit(1)
 
     if failed > 0 or (len(missing) > 0 and args.check_missing):
         print(f"Failed modules: {', '.join(failed_modules)}")
