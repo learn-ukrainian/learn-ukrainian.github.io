@@ -79,8 +79,35 @@ def test_docs_router_root_index_lists_allowed_roots(client: TestClient):
     assert response.status_code == 200
     body = response.json()
     assert {root["id"] for root in body["roots"]} == set(docs_router.ALLOWED_ROOTS)
-    assert len(body["roots"]) == 8
+    assert len(body["roots"]) == 10
     assert all({"id", "path", "exists"} <= set(root) for root in body["roots"])
+
+
+def test_docs_router_includes_proposals_and_poc(client: TestClient):
+    """Regression: /api/artifacts/html must surface docs/proposals and docs/poc.
+
+    Both directories ship genuine artifacts (RFCs, PoC designs, syllabi).
+    Pre-fix, the ALLOWED_ROOTS whitelist omitted them, hiding RFC-001 and
+    PoC lesson/site designs from the API listing. If you remove either
+    root from the whitelist again, this test will tell you (rather than
+    a user noticing artifacts missing in production).
+    """
+    response = client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+    paths = {a["path"] for a in body["artifacts"]}
+
+    # Don't pin specific filenames — the directories' contents will
+    # evolve. Pin the *prefix* coverage instead so we're robust to file
+    # renames but still catch root-drop regressions.
+    assert any(p.startswith("docs/proposals/") for p in paths), (
+        "no docs/proposals/*.html in /api/artifacts/html — ALLOWED_ROOTS"
+        " regression? Add 'docs/proposals' back to scripts/api/docs_router.py."
+    )
+    assert any(p.startswith("docs/poc/") for p in paths), (
+        "no docs/poc/*.html in /api/artifacts/html — ALLOWED_ROOTS"
+        " regression? Add 'docs/poc' back to scripts/api/docs_router.py."
+    )
 
 
 def test_docs_router_directory_listing_includes_file_metadata(client: TestClient):

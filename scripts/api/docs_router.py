@@ -25,6 +25,14 @@ from .config import DASHBOARDS_DIR, PROJECT_ROOT
 router = APIRouter(tags=["docs"])
 
 # Approved roots for documentation artifacts.
+#
+# Maintenance note: this is a whitelist by design — adding a new docs/<dir>
+# does NOT auto-surface its HTML artifacts in /api/artifacts/html. When you
+# create a new top-level docs subdirectory that ships HTML reports, add it
+# here AND bump the count assertion in
+# tests/test_docs_router.py::test_docs_router_root_index_lists_allowed_roots.
+# Explicit excludes (not added on purpose): docs/archive/ (literal scratch),
+# docs/resources/podcasts/raw/ (raw scrapes — not curated reports).
 ALLOWED_ROOTS = {
     "audit": PROJECT_ROOT / "audit",
     "docs/session-state": PROJECT_ROOT / "docs" / "session-state",
@@ -34,6 +42,8 @@ ALLOWED_ROOTS = {
     "docs/best-practices": PROJECT_ROOT / "docs" / "best-practices",
     "docs/decisions": PROJECT_ROOT / "docs" / "decisions",
     "docs/references/external": PROJECT_ROOT / "docs" / "references" / "external",
+    "docs/proposals": PROJECT_ROOT / "docs" / "proposals",
+    "docs/poc": PROJECT_ROOT / "docs" / "poc",
 }
 
 _ALLOWED_EXT = {".html", ".md", ".txt", ".json", ".png", ".jpg", ".jpeg", ".svg", ".webp", ".pdf"}
@@ -147,7 +157,7 @@ def _artifact_url_for(root_key: str, file_path: Path) -> str:
     return f"/artifacts/{root_key}/{relative}"
 
 
-def _artifact_path_for(root_key: str, file_path: Path) -> str:
+def _artifact_path_for(file_path: Path) -> str:
     return file_path.relative_to(PROJECT_ROOT).as_posix()
 
 
@@ -183,7 +193,7 @@ def collect_html_artifacts(
                 continue
             artifacts.append(
                 {
-                    "path": _artifact_path_for(root_key, file_path),
+                    "path": _artifact_path_for(file_path),
                     "url": _artifact_url_for(root_key, file_path),
                     "class": report_class,
                     "date": report_date,
