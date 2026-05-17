@@ -7,6 +7,13 @@ import pytest
 
 from scripts.audit import code_review_benchmark as bench
 
+CORPUS_DIR = Path("audit/code-review-benchmark/corpus")
+AFFECTED_OPUS_NATIVE_CELLS = (
+    Path("audit/2026-05-17-code-review-benchmark-expansion-2/anthropic/claude-opus-4-7/native_cli/xhigh-with_mcp.json"),
+    Path("audit/2026-05-17-code-review-benchmark-expansion-2/anthropic/claude-opus-4-7/native_cli/xhigh-without_mcp.json"),
+    Path("audit/2026-05-17-code-review-benchmark-expansion-2/anthropic/claude-opus-4-7/native_cli/high-with_mcp.json"),
+)
+
 
 def _write_case(tmp_path: Path, *, extra: str = "") -> Path:
     corpus = tmp_path / "corpus"
@@ -68,6 +75,19 @@ def test_corpus_loader_reads_valid_case(tmp_path: Path) -> None:
     assert "diff --git" in cases[0]["diff"]
 
 
+def test_corpus_loader_preserves_gold_aliases(tmp_path: Path) -> None:
+    _write_case(
+        tmp_path,
+        extra="""    aliases:
+      - prompt-on-command-line-leak-and-arg-max-dos
+""",
+    )
+
+    cases = bench.load_corpus(tmp_path / "corpus")
+
+    assert cases[0]["gold_findings"][0]["aliases"] == ["prompt-on-command-line-leak-and-arg-max-dos"]
+
+
 def test_semantic_match_strong() -> None:
     gold = [
         {
@@ -87,6 +107,40 @@ def test_semantic_match_strong() -> None:
     }
 
     assert bench.find_semantic_match(model_finding, gold, set()) == "arg-max"
+
+
+def test_semantic_match_gold_alias_before_location_and_jaccard() -> None:
+    gold = [
+        {
+            "id": "arg-max",
+            "aliases": ["prompt-on-command-line-leak-and-arg-max-dos"],
+            "severity": "HIGH",
+            "category": "security",
+            "location": "scripts/proxy.py:204",
+            "description": "Short argv limit finding.",
+        }
+    ]
+    model_finding = {
+        "id": "prompt-on-command-line-leak-and-arg-max-dos",
+        "severity": "HIGH",
+        "category": "security",
+        "location": "scripts/proxy.py:153-186",
+        "description": "Verbose review prose with enough unrelated detail that token overlap alone is weak.",
+    }
+
+    assert bench.find_semantic_match(model_finding, gold, set()) == "arg-max"
+
+
+@pytest.mark.parametrize(
+    ("location", "expected"),
+    [
+        ("scripts/proxy.py:153-186", "scripts/proxy.py"),
+        ("scripts/proxy.py:153-186 (handler)", "scripts/proxy.py"),
+        ("scripts/proxy.py:153-186; scripts/cli.py:680", "scripts/proxy.py"),
+    ],
+)
+def test_location_file_normalizes_ranges(location: str, expected: str) -> None:
+    assert bench.location_file(location) == expected
 
 
 def test_semantic_match_severity_tolerance() -> None:
@@ -229,7 +283,7 @@ def test_scorer_matches_file_not_line_and_tolerates_adjacent_severity() -> None:
                 "severity": "MEDIUM",
                 "category": "dos-surface",
                 "location": "scripts/proxy.py:999",
-                "description": "Same file, shifted line.",
+                "description": "Forks on health checks from the same file, shifted line.",
             },
             {
                 "id": "health-check-low",
@@ -247,6 +301,20 @@ def test_scorer_matches_file_not_line_and_tolerates_adjacent_severity() -> None:
     assert score["fp"] == 1
     assert score["fn"] == 0
     assert score["f1"] == 0.6667
+
+
+@pytest.mark.parametrize("cell_path", AFFECTED_OPUS_NATIVE_CELLS)
+def test_semantic_match_replays_affected_opus_native_cells(cell_path: Path) -> None:
+    cases = {case["case_id"]: case for case in bench.load_corpus(CORPUS_DIR)}
+    data = json.loads(cell_path.read_text(encoding="utf-8"))
+
+    scores = [
+        bench.score_case({"findings": judgment["model_findings"]}, cases[judgment["case_id"]])
+        for judgment in data["judgments"]
+    ]
+    aggregate = bench.aggregate(scores)
+
+    assert aggregate["f1"] > 0.0
 
 
 def test_run_cell_uses_injected_runner_and_writes_reportable_json(tmp_path: Path) -> None:
