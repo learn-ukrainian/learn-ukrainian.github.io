@@ -5416,6 +5416,17 @@ def _normalize_citation_ref(value: Any) -> str:
     return normalize_citation_ref(value)
 
 
+def _normalize_citation_match_text(value: Any) -> str:
+    normalized = _normalize_citation_ref(value).casefold()
+    return re.sub(r"[^\wа-яіїєґА-ЯІЇЄҐ]+", "", normalized)
+
+
+def _citation_ref_text_contains(reference_title: str, text: str) -> bool:
+    normalized_ref = _normalize_citation_match_text(reference_title)
+    normalized_text = _normalize_citation_match_text(text)
+    return bool(normalized_ref and normalized_ref in normalized_text)
+
+
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
     plan_reference_titles = extract_plan_reference_titles(plan)
     plan_titles = {_normalize_citation_ref(title) for title in plan_reference_titles}
@@ -5449,6 +5460,23 @@ def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
     current: list[str] = []
     current_section = ""
     quote_section = ""
+    pending_attribution_index: int | None = None
+
+    def flush_quote() -> None:
+        nonlocal current, quote_section, pending_attribution_index
+        if not current:
+            return
+        quotes.append(
+            {
+                "quote": "\n".join(current).strip(),
+                "section_title": quote_section,
+                "attribution": "",
+            }
+        )
+        current = []
+        quote_section = ""
+        pending_attribution_index = len(quotes) - 1
+
     for line in text.splitlines():
         heading = re.match(r"^\s{0,3}#{1,6}\s+(?P<title>.+?)\s*#*\s*$", line)
         if heading:
@@ -5460,23 +5488,31 @@ def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
             current.append(match.group("body"))
             continue
         if current:
-            quotes.append(
-                {
-                    "quote": "\n".join(current).strip(),
-                    "section_title": quote_section,
-                }
-            )
-            current = []
-            quote_section = ""
+            flush_quote()
+        if pending_attribution_index is not None:
+            if not line.strip():
+                continue
+            attribution = _extract_textbook_attribution(line)
+            if attribution:
+                quotes[pending_attribution_index]["attribution"] = attribution
+                pending_attribution_index = None
+                continue
+            pending_attribution_index = None
     if current:
-        quotes.append(
-            {"quote": "\n".join(current).strip(), "section_title": quote_section}
-        )
+        flush_quote()
     return [record for record in quotes if record["quote"]]
 
 
 def _extract_blockquotes(text: str) -> list[str]:
     return [record["quote"] for record in _extract_blockquote_records(text)]
+
+
+def _extract_textbook_attribution(line: str) -> str:
+    stripped = line.strip().strip("*_`~ ")
+    match = re.match(r"^[—–-]\s*(?P<body>.+?)\s*$", stripped)
+    if match is None:
+        return ""
+    return match.group("body").strip().strip("*_`~ ")
 
 
 def _normalize_match_text(text: str) -> str:
@@ -5826,9 +5862,7 @@ def _reference_matches_result(
             result_key = extract_citation_key(text)
             if result_key is not None and citation_keys_match(result_key, ref_key):
                 return True
-    normalized_ref = _normalize_citation_ref(reference_title).casefold()
-    normalized_result = _normalize_citation_ref(result_text).casefold()
-    return bool(normalized_ref and normalized_ref in normalized_result)
+    return _citation_ref_text_contains(reference_title, result_text)
 
 
 def _missing_corpus_refs_from_packet(module_dir: Path) -> set[str]:
@@ -5945,9 +5979,13 @@ def _textbook_grounding_gate(
         ]
         for record in long_blockquote_records:
             quote = record["quote"]
+            attribution = record.get("attribution", "")
+            candidate_results = ref_results
+            if not candidate_results and _citation_ref_text_contains(ref, attribution):
+                candidate_results = [result for _call, result in textbook_results]
             if not any(
                 _contains_textbook_quote(quote, _result_text_for_match(result))
-                for result in ref_results
+                for result in candidate_results
             ):
                 continue
             topic_text = f"{record['section_title']} {plan_reasoning}".strip()
