@@ -6,12 +6,14 @@ model listing, non-streaming chat completions, and a cheap health probe.
 
 from __future__ import annotations
 
+import concurrent.futures
 import os
 import re
 import shlex
 import shutil
 import subprocess
 import tempfile
+import threading
 import time
 import uuid
 from collections.abc import Callable
@@ -291,7 +293,7 @@ _ROUTABLE_MODELS: dict[str, ModelRoute] = {
 }
 
 
-def _probe_cli(argv: list[str]) -> bool:
+def _probe_cli(argv: list[str]) -> tuple[bool, str]:
     try:
         result = subprocess.run(
             argv,
@@ -303,32 +305,40 @@ def _probe_cli(argv: list[str]) -> bool:
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
-        return False
-    return result.returncode == 0
+        return False, ""
+    if result.returncode == 0:
+        return True, result.stdout.strip().splitlines()[0] if result.stdout.strip() else "unknown"
+    return False, ""
 
 
-def _probe_codex() -> bool:
+def _probe_codex() -> tuple[bool, str]:
     return _probe_cli([CODEX_CLI, "--version"])
 
 
-def _probe_gemini() -> bool:
+def _probe_gemini() -> tuple[bool, str]:
     return _probe_cli([GEMINI_CLI, "--version"])
 
 
-def _probe_claude() -> bool:
+def _probe_claude() -> tuple[bool, str]:
     return _probe_cli([*CLAUDE_CMD, "--version"])
 
 
-def _probe_hermes() -> bool:
+def _probe_hermes() -> tuple[bool, str]:
     return _probe_cli([shutil.which("hermes") or "hermes", "--version"])
 
 
-_BACKEND_PROBES: dict[str, Callable[[], bool]] = {
+_BACKEND_PROBES: dict[str, Callable[[], tuple[bool, str]]] = {
     "codex": _probe_codex,
     "gemini": _probe_gemini,
     "claude": _probe_claude,
     "hermes": _probe_hermes,
 }
+
+_BRIDGE_HEALTHZ_TTL_SECS = int(os.environ.get("BRIDGE_HEALTHZ_TTL_SECS", "60"))
+
+_healthz_cache: dict[str, tuple[float, bool, str]] = {}
+_healthz_cache_lock = threading.Lock()
+_healthz_in_flight: dict[str, threading.Event] = {}
 
 
 def _openai_error(status_code: int, message: str, error_type: str, code: str) -> JSONResponse:
@@ -367,9 +377,76 @@ async def validation_exception_handler(_request: Request, exc: RequestValidation
 
 @app.get("/healthz")
 def healthz() -> dict[str, object]:
+    """Health check with backend availability probes (issue #2029).
+
+    Probe results are cached for ``BRIDGE_HEALTHZ_TTL_SECS`` (default 60s)
+    to prevent DoS via subprocess-fork storms from external monitoring.
+    Uncached probes run concurrently via ``ThreadPoolExecutor``.
+    Single-flight deduplication ensures only one probe per backend
+    runs across concurrent requests.
+    """
+    now = time.monotonic()
+    ttl = _BRIDGE_HEALTHZ_TTL_SECS
+
+    # --- Phase 1: collect cached results and identify stale/missing backends ---
+    with _healthz_cache_lock:
+        cached: dict[str, bool] = {}
+        missing: list[str] = []
+        for name in _BACKEND_PROBES:
+            entry = _healthz_cache.get(name)
+            if entry is not None and now - entry[0] < ttl:
+                cached[name] = entry[1]
+            else:
+                missing.append(name)
+
+    # --- Phase 2: probe stale/missing backends (single-flight per backend) ---
+    if missing:
+        events_to_wait: list[tuple[str, threading.Event]] = []
+        names_to_probe: list[str] = []
+
+        with _healthz_cache_lock:
+            for name in missing:
+                if name in _healthz_in_flight:
+                    events_to_wait.append((name, _healthz_in_flight[name]))
+                else:
+                    event = threading.Event()
+                    _healthz_in_flight[name] = event
+                    names_to_probe.append(name)
+
+        if names_to_probe:
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=min(len(names_to_probe), 4)
+            ) as executor:
+                future_map = {
+                    executor.submit(_BACKEND_PROBES[name]): name
+                    for name in names_to_probe
+                }
+                for future in concurrent.futures.as_completed(future_map):
+                    probe_name = future_map[future]
+                    try:
+                        ok, version = future.result()
+                    except Exception:
+                        ok, version = False, ""
+                    with _healthz_cache_lock:
+                        _healthz_cache[probe_name] = (now, ok, version)
+                        ev = _healthz_in_flight.pop(probe_name, None)
+                        if ev is not None:
+                            ev.set()
+                    cached[probe_name] = ok
+
+        # Wait for any probes started by other concurrent requests
+        for name, event in events_to_wait:
+            event.wait()
+            with _healthz_cache_lock:
+                entry = _healthz_cache.get(name)
+                if entry is not None:
+                    cached[name] = entry[1]
+                else:
+                    cached[name] = False
+
     return {
         "ok": True,
-        "backends": {name: probe() for name, probe in _BACKEND_PROBES.items()},
+        "backends": cached,
     }
 
 

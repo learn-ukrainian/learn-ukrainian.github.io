@@ -254,14 +254,20 @@ def test_message_flatten_preserves_role_order(monkeypatch):
 
 
 def test_healthz_endpoint_returns_backend_status(monkeypatch):
+    # Clear any cached state from other tests to keep this test isolated
+    with proxy._healthz_cache_lock:
+        proxy._healthz_cache.clear()
+        proxy._healthz_in_flight.clear()
+
+    monkeypatch.setattr(proxy, "_BRIDGE_HEALTHZ_TTL_SECS", 60)
     monkeypatch.setattr(
         proxy,
         "_BACKEND_PROBES",
         {
-            "codex": lambda: True,
-            "gemini": lambda: False,
-            "claude": lambda: True,
-            "hermes": lambda: False,
+            "codex": lambda: (True, "codex v1.2.3"),
+            "gemini": lambda: (False, ""),
+            "claude": lambda: (True, "claude v4.0"),
+            "hermes": lambda: (False, ""),
         },
     )
 
