@@ -160,7 +160,11 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
-    if agent_name == "grok":
+    if agent_name in ("grok", "deepseek"):
+        # Hermes -z mode: effort is config-scoped (~/.hermes/config.yaml),
+        # not surfaced on the command line. Adapter logs a warning when the
+        # caller's request disagrees with the config — telemetry has nothing
+        # to resolve from the plan.
         return None
     return None
 
@@ -176,7 +180,7 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
             _gemini_settings(),
             ("model", "defaultModel", "selectedModel", "modelName", "default_model"),
         )
-    if agent_name == "grok":
+    if agent_name in ("grok", "deepseek"):
         return _default_model_for(agent_name)
     if agent_name == "claude":
         return _default_model_for(agent_name)
@@ -220,7 +224,8 @@ def _gemini_version_prefix(cmd: list[str]) -> tuple[str, ...]:
     return ("gemini",)
 
 
-def _grok_version_prefix(cmd: list[str]) -> tuple[str, ...]:
+def _hermes_version_prefix(cmd: list[str]) -> tuple[str, ...]:
+    """Prefix for ``hermes --version`` probes. Used by every Hermes-backed agent."""
     if cmd:
         return (cmd[0],)
     return ("hermes",)
@@ -273,8 +278,9 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "claude":
         prefix = _claude_version_prefix(plan.cmd) if plan is not None else ("claude",)
         return claude_cli_version(prefix)
-    if agent_name == "grok":
-        prefix = _grok_version_prefix(plan.cmd) if plan is not None else ("hermes",)
+    if agent_name in ("grok", "deepseek"):
+        # Both grok and deepseek run through hermes; one shared version probe.
+        prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
         return _probe_version(prefix)
     return None
 

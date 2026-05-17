@@ -30,6 +30,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "codex"
     if agent.startswith("grok"):
         return "grok"
+    if agent.startswith("deepseek"):
+        return "deepseek"
     return None
 
 
@@ -229,7 +231,10 @@ def build_mcp_tool_config(
             ),
         )
 
-    if canonical_agent == "grok":
+    if canonical_agent in ("grok", "deepseek"):
+        # Both grok and deepseek route through Hermes; tool_config translation
+        # is identical (Hermes reads MCP servers from ~/.hermes/config.yaml,
+        # not from the per-call payload). Diagnostics point at the same file.
         if not mcp_servers:
             return None, _basic_diagnostics(
                 mcp_config_path=Path.home() / ".hermes" / "config.yaml",

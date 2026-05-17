@@ -122,6 +122,20 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "deepseek": {
+        "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
+        "default_model": "deepseek-v4-pro",
+        "cost_tier": "low",
+        "capabilities": frozenset({
+            "code_writing",
+            "code_review",
+            "content_writing",
+            "content_review",
+            "adversarial_review",
+        }),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
 }
 
 
