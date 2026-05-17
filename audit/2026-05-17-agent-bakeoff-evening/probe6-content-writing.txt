@@ -1,0 +1,4 @@
+Write a short A1-CEFR Ukrainian dialogue between two friends (Олена and Петро) meeting at a café in Lviv. EXACTLY 4 turns total. Each turn must show:
+  - Ukrainian line
+  - English gloss on the next line
+Vocabulary should be A1-appropriate (approximately the 300-word range). End the dialogue with ONE English comprehension question. No Russianisms (e.g. NOT "на протязі"). No invented words. No transliteration — only Cyrillic for Ukrainian.

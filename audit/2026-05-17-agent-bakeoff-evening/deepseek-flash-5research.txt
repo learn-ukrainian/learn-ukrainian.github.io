@@ -1,0 +1,7 @@
+[0m
+> build · deepseek-v4-flash
+[0m
+
+real	0m13.174s
+user	0m3.747s
+sys	0m0.361s

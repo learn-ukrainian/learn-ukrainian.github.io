@@ -1,0 +1,20 @@
+[0m
+> build · deepseek-v4-flash
+[0m
+Олена: Привіт, Петре! Ти в кав'ярні?
+Hello, Petro! Are you at the café?
+
+Петро: Привіт, Олено! Так, я тут. Сідай!
+Hello, Olena! Yes, I'm here. Sit down!
+
+Олена: Дякую! Що ти п'єш?
+Thanks! What are you drinking?
+
+Петро: Я п'ю каву. Вона дуже смачна!
+I'm drinking coffee. It's very tasty!
+
+**Comprehension question:** What is Petro drinking?
+
+real	0m19.877s
+user	0m5.067s
+sys	0m0.493s

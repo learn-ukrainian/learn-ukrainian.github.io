@@ -1,0 +1,10 @@
+Below is an A1-level Ukrainian dialogue. Judge its pedagogical quality and Ukrainian linguistic accuracy. Report EXACTLY 3 findings, highest priority first, one sentence each. The dialogue:
+
+Олена: Привіт, Петре! Як справи?
+Hello, Petro! How are things?
+Петро: Привіт, Олено! Все добре. На протязі дня я багато працював.
+Hi, Olena! Everything's good. During the day I worked a lot.
+Олена: А давай зустрінемось у кав'ярні завтра?
+Let's meet at the café tomorrow?
+Петро: Звичайно! О сьомій годині?
+Sure! At seven o'clock?

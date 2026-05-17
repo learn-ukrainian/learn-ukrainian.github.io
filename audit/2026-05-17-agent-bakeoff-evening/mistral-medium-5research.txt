@@ -1,0 +1,9 @@
+(1) Leading hypothesis: From Old East Slavic *украина* (*у-* "at/in" + *край* "edge/border" from Proto-Slavic **\*kraj-**), meaning "borderland/frontier region" (Vasmer, *Russisches etymologisches Wörterbuch*, 1953–58).
+
+(2) Earliest attestation: Hypatian Codex (Ipatiev Chronicle), 1187: "ѡ нем же Оукраина много постона" referring to Pereyaslavl land (Shakhmatov ed., 1908; codex c. 1425 preserves older text).
+
+(3) Alternative: Hryhoriy Pivtorak (2001) argues *україна* meant "region/principality/homeland," distinguishing it from *окраїна* ("borderland").
+
+real	1m56.783s
+user	0m2.762s
+sys	0m0.405s

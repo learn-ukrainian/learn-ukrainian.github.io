@@ -74,17 +74,41 @@ Plus 2 cross-cutting capabilities the user didn't list but that we already use:
 
 ## Empirical bakeoff results (2026-05-17 evening)
 
-Four probes designed to test Plan / Architect / Coding / Code Review. Probes are
-small but discriminating — see `audit/2026-05-17-agent-bakeoff-evening/probe*.txt`
-for exact prompts. Grades are mine after reading raw outputs; raw outputs are
-preserved in the audit dir.
+Seven probes designed across all 7 user-listed roles + the linguistic
+verification we ran earlier. Probes are small but discriminating — see
+`audit/2026-05-17-agent-bakeoff-evening/probe*.txt` for exact prompts. Grades
+are mine after reading raw outputs; raw outputs are preserved in the audit dir.
 
 | Role | mistral-medium-3.5 (vibe) | deepseek-v4-pro --variant max (opencode) | deepseek-v4-flash (opencode) |
 |---|---|---|---|
-| **Plan** | B (29.9s) — 4 steps + risks; step 4 has SQLite syntax slip (`ALTER COLUMN SET NOT NULL` invalid in SQLite) | A retry / F first attempt (24.7s empty banner; 55.3s on retry produced clean 4-step plan with sharp risks) — **flakiness flag** | A- (11.6s) — accurate SQLite knowledge (WAL checkpoint, FTS `rebuild` exclusive lock), sleep-based batching |
+| **Plan** | B (29.9s) — 4 steps + risks; step 4 has SQLite syntax slip (`ALTER COLUMN SET NOT NULL` invalid in SQLite) | A retry / **EMPTY first attempt** (24.7s banner-only; 55.3s on retry produced clean 4-step plan with sharp risks) | A- (11.6s) — accurate SQLite knowledge (WAL checkpoint, FTS `rebuild` exclusive lock), sleep-based batching |
 | **Architect** | C+ (14.4s) — minimal "scanner + serving" split; weak trade-off | A (44.0s) — used Grep to inspect repo first, proposed `SCAN_ROOTS` + `SERVE_ROOTS` + **reconciler** for pending entries | A- (11.7s) — same split, sharper trade-off ("scanner finds, serving 404s = different invisibility") |
 | **Coding** | B+ (29.9s) — correct + walrus operator; compact but readable | A (74.6s) — correct + adds word-boundary checks (`isalpha()` adjacency) not in spec — defensive engineering | B (11.8s) — wrote file `/Users/krisztiankoos/agent.py` (outside workdir, **hygiene violation**) and ran it; function works but prompt-following weak |
 | **Code Review** | B- (12.0s) — 3 findings, MISSED sentinel ambiguity (highest-priority issue) | A (19.0s) — 3 findings, sentinel ambiguity articulated correctly | A+ (8.1s) — 3 findings, sentinel + caught magic-number `5` (both Mistral and pro missed it) |
+| **Research** (Україна etymology) | A- (116.8s) — correct Vasmer + Pivtorak citations + accurate Hypatian Codex 1187 attestation | A (34.2s) — Vasmer + Rudnyckyj 1962-82 + critically evaluates the Hrushevsky counterhypothesis | **EMPTY OUTPUT** (13.2s banner-only) |
+| **Content Writing** (A1 Ukrainian dialogue) | B+ (27.1s) — 4 turns, vocative correct, no Russianisms, no speaker labels (style miss) | **EMPTY OUTPUT** (35.3s) | A (19.9s) — speaker labels, café reference, correct locative case, comprehension question well-formatted |
+| **Content Review** (planted `на протязі` Russianism + other issues) | **C** (18.1s) — caught the calque BUT **false positive** asserting `зустрінемось` is misspelled (both `-сь`/`-ся` are valid per VESUM) | B+ (71.4s) — caught calque + sharp pedagogical critique on past-tense complexity, but **over-prescriptive** on `звичайно→звісно` (звичайно is native UK, not Russian influence) | A (30.4s) — caught calque + Time-Place-Manner word-order critique + completeness critique; **no false positives** |
+
+### Empty-output flake rate (significant)
+
+Across 9 opencode + DeepSeek probes, **3 returned banner-only with no content**:
+pro-max PLAN (attempt 1 — retry succeeded), pro-max WRITING, flash RESEARCH.
+**~33% flake rate.** Probably an opencode/streaming edge case where the final
+`text` event doesn't get emitted, not a model-level failure (the model spent
+real wall-clock time in every case). If we use opencode + DeepSeek for any
+production lane, the adapter MUST retry on empty output. Filed as follow-up
+in §Open follow-ups.
+
+### Mistral content-review false-positive risk
+
+Mistral medium-3.5 produced a confident false positive on `зустрінемось` →
+`зустрінемося`. Both forms are valid Ukrainian; the loader confidently
+"corrects" the original to a non-existent rule. **This is more damaging than
+missing a real finding** — false positives in content review erode trust in
+real findings. Caveat: 1 false positive across 7 probes is not a pattern
+yet, but the content-review lane is the one where this kind of mistake
+costs the most. Recommendation: pair Mistral with a verifier (`mcp__sources__verify_word`)
+for any `-ся` / `-сь` / orthography-detail finding before surfacing it to learners.
 
 **Linguistic verification** (from earlier this session, `на протязі` Russianism probe):
 
@@ -108,13 +132,13 @@ prior audits**, **(I)nferred from architecture**.
 
 | Role | Primary | Backup | Pick / Avoid signal |
 |---|---|---|---|
-| **Research** | Grok 4.3 (H) | Gemini 3.1 pro (H) | Grok = X.com access + lower cost (#M0). DeepSeek-pro untested for research; likely competitive. |
+| **Research** | Grok 4.3 (H) OR DeepSeek-pro-max (E) | Gemini 3.1 pro (H), Mistral medium-3.5 (E) | Pro-max wins on speed (34s vs Mistral's 117s) + adds critical evaluation of counterhypotheses. Mistral correct but slow. Flash UNUSABLE here (returned empty). Grok still strong for X.com / web access tasks. |
 | **Plan** | DeepSeek-flash (E) OR Codex (H) | Claude-Opus-xhigh (H) | Flash is 2.5× faster than Mistral and avoids pro's flakiness. Codex remains the production planner. |
 | **Architect** | Claude-Opus-xhigh (H) | DeepSeek-pro-max (E) | Opus xhigh for ADRs/decision cards (post-2026-06-15: Opus dispatches dropped → DeepSeek-pro-max takes lead). Pro's grep-then-design pattern is encouraging. |
 | **Coding** | Codex gpt-5.5 (H) | DeepSeek-pro-max (E) | Codex remains incumbent — production-shipped 20+ PRs this month. DeepSeek-pro-max competitive on small tasks; needs validation on cross-file work. |
 | **Code Review** | Codex (H) + DeepSeek-flash (E) | Gemini-3.1-pro (H) | DeepSeek-flash had the highest signal density tonight. Use it as cheap second-opinion alongside Codex on PR reviews. |
-| **Content Writing** | Claude (until 2026-06-15) / Gemini (after) | Mistral medium-3.5 (UNTESTED for content) | Per ADR `2026-05-06-writer-selection-codex-gpt55.md` REVISED → claude-tools. Post-June-15 hard cutoff: Gemini becomes default; Mistral and DeepSeek become bakeoff candidates. |
-| **Content Review** | Claude-Opus-xhigh (H) | Gemini-3.1-pro (H) | xhigh-effort review on Opus is gold standard. Codex green-team adversarial review pairs with it (#M0). |
+| **Content Writing** | Claude (until 2026-06-15) / Gemini (after) | DeepSeek-flash (E), Mistral medium-3.5 (E) | Per ADR `2026-05-06-writer-selection-codex-gpt55.md` REVISED → claude-tools. Post-June-15: Gemini default. Flash beat Mistral on format compliance + speaker labels in the A1 dialogue test. Pro-max UNUSABLE here (returned empty). NOT yet tested on full V7-module-scale output. |
+| **Content Review** | Claude-Opus-xhigh (H) + Codex (H, green-team) | Gemini-3.1-pro (H), DeepSeek-flash (E) | xhigh-effort review on Opus is gold standard. **DeepSeek-flash is the strongest new entrant — caught the planted Russianism + sharp pedagogical critique + zero false positives.** Mistral medium-3.5 NOT trustworthy for content review without a verifier (produced false positive on `-ся/-сь`). |
 | **Linguistic Verification** | inline Claude with `mcp__sources__*` | DeepSeek-pro / DeepSeek-flash (E) | Sources MCP must run in-process (Claude Code). For OUT-OF-PROCESS verification: DeepSeek (either variant) — both passed `на протязі`. **NEVER devstral-small** (contamination). |
 | **OCR / Vision** | Gemini Vision (H, used for bulk ESUM re-OCR) | Mistral OCR (UNTESTED) | Pending Mistral bakeoff. User reports anecdotally that Mistral is strong. |
 
@@ -236,12 +260,19 @@ opencode run --model deepseek/deepseek-v4-flash \
    claude/codex (rich JSON), NOT on `hermes_grok.py`. Routes both pro and flash.
 3. **`vibe_mistral.py` adapter** — implementation PR. Env-based model override
    (no `-m`), manual worktree (`--workdir` + `git worktree add`), 5-LOC adapter.
-4. **DeepSeek-pro empty-output flake** — happened 1/2 attempts on the PLAN probe.
-   Probably timing / streaming buffer race; not deterministic. File a tracking issue
-   if it recurs on real dispatches.
-5. **Content writing bakeoff for Mistral + DeepSeek** — tonight's probes covered
-   non-content roles. A real `a1/m20`-shape module bakeoff is the next test,
-   roadmapped behind Path 3 PR1.
+4. **DeepSeek empty-output flake — 33% rate across 9 probes** (confirmed this
+   session): pro-max PLAN attempt 1, pro-max WRITING, flash RESEARCH all
+   returned banner-only with real wall-clock time consumed. Recommendation:
+   the `opencode_deepseek.py` adapter MUST retry on empty output, max 2
+   retries, before treating as failure. File as tracking issue when the
+   adapter PR lands. Hypothesis: opencode streaming edge case where final
+   `text` event isn't emitted; model produced text but the harness lost it.
+5. **Content writing bakeoff at module scale** — tonight's A1-dialogue probe
+   was a smoke test (4 turns). The real test is a full V7-shape module:
+   plan_sections, vocabulary YAML, activities, all 22 gates. Roadmapped
+   behind Path 3 PR1. Tonight's small-scale signal: DeepSeek-flash and
+   Mistral medium-3.5 are both viable candidates; pro-max is RISKY due
+   to the empty-output flake.
 6. **`gemma-local` audit** — define a lane or remove from `/api/orient`.
 
 ## Format note

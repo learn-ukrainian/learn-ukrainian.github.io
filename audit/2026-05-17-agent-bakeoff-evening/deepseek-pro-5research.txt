@@ -1,0 +1,12 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+(1) **Leading hypothesis:** The consensus etymology traces *Україна* to Old East Slavic *оукраина* (*ukraina*), meaning "borderland," "marches," or "periphery." It derives from the noun *край* ("edge," "border," "region") prefixed with *у-* ("in," "at"). This is the standard view recorded in **Max Vasmer**, *Russisches etymologisches Wörterbuch* (1953–58), and endorsed by most Slavic historical linguists. Ukrainian linguist **Jaroslav Rudnyckyj** likewise gives "borderland, frontier region" in his *Etymological Dictionary of the Ukrainian Language* (1962–82).
+
+(2) **Earliest attestation:** The **Hypatian Codex** (Ипатьевская летопись), a 15th‑century copy of a southern Rus′ chronicle preserved in the Hypatian Monastery, records *ѡукраина* (*ukraina*) under the year **1187** in a passage about the death of Prince Volodymyr Hlibovych of Pereyaslavl: "и плакашасѧ по немь вси Переӕславци… ѡ нем же Ѹкраина много постона" ("all the Pereyaslavtsi wept for him… for whom the *ukraina* greatly mourned"). Here it denotes the borderland of the Pereyaslavl principality.
+
+(3) **Alternative hypothesis:** Historian **Mykhailo Hrushevsky** and some Ukrainian nationalist scholars argued *Україна* stems from the simplex *країна* ("country, land"), the prefix having lost semantic force, so the original meaning would be simply "homeland" or "one's own country" — rejecting the "borderland" reading as pejorative. This lacks support from the historical linguistic record; the prefix *у-* is etymologically distinct and productive in the attested forms.
+
+real	0m34.219s
+user	0m6.838s
+sys	0m0.672s

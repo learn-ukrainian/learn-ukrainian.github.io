@@ -1,0 +1,7 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+
+real	0m35.339s
+user	0m6.838s
+sys	0m0.682s

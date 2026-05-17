@@ -1,0 +1,7 @@
+"На протязі дня" is ungrammatical and should be "Протягом дня".
+"зустрінемось" is misspelled and the correct form is "зустрінемося".
+Petro’s compound sentence exceeds typical A1-level complexity.
+
+real	0m18.130s
+user	0m1.988s
+sys	0m0.271s

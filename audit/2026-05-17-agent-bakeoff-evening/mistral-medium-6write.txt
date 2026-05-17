@@ -1,0 +1,17 @@
+Привіт, Петре!
+Hello, Petro!
+
+Привіт, Олено! Ти хочеш чай?
+Hello, Oleno! Do you want tea?
+
+Ні, я хочу каву.
+No, I want coffee.
+
+Добре. Я люблю каву.
+Good. I like coffee.
+
+What does Олена want to drink?
+
+real	0m27.097s
+user	0m2.000s
+sys	0m0.279s
