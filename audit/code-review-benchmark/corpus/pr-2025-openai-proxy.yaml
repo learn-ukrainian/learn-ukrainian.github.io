@@ -12,7 +12,7 @@ context: |
   clients, accidental denial-of-service surfaces, and whether network binding
   choices are explicit enough for local-only tooling.
 gold_findings:
-  - id: arg-max
+  - id: prompt-on-command-line-leak-and-arg-max-dos
     severity: HIGH
     category: security
     location: scripts/ai_agent_bridge/openai_proxy.py
@@ -20,7 +20,7 @@ gold_findings:
       Prompts larger than the OS argv limit hit ARG_MAX/E2BIG because the
       proxy passes prompt text through command-line arguments to the upstream
       CLI. The prompt should be sent over stdin or another streaming channel.
-  - id: error-envelope
+  - id: fastapi-422-validation-leaks-framework-envelope
     severity: HIGH
     category: spec-compliance
     location: scripts/ai_agent_bridge/openai_proxy.py
@@ -28,14 +28,14 @@ gold_findings:
       FastAPI validation failures return the framework default
       {detail: [...]} response instead of OpenAI's required
       {error: {message, type, code}} envelope.
-  - id: healthz-fork
+  - id: healthz-dos-amplification-via-subprocess-forking
     severity: MEDIUM
     category: dos-surface
     location: scripts/ai_agent_bridge/openai_proxy.py
     description: >
       /healthz forks multiple subprocess probes on every request, making the
       endpoint a trivial denial-of-service amplifier.
-  - id: host-flag
+  - id: unauthenticated-remote-host-binding
     severity: LOW
     category: security
     location: scripts/ai_agent_bridge/openai_proxy.py
