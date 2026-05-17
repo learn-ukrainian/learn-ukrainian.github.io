@@ -70,7 +70,7 @@ echo "[dagger-pytest] Bypass with 'git push --no-verify' if you must."
 echo
 
 # Run Dagger and stream output. Capture exit code; preserve failures.
-dagger call pytest --source=. 2>&1
+DAGGER_NO_NAG=1 dagger call pytest --source=. 2>&1
 rc=$?
 
 echo
