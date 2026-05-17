@@ -388,6 +388,11 @@ def test_v7_build_writer_timeout_kills_silent_subprocess(
     assert int(returncode_file.read_text("utf-8")) == -signal.SIGKILL
     assert "timed out in phase writer" in captured.err
     assert timeout_event["writer"] == "claude-tools"
-    assert timeout_event["last_event_type"] == "phase_done"
+    # PR #2108 (Path 3 PR1) seeds implementation_map.json BETWEEN the
+    # phase_done event for the wiki/plan phases and the writer subprocess
+    # spawn. So when the writer subprocess is killed for silence, the most
+    # recently-emitted event is the seeder, not phase_done. Adjust the
+    # assertion to match the actual last event before the spawn.
+    assert timeout_event["last_event_type"] == "implementation_map_seeded"
     assert timeout_event["last_event_ts"]
     assert timeout_event["total_wall_time_s"] < 6
