@@ -38,11 +38,102 @@ def controlled_docs_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dic
 
     monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {"safe": safe_root})
+    monkeypatch.setattr(docs_router, "EFFECTIVE_ROOTS", {"safe": safe_root})
+    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (safe_root,))
+
     return {"safe": safe_root, "outside": outside_root}
 
 
 @pytest.fixture()
 def controlled_client(controlled_docs_tree: dict[str, Path]) -> TestClient:
+    return TestClient(app, raise_server_exceptions=False)
+
+
+@pytest.fixture()
+def docs_tree_with_md(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]:
+    """Controlled tree that includes MD files under docs/ subdirectories."""
+    docs_dir = tmp_path / "docs"
+    proposals_dir = docs_dir / "proposals"
+    handoffs_dir = docs_dir / "handoffs"
+    archive_dir = docs_dir / "archive"
+    raw_podcasts_dir = docs_dir / "resources" / "podcasts" / "raw"
+
+    proposals_dir.mkdir(parents=True)
+    handoffs_dir.mkdir(parents=True)
+    archive_dir.mkdir(parents=True)
+    raw_podcasts_dir.mkdir(parents=True)
+
+    # HTML artifact in docs/proposals
+    (proposals_dir / "rfc-001.html").write_text(
+        '<!doctype html>\n<meta name="report-class" content="proposal">\n'
+        '<meta name="report-title" content="RFC 001">\n'
+        '<meta name="report-date" content="2026-05-01">\n'
+        '<meta name="report-status" content="green">\n'
+        '<meta name="report-author" content="team">\n'
+        '<title>RFC 001</title>\n<body>content</body>',
+        encoding="utf-8",
+    )
+
+    # MD artifact with YAML frontmatter in docs/handoffs
+    (handoffs_dir / "session-1.md").write_text(
+        "---\n"
+        "class: handoff\n"
+        "status: green\n"
+        "date: 2026-05-17\n"
+        "author: codex\n"
+        "title: Session Handoff 1\n"
+        "kpi_summary: Completed 3 modules\n"
+        "related_issues: \"142, 150\"\n"
+        "related_prs: \"201, 202\"\n"
+        "agents: \"codex, gemini\"\n"
+        "---\n"
+        "\n"
+        "# Session Handoff 1\n"
+        "\n"
+        "This is a handoff document.\n",
+        encoding="utf-8",
+    )
+
+    # MD artifact WITHOUT frontmatter in docs/handoffs
+    (handoffs_dir / "notes.md").write_text(
+        "# Plain Notes\n"
+        "\n"
+        "No frontmatter here, just a heading.\n",
+        encoding="utf-8",
+    )
+
+    # Excluded: docs/archive/old.html should NOT surface
+    (archive_dir / "old.html").write_text(
+        '<!doctype html><title>Archived</title>',
+        encoding="utf-8",
+    )
+
+    # Excluded: docs/resources/podcasts/raw/* should NOT surface
+    (raw_podcasts_dir / "raw.txt").write_text("raw podcast data", encoding="utf-8")
+    (raw_podcasts_dir / "episode.md").write_text("# Raw Episode\n\nraw content\n", encoding="utf-8")
+
+    # MD in docs/proposals (for dynamic root coverage)
+    (proposals_dir / "proposal-2.md").write_text(
+        "# Proposal 2\n\nSome proposal content.\n",
+        encoding="utf-8",
+    )
+
+    dashboards = tmp_path / "dashboards"
+    dashboards.mkdir()
+    (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
+
+    monkeypatch.setattr(docs_router, "PROJECT_ROOT", tmp_path)
+    # Clear ALLOWED_ROOTS so _build_effective_roots only discovers tmp_path dirs
+    monkeypatch.setattr(docs_router, "ALLOWED_ROOTS", {})
+    docs_router.EFFECTIVE_ROOTS = docs_router._build_effective_roots()
+    monkeypatch.setattr(docs_router, "DISCOVERY_ROOTS", (tmp_path / "docs",))
+    monkeypatch.setattr(docs_router, "DISCOVERY_EXCLUDES", ("docs/archive", "docs/resources/podcasts/raw"))
+
+    return {"docs": docs_dir, "proposals": proposals_dir, "handoffs": handoffs_dir, "archive": archive_dir}
+
+
+@pytest.fixture()
+def docs_tree_client(docs_tree_with_md: dict[str, Path]) -> TestClient:
     return TestClient(app, raise_server_exceptions=False)
 
 
@@ -78,8 +169,8 @@ def test_docs_router_root_index_lists_allowed_roots(client: TestClient):
 
     assert response.status_code == 200
     body = response.json()
-    assert {root["id"] for root in body["roots"]} == set(docs_router.ALLOWED_ROOTS)
-    assert len(body["roots"]) == 10
+    assert {root["id"] for root in body["roots"]} == set(docs_router.EFFECTIVE_ROOTS)
+    assert len(body["roots"]) >= 10  # ≥ 10 — EFFECTIVE_ROOTS may grow with dynamic roots (#2106)
     assert all({"id", "path", "exists"} <= set(root) for root in body["roots"])
 
 
@@ -196,3 +287,134 @@ def test_docs_router_concurrent_access_sanity(controlled_client: TestClient):
     assert len(responses) == 10
     assert all(response.status_code == 200 for response in responses)
     assert all("safe" in response.text for response in responses)
+
+
+# ── New tests for MD artifact support (#2106) ──
+
+
+def test_artifacts_api_surfaces_md_files(docs_tree_client: TestClient):
+    """MD files in docs/ subdirectories should appear in /api/artifacts/html."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    paths = {a["path"] for a in body["artifacts"]}
+    assert "docs/handoffs/session-1.md" in paths, (
+        "MD file with frontmatter not surfaced in artifacts API"
+    )
+    assert "docs/handoffs/notes.md" in paths, (
+        "MD file without frontmatter not surfaced in artifacts API"
+    )
+    assert "docs/proposals/proposal-2.md" in paths, (
+        "MD file in proposals not surfaced in artifacts API"
+    )
+
+
+def test_artifacts_md_with_yaml_frontmatter(docs_tree_client: TestClient):
+    """MD with YAML frontmatter should have metadata extracted."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    # Find the session-1.md artifact
+    session = next(
+        (a for a in body["artifacts"] if a["path"] == "docs/handoffs/session-1.md"),
+        None,
+    )
+    assert session is not None, "session-1.md not found in artifacts"
+
+    assert session["class"] == "handoff"
+    assert session["status"] == "green"
+    assert session["date"] == "2026-05-17"
+    assert session["author"] == "codex"
+    assert session["title"] == "Session Handoff 1"
+    assert session["kpi_summary"] == "Completed 3 modules"
+    assert session["related_issues"] == [142, 150]
+    assert session["related_prs"] == [201, 202]
+    assert session["agents"] == ["codex", "gemini"]
+
+
+def test_artifacts_md_without_frontmatter(docs_tree_client: TestClient):
+    """MD without frontmatter should have class=document, date from mtime."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    notes = next(
+        (a for a in body["artifacts"] if a["path"] == "docs/handoffs/notes.md"),
+        None,
+    )
+    assert notes is not None, "notes.md not found in artifacts"
+
+    assert notes["class"] == "document"
+    # Title should be first H1
+    assert notes["title"] == "Plain Notes"
+    # date should be ISO date from mtime
+    assert len(notes["date"]) == 10  # YYYY-MM-DD
+    assert notes["status"] == "unknown"
+
+
+def test_artifacts_type_filter_md_only(docs_tree_client: TestClient):
+    """?type=md should return only MD artifacts."""
+    response = docs_tree_client.get("/api/artifacts/html?type=md")
+    assert response.status_code == 200
+    body = response.json()
+
+    for artifact in body["artifacts"]:
+        assert artifact["path"].endswith(".md"), (
+            f"Expected only MD files, got {artifact['path']}"
+        )
+    # Should have our MD files
+    paths = {a["path"] for a in body["artifacts"]}
+    assert "docs/handoffs/session-1.md" in paths
+    assert "docs/handoffs/notes.md" in paths
+
+
+def test_artifacts_type_filter_html_only(docs_tree_client: TestClient):
+    """?type=html should return only HTML artifacts."""
+    response = docs_tree_client.get("/api/artifacts/html?type=html")
+    assert response.status_code == 200
+    body = response.json()
+
+    for artifact in body["artifacts"]:
+        assert artifact["path"].endswith(".html"), (
+            f"Expected only HTML files, got {artifact['path']}"
+        )
+
+
+def test_artifacts_archive_excluded(docs_tree_client: TestClient):
+    """docs/archive/* files should NOT appear in artifacts."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    paths = {a["path"] for a in body["artifacts"]}
+    assert not any(p.startswith("docs/archive/") for p in paths), (
+        "docs/archive/* should be excluded from artifacts"
+    )
+
+
+def test_artifacts_podcasts_raw_excluded(docs_tree_client: TestClient):
+    """docs/resources/podcasts/raw/* files should NOT appear in artifacts."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    paths = {a["path"] for a in body["artifacts"]}
+    assert not any("podcasts/raw" in p for p in paths), (
+        "docs/resources/podcasts/raw/* should be excluded from artifacts"
+    )
+
+
+def test_artifacts_dynamic_root_surfaces(docs_tree_client: TestClient):
+    """New docs/<dir> with content should auto-surface no code change (#2106)."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    paths = {a["path"] for a in body["artifacts"]}
+    # proposals should contain both HTML and MD
+    assert "docs/proposals/rfc-001.html" in paths
+    assert "docs/proposals/proposal-2.md" in paths
+    # handoffs should contain MD
+    assert "docs/handoffs/session-1.md" in paths

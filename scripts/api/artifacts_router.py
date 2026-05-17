@@ -119,14 +119,32 @@ async def html_artifacts(
     date_from: str | None = Query(None),
     status: str | None = Query(None),
     author: str | None = Query(None),
+    type_: str | None = Query(None, alias="type", pattern="^(html|md)$"),
 ):
-    """List authored HTML artifacts with parsed report metadata."""
+    """List authored artifacts (HTML + MD) with parsed report metadata.
+
+    Query params:
+        type: Filter to 'html' or 'md'. Omit for both.
+        class: Filter by artifact class.
+        date_from: ISO date lower bound.
+        status: Filter by status.
+        author: Filter by author.
+    """
+    types: tuple[str, ...]
+    if type_ == "html":
+        types = ("html",)
+    elif type_ == "md":
+        types = ("md",)
+    else:
+        types = ("html", "md")
+
     return await asyncio.to_thread(
         collect_html_artifacts,
         class_filter=class_,
         date_from=date_from,
         status=status,
         author=author,
+        types=types,
     )
 
 

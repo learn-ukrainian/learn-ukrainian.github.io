@@ -8,6 +8,7 @@ from approved roots.
 
 from __future__ import annotations
 
+import logging
 import re
 from datetime import UTC, datetime
 from pathlib import Path
@@ -21,6 +22,8 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import
 
 from .config import DASHBOARDS_DIR, PROJECT_ROOT
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["docs"])
 
@@ -45,6 +48,37 @@ ALLOWED_ROOTS = {
     "docs/proposals": PROJECT_ROOT / "docs" / "proposals",
     "docs/poc": PROJECT_ROOT / "docs" / "poc",
 }
+
+# Discovery roots: walk these trees broadly to find all artifacts.
+# Serving is still gated by ALLOWED_ROOTS / EFFECTIVE_ROOTS.
+DISCOVERY_ROOTS = (PROJECT_ROOT / "docs", PROJECT_ROOT / "audit")
+
+# Path prefixes (relative to PROJECT_ROOT) to exclude from discovery.
+DISCOVERY_EXCLUDES = ("docs/archive", "docs/resources/podcasts/raw")
+
+
+# ── Effective roots: ALLOWED_ROOTS ∪ dynamically discovered docs/ dirs ──
+# At import time, add every immediate subdirectory under docs/ (and audit/)
+# that isn't explicitly excluded, so the API surfaces ALL real content
+# directories without per-directory whitelist churn (#2106).
+
+def _build_effective_roots() -> dict[str, Path]:
+    """Build EFFECTIVE_ROOTS as ALLOWED_ROOTS ∪ discovered docs/ dirs."""
+    effective = dict(ALLOWED_ROOTS)
+    docs_dir = PROJECT_ROOT / "docs"
+    if docs_dir.is_dir():
+        for entry in sorted(docs_dir.iterdir()):
+            if not entry.is_dir() or entry.name.startswith("."):
+                continue
+            root_key = f"docs/{entry.name}"
+            # Skip if this path prefix is excluded
+            if any(root_key.startswith(excl) for excl in DISCOVERY_EXCLUDES):
+                continue
+            effective.setdefault(root_key, entry)
+    return effective
+
+
+EFFECTIVE_ROOTS = _build_effective_roots()
 
 _ALLOWED_EXT = {".html", ".md", ".txt", ".json", ".png", ".jpg", ".jpeg", ".svg", ".webp", ".pdf"}
 _MIME_TYPES = {
@@ -99,16 +133,70 @@ def _extract_html_meta(path: Path) -> dict[str, str]:
     return meta
 
 
+def _extract_md_frontmatter(path: Path) -> dict[str, str]:
+    """Extract YAML frontmatter from MD files.
+
+    Parses the leading YAML block delimited by ``---`` / ``---``.
+    Falls back to first H1 as title if no frontmatter ``title`` key.
+    Limits reads to 8KB head. Returns empty dict on any error.
+    """
+    meta: dict[str, str] = {}
+    if path.suffix.lower() != ".md" or not path.is_file():
+        return meta
+    try:
+        with open(path, encoding="utf-8", errors="replace") as f:
+            head = f.read(8192)
+    except Exception:
+        return meta
+
+    if not head.startswith("---"):
+        # No frontmatter — try H1 as title fallback
+        for line in head.split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("# ") and not stripped.startswith("## "):
+                meta["title"] = stripped[2:].strip()
+                break
+        return meta
+
+    # Find closing ---
+    end_idx = head.find("\n---", 3)
+    if end_idx == -1:
+        return meta
+
+    yaml_str = head[4:end_idx]  # Skip opening "---\n"
+    try:
+        import yaml
+
+        data = yaml.safe_load(yaml_str)
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if value is not None:
+                    meta[str(key)] = str(value)
+    except Exception:
+        logger.debug("Malformed YAML frontmatter in %s, skipping metadata", path)
+
+    # Title: first H1 if no title in frontmatter
+    if "title" not in meta:
+        body_start = head[end_idx + 4:]  # after closing ---\n
+        for line in body_start.split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("# ") and not stripped.startswith("## "):
+                meta["title"] = stripped[2:].strip()
+                break
+
+    return meta
+
+
 def _get_root_info(path: str) -> tuple[str, Path, str] | None:
     """Find the matching root for a given path.
 
     Returns (root_key, root_path, relative_remainder) or None.
     """
     # Sort by length descending to match most specific root first
-    for root_key in sorted(ALLOWED_ROOTS.keys(), key=len, reverse=True):
+    for root_key in sorted(EFFECTIVE_ROOTS.keys(), key=len, reverse=True):
         if path == root_key or path.startswith(f"{root_key}/"):
-            remainder = path[len(root_key) :].lstrip("/")
-            return root_key, ALLOWED_ROOTS[root_key], remainder
+            remainder = path[len(root_key):].lstrip("/")
+            return root_key, EFFECTIVE_ROOTS[root_key], remainder
     return None
 
 
@@ -153,7 +241,7 @@ def _directory_listing(path: str, root_key: str, root_path: Path, remainder: str
 
 
 def _artifact_url_for(root_key: str, file_path: Path) -> str:
-    relative = file_path.relative_to(ALLOWED_ROOTS[root_key]).as_posix()
+    relative = file_path.relative_to(EFFECTIVE_ROOTS[root_key]).as_posix()
     return f"/artifacts/{root_key}/{relative}"
 
 
@@ -161,28 +249,87 @@ def _artifact_path_for(file_path: Path) -> str:
     return file_path.relative_to(PROJECT_ROOT).as_posix()
 
 
-def collect_html_artifacts(
+def _find_artifact_root(file_path: Path) -> str | None:
+    """Find the EFFECTIVE_ROOTS key that contains this file path.
+
+    Returns the longest matching root_key, or None if no root covers it.
+    """
+    rel = file_path.relative_to(PROJECT_ROOT).as_posix()
+    # Sort by key length descending — longest (most specific) match wins
+    for root_key in sorted(EFFECTIVE_ROOTS.keys(), key=len, reverse=True):
+        if rel == root_key or rel.startswith(f"{root_key}/"):
+            return root_key
+    return None
+
+
+def collect_artifacts(
     *,
     class_filter: str | None = None,
     date_from: str | None = None,
     status: str | None = None,
     author: str | None = None,
+    types: tuple[str, ...] = ("html", "md"),
 ) -> dict:
-    """Return all HTML report artifacts under approved documentation roots."""
-    artifacts = []
-    for root_key, root_path in ALLOWED_ROOTS.items():
-        if not root_path.exists():
+    """Return all HTML and MD artifacts under discovery roots.
+
+    Walks DISCOVERY_ROOTS (docs/ + audit/) broadly. Skips
+    DISCOVERY_EXCLUDES and dotfiles. Matches each file to an
+    EFFECTIVE_ROOTS entry for serving. Parses HTML <meta> tags
+    and MD YAML frontmatter for metadata.
+
+    Args:
+        class_filter: Filter by artifact class.
+        date_from: ISO date lower bound.
+        status: Filter by status.
+        author: Filter by author.
+        types: Tuples of extensions to include (default: html, md).
+    """
+    artifacts: list[dict] = []
+    type_set = set(types)
+
+    for discovery_root in DISCOVERY_ROOTS:
+        if not discovery_root.exists():
             continue
-        for file_path in sorted(root_path.rglob("*.html")):
-            rel_parts = file_path.relative_to(root_path).parts
-            if any(part.startswith(".") for part in rel_parts):
+        for file_path in sorted(discovery_root.rglob("*")):
+            if not file_path.is_file():
                 continue
-            _assert_under_root(file_path, root_path)
-            meta = _extract_html_meta(file_path)
+
+            # Skip dotfiles
+            rel_to_project = file_path.relative_to(PROJECT_ROOT)
+            if any(part.startswith(".") for part in rel_to_project.parts):
+                continue
+
+            # Skip excluded paths
+            rel_str = rel_to_project.as_posix()
+            if any(rel_str == excl or rel_str.startswith(f"{excl}/") for excl in DISCOVERY_EXCLUDES):
+                continue
+
+            # Filter by type
+            suffix = file_path.suffix.lower()
+            if suffix == ".html":
+                if "html" not in type_set:
+                    continue
+            elif suffix == ".md":
+                if "md" not in type_set:
+                    continue
+            else:
+                continue  # Only HTML and MD for now
+
+            # Find the serving root for this file
+            root_key = _find_artifact_root(file_path)
+            if root_key is None:
+                continue  # Not under any approved root
+
+            _assert_under_root(file_path, EFFECTIVE_ROOTS[root_key])
+
+            # Extract metadata
+            meta = _extract_html_meta(file_path) if suffix == ".html" else _extract_md_frontmatter(file_path)
+
             report_class = meta.get("class") or "document"
             report_status = meta.get("status") or "unknown"
             report_date = meta.get("date") or _iso_from_mtime(file_path)[:10]
             report_author = meta.get("author") or ""
+
             if class_filter and report_class != class_filter:
                 continue
             if status and report_status != status:
@@ -191,6 +338,7 @@ def collect_html_artifacts(
                 continue
             if date_from and report_date < date_from:
                 continue
+
             artifacts.append(
                 {
                     "path": _artifact_path_for(file_path),
@@ -199,21 +347,26 @@ def collect_html_artifacts(
                     "date": report_date,
                     "status": report_status,
                     "title": meta.get("title") or file_path.stem,
-                    "kpi_summary": meta.get("kpi-summary") or "",
-                    "related_issues": _split_csv_numbers(meta.get("related-issues")),
-                    "related_prs": _split_csv_numbers(meta.get("related-prs")),
+                    "kpi_summary": meta.get("kpi_summary") or meta.get("kpi-summary") or "",
+                    "related_issues": _split_csv_numbers(meta.get("related_issues") or meta.get("related-issues")),
+                    "related_prs": _split_csv_numbers(meta.get("related_prs") or meta.get("related-prs")),
                     "agents": _split_csv_strings(meta.get("agents")),
                     "author": report_author,
                     "size_bytes": file_path.stat().st_size,
                     "modified_at": _iso_from_mtime(file_path),
                 }
             )
+
     artifacts.sort(key=lambda item: (item["date"], item["modified_at"], item["path"]), reverse=True)
     return {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "total": len(artifacts),
         "artifacts": artifacts,
     }
+
+
+# Backward-compat alias — artifacts_router.py originally imported this name.
+collect_html_artifacts = collect_artifacts
 
 
 @router.get("/")
@@ -228,7 +381,7 @@ async def list_roots(request: Request, format: str | None = Query(None, pattern=
                 "path": str(v.relative_to(PROJECT_ROOT)),
                 "exists": v.exists(),
             }
-            for k, v in ALLOWED_ROOTS.items()
+            for k, v in EFFECTIVE_ROOTS.items()
         ]
     }
 
