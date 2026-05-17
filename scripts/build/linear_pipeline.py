@@ -494,7 +494,31 @@ _PRONUNCIATION_CUE_PATTERN = re.compile(
 # inner-content alternation `.+?` is non-greedy so adjacent `<!-- bad -->`
 # spans don't fuse.
 _AVOID_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(.+?)<!--\s*/bad\s*-->", re.DOTALL)
-_WARNING_QUOTE_RE = re.compile(r'\bnot\s+["«][^"»]+["»]', re.IGNORECASE)
+# Anti-example contrast patterns in pedagogical prose. Writers use these to
+# show learners "say X, not Y" — Y is intentionally the wrong form and must
+# be excluded from VESUM lookup (it's NOT a valid Ukrainian word; VESUM would
+# correctly fail it, but the writer's pedagogical intent is to show it as
+# wrong, not to assert it as Ukrainian).
+#
+# Three surface forms supported, both English and Ukrainian negators:
+#   1. Straight quotes:  `not "дивюся"`  /  `не "завтрак"`
+#   2. Guillemets:       `not «дивюся»`  /  `не «завтрак»`
+#   3. Markdown italics: `not *дивюся*`  /  `не *завтрак*`
+#
+# #2038 originally shipped the quote-only variant. The italic variant was
+# added 2026-05-17 after a1/m20 rebuild #2 surfaced `*дивюся*` from the
+# writer's `*я дивлюся*, not *дивюся*` contrast pattern. Strikethrough,
+# bold, and explicit ❌ markers are NOT matched here — extend
+# alternation rather than introducing new constants.
+#
+# Bold (`**X**`) is intentionally excluded. Writers reserve bold for the
+# CORRECT form (the structural emphasis: "**л**" is the epenthetic
+# consonant being taught). Matching bold here would strip the very tokens
+# we want VESUM to verify.
+_WARNING_QUOTE_RE = re.compile(
+    r'\b(?:not|не)\s+(?:["«][^"»]+["»]|\*[^*]+\*)',
+    re.IGNORECASE,
+)
 
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset(
     {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
@@ -4852,23 +4876,60 @@ def _normalize_for_vesum(lemma: str) -> str:
     previous = None
     while previous != text:
         previous = text
-        # Strip hyphens INSIDE emphasis (bold/italic/code) — pedagogical
-        # morpheme breaks like `прокида**ю-ся**` and `**-ться**` are
-        # display-only segmentation, not VESUM tokens. Real compound
-        # hyphens (`темно-синій`) sit outside emphasis and survive.
-        text = re.sub(r"\*\*(.+?)\*\*", lambda m: m.group(1).replace("-", ""), text)
+        # Strip emphasis wrappers (bold/italic/code/italic-underscore).
+        # Hyphens INSIDE emphasis are conditionally stripped: pedagogical
+        # morpheme breaks like `прокида**ю-ся**` and `**-ться**` (where
+        # a hyphen splits a short morpheme fragment) collapse to the
+        # canonical VESUM lemma; real compound words like `**темно-синій**`
+        # (both halves are full-length lexemes) preserve their hyphen.
+        # The heuristic: strip the hyphen only if either side is ≤3 chars
+        # (morpheme-fragment width). 3-char threshold captures all observed
+        # Ukrainian reflexive/aspectual suffixes (`ся/сь/ть/єть/єте/ємо/...`)
+        # while keeping every Ukrainian compound noun/adjective intact
+        # (compound halves are ≥4 chars in practice: `темно`, `синій`,
+        # `жовто`, `гарячий`, …).
+        #
+        # 2026-05-17 regression context: PR #2068 introduced unconditional
+        # hyphen-strip-inside-emphasis to fix m20's `прокида**ю-ся**`
+        # VESUM misses, but it also stripped the hyphen from
+        # `**темно-синій**` and broke
+        # `test_vesum_gate_strips_hyphen_prefix_morpheme_notation`. The
+        # conditional strip resolves both — morpheme breaks normalize,
+        # compound words survive.
+        text = re.sub(r"\*\*(.+?)\*\*", lambda m: _strip_morpheme_hyphen(m.group(1)), text)
         text = re.sub(
             r"(?<!\*)\*(?!\*)([^*]+)\*(?!\*)",
-            lambda m: m.group(1).replace("-", ""),
+            lambda m: _strip_morpheme_hyphen(m.group(1)),
             text,
         )
-        text = re.sub(r"`([^`]+)`", lambda m: m.group(1).replace("-", ""), text)
+        text = re.sub(r"`([^`]+)`", lambda m: _strip_morpheme_hyphen(m.group(1)), text)
         text = re.sub(
             r"(?<![_A-Za-z0-9А-ЯІЇЄҐа-яіїєґ])_([^_]+)_(?![_A-Za-z0-9А-ЯІЇЄҐа-яіїєґ])",
-            lambda m: m.group(1).replace("-", ""),
+            lambda m: _strip_morpheme_hyphen(m.group(1)),
             text,
         )
     return text.strip()
+
+
+def _strip_morpheme_hyphen(emphasis_inner: str, *, fragment_max_chars: int = 3) -> str:
+    """Collapse a morpheme-break hyphen INSIDE markdown emphasis, but only
+    when at least one side of the hyphen is short enough to be a morpheme
+    fragment (≤``fragment_max_chars`` chars by default).
+
+    See ``_normalize_for_vesum`` for the rationale + regression context.
+    """
+    # Fast path: no hyphen → no decision needed.
+    if "-" not in emphasis_inner:
+        return emphasis_inner
+    parts = emphasis_inner.split("-")
+    # Only collapse single-hyphen forms — multi-hyphen tokens (`раз-два-три`,
+    # exotic transliterations) are conservatively left intact.
+    if len(parts) != 2:
+        return emphasis_inner
+    left, right = parts
+    if len(left) <= fragment_max_chars or len(right) <= fragment_max_chars:
+        return left + right
+    return emphasis_inner
 
 
 def _vesum_missing_exclusion_keys(
