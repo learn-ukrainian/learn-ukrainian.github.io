@@ -39,7 +39,7 @@ on 4 of those roles. Headline recommendations:
 | 2 | **Codex** | `codex` (CLI), `codex` (Desktop) | `gpt-5.5` (xhigh) | `delegate.py --agent codex`; `ab ask-codex`; Codex Desktop UI |
 | 3 | **Gemini** | `gemini` | `gemini-3.1-pro-preview` (deep), `gemini-3.0-flash-preview` (routine), Gemini Vision (OCR) | `delegate.py --agent gemini`; `ab ask-gemini --model gemini-3.0-flash-preview` for routine, `--model gemini-3.1-pro-preview` for deep |
 | 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `delegate.py --agent grok`; `ab ask-grok`; uses `hermes_grok.py` adapter |
-| 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | NEW LANE — adapter `hermes_deepseek.py` PENDING (clone of `hermes_grok.py`). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
+| 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | LIVE LANE — adapter `scripts/agent_runtime/adapters/hermes_deepseek.py` SHIPPED PR #2107 (2026-05-17, SHA `84ef22455e`). `delegate.py dispatch --agent deepseek` end-to-end smoke validated; first real-world write-mode dispatch landed PR #2112 (artifacts MD support, +192 lines + 10 tests, pytest green). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
 | ~~6~~ | ~~Mistral~~ | ~~vibe -p~~ | — | **REMOVED 2026-05-17 (user-cancelled subscription)**. DeepSeek-flash via hermes covers the lane. |
 | 7 | **Gemma local** | unclear | `gemma-local` (?) | UNCLEAR — listed in `/api/orient` `runtime.agents` but no recent use; investigate before next pass |
 
@@ -53,7 +53,7 @@ on 4 of those roles. Headline recommendations:
 ### Dropped in this report
 
 - **`devstral-small`** — see drop recommendation in §Drop candidates.
-- **`hermes_deepseek.py` (was planned)** — never built; killed before adapter PR.
+- **`hermes_deepseek.py` (was planned, SHIPPED 2026-05-17)** — built and merged via PR #2107. End-to-end smoke validated. First write-mode dispatch (PR #2112) landed code-quality + tests green.
 
 ## Role definitions (NINE roles, +2 from user's list)
 
