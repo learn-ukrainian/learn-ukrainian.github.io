@@ -1,0 +1,75 @@
+Reading additional input from stdin...
+OpenAI Codex v0.130.0
+--------
+workdir: /private/tmp/agent-bakeoff-2026-05-17
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 019e3748-09f3-7811-921a-6bbc52ebeb7a
+--------
+user
+Research task: What is the current scholarly consensus on the etymology of the Ukrainian word "Україна"? Provide:
+(1) the leading hypothesis on the root meaning,
+(2) the earliest documented attestation (give the source and approximate date),
+(3) one alternative hypothesis with its proponent's name.
+Cite real etymological works where possible; do not invent citations. If you are not certain about a citation, say so. Under 200 words.
+codex
+I’ll verify this against etymological and historical sources rather than relying on the common “borderland” gloss, since that word has a politicized citation trail.
+web search:
+web search: Україна етимологія Етимологічний словник української мови Україна україна
+web search:
+web search: "Україна" "Етимологічний словник української мови" "украй"
+web search:
+web search: https://djvu.online/file/oZXTXewlj7Dud
+web search:
+web search: https://djvu.online/file/oZXTXewlj7Dud
+web search:
+web search: Vasmer etymological dictionary Украина украина край
+web search:
+web search: https://gufo.me/dict/vasmer
+web search:
+web search: site:gufo.me/dict/vasmer Украина Фасмер "окраина"
+web search:
+web search: "о нем же оукраина много постона"
+web search:
+web search:
+web search:
+web search:
+web search:
+web search: Півторак Україна походження назви окрема частина території племені 2001
+web search:
+web search:
+web search:
+web search:
+web search:
+web search: "І, нарешті, ще один погляд" "украяти" "Україна"
+web search:
+web search: Encyclopedia of Ukraine Ukraine name etymology Rudnyckyj Ukraina borderland
+web search:
+web search: https://commons.wikimedia.org/wiki/File%3AHypatian_Codex.pdf?uselang=ru
+web search:
+web search: 'Оукраина' in https://krotov.info/acts/12/pvl/ipat28.htm
+web search:
+web search: '6695' in https://krotov.info/acts/12/pvl/ipat28.htm
+codex
+Current consensus: the etymon is Slavic `край` / `*krajь` “edge, border; region/land,” with an older sense of something demarcated or “cut off.” Mainstream dictionaries usually gloss early `оукраина` as “frontier/border region,” not as a derivation from modern Russian `окраина`. See [ESUM vol. 6, s.v. Україна](https://djvu.online/file/oZXTXewlj7Dud) and [Vasmer, s.v. Украина](https://gufo.me/dict/vasmer/%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0).
+
+Earliest attestation: the Kyivan Chronicle entry for 6695/1187, preserved in the Hypatian Codex, says of Prince Volodymyr Hlibovych: `ѡ нем же Оукраина много постона` (“for him Ukraine/the frontier greatly lamented”). The extant Hypatian manuscript is a 1420s copy; see the [chronicle text](https://yakovkrotov.com/acts/12/pvl/ipat28.htm) and [Hypatian Codex file note](https://commons.wikimedia.org/wiki/File:Hypatian_Codex.pdf).
+
+Alternative: Hryhorii Pivtorak, in *Походження українців, росіян, білорусів та їхніх мов* (2001), argued `україна` was distinct from `окраїна` and meant a “separated part of tribal territory,” later a principality/country.
+hook: Stop
+hook: Stop Completed
+tokens used
+89,321
+Current consensus: the etymon is Slavic `край` / `*krajь` “edge, border; region/land,” with an older sense of something demarcated or “cut off.” Mainstream dictionaries usually gloss early `оукраина` as “frontier/border region,” not as a derivation from modern Russian `окраина`. See [ESUM vol. 6, s.v. Україна](https://djvu.online/file/oZXTXewlj7Dud) and [Vasmer, s.v. Украина](https://gufo.me/dict/vasmer/%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0).
+
+Earliest attestation: the Kyivan Chronicle entry for 6695/1187, preserved in the Hypatian Codex, says of Prince Volodymyr Hlibovych: `ѡ нем же Оукраина много постона` (“for him Ukraine/the frontier greatly lamented”). The extant Hypatian manuscript is a 1420s copy; see the [chronicle text](https://yakovkrotov.com/acts/12/pvl/ipat28.htm) and [Hypatian Codex file note](https://commons.wikimedia.org/wiki/File:Hypatian_Codex.pdf).
+
+Alternative: Hryhorii Pivtorak, in *Походження українців, росіян, білорусів та їхніх мов* (2001), argued `україна` was distinct from `окраїна` and meant a “separated part of tribal territory,” later a principality/country.
+
+real	2m11.580s
+user	0m0.723s
+sys	0m0.635s

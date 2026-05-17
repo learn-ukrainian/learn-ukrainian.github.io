@@ -1,0 +1,7 @@
+1. Bare `except:` swallows `KeyboardInterrupt`, `SystemExit`, and memory errors — it must be `except ValueError:` to avoid masking critical signals.
+2. Returning `0` for empty input is indistinguishable from a valid `int("user_0")` result, so the caller has no way to tell "missing input" from a genuine user ID of zero.
+3. The hardcoded slice `raw[5:]` is a magic number tied to the length of `'user_'`; use `raw.removeprefix('user_')` (Python 3.9+) so the two can't drift apart during future edits.
+
+real	0m22.098s
+user	0m1.619s
+sys	0m0.304s

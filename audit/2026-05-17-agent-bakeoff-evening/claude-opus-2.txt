@@ -1,0 +1,7 @@
+**Design:** Split the list in two. Keep `ALLOWED_ROOTS` as the serving-side security boundary (explicit, audited, rarely changed). Introduce `SCAN_ROOTS`, derived dynamically — e.g. glob `docs/*/` at scanner startup (or per-request) — for discovery only. The scanner enumerates `SCAN_ROOTS`; the HTTP handler still validates every served path against the static `ALLOWED_ROOTS` (resolved, prefix-checked post-realpath). New `docs/` subdirs auto-appear in scans; serving a new dir still requires an explicit `ALLOWED_ROOTS` entry.
+
+**Trade-off:** Scans surface artifacts that 404 on click until an operator promotes the directory into `ALLOWED_ROOTS` — discoverability outruns reachability.
+
+real	0m10.391s
+user	0m1.227s
+sys	0m0.386s

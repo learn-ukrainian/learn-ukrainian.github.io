@@ -1,0 +1,17 @@
+**Олена:** Привіт, Петре! Як справи?
+*Hi, Petro! How are you?*
+
+**Петро:** Привіт, Олено! Добре, дякую. А ти?
+*Hi, Olena! Good, thank you. And you?*
+
+**Олена:** Теж добре. Що ти будеш пити? Тут смачна кава.
+*Also good. What will you drink? The coffee here is tasty.*
+
+**Петро:** Я хочу каву і шматок торта. Дякую, що запросила!
+*I want a coffee and a piece of cake. Thank you for inviting me!*
+
+**Comprehension question:** What does Petro want to order at the café?
+
+real	0m8.586s
+user	0m1.213s
+sys	0m0.373s

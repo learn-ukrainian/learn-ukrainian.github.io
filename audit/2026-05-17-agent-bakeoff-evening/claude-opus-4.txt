@@ -1,0 +1,7 @@
+1. The bare `except:` swallows `KeyboardInterrupt` and `SystemExit`; narrow it to `except ValueError:`.
+2. Returning sentinel values (`0`, `-1`) for invalid input silently propagates bad data — raise `ValueError` instead so callers must handle it.
+3. The magic number `5` should be `len('user_')` (or use `raw.removeprefix('user_')`) to stay correct if the prefix ever changes.
+
+real	0m6.732s
+user	0m1.161s
+sys	0m0.390s

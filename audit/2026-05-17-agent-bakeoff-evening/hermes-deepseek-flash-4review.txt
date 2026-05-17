@@ -1,0 +1,11 @@
+Three highest-priority findings, one sentence each:
+
+1. **Bare `except:`** on line 7 catches `KeyboardInterrupt` and `SystemExit`, making the process unkillable during that block — change to `except ValueError:` to catch only the expected parse failure.
+
+2. **Sentinel value collision** — `return 0` for empty input is indistinguishable from a valid parse of `raw='0'` or `raw='user_0'`, so the caller cannot tell an absent ID from user zero.
+
+3. **Fragile offset slice** — `raw[5:]` silently couples to the literal length of `'user_'`; prefer `raw.removeprefix('user_')` (Python 3.9+) or `raw[len('user_'):]` so the prefix length is derived from the constant, not duplicated.
+
+real	0m15.211s
+user	0m1.621s
+sys	0m0.302s

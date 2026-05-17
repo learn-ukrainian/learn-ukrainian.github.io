@@ -1,0 +1,13 @@
+Here are my findings, verified against VESUM, R2U, Russian shadow detection, and PULS CEFR:
+
+---
+
+**1. "На протязі дня" is a confirmed Russian calque.** R2U maps the Russian "на протяжении" → "протягом," VESUM flags "на протязі" as matching Russian morphology (confidence 1.0), and the correct Ukrainian form is the preposition "протягом дня."
+
+**2. "Протягом" is B1-level vocabulary (PULS CEFR), "зустрічатися" is A2 — both exceed A1.** At A1, learners have not yet acquired the temporal prepositions or reflexive future perfectives this dialogue demands; "зустрінемось" requires A2 perfective-future competence.
+
+**3. The dialogue mixes A1 greetings with B1 past-tense temporal constructions ("протягом дня я багато працював").** A1 past-tense introduction should use bare time adverbs like "вчора" or "сьогодні," not multi-word B1 temporal expressions — this creates a grammar gap that the surrounding A1 framing does not scaffold.
+
+real	2m0.683s
+user	0m2.713s
+sys	0m0.442s

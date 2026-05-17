@@ -1,0 +1,83 @@
+Reading additional input from stdin...
+OpenAI Codex v0.130.0
+--------
+workdir: /private/tmp/agent-bakeoff-2026-05-17
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 019e3748-09fe-7fb1-9f9b-d6a625135277
+--------
+user
+Write a single Python function `find_russianisms(text: str) -> list[tuple[str, str]]` that detects these 5 Ukrainian Russianisms (case-insensitive) and returns (found_phrase, suggestion) tuples in the order they appear in the text:
+- 'на протязі' -> 'протягом'
+- 'учбовий' -> 'навчальний'
+- 'співпадати' -> 'збігатися'
+- 'мішати' -> 'заважати'
+- 'приймати участь' -> 'брати участь'
+Requirements: type hints, ONE-line docstring, NO imports. Just the function — no example/test code.
+codex
+```python
+def find_russianisms(text: str) -> list[tuple[str, str]]:
+    """Detect selected Ukrainian Russianisms and return suggested replacements."""
+    patterns = (
+        ("на протязі", "протягом"),
+        ("учбовий", "навчальний"),
+        ("співпадати", "збігатися"),
+        ("мішати", "заважати"),
+        ("приймати участь", "брати участь"),
+    )
+
+    lowered = text.casefold()
+    matches: list[tuple[int, int, str]] = []
+
+    for phrase, suggestion in patterns:
+        start = 0
+        needle = phrase.casefold()
+        while True:
+            index = lowered.find(needle, start)
+            if index == -1:
+                break
+            matches.append((index, len(phrase), suggestion))
+            start = index + 1
+
+    matches.sort(key=lambda match: match[0])
+    return [(text[index:index + length], suggestion) for index, length, suggestion in matches]
+```
+hook: Stop
+hook: Stop Completed
+tokens used
+8,553
+```python
+def find_russianisms(text: str) -> list[tuple[str, str]]:
+    """Detect selected Ukrainian Russianisms and return suggested replacements."""
+    patterns = (
+        ("на протязі", "протягом"),
+        ("учбовий", "навчальний"),
+        ("співпадати", "збігатися"),
+        ("мішати", "заважати"),
+        ("приймати участь", "брати участь"),
+    )
+
+    lowered = text.casefold()
+    matches: list[tuple[int, int, str]] = []
+
+    for phrase, suggestion in patterns:
+        start = 0
+        needle = phrase.casefold()
+        while True:
+            index = lowered.find(needle, start)
+            if index == -1:
+                break
+            matches.append((index, len(phrase), suggestion))
+            start = index + 1
+
+    matches.sort(key=lambda match: match[0])
+    return [(text[index:index + length], suggestion) for index, length, suggestion in matches]
+```
+
+real	0m25.322s
+user	0m0.581s
+sys	0m0.532s

@@ -96,6 +96,73 @@ are mine after reading raw outputs; raw outputs are preserved in the audit dir.
 | **Content Writing** (A1 Ukrainian dialogue) | B+ (27.1s) — 4 turns, vocative correct, no Russianisms, no speaker labels (style miss) | **EMPTY OUTPUT** (35.3s) | A (19.9s) — speaker labels, café reference, correct locative case, comprehension question well-formatted |
 | **Content Review** (planted `на протязі` Russianism + other issues) | **C** (18.1s) — caught the calque BUT **false positive** asserting `зустрінемось` is misspelled (both `-сь`/`-ся` are valid per VESUM) | B+ (71.4s) — caught calque + sharp pedagogical critique on past-tense complexity, but **over-prescriptive** on `звичайно→звісно` (звичайно is native UK, not Russian influence) | A (30.4s) — caught calque + Time-Place-Manner word-order critique + completeness critique; **no false positives** |
 
+### 4-way head-to-head (2026-05-17 late evening)
+
+After dropping Mistral, the production candidates for the per-role lanes are
+**DeepSeek-pro via hermes**, **DeepSeek-flash via hermes**, **Claude Opus 4.7 xhigh**,
+and **Codex gpt-5.5 xhigh**. Same 7 probes (Plan/Architect/Coding/Code-Review/
+Research/Writing/Content-Review) fired against all 4. Probes preserved at
+`audit/2026-05-17-agent-bakeoff-evening/{hermes-deepseek,claude-opus,codex}-*.txt`.
+
+| Role | hermes-pro | hermes-flash | Opus xhigh | Codex gpt-5.5 xhigh |
+|---|---|---|---|---|
+| **Plan** | A (38.6s, sharp SQLite) | A- (~17s, accurate) | A (13.8s, idiomatic) | A (26.4s, succinct) |
+| **Architect** | A- (20.2s, "deliberate gate") | B+ (11.3s, terse) | A (10.4s, "discoverability outruns reachability") | **A+ (21.0s — novel: artifact-store pattern, never serves raw paths)** |
+| **Coding** | C (didn't show code inline, wrote to file) | A (64.3s, ran 6 tests + bonus VESUM/СУМ-20 note on учбовий) | A (7.9s, idiomatic dict) | A (25.3s, `casefold()` for rigor) |
+| **Code Review** | A (22.1s, removeprefix suggestion) | **A+ (15.2s, best articulation, line refs)** | A (6.7s, tight) | **A+ (21.2s — novel: caught `user_-1` parses as `-1`, sentinel collision the others missed)** |
+| **Research** (Україна) | (file lost — see opencode pro retry: A) | A+ (48.8s, in Ukrainian, Bodyansky/Smal-Stotsky) | A (17.3s, Pivtorak + Shelukhin + confidence calibration "I'd verify before citing") | A (131.6s — **20+ web searches**, primary-source verification, ESUM + Vasmer + chronicle text links) |
+| **Content Writing** | **A+ (159.9s — proactively called MCP: verify_words×17 in VESUM, query_cefr_level, russian_shadow; included verification summary)** | A (38.2s — also MCP-backed, in Ukrainian gloss) | A (8.6s, idiomatic, fastest) | A (23.0s, natural Ukrainian, "Сідаймо біля вікна") |
+| **Content Review** | **A+ (120.7s — MCP-backed verdict citing R2U + VESUM + shadow=1.0 + PULS CEFR)** | A (114.3s — in Ukrainian, MCP-backed, sharp semantic-ambiguity point) | A (8.2s, sharp "what's missing" angle — no scaffolding/glossary) | **C+ (24.2s — wasted finding #2 as "mostly suitable for A1" which isn't a finding)** |
+
+### Key observations from the 4-way
+
+1. **Opus is the speed king and idiomatic king.** 7–17s average, consistently
+   clean A-grade output without any specialized tooling. Just a very good base
+   model. Cost: high (Opus xhigh pricing). Use it where speed + linguistic
+   nuance matter, not where verification is the load-bearing requirement.
+
+2. **DeepSeek-pro via hermes is the verification king.** When MCP is in scope
+   (writing, content review), it spends 2-3× the time but produces outputs
+   evidence-backed by VESUM / PULS / R2U / russian_shadow. The verification
+   summary it includes is exactly the writer-isolation pattern we've been
+   engineering via prompts. NOT cost-effective for short Q&A; ideal for
+   "this answer must be defensible against learner harm."
+
+3. **DeepSeek-flash via hermes is the value champion.** A+ on Code Review
+   (caught sentinel + magic-number in 15.2s). Strong everywhere else. The
+   "cheap second opinion" lane.
+
+4. **Codex gpt-5.5 has unique architectural insights AND a content-review
+   weakness.** Won Architect with the novel artifact-store decoupling pattern;
+   caught the `user_-1` sentinel-collision edge case the others missed; did
+   primary-source web research on Україна etymology. But on content review
+   wasted a finding slot calling the dialogue "mostly suitable for A1"
+   instead of finding 3 real issues. Codex's tendency to be defensive in code
+   review becomes a tendency to be too lenient in content review.
+
+5. **All 4 caught the planted `на протязі` Russianism.** That's the load-bearing
+   safety signal for content review. Variation is in what ELSE they catch.
+
+### Updated per-role routing (post 4-way)
+
+| Role | Primary | Backup |
+|---|---|---|
+| Plan | Codex (H + E: A) | Opus xhigh (E: A, fastest) |
+| Architect | **Codex (E: A+ novel store-pattern)** | Opus xhigh (E: A) |
+| Coding | Codex (E: A + casefold rigor) | Opus xhigh (E: A, idiomatic) |
+| Code Review | **DeepSeek-flash hermes (E: A+, cheap)** | Codex (E: A+ novel catches), Opus (E: A) |
+| Research | Codex (E: A — actually uses web search for primary sources) | Opus xhigh (E: A) |
+| Content Writing | Opus xhigh (E: A, fastest + idiomatic) when no MCP needed; **DeepSeek-pro hermes when MCP verification load-bearing** | DeepSeek-flash hermes (E: A) |
+| Content Review | **DeepSeek-pro hermes (E: A+, MCP-verified)** for high-stakes; Opus xhigh (E: A) for fast pass | DeepSeek-flash hermes (E: A) |
+
+**Drop candidate:** none from this 4-way — each agent has a lane where it's the
+recommended primary. Codex remains the production code workhorse; DeepSeek-pro
+becomes the new gold standard for content-review-with-verification;
+DeepSeek-flash is the cheap second opinion; Opus xhigh covers everything
+where speed + nuance > cost.
+
+---
+
 ### Harness isolation: opencode flake is opencode, not DeepSeek
 
 Initial 9-probe opencode + DeepSeek run had a **3/9 (33%) empty-output rate**

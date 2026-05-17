@@ -1,0 +1,29 @@
+Reading additional input from stdin...
+OpenAI Codex v0.130.0
+--------
+workdir: /private/tmp/agent-bakeoff-2026-05-17
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 019e3748-0a04-71c3-b2b3-f9924aacb299
+--------
+user
+Our /api/artifacts/html scanner uses a fixed whitelist ALLOWED_ROOTS (10 paths). New docs/ subdirs are invisible until added. The serving HTTP path uses the SAME ALLOWED_ROOTS as a security boundary against path traversal. Propose ONE decoupling that fixes the drift problem while preserving serving-side security. Output: design in under 100 words + ONE trade-off.
+codex
+**Design:** Split discovery from serving. Let the scanner recurse over `docs/**` or configurable `DISCOVERY_ROOTS`, but emit/copy discovered HTML artifacts into a controlled artifact store, e.g. `.cache/artifacts/html/{id}.html`. The HTTP handler only serves by artifact ID from that store, with canonical realpath checks against a small `SERVE_ROOTS` containing only the artifact store. It never serves arbitrary source paths.
+
+**Trade-off:** Requires staging/copying artifacts, so freshness depends on scanner runs or invalidation.
+hook: Stop
+hook: Stop Completed
+tokens used
+8,324
+**Design:** Split discovery from serving. Let the scanner recurse over `docs/**` or configurable `DISCOVERY_ROOTS`, but emit/copy discovered HTML artifacts into a controlled artifact store, e.g. `.cache/artifacts/html/{id}.html`. The HTTP handler only serves by artifact ID from that store, with canonical realpath checks against a small `SERVE_ROOTS` containing only the artifact store. It never serves arbitrary source paths.
+
+**Trade-off:** Requires staging/copying artifacts, so freshness depends on scanner runs or invalidation.
+
+real	0m21.024s
+user	0m0.623s
+sys	0m0.562s

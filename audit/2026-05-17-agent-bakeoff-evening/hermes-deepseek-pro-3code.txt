@@ -1,0 +1,12 @@
+Done. The function is at `/private/tmp/agent-bakeoff-2026-05-17/russianisms.py`.
+
+How it works:
+
+- Iterates over the 5 hardcoded `(phrase, suggestion)` pairs.
+- Uses `str.find()` on a lowercased copy for **case-insensitive** matching, but returns the **original-cased fragment** from `text[idx:idx+len]` so the tuple reflects actual text.
+- Collects all matches, then sorts by their occurrence index in the original text so the output respects first-appearance order (handles multi-word patterns appearing in any sequence).
+- No imports, one-line docstring, full type hints.
+
+real	0m25.054s
+user	0m1.893s
+sys	0m0.525s

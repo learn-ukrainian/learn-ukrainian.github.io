@@ -1,0 +1,7 @@
+**Design:** Split into `SCAN_ROOTS` (scanner discovery) and `SERVE_ROOTS` (security boundary). Scanner walks `SCAN_ROOTS` recursively — new docs subdirs appear automatically. Server checks only `SERVE_ROOTS`; a scanned path outside it returns 403, never served. Activation is a deliberate security action, not a scanner-config chore.
+
+**Trade-off:** Scanner may index content that can never be served (orphaned paths), wasting CPU/IO on each scan cycle.
+
+real	0m11.292s
+user	0m1.731s
+sys	0m0.583s

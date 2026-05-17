@@ -1,0 +1,19 @@
+1. **Add nullable `page` column + index on `section_id`**
+   `ALTER TABLE textbook_chunks ADD COLUMN page INTEGER;` then `CREATE INDEX IF NOT EXISTS idx_chunks_section ON textbook_chunks(section_id);`. SQLite `ADD COLUMN` is O(1) metadata-only, safe on a live DB.
+   *Risk:* index build briefly holds a write lock; readers are fine under WAL but concurrent writers stall — run during low-write window.
+
+2. **Backfill in bounded batches inside short transactions**
+   Loop `UPDATE textbook_chunks SET page = (SELECT page_start FROM textbook_sections WHERE id = section_id) WHERE page IS NULL AND rowid IN (SELECT rowid FROM textbook_chunks WHERE page IS NULL LIMIT 500);` with a sleep between batches.
+   *Risk:* a chunk may span `page_start..page_end`; picking `page_start` silently loses range info — confirm semantics with product before committing.
+
+3. **Add trigger to keep `page` populated for new/updated rows**
+   `AFTER INSERT` and `AFTER UPDATE OF section_id` triggers that re-derive `page` from `textbook_sections`.
+   *Risk:* if `textbook_sections.page_start` itself changes, chunks go stale — add a matching trigger on the sections table or document the gap.
+
+4. **Rebuild FTS5 index to include `page` and wire sync triggers**
+   Drop/recreate the FTS5 virtual table with `page` as an unindexed column, repopulate from base table, and add `AFTER UPDATE OF page` trigger mirroring into FTS.
+   *Risk:* FTS rebuild on 25K rows locks writes for seconds — do it last, after backfill quiesces.
+
+real	0m13.800s
+user	0m1.367s
+sys	0m0.438s

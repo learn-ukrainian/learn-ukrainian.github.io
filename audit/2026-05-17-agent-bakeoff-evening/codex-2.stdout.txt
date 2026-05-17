@@ -1,0 +1,6 @@
+Reading additional input from stdin...
+Not inside a trusted directory and --skip-git-repo-check was not specified.
+
+real	0m0.223s
+user	0m0.078s
+sys	0m0.035s

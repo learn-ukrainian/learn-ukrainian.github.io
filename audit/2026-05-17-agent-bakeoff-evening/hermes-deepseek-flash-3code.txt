@@ -1,0 +1,40 @@
+All 6 tests pass. The function is at `/tmp/find_russianisms.py` — just lift the function body.
+
+```python
+def find_russianisms(text: str) -> list[tuple[str, str]]:
+    """Find 5 common Ukrainian Russianisms and return (found_text, suggestion) pairs in order of appearance."""
+    patterns = (
+        ('на протязі', 'протягом'),
+        ('учбовий', 'навчальний'),
+        ('співпадати', 'збігатися'),
+        ('мішати', 'заважати'),
+        ('приймати участь', 'брати участь'),
+    )
+    lower = text.lower()
+    hits = []
+    for russianism, correction in patterns:
+        start = 0
+        while True:
+            pos = lower.find(russianism, start)
+            if pos < 0:
+                break
+            hits.append((pos, russianism, correction))
+            start = pos + len(russianism)
+    hits.sort(key=lambda x: x[0])
+    return [(r, c) for _, r, c in hits]
+```
+
+Behavioural notes:
+
+- **Case-insensitive** — `НА ПРОТЯЗІ`, `На протязі`, `на ПРОТЯЗІ` all match.
+- **Order of appearance** — results are sorted by first-occurrence position, not by pattern-list order.
+- **Multiple instances** — each occurrence produces its own tuple; `"учбовий учбовий"` returns two entries.
+- **No imports, no dependencies** — pure `str.find()`.
+- **One-line docstring** as specified.
+- **Type hints** — `text: str` in, `list[tuple[str, str]]` out.
+
+Note: `учбовий` and `співпадати` are absent from VESUM (the authoritative morphological dictionary), confirming their status as Soviet-era Russianisms that never fully naturalised into the core lexicon. `учбовий` does appear in СУМ-20 marked as synonymous with `навчальний`, while `співпадати` is cross-referenced to `збігатися`. The other three patterns are well-established calques.
+
+real	1m4.278s
+user	0m2.950s
+sys	0m0.664s

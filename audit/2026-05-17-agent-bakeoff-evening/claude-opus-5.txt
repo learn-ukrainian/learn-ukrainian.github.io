@@ -1,0 +1,13 @@
+**Etymology of "Україна"**
+
+**(1) Leading hypothesis (root meaning):** The dominant scholarly view derives Україна from Proto-Slavic **krajь* ("edge, border, region, territory") via the noun *ukraina* meaning "borderland," "frontier region," or more neutrally "district/territory carved out." Most modern Ukrainian scholars (e.g., Hryhoriy Pivtorak) emphasize the broader sense "region, country, land" rather than strictly "borderland," noting *kraj* in East Slavic could mean simply "territory" or "homeland." This is reflected in the *Етимологічний словник української мови* (Melnychuk, ed., 7 vols., 1982–2012).
+
+**(2) Earliest attestation:** The Hypatian Codex (Іпатіївський літопис) entry for the year 1187, referring to the death of Prince Volodymyr Hlibovych, states that "Оукраина" mourned him — typically dated to the late 12th century, with the surviving manuscript copy from c. 1425.
+
+**(3) Alternative hypothesis:** Linguist **Serhii Shelukhin** (early 20th c.) argued Україна derived not from "border" but from a root meaning "country/land carved out for one's own people" (*у-краяти*, "to cut out"), making it semantically "our own land." This view is minority but periodically revived.
+
+I'm confident on the Hypatian attestation and Pivtorak/Melnychuk references; the Shelukhin attribution is correct but I'd verify the exact publication before citing.
+
+real	0m17.310s
+user	0m1.432s
+sys	0m0.407s

@@ -1,0 +1,19 @@
+**1. Add column (schema-only)**
+`ALTER TABLE textbook_chunks ADD COLUMN page INTEGER;` — SQLite metadata change, O(1), no table rewrite. No downtime.
+*Risk:* Even this brief write-lock can queue readers under heavy concurrency; do during lowest traffic window.
+
+**2. Batch backfill**
+Loop `UPDATE textbook_chunks SET page = s.page_start + ... WHERE page IS NULL AND section_id = s.id` in batches of 500. Compute page from chunk_order relative to section's page_start.
+*Risk:* Unbatched single UPDATE on 25K rows holds write-lock too long; batch keeps each lock <50ms.
+
+**3. Rebuild FTS5 index**
+If FTS5 uses external content, run `INSERT INTO fts(fts) VALUES('rebuild')`. If content is embedded, rebuild the external content table from scratch.
+*Risk:* FTS rebuild is I/O-intensive; test on replica first. Stale index until complete.
+
+**4. Index and verify**
+`CREATE INDEX IF NOT EXISTS idx_page ON textbook_chunks(page);` — fast on 25K populated rows. Run counts: verify every chunk got a page, no NULLs remain.
+*Risk:* Index creation briefly blocks writes; negligible at this row count.
+
+real	0m12.522s
+user	0m1.470s
+sys	0m0.252s

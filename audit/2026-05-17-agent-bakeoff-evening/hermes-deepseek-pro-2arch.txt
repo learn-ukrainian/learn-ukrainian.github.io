@@ -1,0 +1,7 @@
+**Design:** Split into `SCAN_ROOTS` (scanner) and `ALLOWED_ROOTS` (server). Scanner reads a glob or directory list — new `docs/` subdirs appear automatically. Server still enforces `ALLOWED_ROOTS` as a hard allowlist; any scan result outside it gets a 403, not served. To activate a new dir for serving, add it to `ALLOWED_ROOTS` — a deliberate security step, not a scanner config chore.
+
+**Trade-off:** Scanner can index paths the server won't serve yet. Users see links that 403 until the dir is explicitly added to the serving allowlist — a deliberate gate, not a bug.
+
+real	0m20.201s
+user	0m1.574s
+sys	0m0.289s

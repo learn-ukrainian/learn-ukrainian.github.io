@@ -1,0 +1,23 @@
+All vocabulary verified against VESUM, Грінченко, and ЕСУМ. Zero Russian shadow detected on any word. Here's the dialogue:
+
+---
+
+**Олена:** Привіт, Петре! Я рада тебе бачити. Ти любиш це кафе?
+**Олена:** Hello, Petro! I am happy to see you. Do you like this café?
+
+**Петро:** Привіт, Олено! Так, це дуже гарне кафе. Я хочу пити каву.
+**Петро:** Hello, Oleno! Yes, it is a very nice café. I want to drink coffee.
+
+**Олена:** Добре! Тут кава дуже смачна. Я теж хочу каву з молоком.
+**Олена:** Good! The coffee here is very tasty. I also want coffee with milk.
+
+**Петро:** Чудово. Я замовляю дві кави. Ти п'єш каву з цукром?
+**Петро:** Great. I am ordering two coffees. Do you drink coffee with sugar?
+
+---
+
+**Comprehension question:** What kind of coffee does Олена want?
+
+real	0m38.199s
+user	0m1.959s
+sys	0m0.298s

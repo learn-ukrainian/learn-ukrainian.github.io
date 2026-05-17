@@ -1,0 +1,7 @@
+1. "На протязі дня" is a Russianism — standard Ukrainian uses "протягом дня," and this is too advanced/idiomatic for A1 anyway.
+2. The vocative forms ("Петре!", "Олено!") and the reflexive perfective "зустрінемось" exceed A1 scope, which should stay with nominative address and simpler constructions like "давай підемо."
+3. No glossary, grammar notes, or pronunciation guidance accompanies the dialogue, so a true A1 learner has no scaffolding to actually learn from it.
+
+real	0m8.218s
+user	0m1.171s
+sys	0m0.349s
