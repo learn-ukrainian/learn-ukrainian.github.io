@@ -687,6 +687,11 @@ def _build_parser() -> argparse.ArgumentParser:
         default=8767,
         help="Port for --openai (default: 8767)",
     )
+    serve_parser.add_argument(
+        "--allow-remote",
+        action="store_true",
+        help="Allow binding to non-localhost (unsafe: no auth)",
+    )
 
     # interactive
     subparsers.add_parser("interactive", help="Interactive mode")
@@ -700,7 +705,22 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def _dispatch_command(args):
     """Dispatch parsed CLI arguments to the appropriate handler."""
-    if args.command == "inbox":
+    if args.command == "serve":
+        if not args.openai:
+            raise SystemExit("serve currently requires --openai")
+
+        if args.host != "127.0.0.1" and not args.allow_remote:
+            raise SystemExit(
+                "refusing to bind to non-localhost host without --allow-remote. "
+                "the proxy has no auth and exposes 4 agent CLIs to anyone on the network."
+            )
+
+        import uvicorn
+
+        from .openai_proxy import app
+
+        uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    elif args.command == "inbox":
         if getattr(args, "inbox_command", None):
             from ._channels_cli import dispatch_channel_command
             rc = dispatch_channel_command(args)
