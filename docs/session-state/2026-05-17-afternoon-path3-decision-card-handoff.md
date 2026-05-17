@@ -13,7 +13,7 @@ afternoon_bar_status:
   path3_decision_card: "SIGNED OFF as drafted — moved to docs/decisions/2026-05-17-path3-per-obligation-review-loop.md; start PR1 next session"
   evidence_layer_decision: "SIGNED OFF as drafted — moved to docs/decisions/2026-05-17-unified-evidence-layer-for-judges-DECISION.md; 5 PRs queued behind Path 3"
   clawpatch_decision: "SIGNED OFF + ACTIVE MULTI-AGENT SCANNING per user direction — moved to docs/decisions/2026-05-17-clawpatch-adoption.md; per-area routing across all 4-6 agents"
-  5th_agent_status: "Mistral SET UP by user (vibe CLI, mistral-medium-3.5 + devstral-small); DeepSeek being set up in parallel; orchestrator studies both next session before re-arranging queue"
+  5th_agent_status: "Mistral SET UP (vibe CLI: mistral-medium-3.5 high-effort default + devstral-small); DeepSeek v4 SET UP via hermes (deepseek-v4-pro default + deepseek-v4-flash); orchestrator studies BOTH next session while user at Ukrainian lesson, writes findings handoff before re-arranging queue"
 
 merged_today: [2087, 2088, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2103, 2104]
 # 13 total — morning cascade (5) + afternoon m20 + clawpatch + governance
@@ -44,20 +44,21 @@ next_p0: |
 
   ### 5th + 6th agent setup status
 
-  - **Mistral set up by user.** CLI is `vibe`. Two models: `mistral-medium-3.5` (high effort) and `devstral-small`. **Orchestrator to study `vibe` CLI in next session** (per user direction at end of afternoon).
-  - **DeepSeek 4 (Pro) being set up by user** in parallel.
-  - **Once both online**, bakeoff against current 4 on one of the clawpatch-found bugs (#2099-2102 are good candidates) BEFORE wiring into production routing.
+  - **Mistral set up by user.** CLI is `vibe`. Two models: `mistral-medium-3.5` (high effort, default) and `devstral-small`. **Orchestrator to study `vibe` CLI next session.**
+  - **DeepSeek v4 set up by user via hermes** (the existing runtime adapter at `scripts/agent_runtime/adapters/hermes_*`). Two model variants: `deepseek-v4-pro` (default) and `deepseek-v4-flash` (lighter). **Orchestrator to study both variants next session via `hermes -z PROMPT -m deepseek-v4-pro` and `... -m deepseek-v4-flash`.**
+  - **Once orchestrator has studied both**, bakeoff against current 4 on one of the clawpatch-found bugs (#2099-2102 are good candidates) BEFORE wiring into production routing.
+  - **User unavailable for ~Ukrainian lesson duration** at end of this session — next session orchestrator drives study + writes findings to a new handoff for user review on return.
 
   ### Sequence for next session
 
-  1. Study `vibe` CLI (read help, test invocations, document integration shape for `delegate.py` + `ab` + `openai_proxy.py`)
-  2. Wait for DeepSeek setup confirmation from user
-  3. Study DeepSeek integration
-  4. **Re-arrange queue** — user explicitly flagged "we might need to rearrange things" after agent study completes
-  5. Fire Path 3 PR1 (deterministic skeleton seeder) — Codex dispatch
-  6. PR2-PR4 sequential through Path 3 completion
-  7. m20 rebuild under Path 3 architecture → ships as proof module
-  8. Then: Phase 2b A1 batch (m01-m07) under Path 3; clawpatch wrapper + 4 audit-bug fixes; evidence-layer PR0 contract test
+  1. **Study `vibe` CLI** (Mistral) — `vibe --help`, test `mistral-medium-3.5` (default high-effort) + `devstral-small`, document integration shape for `delegate.py` + `ab` + `openai_proxy.py`.
+  2. **Study DeepSeek via hermes** — `hermes -z PROMPT -m deepseek-v4-pro` (default) and `... -m deepseek-v4-flash`. Hermes adapter pattern already exists for Grok; DeepSeek likely follows same shape. Document differences (latency, output style, tool-use shape if any).
+  3. **Write findings handoff** for user to review on return from Ukrainian lesson — both CLIs, integration recommendations, bakeoff design.
+  4. **Re-arrange queue** based on what study reveals (user explicit "we might need to rearrange").
+  5. Fire Path 3 PR1 (deterministic skeleton seeder) — Codex dispatch.
+  6. PR2-PR4 sequential through Path 3 completion.
+  7. m20 rebuild under Path 3 architecture → ships as proof module.
+  8. Then: Phase 2b A1 batch (m01-m07) under Path 3; clawpatch wrapper + 4 audit-bug fixes; evidence-layer PR0 contract test.
 
   ### Tech-debt queue (background)
 
