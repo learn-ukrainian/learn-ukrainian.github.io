@@ -413,6 +413,27 @@ def is_non_ocr_response(stdout_text: str) -> bool:
 # as bad data.
 MIN_OUTPUT_BYTES = 500
 CONTROL_GARBAGE_RE = re.compile(r"<ctrl\d+>")
+REFUSAL_AND_META_PATTERNS = (
+    re.compile(r"\bas an AI\b", re.IGNORECASE),
+    re.compile(r"\bI cannot (?:directly )?(?:see|read|OCR|process|view|access|perform)\b", re.IGNORECASE),
+    re.compile(r"\bI can only (?:process|see|read|handle)\b", re.IGNORECASE),
+    re.compile(r"\bplease (?:paste|provide|share|attach)\b", re.IGNORECASE),
+    re.compile(r"\bI(?:'ll| will) (?:do my best|try|attempt)\b", re.IGNORECASE),
+    re.compile(r"\bI(?:'m| am) (?:unable|not able) to\b", re.IGNORECASE),
+    re.compile(r"\bcannot directly\b", re.IGNORECASE),
+    re.compile(r"\bif you can provide\b", re.IGNORECASE),
+    re.compile(r"\bI apologize, but\b", re.IGNORECASE),
+    re.compile(r"\bI(?:'ve| have) successfully (?:transcribed|completed|finished|processed)\b", re.IGNORECASE),
+    re.compile(r"\bAn?\s+excellent\s+(?:start|job|work|page)\b", re.IGNORECASE),
+    re.compile(r"\banother page to (?:transcribe|process|do)\b", re.IGNORECASE),
+    re.compile(r"\baccording to your instructions\b", re.IGNORECASE),
+    re.compile(r"\bmaintaining the two-column\b", re.IGNORECASE),
+    re.compile(r"\b(?:transcription|task|page) (?:complete|completed|finished|done)\b", re.IGNORECASE),
+    re.compile(r"\bI(?:'ve| have) (?:rendered|preserved|maintained|ensured)\b", re.IGNORECASE),
+    re.compile(r"update_topic\{strategic_intent:"),
+    re.compile(r"<\|[\w_]+\|>"),
+    re.compile(r"\[(?:INST|SYSTEM|/INST|/SYSTEM)\]", re.IGNORECASE),
+)
 
 
 def is_low_quality_output(stdout_text: str) -> bool:
@@ -422,8 +443,11 @@ def is_low_quality_output(stdout_text: str) -> bool:
     - Output under 500 bytes (real page transcripts are 3-10KB).
     - Output dominated by `<ctrl\\d+>` markers (Gemini CLI control-char fallback).
     - Output with fewer than 100 letter characters total.
+    - Output containing Gemini refusal, completion-meta, or tool-schema leaks.
     """
     if len(stdout_text.encode("utf-8")) < MIN_OUTPUT_BYTES:
+        return True
+    if any(pattern.search(stdout_text) for pattern in REFUSAL_AND_META_PATTERNS):
         return True
     ctrl_matches = len(CONTROL_GARBAGE_RE.findall(stdout_text))
     word_chars = sum(1 for c in stdout_text if c.isalpha())
@@ -443,6 +467,10 @@ PREAMBLE_UPDATE_TOPIC_RE = re.compile(
     r"update_topic\{.*?page number at the (?:end|bottom)\.?",
     re.DOTALL,
 )
+TRAILING_UPDATE_TOPIC_RE = re.compile(
+    r"\n?update_topic\{.*\}\s*\Z",
+    re.DOTALL,
+)
 # auto/3.x leak (English conversational, e.g.:
 #   "Wait! I can see the image now."
 #   "Let me transcribe the image verbatim exactly as requested."
@@ -460,6 +488,7 @@ def strip_planning_preamble(text: str) -> str:
     """
     text = PREAMBLE_CTRL_RE.sub("", text)
     text = PREAMBLE_UPDATE_TOPIC_RE.sub("", text)
+    text = TRAILING_UPDATE_TOPIC_RE.sub("", text)
     # Walk lines from top; drop any line until we find one with substantial
     # Cyrillic content. ESUM pages always have Cyrillic on every content line.
     lines = text.split("\n")
