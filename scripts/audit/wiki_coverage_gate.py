@@ -21,28 +21,81 @@ _IMPLEMENTATION_MAP_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 _OBLIGATION_RE = re.compile(r"obligation_id\s*:\s*(?P<id>[-\w]+)", re.IGNORECASE)
-_FIELD_RE = re.compile(r"^\s*-?\s*(?P<key>artifact|location|treatment)\s*:\s*(?P<value>.+?)\s*$", re.IGNORECASE)
+_FIELD_RE = re.compile(
+    r"^\s*-?\s*(?P<key>artifact|location|treatment)\s*:\s*(?P<value>.+?)\s*$",
+    re.IGNORECASE,
+)
+# Inline-field shape: writer emits all four fields on the SAME line as the
+# obligation_id, separated by `;` (semicolons). Example:
+#   - obligation_id: step-2; artifact: module.md; location: §Дiалоги; treatment: ...
+# Captures each known field name + its value (up to the next `;` or end of
+# string), regardless of position in the line.
+_INLINE_FIELD_RE = re.compile(
+    r"(?P<key>artifact|location|treatment)\s*:\s*(?P<value>[^;]+?)(?=\s*;\s*(?:obligation_id|artifact|location|treatment)\s*:|\s*$)",
+    re.IGNORECASE,
+)
 
 
 def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
-    """Parse the writer-visible implementation map from raw writer output."""
-    match = _IMPLEMENTATION_MAP_RE.search(text)
-    if not match:
+    """Parse the writer-visible implementation map from raw writer output.
+
+    The writer-prompt template nests `<implementation_map>` inside each
+    `<plan_reasoning>` section block (one per section, typically 4 per
+    module). This parser MUST collect entries from ALL implementation_map
+    blocks, not just the first — `re.findall` instead of `re.search`.
+
+    The prompt's example format puts each field on its own line:
+
+        <implementation_map>
+        - obligation_id: step-2
+          artifact: module.md
+          location: §Діалоги
+          treatment: ...
+        </implementation_map>
+
+    But writers (notably claude-tools) commonly emit the more compact
+    single-line semicolon-delimited form:
+
+        <implementation_map>
+        - obligation_id: step-2; artifact: module.md; location: §Діалоги; treatment: ...
+        </implementation_map>
+
+    Both are valid markdown and pedagogically equivalent. Parser accepts
+    BOTH shapes per-line: it captures any `obligation_id` mention, then
+    captures any inline `key: value` triple after `;` separators in the
+    same line, AND continues to consume bullet-list field lines below
+    in the original multi-line shape.
+
+    Per-obligation entries are merged across all implementation_map blocks
+    by obligation_id; the LAST emission wins for a given field (mirrors
+    the writer's intent if they restate a more refined claim later).
+    """
+    matches = list(_IMPLEMENTATION_MAP_RE.finditer(text))
+    if not matches:
         return {}
-    body = match.group("body")
     entries: dict[str, dict[str, str]] = {}
-    current_id: str | None = None
-    for line in body.splitlines():
-        id_match = _OBLIGATION_RE.search(line)
-        if id_match:
-            current_id = id_match.group("id").strip()
-            entries.setdefault(current_id, {"obligation_id": current_id})
-            continue
-        if current_id is None:
-            continue
-        field_match = _FIELD_RE.match(line)
-        if field_match:
-            entries[current_id][field_match.group("key").casefold()] = field_match.group("value").strip()
+    for match in matches:
+        body = match.group("body")
+        current_id: str | None = None
+        for line in body.splitlines():
+            id_match = _OBLIGATION_RE.search(line)
+            if id_match:
+                current_id = id_match.group("id").strip()
+                entries.setdefault(current_id, {"obligation_id": current_id})
+                # Also capture inline fields on the same line (semicolon shape).
+                for inline_match in _INLINE_FIELD_RE.finditer(line):
+                    entries[current_id][inline_match.group("key").casefold()] = (
+                        inline_match.group("value").strip()
+                    )
+                continue
+            if current_id is None:
+                continue
+            # Multi-line bullet-list shape: field on its own line below the id.
+            field_match = _FIELD_RE.match(line)
+            if field_match:
+                entries[current_id][field_match.group("key").casefold()] = (
+                    field_match.group("value").strip()
+                )
     return entries
 
 

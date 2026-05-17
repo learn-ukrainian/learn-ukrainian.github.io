@@ -113,6 +113,96 @@ def _implementation_map() -> dict[str, dict[str, str]]:
     }
 
 
+def test_parse_implementation_map_collects_all_blocks_and_inline_format() -> None:
+    """The writer-prompt template nests `<implementation_map>` inside each
+    `<plan_reasoning>` section block — typically 4 blocks per module.
+    Parser MUST collect entries from ALL blocks, not just the first.
+
+    AND the writer (notably claude-tools) commonly emits all fields on
+    ONE line separated by `;`, not the prompt's example multi-line shape.
+    Parser MUST accept BOTH the inline-semicolon and the multi-line
+    bullet shape.
+
+    Surfaced 2026-05-17 by a1/m20 build #14: writer correctly emitted
+    4 implementation_map blocks with all 18 obligations covered, but the
+    parser only saw the first block's 3 obligation_ids and dropped their
+    artifact/location/treatment fields because they were inline on the
+    same line. Result: 0/18 coverage, gate REJECT, despite a clean
+    writer output.
+    """
+    raw = """
+<plan_reasoning section="Діалоги">
+<implementation_map>
+- obligation_id: step-2; artifact: module.md; location: §Діалоги Dialog 1; treatment: reflexive verbs introduced in dialogue.
+- obligation_id: err-1; artifact: module.md; location: §Діалоги closing; treatment: я prokidayusya vs ты prokidaeshsya contrast.
+</implementation_map>
+</plan_reasoning>
+
+<plan_reasoning section="Дієслова на -ся">
+<implementation_map>
+- obligation_id: step-1; artifact: module.md; location: §Дієслова opening sentence; treatment: explicit I-conjugation endings.
+- obligation_id: phon-1; artifact: module.md; location: §Дієслова IPA paragraph; treatment: -шся to [s:a] pair with example.
+</implementation_map>
+</plan_reasoning>
+
+<plan_reasoning section="Підсумок">
+<implementation_map>
+- obligation_id: err-5
+  artifact: module.md
+  location: §Підсумок row 5
+  treatment: дивюся to дивлюся with epenthetic l
+</implementation_map>
+</plan_reasoning>
+"""
+    result = parse_implementation_map(raw)
+
+    # All 5 obligation_ids from across the 3 blocks must be present, each
+    # with its artifact/location/treatment populated.
+    assert set(result.keys()) == {"step-2", "err-1", "step-1", "phon-1", "err-5"}
+    assert result["step-2"]["artifact"] == "module.md"
+    assert result["step-2"]["location"] == "§Діалоги Dialog 1"
+    assert "reflexive verbs" in result["step-2"]["treatment"]
+    # Multi-line bullet shape (err-5) also parsed correctly.
+    assert result["err-5"]["artifact"] == "module.md"
+    assert result["err-5"]["location"] == "§Підсумок row 5"
+    assert "epenthetic" in result["err-5"]["treatment"]
+
+
+def test_parse_implementation_map_inline_field_order_independence() -> None:
+    """Inline-format fields appear in any order on the line; parser must
+    not assume `obligation_id` comes first or that `artifact` precedes
+    `location`."""
+    raw = """<implementation_map>
+- artifact: activities.yaml; obligation_id: phon-3; treatment: phonetic explanation; location: act-3
+- treatment: ban explanation; obligation_id: ban-1; location: §Підсумок; artifact: module.md
+</implementation_map>"""
+
+    result = parse_implementation_map(raw)
+
+    assert result["phon-3"]["artifact"] == "activities.yaml"
+    assert result["phon-3"]["location"] == "act-3"
+    assert result["ban-1"]["artifact"] == "module.md"
+    assert result["ban-1"]["location"] == "§Підсумок"
+
+
+def test_parse_implementation_map_last_emission_wins() -> None:
+    """If the writer restates an obligation in a later section block with
+    a different artifact/location, the LATER claim wins. Mirrors writer
+    intent — the second mention is usually a refinement."""
+    raw = """<implementation_map>
+- obligation_id: step-5; artifact: module.md; location: §Діалоги; treatment: initial mention
+</implementation_map>
+
+<implementation_map>
+- obligation_id: step-5; artifact: module.md; location: §Мій ранок; treatment: full narrative coverage
+</implementation_map>"""
+
+    result = parse_implementation_map(raw)
+
+    assert result["step-5"]["location"] == "§Мій ранок"
+    assert result["step-5"]["treatment"] == "full narrative coverage"
+
+
 def test_parse_implementation_map_from_writer_output() -> None:
     raw = """<implementation_map>
 - obligation_id: err-1
