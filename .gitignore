@@ -217,6 +217,12 @@ data/raw/esum/gemini-ocr/
 audit/etymology-ocr-feasibility/raw-outputs/
 audit/etymology-ocr-feasibility/bulk-run-log.jsonl
 
+# Grinchenko 1907 raw OCR landing — out-of-band per-page transcription
+# probes (no current ingestion pipeline; canonical Grinchenko ingest reads
+# from data/grinchenko/json_raw/). Pages may be deposited here while the
+# pipeline is designed.
+data/raw/grinchenko-1907/
+
 # OCR temporary PNG staging directory (bulk_ocr_gemini.py uses this as
 # scratch; cleared between runs; never committed).
 gemini_ocr_images/
