@@ -6110,11 +6110,42 @@ def _count_vocab_entries(text: str) -> int:
 
 
 def _count_uk_example_bullets(text: str) -> int:
-    return sum(
+    """Count UK example sentences exposed to the learner.
+
+    Counts two pedagogical surfaces:
+
+    1. **Bullet-list lines** (`- ...` / `* ...`) containing UK content.
+       Used for routine-verb examples, phonetic-rule examples, trap
+       explanations, etc.
+
+    2. **Markdown table data rows** containing UK content. Contrast
+       tables (Wrong / Right pairs), paradigm tables, IPA tables, and
+       pronunciation reference tables are all valid UK example
+       surfaces for the learner — the form is tabular but the content
+       is example sentences. Skipping them under-counts modules that
+       prefer tabular presentation. Surfaced 2026-05-17 by a1/m20
+       Path A rebuild: writer produced 13 bullet examples + 8 table-
+       row examples but counter saw only 13, failing the floor of 14
+       by one despite pedagogical density well over the threshold.
+
+    Header rows and `---` separator rows are excluded.
+    """
+    bullet_count = sum(
         1
         for line in text.splitlines()
         if re.match(r"^\s*[-*]\s+", line) and _UK_WORD_RE.search(line)
     )
+    table_count = 0
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not (stripped.startswith("|") and stripped.endswith("|")):
+            continue
+        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        if set(cells) <= {"", "---", ":---", "---:", ":---:"}:
+            continue
+        if any(_UK_WORD_RE.search(cell) for cell in cells):
+            table_count += 1
+    return bullet_count + table_count
 
 
 def _long_uk_ceiling_gate(

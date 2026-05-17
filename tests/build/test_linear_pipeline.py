@@ -3058,6 +3058,54 @@ def test_textbook_match_tokens_strips_syllable_breaks_symmetrically() -> None:
     assert compounds == ["івано-франківськ", "темно-синіи", "я-форма"]
 
 
+def test_count_uk_example_bullets_includes_table_rows() -> None:
+    """`_count_uk_example_bullets` counts both bullet-list lines AND
+    markdown table data rows containing UK content.
+
+    Surfaced 2026-05-17 by a1/m20 Path A rebuild: writer produced
+    13 bullet UK examples + 8 table-row UK examples (5 contrast pairs
+    + 3 pronunciation rows) but the counter only saw bullets, failing
+    `l2_exposure_floor` by one despite pedagogical density well over
+    the floor of 14.
+
+    Tables are a valid pedagogical surface for UK example sentences:
+    contrast tables (Wrong / Right pairs), paradigm tables, IPA tables,
+    and pronunciation reference tables all expose UK forms in context.
+    Counting only bullets under-counts modules that prefer tabular
+    presentation, which were precisely what m20 used.
+    """
+    count = linear_pipeline._count_uk_example_bullets
+    # Bullets alone — baseline (the pre-fix behavior).
+    assert count("- я прокидаюся о сьомій\n- я вмиваюся холодною водою\n") == 2
+    # Table rows alone — new behavior.
+    table_only = (
+        "| ❌ Wrong | ✅ Right | Why |\n"
+        "|---|---|---|\n"
+        "| Я прокидаєшся | Я прокидаюся | Person changes |\n"
+        "| Я мию себе | Я миюся | -ся carries 'myself' |\n"
+    )
+    assert count(table_only) == 2  # 2 data rows, header + separator excluded
+    # Mixed bullets + table — both counted.
+    mixed = (
+        "- я прокидаюся о сьомій\n"
+        "- я вмиваюся холодною водою\n"
+        "\n"
+        "| Written | Spoken | Example |\n"
+        "|---|---|---|\n"
+        "| **-шся** | [с':а] | ти прокидаєшся → [прокидайес':а] |\n"
+        "| **-ться** | [ц':а] | він прокидається → [прокидайец':а] |\n"
+    )
+    assert count(mixed) == 4
+    # Separator-only / empty-cell rows are excluded; English-only rows
+    # are excluded (no UK word in any cell).
+    no_uk = (
+        "| Hello | World | Greeting |\n"
+        "|---|---|---|\n"
+        "| Apple | Banana | Cherry |\n"
+    )
+    assert count(no_uk) == 0
+
+
 def test_warning_quote_unclosed_italic_terminated_by_punctuation() -> None:
     """`not *X.` / `не *X,` / `not *X<EOS>` — unclosed italics terminated by
     sentence punctuation or end-of-string also strip the anti-example.
