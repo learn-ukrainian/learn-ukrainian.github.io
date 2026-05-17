@@ -6422,11 +6422,17 @@ def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[s
     injected = _INJECT_RE.findall(text)
     missing = [activity_id for activity_id in injected if activity_id not in ids]
     unused = sorted(ids - set(injected))
+    reasons = []
+    if missing:
+        reasons.append("missing_activity_ids")
+    if unused:
+        reasons.append("unused_activities_not_injected")
     return {
-        "passed": not missing,
+        "passed": not missing and not unused,
         "injected": injected,
         "missing": missing,
         "unused": unused,
+        "reason": ",".join(reasons) or None,
     }
 
 
