@@ -218,7 +218,7 @@ def collect_findings(level: str) -> list[Finding]:
     # 1. Review markdown files
     review_dir = level_dir / "review"
     if review_dir.is_dir():
-        for path in sorted(review_dir.glob("*-review.md")):
+        for path in sorted(review_dir.glob("*-review*.md")):
             slug = path.stem.replace("-review", "")
             text = path.read_text("utf-8")
             findings.extend(parse_findings_from_markdown(text, slug))
@@ -255,7 +255,7 @@ def format_report(
 
     # Count unique modules that have reviews (including those with zero findings)
     review_dir = CURRICULUM_ROOT / level / "review"
-    module_count = len(list(review_dir.glob("*-review.md"))) if review_dir.is_dir() else 0
+    module_count = len(list(review_dir.glob("*-review*.md"))) if review_dir.is_dir() else 0
 
     lines: list[str] = []
     sev_label = f" ({severity_filter.upper()})" if severity_filter and severity_filter != "all" else ""
