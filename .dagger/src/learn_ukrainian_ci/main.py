@@ -100,6 +100,46 @@ _TORCH_PIN = "torch==2.11.0"
 _TORCHVISION_PIN = "torchvision==0.26.0"
 
 
+# Host-side directories that MUST NOT be uploaded into the Dagger
+# container's /work mount. The default `dagger call pytest --source=.`
+# resolves source to the repo root; without filtering, the host's
+# `.venv/` directory shadows the in-container venv that the pipeline
+# creates at `/work/.venv` via `python3 -m venv .venv`, causing
+# `test -x /work/.venv/bin/python` to fail because the symlinked
+# host binaries don't resolve inside the container's filesystem.
+# Filed 2026-05-17 as a recurrence of #2077 — see follow-up issue.
+#
+# Other entries are scope-creep prevention: dev caches that bloat the
+# upload (and inflate the cache_volume to 60+ GB, which was the
+# 2026-05-17 disk-fill cause) without serving any test purpose.
+_HOST_ARTIFACTS_TO_EXCLUDE: tuple[str, ...] = (
+    ".venv",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".worktrees",
+    "node_modules",
+    "starlight/node_modules",
+    "starlight/.astro",
+    "starlight/dist",
+)
+
+
+def _strip_host_artifacts(source: dagger.Directory) -> dagger.Directory:
+    """Drop dev-host directories from the source upload.
+
+    See `_HOST_ARTIFACTS_TO_EXCLUDE` rationale. Returns a filtered
+    Directory; the caller passes it to `with_mounted_directory`.
+
+    `Directory.without_directory(path)` is a no-op if the path doesn't
+    exist, so this is safe to call on a clean clone where some entries
+    are absent.
+    """
+    filtered = source
+    for path in _HOST_ARTIFACTS_TO_EXCLUDE:
+        filtered = filtered.without_directory(path)
+    return filtered
+
+
 @object_type
 class LearnUkrainianCi:
     """Local-CI replay functions for learn-ukrainian.
@@ -174,11 +214,13 @@ class LearnUkrainianCi:
         # second run pays only the actual test cost, not re-download.
         pip_cache = dag.cache_volume("learn-ukrainian-pip")
 
-        # Mount the repo. Dagger figures out what to upload from the
-        # call site; ``source`` is whatever ``--source=.`` resolves to.
+        # Mount the repo, minus host-side dev artifacts (`.venv`,
+        # caches, node_modules, worktrees). See `_strip_host_artifacts`
+        # docstring — without this filter the host `.venv/` shadows the
+        # in-container venv created at `/work/.venv` below.
         installed = (
             base.with_mounted_cache("/root/.cache/pip", pip_cache)
-            .with_mounted_directory("/work", source)
+            .with_mounted_directory("/work", _strip_host_artifacts(source))
             .with_workdir("/work")
             # Create the venv, then mirror ci.yml's dependency installs.
             .with_exec([
@@ -289,7 +331,7 @@ class LearnUkrainianCi:
             dag.container()
             .from_(_PYTHON_IMAGE)
             .with_mounted_cache("/root/.cache/pip", pip_cache)
-            .with_mounted_directory("/work", source)
+            .with_mounted_directory("/work", _strip_host_artifacts(source))
             .with_workdir("/work")
             .with_exec(["pip", "install", "ruff"])
             .with_exec(["ruff", "check", "."])
