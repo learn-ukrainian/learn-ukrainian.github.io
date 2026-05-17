@@ -225,7 +225,7 @@ class TestCollectFindings:
     def test_with_real_a1_data(self):
         """Integration test — only runs if A1 review data exists."""
         review_dir = Path(__file__).resolve().parent.parent / "curriculum" / "l2-uk-en" / "a1" / "review"
-        if not review_dir.is_dir() or not list(review_dir.glob("*-review.md")):
+        if not review_dir.is_dir() or not list(review_dir.glob("*-review*.md")):
             pytest.skip("No A1 review data available")
 
         findings = collect_findings("a1")
@@ -236,3 +236,48 @@ class TestCollectFindings:
             assert f["dimension"]
             assert f["severity"] in {"CRITICAL", "MAJOR", "MINOR"}
             assert f["issue"]
+
+    def test_round_suffix_glob(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+        """Bug #2102: aggregate_review_findings glob drops round-suffixed reviews."""
+        # Mock CURRICULUM_ROOT
+        import scripts.aggregate_review_findings
+        monkeypatch.setattr(scripts.aggregate_review_findings, "CURRICULUM_ROOT", tmp_path)
+
+        # Setup mock file structure
+        level_dir = tmp_path / "a1"
+        review_dir = level_dir / "review"
+        review_dir.mkdir(parents=True)
+
+        # 1. No round suffix
+        f1 = review_dir / "mod1-review.md"
+        f1.write_text(dedent("""\
+            ## Findings
+
+            [PLAN ADHERENCE] [MINOR]
+            Location: here
+            Issue: issue1
+            Fix: fix1
+
+            ## Verdict: PASS
+        """))
+
+        # 2. Round suffix
+        f2 = review_dir / "mod2-review-r1.md"
+        f2.write_text(dedent("""\
+            ## Findings
+
+            [ENGAGEMENT & TONE] [MAJOR]
+            Location: there
+            Issue: issue2
+            Fix: fix2
+
+            ## Verdict: REVISE
+        """))
+
+        findings = collect_findings("a1")
+
+        # Verify both files were parsed
+        issues = {f["issue"] for f in findings}
+        assert "issue1" in issues
+        assert "issue2" in issues
+        assert len(findings) == 2
