@@ -11,25 +11,17 @@ context: |
   Reviewers should look for whether the patch fully addresses each regression
   without moving the checks to a weaker signal or leaving edge cases in the
   text-cleaning path.
+# Removed stale finding `textbook-grounding-plan-reference-swap` because the PR successfully swapped all plan references to the corrected chunks.
 gold_findings:
-  - id: vesum-reviewer-anchor-leak
+  - id: vesum-exclusion-mask-leak-globally-ignores-words
     severity: HIGH
     category: correctness
-    location: scripts/build/linear_pipeline.py
+    location: scripts/build/linear_pipeline.py:3456
     description: >
-      The VESUM verification path can leak reviewer anchor text into the word
-      extraction scope, causing non-answer prose to be checked as vocabulary.
-  - id: textbook-grounding-plan-reference-swap
-    severity: HIGH
-    category: correctness
-    location: curriculum/l2-uk-en/plans/a1/my-morning.yaml
-    description: >
-      The plan reference swap must use the corrected textbook grounding source
-      instead of the stale citation that caused the m20 failure.
-  - id: warning-quote-strip
+      The global unmatched anchors exclusion ignores any word the reviewer tried and failed to fix across the entire module text. This silently masks legitimate VESUM failures if a misspelled word happens to appear within an unmatched reviewer anchor.
+  - id: warning-quote-regex-misses-typographical-quotes-and-ukrainian-not
     severity: MEDIUM
     category: correctness
-    location: scripts/build/linear_pipeline.py
+    location: scripts/build/linear_pipeline.py:491
     description: >
-      _strip_metalinguistic must strip warning quotes and related markers so
-      metalinguistic notes do not contaminate checked learner-facing text.
+      The _WARNING_QUOTE_RE regex hardcodes the English word "not" and misses the Ukrainian equivalent "не". It also fails to match curly typographical quotes (“”), leaving significant edge cases in the text cleaning path.
