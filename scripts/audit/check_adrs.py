@@ -353,25 +353,25 @@ def _check_index_drift(records: list[AdrRecord], result: CheckResult) -> None:
         )
 
 
-def _rebuild_index(records: list[AdrRecord]) -> bool:
-    """Regenerate the README.md index block in place. Returns True if changed."""
+def _rebuild_index(records: list[AdrRecord]) -> tuple[bool, str]:
+    """Regenerate the README.md index block in place. Returns (changed, error_msg)."""
     if not README_PATH.exists():
-        return False
+        return False, f"{README_PATH.name} is missing."
 
     readme = README_PATH.read_text("utf-8")
     start = readme.find(INDEX_START)
     end = readme.find(INDEX_END)
     if start < 0 or end < 0:
-        return False
+        return False, f"ADR-INDEX sentinels are missing in {README_PATH.name}."
 
     new_block = _build_index_block(records)
     before = readme[:start]
     after = readme[end + len(INDEX_END) :]
     new_readme = before + new_block + after
     if new_readme == readme:
-        return False
+        return False, ""
     README_PATH.write_text(new_readme, "utf-8")
-    return True
+    return True, ""
 
 
 def _check_orphaned_refs(records: list[AdrRecord], result: CheckResult) -> None:
@@ -536,7 +536,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.rebuild_index:
         records = _load_adrs()
-        changed = _rebuild_index(records)
+        changed, err_msg = _rebuild_index(records)
+        if err_msg:
+            print(f"Error: {err_msg}", file=sys.stderr)
+            return 1
         if changed:
             print(f"Rewrote ADR index in {README_PATH.relative_to(PROJECT_ROOT)}")
         else:
