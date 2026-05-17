@@ -1485,6 +1485,29 @@ def test_vesum_gate_skips_error_field_of_error_correction_items_shape(
     assert "одягаєшся" in forwarded
 
 
+@pytest.mark.parametrize("answer_key", ["correctAnswer", "answer"])
+def test_activity_vesum_text_filters_quiz_distractors_by_answer_spelling(
+    answer_key: str,
+) -> None:
+    activity = {
+        "id": "act-1",
+        "type": "quiz",
+        "title": "Оберіть правильну форму",
+        "items": [
+            {
+                "question": "Яка форма правильна для «я»?",
+                "options": ["користуювася", "користуюся"],
+                answer_key: "користуюся",
+            }
+        ],
+    }
+
+    vesum_text = linear_pipeline._activity_vesum_text(activity)
+
+    assert "користуювася" not in vesum_text
+    assert "користуюся" in vesum_text
+
+
 def test_vesum_gate_skips_fill_in_answer_suffix_without_options_field(
     tmp_path: Path,
 ) -> None:

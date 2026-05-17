@@ -5280,12 +5280,14 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
 
     out: list[str] = []
 
-    def answer_values(answer: Any) -> set[str]:
-        if isinstance(answer, str):
-            return {answer}
-        if isinstance(answer, list):
-            return {item for item in answer if isinstance(item, str)}
-        return set()
+    def answer_values(*answers: Any) -> set[str]:
+        values: set[str] = set()
+        for answer in answers:
+            if isinstance(answer, str):
+                values.add(answer)
+            elif isinstance(answer, list):
+                values.update(item for item in answer if isinstance(item, str))
+        return values
 
     def walk_answer_options(options: Any, answers: set[str]) -> None:
         if not answers:
@@ -5327,8 +5329,13 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
                     # is always a suffix fragment.  Skip unconditionally.
                     # See #1967.
                     continue
-                if key == "options" and "answer" in node:
-                    walk_answer_options(child, answer_values(node.get("answer")))
+                if key == "options" and (
+                    "answer" in node or "correctAnswer" in node
+                ):
+                    walk_answer_options(
+                        child,
+                        answer_values(node.get("answer"), node.get("correctAnswer")),
+                    )
                     continue
                 if wrong_option and key == "text":
                     continue
