@@ -9,10 +9,11 @@ active_dispatches: 0
 worktrees_open: 1  # main + clawpatch-trial (eval artifact, can clean)
 
 afternoon_bar_status:
-  m20_shippable: "BLOCKED on Path 3 sign-off — single-pass writer asymptote at 44% coverage proven across 4 rebuild iterations"
-  path3_decision_card: "DRAFTED with 4-agent vote consensus at docs/decisions/pending/2026-05-17-path3-per-obligation-review-loop.md — awaiting user sign-off"
-  clawpatch_eval: "COMPLETE — adopt-with-modifications recommendation in docs/decisions/pending/2026-05-17-clawpatch-adoption.md, 4 verified audit bugs filed as #2099-2102"
-  5th_agent_decision: "Pick: Mistral Large 2.1. User to set up Mistral + DeepSeek V3 (offered to set up multiple); I bakeoff post-m20"
+  m20_shippable: "BLOCKED on Path 3 implementation — sign-off complete; ship as proof-of-pipeline module under Path 3 architecture (option A selected)"
+  path3_decision_card: "SIGNED OFF as drafted — moved to docs/decisions/2026-05-17-path3-per-obligation-review-loop.md; start PR1 next session"
+  evidence_layer_decision: "SIGNED OFF as drafted — moved to docs/decisions/2026-05-17-unified-evidence-layer-for-judges-DECISION.md; 5 PRs queued behind Path 3"
+  clawpatch_decision: "SIGNED OFF + ACTIVE MULTI-AGENT SCANNING per user direction — moved to docs/decisions/2026-05-17-clawpatch-adoption.md; per-area routing across all 4-6 agents"
+  5th_agent_status: "Mistral SET UP by user (vibe CLI, mistral-medium-3.5 + devstral-small); DeepSeek being set up in parallel; orchestrator studies both next session before re-arranging queue"
 
 merged_today: [2087, 2088, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2103, 2104]
 # 13 total — morning cascade (5) + afternoon m20 + clawpatch + governance
@@ -20,7 +21,58 @@ reverted_today: [2105]  # implementation-shape patch caused writer to drop plan_
 new_issues_filed: [2099, 2100, 2101, 2102]  # clawpatch-found audit bugs
 
 next_p0: |
-  USER DECISIONS BLOCKING ALL FORWARD MOTION
+  ALL DECISIONS LOCKED AT END OF AFTERNOON SESSION (user sign-off via interview format)
+
+  ### Signed-off decisions (moved to docs/decisions/)
+
+  1. **Path 3 architecture: ADOPT AS DRAFTED** — start PR1 (deterministic skeleton seeder) next session. Card at `docs/decisions/2026-05-17-path3-per-obligation-review-loop.md`.
+  2. **m20 bridge: WAIT FOR PATH 3** — m20 ships as first proof-of-pipeline module under Path 3 architecture. No manual patches, no manifest shrinkage, no threshold lowering.
+  3. **Evidence-layer unification: ADOPT AS DRAFTED** — 5 PRs over time, queued behind Path 3. Card at `docs/decisions/2026-05-17-unified-evidence-layer-for-judges-DECISION.md`.
+  4. **Clawpatch: ADOPT-WITH-MODIFICATIONS + ACTIVE MULTI-AGENT SCANNING** — Pin v0.2.0, hand-edit config, write wrapper enforcing DISPATCH CAP. **NEW from user direction**: active continuous scanning across ALL agents (no single-agent budget bleed), per-area routing (see table below), weekly full-repo + per-PR incremental cadence. Card at `docs/decisions/2026-05-17-clawpatch-adoption.md`.
+
+  ### Per-area provider routing for clawpatch scanning
+
+  | Area | Today (4 agents) | When DeepSeek + Mistral online |
+  |---|---|---|
+  | scripts/audit/ | Codex | Codex ↔ DeepSeek |
+  | scripts/build/ | Claude headless | Claude ↔ Mistral |
+  | scripts/wiki/ + curriculum/ | Gemini | Gemini ↔ Mistral |
+  | tests/ | Codex | Codex ↔ DeepSeek |
+  | .mcp/servers/ | Codex | Codex ↔ DeepSeek |
+  | Frontend starlight/ | Claude | Claude ↔ Mistral |
+  | scripts/ infrastructure | Claude | Claude ↔ Grok |
+
+  ### 5th + 6th agent setup status
+
+  - **Mistral set up by user.** CLI is `vibe`. Two models: `mistral-medium-3.5` (high effort) and `devstral-small`. **Orchestrator to study `vibe` CLI in next session** (per user direction at end of afternoon).
+  - **DeepSeek 4 (Pro) being set up by user** in parallel.
+  - **Once both online**, bakeoff against current 4 on one of the clawpatch-found bugs (#2099-2102 are good candidates) BEFORE wiring into production routing.
+
+  ### Sequence for next session
+
+  1. Study `vibe` CLI (read help, test invocations, document integration shape for `delegate.py` + `ab` + `openai_proxy.py`)
+  2. Wait for DeepSeek setup confirmation from user
+  3. Study DeepSeek integration
+  4. **Re-arrange queue** — user explicitly flagged "we might need to rearrange things" after agent study completes
+  5. Fire Path 3 PR1 (deterministic skeleton seeder) — Codex dispatch
+  6. PR2-PR4 sequential through Path 3 completion
+  7. m20 rebuild under Path 3 architecture → ships as proof module
+  8. Then: Phase 2b A1 batch (m01-m07) under Path 3; clawpatch wrapper + 4 audit-bug fixes; evidence-layer PR0 contract test
+
+  ### Tech-debt queue (background)
+
+  | Issue | Lane | Notes |
+  |---|---|---|
+  | #2099 | clawpatch HIGH audit_level.py | CI-trust killer — fix before any full audit run |
+  | #2100 | clawpatch MEDIUM audit_external_resources path | One-line fix |
+  | #2101 | clawpatch MEDIUM check_adrs rebuild-index broken | Fix or propagate |
+  | #2102 | clawpatch MEDIUM aggregate_review_findings glob | Round suffix gap |
+  | #2071 | Infra | Codex dispatch hangs (codereview-benchmark + proxy-bundle) |
+  | #2072 | Infra | Grok dispatch can't open PRs |
+  | #1969 | Writer-prompt | resources_search_attempted regression (may already be fixed; unverified) |
+  | #2052/53/54 | Sources data | User-gated paronyms/Holovashchuk/Karavansky |
+
+  ## SUPERSEDED — was: USER DECISIONS BLOCKING ALL FORWARD MOTION
 
   ### A. Path 3 architecture sign-off
 
