@@ -24,7 +24,7 @@ from urllib.parse import urlparse
 import requests
 import yaml
 
-RESOURCES_FILE = Path(__file__).resolve().parent.parent / "docs" / "resources" / "external_resources.yaml"
+RESOURCES_FILE = Path(__file__).resolve().parents[2] / "docs" / "resources" / "external_resources.yaml"
 
 # Timeout per request (seconds)
 REQUEST_TIMEOUT = 15
