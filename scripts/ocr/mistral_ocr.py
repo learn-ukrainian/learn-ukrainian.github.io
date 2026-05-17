@@ -177,28 +177,36 @@ def _sha256_file(path: Path, *, chunk_size: int = 65536) -> str:
 
 
 def _build_document_payload(input_file: Path) -> dict[str, Any]:
-    """Encode the input file for the Mistral OCR request body.
+    """Encode the input file as a Mistral OCR `document` object.
 
-    Image inputs (PNG/JPG) → `type: image_url`, base64-encoded data URI.
-    PDF inputs → `type: document_url`, base64-encoded data URI.
+    Mistral OCR's JSON shape (verified 2026-05-17 via docs + user-provided
+    SDK example):
 
-    Mistral OCR also accepts hosted HTTPS URLs for both types, but we keep
-    everything local so private corpus files never leave our control via a
-    side channel.
+        Image: {"type": "image_url", "image_url": {"url": "<data-uri-or-https>"}}
+        PDF:   {"type": "document_url", "document_url": {"url": "<data-uri-or-https>"}}
+
+    Note the nesting — `image_url` / `document_url` is an OBJECT with a
+    `url` key, NOT a bare string. Mirrors the OpenAI vision API shape.
+
+    For local files we encode as base64 data URI so the file never leaves
+    our process via a side channel (no temporary public hosting). Adds a
+    ~33% bandwidth overhead vs raw multipart but Mistral does not accept
+    multipart on /v1/ocr — that's the /v1/files endpoint (two-step). The
+    single-call base64 path is fine for the page sizes we OCR
+    (typical PDF page < 1 MB → < 1.5 MB base64).
     """
     suffix = input_file.suffix.lower()
     mime, _ = mimetypes.guess_type(input_file.name)
     if mime is None:
-        # Default fallback. Mistral cares about the data URI MIME for
-        # routing; better to be explicit than rely on sniffing.
         mime = "image/png" if suffix in _IMAGE_EXTS else "application/pdf"
 
     encoded = base64.b64encode(input_file.read_bytes()).decode("ascii")
     data_uri = f"data:{mime};base64,{encoded}"
+    url_obj = {"url": data_uri}
 
     if suffix in _IMAGE_EXTS:
-        return {"type": "image_url", "image_url": data_uri}
-    return {"type": "document_url", "document_url": data_uri}
+        return {"type": "image_url", "image_url": url_obj}
+    return {"type": "document_url", "document_url": url_obj}
 
 
 def _compose_markdown(response_body: dict[str, Any]) -> tuple[str, int]:
@@ -226,7 +234,16 @@ def _post_ocr(
     document: dict[str, Any],
     timeout_s: int,
 ) -> dict[str, Any]:
-    """One HTTP call against the OCR endpoint. Retries on 429 / 5xx."""
+    """One JSON POST against /v1/ocr. Retries on 429/5xx.
+
+    Body shape: {"model": "mistral-ocr-latest",
+                 "document": {"type": "image_url",
+                              "image_url": {"url": "data:image/png;base64,..."}}}
+
+    Error policy: NEVER log the request body (contains base64-encoded image
+    bytes) and NEVER include any auth state in error output. httpx redacts
+    Authorization in its own repr; we sanity-strip on top of that.
+    """
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
@@ -250,10 +267,6 @@ def _post_ocr(
             time.sleep(backoff)
             backoff *= 2
             continue
-        # 4xx other than 429 — surface upstream error text, but NEVER the
-        # request body (which contains the base64 image but not the key).
-        # The key is in the Authorization header, which httpx redacts in
-        # its repr; we still strip it from any logged response.
         snippet = response.text[:400]
         raise RuntimeError(
             f"OCR request failed with HTTP {response.status_code}. "
