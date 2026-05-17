@@ -388,11 +388,10 @@ def dispatch_agent(
     ``scripts.agent_runtime.runner.invoke()``.
     """
     is_gemini = agent.startswith("gemini")
-    is_gemma_local = agent.startswith("gemma-local")
     is_claude = agent.startswith("claude")
     is_codex = agent.startswith("codex")
 
-    if not is_gemini and not is_gemma_local and not is_claude and not is_codex:
+    if not is_gemini and not is_claude and not is_codex:
         _log(f"  ❌ Unknown agent: {agent}")
         return False, ""
 
@@ -401,8 +400,6 @@ def dispatch_agent(
         if is_gemini:
             from batch_gemini_config import PRO_MODEL
             model = PRO_MODEL
-        elif is_gemma_local:
-            model = "mlx-community/gemma-4-e4b-it-4bit"
         elif is_codex:
             model = "gpt-5.5"
         else:
@@ -415,7 +412,7 @@ def dispatch_agent(
         _log("  Gemini auth mode: ladder (API → OAuth per model)")
 
     # ---------- All three agents now routed through agent_runtime (Phase 3 + 5) ----------
-    if is_codex or is_gemini or is_gemma_local:
+    if is_codex or is_gemini:
         return _dispatch_via_runtime(
             prompt=prompt,
             agent=agent,
@@ -426,7 +423,7 @@ def dispatch_agent(
             model=model,
             agent_label=agent_label,
             is_gemini=is_gemini,
-            runtime_agent_name="gemma-local" if is_gemma_local else ("gemini" if is_gemini else "codex"),
+            runtime_agent_name="gemini" if is_gemini else "codex",
             cascade_per_call_max_s=cascade_per_call_max_s,
         )
     if is_claude:
@@ -593,9 +590,6 @@ def _dispatch_via_runtime(
             )
         else:
             tool_config = None
-    elif runtime_agent_name == "gemma-local":
-        runtime_mode = "workspace-write"
-        tool_config = None
     else:
         # Codex
         runtime_mode = _codex_runtime_mode(agent)
