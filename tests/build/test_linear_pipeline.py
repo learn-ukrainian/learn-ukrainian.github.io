@@ -2943,16 +2943,88 @@ def test_strip_metalinguistic_avoid_marker_keeps_adjacent_callouts_separate() ->
 
 
 def test_strip_metalinguistic_warning_quote_pattern() -> None:
-    """Negative examples after `not` are warning prose, not VESUM claims."""
+    """Negative examples after `not` / `не` are warning prose, not VESUM claims.
+
+    Three surface forms must all strip the negative example:
+      1. Straight quotes:  `not "X"` / `не "X"`
+      2. Guillemets:       `not «X»` / `не «X»`
+      3. Markdown italics: `not *X*` / `не *X*`
+
+    The italic variant was added 2026-05-17 after a1/m20 rebuild #2 surfaced
+    `*дивюся*` from the writer's `*я дивлюся*, not *дивюся*` contrast
+    pattern. Bold (`**X**`) is INTENTIONALLY not matched — writers reserve
+    bold for the CORRECT form (e.g. the epenthetic `**л**` being taught).
+    """
     ascii_quote = linear_pipeline._strip_metalinguistic('я дивлюся, not "дивюся"')
     guillemet_quote = linear_pipeline._strip_metalinguistic("кажуть, not «дивюся»")
+    italic_en_quote = linear_pipeline._strip_metalinguistic(
+        "Group II first-person inserts **л**: *я дивлюся*, not *дивюся*."
+    )
+    italic_uk_quote = linear_pipeline._strip_metalinguistic(
+        "Use *сніданок*, не *завтрак*."
+    )
     legitimate_quote = linear_pipeline._strip_metalinguistic(
         'the word "ранок" means morning'
+    )
+    bold_correct_form = linear_pipeline._strip_metalinguistic(
+        "Bold **дивлюся** is the correct form."
     )
 
     assert "дивюся" not in ascii_quote
     assert "дивюся" not in guillemet_quote
+    assert "дивюся" not in italic_en_quote
+    assert "завтрак" not in italic_uk_quote
+    # The CORRECT form in italics must survive (it's not after a negator).
+    assert "дивлюся" in italic_en_quote
+    assert "сніданок" in italic_uk_quote
     assert "ранок" in legitimate_quote
+    # Bold-wrapped correct forms are not negated; must reach VESUM intact.
+    assert "дивлюся" in bold_correct_form
+
+
+def test_normalize_for_vesum_morpheme_hyphen_conditional() -> None:
+    """Hyphen inside emphasis collapses only for short morpheme fragments.
+
+    PR #2068 introduced unconditional hyphen-strip-inside-emphasis to fix
+    m20's reflexive morpheme pattern `прокида**ю-ся**`. That broke
+    `**темно-синій**` (a real compound word). PR #2074 restored the
+    distinction via a length heuristic: strip the hyphen only when at
+    least one side is ≤3 chars (morpheme-fragment width). This test pins
+    both arms of the heuristic so neither regresses.
+    """
+    # Morpheme breaks: at least one side is a short suffix fragment.
+    # Both arms must collapse to the canonical lemma. All real-world m20
+    # writer output uses a single hyphen per emphasis span; multi-hyphen
+    # tokens are intentionally NOT collapsed (the heuristic is conservative
+    # — see `_strip_morpheme_hyphen` for the rationale).
+    morpheme_cases = {
+        "прокида**ю-ся**": "прокидаюся",
+        "прокида**ють-ся**": "прокидаються",
+        "прокида**ємо-ся**": "прокидаємося",
+        "прокида**єте-ся**": "прокидаєтеся",
+        "прокида**єть-ся**": "прокидається",
+        "прокида**єш-ся**": "прокидаєшся",
+    }
+    for emphasized, expected in morpheme_cases.items():
+        normalized = linear_pipeline._normalize_for_vesum(emphasized)
+        assert normalized == expected, (
+            f"morpheme break {emphasized!r} should normalize to {expected!r}, "
+            f"got {normalized!r}"
+        )
+
+    # Real compound words: both halves are full lexemes — hyphen survives.
+    compound_cases = {
+        "**темно-синій**": "темно-синій",
+        "*жовто-блакитний*": "жовто-блакитний",
+        "**Івано-Франківськ**": "Івано-Франківськ",
+        "_південно-східний_": "південно-східний",
+    }
+    for emphasized, expected in compound_cases.items():
+        normalized = linear_pipeline._normalize_for_vesum(emphasized)
+        assert normalized == expected, (
+            f"compound word {emphasized!r} must preserve its hyphen, "
+            f"got {normalized!r}"
+        )
 
 
 def test_strip_metalinguistic_collapses_bold_wrapped_morpheme_labels() -> None:
