@@ -162,7 +162,14 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
 
 
 DEFAULT_HARD_TIMEOUT_S = 7200
-DEFAULT_SILENCE_TIMEOUT_S = 1800
+# Bumped 1800 -> 3600 on 2026-05-18 after kubedojo-artifacts Codex dispatch
+# timed out at exactly 1800s with worktree_dirty_on_exit=true and
+# response_chars=0 — i.e. the agent was actively making file changes but
+# its stream-json output was block-buffered by libc (non-TTY stdout) and
+# never reached the watchdog. Until #2071 PTY-wrapping lands, the looser
+# silence window is the stopgap. See watchdog.py:323-332 for the historical
+# Gemini block-buffering incident chain (#1184).
+DEFAULT_SILENCE_TIMEOUT_S = 3600
 
 
 def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
@@ -1609,8 +1616,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Absolute wall-clock seconds for the worker before the runtime "
             f"hard-kills it (default: {DEFAULT_HARD_TIMEOUT_S}). "
-            "--silence-timeout defaults to 1800s and catches stdout-silent "
-            "hangs sooner."
+            f"--silence-timeout defaults to {DEFAULT_SILENCE_TIMEOUT_S}s and catches "
+            "stdout-silent hangs sooner."
         ),
     )
     d.add_argument(

@@ -99,10 +99,10 @@ def test_dispatch_parser_timeout_defaults():
     ])
 
     assert args.hard_timeout == 7200
-    assert args.silence_timeout == 1800
+    assert args.silence_timeout == 3600
 
 
-def test_silence_timeout_default_is_1800():
+def test_silence_timeout_default_is_3600():
     args = delegate.build_parser().parse_args([
         "dispatch",
         "--agent",
@@ -113,7 +113,7 @@ def test_silence_timeout_default_is_1800():
         "hi",
     ])
 
-    assert args.silence_timeout == 1800
+    assert args.silence_timeout == 3600
 
 
 def test_explicit_silence_timeout_override_still_works():
@@ -142,7 +142,7 @@ def test_dispatch_help_documents_timeout_interaction(capsys):
     assert exc_info.value.code == 0
     assert "--hard-timeout" in captured.out
     assert "--silence-timeout" in captured.out
-    assert "1800s" in captured.out
+    assert "3600s" in captured.out
     assert "pass 600" in captured.out
     assert "fallback" in captured.out
     assert "0 disables" in captured.out
