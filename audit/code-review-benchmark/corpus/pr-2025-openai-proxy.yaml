@@ -15,7 +15,7 @@ gold_findings:
   - id: prompt-on-command-line-leak-and-arg-max-dos
     severity: HIGH
     category: security
-    location: scripts/ai_agent_bridge/openai_proxy.py
+    location: scripts/ai_agent_bridge/openai_proxy.py:204
     description: >
       Prompts larger than the OS argv limit hit ARG_MAX/E2BIG because the
       proxy passes prompt text through command-line arguments to the upstream
@@ -23,7 +23,7 @@ gold_findings:
   - id: fastapi-422-validation-leaks-framework-envelope
     severity: HIGH
     category: spec-compliance
-    location: scripts/ai_agent_bridge/openai_proxy.py
+    location: scripts/ai_agent_bridge/openai_proxy.py:317
     description: >
       FastAPI validation failures return the framework default
       {detail: [...]} response instead of OpenAI's required
@@ -31,14 +31,32 @@ gold_findings:
   - id: healthz-dos-amplification-via-subprocess-forking
     severity: MEDIUM
     category: dos-surface
-    location: scripts/ai_agent_bridge/openai_proxy.py
+    location: scripts/ai_agent_bridge/openai_proxy.py:307
     description: >
       /healthz forks multiple subprocess probes on every request, making the
       endpoint a trivial denial-of-service amplifier.
   - id: unauthenticated-remote-host-binding
     severity: LOW
     category: security
-    location: scripts/ai_agent_bridge/openai_proxy.py
+    location: scripts/ai_agent_bridge/_cli.py:680
     description: >
       --host accepts non-localhost bind addresses without requiring an
       explicit --allow-remote acknowledgement.
+  - id: unbounded-request-size
+    severity: MEDIUM
+    category: dos-surface
+    location: scripts/ai_agent_bridge/openai_proxy.py:317
+    description: >
+      ChatCompletionRequest and Message models accept arbitrarily large
+      content arrays and strings with no max_length or body-size limit,
+      making the proxy vulnerable to memory exhaustion or tie-ups of
+      backend subprocess slots.
+  - id: tempfile-leak-on-crash
+    severity: LOW
+    category: correctness
+    location: scripts/ai_agent_bridge/openai_proxy.py:170
+    description: >
+      _codex_backend creates a NamedTemporaryFile with delete=False and
+      unlinks only in a finally block; an unhandled exception before the
+      unlink (or an interpreter crash/SIGKILL) leaves orphaned files in
+      the temp directory.

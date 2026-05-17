@@ -15,18 +15,18 @@ gold_findings:
   - id: silent-pass-non-mapping-activity
     severity: HIGH
     category: correctness
-    location: scripts/build/linear_pipeline.py
+    location: scripts/build/linear_pipeline.py:4458
     description: >
       The gate silently skips validation for any activity that is not a dictionary mapping (e.g. if the LLM hallucinates a string or list), allowing completely malformed activities to pass the gate without returning passed=False.
   - id: silent-pass-non-list-items
     severity: HIGH
     category: correctness
-    location: scripts/build/linear_pipeline.py
+    location: scripts/build/linear_pipeline.py:4467
     description: >
       The gate silently skips validation if an activity's items value is not a list (e.g. if it is a dictionary or string), allowing malformed item structures to pass the schema check.
   - id: unvalidated-activity-types-pass-silently
     severity: MEDIUM
     category: correctness
-    location: scripts/build/linear_pipeline.py
+    location: scripts/build/linear_pipeline.py:4463
     description: >
       The gate only enforces schema for 'error-correction' types. If a writer hallucinates an incorrect or completely missing type, allowed_fields is None, and the gate silently bypasses the activity.
