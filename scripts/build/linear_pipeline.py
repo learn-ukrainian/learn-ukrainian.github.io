@@ -5036,8 +5036,42 @@ def _iter_vesum_word_surfaces(text: str) -> list[str]:
             continue
         if word.lower() in _STANDALONE_POSTFIX_FRAGMENTS:
             continue
+        word = _collapse_syllable_break(word)
         words.append(word)
     return words
+
+
+def _collapse_syllable_break(word: str) -> str:
+    """Collapse textbook syllable-break notation like `за-пи-са-ний` →
+    `записаний` or `у-весь` → `увесь`.
+
+    Early-reader Ukrainian textbooks (Захарійчук Grade 1 in particular)
+    use hyphens to mark syllable boundaries in newly-introduced words.
+    When the writer quotes a textbook excerpt verbatim, these
+    pedagogical hyphens flow through to VESUM and fail (VESUM has
+    `записаний` but not `за-пи-са-ний`).
+
+    Heuristic: 2+ hyphen-separated parts where ALL parts are ≤4 chars
+    (syllable-width) → strip all hyphens. Spares real compound nouns
+    (`Івано-Франківськ` = 5+10 chars, kept; `темно-синій` = 5+6 chars,
+    kept) and pronoun-noun terminology (`я-форма` = 1+5 chars, kept —
+    `форма` exceeds 4). The 4-char threshold is the upper bound for a
+    Ukrainian syllable (closed syllables like `буль` or `шість` rarely
+    exceed 4 graphemes).
+
+    Surfaced 2026-05-17 by a1/m20 rebuild #5 quoting the Захарійчук
+    p.24 Frog & Toad excerpt: "тут за-пи-са-ний у-весь мій день" —
+    both `за-пи-са-ний` (4 parts × 2-3 chars) and `у-весь` (1+4 chars)
+    are textbook syllable breaks the writer copied verbatim.
+    """
+    if "-" not in word:
+        return word
+    parts = word.split("-")
+    if len(parts) < 2:
+        return word
+    if all(len(part) <= 4 for part in parts):
+        return "".join(parts)
+    return word
 
 
 def _touches_blank_marker(text: str, start: int, end: int) -> bool:

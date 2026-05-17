@@ -2982,6 +2982,34 @@ def test_strip_metalinguistic_warning_quote_pattern() -> None:
     assert "дивлюся" in bold_correct_form
 
 
+def test_collapse_syllable_break_strips_textbook_hyphens() -> None:
+    """Textbook syllable-break notation (`за-пи-са-ний`, `у-весь`) collapses
+    to the canonical lemma, while real compound nouns survive.
+
+    Surfaced 2026-05-17 by a1/m20 rebuild #5: the writer quoted the
+    Захарійчук Grade 1 p.24 Frog & Toad excerpt verbatim including the
+    textbook's own syllable-break hyphens, and VESUM failed on the
+    hyphenated forms.
+
+    Heuristic: 2+ hyphen-separated parts where ALL parts are ≤4 chars
+    (Ukrainian syllable width). Real compounds always have at least one
+    side >4 chars.
+    """
+    collapse = linear_pipeline._collapse_syllable_break
+    # Textbook syllable breaks (the m20 triggers + close siblings).
+    assert collapse("за-пи-са-ний") == "записаний"
+    assert collapse("у-весь") == "увесь"
+    assert collapse("ад-же") == "адже"
+    # Real compound nouns / linguistic terminology MUST survive.
+    assert collapse("темно-синій") == "темно-синій"
+    assert collapse("Івано-Франківськ") == "Івано-Франківськ"
+    assert collapse("я-форма") == "я-форма"  # `форма` is 5 chars
+    assert collapse("англо-український") == "англо-український"
+    # Edge cases.
+    assert collapse("noдашь") == "noдашь"  # no hyphen → unchanged
+    assert collapse("a") == "a"  # single char → unchanged
+
+
 def test_warning_quote_unclosed_italic_terminated_by_punctuation() -> None:
     """`not *X.` / `не *X,` / `not *X<EOS>` — unclosed italics terminated by
     sentence punctuation or end-of-string also strip the anti-example.
