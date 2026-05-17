@@ -395,6 +395,21 @@ def run_batch(
                     )
                     state.failed += 1
                     logger.warning("FAILED %s: %s", item[0], exc)
+                    # Persist failure telemetry so batch jobs are auditable
+                    # post-hoc without re-running. No .md is written — only
+                    # the sidecar .json captures the error path.
+                    _, json_path_failed = _output_paths(item[0], input_root, output_root)
+                    try:
+                        json_path_failed.parent.mkdir(parents=True, exist_ok=True)
+                        json_path_failed.write_text(
+                            json.dumps(telemetry.__dict__, indent=2), encoding="utf-8"
+                        )
+                    except OSError as write_exc:
+                        logger.warning(
+                            "could not persist failure telemetry to %s: %s",
+                            json_path_failed,
+                            write_exc,
+                        )
                 else:
                     state.completed += 1
                     state.total_cost_usd += telemetry.cost_usd
