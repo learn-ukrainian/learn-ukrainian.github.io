@@ -67,6 +67,7 @@ class ModelRoute:
 
     family: str
     backend: Backend
+    cli_model_name: str | None = None
 
 
 def _backend_timeout_s() -> int:
@@ -277,9 +278,12 @@ def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
     return CompletionResponse(content=result.stdout.strip())
 
 
+# Alias Mapping Table:
+# - gemini-3.0-flash-preview: Remapped to cli_model_name="gemini-2.5-flash" because the local Gemini CLI
+#   does not recognize the 3.0-flash-preview alias, but 2.5-flash is supported and functional (Issue #2022).
 _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
-    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend),
+    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="gemini-2.5-flash"),
     "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
@@ -400,7 +404,7 @@ def chat_completions(request: ChatCompletionRequest) -> dict[str, object] | JSON
     prompt = _flatten_messages(request.messages)
     try:
         completion = route.backend(
-            request.model,
+            route.cli_model_name or request.model,
             request.messages,
             prompt=prompt,
             user=request.user,

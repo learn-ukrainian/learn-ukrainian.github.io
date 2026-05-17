@@ -75,6 +75,8 @@ def test_chat_completions_gemini_round_trip(monkeypatch):
     model_id = "gemini-3.0-flash-preview"
 
     def backend(model, messages, **kwargs):
+        # Assert the alias is resolved to the underlying CLI model
+        assert model == "gemini-2.5-flash"
         return proxy.CompletionResponse(content="hello from gemini")
 
     monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
@@ -88,6 +90,28 @@ def test_chat_completions_gemini_round_trip(monkeypatch):
     assert response.status_code == 200
     assert body["model"] == model_id
     assert body["choices"][0]["message"]["content"] == "hello from gemini"
+    assert body["choices"][0]["finish_reason"] == "stop"
+
+
+def test_chat_completions_gemini_pro_round_trip(monkeypatch):
+    model_id = "gemini-3.1-pro-preview"
+
+    def backend(model, messages, **kwargs):
+        # Assert no remapping occurs for the pro model
+        assert model == "gemini-3.1-pro-preview"
+        return proxy.CompletionResponse(content="hello from gemini pro")
+
+    monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
+
+    response = _client().post(
+        "/v1/chat/completions",
+        json={"model": model_id, "messages": [{"role": "user", "content": "hello"}]},
+    )
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["model"] == model_id
+    assert body["choices"][0]["message"]["content"] == "hello from gemini pro"
     assert body["choices"][0]["finish_reason"] == "stop"
 
 
