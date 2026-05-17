@@ -825,6 +825,26 @@ def _run(args: argparse.Namespace) -> int:
             module_dir / "wiki_coverage_review.json",
             wiki_coverage_review,
         )
+        # Phase 5 Goodhart sentinel telemetry (PR4)
+        stuffing_count = sum(
+            1
+            for v in wiki_coverage_review.get("verdicts", [])
+            if str(v.get("verdict", "")).upper() == "KEYWORD_STUFFING"
+        )
+        partial_count = sum(
+            1
+            for v in wiki_coverage_review.get("verdicts", [])
+            if str(v.get("verdict", "")).upper() == "PARTIAL"
+        )
+        tracker.emit(
+            "wiki_coverage_goodhart_sentinel",
+            level=level,
+            slug=slug,
+            overall_verdict=wiki_coverage_review["overall_verdict"],
+            keyword_stuffing_count=stuffing_count,
+            partial_count=partial_count,
+            total_verdicts=len(wiki_coverage_review.get("verdicts", [])),
+        )
         _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
         if wiki_coverage_review["overall_verdict"] == "FAIL":
             raise linear_pipeline.LinearPipelineError("Wiki coverage review failed")
