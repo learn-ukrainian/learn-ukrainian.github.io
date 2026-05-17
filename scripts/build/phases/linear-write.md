@@ -278,6 +278,49 @@ just because the example looks shorter that way.
 ]
 ```
 
+### IMPLEMENTATION SHAPE by obligation type (mandatory — #2105)
+
+Listing an obligation in `<implementation_map>` is necessary but NOT sufficient. The wiki_coverage_gate at `scripts/audit/wiki_coverage_gate.py:276-320` verifies actual implementation per obligation type. Mismatched implementation shape is a HARD REJECT — the gate will report `contrast_pair_not_in_activity`, `ban_substance_missing`, `sequence_claim_missing`, or `missing_incorrect_and_correct` and fail the build.
+
+Implementation shape per obligation type:
+
+**`l2_error` with `treatment: contrast_pair`** — MUST live in `activities.yaml` as an `error-correction` activity item. The item MUST contain BOTH the manifest's `incorrect` form and the `correct` form verbatim (substring-match — case-insensitive but punctuation-preserving). NOT in module.md prose. NOT as an inline contrast block. Concrete shape:
+
+```yaml
+- id: act-N
+  type: error-correction
+  items:
+    - sentence: "<context sentence with the wrong form>"
+      error: "<verbatim incorrect substring from manifest>"
+      correction: "<verbatim correct substring from manifest>"
+```
+
+If the manifest's `incorrect` is `"Я прокидаєшся. / Він прокидаюся."` (slash-separated alternates), include BOTH alternates in either separate items or one item where the sentence covers both. The literal substring `Я прокидаєшся.` AND `Він прокидаюся.` MUST both appear in activities.yaml.
+
+**`decolonization_ban`** — MUST quote the manifest's `rule` text substantively in module.md prose (NOT just a passing mention; the gate checks `_claim_markers_present` which requires multiple keyword markers from the rule text to appear). Concrete shape: in module.md, add a paragraph that paraphrases the rule's core constraint using its distinctive vocabulary. If the ban rule says "категорично заборонено використовувати російськомовні пояснення", your prose must contain those distinctive phrases (заборонено, російськомовні, пояснення) close together. Bare phrases like "we use Ukrainian only" are NOT substantive enough.
+
+**`sequence_step`** — MUST include the step's `required_claim` content substantively in module.md prose. Same `_claim_markers_present` check as bans. Read each step's `required_claim` from the wiki manifest and ensure the distinctive vocabulary (verb names, technical terms like "епентетичний л", "суфікс -ва-", specific lexeme examples) appears in your prose for the matching section.
+
+**`phonetic_rule`** — MUST include BOTH the `written` and `spoken` forms verbatim AND `_phonetic_examples_present` (specific example words). Already worked in build #20 — no change needed but the rule is restated here for completeness.
+
+### Pre-emit implementation audit (mandatory — #2105)
+
+AFTER the `<implementation_map_audit>` (#2094) and `<bad_form_audit>` (#2095) lines, add a third visible audit line by self-checking each obligation against its implementation shape:
+
+For EACH obligation in your `<implementation_map>`:
+1. If type=`l2_error` with treatment=`contrast_pair`: open `activities.yaml`, search for an `error-correction` item containing BOTH `incorrect` and `correct` substrings verbatim. If not found, FAIL this obligation.
+2. If type=`decolonization_ban`: scan module.md prose for ≥3 distinctive substantive phrases from the manifest's `rule` text. If <3 found, FAIL this obligation.
+3. If type=`sequence_step`: scan module.md prose for the distinctive vocabulary from `required_claim`. If thin or missing, FAIL this obligation.
+4. If type=`phonetic_rule`: scan module.md for both `written` and `spoken` forms verbatim. If either missing, FAIL this obligation.
+
+Emit a single visible audit line BEFORE the artifact fences:
+
+`<obligation_implementation_audit>obligations_checked=N implemented=M failed_ids=[<list any IDs that failed self-check>]</obligation_implementation_audit>`
+
+If `failed_ids` is non-empty, STOP. Go back and fix the failing obligation's implementation shape. Re-run the audit. Only when `failed_ids=[]` may you proceed to emit the four artifact fences.
+
+If this audit line is missing, or if `implemented < obligations_checked`, the rebuild is wasted — the wiki_coverage gate will reach the same conclusion and HARD REJECT.
+
 ## Output format (strict)
 
 Emit `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` as separate
