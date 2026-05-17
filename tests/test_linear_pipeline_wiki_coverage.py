@@ -81,5 +81,8 @@ def test_v7_build_orders_wiki_gate_before_aggregate_qg() -> None:
     # implementation_map seeder can consume the dict before the writer phase.
     # The structural assertion (manifest built before writer prompt) is unchanged.
     assert run_body.index("build_wiki_manifest_data(") < run_body.index("_writer_prompt(")
-    assert run_body.index("run_wiki_coverage_gate(") < run_body.index("_run_wiki_coverage_review(")
+    # PR3 (#2123) replaced run_wiki_coverage_gate with the
+    # run_wiki_coverage_with_corrections wrapper at the v7_build call site.
+    # The ordering invariant remains: wiki coverage runs BEFORE review/LLM QG.
+    assert run_body.index("run_wiki_coverage_with_corrections(") < run_body.index("_run_wiki_coverage_review(")
     assert run_body.index("_run_wiki_coverage_review(") < run_body.index("_run_llm_qg(")

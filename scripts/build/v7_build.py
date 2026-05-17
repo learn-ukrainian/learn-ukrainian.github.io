@@ -794,16 +794,20 @@ def _run(args: argparse.Namespace) -> int:
 
         phase = "wiki_coverage_gate"
         started_at = time.monotonic()
-        wiki_coverage_gate = linear_pipeline.run_wiki_coverage_gate(
+        wiki_coverage_gate = linear_pipeline.run_wiki_coverage_with_corrections(
+            plan=plan,
             manifest=wiki_manifest,
             writer_output=writer_output,
             module_dir=module_dir,
             level=level,
+            event_sink=tracker.emit,
         )
         linear_pipeline.write_json(module_dir / "wiki_coverage_gate.json", wiki_coverage_gate)
         _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
         if wiki_coverage_gate.get("passed") is not True:
-            raise linear_pipeline.LinearPipelineError("Wiki coverage gate failed")
+            raise linear_pipeline.LinearPipelineError(
+                "Wiki coverage gate failed after batched + narrow correction passes"
+            )
 
         phase = "wiki_coverage_review"
         timeout_agent = _reviewer_for_writer(writer)
