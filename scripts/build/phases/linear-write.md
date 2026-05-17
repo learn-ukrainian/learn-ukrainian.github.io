@@ -18,13 +18,23 @@ Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not wri
 <register>The immersion ratio from the Immersion Rule and how this section preserves it.</register>
 <teaching_sequence>Which Knowledge Packet facts/citations this section uses.</teaching_sequence>
 <implementation_map>
-For each obligation_id in the Wiki Obligations Manifest, list:
+**MUST list ALL `obligation_id`s from the Wiki Obligations Manifest. No exceptions.**
+
+The `<implementation_map>` blocks across your N section-`<plan_reasoning>` nodes, taken together, MUST mention every `obligation_id` in the manifest exactly once. Silent omission of any `obligation_id` is a HARD REJECT — the rebuild is wasted and the gate will fail with `implementation_map_missing`.
+
+For each `obligation_id` in the Wiki Obligations Manifest, list:
   - obligation_id: <id>
   - artifact: <module.md | activities.yaml | vocabulary.yaml | resources.yaml>
   - location: <section name or activity id>
   - treatment: <how the obligation is addressed, for example "contrast_pair in activity act-3"
                 or "prose explanation in section §Дієслова на -ся paragraph 2">
-Do not defer. Every obligation must be implemented in THIS module, not a later one.
+
+**Do not defer silently. Every obligation must be implemented in THIS module unless you explicitly mark it deferred.** If, after careful drafting, an obligation genuinely cannot fit within the four sections of this A1 module (e.g., it requires grammar not yet introduced), emit it anyway with:
+  - artifact: <none>
+  - location: <none>
+  - treatment: `deferred (out of A1 scope) — <one-sentence justification>`
+
+Explicit deferral is far better than silent omission: the gate sees an honest decision and the orchestrator can reassign the obligation. Silent omission is a HARD REJECT and forces a full rebuild.
 </implementation_map>
 <verification_plan>Specific MCP tools to be called for this section's claims.</verification_plan>
 <verification_trace>
@@ -46,6 +56,21 @@ Every signature listed here is a commitment to call that exact tool this turn; o
 Keep each `<plan_reasoning>` block to 200 words or fewer. Do not use triple backticks inside `<plan_reasoning>` blocks; fenced code belongs only in the four artifact blocks below.
 
 Only after all `<plan_reasoning>` blocks are complete and passed may you emit the four fenced artifact blocks.
+
+### Pre-emit obligation-count check (mandatory — #2094)
+
+Before emitting the four artifact fences, you MUST audit your own `<implementation_map>` blocks against the Wiki Obligations Manifest:
+
+1. Count the `obligation_id`s in the Wiki Obligations Manifest (call this `N`).
+2. Count the distinct `obligation_id`s mentioned across all your `<implementation_map>` blocks (call this `M`).
+3. If `M < N`, STOP. Go back, find the missing `obligation_id`s, and add them to the appropriate section's `<implementation_map>` — either with a real `treatment` or with the explicit `deferred (out of A1 scope)` escape hatch.
+4. Only when `M == N` may you proceed to emit the four artifact fences.
+
+Emit a single visible audit line BEFORE the artifact fences:
+
+`<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[<list any IDs that ended up with treatment: deferred>]</implementation_map_audit>`
+
+If this audit line is missing, or if `covered_in_map < manifest_obligations`, the writer has failed the protocol and the rebuild is wasted.
 
 ## Tier-1 verification discipline (do this WHILE drafting — #1661)
 
