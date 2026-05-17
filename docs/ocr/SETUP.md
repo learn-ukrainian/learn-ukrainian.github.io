@@ -1,9 +1,16 @@
-# OCR setup — how to give the orchestrator a credential safely
+# OCR / API credential setup — file-backed pattern
 
 > **Threat we're defending against:** MEMORY.md #M-5 records two API-key leaks
 > in six weeks via shell-env enumeration patterns. The fix is to keep keys out
 > of shell env entirely. Store them in `~/.secret/<provider>.key` (mode 0600,
 > owner-only) and let scripts read them on demand.
+
+> **Current OCR provider (2026-05-17):** **Gemini**, via the existing
+> `scripts/etymology/bulk_ocr_gemini.py` tool. Mistral subscription was
+> cancelled; the Mistral-specific OCR client was removed in commit
+> `<next-commit-SHA>`. The credential-loader pattern below stays — it's
+> provider-agnostic and applies whenever we add a new API key (DeepSeek,
+> future providers).
 
 ## Project convention
 
@@ -11,7 +18,7 @@ All third-party API keys live under `~/.secret/`:
 
 ```
 ~/.secret/
-├── mistral.key      mode 0600, owned by you
+├── gemini.key      mode 0600, owned by you
 ├── deepseek.key     mode 0600, owned by you
 └── ...
 ```
@@ -27,16 +34,16 @@ quotes. Trailing newline is fine.
 
 ```bash
 mkdir -p ~/.secret
-install -m 0600 /dev/stdin ~/.secret/mistral.key <<< 'YOUR_MISTRAL_API_KEY_HERE'
+install -m 0600 /dev/stdin ~/.secret/gemini.key <<< 'YOUR_MISTRAL_API_KEY_HERE'
 # or, if you prefer interactive editing:
-touch ~/.secret/mistral.key && chmod 600 ~/.secret/mistral.key && $EDITOR ~/.secret/mistral.key
+touch ~/.secret/gemini.key && chmod 600 ~/.secret/gemini.key && $EDITOR ~/.secret/gemini.key
 ```
 
 Verify it loaded correctly (no contents printed):
 
 ```bash
 .venv/bin/python -c "from scripts.ocr._credentials import load_credential; \
-    load_credential('~/.secret/mistral.key'); print('OK')"
+    load_credential('~/.secret/gemini.key'); print('OK')"
 ```
 
 If the credential is missing, world-readable, or owned by a different uid,
@@ -46,7 +53,7 @@ the loader refuses with an explicit error message — see
 
 ## Why a file, not an env var
 
-| Concern | Env var (`MISTRAL_API_KEY=...`) | File (`~/.secret/mistral.key`) |
+| Concern | Env var (`MISTRAL_API_KEY=...`) | File (`~/.secret/gemini.key`) |
 |---|---|---|
 | Visible via `env` / `printenv` / shell history | YES — every subprocess sees it | NO — only processes that open the file |
 | Visible via `ps aux` if leaked into argv | depends | NO if you use `--credentials PATH` (path is visible, value isn't) |

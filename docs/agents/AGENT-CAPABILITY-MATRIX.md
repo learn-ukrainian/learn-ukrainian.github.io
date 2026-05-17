@@ -11,10 +11,12 @@ We run a roster of **7 agent families** across **9 roles**. Tonight's bakeoff ad
 empirical signal for the two newest (Mistral via `vibe`, DeepSeek v4 via `opencode`)
 on 4 of those roles. Headline recommendations:
 
-- **Drop `devstral-small`** (Mistral lighter) from the production roster. Failed UK
-  Russianism judgment (Russian-pretraining contamination) and is unlikely to compete
-  on coding/review against `gpt-5.5`, `deepseek-v4-flash`, or `claude-sonnet`.
-  Keep `mistral-medium-3.5` as the Mistral entry.
+- **Mistral roster REMOVED 2026-05-17** (user-cancelled subscription). DeepSeek-flash
+  via hermes matched or beat Mistral medium-3.5 on every tested role, AND Mistral
+  produced a confident false positive on `-ся/-сь` in content review which is the
+  worst place for unreliability. OCR work goes to existing Gemini pipeline.
+  Bakeoff data preserved at `audit/2026-05-17-agent-bakeoff-evening/mistral-*.txt`
+  for historical reference.
 - **Build `hermes_deepseek.py`** (clone of `hermes_grok.py`). The earlier-
   this-session recommendation to build `opencode_deepseek.py` was REVERSED
   after harness isolation tonight: opencode has a 33% empty-output flake
@@ -37,8 +39,8 @@ on 4 of those roles. Headline recommendations:
 | 2 | **Codex** | `codex` (CLI), `codex` (Desktop) | `gpt-5.5` (xhigh) | `delegate.py --agent codex`; `ab ask-codex`; Codex Desktop UI |
 | 3 | **Gemini** | `gemini` | `gemini-3.1-pro-preview` (deep), `gemini-3.0-flash-preview` (routine), Gemini Vision (OCR) | `delegate.py --agent gemini`; `ab ask-gemini --model gemini-3.0-flash-preview` for routine, `--model gemini-3.1-pro-preview` for deep |
 | 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `delegate.py --agent grok`; `ab ask-grok`; uses `hermes_grok.py` adapter |
-| 5 | **Mistral** | `vibe -p` | `mistral-medium-3.5` (high-effort default) | NEW LANE — adapter `vibe_mistral.py` PENDING; `VIBE_ACTIVE_MODEL` env override |
-| 6 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | NEW LANE — adapter `hermes_deepseek.py` PENDING (clone of `hermes_grok.py`). REVERSED from opencode after 33% empty-output flake (see §Drop candidates §2). Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
+| 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | NEW LANE — adapter `hermes_deepseek.py` PENDING (clone of `hermes_grok.py`). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
+| ~~6~~ | ~~Mistral~~ | ~~vibe -p~~ | — | **REMOVED 2026-05-17 (user-cancelled subscription)**. DeepSeek-flash via hermes covers the lane. |
 | 7 | **Gemma local** | unclear | `gemma-local` (?) | UNCLEAR — listed in `/api/orient` `runtime.agents` but no recent use; investigate before next pass |
 
 ### Light / orchestration-only surfaces (not full agents)
@@ -161,7 +163,7 @@ prior audits**, **(I)nferred from architecture**.
 | **Content Writing** | Claude (until 2026-06-15) / Gemini (after) | DeepSeek-flash (E), Mistral medium-3.5 (E) | Per ADR `2026-05-06-writer-selection-codex-gpt55.md` REVISED → claude-tools. Post-June-15: Gemini default. Flash beat Mistral on format compliance + speaker labels in the A1 dialogue test. Pro-max UNUSABLE here (returned empty). NOT yet tested on full V7-module-scale output. |
 | **Content Review** | Claude-Opus-xhigh (H) + Codex (H, green-team) | Gemini-3.1-pro (H), DeepSeek-flash (E) | xhigh-effort review on Opus is gold standard. **DeepSeek-flash is the strongest new entrant — caught the planted Russianism + sharp pedagogical critique + zero false positives.** Mistral medium-3.5 NOT trustworthy for content review without a verifier (produced false positive on `-ся/-сь`). |
 | **Linguistic Verification** | inline Claude with `mcp__sources__*` | DeepSeek-pro / DeepSeek-flash (E) | Sources MCP must run in-process (Claude Code). For OUT-OF-PROCESS verification: DeepSeek (either variant) — both passed `на протязі`. **NEVER devstral-small** (contamination). |
-| **OCR / Vision** | Gemini Vision (H, used for bulk ESUM re-OCR) | Mistral OCR (UNTESTED) | Pending Mistral bakeoff. User reports anecdotally that Mistral is strong. |
+| **OCR / Vision** | **Gemini Vision** via `scripts/etymology/bulk_ocr_gemini.py` (gemini-2.5-flash default, 691-page ESUM Phase 2 track record) | Apple Vision (untested, on-device option if budget tight) | Mistral OCR was on the list — cancelled with the subscription 2026-05-17. The credential-loader pattern (`scripts/ocr/_credentials.py`) stays for future API key needs. |
 
 Cross-cutting:
 
