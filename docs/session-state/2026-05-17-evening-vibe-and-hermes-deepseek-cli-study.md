@@ -19,7 +19,35 @@ unchanged_decisions:
   - "Per-area routing table from afternoon handoff: VALID for mistral-medium-3.5. INVALID for devstral-small on any UK-content surface — see finding #1."
 ---
 
-# Findings — `vibe` (Mistral) + `hermes` (DeepSeek v4) CLI study
+# Findings — `vibe` (Mistral) + `opencode` (DeepSeek v4 max) + `hermes` (Grok) CLI study
+
+## CORRECTION (user direction, post-initial-handoff)
+
+User clarified: **DeepSeek lane goes through `opencode` (max effort)**, NOT through
+hermes. Hermes stays as the **Grok** lane (which is what `hermes_grok.py` already does).
+Re-probed; key updates:
+
+- **opencode + deepseek-v4-pro `--variant max`:** PONG **13.1s** (cold-start tax),
+  Russianism **11.3s CORRECT** — with grammar-detail bonus ("instrumental case used
+  as a preposition"). Faster than hermes on the substantive probe (11.3s vs 37.5s)
+  despite slower PONG.
+- **opencode `--format json` event stream is RICHER than hermes:** emits
+  `step_start` / `text` / `step_finish` events with `tokens: {total, input, output,
+  reasoning, cache.read, cache.write}` + `cost` per call. Hermes `-z` gives us
+  none of this — `hermes_grok.py` flagged `tool_calls_total=None` because of it.
+- **Adapter target changes** from `hermes_deepseek.py` to `opencode_deepseek.py`.
+  Better shape: real telemetry parity with claude/codex/gemini adapters.
+- **Hermes-DeepSeek probe data** below is preserved for forensic value but
+  superseded by opencode for routing.
+- Sample telemetry envelope from a real opencode JSON call:
+  ```
+  step_finish: {tokens: {total: 13177, input: 6758, output: 3, reasoning: 16,
+                          cache: {write: 0, read: 6400}}, cost: 0.01275304}
+  ```
+  Cost surfaced per-call — directly wires into `/api/state/routing-budget`.
+
+Everything else in this handoff stands; routing table updated below in
+"Routing implications" section to use opencode-deepseek-v4-pro.
 
 ## TL;DR (3 lines)
 
@@ -134,24 +162,52 @@ Key gotchas:
    `--output json` (all messages at end). For V7 writer telemetry parity, need
    the streaming envelope.
 
-### `delegate.py dispatch --agent deepseek` (NEW lane via hermes)
+### `delegate.py dispatch --agent deepseek` (NEW lane via opencode — CORRECTED)
 
-Pattern: clone `hermes_grok.py` → `hermes_deepseek.py`. The adapter already exists
-in shape — only the model identifier changes.
+Pattern: new adapter `scripts/agent_runtime/adapters/opencode_deepseek.py`. Modeled
+on claude/codex adapters (rich JSON event stream), NOT on `hermes_grok.py`.
 
-```python
-# scripts/agent_runtime/adapters/hermes_deepseek.py
-class HermesDeepSeekAdapter(HermesGrokAdapter):
-    DEFAULT_MODEL = "deepseek-v4-pro"
-    LIGHT_MODEL = "deepseek-v4-flash"
-    # Inherits: tool_calls_total=None telemetry caveat,
-    # config-scoped reasoning effort, ANSI strip, rate-limit regex.
+```
+opencode run \
+  --model deepseek/deepseek-v4-pro \
+  --variant max \
+  --dangerously-skip-permissions \
+  --format json \
+  --dir <worktree_path> \
+  "PROMPT"
 ```
 
-**Note the `tool_calls_total=None`** caveat — Hermes `-z` mode does NOT expose
-stream-json telemetry. Same limitation as `hermes_grok.py`. If we want tool-call
-counts for DeepSeek-driven dispatches, we'd need Hermes to emit JSONL events,
-which it doesn't on `-z`.
+```python
+# scripts/agent_runtime/adapters/opencode_deepseek.py
+class OpencodeDeepseekAdapter:
+    cli = "opencode"
+    subcommand = "run"
+    model = "deepseek/deepseek-v4-pro"
+    variant = "max"  # provider-specific reasoning effort
+    permissions = "--dangerously-skip-permissions"  # auto-approve
+    output = "--format json"  # emit JSONL events
+    worktree_via = "--dir"  # manual git worktree add + pass --dir
+    warm_cache = "-c/--continue or -s SESSION_ID"
+    # Telemetry parity with claude/codex:
+    #   - step_start / text / tool_use / step_finish events
+    #   - step_finish.tokens = {total, input, output, reasoning, cache.{read,write}}
+    #   - step_finish.cost = per-call USD
+```
+
+Key wins vs the originally-proposed hermes path:
+- **Real telemetry**: `tool_calls_total` is computable from `tool_use` events; no
+  need for the `None` sentinel that `hermes_grok.py` had to carry.
+- **Per-call cost** surfaced directly — routing-budget endpoint gets cleaner data.
+- **`--variant max`** is opencode's reasoning-effort flag (`high`, `max`, `minimal`
+  per `opencode run --help`). User's directive "max effort" maps cleanly.
+- **Cache read/write** counters mean we can verify prompt-cache hit rate the same
+  way Claude/Codex give us.
+
+### Hermes adapter scope (clarification)
+
+Hermes stays as the **Grok** lane via the existing `hermes_grok.py`. The DeepSeek
+probes I ran via hermes earlier in this handoff are forensic data only — they are
+NOT the production path. No `hermes_deepseek.py` adapter to write.
 
 ### `ab ask-mistral` / `ab ask-deepseek` (Q&A bridge)
 
@@ -181,17 +237,17 @@ The afternoon handoff proposed:
 **Action required:** disambiguate **Mistral** in those rows to `mistral-medium-3.5`
 explicitly. `devstral-small` is now a separate, narrower routing target.
 
-Proposed refined table:
+Proposed refined table (corrected: opencode is the DeepSeek harness; hermes is the Grok harness):
 
 | Area | Today | + DeepSeek + Mistral |
 |---|---|---|
-| scripts/audit/ | Codex | Codex ↔ deepseek-v4-pro |
+| scripts/audit/ | Codex | Codex ↔ opencode-deepseek-v4-pro-max |
 | scripts/build/ | Claude headless | Claude ↔ mistral-medium-3.5 |
 | scripts/wiki/ + curriculum/ | Gemini | Gemini ↔ mistral-medium-3.5 |
-| tests/ | Codex | Codex ↔ deepseek-v4-pro (or flash for cheap iteration) |
-| .mcp/servers/ | Codex | Codex ↔ deepseek-v4-pro |
+| tests/ | Codex | Codex ↔ opencode-deepseek-v4-pro-max |
+| .mcp/servers/ | Codex | Codex ↔ opencode-deepseek-v4-pro-max |
 | Frontend starlight/ | Claude | Claude ↔ mistral-medium-3.5 OR devstral-small (TS-only, no UK content) |
-| scripts/ infrastructure | Claude | Claude ↔ Grok or devstral-small (code-only, no UK) |
+| scripts/ infrastructure | Claude | Claude ↔ hermes-grok-4.3 or devstral-small (code-only, no UK) |
 | **UK content surfaces (anywhere)** | — | **NEVER devstral-small** |
 
 `devstral-small` carve-out applies anywhere a model might see Ukrainian text
