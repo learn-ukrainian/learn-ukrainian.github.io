@@ -1,7 +1,60 @@
 from __future__ import annotations
 
+import json
+
 import scripts.audit.wiki_coverage_gate as gate
 from scripts.audit.wiki_coverage_gate import check_wiki_coverage, parse_implementation_map
+
+
+def test_load_manifest_parses_json_blob_without_filesystem_access() -> None:
+    """`_load_manifest` must detect a JSON-blob string and parse it
+    directly, not pass it through `Path(...).exists()`.
+
+    On macOS APFS, passing a multi-kB JSON string to `Path(...).exists()`
+    raises `OSError: [Errno 63] ENAMETOOLONG` instead of returning False,
+    crashing the wiki_coverage_gate before the gate logic runs. Linux
+    returns False silently for the same input, which is why the bug
+    only surfaced on darwin (2026-05-17 m20 build #12 — the first build
+    to reach `wiki_coverage_gate` on a developer macOS workstation).
+
+    A JSON blob starts with `{` or `[` after whitespace; that signature
+    is the cheapest reliable discriminator.
+    """
+    # Realistic-shape wiki manifest as produced by build_wiki_manifest.
+    manifest = {
+        "slug": "my-morning",
+        "wiki_path": "/Users/k/projects/learn-ukrainian/wiki/pedagogy/a1/my-morning.md",
+        "sequence_steps": [
+            {"id": f"step-{i}", "heading": f"Крок {i}: ..."} for i in range(1, 8)
+        ],
+        "l2_errors": [{"id": f"err-{i}", "incorrect": "X", "correct": "Y"} for i in range(1, 6)],
+        "phonetic_rules": [
+            {"id": "phon-1", "written": "-шся", "spoken": "[с':а]"}
+        ],
+        "decolonization_bans": [],
+    }
+    blob = json.dumps(manifest, ensure_ascii=False, indent=2)
+    # Sanity: this blob would explode Path(...).exists() on macOS if not
+    # short-circuited.
+    assert len(blob) > 255, "fixture too small to reproduce the original bug"
+
+    result = gate._load_manifest(blob)
+
+    assert result == manifest
+
+
+def test_load_manifest_short_json_blob_also_short_circuits() -> None:
+    """Short JSON blobs (under 255 bytes) still take the JSON path so
+    behavior is consistent regardless of payload size."""
+    short_blob = '{"slug": "test", "sequence_steps": [], "l2_errors": [], "phonetic_rules": [], "decolonization_bans": []}'
+    result = gate._load_manifest(short_blob)
+    assert result["slug"] == "test"
+
+
+def test_load_manifest_passes_through_mapping() -> None:
+    """Mapping input returns unchanged (no path/JSON detour)."""
+    payload = {"slug": "x", "sequence_steps": []}
+    assert gate._load_manifest(payload) is payload
 
 
 def _manifest() -> dict[str, object]:
