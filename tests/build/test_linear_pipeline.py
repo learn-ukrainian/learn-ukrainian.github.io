@@ -2982,6 +2982,48 @@ def test_strip_metalinguistic_warning_quote_pattern() -> None:
     assert "дивлюся" in bold_correct_form
 
 
+def test_iter_vesum_word_surfaces_skips_mixed_script_typos() -> None:
+    """Mixed-script Cyrillic-abutting-Latin tokens are writer typos, not words.
+
+    a1/m20 rebuild #3 (2026-05-17) surfaced this: the writer typed
+    ``Buкварь`` in resources.yaml notes — Latin "Bu" + Cyrillic "кварь"
+    with no boundary — and VESUM dutifully extracted the Cyrillic
+    substring `кварь` and failed it. The token is a transcription typo
+    of "Буквар" (the textbook title), not a real Ukrainian lemma. The
+    correct behavior is to skip mixed-script tokens entirely so VESUM
+    doesn't false-flag the orchestrator into chasing whitelists for
+    writer fat-fingers.
+
+    Real script transitions (Latin word followed by Cyrillic word across
+    whitespace or punctuation) must NOT be affected — only direct
+    letter-to-letter abutment fires the skip.
+    """
+    extract = linear_pipeline._iter_vesum_word_surfaces
+
+    # Mixed-script typo: Cyrillic suffix abutting Latin prefix.
+    assert extract("Buкварь, 2025") == [], (
+        "mixed-script `Buкварь` should not yield `кварь` for VESUM check"
+    )
+    assert extract("Buкварь, частина перша") == ["частина", "перша"], (
+        "mixed-script skip must not swallow adjacent clean Cyrillic words"
+    )
+    # Reverse: Cyrillic prefix abutting Latin suffix.
+    assert extract("кварьs") == [], (
+        "mixed-script `кварьs` (Cyrillic+Latin suffix) should be skipped"
+    )
+
+    # Clean Cyrillic of the same form passes through (so the skip is
+    # specifically about the script boundary, not a content blacklist).
+    assert "кварь" in extract("Я кварь."), (
+        "the SAME token in a clean Cyrillic-only context must still reach VESUM"
+    )
+
+    # Latin and Cyrillic words separated by whitespace are independent.
+    assert extract("English і Українська") == ["і", "Українська"]
+    # ... and by punctuation.
+    assert extract("English, Українська") == ["Українська"]
+
+
 def test_normalize_for_vesum_morpheme_hyphen_conditional() -> None:
     """Hyphen inside emphasis collapses only for short morpheme fragments.
 
