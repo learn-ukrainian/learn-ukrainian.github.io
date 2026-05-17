@@ -30,7 +30,7 @@ body { min-height: 100vh; }
 .ops-card.agent { border-left-color:var(--accent); }
 .ops-card.curriculum { border-left-color:var(--cyan); }
 .ops-card.runtime { border-left-color:var(--purple); }
-.filters { display:grid; grid-template-columns: 1.2fr repeat(4, minmax(130px, 1fr)); gap:10px; margin-bottom: 26px; }
+.filters { display:grid; grid-template-columns: 1.2fr repeat(5, minmax(130px, 1fr)); gap:10px; margin-bottom: 26px; }
 .filters input, .filters select { background:#fffaf0; color:var(--text); border:1px solid var(--border); border-radius:4px; padding:9px 10px; font:inherit; font-size:13px; }
 .group { margin: 26px 0 34px; }
 .group h3 { font-family: Charter, Georgia, serif; font-size:21px; border-bottom:1px solid var(--border); padding-bottom:8px; margin:0 0 14px; display:flex; justify-content:space-between; gap:12px; }
@@ -77,8 +77,8 @@ body { min-height: 100vh; }
 <main class="wrap">
   <section class="hero">
     <div>
-      <h2>HTML reports and handoffs</h2>
-      <p>Browse locally served audit reports, session handoffs, decisions, and best-practice artifacts from the Monitor API.</p>
+      <h2>Documents, handoffs, reports</h2>
+      <p>Browse locally served documents, reports, session handoffs, dispatch briefs, decisions, and best-practice artifacts from the Monitor API.</p>
     </div>
     <div class="hero-count">
       <div class="value" id="total-count">—</div>
@@ -114,6 +114,7 @@ body { min-height: 100vh; }
     <select id="class-filter"><option value="">All classes</option></select>
     <select id="status-filter"><option value="">All statuses</option></select>
     <select id="author-filter"><option value="">All authors</option></select>
+    <select id="type-filter"><option value="">All types</option><option value="html">HTML</option><option value="md">MD</option></select>
     <input id="date-filter" type="date" aria-label="Date from">
   </section>
 
@@ -130,6 +131,7 @@ const els = {
   statusFilter: document.getElementById('status-filter'),
   authorFilter: document.getElementById('author-filter'),
   dateFilter: document.getElementById('date-filter'),
+  typeFilter: document.getElementById('type-filter'),
 };
 
 function escapeHtml(value) {
@@ -206,7 +208,9 @@ function render() {
 }
 
 async function loadArtifacts() {
-  const response = await fetch('/api/artifacts/html');
+  const type = els.typeFilter.value;
+  const url = type ? `/api/artifacts/html?type=${encodeURIComponent(type)}` : '/api/artifacts/html';
+  const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
   state.artifacts = data.artifacts || [];
@@ -218,6 +222,7 @@ async function loadArtifacts() {
   el.addEventListener('input', render);
   el.addEventListener('change', render);
 });
+els.typeFilter.addEventListener('change', loadArtifacts);
 
 loadArtifacts().catch(error => {
   els.total.textContent = '!';
