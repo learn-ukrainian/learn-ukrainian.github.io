@@ -286,6 +286,10 @@ WIKI_COVERAGE_BATCH_MAX_ITERATIONS = 2
 WIKI_COVERAGE_NARROW_MAX_ITERATIONS = 2
 WIKI_COVERAGE_PATCHABLE_ARTIFACTS = frozenset({"module.md", "activities.yaml"})
 WIKI_COVERAGE_ARTIFACT_INFERENCE_ORDER = ("activities.yaml", "module.md")
+ALLOWED_WIKI_COVERAGE_VERDICTS = {"PASS", "KEYWORD_STUFFING", "PARTIAL", "FAIL"}
+WIKI_COVERAGE_OVERALL_FAIL_VERDICTS = {"FAIL", "KEYWORD_STUFFING"}
+WIKI_COVERAGE_OVERALL_VERDICTS = {"PASS", "PARTIAL", "FAIL"}
+WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS = ('"', "“", "«")
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
 
@@ -3512,23 +3516,45 @@ def parse_review_response(
 
 
 def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
-    payload = parse_json_or_yaml_mapping(response)
+    payload = _parse_json_or_yaml_mapping(response)
     verdicts = payload.get("verdicts")
     if not isinstance(verdicts, list):
         raise LinearPipelineError("Wiki coverage review response missing verdicts list")
+    normalized_verdicts: list[dict[str, Any]] = []
+    hard_fail_seen = False
     for item in verdicts:
         if not isinstance(item, Mapping):
             raise LinearPipelineError("Wiki coverage review verdict entries must be mappings")
-        if str(item.get("verdict") or "").upper() not in {"PASS", "PARTIAL", "FAIL"}:
-            raise LinearPipelineError("Wiki coverage review verdict must be PASS, PARTIAL, or FAIL")
+        verdict = str(item.get("verdict") or "").upper()
+        if verdict not in ALLOWED_WIKI_COVERAGE_VERDICTS:
+            raise LinearPipelineError(
+                "Wiki coverage review verdict must be PASS, KEYWORD_STUFFING, PARTIAL, or FAIL"
+            )
         if not str(item.get("obligation_id") or "").strip():
             raise LinearPipelineError("Wiki coverage review verdict missing obligation_id")
-        if not str(item.get("evidence") or "").strip():
+        evidence = str(item.get("evidence") or "").strip()
+        if not evidence:
             raise LinearPipelineError("Wiki coverage review verdict missing evidence")
+        if len(evidence) < 8 or not any(
+            marker in evidence for marker in WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS
+        ):
+            raise LinearPipelineError(
+                "Wiki coverage review evidence must be a quoted excerpt of ≥8 chars"
+            )
+        if verdict in WIKI_COVERAGE_OVERALL_FAIL_VERDICTS:
+            hard_fail_seen = True
+        normalized_item = dict(item)
+        normalized_item["verdict"] = verdict
+        normalized_item["evidence"] = evidence
+        normalized_verdicts.append(normalized_item)
     overall = str(payload.get("overall_verdict") or "").upper()
-    if overall not in {"PASS", "PARTIAL", "FAIL"}:
+    if overall not in WIKI_COVERAGE_OVERALL_VERDICTS:
         raise LinearPipelineError("Wiki coverage review overall_verdict must be PASS, PARTIAL, or FAIL")
-    return {**payload, "overall_verdict": overall}
+    if hard_fail_seen and overall != "FAIL":
+        raise LinearPipelineError(
+            "Wiki coverage review overall_verdict must be FAIL when any obligation verdict fails"
+        )
+    return {**payload, "verdicts": normalized_verdicts, "overall_verdict": overall}
 
 
 def validate_llm_review_report(report: Mapping[str, Any]) -> None:
