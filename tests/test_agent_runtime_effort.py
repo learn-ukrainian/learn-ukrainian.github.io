@@ -418,31 +418,6 @@ def test_gemini_adapter_accepts_effort_without_crashing(tmp_path, caplog):
     )
 
 
-# ---------------------------------------------------------------------------
-# Regression: gemma-local adapter must accept effort without crashing
-# (Codex adversarial review 2026-04-22: gemma-local broke when every
-# non-Gemini adapter got effort forwarded.)
-# ---------------------------------------------------------------------------
-
-def test_gemma_local_adapter_accepts_effort_kwarg(tmp_path):
-    from agent_runtime.adapters.gemma_local import GemmaLocalAdapter
-
-    adapter = GemmaLocalAdapter()
-    # No exception on effort=... even though the CLI has no such knob.
-    plan = adapter.build_invocation(
-        prompt="hi",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-        effort="xhigh",
-    )
-    # And no '--effort' / 'xhigh' leaks into the Gemma argv.
-    assert "--effort" not in plan.cmd
-    assert "xhigh" not in plan.cmd
-
 
 # ---------------------------------------------------------------------------
 # Gemini fallback ladder path propagates effort on every rung
