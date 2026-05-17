@@ -162,17 +162,23 @@ repos:
         pass_filenames: false
         stages: [pre-push]
 
-      # Full GHA-replay pytest via Dagger. Runs when scripts/, tests/,
-      # .dagger/, or any .py is in the push. ~2-3 min warm; replicates
-      # the CI Test (pytest) job byte-for-byte using the .dagger/ pipeline.
-      # If `dagger` is not installed locally, the hook skips with a
-      # warning (CI will catch failures). Bypass with --no-verify.
-      # Reference: MEMORY.md #M-7 (pytest locally before push to main).
-      - id: dagger-pytest
-        name: full pytest via Dagger (GHA replay)
-        entry: scripts/pre_push/dagger_pytest.sh
-        language: system
-        pass_filenames: false
-        # Only run when something pytest-relevant is in the push.
-        files: ^(scripts/|tests/|\.dagger/|.*\.py$)
-        stages: [pre-push]
+      # Dagger pre-push pytest hook REMOVED 2026-05-17 per user direction.
+      # Cause: Dagger's cache_volume design accumulates pip wheels every
+      # cold run (was 30 GB/run pre-#2088, ~6 GB/run post-#2088 with .venv
+      # mount filter), and the resulting disk creep filled the SSD to 99%
+      # twice in 12 hours. Local replay value did not justify the recurring
+      # disk cost.
+      #
+      # Manual invocation still available:
+      #
+      #     bash scripts/pre_push/dagger_pytest.sh
+      #
+      # The script remains in-tree for ad-hoc GHA-replay debugging of a
+      # CI-only failure. CI's `Test (pytest)` workflow remains the
+      # canonical pre-merge gate. For local validation between pushes:
+      #
+      #     .venv/bin/python -m pytest <targeted-paths>
+      #
+      # MEMORY.md #M-7 still applies — run pytest locally before push when
+      # editing .py, scripts/, tests/, .dagger/, or hardcoded test fixtures.
+      # The hook automation is gone; the obligation isn't.

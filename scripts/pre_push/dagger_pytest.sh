@@ -1,31 +1,37 @@
 #!/usr/bin/env bash
 #
-# Pre-push hook: full GHA-replay pytest via Dagger.
+# Full GHA-replay pytest via Dagger — MANUAL invocation only.
 #
-# Invoked by pre-commit framework (stage=pre-push) when the push touches
-# scripts/, tests/, .dagger/, or any .py file. The file filter is set in
-# .pre-commit-config.yaml (id: dagger-pytest), so this script just runs
-# unconditionally when called.
+# Status: this script was originally a pre-push pre-commit hook (id:
+# dagger-pytest in .pre-commit-config.yaml). Removed from the pre-push
+# stage 2026-05-17 because Dagger's cache_volume design accumulated pip
+# wheels every cold run (was 30 GB/run pre-#2088, ~6 GB/run after the
+# .venv mount filter), and the disk creep filled the SSD to 99% twice
+# in 12 hours. CI's `Test (pytest)` workflow is the canonical pre-merge
+# gate; this script is kept in-tree for ad-hoc GHA-replay debugging of
+# a CI-only failure that needs reproduction locally.
+#
+# Usage:
+#   bash scripts/pre_push/dagger_pytest.sh
 #
 # Behavior:
-#   - If `dagger` is not installed: WARN and exit 0 (allow push). CI
-#     remains the safety net; we don't punish devs who haven't installed
-#     Dagger yet.
+#   - If `dagger` is not installed: WARN and exit 0.
 #   - If `dagger` is installed: run `dagger call pytest --source=.`.
-#     Exit non-zero on test failure (blocks push). Exit 0 on success.
+#     Exit non-zero on test failure. Exit 0 on success.
 #
-# Why this exists:
-#   MEMORY.md #M-7 — "PYTEST LOCALLY BEFORE PUSH TO MAIN" — encodes the
-#   lesson that pre-commit's ruff-only checks are insufficient. We've
-#   merged red commits to main by skipping local pytest before push.
-#   This hook makes the slow-but-safe path automatic so it can't be
-#   forgotten.
+# Cost reminder:
+#   Each cold run rebuilds the `learn-ukrainian-pip` cache_volume to
+#   ~6 GB. Use `docker volume prune -f` (after stopping
+#   `dagger-engine-v*`) periodically if you invoke this often.
 #
-# Bypass:
-#   `git push --no-verify`  — only when you're sure (e.g. you know the
-#   path filter caught a non-Python change that triggered the hook).
+# Why MEMORY.md #M-7 still applies:
+#   The hook automation is gone but the obligation is not — run pytest
+#   locally before push when editing .py, scripts/, tests/, .dagger/,
+#   or hardcoded test fixtures. For most pushes, the faster path is
+#   `.venv/bin/python -m pytest <targeted-paths>` (5s vs Dagger's
+#   3-5 min). Use this script only when you suspect a CI-only diff.
 #
-# Reference: PR #TBD (added 2026-05-17).
+# Reference: PR #TBD (de-hooked 2026-05-17).
 
 set -u
 
