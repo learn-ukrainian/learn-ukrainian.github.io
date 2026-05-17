@@ -1485,6 +1485,29 @@ def test_vesum_gate_skips_error_field_of_error_correction_items_shape(
     assert "одягаєшся" in forwarded
 
 
+@pytest.mark.parametrize("answer_key", ["correctAnswer", "answer"])
+def test_activity_vesum_text_filters_quiz_distractors_by_answer_spelling(
+    answer_key: str,
+) -> None:
+    activity = {
+        "id": "act-1",
+        "type": "quiz",
+        "title": "Оберіть правильну форму",
+        "items": [
+            {
+                "question": "Яка форма правильна для «я»?",
+                "options": ["користуювася", "користуюся"],
+                answer_key: "користуюся",
+            }
+        ],
+    }
+
+    vesum_text = linear_pipeline._activity_vesum_text(activity)
+
+    assert "користуювася" not in vesum_text
+    assert "користуюся" in vesum_text
+
+
 def test_vesum_gate_skips_fill_in_answer_suffix_without_options_field(
     tmp_path: Path,
 ) -> None:
@@ -3110,6 +3133,67 @@ def test_textbook_match_tokens_strips_syllable_breaks_symmetrically() -> None:
     # sides — `_collapse_syllable_break` rejects parts >4 chars.
     compounds = tokens("Івано-Франківськ темно-синій я-форма")
     assert compounds == ["івано-франківськ", "темно-синіи", "я-форма"]
+
+
+def test_textbook_grounding_matches_punctuation_different_attribution(
+    tmp_path: Path,
+) -> None:
+    quote = (
+        "Ранковий план Євгена простий і послідовний. Уранці він устав із "
+        "ліжка сам, прибрав ліжко сам, зробив зарядку сам, на кухні "
+        "поставив чашку, після сніданку помив посуд, а тато усміхався "
+        "й уважно дивився на сина."
+    )
+    module_text = "\n".join(
+        [
+            "## Ранковий план",
+            "",
+            f"> {quote}",
+            "",
+            "*— Захарійчук, Grade 1, p.24*",
+            "",
+        ]
+    )
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "writer_tool_calls.json").write_text(
+        json.dumps(
+            [
+                {
+                    "name": "mcp__sources__search_text",
+                    "result": [{"source_type": "textbook", "text": quote}],
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    plan = {"level": "a1", "references": [{"title": "Захарійчук Grade 1, p.24"}]}
+    wrong_page_plan = {
+        "level": "a1",
+        "references": [{"title": "Захарійчук Grade 1, p.52"}],
+    }
+
+    assert linear_pipeline._citation_ref_text_contains(
+        "Захарійчук Grade 1, p.24",
+        "— Захарійчук, Grade 1, p.24",
+    )
+    assert not linear_pipeline._citation_ref_text_contains(
+        "Захарійчук Grade 1, p.52",
+        "— Захарійчук, Grade 1, p.24",
+    )
+    report = linear_pipeline._textbook_grounding_gate(module_text, plan, module_dir)
+    wrong_page_report = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        wrong_page_plan,
+        module_dir,
+    )
+
+    assert report["passed"] is True
+    assert report["matched"] == ["Захарійчук Grade 1, p.24"]
+    assert wrong_page_report["passed"] is False
+    assert wrong_page_report["matched"] == []
+    assert wrong_page_report["missing"] == ["Захарійчук Grade 1, p.52"]
 
 
 def test_count_uk_example_bullets_includes_table_rows() -> None:
