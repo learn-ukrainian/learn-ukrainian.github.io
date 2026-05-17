@@ -4,6 +4,10 @@ This module intentionally implements a one-way build path: plan validation,
 research packet assembly, prompt rendering, writer invocation, deterministic
 Python QG, independent LLM QG aggregation, and MDX assembly. It does not expose
 any LLM rewrite or regeneration loop.
+
+Path 3 PR3 adds a bounded wiki_coverage correction loop around deterministic
+fix proposals; see
+docs/decisions/2026-05-17-path3-per-obligation-review-loop.md.
 """
 
 from __future__ import annotations
@@ -11,11 +15,12 @@ from __future__ import annotations
 import json
 import logging
 import re
+import shutil
 import sqlite3
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
-from collections.abc import Callable, Collection, Mapping
+from collections.abc import Callable, Collection, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -277,6 +282,10 @@ TELEMETRY_MAX_FAILED_WORDS = 5
 TELEMETRY_MAX_THEATRE_VIOLATIONS = 25
 TEXTBOOK_GROUNDING_MIN_WORDS = 30
 CORRECTION_PREVIEW_CHARS = 200
+WIKI_COVERAGE_BATCH_MAX_ITERATIONS = 2
+WIKI_COVERAGE_NARROW_MAX_ITERATIONS = 2
+WIKI_COVERAGE_PATCHABLE_ARTIFACTS = frozenset({"module.md", "activities.yaml"})
+WIKI_COVERAGE_ARTIFACT_INFERENCE_ORDER = ("activities.yaml", "module.md")
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
 
@@ -3024,6 +3033,122 @@ def render_wiki_coverage_review_prompt(
     )
 
 
+def wiki_coverage_correction_context(
+    *,
+    plan: Mapping[str, Any],
+    failure_group_key: str,
+    fix_proposals: Sequence[Mapping[str, Any]],
+    artifact_text: str,
+    coverage_pct_before: float,
+    iteration: int,
+) -> dict[str, str]:
+    """Build prompt context for one batched wiki_coverage correction group."""
+    level = str(plan["level"])
+    sequence = int(plan["sequence"])
+    return {
+        "LEVEL": level,
+        "MODULE_NUM": str(sequence),
+        "MODULE_SLUG": str(plan["slug"]),
+        "WORD_TARGET": str(plan["word_target"]),
+        "FAILURE_GROUP_KEY": failure_group_key,
+        "FIX_PROPOSALS_YAML": yaml.safe_dump(
+            list(fix_proposals),
+            allow_unicode=True,
+            sort_keys=False,
+        ).strip(),
+        "ARTIFACT_TEXT": artifact_text,
+        "COVERAGE_PCT_BEFORE": f"{coverage_pct_before:.4f}",
+        "ITERATION": str(iteration),
+    }
+
+
+def render_wiki_coverage_correction_prompt(
+    *,
+    plan: Mapping[str, Any],
+    failure_group_key: str,
+    fix_proposals: Sequence[Mapping[str, Any]],
+    artifact_text: str,
+    coverage_pct_before: float,
+    iteration: int,
+) -> str:
+    return render_phase_prompt(
+        PROJECT_ROOT
+        / "scripts"
+        / "build"
+        / "phases"
+        / "linear-correction-wiki-coverage.md",
+        wiki_coverage_correction_context(
+            plan=plan,
+            failure_group_key=failure_group_key,
+            fix_proposals=fix_proposals,
+            artifact_text=artifact_text,
+            coverage_pct_before=coverage_pct_before,
+            iteration=iteration,
+        ),
+    )
+
+
+def wiki_coverage_narrow_correction_context(
+    *,
+    plan: Mapping[str, Any],
+    fix_proposal: Mapping[str, Any],
+    artifact_text: str,
+    previous_batched_attempts: int,
+) -> dict[str, str]:
+    """Build prompt context for one per-obligation wiki_coverage correction."""
+    level = str(plan["level"])
+    sequence = int(plan["sequence"])
+    expected_treatment = fix_proposal.get("expected_treatment")
+    manifest_payload = fix_proposal.get("manifest_payload")
+    return {
+        "LEVEL": level,
+        "MODULE_NUM": str(sequence),
+        "MODULE_SLUG": str(plan["slug"]),
+        "WORD_TARGET": str(plan.get("word_target", "")),
+        "OBLIGATION_ID": str(fix_proposal.get("obligation_id") or ""),
+        "OBLIGATION_TYPE": str(fix_proposal.get("obligation_type") or ""),
+        "FAILURE_REASON": str(fix_proposal.get("failure_reason") or ""),
+        "EXPECTED_TREATMENT": yaml.safe_dump(
+            dict(expected_treatment) if isinstance(expected_treatment, Mapping) else {},
+            allow_unicode=True,
+            sort_keys=False,
+        ).strip(),
+        "MANIFEST_PAYLOAD": yaml.safe_dump(
+            dict(manifest_payload) if isinstance(manifest_payload, Mapping) else {},
+            allow_unicode=True,
+            sort_keys=False,
+        ).strip(),
+        "SURGICAL_DIFF_HINT": str(fix_proposal.get("surgical_diff_hint") or ""),
+        "CURRENT_ARTIFACT_STATE": str(
+            fix_proposal.get("current_artifact_state") or ""
+        ),
+        "FULL_ARTIFACT_TEXT": artifact_text,
+        "PREVIOUS_BATCHED_ATTEMPTS": str(previous_batched_attempts),
+    }
+
+
+def render_wiki_coverage_narrow_correction_prompt(
+    *,
+    plan: Mapping[str, Any],
+    fix_proposal: Mapping[str, Any],
+    artifact_text: str,
+    previous_batched_attempts: int,
+) -> str:
+    return render_phase_prompt(
+        PROJECT_ROOT
+        / "scripts"
+        / "build"
+        / "phases"
+        / "linear-correction-wiki-coverage-narrow.md",
+        wiki_coverage_narrow_correction_context(
+            plan=plan,
+            fix_proposal=fix_proposal,
+            artifact_text=artifact_text,
+            previous_batched_attempts=previous_batched_attempts,
+        ),
+    )
+
+
 def _quote_items_from_text(text: str) -> list[str]:
     quotes: list[str] = []
     quote_re = re.compile(
@@ -3602,6 +3727,504 @@ def run_python_qg_with_corrections(
                 }
                 gates["passed"] = False
             return report
+
+
+def run_wiki_coverage_with_corrections(
+    *,
+    plan: Mapping[str, Any],
+    manifest: Mapping[str, Any] | str | Path,
+    writer_output: str,
+    module_dir: Path,
+    level: str | None = None,
+    batched_corrector: Callable[..., str] | None = None,
+    narrow_corrector: Callable[..., str] | None = None,
+    invoker: Callable[..., Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Run wiki_coverage_gate with batched and narrow correction loops.
+
+    PR1 provides the seeded ``implementation_map.json`` sidecar, PR2 provides
+    structured ``fix_proposals``, and PR3 applies bounded deterministic fixes
+    from those proposals. PR4's Goodhart sentinel stays out of scope here and
+    remains the existing wiki_coverage_review phase.
+
+    Returns the final gate report. The caller decides whether ``passed=False``
+    should abort the build.
+    """
+
+    def _run_gate() -> dict[str, Any]:
+        return run_wiki_coverage_gate(
+            manifest=manifest,
+            writer_output=writer_output,
+            module_dir=module_dir,
+            level=level,
+        )
+
+    result = _run_gate()
+    if result.get("passed") is True:
+        return result
+
+    batched_attempts = 0
+    narrow_attempts = 0
+    for iteration in range(1, WIKI_COVERAGE_BATCH_MAX_ITERATIONS + 1):
+        proposals = _wiki_coverage_fix_proposals(result)
+        if not proposals:
+            break
+        batched_attempts = iteration
+        coverage_before = _wiki_coverage_coverage_pct(result)
+        groups = _wiki_coverage_grouped_fix_proposals(proposals, module_dir)
+        _emit(
+            event_sink,
+            "wiki_coverage_correction_pass_start",
+            phase="batched",
+            iteration=iteration,
+            coverage_pct_before=coverage_before,
+            fail_count=len(proposals),
+        )
+        backup_dir = _backup_wiki_coverage_artifacts(
+            module_dir,
+            phase="batched",
+            iteration=iteration,
+        )
+        fixes_applied_total = 0
+        for group in groups:
+            artifact = str(group["artifact"])
+            artifact_text = _read_required(module_dir / artifact)
+            prompt = render_wiki_coverage_correction_prompt(
+                plan=plan,
+                failure_group_key=str(group["key"]),
+                fix_proposals=group["proposals"],
+                artifact_text=artifact_text,
+                coverage_pct_before=coverage_before,
+                iteration=iteration,
+            )
+            response = _wiki_coverage_corrector_response(
+                corrector=batched_corrector,
+                invoker=invoker,
+                prompt=prompt,
+                module_dir=module_dir,
+                effort="xhigh",
+                task_id=f"wiki-coverage-batched-{iteration}",
+                event_sink=event_sink,
+                phase="batched",
+                iteration=iteration,
+                group_key=str(group["key"]),
+                fix_proposals=group["proposals"],
+                artifact_text=artifact_text,
+            )
+            fixes = _parse_reviewer_fixes(response)
+            if not fixes:
+                _emit(
+                    event_sink,
+                    "wiki_coverage_correction_unparseable",
+                    phase="batched",
+                    iteration=iteration,
+                    group_key=str(group["key"]),
+                    response_preview=str(response or "")[:800],
+                )
+                continue
+            fixes_applied_total += _apply_wiki_coverage_fixes(
+                module_dir=module_dir,
+                artifact=artifact,
+                fixes=fixes,
+                phase="batched",
+                iteration=iteration,
+                event_sink=event_sink,
+                group_key=str(group["key"]),
+            )
+
+        after = _run_gate()
+        coverage_after = _wiki_coverage_coverage_pct(after)
+        if coverage_after < coverage_before - 1e-6:
+            _restore_wiki_coverage_artifacts(module_dir, backup_dir)
+            result = _run_gate()
+            _emit(
+                event_sink,
+                "wiki_coverage_correction_regression",
+                phase="batched",
+                iteration=iteration,
+                coverage_pct_before=coverage_before,
+                coverage_pct_after=coverage_after,
+            )
+            break
+        _emit(
+            event_sink,
+            "wiki_coverage_correction_pass_done",
+            phase="batched",
+            iteration=iteration,
+            coverage_pct_before=coverage_before,
+            coverage_pct_after=coverage_after,
+            fail_count=len(proposals),
+            fixes_applied_total=fixes_applied_total,
+            groups_processed=len(groups),
+        )
+        result = after
+        if result.get("passed") is True:
+            return result
+        if coverage_after <= coverage_before + 1e-6:
+            break
+
+    for iteration in range(1, WIKI_COVERAGE_NARROW_MAX_ITERATIONS + 1):
+        proposals = _wiki_coverage_fix_proposals(result)
+        if not proposals:
+            break
+        narrow_attempts = iteration
+        coverage_before = _wiki_coverage_coverage_pct(result)
+        _emit(
+            event_sink,
+            "wiki_coverage_correction_pass_start",
+            phase="narrow",
+            iteration=iteration,
+            coverage_pct_before=coverage_before,
+            fail_count=len(proposals),
+        )
+        backup_dir = _backup_wiki_coverage_artifacts(
+            module_dir,
+            phase="narrow",
+            iteration=iteration,
+        )
+        fixes_applied_total = 0
+        obligations_processed = 0
+        for proposal in proposals:
+            obligations_processed += 1
+            artifact = _wiki_coverage_target_artifact(proposal, module_dir)
+            artifact_text = _read_required(module_dir / artifact)
+            prompt = render_wiki_coverage_narrow_correction_prompt(
+                plan=plan,
+                fix_proposal=proposal,
+                artifact_text=artifact_text,
+                previous_batched_attempts=batched_attempts,
+            )
+            response = _wiki_coverage_corrector_response(
+                corrector=narrow_corrector,
+                invoker=invoker,
+                prompt=prompt,
+                module_dir=module_dir,
+                effort="high",
+                task_id=f"wiki-coverage-narrow-{iteration}",
+                event_sink=event_sink,
+                phase="narrow",
+                iteration=iteration,
+                obligation_id=str(proposal.get("obligation_id") or ""),
+                fix_proposal=proposal,
+                artifact_text=artifact_text,
+            )
+            fixes = _parse_reviewer_fixes(response)
+            if not fixes:
+                _emit(
+                    event_sink,
+                    "wiki_coverage_correction_unparseable",
+                    phase="narrow",
+                    iteration=iteration,
+                    obligation_id=str(proposal.get("obligation_id") or ""),
+                    response_preview=str(response or "")[:800],
+                )
+                continue
+            fixes_applied_total += _apply_wiki_coverage_fixes(
+                module_dir=module_dir,
+                artifact=artifact,
+                fixes=fixes,
+                phase="narrow",
+                iteration=iteration,
+                event_sink=event_sink,
+                obligation_id=str(proposal.get("obligation_id") or ""),
+            )
+
+        after = _run_gate()
+        coverage_after = _wiki_coverage_coverage_pct(after)
+        if coverage_after < coverage_before - 1e-6:
+            _restore_wiki_coverage_artifacts(module_dir, backup_dir)
+            result = _run_gate()
+            _emit(
+                event_sink,
+                "wiki_coverage_correction_regression",
+                phase="narrow",
+                iteration=iteration,
+                coverage_pct_before=coverage_before,
+                coverage_pct_after=coverage_after,
+            )
+            break
+        _emit(
+            event_sink,
+            "wiki_coverage_correction_pass_done",
+            phase="narrow",
+            iteration=iteration,
+            coverage_pct_before=coverage_before,
+            coverage_pct_after=coverage_after,
+            fail_count=len(proposals),
+            fixes_applied_total=fixes_applied_total,
+            obligations_processed=obligations_processed,
+        )
+        result = after
+        if result.get("passed") is True:
+            return result
+
+    _emit(
+        event_sink,
+        "wiki_coverage_plan_revision_request",
+        coverage_pct_final=_wiki_coverage_coverage_pct(result),
+        remaining_failures=_wiki_coverage_remaining_failures(result),
+        total_iterations=batched_attempts + narrow_attempts,
+        iterations_exhausted=True,
+    )
+    return result
+
+
+def _wiki_coverage_fix_proposals(
+    result: Mapping[str, Any],
+) -> list[Mapping[str, Any]]:
+    proposals = result.get("fix_proposals") or []
+    if not isinstance(proposals, Sequence) or isinstance(proposals, (str, bytes)):
+        return []
+    return [item for item in proposals if isinstance(item, Mapping)]
+
+
+def _wiki_coverage_coverage_pct(result: Mapping[str, Any]) -> float:
+    try:
+        return float(result.get("coverage_pct", 0.0))
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _wiki_coverage_grouped_fix_proposals(
+    proposals: Sequence[Mapping[str, Any]],
+    module_dir: Path,
+) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str], list[Mapping[str, Any]]] = {}
+    for proposal in proposals:
+        obligation_type = str(proposal.get("obligation_type") or "unknown")
+        group_artifact = _wiki_coverage_group_key_artifact(proposal)
+        if group_artifact:
+            group_key = f"(artifact={group_artifact}, obligation_type={obligation_type})"
+        else:
+            group_key = f"(obligation_type={obligation_type})"
+        target_artifact = _wiki_coverage_target_artifact(proposal, module_dir)
+        grouped.setdefault((group_key, target_artifact), []).append(proposal)
+    return [
+        {
+            "key": group_key,
+            "artifact": artifact,
+            "proposals": tuple(items),
+        }
+        for (group_key, artifact), items in grouped.items()
+    ]
+
+
+def _wiki_coverage_group_key_artifact(proposal: Mapping[str, Any]) -> str | None:
+    expected_treatment = proposal.get("expected_treatment")
+    if isinstance(expected_treatment, Mapping):
+        artifact = _wiki_coverage_normalize_artifact(expected_treatment.get("artifact"))
+        if artifact:
+            return artifact
+    return _wiki_coverage_normalize_artifact(proposal.get("artifact"))
+
+
+def _wiki_coverage_target_artifact(proposal: Mapping[str, Any], module_dir: Path) -> str:
+    artifact = _wiki_coverage_group_key_artifact(proposal)
+    if artifact:
+        return artifact
+    obligation_id = str(proposal.get("obligation_id") or "")
+    artifact_index = _wiki_coverage_seeded_artifact_index(module_dir)
+    artifact = _wiki_coverage_normalize_artifact(artifact_index.get(obligation_id))
+    if artifact:
+        return artifact
+    return _wiki_coverage_infer_artifact(proposal)
+
+
+def _wiki_coverage_seeded_artifact_index(module_dir: Path) -> dict[str, str]:
+    implementation_map_path = module_dir / "implementation_map.json"
+    if not implementation_map_path.exists():
+        return {}
+    try:
+        data = json.loads(implementation_map_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    entries = data.get("entries") if isinstance(data, Mapping) else None
+    if not isinstance(entries, Sequence) or isinstance(entries, (str, bytes)):
+        return {}
+    index: dict[str, str] = {}
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            continue
+        obligation_id = str(entry.get("obligation_id") or "")
+        artifact = _wiki_coverage_normalize_artifact(entry.get("artifact"))
+        if obligation_id and artifact:
+            index[obligation_id] = artifact
+    return index
+
+
+def _wiki_coverage_infer_artifact(proposal: Mapping[str, Any]) -> str:
+    expected_treatment = proposal.get("expected_treatment")
+    if isinstance(expected_treatment, Mapping):
+        treatment_text = "\n".join(str(value) for value in expected_treatment.values())
+        for artifact in WIKI_COVERAGE_ARTIFACT_INFERENCE_ORDER:
+            if artifact in treatment_text:
+                return artifact
+    haystack_parts: list[str] = []
+    for key in ("surgical_diff_hint", "current_artifact_state"):
+        haystack_parts.append(str(proposal.get(key) or ""))
+    haystack = "\n".join(haystack_parts)
+    for artifact in WIKI_COVERAGE_ARTIFACT_INFERENCE_ORDER:
+        if artifact in haystack:
+            return artifact
+    return "module.md"
+
+
+def _wiki_coverage_normalize_artifact(value: Any) -> str | None:
+    artifact = str(value or "").strip()
+    if artifact in WIKI_COVERAGE_PATCHABLE_ARTIFACTS:
+        return artifact
+    return None
+
+
+def _wiki_coverage_corrector_response(
+    *,
+    corrector: Callable[..., str] | None,
+    invoker: Callable[..., Any] | None,
+    prompt: str,
+    module_dir: Path,
+    effort: str,
+    task_id: str,
+    event_sink: Callable[..., None] | None,
+    **corrector_kwargs: Any,
+) -> str:
+    if corrector is not None:
+        return str(
+            corrector(
+                prompt=prompt,
+                module_dir=module_dir,
+                **corrector_kwargs,
+            )
+            or ""
+        )
+    runtime_invoke = invoker
+    if runtime_invoke is None:
+        from scripts.agent_runtime.runner import invoke as runtime_invoke
+
+    result = runtime_invoke(
+        "codex",
+        prompt,
+        mode="read-only",
+        cwd=module_dir,
+        model=REVIEWER_DEFAULTS["codex-tools"]["model"],
+        task_id=task_id,
+        entrypoint="runtime",
+        effort=effort,
+        tool_config=_runtime_tool_config("codex-tools", event_sink=event_sink),
+        event_sink=event_sink,
+    )
+    return str(getattr(result, "response", "") or "")
+
+
+def _backup_wiki_coverage_artifacts(
+    module_dir: Path,
+    *,
+    phase: str,
+    iteration: int,
+) -> Path:
+    backup_dir = module_dir / ".wiki_correction_backup" / f"{phase}_iter_{iteration}"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    for artifact in WIKI_COVERAGE_PATCHABLE_ARTIFACTS:
+        source = module_dir / artifact
+        if source.exists():
+            shutil.copy2(source, backup_dir / artifact)
+    return backup_dir
+
+
+def _restore_wiki_coverage_artifacts(module_dir: Path, backup_dir: Path) -> None:
+    if not backup_dir.exists():
+        return
+    for backup_file in backup_dir.iterdir():
+        if backup_file.name in WIKI_COVERAGE_PATCHABLE_ARTIFACTS:
+            shutil.copy2(backup_file, module_dir / backup_file.name)
+
+
+def _apply_wiki_coverage_fixes(
+    *,
+    module_dir: Path,
+    artifact: str,
+    fixes: list[dict[str, str]],
+    phase: str,
+    iteration: int,
+    event_sink: Callable[..., None] | None,
+    group_key: str | None = None,
+    obligation_id: str | None = None,
+) -> int:
+    artifact_path = module_dir / artifact
+    original = _read_required(artifact_path)
+    applicable_count = _count_applicable_reviewer_fixes(original, fixes)
+    result = _apply_reviewer_fixes(
+        original,
+        fixes,
+        gate="wiki_coverage_gate",
+        module_dir=module_dir,
+    )
+    artifact_path.write_text(result.text, encoding="utf-8")
+    try:
+        _validate_wiki_coverage_artifact_text(artifact, result.text)
+    except LinearPipelineError as exc:
+        artifact_path.write_text(original, encoding="utf-8")
+        _emit(
+            event_sink,
+            "wiki_coverage_correction_yaml_invalid",
+            phase=phase,
+            iteration=iteration,
+            artifact=artifact,
+            error_preview=str(exc)[:800],
+        )
+        return 0
+    _emit(
+        event_sink,
+        "wiki_coverage_correction_fixes_applied",
+        phase=phase,
+        iteration=iteration,
+        artifact=artifact,
+        fixes_applied=applicable_count,
+        group_key=group_key,
+        obligation_id=obligation_id,
+    )
+    return applicable_count
+
+
+def _count_applicable_reviewer_fixes(text: str, fixes: Sequence[Mapping[str, str]]) -> int:
+    updated = text
+    count = 0
+    for fix in fixes:
+        if "insert_after" in fix and "text" in fix:
+            anchor = str(fix["insert_after"])
+            if anchor in updated:
+                updated = updated.replace(anchor, anchor + str(fix["text"]), 1)
+                count += 1
+            continue
+        find = str(fix.get("find") or "")
+        if find and find in updated:
+            updated = updated.replace(find, str(fix.get("replace") or ""), 1)
+            count += 1
+    return count
+
+
+def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
+    if artifact != "activities.yaml":
+        return
+    parsed = yaml.safe_load(text)
+    if not isinstance(parsed, list):
+        raise LinearPipelineError("activities.yaml must remain a bare YAML list")
+    if not all(isinstance(item, dict) for item in parsed):
+        raise LinearPipelineError("activities.yaml entries must remain mappings")
+
+
+def _wiki_coverage_remaining_failures(result: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    proposals = _wiki_coverage_fix_proposals(result)
+    if proposals:
+        return proposals
+    obligations = result.get("obligations") or []
+    if not isinstance(obligations, Sequence) or isinstance(obligations, (str, bytes)):
+        return []
+    return [
+        item
+        for item in obligations
+        if isinstance(item, Mapping) and item.get("status") == "FAIL"
+    ]
 
 
 def _first_failed_correctable_gate(report: Mapping[str, Any]) -> str | None:
