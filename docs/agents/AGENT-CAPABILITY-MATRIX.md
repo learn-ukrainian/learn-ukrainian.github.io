@@ -151,6 +151,26 @@ clean parity with claude/codex/gemini adapters.
 **Recommendation:** Build `opencode_deepseek.py` instead. Hermes stays scoped to
 **Grok only**, where it's the canonical adapter and we have no opencode-equivalent.
 
+#### Aside: can we use opencode for Grok too?
+
+Probed 2026-05-17. **Not natively today, but extensible if we want it.**
+
+- `opencode models` lists only `github-copilot/grok-code-fast-1` — Grok routed via
+  GitHub Copilot's API, not native xAI. PONG returns `Forbidden: unauthorized: not
+  licensed to use Copilot`. Path dead without a paid Copilot tier, and it's
+  `grok-code-fast-1` not `grok-4.3` — different capability profile (faster +
+  code-tuned, weaker on the research/reasoning where Grok wins for us).
+- opencode DOES support custom OpenAI-compatible providers via
+  `~/.config/opencode/opencode.jsonc`. xAI exposes `https://api.x.ai/v1`. Adding
+  10-15 lines of config + `XAI_API_KEY` env var would unlock `opencode_grok.py`.
+
+**Recommendation: KEEP hermes for Grok 4.3 until consolidation pays off.** The
+existing `hermes_grok.py` works, MCP is wired, and migration cost (config +
+adapter rewrite + retest) outweighs current pain. Revisit IF the DeepSeek +
+Mistral adapters land AND we find ourselves duplicating hermes logic. Then
+consolidate to opencode for all OpenAI-compatible API agents (Mistral via vibe
+stays separate as its own CLI surface).
+
 ### 3. INVESTIGATE: `gemma-local`
 
 **Evidence:** `runtime.agents` list at `/api/orient` includes `gemma-local`. No
