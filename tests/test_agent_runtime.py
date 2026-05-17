@@ -1712,6 +1712,13 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
         {
             "GEMINI_API_KEY": "secret-key",
             "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+            # This test mocks subprocess.Popen with fake procs that
+            # expose proc.stderr.readline (a pipe-mode contract).
+            # PTY-mode reads from a master fd that the mock never
+            # writes to, so opt out for ladder-logic tests. The PTY
+            # path is exercised end-to-end in
+            # tests/agent_runtime/test_pty_subprocess_wrap.py (#2071).
+            "DELEGATE_DISABLE_PTY": "1",
         },
         clear=False,
     ), patch(
@@ -1781,6 +1788,8 @@ def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
             "GEMINI_AUTH_MODE": "api",
             "GEMINI_API_KEY": "secret-key",
             "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+            # Pipe-mode mocks (see ladder-fallback test above). #2071.
+            "DELEGATE_DISABLE_PTY": "1",
         },
         clear=False,
     ), patch(
@@ -1840,6 +1849,8 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
             "GEMINI_AUTH_MODE": "api",
             "GEMINI_API_KEY": "secret-key",
             "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+            # Pipe-mode mocks (see ladder-fallback tests above). #2071.
+            "DELEGATE_DISABLE_PTY": "1",
         },
         clear=False,
     ), patch(

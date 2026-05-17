@@ -31,7 +31,9 @@ Issue: #1184
 from __future__ import annotations
 
 import contextlib
+import errno
 import os
+import re
 import subprocess
 import threading
 import time
@@ -48,6 +50,23 @@ _MTIME_POLL_INTERVAL_S = 5.0
 # this many paths will only have the first _MAX_LIVENESS_PATHS polled.
 # Arbitrary but bounded — prevents adapter mistakes from causing poll storms.
 _MAX_LIVENESS_PATHS = 5
+
+# Read chunk size for PTY master reads. 4 KiB matches the typical libc
+# line-buffer size; bigger reads are fine but waste no time on partial
+# kernel buffers because os.read on a PTY returns whatever is available.
+_PTY_READ_CHUNK = 4096
+
+# Strip CSI / SGR escape sequences emitted by TTY-detecting CLIs. PTY-wrapped
+# children think their stdout is interactive and may emit ANSI color codes,
+# cursor saves, and similar. Stream-json payloads never contain literal
+# control bytes (RFC 8259 requires they be escaped), so stripping here is
+# safe for the JSON event consumer in the runner.
+_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+
+
+def _strip_ansi(line: str) -> str:
+    """Remove ANSI SGR / CSI escape sequences from a line."""
+    return _ANSI_ESCAPE_RE.sub("", line)
 
 
 @dataclass
@@ -153,6 +172,85 @@ def _stderr_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
             pass
 
 
+def _pty_line_streamer(
+    master_fd: int,
+    state: WatchdogState,
+    *,
+    is_stderr: bool,
+) -> None:
+    """Background thread: read from a PTY master fd, emit complete lines.
+
+    Unlike the pipe-based streamers above, this path reads raw bytes
+    from a master pty fd via ``os.read`` and reassembles them into
+    newline-terminated strings. PTY usage means the child's libc
+    detects a TTY and switches stdout to line-buffered mode — events
+    arrive in real time rather than sitting in a block-buffer for
+    minutes. See ``_spawn_pty_subprocess`` in runner.py for the why.
+
+    EOF semantics differ by OS:
+      * macOS / *BSD: ``os.read`` returns ``b""`` when the slave side
+        closes (child exits or closes the fd).
+      * Linux: ``os.read`` raises ``OSError(errno=EIO)`` instead.
+
+    Both cases are treated as a clean shutdown signal — symmetrical
+    with how the pipe-based streamer ends on ``iter(..., "")``.
+
+    Issue: #2071.
+    """
+    buffer = bytearray()
+    try:
+        while not state.stop:
+            try:
+                chunk = os.read(master_fd, _PTY_READ_CHUNK)
+            except OSError as exc:
+                # Linux EIO == PTY slave closed; mac/BSD returns b"" instead.
+                if exc.errno == errno.EIO:
+                    chunk = b""
+                else:
+                    raise
+            if not chunk:
+                break  # EOF — child closed its end of the PTY
+            buffer.extend(chunk)
+            while True:
+                nl_index = buffer.find(b"\n")
+                if nl_index == -1:
+                    break
+                raw_line = bytes(buffer[: nl_index + 1])
+                del buffer[: nl_index + 1]
+                line = raw_line.decode("utf-8", errors="replace")
+                # PTY default output mode adds \r before \n. We disable
+                # OPOST on the slave (see runner._spawn_pty_subprocess)
+                # but strip \r defensively in case that termios call
+                # fails or the platform behaves differently.
+                if line.endswith("\r\n"):
+                    line = line[:-2] + "\n"
+                line = _strip_ansi(line)
+                _emit_line(state, line, is_stderr=is_stderr)
+    except (ValueError, OSError):
+        # Master fd closed underneath us (e.g. cleanup raced ahead);
+        # treat as clean shutdown — same semantics as the pipe path.
+        pass
+    finally:
+        # Flush any tail that didn't end in \n — agents sometimes exit
+        # mid-line on crash, and we want to capture that final fragment.
+        if buffer:
+            tail = bytes(buffer).decode("utf-8", errors="replace")
+            tail = tail.replace("\r\n", "\n")
+            tail = _strip_ansi(tail)
+            _emit_line(state, tail, is_stderr=is_stderr)
+
+
+def _emit_line(state: WatchdogState, line: str, *, is_stderr: bool) -> None:
+    """Append a decoded line to the relevant state buffer + bump activity."""
+    now = time.monotonic()
+    if is_stderr:
+        state.stderr_lines.append(line)
+    else:
+        state.stdout_lines.append(line)
+        state.last_stdout_activity = now
+    state.last_activity = now
+
+
 def _mtime_poller(paths: Iterable[Path], state: WatchdogState) -> None:
     """Background thread: poll file mtimes, bump last_activity on changes.
 
@@ -182,27 +280,51 @@ def _mtime_poller(paths: Iterable[Path], state: WatchdogState) -> None:
 
 def start_watchdog(
     proc: subprocess.Popen,
-    liveness_paths: Iterable[Path],
+    liveness_paths: Iterable[Path] = (),
+    *,
+    stdout_master_fd: int | None = None,
+    stderr_master_fd: int | None = None,
 ) -> tuple[WatchdogState, list[threading.Thread]]:
     """Start the stdout streamer + mtime poller threads for a running subprocess.
 
     Args:
-        proc: A Popen object with ``stdout=subprocess.PIPE`` and ``text=True``.
+        proc: A Popen object.
         liveness_paths: Paths to poll for mtime changes (adapter-provided).
             Capped at ``_MAX_LIVENESS_PATHS``.
+        stdout_master_fd: PTY master fd for the child's stdout. When
+            provided, a PTY-mode streamer (``_pty_line_streamer``) reads
+            from this fd instead of ``proc.stdout``. Required for
+            block-buffer-breaking line-buffered streaming — see
+            ``_spawn_pty_subprocess`` in runner.py (#2071).
+        stderr_master_fd: PTY master fd for the child's stderr. Same
+            semantics as ``stdout_master_fd``.
+
+    When the fd kwargs are ``None`` the watchdog falls back to the
+    legacy pipe-mode streamers — exercised by the ``DELEGATE_DISABLE_PTY``
+    opt-out and the regression-pin tests at tests/test_agent_runtime.py.
 
     Returns:
         (state, threads): The shared state and the list of started threads.
-        Callers must call ``stop_watchdog(state, threads)`` to join them
-        cleanly after the subprocess terminates.
+        Callers must call ``stop_watchdog(state, threads, proc=proc, ...)``
+        to join them cleanly after the subprocess terminates.
     """
     now = time.monotonic()
     state = WatchdogState(start_time=now, last_activity=now, last_stdout_activity=now)
 
     threads: list[threading.Thread] = []
 
-    # Layer 1a: stdout streamer (always started if stdout is a pipe)
-    if proc.stdout is not None:
+    # Layer 1a: stdout streamer.
+    if stdout_master_fd is not None:
+        t_stdout = threading.Thread(
+            target=_pty_line_streamer,
+            args=(stdout_master_fd, state),
+            kwargs={"is_stderr": False},
+            name=f"watchdog-stdout-{proc.pid}",
+            daemon=True,
+        )
+        t_stdout.start()
+        threads.append(t_stdout)
+    elif proc.stdout is not None:
         t_stdout = threading.Thread(
             target=_stdout_streamer,
             args=(proc, state),
@@ -219,7 +341,17 @@ def start_watchdog(
     # macOS buffer and block the subprocess forever on its next
     # stderr write. Added 2026-04-10 after reproducing a multi-minute
     # hang on tool-heavy Codex tasks. See _stderr_streamer docstring.
-    if proc.stderr is not None:
+    if stderr_master_fd is not None:
+        t_stderr = threading.Thread(
+            target=_pty_line_streamer,
+            args=(stderr_master_fd, state),
+            kwargs={"is_stderr": True},
+            name=f"watchdog-stderr-{proc.pid}",
+            daemon=True,
+        )
+        t_stderr.start()
+        threads.append(t_stderr)
+    elif proc.stderr is not None:
         t_stderr = threading.Thread(
             target=_stderr_streamer,
             args=(proc, state),
@@ -249,6 +381,9 @@ def stop_watchdog(
     threads: list[threading.Thread],
     timeout: float = 2.0,
     proc: subprocess.Popen | None = None,
+    *,
+    stdout_master_fd: int | None = None,
+    stderr_master_fd: int | None = None,
 ) -> None:
     """Signal the watchdog threads to stop and join them.
 
@@ -257,19 +392,22 @@ def stop_watchdog(
     1. ``state.stop = True`` unblocks the mtime poller (it checks this
        flag between sleeps).
 
-    2. Closing ``proc.stdout`` (if ``proc`` is provided) unblocks the
-       stdout streamer. Without this, the streamer sits on
-       ``proc.stdout.readline()`` forever because the OS pipe read is
-       not interruptible from another thread. Setting state.stop has
-       no effect on a blocked read. Closing the pipe from THIS thread
-       causes ``readline`` to raise ValueError (closed file) which the
-       streamer's try/except catches for a clean exit.
+    2. Closing ``proc.stdout`` (if ``proc`` is provided) — OR closing
+       the PTY master fds (when running in PTY mode, see #2071) —
+       unblocks the streamer. Without this, the streamer sits on
+       ``proc.stdout.readline()`` / ``os.read(master_fd, ...)`` forever
+       because the OS read is not interruptible from another thread.
+       Setting state.stop has no effect on a blocked read. Closing the
+       pipe or master fd from THIS thread causes the read to raise
+       ValueError / OSError which the streamer's try/except catches for
+       a clean exit.
 
-       Pass ``proc`` when you want the streamer to drop IMMEDIATELY
-       without waiting for the subprocess to exit on its own. If you
-       omit ``proc``, the streamer will still exit when the subprocess
-       terminates and its stdout pipe naturally closes — acceptable
-       for the normal path where we've already waited for exit.
+       Pass ``proc`` (and/or fds) when you want the streamer to drop
+       IMMEDIATELY without waiting for the subprocess to exit on its
+       own. If you omit them, the streamer will still exit when the
+       subprocess terminates and its descriptors naturally close —
+       acceptable for the normal path where we've already waited for
+       exit.
 
     Safe to call multiple times. Threads that don't join within
     ``timeout`` are left running as daemons — they'll be cleaned up
@@ -295,6 +433,15 @@ def stop_watchdog(
         if proc.stderr is not None:
             with contextlib.suppress(OSError, ValueError):
                 proc.stderr.close()
+
+    # PTY-mode equivalent: closing the master fds yields EIO/EOF in the
+    # streamer's os.read, which exits cleanly via the same try/except
+    # pattern as the pipe path. Idempotent — if the streamer's finally
+    # block already closed the fd, os.close raises EBADF, suppressed.
+    for fd in (stdout_master_fd, stderr_master_fd):
+        if fd is not None:
+            with contextlib.suppress(OSError):
+                os.close(fd)
 
     for t in threads:
         t.join(timeout=timeout)

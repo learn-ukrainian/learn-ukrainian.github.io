@@ -161,6 +161,14 @@ def test_claude_subprocess_argv_contains_allowed_tools(
         lambda _cmd_prefix: (2, 1, 119),
     )
 
+    # This test mocks subprocess.Popen with a FakeProc whose
+    # ``stdout`` is an in-memory ``io.StringIO``. That's a pipe-mode
+    # contract — the PTY path (#2071) reads from a real master fd
+    # that the fake never writes to, so we'd see response='' even
+    # when the mock did the right thing. Opt out: the test is about
+    # argv assembly + adapter parse, not about the spawn mechanism.
+    monkeypatch.setenv("DELEGATE_DISABLE_PTY", "1")
+
     with patch("scripts.agent_runtime.runner.has_headroom", return_value=(True, "")), patch(
         "scripts.agent_runtime.runner.write_record"
     ), patch("scripts.agent_runtime.runner.subprocess.Popen", side_effect=fake_popen):
