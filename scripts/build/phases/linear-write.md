@@ -98,13 +98,31 @@ that failure class. Run each check while drafting, not as a separate pass.
 
    The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX, so the bad form is still visible in plain prose. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. The marker is specifically for Russianisms, surzhyk forms, calques, and paronyms shown *to be avoided*. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
 
-   **CONCRETE FORBIDDEN PATTERNS — close-the-class enumeration.** These are the exact patterns that failed m20 rebuilds #2–#6. The `<!-- bad -->` marker is the ONLY accepted form for a bad-form contrast. Any of the following will trip `vesum_verified`, `formatting_standards`, or `russianisms_clean`:
+   **CONCRETE FORBIDDEN PATTERNS — HARD REJECT, close-the-class enumeration (#2094, #2095).** These are the exact patterns that failed m20 rebuilds #2–#17. The `<!-- bad -->` marker is the ONLY accepted form for a bad-form contrast.
+
+   **Silent emission of any italic-wrapped bad form is a HARD REJECT — the rebuild is wasted and `vesum_verified` will fail.** Yesterday's m20 build #17 emitted `❌ *Я дивюся* → ✅ **Я дивлюся**` and `not the L2 trap form ❌ *Я користуювася*` — both patterns the writer KNEW the rule for (the same writer used `<!-- bad -->` markers correctly in the same module for завтрак / полотенце / одіватися). Inconsistent application of this rule is the same failure class as silent obligation omission, and it now carries the same HARD REJECT consequence.
+
+   Any of the following will trip `vesum_verified`, `formatting_standards`, or `russianisms_clean`:
 
    - ❌ `*X*, not *Y*` — italic contrast pair. The italicized *Y* leaks into VESUM and is rejected.
    - ❌ `... not *Y*.` / `... not *Y*,` — bare italic bad form.
    - ❌ `say X, not Y` — unmarked bad form in prose. The unmarked Y leaks into VESUM lookup.
    - ❌ `instead of Y` / `замість Y` — unmarked bad form after a contrast preposition.
    - ❌ `(not Y)` / `(не Y)` — unmarked bad form in parentheses.
+
+### Pre-emit bad-form audit (mandatory — #2095)
+
+Before emitting the four artifact fences (after the `<implementation_map_audit>` line from #2094), you MUST self-audit your draft for any italic-wrapped bad-form pattern:
+
+1. Scan your draft `module.md` for any of: `❌ *X*`, `*X*, not *Y*`, `... not *Y*.`, `... not *Y*,`, or `say X, not Y`.
+2. For EVERY match, the bad form `X` or `Y` MUST be wrapped in `<!-- bad -->X<!-- /bad -->` markers, NOT in `*italic*` and NOT bare prose. The Russianism, surzhyk, calque, or L2-trap form is the load-bearing case.
+3. If your scan finds zero italic-bad-form patterns, you may proceed. If your scan finds any, STOP, replace them with `<!-- bad -->` markers, and re-scan.
+
+Emit a single visible audit line BEFORE the artifact fences (after the `<implementation_map_audit>` line):
+
+`<bad_form_audit>italic_bad_form_patterns_found=N converted_to_marker=N remaining=0</bad_form_audit>`
+
+If this audit line is missing, or if `remaining > 0`, the writer has failed the protocol and the rebuild is wasted. Mechanical consistency on this rule unlocks all m20 ship velocity.
 
    ✅ REQUIRED: `Stick to **X** (not the Russian-borrowed <!-- bad -->Y<!-- /bad -->).` — the `<!-- bad -->...<!-- /bad -->` marker wraps Y precisely. Markdown bold is fine for the GOOD form. Parentheses are fine around the bad form so long as the `<!-- bad -->` marker is inside them.
 
