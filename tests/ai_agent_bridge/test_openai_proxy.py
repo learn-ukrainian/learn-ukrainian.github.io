@@ -16,6 +16,17 @@ def _route_with_backend(model: str, backend):
     return replace(proxy._ROUTABLE_MODELS[model], backend=backend)
 
 
+def _assert_openai_validation_error(response, field: str | None = None) -> None:
+    assert response.status_code == 422
+    body = response.json()
+    assert set(body) == {"error"}
+    assert body["error"]["type"] == "invalid_request_error"
+    assert body["error"]["code"] == "validation_error"
+    assert body["error"]["message"]
+    if field is not None:
+        assert field in body["error"]["message"]
+
+
 def test_models_endpoint_lists_routable_models():
     response = _client().get("/v1/models")
 
@@ -152,8 +163,41 @@ def test_chat_completions_backend_timeout_returns_504(monkeypatch):
 def test_chat_completions_missing_messages_returns_422():
     response = _client().post("/v1/chat/completions", json={"model": "codex"})
 
-    assert response.status_code == 422
-    assert any(item["loc"][-1] == "messages" for item in response.json()["detail"])
+    _assert_openai_validation_error(response, "messages")
+
+
+def test_chat_completions_missing_model_returns_422():
+    response = _client().post(
+        "/v1/chat/completions",
+        json={"messages": [{"role": "user", "content": "hello"}]},
+    )
+
+    _assert_openai_validation_error(response, "model")
+
+
+def test_chat_completions_messages_wrong_type_returns_422():
+    response = _client().post(
+        "/v1/chat/completions",
+        json={"model": "codex", "messages": "hello"},
+    )
+
+    _assert_openai_validation_error(response, "messages")
+
+
+def test_chat_completions_empty_body_returns_422():
+    response = _client().post("/v1/chat/completions", json={})
+
+    _assert_openai_validation_error(response, "model")
+
+
+def test_chat_completions_invalid_json_body_returns_422():
+    response = _client().post(
+        "/v1/chat/completions",
+        content='{"model": "codex", "messages":',
+        headers={"content-type": "application/json"},
+    )
+
+    _assert_openai_validation_error(response)
 
 
 def test_message_flatten_preserves_role_order(monkeypatch):
