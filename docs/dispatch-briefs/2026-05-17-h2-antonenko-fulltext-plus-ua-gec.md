@@ -150,6 +150,7 @@ evidence_type ∈ {antonenko_headword, antonenko_prose, ua_gec_calque,
 ### 5. Eyeball check — render the prompt for the dirty case that broke H1
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts/audit')
 from _judge_eval_lib import build_judge_prompt, retrieve_evidence, pull_calibration_cases
@@ -174,6 +175,7 @@ threshold choice in a code comment.
 ### 6. Tests + lint
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pytest tests/audit/ -q
 .venv/bin/ruff check scripts/audit/_judge_eval_lib.py scripts/audit/judge_calibration_matrix.py
 ```
@@ -189,6 +191,7 @@ Add ONE new test in `tests/audit/test_judge_eval_lib_h2.py`:
 Same 6 cells as H1 (per-config filter; harness will skip unsupported combos):
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python scripts/audit/judge_calibration_matrix.py \
   --out-dir audit/2026-05-17-judge-calibration-h2 \
   --families anthropic,openai,google,xai \

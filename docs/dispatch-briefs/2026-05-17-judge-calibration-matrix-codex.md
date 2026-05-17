@@ -264,7 +264,9 @@ python scripts/audit/judge_calibration_matrix.py --build-report-only --out-dir a
 
 ```
 .venv/bin/ruff check scripts/audit/_judge_eval_lib.py scripts/audit/judge_calibration_matrix.py tests/audit/test_judge_calibration_matrix.py
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pytest tests/audit/test_judge_calibration_matrix.py -v
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pytest tests/audit/ -x -q
 ```
 

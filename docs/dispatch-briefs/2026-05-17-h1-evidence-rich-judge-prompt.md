@@ -142,6 +142,7 @@ And update `build_judge_prompt` signature to accept the dict instead of a list. 
 ### 5. Tests + lint
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pytest tests/audit/ -q
 .venv/bin/ruff check scripts/audit/_judge_eval_lib.py scripts/audit/judge_calibration_matrix.py
 ```
@@ -151,6 +152,7 @@ If existing tests break: read them, understand why, fix the test if the contract
 ### 6. Render the new prompt for the false-positive case (eyeball check)
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts/audit')
 from _judge_eval_lib import build_judge_prompt, retrieve_evidence
@@ -176,6 +178,7 @@ If the heritage check returns no rows for the greeting, that means the local DB 
 **New out-dir:** `audit/2026-05-17-judge-calibration-h1/` (preserves the original matrix for diff).
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python scripts/audit/judge_calibration_matrix.py \
   --out-dir audit/2026-05-17-judge-calibration-h1 \
   --families anthropic,openai,google,xai \

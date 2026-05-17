@@ -69,7 +69,9 @@ cp data/sources.db data/sources.db.bak-pre-ua-gec
 ### 2. Use the upstream UA-GEC python library
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pip install -e data/ua-gec/python
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -c "from ua_gec import Corpus; c = Corpus('gec-only', 'train'); print(len(list(c)))"
 ```
 
@@ -146,6 +148,7 @@ Tests in `tests/ingest/test_ua_gec_ingest.py`:
 ### 4. Run the ingest
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m scripts.ingest.ua_gec_ingest --db data/sources.db
 sqlite3 data/sources.db "SELECT error_type, COUNT(*) FROM ua_gec_errors GROUP BY error_type ORDER BY 2 DESC"
 ```

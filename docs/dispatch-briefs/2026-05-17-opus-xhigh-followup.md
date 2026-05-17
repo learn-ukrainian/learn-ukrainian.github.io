@@ -58,6 +58,7 @@ git rev-parse origin/pr-2006 >/dev/null 2>&1 || git fetch origin 'refs/pull/2006
 ### 4. Run the 2 cells
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python scripts/audit/judge_calibration_matrix.py \
   --families anthropic \
   --models claude-opus-4-7 \
@@ -89,6 +90,7 @@ grep -c "xhigh" audit/2026-05-17-judge-calibration-matrix/REPORT.html
 ### 6. Tests + lint
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pytest tests/audit/test_judge_calibration_matrix.py -q
 .venv/bin/ruff check scripts/audit/judge_calibration_matrix.py
 ```

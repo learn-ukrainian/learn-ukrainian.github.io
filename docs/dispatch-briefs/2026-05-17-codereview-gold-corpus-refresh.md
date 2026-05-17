@@ -61,7 +61,9 @@ at.
 5. **Run the benchmark to see your work cause an improvement.**
    ```
    cd /Users/krisztiankoos/projects/learn-ukrainian
+   # venv symlinked into worktree by delegate.py
    .venv/bin/python scripts/audit/code_review_benchmark.py --help
+   # venv symlinked into worktree by delegate.py
    .venv/bin/python scripts/audit/code_review_benchmark.py <args-that-replay-an-existing-cell>
    # then cd back to the worktree to commit the gold edits
    cd -

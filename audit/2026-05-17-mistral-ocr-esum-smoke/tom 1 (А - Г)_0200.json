@@ -1,0 +1,12 @@
+{
+  "input_path": "data/raw/esum/jp2-staging/tom 1 (\u0410 - \u0413)_jp2/tom 1 (\u0410 - \u0413)_0200.png",
+  "input_sha256": "",
+  "output_path": "audit/2026-05-17-mistral-ocr-esum-smoke/tom 1 (\u0410 - \u0413)_0200.md",
+  "model": "mistral-ocr-latest",
+  "pages": 0,
+  "cost_usd": 0.0,
+  "usage_info": {},
+  "duration_s": 0.0,
+  "timestamp": "2026-05-17T18:19:14.373936Z",
+  "error": "OCR request failed with HTTP 403. Response prefix (no auth): '{\"object\":\"error\",\"message\":\"Model mistral-ocr-latest is not available for API key with scope APIKeyScope.vibe\",\"type\":\"api_key_scope_not_allowed\",\"param\":null,\"code\":\"1912\",\"raw_status_code\":403}'"
+}

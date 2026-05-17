@@ -13,6 +13,7 @@ cascade (#2060/#2061/#2062/#2063/#2068/#2069/#2070) to use
 Read `gh issue view 2059` for full diagnosis. Summary:
 
 - Inside the hook subshell: `ModuleNotFoundError: No module named 'rapidfuzz'`
+# venv symlinked into worktree by delegate.py
 - Outside: `.venv/bin/python -c "import rapidfuzz"` → `3.10.1`
 - Same Python, same `.venv`, different result.
 
@@ -41,6 +42,7 @@ pre-commit's own venv shadow takes precedence over `.venv/`.
    ```bash
    .git/hooks/pre-commit  # see what fails
    ```
+   # venv symlinked into worktree by delegate.py
    Then run the offending entry's command directly with `.venv/bin/python`.
    Paste the raw outputs side-by-side.
 
@@ -53,6 +55,7 @@ pre-commit's own venv shadow takes precedence over `.venv/`.
        * Add `rapidfuzz` to that hook's `additional_dependencies`
          (cleanest if the hook is project-owned and small), OR
        * Switch the hook's `language` to `system` and have it call
+         # venv symlinked into worktree by delegate.py
          `.venv/bin/python -m pytest ...` directly (correct for hooks
          that already depend on the project's full lockfile).
    - **b.** `PYTHONPATH` / `VIRTUAL_ENV` env-var stripping. Run the

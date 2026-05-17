@@ -86,6 +86,7 @@ Use `--resume` so if the run is interrupted, restart picks up where it
 left off (cells with valid JSON are skipped).
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python scripts/audit/judge_calibration_matrix.py \
   --families anthropic \
   --models claude-opus-4-7,claude-sonnet-4-6,claude-haiku-4-5-20251001 \
@@ -116,6 +117,7 @@ grep -c "claude-" audit/2026-05-17-judge-calibration-matrix/REPORT.html
 ### 7. Tests + lint
 
 ```
+# venv symlinked into worktree by delegate.py
 .venv/bin/python -m pytest tests/audit/test_judge_calibration_matrix.py -q
 .venv/bin/ruff check scripts/audit/judge_calibration_matrix.py
 ```

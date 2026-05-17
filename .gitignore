@@ -306,3 +306,9 @@ curriculum/l2-uk-en/*/*/knowledge_packet.md
 # Regenerate when ESUM data changes:
 #   .venv/bin/python scripts/etymology/build_data_manifest.py
 data/eval-archive/
+
+# clawpatch tool output (config + findings + locks + patches — regenerable)
+.clawpatch/
+
+# Raw ESUM OCR outputs (per-volume .txt files; jp2-staging/ + gemini-ocr/ already covered)
+data/raw/esum/*.txt
