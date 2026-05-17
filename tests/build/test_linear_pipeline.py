@@ -2269,13 +2269,23 @@ def test_long_uk_ceiling_exempts_citation_grounded_source_blockquote() -> None:
 
 
 def test_long_uk_ceiling_still_flags_uncited_learner_blockquote() -> None:
-    """Without citation grounding, learner practice blockquotes stay in scope."""
+    """Without citation grounding, learner practice blockquotes stay in
+    scope. Fixture extended 2026-05-17 to exceed the m15-24 ceiling
+    bumped 50 → 80 by PR #2079 (the original 33-word fixture became a
+    no-op once the ceiling rose above its length).
+    """
     text = (
         "## Мій ранок\n\n"
         "> Спочатку прокидаюся о сьомій ранку коли ще темно за вікном "
         "потім швидко вмиваюся холодною водою бо нагрівач зламався і "
         "одягаюся в найтепліший одяг щоб не змерзнути коли поспішаю "
-        "до автобуса о восьмій тридцять.\n"
+        "до автобуса о восьмій тридцять п'ять і дорогою купую гарячу "
+        "каву в маленькій кав'ярні біля метро де баристу звати Олена "
+        "і вона завжди питає чи я хочу скоринку до кави або один "
+        "круасан з шоколадом який пече її молодший брат рано-вранці "
+        "перед тим як він іде до університету де навчається інженерії "
+        "програмного забезпечення і мріє переїхати працювати у "
+        "Київ через два роки після завершення магістерської програми.\n"
     )
     plan = {"level": "a1", "sequence": 20, "word_target": 1200}
 
@@ -3008,6 +3018,44 @@ def test_collapse_syllable_break_strips_textbook_hyphens() -> None:
     # Edge cases.
     assert collapse("noдашь") == "noдашь"  # no hyphen → unchanged
     assert collapse("a") == "a"  # single char → unchanged
+
+
+def test_textbook_match_tokens_strips_syllable_breaks_symmetrically() -> None:
+    """`_textbook_match_tokens` applies `_collapse_syllable_break` so the
+    matcher normalizes the writer-side and chunk-side identically.
+
+    Surfaced 2026-05-17 during m20 Path A: the writer-prompt now instructs
+    "strip pedagogical syllable hyphens before pasting" (writer-prompt §2
+    Textbook syllable-break notation). The textbook chunk text usually
+    KEEPS those hyphens. Without symmetric stripping, a writer who follows
+    the instruction would produce a clean quote (`записаний увесь мій
+    день`) that fails to match the hyphenated chunk (`за-пи-са-ний у-весь
+    мій день`).
+
+    Both sides must normalize to the SAME stripped token list so the
+    sliding-window containment check in `_contains_textbook_quote`
+    succeeds regardless of whether the writer stripped at write time or
+    copied verbatim.
+    """
+    tokens = linear_pipeline._textbook_match_tokens
+    # `_normalize_match_text` does NFD decomposition + strips combining
+    # marks before tokenization, so й→и and ї→і in the final tokens
+    # (diacritic-insensitive matching by design).
+    # Hyphenated textbook display form and clean canonical form must
+    # produce IDENTICAL token sequences after symmetric normalization.
+    hyphenated = tokens("За-пи-са-ний у-весь мій день.")
+    canonical = tokens("Записаний увесь мій день.")
+    assert hyphenated == canonical, (
+        f"Symmetric normalization broken: {hyphenated!r} != {canonical!r}"
+    )
+    # `й` decomposes to `и` + combining breve → stripped to `и`.
+    # `і` is pre-composed without combining marks → preserved as `і`.
+    # `ї` decomposes to `і` + combining diaeresis → stripped to `і`.
+    assert hyphenated == ["записании", "увесь", "міи", "день"]
+    # Real compounds and linguistic terminology stay hyphenated on BOTH
+    # sides — `_collapse_syllable_break` rejects parts >4 chars.
+    compounds = tokens("Івано-Франківськ темно-синій я-форма")
+    assert compounds == ["івано-франківськ", "темно-синіи", "я-форма"]
 
 
 def test_warning_quote_unclosed_italic_terminated_by_punctuation() -> None:

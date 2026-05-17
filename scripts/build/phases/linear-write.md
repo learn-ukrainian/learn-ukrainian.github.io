@@ -73,6 +73,44 @@ that failure class. Run each check while drafting, not as a separate pass.
 
    The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX, so the bad form is still visible in plain prose. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. The marker is specifically for Russianisms, surzhyk forms, calques, and paronyms shown *to be avoided*. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
 
+   **CONCRETE FORBIDDEN PATTERNS — close-the-class enumeration.** These are the exact patterns that failed m20 rebuilds #2–#6. The `<!-- bad -->` marker is the ONLY accepted form for a bad-form contrast. Any of the following will trip `vesum_verified`, `formatting_standards`, or `russianisms_clean`:
+
+   - ❌ `*X*, not *Y*` — italic contrast pair. The italicized *Y* leaks into VESUM and is rejected.
+   - ❌ `... not *Y*.` / `... not *Y*,` — bare italic bad form.
+   - ❌ `say X, not Y` — unmarked bad form in prose. The unmarked Y leaks into VESUM lookup.
+   - ❌ `instead of Y` / `замість Y` — unmarked bad form after a contrast preposition.
+   - ❌ `(not Y)` / `(не Y)` — unmarked bad form in parentheses.
+
+   ✅ REQUIRED: `Stick to **X** (not the Russian-borrowed <!-- bad -->Y<!-- /bad -->).` — the `<!-- bad -->...<!-- /bad -->` marker wraps Y precisely. Markdown bold is fine for the GOOD form. Parentheses are fine around the bad form so long as the `<!-- bad -->` marker is inside them.
+
+   Even single occurrences of the forbidden patterns fail the gate. Do not emit ANY bad form without the comment marker. When in doubt, omit the contrast — pedagogically, the good form alone is sufficient if the bad form cannot be cleanly marked.
+
+   **Morpheme-bold notation — NO hyphens inside bold spans.** When highlighting a reflexive suffix, case ending, conjugation row, or any morpheme, the bold span MUST contain ONLY the morpheme being highlighted. Hyphens, slashes, or word fragments INSIDE the bold span create tokens that don't lemmatize in VESUM and trip `vesum_verified`.
+
+   - ❌ `прокида**ю-ся**` — hyphen INSIDE bold. Normalizer extracts `прокидаю-ся` which fails VESUM.
+   - ❌ `чита**ю-ся**`, `див**иться**.`, `мий**ся**!` — same class: prefix glued to a bold span containing an inflected suffix with internal punctuation.
+   - ❌ `**-ся/-сь**` — slash inside bold creates two tokens.
+
+   ✅ REQUIRED for highlighting a reflexive suffix in a paradigm row: write the FULL form unbolded, then call out the suffix on its own.
+   - `прокидаюся (**-ся**)` — full form clean, suffix bolded standalone.
+   - `прокидаюся, прокидаєшся, прокидається — суфікс **-ся** означає...` — prose form, suffix referenced as a standalone bold token.
+
+   ✅ REQUIRED for case-ending or conjugation tables: use a table or list where the suffix appears on its own line, not glued to a stem with a hyphen inside bold.
+
+   The normalizer now has a conditional heuristic that strips short morpheme-break hyphens inside bold (#2076), but the prompt-side rule is to NOT produce them in the first place. The heuristic is a backstop, not a license.
+
+   **Textbook syllable-break notation — CONDITIONAL on module topic.** When quoting a textbook (e.g. Захарійчук Grade 1) that prints words with pedagogical syllable hyphens (`за-пи-са-ний`, `мо-ло-ко`, `пе-ре-мо-га`), the rule depends on what THIS module is teaching:
+
+   - **If this module's topic IS syllabification / склади** (e.g. an early A1 module about dividing words into syllables, hyphenation rules, or sound-by-sound decoding): KEEP the hyphens. They are pedagogical content, not typography. The learner needs to see `за-пи-са-ний` to learn how the word divides. Both `vesum_verified` (via `_collapse_syllable_break` backstop) and `textbook_grounding` (via symmetric matcher normalization) handle the hyphenated form correctly — gates do not block this case.
+
+   - **For all other modules** (the topic is anything OTHER than syllabification — vocabulary, dialogue, grammar, culture, daily routines, etc.): STRIP the hyphens before pasting. The hyphens are display typography for syllable-by-syllable reading drills the textbook uses to introduce vocabulary; they are not part of the word's actual form. A learner studying "my morning routine" should see `записаний`, not `за-пи-са-ний` — the latter teaches a malformed word in a non-syllable context.
+     - ❌ Verbatim copy in a vocabulary/dialogue/culture module: `За-пи-са-ний на дошці.`
+     - ✅ Hyphen-stripped: `Записаний на дошці.`
+
+   Determination: read `Topic: {TOPIC_TITLE}` in the "Module Context" section above. If the topic explicitly references syllables (склади, поділ на склади, sound-by-sound reading, syllabification), keep hyphens. Otherwise strip them. When in doubt: prefer quoting a section of the chunk that does NOT contain syllable-broken display words.
+
+   Note the decision in `<plan_reasoning>`: either `syllable hyphens kept (склади-teaching module)` or `syllable hyphens stripped from textbook quote per writer-prompt §2`. The deterministic `_collapse_syllable_break` normalizer (#2084) and the matcher's symmetric normalization are backstops; the prompt-side decision is what the LEARNER sees in the rendered MDX.
+
 3. **Source-citation discipline.** Every dictionary / style-guide / author
    citation MUST be groundable in MCP. **Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive** — it returns a `discusses: bool` verdict in one call. Allowed `source` enum values: `grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`. If `discusses=false`, do NOT cite that source for that claim.
 
@@ -95,6 +133,8 @@ that failure class. Run each check while drafting, not as a separate pass.
    **Step A — find the chunk_id.** Call `mcp__sources__search_text` with a query containing the **author surname AND the page number as plain digits** (e.g. `Захарійчук 162`, `Караман 176`, `Захарійчук 163`). The chunk_id pattern is `<source_file>_s<PAGE>` where `<PAGE>` is the zero-padded 4-digit page (`p.162` → `_s0162`). Scan the top results for a `Chunk ID:` ending in the right page suffix. If none match, refine: try different word orders, add a Ukrainian phrase distinctive to that page (from the Knowledge Packet), narrow to one author. Don't stop until you've identified the exact chunk_id.
 
    **Step B — fetch the verbatim text.** Once you have the matching chunk_id (e.g. `4-klas-ukrmova-zaharijchuk_s0162`), call `mcp__sources__get_chunk_context(chunk_id="4-klas-ukrmova-zaharijchuk_s0162")` (or pass the chunk_id positionally as documented in the tool's signature). Then copy-paste ≥30 contiguous words from THAT chunk's returned `text` into a blockquote in `module.md`, preserving punctuation and Cyrillic letter forms exactly. Paraphrasing, composing from memory, fusing snippets from multiple chunks, summarizing, "improving" punctuation, or substituting equivalent phrases is a hard fail — take a contiguous block verbatim.
+
+   **EXCEPTION — pedagogical syllable hyphens depend on module topic.** Per §2 above (Markup conventions → Textbook syllable-break notation), syllable hyphens (`за-пи-са-ний`, `мо-ло-ко`) are pedagogical content in syllable-teaching modules (склади) and display typography elsewhere. KEEP them when the module teaches syllabification; STRIP them otherwise. All other punctuation, capitalization, and letter forms remain exact. The textbook_grounding matcher normalizes syllable hyphens symmetrically on both sides — a stripped quote still matches a hyphenated chunk and vice versa. Note the decision in `<plan_reasoning>` per §2.
 
    **Citation line format (mandatory; `citations_resolve` enforces it).** Immediately below the blockquote add `*— <Author>, Grade <N>, p.<PAGE>*` using the **exact** strings from the plan_references entry (e.g. `*— Захарійчук, Grade 4, p.162*`). Do NOT add the textbook title ("Українська мова") — that breaks the matcher because the plan_references format is `<Author> Grade <N>, p.<PAGE>` and the matcher requires that exact shape.
 

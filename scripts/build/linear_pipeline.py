@@ -5097,9 +5097,7 @@ def _touches_latin_letter(text: str, start: int, end: int) -> bool:
     """
     if start > 0 and _LATIN_LETTER_RE.match(text[start - 1]):
         return True
-    if end < len(text) and _LATIN_LETTER_RE.match(text[end]):
-        return True
-    return False
+    return bool(end < len(text) and _LATIN_LETTER_RE.match(text[end]))
 
 
 def _looks_like_elided_notation(text: str, start: int, raw: str) -> bool:
@@ -5487,7 +5485,16 @@ def _normalize_match_text(text: str) -> str:
 def _textbook_match_tokens(text: str) -> list[str]:
     text = _normalize_match_text(text)
     text = re.sub(r"[*_`~#>|]", " ", text)
-    return re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text.casefold())
+    tokens = re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text.casefold())
+    # Symmetric syllable-break normalization (see #2084 + writer-prompt §2
+    # "Textbook syllable-break notation"). The writer is instructed to strip
+    # pedagogical syllable hyphens like `за-пи-са-ний` → `записаний` before
+    # pasting a quote. The textbook chunk text itself usually KEEPS those
+    # hyphens, so without symmetric stripping on both sides the writer's
+    # clean quote fails to match the hyphenated chunk. Applying
+    # `_collapse_syllable_break` here makes the match work regardless of
+    # whether the writer stripped or copied verbatim.
+    return [_collapse_syllable_break(token) for token in tokens]
 
 
 def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
