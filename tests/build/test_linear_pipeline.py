@@ -1508,6 +1508,30 @@ def test_activity_vesum_text_filters_quiz_distractors_by_answer_spelling(
     assert "користуюся" in vesum_text
 
 
+def test_activity_vesum_text_skips_false_true_false_statements() -> None:
+    activity = {
+        "id": "act-7",
+        "type": "true-false",
+        "title": "Перевірте твердження",
+        "items": [
+            {
+                "statement": "The verb «дивитися» has «я дивюся» in the 1st person singular.",
+                "answer": False,
+            },
+            {
+                "statement": "Форма «я дивлюся» правильна.",
+                "answer": True,
+            },
+        ],
+    }
+
+    vesum_text = linear_pipeline._activity_vesum_text(activity)
+
+    assert "дивюся" not in vesum_text
+    assert "дивлюся" in vesum_text
+    assert "правильна" in vesum_text
+
+
 def test_vesum_gate_skips_fill_in_answer_suffix_without_options_field(
     tmp_path: Path,
 ) -> None:
