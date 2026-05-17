@@ -1,0 +1,7 @@
+Write a single Python function `find_russianisms(text: str) -> list[tuple[str, str]]` that detects these 5 Ukrainian Russianisms (case-insensitive) and returns (found_phrase, suggestion) tuples in the order they appear in the text:
+- 'на протязі' -> 'протягом'
+- 'учбовий' -> 'навчальний'
+- 'співпадати' -> 'збігатися'
+- 'мішати' -> 'заважати'
+- 'приймати участь' -> 'брати участь'
+Requirements: type hints, ONE-line docstring, NO imports. Just the function — no example/test code.

@@ -1,0 +1,12 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+[0m✱ [0mGrep "ALLOWED_ROOTS"[90m 3 matches[0m
+[0m✱ [0mGrep "artifacts/html"[90m 1 match[0m
+**Design:** Split into two lists. `SCAN_ROOTS` auto-discovers subdirectories via a watcher. `SERVE_ROOTS` remains the manually curated security boundary. The scanner indexes everything under `SCAN_ROOTS`; the server rejects any request whose resolved path falls outside `SERVE_ROOTS` with 404. A reconciler surfaces entries in `SCAN_ROOTS` but missing from `SERVE_ROOTS` as "pending approval."
+
+**Trade-off:** Operational overhead of the approval step — but drift becomes a visible alert instead of a silent breakage.
+
+real	0m44.023s
+user	0m7.997s
+sys	0m0.746s

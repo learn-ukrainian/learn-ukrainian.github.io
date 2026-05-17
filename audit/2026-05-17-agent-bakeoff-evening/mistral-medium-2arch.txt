@@ -1,0 +1,7 @@
+**Design:** Scanner discovers artifacts via filesystem traversal from a trusted base directory, independent of `ALLOWED_ROOTS`. Serving still validates requests against `ALLOWED_ROOTS` as the security boundary.
+
+**Trade-off:** Scanner may index paths not in `ALLOWED_ROOTS` (wasted resources).
+
+real	0m14.359s
+user	0m1.797s
+sys	0m0.252s

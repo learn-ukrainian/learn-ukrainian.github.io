@@ -1,0 +1,10 @@
+[0m
+> build · deepseek-v4-flash
+[0m
+**Design**: Split `ALLOWED_ROOTS` into `SCAN_ROOTS` (discovery) and `SERVE_ROOTS` (serving security). Scanner walks `SCAN_ROOTS` recursively — new docs/ subdirs are found automatically. The HTTP server checks `SERVE_ROOTS` only. A path is served iff it resolves inside `SERVE_ROOTS`, regardless of scan scope.
+
+**Trade-off**: If a team adds content under `SCAN_ROOTS` but forgets to extend `SERVE_ROOTS`, the scanner finds it but serving silently 404s — a different kind of invisibility.
+
+real	0m11.745s
+user	0m2.930s
+sys	0m0.299s

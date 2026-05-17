@@ -1,0 +1,11 @@
+1. **Add column**: `ALTER TABLE textbook_chunks ADD COLUMN page INTEGER;` creates nullable column. Risk: momentary schema lock.
+
+2. **Create triggers**: BEFORE INSERT/UPDATE triggers on textbook_chunks set page from textbook_sections.page_start via section_id. Risk: write amplification on all modifications.
+
+3. **Batch backfill**: Update 1000 NULL rows at a time: `UPDATE textbook_chunks SET page=(SELECT page_start FROM textbook_sections WHERE id=section_id) WHERE rowid IN (SELECT rowid FROM textbook_chunks WHERE page IS NULL LIMIT 1000);` Risk: read/write contention.
+
+4. **FTS5 sync**: Create new FTS5 virtual table with page column, migrate data, rename, then `ALTER COLUMN page SET NOT NULL`. Risk: full rebuild blocks reads.
+
+real	0m31.576s
+user	0m1.792s
+sys	0m0.257s

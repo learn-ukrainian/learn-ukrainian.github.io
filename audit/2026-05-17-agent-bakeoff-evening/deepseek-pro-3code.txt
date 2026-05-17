@@ -1,0 +1,34 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+```python
+def find_russianisms(text: str) -> list[tuple[str, str]]:
+    """Find Ukrainian Russianisms in text and return (found_phrase, suggestion) tuples in order of appearance."""
+    pairs = [
+        ('на протязі', 'протягом'),
+        ('учбовий', 'навчальний'),
+        ('співпадати', 'збігатися'),
+        ('мішати', 'заважати'),
+        ('приймати участь', 'брати участь'),
+    ]
+    lower = text.lower()
+    results = []
+    for phrase, suggestion in pairs:
+        plen = len(phrase)
+        pos = 0
+        while True:
+            idx = lower.find(phrase, pos)
+            if idx == -1:
+                break
+            before_ok = idx == 0 or not lower[idx - 1].isalpha()
+            after_ok = idx + plen == len(lower) or not lower[idx + plen].isalpha()
+            if before_ok and after_ok:
+                results.append((idx, text[idx:idx + plen], suggestion))
+            pos = idx + 1
+    results.sort(key=lambda x: x[0])
+    return [(phrase, suggestion) for _, phrase, suggestion in results]
+```
+
+real	1m14.614s
+user	0m14.715s
+sys	0m1.239s

@@ -1,0 +1,40 @@
+[0m
+> build · deepseek-v4-flash
+[0m
+[0m← [0mWrite /Users/krisztiankoos/agent.py
+Wrote file successfully.
+[0m
+[0m$ [0mcd /private/tmp/agent-bakeoff-2026-05-17 && python3 -c "
+from agent import find_russianisms
+# Test cases
+print(find_russianisms('На протязі учбовий співпадати мішати приймати участь'))
+print(find_russianisms('немає русизмів'))
+print(find_russianisms('Приймати участь в учбовому процесі'))
+print(find_russianisms(''))
+print(find_russianisms('на протязі на протязі'))
+"
+Traceback (most recent call last):
+  File "<string>", line 2, in <module>
+    from agent import find_russianisms
+ModuleNotFoundError: No module named 'agent'
+[0m
+[0m$ [0mpython3 -c "
+import sys
+sys.path.insert(0, '/Users/krisztiankoos')
+from agent import find_russianisms
+print(find_russianisms('На протязі учбовий співпадати мішати приймати участь'))
+print(find_russianisms('немає русизмів'))
+print(find_russianisms('Приймати участь в учбовому процесі'))
+print(find_russianisms(''))
+print(find_russianisms('на протязі на протязі'))
+"
+[('На протязі', 'протягом'), ('учбовий', 'навчальний'), ('співпадати', 'збігатися'), ('мішати', 'заважати'), ('приймати участь', 'брати участь')]
+[]
+[('Приймати участь', 'брати участь')]
+[]
+[('на протязі', 'протягом')]
+[0m
+
+real	0m11.800s
+user	0m2.952s
+sys	0m0.295s

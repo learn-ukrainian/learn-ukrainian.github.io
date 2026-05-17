@@ -1,0 +1,18 @@
+```python
+def find_russianisms(text: str) -> list[tuple[str, str]]:
+    """Detect Ukrainian Russianisms and return (found_phrase, suggestion) tuples."""
+    tl = text.lower()
+    matches = []
+    for p, s in [('на протязі', 'протягом'), ('учбовий', 'навчальний'), ('співпадати', 'збігатися'), ('мішати', 'заважати'), ('приймати участь', 'брати участь')]:
+        pl, n = p.lower(), len(p)
+        i = 0
+        while (i := tl.find(pl, i)) >= 0:
+            matches.append((text[i:i+n], s, i))
+            i += 1
+    matches.sort(key=lambda x: x[2])
+    return [(m[0], m[1]) for m in matches]
+```
+
+real	0m29.950s
+user	0m1.797s
+sys	0m0.264s

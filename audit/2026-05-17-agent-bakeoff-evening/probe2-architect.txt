@@ -1,0 +1,1 @@
+Our /api/artifacts/html scanner uses a fixed whitelist ALLOWED_ROOTS (10 paths). New docs/ subdirs are invisible until added. The serving HTTP path uses the SAME ALLOWED_ROOTS as a security boundary against path traversal. Propose ONE decoupling that fixes the drift problem while preserving serving-side security. Output: design in under 100 words + ONE trade-off.

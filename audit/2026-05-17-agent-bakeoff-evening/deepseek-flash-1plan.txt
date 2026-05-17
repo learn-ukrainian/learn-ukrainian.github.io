@@ -1,0 +1,11 @@
+[0m
+> build · deepseek-v4-flash
+[0m
+1. **`ALTER TABLE textbook_chunks ADD COLUMN page INTEGER`** — metadata-only, near-instant. Risk: column starts NULL for all 25K rows.
+2. **Batch backfill** — loop `UPDATE … SET page = (SELECT page_start + offset FROM …) WHERE page IS NULL LIMIT 200` with 100ms sleeps between batches. Risk: write-ahead-log checkpoint can spike read latency.
+3. **BEFORE INSERT/UPDATE trigger** on `textbook_chunks` to auto-set `page` from the parent section’s `page_start`. Risk: trigger increases per-row write cost; must be benchmarked under peak load.
+4. **Rebuild FTS5 index** — `INSERT INTO chunks_fts(chunks_fts) VALUES('rebuild')` after backfill completes; for ongoing sync, add a trigger updating the FTS content table on `page` changes. Risk: `rebuild` acquires an exclusive lock; do during low-write window (or use external content FTS5 with triggers only).
+
+real	0m11.591s
+user	0m2.989s
+sys	0m0.306s

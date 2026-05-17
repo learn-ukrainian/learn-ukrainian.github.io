@@ -1,0 +1,5 @@
+Design a 4-step plan to add a `page` column to a 25K-row SQLite textbook_chunks table where:
+(a) chunks have section_id pointing to a textbook_sections row with page_start/page_end,
+(b) the column must be backfilled non-blocking on a live read-heavy DB,
+(c) a downstream FTS5 index needs to stay in sync.
+Output: 4 numbered steps + ONE risk per step. Total under 200 words.

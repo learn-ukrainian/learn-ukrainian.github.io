@@ -1,0 +1,11 @@
+Review this Python function. Report EXACTLY 3 findings (highest priority first), one sentence each.
+
+def parse_user_id(raw: str) -> int:
+    if not raw:
+        return 0
+    if raw.startswith('user_'):
+        raw = raw[5:]
+    try:
+        return int(raw)
+    except:
+        return -1

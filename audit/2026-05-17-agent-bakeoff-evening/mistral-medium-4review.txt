@@ -1,0 +1,7 @@
+Bare except clause catches all exceptions including system exceptions.
+Uses sentinel values (0, -1) instead of raising exceptions for invalid input.
+Fails to recheck for empty string after stripping 'user_' prefix.
+
+real	0m11.965s
+user	0m1.780s
+sys	0m0.255s

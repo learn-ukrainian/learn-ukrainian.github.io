@@ -1,0 +1,22 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+**1. Add nullable `page` column**
+`ALTER TABLE textbook_chunks ADD COLUMN page INTEGER;` — zero-downtime in SQLite (no table copy).
+**Risk:** Application queries consuming the column before backfill see NULLs → incorrect pagination.
+
+**2. Batch backfill via iterative UPDATE**
+In a loop, update 1000 rows at a time: `UPDATE textbook_chunks SET page = (SELECT s.page_start FROM textbook_sections s WHERE s.id = section_id) WHERE rowid IN (SELECT rowid FROM textbook_chunks WHERE page IS NULL LIMIT 1000).`
+**Risk:** Each batch’s write-lock acquisition briefly stalls concurrent reads under heavy traffic.
+
+**3. Rebuild FTS5 to include `page`**
+Drop and recreate the FTS5 external-content table with `page` as an additional column, then `INSERT INTO fts(fts) VALUES('rebuild')`.
+**Risk:** Drop→rebuild window leaves FTS queries failing or returning stale/incomplete results.
+
+**4. Install triggers for ongoing FTS sync**
+Add AFTER INSERT/UPDATE/DELETE triggers mirroring `textbook_chunks` changes (including `page`) into the rebuilt FTS5 table.
+**Risk:** Misordered column mappings between the content table and FTS silently desync the index with no obvious error.
+
+real	0m55.290s
+user	0m13.996s
+sys	0m1.196s

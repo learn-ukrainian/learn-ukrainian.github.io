@@ -1,0 +1,10 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+1. Bare `except:` swallows all exceptions including `KeyboardInterrupt` and `SystemExit`; use `except ValueError:`.
+2. Returns `0` for empty input and `-1` for parse failures — both could be valid user IDs, making error signaling ambiguous.
+3. Reassigns the `raw` parameter instead of using a local variable, which is a lint-level code smell.
+
+real	0m19.017s
+user	0m3.809s
+sys	0m0.360s

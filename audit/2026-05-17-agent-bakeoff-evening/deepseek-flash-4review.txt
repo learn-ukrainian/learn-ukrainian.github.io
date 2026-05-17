@@ -1,0 +1,10 @@
+[0m
+> build · deepseek-v4-flash
+[0m
+1. **Bare `except:`** catches `KeyboardInterrupt` and `SystemExit`; should be `except ValueError:`.
+2. **Inconsistent sentinels** (`0` for empty, `-1` for parse failure) silently corrupt valid user ID `0` — pick one sentinel or raise.
+3. **Magic number `5`** breaks if the prefix ever changes; use `len("user_")` or a named constant.
+
+real	0m8.123s
+user	0m2.097s
+sys	0m0.194s
