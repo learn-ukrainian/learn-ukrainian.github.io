@@ -76,6 +76,10 @@ def test_v7_build_orders_wiki_gate_before_aggregate_qg() -> None:
     source = (ROOT / "scripts/build/v7_build.py").read_text(encoding="utf-8")
     run_body = source[source.index("def _run(") :]
 
-    assert run_body.index("build_wiki_manifest(") < run_body.index("_writer_prompt(")
+    # PR #2108 (Path 3 PR1) split build_wiki_manifest into a dict-returning
+    # build_wiki_manifest_data + a json-stringifying wrapper so the deterministic
+    # implementation_map seeder can consume the dict before the writer phase.
+    # The structural assertion (manifest built before writer prompt) is unchanged.
+    assert run_body.index("build_wiki_manifest_data(") < run_body.index("_writer_prompt(")
     assert run_body.index("run_wiki_coverage_gate(") < run_body.index("_run_wiki_coverage_review(")
     assert run_body.index("_run_wiki_coverage_review(") < run_body.index("_run_llm_qg(")

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -20,6 +21,10 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline
+from scripts.build.phases.implementation_map import (
+    seed_implementation_map,
+    write_implementation_map,
+)
 from scripts.common.thresholds import QG_DIMS
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
@@ -677,11 +682,12 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             plan=plan,
         )
-        wiki_manifest = linear_pipeline.build_wiki_manifest(
+        wiki_manifest_data = linear_pipeline.build_wiki_manifest_data(
             level=level,
             slug=slug,
             plan=plan,
         )
+        wiki_manifest = json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
         _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
 
         if args.dry_run:
@@ -713,6 +719,15 @@ def _run(args: argparse.Namespace) -> int:
         timeout_agent = writer
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
+        impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
+        impl_map_path = module_dir / "implementation_map.json"
+        write_implementation_map(impl_map, impl_map_path)
+        tracker.emit(
+            "implementation_map_seeded",
+            slug=slug,
+            entry_count=len(impl_map["entries"]),
+            path=str(impl_map_path),
+        )
         prompt = _writer_prompt(
             plan=plan,
             plan_content=plan_content,
