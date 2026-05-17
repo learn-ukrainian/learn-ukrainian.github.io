@@ -19,7 +19,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -339,7 +340,25 @@ def _first_error_line(value: object) -> str:
     return first[0] if first else "unknown error"
 
 
+def _validation_error_message(exc: RequestValidationError) -> str:
+    first = exc.errors()[0] if exc.errors() else {}
+    message = str(first.get("msg") or "validation error")
+    loc_parts = [str(part) for part in first.get("loc", ()) if part != "body"]
+    location = ".".join(loc_parts)
+    return f"{message} ({location})" if location else message
+
+
 app = FastAPI(title="AI Agent Bridge OpenAI Proxy", version="1.0")
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(_request: Request, exc: RequestValidationError) -> JSONResponse:
+    return _openai_error(
+        422,
+        _validation_error_message(exc),
+        "invalid_request_error",
+        "validation_error",
+    )
 
 
 @app.get("/healthz")
