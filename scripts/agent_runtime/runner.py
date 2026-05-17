@@ -34,7 +34,7 @@ import shutil
 import signal
 import subprocess
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -84,6 +84,210 @@ _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
+
+
+class _PTYUnavailableError(RuntimeError):
+    """Raised when PTY setup itself fails on this host.
+
+    Distinguishes "PTY allocation / termios setup failed" (the
+    fail-soft case where we fall back to pipe spawn) from "Popen
+    failed because the binary doesn't exist" (a real error the
+    caller must surface). Both would otherwise show up as ``OSError``,
+    which made the original fail-soft path swallow binary-not-found
+    errors with a misleading warning.
+    """
+
+
+def _pty_disabled_via_env() -> bool:
+    """Return True when ``DELEGATE_DISABLE_PTY`` opts back into pipe spawn.
+
+    Read at call time (not module import) so tests can flip the env var
+    inside a single process without re-importing the module.
+    """
+    return os.environ.get("DELEGATE_DISABLE_PTY", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+def _spawn_pty_subprocess(
+    cmd: Sequence[str],
+    *,
+    cwd: Path | str,
+    env: Mapping[str, str],
+    stdin: Any = subprocess.DEVNULL,
+    pty_window: tuple[int, int] = (40, 200),
+) -> tuple[subprocess.Popen, int, int]:
+    """Spawn ``cmd`` in a PTY so stdout/stderr line-buffer naturally.
+
+    Returns ``(proc, stdout_master_fd, stderr_master_fd)``. The slave
+    fds are closed in the parent immediately after spawn so EOF / EIO
+    propagates cleanly when the child closes its side.
+
+    PTY usage forces the child's libc to detect a TTY and switch from
+    block-buffered to line-buffered stdout. Without this, agents that
+    write to stdout via stdio (most CLIs) emit no data to the parent
+    for minutes at a time, defeating the watchdog's silence-timeout
+    detection. See #2071 + watchdog.py::should_kill incident chain
+    (#1184): Gemini block-buffers stdout when not a TTY → stdout
+    streamer goes silent → looks identical to a hang but is actually
+    successful work.
+
+    Per-slave termios: ``OPOST`` is disabled so the kernel does NOT
+    convert ``\\n`` to ``\\r\\n`` on output. That keeps stream-json
+    payloads byte-identical to what the child wrote — which the
+    streamer's UTF-8 decode + ANSI strip expects. We additionally
+    set ``TIOCSWINSZ`` to ``pty_window`` so children that query
+    terminal size for output formatting get sane defaults.
+
+    Caller is responsible for closing the master fds via the watchdog's
+    ``stop_watchdog(..., stdout_master_fd=..., stderr_master_fd=...)``.
+    """
+    # --- Phase 1: PTY allocation + termios configuration. ---
+    # Failure here is "PTY unavailable on this host" — surface a
+    # dedicated exception so the caller can fall back to pipe spawn
+    # rather than swallowing unrelated Popen errors with a misleading
+    # warning.
+    try:
+        import fcntl
+        import pty
+        import struct
+        import termios
+
+        stdout_master, stdout_slave = pty.openpty()
+        try:
+            stderr_master, stderr_slave = pty.openpty()
+        except (OSError, AttributeError):
+            with contextlib.suppress(OSError):
+                os.close(stdout_master)
+            with contextlib.suppress(OSError):
+                os.close(stdout_slave)
+            raise
+
+        # Disable OPOST on each slave so \n stays \n (no ONLCR rewrite).
+        # Belt-and-suspenders: the streamer also strips \r\n → \n if a
+        # platform somehow ignores the termios change. Suppression is
+        # narrow — these calls are advisory; the spawn proceeds either
+        # way.
+        for slave_fd in (stdout_slave, stderr_slave):
+            with contextlib.suppress(termios.error, OSError):
+                attrs = termios.tcgetattr(slave_fd)
+                attrs[1] &= ~termios.OPOST  # oflag
+                termios.tcsetattr(slave_fd, termios.TCSANOW, attrs)
+
+        # Set sane window size so agents that query TIOCGWINSZ for output
+        # formatting (e.g. ANSI tables) get reasonable defaults.
+        winsize = struct.pack("HHHH", pty_window[0], pty_window[1], 0, 0)
+        for slave_fd in (stdout_slave, stderr_slave):
+            with contextlib.suppress(OSError):
+                fcntl.ioctl(slave_fd, termios.TIOCSWINSZ, winsize)
+    except (OSError, AttributeError) as exc:
+        raise _PTYUnavailableError(
+            f"PTY setup failed ({type(exc).__name__}: {exc})"
+        ) from exc
+
+    # --- Phase 2: spawn the child against the PTY slaves. ---
+    # Any failure here (FileNotFoundError, PermissionError, generic
+    # OSError) is a real spawn problem and must propagate UNCHANGED so
+    # the runner's existing FileNotFoundError handling can turn it into
+    # AgentUnavailableError. Do NOT translate this to PTYUnavailable.
+    try:
+        proc = subprocess.Popen(
+            list(cmd),
+            cwd=str(cwd),
+            env=dict(env),
+            stdin=stdin,
+            stdout=stdout_slave,
+            stderr=stderr_slave,
+            # text=True / bufsize=1 here are no-ops for stdout/stderr
+            # (those are raw int fds, not Python-managed pipes), but
+            # they make stdin a line-buffered text pipe when the
+            # caller passes stdin=PIPE for stdin_payload writes.
+            text=True,
+            bufsize=1,
+            start_new_session=True,
+        )
+    except BaseException:
+        for fd in (stdout_master, stderr_master, stdout_slave, stderr_slave):
+            with contextlib.suppress(OSError):
+                os.close(fd)
+        raise
+
+    # Parent does NOT need slave fds; close them so EOF arrives on
+    # master when child closes its side.
+    with contextlib.suppress(OSError):
+        os.close(stdout_slave)
+    with contextlib.suppress(OSError):
+        os.close(stderr_slave)
+
+    return proc, stdout_master, stderr_master
+
+
+def _spawn_pipe_subprocess(
+    cmd: Sequence[str],
+    *,
+    cwd: Path | str,
+    env: Mapping[str, str],
+    stdin: Any = subprocess.DEVNULL,
+) -> tuple[subprocess.Popen, None, None]:
+    """Spawn ``cmd`` with PIPE stdout/stderr (legacy pre-PTY path).
+
+    Returned only when ``DELEGATE_DISABLE_PTY`` is set OR PTY is
+    unavailable on the host (rare; ``pty`` is POSIX). Reserved as an
+    escape hatch in case PTY mode regresses for a specific agent
+    (e.g. one that emits ANSI codes in the middle of stream-json
+    events and breaks parsing). See ``_spawn_subprocess`` for the
+    fail-soft selection logic.
+    """
+    proc = subprocess.Popen(
+        list(cmd),
+        stdin=stdin,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        cwd=str(cwd),
+        env=dict(env),
+        bufsize=1,
+        start_new_session=True,
+    )
+    return proc, None, None
+
+
+def _spawn_subprocess(
+    cmd: Sequence[str],
+    *,
+    cwd: Path | str,
+    env: Mapping[str, str],
+    stdin: Any,
+) -> tuple[subprocess.Popen, int | None, int | None]:
+    """Spawn ``cmd`` using PTY mode by default; pipe mode on opt-out.
+
+    Fail-soft: if ``pty.openpty()`` or the termios calls raise on the
+    host platform (Linux containers without /dev/pts, etc.), fall back
+    to pipe-based spawn with a warning rather than crashing the
+    runner. Pipe mode is correct but defeats the block-buffer fix —
+    that's the trade-off the env var documents.
+
+    Popen failures (missing binary, EACCES) are NOT caught here — they
+    propagate as ``FileNotFoundError`` / ``PermissionError`` / ``OSError``
+    so the caller's existing ``AgentUnavailableError`` mapping fires.
+    """
+    if _pty_disabled_via_env():
+        return _spawn_pipe_subprocess(cmd, cwd=cwd, env=env, stdin=stdin)
+    try:
+        return _spawn_pty_subprocess(cmd, cwd=cwd, env=env, stdin=stdin)
+    except _PTYUnavailableError as exc:
+        import warnings
+
+        warnings.warn(
+            f"{exc}; falling back to pipe-based spawn. Set "
+            f"DELEGATE_DISABLE_PTY=1 to silence this warning.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        return _spawn_pipe_subprocess(cmd, cwd=cwd, env=env, stdin=stdin)
 
 
 def _normalize_mcp_url(url: str | None) -> str:
@@ -694,19 +898,16 @@ def _execute_invocation_plan(
     watchdog_state: WatchdogState | None = None
     watchdog_threads: list = []
     liveness_paths: tuple[Path, ...] = ()
+    stdout_master_fd: int | None = None
+    stderr_master_fd: int | None = None
 
     try:
         try:
-            proc = subprocess.Popen(
+            proc, stdout_master_fd, stderr_master_fd = _spawn_subprocess(
                 plan.cmd,
-                stdin=subprocess.PIPE if plan.stdin_payload else subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=str(cwd),
+                cwd=cwd,
                 env=env,
-                bufsize=1,
-                start_new_session=True,
+                stdin=subprocess.PIPE if plan.stdin_payload else subprocess.DEVNULL,
             )
         except (FileNotFoundError, PermissionError, OSError) as exc:
             record = _build_usage_record(
@@ -744,7 +945,12 @@ def _execute_invocation_plan(
         liveness_paths = tuple(adapter.liveness_signal_paths(plan))
         if plan.output_file is not None and plan.output_file not in liveness_paths:
             liveness_paths = (*liveness_paths, plan.output_file)
-        watchdog_state, watchdog_threads = start_watchdog(proc, list(liveness_paths))
+        watchdog_state, watchdog_threads = start_watchdog(
+            proc,
+            list(liveness_paths),
+            stdout_master_fd=stdout_master_fd,
+            stderr_master_fd=stderr_master_fd,
+        )
         mcp_observer = _McpRuntimeObserver.from_tool_config(
             agent_name=agent_name,
             task_id=task_id,
@@ -827,7 +1033,17 @@ def _execute_invocation_plan(
         stdout_text = "".join(watchdog_state.stdout_lines)
         stderr_text = "".join(watchdog_state.stderr_lines)
 
-        stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
+        stop_watchdog(
+            watchdog_state,
+            watchdog_threads,
+            proc=proc,
+            stdout_master_fd=stdout_master_fd,
+            stderr_master_fd=stderr_master_fd,
+        )
+        # stop_watchdog closed the master fds; null out our locals so
+        # the finally clause doesn't try to close them again.
+        stdout_master_fd = None
+        stderr_master_fd = None
         parse = adapter.parse_response(
             stdout=stdout_text,
             stderr=stderr_text,
@@ -851,7 +1067,13 @@ def _execute_invocation_plan(
                 _kill_process_tree(proc)
 
         if watchdog_state is not None:
-            stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
+            stop_watchdog(
+                watchdog_state,
+                watchdog_threads,
+                proc=proc,
+                stdout_master_fd=stdout_master_fd,
+                stderr_master_fd=stderr_master_fd,
+            )
 
         if (
             plan.output_file is not None
