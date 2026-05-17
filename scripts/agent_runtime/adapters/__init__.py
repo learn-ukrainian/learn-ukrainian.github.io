@@ -11,6 +11,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+from .hermes_deepseek import HermesDeepSeekAdapter
 from .hermes_grok import HermesGrokAdapter
 
-__all__ = ["HermesGrokAdapter"]
+__all__ = ["HermesDeepSeekAdapter", "HermesGrokAdapter"]

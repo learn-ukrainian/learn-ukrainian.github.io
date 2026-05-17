@@ -75,6 +75,7 @@ VALID_AGENTS = (
     "gemini",
     "codex",
     "grok",
+    "deepseek",
     "claude-desktop",
     "codex-desktop",
 )
