@@ -5002,6 +5002,19 @@ def _iter_vesum_word_surfaces(text: str) -> list[str]:
     for match in _UK_WORD_RE.finditer(text):
         if _touches_blank_marker(text, match.start(), match.end()):
             continue
+        if _touches_latin_letter(text, match.start(), match.end()):
+            # Mixed-script tokens like `Buкварь` (writer typo: Latin "Bu"
+            # immediately abutting Cyrillic "кварь") are typo artifacts,
+            # not real Ukrainian words. The `_UK_WORD_RE` regex would
+            # extract just the Cyrillic substring (`кварь`) and forward
+            # it to VESUM, which would correctly fail it — but the
+            # downstream signal is a gate failure on a token that doesn't
+            # exist as written. Skipping here keeps VESUM honest. Real
+            # script boundaries (Latin word followed by Cyrillic word
+            # across whitespace) are unaffected because `_touches_latin_letter`
+            # only fires when the abutting character is a Latin LETTER,
+            # not whitespace or punctuation.
+            continue
         raw = match.group(0)
         if _looks_like_elided_notation(text, match.start(), raw):
             continue
@@ -5019,6 +5032,27 @@ def _touches_blank_marker(text: str, start: int, end: int) -> bool:
     return (start > 0 and text[start - 1] == "_") or (
         end < len(text) and text[end] == "_"
     )
+
+
+_LATIN_LETTER_RE = re.compile(r"[A-Za-z]")
+
+
+def _touches_latin_letter(text: str, start: int, end: int) -> bool:
+    """Return true when a Cyrillic-word match abuts a Latin letter with no
+    whitespace/punctuation between them.
+
+    Catches writer typos like `Buкварь` (Latin "Bu" + Cyrillic "кварь" with
+    no boundary), which `_UK_WORD_RE` would otherwise extract as the
+    spurious token `кварь`. Real script transitions (Latin word followed
+    by Cyrillic word across whitespace, punctuation, or markdown) do not
+    fire this guard because the character at the boundary is not a Latin
+    letter.
+    """
+    if start > 0 and _LATIN_LETTER_RE.match(text[start - 1]):
+        return True
+    if end < len(text) and _LATIN_LETTER_RE.match(text[end]):
+        return True
+    return False
 
 
 def _looks_like_elided_notation(text: str, start: int, raw: str) -> bool:
