@@ -1,0 +1,15 @@
+1. **Add `page` column via `ALTER TABLE`** — in SQLite 3.35+ this is instant metadata-only, no table rewrite. Run inside a short transaction in WAL mode so readers proceed uninterrupted during the schema change.
+   *Risk:* A concurrent writer holding a RESERVED lock can block your ALTER TABLE, returning `SQLITE_BUSY`; without a retry loop you leave the column missing.
+
+2. **Backfill in batched UPDATEs** — join `textbook_chunks` to `textbook_sections` on `section_id`, compute `page` as a midpoint or `page_start`, and update 500–1000 rows per transaction. Insert a `PRAGMA busy_timeout` and sleep ~50ms between batches to yield to read traffic.
+   *Risk:* If any `section_id` is orphaned or `page_start` is NULL, chunks get null pages silently — mask a data-quality gap until downstream queries fail.
+
+3. **Rebuild FTS5 index to include `page`** — FTS5 external-content tables don't auto-discover new columns. Drop and recreate the FTS5 virtual table with the new column in the schema, then repopulate (INSERT … SELECT) inside a single transaction.
+   *Risk:* The rebuild blocks FTS5 queries entirely for the duration (~seconds for 25K rows), violating the non-blocking constraint for search-dependent readers.
+
+4. **Validate with hash-based pre/post comparison** — compute a checksum of `COUNT(*)`, `MIN(page)`, `MAX(page)`, and NULL-count before migration, repeat after, and assert equality for all non-page columns plus page-coverage ≥ 99%.
+   *Risk:* A passing checksum on `COUNT(*)` hides the case where the new FTS5 index silently omitted `page` and only old columns are searchable.
+
+real	0m38.610s
+user	0m1.732s
+sys	0m0.382s

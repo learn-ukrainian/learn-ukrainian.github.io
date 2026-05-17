@@ -1,0 +1,15 @@
+1. **ALTER TABLE ADD COLUMN `page` (nullable).** Use bare DDL — SQLite ADD COLUMN is O(1), no table rewrite. Map the column to `section.page_start` in app code as fallback during backfill window.
+   - *Risk:* Schema change takes an exclusive lock momentarily — even in WAL mode this serializes against concurrent writers for the duration of the ALTER.
+
+2. **Batch-backfill in 500-row transactions with `WHERE page IS NULL` + `RETURNING` loop.** Join on `textbook_sections` via `section_id`, extract `page_start`, and commit every 500 rows. Run during low-write windows.
+   - *Risk:* Long checkpointer stalls if WAL file grows faster than the checkpoint can flush — monitor `PRAGMA wal_checkpoint` between batches.
+
+3. **Rebuild the FTS5 index to include `page`.** SQLite FTS5 has no ALTER — DROP the old index, CREATE a new one with the `page` column in the content definition. Use `content=` pointing at `textbook_chunks` so FTS5 stays a shadow table, not a copy.
+   - *Risk:* Full-text queries fail during the DROP → CREATE gap. Mitigate with a staging FTS5 table created first, then atomically rename via `DROP` + `ALTER TABLE … RENAME TO` in one transaction.
+
+4. **Validate backfill completeness, then add NOT NULL constraint.** `SELECT COUNT(*) FROM textbook_chunks WHERE page IS NULL` → zero before constraining.
+   - *Risk:* Validation scan could be a long read-lock on older SQLite versions without WAL — verify WAL is enabled first, and pin the query to a read transaction.
+
+real	0m32.250s
+user	0m1.657s
+sys	0m0.382s

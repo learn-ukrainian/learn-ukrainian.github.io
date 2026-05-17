@@ -15,8 +15,13 @@ on 4 of those roles. Headline recommendations:
   Russianism judgment (Russian-pretraining contamination) and is unlikely to compete
   on coding/review against `gpt-5.5`, `deepseek-v4-flash`, or `claude-sonnet`.
   Keep `mistral-medium-3.5` as the Mistral entry.
-- **Drop the planned `hermes_deepseek.py` adapter** — superseded by `opencode`
-  (richer JSON telemetry, faster per-call). Hermes stays as the **Grok** harness.
+- **Build `hermes_deepseek.py`** (clone of `hermes_grok.py`). The earlier-
+  this-session recommendation to build `opencode_deepseek.py` was REVERSED
+  after harness isolation tonight: opencode has a 33% empty-output flake
+  rate on DeepSeek (3/9 probes returned banner-only); hermes had 5/5
+  success on the same prompts AND wires the `sources` MCP into the model
+  session (DeepSeek proactively verified words in VESUM + CEFR before
+  emitting content). See §Drop candidates §2 for the full reversal note.
 - **Investigate `gemma-local`** — last surfaced in `runtime.agents` but I have not
   seen it used in months. Either resurrect with a defined lane or remove from
   `/api/orient` to stop suggesting it's in rotation.
@@ -33,7 +38,7 @@ on 4 of those roles. Headline recommendations:
 | 3 | **Gemini** | `gemini` | `gemini-3.1-pro-preview` (deep), `gemini-3.0-flash-preview` (routine), Gemini Vision (OCR) | `delegate.py --agent gemini`; `ab ask-gemini --model gemini-3.0-flash-preview` for routine, `--model gemini-3.1-pro-preview` for deep |
 | 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `delegate.py --agent grok`; `ab ask-grok`; uses `hermes_grok.py` adapter |
 | 5 | **Mistral** | `vibe -p` | `mistral-medium-3.5` (high-effort default) | NEW LANE — adapter `vibe_mistral.py` PENDING; `VIBE_ACTIVE_MODEL` env override |
-| 6 | **DeepSeek v4** | `opencode run -m deepseek/...` | `deepseek-v4-pro` (max effort), `deepseek-v4-flash` (default) | NEW LANE — adapter `opencode_deepseek.py` PENDING; rich JSONL telemetry via `--format json` |
+| 6 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | NEW LANE — adapter `hermes_deepseek.py` PENDING (clone of `hermes_grok.py`). REVERSED from opencode after 33% empty-output flake (see §Drop candidates §2). Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
 | 7 | **Gemma local** | unclear | `gemma-local` (?) | UNCLEAR — listed in `/api/orient` `runtime.agents` but no recent use; investigate before next pass |
 
 ### Light / orchestration-only surfaces (not full agents)
@@ -89,15 +94,31 @@ are mine after reading raw outputs; raw outputs are preserved in the audit dir.
 | **Content Writing** (A1 Ukrainian dialogue) | B+ (27.1s) — 4 turns, vocative correct, no Russianisms, no speaker labels (style miss) | **EMPTY OUTPUT** (35.3s) | A (19.9s) — speaker labels, café reference, correct locative case, comprehension question well-formatted |
 | **Content Review** (planted `на протязі` Russianism + other issues) | **C** (18.1s) — caught the calque BUT **false positive** asserting `зустрінемось` is misspelled (both `-сь`/`-ся` are valid per VESUM) | B+ (71.4s) — caught calque + sharp pedagogical critique on past-tense complexity, but **over-prescriptive** on `звичайно→звісно` (звичайно is native UK, not Russian influence) | A (30.4s) — caught calque + Time-Place-Manner word-order critique + completeness critique; **no false positives** |
 
-### Empty-output flake rate (significant)
+### Harness isolation: opencode flake is opencode, not DeepSeek
 
-Across 9 opencode + DeepSeek probes, **3 returned banner-only with no content**:
-pro-max PLAN (attempt 1 — retry succeeded), pro-max WRITING, flash RESEARCH.
-**~33% flake rate.** Probably an opencode/streaming edge case where the final
-`text` event doesn't get emitted, not a model-level failure (the model spent
-real wall-clock time in every case). If we use opencode + DeepSeek for any
-production lane, the adapter MUST retry on empty output. Filed as follow-up
-in §Open follow-ups.
+Initial 9-probe opencode + DeepSeek run had a **3/9 (33%) empty-output rate**
+(pro-max PLAN attempt 1, pro-max WRITING, flash RESEARCH all returned
+banner-only after real wall-clock time). To isolate whether this was
+harness-side or model-side, the SAME 3 prompts (plus 2 extra retries of the
+flakiest one) were re-run via `hermes -z PROMPT -m deepseek-v4-pro` /
+`hermes -z PROMPT -m deepseek-v4-flash`.
+
+**Result: 5/5 success on hermes, no empty outputs.**
+
+Bonus finding: the hermes Content Writing output used the project's `sources`
+MCP server **proactively** — DeepSeek-pro called `verify_words` to confirm
+all 17 words in VESUM, `query_cefr_level` to confirm A1 PULS membership, and
+checked Russianism + Surzhyk before emitting the dialogue. Output included
+a verification summary. This is the writer-isolation behavior we've been
+trying to engineer via prompts. Hermes wires MCP into the model session;
+opencode doesn't. Tonight's `audit/2026-05-17-agent-bakeoff-evening/hermes-*.txt`
+preserves all 5 probe outputs.
+
+**Routing implication (revised):** DeepSeek lane goes through **hermes**,
+NOT opencode. Same harness as Grok. The `tool_calls_total=None` telemetry
+caveat applies (per `hermes_grok.py` docstring), but reliability + MCP
+integration beats opencode's richer JSON telemetry that we can't trust to
+emit. opencode stays as a fallback harness only if hermes is down.
 
 ### Mistral content-review false-positive risk
 
@@ -147,7 +168,7 @@ Cross-cutting:
 | Capability | Primary | Notes |
 |---|---|---|
 | **UI Testing** | Claude inline + Chrome MCP | Codex Desktop has `@browser-use` for parallel testing. Mistral + DeepSeek not relevant here. |
-| **Bug Hunter (clawpatch)** | per-area: Codex ↔ DeepSeek for `scripts/audit/`, `tests/`, `.mcp/`; Claude ↔ Mistral for `scripts/build/`, starlight | See afternoon handoff `2026-05-17-afternoon-path3-decision-card-handoff.md` for the full per-area table; one update: DeepSeek (via opencode) replaces hermes-deepseek throughout. |
+| **Bug Hunter (clawpatch)** | per-area: Codex ↔ DeepSeek for `scripts/audit/`, `tests/`, `.mcp/`; Claude ↔ Mistral for `scripts/build/`, starlight | See afternoon handoff `2026-05-17-afternoon-path3-decision-card-handoff.md` for the full per-area table; DeepSeek lane goes via **hermes** (reversed from opencode after tonight's flake-rate measurement). |
 
 ## Drop candidates (the user-requested call)
 
@@ -165,15 +186,21 @@ wins on latency).
 want a "cheap Mistral" lane, retest after a major Mistral release. Don't ship it
 to clawpatch lanes that walk over `curriculum/` or `scripts/wiki/`.
 
-### 2. DROP (already): planned `hermes_deepseek.py` adapter
+### 2. REVERSED 2026-05-17: build `hermes_deepseek.py`, NOT `opencode_deepseek.py`
 
-**Evidence:** Hermes `-z` mode gives us `tool_calls_total=None` (per
-`hermes_grok.py` docstring). Opencode `--format json` gives us
-`tokens: {total, input, output, reasoning, cache.{read,write}}` + `cost` per call —
-clean parity with claude/codex/gemini adapters.
+**Initial recommendation (earlier this session):** build `opencode_deepseek.py`
+because opencode `--format json` emits `tokens: {total, input, output, reasoning,
+cache.{read,write}}` + `cost` per call, vs. hermes `-z`'s `tool_calls_total=None`.
 
-**Recommendation:** Build `opencode_deepseek.py` instead. Hermes stays scoped to
-**Grok only**, where it's the canonical adapter and we have no opencode-equivalent.
+**REVERSED after harness isolation:** opencode has a **33% empty-output flake
+rate** on DeepSeek (3/9 probes returned banner-only after real wall-clock time).
+Hermes has **0/5 flake rate** on the same probes, AND DeepSeek-via-hermes
+proactively uses the `sources` MCP for verification before emitting (verified
+17 words in VESUM, checked CEFR A1 via PULS, validated locative `у Львові`).
+
+**Final recommendation:** clone `hermes_grok.py` → `hermes_deepseek.py`. Same
+adapter shape as Grok. Accept the telemetry caveat (`tool_calls_total=None`).
+opencode stays as a fallback harness only.
 
 #### Aside: can we use opencode for Grok too?
 

@@ -1,0 +1,11 @@
+1. **Add column without default**: `ALTER TABLE textbook_chunks ADD COLUMN page INTEGER;` — SQLite ADD COLUMN is O(1), no table rewrite. **Risk**: schema change takes a brief write-lock; on a busy DB, this blocks all reads. Run during lowest-traffic window.
+
+2. **Batch backfill in chunks of 500**: `UPDATE textbook_chunks SET page = ... FROM textbook_sections WHERE ... LIMIT 500` in a loop with `COMMIT` between batches and a short sleep (100ms). Derive page by distributing chunk offsets proportionally across page_start–page_end. **Risk**: page assignment is approximate — equal distribution of chunks across a page range ignores actual layout density. Acceptable for search proximity, not for exact citation.
+
+3. **Rebuild FTS5 as an external content table**: Drop the FTS5 index, rebuild it with `content='textbook_chunks'`, then a full `INSERT INTO fts_table(fts_table) VALUES('rebuild')`. External-content FTS5 stays in sync automatically afterward. **Risk**: during the drop-to-rebuild window, full-text search is unavailable. Announce a 30-second maintenance window.
+
+4. **Validate and add NOT NULL**: Run `SELECT COUNT(*) FROM textbook_chunks WHERE page IS NULL` — must return 0. Then quick schema rewrite: create new table with NOT NULL, copy data, drop old, rename. **Risk**: the rewrite locks the table for ~1–2s even with WAL mode. Do this immediately after FTS rebuild while the window is already open.
+
+real	0m24.420s
+user	0m1.611s
+sys	0m0.342s
