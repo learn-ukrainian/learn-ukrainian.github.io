@@ -500,23 +500,36 @@ _AVOID_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(.+?)<!--\s*/bad\s*-->", re.DOTA
 # correctly fail it, but the writer's pedagogical intent is to show it as
 # wrong, not to assert it as Ukrainian).
 #
-# Three surface forms supported, both English and Ukrainian negators:
-#   1. Straight quotes:  `not "дивюся"`  /  `не "завтрак"`
-#   2. Guillemets:       `not «дивюся»`  /  `не «завтрак»`
-#   3. Markdown italics: `not *дивюся*`  /  `не *завтрак*`
+# Four surface forms supported, both English and Ukrainian negators:
+#   1. Straight quotes:    `not "дивюся"`   /  `не "завтрак"`
+#   2. Guillemets:         `not «дивюся»`   /  `не «завтрак»`
+#   3. Closed markdown italics: `not *дивюся*` / `не *завтрак*`
+#   4. Unclosed italic terminated by sentence punctuation:
+#        `not *дивюся.`  /  `не *завтрак,`  /  `not *дивюся` (end-of-string)
 #
-# #2038 originally shipped the quote-only variant. The italic variant was
-# added 2026-05-17 after a1/m20 rebuild #2 surfaced `*дивюся*` from the
-# writer's `*я дивлюся*, not *дивюся*` contrast pattern. Strikethrough,
-# bold, and explicit ❌ markers are NOT matched here — extend
-# alternation rather than introducing new constants.
+# #2038 originally shipped quote-only. PR #2076 added closed-italic. The
+# unclosed-italic variant was added 2026-05-17 after a1/m20 rebuild #4
+# surfaced `*дивюся` (no closing `*` — the writer typed
+# `not *дивюся.` inside a JSON `"explanation"` field, where the sentence-
+# ending period takes the role of the closing italic marker).
+#
+# Strikethrough, bold, and explicit ❌ markers are NOT matched here —
+# extend alternation rather than introducing new constants.
 #
 # Bold (`**X**`) is intentionally excluded. Writers reserve bold for the
 # CORRECT form (the structural emphasis: "**л**" is the epenthetic
 # consonant being taught). Matching bold here would strip the very tokens
 # we want VESUM to verify.
 _WARNING_QUOTE_RE = re.compile(
-    r'\b(?:not|не)\s+(?:["«][^"»]+["»]|\*[^*]+\*)',
+    # Four alternations: quotes, guillemets, closed italics, unclosed italics.
+    # The unclosed-italic arm requires the inner span to be Cyrillic-only
+    # (no asterisk, no whitespace, no punctuation) so it stops cleanly at
+    # the next boundary instead of swallowing the rest of the sentence.
+    r'\b(?:not|не)\s+(?:'
+    r'["«][^"»]+["»]'
+    r'|\*[^*\n]+?\*'
+    r'|\*[A-Za-zА-ЯІЇЄҐа-яіїєґ\'ʼ-]+'
+    r')',
     re.IGNORECASE,
 )
 

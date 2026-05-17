@@ -2982,6 +2982,66 @@ def test_strip_metalinguistic_warning_quote_pattern() -> None:
     assert "дивлюся" in bold_correct_form
 
 
+def test_warning_quote_unclosed_italic_terminated_by_punctuation() -> None:
+    """`not *X.` / `не *X,` / `not *X<EOS>` — unclosed italics terminated by
+    sentence punctuation or end-of-string also strip the anti-example.
+
+    PR #2076 added closed-italic handling (`not *X*`). a1/m20 rebuild #4
+    (2026-05-17) surfaced the unclosed variant: the writer typed
+    `In II-conjugation: дивлюся, not *дивюся.` inside a JSON
+    `"explanation"` field, where the sentence-ending period implicitly
+    closes the italic span. The closed-italic-only regex missed it; the
+    bare token `*дивюся` (with the opening asterisk attached) reached
+    VESUM and tripped the gate.
+    """
+    cases = [
+        # Unclosed italic + period (the m20 trigger)
+        ("In II-conjugation: дивлюся, not *дивюся.", ["*дивюся"]),
+        # Unclosed italic + comma
+        ("кажуть, не *завтрак, а сніданок", ["завтрак"]),
+        # Unclosed italic + end-of-string
+        ("finally, not *X", ["*X"]),
+        # Closed italic still works (regression)
+        ("Use *сніданок*, не *завтрак*.", ["завтрак"]),
+        # Quote still works (regression)
+        ('Say not "X" but Y.', ['"X"']),
+    ]
+    for text, must_be_gone in cases:
+        stripped = linear_pipeline._strip_metalinguistic(text)
+        for fragment in must_be_gone:
+            assert fragment not in stripped, (
+                f"anti-example {fragment!r} should be stripped from {text!r}, "
+                f"got {stripped!r}"
+            )
+
+    # Bold-wrapped CORRECT form must survive.
+    bold = linear_pipeline._strip_metalinguistic("Bold **дивлюся** stays.")
+    assert "дивлюся" in bold, (
+        f"bold-wrapped correct form should survive, got {bold!r}"
+    )
+
+
+def test_proper_name_whitelist_covers_ya_forma() -> None:
+    """`я-форма` and its declined forms are pedagogical Ukrainian
+    linguistics terminology, not a VESUM lemma. Whitelist must cover
+    the surface forms a writer can realistically emit so the m20
+    `Інфінітив ↔ я-форма` activity title doesn't trip the gate."""
+    from scripts.audit.config import PROPER_NAME_WHITELIST
+
+    whitelist_lc = {name.lower() for name in PROPER_NAME_WHITELIST}
+    for surface in (
+        "я-форма",  # nom
+        "я-форми",  # gen / nom-pl
+        "я-формі",  # dat / loc
+        "я-форму",  # acc
+        "я-формою",  # instr
+    ):
+        assert surface in whitelist_lc, (
+            f"linguistic term {surface!r} must be in PROPER_NAME_WHITELIST "
+            f"(VESUM does not contain hyphenated pronoun-forma compounds)"
+        )
+
+
 def test_iter_vesum_word_surfaces_skips_mixed_script_typos() -> None:
     """Mixed-script Cyrillic-abutting-Latin tokens are writer typos, not words.
 
