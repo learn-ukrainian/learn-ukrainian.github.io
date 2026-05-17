@@ -46,6 +46,17 @@ PROPER_NAME_WHITELIST: set[str] = {
     # forms included so citations like "За Караманом" or "у Карамана"
     # don't re-trip the VESUM gate (PR #1603 review).
     "Караман", "Карамана", "Караманом", "Караману", "Карамані",
+    # Added 2026-05-17: textbook character names + translator surname
+    # surfaced by the A1/m20 (`my-morning`) rebuild after PR #2068's
+    # citation-matcher fix unblocked textbook_grounding. The Захарійчук
+    # Grade 1 p.24 passage ("за Арнольдом Лобелом") cites Arnold Lobel,
+    # and the Ukrainian-translated Frog & Toad characters `Квак` and
+    # `Кнак` are dialogue characters in the same excerpt. All declined
+    # forms included so the writer can address or reference them in
+    # any case without re-tripping the VESUM gate.
+    "Лобел", "Лобела", "Лобеле", "Лобелу", "Лобелі", "Лобелем", "Лобелом",
+    "Квак", "Квака", "Кваку", "Кваком", "Кваче",
+    "Кнак", "Кнака", "Кнаку", "Кнаком", "Кначе",
     # Common abbreviations and brand names
     "ІТ", "ЗНО", "НМТ", "ЄС", "ООН", "НАТО", "ЗСУ",
     "МійКлас",
