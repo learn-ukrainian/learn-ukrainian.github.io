@@ -5270,6 +5270,10 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
     not VESUM lemmas. For quiz-like item dicts with `options:` plus `answer:`,
     only the option equal to the answer is verified; sibling distractors can be
     fabricated wrong forms.
+
+    For true-false activities, false statements are intentional wrong claims
+    and may contain fabricated Ukrainian forms. Only true statements are
+    verified; missing answers fail soft by skipping the statement.
     """
     activity_type = activity.get("type")
     skip_subtree = (
@@ -5304,6 +5308,10 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
         elif isinstance(options, str) and options in answers:
             walk(options, "options")
 
+    def walk_truefalse_statement(statement: Any, answer: Any) -> None:
+        if answer is True:
+            walk(statement, "statement")
+
     def walk(node: Any, parent_key: str | None, *, in_options_list: bool = False) -> None:
         if isinstance(node, dict):
             wrong_option = (
@@ -5336,6 +5344,9 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
                         child,
                         answer_values(node.get("answer"), node.get("correctAnswer")),
                     )
+                    continue
+                if activity_type == "true-false" and key == "statement":
+                    walk_truefalse_statement(child, node.get("answer"))
                     continue
                 if wrong_option and key == "text":
                     continue
