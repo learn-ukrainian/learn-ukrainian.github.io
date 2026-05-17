@@ -57,6 +57,15 @@ PROPER_NAME_WHITELIST: set[str] = {
     "Лобел", "Лобела", "Лобеле", "Лобелу", "Лобелі", "Лобелем", "Лобелом",
     "Квак", "Квака", "Кваку", "Кваком", "Кваче",
     "Кнак", "Кнака", "Кнаку", "Кнаком", "Кначе",
+    # Added 2026-05-17: hyphenated Ukrainian linguistic terminology that
+    # VESUM does not contain because it's a compound term, not a single
+    # lemma. The writer's reflexive-verb m20 build surfaced `я-форма`
+    # ("I-form" — 1sg verb form) as a HARD gate failure even though the
+    # term is standard pedagogical Ukrainian (вживається в посібниках
+    # Заболотного, Авраменка). Sibling pronoun-form terms (`ти-форма`,
+    # `він-форма`, `ми-форма`, `ви-форма`, `вони-форма`) will be added
+    # as they surface; tonight only `я-форма` actually trips a build.
+    "я-форма", "я-форми", "я-формі", "я-форму", "я-формою", "я-формах",
     # Common abbreviations and brand names
     "ІТ", "ЗНО", "НМТ", "ЄС", "ООН", "НАТО", "ЗСУ",
     "МійКлас",
