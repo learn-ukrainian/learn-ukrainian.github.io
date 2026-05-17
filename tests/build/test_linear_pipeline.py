@@ -1157,6 +1157,33 @@ def _build_fake_verify_words(
     return fake_verify
 
 
+def test_inject_activity_gate_fails_when_activities_unused() -> None:
+    activities = [{"id": "act-1"}, {"id": "act-2"}, {"id": "act-3"}]
+    report = linear_pipeline._inject_activity_gate("## Діалоги\n\nБез маркерів.", activities)
+
+    assert report["passed"] is False
+    assert report["unused"] == ["act-1", "act-2", "act-3"]
+    assert "unused_activities" in report["reason"]
+
+
+def test_inject_activity_gate_passes_when_all_activities_injected() -> None:
+    activities = [{"id": "act-1"}, {"id": "act-2"}, {"id": "act-3"}]
+    text = "\n".join(
+        [
+            "## Діалоги",
+            "",
+            "<!-- INJECT_ACTIVITY: act-1 -->",
+            "<!-- INJECT_ACTIVITY: act-2 -->",
+            "<!-- INJECT_ACTIVITY: act-3 -->",
+        ]
+    )
+
+    report = linear_pipeline._inject_activity_gate(text, activities)
+
+    assert report["passed"] is True
+    assert report["unused"] == []
+
+
 def test_ai_slop_gate_ignores_correction_field_in_error_correction_activity(
     tmp_path: Path,
 ) -> None:
