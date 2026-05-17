@@ -78,12 +78,14 @@ _IGNORED_TESTS: tuple[str, ...] = (
     "tests/wiki/test_t1_t2_pipeline.py",
 )
 
-# Two tests require a fresh process (module-global cache invalidation
-# counts). The CI script runs them separately first to avoid leakage
-# from earlier orient API tests.
+# Tests that need a serial process before the main xdist suite. The
+# cache invalidation tests assert module-global counts. The stress
+# annotation speed test measures one function's latency and is noisy
+# under full-suite worker contention in local Dagger.
 _FRESH_PROCESS_TESTS: tuple[str, ...] = (
     "tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix",
     "tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all",
+    "tests/test_stress_annotation.py::TestPerformance::test_annotation_speed",
 )
 
 # Python version pinned to match .python-version + ci.yml. Touched only
@@ -137,6 +139,8 @@ class LearnUkrainianCi:
         #   - ``rsync`` — tests/test_deploy_script_idempotency.py
         #   - ``git``   — any test that shells out to git
         #   - ``curl``, ``ca-certificates`` — live-API + HTTPS
+        #   - ``nodejs``, ``npm`` — ubuntu-latest includes npx; Claude
+        #     adapter tests expect that sidecar binary to be discoverable.
         #   - ``build-essential``, ``python3-dev`` — wheel-builds for
         #     pyproject-only packages without a manylinux aarch64 wheel
         #     on PyPI (e.g. ``zlib-state``). GHA's ubuntu-latest ships
@@ -157,6 +161,8 @@ class LearnUkrainianCi:
                 "git",
                 "curl",
                 "ca-certificates",
+                "nodejs",
+                "npm",
                 "build-essential",
                 "python3-dev",
                 "zlib1g-dev",
@@ -174,13 +180,24 @@ class LearnUkrainianCi:
             base.with_mounted_cache("/root/.cache/pip", pip_cache)
             .with_mounted_directory("/work", source)
             .with_workdir("/work")
-            # Match ci.yml::test "Install dependencies" exactly:
+            # Create the venv, then mirror ci.yml's dependency installs.
             .with_exec([
-                "python",
+                "python3",
                 "-m",
                 "venv",
+                "--without-pip",
                 ".venv",
             ])
+            .with_exec(["test", "-x", "/work/.venv/bin/python"])
+            .with_exec([
+                "curl",
+                "-fsSL",
+                "https://bootstrap.pypa.io/get-pip.py",
+                "-o",
+                "/tmp/get-pip.py",
+            ])
+            .with_exec([".venv/bin/python", "/tmp/get-pip.py"])
+            .with_exec(["ls", "/work/.venv/bin/"])
             .with_exec([
                 ".venv/bin/python",
                 "-m",
@@ -220,7 +237,7 @@ class LearnUkrainianCi:
         )
 
         # Build the pytest command. We run the fresh-process tests
-        # first (separate process, so module-global cache state is
+        # first (separate process, so module-global cache/perf state is
         # clean), then the main suite.
         common_args = [
             "tests/",
