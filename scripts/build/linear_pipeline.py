@@ -2904,12 +2904,38 @@ def run_wiki_coverage_gate(
 ) -> dict[str, Any]:
     from scripts.audit.wiki_coverage_gate import check_wiki_coverage_paths
 
-    return check_wiki_coverage_paths(
+    result = check_wiki_coverage_paths(
         manifest=manifest,
         implementation_map=writer_output,
         module_dir=module_dir,
         level=level,
     )
+    if result.get("passed") is False:
+        proposals = list(result.get("fix_proposals") or [])
+        emit_event(
+            "wiki_coverage_fix_proposals",
+            slug=_wiki_manifest_slug(manifest, module_dir),
+            fail_count=len(proposals),
+            proposals=proposals,
+        )
+    return result
+
+
+def _wiki_manifest_slug(manifest: Mapping[str, Any] | str | Path, module_dir: Path) -> str:
+    if isinstance(manifest, Mapping):
+        return str(manifest.get("slug") or module_dir.name)
+    try:
+        raw = str(manifest)
+        if raw.lstrip().startswith(("{", "[")):
+            data = json.loads(raw)
+        else:
+            path = Path(manifest)
+            data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    except (OSError, TypeError, ValueError, json.JSONDecodeError):
+        data = {}
+    if isinstance(data, Mapping):
+        return str(data.get("slug") or module_dir.name)
+    return module_dir.name
 
 
 def review_context(
