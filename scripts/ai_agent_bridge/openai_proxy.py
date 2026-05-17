@@ -7,6 +7,8 @@ model listing, non-streaming chat completions, and a cheap health probe.
 from __future__ import annotations
 
 import os
+import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -24,6 +26,8 @@ from pydantic import BaseModel, ConfigDict, Field
 from ._config import _PARENT_ENV, CLAUDE_CMD, CODEX_CLI, GEMINI_CLI, REPO_ROOT
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
+_HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
+_SHELL_EXEC_RE = re.compile(r"^\s*exec\s+")
 
 
 class Message(BaseModel):
@@ -145,6 +149,57 @@ def _run_backend_command(
     return result
 
 
+def _python_argv_for_console_script(executable: str, seen: set[Path] | None = None) -> list[str] | None:
+    path = Path(shutil.which(executable) or executable).expanduser()
+    try:
+        resolved = path.resolve()
+    except OSError:
+        resolved = path
+
+    seen = set() if seen is None else seen
+    if resolved in seen:
+        return None
+    seen.add(resolved)
+
+    try:
+        text = resolved.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+
+    lines = text.splitlines()
+    if lines and lines[0].startswith("#!"):
+        shebang = shlex.split(lines[0][2:].strip())
+        if shebang:
+            command_name = Path(shebang[0]).name
+            if command_name == "env" and len(shebang) > 1 and "python" in Path(shebang[1]).name:
+                return shebang
+            if "python" in command_name:
+                return shebang
+
+    for line in lines[:10]:
+        if not _SHELL_EXEC_RE.match(line):
+            continue
+        try:
+            parts = shlex.split(line)
+        except ValueError:
+            continue
+        if len(parts) >= 3 and parts[0] == "exec" and "$@" in parts[2:]:
+            nested = Path(parts[1])
+            if not nested.is_absolute():
+                nested = resolved.parent / nested
+            return _python_argv_for_console_script(str(nested), seen)
+
+    return None
+
+
+def _hermes_python_argv() -> list[str]:
+    hermes = shutil.which("hermes") or "hermes"
+    python_argv = _python_argv_for_console_script(hermes)
+    if python_argv is None:
+        raise OSError(f"could not resolve Python interpreter for Hermes executable: {hermes}")
+    return python_argv
+
+
 def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
     codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-5.5")
@@ -187,11 +242,10 @@ def _gemini_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
         GEMINI_CLI,
         "-m",
         model,
-        f"--prompt={prompt}",
         "--approval-mode",
         "plan",
     ]
-    result = _run_backend_command("gemini", argv)
+    result = _run_backend_command("gemini", argv, prompt=prompt)
     return CompletionResponse(content=result.stdout.strip())
 
 
@@ -203,22 +257,22 @@ def _claude_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
         "--bare",
         "--model",
         model,
-        "--",
-        prompt,
+        "--input-format",
+        "text",
     ]
-    result = _run_backend_command("claude", argv)
+    result = _run_backend_command("claude", argv, prompt=prompt)
     return CompletionResponse(content=result.stdout.strip())
 
 
 def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
     argv = [
-        shutil.which("hermes") or "hermes",
-        f"--oneshot={prompt}",
+        *_hermes_python_argv(),
         "-m",
+        _HERMES_STDIN_MODULE,
         model,
     ]
-    result = _run_backend_command("hermes", argv)
+    result = _run_backend_command("hermes", argv, prompt=prompt)
     return CompletionResponse(content=result.stdout.strip())
 
 
