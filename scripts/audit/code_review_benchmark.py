@@ -39,6 +39,8 @@ MCP_STATES = ("with_mcp", "without_mcp")
 SEVERITIES = ("HIGH", "MEDIUM", "LOW")
 SEVERITY_ORDER = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
 RAW_RESPONSE_TRUNCATE = 8000
+LOCATION_DESCRIPTION_JACCARD_THRESHOLD = 0.12
+DESCRIPTION_JACCARD_THRESHOLD = 0.4
 TOKEN_STOPWORDS = {
     "the",
     "a",
@@ -120,6 +122,7 @@ REQUIRED_CASE_KEYS = {
     "gold_findings",
 }
 REQUIRED_FINDING_KEYS = {"id", "severity", "category", "location", "description"}
+LOCATION_FILE_RE = re.compile(r"[\w./-]+\.[A-Za-z0-9_]+")
 
 
 @dataclass(frozen=True)
@@ -241,13 +244,19 @@ def _validate_finding(raw: Any, *, source: Path) -> dict[str, Any]:
     severity = str(raw["severity"]).upper()
     if severity not in SEVERITIES:
         raise ValueError(f"{source}: invalid severity {raw['severity']!r}")
-    return {
+    finding = {
         "id": str(raw["id"]),
         "severity": severity,
         "category": str(raw["category"]),
         "location": str(raw["location"]),
         "description": str(raw["description"]),
     }
+    aliases = raw.get("aliases", [])
+    if aliases:
+        if not isinstance(aliases, list):
+            raise ValueError(f"{source}: gold finding aliases must be a list")
+        finding["aliases"] = [str(alias) for alias in aliases]
+    return finding
 
 
 def _resolve_diff_path(yaml_path: Path, diff_path: str) -> Path:
@@ -581,6 +590,9 @@ def verdict_from_call(call: HarnessCall) -> dict[str, Any]:
 
 def location_file(location: Any) -> str:
     """Normalize a finding location to file-level granularity."""
+    files = location_files(location)
+    if files:
+        return files[0]
     raw = str(location or "").strip()
     if not raw:
         return ""
@@ -591,10 +603,50 @@ def location_file(location: Any) -> str:
     return raw
 
 
+def location_files(location: Any) -> list[str]:
+    """Return file paths mentioned in a finding location, preserving order."""
+    raw = str(location or "").strip()
+    if not raw:
+        return []
+    files: list[str] = []
+    seen: set[str] = set()
+    for match in LOCATION_FILE_RE.finditer(raw):
+        file_path = match.group(0)
+        if file_path not in seen:
+            files.append(file_path)
+            seen.add(file_path)
+    return files
+
+
 def _tokenize(s: Any) -> list[str]:
     """Split text into normalized content tokens for lightweight similarity."""
     toks = re.findall(r"\w{3,}", str(s or "").lower())
     return [token for token in toks if token not in TOKEN_STOPWORDS]
+
+
+def _jaccard(left: set[str], right: set[str]) -> float:
+    return len(left & right) / max(len(left | right), 1)
+
+
+def _normalize_finding_id(raw: Any) -> str:
+    """Normalize model/gold finding identifiers for alias matching."""
+    return re.sub(r"[^a-z0-9]+", "-", str(raw or "").strip().casefold()).strip("-")
+
+
+def _finding_identifiers(finding: dict[str, Any]) -> set[str]:
+    identifiers = {_normalize_finding_id(finding.get("id"))}
+    aliases = finding.get("aliases", [])
+    if isinstance(aliases, list):
+        identifiers.update(_normalize_finding_id(alias) for alias in aliases)
+    identifiers.discard("")
+    return identifiers
+
+
+def _identifier_tokens(finding: dict[str, Any]) -> set[str]:
+    tokens: set[str] = set()
+    for identifier in _finding_identifiers(finding):
+        tokens.update(token for token in identifier.split("-") if len(token) >= 3 and token not in TOKEN_STOPWORDS)
+    return tokens
 
 
 def _severity_value(finding: dict[str, Any]) -> int:
@@ -607,35 +659,51 @@ def _semantic_match_candidate(
     matched_already: set[str],
 ) -> tuple[str, str] | None:
     model_category = str(model_finding.get("category", "")).strip().lower()
-    model_loc_file = location_file(model_finding.get("location"))
+    model_loc_files = set(location_files(model_finding.get("location")) or [location_file(model_finding.get("location"))])
+    model_loc_files.discard("")
     model_sev = _severity_value(model_finding)
     model_desc_tokens = set(_tokenize(model_finding.get("description", "")))
+    model_identifiers = _finding_identifiers(model_finding)
+    model_identifier_tokens = _identifier_tokens(model_finding)
 
+    best_location: str | None = None
+    best_location_score = 0.0
     best: str | None = None
     best_score = 0.0
     for gold in gold_findings:
         gold_id = str(gold.get("id", ""))
         if gold_id in matched_already:
             continue
+        if model_identifiers & _finding_identifiers(gold):
+            return gold_id, "strong"
+
         gold_category = str(gold.get("category", "")).strip().lower()
         if model_category != gold_category:
             continue
 
-        gold_loc_file = location_file(gold.get("location"))
+        gold_loc_files = set(location_files(gold.get("location")) or [location_file(gold.get("location"))])
+        gold_loc_files.discard("")
         gold_sev = _severity_value(gold)
-        same_file = bool(model_loc_file) and model_loc_file == gold_loc_file
+        same_file = bool(model_loc_files & gold_loc_files)
+        gold_desc_tokens = set(_tokenize(gold.get("description", "")))
+        description_jaccard = _jaccard(model_desc_tokens, gold_desc_tokens)
 
         if same_file:
             if abs(model_sev - gold_sev) <= 1:
-                return gold_id, "strong"
+                identifier_jaccard = _jaccard(model_identifier_tokens, _identifier_tokens(gold))
+                if identifier_jaccard > 0 or description_jaccard > LOCATION_DESCRIPTION_JACCARD_THRESHOLD:
+                    location_score = max(identifier_jaccard, description_jaccard)
+                    if location_score > best_location_score:
+                        best_location = gold_id
+                        best_location_score = location_score
             continue
 
-        gold_desc_tokens = set(_tokenize(gold.get("description", "")))
-        jaccard = len(model_desc_tokens & gold_desc_tokens) / max(len(model_desc_tokens | gold_desc_tokens), 1)
-        if jaccard > 0.4 and jaccard > best_score:
+        if description_jaccard > DESCRIPTION_JACCARD_THRESHOLD and description_jaccard > best_score:
             best = gold_id
-            best_score = jaccard
+            best_score = description_jaccard
 
+    if best_location is not None:
+        return best_location, "strong"
     if best is not None:
         return best, "weak"
     return None
@@ -650,9 +718,10 @@ def find_semantic_match(
     Find the best gold finding that matches a model finding semantically.
 
     Match criteria, in priority order:
-    1. category + file-location match -> strong match, with severity tolerated +/-1 step
-    2. category match + description token-set Jaccard > 0.4 -> weak match
-    3. otherwise no match
+    1. model id/aliases match gold id/aliases -> strong match
+    2. category + file-location match + identifier/description signal -> strong match, with severity tolerated +/-1 step
+    3. category match + description token-set Jaccard > 0.4 -> weak match
+    4. otherwise no match
     """
     match = _semantic_match_candidate(model_finding, gold_findings, matched_already)
     return match[0] if match else None
