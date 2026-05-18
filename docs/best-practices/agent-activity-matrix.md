@@ -384,6 +384,54 @@ The user said: *"quality foremost, but if Chinese models bring quality we use th
 4. **Qwen-3.6-max-preview vs Claude Opus xhigh on adversarial review** (post-June-15 readiness) — cost ~$5/review
 5. **Qwen-3.6-flash vs DeepSeek-flash on code review** — cost ~$0.50/PR
 
+### 8.11 Track-level V7 writer routing — STUBBED, pending bakeoff (added v1.2.1 / 2026-05-18)
+
+> **Why this section exists:** the gap audit (`audit/2026-05-18-docs-gaps-and-reorganization/REPORT.md` §1.10) flagged that
+> §8.1 ranks writers at **A1 register** specifically, but the project has 20+ tracks across CEFR levels A1→C2 + seminars
+> (hist, bio, istorio, lit, lit-essay/war/fantastika/hist-fic/humor/youth/doc/drama/crimea, oes, ruth, folk). Writer
+> rankings do not transfer across registers — the codex A1-register gap may *invert* at B1+ where high-Ukrainian
+> bias is a feature, not a bug. This section is the canonical home for per-track writer routing as bakeoff data lands.
+> All rows are stubbed `❓ pending bakeoff` until evidence exists.
+
+| Track bucket | Tracks | Register / pedagogy | Current default | Top runner-up | Status |
+|---|---|---|---|---|---|
+| **A1 register-precision** | a1 (55) | Heavy English scaffold, ULP-derived immersion, PPP pedagogy | claude-tools (v3 ✅ §8.1) | codex-tools (gap: 996/1200 register undershoot) | ✅ §8.1 valid; lane ends 2026-06-15 |
+| **A2 transition** | a2 (69) | Transition completes to UA by end of A2, PPP→TTT | claude-tools (presumed; not separately bakeoffed) | ❓ | ❓ A2 bakeoff never run; A1 results assumed transferable for now |
+| **B1+ register-relaxed core** | b1 (94), b2 (93) | 100% UA except Tab 2, TTT pedagogy | ❓ | ❓ | ❓ Codex's high-UK bias plausibly becomes feature; deepseek-pro plausibly competitive at cost. Bakeoff is recommended next step (§8.10 #1). |
+| **C1 / C2 advanced core** | c1 (132), c2 (110) | 100% UA, CLIL pedagogy, abstract topics | ❓ | ❓ | ❓ No bakeoff; assumed to follow B1+ findings. |
+| **Seminar — biography** | bio (180) | 100% UA, CBI, narrative arc (birth→impact→legacy) | ❓ | ❓ | ❓ Different writing-task class than core modules; needs own bakeoff. |
+| **Seminar — history** | hist (140), istorio (136) | 100% UA, CBI, decolonized historiography | ❓ | ❓ | ❓ Decolonization framing risk; Claude has best track record on cultural nuance (§8.4); cost-at-scale unclear. |
+| **Seminar — literary** | lit (232), lit-essay (63), lit-hist-fic (23), lit-fantastika (25), lit-war (29), lit-humor (14), lit-youth (32), lit-doc (13), lit-drama (17), lit-crimea (12) | 100% UA, CBI, essay + reflection format | ❓ | ❓ | ❓ Highest literary register; native UA flow critical. Gemini-3.1-pro is the wiki writer for these; module-writer choice TBD. |
+| **Seminar — paleography** | oes (102), ruth (115) | 100% UA + Old East Slavic / Ruthenian primary sources, philological | ❓ | ❓ | ❓ Specialized — primary-source literacy. Unclear if any current writer handles cyrillic-archaic well. |
+| **Seminar — folklore** | folk (27) | 100% UA, CBI, oral-tradition focus | ❓ | ❓ | ❓ Smallest seminar bucket; could serve as bakeoff canary. |
+
+**Cost-at-scale note.** Total module count across all tracks is **1,713** per `/api/orient`. At ~$3-10/module (typical bakeoff-observed range)
+the writer choice has a wide cost spread across the curriculum:
+
+- All-Claude-Opus pre-June-15: ~$5-15K total writer cost
+- All-Codex post-June-15: ~$3-8K (Codex's lane after sunset)
+- All-DeepSeek-pro: ~$1-3K (cheapest validated quality)
+- All-Gemini-3.1-pro: 0$ (unmetered, but writer quality unproven for B1+ modules — only validated for wikis)
+
+The cost gradient means **even a ±5% quality difference between writers at B1+ shifts $3-7K of total spend**.
+Bakeoff cost (~$10-20 for a 6-writer fair test per §8.10) pays for itself if it informs even one track's choice correctly.
+
+**Recommended sequence to populate this table** (priority order):
+
+1. **A1 m20 6-writer bakeoff** (claude / codex / gemini-3.1-pro / deepseek-pro / qwen-plus / grok) — closes ❓ on A2 transition by extension; validates the §8.1 ranking under the post-#2148-fix contract. ~$10-15.
+2. **B1 m01 bakeoff** (same roster minus grok) — closes ❓ on B1+ register-relaxed core; if codex-tools beats claude-tools here, the post-June-15 transition gets easier. ~$15-20 (longer modules).
+3. **Bio canary bakeoff** — closes ❓ on seminar-biography bucket; biography arc is a narrative-writing task class distinct from grammar-progression modules. ~$10/module.
+4. **Lit-essay canary bakeoff** — closes ❓ on the literary seminar bucket; literary register is the deepest UA-native test we have. ~$10/module.
+5. **C1 m01 bakeoff** — closes ❓ on advanced core. Only worth running after B1+ result is in, since rankings likely transfer. ~$10-15.
+
+Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 dispatches. Compared to the $3-7K cost-of-being-wrong, this is overwhelmingly worth running.
+
+**What this section does NOT lock in (per #1 quality-above-all + the gap audit's recommendation to avoid speculation):**
+
+- Defaults for any ❓ row — those wait for bakeoff evidence.
+- Cost-at-scale verdicts — listed for context only; quality still leads.
+- Cross-track writer-swap policies — bakeoffs measure per-track, not per-curriculum.
+
 ---
 
 ## 9. Maintenance
