@@ -4,6 +4,7 @@ from textwrap import dedent
 
 from scripts.etymology.bulk_ocr_gemini import (
     is_low_quality_output,
+    is_repetition_hallucination,
     strip_planning_preamble,
 )
 
@@ -171,6 +172,46 @@ LEGIT_APOLOGY = (
     "чи службового повідомлення про завершення транскрипції. "
 ) * 3
 
+REPETITION_EXTREME = "\n".join(
+    ["**крути́тися** «обертатися» — див. *крути́ти*."] * 100
+)
+
+REPETITION_MODERATE = "\n".join(
+    [
+        "**пере́зрівати** «надмірно зріти»",
+        "Ж, Ох, *пере́зрівати*. – Так. Надмірно зріти.",
+        "пере́зрівати, пере́зрілий, пере́зріти; приклади словникового тексту.",
+        "р. перезревать, бр. пераспяваць; словниковий опис походження.",
+        "утворене з префікса пере- та дієслова зріти з прозорою мотивацією.",
+        "Пор. дозрівати, визрівати, зрілий; джерельні скорочення подано далі.",
+        "Далі сторінка зривається в повторюваний перехресний покажчик.",
+        *(["**пере́зрілий** – див. *пере́зріти*."] * 10),
+    ]
+)
+
+LEGIT_CROSS_REFERENCE_HEAVY_PAGE = "\n".join(
+    [
+        CLEAN_PAGE,
+        "**абза́цний** «пов'язаний з абзацом» — опис словникової статті.",
+        "**абза́цовий** «тс.» — коротка словникова позначка.",
+        "**абза́цувати** «ділити на абзаци» — книжне утворення.",
+        "**абза́цний** — див. *абза́ц*.",
+        "**абза́цовий** — див. *абза́ц*.",
+        "**абза́цувати** — див. *абза́ц*.",
+        "**аку́тний** — див. *аку́т*.",
+        "**акце́нтний** — див. *акце́нт*.",
+        "**абза́цний** — див. *абза́ц*.",
+        "**абза́цовий** — див. *абза́ц*.",
+        "**абза́цувати** — див. *абза́ц*.",
+        "**аку́тний** — див. *аку́т*.",
+        "**акце́нтний** — див. *акце́нт*.",
+    ]
+)
+
+REPETITION_SHORT_PAGE = "\n".join(
+    ["**крути́тися** «обертатися» — див. *крути́ти*."] * 5
+)
+
 
 def test_is_low_quality_rejects_bare_refusal():
     assert is_low_quality_output(BARE_REFUSAL) is True
@@ -186,6 +227,22 @@ def test_is_low_quality_rejects_completion_meta_self_praise():
 
 def test_is_low_quality_rejects_trailing_update_topic():
     assert is_low_quality_output(TRAILING_UPDATE_TOPIC) is True
+
+
+def test_is_low_quality_rejects_repetition_hallucination_extreme():
+    assert is_low_quality_output(REPETITION_EXTREME) is True
+
+
+def test_is_low_quality_rejects_repetition_hallucination_moderate():
+    assert is_low_quality_output(REPETITION_MODERATE) is True
+
+
+def test_is_low_quality_accepts_legit_cross_reference_heavy_page():
+    assert is_low_quality_output(LEGIT_CROSS_REFERENCE_HEAVY_PAGE) is False
+
+
+def test_is_repetition_hallucination_short_page_skip():
+    assert is_repetition_hallucination(REPETITION_SHORT_PAGE) is False
 
 
 def test_strip_planning_preamble_removes_trailing_update_topic():
