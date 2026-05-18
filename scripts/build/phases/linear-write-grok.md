@@ -428,27 +428,32 @@ Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word
 
 ## Pre-emit verification (run BEFORE you write any artifact)
 
-Before emitting the four fenced blocks and the `<end_gate>` block, confirm
-you have made AT LEAST one of each of the following tool calls during this
-turn. If any line below is FALSE, make the call now before emitting.
+Confirm you have made AT LEAST one of each of the following MCP tool calls.
+If any line below is FALSE for your current session, make the call now BEFORE
+emitting any artifact:
 
-1. `mcp__sources__search_text` — at least one call per `plan_references`
-   textbook entry (textbook grounding obligation; gate
-   `textbook_grounding`).
-2. `mcp__sources__query_wikipedia` OR `mcp__sources__search_external` OR
-   `mcp__sources__search_images` — at least one call (multimedia search
-   obligation; gate `resources_search_attempted`). Honest "no result"
-   counts — the attempt is what the gate counts.
-3. `mcp__sources__verify_words` (or `verify_word` / `verify_lemma`) — at
-   least one call on novel Ukrainian forms before writing them
-   (verification obligation; reviewer evidence requirement).
-4. `mcp__sources__search_style_guide` — at least one call on a Russianism
-   or paronym candidate from the topic vocabulary (heritage-defense
-   obligation; reviewer evidence requirement).
+1. **Textbook grounding** — `mcp__sources__search_text` for each
+   `plan_references` textbook entry (one call per entry; verify the citation
+   page exists in the search hit).
+2. **Multimedia obligation** — AT LEAST ONE of
+   `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, OR
+   `mcp__sources__search_images`. This is non-negotiable: the
+   `resources_search_attempted` gate will REJECT modules with
+   `multimedia_calls_total == 0`.
+3. **VESUM verification** — `mcp__sources__verify_words` on EVERY Ukrainian
+   form you intend to write that isn't trivially known (i.e. anything beyond
+   top-100 frequency). One batched call per dozen lemmas/forms is fine.
+4. **Russianism check** — `mcp__sources__search_style_guide` on at least one
+   Russianism-candidate form (when teaching contrast pairs).
 
-This checklist is not a substitute for the per-mandate instructions above;
-it is a final cross-check that no mandate was forgotten under the attention
-budget of the early-prompt contract directives.
+If any line above is FALSE, make the call now. Do not emit artifacts until
+the checklist is fully green.
+
+Failure to satisfy ANY checklist line will cause the build to fail at the
+`resources_search_attempted` / `vesum_verified` / `textbook_grounding` /
+`style_guide_evidence` gate AFTER you've spent compute generating prose. The
+4 tool calls above cost you 30 seconds of latency and unblock the entire
+build. Make them.
 
 ## HARD STOP RULE
 
