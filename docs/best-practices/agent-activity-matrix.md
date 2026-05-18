@@ -295,14 +295,14 @@ Listed by priority for next-session fill:
 
 ### 8.2a Russianism / linguistic reviewer (empirical F1 ranking)
 
-| Rank | Model | F1 | Cost | Notes |
-|---|---|---|---|---|
-| 1 ✅ | Claude Opus 4.7 | 86% (100% case accuracy on 12-case set) | $$$ | Primary. |
-| 2 ✅ | Gemini-3.1-pro-preview | 84% | 0$ | Greeting-FP issue. |
-| 3 ✅ | GPT-5.5 (Codex) | high precision, low recall | $$ | Conservative. |
-| 4 ✅ | Grok-4.3 | 77% | $ | Middle of pack. |
-| ❓ | DeepSeek-v4-pro | — | $ | No Russianism-judge bakeoff yet. Promising on content review. |
-| ❓ | Qwen-3.6-plus | — | $ | Untested. |
+| Rank | Model | F1 | Precision | Recall | Case acc | Cost | Notes |
+|---|---|---:|---:|---:|---:|---|---|
+| 1 ✅ | Claude Opus 4.7 | **86%** | 79% | 94% | 100% | $$$ | Primary. Highest recall in the field. |
+| 2 ✅ | Gemini-3.1-pro-preview | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
+| 3 ✅ | GPT-5.5 (Codex) | **78%** | 90% | 69% | 83% | $$ | Conservative, high precision. |
+| 4 ✅ | Grok-4.3 | **77%** | — | — | — | $ | Middle of pack (2026-05-15 calibration). |
+| 5 ✅ | Qwen-3.6-plus | **69%** | 90% | 56% | 92% | $ | **NEW 2026-05-19 (`audit/2026-05-19-qwen-3.6-judge-calibration/`).** Most conservative judge in the field — ties Codex on precision but lowest recall (misses ~half of sev≥2 issues). 1 spurious flag on `cal_clean_with_lure`. NOT primary; viable as cheap second-opinion screen where precision matters more than recall. |
+| ❓ | DeepSeek-v4-pro | — | — | — | — | $ | No Russianism-judge bakeoff yet. Promising on content review (§8.8). |
 
 ### 8.3 Wiki article writing
 
@@ -369,7 +369,7 @@ The user said: *"quality foremost, but if Chinese models bring quality we use th
 |---|---|---|---|
 | DeepSeek-v4-pro | Chinese (DeepSeek AI) | **YES** — §8.8 content review with VESUM | ✅ Empirical bakeoff 2026-05-17 |
 | DeepSeek-v4-flash | Chinese (DeepSeek AI) | **YES** — §8.7 code review | ✅ Empirical bakeoff 2026-05-15 |
-| Qwen-3.6-plus | Chinese (Alibaba) | No (just wired) | ❓ Untested in any role |
+| Qwen-3.6-plus | Chinese (Alibaba) | No (Russianism judge tested, did not earn primary) | ⚠️ F1 69% (rank 5/5) as Russianism judge per `audit/2026-05-19-qwen-3.6-judge-calibration/`. Conservative, high-precision profile. |
 | Qwen-3.6-max-preview | Chinese (Alibaba) | No | ❓ Untested |
 | Qwen-3.6-flash | Chinese (Alibaba) | No | ❓ Untested |
 | Kimi K2 | Chinese (Moonshot) | No | ⏸ EXCLUDED per user direction 2026-05-18 |
@@ -379,8 +379,8 @@ The user said: *"quality foremost, but if Chinese models bring quality we use th
 **Recommended next bakeoffs to answer "which Chinese model is good enough for which role" (priority order):**
 
 1. **Qwen-3.6-plus as V7 module writer at B1+** (codex's tools+register issue at A1 may not exist at B1+ register; qwen plausibly fits well here at low cost) — cost ~$5-10/module
-2. **Qwen-3.6-plus as Russianism judge** vs Claude Opus 86% F1 baseline — cost ~$2/case set
-3. **Qwen-3.6-plus as content reviewer with VESUM** vs DeepSeek-pro current primary — cost ~$3-5/module
+2. ~~**Qwen-3.6-plus as Russianism judge** vs Claude Opus 86% F1 baseline — cost ~$2/case set~~ **DONE 2026-05-19.** Verdict: F1 69%, precision 90%, recall 56%. Rank 5/5; doesn't earn primary. See `audit/2026-05-19-qwen-3.6-judge-calibration/REPORT.md`.
+3. **Qwen-3.6-plus as content reviewer with VESUM** vs DeepSeek-pro current primary — cost ~$3-5/module. Open question whether qwen's conservative high-precision Russianism profile translates to better VESUM compliance vs missed issues.
 4. **Qwen-3.6-max-preview vs Claude Opus xhigh on adversarial review** (post-June-15 readiness) — cost ~$5/review
 5. **Qwen-3.6-flash vs DeepSeek-flash on code review** — cost ~$0.50/PR
 

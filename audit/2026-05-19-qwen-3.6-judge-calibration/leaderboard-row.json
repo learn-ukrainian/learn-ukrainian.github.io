@@ -1,0 +1,10 @@
+{
+  "judge": "qwen/qwen3.6-plus",
+  "via": "hermes-openrouter",
+  "n": 12,
+  "f1": 0.6923,
+  "precision": 0.9,
+  "recall": 0.5625,
+  "case_accuracy": 0.9167,
+  "tested_at": "2026-05-18T23:06:39Z"
+}
