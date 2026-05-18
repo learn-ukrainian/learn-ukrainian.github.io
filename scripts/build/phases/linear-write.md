@@ -88,13 +88,24 @@ that failure class. Run each check while drafting, not as a separate pass.
 
 2. **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys standard forms for learner-facing standard Ukrainian. However, NEVER classify a word as Russianism, surzhyk, or calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. For any non-modern or suspicious form, verify with `mcp__sources__check_modern_form` (VESUM) plus available historical/etymological evidence (`mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, literary/wiki source context). If authentic but non-standard, keep it only when pedagogically required, tag it `[Archaism]`, `[Historism]`, or `[Dialectism]`, give the modern standard equivalent, and briefly state its Ukrainian heritage. If unverified, omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
-   **Russianism / surzhyk / calque callout markup (mandatory).** When a sentence in prose demonstrates a *bad form* for learner contrast (the "stick to X, not the Russian-borrowed Y" pattern), the bad form is deliberately NOT in VESUM and would trip the `vesum_verified` gate as a false positive. Wrap the bad form in HTML comments so the gate strips it but the learner still sees it in rendered MDX:
+   **Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM — intentional misspellings, Russianisms, Surzhyk, calques, archaisms appearing only for teaching contrast — MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers wherever it appears in the output, regardless of which artifact. The bad form is deliberately NOT in VESUM and would trip the `vesum_verified` gate as a false positive; the marker lets the gate strip it while the learner still sees the form in rendered MDX.
 
    ```markdown
    Stick to **сніданок** (not the Russian-borrowed <!-- bad -->завтрак<!-- /bad -->),
    **рушник** (not <!-- bad -->полотенце<!-- /bad -->), and **одягатися** (not the
    surzhyk <!-- bad -->одіватися<!-- /bad -->).
    ```
+
+   Apply this same convention in ALL writer artifacts:
+   - **module.md prose:** `**дивитися → я дивлюся**, not <!-- bad -->дивюся<!-- /bad -->`.
+   - **activities.yaml `true-false` `statement:` fields:** any negative example named in a true statement must be marker-wrapped. WRONG: `statement: "правильно: X, а не Y."`. RIGHT: `statement: "правильно: X, а не <!-- bad -->Y<!-- /bad -->."`
+   - **activities.yaml `match`, `fill-in`, `multiple-choice`, `order`, `pair-up`, etc. items:** any wrong form named as a contrast — if it is not a structural field like `error:` that the gate already skips — MUST have markers.
+   - **vocabulary.yaml `usage:` field:** usually exemplifies the correct form, so markers should not normally be needed. If a usage line names a wrong form for teaching, marker it.
+   - **resources.yaml `title:` / notes:** out of scope; do not marker.
+
+   **Exception:** `type: error-correction` activity items already have `sentence:` / `error:` fields fully excluded from VESUM lookup; markers are optional there but harmless.
+
+   **True-false anti-pattern:** statements that say `X, а не Y` / `X, not Y` MUST marker the Y form when Y is a malformed, Russianism, Surzhyk, or other non-VESUM teaching contrast. Do not leave Y bare just because the statement's `answer: true`.
 
    The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX, so the bad form is still visible in plain prose. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. The marker is specifically for Russianisms, surzhyk forms, calques, and paronyms shown *to be avoided*. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
 
@@ -107,14 +118,15 @@ that failure class. Run each check while drafting, not as a separate pass.
    - ❌ `*X*, not *Y*` — italic contrast pair. The italicized *Y* leaks into VESUM and is rejected.
    - ❌ `... not *Y*.` / `... not *Y*,` — bare italic bad form.
    - ❌ `say X, not Y` — unmarked bad form in prose. The unmarked Y leaks into VESUM lookup.
+   - ❌ `true-false statement: X, а не Y.` — unmarked YAML negative example. The unmarked Y leaks into VESUM lookup unless marker-wrapped.
    - ❌ `instead of Y` / `замість Y` — unmarked bad form after a contrast preposition.
    - ❌ `(not Y)` / `(не Y)` — unmarked bad form in parentheses.
 
 ### Pre-emit bad-form audit (mandatory — #2095)
 
-Before emitting the four artifact fences (after the `<implementation_map_audit>` line from #2094), you MUST self-audit your draft for any italic-wrapped bad-form pattern:
+Before emitting the four artifact fences (after the `<implementation_map_audit>` line from #2094), you MUST self-audit your draft across `module.md`, `activities.yaml`, and `vocabulary.yaml` for any unmarked or italic-wrapped bad-form pattern:
 
-1. Scan your draft `module.md` for any of: `❌ *X*`, `*X*, not *Y*`, `... not *Y*.`, `... not *Y*,`, or `say X, not Y`.
+1. Scan your draft for any of: `❌ *X*`, `*X*, not *Y*`, `... not *Y*.`, `... not *Y*,`, `say X, not Y`, `X, а не Y`, or `X, not Y` inside YAML `statement:` / item strings.
 2. For EVERY match, the bad form `X` or `Y` MUST be wrapped in `<!-- bad -->X<!-- /bad -->` markers, NOT in `*italic*` and NOT bare prose. The Russianism, surzhyk, calque, or L2-trap form is the load-bearing case.
 3. If your scan finds zero italic-bad-form patterns, you may proceed. If your scan finds any, STOP, replace them with `<!-- bad -->` markers, and re-scan.
 

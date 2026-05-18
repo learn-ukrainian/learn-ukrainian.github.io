@@ -142,6 +142,32 @@ Apostrophes in Ukrainian (пам'ять) inside single-quoted strings need doubl
 
 ---
 
+## Bad-Form Markers in YAML
+
+Intentional non-VESUM forms used for teaching contrast must be wrapped wherever
+they appear, not only in `module.md` prose:
+
+```yaml
+- type: true-false
+  items:
+    - statement: "Правильно: дивлюся, а не <!-- bad -->дивюся<!-- /bad -->."
+      answer: true
+```
+
+Use `<!-- bad -->...<!-- /bad -->` in `activities.yaml` strings such as
+`true-false` statements, `match` / `fill-in` / `multiple-choice` items, and
+`vocabulary.yaml` `usage:` only when it explicitly names a wrong form. The
+VESUM gate strips these markers before lookup. `error-correction` `sentence:`
+and `error:` fields are already excluded from VESUM lookup, so markers there are
+optional but harmless.
+
+The gate has a narrow safety net for true-false statements ending in
+`X, а не Y.` or `X, not Y.`, but writers must still marker the `Y` form. Safety
+net telemetry (`vesum_verified_negative_example_stripped`) should be rare; if it
+appears often, the writer prompt convention is not being followed.
+
+---
+
 ## Vocabulary YAML Format
 
 ```yaml

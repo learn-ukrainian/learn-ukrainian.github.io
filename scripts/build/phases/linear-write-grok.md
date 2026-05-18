@@ -57,7 +57,7 @@ that failure class. Run each check while drafting, not as a separate pass.
 
 2. **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys standard forms for learner-facing standard Ukrainian. However, NEVER classify a word as Russianism, surzhyk, or calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. For any non-modern or suspicious form, verify with `mcp__sources__check_modern_form` (VESUM) plus available historical/etymological evidence (`mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, literary/wiki source context). If authentic but non-standard, keep it only when pedagogically required, tag it `[Archaism]`, `[Historism]`, or `[Dialectism]`, give the modern standard equivalent, and briefly state its Ukrainian heritage. If unverified, omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
-   **Russianism / surzhyk / calque callout markup (mandatory).** When a sentence in prose demonstrates a *bad form* for learner contrast (the "stick to X, not the Russian-borrowed Y" pattern), the bad form is deliberately NOT in VESUM and would trip the `vesum_verified` gate as a false positive. Wrap the bad form in HTML comments so the gate strips it but the learner still sees it in rendered MDX:
+   **Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM — intentional misspellings, Russianisms, Surzhyk, calques, archaisms appearing only for teaching contrast — MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers wherever it appears in the output, regardless of artifact. The marker lets `vesum_verified` strip the form while the learner still sees it in rendered MDX:
 
    ```markdown
    Stick to **сніданок** (not the Russian-borrowed <!-- bad -->завтрак<!-- /bad -->),
@@ -65,7 +65,11 @@ that failure class. Run each check while drafting, not as a separate pass.
    surzhyk <!-- bad -->одіватися<!-- /bad -->).
    ```
 
-   The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX, so the bad form is still visible in plain prose. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. The marker is specifically for Russianisms, surzhyk forms, calques, and paronyms shown *to be avoided*. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
+   Apply it in `module.md` prose, `activities.yaml` `true-false` `statement:` fields, `match` / `fill-in` / `multiple-choice` / `order` / `pair-up` item strings, and `vocabulary.yaml` `usage:` when a wrong form is named for contrast. `resources.yaml title:` / notes are out of scope. `type: error-correction` `sentence:` / `error:` fields are already excluded from VESUM; markers are optional there but harmless.
+
+   **True-false anti-pattern:** statements that say `X, а не Y` / `X, not Y` MUST marker the Y form when Y is a malformed, Russianism, Surzhyk, or other non-VESUM teaching contrast. WRONG: `statement: "правильно: X, а не Y."`. RIGHT: `statement: "правильно: X, а не <!-- bad -->Y<!-- /bad -->."`
+
+   The `<!-- bad -->...<!-- /bad -->` marker is stripped by `_strip_metalinguistic` before VESUM lookup but doesn't render in MDX. Do NOT use single-asterisk italics (`*завтрак*`) or bare unmarked prose for bad forms — both trip the gate. Words shown as legitimate non-standard heritage (archaisms, dialectisms) keep the `[Archaism]` / `[Dialectism]` tag and pedagogical defense above.
 
 3. **Source-citation discipline.** Every dictionary / style-guide / author
    citation MUST be groundable in MCP. **Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive** — it returns a `discusses: bool` verdict in one call. Allowed `source` enum values: `grinchenko_1907`, `esum`, `sum11`, `antonenko_davydovych`, `literary`, `heritage`, `wikipedia`, `style_guide`. If `discusses=false`, do NOT cite that source for that claim.
