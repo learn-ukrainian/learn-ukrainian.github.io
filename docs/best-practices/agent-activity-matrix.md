@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1 — compiled 2026-05-18 by orchestrator (Claude). Evidence index at `audit/INDEX-bakeoff-evidence.md` (built in parallel by Gemini dispatch). Promote-protocol kickoff scheduled this session per user direction.
+> **Status:** v1.2 — updated 2026-05-18 by orchestrator (Claude). Evidence index at `audit/INDEX-bakeoff-evidence.md`. **v1.2 adds §8 quality-vs-cost ranking view + Qwen-3.6 integration + codex retraction sync.** See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -31,6 +31,7 @@ Each cell carries:
 | **Gemini** | gemini-3.0-flash-preview (routine, fast); gemini-3.1-pro-preview (deep) | Google AI Studio via gemini-cli 0.42.0 | $500/wk; current burn 0%; UNMETERED for routine | Default for routine: ingestion runs, fixtures, docs-near-code, tests/migrations |
 | **DeepSeek** | deepseek-v4-pro (load-bearing content review w/ VESUM); deepseek-v4-flash (cheap PR code review) | Hermes adapter (deepseek 0.13.0) | Cheap; routing budget not currently capped | Primary code review + content review (with sources MCP) |
 | **Grok** | grok-4.3 via Hermes (one-shot text only) | Hermes adapter (xai-oauth) | Cheap | Discuss-only — no file-edit capability yet (#2072) |
+| **Qwen** | qwen/qwen3.6-plus (default); qwen/qwen3.6-flash (cheap); qwen/qwen3.6-max-preview (top tier); qwen/qwen3.6-35b-a3b:thinking (reasoning-augmented) | Hermes adapter via OpenRouter (`provider: openrouter`, base `https://openrouter.ai/api/v1`) | Cheap (OpenRouter routing) | **NEWLY WIRED 2026-05-18 — no role bakeoff yet.** Smoke-test passed (5s, returncode 0). Available for content/review/Q&A bakeoffs starting this session. Kimi explicitly deferred per user direction. |
 
 **Sub-agents (children of the orchestrator session, not separate dispatches):**
 - `Explore` (Haiku) — grep/file-read across the codebase.
@@ -68,9 +69,11 @@ Eleven canonical task types map onto the agent roster. Sub-rows are noted where 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 |---|---|---|---|---|---|
 | **Primary** | Claude (claude-tools) | 4 MCP tool calls, vesum_verified=true (159/159), 1224-word module produced | 2026-05-12 | `audit/bakeoff-2026-05-12-night/REPORT.md` | "Default V7 writer until next bakeoff signal indicates otherwise" per decision card. |
-| Runner-up 1 | Codex (codex-tools) | tool_calls_total=0 (theatre); MCP_TOOLS_NEVER_INVOKED guard fired | 2026-05-12 | same | Prompt-rewrite attempted at `28417cc3cb`; codex still emitted zero tool calls in fair-env re-test. Decision REVISED. |
-| Runner-up 2 | Gemini (gemini-tools) | subprocess crash before writer phase | 2026-05-06 | `audit/bakeoff-2026-05-05/REPORT.md` | Adapter instability (#1708 writer subprocess timeout). Not a content-quality failure; infra. |
+| Runner-up 1 | Codex (codex-tools) | **11 MCP tool calls in fair retest** (2026-05-13); content-register gap at A1: 996/1200 words, 51.77% immersion vs 24% A1 cap, truncation artifacts | 2026-05-13 (post-PR-#1907) | `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md:120-141` | **2026-05-12 night `tool_calls_total=0` verdict RETRACTED** — was a rollout-matcher bug in `scripts/agent_runtime/adapters/codex.py::_rollout_matches_plan`, fixed PR #1907. Real codex friction at A1 is **content register**, not tool wiring. At B1+ (immersion inverts) codex's high-Ukrainian tendency may become a feature. |
+| Runner-up 2 | Gemini (gemini-tools) | subprocess crash before writer phase | 2026-05-06 | `audit/bakeoff-2026-05-05/REPORT.md` | Adapter instability (#1708 writer subprocess timeout). Not a content-quality failure; infra. Re-bakeoff needed. |
 | Open | Grok (grok-tools) | ~52% of word count target + token truncation | 2026-05-16 | issue #2039 | Grok lane was bounded probe; not ready to compete on writer. |
+| Open | DeepSeek (deepseek-tools) | **not yet wired as V7 writer** (only as reviewer) — adapter exists PR #2107, write-mode validated PR #2112 | n/a | n/a | Highest leverage cost play if it passes quality. ~10× cheaper than Opus. Needs V7 writer wiring (~half-day) + bakeoff. |
+| Open | Qwen (qwen-tools) | **just integrated 2026-05-18; smoke-passed; no writer bakeoff** | 2026-05-18 (smoke only) | this session | qwen/qwen3.6-plus via OpenRouter. Targeted for B1+ bakeoff per user direction. Also: qwen/qwen3.6-flash (cheaper), qwen/qwen3.6-max-preview (top tier), qwen/qwen3.6-35b-a3b:thinking. |
 
 **Known weakness (claude-tools primary):** partial tool theatre on newly-introduced single-call verifiers (`verify_quote`, `verify_source_attribution` cited but uncalled). Strand-1 catches via `writer_tool_theatre`. Follow-up prompt-tightening, not a rollback trigger.
 
@@ -261,7 +264,129 @@ Listed by priority for next-session fill:
 
 ---
 
-## 8. Maintenance
+## 8. Ranking by role — quality-first, cost-aware (added v1.2)
+
+> **Purpose:** Answer the recurring question *"which model is best for which role, and is the cheap one good enough?"* in one table. Cost notation: $$$ = high (>$3/M input), $$ = medium ($0.50-$3), $ = low (<$0.50), 0$ = unmetered (within current weekly cap).
+> **Validation legend:** ✅ = empirical bakeoff data on this role; ⚠️ = gut-routing or limited data; ❓ = no bakeoff, needs validation.
+
+### 8.1 V7 module writer (A1 register-precision; B1+ register-relaxed)
+
+| Rank @ A1 | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | Claude Opus 4.7 (claude-tools) | $$$ | Default. 1224 words / 4 MCP / VESUM 159/159. Lane ends 2026-06-15. |
+| 2 ✅ | Codex GPT-5.5 (codex-tools) | $$ | Tools confirmed (11 calls). Content register gap: 996/1200, 51% immersion. Underperforms at A1. |
+| 3 ⚠️ | Gemini-3.1-pro (gemini-tools) | 0$ | Last bakeoff: infra crash (#1708). Re-bakeoff needed. |
+| 4 ⚠️ | Grok-4.3 (grok-tools) | $ | 52% word count + truncation per #2039. Probably out. |
+| ❓ | DeepSeek-v4-pro (deepseek-tools — UNWIRED for V7) | $ | Adapter exists, write-mode validated PR #2112. ~half-day to wire as V7 writer. |
+| ❓ | Qwen-3.6-plus (qwen-tools) | $ | Wired 2026-05-18, smoke OK. No writer bakeoff. |
+| ❓ | Qwen-3.6-max-preview | $$ | Top-tier qwen, may close gap with Opus at higher cost. |
+
+**At B1+ (immersion inverts to ~100% Ukrainian):** rankings probably shift — codex's high-Ukrainian bias becomes feature not bug. **A1 results do not transfer.** Per-level bakeoff needed.
+
+### 8.2 V7 module reviewer (per-dim LLM QG)
+
+| Rank | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | Codex GPT-5.5 (codex-tools) | $$ | Default per ADR. `<fixes>` contract honored. Bug surfaced #2127. |
+| 2 ⚠️ | DeepSeek-v4-pro hermes | $ | New (2026-05-17). Promote-protocol round 1 proposed split-by-phase prompt. Bakeoff queued. |
+| 3 ✅ | Claude Opus 4.7 | $$$ | Reserved for cultural/creative nuance. Best on Russianism (§4.2.a). |
+| 4 ⚠️ | Grok-4.3 | $ | Judge-calibration in progress; not yet aggregated. |
+| ❓ | Qwen-3.6-plus | $ | Untested as reviewer. |
+
+### 8.2a Russianism / linguistic reviewer (empirical F1 ranking)
+
+| Rank | Model | F1 | Cost | Notes |
+|---|---|---|---|---|
+| 1 ✅ | Claude Opus 4.7 | 86% (100% case accuracy on 12-case set) | $$$ | Primary. |
+| 2 ✅ | Gemini-3.1-pro-preview | 84% | 0$ | Greeting-FP issue. |
+| 3 ✅ | GPT-5.5 (Codex) | high precision, low recall | $$ | Conservative. |
+| 4 ✅ | Grok-4.3 | 77% | $ | Middle of pack. |
+| ❓ | DeepSeek-v4-pro | — | $ | No Russianism-judge bakeoff yet. Promising on content review. |
+| ❓ | Qwen-3.6-plus | — | $ | Untested. |
+
+### 8.3 Wiki article writing
+
+| Rank | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | Gemini-3.0-flash-preview | 0$ | Primary always. 100% wiki coverage across 22 tracks. |
+| FORBIDDEN | Claude | n/a | Per ADR — never pass `--writer=claude` for wiki. |
+
+### 8.4 Adversarial review of design / ADR
+
+| Rank pre-June-15 | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | Claude Opus 4.7 xhigh (read-only) | $$$ | Caught #2127, flagged #1933. Lane ends 2026-06-15. |
+| 2 ⚠️ | Codex GPT-5.5 xhigh | $$ | Substitution per `agent_fallback_substitutions.yaml`. Becomes primary post-June-15. |
+| 3 ⚠️ | DeepSeek-v4-pro | $ | One shipped (PR #2107). Promising cheap second-opinion. |
+| ❓ | Qwen-3.6-max-preview | $$ | Top-tier reasoning candidate; untested. |
+
+### 8.5 Code dispatch — mechanical refactor
+
+| Rank | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | Gemini-3.0-flash-preview | 0$ | Default for routine. Unmetered. |
+| 2 ✅ | Codex GPT-5.5 | $$ | Reserve for high-uncertainty / edge-case-heavy refactors. |
+
+### 8.6 Code dispatch — novel implementation
+
+| Rank | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | Codex GPT-5.5 xhigh | $$ | Recent: PRs #2121-#2125. Design judgment + tight scoping. |
+| 2 ⚠️ | Claude Opus 4.7 (pre-June-15) | $$$ | When Codex's bug pattern unclear. |
+| ❓ | Gemini-3.1-pro | 0$ | OPEN — runner-up bakeoff not run. |
+
+### 8.7 Code review (PR diff)
+
+| Rank | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | DeepSeek-v4-flash | $ | E:A+ 15s, zero false positives. Primary as of 2026-05-13. |
+| 2 ✅ | Codex GPT-5.5 | $$ | Architectural catches. Reserve. |
+| ❓ | Qwen-3.6-flash | $ | Cheap candidate; untested. |
+
+### 8.8 Content review (with VESUM verification)
+
+| Rank | Model | Cost | Quality status |
+|---|---|---|---|
+| 1 ✅ | DeepSeek-v4-pro hermes | $ | Primary 2026-05-17 (PR #2107/#2112). Proactive MCP use. |
+| 2 ⚠️ | Claude Opus xhigh | $$$ | Inline fast pass. |
+| 3 ⚠️ | DeepSeek-v4-flash | $ | Budget-tight option. |
+| ❓ | Qwen-3.6-plus | $ | Untested. |
+
+### 8.9 Q&A / single-shot consult
+
+| Rank routine | Model | Cost |
+|---|---|---|
+| 1 ✅ | Gemini-3.0-flash (`ab ask-gemini`) | 0$ |
+| 1 deep ✅ | Gemini-3.1-pro-preview | 0$ |
+| 2 ✅ | Codex GPT-5.5 (`ab ask-codex`) | $$ |
+| ❓ | Qwen-3.6-plus | $ |
+
+### 8.10 The Chinese-model question (user-asked)
+
+The user said: *"quality foremost, but if Chinese models bring quality we use them."* Status as of 2026-05-18:
+
+| Model | Origin | Already primary in a role? | Validation status |
+|---|---|---|---|
+| DeepSeek-v4-pro | Chinese (DeepSeek AI) | **YES** — §8.8 content review with VESUM | ✅ Empirical bakeoff 2026-05-17 |
+| DeepSeek-v4-flash | Chinese (DeepSeek AI) | **YES** — §8.7 code review | ✅ Empirical bakeoff 2026-05-15 |
+| Qwen-3.6-plus | Chinese (Alibaba) | No (just wired) | ❓ Untested in any role |
+| Qwen-3.6-max-preview | Chinese (Alibaba) | No | ❓ Untested |
+| Qwen-3.6-flash | Chinese (Alibaba) | No | ❓ Untested |
+| Kimi K2 | Chinese (Moonshot) | No | ⏸ EXCLUDED per user direction 2026-05-18 |
+
+**Honest take:** DeepSeek has earned primary slots on quality, not just cost. Qwen integration just landed; needs role-specific bakeoffs to know if it earns slots or stays runner-up.
+
+**Recommended next bakeoffs to answer "which Chinese model is good enough for which role" (priority order):**
+
+1. **Qwen-3.6-plus as V7 module writer at B1+** (codex's tools+register issue at A1 may not exist at B1+ register; qwen plausibly fits well here at low cost) — cost ~$5-10/module
+2. **Qwen-3.6-plus as Russianism judge** vs Claude Opus 86% F1 baseline — cost ~$2/case set
+3. **Qwen-3.6-plus as content reviewer with VESUM** vs DeepSeek-pro current primary — cost ~$3-5/module
+4. **Qwen-3.6-max-preview vs Claude Opus xhigh on adversarial review** (post-June-15 readiness) — cost ~$5/review
+5. **Qwen-3.6-flash vs DeepSeek-flash on code review** — cost ~$0.50/PR
+
+---
+
+## 9. Maintenance
 
 - Every cell's `last_verified` ages. Re-bakeoff cadence: **30 days** for primary cells, **60 days** for runner-ups.
 - New agent added → add to §2 roster + audit every relevant cell.
@@ -271,8 +396,9 @@ Listed by priority for next-session fill:
 
 ---
 
-## 9. Provenance
+## 10. Provenance
 
+- v1.2: 2026-05-18 by orchestrator (Claude inline). Added §8 Ranking-by-role with quality+cost view per user request. Added Qwen-3.6 row to §2 roster (newly wired). Updated §4.1 runner-ups to reflect the codex `tool_calls_total=0` retraction (PR #1907, 2026-05-13). Added DeepSeek + Qwen to writer Open slots pending bakeoff. Excluded Kimi K2 per user direction.
 - v1.1: 2026-05-18 by orchestrator (Claude inline). Added §4.2.a Russianism judge sub-cell from new evidence in `audit/INDEX-bakeoff-evidence.md`. Added promote-protocol round 1 results pointer to #2132.
 - v1: 2026-05-18 by orchestrator (Claude inline) per user direction.
 - Sources:
