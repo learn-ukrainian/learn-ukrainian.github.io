@@ -125,6 +125,18 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "qwen": {
+        "adapter": "scripts.agent_runtime.adapters.hermes_qwen:HermesQwenAdapter",
+        "default_model": "qwen/qwen3.6-plus",
+        "cost_tier": "low",
+        "capabilities": frozenset({
+            "content_writing",
+            "content_review",
+            "adversarial_review",
+        }),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
 }
 
 

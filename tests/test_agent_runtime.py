@@ -173,6 +173,7 @@ def test_registry_has_known_agents():
         "gemini",
         "grok",
         "deepseek",
+        "qwen",
     }
 
 

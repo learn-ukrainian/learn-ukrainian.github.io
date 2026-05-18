@@ -13,5 +13,6 @@ from __future__ import annotations
 
 from .hermes_deepseek import HermesDeepSeekAdapter
 from .hermes_grok import HermesGrokAdapter
+from .hermes_qwen import HermesQwenAdapter
 
-__all__ = ["HermesDeepSeekAdapter", "HermesGrokAdapter"]
+__all__ = ["HermesDeepSeekAdapter", "HermesGrokAdapter", "HermesQwenAdapter"]
