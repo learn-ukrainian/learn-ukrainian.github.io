@@ -53,6 +53,15 @@ Do not compare a run made before a pipeline bug fix with a run made after that
 fix as if they were the same condition. If the code changes, restart the bakeoff
 or split the report into separate cohorts.
 
+> **In-flight contract change (#2148 γ-shape).** The decision card at
+> [`docs/decisions/pending/2026-05-18-wiki-obligation-emission-contract.md`](../../decisions/pending/2026-05-18-wiki-obligation-emission-contract.md)
+> would render `implementation_map.json` into the writer prompt as a new
+> `IMPLEMENTATION_MAP_CONTRACT` block. If γ lands before a planned bakeoff,
+> treat all writers' prior runs as a different cohort. Include a baseline
+> run of the current default writer (claude-tools) on the post-γ prompt as
+> the new control — every other writer's first test is against the new
+> prompt by default.
+
 ---
 
 ## Per-Level Scope Rule

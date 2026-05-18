@@ -153,6 +153,14 @@ questions without re-running the build:
 - Which MDX would have rendered on the site if the build had succeeded?
 - What changed relative to `parent_run_id`?
 
+`implementation_map.json` is already on disk per the Path 3 PR1 seeder
+(merged via PR #2108). It belongs in the archive as a writer-phase input
+record. If the in-flight γ-shape from
+[`docs/decisions/pending/2026-05-18-wiki-obligation-emission-contract.md`](../../decisions/pending/2026-05-18-wiki-obligation-emission-contract.md)
+lands, the rendered contract block also becomes part of the writer prompt
+and is therefore preserved as part of `writer_prompt.md` (no schema change
+to this archive contract).
+
 ---
 
 ## `state.json` Schema
