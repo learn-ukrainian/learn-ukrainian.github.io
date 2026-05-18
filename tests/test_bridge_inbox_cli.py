@@ -574,7 +574,7 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     # When a new CLI agent is registered (e.g. grok via #1934, deepseek
     # via #2107), this list tracks the registry — the test guards the
     # iteration order, not a frozen subset.
-    cli_agents = ["claude", "gemini", "codex", "grok", "deepseek"]
+    cli_agents = ["claude", "gemini", "codex", "grok", "deepseek", "qwen"]
 
     calls: list[tuple[str, dict[str, object]]] = []
 
