@@ -93,6 +93,21 @@ Eleven canonical task types map onto the agent roster. Sub-rows are noted where 
 
 **Known strength (codex-tools):** ADR-007 honoring; emits structured fix proposals (`<fixes>` block) reliably; no LLM self-review drift.
 
+#### 4.2.a — Sub-cell: Russianism / linguistic reviewer
+
+New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.md`):
+
+| Slot | Agent | F1 / accuracy | Last verified | Evidence |
+|---|---|---|---|---|
+| **Primary** | Claude Opus 4.7 | **F1=86%, 100% case accuracy** on 12-case Russianism set | 2026-05-15 | `audit/2026-05-15-russianism-judge-calibration/REPORT.md` |
+| Runner-up 1 | Gemini-3.1-pro-preview | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
+| Runner-up 2 | GPT-5.5 (Codex) | high precision, lower recall (conservative) | 2026-05-15 | same |
+| Runner-up 3 | Grok-4.3 | F1=77% (middle of pack) | 2026-05-15 | `audit/2026-05-15-grok-4.3-judge-calibration/REPORT.md` |
+
+**Note:** Russianism reviewer ≠ V7 module reviewer. Codex stays primary for full per-dim review per 4.2 above; Claude Opus is primary for the Russianism / linguistic dimension specifically when needed as a standalone judge. This sub-row replaces the previous "Runner-up 1 Claude — reserved for cultural/creative nuance dims" with empirical evidence.
+
+**Promote-protocol round 1 result (2026-05-18, #2132):** DeepSeek-pro proposed splitting the reviewer prompt into Phase 1 (deterministic content-word verification: batch verify_words + query_cefr_level + check_russian_shadow + search_heritage) and Phase 2 (dim-by-dim judgment). Bakeoff queued: DeepSeek-pro vs Codex on `a1/my-morning` post-#2128/#2127 merge.
+
 ---
 
 ### 4.3 Wiki article writing
@@ -258,6 +273,7 @@ Listed by priority for next-session fill:
 
 ## 9. Provenance
 
+- v1.1: 2026-05-18 by orchestrator (Claude inline). Added §4.2.a Russianism judge sub-cell from new evidence in `audit/INDEX-bakeoff-evidence.md`. Added promote-protocol round 1 results pointer to #2132.
 - v1: 2026-05-18 by orchestrator (Claude inline) per user direction.
 - Sources:
   - `memory/MEMORY.md` #M-0 (per-task model assignment)
