@@ -18,7 +18,7 @@ import subprocess
 import sys
 import time
 import zipfile
-from collections import deque
+from collections import Counter, deque
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -412,6 +412,10 @@ def is_non_ocr_response(stdout_text: str) -> bool:
 # below treats these as errors so they get retried instead of silently shipped
 # as bad data.
 MIN_OUTPUT_BYTES = 500
+MIN_LINES_FOR_REPETITION_CHECK = 10
+REPETITION_LINE_THRESHOLD = 5
+REPETITION_TAIL_UNIQUE_MAX = 10
+REPETITION_TAIL_WINDOW = 30
 CONTROL_GARBAGE_RE = re.compile(r"<ctrl\d+>")
 REFUSAL_AND_META_PATTERNS = (
     re.compile(r"\bas an AI\b", re.IGNORECASE),
@@ -436,6 +440,19 @@ REFUSAL_AND_META_PATTERNS = (
 )
 
 
+def is_repetition_hallucination(text: str) -> bool:
+    """True if output shows Gemini-style generation loop (same line repeated)."""
+    lines = [line.strip() for line in text.splitlines() if len(line.strip()) > 5]
+    if len(lines) < MIN_LINES_FOR_REPETITION_CHECK:
+        return False
+    most_count = Counter(lines).most_common(1)[0][1]
+    tail_unique = len(set(lines[-REPETITION_TAIL_WINDOW:]))
+    return (
+        most_count >= REPETITION_LINE_THRESHOLD
+        and tail_unique < REPETITION_TAIL_UNIQUE_MAX
+    )
+
+
 def is_low_quality_output(stdout_text: str) -> bool:
     """True if stdout looks like a silent OCR failure (garbage, refusal, too short).
 
@@ -446,6 +463,8 @@ def is_low_quality_output(stdout_text: str) -> bool:
     - Output containing Gemini refusal, completion-meta, or tool-schema leaks.
     """
     if len(stdout_text.encode("utf-8")) < MIN_OUTPUT_BYTES:
+        return True
+    if is_repetition_hallucination(stdout_text):
         return True
     if any(pattern.search(stdout_text) for pattern in REFUSAL_AND_META_PATTERNS):
         return True
