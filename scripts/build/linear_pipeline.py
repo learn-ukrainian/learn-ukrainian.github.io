@@ -507,6 +507,15 @@ _PRONUNCIATION_CUE_PATTERN = re.compile(
 # inner-content alternation `.+?` is non-greedy so adjacent `<!-- bad -->`
 # spans don't fuse.
 _AVOID_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(.+?)<!--\s*/bad\s*-->", re.DOTALL)
+# True-false grammar statements often teach contrast as "X, а не Y." / "X, not Y."
+# The Y form can be intentionally malformed and absent from VESUM. This safety
+# net is deliberately narrow: it only strips the sentence-final tail after an
+# explicit comma + negator, and only in true-false statements that are otherwise
+# VESUM-checked.
+_TF_NEGATIVE_EXAMPLE_RE = re.compile(
+    r"(?:,\s*(?:а\s+)?не|,\s*not)\s+([\w'’ʼ-]+)\s*[.!?]",
+    re.UNICODE | re.IGNORECASE,
+)
 # Anti-example contrast patterns in pedagogical prose. Writers use these to
 # show learners "say X, not Y" — Y is intentionally the wrong form and must
 # be excluded from VESUM lookup (it's NOT a valid Ukrainian word; VESUM would
@@ -2906,6 +2915,12 @@ def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> No
     module_dir.mkdir(parents=True, exist_ok=True)
     for name in WRITER_ARTIFACTS:
         (module_dir / name).write_text(str(artifacts[name]), encoding="utf-8")
+    module_ref = _module_ref_from_module_dir(module_dir)
+    for finding in detect_unmarkered_negative_examples(str(artifacts["activities.yaml"])):
+        fields = dict(finding)
+        if module_ref is not None:
+            fields["module"] = module_ref
+        emit_event("writer_negative_example_unmarkered", **fields)
 
 
 def run_wiki_coverage_gate(
@@ -5485,7 +5500,13 @@ def _vesum_gate(
     """
     from scripts.audit.config import VESUM_MIN_WORD_LENGTH
 
-    text = _build_vesum_text(module_text, activities, vocabulary, resources)
+    text = _build_vesum_text(
+        module_text,
+        activities,
+        vocabulary,
+        resources,
+        emit_negative_example_events=True,
+    )
 
     # Pair each surface form with its normalized lowercase lookup key once, so
     # subsequent whitelist + missing computations don't re-normalize repeatedly.
@@ -5901,16 +5922,147 @@ def _strip_usage_parentheticals(text: str) -> str:
     return _USAGE_PARENTHETICAL_RE.sub(" ", text)
 
 
+def _negative_example_tail_forms(text: str) -> list[str]:
+    forms: list[str] = []
+    for match in _TF_NEGATIVE_EXAMPLE_RE.finditer(text):
+        forms.extend(_iter_vesum_word_surfaces(match.group(1)))
+    return _unique_preserving_order(forms)
+
+
+def _unique_preserving_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    unique: list[str] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        unique.append(value)
+    return unique
+
+
+def _strip_truefalse_negative_examples(statement: str) -> tuple[str, list[str]]:
+    """Remove narrow sentence-final negative examples from TF VESUM scope."""
+    skipped_forms: list[str] = []
+    chunks: list[str] = []
+    last_end = 0
+    for match in _TF_NEGATIVE_EXAMPLE_RE.finditer(statement):
+        forms = _negative_example_tail_forms(match.group(0))
+        if not forms:
+            continue
+        start, end = match.span(1)
+        chunks.append(statement[last_end:start])
+        chunks.append(" " * (end - start))
+        last_end = end
+        skipped_forms.extend(forms)
+    if not skipped_forms:
+        return statement, []
+    chunks.append(statement[last_end:])
+    return "".join(chunks), _unique_preserving_order(skipped_forms)
+
+
+def detect_unmarkered_negative_examples(activities_yaml: str) -> list[dict[str, Any]]:
+    """Find obvious unmarkered negative examples in writer activity YAML.
+
+    This is a soft writer-output warning, not a gate. It catches the narrow
+    `X, а не Y.` / `X, not Y.` pattern in true-false statements and item bodies
+    outside `error-correction`, where malformed forms should normally be wrapped
+    in `<!-- bad -->...<!-- /bad -->` markers.
+    """
+    try:
+        activities = yaml.safe_load(activities_yaml)
+    except yaml.YAMLError:
+        return []
+    if not isinstance(activities, list):
+        return []
+
+    findings: list[dict[str, Any]] = []
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+        activity_type = str(activity.get("type") or "")
+        if activity_type == _ERROR_CORRECTION_TYPE:
+            continue
+        activity_id = str(activity.get("id") or "")
+        items = activity.get("items")
+        if isinstance(items, list):
+            for item_idx, item in enumerate(items):
+                texts = _negative_example_candidate_texts(activity_type, item)
+                findings.extend(
+                    _negative_example_findings(activity_id, item_idx, texts)
+                )
+        else:
+            texts = _negative_example_candidate_texts(activity_type, activity)
+            findings.extend(_negative_example_findings(activity_id, None, texts))
+    return findings
+
+
+def _negative_example_candidate_texts(activity_type: str, item: Any) -> list[str]:
+    if activity_type == "true-false":
+        if isinstance(item, dict) and isinstance(item.get("statement"), str):
+            return [item["statement"]]
+        return []
+    return _walk_yaml_strings(item)
+
+
+def _walk_yaml_strings(node: Any) -> list[str]:
+    strings: list[str] = []
+    if isinstance(node, dict):
+        for child in node.values():
+            strings.extend(_walk_yaml_strings(child))
+    elif isinstance(node, list):
+        for child in node:
+            strings.extend(_walk_yaml_strings(child))
+    elif isinstance(node, str):
+        strings.append(node)
+    return strings
+
+
+def _negative_example_findings(
+    activity_id: str,
+    item_idx: int | None,
+    texts: list[str],
+) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    seen: set[tuple[int | None, str]] = set()
+    for text in texts:
+        for form in _negative_example_tail_forms(text):
+            key = (item_idx, form)
+            if key in seen:
+                continue
+            seen.add(key)
+            findings.append(
+                {
+                    "activity_id": activity_id,
+                    "item_idx": item_idx,
+                    "form": form,
+                    "hint": (
+                        "Wrap the negative example as "
+                        f"<!-- bad -->{form}<!-- /bad -->."
+                    ),
+                }
+            )
+    return findings
+
+
 def _build_vesum_text(
     module_text: str,
     activities: list[dict[str, Any]],
     vocabulary: list[dict[str, Any]],
     resources: list[dict[str, Any]],
+    *,
+    emit_negative_example_events: bool = False,
 ) -> str:
     """Compose the text blob that VESUM verifies, with structural exclusions."""
     parts = [_strip_metalinguistic(module_text)]
     for activity in activities:
-        parts.append(_strip_metalinguistic(_activity_vesum_text(activity)))
+        parts.append(
+            _strip_metalinguistic(
+                _activity_vesum_text(
+                    activity,
+                    emit_negative_example_events=emit_negative_example_events,
+                )
+            )
+        )
     for entry in vocabulary:
         if isinstance(entry, dict):
             parts.append(_strip_metalinguistic(str(entry.get("lemma", ""))))
@@ -5927,7 +6079,11 @@ def _build_vesum_text(
     return "\n".join(part for part in parts if part)
 
 
-def _activity_vesum_text(activity: dict[str, Any]) -> str:
+def _activity_vesum_text(
+    activity: dict[str, Any],
+    *,
+    emit_negative_example_events: bool = False,
+) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
     For `error-correction` activities, fields like `error:`, `errorWord:`,
@@ -5948,9 +6104,12 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
 
     For true-false activities, false statements are intentional wrong claims
     and may contain fabricated Ukrainian forms. Only true statements are
-    verified; missing answers fail soft by skipping the statement.
+    verified; missing answers fail soft by skipping the statement. True
+    statements also get a narrow safety net for sentence-final negative examples
+    like ``X, а не дивюся.`` where the tail is named as wrong teaching content.
     """
     activity_type = activity.get("type")
+    activity_id = str(activity.get("id") or "")
     skip_subtree = (
         _ERROR_CORRECTION_INTENTIONAL_FIELDS
         if activity_type == _ERROR_CORRECTION_TYPE
@@ -5983,11 +6142,36 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
         elif isinstance(options, str) and options in answers:
             walk(options, "options")
 
-    def walk_truefalse_statement(statement: Any, answer: Any) -> None:
+    def walk_truefalse_statement(
+        statement: Any,
+        answer: Any,
+        *,
+        item_idx: int | None = None,
+    ) -> None:
         if answer is True:
+            if isinstance(statement, str):
+                original_statement = statement
+                statement, skipped_forms = _strip_truefalse_negative_examples(statement)
+                if skipped_forms and emit_negative_example_events:
+                    emit_event(
+                        "vesum_verified_negative_example_stripped",
+                        activity_id=activity_id,
+                        item_idx=item_idx,
+                        forms=skipped_forms,
+                        statement_preview=_clean_telemetry_text(
+                            original_statement,
+                            180,
+                        ),
+                    )
             walk(statement, "statement")
 
-    def walk(node: Any, parent_key: str | None, *, in_options_list: bool = False) -> None:
+    def walk(
+        node: Any,
+        parent_key: str | None,
+        *,
+        in_options_list: bool = False,
+        item_idx: int | None = None,
+    ) -> None:
         if isinstance(node, dict):
             wrong_option = (
                 in_options_list
@@ -6021,14 +6205,28 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
                     )
                     continue
                 if activity_type == "true-false" and key == "statement":
-                    walk_truefalse_statement(child, node.get("answer"))
+                    walk_truefalse_statement(
+                        child,
+                        node.get("answer"),
+                        item_idx=item_idx,
+                    )
                     continue
                 if wrong_option and key == "text":
                     continue
-                walk(child, key)
+                walk(child, key, item_idx=item_idx)
         elif isinstance(node, list):
-            for item in node:
-                walk(item, parent_key, in_options_list=parent_key == "options")
+            for index, item in enumerate(node):
+                child_item_idx = (
+                    index
+                    if activity_type == "true-false" and parent_key == "items"
+                    else item_idx
+                )
+                walk(
+                    item,
+                    parent_key,
+                    in_options_list=parent_key == "options",
+                    item_idx=child_item_idx,
+                )
         elif isinstance(node, str):
             out.append(node)
 
