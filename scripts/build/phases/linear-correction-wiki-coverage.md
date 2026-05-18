@@ -14,6 +14,21 @@ the smallest local changes that satisfy the supplied proposals.
 
 Return exactly one `<fixes>` block and nothing else.
 
+You may emit ONLY these two fix shapes inside `<fixes>...</fixes>`
+(XML or YAML, no other content):
+
+- `<fix><find>...</find><replace>...</replace></fix>` - local textual
+  find/replace.
+- `<fix><insert_after>...</insert_after><text>...</text></fix>` - inserts
+  AFTER an existing anchor.
+
+You MUST NOT:
+
+- Regenerate full activity blocks (`- id: act-N` with multiple keys).
+- Add new top-level activity entries.
+- Rewrite multi-line YAML structures.
+- Output any Markdown, prose, or YAML outside `<fixes>`.
+
 Allowed XML form:
 
 ```xml
@@ -25,6 +40,17 @@ Allowed XML form:
 </fixes>
 ```
 
+Allowed XML insert form:
+
+```xml
+<fixes>
+  <fix obligation_id="err-1">
+    <insert_after>exact existing anchor text</insert_after>
+    <text>small inserted text</text>
+  </fix>
+</fixes>
+```
+
 Allowed YAML-list form:
 
 ```yaml
@@ -32,6 +58,16 @@ Allowed YAML-list form:
 - obligation_id: err-1
   find: exact text currently present in the artifact
   replace: small corrected text
+</fixes>
+```
+
+Allowed YAML insert form:
+
+```yaml
+<fixes>
+- obligation_id: err-1
+  insert_after: exact existing anchor text
+  text: small inserted text
 </fixes>
 ```
 
@@ -49,8 +85,37 @@ artifact. No section rewrite. Strictly follow ADR-007:
 - Use `manifest_payload` values verbatim. For example, if the proposal says
   `incorrect: Я прокидаєшся.` and `correct: Я прокидаюся.`, the replacement
   must contain those strings exactly.
-- No single `replace` value may exceed 600 characters.
+- Each `replace` and each `text` body must satisfy both caps: at most 6 lines
+  and at most 240 characters. Exceeding either cap is evidence of
+  regeneration. If you need a larger patch, abort with `<fixes></fixes>` and
+  let the next gate iteration handle it.
 - Patch only this artifact. Do not mention or modify unrelated files.
+
+## Anti-Pattern: m20 Build #1 Regeneration
+
+WRONG (regeneration):
+
+```yaml
+- find: |
+    - id: act-7
+      ...existing block...
+  replace: |
+    - id: act-7
+      ...rewritten block...
+    - id: act-8           # FORBIDDEN: brand-new entry
+      type: true-false
+      ...
+```
+
+RIGHT (additive via `insert_after`):
+
+```yaml
+- insert_after: |
+    # last item of an existing activity's `items:` list
+  text: |
+    - left: foo
+      right: bar
+```
 
 ## Module Context
 
