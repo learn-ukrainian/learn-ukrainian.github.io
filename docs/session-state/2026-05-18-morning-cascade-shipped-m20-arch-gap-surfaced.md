@@ -14,6 +14,50 @@ active_dispatches: []  # all reaped
 
 # Morning autonomous drive handoff — cascade complete, m20 arch gap surfaced
 
+## FIRST ACTIONS FOR NEW SESSION (user-directed 2026-05-18 afternoon)
+
+Per user direction at handoff time: *"lets do a session handoff then in the new session do git hygene and a report and how to continue"*. Execute these three in order:
+
+### 1. Git hygiene sweep
+
+Run the standard hygiene policy (`docs/best-practices/git-hygiene.md`). Specifically:
+
+```bash
+git status --short | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)'
+```
+
+Expected at handoff time: clean (one untracked OCR brief from the other agent — leave it; they'll commit via their own PR). Also verify:
+
+- `git worktree list` → only `main` (no stale dispatch/build worktrees).
+- `git branch -vv` → only `main` and merged branches.
+- 11 dependabot PRs are open (#2138-#2147 + the older #1873 starlight) — **do NOT auto-merge**. Each needs CI status check + a glance at the diff. User has historically held dependabot PRs to clear in batches with explicit signoff; do not assume autonomy here. Report them in the status report (step 2) and ask before merging.
+
+If anything is dirty, follow the hygiene policy: commit, restore, or stash. No silent drift.
+
+### 2. Status report
+
+Produce a concise report (1-2 KB, prose + small tables) covering:
+
+- **What shipped 2026-05-18** — the 4 cascade-blocking fixes (#2128, #1969, #2127, #2137) and what each does. Link the PRs.
+- **What's blocking m20** — #2148 architectural gap (writer obligation→artifact translation). Quote the 4 / 18 / 14 numbers and the 3 obligation types (sequence_step, l2_error, decolonization_ban).
+- **What's pending user review** — the dependabot batch + the #2148 architectural decision + #2134 refined diagnosis (await dispatch).
+- **Tech-debt queue ordered by leverage** — top 3 with rough effort estimate. Format: numbered list, ≤1 line per item.
+- **Open questions for the user** — anything that needs explicit signoff (e.g. "do you want me to dispatch #2148 fix per the brief, or revise the architecture first?").
+
+Output destination: post the report as the FIRST message in the new session, OR write it to a new file `docs/session-state/2026-05-18-resume-report.md` and link from the message — your call based on context budget. Format depends on flow (per #M-2): if it's ai→human, render as HTML companion; if ai→ai inline, MD is fine.
+
+### 3. How to continue
+
+After the report lands, propose ONE of three paths and recommend the strongest:
+
+- **Path A — Dispatch #2148 fix to Codex.** Write a focused brief (writer-prompt per-obligation-type emission templates + Pre-emit obligation check at end of prompt). Estimate 60-120 min Codex. Risk: substantial prompt rework could regress other gates (the 21/23 that currently pass).
+- **Path B — Manual diagnostic deep-dive first.** Read the wiki_manifest + writer_prompt + writer_output diff on a fresh m20 build to characterize the obligation→artifact translation gap precisely before drafting the fix. Estimate 30-45 min me-inline. Lower risk, slower to delivery.
+- **Path C — Defer m20 + drive other tech debt.** #2134 watchdog fix (60-90 min Codex), promote-protocol bakeoffs from #2132 (3-4 bakeoffs to schedule + run), or /api/activity-matrix Deliverable 1 (45-60 min Codex). Keeps m20 paused; surfaces other-track wins.
+
+After proposing: execute whichever the user signs off on (or your recommendation, if user says "go auto").
+
+---
+
 ## TL;DR for cold-start
 
 Read this section first. Five lines of state, then the queue.
