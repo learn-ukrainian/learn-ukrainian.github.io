@@ -1,19 +1,32 @@
 # North Star — Curriculum Reboot (#1577 Phase 0 draft)
 
-> **Status:** DRAFT v3 — signed off by Codex + Gemini in `architecture`
+> **Status:** DRAFT v3.1 — v3 signed off by Codex + Gemini in `architecture`
 > channel thread `6de2be4789394536abdb6356cd5bb006` (round 2, both
-> `[AGREE]`). Open questions §OPEN QUESTIONS resolved per panel
-> consensus and folded into policy. Ready for Phase 3 prompt-template
-> injection.
+> `[AGREE]`). v3.1 layered 2026-05-18 to reflect the ULP-derived
+> student-aware immersion model that landed via decision card
+> `2026-05-13-ulp-derived-student-aware-immersion.md` (ACCEPTED).
+> Open questions §OPEN QUESTIONS resolved per panel consensus and folded
+> into policy. Ready for Phase 3 prompt-template injection.
 >
 > v3 corrects v2 on the immersion model: there is **no B1 entry sub-band**.
 > The transition out of English finishes inside A2; B1 onwards is 100 %
 > Ukrainian. The only sanctioned English at B1+ is the **Словник (vocab
 > tab) translation column** — used for L1 anchoring of new lemmas and
-> idiom/expression explanation. `scripts/config.py` IMMERSION_POLICIES
-> still encodes the old "rescue English" model at B1; that file is stale
-> and gets corrected in Phase 2 config audit. The docs are the source of
-> truth; config follows.
+> idiom/expression explanation.
+>
+> **v3.1 — immersion is now ULP-derived, not flat-%.** The earlier model
+> read flat band percentages from `scripts/config.py` `IMMERSION_POLICIES`.
+> That model has been superseded by **`compute_immersion_band(track,
+> module_num, learner_state)`** which derives immersion floors and
+> ceilings from the learner's cumulative vocabulary count + the module's
+> declared `plan.targets.new_vocabulary` + the lemma-frequency map. The
+> feature flag `USE_ULP_IMMERSION_DERIVATION` is set to `True` at
+> `scripts/config.py:145` (live default). The earlier "Known pipeline
+> drift" callout below (Phase 2 IMMERSION_POLICIES cleanup) has been
+> RESOLVED via the ULP card's Phase 4 calibration replay. The B1+ rule
+> ("100 % Ukrainian everywhere except Tab 2") is unchanged in intent —
+> the mechanism is now cumulative-vocabulary-aware derivation rather
+> than static module-range bands.
 >
 > This document, with `docs/lesson-contract.md`, is the preamble every
 > prompt template will inject from Phase 3 onward (writer, all LLM QG
@@ -86,11 +99,15 @@ stages:
 
 1. **A1 + A2 — literacy bootstrap (124 modules).** The learner cannot
    read Cyrillic on day one. English is the carrier; Ukrainian is the
-   target. Immersion ramps from 5–25 % Ukrainian (A1 m01–03) up to
-   65–90 % Ukrainian (A2 final ramp, `a2-m51-70`). The end of A2 is
-   structurally where the learner finishes the transition out of
-   English; A2's final band absorbed the work that used to live in a
-   "B1 entry" sub-band.
+   target. Immersion ramps progressively as cumulative vocabulary
+   builds — early A1 modules sit in the 5–25 % Ukrainian range,
+   late A2 modules sit in the 65–90 % range, but the exact band per
+   module is **derived per-build** by `compute_immersion_band(track,
+   module_num, learner_state)` from cumulative-vocab count + this
+   module's declared new vocabulary + the lemma-frequency map. The
+   end of A2 is structurally where the learner finishes the
+   transition out of English; A2's final band absorbed the work that
+   used to live in a "B1 entry" sub-band.
 
 2. **B1 + B2 + C1 — immersion preparation (319 modules).** **At and
    after B1, every module body is 100 % Ukrainian.** No English in
@@ -134,8 +151,14 @@ contract (`docs/lesson-contract.md`) says WHAT TABS, WHAT COMPONENTS,
 and WHAT DATA SHAPES the published MDX must have. Writer respects
 both. Reviewer scores against both.
 
-**Immersion is band-strict and tab-aware.** A1+A2 immersion follows
-the per-band ramps in `scripts/config.py` IMMERSION_POLICIES.
+**Immersion is band-strict and tab-aware, derived per-build.** A1+A2
+immersion uses `compute_immersion_band(track, module_num,
+learner_state)` to derive each module's band from cumulative
+vocabulary + this module's declared new vocabulary + lemma-frequency
+map. The derivation is deterministic and tested; the calibration
+constants (`_ULP_VOCAB_KNEE_PER_BAND`, `_RECYCLE_CADENCE_DEFAULTS`,
+`_PATTERN_FREQ_MASTERY_THRESHOLD`) live in `scripts/config.py`,
+calibrated against Anna Ohoiko's ULP S1–S6 corpus.
 **B1 onwards is uniformly 100 % Ukrainian** in every tab except
 Tab 2 (Словник), where English translations and idiom/expression
 explanations are sanctioned as the only L1 scaffolding. Writer hits
@@ -143,15 +166,16 @@ the band; reviewer scores against the band; nobody freelances. The
 A2→B1 boundary is the single biggest discontinuity in the whole
 curriculum.
 
-> **Known pipeline drift to clean up in Phase 2:** `scripts/config.py`
-> still defines a `b1-m01-05` sub-band at 75–100 % Ukrainian and a
-> `b1-core` band at 85–100 % with a "rescue English" allowance. This
-> doc supersedes both. The Phase 2 config audit deletes the
-> `b1-m01-05` band entirely, collapses `b1-core` to 100 %, and
-> rewrites the rule string to match the B2+ language ("Full Ukrainian
-> immersion. No English in module body. Tab 2 (Словник) keeps L1
-> translations and idiom explanations as the only English."). Any
-> pipeline code that branches on `b1-m01-05` as a key gets removed.
+> **Phase 2 IMMERSION_POLICIES cleanup — RESOLVED 2026-05-13.** The
+> earlier flat-% `b1-m01-05` and `b1-core` "rescue English" bands
+> have been superseded by the ULP-derived model. The decision card
+> at `docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md`
+> shipped via PR1 (learner-state V7 wiring) + PR2 (ULP derivation +
+> Phase 4 calibration replay). The feature flag
+> `USE_ULP_IMMERSION_DERIVATION = True` at `scripts/config.py:145`
+> activates the derivation. The B1+ rule ("Full Ukrainian immersion.
+> No English in module body. Tab 2 (Словник) keeps L1 translations
+> and idiom explanations as the only English") is enforced today.
 
 ### Sourcing and verification
 
@@ -276,8 +300,10 @@ A module ships when ALL of these are true:
 4. **Citations resolve.** Every textbook citation roundtrips against
    the wiki packet / sources MCP. No ghost authors. No invented
    page numbers.
-5. **Immersion band respected.** A1+A2 modules respect the per-band
-   ramp in IMMERSION_POLICIES. **B1 and every higher level are 100 %
+5. **Immersion band respected.** A1+A2 modules respect the band
+   derived per-build by `compute_immersion_band(track, module_num,
+   learner_state)` from cumulative vocabulary + declared new vocab +
+   lemma-frequency map. **B1 and every higher level are 100 %
    Ukrainian in every tab EXCEPT Tab 2 (Словник).** Any English in
    B1+ Tab 1 / Tab 3 / Tab 4 module body fails the immersion gate
    regardless of percentage math. Tab 2 English is structural and
@@ -408,6 +434,13 @@ does not hit the stale B1 code paths. The cleanup (delete
 `b1-m01-05`, collapse `b1-core` to 100 %, rewrite rule string,
 audit pipeline branches) is filed as a Phase 2 sub-issue under EPIC
 #1577. Source: panel consensus.
+
+> **2026-05-13 RESOLUTION:** P7 superseded by the broader ULP-derived
+> immersion replacement (decision card
+> `2026-05-13-ulp-derived-student-aware-immersion.md`). The static
+> bands are no longer authoritative; `compute_immersion_band()` is.
+> The B1+ rule string survives unchanged in intent; only the
+> derivation mechanism changed.
 
 ---
 
