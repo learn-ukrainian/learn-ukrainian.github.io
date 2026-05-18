@@ -3453,7 +3453,7 @@ def render_reviewer_correction_prompt(
     else:
         candidate_section = "[]"
         reviewer_role = (
-            "Emit only local <fixes> find/replace pairs. Do not rewrite sections."
+            "Emit local <fixes> entries only. Do not rewrite sections."
         )
     diagnostic = yaml.safe_dump(
         {
@@ -3468,7 +3468,15 @@ def render_reviewer_correction_prompt(
             "# Python QG correction",
             "",
             reviewer_role,
-            "Return a single <fixes> block. Use find/replace pairs only.",
+            "Return a single <fixes> block. Use these two shapes only:",
+            "  - `<fix><find>...</find><replace>...</replace></fix>` for textual"
+            " swaps. Each `<replace>` body MUST be ≤ 6 lines OR ≤ 240 chars.",
+            "  - `<fix><insert_after>ANCHOR</insert_after><text>...</text></fix>` for"
+            " ADDITIONS. Use this when the gate failure is 'missing/insufficient X'"
+            " (l2_exposure_floor, inject_activity_ids, n_resources, etc.).",
+            "Decision rule: if the gate says you need to ADD content, you MUST use"
+            " `insert_after` + `text`. Using `find` + `replace` to add multiple new"
+            " entries triggers `reviewer_fix_oversize_rejected` and the build fails.",
             "",
             "## Gate diagnostic",
             "```yaml",
