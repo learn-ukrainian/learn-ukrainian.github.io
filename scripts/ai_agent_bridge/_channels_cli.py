@@ -1259,9 +1259,9 @@ def _handle_discuss(args) -> int:
     if not with_agents:
         print("❌ --with requires at least one agent", file=sys.stderr)
         return 1
-    if len(with_agents) > 4:
+    if len(with_agents) > 6:
         print(
-            f"❌ --with accepts at most 4 agents, got {len(with_agents)}",
+            f"❌ --with accepts at most 6 agents, got {len(with_agents)}",
             file=sys.stderr,
         )
         return 1
