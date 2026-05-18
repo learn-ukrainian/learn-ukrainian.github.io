@@ -286,6 +286,11 @@ WIKI_COVERAGE_BATCH_MAX_ITERATIONS = 2
 WIKI_COVERAGE_NARROW_MAX_ITERATIONS = 2
 WIKI_COVERAGE_PATCHABLE_ARTIFACTS = frozenset({"module.md", "activities.yaml"})
 WIKI_COVERAGE_ARTIFACT_INFERENCE_ORDER = ("activities.yaml", "module.md")
+CORRECTION_YAML_ARTIFACT_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
+    "activities.yaml": ("id", "type"),
+    "vocabulary.yaml": ("lemma", "translation", "pos", "usage"),
+    "resources.yaml": ("title", "role"),
+}
 ALLOWED_WIKI_COVERAGE_VERDICTS = {"PASS", "KEYWORD_STUFFING", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_OVERALL_FAIL_VERDICTS = {"FAIL", "KEYWORD_STUFFING"}
 WIKI_COVERAGE_OVERALL_VERDICTS = {"PASS", "PARTIAL", "FAIL"}
@@ -4193,10 +4198,23 @@ def _apply_wiki_coverage_fixes(
 ) -> int:
     artifact_path = module_dir / artifact
     original = _read_required(artifact_path)
-    applicable_count = _count_applicable_reviewer_fixes(original, fixes)
+    accepted_fixes, rejected_fixes = _validate_reviewer_fix_shapes(fixes)
+    _emit_reviewer_fix_oversize_rejections(
+        rejected_fixes,
+        gate="wiki_coverage_gate",
+        group_key=group_key,
+        event_sink=event_sink,
+        phase=phase,
+        iteration=iteration,
+        artifact=artifact,
+        obligation_id=obligation_id,
+    )
+    if not accepted_fixes:
+        return 0
+    applicable_count = _count_applicable_reviewer_fixes(original, accepted_fixes)
     result = _apply_reviewer_fixes(
         original,
-        fixes,
+        accepted_fixes,
         gate="wiki_coverage_gate",
         module_dir=module_dir,
     )
@@ -4244,14 +4262,130 @@ def _count_applicable_reviewer_fixes(text: str, fixes: Sequence[Mapping[str, str
     return count
 
 
+def _reviewer_fix_body(fix: Mapping[str, str]) -> tuple[str, str] | None:
+    if "replace" in fix:
+        return "replace", str(fix["replace"])
+    if "text" in fix:
+        return "text", str(fix["text"])
+    return None
+
+
+def _reviewer_fix_line_count(body: str) -> int:
+    if body == "":
+        return 0
+    return body.count("\n") + 1
+
+
+def _validate_reviewer_fix_shapes(
+    fixes: list[dict[str, str]],
+    *,
+    max_lines: int = 6,
+    max_chars: int = 240,
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    """Split parsed fixes into (accepted, rejected_oversize).
+
+    A fix is rejected when its `replace` or `text` body exceeds the size
+    limit, which is evidence of regeneration per the corrector prompt contract.
+    """
+    accepted: list[dict[str, str]] = []
+    rejected: list[dict[str, str]] = []
+    for fix in fixes:
+        body_info = _reviewer_fix_body(fix)
+        if body_info is None:
+            accepted.append(fix)
+            continue
+        _, body = body_info
+        if _reviewer_fix_line_count(body) > max_lines or len(body) > max_chars:
+            rejected.append(fix)
+            continue
+        accepted.append(fix)
+    return accepted, rejected
+
+
+def _emit_reviewer_fix_oversize_rejections(
+    rejected_fixes: Sequence[Mapping[str, str]],
+    *,
+    gate: str,
+    group_key: str | None,
+    event_sink: Callable[..., None] | None = None,
+    **fields: Any,
+) -> None:
+    for fix in rejected_fixes:
+        body_info = _reviewer_fix_body(fix)
+        if body_info is None:
+            continue
+        body_field, body = body_info
+        _emit(
+            event_sink,
+            "reviewer_fix_oversize_rejected",
+            gate=gate,
+            group_key=group_key,
+            body_field=body_field,
+            body_len=len(body),
+            line_count=_reviewer_fix_line_count(body),
+            body_preview=_correction_preview(body),
+            **fields,
+        )
+
+
 def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
-    if artifact != "activities.yaml":
+    required_fields = CORRECTION_YAML_ARTIFACT_REQUIRED_FIELDS.get(artifact)
+    if required_fields is None:
         return
-    parsed = yaml.safe_load(text)
+    try:
+        parsed = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        raise LinearPipelineError(f"{artifact} invalid YAML: {exc}") from exc
     if not isinstance(parsed, list):
-        raise LinearPipelineError("activities.yaml must remain a bare YAML list")
-    if not all(isinstance(item, dict) for item in parsed):
-        raise LinearPipelineError("activities.yaml entries must remain mappings")
+        raise LinearPipelineError(f"{artifact} must remain a bare YAML list")
+    for index, item in enumerate(parsed, start=1):
+        if not isinstance(item, dict):
+            raise LinearPipelineError(
+                f"{artifact} entries must remain mappings; item {index} is "
+                f"{type(item).__name__}"
+            )
+    try:
+        redumped = yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+        reparsed = yaml.safe_load(redumped)
+    except yaml.YAMLError as exc:
+        raise LinearPipelineError(f"{artifact} failed YAML round-trip: {exc}") from exc
+    if parsed != reparsed:
+        raise LinearPipelineError(
+            f"{artifact} does not round-trip cleanly; likely scalar/mapping "
+            "ambiguity or non-portable scalar value"
+        )
+    for index, item in enumerate(parsed, start=1):
+        for field in required_fields:
+            value = item.get(field)
+            if not isinstance(value, str) or not value.strip():
+                raise LinearPipelineError(
+                    f"{artifact} item {index} requires {field} as a non-empty "
+                    f"string (got {type(value).__name__}: {value!r})"
+                )
+        if artifact == "activities.yaml" and "items" in item:
+            items = item["items"]
+            if not isinstance(items, list):
+                raise LinearPipelineError(
+                    f"{artifact} item {index} field items must remain a list"
+                )
+            activity_type = str(item.get("type") or "")
+            required_item_fields = _ACTIVITY_ITEM_REQUIRED_FIELDS.get(activity_type)
+            if required_item_fields is None:
+                continue
+            for item_index, nested_item in enumerate(items, start=1):
+                if not isinstance(nested_item, dict):
+                    raise LinearPipelineError(
+                        f"{artifact} item {index} items entry {item_index} "
+                        f"must remain a mapping (got {type(nested_item).__name__})"
+                    )
+                for field in required_item_fields:
+                    value = nested_item.get(field)
+                    if not isinstance(value, str) or not value.strip():
+                        raise LinearPipelineError(
+                            f"{artifact} item {index} items entry {item_index} "
+                            f"requires {field} as a non-empty string "
+                            f"(got {type(value).__name__}: {value!r})"
+                        )
 
 
 def _wiki_coverage_remaining_failures(result: Mapping[str, Any]) -> list[Mapping[str, Any]]:
@@ -4476,15 +4610,44 @@ def _apply_reviewer_correction(
             response_preview=_correction_preview(response),
         )
         return frozenset()
-    result = _apply_reviewer_fixes(
-        module_text,
-        fixes,
+    accepted_fixes, rejected_fixes = _validate_reviewer_fix_shapes(fixes)
+    correction_fields = _correction_event_fields(
         gate=gate,
         module_dir=module_dir,
         plan_path=plan_path,
     )
-    if fixes:
+    correction_fields.pop("gate", None)
+    _emit_reviewer_fix_oversize_rejections(
+        rejected_fixes,
+        gate=gate,
+        group_key=None,
+        **correction_fields,
+    )
+    if not accepted_fixes:
+        return frozenset()
+    result = _apply_reviewer_fixes(
+        module_text,
+        accepted_fixes,
+        gate=gate,
+        module_dir=module_dir,
+        plan_path=plan_path,
+    )
+    if accepted_fixes:
         module_path.write_text(result.text, encoding="utf-8")
+        try:
+            _validate_wiki_coverage_artifact_text(module_path.name, result.text)
+        except LinearPipelineError as exc:
+            module_path.write_text(module_text, encoding="utf-8")
+            emit_event(
+                "reviewer_correction_yaml_invalid",
+                **_correction_event_fields(
+                    gate=gate,
+                    module_dir=module_dir,
+                    plan_path=plan_path,
+                ),
+                artifact=module_path.name,
+                error_preview=str(exc)[:800],
+            )
     return result.unmatched_anchors
 
 

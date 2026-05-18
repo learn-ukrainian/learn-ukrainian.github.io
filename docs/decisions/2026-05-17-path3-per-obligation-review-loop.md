@@ -79,6 +79,22 @@ For each remaining failed obligation:
 2. **Cap at 2 iterations per obligation** (Grok). After cap, emit `plan_revision_request` (defer to next plan iteration) rather than further LLM thrashing.
 3. Each `<fixes>` diff capped in size (Grok); each accepted fix logged with before/after gate scores + rationale.
 
+### Corrector contract enforcement
+
+Issue #2127 hardens PR3's `<fixes>`-only contract in both prompt and pipeline
+code. Wiki coverage correctors may now emit only local `find`/`replace` fixes
+or `insert_after`/`text` insertions, and each replacement/insertion body is
+capped at 6 lines and 240 characters. Oversize reviewer fixes are rejected with
+`reviewer_fix_oversize_rejected` before any artifact write, which prevents
+activity-block regeneration from entering the correction loop.
+
+The artifact writer also validates YAML correction outputs before accepting
+them. `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` must remain
+bare lists of mappings, required identity fields must stay non-empty strings,
+activity `items` must remain lists of mappings, and YAML parser or round-trip
+failures are normalized to `LinearPipelineError` so the correction rollback path
+emits `wiki_coverage_correction_yaml_invalid` instead of a raw stacktrace.
+
 ### Phase 5 — Goodhart sentinel (Gemini + Grok merge)
 
 After Phase 3+4 converge on the deterministic gate, run a **secondary semantic reviewer** (cross-family — Codex if writer was Claude, etc.) that judges "is this obligation woven into the prose, or just keyword-stuffed?" If the gate passes but the semantic reviewer flags "substance missing," fail the build with explicit signal.
