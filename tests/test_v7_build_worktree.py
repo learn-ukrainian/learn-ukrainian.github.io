@@ -182,3 +182,78 @@ def test_worktree_build_failure_prints_summary_and_preserves_worktree(
     assert exit_code == 17
     assert "BUILD_RESULT=failed" in captured.out
     assert not any(cmd[:3] == ["git", "worktree", "remove"] for cmd in calls)
+
+
+def test_worktree_persists_artifacts_on_success(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    """Build artifacts MUST be committed to the build branch on success.
+
+    Per MEMORY.md #M-10, build artifacts (writer_prompt, writer_output.raw,
+    hermes.write.jsonl, writer_tool_calls.json, knowledge_packet, etc.) are
+    load-bearing for diagnosis and the self-correction loop. v7_build writes
+    them to the worktree filesystem but does NOT commit them — without this
+    persist step, ``git worktree remove`` silently destroys forensic
+    evidence (2026-05-19→20 incident: 7 worktrees deleted, today's
+    textbook_grounding diagnostic artifacts lost). Both ``git add -A`` and
+    ``git commit --allow-empty`` must fire in the worktree.
+    """
+    repo = _prepare_repo(monkeypatch, tmp_path)
+    calls = _install_fake_subprocess_run(monkeypatch, repo, child_returncode=0)
+    worktree_path = repo / ".worktrees" / "builds" / "a1-my-morning-20260513-123456"
+
+    exit_code = v7_build.main(["a1", "my-morning", "--dry-run", "--worktree"])
+
+    assert exit_code == 0
+    add_cmd = next(
+        cmd
+        for cmd in calls
+        if cmd[:2] == ["git", "-C"]
+        and cmd[2] == str(worktree_path)
+        and cmd[3:] == ["add", "-A"]
+    )
+    assert add_cmd is not None
+    commit_cmd = next(
+        cmd
+        for cmd in calls
+        if cmd[:2] == ["git", "-C"]
+        and cmd[2] == str(worktree_path)
+        and cmd[3] == "commit"
+    )
+    assert "--allow-empty" in commit_cmd
+    assert "--no-verify" in commit_cmd
+    msg_idx = commit_cmd.index("-m") + 1
+    assert "build(a1/my-morning)" in commit_cmd[msg_idx]
+    assert "(success)" in commit_cmd[msg_idx]
+
+
+def test_worktree_persists_artifacts_on_failure(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    """Persist artifacts even when the build crashed mid-phase.
+
+    A failed build's writer_prompt + partial writer_output is OFTEN the
+    most valuable diagnostic evidence — those artifacts are what surface
+    bugs like the 2026-05-19 textbook_grounding gap (writer DID retrieve
+    correctly, gate just couldn't see it). The finally branch MUST commit
+    regardless of child exit code.
+    """
+    repo = _prepare_repo(monkeypatch, tmp_path)
+    calls = _install_fake_subprocess_run(monkeypatch, repo, child_returncode=17)
+    worktree_path = repo / ".worktrees" / "builds" / "a1-my-morning-20260513-123456"
+
+    exit_code = v7_build.main(["a1", "my-morning", "--dry-run", "--worktree"])
+
+    assert exit_code == 17
+    commit_cmds = [
+        cmd
+        for cmd in calls
+        if cmd[:2] == ["git", "-C"]
+        and cmd[2] == str(worktree_path)
+        and cmd[3] == "commit"
+    ]
+    assert len(commit_cmds) == 1
+    msg_idx = commit_cmds[0].index("-m") + 1
+    assert "(failed)" in commit_cmds[0][msg_idx]

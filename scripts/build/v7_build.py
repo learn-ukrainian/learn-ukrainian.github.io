@@ -362,6 +362,77 @@ def _print_worktree_summary(
     print(f"  git branch -D {worktree.branch}")
 
 
+def _persist_build_artifacts(
+    worktree: BuildWorktree,
+    *,
+    level: str,
+    slug: str,
+    result: str,
+) -> None:
+    """Commit ALL build artifacts to the worktree's build branch.
+
+    Build artifacts (writer_prompt.md, writer_output.raw.md, hermes.write.jsonl,
+    writer_tool_calls.json, knowledge_packet.md, implementation_map.json, the
+    module.md + yaml siblings, and the assembled MDX if the build reached the
+    publish phase) are LOAD-BEARING for diagnosis and for the self-correction
+    loop. They MUST survive worktree removal — otherwise `git worktree remove`
+    silently destroys forensic evidence (encoded as #M-10 in MEMORY.md after
+    the 2026-05-19→20 incident where 7 worktrees were cleaned up and today's
+    diagnostic artifacts were lost).
+
+    Strategy: from inside the worktree's working tree, ``git add -A &&
+    git commit --allow-empty -m "build(level/slug): artifacts (<result>)"``.
+    The build branch is private to this worktree (created from origin/main in
+    ``_setup_worktree`` with the unique timestamped suffix) so the commit
+    cannot collide with another build of the same module. We deliberately
+    do NOT push — keeps origin clean while preserving locally. Users who
+    want shareable provenance for a specific build can push that branch
+    manually.
+
+    Errors here are non-fatal: persistence is best-effort. A failure to
+    commit (e.g. git config not set, hooks blocking) prints a warning and
+    returns. Better to leave the worktree dir as-is than to crash the
+    wrapper after the actual build already finished.
+    """
+    try:
+        # Stage every file in the worktree relative to its working tree.
+        # The worktree was created from origin/main with no local edits,
+        # so any staged change here came from the build run.
+        subprocess.run(
+            ["git", "-C", str(worktree.path), "add", "-A"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        # --allow-empty so empty builds (rare, e.g. dry-run paths or
+        # failed-before-writer setups) still leave a commit on the branch
+        # marking that the worktree was used. Caller can prune later.
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(worktree.path),
+                "commit",
+                "--allow-empty",
+                "--no-verify",
+                "-m",
+                f"build({level}/{slug}): artifacts ({result})",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (subprocess.CalledProcessError, OSError) as exc:
+        stderr_tail = ""
+        if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
+            stderr_tail = exc.stderr.strip().splitlines()[-1] if exc.stderr.strip() else ""
+        print(
+            f"v7_build: warning — failed to commit build artifacts on "
+            f"branch {worktree.branch!r}: {exc}. {stderr_tail}".rstrip(),
+            file=sys.stderr,
+        )
+
+
 def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
     level = args.level.lower()
     slug = args.slug
@@ -387,6 +458,12 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         print(f"v7_build worktree child failed to start: {exc}", file=sys.stderr)
         exit_code = 1
     finally:
+        # Persist artifacts BEFORE printing the summary so the summary
+        # can include the commit-status line. Even if the build crashed,
+        # the writer_prompt + partial writer_output remain queryable via
+        # the build branch SHA. Without this, `git worktree remove`
+        # silently destroys forensic evidence.
+        _persist_build_artifacts(worktree, level=level, slug=slug, result=result)
         _print_worktree_summary(worktree, level=level, slug=slug, result=result)
     return exit_code
 
