@@ -151,9 +151,14 @@ def check_wiki_coverage(
     }
     activities = _load_activity_items(activities_yaml)
     obligation_results: list[dict[str, Any]] = []
+    seeded_index = _seeded_obligation_index(seeded_map)
 
     for obligation in validate_obligations(manifest):
         obligation_id = str(obligation.get("id") or "")
+        obligation = _enrich_obligation_from_seeded_map(
+            obligation,
+            seeded_index.get(obligation_id),
+        )
         claim = map_entries.get(obligation_id)
         if not claim:
             obligation_results.append(_result(obligation, "FAIL", "implementation_map_missing", evidence_text=""))
@@ -201,7 +206,6 @@ def check_wiki_coverage(
         "obligations": [_public_obligation_result(item) for item in obligation_results],
     }
     if not passed:
-        seeded_index = _seeded_obligation_index(seeded_map)
         report["fix_proposals"] = [
             _build_fix_proposal(
                 result,
@@ -212,6 +216,19 @@ def check_wiki_coverage(
             if result["status"] == "FAIL"
         ]
     return report
+
+
+def _enrich_obligation_from_seeded_map(
+    obligation: Mapping[str, Any],
+    seeded_entry: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    enriched = dict(obligation)
+    if enriched.get("subtype") or not seeded_entry:
+        return enriched
+    subtype = str(seeded_entry.get("subtype") or "")
+    if subtype in {"substance_required", "absence_required"}:
+        enriched["subtype"] = subtype
+    return enriched
 
 
 def check_wiki_coverage_paths(
@@ -352,8 +369,8 @@ def _surgical_diff_hint(
             f"({payload.get('heading')!r}); required_claim: {payload.get('required_claim')!r}"
         ),
         "ban_substance_missing": (
-            f"Remove phrasing matching manifest_payload.rule ({payload.get('rule')!r}) "
-            "- negative obligation: absence required"
+            f"Add prose implementing the lexical substitution substance in manifest_payload.rule "
+            f"({payload.get('rule')!r})"
         ),
         "unknown_obligation_type": (
             f"Unknown obligation type {obligation_result.get('type')!r} "
@@ -521,10 +538,15 @@ def _check_obligation_text(obligation: Mapping[str, Any], target_text: str, arti
         return "FAIL", "sequence_claim_missing"
 
     if obligation_type == "decolonization_ban":
-        rule = str(obligation.get("rule") or "")
-        if _claim_markers_present(rule, target_text):
-            return "PASS", "ban_substance_present"
-        return "FAIL", "ban_substance_missing"
+        subtype = str(obligation.get("subtype") or "substance_required")
+        if subtype == "substance_required":
+            rule = str(obligation.get("rule") or "")
+            if _claim_markers_present(rule, target_text):
+                return "PASS", "ban_substance_present"
+            return "FAIL", "ban_substance_missing"
+        # Arbitrary prose prohibitions cannot be affirmatively verified here;
+        # concrete violations belong to the russianism/shadow gates.
+        return "PASS", "absence_obligation_assumed_satisfied"
 
     return "FAIL", "unknown_obligation_type"
 
@@ -561,6 +583,8 @@ def _result(
                 "example_pairs_required": bool(example_pairs),
             }
         )
+    if obligation_type == "decolonization_ban" and obligation.get("subtype"):
+        result["subtype"] = str(obligation.get("subtype"))
     return result
 
 

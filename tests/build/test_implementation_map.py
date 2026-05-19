@@ -4,8 +4,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+import jsonschema
+
 from scripts.audit.wiki_coverage_gate import validate_obligations
 from scripts.build.phases.implementation_map import (
+    IMPLEMENTATION_MAP_SCHEMA,
+    classify_decolonization_ban_subtype,
     read_implementation_map,
     seed_implementation_map,
     validate_implementation_map,
@@ -14,6 +18,34 @@ from scripts.build.phases.implementation_map import (
 from scripts.build.phases.wiki_manifest import extract_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+M20_BAN_1_RULE = (
+    "При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено "
+    "використовувати будь-які російськомовні пояснення, паралелі чи фонетичні порівняння. "
+    "Це абсолютна вимога деколонізованої педагогіки [S9]."
+)
+M20_BAN_2_RULE = (
+    "Часто недосвідчені автори чи викладачі намагаються пояснити вимову українського "
+    "закінчення -ться як «схоже на російське -тся», що є грубим порушенням. Учень має "
+    "вибудовувати українські фонетичні категорії з нуля, спираючись виключно на українські "
+    "правила асиміляції (звук [т] плюс звук [с] дають подовжений м'який [ц':а]) [S1, S9]. "
+    "Жодних відсилок до мови колонізатора бути не може."
+)
+M20_BAN_3_RULE = (
+    "Також слід уникати хибного тлумачення походження частки -ся. Вона не є «запозиченою» "
+    "чи «спільною з російською». Навпаки, глибоке питомо українське етимологічне коріння "
+    "цієї частки лежить у давній короткій формі зворотного займенника «себе» "
+    "(Знахідний відмінок однини: «Я ся не бою»), що чітко й досі фіксується в українських "
+    "карпатських діалектах та історичних текстах [S9]."
+)
+M20_BAN_4_RULE = (
+    "У лексичному наповненні теми ранкової рутини слід рішуче відкидати русизми, суржик "
+    "та кальки, які можуть випадково просочитися в тексти. Слід суворо контролювати чистоту "
+    "словника: використовуємо виключно «рушник» (не «полотенце»), «сніданок» (не «завтрак»), "
+    "«одягатися» (не «одіватися») [S2, S3]. Процес навчання має занурювати студента в "
+    "автентичний простір, де панує українська мова без сторонніх домішок [S3]. Будь-які "
+    "конструкції, що вказують на вік, на кшталт «Я маю N років» (калька) беззастережно "
+    "замінюються на питомо українські: «Мені N років» [S8, S9]."
+)
 
 
 def _fixture_manifest() -> dict[str, Any]:
@@ -172,6 +204,18 @@ def test_json_schema_validates_seeded_output() -> None:
     validate_implementation_map(seed_implementation_map(_fixture_manifest()))
 
 
+def test_json_schema_allows_subtype_only_for_decolonization_bans() -> None:
+    payload = seed_implementation_map(_fixture_manifest())
+    validator = jsonschema.Draft7Validator(IMPLEMENTATION_MAP_SCHEMA)
+
+    assert list(validator.iter_errors(payload)) == []
+
+    invalid_payload = json.loads(json.dumps(payload, ensure_ascii=False))
+    invalid_payload["entries"][0]["subtype"] = "absence_required"
+
+    assert list(validator.iter_errors(invalid_payload))
+
+
 def test_write_read_round_trip_identity(tmp_path: Path) -> None:
     payload = seed_implementation_map(_fixture_manifest())
     path = tmp_path / "implementation_map.json"
@@ -250,3 +294,56 @@ def test_m20_real_world_manifest_seeds_gate_obligation_count() -> None:
 
     assert len(payload["entries"]) == len(gate_obligations)
     assert len(payload["entries"]) >= 10
+
+
+def test_classify_ban_substance_required_with_substitution_pairs() -> None:
+    assert classify_decolonization_ban_subtype(M20_BAN_4_RULE) == "substance_required"
+
+
+def test_classify_ban_absence_required_pure_prohibition() -> None:
+    for rule in (M20_BAN_1_RULE, M20_BAN_2_RULE, M20_BAN_3_RULE):
+        assert classify_decolonization_ban_subtype(rule) == "absence_required"
+
+
+def test_classify_ban_edge_case_empty_rule() -> None:
+    assert classify_decolonization_ban_subtype("") == "absence_required"
+
+
+def test_classify_ban_edge_case_mixed_prose_and_pair() -> None:
+    rule = (
+        "Не пояснюйте тему через мову колонізатора; натомість у словнику давайте "
+        "«рушник» (не «полотенце»)."
+    )
+
+    assert classify_decolonization_ban_subtype(rule) == "substance_required"
+
+
+def test_classify_ban_edge_case_variant_substitution_phrasings() -> None:
+    rules = [
+        "Не лишайте «полотенце» (це русизм) у лексиці ранкової рутини.",
+        "Пояснюйте як українську норму: «рушник», а не «полотенце».",
+        "У вправах замінюємо «одіватися» на «одягатися».",
+    ]
+
+    for rule in rules:
+        assert classify_decolonization_ban_subtype(rule) == "substance_required"
+
+
+def test_seed_stamps_decolonization_ban_subtype() -> None:
+    manifest = {
+        "slug": "fixture-module",
+        "wiki_path": "wiki/pedagogy/a1/fixture-module.md",
+        "sequence_steps": [],
+        "l2_errors": [],
+        "phonetic_rules": [],
+        "decolonization_bans": [
+            {"id": "ban-1", "rule": M20_BAN_1_RULE, "source_lines": "50"},
+            {"id": "ban-4", "rule": M20_BAN_4_RULE, "source_lines": "56"},
+        ],
+        "external_resources": [],
+    }
+
+    payload = seed_implementation_map(manifest)
+    subtypes = {entry["obligation_id"]: entry["subtype"] for entry in payload["entries"]}
+
+    assert subtypes == {"ban-1": "absence_required", "ban-4": "substance_required"}
