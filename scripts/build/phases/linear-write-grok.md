@@ -220,6 +220,14 @@ single largest reason A1 modules under-teach.
 
 {WIKI_MANIFEST}
 
+## Implementation Map Contract
+
+The pipeline has pre-resolved every wiki obligation listed above into a concrete contract: `(obligation_id, artifact, location_hint, treatment_template)`. Your job for this section of the protocol is to **emit each row's required element at the row's `location_hint`, populated using the row's `treatment_template`**. Do NOT invent new obligations beyond those in the manifest. Do NOT skip rows. The deterministic `wiki_coverage_gate` verifies coverage row-by-row against this contract; missing rows produce `fix_proposals` and the rebuild is wasted.
+
+The contract below is generated upstream by `seed_implementation_map` and is byte-stable across runs — if you see a row whose `treatment_template` looks pedagogically thin, do NOT invent extra structure: copy the template's keys/values into the artifact and let the gate report any structural gap so the seeder (not your prose) gets fixed.
+
+{IMPLEMENTATION_MAP_CONTRACT}
+
 ### External Resources — multimedia search obligation
 
 Every module MUST attempt to find at least one multimedia external resource
