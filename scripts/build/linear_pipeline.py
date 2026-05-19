@@ -247,6 +247,20 @@ WRITER_TOOL_NAMES = frozenset(
     }
 )
 WRITER_ALLOWED_TOOL_PREFIX = "mcp__sources__"
+# Gemini CLI 0.42.0+ emits tool calls with single-underscore separators
+# (`mcp_sources_search_text`) instead of the canonical double-underscore MCP
+# convention (`mcp__sources__search_text`) used by claude, codex, hermes-backed
+# writers. Both are the same MCP "sources" server tool — Gemini's representation
+# changed between 0.40.x and 0.42.x. Accept both prefixes for the
+# writer-trace-isolation gate so gemini-tools' valid MCP calls aren't
+# misclassified as wrong-tool-family. Real wrong-family calls (gemini's
+# built-in `run_shell_command`, `update_topic`, etc.) are still flagged
+# because they don't match either prefix. Related: #2159-adjacent;
+# see 2026-05-19 B1 bakeoff gemini-tools investigation.
+WRITER_ALLOWED_TOOL_PREFIXES = (
+    "mcp__sources__",  # canonical (claude, codex, deepseek, qwen, grok)
+    "mcp_sources_",    # gemini-cli 0.42.0+ single-underscore convention
+)
 WRITER_INFRA_DENYLIST_PATHS = (
     "docs/session-state/**",
     "docs/decisions/**",
@@ -1986,7 +2000,7 @@ def classify_writer_trace(
         tool_name = _raw_tool_name_from_call(call)
         if not tool_name:
             continue
-        if not tool_name.startswith(WRITER_ALLOWED_TOOL_PREFIX):
+        if not any(tool_name.startswith(p) for p in WRITER_ALLOWED_TOOL_PREFIXES):
             wrong_family_calls.append(
                 {
                     "index": index,
@@ -2102,7 +2116,15 @@ def _runtime_tool_calls(result: Any) -> list[dict[str, Any]] | None:
 def _normalize_tool_name(raw_tool: Any) -> str:
     tool = str(raw_tool or "").strip()
     if "__" in tool:
+        # Canonical MCP: `mcp__sources__search_text` → `search_text`.
         tool = tool.rsplit("__", 1)[-1]
+    elif tool.startswith("mcp_sources_"):
+        # Gemini CLI 0.42.0+ emits single-underscore MCP tool names. Strip
+        # the `mcp_sources_` prefix so the unqualified tool name can match
+        # WRITER_TOOL_NAMES (and downstream telemetry/gates work the same
+        # for both prefix conventions). See WRITER_ALLOWED_TOOL_PREFIXES
+        # for the gate-side counterpart.
+        tool = tool.removeprefix("mcp_sources_")
     return tool
 
 

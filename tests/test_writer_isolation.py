@@ -55,6 +55,53 @@ def test_pure_mcp_writer_passes_isolation() -> None:
     assert records == []
 
 
+def test_gemini_single_underscore_mcp_prefix_passes_isolation() -> None:
+    """Gemini CLI 0.42.0+ emits `mcp_sources_*` instead of `mcp__sources__*`.
+
+    Both prefixes are the same MCP "sources" server tool; the gate must
+    treat them equivalently or every gemini-tools writer call falsely
+    trips wrong_tool_family (2026-05-19 B1 bakeoff regression).
+    """
+    records = classify_writer_trace(
+        [
+            {
+                "name": "mcp_sources_verify_words",
+                "arguments": {"words": ["кіт"]},
+            },
+            {
+                "name": "mcp_sources_search_text",
+                "arguments": {"query": "Захарійчук 162"},
+            },
+        ]
+    )
+
+    assert records == []
+
+
+def test_gemini_builtin_tools_still_fail_isolation() -> None:
+    """Even with single-underscore tolerance for MCP names, gemini's
+    built-in tools (`run_shell_command`, `update_topic`) must still
+    trigger wrong_tool_family — they're not in the writer toolset."""
+    records = classify_writer_trace(
+        [
+            {
+                "name": "mcp_sources_verify_words",
+                "arguments": {"words": ["кіт"]},
+            },
+            {
+                "name": "run_shell_command",
+                "arguments": {"command": "ls"},
+            },
+            {
+                "name": "update_topic",
+                "arguments": {"title": "Drafting B1-052"},
+            },
+        ]
+    )
+
+    assert "wrong_tool_family" in _failure_subclasses(records)
+
+
 def test_mixed_writer_fails_isolation() -> None:
     records = classify_writer_trace(
         [
