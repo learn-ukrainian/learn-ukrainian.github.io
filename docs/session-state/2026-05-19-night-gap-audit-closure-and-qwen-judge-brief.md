@@ -56,6 +56,21 @@ User shared kubedojo's analysis of the same release notes. Two items add real va
 
 **Net adjustments to the muscle-memory layer:** none for grep (we're clean); add `claude mcp list` to the first-turn hygiene check; remember `d` in the model picker.
 
+### Supply-chain audit — 2026-05 GitHub Actions `actions-cool/*` compromise
+
+User flagged TheHackerNews report on `actions-cool/issues-helper` + `actions-cool/maintain-one-comment` (tags redirected to malicious imposter commits). Article's core protection: full-SHA pinning.
+
+**Audit findings:**
+
+1. **NOT exposed to the specific compromise** — we don't use any `actions-cool/*` action (grep `.github/` confirms zero hits).
+2. **Real gap fixed inline:** `dorny/paths-filter@v4` (third-party, floating tag) at `ci.yml:46` — pinned to `fbd0ab8f3e69293af611ebaee6363fc25e6d187d`.
+3. **Consistency gap fixed inline:** `actions/setup-node@v6` at `ci.yml:258` + `ci.yml:418` — pinned to `48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e` (same vendor already SHA-pinned in other workflows; just consistency).
+4. **Follow-up filed (#2152):** the `gemini-*` workflows have an inconsistent `ratchet:exclude` pattern — `actions/checkout@v6` is excluded in gemini-invoke.yml + gemini-plan-execute.yml but properly SHA-pinned in gemini-review.yml. `google-github-actions/run-gemini-cli@v0` is excluded everywhere (Google's release branch — intentional but worth documenting). Estimated 15 min cleanup.
+
+**Inline fix committed at `fd4b89f18d`** (security-only, 3 lines, YAML parses, no behavior change).
+
+**Where supply-chain hygiene was previously established:** 2026-03-25 handoff §"Supply chain hardening (SHA-pinned actions, requirements.lock, Dependabot)". Most actions are pinned with `ratchet:` comments — the 3 unpinned references in `ci.yml` were leftovers; #2152 covers the remaining `gemini-*` cleanup.
+
 ---
 
 ## TL;DR
