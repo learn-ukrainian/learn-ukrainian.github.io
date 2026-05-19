@@ -2752,7 +2752,24 @@ def invoke_writer(
     )
     response = getattr(result, "response", None)
     if not response:
-        raise LinearPipelineError("Writer call returned no response")
+        # Surface the runtime's debug fields so silent-no-response failures
+        # (e.g. codex CLI dying at startup with returncode=1) are diagnosable
+        # without re-running with bespoke instrumentation. Filed as part of
+        # the 2026-05-19 B1 bakeoff codex-tools investigation: original error
+        # said only "Writer call returned no response" while the runtime
+        # actually had returncode=1, duration_s<1.0 in its usage record.
+        stderr_excerpt = getattr(result, "stderr_excerpt", None) or "<empty>"
+        returncode = getattr(result, "returncode", None)
+        duration_s = getattr(result, "duration_s", None)
+        stalled = getattr(result, "stalled", None)
+        rate_limited = getattr(result, "rate_limited", None)
+        raise LinearPipelineError(
+            "Writer call returned no response "
+            f"(writer={writer}, effort={resolved_effort}, "
+            f"returncode={returncode}, duration_s={duration_s}, "
+            f"stalled={stalled}, rate_limited={rate_limited}, "
+            f"stderr_excerpt={stderr_excerpt!r})"
+        )
     response_text = str(response)
     module_ref = module or _prompt_module_ref(prompt)
     section_names = list(sections) if sections is not None else _prompt_sections(prompt)
