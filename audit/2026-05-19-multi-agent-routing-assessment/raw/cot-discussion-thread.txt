@@ -1,0 +1,4 @@
+usage: __main__.py [-h]
+                   {inbox,read,send,ack,ack-all,conversation,process,process-claude,process-codex,ask-claude,ask-codex,ask-gemini,converse,process-all,process-claude-all,process-codex-all,codex-usage,dispatch-fix,review-deep,check-model,cleanup,status,serve,interactive,channel,post,p,reconcile,sync,discuss}
+                   ...
+__main__.py: error: unrecognized arguments: --full

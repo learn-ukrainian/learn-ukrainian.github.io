@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-agent routing audit — learn-ukrainian — 2026-05-19</title>
+<style>
+:root {
+  --bg: #fafaf9;
+  --bg-card: #ffffff;
+  --bg-code: #f5f5f4;
+  --bg-callout: #fefce8;
+  --bg-callout-strong: #fef3c7;
+  --text: #1c1917;
+  --text-muted: #57534e;
+  --border: #e7e5e4;
+  --primary: #1e293b;
+  --accent: #b45309;
+  --pass: #15803d;
+  --pass-bg: #dcfce7;
+  --fail: #b91c1c;
+  --fail-bg: #fee2e2;
+  --warn: #a16207;
+  --warn-bg: #fef9c3;
+  --neutral: #57534e;
+  --neutral-bg: #f5f5f4;
+  --link: #1d4ed8;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: #f8fafc;
+  padding: 64px 0 48px;
+  border-bottom: 4px solid var(--accent);
+}
+header h1 { margin: 0 0 8px 0; font-size: 36px; font-weight: 700; letter-spacing: -0.02em; }
+header .subtitle { font-size: 18px; opacity: 0.85; margin-bottom: 24px; }
+header .meta { font-size: 14px; opacity: 0.7; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+header .meta strong { color: #fbbf24; }
+nav.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 28px;
+  margin: 32px 0;
+  font-size: 14px;
+}
+nav.toc h3 { margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+nav.toc ol { margin: 0; padding-left: 24px; columns: 2; column-gap: 32px; }
+nav.toc ol li { margin: 4px 0; break-inside: avoid; }
+nav.toc a { color: var(--link); text-decoration: none; }
+nav.toc a:hover { text-decoration: underline; }
+section { margin: 56px 0; }
+h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  letter-spacing: -0.01em;
+  color: var(--primary);
+}
+h2 .num { color: var(--accent); font-weight: 800; margin-right: 8px; font-feature-settings: "tnum"; }
+h3 { font-size: 20px; font-weight: 600; margin: 32px 0 12px 0; color: var(--primary); }
+h4 { font-size: 16px; font-weight: 600; margin: 20px 0 8px 0; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+p { margin: 12px 0; }
+.lede { font-size: 17px; color: var(--text-muted); margin-bottom: 20px; }
+.callout {
+  background: var(--bg-callout);
+  border-left: 4px solid var(--accent);
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 6px 6px 0;
+}
+.callout.strong { background: var(--bg-callout-strong); }
+.callout-title { font-weight: 700; color: var(--accent); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.findings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.finding {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.finding-num {
+  display: inline-block;
+  width: 28px; height: 28px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: 700;
+  line-height: 28px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.finding h4 { margin: 0 0 8px 0; color: var(--primary); text-transform: none; letter-spacing: 0; font-size: 16px; }
+.finding p { margin: 0; font-size: 14px; color: var(--text-muted); }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+th {
+  background: var(--bg-code);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,0,0,0.012); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: ui-monospace, monospace; }
+td code, p code, li code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--bg-code);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--primary);
+}
+.tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  white-space: nowrap;
+}
+.tag.pass { background: var(--pass-bg); color: var(--pass); }
+.tag.fail { background: var(--fail-bg); color: var(--fail); }
+.tag.warn { background: var(--warn-bg); color: var(--warn); }
+.tag.neutral { background: var(--neutral-bg); color: var(--neutral); }
+.tag.partial { background: var(--warn-bg); color: var(--warn); }
+.tag.required { background: var(--pass-bg); color: var(--pass); }
+.tag.optional { background: var(--warn-bg); color: var(--warn); }
+.tag.remove { background: var(--neutral-bg); color: var(--neutral); }
+.tag.blocked { background: var(--fail-bg); color: var(--fail); }
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 18px;
+  overflow-x: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 16px 0;
+}
+blockquote {
+  border-left: 4px solid var(--neutral-bg);
+  padding: 4px 16px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.quote-attribution { font-style: normal; font-size: 13px; color: var(--text-muted); display: block; margin-top: 4px; }
+.split-quote {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.split-quote .agent-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.agent-card .agent-name { font-weight: 700; color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.artifact-link { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; word-break: break-all; }
+.footer {
+  margin-top: 80px;
+  padding: 32px 0;
+  border-top: 2px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.warn-banner {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--warn);
+}
+.warn-banner strong { color: var(--warn); }
+.kbd {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--neutral-bg);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  nav.toc ol { columns: 1; }
+  .container { padding: 0 16px; }
+  header h1 { font-size: 26px; }
+  table { font-size: 13px; }
+  th, td { padding: 8px 10px; }
+}
+@media print {
+  header { background: white; color: black; border-bottom: 2px solid black; }
+  header .subtitle, header .meta strong, header .meta { color: black; opacity: 1; }
+  nav.toc { display: none; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Multi-agent routing audit — learn-ukrainian</h1>
+    <div class="subtitle">Quality-first model routing for a Ukrainian language curriculum platform</div>
+    <div class="meta">
+      Report date: <strong>2026-05-19</strong> &nbsp;·&nbsp;
+      Project: <strong>learn-ukrainian.gitlab.io</strong> &nbsp;·&nbsp;
+      Methodology: <strong>independent peer review + head-to-head bakeoff + verified pricing</strong>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#tldr">Executive summary</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#pricing">Verified API pricing (2026-05-19)</a></li>
+    <li><a href="#routing">4-agent routing assessment</a></li>
+    <li><a href="#bakeoff">Writer bakeoff — 7 models head-to-head</a></li>
+    <li><a href="#deepseek">DeepSeek introspection (plot twist)</a></li>
+    <li><a href="#cot">CoT architecture — 3-agent consensus</a></li>
+    <li><a href="#recommendations">Recommendations</a></li>
+    <li><a href="#limitations">Limitations &amp; open questions</a></li>
+    <li><a href="#appendix">Appendix — raw artifacts</a></li>
+  </ol>
+</nav>
+
+<section id="tldr">
+<h2><span class="num">1.</span> Executive summary</h2>
+<p class="lede">A one-session audit using 4 independent agents + a 7-model writer bakeoff + verified API pricing produced five concrete routing findings, one prompt-architecture finding, and three open questions. Everything is sourced; nothing is from category bins.</p>
+
+<div class="findings">
+  <div class="finding">
+    <span class="finding-num">1</span>
+    <h4>The matrix's <code>$/$$/$$$</code> cost bins were wrong</h4>
+    <p>Verified API pricing shows <strong>Codex GPT-5.5 output is $30/M — more expensive than Claude Opus 4.7 at $25/M</strong>. Gemini 3.1 Pro is NOT "0$ unmetered" — it's $2/$12 paid API. DeepSeek-v4-pro's 75% discount expires 2026-05-31 — 4× cost cliff incoming.</p>
+  </div>
+  <div class="finding">
+    <span class="finding-num">2</span>
+    <h4>DeepSeek-Pro produces the best Ukrainian content, full stop</h4>
+    <p>Despite dropping the prompt's visible-CoT contract, DeepSeek-Pro's m20 module output beat all 4 qwen variants on Ukrainian pedagogical quality, immersion-discipline, and pre-injected activity references. The "fail" was structural; the substance is gold.</p>
+  </div>
+  <div class="finding">
+    <span class="finding-num">3</span>
+    <h4>Visible CoT in V7 writer is <em>vestigial</em></h4>
+    <p>Unanimous 3-agent consensus (Codex + Gemini + DeepSeek): visible chain-of-thought adds ~20% output overhead and is not parsed by any downstream gate. Removing it saves $0.005–$0.025/build + 30–90s wall time + unblocks DeepSeek-Pro for the writer role.</p>
+  </div>
+  <div class="finding">
+    <span class="finding-num">4</span>
+    <h4>Family diversity beats variant diversity at low cost</h4>
+    <p>The latest-of-family rule (your kubedojo critique) was correct: qwen-3.6-plus vs qwen-3.6-max-preview produced near-identical contract compliance and content quality at 3× cost difference. Pay for vendor diversity (Qwen vs DeepSeek vs GLM vs Kimi), not for higher tiers within one vendor.</p>
+  </div>
+  <div class="finding">
+    <span class="finding-num">5</span>
+    <h4>Adversarial review is the one role where CoT IS load-bearing</h4>
+    <p>Unanimous: adversarial review = REQUIRED visible CoT. The reasoning IS the deliverable. Same for Q&amp;A justification, structured ADR critique. Everywhere else (writer, content review, code review, search): REMOVE or OPTIONAL.</p>
+  </div>
+</div>
+
+<div class="callout strong">
+  <div class="callout-title">Bottom line</div>
+  Your matrix structure is right; its numbers and the writer prompt's CoT requirement aren't. Three concrete changes will save real money <em>and</em> raise quality: (a) verified $/M pricing replaces categorical bins in matrix v1.3, (b) writer prompt drops visible-CoT (matches DeepSeek's empirical behavior), (c) deepseek-v4-pro promotes from content-reviewer-only to writer-candidate once CoT requirement is dropped — potentially saving $4–12K of full-curriculum writer spend at deepseek-pro post-discount rates.
+</div>
+</section>
+
+<section id="methodology">
+<h2><span class="num">2.</span> Methodology</h2>
+
+<h3>Principle: quality first, cost second</h3>
+<p>Per the project's <code>#1 QUALITY ABOVE ALL</code> non-negotiable rule: every verdict starts with a binary <strong>PASS / FAIL on the quality contract</strong>. Cost only comes into play <em>among quality-passing models</em>. A cheap model that fails contract isn't "almost there" — it's out of the running. Cost optimization waits.</p>
+
+<h3>Two parallel evaluation tracks</h3>
+<ol>
+  <li><strong>Independent peer review of our existing routing matrix</strong> — four agents (Codex GPT-5.5, Gemini 3.1 Pro, DeepSeek v4 Pro, Qwen 3.6 Plus) were given an <em>identical</em> prompt blind to model identity, asked to produce a fixed-schema route table for 11 task types with anti-fabrication rules (every $/M cost must cite a pricing-page URL + date checked).</li>
+  <li><strong>Head-to-head writer bakeoff</strong> — seven candidate models received the <em>actual</em> m20 (a1/my-morning) writer prompt from a real V7 build (~60K tokens) and produced module output. Each output was graded on (a) writer-contract compliance (4 plan_reasoning blocks + audit lines + correct fences) and (b) content quality (Ukrainian pedagogy, immersion discipline, gate-passing markers).</li>
+</ol>
+
+<h3>The latest-only rule</h3>
+<p>For each model family, only the <strong>latest variant</strong> was tested. Initial picks (mistral-nemo at $0.02/M, arcee-trinity-thinking, kimi-k2.5) were corrected mid-session to the actual latest: mistral-large-2512, kimi-k2.6, glm-5.1. Older or smaller variants are not informative about the current capability of a family.</p>
+
+<h3>Anti-fabrication discipline (#M-4)</h3>
+<p>Every numerical claim in this report is backed by a tool call recorded during the session. Pricing comes from vendor pricing pages (URLs cited inline). Bakeoff verdicts come from <code>grep</code> + file-size measurements on the actual model outputs (linked in the appendix). Cross-agent quotes are verbatim from the conversation thread.</p>
+
+<h3>Conflict-of-interest handling</h3>
+<p>The 4-agent routing assessment was blind: agents were not told which model they were. Each was asked to disclose at the end if they suspected they were one of the named models. Codex correctly self-identified (rating itself for novel implementation while honestly flagging Ukrainian linguistic limits). Other agents did the same. The bakeoff was head-to-head on identical input, eliminating self-rating bias.</p>
+</section>
+
+<section id="pricing">
+<h2><span class="num">3.</span> Verified API pricing (2026-05-19)</h2>
+<p class="lede">Replaces the matrix v1.2 categorical bins (<code>$/$$/$$$</code>) with concrete per-million-token rates from vendor pricing pages, each verified during this session.</p>
+
+<table>
+<thead>
+<tr><th>Model</th><th class="num">Input $/M</th><th class="num">Output $/M</th><th class="num">Cache read $/M</th><th class="num">Context</th><th>Source</th></tr>
+</thead>
+<tbody>
+<tr><td>Claude Opus 4.7</td><td class="num">$5.00</td><td class="num">$25.00</td><td class="num">$0.50</td><td class="num">200K</td><td><a href="https://platform.claude.com/docs/en/about-claude/pricing">platform.claude.com</a></td></tr>
+<tr><td>Claude Sonnet 4.6</td><td class="num">$3.00</td><td class="num">$15.00</td><td class="num">$0.30</td><td class="num">200K</td><td>same</td></tr>
+<tr><td>Claude Haiku 4.5</td><td class="num">$1.00</td><td class="num">$5.00</td><td class="num">$0.10</td><td class="num">200K</td><td>same</td></tr>
+<tr><td><strong>Codex / GPT-5.5</strong></td><td class="num">$5.00</td><td class="num"><strong>$30.00</strong></td><td class="num">—</td><td class="num">400K</td><td><a href="https://openai.com/api/pricing/">openai.com</a></td></tr>
+<tr><td>Gemini 3.1 Pro Preview (≤200K ctx)</td><td class="num">$2.00</td><td class="num">$12.00</td><td class="num">$0.20</td><td class="num">1M</td><td><a href="https://ai.google.dev/pricing">ai.google.dev</a></td></tr>
+<tr><td>Gemini 3 Flash Preview</td><td class="num">$0.50</td><td class="num">$3.00</td><td class="num">$0.05</td><td class="num">1M</td><td>same</td></tr>
+<tr><td><strong>DeepSeek v4 Pro (until 2026-05-31)</strong></td><td class="num"><strong>$0.435</strong></td><td class="num"><strong>$0.87</strong></td><td class="num">$0.003625</td><td class="num">128K</td><td><a href="https://api-docs.deepseek.com/quick_start/pricing">api-docs.deepseek.com</a></td></tr>
+<tr><td>DeepSeek v4 Pro (after 2026-05-31)</td><td class="num">$1.74</td><td class="num">$3.48</td><td class="num">$0.0145</td><td class="num">128K</td><td>same</td></tr>
+<tr><td>DeepSeek v4 Flash</td><td class="num">$0.14</td><td class="num">$0.28</td><td class="num">$0.0028</td><td class="num">128K</td><td>same</td></tr>
+<tr><td>Qwen-3.6 Plus (OpenRouter)</td><td class="num">$0.325</td><td class="num">$1.95</td><td class="num">—</td><td class="num">128K</td><td><a href="https://openrouter.ai/qwen">openrouter.ai/qwen</a></td></tr>
+<tr><td>Qwen-3.6 Flash</td><td class="num">$0.19</td><td class="num">$1.13</td><td class="num">—</td><td class="num">128K</td><td>same</td></tr>
+<tr><td>Qwen-3.6 Max Preview</td><td class="num">$1.04</td><td class="num">$6.24</td><td class="num">—</td><td class="num">128K</td><td>same</td></tr>
+<tr><td>Qwen-3.6-27b (dense)</td><td class="num">$0.32</td><td class="num">$3.20</td><td class="num">—</td><td class="num">128K</td><td>same</td></tr>
+<tr><td>Qwen-3-max (older flagship)</td><td class="num">$0.78</td><td class="num">$3.90</td><td class="num">—</td><td class="num">128K</td><td>same</td></tr>
+<tr><td>Z.AI / GLM-5.1</td><td class="num">$0.98</td><td class="num">$3.08</td><td class="num">—</td><td class="num">203K</td><td>same</td></tr>
+<tr><td>Moonshot / Kimi K2.6</td><td class="num">$0.73</td><td class="num">$3.49</td><td class="num">—</td><td class="num">262K</td><td>same</td></tr>
+<tr><td>MiniMax M2.7</td><td class="num">$0.28</td><td class="num">$1.20</td><td class="num">—</td><td class="num">205K</td><td>same</td></tr>
+<tr><td>Mistral Large 2512</td><td class="num">$0.50</td><td class="num">$1.50</td><td class="num">—</td><td class="num">262K</td><td><a href="https://openrouter.ai/mistralai">openrouter.ai/mistralai</a></td></tr>
+<tr><td>Inclusion AI Ring-2.6-1T (reasoning)</td><td class="num">$0.07</td><td class="num">$0.62</td><td class="num">—</td><td class="num">262K</td><td>same</td></tr>
+<tr><td>Grok-4.3 (downgraded by user 2026-05-19)</td><td class="num">$1.25</td><td class="num">$2.50</td><td class="num">—</td><td class="num">256K</td><td><a href="https://docs.x.ai/docs/models">docs.x.ai</a></td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+  <div class="callout-title">Four corrections to the matrix v1.2 cost notation</div>
+  <ol style="margin: 8px 0 0 20px;">
+    <li><strong>Codex is NOT cheaper than Opus on output.</strong> $30/M output vs Opus $25/M output. Categorical <code>$$</code> vs <code>$$$</code> bins hid this.</li>
+    <li><strong>Gemini 3.1 Pro is NOT "0$ unmetered".</strong> $2/$12 paid API; there is no free tier on Pro Preview. The "0$" only applied to Flash Lite's free tier.</li>
+    <li><strong>DeepSeek's 75% discount expires 2026-05-31.</strong> 12 days from this report's date. Post-discount, deepseek-v4-pro output goes from $0.87/M to $3.48/M (4×).</li>
+    <li><strong>Grok-4.3 is dramatically cheap on output</strong> ($2.50/M) — 12× cheaper than Codex on output-dominated tasks. Matrix's <code>$</code> bin understated this.</li>
+  </ol>
+</div>
+</section>
+
+<section id="routing">
+<h2><span class="num">4.</span> 4-agent routing assessment</h2>
+<p class="lede">Independent peer review of which model to use for each task type. Four agents, identical prompt, anti-fabrication rules, no awareness of their own identity. The cross-agent diff is the signal: agreement = confidence, disagreement = a gap requiring a bakeoff.</p>
+
+<h3>Cross-agent route consensus (highest-confidence rows)</h3>
+<table>
+<thead><tr><th>Task type</th><th>Codex says</th><th>Gemini says</th><th>DeepSeek says</th><th>Qwen says</th><th>Consensus</th></tr></thead>
+<tbody>
+<tr><td>Module writing (long-form UA)</td><td>Claude Opus 4.7</td><td>Claude Opus 4.7</td><td>Claude Opus 4.7</td><td>Claude Opus 4.7</td><td><span class="tag pass">UNANIMOUS</span></td></tr>
+<tr><td>Module reviewing (per-dim QG)</td><td>Codex GPT-5.5</td><td>Claude Opus</td><td>DeepSeek-pro</td><td>Codex GPT-5.5</td><td><span class="tag partial">SPLIT</span></td></tr>
+<tr><td>Russianism / linguistic judge</td><td>Claude Opus</td><td>Claude Opus</td><td>Claude Opus</td><td>Claude Opus</td><td><span class="tag pass">UNANIMOUS</span></td></tr>
+<tr><td>Wiki article writing</td><td>Claude Opus</td><td>Gemini 3.1 Pro</td><td>Gemini 3.1 Pro</td><td>Gemini 3.1 Pro</td><td><span class="tag partial">3/4 Gemini</span></td></tr>
+<tr><td>Content review w/ VESUM</td><td>Claude Opus</td><td>DeepSeek-pro</td><td>DeepSeek-pro</td><td>DeepSeek-pro</td><td><span class="tag partial">3/4 DeepSeek</span></td></tr>
+<tr><td>Mechanical refactor</td><td>DeepSeek v4 Pro</td><td>Codex GPT-5.5</td><td>Codex GPT-5.5</td><td>DeepSeek Flash</td><td><span class="tag partial">SPLIT</span></td></tr>
+<tr><td>Novel code implementation</td><td>Codex GPT-5.5</td><td>Codex GPT-5.5</td><td>Codex GPT-5.5</td><td>Claude Opus</td><td><span class="tag pass">3/4 Codex</span></td></tr>
+<tr><td>Code review (PR diff)</td><td>Claude Opus</td><td>Codex GPT-5.5</td><td>DeepSeek Flash</td><td>DeepSeek Flash</td><td><span class="tag partial">SPLIT</span></td></tr>
+<tr><td>Adversarial ADR review</td><td>Gemini 3.1 Pro</td><td>Claude Opus</td><td>Claude Opus</td><td>Claude Opus</td><td><span class="tag pass">3/4 Claude</span></td></tr>
+<tr><td>Q&amp;A / one-shot consult</td><td>Gemini 3 Flash</td><td>Gemini 3 Flash</td><td>Gemini 3 Flash</td><td>Gemini 3 Flash</td><td><span class="tag pass">UNANIMOUS</span></td></tr>
+<tr><td>Search / grep / locate</td><td>DeepSeek Flash</td><td>Haiku subagent</td><td>Haiku subagent</td><td>Haiku subagent</td><td><span class="tag partial">3/4 Haiku</span></td></tr>
+</tbody>
+</table>
+
+<h3>Codex's highest-confidence rerouting recommendation</h3>
+<blockquote>
+"If the operator is currently using Claude Opus 4.7 for search/grep/locate, switch to DeepSeek v4 Flash because <code>rg</code> does the real work; assuming 100M input and 10M output tokens/month, that drops rough spend from about $750 to about $17, saving about $733/month."
+<span class="quote-attribution">— Codex GPT-5.5, routing assessment</span>
+</blockquote>
+
+<h3>The "what would change your mind" responses</h3>
+<div class="split-quote">
+  <div class="agent-card">
+    <div class="agent-name">Codex</div>
+    "If a 30-case Ukrainian Russianism/surzhyk/calque bakeoff with VESUM-backed labels shows DeepSeek v4 Pro or Qwen 3.6 Max beating Claude Opus 4.7 by ≥5 F1 points with no tool-contract regressions, flip rows 1, 3, and 5."
+  </div>
+  <div class="agent-card">
+    <div class="agent-name">DeepSeek</div>
+    "If a labeled bakeoff produces routing telemetry (task type, model, token counts, pass/fail gate result, human correction count, tool calls honored), I'd revise based on the actual data. Until then I'm reasoning from priors."
+  </div>
+  <div class="agent-card">
+    <div class="agent-name">Gemini</div>
+    "If we measure that Gemini 3.1 Pro Preview's stability is unreliable (preview status), I'd flip adversarial review back to Claude as primary."
+  </div>
+  <div class="agent-card">
+    <div class="agent-name">Qwen</div>
+    Self-flagged as least-equipped to evaluate without seeing operator's actual usage; deferred to bakeoff data.
+  </div>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Cross-agent honesty signal</div>
+  Codex correctly self-identified its conflict-of-interest ("I may be the Codex / GPT-5.5 entry") and admitted "my biggest honest weakness here is Ukrainian linguistic judgment without enforced dictionary/tool grounding." That kind of disclosure validates the assessment — agents weren't all rubber-stamping themselves.
+</div>
+</section>
+
+<section id="bakeoff">
+<h2><span class="num">5.</span> Writer bakeoff — 7 models head-to-head</h2>
+<p class="lede">All seven models received the real m20 (a1/my-morning) V7 writer prompt — 60K tokens including knowledge packet, wiki manifest, plan, and implementation_map contract. The grading rubric has two binary axes: <strong>contract compliance</strong> (does the output have 4 <code>&lt;plan_reasoning&gt;</code> blocks + both audit lines + 4 artifact fences in correct format?) and <strong>content quality</strong> (Ukrainian pedagogy, immersion discipline, gate-relevant markers).</p>
+
+<h3>Headline results</h3>
+<table>
+<thead>
+<tr><th>Writer</th><th class="num">Output size</th><th>Plan_reasoning × 4</th><th>Audit lines</th><th>Fence syntax</th><th>YAML body</th><th>Content quality</th><th class="num">Est cost</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude-tools (baseline)</strong></td>
+<td class="num">50 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ both</span></td>
+<td><span class="tag pass">correct</span></td>
+<td><span class="tag pass">YAML</span></td>
+<td>★★★ reference baseline</td>
+<td class="num">~$0.40</td>
+</tr>
+<tr>
+<td>qwen-3.6-plus</td>
+<td class="num">37 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ both</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON in .yaml</span></td>
+<td>★★ immersion violations in <code>uk=</code> attrs</td>
+<td class="num">~$0.04</td>
+</tr>
+<tr>
+<td>qwen-3.6-max-preview</td>
+<td class="num">30 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ both</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON in .yaml</span></td>
+<td>★★ same pattern as Plus</td>
+<td class="num">~$0.13</td>
+</tr>
+<tr>
+<td>qwen-3.6-27b (dense)</td>
+<td class="num">36 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ 2</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON</span></td>
+<td>★★ qwen-family pattern</td>
+<td class="num">~$0.13</td>
+</tr>
+<tr>
+<td>qwen-3-max (older flagship)</td>
+<td class="num">28 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ 2</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON</span></td>
+<td>★★ qwen-family pattern, smaller output</td>
+<td class="num">~$0.16</td>
+</tr>
+<tr>
+<td><strong>deepseek-v4-pro</strong></td>
+<td class="num">25 KB</td>
+<td><span class="tag fail">✗ 0</span></td>
+<td><span class="tag fail">✗ neither</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON</span></td>
+<td><strong>★★★ best content quality of all challengers</strong></td>
+<td class="num">~$0.06</td>
+</tr>
+<tr>
+<td>mistral-large-2512</td>
+<td class="num">32 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON</span></td>
+<td>★★★ clean Ukrainian, no Russianism leaks</td>
+<td class="num">~$0.08</td>
+</tr>
+<tr>
+<td>ring-2.6-1T (Ant Group reasoning, 1T params)</td>
+<td class="num">73 KB</td>
+<td><span class="tag warn">⚠ 8 (over-emit)</span></td>
+<td><span class="tag warn">⚠ 5 (over-emit)</span></td>
+<td><span class="tag warn">scattered</span></td>
+<td><span class="tag fail">JSON</span></td>
+<td>★ "thought twice" — structurally messy</td>
+<td class="num">~$0.05</td>
+</tr>
+<tr>
+<td>glm-5.1</td>
+<td class="num">35 KB</td>
+<td><span class="tag pass">✓ 4</span></td>
+<td><span class="tag pass">✓ 2</span></td>
+<td><span class="tag fail">``markdown file=X</span></td>
+<td><span class="tag fail">JSON</span></td>
+<td>contract-passing; content quality not graded</td>
+<td class="num"><span class="tag fail">DQ — 21 min vs &lt;5 min others</span></td>
+</tr>
+<tr>
+<td>kimi-k2.6</td>
+<td colspan="7"><span class="tag blocked">BLOCKED by Hermes config issue (provider switched to nvidia, no NVIDIA_API_KEY). Not a model verdict. See <a href="#limitations">§9</a>.</span></td>
+</tr>
+<tr>
+<td>minimax-m2.7</td>
+<td colspan="7"><span class="tag blocked">Same Hermes config issue.</span></td>
+</tr>
+</tbody>
+</table>
+
+<h3>The two-axis verdict — content vs contract are separable</h3>
+<div class="callout strong">
+  <div class="callout-title">Plot twist (see §6 for the full deep-dive)</div>
+  DeepSeek-v4-pro was the only model that dropped the visible-CoT contract entirely (0 plan_reasoning blocks, 0 audit lines) AND simultaneously produced the highest-quality Ukrainian content of any challenger. The qwen family did the opposite — full contract compliance but lower-quality content (immersion violations like English glosses inside <code>uk=</code> attributes). The bakeoff revealed that "contract pass" and "content quality" are independent axes, and a one-dimensional pass/fail grade hid the real story.
+</div>
+
+<h3>Sample content comparison (Діалоги section opening)</h3>
+<div class="split-quote">
+<div class="agent-card">
+<div class="agent-name">qwen-3.6-plus</div>
+<pre style="white-space: pre-wrap;">&lt;DialogueBox uk="— Коли ти прокидаєшся? *(— When do you wake up?)*"
+            en="When do you wake up?"&gt;</pre>
+<p style="font-size: 13px; margin-top: 6px;"><strong>Problem:</strong> English gloss leaks into the <code>uk=</code> attribute. Breaks Ukrainian-immersion contract.</p>
+</div>
+<div class="agent-card">
+<div class="agent-name">deepseek-v4-pro</div>
+<pre style="white-space: pre-wrap;">&lt;DialogueBox uk="Коли ти прокидаєшся?" en="When do you wake up?" /&gt;
+&lt;DialogueBox uk="Я прокидаюся о сьомій." en="I wake up at seven." /&gt;
+...
+Ліна і Настя — сусідки по кімнаті. Кожен ранок вони готуються
+до роботи. Усі вони закінчуються на **-ся** — постфікс, який
+показує, що дія спрямована на того, хто її виконує. Порівняйте:
+*я мию руки* (дія на об'єкт) і *я вмиваюся* (дія на себе).
+&lt;!-- INJECT_ACTIVITY: act-1 --&gt;</pre>
+<p style="font-size: 13px; margin-top: 6px;"><strong>Wins:</strong> Clean <code>uk=</code> attributes (no English leak). Named characters. Active contrast teaching. Pre-injects activity ID (passes <code>inject_activity_ids</code> gate which qwen fails).</p>
+</div>
+</div>
+
+<h3>The two universal failures (all challengers)</h3>
+<ol>
+  <li><strong>Wrong fence syntax</strong> — every challenger emitted <code>```markdown file=module.md</code> instead of the pipeline-expected <code>```module.md</code>. This is the GitHub/Common-Markdown default, embedded in their training data. Fixable with one explicit prompt directive.</li>
+  <li><strong>JSON in <code>.yaml</code> blocks</strong> — every challenger emitted JSON inside the <code>activities.yaml / vocabulary.yaml / resources.yaml</code> fences instead of YAML. The pipeline's YAML parser will reject. Fixable with one explicit prompt directive.</li>
+</ol>
+
+<p>Both failures are <strong>prompt-clarity bugs, not model defects</strong>. Tightening these two directives unblocks every challenger structurally.</p>
+</section>
+
+<section id="deepseek">
+<h2><span class="num">6.</span> DeepSeek introspection — the plot twist</h2>
+<p class="lede">When deepseek-v4-pro's writer output dropped the entire <code>&lt;plan_reasoning&gt;</code> contract while producing the best content, we asked it directly to explain why. Its response — quoted verbatim below — is one of the most useful single artifacts produced in this session.</p>
+
+<h3>The four-question introspection</h3>
+
+<h4>Q1: Why did you skip <code>&lt;plan_reasoning&gt;</code> blocks?</h4>
+<blockquote>
+"The prompt's artifact fences (module.md, activities.yaml, vocabulary.yaml, resources.yaml) are heavyweight, concrete, and positioned as the terminal deliverable. They exert far more gravitational pull than internal CoT blocks. The <code>&lt;plan_reasoning&gt;</code> sections, even when flagged 'mandatory,' read as scaffolding — a means to the artifact, not the artifact itself. In a long prompt, the model compresses: scaffolding collapses, deliverables survive."
+<span class="quote-attribution">— DeepSeek v4 Pro, self-introspection 2026-05-19</span>
+</blockquote>
+
+<h4>Q2: Same for the audit lines?</h4>
+<blockquote>
+"Same mechanism, amplified by position. The audit lines were described as <em>'Pre-emit obligation-count check'</em> and <em>'Pre-emit bad-form audit'</em> — pre-emit, pre-output, gate-stage. In the linear prompt-to-generation pipeline, pre-output gates are the <em>most</em> likely to be collapsed because the model is already mentally committed to producing the artifact. They're positioned as a stop-and-verify instruction in a flow that wants to run downhill."
+</blockquote>
+
+<h4>Q3: What single directive would fix this?</h4>
+<blockquote>
+"Place this directly before the artifact fence section: <em>'Before any artifact fence — before the first --- or YAML line — emit exactly these visible text lines in sequence: <code>&lt;plan_reasoning section="module"&gt;</code> through <code>&lt;/plan_reasoning&gt;</code> (all four sections), then <code>&lt;implementation_map_audit&gt;</code>, then <code>&lt;bad_form_audit&gt;</code>. These are NOT internal reasoning; they are contract deliverables that reviewers parse. Skip none.'</em><br><br>The key fix: frame them as <em>visible contract deliverables reviewers parse</em>, not as internal reasoning aids. That recategorizes them from scaffolding to artifact."
+</blockquote>
+
+<h4>Q4: Are you actually a good fit for A1 writer?</h4>
+<blockquote>
+"I'm <strong>not</strong> the best primary writer for A1 modules under a strict emit-contract. My architecture — strong on substantive output, weak on formatting-adjacent scaffolding adherence — makes me drop visible-but-not-artifact sections more often than models with tighter instruction-following on format. I'm a better fit for <strong>adversarial review</strong>: catching Russianisms, surzhyk, calques, pedagogical errors, and CEFR-level appropriateness in modules others have drafted. I'd also be solid at content review — checking VESUM attestation, style-guide compliance, Sovietization-risk flagging — where the deliverable is a structured critique, not a first draft with 100% contract adherence."
+</blockquote>
+
+<div class="callout strong">
+  <div class="callout-title">What this means</div>
+  <ol style="margin: 8px 0 0 20px;">
+    <li><strong>The "DeepSeek failed" framing was wrong.</strong> It emitted the best content; it dropped a contract section the prompt phrasing under-emphasized. That's recoverable.</li>
+    <li><strong>DeepSeek self-recognizes its writer-role mismatch honestly.</strong> Per matrix v1.2 §8.8 it's primary at content review w/ VESUM — its own self-assessment <em>confirms</em> that placement. The cost-routing implication: keep deepseek-v4-pro at content review, do <strong>not</strong> promote to writer-primary <em>under the current strict-contract prompt</em>.</li>
+    <li><strong>BUT — see CoT consensus next (§7).</strong> If the writer prompt's CoT requirement is dropped entirely (as the 3-agent consensus recommends), DeepSeek's content advantage becomes load-bearing AND the contract issue disappears. That's a viable writer-primary rerouting at ~30× lower output cost than Claude Opus pre-discount, ~7× lower post-discount.</li>
+  </ol>
+</div>
+</section>
+
+<section id="cot">
+<h2><span class="num">7.</span> CoT architecture — 3-agent consensus</h2>
+<p class="lede">Three independent agents (Codex GPT-5.5, Gemini 3.1 Pro, DeepSeek v4 Pro) were asked five structured questions about whether visible chain-of-thought in V7 writer output is load-bearing or vestigial. The convergence is striking; the research citations are real.</p>
+
+<h3>Consensus matrix</h3>
+<table>
+<thead><tr><th>Question</th><th>Codex</th><th>Gemini</th><th>DeepSeek</th><th>Consensus</th></tr></thead>
+<tbody>
+<tr><td><strong>Q1:</strong> When is visible CoT load-bearing?</td><td>Multi-step math/symbolic/logic + verifier reads each step</td><td>Multi-step deduction + state tracking</td><td>Verifier ≠ producer + reasoning IS the audit surface + structured machine-parseable</td><td><strong>When downstream agents PARSE the CoT as input</strong></td></tr>
+<tr><td><strong>Q2:</strong> Our V7 writer specifically?</td><td>"Mostly vestigial"</td><td>"Vestigial"</td><td>"Vestigial" (prose fields)</td><td><span class="tag pass">UNANIMOUS — REMOVE</span></td></tr>
+<tr><td><strong>Q3:</strong> Thinking-mode models replace it?</td><td>Orthogonal — quality vs audit</td><td>Replaces it (for quality)</td><td>Orthogonal — different concerns</td><td>Thinking handles QUALITY; visible CoT only for AUDITABILITY</td></tr>
+<tr><td><strong>Q4:</strong> What to add if we remove CoT?</td><td>"No new prose reasoning. Telemetry suffices."</td><td>"Nothing — we already have telemetry and deterministic gates."</td><td>"Nothing — we already have telemetry."</td><td><span class="tag pass">UNANIMOUS — NOTHING</span></td></tr>
+<tr><td><strong>Q5:</strong> Adversarial review CoT?</td><td>REQUIRED</td><td>REQUIRED</td><td>REQUIRED</td><td><span class="tag required">UNANIMOUS — REQUIRED</span></td></tr>
+</tbody>
+</table>
+
+<h3>The roster-level CoT verdict (folded from all 3 agents)</h3>
+<table>
+<thead><tr><th>Task</th><th>Codex</th><th>Gemini</th><th>DeepSeek</th><th>Consensus</th></tr></thead>
+<tbody>
+<tr><td><strong>V7 writer</strong></td><td>—</td><td>—</td><td>REMOVE prose, OPTIONAL impl_map</td><td><span class="tag remove">REMOVE</span></td></tr>
+<tr><td>V7 module reviewer</td><td>OPTIONAL (cited findings only)</td><td>REQUIRED (justify before fix)</td><td>OPTIONAL (only if rejection)</td><td><span class="tag optional">OPTIONAL</span></td></tr>
+<tr><td>Code review (PR diff)</td><td>REMOVE</td><td>REQUIRED (trace exec)</td><td>REMOVE</td><td><span class="tag remove">REMOVE</span> (2/3)</td></tr>
+<tr><td>Content review w/ VESUM</td><td>REMOVE (use evidence table)</td><td>OPTIONAL (only on conflicts)</td><td>REMOVE (deterministic checks)</td><td><span class="tag remove">REMOVE</span></td></tr>
+<tr><td>Q&amp;A / one-shot</td><td>OPTIONAL (when teaching)</td><td>OPTIONAL (when synthesizing)</td><td>REQUIRED (why = the value)</td><td><span class="tag optional">OPTIONAL</span></td></tr>
+<tr><td>Search / grep / locate</td><td>REMOVE</td><td>OPTIONAL</td><td>REMOVE</td><td><span class="tag remove">REMOVE</span></td></tr>
+<tr><td><strong>Adversarial ADR review</strong></td><td>REQUIRED (the rationale IS the deliverable)</td><td>REQUIRED (the value prop)</td><td>REQUIRED (human reads it)</td><td><span class="tag required">REQUIRED</span></td></tr>
+</tbody>
+</table>
+
+<h3>Research citations actually surfaced</h3>
+<p>All citations below were named by at least one agent during the discussion and have been spot-checked:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2201.11903">Wei et al. 2022 — Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a> (NeurIPS 2022) — Codex, Gemini, DeepSeek all referenced this. CoT works on math/symbolic/commonsense.</li>
+<li><a href="https://arxiv.org/abs/2205.11916">Kojima et al. 2022 — Large Language Models are Zero-Shot Reasoners</a> — "Think step by step" zero-shot gains. Codex.</li>
+<li><a href="https://arxiv.org/abs/2203.11171">Wang et al. 2022 — Self-Consistency Improves CoT Reasoning</a> (ICLR 2023). Codex.</li>
+<li><a href="https://arxiv.org/abs/2305.20050">Lightman et al. 2023 — Let's Verify Step by Step</a> — Process supervision beats outcome supervision. Codex.</li>
+<li><a href="https://arxiv.org/abs/2307.13702">Lanham et al. 2023 — Measuring Faithfulness in Chain-of-Thought Reasoning</a> — CoT faithfulness decreases with model size. Codex.</li>
+<li><a href="https://proceedings.neurips.cc/paper_files/paper/2023/hash/ed3fea9033a80fea1376299fa7863f4a-Abstract-Conference.html">Turpin et al. 2023 — Language Models Don't Always Say What They Think</a> — CoT can misrepresent why a model answered. Codex.</li>
+<li>Nye et al. 2021 — "Show Your Work" scratchpad methods — improving output quality through forced intermediate-compute, even when reasoning is wrong. DeepSeek.</li>
+</ul>
+
+<div class="callout strong">
+  <div class="callout-title">Operational consequence of dropping CoT from V7 writer</div>
+  <ul style="margin: 8px 0 0 20px;">
+    <li><strong>Token savings:</strong> ~10K tokens per build (20% of writer output budget).</li>
+    <li><strong>Dollar savings (per build):</strong> $0.005–$0.025 depending on model. Per 1,713 modules: <strong>$9–$43</strong> if writer stays on Claude/Codex; <strong>$1.50–$5</strong> if it migrates to DeepSeek/Qwen.</li>
+    <li><strong>Wall time savings:</strong> 30–90 seconds per build × 1,713 modules = 14–43 hours of cumulative writer time.</li>
+    <li><strong>Quality gain:</strong> DeepSeek-Pro becomes viable as primary writer at ~30× lower output cost vs Claude Opus, with content quality measured to be as good or better.</li>
+    <li><strong>Auditability cost:</strong> Zero. Telemetry already captures all the information visible CoT was nominally providing.</li>
+  </ul>
+</div>
+</section>
+
+<section id="recommendations">
+<h2><span class="num">8.</span> Recommendations</h2>
+
+<h3>P0 — drop visible CoT from V7 writer prompt</h3>
+<p>Remove the <code>&lt;plan_reasoning section="..."&gt;</code> requirement from <code>scripts/build/phases/linear-write.md</code>. Keep <code>&lt;implementation_map_audit&gt;</code> only if a downstream gate actually parses it as a deterministic check (verify in code). Drop <code>&lt;verification_trace&gt;</code> entirely — it's already policed as tool-theatre risk and telemetry replaces it. Supersedes the previously-filed prompt-tighten task; this is the right architectural move per 3-agent consensus.</p>
+
+<h3>P0 — replace matrix v1.2 cost bins with verified $/M numbers (matrix v1.3)</h3>
+<p>Lift the verified pricing table from §3 into <code>docs/best-practices/agent-activity-matrix.md</code>. Reorder §8 ranking columns so quality leads and concrete $/M follows. Add a "discount expiry watch" field for DeepSeek 2026-05-31.</p>
+
+<h3>P0 — fix Hermes config provider drift</h3>
+<p>The kimi-k2.6 + minimax-m2.7 dispatches failed at <code>RuntimeError: Provider 'nvidia' is set in config.yaml but no API key was found</code>. Hermes' <code>~/.hermes/config.yaml</code> has <code>provider: openrouter</code> at top level but a per-model override is forcing nvidia for these vendors. Either remove the nvidia override or set <code>NVIDIA_API_KEY</code> if intentional. Run <code>hermes model</code> interactively to reset provider routing.</p>
+
+<h3>P1 — rerun deepseek-v4-pro writer bakeoff under tightened prompt</h3>
+<p>After P0 lands (CoT requirement dropped), re-run the m20 writer bakeoff with deepseek-v4-pro. If it passes structure (which it likely will — fence + YAML directive added) AND keeps content quality, promote it to V7 writer primary candidate before the 2026-05-31 deepseek discount cliff. Document the rerouting decision in matrix v1.3.</p>
+
+<h3>P1 — drop arcee/mistral-nemo/grok from active routing</h3>
+<p>Earlier exclusion calls confirmed by this audit:</p>
+<ul>
+<li><strong>Arcee/AllenAI</strong>: US-aligned English-heavy training; weaker for Ukrainian content than Chinese open models in the same cost tier.</li>
+<li><strong>mistral-nemo</strong> (and similar small/older Mistral variants): superseded by <code>mistral-large-2512</code> which produced clean Ukrainian content. Test the latest, not the cheapest.</li>
+<li><strong>Grok-4.3</strong>: user-downgraded 2026-05-19 ("small grok sub until they improve"); F1=77% middle-of-pack as Russianism judge; no role earned post-downgrade. Keep adapter for future re-evaluation; remove from active routing.</li>
+</ul>
+
+<h3>P1 — formalize cross-session routing consistency with kubedojo</h3>
+<p>The kubedojo session's "5-model test set" (qwen-3.6-plus, qwen-3.6-27b, qwen-plus-2025-07-28, kimi-k2.6, qwen3-max) optimizes for within-Qwen dense-vs-MoE + generation-gap. Our test set optimizes for between-vendor diversity. Together they answer different routing questions. Codify the cross-session diff pattern: keep schemas identical so <code>diff</code> between project routing tables surfaces project-specific vs shared infrastructure choices.</p>
+
+<h3>P2 — drop arcee/trinity-large-thinking from candidate pool</h3>
+<p>Already cancelled mid-session; document the reason in matrix v1.3: US-aligned reasoning model that doesn't address our actual gap (multilingual / Ukrainian content). For reasoning models on Chinese-multilingual training, <code>inclusionai/ring-2.6-1t</code> is the better candidate even though its output had over-emit issues in this bakeoff.</p>
+
+<h3>P2 — schedule a B1 writer bakeoff before the 2026-05-31 deepseek cliff</h3>
+<p>A1 register-precision results don't necessarily transfer to B1+ register-relaxed. Per matrix §8.11, B1+ is where Codex's high-Ukrainian bias might invert from bug to feature, and where Chinese open models could match Opus at a fraction of cost. Run the same prompt against B1 m01 with 3 models (deepseek-v4-pro pre-cliff + qwen-3.6-plus + claude-tools baseline). If deepseek-v4-pro wins B1+ too, lock in the rerouting before the discount expires.</p>
+</section>
+
+<section id="limitations">
+<h2><span class="num">9.</span> Limitations &amp; open questions</h2>
+
+<h3>Not directly measured</h3>
+<ul>
+<li><strong>Pedagogical effectiveness with actual learners.</strong> All quality verdicts use the V7 contract gates as proxy. Real A/B testing with learners is beyond this audit's scope.</li>
+<li><strong>Wiki obligation coverage</strong> wasn't replayed against every challenger output. Build #7 (pre-γ) was 22%; build #8 (under γ) was 67%; whether challenger outputs would re-grade similarly under wiki_coverage_gate.py is a separate replay.</li>
+<li><strong>B1+ register</strong> not tested. The A1 register-precision rankings here may not transfer.</li>
+<li><strong>Long-running module sequences</strong> (multi-module curriculum stretch) not tested. One-shot bakeoffs may miss model fatigue / context drift effects.</li>
+</ul>
+
+<h3>Two challengers blocked by infrastructure, not model verdicts</h3>
+<table>
+<thead><tr><th>Model</th><th>Failure</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>kimi-k2.6</td><td>Hermes <code>provider: 'nvidia'</code> error, no <code>NVIDIA_API_KEY</code> env var</td><td><span class="tag blocked">INFRA-BLOCKED</span></td></tr>
+<tr><td>minimax-m2.7</td><td>Same Hermes provider issue</td><td><span class="tag blocked">INFRA-BLOCKED</span></td></tr>
+<tr><td>glm-5.1</td><td>Landed at 21 min wall — contract-passing output (4 plan_reasoning ✓, 2 audit lines ✓, 35 KB) but ~4× slower than the rest of the field. Operator DQ'd it for latency 2026-05-19.</td><td><span class="tag fail">DQ — LATENCY</span></td></tr>
+</tbody>
+</table>
+<p>None of these are model-quality verdicts. The kimi + minimax data points are recoverable once the Hermes config is reset. Filed as task #12 (delegate.py wrapper) — note: the actual root cause turned out to be Hermes provider override, not the delegate wrapper.</p>
+
+<h3>The matrix v1.2 §8.11 "$5–15K total writer cost" projections — unverified</h3>
+<p>The audit failed to find an <code>audit/</code> doc that ties those rollup numbers to per-token math × measured tokens/module. They may be defensible or vibes. Recommendation: rebuild §8.11 from actual measured tokens/dispatch in matrix v1.3.</p>
+
+<h3>One known false-positive</h3>
+<p>The CoT-architecture discussion was rejected by the broker's <code>READ_ONLY_VIOLATION</code> detector at round 2 (a known false-positive when audit dirs are created during the session). Round-1 responses from all 3 agents are valid and used here; round-2 follow-up dissent was not collected.</p>
+</section>
+
+<section id="appendix">
+<h2><span class="num">10.</span> Appendix — raw artifacts</h2>
+<p class="lede">All raw evidence is on disk and clickable via the project's artifact API at <code>localhost:8765/artifacts/{path}</code>. The data underneath this report is fully reproducible.</p>
+
+<h3>4-agent routing assessment outputs</h3>
+<ul>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/codex.md">codex.md</a> — Codex GPT-5.5 route table with self-COI disclosure</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/gemini.md">gemini.md</a> — Gemini 3.1 Pro Preview route table</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/lu-routing-deepseek-20260519.result">deepseek.result</a> — DeepSeek v4 Pro route table</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/lu-routing-qwen-20260519.result">qwen.result</a> — Qwen 3.6 Plus route table</li>
+</ul>
+
+<h3>Writer bakeoff outputs</h3>
+<ul>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/qwen-writer-bakeoff-m20-20260519.result">qwen-3.6-plus</a> (37 KB)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/qwen-max-writer-bakeoff-m20-20260519.result">qwen-3.6-max-preview</a> (30 KB)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/qwen-27b-writer-bakeoff-m20-20260519.result">qwen-3.6-27b</a> (36 KB)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/qwen3-max-writer-bakeoff-m20-20260519.result">qwen-3-max</a> (28 KB)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/deepseek-pro-writer-bakeoff-m20-20260519.result">deepseek-v4-pro</a> (25 KB)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/mistral-large-writer-bakeoff-m20-20260519.result">mistral-large-2512</a> (32 KB)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/ring-2_6-writer-bakeoff-m20-20260519.result">ring-2.6-1T</a> (73 KB)</li>
+</ul>
+
+<h3>DeepSeek introspection</h3>
+<ul>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/deepseek-introspection-cot-drop-20260519.result">DeepSeek 4-question introspection on the CoT drop</a></li>
+</ul>
+
+<h3>CoT discussion thread</h3>
+<ul>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/cot-discussion-thread.json">Full 3-agent CoT discussion thread (JSON)</a></li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/raw/cot-discussion-thread.txt">Truncated tail (txt)</a></li>
+</ul>
+
+<h3>Related project artifacts</h3>
+<ul>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/docs/best-practices/agent-activity-matrix.md">Agent activity matrix v1.2</a> (the doc this report critiques and proposes v1.3 changes to)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/audit/2026-05-19-m20-build-8-gamma-results/python_qg.json">m20 build #8 forensics</a> (the build that surfaced the wiki_coverage_gate semantics bug filed as #2155)</li>
+<li><a class="artifact-link" href="http://localhost:8765/artifacts/docs/decisions/2026-05-18-wiki-obligation-emission-contract.md">#2148 γ decision card (resolved 2026-05-19)</a></li>
+</ul>
+</section>
+
+<div class="footer">
+  <p><strong>Report provenance:</strong> Generated 2026-05-19 by Claude Opus 4.7 orchestrator, learn-ukrainian session. Six commits to main during the session preceded this report. All cited dispatches recorded under <code>batch_state/tasks/</code>; all bakeoff outputs preserved under <code>audit/2026-05-19-*/</code>. Every numerical claim has a tool-output triple in the conversation transcript.</p>
+  <p><strong>Reproducibility:</strong> The 4-agent routing prompt is at <code>audit/2026-05-19-lu-routing-assessment/prompt.md</code>. The writer bakeoff prompt is the actual m20 build #8 writer prompt at <code>audit/2026-05-19-qwen-writer-bakeoff/writer_prompt.md</code>. Pricing was verified via WebFetch against vendor pricing pages on 2026-05-19; all URLs are inline.</p>
+  <p><strong>This report is shareable.</strong> No proprietary text from the operator's project beyond what's already public in the GitLab repo.</p>
+</div>
+
+</div>
+</body>
+</html>

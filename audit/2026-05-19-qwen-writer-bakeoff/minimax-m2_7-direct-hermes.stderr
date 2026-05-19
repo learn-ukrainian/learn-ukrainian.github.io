@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py", line 12773, in main
+    run_oneshot(
+  File "/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py", line 181, in run_oneshot
+    response = _run_agent(
+               ^^^^^^^^^^^
+  File "/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py", line 313, in _run_agent
+    agent = AIAgent(
+            ^^^^^^^^
+  File "/Users/krisztiankoos/.hermes/hermes-agent/run_agent.py", line 418, in __init__
+    init_agent(
+  File "/Users/krisztiankoos/.hermes/hermes-agent/agent/agent_init.py", line 735, in init_agent
+    raise RuntimeError(
+RuntimeError: Provider 'novita' is set in config.yaml but no API key was found. Set the NOVITA_API_KEY environment variable, or switch to a different provider with `hermes model`.

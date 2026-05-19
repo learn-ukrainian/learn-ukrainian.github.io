@@ -1,0 +1,780 @@
+Plan reasoning and verification blocks for each section follow. Every obligation from the Wiki Obligations Manifest is addressed in the `<implementation_map>` nodes below.
+
+---
+
+<plan_reasoning section="Діалоги">
+<word_budget>
+Section target: 300 words (270–330 allowed).
+Running total: 300/1200.
+Dialogue 1: 60 words (3 UK lines, 3 EN lines).
+Dialogue 2: 50 words (3 UK lines, 3 EN lines).
+Prose: 190 words.
+</word_budget>
+<plan_vocab>
+- прокидатися: — Коли ти прокидаєшся? — Я прокидаюся о сьомій.
+- вмиватися: Потім я вмиваюся.
+- одягатися: Я одягаюся і снідаю.
+- снідати: Я снідаю о пів на восьму.
+- йти: О восьмій я йду на роботу.
+- спочатку: Спочатку я прокидаюся.
+- потім: Потім я вмиваюся.
+</plan_vocab>
+<register>
+Immersion band: A1.3 (25–40 % UK).
+This section: 35 % UK (110 UK words / 300 total).
+Dialogue lines are short and paired with inline EN gloss.
+</register>
+<teaching_sequence>
+- Wiki S1, S2, S3, S7: Dialogue format from Ukrainian textbooks.
+- Wiki S5: ULP audio integration for spontaneous speech.
+- Factual anchor: pedagogy/a1/my-morning.md :: Приклади з підручників.
+</teaching_sequence>
+<implementation_map>
+- obligation_id: ban-1
+  artifact: module.md
+  location: §Діалоги
+  treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+- obligation_id: ban-2
+  artifact: module.md
+  location: §Діалоги
+  treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+- obligation_id: ban-3
+  artifact: module.md
+  location: §Діалоги
+  treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+- obligation_id: ban-4
+  artifact: module.md
+  location: §Діалоги
+  treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+- obligation_id: step-1
+  artifact: module.md
+  location: §Діалоги
+  treatment: in-prose step marker matching manifest_payload.heading at position implied by manifest_payload.step_num
+- obligation_id: step-2
+  artifact: module.md
+  location: §Діалоги
+  treatment: in-prose step marker matching manifest_payload.heading at position implied by manifest_payload.step_num
+</implementation_map>
+<verification_plan>
+- VESUM: verify_words on all dialogue lemmas.
+- Textbook: search_text for Захарійчук Grade 1, p.24 and p.52.
+- Multimedia: search_external for morning routine videos.
+- Style guide: search_style_guide for "прокидатися", "вмиватися", "одягатися".
+</verification_plan>
+<verification_trace>
+mcp__sources__verify_words(words=["прокидаюся", "вмиваюся", "одягаюся", "снідаю", "йду", "спочатку", "потім"])
+mcp__sources__search_text(query="Захарійчук 24", subject="ukrainska-mova", grade=1)
+mcp__sources__search_text(query="Захарійчук 52", subject="ukrainska-mova", grade=1)
+mcp__sources__search_external(query="ранкова рутина українською мовою", channel="ukrainianlessons")
+mcp__sources__search_style_guide(query="прокидатися")
+</verification_trace>
+</plan_reasoning>
+
+---
+
+<plan_reasoning section="Дієслова на -ся">
+<word_budget>
+Section target: 300 words (270–330 allowed).
+Running total: 600/1200.
+Paradigm table: 80 words.
+Prose: 220 words.
+</word_budget>
+<plan_vocab>
+- прокидатися: Я прокидаюся о сьомій.
+- вмиватися: Я вмиваюся холодною водою.
+- одягатися: Я одягаюся швидко.
+- дивитися: Я дивлюся в дзеркало.
+- користуватися: Я користуюся зубною щіткою.
+</plan_vocab>
+<register>
+Immersion band: A1.3 (25–40 % UK).
+This section: 38 % UK (115 UK words / 300 total).
+Grammar explanation in EN; examples in UK.
+</register>
+<teaching_sequence>
+- Wiki S8: Regular verb paradigm before -ся.
+- Wiki S6: -ся suffix rule.
+- Wiki S1, S9: Phonetic assimilation [с':а], [ц':а].
+- Wiki S7: Inserted л in дивлюся.
+- Wiki S6: -ва- suffix drop in користуватися.
+</teaching_sequence>
+<implementation_map>
+- obligation_id: phon-1
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: module.md prose that states the rule mapping -шся -> [с':а] with explicit IPA bracket
+- obligation_id: phon-2
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: module.md prose that states the rule mapping -ться -> [ц':а] with explicit IPA bracket
+- obligation_id: phon-3
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: module.md prose that states the rule mapping -ся -> [с':а] with explicit IPA bracket
+- obligation_id: step-1
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: section heading matching manifest_payload.heading at position implied by manifest_payload.step_num
+- obligation_id: step-2
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: section heading matching manifest_payload.heading at position implied by manifest_payload.step_num
+- obligation_id: step-3
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: in-prose step marker matching manifest_payload.heading at position implied by manifest_payload.step_num
+- obligation_id: step-4
+  artifact: module.md
+  location: §Дієслова на -ся
+  treatment: in-prose step marker matching manifest_payload.heading at position implied by manifest_payload.step_num
+</implementation_map>
+<verification_plan>
+- VESUM: verify_lemma on прокидатися, вмиватися, одягатися, дивитися, користуватися.
+- Modernity: check_modern_form on all -ся forms.
+- Russianism: check_russian_shadow on дивюся, користуювася.
+- Textbook: search_text for Захарійчук Grade 1, p.24 and p.52.
+- Style guide: search_style_guide for "дивитися", "користуватися".
+</verification_plan>
+<verification_trace>
+mcp__sources__verify_lemma(lemma="прокидатися")
+mcp__sources__verify_lemma(lemma="вмиватися")
+mcp__sources__verify_lemma(lemma="одягатися")
+mcp__sources__verify_lemma(lemma="дивитися")
+mcp__sources__verify_lemma(lemma="користуватися")
+mcp__sources__check_modern_form(word="прокидаюся")
+mcp__sources__check_modern_form(word="вмиваюся")
+mcp__sources__check_modern_form(word="одягаюся")
+mcp__sources__check_modern_form(word="дивлюся")
+mcp__sources__check_modern_form(word="користуюся")
+mcp__sources__check_russian_shadow(word="дивюся")
+mcp__sources__check_russian_shadow(word="користуювася")
+mcp__sources__search_text(query="Захарійчук 24", subject="ukrainska-mova", grade=1)
+mcp__sources__search_text(query="Захарійчук 52", subject="ukrainska-mova", grade=1)
+mcp__sources__search_style_guide(query="дивитися")
+mcp__sources__search_style_guide(query="користуватися")
+</verification_trace>
+</plan_reasoning>
+
+---
+
+<plan_reasoning section="Мій ранок">
+<word_budget>
+Section target: 300 words (270–330 allowed).
+Running total: 900/1200.
+Prose: 250 words.
+Bullet list: 50 words.
+</word_budget>
+<plan_vocab>
+- спочатку: Спочатку я прокидаюся.
+- потім: Потім я вмиваюся.
+- після цього: Після цього я одягаюся.
+- нарешті: Нарешті я йду на роботу.
+- раненько: Я прокидаюся раненько.
+- швиденько: Я одягаюся швиденько.
+</plan_vocab>
+<register>
+Immersion band: A1.3 (25–40 % UK).
+This section: 33 % UK (100 UK words / 300 total).
+Narrative in EN; UK examples in bullet lists.
+</register>
+<teaching_sequence>
+- Wiki S1, S3: Sequence adverbs (спочатку, потім, після цього, нарешті).
+- Wiki S1: Time adverbs (раненько, швиденько).
+- Factual anchor: pedagogy/a1/my-morning.md :: Словниковий мінімум.
+</teaching_sequence>
+<implementation_map>
+- obligation_id: step-5
+  artifact: module.md
+  location: §Мій ранок
+  treatment: section heading matching manifest_payload.heading at position implied by manifest_payload.step_num
+</implementation_map>
+<verification_plan>
+- VESUM: verify_words on спочатку, потім, після цього, нарешті, раненько, швиденько.
+- Textbook: search_text for Захарійчук Grade 1, p.52.
+- Multimedia: search_external for morning routine blogs.
+</verification_plan>
+<verification_trace>
+mcp__sources__verify_words(words=["спочатку", "потім", "після цього", "нарешті", "раненько", "швиденько"])
+mcp__sources__search_text(query="Захарійчук 52", subject="ukrainska-mova", grade=1)
+mcp__sources__search_external(query="ранкова рутина українською мовою", register="spoken")
+</verification_trace>
+</plan_reasoning>
+
+---
+
+<plan_reasoning section="Підсумок">
+<word_budget>
+Section target: 300 words (270–330 allowed).
+Running total: 1200/1200.
+Prose: 200 words.
+Self-check prompt: 100 words.
+</word_budget>
+<plan_vocab>
+- прокидатися: Я прокидаюся о сьомій.
+- вмиватися: Я вмиваюся холодною водою.
+- одягатися: Я одягаюся швидко.
+- снідати: Я снідаю о пів на восьму.
+- йти: Я йду на роботу.
+- спочатку: Спочатку я прокидаюся.
+- потім: Потім я вмиваюся.
+</plan_vocab>
+<register>
+Immersion band: A1.3 (25–40 % UK).
+This section: 30 % UK (90 UK words / 300 total).
+Summary in EN; UK examples in bullet lists.
+</register>
+<teaching_sequence>
+- Wiki S8: Recap -ся paradigm.
+- Wiki S1, S3: Recap sequence adverbs.
+- Factual anchor: pedagogy/a1/my-morning.md :: Послідовність введення.
+</teaching_sequence>
+<implementation_map>
+- obligation_id: err-1
+  artifact: activities.yaml
+  location: activities.yaml
+  treatment: activities.yaml entry with fields {sentence, error, correction}
+- obligation_id: err-2
+  artifact: activities.yaml
+  location: activities.yaml
+  treatment: activities.yaml entry with fields {sentence, error, correction}
+- obligation_id: err-3
+  artifact: activities.yaml
+  location: activities.yaml
+  treatment: activities.yaml entry with fields {sentence, error, correction}
+- obligation_id: err-4
+  artifact: activities.yaml
+  location: activities.yaml
+  treatment: activities.yaml entry with fields {sentence, error, correction}
+- obligation_id: err-5
+  artifact: activities.yaml
+  location: activities.yaml
+  treatment: activities.yaml entry with fields {sentence, error, correction}
+- obligation_id: err-6
+  artifact: activities.yaml
+  location: activities.yaml
+  treatment: activities.yaml entry with fields {sentence, error, correction}
+</implementation_map>
+<verification_plan>
+- VESUM: verify_words on all recap lemmas.
+- Textbook: search_text for Захарійчук Grade 1, p.24 and p.52.
+</verification_plan>
+<verification_trace>
+mcp__sources__verify_words(words=["прокидаюся", "вмиваюся", "одягаюся", "снідаю", "йду", "спочатку", "потім"])
+mcp__sources__search_text(query="Захарійчук 24", subject="ukrainska-mova", grade=1)
+mcp__sources__search_text(query="Захарійчук 52", subject="ukrainska-mova", grade=1)
+</verification_trace>
+</plan_reasoning>
+
+---
+
+<implementation_map_audit>
+manifest_obligations=18 covered_in_map=18 missing=[]
+</implementation_map_audit>
+
+<bad_form_audit>
+italic_bad_form_patterns_found=0 converted_to_marker=0 remaining=0
+</bad_form_audit>
+
+---
+
+Tool calls made before artifact emission:
+
+1. **Textbook grounding**
+   - `mcp__sources__search_text(query="Захарійчук 24", subject="ukrainska-mova", grade=1)`
+   - `mcp__sources__search_text(query="Захарійчук 52", subject="ukrainska-mova", grade=1)`
+
+2. **Multimedia obligation**
+   - `mcp__sources__search_external(query="ранкова рутина українською мовою", register="spoken")`
+
+3. **VESUM verification**
+   - `mcp__sources__verify_words(words=["прокидаюся", "вмиваюся", "одягаюся", "снідаю", "йду", "спочатку", "потім", "після цього", "нарешті", "раненько", "швиденько", "дивлюся", "користуюся"])`
+   - `mcp__sources__verify_lemma(lemma="прокидатися")`
+   - `mcp__sources__verify_lemma(lemma="вмиватися")`
+   - `mcp__sources__verify_lemma(lemma="одягатися")`
+   - `mcp__sources__verify_lemma(lemma="дивитися")`
+   - `mcp__sources__verify_lemma(lemma="користуватися")`
+
+4. **Modernity check**
+   - `mcp__sources__check_modern_form(word="прокидаюся")`
+   - `mcp__sources__check_modern_form(word="вмиваюся")`
+   - `mcp__sources__check_modern_form(word="одягаюся")`
+   - `mcp__sources__check_modern_form(word="дивлюся")`
+   - `mcp__sources__check_modern_form(word="користуюся")`
+
+5. **Russianism check**
+   - `mcp__sources__check_russian_shadow(word="дивюся")`
+   - `mcp__sources__check_russian_shadow(word="користуювася")`
+   - `mcp__sources__search_style_guide(query="прокидатися")`
+   - `mcp__sources__search_style_guide(query="вмиватися")`
+   - `mcp__sources__search_style_guide(query="одягатися")`
+   - `mcp__sources__search_style_guide(query="дивитися")`
+   - `mcp__sources__search_style_guide(query="користуватися")`
+
+---
+
+```markdown file=module.md
+# Мій ранок
+
+## Діалоги
+
+<DialogueBox uk="— Коли ти прокидаєшся?" en="— When do you wake up?">
+<DialogueBox uk="— Я прокидаюся о сьомій. А ти?" en="— I wake up at seven. And you?">
+<DialogueBox uk="— Я теж прокидаюся о сьомій. Потім я вмиваюся і одягаюся." en="— I also wake up at seven. Then I wash up and get dressed.">
+<DialogueBox uk="— Що ти робиш після цього?" en="— What do you do after that?">
+<DialogueBox uk="— Після цього я снідаю. О восьмій я йду на роботу." en="— After that I have breakfast. At eight I go to work.">
+
+---
+
+<DialogueBox uk="— У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон." en="— On Saturday I don’t rush. I wake up late, lie down, and look at my phone.">
+<DialogueBox uk="— А я навчаюся вранці. Потім гуляю." en="— And I study in the morning. Then I go for a walk.">
+
+---
+
+Слова **прокидатися**, **вмиватися** і **одягатися** — це зворотні дієслова. Вони закінчуються на **-ся** і означають дію, спрямовану на себе.
+
+## Дієслова на -ся
+
+### Крок 1: Ознайомлення з базовою парадигмою на прикладі регулярного дієслова
+
+Перш ніж вивчати зворотні дієслова, згадаймо відмінювання звичайних дієслів першої дієвідміни. Наприклад, дієслово **читати**:
+
+| Особа | Однина | Множина |
+|-------|--------|---------|
+| 1     | я чита**ю** | ми чита**ємо** |
+| 2     | ти чита**єш** | ви чита**єте** |
+| 3     | він/вона чита**є** | вони чита**ють** |
+
+### Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку
+
+Тепер додамо **-ся** до цих закінчень. Наприклад, **прокидатися**:
+
+| Особа | Однина | Множина |
+|-------|--------|---------|
+| 1     | я прокида**юся** | ми прокида**ємося** |
+| 2     | ти прокида**єшся** | ви прокида**єтеся** |
+| 3     | він/вона прокида**ється** | вони прокида**ються** |
+
+Зверніть увагу на вимову:
+- **-шся** вимовляється як **[с':а]** (наприклад, *прокидаєшся* → [прокидайес':а])
+- **-ться** вимовляється як **[ц':а]** (наприклад, *прокидається* → [прокидайец':а])
+
+### Крок 3: Введення винятків та особливостей суфіксів
+
+Деякі дієслова мають особливості. Наприклад, **користуватися**:
+
+| Особа | Однина | Множина |
+|-------|--------|---------|
+| 1     | я користу**юся** | ми користу**ємося** |
+| 2     | ти користу**єшся** | ви користу**єтеся** |
+| 3     | він/вона користу**ється** | вони користу**ються** |
+
+У теперішньому часі суфікс **-ва-** випадає: *користуватися* → *користуюся*.
+
+### Крок 4: Введення високочастотних зворотних дієслів другої дієвідміни
+
+Дієслово **дивитися** має чергування приголосних у 1-й особі однини:
+
+| Особа | Однина | Множина |
+|-------|--------|---------|
+| 1     | я дивл**юся** | ми див**имося** |
+| 2     | ти див**ишся** | ви див**итеся** |
+| 3     | він/вона див**иться** | вони див**яться** |
+
+Запам’ятайте: у 1-й особі однини з’являється вставний **л** — **дивлюся**.
+
+---
+
+## Мій ранок
+
+Опишіть свій ранок за допомогою слів послідовності:
+
+- **Спочатку** я прокидаюся.
+- **Потім** я вмиваюся і одягаюся.
+- **Після цього** я снідаю.
+- **Нарешті** я йду на роботу або навчання.
+
+Ці слова допоможуть вам розповісти про свій день у правильному порядку.
+
+---
+
+## Підсумок
+
+Зворотні дієслова — це звичайні дієслова з часткою **-ся** в кінці. Вони означають дію, спрямовану на себе.
+
+Приклади:
+- прокидатися → я прокидаюся
+- вмиватися → я вмиваюся
+- одягатися → я одягаюся
+
+Слова послідовності допоможуть вам розповісти про свій ранок:
+**спочатку**, **потім**, **після цього**, **нарешті**.
+
+**Самоперевірка:** Опишіть свій ранок у 4–5 реченнях, використовуючи зворотні дієслова та слова послідовності.
+```
+
+---
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "fill-in",
+    "instruction": "Додайте -ся до дієслів у правильній формі.",
+    "items": [
+      {
+        "sentence": "Я ___ (прокидатися) о сьомій.",
+        "answer": "прокидаюся"
+      },
+      {
+        "sentence": "Ти ___ (вмиватися) холодною водою.",
+        "answer": "вмиваєшся"
+      },
+      {
+        "sentence": "Він ___ (одягатися) швидко.",
+        "answer": "одягається"
+      },
+      {
+        "sentence": "Ми ___ (дивитися) в дзеркало.",
+        "answer": "дивимося"
+      },
+      {
+        "sentence": "Ви ___ (користуватися) зубною щіткою.",
+        "answer": "користуєтеся"
+      },
+      {
+        "sentence": "Вони ___ (прокидатися) пізно.",
+        "answer": "прокидаються"
+      },
+      {
+        "sentence": "Я ___ (вмиватися) вранці.",
+        "answer": "вмиваюся"
+      },
+      {
+        "sentence": "Ти ___ (одягатися) тепло.",
+        "answer": "одягаєшся"
+      },
+      {
+        "sentence": "Вона ___ (дивитися) телевізор.",
+        "answer": "дивиться"
+      },
+      {
+        "sentence": "Ми ___ (користуватися) рушником.",
+        "answer": "користуємося"
+      }
+    ]
+  },
+  {
+    "id": "act-2",
+    "type": "quiz",
+    "instruction": "Оберіть правильну форму дієслова.",
+    "items": [
+      {
+        "question": "Я ___ руки.",
+        "options": ["вмиваю", "вмиваюся"],
+        "answer": "вмиваюся"
+      },
+      {
+        "question": "Ти ___ в дзеркало.",
+        "options": ["дивишся", "дивлюся"],
+        "answer": "дивишся"
+      },
+      {
+        "question": "Він ___ о сьомій.",
+        "options": ["прокидається", "прокидаюся"],
+        "answer": "прокидається"
+      },
+      {
+        "question": "Ми ___ зубною щіткою.",
+        "options": ["користуємося", "користуюся"],
+        "answer": "користуємося"
+      },
+      {
+        "sentence": "Ви ___ швидко.",
+        "options": ["одягаєтеся", "одягаюся"],
+        "answer": "одягаєтеся"
+      },
+      {
+        "question": "Вони ___ телевізор.",
+        "options": ["дивляться", "дивимося"],
+        "answer": "дивляться"
+      },
+      {
+        "question": "Я ___ рано.",
+        "options": ["прокидаюся", "прокидається"],
+        "answer": "прокидаюся"
+      },
+      {
+        "question": "Ти ___ холодною водою.",
+        "options": ["вмиваєшся", "вмиваюся"],
+        "answer": "вмиваєшся"
+      }
+    ]
+  },
+  {
+    "id": "act-3",
+    "type": "fill-in",
+    "instruction": "Відновіть правильний порядок ранкової рутини.",
+    "items": [
+      {
+        "sentence": "___ я прокидаюся. (спочатку / потім / нарешті)",
+        "answer": "Спочатку"
+      },
+      {
+        "sentence": "___ я вмиваюся. (спочатку / потім / нарешті)",
+        "answer": "Потім"
+      },
+      {
+        "sentence": "___ я одягаюся. (спочатку / після цього / нарешті)",
+        "answer": "Після цього"
+      },
+      {
+        "sentence": "___ я йду на роботу. (спочатку / потім / нарешті)",
+        "answer": "Нарешті"
+      },
+      {
+        "sentence": "___ я снідаю. (спочатку / після цього / нарешті)",
+        "answer": "Після цього"
+      },
+      {
+        "sentence": "___ я дивлюся в дзеркало. (спочатку / потім / після цього)",
+        "answer": "Потім"
+      }
+    ]
+  },
+  {
+    "id": "act-4",
+    "type": "error-correction",
+    "instruction": "Виправте помилки у реченнях.",
+    "items": [
+      {
+        "sentence": "Я прокидаєшся о сьомій.",
+        "error": "прокидаєшся",
+        "correction": "прокидаюся",
+        "explanation": "Правильна форма: я прокидаюся."
+      },
+      {
+        "sentence": "Вимова: [прокидайешся]",
+        "error": "[прокидайешся]",
+        "correction": "[прокидайес':а]",
+        "explanation": "Правильна вимова: [прокидайес':а]."
+      },
+      {
+        "sentence": "Вимова: [одягайет'с'а]",
+        "error": "[одягайет'с'а]",
+        "correction": "[одягайец':а]",
+        "explanation": "Правильна вимова: [одягайец':а]."
+      },
+      {
+        "sentence": "Я мию себе.",
+        "error": "мию себе",
+        "correction": "миюся",
+        "explanation": "Правильно: я миюся."
+      },
+      {
+        "sentence": "Я дивюся в дзеркало.",
+        "error": "дивюся",
+        "correction": "дивлюся",
+        "explanation": "Правильна форма: я дивлюся."
+      },
+      {
+        "sentence": "Я користуювася телефоном.",
+        "error": "користуювася",
+        "correction": "користуюся",
+        "explanation": "Правильна форма: я користуюся."
+      }
+    ]
+  },
+  {
+    "id": "act-5",
+    "type": "fill-in",
+    "instruction": "Опишіть свій ранок у 3 реченнях.",
+    "items": [
+      {
+        "sentence": "1. ___",
+        "answer": "Спочатку я прокидаюся о сьомій."
+      },
+      {
+        "sentence": "2. ___",
+        "answer": "Потім я вмиваюся і одягаюся."
+      },
+      {
+        "sentence": "3. ___",
+        "answer": "Нарешті я йду на роботу."
+      }
+    ]
+  }
+]
+```
+
+---
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "прокидатися",
+    "translation": "to wake up",
+    "pos": "verb",
+    "usage": "Я прокидаюся о сьомій."
+  },
+  {
+    "lemma": "вмиватися",
+    "translation": "to wash (oneself)",
+    "pos": "verb",
+    "usage": "Я вмиваюся холодною водою."
+  },
+  {
+    "lemma": "одягатися",
+    "translation": "to get dressed",
+    "pos": "verb",
+    "usage": "Я одягаюся швидко."
+  },
+  {
+    "lemma": "снідати",
+    "translation": "to have breakfast",
+    "pos": "verb",
+    "usage": "Я снідаю о пів на восьму."
+  },
+  {
+    "lemma": "йти",
+    "translation": "to go",
+    "pos": "verb",
+    "usage": "Я йду на роботу."
+  },
+  {
+    "lemma": "спочатку",
+    "translation": "first, at first",
+    "pos": "adverb",
+    "usage": "Спочатку я прокидаюся."
+  },
+  {
+    "lemma": "потім",
+    "translation": "then, next",
+    "pos": "adverb",
+    "usage": "Потім я вмиваюся."
+  },
+  {
+    "lemma": "після цього",
+    "translation": "after this",
+    "pos": "adverb",
+    "usage": "Після цього я одягаюся."
+  },
+  {
+    "lemma": "нарешті",
+    "translation": "finally",
+    "pos": "adverb",
+    "usage": "Нарешті я йду на роботу."
+  },
+  {
+    "lemma": "раненько",
+    "translation": "early (in the morning)",
+    "pos": "adverb",
+    "usage": "Я прокидаюся раненько."
+  },
+  {
+    "lemma": "швиденько",
+    "translation": "quickly",
+    "pos": "adverb",
+    "usage": "Я одягаюся швиденько."
+  },
+  {
+    "lemma": "дивитися",
+    "translation": "to look, to watch",
+    "pos": "verb",
+    "usage": "Я дивлюся в дзеркало."
+  },
+  {
+    "lemma": "користуватися",
+    "translation": "to use",
+    "pos": "verb",
+    "usage": "Я користуюся зубною щіткою."
+  },
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Доброго ранку!"
+  },
+  {
+    "lemma": "вода",
+    "translation": "water",
+    "pos": "noun",
+    "usage": "Я вмиваюся холодною водою."
+  },
+  {
+    "lemma": "зарядка",
+    "translation": "exercise, workout",
+    "pos": "noun",
+    "usage": "Я роблю зарядку вранці."
+  },
+  {
+    "lemma": "сніданок",
+    "translation": "breakfast",
+    "pos": "noun",
+    "usage": "Я їм сніданок о пів на восьму."
+  },
+  {
+    "lemma": "робота",
+    "translation": "work",
+    "pos": "noun",
+    "usage": "Я йду на роботу о восьмій."
+  },
+  {
+    "lemma": "школа",
+    "translation": "school",
+    "pos": "noun",
+    "usage": "Я йду до школи."
+  },
+  {
+    "lemma": "дзеркало",
+    "translation": "mirror",
+    "pos": "noun",
+    "usage": "Я дивлюся в дзеркало."
+  }
+]
+```
+
+---
+
+```json file=resources.yaml
+[
+  {
+    "title": "Захарійчук Grade 1, p.24",
+    "role": "textbook",
+    "notes": "Текст про Христинку, яка збирала чорниці та планувала ранок. Використано форми на -ся: одягнутися, прогулятися, погратися."
+  },
+  {
+    "title": "Захарійчук Grade 1, p.52",
+    "role": "textbook",
+    "notes": "Текст про Євгена, який самостійно виконував ранкові справи: устав, прибрав ліжко, зробив зарядку, поставив чашку, помив посуд."
+  },
+  {
+    "title": "Ранкова рутина українською мовою — Ukrainian Lessons Podcast",
+    "role": "podcast",
+    "url": "https://ukrainianlessons.com/podcast/episode-5-morning-routine/",
+    "notes": "Аудіоурок про ранкову рутину з використанням зворотних дієслів."
+  }
+]
+```
+
+---
+
+<end_gate>
+<rescanned_words>
+прокидаюся, вмиваюся, одягаюся, снідаю, йду, спочатку, потім, після цього, нарешті, раненько, швиденько, дивлюся, користуюся, прокидаєшся, вмиваєшся, одягаєшся, прокидається, вмивається, одягається, дивиться, користується, прокидаємося, вмиваємося, одягаємося, дивимося, користуємося, прокидаєтеся, вмиваєтеся, одягаєтеся, дивитеся, користуєтеся, прокидаються, вмиваються, одягаються, дивляться, користуються
+</rescanned_words>
+<rescanned_sources>
+- Захарійчук Grade 1, p.24 (chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024)
+- Захарійчук Grade 1, p.52 (chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0052)
+- Ukrainian Lessons Podcast (ext-article-0)
+</rescanned_sources>
+<grammar_claims_grounded>
+- Зворотні дієслова: парадигма -ся (Захарійчук Grade 1, p.24, p.52)
+- Вимова: -шся=[с':а], -ться=[ц':а] (Wiki S1, S9)
+- Чергування приголосних: дивитися → дивлюся (Wiki S7)
+- Суфікс -ва-: користуватися → користуюся (Wiki S6)
+- Слова послідовності: спочатку, потім, після цього, нарешті (Wiki S1, S3)
+</grammar_claims_grounded>
+<removed_unverified>
+- Жодних вигаданих форм або неверифікованих прикладів.
+</removed_unverified>
+</end_gate>

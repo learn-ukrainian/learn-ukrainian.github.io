@@ -1,0 +1,602 @@
+All pre-write verifications complete. Textbook grounding confirmed for both Захарійчук references, VESUM verified 26/26 forms, external multimedia sources found, immersion rule honored. Writing section-by-section plan reasoning below, then the four artifacts, then end gate.
+
+<plan_reasoning section="Діалоги">
+<word_budget>Target 300 words (270-330). Two dialogue exchanges: workday morning (Lina/Nasia compare routines) + weekend morning (contrast reflexive vs non-reflexive in relaxed context). ~150 words per dialogue including inline English glosses. Running total: ~300/1200.</word_budget>
+<plan_vocab>прокидатися (Коли ти прокидаєшся?), вмиватися (Вмиваюся о сьомій), одягатися (Одягаюся і йду), снідати (Снідаю швидко), йти (Коли ти йдеш?), дивитися (Дивлюся телефон), навчатися (Навчаюся вранці)</plan_vocab>
+<register>English carrier for A1 immersion band. Ukrainian dialogue lines carry the target forms; each line gets an inline English gloss within 8 tokens. No English runs longer than 10 words without Ukrainian support. Follows Immersion Rule: THEORY in English with bolded UK, DIALOGUES as DialogueBox with uk/en props.</register>
+<teaching_sequence>Step 2: introduce first-conjugation reflexives in morning context. Step 5: expand with morning-routine vocabulary. Uses Захарійчук Grade 1 p.52 morning sequence model (ustav, зробив зарядку). DialogueBox format for gate counting. Phon-1/phon-2/phon-3 pronunciation notes appear later in Дієслова section.</teaching_sequence>
+<implementation_map>
+- obligation_id: step-2
+  - artifact: module.md
+  - location: §Діалоги
+  - treatment: prose explanation of first-conjugation reflexive endings in morning context with DialogueBox examples
+- obligation_id: step-5
+  - artifact: module.md
+  - location: §Діалоги
+  - treatment: morning nouns (сніданок, вода, зарядка) and frequency adverbs (завжди, пізно) woven into dialogue
+- obligation_id: ban-1
+  - artifact: module.md
+  - location: §Діалоги
+  - treatment: prose absent of Russian explanations/parallels (negative obligation)
+- obligation_id: ban-4
+  - artifact: module.md
+  - location: §Діалоги
+  - treatment: prose uses рушник, сніданок, одягатися exclusively -- no russianisms (negative obligation)
+</implementation_map>
+<verification_plan>Dialogue verbs checked in VESUM batch. Zero additional MCP calls needed for this section's claims -- all derived from wiki packet and verified forms.</verification_plan>
+<verification_trace>
+mcp__sources__verify_words (already called) for prokydatysya, vymyvatysya, odyahatysya, snydaty, dyty, dyvytytsya, navchatysya, pospyshaty
+</verification_trace>
+</plan_reasoning>
+
+<plan_reasoning section="Дієслова на -ся">
+<word_budget>Target 300 words (270-330). Step 1: review regular conjugation paradigm. Step 2: add -ся/-сь. Phonetic rules with IPA notation. Contrast pairs for L2 errors err-1, err-2, err-3, err-4. Textbook blockquotes from Захарійчук p.24 and p.52. Step 3: -уватися/-юватися with -ва- drop. Running total: ~300/1200.</word_budget>
+<plan_vocab>прокидатися (я прокидаюся, ти прокидаєшся, він прокидається), вмиватися, одягатися, користуватися (користуюся -- -ва- drop), дивитися (дивлюся -- insert л), читати (base paradigm)</plan_vocab>
+<register>English carries grammar explanation; Ukrainian carries all example forms. RuleBox component for the reflexive paradigm table. Inline English glosses within 8 tokens of each Ukrainian run. No English run exceeds 10 words.</register>
+<teaching_sequence>Step 1: read from Захарійчук p.24 chunk (odyahnutysya, prohulyatysya, pohrayatysya). Step 2: first-conjugation reflexive endings -юся, -єшся, -ється with phonetic rules [с':а] for -шся and [ц':а] for -ться. Step 3: -uvaty/-yvaty verbs with -va- drop. Step 4: second conjugation with inserted л (дивлюся). Blockquotes from both textbook chunks. Phon-1 (-шся=[с':а]), Phon-2 (-ться=[ц':а]), Phon-3 (-ся=[с':а]) all explained explicitly with IPA brackets.</teaching_sequence>
+<implementation_map>
+- obligation_id: step-1
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: heading + prose explaining regular first-conjugation paradigm as foundation (читати model)
+- obligation_id: step-3
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: explanation of -уватися/-юватися with -ва- drop rule (користуюся, Zapatнююся)
+- obligation_id: step-4
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: second-conjugation reflexive (дивитися) with inserted л (дивлюся) explanation
+- obligation_id: phon-1
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: explicit prose: -шся is written but pronounced [с':а]
+- obligation_id: phon-2
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: explicit prose: -ться is written but pronounced [ц':а]
+- obligation_id: phon-3
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: explicit prose: -ся after vowel is pronounced [с':а]
+- obligation_id: ban-2
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: no Russian phonetic parallels in any explanation (negative obligation)
+- obligation_id: ban-3
+  - artifact: module.md
+  - location: §Дієслова на -ся
+  - treatment: -ся treated as native Ukrainian etymology, not "borrowed" or "shared" (negative obligation)
+- obligation_id: err-1
+  - artifact: activities.yaml
+  - location: error-correction activity
+  - treatment: contrast_pair with sentence containing wrong form ending, correction shows proper conjugation
+- obligation_id: err-2
+  - artifact: activities.yaml
+  - location: error-correction activity
+  - treatment: pronunciation correction via fill-in of [с':а] notation
+</implementation_map>
+<verification_plan>Textbook blockquotes verified via get_chunk_context. VESUM verified all forms. Textbook citation format follows required shape.</verification_plan>
+<verification_trace>
+mcp__sources__get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0024") -- called
+mcp__sources__get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-2_s0052") -- called
+</verification_trace>
+</plan_reasoning>
+
+<plan_reasoning section="Мій ранок">
+<word_budget>Target 300 words (270-330). Sequence-word lesson (спочатку, потім, після цього, нарешті). Vocabulary table of morning-routine reflexives + non-reflexives for contrast. Irregular verb йти. Sample morning narrative using sequence words. Inline activity injection. Running total: ~300/1200.</word_budget>
+<plan_vocab>спочатку, потім, після цього, нарешті, збиратися, повертатися, поспішати, вранці, пізно, завжди, дивитися, снідати, йти (irregular: йду/йде)</plan_vocab>
+<register>English explanation of sequence words and vocabulary organization; Ukrainian example sentences and sample narrative. Bullet lists for vocab. A1 immersion band maintained.</register>
+<teaching_sequence>Step 5: expand with morning nouns and adverbs. Vocabulary presented as a bolded-table format (lexicon learning). Sequence words introduced with English glosses. Sample narrative follows Захарійчук p.52 model: Uranki yayevген ustav iz lidka SAM -- adapted for learner to produce "My morning" narrative. Irregular verb йти introduced but not over-explained (already in learner state that irregulars exist). INJECT_ACTIVITY marker placed here for inline practice.</teaching_sequence>
+<implementation_map>
+- obligation_id: step-1
+  - artifact: module.md
+  - location: deferred into §Дієслова на -ся (already covered there)
+  - treatment: deferred -- step-1 implemented in previous section to maintain pedagogical sequence
+- obligation_id: err-3
+  - artifact: activities.yaml
+  - location: error-correction activity
+  - treatment: [одягайет'с'а] -> [одягайец':а] pronunciation error correction
+- obligation_id: err-4
+  - artifact: activities.yaml
+  - location: error-correction activity
+  - treatment: "Я мию себе" -> "Я миюся" calque correction
+- obligation_id: err-5
+  - artifact: activities.yaml
+  - location: error-correction activity
+  - treatment: "Я дивюся" -> "Я дивлюся" second-conjugation inserted-л correction
+- obligation_id: err-6
+  - artifact: activities.yaml
+  - location: error-correction activity
+  - treatment: "Я користуювася" -> "Я користуюся" -ва- retention error correction
+</implementation_map>
+<verification_plan>VESUM forms verified: збиратися, повертатися, поспішати, спочатку, потім, нарешті, дивитися. AllLesson vocabulary confirmed in batch calls.</verification_plan>
+<verification_trace>
+mcp__sources__verify_words (already called) -- збиратися, повертатися, поспішати, спочатку, потім, нарешті
+</verification_trace>
+</plan_reasoning>
+
+<plan_reasoning section="Підсумок">
+<word_budget>Target 300 words (270-330). Recap of reflexive ending pattern, morning routine sequence, sequence words. Self-check exercise. Forward link to B1 reflexive depth per North Star P1. Running total: ~300/1200 (total ~1200).</word_budget>
+<plan_vocab>Recap only -- прокидатися, вмиватися, одягатися, снідати, йти, спочатку, потім, після цього, нарешті. No new lemmas.</plan_vocab>
+<register>Summary voice: direct, no filler. English scaffolding remains controlled per immersion band.</register>
+<teaching_sequence>Consolidation: reflexive = base verb + -ся/-сь; conjugation table for first conjugation; routine chain (прокидатися -> вмиватися -> одягатися -> снідати -> йти); sequence word review. Self-check prompt: describe your morning in 4-5 sentences using sequence words. Forward link to seminars per P1: "Once you reach level B2 you'll explore how reflexive verbs encode deeper semantic roles in the HIST track on Hetmanate-era daily life."</teaching_sequence>
+<implementation_map>
+- obligation_id: err-1 through err-6
+  - artifact: activities.yaml
+  - location: already implemented in error-correction activity (listed in §Дієслова map)
+  - treatment: all six L2 errors covered in a single error-correction activity with distinct items
+- obligation_id: ban-1, ban-2, ban-3, ban-4
+  - artifact: module.md
+  - location: all sections
+  - treatment: negative obligations maintained throughout -- no Russian parallels, no borrowed-etymology claims for -ся, no russianisms in vocabulary, no colony-era euphemisms
+</implementation_map>
+<verification_plan>Summary section is recap only -- no new claims to verify. All vocabulary already checked in VESUM batch.</verification_plan>
+<verification_trace>
+No additional tool calls needed -- all forms pre-verified.
+</verification_trade>
+</plan_reasoning>
+
+<implementation_map_audit>manifest_obligations=18 covered_in_map=18 missing=[]</implementation_map_audit>
+
+<bad_form_audit>italic_bad_form_patterns_found=2 converted_to_marker=2 remaining=0</bad_form_audit>
+
+Now emitting the four artifact fences:
+
+```markdown file=module.md
+## Діалоги
+
+Ліна и Настя — сусідки по кімнаті. Вони порівнюють свої ранкові звички.
+
+<DialogueBox uk="— Коли ти прокидаєшся?" en="When do you wake up?"/>
+<DialogueBox uk="— Я прокидаюся о сьомій." en="I wake up at seven."/>
+<DialogueBox uk="— А що ти робиш потім?" en="And what do you do next?"/>
+<DialogueBox uk="— Вмиваюся, одягаюся і снідаю." en="I wash up, get dressed, and have breakfast."/>
+<DialogueBox uk="— А коли ти йдеш на роботу?" en="When do you go to work?"/>
+<DialogueBox uk="— О восьмій. Потім завжди спішаю." en="At eight. Then I always hurry."/>
+
+<DialogueBox uk="— У суботу я не поспішаю." en="On Saturday I don't hurry."/>
+<DialogueBox uk="— Прокидаюся пізно, лежу, дивлюся телефон." en="I wake up late, lie down, look at my phone."/>
+<DialogueBox uk="— А я навчаюся вранці. Потім гуляю." en="I study in the morning. Then I walk around."/>
+
+**Userful observation.** In the second dialogue, Лina drops the pronoun **я** before the verbs — *Вмиваюся, одягаюся і снідаю.* — because the verb endings already show who acts. Ukrainians drop subject pronouns all the time when the context is clear. The same applies to **Прокидаюся пізно** and **Дивлюся телефон**.
+
+---
+
+## Дієслова на -ся
+
+**Зворотні дієслова** (reflexive verbs) end in **-ся** or **-сь**. The -ся tells you the action is directed back at the person doing it — *washing yourself, dressing yourself, waking yourself up.*
+
+Before adding -ся, remember the regular first-conjugation pattern you already know:
+
+| Person | Reading (читати) |
+| --- | --- |
+| я | чита**ю** |
+| ти | чита**єш** |
+| він/вона | чита**є** |
+| ми | чита**ємо** |
+| ви | чита**єте** |
+| вони | чита**ють** |
+
+A reflexive verb takes this exact same pattern and simply appends **-ся** (or **-сь** after a vowel) at the end:
+
+| Person | прокидатися | одягатися |
+| --- | --- | --- |
+| я | прокида**юся** | одяга**юся** |
+| ти | прокида**єшся** | одяга**єшся** |
+| він/вона | прокида**ється** | одяга**ється** |
+| ми | прокида**ємося** | одяга**ємося** |
+| ви | прокида**єтеся** | одяга**єтеся** |
+| вони | прокида**ються** | одяга**ються** |
+
+The endings **-ю, -єш, -є, -ємо, -єте, -ють** stay identical. Only the tail changes: the **-ся** attaches after the personal ending.
+
+**Pronunciation rules — the spelling and sound don't match:**
+
+| Written | Pronounced | When |
+| --- | --- | --- |
+| **-шся** (2nd person) | **[с':а]** | ти прокидає**шся** |
+| **-ться** (3rd person pl.) | **[ц':а]** | вони одягаю**ться** |
+| **-ся** after vowel | **[с':а]** | я прокида**юся** |
+
+When you see **-шся**, don't pronounce [ш]. The consonants assimilate — the [ш] merges into a drawn-out soft **[с':а]**. When you see **-ться**, the [т'] + [с'] merge into the affricate **[ц':а]**. These are standard Ukrainian phonetic rules of consonant assimilation.
+
+:::tip RuleBox
+**<RuleBox title="Pronunciation of -ся endings">**
+ Written **-шся** is spoken **[с':а]**. Written **-ться** is spoken **[ц':а]**. Written **-ся** after a vowel is spoken **[с':а]**.
+**</RuleBox>**
+:::
+
+**Textbook example.** From Захарійчук, Grade 1, p.24:
+
+> «Поснідати. Одягнутися. Піти до Квака. Прогулятися з Кваком. Пообідати. Подрімати. Погратися з Кваком. Повечеряти. Лягти спати.»
+
+*— Захарійчук, Grade 1, p.24*
+
+The text shows a list of daily activities, and the reflexive infinitives **одягнутися, прогулятися, погратися** appear naturally — actions directed at the person doing them: to dress oneself, to walk oneself (take a walk), to play.
+
+**Another textbook model.** From Захарійчук, Grade 1, p.52:
+
+> «Уранці Євген устав із ліжка САМ. Прибрав ліжко САМ. Зробив зарядку САМ.»
+
+*— Захарійчук, Grade 1, p.52*
+
+<!-- INJECT_ACTIVITY: act-1 -->
+
+**Rule: the -ва- drops in present tense.**
+
+Verbs ending in **-уватися** or **-юватися** lose the **-ва-** suffix in the present tense, just like their non-reflexive counterparts:
+
+| Infinitive | я | ти |
+| --- | --- | --- |
+| користуватися | користу**юся** | користу**єшся** |
+| одружуватися | одруж**уюся** | одруж**уєшся** |
+| запізнюватися | запізн**ююся** | запізн**юєшся** |
+
+The form **користуюся** — NOT ~~<strong><!-- bad -->користуювася<!-- /bad --></strong>~~. The -ва- disappears.
+
+**Second-conjugation reflexive.**
+
+Some reflexive verbs belong to the second conjugation. The most common example is **дивитися** (to look):
+
+| Person | дивитися |
+| --- | --- |
+| я | див**люся** |
+| ти | див**ишся** |
+| він/вона | див**иться** |
+
+Notice: first person uses an inserted **л** — **дивлюся**, NOT ~~<strong><!-- bad -->дивюся<!-- /bad --></strong>~~. This is the same consonant alternation you met with second-conjugation verbs before: lip consonants (б, п, в, м, ф) get an epenthetic **л** in the first person singular.
+
+<DialogueBox uk="Я миюся, а не мию себе." en="I wash (myself), I don't say I wash myself."/>
+
+:::tip
+**Common mistake.** English says "I wash myself." Ukrainian uses the reflexive verb directly: **Я миюся**. The construction "Я мию себе" is a calque from English — avoid it. Stick to the reflexive form.
+:::
+
+---
+
+## Мій ранок
+
+Now you can build a short narrative about your morning using **sequence words**:
+
+| Ukrainian | English |
+| --- | --- |
+| **спочатку** | first |
+| **потім** | then, next |
+| **після цього** | after this |
+| **нарешті** | finally |
+
+**Спочатку** я прокидаюся. **Потім** вмиваюся і одягаюся. **Після цього** снідаю. **Нарешті** йду на роботу.
+
+*First I wake up. Then I wash up and get dressed. After this — I have breakfast. Finally — I go to work.*
+
+**Vocabulary for your morning routine:**
+
+|.reflexive | non-reflexive |
+| --- | --- |
+| **прокидатися** — to wake up | **снідати** — to have breakfast |
+| **вмиватися** — to wash (face/hands) | **пити каву** — to drink coffee |
+| **одягатися** — to get dressed | **йду** — I go (irregular!) |
+| **збиратися** — to get ready | |
+| **повертатися** — to return | |
+| **дивитися** — to look (at) | |
+| **навчатися** — to study/learn | |
+
+**Important:** the verb **йти** (to go) is irregular:
+
+| Person | йти |
+| --- | --- |
+| я | й**ду** |
+| ти | й**деш** |
+| він/вона | й**де** |
+
+Remember these forms — they don't follow the regular first or second conjugation patterns.
+
+**Nouns and adverbs:**
+
+- **ранок** — morning
+- **сніданок** — breakfast
+- **зарядка** — morning exercise
+- **вода** — water
+- **вранці** — in the morning
+- **пізно** — late
+- **завжди** — always
+- **ніколи** — never
+
+<DialogueBox uk="Сьогодні я прокинувся раненько." en="Today I woke up very early."/>
+<DialogueBox uk="Ніколи не поспішаю вранці." en="I never hurry in the morning."/>
+
+<DialogueBox uk="— Завжди снідаєш?" en="Do you always have breakfast?"/>
+<DialogueBox uk="— Так, я завжди снідаю вдома." en="Yes, I always have breakfast at home."/>
+
+<!-- INJECT_ACTIVITY: act-2 -->
+
+---
+
+## Підсумок
+
+**Зворотні дієслова** = regular verb + **-ся/-сь** at the end.
+
+The first-conjugation reflexive pattern:
+
+- я **-юся**
+- ти **-єшся**
+- він/вона **-ється**
+- ми **-ємося**
+- ви **-єтеся**
+- вони **-ються**
+
+**Your morning routine chain:**
+
+прокидатися → вмиватися → одягатися → снідати → йти
+
+**Sequence words for ordering events:**
+
+спочатку → потім → після цього → нарешті
+
+**Self-check:** Describe your morning in 4-5 sentences using sequence words and at least three reflexive verbs.
+
+*Once you reach level B2, you'll explore how reflexive verbs encode deeper semantic roles — including heart-mind constructions and causative patterns — in the LIT track's semantic analysis modules.*
+```
+
+The module.md artifact is above. Now the activities:
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "fill-in",
+    "instruction": "Додайте -ся або -сь для правильної форми.",
+    "items": [
+      {"sentence": "Я вмиваю__.", "answer": "ся", "options": ["ся", "сь"]},
+      {"sentence": "Ти одягаєш__.", "answer": "ся", "options": ["ся", "сь"]},
+      {"sentence": "Він прокидаєть__.", "answer": "ся", "options": ["ся", "сь"]},
+      {"sentence": "Ми збираємо__.", "answer": "ся", "options": ["ся", "сь"]},
+      {"sentence": "Ви навчаєть__.", "answer": "ся", "options": ["ся", "сь"]},
+      {"sentence": "Вони повертаю__.", "answer": "ться", "options": ["ться", "ться"]},
+      {"sentence": "Я дивлю__.", "answer": "ся", "options": ["ся", "сь"]},
+      {"sentence": "Ти користуєш__.", "answer": "ся", "options": ["ся", "сь"]}
+    ]
+  },
+  {
+    "id": "act-2",
+    "type": "error-correction",
+    "instruction": "Знайдіть виправте помилку в кожній фразі.",
+    "items": [
+      {
+        "sentence": "Я прокидаєшся о сьомій.",
+        "error": "прокидаєшся",
+        "correction": "прокидаюся",
+        "explanation": "First person uses -юся, not -єшся."
+      },
+      {
+        "sentence": "Він прокидаюся пізно.",
+        "error": "прокидаюся",
+        "correction": "прокидається",
+        "explanation": "Third person uses -ється, not -юся."
+      },
+      {
+        "sentence": "Я мию себе вранці.",
+        "error": "мию себе",
+        "correction": "миюся",
+        "explanation": "Use the reflexive verb directly, not the calque 'мию себе'."
+      },
+      {
+        "sentence": "Я дивюся в дзеркало.",
+        "error": "дивюся",
+        "correction": "дивлюся",
+        "explanation": "Second conjugation inserts л after lip consonants: дивлюся."
+      },
+      {
+        "sentence": "Я користуювася книгою.",
+        "error": "користуювася",
+        "correction": "користуюся",
+        "explanation": "The -ва- suffix drops in present tense: користуюся."
+      }
+    ]
+  },
+  {
+    "id": "act-3",
+    "type": "quiz",
+    "instruction": "Оберіть правильну форму. Оберіть зворотне чи незворотне дієслово.",
+    "items": [
+      {
+        "question": "Я ___ руки перед сніданком.",
+        "answer": "вмиваюся",
+        "options": ["вмиваю", "вмиваюся"]
+      },
+      {
+        "question": "Що ти робиш вранці? Я ___ пізно.",
+        "answer": "прокидаюся",
+        "options": ["прокидаю", "прокидаюся"]
+      },
+      {
+        "question": "Вона ___ телефон під час сніданку.",
+        "answer": "дивиться",
+        "options": ["дивиться", "дивитися"]
+      },
+      {
+        "question": "Ми ___ швидко вранці.",
+        "answer": "одягаємося",
+        "options": ["одягаємо", "одягаємося"]
+      },
+      {
+        "question": "Ти завжди ___ вранці?",
+        "answer": "снідаєш",
+        "options": ["снідаєш", "снідаєшся"]
+      },
+      {
+        "question": "Я ___ на роботу о восьмій.",
+        "answer": "йду",
+        "options": ["йду", "я йдуся"]
+      },
+      {
+        "question": "Вони ___ у суботу пізно.",
+        "answer": "прокидаються",
+        "options": ["прокидаються", "прокидають"]
+      },
+      {
+        "question": "Я ___ інтернетом для навчання.",
+        "answer": "користуюся",
+        "options": ["користуюся", "користую"]
+      }
+    ]
+  },
+  {
+    "id": "act-4",
+    "type": "order",
+    "instruction": "Поставте речення у правильному порядку для ранкової рутини.",
+    "items": ["Спочатку я прокидаюся.", "Потім вмиваюся і одягаюся.", "Після цього снідаю.", "Нарешті йду на роботу."],
+    "correct_order": [0, 1, 2, 3]
+  },
+  {
+    "id": "act-5",
+    "type": "group-sort",
+    "instruction": "Розподіліть дієслова: зворотні чи незворотні?",
+    "groups": {
+      "зворотні": ["прокидатися", "вмиватися", "одягатися", "збиратися", "дивитися", "навчатися"],
+      "незворотні": ["снідати", "йти", "пити", "почитати"]
+    }
+  },
+  {
+    "id": "act-6",
+    "type": "true-false",
+    "instruction": "Правильно чи неправильно?",
+    "items": [
+      {"statement": "Правильна форма: я прокидаюся, а не <!-- bad -->прокидаєшся<!-- /bad --> для першої особи.", "answer": true},
+      {"statement": "Правильна форма: я дивлюся, а не <!-- bad -->дивюся<!-- /bad -->.", "answer": true},
+      {"statement": "Дієслово снідати — зворотне.", "answer": false},
+      {"statement": "Вимова -шся: [с':а].", "answer": true},
+      {"statement": "Вимова -ться: [ц':а].", "answer": true},
+      {"statement": "Я користуюся, а не <!-- bad -->користуювася<!-- /bad -->.", "answer": true}
+    ]
+  },
+  {
+    "id": "act-7",
+    "type": "fill-in",
+    "instruction": "Заповніть слова послідовності.",
+    "items": [
+      {"sentence": "___ я прокидаюся о сьомій.", "answer": "Спочатку", "options": ["Спочатку", "Нарешті", "Потім"]},
+      {"sentence": "___ я вмиваюся і одягаюся.", "answer": "Потім", "options": ["Потім", "Спочатку"]},
+      {"sentence": "___ я снідаю.", "answer": "Після цього", "options": ["Після цього", "Спочатку"]},
+      {"sentence": "___ я йду на роботу.", "answer": "Нарешті", "options": ["Нарешті", "Потім"]}
+    ]
+  },
+  {
+    "id": "act-8",
+    "type": "fill-in",
+    "instruction": "Опишіть свій ранок у 3 реченнях.",
+    "items": [
+      {"sentence": "Спочатку я ___.", "answer": "прокидаюся", "options": ["прокидаюся", "снідаю", "йду"]},
+      {"sentence": "Потім я ___ та ___.", "answer": "вмиваюся одягаюся", "options": ["вмиваюся", "прокидаюся", "йду"]},
+      {"sentence": "Нарешті я ___ на роботу.", "answer": "йду", "options": ["йду", "прокидаюся", "вмиваюся"]}
+    ]
+  },
+  {
+    "id": "act-9",
+    "type": "odd-one-out",
+    "instruction": "Знайдіть зайве слово в кожній групі.",
+    "items": [
+      {"group": ["прокидатися", "вмиватися", "одягатися", "снідати"], "answer": "снідати", "explanation": "снідати is a non-reflexive verb; the others are reflexive."},
+      {"group": ["спочатку", "потім", "завжди", "нарешті"], "answer": "завжди", "explanation": "завжди (always) is a frequency adverb, not a sequence word."},
+      {"group": ["йду", "йдеш", "йде", "читаю"], "answer": "читаю", "explanation": "читаю is first-conjugation; the йти forms are irregular."}
+    ]
+  },
+  {
+    "id": "act-10",
+    "type": "match-up",
+    "instruction": "Спідніть українські слова з англійським перекладом.",
+    "pairs": [
+      {"left": "прокидатися", "right": "to wake up"},
+      {"left": "відмиватися", "right": "to wash (one's face/hands)"},
+      {"left": "одягатися", "right": "to get dressed"},
+      {"left": "снідати", "right": "to have breakfast"},
+      {"left": "спочатку", "right": "first"},
+      {"left": "потім", "right": "then, next"}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {"lemma": "прокидатися", "translation": "to wake up", "pos": "verb", "usage": "Я прокидаюся о сьомій вранці."},
+  {"lemma": "вмиватися", "translation": "to wash (face/hands)", "pos": "verb", "usage": "Потім я вмиваюся холодною водою."},
+  {"lemma": "одягатися", "translation": "to get dressed", "pos": "verb", "usage": "Швидко одягаюся і йду."},
+  {"lemma": "снідати", "translation": "to have breakfast", "pos": "verb", "usage": "Я завжди снідаю вдома."},
+  {"lemma": "йти", "translation": "to go (on foot)", "pos": "verb", "usage": "Нарешті я йду на роботу."},
+  {"lemma": "спочатку", "translation": "first, at first", "pos": "adverb", "usage": "Спочатку я прокидаюся."},
+  {"lemma": "потім", "translation": "then, next", "pos": "adverb", "usage": "Потім вмиваюся і одягаюся."},
+  {"lemma": "після цього", "translation": "after this", "pos": "adverb", "usage": "Після цього я снідаю."},
+  {"lemma": "нарешті", "translation": "finally", "pos": "adverb", "usage": "Нарешті йду на роботу."},
+  {"lemma": "дивитися", "translation": "to look (at)", "pos": "verb", "usage": "Я дивлюся телефон вранці."},
+  {"lemma": "користуватися", "translation": "to use", "pos": "verb", "usage": "Я користуюся інтернетом."},
+  {"lemma": "навчатися", "translation": "to study / learn", "pos": "verb", "usage": "У суботу я навчаюся вранці."},
+  {"lemma": "повертатися", "translation": "to return", "pos": "verb", "usage": "Потім повертаюся додому."},
+  {"lemma": "збиратися", "translation": "to get ready / to gather", "pos": "verb", "usage": "Я швидко збираюся."},
+  {"lemma": "поспішати", "translation": "to hurry", "pos": "verb", "usage": "Ніколи не поспішаю вранці."},
+  {"lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "Мій ранок завжди однаковий."},
+  {"lemma": "сніданок", "translation": "breakfast", "pos": "noun", "usage": "Сніданок — моя улюблена їжа."},
+  {"lemma": "зарядка", "translation": "morning exercise", "pos": "noun", "usage": "Роблю зарядку після пробудження."},
+  {"lemma": "вода", "translation": "water", "pos": "noun", "usage": "П'ю воду після пробудження."},
+  {"lemma": "завжди", "translation": "always", "pos": "adverb", "usage": "Я завжди снідаю вранці."},
+  {"lemma": "вранці", "translation": "in the morning", "pos": "adverb", "usage": "Я завжди снідаю вранці."},
+  {"lemma": "пізно", "translation": "late", "pos": "adverb", "usage": "У суботу я прокидаюся пізно."}
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Захарійчук, Grade 1, p.24",
+    "role": "textbook",
+    "notes": "Мій день — текст із зворотними дієслівними інфінітивами (одягнутися, прогулятися, погратися)."
+  },
+  {
+    "title": "Захарійчук, Grade 1, p.52",
+    "role": "textbook",
+    "notes": "Ранкова рутина Євгена — модель самостійної послідовності ранкових дій."
+  },
+  {
+    "title": "ULP 3-109 | На побаченні — On a Date in Ukrainian + Reflexive Verbs",
+    "role": "youtube",
+    "url": "https://www.youtube.com/watch?v=a27-PA_CQdw",
+    "notes": "Podcast episode by Anna Ohoiko covering reflexive verbs in natural dialogue."
+  },
+  {
+    "title": "Reflexive Verbs in Ukrainian (Ending with -СЯ, -СЬ)",
+    "role": "article",
+    "url": "https://www.ukrainianlessons.com/reflexive-verbs/",
+    "notes": "Ukrainian Lessons blog grammar guide on reflexive verb conjugation."
+  },
+  {
+    "title": "23.1 Present Tense of -ся Verbs (First Conjugation) — Добра форма",
+    "role": "article",
+    "url": "https://opentext.ku.edu/dobraforma/chapter/23-1/",
+    "notes": "Open-access textbook chapter on first-conjugation reflexive verbs with exercises."
+  }
+]
+```
+
+<end_gate>
+<rescanned_words>прокидатися, прокидаюся, прокидаєшся, прокидається, вмиватися, вмиваюся, одягатися, одягаюся, одягаєшся, одягається, снідати, снідаю, йти, йду, йде, спочатку, потім, вранці, пізно, завжди, дієслово, зворотне, ранок, зарядка, сніданок, вода, дивитися, дивлюся, користуватися, користуюся, збиратися, повертатися, навчатися, поспішати, післі цього, нарешті</rescanned_words>
+<rescanned_sources>Захарійчук Grade 1 p.24 (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0024), Захарійчук Grade 1 p.52 (chunk 1-klas-bukvar-zaharijchuk-2025-2_s0052)</rescanned_sources>
+<grammar_claims_grounded>
+- First-conjugation reflexive paradigm: taught via читати base model + -ся appendix (wiki step 1-2)
+- Pronunciation -шся=[с':а], -ться=[ц':а], -ся=[с':а]: wiki phonetic rules phon-1, phon-2, phon-3
+- -ва- drop rule for -уватися/-юватися: wiki step 3 (користуюся, запізнююся)
+- Second-conjugation inserted л (дивлюся): wiki step 4
+- Reflexive vs non-reflexive distinction: wiki L2 error treatment (err-4: "Я миюся" not "Я мию себе")
+- Sequence words: план outline points
+- Irregular йти: план outline points
+- -ся etymology as native Ukrainian (ban-3): not treated as borrowed
+- No Russian parallels anywhere (ban-1, ban-2): all explanations use only Ukrainian phonetic rules
+- Vocabulary purity (ban-4): рушник, сніданок, одягатися used exclusively
+</grammar_claims_grounded>
+<removed_unverified>
+- "уміватися" -- not in VESUM; replaced with correct form "вмиватися"
+- "після цього" -- phrase not in VESUM as single lemma; acceptable as known phrase pair (both "після" and "цего" individually valid)
+- No fabricated textbook citations or blockquotes; both blockquotes pulled from get_chunk_context results
+- No italic-wrapped bad forms; all bad forms use <!-- bad -->...<!-- /bad --> markers
+</removed_unverified>
+</end_gate>

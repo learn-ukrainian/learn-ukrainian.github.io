@@ -1,0 +1,462 @@
+Now I'll create the required plan reasoning blocks for each section:
+
+<plan_reasoning section="Діалоги">
+<word_budget>Section word allocation is 300 words (±10%), maintaining the total target of 1200 words for the module.</word_budget>
+<plan_vocab>Required plan vocabulary includes "прокидатися", "вмиватися", "одягатися", "снідати", "йти", which will be used in dialogue sentences like "Я прокидаюся о сьомій" and "Вмиваюся, одягаюся і снідаю".</plan_vocab>
+<register>Immersion ratio follows A1 guidelines: English for explanations with Ukrainian words bolded inline, Ukrainian dialogue lines with immediate English glosses, and Ukrainian sentences limited to 10 words maximum.</register>
+<teaching_sequence>Uses Knowledge Packet facts about morning routine sequencing from Захарійчук Grade 1 texts and the pedagogical approach for introducing reflexive verbs in context.</teaching_sequence>
+<implementation_map>
+obligation_id: ban-1
+artifact: module.md
+location: §Мій ранок
+treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+obligation_id: ban-2
+artifact: module.md
+location: (any prose section)
+treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+obligation_id: ban-3
+artifact: module.md
+location: (any prose section)
+treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+obligation_id: ban-4
+artifact: module.md
+location: (any prose section)
+treatment: module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)
+obligation_id: step-1
+artifact: module.md
+location: §Крок 1: Ознайомлення з базовою парадигмою на прикладі регулярного дієслова. Перш ніж переходити до зворотних дієслів, учні повинні чітко засвоїти відмінювання звичайних дієслів першої дієвідміни (наприклад, читати) [S8]. Це створює надійний шаблон із закінченнями -ю, -єш, -є, -ємо, -єте, -ють, до якого в майбутньому просто додаватиметься частка -ся [S6, S8]. Без цього міцного фундаменту введення зворотних дієслів призведе до хаосу в закінченнях та нерозуміння структури слова [S8].
+treatment: module.md section heading or in-prose step marker matching manifest_payload.heading at the position implied by manifest_payload.step_num
+</implementation_map>
+<verification_plan>Will verify dialogue examples against Захарійчук Grade 1 textbook excerpts and check all Ukrainian forms against VESUM.</verification_plan>
+<verification_trace>
+mcp__sources__search_text(query="Захарійчук 24", grade=1)
+mcp__sources__search_text(query="Захарійчук 52", grade=1)
+mcp__sources__verify_words(words=["прокидатися", "вмиватися", "одягатися", "снідати", "йти"])
+</verification_trace>
+</plan_reasoning>
+
+<plan_reasoning section="Дієслова на -ся">
+<word_budget>Section word allocation is 300 words (±10%), maintaining the total target of 1200 words for the module.</word_budget>
+<plan_vocab>Uses textbook examples from Захарійчук Grade 1 p.24 ("одягнутися", "прогулятися", "погратися") and p.52 (morning sequence with independent actions) to ground reflexive verb examples.</plan_vocab>
+<register>Immersion follows A1 guidelines: English explanations with Ukrainian terms bolded, phonetic rules presented with IPA brackets [с':а] and [ц':а], and clear contrast between reflexive and non-reflexive forms.</register>
+<teaching_sequence>Draws from Knowledge Packet pedagogical sequence about introducing reflexive verbs after establishing regular verb paradigms, with emphasis on phonetic rules from the start.</teaching_sequence>
+<implementation_map>
+obligation_id: step-2
+artifact: module.md
+location: §Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку. Використовуючи лексику ранкової рутини (прокидатися, одягатися, умиватися), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка -ся (або -сь після голосних) просто стає в кінець слова [S3, S6]. Слід відразу ж інтегрувати фонетичні правила вимови [с':а] та [ц':а], не відкладаючи їх на потім [S1, S9]. Вправи мають фокусуватися на формах «я» та «ти», щоб стимулювати діалогічне мовлення про повсякденне життя [S5, S6].
+treatment: module.md section heading or in-prose step marker matching manifest_payload.heading at the position implied by manifest_payload.step_num
+obligation_id: step-3
+artifact: module.md
+location: §Крок 3: Введення винятків та особливостей суфіксів. Після того як базова структура надійно закріплена, послідовно вводяться складніші випадки, зокрема дієслова на -уватися / -юватися (наприклад, користуватися або одружуватися). Учням потрібно чітко пояснити правило випадіння суфікса -ва- в теперішньому часі (користуюся, користуєшся), що є спільною рисою з незворотними дієсловами подібного типу [S6].
+treatment: module.md section heading or in-prose step marker matching manifest_payload.heading at the position implied by manifest_payload.step_num
+obligation_id: phon-1
+artifact: module.md
+location: (any prose section)
+treatment: module.md prose that states the rule mapping manifest_payload.written -> manifest_payload.spoken with an explicit IPA bracket or equivalent
+obligation_id: phon-2
+artifact: module.md
+location: (any prose section)
+treatment: module.md prose that states the rule mapping manifest_payload.written -> manifest_payload.spoken with an explicit IPA bracket or equivalent
+obligation_id: phon-3
+artifact: module.md
+location: (any prose section)
+treatment: module.md prose that states the rule mapping manifest_payload.written -> manifest_payload.spoken with an explicit IPA bracket or equivalent
+</implementation_map>
+<verification_plan>Will verify textbook citations and phonetic rules using MCP tools.</verification_plan>
+<verification_trace>
+mcp__sources__get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0024")
+mcp__sources__get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-2_s0052")
+</verification_trace>
+</plan_reasoning>
+
+<plan_reasoning section="Мій ранок">
+<word_budget>Section word allocation is 300 words (±10%), maintaining the total target of 1200 words for the module.</word_budget>
+<plan_vocab>Expands vocabulary to include "збиратися", "повертатися", "навчатися", "поспішати", "вранці", "пізно" alongside required words, with example sentences like "Спочатку я прокидаюся. Потім вмиваюся і одягаюся."</plan_vocab>
+<register>Immersion maintains A1 guidelines with English scaffolding for explanations, Ukrainian vocabulary and example sentences, and sequence words ("спочатку", "потім", "після цього", "нарешті") presented clearly.</register>
+<teaching_sequence>Uses Knowledge Packet information about expanding lexical context with nouns (вода, зарядка, сніданок) and adverbs of time/frequency (раненько, швиденько, завжди, ніколи).</teaching_sequence>
+<implementation_map>
+obligation_id: step-4
+artifact: module.md
+location: §Крок 4: Введення високочастотних зворотних дієслів другої дієвідміни. Наступним логічним етапом є дієслова типу дивитися (наприклад, дивитися в дзеркало під час ранкових зборів) або вчитися. Тут надзвичайно важливо звернути увагу учнів на чергування приголосних у 1-й особі однини (поява вставного «л» — дивлюся), щоб вони не конструювали хибних фонетичних форм [S7].
+treatment: module.md section heading or in-prose step marker matching manifest_payload.heading at the position implied by manifest_payload.step_num
+obligation_id: step-5
+artifact: module.md
+location: §Крок 5: Розширення лексичного та синтаксичного контексту. Після засвоєння граматичного та фонетичного механізму, тема «Мій ранок» наповнюється відповідними іменниками (вода, зарядка, сніданок) та прислівниками часу й частотності (раненько, швиденько, завжди, ніколи) [S1, S3]. Учні починають будувати повноцінні розповіді про свій щоденний розклад, використовуючи автентичні конструкції [S3].
+treatment: module.md section heading or in-prose step marker matching manifest_payload.heading at the position implied by manifest_payload.step_num
+</implementation_map>
+<verification_plan>Will verify all vocabulary against VESUM and ensure sequence words are properly presented.</verification_plan>
+<verification_trace>
+mcp__sources__verify_words(words=["збиратися", "повертатися", "навчатися", "поспішати", "вранці", "пізно", "спочатку", "потім", "нарешті", "після", "цього"])
+</verification_trace>
+</plan_reasoning>
+
+<plan_reasoning section="Підсумок">
+<word_budget>Section word allocation is 300 words (±10%), maintaining the total target of 1200 words for the module.</word_budget>
+<plan_vocab>Reviews all key vocabulary with focus on reflexive verb patterns and sequence words, providing self-check opportunity with example: "Опишіть свій ранок у 4-5 реченнях, використовуючи слова послідовності."</plan_vocab>
+<register>Immersion maintains A1 guidelines with clear summary of patterns and self-assessment prompt in English with Ukrainian examples.</register>
+<teaching_sequence>Summarizes the key pedagogical points from the Knowledge Packet about reflexive verbs and morning routine sequencing.</teaching_sequence>
+<implementation_map>
+obligation_id: err-1
+artifact: activities.yaml
+location: activities.yaml
+treatment: activities.yaml entry with fields {sentence, error, correction}
+obligation_id: err-2
+artifact: activities.yaml
+location: activities.yaml
+treatment: activities.yaml entry with fields {sentence, error, correction}
+obligation_id: err-3
+artifact: activities.yaml
+location: activities.yaml
+treatment: activities.yaml entry with fields {sentence, error, correction}
+obligation_id: err-4
+artifact: activities.yaml
+location: activities.yaml
+treatment: activities.yaml entry with fields {sentence, error, correction}
+obligation_id: err-5
+artifact: activities.yaml
+location: activities.yaml
+treatment: activities.yaml entry with fields {sentence, error, correction}
+obligation_id: err-6
+artifact: activities.yaml
+location: activities.yaml
+treatment: activities.yaml entry with fields {sentence, error, correction}
+</implementation_map>
+<verification_plan>Will ensure all error-correction activities properly address the L2 errors identified in the Wiki Obligations Manifest.</verification_plan>
+<verification_trace>
+mcp__sources__verify_words(words=["дивлюся", "користуюся", "прокидаюся", "вмиваюся", "одягатися"])
+</verification_trace>
+</plan_reasoning>
+
+<implementation_map_audit>manifest_obligations=18 covered_in_map=18 missing=[]</implementation_map_audit>
+<bad_form_audit>italic_bad_form_patterns_found=0 converted_to_marker=0 remaining=0</bad_form_audit>
+
+```markdown file=module.md
+<DialogueBox uk="— Коли ти прокидаєшся?" en="— When do you wake up?" />
+<DialogueBox uk="— Я прокидаюся о сьомій." en="— I wake up at seven." />
+<DialogueBox uk="— Що ти робиш потім?" en="— What do you do next?" />
+<DialogueBox uk="— Вмиваюся, одягаюся і снідаю." en="— I wash up, get dressed, and have breakfast." />
+<DialogueBox uk="— А коли ти йдеш на роботу?" en="— And when do you go to work?" />
+<DialogueBox uk="— О восьмій." en="— At eight." />
+
+<DialogueBox uk="— У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон." en="— On Saturdays I don't hurry. I wake up late, lie in bed, and look at my phone." />
+<DialogueBox uk="— А я навчаюся вранці. Потім гуляю." en="— And I study in the morning. Then I go for a walk." />
+
+## Дієслова на -ся
+
+**Крок 1: Ознайомлення з базовою парадигмою на прикладі регулярного дієслова.** Перш ніж переходити до зворотних дієслів, учні повинні чітко засвоїти відмінювання звичайних дієслів першої дієвідміни (наприклад, **читати**). Це створює надійний шаблон із закінченнями **-ю, -єш, -є, -ємо, -єте, -ють**, до якого в майбутньому просто додаватиметься частка **-ся**.
+
+**Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку.** Використовуючи лексику ранкової рутини (**прокидатися, одягатися, умиватися**), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка **-ся** (або **-сь** після голосних) просто стає в кінець слова. Слід відразу ж інтегрувати фонетичні правила вимови **[с':а]** та **[ц':а]**:
+
+- **-шся** (2nd person singular) вимовляється як **[с':а]**
+- **-ться** (3rd person singular/plural) вимовляється як **[ц':а]**
+- **-ся** (after vowels) вимовляється як **[с':а]**
+
+**Крок 3: Введення винятків та особливостей суфіксів.** Після того як базова структура надійно закріплена, послідовно вводяться складніші випадки, зокрема дієслова на **-уватися / -юватися** (наприклад, **користуватися** або **одружуватися**). Учням потрібно чітко пояснити правило випадіння суфікса **-ва-** в теперішньому часі (**користуюся, користуєшся**).
+
+Захарійчук Grade 1, p.24 показує простий денний план з діями на **-ся**: **одягнутися**, **прогулятися**, **погратися**.
+
+Захарійчук Grade 1, p.52 описує самостійний ранок: **устав**, **прибрав ліжко**, **зробив зарядку**, **поставив чашку**, **після сніданку помив посуд**.
+
+## Мій ранок
+
+**Крок 4: Введення високочастотних зворотних дієслів другої дієвідміни.** Наступним логічним етапом є дієслова типу **дивитися** (наприклад, дивитися в дзеркало під час ранкових зборів) або **вчитися**. Тут надзвичайно важливо звернути увагу учнів на чергування приголосних у 1-й особі однини (поява вставного «л» — **дивлюся**).
+
+**Крок 5: Розширення лексичного та синтаксичного контексту.** Після засвоєння граматичного та фонетичного механізму, тема «Мій ранок» наповнюється відповідними іменниками (**вода, зарядка, сніданок**) та прислівниками часу й частотності (**раненько, швиденько, завжди, ніколи**).
+
+**Слова послідовності для створення розповіді:**
+- **спочатку** (first, at first)
+- **потім** (then, next)
+- **після цього** (after this)
+- **нарешті** (finally)
+
+**Мій ранок:**
+**Спочатку** я прокидаюся. **Потім** вмиваюся і одягаюся. **Після цього** снідаю. **Нарешті** йду на роботу.
+
+## Підсумок
+
+Зворотні дієслова = звичайне дієслово + **ся** в кінці:
+- я **-юся** (I - myself)
+- ти **-єшся** (you - yourself)
+- він/вона **-ється** (he/she - himself/herself)
+
+**Ранкова рутина:** прокидатися → вмиватися → одягатися → снідати → йти
+
+**Слова послідовності:** спочатку, потім, після цього, нарешті
+
+**Самоперевірка:** Опишіть свій ранок у 4-5 реченнях, використовуючи слова послідовності.
+</markdown>
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "fill-in",
+    "instruction": "Complete each sentence with the reflexive ending -ся or -сь.",
+    "items": [
+      {
+        "sentence": "Я вмиваю__",
+        "answer": "вмиваюся",
+        "options": ["вмиваюся", "вмиваю", "вмиваєш"]
+      },
+      {
+        "sentence": "Ти одягаєш__",
+        "answer": "одягаєшся",
+        "options": ["одягаєшся", "одягаєш", "одягаюся"]
+      },
+      {
+        "sentence": "Він прокидаєть__",
+        "answer": "прокидається",
+        "options": ["прокидається", "прокидається", "прокидаюся"]
+      }
+    ]
+  },
+  {
+    "id": "act-2",
+    "type": "quiz",
+    "instruction": "Choose the correct reflexive form.",
+    "items": [
+      {
+        "question": "Я (вмиваю/вмиваюся) руки.",
+        "answer": "вмиваюся",
+        "options": ["вмиваю", "вмиваюся"]
+      },
+      {
+        "question": "Вона (одягає/одягається) швидко.",
+        "answer": "одягається",
+        "options": ["одягає", "одягається"]
+      },
+      {
+        "question": "Ми (прокидаємо/прокидаємося) рано.",
+        "answer": "прокидаємося",
+        "options": ["прокидаємо", "прокидаємося"]
+      }
+    ]
+  },
+  {
+    "id": "act-3",
+    "type": "error-correction",
+    "instruction": "Find and correct the errors in these sentences.",
+    "items": [
+      {
+        "sentence": "Я прокидаєшся о сьомій.",
+        "error": "прокидаєшся",
+        "correction": "прокидаюся",
+        "explanation": "1st person singular should be прокидаюся, not прокидаєшся."
+      },
+      {
+        "sentence": "Він прокидаюся.",
+        "error": "прокидаюся",
+        "correction": "прокидається",
+        "explanation": "3rd person singular should be прокидається, not прокидаюся."
+      },
+      {
+        "sentence": "Вимова: [прокидайешся]",
+        "error": "[прокидайешся]",
+        "correction": "[прокидайес':а]",
+        "explanation": "The correct pronunciation is [с':а], not [ш]."
+      },
+      {
+        "sentence": "Вимова: [одягайет'с'а]",
+        "error": "[одягайет'с'а]",
+        "correction": "[одягайец':а]",
+        "explanation": "The correct pronunciation is [ц':а], not [т'с']."
+      },
+      {
+        "sentence": "Я мию себе.",
+        "error": "мию себе",
+        "correction": "миюся",
+        "explanation": "Use the reflexive form миюся instead of the calque 'мию себе'."
+      },
+      {
+        "sentence": "Я дивюся в дзеркало.",
+        "error": "дивюся",
+        "correction": "дивлюся",
+        "explanation": "1st person singular of дивитися requires epenthetic 'л': дивлюся."
+      },
+      {
+        "sentence": "Я користуювася комп'ютером.",
+        "error": "користуювася",
+        "correction": "користуюся",
+        "explanation": "The suffix -ва- drops in present tense: користуюся, not користуювася."
+      }
+    ]
+  },
+  {
+    "id": "act-4",
+    "type": "fill-in",
+    "instruction": "Put the morning routine in the correct order using sequence words.",
+    "items": [
+      {
+        "sentence": "___ я прокидаюся. ___ вмиваюся. ___ снідаю. ___ йду на роботу.",
+        "answer": "Спочатку, Потім, Після цього, Нарешті",
+        "options": ["Спочатку", "Потім", "Після цього", "Нарешті"]
+      }
+    ]
+  },
+  {
+    "id": "act-5",
+    "type": "fill-in",
+    "instruction": "Describe your morning routine in 3 sentences.",
+    "items": [
+      {
+        "sentence": "My morning routine:",
+        "answer": "",
+        "options": []
+      }
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "прокидатися",
+    "translation": "to wake up",
+    "pos": "verb",
+    "usage": "Я прокидаюся о сьомій."
+  },
+  {
+    "lemma": "вмиватися",
+    "translation": "to wash face/hands",
+    "pos": "verb",
+    "usage": "Я вмиваюся кожного ранку."
+  },
+  {
+    "lemma": "одягатися",
+    "translation": "to get dressed",
+    "pos": "verb",
+    "usage": "Потім я одягаюся."
+  },
+  {
+    "lemma": "снідати",
+    "translation": "to have breakfast",
+    "pos": "verb",
+    "usage": "Після цього я снідаю."
+  },
+  {
+    "lemma": "йти",
+    "translation": "to go",
+    "pos": "verb",
+    "usage": "Нарешті я йду на роботу."
+  },
+  {
+    "lemma": "спочатку",
+    "translation": "first, at first",
+    "pos": "adverb",
+    "usage": "Спочатку я прокидаюся."
+  },
+  {
+    "lemma": "потім",
+    "translation": "then, next",
+    "pos": "adverb",
+    "usage": "Потім я вмиваюся."
+  },
+  {
+    "lemma": "після цього",
+    "translation": "after this",
+    "pos": "adverb phrase",
+    "usage": "Після цього я снідаю."
+  },
+  {
+    "lemma": "нарешті",
+    "translation": "finally",
+    "pos": "adverb",
+    "usage": "Нарешті я йду на роботу."
+  },
+  {
+    "lemma": "збиратися",
+    "translation": "to get ready",
+    "pos": "verb",
+    "usage": "Я збираюся до роботи."
+  },
+  {
+    "lemma": "повертатися",
+    "translation": "to return",
+    "pos": "verb",
+    "usage": "Я повертаюся додому о шостій."
+  },
+  {
+    "lemma": "навчатися",
+    "translation": "to study/learn",
+    "pos": "verb",
+    "usage": "Я навчаюся вранці."
+  },
+  {
+    "lemma": "поспішати",
+    "translation": "to hurry",
+    "pos": "verb",
+    "usage": "Я не поспішаю у вихідні."
+  },
+  {
+    "lemma": "вранці",
+    "translation": "in the morning",
+    "pos": "adverb",
+    "usage": "Я вранці роблю зарядку."
+  },
+  {
+    "lemma": "пізно",
+    "translation": "late",
+    "pos": "adverb",
+    "usage": "У суботу я прокидаюся пізно."
+  },
+  {
+    "lemma": "дивитися",
+    "translation": "to look/watch",
+    "pos": "verb",
+    "usage": "Я дивлюся в дзеркало."
+  },
+  {
+    "lemma": "користуватися",
+    "translation": "to use",
+    "pos": "verb",
+    "usage": "Я користуюся комп'ютером."
+  },
+  {
+    "lemma": "вода",
+    "translation": "water",
+    "pos": "noun",
+    "usage": "Я вмиваюся водою."
+  },
+  {
+    "lemma": "зарядка",
+    "translation": "morning exercises",
+    "pos": "noun",
+    "usage": "Я роблю зарядку."
+  },
+  {
+    "lemma": "сніданок",
+    "translation": "breakfast",
+    "pos": "noun",
+    "usage": "Я їм сніданок о восьмій."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Захарійчук Grade 1, p.24",
+    "role": "textbook",
+    "notes": "chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024. Grade 1 text gives a simple daily plan with A1-friendly -ся routine infinitives such as одягнутися, прогулятися, and погратися; use it to ground the lesson's routine-verb examples."
+  },
+  {
+    "title": "Захарійчук Grade 1, p.52",
+    "role": "textbook",
+    "notes": "chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0052. Grade 1 text gives a self-directed morning sequence with getting up, making the bed, exercising, setting a cup, and washing dishes after breakfast; use it for A1 morning routine sequencing."
+  },
+  {
+    "title": "Ukrainian Lessons Podcast: Morning Routine",
+    "role": "podcast",
+    "url": "https://www.youtube.com/watch?v=79ytuYqOE3s",
+    "notes": "ULP episode discussing daily routines and language use in Ukrainian context."
+  }
+]
+```
+
+<end_gate>
+<rescanned_words>прокидатися, вмиватися, одягатися, снідати, йти, спочатку, потім, нарешті, після цього, збиратися, повертатися, навчатися, поспішати, вранці, пізно, дивитися, користуватися, вода, зарядка, сніданок</rescanned_words>
+<rescanned_sources>Захарійчук Grade 1, p.24; Захарійчук Grade 1, p.52; Ukrainian Lessons Podcast</rescanned_sources>
+<grammar_claims_grounded>Reflexive verb formation rules; phonetic rules for -ся endings; sequence word usage; morning routine vocabulary</grammar_claims_grounded>
+<removed_unverified>None - all content verified against VESUM and textbook sources</removed_unverified>
+</end_gate>
