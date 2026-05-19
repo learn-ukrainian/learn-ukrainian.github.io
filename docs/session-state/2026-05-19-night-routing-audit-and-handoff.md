@@ -37,21 +37,25 @@ tasks_carried_over:
 
 This session shipped a comprehensive 788-line HTML routing audit report at `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html` covering pricing (corrected), 4-agent peer review, 7-model writer bakeoff, DeepSeek introspection, and 3-agent CoT consensus. User saw the report and approved the direction. **User's mandate for the next session:** recover the kimi-k2.5, kimi-k2.6, and minimax-m2.7 bakeoffs that failed due to a Hermes config drift, fold them into a v2 report at the same path, and validate B1+ readiness for a future v3.
 
-## ⚠️ FIRST ITEM NEXT SESSION — pending email reply from Oleksiy Syvokon (UA-GEC co-author / UNLP organizer)
+## ⚠️ FIRST ITEM NEXT SESSION — Syvokon email exchange + report-back owed
 
-**User said at session close 2026-05-19:** they have a reply from Oleksiy Syvokon — public Ukrainian NLP researcher, co-author of UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA team, the corpus that our `mcp__sources__search_ua_gec_errors` MCP tool surfaces — see `claude_extensions/rules/mcp-sources-and-dictionaries.md:33`), and organizer of UNLP (Ukrainian Natural Language Processing workshop). User will share the content of the reply at the start of the next session.
+**Context:** A previous session advised the user to email Oleksiy Syvokon (UA-GEC co-author, UNLP organizer, Grammarly UA team — `claude_extensions/rules/mcp-sources-and-dictionaries.md:33`). The user sent questions; Syvokon replied. **The user owes him a report-back, and that report is the actual deliverable next session.**
 
-**Why this matters for the routing audit:** Syvokon's expertise is directly load-bearing on:
-- The Russianism evidence layer (UA-GEC is one of 5 sources in `mcp__sources__search_heritage`)
-- Russianism judge routing decisions (matrix §8.2a — Russianism F1 ranking)
-- Calque / phraseological-error detection (UA-GEC's F/Calque and F/Collocation tags are core signal)
-- Any content review w/ VESUM verification (he can validate the gates we're treating as ground-truth)
+**Scope of the report-back (per user direction at close):** Ukrainian writing text quality across BOTH registers, not just Russianism. Specifically:
+- **A1-A2 register** (English scaffold, transitional UA — covered by v1 REPORT.html bakeoff data)
+- **B1+ full-Ukrainian register** (100% UA except Tab 2 per matrix §8.11 — NOT yet measured)
 
-This is NOT a generic reviewer — it's the author of corpus infrastructure we depend on. Treat his input with corresponding weight.
+Russianism evidence (matrix §8.2a) is a subset of this scope, not the whole picture. Don't narrow the deliverable to just Russianism.
 
-**Action for next orchestrator:** Before starting Section 1 (Hermes fix), ASK the user to share Syvokon's reply. Do not proceed with the recovery plan until you've seen and discussed it — it may redirect priorities (e.g. validate a routing assumption, point us at additional UA-NLP resources, surface a quality concern with one of the corpora). Treat this as a blocking prerequisite for the recovery work.
+**Action for next orchestrator (in order):**
+1. ASK user to share Syvokon's reply.
+2. Confirm the original questions we sent (user may need to surface those too).
+3. Validate B1+ readiness (handoff §4) — this is now REQUIRED for the report-back, not deferred to a future v3.
+4. Run B1+ writer bakeoff with the top A1 performers (claude-tools + deepseek-v4-pro + qwen-3.6-plus) on a real B1 plan.
+5. Fold both A1-A2 register data (already in v1 REPORT.html) AND new B1+ register data into the report-back to Syvokon.
+6. Then do the kimi/minimax recovery (handoff §3) if time allows — that's internal-routing detail, less load-bearing for the Syvokon deliverable.
 
-Once you've read the reply: triage it against the carry-over tasks below, decide whether anything in it supersedes the v2-report plan, then proceed.
+Treat the Syvokon report-back as the primary next-session output. The Hermes fix and kimi/minimax bakeoffs are secondary.
 
 **Main is at `be4c3c7afc`, tree clean, 0 active dispatches, 0 open PRs of mine** (only dependabot's remain).
 
@@ -195,7 +199,7 @@ The v2 report is a TARGETED EXPANSION, not a rewrite.
 
 ---
 
-## Section 4 — B1+ register readiness check (for v3)
+## Section 4 — B1+ register bakeoff (REQUIRED for Syvokon report-back)
 
 ### Current state
 
@@ -227,11 +231,13 @@ B1 plans EXIST on disk (`curriculum/l2-uk-en/plans/b1/*.yaml`, well-formed). Sam
 2. If the prompt renders cleanly → fire a B1 bakeoff with the top 3 A1 performers (claude-tools baseline + deepseek-v4-pro + qwen-3.6-plus). ~$1-3 cost, ~15 min wall.
 3. If it doesn't render → document the missing infrastructure in the v3 readiness section and defer to a future date.
 
-### What the v2 report SAYS about B1+
+### What the report-back to Syvokon needs to cover
 
-Per user direction: state explicitly that **B1+ register (full Ukrainian) will be covered in a later report (v3)** with rationale: A1 register-precision findings do not transfer to B1+ register-relaxed automatically. The codex high-Ukrainian bias that hurt at A1 may BECOME a feature at B1+. Same for qwen / deepseek-pro register tuning. Per-level bakeoff is required; this audit covers A1 only.
+Per user direction (corrected at session close): **B1+ register is REQUIRED for the Syvokon report-back, not deferred.** The report-back covers UK writing text quality across BOTH A1-A2 register (already in v1 REPORT.html §5) AND B1+ register (this section's bakeoff produces the data).
 
-Add to v2 report (suggested location: between §8 Recommendations and §9 Limitations, as a new "§8.5 B1+ register: deferred to v3" subsection).
+Rationale: A1 register-precision findings do not transfer to B1+ register-relaxed automatically. The codex high-Ukrainian bias that hurt at A1 may BECOME a feature at B1+. Per-level bakeoff is required.
+
+The report-back format (HTML, shareable) should add a §5b "B1+ writer bakeoff" section parallel to v1's §5 A1 bakeoff, with the same grading rubric (contract compliance + content quality) but graded against B1+ register expectations (100% UA except Tab 2, register-relaxed not register-precision).
 
 ---
 
