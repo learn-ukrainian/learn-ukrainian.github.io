@@ -204,7 +204,7 @@ unlzw3==0.2.3
 urllib3==2.6.3
 uvicorn==0.40.0
 virtualenv==21.2.0
-vulture==2.15
+vulture==2.16
 warc3-wet-clueweb09==0.2.5
 warc3-wet==0.2.5
 wcwidth==0.6.0
