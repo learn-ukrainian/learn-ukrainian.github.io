@@ -55,6 +55,42 @@ def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_flash(tmp_path, mon
     assert plan.cmd == ["hermes", "-z", "Review this code.", "-m", "deepseek-v4-flash"]
 
 
+def test_deepseek_adapter_translates_mcp_prefix_for_hermes(tmp_path, monkeypatch):
+    """Hermes registers MCP tools with single-underscore (`mcp_sources_*`)
+    while the canonical writer prompt documents double-underscore
+    (`mcp__sources__*`). The adapter must translate so the model emits
+    names Hermes can actually dispatch. 2026-05-19 B1-bakeoff finding —
+    without this translation, deepseek-pro wrote verification_trace
+    blocks but never invoked any MCP tool.
+    """
+    monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
+
+    prompt_with_mcp = (
+        "Verify each Ukrainian word via `mcp__sources__verify_words` and "
+        "look up etymology via `mcp__sources__search_esum`."
+    )
+    plan = _build(prompt_with_mcp, tmp_path, model="deepseek-v4-pro")
+
+    sent_prompt = plan.cmd[2]  # ["hermes", "-z", PROMPT, "-m", MODEL]
+    assert "mcp__sources__" not in sent_prompt, (
+        "double-underscore MCP names should be rewritten before Hermes invocation"
+    )
+    assert "mcp_sources_verify_words" in sent_prompt
+    assert "mcp_sources_search_esum" in sent_prompt
+
+
+def test_deepseek_adapter_leaves_non_mcp_prompts_unchanged(tmp_path, monkeypatch):
+    """The translation must be scoped to ``mcp__sources__`` exactly — no
+    accidental matches on similar substrings like ``mcp__rag__`` (legacy
+    naming, archived) or random underscore-heavy text."""
+    monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
+
+    prompt = "Module b1-052: write content. Use `mcp__rag__legacy_tool` only if it appears."
+    plan = _build(prompt, tmp_path, model="deepseek-v4-pro")
+
+    assert plan.cmd[2] == prompt
+
+
 def test_deepseek_adapter_default_model_is_pro(tmp_path, monkeypatch):
     """When model=None, the adapter falls back to deepseek-v4-pro (primary)."""
     monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")

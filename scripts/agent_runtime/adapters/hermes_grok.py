@@ -77,6 +77,17 @@ def _sources_mcp_registered(config: dict[str, Any]) -> bool:
     return bool(sources.get("enabled") is not False and sources.get("url"))
 
 
+def _translate_mcp_prefix_for_hermes(prompt: str) -> str:
+    """Rewrite ``mcp__sources__X`` → ``mcp_sources_X`` for Hermes routing.
+
+    See ``hermes_deepseek.py`` for full rationale. Hermes registers MCP
+    tools with single-underscore naming while the canonical writer
+    prompt uses MCP-spec double-underscore. Translating before
+    invocation lets Hermes-routed models actually dispatch the calls.
+    """
+    return prompt.replace("mcp__sources__", "mcp_sources_")
+
+
 class HermesGrokAdapter:
     """Adapter for the Hermes CLI using Grok 4.3."""
 
@@ -131,8 +142,9 @@ class HermesGrokAdapter:
             )
 
         hermes_bin = shutil.which("hermes") or "hermes"
+        hermes_prompt = _translate_mcp_prefix_for_hermes(prompt)
         return InvocationPlan(
-            cmd=[hermes_bin, "-z", prompt, "-m", model or self.default_model],
+            cmd=[hermes_bin, "-z", hermes_prompt, "-m", model or self.default_model],
             cwd=cwd,
             stdin_payload="",
             output_file=None,

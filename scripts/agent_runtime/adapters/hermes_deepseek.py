@@ -92,6 +92,29 @@ def _sources_mcp_registered(config: dict[str, Any]) -> bool:
     return bool(sources.get("enabled") is not False and sources.get("url"))
 
 
+def _translate_mcp_prefix_for_hermes(prompt: str) -> str:
+    """Rewrite ``mcp__sources__X`` → ``mcp_sources_X`` for Hermes routing.
+
+    Empirical finding (2026-05-19 B1 writer bakeoff investigation):
+    Hermes registers MCP tools using a single-underscore convention
+    (``mcp_sources_search_text``, etc. — visible in
+    ``~/.hermes/logs/agent.log``: ``MCP server 'sources' (HTTP):
+    registered 33 tool(s): mcp_sources_search_sources, ...``). The
+    canonical V7 writer prompt documents tools with double-underscore
+    (``mcp__sources__search_text``) — the MCP spec convention used by
+    claude / codex. When the prompt teaches one form and the runtime
+    registers another, models that parrot prompt names emit tool calls
+    Hermes can't dispatch, so no MCP invocation actually fires even
+    though ``verification_trace`` blocks declare intent.
+
+    Translating the prompt before handing it to Hermes aligns the two
+    conventions without per-writer prompt-template forks. The same fix
+    applies to all three Hermes-routed adapters (deepseek/qwen/grok).
+    Companion gate-side tolerance shipped in commit ``0fc0f0d427``.
+    """
+    return prompt.replace("mcp__sources__", "mcp_sources_")
+
+
 class HermesDeepSeekAdapter:
     """Adapter for the Hermes CLI using DeepSeek v4 (pro or flash)."""
 
@@ -146,8 +169,9 @@ class HermesDeepSeekAdapter:
             )
 
         hermes_bin = shutil.which("hermes") or "hermes"
+        hermes_prompt = _translate_mcp_prefix_for_hermes(prompt)
         return InvocationPlan(
-            cmd=[hermes_bin, "-z", prompt, "-m", model or self.default_model],
+            cmd=[hermes_bin, "-z", hermes_prompt, "-m", model or self.default_model],
             cwd=cwd,
             stdin_payload="",
             output_file=None,

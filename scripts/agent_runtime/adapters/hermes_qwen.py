@@ -99,6 +99,19 @@ def _sources_mcp_registered(config: dict[str, Any]) -> bool:
     return bool(sources.get("enabled") is not False and sources.get("url"))
 
 
+def _translate_mcp_prefix_for_hermes(prompt: str) -> str:
+    """Rewrite ``mcp__sources__X`` → ``mcp_sources_X`` for Hermes routing.
+
+    See ``hermes_deepseek.py`` for the full rationale. Hermes registers
+    MCP tools with single-underscore naming (``mcp_sources_*``) while
+    the canonical writer prompt documents the double-underscore MCP-spec
+    form (``mcp__sources__*``) used by claude/codex. Translating the
+    prompt before Hermes invocation lets the model emit names Hermes
+    can actually dispatch.
+    """
+    return prompt.replace("mcp__sources__", "mcp_sources_")
+
+
 class HermesQwenAdapter:
     """Adapter for the Hermes CLI using Qwen 3.6 (plus, flash, or max-preview)."""
 
@@ -153,6 +166,7 @@ class HermesQwenAdapter:
             )
 
         hermes_bin = shutil.which("hermes") or "hermes"
+        hermes_prompt = _translate_mcp_prefix_for_hermes(prompt)
         # Force --provider openrouter explicitly. Hermes' top-level
         # `model.provider: openrouter` is NOT honored for some vendor prefixes
         # at per-invocation `-m` routing time: `moonshotai/*` and `minimax/*`
@@ -167,7 +181,7 @@ class HermesQwenAdapter:
         return InvocationPlan(
             cmd=[
                 hermes_bin,
-                "-z", prompt,
+                "-z", hermes_prompt,
                 "-m", model or self.default_model,
                 "--provider", "openrouter",
             ],
