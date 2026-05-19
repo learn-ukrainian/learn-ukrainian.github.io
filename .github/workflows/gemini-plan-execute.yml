@@ -40,7 +40,7 @@ jobs:
           permission-pull-requests: 'write'
 
       - name: 'Checkout Code'
-        uses: 'actions/checkout@v6' # ratchet:exclude
+        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6
 
       - name: 'Run Gemini CLI'
         id: 'run_gemini'
