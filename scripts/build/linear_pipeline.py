@@ -63,12 +63,21 @@ PLAN_REQUIRED_KEYS = {
     "references",
 }
 
-WRITER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools", "grok-tools")
+WRITER_CHOICES = (
+    "claude-tools",
+    "gemini-tools",
+    "codex-tools",
+    "grok-tools",
+    "deepseek-tools",
+    "qwen-tools",
+)
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
+    "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
+    "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
@@ -76,12 +85,21 @@ PROMPT_BY_WRITER = {
 CORRECTION_PROMPT_BY_WRITER = {
     "grok-tools": "linear-writer-correction-grok.md",
 }
-REVIEWER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools", "grok-tools")
+REVIEWER_CHOICES = (
+    "claude-tools",
+    "gemini-tools",
+    "codex-tools",
+    "grok-tools",
+    "deepseek-tools",
+    "qwen-tools",
+)
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
+    "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
+    "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",
@@ -2606,14 +2624,20 @@ def _runtime_tool_config(
             "mcp_servers": ["sources"],
             "allowed_tools": "mcp__sources__*",
         }
-    elif agent_label in {"gemini-tools", "grok-tools"}:
+    elif agent_label in {
+        "gemini-tools",
+        "grok-tools",
+        "deepseek-tools",
+        "qwen-tools",
+    }:
         agent_kwargs = {
             "mcp_servers": ["sources"],
         }
     else:
         raise LinearPipelineError(
             f"Unknown -tools writer {agent_label!r}; expected one of "
-            "codex-tools / claude-tools / gemini-tools / grok-tools."
+            "codex-tools / claude-tools / gemini-tools / grok-tools / "
+            "deepseek-tools / qwen-tools."
         )
 
     canonical_agent = agent_label.split("-", 1)[0]

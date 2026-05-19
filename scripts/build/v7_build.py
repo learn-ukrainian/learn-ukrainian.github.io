@@ -35,6 +35,8 @@ WRITER_ALIASES = {
     "gemini": "gemini-tools",
     "codex": "codex-tools",
     "grok": "grok-tools",
+    "deepseek": "deepseek-tools",
+    "qwen": "qwen-tools",
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 
