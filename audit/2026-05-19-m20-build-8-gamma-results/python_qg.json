@@ -1,0 +1,313 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "plan_references": [
+    {
+      "title": "Захарійчук Grade 1, p.24",
+      "notes": "chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024. Grade 1 text gives a simple daily plan with A1-friendly -ся routine infinitives such as одягнутися, прогулятися, and погратися; use it to ground the lesson's routine-verb examples."
+    },
+    {
+      "title": "Захарійчук Grade 1, p.52",
+      "notes": "chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0052. Grade 1 text gives a self-directed morning sequence with getting up, making the bed, exercising, setting a cup, and washing dishes after breakfast; use it for A1 morning routine sequencing."
+    }
+  ],
+  "gates": {
+    "activity_schema": {
+      "passed": true,
+      "checked": 6,
+      "violations": []
+    },
+    "word_count": {
+      "passed": true,
+      "count": 1243,
+      "target": 1200
+    },
+    "plan_sections": {
+      "passed": true,
+      "missing_headings": [],
+      "word_budgets": [
+        {
+          "section": "Діалоги",
+          "count": 293,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Дієслова на -ся",
+          "count": 367,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Мій ранок",
+          "count": 290,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Підсумок",
+          "count": 286,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        }
+      ]
+    },
+    "formatting_standards": {
+      "passed": true,
+      "malformed_callouts": [],
+      "missing_mandatory_callouts": []
+    },
+    "vesum_verified": {
+      "passed": true,
+      "checked": 221,
+      "whitelisted": 7,
+      "missing": [],
+      "missing_count": 0
+    },
+    "citations_resolve": {
+      "passed": true,
+      "unknown": []
+    },
+    "textbook_grounding": {
+      "passed": true,
+      "verdict": "PASS",
+      "severity": "HARD",
+      "required": 1,
+      "matched": [
+        "Захарійчук Grade 1, p.24",
+        "Захарійчук Grade 1, p.52"
+      ],
+      "missing": [],
+      "blockquotes_checked": 3,
+      "long_blockquotes_checked": 2,
+      "search_text_calls": 2,
+      "textbook_result_hits": 10,
+      "min_words": 30,
+      "downgraded": [],
+      "missing_corpus": [],
+      "warnings": [],
+      "reason": null,
+      "unattributed_matches": 0
+    },
+    "resources_search_attempted": {
+      "passed": true,
+      "severity": "HARD",
+      "search_attempt_count": 2,
+      "search_tools_used": [
+        "query_wikipedia",
+        "search_external"
+      ]
+    },
+    "immersion_advisory": {
+      "passed": true,
+      "pct": 31.84,
+      "min_pct": 15,
+      "max_pct": 24,
+      "policy": "a1-m15-24"
+    },
+    "l2_exposure_floor": {
+      "passed": false,
+      "required": {
+        "uk_dialogue_lines": 14,
+        "vocab_entries": 0,
+        "uk_example_sentences": 14,
+        "uk_tab3_activities": 3
+      },
+      "observed": {
+        "uk_dialogue_lines": 12,
+        "vocab_entries": 0,
+        "uk_example_sentences": 9,
+        "uk_tab3_activities": 0
+      },
+      "reason": "too_few_uk_dialogue_lines,too_few_uk_example_sentences,too_few_uk_tab3_activities",
+      "policy": "a1-m15-24"
+    },
+    "long_uk_ceiling": {
+      "passed": true,
+      "required": {
+        "max_unsupported_uk_words": 80,
+        "support_proximity": 8
+      },
+      "observed": {
+        "offending_runs": 0
+      },
+      "reason": null,
+      "offending_runs": [],
+      "policy": "a1-m15-24"
+    },
+    "component_density": {
+      "passed": true,
+      "required": {
+        "DialogueBox": [
+          95,
+          100
+        ],
+        "RuleBox": [
+          0,
+          30
+        ]
+      },
+      "observed": [
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        },
+        {
+          "component_tag": "DialogueBox",
+          "observed_pct": 100.0,
+          "expected_range": [
+            95,
+            100
+          ]
+        }
+      ],
+      "reason": null,
+      "mismatches": [],
+      "ignored_components": [],
+      "policy": "a1-m15-24"
+    },
+    "inject_activity_ids": {
+      "passed": false,
+      "injected": [],
+      "missing": [],
+      "unused": [
+        "act-1",
+        "act-10",
+        "act-2",
+        "act-3",
+        "act-4",
+        "act-5",
+        "act-6",
+        "act-7",
+        "act-8",
+        "act-9"
+      ],
+      "reason": "unused_activities_not_injected"
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "quiz",
+        "fill-in",
+        "fill-in",
+        "fill-in",
+        "error-correction",
+        "match-up",
+        "order",
+        "group-sort",
+        "true-false",
+        "unjumble"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "previously_passed_regression": {
+      "passed": true,
+      "regressions": []
+    },
+    "mdx_render": {
+      "passed": null,
+      "message": "Run after publish stage"
+    },
+    "passed": false,
+    "correction_terminal": {
+      "passed": false,
+      "gate": "l2_exposure_floor",
+      "message": "l2_exposure_floor failed after its single ADR-008 correction attempt"
+    }
+  }
+}

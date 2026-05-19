@@ -1,0 +1,368 @@
+{
+  "passed": false,
+  "hard_fail": true,
+  "phonetic_hard_fail": false,
+  "coverage_pct": 0.6667,
+  "covered": 12,
+  "total": 18,
+  "min_pct": 0.8,
+  "obligations": [
+    {
+      "obligation_id": "step-1",
+      "type": "sequence_step",
+      "category": "sequence_steps",
+      "status": "PASS",
+      "reason": "sequence_claim_present",
+      "claim": {
+        "obligation_id": "step-1",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся (Крок 1)",
+        "treatment": "prose introduces regular Group 1 -ти paradigm via читати template; lists endings -ю/-єш/-є/-ємо/-єте/-ють as the foundation onto which -ся glues."
+      }
+    },
+    {
+      "obligation_id": "step-2",
+      "type": "sequence_step",
+      "category": "sequence_steps",
+      "status": "FAIL",
+      "reason": "sequence_claim_missing",
+      "claim": {
+        "obligation_id": "step-2",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся (Крок 2)",
+        "treatment": "prose adds -ся to the Group 1 template using прокидатися; shows endings unchanged + -ся glued at the back; integrates phon-1 and phon-2 immediately in the same step per wiki directive (\"не відкладаючи їх на потім\")."
+      }
+    },
+    {
+      "obligation_id": "step-3",
+      "type": "sequence_step",
+      "category": "sequence_steps",
+      "status": "PASS",
+      "reason": "sequence_claim_present",
+      "claim": {
+        "obligation_id": "step-3",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся (Крок 3)",
+        "treatment": "prose explains -уватися/-юватися -ва- drop with користуватися (and одружуватися mentioned by name)."
+      }
+    },
+    {
+      "obligation_id": "step-4",
+      "type": "sequence_step",
+      "category": "sequence_steps",
+      "status": "PASS",
+      "reason": "sequence_claim_present",
+      "claim": {
+        "obligation_id": "step-4",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся (Крок 4)",
+        "treatment": "prose explains 2nd-conjugation epenthetic л after labials (б/п/в/м/ф) using дивитися → я дивлюся; appears in я-form only."
+      }
+    },
+    {
+      "obligation_id": "step-5",
+      "type": "sequence_step",
+      "category": "sequence_steps",
+      "status": "PASS",
+      "reason": "sequence_claim_present",
+      "claim": {
+        "obligation_id": "step-5",
+        "artifact": "module.md",
+        "location": "§Мій ранок (Крок 5)",
+        "treatment": "prose adds nouns (вода, зарядка, сніданок, робота, школа) and frequency/time adverbs (завжди, ніколи, рано, пізно, вранці) to the reflexive-verb base, then constructs a complete morning narrative with sequence words."
+      }
+    },
+    {
+      "obligation_id": "err-1",
+      "type": "l2_error",
+      "category": "l2_errors",
+      "status": "PASS",
+      "reason": "contrast_pair_present",
+      "claim": {
+        "obligation_id": "err-1",
+        "artifact": "activities.yaml",
+        "location": "act-5 item 1",
+        "treatment": "contrast_pair — sentence=\"Я прокидаєшся. / Він прокидаюся.\", error=\"прокидаєшся\", correction=\"Я прокидаюся. / Він прокидається.\", explanation grounds person-ending agreement rule."
+      }
+    },
+    {
+      "obligation_id": "err-2",
+      "type": "l2_error",
+      "category": "l2_errors",
+      "status": "FAIL",
+      "reason": "missing_correct",
+      "claim": {
+        "obligation_id": "err-2",
+        "artifact": "activities.yaml",
+        "location": "act-5 item 2",
+        "treatment": "contrast_pair — sentence=\"Вимова: [прокидайешся]\", error=\"[прокидайешся]\", correction=\"Вимова: [прокидайес':а]\", explanation grounds -шся → [с':а] assimilation."
+      }
+    },
+    {
+      "obligation_id": "err-3",
+      "type": "l2_error",
+      "category": "l2_errors",
+      "status": "FAIL",
+      "reason": "missing_incorrect_and_correct",
+      "claim": {
+        "obligation_id": "err-3",
+        "artifact": "activities.yaml",
+        "location": "act-5 item 3",
+        "treatment": "contrast_pair — sentence=\"Вимова: [одягайет'с'а]\", error=\"[одягайет'с'а]\", correction=\"Вимова: [одягайец':а]\", explanation grounds [т']+[с'] → [ц':а] affricate."
+      }
+    },
+    {
+      "obligation_id": "err-4",
+      "type": "l2_error",
+      "category": "l2_errors",
+      "status": "PASS",
+      "reason": "contrast_pair_present",
+      "claim": {
+        "obligation_id": "err-4",
+        "artifact": "activities.yaml",
+        "location": "act-5 item 4",
+        "treatment": "contrast_pair — sentence=\"Я мию себе.\", error=\"мию себе\", correction=\"Я миюся. / Я вмиваюся.\", explanation grounds reflexive verb replacing \"verb+себе\" calque."
+      }
+    },
+    {
+      "obligation_id": "err-5",
+      "type": "l2_error",
+      "category": "l2_errors",
+      "status": "PASS",
+      "reason": "contrast_pair_present",
+      "claim": {
+        "obligation_id": "err-5",
+        "artifact": "activities.yaml",
+        "location": "act-5 item 5",
+        "treatment": "contrast_pair — sentence=\"Я дивюся. / Я дивюсь.\", error=\"дивюся\", correction=\"Я дивлюся.\", explanation grounds epenthetic л after labial в in 1sg."
+      }
+    },
+    {
+      "obligation_id": "err-6",
+      "type": "l2_error",
+      "category": "l2_errors",
+      "status": "PASS",
+      "reason": "contrast_pair_present",
+      "claim": {
+        "obligation_id": "err-6",
+        "artifact": "activities.yaml",
+        "location": "act-5 item 6",
+        "treatment": "contrast_pair — sentence=\"Я користуювася.\", error=\"користуювася\", correction=\"Я користуюся.\", explanation grounds -ва- drop in present tense of -уватися verbs."
+      }
+    },
+    {
+      "obligation_id": "phon-1",
+      "type": "phonetic_rule",
+      "category": "phonetic_rules",
+      "status": "PASS",
+      "reason": "phonetic_rule_present",
+      "claim": {
+        "obligation_id": "phon-1",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся (Крок 2 bullet 1)",
+        "treatment": "\"Written **ти прокидаєшся**, spoken [прокидайес':а]\" — explicit IPA bracket; written -шся mapped to spoken [с':а]."
+      },
+      "written": "-шся",
+      "spoken_target": "[с':а]",
+      "written_present": true,
+      "spoken_present": true,
+      "example_pairs_present": true,
+      "example_pairs_required": false
+    },
+    {
+      "obligation_id": "phon-2",
+      "type": "phonetic_rule",
+      "category": "phonetic_rules",
+      "status": "PASS",
+      "reason": "phonetic_rule_present",
+      "claim": {
+        "obligation_id": "phon-2",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся (Крок 2 bullet 2)",
+        "treatment": "\"Written **він прокидається**, spoken [прокидайец':а]\" — explicit IPA bracket; written -ться mapped to spoken [ц':а]."
+      },
+      "written": "-ться",
+      "spoken_target": "[ц':а]",
+      "written_present": true,
+      "spoken_present": true,
+      "example_pairs_present": true,
+      "example_pairs_required": false
+    },
+    {
+      "obligation_id": "phon-3",
+      "type": "phonetic_rule",
+      "category": "phonetic_rules",
+      "status": "PASS",
+      "reason": "phonetic_rule_present",
+      "claim": {
+        "obligation_id": "phon-3",
+        "artifact": "module.md",
+        "location": "§Мій ранок (under the short story)",
+        "treatment": "explicit \"Прокидаюся ends in -ся, spoken [с':а]: [прокидайус':а]\" with the same long soft consonant noted at the end of вмиваюся / одягаюся / збираюся / повертаюся."
+      },
+      "written": "-ся",
+      "spoken_target": "[с':а]",
+      "written_present": true,
+      "spoken_present": true,
+      "example_pairs_present": true,
+      "example_pairs_required": false
+    },
+    {
+      "obligation_id": "ban-1",
+      "type": "decolonization_ban",
+      "category": "decolonization_bans",
+      "status": "FAIL",
+      "reason": "ban_substance_missing",
+      "claim": {
+        "obligation_id": "ban-1",
+        "artifact": "module.md",
+        "location": "§Підсумок (and module-wide absence assertion)",
+        "treatment": "absence-of-pattern — recap phonetics describe -шся/-ться/-ся via Ukrainian assimilation only; zero Russian-language explanatory framing anywhere in summary or self-check rubric."
+      }
+    },
+    {
+      "obligation_id": "ban-2",
+      "type": "decolonization_ban",
+      "category": "decolonization_bans",
+      "status": "FAIL",
+      "reason": "ban_substance_missing",
+      "claim": {
+        "obligation_id": "ban-2",
+        "artifact": "module.md",
+        "location": "§Підсумок pronunciation recap paragraph",
+        "treatment": "absence-of-pattern — \"Written -ться is spoken [ц':а]\" stated as Ukrainian-rule-only; no mention of Russian -тся as a pronunciation reference point."
+      }
+    },
+    {
+      "obligation_id": "ban-3",
+      "type": "decolonization_ban",
+      "category": "decolonization_bans",
+      "status": "FAIL",
+      "reason": "ban_substance_missing",
+      "claim": {
+        "obligation_id": "ban-3",
+        "artifact": "module.md",
+        "location": "§Дієслова на -ся opening paragraph",
+        "treatment": "positive — explicit Ukrainian etymology of -ся as old short form of pronoun \"себе\" with Carpathian dialect phrase \"Я ся не бою\" as attestation; no claim of Russian-borrowing."
+      }
+    },
+    {
+      "obligation_id": "ban-4",
+      "type": "decolonization_ban",
+      "category": "decolonization_bans",
+      "status": "PASS",
+      "reason": "ban_substance_present",
+      "claim": {
+        "obligation_id": "ban-4",
+        "artifact": "module.md",
+        "location": "§Мій ранок closing paragraph",
+        "treatment": "positive contrast with <!-- bad --> markers — stick to рушник (not <!-- bad -->полотенце<!-- /bad -->), сніданок (not <!-- bad -->завтрак<!-- /bad -->), одягатися (not <!-- bad -->одіватися<!-- /bad -->); native Мені N років instead of \"have\"-shape calque for age. No Russianisms, surzhyk forms, or calques appear bare."
+      }
+    }
+  ],
+  "fix_proposals": [
+    {
+      "obligation_id": "step-2",
+      "obligation_type": "sequence_step",
+      "failure_reason": "sequence_claim_missing",
+      "current_artifact_state": "## Дієслова на -ся\n\nA Ukrainian reflexive verb is a regular verb plus the suffix **-ся** glued to the very end. The action loops back on the speaker, the way English uses *myself* or *up*. The suffix itself has deep Ukrainian roots: it is the old short form of the reflexive pronoun **себе** (\"self\"), still preserved in Carpathian dialect phrases like *Я ся не бою* (\"I am not afraid\"). It is a nati...",
+      "expected_treatment": {
+        "required_claim": "Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку. Використовуючи лексику ранкової рутини (прокидатися, одягатися, умиватися), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка -ся (або -сь після голосних) просто стає в кінець слова [S3, S6]. Слід відразу ж інтегрувати фонетичні правила вимови [с':а] та [ц':а], не відкладаючи їх на потім [S1, S9]. Вправи мають фокусуватися на формах «я» та «ти», щоб стимулювати діалогічне мовлення про повсякденне життя [S5, S6].",
+        "shape": "module.md section heading or in-prose step marker matching manifest_payload.heading at the position implied by manifest_payload.step_num"
+      },
+      "surgical_diff_hint": "Add section heading or step marker matching manifest_payload.heading (\"Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку. Використовуючи лексику ранкової рутини (прокидатися, одягатися, умиватися), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка -ся (або -сь після голосних) просто стає в кінець слова [S3, S6]. Слід відразу ж інтегрувати фонетичні правила вимови [с':а] та [ц':а], не відкладаючи їх на потім [S1, S9]. Вправи мають фокусуватися на формах «я» та «ти», щоб стимулювати діалогічне мовлення про повсякденне життя [S5, S6].\"); required_claim: \"Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку. Використовуючи лексику ранкової рутини (прокидатися, одягатися, умиватися), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка -ся (або -сь після голосних) просто стає в кінець слова [S3, S6]. Слід відразу ж інтегрувати фонетичні правила вимови [с':а] та [ц':а], не відкладаючи їх на потім [S1, S9]. Вправи мають фокусуватися на формах «я» та «ти», щоб стимулювати діалогічне мовлення про повсякденне життя [S5, S6].\"",
+      "manifest_payload": {
+        "heading": "Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку. Використовуючи лексику ранкової рутини (прокидатися, одягатися, умиватися), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка -ся (або -сь після голосних) просто стає в кінець слова [S3, S6]. Слід відразу ж інтегрувати фонетичні правила вимови [с':а] та [ц':а], не відкладаючи їх на потім [S1, S9]. Вправи мають фокусуватися на формах «я» та «ти», щоб стимулювати діалогічне мовлення про повсякденне життя [S5, S6].",
+        "id": "step-2",
+        "required_claim": "Крок 2: Введення зворотних дієслів першої дієвідміни в контексті ранку. Використовуючи лексику ранкової рутини (прокидатися, одягатися, умиватися), автор-письменник має показати, що закінчення змінюються абсолютно так само, як і в регулярних дієсловах, а частка -ся (або -сь після голосних) просто стає в кінець слова [S3, S6]. Слід відразу ж інтегрувати фонетичні правила вимови [с':а] та [ц':а], не відкладаючи їх на потім [S1, S9]. Вправи мають фокусуватися на формах «я» та «ти», щоб стимулювати діалогічне мовлення про повсякденне життя [S5, S6].",
+        "source_lines": "25-26",
+        "step_num": 2
+      }
+    },
+    {
+      "obligation_id": "err-2",
+      "obligation_type": "l2_error",
+      "failure_reason": "missing_correct",
+      "current_artifact_state": "id: act-5\ntype: error-correction\ntitle: Виправте помилку\ninstruction: Each line shows a common L2 mistake with reflexive verbs. Find the wrong\n  part and rewrite the correct version.\nitems:\n- sentence: Я прокидаєшся. / Він прокидаюся.\n  error: прокидаєшся\n  correction: Я прокидаюся. / Він прокидається.\n  explanation: 'Endings before -ся agree with the subject: я → -юся, він → -ється.\n    The suffi...",
+      "expected_treatment": {
+        "expected_correction_value": "Вимова: [прокидайес':а]",
+        "expected_error_value": "Вимова: [прокидайешся]",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      },
+      "surgical_diff_hint": "Insert manifest_payload.correct (\"Вимова: [прокидайес':а]\") verbatim",
+      "manifest_payload": {
+        "correct": "Вимова: [прокидайес':а]",
+        "id": "err-2",
+        "incorrect": "Вимова: [прокидайешся]",
+        "source_lines": "40",
+        "treatment": "contrast_pair",
+        "why": "Побуквене прочитання. Учень намагається чітко вимовити звук [ш], хоча українська фонетична норма вимагає повної асиміляції в подовжений м'який [с':а] [S1, S9]."
+      }
+    },
+    {
+      "obligation_id": "err-3",
+      "obligation_type": "l2_error",
+      "failure_reason": "missing_incorrect_and_correct",
+      "current_artifact_state": "id: act-5\ntype: error-correction\ntitle: Виправте помилку\ninstruction: Each line shows a common L2 mistake with reflexive verbs. Find the wrong\n  part and rewrite the correct version.\nitems:\n- sentence: Я прокидаєшся. / Він прокидаюся.\n  error: прокидаєшся\n  correction: Я прокидаюся. / Він прокидається.\n  explanation: 'Endings before -ся agree with the subject: я → -юся, він → -ється.\n    The suffi...",
+      "expected_treatment": {
+        "expected_correction_value": "Вимова: [одягайец':а]",
+        "expected_error_value": "Вимова: [одягайет'с'а]",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      },
+      "surgical_diff_hint": "Insert manifest_payload.incorrect (\"Вимова: [одягайет'с'а]\") verbatim into the activities.yaml entry at act-5 item 3; Insert manifest_payload.correct (\"Вимова: [одягайец':а]\") verbatim",
+      "manifest_payload": {
+        "correct": "Вимова: [одягайец':а]",
+        "id": "err-3",
+        "incorrect": "Вимова: [одягайет'с'а]",
+        "source_lines": "41",
+        "treatment": "contrast_pair",
+        "why": "Відсутність асиміляції звуків [т'] і [с'] в африкату [ц':а]. Англомовний артикуляційний апарат не звик до таких злиттів у кінці слова, тому учні намагаються вимовляти звуки роздільно [S1, S9]."
+      }
+    },
+    {
+      "obligation_id": "ban-1",
+      "obligation_type": "decolonization_ban",
+      "failure_reason": "ban_substance_missing",
+      "current_artifact_state": "## Підсумок\n\nA reflexive Ukrainian verb is built from three things: the verb stem you already know, the regular Group 1 or Group 2 ending for the person you mean, and the suffix **-ся** glued onto the very end. Endings before **-ся** behave exactly like they do on a non-reflexive verb. In Group 2 verbs after a labial consonant, the 1st-person singular grows an extra **л** (**дивитися** → я **дивлю...",
+      "expected_treatment": {
+        "shape": "module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)"
+      },
+      "surgical_diff_hint": "Remove phrasing matching manifest_payload.rule ('При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено використовувати будь-які російськомовні пояснення, паралелі чи фонетичні порівняння. Це абсолютна вимога деколонізованої педагогіки [S9].') - negative obligation: absence required",
+      "manifest_payload": {
+        "id": "ban-1",
+        "rule": "При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено використовувати будь-які російськомовні пояснення, паралелі чи фонетичні порівняння. Це абсолютна вимога деколонізованої педагогіки [S9].",
+        "source_lines": "50"
+      }
+    },
+    {
+      "obligation_id": "ban-2",
+      "obligation_type": "decolonization_ban",
+      "failure_reason": "ban_substance_missing",
+      "current_artifact_state": "## Підсумок\n\nA reflexive Ukrainian verb is built from three things: the verb stem you already know, the regular Group 1 or Group 2 ending for the person you mean, and the suffix **-ся** glued onto the very end. Endings before **-ся** behave exactly like they do on a non-reflexive verb. In Group 2 verbs after a labial consonant, the 1st-person singular grows an extra **л** (**дивитися** → я **дивлю...",
+      "expected_treatment": {
+        "shape": "module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)"
+      },
+      "surgical_diff_hint": "Remove phrasing matching manifest_payload.rule (\"Часто недосвідчені автори чи викладачі намагаються пояснити вимову українського закінчення -ться як «схоже на російське -тся», що є грубим порушенням. Учень має вибудовувати українські фонетичні категорії з нуля, спираючись виключно на українські правила асиміляції (звук [т] плюс звук [с] дають подовжений м'який [ц':а]) [S1, S9]. Жодних відсилок до мови колонізатора бути не може.\") - negative obligation: absence required",
+      "manifest_payload": {
+        "id": "ban-2",
+        "rule": "Часто недосвідчені автори чи викладачі намагаються пояснити вимову українського закінчення -ться як «схоже на російське -тся», що є грубим порушенням. Учень має вибудовувати українські фонетичні категорії з нуля, спираючись виключно на українські правила асиміляції (звук [т] плюс звук [с] дають подовжений м'який [ц':а]) [S1, S9]. Жодних відсилок до мови колонізатора бути не може.",
+        "source_lines": "52"
+      }
+    },
+    {
+      "obligation_id": "ban-3",
+      "obligation_type": "decolonization_ban",
+      "failure_reason": "ban_substance_missing",
+      "current_artifact_state": "## Дієслова на -ся\n\nA Ukrainian reflexive verb is a regular verb plus the suffix **-ся** glued to the very end. The action loops back on the speaker, the way English uses *myself* or *up*. The suffix itself has deep Ukrainian roots: it is the old short form of the reflexive pronoun **себе** (\"self\"), still preserved in Carpathian dialect phrases like *Я ся не бою* (\"I am not afraid\"). It is a nati...",
+      "expected_treatment": {
+        "shape": "module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)"
+      },
+      "surgical_diff_hint": "Remove phrasing matching manifest_payload.rule ('Також слід уникати хибного тлумачення походження частки -ся. Вона не є «запозиченою» чи «спільною з російською». Навпаки, глибоке питомо українське етимологічне коріння цієї частки лежить у давній короткій формі зворотного займенника «себе» (Знахідний відмінок однини: «Я ся не бою»), що чітко й досі фіксується в українських карпатських діалектах та історичних текстах [S9].') - negative obligation: absence required",
+      "manifest_payload": {
+        "id": "ban-3",
+        "rule": "Також слід уникати хибного тлумачення походження частки -ся. Вона не є «запозиченою» чи «спільною з російською». Навпаки, глибоке питомо українське етимологічне коріння цієї частки лежить у давній короткій формі зворотного займенника «себе» (Знахідний відмінок однини: «Я ся не бою»), що чітко й досі фіксується в українських карпатських діалектах та історичних текстах [S9].",
+        "source_lines": "54"
+      }
+    }
+  ]
+}
