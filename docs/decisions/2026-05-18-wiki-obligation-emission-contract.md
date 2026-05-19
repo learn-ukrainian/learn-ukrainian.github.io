@@ -1,6 +1,7 @@
-# DECISION REQUIRED — Wiki obligation emission contract for V7 writer (#2148)
+# RESOLVED — Wiki obligation emission contract for V7 writer (#2148)
 
-**Status:** DRAFT — awaiting user sign-off (3 fix shapes scoped; γ recommended after codex consultation)
+**Status:** RESOLVED 2026-05-19 — User approved γ + bridge A. Implementation shipped via PR #2153 (`5ac671a1b5`). m20 build #8 follows under the new contract.
+**Original status:** DRAFT — awaiting user sign-off (3 fix shapes scoped; γ recommended after codex consultation)
 **Surfaced:** 2026-05-18 — m20 build #7 reached wiki_coverage_gate at **22.22% (4 / 18 obligations)**, hard-failed at `min_pct=80%` after batched + narrow correction passes converged (one regression to 5.56% before recovering to 22%)
 **Scope (BLOCKING):** A1 m20 ship + every future module build with a wiki manifest. Does NOT block tech-debt PRs that don't touch the writer prompt or the obligation emission path.
 **Issue:** #2148 (HIGH severity, architectural)
