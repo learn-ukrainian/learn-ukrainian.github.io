@@ -2815,6 +2815,23 @@ def invoke_writer(
     module_ref = module or _prompt_module_ref(prompt)
     section_names = list(sections) if sections is not None else _prompt_sections(prompt)
     tool_calls = _runtime_tool_calls(result)
+    # Backfill from sidecar JSONL when the runtime adapter is a black box.
+    # ``hermes -z`` strips tool-call traces from stdout by design, so the
+    # HermesGrok/Qwen/DeepSeek adapters return ``tool_calls_total=None`` —
+    # which makes ``_runtime_tool_calls`` return ``None``. Without backfill,
+    # in-memory writer-runtime gates (``detect_tool_theatre``,
+    # ``emit_writer_response_telemetry``, ``_enforce_writer_runtime_gates``)
+    # all see zero calls and treat every cited tool as a tool-theatre
+    # violation, even when the post_tool_call shell hook actually captured
+    # the calls in ``$cwd/*.write.jsonl``. The gate-side
+    # ``_load_writer_tool_calls`` already reads that file; this restores
+    # parity for the in-memory path. Empirical evidence: 2026-05-19 b1
+    # genitive-nuances build, whose ``phase_writer_summary`` reported
+    # ``tool_calls_total: null`` while the hook captured 11 real MCP calls.
+    if tool_calls is None:
+        sidecar_calls = _load_writer_tool_calls(Path(cwd))
+        if sidecar_calls:
+            tool_calls = [dict(call) for call in sidecar_calls]
     if tool_trace_path is not None and tool_calls is not None:
         tool_trace_path.parent.mkdir(parents=True, exist_ok=True)
         existing_calls: list[Any] = []

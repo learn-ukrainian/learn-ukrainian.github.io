@@ -343,6 +343,77 @@ def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
+def test_invoke_writer_backfills_tool_calls_from_sidecar_jsonl(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Pin the invoke_writer sidecar-JSONL backfill for Hermes-routed writers.
+
+    ``hermes -z`` strips tool-call traces from stdout, so the Hermes adapter
+    returns ``tool_calls_total=None`` and ``_runtime_tool_calls`` returns
+    ``None``. Without backfill, ``detect_tool_theatre`` and
+    ``_enforce_writer_runtime_gates`` see zero calls and treat every cited
+    tool as a violation, even when the ``post_tool_call`` shell hook
+    captured the calls in ``$cwd/hermes.write.jsonl``. This test simulates
+    that situation by:
+
+    * Creating a fake Hermes-style invoker that returns
+      ``tool_calls_total=None`` (signal: telemetry unavailable).
+    * Seeding ``$cwd/hermes.write.jsonl`` with one captured MCP call.
+    * Asserting the trace file written by ``invoke_writer`` contains the
+      backfilled call (proves the in-memory path also saw it).
+    """
+    _seed_mcp_config(tmp_path, monkeypatch)
+    trace_path = tmp_path / "writer_tool_calls.json"
+
+    # Simulate the hook's output (one MCP call captured during the writer
+    # session). ``event: writer_tool_call`` is required for
+    # ``_load_jsonl_tool_calls`` to keep this line.
+    (tmp_path / "hermes.write.jsonl").write_text(
+        json.dumps(
+            {
+                "event": "writer_tool_call",
+                "tool": "mcp_sources_verify_word",
+                "args": {"word": "стіл"},
+                "result": {"valid": True, "matches": 2},
+                "duration_ms": 9,
+                "tool_call_id": "call_test",
+                "session_id": "sess",
+                "ts": 1779220000,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    def hermes_like_invoker(
+        _agent: str, _prompt: str, **_kwargs: Any
+    ) -> SimpleNamespace:
+        # tool_calls_total=None mirrors HermesDeepSeekParseResult / Grok /
+        # Qwen — the adapter explicitly returns "unknown" for the call
+        # count because Hermes -z doesn't expose the trace on stdout.
+        return SimpleNamespace(
+            response="writer output",
+            tool_calls=[],
+            tool_calls_total=None,
+        )
+
+    response = linear_pipeline.invoke_writer(
+        "Write.",
+        "deepseek-tools",
+        cwd=tmp_path,
+        invoker=hermes_like_invoker,
+        tool_trace_path=trace_path,
+    )
+
+    trace = json.loads(trace_path.read_text(encoding="utf-8"))
+    assert response == "writer output"
+    assert len(trace) == 1
+    assert trace[0]["tool"] == "mcp_sources_verify_word"
+    assert trace[0]["args"] == {"word": "стіл"}
+
+
 def test_invoke_writer_persists_tool_trace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
