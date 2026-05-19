@@ -202,6 +202,98 @@ def test_parse_writer_output_strict_json() -> None:
     )
 
 
+def test_parse_writer_output_accepts_4backtick_outer_with_inner_3backtick_content() -> None:
+    """Pin CommonMark fence-counting for the module.md OUTER fence.
+
+    The writer prompt now instructs writers to use a 4-backtick OUTER fence
+    for module.md so they can include 3-backtick code blocks (verb-conjugation
+    tables, code-style examples, etc.) inside the prose without breaking
+    artifact parsing. Before this change the parser treated every triple-
+    backtick line as a structural fence-toggle, which produced "unnamed
+    fenced block" HARD-FAILs whenever a writer emitted any nested ```
+    inside module.md (observed 2026-05-19 a2/aspect-concept build).
+
+    Per CommonMark: an opening N-backtick fence is closed by a bare fence of
+    at least N backticks. So a 4-backtick OUTER fence lets all 3-backtick
+    inner content fences pass through as content.
+
+    Triangulated via parallel ``ask-codex`` + delegate-dispatch ``deepseek``
+    consults 2026-05-20: both independently picked this protocol.
+    """
+    output = """````markdown file=module.md
+# Мій ранок
+
+Verb conjugations in a code block:
+
+```
+Я читаю
+Ти читаєш
+Він читає
+```
+
+End of section.
+````
+
+```json file=activities.yaml
+[{"id": "act-1", "type": "fill-in", "title": "Додайте -ся"}]
+```
+
+```json file=vocabulary.yaml
+[{"lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "Мій ранок простий."}]
+```
+
+```json file=resources.yaml
+[{"title": "Караман Grade 10, p.176", "role": "textbook", "notes": "Зворотні дієслова."}]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+
+    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
+    # Inner 3-backtick fences MUST be preserved as content, not stripped or
+    # interpreted as the artifact close.
+    module_md = artifacts["module.md"]
+    assert "```" in module_md, (
+        "Inner 3-backtick code fence was stripped — parser swallowed it "
+        "instead of treating it as content"
+    )
+    assert "Я читаю" in module_md
+    assert "End of section." in module_md
+    assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
+
+
+def test_parse_writer_output_3backtick_outer_still_works_no_inner_fences() -> None:
+    """3-backtick OUTER fences still parse correctly (backward compat).
+
+    Writers who don't need inner code fences can keep using 3-backtick outer
+    fences. The new run-length-aware close logic preserves this — an open=3
+    fence closes on a close=3 (no info) line. Critical for incremental
+    migration of the writer-prompt templates.
+    """
+    output = """```markdown file=module.md
+# Мій ранок
+
+Plain prose without any code fences.
+```
+
+```json file=activities.yaml
+[{"id": "act-1", "type": "fill-in", "title": "Додайте -ся"}]
+```
+
+```json file=vocabulary.yaml
+[{"lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "test."}]
+```
+
+```json file=resources.yaml
+[{"title": "Караман Grade 10, p.176", "role": "textbook", "notes": "test."}]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
+    assert "Plain prose" in artifacts["module.md"]
+
+
 def test_parse_writer_output_rejects_yaml_block() -> None:
     output = """```markdown file=module.md
 # Мій ранок

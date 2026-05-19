@@ -293,16 +293,25 @@ just because the example looks shorter that way.
 ## Output format (strict)
 
 Emit `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` as separate
-fenced JSON code blocks labeled with the language `json`. Exactly one JSON
-block per structured artifact. Do not include trailing commas. Do not include
-comments. Do not mix YAML or prose into JSON blocks. The pipeline uses
-`json.loads` and fails the build on any parse error.
+3-backtick fenced JSON code blocks labeled with the language `json`. Exactly
+one JSON block per structured artifact. Do not include trailing commas. Do
+not include comments. Do not mix YAML or prose into JSON blocks. The pipeline
+uses `json.loads` and fails the build on any parse error.
 
-Inside the `module.md` artifact, do NOT use triple backticks (```) for ANY
-purpose — no fenced code, no fenced quote, no fenced text. Use plain paragraphs,
-lists, or tables instead. Triple backticks inside the artifact will be parsed as
-a closing fence and break the artifact boundary. Single backticks for inline code
-spans (e.g., `verify_words`) are fine — only triple backticks are forbidden.
+**Wrap the `module.md` artifact in a 4-backtick OUTER fence**: ````markdown
+file=module.md` opens, ```` (four backticks, bare, on its own line) closes.
+The 4-backtick wrapper lets you include 3-backtick code blocks INSIDE
+module.md for verb conjugation tables, code-style examples, or any prose
+that benefits from a fenced block — those inner 3-backtick fences will be
+treated as content. CommonMark fence semantics: an N-backtick open is
+closed only by ≥N backticks. So a 4-backtick outer permits 3-backtick
+inner fences to pass through. Use 4 backticks for module.md OUTER even if
+you don't need inner fences — uniform protocol is safer than per-module
+choices.
+
+Triple-backtick `module.md` outers are still accepted for backward
+compatibility, but they fail HARD as soon as the writer includes any
+nested triple-backtick line. Default to 4-backtick.
 
 ## LESSON SOURCE — synthesize this wiki content into the 4-tab format
 

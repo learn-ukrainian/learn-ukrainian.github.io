@@ -2883,11 +2883,29 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
     fence_name: str | None = None
     fence_lang: str | None = None
     fence_start_line = 0
+    fence_open_run = 0  # Backtick-run length of the OPEN fence (CommonMark).
     fence_lines: list[str] = []
 
+    # CommonMark fence semantics (#2026-05-20 design triangulation via Codex +
+    # DeepSeek consults): an opening fence of N>=3 backticks is closed by a
+    # bare fence of at least N backticks. A 4-backtick OUTER fence therefore
+    # permits arbitrary 3-backtick inner content fences to pass through. This
+    # mirrors the existing `_attempt_module_md_only_recovery` precedent at
+    # ~line 3013 (which already implements N>=4 wrappers for the correction
+    # path). Before this rewrite the parser treated every triple-backtick
+    # line as a structural fence-toggle, which (a) forced writers to forgo
+    # markdown code blocks inside `module.md`, (b) produced "unnamed fenced
+    # block" HARD-FAILs whenever a writer ignored the prohibition (2026-05-19
+    # a2/aspect-concept build), and (c) fought CommonMark instead of using
+    # it. Backward-compatible: 3-backtick artifact fences still work exactly
+    # as before because the close-fence run-length check matches when both
+    # opens and closes are 3.
+    _FENCE_LINE_RE = re.compile(r"^\s*(?P<run>`{3,})(?P<info>.*)$")
+
     for line_no, line in enumerate(output.splitlines(), start=1):
-        fence_match = re.match(r"^\s*```(?P<info>.*)$", line)
+        fence_match = _FENCE_LINE_RE.match(line)
         if fence_match:
+            run_len = len(fence_match.group("run"))
             if not in_fence:
                 info = fence_match.group("info").strip()
                 info_name = _artifact_name_from_text(info)
@@ -2905,6 +2923,7 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
                 fence_name = info_name or pending_name
                 fence_lang = _fence_language(info)
                 fence_start_line = line_no
+                fence_open_run = run_len
                 if fence_name is None:
                     raise LinearPipelineError(
                         f"Writer output contains unnamed fenced block at line {line_no}"
@@ -2923,6 +2942,18 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
                 fence_lines = []
                 continue
 
+            # In-fence backtick line: only close on a bare run >= open run AND
+            # an empty info string (CommonMark close-fence rule). A shorter
+            # run, OR a run with content after the backticks, is treated as
+            # inner content (writers can use 3-backtick code blocks inside
+            # a 4-backtick module.md wrapper). The empty-info check guards
+            # against the rare case where the writer opens a NEW info-bearing
+            # fence inside an artifact — that's content too, not a close.
+            close_info = fence_match.group("info").strip()
+            if run_len < fence_open_run or close_info:
+                fence_lines.append(line)
+                continue
+
             if fence_name == "module.md":
                 artifacts[fence_name] = "\n".join(fence_lines).strip() + "\n"
             elif fence_name in WRITER_JSON_ARTIFACTS:
@@ -2936,6 +2967,7 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
             fence_lang = None
             pending_name = None
             fence_start_line = 0
+            fence_open_run = 0
             fence_lines = []
             continue
 
