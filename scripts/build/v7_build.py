@@ -605,6 +605,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--effort",
+        choices=("low", "medium", "high", "xhigh", "max"),
+        default=None,
+        help=(
+            "Override reasoning effort for the writer phase. Defaults to "
+            "WRITER_DEFAULTS[writer]['effort'] when unset. The 2026-05-19 B1 "
+            "writer bakeoff validated deepseek-tools at xhigh (medium fails "
+            "with scaffolding-only on B1+ word targets); use --effort xhigh "
+            "for deepseek/qwen-routed builds at A2+ until the per-writer "
+            "defaults are revised."
+        ),
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help=(
@@ -752,6 +765,7 @@ def _run(args: argparse.Namespace) -> int:
             cwd=writer_cwd,
             tool_trace_path=module_dir / "writer_tool_calls.json",
             stdout_silence_timeout=args.writer_timeout,
+            effort=args.effort,
         )
         # Save raw writer output + prompt + knowledge packet BEFORE parse so any
         # parse failure is fully debuggable. Without this, a parse error like
