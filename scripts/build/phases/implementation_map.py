@@ -7,7 +7,7 @@ import json
 import re
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, NotRequired, TypedDict
 
 ObligationType = Literal[
     "sequence_step",
@@ -16,6 +16,7 @@ ObligationType = Literal[
     "decolonization_ban",
 ]
 Artifact = Literal["module.md", "activities.yaml"]
+DecolonizationBanSubtype = Literal["substance_required", "absence_required"]
 
 OBLIGATION_GROUPS: tuple[tuple[str, ObligationType], ...] = (
     ("sequence_steps", "sequence_step"),
@@ -59,6 +60,9 @@ IMPLEMENTATION_MAP_SCHEMA: dict[str, Any] = {
                     "location_hint": {"type": "string"},
                     "treatment_template": {"type": "object"},
                     "manifest_payload": {"type": "object"},
+                    "subtype": {
+                        "enum": ["substance_required", "absence_required"],
+                    },
                 },
                 "additionalProperties": False,
             },
@@ -108,6 +112,49 @@ class ImplementationMapEntry(TypedDict):
     location_hint: str
     treatment_template: dict[str, Any]
     manifest_payload: dict[str, Any]
+    subtype: NotRequired[DecolonizationBanSubtype]
+
+
+_GUILLEMET_TERM = r"«[^»\n]{1,120}»"
+_GUILLEMET_NEGATED_PAIR_RE = re.compile(
+    rf"{_GUILLEMET_TERM}\s*\(\s*не\s+{_GUILLEMET_TERM}\s*\)",
+    re.IGNORECASE,
+)
+_GUILLEMET_SLASH_PAIR_RE = re.compile(
+    rf"{_GUILLEMET_TERM}\s*/\s*{_GUILLEMET_TERM}",
+    re.IGNORECASE,
+)
+_GUILLEMET_MARKED_CALQUE_RE = re.compile(
+    rf"{_GUILLEMET_TERM}[^.?!\n]{{0,80}}\(\s*(?:калька|русизм|суржик)\s*\)",
+    re.IGNORECASE,
+)
+_EXPLICIT_SUBSTITUTION_RE = re.compile(
+    rf"(?:{_GUILLEMET_TERM}|[\w'’ʼ-]{{2,}})\s+замість\s+"
+    rf"(?:{_GUILLEMET_TERM}|[\w'’ʼ-]{{2,}})",
+    re.IGNORECASE | re.UNICODE,
+)
+
+
+def classify_decolonization_ban_subtype(
+    rule_or_obligation: str | Mapping[str, Any],
+) -> DecolonizationBanSubtype:
+    """Classify a decolonization ban by whether it carries checkable substance."""
+    rule = (
+        str(rule_or_obligation.get("rule") or "")
+        if isinstance(rule_or_obligation, Mapping)
+        else str(rule_or_obligation or "")
+    )
+    if not rule.strip():
+        return "absence_required"
+    if _GUILLEMET_NEGATED_PAIR_RE.search(rule):
+        return "substance_required"
+    if _GUILLEMET_SLASH_PAIR_RE.search(rule):
+        return "substance_required"
+    if _GUILLEMET_MARKED_CALQUE_RE.search(rule):
+        return "substance_required"
+    if _EXPLICIT_SUBSTITUTION_RE.search(rule):
+        return "substance_required"
+    return "absence_required"
 
 
 def seed_implementation_map(
@@ -119,16 +166,17 @@ def seed_implementation_map(
     entries: list[ImplementationMapEntry] = []
     for obligation_type, manifest_payload in _iter_manifest_obligations(manifest):
         artifact = _artifact_for(obligation_type, manifest_payload)
-        entries.append(
-            {
-                "obligation_id": str(manifest_payload.get("id") or ""),
-                "obligation_type": obligation_type,
-                "artifact": artifact,
-                "location_hint": _location_hint(obligation_type, manifest_payload, artifact, plan),
-                "treatment_template": _treatment_template(obligation_type, manifest_payload),
-                "manifest_payload": manifest_payload,
-            }
-        )
+        entry: ImplementationMapEntry = {
+            "obligation_id": str(manifest_payload.get("id") or ""),
+            "obligation_type": obligation_type,
+            "artifact": artifact,
+            "location_hint": _location_hint(obligation_type, manifest_payload, artifact, plan),
+            "treatment_template": _treatment_template(obligation_type, manifest_payload),
+            "manifest_payload": manifest_payload,
+        }
+        if obligation_type == "decolonization_ban":
+            entry["subtype"] = classify_decolonization_ban_subtype(manifest_payload)
+        entries.append(entry)
 
     payload = {
         "schema_version": 1,
@@ -304,7 +352,8 @@ def _validate_entry(index: int, entry: Any) -> None:
     if missing:
         raise ValueError(f"implementation_map entries[{index}] missing required keys: {', '.join(missing)}")
 
-    extra = sorted(set(entry).difference(required))
+    allowed = set(IMPLEMENTATION_MAP_SCHEMA["properties"]["entries"]["items"]["properties"])
+    extra = sorted(set(entry).difference(allowed))
     if extra:
         raise ValueError(f"implementation_map entries[{index}] has unexpected keys: {', '.join(extra)}")
 
@@ -329,6 +378,12 @@ def _validate_entry(index: int, entry: Any) -> None:
         raise ValueError(f"implementation_map entries[{index}] manifest_payload must be an object")
     if manifest_payload.get("id") != obligation_id:
         raise ValueError(f"implementation_map entries[{index}] obligation_id must match manifest_payload.id")
+    subtype = entry.get("subtype")
+    if subtype is not None:
+        if obligation_type != "decolonization_ban":
+            raise ValueError(f"implementation_map entries[{index}] subtype is only valid for decolonization_ban")
+        if subtype not in {"substance_required", "absence_required"}:
+            raise ValueError(f"implementation_map entries[{index}] has invalid subtype: {subtype}")
 
 
 def render_for_writer_prompt(payload: dict[str, Any]) -> str:
@@ -342,9 +397,11 @@ def render_for_writer_prompt(payload: dict[str, Any]) -> str:
                 f"(obligation_type: {entry['obligation_type']})",
                 f"  artifact: {entry['artifact']}",
                 f"  location_hint: {entry['location_hint']}",
-                "  treatment_template:",
             ]
         )
+        if entry.get("subtype"):
+            rows.append(f"  subtype: {entry['subtype']}")
+        rows.append("  treatment_template:")
         for key, value in sorted(entry["treatment_template"].items()):
             rows.append(f"    {key}: {_render_template_value(value)}")
     body = "\n".join(rows)

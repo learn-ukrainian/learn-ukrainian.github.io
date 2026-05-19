@@ -373,6 +373,7 @@ def test_sequence_claim_missing_quotes_heading_and_required_claim() -> None:
 
 def test_ban_substance_missing_quotes_seeded_rule() -> None:
     manifest = _ban_manifest()
+    manifest["decolonization_bans"][0]["rule"] = "Use «рушник» (не «полотенце»)."
 
     report = check_wiki_coverage(
         manifest=manifest,
@@ -384,8 +385,8 @@ def test_ban_substance_missing_quotes_seeded_rule() -> None:
 
     proposal = _single_proposal(report)
     assert proposal["failure_reason"] == "ban_substance_missing"
-    assert "manifest_payload.rule ('Do not frame Ukrainian as a dialect.')" in proposal["surgical_diff_hint"]
-    assert "negative obligation: absence required" in proposal["surgical_diff_hint"]
+    assert "manifest_payload.rule ('Use «рушник» (не «полотенце»).')" in proposal["surgical_diff_hint"]
+    assert "lexical substitution substance" in proposal["surgical_diff_hint"]
 
 
 def test_unknown_obligation_type_proposal_names_seeder_bug() -> None:
