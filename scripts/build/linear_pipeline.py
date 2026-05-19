@@ -6985,6 +6985,100 @@ def _parse_mcp_search_text_markdown(text: str) -> list[Mapping[str, Any]]:
     return items
 
 
+_MCP_GET_CHUNK_CONTEXT_RE = re.compile(
+    r"(?s)^\s*\*\*\[(?P<chunk_id>[^\]]+)\]\*\*\s+—\s+"
+    r"(?:Сторінка|Page|p\.?)\s+(?P<section>\d+)\s*\n+"
+    r"(?P<body>.*)$"
+)
+
+_CHUNK_ID_PAGE_SUFFIX_RE = re.compile(r"^(?P<source_file>.+)_s(?P<page>\d{3,4})$")
+
+
+def _lookup_textbook_metadata(source_file: str) -> dict[str, str] | None:
+    """Look up author_uk + grade for a textbook ``source_file``.
+
+    Pulled out of ``_parse_mcp_get_chunk_context_markdown`` so tests can
+    monkeypatch the DB hit. Returns ``None`` if the DB is unavailable, the
+    source_file has no row, or the query fails. Cyrillic-native — never
+    crosses writing systems (per ADR
+    ``docs/decisions/2026-05-15-cyrillic-native-matcher.md``).
+    """
+    if not TEXTBOOK_SOURCES_DB_PATH.exists():
+        return None
+    try:
+        with sqlite3.connect(str(TEXTBOOK_SOURCES_DB_PATH)) as conn:
+            row = conn.execute(
+                "SELECT author_uk, grade FROM textbooks WHERE source_file = ? LIMIT 1",
+                (source_file,),
+            ).fetchone()
+    except sqlite3.Error:
+        return None
+    if row is None:
+        return None
+    author_uk = str(row[0] or "").strip()
+    grade = str(row[1] or "").strip()
+    if not author_uk or not grade:
+        return None
+    return {"author_uk": author_uk, "grade": grade}
+
+
+def _parse_mcp_get_chunk_context_markdown(
+    text: str,
+) -> list[Mapping[str, Any]]:
+    """Parse sources.get_chunk_context markdown output into a textbook item.
+
+    Output shape:
+
+        **[<chunk_id>]** — Сторінка <N>
+
+        <verbatim body>
+
+    The writer prompt's Step B (writer_prompt §"Textbook quotes") instructs
+    every CORE-level writer to call ``get_chunk_context(chunk_id=...)`` with
+    the chunk_id resolved from the plan's reference_records, then paste ≥30
+    contiguous words from the returned body. Before this parser landed the
+    textbook_grounding gate only ingested ``search_text`` results, so a
+    writer doing the prompt-prescribed thing produced ``matched=[]`` and
+    HARD-REJECTED on textbook_grounding (observed on a1/my-morning
+    build 2026-05-19 21:06 — the writer's two verbatim blockquotes WERE
+    in the returned chunk_context body but the gate never saw them).
+
+    To make the synthesized item match the plan reference title (e.g.
+    ``"Захарійчук Grade 1, p.52"``), we derive ``page`` deterministically
+    from the chunk_id pattern ``<source_file>_s<NNNN>`` and look up
+    ``author_uk`` + ``grade`` from the textbooks table via
+    ``_lookup_textbook_metadata``. If the DB is unavailable the item is
+    returned without a synthesized title (the body still contributes to
+    the long-blockquote substring match path in
+    ``_textbook_grounding_gate``).
+    """
+    match = _MCP_GET_CHUNK_CONTEXT_RE.match(text)
+    if match is None:
+        return []
+    chunk_id = match.group("chunk_id").strip()
+    body = match.group("body").strip()
+    item: dict[str, Any] = {
+        "source_type": "textbook",
+        "chunk_id": chunk_id,
+        "text": body,
+    }
+    suffix_match = _CHUNK_ID_PAGE_SUFFIX_RE.match(chunk_id)
+    if suffix_match is None:
+        return [item]
+    source_file = suffix_match.group("source_file")
+    page = int(suffix_match.group("page"))
+    item["source_file"] = source_file
+    item["page"] = page
+    metadata = _lookup_textbook_metadata(source_file)
+    if metadata is not None:
+        author = metadata["author_uk"]
+        grade_str = metadata["grade"]
+        item["author"] = author
+        item["grade"] = int(grade_str) if grade_str.isdigit() else grade_str
+        item["title"] = f"{author} Grade {grade_str}, p.{page}"
+    return [item]
+
+
 def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     result = call.get("result", call.get("response"))
     result_summary = call.get("result_summary")
@@ -7022,7 +7116,8 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         raw_hits = result.get("results") or result.get("hits") or result.get("items")
         if isinstance(raw_hits, list):
             return [item for item in raw_hits if isinstance(item, Mapping)]
-        if _tool_name_from_call(call) == "search_text":
+        tool_name = _tool_name_from_call(call)
+        if tool_name == "search_text":
             # Canonical MCP content-block shape (claude / codex / direct
             # anthropic-tools): result is ``{"type": "text", "text": "<md>"}``.
             if result.get("type") == "text" and isinstance(result.get("text"), str):
@@ -7045,6 +7140,19 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
                 parsed = _parse_mcp_search_text_markdown(inner)
                 if parsed:
                     return parsed
+        elif tool_name == "get_chunk_context":
+            # The writer prompt's Step B prescribes get_chunk_context for
+            # plan-referenced chunks (after search_text resolves chunk_id).
+            # Without parsing this shape the textbook_grounding gate ignores
+            # the writer's deterministic retrieval path entirely — observed
+            # 2026-05-19 a1/my-morning build, where the writer's two verbatim
+            # blockquotes WERE in the chunk_context bodies but the gate
+            # produced ``matched=[]``.
+            for candidate in (result.get("text"), result.get("result")):
+                if isinstance(candidate, str):
+                    parsed = _parse_mcp_get_chunk_context_markdown(candidate)
+                    if parsed:
+                        return parsed
         return [result]
     return []
 
@@ -7186,13 +7294,26 @@ def _textbook_grounding_gate(
         for record in blockquote_records
         if len(_textbook_match_tokens(record["quote"])) >= TEXTBOOK_GROUNDING_MIN_WORDS
     ]
+    all_writer_calls = _load_writer_tool_calls(module_dir)
     search_calls = [
         call
-        for call in _load_writer_tool_calls(module_dir)
+        for call in all_writer_calls
         if _tool_name_from_call(call) == "search_text"
     ]
+    # Per writer_prompt §"Textbook quotes" Step B, writers retrieve the
+    # plan-referenced chunk via ``get_chunk_context(chunk_id=...)`` after
+    # ``search_text`` resolves the chunk_id. Both call families produce
+    # textbook items the matcher needs to see — collecting only one half
+    # (the historical state until 2026-05-20) makes the writer's
+    # prompt-prescribed retrieval path invisible to the gate.
+    chunk_context_calls = [
+        call
+        for call in all_writer_calls
+        if _tool_name_from_call(call) == "get_chunk_context"
+    ]
+    relevant_calls = search_calls + chunk_context_calls
     textbook_results: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
-    for call in search_calls:
+    for call in relevant_calls:
         for result in _result_items_from_call(call):
             if _is_textbook_result(result):
                 textbook_results.append((call, result))
@@ -7290,6 +7411,7 @@ def _textbook_grounding_gate(
         "blockquotes_checked": len(blockquote_records),
         "long_blockquotes_checked": len(long_blockquote_records),
         "search_text_calls": len(search_calls),
+        "chunk_context_calls": len(chunk_context_calls),
         "textbook_result_hits": len(textbook_results),
         "min_words": TEXTBOOK_GROUNDING_MIN_WORDS,
         "downgraded": downgraded,

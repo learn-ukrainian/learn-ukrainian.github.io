@@ -343,6 +343,115 @@ def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
+def test_textbook_grounding_gate_matches_via_get_chunk_context(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Pin the writer_prompt §"Textbook quotes" Step B retrieval path.
+
+    The writer prompt instructs every CORE-level writer to:
+
+    * Step A: call ``search_text`` to resolve a ``chunk_id`` from a
+      plan reference.
+    * Step B: call ``get_chunk_context(chunk_id=...)`` to fetch the
+      verbatim body, then paste ≥30 contiguous words into a blockquote.
+
+    Before 2026-05-20 the textbook_grounding gate only ingested ``search_text``
+    results, so a writer doing the prompt-prescribed thing produced
+    ``matched=[]`` and HARD-REJECTED. Observed on 2026-05-19 a1/my-morning
+    build: the writer's two verbatim blockquotes WERE in the chunk_context
+    bodies but the gate never saw them. This test pins the fix end-to-end —
+    seed only a get_chunk_context call, assert the gate matches the plan
+    reference.
+    """
+    # The chunk_context shape the sources MCP server emits is
+    # ``"**[<chunk_id>]** — Сторінка <N>\n\n<body>"``. The chunk's chunk_id
+    # encodes source_file + page; _lookup_textbook_metadata is monkey-
+    # patched so the test does not depend on a populated sources.db.
+    body = (
+        "Зворотна форма дієслова показує дію, яка повертається до виконавця. "
+        "Учень умивається, одягається, готується до уроку, вітається з учителем, "
+        "збирається швидко і повертається до щоденної ранкової справи без зайвих "
+        "пояснень сьогодні."
+    )
+    chunk_id = "10-klas-ukrmova-karaman-2018_s0176"
+    chunk_markdown = (
+        f"**[{chunk_id}]** — Сторінка 176\n\n{body}"
+    )
+    (tmp_path / "hermes.write.jsonl").write_text(
+        json.dumps(
+            {
+                "event": "writer_tool_call",
+                "tool": "mcp_sources_get_chunk_context",
+                "args": {"chunk_id": chunk_id},
+                "result": {"result": chunk_markdown},
+                "duration_ms": 12,
+                "tool_call_id": "call_chunk",
+                "session_id": "sess",
+                "ts": 1779220000,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    # Cyrillic-native metadata (per ADR
+    # docs/decisions/2026-05-15-cyrillic-native-matcher.md) — never derive
+    # author from Latin source_file segments. Monkeypatch the DB lookup so
+    # CI does not depend on a populated sources.db at the chosen path.
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_lookup_textbook_metadata",
+        lambda source_file: {"author_uk": "Караман", "grade": "10"}
+        if source_file == "10-klas-ukrmova-karaman-2018"
+        else None,
+    )
+
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True, result
+    assert result["search_text_calls"] == 0
+    assert result["chunk_context_calls"] == 1
+    assert result["textbook_result_hits"] == 1
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
+def test_parse_mcp_get_chunk_context_markdown_no_db(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Parser still extracts text + page when the DB lookup fails.
+
+    If the DB is missing the parser must still return an item with the
+    body and chunk_id-derived page, so the A1-fallback substring path in
+    ``_textbook_grounding_gate`` can still attempt a match by body
+    content alone. The synthesized title is the only thing that gets
+    skipped — the item is still ``source_type='textbook'``.
+    """
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_lookup_textbook_metadata",
+        lambda _source_file: None,
+    )
+    chunk_id = "10-klas-ukrmova-karaman-2018_s0176"
+    text = f"**[{chunk_id}]** — Сторінка 176\n\nЦе тіло чанку для тесту."
+    items = linear_pipeline._parse_mcp_get_chunk_context_markdown(text)
+    assert len(items) == 1
+    item = items[0]
+    assert item["source_type"] == "textbook"
+    assert item["chunk_id"] == chunk_id
+    assert item["page"] == 176
+    assert item["source_file"] == "10-klas-ukrmova-karaman-2018"
+    assert "title" not in item  # No DB → no synthesized title.
+    assert item["text"] == "Це тіло чанку для тесту."
+
+
 def test_invoke_writer_backfills_tool_calls_from_sidecar_jsonl(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
