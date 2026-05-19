@@ -414,6 +414,7 @@ def _writer_prompt(
     plan_content: str,
     knowledge_packet: str,
     wiki_manifest: str | Mapping[str, Any],
+    implementation_map: Mapping[str, Any],
     writer: str,
 ) -> str:
     return linear_pipeline.render_writer_prompt(
@@ -421,6 +422,7 @@ def _writer_prompt(
         plan_content=plan_content,
         knowledge_packet=knowledge_packet,
         wiki_manifest=wiki_manifest,
+        implementation_map=implementation_map,
         writer=writer,
     )
 
@@ -733,6 +735,7 @@ def _run(args: argparse.Namespace) -> int:
             plan_content=plan_content,
             knowledge_packet=knowledge_packet,
             wiki_manifest=wiki_manifest,
+            implementation_map=impl_map,
             writer=writer,
         )
         # gemini-tools must load .gemini/settings.json from repo root;

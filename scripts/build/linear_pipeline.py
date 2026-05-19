@@ -1527,11 +1527,18 @@ def render_writer_prompt(
     plan_content: str,
     knowledge_packet: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
     writer: str = "claude-tools",
 ) -> str:
     return render_phase_prompt(
         writer_prompt_path(writer),
-        writer_context(plan, plan_content, knowledge_packet, wiki_manifest),
+        writer_context(
+            plan,
+            plan_content,
+            knowledge_packet,
+            wiki_manifest,
+            implementation_map=implementation_map,
+        ),
     )
 
 
@@ -2499,6 +2506,8 @@ def writer_context(
     plan_content: str,
     knowledge_packet: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
+    *,
+    implementation_map: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
@@ -2510,6 +2519,12 @@ def writer_context(
         wiki_manifest_text = wiki_manifest
     else:
         wiki_manifest_text = json.dumps(wiki_manifest, ensure_ascii=False, indent=2)
+    if implementation_map is None:
+        impl_map_contract = "(no implementation_map provided to render_writer_prompt — gate will fail)"
+    else:
+        from scripts.build.phases.implementation_map import render_for_writer_prompt
+
+        impl_map_contract = render_for_writer_prompt(dict(implementation_map))
     return {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
@@ -2520,6 +2535,7 @@ def writer_context(
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
         "WIKI_MANIFEST": wiki_manifest_text,
+        "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "LEARNER_STATE": format_learner_state(learner_state),
         "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence, learner_state=learner_state),
         "CONTRACT_YAML": _contract_yaml(plan),

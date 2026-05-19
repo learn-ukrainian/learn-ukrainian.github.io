@@ -329,3 +329,37 @@ def _validate_entry(index: int, entry: Any) -> None:
         raise ValueError(f"implementation_map entries[{index}] manifest_payload must be an object")
     if manifest_payload.get("id") != obligation_id:
         raise ValueError(f"implementation_map entries[{index}] obligation_id must match manifest_payload.id")
+
+
+def render_for_writer_prompt(payload: dict[str, Any]) -> str:
+    """Render the implementation map as a human-readable contract block for the writer."""
+    validate_implementation_map(payload)
+    rows: list[str] = []
+    for entry in sorted(payload["entries"], key=lambda e: str(e.get("obligation_id") or "")):
+        rows.extend(
+            [
+                f"- obligation_id: {entry['obligation_id']}  "
+                f"(obligation_type: {entry['obligation_type']})",
+                f"  artifact: {entry['artifact']}",
+                f"  location_hint: {entry['location_hint']}",
+                "  treatment_template:",
+            ]
+        )
+        for key, value in sorted(entry["treatment_template"].items()):
+            rows.append(f"    {key}: {_render_template_value(value)}")
+    body = "\n".join(rows)
+    header = (
+        f"Manifest obligations: {payload['manifest_obligation_count']}.\n"
+        "Each row below is a pre-resolved slot the writer MUST fill at the artifact "
+        "indicated by `artifact`, located by `location_hint`, populated using "
+        "`treatment_template` as the structural blueprint."
+    )
+    return f"{header}\n\n{body}\n"
+
+
+def _render_template_value(value: Any) -> str:
+    if isinstance(value, Mapping):
+        return json.dumps(dict(value), ensure_ascii=False, sort_keys=True)
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return json.dumps(list(value), ensure_ascii=False)
+    return str(value)
