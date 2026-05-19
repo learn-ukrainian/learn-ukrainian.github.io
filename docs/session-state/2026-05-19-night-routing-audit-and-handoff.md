@@ -37,11 +37,19 @@ tasks_carried_over:
 
 This session shipped a comprehensive 788-line HTML routing audit report at `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html` covering pricing (corrected), 4-agent peer review, 7-model writer bakeoff, DeepSeek introspection, and 3-agent CoT consensus. User saw the report and approved the direction. **User's mandate for the next session:** recover the kimi-k2.5, kimi-k2.6, and minimax-m2.7 bakeoffs that failed due to a Hermes config drift, fold them into a v2 report at the same path, and validate B1+ readiness for a future v3.
 
-## ⚠️ FIRST ITEM NEXT SESSION — pending email reply from the native-speaker reviewer
+## ⚠️ FIRST ITEM NEXT SESSION — pending email reply from Oleksiy Syvokon (UA-GEC co-author / UNLP organizer)
 
-**User said at session close 2026-05-19:** they have a reply from one of the project's native-speaker reviewers (referenced privately in `memory/MEMORY.md` per the personal-name-audit convention — name not committed). User will share the content of the reply at the start of the next session.
+**User said at session close 2026-05-19:** they have a reply from Oleksiy Syvokon — public Ukrainian NLP researcher, co-author of UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA team, the corpus that our `mcp__sources__search_ua_gec_errors` MCP tool surfaces — see `claude_extensions/rules/mcp-sources-and-dictionaries.md:33`), and organizer of UNLP (Ukrainian Natural Language Processing workshop). User will share the content of the reply at the start of the next session.
 
-**Action for next orchestrator:** Before starting Section 1 (Hermes fix), ASK the user to share the reviewer's reply. Do not proceed with the recovery plan until you've seen and discussed it — it may change priorities, redirect to a different concern, or surface a domain-expert review that affects routing/curriculum decisions. Treat this as a blocking prerequisite for the recovery work.
+**Why this matters for the routing audit:** Syvokon's expertise is directly load-bearing on:
+- The Russianism evidence layer (UA-GEC is one of 5 sources in `mcp__sources__search_heritage`)
+- Russianism judge routing decisions (matrix §8.2a — Russianism F1 ranking)
+- Calque / phraseological-error detection (UA-GEC's F/Calque and F/Collocation tags are core signal)
+- Any content review w/ VESUM verification (he can validate the gates we're treating as ground-truth)
+
+This is NOT a generic reviewer — it's the author of corpus infrastructure we depend on. Treat his input with corresponding weight.
+
+**Action for next orchestrator:** Before starting Section 1 (Hermes fix), ASK the user to share Syvokon's reply. Do not proceed with the recovery plan until you've seen and discussed it — it may redirect priorities (e.g. validate a routing assumption, point us at additional UA-NLP resources, surface a quality concern with one of the corpora). Treat this as a blocking prerequisite for the recovery work.
 
 Once you've read the reply: triage it against the carry-over tasks below, decide whether anything in it supersedes the v2-report plan, then proceed.
 
@@ -247,7 +255,7 @@ The user explicitly requested tasks carry over. The task IDs below are from the 
 ## Section 6 — Cold-start protocol for the next session
 
 1. Read this handoff (you're doing it now).
-2. **ASK USER FOR THE NATIVE-SPEAKER REVIEWER'S EMAIL REPLY** (see ⚠️ block at top — pending content blocks the recovery plan).
+2. **ASK USER FOR SYVOKON'S EMAIL REPLY** (UA-GEC co-author; see ⚠️ block at top — pending content blocks the recovery plan).
 3. Orient via Monitor API:
    ```
    curl -s http://localhost:8765/api/state/manifest
@@ -256,7 +264,7 @@ The user explicitly requested tasks carry over. The task IDs below are from the 
    ```
 4. Read the v1 REPORT.html for context on what's already shipped: `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html`. Browseable at http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/REPORT.html.
 5. Check the open follow-up issues (#2154 zizmor MED triage, #2155 gate semantics bug).
-6. AFTER triaging the reviewer's reply: begin with Section 1 (Hermes fix) — that unblocks Section 3 (kimi/minimax bakeoffs).
+6. AFTER triaging Syvokon's reply: begin with Section 1 (Hermes fix) — that unblocks Section 3 (kimi/minimax bakeoffs).
 7. Section 2 (CoT removal) can dispatch in parallel — independent of Hermes.
 8. Section 4 (B1+ readiness) is a one-shot inline check; do it whenever convenient.
 
