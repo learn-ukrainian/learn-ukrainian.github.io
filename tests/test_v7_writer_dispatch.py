@@ -48,6 +48,8 @@ def _seed_sources_mcp_config(
         ("gemini-tools", "gemini"),
         ("codex-tools", "codex"),
         ("grok-tools", "grok"),
+        ("deepseek-tools", "deepseek"),
+        ("qwen-tools", "qwen"),
     ],
 )
 def test_v7_writer_choices_resolve_to_runtime_adapters(
@@ -100,13 +102,19 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
         assert calls[0][2]["tool_config"]["hermes_mcp_servers"] == ["sources"]
 
 
-def test_v7_build_accepts_codex_alias() -> None:
-    assert "codex-tools" in v7_build.WRITER_CHOICES
-    assert "codex" in v7_build.WRITER_CHOICES
-    assert v7_build._normalize_writer("codex") == "codex-tools"
-    assert "grok-tools" in v7_build.WRITER_CHOICES
-    assert "grok" in v7_build.WRITER_CHOICES
-    assert v7_build._normalize_writer("grok") == "grok-tools"
+@pytest.mark.parametrize(
+    ("alias", "writer"),
+    [
+        ("codex", "codex-tools"),
+        ("grok", "grok-tools"),
+        ("deepseek", "deepseek-tools"),
+        ("qwen", "qwen-tools"),
+    ],
+)
+def test_v7_build_accepts_writer_aliases(alias: str, writer: str) -> None:
+    assert writer in v7_build.WRITER_CHOICES
+    assert alias in v7_build.WRITER_CHOICES
+    assert v7_build._normalize_writer(alias) == writer
 
 
 @pytest.mark.parametrize(
@@ -116,6 +124,8 @@ def test_v7_build_accepts_codex_alias() -> None:
         ("claude-tools", None),
         ("codex-tools", None),
         ("grok-tools", None),
+        ("deepseek-tools", None),
+        ("qwen-tools", None),
     ],
 )
 def test_v7_build_invokes_gemini_tools_from_project_root(
