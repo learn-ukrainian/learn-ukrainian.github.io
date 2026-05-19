@@ -1,0 +1,25 @@
+ INFO zizmor: 🌈 zizmor v1.25.2
+ INFO audit: zizmor: 🌈 completed .github/workflows/ci.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/deploy-pages.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/gemini-dispatch.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/gemini-invoke.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/gemini-plan-execute.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/gemini-review.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/gemini-scheduled-triage.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/gemini-triage.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/rules-deployment-check.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/validate-yaml.yml
+ INFO audit: zizmor: 🌈 completed .github/workflows/zizmor.yml
+warning[artipacked]: credential persistence through GitHub Actions artifacts
+  --> .github/workflows/gemini-plan-execute.yml:49:9
+   |
+49 |         - name: 'Checkout Code'
+   |  _________^
+50 | |         uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6
+   | |_______________________________________________________________________________________________________^ does not set persist-credentials: false
+   |
+   = note: audit confidence → Low
+   = note: this finding has an auto-fix
+   = help: audit documentation → https://docs.zizmor.sh/audits/#artipacked
+
+83 findings (1 ignored, 81 suppressed, 1 unsafe fixes): 0 informational, 0 low, 1 medium, 0 high

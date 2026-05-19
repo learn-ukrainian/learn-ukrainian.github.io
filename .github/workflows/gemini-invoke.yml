@@ -7,6 +7,13 @@ on:
         type: 'string'
         description: 'Any additional context from the request'
         required: false
+    secrets:
+      GEMINI_API_KEY:
+        required: true
+      GOOGLE_API_KEY:
+        required: true
+      APP_PRIVATE_KEY:
+        required: false
 
 concurrency:
   group: '${{ github.workflow }}-invoke-${{ github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}'
@@ -39,6 +46,8 @@ jobs:
 
       - name: 'Checkout Code'
         uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: 'Run Gemini CLI'
         id: 'run_gemini'
