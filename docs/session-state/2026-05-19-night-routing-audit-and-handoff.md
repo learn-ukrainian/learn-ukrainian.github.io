@@ -37,6 +37,14 @@ tasks_carried_over:
 
 This session shipped a comprehensive 788-line HTML routing audit report at `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html` covering pricing (corrected), 4-agent peer review, 7-model writer bakeoff, DeepSeek introspection, and 3-agent CoT consensus. User saw the report and approved the direction. **User's mandate for the next session:** recover the kimi-k2.5, kimi-k2.6, and minimax-m2.7 bakeoffs that failed due to a Hermes config drift, fold them into a v2 report at the same path, and validate B1+ readiness for a future v3.
 
+## ⚠️ FIRST ITEM NEXT SESSION — Oleksiy's email reply
+
+**User said at session close 2026-05-19:** *"also Oleksiy replied to our email i will show you in the next session."*
+
+**Action for next orchestrator:** Before starting Section 1 (Hermes fix), ASK the user to share Oleksiy's reply. Do not proceed with the recovery plan until you've seen and discussed it — it may change priorities, redirect to a different concern, or surface a domain-expert review that affects routing decisions (Oleksiy is one of the project's external reviewers per past session-state references). Treat this as a blocking prerequisite for the recovery work.
+
+Once you've read the reply: triage it against the carry-over tasks below, decide whether anything in it supersedes the v2-report plan, then proceed.
+
 **Main is at `be4c3c7afc`, tree clean, 0 active dispatches, 0 open PRs of mine** (only dependabot's remain).
 
 ## Section 1 — The Hermes nvidia-provider config drift (P0 to fix)
@@ -239,17 +247,18 @@ The user explicitly requested tasks carry over. The task IDs below are from the 
 ## Section 6 — Cold-start protocol for the next session
 
 1. Read this handoff (you're doing it now).
-2. Orient via Monitor API:
+2. **ASK USER FOR OLEKSIY'S EMAIL REPLY** (see ⚠️ block at top — pending content blocks the recovery plan).
+3. Orient via Monitor API:
    ```
    curl -s http://localhost:8765/api/state/manifest
    curl -s http://localhost:8765/api/orient
    curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'
    ```
-3. Read the v1 REPORT.html for context on what's already shipped: `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html`. Browseable at http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/REPORT.html.
-4. Check the open follow-up issues (#2154 zizmor MED triage, #2155 gate semantics bug).
-5. Begin with Section 1 (Hermes fix) — that unblocks Section 3 (kimi/minimax bakeoffs).
-6. Section 2 (CoT removal) can dispatch in parallel — independent of Hermes.
-7. Section 4 (B1+ readiness) is a one-shot inline check; do it whenever convenient.
+4. Read the v1 REPORT.html for context on what's already shipped: `audit/2026-05-19-multi-agent-routing-assessment/REPORT.html`. Browseable at http://localhost:8765/artifacts/audit/2026-05-19-multi-agent-routing-assessment/REPORT.html.
+5. Check the open follow-up issues (#2154 zizmor MED triage, #2155 gate semantics bug).
+6. AFTER triaging Oleksiy's reply: begin with Section 1 (Hermes fix) — that unblocks Section 3 (kimi/minimax bakeoffs).
+7. Section 2 (CoT removal) can dispatch in parallel — independent of Hermes.
+8. Section 4 (B1+ readiness) is a one-shot inline check; do it whenever convenient.
 
 ---
 
