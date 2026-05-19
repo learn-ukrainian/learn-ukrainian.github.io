@@ -1,0 +1,3896 @@
+{
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/schemas/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "results": [
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "changes"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 44,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 44
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "changes"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 44,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 44
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "lint"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 71,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 71
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "lint"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 71,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 71
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "quality-gates"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 25,
+                            "endLine": 91,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 89
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "quality-gates"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 25,
+                  "endLine": 91,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 89
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "lint-prompts"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 173,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 173
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "lint-prompts"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 173,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 173
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "scripts-root-guard"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 25,
+                            "endLine": 190,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 188
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "scripts-root-guard"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 25,
+                  "endLine": 190,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 188
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "lesson-schema-drift"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 252,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 252
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "lesson-schema-drift"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 252,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 252
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "test"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 49,
+                            "endLine": 294,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        if: needs.changes.outputs.code == 'true'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 293
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "test"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 49,
+                  "endLine": 294,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        if: needs.changes.outputs.code == 'true'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 293
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "frontend"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 416,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 416
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "frontend"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 416,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 416
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/ci.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "secret-scan"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "ci.yml"
+                          },
+                          "region": {
+                            "endColumn": 25,
+                            "endLine": 440,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 438
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/ci.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "secret-scan"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ci.yml"
+                },
+                "region": {
+                  "endColumn": 25,
+                  "endLine": 440,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 438
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/deploy-pages.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "deploy"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "deploy-pages.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 31,
+                            "snippet": {
+                              "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 30
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/deploy-pages.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "deploy"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "deploy-pages.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 31,
+                  "snippet": {
+                    "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 30
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "this reusable workflow",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "./.github/workflows/gemini-review.yml"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "review"
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "this reusable workflow"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 49,
+                            "endLine": 107,
+                            "snippet": {
+                              "text": "'./.github/workflows/gemini-review.yml'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 12,
+                            "startLine": 107
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "importance": "important",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "inherits all parent secrets",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Related",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "review"
+                                    },
+                                    {
+                                      "Key": "secrets"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "inherits all parent secrets"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 23,
+                            "endLine": 115,
+                            "snippet": {
+                              "text": "    secrets: 'inherit'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 5,
+                            "startLine": 115
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "this reusable workflow",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "./.github/workflows/gemini-review.yml"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-dispatch.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "review"
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "this reusable workflow"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-dispatch.yml"
+                },
+                "region": {
+                  "endColumn": 49,
+                  "endLine": 107,
+                  "snippet": {
+                    "text": "'./.github/workflows/gemini-review.yml'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 12,
+                  "startLine": 107
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "secrets unconditionally inherited by called workflow: this reusable workflow"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/secrets-inherit"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "this reusable workflow",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "./.github/workflows/gemini-triage.yml"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "triage"
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "this reusable workflow"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 49,
+                            "endLine": 121,
+                            "snippet": {
+                              "text": "'./.github/workflows/gemini-triage.yml'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 12,
+                            "startLine": 121
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "importance": "important",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "inherits all parent secrets",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Related",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "triage"
+                                    },
+                                    {
+                                      "Key": "secrets"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "inherits all parent secrets"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 23,
+                            "endLine": 129,
+                            "snippet": {
+                              "text": "    secrets: 'inherit'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 5,
+                            "startLine": 129
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "this reusable workflow",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "./.github/workflows/gemini-triage.yml"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-dispatch.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "triage"
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "this reusable workflow"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-dispatch.yml"
+                },
+                "region": {
+                  "endColumn": 49,
+                  "endLine": 121,
+                  "snippet": {
+                    "text": "'./.github/workflows/gemini-triage.yml'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 12,
+                  "startLine": 121
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "secrets unconditionally inherited by called workflow: this reusable workflow"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/secrets-inherit"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "this reusable workflow",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "./.github/workflows/gemini-invoke.yml"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "invoke"
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "this reusable workflow"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 49,
+                            "endLine": 135,
+                            "snippet": {
+                              "text": "'./.github/workflows/gemini-invoke.yml'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 12,
+                            "startLine": 135
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "importance": "important",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "inherits all parent secrets",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Related",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "invoke"
+                                    },
+                                    {
+                                      "Key": "secrets"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "inherits all parent secrets"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 23,
+                            "endLine": 143,
+                            "snippet": {
+                              "text": "    secrets: 'inherit'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 5,
+                            "startLine": 143
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "this reusable workflow",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "./.github/workflows/gemini-invoke.yml"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-dispatch.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "invoke"
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "this reusable workflow"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-dispatch.yml"
+                },
+                "region": {
+                  "endColumn": 49,
+                  "endLine": 135,
+                  "snippet": {
+                    "text": "'./.github/workflows/gemini-invoke.yml'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 12,
+                  "startLine": 135
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "secrets unconditionally inherited by called workflow: this reusable workflow"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/secrets-inherit"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "this reusable workflow",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "./.github/workflows/gemini-plan-execute.yml"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "plan-execute"
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "this reusable workflow"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 55,
+                            "endLine": 149,
+                            "snippet": {
+                              "text": "'./.github/workflows/gemini-plan-execute.yml'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 12,
+                            "startLine": 149
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "importance": "important",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "inherits all parent secrets",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-dispatch.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Related",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "plan-execute"
+                                    },
+                                    {
+                                      "Key": "secrets"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "inherits all parent secrets"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-dispatch.yml"
+                          },
+                          "region": {
+                            "endColumn": 23,
+                            "endLine": 157,
+                            "snippet": {
+                              "text": "    secrets: 'inherit'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 5,
+                            "startLine": 157
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "this reusable workflow",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "./.github/workflows/gemini-plan-execute.yml"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-dispatch.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "plan-execute"
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "this reusable workflow"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-dispatch.yml"
+                },
+                "region": {
+                  "endColumn": 55,
+                  "endLine": 149,
+                  "snippet": {
+                    "text": "'./.github/workflows/gemini-plan-execute.yml'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 12,
+                  "startLine": 149
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "secrets unconditionally inherited by called workflow: this reusable workflow"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/secrets-inherit"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-invoke.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "invoke"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-invoke.yml"
+                          },
+                          "region": {
+                            "endColumn": 104,
+                            "endLine": 41,
+                            "snippet": {
+                              "text": "name: 'Checkout Code'\n        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 40
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-invoke.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "invoke"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 1
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-invoke.yml"
+                },
+                "region": {
+                  "endColumn": 104,
+                  "endLine": 41,
+                  "snippet": {
+                    "text": "name: 'Checkout Code'\n        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 40
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "action is not pinned to a hash (required by blanket policy)",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "google-github-actions/run-gemini-cli@v0"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-invoke.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "invoke"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 2
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "action is not pinned to a hash (required by blanket policy)"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-invoke.yml"
+                          },
+                          "region": {
+                            "endColumn": 55,
+                            "endLine": 45,
+                            "snippet": {
+                              "text": "'google-github-actions/run-gemini-cli@v0'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 16,
+                            "startLine": 45
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "error",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "action is not pinned to a hash (required by blanket policy)",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "google-github-actions/run-gemini-cli@v0"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-invoke.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "invoke"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 2
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "action is not pinned to a hash (required by blanket policy)"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-invoke.yml"
+                },
+                "region": {
+                  "endColumn": 55,
+                  "endLine": 45,
+                  "snippet": {
+                    "text": "'google-github-actions/run-gemini-cli@v0'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 16,
+                  "startLine": 45
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "unpinned action reference: action is not pinned to a hash (required by blanket policy)"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "High"
+          },
+          "ruleId": "zizmor/unpinned-uses"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-plan-execute.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "plan-execute"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-plan-execute.yml"
+                          },
+                          "region": {
+                            "endColumn": 104,
+                            "endLine": 43,
+                            "snippet": {
+                              "text": "name: 'Checkout Code'\n        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 42
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-plan-execute.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "plan-execute"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 1
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-plan-execute.yml"
+                },
+                "region": {
+                  "endColumn": 104,
+                  "endLine": 43,
+                  "snippet": {
+                    "text": "name: 'Checkout Code'\n        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 42
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "action is not pinned to a hash (required by blanket policy)",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "google-github-actions/run-gemini-cli@v0"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-plan-execute.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "plan-execute"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 2
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "action is not pinned to a hash (required by blanket policy)"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-plan-execute.yml"
+                          },
+                          "region": {
+                            "endColumn": 55,
+                            "endLine": 47,
+                            "snippet": {
+                              "text": "'google-github-actions/run-gemini-cli@v0'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 16,
+                            "startLine": 47
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "error",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "action is not pinned to a hash (required by blanket policy)",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "google-github-actions/run-gemini-cli@v0"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-plan-execute.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "plan-execute"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 2
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "action is not pinned to a hash (required by blanket policy)"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-plan-execute.yml"
+                },
+                "region": {
+                  "endColumn": 55,
+                  "endLine": 47,
+                  "snippet": {
+                    "text": "'google-github-actions/run-gemini-cli@v0'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 16,
+                  "startLine": 47
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "unpinned action reference: action is not pinned to a hash (required by blanket policy)"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "High"
+          },
+          "ruleId": "zizmor/unpinned-uses"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-review.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "review"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-review.yml"
+                          },
+                          "region": {
+                            "endColumn": 104,
+                            "endLine": 42,
+                            "snippet": {
+                              "text": "name: 'Checkout repository'\n        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 41
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-review.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "review"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 1
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-review.yml"
+                },
+                "region": {
+                  "endColumn": 104,
+                  "endLine": 42,
+                  "snippet": {
+                    "text": "name: 'Checkout repository'\n        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 41
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "action is not pinned to a hash (required by blanket policy)",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "google-github-actions/run-gemini-cli@v0"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-review.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "review"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 2
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "action is not pinned to a hash (required by blanket policy)"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-review.yml"
+                          },
+                          "region": {
+                            "endColumn": 55,
+                            "endLine": 45,
+                            "snippet": {
+                              "text": "'google-github-actions/run-gemini-cli@v0'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 16,
+                            "startLine": 45
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "error",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "action is not pinned to a hash (required by blanket policy)",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "google-github-actions/run-gemini-cli@v0"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-review.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "review"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 2
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "action is not pinned to a hash (required by blanket policy)"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-review.yml"
+                },
+                "region": {
+                  "endColumn": 55,
+                  "endLine": 45,
+                  "snippet": {
+                    "text": "'google-github-actions/run-gemini-cli@v0'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 16,
+                  "startLine": 45
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "unpinned action reference: action is not pinned to a hash (required by blanket policy)"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "High"
+          },
+          "ruleId": "zizmor/unpinned-uses"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "action is not pinned to a hash (required by blanket policy)",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "google-github-actions/run-gemini-cli@v0"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-scheduled-triage.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "triage"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 2
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "action is not pinned to a hash (required by blanket policy)"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-scheduled-triage.yml"
+                          },
+                          "region": {
+                            "endColumn": 55,
+                            "endLine": 92,
+                            "snippet": {
+                              "text": "'google-github-actions/run-gemini-cli@v0'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 16,
+                            "startLine": 92
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "error",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "action is not pinned to a hash (required by blanket policy)",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "google-github-actions/run-gemini-cli@v0"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-scheduled-triage.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "triage"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 2
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "action is not pinned to a hash (required by blanket policy)"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-scheduled-triage.yml"
+                },
+                "region": {
+                  "endColumn": 55,
+                  "endLine": 92,
+                  "snippet": {
+                    "text": "'google-github-actions/run-gemini-cli@v0'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 16,
+                  "startLine": 92
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "unpinned action reference: action is not pinned to a hash (required by blanket policy)"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "High"
+          },
+          "ruleId": "zizmor/unpinned-uses"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "action is not pinned to a hash (required by blanket policy)",
+                                "feature_kind": {
+                                  "Subfeature": {
+                                    "after": 0,
+                                    "fragment": {
+                                      "Raw": "google-github-actions/run-gemini-cli@v0"
+                                    }
+                                  }
+                                },
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/gemini-triage.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "triage"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 1
+                                    },
+                                    {
+                                      "Key": "uses"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "action is not pinned to a hash (required by blanket policy)"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "gemini-triage.yml"
+                          },
+                          "region": {
+                            "endColumn": 55,
+                            "endLine": 62,
+                            "snippet": {
+                              "text": "'google-github-actions/run-gemini-cli@v0'"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 16,
+                            "startLine": 62
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "error",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "action is not pinned to a hash (required by blanket policy)",
+                      "feature_kind": {
+                        "Subfeature": {
+                          "after": 0,
+                          "fragment": {
+                            "Raw": "google-github-actions/run-gemini-cli@v0"
+                          }
+                        }
+                      },
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/gemini-triage.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "triage"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 1
+                          },
+                          {
+                            "Key": "uses"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "action is not pinned to a hash (required by blanket policy)"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "gemini-triage.yml"
+                },
+                "region": {
+                  "endColumn": 55,
+                  "endLine": 62,
+                  "snippet": {
+                    "text": "'google-github-actions/run-gemini-cli@v0'"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 16,
+                  "startLine": 62
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "unpinned action reference: action is not pinned to a hash (required by blanket policy)"
+          },
+          "properties": {
+            "zizmor/confidence": "High",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "High"
+          },
+          "ruleId": "zizmor/unpinned-uses"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/rules-deployment-check.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "verify-rules-deployment"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "rules-deployment-check.yml"
+                          },
+                          "region": {
+                            "endColumn": 81,
+                            "endLine": 35,
+                            "snippet": {
+                              "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 35
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/rules-deployment-check.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "verify-rules-deployment"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "rules-deployment-check.yml"
+                },
+                "region": {
+                  "endColumn": 81,
+                  "endLine": 35,
+                  "snippet": {
+                    "text": "uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 35
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/validate-yaml.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "validate-activities"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "validate-yaml.yml"
+                          },
+                          "region": {
+                            "endColumn": 25,
+                            "endLine": 31,
+                            "snippet": {
+                              "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 28
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/validate-yaml.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "validate-activities"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "validate-yaml.yml"
+                },
+                "region": {
+                  "endColumn": 25,
+                  "endLine": 31,
+                  "snippet": {
+                    "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 28
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/validate-yaml.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "validate-plans"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "validate-yaml.yml"
+                          },
+                          "region": {
+                            "endColumn": 25,
+                            "endLine": 123,
+                            "snippet": {
+                              "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 120
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/validate-yaml.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "validate-plans"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "validate-yaml.yml"
+                },
+                "region": {
+                  "endColumn": 25,
+                  "endLine": 123,
+                  "snippet": {
+                    "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 120
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        },
+        {
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "importance": "essential",
+                      "location": {
+                        "logicalLocations": [
+                          {
+                            "properties": {
+                              "symbolic": {
+                                "annotation": "does not set persist-credentials: false",
+                                "feature_kind": "Normal",
+                                "key": {
+                                  "Local": {
+                                    "given_path": ".github/workflows/validate-yaml.yml",
+                                    "prefix": ".github/workflows/"
+                                  }
+                                },
+                                "kind": "Primary",
+                                "route": {
+                                  "route": [
+                                    {
+                                      "Key": "jobs"
+                                    },
+                                    {
+                                      "Key": "schema-check"
+                                    },
+                                    {
+                                      "Key": "steps"
+                                    },
+                                    {
+                                      "Index": 0
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ],
+                        "message": {
+                          "text": "does not set persist-credentials: false"
+                        },
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "validate-yaml.yml"
+                          },
+                          "region": {
+                            "endColumn": 25,
+                            "endLine": 225,
+                            "snippet": {
+                              "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                            },
+                            "sourceLanguage": "yaml",
+                            "startColumn": 9,
+                            "startLine": 222
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "kind": "fail",
+          "level": "warning",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "properties": {
+                    "symbolic": {
+                      "annotation": "does not set persist-credentials: false",
+                      "feature_kind": "Normal",
+                      "key": {
+                        "Local": {
+                          "given_path": ".github/workflows/validate-yaml.yml",
+                          "prefix": ".github/workflows/"
+                        }
+                      },
+                      "kind": "Primary",
+                      "route": {
+                        "route": [
+                          {
+                            "Key": "jobs"
+                          },
+                          {
+                            "Key": "schema-check"
+                          },
+                          {
+                            "Key": "steps"
+                          },
+                          {
+                            "Index": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "does not set persist-credentials: false"
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "validate-yaml.yml"
+                },
+                "region": {
+                  "endColumn": 25,
+                  "endLine": 225,
+                  "snippet": {
+                    "text": "name: Checkout\n        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n        with:\n          fetch-depth: 0"
+                  },
+                  "sourceLanguage": "yaml",
+                  "startColumn": 9,
+                  "startLine": 222
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "credential persistence through GitHub Actions artifacts: does not set persist-credentials: false"
+          },
+          "properties": {
+            "zizmor/confidence": "Low",
+            "zizmor/persona": "Regular",
+            "zizmor/severity": "Medium"
+          },
+          "ruleId": "zizmor/artipacked"
+        }
+      ],
+      "tool": {
+        "driver": {
+          "downloadUri": "https://github.com/zizmorcore/zizmor",
+          "informationUri": "https://docs.zizmor.sh",
+          "name": "zizmor",
+          "rules": [
+            {
+              "help": {
+                "markdown": "`artipacked`: credential persistence through GitHub Actions artifacts\n\nDocs: <https://docs.zizmor.sh/audits/#artipacked>",
+                "text": "credential persistence through GitHub Actions artifacts"
+              },
+              "helpUri": "https://docs.zizmor.sh/audits/#artipacked",
+              "id": "zizmor/artipacked",
+              "name": "artipacked",
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "help": {
+                "markdown": "`secrets-inherit`: secrets unconditionally inherited by called workflow\n\nDocs: <https://docs.zizmor.sh/audits/#secrets-inherit>",
+                "text": "secrets unconditionally inherited by called workflow"
+              },
+              "helpUri": "https://docs.zizmor.sh/audits/#secrets-inherit",
+              "id": "zizmor/secrets-inherit",
+              "name": "secrets-inherit",
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "help": {
+                "markdown": "`unpinned-uses`: unpinned action reference\n\nDocs: <https://docs.zizmor.sh/audits/#unpinned-uses>",
+                "text": "unpinned action reference"
+              },
+              "helpUri": "https://docs.zizmor.sh/audits/#unpinned-uses",
+              "id": "zizmor/unpinned-uses",
+              "name": "unpinned-uses",
+              "properties": {
+                "tags": [
+                  "security"
+                ]
+              }
+            }
+          ],
+          "semanticVersion": "1.25.2",
+          "version": "1.25.2"
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}

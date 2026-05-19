@@ -1,0 +1,39 @@
+name: GitHub Actions Security Analysis with zizmor 🌈
+
+# Static analysis of all .github/workflows/* files using zizmorcore/zizmor.
+# Adopted 2026-05-19 after the actions-cool 2026-05 supply-chain attack +
+# kubedojo cross-perspective recommendation. Findings land in repo Security
+# tab (SARIF) via GitHub Advanced Security.
+#
+# Baseline at adoption (2026-05-19): 0 high, 21 medium (17 artipacked
+# credential-persistence + 4 secrets-inherit). See follow-up issue for the
+# triage plan — some checkouts legitimately need credentials.
+
+on:
+  push:
+    branches: ['main']
+  pull_request: {}
+  schedule:
+    # Weekly run on Mondays at 09:00 UTC catches new audit rules that ship
+    # in zizmor releases between user-triggered runs.
+    - cron: '0 9 * * 1'
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  zizmor:
+    name: 'Run zizmor 🌈'
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+      - name: 'Checkout repository'
+        uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # ratchet:actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: 'Run zizmor 🌈'
+        uses: 'zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d' # ratchet:zizmorcore/zizmor-action@v0.5.6
