@@ -167,11 +167,130 @@ probes were the obvious next failure mode and weren't covered.
 
 ---
 
+## 2026-05-19 — Codex JWT `id_token` printed via wrong-pattern sed on JSON file
+
+### Symptom
+
+While diagnosing why `codex exec` was exiting with returncode=1 in <1s
+under the agent_runtime path (B1 writer bakeoff codex-tools-xhigh
+investigation), Claude inspected `~/.codex/auth.json` to check the
+ChatGPT subscription state. The command was:
+
+```bash
+cat ~/.codex/auth.json 2>/dev/null | head -5 | sed 's/=.*/=<REDACTED>/'
+```
+
+The `sed 's/=.*/=<REDACTED>/'` redactor was intended to mask values, but
+`auth.json` is a JSON file:
+
+```json
+{
+  "auth_mode": "chatgpt",
+  "OPENAI_API_KEY": null,
+  "tokens": {
+    "id_token": "eyJhbGciOi...<JWT>...",
+```
+
+JSON syntax uses `"key": "value"`, not the shell `KEY=VALUE` shape the
+sed pattern was designed to redact. There is no `=` in well-formed JSON
+content lines. So the redactor was a no-op, and the JWT id_token printed
+verbatim into the conversation transcript.
+
+The token was now in:
+- The conversation transcript (visible to user; possibly uploaded to
+  Anthropic depending on settings)
+- The local Claude Code session log
+- Any session backups, transcript caches, or telemetry
+
+User must rotate Codex auth: `codex logout` then `codex login`.
+
+### Root cause
+
+**Format-aware sanitization missing.** The two prior incidents
+(2026-05-10 file grep, 2026-05-12 live-env probe) hardened the redaction
+pattern for **shell-style `KEY=VALUE` content**. JSON files, YAML files,
+TOML files, and other structured configs use different separator syntax,
+and the `sed 's/=.*/=<REDACTED>/'` pattern matches NONE of them.
+
+This is the **third recurrence** of the same conceptual failure: a
+sanitizer chosen for one content format ran on a different format and
+silently degraded to a no-op. 2026-05-10 was `grep -v -i secret`
+(substring filter on names). 2026-05-12 was the same substring filter
+extended to live env. 2026-05-19 is shell-pattern redaction on JSON.
+
+### Why partial fixes fail
+
+Each previous fix added another row to the "decision tree for is X set?"
+table. None of them addressed the underlying generator of the bug: an
+agent looking at a credential-bearing file in a format it didn't
+fingerprint first picks a redactor on autopilot.
+
+The redactor must be chosen by **content format**, not by reflex:
+
+| File format | Indicator | Safe inspection |
+|---|---|---|
+| Shell env (`.env`, `.bash_secrets`) | `KEY=VALUE` lines, often `export KEY=...` | `cut -d= -f1` or `sed 's/=.*/=<REDACTED>/'` |
+| JSON (`auth.json`, `*.json`) | `{` / `"key":` | `jq 'keys'` (top-level keys) or `jq 'del(.tokens, .api_key, .access_token, .id_token, .refresh_token)'` to strip known fields |
+| YAML (`config.yaml`, `~/.hermes/config.yaml`) | `key: value`, indentation | `yq 'keys'` or `yq 'del(.tokens, .api_key)'` |
+| TOML (`~/.codex/config.toml`) | `key = "value"`, `[section]` | `tq` or a Python one-liner with `tomllib.loads`; **NOT** the shell sed pattern |
+| netrc / curl config | `machine X login Y password Z` | Never cat; check existence + permissions only |
+
+### Prevention
+
+#### Hard rule (extends MEMORY.md #M-5 again)
+
+> Before sanitizing a credential-bearing file, check the FORMAT first:
+> shell `KEY=VALUE`, JSON, YAML, TOML, and netrc each need a
+> format-specific redactor. **Never apply the shell `sed 's/=.*/=<REDACTED>/'`
+> pattern to JSON / YAML / TOML files** — it silently degrades to a
+> no-op because those formats don't use `=` as the key/value separator
+> (or use it differently — TOML's `=` is per-line key-value, but values
+> are quoted/typed and may span lines or contain `=` in URLs).
+>
+> Default to `jq 'keys'` for JSON, `yq 'keys'` for YAML, and the per-line
+> Python `tomllib` extractor for TOML. If you only need to know which
+> fields exist (not their values), keys-only is always the right answer.
+
+#### Decision branch added to the inspection tree
+
+```
+Need to inspect a credential-bearing file?
+├── Shell env (`.bash_secrets`, `.envrc`, `.env*`) → cut -d= -f1
+├── JSON (auth.json, *.json) → jq 'keys' or jq 'del(<known-token-fields>)'
+├── YAML (config.yaml) → yq 'keys' or yq 'del(<known-token-fields>)'
+├── TOML (config.toml) → tomllib.loads + filter known-token keys
+└── Just need "is this var set?" → `[ -n "${X:-}" ] && echo SET || echo UNSET`
+```
+
+#### Sibling-check rule (reinforces 2026-05-12)
+
+When fixing a sanitization bug, scan EVERY credential-bearing inspection
+in the upcoming work for the new failure mode. The 2026-05-12 fix
+focused on env probes; JSON content was the obvious next surface and
+was not covered. Future fixes must consider all the formats listed in
+the table above.
+
+### Links
+
+- Prior incidents:
+  `docs/bug-autopsies/secret-leakage.md#2026-05-10` (shell file grep),
+  `docs/bug-autopsies/secret-leakage.md#2026-05-12` (live-env probe)
+- This autopsy: `docs/bug-autopsies/secret-leakage.md#2026-05-19`
+- Trigger: 2026-05-19 B1 writer bakeoff codex-tools-xhigh investigation,
+  while diagnosing codex CLI sub-second exit-1 crash
+- User direction: rotate Codex auth (`codex logout` + `codex login`)
+
+---
+
 ## Links
 
 - Tracking issue: #1896 (Secret-leak prevention follow-ups)
-- Prior incident reference: `docs/bug-autopsies/secret-leakage.md#2026-05-10`
-- Recurrence reference: `docs/bug-autopsies/secret-leakage.md#2026-05-12`
+- Prior incident references:
+  `docs/bug-autopsies/secret-leakage.md#2026-05-10` (shell file grep),
+  `docs/bug-autopsies/secret-leakage.md#2026-05-12` (live-env probe),
+  `docs/bug-autopsies/secret-leakage.md#2026-05-19` (JSON content)
 - Fix commit (rule expansion): `e64f021fb5 docs(autopsy): 2026-05-12 DAGGER_CLOUD_TOKEN leak — extend #M-5 to live-env probes`
-- MEMORY rule: `memory/MEMORY.md` #M-5 (expanded 2026-05-12 to cover live-env probes — file-only wording was too narrow)
+- MEMORY rule: `memory/MEMORY.md` #M-5 (extend again for content-format
+  awareness — JSON/YAML/TOML need their own redactors; shell sed pattern
+  silently degrades to no-op on those)
 - Critical rules: `claude_extensions/rules/critical-rules.md`
