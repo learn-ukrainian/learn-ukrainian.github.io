@@ -200,6 +200,96 @@ def test_textbook_grounding_gate_reads_mcp_markdown_result(tmp_path: Path) -> No
     assert result["textbook_result_hits"] == 1
 
 
+def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
+    tmp_path: Path,
+) -> None:
+    """Hermes registers MCP tools with single-underscore (``mcp_sources_X``).
+
+    Prior to the 2026-05-19 normalizer fix, the gate's tool-name match was
+    hardcoded to strip only the double-underscore canonical form, so every
+    Hermes-routed writer (deepseek/qwen/grok) was reading ``search_text_calls:
+    0`` and HARD-REJECTing on ``textbook_grounding`` — even when the calls
+    actually fired. This test pins the single-underscore acceptance so the
+    regression can't silently come back.
+    """
+    _write_tool_calls(
+        tmp_path,
+        [
+            {
+                "tool": "mcp_sources_search_text",
+                "args": {"query": "Караман Grade 10 reflexive verbs"},
+                "result": [
+                    {
+                        "title": "Караман Grade 10, p.176",
+                        "source_type": "textbook",
+                        "text": SEARCH_TEXT,
+                        "page": 176,
+                        "grade": 10,
+                    }
+                ],
+            }
+        ],
+    )
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True
+    assert result["search_text_calls"] == 1
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
+def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None:
+    """End-to-end pin for the Hermes ``post_tool_call`` shell-hook output.
+
+    The hook (``scripts/agent_runtime/hermes_hooks/log_tool_call.sh``) writes
+    one line per MCP tool call to ``$cwd/hermes.write.jsonl`` with the
+    Hermes single-underscore prefix and an ``event: writer_tool_call`` sentinel
+    so ``_load_jsonl_tool_calls`` picks it up. This test feeds the exact
+    on-disk shape the hook produces and asserts the gate sees the call and
+    matches the reference — closes the observability gap that previously had
+    every Hermes-routed writer build HARD-rejecting on ``textbook_grounding``.
+    """
+    event = {
+        "event": "writer_tool_call",
+        "tool": "mcp_sources_search_text",
+        "args": {"query": "Караман Grade 10 reflexive verbs"},
+        "result": [
+            {
+                "title": "Караман Grade 10, p.176",
+                "source_type": "textbook",
+                "text": SEARCH_TEXT,
+                "page": 176,
+                "grade": 10,
+            }
+        ],
+        "duration_ms": 42,
+        "tool_call_id": "call_00_test",
+        "session_id": "sess_test",
+        "ts": 1779220000,
+    }
+    (tmp_path / "hermes.write.jsonl").write_text(
+        json.dumps(event, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True
+    assert result["search_text_calls"] == 1
+    assert result["textbook_result_hits"] == 1
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
 def test_invoke_writer_persists_tool_trace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

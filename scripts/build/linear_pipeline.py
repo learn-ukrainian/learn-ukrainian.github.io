@@ -1932,9 +1932,28 @@ _TOOL_CITATION_RE = re.compile(
 
 
 def _normalize_tool_citation_name(raw_tool: Any) -> str:
+    """Strip the MCP prefix from a tool name so gate-side matches work against
+    the bare tool name (``search_text``, ``verify_words``, …).
+
+    Two prefixes appear in the wild:
+
+    * ``mcp__sources__`` — canonical double-underscore convention used by
+      claude / codex / gemini-cli ≤0.41 / direct anthropic-tools calls.
+    * ``mcp_sources_`` — single-underscore convention used by Hermes (and
+      gemini-cli 0.42.0+). Hermes registers MCP tools under this name and
+      the post-tool-call shell hook receives this form in its ``tool_name``
+      payload field. Without stripping it here, the gate's downstream
+      ``_tool_name_from_call(call) == "search_text"`` checks all fail
+      silently — every Hermes-routed writer (deepseek/qwen/grok) gets
+      ``search_text_calls: 0`` and a HARD ``textbook_grounding`` REJECT
+      even when the calls actually fired. Matches the symmetry of
+      ``WRITER_ALLOWED_TOOL_PREFIXES`` which already accepts both.
+    """
     tool = str(raw_tool or "").strip()
     if tool.startswith("mcp__sources__"):
         tool = tool.removeprefix("mcp__sources__")
+    elif tool.startswith("mcp_sources_"):
+        tool = tool.removeprefix("mcp_sources_")
     return tool
 
 
