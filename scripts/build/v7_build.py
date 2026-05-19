@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -20,7 +21,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.agent_runtime.errors import AgentStalledError
-from scripts.build import linear_pipeline
+from scripts.build import linear_pipeline, run_archive
 from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
@@ -58,6 +59,7 @@ class BuildWorktree:
     branch: str
     base_sha: str
     repo_root: Path
+    run_id: str
 
 
 class WorktreeSetupError(RuntimeError):
@@ -214,6 +216,53 @@ def _derive_build_branch(
     return f"build/{safe_level}/{suffix}"
 
 
+def _resolve_worktree_output_dir(
+    raw: str | None,
+    *,
+    worktree_path: Path,
+    level: str,
+    slug: str,
+) -> Path:
+    if raw is None:
+        return worktree_path / "curriculum" / "l2-uk-en" / level.lower() / slug
+    path = Path(raw)
+    if not path.is_absolute():
+        path = worktree_path / path
+    return path
+
+
+def _worktree_mdx_path(
+    raw_out: str | None,
+    *,
+    worktree_path: Path,
+    module_dir: Path,
+    level: str,
+    slug: str,
+) -> Path:
+    if raw_out is None:
+        return (
+            worktree_path
+            / "starlight"
+            / "src"
+            / "content"
+            / "docs"
+            / level.lower()
+            / f"{slug}.mdx"
+        )
+    return module_dir / f"{slug}.mdx"
+
+
+def _writer_model_effort(writer: str, effort_override: str | None) -> tuple[str, str]:
+    defaults = linear_pipeline.WRITER_DEFAULTS.get(writer, {})
+    model = defaults.get("model", "unknown")
+    effort = effort_override or defaults.get("effort", "unknown")
+    return model, effort
+
+
+def _writer_prompt_template_sha(writer: str) -> str | None:
+    return run_archive.file_sha256(linear_pipeline.writer_prompt_path(writer))
+
+
 def _fetch_origin_main(repo_root: Path) -> bool:
     try:
         fetch = _run_git(["fetch", "origin"], cwd=repo_root, timeout=FETCH_TIMEOUT_S)
@@ -315,6 +364,7 @@ def _setup_worktree(level: str, slug: str, raw_path: str | None) -> BuildWorktre
         branch=branch,
         base_sha=base_sha,
         repo_root=repo_root,
+        run_id=timestamp,
     )
 
 
@@ -436,12 +486,26 @@ def _persist_build_artifacts(
 def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
     level = args.level.lower()
     slug = args.slug
+    writer = _normalize_writer(args.writer)
     try:
         worktree = _setup_worktree(level, slug, args.worktree)
     except WorktreeSetupError as exc:
         print(str(exc), file=sys.stderr)
         return exc.exit_code
 
+    model, effort = _writer_model_effort(writer, args.effort)
+    archive = run_archive.RunArchive.start(
+        project_root=worktree.repo_root,
+        worktree_path=worktree.path,
+        level=level,
+        slug=slug,
+        run_id=worktree.run_id,
+        writer=writer,
+        model=model,
+        effort=effort,
+        prompt_sha=_writer_prompt_template_sha(writer),
+        base_ref=worktree.base_sha,
+    )
     result = "failed"
     child_argv = _strip_worktree_args(raw_argv)
     command = [
@@ -449,8 +513,10 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         "scripts/build/v7_build.py",
         *child_argv,
     ]
+    child_env = os.environ.copy()
+    child_env.update(archive.env())
     try:
-        proc = subprocess.run(command, cwd=worktree.path, check=False)
+        proc = subprocess.run(command, cwd=worktree.path, check=False, env=child_env)
         exit_code = proc.returncode
         if exit_code == 0:
             result = "success"
@@ -458,6 +524,25 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         print(f"v7_build worktree child failed to start: {exc}", file=sys.stderr)
         exit_code = 1
     finally:
+        module_dir = _resolve_worktree_output_dir(
+            args.out,
+            worktree_path=worktree.path,
+            level=level,
+            slug=slug,
+        )
+        mdx_path = _worktree_mdx_path(
+            args.out,
+            worktree_path=worktree.path,
+            module_dir=module_dir,
+            level=level,
+            slug=slug,
+        )
+        archive.terminal(
+            status="complete" if result == "success" else "failed",
+            artifact_dir=module_dir,
+            extra_paths=[mdx_path],
+        )
+        archive.write_commit_diff_summary(worktree_path=worktree.path)
         # Persist artifacts BEFORE printing the summary so the summary
         # can include the commit-status line. Even if the build crashed,
         # the writer_prompt + partial writer_output remain queryable via
@@ -475,6 +560,8 @@ def _phase_done(
     level: str,
     slug: str,
     event_sink: Callable[..., None] = emit_event,
+    archive: run_archive.RunArchive | None = None,
+    artifact_dir: Path | None = None,
     **fields: Any,
 ) -> None:
     event_sink(
@@ -484,6 +571,52 @@ def _phase_done(
         phase=phase,
         duration_s=round(time.monotonic() - started_at, 3),
         **fields,
+    )
+    if archive is not None:
+        extra_paths = []
+        output = fields.get("output")
+        if isinstance(output, Path):
+            extra_paths.append(output)
+        archive.phase_succeeded(
+            phase,
+            artifact_dir=artifact_dir,
+            extra_paths=extra_paths,
+            fields=fields,
+        )
+
+
+def _phase_started(archive: run_archive.RunArchive | None, phase: str) -> None:
+    if archive is not None:
+        archive.phase_started(phase)
+
+
+def _archive_failure(
+    archive: run_archive.RunArchive | None,
+    *,
+    phase: str,
+    module_dir: Path | None,
+    plan_path: Path | None,
+    exc: Exception,
+) -> None:
+    if archive is None:
+        return
+    failed_mdx = archive.write_failed_mdx(
+        module_dir=module_dir,
+        plan_path=plan_path,
+        failed_phase=phase,
+    )
+    archive.phase_failed(
+        phase,
+        artifact_dir=module_dir,
+        failure_class=type(exc).__name__,
+        reason=str(exc),
+    )
+    archive.terminal(
+        status="failed",
+        failed_phase=phase,
+        failure_class=type(exc).__name__,
+        artifact_dir=module_dir,
+        extra_paths=[failed_mdx] if failed_mdx is not None else None,
     )
 
 
@@ -549,6 +682,7 @@ def _run_llm_qg(
             generated_content,
             dim,
         )
+        (module_dir / f"llm-qg-{dim}-prompt.md").write_text(prompt, encoding="utf-8")
         result = invoke(
             agent_name,
             prompt,
@@ -589,6 +723,10 @@ def _run_wiki_coverage_review(
         generated_content,
         wiki_manifest,
         wiki_coverage_gate,
+    )
+    (module_dir / "wiki-coverage-review-prompt.md").write_text(
+        prompt,
+        encoding="utf-8",
     )
     result = invoke(
         agent_name,
@@ -757,19 +895,31 @@ def _run(args: argparse.Namespace) -> int:
     phase = "start"
     timeout_agent = writer
     tracker = LastEventTracker()
+    archive = run_archive.RunArchive.from_env()
+    plan_path: Path | None = None
+    module_dir: Path | None = None
 
     tracker.emit("module_start", level=level, slug=slug)
 
     try:
         phase = "plan"
+        _phase_started(archive, phase)
         started_at = time.monotonic()
         plan_path = linear_pipeline.plan_path_for(level, slug)
         plan_content = plan_path.read_text(encoding="utf-8")
         plan = linear_pipeline.load_plan(plan_path)
         linear_pipeline.validate_plan(plan)
-        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+        )
 
         phase = "knowledge_packet"
+        _phase_started(archive, phase)
         started_at = time.monotonic()
         knowledge_packet = linear_pipeline.build_knowledge_packet(
             level=level,
@@ -782,7 +932,14 @@ def _run(args: argparse.Namespace) -> int:
             plan=plan,
         )
         wiki_manifest = json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
-        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+        )
 
         if args.dry_run:
             sections = [
@@ -810,6 +967,7 @@ def _run(args: argparse.Namespace) -> int:
         module_dir = _resolve_output_dir(args.out, level, slug)
 
         phase = "writer"
+        _phase_started(archive, phase)
         timeout_agent = writer
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
@@ -871,9 +1029,12 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             writer=writer,
             event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
         )
 
         phase = "python_qg"
+        _phase_started(archive, phase)
         started_at = time.monotonic()
         python_qg = linear_pipeline.run_python_qg_with_corrections(
             module_dir,
@@ -881,7 +1042,15 @@ def _run(args: argparse.Namespace) -> int:
             writer=writer,
         )
         linear_pipeline.write_json(module_dir / "python_qg.json", python_qg)
-        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
         gates = python_qg.get("gates")
         if not isinstance(gates, Mapping) or gates.get("passed") is not True:
             raise linear_pipeline.LinearPipelineError(
@@ -889,6 +1058,7 @@ def _run(args: argparse.Namespace) -> int:
             )
 
         phase = "wiki_coverage_gate"
+        _phase_started(archive, phase)
         started_at = time.monotonic()
         wiki_coverage_gate = linear_pipeline.run_wiki_coverage_with_corrections(
             plan=plan,
@@ -899,13 +1069,22 @@ def _run(args: argparse.Namespace) -> int:
             event_sink=tracker.emit,
         )
         linear_pipeline.write_json(module_dir / "wiki_coverage_gate.json", wiki_coverage_gate)
-        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
         if wiki_coverage_gate.get("passed") is not True:
             raise linear_pipeline.LinearPipelineError(
                 "Wiki coverage gate failed after batched + narrow correction passes"
             )
 
         phase = "wiki_coverage_review"
+        _phase_started(archive, phase)
         timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
         wiki_coverage_review = _run_wiki_coverage_review(
@@ -941,11 +1120,20 @@ def _run(args: argparse.Namespace) -> int:
             partial_count=partial_count,
             total_verdicts=len(wiki_coverage_review.get("verdicts", [])),
         )
-        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
         if wiki_coverage_review["overall_verdict"] == "FAIL":
             raise linear_pipeline.LinearPipelineError("Wiki coverage review failed")
 
         phase = "llm_qg"
+        _phase_started(archive, phase)
         timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
         llm_qg = _run_llm_qg(
@@ -964,13 +1152,22 @@ def _run(args: argparse.Namespace) -> int:
             score=aggregate["min_score"],
             verdict=aggregate["verdict"],
         )
-        _phase_done(phase, started_at, level=level, slug=slug, event_sink=tracker.emit)
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
         if aggregate["verdict"] != "PASS":
             raise linear_pipeline.LinearPipelineError(
                 f"LLM QG verdict was {aggregate['verdict']}"
             )
 
         phase = "mdx"
+        _phase_started(archive, phase)
         started_at = time.monotonic()
         # MDX is the BUILT artifact and goes where Starlight reads it. Source
         # artifacts (.md, *.yaml) stay in curriculum/ as authoring source. When
@@ -997,6 +1194,8 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             output=mdx_path,
             event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
         )
 
         tracker.emit(
@@ -1007,6 +1206,13 @@ def _run(args: argparse.Namespace) -> int:
         )
         return 0
     except AgentStalledError as exc:
+        _archive_failure(
+            archive,
+            phase=phase,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            exc=exc,
+        )
         tracker.emit(
             "writer_timeout",
             level=level,
@@ -1021,6 +1227,13 @@ def _run(args: argparse.Namespace) -> int:
         print(f"v7_build timed out in phase {phase}: {exc}", file=sys.stderr, flush=True)
         return 124
     except Exception as exc:
+        _archive_failure(
+            archive,
+            phase=phase,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            exc=exc,
+        )
         tracker.emit(
             "module_failed",
             level=level,

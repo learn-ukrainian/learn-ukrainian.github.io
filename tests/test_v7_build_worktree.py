@@ -24,8 +24,9 @@ def _install_fake_subprocess_run(
         text: bool = False,
         check: bool = False,
         timeout: int | None = None,
+        env: dict[str, str] | None = None,
     ) -> subprocess.CompletedProcess[str]:
-        del cwd, capture_output, text, check, timeout
+        del cwd, capture_output, text, check, timeout, env
         calls.append(cmd)
         if cmd[:2] == ["git", "rev-parse"] and "--show-toplevel" in cmd:
             return subprocess.CompletedProcess(cmd, 0, f"{repo}\n", "")
