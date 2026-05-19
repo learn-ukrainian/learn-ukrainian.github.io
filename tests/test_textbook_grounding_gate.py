@@ -290,6 +290,59 @@ def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
+def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
+    tmp_path: Path,
+) -> None:
+    """Pin the Hermes-routed MCP-server shape ``{"result": "<markdown>"}``.
+
+    The learn-ukrainian sources MCP server wraps its single-string response
+    under an inner ``result`` key (observed 2026-05-19 in the b1
+    genitive-nuances build's ``hermes.write.jsonl``). Before this unwrap
+    the textbook_grounding gate read ``textbook_result_hits: 0`` for every
+    Hermes-routed writer even though the calls fired and returned valid
+    grounded chunks — the gate's mapping path didn't know to dive into
+    the inner ``result`` key.
+    """
+    inner_markdown = (
+        'Found 1 results for: "Караман reflexive verbs"\n\n'
+        "### Result 1\n"
+        "- **Section**: Сторінка 176\n"
+        "- **Source**: Grade 10, karaman\n"
+        "- **Chunk ID**: `10-klas-ukrmova-karaman-2018_s0315`\n"
+        "- **Text**:\n"
+        f"{SEARCH_TEXT}\n"
+    )
+    (tmp_path / "hermes.write.jsonl").write_text(
+        json.dumps(
+            {
+                "event": "writer_tool_call",
+                "tool": "mcp_sources_search_text",
+                "args": {"query": "Караман Grade 10 reflexive verbs"},
+                "result": {"result": inner_markdown},
+                "duration_ms": 101,
+                "tool_call_id": "call_inner",
+                "session_id": "sess",
+                "ts": 1779220000,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True
+    assert result["search_text_calls"] == 1
+    assert result["textbook_result_hits"] == 1
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
 def test_invoke_writer_persists_tool_trace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

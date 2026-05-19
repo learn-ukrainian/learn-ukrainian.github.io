@@ -7005,14 +7005,29 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         raw_hits = result.get("results") or result.get("hits") or result.get("items")
         if isinstance(raw_hits, list):
             return [item for item in raw_hits if isinstance(item, Mapping)]
-        if (
-            _tool_name_from_call(call) == "search_text"
-            and result.get("type") == "text"
-            and isinstance(result.get("text"), str)
-        ):
-            parsed = _parse_mcp_search_text_markdown(result["text"])
-            if parsed:
-                return parsed
+        if _tool_name_from_call(call) == "search_text":
+            # Canonical MCP content-block shape (claude / codex / direct
+            # anthropic-tools): result is ``{"type": "text", "text": "<md>"}``.
+            if result.get("type") == "text" and isinstance(result.get("text"), str):
+                parsed = _parse_mcp_search_text_markdown(result["text"])
+                if parsed:
+                    return parsed
+            # Hermes-routed MCP variant shape: the sources MCP server wraps
+            # its single-string response under an inner ``result`` key, so
+            # the captured hook payload reads
+            # ``{"tool":"mcp_sources_search_text","result":{"result":"<md>"}}``.
+            # The inner markdown payload follows the same
+            # ``### Result N / **Source** / **Text**`` format the parser
+            # already handles. Empirical evidence: 2026-05-19 b1
+            # genitive-nuances build's hermes.write.jsonl. Without this
+            # unwrap every Hermes-routed writer reads
+            # ``textbook_result_hits: 0`` even when the calls fired and
+            # returned grounded textbook chunks.
+            inner = result.get("result")
+            if isinstance(inner, str):
+                parsed = _parse_mcp_search_text_markdown(inner)
+                if parsed:
+                    return parsed
         return [result]
     return []
 
