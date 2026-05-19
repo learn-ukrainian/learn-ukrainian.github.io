@@ -397,6 +397,12 @@ def test_writer_correction_handles_tool_theatre_gate(tmp_path: Path) -> None:
     assert (module_dir / "module.md").read_text("utf-8") == (
         "## Morning\n\nOriginal prose with verification not performed theatre.\n"
     )
+    correction = json.loads(
+        (module_dir / "python_qg_correction_r1.json").read_text("utf-8")
+    )
+    assert correction["gate"] == "tool_theatre"
+    assert correction["correction"]["applied"] == "module_patch"
+    assert "search_heritage" in correction["correction"]["prompt"]
 
 
 def test_writer_correction_strict_json_parse_gate_still_requires_full_artifacts(

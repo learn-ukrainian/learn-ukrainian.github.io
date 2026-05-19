@@ -3923,6 +3923,7 @@ def run_python_qg_with_corrections(
     """
     attempts: set[str] = set()
     vesum_missing_exclusions: set[str] = set()
+    correction_round = 0
 
     def _run_qg() -> dict[str, Any]:
         if qg_runner is not None:
@@ -3947,9 +3948,10 @@ def run_python_qg_with_corrections(
             )
             return report
         attempts.add(failed_gate)
+        correction_round += 1
 
         before = report
-        handled, unmatched_anchors = _apply_python_qg_correction(
+        handled, unmatched_anchors, correction_payload = _apply_python_qg_correction(
             failed_gate,
             report,
             module_dir=module_dir,
@@ -3961,6 +3963,16 @@ def run_python_qg_with_corrections(
             invoker=invoker,
         )
         if not handled:
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                {
+                    "round": correction_round,
+                    "gate": failed_gate,
+                    "handled": False,
+                    "before": before,
+                    "correction": correction_payload,
+                },
+            )
             _annotate_correction_terminal(
                 report,
                 failed_gate,
@@ -3973,6 +3985,16 @@ def run_python_qg_with_corrections(
         report = _run_qg()
         vesum_missing_exclusions.clear()
         regressions = _previously_passing_regressions(before, report)
+        correction_artifact: dict[str, Any] = {
+            "round": correction_round,
+            "gate": failed_gate,
+            "handled": True,
+            "unmatched_anchors": sorted(unmatched_anchors),
+            "before": before,
+            "correction": correction_payload,
+            "after": report,
+            "regressions": regressions,
+        }
         if regressions:
             gates = report.setdefault("gates", {})
             if isinstance(gates, dict):
@@ -3981,7 +4003,16 @@ def run_python_qg_with_corrections(
                     "regressions": regressions,
                 }
                 gates["passed"] = False
+            correction_artifact["after"] = report
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                correction_artifact,
+            )
             return report
+        _write_correction_artifact(
+            module_dir / f"python_qg_correction_r{correction_round}.json",
+            correction_artifact,
+        )
 
 
 def run_wiki_coverage_with_corrections(
@@ -4021,11 +4052,13 @@ def run_wiki_coverage_with_corrections(
 
     batched_attempts = 0
     narrow_attempts = 0
+    correction_round = 0
     for iteration in range(1, WIKI_COVERAGE_BATCH_MAX_ITERATIONS + 1):
         proposals = _wiki_coverage_fix_proposals(result)
         if not proposals:
             break
         batched_attempts = iteration
+        correction_round += 1
         coverage_before = _wiki_coverage_coverage_pct(result)
         groups = _wiki_coverage_grouped_fix_proposals(proposals, module_dir)
         _emit(
@@ -4042,6 +4075,7 @@ def run_wiki_coverage_with_corrections(
             iteration=iteration,
         )
         fixes_applied_total = 0
+        attempt_records: list[dict[str, Any]] = []
         for group in groups:
             artifact = str(group["artifact"])
             artifact_text = _read_required(module_dir / artifact)
@@ -4068,6 +4102,14 @@ def run_wiki_coverage_with_corrections(
                 artifact_text=artifact_text,
             )
             fixes = _parse_reviewer_fixes(response)
+            attempt_record: dict[str, Any] = {
+                "group_key": str(group["key"]),
+                "artifact": artifact,
+                "prompt": prompt,
+                "response": response,
+                "fixes": fixes,
+                "fixes_applied": 0,
+            }
             if not fixes:
                 _emit(
                     event_sink,
@@ -4077,8 +4119,10 @@ def run_wiki_coverage_with_corrections(
                     group_key=str(group["key"]),
                     response_preview=str(response or "")[:800],
                 )
+                attempt_record["status"] = "unparseable"
+                attempt_records.append(attempt_record)
                 continue
-            fixes_applied_total += _apply_wiki_coverage_fixes(
+            fixes_applied = _apply_wiki_coverage_fixes(
                 module_dir=module_dir,
                 artifact=artifact,
                 fixes=fixes,
@@ -4087,12 +4131,35 @@ def run_wiki_coverage_with_corrections(
                 event_sink=event_sink,
                 group_key=str(group["key"]),
             )
+            fixes_applied_total += fixes_applied
+            attempt_record["fixes_applied"] = fixes_applied
+            attempt_record["status"] = "applied" if fixes_applied else "no_applicable_fix"
+            attempt_records.append(attempt_record)
 
         after = _run_gate()
         coverage_after = _wiki_coverage_coverage_pct(after)
+        correction_payload: dict[str, Any] = {
+            "round": correction_round,
+            "phase": "batched",
+            "iteration": iteration,
+            "coverage_pct_before": coverage_before,
+            "coverage_pct_after": coverage_after,
+            "fail_count": len(proposals),
+            "fixes_applied_total": fixes_applied_total,
+            "groups_processed": len(groups),
+            "before": result,
+            "after": after,
+            "attempts": attempt_records,
+        }
         if coverage_after < coverage_before - 1e-6:
             _restore_wiki_coverage_artifacts(module_dir, backup_dir)
             result = _run_gate()
+            correction_payload["status"] = "regression"
+            correction_payload["restored"] = result
+            _write_correction_artifact(
+                module_dir / f"wiki_coverage_correction_r{correction_round}.json",
+                correction_payload,
+            )
             _emit(
                 event_sink,
                 "wiki_coverage_correction_regression",
@@ -4102,6 +4169,11 @@ def run_wiki_coverage_with_corrections(
                 coverage_pct_after=coverage_after,
             )
             break
+        correction_payload["status"] = "done"
+        _write_correction_artifact(
+            module_dir / f"wiki_coverage_correction_r{correction_round}.json",
+            correction_payload,
+        )
         _emit(
             event_sink,
             "wiki_coverage_correction_pass_done",
@@ -4124,6 +4196,7 @@ def run_wiki_coverage_with_corrections(
         if not proposals:
             break
         narrow_attempts = iteration
+        correction_round += 1
         coverage_before = _wiki_coverage_coverage_pct(result)
         _emit(
             event_sink,
@@ -4140,6 +4213,7 @@ def run_wiki_coverage_with_corrections(
         )
         fixes_applied_total = 0
         obligations_processed = 0
+        attempt_records = []
         for proposal in proposals:
             obligations_processed += 1
             artifact = _wiki_coverage_target_artifact(proposal, module_dir)
@@ -4165,6 +4239,14 @@ def run_wiki_coverage_with_corrections(
                 artifact_text=artifact_text,
             )
             fixes = _parse_reviewer_fixes(response)
+            attempt_record = {
+                "obligation_id": str(proposal.get("obligation_id") or ""),
+                "artifact": artifact,
+                "prompt": prompt,
+                "response": response,
+                "fixes": fixes,
+                "fixes_applied": 0,
+            }
             if not fixes:
                 _emit(
                     event_sink,
@@ -4174,8 +4256,10 @@ def run_wiki_coverage_with_corrections(
                     obligation_id=str(proposal.get("obligation_id") or ""),
                     response_preview=str(response or "")[:800],
                 )
+                attempt_record["status"] = "unparseable"
+                attempt_records.append(attempt_record)
                 continue
-            fixes_applied_total += _apply_wiki_coverage_fixes(
+            fixes_applied = _apply_wiki_coverage_fixes(
                 module_dir=module_dir,
                 artifact=artifact,
                 fixes=fixes,
@@ -4184,12 +4268,35 @@ def run_wiki_coverage_with_corrections(
                 event_sink=event_sink,
                 obligation_id=str(proposal.get("obligation_id") or ""),
             )
+            fixes_applied_total += fixes_applied
+            attempt_record["fixes_applied"] = fixes_applied
+            attempt_record["status"] = "applied" if fixes_applied else "no_applicable_fix"
+            attempt_records.append(attempt_record)
 
         after = _run_gate()
         coverage_after = _wiki_coverage_coverage_pct(after)
+        correction_payload = {
+            "round": correction_round,
+            "phase": "narrow",
+            "iteration": iteration,
+            "coverage_pct_before": coverage_before,
+            "coverage_pct_after": coverage_after,
+            "fail_count": len(proposals),
+            "fixes_applied_total": fixes_applied_total,
+            "obligations_processed": obligations_processed,
+            "before": result,
+            "after": after,
+            "attempts": attempt_records,
+        }
         if coverage_after < coverage_before - 1e-6:
             _restore_wiki_coverage_artifacts(module_dir, backup_dir)
             result = _run_gate()
+            correction_payload["status"] = "regression"
+            correction_payload["restored"] = result
+            _write_correction_artifact(
+                module_dir / f"wiki_coverage_correction_r{correction_round}.json",
+                correction_payload,
+            )
             _emit(
                 event_sink,
                 "wiki_coverage_correction_regression",
@@ -4199,6 +4306,11 @@ def run_wiki_coverage_with_corrections(
                 coverage_pct_after=coverage_after,
             )
             break
+        correction_payload["status"] = "done"
+        _write_correction_artifact(
+            module_dir / f"wiki_coverage_correction_r{correction_round}.json",
+            correction_payload,
+        )
         _emit(
             event_sink,
             "wiki_coverage_correction_pass_done",
@@ -4649,20 +4761,24 @@ def _apply_python_qg_correction(
     dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None,
     writer: str,
     invoker: Callable[..., Any] | None,
-) -> tuple[bool, frozenset[str]]:
+) -> tuple[bool, frozenset[str], dict[str, Any]]:
     gates = qg_report.get("gates")
     if not isinstance(gates, Mapping):
-        return False, frozenset()
+        return False, frozenset(), {"reason": "missing gates mapping"}
     gate_report = gates.get(gate)
     if not isinstance(gate_report, Mapping):
-        return False, frozenset()
+        return False, frozenset(), {"reason": "missing gate report"}
     if gate in TERMINAL_ZERO_RETRY_GATES:
-        return False, frozenset()
+        return False, frozenset(), {"reason": "terminal zero-retry gate"}
     if gate in PIPELINE_INSERT_GATES:
         _apply_activity_id_inserts(module_dir / "module.md", gate_report)
-        return True, frozenset()
+        return True, frozenset(), {
+            "kind": "pipeline_insert",
+            "gate": gate,
+            "gate_report": dict(gate_report),
+        }
     if gate in WRITER_CORRECTION_GATES:
-        _apply_writer_correction(
+        payload = _apply_writer_correction(
             gate,
             gate_report,
             qg_report=qg_report,
@@ -4672,7 +4788,7 @@ def _apply_python_qg_correction(
             writer=writer,
             invoker=invoker,
         )
-        return True, frozenset()
+        return True, frozenset(), payload
     if gate in REVIEWER_FIX_GATES:
         candidates = ()
         if gate in DICTIONARY_CANDIDATE_GATES:
@@ -4682,7 +4798,7 @@ def _apply_python_qg_correction(
                 qg_report=qg_report,
                 dictionary_lookup_fn=dictionary_lookup_fn,
             )
-        unmatched_anchors = _apply_reviewer_correction(
+        unmatched_anchors, payload = _apply_reviewer_correction(
             gate,
             gate_report,
             qg_report=qg_report,
@@ -4692,8 +4808,8 @@ def _apply_python_qg_correction(
             reviewer_corrector=reviewer_corrector,
             invoker=invoker,
         )
-        return True, unmatched_anchors
-    return False, frozenset()
+        return True, unmatched_anchors, payload
+    return False, frozenset(), {"reason": "no correction path", "gate": gate}
 
 
 def _apply_writer_correction(
@@ -4707,7 +4823,7 @@ def _apply_writer_correction(
     | None,
     writer: str,
     invoker: Callable[..., Any] | None,
-) -> None:
+) -> dict[str, Any]:
     module_text = _read_required(module_dir / "module.md")
     prompt = render_writer_correction_prompt(
         gate=gate,
@@ -4734,7 +4850,13 @@ def _apply_writer_correction(
         response = writer_corrector(context)
     if isinstance(response, Mapping):
         write_writer_artifacts(module_dir, response)
-        return
+        return {
+            "kind": "writer",
+            "gate": gate,
+            "prompt": prompt,
+            "response": dict(response),
+            "applied": "writer_artifacts_mapping",
+        }
     if isinstance(response, str):
         # Strict-JSON-parse failures need all 4 artifact blocks back since the
         # original parse was the failure mode itself. Other gates are
@@ -4742,12 +4864,24 @@ def _apply_writer_correction(
         # contract.
         if all(name in response for name in WRITER_ARTIFACTS):
             write_writer_artifacts(module_dir, parse_writer_output_strict_json(response))
-            return
+            return {
+                "kind": "writer",
+                "gate": gate,
+                "prompt": prompt,
+                "response": response,
+                "applied": "strict_json_artifacts",
+            }
         if gate != "strict_json_parse":
             patched = parse_writer_correction_module_only(response)
             if patched is not None:
                 (module_dir / "module.md").write_text(patched, encoding="utf-8")
-                return
+                return {
+                    "kind": "writer",
+                    "gate": gate,
+                    "prompt": prompt,
+                    "response": response,
+                    "applied": "module_patch",
+                }
     emit_event(
         "writer_correction_unparseable",
         **_correction_event_fields(
@@ -4757,6 +4891,13 @@ def _apply_writer_correction(
         ),
         response_preview=_correction_preview(response),
     )
+    return {
+        "kind": "writer",
+        "gate": gate,
+        "prompt": prompt,
+        "response": response,
+        "applied": "unparseable",
+    }
 
 
 def _apply_reviewer_correction(
@@ -4769,7 +4910,7 @@ def _apply_reviewer_correction(
     candidates: tuple[CorrectionCandidate, ...],
     reviewer_corrector: Callable[[CorrectionContext], str | None] | None,
     invoker: Callable[..., Any] | None,
-) -> frozenset[str]:
+) -> tuple[frozenset[str], dict[str, Any]]:
     module_path = module_dir / "module.md"
     module_text = _read_required(module_path)
     prompt = render_reviewer_correction_prompt(
@@ -4818,7 +4959,16 @@ def _apply_reviewer_correction(
             ),
             response_preview=_correction_preview(response),
         )
-        return frozenset()
+        return frozenset(), {
+            "kind": "reviewer",
+            "gate": gate,
+            "prompt": prompt,
+            "response": response,
+            "fixes": [],
+            "accepted_fixes": [],
+            "rejected_fixes": [],
+            "applied": False,
+        }
     accepted_fixes, rejected_fixes = _validate_reviewer_fix_shapes(fixes)
     correction_fields = _correction_event_fields(
         gate=gate,
@@ -4833,7 +4983,16 @@ def _apply_reviewer_correction(
         **correction_fields,
     )
     if not accepted_fixes:
-        return frozenset()
+        return frozenset(), {
+            "kind": "reviewer",
+            "gate": gate,
+            "prompt": prompt,
+            "response": response,
+            "fixes": fixes,
+            "accepted_fixes": [],
+            "rejected_fixes": rejected_fixes,
+            "applied": False,
+        }
     result = _apply_reviewer_fixes(
         module_text,
         accepted_fixes,
@@ -4857,7 +5016,17 @@ def _apply_reviewer_correction(
                 artifact=module_path.name,
                 error_preview=str(exc)[:800],
             )
-    return result.unmatched_anchors
+    return result.unmatched_anchors, {
+        "kind": "reviewer",
+        "gate": gate,
+        "prompt": prompt,
+        "response": response,
+        "fixes": fixes,
+        "accepted_fixes": accepted_fixes,
+        "rejected_fixes": rejected_fixes,
+        "unmatched_anchors": sorted(result.unmatched_anchors),
+        "applied": True,
+    }
 
 
 def _apply_activity_id_inserts(module_path: Path, gate_report: Mapping[str, Any]) -> None:
@@ -5217,6 +5386,14 @@ def write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _write_correction_artifact(path: Path, payload: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, default=str) + "\n",
         encoding="utf-8",
     )
 
