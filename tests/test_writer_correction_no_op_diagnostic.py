@@ -192,6 +192,56 @@ def test_parse_writer_correction_module_only_accepts_short_form_label() -> None:
     assert linear_pipeline.parse_writer_correction_module_only(response_bare) == "body2\n"
 
 
+def test_parse_writer_correction_module_only_unwraps_four_backtick_wrapper() -> None:
+    """When the model wraps its 3-backtick fenced block in a 4-backtick
+    outer fence (CommonMark convention for "code block containing code
+    blocks"), peel one wrapper layer before parsing. Observed 2026-05-19
+    from deepseek-v4-pro xhigh on a2/aspect-concept word_count correction.
+    """
+    response = (
+        "```` markdown\n"
+        "```markdown file=module.md\n"
+        "## Діалог: про вид дієслова\n\n"
+        "Expanded prose with the missing 50 words to clear the gate.\n"
+        "```\n"
+        "````\n"
+    )
+    body = linear_pipeline.parse_writer_correction_module_only(response)
+    assert body is not None
+    assert body.startswith("## Діалог")
+    assert "Expanded prose" in body
+    assert body.endswith("\n")
+
+
+def test_parse_writer_correction_module_only_unwraps_bare_four_backtick_wrapper() -> None:
+    """Same wrapper tolerance when the outer fence has no info-line."""
+    response = (
+        "````\n"
+        "```module.md\n"
+        "Patched body content.\n"
+        "```\n"
+        "````\n"
+    )
+    body = linear_pipeline.parse_writer_correction_module_only(response)
+    assert body == "Patched body content.\n"
+
+
+def test_parse_writer_correction_module_only_does_not_peel_when_outer_has_file_label() -> None:
+    """A bare ≥4-backtick fence with `file=module.md` info-line is itself a
+    valid single fence (not a wrapper) — do not peel."""
+    response = (
+        "````markdown file=module.md\n"
+        "Body inside a 4-backtick fence used as the actual artifact fence.\n"
+        "````\n"
+    )
+    # The strict triple-backtick split rejects 4-backtick artifact fences;
+    # peeling would change behavior. The current contract is 3-backtick
+    # only — peeling should NOT happen when the wrapper info names a file.
+    # If this were a real writer pattern, we'd extend the parser; for now,
+    # the no-peel behavior on file= info-lines is correct.
+    assert linear_pipeline.parse_writer_correction_module_only(response) is None
+
+
 def test_parse_writer_correction_module_only_rejects_zero_or_multi_blocks() -> None:
     """No fenced block, or multiple fenced blocks, returns None — the
     pipeline falls through to writer_correction_unparseable."""

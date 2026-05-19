@@ -2956,6 +2956,16 @@ def parse_writer_correction_module_only(response: str) -> str | None:
     - bare ``` ```markdown``` fences without the module.md label
     - empty fence body
 
+    **Outer-fence-wrapper tolerance**: when the writer's correction output
+    is itself a fenced code block (a CommonMark convention for "code block
+    containing code blocks", using ≥4 backticks to disambiguate from the
+    inner triple-backticks), peel one wrapper layer before parsing. This
+    was observed 2026-05-19 from deepseek-v4-pro xhigh on a2/aspect-concept
+    word_count correction: model emitted ````` ```` markdown\\n```markdown
+    file=module.md\\n...\\n```\\n``` ````` and the strict 3-backtick split
+    parser returned 5 parts instead of 3. Peeling one wrapper layer recovers
+    the inner fence.
+
     Returns the module.md body (with one trailing newline) on the contract
     match, else None. Used by `_apply_writer_correction` for gates that only
     modify module.md (everything in WRITER_CORRECTION_GATES except
@@ -2964,7 +2974,44 @@ def parse_writer_correction_module_only(response: str) -> str | None:
     if not isinstance(response, str):
         return None
     stripped = response.strip()
-    # Hard guards: the entire response must be one triple-fence block.
+    # Peel one ≥4-backtick wrapper if present. The CommonMark convention is:
+    # an opening fence of N backticks (N >= 3) is closed by a fence of EXACTLY
+    # N backticks (or more). Writers use 4-backtick wrappers when their
+    # content itself contains 3-backtick code blocks. We accept exactly one
+    # wrapper level — nested wrappers would be hostile to the parser
+    # contract and should still fail.
+    if stripped.startswith("````"):
+        # Find the run length of the opening fence.
+        open_run = 0
+        for ch in stripped:
+            if ch == "`":
+                open_run += 1
+            else:
+                break
+        # The opening fence has an optional info-line (which we discard) until
+        # the first newline. The matching close is a run of at least open_run
+        # backticks on its own line.
+        after_open = stripped[open_run:]
+        nl_idx = after_open.find("\n")
+        if nl_idx == -1:
+            return None
+        wrapper_info = after_open[:nl_idx].strip()
+        # Allowed wrapper info-lines: empty, "markdown", or a generic language
+        # hint. Anything that looks like a real fence label (file=...) means
+        # this isn't a wrapper — it's a single bare fence we shouldn't peel.
+        if "file=" in wrapper_info:
+            # Don't peel — let the normal triple-backtick parser handle it.
+            pass
+        else:
+            inner = after_open[nl_idx + 1 :]
+            # Strip the matching close fence at the end of the inner block.
+            inner_stripped = inner.rstrip()
+            close_marker = "`" * open_run
+            if inner_stripped.endswith(close_marker):
+                inner_stripped = inner_stripped[: -open_run].rstrip()
+                stripped = inner_stripped
+    # Hard guards: the entire (possibly unwrapped) response must be one
+    # triple-fence block.
     if not (stripped.startswith("```") and stripped.endswith("```")):
         return None
     # Splitting on the triple-backtick delimiter gives exactly 3 parts when
