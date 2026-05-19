@@ -55,6 +55,21 @@ that failure class. Run each check while drafting, not as a separate pass.
    silently substitute a confabulated alternative. If no good substitute,
    leave the slot empty and emit `<!-- VERIFY: lemma "X" not in VESUM -->`.
 
+   **Coverage requirement.** "Every example word" means EVERY Cyrillic
+   word form that appears in module.md prose, vocabulary.yaml entries
+   (lemma AND usage fields), activities.yaml prompts/answers, and
+   resources.yaml notes — not a selected sample. Build the
+   `verify_words` list by iterating the full draft, not by recalling
+   salient words.
+
+   **L2-trap: over-applied reflexive -ся.** Do NOT add `-ся` to
+   transitive verbs that lack a reflexive form in VESUM. The verb is
+   intransitive-reflexive ONLY if its `-ся` form is in VESUM. Examples
+   that ALWAYS fail: `пити → *п'юся`, `снідати → *снідається`,
+   `читати → *читаюся`, `писати → *пишуся`. Before emitting any `-ся`
+   form, verify via `mcp__sources__verify_word`. If NOT FOUND, the verb
+   is not reflexive — use the non-reflexive form.
+
 2. **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys standard forms for learner-facing standard Ukrainian. However, NEVER classify a word as Russianism, surzhyk, or calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. For any non-modern or suspicious form, verify with `mcp__sources__check_modern_form` (VESUM) plus available historical/etymological evidence (`mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, literary/wiki source context). If authentic but non-standard, keep it only when pedagogically required, tag it `[Archaism]`, `[Historism]`, or `[Dialectism]`, give the modern standard equivalent, and briefly state its Ukrainian heritage. If unverified, omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
    **Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM — intentional misspellings, Russianisms, Surzhyk, calques, archaisms appearing only for teaching contrast — MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers wherever it appears in the output, regardless of artifact. The marker lets `vesum_verified` strip the form while the learner still sees it in rendered MDX:
