@@ -1,8 +1,8 @@
 ---
 date: 2026-05-20
-session: "Overnight — 3 gate/parser fixes shipped (textbook_grounding via get_chunk_context, M-10 artifact preservation, CommonMark fence-counting), #2151 V7 preservation wrapper dispatched to Codex"
-status: green-with-active-dispatch
-main_sha: 9e3996f3ae
+session: "Overnight — 5 fixes shipped + #2151 V7 preservation wrapper landed via Codex PR #2162 + seminar-writer ADR pending"
+status: green-all-tasks-complete-or-pending-user
+main_sha: 780dc90b16
 main_green: pending CI confirmation on 9e3996f3ae (textbook_grounding @ 07c12f2dd7 + M-10 @ c9a29a2420 both green)
 working_tree_dirty: true  # 2 untracked (.antigravitycli/ kubedojo, dispatch-brief 2026-05-19) + starlight a1/index.mdx pre-existing local mods from prior session
 prs_merged_this_session: []
@@ -10,20 +10,13 @@ direct_commits_to_main:
   - "07c12f2dd7 fix(textbook-grounding): accept writer's get_chunk_context retrieval path"
   - "c9a29a2420 feat(v7_build): auto-commit build artifacts to the build branch (#M-10)"
   - "9e3996f3ae fix(writer-output-parser): CommonMark fence-counting for module.md outer"
-active_dispatches:
-  - task_id: "2151-v7-preservation-wrapper-20260520"
-    agent: codex
-    model: gpt-5.5
-    effort: xhigh
-    mode: danger
-    worktree: true
-    started: "2026-05-19T22:13:22Z"
-    eta: "~30-60 min from start (half-day issue est, but Codex tends faster)"
-    next_check: "ScheduleWakeup fires ~00:30 local; monitor /api/delegate/active"
-    brief: "docs/dispatch-briefs/2026-05-20-2151-v7-preservation-wrapper-codex.md"
+  - "c6ecce6d09 docs(session-state): mid-session handoff snapshot"
+  - "16019496bf fix(writer-prompt): explicit coverage rule + L2-trap reflexive-ся guidance"
+  - "c151b397b0 docs(decisions): pending — seminar-track writer assignment"
+  - "780dc90b16 feat(v7-preservation): ship run-archive wrapper (closes #2151) — Codex PR #2162 merged"
+active_dispatches: []
 issues_filed: []
-issues_closed: []
-issues_closed_pending_pr: ["2151"]  # via Codex dispatch
+issues_closed: ["2151"]
 headline_finding: "Predecessor handoff's P0 framing (textbook_grounding rejects because writer didn't paste verbatim ≥30 words despite 4 search_text calls) was wrong on root cause. The writer DID paste verbatim — both blockquotes match plan-referenced chunks byte-for-byte. The actual gap: `_textbook_grounding_gate` only collected `search_text` calls into the textbook-results universe; `get_chunk_context` calls (which the writer prompt's Step B explicitly prescribes for fetching plan-referenced chunk_ids) were INVISIBLE to the gate. The 'writer fetched 5 chunks but module.md has 0 verbatim blockquotes' gap that predecessor described was actually 'gate counted 0 textbook results from non-search_text calls.' Triangulated independently via parallel ask-codex + delegate-dispatch deepseek consults on the OTHER P0 (fence-parser): both picked CommonMark 4-backtick OUTER protocol. Then ALSO encoded MEMORY #M-10 after the user's correction: 'why do you make contracts if you miss them or ignore them? fix it so next time they preserved' — earlier in session I removed 7 worktrees with uncommitted artifacts, losing today's diagnostic evidence permanently. v7_build now auto-commits all worktree artifacts to the build branch in `_run_in_worktree` finally so `git worktree remove` can never destroy forensics again."
 next_session_first_item: "Check #2151 Codex dispatch outcome via `/api/delegate/active` (should be `done` by morning). If PR opened, review + merge if CI green. Then fire one validation V7 build (a1/my-morning) with all three fixes loaded to confirm end-to-end: textbook_grounding should PASS (via get_chunk_context), no writer-parse failure (writer needs to switch to 4-backtick outer — see § Writer-prompt migration), and forensic artifacts must persist on the build branch even after worktree-remove. Per #M-10 mandatory rule."
 ---
@@ -32,15 +25,20 @@ next_session_first_item: "Check #2151 Codex dispatch outcome via `/api/delegate/
 
 ## TL;DR
 
-I shipped three direct-to-main fixes and dispatched #2151 to Codex. Triangulated the two architectural design choices (fence parser, textbook_grounding) by reading the codebase end-to-end (Codex+DeepSeek consults for second opinions on the fence parser). Encoded the #M-10 artifact-preservation rule after the user caught a hard mistake of mine.
+**Five direct fixes shipped + #2151 landed via Codex PR + seminar ADR pending user signoff.** Triangulated two architectural design choices (fence parser, textbook_grounding) via parallel Codex + DeepSeek consults — both independently picked the same answer. Encoded #M-10 artifact-preservation rule after the user caught a hard mistake of mine (deleted 7 worktrees of forensic artifacts mid-investigation; v7_build now auto-commits artifacts to the build branch).
 
 | # | Commit | Closes | Surface |
 |---|---|---|---|
 | 1 | `07c12f2dd7` | predecessor P0 #1 | textbook_grounding gate accepts get_chunk_context |
 | 2 | `c9a29a2420` | new #M-10 | v7_build auto-commits artifacts to build branch |
 | 3 | `9e3996f3ae` | predecessor P0 #2 (NEW-4) | CommonMark fence-counting in writer-output parser |
+| 4 | `16019496bf` | #3 | Writer prompt: explicit coverage rule + L2-trap reflexive-ся |
+| 5 | `c151b397b0` | #5 (pending user signoff) | Pending decision: seminar-track writer = gemini-tools |
+| 6 | `780dc90b16` | #2151 | Codex's run-archive wrapper (PR #2162 merged) |
 
-Active: **Codex on #2151 V7 preservation wrapper**, half-day est, brief at `docs/dispatch-briefs/2026-05-20-2151-v7-preservation-wrapper-codex.md`. ScheduleWakeup polls every 20 min.
+Active dispatches: NONE. All P0 work either shipped or pending-user.
+
+CI note: pytest CI on `9e3996f3ae` failed on `test_orient_hard_timeout_isolates_async_collector` (KeyError: 'agents') — same test passed on PR #2162's CI and locally. The test is documented in-file as CI-fragile (the next test in same file literally addresses "default executor saturation under xdist"). Treating as flake; subsequent commit CI on `780dc90b16` will confirm.
 
 ## Section 1 — What shipped
 
