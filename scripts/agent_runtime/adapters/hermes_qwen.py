@@ -153,8 +153,24 @@ class HermesQwenAdapter:
             )
 
         hermes_bin = shutil.which("hermes") or "hermes"
+        # Force --provider openrouter explicitly. Hermes' top-level
+        # `model.provider: openrouter` is NOT honored for some vendor prefixes
+        # at per-invocation `-m` routing time: `moonshotai/*` and `minimax/*`
+        # default to an internal `nvidia` mapping, causing
+        # ``RuntimeError: Provider 'nvidia' is set in config.yaml but no API
+        # key was found`` despite the top-level config saying openrouter.
+        # All models we route through this adapter live on OpenRouter, so
+        # passing the flag unambiguously forces the documented behavior.
+        # Investigated 2026-05-19: verified that the flag rescues k2.5, k2.6,
+        # minimax-m2.7; qwen/* and other previously-working models continue
+        # to work unchanged.
         return InvocationPlan(
-            cmd=[hermes_bin, "-z", prompt, "-m", model or self.default_model],
+            cmd=[
+                hermes_bin,
+                "-z", prompt,
+                "-m", model or self.default_model,
+                "--provider", "openrouter",
+            ],
             cwd=cwd,
             stdin_payload="",
             output_file=None,
