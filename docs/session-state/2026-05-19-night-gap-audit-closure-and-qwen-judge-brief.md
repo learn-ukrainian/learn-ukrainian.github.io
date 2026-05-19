@@ -25,6 +25,25 @@ issues_filed: ["#2150 (closed inline)", "#2151 V7 preservation wrapper impl"]
 
 # Handoff — Gap audit closure + first qwen empirical signal
 
+## Restart context — 2.1.144 release notes (relevant items only)
+
+User restarted with this session ending at `e5e16c9f2b`. New CLI is Claude Code 2.1.144. Items affecting our orchestration flow:
+
+1. **MCP pagination fix** — *"MCP servers with paginated tools/list responses only returning the first page, silently dropping tools."* Our `mcp__sources__*` server registers ~40+ tools. Worth verifying with `claude mcp list` on first turn that the full tool catalog comes through. If the server uses pagination, prior sessions may have been operating with a subset.
+2. **15s side-channel API timeout** (was 75s on `api.anthropic.com` unreachable). Affects cold-start when network is flaky / captive portals / VPN.
+3. **Headless MCP startup ~2s faster** — every `delegate.py dispatch --agent claude` benefits. Also helps the Agent-tool subagents.
+4. **Skill tool fixed in headless mode** (regression in 2.1.141). The `curriculum-writer` subagent uses skills; this regression may have been biting silent.
+5. **`claude mcp list`** now surfaces `.mcp.json` config errors (was silent-empty). Useful debug surface — run on first turn if MCP behavior looks off.
+6. **`/model` is now per-session; `/model d` sets default for new sessions.** Behavioral change. Default-setting requires a separate keypress now.
+7. **MCP unsupported MIME (e.g. SVG)** — saved to disk + referenced instead of breaking the conversation. Affects `mcp__sources__search_images` if it ever returns non-JPEG/PNG.
+8. **`/extra-usage` → `/usage-credits`** rename (old name still works as alias).
+9. **MCP background side-queries on custom `ANTHROPIC_BASE_URL` / Bedrock Mantle** — now correctly fall back to Haiku. Relevant if the Hermes proxy ever gets pointed at by our base URL.
+10. **`Edit`/`Write` no longer refuses with "background session hasn't isolated its changes yet"** right after detaching a session that was editing in place. Affects dispatch-worktree flows if we ever use `--bg`.
+
+**Action recommended on first turn:** run `claude mcp list` to verify the `sources` MCP catalog is fully present post-pagination-fix; if any tool is missing that the matrix or rules reference, file an issue against the MCP server config.
+
+---
+
 ## TL;DR
 
 Predecessor session (2026-05-19 morning) shipped the gap audit + 4 hygiene commits and left 8 items in the carry-over queue. This session drained items 2-4 inline, dispatched item 4 to Codex (landed in 20 min — 4× faster than the 1.5-3h estimate), updated item 7 (north-star), and earned the first empirical qwen signal in any role.
