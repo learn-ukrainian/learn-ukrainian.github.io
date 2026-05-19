@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B1 writer bakeoff — learn-ukrainian — 2026-05-19</title>
+<style>
+:root {
+  --bg: #fafaf9;
+  --bg-card: #ffffff;
+  --bg-code: #f5f5f4;
+  --bg-callout: #fefce8;
+  --bg-callout-strong: #fef3c7;
+  --text: #1c1917;
+  --text-muted: #57534e;
+  --border: #e7e5e4;
+  --primary: #1e293b;
+  --accent: #b45309;
+  --pass: #15803d;
+  --pass-bg: #dcfce7;
+  --fail: #b91c1c;
+  --fail-bg: #fee2e2;
+  --warn: #a16207;
+  --warn-bg: #fef9c3;
+  --neutral: #57534e;
+  --neutral-bg: #f5f5f4;
+  --link: #1d4ed8;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; font-size: 16px; -webkit-font-smoothing: antialiased; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+header { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: #f8fafc; padding: 64px 0 48px; border-bottom: 4px solid var(--accent); }
+header h1 { margin: 0 0 8px 0; font-size: 36px; font-weight: 700; letter-spacing: -0.02em; }
+header .subtitle { font-size: 18px; opacity: 0.85; margin-bottom: 24px; }
+header .meta { font-size: 14px; opacity: 0.7; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+header .meta strong { color: #fbbf24; }
+nav.toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 28px; margin: 32px 0; font-size: 14px; }
+nav.toc h3 { margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+nav.toc ol { margin: 0; padding-left: 24px; columns: 2; column-gap: 32px; }
+nav.toc ol li { margin: 4px 0; break-inside: avoid; }
+nav.toc a { color: var(--link); text-decoration: none; }
+nav.toc a:hover { text-decoration: underline; }
+section { margin: 48px 0; }
+h2 { font-size: 28px; font-weight: 700; margin: 0 0 8px 0; padding-bottom: 12px; border-bottom: 2px solid var(--border); letter-spacing: -0.01em; color: var(--primary); }
+h2 .num { color: var(--accent); font-weight: 800; margin-right: 8px; font-feature-settings: "tnum"; }
+h3 { font-size: 20px; font-weight: 600; margin: 32px 0 12px 0; color: var(--primary); }
+h4 { font-size: 16px; font-weight: 600; margin: 20px 0 8px 0; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+p { margin: 12px 0; }
+.lede { font-size: 17px; color: var(--text-muted); margin-bottom: 20px; }
+.callout { background: var(--bg-callout); border-left: 4px solid var(--accent); padding: 16px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+.callout.strong { background: var(--bg-callout-strong); border-left-color: var(--fail); }
+.callout.pass { background: var(--pass-bg); border-left-color: var(--pass); }
+.callout p:first-child { margin-top: 0; }
+.callout p:last-child { margin-bottom: 0; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+code { background: var(--bg-code); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border); }
+pre { background: var(--bg-code); padding: 16px 20px; border-radius: 6px; overflow-x: auto; font-size: 13px; line-height: 1.5; border: 1px solid var(--border); }
+pre code { background: none; padding: 0; border: none; }
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { background: var(--neutral-bg); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+tr:last-child td { border-bottom: none; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge.pass { background: var(--pass-bg); color: var(--pass); }
+.badge.fail { background: var(--fail-bg); color: var(--fail); }
+.badge.warn { background: var(--warn-bg); color: var(--warn); }
+.badge.neutral { background: var(--neutral-bg); color: var(--neutral); }
+.num-mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+ul, ol { margin: 12px 0; padding-left: 24px; }
+li { margin: 4px 0; }
+footer { background: var(--neutral-bg); border-top: 1px solid var(--border); padding: 32px 0; margin-top: 64px; font-size: 14px; color: var(--text-muted); }
+footer a { color: var(--link); }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 16px 0; font-size: 14px; }
+.kv dt { color: var(--text-muted); font-weight: 500; }
+.kv dd { margin: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>B1 writer bakeoff — five-way scoreboard</h1>
+    <div class="subtitle">b1-052 genitive-nuances. Effort hypothesis tested for codex-tools + deepseek-tools. Gemini namespace bug found and fixed.</div>
+    <div class="meta">Run date: <strong>2026-05-19</strong> · Module: <strong>b1/genitive-nuances</strong> · Prompt size: <strong>210,976 chars</strong> · Methodology: writer-only (no reviewer phase) per v1 A1 bakeoff</div>
+  </div>
+</header>
+
+<div class="container">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#headline">Headline findings</a></li>
+    <li><a href="#scoreboard">Scoreboard</a></li>
+    <li><a href="#codex">Codex hypothesis (DISCONFIRMED)</a></li>
+    <li><a href="#deepseek">DeepSeek hypothesis (CONFIRMED at xhigh)</a></li>
+    <li><a href="#gemini">Gemini namespace fix</a></li>
+    <li><a href="#qwen">Qwen at B1</a></li>
+    <li><a href="#mcp-gap">Writer-MCP-invocation gap</a></li>
+    <li><a href="#routing">Routing recommendations</a></li>
+    <li><a href="#followups">Open follow-ups</a></li>
+    <li><a href="#provenance">Provenance</a></li>
+  </ol>
+</nav>
+
+<section id="headline">
+<h2><span class="num">1.</span>Headline findings</h2>
+<p class="lede">Three hypotheses tested. Two disconfirmed at one level then refined or confirmed at another. One adapter-layer bug found and fixed.</p>
+
+<div class="callout strong">
+<p><strong>1. DeepSeek-v4-pro hypothesis (carried from A1 bakeoff): <span class="badge fail">DISCONFIRMED at medium</span> · <span class="badge pass">CONFIRMED at xhigh</span></strong></p>
+<p>At B1's 4000-word target on b1-052 genitive-nuances, deepseek-tools at <code>effort=medium</code> emits all 7 plan_reasoning + 2 audit lines then <strong>stops before any artifact fence</strong> — 9 KB scaffolding-only, opposite of A1 where deepseek shipped the best content. Bumping to <code>effort=xhigh</code> recovers full artifact emission: 7 plan_reasoning + 4 fences + end_gate, 38,940 chars (largest of any writer tested). The effort-budget axis is real at B1+ where it was invisible at A1.</p>
+</div>
+
+<div class="callout strong">
+<p><strong>2. Codex-tools effort hypothesis: <span class="badge fail">DISCONFIRMED</span></strong></p>
+<p>Codex CLI exits with <code>returncode=1</code> in <strong>under 1 second</strong> with empty stderr, before creating a session/rollout file. Both <code>effort=high</code> (default) and <code>effort=xhigh</code> produce the identical sub-second crash. This is a runner-layer interaction bug, not a model-quality or reasoning-budget issue. Filed as <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2159">#2159</a>. Manual <code>cat prompt.md | codex exec &lt;same-flags&gt; -</code> succeeds with the exact runner flags, so the failure surface is the agent_runtime's PTY-stdout + pipe-stdin path on 210K-char prompts specifically.</p>
+</div>
+
+<div class="callout pass">
+<p><strong>3. Gemini-tools namespace bug: <span class="badge pass">FOUND + FIXED</span></strong></p>
+<p>Gemini CLI 0.42.0 emits MCP tool calls with single-underscore <code>mcp_sources_search_text</code> instead of the canonical double-underscore <code>mcp__sources__search_text</code> used by claude / codex / hermes-backed writers. The pipeline's writer-trace-isolation gate hardcoded the double-underscore form, so all 14 of gemini's real MCP calls were misclassified as <code>wrong_tool_family</code>. Fixed in commit <code>0fc0f0d427</code>: both prefixes now accepted; gemini's actual wrong-tool-family calls (built-in <code>run_shell_command</code>, <code>update_topic</code>) are still correctly flagged.</p>
+</div>
+
+<div class="callout">
+<p><strong>Production B1+ writer remains <code>claude-tools</code> (Opus 4.7 xhigh)</strong> — the only writer making real writer-time MCP linguistic-verification calls (24 in this run vs 0 for deepseek-xhigh / qwen). DeepSeek-tools at xhigh is the viable metered fallback for the post-2026-06-15 era when the Claude dispatch lane sunsets, but reviewer-phase MCP must compensate for the writer-time verification gap.</p>
+</div>
+</section>
+
+<section id="scoreboard">
+<h2><span class="num">2.</span>Five-way scoreboard</h2>
+<p class="lede">All runs against the same module (<code>b1-052 genitive-nuances</code>, word_target=4000, grammar focus), same prompt (210,976 chars), same methodology (writer-only via <code>scripts/bakeoff/run_b1_writer.py</code>).</p>
+
+<table>
+<thead>
+<tr>
+  <th>Writer</th>
+  <th>Model</th>
+  <th>Effort</th>
+  <th>Output</th>
+  <th>Duration</th>
+  <th>Plan/Audit/Fence/Gate</th>
+  <th>Real MCP calls</th>
+  <th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>claude-tools</strong></td>
+  <td>claude-opus-4-7</td>
+  <td>xhigh</td>
+  <td class="num-mono">54,007</td>
+  <td class="num-mono">805 s</td>
+  <td>7 / 2 / 4 / ✅</td>
+  <td class="num-mono">24</td>
+  <td><span class="badge pass">FULL — gold</span></td>
+</tr>
+<tr>
+  <td><strong>qwen-tools</strong></td>
+  <td>qwen/qwen3.6-plus</td>
+  <td>medium</td>
+  <td class="num-mono">31,351</td>
+  <td class="num-mono">258 s</td>
+  <td>7 / 2 / 4 / ✅</td>
+  <td class="num-mono">0</td>
+  <td><span class="badge pass">FULL · no MCP</span></td>
+</tr>
+<tr>
+  <td><strong>deepseek-tools</strong></td>
+  <td>deepseek-v4-pro</td>
+  <td>medium</td>
+  <td class="num-mono">8,958</td>
+  <td class="num-mono">206 s</td>
+  <td>7 / 2 / <strong>0</strong> / ❌</td>
+  <td class="num-mono">0</td>
+  <td><span class="badge fail">scaffolding only</span></td>
+</tr>
+<tr>
+  <td><strong>deepseek-tools</strong></td>
+  <td>deepseek-v4-pro</td>
+  <td><strong>xhigh</strong></td>
+  <td class="num-mono">38,940</td>
+  <td class="num-mono">687 s</td>
+  <td>7 / — / 4 / ✅</td>
+  <td class="num-mono">0</td>
+  <td><span class="badge pass">FULL · no MCP</span></td>
+</tr>
+<tr>
+  <td><strong>codex-tools</strong></td>
+  <td>gpt-5.5</td>
+  <td>high</td>
+  <td class="num-mono">0</td>
+  <td class="num-mono">0.98 s</td>
+  <td>—</td>
+  <td class="num-mono">0</td>
+  <td><span class="badge fail">CLI crashed</span></td>
+</tr>
+<tr>
+  <td><strong>codex-tools</strong></td>
+  <td>gpt-5.5</td>
+  <td><strong>xhigh</strong></td>
+  <td class="num-mono">0</td>
+  <td class="num-mono">0.74 s</td>
+  <td>—</td>
+  <td class="num-mono">0</td>
+  <td><span class="badge fail">CLI crashed</span></td>
+</tr>
+<tr>
+  <td><strong>gemini-tools</strong></td>
+  <td>gemini-3.1-pro-preview</td>
+  <td>high</td>
+  <td>gate-rejected</td>
+  <td class="num-mono">~270 s</td>
+  <td>—</td>
+  <td>23 (14 MCP, 11 wrong-family)</td>
+  <td><span class="badge fail">wrong toolset</span></td>
+</tr>
+</tbody>
+</table>
+
+<h4>Output structure breakdown (plan_reasoning / audit lines / artifact fences / end_gate)</h4>
+<p>All three successful runs (claude-tools, qwen-tools medium, deepseek-tools xhigh) emit the full 7-section plan_reasoning + 4-fence artifact structure. Deepseek-tools at medium hits the plan_reasoning blocks then stops — same prompt, same template, different model behavior under reasoning-budget pressure on a 4000-word target.</p>
+</section>
+
+<section id="codex">
+<h2><span class="num">3.</span>Codex hypothesis — DISCONFIRMED, runner-layer bug</h2>
+<p class="lede">Hypothesis from the predecessor handoff: codex-tools at <code>effort=xhigh</code> may recover artifact emission that <code>effort=high</code> couldn't reach on B1's 210K-char prompt. Both runs produce the identical sub-second crash — effort is not the axis.</p>
+
+<h3>Evidence</h3>
+<p>After shipping the diagnostic improvement in <code>5f20d357b6 fix(invoke_writer): surface runtime debug fields on no-response errors</code>, the actual failure shape became readable:</p>
+
+<pre><code>LinearPipelineError: Writer call returned no response (writer=codex-tools, effort=xhigh,
+  returncode=1, duration_s=0.7404133750242181, stalled=False, rate_limited=False,
+  stderr_excerpt='&lt;empty&gt;')</code></pre>
+
+<p>Identical for both <code>effort=high</code> (0.98 s) and <code>effort=xhigh</code> (0.74 s). The <code>batch_state/api_usage/usage_codex-dispatch_2026-05-19.jsonl</code> records show <code>output_chars=0</code> and <code>stderr_excerpt=null</code> for both. <code>~/.codex/sessions/2026/05/19/</code> contains <strong>no rollout file</strong> for these invocations — the codex CLI dies before session init.</p>
+
+<h3>Ruled out by manual reproduction</h3>
+<p>I extracted the exact subprocess command the agent_runtime builds for the codex-tools writer and ran it manually with the full 210K prompt via shell pipe. Output:</p>
+
+<pre><code>OpenAI Codex v0.131.0
+--------
+workdir: /Users/krisztiankoos/projects/learn-ukrainian/audit/2026-05-19-b1-writer-bakeoff/codex-tools-xhigh
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+...
+user
+# North Star — Curriculum Reboot (#1577 Phase 0 draft)
+...</code></pre>
+
+<p>The manual call <strong>starts processing normally</strong>. Same binary, same flags, same prompt, same effort. The difference must be in the agent_runtime's PTY-stdout + pipe-stdin path: <code>scripts/agent_runtime/runner.py:_spawn_pty_subprocess</code> creates PTYs for stdout/stderr but uses a regular <code>subprocess.PIPE</code> for stdin, then writes the full 210K prompt at line 938-943 with <code>BrokenPipeError</code> silently swallowed.</p>
+
+<h3>Disposition</h3>
+<p>Filed as <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2159">#2159</a> with full evidence + cross-references to <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2071">#2071</a> (codereview-benchmark + proxy-bundle dispatch hangs with <code>response_chars=0</code>) and <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2134">#2134</a> (codex worker dies post-edits). All three may be the same underlying runner/CLI interaction. Acceptance: either root-cause identified and fixed, OR a runtime regression-test asserts the runner produces a <em>useful</em> error rather than silent exit-1 on a synthetic 200K-char prompt.</p>
+</section>
+
+<section id="deepseek">
+<h2><span class="num">4.</span>DeepSeek hypothesis — CONFIRMED at xhigh</h2>
+<p class="lede">Predecessor finding (A1 bakeoff): deepseek-v4-pro at medium led on content quality after dropping the CoT contract — best A1 writer. This session's B1 medium run inverted that result. The xhigh re-run resolves the inversion.</p>
+
+<h3>Medium-effort failure</h3>
+<p>Per session-state handoff <code>2026-05-19-evening-b1-bakeoff-deepseek-disconfirmed.md</code>:</p>
+<ul>
+  <li>3.4 min wall-clock</li>
+  <li>9 KB output: all 7 plan_reasoning + 2 audit lines emitted thoughtfully, then <strong>stopped before any artifact fence</strong>.</li>
+  <li>8,027 of 8,958 output chars are plan_reasoning content; ~931 chars actual emission.</li>
+  <li>Opposite of A1 behavior where deepseek dropped scaffolding and produced best content.</li>
+</ul>
+
+<h3>xhigh-effort recovery</h3>
+<p>Same model, same prompt, same writer adapter — only the effort knob changed (medium → xhigh via the new <code>--effort</code> flag on <code>run_b1_writer.py</code>, landed in commit <code>15ecdf4892</code>):</p>
+<ul>
+  <li>11.5 min wall-clock (3.4× slower than medium, in line with xhigh's expected cost premium)</li>
+  <li><strong>38,940 chars output</strong> (largest of any writer tested — beats claude-tools' 54 KB byte-size when measured in characters because deepseek's prose is denser in Cyrillic per char-vs-byte difference)</li>
+  <li>All 7 plan_reasoning blocks with proper <code>word_budget / plan_vocab / register / teaching_sequence / implementation_map / verification_plan / verification_trace</code> structure</li>
+  <li>4 artifact fences emitted: <code>module.md</code>, <code>activities.yaml</code>, <code>vocabulary.yaml</code>, <code>resources.yaml</code></li>
+  <li>1 <code>&lt;end_gate&gt;</code> block present</li>
+  <li>B1 register adherence: "100% Ukrainian. No English in body." (matches B1 immersion policy)</li>
+</ul>
+
+<h3>Content sample (first plan_reasoning block)</h3>
+<pre><code>&lt;plan_reasoning section="Частковий родовий"&gt;
+&lt;word_budget&gt;700 words (±10%). Running total: 700.&lt;/word_budget&gt;
+&lt;plan_vocab&gt;склянка (Я купую склянку води), шматок (Дайте шматок хліба),
+багато (Багато часу), кількість (Кількість цукру), частковий
+(Частковий родовий виражає частину від цілого)&lt;/plan_vocab&gt;
+&lt;register&gt;B1 — 100% Ukrainian. No English in body. Sentences max 30 words.
+Ukrainian peer voice, direct.&lt;/register&gt;
+&lt;teaching_sequence&gt;Uses Knowledge Packet: "Типові помилки L2" for the L2
+error awareness, "Частотність і пріоритети" for pedagogical ordering. Uses
+Глазова Grade 10 p.190 for the genitive endings table.&lt;/teaching_sequence&gt;
+...
+&lt;/plan_reasoning&gt;</code></pre>
+
+<h3>Caveat — zero writer-time MCP calls</h3>
+<p>The output includes <code>&lt;verification_trace&gt;</code> blocks listing <strong>intended</strong> MCP calls (<code>mcp__sources__verify_words</code>, <code>verify_source_attribution</code>, <code>check_modern_form</code>) but the writer never actually invoked them — <code>writer_tool_calls.json</code> wasn't produced. Same pattern as qwen-tools (also zero real MCP). Only claude-tools made real verification calls at writer-time (24 in this run). This matters: writer-time MCP is the "free lunch" that catches Russianisms / archaisms / ghost citations before the reviewer phase has to clean them up.</p>
+</section>
+
+<section id="gemini">
+<h2><span class="num">5.</span>Gemini namespace fix shipped</h2>
+<p class="lede">Predecessor finding: gemini-tools fails two gates on the bakeoff. Investigation root-caused it to a gemini-cli 0.42.0 convention change. Fix shipped in commit <code>0fc0f0d427</code>.</p>
+
+<h3>Root cause</h3>
+<p>Gemini CLI 0.42.0 changed the emitted MCP tool name convention from canonical double-underscore <code>mcp__sources__search_text</code> (per the MCP spec used by claude, codex, and the hermes-backed writers) to single-underscore <code>mcp_sources_search_text</code>. The pipeline had two surfaces that hardcoded the canonical form:</p>
+
+<table>
+<thead><tr><th>Surface</th><th>File:line</th><th>Pre-fix behavior on gemini</th></tr></thead>
+<tbody>
+<tr><td><code>_normalize_tool_name()</code></td><td>linear_pipeline.py:2102</td><td>Split on <code>__</code>; single-underscore names fell through, raw name didn't match <code>WRITER_TOOL_NAMES</code> → call silently dropped from <code>tool_calls_total</code> → <code>MCP_TOOLS_NEVER_INVOKED</code> fired</td></tr>
+<tr><td><code>classify_writer_trace()</code></td><td>linear_pipeline.py:1989</td><td>Single <code>startswith(WRITER_ALLOWED_TOOL_PREFIX)</code> against <code>"mcp__sources__"</code>; gemini's <code>mcp_sources_*</code> calls didn't match → <code>wrong_tool_family</code> fired</td></tr>
+</tbody>
+</table>
+
+<h3>Fix</h3>
+<p>Introduced <code>WRITER_ALLOWED_TOOL_PREFIXES</code> as a tuple of accepted MCP-sources prefixes:</p>
+
+<pre><code>WRITER_ALLOWED_TOOL_PREFIXES = (
+    "mcp__sources__",  # canonical (claude, codex, deepseek, qwen, grok)
+    "mcp_sources_",    # gemini-cli 0.42.0+ single-underscore convention
+)</code></pre>
+
+<p><code>_normalize_tool_name</code> now also strips the <code>mcp_sources_</code> prefix when present without <code>__</code>. The classify check uses <code>any(tool_name.startswith(p) for p in WRITER_ALLOWED_TOOL_PREFIXES)</code>.</p>
+
+<h3>Pre-fix vs post-fix on captured gemini-tools data</h3>
+<table>
+<thead><tr><th>Metric</th><th>Before fix</th><th>After fix</th></tr></thead>
+<tbody>
+<tr><td>Total tool calls recorded</td><td class="num-mono">23</td><td class="num-mono">23</td></tr>
+<tr><td><code>wrong_tool_family</code> offenders</td><td class="num-mono">14 (incl. all 12 MCP)</td><td class="num-mono">11 (only built-ins)</td></tr>
+<tr><td>Normalized MCP-tool calls (<code>tool_calls_total</code>)</td><td class="num-mono">0</td><td class="num-mono">9</td></tr>
+<tr><td><code>MCP_TOOLS_NEVER_INVOKED</code> would fire?</td><td><span class="badge fail">yes (false-positive)</span></td><td><span class="badge pass">no</span></td></tr>
+</tbody>
+</table>
+
+<p>Gemini-tools <strong>still fails</strong> the writer phase post-fix because of the 11 built-in tool calls (<code>run_shell_command</code> ×9, <code>update_topic</code> ×2) — those are correctly classified as wrong-family. The fix doesn't unblock gemini as a writer; it stops misclassifying its legitimate MCP traffic. Disabling gemini-cli's built-in tools is a separate problem (the CLI offers <code>--allowed-mcp-server-names</code> but no equivalent built-in disable flag).</p>
+
+<h3>Verification</h3>
+<ul>
+  <li>2 new tests: <code>test_gemini_single_underscore_mcp_prefix_passes_isolation</code> + <code>test_gemini_builtin_tools_still_fail_isolation</code></li>
+  <li>307 passed / 1 skipped across the broader writer-isolation + telemetry + adapter test surface</li>
+  <li>Re-ran <code>classify_writer_trace</code> against the captured <code>audit/2026-05-19-b1-writer-bakeoff/gemini-tools/writer_tool_calls.json</code> to confirm the failure record count + offender list match expectations</li>
+</ul>
+</section>
+
+<section id="qwen">
+<h2><span class="num">6.</span>Qwen at B1</h2>
+<p class="lede">No new investigation; qwen-tools medium produces full emission on B1 just like A1. Same caveat as deepseek-xhigh: zero writer-time MCP calls.</p>
+
+<ul>
+  <li>4.3 min wall-clock at <code>effort=medium</code> — fastest of any successful writer</li>
+  <li>31 KB output, all 7 plan_reasoning + 2 audit + 4 fences + end_gate</li>
+  <li>0 real MCP calls — same writer-time verification gap as deepseek-xhigh</li>
+  <li>Universal-failure-pattern naming from the predecessor handoff (wrong fence syntax + JSON-in-yaml) appears to be a misreading of the template: <code>linear-write.md</code> explicitly specifies <code>markdown file=module.md</code> and <code>json file=activities.yaml</code> as the intended fence-info lines. What looked like a writer mistake is actually the documented contract. The deeper question — does <code>parse_writer_output_strict_json</code> accept what the template tells writers to emit? — was not investigated this session.</li>
+</ul>
+</section>
+
+<section id="mcp-gap">
+<h2><span class="num">7.</span>Writer-MCP-invocation gap</h2>
+<p class="lede">Three writers shipped full artifacts. Only one made real MCP linguistic-verification calls at writer-time. The other two wrote intent-traces and skipped the calls.</p>
+
+<table>
+<thead><tr><th>Writer</th><th>Output</th><th><code>verification_trace</code> blocks</th><th>Real MCP calls</th><th>Gap?</th></tr></thead>
+<tbody>
+<tr><td>claude-tools (Opus 4.7)</td><td class="num-mono">54 KB</td><td>yes</td><td class="num-mono">24</td><td><span class="badge pass">none</span></td></tr>
+<tr><td>deepseek-tools xhigh</td><td class="num-mono">38 KB</td><td>yes (detailed)</td><td class="num-mono">0</td><td><span class="badge warn">scaffolding only</span></td></tr>
+<tr><td>qwen-tools medium</td><td class="num-mono">31 KB</td><td>yes</td><td class="num-mono">0</td><td><span class="badge warn">scaffolding only</span></td></tr>
+</tbody>
+</table>
+
+<p>The intended behavior is that <code>verification_trace</code> declares the calls the writer plans to make AND will then execute. Deepseek and qwen treat these blocks as documentation and skip the actual tool invocation. Hypotheses worth investigating:</p>
+
+<ol>
+  <li><strong>Adapter-side</strong>: hermes-backed adapters (<code>deepseek-tools</code>, <code>qwen-tools</code>, <code>grok-tools</code>) wire MCP servers through <code>~/.hermes/config.yaml</code> rather than per-call tool config. If hermes' MCP exposure has visibility issues for these specific models, the writer can't invoke even though the prompt says to.</li>
+  <li><strong>Prompt-side</strong>: the prompt may inadvertently treat <code>verification_trace</code> as "describe what you would do" rather than "do it then describe what you did". Claude's training apparently distinguishes; smaller open models may not.</li>
+  <li><strong>Tool-discovery</strong>: deepseek/qwen may not even <em>see</em> the MCP tools in their context — hermes-side server start-up may fail silently for some models.</li>
+</ol>
+
+<p>This matters for routing decisions: if writer-time MCP is the cost of using claude-tools, and the post-2026-06-15 fallbacks can't replicate it, the reviewer phase needs hardening to catch what the writer would otherwise verify pre-emission.</p>
+</section>
+
+<section id="routing">
+<h2><span class="num">8.</span>Routing recommendations</h2>
+
+<table>
+<thead><tr><th>Lane</th><th>Pre-2026-06-15</th><th>Post-2026-06-15 (Claude dispatch sunset)</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>V7 writer A1</strong></td>
+  <td>claude-tools (current default); deepseek-tools medium viable per A1 v1 bakeoff</td>
+  <td>deepseek-tools medium (per A1 v1 bakeoff) — cheaper, was best at A1</td>
+</tr>
+<tr>
+  <td><strong>V7 writer B1+</strong></td>
+  <td>claude-tools (only writer with real writer-time MCP)</td>
+  <td>deepseek-tools <strong>xhigh</strong> (verified this session) — full emission, but reviewer phase must compensate for the writer-time MCP gap</td>
+</tr>
+<tr>
+  <td><strong>Codex as writer</strong></td>
+  <td>blocked by #2159 — runner-layer crash on large prompts regardless of effort</td>
+  <td>still blocked unless #2159 lands. The 2026-06-15 sunset has no impact on this; codex-tools is non-viable as B1+ writer in current state.</td>
+</tr>
+<tr>
+  <td><strong>Gemini as writer</strong></td>
+  <td>not viable — built-in tool calls fail the wrong-tool-family gate even with the 0fc0f0d427 namespace fix</td>
+  <td>same — needs a way to disable gemini-cli built-in tools</td>
+</tr>
+<tr>
+  <td><strong>Qwen as writer</strong></td>
+  <td>viable as fast/cheap option; same writer-time MCP gap as deepseek</td>
+  <td>viable as cheaper alternative to deepseek-xhigh; same caveat</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>scripts/config/agent_fallback_substitutions.yaml</code> already documents per-surface fallback chains. The post-2026-06-15 V7 writer substitution should update its "claude-tools out" branch to point at <code>deepseek-tools (effort=xhigh)</code> for B1+ and <code>deepseek-tools (medium)</code> for A1 based on this session's evidence + the A1 v1 bakeoff.</p>
+</section>
+
+<section id="followups">
+<h2><span class="num">9.</span>Open follow-ups</h2>
+
+<table>
+<thead><tr><th>#</th><th>Item</th><th>Owner</th><th>Effort</th></tr></thead>
+<tbody>
+<tr><td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2159">#2159</a></td><td>Root-cause + fix the codex CLI sub-second exit-1 via agent_runtime PTY+stdin path on large prompts. Or add a synthetic 200K-prompt regression test that asserts the runner produces a useful error.</td><td>Codex dispatch (after auth re-login)</td><td>2-4 h</td></tr>
+<tr><td>NEW</td><td>Writer-MCP-invocation gap (§7): figure out why deepseek-tools / qwen-tools write <code>verification_trace</code> scaffolding without actually invoking MCP. Adapter vs prompt vs tool-discovery — currently three live hypotheses.</td><td>Investigation</td><td>1-3 h</td></tr>
+<tr><td>NEW</td><td>Gemini-cli built-in tool disable: 0.42.0 doesn't expose a flag to suppress <code>run_shell_command</code> / <code>update_topic</code>. Investigate the Policy Engine (referenced in <code>gemini --help</code>) as the right surface to forbid non-MCP tools for writer dispatch.</td><td>Adapter work</td><td>2-3 h</td></tr>
+<tr><td>NEW (rescoped)</td><td>The "universal-failure pattern" (wrong fence + JSON-in-yaml) named in the predecessor handoff doesn't match the actual template contract. Audit <code>parse_writer_output_strict_json</code> vs <code>linear-write.md</code> for the real gap before opening any prompt-clarity PR.</td><td>Inspection</td><td>30 min</td></tr>
+<tr><td>NEW</td><td>Update <code>scripts/config/agent_fallback_substitutions.yaml</code> "claude-tools out" branch to reflect the deepseek-tools xhigh / qwen-tools routing options for post-2026-06-15.</td><td>Config edit</td><td>15 min</td></tr>
+<tr><td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2155">#2155</a></td><td>Fix <code>wiki_coverage_gate</code> semantics — orthogonal to bakeoff but the highest-leverage code fix in queue (would push m20 from 67% → 83% coverage).</td><td>Codex dispatch</td><td>2-3 h</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="provenance">
+<h2><span class="num">10.</span>Provenance</h2>
+
+<dl class="kv">
+  <dt>Methodology</dt><dd>Writer-only via <code>scripts/bakeoff/run_b1_writer.py</code> — matches v1 A1 bakeoff methodology. No reviewer phase, no audit gates, no fix loop. Compares raw writer outputs at parity.</dd>
+  <dt>Module</dt><dd><code>b1-052 genitive-nuances</code> (word_target=4000, grammar focus). Plan locked. Knowledge packet 62 KB; wiki manifest 6 KB; implementation map 10 KB.</dd>
+  <dt>Prompt size</dt><dd>210,976 characters per run, identical across writers (writer prompt rendered once per writer via <code>render_writer_prompt</code>).</dd>
+  <dt>Raw artifacts</dt><dd><code>audit/2026-05-19-b1-writer-bakeoff/{claude-tools, qwen-tools, deepseek-tools, deepseek-tools-xhigh, gemini-tools, codex-tools, codex-tools-xhigh}/</code></dd>
+  <dt>Bakeoff runner</dt><dd><code>scripts/bakeoff/run_b1_writer.py</code> — committed at <code>6581b26334</code>, extended with <code>--effort</code> flag at <code>15ecdf4892</code></dd>
+  <dt>Diagnostic improvement</dt><dd><code>5f20d357b6 fix(invoke_writer): surface runtime debug fields on no-response errors</code> — made the codex sub-second exit-1 finding deterministic instead of "Writer call returned no response" with no further detail</dd>
+  <dt>Gemini namespace fix</dt><dd><code>0fc0f0d427 fix(writer-trace): tolerate gemini-cli 0.42.0+ single-underscore MCP tool names</code> + 2 new tests</dd>
+  <dt>Predecessor handoff</dt><dd><code>docs/session-state/2026-05-19-evening-b1-bakeoff-deepseek-disconfirmed.md</code></dd>
+  <dt>v1 routing audit</dt><dd><code>audit/2026-05-19-multi-agent-routing-assessment/REPORT.html</code> (v2)</dd>
+  <dt>v1 A1 writer bakeoff data</dt><dd><code>audit/2026-05-19-qwen-writer-bakeoff/</code> and <code>audit/2026-05-19-multi-agent-routing-assessment/raw/</code></dd>
+  <dt>Pipeline writer policy</dt><dd><code>claude_extensions/rules/pipeline.md</code> + <code>docs/decisions/2026-05-06-writer-selection-codex-gpt55.md</code></dd>
+  <dt>Filed issue</dt><dd><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2159">#2159</a> — codex CLI silent-crash via runner</dd>
+  <dt>Cost (this session)</dt><dd>codex-tools high + xhigh: subscription (failed fast, ~0 incremental). deepseek-tools xhigh: ~$0.30-$0.80 metered. claude-tools: subscription. qwen-tools medium: ~$0.05-$0.20 metered. Gemini-tools: subscription.</dd>
+</dl>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>B1 writer bakeoff REPORT — generated 2026-05-19. Raw evidence in <code>audit/2026-05-19-b1-writer-bakeoff/</code>. Sources: writer outputs at <code>{writer}/writer_output.md</code>, summaries at <code>raw/summary-{writer}.json</code>, gemini session trace at <code>~/.gemini/tmp/learn-ukrainian/chats/session-2026-05-19T14-09-638769bc.jsonl</code>, codex usage records at <code>batch_state/api_usage/usage_codex-dispatch_2026-05-19.jsonl</code>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
