@@ -42,6 +42,20 @@ User restarted with this session ending at `e5e16c9f2b`. New CLI is Claude Code 
 
 **Action recommended on first turn:** run `claude mcp list` to verify the `sources` MCP catalog is fully present post-pagination-fix; if any tool is missing that the matrix or rules reference, file an issue against the MCP server config.
 
+### Kubedojo cross-perspective on 2.1.144
+
+User shared kubedojo's analysis of the same release notes. Two items add real value over my own; two items are stale/N/A here. Verified findings:
+
+| Their item | Our state |
+|---|---|
+| Drop `|| true` suppression around grep in pipeline scripts | **N/A for us.** Grepped `scripts/`, `.claude/`, `claude_extensions/`, `tests/` — only hit is `scripts/wt.sh:37 pgrep ... \|\| true`, which is process-grep, not the content-grep pattern the release fix targets. We don't have that anti-pattern. |
+| Audit `mcp__rag__*` tool count | **Stale prefix** — our MCP retired `mcp__rag__*` → `mcp__sources__*` per `claude_extensions/rules/mcp-sources-and-dictionaries.md`. Audit still valid for `mcp__sources__*`. HTTP probe of `:8766/tools` returned "Not Found" — sources MCP is stdio, not HTTP. Concrete audit: next session run `claude mcp list` (2.1.144 surfaces config errors now) and compare visible tool count to `@server.tool()` declarations in the MCP server source. |
+| `/resume` supports `--bg` sessions | Already in my notes. Pairs well with the `claude-i tmux wrapper` research (#2116) — `--bg` is no longer a one-way trip. |
+| `/model` is per-session; `d` sets default | Already in my notes. |
+| `/usage-credits` rename | Already in my notes. Aliases preserved. |
+
+**Net adjustments to the muscle-memory layer:** none for grep (we're clean); add `claude mcp list` to the first-turn hygiene check; remember `d` in the model picker.
+
 ---
 
 ## TL;DR
