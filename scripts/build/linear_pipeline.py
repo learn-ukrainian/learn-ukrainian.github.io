@@ -2719,8 +2719,14 @@ def invoke_writer(
     event_sink: Callable[..., None] | None = None,
     tool_trace_path: Path | None = None,
     stdout_silence_timeout: int | None = None,
+    effort: str | None = None,
 ) -> str:
-    """Call the selected writer through the universal agent runtime."""
+    """Call the selected writer through the universal agent runtime.
+
+    ``effort`` overrides ``WRITER_DEFAULTS[writer]["effort"]`` when provided.
+    The bakeoff runner uses this to probe writer behaviour at higher
+    reasoning budgets without mutating the global default.
+    """
     if writer not in WRITER_CHOICES:
         raise LinearPipelineError(
             f"Unknown writer {writer!r}; expected one of {WRITER_CHOICES}"
@@ -2729,6 +2735,7 @@ def invoke_writer(
         from scripts.agent_runtime.runner import invoke as invoker
 
     defaults = WRITER_DEFAULTS[writer]
+    resolved_effort = effort if effort is not None else defaults["effort"]
     agent_name = writer.split("-", 1)[0]
     result = invoker(
         agent_name,
@@ -2738,7 +2745,7 @@ def invoke_writer(
         model=defaults["model"],
         task_id="phase-4-a1-20-writer",
         entrypoint="dispatch",
-        effort=defaults["effort"],
+        effort=resolved_effort,
         tool_config=_runtime_tool_config(writer, event_sink=event_sink),
         event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,

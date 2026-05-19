@@ -67,6 +67,17 @@ def main() -> int:
         default=1800,
         help="stdout silence timeout for the writer subprocess",
     )
+    parser.add_argument(
+        "--effort",
+        choices=("low", "medium", "high", "xhigh", "max"),
+        default=None,
+        help=(
+            "Override reasoning effort for the writer. Defaults to "
+            "WRITER_DEFAULTS[writer]['effort'] when unset. Used by the bakeoff "
+            "to probe whether silent-failure writers (e.g. codex-tools at B1) "
+            "recover at higher reasoning budgets."
+        ),
+    )
     args = parser.parse_args()
 
     level = args.level.lower()
@@ -116,8 +127,14 @@ def main() -> int:
     # 6. Pick cwd (matches v7_build.py:748 — gemini-tools needs PROJECT_ROOT)
     writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else out_dir
 
-    # 7. Invoke writer
-    print(f"[bakeoff] invoking writer ({prompt_chars} prompt chars)...")
+    # 7. Resolve effort (CLI override falls back to writer default)
+    resolved_effort = args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
+
+    # 8. Invoke writer
+    print(
+        f"[bakeoff] invoking writer ({prompt_chars} prompt chars, "
+        f"effort={resolved_effort})..."
+    )
     invoke_started = time.monotonic()
     writer_output = linear_pipeline.invoke_writer(
         prompt,
@@ -125,6 +142,7 @@ def main() -> int:
         cwd=writer_cwd,
         tool_trace_path=out_dir / "writer_tool_calls.json",
         stdout_silence_timeout=args.writer_timeout,
+        effort=args.effort,
     )
     invoke_duration = time.monotonic() - invoke_started
 
@@ -137,7 +155,8 @@ def main() -> int:
         "slug": slug,
         "writer": writer,
         "model": linear_pipeline.WRITER_DEFAULTS[writer]["model"],
-        "effort": linear_pipeline.WRITER_DEFAULTS[writer]["effort"],
+        "effort": resolved_effort,
+        "effort_overridden": args.effort is not None,
         "prompt_chars": prompt_chars,
         "output_chars": output_chars,
         "invoke_duration_s": round(invoke_duration, 2),
