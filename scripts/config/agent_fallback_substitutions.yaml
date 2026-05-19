@@ -43,6 +43,35 @@ substitutions:
     fallback: "(unaffected — separate quota)"
     budget_bucket: "Gemini"
 
+  - currently_uses: "linear_pipeline.invoke_writer(writer='claude-tools')"
+    fallback: |
+      Tiered by CEFR level, per evidence in two writer bakeoffs:
+        - A1: deepseek-tools effort=medium
+              (v1 A1 bakeoff: deepseek-v4-pro led on content quality after
+              dropping CoT contract — best A1 writer at low cost)
+        - B1+: deepseek-tools effort=xhigh
+              (2026-05-19 B1 bakeoff: full artifact emission, 38 KB output,
+              7 plan_reasoning + 4 fences + end_gate. Medium effort fails
+              with 9 KB scaffolding-only on B1's 4000-word target.)
+        - Cheaper alternative both tiers: qwen-tools effort=medium
+              (4.3 min on B1 vs deepseek-xhigh's 11.5 min; ~$0.05-0.20
+              per module vs ~$0.30-0.80; same writer-time MCP-invocation
+              gap as deepseek)
+        - NOT VIABLE: codex-tools (blocked by #2159 — runner-layer crash
+              regardless of effort), gemini-tools (built-in
+              run_shell_command + update_topic calls trip wrong_tool_family
+              even after 0fc0f0d427's namespace-prefix fix)
+      Reviewer phase must compensate for the writer-time MCP-invocation
+      gap (deepseek + qwen write verification_trace scaffolding without
+      actually invoking MCP). claude-tools is currently the only writer
+      with real writer-time MCP linguistic verification.
+    fallback_note: |
+      Evidence trail: audit/2026-05-19-b1-writer-bakeoff/REPORT.html
+      (B1 verdict), audit/2026-05-19-multi-agent-routing-assessment/
+      REPORT.html (A1 verdict + multi-agent routing).
+    budget_bucket: "interactive (orchestrator-active builds) OR
+      Claude weekly (during user cold-start review sessions)"
+
 post_2026_06_15_hard_rule: |
   Per user direction 2026-05-13 ("you should delegate only to codex and gemini
   after june 15th"): after the agentic credit pool launches, NO `delegate.py
