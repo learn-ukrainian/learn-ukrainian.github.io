@@ -45,30 +45,50 @@ substitutions:
 
   - currently_uses: "linear_pipeline.invoke_writer(writer='claude-tools')"
     fallback: |
-      Tiered by CEFR level, per evidence in two writer bakeoffs:
-        - A1: deepseek-tools effort=medium
-              (v1 A1 bakeoff: deepseek-v4-pro led on content quality after
-              dropping CoT contract — best A1 writer at low cost)
-        - B1+: deepseek-tools effort=xhigh
-              (2026-05-19 B1 bakeoff: full artifact emission, 38 KB output,
-              7 plan_reasoning + 4 fences + end_gate. Medium effort fails
-              with 9 KB scaffolding-only on B1's 4000-word target.)
-        - Cheaper alternative both tiers: qwen-tools effort=medium
-              (4.3 min on B1 vs deepseek-xhigh's 11.5 min; ~$0.05-0.20
-              per module vs ~$0.30-0.80; same writer-time MCP-invocation
-              gap as deepseek)
-        - NOT VIABLE: codex-tools (blocked by #2159 — runner-layer crash
-              regardless of effort), gemini-tools (built-in
-              run_shell_command + update_topic calls trip wrong_tool_family
-              even after 0fc0f0d427's namespace-prefix fix)
-      Reviewer phase must compensate for the writer-time MCP-invocation
-      gap (deepseek + qwen write verification_trace scaffolding without
-      actually invoking MCP). claude-tools is currently the only writer
-      with real writer-time MCP linguistic verification.
+      deepseek-tools effort=xhigh — uniformly across A1, A2, B1+.
+
+      User direction 2026-05-19: "we don't do budget options" — quality is
+      non-negotiable (CLAUDE.md), so the routing does NOT degrade effort
+      by level. Same writer + same effort = consistent quality contract
+      across the curriculum. The "medium for A1, xhigh for B1+" tier was
+      a cost-optimization proposal explicitly rejected.
+
+      Evidence basis:
+        - 2026-05-19 B1 bakeoff: deepseek-v4-pro xhigh produces full
+          artifact emission (38 KB output, 7 plan_reasoning + 4 fences +
+          end_gate, beats claude-tools by char count). Medium effort
+          fails at B1's 4000-word target (scaffolding-only).
+        - v1 A1 bakeoff: deepseek-v4-pro at MEDIUM was best A1 writer.
+          xhigh at A1 has not been bakeoff-validated head-to-head, but
+          per the project's quality-over-cost stance the safer move is
+          xhigh everywhere (same-or-better content; no risk of running
+          out of budget on edge cases or future plan growth).
+
+      NOT VIABLE alternatives (current state):
+        - codex-tools — blocked by #2159 (runner-layer crash regardless
+          of effort)
+        - gemini-tools — built-in run_shell_command + update_topic calls
+          trip wrong_tool_family even after 0fc0f0d427's namespace fix
+        - qwen-tools — produces full emission cheap+fast at B1, but was
+          rejected from routing as a "budget option" per same user
+          direction. Untested for quality parity with deepseek-xhigh.
+
+      Outstanding quality caveat:
+        Reviewer phase must compensate for the writer-time MCP-invocation
+        gap — deepseek-pro writes verification_trace scaffolding listing
+        intended MCP calls but does NOT actually invoke them at
+        writer-time. claude-tools is the only writer with real writer-time
+        MCP linguistic verification (24 calls on B1 this session vs 0 for
+        deepseek-xhigh). This is the #1 known risk; investigation is
+        task #8 in the orchestrator queue. Until resolved, post-cutover
+        pipeline relies on reviewer + audit gates (russianisms_clean,
+        check_russian_shadow, vesum_verified) to catch what the writer
+        would have verified pre-emission.
     fallback_note: |
       Evidence trail: audit/2026-05-19-b1-writer-bakeoff/REPORT.html
       (B1 verdict), audit/2026-05-19-multi-agent-routing-assessment/
-      REPORT.html (A1 verdict + multi-agent routing).
+      REPORT.html (A1 verdict + multi-agent routing). Quality-over-cost
+      stance: user direction 2026-05-19 + CLAUDE.md mission statement.
     budget_bucket: "interactive (orchestrator-active builds) OR
       Claude weekly (during user cold-start review sessions)"
 
