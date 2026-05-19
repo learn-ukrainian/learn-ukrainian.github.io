@@ -64,6 +64,16 @@ IMPLEMENTATION_MAP_SCHEMA: dict[str, Any] = {
                         "enum": ["substance_required", "absence_required"],
                     },
                 },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {"obligation_type": {"const": "decolonization_ban"}},
+                            "required": ["obligation_type"],
+                        },
+                        "then": {},
+                        "else": {"not": {"required": ["subtype"]}},
+                    }
+                ],
                 "additionalProperties": False,
             },
         },
@@ -124,12 +134,22 @@ _GUILLEMET_SLASH_PAIR_RE = re.compile(
     rf"{_GUILLEMET_TERM}\s*/\s*{_GUILLEMET_TERM}",
     re.IGNORECASE,
 )
+_GUILLEMET_A_NOT_B_PAIR_RE = re.compile(
+    rf"{_GUILLEMET_TERM}\s*(?:[,—-]\s*)?(?:а\s+)?не\s+{_GUILLEMET_TERM}",
+    re.IGNORECASE,
+)
 _GUILLEMET_MARKED_CALQUE_RE = re.compile(
-    rf"{_GUILLEMET_TERM}[^.?!\n]{{0,80}}\(\s*(?:калька|русизм|суржик)\s*\)",
+    rf"{_GUILLEMET_TERM}[^.?!\n]{{0,80}}\([^)\n]{{0,80}}(?:калька|русизм|суржик)[^)\n]{{0,80}}\)",
     re.IGNORECASE,
 )
 _EXPLICIT_SUBSTITUTION_RE = re.compile(
     rf"(?:{_GUILLEMET_TERM}|[\w'’ʼ-]{{2,}})\s+замість\s+"
+    rf"(?:{_GUILLEMET_TERM}|[\w'’ʼ-]{{2,}})",
+    re.IGNORECASE | re.UNICODE,
+)
+_EXPLICIT_REPLACEMENT_RE = re.compile(
+    rf"(?:заміню(?:ємо|йте|ють|ється|ються)|замінити)\s+"
+    rf"(?:{_GUILLEMET_TERM}|[\w'’ʼ-]{{2,}})\s+на\s+"
     rf"(?:{_GUILLEMET_TERM}|[\w'’ʼ-]{{2,}})",
     re.IGNORECASE | re.UNICODE,
 )
@@ -150,9 +170,13 @@ def classify_decolonization_ban_subtype(
         return "substance_required"
     if _GUILLEMET_SLASH_PAIR_RE.search(rule):
         return "substance_required"
+    if _GUILLEMET_A_NOT_B_PAIR_RE.search(rule):
+        return "substance_required"
     if _GUILLEMET_MARKED_CALQUE_RE.search(rule):
         return "substance_required"
     if _EXPLICIT_SUBSTITUTION_RE.search(rule):
+        return "substance_required"
+    if _EXPLICIT_REPLACEMENT_RE.search(rule):
         return "substance_required"
     return "absence_required"
 

@@ -4,8 +4,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+import jsonschema
+
 from scripts.audit.wiki_coverage_gate import validate_obligations
 from scripts.build.phases.implementation_map import (
+    IMPLEMENTATION_MAP_SCHEMA,
     classify_decolonization_ban_subtype,
     read_implementation_map,
     seed_implementation_map,
@@ -201,6 +204,18 @@ def test_json_schema_validates_seeded_output() -> None:
     validate_implementation_map(seed_implementation_map(_fixture_manifest()))
 
 
+def test_json_schema_allows_subtype_only_for_decolonization_bans() -> None:
+    payload = seed_implementation_map(_fixture_manifest())
+    validator = jsonschema.Draft7Validator(IMPLEMENTATION_MAP_SCHEMA)
+
+    assert list(validator.iter_errors(payload)) == []
+
+    invalid_payload = json.loads(json.dumps(payload, ensure_ascii=False))
+    invalid_payload["entries"][0]["subtype"] = "absence_required"
+
+    assert list(validator.iter_errors(invalid_payload))
+
+
 def test_write_read_round_trip_identity(tmp_path: Path) -> None:
     payload = seed_implementation_map(_fixture_manifest())
     path = tmp_path / "implementation_map.json"
@@ -301,6 +316,17 @@ def test_classify_ban_edge_case_mixed_prose_and_pair() -> None:
     )
 
     assert classify_decolonization_ban_subtype(rule) == "substance_required"
+
+
+def test_classify_ban_edge_case_variant_substitution_phrasings() -> None:
+    rules = [
+        "Не лишайте «полотенце» (це русизм) у лексиці ранкової рутини.",
+        "Пояснюйте як українську норму: «рушник», а не «полотенце».",
+        "У вправах замінюємо «одіватися» на «одягатися».",
+    ]
+
+    for rule in rules:
+        assert classify_decolonization_ban_subtype(rule) == "substance_required"
 
 
 def test_seed_stamps_decolonization_ban_subtype() -> None:
