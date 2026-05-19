@@ -1,0 +1,11 @@
+{
+  "level": "b1",
+  "slug": "genitive-nuances",
+  "writer": "deepseek-tools",
+  "model": "deepseek-v4-pro",
+  "effort": "medium",
+  "prompt_chars": 210976,
+  "output_chars": 8958,
+  "invoke_duration_s": 206.37,
+  "total_duration_s": 260.39
+}

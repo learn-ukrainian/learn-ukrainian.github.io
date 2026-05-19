@@ -1,0 +1,11 @@
+{
+  "level": "b1",
+  "slug": "genitive-nuances",
+  "writer": "claude-tools",
+  "model": "claude-opus-4-7",
+  "effort": "xhigh",
+  "prompt_chars": 210976,
+  "output_chars": 54007,
+  "invoke_duration_s": 805.15,
+  "total_duration_s": 865.38
+}

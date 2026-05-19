@@ -1,0 +1,169 @@
+{
+  "entries": [
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Я приїхав з Лондона.",
+        "id": "err-1",
+        "incorrect": "Я приїхав з Лондон.",
+        "source_lines": "112",
+        "treatment": "contrast_pair",
+        "why": "Відсутність відмінювання загалом. Англомовні учні часто залишають іменник у називному відмінку після прийменника з."
+      },
+      "obligation_id": "err-1",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Я приїхав з Лондона.",
+        "expected_error_value": "Я приїхав з Лондон.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Він повернувся з Єгипту.",
+        "id": "err-2",
+        "incorrect": "Він повернувся з Єгипта.",
+        "source_lines": "113",
+        "treatment": "contrast_pair",
+        "why": "Нерозуміння різниці між містом і країною. Географічні назви (країни) вимагають закінчення -у, тоді як міста — -а [S8]."
+      },
+      "obligation_id": "err-2",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Він повернувся з Єгипту.",
+        "expected_error_value": "Він повернувся з Єгипта.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "У мене немає цукру.",
+        "id": "err-3",
+        "incorrect": "У мене немає цукра.",
+        "source_lines": "114",
+        "treatment": "contrast_pair",
+        "why": "Хібна аналогія з конкретними предметами. Речовини, матеріали та сипучі маси є незлічуваними і вимагають закінчення -у [S8]."
+      },
+      "obligation_id": "err-3",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "У мене немає цукру.",
+        "expected_error_value": "У мене немає цукра.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Це зупинка автобуса.",
+        "id": "err-4",
+        "incorrect": "Це зупинка автобусу.",
+        "source_lines": "115",
+        "treatment": "contrast_pair",
+        "why": "Надмірна генералізація правила для абстрактних речей. Транспортні засоби є чітко окресленими предметами, тому мають закінчення -а [S5]."
+      },
+      "obligation_id": "err-4",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Це зупинка автобуса.",
+        "expected_error_value": "Це зупинка автобусу.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Ми чекаємо до вівторка.",
+        "id": "err-5",
+        "incorrect": "Ми чекаємо до вівторку.",
+        "source_lines": "116",
+        "treatment": "contrast_pair",
+        "why": "Дні тижня сприймаються учнями як абстрактні періоди, але за правилами української мови назви днів тижня мають закінчення -а [S5]."
+      },
+      "obligation_id": "err-5",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Ми чекаємо до вівторка.",
+        "expected_error_value": "Ми чекаємо до вівторку.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Я не бачила нового телефона.",
+        "id": "err-6",
+        "incorrect": "Я не бачила новий телефон.",
+        "source_lines": "117",
+        "treatment": "contrast_pair",
+        "why": "Відсутність узгодження прикметника. Прикметник має набути форми родового відмінка (-ого) разом з іменником, з яким він пов'язаний [S7]."
+      },
+      "obligation_id": "err-6",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Я не бачила нового телефона.",
+        "expected_error_value": "Я не бачила новий телефон.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Багато місць для паркування.",
+        "id": "err-7",
+        "incorrect": "Багато місців для паркування.",
+        "source_lines": "118",
+        "treatment": "contrast_pair",
+        "why": "Хибне додавання закінчення -ів до іменників середнього роду на -о/-е. Більшість таких іменників у родовому множини мають нульове закінчення [S4]."
+      },
+      "obligation_id": "err-7",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Багато місць для паркування.",
+        "expected_error_value": "Багато місців для паркування.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "module.md",
+      "location_hint": "§Частковий родовий",
+      "manifest_payload": {
+        "id": "ban-1",
+        "rule": "Родовий відмінок є однією з тих граматичних зон, де українська мова кардинально відрізняється від російської, і саме тут найчастіше виникають інтерференційні помилки (суржик) та перенесення російських граматичних моделей.",
+        "source_lines": "122"
+      },
+      "obligation_id": "ban-1",
+      "obligation_type": "decolonization_ban",
+      "treatment_template": {
+        "shape": "module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)"
+      }
+    },
+    {
+      "artifact": "module.md",
+      "location_hint": "§Закінчення -а/-я чи -у/-ю?",
+      "manifest_payload": {
+        "id": "ban-2",
+        "rule": "- Експансія закінчення -а в російській мові: У російській мові іменники чоловічого роду в родовому відмінку майже завжди мають закінчення -а / -я (из Лондона, из Египта, много ветра, ожидание прогресса). Українська мова зберігає давню та багату систему диференціації, де абстрактні поняття, речовини, явища природи, країни та установи отримують закінчення -у / -ю [S5], [S8]. - Країни та території: Українська норма вимагає з Єгипту, з Казахстану, з Алжиру (країна) [S2], [S5]. Використання форм з Єгипта чи з Казахстана є прямим русизмом. - Процеси та абстракції: Українською правильно говорити розвитку, прогресу, болю [S8]. Форми на кшталт розвитка чи боля є неприпустимими. - Ніколи не подавайте закінчення -у / -ю англомовним учням як «винятки з правил» або як щось нерегулярне. В українській мові це глибоко логічна, базова система маркування сутностей за ознакою їхньої матеріальної визначеності та злічуваності. Українська мова є самодостатньою основою, а не відхиленням від східнослов'янського стандарту.",
+        "source_lines": "124-127"
+      },
+      "obligation_id": "ban-2",
+      "obligation_type": "decolonization_ban",
+      "treatment_template": {
+        "shape": "module.md prose absent of any phrasing matching manifest_payload.rule (negative obligation: absence-of-pattern)"
+      }
+    }
+  ],
+  "manifest_obligation_count": 9,
+  "schema_version": 1,
+  "slug": "genitive-nuances",
+  "wiki_path": "/Users/krisztiankoos/projects/learn-ukrainian/wiki/grammar/b1/genitive-nuances.md"
+}

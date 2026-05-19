@@ -1,0 +1,11 @@
+{
+  "level": "b1",
+  "slug": "genitive-nuances",
+  "writer": "qwen-tools",
+  "model": "qwen/qwen3.6-plus",
+  "effort": "medium",
+  "prompt_chars": 210976,
+  "output_chars": 31351,
+  "invoke_duration_s": 258.29,
+  "total_duration_s": 313.78
+}
