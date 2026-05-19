@@ -68,7 +68,7 @@ import subprocess
 import sys
 
 _TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|grok|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
+    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|grok|deepseek-v4-pro|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
     re.MULTILINE,
 )
 

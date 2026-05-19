@@ -1,0 +1,9 @@
+# zizmor configuration — per-audit ignore rules
+# See https://docs.zizmor.sh/configuration/
+rules:
+  artipacked:
+    ignore:
+      # deploy-pages.yml:30 — credentials needed for gh-pages deploy
+      - deploy-pages.yml:30
+      # gemini-plan-execute.yml:49 — credentials needed for MCP push_files (contents:write)
+      - gemini-plan-execute.yml:49
