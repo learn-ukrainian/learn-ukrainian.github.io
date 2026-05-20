@@ -190,7 +190,7 @@ def test_python_qg_reviewer_correction_rejects_oversize_fix(
     oversize = "\n".join(f"line {index}" for index in range(10))
 
     with linear_pipeline.telemetry_event_sink(telemetry):
-        changed, unmatched = linear_pipeline._apply_python_qg_correction(
+        changed, unmatched, _payload = linear_pipeline._apply_python_qg_correction(
             "l2_exposure_floor",
             {"gates": {"l2_exposure_floor": {"passed": False}}},
             module_dir=module_dir,

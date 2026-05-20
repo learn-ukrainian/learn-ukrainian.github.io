@@ -145,6 +145,17 @@ def test_build_knowledge_packet_appends_textbook_excerpts(monkeypatch) -> None:
         "_build_wiki_packet",
         lambda level, slug: "### Вікі: pedagogy/a1/dictionary-context.md\n\n## Overview\nранок",
     )
+    # Force the search_sources fallback path. PR #1975 introduced a direct
+    # SQLite lookup (`_lookup_textbook_reference_chunk`) that pre-empts the
+    # `wiki.sources_db.search_sources` call for titles matching the
+    # `<Author> Grade <N>, p.<M>` shape. Returning None signals "title not
+    # resolvable by direct lookup" and exercises the legacy fallback this
+    # test pins.
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_lookup_textbook_reference_chunk",
+        lambda title, *, limit=1, missing_reason=None: None,
+    )
     monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
 
     packet = linear_pipeline.build_knowledge_packet(
