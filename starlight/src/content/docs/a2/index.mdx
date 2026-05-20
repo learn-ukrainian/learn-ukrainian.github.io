@@ -1,87 +1,223 @@
 ---
-title: "A2 — Pre-Intermediate · Перші кроки далі"
-sidebar:
-  order: 0
+title: "A2 — Pre-Intermediate"
+description: "Pre-Intermediate — 69 modules"
+template: splash
 ---
 
 import LevelLanding from '@site/src/components/LevelLanding';
 
 <LevelLanding
   client:load
-  level="a2"
-  levelName="A2 — Pre-Intermediate · Перші кроки далі"
-  subtitle="Pre-intermediate — 69 modules"
-  introduction="А2 розширює А1: вид дієслова, складніший синтаксис, перші складні діалоги."
-  totalPlanned={69}
+  level="A2"
+  title="Перші кроки далі"
+  subtitle="Pre-Intermediate — 0/69 modules complete"
+  moduleCount={69}
+  wordTarget={2000}
+  color="#1565C0"
   modules={[
-  { num: 1, title: "Ласкаво просимо до рівня А2", slug: "a2-bridge", status: "wip" },
-  { num: 2, title: "Зроблено чи в процесі? Вступ до виду дієслова", slug: "aspect-concept", status: "wip" },
-  { num: 3, title: "Дієслова ходять парами", slug: "aspect-in-vocabulary", status: "wip" },
-  { num: 4, title: "Яка вона людина? Описуємо людей навколо нас", slug: "liudyna-i-stosunky", status: "wip" },
-  { num: 5, title: "У мене немає...", slug: "genitive-intro", status: "wip" },
-  { num: 6, title: "Скільки? Котра година? Яке число?", slug: "genitive-dates-numbers", status: "wip" },
-  { num: 7, title: "Перші кроки в А2", slug: "foundations-practice", status: "wip" },
-  { num: 8, title: "Контрольна точка: Основи А2", slug: "checkpoint-foundations", status: "wip" },
-  { num: 9, title: "Звідки ти? З чого це зроблено?", slug: "genitive-prepositions-source", status: "wip" },
-  { num: 10, title: "Для кого? Без чого? Біля чого?", slug: "genitive-prepositions-purpose", status: "wip" },
-  { num: 11, title: "Куди? До якого часу?", slug: "genitive-prepositions-direction", status: "wip" },
-  { num: 12, title: "Милозвучність у складних контекстах", slug: "euphony-advanced", status: "wip" },
-  { num: 13, title: "Мого друга, цієї книги", slug: "genitive-adjectives-pronouns", status: "wip" },
-  { num: 14, title: "Багато книг, мало студентів", slug: "genitive-plural", status: "wip" },
-  { num: 15, title: "На ринку та у лікаря", slug: "shopping-and-health", status: "wip" },
-  { num: 16, title: "Контрольна робота — родовий відмінок", slug: "checkpoint-genitive", status: "wip" },
-  { num: 17, title: "Мені, тобі, йому...", slug: "dative-pronouns", status: "wip" },
-  { num: 18, title: "Студентові, сестрі, дитині", slug: "dative-nouns", status: "wip" },
-  { num: 19, title: "Моєму другові, нашій вчительці", slug: "dative-adjectives-pronouns", status: "wip" },
-  { num: 20, title: "Місцевий відмінок у нових контекстах", slug: "locative-expanded", status: "wip" },
-  { num: 21, title: "Допомагати, дякувати, дзвонити", slug: "dative-verbs", status: "wip" },
-  { num: 22, title: "На пошті", slug: "services-and-communication", status: "wip" },
-  { num: 23, title: "Контрольна робота — давальний відмінок", slug: "checkpoint-dative", status: "wip" },
-  { num: 24, title: "З другом", slug: "instrumental-accompaniment", status: "wip" },
-  { num: 25, title: "Ручкою, автобусом", slug: "instrumental-means", status: "wip" },
-  { num: 26, title: "Я буду вчителькою", slug: "instrumental-profession", status: "wip" },
-  { num: 27, title: "Пане лікарю! Друже мій!", slug: "vocative-expanded", status: "wip" },
-  { num: 28, title: "Над, під, між", slug: "instrumental-prepositions", status: "wip" },
-  { num: 29, title: "З моїм найкращим другом", slug: "instrumental-adjectives-pronouns", status: "wip" },
-  { num: 30, title: "Професії та кулінарія", slug: "work-and-food", status: "wip" },
-  { num: 31, title: "Контрольна точка: Орудний відмінок", slug: "checkpoint-instrumental", status: "wip" },
-  { num: 32, title: "Багато людей, багато речей", slug: "plural-nominative-accusative", status: "wip" },
-  { num: 33, title: "Скільки?", slug: "plural-genitive", status: "wip" },
-  { num: 34, title: "З друзями, для дітей", slug: "plural-other-cases", status: "wip" },
-  { num: 35, title: "Чим ти захоплюєшся? Дозвілля та хобі", slug: "dozvillia-i-khobi", status: "wip" },
-  { num: 36, title: "Компас відмінків", slug: "which-case-when", status: "wip" },
-  { num: 37, title: "Все разом", slug: "all-cases-practice", status: "wip" },
-  { num: 38, title: "Мій дім, мій день", slug: "home-and-daily-life", status: "wip" },
-  { num: 39, title: "Контрольна точка: Відмінки та множина", slug: "checkpoint-cases", status: "wip" },
-  { num: 40, title: "Що ти робив? А що зробив?", slug: "aspect-in-past", status: "wip" },
-  { num: 41, title: "Я напишу!", slug: "synthetic-future", status: "wip" },
-  { num: 42, title: "30 найважливіших видових пар", slug: "aspect-mastery", status: "wip" },
-  { num: 43, title: "Іду, їду, лечу", slug: "motion-verbs", status: "wip" },
-  { num: 44, title: "Хай він прочитає!", slug: "imperative-complete", status: "wip" },
-  { num: 45, title: "Розповіді та подорожі", slug: "telling-stories-and-travel", status: "wip" },
-  { num: 46, title: "Контрольна точка: Вид, час і рух", slug: "checkpoint-verbs", status: "wip" },
-  { num: 47, title: "Тому що, бо, хоча", slug: "because-and-although", status: "wip" },
-  { num: 48, title: "Щоб зрозуміти...", slug: "purpose-clauses", status: "wip" },
-  { num: 49, title: "Той, який...", slug: "relative-clauses", status: "wip" },
-  { num: 50, title: "Порядок слів і наголос у реченні", slug: "word-order-emphasis", status: "wip" },
-  { num: 51, title: "Якщо... то...", slug: "real-conditionals", status: "wip" },
-  { num: 52, title: "Навчання і робота", slug: "education-and-work", status: "wip" },
-  { num: 53, title: "Контрольна робота — складне речення", slug: "checkpoint-syntax", status: "wip" },
-  { num: 54, title: "Більше, краще, найкраще", slug: "comparison", status: "wip" },
-  { num: 55, title: "Числа у відмінках", slug: "numerals-and-cases", status: "wip" },
-  { num: 56, title: "Своє та себе", slug: "sviy-and-sebe", status: "wip" },
-  { num: 57, title: "Хтось, ніхто", slug: "indefinite-negative-pronouns", status: "wip" },
-  { num: 58, title: "Слова мають друзів", slug: "synonyms-antonyms-style", status: "wip" },
-  { num: 59, title: "Я обираю, я вважаю", slug: "preferences-and-choices", status: "wip" },
-  { num: 60, title: "Пори року і свята", slug: "nature-and-traditions", status: "wip" },
-  { num: 61, title: "Слова і відмінки", slug: "metalanguage-words-and-cases", status: "wip" },
-  { num: 62, title: "Дія і час", slug: "metalanguage-verbs-and-time", status: "wip" },
-  { num: 63, title: "Речення і клас", slug: "metalanguage-sentences-and-classroom", status: "wip" },
-  { num: 64, title: "Звуки і букви", slug: "metalanguage-phonetics", status: "wip" },
-  { num: 65, title: "Морфологія", slug: "metalanguage-morphology", status: "wip" },
-  { num: 66, title: "Синтаксис і відмінки", slug: "metalanguage-syntax-cases", status: "wip" },
-  { num: 67, title: "Повна картина", slug: "a2-comprehensive-review", status: "wip" },
-  { num: 68, title: "Пробний іспит", slug: "a2-practice-exam", status: "wip" },
-  { num: 69, title: "Фінал A2", slug: "a2-finale", status: "wip" },
+    {
+      unit: "A2.1 [Основи та вступ до виду дієслова]",
+      items: [
+        { num: 1, slug: "a2-bridge", title: "Ласкаво просимо до рівня А2", sub: "Огляд граматики рівня А1 та підготовка до нових тем", status: "locked" },
+        { num: 2, slug: "aspect-concept", title: "Зроблено чи в процесі? Вступ до виду дієслова", sub: "Концепція доконаного та недоконаного виду", status: "locked" },
+        { num: 3, slug: "aspect-in-vocabulary", title: "Дієслова ходять парами", sub: "Як утворюються та вивчаються видові пари", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.1 [Основи та вступ до видів дієслова]",
+      items: [
+        { num: 4, slug: "liudyna-i-stosunky", title: "Яка вона людина? Описуємо людей навколо нас", sub: "Зовнішність, характер та стосунки — описуємо рідних, друзів і знайомих", status: "locked" },
+        { num: 5, slug: "genitive-intro", title: "У мене немає...", sub: "Родовий відмінок для вираження відсутності та кількості", status: "locked" },
+        { num: 6, slug: "genitive-dates-numbers", title: "Скільки? Котра година? Яке число?", sub: "Родовий відмінок з числами, датами та запереченням", status: "locked" },
+        { num: 7, slug: "foundations-practice", title: "Перші кроки в А2", sub: "Практикуємо видові пари та родовий відмінок у діалогах", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.1 [Основи та вступ до виду дієслова]",
+      items: [
+        { num: 8, slug: "checkpoint-foundations", title: "Контрольна точка: Основи А2", sub: "Перевірка знань: вид дієслова та родовий відмінок", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.2 [Родовий відмінок: завершення]",
+      items: [
+        { num: 9, slug: "genitive-prepositions-source", title: "Звідки ти? З чого це зроблено?", sub: "Прийменники з/із/зі, від, після з родовим відмінком", status: "locked" },
+        { num: 10, slug: "genitive-prepositions-purpose", title: "Для кого? Без чого? Біля чого?", sub: "Прийменники для, без, біля, навпроти, коло з родовим відмінком", status: "locked" },
+        { num: 11, slug: "genitive-prepositions-direction", title: "Куди? До якого часу?", sub: "Прийменник до з родовим відмінком для напрямку, мети та часу", status: "locked" },
+        { num: 13, slug: "genitive-adjectives-pronouns", title: "Мого друга, цієї книги", sub: "Узгодження прикметників, присвійних та вказівних займенників у родовому відмінку", status: "locked" },
+        { num: 14, slug: "genitive-plural", title: "Багато книг, мало студентів", sub: "Родовий відмінок множини — найскладніша форма", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.2 [Повний родовий відмінок]",
+      items: [
+        { num: 12, slug: "euphony-advanced", title: "Милозвучність у складних контекстах", sub: "Розширені правила у/в, з/із/зі та і/й у складних реченнях", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.2 [Родовий відмінок повністю]",
+      items: [
+        { num: 15, slug: "shopping-and-health", title: "На ринку та у лікаря", sub: "Родовий відмінок у реальних ситуаціях — покупки та здоров'я", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.2 [Родовий відмінок (повністю)]",
+      items: [
+        { num: 16, slug: "checkpoint-genitive", title: "Контрольна робота — родовий відмінок", sub: "Перевірка знань з модулів модулі №8–13 — прийменники, узгодження, множина, ситуації", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.3 [Давальний відмінок]",
+      items: [
+        { num: 17, slug: "dative-pronouns", title: "Мені, тобі, йому...", sub: "Давальний відмінок особових займенників та безособові конструкції", status: "locked" },
+        { num: 18, slug: "dative-nouns", title: "Студентові, сестрі, дитині", sub: "Закінчення давального відмінка іменників усіх родів", status: "locked" },
+        { num: 19, slug: "dative-adjectives-pronouns", title: "Моєму другові, нашій вчительці", sub: "Узгодження прикметників та присвійних займенників у давальному відмінку", status: "locked" },
+        { num: 20, slug: "locative-expanded", title: "Місцевий відмінок у нових контекстах", sub: "Абстрактні іменники, часові вирази та тема розмови у місцевому відмінку", status: "locked" },
+        { num: 21, slug: "dative-verbs", title: "Допомагати, дякувати, дзвонити", sub: "Дієслова, що вимагають давального відмінка, та конструкція з подобатися", status: "locked" },
+        { num: 22, slug: "services-and-communication", title: "На пошті", sub: "Давальний відмінок у ситуаціях обслуговування — надсилання, отримання, прохання", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.3 [Давальний відмінок]",
+      items: [
+        { num: 23, slug: "checkpoint-dative", title: "Контрольна робота — давальний відмінок", sub: "Перевірка засвоєння давального відмінка (М15-М19)", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.4 [Instrumental Case]",
+      items: [
+        { num: 24, slug: "instrumental-accompaniment", title: "З другом", sub: "Прийменники з/із/зі з орудним відмінком для супроводу та ознаки", status: "locked" },
+        { num: 25, slug: "instrumental-means", title: "Ручкою, автобусом", sub: "Орудний відмінок без прийменника для знаряддя та засобу", status: "locked" },
+        { num: 26, slug: "instrumental-profession", title: "Я буду вчителькою", sub: "Орудний відмінок для професії та стану; дієслова з орудним відмінком", status: "locked" },
+        { num: 28, slug: "instrumental-prepositions", title: "Над, під, між", sub: "Просторові та часові прийменники з орудним відмінком", status: "locked" },
+        { num: 29, slug: "instrumental-adjectives-pronouns", title: "З моїм найкращим другом", sub: "Узгодження прикметників та займенників в орудному відмінку", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.4 [Орудний відмінок]",
+      items: [
+        { num: 27, slug: "vocative-expanded", title: "Пане лікарю! Друже мій!", sub: "Кличний відмінок у формальних, професійних та емоційних звертаннях", status: "locked" },
+        { num: 30, slug: "work-and-food", title: "Професії та кулінарія", sub: "Застосування орудного відмінка у розмовах про роботу та приготування їжі", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.4 [Орудний відмінок]",
+      items: [
+        { num: 31, slug: "checkpoint-instrumental", title: "Контрольна точка: Орудний відмінок", sub: "Перевірка знань: усі функції орудного відмінка", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.5 [Синтез відмінків та множина]",
+      items: [
+        { num: 32, slug: "plural-nominative-accusative", title: "Багато людей, багато речей", sub: "Множина називного та знахідного відмінків для всіх відмін", status: "locked" },
+        { num: 33, slug: "plural-genitive", title: "Скільки?", sub: "Родовий відмінок множини — найскладніший відмінок", status: "locked" },
+        { num: 34, slug: "plural-other-cases", title: "З друзями, для дітей", sub: "Давальний, орудний та місцевий відмінки множини", status: "locked" },
+        { num: 35, slug: "dozvillia-i-khobi", title: "Чим ти захоплюєшся? Дозвілля та хобі", sub: "Вільний час, спорт, розваги та плани на вихідні — з відмінками", status: "locked" },
+        { num: 36, slug: "which-case-when", title: "Компас відмінків", sub: "Як обрати правильний відмінок за дієсловом, прийменником та контекстом", status: "locked" },
+        { num: 37, slug: "all-cases-practice", title: "Все разом", sub: "Розширені діалоги з усіма сімома відмінками в однині та множині", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.5 [Case Synthesis and Plurals]",
+      items: [
+        { num: 38, slug: "home-and-daily-life", title: "Мій дім, мій день", sub: "Описуємо помешкання, меблі та щоденний розпорядок із повною системою відмінків", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.5 [Синтез відмінків та множина]",
+      items: [
+        { num: 39, slug: "checkpoint-cases", title: "Контрольна точка: Відмінки та множина", sub: "Перевірка знань: усі відмінки в однині та множині", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.6 [Вид дієслова, часи та рух]",
+      items: [
+        { num: 40, slug: "aspect-in-past", title: "Що ти робив? А що зробив?", sub: "Вид дієслова в минулому часі — процес чи результат", status: "locked" },
+        { num: 41, slug: "synthetic-future", title: "Я напишу!", sub: "Простий майбутній час доконаного виду та складений майбутній недоконаного", status: "locked" },
+        { num: 42, slug: "aspect-mastery", title: "30 найважливіших видових пар", sub: "Морфологія видових пар та вибір виду в контексті", status: "locked" },
+        { num: 45, slug: "telling-stories-and-travel", title: "Розповіді та подорожі", sub: "Розповідаємо про минуле з видом дієслова та плануємо подорожі з дієсловами руху", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.6 [Вид, часи та рух]",
+      items: [
+        { num: 43, slug: "motion-verbs", title: "Іду, їду, лечу", sub: "Дієслова руху та моделі дієвідмінювання з чергуванням основи", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.6 [Aspect, Tenses, and Motion]",
+      items: [
+        { num: 44, slug: "imperative-complete", title: "Хай він прочитає!", sub: "Наказовий спосіб для всіх осіб — хай/нехай, -мо, кличний + побажання", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.6 [Вид, часи та дієслова руху]",
+      items: [
+        { num: 46, slug: "checkpoint-verbs", title: "Контрольна точка: Вид, час і рух", sub: "Перевірка знань: видові pairs, майбутній час, дієслова руху та наказовий спосіб", status: "locked" },
+      ]
+    },
+    {
+      unit: "А2.7 [Складні речення та умови]",
+      items: [
+        { num: 47, slug: "because-and-although", title: "Тому що, бо, хоча", sub: "Складне речення з причиною та допустом", status: "locked" },
+        { num: 53, slug: "checkpoint-syntax", title: "Контрольна робота — складне речення", sub: "Перевірка знань з модулів модулі №42–46 — причина, мета, означення, умова", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.7 [Складні речення та умовні конструкції]",
+      items: [
+        { num: 48, slug: "purpose-clauses", title: "Щоб зрозуміти...", sub: "Підрядні речення мети та базова непряма мова", status: "locked" },
+        { num: 49, slug: "relative-clauses", title: "Той, який...", sub: "Означальні підрядні речення з який, де, куди, звідки", status: "locked" },
+        { num: 51, slug: "real-conditionals", title: "Якщо... то...", sub: "Реальна умова — теперішній і майбутній час", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.7 [Складні речення та умовний спосіб]",
+      items: [
+        { num: 50, slug: "word-order-emphasis", title: "Порядок слів і наголос у реченні", sub: "Тема і рема, інверсія для контрасту та природний порядок слів", status: "locked" },
+        { num: 52, slug: "education-and-work", title: "Навчання і робота", sub: "Складні речення в академічному та професійному контексті", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.8 [Удосконалення та завершення]",
+      items: [
+        { num: 54, slug: "comparison", title: "Більше, краще, найкраще", sub: "Ступені порівняння прикметників та прислівників", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.8 [Удосконалення та випуск]",
+      items: [
+        { num: 55, slug: "numerals-and-cases", title: "Числа у відмінках", sub: "Порядкові числівники та узгодження числівників з іменниками", status: "locked" },
+        { num: 56, slug: "sviy-and-sebe", title: "Своє та себе", sub: "Присвійний займенник свій та зворотний займенник себе", status: "locked" },
+        { num: 58, slug: "synonyms-antonyms-style", title: "Слова мають друзів", sub: "Синоніми, антоніми, епітети, метафори та стилістичні прийоми", status: "locked" },
+        { num: 59, slug: "preferences-and-choices", title: "Я обираю, я вважаю", sub: "Висловлення вподобань, думок та вибору", status: "locked" },
+        { num: 60, slug: "nature-and-traditions", title: "Пори року і свята", sub: "Природа, пори року та українські традиції", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.8 [Refinement and Graduation]",
+      items: [
+        { num: 57, slug: "indefinite-negative-pronouns", title: "Хтось, ніхто", sub: "Неозначені та заперечні займенники і прислівники", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.9 [Метамова: місток та основи]",
+      items: [
+        { num: 61, slug: "metalanguage-words-and-cases", title: "Слова і відмінки", sub: "Частини мови, відмінки та граматичні терміни українською", status: "locked" },
+        { num: 62, slug: "metalanguage-verbs-and-time", title: "Дія і час", sub: "Дієслівні категорії та словникова грамотність", status: "locked" },
+        { num: 63, slug: "metalanguage-sentences-and-classroom", title: "Речення і клас", sub: "Синтаксичні терміни, будова слова та мова класу", status: "locked" },
+        { num: 64, slug: "metalanguage-phonetics", title: "Звуки і букви", sub: "Фонетика українською — від звуків до транскрипції", status: "locked" },
+        { num: 65, slug: "metalanguage-morphology", title: "Морфологія", sub: "Будова слова і частини мови — від знання до називання", status: "locked" },
+        { num: 66, slug: "metalanguage-syntax-cases", title: "Синтаксис і відмінки", sub: "Речення, його члени і словникова грамотність", status: "locked" },
+      ]
+    },
+    {
+      unit: "A2.10 [Вдосконалення та випуск]",
+      items: [
+        { num: 67, slug: "a2-comprehensive-review", title: "Повна картина", sub: "Повторення всієї граматики рівня A2", status: "locked" },
+        { num: 68, slug: "a2-practice-exam", title: "Пробний іспит", sub: "Тренувальний тест рівня A2 з читання, письма та граматики", status: "locked" },
+        { num: 69, slug: "a2-finale", title: "Фінал A2", sub: "Підсумкове завдання — один день в українському місті", status: "locked" },
+      ]
+    },
   ]}
 />
