@@ -38,6 +38,7 @@ WRITER_ALIASES = {
     "grok": "grok-tools",
     "deepseek": "deepseek-tools",
     "qwen": "qwen-tools",
+    "agy": "agy-tools",
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 
@@ -805,8 +806,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="claude-tools",
         help=(
             "Writer backend for the one-shot V7 write phase "
-            "(default: claude-tools; claude/gemini/codex/grok aliases normalize to "
-            "claude-tools/gemini-tools/codex-tools/grok-tools)."
+            "(default: claude-tools; claude/gemini/codex/grok/deepseek/qwen/agy "
+            "aliases normalize to <name>-tools)."
         ),
     )
     parser.add_argument(

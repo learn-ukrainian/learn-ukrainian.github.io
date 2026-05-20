@@ -11,8 +11,14 @@ Issue: #1184
 """
 from __future__ import annotations
 
+from .agy import AgyAdapter
 from .hermes_deepseek import HermesDeepSeekAdapter
 from .hermes_grok import HermesGrokAdapter
 from .hermes_qwen import HermesQwenAdapter
 
-__all__ = ["HermesDeepSeekAdapter", "HermesGrokAdapter", "HermesQwenAdapter"]
+__all__ = [
+    "AgyAdapter",
+    "HermesDeepSeekAdapter",
+    "HermesGrokAdapter",
+    "HermesQwenAdapter",
+]

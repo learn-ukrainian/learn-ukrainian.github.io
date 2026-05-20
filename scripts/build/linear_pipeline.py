@@ -70,6 +70,7 @@ WRITER_CHOICES = (
     "grok-tools",
     "deepseek-tools",
     "qwen-tools",
+    "agy-tools",
 )
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
@@ -78,6 +79,10 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
+    # agy effort is a no-op on the CLI today (Phase-2 follow-up). The
+    # model field is informational only; the TUI-selected model is what
+    # actually runs. "medium" is a placeholder for telemetry parity.
+    "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
@@ -92,6 +97,7 @@ REVIEWER_CHOICES = (
     "grok-tools",
     "deepseek-tools",
     "qwen-tools",
+    "agy-tools",
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
@@ -100,6 +106,7 @@ REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
+    "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",
@@ -2670,6 +2677,7 @@ def _runtime_tool_config(
         "grok-tools",
         "deepseek-tools",
         "qwen-tools",
+        "agy-tools",
     }:
         agent_kwargs = {
             "mcp_servers": ["sources"],
@@ -2678,7 +2686,7 @@ def _runtime_tool_config(
         raise LinearPipelineError(
             f"Unknown -tools writer {agent_label!r}; expected one of "
             "codex-tools / claude-tools / gemini-tools / grok-tools / "
-            "deepseek-tools / qwen-tools."
+            "deepseek-tools / qwen-tools / agy-tools."
         )
 
     canonical_agent = agent_label.split("-", 1)[0]

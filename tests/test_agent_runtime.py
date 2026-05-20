@@ -174,7 +174,17 @@ def test_registry_has_known_agents():
         "grok",
         "deepseek",
         "qwen",
+        "agy",
     }
+
+
+def test_agy_entry_is_well_formed():
+    entry = get_agent_entry("agy")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.agy:AgyAdapter"
+    assert entry["default_model"] == "gemini-3.5-flash-high"
+    assert entry["cli_available"] is True
+    assert entry["resume_policy"] == "bridge_only"
+    assert {"content_writing", "content_review"} <= entry["capabilities"]
 
 
 def test_codex_entry_has_bridge_only_resume_policy():

@@ -349,6 +349,30 @@ def test_runtime_tool_config_gemini_tools_raises_when_unconfigured(
     assert events[0][1]["resolved_servers"] == []
 
 
+def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """agy-tools mirrors gemini-tools diagnostics so the dispatch gate passes;
+    actual MCP wiring is a Phase-2 follow-up and the runtime MCP_TOOLS_NEVER_INVOKED
+    gate then surfaces the gap."""
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    config = linear_pipeline._runtime_tool_config(
+        "agy-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert config["output_format"] == "stream-json"
+    assert config["mcp_server_names"] == ["sources"]
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["writer"] == "agy-tools"
+    assert events[0][1]["resolution_status"] == "ok"
+    assert events[0][1]["resolved_servers"] == ["sources"]
+
+
 @pytest.mark.parametrize("writer", ["grok-tools", "deepseek-tools", "qwen-tools"])
 def test_runtime_tool_config_hermes_tools_emits_resolution_event_success(
     writer: str,
