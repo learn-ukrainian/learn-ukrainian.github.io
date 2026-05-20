@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seminar smoke builds — agy/Flash-3.5 — 2026-05-20</title>
+<style>
+:root {
+  --bg: #fafaf9; --bg-card: #ffffff; --bg-code: #f5f5f4; --bg-callout: #fefce8; --bg-callout-strong: #fef3c7;
+  --text: #1c1917; --text-muted: #57534e; --border: #e7e5e4;
+  --primary: #1e293b; --accent: #b45309;
+  --pass: #15803d; --pass-bg: #dcfce7;
+  --fail: #b91c1c; --fail-bg: #fee2e2;
+  --warn: #a16207; --warn-bg: #fef9c3;
+  --neutral: #57534e; --neutral-bg: #f5f5f4;
+  --link: #1d4ed8;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.6;
+  margin: 0; padding: 0; font-size: 16px; -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 1080px; margin: 0 auto; padding: 32px 24px; }
+header { border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 32px; }
+header h1 { margin: 0 0 8px; font-size: 28px; color: var(--primary); }
+header .meta { color: var(--text-muted); font-size: 14px; }
+h2 { margin-top: 40px; font-size: 22px; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h3 { margin-top: 24px; font-size: 18px; color: var(--primary); }
+section { margin-bottom: 24px; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace; font-size: 13.5px; }
+code { background: var(--bg-code); padding: 2px 6px; border-radius: 4px; color: var(--text); }
+pre { background: var(--bg-code); padding: 12px 14px; border-radius: 6px; overflow-x: auto; border: 1px solid var(--border); }
+pre code { background: transparent; padding: 0; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14.5px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { background: var(--bg-code); font-weight: 600; }
+tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+.callout { padding: 12px 16px; border-radius: 6px; margin: 16px 0; border-left: 4px solid; }
+.callout.warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout.fail { background: var(--fail-bg); border-left-color: var(--fail); }
+.callout.pass { background: var(--pass-bg); border-left-color: var(--pass); }
+.callout.note { background: var(--bg-callout); border-left-color: var(--accent); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12.5px; font-weight: 500; }
+.tag.pass { background: var(--pass-bg); color: var(--pass); }
+.tag.fail { background: var(--fail-bg); color: var(--fail); }
+.tag.warn { background: var(--warn-bg); color: var(--warn); }
+.tag.neutral { background: var(--neutral-bg); color: var(--neutral); }
+.kv { display: grid; grid-template-columns: 180px 1fr; gap: 4px 16px; margin: 8px 0; font-size: 14.5px; }
+.kv dt { color: var(--text-muted); }
+.kv dd { margin: 0; }
+.tldr { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 22px; margin-bottom: 28px; }
+.tldr ul { margin: 8px 0 0 18px; padding: 0; }
+.tldr li { margin: 4px 0; }
+.muted { color: var(--text-muted); font-size: 13.5px; }
+.footnote { color: var(--text-muted); font-size: 13.5px; border-top: 1px solid var(--border); margin-top: 48px; padding-top: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+<h1>Seminar smoke builds — agy / Gemini Flash 3.5</h1>
+<div class="meta">
+Build date: <strong>2026-05-20</strong> · Reported: <strong>2026-05-21</strong> ·
+Operator session · Three V7 builds against seminar plans
+</div>
+</header>
+
+<div class="tldr">
+<strong>TL;DR.</strong>
+<ul>
+<li><strong>3 builds attempted, 0 reached green.</strong> Each surfaced a distinct issue ahead of the writer phase, so the agy CLI was only actually exercised in build #3.</li>
+<li><strong>agy adapter wiring works end-to-end</strong> (CLI invoked, 184K-char prompt accepted, 5.5K-char response captured, telemetry emitted, 111s wall time, returncode 0).</li>
+<li><strong>agy 1.0.0 has no MCP plugin enablement</strong> — empirically confirmed: <code>tool_calls_total=0</code> with <code>tool_call_telemetry_available=true</code>, so MCP_TOOLS_NEVER_INVOKED HARD-FAIL fires by design. Until <code>agy plugin enable sources</code> ships from kubedojo upstream, agy cannot satisfy seminar gates (VESUM, literary-grounding, citations-resolve, all four russianism family gates).</li>
+<li><strong>Two latent seminar plan-schema bugs surfaced and were fixed/filed</strong> alongside the agy work: PR #2165 (<code>_contract_yaml</code> list-shape <code>vocabulary_hints</code>) merged; issue #2164 (<code>references[].title</code> missing across most HIST/BIO/LIT plans) filed.</li>
+<li>All 5 build worktrees + branches preserved on disk per MEMORY #M-10 — diagnostic forensics safe.</li>
+</ul>
+</div>
+
+<h2>Builds</h2>
+
+<h3>Build 1 — hist/trypillian-civilization &nbsp; <span class="tag fail">FAIL — plan phase</span></h3>
+<dl class="kv">
+<dt>Stamp / branch</dt><dd><code>build/hist/trypillian-civilization-20260520-182509</code></dd>
+<dt>Started (UTC)</dt><dd>2026-05-20 18:25:09</dd>
+<dt>Writer</dt><dd><code>agy-tools</code></dd>
+<dt>Phase reached</dt><dd>plan (failed validation)</dd>
+<dt>Reason</dt><dd><code>LinearPipelineError: Every plan reference must include a title</code></dd>
+<dt>Worktree</dt><dd><code>.worktrees/builds/hist-trypillian-civilization-20260520-182509/</code> — still on disk, preserved per #M-10</dd>
+<dt>Auto-commit</dt><dd><code>12bba16b2b build(hist/trypillian-civilization): artifacts (failed)</code> — empty marker commit (failure was upstream of any artifact write)</dd>
+</dl>
+<p>The plan validator at <code>scripts/build/linear_pipeline.py:768</code> rejected because the Trypillian plan&apos;s three references use <code>work:</code> / <code>note:</code> / <code>author:</code> fields but no <code>title:</code>. Inventoried plans/hist + plans/lit + plans/bio: <strong>0 of all HIST plans, only 2 of all LIT plans (<code>natalka-poltavka</code>, <code>teliha-poetry</code>, <code>synthesis-2</code>), and only 1 BIO plan (<code>roman-ratushny</code>) pass validation today</strong>. Filed as <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2164">issue #2164</a> (P1 — blocks any seminar build regardless of writer).</p>
+<p class="muted">No agy invocation occurred; the failure was at validate-plan, three phases before writer.</p>
+
+<h3>Build 2 — lit/natalka-poltavka (initial attempt) &nbsp; <span class="tag fail">FAIL — writer phase, TypeError</span></h3>
+<dl class="kv">
+<dt>Stamp / branch</dt><dd><code>build/lit/natalka-poltavka-20260520-182758</code></dd>
+<dt>Started (UTC)</dt><dd>2026-05-20 18:27:58</dd>
+<dt>Writer</dt><dd><code>agy-tools</code></dd>
+<dt>Phase reached</dt><dd>writer (TypeError in <code>render_writer_prompt</code> before any CLI invocation)</dd>
+<dt>Reason</dt><dd><code>&apos;list&apos; object has no attribute &apos;get&apos;</code> at <code>linear_pipeline.py:5799</code></dd>
+<dt>Worktree</dt><dd><code>.worktrees/builds/lit-natalka-poltavka-20260520-182758/</code></dd>
+<dt>Auto-commit</dt><dd><code>161b11d7de build(lit/natalka-poltavka): artifacts (failed)</code></dd>
+<dt>Artifacts on disk</dt><dd><code>implementation_map.json</code> (entry_count: 0) — written before the error fired</dd>
+</dl>
+<p><code>_contract_yaml</code> did <code>plan.get(&quot;vocabulary_hints&quot;, {}).get(&quot;required&quot;, [])</code>, assuming the dict shape used by CORE plans. The seminar convention (most LIT + BIO) instead uses a bare list of <code>{word, pos, definition}</code> dicts. Fixed via <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2165">PR #2165</a> (merged as <code>e99fa0a0fd</code>) — extracted <code>_required_vocabulary_for_contract(plan)</code> helper mirroring the dispatch in <code>_vocabulary_lemmas</code> (line ~895), which already handled both shapes.</p>
+<p class="muted">Note: a second build under the same plan ran during inline reproduction (<code>build/lit/natalka-poltavka-20260520-182859</code>) — same TypeError, kept for forensics; not analyzed separately.</p>
+
+<h3>Build 3 — lit/natalka-poltavka (post PR #2165) &nbsp; <span class="tag fail">FAIL — writer runtime gate</span></h3>
+<dl class="kv">
+<dt>Stamp / branch</dt><dd><code>build/lit/natalka-poltavka-20260520-183940</code></dd>
+<dt>Started (UTC)</dt><dd>2026-05-20 18:39:40</dd>
+<dt>Writer</dt><dd><code>agy-tools</code> · model <code>gemini-3.5-flash-high</code> (TUI-selected, persisted)</dd>
+<dt>Phase reached</dt><dd>writer (completed)</dd>
+<dt>Verdict</dt><dd><code>WRITER_RUNTIME_GATE_FAILED: failures=[mcp_tools_never_invoked]</code></dd>
+<dt>Worktree</dt><dd><code>.worktrees/builds/lit-natalka-poltavka-20260520-183940/</code></dd>
+<dt>Auto-commit</dt><dd><code>966fb1d5c3 build(lit/natalka-poltavka): artifacts (failed)</code></dd>
+</dl>
+
+<p><strong>This is the build that actually exercised the agy adapter.</strong></p>
+
+<table>
+<thead>
+<tr><th>Telemetry field</th><th>Value</th><th>Interpretation</th></tr>
+</thead>
+<tbody>
+<tr><td><code>duration_s</code></td><td>111.47</td><td>agy CLI ran end-to-end without timeout or stall</td></tr>
+<tr><td><code>input_chars</code></td><td>184,788</td><td>Full writer prompt accepted (large prompt OK)</td></tr>
+<tr><td><code>output_chars</code></td><td>5,523</td><td>~700–1000 words emitted — content was generated</td></tr>
+<tr><td><code>returncode</code></td><td>0</td><td>CLI considered the call successful</td></tr>
+<tr><td><code>rate_limited</code></td><td>false</td><td>No quota signal</td></tr>
+<tr><td><code>stalled</code></td><td>false</td><td>Stall watchdog did not fire</td></tr>
+<tr><td><code>sections_total</code></td><td>5</td><td>Writer recognized the 5 plan sections</td></tr>
+<tr><td><code>sections_with_cot</code></td><td><strong>0</strong></td><td>Zero chain-of-thought blocks filled — V7&apos;s &lt;cot&gt;…&lt;/cot&gt; structure ignored</td></tr>
+<tr><td><code>tool_calls_total</code></td><td><strong>0</strong></td><td>Zero MCP tool calls — agy has no MCP wiring</td></tr>
+<tr><td><code>verify_words_calls</code></td><td>0</td><td>No VESUM verification possible — gate would have failed downstream too</td></tr>
+<tr><td><code>end_gate_fired</code></td><td><strong>false</strong></td><td>Writer did not emit the closing structured-output gate</td></tr>
+<tr><td><code>tool_theatre_violations</code></td><td>[]</td><td>No fake-tool-use signals — the failure is honest absence, not pretense</td></tr>
+<tr><td><code>tool_call_telemetry_available</code></td><td>true</td><td>Runtime observer was wired correctly; the zero is real, not a measurement artifact</td></tr>
+</tbody>
+</table>
+
+<div class="callout fail"><strong>Why this fails the seminar gate suite categorically.</strong> Without MCP, agy cannot call <code>mcp__sources__verify_words</code> (VESUM gate), <code>mcp__sources__search_literary</code> (literary grounding for LIT/OES/RUTH), <code>mcp__sources__search_style_guide</code> + <code>mcp__sources__check_russian_shadow</code> (the russianism/surzhyk/calques/paronym family of gates), or <code>mcp__sources__query_pravopys</code> (orthography). The MCP_TOOLS_NEVER_INVOKED HARD gate at <code>linear_pipeline.py:2484</code> catches this structurally — a tool-less writer cannot produce gate-passing content by construction.</div>
+
+<h2>Cross-cutting findings</h2>
+
+<h3>agy is blocked, not bad</h3>
+<p>The adapter port (PR <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2163">#2163</a>, merged as <code>29043426a9</code>) is durable. Once agy upstream ships MCP plugin enablement (kubedojo Phase-2 follow-up), the adapter should pick it up via <code>~/.gemini/config/mcp_config.json</code> — agy&apos;s own CLI log surfaces that as its MCP discovery path:</p>
+<pre><code>E0520 21:11:14 discovery.go:335] Failed to load JSON config file
+  /Users/krisztiankoos/.gemini/config/mcp_config.json:
+  unexpected end of JSON input</code></pre>
+<p>The file exists but is 0 bytes. Writing the <code>sources</code> server config there is the obvious next experiment (operator-decision pending — user-global mcp_config.json affects all agy invocations across projects, so the call is on the operator, not the orchestrator).</p>
+
+<h3>agy/Flash-3.5 did not follow V7&apos;s structured output format</h3>
+<p>Distinct from the MCP problem: <code>sections_with_cot=0</code> and <code>end_gate_fired=false</code> together indicate Flash-3.5 ignored the 4-backtick-OUTER fence convention (per <code>2026-05-20 PR #2162-adjacent CommonMark fence fix</code>) and the closing structured-output gate. Either the writer prompt is mis-shaped for Flash-3.5, or Flash-3.5 doesn&apos;t reliably track multi-part fenced output. Cannot be diagnosed further without MCP wiring (the lack of MCP would also have caused content-gate failures regardless of format adherence).</p>
+
+<h3>Seminar plan-schema drift is the silent blocker</h3>
+<p>The agy bakeoff surfaced an independent issue that blocks <em>any</em> writer choice:</p>
+<ul>
+<li><strong>Issue #2164 (open):</strong> <code>references[].title</code> systematically missing across HIST/BIO/most LIT plans. 0 HIST plans, 1 BIO, 3 LIT pass <code>validate_plan</code>. Even gemini-tools (the historical seminar baseline) will fail-fast at PLAN phase on most modules until a backfill ships.</li>
+<li><strong>PR #2165 (merged):</strong> <code>vocabulary_hints</code> shape — seminar plans use a bare list, CORE plans use a dict-with-required-key. <code>_contract_yaml</code> only supported the dict shape; <code>_vocabulary_lemmas</code> already handled both (line ~895). Pulled the dispatch logic out as <code>_required_vocabulary_for_contract</code>.</li>
+</ul>
+
+<h2>Recommendations</h2>
+<table>
+<thead><tr><th>#</th><th>Action</th><th>Why</th></tr></thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>Backfill <code>references[].title</code> across all seminar plans (per issue #2164)</td>
+<td>Unblocks every seminar writer regardless of choice. Most refs have <code>work:</code> which is the title in disguise — mechanical sweep.</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>Operator decision on <code>~/.gemini/config/mcp_config.json</code></td>
+<td>Writing the <code>sources</code> server there would unblock agy MCP. User-global file → operator&apos;s call (blast radius: every agy invocation across every project sees <code>sources</code>).</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>Honor the pre-deferral ADR recommendation: <strong>gemini-tools as seminar writer default</strong></td>
+<td>Gemini-cli has working MCP wiring (per <code>--allowed-mcp-server-names</code>). Survives 2026-06-15 Claude-sunset. Aligns with historical baseline (&ldquo;everything was Gemini before&rdquo;).</td>
+</tr>
+<tr>
+<td>R4</td>
+<td>Run one HIST/LIT seminar smoke build under <code>--writer gemini-tools</code> after R1 lands</td>
+<td>Empirical baseline for the seminar ADR that no version of the ADR has had until now. If green → lock the recommendation; if red → re-open.</td>
+</tr>
+<tr>
+<td>R5</td>
+<td>Re-test agy when upstream ships MCP plugin enablement</td>
+<td>Adapter is already in place. Cost-of-re-test ≈ one smoke build. Likely path to Flash-3.5 as a CORE-C1/C2 STEM writer (where agy&apos;s built-in science-agents are an asset), not as a humanities-seminar writer.</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Artifact map</h2>
+<table>
+<thead><tr><th>Artifact</th><th>Location</th></tr></thead>
+<tbody>
+<tr><td>Build branches (all)</td><td><code>git branch | grep build/</code> on this clone</td></tr>
+<tr><td>Build worktrees (all)</td><td><code>.worktrees/builds/{hist,lit}-*</code></td></tr>
+<tr><td>agy adapter (port)</td><td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2163">PR #2163</a> · <code>scripts/agent_runtime/adapters/agy.py</code></td></tr>
+<tr><td>Plan-schema fix (vocabulary_hints)</td><td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2165">PR #2165</a> · <code>scripts/build/linear_pipeline.py</code></td></tr>
+<tr><td>Plan-schema issue (refs.title)</td><td><a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2164">Issue #2164</a></td></tr>
+<tr><td>Seminar-writer ADR</td><td><code>docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md</code> (re-opened with this evidence in <code>c04ed2bb79</code>)</td></tr>
+<tr><td>agy usage telemetry (build 3)</td><td><code>.worktrees/builds/lit-natalka-poltavka-20260520-183940/batch_state/api_usage/usage_agy-dispatch_2026-05-20.jsonl</code></td></tr>
+</tbody>
+</table>
+
+<div class="footnote">
+Format note: this is an ai→human artifact, so HTML per MEMORY #M-2. The underlying data is also captured in the ADR Markdown for ai→ai consumption.
+</div>
+
+</div>
+</body>
+</html>
