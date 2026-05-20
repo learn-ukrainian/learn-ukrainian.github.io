@@ -4,7 +4,7 @@ session: "Overnight — 5 fixes shipped + #2151 V7 preservation wrapper landed v
 status: green-all-tasks-complete-or-pending-user
 main_sha: 780dc90b16
 main_green: pending CI confirmation on 9e3996f3ae (textbook_grounding @ 07c12f2dd7 + M-10 @ c9a29a2420 both green)
-working_tree_dirty: true  # 2 untracked (.antigravitycli/ kubedojo, dispatch-brief 2026-05-19) + starlight a1/index.mdx pre-existing local mods from prior session
+working_tree_dirty: true  # only `starlight/src/content/docs/a1/index.mdx` (pre-existing local mods from a prior session, NOT mine, deliberately untouched). All other carry-overs cleaned up at end-of-session: `.antigravitycli/` gitignored; two carry-over briefs committed.
 prs_merged_this_session: []
 direct_commits_to_main:
   - "07c12f2dd7 fix(textbook-grounding): accept writer's get_chunk_context retrieval path"
@@ -149,7 +149,7 @@ My first `ask-codex` call sent the message but Codex never processed it (silent 
 ## Section 5 — Open file state at handoff
 
 - **Main**: `9e3996f3ae` (CommonMark fence-counting + writer-prompt updates).
-- **Working tree dirty**: `.antigravitycli/` (kubedojo-created, gitignore candidate); `docs/dispatch-briefs/2026-05-19-etymology-closeout-codex.md` (untracked carry-over); `starlight/src/content/docs/a1/index.mdx` (pre-existing local mods from prior session — NOT mine; left as-is so as not to accidentally ship someone else's work).
+- **Working tree dirty**: ONLY `starlight/src/content/docs/a1/index.mdx` (pre-existing local mods from a prior session — NOT mine; left as-is so as not to accidentally ship someone else's work). End-of-session hygiene cleared: `.antigravitycli/` was added to `.gitignore` (kubedojo-owned symlink dir); the two untracked carry-over briefs (`docs/dispatch-briefs/2026-05-19-etymology-closeout-codex.md` + `docs/session-state/2026-05-20-issue-2001-ocr-handoff.md`) were committed to the archive.
 - **Active dispatches**: 1 — `2151-v7-preservation-wrapper-20260520` (Codex, started 22:13:22Z, ETA ~30-60 min).
 - **Worktrees alive**: just `a2-aspect-concept-20260519-204548` (preserved for fence-parser investigation; my fix should now correctly parse a re-run of this module if the writer adopts the 4-backtick outer per the new prompt).
 - **Open PRs upstream**: only #1873 (dependabot starlight, user-owned, leave).

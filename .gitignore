@@ -316,5 +316,11 @@ data/eval-archive/
 # clawpatch tool output (config + findings + locks + patches — regenerable)
 .clawpatch/
 
+# antigravity-cli (agy) per-project state — symlinks into
+# ~/.gemini/config/projects/, owned by the agy binary, regenerable. Kubedojo
+# owns the agy migration; the dir is a local-only side-effect of agy running
+# in this repo.
+.antigravitycli/
+
 # Raw ESUM OCR outputs (per-volume .txt files; jp2-staging/ + gemini-ocr/ already covered)
 data/raw/esum/*.txt
