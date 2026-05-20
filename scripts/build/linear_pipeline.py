@@ -5781,6 +5781,31 @@ def _activity_config(level: str, module_num: int, slug: str | None = None) -> di
     return get_activity_config(level.lower(), module_num, slug)
 
 
+def _required_vocabulary_for_contract(plan: Mapping[str, Any]) -> list[Any]:
+    """Extract required-vocabulary list, tolerating both plan-schema shapes.
+
+    Two shapes exist in the wild (discovered 2026-05-20 seminar smoke build):
+
+    * CORE plans + some LIT plans: ``vocabulary_hints`` is a dict with
+      ``required`` / ``optional`` / ``recommended`` keys, each a list.
+    * Most LIT/BIO seminar plans + ``required_vocab`` callers: a bare list
+      of ``{word, pos, definition}`` entries.
+
+    ``_vocabulary_lemmas`` already handles both shapes (line ~895); this
+    helper applies the same pattern to ``_contract_yaml`` so seminar
+    builds don't crash with ``'list' object has no attribute 'get'``.
+    Follow-up: schema unification (see issue tracking the parallel
+    ``title:`` gap).
+    """
+    vh = plan.get("vocabulary_hints")
+    if isinstance(vh, dict):
+        required = vh.get("required")
+        return list(required) if isinstance(required, list) else []
+    if isinstance(vh, list):
+        return list(vh)
+    return []
+
+
 def _contract_yaml(plan: Mapping[str, Any]) -> str:
     contract = {
         "sections": [
@@ -5796,7 +5821,7 @@ def _contract_yaml(plan: Mapping[str, Any]) -> str:
             for section in plan.get("content_outline", [])
         ],
         "activity_hints": plan.get("activity_hints", []),
-        "vocabulary_required": plan.get("vocabulary_hints", {}).get("required", []),
+        "vocabulary_required": _required_vocabulary_for_contract(plan),
         "references": plan.get("references", []),
     }
     return yaml.safe_dump(contract, allow_unicode=True, sort_keys=False).strip()
