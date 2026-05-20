@@ -61,7 +61,60 @@ The blocker: **post-2026-06-15 the `delegate.py --agent claude` lane is sunset (
 | If flash-3.5 performs well, it's the obvious upgrade path from gemini-cli for seminar content (same family, newer model). | First-build risk: pipeline interaction with the new adapter could surface tooling bugs (MCP config path, hooks, telemetry) like the Hermes observability issues 2026-05-19. |
 | Survives 2026-06-15 sunset (gemini-family, not claude). | Requires the adapter port + a smoke build before we can compare against gemini-cli on real seminar output. |
 
-**Status: held until evaluation possible.** Per user direction the next session must (1) pull the agy adapter from kubedojo into `scripts/agent_runtime/adapters/agy.py`, (2) wire `--agent agy` (or equivalent) into `delegate.py` and `v7_build.py`, (3) run one HIST or LIT seminar module under agy/flash-3.5, and only then re-evaluate this card with empirical data.
+**Status: evaluation complete 2026-05-20; verdict NOT VIABLE TODAY pending agy MCP wiring.** See § "Smoke-build empirical evidence — agy/Flash-3.5" below.
+
+---
+
+### Smoke-build empirical evidence — agy/Flash-3.5 (2026-05-20)
+
+**Setup:**
+
+- Adapter ported in PR #2163 (squash-merge `29043426a9`). Mirrors kubedojo, adds `effort` param per learn-ukrainian's AgentAdapter protocol.
+- Registry, `delegate.py`, `tool_config.build_mcp_tool_config`, `linear_pipeline.WRITER_CHOICES / REVIEWER_CHOICES`, `v7_build.WRITER_ALIASES` all wired.
+- 2 latent seminar plan-schema bugs surfaced and fixed/filed ahead of the test:
+    - PR #2165 (`e99fa0a0fd`) — `_contract_yaml` now accepts list-shape `vocabulary_hints` (most LIT + BIO plans use the list shape, not the dict shape).
+    - Issue #2164 — seminar plan `references[]` systematically missing `title:` field (blocks `validate_plan`).
+- Smoke target: `lit/natalka-poltavka` (sequence=5, smallest LIT plan that passes `validate_plan` per #2164 inventory).
+- Build branch: `build/lit/natalka-poltavka-20260520-183940` (artifacts auto-committed per #M-10).
+
+**Telemetry (from the agy usage row + writer_phase_summary event):**
+
+| Field | Value |
+|---|---|
+| agent | `agy` |
+| model | `gemini-3.5-flash-high` |
+| duration | 111.47 s |
+| input chars | 184,788 (the rendered writer prompt) |
+| output chars | 5,523 |
+| returncode | 0 (CLI exited clean) |
+| outcome | ok |
+| rate_limited | false |
+| stalled | false |
+| sections_total | 5 |
+| sections_with_cot | **0** |
+| tool_calls_total | **0** |
+| verify_words_calls | 0 |
+| end_gate_fired | **false** |
+| tool_theatre_violations | [] |
+
+**Build verdict:** `WRITER_RUNTIME_GATE_FAILED: failures=[mcp_tools_never_invoked]` (HARD-FAIL).
+
+**Three load-bearing findings:**
+
+1. **agy 1.0.0 has no MCP plugin wiring.** Confirmed empirically: `tool_calls_total=0` despite the writer prompt explicitly instructing MCP tool use; `tool_call_telemetry_available=true` rules out a measurement artifact. kubedojo notes already flagged this as a Phase-2 follow-up — the smoke build shows the consequence end-to-end. Without `mcp__sources__verify_words` and `mcp__sources__search_literary` calls, no seminar build can pass VESUM-verified, literary-grounding, citations-resolve, russianisms-clean, surzhyk-clean, or calques-clean gates. The MCP_TOOLS_NEVER_INVOKED gate correctly enforces this structurally.
+2. **agy/Flash-3.5 did produce content (5,523 chars in 111s) but ignored the structured V7 output format.** `sections_with_cot=0` and `end_gate_fired=false` together mean the model neither filled the chain-of-thought blocks (`<cot>...</cot>`) nor emitted the closing structured-output gate (`<<<END_GATE>>>`). Either the writer prompt isn't reaching agy in a form Flash-3.5 follows, or Flash-3.5 just doesn't track multi-part fenced output. Either way, the output is not pipe-compatible.
+3. **The agy adapter wiring itself works end-to-end.** CLI invoked correctly (`agy -p <prompt> --dangerously-skip-permissions`), prompt of 184K chars accepted, response of 5.5K chars captured, telemetry emitted, rate-limit / stall detection ran. The adapter is production-ready as soon as the underlying CLI grows MCP plugin support.
+
+**What this means for the seminar-writer choice:**
+
+- agy/Flash-3.5 is **blocked, not bad.** Once `agy plugin enable sources` (or equivalent) ships from the kubedojo upstream, this card should re-open. The adapter port is durable.
+- The pre-deferral recommendation (gemini-tools as seminar default) **stands as the practical default for now.** Gemini-cli has MCP wiring (`--allowed-mcp-server-names sources`) per `GeminiAdapter`, so it can satisfy the MCP_TOOLS_NEVER_INVOKED gate by construction.
+- The seminar plan-schema gaps (#2164 + the vocabulary_hints shape fixed in PR #2165) are independent blockers that need addressing before *any* writer can build most seminar modules. Even gemini-tools will fail-fast at PLAN phase on most HIST plans until the title-field backfill lands.
+
+**Next-action triggers for re-opening this card:**
+
+- `agy` ships an MCP plugin enablement surface (per kubedojo Phase-2 follow-up). Then re-run this smoke build; if `tool_calls_total>0` and `end_gate_fired=true`, agy becomes a serious candidate again.
+- Issue #2164 is resolved AND gemini-tools is empirically tried on one HIST or LIT module under `--writer gemini-tools --worktree`. That gives the gemini-cli baseline data the pre-deferral recommendation always lacked.
 
 ### Not viable
 
@@ -69,9 +122,11 @@ The blocker: **post-2026-06-15 the `delegate.py --agent claude` lane is sunset (
 
 ---
 
-## Recommendation (SUPERSEDED 2026-05-20 by user "wait for agy" direction)
+## Recommendation (RESTORED 2026-05-20 evening after agy smoke build)
 
-> **Held.** The recommendation block below proposed gemini-cli as the seminar default. User direction 2026-05-20 (pre-handoff): test agy/flash-3.5 first, then choose. Do NOT ship the gemini-cli substitutions.yaml change before that. The text below remains as the pre-deferral baseline so the next session can re-open with full context.
+> **agy/Flash-3.5 evaluation complete — D ruled out for today (blocked on agy MCP wiring, not a quality concern).** The pre-deferral recommendation (option A — gemini-tools) is restored as the active proposal. Awaiting user signoff. See § "Smoke-build empirical evidence — agy/Flash-3.5" above for the data behind the verdict.
+>
+> **Final mile before user sees this card:** seminar plan-schema fixes (#2164 + already-shipped PR #2165) need to land for ANY writer choice to actually produce seminar modules. The writer-choice decision and the plan-schema backfill are independent — both must happen.
 
 ---
 
