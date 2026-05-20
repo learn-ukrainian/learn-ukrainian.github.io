@@ -36,6 +36,31 @@ Five shippable changes landed; one build running; one diagnosed blocker for the 
 | 5 | filed | hist/hromadske-suspilstvo missing objectives — blocks #2168 | issue #2170 |
 | 6 | running | a1/my-morning V7 build (codex-tools writer) | Monitor `bogkut45c` |
 
+## Section 1a — codex-tools ALSO fails: `mcp_tools_never_invoked`
+
+The first attempt with `--writer codex-tools` reached the writer phase, emitted CoT for all four sections (`Діалоги`, `Дієслова на -ся`, `Мій ранок`, `Підсумок`), fired the `writer_end_gate` with `rescanned_words`/`rescanned_sources`/`grammar_claims_grounded`, then HARD-FAILED:
+
+```json
+{"event": "writer_tool_theatre", "violations": ["get_chunk_context", "search_external", "search_sources", "search_style_guide", "search_text", "verify_words"], "violation_count": 6, "cited_count": 6, "called_count": 0}
+{"event": "phase_writer_summary", "tool_calls_total": 0, "verify_words_calls": 0, "tool_call_telemetry_available": true, "tool_theatre_violation_count": 6}
+{"event": "writer_failure_class", "failure_class": "mcp_tools_never_invoked", "severity": "HARD"}
+{"event": "module_failed", "reason": "WRITER_RUNTIME_GATE_FAILED: writer='codex-tools' module='a1/20' failures=[mcp_tools_never_invoked]"}
+```
+
+Per pipeline.md the 2026-05-12 `tool_calls_total=0` verdict was retracted as a measurement artifact (PR #1907 fixed `_rollout_matches_plan` in `scripts/agent_runtime/adapters/codex.py`). Tonight's repro shows **the symptom is back** OR a new regression — `writer_tool_calls.json` in the build worktree is `[]` (empty list), and `module.md` is byte-identical to main's existing version (codex didn't actually write fresh content, it regurgitated). Auto-commit fired per #M-10: branch `build/a1/my-morning-20260520-233701` retains the forensics at `e408c91ab6 build(a1/my-morning): artifacts (failed)`.
+
+Hypotheses for next session:
+1. Codex rollout-matcher regression (look at codex CLI 0.132.0 vs the version PR #1907 was tested on; the rollout location may have changed).
+2. MCP server reachable but codex's MCP wiring config drifted (the runtime emits `-c mcp_servers.sources.url="http://127.0.0.1:8766/mcp"` — verify the local sources server is listening).
+3. Codex genuinely lying about tool-calls in CoT but not making them — would point to a prompt engineering gap (writer doesn't believe it must call tools, just claims it did).
+
+Diagnostic command for next session:
+```
+git log build/a1/my-morning-20260520-233701 --oneline
+git show build/a1/my-morning-20260520-233701:curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json
+git show build/a1/my-morning-20260520-233701:curriculum/l2-uk-en/a1/my-morning/module.md | diff -q - curriculum/l2-uk-en/a1/my-morning/module.md
+```
+
 ## Section 1 — claude CLI not logged in (HEADLINE)
 
 Reproducer: `claude -p "echo hello" --bare` → `Not logged in · Please run /login`.
