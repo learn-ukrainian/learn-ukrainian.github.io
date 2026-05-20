@@ -2,7 +2,7 @@ module: a1-027
 level: A1
 sequence: 27
 slug: checkpoint-time-nature
-version: '1.2.4'
+version: '1.2.3'
 title: 'Підсумок: Час і природа'
 subtitle: Чи вмієте ви називати час, планувати тиждень та описувати погоду?
 focus: review
@@ -43,8 +43,7 @@ content_outline:
   points:
   - 'Огляд досягнень A1.4: Тепер ви вмієте говорити про час, розклад та навколишній світ. Ви вмієте називати час і призначати зустрічі. Ви можете назвати всі дні, місяці та пори року. Ви вмієте описувати погоду. Ви можете розповісти про свій день. Ви вмієте обговорювати хобі та будувати плани. Далі: A1.5 — Місця (місто, напрямки, транспорт).'
 vocabulary_hints:
-  required:
-  - All vocabulary from №22–26 is recycled — no new required words
+  required: []
   recommended: []
 activity_hints:
 - type: fill-in
