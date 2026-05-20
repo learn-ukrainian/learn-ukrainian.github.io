@@ -35,7 +35,26 @@ Five shippable changes landed; one build running; one diagnosed blocker for the 
 | 4 | shipped to main | A1 checkpoint-food-shopping + checkpoint-communication schema fix | `f9609d39b3` |
 | 5 | filed | hist/hromadske-suspilstvo missing objectives — blocks #2168 | issue #2170 |
 | 6 | shipped to main | A1 checkpoint vocabulary_hints doc note (3 plans) | `432f72ea79` |
-| 7 | running | a1/my-morning V7 build (gemini-tools, 3rd attempt) | Monitor `bu2qx1fmf` |
+| 7 | FAILED | a1/my-morning V7 build (gemini-tools) — `infra_context_contamination:wrong_tool_family` on built-in `update_topic` | branch `build/a1/my-morning-20260520-234426` |
+| 8 | new finding | 3-for-3 writer failures tonight: claude-tools not-logged-in / codex-tools tool-theatre / gemini-tools update_topic leak — all `-tools` writers broken in different ways | next-session P0 |
+
+## Section 1b — gemini-tools fails too: `infra_context_contamination:wrong_tool_family`
+
+Third writer attempt. Gemini-3.1-Pro reached the writer phase, emitted 4 CoT blocks with proper `verification_trace` fields, then made **11 MCP tool calls** including verify_words×5, search_text×2, search_images, search_style_guide, query_wikipedia, check_modern_form — none of the tool-theatre violations that killed codex-tools. `phase_writer_summary` reported `tool_calls_total=11, verify_words_calls=5, tool_theatre_violation_count=0`.
+
+But the build still hard-failed because the very first tool call was Gemini CLI's built-in **`update_topic`** (a non-MCP, agent-self-management tool that gemini-cli exposes by default with strategic_intent / title / summary fields). The `writer_trace_isolation` gate flagged it:
+
+```json
+{"event": "writer_failure_class", "failure_class": "infra_context_contamination", "sub_class": "wrong_tool_family", "gate": "writer_trace_isolation", "severity": "TERMINAL", "evidence": {"offending_tool_calls": [{"index": 0, "name": "update_topic", "arguments": {"strategic_intent": "...", "title": "Verifying Sources and Vocabulary", "summary": "..."}}]}}
+```
+
+This is a configuration / allowlist gap, not a real semantic problem — `update_topic` is gemini-cli's internal "what's the agent doing right now" annotation and doesn't touch curriculum content. The `writer_trace_isolation` gate likely needs to either:
+
+1. Allowlist gemini-cli built-ins (`update_topic`, possibly others) — same way claude-tools' built-in `Read`/`Write` are allowed today.
+2. Pass `--no-builtin-tools` or equivalent to gemini-cli (verify in `gemini --help` whether such a flag exists in 0.42.0).
+3. Filter `update_topic` calls out at the runtime-adapter level (`scripts/agent_runtime/adapters/gemini.py`) before the gate sees them — same approach used to strip claude-tools' Bash/Read entries.
+
+Build branch: `build/a1/my-morning-20260520-234426` auto-committed per #M-10 (`3740186e9b build(a1/my-morning): artifacts (failed)`). The full `writer_tool_calls.json` (409 lines, 11 MCP calls + the leaky `update_topic`) is on that branch for next-session inspection.
 
 ## Section 1a — codex-tools ALSO fails: `mcp_tools_never_invoked`
 
