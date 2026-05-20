@@ -80,3 +80,7 @@ vocabulary_hints:
 - сліпець
 - хромець
 word_target: 5000
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill

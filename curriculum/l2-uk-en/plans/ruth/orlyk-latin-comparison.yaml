@@ -54,7 +54,10 @@ persona:
 phase: 4
 prerequisites:
 - diplomatic-language
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 90
 slug: orlyk-latin-comparison

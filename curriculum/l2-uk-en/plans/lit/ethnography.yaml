@@ -84,15 +84,18 @@ prerequisites:
 - lit-07 (Marusya — етнографічні описи)
 - lit-03 (Eneida Feast — обрядовість бенкету)
 references:
-- name: Маруся — весілля та похорон
+- title: Маруся — весілля та похорон
+  name: Маруся — весілля та похорон
   notes: Етнографічні описи в повісті
   type: primary
   url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-- name: Сватання на Гончарівці
+- title: Сватання на Гончарівці
+  name: Сватання на Гончарівці
   notes: Весільний обряд у п'єсі
   type: primary
   url: https://www.ukrlib.com.ua/books/printit.php?tid=253
-- name: Українські народні обряди
+- title: Українські народні обряди
+  name: Українські народні обряди
   notes: Етнографічний контекст
   type: reference
   url: https://uk.wikipedia.org/wiki/Українські_народні_обряди

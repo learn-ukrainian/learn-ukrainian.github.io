@@ -96,11 +96,13 @@ persona:
 prerequisites:
 - holodomor-vyznannia
 references:
-- name: Голодомор (Вікіпедія)
+- title: Голодомор (Вікіпедія)
+  name: Голодомор (Вікіпедія)
   notes: Comprehensive overview
   type: reference
   url: https://uk.wikipedia.org/wiki/Голодомор
-- name: Harvard Ukrainian Research Institute — Holodomor
+- title: Harvard Ukrainian Research Institute — Holodomor
+  name: Harvard Ukrainian Research Institute — Holodomor
   notes: Research center
   type: reference
   url: https://huri.harvard.edu/

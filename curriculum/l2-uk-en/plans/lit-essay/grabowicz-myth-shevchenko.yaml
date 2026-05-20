@@ -51,7 +51,10 @@ persona:
   role: Myth Deconstructor
   voice: Senior Specialist
 phase: LIT Expansion
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 55
 slug: grabowicz-myth-shevchenko

@@ -54,7 +54,10 @@ persona:
 phase: 4
 prerequisites:
 - slovo-first-battle
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 77
 slug: slovo-defeat

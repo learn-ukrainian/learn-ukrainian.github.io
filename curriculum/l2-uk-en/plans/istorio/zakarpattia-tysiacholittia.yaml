@@ -98,15 +98,18 @@ persona:
 prerequisites:
 - bukovyna-mizh-imperiiamy
 references:
-- name: Закарпаття (Вікіпедія)
+- title: Закарпаття (Вікіпедія)
+  name: Закарпаття (Вікіпедія)
   notes: Regional overview
   type: reference
   url: https://uk.wikipedia.org/wiki/Закарпаття
-- name: Карпатська Україна (Вікіпедія)
+- title: Карпатська Україна (Вікіпедія)
+  name: Карпатська Україна (Вікіпедія)
   notes: 1939 independence
   type: reference
   url: https://uk.wikipedia.org/wiki/Карпатська_Україна
-- name: Русини (Вікіпедія)
+- title: Русини (Вікіпедія)
+  name: Русини (Вікіпедія)
   notes: Rusyn identity question
   type: reference
   url: https://uk.wikipedia.org/wiki/Русини

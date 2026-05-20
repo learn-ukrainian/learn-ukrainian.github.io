@@ -54,7 +54,10 @@ persona:
 phase: 4
 prerequisites:
 - fables-kharkiv
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 93
 slug: affinity-srodna-pratsia

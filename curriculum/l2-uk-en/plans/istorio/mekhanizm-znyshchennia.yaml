@@ -101,15 +101,18 @@ persona:
 prerequisites:
 - teatr-kurbasa
 references:
-- name: Великий терор в Україні
+- title: Великий терор в Україні
+  name: Великий терор в Україні
   notes: Great Terror overview
   type: reference
   url: https://uk.wikipedia.org/wiki/Великий_терор
-- name: Сталінські репресії
+- title: Сталінські репресії
+  name: Сталінські репресії
   notes: Ukrainian repressions
   type: reference
   url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
-- name: Список жертв Розстріляного відродження
+- title: Список жертв Розстріляного відродження
+  name: Список жертв Розстріляного відродження
   notes: Victims list
   type: reference
   url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
