@@ -30,11 +30,12 @@ Five shippable changes landed; one build running; one diagnosed blocker for the 
 | # | Status | Subject | Artifact |
 |---|---|---|---|
 | 1 | shipped to main | unblock stale tests (textbook_grounding, python_qg) | `afc3510364` |
-| 2 | PR open | promote_module + prune_module_forensics helpers | #2169 |
+| 2 | PR #2169 MERGED | promote_module + prune_module_forensics helpers | `73604666cd` |
 | 3 | shipped to main | commit 2026-05-21 dispatch briefs | `7a0458cec9` |
 | 4 | shipped to main | A1 checkpoint-food-shopping + checkpoint-communication schema fix | `f9609d39b3` |
 | 5 | filed | hist/hromadske-suspilstvo missing objectives — blocks #2168 | issue #2170 |
-| 6 | running | a1/my-morning V7 build (codex-tools writer) | Monitor `bogkut45c` |
+| 6 | shipped to main | A1 checkpoint vocabulary_hints doc note (3 plans) | `432f72ea79` |
+| 7 | running | a1/my-morning V7 build (gemini-tools, 3rd attempt) | Monitor `bu2qx1fmf` |
 
 ## Section 1a — codex-tools ALSO fails: `mcp_tools_never_invoked`
 
