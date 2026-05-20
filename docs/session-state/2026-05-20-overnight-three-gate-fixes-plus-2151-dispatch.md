@@ -180,6 +180,63 @@ My first `ask-codex` call sent the message but Codex never processed it (silent 
 
 ## Sign-off
 
-User went to bed mid-session with explicit empowerment: *"i am going to sleep. but you are not alone. there are other agents. work with them, discuss the problems, design cooperate so we can reach our target."* Tonight's work used that capacity — Codex+DeepSeek consults for the fence-parser design, plus Codex now driving #2151. The triangulation paid off (both colleagues independently arrived at the same answer with the same precedent citation).
+User went to bed mid-session with explicit empowerment: *"i am going to sleep. but you are not alone. there are other agents. work with them, discuss the problems, design cooperate so we can reach our target."* Tonight's work used that capacity — Codex+DeepSeek consults for the fence-parser design, plus Codex driving #2151 to merge. The triangulation paid off (both colleagues independently arrived at the same answer with the same precedent citation).
 
-Next session inherits: three fixes shipped, one Codex dispatch in flight, MEMORY rule encoded, task list updated. Tomorrow's first move is checking the Codex dispatch outcome — the rest of the queue is in good shape.
+User woke briefly to set pre-sleep decisions (see Section 7), confirmed agy/Gemini-Flash-3.5 is gated behind the new agy CLI and our seminar-writer choice should wait for empirical agy testing, then signed off again.
+
+Next session inherits: 8 commits to main, all P0 tasks done or deferred, ONE pending Decision Card (held pending agy adapter port), and a clear next-session work order (Section 7).
+
+## Section 7 — Pre-sleep decisions (user awake briefly)
+
+User surfaced these three decisions before final handoff. Outcomes:
+
+### Decision 1 — Seminar-track writer: ship gemini-cli now vs wait for agy/flash-3.5
+
+**Resolved: DEFER.** User direction (verbatim): *"wait for the agy tests pls, integrate it in the next session and test it before making decision."*
+
+Next-session protocol:
+
+1. Pull the agy adapter from the `kubedojo` project into `scripts/agent_runtime/adapters/agy.py` (or whatever surface kubedojo's port lands as). User confirmed: *"you should get the agy adapter from the kubedojo project after session handoff."*
+2. Wire `--agent agy` (or equivalent) into `delegate.py` and `v7_build.py`.
+3. Run at least one Ukrainian seminar smoke build (HIST or LIT module) under agy / Gemini Flash 3.5.
+4. THEN re-open `docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md` with empirical data alongside gemini-cli baseline. The card now has a candidate D (agy/flash-3.5) added; the original gemini-cli recommendation is preserved as the pre-deferral baseline.
+
+Context the user added: *"gemini flash-3.5 came out and we can only support it through the new agy cli, (we will keep gemini cli for the rest since they are on different meter) kubedojo is doing extensive testing but we will have to do ukrainian related tests with it."* So gemini-cli stays the wiki-content writer (per `2026-04-26-reboot-agent-responsibilities.md`); agy is added for new-model access; quotas are separate.
+
+### Decision 2 — Promote-helper scope (task #7)
+
+**Resolved: Option B + paired cleanup tool.** User: *"i think we should copy all forensics, we can always clean them up when the module is finished."* I agreed with a refinement: build the cleanup tool in the SAME PR as the promote helper, so "later = tool call" not "later = never."
+
+Updated task #7 scope:
+
+- **Promote helper** — after a green V7 build, copy BOTH the lesson source (`module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`, the MDX) AND the forensics (`writer_prompt.md`, `writer_output.raw.md`, `hermes.write.jsonl`, `writer_tool_calls.json`, `python_qg.json`, `llm_qg.json`, `knowledge_packet.md`) from worktree → `curriculum/{level}/{slug}/` + `starlight/.../{slug}.mdx` on main.
+- **Module-prune helper** (paired, same PR) — when a module's `status/{slug}.json` flips to `locked` (or manual `--slug`), remove the in-curriculum forensics but keep `module.md` + YAMLs + MDX. Leaves `_orchestration/runs/{stamp}/` untouched (full history via the run_archive from #2151 / PR #2162).
+
+Why pairing matters: forensics on main grow ~1MB per build per module. At 1713 modules with 2-5 builds each that's 3-9 GB if uncleaned. The prune helper makes "clean up at lock-time" a one-liner, not a future memory item.
+
+### Decision 3 — Seminar-writer ADR explicit agy trigger
+
+**Resolved: yes, add the trigger.** The pending Decision Card now explicitly defers to agy/flash-3.5 evaluation rather than provisionally shipping gemini-cli. Edits already committed (see `docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md` revision).
+
+### Final task list state
+
+| # | Status | Subject |
+|---|---|---|
+| #1 | completed | Investigate textbook_grounding |
+| #2 | completed | Fix NEW-4 fence-sequencing parser |
+| #3 | completed | Writer-prompt reflexive-ся guidance |
+| #4 | completed | Worktree cleanup (with regret, encoded #M-10) |
+| #5 | completed | Seminar-writer pending Decision Card filed + deferred-to-agy |
+| #6 | completed | #2151 V7 preservation wrapper (Codex PR #2162 merged) |
+| #7 | **pending** | Promote helper + module-prune helper (paired PR) |
+| #8 | completed | V7 build artifacts auto-commit (#M-10) |
+
+### Next-session opening sequence
+
+1. Cold-start orient via Monitor API (see § 6 of this handoff).
+2. **First action: port the agy adapter from kubedojo.** Path: clone or `cd` into `~/projects/kubedojo`, find their `adapters/agy.py` or equivalent, copy into `scripts/agent_runtime/adapters/agy.py`, adapt for learn-ukrainian's tool-config plumbing.
+3. **Second action: smoke build.** Pick lowest-sequence HIST or LIT module from `curriculum/l2-uk-en/curriculum.yaml`, run `v7_build.py {level} {slug} --writer agy-tools --worktree`. Per #M-10 the build branch will retain all forensics even if gates fail.
+4. **Third action: build task #7's paired tools.** Promote helper + module-prune helper. Scope locked per Decision 2 above.
+5. **Then: re-open the seminar-writer pending Decision Card** with the agy/flash-3.5 smoke-build evidence.
+
+CORE builds and writer-prompt fixes that shipped tonight are NOT on the next-session critical path — they're prerequisites already in place. The remaining work is agy integration, then content quality iteration once a fresh build with all fixes loaded can run end-to-end.

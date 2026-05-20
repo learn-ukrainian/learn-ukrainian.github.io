@@ -1,6 +1,6 @@
 # DECISION REQUIRED — Which writer for SEMINAR tracks (hist / bio / lit family / oes / ruth / folk / istorio)?
 
-**Status:** PROPOSED
+**Status:** DEFERRED 2026-05-20 — user direction (pre-handoff): *"wait for the agy tests pls, integrate it in the next session and test it before making decision."* The seminar-writer choice is held pending Gemini Flash 3.5 (via the agy CLI) becoming testable in the learn-ukrainian repo. Next-session action: pull `scripts/agent_runtime/adapters/agy.py` (or whatever surface lands) from the kubedojo project, run at least one Ukrainian-content smoke build (HIST or LIT seminar module) under agy/flash-3.5, then re-open this card with empirical data alongside gemini-cli and the other candidates.
 **Surfaced:** 2026-05-20 overnight (user AFK), per predecessor handoff `2026-05-19-night-hermes-mcp-observability-fixed.md` § "Writers per track — partially documented" and carry-over task #9. Predecessor described the gap precisely: *"Seminars implicitly fell through to claude-tools when CORE switched. **No explicit ADR yet.**"*
 **Source:** Implicit fallthrough in `scripts/config/agent_fallback_substitutions.yaml`; no decision in `docs/decisions/` covers seminars; existing writer-selection ADR (`2026-05-06-writer-selection-codex-gpt55.md`) scope is CORE A1-C2 explicitly.
 **Scope:** SEMINAR profile (`hist`, `istorio`, `bio`, `lit`, `lit-essay`, `lit-hist-fic`, `lit-fantastika`, `lit-war`, `lit-humor`, `lit-youth`, `lit-doc`, `lit-drama`, `lit-crimea`, `oes`, `ruth`, `folk`) writer-tools selection in the V7 pipeline. **Does NOT touch:** CORE writer selection (covered by `2026-05-06-writer-selection-codex-gpt55.md`); wiki writer (Gemini per `2026-04-26-reboot-agent-responsibilities.md` §1); pipeline reviewer (Codex / cross-agent / no self-review per `2026-04-26-reboot-agent-responsibilities.md` §2).
@@ -52,13 +52,28 @@ The blocker: **post-2026-06-15 the `delegate.py --agent claude` lane is sunset (
 | Hermes-routed; #M-10 observability fix landed today (textbook_grounding gate now sees deepseek's get_chunk_context calls); writer telemetry observability confirmed via b1 build. | DeepSeek-pro content-review primary per #M0; using it ALSO as seminar writer creates the self-review-adjacent risk if the same model variant later reviews its own writes. Need explicit cross-agent guard. |
 | Survives 2026-06-15 sunset. | Less project-tooling familiarity than gemini-tools (which has been the wiki writer since 2026-04-26). |
 
+### D. agy / Gemini Flash 3.5 (NEW CANDIDATE — added 2026-05-20 per user direction)
+
+| Pro | Con |
+|---|---|
+| Gemini Flash 3.5 is only available via the new `agy` CLI; this is the gating tool for a major Gemini-family model upgrade. | Adapter (`scripts/agent_runtime/adapters/agy.py`) not yet in the learn-ukrainian repo — must be ported from kubedojo. |
+| Separate quota meter from gemini-cli (user-confirmed 2026-05-20), so adding agy as a writer surface does not contend with wiki-content gemini-cli usage. | No Ukrainian-content empirical data yet. kubedojo runs are generic; seminar register is unproven. |
+| If flash-3.5 performs well, it's the obvious upgrade path from gemini-cli for seminar content (same family, newer model). | First-build risk: pipeline interaction with the new adapter could surface tooling bugs (MCP config path, hooks, telemetry) like the Hermes observability issues 2026-05-19. |
+| Survives 2026-06-15 sunset (gemini-family, not claude). | Requires the adapter port + a smoke build before we can compare against gemini-cli on real seminar output. |
+
+**Status: held until evaluation possible.** Per user direction the next session must (1) pull the agy adapter from kubedojo into `scripts/agent_runtime/adapters/agy.py`, (2) wire `--agent agy` (or equivalent) into `delegate.py` and `v7_build.py`, (3) run one HIST or LIT seminar module under agy/flash-3.5, and only then re-evaluate this card with empirical data.
+
 ### Not viable
 
 - **claude-tools** as seminar default — expires 2026-06-15 per #M0. Could be retained as pre-2026-06-15 fallback only.
 
 ---
 
-## Recommendation
+## Recommendation (SUPERSEDED 2026-05-20 by user "wait for agy" direction)
+
+> **Held.** The recommendation block below proposed gemini-cli as the seminar default. User direction 2026-05-20 (pre-handoff): test agy/flash-3.5 first, then choose. Do NOT ship the gemini-cli substitutions.yaml change before that. The text below remains as the pre-deferral baseline so the next session can re-open with full context.
+
+---
 
 **Pick gemini-tools as the SEMINAR writer DEFAULT, effective immediately.** Reasoning:
 
@@ -102,15 +117,16 @@ Per ADR-007 / dec-001, the rollback is to bakeoff selection — never to "let it
 
 ---
 
-## What happens if user does NOT respond before 2026-06-15
+## What happens if user does NOT respond before 2026-06-15 (REVISED 2026-05-20)
 
-This decision is **blocking for seminar builds only** — CORE builds proceed unaffected. If the user doesn't decide before 2026-06-15:
+Per user direction 2026-05-20, the choice is held pending agy/flash-3.5 evaluation. New default behavior:
 
-- 2026-06-15: `delegate.py --agent claude` is sunset → seminar builds via the implicit claude-tools fallthrough will fail-to-route.
-- The orchestrator (me) treats this card's recommendation as the de-facto policy at that point — gemini-tools, the historical baseline + sunset-safe choice — and ships the substitutions.yaml change + ADR.
-- The card remains open for user override. The substitutions.yaml change is reversible in one commit.
+- **Next session FIRST** ports the agy adapter from kubedojo and runs one Ukrainian seminar smoke build under agy/flash-3.5.
+- **Then** this card is re-opened with empirical data from that smoke build (alongside the gemini-cli baseline if also run).
+- If 2026-06-15 arrives WITHOUT a user decision AND WITHOUT agy testing complete, orchestrator falls back to **gemini-cli** as the pre-deferral baseline — but flags this as a forced default and re-opens the card immediately when agy is ready.
+- The card remains open for override at any point. The substitutions.yaml change is reversible in one commit regardless of which writer ships.
 
-This is the same "drive by default, ask permission only when stakes are uncertain" posture from MEMORY #M-6. Gemini-as-seminar-writer is the obvious default; the card asks only because there's a contrary path (bakeoff first) that has cost implications I shouldn't choose unilaterally.
+The "drive by default" posture from #M-6 still applies, but with an explicit user-requested hold on this specific choice until empirical evidence is available.
 
 ---
 
