@@ -137,6 +137,23 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "agy": {
+        # Antigravity CLI shipping Gemini Flash 3.5 on a separate meter from
+        # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff
+        # (`docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md`).
+        # MCP plugin wiring is a Phase-2 follow-up — until then `-tools`
+        # writer mode will trip MCP_TOOLS_NEVER_INVOKED, which is the
+        # expected signal in the bakeoff.
+        "adapter": "scripts.agent_runtime.adapters.agy:AgyAdapter",
+        "default_model": "gemini-3.5-flash-high",
+        "cost_tier": "low",
+        "capabilities": frozenset({
+            "content_writing",
+            "content_review",
+        }),
+        "cli_available": True,
+        "resume_policy": "bridge_only",
+    },
 }
 
 

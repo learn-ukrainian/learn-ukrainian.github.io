@@ -34,6 +34,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "deepseek"
     if agent.startswith("qwen"):
         return "qwen"
+    if agent.startswith("agy"):
+        return "agy"
     return None
 
 
@@ -216,6 +218,31 @@ def build_mcp_tool_config(
         )
 
     if canonical_agent == "gemini":
+        if not mcp_servers:
+            return None, _basic_diagnostics(
+                mcp_config_path=resolved_config_path,
+                requested_servers=mcp_servers,
+                resolved_servers=None,
+                resolution_status="config_empty",
+            )
+        return (
+            {"mcp_server_names": mcp_servers},
+            _basic_diagnostics(
+                mcp_config_path=resolved_config_path,
+                requested_servers=mcp_servers,
+                resolved_servers=mcp_servers,
+                resolution_status="ok",
+            ),
+        )
+
+    if canonical_agent == "agy":
+        # agy 1.0.0 has no per-invocation MCP flag (Phase 2 follow-up).
+        # We mirror the Gemini path's diagnostics shape so the upstream
+        # `_runtime_tool_config` validator does not fail-fast at dispatch
+        # time; the lack of MCP wiring then surfaces at runtime as
+        # MCP_TOOLS_NEVER_INVOKED, which is the precise + intended signal
+        # for the seminar-writer bakeoff. The adapter itself ignores
+        # `mcp_server_names`; we pass it through for parity / debuggability.
         if not mcp_servers:
             return None, _basic_diagnostics(
                 mcp_config_path=resolved_config_path,
