@@ -3538,3 +3538,53 @@ def test_strip_metalinguistic_preserves_bold_lemmas_in_running_prose() -> None:
     stripped = linear_pipeline._strip_metalinguistic(text)
     for lemma in ("сніданок", "рушник", "полотенце"):
         assert lemma in stripped, f"bold-unwrapped lemma '{lemma}' should survive"
+
+
+def test_contract_yaml_handles_dict_shape_vocabulary_hints() -> None:
+    """CORE plans express vocabulary_hints as `{required: [...], optional: [...]}`."""
+    plan = {
+        "content_outline": [{"section": "S", "words": 100, "points": ["p1"]}],
+        "activity_hints": [],
+        "references": [{"title": "Ref"}],
+        "vocabulary_hints": {
+            "required": [{"word": "сніданок", "pos": "ч.", "definition": "ранкова їжа"}],
+            "optional": [],
+        },
+    }
+    out = linear_pipeline._contract_yaml(plan)
+    assert "vocabulary_required" in out
+    assert "сніданок" in out
+
+
+def test_contract_yaml_handles_list_shape_vocabulary_hints() -> None:
+    """Seminar plans (most LIT + BIO) express vocabulary_hints as a bare list.
+
+    Regression for the 2026-05-20 seminar smoke build that crashed on
+    `'list' object has no attribute 'get'` while rendering the writer
+    prompt for `lit/natalka-poltavka`. `_vocabulary_lemmas` (line ~895)
+    already handled both shapes; `_contract_yaml` lagged.
+    """
+    plan = {
+        "content_outline": [{"section": "S", "words": 100, "points": ["p1"]}],
+        "activity_hints": [],
+        "references": [{"title": "Ref"}],
+        "vocabulary_hints": [
+            {"word": "сентименталізм", "pos": "ч.", "definition": "літ. напрям"},
+            {"word": "ремарка", "pos": "ж.", "definition": "авторська вказівка"},
+        ],
+    }
+    out = linear_pipeline._contract_yaml(plan)
+    assert "vocabulary_required" in out
+    assert "сентименталізм" in out
+    assert "ремарка" in out
+
+
+def test_contract_yaml_tolerates_missing_vocabulary_hints() -> None:
+    """Plans without vocabulary_hints render an empty required list."""
+    plan = {
+        "content_outline": [{"section": "S", "words": 100, "points": ["p1"]}],
+        "activity_hints": [],
+        "references": [{"title": "Ref"}],
+    }
+    out = linear_pipeline._contract_yaml(plan)
+    assert "vocabulary_required: []" in out
