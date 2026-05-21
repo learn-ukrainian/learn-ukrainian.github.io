@@ -1,0 +1,8 @@
+Created At: 2026-05-21T14:12:14Z
+Completed At: 2026-05-21T14:12:14Z
+Batch verification: 2 words
+
+Found: 2/2
+
+- **стіл** — FOUND (2 match): стіл(noun), стіл(noun)
+- **ранок** — FOUND (3 match): ранка(noun), ранок(noun), ранок(noun)

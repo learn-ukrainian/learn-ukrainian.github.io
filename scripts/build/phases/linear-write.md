@@ -8,6 +8,8 @@ Write the A1 module using the plan and contract below. Produce exactly four
 authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 `resources.yaml`.
 
+{WRITER_SPECIFIC_DIRECTIVES}
+
 ## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)
 
 Before the four artifact fences, you MUST emit one `<plan_reasoning section="...">...</plan_reasoning>` block for each contracted section. This is not optional hidden thinking. If any section lacks this visible block, the writer has failed the protocol.
