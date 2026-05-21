@@ -2,7 +2,7 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: 1.6.2
+version: 1.6.3
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-1412-sounds-letters-and-hello
@@ -103,7 +103,7 @@ content_outline:
   - Рада тебе бачити! (каже жінка) / Радий тебе бачити! (каже чоловік) — Радий/рада зустрічі! В українській
     мові є родові форми — жінки кажуть «рада», чоловіки — «радий». Це ваше перше знайомство з граматичним
     родом. Це стане великою темою, починаючи з модуля №8.
-  - 'Прочитаймо «Привіт» по літерах — ваш перший звуковий аналіз: П [п] приголосний + р [р] приголосний
+  - 'Прочитай «Привіт» по літерах — ваш перший звуковий аналіз: П [п] приголосний + р [р] приголосний
     + и [и] голосний + в [в] приголосний + і [і] голосний + т [т] приголосний. Два голосні, чотири приголосні.
     Кожен тип звука, який ви вивчили в цьому модулі, з''являється в цьому єдиному слові.'
 - section: Підсумок
@@ -159,7 +159,7 @@ vocabulary_hints:
   - word: З
     key_word: зуб
   - word: И
-    key_word: ирій
+    key_word: іній
   - word: І
     key_word: ім'я
   - word: Ї
@@ -370,6 +370,22 @@ plan_fixes:
   trigger: Activity grid needs explicit alphabet vocab coverage for letter-module activity generation.
   changes:
   - add letter_module flag and 33 alphabet entries with key_word examples for required activity coverage
+- version: 1.6.3
+  date: '2026-05-22'
+  ref: 'audit/2026-05-13/first-7-summary M-2 and M-3'
+  trigger: Plan-review (2026-05-13) flagged two MEDIUM issues to fix before letter-module
+    build queue. (M-2) 1pl imperative `Прочитаймо` is out-of-scope for A1 per State
+    Standard 2024 §4.2.4.2 (1pl `читаймо` / 3rd-person `хай/нехай` belong to A2 —
+    A1 imperative restricted to 2nd-person only). (M-3) Key-word `ирій` for И is in
+    VESUM but extremely low-frequency (poetic/mythological); NUS A1 bukvars pair И
+    with `іній` (high-frequency, concrete) — Захарійчук 1кл. с.46, Большакова 1кл.
+    с.32.
+  changes:
+  - 'replace content_outline[3].points[3] prose: `Прочитаймо «Привіт» по літерах`
+    → `Прочитай «Привіт» по літерах` (1pl imperative → 2sg imperative per State
+    Standard §4.2.4.2 A1 scope).'
+  - 'replace vocabulary_hints.recommended[].key_word for И: `ирій` → `іній` (poetic-
+    archaic → high-frequency concrete; NUS bukvar canonical pairing).'
 changelog:
 - version: 1.6.0
   date: '2026-04-23'
