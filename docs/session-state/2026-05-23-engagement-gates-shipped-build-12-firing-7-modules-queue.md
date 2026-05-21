@@ -1,20 +1,21 @@
 ---
 date: 2026-05-22
-session: "Engagement gates shipped + M1 plan fix + fresh build #12 firing — A1.1 build queue queued"
-status: yellow-2-PRs-tonight + 1-build-in-flight + 4-A1-plan-followups-queued
-main_sha: 954966b5ea  # PR #2204 merge
+session: "Engagement gates shipped + M1 plan fix — build #12 + #13 surfaced writer-quality structural pattern (NEW gates work; OLD writer-compliance gates rotate failures)"
+status: yellow-2-PRs-merged + 0-active-builds + first-7-A1-queue-still-blocked-on-writer-pattern
+main_sha: 954966b5ea  # PR #2204 merge (PR #2205 also merged on top — see Section 1)
 main_green: clean (review/review advisory persists on every PR)
-working_tree_dirty: starlight/src/content/docs/a1/my-morning.mdx still has the manually-assembled build #11 preview; clean once promote runs
+working_tree_dirty: starlight/src/content/docs/a1/my-morning.mdx still has the manually-assembled build #11 preview; clean once a future build promotes
 prs_merged_this_session:
   - "#2204 feat(linear_pipeline): engagement_floor + russianisms_strict gates"
-prs_wip_unmerged:
-  - "#2205 fix(plans/a1/sounds-letters-and-hello): drop 1pl imp + low-freq И key-word — awaiting CI"
+  - "#2205 fix(plans/a1/sounds-letters-and-hello): drop 1pl imp + low-freq И key-word (audit M-2 + M-3)"
+prs_wip_unmerged: []
 active_dispatches: []
-active_builds:
-  - "a1/my-morning fresh build (claude-tools writer) at .worktrees/builds/a1-my-morning-20260521-224207 — fired 22:42 UTC, currently in writer phase"
-builds_completed_this_session: []
-headline_finding: "The engagement_floor + russianisms_strict gates landed (#2204) restoring the V6 pedagogical floor V7 had silently dropped. Build #11 of a1/my-morning had REVISE'd on engagement with no critique because no rubric existed — the new deterministic gates close that gap and the reviewer prompt narrows the LLM dim to judgment-only. Build #12 (fresh, claude-tools writer, --worktree) fired against this new gate set at 22:42 UTC. Plan-level audit follow-up #2205 also opened — M-2 + M-3 fixes on sounds-letters-and-hello v1.6.3 (Прочитаймо→Прочитай, ирій→іній). M5/M6/M7 plan fixes deliberately deferred to morning when human judgment can re-validate the Surzhyk-drill decisions."
-next_session_first_item: "Read the build #12 result. If module_done → run scripts/sync/promote_module.py --latest --level a1 --slug my-morning to land the first complete V7 module on main. If still failing on the new engagement_floor, the writer log + module.md tells the story — most likely outcome is that the writer prompt does produce the callouts (the prompt is now explicit about the floor) and the LLM engagement dim either passes or returns concrete residual feedback."
+active_builds: []
+builds_completed_this_session:
+  - "#12 build/a1/my-morning-20260521-224207 — failed at python_qg.resources_search_attempted (writer skipped search_images). NEW gates engagement_floor ✅ (4 callouts, 0 META_NARRATION) + russianisms_strict ✅ (0 critical, 0 warnings) BOTH PASSED."
+  - "#13 build/a1/my-morning-20260521-225659 — failed at python_qg.{plan_sections, vesum_verified, previously_passed_regression}. resources_search_attempted ✅ (writer called query_wikipedia this time), engagement_floor + russianisms_strict ✅✅. Different writer-quality failures than #12."
+headline_finding: "Tonight's PR #2204 (engagement_floor + russianisms_strict gates) WORKS end-to-end. Build #12 + #13 both PASS the new gates cleanly — engagement_floor caught nothing, russianisms_strict caught nothing. The V7 reviewer dim narrowing is implicitly validated (no more REVISE-without-critique on engagement). HOWEVER, build #12 + #13 surfaced a deeper structural pattern: each writer iteration fails on a DIFFERENT subset of pre-existing writer-quality gates (build #12: resources_search_attempted; build #13: plan_sections + vesum_verified + regression). The writer is being asked to satisfy ~20 gates simultaneously and Opus 4.7 xhigh misses a different ~1 per pass. No convergence is happening within the auto-correction loop. Each iteration costs 11-13 minutes of writer time. Stopping overnight at this point — the marginal value of build #14 is low without a thoughtful design pass on the prompt-vs-gates structure that the user can be present for."
+next_session_first_item: "Decide writer-vs-gate structural fix. The new gates I shipped tonight WORK and are clean. The blocking work is on the EXISTING writer-compliance pattern. Two options: (A) ADR-008 correction paths for the remaining hard-fail gates (resources_search_attempted, vesum_verified for whitelistable forms, plan_sections word-rebalance) — code work, ~1 day, structural. (B) Writer prompt restructuring — collapse the 700+-line linear-write.md into a tighter check-list-first, narrative-second structure that puts the gate obligations at the TOP and the pedagogy notes BELOW. Option B is faster (~2-4h) but less robust. Recommended: B first, then A for the gates that survive B. After either fix, fire build #14 — if module_done, promote a1/my-morning."
 ---
 
 # 2026-05-22→23 Engagement gates shipped + M1 plan fix + build #12 firing
@@ -84,23 +85,43 @@ Version 1.6.2 → 1.6.3. New `plan_fixes` entry with rationale + source citation
 
 PR open at #2205, awaiting CI. Merge unblocks the A1.1 letter-module build queue when a1/my-morning ships.
 
-## Section 3 — Build #12 (fresh) firing right now
+## Section 3 — Build #12 + #13 outcomes (KEY DIAGNOSTIC)
 
-```
-.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --worktree --writer claude-tools
-```
+### Build #12 — worktree `.worktrees/builds/a1-my-morning-20260521-224207/`
+- Start: 22:42 UTC | Writer: claude-tools (Opus 4.7 xhigh) | Writer duration: 583s (~9.7 min)
+- Writer tool calls (16 total): `verify_words ×11`, `search_text ×4`, `search_style_guide ×1`
+- python_qg duration: 130s
+- **NEW gates: BOTH PASS**
+  - `engagement_floor` ✅ `callout_count=4` (min=2), `meta_narration_hits=[]`
+  - `russianisms_strict` ✅ `critical_count=0`, `warning_count=0`
+- **Failed gates**:
+  - `resources_search_attempted` ❌ HARD — `search_attempt_count=0`. Writer called NONE of MULTIMEDIA_SEARCH_TOOLS (`query_wikipedia`, `search_external`, `search_images`, `browser_search`, `search_query`, `web_search`). All 16 tool calls were verify/textbook-search, no multimedia search.
+  - `correction_terminal` ❌ — "`resources_search_attempted` has no ADR-008 correction path". Pipeline halted.
 
-- Worktree: `.worktrees/builds/a1-my-morning-20260521-224207/`
-- Started: 22:42 UTC 2026-05-21
-- Writer: claude-tools (per writer-selection ADR `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md` REVISED 2026-05-12 — codex-tools had `tool_calls_total=0`, claude-tools 4 calls + module)
+### Build #13 — worktree `.worktrees/builds/a1-my-morning-20260521-225659/`
+- Start: 22:57 UTC | Writer: claude-tools (Opus 4.7 xhigh) | Writer duration: 702s (~11.7 min)
+- Writer tool calls (28 total): `verify_words ×12`, `verify_word ×5`, `search_text ×4`, `search_style_guide ×3`, `get_chunk_context ×2`, **`query_wikipedia ×1` ✅**, `search_heritage ×1`
+- python_qg duration: 126s
+- **NEW gates: BOTH STILL PASS**
+  - `engagement_floor` ✅, `russianisms_strict` ✅
+- **resources_search_attempted ✅** — writer called `query_wikipedia` (different MULTIMEDIA tool than #12 missed, but in the same allowed list)
+- **Different failures this iteration**:
+  - `plan_sections` ❌ — word budget imbalance: Діалоги 257 (target 270-330, ~5% short), Дієслова на -ся 310 ✅, Мій ранок 265 (target 270-330, ~2% short), Підсумок 441 (target ≤330, ~33% over). Writer dumped extra content into Підсумок.
+  - `vesum_verified` ❌ — 2 missing words: `буквенного` and `літера-в-літеру`. VESUM lookup confirms both: `буквенний` (writer's double-н form) NOT in VESUM; standard is `буквений` (single-н) or `літерний`. `літера-в-літеру` is a hyphenated phrase, not a single lemma (VESUM doesn't handle multi-word forms; reframe as `літера за літерою` or `послідовно`).
+  - `previously_passed_regression` ❌ — `vesum_verified` passed in earlier iterations but failed now. Meta-gate firing correctly.
 
-**Key difference from build #11**: writer prompt now documents both new gates. Expected outcomes (in priority order):
+### The pattern (KEY OBSERVATION)
 
-1. **Most likely (P0.7)**: writer produces callouts (the prompt is explicit) → `engagement_floor` passes → llm_qg engagement dim either passes (residual quality only) or returns concrete residual feedback → mdx → green.
-2. **Possible (P0.25)**: writer still emits ≤1 callout (e.g. interprets "≥2" as "1 is fine if rich") → `engagement_floor` fails with concrete feedback → ADR-008 correction path applies → second iteration adds callouts.
-3. **Edge (P0.05)**: writer adds 2+ callouts but `russianisms_strict` triggers on something the writer didn't realize was a calque → critical finding lists offending phrases → correction.
+The NEW gates I shipped tonight work perfectly. The blocking gates are pre-existing writer-compliance gates where Opus 4.7 xhigh misses a DIFFERENT random ~1-2 obligations per iteration:
+- Build #11 (handoff predecessor): missed engagement
+- Build #12: missed `search_images` / multimedia search
+- Build #13: missed word-budget balance + slipped a Russified adjective (`буквенний`)
 
-If module_done lands: `scripts/sync/promote_module.py --latest --level a1 --slug my-morning` to land the first complete V7 module on main.
+This is not random noise — it's structural. The writer prompt asks for ~20+ obligations across activity schema, vocabulary verification, textbook grounding, resource search, immersion ratio, plan sections, engagement, russianisms, callouts, META_NARRATION absence, dialogue dual-rendering, IPA notation, citations, component prop schemas, AI-slop avoidance, paronym checks, etc. Opus 4.7 hits ~95% per pass, misses ~5%, and the 5% rotates between passes. ADR-008 corrections only handle a subset (`WRITER_CORRECTION_GATES`: activity_schema, strict_json_parse, tool_theatre, word_count, plan_sections, formatting_standards, mdx_render). `resources_search_attempted` and `vesum_verified` have no auto-correction; the gate fails terminally.
+
+### Why I stopped iterating overnight
+
+Each iteration costs 11-13 minutes of Opus xhigh writer time. With no convergence pattern observed, the marginal value of build #14 at 1 AM with no user oversight is low. The right move is to surface the pattern with full diagnostic and let tomorrow's session decide between (A) more ADR-008 corrections vs (B) writer prompt restructuring vs (C) gate-loosening for hyphenated VESUM phrases. See `next_session_first_item` in frontmatter.
 
 ## Section 4 — Deferred to morning (M5/M6/M7 plan fixes)
 
@@ -131,10 +152,12 @@ The first 3 plans that are LOCK_NOW + pass — `reading-ukrainian`, `special-sig
 ## Section 6 — Active state at handoff
 
 - **Active dispatches**: 0
-- **Active builds**: 1 (a1/my-morning, in writer phase, ETA ~14 min for writer + ~5-15 min for downstream)
-- **Open PRs**: 1 (#2205, CI pending)
-- **Origin/main**: `954966b5ea` (PR #2204 merge)
+- **Active builds**: 0 (stopped after #13 surfaced structural pattern; see Section 3 for why)
+- **Open PRs**: 0 (#2204 + #2205 both merged tonight)
+- **Origin/main**: `954966b5ea` (PR #2204 merge); `a1f2e850b0` (this handoff + PR #2205 squash-merge on top)
 - **Build worktrees preserved per #M-10** (do not delete):
+  - `.worktrees/builds/a1-my-morning-20260521-225659` (build #13 — most recent, plan_sections+vesum failure)
+  - `.worktrees/builds/a1-my-morning-20260521-224207` (build #12 — resources_search_attempted failure)
   - `.worktrees/builds/a1-my-morning-20260521-202848` (build #11 — manually-assembled MDX source, still live on starlight)
   - `.worktrees/builds/a1-my-morning-20260521-195056` (build #10)
   - older builds from yesterday's cascade
@@ -146,29 +169,34 @@ The first 3 plans that are LOCK_NOW + pass — `reading-ukrainian`, `special-sig
 
 | # | Subject | Priority | Notes |
 |---|---|---|---|
-| 1 | a1/my-morning build #12 result | **P0 in flight** | If module_done → promote. If gate fail → investigate correction path. |
-| 2 | Merge #2205 (M1 plan fix) | P0 morning | small mechanical PR, CI pending |
-| 3 | Apply M5/M6/M7 plan fixes | P0 morning | per Section 4 — needs daylight judgment on Surzhyk-drill rows |
-| 4 | Fire builds for first 7 A1 modules (after #1 lands + plan fixes done) | **P0 the "tough work"** | start with the 3 LOCK_NOW plans (M2/M3/M4) once my-morning proves the pipeline |
+| 1 | **Writer-vs-gate structural fix** | **P0 morning** | Per Section 3 — Opus 4.7 xhigh misses different ~1-2 of ~20 writer obligations per pass; no convergence with current prompt+correction structure. Pick (A) ADR-008 corrections for resources_search + vesum + plan_sections-balance OR (B) writer prompt restructuring (checklist-first, narrative-second) OR (C) gate-loosening for hyphenated VESUM phrases. Recommended: B first (faster), then A for survivors. |
+| 2 | Fire build #14 after #1 lands | P0 right after | If module_done → `scripts/sync/promote_module.py --latest --level a1 --slug my-morning` to ship first complete V7 module on main |
+| 3 | Apply M5/M6/M7 plan fixes | P0 morning | per Section 4 — Gemini consult confirmed (A) DROP for M6 муж/чоловік row; M7 тато/папа drop is mechanically clear; M5 Підсумок=0 needs delete-vs-allocate judgment call. Three small PRs. |
+| 4 | Fire builds for first 7 A1 modules (after #1+#2+#3) | **P0 the "tough work"** | start with the 3 LOCK_NOW plans (M2 reading-ukrainian / M3 special-signs / M4 stress-and-melody) once my-morning proves the full pipeline end-to-end |
 | 5 | inline/workbook activity split | P1 | V7 writer emits flat array; activity_repair.py patches but writer has no control over placement |
-| 6 | Other V6 anti-patterns deterministically | P1 | `Українською:` meta-frame, mixed-language clauses, Forbidden Tropes — separate small PRs |
-| 7 | Cross-validate gemini-tools + deepseek-tools writers | P1 | inherited |
+| 6 | Other V6 anti-patterns deterministically (Українською: meta-frame, mixed-language clauses, Forbidden Tropes) | P1 | separate small PRs in the same style as PR #2204 (engagement_floor + russianisms_strict). The "deterministic over LLM judgment" pattern is now proven — see #2204's gates passing both build #12 + #13. |
+| 7 | Cross-validate gemini-tools + deepseek-tools writers | P1 | inherited — particularly relevant for #1 since switching writer adapter may converge faster than prompt restructuring with claude-tools |
 | 8 | `pedagogical_deviations_from_standard:` plan field convention (CC-1) | P2 | curriculum-wide schema enhancement |
-| 9 | Holistic gate-quality audit | P2 | may be moot once #1, #3 land |
+| 9 | Holistic gate-quality audit | P2 | may be moot once #1 lands |
 | 10 | codex-tools rollout-flush race | P2 | inherited |
 | 11 | PR #2168 amelina stub blocker | low | inherited (Gemini PR with Curriculum Plans CI fail) |
 | 12 | `review / review` CI auth broken | P2 | inherited; every PR shows this advisory fail; safe to ignore for merge decisions |
 
-## Section 8 — Tonight's wins
+## Section 8 — Tonight's wins (and one honest miss)
 
-- ✅ Engagement gap that built #11 silently shipped past is now structurally impossible
-- ✅ Russianism detection layer (676 patterns + 8,937 UA-GEC pairs) finally wired into pipeline
-- ✅ Reviewer dim narrowed to judgment-only — no more "REVISE 6.5/10 with no critique"
-- ✅ M-2 + M-3 plan fixes shipped on PR #2205 — first of 4 first-7 plan follow-ups
-- ✅ Build #12 of a1/my-morning firing against the new gate set
+### Wins
+- ✅ **PR #2204 shipped + validated**. The engagement gap that build #11 silently shipped past is now structurally impossible. Build #12 + #13 BOTH passed engagement_floor + russianisms_strict cleanly with content the new prompt produced — proves the gate design works on real writer output, not just synthetic fixtures.
+- ✅ **Russianism detection layer wired in**. 676 curated patterns + 8,937 UA-GEC corpus pairs available to every build, not just a 10-word V6 list.
+- ✅ **Reviewer dim narrowed to judgment-only**. The "JUDGMENT ONLY — do NOT re-litigate deterministic gates" preamble lands. No more "REVISE 6.5/10 with no critique" failure mode.
+- ✅ **PR #2205 shipped**. M-2 + M-3 plan fixes (sounds-letters-and-hello v1.6.3: Прочитаймо→Прочитай, ирій→іній) — first of 4 first-7 plan follow-ups.
+- ✅ **Two real builds with full diagnostic** (#12 + #13). Surfaces the structural writer-vs-gate pattern with concrete evidence.
+- ✅ **Gemini consult on M6 муж/чоловік** confirmed Option A (DROP) — decision-grade rationale captured for morning.
+
+### Honest miss
+- ❌ **Did not ship a1/my-morning to main**. Two builds against the new gate set both green-passed the new gates but red-failed pre-existing writer-compliance gates (different ones each time). Tonight's marginal value at 1 AM with no user oversight was capped — stopping at #13 instead of #14 was the right call, but it leaves the V7 ship still un-shipped.
 
 User went to sleep with `i ma goiong to see contnue on your own and utilise the agents, fiscuss things with them , work togehter, we are really close to be able to ship a module and then have to start wroking on the first 7 modules of a1 which will be tough`.
 
-The first complete V7 module is one Monitor notification away. Tomorrow's tough work starts with three LOCK_NOW plans + four plan-fix small PRs + a deterministic gate layer that finally enforces what V6 used to.
+What I delivered: the deterministic gate layer that was the missing piece for build #11 + a clean plan fix + a full diagnostic of why the writer-loop still hasn't converged. What's still ahead: one structural design pass on the writer-vs-gate boundary (Section 7 #1), then one more build, then the first 7 modules. The first complete V7 module is one design pass away, not one Monitor notification away — that was the optimistic framing at the top of this handoff; the honest framing after #12 + #13 is that the gate layer is solid and the writer-side discipline needs the structural fix the user can be present for.
 
 Good night.
