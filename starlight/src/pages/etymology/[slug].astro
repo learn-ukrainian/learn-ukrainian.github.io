@@ -126,6 +126,147 @@ const summary = (text: string, length = 90): string => {
   const collapsed = text.replace(/\s+/g, ' ').trim();
   return collapsed.length > length ? collapsed.slice(0, length) + '…' : collapsed;
 };
+
+// HTML-escape a raw text fragment before injecting into set:html output.
+const escapeHtml = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// Known ESUM language abbreviation markers. Used by the inline-marker
+// renderer to italicize the abbreviation and (when known) attach the
+// full language name as a tooltip.
+const LANG_ABBR_LOOKUP: Record<string, string> = MARKER_LABELS;
+
+// Source-citation tokens that follow an ESUM entry. ESUM uses these to cite
+// where a derivative or meaning was attested. Rendering them as small muted
+// chips helps the reader visually separate citation noise from etymology
+// content.
+const CITATION_TOKENS = new Set([
+  'Ж', 'Я', 'О', 'Г', 'Нед', 'Бі', 'Куз', 'Мак', 'Шейк', 'Чаб', 'ВеЗа',
+  'ВеУг', 'Гр', 'Дз', 'Дз.', 'Ме', 'Пі', 'ЛексПолі', 'ЕЗб', 'ССУМ',
+  'СУМ', 'СІС', 'СІС?', 'ЗСРЯ', 'ЕСЯ', 'ЕСлС', 'РУДБЕ', 'Преобр',
+  'Фасмер', 'Шанский', 'Брандт', 'МасНпек', 'Маспек', 'Маsпеk',
+  'Львов', 'Преобр.', 'Фасмер.', 'Брюкнер', 'BгйcКпег', 'Vasmer',
+]);
+
+/**
+ * Render the ESUM etymology body as readable HTML.
+ *
+ * The raw `etymology_text` is a dense single paragraph stuffed with
+ *
+ *   - bracketed dialectal/archaic forms     [віднйха]
+ *   - quoted meanings (Ukrainian gloss)     «діжечка для води»
+ *   - language abbreviations                р., бр., п., ч., псл.
+ *   - source-citation markers               Ж, Я, Нед, СУМ, Фасмер
+ *   - section separators                    `--` or `—`
+ *
+ * The legacy renderer dumped the whole blob into a `<div>` with
+ * `white-space: pre-wrap`, which left dictionary readers with an
+ * unreadable wall of text.
+ *
+ * This renderer:
+ *   1. Splits on `--` / `—` boundaries that ESUM uses to separate the
+ *      derivatives list, cognates section, and citation block.
+ *   2. Wraps bracketed forms, quoted meanings, language markers, and
+ *      citation tokens in span classes that the stylesheet typesets
+ *      with distinct weight/color/size.
+ *   3. Falls back to plain text for fragments that don't match any
+ *      pattern (so unknown content never disappears).
+ */
+function renderEtymologyBody(rawText: string): string {
+  if (!rawText) return '';
+
+  // Normalize whitespace; the source has hard line breaks from PDF text
+  // layer extraction that we want to collapse into prose.
+  const collapsed = rawText.replace(/\s+/g, ' ').trim();
+
+  // Split on `--` or `—` boundaries to recover ESUM's section structure.
+  // Each segment becomes one rendered paragraph.
+  const segments = collapsed.split(/\s+(?:--|—)\s+/).filter((s) => s.trim().length > 0);
+
+  const renderSegment = (segment: string): string => {
+    // Tokenize: walk the string, recognizing brackets, quotes, lang markers,
+    // citation tokens, and plain text. Order matters: brackets first because
+    // they enclose other content; then quotes; then markers; then citations.
+    let out = '';
+    let i = 0;
+    while (i < segment.length) {
+      const ch = segment[i];
+
+      // Bracketed form: [...] -- dialectal/archaic marker in ESUM.
+      // We only close on the actual `]`. Using `)` as a permissive fallback
+      // captured too much (e.g. swallowed `(ент.)` parentheticals that ESUM
+      // writes inside its derivative lists). When the close `]` is OCR-damaged
+      // and missing, fall through to plain text instead of spanning aggressively.
+      if (ch === '[') {
+        const closeIdx = segment.indexOf(']', i);
+        const closeBracketIdx = segment.indexOf('[', i + 1);
+        let end = -1;
+        const candidates = [closeIdx, closeBracketIdx].filter((x) => x > i);
+        if (candidates.length > 0) {
+          end = Math.min(...candidates);
+        }
+        if (end > i && end - i < 80) {
+          const inner = segment.slice(i + 1, end);
+          out += `<span class="esum-bracket">[${escapeHtml(inner)}]</span>`;
+          i = end + 1;
+          continue;
+        }
+      }
+
+      // Quoted gloss: «...»
+      if (ch === '«') {
+        const end = segment.indexOf('»', i);
+        if (end > i && end - i < 200) {
+          const inner = segment.slice(i + 1, end);
+          out += `<span class="esum-gloss">«${escapeHtml(inner)}»</span>`;
+          i = end + 1;
+          continue;
+        }
+      }
+
+      // Language abbreviation: Cyrillic 1-5 chars ending in `.`, after a
+      // space or at the start of a segment.
+      if (/[а-яґіїєА-ЯҐІЇЄ]/.test(ch) && (i === 0 || /[\s,;]/.test(segment[i - 1]))) {
+        const m = segment.slice(i).match(/^[а-яґіїєА-ЯҐІЇЄ]{1,5}\.(?=\s)/);
+        if (m) {
+          const abbr = m[0];
+          if (LANG_ABBR_LOOKUP[abbr]) {
+            const fullName = LANG_ABBR_LOOKUP[abbr];
+            out += `<span class="esum-lang" title="${escapeHtml(fullName)}">${escapeHtml(abbr)}</span>`;
+            i += abbr.length;
+            continue;
+          }
+        }
+      }
+
+      // Citation token: standalone capital word(s) from CITATION_TOKENS.
+      if (/[А-ЯҐІЇЄ]/.test(ch) && (i === 0 || /\s/.test(segment[i - 1]))) {
+        const m = segment.slice(i).match(/^[А-ЯҐІЇЄ][а-яґіїєА-ЯҐІЇЄ.?]{0,8}/);
+        if (m && CITATION_TOKENS.has(m[0])) {
+          out += `<span class="esum-cite">${escapeHtml(m[0])}</span>`;
+          i += m[0].length;
+          continue;
+        }
+      }
+
+      // Plain text fallback: consume exactly one char and re-check on next
+      // iteration. (Greedy consumption to the next bracket/quote would skip
+      // language markers and citation tokens that the per-position checks
+      // above can only match when sitting on the starting char.)
+      out += escapeHtml(ch);
+      i += 1;
+    }
+    return out;
+  };
+
+  return segments
+    .map((seg, idx) => {
+      const rendered = renderSegment(seg);
+      const isFirst = idx === 0;
+      return `<p class="esum-body-seg${isFirst ? ' esum-body-derivatives' : ''}">${rendered}</p>`;
+    })
+    .join('\n');
+}
 ---
 
 {props.kind === 'entry' ? (
@@ -170,7 +311,7 @@ const summary = (text: string, length = 90): string => {
     )}
 
     <h2>Етимологія</h2>
-    <div class="esum-body">{props.entry.etymology_text}</div>
+    <div class="esum-body" set:html={renderEtymologyBody(props.entry.etymology_text)} />
 
     <h2>Джерело</h2>
     <p>
@@ -243,9 +384,55 @@ const summary = (text: string, length = 90): string => {
     font-weight: 600;
   }
   .esum-body {
-    white-space: pre-wrap;
-    word-wrap: break-word;
     margin: 1rem 0;
+    line-height: 1.7;
+    max-width: 70ch;
+    font-size: var(--sl-text-base);
+  }
+  .esum-body-seg {
+    margin: 0 0 1.1em 0;
+  }
+  .esum-body-seg:last-child {
+    margin-bottom: 0;
+  }
+  /* The first segment of an ESUM body is the derivatives list — give it
+     a left rule so it visually reads as the "headword family" block. */
+  .esum-body-derivatives {
+    border-left: 3px solid var(--sl-color-accent-low);
+    padding-left: 0.9rem;
+  }
+  /* Bracketed dialectal/archaic forms: italic, slightly muted. */
+  .esum-bracket {
+    font-style: italic;
+    color: var(--sl-color-text-accent, var(--sl-color-accent-high));
+    font-weight: 500;
+  }
+  /* Quoted meanings (Ukrainian gloss): italic, dimmed brand color so the
+     definition reads as a side-note rather than competing with the form. */
+  .esum-gloss {
+    color: var(--sl-color-gray-2);
+    font-style: italic;
+    font-size: 0.97em;
+  }
+  /* Language abbreviation (р., бр., п., ч., псл., ...). Small-caps style
+     so it visually separates from running prose. Title attr shows full
+     language name on hover. */
+  .esum-lang {
+    font-variant: small-caps;
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+    text-decoration: underline dotted var(--sl-color-gray-5);
+    text-underline-offset: 0.15em;
+    cursor: help;
+    white-space: nowrap;
+  }
+  /* Source-citation tokens: small caps, muted. These are tail-references
+     like "Ж" "Нед" "СУМ" "Фасмер" that ESUM uses to credit sources. */
+  .esum-cite {
+    font-variant: small-caps;
+    color: var(--sl-color-gray-3);
+    font-size: 0.9em;
+    font-weight: 500;
   }
   .esum-proto {
     background: var(--sl-color-gray-6);
