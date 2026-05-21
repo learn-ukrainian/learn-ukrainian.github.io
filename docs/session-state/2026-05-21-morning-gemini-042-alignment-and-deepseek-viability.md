@@ -296,6 +296,43 @@ Probed with `agy -p "Call the MCP tool mcp_sources_verify_word with word='сті
 - Consider workspace-scoped `.agents/mcp_config.json` write in the agy adapter for sandbox parity with gemini-cli's `.mcp.json` pattern
 - File issue if agy 1.0.0 ever needs MCP-server denylisting (claude/codex use `--allowed-mcp-server-names`; agy reads all configured servers)
 
+## Section 13 — Misdiagnosis correction: claude-tools NOT confirmed broken
+
+**User caught this at sign-off:** *"uh i dont get it why do we need /login for claude i am using you here"*. They were right to flag it.
+
+The "claude CLI not logged in" diagnosis from the night handoff (and propagated forward in this brief) was based on a flawed probe — `claude -p "..." --bare`. The `--bare` flag FORCES bare mode (no OAuth/keychain reads, requires `ANTHROPIC_API_KEY` env var). Since we don't have an API key globally exported (OAuth is via Claude Code keychain), `--bare` exits with `Not logged in` — but that's NOT the V7 writer adapter's actual code path.
+
+`scripts/agent_runtime/adapters/claude.py:228`:
+
+```python
+use_bare = not has_session and bool(os.environ.get("ANTHROPIC_API_KEY"))
+```
+
+For typical V7 invocations: no `ANTHROPIC_API_KEY` → `use_bare = False` → claude CLI uses OAuth/keychain → works.
+
+**Verified live at sign-off:** `claude -p "Respond with exactly: PONG"` → `PONG`, exit 0. No login needed.
+
+The three "stalled silent" build attempts in the night handoff (`build/a1/my-morning-20260520-{232732,233504,233549}`) failed for some OTHER reason that we misattributed. Hypotheses (not yet verified):
+
+1. **Anthropic API rate-limit at that minute** — Claude Code weekly cap could have hit at 23:32-23:35 UTC (~01:30-01:35 CEST). Check usage panel + retry at a different time.
+2. **Prompt size exceeded model context** — V7 writer prompts run 200+ KB. Check `writer_prompt.md` size vs sonnet-4-6 token cap, especially with the new gemini-cli alignment additions.
+3. **Spawn-time OAuth refresh race** — if multiple parallel claude invocations hit a stale token, one may need refresh while another fails. Single-shot retry usually clears it.
+4. **macOS sandbox / yolo-flag conflict** — try with `DELEGATE_DISABLE_PTY=1`.
+
+**Revised writer state matrix:**
+
+| Writer | True status |
+|---|---|
+| gemini-tools | 🟢 PROVEN end-to-end |
+| deepseek-tools | 🟢 PROVEN clean (19/22 gates) |
+| **claude-tools** | **🟡 UNTESTED tonight — original diagnosis was wrong**. Needs a fresh build attempt. OAuth works (PONG'd at sign-off). |
+| codex-tools | 🟡 format fixed, rollout-flush race separate |
+| agy-tools (Flash 3.5) | 🟢 MCP wired, ready to fire |
+
+**Implication: claude-tools may actually be the easiest path to an end-to-end green build.** Per `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md`, claude-tools was the V7 writer DEFAULT. If it works (which the OAuth probe suggests it does), Section 11's textbook_grounding diagnosis would have a different fix path: claude-tools historically pasted 30+ word verbatim quotes correctly (the 2026-05-19 production baseline), so it'd likely pass textbook_grounding without prompt-directive changes.
+
+**Next-session diagnostic order:** start with claude-tools build to confirm it works. If yes, that's the fastest path to ship. If no, then iterate on deepseek-tools / gemini-tools with task #8 prompt-directive enhancements.
+
 ## Sign-off
 
 Five commits shipped to main, one full DeepSeek-pro writer phase proven clean with 19/22 gates green (first complete writer-phase + python_qg cycle this week), three writer regressions root-caused and fixed at the pipeline layer. The blocker landscape went from "three of three writers broken in different ways" to:
