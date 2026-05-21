@@ -7034,7 +7034,19 @@ def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
         pending_attribution_index = len(quotes) - 1
 
     for line in text.splitlines():
-        heading = re.match(r"^\s{0,3}#{1,6}\s+(?P<title>.+?)\s*#*\s*$", line)
+        # Track only H1/H2 as the blockquote's `section_title` — the
+        # `_textbook_grounding_gate`'s `_quote_topic_matches` check uses
+        # this string as the topic context, and sub-headings (H3+) are
+        # typically step/sub-step markers (e.g. `### Крок N: ...`) whose
+        # pedagogy-meta-talk lexicon poisons the token set. The H2 is
+        # the actual learner-navigable section that defines the topic.
+        # Build-#7 a1/my-morning regression: writer used H3 ### Крок N
+        # (pedagogically clearer than inline-bold) and the gate
+        # rejected real Захарійчук blockquotes for topical_mismatch
+        # because the H3 stems didn't overlap with concrete-content
+        # quotes. See `tests/test_textbook_grounding_gate.py::
+        # test_blockquote_under_h3_inherits_h2_section_title`.
+        heading = re.match(r"^\s{0,3}#{1,2}\s+(?P<title>.+?)\s*#*\s*$", line)
         if heading:
             current_section = re.sub(r"[*_`~]+", "", heading.group("title")).strip()
         match = re.match(r"^\s*>\s?(?P<body>.*)$", line)

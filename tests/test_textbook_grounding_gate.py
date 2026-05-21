@@ -677,6 +677,47 @@ def test_a1_fallback_attributes_to_actual_match(tmp_path: Path) -> None:
     assert result["matched"] == ["Кравцова Grade 4, p.113"]
 
 
+def test_blockquote_under_h3_inherits_h2_section_title(tmp_path: Path) -> None:
+    """Build-#7 regression: when the writer organises the module with
+    H3 ### Крок N: sub-headings inside an H2 ## Section, the blockquote
+    must take the H2 section title (the actual pedagogical scope) for
+    the topic match — not the H3 sub-heading's long technical
+    meta-description, whose pedagogy-jargon stems flood topic_tokens
+    and lock out any concrete-content quote from overlapping. Build #6
+    (inline-bold Крок) passed; build #7 (H3 Крок) failed with
+    topical_mismatch on real Захарійчук quotes that DID match the
+    plan's references. The H3 'meta-talk' below mirrors the actual
+    build-#7 section title that caused the false REJECT."""
+    _write_tool_calls(
+        tmp_path,
+        [_search_call("Караман Grade 10, p.176")],
+    )
+    # SEARCH_TEXT topics: учень, умивається, одягається, готується,
+    # зборатися, зворотна, ранкова. The H2 "Зворотні дієслова" shares
+    # "зворотн*", "дієсло*" stems with SEARCH_TEXT → topic check passes
+    # when the H2 is used as section_title. The H3 below is
+    # methodology-meta-talk (історичні джерела індоєвропейських мов)
+    # with zero stem overlap with the quote — so when the gate picks
+    # H3 as section_title the topic check fails even though the quote
+    # is on-topic for the H2.
+    module_text = (
+        "## Зворотні дієслова\n\n"
+        "Quick framing of the topic.\n\n"
+        "### Крок 1: Класифікація типів за історичними джерелами "
+        "індоєвропейських мов та порівняльна типологія парадигм\n\n"
+        "Sub-step explanation.\n\n"
+        f"> **Караман Grade 10, p.176:** {SEARCH_TEXT}\n"
+    )
+
+    result = linear_pipeline._textbook_grounding_gate(module_text, _plan(), tmp_path)
+
+    assert result["passed"] is True, (
+        f"H3 sub-heading must not poison the topic check; "
+        f"reason={result.get('reason')!r} matched={result.get('matched')!r}"
+    )
+    assert "Караман Grade 10, p.176" in result["matched"]
+
+
 def test_off_topic_quote_rejected(tmp_path: Path) -> None:
     _write_tool_calls(
         tmp_path,
