@@ -1,10 +1,15 @@
 """Regression tests for Gemini OCR quality filtering."""
 
+import asyncio
 from textwrap import dedent
 
+from scripts.etymology import bulk_ocr_gemini
 from scripts.etymology.bulk_ocr_gemini import (
+    GEMINI_OCR_POLICY,
+    Page,
     is_low_quality_output,
     is_repetition_hallucination,
+    run_gemini_once,
     strip_planning_preamble,
 )
 
@@ -215,6 +220,42 @@ REPETITION_SHORT_PAGE = "\n".join(
 
 def test_is_low_quality_rejects_bare_refusal():
     assert is_low_quality_output(BARE_REFUSAL) is True
+
+
+def test_run_gemini_once_uses_policy_not_deprecated_allowed_tools(monkeypatch, tmp_path):
+    captured: dict[str, object] = {}
+    copied_image = tmp_path / "copied.png"
+
+    class DummyProc:
+        returncode = 0
+
+    async def fake_create_subprocess_exec(*args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+        return DummyProc()
+
+    async def fake_communicate_with_heartbeat(proc, page, prompt_text, attempt):
+        return b"\xd1\x83\xd0\xba\xd1\x80", b""
+
+    def fake_prepare_gemini_image(page):
+        copied_image.write_bytes(b"png")
+        return copied_image
+
+    monkeypatch.setattr(bulk_ocr_gemini.asyncio, "create_subprocess_exec", fake_create_subprocess_exec)
+    monkeypatch.setattr(bulk_ocr_gemini, "communicate_with_heartbeat", fake_communicate_with_heartbeat)
+    monkeypatch.setattr(bulk_ocr_gemini, "prepare_gemini_image", fake_prepare_gemini_image)
+
+    page = Page(1, 1, tmp_path / "p0001.jp2", tmp_path / "p0001.png", tmp_path / "p0001.md")
+    returncode, stdout, stderr = asyncio.run(run_gemini_once(page, "Transcribe", "gemini-2.5-flash", 1))
+
+    args = captured["args"]
+    assert returncode == 0
+    assert stdout == b"\xd1\x83\xd0\xba\xd1\x80"
+    assert stderr == b""
+    assert "--allowed-tools" not in args
+    assert "--policy" in args
+    assert args[args.index("--policy") + 1] == str(GEMINI_OCR_POLICY)
+    assert not copied_image.exists()
 
 
 def test_is_low_quality_rejects_mixed_refusal_block():
