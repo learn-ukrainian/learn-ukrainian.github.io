@@ -93,6 +93,52 @@ If Gemini is available, send the diff for adversarial review:
 
 ---
 
+## Step 5b: Challenge round (anti-false-positive)
+
+Reviewer findings include false positives — the writer's choice was correct and the reviewer pattern-matched on a surface signal. Auto-applying every finding produces churn and sometimes regresses the diff.
+
+Send the FINDINGS LIST from Step 5 to a **different** agent (Codex, since Gemini was the reviewer) for an adversarial pass that argues *for* the writer:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
+  --task-id code-review-challenge --to-model gpt-5.5 <<'EOF'
+Below is a code diff and a list of issues raised by a reviewer agent.
+Your job: identify which findings are LIKELY FALSE POSITIVES where the
+writer's choice was correct, and which are real bugs. Be skeptical of
+the reviewer. Pattern-match on these false-positive shapes:
+
+- "missing tests" when the function is trivially a thin wrapper or pure config
+- "silent failure" when the bare except is intentional and documented inline
+- "magic number" when the number is a domain constant (HTTP status, port, etc.)
+- "dead code" when grep missed dynamic import / re-export / test fixture
+- "type hints missing" when the function is `__init__` or matches a typing.Protocol
+
+For each finding emit ONE LINE in this exact format:
+
+  KEEP <finding_id>: <one-sentence rationale>
+  DROP <finding_id>: <one-sentence why it's a false positive>
+  EVIDENCE_NEEDED <finding_id>: <what to check before deciding>
+
+Do not invent new findings. Only adjudicate the ones supplied.
+
+---DIFF---
+{paste git diff output here}
+---FINDINGS---
+{paste numbered finding list from Step 5 here}
+EOF
+```
+
+**Filter rule for Step 6 application:**
+- `KEEP` findings → apply the fix
+- `DROP` findings → skip silently (do not apply, do not surface to user unless they ask)
+- `EVIDENCE_NEEDED` findings → run the suggested check; if it confirms the bug, apply; if not, drop
+
+**If Codex is unavailable**: Skip this step. Note "Challenge round skipped (Codex unavailable)" in the report; apply Gemini's findings as-is.
+
+**Cross-model invariant**: the challenger MUST be a different model family from the reviewer (per `SELF_REVIEW_DETECTED` audit gate intent). If Gemini reviewed, Codex challenges. If Codex reviewed (rare for this skill), DeepSeek-pro challenges.
+
+---
+
 ## Step 6: Run affected tests
 
 ```bash
@@ -130,6 +176,9 @@ Output a structured report:
 
 ### Cross-agent review
 {Gemini findings or "Skipped (unavailable)"}
+
+### Challenge round
+{N findings KEPT, M findings DROPPED, K need evidence — or "Skipped (Codex unavailable)"}
 
 ### Tests
 {test results or "No matching tests found — NEEDS TESTS: {functions}"}

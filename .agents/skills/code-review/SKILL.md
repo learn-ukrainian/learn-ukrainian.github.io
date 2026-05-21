@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Review changed code for reuse, quality, and efficiency, then fix any issues found.
+description: Review changed code for reuse, quality, and efficiency with an anti-false-positive challenge round, then fix issues that survive.
 argument-hint: "[files|diff|all]"
 ---
 
