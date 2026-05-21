@@ -1,0 +1,25 @@
+{
+  "version": "2026-05-21-v1",
+  "generated_at": "2026-05-21T21:17:06+00:00",
+  "source": {
+    "content_root": "starlight/src/content/docs",
+    "manifest": "starlight/src/data/etymology-manifest.json",
+    "vesum_db": "data/vesum.db",
+    "mdx_files": [
+      "starlight/src/content/docs/a1/my-morning.mdx",
+      "starlight/src/content/docs/a1/review-clears-needs-human.mdx",
+      "starlight/src/content/docs/folk/dumy-lytsarski.mdx",
+      "starlight/src/content/docs/folk/koliadky-shchedrivky.mdx"
+    ]
+  },
+  "stats": {
+    "vocabulary_words": 59,
+    "direct_manifest_matches": 10,
+    "vesum_form_matches": 1,
+    "skipped_multiword": 2,
+    "ambiguous_or_missing": 46
+  },
+  "form_to_lemma": {
+    "повертатися": "повертати"
+  }
+}
