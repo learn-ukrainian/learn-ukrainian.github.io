@@ -1,4 +1,6 @@
-# Code Review Checklist
+# Local Code Review Checklist
+
+> **Scope**: working-tree only — uncommitted edits in your active session. For pull-request review use the official `/code-review:code-review` plugin command instead.
 
 Run every check in order. Report findings at the end. Fix anything fixable before reporting.
 
