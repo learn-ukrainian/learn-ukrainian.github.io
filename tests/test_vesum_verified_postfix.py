@@ -4,9 +4,15 @@ import yaml
 
 from scripts.build.linear_pipeline import (
     _iter_vesum_word_surfaces,
+    _looks_like_stem_fragment,
     _normalize_for_vesum,
     _vesum_gate,
 )
+
+
+def _span(text: str, token: str) -> tuple[int, int]:
+    start = text.index(token)
+    return start, start + len(token)
 
 
 def test_reflexive_verb_not_split() -> None:
@@ -43,6 +49,24 @@ def test_em_dash_splits_sentences() -> None:
     tokens = _iter_vesum_word_surfaces(text)
 
     assert tokens == ["Привіт", "як", "справи"]
+
+
+def test_looks_like_stem_fragment_accepts_markdown_stem_examples() -> None:
+    bold = '**користу**-, not "користуву-"'
+    single_asterisk = "*користу*-"
+    backtick = "`користу-`"
+
+    assert _looks_like_stem_fragment(bold, *_span(bold, "користу"))
+    assert _looks_like_stem_fragment(
+        single_asterisk,
+        *_span(single_asterisk, "користу"),
+    )
+    assert _looks_like_stem_fragment(backtick, *_span(backtick, "користу-"))
+
+
+def test_looks_like_stem_fragment_rejects_compounds_and_complete_words() -> None:
+    for text in ("темно-синій", "Івано-Франківськ", "я-форма", "користу"):
+        assert not _looks_like_stem_fragment(text, 0, len(text))
 
 
 def test_normalize_for_vesum_strips_stress_and_markdown() -> None:
@@ -88,6 +112,31 @@ def test_vesum_gate_missing_report_preserves_decorated_surface() -> None:
 
     assert gate["passed"] is False
     assert gate["missing"] == ["вмива́ю**ся**"]
+
+
+def test_vesum_gate_ignores_morphological_stem_fragments() -> None:
+    module_text = (
+        "Verbs like **користуватися** lose the suffix **-ва-** in the present "
+        'tense. The stem begins **користу**-, not "користуву-".'
+    )
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {"користуватися"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text=module_text,
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [["користуватися"]]
 
 
 def test_proper_noun_genitive_resolves() -> None:
