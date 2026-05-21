@@ -90,6 +90,19 @@ PROMPT_BY_WRITER = {
 CORRECTION_PROMPT_BY_WRITER = {
     "grok-tools": "linear-writer-correction-grok.md",
 }
+WRITER_SPECIFIC_DIRECTIVES: dict[str, str] = {
+    "agy-tools": """\
+## agy-tools writer directives
+
+These directives apply only when the selected writer is `agy-tools`.
+
+- Use `mcp_sources_*` tools directly. Do NOT issue curl-via-Bash for MCP retrieval — your native integration is wired.
+- After each MCP call, emit the verbatim TEXT field from the server's response (the markdown-text payload inside `content[0].text`). Do NOT substitute your parsed JSON view of the response — the pipeline parser expects the raw payload format.
+- If an MCP retrieval returns 0 hits or the wrong page, emit a `<!-- VERIFY: ... -->` marker in the artifact and continue. Do NOT side-investigate via `sqlite3`, codebase grep, `python` scripts, or any other path outside MCP.
+- Allowed bash: NONE except `curl` against `http://127.0.0.1:8766/mcp` as a fallback when the native integration returns an error.
+- Allowed file operations: read/write ONLY within the build worktree's `curriculum/l2-uk-en/<level>/<slug>/` directory.
+""",
+}
 REVIEWER_CHOICES = (
     "claude-tools",
     "gemini-tools",
@@ -1598,8 +1611,15 @@ def render_writer_prompt(
             knowledge_packet,
             wiki_manifest,
             implementation_map=implementation_map,
+            writer=writer,
         ),
     )
+
+
+def _writer_specific_directives(writer: str | None) -> str:
+    if not writer:
+        return ""
+    return WRITER_SPECIFIC_DIRECTIVES.get(writer, "")
 
 
 def emit_event(event: str, **fields: Any) -> None:
@@ -2602,6 +2622,7 @@ def writer_context(
     wiki_manifest: str | Mapping[str, Any] | None = None,
     *,
     implementation_map: Mapping[str, Any] | None = None,
+    writer: str | None = None,
 ) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
@@ -2626,6 +2647,7 @@ def writer_context(
         "TOPIC_TITLE": str(plan["title"]),
         "PHASE": str(plan.get("phase", "")),
         "WORD_TARGET": str(plan["word_target"]),
+        "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
         "WIKI_MANIFEST": wiki_manifest_text,

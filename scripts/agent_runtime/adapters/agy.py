@@ -14,7 +14,9 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
 - Write-capable modes use ``--dangerously-skip-permissions``. Read-only
   hangs on interactive permission prompts; callers must force
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
-- No known on-disk session or liveness file exists — stdout is canonical.
+- Print-mode stdout is the final answer only. Tool-call telemetry is stored
+  in Antigravity's per-conversation JSONL transcript, located via a unique
+  ``--log-file`` path for each invocation.
 - ``agy`` model selection is controlled by the interactive TUI and persists
   across ``agy -p`` invocations; there is no CLI model flag. The runtime
   records the caller-passed ``model`` in the JSONL audit row for
@@ -26,10 +28,9 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``GeminiAdapter`` but does not act on it today; wire ``agy plugin
   enable <name>`` once concrete MCP servers are available.
 
-Phase-2 follow-up will wire MCP plugin enablement; until then ``-tools``
-writer mode will trip ``MCP_TOOLS_NEVER_INVOKED`` if agy is selected,
-which is the expected (and informative) signal in the seminar-writer
-bakeoff.
+MCP plugin enablement is managed by agy's local configuration rather than a
+per-invocation CLI flag. The adapter accepts tool_config for API parity but
+does not mutate agy's MCP setup.
 
 Differences from the kubedojo source:
 
@@ -39,13 +40,20 @@ Differences from the kubedojo source:
 """
 from __future__ import annotations
 
+import contextlib
+import json
 import logging
 import os
 import re
 import shutil
+import tempfile
+import uuid
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 from ..result import ParseResult
+from ..tool_calls import summarize_tool_output
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -59,6 +67,15 @@ _RATE_LIMIT_PATTERNS = (
     r"daily.{0,10}limit.{0,10}exceeded",
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
+_AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
+_AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
+_AGY_CONVERSATION_RE = re.compile(
+    r"\b(?:conversation=|Created conversation\s+)(?P<id>[0-9a-fA-F-]{36})\b"
+)
+_STDOUT_MARKER_RE = re.compile(
+    r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$"
+)
+_STDOUT_RESULT_PREFIX = "⎿"
 
 
 class AgyAdapter:
@@ -107,6 +124,7 @@ class AgyAdapter:
             )
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
+        log_path = _build_log_path(task_id)
         # `--dangerously-skip-permissions` is unconditional: any tool-using
         # prompt (file read, shell call) triggers an interactive permission
         # prompt that would hang a headless dispatch waiting for human input.
@@ -114,7 +132,14 @@ class AgyAdapter:
         # parity, but agy has no finer-grained permission model than this
         # single flag. Callers (delegate.py/dispatch_smart.py) should force
         # mode=danger for --agent agy to avoid accidental routes around this.
-        cmd: list[str] = [agy_bin, "-p", prompt, "--dangerously-skip-permissions"]
+        cmd: list[str] = [
+            agy_bin,
+            "-p",
+            prompt,
+            "--dangerously-skip-permissions",
+            "--log-file",
+            str(log_path),
+        ]
 
         if session_id:
             cmd.append(f"--conversation={session_id}")
@@ -123,7 +148,6 @@ class AgyAdapter:
         # not a per-invocation CLI flag like gemini-cli. tool_config is
         # accepted for parity but not acted on yet.
         _ = tool_config
-        _ = task_id
         _ = model
 
         return InvocationPlan(
@@ -131,9 +155,9 @@ class AgyAdapter:
             cwd=cwd,
             stdin_payload="",
             output_file=None,
-            env_overrides={},
+            env_overrides={_AGY_LOG_ENV: str(log_path)},
             env_unsets=(),
-            liveness_paths=(),
+            liveness_paths=(log_path,),
         )
 
     def parse_response(
@@ -148,13 +172,11 @@ class AgyAdapter:
     ) -> ParseResult:
         """Parse ``agy -p`` output.
 
-        Stdout is the only known canonical response source. We deliberately
-        do not attempt Gemini-style session-file recovery because no
-        Antigravity on-disk session location is known yet.
+        Stdout is the canonical final response. Tool-call telemetry is parsed
+        from either optional stdout markers or Antigravity's JSONL transcript.
         """
         _ = output_file
         _ = call_start_time
-        _ = plan
 
         stdout_response = (stdout or "").strip()
         stderr_text = (stderr or "").strip()
@@ -178,6 +200,10 @@ class AgyAdapter:
         elif stderr_text:
             stderr_excerpt = stderr_text[:500]
 
+        tool_calls = _parse_transcript_tool_calls(plan)
+        if not tool_calls:
+            tool_calls = _parse_stdout_marker_tool_calls(combined)
+
         return ParseResult(
             ok=ok,
             response=response,
@@ -185,9 +211,235 @@ class AgyAdapter:
             rate_limited=rate_limited,
             session_id=None,
             tokens=None,
+            tool_calls=tool_calls,
         )
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
-        """Agy has no known on-disk liveness signal; stdout is canonical."""
-        _ = plan
-        return ()
+        """Agy writes a per-invocation log that advances during print mode."""
+        return tuple(plan.liveness_paths)
+
+    def cleanup_invocation(self, plan: InvocationPlan) -> None:
+        """Remove the per-invocation log file after ``parse_response`` reads it."""
+        raw_path = plan.env_overrides.get(_AGY_LOG_ENV)
+        if not raw_path:
+            return
+        path = Path(raw_path)
+        if not _is_temp_path(path):
+            return
+        with contextlib.suppress(FileNotFoundError):
+            path.unlink()
+
+
+def _build_log_path(task_id: str | None) -> Path:
+    safe_task = re.sub(r"[^A-Za-z0-9_.-]+", "-", task_id or "call").strip("-")
+    if not safe_task:
+        safe_task = "call"
+    return (
+        Path(tempfile.gettempdir())
+        / f"agy-runtime-{safe_task[:48]}-{os.getpid()}-{uuid.uuid4().hex[:12]}.log"
+    )
+
+
+def _is_temp_path(path: Path) -> bool:
+    try:
+        return str(path).startswith(str(Path(tempfile.gettempdir())) + "/")
+    except Exception:
+        return str(path).startswith(("/tmp/", "/private/tmp/"))
+
+
+def _parse_stdout_marker_tool_calls(text: str) -> list[dict[str, Any]]:
+    """Parse optional agy ``● ...`` / ``⎿ ...`` MCP markers.
+
+    The 2026-05-21 live print-mode probe did not expose these on stdout, but
+    earlier agy captures suggested this shape may appear in other modes. Keep
+    the parser narrow: only synthesize telemetry for ``mcp_sources_*`` calls.
+    """
+    calls: list[dict[str, Any]] = []
+    lines = text.splitlines()
+    index = 0
+    while index < len(lines):
+        match = _STDOUT_MARKER_RE.match(lines[index])
+        if not match:
+            index += 1
+            continue
+
+        tool = match.group("tool")
+        args = _coerce_args(match.group("args"))
+        index += 1
+
+        result_lines: list[str] = []
+        while index < len(lines):
+            line = lines[index]
+            if _STDOUT_MARKER_RE.match(line):
+                break
+            if not result_lines and line.lstrip().startswith(_STDOUT_RESULT_PREFIX):
+                result_lines.append(line.split(_STDOUT_RESULT_PREFIX, 1)[1].strip())
+                index += 1
+                continue
+            if result_lines and not line.strip():
+                break
+            if result_lines:
+                result_lines.append(line)
+            index += 1
+
+        result_text = "\n".join(result_lines).strip()
+        calls.append(_build_tool_call(tool, args, result_text))
+    return calls
+
+
+def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, Any]]:
+    transcript_path = _transcript_path_from_plan(plan)
+    if transcript_path is None or not transcript_path.exists():
+        return []
+
+    calls: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    try:
+        lines = transcript_path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+
+    for raw_line in lines:
+        if not raw_line.strip():
+            continue
+        try:
+            event = json.loads(raw_line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):
+            continue
+
+        pending.extend(_extract_transcript_tool_calls(event))
+
+        if event.get("type") != "MCP_TOOL" or not pending:
+            continue
+        call = pending.pop(0)
+        result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
+        result = [{"type": "text", "text": result_text}]
+        call["output_summary"] = summarize_tool_output(result)
+        call["result"] = result
+        calls.append(call)
+
+    # Preserve telemetry for calls whose result event did not make it to disk.
+    calls.extend(pending)
+    return calls
+
+
+def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
+    if plan is None:
+        return None
+    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
+    if not log_file:
+        return None
+    conversation_id = _conversation_id_from_log(Path(log_file))
+    if not conversation_id:
+        return None
+    app_data = Path(
+        plan.env_overrides.get(
+            _AGY_APP_DATA_ENV,
+            str(Path.home() / ".gemini" / "antigravity-cli"),
+        )
+    )
+    return (
+        app_data
+        / "brain"
+        / conversation_id
+        / ".system_generated"
+        / "logs"
+        / "transcript.jsonl"
+    )
+
+
+def _conversation_id_from_log(log_file: Path) -> str | None:
+    latest: str | None = None
+    try:
+        with log_file.open(encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                match = _AGY_CONVERSATION_RE.search(line)
+                if match:
+                    latest = match.group("id")
+    except OSError:
+        return None
+    return latest
+
+
+def _extract_transcript_tool_calls(event: Mapping[str, Any]) -> list[dict[str, Any]]:
+    raw_calls = event.get("tool_calls")
+    if not isinstance(raw_calls, list):
+        return []
+
+    calls: list[dict[str, Any]] = []
+    for raw_call in raw_calls:
+        if not isinstance(raw_call, Mapping):
+            continue
+        if raw_call.get("name") != "call_mcp_tool":
+            continue
+        raw_args = raw_call.get("args")
+        if not isinstance(raw_args, Mapping):
+            continue
+
+        server = _decode_jsonish(raw_args.get("ServerName"))
+        tool_name = _decode_jsonish(raw_args.get("ToolName"))
+        if server != "sources" or not isinstance(tool_name, str) or not tool_name:
+            continue
+
+        args = _coerce_args(raw_args.get("Arguments"))
+        calls.append(
+            {
+                "name": f"mcp__sources__{tool_name}",
+                "arguments": args,
+                "output_summary": "",
+                "timestamp": str(event.get("created_at") or ""),
+            }
+        )
+    return calls
+
+
+def _build_tool_call(tool_name: str, args: dict[str, Any], result_text: str) -> dict[str, Any]:
+    canonical_name = tool_name
+    if canonical_name.startswith("mcp_sources_"):
+        canonical_name = "mcp__sources__" + canonical_name.removeprefix("mcp_sources_")
+    result = [{"type": "text", "text": result_text}] if result_text else None
+    call: dict[str, Any] = {
+        "name": canonical_name,
+        "arguments": args,
+        "output_summary": summarize_tool_output(result),
+        "timestamp": "",
+    }
+    if result is not None:
+        call["result"] = result
+    return call
+
+
+def _coerce_args(value: Any) -> dict[str, Any]:
+    decoded = _decode_jsonish(value)
+    if isinstance(decoded, Mapping):
+        return {str(key): nested for key, nested in decoded.items()}
+    if decoded in (None, ""):
+        return {}
+    return {"_raw": summarize_tool_output(decoded)}
+
+
+def _decode_jsonish(value: Any) -> Any:
+    if not isinstance(value, str):
+        return value
+    stripped = value.strip()
+    if not stripped:
+        return ""
+    try:
+        return json.loads(stripped)
+    except json.JSONDecodeError:
+        return stripped.strip('"')
+
+
+def _strip_agy_task_metadata(content: str) -> str:
+    lines = content.splitlines()
+    if (
+        len(lines) >= 2
+        and lines[0].startswith("Created At:")
+        and lines[1].startswith("Completed At:")
+    ):
+        lines = lines[2:]
+        if lines and not lines[0].strip():
+            lines = lines[1:]
+    return "\n".join(lines).strip()
