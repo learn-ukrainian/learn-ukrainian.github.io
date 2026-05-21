@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<document xmlns="http://www.abbyy.com/FineReader_xml/FineReader10-schema-v1.xml">
+  <page width="4961" height="7017" resolution="600">
+    <block blockType="Text" l="500" t="500" r="900" b="650">
+      <text>
+        <par>
+          <line l="520" t="520" r="880" b="610">
+            <formatting ff="Default Metrics Font" fs="11">
+              <charParams l="520" t="520" r="540" b="610">абетка</charParams>
+            </formatting>
+          </line>
+        </par>
+      </text>
+    </block>
+    <block blockType="Text" l="600" t="1000" r="2500" b="6200">
+      <text>
+        <par startIndent="1900">
+          <line l="760" t="1000" r="2400" b="1100">
+            <formatting bold="1" ff="Default Metrics Font" fs="11.5">
+              <charParams l="760" t="1000" r="780" b="1100">а</charParams>
+            </formatting>
+            <formatting ff="Default Metrics Font" fs="7">
+              <charParams l="782" t="1000" r="790" b="1100">1</charParams>
+            </formatting>
+            <formatting ff="Default Metrics Font" fs="11.5">
+              <charParams l="792" t="1000" r="1300" b="1100"> (сполучник); — псл. а; споріднене з дінд. а, лат. at¬</charParams>
+            </formatting>
+          </line>
+          <line l="640" t="1110" r="2400" b="1210">
+            <formatting ff="Default Metrics Font" fs="11.5">
+              <charParams l="640" t="1110" r="2400" b="1210">que; довга тестова фраза для повного запису.</charParams>
+            </formatting>
+          </line>
+        </par>
+        <par>
+          <line l="640" t="1220" r="2400" b="1320">
+            <formatting ff="Default Metrics Font" fs="11.5">
+              <charParams l="640" t="1220" r="2400" b="1320">Продовження тієї самої статті з додатковим посиланням; — див. і.</charParams>
+            </formatting>
+          </line>
+        </par>
+        <par startIndent="1900">
+          <line l="760" t="1500" r="2400" b="1600">
+            <formatting ff="Default Metrics Font" fs="11.5">
+              <charParams l="760" t="1500" r="2400" b="1600">абетка, абетний; — власне українська назва азбуки, утворена від а і бе; текст достатньої довжини.</charParams>
+            </formatting>
+          </line>
+        </par>
+      </text>
+    </block>
+    <block blockType="Text" l="4400" t="6400" r="4520" b="6500">
+      <text>
+        <par>
+          <line l="4420" t="6400" r="4500" b="6500">
+            <formatting ff="Default Metrics Font" fs="11">
+              <charParams l="4420" t="6400" r="4500" b="6500">1</charParams>
+            </formatting>
+          </line>
+        </par>
+      </text>
+    </block>
+  </page>
+  <page width="4961" height="7017" resolution="600">
+    <block blockType="Text" l="600" t="1000" r="2500" b="6200">
+      <text>
+        <par hasOverflowedHead="1">
+          <line l="640" t="1000" r="2400" b="1100">
+            <formatting ff="Default Metrics Font" fs="11.5">
+              <charParams l="640" t="1000" r="2400" b="1100">Цей хвіст не починає нової статті, бо він overflow head.</charParams>
+            </formatting>
+          </line>
+        </par>
+        <par startIndent="1900">
+          <line l="760" t="1300" r="2400" b="1400">
+            <formatting ff="Default Metrics Font" fs="11.5">
+              <charParams l="760" t="1300" r="2400" b="1400">[абе] (вигук відрази);— складне слово, утворене з вигуків а2 і бе2 (див.).</charParams>
+            </formatting>
+          </line>
+        </par>
+      </text>
+    </block>
+  </page>
+</document>
