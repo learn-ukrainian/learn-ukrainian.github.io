@@ -14,7 +14,7 @@
   --co-gold: #FFD700;
   --co-gold-dark: #D4AF37;
   --co-gold-light: #FFE57F;
-  
+
   /* Neutrals */
   --co-white: #FFFFFF;
   --co-gray-50: #FAFBFC;
@@ -24,7 +24,7 @@
   --co-gray-600: #5F6368;
   --co-gray-800: #3C4043;
   --co-gray-900: #202124;
-  
+
   /* Semantic colors */
   --co-success: #34A853;
   --co-success-bg: rgba(52, 168, 83, 0.1);
@@ -32,7 +32,7 @@
   --co-error-bg: rgba(234, 67, 53, 0.1);
   --co-warning: #FBBC04;
   --co-info: #4285F4;
-  
+
   /* ── Infima / Docusaurus compatibility shim ──────────────────────────────
    * Starlight does not define --ifm-* variables. Activities.module.css and
    * other migrated components depend on these. Define them here so the
@@ -69,22 +69,22 @@
   --ifm-color-primary-light: #0061c9;
   --ifm-color-primary-lighter: #0066d3;
   --ifm-color-primary-lightest: #1A73E8;
-  
+
   --ifm-font-family-base: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --ifm-heading-font-family: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --ifm-font-size-base: 16px;
   --ifm-line-height-base: 1.6;
-  
+
   --ifm-code-font-size: 90%;
   --ifm-heading-font-weight: 700;
   --ifm-h1-font-size: 2.5rem;
   --ifm-h2-font-size: 1.75rem;
-  
+
   --ifm-border-radius: 12px;
   --ifm-global-shadow-lw: 0 2px 8px rgba(0, 0, 0, 0.08);
   --ifm-global-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
   --ifm-global-shadow-tl: 0 8px 32px rgba(0, 0, 0, 0.16);
-  
+
   --docusaurus-highlighted-code-line-bg: rgba(0, 87, 183, 0.1);
 }
 
@@ -116,7 +116,7 @@
   --co-gray-600: #9CA3AF;
   --co-gray-800: #E5E7EB;
   --co-gray-900: #F9FAFB;
-  
+
   --ifm-color-primary: #5B9BD5;
   --ifm-color-primary-dark: #4690d0;
   --ifm-color-primary-darker: #3b88cd;
@@ -124,10 +124,10 @@
   --ifm-color-primary-light: #70a6da;
   --ifm-color-primary-lighter: #7baedc;
   --ifm-color-primary-lightest: #9fc4e6;
-  
+
   --ifm-background-color: #0f0f1a;
   --ifm-background-surface-color: #1a1a2e;
-  
+
   --docusaurus-highlighted-code-line-bg: rgba(91, 155, 213, 0.2);
 }
 
@@ -331,6 +331,20 @@ a {
   border-bottom: none;
 }
 
+.theme-doc-markdown .vocab-etymology-link,
+.sl-markdown-content .vocab-etymology-link {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.theme-doc-markdown .vocab-etymology-link:hover,
+.sl-markdown-content .vocab-etymology-link:hover {
+  color: var(--co-blue-bright);
+}
+
 /* ============= ADMONITIONS / ALERTS ============= */
 .alert {
   border-radius: 12px;
@@ -520,7 +534,7 @@ code {
   .theme-doc-markdown h1 {
     font-size: 2rem;
   }
-  
+
   .theme-doc-markdown h2 {
     font-size: 1.5rem;
   }

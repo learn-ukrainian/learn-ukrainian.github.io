@@ -5,6 +5,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import starlightDocSearch from '@astrojs/starlight-docsearch';
 import rehypeMermaid from 'rehype-mermaid';
+import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 
 
 // https://astro.build/config
@@ -15,6 +16,7 @@ export default defineConfig({
   compressHTML: true,
 
   markdown: {
+    remarkPlugins: [vocabEtymologyLinker],
     rehypePlugins: [rehypeMermaid],
   },
 
