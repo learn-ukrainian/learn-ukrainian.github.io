@@ -68,7 +68,17 @@ Vol5 +47% is **real new coverage** of entries the deployed djvutxt parser missed
 
 ## Open follow-up
 
-#2183 — vol4 + vol5 text-pdf parser noise: ~20% of sampled results contain backmatter (colophon: `видавництво`, `виготовлено`, `НВП`, `ТОВ`) or bibliography blocks (citation lists like `СУМ 9, 763; Бупр. Ш 222; Фасмер Ш 776`) extracted as if they were lemma entries. The relaxed entry-start heuristic in `--source-format text-pdf` (min-length 5 chars, no punctuation requirement on cross-references) catches legit short entries vols 1/2/3/6's ABBYY structure recovered explicitly, but it also catches structural artifacts. Vols 1/2/3/6 are clean on spot-check.
+- **#2183** — text-pdf parser noise across all 6 vols (~20% of sampled results contain backmatter colophon, bibliography blocks, or single-character OCR artifacts extracted as if they were lemma entries). The relaxed entry-start heuristic in `--source-format text-pdf` (min-length 5 chars, no punctuation requirement on cross-references) catches legit short entries but also structural artifacts. Vols 1, 2, 4 are cleanest; vols 3, 5, 6 carry the most noise.
+- **#2186** — residual Latin-transliteration OCR damage on cognate forms (e.g., `п.: зіегдгізку` for `sierdzisty`, `ч.: 5гбей` for `srdce`). This was the *other half* of #2001 that the pivot did NOT fix — text.pdf is OCR-derived and shares the same character-level confusion errors as the deployed djvutxt. The pivot fixed wrong-page hallucination and parser over-extraction; the character-level damage on Latin glyphs in dense Cyrillic-Latin typography is upstream of our ingestion pipeline. Possible mitigations (sanitizer table, vision-LLM with semantic-diff gating, publisher source) outlined in the issue.
+
+## Decision: text-pdf only (2026-05-21 PM)
+
+After spot-checking text-pdf output for vols 1, 2, 3, 6 (the ones ABBYY originally covered), text-pdf was selected as the single corpus source for all 6 vols. Trade-offs documented in commit `be4c86e00b`:
+- text-pdf catches **+5,715 entries** (+19.3%) vs the ABBYY hybrid.
+- text-pdf preserves homonym numbers cleanly (`а1, а2, у1, у2, чвир1, чвир2`); ABBYY collapsed them.
+- Noise rate is comparable across both pipelines.
+- One parser path instead of two — simpler maintenance.
+- ABBYY parser code (`scripts/ingest/esum_abbyy_parser.py`) stays in the repo as a fallback option; the 1.9 GB of ABBYY XML files was removed (re-downloadable from IA if needed).
 
 ## Prevention
 
