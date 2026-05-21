@@ -2238,7 +2238,19 @@ def create_http_app():
                 async with anyio.create_task_group() as tg:
                     tg.start_soon(run_streamable_http_server)
                     await http_transport.handle_request(scope, receive, send)
-                    await http_transport.terminate()
+                    # NOTE (2026-05-21): do NOT call `await http_transport.terminate()` here.
+                    # In mcp==1.26.0 the StreamableHTTPServerTransport.terminate() path
+                    # can emit an additional `http.response.start` frame against the
+                    # already-finalized ASGI response, raising
+                    #     RuntimeError: Expected ASGI message 'http.response.body',
+                    #         but got 'http.response.start'.
+                    # The bug is intermittent (depends on which client and which tool
+                    # path completed first) but reproducible against the production
+                    # server — see logs/mcp-sources.log entries showing the h11_impl
+                    # send() failure following our terminate() call. The
+                    # `async with http_transport.connect()` block cleans up the
+                    # read/write streams on exit, and `tg.cancel_scope.cancel()`
+                    # tears down the in-flight server task — no leak.
                     tg.cancel_scope.cancel()
 
     app = Starlette(

@@ -95,6 +95,60 @@ def test_streamable_http_tools_list_contains_verify_words(sources_http_url):
     assert "verify_words" in tool_names
 
 
+def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
+    """Sanity check: a real `tools/call` against the streamable-HTTP endpoint
+    returns a valid MCP response. This is the path that historically suffered
+    from an ASGI-message-order RuntimeError when the endpoint awaited the
+    transport's terminate() after handle_request() — see the NOTE in
+    .mcp/servers/sources/server.py near StreamableHTTPEndpoint. The bug was
+    intermittent and tied to specific client/timing conditions, so this test
+    doesn't try to guarantee error-log silence; it just guards that a
+    well-formed tool call still produces a valid response shape end-to-end.
+    """
+    init_response = httpx.post(
+        f"{sources_http_url}/mcp",
+        json={
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2025-06-18",
+                "capabilities": {},
+                "clientInfo": {"name": "test", "version": "1.0"},
+            },
+        },
+        timeout=5,
+    )
+    assert init_response.status_code == 200
+
+    response = httpx.post(
+        f"{sources_http_url}/mcp",
+        json={
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "verify_word",
+                "arguments": {"word": "стіл"},
+            },
+        },
+        timeout=10,
+    )
+
+    assert response.status_code == 200, f"tool call returned {response.status_code}"
+    body = response.json()
+    assert body["jsonrpc"] == "2.0"
+    assert body["id"] == 2
+    assert "result" in body, f"tool call missing result: {body}"
+    # `verify_word` should surface VESUM tags for a real Ukrainian noun.
+    content = body["result"].get("content", [])
+    assert content, f"verify_word returned empty content: {body}"
+    text_blob = content[0].get("text", "")
+    assert "v_naz" in text_blob or "lemma" in text_blob, (
+        f"verify_word response missing expected VESUM markers: {text_blob[:200]}"
+    )
+
+
 def test_legacy_sse_endpoint_still_emits_message_endpoint(sources_http_url):
     text = ""
     timeout = httpx.Timeout(2.0, connect=2.0, read=2.0, write=2.0, pool=2.0)
