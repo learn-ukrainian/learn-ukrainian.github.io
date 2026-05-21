@@ -213,6 +213,8 @@ If this audit line is missing, or if `remaining > 0`, the writer has failed the 
 
    **Step B — fetch the verbatim text.** Once you have the matching chunk_id (e.g. `4-klas-ukrmova-zaharijchuk_s0162`), call `mcp__sources__get_chunk_context(chunk_id="4-klas-ukrmova-zaharijchuk_s0162")` (or pass the chunk_id positionally as documented in the tool's signature). Then copy-paste ≥30 contiguous words from THAT chunk's returned `text` into a blockquote in `module.md`, preserving punctuation and Cyrillic letter forms exactly. Paraphrasing, composing from memory, fusing snippets from multiple chunks, summarizing, "improving" punctuation, or substituting equivalent phrases is a hard fail — take a contiguous block verbatim.
 
+   **MANDATORY WORD-COUNT SELF-CHECK (≥30 words).** Before emitting each textbook blockquote, count the Ukrainian word tokens you pasted. The `textbook_grounding` gate runs `long_blockquotes_checked` against a HARD floor of 30 contiguous words — fewer than 30 produces a HARD REJECT even when retrieval + attribution were perfect. Observed failure mode (DeepSeek-pro build #3, a1/my-morning, 2026-05-21): writer pasted *"Уранці Євген устав із ліжка САМ. ... Після сніданку САМ помив посуд."* (24 words, correctly attributed to Захарійчук Grade 1 p.52) and the gate still rejected. If your draft block hits a comma at word ~24 and stops, KEEP READING the chunk body and KEEP COPYING the next sentence until your contiguous span passes 30 words. Trim trailing partial sentences only AFTER you've cleared the floor. The retry path is expensive — get it right on the first emit.
+
    **EXCEPTION — pedagogical syllable hyphens depend on module topic.** Per §2 above (Markup conventions → Textbook syllable-break notation), syllable hyphens (`за-пи-са-ний`, `мо-ло-ко`) are pedagogical content in syllable-teaching modules (склади) and display typography elsewhere. KEEP them when the module teaches syllabification; STRIP them otherwise. All other punctuation, capitalization, and letter forms remain exact. The textbook_grounding matcher normalizes syllable hyphens symmetrically on both sides — a stripped quote still matches a hyphenated chunk and vice versa. Note the decision in `<plan_reasoning>` per §2.
 
    **Citation line format (mandatory; `citations_resolve` enforces it).** Immediately below the blockquote add `*— <Author>, Grade <N>, p.<PAGE>*` using the **exact** strings from the plan_references entry (e.g. `*— Захарійчук, Grade 4, p.162*`). Do NOT add the textbook title ("Українська мова") — that breaks the matcher because the plan_references format is `<Author> Grade <N>, p.<PAGE>` and the matcher requires that exact shape.
@@ -554,6 +556,44 @@ Workbook allowed: {WORKBOOK_ALLOWED_TYPES}
 Activity count target: {ACTIVITY_COUNT_TARGET}
 
 Vocabulary count target: {VOCAB_COUNT_TARGET}
+
+## Inline activity cross-references in module.md (mandatory)
+
+**Every activity emitted in `activities.yaml` MUST be inline-referenced in
+`module.md`** via an exact-format HTML comment marker:
+
+```
+<!-- INJECT_ACTIVITY: act-1 -->
+```
+
+The pipeline parses these markers (`<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->`)
+and the `inject_activity_ids` gate enforces bidirectional consistency:
+
+- **`unused_activities_not_injected`** — an `id` in `activities.yaml` with no
+  matching `<!-- INJECT_ACTIVITY: ... -->` marker anywhere in `module.md`.
+  HARD REJECT. Observed failure mode (DeepSeek-pro build #3, 2026-05-21):
+  writer emitted clean `activities.yaml` with `act-1..act-4` but referenced
+  none of them inline in `module.md` prose.
+- **`missing_activity_ids`** — an `<!-- INJECT_ACTIVITY: act-X -->` marker
+  pointing to an `id` that doesn't exist in `activities.yaml`. HARD REJECT.
+
+**Placement rule:** put the marker in the section whose pedagogical topic the
+activity practices — e.g. the marker for an `act-2` quiz on Genitive endings
+goes inside the prose that introduces the Genitive paradigm, NOT in the
+Підсумок (summary) tab. Place each marker on its own line for readability,
+flanked by blank lines:
+
+```
+…паттерн закінчень -а / -я для іменників чоловічого роду.
+
+<!-- INJECT_ACTIVITY: act-2 -->
+
+Спробуй вправу нижче, щоб перевірити твоє розуміння цих закінчень.
+```
+
+The marker is an HTML comment so it's invisible in rendered MDX — its only
+purpose is the gate. Do not wrap it in backticks, do not put it inside a
+JSX prop, do not nest it inside another fence.
 
 ## Activity Authoring Fields (mandatory)
 
