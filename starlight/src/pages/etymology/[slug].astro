@@ -275,35 +275,35 @@ function renderEtymologyBody(rawText: string): string {
       <strong>Том {props.entry.vol}, с. {props.entry.page}</strong> • Етимологічний словник української мови (ЕСУМ)
     </p>
 
-    <h2>Когнати</h2>
-    {Object.keys(props.entry.cognate_forms).length > 0 ? (
-      <table class="esum-cognates">
-        <thead>
-          <tr>
-            <th>Мова</th>
-            <th>Форма</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(props.entry.cognate_forms)
-            .sort(([a], [b]) => a.localeCompare(b))
-            .map(([marker, form]) => {
-              const recovered = props.entry.cognate_forms_recovered?.[marker];
-              const hasRecovered = recovered && recovered !== form;
-              return (
-                <tr>
-                  <td>{MARKER_LABELS[marker] ?? marker} <span class="esum-marker">({marker})</span></td>
-                  <td>
-                    <span>{form}</span>
-                    {hasRecovered && <span class="esum-recovered">→ {recovered}</span>}
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
-    ) : (
-      <p class="esum-muted"><em>Структурованих форм когнатів для цієї статті не вилучено.</em></p>
+    {Object.keys(props.entry.cognate_forms).length > 0 && (
+      <>
+        <h2>Когнати</h2>
+        <table class="esum-cognates">
+          <thead>
+            <tr>
+              <th>Мова</th>
+              <th>Форма</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(props.entry.cognate_forms)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([marker, form]) => {
+                const recovered = props.entry.cognate_forms_recovered?.[marker];
+                const hasRecovered = recovered && recovered !== form;
+                return (
+                  <tr>
+                    <td>{MARKER_LABELS[marker] ?? marker} <span class="esum-marker">({marker})</span></td>
+                    <td>
+                      <span>{form}</span>
+                      {hasRecovered && <span class="esum-recovered">→ {recovered}</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </>
     )}
 
     {props.entry.proto_form && (
