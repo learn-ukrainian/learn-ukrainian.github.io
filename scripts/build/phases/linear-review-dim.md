@@ -10,6 +10,40 @@ content. Return a machine-readable mapping with `score`, `evidence`, and
 
 Assigned dimension: {DIM}
 
+## Scope — JUDGMENT ONLY, do NOT re-litigate deterministic gates
+
+Deterministic gates already ran before you. Treat their verdicts as ground
+truth and do not score them again. The deterministic floor includes
+(non-exhaustive): word counts, plan adherence, vesum_verified vocabulary
+coverage, textbook grounding, immersion ratios, AI-slop patterns, activity
+schema + types + props, formatting standards, `forbidden_words`
+(SEVERE_RUSSIANISMS hard list), and `engagement_floor` (callout minimums +
+META_NARRATION zero-tolerance ban).
+
+Your job in this LLM dim is the residual judgment that regex cannot make.
+For `{DIM}` specifically:
+
+- `engagement`: does the prose actually *hold attention*? The gate already
+  confirmed callout count + META_NARRATION absence; you assess whether the
+  callouts carry real pedagogy vs filler, whether the tone is warm vs
+  bureaucratic, whether direct-address phrases (e.g. `Notice the soft sign
+  in **писатися**`) are content-anchored vs generic, whether dialogue feels
+  human vs robotic. Score the *quality* of engagement, not its presence —
+  presence is the gate's job.
+- `pedagogical`: does the sequencing actually teach? Are examples
+  illuminating? Does each concept earn the next? The gate confirmed word
+  budgets and section presence; you assess whether the pedagogy *works*.
+- `naturalness`: does Ukrainian read as native? The gate confirmed VESUM +
+  russianism shadow; you assess flow, register, idiom.
+- `decolonization`: is the framing Ukrainian-centered? The gate confirmed
+  forbidden_words; you assess whether the lesson teaches Ukrainian on its
+  own terms vs as "like Russian but...".
+- `tone`: is the teacher's voice consistent and warm? The gate caught
+  META_NARRATION; you assess everything else about register.
+
+A dim score that re-states what a deterministic gate already enforced is a
+reviewer-protocol failure. Cite something the gate cannot see.
+
 ## Reasoning checklist (do this BEFORE scoring — #1673)
 
 Before producing the JSON response, reason through this dimension explicitly.
@@ -23,10 +57,11 @@ trace to verbatim quotes from the content is invalid by definition.
    actually appear in `module.md`, `activities.yaml`, `vocabulary.yaml`, or
    `resources.yaml`. Do not invent. Do not paraphrase. Do not summarize.
 
-2. **For each quote, state how it maps to the rubric for `{DIM}`.** Is this
-   quote evidence FOR the dimension being satisfied, or evidence AGAINST?
-   Which specific rubric criterion does it touch? A quote that is irrelevant
-   to the rubric is not evidence — find a different one.
+2. **For each quote, state how it maps to the residual-judgment rubric for
+   `{DIM}`** (see scope section above; deterministic checks already ran).
+   Is this quote evidence FOR the dimension being satisfied, or evidence
+   AGAINST? A quote that just confirms a deterministic-gate criterion is
+   not residual evidence — find a different one.
 
 3. **Aggregate the score on the 1-10 scale.** Strongest evidence weighs more
    than weakest. What does the balance tell you? Round to 1 decimal place.
