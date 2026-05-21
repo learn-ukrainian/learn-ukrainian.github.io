@@ -1,0 +1,962 @@
+[
+  {
+    "page": "vol1/p0045",
+    "pipeline": "tesseract",
+    "char_acc": 0.12,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol1/p0045",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol1/p0045",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.98,
+    "semantic_acc": 0.98,
+    "hallucination_flags": 0,
+    "quirks": "High-fidelity line OCR; keeps page breaks and dense citations."
+  },
+  {
+    "page": "vol1/p0045",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol1/p0207",
+    "pipeline": "tesseract",
+    "char_acc": 0.28,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol1/p0207",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.12,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol1/p0207",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.98,
+    "semantic_acc": 0.98,
+    "hallucination_flags": 0,
+    "quirks": "High-fidelity line OCR; keeps page breaks and dense citations."
+  },
+  {
+    "page": "vol1/p0207",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol1/p0335",
+    "pipeline": "tesseract",
+    "char_acc": 0.32,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol1/p0335",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.8,
+    "semantic_acc": 0.9,
+    "hallucination_flags": 0,
+    "quirks": "Readable Markdown transcription; some normalization."
+  },
+  {
+    "page": "vol1/p0335",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.98,
+    "semantic_acc": 0.98,
+    "hallucination_flags": 0,
+    "quirks": "High-fidelity line OCR; keeps page breaks and dense citations."
+  },
+  {
+    "page": "vol1/p0335",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol1/p0465",
+    "pipeline": "tesseract",
+    "char_acc": 0.28,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol1/p0465",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.3,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol1/p0465",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.98,
+    "semantic_acc": 0.98,
+    "hallucination_flags": 0,
+    "quirks": "High-fidelity line OCR; keeps page breaks and dense citations."
+  },
+  {
+    "page": "vol1/p0465",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol1/p0571",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol1/p0571",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.08,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol1/p0571",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol1/p0571",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol2/p0070",
+    "pipeline": "tesseract",
+    "char_acc": 0.76,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol2/p0070",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.16,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol2/p0070",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol2/p0070",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol2/p0193",
+    "pipeline": "tesseract",
+    "char_acc": 0.72,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol2/p0193",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol2/p0193",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol2/p0193",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol2/p0341",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol2/p0341",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.08,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol2/p0341",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol2/p0341",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol2/p0416",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol2/p0416",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.08,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol2/p0416",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol2/p0416",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol2/p0556",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol2/p0556",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.16,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol2/p0556",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol2/p0556",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol3/p0045",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol3/p0045",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.28,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol3/p0045",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol3/p0045",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol3/p0168",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol3/p0168",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.08,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol3/p0168",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol3/p0168",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol3/p0302",
+    "pipeline": "tesseract",
+    "char_acc": 0.54,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol3/p0302",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.18,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol3/p0302",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol3/p0302",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol3/p0381",
+    "pipeline": "tesseract",
+    "char_acc": 0.56,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol3/p0381",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol3/p0381",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol3/p0381",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol3/p0522",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol3/p0522",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.12,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 4,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol3/p0522",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol3/p0522",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol4/p0128",
+    "pipeline": "tesseract",
+    "char_acc": 0.74,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol4/p0128",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.06,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol4/p0128",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol4/p0128",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol4/p0215",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol4/p0215",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.14,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol4/p0215",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol4/p0215",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol4/p0278",
+    "pipeline": "tesseract",
+    "char_acc": 0.56,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol4/p0278",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol4/p0278",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol4/p0278",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol4/p0434",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol4/p0434",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol4/p0434",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol4/p0434",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol4/p0623",
+    "pipeline": "tesseract",
+    "char_acc": 0.82,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol4/p0623",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol4/p0623",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol4/p0623",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol5/p0017",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol5/p0017",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.04,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol5/p0017",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol5/p0017",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol5/p0152",
+    "pipeline": "tesseract",
+    "char_acc": 0.92,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol5/p0152",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.04,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol5/p0152",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol5/p0152",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol5/p0408",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol5/p0408",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.12,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol5/p0408",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol5/p0408",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol5/p0563",
+    "pipeline": "tesseract",
+    "char_acc": 0.92,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol5/p0563",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol5/p0563",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol5/p0563",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol5/p0699",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol5/p0699",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol5/p0699",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol5/p0699",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol6/p0004",
+    "pipeline": "tesseract",
+    "char_acc": 0.18,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol6/p0004",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.16,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol6/p0004",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol6/p0004",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol6/p0028",
+    "pipeline": "tesseract",
+    "char_acc": 0.48,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol6/p0028",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol6/p0028",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol6/p0028",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol6/p0057",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol6/p0057",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.1,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol6/p0057",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol6/p0057",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol6/p0077",
+    "pipeline": "tesseract",
+    "char_acc": 0.76,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Visible OCR noise in Latin/Greek/citation text; content still aligned."
+  },
+  {
+    "page": "vol6/p0077",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.12,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 3,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol6/p0077",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol6/p0077",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  },
+  {
+    "page": "vol6/p0090",
+    "pipeline": "tesseract",
+    "char_acc": 0.94,
+    "semantic_acc": 0.92,
+    "hallucination_flags": 0,
+    "quirks": "Aligned with scan, but retains Tesseract glyph noise."
+  },
+  {
+    "page": "vol6/p0090",
+    "pipeline": "gemini-2.5",
+    "char_acc": 0.16,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 2,
+    "quirks": "Clean-looking but divergent from scan/Tesseract; hallucination suspected."
+  },
+  {
+    "page": "vol6/p0090",
+    "pipeline": "gemini-3.5-agy",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 1,
+    "quirks": "No output available."
+  },
+  {
+    "page": "vol6/p0090",
+    "pipeline": "pdf-text-layer",
+    "char_acc": 0.0,
+    "semantic_acc": 0.0,
+    "hallucination_flags": 0,
+    "quirks": "No ESUM PDF text layer found in repo."
+  }
+]

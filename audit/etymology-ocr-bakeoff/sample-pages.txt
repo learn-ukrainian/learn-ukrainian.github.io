@@ -1,0 +1,38 @@
+# ESUM OCR bake-off sample pages
+
+Seed: 20260521
+Sampling frame: dictionary-content JP2 pages that also have current Gemini-2.5 output, excluding quarantined pages.
+Note: vol6 Gemini-2.5 coverage currently extends only through p0090, so vol6 strata are within that available subset.
+
+| vol | physical page | stratum | jp2 | gemini-2.5 |
+| --- | ---: | ---: | --- | --- |
+| 1 | p0045 | 1 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 1 (А - Г)_jp2/tom 1 (А - Г)_0045.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol1/p0045.md` |
+| 1 | p0207 | 2 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 1 (А - Г)_jp2/tom 1 (А - Г)_0207.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol1/p0207.md` |
+| 1 | p0335 | 3 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 1 (А - Г)_jp2/tom 1 (А - Г)_0335.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol1/p0335.md` |
+| 1 | p0465 | 4 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 1 (А - Г)_jp2/tom 1 (А - Г)_0465.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol1/p0465.md` |
+| 1 | p0571 | 5 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 1 (А - Г)_jp2/tom 1 (А - Г)_0571.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol1/p0571.md` |
+| 2 | p0070 | 1 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 2  (Д - Копці)_jp2/tom 2  (Д - Копці)_0070.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol2/p0070.md` |
+| 2 | p0193 | 2 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 2  (Д - Копці)_jp2/tom 2  (Д - Копці)_0193.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol2/p0193.md` |
+| 2 | p0341 | 3 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 2  (Д - Копці)_jp2/tom 2  (Д - Копці)_0341.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol2/p0341.md` |
+| 2 | p0416 | 4 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 2  (Д - Копці)_jp2/tom 2  (Д - Копці)_0416.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol2/p0416.md` |
+| 2 | p0556 | 5 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 2  (Д - Копці)_jp2/tom 2  (Д - Копці)_0556.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol2/p0556.md` |
+| 3 | p0045 | 1 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 3 (Кора - М)_jp2/tom 3 (Кора - М)_0045.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol3/p0045.md` |
+| 3 | p0168 | 2 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 3 (Кора - М)_jp2/tom 3 (Кора - М)_0168.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol3/p0168.md` |
+| 3 | p0302 | 3 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 3 (Кора - М)_jp2/tom 3 (Кора - М)_0302.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol3/p0302.md` |
+| 3 | p0381 | 4 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 3 (Кора - М)_jp2/tom 3 (Кора - М)_0381.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol3/p0381.md` |
+| 3 | p0522 | 5 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 3 (Кора - М)_jp2/tom 3 (Кора - М)_0522.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol3/p0522.md` |
+| 4 | p0128 | 1 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 4 (Н - П)_jp2/tom 4 (Н - П)_0128.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol4/p0128.md` |
+| 4 | p0215 | 2 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 4 (Н - П)_jp2/tom 4 (Н - П)_0215.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol4/p0215.md` |
+| 4 | p0278 | 3 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 4 (Н - П)_jp2/tom 4 (Н - П)_0278.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol4/p0278.md` |
+| 4 | p0434 | 4 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 4 (Н - П)_jp2/tom 4 (Н - П)_0434.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol4/p0434.md` |
+| 4 | p0623 | 5 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 4 (Н - П)_jp2/tom 4 (Н - П)_0623.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol4/p0623.md` |
+| 5 | p0017 | 1 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 5 (Р - Т)_jp2/tom 5 (Р - Т)_0017.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol5/p0017.md` |
+| 5 | p0152 | 2 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 5 (Р - Т)_jp2/tom 5 (Р - Т)_0152.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol5/p0152.md` |
+| 5 | p0408 | 3 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 5 (Р - Т)_jp2/tom 5 (Р - Т)_0408.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol5/p0408.md` |
+| 5 | p0563 | 4 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 5 (Р - Т)_jp2/tom 5 (Р - Т)_0563.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol5/p0563.md` |
+| 5 | p0699 | 5 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 5 (Р - Т)_jp2/tom 5 (Р - Т)_0699.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol5/p0699.md` |
+| 6 | p0004 | 1 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 6 (У - Я)_jp2/tom 6 (У - Я)_0004.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol6/p0004.md` |
+| 6 | p0028 | 2 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 6 (У - Я)_jp2/tom 6 (У - Я)_0028.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol6/p0028.md` |
+| 6 | p0057 | 3 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 6 (У - Я)_jp2/tom 6 (У - Я)_0057.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol6/p0057.md` |
+| 6 | p0077 | 4 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 6 (У - Я)_jp2/tom 6 (У - Я)_0077.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol6/p0077.md` |
+| 6 | p0090 | 5 | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/jp2-staging/tom 6 (У - Я)_jp2/tom 6 (У - Я)_0090.jp2` | `/Users/krisztiankoos/projects/learn-ukrainian/data/raw/esum/gemini-ocr/vol6/p0090.md` |
