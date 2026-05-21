@@ -84,7 +84,42 @@ The new verdict enum: `PASS | KEYWORD_STUFFING | PARTIAL | FAIL`.
 `KEYWORD_STUFFING`. `PARTIAL` is a soft signal — system aggregates, build
 continues, but logs the pattern.
 
-Return only JSON:
+## Response Format — STRICT
+
+Return ONLY a single JSON object. No preamble. No epilogue. No "I have
+verified" narration. No markdown bold. No prose confirmation. The parser
+calls `json.loads` on your response (with a fenced-block fallback) — any
+prose outside the JSON shape will cause the build to fail at this phase
+even when every obligation passes.
+
+The JSON object MUST contain:
+
+- `verdicts`: a list with one entry per obligation in the manifest. Each
+  entry MUST have `obligation_id`, `verdict`, `evidence` (verbatim quote
+  ≥8 chars containing `"…"` / `«…»` / `“…”`), and `rationale`.
+- `overall_verdict`: `"PASS"`, `"PARTIAL"`, or `"FAIL"`. MUST be `"FAIL"`
+  if any per-obligation verdict is `FAIL` or `KEYWORD_STUFFING`.
+- `summary`: a single-sentence string (still inside the JSON object).
+
+If every obligation passes, emit the all-PASS shape — STILL JSON, STILL no
+narration:
+
+```json
+{
+  "verdicts": [
+    {
+      "obligation_id": "err-1",
+      "verdict": "PASS",
+      "evidence": "\"Choose between я вибачаюся and я вибачаю себе, then explain which one fits the dialogue.\"",
+      "rationale": "Activity body requires learners to distinguish both forms."
+    }
+  ],
+  "overall_verdict": "PASS",
+  "summary": "All 1 obligation woven into substantive pedagogy."
+}
+```
+
+Mixed-verdict shape:
 
 ```json
 {

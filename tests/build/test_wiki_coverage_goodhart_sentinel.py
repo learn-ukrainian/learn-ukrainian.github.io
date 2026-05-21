@@ -134,6 +134,7 @@ def _install_v7_fixture(
             dry_run=False,
             out=str(module_dir),
             writer_timeout=5,
+            effort=None,  # added 2026-05-13 in 9e5a6496b9 (--effort flag)
         ),
         tmp_path / "events.jsonl",
     )
@@ -305,3 +306,103 @@ def test_prompt_template_renders_keyword_stuffing_instruction() -> None:
     )
 
     assert "KEYWORD_STUFFING" in prompt
+
+
+def test_prompt_template_enforces_strict_response_format() -> None:
+    """Build #10 (2026-05-21) failed because the reviewer emitted prose
+    narration around the JSON. The prompt must now explicitly forbid
+    preamble/epilogue and demonstrate the all-PASS shape."""
+    prompt = linear_pipeline.render_wiki_coverage_review_prompt(
+        {
+            "level": "a1",
+            "sequence": 1,
+            "slug": "fixture",
+            "word_target": 600,
+        },
+        "level: a1\nslug: fixture\n",
+        "## module.md\n\nGenerated content",
+        {"slug": "fixture", "sequence_steps": []},
+        {"passed": True, "coverage_pct": 1.0},
+    )
+
+    assert "Response Format — STRICT" in prompt
+    assert "No preamble" in prompt
+    assert "No epilogue" in prompt
+    # All-PASS worked example so the reviewer has no excuse to narrate.
+    assert '"overall_verdict": "PASS"' in prompt
+
+
+def test_parser_recovers_from_prose_preamble_with_fenced_block() -> None:
+    """Codex reviewer pattern from build #10: prose narration wrapping a
+    fenced JSON payload. The parser must extract the fenced block."""
+    response = (
+        "I have verified all **18 obligations** in the wiki coverage manifest. "
+        "Each one was checked against the cited artifact and the surrounding "
+        "lesson context. Here is the structured output:\n\n"
+        "```json\n"
+        + json.dumps(
+            {
+                "verdicts": [_verdict("err-1", "PASS")],
+                "overall_verdict": "PASS",
+                "summary": "All obligations satisfied.",
+            }
+        )
+        + "\n```\n\nLet me know if you need further detail."
+    )
+
+    parsed = linear_pipeline.parse_wiki_coverage_review_response(response)
+    assert parsed["overall_verdict"] == "PASS"
+    assert parsed["verdicts"][0]["obligation_id"] == "err-1"
+
+
+def test_parser_recovers_from_prose_preamble_with_bare_object() -> None:
+    """LLMs sometimes drop the fence and emit a bare object inside prose."""
+    payload = json.dumps(
+        {
+            "verdicts": [_verdict("err-1", "PASS")],
+            "overall_verdict": "PASS",
+            "summary": "All obligations satisfied.",
+        }
+    )
+    response = (
+        "I have verified all obligations. The result is " + payload + " Thanks!"
+    )
+
+    parsed = linear_pipeline.parse_wiki_coverage_review_response(response)
+    assert parsed["overall_verdict"] == "PASS"
+
+
+def test_parser_still_handles_bare_json_payload() -> None:
+    """Regression guard: well-formed responses without prose still parse."""
+    payload = json.dumps(
+        {
+            "verdicts": [_verdict("err-1", "PASS")],
+            "overall_verdict": "PASS",
+            "summary": "OK.",
+        }
+    )
+    parsed = linear_pipeline.parse_wiki_coverage_review_response(payload)
+    assert parsed["overall_verdict"] == "PASS"
+
+
+def test_parser_still_handles_outer_fenced_payload() -> None:
+    payload = json.dumps(
+        {
+            "verdicts": [_verdict("err-1", "PASS")],
+            "overall_verdict": "PASS",
+            "summary": "OK.",
+        }
+    )
+    parsed = linear_pipeline.parse_wiki_coverage_review_response(
+        f"```json\n{payload}\n```"
+    )
+    assert parsed["overall_verdict"] == "PASS"
+
+
+def test_parser_rejects_pure_prose_with_no_json() -> None:
+    """Without any extractable JSON, the parser must still raise so the
+    build doesn't silently succeed on a bare confirmation."""
+    with pytest.raises(linear_pipeline.LinearPipelineError):
+        linear_pipeline.parse_wiki_coverage_review_response(
+            "I have verified all 18 obligations. They are all good."
+        )
