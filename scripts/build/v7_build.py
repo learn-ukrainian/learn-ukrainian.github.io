@@ -892,17 +892,106 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "paths resolve from the repository root; default: stdout."
         ),
     )
+    parser.add_argument(
+        "--resume",
+        metavar="MODULE_DIR",
+        default=None,
+        help=(
+            "Resume a previous v7_build run from MODULE_DIR (e.g. "
+            ".worktrees/builds/a1-my-morning-20260521-202848/curriculum/"
+            "l2-uk-en/a1/my-morning). Phases whose artifacts already exist "
+            "AND report PASS are skipped; the first failed or missing phase "
+            "AND everything downstream re-runs. MDX assembly always re-runs. "
+            "Mutually exclusive with --worktree (resume operates on the "
+            "existing module_dir directly, without creating a new worktree)."
+        ),
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     args = parse_args(raw_argv)
+    if args.resume is not None and args.worktree is not None:
+        print(
+            "v7_build: --resume and --worktree are mutually exclusive — "
+            "resume targets an existing module_dir.",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 2
     if args.worktree is not None:
         return _run_in_worktree(args, raw_argv)
     telemetry_out = _resolve_project_path(args.telemetry_out)
     with linear_pipeline.telemetry_event_sink(telemetry_out):
         return _run(args)
+
+
+# ----- Resume helpers ---------------------------------------------------------
+#
+# Resume policy: skip a phase iff its on-disk artifact exists AND reports the
+# canonical success shape for that phase. Any missing / failed artifact forces
+# the phase to re-run. Once one phase re-runs, every downstream phase also
+# re-runs unconditionally (the corrections may invalidate later verdicts).
+#
+# Codified after the 2026-05-21 cascade burned ~14 minutes of writer time per
+# iteration on phase-6 fixes. With resume, iteration drops to ~45s for the
+# review-only re-run path.
+
+def _read_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
+    """Return True if `phase`'s on-disk artifact exists and reports success.
+
+    The on-disk shapes mirror the success conditions enforced in `_run` itself
+    (see the post-phase guards: `gates.passed`, `wiki_coverage_gate.passed`,
+    `wiki_coverage_review.overall_verdict == "PASS"`, `aggregate.verdict ==
+    "PASS"`). Any deviation means the phase needs to re-run.
+    """
+    if phase == "knowledge_packet":
+        return (module_dir / "knowledge_packet.md").exists() and (
+            module_dir / "wiki_manifest.json"
+        ).exists()
+    if phase == "writer":
+        required = (
+            "module.md",
+            "activities.yaml",
+            "vocabulary.yaml",
+            "resources.yaml",
+            "writer_output.raw.md",
+            "implementation_map.json",
+        )
+        return all((module_dir / name).exists() for name in required)
+    if phase == "python_qg":
+        data = _read_json(module_dir / "python_qg.json")
+        if not isinstance(data, Mapping):
+            return False
+        gates = data.get("gates")
+        return isinstance(gates, Mapping) and gates.get("passed") is True
+    if phase == "wiki_coverage_gate":
+        data = _read_json(module_dir / "wiki_coverage_gate.json")
+        return isinstance(data, Mapping) and data.get("passed") is True
+    if phase == "wiki_coverage_review":
+        data = _read_json(module_dir / "wiki_coverage_review.json")
+        return (
+            isinstance(data, Mapping)
+            and str(data.get("overall_verdict", "")).upper() == "PASS"
+        )
+    if phase == "llm_qg":
+        data = _read_json(module_dir / "llm_qg.json")
+        if not isinstance(data, Mapping):
+            return False
+        aggregate = data.get("aggregate")
+        return (
+            isinstance(aggregate, Mapping)
+            and str(aggregate.get("verdict", "")).upper() == "PASS"
+        )
+    return False
 
 
 def _run(args: argparse.Namespace) -> int:
@@ -916,6 +1005,23 @@ def _run(args: argparse.Namespace) -> int:
     archive = run_archive.RunArchive.from_env()
     plan_path: Path | None = None
     module_dir: Path | None = None
+
+    # Resume-mode setup: when --resume MODULE_DIR is set, use that directory
+    # directly and downstream phase blocks check on-disk artifact validity to
+    # decide whether to skip. Once one phase re-runs (`force_rerun` flips
+    # True), every downstream phase re-runs unconditionally.
+    resume_path = getattr(args, "resume", None)
+    if resume_path is not None:
+        resume_module_dir = Path(resume_path).expanduser().resolve()
+        if not resume_module_dir.exists():
+            print(
+                f"v7_build: --resume MODULE_DIR does not exist: {resume_module_dir}",
+                file=sys.stderr,
+                flush=True,
+            )
+            return 2
+        args.out = str(resume_module_dir)
+    force_rerun = False
 
     tracker.emit("module_start", level=level, slug=slug)
 
@@ -939,17 +1045,37 @@ def _run(args: argparse.Namespace) -> int:
         phase = "knowledge_packet"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        knowledge_packet = linear_pipeline.build_knowledge_packet(
-            level=level,
-            slug=slug,
-            plan=plan,
+        resume_module_dir = (
+            Path(args.out).expanduser().resolve() if resume_path is not None else None
         )
-        wiki_manifest_data = linear_pipeline.build_wiki_manifest_data(
-            level=level,
-            slug=slug,
-            plan=plan,
-        )
-        wiki_manifest = json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
+        if (
+            resume_path is not None
+            and not force_rerun
+            and resume_module_dir is not None
+            and _phase_artifact_passes(resume_module_dir, "knowledge_packet")
+        ):
+            knowledge_packet = (resume_module_dir / "knowledge_packet.md").read_text(
+                encoding="utf-8",
+            )
+            wiki_manifest = (resume_module_dir / "wiki_manifest.json").read_text(
+                encoding="utf-8",
+            )
+            wiki_manifest_data = json.loads(wiki_manifest)
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_path is not None:
+                force_rerun = True
+            knowledge_packet = linear_pipeline.build_knowledge_packet(
+                level=level,
+                slug=slug,
+                plan=plan,
+            )
+            wiki_manifest_data = linear_pipeline.build_wiki_manifest_data(
+                level=level,
+                slug=slug,
+                plan=plan,
+            )
+            wiki_manifest = json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
         _phase_done(
             phase,
             started_at,
@@ -989,57 +1115,69 @@ def _run(args: argparse.Namespace) -> int:
         timeout_agent = writer
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
-        impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
-        impl_map_path = module_dir / "implementation_map.json"
-        write_implementation_map(impl_map, impl_map_path)
-        tracker.emit(
-            "implementation_map_seeded",
-            slug=slug,
-            entry_count=len(impl_map["entries"]),
-            path=str(impl_map_path),
-        )
-        prompt = _writer_prompt(
-            plan=plan,
-            plan_content=plan_content,
-            knowledge_packet=knowledge_packet,
-            wiki_manifest=wiki_manifest,
-            implementation_map=impl_map,
-            writer=writer,
-        )
-        # gemini-tools must load .gemini/settings.json from repo root;
-        # module_dir cwd would leave its MCP catalog empty. See
-        # audit/gemini-tools-review-2026-05-09/REPORT.html E5/E6.
-        # grok-tools gets MCP from ~/.hermes/config.yaml and can run from
-        # the module directory like claude-tools/codex-tools.
-        writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
-        writer_output = linear_pipeline.invoke_writer(
-            prompt,
-            writer,
-            cwd=writer_cwd,
-            tool_trace_path=module_dir / "writer_tool_calls.json",
-            stdout_silence_timeout=args.writer_timeout,
-            effort=args.effort,
-        )
-        # Save raw writer output + prompt + knowledge packet BEFORE parse so any
-        # parse failure is fully debuggable. Without this, a parse error like
-        # "Writer output contains unnamed fenced block at line 113" leaves
-        # nothing on disk to inspect — the writer_output is held only in memory
-        # and is lost on the LinearPipelineError raise.
-        (module_dir / "writer_output.raw.md").write_text(
-            writer_output,
-            encoding="utf-8",
-        )
-        (module_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
-        (module_dir / "knowledge_packet.md").write_text(
-            knowledge_packet,
-            encoding="utf-8",
-        )
-        (module_dir / "wiki_manifest.json").write_text(
-            wiki_manifest,
-            encoding="utf-8",
-        )
-        artifacts = linear_pipeline.parse_writer_output(writer_output)
-        linear_pipeline.write_writer_artifacts(module_dir, artifacts)
+        if (
+            resume_path is not None
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "writer")
+        ):
+            writer_output = (module_dir / "writer_output.raw.md").read_text(
+                encoding="utf-8",
+            )
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_path is not None:
+                force_rerun = True
+            impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
+            impl_map_path = module_dir / "implementation_map.json"
+            write_implementation_map(impl_map, impl_map_path)
+            tracker.emit(
+                "implementation_map_seeded",
+                slug=slug,
+                entry_count=len(impl_map["entries"]),
+                path=str(impl_map_path),
+            )
+            prompt = _writer_prompt(
+                plan=plan,
+                plan_content=plan_content,
+                knowledge_packet=knowledge_packet,
+                wiki_manifest=wiki_manifest,
+                implementation_map=impl_map,
+                writer=writer,
+            )
+            # gemini-tools must load .gemini/settings.json from repo root;
+            # module_dir cwd would leave its MCP catalog empty. See
+            # audit/gemini-tools-review-2026-05-09/REPORT.html E5/E6.
+            # grok-tools gets MCP from ~/.hermes/config.yaml and can run from
+            # the module directory like claude-tools/codex-tools.
+            writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
+            writer_output = linear_pipeline.invoke_writer(
+                prompt,
+                writer,
+                cwd=writer_cwd,
+                tool_trace_path=module_dir / "writer_tool_calls.json",
+                stdout_silence_timeout=args.writer_timeout,
+                effort=args.effort,
+            )
+            # Save raw writer output + prompt + knowledge packet BEFORE parse so any
+            # parse failure is fully debuggable. Without this, a parse error like
+            # "Writer output contains unnamed fenced block at line 113" leaves
+            # nothing on disk to inspect — the writer_output is held only in memory
+            # and is lost on the LinearPipelineError raise.
+            (module_dir / "writer_output.raw.md").write_text(
+                writer_output,
+                encoding="utf-8",
+            )
+            (module_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
+            (module_dir / "knowledge_packet.md").write_text(
+                knowledge_packet,
+                encoding="utf-8",
+            )
+            (module_dir / "wiki_manifest.json").write_text(
+                wiki_manifest,
+                encoding="utf-8",
+            )
+            artifacts = linear_pipeline.parse_writer_output(writer_output)
+            linear_pipeline.write_writer_artifacts(module_dir, artifacts)
         _phase_done(
             phase,
             started_at,
@@ -1054,12 +1192,22 @@ def _run(args: argparse.Namespace) -> int:
         phase = "python_qg"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        python_qg = linear_pipeline.run_python_qg_with_corrections(
-            module_dir,
-            plan_path,
-            writer=writer,
-        )
-        linear_pipeline.write_json(module_dir / "python_qg.json", python_qg)
+        if (
+            resume_path is not None
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "python_qg")
+        ):
+            python_qg = _read_json(module_dir / "python_qg.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_path is not None:
+                force_rerun = True
+            python_qg = linear_pipeline.run_python_qg_with_corrections(
+                module_dir,
+                plan_path,
+                writer=writer,
+            )
+            linear_pipeline.write_json(module_dir / "python_qg.json", python_qg)
         _phase_done(
             phase,
             started_at,
@@ -1069,7 +1217,7 @@ def _run(args: argparse.Namespace) -> int:
             archive=archive,
             artifact_dir=module_dir,
         )
-        gates = python_qg.get("gates")
+        gates = python_qg.get("gates") if isinstance(python_qg, Mapping) else None
         if not isinstance(gates, Mapping) or gates.get("passed") is not True:
             raise linear_pipeline.LinearPipelineError(
                 "Python QG failed after ADR-008 correction paths"
@@ -1078,15 +1226,27 @@ def _run(args: argparse.Namespace) -> int:
         phase = "wiki_coverage_gate"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        wiki_coverage_gate = linear_pipeline.run_wiki_coverage_with_corrections(
-            plan=plan,
-            manifest=wiki_manifest,
-            writer_output=writer_output,
-            module_dir=module_dir,
-            level=level,
-            event_sink=tracker.emit,
-        )
-        linear_pipeline.write_json(module_dir / "wiki_coverage_gate.json", wiki_coverage_gate)
+        if (
+            resume_path is not None
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "wiki_coverage_gate")
+        ):
+            wiki_coverage_gate = _read_json(module_dir / "wiki_coverage_gate.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_path is not None:
+                force_rerun = True
+            wiki_coverage_gate = linear_pipeline.run_wiki_coverage_with_corrections(
+                plan=plan,
+                manifest=wiki_manifest,
+                writer_output=writer_output,
+                module_dir=module_dir,
+                level=level,
+                event_sink=tracker.emit,
+            )
+            linear_pipeline.write_json(
+                module_dir / "wiki_coverage_gate.json", wiki_coverage_gate
+            )
         _phase_done(
             phase,
             started_at,
@@ -1096,7 +1256,7 @@ def _run(args: argparse.Namespace) -> int:
             archive=archive,
             artifact_dir=module_dir,
         )
-        if wiki_coverage_gate.get("passed") is not True:
+        if not isinstance(wiki_coverage_gate, Mapping) or wiki_coverage_gate.get("passed") is not True:
             raise linear_pipeline.LinearPipelineError(
                 "Wiki coverage gate failed after batched + narrow correction passes"
             )
@@ -1105,19 +1265,29 @@ def _run(args: argparse.Namespace) -> int:
         _phase_started(archive, phase)
         timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
-        wiki_coverage_review = _run_wiki_coverage_review(
-            plan=plan,
-            plan_content=plan_content,
-            module_dir=module_dir,
-            writer=writer,
-            wiki_manifest=wiki_manifest,
-            wiki_coverage_gate=wiki_coverage_gate,
-            stdout_silence_timeout=args.writer_timeout,
-        )
-        linear_pipeline.write_json(
-            module_dir / "wiki_coverage_review.json",
-            wiki_coverage_review,
-        )
+        if (
+            resume_path is not None
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "wiki_coverage_review")
+        ):
+            wiki_coverage_review = _read_json(module_dir / "wiki_coverage_review.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_path is not None:
+                force_rerun = True
+            wiki_coverage_review = _run_wiki_coverage_review(
+                plan=plan,
+                plan_content=plan_content,
+                module_dir=module_dir,
+                writer=writer,
+                wiki_manifest=wiki_manifest,
+                wiki_coverage_gate=wiki_coverage_gate,
+                stdout_silence_timeout=args.writer_timeout,
+            )
+            linear_pipeline.write_json(
+                module_dir / "wiki_coverage_review.json",
+                wiki_coverage_review,
+            )
         # Phase 5 Goodhart sentinel telemetry (PR4)
         stuffing_count = sum(
             1
@@ -1154,14 +1324,24 @@ def _run(args: argparse.Namespace) -> int:
         _phase_started(archive, phase)
         timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
-        llm_qg = _run_llm_qg(
-            plan=plan,
-            plan_content=plan_content,
-            module_dir=module_dir,
-            writer=writer,
-            stdout_silence_timeout=args.writer_timeout,
-        )
-        linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
+        if (
+            resume_path is not None
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "llm_qg")
+        ):
+            llm_qg = _read_json(module_dir / "llm_qg.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_path is not None:
+                force_rerun = True
+            llm_qg = _run_llm_qg(
+                plan=plan,
+                plan_content=plan_content,
+                module_dir=module_dir,
+                writer=writer,
+                stdout_silence_timeout=args.writer_timeout,
+            )
+            linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
         aggregate = llm_qg["aggregate"]
         tracker.emit(
             "review_score",
