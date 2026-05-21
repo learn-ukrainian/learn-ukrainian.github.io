@@ -6280,6 +6280,8 @@ def _iter_vesum_lookup_surface_pairs(
         raw = match.group(0).strip("-'ʼ")
         if not raw or "__" in raw or not _has_vesum_lookup_decoration(raw):
             continue
+        if _looks_like_stem_fragment(text, match.start(), match.end()):
+            continue
         normalized = _normalize_for_vesum(raw)
         for word in _iter_vesum_candidate_words(normalized):
             lower = word.lower()
@@ -6334,6 +6336,8 @@ def _iter_vesum_word_surfaces(text: str) -> list[str]:
             # only fires when the abutting character is a Latin LETTER,
             # not whitespace or punctuation.
             continue
+        if _looks_like_stem_fragment(text, match.start(), match.end()):
+            continue
         raw = match.group(0)
         if _looks_like_elided_notation(text, match.start(), raw):
             continue
@@ -6385,6 +6389,42 @@ def _touches_blank_marker(text: str, start: int, end: int) -> bool:
     return (start > 0 and text[start - 1] == "_") or (
         end < len(text) and text[end] == "_"
     )
+
+
+_CYRILLIC_LETTER_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ]")
+_STEM_FRAGMENT_LEFT_BOUNDARY = frozenset({"*", "_", "`"})
+_STEM_FRAGMENT_MARKDOWN_CLOSERS = frozenset({"*", "_", "`"})
+
+
+def _looks_like_stem_fragment(text: str, start: int, end: int) -> bool:
+    """Return true for pedagogical stem notation like `користу-`.
+
+    Motivated by claude-tools a1/my-morning build 2026-05-21: the correct
+    stem fragment `**користу**-` is not a VESUM lemma and should not be checked.
+    """
+    if start > 0:
+        previous = text[start - 1]
+        if not previous.isspace() and previous not in _STEM_FRAGMENT_LEFT_BOUNDARY:
+            return False
+
+    if start >= end:
+        return False
+
+    hyphen_pos: int | None = None
+    if text[end - 1] == "-":
+        hyphen_pos = end - 1
+    else:
+        cursor = end
+        while cursor < len(text) and text[cursor] in _STEM_FRAGMENT_MARKDOWN_CLOSERS:
+            cursor += 1
+        if cursor < len(text) and text[cursor] == "-":
+            hyphen_pos = cursor
+
+    if hyphen_pos is None:
+        return False
+
+    after_hyphen = hyphen_pos + 1
+    return after_hyphen >= len(text) or not _CYRILLIC_LETTER_RE.match(text[after_hyphen])
 
 
 _LATIN_LETTER_RE = re.compile(r"[A-Za-z]")
