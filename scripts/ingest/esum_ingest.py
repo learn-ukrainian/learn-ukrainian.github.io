@@ -27,13 +27,20 @@ import argparse
 import html
 import json
 import re
+import sqlite3
 import sys
 from collections.abc import Iterable
+from functools import lru_cache
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = REPO / "data" / "raw" / "esum" / "vol1.txt"
 DEFAULT_OUTPUT = REPO / "data" / "processed" / "esum_vol1.jsonl"
+_VESUM_CONN: sqlite3.Connection | None = None
+_VESUM_CONN_UNAVAILABLE = False
+_VESUM_LEMMAS: frozenset[str] | None = None
+CYRILLIC_WORD = r"[а-яґіїєА-ЯҐІЇЄ'’]"
+TEXTPDF_STRONG_HEADWORD = rf"(?:{CYRILLIC_WORD}{{2,20}}[1-9!?-]?|{CYRILLIC_WORD}-)"
 
 # Body-start anchor: a homonym-marked single-letter opener that begins
 # the dictionary body for each volume. Vol 1 opens with ``а 1 (``; vol 2
@@ -80,6 +87,58 @@ GARBAGE_HEADWORDS = {
     "никсблод",
 }
 
+# Text-pdf column transitions can promote tiny fragments or source
+# abbreviations to apparent headwords. These exact forms are high-volume
+# false positives in vols 4-6 and should not be recovered through VESUM.
+TEXT_PDF_FRAGMENT_HEADWORDS = {"ка", "рай", "тин", "від", "ем", "мов", "не", "мак"}
+
+# Real short ESUM headwords that are not reliably covered by VESUM because
+# many are particles, interjections, or prefix-like dictionary entries.
+SHORT_HEADWORD_ALLOWLIST = {
+    "а-",
+    "ага",
+    "аж",
+    "ай",
+    "ан",
+    "ах",
+    "ба",
+    "бо",
+    "ге",
+    "гей",
+    "ей",
+    "ех",
+    "же",
+    "ну",
+    "о",
+    "ого",
+    "ой",
+    "он",
+    "от",
+    "ото",
+    "ох",
+    "та",
+    "ти",
+    "тьху",
+    "у-",
+    "ух",
+    "фу",
+    "чи",
+    "ще",
+    "що",
+    "як",
+}
+
+TEXT_PDF_MASHED_HEADWORDS = {
+    "дорізькийізйре",
+    "гневразнийодраза",
+    "дорізнийчіткий",
+}
+
+TEXT_PDF_LEMMA_CORRECTIONS = {
+    "сбнце": "сонце",
+    "сднце": "сонце",
+}
+
 PAGE_RE = re.compile(r"^\d{1,3}$")
 WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
@@ -89,6 +148,8 @@ SPACE_RE = re.compile(r"[ \t]+")
 ENTRY_PUNCT_RE = re.compile(r"[;—]")
 ENTRY_PUNCT_TEXTPDF_RE = re.compile(r"[;—«]")
 HEAD_END_RE = re.compile(r"[,;(—«]")
+CLEAN_LEMMA_MARKER_RE = re.compile(r"[1-9!?-]+$")
+COMBINING_ACUTE_RE = re.compile("\u0301")
 LANG_MARKERS = (
     "псл.",
     "іє.",
@@ -133,6 +194,99 @@ LEADING_LANGUAGE_ABBREVIATIONS = {
     "лит.",
     "тюрк.",
 }
+
+
+def _looks_like_strong_entry_start_textpdf(line: str) -> bool:
+    """Strong text-pdf entry start: punctuated Cyrillic headword or bracketed form."""
+    plain = re.match(
+        rf"^(?P<head>{TEXTPDF_STRONG_HEADWORD})\s*[,;]\s*(?P<body>[а-яґіїєА-ЯҐІЇЄ\[«].*)",
+        line,
+    )
+    if plain:
+        body = plain.group("body").lower()
+        return not any(body.startswith(marker) for marker in LEADING_LANGUAGE_ABBREVIATIONS)
+    return bool(re.match(r"^\[[а-яґіїєА-ЯҐІЇЄ'’]{2,20}\]?\s*[«,]", line))
+
+
+def _lemma_lookup_key(lemma: str) -> str:
+    key = COMBINING_ACUTE_RE.sub("", lemma.lower())
+    key = CLEAN_LEMMA_MARKER_RE.sub("", key)
+    return key.strip("[]() ")
+
+
+def _vesum_db_path() -> Path:
+    return REPO / "data" / "vesum.db"
+
+
+def _vesum_conn() -> sqlite3.Connection | None:
+    global _VESUM_CONN, _VESUM_CONN_UNAVAILABLE
+    if _VESUM_CONN_UNAVAILABLE:
+        return None
+    if _VESUM_CONN is not None:
+        return _VESUM_CONN
+    db_path = _vesum_db_path()
+    if not db_path.exists():
+        _VESUM_CONN_UNAVAILABLE = True
+        return None
+    try:
+        _VESUM_CONN = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)
+    except sqlite3.Error:
+        _VESUM_CONN_UNAVAILABLE = True
+        return None
+    return _VESUM_CONN
+
+
+def _vesum_lemmas() -> frozenset[str]:
+    global _VESUM_LEMMAS
+    if _VESUM_LEMMAS is not None:
+        return _VESUM_LEMMAS
+    conn = _vesum_conn()
+    if conn is None:
+        _VESUM_LEMMAS = frozenset()
+        return _VESUM_LEMMAS
+    try:
+        _VESUM_LEMMAS = frozenset(
+            _lemma_lookup_key(row[0])
+            for row in conn.execute("SELECT DISTINCT lemma FROM forms")
+            if row[0]
+        )
+    except sqlite3.Error:
+        _VESUM_LEMMAS = frozenset()
+    return _VESUM_LEMMAS
+
+
+@lru_cache(maxsize=8192)
+def _vesum_has_lemma(lemma: str) -> bool:
+    key = _lemma_lookup_key(lemma)
+    if not key:
+        return False
+    lemmas = _vesum_lemmas()
+    return key in lemmas
+
+
+def _is_short_textpdf_headword_allowed(lemma: str) -> bool:
+    key = _lemma_lookup_key(lemma)
+    if key in TEXT_PDF_FRAGMENT_HEADWORDS:
+        return False
+    if lemma.lower() in SHORT_HEADWORD_ALLOWLIST or key in SHORT_HEADWORD_ALLOWLIST:
+        return True
+    # Common prefix-like ESUM headwords such as "а-" are allowlisted above;
+    # other 2-3 character non-VESUM starts are overwhelmingly column debris.
+    return _vesum_has_lemma(key)
+
+
+def _has_vesum_boundary_split(lemma: str) -> bool:
+    key = _lemma_lookup_key(lemma)
+    if len(key) <= 12 or "-" in key or "'" in key or "’" in key:
+        return False
+    if _vesum_has_lemma(key):
+        return False
+    for split_at in range(5, len(key) - 4):
+        prefix = key[:split_at]
+        suffix = key[split_at:]
+        if _vesum_has_lemma(prefix) and _vesum_has_lemma(suffix):
+            return True
+    return False
 
 
 def _extract_pre_if_html(text: str) -> str:
@@ -192,6 +346,7 @@ def _clean_lines(lines: Iterable[str], source_format: str = "djvutxt") -> list[t
     cleaned: list[tuple[int | None, str]] = []
     current_page: int | None = 37
     carry = ""
+    textpdf_saw_blank = False
 
     split_re = WORD_SPLIT_TEXTPDF_RE if source_format == "text-pdf" else WORD_SPLIT_RE
     spaced_split_re = SPACED_WORD_SPLIT_TEXTPDF_RE if source_format == "text-pdf" else SPACED_WORD_SPLIT_RE
@@ -206,6 +361,7 @@ def _clean_lines(lines: Iterable[str], source_format: str = "djvutxt") -> list[t
 
         if not line:
             if source_format == "text-pdf":
+                textpdf_saw_blank = True
                 continue
             if carry:
                 cleaned.append((current_page, carry.strip()))
@@ -213,10 +369,31 @@ def _clean_lines(lines: Iterable[str], source_format: str = "djvutxt") -> list[t
             cleaned.append((current_page, ""))
             continue
 
+        if (
+            source_format == "text-pdf"
+            and textpdf_saw_blank
+            and not carry
+            and _looks_like_strong_entry_start_textpdf(line)
+            and _extract_headword(line, source_format=source_format) is not None
+        ):
+            cleaned.append((current_page, ""))
+        textpdf_saw_blank = False
+
         if carry:
             # In text-pdf, if a line starts with [ (pipe), it's likely a new entry.
             # Don't merge it into the previous carry, unless it's a hyphenated fragment.
-            if source_format == "text-pdf" and line.startswith("[") and not line.split()[0].rstrip("[").endswith("-"):
+            starts_bracket_entry = (
+                source_format == "text-pdf"
+                and line.startswith("[")
+                and not line.split()[0].rstrip("[").endswith("-")
+            )
+            starts_plain_entry = (
+                source_format == "text-pdf"
+                and _looks_like_strong_entry_start_textpdf(line)
+                and not split_re.search(carry)
+                and not spaced_split_re.search(carry)
+            )
+            if starts_bracket_entry or starts_plain_entry:
                 cleaned.append((current_page, carry.strip()))
                 carry = line
             elif split_re.search(carry) or spaced_split_re.search(carry):
@@ -311,7 +488,7 @@ def _looks_like_ocr_garbage(lemma: str) -> bool:
     return bool(any(ch in lemma for ch in ("§", "^", ".")))
 
 
-def _is_sane_lemma(lemma: str) -> bool:
+def _is_sane_lemma(lemma: str, source_format: str = "text-pdf") -> bool:
     """Validate lemma quality for text-pdf source to filter out OCR noise.
 
     Rules:
@@ -328,6 +505,14 @@ def _is_sane_lemma(lemma: str) -> bool:
     if lemma in RUSSIAN_HEADWORDS or lemma in GARBAGE_HEADWORDS:
         # Rule 4 & 5: Russian-only or known garbage headwords
         return False
+
+    if source_format == "text-pdf":
+        key = _lemma_lookup_key(lemma)
+        key_len = len(key.replace("'", "").replace("’", "").replace("-", ""))
+        if 2 <= key_len <= 3 and not _is_short_textpdf_headword_allowed(lemma):
+            return False
+        if key in TEXT_PDF_MASHED_HEADWORDS or _has_vesum_boundary_split(lemma):
+            return False
 
     # Rule 2: Mixed-script — reject lemmas that contain Basic-Latin letters
     # (these appear when OCR confuses Cyrillic glyphs for Latin lookalikes).
@@ -348,14 +533,19 @@ def _is_sane_lemma(lemma: str) -> bool:
     return not (digits and not re.search(r"[1-9]$", lemma))
 
 
-def _extract_headword(paragraph: str) -> str | None:
+def _extract_headword(paragraph: str, source_format: str = "djvutxt") -> str | None:
     match = HEAD_END_RE.search(paragraph)
     if not match:
         return None
     head = paragraph[: match.start()].strip()
     if not 1 <= len(head) <= 80:
         return None
+    raw_first = head.split(",", 1)[0].split()[0].strip("[]() ") if head.split() else ""
+    if source_format == "text-pdf" and raw_first in {"ЕМ", "Мак"}:
+        return None
     lemma = _canonical_lemma(head)
+    if source_format == "text-pdf":
+        lemma = TEXT_PDF_LEMMA_CORRECTIONS.get(lemma, lemma)
     if not lemma:
         return None
     if "«" in head or "»" in head:
@@ -369,7 +559,7 @@ def _extract_headword(paragraph: str) -> str | None:
     if _looks_like_ocr_garbage(lemma):
         return None
     # Layer 2 (Lemma sanity gate)
-    if not _is_sane_lemma(lemma):
+    if not _is_sane_lemma(lemma, source_format=source_format):
         return None
     return lemma
 
@@ -382,11 +572,11 @@ def _looks_like_entry_start(paragraph: str, source_format: str = "djvutxt") -> b
     punct_re = ENTRY_PUNCT_TEXTPDF_RE if source_format == "text-pdf" else ENTRY_PUNCT_RE
     if not punct_re.search(paragraph):
         return False
-    return _extract_headword(paragraph) is not None
+    return _extract_headword(paragraph, source_format=source_format) is not None
 
 
-def _looks_like_cross_reference_entry(paragraph: str) -> bool:
-    return "див." in paragraph and _extract_headword(paragraph) is not None
+def _looks_like_cross_reference_entry(paragraph: str, source_format: str = "djvutxt") -> bool:
+    return "див." in paragraph and _extract_headword(paragraph, source_format=source_format) is not None
 
 
 def _looks_like_head_candidate(line: str) -> bool:
@@ -406,7 +596,7 @@ def _looks_like_head_candidate(line: str) -> bool:
 def _looks_like_complete_entry(paragraph: str, source_format: str = "djvutxt") -> bool:
     if len(paragraph) >= 80:
         return _looks_like_entry_start(paragraph, source_format=source_format)
-    if _looks_like_cross_reference_entry(paragraph):
+    if _looks_like_cross_reference_entry(paragraph, source_format=source_format):
         return True
     # For text-pdf, accept shorter entries if they look like real starts (punctuation + headword)
     if source_format == "text-pdf":
@@ -550,32 +740,37 @@ def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict
     while i < len(rows):
         page, line = rows[i]
         if not line:
-            if source_format == "djvutxt":
-                after_blank = True
+            after_blank = True
             i += 1
             continue
 
         is_entry_start = (
             _looks_like_entry_start(line, source_format=source_format)
-            or _looks_like_cross_reference_entry(line)
+            or _looks_like_cross_reference_entry(line, source_format=source_format)
             or _looks_like_head_candidate(line)
         )
 
         # In text-pdf, a line starting with [ (from |) is a strong signal for a new entry.
         # We avoid splitting on variations/fragments that end in a hyphen, or where
         # a meaning is glued immediately to the headword (likely joined fragment).
-        is_strong_start = (
+        is_bracket_strong_start = (
             source_format == "text-pdf"
-            and line.startswith("[")
             and not line.split()[0].rstrip("[").endswith("-")
             and not re.match(r"^\[[а-яґіїє]+«", line)
+            and line.startswith("[")
             and _looks_like_head_candidate(line)
+        )
+        is_plain_strong_after_blank = (
+            source_format == "text-pdf"
+            and after_blank
+            and _looks_like_strong_entry_start_textpdf(line)
+            and _extract_headword(line, source_format=source_format) is not None
         )
 
         condition = (
             (after_blank and is_entry_start)
             if source_format == "djvutxt"
-            else (is_strong_start or (after_end_of_entry and is_entry_start))
+            else (is_bracket_strong_start or is_plain_strong_after_blank or (after_end_of_entry and is_entry_start))
         )
 
         if condition:
@@ -607,6 +802,7 @@ def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict
         if source_format == "djvutxt":
             after_blank = False
         else:
+            after_blank = False
             clean_end = line.rstrip("»\"' ")
             if clean_end.endswith(".") or clean_end.endswith("!") or clean_end.endswith("?"):
                 after_end_of_entry = not _is_likely_abbreviation(clean_end)
@@ -620,7 +816,7 @@ def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict
     for page, paragraph in merged:
         if not _looks_like_complete_entry(paragraph, source_format=source_format):
             continue
-        lemma = _extract_headword(paragraph)
+        lemma = _extract_headword(paragraph, source_format=source_format)
         if lemma is None:
             continue
         # Layer 3 (Bibliography detector)

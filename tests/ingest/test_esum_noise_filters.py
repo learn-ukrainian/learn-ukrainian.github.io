@@ -32,6 +32,15 @@ def test_is_sane_lemma_rejections():
     assert _is_sane_lemma("тов") is False
     assert _is_sane_lemma("ргазкас") is False
 
+    # Text-pdf column-flow fragments and source abbreviations.
+    for lemma in ("ка", "рай", "тин", "від", "ем", "мов", "не", "мак"):
+        assert _is_sane_lemma(lemma) is False
+
+    # Mashed column-boundary headwords.
+    assert _is_sane_lemma("дорізькийізйре") is False
+    assert _is_sane_lemma("гневразнийодраза") is False
+    assert _is_sane_lemma("дорізнийчіткий") is False
+
 
 def test_is_sane_lemma_positive_cases():
     # Plain lowercase Ukrainian
@@ -57,8 +66,9 @@ def test_is_sane_lemma_positive_cases():
 
     # Hyphens, apostrophes (Ukrainian apostrophe ')
     assert _is_sane_lemma("а-") is True
+    assert _is_sane_lemma("ох") is True
     assert _is_sane_lemma("ім'я") is True
-    assert _is_sane_lemma("надія-")  is True
+    assert _is_sane_lemma("надія-") is True
 
 
 def test_is_pure_bibliography():
