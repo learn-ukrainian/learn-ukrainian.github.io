@@ -55,6 +55,41 @@ BODY_START_RE = re.compile(
 BODY_END_RE = re.compile(
     r"^АКАДЕМИЯ\s+НАУК\s+УКРАИНСКОЙ\s+(?:ССР|СЄР)\s*$",
 )
+
+# Colophon markers for text-pdf volumes (4-6) where the standard
+# BODY_END_RE misses due to line breaks or different wording.
+COLOPHON_MARKERS_RE = re.compile(
+    r"\b(видавництв[оа]|виготовлен[ао]|укладач[іа]?|редактор[иа]|редколегі[яї]|"
+    r"наукове видання|підписано до друку|формат|папір офсет|друк офсет|"
+    r"гарнітура|умов[нi]?\.? друк\.? арк\.|тираж|зам\.|"
+    r"АН України|НВП|ТОВ|ВАТ|ПП)\b",
+    re.IGNORECASE,
+)
+
+# Specific Russian headwords that appear in the tail of vol 6 or as noise.
+# While Russian words appear in etymology bodies, they should not be entries.
+RUSSIAN_HEADWORDS = {"последний", "который", "этот", "тот"}
+
+# Known OCR noise lemmas collected from spot-checks (Issue #2183).
+GARBAGE_HEADWORDS = {
+    "видавництво",
+    "виготовлено",
+    "укладачі",
+    "нвп",
+    "тов",
+    "і£і",
+    "ргазкас",
+    "з8оіуь",
+    "к88",
+    "пп:",
+    "кзсря",
+    "егаепке!",
+    "угаьіе",
+    "іїейїма",
+    "кайап",
+    "никсблод",
+}
+
 PAGE_RE = re.compile(r"^\d{1,3}$")
 WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
@@ -120,7 +155,22 @@ def _extract_pre_if_html(text: str) -> str:
     return html.unescape(match.group(1))
 
 
-def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
+def _is_colophon_shaped(line: str, source_format: str) -> bool:
+    """Check if a line looks like a colophon entry (short, no entry punctuation)."""
+    if not line:
+        return False
+    if len(line) > 100:
+        return False
+    # Entry starts are definitely NOT colophons
+    if _looks_like_head_candidate(line):
+        return False
+    # Use standard entry punctuation as a 'non-colophon' signal.
+    # For colophon lines, we allow « because it appears in publisher names.
+    punct_re = re.compile(r"[;—]")
+    return not punct_re.search(line)
+
+
+def _strip_front_and_back_matter(lines: list[str], source_format: str = "djvutxt") -> list[str]:
     """Trim cover/foreword/bibliography from the head and Russian
     colophon / errata from the tail.
 
@@ -137,7 +187,7 @@ def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
     УКРАИНСКОЙ ССР`` (or vol-3-typo ``СЄР``) header on a single line.
     Vols 4-6 print the same colophon broken across lines, the regex
     misses, and we process to EOF; back-matter prose is filtered by
-    the entry validator.
+    the entry validator. For text-pdf, we use COLOPHON_MARKERS_RE.
     """
     start = 0
     for index, line in enumerate(lines):
@@ -145,10 +195,22 @@ def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
             start = index
             break
     end = len(lines)
+    # Layer 1 (Backmatter trim)
     for index in range(start, len(lines)):
-        if BODY_END_RE.match(lines[index].strip()):
+        line_clean = lines[index].strip()
+        if BODY_END_RE.match(line_clean):
             end = index
             break
+        # text-pdf colophon detection: search from the end of the body
+        if source_format == "text-pdf" and COLOPHON_MARKERS_RE.search(line_clean):
+            # Verify context: at least 3 of the next 5 lines should be colophon-shaped
+            match_count = 0
+            for j in range(index + 1, min(index + 6, len(lines))):
+                if _is_colophon_shaped(lines[j].strip(), source_format):
+                    match_count += 1
+            if match_count >= 3:
+                end = index
+                break
     return lines[start:end]
 
 
@@ -275,6 +337,35 @@ def _looks_like_ocr_garbage(lemma: str) -> bool:
     return bool(any(ch in lemma for ch in ("§", "^", ".")))
 
 
+def _is_sane_lemma(lemma: str) -> bool:
+    """Validate lemma quality for text-pdf source to filter out OCR noise.
+
+    Rules:
+    - No single-character lemmas (e.g., 'і', 'п', 'т', 'и').
+    - No mixed-script or Latin-only entries (e.g., 'ргазкас', 'угаьіе', 'і£і').
+    - No digits except as trailing homonym markers 1/2/3 (e.g., reject 'к88', 'з8оіуь').
+    - No specific Russian-only headwords ('последний', 'который', 'этот', 'тот').
+    - No known garbage lemmas from colophons or OCR artifacts.
+    """
+    if len(lemma) <= 1:
+        # Rule 1: Single char (e.g., 'і', 'п', 'т')
+        return False
+
+    if lemma in RUSSIAN_HEADWORDS or lemma in GARBAGE_HEADWORDS:
+        # Rule 4 & 5: Russian-only or known garbage headwords
+        return False
+
+    # Rule 2: Mixed-script / Latin / Non-Ukrainian characters
+    # We allow: lowercase cyrillic, hyphen, apostrophes, homonym markers 123,
+    # and punctuation !, ? which sometimes appear in headwords.
+    if re.search(r"[^а-яґіїє'’\-123!?]", lemma):
+        # This catches Latin letters (a-z) and symbols like £
+        return False
+
+    # Rule 3: Digits other than trailing homonym markers (e.g., reject 'к88', 'з8оіуь')
+    return not (re.search(r"\d", lemma) and (not re.search(r"[123]$", lemma) or re.search(r"\d.*\d", lemma)))
+
+
 def _extract_headword(paragraph: str) -> str | None:
     match = HEAD_END_RE.search(paragraph)
     if not match:
@@ -294,6 +385,9 @@ def _extract_headword(paragraph: str) -> str | None:
     if not re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma):
         return None
     if _looks_like_ocr_garbage(lemma):
+        return None
+    # Layer 2 (Lemma sanity gate)
+    if not _is_sane_lemma(lemma):
         return None
     return lemma
 
@@ -404,10 +498,23 @@ def _is_likely_abbreviation(text: str) -> bool:
     if clean.split()[-1] in specific_abbrevs:
         return True
     # Match general patterns: 1-3 lowercase cyrillic letters or 1-2 uppercase
-    return bool(
-        re.search(r"\b[а-яґіїє]{1,3}\.?$", clean)
-        or re.search(r"\b[А-ЯҐІЇЄIVXLCDM]{1,2}\.?$", clean)
-    )
+    return bool(re.search(r"\b[а-яґіїє]{1,3}\.?$", clean) or re.search(r"\b[А-ЯҐІЇЄIVXLCDM]{1,2}\.?$", clean))
+
+
+def _is_pure_bibliography(text: str) -> bool:
+    """Detect if the etymology body is just a bibliography list (OCR noise).
+
+    Example to catch: 'СУМ 9, 763; Бупр. Ш 222; Фасмер Ш 776; Преобр. П 397;'
+    Real entries always have prose etymology before any citation cluster.
+    """
+    if not text:
+        return False
+    # Identify citation-like chunks: TitleCase or Uppercase abbreviation(s) + space + Roman/Arabic numeral
+    # Pattern: ([А-Я]+\.?\s+)+ [IVXLCDM\d]+ \d+(--\d+)?
+    chunks = re.findall(r"(?:[А-ЯЁІЇЄҐA-Z][а-яёіїєґa-z]*\.?\s+)+[IVXLCDM\d]+\s*[,;]?\s*\d*(?:--\d+)?", text)
+    chunk_len = sum(len(c) for c in chunks)
+    # If 80%+ of body characters are within citation-shaped substrings, reject.
+    return len(text) > 0 and chunk_len / len(text) > 0.8
 
 
 def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict[str, object]]:
@@ -419,7 +526,7 @@ def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict
         text = re.sub(r"\bІ([а-яґіїє]+\[)", r"[\1", text)
         text = re.sub(r"^І([а-яґіїє]+\[)", r"[\1", text, flags=re.MULTILINE)
 
-    lines = _strip_front_and_back_matter(text.splitlines())
+    lines = _strip_front_and_back_matter(text.splitlines(), source_format=source_format)
     cleaned_lines = _clean_lines(lines, source_format=source_format)
 
     merged: list[tuple[int, str]] = []
@@ -533,6 +640,9 @@ def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict
             continue
         lemma = _extract_headword(paragraph)
         if lemma is None:
+            continue
+        # Layer 3 (Bibliography detector)
+        if _is_pure_bibliography(paragraph):
             continue
         entries.append(
             {
