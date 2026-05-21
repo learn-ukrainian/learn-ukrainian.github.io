@@ -1,262 +1,262 @@
 {
-  "entries_processed": 29171,
-  "entries_with_declared_markers": 21904,
-  "entries_with_at_least_one_form": 18936,
-  "total_forms_extracted": 96440,
-  "coverage_pct": 86.45,
-  "all_entries_coverage_pct": 64.91,
+  "entries_processed": 35291,
+  "entries_with_declared_markers": 23128,
+  "entries_with_at_least_one_form": 19306,
+  "total_forms_extracted": 93523,
+  "coverage_pct": 83.47,
+  "all_entries_coverage_pct": 54.71,
   "per_marker_coverage": {
     "ав.": {
-      "expected": 546,
-      "extracted": 540,
-      "pct": 98.9
-    },
-    "болг.": {
-      "expected": 7425,
-      "extracted": 7339,
-      "pct": 98.84
-    },
-    "бр.": {
-      "expected": 10201,
-      "extracted": 10007,
-      "pct": 98.1
-    },
-    "гот.": {
-      "expected": 887,
-      "extracted": 880,
-      "pct": 99.21
-    },
-    "гр.": {
-      "expected": 3597,
-      "extracted": 3435,
-      "pct": 95.5
-    },
-    "двн.": {
-      "expected": 1696,
-      "extracted": 1661,
-      "pct": 97.94
-    },
-    "др.": {
-      "expected": 2850,
-      "extracted": 2836,
-      "pct": 99.51
-    },
-    "дінд.": {
-      "expected": 1668,
-      "extracted": 1638,
-      "pct": 98.2
-    },
-    "лат.": {
-      "expected": 4755,
-      "extracted": 4697,
-      "pct": 98.78
-    },
-    "лит.": {
-      "expected": 2036,
-      "extracted": 2012,
-      "pct": 98.82
-    },
-    "лтс.": {
-      "expected": 1064,
-      "extracted": 1042,
-      "pct": 97.93
-    },
-    "п.": {
-      "expected": 11283,
-      "extracted": 11104,
-      "pct": 98.41
-    },
-    "перс.": {
-      "expected": 204,
-      "extracted": 196,
-      "pct": 96.08
-    },
-    "прус.": {
-      "expected": 249,
-      "extracted": 244,
-      "pct": 97.99
-    },
-    "псл.": {
-      "expected": 4522,
-      "extracted": 4375,
-      "pct": 96.75
-    },
-    "р.": {
-      "expected": 12516,
-      "extracted": 12046,
-      "pct": 96.24
-    },
-    "слн.": {
-      "expected": 6270,
-      "extracted": 6182,
-      "pct": 98.6
-    },
-    "слц.": {
-      "expected": 7596,
-      "extracted": 7468,
-      "pct": 98.31
-    },
-    "стел.": {
-      "expected": 775,
-      "extracted": 765,
-      "pct": 98.71
-    },
-    "схв.": {
-      "expected": 7374,
-      "extracted": 7297,
-      "pct": 98.96
-    },
-    "тат.": {
-      "expected": 368,
-      "extracted": 359,
-      "pct": 97.55
-    },
-    "тур.": {
-      "expected": 725,
-      "extracted": 717,
-      "pct": 98.9
-    },
-    "тюрк.": {
-      "expected": 84,
-      "extracted": 78,
-      "pct": 92.86
-    },
-    "ч.": {
-      "expected": 8537,
-      "extracted": 8345,
+      "expected": 577,
+      "extracted": 564,
       "pct": 97.75
     },
+    "болг.": {
+      "expected": 7130,
+      "extracted": 7067,
+      "pct": 99.12
+    },
+    "бр.": {
+      "expected": 9739,
+      "extracted": 9658,
+      "pct": 99.17
+    },
+    "гот.": {
+      "expected": 900,
+      "extracted": 882,
+      "pct": 98.0
+    },
+    "гр.": {
+      "expected": 3589,
+      "extracted": 3415,
+      "pct": 95.15
+    },
+    "двн.": {
+      "expected": 1773,
+      "extracted": 1729,
+      "pct": 97.52
+    },
+    "др.": {
+      "expected": 2890,
+      "extracted": 2856,
+      "pct": 98.82
+    },
+    "дінд.": {
+      "expected": 1773,
+      "extracted": 1730,
+      "pct": 97.57
+    },
+    "лат.": {
+      "expected": 4663,
+      "extracted": 4581,
+      "pct": 98.24
+    },
+    "лит.": {
+      "expected": 2168,
+      "extracted": 2133,
+      "pct": 98.39
+    },
+    "лтс.": {
+      "expected": 1015,
+      "extracted": 990,
+      "pct": 97.54
+    },
+    "п.": {
+      "expected": 10805,
+      "extracted": 10614,
+      "pct": 98.23
+    },
+    "перс.": {
+      "expected": 167,
+      "extracted": 158,
+      "pct": 94.61
+    },
+    "прус.": {
+      "expected": 329,
+      "extracted": 323,
+      "pct": 98.18
+    },
+    "псл.": {
+      "expected": 4187,
+      "extracted": 3982,
+      "pct": 95.1
+    },
+    "р.": {
+      "expected": 11976,
+      "extracted": 11798,
+      "pct": 98.51
+    },
+    "слн.": {
+      "expected": 6051,
+      "extracted": 5950,
+      "pct": 98.33
+    },
+    "слц.": {
+      "expected": 7171,
+      "extracted": 7018,
+      "pct": 97.87
+    },
+    "стел.": {
+      "expected": 678,
+      "extracted": 657,
+      "pct": 96.9
+    },
+    "схв.": {
+      "expected": 7116,
+      "extracted": 7047,
+      "pct": 99.03
+    },
+    "тат.": {
+      "expected": 379,
+      "extracted": 369,
+      "pct": 97.36
+    },
+    "тур.": {
+      "expected": 724,
+      "extracted": 712,
+      "pct": 98.34
+    },
+    "тюрк.": {
+      "expected": 83,
+      "extracted": 77,
+      "pct": 92.77
+    },
+    "ч.": {
+      "expected": 8249,
+      "extracted": 8021,
+      "pct": 97.24
+    },
     "іє.": {
-      "expected": 1299,
-      "extracted": 1177,
-      "pct": 90.61
+      "expected": 1393,
+      "extracted": 1192,
+      "pct": 85.57
     }
   },
   "per_marker_declared_coverage": {
     "ав.": {
-      "expected": 674,
-      "extracted": 540,
-      "pct": 80.12
+      "expected": 710,
+      "extracted": 564,
+      "pct": 79.44
     },
     "болг.": {
-      "expected": 7457,
-      "extracted": 7339,
-      "pct": 98.42
+      "expected": 7248,
+      "extracted": 7067,
+      "pct": 97.5
     },
     "бр.": {
-      "expected": 11448,
-      "extracted": 10007,
-      "pct": 87.41
+      "expected": 11316,
+      "extracted": 9658,
+      "pct": 85.35
     },
     "гот.": {
-      "expected": 893,
-      "extracted": 880,
-      "pct": 98.54
+      "expected": 909,
+      "extracted": 882,
+      "pct": 97.03
     },
     "гр.": {
-      "expected": 3795,
-      "extracted": 3435,
-      "pct": 90.51
+      "expected": 3799,
+      "extracted": 3415,
+      "pct": 89.89
     },
     "двн.": {
-      "expected": 1706,
-      "extracted": 1661,
-      "pct": 97.36
+      "expected": 1788,
+      "extracted": 1729,
+      "pct": 96.7
     },
     "др.": {
-      "expected": 2868,
-      "extracted": 2836,
-      "pct": 98.88
+      "expected": 2925,
+      "extracted": 2856,
+      "pct": 97.64
     },
     "дінд.": {
-      "expected": 1683,
-      "extracted": 1638,
-      "pct": 97.33
+      "expected": 1788,
+      "extracted": 1730,
+      "pct": 96.76
     },
     "лат.": {
-      "expected": 5264,
-      "extracted": 4697,
-      "pct": 89.23
+      "expected": 5230,
+      "extracted": 4581,
+      "pct": 87.59
     },
     "лит.": {
-      "expected": 2044,
-      "extracted": 2012,
-      "pct": 98.43
+      "expected": 2185,
+      "extracted": 2133,
+      "pct": 97.62
     },
     "лтс.": {
-      "expected": 1068,
-      "extracted": 1042,
-      "pct": 97.57
+      "expected": 1024,
+      "extracted": 990,
+      "pct": 96.68
     },
     "п.": {
-      "expected": 12712,
-      "extracted": 11104,
-      "pct": 87.35
+      "expected": 12477,
+      "extracted": 10614,
+      "pct": 85.07
     },
     "перс.": {
-      "expected": 273,
-      "extracted": 196,
-      "pct": 71.79
+      "expected": 282,
+      "extracted": 158,
+      "pct": 56.03
     },
     "прус.": {
-      "expected": 251,
-      "extracted": 244,
-      "pct": 97.21
+      "expected": 332,
+      "extracted": 323,
+      "pct": 97.29
     },
     "псл.": {
-      "expected": 4543,
-      "extracted": 4375,
-      "pct": 96.3
+      "expected": 4239,
+      "extracted": 3982,
+      "pct": 93.94
     },
     "р.": {
-      "expected": 19809,
-      "extracted": 12046,
-      "pct": 60.81
+      "expected": 20445,
+      "extracted": 11798,
+      "pct": 57.71
     },
     "слн.": {
-      "expected": 6298,
-      "extracted": 6182,
-      "pct": 98.16
+      "expected": 6116,
+      "extracted": 5950,
+      "pct": 97.29
     },
     "слц.": {
-      "expected": 7624,
-      "extracted": 7468,
-      "pct": 97.95
+      "expected": 7258,
+      "extracted": 7018,
+      "pct": 96.69
     },
     "стел.": {
-      "expected": 798,
-      "extracted": 765,
-      "pct": 95.86
+      "expected": 924,
+      "extracted": 657,
+      "pct": 71.1
     },
     "схв.": {
-      "expected": 7399,
-      "extracted": 7297,
-      "pct": 98.62
+      "expected": 7177,
+      "extracted": 7047,
+      "pct": 98.19
     },
     "тат.": {
-      "expected": 379,
-      "extracted": 359,
-      "pct": 94.72
+      "expected": 392,
+      "extracted": 369,
+      "pct": 94.13
     },
     "тур.": {
-      "expected": 732,
-      "extracted": 717,
-      "pct": 97.95
+      "expected": 734,
+      "extracted": 712,
+      "pct": 97.0
     },
     "тюрк.": {
-      "expected": 165,
-      "extracted": 78,
-      "pct": 47.27
+      "expected": 173,
+      "extracted": 77,
+      "pct": 44.51
     },
     "ч.": {
-      "expected": 8821,
-      "extracted": 8345,
-      "pct": 94.6
+      "expected": 8572,
+      "extracted": 8021,
+      "pct": 93.57
     },
     "іє.": {
-      "expected": 1318,
-      "extracted": 1177,
-      "pct": 89.3
+      "expected": 1421,
+      "extracted": 1192,
+      "pct": 83.88
     }
   }
 }
