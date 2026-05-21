@@ -38,7 +38,9 @@ _ARTIFACT_GLOBS = (
     "python_qg_correction_r*.json",
     "wiki_coverage_correction_r*.json",
     "llm-qg-*-prompt.md",
+    "llm-qg-*-response.raw.md",
     "wiki-coverage-review-prompt.md",
+    "wiki-coverage-review-response.raw.md",
 )
 
 

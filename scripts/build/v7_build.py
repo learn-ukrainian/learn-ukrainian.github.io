@@ -697,6 +697,13 @@ def _run_llm_qg(
             stdout_silence_timeout=stdout_silence_timeout,
         )
         response = str(getattr(result, "response", "") or "")
+        # Persist raw reviewer response BEFORE parse so #M-10 forensic
+        # continuity holds when the parser raises (build #10, 2026-05-21
+        # exposed prose-wrapped JSON shape with no saved artifact).
+        (module_dir / f"llm-qg-{dim}-response.raw.md").write_text(
+            response,
+            encoding="utf-8",
+        )
         report[dim] = linear_pipeline.parse_review_response(response, dim)
 
     return linear_pipeline.aggregate_llm_review(report, str(plan["level"]))
@@ -742,6 +749,16 @@ def _run_wiki_coverage_review(
         stdout_silence_timeout=stdout_silence_timeout,
     )
     response = str(getattr(result, "response", "") or "")
+    # Persist raw reviewer response BEFORE parse so #M-10 forensic continuity
+    # holds when the parser raises. Build #10 (a1/my-morning, 2026-05-21)
+    # exposed prose-wrapped JSON: codex-tools emitted "I have verified all
+    # **18 obligations**..." narrative around the structured payload, the
+    # parser failed, no artifact was saved, and the only diagnostic was the
+    # YAML-parser error string in the build event log.
+    (module_dir / "wiki-coverage-review-response.raw.md").write_text(
+        response,
+        encoding="utf-8",
+    )
     return linear_pipeline.parse_wiki_coverage_review_response(response)
 
 

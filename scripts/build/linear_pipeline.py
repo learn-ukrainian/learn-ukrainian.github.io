@@ -5803,15 +5803,102 @@ def _strip_outer_code_fence(text: str) -> str:
     return stripped
 
 
+# Fenced-block + bare-JSON-object extractor used when the LLM wraps the
+# expected JSON/YAML payload in prose preamble/epilogue (a common pattern —
+# "I have verified all 18 obligations. Here is the structured output:" + ```json
+# {...} ``` + closing remarks). Without these fallbacks, ``json.loads`` and
+# ``yaml.safe_load`` both fail on the prose, masking the actual reviewer
+# output. Build #10 (a1/my-morning, 2026-05-21) exposed this: codex-tools
+# emitted a prose preamble, the gate raised
+# ``LLM QG response must be a JSON/YAML mapping`` with no way to recover the
+# structured payload from inside the response. Order matters: try a fenced
+# block first (most LLMs use ``` ```json `` or `` ```yaml ``); then try to
+# extract the first balanced ``{...}`` object span; finally fall through to
+# the whole-string parse so existing well-formed responses are unchanged.
+_FENCED_BLOCK_RE = re.compile(
+    r"```(?:json|yaml|yml)?\s*\n(?P<body>.*?)\n```",
+    re.DOTALL,
+)
+
+
+def _extract_first_fenced_block(text: str) -> str | None:
+    match = _FENCED_BLOCK_RE.search(text)
+    if match:
+        return match.group("body").strip()
+    return None
+
+
+def _extract_first_balanced_json_object(text: str) -> str | None:
+    """Return the first top-level ``{...}`` span with balanced braces.
+
+    Naive bracket-counter that ignores braces inside double-quoted strings
+    (so ``"key": "}{"`` does not break the count) and respects backslash
+    escapes inside those strings. Returns None if no balanced object is found.
+    Used as a last-resort extractor for prose-wrapped reviewer responses; we
+    don't try to handle arrays — every reviewer-response schema is a top-level
+    mapping.
+    """
+    depth = 0
+    start = -1
+    in_string = False
+    escape = False
+    for idx, ch in enumerate(text):
+        if in_string:
+            if escape:
+                escape = False
+                continue
+            if ch == "\\":
+                escape = True
+                continue
+            if ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+            continue
+        if ch == "{":
+            if depth == 0:
+                start = idx
+            depth += 1
+            continue
+        if ch == "}":
+            if depth == 0:
+                continue
+            depth -= 1
+            if depth == 0 and start >= 0:
+                return text[start : idx + 1]
+    return None
+
+
 def _parse_json_or_yaml_mapping(text: str) -> dict[str, Any]:
+    candidates: list[str] = []
     body = _strip_outer_code_fence(text)
-    try:
-        parsed = json.loads(body)
-    except json.JSONDecodeError:
-        parsed = yaml.safe_load(body)
-    if not isinstance(parsed, dict):
-        raise LinearPipelineError("LLM QG response must be a JSON/YAML mapping")
-    return parsed
+    candidates.append(body)
+    fenced = _extract_first_fenced_block(text)
+    if fenced is not None and fenced != body:
+        candidates.append(fenced)
+    bare_object = _extract_first_balanced_json_object(text)
+    if bare_object is not None and bare_object not in candidates:
+        candidates.append(bare_object)
+
+    last_error: Exception | None = None
+    for candidate in candidates:
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError as exc:
+            last_error = exc
+            try:
+                parsed = yaml.safe_load(candidate)
+            except yaml.YAMLError as yaml_exc:
+                last_error = yaml_exc
+                continue
+        if isinstance(parsed, dict):
+            return parsed
+    if last_error is not None:
+        raise LinearPipelineError(
+            "LLM QG response must be a JSON/YAML mapping"
+        ) from last_error
+    raise LinearPipelineError("LLM QG response must be a JSON/YAML mapping")
 
 
 def _placeholder_review_report() -> dict[str, dict[str, Any]]:
