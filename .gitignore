@@ -324,3 +324,9 @@ data/eval-archive/
 
 # Raw ESUM OCR outputs (per-volume .txt files; jp2-staging/ + gemini-ocr/ already covered)
 data/raw/esum/*.txt
+
+# IA-sourced ESUM extracts (pdf + abbyy.xml — large, re-downloadable from archive.org)
+data/raw/esum/ia-text-pdf/
+data/raw/esum/ia-abbyy-xml/
+# v2 parsing output (work-in-progress, parser adaptation pending)
+data/processed/v2/
