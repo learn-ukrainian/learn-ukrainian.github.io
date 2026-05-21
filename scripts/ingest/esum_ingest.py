@@ -42,7 +42,7 @@ DEFAULT_OUTPUT = REPO / "data" / "processed" / "esum_vol1.jsonl"
 # match falls through and the parser starts from line 0; downstream
 # entry validation filters out front-matter prose.
 BODY_START_RE = re.compile(
-    r"^[а-яґіїє]{1,3}\s+1\s+[«\(]",
+    r"^[а-яґіїє]{1,3}\s*[1!]\s+[«\(]",
     re.IGNORECASE,
 )
 
@@ -58,8 +58,11 @@ BODY_END_RE = re.compile(
 PAGE_RE = re.compile(r"^\d{1,3}$")
 WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
+WORD_SPLIT_TEXTPDF_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬|\[]\s*$")
+SPACED_WORD_SPLIT_TEXTPDF_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬|\[]\s*$")
 SPACE_RE = re.compile(r"[ \t]+")
 ENTRY_PUNCT_RE = re.compile(r"[;—]")
+ENTRY_PUNCT_TEXTPDF_RE = re.compile(r"[;—«]")
 HEAD_END_RE = re.compile(r"[,;(—«]")
 LANG_MARKERS = (
     "псл.",
@@ -149,10 +152,13 @@ def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
     return lines[start:end]
 
 
-def _clean_lines(lines: Iterable[str]) -> list[tuple[int | None, str]]:
+def _clean_lines(lines: Iterable[str], source_format: str = "djvutxt") -> list[tuple[int | None, str]]:
     cleaned: list[tuple[int | None, str]] = []
     current_page: int | None = 37
     carry = ""
+
+    split_re = WORD_SPLIT_TEXTPDF_RE if source_format == "text-pdf" else WORD_SPLIT_RE
+    spaced_split_re = SPACED_WORD_SPLIT_TEXTPDF_RE if source_format == "text-pdf" else SPACED_WORD_SPLIT_RE
 
     for raw_line in lines:
         line = SPACE_RE.sub(" ", raw_line.rstrip()).strip()
@@ -163,6 +169,8 @@ def _clean_lines(lines: Iterable[str]) -> list[tuple[int | None, str]]:
                 continue
 
         if not line:
+            if source_format == "text-pdf":
+                continue
             if carry:
                 cleaned.append((current_page, carry.strip()))
                 carry = ""
@@ -170,14 +178,19 @@ def _clean_lines(lines: Iterable[str]) -> list[tuple[int | None, str]]:
             continue
 
         if carry:
-            if WORD_SPLIT_RE.search(carry) or SPACED_WORD_SPLIT_RE.search(carry):
-                carry = SPACED_WORD_SPLIT_RE.sub("", WORD_SPLIT_RE.sub("", carry)) + line
+            # In text-pdf, if a line starts with [ (pipe), it's likely a new entry.
+            # Don't merge it into the previous carry, unless it's a hyphenated fragment.
+            if source_format == "text-pdf" and line.startswith("[") and not line.split()[0].rstrip("[").endswith("-"):
+                cleaned.append((current_page, carry.strip()))
+                carry = line
+            elif split_re.search(carry) or spaced_split_re.search(carry):
+                carry = spaced_split_re.sub("", split_re.sub("", carry)) + line
             else:
                 carry = f"{carry} {line}"
         else:
             carry = line
 
-        if not WORD_SPLIT_RE.search(carry):
+        if not split_re.search(carry):
             cleaned.append((current_page, carry.strip()))
             carry = ""
 
@@ -285,24 +298,25 @@ def _extract_headword(paragraph: str) -> str | None:
     return lemma
 
 
-def _looks_like_entry_start(paragraph: str) -> bool:
-    if len(paragraph) < 20:
+def _looks_like_entry_start(paragraph: str, source_format: str = "djvutxt") -> bool:
+    # Relax length constraint for text-pdf which has more fragmented lines
+    min_len = 20 if source_format == "djvutxt" else 5
+    if len(paragraph) < min_len:
         return False
-    if not ENTRY_PUNCT_RE.search(paragraph):
+    punct_re = ENTRY_PUNCT_TEXTPDF_RE if source_format == "text-pdf" else ENTRY_PUNCT_RE
+    if not punct_re.search(paragraph):
         return False
     return _extract_headword(paragraph) is not None
 
 
 def _looks_like_cross_reference_entry(paragraph: str) -> bool:
-    return (
-        "див." in paragraph
-        and ENTRY_PUNCT_RE.search(paragraph) is not None
-        and _extract_headword(paragraph) is not None
-    )
+    return "див." in paragraph and _extract_headword(paragraph) is not None
 
 
 def _looks_like_head_candidate(line: str) -> bool:
     if _is_page_header_fragment(line):
+        return False
+    if not line or line[0] in (")", "]", "»", ".", ",", ";"):
         return False
     head = re.split(r"[,;(—]", line, maxsplit=1)[0].strip()
     lemma = _canonical_lemma(head)
@@ -313,10 +327,15 @@ def _looks_like_head_candidate(line: str) -> bool:
     return bool(re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma))
 
 
-def _looks_like_complete_entry(paragraph: str) -> bool:
+def _looks_like_complete_entry(paragraph: str, source_format: str = "djvutxt") -> bool:
     if len(paragraph) >= 80:
-        return _looks_like_entry_start(paragraph)
-    return _looks_like_cross_reference_entry(paragraph)
+        return _looks_like_entry_start(paragraph, source_format=source_format)
+    if _looks_like_cross_reference_entry(paragraph):
+        return True
+    # For text-pdf, accept shorter entries if they look like real starts (punctuation + headword)
+    if source_format == "text-pdf":
+        return _looks_like_entry_start(paragraph, source_format=source_format)
+    return False
 
 
 def _is_page_header_fragment(paragraph: str) -> bool:
@@ -357,15 +376,57 @@ def _extract_cognate_markers(text: str) -> list[str]:
     return sorted(set(found), key=found.index)
 
 
-def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
+def _is_likely_abbreviation(text: str) -> bool:
+    """Check if a word ending in a period is likely an abbreviation, not an entry end.
+
+    Used in text-pdf mode where blank lines are missing and we rely on punctuation.
+    """
+    # Specific common ESUM abbreviations
+    specific_abbrevs = {
+        "див.",
+        "пор.",
+        "стор.",
+        "напр.",
+        "очевид.",
+        "похідн.",
+        "прасл.",
+        "болг.",
+        "тюрк.",
+        "дінд.",
+        "прус.",
+        "лат.",
+        "лит.",
+        "псл.",
+        "гр.",
+    }
+    clean = text.lower().rstrip("»\"' ")
+    # Match specific ones
+    if clean.split()[-1] in specific_abbrevs:
+        return True
+    # Match general patterns: 1-3 lowercase cyrillic letters or 1-2 uppercase
+    return bool(
+        re.search(r"\b[а-яґіїє]{1,3}\.?$", clean)
+        or re.search(r"\b[А-ЯҐІЇЄIVXLCDM]{1,2}\.?$", clean)
+    )
+
+
+def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict[str, object]]:
     text = _extract_pre_if_html(text)
+
+    if source_format == "text-pdf":
+        text = text.replace("|", "[")
+        # Fix uppercase I used as opening bracket: "Інабадкати[" -> "[набадкати["
+        text = re.sub(r"\bІ([а-яґіїє]+\[)", r"[\1", text)
+        text = re.sub(r"^І([а-яґіїє]+\[)", r"[\1", text, flags=re.MULTILINE)
+
     lines = _strip_front_and_back_matter(text.splitlines())
-    cleaned_lines = _clean_lines(lines)
+    cleaned_lines = _clean_lines(lines, source_format=source_format)
 
     merged: list[tuple[int, str]] = []
     current_page = 37
     current_parts: list[str] = []
     after_blank = True
+    after_end_of_entry = True
 
     def flush_current() -> None:
         nonlocal current_parts
@@ -373,12 +434,7 @@ def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
             merged.append((current_page, SPACE_RE.sub(" ", " ".join(current_parts)).strip()))
         current_parts = []
 
-    # Materialize for look-ahead — needed to detect page-running-header
-    # pairs (vols 4-6 print two short single-word lines back-to-back at
-    # the top of each page: left-column-first-headword and
-    # right-column-last-headword). Without look-ahead, the parser
-    # promotes both as bare-headword entry starts and silently drops
-    # them because no body follows.
+    # Materialize for look-ahead
     rows = list(cleaned_lines)
 
     def _next_nonblank_index(start: int) -> int | None:
@@ -396,46 +452,61 @@ def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
             return False
         if len(text.split()) != 1:
             return False
+        # Page headers don't contain typical entry punctuation or meanings
+        if any(c in text for c in ",;(—«"):
+            return False
         return _looks_like_head_candidate(text)
 
     i = 0
     while i < len(rows):
         page, line = rows[i]
         if not line:
-            after_blank = True
+            if source_format == "djvutxt":
+                after_blank = True
             i += 1
             continue
 
-        if after_blank and (
-            _looks_like_entry_start(line)
+        is_entry_start = (
+            _looks_like_entry_start(line, source_format=source_format)
             or _looks_like_cross_reference_entry(line)
             or _looks_like_head_candidate(line)
-        ):
-            # Page-running-header detection: two consecutive bare-headword
-            # lines back to back (with optional blanks between) are
-            # column-pair running headers, NOT real entries. Skip both
-            # if pattern matches; the real entries reappear deeper in
-            # the page with proper bodies.
+        )
+
+        # In text-pdf, a line starting with [ (from |) is a strong signal for a new entry.
+        # We avoid splitting on variations/fragments that end in a hyphen, or where
+        # a meaning is glued immediately to the headword (likely joined fragment).
+        is_strong_start = (
+            source_format == "text-pdf"
+            and line.startswith("[")
+            and not line.split()[0].rstrip("[").endswith("-")
+            and not re.match(r"^\[[а-яґіїє]+«", line)
+            and _looks_like_head_candidate(line)
+        )
+
+        condition = (
+            (after_blank and is_entry_start)
+            if source_format == "djvutxt"
+            else (is_strong_start or (after_end_of_entry and is_entry_start))
+        )
+
+        if condition:
+            # Page-running-header detection
             if _is_bare_head_only(line):
                 j = _next_nonblank_index(i + 1)
                 if j is not None and _is_bare_head_only(rows[j][1]):
                     k = _next_nonblank_index(j + 1)
-                    # Confirm: the NEXT line after the pair must not be
-                    # body of either bare head (otherwise we'd be
-                    # falsely skipping a real entry). Heuristic: if
-                    # the third line is itself a head candidate or
-                    # starts with the typical body marker `[`/`|`, the
-                    # first two were running headers.
                     if k is not None:
                         third = rows[k][1]
                         if (
                             third.startswith(("[", "|"))
                             or _is_bare_head_only(third)
-                            or _looks_like_entry_start(third)
+                            or _looks_like_entry_start(third, source_format=source_format)
                             or _looks_like_head_candidate(third)
                         ):
+                            flush_current()
                             i = j + 1  # skip past both bare headers
-                            after_blank = True
+                            if source_format == "djvutxt":
+                                after_blank = True
                             continue
 
             flush_current()
@@ -443,13 +514,22 @@ def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
             current_parts = [line]
         elif current_parts and not _is_page_header_fragment(line):
             current_parts.append(line)
-        after_blank = False
+
+        if source_format == "djvutxt":
+            after_blank = False
+        else:
+            clean_end = line.rstrip("»\"' ")
+            if clean_end.endswith(".") or clean_end.endswith("!") or clean_end.endswith("?"):
+                after_end_of_entry = not _is_likely_abbreviation(clean_end)
+            else:
+                after_end_of_entry = False
+
         i += 1
     flush_current()
 
     entries: list[dict[str, object]] = []
     for page, paragraph in merged:
-        if not _looks_like_complete_entry(paragraph):
+        if not _looks_like_complete_entry(paragraph, source_format=source_format):
             continue
         lemma = _extract_headword(paragraph)
         if lemma is None:
@@ -494,7 +574,7 @@ Exit codes:
   0 on successful parse with at least one entry; >=1 on missing input, parse failure, or write failure.
 
 Related:
-  GitHub issue #1662; load output with scripts/ingest/esum_load.py.
+  GitHub issue #1662; load output with scripts/ingest/esum_ingest.py.
 """,
     )
     parser.add_argument(
@@ -515,6 +595,12 @@ Related:
         required=True,
         help="ЕСУМ volume number to store in each JSONL row. Example: 1",
     )
+    parser.add_argument(
+        "--source-format",
+        choices=["djvutxt", "text-pdf"],
+        default="djvutxt",
+        help="Input format: djvutxt (default, for vols 1-3, 6) or text-pdf (vols 4, 5).",
+    )
     return parser
 
 
@@ -524,7 +610,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Input file not found: {args.input}", file=sys.stderr)
         return 1
     text = args.input.read_text(encoding="utf-8")
-    entries = parse_esum(text, args.vol)
+    entries = parse_esum(text, args.vol, source_format=args.source_format)
     if not entries:
         print("No ЕСУМ entries parsed; inspect OCR and segmentation rules.", file=sys.stderr)
         return 1
