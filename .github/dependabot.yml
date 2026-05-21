@@ -8,6 +8,12 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    # Wait 5 days after a new release before opening a PR — gives the
+    # upstream time to surface regressions and avoids burning CI on
+    # versions that get yanked. Closes zizmor dependabot-cooldown
+    # warnings (CodeQL alerts #185, #186, #187).
+    cooldown:
+      default-days: 5
     commit-message:
       prefix: "ci"
     labels:
@@ -24,6 +30,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    cooldown:
+      default-days: 5
     commit-message:
       prefix: "deps"
     labels:
@@ -37,6 +45,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    cooldown:
+      default-days: 5
     commit-message:
       prefix: "deps"
     labels:

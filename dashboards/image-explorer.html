@@ -715,8 +715,13 @@ async function loadPage() {
         title="${escapeHtml(tb.text.substring(0, 100))}"></div>`;
     });
 
+    // `imgUrl` derives from the DOM-controlled `currentStem` (textbook
+    // select value) and `currentPage` (numeric input). Escape it as an
+    // HTML attribute even though the realistic exploit surface is
+    // self-XSS — CodeQL's flow analysis can't see the bounded select
+    // values and flagged the raw interpolation (alert #178).
     container.innerHTML = `
-      <img src="${imgUrl}" onload="this.parentElement.style.width=this.naturalWidth+'px'">
+      <img src="${escapeHtml(imgUrl)}" onload="this.parentElement.style.width=this.naturalWidth+'px'">
       <div id="img-overlays" style="${showImageOverlay ? '' : 'display:none'}">${imgOverlays}</div>
       <div id="text-overlays" style="${showTextOverlay ? '' : 'display:none'}">${textOverlays}</div>`;
 
@@ -724,13 +729,23 @@ async function loadPage() {
     let sidebarHtml = `<div style="font-size:12px;color:var(--text2);margin-bottom:8px;">${data.images.length} images, ${data.text_blocks.length} text blocks</div>`;
 
     data.images.forEach((img, i) => {
+      // Defense-in-depth: every server-controlled string interpolated
+      // into innerHTML/onclick must be escaped, even though the
+      // textbook_images ingestion pipeline is our own. The original
+      // raw `${imgSrc}` and `${img.description_uk}` were the
+      // hardening gaps left around CodeQL alert #178.
       const imgSrc = img.image_path ? `/images/${img.image_path.replace('data/textbook_images/','')}` : '';
+      const imgSrcAttr = escapeHtml(imgSrc);
+      const imgSrcJS = imgSrc.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      const descSafe = img.description_uk
+        ? escapeHtml(img.description_uk)
+        : '<span style="color:var(--text3)">no description</span>';
       sidebarHtml += `<div class="page-img-row" id="row-${i}" data-idx="${i}"
         onmouseenter="highlightBbox(${i})" onmouseleave="unhighlightBbox(${i})"
         onclick="if(event.target.tagName!=='IMG') highlightBbox(${i})">
-        ${imgSrc ? `<img class="thumb" src="${imgSrc}" onclick="openLightbox('${imgSrc}')" loading="lazy">` : '<div class="thumb-placeholder" style="width:60px;height:45px">?</div>'}
+        ${imgSrc ? `<img class="thumb" src="${imgSrcAttr}" onclick="openLightbox('${imgSrcJS}')" loading="lazy">` : '<div class="thumb-placeholder" style="width:60px;height:45px">?</div>'}
         <div class="meta">
-          <div class="desc">${img.description_uk || '<span style="color:var(--text3)">no description</span>'}</div>
+          <div class="desc">${descSafe}</div>
           <div class="tags">
             <span class="tag tag-type">#${i+1}</span>
             ${tvTag(img.teaching_value)}
