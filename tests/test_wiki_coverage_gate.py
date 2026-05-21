@@ -185,6 +185,33 @@ def test_parse_implementation_map_inline_field_order_independence() -> None:
     assert result["ban-1"]["location"] == "§Підсумок"
 
 
+def test_parse_implementation_map_inline_pipe_separator_accepted() -> None:
+    """Build-#9 a1/my-morning regression: the writer-prompt template
+    describes the artifact field as `<module.md | activities.yaml | ...>`
+    (pipes denote alternatives), and the writer copied the `|` pattern
+    as a field separator across all four implementation_map fields:
+
+        - obligation_id: step-1 | artifact: module.md | location: §... | treatment: ...
+
+    Parser originally accepted only `;` as separator, so `artifact` ate
+    the rest of the line and every obligation returned `unknown_artifact`
+    with coverage stuck at 0/18. Accept pipe-with-spaces as alternative
+    separator (alongside semicolons) so this writer shape parses cleanly."""
+    raw = """<implementation_map>
+- obligation_id: step-1 | artifact: module.md | location: §Дієслова на -ся | treatment: H3 step marker
+- obligation_id: err-2 | artifact: activities.yaml | location: act-5 item 2 | treatment: contrast_pair
+</implementation_map>"""
+
+    result = parse_implementation_map(raw)
+
+    assert result["step-1"]["artifact"] == "module.md"
+    assert result["step-1"]["location"] == "§Дієслова на -ся"
+    assert result["step-1"]["treatment"] == "H3 step marker"
+    assert result["err-2"]["artifact"] == "activities.yaml"
+    assert result["err-2"]["location"] == "act-5 item 2"
+    assert result["err-2"]["treatment"] == "contrast_pair"
+
+
 def test_parse_implementation_map_last_emission_wins() -> None:
     """If the writer restates an obligation in a later section block with
     a different artifact/location, the LATER claim wins. Mirrors writer
