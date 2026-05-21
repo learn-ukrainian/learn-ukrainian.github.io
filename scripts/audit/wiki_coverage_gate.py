@@ -473,28 +473,80 @@ def _load_activity_items(activities_yaml: str) -> list[dict[str, Any]]:
     return [item for item in parsed if isinstance(item, dict)]
 
 
+def _flatten_strings(value: Any) -> list[str]:
+    """Yield every string value reachable inside a YAML-decoded structure.
+
+    Used by `_activity_text` so that the activity's content reaches the
+    marker-match step as plain text. `yaml.safe_dump` would round-trip
+    inner apostrophes inside single-quoted YAML strings as `''` (e.g.
+    `Вимова: [прокидайес':а]` becomes `Вимова: [прокидайес'':а]`), which
+    breaks `_contains` substring matching against the wiki-manifest
+    marker. Concatenating raw string fields avoids that escape artifact.
+    """
+
+    out: list[str] = []
+    stack: list[Any] = [value]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, str):
+            out.append(node)
+        elif isinstance(node, Mapping):
+            stack.extend(node.values())
+        elif isinstance(node, Sequence) and not isinstance(node, (str, bytes)):
+            stack.extend(node)
+    return out
+
+
 def _activity_text(activities: list[dict[str, Any]], location: str) -> str:
     if not location:
-        return yaml.safe_dump(activities, allow_unicode=True, sort_keys=False)
+        return "\n".join(s for activity in activities for s in _flatten_strings(activity))
     for activity in activities:
         activity_id = str(activity.get("id") or "")
         if activity_id and activity_id in location:
-            return yaml.safe_dump(activity, allow_unicode=True, sort_keys=False)
+            return "\n".join(_flatten_strings(activity))
     return ""
 
 
 def _location_text(text: str, location: str) -> str:
+    """Return the text of the heading section that best matches `location`.
+
+    A module may legitimately repeat its title as a section heading
+    (`# Мій ранок` for the module title and `## Мій ранок` for the
+    matching section). Picking the first match in document order returns
+    the H1 title-only block (a few lines of intro) instead of the H2
+    section. Score candidates by heading depth (deeper = more specific)
+    with title-length proximity as a tiebreaker so the deeper match
+    wins, but degrade gracefully to the earlier behaviour when only one
+    candidate exists.
+    """
+
     if not location or location.casefold() in {"module.md", "whole file", "file"}:
         return text
     location_key = location.strip().lstrip("#§ ").casefold()
     heading_re = re.compile(r"^(?P<marks>#{1,6})\s+(?P<title>.+?)\s*$", re.MULTILINE)
     headings = list(heading_re.finditer(text))
+    candidates: list[tuple[int, int, int]] = []
     for index, heading in enumerate(headings):
         title = heading.group("title").strip().casefold()
         if location_key and location_key not in title and title not in location_key:
             continue
+        depth = len(heading.group("marks"))
+        title_gap = abs(len(title) - len(location_key))
+        # Sort key: deeper first (negate depth), then closer title-length, then
+        # earlier in the document — matches author intent that "§Мій ранок ..."
+        # refers to the section, not the H1 module title.
+        candidates.append((-depth, title_gap, index))
+
+    if candidates:
+        candidates.sort()
+        chosen_index = candidates[0][2]
+        heading = headings[chosen_index]
         start = heading.start()
-        end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
+        end = (
+            headings[chosen_index + 1].start()
+            if chosen_index + 1 < len(headings)
+            else len(text)
+        )
         return text[start:end]
     return text if location_key in text.casefold() else ""
 

@@ -126,3 +126,150 @@ def test_decolonization_ban_legacy_manifest_without_subtype_field() -> None:
     assert result["status"] == "FAIL"
     assert result["reason"] == "ban_substance_missing"
     assert "subtype" not in result
+
+
+# Regression tests for two bugs that masked the build #6 a1/my-morning gate
+# (2026-05-21). Both fixes are required for the gate to recognise content
+# the writer and correction loop actually emitted.
+
+
+def _sequence_step_manifest() -> dict[str, Any]:
+    return {
+        "slug": "fixture",
+        "wiki_path": "wiki/pedagogy/a1/fixture.md",
+        "sequence_steps": [
+            {
+                "id": "step-5",
+                "heading": (
+                    "Крок 5: Розширення лексичного контексту. "
+                    "Тема ранкової рутини наповнюється іменниками "
+                    "(вода, зарядка, сніданок) та прислівниками "
+                    "часу і частотності (раненько, завжди, ніколи)."
+                ),
+                "step_num": 5,
+                "required_claim": (
+                    "Крок 5: Розширення лексичного контексту. "
+                    "Тема ранкової рутини наповнюється іменниками "
+                    "(вода, зарядка, сніданок) та прислівниками "
+                    "часу і частотності (раненько, завжди, ніколи)."
+                ),
+                "source_lines": "31",
+            }
+        ],
+        "l2_errors": [],
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+        "external_resources": [],
+    }
+
+
+def _phonetic_l2_error_manifest() -> dict[str, Any]:
+    return {
+        "slug": "fixture",
+        "wiki_path": "wiki/pedagogy/a1/fixture.md",
+        "sequence_steps": [],
+        "l2_errors": [
+            {
+                "id": "err-2",
+                "incorrect": "Вимова: [прокидайешся]",
+                "correct": "Вимова: [прокидайес':а]",
+                "why": (
+                    "Побуквене прочитання. Учень намагається чітко "
+                    "вимовити звук [ш], хоча українська норма вимагає "
+                    "повної асиміляції в подовжений м'який [с':а]."
+                ),
+                "treatment": "contrast_pair",
+                "source_lines": "40",
+            }
+        ],
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+        "external_resources": [],
+    }
+
+
+def test_sequence_step_passes_when_h1_title_collides_with_h2_section() -> None:
+    """`_location_text` must prefer the deeper heading when an H1 module
+    title and an H2 section share the same name. The build-#6 regression:
+    module starts with `# Мій ранок` (title) and contains `## Мій ранок`
+    (section); the gate was scoping to the H1 title-only block and
+    failing step-5 even though the section had the required substance."""
+    manifest = _sequence_step_manifest()
+    module_md = (
+        "# Мій ранок\n\n"
+        "Two roommates compare their mornings. Listen for **-ся**.\n\n"
+        "## Діалоги\n\nDialogue content here.\n\n"
+        "## Дієслова на -ся\n\nGrammar content here.\n\n"
+        "## Мій ранок\n\n"
+        "**Sequence words** — these are the connective tissue:\n\n"
+        "- **спочатку** — first\n- **потім** — then\n"
+        "- **нарешті** — finally\n- **завжди** — always\n\n"
+        "Build a narrative from **іменниками** like **сніданок** "
+        "and **зарядка**, plus **прислівниками** of time.\n\n"
+        "## Підсумок\n\nWrap-up here.\n"
+    )
+    implementation_map = {
+        "step-5": {
+            "artifact": "module.md",
+            "location": "§Мій ранок (sequence-words + nouns block)",
+            "treatment": "in-prose vocabulary expansion",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    step_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "step-5"
+    )
+    assert step_result["status"] == "PASS", (
+        f"step-5 should PASS when H2 section has the substance, even "
+        f"with a colliding H1 title; got reason={step_result['reason']!r}"
+    )
+
+
+def test_l2_error_passes_when_marker_contains_apostrophe() -> None:
+    """`_activity_text` must surface activity content without YAML re-
+    serialisation double-escaping apostrophes. The build-#6 regression:
+    `correction: \"Вимова: [прокидайес':а]\"` round-tripped through
+    `yaml.safe_dump` as `[прокидайес'':а]` (double apostrophe), so the
+    marker substring match failed even though the artifact was correct."""
+    manifest = _phonetic_l2_error_manifest()
+    activities_yaml = (
+        "- id: act-5\n"
+        "  type: error-correction\n"
+        "  title: Fix the trap forms\n"
+        "  items:\n"
+        "    - sentence: 'Вимова: [прокидайешся]'\n"
+        "      error: 'Вимова: [прокидайешся]'\n"
+        "      correction: \"Вимова: [прокидайес':а]\"\n"
+        "      explanation: phonetic assimilation explanation.\n"
+    )
+    implementation_map = {
+        "err-2": {
+            "artifact": "activities.yaml",
+            "location": "act-5 item 2",
+            "treatment": "contrast_pair for phonetic assimilation",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="# Module body unrelated to err-2.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    err_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "err-2"
+    )
+    assert err_result["status"] == "PASS", (
+        f"err-2 should PASS when activity contains the correct apostrophe "
+        f"marker; got reason={err_result['reason']!r}"
+    )
