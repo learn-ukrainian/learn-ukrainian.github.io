@@ -233,8 +233,48 @@ Additional implicit follow-ups not yet filed as tasks but worth noting:
 6. **Then: address PR #2168 amelina blocker** if you want the seminar title backfill merged — task #7 plan-quality sweep is the broader scope but a single-file content fill on amelina would unblock immediately.
 7. **Possible parallel test: deepseek-tools on B1 module** — tonight proved A1 readiness; B1+ has been the historical disconfirmation point. If A1 ships clean, retest a B1 module that previously failed (b1/genitive-nuances per 2026-05-19 night handoff).
 
+## Section 11 — Build #3 final outcome (arrived just before sign-off)
+
+DeepSeek-pro build #3 python_qg result (8:50 UTC, 520s python_qg phase):
+
+**19/22 gates PASSED.** 3 failures:
+
+1. **textbook_grounding [HARD] REJECT** — `textbook_result_hits=24` (parser correctly extracts 24 hits from the 2 get_chunk_context calls), `chunk_context_calls=4`, BUT `long_blockquotes_checked=0`. Writer DID paste a verbatim blockquote — `> Уранці Євген устав із ліжка САМ. ... Після сніданку САМ помив посуд.` properly attributed to «Захарійчук, Grade 1, p.52». The quote is **24 words**, gate requires **≥30 contiguous words**. Writer pasted too short by 6 words.
+
+2. **correction_terminal** — consequential: textbook_grounding has no ADR-008 correction path, so correction loop terminates after first attempt.
+
+3. **inject_activity_ids** — `unused_activities_not_injected, missing=[]`. Writer emitted activities.yaml but didn't inline-reference all activity IDs in module.md. (Note: gemini build #1 PASSED this gate — different writer-output-shape contract.)
+
+**Flipped failure mode vs gemini-tools.** Compare:
+
+| Writer | textbook_grounding root cause |
+|---|---|
+| gemini-tools build #1 | ✅ pasted ≥30-word blockquote correctly, ❌ parser missed gemini's functionResponse envelope (fixed in `a1cbf338ee`) |
+| deepseek-tools build #3 | ✅ parser sees 24 hits (Hermes envelope), ❌ writer pasted 24-word blockquote (6 short) |
+
+Both writers do part of the textbook_grounding job; neither does it complete. **DeepSeek needs a writer-prompt directive: "if quoting, paste ≥30 contiguous words from the chunk_context body."** The 4-backtick + l2_exposure_floor directives (commit 5) didn't address this dimension.
+
+**inject_activity_ids** is a separate writer-content gap — writer must inline-emit activity-ID references in module.md prose so the gate can find them. Easy prompt-directive add.
+
+Build branch preserved at `build/a1/my-morning-20260521-083420` per #M-10. Forensics: `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`, `writer_tool_calls.json`, `hermes.write.jsonl`, `python_qg.json`, `python_qg_correction_r1.json` all on the branch.
+
+**Next-session-actionable follow-up:** strengthen writer prompt with TWO additional directives, paired with prompt commit `be3b7c54fa`:
+
+- **Blockquote length floor (≥30 words for textbook_grounding):** add to the existing "Textbook quotes" section near line 83 in `linear-write.md`. Wording suggestion: "After `get_chunk_context` returns, paste at least 30 CONTIGUOUS Ukrainian words from the chunk body into a `>` blockquote in module.md. Attribute via italic line directly after the blockquote: `*— Захарійчук, Grade <N>, p.<page>*`. Stopping short of 30 words causes HARD-reject at textbook_grounding even when retrieval + attribution are perfect."
+- **inject_activity_ids — inline activity references:** every activity ID emitted in activities.yaml MUST appear as inline `<InjectActivity id="..." />` or equivalent reference in the relevant module.md tab. Otherwise the gate flags the activity as unused.
+
+Both directives benefit every writer (not just deepseek).
+
 ## Sign-off
 
-Five commits shipped to main, one full DeepSeek-pro writer phase proven clean (first time this week), three writer regressions root-caused and fixed at the pipeline layer. The blocker landscape went from "three of three writers broken in different ways" to "two writers proven, two partially fixable, one needs operator login". Build #3's reviewer outcome will tell us whether tonight produced the first end-to-end clean A1 module in V7.
+Five commits shipped to main, one full DeepSeek-pro writer phase proven clean with 19/22 gates green (first complete writer-phase + python_qg cycle this week), three writer regressions root-caused and fixed at the pipeline layer. The blocker landscape went from "three of three writers broken in different ways" to:
+
+- **gemini-tools**: writer phase green; downstream needs the ≥30-word blockquote directive AND the in-flight fence-label/l2_exposure prompt directives (commit 5) actually applied to a fresh build.
+- **deepseek-tools**: writer phase green with strongest telemetry; needs ≥30-word blockquote directive + inject_activity_ids prompt strengthening.
+- **codex-tools**: parser format fixed; rollout-flush race still needs separate fix.
+- **claude-tools**: operator action (`claude /login`).
+- **agy-tools**: kubedojo upstream (`agy plugin enable sources`).
+
+Net: BOTH gemini and deepseek are now within ONE writer-prompt-directive of an end-to-end green build. That's a real shift vs session start where neither could even clear the writer phase.
 
 Session length: ~4.5 hours of orchestrator work. Main project tree dirty with three unrelated pre-existing items (none mine). MEMORY.md within budget at 140 lines.
