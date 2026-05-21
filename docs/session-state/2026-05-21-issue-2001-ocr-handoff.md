@@ -102,15 +102,13 @@ data/raw/esum/
 
 ## Next workstreams (filed as GitHub issues — work in worktrees)
 
-See §6 for issue numbers once created.
-
-| # | Title | Effort | Depends |
+| Issue | Title | Effort | Depends |
 |---|---|---|---|
-| 1 | Adapt `esum_ingest.py` for IA text.pdf format (vols 4, 5) | ~2h Codex | none |
-| 2 | Write ABBYY XML parser for ESUM (vols 1, 2, 3, 6) | ~3h Codex | none |
-| 3 | Reload `sources.db` from new ESUM JSONLs after parsers ship | 30min inline | 1 + 2 |
-| 4 | Preserve 17 Gemini hallucination samples as test fixtures | 1h Codex | none |
-| 5 | Close #2001 with bake-off REPORT as autopsy + cleanup notes | 30min inline | 1+2+3 done |
+| **#2174** | [etymology] Adapt esum_ingest.py parser for IA text.pdf format (vols 4, 5) | ~2h Codex | none |
+| **#2175** | [etymology] Write ABBYY XML parser for ESUM (vols 1, 2, 3, 6) | ~3h Codex | none |
+| **#2176** | [etymology] Reload sources.db from new ESUM JSONLs after parsers ship | 30min inline | #2174 + #2175 |
+| **#2177** | [etymology] Preserve 17 Gemini hallucination samples as detection test fixtures | 1h Codex | none |
+| **#2178** | [etymology] Close issue #2001 — autopsy + lessons learned | 30min inline | #2174+#2175+#2176 done |
 
 ## Sweep loop — no longer needed
 
