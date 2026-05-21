@@ -159,6 +159,8 @@ class ClaudeAdapter:
               calls can be captured from the CLI trace.
             - ``use_bare: bool`` — explicit opt-out of --bare (default: auto-enable
               when no session + ANTHROPIC_API_KEY is set)
+            - ``max_budget_usd: float`` — optional Claude Code print-mode
+              API spend cap, emitted as ``--max-budget-usd <amount>``
 
         ``effort``: optional reasoning-level string. When non-None and the
         probed Claude binary supports ``--effort`` (CC 2.1.98+), the flag
@@ -240,6 +242,12 @@ class ClaudeAdapter:
         # Model override
         if model:
             cmd.extend(["--model", model])
+
+        max_budget_usd = tc.get("max_budget_usd")
+        if max_budget_usd is not None:
+            # Claude Code only honors --max-budget-usd in print mode. This
+            # adapter always uses -p, so the constraint is satisfied here.
+            cmd.extend(["--max-budget-usd", f"{float(max_budget_usd):.2f}"])
 
         # Effort (reasoning level) — version-gated. See #1396.
         if effort is not None:

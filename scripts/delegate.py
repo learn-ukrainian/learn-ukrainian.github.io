@@ -677,6 +677,7 @@ def _run_worker(
     hard_timeout: int,
     silence_timeout: int = DEFAULT_SILENCE_TIMEOUT_S,
     effort: str | None = None,
+    max_budget_usd: float | None = None,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -710,6 +711,7 @@ def _run_worker(
     state = _read_state(state_path) or {}
     state["pid"] = os.getpid()
     state["status"] = "running"
+    state["max_budget_usd"] = max_budget_usd
     if "cli_version" not in state:
         start_telemetry = resolve_dispatch_start_telemetry(
             agent_name=agent,
@@ -734,6 +736,11 @@ def _run_worker(
     cancelled = False
     try:
         stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
+        tool_config = (
+            {"max_budget_usd": max_budget_usd}
+            if max_budget_usd is not None
+            else None
+        )
         result = runtime_invoke(
             agent,
             prompt,
@@ -742,7 +749,7 @@ def _run_worker(
             model=model,
             task_id=task_id,
             session_id=None,  # Layer 3 is always fresh-session
-            tool_config=None,
+            tool_config=tool_config,
             entrypoint="delegate",
             hard_timeout=hard_timeout,
             stdout_silence_timeout=stdout_silence_timeout,
@@ -845,6 +852,7 @@ def _run_worker(
             status=final_status,
             silence_timeout_s=silence_timeout,
             hard_timeout_s=hard_timeout,
+            max_budget_usd=max_budget_usd,
             duration_s=round(duration_s, 3),
             stderr_excerpt=stderr_excerpt,
         )
@@ -865,6 +873,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
+    max_budget_usd = getattr(args, "max_budget_usd", None)
 
     if args.mode == "danger" and not worktree_arg:
         print(
@@ -990,6 +999,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_layout": worktree_layout,
         "hard_timeout": args.hard_timeout,
         "silence_timeout": silence_timeout,
+        "max_budget_usd": max_budget_usd,
         "pid": None,  # worker fills this
         "status": "spawning",
         "started_at": datetime.now(UTC).isoformat(),
@@ -1041,6 +1051,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "--hard-timeout", str(args.hard_timeout),
         "--silence-timeout", str(silence_timeout),
     ]
+    if max_budget_usd is not None:
+        cmd.extend(["--max-budget-usd", str(max_budget_usd)])
     if args.model:
         cmd.extend(["--model", args.model])
     effort = getattr(args, "effort", None)
@@ -1486,6 +1498,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         model=args.model,
         hard_timeout=args.hard_timeout,
         silence_timeout=args.silence_timeout,
+        max_budget_usd=getattr(args, "max_budget_usd", None),
         effort=args.effort,
     )
 
@@ -1505,6 +1518,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id review-123 --prompt-file prompt.md --mode workspace-write --cwd .\n"
             "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id pr-123 --prompt-file brief.md --mode danger --worktree .worktrees/codex-pr-123\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent claude --task-id review-456 --prompt-file brief.md --max-budget-usd 0.50\n"
             "  .venv/bin/python scripts/delegate.py status-or-fail review-123\n"
             "  .venv/bin/python scripts/delegate.py wait review-123 --timeout 600\n"
             "  .venv/bin/python scripts/delegate.py list --status running\n\n"
@@ -1514,6 +1528,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  --hard-timeout is the absolute wall-clock fallback for the worker.\n"
             "  --silence-timeout kills the agent CLI earlier when no stdout line arrives within the window.\n"
             "    Default is 1800s to tolerate long Codex thinking/test phases; pass 600 for a tighter watchdog; 0 disables it.\n\n"
+            "  --max-budget-usd caps Claude Code API spend for this dispatch when set; omitted means no dollar cap.\n\n"
             "Exit codes:\n"
             "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
             "Related:\n"
@@ -1635,6 +1650,16 @@ def build_parser() -> argparse.ArgumentParser:
             "absolute wall-clock fallback."
         ),
     )
+    d.add_argument(
+        "--max-budget-usd",
+        type=float,
+        default=None,
+        help=(
+            "Optional Claude Code dollar cap for this dispatch. Only Claude "
+            "translates this to a CLI flag; non-Claude adapters warn and "
+            "ignore it. Omit to run uncapped."
+        ),
+    )
     d.set_defaults(func=cmd_dispatch)
 
     # status
@@ -1712,6 +1737,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     wk.add_argument("--hard-timeout", type=int, default=DEFAULT_HARD_TIMEOUT_S)
     wk.add_argument("--silence-timeout", type=int, default=DEFAULT_SILENCE_TIMEOUT_S)
+    wk.add_argument("--max-budget-usd", type=float, default=None)
     wk.set_defaults(func=cmd_worker)
 
     return p

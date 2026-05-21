@@ -143,7 +143,15 @@ class HermesDeepSeekAdapter:
         _ = mode
         _ = task_id
         _ = session_id
-        _ = tool_config
+
+        max_budget_usd = (tool_config or {}).get("max_budget_usd")
+        if max_budget_usd is not None:
+            _logger.warning(
+                "non-claude adapter %s ignoring max_budget_usd=%s; "
+                "use hard-timeout/silence-timeout instead",
+                self.name,
+                max_budget_usd,
+            )
 
         config = _read_hermes_config()
         configured_effort = _top_level_agent_effort(config)

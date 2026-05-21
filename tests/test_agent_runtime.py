@@ -17,6 +17,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
 import sys
@@ -499,6 +500,41 @@ def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
     cmd_str = " ".join(plan.cmd)
     assert "some_future_field" not in cmd_str
+
+
+def test_codex_adapter_ignores_max_budget_usd_tool_config(tmp_path, caplog):
+    adapter = CodexAdapter()
+    with caplog.at_level(logging.WARNING, logger="agent_runtime.adapters.codex"):
+        plan = adapter.build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"max_budget_usd": 0.5},
+        )
+
+    assert "--max-budget-usd" not in plan.cmd
+    assert any(
+        "non-claude adapter codex ignoring max_budget_usd=0.5" in rec.message
+        for rec in caplog.records
+    )
+
+
+def test_codex_adapter_omits_max_budget_usd_by_default(tmp_path):
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert "--max-budget-usd" not in plan.cmd
 
 
 # ---------------------------------------------------------------------------
@@ -2714,6 +2750,37 @@ def test_claude_adapter_basic_stateless(tmp_path):
     assert "--session-id" not in plan.cmd
     assert "--output-format" in plan.cmd
     assert plan.stdin_payload == ""  # Claude -p takes prompt as positional
+
+
+def test_claude_adapter_emits_max_budget_usd_from_tool_config(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"max_budget_usd": 0.5},
+    )
+
+    assert "--max-budget-usd" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--max-budget-usd") + 1] == "0.50"
+
+
+def test_claude_adapter_omits_max_budget_usd_by_default(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert "--max-budget-usd" not in plan.cmd
 
 
 def test_claude_adapter_discussion_readonly_uses_restricted_tools_without_plan_mode(tmp_path):

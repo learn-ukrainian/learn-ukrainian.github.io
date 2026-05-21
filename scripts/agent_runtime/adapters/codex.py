@@ -170,6 +170,15 @@ class CodexAdapter:
         if discussion_readonly and mode != "read-only":
             raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
 
+        max_budget_usd = (tool_config or {}).get("max_budget_usd")
+        if max_budget_usd is not None:
+            _logger.warning(
+                "non-claude adapter %s ignoring max_budget_usd=%s; "
+                "use hard-timeout/silence-timeout instead",
+                self.name,
+                max_budget_usd,
+            )
+
         # Resolve binary. shutil.which handles PATH lookup; fall back to
         # bare "codex" if not on PATH so subprocess.Popen can report the
         # error clearly.

@@ -523,6 +523,70 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert "failed to spawn" in captured.err
 
 
+def test_dispatch_parses_max_budget_usd_flag():
+    parser = delegate.build_parser()
+    args = parser.parse_args([
+        "dispatch",
+        "--agent", "claude",
+        "--task-id", "budget-task",
+        "--prompt", "hi",
+        "--max-budget-usd", "0.50",
+    ])
+
+    assert args.max_budget_usd == 0.5
+
+
+def test_worker_parser_accepts_max_budget_usd():
+    parser = delegate.build_parser()
+    args = parser.parse_args([
+        "_worker",
+        "--task-id", "budget-task",
+        "--agent", "claude",
+        "--mode", "read-only",
+        "--cwd", "/tmp",
+        "--max-budget-usd", "0.50",
+    ])
+
+    assert args.max_budget_usd == 0.5
+
+
+def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
+    args = delegate.build_parser().parse_args([
+        "dispatch",
+        "--agent", "claude",
+        "--task-id", "budget-dispatch",
+        "--prompt", "hi",
+        "--max-budget-usd", "0.50",
+    ])
+    captured: dict[str, list[str]] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 12345
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **_kwargs):
+        captured["cmd"] = cmd
+        return _FakeProc()
+
+    with patch("delegate.subprocess.Popen", side_effect=fake_popen):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("budget-dispatch"))
+    assert state is not None
+    assert state["max_budget_usd"] == 0.5
+    cmd = captured["cmd"]
+    assert "--max-budget-usd" in cmd
+    assert cmd[cmd.index("--max-budget-usd") + 1] == "0.5"
+
+
 def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
     """Dispatch should persist model/effort/cli_version immediately."""
     import argparse
@@ -845,6 +909,45 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["model"] == "claude-opus-4-6"
     assert state["effort"] == "xhigh"
     assert state["cli_version"] == "2.1.89"
+
+
+def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
+    state_path = delegate._state_path("worker-budget")
+    delegate._write_state_atomic(state_path, {"task_id": "worker-budget"})
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "claude-opus-4-7",
+            "effort": "unknown",
+            "cli_version": "2.1.116",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id="worker-budget",
+            agent="claude",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            max_budget_usd=0.5,
+            effort=None,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {"max_budget_usd": 0.5}
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["max_budget_usd"] == 0.5
 
 
 def test_run_worker_silence_timeout_kills_silent_subprocess(
