@@ -28,6 +28,7 @@ JP2_STAGING = RAW_ESUM / "jp2-staging"
 OCR_DIR = RAW_ESUM / "gemini-ocr"
 DEFAULT_PROMPT = ROOT / "audit/etymology-ocr-feasibility/prompts/transcription-v1.txt"
 DEFAULT_LOG = ROOT / "audit/etymology-ocr-feasibility/bulk-run-log.jsonl"
+GEMINI_OCR_POLICY = ROOT / "scripts/etymology/gemini-ocr-policy.toml"
 GEMINI_TMP_DIR = ROOT / "gemini_ocr_images"
 DEFAULT_MODEL = "gemini-2.5-flash"
 DEFAULT_CONCURRENCY = 10
@@ -72,13 +73,7 @@ TRANSIENT_RE = re.compile(
     # 429 / RESOURCE_EXHAUSTED when NOT daily (DAILY_QUOTA_RE catches the
     # multi-hour-reset case first). Account-level burst rate-limit recovers
     # within seconds; backoff is enough.
-    r"|\b429\b|RESOURCE_EXHAUSTED(?!.*daily)|\brate[- ]?limit"
-    # Silent failure: gemini-cli exits 0 with only the --allowed-tools
-    # deprecation warning + YOLO mode message + Ripgrep notice on stderr, and
-    # no usable output. is_low_quality_output() catches the output side; this
-    # regex lets classify_error see the deprecation-only stderr and route to
-    # transient retry. ~13% of stderr observed in run #8 is this pattern.
-    r"|allowed-tools.*deprecated",
+    r"|\b429\b|RESOURCE_EXHAUSTED(?!.*daily)|\brate[- ]?limit",
     re.IGNORECASE,
 )
 IMAGE_REFUSAL_RE = re.compile(
@@ -379,8 +374,8 @@ async def run_gemini_once(page: Page, prompt_text: str, model: str, attempt: int
             model,
             "--output-format",
             "text",
-            "--allowed-tools",
-            "read_file",
+            "--policy",
+            str(GEMINI_OCR_POLICY),
             "-y",
             cwd=ROOT,
             stdin=asyncio.subprocess.PIPE,

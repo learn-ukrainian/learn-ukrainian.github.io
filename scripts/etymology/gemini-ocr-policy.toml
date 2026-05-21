@@ -1,0 +1,13 @@
+# Tool restriction for bulk OCR; replaces deprecated `--allowed-tools read_file`
+# flag in `bulk_ocr_gemini.py`.
+
+[[rule]]
+toolName = "read_file"
+decision = "allow"
+priority = 999
+
+[[rule]]
+toolName = "*"
+decision = "deny"
+priority = 900
+denyMessage = "Bulk OCR may only read the image file attached with @<path>."
