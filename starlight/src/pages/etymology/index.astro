@@ -27,10 +27,14 @@ const data = manifest as {
 // Verification: scripts/etymology/transliterate.py emits the slug; we check
 // it's in manifest.slug_groups. (Failed once with 'хата' — hand-picked, not
 // an ESUM headword; closest real entries are 'хати' / 'хатьма'. Replaced
-// with 'хліб'.)
+// with 'хліб'.) On 2026-05-21 the manifest was regenerated from new
+// ABBYY+text.pdf parsers (PRs #2180/#2181, commit 7d3ab9d898). The new
+// ingest dropped headwords 'серце' / 'мати'; their featured cards
+// (slugs 'sertse' / 'maty') started 404-ing in dev and the
+// `tests/unit/etymology-featured-slugs.test.ts` quality gate started
+// failing on every CI run from that point. Removed both until the
+// etymology team re-includes those lemmas in a future ingest.
 const featured: Array<{ slug: string; lemma: string; gloss: string }> = [
-  { slug: 'sertse', lemma: 'серце', gloss: 'Том 5, с. 222 — серце як орган і символ' },
-  { slug: 'maty', lemma: 'мати', gloss: "5 статей в ЕСУМ — іменник, дієслово, прислівник" },
   { slug: 'dim', lemma: 'дім', gloss: 'Том 2, с. 90 — псл. *domъ, споріднене з лат. domus' },
   { slug: 'zhinka', lemma: 'жінка', gloss: 'Том 2, с. 200 — псл. *žena, споріднене з гр. γυνή' },
   { slug: 'khlib', lemma: 'хліб', gloss: 'Том 6, с. 180 — давнє запозичення з широким розгалуженням' },
