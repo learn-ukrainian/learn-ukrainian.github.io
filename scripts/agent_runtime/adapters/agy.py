@@ -90,6 +90,15 @@ class AgyAdapter:
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
 
+        max_budget_usd = (tool_config or {}).get("max_budget_usd")
+        if max_budget_usd is not None:
+            _logger.warning(
+                "non-claude adapter %s ignoring max_budget_usd=%s; "
+                "use hard-timeout/silence-timeout instead",
+                self.name,
+                max_budget_usd,
+            )
+
         if effort is not None:
             _logger.debug(
                 "agy effort %r not yet wired through CLI — "
