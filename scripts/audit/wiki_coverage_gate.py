@@ -37,12 +37,22 @@ _FIELD_RE = re.compile(
     re.IGNORECASE,
 )
 # Inline-field shape: writer emits all four fields on the SAME line as the
-# obligation_id, separated by `;` (semicolons). Example:
+# obligation_id, separated by EITHER `;` (semicolons) OR `|` (pipes).
+# Examples (both accepted):
 #   - obligation_id: step-2; artifact: module.md; location: §Дiалоги; treatment: ...
-# Captures each known field name + its value (up to the next `;` or end of
-# string), regardless of position in the line.
+#   - obligation_id: step-2 | artifact: module.md | location: §Дiалоги | treatment: ...
+# Captures each known field name + its value (up to the next `;`/`|` or end
+# of string), regardless of position in the line. Pipe support added 2026-05-21
+# after build-#9 a1/my-morning regression: writer-prompt template uses
+# `<module.md | activities.yaml | vocabulary.yaml | resources.yaml>` to denote
+# alternatives, and the writer copied the `|` pattern as a field separator
+# across all four implementation_map fields. Coverage at 0/18 unknown_artifact
+# because `artifact = "module.md | location: §... | treatment: ..."` did not
+# match any artifact filename.
 _INLINE_FIELD_RE = re.compile(
-    r"(?P<key>artifact|location|treatment)\s*:\s*(?P<value>[^;]+?)(?=\s*;\s*(?:obligation_id|artifact|location|treatment)\s*:|\s*$)",
+    r"(?P<key>artifact|location|treatment)\s*:\s*"
+    r"(?P<value>[^;|]+?)"
+    r"(?=\s*[;|]\s*(?:obligation_id|artifact|location|treatment)\s*:|\s*$)",
     re.IGNORECASE,
 )
 
