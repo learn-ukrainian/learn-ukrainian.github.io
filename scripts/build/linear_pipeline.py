@@ -5432,6 +5432,8 @@ def run_python_qg(
         ),
     )
     record("ai_slop_clean", _ai_slop_gate(prose_text))
+    record("russianisms_strict", _russianisms_strict_gate(text_for_quality))
+    record("engagement_floor", _engagement_floor_gate(module_text, plan))
     record("component_props", _component_prop_gate(activities))
     for gate_name, gate_report in _quality_fields(text_for_quality).items():
         record(gate_name, gate_report)
@@ -8385,6 +8387,184 @@ def _ai_slop_gate(text: str) -> dict[str, Any]:
         }
     )
     return {"passed": not hits, "hits": hits}
+
+
+# ---- engagement_floor ------------------------------------------------------
+#
+# Replaces what V6 paid the LLM `engagement & tone` reviewer to evaluate. Every
+# item below is a deterministic count or absence check — exactly the kind of
+# work that should live in code per the project deal "don't dim-check what
+# code can check." The LLM `engagement` dim survives but its rubric narrows
+# to judgment-only items (does the hook resonate, does the tone land) that
+# regex can't measure.
+#
+# Floors restored from V6 `v6-write.md` § "Writing Quality" line 537 and
+# `docs/best-practices/module-content-quality.md` § "Required engagement
+# elements" (lines 92-102). Build #11 a1/my-morning REVISE-with-no-critique
+# (2026-05-22) was the exact failure mode: writer emitted 0 callouts, 0
+# direct addresses, 0 META_NARRATION violations — but the reviewer had no
+# rubric, so it scored 6.5 without a concrete shortfall to name.
+
+#: Markdown callout patterns we accept as engagement signal. Covers Starlight
+#: directive blocks (``:::tip``) and GitHub-style admonitions
+#: (``[!myth-buster]``). Both render to highlighted blocks in the MDX output.
+_CALLOUT_PATTERN = re.compile(
+    r"(?m)^(?:"
+    r":::\s*(?:tip|caution|note|warning|important|info)\b"
+    r"|"
+    r"> *\[!(?:tip|note|warning|important|caution|info|myth-buster|history-bite)\]"
+    r")",
+    flags=re.IGNORECASE,
+)
+
+#: English META_NARRATION patterns from V6 ``v6-review.md`` line 118
+#: (engagement DEDUCT list) AND the V7 writer prompt's own banned list at
+#: ``linear-write.md`` § "Tone and immersion (mandatory)". The writer's
+#: persona is a teacher addressing the learner, not a narrator describing
+#: the lesson container. Self-referential framing ("In this lesson...")
+#: breaks immersion and adds zero pedagogical signal. V7 already TELLS the
+#: writer not to do this; what was missing was deterministic enforcement.
+#:
+#: Note: bare ``Notice that…`` / ``Observe how…`` are deliberately NOT in
+#: this list. V7 forbids them in the abstract, but V6 rewarded them when
+#: content-anchored ("Notice the soft sign in **писатися**"). Deciding
+#: which is which requires judgment; that part stays in the LLM dim.
+_META_NARRATION_PATTERNS = (
+    r"\bLet us (?:begin|explore|examine|look|learn|see|consider|now)\b",
+    r"\bIn this (?:section|module|lesson|chapter|unit)\b",
+    r"\bWelcome to (?:[ABC][12]\b|the [ABC][12]\b)",
+    r"\bCongratulations on completing\b",
+    r"\bYou have unlocked\b",
+    r"\bYou now possess\b",
+    r"\bYour journey (?:begins|starts|continues)\b",
+)
+_META_NARRATION_RE = re.compile(
+    "|".join(_META_NARRATION_PATTERNS),
+    flags=re.IGNORECASE,
+)
+
+
+def _engagement_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Count engagement signals against the V6 + module-content-quality floor.
+
+    Two signals tracked (scope intentionally tight — direct-address phrase
+    counting is deferred because the content-anchored vs generic distinction
+    requires judgment that this gate can't make):
+
+    1. **Callouts** (Starlight ``:::tip``-style or GitHub ``[!myth-buster]``).
+       Minimum 2 per module (``docs/best-practices/module-content-quality.md``
+       line 97; V6 ``v6-write.md`` line 537 said 3, we relax to 2 to match
+       the documented standard). Callouts are unambiguous engagement signal
+       because their syntax forces content-anchored prose (mnemonics, myth
+       busts, cultural notes, common-mistake callouts).
+    2. **META_NARRATION violations** (``In this section...``, ``Welcome to
+       A2``, ``Let us begin...``, ``You have unlocked``, ``Your journey
+       begins``...). HARD 0. These are persona breaks that V7's writer
+       prompt already forbids in prose but never enforced.
+
+    The threshold floor is intentionally low. Exceeding is rewarded by the
+    LLM engagement dim's judgment-only rubric, not the gate. This gate just
+    catches the "0 callouts, 3 META_NARRATION lines" failure mode that
+    build #11 a1/my-morning (2026-05-22) shipped past silently.
+    """
+    callout_hits = _CALLOUT_PATTERN.findall(text)
+    meta_hits = sorted({m.lower().strip() for m in _META_NARRATION_RE.findall(text)})
+
+    callout_min = 2
+    callouts_ok = len(callout_hits) >= callout_min
+    meta_ok = not meta_hits
+
+    issues: list[str] = []
+    if not callouts_ok:
+        issues.append(
+            f"callouts: found {len(callout_hits)}, minimum {callout_min} "
+            f"(emit :::tip / :::note / :::caution or [!myth-buster] blocks; "
+            f"content-anchored mnemonics, myth-busts, cultural notes, or "
+            f"common-mistake reminders)"
+        )
+    if not meta_ok:
+        issues.append(
+            f"meta_narration: {len(meta_hits)} distinct violations — "
+            f"{', '.join(meta_hits[:3])} (persona breaks; address the "
+            f"learner directly with content-anchored claims, do not narrate "
+            f"the lesson container)"
+        )
+
+    return {
+        "passed": callouts_ok and meta_ok,
+        "callout_count": len(callout_hits),
+        "callout_min": callout_min,
+        "meta_narration_hits": meta_hits,
+        "issues": issues,
+        "_plan_word_target": int(plan.get("word_target", 0)),
+    }
+
+
+# ---- russianisms_strict ----------------------------------------------------
+#
+# Wraps the project's mature russianism detection layer into a pipeline gate.
+# Two complementary detectors run:
+#
+# - ``scripts.audit.checks.russicism_detection.check_russicisms``: hand-curated
+#   regex patterns for known Russian calques + lexical Russicisms (e.g.
+#   ``приймати участь``, ``самий кращий``, ``получати``, ``відноситися``,
+#   ``слідуючий``, ``давайте попрактикуємо``...). 676 lines of patterns;
+#   each match carries a `fix` suggestion and a `note` explaining why.
+# - ``scripts.audit.checks.russicism_detection.check_ua_gec_calques``:
+#   UA-GEC corpus (8,937 human-annotated error→correction pairs from the
+#   Grammarly UA team), filtered to russianism-relevant tags
+#   (F/Calque, F/Collocation, G/Case, G/Gender).
+#
+# Both detectors classify findings by severity (``critical`` / ``warning`` /
+# ``info``). The gate fails on any ``critical`` finding from either source.
+# Lower-severity findings appear in the report for visibility but do not
+# block the build — they surface to the LLM review dim as advisory signal.
+#
+# This replaces what V6 covered with a 10-word ``SEVERE_RUSSIANISMS`` list
+# in ``scripts/build/quick_verify.py`` (#1189). The V7 pipeline never wired
+# quick_verify in; this gate ports the canonical detection layer instead of
+# resurrecting the shorter list.
+
+
+def _russianisms_strict_gate(text: str) -> dict[str, Any]:
+    """Run both russianism detectors; fail on any ``critical`` finding.
+
+    Returns the merged findings keyed by source so the writer correction
+    path (ADR-008) can target either detector's output independently. The
+    LLM ``naturalness`` / ``decolonization`` dims read advisory-severity
+    findings as residual evidence — they are NOT scored deterministically
+    here, only the critical tier is gated.
+    """
+    from scripts.audit.checks.russicism_detection import (
+        check_russicisms,
+        check_ua_gec_calques,
+    )
+
+    rus_findings = check_russicisms(text) or []
+    gec_findings = check_ua_gec_calques(text) or []
+
+    critical_findings: list[dict[str, Any]] = []
+    warning_findings: list[dict[str, Any]] = []
+
+    for source_name, findings in (
+        ("russicism_detection", rus_findings),
+        ("ua_gec_calques", gec_findings),
+    ):
+        for finding in findings:
+            severity = str(finding.get("severity", "")).lower()
+            tagged = {"source": source_name, **finding}
+            if severity == "critical":
+                critical_findings.append(tagged)
+            elif severity == "warning":
+                warning_findings.append(tagged)
+
+    return {
+        "passed": not critical_findings,
+        "critical_findings": critical_findings,
+        "warning_findings": warning_findings,
+        "critical_count": len(critical_findings),
+        "warning_count": len(warning_findings),
+    }
 
 
 def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:

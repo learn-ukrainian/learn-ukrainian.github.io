@@ -495,6 +495,16 @@ for a teacher narrating their own lesson plan. Hold to this register:
   expanding an English bridge sentence, cut it instead. Word budgets are
   authoritative.
 
+**Engagement floor (REQUIRED — `engagement_floor` gate counts these).** Every module MUST emit at least 2 content-anchored callouts. Use Starlight directive blocks (`:::tip` / `:::note` / `:::caution` / `:::warning`) or GitHub-style admonitions (`> [!myth-buster]` / `> [!history-bite]`). Each callout block must carry concrete pedagogy — a mnemonic, a myth-bust, a cultural note, or a common-mistake reminder. Empty or filler callouts that just restate the next paragraph do not count toward the floor.
+
+Forbidden in prose (zero-tolerance — the `engagement_floor` gate fails the build on the first hit): "Let us begin", "Let us explore/look/learn/see/consider/now", "In this section/module/lesson/chapter/unit", "Welcome to A1/A2/...", "Congratulations on completing", "You have unlocked", "You now possess", "Your journey begins/starts/continues". These are persona breaks. Address the learner directly with content-anchored claims; do not narrate the lesson container.
+
+**Russianism floor (HARD BAN — `russianisms_strict` gate fails on any critical-severity finding).** A two-detector layer scans every artifact: (1) the project's curated calque + lexical Russicism patterns (`приймати участь`, `самий кращий`, `получати`, `відноситися`, `слідуючий`, `давайте попрактикуємо`, dozens more) per `scripts/audit/checks/russicism_detection.py`; (2) the UA-GEC corpus (8,937 human-annotated Ukrainian error→correction pairs from the Grammarly UA team, filtered to russianism-relevant tags: F/Calque, F/Collocation, G/Case, G/Gender). Any `critical` finding from either detector halts the build. Lower-severity findings surface to the LLM review dim as advisory signal.
+
+Use `mcp__sources__check_russian_shadow`, `mcp__sources__search_style_guide` (Антоненко-Давидович), `mcp__sources__search_ua_gec_errors`, and `mcp__sources__search_heritage` during drafting to verify any phrase that could plausibly be a Russianism. The authority hierarchy when uncertain: VESUM (does the form exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (historical usage). Heritage-defense check first when a word may be an authentic Ukrainian archaism / regionalism rather than a Russianism (`кобета`/`кобіта` pattern — see `mcp__sources__search_heritage`).
+
+Quote ban: never paste raw Russian forms (e.g. `хорошо`, `спасибо`, `сейчас`, `пожалуйста`) into prose or dialogue, even inside a quoted learner mistake — use a `<!-- VERIFY -->` placeholder if you need to reference one. The russianism detectors will flag these as critical; the build will fail before MDX assembly.
+
 **Dialogue format (REQUIRED for gate counting).** All Ukrainian dialogue lines MUST be emitted as one of:
 
 - `<DialogueBox uk="..." en="...">` JSX component (preferred for V7 rendering), or
