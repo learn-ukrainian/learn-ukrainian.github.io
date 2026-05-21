@@ -62,15 +62,22 @@ def load_manifest(db_path: Path) -> dict:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:
+        cognate_columns = {row["name"] for row in conn.execute("PRAGMA table_info(esum_cognate_forms)")}
+        recovered_select = (
+            "COALESCE(f.cognate_forms_recovered, '{}') AS cognate_forms_recovered"
+            if "cognate_forms_recovered" in cognate_columns
+            else "'{}' AS cognate_forms_recovered"
+        )
         rows = conn.execute(
-            """
+            f"""
             SELECT
                 e.id,
                 e.lemma,
                 e.vol,
                 e.page,
                 e.etymology_text,
-                COALESCE(f.cognate_forms, '{}') AS cognate_forms,
+                COALESCE(f.cognate_forms, '{{}}') AS cognate_forms,
+                {recovered_select},
                 f.proto_form
             FROM esum_etymology_meta e
             LEFT JOIN esum_cognate_forms f ON f.entry_id = e.id
@@ -108,24 +115,33 @@ def load_manifest(db_path: Path) -> dict:
         if not isinstance(cognate_forms, dict):
             cognate_forms = {}
 
-        entries.append(
-            {
-                "id": row["id"],
-                "lemma": row["lemma"],
-                "vol": row["vol"],
-                "page": row["page"],
-                "slug": slug,
-                "page_slug": page_slug,
-                "etymology_text": row["etymology_text"],
-                "cognate_forms": cognate_forms,
-                "proto_form": row["proto_form"],
-            }
-        )
+        try:
+            cognate_forms_recovered = json.loads(row["cognate_forms_recovered"])
+        except (json.JSONDecodeError, TypeError):
+            cognate_forms_recovered = {}
+        if not isinstance(cognate_forms_recovered, dict):
+            cognate_forms_recovered = {}
+
+        entry = {
+            "id": row["id"],
+            "lemma": row["lemma"],
+            "vol": row["vol"],
+            "page": row["page"],
+            "slug": slug,
+            "page_slug": page_slug,
+            "etymology_text": row["etymology_text"],
+            "cognate_forms": cognate_forms,
+            "proto_form": row["proto_form"],
+        }
+        if cognate_forms_recovered:
+            entry["cognate_forms_recovered"] = cognate_forms_recovered
+        entries.append(entry)
         slug_groups[slug].append(page_slug)
 
     # Stats for the build process + landing page.
     polysemy_count = sum(1 for v in slug_groups.values() if len(v) > 1)
     with_forms = sum(1 for e in entries if e["cognate_forms"])
+    with_recovered_forms = sum(1 for e in entries if e.get("cognate_forms_recovered"))
 
     return {
         "version": MANIFEST_VERSION,
@@ -135,6 +151,7 @@ def load_manifest(db_path: Path) -> dict:
             "unique_slugs": len(slug_groups),
             "polysemy_slugs": polysemy_count,
             "entries_with_cognate_forms": with_forms,
+            "entries_with_cognate_forms_recovered": with_recovered_forms,
         },
         "entries": entries,
         "slug_groups": dict(slug_groups),

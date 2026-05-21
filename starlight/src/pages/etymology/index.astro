@@ -20,6 +20,7 @@ const data = manifest as {
     unique_slugs: number;
     polysemy_slugs: number;
     entries_with_cognate_forms: number;
+    entries_with_cognate_forms_recovered?: number;
   };
 };
 
@@ -83,6 +84,12 @@ const fmtCount = (n: number) => n.toLocaleString('uk-UA');
       <tr><th>Унікальних лем (після транслітерації)</th><td>{fmtCount(data.stats.unique_slugs)}</td></tr>
       <tr><th>Сторінок розгалуження (омонімія)</th><td>{fmtCount(data.stats.polysemy_slugs)}</td></tr>
       <tr><th>Статей із витягнутими формами когнатів</th><td>{fmtCount(data.stats.entries_with_cognate_forms)}</td></tr>
+      {(data.stats.entries_with_cognate_forms_recovered ?? 0) > 0 && (
+        <tr>
+          <th>Статей із відновленими латинськими формами</th>
+          <td>{fmtCount(data.stats.entries_with_cognate_forms_recovered ?? 0)}</td>
+        </tr>
+      )}
     </tbody>
   </table>
 

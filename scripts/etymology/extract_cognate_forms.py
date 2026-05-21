@@ -10,6 +10,11 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable
 from pathlib import Path
 
+try:
+    from scripts.etymology.recover_latin_cognates import ensure_recovered_column, recover_cognate_forms
+except ModuleNotFoundError:  # pragma: no cover - direct-script support
+    from recover_latin_cognates import ensure_recovered_column, recover_cognate_forms
+
 DEFAULT_DB = Path("data/sources.db")
 DEFAULT_TELEMETRY = Path("audit/etymology-phase-1/cognate_extraction_coverage.json")
 PROTO_MARKERS = ("псл.", "іє.", "стел.")
@@ -57,6 +62,7 @@ def create_schema(conn: sqlite3.Connection) -> None:
         CREATE TABLE IF NOT EXISTS esum_cognate_forms (
             entry_id INTEGER PRIMARY KEY,
             cognate_forms TEXT NOT NULL DEFAULT '{}',
+            cognate_forms_recovered TEXT NOT NULL DEFAULT '{}',
             proto_form TEXT,
             extracted_count INTEGER NOT NULL DEFAULT 0,
             expected_count INTEGER NOT NULL DEFAULT 0,
@@ -66,6 +72,7 @@ def create_schema(conn: sqlite3.Connection) -> None:
         ON esum_cognate_forms(entry_id);
         """
     )
+    ensure_recovered_column(conn)
 
 
 def _clean_form(raw_form: str) -> str:
@@ -200,14 +207,17 @@ def extract_database(db_path: Path, telemetry_path: Path, min_coverage_pct: floa
                     entries_with_forms += 1
                 total_forms += len(forms)
                 marker_extracted.update(forms.keys())
+                recovered_forms = recover_cognate_forms(forms)
                 conn.execute(
                     """
                     INSERT INTO esum_cognate_forms (
-                        entry_id, cognate_forms, proto_form, extracted_count, expected_count
+                        entry_id, cognate_forms, cognate_forms_recovered,
+                        proto_form, extracted_count, expected_count
                     )
-                    VALUES (?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?)
                     ON CONFLICT(entry_id) DO UPDATE SET
                         cognate_forms = excluded.cognate_forms,
+                        cognate_forms_recovered = excluded.cognate_forms_recovered,
                         proto_form = excluded.proto_form,
                         extracted_count = excluded.extracted_count,
                         expected_count = excluded.expected_count
@@ -215,6 +225,7 @@ def extract_database(db_path: Path, telemetry_path: Path, min_coverage_pct: floa
                     (
                         row["id"],
                         json.dumps(forms, ensure_ascii=False, sort_keys=True),
+                        json.dumps(recovered_forms, ensure_ascii=False, sort_keys=True),
                         proto_form,
                         len(forms),
                         len(markers),

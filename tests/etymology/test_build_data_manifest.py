@@ -24,6 +24,7 @@ def _make_db(path):
         CREATE TABLE esum_cognate_forms (
             entry_id INTEGER PRIMARY KEY,
             cognate_forms TEXT NOT NULL DEFAULT '{}',
+            cognate_forms_recovered TEXT NOT NULL DEFAULT '{}',
             proto_form TEXT,
             extracted_count INTEGER NOT NULL DEFAULT 0,
             expected_count INTEGER NOT NULL DEFAULT 0,
@@ -32,22 +33,49 @@ def _make_db(path):
         """
     )
     entries = [
-        (1, "дім", 2, 90, "hash-1", "дім; — р. дом, п. dom.", {"р.": "дом", "п.": "dom"}, None),
-        (2, "мати", 2, 48, "hash-2", "мати більш загальне значення.", {}, None),
-        (3, "мати", 3, 412, "hash-3", "мати 1 (іменник)", {"р.": "мать"}, None),
-        (4, "мати", 3, 413, "hash-4", "мати 2 (дієслово); — псл. *mati.", {"псл.": "*mati"}, "*mati"),
-        (5, "серце", 5, 222, "hash-5", "серце; — псл. *sьrdьce.", {"р.": "сéрдце"}, "*sьrdьce"),
+        (1, "дім", 2, 90, "hash-1", "дім; — р. дом, п. dom.", {"р.": "дом", "п.": "dom"}, {}, None),
+        (2, "мати", 2, 48, "hash-2", "мати більш загальне значення.", {}, {}, None),
+        (3, "мати", 3, 412, "hash-3", "мати 1 (іменник)", {"р.": "мать"}, {}, None),
+        (
+            4,
+            "мати",
+            3,
+            413,
+            "hash-4",
+            "мати 2 (дієслово); — псл. *mati.",
+            {"псл.": "*mati"},
+            {},
+            "*mati",
+        ),
+        (
+            5,
+            "серце",
+            5,
+            222,
+            "hash-5",
+            "серце; — ч. 5гбей; — псл. *sьrdьce.",
+            {"ч.": "5гбей", "р.": "сéрдце"},
+            {"ч.": "srdce"},
+            "*sьrdьce",
+        ),
     ]
-    for entry_id, lemma, vol, page, entry_hash, text, forms, proto in entries:
+    for entry_id, lemma, vol, page, entry_hash, text, forms, recovered, proto in entries:
         conn.execute(
             "INSERT INTO esum_etymology_meta (id, lemma, vol, page, entry_hash, etymology_text)"
             " VALUES (?, ?, ?, ?, ?, ?)",
             (entry_id, lemma, vol, page, entry_hash, text),
         )
         conn.execute(
-            "INSERT INTO esum_cognate_forms (entry_id, cognate_forms, proto_form,"
-            " extracted_count, expected_count) VALUES (?, ?, ?, ?, ?)",
-            (entry_id, json.dumps(forms, ensure_ascii=False), proto, len(forms), len(forms)),
+            "INSERT INTO esum_cognate_forms (entry_id, cognate_forms, cognate_forms_recovered,"
+            " proto_form, extracted_count, expected_count) VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                entry_id,
+                json.dumps(forms, ensure_ascii=False),
+                json.dumps(recovered, ensure_ascii=False),
+                proto,
+                len(forms),
+                len(forms),
+            ),
         )
     conn.commit()
     conn.close()
@@ -64,6 +92,7 @@ def test_manifest_shape_and_stats(tmp_path):
     assert manifest["stats"]["unique_slugs"] == 3  # дім, мати (3 senses), серце
     assert manifest["stats"]["polysemy_slugs"] == 1  # only мати has >1 entry
     assert manifest["stats"]["entries_with_cognate_forms"] == 4  # all but мати-2-48
+    assert manifest["stats"]["entries_with_cognate_forms_recovered"] == 1
 
 
 def test_slug_groups_index_polysemy(tmp_path):
@@ -101,6 +130,10 @@ def test_entry_fields_include_cognates_and_proto(tmp_path):
     )
     assert maty_dieslovo["proto_form"] == "*mati"
     assert maty_dieslovo["cognate_forms"] == {"псл.": "*mati"}
+    assert "cognate_forms_recovered" not in maty_dieslovo
+
+    sertse = next(e for e in manifest["entries"] if e["lemma"] == "серце")
+    assert sertse["cognate_forms_recovered"] == {"ч.": "srdce"}
 
 
 def test_polysemy_page_slug_includes_ordinal_when_vol_page_collide(tmp_path):

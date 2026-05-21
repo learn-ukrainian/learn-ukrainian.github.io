@@ -25,6 +25,7 @@ interface EtymEntry {
   page_slug: string;
   etymology_text: string;
   cognate_forms: Record<string, string>;
+  cognate_forms_recovered?: Record<string, string>;
   proto_form: string | null;
 }
 
@@ -145,12 +146,19 @@ const summary = (text: string, length = 90): string => {
         <tbody>
           {Object.entries(props.entry.cognate_forms)
             .sort(([a], [b]) => a.localeCompare(b))
-            .map(([marker, form]) => (
-              <tr>
-                <td>{MARKER_LABELS[marker] ?? marker} <span class="esum-marker">({marker})</span></td>
-                <td>{form}</td>
-              </tr>
-            ))}
+            .map(([marker, form]) => {
+              const recovered = props.entry.cognate_forms_recovered?.[marker];
+              const hasRecovered = recovered && recovered !== form;
+              return (
+                <tr>
+                  <td>{MARKER_LABELS[marker] ?? marker} <span class="esum-marker">({marker})</span></td>
+                  <td>
+                    <span>{form}</span>
+                    {hasRecovered && <span class="esum-recovered">→ {recovered}</span>}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     ) : (
@@ -227,6 +235,12 @@ const summary = (text: string, length = 90): string => {
   .esum-marker {
     color: var(--sl-color-gray-3);
     font-weight: normal;
+  }
+  .esum-recovered {
+    display: inline-block;
+    margin-left: 0.5rem;
+    color: var(--sl-color-accent-high);
+    font-weight: 600;
   }
   .esum-body {
     white-space: pre-wrap;
