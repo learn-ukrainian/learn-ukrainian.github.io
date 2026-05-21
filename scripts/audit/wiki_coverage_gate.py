@@ -542,11 +542,23 @@ def _location_text(text: str, location: str) -> str:
         chosen_index = candidates[0][2]
         heading = headings[chosen_index]
         start = heading.start()
-        end = (
-            headings[chosen_index + 1].start()
-            if chosen_index + 1 < len(headings)
-            else len(text)
-        )
+        # End the section at the next heading whose depth is <= chosen
+        # depth (sibling or shallower). Sub-headings (deeper) are
+        # structurally INSIDE the chosen section and must stay in
+        # `target_text`. Build-#8 a1/my-morning regression: chosen was
+        # H2 `## Дієслова на -ся`, next-by-document was H3
+        # `### Крок 1: ...`; without depth-aware boundary the returned
+        # text was just the 620-char H2 intro, excluding every H3
+        # paradigm block that carried the substance terms step-2 needed
+        # to match. See `tests/audit/test_wiki_coverage_gate.py::
+        # test_sequence_step_h2_section_includes_h3_subsection_content`.
+        chosen_depth = len(heading.group("marks"))
+        end = len(text)
+        for next_idx in range(chosen_index + 1, len(headings)):
+            next_depth = len(headings[next_idx].group("marks"))
+            if next_depth <= chosen_depth:
+                end = headings[next_idx].start()
+                break
         return text[start:end]
     return text if location_key in text.casefold() else ""
 
