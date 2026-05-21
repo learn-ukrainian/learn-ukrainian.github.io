@@ -322,8 +322,25 @@ one JSON block per structured artifact. Do not include trailing commas. Do
 not include comments. Do not mix YAML or prose into JSON blocks. The pipeline
 uses `json.loads` and fails the build on any parse error.
 
-**Wrap the `module.md` artifact in a 4-backtick OUTER fence**: ````markdown
-file=module.md` opens, ```` (four backticks, bare, on its own line) closes.
+**Wrap the `module.md` artifact in a 4-backtick OUTER fence.** The OPEN
+fence MUST be exactly one line — four backticks, then a single space,
+then the info string `markdown file=module.md`, then newline. Like this
+(everything between the two `<<<` markers is one line, with no
+mid-line break):
+
+```
+<<<````markdown file=module.md<<<
+```
+
+DO NOT split the info string across two lines (i.e. NEVER emit
+` ```` ` followed by a newline followed by `markdown file=module.md`).
+The parser scans the fence-open line for the `file=` label; if that
+label is on a separate line, the block is tagged "unnamed fenced block"
+and the build hard-fails at writer-output parse.
+
+The CLOSE fence is four bare backticks on their own line: ```` (no
+indentation, no trailing text).
+
 The 4-backtick wrapper lets you include 3-backtick code blocks INSIDE
 module.md for verb conjugation tables, code-style examples, or any prose
 that benefits from a fenced block — those inner 3-backtick fences will be
@@ -487,6 +504,40 @@ Default to `<DialogueBox>` for new modules; `> ` blockquote acceptable when a mu
 
 - Italic gloss directly after the UK line: `— Привіт, Насте! *(Hi, Nastia!)*`
 - Inside the same DialogueBox prop: `<DialogueBox uk="..." en="...">`
+
+**UK example-sentence density (REQUIRED for `l2_exposure_floor`).** The
+gate counts two pedagogical surfaces as "UK example sentences" — every
+A1-m15-24 module needs **≥ 14 of these combined** to clear the floor:
+
+1. **Bullet-list lines** (`- ...` or `* ...`) whose body contains any
+   Ukrainian word. Use for routine-verb examples, paradigm rows in
+   list form, phonetic-rule examples, trap-pair contrasts. Glossable
+   inline (one bullet, one `*(en gloss)*` or `(en gloss)` clause).
+2. **Markdown table data rows** (`| ... |`) whose cells contain any
+   Ukrainian word. Header rows and `---` separators don't count.
+   Contrast tables (Wrong / Right), conjugation paradigms, IPA
+   reference, vocabulary preview — all valid.
+
+**Anti-pattern: prose-only UK content.** A grammar section that
+introduces a paradigm as paragraph prose without ANY bullet or table
+row will count zero toward `l2_exposure_floor`, even if it shows 20
+Ukrainian verb forms in narrative sentences. The 2026-05-21 a1/my-
+morning gemini-tools build #1 produced 6 example sentences against the
+14-minimum and rejected at this gate — the writer used flowing prose
+where bullets/tables would have rendered the same paradigm in a
+gate-countable shape.
+
+**Practical guidance for module shape:**
+- Under each grammar section (`Дієслова на -ся`, `Мій ранок`), emit at
+  least **6 bullet lines** carrying conjugation forms or example
+  sentences. A 6-row paradigm table also satisfies this.
+- Under `Підсумок` / contrast or trap sections, add a 4+ row
+  "Wrong / Right" or "Calque / Native" table.
+- Vocabulary preview can be a short table too — its UK cells count.
+
+The dialogue-line and example-sentence floors are independent — 14
+dialogue lines alone won't clear the example-sentence floor, and
+vice versa.
 
 **Anti-pattern: block-bottom gloss.** Do NOT emit all UK dialogue lines first and then a separate "translation:" / "English:" block at the bottom. This causes `long_uk_ceiling` to flag the entire UK run as one unsupported segment, even when every line has a corresponding English translation farther down.
 
