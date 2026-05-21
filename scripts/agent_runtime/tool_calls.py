@@ -222,6 +222,19 @@ def _tool_name(payload: Mapping[str, Any]) -> str:
     function = payload.get("function")
     if isinstance(function, Mapping) and isinstance(function.get("name"), str):
         return function["name"]
+    # Codex CLI 0.132.0+ emits `function_call` payloads for MCP calls
+    # with the canonical prefix split off into a separate `namespace`
+    # field — e.g. ``{"type": "function_call", "name": "search_text",
+    # "namespace": "mcp__sources__", "arguments": "..."}`` — and a
+    # companion `mcp_tool_call_end` event with the full invocation +
+    # response. Without concatenating namespace+name the writer-trace-
+    # isolation gate sees bare ``search_text`` (no prefix) and tags it
+    # wrong_tool_family. Empirical reference: rollout-2026-05-21T01-37-06
+    # for the night a1/my-morning codex-tools build at codex-cli 0.132.0.
+    namespace = payload.get("namespace")
+    name = payload.get("name")
+    if isinstance(namespace, str) and isinstance(name, str) and namespace and name:
+        return f"{namespace}{name}"
     for key in ("name", "tool_name", "toolName", "function_name", "server_tool_name"):
         value = payload.get(key)
         if isinstance(value, str) and value.strip():
