@@ -423,6 +423,83 @@ def test_textbook_grounding_gate_matches_via_get_chunk_context(
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
+def test_textbook_grounding_gate_unwraps_gemini_function_response_shape(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Pin gemini-cli 0.42.0's list-of-functionResponse envelope shape.
+
+    Gemini-cli ships writer-tool MCP results as
+    ``[{"functionResponse": {"id": ..., "name": "mcp_sources_get_chunk_context",
+    "response": {"output": "**[<chunk_id>]** — Сторінка <N>\\n\\n<md>"}}}]``
+    — neither the canonical ``{"text": <md>}`` shape (claude/codex/direct
+    anthropic-tools) nor the Hermes ``{"result": <md>}`` shape the
+    2026-05-20 textbook parser fix (`07c12f2dd7`) covered. Without this
+    unwrap the 2026-05-21 a1/my-morning gemini-tools build read
+    ``textbook_result_hits: 0`` despite making two valid
+    ``get_chunk_context`` calls that returned grounded Захарійчук Grade 1
+    p.24 and p.52 bodies.
+
+    Empirical reference:
+    ``.worktrees/builds/a1-my-morning-20260521-060558/.../writer_tool_calls.json``
+    — preserved on build branch ``build/a1/my-morning-20260521-060558``.
+    """
+    body = (
+        "Зворотна форма дієслова показує дію, яка повертається до виконавця. "
+        "Учень умивається, одягається, готується до уроку, вітається з учителем, "
+        "збирається швидко і повертається до щоденної ранкової справи без зайвих "
+        "пояснень сьогодні."
+    )
+    chunk_id = "10-klas-ukrmova-karaman-2018_s0176"
+    chunk_markdown = f"**[{chunk_id}]** — Сторінка 176\n\n{body}"
+    # The list-of-functionResponse shape is what writer_tool_calls.json
+    # records when the writer is gemini-cli 0.42.0+. The runtime adapter
+    # stores the raw provider response untouched so forensic replay sees
+    # exactly what gemini-cli emitted.
+    (tmp_path / "writer_tool_calls.json").write_text(
+        json.dumps(
+            [
+                {
+                    "name": "mcp_sources_get_chunk_context",
+                    "arguments": {"chunk_id": chunk_id},
+                    "result": [
+                        {
+                            "functionResponse": {
+                                "id": "mcp_sources_get_chunk_context_1779343612984_0",
+                                "name": "mcp_sources_get_chunk_context",
+                                "response": {"output": chunk_markdown},
+                            }
+                        }
+                    ],
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_lookup_textbook_metadata",
+        lambda source_file: {"author_uk": "Караман", "grade": "10"}
+        if source_file == "10-klas-ukrmova-karaman-2018"
+        else None,
+    )
+
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True, result
+    assert result["chunk_context_calls"] == 1
+    assert result["textbook_result_hits"] == 1
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
 def test_parse_mcp_get_chunk_context_markdown_no_db(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

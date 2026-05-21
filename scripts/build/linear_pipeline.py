@@ -7365,11 +7365,12 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
             result["source_type"] = call["source_type"]
     if isinstance(result, list):
         items: list[Mapping[str, Any]] = []
+        tool_name = _tool_name_from_call(call)
         for item in result:
             if not isinstance(item, Mapping):
                 continue
             if (
-                _tool_name_from_call(call) == "search_text"
+                tool_name == "search_text"
                 and item.get("type") == "text"
                 and isinstance(item.get("text"), str)
             ):
@@ -7377,6 +7378,33 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
                 if parsed:
                     items.extend(parsed)
                     continue
+            # Gemini-CLI list-shape MCP response. Empirical evidence: the
+            # 2026-05-21 a1/my-morning gemini-tools build wrote the writer
+            # call result as
+            # ``[{"functionResponse": {"id": ..., "name": "...",
+            # "response": {"output": "**[chunk_id]** — Сторінка N\n\n<md>"}}}]``
+            # — neither the canonical ``{"text": <md>}`` nor the Hermes
+            # ``{"result": <md>}`` shapes the parser previously handled.
+            # Without this unwrap textbook_grounding reads
+            # ``textbook_result_hits: 0`` even when get_chunk_context fired
+            # and returned grounded textbook chunks (the 2026-05-20 textbook
+            # parser fix `07c12f2dd7` only covered the dict-shape responses).
+            function_response = item.get("functionResponse")
+            if isinstance(function_response, Mapping):
+                response = function_response.get("response")
+                if isinstance(response, Mapping):
+                    output = response.get("output")
+                    if isinstance(output, str):
+                        if tool_name == "search_text":
+                            parsed = _parse_mcp_search_text_markdown(output)
+                            if parsed:
+                                items.extend(parsed)
+                                continue
+                        elif tool_name == "get_chunk_context":
+                            parsed = _parse_mcp_get_chunk_context_markdown(output)
+                            if parsed:
+                                items.extend(parsed)
+                                continue
             items.append(item)
         return items
     if isinstance(result, Mapping):
