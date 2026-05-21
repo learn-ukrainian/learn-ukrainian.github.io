@@ -55,6 +55,31 @@ BODY_START_RE = re.compile(
 BODY_END_RE = re.compile(
     r"^АКАДЕМИЯ\s+НАУК\s+УКРАИНСКОЙ\s+(?:ССР|СЄР)\s*$",
 )
+
+# Specific Russian headwords that appear in the tail of vol 6 or as noise.
+# While Russian words appear in etymology bodies, they should not be entries.
+RUSSIAN_HEADWORDS = {"последний", "который", "этот", "тот"}
+
+# Known OCR noise lemmas collected from spot-checks (Issue #2183).
+GARBAGE_HEADWORDS = {
+    "видавництво",
+    "виготовлено",
+    "укладачі",
+    "нвп",
+    "тов",
+    "і£і",
+    "ргазкас",
+    "з8оіуь",
+    "к88",
+    "пп:",
+    "кзсря",
+    "егаепке!",
+    "угаьіе",
+    "іїейїма",
+    "кайап",
+    "никсблод",
+}
+
 PAGE_RE = re.compile(r"^\d{1,3}$")
 WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
@@ -137,7 +162,18 @@ def _strip_front_and_back_matter(lines: list[str]) -> list[str]:
     УКРАИНСКОЙ ССР`` (or vol-3-typo ``СЄР``) header on a single line.
     Vols 4-6 print the same colophon broken across lines, the regex
     misses, and we process to EOF; back-matter prose is filtered by
-    the entry validator.
+    the entry validator (incl. lemma sanity gate + bibliography detector
+    for text-pdf).
+
+    Note: An earlier iteration of this function tried to detect
+    text-pdf colophons in-line by scanning forward for a colophon-marker
+    regex (``видавництво|тираж|формат|...``) + a 3-of-5 colophon-shaped
+    neighbor check. That over-truncated vol1 by 53% and vol6 by 67%
+    because generic Ukrainian words in the marker list (e.g. ``формат``,
+    ``тираж``) also appear in etymology bodies, and the 3-of-5 context
+    check is too permissive against ESUM's many short continuation
+    lines. The lemma sanity gate + bibliography detector handle the
+    actual noise correctly without truncating real entries.
     """
     start = 0
     for index, line in enumerate(lines):
@@ -275,6 +311,43 @@ def _looks_like_ocr_garbage(lemma: str) -> bool:
     return bool(any(ch in lemma for ch in ("§", "^", ".")))
 
 
+def _is_sane_lemma(lemma: str) -> bool:
+    """Validate lemma quality for text-pdf source to filter out OCR noise.
+
+    Rules:
+    - No single-character lemmas (e.g., 'і', 'п', 'т', 'и').
+    - No mixed-script or Latin-only entries (e.g., 'ргазкас', 'угаьіе', 'і£і').
+    - No digits except as trailing homonym markers 1/2/3 (e.g., reject 'к88', 'з8оіуь').
+    - No specific Russian-only headwords ('последний', 'который', 'этот', 'тот').
+    - No known garbage lemmas from colophons or OCR artifacts.
+    """
+    if len(lemma) <= 1:
+        # Rule 1: Single char (e.g., 'і', 'п', 'т')
+        return False
+
+    if lemma in RUSSIAN_HEADWORDS or lemma in GARBAGE_HEADWORDS:
+        # Rule 4 & 5: Russian-only or known garbage headwords
+        return False
+
+    # Rule 2: Mixed-script — reject lemmas that contain Basic-Latin letters
+    # (these appear when OCR confuses Cyrillic glyphs for Latin lookalikes).
+    # Cyrillic Ukrainian + apostrophe + hyphen + stress marks (combining acute
+    # U+0301) + homonym digits + entry markers (`!`/`?`) + symbols `§`/`^`/`.`
+    # (the latter three rejected separately by `_looks_like_ocr_garbage`) are
+    # all legitimate. The narrow Basic-Latin check below catches the real
+    # noise without rejecting stress-marked or uppercase lemmas.
+    if re.search(r"[A-Za-z£]", lemma):
+        return False
+
+    # Rule 3: Digits other than trailing homonym markers (1-9).
+    # Reject lemmas with multiple digits ('к88', 'з8оіуь') or non-trailing
+    # digits. Allow a single trailing 1-9 as homonym marker.
+    digits = re.findall(r"\d", lemma)
+    if len(digits) > 1:
+        return False
+    return not (digits and not re.search(r"[1-9]$", lemma))
+
+
 def _extract_headword(paragraph: str) -> str | None:
     match = HEAD_END_RE.search(paragraph)
     if not match:
@@ -294,6 +367,9 @@ def _extract_headword(paragraph: str) -> str | None:
     if not re.match(r"^[\[\(]?[А-ЯҐІЇЄа-яґіїє]", lemma):
         return None
     if _looks_like_ocr_garbage(lemma):
+        return None
+    # Layer 2 (Lemma sanity gate)
+    if not _is_sane_lemma(lemma):
         return None
     return lemma
 
@@ -404,10 +480,23 @@ def _is_likely_abbreviation(text: str) -> bool:
     if clean.split()[-1] in specific_abbrevs:
         return True
     # Match general patterns: 1-3 lowercase cyrillic letters or 1-2 uppercase
-    return bool(
-        re.search(r"\b[а-яґіїє]{1,3}\.?$", clean)
-        or re.search(r"\b[А-ЯҐІЇЄIVXLCDM]{1,2}\.?$", clean)
-    )
+    return bool(re.search(r"\b[а-яґіїє]{1,3}\.?$", clean) or re.search(r"\b[А-ЯҐІЇЄIVXLCDM]{1,2}\.?$", clean))
+
+
+def _is_pure_bibliography(text: str) -> bool:
+    """Detect if the etymology body is just a bibliography list (OCR noise).
+
+    Example to catch: 'СУМ 9, 763; Бупр. Ш 222; Фасмер Ш 776; Преобр. П 397;'
+    Real entries always have prose etymology before any citation cluster.
+    """
+    if not text:
+        return False
+    # Identify citation-like chunks: TitleCase or Uppercase abbreviation(s) + space + Roman/Arabic numeral
+    # Pattern: ([А-Я]+\.?\s+)+ [IVXLCDM\d]+ \d+(--\d+)?
+    chunks = re.findall(r"(?:[А-ЯЁІЇЄҐA-Z][а-яёіїєґa-z]*\.?\s+)+[IVXLCDM\d]+\s*[,;]?\s*\d*(?:--\d+)?", text)
+    chunk_len = sum(len(c) for c in chunks)
+    # If 80%+ of body characters are within citation-shaped substrings, reject.
+    return len(text) > 0 and chunk_len / len(text) > 0.8
 
 
 def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict[str, object]]:
@@ -533,6 +622,9 @@ def parse_esum(text: str, vol: int, source_format: str = "djvutxt") -> list[dict
             continue
         lemma = _extract_headword(paragraph)
         if lemma is None:
+            continue
+        # Layer 3 (Bibliography detector)
+        if _is_pure_bibliography(paragraph):
             continue
         entries.append(
             {
