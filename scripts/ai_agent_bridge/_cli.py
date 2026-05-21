@@ -9,6 +9,7 @@ from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
 
+from ._agy import ask_agy
 from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
 from ._codex import (
@@ -539,6 +540,28 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--review", action="store_true",
                                    help="Prepend docs/review-protocol.md")
 
+    # ask-agy
+    ask_agy_parser = subparsers.add_parser(
+        "ask-agy",
+        help="Send message AND invoke Agy (Antigravity CLI, Gemini-3.5-Flash-High)",
+    )
+    ask_agy_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_agy_parser.add_argument("--task-id", help="Task ID for session tracking")
+    ask_agy_parser.add_argument("--type", default="query", help="Message type (default: query)")
+    ask_agy_parser.add_argument("--data", help="Path to data file to attach")
+    ask_agy_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                help="Force new session (no-op today; reserved)")
+    ask_agy_parser.add_argument("--from", dest="from_llm",
+                                help="Sender agent family. Default: inferred from environment")
+    ask_agy_parser.add_argument("--from-model", dest="from_model",
+                                help="Exact sender model ID")
+    ask_agy_parser.add_argument("--to-model", dest="to_model",
+                                help="Target Agy model ID (default: gemini-3.5-flash-high)")
+    ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
+                                help="Run sync without timeout")
+    ask_agy_parser.add_argument("--review", action="store_true",
+                                help="Prepend docs/review-protocol.md")
+
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
     converse_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
@@ -752,6 +775,8 @@ def _dispatch_command(args):
         _handle_ask_codex(args)
     elif args.command == "ask-gemini":
         _handle_ask_gemini(args)
+    elif args.command == "ask-agy":
+        _handle_ask_agy(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content
         converse_gemini(content, args.task_id, args.model,
@@ -832,6 +857,19 @@ def _handle_ask_codex(args):
     ask_codex(content, args.task_id, args.type, data,
               args.new_session, from_llm, args.from_model,
               args.to_model, args.no_timeout, **kwargs)
+
+
+def _handle_ask_agy(args):
+    """Handle ask-agy subcommand."""
+    data = None
+    if args.data:
+        data = Path(args.data).read_text()
+    content = sys.stdin.read() if args.content == "-" else args.content
+    kwargs = {"review": True} if getattr(args, "review", False) else {}
+    from_llm = _resolve_from_llm(args)
+    ask_agy(content, args.task_id, args.type, data,
+            args.new_session, from_llm, args.from_model,
+            args.to_model, args.no_timeout, **kwargs)
 
 
 def _handle_ask_gemini(args):

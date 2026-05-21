@@ -236,6 +236,49 @@ Violating this rule destroys the caller's work in progress. There is no exceptio
 """
 
 
+def build_agy_prompt(msg: dict, review: bool = False) -> str:
+    """Build prompt for Agy (Antigravity CLI) invocation.
+
+    Mirrors the codex prompt shape — minimal context, directive framing,
+    no investigation side-paths. Agy has shown a tendency in 2026-05-21
+    probes to grep through scripts/, query sqlite directly, and write
+    throwaway scripts when asked introspection-style questions. The
+    standing rules here explicitly forbid those routes for bridge Q&A.
+    """
+    prompt = f"""You are Agy (Antigravity CLI, Gemini-3.5-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
+
+---
+Task ID: {msg['task_id'] or 'none'}
+Type: {msg['type']}
+From: {msg['from']}
+
+{msg['content']}
+"""
+    if msg['data']:
+        prompt += f"""
+---
+Attached data:
+{msg['data']}
+"""
+    prompt += """
+
+---
+
+Standing rules for bridge Q&A:
+- Respond directly. Be concise. This bridge is for quick questioning
+  and short coordination, not long-running task execution.
+- Do NOT investigate the codebase to answer (no `grep` across scripts/,
+  no `sqlite3` against data/, no throwaway Python scripts). If you need
+  more context, ASK in your reply — don't go fetch it.
+- Do NOT use broker or MCP messaging tools to send your response —
+  output your response directly.
+- If the message references MCP tools (mcp_sources_*), prefer calling
+  them via your native plugin surface; only fall back to run_command +
+  curl if the plugin isn't loaded.
+"""
+    return _prepend_review_protocol(prompt, review)
+
+
 def build_codex_prompt(msg: dict, review: bool = False) -> str:
     """Build prompt for Codex invocation."""
     prompt = f"""You are Codex, receiving a message from {msg['from'].title()} via the message broker.
