@@ -233,6 +233,59 @@ def test_sequence_step_passes_when_h1_title_collides_with_h2_section() -> None:
     )
 
 
+def test_sequence_step_h2_section_includes_h3_subsection_content() -> None:
+    """Build-#8 regression: PR #2184's `_location_text` correctly picks
+    the H2 section over the H1 module title, but ended the section at
+    the next heading regardless of depth. When the H2 contains H3
+    sub-sections (writer uses `### Крок N: ...` markers), the returned
+    text is only the H2 intro + space before the first H3 — all H3
+    sub-content is excluded from substance matching.
+
+    The H3 is structurally INSIDE the H2 section; the section boundary
+    should be the next heading whose depth is <= chosen depth (a
+    sibling or shallower heading), so H3+ sub-content stays included.
+
+    Build #8 of a1/my-morning ended at 17/18 with this exact shape:
+    only the parent H2 matched (writer's H3 title diverged from the
+    implementation_map's subsection name), and the returned 620-char
+    H2 intro excluded the H3 paradigm tables that carried the
+    substance-term overlap step-5's claim needed."""
+    manifest = _sequence_step_manifest()
+    module_md = (
+        "## Дієслова на -ся\n\n"
+        "Short H2 intro paragraph that mentions ранкової only briefly.\n\n"
+        "### Крок 1: Шаблон\n\nReader paradigm content here.\n\n"
+        "### Крок 2: Зворотні дієслова\n\n"
+        "Substance lives here: іменниками вода зарядка сніданок "
+        "прислівниками часу частотності раненько швиденько завжди "
+        "ніколи — all the wiki-claim stems the substance check needs.\n\n"
+        "## Підсумок\n\nWrap-up.\n"
+    )
+    implementation_map = {
+        "step-5": {
+            "artifact": "module.md",
+            "location": "§Дієслова на -ся",
+            "treatment": "in-prose vocabulary block in H3 sub-section",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    step_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "step-5"
+    )
+    assert step_result["status"] == "PASS", (
+        f"H2 section must include its H3 sub-section content when "
+        f"computing target_text; got reason={step_result['reason']!r}"
+    )
+
+
 def test_l2_error_passes_when_marker_contains_apostrophe() -> None:
     """`_activity_text` must surface activity content without YAML re-
     serialisation double-escaping apostrophes. The build-#6 regression:
