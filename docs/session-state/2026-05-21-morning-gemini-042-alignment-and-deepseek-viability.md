@@ -265,6 +265,37 @@ Build branch preserved at `build/a1/my-morning-20260521-083420` per #M-10. Foren
 
 Both directives benefit every writer (not just deepseek).
 
+## Section 12 — agy + MCP unblocked (just before sign-off)
+
+User direction at handoff: *"can you ask agy how to configure mcp so we can create agy-tools? i would really like to test gemini-3.5-flash in the next session"*.
+
+**Asked agy directly via `agy -p`:** agy 1.0.0 supports both `sse` and `streamable-http` MCP transports; `streamable-http` is recommended for production. Configuration goes in `~/.gemini/antigravity-cli/mcp_config.json` (global) or `.agents/mcp_config.json` (workspace).
+
+**Created global config + live-tested:**
+
+```json
+// ~/.gemini/antigravity-cli/mcp_config.json
+{
+  "mcpServers": {
+    "sources": {
+      "type": "streamable-http",
+      "url": "http://127.0.0.1:8766/mcp"
+    }
+  }
+}
+```
+
+Probed with `agy -p "Call the MCP tool mcp_sources_verify_word with word='стіл'..."`. Response: *"The word 'стіл' is a noun (inanimate masculine), matching the Nominative (v_naz) and Accusative (v_zna) cases in the singular."* The `v_naz`/`v_zna` VESUM codes cannot be hallucinated — **agy + MCP works end-to-end**.
+
+**The agy.py adapter docstring is stale.** Lines 22-30 claim agy needs `agy plugin enable <name>` and that's not yet shipped — wrong diagnosis. agy 1.0.0 reads MCP config from the file at `~/.gemini/antigravity-cli/mcp_config.json` automatically. No adapter code changes required for MCP. The `mcp_tools_never_invoked` warning in the adapter notes is no longer accurate.
+
+**Implication: agy-tools V7 writer is unblocked.** Next session can fire `v7_build.py a1 my-morning --writer agy-tools --effort xhigh --worktree` immediately. The agy adapter already accepts the `--writer agy-tools` flag (verified in `linear_pipeline.py:73-85`); MCP is now wired via global config.
+
+**Updates to make next session (small, ~10 LOC):**
+- Refresh agy.py adapter docstring (lines 22-30) to reflect file-based MCP config, not plugin-enable
+- Consider workspace-scoped `.agents/mcp_config.json` write in the agy adapter for sandbox parity with gemini-cli's `.mcp.json` pattern
+- File issue if agy 1.0.0 ever needs MCP-server denylisting (claude/codex use `--allowed-mcp-server-names`; agy reads all configured servers)
+
 ## Sign-off
 
 Five commits shipped to main, one full DeepSeek-pro writer phase proven clean with 19/22 gates green (first complete writer-phase + python_qg cycle this week), three writer regressions root-caused and fixed at the pipeline layer. The blocker landscape went from "three of three writers broken in different ways" to:
