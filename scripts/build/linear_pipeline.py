@@ -3778,12 +3778,20 @@ def parse_review_response(
         raise LinearPipelineError(f"LLM QG response for {dim} has invalid score") from exc
 
     evidence = payload.get("evidence")
+    evidence_quotes = payload.get("evidence_quotes")
     verdict = str(payload.get("verdict", "")).upper()
-    entry = {
+    entry: dict[str, Any] = {
         "score": score,
         "evidence": evidence,
         "verdict": verdict,
     }
+    # Preserve `evidence_quotes` when the reviewer emitted the richer schema
+    # (list of supporting excerpts). Build #11 a1/my-morning (2026-05-21)
+    # gemini-pro pedagogical dim used this shape; validator + downstream
+    # telemetry both honor it. Without this field, validate_llm_review_report
+    # raises "missing quoted excerpt" even when 3 valid quotes are present.
+    if isinstance(evidence_quotes, list) and evidence_quotes:
+        entry["evidence_quotes"] = evidence_quotes
     validate_llm_review_report({**_placeholder_review_report(), dim: entry})
     if verdict not in {"PASS", "REVISE", "REJECT"}:
         raise LinearPipelineError(f"LLM QG response for {dim} has invalid verdict")
@@ -3844,6 +3852,44 @@ def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
     return {**payload, "verdicts": normalized_verdicts, "overall_verdict": overall}
 
 
+_LLM_QG_QUOTE_MARKERS = ('"', "“", "”", "«", "»")
+
+
+def _evidence_passes_quote_contract(entry: Mapping[str, Any]) -> bool:
+    """Return True iff the dim entry carries falsifiable quoted evidence.
+
+    Two accepted shapes (both seen in production reviewer responses):
+
+    1. Bare ``evidence`` scalar containing a quote marker (``"``, ``«``,
+       ``""``, curly quotes). This is what the prompt currently asks for.
+    2. ``evidence_quotes`` list of one or more strings ≥8 chars each. Build
+       #11 (2026-05-21) showed gemini-pro emitting this richer schema for
+       the ``pedagogical`` dim — multiple supporting quotes are more
+       falsifiable than a single one, so we accept the array form even when
+       the bare ``evidence`` scalar lacks literal quote markers.
+
+    Either shape satisfies the falsifiability contract: a reviewer cannot
+    claim PASS without citing concrete text from the artifact.
+    """
+    evidence = entry.get("evidence")
+    if (
+        isinstance(evidence, str)
+        and evidence.strip()
+        and any(q in evidence for q in _LLM_QG_QUOTE_MARKERS)
+    ):
+        return True
+
+    quotes = entry.get("evidence_quotes")
+    if isinstance(quotes, list) and quotes:
+        valid = [
+            q for q in quotes
+            if isinstance(q, str) and len(q.strip()) >= 8
+        ]
+        if valid:
+            return True
+    return False
+
+
 def validate_llm_review_report(report: Mapping[str, Any]) -> None:
     """Validate per-dim LLM QG reports before aggregation."""
     dims = set(QG_DIMS)
@@ -3866,9 +3912,12 @@ def validate_llm_review_report(report: Mapping[str, Any]) -> None:
         if not 0 <= score <= 10:
             raise LinearPipelineError(f"LLM QG score for {dim} out of range: {score}")
         evidence = entry.get("evidence")
-        if not isinstance(evidence, str) or not evidence.strip():
+        evidence_quotes = entry.get("evidence_quotes")
+        if (not isinstance(evidence, str) or not evidence.strip()) and not (
+            isinstance(evidence_quotes, list) and evidence_quotes
+        ):
             raise LinearPipelineError(f"LLM QG entry for {dim} missing evidence")
-        if not any(q in evidence for q in ('"', "“", "”", "«", "»")):
+        if not _evidence_passes_quote_contract(entry):
             raise LinearPipelineError(
                 f"LLM QG evidence for {dim} must include a quoted excerpt"
             )
