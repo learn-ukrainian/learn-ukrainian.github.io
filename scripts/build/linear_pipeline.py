@@ -260,13 +260,34 @@ WRITER_ALLOWED_TOOL_PREFIX = "mcp__sources__"
 # writers. Both are the same MCP "sources" server tool — Gemini's representation
 # changed between 0.40.x and 0.42.x. Accept both prefixes for the
 # writer-trace-isolation gate so gemini-tools' valid MCP calls aren't
-# misclassified as wrong-tool-family. Real wrong-family calls (gemini's
-# built-in `run_shell_command`, `update_topic`, etc.) are still flagged
-# because they don't match either prefix. Related: #2159-adjacent;
-# see 2026-05-19 B1 bakeoff gemini-tools investigation.
+# misclassified as wrong-tool-family. Genuinely dangerous wrong-family calls
+# (shell exec / arbitrary file Read / Bash) remain flagged via the absence
+# of either prefix and the absence from WRITER_AGENT_ANNOTATION_TOOLS below.
+# Related: #2159-adjacent; see 2026-05-19 B1 bakeoff gemini-tools investigation
+# and 2026-05-21 night handoff Section 1b (gemini-tools writer success run).
 WRITER_ALLOWED_TOOL_PREFIXES = (
     "mcp__sources__",  # canonical (claude, codex, deepseek, qwen, grok)
     "mcp_sources_",    # gemini-cli 0.42.0+ single-underscore convention
+)
+# Agent-CLI built-in self-annotation tools. These emit METADATA only — no file
+# access, no command execution, no curriculum-content impact — and are
+# preserved in `writer_tool_calls.json` for forensics but DO NOT trigger
+# wrong_tool_family. Distinct from dangerous built-ins like `run_shell_command`
+# (exec capable), `Read`/`Write` (file I/O), `Bash`/`Edit` (both) — those
+# remain flagged because they're not in this allowlist.
+#
+# Empirical evidence (2026-05-21 a1/my-morning gemini-tools run): gemini-cli
+# 0.42.0 emits exactly one `update_topic` call as the writer's first tool
+# invocation (strategic_intent / title / summary fields, agent self-narration).
+# The writer then proceeds to make 13 valid `mcp_sources_*` calls and writes
+# all 6 V7 artifacts. Without this allowlist the rigid prefix check trips
+# wrong_tool_family on the one annotation call and discards a successful
+# build. See `curriculum/l2-uk-en/_orchestration/a1/my-morning/runs/20260520-234426/`
+# for the smoking-gun trace.
+WRITER_AGENT_ANNOTATION_TOOLS = frozenset(
+    {
+        "update_topic",  # gemini-cli 0.42.0+ strategic-intent / title / summary
+    }
 )
 WRITER_INFRA_DENYLIST_PATHS = (
     "docs/session-state/**",
@@ -2026,7 +2047,14 @@ def classify_writer_trace(
         tool_name = _raw_tool_name_from_call(call)
         if not tool_name:
             continue
-        if not any(tool_name.startswith(p) for p in WRITER_ALLOWED_TOOL_PREFIXES):
+        # Harmless annotation-only built-ins (e.g. gemini-cli's
+        # `update_topic`) are preserved in the trace for forensics but do
+        # not count against wrong_tool_family. See
+        # WRITER_AGENT_ANNOTATION_TOOLS for rationale.
+        if (
+            not any(tool_name.startswith(p) for p in WRITER_ALLOWED_TOOL_PREFIXES)
+            and tool_name not in WRITER_AGENT_ANNOTATION_TOOLS
+        ):
             wrong_family_calls.append(
                 {
                     "index": index,

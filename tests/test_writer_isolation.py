@@ -78,10 +78,11 @@ def test_gemini_single_underscore_mcp_prefix_passes_isolation() -> None:
     assert records == []
 
 
-def test_gemini_builtin_tools_still_fail_isolation() -> None:
-    """Even with single-underscore tolerance for MCP names, gemini's
-    built-in tools (`run_shell_command`, `update_topic`) must still
-    trigger wrong_tool_family — they're not in the writer toolset."""
+def test_gemini_dangerous_builtins_still_fail_isolation() -> None:
+    """Gemini-cli built-ins that read files or execute commands
+    (`run_shell_command`, file-I/O tools) must still trigger
+    wrong_tool_family — annotation-only built-ins are the only
+    exemption (`WRITER_AGENT_ANNOTATION_TOOLS`)."""
     records = classify_writer_trace(
         [
             {
@@ -92,14 +93,54 @@ def test_gemini_builtin_tools_still_fail_isolation() -> None:
                 "name": "run_shell_command",
                 "arguments": {"command": "ls"},
             },
-            {
-                "name": "update_topic",
-                "arguments": {"title": "Drafting B1-052"},
-            },
         ]
     )
 
     assert "wrong_tool_family" in _failure_subclasses(records)
+    offending = {
+        entry["name"]
+        for record in records
+        for entry in record.evidence.get("offending_tool_calls", [])
+    }
+    assert "run_shell_command" in offending
+
+
+def test_gemini_update_topic_annotation_passes_isolation() -> None:
+    """Gemini-cli 0.42.0+ emits an `update_topic` self-annotation call
+    as the writer's first tool invocation (strategic_intent / title /
+    summary — no file or exec side effects). Documented in
+    `WRITER_AGENT_ANNOTATION_TOOLS`. The trace is preserved for
+    forensics but the call must NOT trip wrong_tool_family — every
+    gemini-tools writer run would otherwise hard-fail before its
+    valid MCP work is acknowledged.
+
+    Empirical reference: gemini-tools a1/my-morning build
+    20260520-234426 — 1 update_topic + 13 mcp_sources_* calls,
+    all 6 V7 artifacts written successfully, build killed only by
+    the (now-fixed) rigid prefix check.
+    """
+    records = classify_writer_trace(
+        [
+            {
+                "name": "update_topic",
+                "arguments": {
+                    "strategic_intent": "Verify before drafting",
+                    "title": "Verifying Sources and Vocabulary",
+                    "summary": "Starting the module drafting process.",
+                },
+            },
+            {
+                "name": "mcp_sources_verify_words",
+                "arguments": {"words": ["кіт"]},
+            },
+            {
+                "name": "mcp_sources_search_text",
+                "arguments": {"query": "Захарійчук 52"},
+            },
+        ]
+    )
+
+    assert records == []
 
 
 def test_mixed_writer_fails_isolation() -> None:
