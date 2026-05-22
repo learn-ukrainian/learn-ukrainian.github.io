@@ -460,3 +460,147 @@ def test_l2_error_passes_when_marker_contains_apostrophe() -> None:
         f"err-2 should PASS when activity contains the correct apostrophe "
         f"marker; got reason={err_result['reason']!r}"
     )
+
+
+def test_l2_error_resolves_via_title_when_workbook_activity_omits_id() -> None:
+    """`_activity_text` MUST fall back to ``title`` matching when the writer
+    targets a workbook activity, because workbook activities legitimately
+    omit ``id`` per ``scripts/build/phases/linear-write.md`` L700 (#2218).
+
+    The codex-tools build-205831 regression: writer packed 6 ``err-N``
+    items into one workbook activity titled
+    ``workbook error-correction item 5`` and emitted
+    ``location: workbook error-correction item N`` per row. The pre-fix
+    resolver only matched on ``activity.id``, so every workbook row hard-
+    failed ``claimed_location_missing`` even though the activity's
+    flattened text contained the required contrast pair.
+    """
+    manifest = _phonetic_l2_error_manifest()
+    activities_yaml = (
+        "- type: error-correction\n"
+        "  title: workbook error-correction item 5\n"
+        "  items:\n"
+        "    - sentence: 'Вимова: [прокидайешся]'\n"
+        "      error: 'Вимова: [прокидайешся]'\n"
+        "      correction: \"Вимова: [прокидайес':а]\"\n"
+        "      explanation: assimilation rule.\n"
+    )
+    implementation_map = {
+        "err-2": {
+            "artifact": "activities.yaml",
+            # Codex's actual claim string, not present anywhere as an
+            # activity id (no `id` field on workbook activity).
+            "location": "workbook error-correction item 2",
+            "treatment": "sentence/error/correction contrast",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="# Module body unrelated to err-2.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    err_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "err-2"
+    )
+    assert err_result["status"] == "PASS", (
+        f"err-2 must PASS via title-substring fallback when the writer's "
+        f"location string overlaps the workbook activity's `title` field; "
+        f"got reason={err_result['reason']!r}"
+    )
+
+
+def test_l2_error_resolves_via_bare_activities_yaml_location() -> None:
+    """When the writer copies the seeded ``location_hint: \"activities.yaml\"``
+    verbatim, ``_activity_text`` MUST return all activities flattened so the
+    substance check has a chance to find the markers.
+
+    ``scripts/build/phases/implementation_map.py::_location_hint`` seeds
+    activity-targeted obligations with the bare string ``\"activities.yaml\"``.
+    Pre-fix resolver returned empty string when no activity ``id`` matched
+    that literal, hard-failing every faithful copy of the seeded hint.
+    """
+    manifest = _phonetic_l2_error_manifest()
+    activities_yaml = (
+        "- type: error-correction\n"
+        "  title: Fix the contrast pair\n"
+        "  items:\n"
+        "    - sentence: 'Вимова: [прокидайешся]'\n"
+        "      error: 'Вимова: [прокидайешся]'\n"
+        "      correction: \"Вимова: [прокидайес':а]\"\n"
+        "      explanation: assimilation rule.\n"
+    )
+    implementation_map = {
+        "err-2": {
+            "artifact": "activities.yaml",
+            "location": "activities.yaml",
+            "treatment": "sentence/error/correction contrast",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="# Module body unrelated to err-2.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    err_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "err-2"
+    )
+    assert err_result["status"] == "PASS", (
+        f"err-2 must PASS when the writer's location equals the seeded "
+        f"bare-artifact hint and the contrast pair is present anywhere "
+        f"in activities.yaml; got reason={err_result['reason']!r}"
+    )
+
+
+def test_l2_error_still_fails_when_workbook_activity_lacks_substance() -> None:
+    """Title-fallback resolution MUST NOT bypass the substance check.
+
+    Companion to ``test_phonetic_rule_still_fails_when_substance_absent_anywhere``:
+    if ``_activity_text`` widens the search window via title fallback OR
+    bare-artifact fallback, the obligation-specific substance check must
+    still reject activities that don't contain the required
+    ``expected_error_value`` / ``expected_correction_value`` markers. The
+    gate's leniency is a hint-resolution concession, not a substance
+    waiver.
+    """
+    manifest = _phonetic_l2_error_manifest()
+    activities_yaml = (
+        "- type: order\n"
+        "  title: workbook error-correction item 5\n"
+        "  items:\n"
+        "    - Спочатку я прокидаюся.\n"
+        "    - Потім я вмиваюся.\n"
+        "    - Нарешті я йду на роботу.\n"
+        "  correct_order: [0, 1, 2]\n"
+    )
+    implementation_map = {
+        "err-2": {
+            "artifact": "activities.yaml",
+            "location": "workbook error-correction item 2",
+            "treatment": "sentence/error/correction contrast",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="# Module body unrelated to err-2.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    err_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "err-2"
+    )
+    assert err_result["status"] == "FAIL", (
+        "err-2 must FAIL when the title-matched activity does NOT contain "
+        "the required incorrect/correct contrast pair — the widened "
+        "resolution window must not create a false-positive escape hatch"
+    )

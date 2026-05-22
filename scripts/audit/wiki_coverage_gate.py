@@ -508,13 +508,90 @@ def _flatten_strings(value: Any) -> list[str]:
 
 
 def _activity_text(activities: list[dict[str, Any]], location: str) -> str:
+    """Resolve a writer's claim ``location`` to flattened activity text.
+
+    Resolution strategies (first match wins):
+
+    1. Empty ``location`` → all activities flattened.
+    2. ``location`` equals the bare artifact name ``activities.yaml`` (or
+       an explicit ``all``/``any`` marker) → all activities flattened.
+       This honours the seeded ``location_hint`` produced by
+       ``seed_implementation_map`` for ``activities.yaml``-targeted
+       obligations (see ``scripts/build/phases/implementation_map.py::
+       _location_hint``: activity-targeted entries are seeded with the
+       bare string ``"activities.yaml"``).
+    3. An activity's ``id`` appears as a substring of ``location`` —
+       canonical handle for **inline** activities targeted by
+       ``<!-- INJECT_ACTIVITY: act-N -->`` markers.
+    4. An activity's ``title`` overlaps ``location`` (either direction)
+       — workbook activities legitimately **omit** ``id`` per
+       ``scripts/build/phases/linear-write.md`` L700, so ``title`` is
+       the next-most-stable handle when the writer's claim names a
+       workbook activity. Codex-tools build-205831 regression: writer
+       packed 6 ``err-N`` items into one workbook activity titled
+       ``workbook error-correction item 5`` and wrote
+       ``location: workbook error-correction item N``. Without title
+       fallback, all 6 obligations hard-failed ``claimed_location_missing``
+       even though the activity flattens to text containing every
+       required contrast pair.
+    5. No match → empty string (downstream gate FAILs the obligation
+       with ``claimed_location_missing``).
+
+    The flattened-text return is intentionally lenient: the downstream
+    ``_check_obligation_text`` substance check validates that the
+    required ``expected_error_value``/``expected_correction_value``
+    markers are actually present. ``_activity_text``'s job is to give
+    that substance check a sufficiently wide search window, not to
+    enforce per-item exact-location accounting.
+    """
+
     if not location:
         return "\n".join(s for activity in activities for s in _flatten_strings(activity))
+
+    location_cf = location.casefold().strip()
+    if location_cf in {"activities.yaml", "all", "any", "(any)", "(any activity)"}:
+        return "\n".join(s for activity in activities for s in _flatten_strings(activity))
+
     for activity in activities:
         activity_id = str(activity.get("id") or "")
         if activity_id and activity_id in location:
             return "\n".join(_flatten_strings(activity))
+
+    for activity in activities:
+        title = str(activity.get("title") or "")
+        if not title:
+            continue
+        title_cf = title.casefold().strip()
+        if not title_cf:
+            continue
+        if title_cf in location_cf or location_cf in title_cf:
+            return "\n".join(_flatten_strings(activity))
+
+    # Last-resort: strip a single trailing numeric index off both strings
+    # and retry equality. Handles the codex-tools build-205831 pattern
+    # where the writer packed 6 ``err-N`` items into ONE workbook activity
+    # whose title happened to bake in one row's index (``workbook error-
+    # correction item 5``) while every per-row claim location named a
+    # different index (``workbook error-correction item 1``..``6``).
+    # Pure substring matching can't unify them; stripping the trailing
+    # ``\s*\d+\s*$`` from each yields the same stem and the activity (which
+    # contains all 6 items as flattened text) covers every per-index claim.
+    stripped_location = _TRAILING_INDEX_RE.sub("", location_cf).strip()
+    if stripped_location:
+        for activity in activities:
+            title = str(activity.get("title") or "")
+            if not title:
+                continue
+            stripped_title = _TRAILING_INDEX_RE.sub(
+                "", title.casefold().strip()
+            ).strip()
+            if stripped_title and stripped_title == stripped_location:
+                return "\n".join(_flatten_strings(activity))
+
     return ""
+
+
+_TRAILING_INDEX_RE = re.compile(r"\s*\d+\s*$")
 
 
 def _location_text(text: str, location: str) -> str:
