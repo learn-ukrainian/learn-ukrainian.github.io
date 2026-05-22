@@ -187,7 +187,7 @@ surya-ocr==0.17.1
 sympy==1.14.0
 tenacity==9.1.4
 threadpoolctl==3.6.0
-timm==1.0.25
+timm==1.0.27
 tokenizers==0.22.2
 torch==2.11.0
 torchvision==0.26.0
