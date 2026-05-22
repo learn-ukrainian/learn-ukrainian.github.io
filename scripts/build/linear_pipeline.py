@@ -2117,15 +2117,26 @@ def classify_writer_trace(
 
     failures: list[FailureRecord] = []
     if wrong_family_calls:
+        # Demoted from TERMINAL → WARN on 2026-05-22 (user direction:
+        # "i dont care how they do it as long as they do it" — quality is
+        # judged by python_qg / wiki_coverage / llm_qg, not by tool-family
+        # cosmetics). The 2026-05-22 codex-tools build that surfaced this
+        # used `mcp__node_repl__js` to spawn `rg` and `sed` against the
+        # worktree's own scripts/ — resourceful self-correction behavior
+        # that the prior TERMINAL framing punished. The companion
+        # `handoff_or_orchestrator_file` check below remains TERMINAL
+        # because reading session-state into curriculum content IS a
+        # content-quality concern (orchestrator decisions leaking into
+        # learner-facing material), distinct from tool-choice surface.
         failures.append(
             FailureRecord(
                 failure_class=FailureClass.INFRA_CONTEXT_CONTAMINATION,
                 sub_class="wrong_tool_family",
                 gate="writer_trace_isolation",
-                severity="TERMINAL",
+                severity="WARN",
                 recovery_action="none",
                 evidence={"offending_tool_calls": wrong_family_calls},
-                terminal=True,
+                terminal=False,
             )
         )
     if handoff_reads:
@@ -2617,6 +2628,16 @@ def _enforce_writer_runtime_gates(
     if not failures:
         return
 
+    # Emit ALL failures (including WARN) for telemetry / forensics — but
+    # only raise on TERMINAL ones. The writer_trace_isolation
+    # `wrong_tool_family` record is WARN since 2026-05-22: a writer
+    # reaching for a non-sources tool is observed and logged, but does
+    # not kill the build — python_qg / wiki_coverage / llm_qg judge
+    # quality, not tool-family cosmetics. TERMINAL conditions
+    # (`handoff_or_orchestrator_file`, `mcp_tools_never_invoked`) still
+    # halt the build because they represent content-leakage or
+    # zero-corpus-grounding states that python_qg cannot recover from
+    # downstream.
     for record in failures:
         _emit(
             event_sink,
@@ -2626,10 +2647,14 @@ def _enforce_writer_runtime_gates(
             **_failure_record_to_event(record),
         )
 
+    terminal_failures = [record for record in failures if record.terminal]
+    if not terminal_failures:
+        return
+
     classes = ", ".join(
         f"{record.failure_class.value}"
         + (f":{record.sub_class}" if record.sub_class else "")
-        for record in failures
+        for record in terminal_failures
     )
     raise LinearPipelineError(
         f"WRITER_RUNTIME_GATE_FAILED: writer={writer!r} module={module!r} "

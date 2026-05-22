@@ -24,6 +24,7 @@ Key design points:
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 import json as _json
@@ -69,8 +70,7 @@ _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
     """Return True when the caller is an ab discuss read-only invocation."""
     return bool(
-        os.environ.get("AB_DISCUSS_READONLY") == "1"
-        or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
+        os.environ.get("AB_DISCUSS_READONLY") == "1" or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
     )
 
 
@@ -122,7 +122,7 @@ def _strip_codex_prompt_echo(stderr: str) -> str:
     if last_divider is None:
         # No dividers — return as-is. Likely a very early crash.
         return stderr
-    return stderr[last_divider.end():]
+    return stderr[last_divider.end() :]
 
 
 class CodexAdapter:
@@ -173,8 +173,7 @@ class CodexAdapter:
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; "
-                "use hard-timeout/silence-timeout instead",
+                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
                 self.name,
                 max_budget_usd,
             )
@@ -207,18 +206,33 @@ class CodexAdapter:
         cmd: list[str] = [codex_bin, "exec"]
         if has_session_to_resume:
             cmd.append("resume")
-        cmd.extend(self._tool_config_flags(tool_config))
         if effort is not None:
             # Per-invocation override of ~/.codex/config.toml (#1396).
             cmd.extend(["-c", f"model_reasoning_effort={effort}"])
-        cmd.extend([
-            "--skip-git-repo-check",
-            "-C", str(cwd),
-            "--color", "never",
-            "-o", str(output_path),
-            "-m", model or self.default_model,
-        ])
+        cmd.extend(
+            [
+                "--skip-git-repo-check",
+                "-C",
+                str(cwd),
+                "--color",
+                "never",
+                "-o",
+                str(output_path),
+                "-m",
+                model or self.default_model,
+            ]
+        )
+        # ``_mode_flags`` emits ``--enable multi_agent`` for non-read-only
+        # modes (matches start-codex.sh). ``_tool_config_flags`` emits the
+        # writer-isolation ``--disable shell_tool / goals / browser_use /
+        # in_app_browser / image_generation / apps / plugins / multi_agent``
+        # list. ORDER MATTERS: Codex CLI processes ``--enable`` and
+        # ``--disable`` as ordered toggles, so the disable list MUST come
+        # after the enable to actually suppress ``multi_agent``. The 2026-05-22
+        # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
+        # this ordering as a secondary leak path (see PR #2230 follow-up).
         cmd.extend(self._mode_flags(mode))
+        cmd.extend(self._tool_config_flags(tool_config))
         if has_session_to_resume:
             cmd.append(session_id)
         cmd.append("-")  # Read prompt from stdin.
@@ -361,14 +375,11 @@ class CodexAdapter:
         rollout_source_note: str | None = None
         if not file_output and plan is not None:
             rollout_response = self._read_latest_rollout_task_complete(
-                plan, call_start_time=call_start_time,
+                plan,
+                call_start_time=call_start_time,
             )
             if rollout_response:
-                reason = (
-                    "rc=0 but -o empty (post-completion hang)"
-                    if returncode == 0
-                    else f"rc={returncode}, -o empty"
-                )
+                reason = "rc=0 but -o empty (post-completion hang)" if returncode == 0 else f"rc={returncode}, -o empty"
                 rollout_source_note = (
                     f"recovered {len(rollout_response)} chars from "
                     f"~/.codex/sessions/.../rollout-*.jsonl (reason: {reason})"
@@ -416,9 +427,7 @@ class CodexAdapter:
             rate_limited = False
         else:
             stderr_for_check = _strip_codex_prompt_echo(stderr)
-            combined_for_rl_check = "\n".join(
-                part for part in (stdout, stderr_for_check, durable_output) if part
-            )
+            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, durable_output) if part)
             pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
             # Call failed if neither -o nor rollout gave us content.
             call_failed = returncode != 0 or not durable_output
@@ -509,6 +518,7 @@ class CodexAdapter:
            rollout file's mtime and only re-scan when it advances.
         """
         import time as _time
+
         now = _time.monotonic()
 
         # Guard 1: warmup window.
@@ -523,10 +533,10 @@ class CodexAdapter:
 
         # Guard 3: mtime gate — quick stat instead of a full file scan.
         from datetime import UTC, datetime
+
         today = datetime.now(UTC)
         sessions_today = (
-            Path.home() / ".codex" / "sessions"
-            / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+            Path.home() / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
         )
         try:
             if not sessions_today.exists():
@@ -548,7 +558,8 @@ class CodexAdapter:
 
         # All guards passed — do the actual scan.
         msg = self._read_latest_rollout_task_complete(
-            plan, call_start_time=call_start_time,
+            plan,
+            call_start_time=call_start_time,
         )
         return bool(msg)
 
@@ -564,6 +575,7 @@ class CodexAdapter:
         day directory rolls over. Codex 2026-04-10 audit finding.
         """
         from datetime import UTC, datetime, timedelta
+
         base = Path.home() / ".codex" / "sessions"
         dirs: list[Path] = []
         for delta in (0, 1):
@@ -823,10 +835,7 @@ class CodexAdapter:
         # Today's sessions directory (catches startup via dir mtime
         # bump, but does NOT track subsequent content writes).
         today = datetime.now(UTC)
-        sessions_today = (
-            codex_home / "sessions" / f"{today.year:04d}"
-            / f"{today.month:02d}" / f"{today.day:02d}"
-        )
+        sessions_today = codex_home / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
         if sessions_today.exists():
             paths.append(sessions_today)
 
