@@ -1067,6 +1067,33 @@ def test_validate_writer_json_artifact_requires_type_for_polymorphic() -> None:
         )
 
 
+def test_validate_writer_json_artifact_allows_workbook_activity_without_id() -> None:
+    """V7 writer prompt design (linear-write.md L700-701, PR #2214) — WORKBOOK
+    activities deliberately omit `id`; only INLINE activities (those targeted
+    by `<!-- INJECT_ACTIVITY: act-N -->` markers in prose) need a string id.
+    The required-fields schema MUST allow id-less workbook entries through;
+    the bidirectional check lives in the `inject_activity_ids` content gate.
+
+    Regression for 2026-05-22 a1/my-morning build failure where the writer
+    correctly produced 4 inline + 6 workbook activities, schema rejected it
+    with `item 5 requires id as str, got NoneType (None)`.
+    """
+    activities = [
+        # Inline activities — id present per spec.
+        {"id": "act-1", "type": "match-up", "title": "Inline 1",
+         "pairs": [{"left": "a", "right": "b"}]},
+        {"id": "act-2", "type": "quiz", "title": "Inline 2",
+         "items": [{"question": "q?", "answer": "a", "options": ["a", "b"]}]},
+        # Workbook activities — id omitted per spec.
+        {"type": "fill-in", "title": "Workbook 1",
+         "items": [{"sentence": "I ___ here.", "answer": "live"}]},
+        {"type": "translate", "title": "Workbook 2",
+         "items": [{"source": "I wake up.", "target": "Я прокидаюся."}]},
+    ]
+    # MUST NOT raise — schema accepts the mixed inline+workbook payload.
+    linear_pipeline._validate_writer_json_artifact("activities.yaml", activities)
+
+
 def test_validate_writer_json_artifact_error_messages_include_actual_value() -> None:
     """Schema validation errors must include the actual value/type for redispatch.
 

@@ -360,7 +360,16 @@ WIKI_COVERAGE_NARROW_MAX_ITERATIONS = 2
 WIKI_COVERAGE_PATCHABLE_ARTIFACTS = frozenset({"module.md", "activities.yaml"})
 WIKI_COVERAGE_ARTIFACT_INFERENCE_ORDER = ("activities.yaml", "module.md")
 CORRECTION_YAML_ARTIFACT_REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
-    "activities.yaml": ("id", "type"),
+    # NOTE: `id` is intentionally NOT required on activities.yaml entries —
+    # the V7 writer prompt (`scripts/build/phases/linear-write.md`, lines
+    # 700-701 as of PR #2214) specifies that WORKBOOK activities should
+    # OMIT `id`; only INLINE activities (those referenced from a
+    # `<!-- INJECT_ACTIVITY: act-N -->` marker in the prose) need a string
+    # id so the marker can resolve. The bidirectional consistency check
+    # lives in the `inject_activity_ids` content gate (not here). The
+    # deeper `_activity_schema_gate` likewise tolerates missing id (it
+    # falls back to `f"#{activity_index}"` for diagnostics).
+    "activities.yaml": ("type",),
     "vocabulary.yaml": ("lemma", "translation", "pos", "usage"),
     "resources.yaml": ("title", "role"),
 }
@@ -440,8 +449,18 @@ class JsonArtifactSchema:
 WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
     "activities.yaml": JsonArtifactSchema(
         root_type=list,
+        # NOTE: `id` is intentionally NOT required here. The V7 writer prompt
+        # (`scripts/build/phases/linear-write.md`, lines 700-701 as of
+        # PR #2214) specifies that WORKBOOK activities should OMIT `id`;
+        # only INLINE activities (those targeted by
+        # `<!-- INJECT_ACTIVITY: act-N -->` markers in the lesson prose)
+        # need a string id so the marker can resolve. The bidirectional
+        # consistency check between INJECT markers and present ids lives
+        # in the `inject_activity_ids` content gate. `id` remains in
+        # `_UNIVERSAL_AUTHORING_FIELDS` so it is ALLOWED when present —
+        # just not required. Same rationale applied to
+        # `CORRECTION_YAML_ARTIFACT_REQUIRED_FIELDS["activities.yaml"]`.
         required_item_fields={
-            "id": str,
             "type": str,
         },
         # Polymorphic — per-activity-type allowed fields come from the
