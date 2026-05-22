@@ -43,7 +43,13 @@ def _rel_module(level: str, slug: str, filename: str) -> Path:
     return Path("curriculum") / "l2-uk-en" / level / slug / filename
 
 
+def _rel_mdx_build(level: str, slug: str) -> Path:
+    """Where `assemble_mdx` writes the freshly-built MDX inside the build branch."""
+    return Path("curriculum") / "l2-uk-en" / level / slug / f"{slug}.mdx"
+
+
 def _rel_mdx(level: str, slug: str) -> Path:
+    """Deploy target Starlight reads from."""
     return Path("starlight") / "src" / "content" / "docs" / level / f"{slug}.mdx"
 
 
@@ -80,7 +86,10 @@ def _seed_build_branch(
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
     if "mdx" not in omit:
-        mdx = repo / _rel_mdx(level, slug)
+        # The build's assemble_mdx step writes here (curriculum tree), not into
+        # starlight/. Promote reads from this path and writes the deploy copy
+        # into starlight/src/content/docs/.
+        mdx = repo / _rel_mdx_build(level, slug)
         mdx.parent.mkdir(parents=True, exist_ok=True)
         mdx.write_text("mdx content\n", encoding="utf-8")
     _git(repo, "add", ".")
@@ -151,6 +160,46 @@ def test_promote_dry_run_writes_nothing(tmp_path: Path) -> None:
     assert rc == 0
     assert not (repo / _rel_module("a1", "foo", "module.md")).exists()
     assert _git(repo, "status", "--short").stdout == ""
+
+
+def test_promote_reads_mdx_from_build_curriculum_tree_not_stale_starlight(tmp_path: Path) -> None:
+    """Regression: promote must read MDX from the build's curriculum/ tree
+    (where assemble_mdx writes), not from the build branch's DOCS_ROOT.
+
+    The m20 (a1/my-morning) revert on 2026-05-23 shipped a broken module
+    because promote_module read DOCS_ROOT, found a stale Phase 4 exemplar
+    that happened to be there, and the diff against main was empty (since
+    main also had the same stale file). The freshly-built MDX written by
+    assemble_mdx to `curriculum/.../{slug}.mdx` never reached Starlight.
+
+    This test seeds a build branch with a FRESH curriculum-tree MDX AND a
+    STALE starlight-tree MDX, then asserts the FRESH content lands on main.
+    """
+    repo = _init_repo(tmp_path)
+    branch = "build/a1/foo-20260520-010101"
+    # Use the standard seed (writes fresh MDX to the curriculum tree path
+    # via the updated helper) and then pollute the build branch's
+    # DOCS_ROOT with a stale, divergent MDX as the regression bait.
+    _seed_build_branch(repo, branch)
+    _git(repo, "switch", branch)
+    stale = repo / _rel_mdx("a1", "foo")
+    stale.parent.mkdir(parents=True, exist_ok=True)
+    stale.write_text("stale exemplar — must NOT be promoted\n", encoding="utf-8")
+    _git(repo, "add", str(_rel_mdx("a1", "foo")))
+    env = {
+        "GIT_AUTHOR_DATE": "2026-05-20T01:01:02 +0000",
+        "GIT_COMMITTER_DATE": "2026-05-20T01:01:02 +0000",
+    }
+    _git(repo, "commit", "-m", "seed stale starlight mdx", env=env)
+    _git(repo, "switch", "main")
+
+    rc = promote_module.main(["--build-branch", branch, "--no-commit"], repo_root=repo)
+
+    assert rc == 0
+    promoted = (repo / _rel_mdx("a1", "foo")).read_text(encoding="utf-8")
+    assert promoted == "mdx content\n", (
+        f"Expected fresh build-tree MDX content on main; got stale starlight content: {promoted!r}"
+    )
 
 
 def test_promote_resolves_latest_branch(tmp_path: Path) -> None:
