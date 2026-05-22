@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Word Atlas (Лексикон) — learn-ukrainian</title>
+<style>
+  :root {
+    --blue: #0057B8;
+    --yellow: #FFD700;
+    --yellow-dark: #B8860B;
+    --blue-light: #E8F0FE;
+    --yellow-light: #FFF9E0;
+    --green: #2E7D32;
+    --green-light: #E8F5E9;
+    --red: #C62828;
+    --red-light: #FFEBEE;
+    --purple: #6A1B9A;
+    --purple-light: #F3E5F5;
+    --orange: #E65100;
+    --orange-light: #FFF3E0;
+    --teal: #00695C;
+    --teal-light: #E0F2F1;
+    --brown: #5D4037;
+    --brown-light: #EFEBE9;
+    --gray-50: #FAFAFA; --gray-100: #F5F5F5; --gray-200: #EEEEEE;
+    --gray-300: #E0E0E0; --gray-600: #757575; --gray-800: #424242; --gray-900: #212121;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+    --content-width: 920px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--gray-900); background: var(--gray-50); line-height: 1.7; }
+
+  /* Word switcher (reused from lesson PoC module-switch) */
+  .word-switch {
+    background: var(--gray-900); color: white; padding: 10px 24px;
+    display: flex; align-items: center; gap: 16px; font-size: 13px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .word-switch label { opacity: 0.7; }
+  .word-switch select {
+    background: var(--gray-800); color: white; border: 1px solid var(--gray-600);
+    padding: 4px 12px; border-radius: 6px; font-size: 13px;
+  }
+  .word-switch .poc-label {
+    margin-left: auto; color: var(--yellow); font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  /* Top-nav strip (for context — shows the atlas as a new top-level section) */
+  .topnav {
+    background: white; border-bottom: 1px solid var(--gray-200); padding: 14px 24px;
+  }
+  .topnav-inner { max-width: var(--content-width); margin: 0 auto; display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  .topnav-brand { font-weight: 700; color: var(--blue); }
+  .topnav-link { color: var(--gray-600); text-decoration: none; }
+  .topnav-link:hover { color: var(--blue); }
+  .topnav-link.active { color: var(--teal); font-weight: 700; border-bottom: 2px solid var(--teal); padding-bottom: 12px; margin-bottom: -14px; }
+
+  /* Hero — atlas-specific gradient (teal+yellow distinguishes from core-blue and seminar-purple) */
+  .word-hero {
+    background: linear-gradient(135deg, var(--teal), var(--yellow-dark));
+    color: white; padding: 32px 0; border-bottom: 4px solid var(--yellow);
+  }
+  .word-hero-inner { max-width: var(--content-width); margin: 0 auto; padding: 0 24px; }
+  .word-hero .lexicon-badge {
+    display: inline-block; background: rgba(255,255,255,0.18); color: white;
+    font-weight: 600; font-size: 11px; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px;
+    letter-spacing: 0.6px; text-transform: uppercase;
+  }
+  .word-title { font-size: 44px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+  .word-stress { font-size: 26px; font-weight: 400; opacity: 0.85; font-family: 'SF Mono', Menlo, monospace; margin-left: 14px; }
+  .word-pos { font-size: 14px; opacity: 0.9; margin-bottom: 14px; font-style: italic; }
+  .word-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .status-badge {
+    font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .status-badge.heritage-ok { background: var(--green); color: white; }
+  .status-badge.heritage-warn { background: var(--red); color: white; }
+  .status-badge.cefr { background: var(--yellow); color: var(--gray-900); }
+  .status-badge.dialect { background: #00838F; color: white; }
+  .status-badge.borrowing { background: var(--blue); color: white; }
+  .status-badge.archaic { background: var(--brown); color: white; }
+
+  /* Content shell */
+  .content-area { max-width: var(--content-width); margin: 0 auto; padding: 0 24px 80px; }
+  .atlas-section { margin: 32px 0; }
+  h2 { font-size: 22px; color: var(--teal); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--yellow); }
+  h3 { font-size: 16px; margin: 14px 0 8px; color: var(--gray-800); }
+  p { margin-bottom: 12px; font-size: 15px; }
+  .ukr { font-weight: 600; color: var(--teal); }
+  .trans { color: var(--gray-600); font-style: italic; font-size: 14px; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Editorial banner — sovietization (red myth-box pattern, reused) */
+  .editorial-warn {
+    background: var(--red-light); border: 2px solid var(--red); border-radius: var(--radius);
+    padding: 16px 22px; margin: 22px 0;
+  }
+  .editorial-warn-header { font-weight: 700; color: var(--red); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .editorial-warn-icon { width: 28px; height: 28px; background: var(--red); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-warn p { margin-bottom: 6px; font-size: 14px; }
+
+  /* Editorial banner — heritage-defense success (green inverted myth-box) */
+  .editorial-success {
+    background: var(--green-light); border: 2px solid var(--green); border-radius: var(--radius);
+    padding: 16px 22px; margin: 22px 0;
+  }
+  .editorial-success-header { font-weight: 700; color: var(--green); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .editorial-success-icon { width: 28px; height: 28px; background: var(--green); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-success p { margin-bottom: 6px; font-size: 14px; }
+
+  /* Editorial banner — calque warning (yellow rule-box) */
+  .editorial-calque {
+    background: var(--yellow-light); border: 2px solid var(--yellow); border-radius: var(--radius);
+    padding: 16px 22px; margin: 22px 0;
+  }
+  .editorial-calque-header { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .editorial-calque-icon { width: 28px; height: 28px; background: var(--yellow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+  /* Definition cards */
+  .def-card {
+    background: white; border-radius: var(--radius); border-left: 4px solid var(--blue);
+    padding: 16px 22px; margin: 12px 0; box-shadow: var(--shadow);
+  }
+  .def-card.sum20 { border-left-color: var(--teal); }
+  .def-card.grinchenko { border-left-color: var(--brown); }
+  .def-card.sum11 { border-left-color: var(--gray-600); }
+  .def-card.sum11-flagged { border-left-color: var(--red); background: rgba(198,40,40,0.03); }
+  .def-source { font-size: 11px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .def-source .src-pill { padding: 2px 8px; border-radius: 3px; }
+  .def-card.sum20 .src-pill { background: var(--teal-light); color: var(--teal); }
+  .def-card.grinchenko .src-pill { background: var(--brown-light); color: var(--brown); }
+  .def-card.sum11 .src-pill { background: var(--gray-200); color: var(--gray-800); }
+  .def-card.sum11-flagged .src-pill { background: var(--red); color: white; }
+  .def-text { font-size: 15px; line-height: 1.7; }
+  .def-flag-inline { font-size: 12px; color: var(--red); font-weight: 600; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--red); }
+
+  /* Etymology timeline — reused from PoC #27 EtymologyTrace */
+  .ety-timeline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+  .ety-stage {
+    flex: 1; min-width: 140px; padding: 14px; background: white; border: 2px solid var(--gray-200);
+    border-radius: var(--radius); text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .ety-stage:hover { border-color: var(--teal); box-shadow: var(--shadow); }
+  .ety-period { font-size: 11px; color: var(--gray-600); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ety-word { font-size: 18px; font-weight: 700; color: var(--teal); }
+  .ety-word.archaic { color: var(--brown); font-style: italic; }
+  .ety-word.modern { color: var(--blue); }
+  .ety-arrow { color: var(--gray-300); font-size: 22px; }
+  .ety-note { margin-top: 12px; padding: 12px 16px; background: var(--gray-100); border-radius: 8px; font-size: 13px; color: var(--gray-800); }
+
+  /* Morphology paradigm table */
+  .paradigm-table { width: 100%; border-collapse: collapse; margin: 12px 0; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .paradigm-table th { background: var(--teal); color: white; padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 600; }
+  .paradigm-table th.col-case { width: 28%; }
+  .paradigm-table td { padding: 9px 14px; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .paradigm-table tr:last-child td { border-bottom: none; }
+  .paradigm-table tr:hover td { background: var(--teal-light); }
+  .paradigm-table .case-name { font-weight: 600; color: var(--gray-800); }
+  .paradigm-table .form { color: var(--teal); font-weight: 600; }
+  .paradigm-table .stress-mark { color: var(--red); font-weight: 700; }
+
+  /* Source-box (literary attestation) — reused from PoC seminar */
+  .source-box { background: var(--purple-light); border: 2px solid var(--purple); border-radius: var(--radius); padding: 16px 22px; margin: 14px 0; }
+  .source-box-header { font-weight: 700; color: var(--purple); margin-bottom: 8px; font-size: 14px; }
+  .source-box blockquote { font-style: italic; border-left: 3px solid var(--purple); padding-left: 14px; margin: 8px 0; color: var(--gray-800); }
+  .source-box .source-cite { font-size: 12px; color: var(--gray-600); text-align: right; }
+
+  /* Resource cards */
+  .resource-card {
+    background: white; border-radius: var(--radius); border-left: 4px solid var(--blue);
+    padding: 14px 20px; margin: 10px 0; box-shadow: var(--shadow); transition: all 0.2s;
+  }
+  .resource-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .resource-card h4 { font-size: 15px; margin-bottom: 4px; color: var(--gray-900); }
+  .resource-card p { font-size: 13px; color: var(--gray-600); margin-bottom: 6px; }
+  .resource-card .tag {
+    display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 11px;
+    padding: 2px 8px; border-radius: 3px; font-weight: 600;
+  }
+  .resource-card.ulp { border-left-color: var(--purple); }
+  .resource-card.youtube { border-left-color: var(--red); }
+  .resource-card.podcast { border-left-color: var(--orange); }
+  .resource-card.textbook { border-left-color: var(--green); }
+  .resource-card.blog { border-left-color: var(--teal); }
+
+  /* External collection group */
+  .external-group { margin: 14px 0; }
+  .external-group-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    font-size: 13px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .external-group-count {
+    background: var(--gray-200); color: var(--gray-800); font-size: 11px; padding: 2px 8px; border-radius: 3px;
+  }
+
+  /* Chip layouts (synonyms / antonyms / idioms) — reused groupsort-chip pattern */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .chip {
+    padding: 6px 14px; background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal);
+    border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  }
+  .chip:hover { background: var(--teal); color: white; }
+  .chip.antonym { background: var(--red-light); color: var(--red); border-color: var(--red); }
+  .chip.antonym:hover { background: var(--red); color: white; }
+  .chip-label { font-size: 12px; color: var(--gray-600); margin-right: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Caveat banner for auto-translated data (e.g. WordNet) */
+  .data-caveat {
+    background: var(--yellow-light); padding: 8px 14px; border-radius: 8px; font-size: 12px;
+    color: var(--gray-800); margin-top: 10px; border-left: 3px solid var(--yellow-dark);
+  }
+
+  /* Course usage cards */
+  .course-card {
+    background: white; border-radius: var(--radius); padding: 12px 18px; margin: 8px 0;
+    box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px;
+  }
+  .course-card .level-badge-sm {
+    display: inline-block; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;
+    background: var(--blue); color: white;
+  }
+  .course-card.seminar .level-badge-sm { background: var(--purple); }
+  .course-card .course-title { font-weight: 600; flex: 1; }
+  .course-card .course-gloss { font-size: 13px; color: var(--gray-600); font-style: italic; }
+
+  /* Translation block */
+  .translation-block {
+    background: white; border-radius: var(--radius); padding: 14px 20px; margin: 12px 0;
+    box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .translation-block .uk-side { font-weight: 700; color: var(--teal); font-size: 17px; }
+  .translation-block .arrow { color: var(--gray-300); font-size: 18px; }
+  .translation-block .en-side { display: flex; gap: 8px; flex-wrap: wrap; }
+  .translation-block .en-term { padding: 4px 10px; background: var(--blue-light); color: var(--blue); border-radius: 4px; font-size: 14px; font-weight: 500; }
+
+  /* Wikipedia card */
+  .wiki-card {
+    background: white; border-radius: var(--radius); padding: 16px 22px; margin: 12px 0;
+    border-left: 4px solid #757575; box-shadow: var(--shadow);
+  }
+  .wiki-card h4 { font-size: 15px; margin-bottom: 6px; }
+  .wiki-card .wiki-source { font-size: 11px; color: var(--gray-600); margin-top: 8px; }
+
+  /* Provenance footer */
+  .provenance-footer {
+    margin-top: 50px; padding: 22px; background: var(--gray-100); border-radius: var(--radius);
+    font-size: 12px; color: var(--gray-600);
+  }
+  .provenance-footer h3 { font-size: 13px; color: var(--gray-800); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .provenance-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .provenance-list .src {
+    padding: 4px 10px; background: white; border: 1px solid var(--gray-300); border-radius: 4px;
+    font-size: 11px; font-family: monospace;
+  }
+  .provenance-footer .meta-line { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+
+  /* "Used in modules" sidebar pattern */
+  .used-in-card {
+    background: white; padding: 8px 14px; margin: 4px 0; border-radius: 8px; border-left: 3px solid var(--teal);
+    display: flex; align-items: center; gap: 12px; font-size: 14px;
+  }
+  .used-in-card .module-id { font-weight: 700; color: var(--teal); min-width: 80px; }
+  .used-in-card .module-title { color: var(--gray-800); flex: 1; }
+  .used-in-card .lesson-gloss { color: var(--gray-600); font-style: italic; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="word-switch">
+  <label>Слово:</label>
+  <select onchange="switchWord(this.value)">
+    <option value="knyaz">князь — rich data, no editorial issues</option>
+    <option value="prapor">прапор — sovietization warning</option>
+    <option value="faynyy">файний — heritage-defense (galicianism)</option>
+  </select>
+  <span class="poc-label">POC: Word Atlas (Лексикон) — V7 separate-section design</span>
+</div>
+
+<!-- Top-nav for context: shows the atlas is its OWN top-level section -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="topnav-brand">learn-ukrainian</span>
+    <a class="topnav-link" href="#">Home</a>
+    <a class="topnav-link" href="#">A1–C2</a>
+    <a class="topnav-link" href="#">Seminars</a>
+    <a class="topnav-link active" href="#">Лексикон</a>
+    <a class="topnav-link" href="#">About</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 1: князь — rich data, no editorial issues
+     Demonstrates: full 15-section render, heritage-OK badge,
+     etymology timeline, literary attestation, course cross-link.
+     ============================================================ -->
+<div id="word-knyaz">
+  <div class="word-hero">
+    <div class="word-hero-inner">
+      <span class="lexicon-badge">Лексикон · A‑Я · К</span>
+      <h1 class="word-title">князь <span class="word-stress">[кня́зь]</span></h1>
+      <div class="word-pos">іменник · чоловічий рід · істота</div>
+      <div class="word-badges">
+        <span class="status-badge heritage-ok">✓ Питома українська лексика</span>
+        <span class="status-badge cefr">CEFR B2</span>
+        <span class="status-badge archaic" title="Modern use is historical / honorific only">Історизм у сучасному вжитку</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <!-- 1. Editorial banner: heritage-defense success (this word is authentic UK heritage) -->
+    <section class="atlas-section">
+      <div class="editorial-success">
+        <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська лексика</div>
+        <p>Слово засвідчене у староруських літописах (XI–XIII ст.) та зафіксоване Б. Грінченком (1907) задовго до радянської епохи. Спільнослов'янське походження від прагерманського <em>*kuningaz</em> через готське посередництво.</p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерела підтвердження: <a href="#">Грінченко 1907</a> · <a href="#">ЕСУМ, т. 2</a> · <a href="#">Галицько-Волинський літопис</a></p>
+      </div>
+    </section>
+
+    <!-- 2. Значення (Definitions) -->
+    <section class="atlas-section">
+      <h2>Значення</h2>
+
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">СУМ-20</span><span>сучасний тлумачний словник</span></div>
+        <div class="def-text">1. У слов'янських народів давньої та середньовічної доби — феодальний правитель князівства, голова княжої династії. 2. Спадковий титул нащадків давніх удільних правителів і деяких представників вищої аристократії. 3. <em>перен.</em> Особа, що посідає визначне становище в певній сфері діяльності.</div>
+      </div>
+
+      <div class="def-card grinchenko">
+        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>історичний словник</span></div>
+        <div class="def-text">Князь, -зя, м. 1) Княжескій титулъ. 2) Молодой въ день свадьбы. <em>Молодий — князь, а молода — княгиня. Чуб. IV. 38.</em> 3) Игра въ «князя». <em>Чуб. IV. 51.</em></div>
+      </div>
+
+      <div class="def-card sum11">
+        <div class="def-source"><span class="src-pill">СУМ-11</span><span>радянське видання · перевірено: чисто</span></div>
+        <div class="def-text">Голова феодально-монархічної держави або великого державного утворення в слов'янських народів періоду феодалізму. У Київській та Галицько-Волинській державах — верховний правитель.</div>
+        <div style="font-size: 11px; color: var(--green); margin-top: 8px;">↳ sovietization_risk=0 (чисто) · keywords flagged: none</div>
+      </div>
+    </section>
+
+    <!-- 3. Етимологія (Etymology) — PoC #27 timeline pattern reused -->
+    <section class="atlas-section">
+      <h2>Етимологія</h2>
+      <div class="ety-timeline">
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Готське *kuningaz означало «один з роду» (від *kuni — «рід, плем'я»). Запозичено в праслов'янську через готське посередництво у V–VI ст.')">
+          <div class="ety-period">Прагерманська</div>
+          <div class="ety-word archaic">*kuningaz</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Звукові зміни: u → ъ; g → з через стадії [g→ɣ→dz→z]. Засвідчено у пам'ятках старослов'янської мови (X–XI ст.).')">
+          <div class="ety-period">Праслов'янська</div>
+          <div class="ety-word archaic">*kъnędzь</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Староукраїнська (давньоруська) форма літописів — Києво-Печерський патерик, Галицько-Волинський літопис, Слово о полку Ігоревім. Жіноча форма — княгиня, княжна.')">
+          <div class="ety-period">Давньоукраїнська</div>
+          <div class="ety-word archaic">кънязь</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Сучасна українська форма. Єр (ъ) випав; м'який знак збережений. Наголос на першому складі: кня́зь. Пор. рос. князь, біл. князь, пол. ksiądz («священник» — з тим самим коренем, але інший семантичний розвиток).')">
+          <div class="ety-period">Сучасна українська</div>
+          <div class="ety-word modern">князь</div>
+        </div>
+      </div>
+      <div class="ety-note" id="ety-info-knyaz">Натисніть на стадію, щоб побачити деталі звукових змін та засвідчення.</div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <a href="#">ЕСУМ, т. 2, с. 462</a></p>
+    </section>
+
+    <!-- 4. Морфологія (Morphology) — VESUM paradigm -->
+    <section class="atlas-section">
+      <h2>Морфологія</h2>
+      <p style="font-size: 14px; color: var(--gray-600);">Іменник 2-ї відміни (м'яка група), чоловічий рід, істота. Чергування у непрямих відмінках: <strong>з → ж</strong> (князь → князем). Жіноча відповідність: княгиня (заст. княжна).</p>
+      <table class="paradigm-table">
+        <tr><th class="col-case">Відмінок</th><th>Однина</th><th>Множина</th></tr>
+        <tr><td class="case-name">Називний</td><td class="form">кня́зь</td><td class="form">кня́зі</td></tr>
+        <tr><td class="case-name">Родовий</td><td class="form">кня́зя</td><td class="form">кня́зів</td></tr>
+        <tr><td class="case-name">Давальний</td><td class="form">кня́зеві / кня́зю</td><td class="form">кня́зям</td></tr>
+        <tr><td class="case-name">Знахідний</td><td class="form">кня́зя</td><td class="form">кня́зів</td></tr>
+        <tr><td class="case-name">Орудний</td><td class="form">кня́зем</td><td class="form">кня́зями</td></tr>
+        <tr><td class="case-name">Місцевий</td><td class="form">(на) кня́зеві / кня́зі</td><td class="form">(на) кня́зях</td></tr>
+        <tr><td class="case-name">Кличний</td><td class="form">кня́зю</td><td class="form">кня́зі</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <a href="#">VESUM 409K · paradigm class N2/m-anim-soft</a></p>
+    </section>
+
+    <!-- 5. Стилістичні нотатки (Style notes) — Антоненко + UA-GEC -->
+    <section class="atlas-section">
+      <h2>Стилістичні нотатки</h2>
+      <p style="font-size: 14px; color: var(--gray-600);">Жодних калькових або помилкових форм у нашій базі немає для цього слова. Стилістичних застережень з боку Антоненка-Давидовича не виявлено.</p>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Перевірено: Антоненко-Давидович (342 структурованих + 169 фрагментів) · UA-GEC (8,937 пар) → <strong>0 hits</strong></p>
+    </section>
+
+    <!-- 6. Синоніми + антоніми -->
+    <section class="atlas-section">
+      <h2>Синоніми та антоніми</h2>
+      <div>
+        <div class="chip-label">Синоніми:</div>
+        <div class="chip-row">
+          <span class="chip">правитель</span>
+          <span class="chip">володар</span>
+          <span class="chip">государ</span>
+          <span class="chip">князь-володар</span>
+          <span class="chip">кагáн</span>
+        </div>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="chip-label">Антоніми:</div>
+        <div class="chip-row">
+          <span class="chip antonym">холоп</span>
+          <span class="chip antonym">смерд</span>
+          <span class="chip antonym">підданий</span>
+        </div>
+      </div>
+      <div class="data-caveat">⚠ Дані синсетів автоматично перекладено з Open English WordNet — точність перевіряється (issue #1657). Звіряти з контекстом перед використанням.</div>
+    </section>
+
+    <!-- 7. Фразеологізми (Idioms) -->
+    <section class="atlas-section">
+      <h2>Фразеологізми та сталі вирази</h2>
+      <div class="resource-card">
+        <h4>з князів та в грязь</h4>
+        <p>Про різке зниження соціального становища; від багатства й влади до бідності.</p>
+        <span class="tag">Фразеологічний словник</span>
+      </div>
+      <div class="resource-card">
+        <h4>не вчи рибу плавати, а князя — княжити</h4>
+        <p>Прислів'я про недоречність порад досвідченій людині.</p>
+        <span class="tag">Прислів'я</span>
+      </div>
+    </section>
+
+    <!-- 8. Літературні засвідчення — PoC source-box pattern reused -->
+    <section class="atlas-section">
+      <h2>Літературні засвідчення</h2>
+
+      <div class="source-box">
+        <div class="source-box-header">Галицько-Волинський літопис (XIII ст.)</div>
+        <blockquote>«Данило ж, князь добрий, хоробрий і мудрий, збудував городи многі, і церкви поставив, і оздобив їх різними прикрасами…»</blockquote>
+        <div class="source-cite">— про Данила Романовича Галицького</div>
+      </div>
+
+      <div class="source-box">
+        <div class="source-box-header">Слово о полку Ігоревім (XII ст.)</div>
+        <blockquote>«Тогда вступи Игорь князь въ златъ стремень и поѣха по чистому полю…»</blockquote>
+        <div class="source-cite">— староукраїнська пам'ятка</div>
+      </div>
+
+      <div class="source-box">
+        <div class="source-box-header">Тарас Шевченко · «Іван Підкова» (1839)</div>
+        <blockquote>«Гей, по синьому морю йдуть козаки на байдаки… не страшний нам ні князь, ні цар, ні турецький султан…»</blockquote>
+        <div class="source-cite">— Кобзар, 1840</div>
+      </div>
+
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>literary_fts</code> 125K chunks · показано 3 з 47 знайдених засвідчень · <a href="#">переглянути всі →</a></p>
+    </section>
+
+    <!-- 9. Підручники (Textbook usage) -->
+    <section class="atlas-section">
+      <h2>У шкільних підручниках</h2>
+      <div class="resource-card textbook">
+        <h4>Кравцова та ін., «Я досліджую світ», 4 клас, с. 112</h4>
+        <p>«Володимир Великий — київський князь, який охрестив Русь у 988 році…»</p>
+        <span class="tag">Підручник · Грамота · 4 клас</span>
+      </div>
+      <div class="resource-card textbook">
+        <h4>Власов, «Історія України», 7 клас, с. 84</h4>
+        <p>Розділ «Галицько-Волинська держава» — Роман, Данило, Лев Данилович.</p>
+        <span class="tag">Підручник · 7 клас</span>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>search_text</code> · показано 2 з 18 згадок у підручниках 4–11 класів</p>
+    </section>
+
+    <!-- 10. Зовнішні матеріали — 8 collections grouped -->
+    <section class="atlas-section">
+      <h2>Зовнішні матеріали</h2>
+
+      <div class="external-group">
+        <div class="external-group-header">ULP YouTube <span class="external-group-count">3</span></div>
+        <div class="resource-card youtube">
+          <h4>Anna Ohoiko · «How to talk about Ukrainian history in Ukrainian: Princes, Hetmans, and Kings»</h4>
+          <p>Епізод S3-12, 14 хв. Княжа доба та козацька доба як ключові періоди.</p>
+          <span class="tag">YouTube · subtitles</span>
+        </div>
+      </div>
+
+      <div class="external-group">
+        <div class="external-group-header">Історія мови <span class="external-group-count">2</span></div>
+        <div class="resource-card blog">
+          <h4>«Чому в українській 'князь', а в російській 'князь' звучить інакше?»</h4>
+          <p>Стаття про різні шляхи розвитку слова в українській та російській мовах.</p>
+          <span class="tag">Блог</span>
+        </div>
+      </div>
+
+      <div class="external-group">
+        <div class="external-group-header">Реальна історія <span class="external-group-count">1</span></div>
+        <div class="resource-card youtube">
+          <h4>«Київські князі: династія Рюриковичів і її кінець»</h4>
+          <p>Документальний цикл, серія 4.</p>
+          <span class="tag">YouTube · subtitles</span>
+        </div>
+      </div>
+
+      <div class="external-group">
+        <div class="external-group-header">Комік історик <span class="external-group-count">1</span></div>
+        <div class="resource-card youtube">
+          <h4>«Данило Галицький — король, якого ніхто не пам'ятає»</h4>
+          <p>Освітньо-розважальний епізод.</p>
+          <span class="tag">YouTube · subtitles</span>
+        </div>
+      </div>
+
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>search_external</code> по 8 колекціях · знайдено: 7 матеріалів</p>
+    </section>
+
+    <!-- 11. Курсові посилання (Course cross-links) -->
+    <section class="atlas-section">
+      <h2>У курсі — модулі, де зустрічається це слово</h2>
+      <div class="used-in-card">
+        <span class="module-id">HIST M23</span>
+        <span class="module-title">Данило Галицький</span>
+        <span class="lesson-gloss">«король, якого папа коронував»</span>
+        <a href="#" style="font-size: 13px;">відкрити →</a>
+      </div>
+      <div class="used-in-card">
+        <span class="module-id">HIST M08</span>
+        <span class="module-title">Київські князі IX–X ст.</span>
+        <span class="lesson-gloss">«правитель княжої династії»</span>
+        <a href="#" style="font-size: 13px;">відкрити →</a>
+      </div>
+      <div class="used-in-card">
+        <span class="module-id">LIT M14</span>
+        <span class="module-title">Слово о полку Ігоревім</span>
+        <span class="lesson-gloss">«князь Ігор Святославич»</span>
+        <a href="#" style="font-size: 13px;">відкрити →</a>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Сканування <code>curriculum/l2-uk-en/&#42;/&#42;/vocabulary.yaml</code> · 3 модулі</p>
+    </section>
+
+    <!-- 12. Переклад (Translation) -->
+    <section class="atlas-section">
+      <h2>Переклад</h2>
+      <div class="translation-block">
+        <span class="uk-side">князь</span>
+        <span class="arrow">↔</span>
+        <div class="en-side">
+          <span class="en-term">prince</span>
+          <span class="en-term">duke</span>
+          <span class="en-term">ruler (medieval)</span>
+        </div>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: Балла EN→UK (79K пар) + dmklinger UK→EN</p>
+    </section>
+
+    <!-- 13. Wikipedia -->
+    <section class="atlas-section">
+      <h2>Wikipedia</h2>
+      <div class="wiki-card">
+        <h4>Князь</h4>
+        <p>Князь — спадковий титул володаря держави або найвищого аристократичного звання у феодальній і середньовічній державі слов'ян. У Київській Русі та Галицько-Волинській державі — верховний правитель. У XV–XVI ст. — найвищий титул шляхетства Великого князівства Литовського і Польської Корони…</p>
+        <p class="wiki-source">Джерело: <a href="https://uk.wikipedia.org/wiki/Князь" target="_blank">uk.wikipedia.org/wiki/Князь</a> · freshness: 2026-05-23</p>
+      </div>
+    </section>
+
+    <!-- 14. Provenance footer -->
+    <div class="provenance-footer">
+      <h3>Походження даних · Provenance</h3>
+      <div class="provenance-list">
+        <span class="src">vesum</span>
+        <span class="src">sum20 (slovnyk.me)</span>
+        <span class="src">grinchenko_1907</span>
+        <span class="src">sum11</span>
+        <span class="src">esum (vol. 2)</span>
+        <span class="src">literary_fts</span>
+        <span class="src">search_idioms</span>
+        <span class="src">balla_en_uk</span>
+        <span class="src">search_external (ulp_youtube · istoria_movy · realna_istoria · komik_istoryk)</span>
+        <span class="src">curriculum_vocabulary</span>
+        <span class="src">query_wikipedia</span>
+      </div>
+      <div class="meta-line">
+        <span>згенеровано: 2026-05-23T10:42Z</span>
+        <span>наступна перевірка: при наступному збиранні</span>
+        <span><a href="#">повідомити про помилку даних</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 2: прапор — sovietization warning
+     Demonstrates: red editorial banner at top, sovietized
+     СУМ-11 entry shown but flagged, Грінченко as pre-Soviet
+     baseline.
+     ============================================================ -->
+<div id="word-prapor" style="display:none">
+  <div class="word-hero">
+    <div class="word-hero-inner">
+      <span class="lexicon-badge">Лексикон · A‑Я · П</span>
+      <h1 class="word-title">прапор <span class="word-stress">[пра́пор]</span></h1>
+      <div class="word-pos">іменник · чоловічий рід · неістота</div>
+      <div class="word-badges">
+        <span class="status-badge heritage-ok">✓ Питома українська лексика</span>
+        <span class="status-badge cefr">CEFR A2</span>
+        <span class="status-badge heritage-warn">⚠ Радянські формулювання в СУМ-11</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <section class="atlas-section">
+      <div class="editorial-warn">
+        <div class="editorial-warn-header"><div class="editorial-warn-icon">⚠</div>Радянські ідеологічні формулювання у СУМ-11</div>
+        <p>Тлумачення слова «прапор» у СУМ-11 (1970–1980) подане в радянському ідеологічному ключі: дефініції містять обов'язкові посилання на «прапор СРСР», «прапор Леніна», «прапор партії». Це <strong>не означає, що саме слово негативне</strong> — слово питоме, давнє, спільнослов'янське. Йдеться про <strong>радянську редакторську політику словника</strong>.</p>
+        <p style="margin-top: 10px;">Для нейтральної довідки звертайтеся до Грінченка (1907) та ЕСУМ. СУМ-11 показано нижче <em>з позначками</em> для прозорості.</p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер: <code>sovietization_risk=2</code> · keywords: <code>радянськ, ленін, партійн</code> · аудит #1659</p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Походження + статус</h2>
+      <div class="editorial-success">
+        <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська лексика — давня, не русизм</div>
+        <p>Слово засвідчене у Грінченка 1907 з прикладами фольклорного вжитку. Спільнослов'янський корінь, споріднений з польс. <em>proporzec</em>, чеськ. <em>prapor</em>. Невелика частина словникового запасу, що зберіглась без сильного контактного впливу.</p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Значення</h2>
+
+      <div class="def-card grinchenko">
+        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>дорадянське засвідчення</span></div>
+        <div class="def-text">Прапоръ, -ра, м. Знамя. <em>Розгорнули червоні прапори. О. 1862. III. 23.</em></div>
+      </div>
+
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">СУМ-20</span><span>сучасний тлумачний словник</span></div>
+        <div class="def-text">1. Знамено, прикріплене до древка, що є офіційним символом держави, військового підрозділу, організації. 2. <em>перен.</em> Ідейний символ, гасло руху або боротьби.</div>
+      </div>
+
+      <div class="def-card sum11-flagged">
+        <div class="def-source"><span class="src-pill">СУМ-11 · ⚠ flagged</span><span>радянське видання · risk=2</span></div>
+        <div class="def-text">Полотнище певного кольору і розміру, прикріплене до древка чи шнура, що є офіційним символом держави, певної організації або частини збройних сил. <em>Червоний прапор Радянського Союзу майорів над Рейхстагом. Над сільрадою — червоний прапор з серпом і молотом. Прапор Леніна освітлює шлях радянському народові.</em></div>
+        <div class="def-flag-inline">⚠ Дефініція ілюстрована радянською ідеологією. Триггери: «Радянський Союз», «серп і молот», «прапор Леніна». Рекомендуємо звернутися до СУМ-20 або Грінченка для нейтрального тлумачення.</div>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Морфологія</h2>
+      <table class="paradigm-table">
+        <tr><th class="col-case">Відмінок</th><th>Однина</th><th>Множина</th></tr>
+        <tr><td class="case-name">Називний</td><td class="form">пра́пор</td><td class="form">прапори́</td></tr>
+        <tr><td class="case-name">Родовий</td><td class="form">пра́пора</td><td class="form">прапорі́в</td></tr>
+        <tr><td class="case-name">Орудний</td><td class="form">пра́пором</td><td class="form">прапора́ми</td></tr>
+        <tr><td class="case-name">Місцевий</td><td class="form">(на) пра́порі</td><td class="form">(на) прапора́х</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">(скорочений вигляд — повна парадигма у розгорнутому вигляді)</p>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Літературні засвідчення</h2>
+      <div class="source-box">
+        <div class="source-box-header">Шевченко · «Гайдамаки» (1841)</div>
+        <blockquote>«Гомоніла Україна, довго гомоніла, довго, довго кров степами текла, червоніла…»</blockquote>
+        <div class="source-cite">прапор як символ козацького повстання</div>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>literary_fts</code> · показано 1 з 23 засвідчень</p>
+    </section>
+
+    <!-- Provenance footer -->
+    <div class="provenance-footer">
+      <h3>Походження даних</h3>
+      <div class="provenance-list">
+        <span class="src">vesum</span>
+        <span class="src">grinchenko_1907</span>
+        <span class="src">sum20</span>
+        <span class="src" style="background:var(--red-light);color:var(--red);">sum11 · flagged risk=2</span>
+        <span class="src">esum</span>
+        <span class="src">literary_fts</span>
+      </div>
+      <div class="meta-line">
+        <span>згенеровано: 2026-05-23T10:42Z</span>
+        <span>СУМ-11 показано через прозорість, з обов'язковим прапорцем</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 3: файний — heritage-defense (galicianism)
+     Demonstrates: heritage-defense classification, dialect
+     badge, Грінченко + ЕСУМ as pre-Soviet attestation, no
+     Russianism despite "looks foreign" intuition.
+     ============================================================ -->
+<div id="word-faynyy" style="display:none">
+  <div class="word-hero">
+    <div class="word-hero-inner">
+      <span class="lexicon-badge">Лексикон · A‑Я · Ф</span>
+      <h1 class="word-title">файний <span class="word-stress">[фа́йний]</span></h1>
+      <div class="word-pos">прикметник · якісний</div>
+      <div class="word-badges">
+        <span class="status-badge heritage-ok">✓ Питома українська (галицизм)</span>
+        <span class="status-badge dialect">Регіонально-літературне · Галичина</span>
+        <span class="status-badge cefr">CEFR B1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <section class="atlas-section">
+      <div class="editorial-success">
+        <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська — це НЕ калька і НЕ запозичення з російської</div>
+        <p>Слово «файний» — давній галицький регіоналізм, засвідчений у Грінченка 1907 з прикладами з фольклору. Походить від <em>німецького fein</em> через польське посередництво (XVIII–XIX ст., період Австро-Угорщини), <strong>не з російської</strong>. У сучасній літературній мові — стилістично марковане як <em>розмовне, регіональне, літературне</em>.</p>
+        <p style="margin-top: 10px;">У стандартному вжитку синонімами є <strong>гарний, добрий, чудовий, славний</strong>. У повсякденному мовленні Західної України — норма; в офіційно-діловому стилі — недоречно.</p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер heritage-defense: <code>search_heritage → classification=regional · is_russianism=false · pre_soviet_attestation=[grinchenko_1907, esum]</code></p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Походження</h2>
+      <div class="ety-timeline">
+        <div class="ety-stage">
+          <div class="ety-period">Середньоверхньонімецька</div>
+          <div class="ety-word archaic">fīn</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage">
+          <div class="ety-period">Польська (XVII ст.)</div>
+          <div class="ety-word archaic">fajny</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage">
+          <div class="ety-period">Галицька укр. (XIX ст.)</div>
+          <div class="ety-word archaic">файний</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage">
+          <div class="ety-period">Сучасна укр.</div>
+          <div class="ety-word modern">файний</div>
+        </div>
+      </div>
+      <div class="ety-note">Запозичення XVIII–XIX ст. через польське посередництво в період Австро-Угорщини. Споріднені слова в інших слов'янських мовах: пол. <em>fajny</em>, чеськ. <em>fajn</em>, словац. <em>fajn</em>. Прийшло в українську ЗАХІДНИМ шляхом, незалежно від російського мовного контакту.</div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Значення</h2>
+
+      <div class="def-card grinchenko">
+        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>дорадянське засвідчення</span></div>
+        <div class="def-text">Файный, -на, -не. <em>Зап.</em> Хорошій, красивый. <em>Файна дівка, нема й що казати. Гн. II. 47.</em></div>
+      </div>
+
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">СУМ-20 / slovnyk.me</span><span>сучасний тлумачний словник</span></div>
+        <div class="def-text">Гарний, приємний, чудовий, який викликає схвалення. <em>Розм., рег.</em> Поширене переважно в західних діалектах української мови.</div>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Стилістичні нотатки</h2>
+      <div class="editorial-calque" style="background: var(--blue-light); border-color: var(--blue);">
+        <div class="editorial-calque-header" style="color: var(--blue);"><div class="editorial-calque-icon" style="background: var(--blue); color: white;">ℹ</div>Регіоналізм — не помилка, але стильово маркований</div>
+        <p style="font-size: 14px;">Антоненко-Давидович не заперечує проти слова, але радить у літературній мові обирати <strong>гарний</strong>, <strong>добрий</strong>, <strong>славний</strong> у нейтральному стилі. У художній прозі та поезії — повна свобода: «файний» широко використовують Стефаник, Франко, сучасні західноукраїнські письменники.</p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Літературні засвідчення</h2>
+      <div class="source-box">
+        <div class="source-box-header">Василь Стефаник · «Кленові листки» (1900)</div>
+        <blockquote>«Файна молодиця, файна, дай їй Боже…»</blockquote>
+        <div class="source-cite">— зразок галицького літературного вжитку</div>
+      </div>
+      <div class="source-box">
+        <div class="source-box-header">Іван Франко · «Захар Беркут» (1883)</div>
+        <blockquote>«А чи файний той парубок? — запитала вона батька. — Файний, — відповів той. — І гарної кості, і доброго серця…»</blockquote>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>literary_fts</code> · показано 2 з 31 засвідчень переважно у західноукраїнських авторів</p>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Синоніми</h2>
+      <div class="chip-row">
+        <span class="chip">гарний</span>
+        <span class="chip">добрий</span>
+        <span class="chip">славний</span>
+        <span class="chip">чудовий</span>
+        <span class="chip">приємний</span>
+        <span class="chip">красний</span>
+      </div>
+    </section>
+
+    <!-- Provenance footer -->
+    <div class="provenance-footer">
+      <h3>Походження даних</h3>
+      <div class="provenance-list">
+        <span class="src">vesum</span>
+        <span class="src">grinchenko_1907</span>
+        <span class="src">esum</span>
+        <span class="src">slovnyk_me · regional dictionaries</span>
+        <span class="src">search_heritage merger</span>
+        <span class="src">literary_fts</span>
+      </div>
+      <div class="meta-line">
+        <span>згенеровано: 2026-05-23T10:42Z</span>
+        <span>classification: regional · is_russianism: false</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchWord(w) {
+  document.getElementById('word-knyaz').style.display = (w === 'knyaz') ? '' : 'none';
+  document.getElementById('word-prapor').style.display = (w === 'prapor') ? '' : 'none';
+  document.getElementById('word-faynyy').style.display = (w === 'faynyy') ? '' : 'none';
+}
+function toggleEty(el, infoId, text) {
+  document.querySelectorAll('.ety-stage').forEach(function(s) { s.style.borderColor = ''; });
+  el.style.borderColor = 'var(--teal)';
+  el.style.boxShadow = '0 0 0 2px rgba(0,105,92,0.18)';
+  var info = document.getElementById(infoId);
+  if (info) { info.textContent = text; info.style.background = 'var(--teal-light)'; }
+}
+</script>
+
+</body>
+</html>
