@@ -3598,3 +3598,189 @@ def test_contract_yaml_tolerates_missing_vocabulary_hints() -> None:
     }
     out = linear_pipeline._contract_yaml(plan)
     assert "vocabulary_required: []" in out
+
+
+# ---------------------------------------------------------------------------
+# Gate relaxations (2026-05-23) — user-direction enforcement
+# ---------------------------------------------------------------------------
+#
+# Two surgical relaxations were applied to the `plan_sections` and
+# `vesum_verified` gates after the 2026-05-21 a1/my-morning build #13
+# terminal cascade exposed two structural false-positive patterns:
+#
+# 1. `plan_sections` failed on per-section min/max bounds when the writer's
+#    word_count correction rebalanced total but left one section ~5% short.
+#    User direction: "the section wordcount is a guidance for the writer,
+#    it is not a reason to drop an error. The important is that the whole
+#    content is a whole and not less than the planned word count."
+#
+# 2. `vesum_verified` failed on legitimate hyphenated multi-word
+#    constructions like `літера-в-літеру` ("letter by letter") which VESUM
+#    only indexes by single lemma. User direction: "there are many of these
+#    kind of constructions in the Ukrainian language, do not drop [an]
+#    error if VESUM is not supporting it but we need to be able to check
+#    if they are correct with another tool."
+#
+# The tests below pin those relaxations against regression.
+
+
+def test_section_gate_passes_when_section_below_min_but_present() -> None:
+    """Per-section under-min does NOT fail the gate (advisory only).
+
+    Reflects user direction 2026-05-23: per-section word counts are
+    GUIDANCE for the writer, not a build-fail trigger. The gate-level
+    `passed` reflects only missing headings. Per-section budgets are
+    retained as diagnostics so the writer correction prompt can use them
+    for targeting guidance, but they do NOT halt the build.
+
+    The 2026-05-21 a1/my-morning build #13 cascade — where the writer's
+    word_count r1 correction landed total at 1200 but left Діалоги
+    (257/270 = 95%) and Мій ранок (265/270 = 98%) under their per-section
+    min while Підсумок overshot, triggering terminal halt — is the
+    canonical failure pattern this relaxation prevents.
+    """
+    plan = {
+        "content_outline": [
+            {"section": "Діалоги", "words": 300, "points": ["p1"]},
+            {"section": "Підсумок", "words": 300, "points": ["p2"]},
+        ]
+    }
+    # Діалоги only has ~50 words (well below min=270). Підсумок has plenty.
+    # Both sections are PRESENT as headings.
+    text = (
+        "## Діалоги\n\n"
+        + ("слово " * 50)
+        + "\n\n## Підсумок\n\n"
+        + ("слово " * 500)
+        + "\n"
+    )
+    report = linear_pipeline._section_gate(text, plan)
+    assert report["passed"] is True, (
+        "Per-section under-min must not fail the gate per user direction "
+        "2026-05-23"
+    )
+    # Diagnostic budgets still reflect the per-section state.
+    budgets = {item["section"]: item for item in report["word_budgets"]}
+    assert budgets["Діалоги"]["under_min"] is True
+    assert budgets["Діалоги"]["passed"] is False  # per-section advisory marker
+    assert budgets["Підсумок"]["over_max"] is True
+    assert budgets["Підсумок"]["under_min"] is False
+
+
+def test_section_gate_fails_on_missing_heading() -> None:
+    """A contracted section absent from module.md still fails the gate.
+
+    Missing headings remain a hard fail — the writer must emit every
+    section the plan contracted for. Only per-section word counts were
+    relaxed by the 2026-05-23 change.
+    """
+    plan = {
+        "content_outline": [
+            {"section": "Діалоги", "words": 300, "points": ["p1"]},
+            {"section": "Підсумок", "words": 300, "points": ["p2"]},
+        ]
+    }
+    text = "## Діалоги\n\n" + ("слово " * 320) + "\n"  # Підсумок absent
+    report = linear_pipeline._section_gate(text, plan)
+    assert report["passed"] is False
+    assert "Підсумок" in report["missing_headings"]
+
+
+def test_section_gate_passes_when_sections_overshoot_max() -> None:
+    """Section overshoot (count > max) does not fail the gate either.
+
+    Reaffirms the pre-existing rule that max_words is diagnostic-only
+    ("more is always welcome" — user direction 2026-05-17 + 2026-05-23).
+    """
+    plan = {
+        "content_outline": [
+            {"section": "Підсумок", "words": 300, "points": ["p1"]},
+        ]
+    }
+    # 600 words: well over max=330 but max is diagnostic.
+    text = "## Підсумок\n\n" + ("слово " * 600) + "\n"
+    report = linear_pipeline._section_gate(text, plan)
+    assert report["passed"] is True
+    budget = report["word_budgets"][0]
+    assert budget["over_max"] is True
+    assert budget["under_min"] is False
+
+
+def test_vesum_gate_accepts_hyphenated_multi_word_compound_when_parts_verify() -> None:
+    """Hyphenated multi-word constructions where all parts verify pass.
+
+    Per user direction 2026-05-23: VESUM only indexes single lemmas, so
+    legitimate hyphenated phrases like `літера-в-літеру` (`letter by
+    letter`) need a fallback verification. The gate now splits on hyphens
+    and verifies each constituent above the lookup threshold; if every
+    part itself is a valid VESUM form, the compound is accepted.
+    """
+    # `літера-в-літеру`: every constituent (літера, в, літеру) verifies
+    # in real VESUM. `в` is below VESUM_MIN_WORD_LENGTH=3 and is accepted
+    # without lookup. The other two are listed as `known`. The surrounding
+    # vocab (`слово`) is also declared so the test isolates compound-
+    # handling from incidental missing-word false-positives.
+    fake_verify = _build_fake_verify_words(
+        known={"літера": True, "літеру": True, "слово": True},
+    )
+    report = linear_pipeline._vesum_gate(
+        module_text="Слово літера-в-літеру.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    assert "літера-в-літеру" not in report["missing"]
+    assert report["passed"] is True
+
+
+def test_vesum_gate_still_fails_hyphenated_compound_when_part_is_russianism() -> None:
+    """A hyphenated compound containing an unrecognized part still fails.
+
+    The constituent fallback is conservative — it accepts compounds ONLY
+    when every above-threshold part itself verifies. A hypothetical
+    Russified compound like `буквенного-щось` (where `буквенного` is a
+    real Russianism not in VESUM) MUST still fail the gate — otherwise
+    the relaxation would create a Russianism-laundering loophole via
+    hyphenation.
+    """
+    # `буквенного` is NOT in real VESUM (Russified form; standard is
+    # `буквений`). `щось` is real Ukrainian (`something`). Compound fails.
+    fake_verify = _build_fake_verify_words(
+        known={"щось": True, "слово": True},
+    )
+    report = linear_pipeline._vesum_gate(
+        module_text="Слово буквенного-щось.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    # The compound stays missing because `буквенного` constituent fails.
+    assert "буквенного-щось" in report["missing"]
+    assert report["passed"] is False
+
+
+def test_vesum_gate_hyphenated_compound_accepted_when_only_short_parts() -> None:
+    """Hyphenated compounds of only-short-tokens are accepted conservatively.
+
+    Edge case: `і-і-і` or `у-у-у` — strings of short prepositions/
+    conjunctions all below VESUM_MIN_WORD_LENGTH=3 — are not realistic
+    Ukrainian forms but if they ever appear, the fallback accepts them
+    conservatively (there are no constituents to verify, so no constituent
+    fails). This prevents the gate from blocking on unverifiable noise.
+    """
+    fake_verify = _build_fake_verify_words(known={"слово": True})
+    report = linear_pipeline._vesum_gate(
+        # `і-і-і` (3-part compound of single-char tokens). All below
+        # VESUM_MIN_WORD_LENGTH=3.
+        module_text="Слово і-і-і.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=fake_verify,
+    )
+    # 'і-і-і' wouldn't reach VESUM at all (below min length on the whole
+    # compound). The test is structurally a smoke test that the fallback
+    # doesn't crash on degenerate inputs.
+    assert report.get("error") is None
