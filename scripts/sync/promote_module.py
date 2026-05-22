@@ -118,7 +118,21 @@ def _source_rel_for_lesson(level: str, slug: str, filename: str) -> Path:
     return CURRICULUM_ROOT / level / slug / filename
 
 
-def _source_rel_for_mdx(level: str, slug: str) -> Path:
+def _build_rel_for_mdx(level: str, slug: str) -> Path:
+    """Path where `assemble_mdx` writes the freshly-built MDX inside the build branch.
+
+    The build is the SOURCE of truth for the rendered MDX content. Reading from
+    DOCS_ROOT in the build branch instead would silently pick up whatever stale
+    Starlight-tree MDX happened to be there from a prior PR, which is exactly
+    how the m20 (a1/my-morning) revert (2026-05-23) shipped a broken module —
+    the build wrote a fresh MDX to `curriculum/.../{slug}.mdx`, but the promote
+    read DOCS_ROOT, found an unchanged stale exemplar, and the diff was empty.
+    """
+    return CURRICULUM_ROOT / level / slug / f"{slug}.mdx"
+
+
+def _dest_rel_for_mdx(level: str, slug: str) -> Path:
+    """Path Starlight reads to render the lesson page (deploy target)."""
     return DOCS_ROOT / level / f"{slug}.mdx"
 
 
@@ -212,12 +226,13 @@ def _collect_source_files(repo_root: Path, source: SourceSpec) -> tuple[list[Sou
         else:
             files.append(SourceFile(source_rel=source_rel, dest_rel=source_rel, content=content))
 
-    mdx_rel = _source_rel_for_mdx(source.level, source.slug)
-    mdx = _read_build_file(repo_root, source, mdx_rel)
+    mdx_source_rel = _build_rel_for_mdx(source.level, source.slug)
+    mdx_dest_rel = _dest_rel_for_mdx(source.level, source.slug)
+    mdx = _read_build_file(repo_root, source, mdx_source_rel)
     if mdx is None:
-        missing_required.append(mdx_rel)
+        missing_required.append(mdx_source_rel)
     else:
-        files.append(SourceFile(source_rel=mdx_rel, dest_rel=mdx_rel, content=mdx))
+        files.append(SourceFile(source_rel=mdx_source_rel, dest_rel=mdx_dest_rel, content=mdx))
 
     for filename in sorted(FORENSICS_FILES):
         source_rel = _source_rel_for_lesson(source.level, source.slug, filename)
@@ -254,7 +269,7 @@ def _classify_destination(repo_root: Path, source: SourceSpec, files: list[Sourc
         _source_rel_for_lesson(source.level, source.slug, filename)
         for filename in LESSON_SOURCE_FILES
     }
-    required_dest_rels.add(_source_rel_for_mdx(source.level, source.slug))
+    required_dest_rels.add(_dest_rel_for_mdx(source.level, source.slug))
 
     required_by_dest = {item.dest_rel: item for item in files if item.dest_rel in required_dest_rels}
     any_required_exists = False
