@@ -76,7 +76,8 @@ persona:
 phase: LIT.3 Executed Renaissance 1917-1933
 prerequisites: []
 references:
-- name: Sosiura Love Ukraine — тексти та аналіз
+- title: Sosiura Love Ukraine — тексти та аналіз
+  name: Sosiura Love Ukraine — тексти та аналіз
   notes: Основне джерело
   type: primary
   url: https://www.ukrlib.com.ua/

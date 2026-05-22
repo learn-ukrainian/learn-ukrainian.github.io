@@ -54,7 +54,10 @@ persona:
 phase: 4
 prerequisites:
 - orlyk-latin-comparison
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 91
 slug: wandering-philosopher

@@ -97,15 +97,18 @@ persona:
 prerequisites:
 - unr-vybory
 references:
-- name: Всеукраїнський референдум 1991 (Вікіпедія)
+- title: Всеукраїнський референдум 1991 (Вікіпедія)
+  name: Всеукраїнський референдум 1991 (Вікіпедія)
   notes: Referendum data
   type: reference
   url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_(1991)
-- name: Акт проголошення незалежності (Вікіпедія)
+- title: Акт проголошення незалежності (Вікіпедія)
+  name: Акт проголошення незалежності (Вікіпедія)
   notes: Declaration context
   type: reference
   url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
-- name: Розпад СРСР (Вікіпедія)
+- title: Розпад СРСР (Вікіпедія)
+  name: Розпад СРСР (Вікіпедія)
   notes: USSR collapse
   type: reference
   url: https://uk.wikipedia.org/wiki/Розпад_СРСР

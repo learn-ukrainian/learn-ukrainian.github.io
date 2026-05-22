@@ -77,7 +77,8 @@ phase: LIT.5 Independence Era 1991-Present
 prerequisites:
 - lit-196
 references:
-- name: Kateryna Kalytko Prose — тексти та аналіз
+- title: Kateryna Kalytko Prose — тексти та аналіз
+  name: Kateryna Kalytko Prose — тексти та аналіз
   notes: Основне джерело
   type: primary
   url: https://www.ukrlib.com.ua/

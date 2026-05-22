@@ -54,7 +54,10 @@ persona:
 phase: 4
 prerequisites:
 - slovo-poetic-syntax-lab
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 84
 slug: slovo-hapax-legomena

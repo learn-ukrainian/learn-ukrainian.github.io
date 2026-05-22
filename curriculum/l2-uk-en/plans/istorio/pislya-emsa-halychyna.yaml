@@ -89,15 +89,18 @@ persona:
 prerequisites:
 - tsykl-kulturnykh-vidrodzhen
 references:
-- name: Емський указ (Вікіпедія)
+- title: Емський указ (Вікіпедія)
+  name: Емський указ (Вікіпедія)
   notes: Ems Decree
   type: reference
   url: https://uk.wikipedia.org/wiki/Емський_указ
-- name: Галицьке українство (Вікіпедія)
+- title: Галицьке українство (Вікіпедія)
+  name: Галицьке українство (Вікіпедія)
   notes: Galician Ukrainians
   type: reference
   url: https://uk.wikipedia.org/wiki/Галичина
-- name: НТШ (Вікіпедія)
+- title: НТШ (Вікіпедія)
+  name: НТШ (Вікіпедія)
   notes: Shevchenko Scientific Society
   type: reference
   url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка

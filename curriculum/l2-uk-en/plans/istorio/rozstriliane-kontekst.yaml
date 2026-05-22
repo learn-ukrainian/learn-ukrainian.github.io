@@ -96,15 +96,18 @@ persona:
 prerequisites:
 - syntez-holodomor-studiyi
 references:
-- name: Розстріляне відродження (Вікіпедія)
+- title: Розстріляне відродження (Вікіпедія)
+  name: Розстріляне відродження (Вікіпедія)
   notes: Overview
   type: reference
   url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-- name: Українізація (Вікіпедія)
+- title: Українізація (Вікіпедія)
+  name: Українізація (Вікіпедія)
   notes: Ukrainization policy
   type: reference
   url: https://uk.wikipedia.org/wiki/Українізація
-- name: Юрій Лавріненко — Розстріляне відродження
+- title: Юрій Лавріненко — Розстріляне відродження
+  name: Юрій Лавріненко — Розстріляне відродження
   notes: Term originator
   type: reference
   url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович

@@ -52,7 +52,10 @@ persona:
 phase: 4
 prerequisites:
 - likarski-poradnyky
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 115
 slug: ruth-capstone

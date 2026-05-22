@@ -84,15 +84,18 @@ prerequisites:
 - lit-05 (Natalka Poltavka)
 - Understanding of sentimentalism
 references:
-- name: Григорій Квітка-Основ'яненко — біографія
+- title: Григорій Квітка-Основ'яненко — біографія
+  name: Григорій Квітка-Основ'яненко — біографія
   notes: Офіційна біографія на UkrLib
   type: primary
   url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-- name: Маруся — повний текст
+- title: Маруся — повний текст
+  name: Маруся — повний текст
   notes: Для контексту творчості
   type: secondary
   url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-- name: Слобожанщина — історія
+- title: Слобожанщина — історія
+  name: Слобожанщина — історія
   notes: Регіональний контекст
   type: reference
   url: https://uk.wikipedia.org/wiki/Слобожанщина

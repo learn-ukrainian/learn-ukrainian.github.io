@@ -76,7 +76,8 @@ persona:
 phase: LIT.3 Executed Renaissance 1917-1933
 prerequisites: []
 references:
-- name: Antonenko Davydovych Smert — тексти та аналіз
+- title: Antonenko Davydovych Smert — тексти та аналіз
+  name: Antonenko Davydovych Smert — тексти та аналіз
   notes: Основне джерело
   type: primary
   url: https://www.ukrlib.com.ua/

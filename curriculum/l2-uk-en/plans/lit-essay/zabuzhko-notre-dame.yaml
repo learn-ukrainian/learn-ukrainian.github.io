@@ -51,7 +51,10 @@ persona:
   role: Cultural Exorcist
   voice: Senior Specialist
 phase: LIT Expansion
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 32
 slug: zabuzhko-notre-dame

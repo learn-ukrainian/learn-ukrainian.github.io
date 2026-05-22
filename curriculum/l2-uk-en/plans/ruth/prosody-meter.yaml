@@ -54,7 +54,10 @@ persona:
 phase: 2
 prerequisites:
 - syntax-complex
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 55
 slug: prosody-meter

@@ -54,7 +54,10 @@ persona:
 phase: 1
 prerequisites:
 - wills-testaments
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 14
 slug: guardianship-ruth

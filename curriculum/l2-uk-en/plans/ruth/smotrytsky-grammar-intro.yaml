@@ -54,7 +54,10 @@ persona:
 phase: 2
 prerequisites:
 - ostrih-legacy
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 45
 slug: smotrytsky-grammar-intro

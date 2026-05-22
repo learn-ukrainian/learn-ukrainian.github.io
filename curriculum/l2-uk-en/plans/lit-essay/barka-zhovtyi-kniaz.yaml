@@ -64,7 +64,8 @@ persona:
   voice: Senior Specialist
 phase: ESSAY.6 Testimony Prose
 references:
-- name: Василь Барка — «Жовтий князь»
+- title: Василь Барка — «Жовтий князь»
+  name: Василь Барка — «Жовтий князь»
   type: primary
   url: https://www.ukrlib.com.ua/
 register: академічний

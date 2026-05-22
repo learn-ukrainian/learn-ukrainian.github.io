@@ -82,15 +82,18 @@ phase: LIT.5 Realism
 prerequisites:
 - lit-29 (Language Of Realism)
 references:
-- name: Микола Джеря — повний текст
+- title: Микола Джеря — повний текст
+  name: Микола Джеря — повний текст
   notes: Для детального аналізу
   type: primary
   url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-- name: Микола Джеря — скорочено
+- title: Микола Джеря — скорочено
+  name: Микола Джеря — скорочено
   notes: Для повторення сюжету
   type: secondary
   url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
-- name: Микола Джеря — бунтар
+- title: Микола Джеря — бунтар
+  name: Микола Джеря — бунтар
   notes: Аналіз образу
   type: reference
   url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464

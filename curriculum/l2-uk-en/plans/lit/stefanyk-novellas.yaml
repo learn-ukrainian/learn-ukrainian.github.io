@@ -77,7 +77,8 @@ phase: LIT.2 European Modernism 1890s-1917
 prerequisites:
 - lit-62
 references:
-- name: Stefanyk Novellas — тексти та аналіз
+- title: Stefanyk Novellas — тексти та аналіз
+  name: Stefanyk Novellas — тексти та аналіз
   notes: Основне джерело
   type: primary
   url: https://www.ukrlib.com.ua/

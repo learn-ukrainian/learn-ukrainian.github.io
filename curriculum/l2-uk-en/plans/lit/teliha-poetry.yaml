@@ -55,7 +55,10 @@ persona:
 phase: LIT Expansion
 prerequisites:
 - malaniuk-poetry
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 150
 slug: teliha-poetry

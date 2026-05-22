@@ -96,15 +96,18 @@ persona:
 prerequisites:
 - poltava-naslidky
 references:
-- name: Українська Народна Республіка (Вікіпедія)
+- title: Українська Народна Республіка (Вікіпедія)
+  name: Українська Народна Республіка (Вікіпедія)
   notes: UNR history
   type: reference
   url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
-- name: Українсько-радянська війна (Вікіпедія)
+- title: Українсько-радянська війна (Вікіпедія)
+  name: Українсько-радянська війна (Вікіпедія)
   notes: War context
   type: reference
   url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
-- name: Центральна Рада (Вікіпедія)
+- title: Центральна Рада (Вікіпедія)
+  name: Центральна Рада (Вікіпедія)
   notes: Government
   type: reference
   url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада

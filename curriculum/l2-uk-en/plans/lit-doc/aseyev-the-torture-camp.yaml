@@ -63,3 +63,7 @@ vocabulary_hints:
   - наратив
   - суб'єктність
 word_target: 5000
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill

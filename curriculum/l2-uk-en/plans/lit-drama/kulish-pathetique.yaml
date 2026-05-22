@@ -77,7 +77,8 @@ phase: LIT.3 Executed Renaissance 1917-1933
 prerequisites:
 - lit-100
 references:
-- name: Kulish Pathetique — тексти та аналіз
+- title: Kulish Pathetique — тексти та аналіз
+  name: Kulish Pathetique — тексти та аналіз
   notes: Основне джерело
   type: primary
   url: https://www.ukrlib.com.ua/

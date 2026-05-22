@@ -54,7 +54,10 @@ persona:
 phase: 1
 prerequisites:
 - polonisms-in-law
-references: []
+references:
+- title: Pending Reference
+  type: wiki
+  note: Placeholder added during title backfill
 register: академічний
 sequence: 16
 slug: chancery-formulae-dating
