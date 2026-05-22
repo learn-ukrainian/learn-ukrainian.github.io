@@ -1,6 +1,6 @@
 {
   "version": "0.1",
-  "generated_at": "2026-05-22T15:59:29+00:00",
+  "generated_at": "2026-05-22T16:19:14+00:00",
   "stats": {
     "lemmas_total": 63,
     "modules_covered": 3,
@@ -171,7 +171,7 @@
     },
     {
       "lemma": "вчителька / учителька",
-      "url_slug": "вчителька-/-учителька",
+      "url_slug": "вчителька-учителька",
       "gloss": "teacher, f — feminitive, VESUM-verified; mirror of вчитель / учитель m",
       "pos": null,
       "ipa": null,
@@ -203,7 +203,7 @@
     },
     {
       "lemma": "він, вона, воно",
-      "url_slug": "він,-вона,-воно",
+      "url_slug": "він-вона-воно",
       "gloss": "he, she, it — gender test words",
       "pos": null,
       "ipa": null,
@@ -395,7 +395,7 @@
     },
     {
       "lemma": "комп'ютер",
-      "url_slug": "комп'ютер",
+      "url_slug": "комп-ютер",
       "gloss": "computer, m",
       "pos": null,
       "ipa": null,

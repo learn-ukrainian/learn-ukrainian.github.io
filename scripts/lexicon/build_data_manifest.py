@@ -33,7 +33,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import UTC, datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -55,11 +55,31 @@ V1_MODULES: list[dict[str, str | int]] = [
 def _slug_for_url(lemma: str) -> str:
     """URL-safe slug for an atlas lemma.
 
-    Keeps Cyrillic (Astro handles UTF-8 in dynamic routes fine), but strips
-    whitespace and lowercases. Multi-word lemmas (e.g. ``після цього``) get
-    spaces replaced with hyphens.
+    Astro's ``[lemma].astro`` dynamic route captures ONE path segment, so a
+    slug containing ``/`` would split into multiple segments and break
+    routing (caught against ``вчителька / учителька`` 2026-05-22). We
+    also fold commas (used as list separators in plan-hint chunks like
+    ``він, вона, воно``) and apostrophes (Ukrainian intra-word ``'`` —
+    survives in the display lemma but is stripped from the slug).
+
+    Strategy:
+      1. casefold + strip surrounding whitespace
+      2. replace any non-Cyrillic-letter / non-Latin-letter / non-digit
+         character with a hyphen (this folds spaces, slashes, commas,
+         apostrophes, parens, etc. — Python's ``\\w`` is Unicode-aware
+         and includes Cyrillic letters)
+      3. collapse consecutive hyphens and trim leading/trailing ones
+
+    Cyrillic is preserved (Astro handles UTF-8 path segments).
     """
-    return re.sub(r"\s+", "-", lemma.strip().lower())
+    folded = lemma.strip().casefold()
+    # Non-word (Unicode-aware) → hyphen. \w in Python regex is
+    # Unicode-aware by default and includes Cyrillic letters + digits +
+    # underscore; we strip underscores below to keep slugs clean.
+    slug = re.sub(r"[^\w]+", "-", folded, flags=re.UNICODE)
+    slug = slug.replace("_", "-")
+    slug = re.sub(r"-+", "-", slug).strip("-")
+    return slug
 
 
 def _parse_plan_hint(raw: str) -> tuple[str, str | None]:
