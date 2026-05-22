@@ -3241,12 +3241,16 @@ def review_context(
         raise LinearPipelineError(f"Unknown LLM QG dimension: {dim}")
     level = str(plan["level"])
     sequence = int(plan["sequence"])
+    learner_state = build_learner_state(level.lower(), sequence)
     return {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
         "WORD_TARGET": str(plan["word_target"]),
-        "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence),
+        "LEARNER_STATE": format_learner_state(learner_state),
+        "IMMERSION_RULE": get_immersion_rule(
+            level.lower(), sequence, learner_state=learner_state
+        ),
         "CONTRACT_YAML": _contract_yaml(plan),
         "PLAN_CONTENT": plan_content,
         "GENERATED_CONTENT": generated_content,
