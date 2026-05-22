@@ -233,7 +233,26 @@ def test_unknown_artifact_points_back_to_seeded_artifact() -> None:
     assert "writer_claim={'artifact': 'readme.md'" in proposal["current_artifact_state"]
 
 
-def test_claimed_location_missing_quotes_claim_and_seeded_location_hint() -> None:
+def test_unresolved_location_passes_when_substance_present_anywhere() -> None:
+    """PR #2207: `_location_text` now falls back to whole-artifact matching
+    when the writer's `location` field doesn't anchor to a heading and
+    isn't a literal substring of the artifact. If the obligation's
+    substance markers (backticked terms, italicized markers, or fallback
+    substance words) are present anywhere in the artifact, the obligation
+    PASSES — writer drift on the descriptive `location` field is a soft
+    signal, not a hard contract.
+
+    Pre-PR-#2207 behavior: location='§Diaspora' returned "" target_text
+    → FAIL with `claimed_location_missing` + fix_proposal generated.
+    New behavior: falls back to whole module.md → substance check finds
+    the backticked markers `привіт` and `ранок` from the required_claim
+    → PASS, no fix_proposal.
+
+    This converts a noisy false-positive class (writer used descriptive
+    location prose) into clean passes, while still failing when content
+    is genuinely absent (see
+    `test_unresolved_location_surfaces_substance_failure_with_proposal`).
+    """
     manifest = _sequence_manifest(heading="Morning proof")
 
     report = check_wiki_coverage(
@@ -244,11 +263,62 @@ def test_claimed_location_missing_quotes_claim_and_seeded_location_hint() -> Non
         seeded_map=_seeded(manifest),
     )
 
+    # New behavior: substance IS in the module (just at a section that
+    # doesn't match the descriptive location), so the obligation passes
+    # via the whole-artifact fallback.
+    assert report["passed"] is True
+    assert "fix_proposals" not in report, (
+        "When the gate passes via location fallback, no fix proposals "
+        "should be emitted"
+    )
+    step_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "step-1"
+    )
+    assert step_result["status"] == "PASS"
+    assert step_result["reason"] == "sequence_claim_present"
+
+
+def test_unresolved_location_surfaces_substance_failure_with_proposal() -> None:
+    """When the writer's `location` doesn't anchor AND the obligation's
+    substance is genuinely absent from the artifact, the gate must still
+    FAIL — but with the substance-level reason (`sequence_claim_missing`,
+    `phonetic_rule_missing`, etc.) instead of the location-level reason
+    (`claimed_location_missing`). A fix_proposal must be emitted so the
+    correction loop can target the missing substance markers.
+
+    PR #2207 made `_location_text` permissive on location resolution but
+    did NOT loosen the substance check — that's still the canonical
+    correctness gate. This test pins the FAIL path: bogus location +
+    absent substance → FAIL + actionable proposal.
+    """
+    # Use a required_claim with markers that are deliberately ABSENT from
+    # the module. The default required_claim ("Teach `привіт` and `ранок`
+    # together.") would match the fallback module — supply an explicit one.
+    manifest = _sequence_manifest(
+        heading="Diaspora deep-dive",
+        required_claim="Diaspora deep-dive — discuss `діаспора` and `еміграція`.",
+    )
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        # location doesn't anchor + substance markers absent from module.
+        implementation_map={"step-1": _claim("module.md", "§Diaspora")},
+        module_md="## Routine\nA brief morning narrative without diaspora content.\n",
+        activities_yaml="[]",
+        seeded_map=_seeded(manifest),
+    )
+
     proposal = _single_proposal(report)
-    assert proposal["failure_reason"] == "claimed_location_missing"
-    assert "Location '§Diaspora' returns empty text in module.md" in proposal["surgical_diff_hint"]
-    assert "expected: §Morning proof" in proposal["surgical_diff_hint"]
-    assert "writer_claim={'artifact': 'module.md', 'location': '§Diaspora'" in proposal["current_artifact_state"]
+    # New failure mode is the substance-level reason.
+    assert proposal["failure_reason"] == "sequence_claim_missing"
+    # current_artifact_state now reflects the substance-check evidence
+    # (the actual module text scanned by the fallback), giving the
+    # correction loop the real context for proposing fixes — not a
+    # placeholder "resolved_artifact_text=''" sentinel.
+    assert "A brief morning narrative" in proposal["current_artifact_state"]
+    # Surgical diff hint must surface the missing markers / claim shape
+    # so the correction loop can target them.
+    assert "Diaspora deep-dive" in proposal["surgical_diff_hint"]
 
 
 def test_missing_incorrect_quotes_payload_incorrect() -> None:
