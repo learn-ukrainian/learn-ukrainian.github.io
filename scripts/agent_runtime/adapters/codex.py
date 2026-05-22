@@ -132,6 +132,12 @@ class CodexAdapter:
     default_model: str = "gpt-5.5"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
+    # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``
+    # from ``tool_config["codex_home_override"]`` (V7 writer); read by
+    # ``_candidate_rollout_dirs`` so the post-call rollout scan looks in
+    # the scoped sessions/ dir, not the user's real ``~/.codex/sessions/``.
+    _codex_home_scope: str | None = None
+
     def build_invocation(
         self,
         *,
@@ -160,6 +166,20 @@ class CodexAdapter:
         Codex falls through to the config default (currently ``high``).
         See #1396.
         """
+        # Per-invocation scoped $CODEX_HOME (set by V7 writer via
+        # ``tool_config["codex_home_override"]``). Stored on the
+        # adapter BEFORE ``_reset_per_invocation_state`` so that the
+        # rollout-snapshot it triggers scans the correct sessions/
+        # directory (the scoped one, not the user's real
+        # ``~/.codex/sessions/``). Without this ordering the snapshot
+        # would record an empty set, and post-call rollout discovery
+        # would treat real rollouts as "already-existing" and skip
+        # them. Empirical reference: failed build
+        # a1-my-morning-20260522-205831 — codex wrote 38 valid MCP
+        # calls into ``$TMPDIR/codex-v7-writer-501/sessions/...``, the
+        # adapter scanned ``~/.codex/sessions/`` and saw 0.
+        self._codex_home_scope = (tool_config or {}).get("codex_home_override")
+
         # Reset per-invocation state so _read_latest_rollout_task_complete
         # uses a fresh rollout snapshot (prevents cross-contamination
         # between consecutive calls on the same adapter instance).
@@ -573,10 +593,36 @@ class CodexAdapter:
         Yesterday is included so a call that starts at 23:59 UTC and
         finishes at 00:01 UTC doesn't miss its own rollout when the
         day directory rolls over. Codex 2026-04-10 audit finding.
+
+        Honors the per-invocation scoped ``$CODEX_HOME`` so the V7
+        writer's scoped-tempdir rollouts (materialized by
+        ``linear_pipeline._ensure_codex_writer_home`` and passed via
+        ``tool_config["codex_home_override"]``) are discovered
+        correctly. Without this, the adapter scanned
+        ``~/.codex/sessions/`` while the subprocess wrote rollouts
+        under the scoped home — the codex-tools writer phase appeared
+        to make zero MCP calls (no rollout found → empty tool_calls
+        → ``mcp_tools_never_invoked`` fires) even though 38+ valid
+        ``mcp__sources__*`` calls were actually recorded. Empirical
+        reference: failed build ``a1-my-morning-20260522-205831``,
+        rollout at
+        ``$TMPDIR/codex-v7-writer-501/sessions/2026/05/22/...``.
+
+        Resolution order:
+        1. ``self._codex_home_scope`` — set at ``build_invocation``
+           time from ``tool_config["codex_home_override"]``.
+        2. ``os.environ["CODEX_HOME"]`` — for the (rare) case where
+           the orchestrator itself exports CODEX_HOME.
+        3. ``~/.codex/sessions/`` — legacy default.
         """
         from datetime import UTC, datetime, timedelta
 
-        base = Path.home() / ".codex" / "sessions"
+        scope = getattr(self, "_codex_home_scope", None)
+        if scope:
+            base = Path(scope) / "sessions"
+        else:
+            codex_home_env = os.environ.get("CODEX_HOME")
+            base = Path(codex_home_env) / "sessions" if codex_home_env else Path.home() / ".codex" / "sessions"
         dirs: list[Path] = []
         for delta in (0, 1):
             d = datetime.now(UTC) - timedelta(days=delta)
