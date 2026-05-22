@@ -104,7 +104,7 @@ mypy_extensions==1.1.0
 networkx==3.6.1
 nodeenv==1.10.0
 numpy==2.4.2
-onnxruntime==1.23.2
+onnxruntime==1.24.3
 open_clip_torch==3.3.0
 openai==1.109.1
 opencv-python-headless==4.11.0.86
