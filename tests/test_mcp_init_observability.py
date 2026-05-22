@@ -328,12 +328,14 @@ def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
     assert home_event["scoped_home"].endswith(f"codex-v7-writer-{os.getuid()}")
 
 
-def test_runtime_tool_config_codex_tools_missing_auth_raises(
+def test_runtime_tool_config_codex_tools_missing_auth_warns(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """If the user's CODEX_HOME has no auth.json, fail loud — codex
-    would otherwise start and die with an inscrutable provider error."""
+    """When CODEX_HOME has no auth.json, emit a warning event but don't
+    raise — config resolution must work on CI runners that have never
+    run ``codex login``. The actual ``codex exec`` invocation will fail
+    loud with its own missing-auth error if it tries to run."""
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
     monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
 
@@ -341,8 +343,27 @@ def test_runtime_tool_config_codex_tools_missing_auth_raises(
     bad_home.mkdir()
     monkeypatch.setenv("CODEX_HOME", str(bad_home))
 
-    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"auth\.json"):
-        linear_pipeline._runtime_tool_config("codex-tools")
+    events: list[tuple[str, dict[str, Any]]] = []
+    config = linear_pipeline._runtime_tool_config(
+        "codex-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    # Config resolution succeeds.
+    assert config.get("codex_home_override")
+
+    # But the missing-auth warning event is emitted.
+    event_names = [name for name, _ in events]
+    assert "codex_writer_home_auth_missing" in event_names
+
+    # And the resolved event records auth_present=False.
+    resolved = next(fields for name, fields in events if name == "codex_writer_home_resolved")
+    assert resolved["auth_present"] is False
+
+    # No broken symlink left in the scoped home.
+    scoped_home = Path(config["codex_home_override"])
+    auth_link = scoped_home / "auth.json"
+    assert not auth_link.exists() and not auth_link.is_symlink()
 
 
 def test_runtime_tool_config_non_codex_tools_no_disable_features(

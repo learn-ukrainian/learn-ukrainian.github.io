@@ -12,6 +12,7 @@ docs/decisions/2026-05-17-path3-per-obligation-review-loop.md.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 import os
@@ -2754,18 +2755,18 @@ def _ensure_codex_writer_home(
 
     Returns the absolute path to the scoped home.
 
-    Raises ``LinearPipelineError`` if the user's real ``$CODEX_HOME``
-    doesn't have ``auth.json`` (the symlink target would be missing
-    and codex would fail at startup with an inscrutable auth error).
+    Missing-auth behavior: when the user's ``$CODEX_HOME/auth.json``
+    doesn't exist (e.g. on a CI runner that has never run
+    ``codex login``), the symlink is skipped and a
+    ``codex_writer_home_auth_missing`` event is emitted so build paths
+    can detect the condition. The scoped config is still materialized so
+    test paths exercising ``_runtime_tool_config`` work without real
+    Codex auth. Codex will fail loud at the actual ``codex exec`` call
+    with its own missing-auth error — that's the right layer for the
+    failure to surface, not config resolution.
     """
     real_home = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
     real_auth = real_home / "auth.json"
-    if not real_auth.exists():
-        raise LinearPipelineError(
-            f"Codex writer-isolation expected auth at {real_auth} "
-            "but it doesn't exist. Run `codex login` first, or set "
-            "$CODEX_HOME to a directory that has a populated auth.json."
-        )
 
     # Scoped home under tempdir — survives across invocations within a
     # single user session but doesn't pollute the repo tree. Per-user
@@ -2787,32 +2788,51 @@ def _ensure_codex_writer_home(
         config_path.write_text(desired_config, encoding="utf-8")
 
     auth_link = scoped_home / "auth.json"
-    # Symlink (not copy) so token refreshes by the desktop Codex.app
-    # propagate without us having to invalidate the scoped home.
-    if auth_link.is_symlink():
-        try:
-            if Path(os.readlink(auth_link)) == real_auth:
-                pass  # link already correct
-            else:
-                auth_link.unlink()
+    auth_present = real_auth.exists()
+    if auth_present:
+        # Symlink (not copy) so token refreshes by the desktop Codex.app
+        # propagate without us having to invalidate the scoped home.
+        if auth_link.is_symlink():
+            try:
+                if Path(os.readlink(auth_link)) == real_auth:
+                    pass  # link already correct
+                else:
+                    auth_link.unlink()
+                    auth_link.symlink_to(real_auth)
+            except OSError:
+                # Recover from a dangling/corrupt link
+                auth_link.unlink(missing_ok=True)
                 auth_link.symlink_to(real_auth)
-        except OSError:
-            # Recover from a dangling/corrupt link
-            auth_link.unlink(missing_ok=True)
+        elif auth_link.exists():
+            # Stale file at that path — replace with symlink.
+            auth_link.unlink()
             auth_link.symlink_to(real_auth)
-    elif auth_link.exists():
-        # Stale file at that path — replace with symlink.
-        auth_link.unlink()
-        auth_link.symlink_to(real_auth)
+        else:
+            auth_link.symlink_to(real_auth)
     else:
-        auth_link.symlink_to(real_auth)
+        # No auth.json to link. Remove any stale link so codex doesn't
+        # silently authenticate against a broken target. The actual
+        # ``codex exec`` invocation will fail loud with its own missing-auth
+        # error at runtime — the right layer for that failure to surface.
+        if auth_link.is_symlink() or auth_link.exists():
+            with contextlib.suppress(OSError):
+                auth_link.unlink()
 
     _emit(
         event_sink,
         "codex_writer_home_resolved",
         scoped_home=str(scoped_home),
         real_home=str(real_home),
+        auth_present=auth_present,
     )
+    if not auth_present:
+        _emit(
+            event_sink,
+            "codex_writer_home_auth_missing",
+            scoped_home=str(scoped_home),
+            real_home=str(real_home),
+            real_auth=str(real_auth),
+        )
     return str(scoped_home)
 
 
