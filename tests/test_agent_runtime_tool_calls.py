@@ -109,3 +109,48 @@ def test_normalize_tool_calls_extracts_gemini_toolcalls_shape() -> None:
         }
     ]
     assert calls[0]["timestamp"] == "2026-05-09T19:20:01Z"
+
+
+def test_normalize_tool_calls_correlates_codex_function_call_output() -> None:
+    """Codex CLI emits ``function_call_output`` events with ``call_id`` as
+    the correlation key (not ``tool_call_id``/``tool_use_id``).
+
+    Without recognising both, codex rollouts pair the function_call with no
+    output, leaving ``writer_tool_calls.json`` entries blank and the
+    ``textbook_grounding`` gate reading ``textbook_result_hits: 0`` even
+    when the writer's search_text/get_chunk_context calls returned grounded
+    textbook chunks. Empirical reference: rollout-2026-05-22T22-58-38 for
+    the post-#2233 codex-tools a1/my-morning build — 38 valid mcp__sources__*
+    calls with full results in the rollout, all dropped on the floor by the
+    result-correlation pass.
+    """
+    events = [
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "function_call",
+                "name": "search_text",
+                "namespace": "mcp__sources__",
+                "arguments": '{"query":"Захарійчук 24","grade":1,"limit":10}',
+                "call_id": "call_ujhILo8Q08B3NwugWTPbXbOm",
+            },
+        },
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "function_call_output",
+                "call_id": "call_ujhILo8Q08B3NwugWTPbXbOm",
+                "output": (
+                    'Wall time: 0.0212 seconds\nOutput:\n'
+                    '[{"type":"text","text":"Found 10 results"}]'
+                ),
+            },
+        },
+    ]
+
+    calls = normalize_tool_calls(events)
+
+    assert len(calls) == 1
+    assert calls[0]["name"] == "mcp__sources__search_text"
+    assert calls[0]["result"].startswith("Wall time: 0.0212 seconds\nOutput:\n")
+    assert "Found 10 results" in calls[0]["output_summary"]

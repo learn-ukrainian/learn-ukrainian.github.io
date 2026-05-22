@@ -8056,6 +8056,30 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         result = {"text": call["result_excerpt"]}
         if call.get("source_type"):
             result["source_type"] = call["source_type"]
+    # Codex CLI envelope: tool outputs from codex (mcp_sources_* via codex-cli
+    # 0.133.0+) arrive as a wrapped string ``Wall time: X.XXXX seconds\nOutput:\n<json>``
+    # where ``<json>`` is the canonical content-block list shape
+    # ``[{"type":"text","text":"<md>"}]``. Without unwrapping, the canonical
+    # list branch below skips the result (string isn't list/Mapping) and
+    # ``textbook_grounding`` reads ``textbook_result_hits: 0`` even when
+    # the writer's search_text/get_chunk_context calls returned grounded
+    # textbook chunks. Empirical reference: rollout-2026-05-22T22-58-38
+    # for the post-#2233 codex-tools a1/my-morning build — 38 valid
+    # mcp__sources__* calls fired with full results, all dropped by the
+    # result-extraction pass.
+    if isinstance(result, str):
+        stripped = result.lstrip()
+        if stripped.startswith("Wall time:"):
+            output_marker = "Output:\n"
+            idx = stripped.find(output_marker)
+            if idx >= 0:
+                payload_text = stripped[idx + len(output_marker):]
+                try:
+                    parsed = json.loads(payload_text)
+                except (json.JSONDecodeError, ValueError):
+                    parsed = None
+                if isinstance(parsed, (list, dict)):
+                    result = parsed
     if isinstance(result, list):
         items: list[Mapping[str, Any]] = []
         tool_name = _tool_name_from_call(call)
