@@ -4,6 +4,7 @@ Agent CLIs can run shell commands and inspect ``os.environ`` directly. The
 runtime should therefore pass only ordinary process context plus the credential
 for the provider being invoked, not the full orchestrator environment.
 """
+
 from __future__ import annotations
 
 import os
@@ -70,6 +71,19 @@ _PROVIDER_SECRET_ALLOWLIST = {
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "gemini": {
         "GEMINI_AUTH_MODE",
+    },
+    # CODEX_HOME must reach the codex subprocess so the V7 writer's
+    # scoped config (materialized by
+    # `linear_pipeline._ensure_codex_writer_home`) actually takes
+    # effect. Without this allowlist entry the sanitizer dropped the
+    # `env_overrides["CODEX_HOME"]` set by the codex adapter, the
+    # subprocess fell back to `~/.codex/config.toml`, and writers
+    # discovered the user's globally-registered MCP servers (e.g.
+    # `mcp__node_repl__js`) — see writer-isolation #2228 / #2230 +
+    # the 2026-05-22 ab ask-codex `codex-node-repl-leak-2026-05-22`
+    # diagnosis.
+    "codex": {
+        "CODEX_HOME",
     },
 }
 

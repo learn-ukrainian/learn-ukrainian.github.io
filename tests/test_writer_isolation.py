@@ -25,9 +25,7 @@ def _failure_subclasses(records: list) -> set[str | None]:
 
 def test_classify_1944_incident_as_infra_context_contamination() -> None:
     trace = json.loads(
-        (REPO_ROOT / "audit/incidents/2026-05-13-1944-writer-tool-calls.json").read_text(
-            encoding="utf-8"
-        )
+        (REPO_ROOT / "audit/incidents/2026-05-13-1944-writer-tool-calls.json").read_text(encoding="utf-8")
     )
 
     records = classify_writer_trace(trace)
@@ -35,11 +33,17 @@ def test_classify_1944_incident_as_infra_context_contamination() -> None:
     assert {
         FailureClass.INFRA_CONTEXT_CONTAMINATION,
     } == {record.failure_class for record in records}
-    assert {"wrong_tool_family", "handoff_or_orchestrator_file"} <= _failure_subclasses(
-        records
-    )
-    assert all(record.severity == "TERMINAL" for record in records)
-    assert all(record.terminal is True for record in records)
+    assert {"wrong_tool_family", "handoff_or_orchestrator_file"} <= _failure_subclasses(records)
+    # Per-subclass severity since 2026-05-22 (see classify_writer_trace
+    # comment): `wrong_tool_family` is WARN/non-terminal (tool-family
+    # choice doesn't kill the build; quality gates downstream judge);
+    # `handoff_or_orchestrator_file` stays TERMINAL because session-state
+    # reads contaminate curriculum content.
+    by_sub = {record.sub_class: record for record in records}
+    assert by_sub["wrong_tool_family"].severity == "WARN"
+    assert by_sub["wrong_tool_family"].terminal is False
+    assert by_sub["handoff_or_orchestrator_file"].severity == "TERMINAL"
+    assert by_sub["handoff_or_orchestrator_file"].terminal is True
 
 
 def test_pure_mcp_writer_passes_isolation() -> None:
@@ -97,11 +101,7 @@ def test_gemini_dangerous_builtins_still_fail_isolation() -> None:
     )
 
     assert "wrong_tool_family" in _failure_subclasses(records)
-    offending = {
-        entry["name"]
-        for record in records
-        for entry in record.evidence.get("offending_tool_calls", [])
-    }
+    offending = {entry["name"] for record in records for entry in record.evidence.get("offending_tool_calls", [])}
     assert "run_shell_command" in offending
 
 
@@ -170,9 +170,7 @@ def test_writer_reads_handoff_fails_isolation() -> None:
         ]
     )
 
-    assert {"wrong_tool_family", "handoff_or_orchestrator_file"} <= _failure_subclasses(
-        records
-    )
+    assert {"wrong_tool_family", "handoff_or_orchestrator_file"} <= _failure_subclasses(records)
 
 
 def test_writer_runtime_gate_reports_contamination_and_zero_mcp() -> None:
@@ -189,9 +187,14 @@ def test_writer_runtime_gate_reports_contamination_and_zero_mcp() -> None:
             ],
         )
 
+    # Since 2026-05-22 `wrong_tool_family` is WARN/non-terminal, so the
+    # raise message only lists TERMINAL failures — here that's
+    # `mcp_tools_never_invoked`. Both classes still emit
+    # `writer_failure_class` events (telemetry), the assertions below
+    # cover that.
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
-        match=r"infra_context_contamination:wrong_tool_family.*mcp_tools_never_invoked",
+        match=r"mcp_tools_never_invoked",
     ):
         linear_pipeline.invoke_writer(
             "Write the module.",
@@ -202,9 +205,7 @@ def test_writer_runtime_gate_reports_contamination_and_zero_mcp() -> None:
             event_sink=lambda event, **fields: events.append({"event": event, **fields}),
         )
 
-    failure_events = [
-        event for event in events if event["event"] == "writer_failure_class"
-    ]
+    failure_events = [event for event in events if event["event"] == "writer_failure_class"]
     assert [event["failure_class"] for event in failure_events] == [
         "infra_context_contamination",
         "mcp_tools_never_invoked",
@@ -257,9 +258,11 @@ def test_claude_subprocess_argv_contains_allowed_tools(
     # argv assembly + adapter parse, not about the spawn mechanism.
     monkeypatch.setenv("DELEGATE_DISABLE_PTY", "1")
 
-    with patch("scripts.agent_runtime.runner.has_headroom", return_value=(True, "")), patch(
-        "scripts.agent_runtime.runner.write_record"
-    ), patch("scripts.agent_runtime.runner.subprocess.Popen", side_effect=fake_popen):
+    with (
+        patch("scripts.agent_runtime.runner.has_headroom", return_value=(True, "")),
+        patch("scripts.agent_runtime.runner.write_record"),
+        patch("scripts.agent_runtime.runner.subprocess.Popen", side_effect=fake_popen),
+    ):
         result = invoke(
             "claude",
             "Write the module.",
