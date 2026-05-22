@@ -942,6 +942,64 @@ def test_codex_check_early_reap_ignores_preexisting_rollouts(
     assert adapter.check_early_reap(plan, call_start_time=call_start) is False
 
 
+def test_codex_candidate_rollout_dirs_honors_codex_home_override(
+    tmp_path, monkeypatch
+):
+    """Regression pin: the V7 writer's scoped CODEX_HOME (passed via
+    ``tool_config["codex_home_override"]``) must be honored for
+    rollout discovery. Without this, the adapter scans
+    ``~/.codex/sessions/`` while the subprocess writes rollouts under
+    the scoped home — the writer phase appears to make zero MCP calls
+    (no rollout found → empty tool_calls → ``mcp_tools_never_invoked``
+    fires). Empirical reference: failed build
+    ``a1-my-morning-20260522-205831`` (38 valid sources.* calls
+    written to scoped sessions/; adapter saw 0 because it scanned
+    user home).
+    """
+    from datetime import UTC, datetime
+
+    # User's real ~/.codex/ — explicitly should NOT be scanned when scope is set.
+    fake_user_home = tmp_path / "user_home"
+    fake_user_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_user_home))
+    today = datetime.now(UTC)
+    user_sessions = (
+        fake_user_home
+        / ".codex"
+        / "sessions"
+        / f"{today.year:04d}"
+        / f"{today.month:02d}"
+        / f"{today.day:02d}"
+    )
+    user_sessions.mkdir(parents=True)
+    (user_sessions / "rollout-user-home.jsonl").write_text("{}\n")
+
+    # Scoped CODEX_HOME (per linear_pipeline._ensure_codex_writer_home).
+    scoped_home = tmp_path / "scoped_codex_home"
+    scoped_sessions = (
+        scoped_home
+        / "sessions"
+        / f"{today.year:04d}"
+        / f"{today.month:02d}"
+        / f"{today.day:02d}"
+    )
+    scoped_sessions.mkdir(parents=True)
+    (scoped_sessions / "rollout-scoped.jsonl").write_text("{}\n")
+
+    adapter = CodexAdapter()
+    # Without scope, the adapter scans user home.
+    adapter._codex_home_scope = None
+    dirs_unscoped = adapter._candidate_rollout_dirs()
+    assert user_sessions in dirs_unscoped
+    assert scoped_sessions not in dirs_unscoped
+
+    # With scope, the adapter scans the scoped sessions/ dir instead.
+    adapter._codex_home_scope = str(scoped_home)
+    dirs_scoped = adapter._candidate_rollout_dirs()
+    assert scoped_sessions in dirs_scoped
+    assert user_sessions not in dirs_scoped
+
+
 def test_codex_check_early_reap_skips_within_warmup_window(tmp_path, monkeypatch):
     """Early reap must NOT fire within the first 5 seconds of a call,
     even if a stale rollout from a previous run has a task_complete.
