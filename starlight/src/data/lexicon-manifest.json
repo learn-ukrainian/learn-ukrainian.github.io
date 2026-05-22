@@ -1,0 +1,1037 @@
+{
+  "version": "0.1",
+  "generated_at": "2026-05-22T15:59:29+00:00",
+  "stats": {
+    "lemmas_total": 63,
+    "modules_covered": 3,
+    "from_built": 20,
+    "from_plan_only": 43
+  },
+  "modules": [
+    {
+      "track": "a1",
+      "module_num": 1,
+      "slug": "sounds-letters-and-hello"
+    },
+    {
+      "track": "a1",
+      "module_num": 8,
+      "slug": "things-have-gender"
+    },
+    {
+      "track": "a1",
+      "module_num": 20,
+      "slug": "my-morning"
+    }
+  ],
+  "entries": [
+    {
+      "lemma": "До побачення",
+      "url_slug": "до-побачення",
+      "gloss": "Goodbye — chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "Добрий вечір",
+      "url_slug": "добрий-вечір",
+      "gloss": "Good evening — chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "Добрий день",
+      "url_slug": "добрий-день",
+      "gloss": "Good day / Hello — formal chunk, stress `Добрий день`",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "Доброго ранку",
+      "url_slug": "доброго-ранку",
+      "gloss": "Good morning — chunk, unstressed `[о]` stays clean",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "На все добре",
+      "url_slug": "на-все-добре",
+      "gloss": "All the best — farewell chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "Рада тебе бачити",
+      "url_slug": "рада-тебе-бачити",
+      "gloss": "Glad [f] to see you — chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "Радий тебе бачити",
+      "url_slug": "радий-тебе-бачити",
+      "gloss": "Glad [m] to see you — chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "вмиватися",
+      "url_slug": "вмиватися",
+      "gloss": "to wash oneself",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "вранці",
+      "url_slug": "вранці",
+      "gloss": "in the morning",
+      "pos": "adv",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "вчителька / учителька",
+      "url_slug": "вчителька-/-учителька",
+      "gloss": "teacher, f — feminitive, VESUM-verified; mirror of вчитель / учитель m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "вікно",
+      "url_slug": "вікно",
+      "gloss": "window, n",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "він, вона, воно",
+      "url_slug": "він,-вона,-воно",
+      "gloss": "he, she, it — gender test words",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "голосний",
+      "url_slug": "голосний",
+      "gloss": "vowel sound",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "дзеркало",
+      "url_slug": "дзеркало",
+      "gloss": "mirror, n",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "добре",
+      "url_slug": "добре",
+      "gloss": "fine, good",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "дім",
+      "url_slug": "дім",
+      "gloss": "house",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "збиратися",
+      "url_slug": "збиратися",
+      "gloss": "to get ready",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "звук",
+      "url_slug": "звук",
+      "gloss": "sound",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "зошит",
+      "url_slug": "зошит",
+      "gloss": "notebook, m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "йти",
+      "url_slug": "йти",
+      "gloss": "to go",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "кава",
+      "url_slug": "кава",
+      "gloss": "coffee",
+      "pos": "noun",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "ключ",
+      "url_slug": "ключ",
+      "gloss": "key, m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "книга",
+      "url_slug": "книга",
+      "gloss": "book, f",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "комп'ютер",
+      "url_slug": "комп'ютер",
+      "gloss": "computer, m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "крісло",
+      "url_slug": "крісло",
+      "gloss": "armchair, n",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "кімната",
+      "url_slug": "кімната",
+      "gloss": "room, f",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "лампа",
+      "url_slug": "лампа",
+      "gloss": "lamp, f",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "ліжко",
+      "url_slug": "ліжко",
+      "gloss": "bed, n",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "лікарка",
+      "url_slug": "лікарка",
+      "gloss": "doctor, f — feminitive, VESUM-verified; mirror of лікар m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "літера",
+      "url_slug": "літера",
+      "gloss": "letter",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "мама",
+      "url_slug": "мама",
+      "gloss": "mother",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "молоко",
+      "url_slug": "молоко",
+      "gloss": "milk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "навчатися",
+      "url_slug": "навчатися",
+      "gloss": "to study",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "нарешті",
+      "url_slug": "нарешті",
+      "gloss": "finally",
+      "pos": "adv",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "нормально",
+      "url_slug": "нормально",
+      "gloss": "okay",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "ніс",
+      "url_slug": "ніс",
+      "gloss": "nose",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "одягатися",
+      "url_slug": "одягатися",
+      "gloss": "to get dressed",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "око",
+      "url_slug": "око",
+      "gloss": "eye",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "повертатися",
+      "url_slug": "повертатися",
+      "gloss": "to return",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "поспішати",
+      "url_slug": "поспішати",
+      "gloss": "to hurry",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "потім",
+      "url_slug": "потім",
+      "gloss": "then",
+      "pos": "adv",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "привіт",
+      "url_slug": "привіт",
+      "gloss": "hi, informal — chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "приголосний",
+      "url_slug": "приголосний",
+      "gloss": "consonant sound",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "прокидатися",
+      "url_slug": "прокидатися",
+      "gloss": "to wake up",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "пізно",
+      "url_slug": "пізно",
+      "gloss": "late",
+      "pos": "adv",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "після цього",
+      "url_slug": "після-цього",
+      "gloss": "after that",
+      "pos": "phrase",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "робота",
+      "url_slug": "робота",
+      "gloss": "work",
+      "pos": "noun",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "рутина",
+      "url_slug": "рутина",
+      "gloss": "routine",
+      "pos": "noun",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "ручка",
+      "url_slug": "ручка",
+      "gloss": "pen, f",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "снідати",
+      "url_slug": "снідати",
+      "gloss": "to have breakfast",
+      "pos": "verb",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "сон",
+      "url_slug": "сон",
+      "gloss": "dream",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "спочатку",
+      "url_slug": "спочатку",
+      "gloss": "first",
+      "pos": "adv",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "стіл",
+      "url_slug": "стіл",
+      "gloss": "table, m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "стілець",
+      "url_slug": "стілець",
+      "gloss": "chair, m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "стіна",
+      "url_slug": "стіна",
+      "gloss": "wall, f",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "субота",
+      "url_slug": "субота",
+      "gloss": "Saturday",
+      "pos": "noun",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "сумка",
+      "url_slug": "сумка",
+      "gloss": "bag, f",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "сьома",
+      "url_slug": "сьома",
+      "gloss": "seven o'clock",
+      "pos": "numeral",
+      "ipa": null,
+      "primary_source": "built_vocabulary",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 20,
+          "slug": "my-morning",
+          "context": "built_vocabulary"
+        }
+      ]
+    },
+    {
+      "lemma": "тато",
+      "url_slug": "тато",
+      "gloss": "father",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "телефон",
+      "url_slug": "телефон",
+      "gloss": "phone, m",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "фото",
+      "url_slug": "фото",
+      "gloss": "photo, n",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_recommended",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 8,
+          "slug": "things-have-gender",
+          "context": "plan_recommended"
+        }
+      ]
+    },
+    {
+      "lemma": "чудово",
+      "url_slug": "чудово",
+      "gloss": "great, wonderful",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    },
+    {
+      "lemma": "як справи",
+      "url_slug": "як-справи",
+      "gloss": "how are you — chunk",
+      "pos": null,
+      "ipa": null,
+      "primary_source": "plan_required",
+      "course_usage": [
+        {
+          "track": "a1",
+          "module_num": 1,
+          "slug": "sounds-letters-and-hello",
+          "context": "plan_required"
+        }
+      ]
+    }
+  ]
+}
