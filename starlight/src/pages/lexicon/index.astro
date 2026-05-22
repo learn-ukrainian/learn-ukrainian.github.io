@@ -1,0 +1,181 @@
+---
+/**
+ * Word Atlas (Лексикон) — hub page.
+ *
+ * Lists every lemma in the build-time manifest grouped by Cyrillic
+ * starting letter. v1 has ~80 lemmas — flat list is fine. v3+ will
+ * add search UI (per docs/best-practices/word-atlas-design.md §9).
+ */
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import manifest from "../../data/lexicon-manifest.json";
+
+interface LexiconEntry {
+  lemma: string;
+  url_slug: string;
+  gloss: string | null;
+  course_usage: Array<{ track: string; module_num: number; slug: string }>;
+}
+
+interface LexiconManifest {
+  version: string;
+  generated_at: string;
+  stats: Record<string, number>;
+  entries: LexiconEntry[];
+}
+
+const data = manifest as LexiconManifest;
+
+// Group by first character (Cyrillic + Latin fallback). Sort groups
+// alphabetically using Ukrainian collation.
+const ukCollator = new Intl.Collator("uk", { sensitivity: "base" });
+
+const groups = new Map<string, LexiconEntry[]>();
+for (const entry of data.entries) {
+  const first = entry.lemma.charAt(0).toLocaleUpperCase("uk");
+  const bucket = groups.get(first) ?? [];
+  bucket.push(entry);
+  groups.set(first, bucket);
+}
+
+const sortedGroups = Array.from(groups.entries())
+  .sort(([a], [b]) => ukCollator.compare(a, b))
+  .map(([letter, entries]) => ({
+    letter,
+    entries: entries.slice().sort((a, b) => ukCollator.compare(a.lemma, b.lemma)),
+  }));
+
+const frontmatter = {
+  title: "Лексикон",
+  description:
+    "Українсько-англійський лексикон з курсу — фокус на декольнезації, " +
+    "морфології, етимології та посиланні на лекції.",
+  template: "doc" as const,
+  pagefind: true,
+};
+---
+
+<StarlightPage frontmatter={frontmatter}>
+  <p class="lex-intro">
+    Це <strong>Лексикон</strong> — окрема частина курсу, де кожна стаття
+    розкриває одне слово через VESUM-морфологію, ЕСУМ-етимологію, СУМ-20
+    значення, перевірку русифікації СУМ-11, словник Антоненка-Давидовича,
+    Грінченко 1907 та зовнішні матеріали (ULP, Похрібний, Реальна історія, …).
+  </p>
+
+  <p class="lex-stats">
+    <strong>v0.1 (PoC):</strong> {data.stats.lemmas_total} лем з{" "}
+    {data.stats.modules_covered} модулів A1. Збагачення словниковими даними
+    додається наступними версіями (див.{" "}
+    <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/main/docs/best-practices/word-atlas-design.md">
+      design doc
+    </a>
+    ).
+  </p>
+
+  {/* Letter jump-nav */}
+  <nav class="lex-jump-nav" aria-label="Алфавіт">
+    {sortedGroups.map(({ letter }) => (
+      <a href={`#letter-${letter}`}>{letter}</a>
+    ))}
+  </nav>
+
+  {sortedGroups.map(({ letter, entries }) => (
+    <section class="lex-letter-section">
+      <h2 id={`letter-${letter}`}>{letter}</h2>
+      <ul class="lex-entry-list">
+        {entries.map((e) => (
+          <li>
+            <a class="lex-entry-lemma" href={`/lexicon/${e.url_slug}/`}>
+              {e.lemma}
+            </a>
+            {e.gloss && (
+              <span class="lex-entry-gloss">«{e.gloss}»</span>
+            )}
+            <span class="lex-entry-usage">
+              {e.course_usage.length}{" "}
+              {e.course_usage.length === 1 ? "модуль" : "модулів"}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</StarlightPage>
+
+<style>
+  .lex-intro {
+    font-size: var(--sl-text-base);
+    max-width: 70ch;
+  }
+  .lex-stats {
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-sm);
+    background: var(--sl-color-gray-6);
+    padding: 0.6rem 0.9rem;
+    border-radius: 4px;
+    border-left: 3px solid var(--sl-color-accent-low);
+  }
+
+  .lex-jump-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1.4rem 0;
+    padding: 0.7rem;
+    background: var(--sl-color-gray-6);
+    border-radius: 6px;
+  }
+  .lex-jump-nav a {
+    display: inline-block;
+    min-width: 1.8rem;
+    text-align: center;
+    padding: 0.25rem 0.4rem;
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+    border-radius: 3px;
+  }
+  .lex-jump-nav a:hover {
+    background: var(--sl-color-accent-low);
+    text-decoration: none;
+  }
+
+  .lex-letter-section {
+    margin: 2rem 0;
+  }
+  .lex-letter-section h2 {
+    color: var(--sl-color-accent-high);
+    border-bottom: 2px solid var(--sl-color-accent-low);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.6rem;
+  }
+  .lex-entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .lex-entry-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+  .lex-entry-list li:last-child {
+    border-bottom: none;
+  }
+  .lex-entry-lemma {
+    font-weight: 600;
+    min-width: 12ch;
+  }
+  .lex-entry-gloss {
+    color: var(--sl-color-gray-2);
+    font-style: italic;
+    flex: 1;
+  }
+  .lex-entry-usage {
+    font-size: 0.8em;
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+  }
+</style>

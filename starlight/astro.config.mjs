@@ -92,6 +92,7 @@ export default defineConfig({
       ],
       sidebar: [
         { label: 'Getting Started', slug: 'index' },
+        { label: 'Лексикон (Word Atlas)', link: '/lexicon/' },
         { label: 'A1 - Beginner', autogenerate: { directory: 'a1' }, collapsed: true },
         { label: 'A2 - Elementary', autogenerate: { directory: 'a2' }, collapsed: true },
         { label: 'B1 - Intermediate', autogenerate: { directory: 'b1' }, collapsed: true },
