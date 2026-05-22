@@ -23,22 +23,92 @@ def _load_curriculum() -> dict:
         return yaml.safe_load(f) or {}
 
 
+def _parse_vocab_hint_lemma(entry: str) -> str | None:
+    """Extract the lemma prefix from a plan vocabulary hint."""
+    text = entry.strip()
+    if not text:
+        return None
+    return text.split(" (", 1)[0].strip() or None
+
+
+def _load_planned_vocab(track: str, slug: str) -> list[str]:
+    """Load planned vocabulary lemmas from vocabulary_hints."""
+    path = CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml"
+    if not path.exists():
+        return []
+
+    try:
+        with open(path, encoding="utf-8") as f:
+            plan = yaml.safe_load(f)
+    except Exception:
+        return []
+
+    if not isinstance(plan, dict):
+        return []
+
+    hints = plan.get("vocabulary_hints")
+    if isinstance(hints, dict):
+        sections = [hints.get("required", []), hints.get("recommended", [])]
+    elif isinstance(hints, list):
+        sections = [hints]
+    else:
+        return []
+
+    lemmas: list[str] = []
+    seen: set[str] = set()
+
+    def add_entry(entry) -> None:
+        raw: str | None = None
+        if isinstance(entry, str):
+            raw = entry
+        elif isinstance(entry, dict):
+            for key in ("lemma", "word", "term", "text", "value"):
+                value = entry.get(key)
+                if isinstance(value, str):
+                    raw = value
+                    break
+            if raw is None and len(entry) == 1:
+                key, value = next(iter(entry.items()))
+                if isinstance(key, str) and isinstance(value, str):
+                    raw = key
+        if raw is None:
+            return
+
+        lemma = _parse_vocab_hint_lemma(raw)
+        if lemma and lemma not in seen:
+            lemmas.append(lemma)
+            seen.add(lemma)
+
+    for section in sections:
+        if isinstance(section, list):
+            for entry in section:
+                add_entry(entry)
+        else:
+            add_entry(section)
+
+    return lemmas
+
+
 def _load_vocab(track: str, slug: str) -> list[str]:
     """Load vocabulary lemmas for a module."""
     path = CURRICULUM_ROOT / track / slug / "vocabulary.yaml"
-    if not path.exists():
-        return []
-    try:
-        with open(path) as f:
-            data = yaml.safe_load(f)
-        if not data:
-            return []
-        items = data.get("items", data) if isinstance(data, dict) else data
-        if not isinstance(items, list):
-            return []
-        return [item["lemma"] for item in items if isinstance(item, dict) and "lemma" in item]
-    except Exception:
-        return []
+    built_vocab: list[str] = []
+    if path.exists():
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = yaml.safe_load(f)
+            if data:
+                items = data.get("items", data) if isinstance(data, dict) else data
+                if isinstance(items, list):
+                    built_vocab = [
+                        item["lemma"]
+                        for item in items
+                        if isinstance(item, dict) and isinstance(item.get("lemma"), str)
+                    ]
+        except Exception:
+            built_vocab = []
+
+    return built_vocab or _load_planned_vocab(track, slug)
 
 
 def _load_grammar(track: str, slug: str) -> list[str]:
