@@ -1,84 +1,104 @@
 - lemma: прокидатися
   translation: to wake up
   pos: verb
-  usage: Я прокидаюся о сьомій.
+  ipa: ""
+  usage: "Я прокидаюся о сьомій."
 - lemma: вмиватися
-  translation: to wash one's face/hands
+  translation: to wash oneself
   pos: verb
-  usage: Ти вмиваєшся холодною водою.
+  ipa: ""
+  usage: "Потім я вмиваюся."
 - lemma: одягатися
   translation: to get dressed
   pos: verb
-  usage: Вона одягається швидко.
-- lemma: збиратися
-  translation: to get ready (to leave)
-  pos: verb
-  usage: Ми збираємося на роботу.
-- lemma: повертатися
-  translation: to return, come back
-  pos: verb
-  usage: Я повертаюся додому ввечері.
-- lemma: навчатися
-  translation: to study, to learn
-  pos: verb
-  usage: Я навчаюся в університеті.
-- lemma: поспішати
-  translation: to hurry
-  pos: verb
-  usage: У суботу я не поспішаю.
+  ipa: ""
+  usage: "Я одягаюся швидко."
 - lemma: снідати
-  translation: to have breakfast (non-reflexive)
+  translation: to have breakfast
   pos: verb
-  usage: Я снідаю о восьмій.
+  ipa: ""
+  usage: "Після цього я снідаю."
 - lemma: йти
-  translation: to go (on foot — irregular)
+  translation: to go
   pos: verb
-  usage: Я йду на роботу.
-- lemma: дивитися
-  translation: to look, to watch (II-conjugation, reflexive)
-  pos: verb
-  usage: Я дивлюся у дзеркало.
-- lemma: вчитися
-  translation: to study, to learn (II-conjugation, reflexive)
-  pos: verb
-  usage: Ти вчишся вранці.
-- lemma: користуватися
-  translation: to use (drops -ва- in present)
-  pos: verb
-  usage: Я користуюся рушником.
-- lemma: митися
-  translation: to wash oneself
-  pos: verb
-  usage: Я миюся теплою водою.
-- lemma: пити
-  translation: to drink
-  pos: verb
-  usage: Я п'ю каву вранці.
+  ipa: ""
+  usage: "Я йду на роботу."
 - lemma: спочатку
-  translation: first, at first
+  translation: first
   pos: adv
-  usage: Спочатку я прокидаюся.
+  ipa: ""
+  usage: "Спочатку я прокидаюся."
 - lemma: потім
-  translation: then, next
+  translation: then
   pos: adv
-  usage: Потім вмиваюся і одягаюся.
+  ipa: ""
+  usage: "Потім я вмиваюся."
+- lemma: після цього
+  translation: after that
+  pos: phrase
+  ipa: ""
+  usage: "Після цього я снідаю."
 - lemma: нарешті
   translation: finally
   pos: adv
-  usage: Нарешті я йду на роботу.
+  ipa: ""
+  usage: "Нарешті я йду."
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  ipa: ""
+  usage: "Я збираюся вранці."
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  ipa: ""
+  usage: "Я повертаюся додому."
+- lemma: навчатися
+  translation: to study
+  pos: verb
+  ipa: ""
+  usage: "Я навчаюся вранці."
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  ipa: ""
+  usage: "Я не поспішаю."
 - lemma: вранці
   translation: in the morning
   pos: adv
-  usage: Вранці я завжди снідаю.
-- lemma: сніданок
-  translation: breakfast (native Ukrainian — not the borrowed alternative)
+  ipa: ""
+  usage: "Вранці я снідаю."
+- lemma: пізно
+  translation: late
+  pos: adv
+  ipa: ""
+  usage: "У суботу я прокидаюся пізно."
+- lemma: робота
+  translation: work
   pos: noun
-  usage: Після сніданку я йду на роботу.
-- lemma: зарядка
-  translation: morning exercises
+  gender: f
+  ipa: ""
+  usage: "Я йду на роботу."
+- lemma: субота
+  translation: Saturday
   pos: noun
-  usage: Я роблю зарядку вранці.
-- lemma: рушник
-  translation: towel (native Ukrainian)
+  gender: f
+  ipa: ""
+  usage: "У суботу я не поспішаю."
+- lemma: кава
+  translation: coffee
   pos: noun
-  usage: Я користуюся рушником після душу.
+  gender: f
+  ipa: ""
+  usage: "Я п'ю каву."
+- lemma: рутина
+  translation: routine
+  pos: noun
+  gender: f
+  ipa: ""
+  usage: "Моя рутина проста."
+- lemma: сьома
+  translation: seven o'clock
+  pos: numeral
+  ipa: ""
+  usage: "Я прокидаюся о сьомій."
