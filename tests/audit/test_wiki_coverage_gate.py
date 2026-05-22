@@ -286,6 +286,140 @@ def test_sequence_step_h2_section_includes_h3_subsection_content() -> None:
     )
 
 
+def _phonetic_rule_manifest() -> dict[str, Any]:
+    """Manifest for testing phonetic_rule obligations.
+
+    Mirrors the a1/my-morning wiki obligations for `-ться → [ц':а]` and
+    `-ся → [с':а]` rules — the two phon-2 / phon-3 obligations whose
+    `claimed_location_missing` failure motivated PR #2207's resolver
+    fallback (see `test_phonetic_rule_falls_back_to_whole_artifact_when_location_unresolved`).
+    """
+    return {
+        "slug": "fixture",
+        "wiki_path": "wiki/pedagogy/a1/fixture.md",
+        "sequence_steps": [],
+        "l2_errors": [],
+        "phonetic_rules": [
+            {
+                "id": "phon-2",
+                "written": "-ться",
+                "spoken": "[ц':а]",
+                "treatment": "explicit_explanation",
+                "source_lines": "15",
+            }
+        ],
+        "decolonization_bans": [],
+        "external_resources": [],
+    }
+
+
+def test_phonetic_rule_falls_back_to_whole_artifact_when_location_unresolved() -> None:
+    """`_location_text` must degrade gracefully when the writer's claim
+    location is a descriptive phrase that doesn't anchor to a heading.
+
+    Build #14 of a1/my-morning (2026-05-22) wrote the `-ться → [ц':а]`
+    rule into a `:::caution[Спелінг ≠ Вимова]` block under
+    `## Дієслова на -ся`. The writer's implementation_map for phon-2
+    described the location as `"same :::caution block, bullet 2"` —
+    accurate prose, but not a heading and not a literal substring of the
+    module. The resolver returned empty target_text → FAIL with
+    `claimed_location_missing`, even though both the `written` (-ться)
+    and `spoken` ([ц':а]) markers were present in the module a few lines
+    apart.
+
+    The fix: when no heading matches AND the location isn't a literal
+    substring of the artifact, fall back to whole-artifact matching. The
+    obligation-specific substance check (phonetic_rule requires both
+    `written` and `spoken` to appear in `target_text`) is the real
+    correctness gate; writer drift on the descriptive `location` field
+    must not silently fail obligations whose content is genuinely present.
+    """
+    manifest = _phonetic_rule_manifest()
+    module_md = (
+        "## Дієслова на -ся\n\n"
+        "Intro paragraph.\n\n"
+        ":::caution[Спелінг ≠ Вимова]\n"
+        "Spelling diverges from pronunciation here:\n\n"
+        "- Written **-ться** → spoken **[ц':а]**: прокидається → [прокидайец':а].\n"
+        "- Written **-ся** → spoken **[с':а]**: прокидаюся → [прокидайус':а].\n"
+        ":::\n"
+    )
+    implementation_map = {
+        "phon-2": {
+            "artifact": "module.md",
+            # Writer's descriptive prose anchor: no `## same :::caution block`
+            # heading exists, and this string is not a substring of the
+            # module either. Pre-fix behaviour: FAIL claimed_location_missing.
+            "location": "same :::caution block, bullet 2",
+            "treatment": "explicit IPA",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    phon_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "phon-2"
+    )
+    assert phon_result["status"] == "PASS", (
+        f"phon-2 must PASS via whole-artifact fallback when the writer's "
+        f"location string doesn't anchor to a heading and the substance "
+        f"(-ться + [ц':а]) is present somewhere in module.md; got "
+        f"reason={phon_result['reason']!r}"
+    )
+
+
+def test_phonetic_rule_still_fails_when_substance_absent_anywhere() -> None:
+    """The whole-artifact fallback must NOT bypass the substance check.
+
+    The fix in `_location_text` makes location a hint rather than a hard
+    contract, but the obligation-specific substance check still gates
+    correctness. If the writer claims a phon obligation is satisfied but
+    neither the `written` nor the `spoken` markers appear anywhere in
+    the artifact, the gate must still FAIL — just with the more accurate
+    `phonetic_rule_missing` reason instead of `claimed_location_missing`.
+    """
+    manifest = _phonetic_rule_manifest()
+    module_md = (
+        "## Дієслова на -ся\n\n"
+        "Plain paragraph about morning routines. No reflexive ending\n"
+        "discussion here, no phonetic transcription, just narrative prose.\n"
+    )
+    implementation_map = {
+        "phon-2": {
+            "artifact": "module.md",
+            "location": "same :::caution block, bullet 2",
+            "treatment": "explicit IPA",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    phon_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "phon-2"
+    )
+    assert phon_result["status"] == "FAIL", (
+        "phon-2 must FAIL when neither the written nor the spoken marker is "
+        "present anywhere in the module — the location fallback must not "
+        "create a false-positive escape hatch"
+    )
+    assert phon_result["reason"] == "phonetic_rule_missing", (
+        f"FAIL reason must now reflect the actual substance gap, not the "
+        f"location-resolution failure; got {phon_result['reason']!r}"
+    )
+
+
 def test_l2_error_passes_when_marker_contains_apostrophe() -> None:
     """`_activity_text` must surface activity content without YAML re-
     serialisation double-escaping apostrophes. The build-#6 regression:

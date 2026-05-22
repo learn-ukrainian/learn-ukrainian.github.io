@@ -570,7 +570,23 @@ def _location_text(text: str, location: str) -> str:
                 end = headings[next_idx].start()
                 break
         return text[start:end]
-    return text if location_key in text.casefold() else ""
+    if location_key in text.casefold():
+        return text
+    # No heading match AND location isn't a literal substring of the text.
+    # The writer's `location` field is a descriptive hint that doesn't
+    # anchor cleanly (e.g. "same :::caution block, bullet 2" — observed
+    # 2026-05-22 a1/my-morning build #14 phon-2/phon-3). Degrade
+    # gracefully to whole-artifact matching so the obligation-specific
+    # substance check below can still validate that the required content
+    # is present somewhere in the artifact. The substance check is the
+    # actual correctness gate (e.g. phonetic_rule requires both `written`
+    # and `spoken` strings to appear in `target_text`); writer drift on
+    # the `location` field's prose anchor must not silently fail
+    # obligations whose content is genuinely present. If the content is
+    # genuinely missing, the substance check will still fail and the
+    # obligation will still report FAIL — just with a more accurate reason
+    # than `claimed_location_missing` (e.g. `phonetic_rule_missing`).
+    return text
 
 
 def _check_obligation_text(obligation: Mapping[str, Any], target_text: str, artifact: str) -> tuple[str, str]:
