@@ -1313,6 +1313,112 @@ def test_inject_activity_gate_passes_when_all_activities_injected() -> None:
     assert report["unused"] == []
 
 
+def test_apply_activity_id_inserts_strips_id_from_unused_workbook_activities(
+    tmp_path: Path,
+) -> None:
+    """When `inject_activity_ids` flags unused ids, the pipeline-insert
+    correction MUST strip the ids from activities.yaml — NOT add new
+    `<!-- INJECT_ACTIVITY -->` markers to module.md.
+
+    Regression test for the m20 activity-split bug: before this fix,
+    `_apply_activity_id_inserts` appended an INJECT marker for every
+    unused id, auto-promoting workbook activities to inline and blowing
+    past the A1 `INLINE_MAX=6` ceiling (10 inline / 0 workbook on m20,
+    `944f4200e4` revert). Per PR #2218 + linear-write.md L700, workbook
+    activities omit `id` — so the correct correction is to remove ids
+    from `activities.yaml`, NOT to add markers to module.md.
+    """
+    module_path = tmp_path / "module.md"
+    module_text_before = (
+        "## Діалоги\n\n"
+        "<!-- INJECT_ACTIVITY: act-1 -->\n"
+        "<!-- INJECT_ACTIVITY: act-2 -->\n"
+    )
+    module_path.write_text(module_text_before, encoding="utf-8")
+
+    activities_path = tmp_path / "activities.yaml"
+    _write_yaml(
+        activities_path,
+        [
+            {"id": "act-1", "type": "quiz", "title": "Inline check 1"},
+            {"id": "act-2", "type": "fill-in", "title": "Inline check 2"},
+            {"id": "act-3", "type": "error-correction", "title": "Workbook drill 1"},
+            {"id": "act-4", "type": "match-up", "title": "Workbook drill 2"},
+            {"id": "act-5", "type": "order", "title": "Workbook drill 3"},
+        ],
+    )
+
+    gate_report = {
+        "passed": False,
+        "injected": ["act-1", "act-2"],
+        "missing": [],
+        "unused": ["act-3", "act-4", "act-5"],
+        "reason": "unused_activities_not_injected",
+    }
+
+    linear_pipeline._apply_activity_id_inserts(module_path, gate_report)
+
+    after_module = module_path.read_text(encoding="utf-8")
+    assert after_module == module_text_before, (
+        f"_apply_activity_id_inserts must not add new INJECT markers to "
+        f"module.md; promotion to inline violates the A1 INLINE_MAX=6 "
+        f"split band. Got module.md=\n{after_module!r}"
+    )
+
+    after_activities = yaml.safe_load(activities_path.read_text(encoding="utf-8"))
+    by_title = {item.get("title"): item for item in after_activities}
+    assert by_title["Inline check 1"].get("id") == "act-1"
+    assert by_title["Inline check 2"].get("id") == "act-2"
+    for title in ("Workbook drill 1", "Workbook drill 2", "Workbook drill 3"):
+        assert "id" not in by_title[title], (
+            f"unused workbook activity {title!r} must have its `id` "
+            f"stripped to satisfy the bidirectional gate without "
+            f"promoting it to inline; got {by_title[title]!r}"
+        )
+
+
+def test_apply_activity_id_inserts_noop_when_unused_empty(tmp_path: Path) -> None:
+    """No unused ids → no-op; module.md and activities.yaml untouched."""
+    module_path = tmp_path / "module.md"
+    activities_path = tmp_path / "activities.yaml"
+    module_text = "## Section\n\n<!-- INJECT_ACTIVITY: act-1 -->\n"
+    module_path.write_text(module_text, encoding="utf-8")
+    activities_data = [{"id": "act-1", "type": "quiz", "title": "Inline only"}]
+    _write_yaml(activities_path, activities_data)
+
+    linear_pipeline._apply_activity_id_inserts(
+        module_path,
+        {"passed": True, "injected": ["act-1"], "missing": [], "unused": [], "reason": None},
+    )
+
+    assert module_path.read_text(encoding="utf-8") == module_text
+    assert yaml.safe_load(activities_path.read_text(encoding="utf-8")) == activities_data
+
+
+def test_apply_activity_id_inserts_tolerates_missing_activities_yaml(
+    tmp_path: Path,
+) -> None:
+    """If `activities.yaml` is absent, the correction silently no-ops on
+    module.md and exits cleanly — the upstream `inject_activity_ids` gate
+    will continue to fail and the build will halt naturally rather than
+    crashing inside the correction path.
+    """
+    module_path = tmp_path / "module.md"
+    module_text = "## Section\n\n<!-- INJECT_ACTIVITY: act-1 -->\n"
+    module_path.write_text(module_text, encoding="utf-8")
+
+    gate_report = {
+        "passed": False,
+        "injected": ["act-1"],
+        "missing": [],
+        "unused": ["act-2"],
+        "reason": "unused_activities_not_injected",
+    }
+    linear_pipeline._apply_activity_id_inserts(module_path, gate_report)
+
+    assert module_path.read_text(encoding="utf-8") == module_text
+
+
 def test_ai_slop_gate_ignores_correction_field_in_error_correction_activity(
     tmp_path: Path,
 ) -> None:

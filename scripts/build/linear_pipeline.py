@@ -5345,12 +5345,71 @@ def _apply_reviewer_correction(
 
 
 def _apply_activity_id_inserts(module_path: Path, gate_report: Mapping[str, Any]) -> None:
+    """Resolve ``inject_activity_ids:unused_activities_not_injected`` by
+    stripping ``id`` from unused workbook activities — NOT by promoting
+    them to inline with new INJECT markers.
+
+    Background: PR #2218 (2026-05-21) made ``id`` optional on workbook
+    activities (``inject_activity_ids`` only enforces bidirectional
+    consistency for activities INTENDED to be inline-injected, and the
+    schema rule per ``scripts/build/phases/linear-write.md`` L700 is
+    "workbook activity objects should omit `id` entirely"). When a
+    writer leaves an activity-with-id WITHOUT a matching
+    ``<!-- INJECT_ACTIVITY: act-X -->`` marker, the most-faithful
+    interpretation under the new contract is *that activity is workbook
+    and the writer over-emitted id* — NOT *that activity is inline and
+    the writer forgot the marker*.
+
+    The previous implementation appended INJECT markers for every
+    ``unused`` id to ``module.md``. That auto-promoted EVERY workbook
+    activity to inline, blowing past the level's
+    ``INLINE_MIN..INLINE_MAX`` range and producing the anti-pattern that
+    got m20 reverted on 2026-05-23 morning (``inline_n=10 / workbook_n=0``
+    in build #14). Empirical reproduction of the same anti-pattern
+    across 4 writers on 2026-05-22 night (codex / gemini / deepseek /
+    claude builds of a1/my-morning, see session-state handoff for
+    forensics).
+
+    The fix: strip ``id`` from each unused activity in
+    ``activities.yaml`` so the bidirectional consistency gate passes
+    WITHOUT touching ``module.md``, preserving the writer's authored
+    INLINE/WORKBOOK split. If the writer *did* mean these as inline
+    and forgot markers, the resulting ``inline_n`` shortfall is the
+    writer's responsibility to flag via the ``<activity_split_audit>``
+    self-audit line — that's where the corrective signal belongs, not
+    in a downstream pipeline insert that has no visibility into the
+    writer's intent.
+    """
+
     unused = [str(activity_id) for activity_id in gate_report.get("unused", [])]
     if not unused:
         return
-    text = _read_required(module_path).rstrip()
-    markers = "\n\n".join(f"<!-- INJECT_ACTIVITY: {activity_id} -->" for activity_id in unused)
-    module_path.write_text(f"{text}\n\n{markers}\n", encoding="utf-8")
+
+    module_dir = module_path.parent
+    activities_path = module_dir / "activities.yaml"
+    if not activities_path.exists():
+        return
+
+    try:
+        activities = yaml.safe_load(activities_path.read_text(encoding="utf-8")) or []
+    except yaml.YAMLError:
+        return
+    if not isinstance(activities, list):
+        return
+
+    unused_set = {str(activity_id) for activity_id in unused}
+    changed = False
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+        if str(activity.get("id") or "") in unused_set:
+            del activity["id"]
+            changed = True
+    if changed:
+        activities_path.write_text(
+            yaml.safe_dump(activities, allow_unicode=True, sort_keys=False),
+            encoding="utf-8",
+        )
 
 
 def _parse_reviewer_fixes(review_text: str) -> list[dict[str, str]]:
