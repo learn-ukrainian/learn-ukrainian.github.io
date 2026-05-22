@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from collections import Counter
@@ -202,17 +203,23 @@ def test_runtime_tool_config_emits_resolution_event_success(
     assert events[0][1]["resolved_servers"] == ["sources"]
 
 
-def test_runtime_tool_config_codex_tools_disables_shell_tool(
+def test_runtime_tool_config_codex_tools_disables_writer_unsafe_features(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """V7 codex-tools writer must disable Codex's ``shell_tool`` feature.
+    """V7 codex-tools writer must disable Codex's non-MCP tool families.
 
-    Failure observed 2026-05-22 a1-my-morning-20260522-181103: the writer
-    called ``exec_command`` (surfaced by ``shell_tool``) 18× and tripped
-    the ``writer_trace_isolation`` gate with ``wrong_tool_family``
-    BEFORE python_qg ran. The fix surfaces the disable at CLI
-    invocation time via ``tool_config["disable_features"]``.
+    Failure trail:
+    1. 2026-05-22 a1-my-morning-20260522-181103 — writer called
+       ``exec_command`` (surfaced by ``shell_tool``) 18× and tripped
+       ``writer_trace_isolation`` with ``wrong_tool_family``. PR #2227
+       added ``shell_tool`` to ``disable_features``.
+    2. 2026-05-22 a1-my-morning-20260522-191117 — with shell_tool
+       disabled, writer gravitated to ``mcp__node_repl__js`` (5×) +
+       ``get_goal`` (1×). Issue #2228. The disable list is now broadened
+       to also cover ``goals``, ``browser_use``, ``in_app_browser``,
+       ``image_generation``, ``apps``, ``plugins``, ``multi_agent`` —
+       per `ab ask-codex` recommendation 2026-05-22.
 
     Defense-in-depth: also applies when codex-tools is invoked as the
     reviewer — reviewers should also only call ``mcp__sources__*``.
@@ -222,7 +229,141 @@ def test_runtime_tool_config_codex_tools_disables_shell_tool(
 
     config = linear_pipeline._runtime_tool_config("codex-tools")
 
-    assert config.get("disable_features") == ["shell_tool"]
+    disable_features = config.get("disable_features") or []
+    expected_disables = {
+        "shell_tool",
+        "goals",
+        "browser_use",
+        "in_app_browser",
+        "image_generation",
+        "apps",
+        "plugins",
+        "multi_agent",
+    }
+    assert set(disable_features) >= expected_disables, (
+        f"missing disables: {expected_disables - set(disable_features)}; "
+        f"got: {disable_features}"
+    )
+
+
+def test_runtime_tool_config_codex_tools_scoped_codex_home(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """codex-tools must materialize a scoped ``$CODEX_HOME``.
+
+    Per-invocation ``-c mcp_servers.X.url=...`` MERGES with the
+    user-level config; it doesn't REPLACE. Codex.app's
+    ``node_repl``/``openaiDeveloperDocs``/``codex_apps.github`` MCP
+    server registrations therefore survive ``--ignore-user-config`` and
+    ``-c`` overrides. The real isolation mechanism is a scoped
+    ``$CODEX_HOME`` containing ONLY the sources MCP definition + a
+    symlink of the user's ``auth.json``. Verified empirically (smoke
+    test 2026-05-22) and confirmed via ``ab ask-codex``.
+    """
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+
+    # Stand in a fake $CODEX_HOME so we don't depend on a real Codex
+    # login on the runner; auth.json just needs to exist for the helper
+    # to accept the symlink target.
+    fake_home = tmp_path / "fake-codex-home"
+    fake_home.mkdir()
+    (fake_home / "auth.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("CODEX_HOME", str(fake_home))
+
+    config = linear_pipeline._runtime_tool_config("codex-tools")
+
+    scoped_home_str = config.get("codex_home_override")
+    assert scoped_home_str, "codex-tools must populate codex_home_override"
+
+    scoped_home = Path(scoped_home_str)
+    assert scoped_home.exists()
+    assert scoped_home != fake_home, "scoped home must NOT be the user's CODEX_HOME"
+
+    # Config must register sources and nothing else.
+    config_toml = (scoped_home / "config.toml").read_text(encoding="utf-8")
+    assert "[mcp_servers.sources]" in config_toml
+    assert "node_repl" not in config_toml
+    assert "openaiDeveloperDocs" not in config_toml
+    assert "codex_apps" not in config_toml
+    assert 'url = "http://127.0.0.1:8766/mcp"' in config_toml
+
+    # Auth must be a symlink to the user's auth.json — copies would mean
+    # token refreshes don't propagate.
+    auth_link = scoped_home / "auth.json"
+    assert auth_link.is_symlink()
+    assert Path(auth_link.resolve()) == (fake_home / "auth.json").resolve()
+
+
+def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Materialization fires ``codex_writer_home_resolved`` AFTER
+    ``mcp_config_resolved`` so downstream observability sees the
+    expected first event unchanged."""
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+
+    fake_home = tmp_path / "fake-codex-home"
+    fake_home.mkdir()
+    (fake_home / "auth.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("CODEX_HOME", str(fake_home))
+
+    events: list[tuple[str, dict[str, Any]]] = []
+    linear_pipeline._runtime_tool_config(
+        "codex-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    event_names = [name for name, _ in events]
+    assert event_names[0] == "mcp_config_resolved", (
+        f"first event must remain mcp_config_resolved, got {event_names!r}"
+    )
+    assert "codex_writer_home_resolved" in event_names
+
+    home_event = next(fields for name, fields in events if name == "codex_writer_home_resolved")
+    assert home_event["real_home"] == str(fake_home)
+    assert home_event["scoped_home"].endswith(f"codex-v7-writer-{os.getuid()}")
+
+
+def test_runtime_tool_config_codex_tools_missing_auth_warns(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When CODEX_HOME has no auth.json, emit a warning event but don't
+    raise — config resolution must work on CI runners that have never
+    run ``codex login``. The actual ``codex exec`` invocation will fail
+    loud with its own missing-auth error if it tries to run."""
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+
+    bad_home = tmp_path / "no-auth-codex-home"
+    bad_home.mkdir()
+    monkeypatch.setenv("CODEX_HOME", str(bad_home))
+
+    events: list[tuple[str, dict[str, Any]]] = []
+    config = linear_pipeline._runtime_tool_config(
+        "codex-tools",
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    # Config resolution succeeds.
+    assert config.get("codex_home_override")
+
+    # But the missing-auth warning event is emitted.
+    event_names = [name for name, _ in events]
+    assert "codex_writer_home_auth_missing" in event_names
+
+    # And the resolved event records auth_present=False.
+    resolved = next(fields for name, fields in events if name == "codex_writer_home_resolved")
+    assert resolved["auth_present"] is False
+
+    # No broken symlink left in the scoped home.
+    scoped_home = Path(config["codex_home_override"])
+    auth_link = scoped_home / "auth.json"
+    assert not auth_link.exists() and not auth_link.is_symlink()
 
 
 def test_runtime_tool_config_non_codex_tools_no_disable_features(

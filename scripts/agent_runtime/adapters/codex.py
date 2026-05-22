@@ -223,12 +223,26 @@ class CodexAdapter:
             cmd.append(session_id)
         cmd.append("-")  # Read prompt from stdin.
 
+        env_overrides: dict[str, str] = {}
+        if discussion_readonly:
+            env_overrides["AB_DISCUSS_READONLY"] = "1"
+        codex_home_override = (tool_config or {}).get("codex_home_override")
+        if codex_home_override:
+            # Per-invocation scoping of $CODEX_HOME — see
+            # ``_tool_config_flags`` docstring for the rationale. The
+            # caller is responsible for ensuring the directory exists,
+            # contains a minimal ``config.toml`` registering ONLY the
+            # MCP servers the writer is allowed to touch, and a
+            # readable ``auth.json`` (typically a symlink to the user's
+            # real ``$CODEX_HOME/auth.json``).
+            env_overrides["CODEX_HOME"] = str(codex_home_override)
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload=prompt,
             output_file=output_path,
-            env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
+            env_overrides=env_overrides,
             liveness_paths=(output_path,),
         )
 
@@ -243,12 +257,26 @@ class CodexAdapter:
           (per ``codex features list``) → ``--disable <name>`` per item.
           Used by ``linear_pipeline._runtime_tool_config`` to enforce
           writer tool-isolation: V7 writers may only call ``mcp__sources__*``
-          tools, so the Codex ``shell_tool`` feature (which surfaces the
-          ``exec_command`` shell tool) must be disabled before invocation
-          so the model can't reach for it and trip the
-          ``writer_trace_isolation`` gate with ``wrong_tool_family``
-          (failure observed 2026-05-22 a1-my-morning-20260522-181103:
-          18× ``exec_command`` calls vs. 22 valid ``mcp__sources__*``).
+          tools, so feature flags such as ``shell_tool``, ``goals``,
+          ``apps``, ``plugins``, ``browser_use``, ``in_app_browser``,
+          ``image_generation``, and ``multi_agent`` must be disabled
+          before invocation so the model can't reach for them and trip
+          the ``writer_trace_isolation`` gate with ``wrong_tool_family``.
+          See ``codex_home_override`` for the companion MCP-scoping fix.
+        - ``codex_home_override``: NOT translated to flags here — it's a
+          companion ``env_overrides`` key handled in
+          ``build_invocation``; documented in this method so callers see
+          the full surface in one place. The motivation is the same
+          ``writer_trace_isolation`` gate: the user-level
+          ``$CODEX_HOME/config.toml`` may register MCP servers
+          (e.g. Codex.app's ``node_repl`` and ``openaiDeveloperDocs``)
+          that surface tools outside ``mcp__sources__*``. Per-invocation
+          ``-c mcp_servers.X.url=...`` overrides MERGE with the global
+          config; they don't replace it. Repointing ``CODEX_HOME`` at a
+          scoped directory containing only the sources MCP definition
+          (plus a symlink of the user's ``auth.json``) is the actual
+          per-invocation isolation mechanism in codex-cli 0.133.0,
+          confirmed via ``ab ask-codex`` 2026-05-22.
         """
         flags: list[str] = []
         if not tool_config:
