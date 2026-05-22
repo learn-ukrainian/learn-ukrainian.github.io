@@ -234,17 +234,37 @@ class CodexAdapter:
 
     @classmethod
     def _tool_config_flags(cls, tool_config: dict | None) -> list[str]:
-        """Translate supported tool_config keys into ``codex exec`` flags."""
+        """Translate supported tool_config keys into ``codex exec`` flags.
+
+        Supported keys:
+        - ``mcp_servers``: ``{"<name>": {"url": "...", ...}}`` →
+          ``-c mcp_servers.<name>.<field>=<value>`` overrides.
+        - ``disable_features``: ``list[str]`` of Codex feature-flag names
+          (per ``codex features list``) → ``--disable <name>`` per item.
+          Used by ``linear_pipeline._runtime_tool_config`` to enforce
+          writer tool-isolation: V7 writers may only call ``mcp__sources__*``
+          tools, so the Codex ``shell_tool`` feature (which surfaces the
+          ``exec_command`` shell tool) must be disabled before invocation
+          so the model can't reach for it and trip the
+          ``writer_trace_isolation`` gate with ``wrong_tool_family``
+          (failure observed 2026-05-22 a1-my-morning-20260522-181103:
+          18× ``exec_command`` calls vs. 22 valid ``mcp__sources__*``).
+        """
+        flags: list[str] = []
         if not tool_config:
-            return []
+            return flags
 
         mcp_servers = tool_config.get("mcp_servers")
-        if not isinstance(mcp_servers, dict):
-            return []
+        if isinstance(mcp_servers, dict):
+            for key, value in cls._flatten_config_overrides("mcp_servers", mcp_servers):
+                flags.extend(["-c", f"{key}={value}"])
 
-        flags: list[str] = []
-        for key, value in cls._flatten_config_overrides("mcp_servers", mcp_servers):
-            flags.extend(["-c", f"{key}={value}"])
+        disable_features = tool_config.get("disable_features")
+        if isinstance(disable_features, (list, tuple)):
+            for feature in disable_features:
+                if isinstance(feature, str) and feature:
+                    flags.extend(["--disable", feature])
+
         return flags
 
     @classmethod

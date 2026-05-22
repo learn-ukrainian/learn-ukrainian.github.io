@@ -475,6 +475,84 @@ def test_codex_adapter_mcp_tool_config_multiple(tmp_path):
     assert "mcp_servers.other.enabled=true" in config_values
 
 
+def test_codex_adapter_disable_features_emits_flags(tmp_path):
+    """tool_config['disable_features'] must map to one --disable <name> per item.
+
+    Used by V7 writer tool-isolation: the pipeline sets
+    ``disable_features=["shell_tool"]`` so Codex's ``exec_command`` shell
+    tool isn't surfaced — without this the writer trips
+    ``writer_trace_isolation`` with ``wrong_tool_family``
+    (observed 2026-05-22 a1-my-morning-20260522-181103: 18× exec_command).
+    """
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "mcp_servers": {"sources": {"url": "http://127.0.0.1:8766/sse"}},
+            "disable_features": ["shell_tool"],
+        },
+    )
+    assert "--disable" in plan.cmd
+    disable_idx = plan.cmd.index("--disable")
+    assert plan.cmd[disable_idx + 1] == "shell_tool"
+    # Both flags coexist with MCP override.
+    config_values = [
+        plan.cmd[index + 1]
+        for index, token in enumerate(plan.cmd[:-1])
+        if token == "-c"
+    ]
+    assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
+
+
+def test_codex_adapter_disable_features_multiple(tmp_path):
+    """Multiple disable_features entries each emit a separate --disable pair."""
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "disable_features": ["shell_tool", "browser_use"],
+        },
+    )
+    disable_pairs = [
+        plan.cmd[index + 1]
+        for index, token in enumerate(plan.cmd[:-1])
+        if token == "--disable"
+    ]
+    assert disable_pairs == ["shell_tool", "browser_use"]
+
+
+def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):
+    """Defensive: non-string entries (None, ints) must be dropped silently."""
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "disable_features": ["shell_tool", None, 0, "", "browser_use"],
+        },
+    )
+    disable_pairs = [
+        plan.cmd[index + 1]
+        for index, token in enumerate(plan.cmd[:-1])
+        if token == "--disable"
+    ]
+    assert disable_pairs == ["shell_tool", "browser_use"]
+
+
 def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
     """Forward compatibility: unknown Codex tool_config keys stay local."""
     adapter = CodexAdapter()

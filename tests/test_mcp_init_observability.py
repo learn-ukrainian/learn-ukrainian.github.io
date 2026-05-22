@@ -202,6 +202,48 @@ def test_runtime_tool_config_emits_resolution_event_success(
     assert events[0][1]["resolved_servers"] == ["sources"]
 
 
+def test_runtime_tool_config_codex_tools_disables_shell_tool(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """V7 codex-tools writer must disable Codex's ``shell_tool`` feature.
+
+    Failure observed 2026-05-22 a1-my-morning-20260522-181103: the writer
+    called ``exec_command`` (surfaced by ``shell_tool``) 18× and tripped
+    the ``writer_trace_isolation`` gate with ``wrong_tool_family``
+    BEFORE python_qg ran. The fix surfaces the disable at CLI
+    invocation time via ``tool_config["disable_features"]``.
+
+    Defense-in-depth: also applies when codex-tools is invoked as the
+    reviewer — reviewers should also only call ``mcp__sources__*``.
+    """
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+
+    config = linear_pipeline._runtime_tool_config("codex-tools")
+
+    assert config.get("disable_features") == ["shell_tool"]
+
+
+def test_runtime_tool_config_non_codex_tools_no_disable_features(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Non-codex writers must NOT inherit the codex-specific disable.
+
+    The ``disable_features`` flag is a Codex CLI feature; other adapters
+    don't understand the key. The pipeline emits it only for codex-tools.
+    """
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+
+    for agent in ("claude-tools", "gemini-tools", "grok-tools", "deepseek-tools"):
+        config = linear_pipeline._runtime_tool_config(agent)
+        assert "disable_features" not in config, (
+            f"{agent} unexpectedly carries disable_features={config.get('disable_features')!r}"
+        )
+
+
 def test_wiki_review_codex_emits_resolution_event(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

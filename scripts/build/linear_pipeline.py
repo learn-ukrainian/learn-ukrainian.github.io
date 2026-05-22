@@ -2732,10 +2732,21 @@ def _runtime_tool_config(
 
     from scripts.agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
 
+    codex_disable_features: list[str] = []
     if agent_label == "codex-tools":
         agent_kwargs = {
             "mcp_servers": ["sources"],
         }
+        # V7 writer tool-isolation: Codex's built-in `shell_tool` surfaces
+        # the `exec_command` shell. The writer must only call
+        # `mcp__sources__*` — anything else trips the
+        # `writer_trace_isolation` gate with `wrong_tool_family`.
+        # Disable the feature at CLI invocation so the model can't reach
+        # for it. Observed failure: a1-my-morning-20260522-181103 ran
+        # 18× exec_command vs. 22 valid MCP calls; gate fired TERMINAL
+        # before python_qg. See `scripts/agent_runtime/adapters/codex.py::
+        # _tool_config_flags` for the flag mapping.
+        codex_disable_features = ["shell_tool"]
     elif agent_label == "claude-tools":
         agent_kwargs = {
             "mcp_servers": ["sources"],
@@ -2778,6 +2789,8 @@ def _runtime_tool_config(
         )
     if mcp_dict:
         tool_config.update(mcp_dict)
+    if codex_disable_features:
+        tool_config["disable_features"] = codex_disable_features
     if agent_label == "claude-tools":
         tool_config["agent"] = "curriculum-writer"
     assert tool_config.get("output_format") == "stream-json", (
