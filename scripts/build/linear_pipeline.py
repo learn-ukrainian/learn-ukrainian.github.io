@@ -6211,21 +6211,43 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         section_text = _extract_section_text(text, title)
         count = _word_count(_strip_comments(section_text))
         min_words = int(target * 0.9)
-        # Per user direction (2026-05-17, repeated multiple times across
-        # sessions): word targets are MINIMUMS. Overshoot is welcome, never
-        # an error. We retain a `max` field in the output for diagnostic
-        # visibility (so we can still SEE if a section has drifted far from
-        # plan) but it does NOT fail the gate.
+        # Per user direction (2026-05-17, reaffirmed 2026-05-23): word targets
+        # are MINIMUMS. Overshoot is welcome, never an error. We retain `min`
+        # and `max` fields in the output for diagnostic visibility — they feed
+        # the writer correction prompt as targeting guidance — but they do
+        # NOT fail the gate. The 2026-05-23 reaffirmation is specifically:
+        # "the section wordcount is a guidance for the writer, it is not a
+        # reason to drop an error. The important is that the whole content
+        # is a whole and not less than the planned word count." The total
+        # `word_count` gate enforces the only hard floor; per-section budgets
+        # surface as advisory diagnostics. The 2026-05-21 a1/my-morning
+        # build #13 cascade — where word_count r1 correction balanced the
+        # total but left Діалоги (257/270) and Мій ранок (265/270) under
+        # their per-section min and triggered a terminal halt — is the
+        # canonical failure pattern this relaxation prevents.
         max_words = int(target * 1.1)  # diagnostic-only
         budgets.append({
             "section": title,
             "count": count,
             "min": min_words,
             "max": max_words,
+            # `passed` is retained on every per-section budget for backward
+            # compatibility with diagnostic consumers (writer correction
+            # render, telemetry dashboards). It marks per-section min
+            # adherence, NOT a build-fail signal — see gate-level `passed`
+            # below.
             "passed": count >= min_words,
+            "under_min": count < min_words,
+            "over_max": count > max_words,
         })
     return {
-        "passed": not missing and all(item["passed"] for item in budgets),
+        # Gate-level `passed` reflects ONLY missing headings: every contracted
+        # section must EXIST as a level-2 heading in the module. Per-section
+        # word budgets are advisory (see comment in budgets construction
+        # above). A future stricter mode could surface per-section under-min
+        # as a separate `plan_sections_balance` advisory gate, but the build
+        # halt no longer fires on it.
+        "passed": not missing,
         "missing_headings": missing,
         "word_budgets": budgets,
     }
@@ -6320,6 +6342,57 @@ def _vesum_gate(
                 if matches
             }
             missing_lc -= resolved_lc
+    # Hyphenated multi-word constructions fallback (per user direction
+    # 2026-05-23). Many legitimate Ukrainian forms appear as hyphenated
+    # compounds that VESUM only indexes by individual lemma: adverbial
+    # expressions like `літера-в-літеру` ("letter by letter"), reduplicative
+    # intensifiers like `тихо-тихо` / `день-у-день`, range constructions
+    # like `п'ять-шість`, and color/temporal compounds like `темно-синій`.
+    # The primary VESUM lookup treats the whole token as one lemma and
+    # fails. Per user: "do not drop [an] error if VESUM is not supporting
+    # it but we need to be able to check if they are correct with another
+    # tool." Tier-1 fallback: split on hyphens, verify each constituent
+    # in VESUM, accept the compound if every part above the lookup
+    # threshold itself verifies. Short connector parts (`в`, `у`, `і`,
+    # `до`) below VESUM_MIN_WORD_LENGTH are accepted without lookup —
+    # they're under the gate's standard threshold and would be skipped if
+    # encountered standalone. Russified compounds where one part fails
+    # VESUM (e.g. hypothetical `буквенного-щось`) still fail the gate
+    # because the failing constituent is itself a VESUM miss.
+    if missing_lc:
+        hyphenated_missing = sorted(w for w in missing_lc if "-" in w)
+        if hyphenated_missing:
+            constituent_lookups: set[str] = set()
+            constituent_map: dict[str, list[str]] = {}
+            for compound in hyphenated_missing:
+                parts = [part for part in compound.split("-") if part]
+                if len(parts) < 2:
+                    continue
+                eligible_parts = [
+                    part for part in parts if len(part) >= VESUM_MIN_WORD_LENGTH
+                ]
+                constituent_lookups.update(eligible_parts)
+                constituent_map[compound] = eligible_parts
+            if constituent_lookups:
+                try:
+                    constituent_verified = verify_words_fn(sorted(constituent_lookups))
+                except Exception as exc:
+                    return {
+                        "passed": False,
+                        "error": str(exc),
+                        "checked": len(unchecked_pairs),
+                    }
+            else:
+                constituent_verified = {}
+            resolved_compounds: set[str] = set()
+            for compound, parts in constituent_map.items():
+                # All eligible parts must verify. If there are zero
+                # eligible parts (every constituent below threshold),
+                # accept conservatively — the compound is a string of
+                # very short tokens we wouldn't gate individually.
+                if all(constituent_verified.get(part) for part in parts):
+                    resolved_compounds.add(compound)
+            missing_lc -= resolved_compounds
     missing = sorted(
         {surface for surface, lower, _original in unchecked_pairs if lower in missing_lc}
     )
