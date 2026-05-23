@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Codebase Architecture Diagram</title>
+
+<meta name="report-class" content="documentation" />
+<meta name="report-date" content="2026-05-23" />
+<meta name="report-status" content="current" />
+
+<style>
+  :root {
+    --bg: #faf6ef;
+    --surface: #f5efde;
+    --surface-2: #ede6d0;
+    --surface-warn: #f3ead0;
+    --surface-fail: #f3dada;
+    --surface-ok: #dde9df;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4540;
+    --ink-faint: #7a736a;
+    --rule: #d4cdb8;
+    --rule-soft: #e3dcc6;
+    --accent: #7a1c20;
+    --warn: #a8842b;
+    --ok: #3d6b4a;
+    --fail: #9c2828;
+    --info: #2a5680;
+    --serif: Charter, "Source Serif Pro", "Iowan Old Style", Baskerville, "Times New Roman", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,28,32,0.25); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre { font-family: var(--mono); font-size: 0.88em; }
+  code.inline { background: var(--surface-2); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--rule-soft); color: var(--ink-soft); white-space: nowrap; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  header.hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 36px;
+  }
+  header.hero .title-block { flex: 1 1 480px; }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+  header.hero .lede {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  header.hero .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.85;
+    flex: 0 1 280px;
+  }
+
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 40px;
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+  nav.toc strong { display: block; margin-bottom: 10px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); }
+  nav.toc ol { margin: 0; padding-left: 20px; }
+  nav.toc li { margin: 6px 0; }
+
+  h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
+  th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
+  td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
+
+  .callout {
+    padding: 16px;
+    border-radius: 4px;
+    margin: 24px 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .callout.info { border-left: 4px solid var(--info); }
+
+  .diagram {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 20px 16px;
+    margin: 20px 0 28px;
+    overflow-x: auto;
+  }
+  .diagram .mermaid {
+    display: flex;
+    justify-content: center;
+    min-width: min(100%, 900px);
+  }
+
+  .related {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+  .related ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="title-block">
+      <h1>Codebase Architecture Diagram</h1>
+      <p class="lede">Visual map of the learn-ukrainian repository — curriculum platform, AI content factory, and Starlight publishing site.</p>
+    </div>
+    <div class="meta">
+      <div>Created: 2026-05-23</div>
+      <div>Source: <a href="codebase-diagram.md">codebase-diagram.md</a></div>
+      <div>Open this file in a browser for rendered diagrams</div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#overview">System Overview</a></li>
+      <li><a href="#layout">Repository Layout</a></li>
+      <li><a href="#pipeline">V7 Module Build Pipeline</a></li>
+      <li><a href="#tracks">Curriculum Tracks</a></li>
+      <li><a href="#agents">Multi-Agent Architecture</a></li>
+      <li><a href="#frontend">Frontend (Starlight / Astro)</a></li>
+      <li><a href="#validation">Data &amp; Validation Layer</a></li>
+      <li><a href="#takeaways">Key Takeaways</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <h2>1. System Overview</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TB
+    subgraph Human["Human operators"]
+        Architect["Claude — architect / reviewer"]
+        Builder["Gemini — content builder"]
+        Reviewer["Codex — adversarial reviewer"]
+    end
+
+    subgraph Orchestration["Orchestration layer"]
+        Bridge["scripts/ai_agent_bridge/"]
+        Runtime["scripts/agent_runtime/"]
+        Monitor["Monitor API :8765"]
+        Orchestrator["curriculum-orchestrator"]
+    end
+
+    subgraph Build["Build pipeline (V7)"]
+        V7["scripts/build/v7_build.py"]
+        Linear["scripts/build/linear_pipeline.py"]
+        Audit["scripts/audit_module.py"]
+    end
+
+    subgraph Knowledge["Knowledge & grounding"]
+        Plans["plans/{track}/{slug}.yaml"]
+        Wiki["wiki/ + scripts/wiki/"]
+        RAG["data/sources.db"]
+        VESUM["VESUM / lexicon data"]
+        Textbooks["Textbook RAG corpus"]
+    end
+
+    subgraph Content["Curriculum artifacts"]
+        Meta["{track}/meta/{slug}.yaml"]
+        MD["{track}/{slug}.md"]
+        Acts["{track}/activities/{slug}.yaml"]
+        Vocab["{track}/vocabulary/{slug}.yaml"]
+        Status["{track}/status/{slug}.json"]
+    end
+
+    subgraph Publish["Published site"]
+        MDX["starlight/src/content/docs/"]
+        Components["React activity components"]
+        Site["learn-ukrainian.github.io"]
+    end
+
+    Architect --> Orchestrator
+    Builder --> Orchestrator
+    Reviewer --> Orchestrator
+    Orchestrator --> Bridge
+    Bridge --> Runtime
+    Runtime --> V7
+    V7 --> Linear
+    Plans --> V7
+    Wiki --> Linear
+    RAG --> Linear
+    VESUM --> Audit
+    Textbooks --> Linear
+    Linear --> Meta
+    Linear --> MD
+    Linear --> Acts
+    Linear --> Vocab
+    Linear --> MDX
+    Audit --> Status
+    MDX --> Components
+    Components --> Site
+    Monitor --> Orchestration
+    Monitor --> Build
+        </pre>
+      </div>
+    </section>
+
+    <section id="layout">
+      <h2>2. Repository Layout</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+graph LR
+    subgraph Root["learn-ukrainian/"]
+        direction TB
+
+        subgraph Curriculum["curriculum/"]
+            L2EN["l2-uk-en/ — main track A1→C2 + seminars"]
+            L2Direct["l2-uk-direct/ — L1-agnostic Ukrainian"]
+            L1UK["l1-uk/ — Ukrainian wiki corpus"]
+            WikiCur["wiki/ — compiled knowledge"]
+        end
+
+        subgraph Scripts["scripts/ (~1000+ files)"]
+            BuildS["build/ — V7 pipeline"]
+            AuditS["audit/ — quality gates"]
+            BridgeS["ai_agent_bridge/ — inter-agent comms"]
+            AgentRT["agent_runtime/ — unified CLI adapter"]
+            WikiS["wiki/ — compile + review"]
+            RAGS["rag/ — ingestion + search"]
+            APIS["api/ — Monitor API"]
+            GenMDX["generate_mdx/ — MDX assembly"]
+        end
+
+        subgraph Frontend["starlight/"]
+            MDXDir["src/content/docs/"]
+            ReactC["src/components/ — Quiz, Cloze, MatchUp…"]
+            Lexicon["pages/lexicon/, etymology/"]
+        end
+
+        subgraph Infra["Supporting"]
+            Data["data/ — sources.db, translations"]
+            Schemas["schemas/ — activity YAML schemas"]
+            Tests["tests/ — pytest suite"]
+            Docs["docs/ — best-practices, decisions"]
+            Orch["orchestration/ — build run archives"]
+            GH[".github/ — CI, deploy"]
+        end
+    end
+        </pre>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <h2>3. V7 Module Build Pipeline</h2>
+      <p>Each of the <strong>1,778 modules</strong> flows through this linear pipeline:</p>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+    P0["① plan<br/>Validate plans/{track}/{slug}.yaml"]
+    P1["② knowledge_packet<br/>RAG + wiki manifest"]
+    P2["③ writer<br/>LLM writes lesson + activities + vocab"]
+    P3["④ python_qg<br/>Deterministic quality gates"]
+    P4["⑤ wiki_coverage_gate<br/>Citation/grounding check"]
+    P5["⑥ wiki_coverage_review<br/>Independent LLM review"]
+    P6["⑦ llm_qg<br/>Adversarial multi-dim review"]
+    P7["⑧ mdx<br/>Assemble → starlight/…/slug.mdx"]
+
+    P0 --> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7
+
+    P2 -.->|"claude / gemini / codex / grok…"| Writers["AI writers via agent_runtime"]
+    P3 -.->|"audit_module.py checks"| Gates["Word count, Russianisms,<br/>activity pedagogy, VESUM…"]
+    P7 -.->|"React components"| Live["Published lesson page"]
+        </pre>
+      </div>
+
+      <h3>Per-module artifact chain</h3>
+      <p>Inside <code class="inline">curriculum/l2-uk-en/</code>:</p>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+    Plan["plans/{track}/{slug}.yaml<br/>SOURCE OF TRUTH (immutable)"]
+    Meta["{track}/meta/{slug}.yaml<br/>Structural blueprint"]
+    Lesson["{track}/{num}-{slug}.md<br/>Lesson prose"]
+    Activities["{track}/activities/{slug}.yaml<br/>Interactive exercises"]
+    Vocabulary["{track}/vocabulary/{slug}.yaml<br/>Word list + morphology"]
+    Review["{track}/review/{slug}-review.md<br/>Adversarial review"]
+    MDXOut["starlight/src/content/docs/{track}/{slug}.mdx<br/>PUBLISHED OUTPUT"]
+
+    Plan --> Meta --> Lesson
+    Lesson --> Activities
+    Lesson --> Vocabulary
+    Activities --> Review
+    Review --> MDXOut
+        </pre>
+      </div>
+    </section>
+
+    <section id="tracks">
+      <h2>4. Curriculum Tracks</h2>
+      <p>22 tracks, 1,778 modules:</p>
+      <div class="diagram">
+        <pre class="mermaid">
+mindmap
+  root((learn-ukrainian))
+    Core CEFR
+      A1 — 55 modules — PPP
+      A2 — 69 modules — PPP
+      B1 — 94 modules — TTT
+      B2 — 93 modules — TTT
+      C1 — 132 modules — CLIL
+      C2 — 110 modules — CLIL
+    Seminar tracks
+      HIST — Ukrainian history
+      BIO — Notable Ukrainians
+      ISTORIO — Historiography
+      LIT — Literature + 7 sub-tracks
+      FOLK — Folk culture
+      OES — Old East Slavic
+      RUTH — Ruthenian
+    Other
+      l2-uk-direct — L1-agnostic B2
+      l1-uk — Wiki corpus only
+        </pre>
+      </div>
+    </section>
+
+    <section id="agents">
+      <h2>5. Multi-Agent Architecture</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TB
+    subgraph Agents["AI agents"]
+        Claude["Claude Opus 4.7<br/>Architect, plan review, orchestration"]
+        Gemini["Gemini 3.1 Pro<br/>Primary content writer"]
+        Codex["Codex<br/>Adversarial reviewer, bug hunter"]
+        Others["Grok, DeepSeek, Qwen…<br/>Bakeoff / alternate writers"]
+    end
+
+    subgraph Comms["Communication"]
+        AB["ai_agent_bridge<br/>SQLite message broker"]
+        Discuss["ab discuss — multi-agent deliberation"]
+        Delegate["delegate.py — worktree dispatch"]
+    end
+
+    subgraph Runtime["agent_runtime/"]
+        Invoke["runner.invoke()"]
+        Adapters["adapters/ — claude, codex, gemini…"]
+        Registry["registry.AGENTS"]
+    end
+
+    subgraph Isolation["Isolation"]
+        WT[".worktrees/dispatch/{agent}/{task}/"]
+        BuildWT[".worktrees/builds/{level}-{slug}/"]
+    end
+
+    Claude --> AB
+    Gemini --> AB
+    Codex --> AB
+    AB --> Invoke
+    Delegate --> Invoke
+    Invoke --> Adapters
+    Adapters --> Registry
+    Invoke --> WT
+    V7Build["v7_build.py --worktree"] --> BuildWT
+        </pre>
+      </div>
+    </section>
+
+    <section id="frontend">
+      <h2>6. Frontend (Starlight / Astro)</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+    subgraph Input
+        MDX["MDX lesson files"]
+        YAML["Activity YAML"]
+        JSON["curriculum-stats.json<br/>vesum-vocab-lemmas.json"]
+    end
+
+    subgraph Starlight["starlight/"]
+        Astro["Astro pages"]
+        Content["content/docs/{track}/"]
+        Comp["40+ React components"]
+    end
+
+    subgraph Components["Activity types"]
+        Quiz["Quiz, TrueFalse, Cloze"]
+        Match["MatchUp, GroupSort, Anagram"]
+        Write["FillIn, Translate, EssayResponse"]
+        Read["ReadingActivity, DialogueBox"]
+        Lit["SourceBox, PaleographyAnalysis"]
+    end
+
+    subgraph Pages["Special pages"]
+        Home["/ — LevelLanding"]
+        Lex["/lexicon — VESUM lookup"]
+        Etym["/etymology — word origins"]
+    end
+
+    MDX --> Content
+    YAML --> Comp
+    JSON --> Lex
+    Content --> Astro
+    Comp --> Components
+    Astro --> Home
+    Astro --> Lex
+    Astro --> Etym
+    Astro --> Deploy["GitHub Pages deploy"]
+        </pre>
+      </div>
+    </section>
+
+    <section id="validation">
+      <h2>7. Data &amp; Validation Layer</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TB
+    subgraph Sources["Grounding sources"]
+        SS2024["Ukrainian State Standard 2024"]
+        TB["Textbook RAG — data/sources.db"]
+        UW["ukrainian_wiki corpus — A1/A2"]
+        LitRAG["Literary RAG"]
+        VESUM2["VESUM morphological dictionary"]
+    end
+
+    subgraph Validation["Quality gates"]
+        AuditMod["audit_module.py"]
+        Pipeline["npm run pipeline"]
+        ValidateYAML["validate_yaml / validate_plans"]
+        LintMD["markdownlint + yamllint"]
+        PreCommit[".pre-commit-config.yaml"]
+    end
+
+    subgraph CI["CI / monitoring"]
+        Pytest["pytest — 200+ test files"]
+        MonitorAPI["Monitor API — track health, build status"]
+        Dashboards["dashboards/ — build analytics"]
+    end
+
+    Sources --> AuditMod
+    AuditMod --> Pipeline
+    Pipeline --> ValidateYAML
+    ValidateYAML --> LintMD
+    LintMD --> PreCommit
+    PreCommit --> Pytest
+    MonitorAPI --> Dashboards
+        </pre>
+      </div>
+    </section>
+
+    <section id="takeaways">
+      <h2>Key Takeaways</h2>
+      <table>
+        <thead>
+          <tr><th>Layer</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code class="inline">curriculum/</code></td><td>Authoring source — plans, lessons, activities, vocab</td></tr>
+          <tr><td><code class="inline">scripts/build/</code></td><td>V7 linear pipeline — plan → writer → QG → MDX</td></tr>
+          <tr><td><code class="inline">scripts/audit/</code></td><td>Deterministic quality gates (word counts, pedagogy, Russianisms)</td></tr>
+          <tr><td><code class="inline">scripts/agent_runtime/</code></td><td>Single entrypoint for all AI CLI invocations</td></tr>
+          <tr><td><code class="inline">scripts/ai_agent_bridge/</code></td><td>Inter-agent messaging and dispatch</td></tr>
+          <tr><td><code class="inline">starlight/</code></td><td>Astro site with 40+ interactive React activity components</td></tr>
+          <tr><td><code class="inline">data/</code></td><td>RAG corpora, translations, lexicon databases</td></tr>
+          <tr><td><code class="inline">docs/</code></td><td>Best practices, architectural decisions, agent protocols</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="related">
+      <h2>Related docs</h2>
+      <ul>
+        <li><a href="system-topology.md">system-topology.md</a> — agent/runtime/bridge wiring (V6-era reference)</li>
+        <li><a href="v7-pipeline.md">v7-pipeline.md</a> — V7 build pipeline details</li>
+        <li><a href="../best-practices/track-architecture.md">track-architecture.md</a> — track/level structure and pedagogy models</li>
+        <li><a href="../agent-runtime-guide.md">agent-runtime-guide.md</a> — <code class="inline">runner.invoke()</code> mental model</li>
+      </ul>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "base",
+    themeVariables: {
+      primaryColor: "#f5efde",
+      primaryTextColor: "#1a1a1a",
+      primaryBorderColor: "#7a1c20",
+      lineColor: "#4a4540",
+      secondaryColor: "#ede6d0",
+      tertiaryColor: "#faf6ef",
+      fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, system-ui, sans-serif"
+    },
+    flowchart: { htmlLabels: true, curve: "basis" }
+  });
+</script>
+</body>
+</html>

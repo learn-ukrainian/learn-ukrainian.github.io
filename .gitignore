@@ -28,6 +28,18 @@ service-account*.json
 #.gemini/
 .claude/
 .codex/
+# Cursor IDE local state — keep project-level mcp.json committed (parallel to .mcp.json)
+.cursor/*
+!.cursor/mcp.json
+
+# Stale build-orchestration scratchpad — load-bearing artifacts auto-commit to build/<level>/<slug>-<stamp> branches per #M-10 (PR #1952). Anything lingering in main worktree is pre-#1952 leftover state.
+curriculum/l2-uk-en/_orchestration/
+curriculum/l2-uk-direct/_orchestration/
+
+# Hermes / opencode write-trace JSONL leaks at repo root — telemetry should live under audit/<dir>/
+/hermes.write.jsonl
+/opencode.write.jsonl
+/*.write.jsonl
 
 
 # Python
