@@ -28,6 +28,7 @@ from ._dispatch_wrappers import (
     handle_review_deep,
 )
 from ._gemini import ask_gemini, converse_gemini, process_and_respond
+from ._hermes import HERMES_DEFAULT_MODEL, ask_hermes
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -37,6 +38,7 @@ from ._messaging import (
     send_message,
 )
 from ._model import check_model
+from ._opencode import OPENCODE_DEFAULT_MODEL, ask_opencode
 
 _CALLER_IDENTITY_ENV_HINTS = (
     "CLAUDE_AGENT_NAME",
@@ -562,6 +564,44 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_agy_parser.add_argument("--review", action="store_true",
                                 help="Prepend docs/review-protocol.md")
 
+    # ask-hermes
+    ask_hermes_parser = subparsers.add_parser(
+        "ask-hermes",
+        help="Send message AND invoke Hermes one-shot (use '-' to read from stdin)",
+    )
+    ask_hermes_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_hermes_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_hermes_parser.add_argument("--type", default="query", help="Message type")
+    ask_hermes_parser.add_argument("--data", help="Path to data file to attach")
+    ask_hermes_parser.add_argument(
+        "--model",
+        default=HERMES_DEFAULT_MODEL,
+        help=f"Hermes model (default {HERMES_DEFAULT_MODEL})",
+    )
+    ask_hermes_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_hermes_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_hermes_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_hermes_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
+    # ask-opencode
+    ask_opencode_parser = subparsers.add_parser(
+        "ask-opencode",
+        help="Send message AND invoke opencode one-shot (use '-' to read from stdin)",
+    )
+    ask_opencode_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_opencode_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_opencode_parser.add_argument("--type", default="query", help="Message type")
+    ask_opencode_parser.add_argument("--data", help="Path to data file to attach")
+    ask_opencode_parser.add_argument(
+        "--model",
+        default=OPENCODE_DEFAULT_MODEL,
+        help=f"Opencode model (default {OPENCODE_DEFAULT_MODEL})",
+    )
+    ask_opencode_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_opencode_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_opencode_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_opencode_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
     converse_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
@@ -777,6 +817,10 @@ def _dispatch_command(args):
         _handle_ask_gemini(args)
     elif args.command == "ask-agy":
         _handle_ask_agy(args)
+    elif args.command == "ask-hermes":
+        _handle_ask_hermes(args)
+    elif args.command == "ask-opencode":
+        _handle_ask_opencode(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content
         converse_gemini(content, args.task_id, args.model,
@@ -870,6 +914,40 @@ def _handle_ask_agy(args):
     ask_agy(content, args.task_id, args.type, data,
             args.new_session, from_llm, args.from_model,
             args.to_model, args.no_timeout, **kwargs)
+
+
+def _handle_ask_hermes(args):
+    """Handle ask-hermes subcommand."""
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_hermes(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=args.data,
+        model=args.model,
+        from_llm=from_llm,
+        from_model=args.from_model,
+        to_model=args.to_model,
+        no_timeout=args.no_timeout,
+    )
+
+
+def _handle_ask_opencode(args):
+    """Handle ask-opencode subcommand."""
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_opencode(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=args.data,
+        model=args.model,
+        from_llm=from_llm,
+        from_model=args.from_model,
+        to_model=args.to_model,
+        no_timeout=args.no_timeout,
+    )
 
 
 def _handle_ask_gemini(args):
