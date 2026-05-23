@@ -112,6 +112,14 @@ implemented at `core.py:283-302`).
 
 See `docs/best-practices/writer-prompt-appendix.md` § Component inventory for the full React component → MDX mapping. The writer prompt does NOT inline this — the authoring fields (consumed by `scripts/yaml_activities.py`) are surfaced via the COMPONENT_PROPS_SCHEMA template substitution and the §Activity Authoring Fields section in `linear-write.md`, which is what the writer acts on. Reference the appendix only if you need to debug a downstream MDX-render issue.
 
+Per-tab activity surfaces:
+- Tab 1 — Урок: explanation prose, dialogues, vocabulary previews
+- Tab 2 — Словник: full vocabulary list
+- Tab 3 — Вправи: workbook activities (fill-in, quiz, match, select, error-correction, drag-drop, anagram, mark-the-words, multiple-choice, true-false, hangman, gap-fill, listening, pair-up, order)
+- Tab 4 — Джерела: textbook citations + multimedia resources
+
+Component compatibility note: legacy `fill-in-the-blanks` is Deprecated; subsumed by `mark-the-words` and `gap-fill` in the V7 component inventory.
+
 ## 4. Constraints the writer must obey
 
 1. **Tab 3 activities use only the 22 type strings in §3.4** (or the

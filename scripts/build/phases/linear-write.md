@@ -114,7 +114,9 @@ authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 
 ## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)
 
-Before the four artifact fences, emit one `<plan_reasoning section="...">...</plan_reasoning>` block per contracted section. Keep each block <=200 words and include these exact subnodes:
+Before the four artifact fences, emit one `<plan_reasoning section="...">...</plan_reasoning>` block per contracted section. Keep each block <=200 words.
+
+Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
 
 <word_budget>Section word allocation and running total check against {WORD_TARGET} (gate tolerates 8% lower band per scripts/build/linear_pipeline.py::_word_count_gate).</word_budget>
 <plan_vocab>Required plan-vocabulary lemmas used in this section, with the exact Ukrainian sentence that grounds each lemma.</plan_vocab>
@@ -171,6 +173,8 @@ When in doubt, omit the bad contrast and teach only the good form.
 
 <!-- rule_id: #R-CITE-HONEST -->
 **3. Source-citation discipline** (citation honesty). Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
+
+**Grammar claim grounding.** EVERY specific grammar claim (rules about aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or learner-facing meaning distinctions) MUST cite an authoritative source from the Knowledge Packet or a specific school textbook. Name the source in the text or as an HTML comment with concrete metadata: `<!-- VERIFY: source="..." grade="..." author="..." -->`. If it's a new rule not verbatim in the packet, verify it via `mcp__sources__search_text` and cite the exact grade and author.
 
 <!-- rule_id: #R-TEXTBOOK-30W -->
 **Textbook grounding.** For each `plan_references` entry: (A) call `search_text` with author surname + page digits to identify the exact chunk_id; (B) call `get_chunk_context(chunk_id=...)`; (C) paste >=30 contiguous Ukrainian words from that returned text into a blockquote; (D) add the exact citation line `*— <Author>, Grade <N>, p.<PAGE>*`. Fewer than 30 words makes `textbook_grounding.long_blockquotes_checked` fail.
@@ -438,13 +442,13 @@ See `## Knowledge Packet` above. This is the same content; the prior render dupl
 ## Pre-emit verification (run BEFORE you write any artifact)
 
 Before artifacts, make the in-scope MCP calls your draft depends on:
-1. Textbook grounding: `search_text` for each `plan_references` entry, then `get_chunk_context` for quotes.
-2. Multimedia obligation: at least one `query_wikipedia`, `search_external`, or `search_images`; `resources_search_attempted` rejects zero attempts.
-3. VESUM: `verify_words` over every Ukrainian form you will emit.
-4. Russianism/style: `search_style_guide`, `search_ua_gec_errors`, `check_russian_shadow`, or `search_heritage` for contrast pairs or suspicious forms.
-5. Literary/cultural quote: `verify_quote` or `search_literary` as level-appropriate.
-6. CEFR check: `query_cefr_level` before adding non-plan lemmas.
-7. Source attribution: `verify_source_attribution` for every named source claim.
+1. Textbook grounding: `mcp__sources__search_text` for each `plan_references` entry, then `mcp__sources__get_chunk_context` for quotes.
+2. Multimedia obligation: at least one `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`; `resources_search_attempted` rejects zero attempts.
+3. VESUM: `mcp__sources__verify_words` over every Ukrainian form you will emit.
+4. Russianism/style: `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__check_russian_shadow`, or `mcp__sources__search_heritage` for contrast pairs or suspicious forms.
+5. Literary/cultural quote: `mcp__sources__verify_quote` or `mcp__sources__search_literary` as level-appropriate.
+6. CEFR check: `mcp__sources__query_cefr_level` before adding non-plan lemmas.
+7. Source attribution: `mcp__sources__verify_source_attribution` for every named source claim.
 
 If a required call is missing for your level, make it now. Do not emit artifacts first and hope the gate catches it.
 
