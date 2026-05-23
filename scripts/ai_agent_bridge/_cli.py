@@ -20,6 +20,7 @@ from ._codex import (
     process_for_codex,
 )
 from ._config import GEMINI_DEFAULT_MODEL
+from ._cursor import CURSOR_DEFAULT_MODEL, ask_cursor
 from ._db import get_db
 from ._dispatch_wrappers import (
     MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
@@ -602,6 +603,25 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_opencode_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_opencode_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
+    # ask-cursor
+    ask_cursor_parser = subparsers.add_parser(
+        "ask-cursor",
+        help="Send message AND invoke Cursor Agent one-shot (use '-' to read from stdin)",
+    )
+    ask_cursor_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_cursor_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_cursor_parser.add_argument("--type", default="query", help="Message type")
+    ask_cursor_parser.add_argument("--data", help="Path to data file to attach")
+    ask_cursor_parser.add_argument(
+        "--model",
+        default=CURSOR_DEFAULT_MODEL,
+        help=f"Cursor model (default {CURSOR_DEFAULT_MODEL})",
+    )
+    ask_cursor_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_cursor_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_cursor_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_cursor_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
     converse_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
@@ -821,6 +841,8 @@ def _dispatch_command(args):
         _handle_ask_hermes(args)
     elif args.command == "ask-opencode":
         _handle_ask_opencode(args)
+    elif args.command == "ask-cursor":
+        _handle_ask_cursor(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content
         converse_gemini(content, args.task_id, args.model,
@@ -938,6 +960,23 @@ def _handle_ask_opencode(args):
     content = sys.stdin.read() if args.content == "-" else args.content
     from_llm = _resolve_from_llm(args)
     ask_opencode(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=args.data,
+        model=args.model,
+        from_llm=from_llm,
+        from_model=args.from_model,
+        to_model=args.to_model,
+        no_timeout=args.no_timeout,
+    )
+
+
+def _handle_ask_cursor(args):
+    """Handle ask-cursor subcommand."""
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_cursor(
         content,
         args.task_id,
         msg_type=args.type,
