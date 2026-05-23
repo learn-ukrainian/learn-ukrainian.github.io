@@ -65,36 +65,58 @@ def utc_timestamp() -> str:
 
 def pull_calibration_cases(
     *,
-    ref: str = PR_2006_REF,
+    ref: str | None = None,
     blob: str = CALIBRATION_BLOB,
     project_root: Path = PROJECT_ROOT,
 ) -> list[dict[str, Any]]:
-    """Pull the calibration cases from PR #2006's branch without copying them.
+    """Load the russianism calibration cases.
 
-    The branch may not be checked out locally; callers should fetch
-    ``refs/pull/2006/head`` into ``refs/remotes/origin/pr-2006`` if this
-    read fails.
+    Preference order:
+    1. Working-tree file at ``project_root / blob`` — PR #2006 is merged
+       (commit ``82afad7438`` on 2026-05-15) and the fixture lives on
+       main, so the working tree is the canonical source of truth.
+    2. Explicit git ref via ``ref=`` (for historical-replay calibrations
+       against a specific commit / branch).
+    3. Legacy fallback to ``PR_2006_REF`` (``origin/pr-2006``) if it
+       still exists locally; pruned-branch path errors clearly.
     """
-    proc = subprocess.run(
-        ["git", "show", f"{ref}:{blob}"],
-        cwd=str(project_root),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if proc.returncode != 0:
-        sys.exit(
-            f"ERROR: could not read {blob} from {ref}.\n"
-            f"git stderr: {proc.stderr.strip()}\n"
-            "If origin/pr-2006 has been pruned, refetch with:\n"
-            "  git fetch origin 'refs/pull/2006/head:refs/remotes/origin/pr-2006'"
+    text: str | None = None
+    source_note: str = ""
+
+    if ref is None:
+        working_path = project_root / blob
+        if working_path.exists():
+            text = working_path.read_text(encoding="utf-8")
+            source_note = f"working tree: {working_path}"
+
+    if text is None:
+        effective_ref = ref or PR_2006_REF
+        proc = subprocess.run(
+            ["git", "show", f"{effective_ref}:{blob}"],
+            cwd=str(project_root),
+            capture_output=True,
+            text=True,
+            check=False,
         )
+        if proc.returncode != 0:
+            sys.exit(
+                f"ERROR: could not read {blob} from {effective_ref}.\n"
+                f"git stderr: {proc.stderr.strip()}\n"
+                f"Working-tree path also missing: {project_root / blob}\n"
+                "If origin/pr-2006 has been pruned, refetch with:\n"
+                "  git fetch origin 'refs/pull/2006/head:refs/remotes/origin/pr-2006'\n"
+                "Or pass an explicit --ref to a current commit/branch."
+            )
+        text = proc.stdout
+        source_note = f"git show {effective_ref}:{blob}"
 
     cases: list[dict[str, Any]] = []
-    for line in proc.stdout.splitlines():
+    for line in text.splitlines():
         line = line.strip()
         if line:
             cases.append(json.loads(line))
+    if not cases:
+        sys.exit(f"ERROR: {source_note} returned zero calibration cases.")
     return cases
 
 
