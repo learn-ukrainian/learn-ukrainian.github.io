@@ -1,0 +1,10 @@
+{
+  "judge": "xai/grok-4.20-multi-agent-0309",
+  "via": "opencode-openrouter",
+  "n": 12,
+  "f1": 0.0,
+  "precision": 0.0,
+  "recall": 0.0,
+  "case_accuracy": 0.5833,
+  "tested_at": "2026-05-23T19:40:01Z"
+}

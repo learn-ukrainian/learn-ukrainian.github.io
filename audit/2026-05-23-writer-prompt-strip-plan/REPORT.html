@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Writer prompt strip plan — 2026-05-23</title>
+<style>
+  body { font-family: -apple-system, "SF Pro Text", "Segoe UI", sans-serif; max-width: 1200px; margin: 2em auto; padding: 0 1em; color: #222; line-height: 1.5; }
+  h1 { border-bottom: 2px solid #333; padding-bottom: 0.3em; }
+  h2 { margin-top: 2em; border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+  h3 { margin-top: 1.5em; color: #444; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.9em; }
+  th, td { border: 1px solid #ccc; padding: 6px 10px; vertical-align: top; text-align: left; }
+  th { background: #f0f0f0; }
+  tr.keep td:first-child { border-left: 4px solid #2a7; }
+  tr.remove td:first-child { border-left: 4px solid #c33; }
+  tr.dedupe td:first-child { border-left: 4px solid #e80; }
+  tr.move td:first-child { border-left: 4px solid #58c; }
+  tr.compress td:first-child { border-left: 4px solid #a6c; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 0.8em; }
+  .b-keep { background: #cef0d8; color: #185028; }
+  .b-remove { background: #fdd; color: #802020; }
+  .b-dedupe { background: #fde0c0; color: #804018; }
+  .b-move { background: #d0e0f8; color: #1850a0; }
+  .b-compress { background: #e8d8f0; color: #5028a0; }
+  code { background: #f4f4f4; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  .stat { background: #f8f8f0; padding: 1em; border-left: 4px solid #c80; margin: 1em 0; }
+  .big-win { background: #f0f8f0; padding: 1em; border-left: 4px solid #2a7; margin: 1em 0; }
+  .risk { background: #fff0f0; padding: 1em; border-left: 4px solid #c33; margin: 1em 0; }
+  .meta { color: #888; font-size: 0.85em; }
+  .src { color: #888; font-style: italic; }
+  ul.tight li { margin: 0.2em 0; }
+</style>
+</head>
+<body>
+
+<h1>Writer prompt strip plan — pre-PR-C review</h1>
+<p class="meta">Generated 2026-05-23 · Source: <code>scripts/build/phases/linear-write.md</code> (66.7KB raw template) → rendered <code>curriculum/l2-uk-en/a1/my-morning/writer_prompt.md</code> (194KB on 2026-05-12, expected ~268KB once Wiki Manifest is fully populated for newer modules).</p>
+
+<h2>TL;DR</h2>
+<div class="stat">
+  <strong>Current rendered prompt:</strong> 194KB (snapshot 2026-05-12 my-morning; handoff cites ~268KB for newer / fuller modules).<br>
+  <strong>Target:</strong> ≤40KB rendered, enforced by new <code>scripts/audit/check_writer_prompt_size.py</code>.<br>
+  <strong>Strip approach:</strong> 80% of the reduction comes from THREE structural changes (one is free — pure dedup). The remaining 20% comes from per-section compression and demote-to-appendix.<br>
+  <strong>Expected post-strip:</strong> ~38-44KB rendered. If we land above 50KB, fall back to PR-C2 with deeper cuts.
+</div>
+
+<h2>The three big wins (~85KB / 44% of total)</h2>
+
+<div class="big-win">
+  <h3>Win #1 — <code>KNOWLEDGE_PACKET</code> is rendered TWICE (~27KB pure waste)</h3>
+  <p>The template substitutes <code>{KNOWLEDGE_PACKET}</code> at line 456 ("## Knowledge Packet") AND <code>{KNOWLEDGE_PACKET}</code> at line 791 ("## Full Wiki Context (source of truth for citations)"). Same content, two locations. In the my-morning render:</p>
+  <ul class="tight">
+    <li>Line 1201: <code>## Knowledge Packet</code> → 13.3KB of wiki content</li>
+    <li>Line 1769: <code>## Full Wiki Context (source of truth for citations)</code> → SAME 13.3KB</li>
+  </ul>
+  <p><strong>Action:</strong> remove the second substitution. Keep "## Knowledge Packet" only. Update the prose at line 791 to reference back ("see §Knowledge Packet above for citations").</p>
+  <p><strong>Risk:</strong> zero. Pure copy-paste artifact from template evolution.</p>
+  <p><strong>Saves:</strong> ~13.3KB on this module; up to ~27KB on larger modules where the manifest is fuller.</p>
+</div>
+
+<div class="big-win">
+  <h3>Win #2 — <code>LESSON_CONTRACT</code> §3 Component inventory overlaps with <code>COMPONENT_PROPS_SCHEMA</code> + Activity Authoring Fields section (~14KB redundancy)</h3>
+  <p>Three sections specify activity component structure:</p>
+  <ul class="tight">
+    <li><code>## 3. Component inventory — 1:1 mapping</code> (11.3KB) — from LESSON_CONTRACT, describes React component → MDX mapping</li>
+    <li><code>## Activity Authoring Fields (mandatory)</code> (2.9KB inline + COMPONENT_PROPS_SCHEMA substitution)</li>
+    <li><code>## Activity Types and the INLINE / WORKBOOK split (mandatory)</code> (1.0KB)</li>
+  </ul>
+  <p>The writer needs the AUTHORING fields (the YAML/JSON shape consumed by <code>scripts/yaml_activities.py</code>) — NOT the React component prop names. LESSON_CONTRACT §3 was explicitly noted in <code>_render_component_props_schema</code> docstring as the source of past Gemini failures (writer used React names because it saw both). The writer SHOULD see only the authoring-field whitelist.</p>
+  <p><strong>Action:</strong> drop LESSON_CONTRACT §3 from the writer prompt (move to <code>docs/best-practices/v7-design-and-corpus.md</code> as appendix; writer fetches on demand via @-path if needed for novel activity types). Keep COMPONENT_PROPS_SCHEMA + Activity Authoring Fields.</p>
+  <p><strong>Risk:</strong> low. The authoring fields are what the parser checks; React-component knowledge is downstream MDX-render concern that the writer doesn't act on.</p>
+  <p><strong>Saves:</strong> ~11.3KB.</p>
+</div>
+
+<div class="big-win">
+  <h3>Win #3 — NORTH_STAR philosophy + LESSON_CONTRACT framing (~22KB)</h3>
+  <p>The writer prompt opens with the full NORTH_STAR (16.6KB across WHO/WHY/HOW/VOICE/SHIPPABLE/WRONG sections) and LESSON_CONTRACT (28.1KB across 7 numbered sections + resolved-policy block). Most of this is project-philosophy and architectural framing the writer doesn't act on at write-time — it's already been baked into the plan, the wiki obligations manifest, the implementation map, the immersion rule.</p>
+  <p><strong>What the writer actually needs from these docs at write-time:</strong></p>
+  <ul class="tight">
+    <li>The 4 artifact contract (what files to produce) — keep, ~1 page</li>
+    <li>The 4-tab MDX shape — keep, ~1 paragraph</li>
+    <li>Tone / voice constraints (no English meta-narration) — already restated in §Tone and immersion (mandatory) inline. KEEP that, DROP NORTH_STAR § VOICE.</li>
+    <li>"What we will not ship" — already enforced by deterministic gates. The writer doesn't need to re-read the philosophy; the gates fail it if it tries.</li>
+  </ul>
+  <p><strong>Action:</strong> compress NORTH_STAR + LESSON_CONTRACT down to a single "## Writer charter (1 page)" section: the 4 artifact contract + the 4-tab shape + a 5-line voice anchor + a reference to <code>docs/north-star.md</code> + <code>docs/lesson-contract.md</code> for the full versions. Target: NORTH_STAR + LESSON_CONTRACT combined down from 50KB → 5KB. (~45KB saved, but realistic post-compression is ~40KB after we keep the load-bearing constraints inline.)</p>
+  <p><strong>Risk:</strong> medium. The philosophy text isn't waste, but the writer LLM doesn't ground its output in philosophy — it grounds in the plan + manifest + immersion rule + gate constraints. If we cut and the writer regresses on voice, PR-C2 adds back the specific voice anchors that fired.</p>
+  <p><strong>Saves:</strong> ~40KB (conservative; could be ~45KB).</p>
+</div>
+
+<h2>Section-by-section plan</h2>
+
+<p>Every <code>##</code> section in the rendered prompt, with action and justification. Sizes are from the 2026-05-12 my-morning render.</p>
+
+<table>
+<thead>
+<tr><th>Section</th><th>Bytes</th><th>Action</th><th>Justification</th></tr>
+</thead>
+<tbody>
+
+<tr class="compress"><td>## WHO — the learner</td><td>1345</td><td><span class="badge b-compress">COMPRESS</span></td><td>Project-philosophy framing. Already baked into the plan. Compress to 1 sentence inside Writer Charter; full doc lives in <code>docs/north-star.md</code>.</td></tr>
+<tr class="compress"><td>## WHY — what does not exist anywhere else</td><td>1308</td><td><span class="badge b-compress">COMPRESS</span></td><td>Same as above. Project mission, not a write-time constraint.</td></tr>
+<tr class="compress"><td>## HOW — the working principles</td><td>6752</td><td><span class="badge b-compress">COMPRESS</span></td><td>Mostly process principles (review discipline, RAG-first, etc.). The write-time relevant rules (no fabrication, verify everything, ground in corpus) are already restated in §Tier-1 verification discipline. Compress to a 5-bullet anchor; keep canonical at <code>docs/north-star.md</code>.</td></tr>
+<tr class="compress"><td>## VOICE — how the prose sounds</td><td>2398</td><td><span class="badge b-compress">COMPRESS</span></td><td>Voice constraints are restated more specifically in §Tone and immersion (mandatory) — the forbidden phrase list + engagement floor + russianism floor are write-time actionable. Drop the abstract voice framing; keep the concrete forbidden list.</td></tr>
+<tr class="compress"><td>## SHIPPABLE — when a module is done</td><td>1884</td><td><span class="badge b-compress">COMPRESS</span></td><td>The shippable criteria are now the deterministic gates (python_qg) + the LLM dims. The writer doesn't choose what's shippable; the gates do. Drop, keep reference.</td></tr>
+<tr class="compress"><td>## WRONG — what we will not ship</td><td>2949</td><td><span class="badge b-compress">COMPRESS</span></td><td>Same. Wrong-patterns are enforced by gates + the specific anti-pattern lists in §Tier-1 verification. The abstract "we will not ship X" framing is duplicative.</td></tr>
+
+<tr class="compress"><td>## RESOLVED POLICY (panel-confirmed 2026-04-25)</td><td>5654</td><td><span class="badge b-compress">COMPRESS</span></td><td>Architectural panel decisions that landed in the pipeline already. The writer doesn't choose policy. Drop full text; reference <code>docs/lesson-contract.md</code> appendix.</td></tr>
+<tr class="compress"><td>## 1. Source artifacts the writer produces</td><td>1406</td><td><span class="badge b-keep">KEEP (compress to 2 lines)</span></td><td>The writer DOES need to know "produce 4 files." Compress.</td></tr>
+<tr class="compress"><td>## 2. Published MDX shape</td><td>1629</td><td><span class="badge b-keep">KEEP (compress to 3 lines)</span></td><td>The 4-tab shape is write-time critical. Keep as a 3-line summary; defer details to appendix.</td></tr>
+<tr class="move"><td>## 3. Component inventory — 1:1 mapping</td><td>11328</td><td><span class="badge b-move">MOVE TO APPENDIX</span></td><td>See big-win #2. Writer needs AUTHORING fields, not React props. Move to <code>docs/best-practices/v7-design-and-corpus.md</code>; <code>COMPONENT_PROPS_SCHEMA</code> already covers authoring.</td></tr>
+<tr class="compress"><td>## 4. Constraints the writer must obey</td><td>1776</td><td><span class="badge b-keep">KEEP (dedupe)</span></td><td>Constraints overlap with §Tier-1 verification. Audit for unique constraints; dedupe.</td></tr>
+<tr class="compress"><td>## 5. Constraints the pipeline must enforce</td><td>1366</td><td><span class="badge b-remove">REMOVE</span></td><td>Pipeline constraints are pipeline-side; writer doesn't act on them. Drop.</td></tr>
+<tr class="remove"><td>## 6. What this contract DOES NOT specify</td><td>610</td><td><span class="badge b-remove">REMOVE</span></td><td>Negative-specification framing. Not write-time actionable. Drop.</td></tr>
+<tr class="remove"><td>## 7. Resolved policy decisions (panel-confirmed 2026-04-25)</td><td>4376</td><td><span class="badge b-remove">REMOVE</span></td><td>Duplicates RESOLVED POLICY section above. Drop entirely.</td></tr>
+
+<tr class="keep"><td>## Mandatory visible verification block (emit BEFORE drafting)</td><td>3453</td><td><span class="badge b-keep">KEEP</span></td><td>The <code>&lt;plan_reasoning&gt;</code> block contract is the writer's visible reasoning scaffold. Load-bearing. Keep verbatim except for compression of repetitive "HARD REJECT" framing inside <code>&lt;implementation_map&gt;</code>.</td></tr>
+<tr class="keep"><td>## Tier-1 verification discipline (do this WHILE drafting)</td><td>8918</td><td><span class="badge b-keep">KEEP (compress)</span></td><td>The 5 checks (VESUM, modern Ukrainian, source-citation, quote attribution, end-of-output gate) are load-bearing. KEEP each check but compress each from prose-paragraph form to terse "rule + 1 good / 1 bad example." Target: 9KB → 5KB. Drop the historical case studies (Сибір case, m20 #17 case) — the autopsy lives in <code>docs/bug-autopsies/</code>; the writer doesn't need narrative.</td></tr>
+
+<tr class="remove"><td>### Pre-emit obligation-count check (#2094)</td><td>~800</td><td><span class="badge b-keep">KEEP</span></td><td>The <code>&lt;implementation_map_audit&gt;</code> line is the one HARD REJECT pre-emit audit we keep. Load-bearing.</td></tr>
+<tr class="remove"><td>### Pre-emit bad-form audit (#2095)</td><td>~1100</td><td><span class="badge b-remove">REMOVE</span></td><td>Per handoff decision: <code>vesum_verified</code> + <code>russianisms_clean</code> + <code>surzhyk_clean</code> + <code>calques_clean</code> deterministic gates catch this post-emission. The pre-emit audit is redundant insurance that adds 1KB of prompt for nothing.</td></tr>
+<tr class="remove"><td>### Pre-emit activity-split audit (mandatory)</td><td>~1100</td><td><span class="badge b-remove">REMOVE</span></td><td>Per handoff decision + PR #2238 fix: deterministic <code>activity_split</code> gate catches this. Pre-emit audit is redundant.</td></tr>
+
+<tr class="keep"><td>## Output format (strict)</td><td>778</td><td><span class="badge b-keep">KEEP</span></td><td>The 4-backtick wrapper rule is load-bearing for parsing. Keep verbatim.</td></tr>
+<tr class="keep"><td>## LESSON SOURCE — synthesize this wiki content</td><td>474</td><td><span class="badge b-keep">KEEP</span></td><td>1-paragraph framing for the manifest. Load-bearing context.</td></tr>
+<tr class="keep"><td>## Wiki Obligations Manifest</td><td>9969</td><td><span class="badge b-keep">KEEP</span></td><td>Per-module data, load-bearing. Cannot strip — this IS the input.</td></tr>
+
+<tr class="dedupe"><td>## Knowledge Packet (first instance, ~line 1201)</td><td>~13300</td><td><span class="badge b-keep">KEEP</span></td><td>Per-module corpus context, load-bearing. Cannot strip.</td></tr>
+<tr class="dedupe"><td>## Full Wiki Context (source of truth for citations) — SECOND <code>{KNOWLEDGE_PACKET}</code> render</td><td>~13300</td><td><span class="badge b-dedupe">DEDUPE</span></td><td>SEE BIG WIN #1. Pure duplication. Drop the second substitution entirely; replace with a one-line back-reference.</td></tr>
+
+<tr class="keep"><td>## Module Context</td><td>123</td><td><span class="badge b-keep">KEEP</span></td><td>Per-module data. Trivial size, load-bearing.</td></tr>
+<tr class="keep"><td>## Learner State</td><td>(~variable, ~1KB)</td><td><span class="badge b-keep">KEEP</span></td><td>The "Rules of engagement with prior learning" (5 bullets) are load-bearing for cumulative-vocab discipline. The {LEARNER_STATE} substitution itself is per-module data. KEEP both.</td></tr>
+<tr class="keep"><td>## Immersion Rule</td><td>963</td><td><span class="badge b-keep">KEEP</span></td><td>Per-level / per-module substitution. Load-bearing.</td></tr>
+<tr class="keep"><td>## Contract YAML</td><td>3199</td><td><span class="badge b-keep">KEEP</span></td><td>Per-module data. Load-bearing.</td></tr>
+
+<tr class="compress"><td>## Tone and immersion (mandatory)</td><td>1528</td><td><span class="badge b-keep">KEEP (compress)</span></td><td>Forbidden phrase list is critical (callouts, engagement floor). Compress redundancy with NORTH_STAR §VOICE — keep concrete list, drop abstract framing.</td></tr>
+<tr class="compress"><td>## Activity Types and the INLINE / WORKBOOK split (mandatory)</td><td>1023</td><td><span class="badge b-keep">KEEP (compress)</span></td><td>The split-targets table is load-bearing (post-#2238). Compress the prose preamble; keep the table.</td></tr>
+<tr class="keep"><td>## Inline activity cross-references in module.md (mandatory)</td><td>~1500</td><td><span class="badge b-keep">KEEP (compress)</span></td><td>The <code>INJECT_ACTIVITY</code> marker contract is load-bearing for the <code>inject_activity_ids</code> gate. Compress historical autopsy ("DeepSeek-pro build #3"); keep the rule + example.</td></tr>
+<tr class="keep"><td>## Activity Authoring Fields (mandatory)</td><td>2902</td><td><span class="badge b-keep">KEEP (compress)</span></td><td><code>COMPONENT_PROPS_SCHEMA</code> substitution is load-bearing. The FORBIDDEN inner field-name aliases list (~1KB) is also load-bearing — known failure class. Keep both; compress the prose framing.</td></tr>
+
+<tr class="keep"><td>## Plan</td><td>4289</td><td><span class="badge b-keep">KEEP</span></td><td>Per-module data, load-bearing. Cannot strip.</td></tr>
+<tr class="remove"><td>## Full Wiki Context (source of truth for citations) — section heading + duplicate <code>{KNOWLEDGE_PACKET}</code></td><td>—</td><td><span class="badge b-dedupe">REMOVE (see big win #1)</span></td><td>Covered above.</td></tr>
+
+<tr class="compress"><td>## Pre-emit verification (run BEFORE you write any artifact)</td><td>~2000</td><td><span class="badge b-keep">KEEP (compress)</span></td><td>The 7-line MCP-call checklist is load-bearing for the multimedia obligation + textbook grounding. Compress the trailing prose ("Failure to satisfy ANY checklist line..."); keep the 7 lines.</td></tr>
+<tr class="keep"><td>## HARD STOP RULE</td><td>565</td><td><span class="badge b-keep">KEEP</span></td><td>Prevents trailing meta-prose. Load-bearing for parser.</td></tr>
+
+</tbody>
+</table>
+
+<h2>Cuts I'm NOT recommending (despite handoff suggesting some)</h2>
+
+<table>
+<thead><tr><th>Item</th><th>Why I'm keeping it</th></tr></thead>
+<tbody>
+<tr><td>Cut <code>{INLINE_ALLOWED_TYPES}</code> + <code>{WORKBOOK_ALLOWED_TYPES}</code> placeholders (handoff suggests baking in fixed values)</td><td>These vary by level (A1 inline ≠ B2 inline). Baking-in only works if we accept per-level prompt forks — which is MORE complexity. Keep the substitution. The savings (~50 bytes) aren't worth the fork.</td></tr>
+<tr><td>Drop the "Сибір case study" autopsy paragraph in §Tier-1 (~500 bytes)</td><td>Actually DO drop it from the prompt — it's narrative not rule. But keep the rule itself (5 verification checks). The case study moves to <code>docs/bug-autopsies/sibir-fabricated-citations.md</code> and the writer never re-reads it. Net: drop ~500B, no risk.</td></tr>
+<tr><td>Cut the FORBIDDEN inner field-name aliases list (12 aliases × ~30B = ~360B)</td><td>This is a closed-class enumeration of HARD-FAIL aliases from observed writer regressions. Aliases like <code>correct:</code> (vs the required <code>correction:</code>) are exactly the cases that recurred across writer families. Keep the list — it's high-leverage prevention.</td></tr>
+<tr><td>Cut the "L2-trap: over-applied reflexive -ся" enumeration (~400B with 4 examples)</td><td>This is the single most common A1-specific writer failure (per m20 builds). Listed forms (<code>*п'юся, *снідаюся, *читаюся, *писатися</code>) are the empirical failure set. Keep the 4 examples — they're load-bearing instruction for the most common bug class.</td></tr>
+<tr><td>Cut the textbook syllable-break notation rule (~1.5KB)</td><td>It's a topic-conditional rule with a real failure mode (verbatim-copying syllable hyphens like <code>за-пи-са-ний</code> in non-syllable modules). Compress the prose explanation; keep the rule + good/bad example.</td></tr>
+</tbody>
+</table>
+
+<h2>Cumulative reduction math</h2>
+
+<div class="stat">
+  <p><strong>Current rendered:</strong> 194KB (snapshot 2026-05-12 my-morning).</p>
+  <p><strong>Hard saves (zero risk):</strong></p>
+  <ul class="tight">
+    <li>Win #1 — <code>{KNOWLEDGE_PACKET}</code> dedup: <strong>−13.3KB</strong></li>
+    <li>Win #2 — LESSON_CONTRACT §3 to appendix: <strong>−11.3KB</strong></li>
+    <li>Sections §6, §7 (LESSON_CONTRACT trailing redundancy): <strong>−5.0KB</strong></li>
+    <li>3 pre-emit audits → 1 (drop bad_form_audit + activity_split_audit): <strong>−2.2KB</strong></li>
+  </ul>
+  <p><strong>Hard-save subtotal: −31.8KB (16% reduction, zero risk).</strong></p>
+
+  <p><strong>Medium saves (low-medium risk, recoverable via PR-C2):</strong></p>
+  <ul class="tight">
+    <li>NORTH_STAR compression (WHO/WHY/HOW/VOICE/SHIPPABLE/WRONG → 5-bullet anchor): <strong>−14.5KB</strong></li>
+    <li>LESSON_CONTRACT compression (resolved policy + §1/§2/§4 trim): <strong>−10KB</strong></li>
+    <li>§Tier-1 case-study autopsy removal + prose-to-table compression: <strong>−4KB</strong></li>
+    <li>§Tone and immersion + §Inline activity cross-references compression: <strong>−1.5KB</strong></li>
+    <li>§Pre-emit verification prose trim: <strong>−1KB</strong></li>
+  </ul>
+  <p><strong>Medium-save subtotal: −31KB.</strong></p>
+
+  <p><strong>Per-module data (KEEP as-is):</strong></p>
+  <ul class="tight">
+    <li>WIKI_MANIFEST (~10KB), KNOWLEDGE_PACKET (~13.3KB), Module Context + Learner State + Immersion Rule + Contract YAML + Plan + per-module corpus excerpts (~25KB combined). These cannot shrink without changing the corpus model.</li>
+  </ul>
+
+  <p><strong>Projected post-strip total: 194KB − 31.8KB − 31KB = 131KB.</strong></p>
+  <p><strong>That MISSES the 40KB target by 91KB. Either:</strong></p>
+  <ol>
+    <li>The 40KB target is unachievable without restructuring the per-module data substitutions (KNOWLEDGE_PACKET, WIKI_MANIFEST), OR</li>
+    <li>The 40KB target was set against the raw template (66KB) not the rendered prompt — in which case the realistic rendered target is ~80-100KB, and 40KB is the post-substitution-also-stripped goal we walk down to over PR-C / C2 / C3.</li>
+  </ol>
+  <p>I recommend the orchestrator treat 40KB as a <strong>raw-template</strong> target (achievable: 66KB → 30KB on the raw template via the cuts above) and a <strong>~80KB rendered</strong> target post-strip. The per-module data legitimately costs 25-30KB and isn't fat.</p>
+</div>
+
+<h2>Risks per cut</h2>
+
+<div class="risk">
+  <h3>Risk: NORTH_STAR / LESSON_CONTRACT compression breaks voice or shape</h3>
+  <p><strong>Mitigation:</strong> Validation build IS the falsifier. If a1/my-morning regresses on voice (e.g. meta-narration creeps back, immersion drops), PR-C2 restores the specific anchors that fired. The compressed Writer Charter section will include the 5 anchors most likely to fire (no English meta-narration, no warm-up, immersion-ratio binding, voice as content not container, no "let us X").</p>
+</div>
+
+<div class="risk">
+  <h3>Risk: dropping pre-emit bad_form_audit + activity_split_audit causes writer to skip self-check, ship more failures</h3>
+  <p><strong>Honest reality:</strong> the deterministic gates (vesum_verified, russianisms_clean, activity_split per #2238) FAIL the build on the same failures the audit was supposed to prevent. The audit was insurance against the gate; redundant. The cost of dropping it is one extra correction round on the build (not a worse module). Net: build is slower in failure cases, no quality regression in success cases.</p>
+</div>
+
+<div class="risk">
+  <h3>Risk: LESSON_CONTRACT §3 component-inventory move to appendix means writer doesn't see component shapes</h3>
+  <p><strong>Mitigation:</strong> COMPONENT_PROPS_SCHEMA substitution already covers the authoring fields the writer acts on. The React-component prop names in §3 are downstream MDX-render concerns the writer never touches. <strong>The original docstring on <code>_render_component_props_schema</code> literally says Gemini failed because it saw React props.</strong> Removing them is the correction, not a regression risk.</p>
+</div>
+
+<div class="risk">
+  <h3>Risk: the 40KB target is unreachable per the math above</h3>
+  <p><strong>Mitigation:</strong> reframe the target as raw-template 40KB (66KB → 40KB on <code>scripts/build/phases/linear-write.md</code>) + rendered ~80KB. The 40KB-rendered ambition would require shrinking the per-module data (KNOWLEDGE_PACKET / WIKI_MANIFEST), which is a separate engineering project (PR-D candidate: knowledge-packet diet). Don't try to hit 40KB rendered in PR-C.</p>
+</div>
+
+<h2>Per-rule firing telemetry (added scope inside PR-C)</h2>
+
+<p>Per the strategic discussion: each rule statement gets a stable tag (e.g. <code>#R-VESUM-ALL-WORDS</code>, <code>#R-BAD-FORM-MARKER</code>, <code>#R-NO-META-NARRATION</code>) and the pipeline emits a <code>writer_rule_fired</code> JSONL event when a gate detects the rule was violated. After 20-30 builds we'll have empirical data showing which rules actually fire vs which are dead weight. PR-C2 (if needed) or future strip cycles use this data instead of gut.</p>
+
+<h2>Cut list ranked by leverage (top 10)</h2>
+
+<table>
+<thead><tr><th>#</th><th>Cut</th><th>Bytes saved</th><th>Risk</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Drop second <code>{KNOWLEDGE_PACKET}</code> substitution</td><td>13300</td><td>zero</td></tr>
+<tr><td>2</td><td>Move LESSON_CONTRACT §3 to appendix doc</td><td>11328</td><td>low (mitigation is COMPONENT_PROPS_SCHEMA)</td></tr>
+<tr><td>3</td><td>Drop LESSON_CONTRACT §7 (duplicates §RESOLVED POLICY)</td><td>4376</td><td>zero</td></tr>
+<tr><td>4</td><td>Compress NORTH_STAR § HOW prose → 5-bullet anchor</td><td>~5000</td><td>medium</td></tr>
+<tr><td>5</td><td>Drop §5 + §6 (pipeline-side + negative-spec sections)</td><td>1976</td><td>zero</td></tr>
+<tr><td>6</td><td>Compress §RESOLVED POLICY to 1-line anchor + appendix ref</td><td>~5000</td><td>medium</td></tr>
+<tr><td>7</td><td>Drop pre-emit bad_form_audit + activity_split_audit</td><td>2200</td><td>low</td></tr>
+<tr><td>8</td><td>Drop §Tier-1 case-study autopsies (Сибір, m20 #17)</td><td>~1500</td><td>zero</td></tr>
+<tr><td>9</td><td>Compress NORTH_STAR §WHO/§WHY/§VOICE/§SHIPPABLE/§WRONG → Writer Charter section</td><td>~9000</td><td>medium</td></tr>
+<tr><td>10</td><td>Compress §Tone and immersion prose framing (keep forbidden list)</td><td>~600</td><td>zero</td></tr>
+</tbody>
+</table>
+
+<h2>Open questions for review on return</h2>
+
+<ol>
+  <li><strong>Is the 40KB-rendered target firm or is 80KB-rendered acceptable post-strip?</strong> The math doesn't reach 40KB without shrinking per-module data substitutions, which is a separate project. My read: 40KB on the raw template is achievable; 80KB rendered is the realistic post-strip number.</li>
+  <li><strong>Should NORTH_STAR compression happen in PR-C or stay separate (PR-C0)?</strong> Bundling means one PR; separating means we can revert one cut without losing the others.</li>
+  <li><strong>Per-rule firing telemetry — implement in PR-C or defer to PR-C2?</strong> My recommendation: implement in PR-C so the validation build emits the data we need for future cycles.</li>
+  <li><strong>Move-to-appendix targets — single file (<code>docs/best-practices/writer-prompt-appendix.md</code>) or split (<code>activity-component-props.md</code> + <code>writer-charter-full.md</code>)?</strong> My recommendation: single appendix file for ease of fetching; section anchors inside.</li>
+</ol>
+
+<h2>Next-step plan if you accept the plan as-is</h2>
+
+<ol>
+  <li>Dispatch PR-A + PR-A2 (LLM dim demote + --resume default) immediately. Independent of PR-C.</li>
+  <li>While PR-A is in dispatch: dispatch PR-B (band widening). Also independent.</li>
+  <li>Once user returns + approves the strip plan: dispatch PR-C with the cut list above as the brief. Use codex (judgment-heavy cuts) or claude-tools if quota allows; not gemini (mechanical cuts the model judgment is the work).</li>
+  <li>Validation build after A+B+C land on main.</li>
+  <li>Manual review (you + me) of llm_qg.json + visual MDX, then promote.</li>
+</ol>
+
+<p class="meta">Report saved to <code>audit/2026-05-23-writer-prompt-strip-plan/REPORT.html</code>. Source data: <code>scripts/build/phases/linear-write.md</code> + <code>curriculum/l2-uk-en/a1/my-morning/writer_prompt.md</code>. Author: orchestrator / Claude Opus 4.7.</p>
+
+</body>
+</html>
