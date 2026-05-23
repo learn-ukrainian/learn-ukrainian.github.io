@@ -55,6 +55,29 @@ QG_DIMS: tuple[str, ...] = (
 )
 """The 5 LLM QG dimensions per North Star §7."""
 
+LLM_QG_TERMINAL_DIMS: frozenset[str] = frozenset({"decolonization"})
+"""LLM QG dims whose REJECT verdict terminates the build.
+
+Per architectural reset 2026-05-23
+(docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md
+decision #2): subjective dims (pedagogical, naturalness, engagement, tone)
+were stochastic and produced zero shipped modules across 6 builds
+2026-05-22 to 2026-05-23. They're demoted to warning. Decolonization stays
+terminal because political safety is not subjective: Russian framing leaking
+in is a hard rule, not a judgment call.
+
+Adding a dim here means: a REJECT in that dim raises LinearPipelineError and
+kills the build. Removing a dim means: a REJECT in that dim emits
+llm_qg_warning telemetry but the build continues.
+
+When per-dim LLM/human agreement empirics support re-promotion (about 20+
+shipped modules with captured human decisions; see PR-G placeholder), dims can
+be re-added to this set with the agreement-rate justification logged.
+"""
+
+LLM_QG_WARNING_DIMS: frozenset[str] = frozenset(QG_DIMS) - LLM_QG_TERMINAL_DIMS
+"""Derived: LLM QG dims whose REJECT verdict is logged but does not terminate."""
+
 STYLE_REVIEW_TARGET: float = 9.0
 """Style-reviewer verdict target. Stricter than the general reviewer
 because pragmatic authenticity / stylistic consistency / culture-register /
@@ -128,8 +151,16 @@ class ReviewVerdict:
     """Aggregate LLM QG verdict and the dimensions that drove it."""
 
     verdict: Literal["PASS", "REVISE", "REJECT"]
+    """Full aggregate verdict across all dims. Used for telemetry and review."""
+
+    terminal_verdict: Literal["PASS", "REVISE", "REJECT"]
+    """Verdict computed from LLM_QG_TERMINAL_DIMS only. This gates the build."""
+
     failing_dims: tuple[str, ...]
     rejected_dims: tuple[str, ...]
+    warning_dims: tuple[str, ...]
+    """Subset of failing_dims in LLM_QG_WARNING_DIMS, logged but not terminal."""
+
     min_score: float
     min_dim: str
 
@@ -257,11 +288,7 @@ def aggregate_review(
     scores: Mapping[str, float],
     level_code: str | None,
 ) -> ReviewVerdict:
-    """MIN aggregator for Phase 4 LLM QG.
-
-    PASS iff every scored QG dim is at or above its per-level pass floor.
-    REJECT if any scored QG dim is below its reject floor. Otherwise REVISE.
-    """
+    """MIN aggregator for Phase 4 LLM QG, terminal/warning split."""
     floors = get_level_thresholds(level_code).review_floors
     scored_qg = {dim: score for dim, score in scores.items() if dim in floors}
     if not scored_qg:
@@ -277,9 +304,11 @@ def aggregate_review(
         for dim, score in scored_qg.items()
         if score < floors[dim].reject_floor
     )
+    warnings = tuple(dim for dim in failing if dim in LLM_QG_WARNING_DIMS)
     min_dim = min(scored_qg, key=scored_qg.__getitem__)
     min_score = scored_qg[min_dim]
 
+    # Full verdict: used for telemetry and human review.
     if rejected:
         verdict: Literal["PASS", "REVISE", "REJECT"] = "REJECT"
     elif failing:
@@ -287,10 +316,22 @@ def aggregate_review(
     else:
         verdict = "PASS"
 
+    # Terminal verdict: used for build gating. Only terminal dims count.
+    terminal_rejected = tuple(dim for dim in rejected if dim in LLM_QG_TERMINAL_DIMS)
+    terminal_failing = tuple(dim for dim in failing if dim in LLM_QG_TERMINAL_DIMS)
+    if terminal_rejected:
+        terminal_verdict: Literal["PASS", "REVISE", "REJECT"] = "REJECT"
+    elif terminal_failing:
+        terminal_verdict = "REVISE"
+    else:
+        terminal_verdict = "PASS"
+
     return ReviewVerdict(
         verdict=verdict,
+        terminal_verdict=terminal_verdict,
         failing_dims=failing,
         rejected_dims=rejected,
+        warning_dims=warnings,
         min_score=min_score,
         min_dim=min_dim,
     )

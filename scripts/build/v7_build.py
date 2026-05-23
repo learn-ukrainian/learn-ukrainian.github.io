@@ -26,7 +26,7 @@ from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
 )
-from scripts.common.thresholds import QG_DIMS
+from scripts.common.thresholds import LLM_QG_TERMINAL_DIMS, QG_DIMS
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 FETCH_TIMEOUT_S = 30
@@ -767,7 +767,7 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Build one V7 curriculum module through scripts.build.linear_pipeline.\n"
             "Use for single-module V7 reboot builds; do not use for V6 legacy "
-            "batch, resume, rewrite, or regeneration workflows."
+            "batch, rewrite, or regeneration workflows."
         ),
         epilog=(
             "Examples:\n"
@@ -893,17 +893,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
-        "--resume",
-        metavar="MODULE_DIR",
-        default=None,
+        "--no-resume",
+        action="store_true",
         help=(
-            "Resume a previous v7_build run from MODULE_DIR (e.g. "
-            ".worktrees/builds/a1-my-morning-20260521-202848/curriculum/"
-            "l2-uk-en/a1/my-morning). Phases whose artifacts already exist "
-            "AND report PASS are skipped; the first failed or missing phase "
-            "AND everything downstream re-runs. MDX assembly always re-runs. "
-            "Mutually exclusive with --worktree (resume operates on the "
-            "existing module_dir directly, without creating a new worktree)."
+            "Force a full rebuild from scratch. Default behavior resumes from "
+            "the last failed phase using artifact existence checks."
         ),
     )
     return parser.parse_args(argv)
@@ -912,14 +906,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     args = parse_args(raw_argv)
-    if args.resume is not None and args.worktree is not None:
-        print(
-            "v7_build: --resume and --worktree are mutually exclusive — "
-            "resume targets an existing module_dir.",
-            file=sys.stderr,
-            flush=True,
-        )
-        return 2
     if args.worktree is not None:
         return _run_in_worktree(args, raw_argv)
     telemetry_out = _resolve_project_path(args.telemetry_out)
@@ -950,8 +936,9 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
 
     The on-disk shapes mirror the success conditions enforced in `_run` itself
     (see the post-phase guards: `gates.passed`, `wiki_coverage_gate.passed`,
-    `wiki_coverage_review.overall_verdict == "PASS"`, `aggregate.verdict ==
-    "PASS"`). Any deviation means the phase needs to re-run.
+    `wiki_coverage_review.overall_verdict == "PASS"`, and
+    `aggregate.terminal_verdict == "PASS"`). Any deviation means the phase
+    needs to re-run.
     """
     if phase == "knowledge_packet":
         return (module_dir / "knowledge_packet.md").exists() and (
@@ -987,10 +974,10 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
         if not isinstance(data, Mapping):
             return False
         aggregate = data.get("aggregate")
-        return (
-            isinstance(aggregate, Mapping)
-            and str(aggregate.get("verdict", "")).upper() == "PASS"
-        )
+        if not isinstance(aggregate, Mapping):
+            return False
+        terminal_verdict = aggregate.get("terminal_verdict", aggregate.get("verdict", ""))
+        return str(terminal_verdict).upper() == "PASS"
     return False
 
 
@@ -1006,21 +993,12 @@ def _run(args: argparse.Namespace) -> int:
     plan_path: Path | None = None
     module_dir: Path | None = None
 
-    # Resume-mode setup: when --resume MODULE_DIR is set, use that directory
-    # directly and downstream phase blocks check on-disk artifact validity to
-    # decide whether to skip. Once one phase re-runs (`force_rerun` flips
-    # True), every downstream phase re-runs unconditionally.
-    resume_path = getattr(args, "resume", None)
-    if resume_path is not None:
-        resume_module_dir = Path(resume_path).expanduser().resolve()
-        if not resume_module_dir.exists():
-            print(
-                f"v7_build: --resume MODULE_DIR does not exist: {resume_module_dir}",
-                file=sys.stderr,
-                flush=True,
-            )
-            return 2
-        args.out = str(resume_module_dir)
+    # Resume is the default. Pass --no-resume for a forced full restart.
+    # Per architectural reset 2026-05-23
+    # (docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md
+    # decision #8), each of 6 failed builds 2026-05-22 to 2026-05-23 burned
+    # 5-20 minutes replaying writer when only a later phase had failed.
+    resume_enabled = not getattr(args, "no_resume", False)
     force_rerun = False
 
     tracker.emit("module_start", level=level, slug=slug)
@@ -1045,13 +1023,10 @@ def _run(args: argparse.Namespace) -> int:
         phase = "knowledge_packet"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        resume_module_dir = (
-            Path(args.out).expanduser().resolve() if resume_path is not None else None
-        )
+        resume_module_dir = _resolve_output_dir(args.out, level, slug)
         if (
-            resume_path is not None
+            resume_enabled
             and not force_rerun
-            and resume_module_dir is not None
             and _phase_artifact_passes(resume_module_dir, "knowledge_packet")
         ):
             knowledge_packet = (resume_module_dir / "knowledge_packet.md").read_text(
@@ -1063,7 +1038,7 @@ def _run(args: argparse.Namespace) -> int:
             wiki_manifest_data = json.loads(wiki_manifest)
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
-            if resume_path is not None:
+            if resume_enabled:
                 force_rerun = True
             knowledge_packet = linear_pipeline.build_knowledge_packet(
                 level=level,
@@ -1116,7 +1091,7 @@ def _run(args: argparse.Namespace) -> int:
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
         if (
-            resume_path is not None
+            resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "writer")
         ):
@@ -1125,7 +1100,7 @@ def _run(args: argparse.Namespace) -> int:
             )
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
-            if resume_path is not None:
+            if resume_enabled:
                 force_rerun = True
             impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
             impl_map_path = module_dir / "implementation_map.json"
@@ -1193,14 +1168,14 @@ def _run(args: argparse.Namespace) -> int:
         _phase_started(archive, phase)
         started_at = time.monotonic()
         if (
-            resume_path is not None
+            resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "python_qg")
         ):
             python_qg = _read_json(module_dir / "python_qg.json")
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
-            if resume_path is not None:
+            if resume_enabled:
                 force_rerun = True
             python_qg = linear_pipeline.run_python_qg_with_corrections(
                 module_dir,
@@ -1227,14 +1202,14 @@ def _run(args: argparse.Namespace) -> int:
         _phase_started(archive, phase)
         started_at = time.monotonic()
         if (
-            resume_path is not None
+            resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "wiki_coverage_gate")
         ):
             wiki_coverage_gate = _read_json(module_dir / "wiki_coverage_gate.json")
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
-            if resume_path is not None:
+            if resume_enabled:
                 force_rerun = True
             wiki_coverage_gate = linear_pipeline.run_wiki_coverage_with_corrections(
                 plan=plan,
@@ -1266,14 +1241,14 @@ def _run(args: argparse.Namespace) -> int:
         timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
         if (
-            resume_path is not None
+            resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "wiki_coverage_review")
         ):
             wiki_coverage_review = _read_json(module_dir / "wiki_coverage_review.json")
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
-            if resume_path is not None:
+            if resume_enabled:
                 force_rerun = True
             wiki_coverage_review = _run_wiki_coverage_review(
                 plan=plan,
@@ -1325,14 +1300,14 @@ def _run(args: argparse.Namespace) -> int:
         timeout_agent = _reviewer_for_writer(writer)
         started_at = time.monotonic()
         if (
-            resume_path is not None
+            resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "llm_qg")
         ):
             llm_qg = _read_json(module_dir / "llm_qg.json")
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
-            if resume_path is not None:
+            if resume_enabled:
                 force_rerun = True
             llm_qg = _run_llm_qg(
                 plan=plan,
@@ -1359,9 +1334,36 @@ def _run(args: argparse.Namespace) -> int:
             archive=archive,
             artifact_dir=module_dir,
         )
-        if aggregate["verdict"] != "PASS":
+        terminal_verdict = aggregate.get("terminal_verdict", aggregate["verdict"])
+
+        # Emit warning telemetry when warning dims drove the non-PASS aggregate.
+        # Build continues regardless of warning-dim verdict; reviewer output stays
+        # in llm_qg.json for human review. Per architectural reset 2026-05-23
+        # (docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md).
+        warning_dims = aggregate.get("warning_dims") or ()
+        if aggregate["verdict"] != "PASS" and warning_dims:
+            tracker.emit(
+                "llm_qg_warning",
+                level=level,
+                slug=slug,
+                aggregate_verdict=aggregate["verdict"],
+                terminal_verdict=terminal_verdict,
+                warning_dims=list(warning_dims),
+                rejected_dims=list(aggregate.get("rejected_dims") or ()),
+                min_dim=aggregate.get("min_dim"),
+                min_score=aggregate.get("min_score"),
+            )
+
+        # Only terminal-dim verdicts kill the build.
+        if terminal_verdict != "PASS":
+            failing_terminal_dims = [
+                dim
+                for dim in aggregate.get("failing_dims", ())
+                if dim in LLM_QG_TERMINAL_DIMS
+            ]
             raise linear_pipeline.LinearPipelineError(
-                f"LLM QG verdict was {aggregate['verdict']}"
+                f"LLM QG terminal verdict was {terminal_verdict} "
+                f"(failing terminal dims: {failing_terminal_dims})"
             )
 
         phase = "mdx"
