@@ -117,14 +117,15 @@ class CursorAdapter:
             sandbox = config.get("sandbox", "enabled")
             cmd.extend(["--sandbox", sandbox])
         elif mode == "danger":
-            # Same as writer path but NO --mode plan (file edits allowed)
-            # Use sparingly — most delegate calls should use workspace-write.
-            cursor_mode = config.get("cursor_mode", "ask")  # "ask" allows edits in non-plan mode?
-            # Actually spec §1 says: "Danger mode: same as writer path but NO --mode plan (file edits allowed)"
-            # For cursor-agent, --mode ask is the default for "ask" where it can edit if allowed?
-            # Wait, let me check spec §1 again.
-            # "Danger mode: same as writer path but NO --mode plan (file edits allowed)"
-            cmd.extend(["--mode", cursor_mode])
+            # Danger mode: no --mode flag (cursor-agent default allows edits;
+            # --mode plan blocks edits, --mode ask is read-only Q&A — neither
+            # matches "danger" intent). Sandbox + approve-mcps kept on for
+            # MCP discipline + shell-side guard; --yolo deliberately omitted
+            # so shell tools still need explicit approval (matches the
+            # "no --yolo in any path" Phase 2 spec §2 boundary).
+            #
+            # Use sparingly — most delegate calls should use workspace-write
+            # (which blocks edits via --mode plan).
             if config.get("approve_mcps") is not False:
                 cmd.append("--approve-mcps")
             sandbox = config.get("sandbox", "enabled")
