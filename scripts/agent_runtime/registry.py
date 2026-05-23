@@ -137,6 +137,18 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "cursor": {
+        "adapter": "scripts.agent_runtime.adapters.cursor:CursorAdapter",
+        "default_model": "composer-2.5",
+        "cost_tier": "low",
+        "capabilities": frozenset({
+            "content_writing",
+            "content_review",
+            "adversarial_review",
+        }),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
     "agy": {
         # Antigravity CLI shipping Gemini Flash 3.5 on a separate meter from
         # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff

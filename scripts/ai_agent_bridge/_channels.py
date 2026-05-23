@@ -77,6 +77,7 @@ VALID_AGENTS = (
     "grok",
     "deepseek",
     "qwen",
+    "cursor",
     "claude-desktop",
     "codex-desktop",
 )

@@ -176,7 +176,17 @@ def test_registry_has_known_agents():
         "deepseek",
         "qwen",
         "agy",
+        "cursor",
     }
+
+
+def test_cursor_entry_is_well_formed():
+    entry = get_agent_entry("cursor")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.cursor:CursorAdapter"
+    assert entry["default_model"] == "composer-2.5"
+    assert entry["cli_available"] is True
+    assert entry["resume_policy"] == "never"
+    assert {"content_writing", "content_review", "adversarial_review"} <= entry["capabilities"]
 
 
 def test_agy_entry_is_well_formed():
@@ -222,6 +232,13 @@ def test_load_adapter_codex():
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
+def test_load_adapter_cursor():
+    adapter = _load_adapter("cursor")
+    assert adapter.name == "cursor"
+    assert adapter.default_model == "composer-2.5"
+    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
+
+
 def test_load_adapter_unknown_raises():
     with pytest.raises(AgentUnavailableError, match="not in the registry"):
         _load_adapter("nonexistent")
@@ -234,6 +251,7 @@ def test_load_adapter_unknown_raises():
         ("claude-tools", "claude"),
         ("gemini-tools", "gemini"),
         ("grok-tools", "grok"),
+        ("cursor-tools", "cursor"),
     ],
 )
 def test_validate_agent_name_rejects_tools_suffix(agent_name, bare_name):
