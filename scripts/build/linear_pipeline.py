@@ -357,6 +357,13 @@ TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
 TELEMETRY_MAX_THEATRE_VIOLATIONS = 25
 TEXTBOOK_GROUNDING_MIN_WORDS = 30
+
+RULE_VOICE_META = "#R-VOICE-META"
+RULE_BAD_FORM_MARKER = "#R-BAD-FORM-MARKER"
+RULE_VESUM_ALL_WORDS = "#R-VESUM-ALL-WORDS"
+RULE_IMPL_MAP_COMPLETE = "#R-IMPL-MAP-COMPLETE"
+RULE_TEXTBOOK_30W = "#R-TEXTBOOK-30W"
+RULE_CITE_HONEST = "#R-CITE-HONEST"
 CORRECTION_PREVIEW_CHARS = 200
 WIKI_COVERAGE_BATCH_MAX_ITERATIONS = 2
 WIKI_COVERAGE_NARROW_MAX_ITERATIONS = 2
@@ -935,6 +942,97 @@ def build_wiki_manifest_data(
     return merged or {}
 
 
+PHONETIC_FORMAT_REFERENCE = (
+    "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
+    "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",
+    "Copy >=1 textbook example verbatim when the wiki provides one",
+)
+
+
+def _first_sentence(value: Any, *, max_chars: int = 260) -> str:
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    if not text:
+        return ""
+    match = re.search(r"(?<=[.!?])\s+", text)
+    if match:
+        text = text[: match.start()].strip()
+    if len(text) <= max_chars:
+        return text
+    return text[: max_chars - 1].rstrip() + "…"
+
+
+def _compact_wiki_manifest_for_prompt(manifest: Mapping[str, Any]) -> dict[str, Any]:
+    """Render only write-time obligation IDs and summaries for the prompt."""
+    sequence_steps = [
+        {
+            "id": str(item.get("id") or ""),
+            "obligation_id": str(item.get("id") or ""),
+            "category": "sequence_steps",
+            "summary": _first_sentence(item.get("required_claim") or item.get("heading")),
+        }
+        for item in manifest.get("sequence_steps", [])
+        if isinstance(item, Mapping)
+    ]
+    l2_errors = [
+        {
+            "id": str(item.get("id") or ""),
+            "obligation_id": str(item.get("id") or ""),
+            "category": "l2_errors",
+            "summary": _first_sentence(
+                f"Use {item.get('correct')} instead of {item.get('incorrect')}: {item.get('why')}",
+                max_chars=340,
+            ),
+        }
+        for item in manifest.get("l2_errors", [])
+        if isinstance(item, Mapping)
+    ]
+    phonetic_rules = [
+        {
+            "id": str(item.get("id") or ""),
+            "obligation_id": str(item.get("id") or ""),
+            "category": "phonetic_rules",
+            "written": str(item.get("written") or ""),
+            "spoken": str(item.get("spoken") or ""),
+        }
+        for item in manifest.get("phonetic_rules", [])
+        if isinstance(item, Mapping)
+    ]
+    decolonization_bans = [
+        {
+            "id": str(item.get("id") or ""),
+            "obligation_id": str(item.get("id") or ""),
+            "category": "decolonization_bans",
+            "summary": _first_sentence(item.get("rule"), max_chars=320),
+        }
+        for item in manifest.get("decolonization_bans", [])
+        if isinstance(item, Mapping)
+    ]
+    return {
+        "slug": manifest.get("slug"),
+        "wiki_path": manifest.get("wiki_path"),
+        "phonetic_format_reference": list(PHONETIC_FORMAT_REFERENCE),
+        "sequence_steps": sequence_steps,
+        "l2_errors": l2_errors,
+        "phonetic_rules": phonetic_rules,
+        "decolonization_bans": decolonization_bans,
+        "external_resources": manifest.get("external_resources", []),
+    }
+
+
+def _render_prompt_wiki_manifest(wiki_manifest: str | Mapping[str, Any]) -> str:
+    if isinstance(wiki_manifest, Mapping):
+        manifest = wiki_manifest
+    else:
+        try:
+            manifest = json.loads(wiki_manifest)
+        except json.JSONDecodeError:
+            return wiki_manifest
+        if not isinstance(manifest, Mapping):
+            return wiki_manifest
+    compact = _compact_wiki_manifest_for_prompt(manifest)
+    return json.dumps(compact, ensure_ascii=False, indent=2)
+
+
 def build_wiki_manifest(
     plan_path: Path | None = None,
     *,
@@ -944,7 +1042,7 @@ def build_wiki_manifest(
 ) -> str:
     """Return compact JSON for the writer/reviewer manifest slot."""
     manifest = build_wiki_manifest_data(plan_path, level=level, slug=slug, plan=plan)
-    return json.dumps(manifest, ensure_ascii=False, indent=2)
+    return _render_prompt_wiki_manifest(manifest)
 
 
 def _extract_dictionary_lemmas(plan: Mapping[str, Any]) -> list[str]:
@@ -1695,6 +1793,90 @@ def telemetry_event_sink(path: Path | None):
 def _emit(event_sink: Callable[..., None] | None, event: str, **fields: Any) -> None:
     sink = event_sink or emit_event
     sink(event, **fields)
+
+
+def _emit_writer_rule_fired(
+    event_sink: Callable[..., None] | None,
+    *,
+    rule_id: str,
+    gate: str,
+    evidence: str,
+    level: str | None = None,
+    slug: str | None = None,
+    **fields: Any,
+) -> None:
+    payload = {
+        "rule_id": rule_id,
+        "gate": gate,
+        "evidence": _clean_telemetry_text(evidence, 240),
+        **fields,
+    }
+    if level:
+        payload["level"] = level
+    if slug:
+        payload["slug"] = slug
+    _emit(event_sink, "writer_rule_fired", **payload)
+
+
+def _writer_rule_ids_for_gate_failure(
+    gate: str,
+    report: Mapping[str, Any],
+) -> list[str]:
+    if gate == "engagement_floor":
+        return [RULE_VOICE_META] if report.get("meta_narration_hits") else []
+    if gate == "vesum_verified":
+        return [RULE_VESUM_ALL_WORDS, RULE_BAD_FORM_MARKER]
+    if gate in {"russianisms_strict", "russianisms_clean", "surzhyk_clean", "calques_clean", "paronym_clean"}:
+        return [RULE_BAD_FORM_MARKER]
+    if gate == "citations_resolve":
+        return [RULE_CITE_HONEST]
+    if gate == "textbook_grounding":
+        return [RULE_TEXTBOOK_30W]
+    return []
+
+
+def _writer_rule_evidence_for_gate(
+    gate: str,
+    report: Mapping[str, Any],
+) -> str:
+    if gate == "engagement_floor":
+        hits = report.get("meta_narration_hits")
+        if isinstance(hits, list):
+            return ", ".join(str(hit) for hit in hits[:3])
+    if gate == "vesum_verified":
+        missing = report.get("missing")
+        if isinstance(missing, list):
+            return "missing=" + ", ".join(str(item) for item in missing[:5])
+        if report.get("error"):
+            return str(report["error"])
+    if gate == "russianisms_strict":
+        findings = report.get("critical_findings")
+        if isinstance(findings, list) and findings:
+            first = findings[0]
+            if isinstance(first, Mapping):
+                return str(
+                    first.get("text")
+                    or first.get("match")
+                    or first.get("pattern")
+                    or first.get("note")
+                    or first
+                )
+    if gate in {"russianisms_clean", "surzhyk_clean", "calques_clean", "paronym_clean"}:
+        detections = report.get("detections")
+        if isinstance(detections, list) and detections:
+            first = detections[0]
+            if isinstance(first, Mapping):
+                return str(first.get("text") or first.get("pattern") or first)
+    if gate == "citations_resolve":
+        unknown = report.get("unknown")
+        if isinstance(unknown, list):
+            return "unknown=" + ", ".join(str(item) for item in unknown[:5])
+    if gate == "textbook_grounding":
+        return (
+            f"long_blockquotes_checked={report.get('long_blockquotes_checked')}; "
+            f"min_words={report.get('min_words')}; missing={report.get('missing')}"
+        )
+    return str(report)
 
 
 def _correction_preview(text: Any, limit: int = CORRECTION_PREVIEW_CHARS) -> str:
@@ -2552,6 +2734,14 @@ def emit_writer_response_telemetry(
             cited_count=len(_cited_plan_reasoning_tools(output)),
             called_count=len(called_tools),
         )
+        _emit_writer_rule_fired(
+            event_sink,
+            rule_id=RULE_CITE_HONEST,
+            gate="tool_theatre",
+            evidence=", ".join(capped_theatre_violations),
+            writer=writer,
+            module=module,
+        )
     _emit(event_sink, "phase_writer_summary", writer=writer, module=module, **summary)
     return summary
 
@@ -2678,9 +2868,9 @@ def writer_context(
     if wiki_manifest is None:
         wiki_manifest_text = build_wiki_manifest(level=level.lower(), slug=str(plan["slug"]), plan=plan)
     elif isinstance(wiki_manifest, str):
-        wiki_manifest_text = wiki_manifest
+        wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
     else:
-        wiki_manifest_text = json.dumps(wiki_manifest, ensure_ascii=False, indent=2)
+        wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
     if implementation_map is None:
         impl_map_contract = "(no implementation_map provided to render_writer_prompt — gate will fail)"
     else:
@@ -4228,6 +4418,7 @@ def run_python_qg_with_corrections(
     dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None = None,
     writer: str = "claude-tools",
     invoker: Callable[..., Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     """Run Python QG and apply one ADR-008 correction attempt per failed gate.
 
@@ -4248,6 +4439,7 @@ def run_python_qg_with_corrections(
             plan_path,
             verify_words_fn=verify_words_fn,
             ignored_vesum_missing_surfaces=vesum_missing_exclusions,
+            event_sink=event_sink,
         )
 
     report = _run_qg()
@@ -4362,6 +4554,13 @@ def run_wiki_coverage_with_corrections(
         )
 
     result = _run_gate()
+    _emit_wiki_coverage_rule_events(
+        result,
+        manifest=manifest,
+        module_dir=module_dir,
+        level=level,
+        event_sink=event_sink,
+    )
     if result.get("passed") is True:
         return result
 
@@ -4666,6 +4865,48 @@ def _wiki_coverage_coverage_pct(result: Mapping[str, Any]) -> float:
         return float(result.get("coverage_pct", 0.0))
     except (TypeError, ValueError):
         return 0.0
+
+
+def _emit_wiki_coverage_rule_events(
+    result: Mapping[str, Any],
+    *,
+    manifest: Mapping[str, Any] | str | Path,
+    module_dir: Path,
+    level: str | None,
+    event_sink: Callable[..., None] | None,
+) -> None:
+    proposals = _wiki_coverage_fix_proposals(result)
+    missing_impl_ids = [
+        str(proposal.get("obligation_id") or "")
+        for proposal in proposals
+        if str(
+            proposal.get("failure_reason")
+            or proposal.get("reason")
+            or proposal.get("status")
+            or ""
+        )
+        == "implementation_map_missing"
+    ]
+    if not missing_impl_ids:
+        obligations = result.get("obligations") or []
+        if isinstance(obligations, Sequence) and not isinstance(obligations, (str, bytes)):
+            missing_impl_ids = [
+                str(item.get("obligation_id") or item.get("id") or "")
+                for item in obligations
+                if isinstance(item, Mapping)
+                and str(item.get("reason") or "") == "implementation_map_missing"
+            ]
+    if not missing_impl_ids:
+        return
+    _emit_writer_rule_fired(
+        event_sink,
+        rule_id=RULE_IMPL_MAP_COMPLETE,
+        level=(str(level).lower() if level else None),
+        slug=_wiki_manifest_slug(manifest, module_dir),
+        gate="implementation_map_missing",
+        evidence="missing_obligation_ids="
+        + ", ".join(sorted(set(missing_impl_ids))[:10]),
+    )
 
 
 def _wiki_coverage_grouped_fix_proposals(
@@ -5623,6 +5864,7 @@ def run_python_qg(
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
     gate_observer: Callable[[str], None] | None = None,
     ignored_vesum_missing_surfaces: Collection[str] = (),
+    event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     """Run deterministic Phase 4 quality gates for one module directory."""
     plan = plan_check(plan_path)
@@ -5646,10 +5888,27 @@ def run_python_qg(
     prose_text = _extract_prose_text(module_text, activities, vocabulary, resources)
 
     gates: dict[str, Any] = {}
+    level = str(plan.get("level") or "").lower()
+    slug = str(plan.get("slug") or "")
 
     def record(name: str, report: dict[str, Any]) -> None:
         if gate_observer is not None:
             gate_observer(name)
+        if report.get("passed") is False:
+            rule_ids = _writer_rule_ids_for_gate_failure(name, report)
+            if rule_ids:
+                report = dict(report)
+                report["rule_ids"] = rule_ids
+                evidence = _writer_rule_evidence_for_gate(name, report)
+                for rule_id in rule_ids:
+                    _emit_writer_rule_fired(
+                        event_sink,
+                        rule_id=rule_id,
+                        level=level,
+                        slug=slug,
+                        gate=name,
+                        evidence=evidence,
+                    )
         gates[name] = report
 
     record("activity_schema", _activity_schema_gate(activities))

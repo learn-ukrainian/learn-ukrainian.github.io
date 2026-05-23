@@ -341,6 +341,44 @@ def test_telemetry_event_sink_appends_jsonl(
     assert all(event["slug"] == "x" for event in events)
 
 
+def test_writer_rule_fired_event_emitted_on_known_failure_class(tmp_path: Path) -> None:
+    """Known gate failure classes emit writer_rule_fired with the stable rule ID."""
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "module.md").write_text(
+        "## Діалоги\n\n"
+        "Welcome to A1.\n\n"
+        ":::tip\n"
+        "Суфікс **-ся** тримай при дієслові.\n"
+        ":::\n",
+        encoding="utf-8",
+    )
+    (module_dir / "activities.yaml").write_text("[]\n", encoding="utf-8")
+    (module_dir / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+    (module_dir / "resources.yaml").write_text("[]\n", encoding="utf-8")
+    events: list[dict[str, Any]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {word: [{"lemma": word}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir,
+        linear_pipeline.plan_path_for("a1", "my-morning"),
+        verify_words_fn=verify_words,
+        event_sink=_event_sink(events),
+    )
+
+    rule_events = _events_named(events, "writer_rule_fired")
+    assert any(
+        event["rule_id"] == "#R-VOICE-META"
+        and event["gate"] == "engagement_floor"
+        and event["level"] == "a1"
+        and event["slug"] == "my-morning"
+        and "welcome to a1" in event["evidence"]
+        for event in rule_events
+    )
+
+
 def test_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> None:
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
