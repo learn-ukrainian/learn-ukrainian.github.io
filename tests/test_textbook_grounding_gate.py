@@ -823,6 +823,59 @@ def test_apostrophes_normalized_for_matching(tmp_path: Path) -> None:
     assert result["passed"] is True
 
 
+def test_searched_but_skipped_step_b_gets_diagnostic_reason(tmp_path: Path) -> None:
+    """m20 build a1-my-morning-20260523-184413 failure mode (2026-05-23).
+
+    Writer made 2 ``search_text`` calls by topic keyword, ZERO
+    ``get_chunk_context`` calls, and pasted wrong-chunk text into the
+    blockquote. Existing logic would reject via ``matched=[]`` with
+    ``reason=None`` — opaque to the writer's self-correction loop.
+
+    With the diagnostic-clarity override, the reason is explicitly
+    ``step_b_skipped_no_get_chunk_context`` so the writer (and reviewer)
+    knows to call ``get_chunk_context(chunk_id=...)`` per rule
+    #R-TEXTBOOK-30W Step B before pasting the blockquote.
+    """
+    _write_tool_calls(
+        tmp_path,
+        [
+            {
+                "tool": "mcp__sources__search_text",
+                "args": {
+                    "query": "Захарійчук Христинка чорниці бабуся радіопередача",
+                    "subject": "bukvar",
+                    "limit": 3,
+                },
+                "result": [
+                    {
+                        "title": "Захарійчук Grade 1, p.24",
+                        "source_type": "textbook",
+                        "text": FARMING_TEXT,  # wrong-chunk content; doesn't match the blockquote
+                        "page": 24,
+                        "grade": 1,
+                    }
+                ],
+            }
+        ],
+    )
+    # Module text uses an unrelated blockquote that is NOT in the search result
+    # (mimics the writer pasting wrong-chunk text or paraphrasing).
+    module_text = f"## Morning Routine\n\n> {SEARCH_TEXT}\n\n*— Захарійчук, Grade 1, p.24*\n"
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan("A1", ["Захарійчук Grade 1, p.24"]),
+        tmp_path,
+    )
+
+    assert result["passed"] is False
+    assert result["verdict"] == "REJECT"
+    assert result["severity"] == "HARD"
+    assert result["search_text_calls"] == 1
+    assert result["chunk_context_calls"] == 0
+    assert result["reason"] == "step_b_skipped_no_get_chunk_context"
+
+
 def test_empty_references_rejected_for_b1_plus(tmp_path: Path) -> None:
     result = linear_pipeline._textbook_grounding_gate(
         "## Topic\n\nNo quotes.\n",

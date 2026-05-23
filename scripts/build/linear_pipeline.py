@@ -8519,6 +8519,16 @@ def _textbook_grounding_gate(
         if not passed and topical_mismatches
         else None
     )
+    # Diagnostic clarity for rule #R-TEXTBOOK-30W Step B (2026-05-23):
+    # When the gate failed and the writer searched but never called
+    # ``get_chunk_context``, give an explicit "you skipped Step B" reason
+    # rather than a vague ``matched=[]``. Catches the m20 build
+    # ``a1-my-morning-20260523-184413`` failure mode where 2 ``search_text``
+    # calls by topic keyword + 0 ``get_chunk_context`` + wrong-chunk text
+    # pasted into the blockquote produced opaque ``matched=[]`` with no
+    # actionable signal for the writer's self-correction loop.
+    if not passed and search_calls and not chunk_context_calls and reason is None:
+        reason = "step_b_skipped_no_get_chunk_context"
     # Per #1765, missing-corpus citations get rejected here — the proper fix is
     # plan-review-time corpus check that prevents plans from getting this far.
     # Until #1765 lands, this guard prevents shipping false authority.

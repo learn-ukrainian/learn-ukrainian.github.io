@@ -177,7 +177,17 @@ When in doubt, omit the bad contrast and teach only the good form.
 **Grammar claim grounding.** EVERY specific grammar claim (rules about aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or learner-facing meaning distinctions) MUST cite an authoritative source from the Knowledge Packet or a specific school textbook. Name the source in the text or as an HTML comment with concrete metadata: `<!-- VERIFY: source="..." grade="..." author="..." -->`. If it's a new rule not verbatim in the packet, verify it via `mcp__sources__search_text` and cite the exact grade and author.
 
 <!-- rule_id: #R-TEXTBOOK-30W -->
-**Textbook grounding.** For each `plan_references` entry: (A) call `search_text` with author surname + page digits to identify the exact chunk_id; (B) call `get_chunk_context(chunk_id=...)`; (C) paste >=30 contiguous Ukrainian words from that returned text into a blockquote; (D) add the exact citation line `*— <Author>, Grade <N>, p.<PAGE>*`. Fewer than 30 words makes `textbook_grounding.long_blockquotes_checked` fail.
+**Textbook grounding.** For each `plan_references` entry, you MUST retrieve the chunk text from MCP and paste from THAT text verbatim — paraphrasing, topic-keyword search, or pasting from memory all fail this gate.
+
+(A) **Identify the chunk_id.** If the plan entry's `notes` field already contains a string `chunk_id: <ID>` (which it usually does), use that ID directly and SKIP straight to step (B) — no `search_text` call needed. If `notes` does not name a chunk_id, call `mcp__sources__search_text(query="<author surname> p. <page digits>", subject="<corpus>", limit=3)`. Use ONLY author surname + page digits — do NOT search by lesson topic keywords (topic search returns the wrong chunk). Identify the matching chunk_id from the returned hits.
+
+(B) **Retrieve the chunk text.** Call `mcp__sources__get_chunk_context(chunk_id=<ID>)`. This step is MANDATORY — calling `search_text` alone returns a truncated snippet, not the full chunk text. The gate counts `chunk_context_calls`; if zero while `plan_references` is non-empty, the gate HARD-rejects regardless of blockquote content.
+
+(C) **Paste >=30 contiguous Ukrainian words from the returned `text` field into a blockquote.** Verbatim only — no paraphrasing, no translation, no stitching from multiple chunks, no Russian-script characters, no syllable-hyphen removal that breaks contiguity. The gate uses string-containment against the chunk's exact `text`. Each `plan_references` entry needs its own ≥30-word blockquote (one per cited page) — a single aggregate blockquote does not cover multiple references.
+
+(D) Add the exact citation line immediately after the blockquote: `*— <Author>, Grade <N>, p.<PAGE>*` (em-dash + spaces, italic).
+
+Fewer than 30 words per blockquote, or a blockquote whose text is not literally contained in the returned chunk, makes `textbook_grounding.long_blockquotes_checked` fail and the gate HARD-rejects.
 
 <!-- rule_id: #R-CITE-HONEST -->
 Sources in blockquotes/resources must be either in `plan_references` or grounded in a Knowledge Packet / `search_text` result that appears in writer telemetry. Do not add out-of-plan textbook references without retrieved evidence.
