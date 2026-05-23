@@ -1,4 +1,4 @@
-"""Tests for the v7_build.py --resume flag and phase-skip helpers.
+"""Tests for v7_build.py resume-default phase-skip helpers.
 
 Resume policy:
   - A phase is skipped iff its on-disk artifact exists AND reports the canonical
@@ -146,20 +146,40 @@ def test_wiki_coverage_review_reruns_when_overall_fail(module_dir: Path) -> None
 
 # ----- llm_qg ------------------------------------------------------------------
 
-def test_llm_qg_skipped_when_aggregate_pass(module_dir: Path) -> None:
+def test_llm_qg_skipped_when_terminal_verdict_pass(module_dir: Path) -> None:
+    _write_json(
+        module_dir / "llm_qg.json",
+        {
+            "aggregate": {
+                "verdict": "REJECT",
+                "terminal_verdict": "PASS",
+                "min_score": 4.0,
+            }
+        },
+    )
+    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
+
+
+def test_llm_qg_reruns_when_terminal_verdict_revise(module_dir: Path) -> None:
+    _write_json(
+        module_dir / "llm_qg.json",
+        {
+            "aggregate": {
+                "verdict": "REVISE",
+                "terminal_verdict": "REVISE",
+                "min_score": 8.5,
+            }
+        },
+    )
+    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
+
+
+def test_llm_qg_skipped_for_legacy_aggregate_pass(module_dir: Path) -> None:
     _write_json(
         module_dir / "llm_qg.json",
         {"aggregate": {"verdict": "PASS", "min_score": 9.0}},
     )
     assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is True
-
-
-def test_llm_qg_reruns_when_aggregate_revise(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "llm_qg.json",
-        {"aggregate": {"verdict": "REVISE", "min_score": 6.0}},
-    )
-    assert v7_build._phase_artifact_passes(module_dir, "llm_qg") is False
 
 
 def test_llm_qg_reruns_when_aggregate_missing(module_dir: Path) -> None:
@@ -176,29 +196,16 @@ def test_unknown_phase_returns_false(module_dir: Path) -> None:
 
 # ----- CLI flag wiring --------------------------------------------------------
 
-def test_parse_args_accepts_resume() -> None:
-    args = v7_build.parse_args(
-        ["a1", "my-morning", "--resume", "/tmp/some/module/dir"]
-    )
-    assert args.resume == "/tmp/some/module/dir"
+def test_parse_args_rejects_removed_resume_flag() -> None:
+    with pytest.raises(SystemExit):
+        v7_build.parse_args(["a1", "my-morning", "--resume", "/tmp/some/module/dir"])
 
 
-def test_parse_args_resume_defaults_to_none() -> None:
+def test_parse_args_resume_defaults_to_enabled() -> None:
     args = v7_build.parse_args(["a1", "my-morning"])
-    assert args.resume is None
+    assert args.no_resume is False
 
 
-def test_main_rejects_resume_with_worktree(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """--resume and --worktree are mutually exclusive — resume already targets
-    an existing build dir, so creating a new worktree alongside it is a
-    user error caught upfront with exit 2."""
-    fake_module = tmp_path / "module"
-    fake_module.mkdir()
-    code = v7_build.main(
-        ["a1", "my-morning", "--resume", str(fake_module), "--worktree"]
-    )
-    assert code == 2
-    captured = capsys.readouterr()
-    assert "mutually exclusive" in captured.err
+def test_parse_args_no_resume_disables_resume_default() -> None:
+    args = v7_build.parse_args(["a1", "my-morning", "--no-resume"])
+    assert args.no_resume is True
