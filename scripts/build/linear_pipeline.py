@@ -502,6 +502,12 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
             "description",
             "source_ref",
             "packet_chunk_id",
+            # Alias for packet_chunk_id — writers naturally emit this name
+            # (it matches plan.notes wording and MCP tool arg names). Both
+            # accepted; downstream code (L7757) reads packet_chunk_id, so a
+            # writer-emitted chunk_id is decorative metadata. Added 2026-05-23
+            # after m20 build #5 schema-rejected writer's chunk_id field.
+            "chunk_id",
             "url",
             "section",
             "page",
