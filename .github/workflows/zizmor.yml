@@ -37,3 +37,12 @@ jobs:
 
       - name: 'Run zizmor 🌈'
         uses: 'zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d' # ratchet:zizmorcore/zizmor-action@v0.5.6
+        with:
+          # 2026-05-23: workflow began failing at 15:57Z with the artipacked
+          # audit hitting HTTP 401 on `actions/checkout` git-upload-pack.
+          # Online verification by zizmor's audit requires unauthenticated
+          # git-fetch to other repos, which Microsoft's git host increasingly
+          # throttles/blocks. Skip online audits — all 21 baseline findings
+          # (17 artipacked + 4 secrets-inherit) are produced by offline
+          # YAML-static rules, so we lose nothing in coverage.
+          advanced-args: '--offline'
