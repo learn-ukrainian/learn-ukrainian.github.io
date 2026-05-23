@@ -51,7 +51,7 @@ claim and every cultural fact roots in an attributed source —
 Караман Grade 10 p. 176; Кравцова Grade 4 p. 113; Заболотний Grade 5
 p. 83; Большакова Grade 1 p. 24; Захарійчук Grade 1 p. 13. The wiki
 packets the writer consumes are themselves source-cited. Ghost
-references fail the build.
+references fail the build (citations_resolve gate).
 
 <!-- rule_id: #R-CITE-HONEST -->
 Сибір case study (May 2026): an unhardened answer shipped two fabricated
@@ -226,7 +226,7 @@ The contract below is generated upstream by `seed_implementation_map` and is byt
 
 Attempt at least one multimedia/resource discovery call (`query_wikipedia`, `search_external`, `search_images`, or browser search). `resources_search_attempted` rejects zero attempts. If the manifest lists `external_resources`, include all verified URLs with their supplied role.
 
-Every `resources.yaml` entry needs `role`. Non-textbook roles (`youtube`, `video`, `blog`, `podcast`, `audio`, `article`, `wiki`) also require a real non-empty `url`. Omit unverifiable non-textbook entries; never emit `url: null`, `url: ""`, `url: TBD`, or a missing `url`.
+Every `resources.yaml` entry needs `role`. The only role that does not require a `url` is `role: textbook`. Non-textbook roles (`youtube`, `video`, `blog`, `podcast`, `audio`, `article`, `wiki`) also require a non-empty `url:`. Omit unverifiable non-textbook entries (OMIT THE ENTRY); never emit `url: null`, `url: ""`, `url: TBD`, or a missing `url`.
 
 ### Phonetic rules — MUST emit IPA notation
 

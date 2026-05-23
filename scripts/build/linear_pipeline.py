@@ -71,6 +71,7 @@ WRITER_CHOICES = (
     "gemini-tools",
     "codex-tools",
     "grok-tools",
+    "cursor-tools",
     "deepseek-tools",
     "qwen-tools",
     "agy-tools",
@@ -80,6 +81,7 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
+    "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     # agy effort is a no-op on the CLI today (Phase-2 follow-up). The
@@ -94,6 +96,12 @@ CORRECTION_PROMPT_BY_WRITER = {
     "grok-tools": "linear-writer-correction-grok.md",
 }
 WRITER_SPECIFIC_DIRECTIVES: dict[str, str] = {
+    "cursor-tools": """\
+## cursor-tools writer directives
+- Use ONLY `mcp__sources__*` tools for verification. Do NOT run shell commands or edit files.
+- Emit all artifacts as fenced blocks in your final message (`markdown file=…`, `json file=…`).
+- If MCP is unavailable, emit `<!-- VERIFY: … -->` and continue — do not improvise with Bash/Write.
+""",
     "agy-tools": """\
 ## agy-tools writer directives
 
@@ -111,6 +119,7 @@ REVIEWER_CHOICES = (
     "gemini-tools",
     "codex-tools",
     "grok-tools",
+    "cursor-tools",
     "deepseek-tools",
     "qwen-tools",
     "agy-tools",
@@ -120,6 +129,7 @@ REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
+    "cursor-tools": {"model": "grok-4.20-reasoning", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
@@ -3057,9 +3067,45 @@ def _ensure_codex_writer_home(
     return str(scoped_home)
 
 
+def _ensure_cursor_writer_workspace(
+    cwd: Path,
+    *,
+    event_sink: Callable[..., None] | None = None,
+) -> Path:
+    """Materialize scoped .cursor/mcp.json for V7 cursor-tools writer.
+
+    Cursor loads MCP from the workspace directory (--workspace / cwd),
+    not from repo-root .mcp.json (Claude/Codex path). Only the sources
+    server may be registered — same contract as _ensure_codex_writer_home.
+    """
+    cursor_dir = cwd / ".cursor"
+    cursor_dir.mkdir(parents=True, exist_ok=True)
+    config_path = cursor_dir / "mcp.json"
+    desired = (
+        '{\n'
+        '  "mcpServers": {\n'
+        '    "sources": {\n'
+        '      "url": "http://127.0.0.1:8766/mcp"\n'
+        '    }\n'
+        '  }\n'
+        '}\n'
+    )
+    if not config_path.exists() or config_path.read_text(encoding="utf-8") != desired:
+        config_path.write_text(desired, encoding="utf-8")
+
+    _emit(
+        event_sink,
+        "cursor_writer_workspace_resolved",
+        workspace=str(cwd.resolve()),
+        mcp_config=str(config_path),
+    )
+    return cwd.resolve()
+
+
 def _runtime_tool_config(
     agent_label: str,
     *,
+    workspace_dir: Path,
     event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     tool_config: dict[str, Any] = {"output_format": "stream-json"}
@@ -3114,6 +3160,18 @@ def _runtime_tool_config(
             "mcp_servers": ["sources"],
             "allowed_tools": "mcp__sources__*",
         }
+    elif agent_label == "cursor-tools":
+        agent_kwargs = {"mcp_servers": ["sources"]}
+        cursor_workspace = _ensure_cursor_writer_workspace(
+            workspace_dir,
+            event_sink=event_sink,
+        )
+        tool_config.update({
+            "cursor_workspace": str(cursor_workspace),
+            "approve_mcps": True,
+            "cursor_mode": "plan",
+            "sandbox": "enabled",
+        })
     elif agent_label in {
         "gemini-tools",
         "grok-tools",
@@ -3127,8 +3185,8 @@ def _runtime_tool_config(
     else:
         raise LinearPipelineError(
             f"Unknown -tools writer {agent_label!r}; expected one of "
-            "codex-tools / claude-tools / gemini-tools / grok-tools / "
-            "deepseek-tools / qwen-tools / agy-tools."
+            "cursor-tools / codex-tools / claude-tools / gemini-tools / "
+            "grok-tools / deepseek-tools / qwen-tools / agy-tools."
         )
 
     canonical_agent = agent_label.split("-", 1)[0]
@@ -3245,7 +3303,7 @@ def invoke_writer(
         task_id="phase-4-a1-20-writer",
         entrypoint="dispatch",
         effort=resolved_effort,
-        tool_config=_runtime_tool_config(writer, event_sink=event_sink),
+        tool_config=_runtime_tool_config(writer, workspace_dir=cwd, event_sink=event_sink),
         event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
     )
@@ -4034,7 +4092,7 @@ def invoke_reviewer_dim(
         task_id=f"phase-4-review-{dim}",
         entrypoint="dispatch",
         effort=defaults["effort"],
-        tool_config=_runtime_tool_config(reviewer, event_sink=event_sink),
+        tool_config=_runtime_tool_config(reviewer, workspace_dir=cwd, event_sink=event_sink),
         event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
     )
@@ -5039,7 +5097,9 @@ def _wiki_coverage_corrector_response(
         task_id=task_id,
         entrypoint="runtime",
         effort=effort,
-        tool_config=_runtime_tool_config("codex-tools", event_sink=event_sink),
+        tool_config=_runtime_tool_config(
+            "codex-tools", workspace_dir=module_dir, event_sink=event_sink
+        ),
         event_sink=event_sink,
     )
     return str(getattr(result, "response", "") or "")
@@ -5505,7 +5565,7 @@ def _apply_reviewer_correction(
             task_id=f"linear-python-qg-{gate}-fix",
             entrypoint="runtime",
             effort=REVIEWER_DEFAULTS["codex-tools"]["effort"],
-            tool_config=_runtime_tool_config("codex-tools"),
+            tool_config=_runtime_tool_config("codex-tools", workspace_dir=module_dir),
         )
         response = str(getattr(result, "response", "") or "")
     else:

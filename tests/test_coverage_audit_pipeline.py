@@ -423,6 +423,30 @@ class TestCheckCrossAgentReview:
         violations = check_cross_agent_review(review, str(md))
         assert not any(v['type'] == 'SELF_REVIEW_DETECTED' for v in violations)
 
+    def test_composer_self_review(self, tmp_path):
+        from audit.checks.review_gaming import check_cross_agent_review
+        md = tmp_path / "test.md"
+        md.write_text("content")
+        orch_dir = tmp_path / "orchestration" / "test"
+        orch_dir.mkdir(parents=True)
+        state = {"phases": {"B": {"model": "composer-2.5"}}}
+        (orch_dir / "state-v3.json").write_text(json.dumps(state))
+        review = "**Reviewed-By:** composer-2.5"
+        violations = check_cross_agent_review(review, str(md))
+        assert any(v["type"] == "SELF_REVIEW_DETECTED" for v in violations)
+
+    def test_cursor_cross_agent_ok(self, tmp_path):
+        from audit.checks.review_gaming import check_cross_agent_review
+        md = tmp_path / "test.md"
+        md.write_text("content")
+        orch_dir = tmp_path / "orchestration" / "test"
+        orch_dir.mkdir(parents=True)
+        state = {"phases": {"B": {"model": "composer-2.5"}}}
+        (orch_dir / "state-v3.json").write_text(json.dumps(state))
+        review = "**Reviewed-By:** grok-4.20-reasoning"
+        violations = check_cross_agent_review(review, str(md))
+        assert not any(v["type"] == "SELF_REVIEW_DETECTED" for v in violations)
+
     def test_no_state_file(self, tmp_path):
         from audit.checks.review_gaming import check_cross_agent_review
         md = tmp_path / "test.md"
@@ -449,6 +473,12 @@ class TestModelFamily:
         from audit.checks.review_gaming import _model_family
         assert _model_family("gpt-4o") == "openai"
         assert _model_family("o3-mini") == "openai"
+
+    def test_cursor_family(self):
+        from audit.checks.review_gaming import _model_family
+        assert _model_family("composer-2.5") == "cursor-composer"
+        assert _model_family("cursor-agent") == "cursor-composer"
+        assert _model_family("grok-4.20-reasoning") == "cursor-grok"
 
     def test_unknown_family(self):
         from audit.checks.review_gaming import _model_family
