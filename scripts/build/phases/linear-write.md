@@ -139,7 +139,7 @@ If `M < N`, stop and fix the map before writing artifacts.
 Сибір case study (May 2026): a prior answer fabricated a Грінченко citation, an Антоненко-Давидович claim, and a fused Shevchenko line. Verify before citing; do not ship authority theatre.
 
 <!-- rule_id: #R-VESUM-ALL-WORDS -->
-**VESUM all-words coverage.** Verify every Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except intentionally bad forms protected by `<!-- bad -->...<!-- /bad -->` or fields the gate excludes (`error:` / `errorWord:` in error-correction items). Selective verification is silent fabrication.
+**1. Verify every example word in VESUM** (VESUM all-words coverage). Verify every Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except intentionally bad forms protected by `<!-- bad -->...<!-- /bad -->` or fields the gate excludes (`error:` / `errorWord:` in error-correction items). Selective verification is silent fabrication.
 
 **L2-trap: over-applied reflexive -ся.** Before emitting any `-ся` form, verify it. These always fail as personal reflexives unless VESUM says otherwise: `пити → *п'юся`, `снідати → *снідаюся / *снідається`, `читати → *читаюся`, `писати → *пишуся`.
 
@@ -167,8 +167,10 @@ When in doubt, omit the bad contrast and teach only the good form.
 
 **Textbook syllable-break notation.** Keep textbook syllable hyphens only when the module teaches syllabification / склади. Otherwise strip display hyphens before learner-facing prose.
 
+**2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first (the кобета/кобіта pattern). If the form is authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
+
 <!-- rule_id: #R-CITE-HONEST -->
-**Citation honesty.** Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
+**3. Source-citation discipline** (citation honesty). Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
 
 <!-- rule_id: #R-TEXTBOOK-30W -->
 **Textbook grounding.** For each `plan_references` entry: (A) call `search_text` with author surname + page digits to identify the exact chunk_id; (B) call `get_chunk_context(chunk_id=...)`; (C) paste >=30 contiguous Ukrainian words from that returned text into a blockquote; (D) add the exact citation line `*— <Author>, Grade <N>, p.<PAGE>*`. Fewer than 30 words makes `textbook_grounding.long_blockquotes_checked` fail.
@@ -177,9 +179,13 @@ When in doubt, omit the bad contrast and teach only the good form.
 Sources in blockquotes/resources must be either in `plan_references` or grounded in a Knowledge Packet / `search_text` result that appears in writer telemetry. Do not add out-of-plan textbook references without retrieved evidence.
 
 <!-- rule_id: #R-CITE-HONEST -->
-Every attributed Ukrainian quote must pass `mcp__sources__verify_quote(author, text)` with `matched=true` and `best_confidence >= 0.85`. Never fuse snippets from separate sources.
+**4. Quote attribution discipline.** Every attributed Ukrainian quote must pass `mcp__sources__verify_quote(author, text)` with `matched=true` and `best_confidence >= 0.85`. Never fuse snippets from separate sources.
 
-**End-of-output gate.** Before artifacts, rescan: all Ukrainian forms verified or marker-protected, every source grounded, every quote literal. Omit or rewrite anything unverifiable.
+**5. End-of-output gate.** Before artifacts, rescan: all Ukrainian forms verified or marker-protected, every source grounded, every quote literal. Omit or rewrite anything unverifiable.
+
+You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER the four artifact fences. Required sub-nodes: `<rescanned_words>`, `<rescanned_sources>`, `<grammar_claims_grounded>`, `<removed_unverified>`. A missing block records `gate_present=false` and the writer is treated as having skipped the protocol.
+
+**Tool-citation honesty (mandatory).** Every tool name you cite inside a `<plan_reasoning verification="...">` attribute or block body MUST correspond to an actual tool call you made on this turn. The pipeline cross-references citations against the trace and treats unmatched citations as a hard fail (`tool_theatre`). Canonical names only — no family aliases. Canonical MCP tool inventory you may cite: `mcp__sources__verify_words`, `mcp__sources__check_modern_form`, `mcp__sources__verify_quote`, `mcp__sources__verify_source_attribution`, `mcp__sources__check_russian_shadow`, `mcp__sources__search_text`, `mcp__sources__search_literary`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`, `mcp__sources__search_external`, `mcp__sources__search_images`, `mcp__sources__query_wikipedia`, `mcp__sources__query_pravopys`, `mcp__sources__query_cefr_level`, `mcp__sources__search_definitions`, `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, `mcp__sources__search_idioms`, `mcp__sources__search_synonyms`, `mcp__sources__translate_en_uk`.
 
 ## LESSON SOURCE — synthesize this wiki content into the 4-tab format
 
