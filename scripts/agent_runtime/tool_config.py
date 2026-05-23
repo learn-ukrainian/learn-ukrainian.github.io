@@ -36,6 +36,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "qwen"
     if agent.startswith("agy"):
         return "agy"
+    if agent.startswith("cursor"):
+        return "cursor"
     return None
 
 
@@ -278,6 +280,25 @@ def build_mcp_tool_config(
                 requested_servers=mcp_servers,
                 resolved_servers=mcp_servers,
                 resolution_status="ok",
+            ),
+        )
+
+    if canonical_agent == "cursor":
+        # For Phase 2, the workspace value defaults to cwd of the subprocess.
+        # Diagnostic config_path should point at {cwd}/.cursor/mcp.json
+        # (not repo .mcp.json).
+        workspace_mcp_path = Path.cwd() / ".cursor" / "mcp.json"
+        return (
+            {
+                "output_format": "stream-json",
+                "approve_mcps": True,
+                "mcp_server_names": mcp_servers,
+            },
+            _basic_diagnostics(
+                mcp_config_path=workspace_mcp_path,
+                requested_servers=mcp_servers,
+                resolved_servers=mcp_servers,
+                resolution_status="ok" if mcp_servers else "config_empty",
             ),
         )
 
