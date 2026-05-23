@@ -48,6 +48,7 @@ def _seed_sources_mcp_config(
         ("gemini-tools", "gemini"),
         ("codex-tools", "codex"),
         ("grok-tools", "grok"),
+        ("cursor-tools", "cursor"),
         ("deepseek-tools", "deepseek"),
         ("qwen-tools", "qwen"),
     ],
@@ -98,6 +99,9 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
         assert calls[0][2]["tool_config"]["allowed_tools"] == "mcp__sources__*"
     elif writer == "gemini-tools":
         assert calls[0][2]["tool_config"]["mcp_server_names"] == ["sources"]
+    elif writer == "cursor-tools":
+        assert calls[0][2]["tool_config"]["cursor_mode"] == "plan"
+        assert calls[0][2]["tool_config"]["cursor_workspace"] == str(tmp_path.resolve())
     else:
         assert calls[0][2]["tool_config"]["hermes_mcp_servers"] == ["sources"]
 
@@ -107,6 +111,7 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
     [
         ("codex", "codex-tools"),
         ("grok", "grok-tools"),
+        ("cursor", "cursor-tools"),
         ("deepseek", "deepseek-tools"),
         ("qwen", "qwen-tools"),
     ],
@@ -124,6 +129,7 @@ def test_v7_build_accepts_writer_aliases(alias: str, writer: str) -> None:
         ("claude-tools", None),
         ("codex-tools", None),
         ("grok-tools", None),
+        ("cursor-tools", None),
         ("deepseek-tools", None),
         ("qwen-tools", None),
     ],

@@ -669,14 +669,24 @@ def check_cross_agent_review(
         return violations
 
     if builder_model:
-        # Normalize model families
         reviewer_family = _model_family(reviewed_by)
         builder_family = _model_family(builder_model)
 
-        if reviewer_family and builder_family and reviewer_family == builder_family:
+        norm_builder = builder_model.lower().strip()
+        norm_reviewer = reviewed_by.lower().strip()
+
+        # Option B: Exact-model fallback (belt)
+        is_same_model = norm_builder == norm_reviewer
+        # Option A: Extended family map (suspenders)
+        is_same_family = (
+            reviewer_family is not None
+            and builder_family is not None
+            and reviewer_family == builder_family
+        )
+
+        if is_same_model or is_same_family:
             violations.append({
                 'type': 'SELF_REVIEW_DETECTED',
-                'severity': 'critical',
                 'message': (
                     f"Same model family reviewed its own content: "
                     f"builder={builder_model}, reviewer={reviewed_by}. "
@@ -685,6 +695,7 @@ def check_cross_agent_review(
                 ),
             })
 
+
     return violations
 
 
@@ -692,12 +703,16 @@ def _model_family(model_id: str) -> str | None:
     """Extract model family from model ID string."""
     model_lower = model_id.lower().strip()
 
-    if any(k in model_lower for k in ['gemini', 'google', 'palm']):
-        return 'google'
-    if any(k in model_lower for k in ['claude', 'anthropic', 'sonnet', 'opus', 'haiku']):
-        return 'anthropic'
-    if any(k in model_lower for k in ['gpt', 'openai', 'o1', 'o3']):
-        return 'openai'
+    if any(k in model_lower for k in ["gemini", "google", "palm"]):
+        return "google"
+    if any(k in model_lower for k in ["claude", "anthropic", "sonnet", "opus", "haiku"]):
+        return "anthropic"
+    if any(k in model_lower for k in ["gpt", "openai", "o1", "o3"]):
+        return "openai"
+    if any(k in model_lower for k in ["composer", "cursor"]):
+        return "cursor-composer"
+    if "grok" in model_lower:
+        return "cursor-grok"
 
     return None
 

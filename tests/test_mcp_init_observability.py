@@ -165,6 +165,7 @@ def test_runtime_tool_config_raises_and_emits_resolution_event(
     with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
         linear_pipeline._runtime_tool_config(
             "codex-tools",
+            workspace_dir=linear_pipeline.PROJECT_ROOT,
             event_sink=lambda event, **fields: events.append((event, fields)),
         )
 
@@ -193,6 +194,7 @@ def test_runtime_tool_config_emits_resolution_event_success(
 
     config = linear_pipeline._runtime_tool_config(
         "codex-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -227,7 +229,7 @@ def test_runtime_tool_config_codex_tools_disables_writer_unsafe_features(
     config_path = _valid_sources_config(tmp_path / ".mcp.json")
     monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
 
-    config = linear_pipeline._runtime_tool_config("codex-tools")
+    config = linear_pipeline._runtime_tool_config("codex-tools", workspace_dir=linear_pipeline.PROJECT_ROOT)
 
     disable_features = config.get("disable_features") or []
     expected_disables = {
@@ -244,6 +246,24 @@ def test_runtime_tool_config_codex_tools_disables_writer_unsafe_features(
         f"missing disables: {expected_disables - set(disable_features)}; "
         f"got: {disable_features}"
     )
+
+
+def test_runtime_tool_config_cursor_tools_scoped_workspace(
+    tmp_path: Path,
+) -> None:
+    """cursor-tools must materialize a scoped .cursor/mcp.json in the workspace."""
+    module_dir = tmp_path / "a1" / "my-morning"
+    module_dir.mkdir(parents=True)
+
+    config = linear_pipeline._runtime_tool_config("cursor-tools", workspace_dir=module_dir)
+
+    workspace_str = config.get("cursor_workspace")
+    assert workspace_str == str(module_dir.resolve())
+
+    mcp_config_path = module_dir / ".cursor" / "mcp.json"
+    assert mcp_config_path.exists()
+    content = mcp_config_path.read_text(encoding="utf-8")
+    assert '"url": "http://127.0.0.1:8766/mcp"' in content
 
 
 def test_runtime_tool_config_codex_tools_scoped_codex_home(
@@ -272,7 +292,7 @@ def test_runtime_tool_config_codex_tools_scoped_codex_home(
     (fake_home / "auth.json").write_text("{}", encoding="utf-8")
     monkeypatch.setenv("CODEX_HOME", str(fake_home))
 
-    config = linear_pipeline._runtime_tool_config("codex-tools")
+    config = linear_pipeline._runtime_tool_config("codex-tools", workspace_dir=linear_pipeline.PROJECT_ROOT)
 
     scoped_home_str = config.get("codex_home_override")
     assert scoped_home_str, "codex-tools must populate codex_home_override"
@@ -314,6 +334,7 @@ def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
     events: list[tuple[str, dict[str, Any]]] = []
     linear_pipeline._runtime_tool_config(
         "codex-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -346,6 +367,7 @@ def test_runtime_tool_config_codex_tools_missing_auth_warns(
     events: list[tuple[str, dict[str, Any]]] = []
     config = linear_pipeline._runtime_tool_config(
         "codex-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -379,7 +401,7 @@ def test_runtime_tool_config_non_codex_tools_no_disable_features(
     monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
 
     for agent in ("claude-tools", "gemini-tools", "grok-tools", "deepseek-tools"):
-        config = linear_pipeline._runtime_tool_config(agent)
+        config = linear_pipeline._runtime_tool_config(agent, workspace_dir=linear_pipeline.PROJECT_ROOT)
         assert "disable_features" not in config, (
             f"{agent} unexpectedly carries disable_features={config.get('disable_features')!r}"
         )
@@ -459,6 +481,7 @@ def test_runtime_tool_config_claude_tools_emits_resolution_event_success(
 
     config = linear_pipeline._runtime_tool_config(
         "claude-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -482,6 +505,7 @@ def test_runtime_tool_config_claude_tools_raises_when_unconfigured(
     with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
         linear_pipeline._runtime_tool_config(
             "claude-tools",
+            workspace_dir=linear_pipeline.PROJECT_ROOT,
             event_sink=lambda event, **fields: events.append((event, fields)),
         )
 
@@ -501,6 +525,7 @@ def test_runtime_tool_config_gemini_tools_emits_resolution_event_success(
 
     config = linear_pipeline._runtime_tool_config(
         "gemini-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -523,6 +548,7 @@ def test_runtime_tool_config_gemini_tools_raises_when_unconfigured(
     with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
         linear_pipeline._runtime_tool_config(
             "gemini-tools",
+            workspace_dir=linear_pipeline.PROJECT_ROOT,
             event_sink=lambda event, **fields: events.append((event, fields)),
         )
 
@@ -545,6 +571,7 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
 
     config = linear_pipeline._runtime_tool_config(
         "agy-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -564,6 +591,7 @@ def test_runtime_tool_config_hermes_tools_emits_resolution_event_success(
 
     config = linear_pipeline._runtime_tool_config(
         writer,
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
         event_sink=lambda event, **fields: events.append((event, fields)),
     )
 
@@ -581,7 +609,9 @@ def test_runtime_tool_config_unknown_tools_writer_raises() -> None:
         linear_pipeline.LinearPipelineError,
         match="Unknown -tools writer",
     ):
-        linear_pipeline._runtime_tool_config("phantom-tools")
+        linear_pipeline._runtime_tool_config(
+            "phantom-tools", workspace_dir=linear_pipeline.PROJECT_ROOT
+        )
 
 
 def test_invoke_writer_refuses_tool_less_codex_before_invoker(

@@ -36,6 +36,7 @@ WRITER_ALIASES = {
     "gemini": "gemini-tools",
     "codex": "codex-tools",
     "grok": "grok-tools",
+    "cursor": "cursor-tools",
     "deepseek": "deepseek-tools",
     "qwen": "qwen-tools",
     "agy": "agy-tools",
@@ -653,6 +654,8 @@ def _reviewer_for_writer(writer: str) -> str:
         return "gemini-tools"
     if writer == "grok-tools":
         return "claude-tools"
+    if writer == "cursor-tools":
+        return "cursor-tools"
     return "claude-tools"
 
 
@@ -671,7 +674,11 @@ def _run_llm_qg(
     from scripts.agent_runtime.runner import invoke
 
     reviewer = _reviewer_for_writer(writer)
-    defaults = linear_pipeline.WRITER_DEFAULTS[reviewer]
+    defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
+
+    assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
+        f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
+
     agent_name = reviewer.split("-", 1)[0]
     generated_content = _generated_content(module_dir)
     report: dict[str, Any] = {}
@@ -723,6 +730,10 @@ def _run_wiki_coverage_review(
 
     reviewer = _reviewer_for_writer(writer)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
+
+    assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
+        f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
+
     agent_name = reviewer.split("-", 1)[0]
     generated_content = _generated_content(module_dir)
     prompt = linear_pipeline.render_wiki_coverage_review_prompt(
