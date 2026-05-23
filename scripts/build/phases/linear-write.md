@@ -452,6 +452,62 @@ Before artifacts, make the in-scope MCP calls your draft depends on:
 
 If a required call is missing for your level, make it now. Do not emit artifacts first and hope the gate catches it.
 
+## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
+
+Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks in the order below, then the `<end_gate>` block. Do not add any other prose anywhere.
+
+**Three structured artifacts (`activities.yaml`, `vocabulary.yaml`, `resources.yaml`) MUST be emitted as 3-backtick fenced blocks labelled with language `json` and an info-string `file=<name>`.** The pipeline parses them with `json.loads`. Do NOT use `yaml`, `activities.yaml`, or bare `\`\`\`` as the fence info — those fail at writer-output parse with `must be fenced as json, got <X>`.
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "fill-in",
+    "instruction": "Complete each sentence with the best word.",
+    "items": [
+      {
+        "sentence": "Я ____ о сьомій.",
+        "answer": "прокидаюся",
+        "options": ["прокидаюся", "сплю", "йду"]
+      }
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "прокидатися",
+    "translation": "to wake up",
+    "pos": "verb",
+    "usage": "Я прокидаюся о сьомій."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Караман Grade 10, p.176",
+    "role": "textbook",
+    "notes": "Зворотні дієслова: суфікс -ся означає дію, спрямовану на себе."
+  }
+]
+```
+
+Each activity object MUST carry the props for its declared `type` per the `COMPONENT_PROPS_SCHEMA` table. Do not strip an `items` array down to `id/type/title` just because the example above looks short.
+
+**Wrap the `module.md` artifact in a 4-backtick OUTER fence.** The OPEN fence MUST be exactly one line: four backticks, then a single space, then the info string `markdown file=module.md`, then newline. Like this (one line, no mid-line break):
+
+````markdown file=module.md
+...module body here, may contain inner 3-backtick fences for examples...
+````
+
+DO NOT split the info string across two lines (i.e. NEVER emit ` ```` ` then a newline then `markdown file=module.md`) — the parser scans the fence-open line for `file=`; a separate line gets tagged "unnamed fenced block" and the build hard-fails at writer-output parse.
+
+The CLOSE fence is four bare backticks on their own line.
+
 ## HARD STOP RULE
 
 After emitting all required `<plan_reasoning>` blocks, the 4 artifact fences
