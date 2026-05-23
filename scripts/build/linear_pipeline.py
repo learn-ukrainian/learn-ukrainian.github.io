@@ -6455,12 +6455,24 @@ def _word_count(text: str) -> int:
     return len(_WORD_RE.findall(text))
 
 
+# Word-target tolerance: 8% lower band. User direction 2026-05-23
+# (handoff docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md
+# decision row B): word targets stay as MINIMUMS for the writer prompt
+# guidance, but the gate tolerates ±8% below target to avoid 0.25%-short
+# rejections like deepseek-pro 1197/1200. Empirically the 8% band still
+# rejects gemini-tools 1031/1200 (14% short).
+_WORD_COUNT_TOLERANCE_BELOW = 0.08
+
+
 def _word_count_gate(text: str, target: int) -> dict[str, Any]:
     count = _word_count(_strip_comments(text))
+    min_with_tolerance = int(target * (1 - _WORD_COUNT_TOLERANCE_BELOW))
     return {
-        "passed": count >= target,
+        "passed": count >= min_with_tolerance,
         "count": count,
         "target": target,
+        "min_with_tolerance": min_with_tolerance,
+        "tolerance_below_pct": _WORD_COUNT_TOLERANCE_BELOW * 100,
     }
 
 
@@ -8810,7 +8822,10 @@ def _engagement_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]
     callout_hits = _CALLOUT_PATTERN.findall(text)
     meta_hits = sorted({m.lower().strip() for m in _META_NARRATION_RE.findall(text)})
 
-    callout_min = 2
+    # callout_min: 2 → 1 per user direction 2026-05-23 (handoff decision row B).
+    # Writers consistently emit 1 callout; "minimum 2" was aspirational not
+    # empirical. The full engagement_floor still catches modules with 0 callouts.
+    callout_min = 1
     callouts_ok = len(callout_hits) >= callout_min
     meta_ok = not meta_hits
 
