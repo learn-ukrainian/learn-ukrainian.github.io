@@ -33,6 +33,7 @@ import os
 import re
 import shutil
 import tempfile
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -65,6 +66,13 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # so ^/$ match at each line boundary.
 _CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+
+
+def _normalize_payload_for_rollout_match(payload: str) -> str:
+    """Normalize Codex-stored prompt text before rollout binding."""
+    normalized = unicodedata.normalize("NFC", payload)
+    normalized = normalized.replace("\r\n", "\n").replace("\r", "\n")
+    return normalized.rstrip()
 
 
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
@@ -786,7 +794,7 @@ class CodexAdapter:
         Validate against the actual stdin payload so we never recover unrelated
         durable output from another task in the same repo.
         """
-        expected = (plan.stdin_payload or "").rstrip()
+        expected = _normalize_payload_for_rollout_match(plan.stdin_payload or "")
         if not expected:
             return True
 
@@ -809,7 +817,8 @@ class CodexAdapter:
                         event.get("type") == "event_msg"
                         and payload.get("type") == "user_message"
                         and isinstance(payload.get("message"), str)
-                        and payload["message"].rstrip() == expected
+                        and _normalize_payload_for_rollout_match(payload["message"])
+                        == expected
                     ):
                         return True
 
@@ -826,7 +835,11 @@ class CodexAdapter:
                                     text = item.get("text")
                                     if isinstance(text, str):
                                         parts.append(text)
-                            if parts and "\n".join(parts).rstrip() == expected:
+                            if (
+                                parts
+                                and _normalize_payload_for_rollout_match("\n".join(parts))
+                                == expected
+                            ):
                                 return True
             return False
         except Exception:
