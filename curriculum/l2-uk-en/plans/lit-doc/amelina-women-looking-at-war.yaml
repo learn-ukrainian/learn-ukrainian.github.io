@@ -38,7 +38,17 @@ content_outline:
   words: 800
 focus: Posthumous legacy, war documentation, Truth Hounds.
 level: LIT.DOC
+module: lit-doc-013
+objectives:
+- Аналізувати діяльність Вікторії Амеліної як документаторки воєнних злочинів та її внесок у фіксацію правди про війну.
+- Оцінювати вплив проєкту «Women Looking at War» на формування пам'яті та жіночу суб'єктність в умовах конфлікту.
+- Досліджувати стилістичні та наративні особливості творчості письменниці в контексті деколонізаційної перспективи.
+- Визначати роль літератури та документальних свідчень у збереженні культурної спадщини та протидії стиранню національної ідентичності.
 sequence: 13
 slug: amelina-women-looking-at-war
+title: 'Вікторія Амеліна: «Women Looking at War»'
 track: lit-doc
+version: 1.0.0
+vocabulary_hints: []
 word_target: 5000
+phase: LIT.DOC.1
