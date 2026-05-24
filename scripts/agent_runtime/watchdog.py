@@ -106,6 +106,7 @@ class WatchdogState:
     last_activity: float
     last_stdout_activity: float = 0.0
     stop: bool = False
+    observed_io: bool = False
     stdout_lines: list[str] = field(default_factory=list)
     stderr_lines: list[str] = field(default_factory=list)
 
@@ -249,6 +250,7 @@ def _emit_line(state: WatchdogState, line: str, *, is_stderr: bool) -> None:
         state.stdout_lines.append(line)
         state.last_stdout_activity = now
     state.last_activity = now
+    state.observed_io = True
 
 
 def _mtime_poller(paths: Iterable[Path], state: WatchdogState) -> None:
@@ -275,6 +277,7 @@ def _mtime_poller(paths: Iterable[Path], state: WatchdogState) -> None:
                 continue  # file disappeared or permission denied; skip
             if current > baseline:
                 state.last_activity = time.monotonic()
+                state.observed_io = True
                 baseline_mtimes[p] = current
 
 
@@ -453,12 +456,16 @@ def should_kill(
     hard_timeout: int,
     *,
     stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
 ) -> str | None:
     """Check if the subprocess should be killed. Returns the kill reason or None.
 
     Returns:
         None if the process should continue running.
         "hard_timeout" if total runtime exceeded hard_timeout.
+        "initial_response_timeout" if the caller enabled startup probing and
+        the subprocess produced no stdout/stderr/liveness activity within that
+        window (#2071 startup hangs with response_chars=0).
         "stdout_silence_timeout" if the caller explicitly enabled stdout
         silence detection and no stdout line has arrived within that window.
 
@@ -493,6 +500,13 @@ def should_kill(
     now = time.monotonic()
     if (now - state.start_time) > hard_timeout:
         return "hard_timeout"
+    if (
+        initial_response_timeout is not None
+        and initial_response_timeout > 0
+        and (now - state.start_time) > initial_response_timeout
+        and not state.observed_io
+    ):
+        return "initial_response_timeout"
     if (
         stdout_silence_timeout is not None
         and stdout_silence_timeout > 0

@@ -70,10 +70,18 @@ class AgentStalledError(AgentRuntimeError):
     detection, we only kill if truly silent.
     """
 
-    def __init__(self, agent: str, stall_timeout: int, last_activity_age: float):
+    def __init__(
+        self,
+        agent: str,
+        stall_timeout: int,
+        last_activity_age: float,
+        *,
+        kind: str = "stall",
+    ):
         self.agent = agent
         self.stall_timeout = stall_timeout
         self.last_activity_age = last_activity_age
+        self.kind = kind
         super().__init__(
             f"{agent} stalled: {last_activity_age:.0f}s since last activity "
             f"(stall_timeout={stall_timeout}s)"
