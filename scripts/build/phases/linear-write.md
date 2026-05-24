@@ -348,14 +348,18 @@ Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word
 {PLAN_CONTENT}
 ```
 
-## Full Wiki Context (source of truth for citations)
+## Full Wiki Context (source obligations, not textbook citation authority)
 
 See `## Knowledge Packet` above. This is the same content; the prior render duplicated it as a token tax.
 
 ## Pre-emit verification (run BEFORE you write any artifact)
 
 Before artifacts, make the in-scope MCP calls your draft depends on:
-1. Textbook grounding: `mcp__sources__search_text` for each `plan_references` entry, then `mcp__sources__get_chunk_context` for quotes.
+1. Textbook grounding (mandatory chunk_id-first protocol):
+   For each entry in `plan_references`, parse the `notes` field for the literal substring `chunk_id: <ID>` (always present — example: `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024`).
+   Call `mcp__sources__get_chunk_context(chunk_id=<ID>)` to fetch the chunk text.
+   DO NOT call `mcp__sources__search_text` for plan references — the chunk_id in notes is authoritative.
+   Concrete example: plan says `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024` → call `get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0024")`, paste from THAT returned text. Do NOT search by "p.24" — FTS5 will return the wrong author (e.g. Pohribnyi instead of Захарійчук).
 2. Multimedia obligation: at least one `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`; `resources_search_attempted` rejects zero attempts.
 3. VESUM: `mcp__sources__verify_words` over every Ukrainian form you will emit.
 4. Russianism/style: `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__check_russian_shadow`, or `mcp__sources__search_heritage` for contrast pairs or suspicious forms.
