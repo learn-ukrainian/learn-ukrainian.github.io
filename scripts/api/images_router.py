@@ -290,14 +290,8 @@ async def list_textbooks():
     """List PDFs on disk with image counts and annotation coverage."""
     await _index.ensure_loaded()
 
-    catalog_items = sorted(_index.pdf_catalog.items())
-    page_counts = await asyncio.gather(*(
-        asyncio.to_thread(_read_pdf_page_count, info["path"])
-        for _stem, info in catalog_items
-    ))
-
     result = []
-    for (stem, info), page_count in zip(catalog_items, page_counts, strict=False):
+    for stem, info in sorted(_index.pdf_catalog.items()):
         # Count images from this PDF
         pages_with_images = _index.by_pdf_page.get(stem, {})
         image_count = sum(len(imgs) for imgs in pages_with_images.values())
@@ -306,6 +300,10 @@ async def list_textbooks():
             for img in imgs
             if img.get("description_uk")
         )
+        # Avoid opening every PDF on each list call — derive from the index
+        # when possible. Image explorer only needs a rough page span here;
+        # per-page context still reads the PDF on demand.
+        page_count = max(pages_with_images.keys(), default=0) if pages_with_images else 0
 
         result.append({
             "stem": stem,

@@ -328,7 +328,7 @@ when the conversation will have at least two turns.
 
 ## Web dashboard
 
-`playgrounds/channels.html` — read-only monitor plus post form,
+`dashboards/channels.html` — read-only monitor plus post form,
 localhost only. Shows:
 
 - All channels with message counts + pending deliveries + last activity
@@ -340,7 +340,7 @@ Served by `scripts/api/main.py` at `http://localhost:8765`. The
 browser POST endpoint is `/api/comms/channels/{name}/post` — user-only,
 gated by localhost binding. Agents still post via CLI.
 
-`playgrounds/comms.html` is the legacy operational dashboard for live
+`dashboards/comms.html` is the legacy operational dashboard for live
 activity, DM-style broker messages, zombie detection, and batch progress.
 Its hot message endpoints are bounded by server-side `limit` defaults
 and keyset cursors; keep client polling paced so heavy views refresh no

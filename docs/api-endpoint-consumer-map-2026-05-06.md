@@ -1,6 +1,6 @@
 # API Endpoint Consumer Map - 2026-05-06
 
-Scope: `scripts/api/*_router.py`, `scripts/api/main.py`, and `playgrounds/*.html`. Route inventory comes from the FastAPI app object; consumers were checked with `rg` across `playgrounds/`, `scripts/`, and `docs/`. `MEMORY.md` is not present in this worktree.
+Scope: `scripts/api/*_router.py`, `scripts/api/main.py`, and `dashboards/*.html`. Route inventory comes from the FastAPI app object; consumers were checked with `rg` across `dashboards/`, `scripts/`, and `docs/`. `MEMORY.md` is not present in this worktree.
 
 ## Endpoint x Consumer Matrix
 
