@@ -75,3 +75,42 @@ def test_search_text_results_preserved_in_telemetry() -> None:
     loaded_jsonl_event["result"] = {"text": event["result_excerpt"]}
     loaded_items = list(_result_items_from_call(loaded_jsonl_event))
     assert loaded_items[0]["source_type"] == "textbook"
+
+
+def test_result_items_from_call_unwraps_codex_envelope() -> None:
+    """Pin codex-cli's ``Wall time: X.XXXX seconds\\nOutput:\\n<json>`` envelope.
+
+    Codex CLI 0.133.0+ wraps MCP tool outputs as a string starting with
+    ``Wall time:`` followed by ``Output:\\n`` and the canonical content-block
+    list ``[{"type":"text","text":"<md>"}]``. Without unwrapping, the gate's
+    ``isinstance(result, list)`` branch skips the result (string isn't a list)
+    and ``textbook_grounding`` reads ``textbook_result_hits: 0`` even when
+    the writer's search_text/get_chunk_context calls returned grounded
+    textbook chunks.
+
+    Empirical reference: rollout-2026-05-22T22-58-38 for the post-#2233
+    codex-tools a1/my-morning build — 38 valid mcp__sources__* calls with
+    full results in the rollout, all dropped by ``_result_items_from_call``
+    until this unwrap landed.
+    """
+    canonical_payload = (
+        '[{"type":"text","text":"Found 1 results for: \\"Захарійчук 24\\"'
+        '\\n\\n### Result 1\\n- **Section**: Сторінка 24\\n'
+        "- **Source**: Grade 1, zaharijchuk\\n"
+        "- **Chunk ID**: `1-klas-bukvar-zaharijchuk-2025-1_s0024`\\n"
+        '- **Text**:\\nМій день\\nПоснідати. Одягнутися. Піти до Квака."}]'
+    )
+    codex_envelope_event = {
+        "tool": "search_text",
+        "args": {"query": "Захарійчук 24"},
+        "result": f"Wall time: 0.0212 seconds\nOutput:\n{canonical_payload}",
+    }
+
+    items = list(_result_items_from_call(codex_envelope_event))
+
+    assert items, "codex envelope was not unwrapped by _result_items_from_call"
+    assert items[0]["source"].startswith("Grade 1")
+    assert items[0]["author"] == "zaharijchuk"
+    assert items[0]["grade"] == 1
+    assert items[0]["page"] == 24
+    assert "Поснідати" in items[0]["text"]

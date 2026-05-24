@@ -211,9 +211,25 @@ def _is_tool_use_payload(payload: Mapping[str, Any]) -> bool:
 
 
 def _is_tool_result_payload(payload: Mapping[str, Any]) -> bool:
+    # Codex CLI emits ``function_call_output`` as the result-event type with
+    # ``call_id`` as the correlation key (not ``tool_call_id``/``tool_use_id``).
+    # Without including both here, codex rollouts parse the function_call
+    # but never correlate the output back, leaving ``writer_tool_calls.json``
+    # entries with empty ``result`` / ``output_summary`` and breaking the
+    # ``textbook_grounding`` gate (textbook_result_hits=0 even when the
+    # writer's search_text/get_chunk_context calls returned grounded chunks).
+    # Empirical reference: rollout-2026-05-22T22-58-38 for the codex-tools
+    # a1/my-morning build at codex-cli 0.133.0 — 38 valid mcp__sources__*
+    # calls fired with full results in the rollout, all dropped on the floor
+    # by the result-correlation pass.
     payload_type = _payload_type(payload)
-    return payload_type in {"tool_result", "tool_output", "function_result"} or (
-        any(key in payload for key in ("tool_use_id", "tool_call_id"))
+    return payload_type in {
+        "tool_result",
+        "tool_output",
+        "function_result",
+        "function_call_output",
+    } or (
+        any(key in payload for key in ("tool_use_id", "tool_call_id", "call_id"))
         and any(key in payload for key in ("content", "output", "result"))
     )
 
