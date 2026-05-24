@@ -1067,7 +1067,7 @@ async def send_message(msg: SendMessageRequest):
 # ══════════════════════════════════════════════════════════════════
 #
 # These endpoints expose the channel bridge to the web dashboard
-# (playgrounds/channels.html). They reuse the same broker DB as the
+# (dashboards/channels.html). They reuse the same broker DB as the
 # legacy /api/comms/messages* endpoints but operate on the new
 # `channels`, `channel_messages`, `deliveries` tables.
 #

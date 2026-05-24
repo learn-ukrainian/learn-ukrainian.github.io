@@ -176,8 +176,8 @@ def main():
         "total_pending": total_modules - total_pass - total_fail,
     }
 
-    # Write to playgrounds directory
-    output_path = Path(__file__).parent.parent / "playgrounds" / "data" / "status.json"
+    # Write to dashboards directory
+    output_path = Path(__file__).parent.parent / "dashboards" / "data" / "status.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w") as f:
