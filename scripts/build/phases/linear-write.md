@@ -3,100 +3,31 @@
 This is the actionable subset of `docs/north-star.md` for the writer phase.
 
 <!-- rule_id: #R-VOICE-META -->
-The learner is not a child. Talk to them as a peer. They will not be
-flattered by emoji confetti or "great job!" stickers; they will be
-respected by clear explanations, honest references to source, and a
-visible escalator from "literally cannot read Cyrillic" to "reading
-Stus in the original."
+Adult peer voice only. No English meta-narration or teacherly transitions in `module.md`, including "Welcome to the start of our journey", "In this section we will learn", "Now that you have seen these verbs", "Let's now look at", "Before we move on", "Note that…", "Notice that…", "Observe that…", "Pay attention to…", "Remember that…", or "It is important to…".
 
 <!-- rule_id: #R-VOICE-META -->
-Forbidden meta-prose in module.md, verbatim:
-- "Welcome to the start of our journey"
-- "In this section we will learn"
-- "Now that you have seen these verbs"
-- "Let's now look at"
-- "Before we move on"
-- "Note that…", "Notice that…", "Observe that…", "Observe how…"
-- "Pay attention to…", "Remember that…", "It is important to…"
-- Any English sentence that opens with a teacher-facing transition verb
-  ("Let's…", "We will…", "You should now…")
-
-<!-- rule_id: #R-VOICE-META -->
-**B1 + B2 + C1 voice (full Ukrainian, no English in body):**
-- Ukrainian peer voice — natural, register-appropriate, not
-  textbook-formal unless the section calls for it.
-- Grammar is explained in Ukrainian using Ukrainian linguistic
-  terms (дієслово, відмінок, недоконаний вид, видова пара). New
-  abstract terms get a one-sentence Ukrainian definition the first
-  time they appear, the way Ukrainian school textbooks introduce
-  them. **No parenthetical English glosses in the body.** L1
-  anchoring lives in Tab 2 (Словник), where each new lemma carries
-  an English translation column and idioms / expressions get an
-  English explanation note.
-- No mirrored English translations after Ukrainian paragraphs. No
-  English blockquote glosses. No English narrative scaffolding in
-  the main body. No "rescue notes" in English.
-- Activity instructions (Tab 3) are 100 % Ukrainian.
-
-<!-- rule_id: #R-VOICE-META -->
-**Any English in B1+ module body** outside Tab 2 (Словник). No
-rescue notes, no parenthetical grammar-term glosses, no English
-activity instructions, no English mirror-translations of
-Ukrainian dialogues. The only English at B1+ is the Словник
-translation column and Словник expression notes.
+B1+ body text outside Tab 2 is Ukrainian only: no rescue notes, mirrored translations, parenthetical English grammar glosses, or English activity instructions. Tab 2 may carry English translations and expression notes.
 
 <!-- rule_id: #R-CITE-HONEST -->
-**Real textbook citations, not invented authority.** Every grammar
-claim and every cultural fact roots in an attributed source —
-Караман Grade 10 p. 176; Кравцова Grade 4 p. 113; Заболотний Grade 5
-p. 83; Большакова Grade 1 p. 24; Захарійчук Grade 1 p. 13. The wiki
-packets the writer consumes are themselves source-cited. Ghost
-references fail the build (citations_resolve gate).
-
-<!-- rule_id: #R-CITE-HONEST -->
-Сибір case study (May 2026): an unhardened answer shipped two fabricated
-citations (a Грінченко example with no Грінченко entry behind it,
-an Антоненко-Давидович claim with no style-guide entry) and one fused
-Shevchenko line that does not exist as composed. These five checks block
-that failure class. Run each check while drafting, not as a separate pass.
-
-<!-- rule_id: #R-CITE-HONEST -->
-**Source-citation discipline.** Every dictionary / style-guide / author
-citation MUST be groundable in MCP. Use `mcp__sources__verify_source_attribution(source, claim)` as the single-call primitive. If `discusses=false`, do NOT cite that source for that claim.
+Use real sources only. Grammar/cultural claims need attributed, MCP-groundable evidence; ghost references fail `citations_resolve`. Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/author claims and do not cite when `discusses=false`.
 
 <!-- rule_id: #R-BAD-FORM-MARKER -->
-**Decolonized framing is the default, not an opt-in.** Ukraine has
-its own canon (Шевченко, Франко, Леся Українка, Стус, Жадан, Забужко,
-Андрухович, Підмогильний, Хвильовий). It has its own history
-(Київська Русь as Ukrainian, the Cossacks, the UNR, the OUN-UPA, the
-Holodomor, the language ban decrees, 2014, 2022). We do not inherit
-the Soviet cultural map. Kyiv-born Russian-imperial writers
-(Bulgakov, Gogol, Akhmatova, Pasternak) stay Russian. Yulia
-Tymoshenko and other Russian-aligned figures do not appear as
-exemplars. Holodomor is genocide; the war is a war, not a "conflict."
-
-<!-- rule_id: #R-BAD-FORM-MARKER -->
-**Russian-imperial cultural map.** Bulgakov, Gogol, Akhmatova,
-Pasternak, Brodsky as "Ukrainian writers" because of biography.
-They wrote in Russian, in Russian-imperial frames; they stay
-Russian.
-
-<!-- rule_id: #R-BAD-FORM-MARKER -->
-**Soviet-era euphemisms.** "Conflict" for the war. "Famine" for
-the Holodomor. "Reunification" for occupation. "Brotherly peoples"
-for imperial subordination.
+Decolonized framing is default. Ukraine has its own canon and history; Russian-imperial writers stay Russian; Holodomor is genocide; the war is a war, not a "conflict"; reject Soviet euphemisms such as "reunification" and "brotherly peoples."
 
 <!-- rule_id: #R-VOICE-META -->
-**Activities that test content recall instead of language.**
-"У якому році Хмельницький підписав Переяславську угоду?" tests
-history memory, not Ukrainian. (See non-negotiable rule §9.) ZNO-
-format activities testing pure language mechanics are exempt.
-
-For the full north-star context, see `docs/north-star.md`. This charter is the write-time-actionable subset.
+Activities test Ukrainian, not content recall. Pure language mechanics are fine; trivia such as "У якому році Хмельницький підписав Переяславську угоду?" is not.
 
 # Writer Lesson Contract (write-time subset)
 
 Produce exactly four artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`. Plans are immutable; wiki packet and implementation map are source obligations, not optional background.
+
+## Citation authority (read this FIRST, applies to every artifact)
+
+The plan's `references` field is the SOLE source of textbook citations for `resources.yaml`. Knowledge Packet anchors (S1, S2, S3, ...) are research material — they help you UNDERSTAND topic context, but they are NOT citation candidates. If a Knowledge Packet anchor points to a chunk OUTSIDE `plan.references`, you MUST NOT cite that chunk in `resources.yaml`.
+
+Concrete example: if `plan.references` lists [Захарійчук Grade 1, p.24] and the Knowledge Packet S1 anchor points to Захарійчук Grade 4 p.150, you cite ONLY Grade 1 p.24. The Grade 4 anchor is research context, not citation material.
+
+This rule overrides any later instruction that suggests "enriching" or "extending" plan_references — those instructions apply within the plan-provided sources, never outside them.
 
 Published tabs are fixed: Tab 1 `Урок` from `module.md`; Tab 2 `Словник` from `vocabulary.yaml`; Tab 3 `Вправи` from `activities.yaml` plus inline cross-references; Tab 4 `Ресурси` from `resources.yaml`.
 
@@ -171,6 +102,8 @@ When in doubt, omit the bad contrast and teach only the good form.
 
 **2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first (the кобета/кобіта pattern). If the form is authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
+Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `search_definitions`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`.
+
 <!-- rule_id: #R-CITE-HONEST -->
 **3. Source-citation discipline** (citation honesty). Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
 
@@ -190,7 +123,7 @@ When in doubt, omit the bad contrast and teach only the good form.
 Fewer than 30 words per blockquote, or a blockquote whose text is not literally contained in the returned chunk, makes `textbook_grounding.long_blockquotes_checked` fail and the gate HARD-rejects.
 
 <!-- rule_id: #R-CITE-HONEST -->
-Sources in blockquotes/resources must be either in `plan_references` or grounded in a Knowledge Packet / `search_text` result that appears in writer telemetry. Do not add out-of-plan textbook references without retrieved evidence.
+Sources in blockquotes/resources must be either in `plan_references` or grounded in a Knowledge Packet / `search_text` result that appears in writer telemetry, EXCEPT `resources.yaml` entries with `role: textbook`: those come ONLY from `plan.references`. Every textbook-role resource MUST carry the plan chunk_id in `packet_chunk_id`, `chunk_id`, or `notes`, and that chunk_id MUST appear literally in `plan.references[*].notes`. Knowledge Packet anchors and out-of-plan `search_text` results may support understanding, but they MUST NOT become textbook entries in `resources.yaml`.
 
 <!-- rule_id: #R-CITE-HONEST -->
 **4. Quote attribution discipline.** Every attributed Ukrainian quote must pass `mcp__sources__verify_quote(author, text)` with `matched=true` and `best_confidence >= 0.85`. Never fuse snippets from separate sources.
@@ -199,7 +132,7 @@ Sources in blockquotes/resources must be either in `plan_references` or grounded
 
 You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER the four artifact fences. Required sub-nodes: `<rescanned_words>`, `<rescanned_sources>`, `<grammar_claims_grounded>`, `<removed_unverified>`. A missing block records `gate_present=false` and the writer is treated as having skipped the protocol.
 
-**Tool-citation honesty (mandatory).** Every tool name you cite inside a `<plan_reasoning verification="...">` attribute or block body MUST correspond to an actual tool call you made on this turn. The pipeline cross-references citations against the trace and treats unmatched citations as a hard fail (`tool_theatre`). Canonical names only — no family aliases. Canonical MCP tool inventory you may cite: `mcp__sources__verify_words`, `mcp__sources__check_modern_form`, `mcp__sources__verify_quote`, `mcp__sources__verify_source_attribution`, `mcp__sources__check_russian_shadow`, `mcp__sources__search_text`, `mcp__sources__search_literary`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`, `mcp__sources__search_external`, `mcp__sources__search_images`, `mcp__sources__query_wikipedia`, `mcp__sources__query_pravopys`, `mcp__sources__query_cefr_level`, `mcp__sources__search_definitions`, `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__search_grinchenko_1907`, `mcp__sources__search_esum`, `mcp__sources__search_idioms`, `mcp__sources__search_synonyms`, `mcp__sources__translate_en_uk`.
+**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
 
 ## LESSON SOURCE — synthesize this wiki content into the 4-tab format
 
@@ -359,23 +292,9 @@ Workbook activities MUST NOT have matching markers. To keep the deterministic
 `inject_activity_ids` gate green, workbook activity objects should omit `id`
 entirely; the gate only expects ids that are intended for inline injection.
 
-The pipeline parses inline markers (`<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->`)
-and the `inject_activity_ids` gate enforces bidirectional consistency for
-inline activity ids:
+The pipeline parses `<!-- INJECT_ACTIVITY: act-N -->` markers and hard-fails both directions: inline activity id without a matching marker (`unused_activities_not_injected`) or marker pointing to a missing id (`missing_activity_ids`).
 
-- **`unused_activities_not_injected`** — an inline `id` in `activities.yaml`
-  with no matching `<!-- INJECT_ACTIVITY: ... -->` marker anywhere in `module.md`.
-  HARD REJECT. Observed failure mode (DeepSeek-pro build #3, 2026-05-21):
-  writer emitted clean inline `activities.yaml` with `act-1..act-4` but
-  referenced none of them inline in `module.md` prose.
-- **`missing_activity_ids`** — an `<!-- INJECT_ACTIVITY: act-X -->` marker
-  pointing to an `id` that doesn't exist in `activities.yaml`. HARD REJECT.
-
-**Placement rule:** put the marker in the section whose pedagogical topic the
-activity practices — e.g. the marker for an `act-2` quiz on Genitive endings
-goes inside the prose that introduces the Genitive paradigm, NOT in the
-Підсумок (summary) tab. Place each marker on its own line for readability,
-flanked by blank lines:
+**Placement rule:** put the marker in the section whose pedagogical topic the activity practices, on its own line with blank lines around it:
 
 ```
 …паттерн закінчень -а / -я для іменників чоловічого роду.
@@ -385,9 +304,7 @@ flanked by blank lines:
 Спробуй вправу нижче, щоб перевірити твоє розуміння цих закінчень.
 ```
 
-The marker is an HTML comment so it's invisible in rendered MDX — its only
-purpose is the gate. Do not wrap it in backticks, do not put it inside a
-JSX prop, do not nest it inside another fence.
+The marker is an invisible HTML comment for the gate only. Do not wrap it in backticks, put it in a JSX prop, or nest it inside another fence.
 
 ## Activity Authoring Fields (mandatory)
 
@@ -423,19 +340,7 @@ like `correct_order`, indices are zero-based.
 The complete VESUM-exclusion list is exactly:
 `{sentence, error, errors, errorWord, error_word, explanation}`.
 
-**FORBIDDEN inner field-name aliases** — every one of these causes the deliberate typo to leak into `vesum_verified` as a false positive AND fails the strict YAML parser at MDX-render time. The build WILL fail at python_qg:
-- `wrong:` ❌
-- `incorrect:` ❌
-- `mistake:` ❌
-- `bad:` ❌
-- `original:` ❌
-- `wrong_form:` ❌
-- `incorrect_form:` ❌
-- `correct:` ❌ (use `correction:` instead)
-- `correctAnswer:` ❌ for error-correction items (it's for other types)
-- `right:` ❌
-- `fix:` ❌
-- `fixed:` ❌
+**FORBIDDEN inner field-name aliases** — these leak deliberate typos into `vesum_verified` and fail the strict parser: `wrong:`, `incorrect:`, `mistake:`, `bad:`, `original:`, `wrong_form:`, `incorrect_form:`, `correct:` (use `correction:`), `correctAnswer:`, `right:`, `fix:`, `fixed:`.
 
 Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word, explanation, correction, answer, options}` for an error-correction item, you are inventing an alias. Stop, use `sentence` + `error` + `correction` exactly as above.
 
@@ -447,12 +352,16 @@ Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word
 
 ## Full Wiki Context (source of truth for citations)
 
-See `## Knowledge Packet` above. This is the same content; the prior render duplicated it as a token tax.
+See `## Knowledge Packet` above. This is the same wiki-obligation content; the prior render duplicated it as a token tax. Textbook citations in `resources.yaml` remain governed by the earlier Citation authority rule: plan references only, never Knowledge Packet anchors as citation candidates.
 
 ## Pre-emit verification (run BEFORE you write any artifact)
 
 Before artifacts, make the in-scope MCP calls your draft depends on:
-1. Textbook grounding: `mcp__sources__search_text` for each `plan_references` entry, then `mcp__sources__get_chunk_context` for quotes.
+1. Textbook grounding (mandatory chunk_id-first protocol):
+   For each entry in `plan_references`, parse the `notes` field for the literal substring `chunk_id: <ID>` (always present — example: `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024`).
+   Call `mcp__sources__get_chunk_context(chunk_id=<ID>)` to fetch the chunk text.
+   DO NOT call `mcp__sources__search_text` for plan references — the chunk_id in notes is authoritative.
+   Concrete example: plan says `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024` → call `get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0024")`, paste from THAT returned text. Do NOT search by "p.24" — FTS5 will return the wrong author (e.g. Pohribnyi instead of Захарійчук).
 2. Multimedia obligation: at least one `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`; `resources_search_attempted` rejects zero attempts.
 3. VESUM: `mcp__sources__verify_words` over every Ukrainian form you will emit.
 4. Russianism/style: `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__check_russian_shadow`, or `mcp__sources__search_heritage` for contrast pairs or suspicious forms.
