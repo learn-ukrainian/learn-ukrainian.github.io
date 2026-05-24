@@ -33,6 +33,7 @@ import re
 import shutil
 import signal
 import subprocess
+import tempfile
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
@@ -72,6 +73,7 @@ from .watchdog import (
 # fast enough that stall detection fires within 1s of the threshold, slow
 # enough that we don't burn CPU in the wait loop.
 _POLL_INTERVAL_S = 1.0
+_STDIN_TEMP_PREFIX = "agent-runtime-stdin-"
 _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 _MCP_RUNTIME_INIT_TIMEOUT_S = 30.0
 _MCP_TOOL_EVENT_RE = re.compile(
@@ -110,6 +112,50 @@ def _pty_disabled_via_env() -> bool:
         "yes",
         "on",
     }
+
+
+def _stdin_uses_text_mode(stdin: Any) -> bool:
+    """Return True when Popen should use text mode for pipe stdout/stderr."""
+    import io
+
+    if stdin in (subprocess.PIPE, subprocess.DEVNULL, None):
+        return True
+    return isinstance(stdin, io.TextIOBase)
+
+
+def _prepare_stdin_handle(
+    stdin_payload: str,
+) -> tuple[Any, Path | None]:
+    """Return ``(stdin_for_Popen, temp_path)`` for a prompt payload.
+
+    PTY-wrapped spawns with ``stdin=PIPE`` plus a large ``write()`` crash
+    Codex CLI before session init (#2159). Feeding stdin from a temp file
+    matches ``cat prompt.txt | codex exec -`` and avoids the silent exit-1
+    path where ``BrokenPipeError`` was previously swallowed.
+    """
+    if not stdin_payload:
+        return subprocess.DEVNULL, None
+
+    fd, path_str = tempfile.mkstemp(prefix=_STDIN_TEMP_PREFIX, suffix=".txt")
+    path = Path(path_str)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(stdin_payload.encode("utf-8"))
+    except OSError:
+        with contextlib.suppress(OSError):
+            path.unlink()
+        raise
+
+    return open(path, encoding="utf-8"), path
+
+
+def _cleanup_stdin_temp(path: Path | None, handle: Any) -> None:
+    if handle not in (None, subprocess.DEVNULL, subprocess.PIPE):
+        with contextlib.suppress(OSError):
+            handle.close()
+    if path is not None and _is_temp_file(path):
+        with contextlib.suppress(OSError):
+            path.unlink()
 
 
 def _spawn_pty_subprocess(
@@ -194,6 +240,7 @@ def _spawn_pty_subprocess(
     # the runner's existing FileNotFoundError handling can turn it into
     # AgentUnavailableError. Do NOT translate this to PTYUnavailable.
     try:
+        text_mode = _stdin_uses_text_mode(stdin)
         proc = subprocess.Popen(
             list(cmd),
             cwd=str(cwd),
@@ -201,12 +248,8 @@ def _spawn_pty_subprocess(
             stdin=stdin,
             stdout=stdout_slave,
             stderr=stderr_slave,
-            # text=True / bufsize=1 here are no-ops for stdout/stderr
-            # (those are raw int fds, not Python-managed pipes), but
-            # they make stdin a line-buffered text pipe when the
-            # caller passes stdin=PIPE for stdin_payload writes.
-            text=True,
-            bufsize=1,
+            text=text_mode,
+            bufsize=1 if text_mode else -1,
             start_new_session=True,
         )
     except BaseException:
@@ -246,10 +289,10 @@ def _spawn_pipe_subprocess(
         stdin=stdin,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        text=_stdin_uses_text_mode(stdin),
         cwd=str(cwd),
         env=dict(env),
-        bufsize=1,
+        bufsize=1 if _stdin_uses_text_mode(stdin) else -1,
         start_new_session=True,
     )
     return proc, None, None
@@ -885,6 +928,7 @@ def _execute_invocation_plan(
     tool_config: dict | None = None,
     event_sink: Callable[..., None] | None = None,
     stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
     env = build_agent_env(provider=agent_name, overrides=plan.env_overrides)
@@ -900,14 +944,18 @@ def _execute_invocation_plan(
     liveness_paths: tuple[Path, ...] = ()
     stdout_master_fd: int | None = None
     stderr_master_fd: int | None = None
+    stdin_handle: Any = subprocess.DEVNULL
+    stdin_temp_path: Path | None = None
 
     try:
         try:
+            if plan.stdin_payload:
+                stdin_handle, stdin_temp_path = _prepare_stdin_handle(plan.stdin_payload)
             proc, stdout_master_fd, stderr_master_fd = _spawn_subprocess(
                 plan.cmd,
                 cwd=cwd,
                 env=env,
-                stdin=subprocess.PIPE if plan.stdin_payload else subprocess.DEVNULL,
+                stdin=stdin_handle,
             )
         except (FileNotFoundError, PermissionError, OSError) as exc:
             record = _build_usage_record(
@@ -934,13 +982,6 @@ def _execute_invocation_plan(
             raise AgentUnavailableError(
                 f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}"
             ) from exc
-
-        if plan.stdin_payload and proc.stdin is not None:
-            try:
-                proc.stdin.write(plan.stdin_payload)
-                proc.stdin.close()
-            except BrokenPipeError:
-                pass
 
         liveness_paths = tuple(adapter.liveness_signal_paths(plan))
         if plan.output_file is not None and plan.output_file not in liveness_paths:
@@ -999,6 +1040,7 @@ def _execute_invocation_plan(
                 stall_timeout,
                 hard_timeout,
                 stdout_silence_timeout=stdout_silence_timeout,
+                initial_response_timeout=initial_response_timeout,
             )
             if kill_reason is not None:
                 returncode = proc.poll()
@@ -1052,6 +1094,27 @@ def _execute_invocation_plan(
             plan=plan,
             call_start_time=start_time,
         )
+        if (
+            not parse.ok
+            and proc.returncode not in (None, 0)
+            and not parse.response
+            and not (parse.stderr_excerpt or "").strip()
+            and not stdout_text.strip()
+            and not stderr_text.strip()
+        ):
+            parse = ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=(
+                    f"{agent_name} subprocess exited rc={proc.returncode} in "
+                    f"{duration_s:.2f}s with no captured stdout/stderr "
+                    f"(stdin_bytes={len(plan.stdin_payload or '')})"
+                )[:500],
+                rate_limited=parse.rate_limited,
+                session_id=parse.session_id,
+                tokens=parse.tokens,
+                tool_calls=parse.tool_calls,
+            )
         return _ExecutionOutcome(
             parse=parse,
             duration_s=duration_s,
@@ -1106,6 +1169,120 @@ def _execute_invocation_plan(
             with contextlib.suppress(Exception):
                 cleanup_invocation(plan)
 
+        _cleanup_stdin_temp(stdin_temp_path, stdin_handle)
+
+
+def _raise_for_kill_reason(
+    *,
+    agent_name: str,
+    kill_reason: str | None,
+    execution: _ExecutionOutcome,
+    prompt: str,
+    entrypoint: str,
+    model: str,
+    mode: str,
+    task_id: str | None,
+    cwd: Path,
+    session_id: str | None,
+    stdout_silence_timeout: int | None,
+    initial_response_timeout: int | None,
+    stall_timeout: int,
+    hard_timeout: int,
+) -> None:
+    """Map watchdog kill reasons to typed runtime errors + usage records."""
+    if not kill_reason:
+        return
+    parse = execution.parse
+    if kill_reason == "hard_timeout" and parse.ok:
+        return
+    if kill_reason == "stdout_silence_timeout":
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="stalled",
+            rate_limited=False,
+            stalled=True,
+            stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
+            tokens=None,
+        )
+        write_record(record)
+        raise AgentStalledError(
+            agent_name,
+            stdout_silence_timeout or stall_timeout,
+            execution.duration_s,
+            kind="stdout_silence_timeout",
+        )
+
+    if kill_reason == "initial_response_timeout":
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="stalled",
+            rate_limited=False,
+            stalled=True,
+            stderr_excerpt=(
+                parse.stderr_excerpt
+                or execution.stderr_text[:500]
+                or (
+                    f"initial_response_timeout: {agent_name} produced no "
+                    f"stdout/stderr/liveness activity within "
+                    f"{initial_response_timeout}s"
+                )
+            ),
+            tokens=None,
+        )
+        write_record(record)
+        raise AgentStalledError(
+            agent_name,
+            initial_response_timeout or stall_timeout,
+            execution.duration_s,
+            kind="initial_response_timeout",
+        )
+
+    if kill_reason == "hard_timeout" and not parse.ok:
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="hard_timeout",
+            rate_limited=False,
+            stalled=False,
+            stderr_excerpt=(
+                parse.stderr_excerpt
+                or execution.stderr_text[:500]
+                or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
+            ),
+            tokens=None,
+        )
+        write_record(record)
+        raise AgentTimeoutError(agent_name, hard_timeout)
+
 
 def _invoke_gemini_with_fallback(
     *,
@@ -1122,6 +1299,7 @@ def _invoke_gemini_with_fallback(
     hard_timeout: int,
     stall_timeout: int,
     stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
     effort: str | None = None,
 ) -> Result:
     """Run Gemini through the shared model/auth fallback ladder."""
@@ -1167,34 +1345,27 @@ def _invoke_gemini_with_fallback(
             stall_timeout=stall_timeout,
             tool_config=attempt_tool_config,
             stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_response_timeout,
         )
         parse = execution.parse
         last_tool_calls = list(parse.tool_calls)
 
-        if execution.kill_reason == "stdout_silence_timeout":
-            record = _build_usage_record(
-                agent=agent_name,
+        if execution.kill_reason in ("stdout_silence_timeout", "initial_response_timeout"):
+            _raise_for_kill_reason(
+                agent_name=agent_name,
+                kill_reason=execution.kill_reason,
+                execution=execution,
+                prompt=prompt,
                 entrypoint=entrypoint,
                 model=last_telemetry.model if last_telemetry is not None else rung.model,
                 mode=mode,
                 task_id=task_id,
                 cwd=cwd,
                 session_id=session_id,
-                duration_s=execution.duration_s,
-                input_chars=len(prompt),
-                output_chars=len(execution.stdout_text),
-                returncode=execution.returncode,
-                outcome="stalled",
-                rate_limited=False,
-                stalled=True,
-                stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
-                tokens=None,
-            )
-            write_record(record)
-            raise AgentStalledError(
-                agent_name,
-                stdout_silence_timeout or stall_timeout,
-                execution.duration_s,
+                stdout_silence_timeout=stdout_silence_timeout,
+                initial_response_timeout=initial_response_timeout,
+                stall_timeout=stall_timeout,
+                hard_timeout=hard_timeout,
             )
 
         if execution.kill_reason == "hard_timeout" and not parse.ok:
@@ -1413,6 +1584,7 @@ def invoke(
                                  # for the full design rationale.
     stall_timeout: int = 180,  # accepted but ignored; see docstring
     stdout_silence_timeout: int | None = None,
+    initial_response_timeout: int | None = None,
     event_sink: Callable[..., None] | None = None,
     effort: str | None = None,
 ) -> Result:
@@ -1450,6 +1622,10 @@ def invoke(
         stdout_silence_timeout: Optional per-call stdout silence watchdog in
             seconds. Disabled by default. Use only for protocols where stdout
             bytes are the authoritative liveness signal.
+        initial_response_timeout: Optional startup probe in seconds. When set,
+            the runtime kills the subprocess if it produces no stdout/stderr
+            or liveness-file activity within this window (#2071). Distinct
+            from ``stdout_silence_timeout``, which only watches stdout lines.
         event_sink: Optional ``event_sink(event_name, **fields)`` callback for
             dispatch JSONL observability events.
         effort: Cross-agent reasoning/effort level. First-class peer of
@@ -1536,6 +1712,7 @@ def invoke(
             hard_timeout=hard_timeout,
             stall_timeout=stall_timeout,
             stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_response_timeout,
             effort=effort,
         )
 
@@ -1574,60 +1751,27 @@ def invoke(
         tool_config=tool_config,
         event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
+        initial_response_timeout=initial_response_timeout,
     )
     parse = execution.parse
 
-    if execution.kill_reason == "stdout_silence_timeout":
-        record = _build_usage_record(
-            agent=agent_name,
+    if execution.kill_reason:
+        _raise_for_kill_reason(
+            agent_name=agent_name,
+            kill_reason=execution.kill_reason,
+            execution=execution,
+            prompt=prompt,
             entrypoint=entrypoint,
             model=effective_model,
             mode=mode,
             task_id=task_id,
             cwd=effective_cwd,
             session_id=session_id,
-            duration_s=execution.duration_s,
-            input_chars=len(prompt),
-            output_chars=len(execution.stdout_text),
-            returncode=execution.returncode,
-            outcome="stalled",
-            rate_limited=False,
-            stalled=True,
-            stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
-            tokens=None,
+            stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            stall_timeout=stall_timeout,
+            hard_timeout=hard_timeout,
         )
-        write_record(record)
-        raise AgentStalledError(
-            agent_name,
-            stdout_silence_timeout or stall_timeout,
-            execution.duration_s,
-        )
-
-    if execution.kill_reason == "hard_timeout" and not parse.ok:
-        record = _build_usage_record(
-            agent=agent_name,
-            entrypoint=entrypoint,
-            model=effective_model,
-            mode=mode,
-            task_id=task_id,
-            cwd=effective_cwd,
-            session_id=session_id,
-            duration_s=execution.duration_s,
-            input_chars=len(prompt),
-            output_chars=len(execution.stdout_text),
-            returncode=execution.returncode,
-            outcome="hard_timeout",
-            rate_limited=False,
-            stalled=False,
-            stderr_excerpt=(
-                parse.stderr_excerpt
-                or execution.stderr_text[:500]
-                or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
-            ),
-            tokens=None,
-        )
-        write_record(record)
-        raise AgentTimeoutError(agent_name, hard_timeout)
 
     if parse.rate_limited:
         outcome = "rate_limited"

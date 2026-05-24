@@ -911,6 +911,74 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["cli_version"] == "2.1.89"
 
 
+def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Danger dispatches with edits but no commits surface needs_finalize (#2134)."""
+    state_path = delegate._state_path("needs-finalize")
+    subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "test"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    delegate._write_state_atomic(state_path, {
+        "task_id": "needs-finalize",
+        "worktree_path": str(tmp_path),
+        "worktree_base": "main",
+    })
+    (tmp_path / "orphan.txt").write_text("left behind", encoding="utf-8")
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+
+    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_a, **_k: 0)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_count_commits_ahead", return_value=0),
+    ):
+        rc = delegate._run_worker(
+            task_id="needs-finalize",
+            agent="codex",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort="xhigh",
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize"
+    assert state["needs_finalize"] is True
+    assert state["commits_ahead"] == 0
+    assert state["worktree_dirty_on_exit"] is True
+
+
 def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("worker-budget")
     delegate._write_state_atomic(state_path, {"task_id": "worker-budget"})

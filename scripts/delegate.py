@@ -170,6 +170,9 @@ DEFAULT_HARD_TIMEOUT_S = 7200
 # silence window is the stopgap. See watchdog.py:323-332 for the historical
 # Gemini block-buffering incident chain (#1184).
 DEFAULT_SILENCE_TIMEOUT_S = 3600
+# Fail fast when Codex (or any agent) never produces stdout/stderr/liveness
+# activity at startup — distinct from the long silence window above (#2071).
+DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 180
 
 
 def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
@@ -406,6 +409,23 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
         return None
     sha = (proc.stdout or "").strip()
     return sha or None
+
+
+def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
+    """Return commits on HEAD not reachable from ``base_ref``, or None."""
+    proc = subprocess.run(
+        ["git", "rev-list", "--count", f"{base_ref}..HEAD"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    try:
+        return int((proc.stdout or "").strip())
+    except ValueError:
+        return None
 
 
 def _validate_existing_worktree(
@@ -678,6 +698,7 @@ def _run_worker(
     silence_timeout: int = DEFAULT_SILENCE_TIMEOUT_S,
     effort: str | None = None,
     max_budget_usd: float | None = None,
+    initial_response_timeout: int = DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -736,6 +757,9 @@ def _run_worker(
     cancelled = False
     try:
         stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
+        initial_probe = (
+            initial_response_timeout if initial_response_timeout > 0 else None
+        )
         tool_config = (
             {"max_budget_usd": max_budget_usd}
             if max_budget_usd is not None
@@ -753,6 +777,7 @@ def _run_worker(
             entrypoint="delegate",
             hard_timeout=hard_timeout,
             stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_probe,
             effort=effort,
         )
         ok_outcome = result.ok
@@ -772,9 +797,12 @@ def _run_worker(
         stderr_excerpt = str(exc)[:500]
     except AgentStalledError as exc:
         timed_out = True
-        stderr_excerpt = (
-            f"stdout_silence_timeout: {exc}"
-        )[:500]
+        prefix = (
+            "initial_response_timeout"
+            if getattr(exc, "kind", "stall") == "initial_response_timeout"
+            else "stdout_silence_timeout"
+        )
+        stderr_excerpt = f"{prefix}: {exc}"[:500]
     except AgentTimeoutError as exc:
         stderr_excerpt = f"hard_timeout: {exc}"[:500]
     except AgentRuntimeError as exc:
@@ -825,6 +853,23 @@ def _run_worker(
         except OSError:
             dirty_on_exit = None
 
+    commits_ahead: int | None = None
+    needs_finalize = False
+    if worktree_path and mode == "danger":
+        base_branch = final_state.get("worktree_base") or "main"
+        commits_ahead = _count_commits_ahead(
+            Path(worktree_path),
+            f"origin/{base_branch}",
+        )
+        if commits_ahead == 0 and dirty_on_exit:
+            needs_finalize = True
+
+    if needs_finalize and (
+        final_status == "done"
+        or (final_status == "failed" and dirty_on_exit)
+    ):
+        final_status = "needs_finalize"
+
     final_state.update({
         "model": getattr(result, "model", final_state.get("model")),
         "effort": getattr(result, "effort", final_state.get("effort")),
@@ -837,6 +882,8 @@ def _run_worker(
         "stderr_excerpt": stderr_excerpt,
         "returncode": returncode,
         "worktree_dirty_on_exit": dirty_on_exit,
+        "commits_ahead": commits_ahead,
+        "needs_finalize": needs_finalize,
     })
     _write_state_atomic(state_path, final_state)
 
@@ -857,7 +904,7 @@ def _run_worker(
             stderr_excerpt=stderr_excerpt,
         )
 
-    return 0 if ok_outcome else 1
+    return 0 if ok_outcome and not needs_finalize else 1
 
 
 # ---------------------------------------------------------------------------
@@ -873,6 +920,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
+    initial_response_timeout = getattr(
+        args,
+        "initial_response_timeout",
+        DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+    )
     max_budget_usd = getattr(args, "max_budget_usd", None)
 
     if args.mode == "danger" and not worktree_arg:
@@ -999,6 +1051,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_layout": worktree_layout,
         "hard_timeout": args.hard_timeout,
         "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
         "max_budget_usd": max_budget_usd,
         "pid": None,  # worker fills this
         "status": "spawning",
@@ -1050,6 +1103,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "--cwd", cwd,
         "--hard-timeout", str(args.hard_timeout),
         "--silence-timeout", str(silence_timeout),
+        "--initial-response-timeout", str(initial_response_timeout),
     ]
     if max_budget_usd is not None:
         cmd.extend(["--max-budget-usd", str(max_budget_usd)])
@@ -1500,6 +1554,11 @@ def cmd_worker(args: argparse.Namespace) -> int:
         silence_timeout=args.silence_timeout,
         max_budget_usd=getattr(args, "max_budget_usd", None),
         effort=args.effort,
+        initial_response_timeout=getattr(
+            args,
+            "initial_response_timeout",
+            DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+        ),
     )
 
 
@@ -1651,6 +1710,19 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--initial-response-timeout",
+        type=int,
+        metavar="SECS",
+        default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+        help=(
+            "Startup probe: kill the agent CLI if it produces no "
+            "stdout/stderr/liveness activity within this many seconds "
+            f"(default: {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}; 0 disables). "
+            "Distinct from --silence-timeout, which only watches stdout "
+            "lines after startup (#2071)."
+        ),
+    )
+    d.add_argument(
         "--max-budget-usd",
         type=float,
         default=None,
@@ -1719,7 +1791,8 @@ def build_parser() -> argparse.ArgumentParser:
     l = sub.add_parser("list", help="List tasks (with optional status filter)")
     l.add_argument("--status", default=None,
                    choices=["spawning", "running", "done", "failed",
-                            "timeout", "rate_limited", "crashed", "cancelled"],
+                            "timeout", "rate_limited", "crashed", "cancelled",
+                            "needs_finalize"],
                    help="Optional status filter, e.g. running or failed.")
     l.set_defaults(func=cmd_list)
 
@@ -1737,6 +1810,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     wk.add_argument("--hard-timeout", type=int, default=DEFAULT_HARD_TIMEOUT_S)
     wk.add_argument("--silence-timeout", type=int, default=DEFAULT_SILENCE_TIMEOUT_S)
+    wk.add_argument(
+        "--initial-response-timeout",
+        type=int,
+        default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+    )
     wk.add_argument("--max-budget-usd", type=float, default=None)
     wk.set_defaults(func=cmd_worker)
 
