@@ -77,6 +77,11 @@ def extract_plan_reference_titles(plan: Mapping[str, Any]) -> list[Any]:
     ]
 
 
+def extract_chunk_id_from_notes(notes: str) -> str | None:
+    match = re.search(r"chunk_id:\s*([A-Za-z0-9_\-]+)", str(notes or ""))
+    return match.group(1) if match else None
+
+
 def extract_citation_key(value: Any) -> CitationKey | None:
     text = str(value or "")
     # The first capitalized token is intentionally a narrow author heuristic:
