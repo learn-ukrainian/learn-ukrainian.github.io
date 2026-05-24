@@ -327,12 +327,13 @@ sidebar:
         vocab_content = f"*{no_vocab_msg}*"
 
     # --- TAB 3: Activities ---
-    tab3_activities = [
-        activity for activity in (yaml_activities or [])
-        if str(getattr(activity, 'id', '')) not in injected_activity_ids
-    ]
+    tab3_activities = list(yaml_activities or [])
     if tab3_activities:
-        activities_content = yaml_activities_to_jsx(tab3_activities, is_ukrainian_forced)
+        activities_content = yaml_activities_to_jsx(
+            tab3_activities,
+            is_ukrainian_forced,
+            inline_cross_ref_ids=injected_activity_ids,
+        )
     elif yaml_activities and injected_activity_ids:
         no_workbook_msg = (
             "Немає окремих вправ у робочому зошиті; дивіться вкладку «Урок»."

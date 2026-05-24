@@ -121,16 +121,17 @@ references:
     lesson_tab = _tab_item(mdx, "Lesson")
     activities_tab = _tab_item(mdx, "Activities")
     assert len(_ACTIVITY_COMPONENT_RE.findall(lesson_tab)) == 2
-    assert len(_ACTIVITY_COMPONENT_RE.findall(activities_tab)) == 3
+    assert len(_ACTIVITY_COMPONENT_RE.findall(activities_tab)) == 5
     assert "<Observe" in lesson_tab
     assert "<TrueFalse" in lesson_tab
-    assert "<Observe" not in activities_tab
-    assert "<TrueFalse" not in activities_tab
+    assert "<Observe" in activities_tab
+    assert "<TrueFalse" in activities_tab
     assert "<Order" in activities_tab
     assert "<MatchUp" in activities_tab
     assert "<FillIn" in activities_tab
-    assert "Inline observe" not in activities_tab
-    assert "Inline true false" not in activities_tab
+    assert "Inline observe" in activities_tab
+    assert "Inline true false" in activities_tab
+    assert activities_tab.count("*(see lesson)*") == 2
     assert "INJECT_ACTIVITY" not in mdx
     assert "by Unknown" not in mdx
     assert "Караман" in mdx
