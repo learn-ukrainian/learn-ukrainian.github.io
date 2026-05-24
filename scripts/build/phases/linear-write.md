@@ -102,6 +102,8 @@ When in doubt, omit the bad contrast and teach only the good form.
 
 **2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first (the кобета/кобіта pattern). If the form is authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
+Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `search_definitions`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`.
+
 <!-- rule_id: #R-CITE-HONEST -->
 **3. Source-citation discipline** (citation honesty). Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
 
@@ -130,7 +132,7 @@ Sources in blockquotes/resources must be either in `plan_references` or grounded
 
 You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER the four artifact fences. Required sub-nodes: `<rescanned_words>`, `<rescanned_sources>`, `<grammar_claims_grounded>`, `<removed_unverified>`. A missing block records `gate_present=false` and the writer is treated as having skipped the protocol.
 
-**Tool-citation honesty (mandatory).** Every tool name cited in `<plan_reasoning verification="...">` or block body MUST correspond to an actual same-turn tool call. The pipeline cross-references citations against the trace and hard-fails unmatched names as `tool_theatre`. Use exact `mcp__sources__...` canonical names only; no family aliases.
+**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
 
 ## LESSON SOURCE — synthesize this wiki content into the 4-tab format
 
@@ -348,9 +350,9 @@ Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word
 {PLAN_CONTENT}
 ```
 
-## Full Wiki Context (source obligations, not textbook citation authority)
+## Full Wiki Context (source of truth for citations)
 
-See `## Knowledge Packet` above. This is the same content; the prior render duplicated it as a token tax.
+See `## Knowledge Packet` above. This is the same wiki-obligation content; the prior render duplicated it as a token tax. Textbook citations in `resources.yaml` remain governed by the earlier Citation authority rule: plan references only, never Knowledge Packet anchors as citation candidates.
 
 ## Pre-emit verification (run BEFORE you write any artifact)
 
