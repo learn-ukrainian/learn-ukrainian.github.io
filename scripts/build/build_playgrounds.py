@@ -4,8 +4,8 @@
 import json
 from pathlib import Path
 
-PLAYGROUNDS_DIR = Path(__file__).parent.parent.parent / "playgrounds"
-DATA_FILE = PLAYGROUNDS_DIR / "data" / "status.json"
+DASHBOARDS_DIR = Path(__file__).parent.parent.parent / "dashboards"
+DATA_FILE = DASHBOARDS_DIR / "data" / "status.json"
 
 
 def build_status_dashboard():
@@ -736,7 +736,7 @@ Click a module cell to see detailed audit results.\\`;
 </body>
 </html>'''
 
-    output_path = PLAYGROUNDS_DIR / "playground-module-status.html"
+    output_path = DASHBOARDS_DIR / "playground-module-status.html"
     with open(output_path, "w") as f:
         f.write(html)
 
@@ -744,10 +744,10 @@ Click a module cell to see detailed audit results.\\`;
 
 
 def main():
-    """Build all playgrounds."""
-    print("Building playgrounds with real data...\n")
+    """Build legacy static dashboard HTML with embedded status data."""
+    print("Building dashboards with real data...\n")
     build_status_dashboard()
-    print("\nDone! Open playgrounds/index.html to see the landing page.")
+    print("\nDone! Open dashboards/index.html to see the launchpad.")
 
 
 if __name__ == "__main__":

@@ -487,15 +487,25 @@ function phaseLabel(phase) {
 // ========= LIVE ACTIVITY =========
 async function loadLiveActivity() {
   try {
-    const params = new URLSearchParams({
-      minutes: '30',
-      limit: String(DISPATCH_LIMIT),
-    });
-    const res = await fetch(`/api/comms/live-activity?${params}`);
-    const data = await res.json();
+    const [activeRes, recentRes] = await Promise.all([
+      fetch('/api/build/events/active'),
+      fetch(`/api/build/events/recent?limit=${Math.max(DISPATCH_LIMIT, 40)}`),
+    ]);
+    if (!activeRes.ok) throw new Error(`active HTTP ${activeRes.status}`);
+    if (!recentRes.ok) throw new Error(`recent HTTP ${recentRes.status}`);
+    const activeData = await activeRes.json();
+    const recentData = await recentRes.json();
+    const now = Date.now();
 
-    // Building Now — modules with recently updated state
-    const building = data.in_progress || [];
+    // Building Now — modules with recent dispatch activity (#1309: build/events)
+    const building = (activeData.active || []).map(b => ({
+      track: b.level,
+      slug: b.slug,
+      phase: b.current_phase || '',
+      phase_status: 'in progress',
+      task_id: '',
+      seconds_ago: Math.round(b.age_s || 0),
+    }));
     document.getElementById('building-count').textContent = `(${building.length})`;
     const buildEl = document.getElementById('feed-building');
     if (building.length === 0) {
@@ -530,8 +540,20 @@ async function loadLiveActivity() {
       }).join('');
     }
 
-    // Recent Completions — research files
-    const completions = data.recent_completions || [];
+    // Recent Completions — successful build events
+    const completions = (recentData.events || [])
+      .filter(e => e.ok === true)
+      .slice(0, 30)
+      .map(e => {
+        const ts = e.ts ? new Date(e.ts).getTime() : now;
+        return {
+          track: e.level,
+          slug: e.slug,
+          type: e.phase || 'phase',
+          size_kb: e.duration_s != null ? String(e.duration_s) : '',
+          seconds_ago: Math.max(0, Math.round((now - ts) / 1000)),
+        };
+      });
     document.getElementById('completions-count').textContent = `(${completions.length})`;
     const compEl = document.getElementById('feed-completions');
     if (completions.length === 0) {
@@ -550,14 +572,24 @@ async function loadLiveActivity() {
               <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
             </div>
             <div class="fi-slug">${slug}</div>
-            <div class="fi-detail">${type} &middot; ${sizeKb} KB</div>
+            <div class="fi-detail">${type}${sizeKb ? ` &middot; ${sizeKb}s` : ''}</div>
           </div>
         `;
       }).join('');
     }
 
-    // Dispatch Feed — recent broker messages
-    const dispatches = data.recent_dispatches || [];
+    // Dispatch Feed — recent build events (replaces deprecated live-activity dispatches)
+    const dispatches = (recentData.events || []).slice(0, DISPATCH_LIMIT).map(e => {
+      const ts = e.ts ? new Date(e.ts).getTime() : now;
+      return {
+        task_id: `${e.level || ''}-${e.slug || ''}-${e.phase || 'event'}`,
+        from: e.agent || 'pipeline',
+        to: e.level || '',
+        type: e.ok ? 'success' : 'error',
+        preview: `${e.phase || 'phase'} ${e.ok ? 'ok' : 'failed'}${e.duration_s != null ? ` (${e.duration_s}s)` : ''}`,
+        seconds_ago: Math.max(0, Math.round((now - ts) / 1000)),
+      };
+    });
     document.getElementById('dispatch-count').textContent = `(${dispatches.length})`;
     const dispEl = document.getElementById('feed-dispatches');
     if (dispatches.length === 0) {

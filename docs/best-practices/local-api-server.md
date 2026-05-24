@@ -84,7 +84,7 @@ The full route and playground consumer inventory lives in
 
 ## Deprecating An Endpoint
 
-1. Prove the endpoint has no active consumer with `rg` across `playgrounds/`,
+1. Prove the endpoint has no active consumer with `rg` across `dashboards/`,
    `scripts/`, and `docs/`.
 2. Mark the FastAPI route `deprecated=True` and add a response header or docs
    pointer to the replacement when compatibility clients still exist.

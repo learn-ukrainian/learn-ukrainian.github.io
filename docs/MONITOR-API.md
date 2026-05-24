@@ -80,7 +80,7 @@ Agents should keep a small on-disk cache keyed by manifest hash
 what you cached, skip the payload fetch entirely — the bytes are
 still authoritative. A ready-to-use helper lives at
 ``scripts/ai_agent_bridge/_monitor_cache.py``; the client SDK
-(``scripts/monitor_client.py``) will wrap this in P3.
+(``scripts/ai_agent_bridge/monitor_client.py``) will wrap this in P3.
 
 ---
 
@@ -1394,7 +1394,7 @@ body = cache.get("rules", expected_hash="...")
 cache.put("rules", body, body_hash="...", url="/api/rules?format=markdown")
 ```
 
-For most callers, **use the SDK**: `scripts/monitor_client.py`.
+For most callers, **use the SDK**: `scripts/ai_agent_bridge/monitor_client.py`.
 
 ```python
 # Requires ``scripts/`` on sys.path. Tests + any caller launched via
@@ -1825,9 +1825,9 @@ revision of this endpoint was removed per reviewer BLOCKER on
 | Page | URL | Data source |
 |------|-----|-------------|
 | Home | `/` | `/api/dashboard/overview`, `/api/state/summary`, `/api/comms/batch-progress` |
-| Audit Dashboard | `/audit-dashboard.html` | `/api/blue/live-status`, `/api/dashboard/track/{id}` |
+| Audit Dashboard | `/audit-dashboard.html` | `/api/dashboard/overview`, `/api/dashboard/track/{id}` |
 | Progress | `/progress.html` | `/api/state/summary`, `/api/state/pipeline/{track}` |
-| Agent Comms | `/comms.html` | `/api/comms/live-activity`, `/api/comms/batch-progress`, `/api/comms/zombies`, `/api/comms/messages`, `/api/comms/stats` |
+| Agent Comms | `/comms.html` | `/api/build/events/active`, `/api/build/events/recent`, `/api/comms/batch-progress`, `/api/comms/zombies`, `/api/comms/messages`, `/api/comms/stats` |
 | Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
 | Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |

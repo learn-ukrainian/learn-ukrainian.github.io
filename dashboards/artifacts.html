@@ -10,6 +10,10 @@
 body { min-height: 100vh; }
 .top-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 24px; position:sticky; top:0; z-index:10; }
 .top-left h1 { font-size:24px; margin:0; }
+.top-right { display:flex; align-items:center; gap:10px; color:var(--text3); font-size:12px; }
+.btn { background:var(--bg2); border:1px solid var(--border); color:var(--text); border-radius:4px; padding:7px 12px; font:inherit; font-size:12px; cursor:pointer; }
+.btn:hover { border-color:var(--accent); color:var(--accent); }
+.btn:disabled { opacity:.55; cursor:default; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 72px; }
 .hero { border-bottom: 1.5px solid var(--text); padding-bottom: 18px; margin-bottom: 22px; display:grid; grid-template-columns: 1fr auto; gap:24px; align-items:end; }
 .hero h2 { font-family: Charter, Georgia, serif; font-size: 30px; line-height: 1.15; margin:0 0 8px; }
@@ -17,11 +21,16 @@ body { min-height: 100vh; }
 .hero-count { background: var(--bg2); border:1px solid var(--border); border-radius:4px; padding:14px 18px; min-width:160px; text-align:right; }
 .hero-count .value { font-family: Charter, Georgia, serif; font-size:34px; font-weight:700; }
 .hero-count .label { color: var(--text3); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
+.hero-count .sub { color: var(--text3); font-size:11px; margin-top:4px; }
 .ops-directory { margin: 0 0 28px; }
-.ops-directory h3 { font-family: Charter, Georgia, serif; font-size:21px; margin:0 0 6px; }
-.ops-directory p { color: var(--text2); font-size:13px; margin:0 0 14px; max-width:760px; }
+.ops-directory summary { cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; background:var(--bg2); border:1px solid var(--border); border-radius:4px; }
+.ops-directory summary::-webkit-details-marker { display:none; }
+.ops-directory summary h3 { font-family: Charter, Georgia, serif; font-size:18px; margin:0; }
+.ops-directory summary p { color: var(--text3); font-size:12px; margin:4px 0 0; }
+.ops-directory[open] summary { border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom-color:transparent; }
+.ops-directory .ops-body { border:1px solid var(--border); border-top:none; border-radius:0 0 4px 4px; padding:14px; background:var(--bg2); }
 .ops-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap:10px; }
-.ops-card { display:block; background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--text3); border-radius:4px; color:var(--text); padding:12px 13px; text-decoration:none; min-height:98px; }
+.ops-card { display:block; background:var(--bg); border:1px solid var(--border); border-left:3px solid var(--text3); border-radius:4px; color:var(--text); padding:12px 13px; text-decoration:none; min-height:98px; }
 .ops-card:hover { border-color:var(--accent); box-shadow:0 6px 18px rgba(122,28,32,.07); }
 .ops-card strong { display:block; font-family: Charter, Georgia, serif; font-size:16px; margin-bottom:5px; }
 .ops-card span { display:block; color:var(--text2); font-size:12px; line-height:1.35; }
@@ -30,25 +39,39 @@ body { min-height: 100vh; }
 .ops-card.agent { border-left-color:var(--accent); }
 .ops-card.curriculum { border-left-color:var(--cyan); }
 .ops-card.runtime { border-left-color:var(--purple); }
-.filters { display:grid; grid-template-columns: 1.2fr repeat(5, minmax(130px, 1fr)); gap:10px; margin-bottom: 26px; }
-.filters input, .filters select { background:#fffaf0; color:var(--text); border:1px solid var(--border); border-radius:4px; padding:9px 10px; font:inherit; font-size:13px; }
+.filter-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+.filter-bar .hint { color:var(--text3); font-size:12px; }
+.filters { display:grid; grid-template-columns: 1.2fr repeat(5, minmax(130px, 1fr)) auto; gap:10px; margin-bottom: 26px; }
+.filters input, .filters select { background:#fffaf0; color:var(--text); border:1px solid var(--border); border-radius:4px; padding:9px 10px; font:inherit; font-size:13px; width:100%; }
 .group { margin: 26px 0 34px; }
 .group h3 { font-family: Charter, Georgia, serif; font-size:21px; border-bottom:1px solid var(--border); padding-bottom:8px; margin:0 0 14px; display:flex; justify-content:space-between; gap:12px; }
 .group h3 span { color:var(--text3); font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size:12px; font-weight:500; }
 .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap:14px; }
-.artifact-card { display:block; background:var(--bg2); color:var(--text); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:15px 16px; text-decoration:none; min-height:158px; }
+.artifact-card { display:block; background:var(--bg2); color:var(--text); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:15px 16px; text-decoration:none; min-height:158px; transition: box-shadow .15s ease, border-color .15s ease; }
 .artifact-card:hover { border-color:var(--accent); box-shadow:0 8px 24px rgba(122,28,32,.08); }
 .card-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px; }
 .card-title { font-family: Charter, Georgia, serif; font-size:17px; line-height:1.25; font-weight:700; }
-.pill { display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; text-transform:uppercase; }
+.card-path { color:var(--text3); font-size:11px; margin-top:4px; word-break:break-all; }
+.pill { display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; text-transform:uppercase; white-space:nowrap; }
 .pill.ok { color:var(--green); background:rgba(61,107,74,.12); }
 .pill.warn, .pill.unknown { color:var(--yellow); background:rgba(168,132,43,.13); }
 .pill.fail { color:var(--red); background:rgba(156,40,40,.13); }
+.pill.type { color:var(--blue); background:rgba(42,86,128,.1); text-transform:none; font-weight:600; }
 .meta { color:var(--text3); font-size:12px; margin-bottom:10px; }
-.summary { color:var(--text2); font-size:13px; line-height:1.45; }
+.summary { color:var(--text2); font-size:13px; line-height:1.45; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
 .badge { background:var(--bg3); border:1px solid var(--border); color:var(--text2); border-radius:999px; padding:2px 8px; font-size:11px; }
-.empty { background:var(--bg2); border:1px solid var(--border); padding:22px; border-radius:4px; color:var(--text3); }
+.empty, .loading { background:var(--bg2); border:1px solid var(--border); padding:22px; border-radius:4px; color:var(--text3); }
+.loading { display:flex; align-items:center; gap:10px; }
+.spinner { width:16px; height:16px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.skeleton-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap:14px; }
+.skeleton-card { background:var(--bg2); border:1px solid var(--border); border-radius:4px; min-height:158px; padding:16px; }
+.skeleton-line { height:12px; background:linear-gradient(90deg, var(--bg3), var(--bg), var(--bg3)); background-size:200% 100%; animation: shimmer 1.2s infinite; border-radius:4px; margin-bottom:10px; }
+.skeleton-line.wide { width:85%; }
+.skeleton-line.mid { width:60%; }
+.skeleton-line.short { width:35%; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 @media (max-width: 820px) {
   .hero { grid-template-columns: 1fr; }
   .hero-count { text-align:left; }
@@ -64,6 +87,10 @@ body { min-height: 100vh; }
 <body>
 <div class="top-bar">
   <div class="top-left"><h1>Artifacts</h1></div>
+  <div class="top-right">
+    <span id="refresh-info">Loading…</span>
+    <button class="btn" id="refresh-btn" type="button" disabled>Refresh</button>
+  </div>
   <nav class="monitor-nav" aria-label="Monitor sections">
     <a href="/">Home</a>
     <a href="/orient.html">Orient</a>
@@ -82,35 +109,48 @@ body { min-height: 100vh; }
     </div>
     <div class="hero-count">
       <div class="value" id="total-count">—</div>
-      <div class="label">artifacts</div>
+      <div class="label">matching artifacts</div>
+      <div class="sub" id="total-sub">of — total</div>
     </div>
   </section>
 
-  <section class="ops-directory" aria-label="Operational dashboards">
-    <h3>Operational dashboards</h3>
-    <p>The legacy home dashboard remains the full operations launchpad. These links keep the old working surfaces close while browsing reports and handoffs.</p>
-    <div class="ops-grid">
-      <a class="ops-card runtime" href="/admin.html"><strong>Admin</strong><span>Backups, health checks, disk usage, broker vacuum, log cleanup.</span></a>
-      <a class="ops-card agent" href="/channels.html"><strong>Agent Channels</strong><span>Topic-scoped multi-agent discussion threads.</span></a>
-      <a class="ops-card agent" href="/comms.html"><strong>Agent Comms</strong><span>Live activity, direct messages, batch progress, zombie monitor.</span></a>
-      <a class="ops-card audit" href="/audit-dashboard.html"><strong>Audit Dashboard</strong><span>Track overview, module heatmaps, QA gate breakdowns.</span></a>
-      <a class="ops-card pipeline" href="/build-events.html"><strong>Build Events</strong><span>Active module builds and dispatch meta events.</span></a>
-      <a class="ops-card runtime" href="/consultation.html"><strong>Consultation Loop</strong><span>Template proposals, review queue, history, metrics.</span></a>
-      <a class="ops-card runtime" href="/cost.html"><strong>Cost</strong><span>Per-module, per-phase, per-model token and USD spend.</span></a>
-      <a class="ops-card curriculum" href="/curriculum-dashboard.html"><strong>Curriculum Dashboard</strong><span>Track plans, module plans, word targets, outlines.</span></a>
-      <a class="ops-card pipeline" href="/delegate.html"><strong>Delegate</strong><span>Delegation tasks, zombie detection, task detail modal.</span></a>
-      <a class="ops-card curriculum" href="/image-explorer.html"><strong>Images</strong><span>Page context, bounding boxes, annotation editor, RAG search.</span></a>
-      <a class="ops-card runtime" href="/orient.html"><strong>Orient</strong><span>Session snapshot: git, issues, pipeline, runtime, health.</span></a>
-      <a class="ops-card pipeline" href="/progress.html"><strong>Progress</strong><span>Pipeline state across tracks from research through MDX.</span></a>
-      <a class="ops-card audit" href="/quality.html"><strong>Quality</strong><span>Research coverage, review scores, weak modules, fix queue.</span></a>
-      <a class="ops-card runtime" href="/runtime.html"><strong>Runtime</strong><span>Agent binaries, usage, headroom, recent runtime calls.</span></a>
-      <a class="ops-card audit" href="/track-health.html"><strong>Track Health</strong><span>Build progress, audits, enrichment, reviews, ETA.</span></a>
-      <a class="ops-card curriculum" href="/wiki.html"><strong>Wiki</strong><span>Wiki compilation progress, quality failures, build logs.</span></a>
+  <details class="ops-directory">
+    <summary>
+      <div>
+        <h3>Operational dashboards</h3>
+        <p>Jump to build, audit, comms, and runtime surfaces without leaving the monitor shell.</p>
+      </div>
+      <span aria-hidden="true">▾</span>
+    </summary>
+    <div class="ops-body">
+      <div class="ops-grid">
+        <a class="ops-card runtime" href="/admin.html"><strong>Admin</strong><span>Backups, health checks, disk usage, broker vacuum, log cleanup.</span></a>
+        <a class="ops-card agent" href="/channels.html"><strong>Agent Channels</strong><span>Topic-scoped multi-agent discussion threads.</span></a>
+        <a class="ops-card agent" href="/comms.html"><strong>Agent Comms</strong><span>Live activity, direct messages, batch progress, zombie monitor.</span></a>
+        <a class="ops-card audit" href="/audit-dashboard.html"><strong>Audit Dashboard</strong><span>Track overview, module heatmaps, QA gate breakdowns.</span></a>
+        <a class="ops-card pipeline" href="/build-events.html"><strong>Build Events</strong><span>Active module builds and dispatch meta events.</span></a>
+        <a class="ops-card runtime" href="/consultation.html"><strong>Consultation Loop</strong><span>Template proposals, review queue, history, metrics.</span></a>
+        <a class="ops-card runtime" href="/cost.html"><strong>Cost</strong><span>Per-module, per-phase, per-model token and USD spend.</span></a>
+        <a class="ops-card curriculum" href="/curriculum-dashboard.html"><strong>Curriculum Dashboard</strong><span>Track plans, module plans, word targets, outlines.</span></a>
+        <a class="ops-card pipeline" href="/delegate.html"><strong>Delegate</strong><span>Delegation tasks, zombie detection, task detail modal.</span></a>
+        <a class="ops-card curriculum" href="/image-explorer.html"><strong>Images</strong><span>Page context, bounding boxes, annotation editor, RAG search.</span></a>
+        <a class="ops-card runtime" href="/orient.html"><strong>Orient</strong><span>Session snapshot: git, issues, pipeline, runtime, health.</span></a>
+        <a class="ops-card pipeline" href="/progress.html"><strong>Progress</strong><span>Pipeline state across tracks from research through MDX.</span></a>
+        <a class="ops-card audit" href="/quality.html"><strong>Quality</strong><span>Research coverage, review scores, weak modules, fix queue.</span></a>
+        <a class="ops-card runtime" href="/runtime.html"><strong>Runtime</strong><span>Agent binaries, usage, headroom, recent runtime calls.</span></a>
+        <a class="ops-card audit" href="/track-health.html"><strong>Track Health</strong><span>Build progress, audits, enrichment, reviews, ETA.</span></a>
+        <a class="ops-card curriculum" href="/wiki.html"><strong>Wiki</strong><span>Wiki compilation progress, quality failures, build logs.</span></a>
+      </div>
     </div>
-  </section>
+  </details>
+
+  <div class="filter-bar">
+    <div class="hint" id="filter-hint">Filter by class, status, author, type, or date.</div>
+    <button class="btn" id="clear-filters" type="button" hidden>Clear filters</button>
+  </div>
 
   <section class="filters" aria-label="Artifact filters">
-    <input id="search" placeholder="Search titles, paths, KPI summaries">
+    <input id="search" placeholder="Search titles, paths, KPI summaries" autocomplete="off">
     <select id="class-filter"><option value="">All classes</option></select>
     <select id="status-filter"><option value="">All statuses</option></select>
     <select id="author-filter"><option value="">All authors</option></select>
@@ -122,9 +162,10 @@ body { min-height: 100vh; }
 </main>
 
 <script>
-const state = { artifacts: [], filtered: [] };
+const state = { artifacts: [], filtered: [], generatedAt: null, loading: true };
 const els = {
   total: document.getElementById('total-count'),
+  totalSub: document.getElementById('total-sub'),
   groups: document.getElementById('groups'),
   search: document.getElementById('search'),
   classFilter: document.getElementById('class-filter'),
@@ -132,6 +173,10 @@ const els = {
   authorFilter: document.getElementById('author-filter'),
   dateFilter: document.getElementById('date-filter'),
   typeFilter: document.getElementById('type-filter'),
+  refreshInfo: document.getElementById('refresh-info'),
+  refreshBtn: document.getElementById('refresh-btn'),
+  clearFilters: document.getElementById('clear-filters'),
+  filterHint: document.getElementById('filter-hint'),
 };
 
 function escapeHtml(value) {
@@ -144,22 +189,58 @@ function optionList(values) {
   return values.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('');
 }
 
+function artifactType(item) {
+  const path = item.path || '';
+  if (path.endsWith('.html')) return 'html';
+  if (path.endsWith('.md')) return 'md';
+  return '';
+}
+
+function formatStatus(status) {
+  if (!status || status === 'unknown') return 'unknown';
+  return status;
+}
+
+function formatAuthor(author) {
+  return author && author.trim() ? author.trim() : '—';
+}
+
+function filtersActive() {
+  return Boolean(
+    els.search.value.trim()
+    || els.classFilter.value
+    || els.statusFilter.value
+    || els.authorFilter.value
+    || els.typeFilter.value
+    || els.dateFilter.value
+  );
+}
+
 function initFilters() {
   const classes = [...new Set(state.artifacts.map(item => item.class).filter(Boolean))].sort();
   const statuses = [...new Set(state.artifacts.map(item => item.status).filter(Boolean))].sort();
   const authors = [...new Set(state.artifacts.map(item => item.author).filter(Boolean))].sort();
+  const keep = {
+    class: els.classFilter.value,
+    status: els.statusFilter.value,
+    author: els.authorFilter.value,
+  };
   els.classFilter.innerHTML = '<option value="">All classes</option>' + optionList(classes);
   els.statusFilter.innerHTML = '<option value="">All statuses</option>' + optionList(statuses);
   els.authorFilter.innerHTML = '<option value="">All authors</option>' + optionList(authors);
+  els.classFilter.value = classes.includes(keep.class) ? keep.class : '';
+  els.statusFilter.value = statuses.includes(keep.status) ? keep.status : '';
+  els.authorFilter.value = authors.includes(keep.author) ? keep.author : '';
 }
 
 function artifactMatches(item) {
   const q = els.search.value.trim().toLowerCase();
-  const haystack = [item.title, item.path, item.kpi_summary, item.author].join(' ').toLowerCase();
+  const haystack = [item.title, item.path, item.kpi_summary, item.author, item.class].join(' ').toLowerCase();
   if (q && !haystack.includes(q)) return false;
   if (els.classFilter.value && item.class !== els.classFilter.value) return false;
   if (els.statusFilter.value && item.status !== els.statusFilter.value) return false;
   if (els.authorFilter.value && item.author !== els.authorFilter.value) return false;
+  if (els.typeFilter.value && artifactType(item) !== els.typeFilter.value) return false;
   if (els.dateFilter.value && item.date < els.dateFilter.value) return false;
   return true;
 }
@@ -171,17 +252,40 @@ function statusClass(status) {
   return 'unknown';
 }
 
+function renderLoading() {
+  els.groups.innerHTML = `
+    <div class="loading"><span class="spinner" aria-hidden="true"></span> Loading artifact index…</div>
+    <div class="skeleton-grid" aria-hidden="true">
+      ${Array.from({ length: 6 }, () => `
+        <div class="skeleton-card">
+          <div class="skeleton-line wide"></div>
+          <div class="skeleton-line mid"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
 function renderCard(item) {
+  const type = artifactType(item);
   const issues = (item.related_issues || []).map(n => `<span class="badge">#${n}</span>`).join('');
   const prs = (item.related_prs || []).map(n => `<span class="badge">PR #${n}</span>`).join('');
   const agents = (item.agents || []).map(a => `<span class="badge">${escapeHtml(a)}</span>`).join('');
+  const summary = item.kpi_summary || (type === 'md' ? 'Markdown document — open to view source.' : item.path);
+  const showPath = item.title && item.path && item.title !== item.path.split('/').pop()?.replace(/\.(html|md)$/i, '');
   return `<a class="artifact-card" href="${escapeHtml(item.url)}" target="_blank" rel="noopener">
     <div class="card-top">
-      <div class="card-title">${escapeHtml(item.title || item.path)}</div>
-      <span class="pill ${statusClass(item.status)}">${escapeHtml(item.status || 'unknown')}</span>
+      <div>
+        <div class="card-title">${escapeHtml(item.title || item.path)}</div>
+        ${showPath ? `<div class="card-path">${escapeHtml(item.path)}</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        ${type ? `<span class="pill type">${escapeHtml(type.toUpperCase())}</span>` : ''}
+        <span class="pill ${statusClass(item.status)}">${escapeHtml(formatStatus(item.status))}</span>
+      </div>
     </div>
-    <div class="meta">${escapeHtml(item.date || 'undated')} · ${escapeHtml(item.class || 'document')} · ${escapeHtml(item.author || 'unknown author')}</div>
-    <div class="summary">${escapeHtml(item.kpi_summary || item.path)}</div>
+    <div class="meta">${escapeHtml(item.date || 'undated')} · ${escapeHtml(item.class || 'document')} · ${escapeHtml(formatAuthor(item.author))}</div>
+    <div class="summary">${escapeHtml(summary)}</div>
     <div class="badges">${issues}${prs}${agents}</div>
   </a>`;
 }
@@ -189,10 +293,21 @@ function renderCard(item) {
 function render() {
   state.filtered = state.artifacts.filter(artifactMatches);
   els.total.textContent = state.filtered.length;
+  els.totalSub.textContent = `of ${state.artifacts.length} total`;
+  els.clearFilters.hidden = !filtersActive();
+  els.filterHint.textContent = filtersActive()
+    ? `Showing ${state.filtered.length} of ${state.artifacts.length} artifacts`
+    : 'Filter by class, status, author, type, or date.';
+
   if (!state.filtered.length) {
-    els.groups.innerHTML = '<div class="empty">No artifacts match the current filters.</div>';
+    els.groups.innerHTML = filtersActive()
+      ? `<div class="empty">No artifacts match the current filters. <button class="btn" type="button" id="empty-clear">Clear filters</button></div>`
+      : '<div class="empty">No artifacts found in the index.</div>';
+    const emptyClear = document.getElementById('empty-clear');
+    if (emptyClear) emptyClear.addEventListener('click', clearFilters);
     return;
   }
+
   const byClass = new Map();
   for (const item of state.filtered) {
     const key = item.class || 'document';
@@ -207,27 +322,61 @@ function render() {
   `).join('');
 }
 
-async function loadArtifacts() {
-  const type = els.typeFilter.value;
-  const url = type ? `/api/artifacts/html?type=${encodeURIComponent(type)}` : '/api/artifacts/html';
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  state.artifacts = data.artifacts || [];
-  initFilters();
+function clearFilters() {
+  els.search.value = '';
+  els.classFilter.value = '';
+  els.statusFilter.value = '';
+  els.authorFilter.value = '';
+  els.typeFilter.value = '';
+  els.dateFilter.value = '';
   render();
 }
 
-[els.search, els.classFilter, els.statusFilter, els.authorFilter, els.dateFilter].forEach(el => {
-  el.addEventListener('input', render);
+function setRefreshInfo() {
+  if (state.loading) {
+    els.refreshInfo.textContent = 'Loading…';
+    return;
+  }
+  const when = state.generatedAt ? new Date(state.generatedAt) : new Date();
+  els.refreshInfo.textContent = `Updated ${when.toLocaleTimeString()}`;
+}
+
+async function loadArtifacts() {
+  state.loading = true;
+  els.refreshBtn.disabled = true;
+  renderLoading();
+  setRefreshInfo();
+  try {
+    const response = await fetch('/api/artifacts/html');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    state.artifacts = data.artifacts || [];
+    state.generatedAt = data.generated_at || null;
+    initFilters();
+    render();
+  } catch (error) {
+    els.total.textContent = '!';
+    els.totalSub.textContent = 'load failed';
+    els.groups.innerHTML = `<div class="empty">Failed to load artifacts: ${escapeHtml(error.message)}</div>`;
+  } finally {
+    state.loading = false;
+    els.refreshBtn.disabled = false;
+    setRefreshInfo();
+  }
+}
+
+let searchTimer = null;
+els.search.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(render, 180);
+});
+[els.classFilter, els.statusFilter, els.authorFilter, els.dateFilter, els.typeFilter].forEach(el => {
   el.addEventListener('change', render);
 });
-els.typeFilter.addEventListener('change', loadArtifacts);
+els.clearFilters.addEventListener('click', clearFilters);
+els.refreshBtn.addEventListener('click', loadArtifacts);
 
-loadArtifacts().catch(error => {
-  els.total.textContent = '!';
-  els.groups.innerHTML = `<div class="empty">Failed to load artifacts: ${escapeHtml(error.message)}</div>`;
-});
+loadArtifacts();
 </script>
 </body>
 </html>

@@ -51,7 +51,8 @@ DASHBOARD_LOADS = {
     ],
     "comms.html": [
         "/api/comms/messages?limit=1&offset=0",
-        "/api/comms/live-activity?minutes=30",
+        "/api/build/events/active",
+        "/api/build/events/recent?limit=40",
         "/api/comms/batch-progress",
         "/api/comms/zombies",
     ],
@@ -128,6 +129,7 @@ BUDGETS = {
     "/api/analytics/cost/module/a1/hello": 1.5,
     "/api/analytics/cost/phase/write": 1.5,
     "/api/build/events/active": 1.5,
+    "/api/build/events/recent?limit=40": 1.5,
     "/api/build/events/recent?limit=50&offset=0": 1.5,
     "/api/comms/batch-progress": 1.5,
     "/api/comms/channels": 1.5,
