@@ -44,6 +44,7 @@ from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.build.citation_matcher import (
     CitationKey,
     citation_keys_match,
+    extract_chunk_id_from_notes,
     extract_citation_key,
     extract_plan_reference_titles,
     normalize_citation_ref,
@@ -141,9 +142,7 @@ WRITER_ARTIFACTS = (
     "resources.yaml",
 )
 _LABEL_LINE_RE = re.compile(
-    r"^[\s>#\-*]*(?P<name>"
-    + "|".join(re.escape(name) for name in WRITER_ARTIFACTS)
-    + r")\s*:?\s*$"
+    r"^[\s>#\-*]*(?P<name>" + "|".join(re.escape(name) for name in WRITER_ARTIFACTS) + r")\s*:?\s*$"
 )
 
 PYTHON_QG_GATE_ORDER = (
@@ -188,6 +187,7 @@ DICTIONARY_CANDIDATE_GATES = frozenset(
         "calques_clean",
         "paronym_clean",
         "citations_resolve",
+        "plan_reference_match",
     }
 )
 REVIEWER_FIX_GATES = DICTIONARY_CANDIDATE_GATES | frozenset(
@@ -239,24 +239,12 @@ PROMPT_ADHERENCE_FIELDS: tuple[str, ...] = (
     "verification_trace",
 )
 PROMPT_ADHERENCE_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
-    "word_budget": (
-        r"<word_budget\b[^>]*>.*?\S.*?</word_budget>",
-    ),
-    "plan_vocab": (
-        r"<plan_vocab\b[^>]*>.*?\S.*?</plan_vocab>",
-    ),
-    "register": (
-        r"<register\b[^>]*>.*?\S.*?</register>",
-    ),
-    "teaching_sequence": (
-        r"<teaching_sequence\b[^>]*>.*?\S.*?</teaching_sequence>",
-    ),
-    "verification_plan": (
-        r"<verification_plan\b[^>]*>.*?\S.*?</verification_plan>",
-    ),
-    "verification_trace": (
-        r"<verification_trace\b[^>]*>.*?\S.*?</verification_trace>",
-    ),
+    "word_budget": (r"<word_budget\b[^>]*>.*?\S.*?</word_budget>",),
+    "plan_vocab": (r"<plan_vocab\b[^>]*>.*?\S.*?</plan_vocab>",),
+    "register": (r"<register\b[^>]*>.*?\S.*?</register>",),
+    "teaching_sequence": (r"<teaching_sequence\b[^>]*>.*?\S.*?</teaching_sequence>",),
+    "verification_plan": (r"<verification_plan\b[^>]*>.*?\S.*?</verification_plan>",),
+    "verification_trace": (r"<verification_trace\b[^>]*>.*?\S.*?</verification_trace>",),
 }
 WRITER_TOOL_NAMES = frozenset(
     {
@@ -293,7 +281,7 @@ WRITER_ALLOWED_TOOL_PREFIX = "mcp__sources__"
 # and 2026-05-21 night handoff Section 1b (gemini-tools writer success run).
 WRITER_ALLOWED_TOOL_PREFIXES = (
     "mcp__sources__",  # canonical (claude, codex, deepseek, qwen, grok)
-    "mcp_sources_",    # gemini-cli 0.42.0+ single-underscore convention
+    "mcp_sources_",  # gemini-cli 0.42.0+ single-underscore convention
 )
 # Agent-CLI built-in self-annotation tools. These emit METADATA only — no file
 # access, no command execution, no curriculum-content impact — and are
@@ -507,26 +495,28 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
             "title": str,
             "role": str,
         },
-        optional_item_fields=frozenset({
-            "notes",
-            "description",
-            "source_ref",
-            "packet_chunk_id",
-            # Alias for packet_chunk_id — writers naturally emit this name
-            # (it matches plan.notes wording and MCP tool arg names). Both
-            # accepted; downstream code (L7757) reads packet_chunk_id, so a
-            # writer-emitted chunk_id is decorative metadata. Added 2026-05-23
-            # after m20 build #5 schema-rejected writer's chunk_id field.
-            "chunk_id",
-            "url",
-            "section",
-            "page",
-            "pages",
-            "author",
-            "channel",
-            "source",
-            "match_reason",
-        }),
+        optional_item_fields=frozenset(
+            {
+                "notes",
+                "description",
+                "source_ref",
+                "packet_chunk_id",
+                # Alias for packet_chunk_id — writers naturally emit this name
+                # (it matches plan.notes wording and MCP tool arg names). Both
+                # accepted; downstream code (L7757) reads packet_chunk_id, so a
+                # writer-emitted chunk_id is decorative metadata. Added 2026-05-23
+                # after m20 build #5 schema-rejected writer's chunk_id field.
+                "chunk_id",
+                "url",
+                "section",
+                "page",
+                "pages",
+                "author",
+                "channel",
+                "source",
+                "match_reason",
+            }
+        ),
     ),
 }
 WRITER_JSON_ARTIFACTS: tuple[str, ...] = tuple(WRITER_JSON_SCHEMAS)
@@ -670,17 +660,15 @@ _WARNING_QUOTE_RE = re.compile(
     # The unclosed-italic arm requires the inner span to be Cyrillic-only
     # (no asterisk, no whitespace, no punctuation) so it stops cleanly at
     # the next boundary instead of swallowing the rest of the sentence.
-    r'\b(?:not|не)\s+(?:'
+    r"\b(?:not|не)\s+(?:"
     r'["«][^"»]+["»]'
-    r'|\*[^*\n]+?\*'
-    r'|\*[A-Za-zА-ЯІЇЄҐа-яіїєґ\'ʼ-]+'
-    r')',
+    r"|\*[^*\n]+?\*"
+    r"|\*[A-Za-zА-ЯІЇЄҐа-яіїєґ\'ʼ-]+"
+    r")",
     re.IGNORECASE,
 )
 
-_STANDALONE_POSTFIX_FRAGMENTS = frozenset(
-    {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
-)
+_STANDALONE_POSTFIX_FRAGMENTS = frozenset({"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"})
 
 # JSX self-closing or paired component blocks. Treated as one structural unit
 # in `_immersion_gate`'s long-sentence detection so prop arrays like
@@ -729,14 +717,9 @@ _ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset(
     {"error", "errors", "errorWord", "error_word", "explanation", "sentence"}
 )
 _ERROR_CORRECTION_REQUIRED_ITEM_FIELDS = frozenset({"sentence", "error"})
-_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS = frozenset(
-    {"answer", "correction", "options", "explanation"}
-)
+_ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS = frozenset({"answer", "correction", "options", "explanation"})
 _ACTIVITY_ITEM_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
-    _ERROR_CORRECTION_TYPE: (
-        _ERROR_CORRECTION_REQUIRED_ITEM_FIELDS
-        | _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS
-    ),
+    _ERROR_CORRECTION_TYPE: (_ERROR_CORRECTION_REQUIRED_ITEM_FIELDS | _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS),
 }
 _ACTIVITY_ITEM_REQUIRED_FIELDS: dict[str, frozenset[str]] = {
     _ERROR_CORRECTION_TYPE: _ERROR_CORRECTION_REQUIRED_ITEM_FIELDS,
@@ -835,9 +818,7 @@ def validate_plan(plan: Mapping[str, Any]) -> None:
             raise LinearPipelineError(f"Plan section {section['section']!r} has invalid words")
         points = section.get("points")
         if not isinstance(points, list) or not all(isinstance(p, str) for p in points):
-            raise LinearPipelineError(
-                f"Plan section {section['section']!r} must have string points"
-            )
+            raise LinearPipelineError(f"Plan section {section['section']!r} must have string points")
 
     references = plan["references"]
     if not isinstance(references, list) or not references:
@@ -871,9 +852,7 @@ def build_knowledge_packet(
     if plan is None:
         if plan_path is None:
             if level is None or slug is None:
-                raise LinearPipelineError(
-                    "build_knowledge_packet requires plan_path or level+slug"
-                )
+                raise LinearPipelineError("build_knowledge_packet requires plan_path or level+slug")
             plan_path = plan_path_for(level.lower(), slug)
         plan_data = load_plan(plan_path)
     else:
@@ -912,9 +891,7 @@ def build_wiki_manifest_data(
     if plan is None:
         if plan_path is None:
             if level is None or slug is None:
-                raise LinearPipelineError(
-                    "build_wiki_manifest_data requires plan_path or level+slug"
-                )
+                raise LinearPipelineError("build_wiki_manifest_data requires plan_path or level+slug")
             plan_path = plan_path_for(level.lower(), slug)
         plan_data = load_plan(plan_path)
     else:
@@ -925,9 +902,7 @@ def build_wiki_manifest_data(
     slug_key = str(slug or plan_data["slug"]).strip()
     article_paths = _wiki_article_paths(level_key, slug_key)
     if not article_paths:
-        raise LinearPipelineError(
-            f"No wiki article found for level={level_key!r}, slug={slug_key!r}"
-        )
+        raise LinearPipelineError(f"No wiki article found for level={level_key!r}, slug={slug_key!r}")
     from scripts.build.phases.wiki_manifest import extract_manifest, validate_manifest
 
     # Current module wiki layout resolves to one canonical article. If future
@@ -1119,10 +1094,7 @@ def _build_dictionary_context(
         from scripts.verification import vesum as vesum_lookup
         from wiki import sources_db
     except Exception as exc:
-        return (
-            "## Dictionary context\n\n"
-            f"*Dictionary context unavailable: {type(exc).__name__}: {exc}*"
-        )
+        return f"## Dictionary context\n\n*Dictionary context unavailable: {type(exc).__name__}: {exc}*"
 
     try:
         batch_matches = vesum_lookup.verify_words(lemmas)
@@ -1144,17 +1116,13 @@ def _build_dictionary_context(
         ]
         definition = _dictionary_hit_text(definitions)
         if definition:
-            entry.append(
-                f"  - Definition: {_truncate_prompt_text(definition, definition_chars)}"
-            )
+            entry.append(f"  - Definition: {_truncate_prompt_text(definition, definition_chars)}")
         else:
             entry.append("  - Definition: Not found in SUM-11.")
 
         style_note = _dictionary_hit_text(style_notes)
         if style_note:
-            entry.append(
-                f"  - Style note: {_truncate_prompt_text(style_note, definition_chars)}"
-            )
+            entry.append(f"  - Style note: {_truncate_prompt_text(style_note, definition_chars)}")
 
         entry_chars = sum(len(line) + 1 for line in entry)
         if current_chars + entry_chars <= max_chars:
@@ -1368,9 +1336,7 @@ def _lookup_textbook_reference_chunk(
                 return None
             if not source_files:
                 if missing_reason is not None:
-                    missing_reason.append(
-                        f"source_file not in corpus for {author} Grade {grade}"
-                    )
+                    missing_reason.append(f"source_file not in corpus for {author} Grade {grade}")
                 return []
             quoted_sources = ",".join("?" for _ in source_files)
             rows: list[sqlite3.Row] = []
@@ -1393,9 +1359,7 @@ def _lookup_textbook_reference_chunk(
 
     if not rows:
         if missing_reason is not None:
-            missing_reason.append(
-                f"page {page} not in corpus for {', '.join(source_files)}"
-            )
+            missing_reason.append(f"page {page} not in corpus for {', '.join(source_files)}")
         return []
 
     source_file_count = len({str(row["source_file"]) for row in rows})
@@ -1446,9 +1410,7 @@ def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dic
         hit
         for hit in hits
         if isinstance(hit, dict)
-        and "textbook" in str(
-            hit.get("source_type") or hit.get("corpus") or hit.get("source") or ""
-        ).casefold()
+        and "textbook" in str(hit.get("source_type") or hit.get("corpus") or hit.get("source") or "").casefold()
     ]
     return textbook_hits[:limit]
 
@@ -1457,11 +1419,7 @@ def _build_textbook_excerpt_context(
     plan: Mapping[str, Any],
     level: str,
 ) -> str:
-    references = [
-        str(title).strip()
-        for title in extract_plan_reference_titles(plan)
-        if str(title).strip()
-    ]
+    references = [str(title).strip() for title in extract_plan_reference_titles(plan) if str(title).strip()]
     if not references:
         return ""
 
@@ -1476,11 +1434,7 @@ def _build_textbook_excerpt_context(
             limit=1,
             missing_reason=missing_reasons,
         )
-        hits = (
-            direct_hits
-            if direct_hits is not None
-            else _search_textbook_hits(query, level=level, limit=1)
-        )
+        hits = direct_hits if direct_hits is not None else _search_textbook_hits(query, level=level, limit=1)
         lines.append(f"### {title}")
         lines.append("")
         if not hits:
@@ -1516,9 +1470,7 @@ def _build_wiki_packet(level: str, slug: str) -> str:
     """Build raw wiki context from exact module article(s) and source registries."""
     article_paths = _wiki_article_paths(level, slug)
     if not article_paths:
-        raise LinearPipelineError(
-            f"No wiki article found for level={level!r}, slug={slug!r}"
-        )
+        raise LinearPipelineError(f"No wiki article found for level={level!r}, slug={slug!r}")
 
     from wiki.config import WIKI_DIR
     from wiki.context import strip_meta
@@ -1531,11 +1483,7 @@ def _build_wiki_packet(level: str, slug: str) -> str:
         registry = load_sources_registry(registry_path_for(article_path))
         source_summary = _format_wiki_sources(registry.sources)
         source_block = f"\n\nSources: {source_summary}" if source_summary else ""
-        parts.append(
-            f"### Вікі: {rel_path}\n\n"
-            f"Article: `wiki/{rel_path}`\n\n"
-            f"{content}{source_block}"
-        )
+        parts.append(f"### Вікі: {rel_path}\n\nArticle: `wiki/{rel_path}`\n\n{content}{source_block}")
 
     body = "\n\n---\n\n".join(parts)
     return (
@@ -1610,8 +1558,7 @@ def _render_wiki_knowledge_packet(
     lines: list[str] = [
         f"# Knowledge Packet: {plan['title']}",
         "",
-        f"**Module:** {plan['module']} | **Level:** {plan['level']} | "
-        f"**Slug:** {plan['slug']}",
+        f"**Module:** {plan['module']} | **Level:** {plan['level']} | **Slug:** {plan['slug']}",
         "**Retrieval:** compiled wiki + MCP sources, no Qdrant",
         "",
         "## Targeted Wiki Excerpts by Plan Section",
@@ -1639,10 +1586,7 @@ def _render_wiki_knowledge_packet(
     if anchors:
         lines.extend(["## Factual Anchors", ""])
         for anchor in anchors:
-            lines.append(
-                f"- **{anchor['section']}** — {anchor['claim']} "
-                f"({anchor['citation']})"
-            )
+            lines.append(f"- **{anchor['section']}** — {anchor['claim']} ({anchor['citation']})")
         lines.append("")
 
     if dictionary_context:
@@ -1657,10 +1601,8 @@ def _render_wiki_knowledge_packet(
             "",
             "Use the canonical `sources` MCP tools for live dictionary checks:",
             "- `mcp__sources__verify_lemma` for VESUM morphology and inflections.",
-            "- `mcp__sources__search_style_guide` for russianisms, surzhyk, "
-            "calques, and paronym-risk phrases.",
-            "- `mcp__sources__search_definitions` for СУМ-11 definitions and "
-            "usage disambiguation.",
+            "- `mcp__sources__search_style_guide` for russianisms, surzhyk, calques, and paronym-risk phrases.",
+            "- `mcp__sources__search_definitions` for СУМ-11 definitions and usage disambiguation.",
             "",
             "Verify suspicious forms before using them in prose, vocabulary, "
             "activities, or resources. Do not call legacy `scripts.rag` or "
@@ -1694,26 +1636,17 @@ def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:
     """Render Phase 0 preamble placeholders and downstream ALL_CAPS tokens."""
     unknown = sorted(set(context) - DOWNSTREAM_TOKENS)
     if unknown:
-        raise LinearPipelineError(
-            "Unknown downstream prompt context keys: " + ", ".join(unknown)
-        )
+        raise LinearPipelineError("Unknown downstream prompt context keys: " + ", ".join(unknown))
 
     rendered = render_prompt(template_path)
     for key, value in context.items():
         rendered = rendered.replace(f"{{{key}}}", str(value))
 
     unresolved = sorted(
-        {
-            match.group(1)
-            for match in TOKEN_RE.finditer(rendered)
-            if match.group(1) in DOWNSTREAM_TOKENS
-        }
+        {match.group(1) for match in TOKEN_RE.finditer(rendered) if match.group(1) in DOWNSTREAM_TOKENS}
     )
     if unresolved:
-        raise LinearPipelineError(
-            f"Unresolved downstream prompt tokens in {template_path}: "
-            + ", ".join(unresolved)
-        )
+        raise LinearPipelineError(f"Unresolved downstream prompt tokens in {template_path}: " + ", ".join(unresolved))
     return rendered
 
 
@@ -1871,11 +1804,7 @@ def _writer_rule_evidence_for_gate(
             first = findings[0]
             if isinstance(first, Mapping):
                 return str(
-                    first.get("text")
-                    or first.get("match")
-                    or first.get("pattern")
-                    or first.get("note")
-                    or first
+                    first.get("text") or first.get("match") or first.get("pattern") or first.get("note") or first
                 )
     if gate in {"russianisms_clean", "surzhyk_clean", "calques_clean", "paronym_clean"}:
         detections = report.get("detections")
@@ -2009,11 +1938,7 @@ def _extract_plan_reasoning_blocks(output: str) -> list[dict[str, str | None]]:
         attrs = match.group("attrs") or ""
         section_match = re.search(r"\bsection\s*=\s*['\"](?P<section>[^'\"]+)['\"]", attrs)
         body = match.group("body").strip()
-        section = (
-            section_match.group("section").strip()
-            if section_match
-            else _reasoning_section_from_body(body)
-        )
+        section = section_match.group("section").strip() if section_match else _reasoning_section_from_body(body)
         blocks.append({"section": section, "body": body})
 
     heading_re = re.compile(
@@ -2026,10 +1951,12 @@ def _extract_plan_reasoning_blocks(output: str) -> list[dict[str, str | None]]:
         end = headings[index + 1].start() if index + 1 < len(headings) else len(output)
         body = output[start:end].strip()
         raw_section = match.group("section").strip(" *`:-")
-        blocks.append({
-            "section": raw_section or _reasoning_section_from_body(body),
-            "body": body,
-        })
+        blocks.append(
+            {
+                "section": raw_section or _reasoning_section_from_body(body),
+                "body": body,
+            }
+        )
     thinking_re = re.compile(
         r"<plan_thinking\b[^>]*>(?P<body>.*?)</plan_thinking>",
         flags=re.DOTALL | re.IGNORECASE,
@@ -2069,10 +1996,7 @@ def _writer_cot_results(output: str, sections: list[str]) -> list[dict[str, Any]
             unnamed.append(block)
 
     if not sections and blocks:
-        sections = [
-            str(block.get("section") or f"section_{index}")
-            for index, block in enumerate(blocks, start=1)
-        ]
+        sections = [str(block.get("section") or f"section_{index}") for index, block in enumerate(blocks, start=1)]
 
     results: list[dict[str, Any]] = []
     for section in sections:
@@ -2114,18 +2038,20 @@ def _extract_writer_gate(output: str) -> dict[str, Any]:
         if match:
             next_heading = re.search(
                 r"^\s*(?:#{1,6}\s+\S|```)",
-                output[match.end():],
+                output[match.end() :],
                 re.MULTILINE,
             )
             end = match.end() + next_heading.start() if next_heading else len(output)
-            body = output[match.end():end].strip()
+            body = output[match.end() : end].strip()
 
     if not body:
         return {"gate_present": False, "gate_actions": [], "removed_count": 0}
 
     lower = body.casefold()
     actions: list[str] = []
-    if "rescanned_words" in lower or ("rescan" in lower and any(token in lower for token in ("word", "vocab", "vesum"))):
+    if "rescanned_words" in lower or (
+        "rescan" in lower and any(token in lower for token in ("word", "vocab", "vesum"))
+    ):
         actions.append("rescanned_words")
     if "rescanned_sources" in lower or ("rescan" in lower and any(token in lower for token in ("source", "citation"))):
         actions.append("rescanned_sources")
@@ -2194,9 +2120,7 @@ _PLAN_THINKING_ELEMENT_RE = re.compile(
     r"<plan_thinking\b(?P<attrs>[^>]*)>(?P<body>.*?)</plan_thinking>",
     re.DOTALL | re.IGNORECASE,
 )
-_TOOL_CITATION_RE = re.compile(
-    r"`?(?P<name>(?:mcp__sources__|search_|verify_|check_|query_|translate_)\w+)`?"
-)
+_TOOL_CITATION_RE = re.compile(r"`?(?P<name>(?:mcp__sources__|search_|verify_|check_|query_|translate_)\w+)`?")
 
 
 def _normalize_tool_citation_name(raw_tool: Any) -> str:
@@ -2227,9 +2151,7 @@ def _normalize_tool_citation_name(raw_tool: Any) -> str:
 
 def _tool_name_from_call(call: Any) -> str:
     mapped = _mapping_from_tool_call(call)
-    return _normalize_tool_citation_name(
-        mapped.get("tool") or mapped.get("tool_name") or mapped.get("name")
-    )
+    return _normalize_tool_citation_name(mapped.get("tool") or mapped.get("tool_name") or mapped.get("name"))
 
 
 def _raw_tool_name_from_call(call: Any) -> str:
@@ -2378,10 +2300,7 @@ def _cited_plan_reasoning_tools(writer_output: str) -> set[str]:
             if _position_in_spans(match.start(), fenced_spans):
                 continue
             searchable = f"{match.group('attrs')} {match.group('body')}"
-            cited.update(
-                _normalize_tool_citation_name(citation)
-                for citation in _TOOL_CITATION_RE.findall(searchable)
-            )
+            cited.update(_normalize_tool_citation_name(citation) for citation in _TOOL_CITATION_RE.findall(searchable))
     return cited
 
 
@@ -2480,10 +2399,7 @@ def _summarize_verify_words_result(result: Any) -> dict[str, Any]:
         return {
             "verified": int(result.get("verified") or 0),
             "failed": int(result.get("failed") or 0),
-            "failed_words": [
-                _clean_telemetry_text(word, 80)
-                for word in failed_words[:TELEMETRY_MAX_FAILED_WORDS]
-            ],
+            "failed_words": [_clean_telemetry_text(word, 80) for word in failed_words[:TELEMETRY_MAX_FAILED_WORDS]],
         }
     if not isinstance(result, Mapping):
         return _summarize_generic_tool_result(result)
@@ -2498,10 +2414,7 @@ def _summarize_verify_words_result(result: Any) -> dict[str, Any]:
     return {
         "verified": verified,
         "failed": len(failed_words),
-        "failed_words": [
-            _clean_telemetry_text(word, 80)
-            for word in failed_words[:TELEMETRY_MAX_FAILED_WORDS]
-        ],
+        "failed_words": [_clean_telemetry_text(word, 80) for word in failed_words[:TELEMETRY_MAX_FAILED_WORDS]],
     }
 
 
@@ -2513,10 +2426,7 @@ def _summarize_generic_tool_result(result: Any) -> dict[str, Any]:
                 summary[key] = int(result[key])
         flags = result.get("flags_raised")
         if isinstance(flags, list):
-            summary["flags_raised"] = [
-                _clean_telemetry_text(flag, 120)
-                for flag in flags[:TELEMETRY_MAX_FAILED_WORDS]
-            ]
+            summary["flags_raised"] = [_clean_telemetry_text(flag, 120) for flag in flags[:TELEMETRY_MAX_FAILED_WORDS]]
         if summary:
             return summary
         return {"keys": sorted(str(key) for key in result)[:5]}
@@ -2569,11 +2479,7 @@ def _search_text_result_items(result: Any) -> list[Mapping[str, Any]]:
     if isinstance(result, list | tuple):
         items: list[Mapping[str, Any]] = []
         for item in result:
-            if (
-                isinstance(item, Mapping)
-                and item.get("type") == "text"
-                and isinstance(item.get("text"), str)
-            ):
+            if isinstance(item, Mapping) and item.get("type") == "text" and isinstance(item.get("text"), str):
                 parsed = _maybe_parse_json_string(item["text"])
                 if parsed is not item["text"]:
                     items.extend(_search_text_result_items(parsed))
@@ -2680,9 +2586,7 @@ def emit_writer_response_telemetry(
     tool_calls_total: int | None = None if telemetry_unavailable else 0
     verify_words_calls: int | None = None if telemetry_unavailable else 0
     for call in tool_calls or []:
-        tool = _normalize_tool_name(
-            call.get("tool") or call.get("tool_name") or call.get("name")
-        )
+        tool = _normalize_tool_name(call.get("tool") or call.get("tool_name") or call.get("name"))
         if tool not in WRITER_TOOL_NAMES:
             continue
         args = call.get("args", call.get("arguments", {}))
@@ -2731,9 +2635,7 @@ def emit_writer_response_telemetry(
         "end_gate_fired": bool(gate["gate_present"]),
         "removed_via_gate": int(gate["removed_count"]),
     }
-    theatre_violations = (
-        [] if telemetry_unavailable else detect_tool_theatre(output, list(tool_calls or []))
-    )
+    theatre_violations = [] if telemetry_unavailable else detect_tool_theatre(output, list(tool_calls or []))
     capped_theatre_violations = theatre_violations[:TELEMETRY_MAX_THEATRE_VIOLATIONS]
     summary["tool_theatre_violations"] = capped_theatre_violations
     summary["tool_theatre_violation_count"] = len(theatre_violations)
@@ -2858,14 +2760,10 @@ def _enforce_writer_runtime_gates(
         return
 
     classes = ", ".join(
-        f"{record.failure_class.value}"
-        + (f":{record.sub_class}" if record.sub_class else "")
+        f"{record.failure_class.value}" + (f":{record.sub_class}" if record.sub_class else "")
         for record in terminal_failures
     )
-    raise LinearPipelineError(
-        f"WRITER_RUNTIME_GATE_FAILED: writer={writer!r} module={module!r} "
-        f"failures=[{classes}]"
-    )
+    raise LinearPipelineError(f"WRITER_RUNTIME_GATE_FAILED: writer={writer!r} module={module!r} failures=[{classes}]")
 
 
 def writer_context(
@@ -2914,9 +2812,7 @@ def writer_context(
         "WORKBOOK_ALLOWED_TYPES": activity_config["WORKBOOK_ALLOWED_TYPES"],
         "ACTIVITY_COUNT_TARGET": activity_config["ACTIVITY_COUNT_TARGET"],
         "VOCAB_COUNT_TARGET": activity_config["VOCAB_COUNT_TARGET"],
-        "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(
-            activity_config["ALLOWED_ACTIVITY_TYPES"]
-        ),
+        "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(activity_config["ALLOWED_ACTIVITY_TYPES"]),
     }
 
 
@@ -3081,15 +2977,7 @@ def _ensure_cursor_writer_workspace(
     cursor_dir = cwd / ".cursor"
     cursor_dir.mkdir(parents=True, exist_ok=True)
     config_path = cursor_dir / "mcp.json"
-    desired = (
-        '{\n'
-        '  "mcpServers": {\n'
-        '    "sources": {\n'
-        '      "url": "http://127.0.0.1:8766/mcp"\n'
-        '    }\n'
-        '  }\n'
-        '}\n'
-    )
+    desired = '{\n  "mcpServers": {\n    "sources": {\n      "url": "http://127.0.0.1:8766/mcp"\n    }\n  }\n}\n'
     if not config_path.exists() or config_path.read_text(encoding="utf-8") != desired:
         config_path.write_text(desired, encoding="utf-8")
 
@@ -3166,12 +3054,14 @@ def _runtime_tool_config(
             workspace_dir,
             event_sink=event_sink,
         )
-        tool_config.update({
-            "cursor_workspace": str(cursor_workspace),
-            "approve_mcps": True,
-            "cursor_mode": "plan",
-            "sandbox": "enabled",
-        })
+        tool_config.update(
+            {
+                "cursor_workspace": str(cursor_workspace),
+                "approve_mcps": True,
+                "cursor_mode": "plan",
+                "sandbox": "enabled",
+            }
+        )
     elif agent_label in {
         "gemini-tools",
         "grok-tools",
@@ -3220,8 +3110,7 @@ def _runtime_tool_config(
     if agent_label == "claude-tools":
         tool_config["agent"] = "curriculum-writer"
     assert tool_config.get("output_format") == "stream-json", (
-        "tool-call writers must keep output_format='stream-json'; "
-        f"got {tool_config.get('output_format')!r}"
+        f"tool-call writers must keep output_format='stream-json'; got {tool_config.get('output_format')!r}"
     )
     return tool_config
 
@@ -3285,9 +3174,7 @@ def invoke_writer(
     reasoning budgets without mutating the global default.
     """
     if writer not in WRITER_CHOICES:
-        raise LinearPipelineError(
-            f"Unknown writer {writer!r}; expected one of {WRITER_CHOICES}"
-        )
+        raise LinearPipelineError(f"Unknown writer {writer!r}; expected one of {WRITER_CHOICES}")
     if invoker is None:
         from scripts.agent_runtime.runner import invoke as invoker
 
@@ -3441,19 +3328,12 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
                 fence_start_line = line_no
                 fence_open_run = run_len
                 if fence_name is None:
-                    raise LinearPipelineError(
-                        f"Writer output contains unnamed fenced block at line {line_no}"
-                    )
+                    raise LinearPipelineError(f"Writer output contains unnamed fenced block at line {line_no}")
                 if fence_name in artifacts:
-                    raise LinearPipelineError(
-                        f"Writer output contains duplicate artifact block: {fence_name}"
-                    )
+                    raise LinearPipelineError(f"Writer output contains duplicate artifact block: {fence_name}")
                 if fence_name in WRITER_JSON_ARTIFACTS and fence_lang != "json":
                     got = fence_lang or "<none>"
-                    raise LinearPipelineError(
-                        f"{fence_name} must be fenced as json, got {got} "
-                        f"at line {line_no}"
-                    )
+                    raise LinearPipelineError(f"{fence_name} must be fenced as json, got {got} at line {line_no}")
                 in_fence = True
                 fence_lines = []
                 continue
@@ -3496,16 +3376,13 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
             pending_name = name
 
     if in_fence:
-        raise LinearPipelineError(
-            f"Writer output has an unterminated fenced block for {fence_name}"
-        )
+        raise LinearPipelineError(f"Writer output has an unterminated fenced block for {fence_name}")
 
     missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
     extra = sorted(set(artifacts) - set(WRITER_ARTIFACTS))
     if missing or extra:
         raise LinearPipelineError(
-            f"Writer output must contain exactly {WRITER_ARTIFACTS}. "
-            f"missing={missing} extra={extra}"
+            f"Writer output must contain exactly {WRITER_ARTIFACTS}. missing={missing} extra={extra}"
         )
     return {name: artifacts[name] for name in WRITER_ARTIFACTS}
 
@@ -3592,7 +3469,7 @@ def parse_writer_correction_module_only(response: str) -> str | None:
             inner_stripped = inner.rstrip()
             close_marker = "`" * open_run
             if inner_stripped.endswith(close_marker):
-                inner_stripped = inner_stripped[: -open_run].rstrip()
+                inner_stripped = inner_stripped[:-open_run].rstrip()
                 stripped = inner_stripped
     # Hard guards: the entire (possibly unwrapped) response must be one
     # triple-fence block.
@@ -3706,9 +3583,7 @@ def review_context(
         "MODULE_SLUG": str(plan["slug"]),
         "WORD_TARGET": str(plan["word_target"]),
         "LEARNER_STATE": format_learner_state(learner_state),
-        "IMMERSION_RULE": get_immersion_rule(
-            level.lower(), sequence, learner_state=learner_state
-        ),
+        "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence, learner_state=learner_state),
         "CONTRACT_YAML": _contract_yaml(plan),
         "PLAN_CONTENT": plan_content,
         "GENERATED_CONTENT": generated_content,
@@ -3738,9 +3613,7 @@ def wiki_coverage_review_context(
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     manifest_text = (
-        wiki_manifest
-        if isinstance(wiki_manifest, str)
-        else json.dumps(wiki_manifest, ensure_ascii=False, indent=2)
+        wiki_manifest if isinstance(wiki_manifest, str) else json.dumps(wiki_manifest, ensure_ascii=False, indent=2)
     )
     return {
         "LEVEL": level,
@@ -3817,11 +3690,7 @@ def render_wiki_coverage_correction_prompt(
     iteration: int,
 ) -> str:
     return render_phase_prompt(
-        PROJECT_ROOT
-        / "scripts"
-        / "build"
-        / "phases"
-        / "linear-correction-wiki-coverage.md",
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-correction-wiki-coverage.md",
         wiki_coverage_correction_context(
             plan=plan,
             failure_group_key=failure_group_key,
@@ -3864,9 +3733,7 @@ def wiki_coverage_narrow_correction_context(
             sort_keys=False,
         ).strip(),
         "SURGICAL_DIFF_HINT": str(fix_proposal.get("surgical_diff_hint") or ""),
-        "CURRENT_ARTIFACT_STATE": str(
-            fix_proposal.get("current_artifact_state") or ""
-        ),
+        "CURRENT_ARTIFACT_STATE": str(fix_proposal.get("current_artifact_state") or ""),
         "FULL_ARTIFACT_TEXT": artifact_text,
         "PREVIOUS_BATCHED_ATTEMPTS": str(previous_batched_attempts),
     }
@@ -3880,11 +3747,7 @@ def render_wiki_coverage_narrow_correction_prompt(
     previous_batched_attempts: int,
 ) -> str:
     return render_phase_prompt(
-        PROJECT_ROOT
-        / "scripts"
-        / "build"
-        / "phases"
-        / "linear-correction-wiki-coverage-narrow.md",
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-correction-wiki-coverage-narrow.md",
         wiki_coverage_narrow_correction_context(
             plan=plan,
             fix_proposal=fix_proposal,
@@ -3896,9 +3759,7 @@ def render_wiki_coverage_narrow_correction_prompt(
 
 def _quote_items_from_text(text: str) -> list[str]:
     quotes: list[str] = []
-    quote_re = re.compile(
-        r'"(?P<double>[^"\n]{1,500})"|“(?P<curly>[^”\n]{1,500})”|«(?P<guillemets>[^»\n]{1,500})»'
-    )
+    quote_re = re.compile(r'"(?P<double>[^"\n]{1,500})"|“(?P<curly>[^”\n]{1,500})”|«(?P<guillemets>[^»\n]{1,500})»')
     for match in quote_re.finditer(text):
         quote = match.group("double") or match.group("curly") or match.group("guillemets")
         if quote:
@@ -3911,18 +3772,12 @@ def _evidence_quotes_from_payload(payload: Mapping[str, Any]) -> list[str]:
     quotes: list[str] = []
     if isinstance(raw_quotes, list):
         quotes.extend(
-            _clean_telemetry_text(item, TELEMETRY_MAX_QUOTE_CHARS)
-            for item in raw_quotes
-            if str(item).strip()
+            _clean_telemetry_text(item, TELEMETRY_MAX_QUOTE_CHARS) for item in raw_quotes if str(item).strip()
         )
 
     evidence = payload.get("evidence")
     if isinstance(evidence, list):
-        quotes.extend(
-            _clean_telemetry_text(item, TELEMETRY_MAX_QUOTE_CHARS)
-            for item in evidence
-            if str(item).strip()
-        )
+        quotes.extend(_clean_telemetry_text(item, TELEMETRY_MAX_QUOTE_CHARS) for item in evidence if str(item).strip())
     elif isinstance(evidence, str):
         quotes.extend(_quote_items_from_text(evidence))
         if not quotes and evidence.strip():
@@ -4016,10 +3871,7 @@ def _flags_for_audit(call: Mapping[str, Any], result: Any) -> list[str]:
         flags = result.get("flags_raised") or result.get("flags")
     if not isinstance(flags, list):
         return []
-    return [
-        _clean_telemetry_text(flag, 120)
-        for flag in flags[:TELEMETRY_MAX_FAILED_WORDS]
-    ]
+    return [_clean_telemetry_text(flag, 120) for flag in flags[:TELEMETRY_MAX_FAILED_WORDS]]
 
 
 def emit_reviewer_audit_telemetry(
@@ -4035,9 +3887,7 @@ def emit_reviewer_audit_telemetry(
     calls_total = 0
     flags_total = 0
     for call in tool_calls:
-        tool = _normalize_tool_name(
-            call.get("tool") or call.get("tool_name") or call.get("name")
-        )
+        tool = _normalize_tool_name(call.get("tool") or call.get("tool_name") or call.get("name"))
         if tool not in WRITER_TOOL_NAMES:
             continue
         args = call.get("args", call.get("arguments", {}))
@@ -4075,9 +3925,7 @@ def invoke_reviewer_dim(
 ) -> str:
     """Call one per-dimension reviewer and emit response/audit telemetry."""
     if reviewer not in REVIEWER_CHOICES:
-        raise LinearPipelineError(
-            f"Unknown reviewer {reviewer!r}; expected one of {REVIEWER_CHOICES}"
-        )
+        raise LinearPipelineError(f"Unknown reviewer {reviewer!r}; expected one of {REVIEWER_CHOICES}")
     if invoker is None:
         from scripts.agent_runtime.runner import invoke as invoker
 
@@ -4164,18 +4012,13 @@ def render_reviewer_correction_prompt(
         for candidate in candidates
     ]
     if candidate_rows:
-        candidate_section = yaml.safe_dump(
-            candidate_rows, allow_unicode=True, sort_keys=False
-        ).strip()
+        candidate_section = yaml.safe_dump(candidate_rows, allow_unicode=True, sort_keys=False).strip()
         reviewer_role = (
-            "Pipeline-proposed candidates are provided below. SELECT from these "
-            "candidates; do not invent replacements."
+            "Pipeline-proposed candidates are provided below. SELECT from these candidates; do not invent replacements."
         )
     else:
         candidate_section = "[]"
-        reviewer_role = (
-            "Emit local <fixes> entries only. Do not rewrite sections."
-        )
+        reviewer_role = "Emit local <fixes> entries only. Do not rewrite sections."
     diagnostic = yaml.safe_dump(
         {
             "gate": gate,
@@ -4284,20 +4127,14 @@ def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
             raise LinearPipelineError("Wiki coverage review verdict entries must be mappings")
         verdict = str(item.get("verdict") or "").upper()
         if verdict not in ALLOWED_WIKI_COVERAGE_VERDICTS:
-            raise LinearPipelineError(
-                "Wiki coverage review verdict must be PASS, KEYWORD_STUFFING, PARTIAL, or FAIL"
-            )
+            raise LinearPipelineError("Wiki coverage review verdict must be PASS, KEYWORD_STUFFING, PARTIAL, or FAIL")
         if not str(item.get("obligation_id") or "").strip():
             raise LinearPipelineError("Wiki coverage review verdict missing obligation_id")
         evidence = str(item.get("evidence") or "").strip()
         if not evidence:
             raise LinearPipelineError("Wiki coverage review verdict missing evidence")
-        if len(evidence) < 8 or not any(
-            marker in evidence for marker in WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS
-        ):
-            raise LinearPipelineError(
-                "Wiki coverage review evidence must be a quoted excerpt of ≥8 chars"
-            )
+        if len(evidence) < 8 or not any(marker in evidence for marker in WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS):
+            raise LinearPipelineError("Wiki coverage review evidence must be a quoted excerpt of ≥8 chars")
         if verdict in WIKI_COVERAGE_OVERALL_FAIL_VERDICTS:
             hard_fail_seen = True
         normalized_item = dict(item)
@@ -4308,9 +4145,7 @@ def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
     if overall not in WIKI_COVERAGE_OVERALL_VERDICTS:
         raise LinearPipelineError("Wiki coverage review overall_verdict must be PASS, PARTIAL, or FAIL")
     if hard_fail_seen and overall != "FAIL":
-        raise LinearPipelineError(
-            "Wiki coverage review overall_verdict must be FAIL when any obligation verdict fails"
-        )
+        raise LinearPipelineError("Wiki coverage review overall_verdict must be FAIL when any obligation verdict fails")
     return {**payload, "verdicts": normalized_verdicts, "overall_verdict": overall}
 
 
@@ -4334,19 +4169,12 @@ def _evidence_passes_quote_contract(entry: Mapping[str, Any]) -> bool:
     claim PASS without citing concrete text from the artifact.
     """
     evidence = entry.get("evidence")
-    if (
-        isinstance(evidence, str)
-        and evidence.strip()
-        and any(q in evidence for q in _LLM_QG_QUOTE_MARKERS)
-    ):
+    if isinstance(evidence, str) and evidence.strip() and any(q in evidence for q in _LLM_QG_QUOTE_MARKERS):
         return True
 
     quotes = entry.get("evidence_quotes")
     if isinstance(quotes, list) and quotes:
-        valid = [
-            q for q in quotes
-            if isinstance(q, str) and len(q.strip()) >= 8
-        ]
+        valid = [q for q in quotes if isinstance(q, str) and len(q.strip()) >= 8]
         if valid:
             return True
     return False
@@ -4359,9 +4187,7 @@ def validate_llm_review_report(report: Mapping[str, Any]) -> None:
     if actual != dims:
         missing = sorted(dims - actual)
         extra = sorted(actual - dims)
-        raise LinearPipelineError(
-            f"LLM QG dims must be exactly QG_DIMS. missing={missing} extra={extra}"
-        )
+        raise LinearPipelineError(f"LLM QG dims must be exactly QG_DIMS. missing={missing} extra={extra}")
 
     for dim in QG_DIMS:
         entry = report[dim]
@@ -4380,9 +4206,7 @@ def validate_llm_review_report(report: Mapping[str, Any]) -> None:
         ):
             raise LinearPipelineError(f"LLM QG entry for {dim} missing evidence")
         if not _evidence_passes_quote_contract(entry):
-            raise LinearPipelineError(
-                f"LLM QG evidence for {dim} must include a quoted excerpt"
-            )
+            raise LinearPipelineError(f"LLM QG evidence for {dim} must include a quoted excerpt")
         if not isinstance(entry.get("verdict"), str) or not entry["verdict"].strip():
             raise LinearPipelineError(f"LLM QG entry for {dim} missing verdict")
         if entry["verdict"].upper() not in {"PASS", "REVISE", "REJECT"}:
@@ -4407,11 +4231,7 @@ def emit_phase_review_summary(
     event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     """Emit the reviewer phase roll-up event."""
-    scores = {
-        dim: float(report[dim]["score"])
-        for dim in QG_DIMS
-        if isinstance(report.get(dim), Mapping)
-    }
+    scores = {dim: float(report[dim]["score"]) for dim in QG_DIMS if isinstance(report.get(dim), Mapping)}
     dims_with_evidence = 0
     for dim in QG_DIMS:
         entry = report.get(dim)
@@ -4476,8 +4296,7 @@ def run_python_qg_with_corrections(
     *,
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
     qg_runner: Callable[[], dict[str, Any]] | None = None,
-    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None]
-    | None = None,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None = None,
     reviewer_corrector: Callable[[CorrectionContext], str | None] | None = None,
     dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None = None,
     writer: str = "claude-tools",
@@ -4943,12 +4762,7 @@ def _emit_wiki_coverage_rule_events(
     missing_impl_ids = [
         str(proposal.get("obligation_id") or "")
         for proposal in proposals
-        if str(
-            proposal.get("failure_reason")
-            or proposal.get("reason")
-            or proposal.get("status")
-            or ""
-        )
+        if str(proposal.get("failure_reason") or proposal.get("reason") or proposal.get("status") or "")
         == "implementation_map_missing"
     ]
     if not missing_impl_ids:
@@ -4957,8 +4771,7 @@ def _emit_wiki_coverage_rule_events(
             missing_impl_ids = [
                 str(item.get("obligation_id") or item.get("id") or "")
                 for item in obligations
-                if isinstance(item, Mapping)
-                and str(item.get("reason") or "") == "implementation_map_missing"
+                if isinstance(item, Mapping) and str(item.get("reason") or "") == "implementation_map_missing"
             ]
     if not missing_impl_ids:
         return
@@ -4968,8 +4781,7 @@ def _emit_wiki_coverage_rule_events(
         level=(str(level).lower() if level else None),
         slug=_wiki_manifest_slug(manifest, module_dir),
         gate="implementation_map_missing",
-        evidence="missing_obligation_ids="
-        + ", ".join(sorted(set(missing_impl_ids))[:10]),
+        evidence="missing_obligation_ids=" + ", ".join(sorted(set(missing_impl_ids))[:10]),
     )
 
 
@@ -5097,9 +4909,7 @@ def _wiki_coverage_corrector_response(
         task_id=task_id,
         entrypoint="runtime",
         effort=effort,
-        tool_config=_runtime_tool_config(
-            "codex-tools", workspace_dir=module_dir, event_sink=event_sink
-        ),
+        tool_config=_runtime_tool_config("codex-tools", workspace_dir=module_dir, event_sink=event_sink),
         event_sink=event_sink,
     )
     return str(getattr(result, "response", "") or "")
@@ -5283,10 +5093,7 @@ def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
         raise LinearPipelineError(f"{artifact} must remain a bare YAML list")
     for index, item in enumerate(parsed, start=1):
         if not isinstance(item, dict):
-            raise LinearPipelineError(
-                f"{artifact} entries must remain mappings; item {index} is "
-                f"{type(item).__name__}"
-            )
+            raise LinearPipelineError(f"{artifact} entries must remain mappings; item {index} is {type(item).__name__}")
     try:
         redumped = yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
         reparsed = yaml.safe_load(redumped)
@@ -5294,8 +5101,7 @@ def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
         raise LinearPipelineError(f"{artifact} failed YAML round-trip: {exc}") from exc
     if parsed != reparsed:
         raise LinearPipelineError(
-            f"{artifact} does not round-trip cleanly; likely scalar/mapping "
-            "ambiguity or non-portable scalar value"
+            f"{artifact} does not round-trip cleanly; likely scalar/mapping ambiguity or non-portable scalar value"
         )
     for index, item in enumerate(parsed, start=1):
         for field in required_fields:
@@ -5308,9 +5114,7 @@ def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
         if artifact == "activities.yaml" and "items" in item:
             items = item["items"]
             if not isinstance(items, list):
-                raise LinearPipelineError(
-                    f"{artifact} item {index} field items must remain a list"
-                )
+                raise LinearPipelineError(f"{artifact} item {index} field items must remain a list")
             activity_type = str(item.get("type") or "")
             required_item_fields = _ACTIVITY_ITEM_REQUIRED_FIELDS.get(activity_type)
             if required_item_fields is None:
@@ -5338,11 +5142,7 @@ def _wiki_coverage_remaining_failures(result: Mapping[str, Any]) -> list[Mapping
     obligations = result.get("obligations") or []
     if not isinstance(obligations, Sequence) or isinstance(obligations, (str, bytes)):
         return []
-    return [
-        item
-        for item in obligations
-        if isinstance(item, Mapping) and item.get("status") == "FAIL"
-    ]
+    return [item for item in obligations if isinstance(item, Mapping) and item.get("status") == "FAIL"]
 
 
 def _first_failed_correctable_gate(report: Mapping[str, Any]) -> str | None:
@@ -5377,8 +5177,7 @@ def _apply_python_qg_correction(
     *,
     module_dir: Path,
     plan_path: Path,
-    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None]
-    | None,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None,
     reviewer_corrector: Callable[[CorrectionContext], str | None] | None,
     dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None,
     writer: str,
@@ -5394,11 +5193,15 @@ def _apply_python_qg_correction(
         return False, frozenset(), {"reason": "terminal zero-retry gate"}
     if gate in PIPELINE_INSERT_GATES:
         _apply_activity_id_inserts(module_dir / "module.md", gate_report)
-        return True, frozenset(), {
-            "kind": "pipeline_insert",
-            "gate": gate,
-            "gate_report": dict(gate_report),
-        }
+        return (
+            True,
+            frozenset(),
+            {
+                "kind": "pipeline_insert",
+                "gate": gate,
+                "gate_report": dict(gate_report),
+            },
+        )
     if gate in WRITER_CORRECTION_GATES:
         payload = _apply_writer_correction(
             gate,
@@ -5441,8 +5244,7 @@ def _apply_writer_correction(
     qg_report: Mapping[str, Any],
     module_dir: Path,
     plan_path: Path,
-    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None]
-    | None,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None,
     writer: str,
     invoker: Callable[..., Any] | None,
 ) -> dict[str, Any]:
@@ -5738,15 +5540,19 @@ def _parse_reviewer_fixes(review_text: str) -> list[dict[str, str]]:
         if not isinstance(item, dict):
             continue
         if "insert_after" in item and "text" in item:
-            fixes.append({
-                "insert_after": str(item["insert_after"]),
-                "text": str(item["text"]),
-            })
+            fixes.append(
+                {
+                    "insert_after": str(item["insert_after"]),
+                    "text": str(item["text"]),
+                }
+            )
         elif "find" in item and "replace" in item:
-            fixes.append({
-                "find": str(item["find"]),
-                "replace": str(item["replace"]),
-            })
+            fixes.append(
+                {
+                    "find": str(item["find"]),
+                    "replace": str(item["replace"]),
+                }
+            )
     return fixes
 
 
@@ -5762,18 +5568,22 @@ def _parse_reviewer_fixes_xml(body: str) -> list[dict[str, str]]:
         find_node = node.find("find")
         replace_node = node.find("replace")
         if find_node is not None and replace_node is not None:
-            fixes.append({
-                "find": "".join(find_node.itertext()),
-                "replace": "".join(replace_node.itertext()),
-            })
+            fixes.append(
+                {
+                    "find": "".join(find_node.itertext()),
+                    "replace": "".join(replace_node.itertext()),
+                }
+            )
             continue
         insert_after_node = node.find("insert_after")
         text_node = node.find("text")
         if insert_after_node is not None and text_node is not None:
-            fixes.append({
-                "insert_after": "".join(insert_after_node.itertext()),
-                "text": "".join(text_node.itertext()),
-            })
+            fixes.append(
+                {
+                    "insert_after": "".join(insert_after_node.itertext()),
+                    "text": "".join(text_node.itertext()),
+                }
+            )
     return fixes
 
 
@@ -5867,9 +5677,7 @@ def generate_dictionary_candidates(
         detections = gate_report.get("detections", [])
         if isinstance(detections, list):
             originals.extend(
-                str(item.get("text"))
-                for item in detections
-                if isinstance(item, Mapping) and item.get("text")
+                str(item.get("text")) for item in detections if isinstance(item, Mapping) and item.get("text")
             )
 
     candidates: list[CorrectionCandidate] = []
@@ -5883,9 +5691,7 @@ def generate_dictionary_candidates(
                     replacement = str(item)
                     source = "pipeline lookup"
                 if replacement:
-                    candidates.append(
-                        CorrectionCandidate(original, replacement, source, gate)
-                    )
+                    candidates.append(CorrectionCandidate(original, replacement, source, gate))
             continue
         if gate == "citations_resolve" and qg_report is not None:
             candidates.extend(_citation_candidates(original, qg_report))
@@ -5997,6 +5803,7 @@ def run_python_qg(
         ),
     )
     record("citations_resolve", _citation_gate(resources, plan))
+    record("plan_reference_match", _plan_reference_match_gate(resources, plan))
     record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
     record(
         "resources_search_attempted",
@@ -6032,9 +5839,7 @@ def run_python_qg(
     gates["previously_passed_regression"] = {"passed": True, "regressions": []}
     gates["mdx_render"] = {"passed": None, "message": "Run after publish stage"}
     gates["passed"] = all(
-        gate.get("passed") is True
-        for key, gate in gates.items()
-        if isinstance(gate, dict) and key != "mdx_render"
+        gate.get("passed") is True for key, gate in gates.items() if isinstance(gate, dict) and key != "mdx_render"
     )
     return _python_qg_report(plan, gates)
 
@@ -6079,7 +5884,9 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
     )
     mdx = mdx.replace("\n{/**/}\n", "\n")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(mdx, encoding="utf-8")  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
+    output_path.write_text(
+        mdx, encoding="utf-8"
+    )  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
     return mdx
 
 
@@ -6177,16 +5984,13 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
     if schema.per_type_extras_authoring:
         per_type_fields = _activity_type_field_whitelist()
 
-    static_allowed_fields = (
-        set(schema.required_item_fields) | schema.optional_item_fields
-    )
+    static_allowed_fields = set(schema.required_item_fields) | schema.optional_item_fields
     required_field_names = set(schema.required_item_fields)
 
     for index, item in enumerate(parsed, start=1):
         if not isinstance(item, dict):
             raise LinearPipelineError(
-                f"{artifact} schema validation failed: item {index} must be "
-                f"object, got {type(item).__name__}"
+                f"{artifact} schema validation failed: item {index} must be object, got {type(item).__name__}"
             )
 
         if per_type_fields is None:
@@ -6250,8 +6054,7 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
                 )
             if role != "textbook" and not str(item.get("url") or "").strip():
                 raise LinearPipelineError(
-                    f"{artifact} schema validation failed: item {index} "
-                    f"role {role!r} requires url"
+                    f"{artifact} schema validation failed: item {index} role {role!r} requires url"
                 )
 
 
@@ -6283,9 +6086,15 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
 # Universal authoring fields valid on every activity type. Sourced from
 # the per-level JSON Schemas (`schemas/activities-*.schema.json`), which
 # uniformly allow `id`/`type`/`title`/`instruction`/`notes` across types.
-_UNIVERSAL_AUTHORING_FIELDS: frozenset[str] = frozenset({
-    "id", "type", "title", "instruction", "notes",
-})
+_UNIVERSAL_AUTHORING_FIELDS: frozenset[str] = frozenset(
+    {
+        "id",
+        "type",
+        "title",
+        "instruction",
+        "notes",
+    }
+)
 
 
 def _activity(*type_specific: str) -> frozenset[str]:
@@ -6295,51 +6104,66 @@ def _activity(*type_specific: str) -> frozenset[str]:
 
 _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     # Core L2 question/practice types — items-bearing.
-    "quiz":               _activity("items"),
-    "select":             _activity("items"),
-    "true-false":         _activity("items"),
-    "fill-in":            _activity("items"),
-    "cloze":              _activity("passage", "blanks"),
-    "match-up":           _activity("pairs"),
-    "group-sort":         _activity("groups"),
-    "unjumble":           _activity("items"),
-    "error-correction":   _activity("items"),
-    "mark-the-words":     _activity("text", "answers"),
-    "translate":          _activity("items"),
-    "anagram":            _activity("items"),
+    "quiz": _activity("items"),
+    "select": _activity("items"),
+    "true-false": _activity("items"),
+    "fill-in": _activity("items"),
+    "cloze": _activity("passage", "blanks"),
+    "match-up": _activity("pairs"),
+    "group-sort": _activity("groups"),
+    "unjumble": _activity("items"),
+    "error-correction": _activity("items"),
+    "mark-the-words": _activity("text", "answers"),
+    "translate": _activity("items"),
+    "anagram": _activity("items"),
     # Pre-literacy (A1 Cyrillic).
-    "classify":           _activity("categories"),
-    "image-to-letter":    _activity("items"),
-    "watch-and-repeat":   _activity("items"),
+    "classify": _activity("categories"),
+    "image-to-letter": _activity("items"),
+    "watch-and-repeat": _activity("items"),
     # Pre-literacy types declared in `docs/lesson-schema.yaml` but with
     # no `_parse_*` method in `ActivityParser` (silently dropped at
     # parse time). Listed here to preserve the pre-#1624 behavior of
     # the old `lesson-schema.yaml`-sourced loader, which accepted them.
-    "count-syllables":    _activity("items", "maxCount"),
-    "divide-words":       _activity("items"),
+    "count-syllables": _activity("items", "maxCount"),
+    "divide-words": _activity("items"),
     "highlight-morphemes": _activity("items", "text"),
-    "letter-grid":        _activity("letters"),
-    "observe":            _activity("examples", "prompt"),
-    "odd-one-out":        _activity("items"),
-    "order":              _activity("items", "correct_order"),
-    "pick-syllables":     _activity("syllables", "category", "correctIndices", "explanation"),
+    "letter-grid": _activity("letters"),
+    "observe": _activity("examples", "prompt"),
+    "odd-one-out": _activity("items"),
+    "order": _activity("items", "correct_order"),
+    "pick-syllables": _activity("syllables", "category", "correctIndices", "explanation"),
     # Seminar / B2+ analytical types. The fields below cover both
     # the canonical and legacy authoring shapes that `ActivityParser`
     # accepts (e.g. `target_text` / `questions` / `model_answers` is
     # canonical for critical-analysis, `context` / `question` /
     # `model_answer` is legacy — both are still read).
-    "reading":            _activity("text", "context", "source", "resource", "tasks"),
-    "essay-response":     _activity("source_reading", "prompt", "min_words", "model_answer", "rubric", "peer_review_guidelines"),
-    "critical-analysis":  _activity("source_reading", "target_text", "questions", "model_answers", "context", "question", "model_answer", "focus_points"),
-    "comparative-study":  _activity("source_reading", "items_to_compare", "criteria", "prompt", "model_answer", "source_a", "source_b", "task"),
-    "authorial-intent":   _activity("source_reading", "text_excerpt", "prompt", "techniques_to_identify", "model_answer"),
+    "reading": _activity("text", "context", "source", "resource", "tasks"),
+    "essay-response": _activity(
+        "source_reading", "prompt", "min_words", "model_answer", "rubric", "peer_review_guidelines"
+    ),
+    "critical-analysis": _activity(
+        "source_reading",
+        "target_text",
+        "questions",
+        "model_answers",
+        "context",
+        "question",
+        "model_answer",
+        "focus_points",
+    ),
+    "comparative-study": _activity(
+        "source_reading", "items_to_compare", "criteria", "prompt", "model_answer", "source_a", "source_b", "task"
+    ),
+    "authorial-intent": _activity("source_reading", "text_excerpt", "prompt", "techniques_to_identify", "model_answer"),
     # ISTORIO / HIST.
-    "source-evaluation":  _activity("source_text", "source_metadata", "evaluation_criteria", "guiding_questions", "model_evaluation"),
-    "debate":             _activity("debate_question", "historical_context", "positions", "analysis_tasks", "model_analysis"),
+    "source-evaluation": _activity(
+        "source_text", "source_metadata", "evaluation_criteria", "guiding_questions", "model_evaluation"
+    ),
+    "debate": _activity("debate_question", "historical_context", "positions", "analysis_tasks", "model_analysis"),
     # OES / RUTH (historical-Ukrainian linguistic types).
-    "etymology-trace":    _activity("items"),
-    "grammar-identify":   _activity("items"),
-    "transcription":      _activity("original", "answer", "hints"),
+    "etymology-trace": _activity("items"),
+    "grammar-identify": _activity("items"),
+    "transcription": _activity("original", "answer", "hints"),
     "paleography-analysis": _activity("image_url", "hotspots", "options"),
     "dialect-comparison": _activity("text_a", "text_b", "label_a", "label_b", "features"),
     "translation-critique": _activity("original", "translations", "focus_points"),
@@ -6433,9 +6257,11 @@ _COMPONENT_TO_AUTHORING_RENAMES: dict[str, dict[str, str]] = {
 # schema (the gate validates the inner structure separately via
 # strict-JSON parser), so missing `children` in the authoring
 # artifact is correct, not a violation.
-_COMPONENT_PROP_GATE_JSX_ONLY_PROPS: frozenset[str] = frozenset({
-    "children",
-})
+_COMPONENT_PROP_GATE_JSX_ONLY_PROPS: frozenset[str] = frozenset(
+    {
+        "children",
+    }
+)
 
 
 def _strip_outer_code_fence(text: str) -> str:
@@ -6538,9 +6364,7 @@ def _parse_json_or_yaml_mapping(text: str) -> dict[str, Any]:
         if isinstance(parsed, dict):
             return parsed
     if last_error is not None:
-        raise LinearPipelineError(
-            "LLM QG response must be a JSON/YAML mapping"
-        ) from last_error
+        raise LinearPipelineError("LLM QG response must be a JSON/YAML mapping") from last_error
     raise LinearPipelineError("LLM QG response must be a JSON/YAML mapping")
 
 
@@ -6659,9 +6483,7 @@ def _activity_schema_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
             checked += 1
             item_fields = {str(field) for field in item}
             aliased_required = {
-                expected
-                for field in item_fields
-                if (expected := aliases.get(field)) in required_fields
+                expected for field in item_fields if (expected := aliases.get(field)) in required_fields
             }
 
             for field in sorted(item_fields):
@@ -6712,15 +6534,10 @@ def _activity_schema_violation(
 ) -> dict[str, Any]:
     if offending_field is None:
         purpose = _ACTIVITY_ITEM_FIELD_PURPOSES.get(expected_field or "", "this item")
-        message = (
-            f"{activity_type} items must include '{expected_field}:' for {purpose}"
-        )
+        message = f"{activity_type} items must include '{expected_field}:' for {purpose}"
     elif expected_field is not None:
         purpose = _ACTIVITY_ITEM_FIELD_PURPOSES.get(expected_field, "this value")
-        message = (
-            f"{activity_type} items must use '{expected_field}:' for {purpose}, "
-            f"not '{offending_field}:'"
-        )
+        message = f"{activity_type} items must use '{expected_field}:' for {purpose}, not '{offending_field}:'"
     else:
         message = f"{activity_type} items do not allow field '{offending_field}:'"
 
@@ -6744,9 +6561,7 @@ def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
         activity_id = violation["activity_id"]
         activity_index = violation["activity_index"]
         item_index = violation["item_index"]
-        lines.append(
-            f"  activity #{activity_index} '{activity_id}' (item {item_index}):"
-        )
+        lines.append(f"  activity #{activity_index} '{activity_id}' (item {item_index}):")
         offending = violation.get("offending_field")
         expected = violation.get("expected_field")
         if offending is None:
@@ -6755,9 +6570,7 @@ def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
             lines.append(f"    forbidden field '{offending}'")
         else:
             purpose = _ACTIVITY_ITEM_FIELD_PURPOSES.get(str(expected), "this value")
-            lines.append(
-                f"    forbidden field '{offending}' - use '{expected}:' for {purpose}"
-            )
+            lines.append(f"    forbidden field '{offending}' - use '{expected}:' for {purpose}")
         lines.append("")
 
     remaining = len(violations) - 10
@@ -6803,11 +6616,7 @@ def _word_count_gate(text: str, target: int) -> dict[str, Any]:
 
 def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     headings = {match.group(1).strip() for match in _HEADING_RE.finditer(text)}
-    missing = [
-        section["section"]
-        for section in plan["content_outline"]
-        if section["section"] not in headings
-    ]
+    missing = [section["section"] for section in plan["content_outline"] if section["section"] not in headings]
     budgets = []
     for section in plan["content_outline"]:
         title = section["section"]
@@ -6830,20 +6639,22 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         # their per-section min and triggered a terminal halt — is the
         # canonical failure pattern this relaxation prevents.
         max_words = int(target * 1.1)  # diagnostic-only
-        budgets.append({
-            "section": title,
-            "count": count,
-            "min": min_words,
-            "max": max_words,
-            # `passed` is retained on every per-section budget for backward
-            # compatibility with diagnostic consumers (writer correction
-            # render, telemetry dashboards). It marks per-section min
-            # adherence, NOT a build-fail signal — see gate-level `passed`
-            # below.
-            "passed": count >= min_words,
-            "under_min": count < min_words,
-            "over_max": count > max_words,
-        })
+        budgets.append(
+            {
+                "section": title,
+                "count": count,
+                "min": min_words,
+                "max": max_words,
+                # `passed` is retained on every per-section budget for backward
+                # compatibility with diagnostic consumers (writer correction
+                # render, telemetry dashboards). It marks per-section min
+                # adherence, NOT a build-fail signal — see gate-level `passed`
+                # below.
+                "passed": count >= min_words,
+                "under_min": count < min_words,
+                "over_max": count > max_words,
+            }
+        )
     return {
         # Gate-level `passed` reflects ONLY missing headings: every contracted
         # section must EXIST as a level-2 heading in the module. Per-section
@@ -6906,9 +6717,7 @@ def _vesum_gate(
 
     # Pair each surface form with its normalized lowercase lookup key once, so
     # subsequent whitelist + missing computations don't re-normalize repeatedly.
-    surface_pairs = sorted(
-        _iter_vesum_lookup_surface_pairs(text, min_word_length=VESUM_MIN_WORD_LENGTH)
-    )
+    surface_pairs = sorted(_iter_vesum_lookup_surface_pairs(text, min_word_length=VESUM_MIN_WORD_LENGTH))
     whitelist_lc = _proper_name_whitelist_lc()
     unchecked_pairs = [
         (surface, lower, original_case_lookup)
@@ -6940,11 +6749,7 @@ def _vesum_gate(
                 original_case_verified = verify_words_fn(original_case_words)
             except Exception as exc:
                 return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
-            resolved_lc = {
-                surface.lower()
-                for surface, matches in original_case_verified.items()
-                if matches
-            }
+            resolved_lc = {surface.lower() for surface, matches in original_case_verified.items() if matches}
             missing_lc -= resolved_lc
     # Hyphenated multi-word constructions fallback (per user direction
     # 2026-05-23). Many legitimate Ukrainian forms appear as hyphenated
@@ -6972,9 +6777,7 @@ def _vesum_gate(
                 parts = [part for part in compound.split("-") if part]
                 if len(parts) < 2:
                     continue
-                eligible_parts = [
-                    part for part in parts if len(part) >= VESUM_MIN_WORD_LENGTH
-                ]
+                eligible_parts = [part for part in parts if len(part) >= VESUM_MIN_WORD_LENGTH]
                 constituent_lookups.update(eligible_parts)
                 constituent_map[compound] = eligible_parts
             if constituent_lookups:
@@ -6997,19 +6800,13 @@ def _vesum_gate(
                 if all(constituent_verified.get(part) for part in parts):
                     resolved_compounds.add(compound)
             missing_lc -= resolved_compounds
-    missing = sorted(
-        {surface for surface, lower, _original in unchecked_pairs if lower in missing_lc}
-    )
+    missing = sorted({surface for surface, lower, _original in unchecked_pairs if lower in missing_lc})
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
         min_word_length=VESUM_MIN_WORD_LENGTH,
     )
     if ignored_missing_lc:
-        missing = [
-            surface
-            for surface in missing
-            if _normalize_for_vesum(surface).lower() not in ignored_missing_lc
-        ]
+        missing = [surface for surface in missing if _normalize_for_vesum(surface).lower() not in ignored_missing_lc]
     return {
         "passed": not missing,
         "checked": len(unchecked_pairs),
@@ -7108,9 +6905,7 @@ def _iter_vesum_lookup_surface_pairs(
     min_word_length: int,
 ) -> set[tuple[str, str, str]]:
     normalized_words = {
-        word
-        for word in _iter_vesum_word_surfaces(_normalize_for_vesum(text))
-        if len(word) >= min_word_length
+        word for word in _iter_vesum_word_surfaces(_normalize_for_vesum(text)) if len(word) >= min_word_length
     }
     decorated_by_lower: dict[str, set[tuple[str, str]]] = {}
     for match in _VESUM_DECORATED_WORD_RE.finditer(text):
@@ -7223,9 +7018,7 @@ def _collapse_syllable_break(word: str) -> str:
 
 def _touches_blank_marker(text: str, start: int, end: int) -> bool:
     """Return true when a regex word is a stem fragment next to `__` blanks."""
-    return (start > 0 and text[start - 1] == "_") or (
-        end < len(text) and text[end] == "_"
-    )
+    return (start > 0 and text[start - 1] == "_") or (end < len(text) and text[end] == "_")
 
 
 _CYRILLIC_LETTER_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ]")
@@ -7285,9 +7078,7 @@ def _touches_latin_letter(text: str, start: int, end: int) -> bool:
 
 def _looks_like_elided_notation(text: str, start: int, raw: str) -> bool:
     """Skip clipped pronunciation notes like `прокидаюс'`, not quoted words."""
-    return raw.endswith(("'", "ʼ")) and not (
-        start > 0 and text[start - 1] in {"'", "ʼ"}
-    )
+    return raw.endswith(("'", "ʼ")) and not (start > 0 and text[start - 1] in {"'", "ʼ"})
 
 
 def _proper_name_whitelist_lc() -> frozenset[str]:
@@ -7474,9 +7265,7 @@ def detect_unmarkered_negative_examples(activities_yaml: str) -> list[dict[str, 
         if isinstance(items, list):
             for item_idx, item in enumerate(items):
                 texts = _negative_example_candidate_texts(activity_type, item)
-                findings.extend(
-                    _negative_example_findings(activity_id, item_idx, texts)
-                )
+                findings.extend(_negative_example_findings(activity_id, item_idx, texts))
         else:
             texts = _negative_example_candidate_texts(activity_type, activity)
             findings.extend(_negative_example_findings(activity_id, None, texts))
@@ -7522,10 +7311,7 @@ def _negative_example_findings(
                     "activity_id": activity_id,
                     "item_idx": item_idx,
                     "form": form,
-                    "hint": (
-                        "Wrap the negative example as "
-                        f"<!-- bad -->{form}<!-- /bad -->."
-                    ),
+                    "hint": (f"Wrap the negative example as <!-- bad -->{form}<!-- /bad -->."),
                 }
             )
     return findings
@@ -7597,11 +7383,7 @@ def _activity_vesum_text(
     """
     activity_type = activity.get("type")
     activity_id = str(activity.get("id") or "")
-    skip_subtree = (
-        _ERROR_CORRECTION_INTENTIONAL_FIELDS
-        if activity_type == _ERROR_CORRECTION_TYPE
-        else frozenset()
-    )
+    skip_subtree = _ERROR_CORRECTION_INTENTIONAL_FIELDS if activity_type == _ERROR_CORRECTION_TYPE else frozenset()
 
     out: list[str] = []
 
@@ -7683,9 +7465,7 @@ def _activity_vesum_text(
                     # is always a suffix fragment.  Skip unconditionally.
                     # See #1967.
                     continue
-                if key == "options" and (
-                    "answer" in node or "correctAnswer" in node
-                ):
+                if key == "options" and ("answer" in node or "correctAnswer" in node):
                     walk_answer_options(
                         child,
                         answer_values(node.get("answer"), node.get("correctAnswer")),
@@ -7703,11 +7483,7 @@ def _activity_vesum_text(
                 walk(child, key, item_idx=item_idx)
         elif isinstance(node, list):
             for index, item in enumerate(node):
-                child_item_idx = (
-                    index
-                    if activity_type == "true-false" and parent_key == "items"
-                    else item_idx
-                )
+                child_item_idx = index if activity_type == "true-false" and parent_key == "items" else item_idx
                 walk(
                     item,
                     parent_key,
@@ -7735,6 +7511,7 @@ def _extract_prose_text(
     legitimate schema keys like `correction:` (in `error-correction`
     activities) that would otherwise produce false positives.
     """
+
     def keep(parent_key: str | None, value: str) -> str | None:
         return value if parent_key in _PROSE_VALUE_FIELDS else None
 
@@ -7767,9 +7544,7 @@ def _formatting_standards_gate(text: str) -> dict[str, Any]:
     """Check markdown callout syntax required by linear module formatting."""
     malformed_callouts = []
     for line_no, line in enumerate(text.splitlines(), start=1):
-        if re.search(r"\[![A-Za-z][\w-]*\]", line) and not re.match(
-            r"^\s*>\s*\[![A-Za-z][\w-]*\]", line
-        ):
+        if re.search(r"\[![A-Za-z][\w-]*\]", line) and not re.match(r"^\s*>\s*\[![A-Za-z][\w-]*\]", line):
             malformed_callouts.append({"line": line_no, "text": line.strip()})
     missing_mandatory = []
     if re.search(r"\bmodel[_ -]?answer\b", text, flags=re.IGNORECASE) and not re.search(
@@ -7801,11 +7576,7 @@ def _citation_ref_text_contains(reference_title: str, text: str) -> bool:
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
     plan_reference_titles = extract_plan_reference_titles(plan)
     plan_titles = {_normalize_citation_ref(title) for title in plan_reference_titles}
-    plan_keys = {
-        key
-        for title in plan_reference_titles
-        if (key := extract_citation_key(title)) is not None
-    }
+    plan_keys = {key for title in plan_reference_titles if (key := extract_citation_key(title)) is not None}
     unknown = []
     for resource in resources:
         role = str(resource.get("role") or "textbook").strip()
@@ -7816,14 +7587,58 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
         source_key = extract_citation_key(source_ref)
         if (
             normalized_ref not in plan_titles
-            and (
-                source_key is None
-                or not any(citation_keys_match(source_key, plan_key) for plan_key in plan_keys)
-            )
+            and (source_key is None or not any(citation_keys_match(source_key, plan_key) for plan_key in plan_keys))
             and resource.get("packet_chunk_id") is None
         ):
             unknown.append(source_ref)
     return {"passed": not unknown, "unknown": unknown}
+
+
+def _plan_reference_match_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
+    plan_chunk_ids = set()
+    has_chunk_ids_in_plan = False
+
+    references = plan.get("references")
+    if references is None:
+        references = plan.get("plan_references", [])
+
+    if isinstance(references, list):
+        for ref in references:
+            if isinstance(ref, dict) and "notes" in ref:
+                chunk_id = extract_chunk_id_from_notes(ref["notes"])
+                if chunk_id:
+                    plan_chunk_ids.add(chunk_id)
+                    has_chunk_ids_in_plan = True
+
+    if not has_chunk_ids_in_plan and references:
+        return {"passed": True, "warnings": ["plan_has_no_chunk_ids_skipping_membership_check"]}
+
+    out_of_plan = []
+
+    for resource in resources:
+        role = str(resource.get("role") or "textbook").strip()
+        if role != "textbook":
+            continue
+
+        cited_chunk_id = resource.get("packet_chunk_id") or resource.get("chunk_id")
+        if not cited_chunk_id and "notes" in resource:
+            cited_chunk_id = extract_chunk_id_from_notes(resource["notes"])
+
+        if cited_chunk_id and cited_chunk_id not in plan_chunk_ids:
+            source_ref = str(resource.get("source_ref") or resource.get("title") or "")
+            out_of_plan.append({"source_ref": source_ref, "cited_chunk_id": cited_chunk_id})
+
+    if out_of_plan:
+        return {
+            "passed": False,
+            "severity": "HARD",
+            "plan_chunk_ids": sorted(list(plan_chunk_ids)),
+            "out_of_plan": out_of_plan,
+            "rule_ids": ["#R-CITE-HONEST", "#R-TEXTBOOK-30W"],
+            "reason": "resources_cite_chunk_ids_not_in_plan_references",
+        }
+
+    return {"passed": True}
 
 
 def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
@@ -7935,9 +7750,7 @@ def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
     if not result_blob:
         return False
     for start in range(0, len(quote_tokens) - TEXTBOOK_GROUNDING_MIN_WORDS + 1):
-        window = " ".join(
-            quote_tokens[start : start + TEXTBOOK_GROUNDING_MIN_WORDS]
-        )
+        window = " ".join(quote_tokens[start : start + TEXTBOOK_GROUNDING_MIN_WORDS])
         if window in result_blob:
             return True
     return False
@@ -8001,10 +7814,10 @@ def _quote_topic_matches(quote: str, topic_text: str) -> bool:
 
 
 def _plan_reasoning_text(module_text: str) -> str:
-    return " ".join(
-        match.group("body") for match in _PLAN_REASONING_ELEMENT_RE.finditer(module_text)
-    ) + " " + " ".join(
-        match.group("body") for match in _PLAN_THINKING_ELEMENT_RE.finditer(module_text)
+    return (
+        " ".join(match.group("body") for match in _PLAN_REASONING_ELEMENT_RE.finditer(module_text))
+        + " "
+        + " ".join(match.group("body") for match in _PLAN_THINKING_ELEMENT_RE.finditer(module_text))
     )
 
 
@@ -8071,9 +7884,7 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
         elif isinstance(data, Mapping):
             raw_calls = data.get("tool_calls") or data.get("mcp_tool_calls")
             if isinstance(raw_calls, list):
-                calls.extend(
-                    dict(item) for item in raw_calls if isinstance(item, Mapping)
-                )
+                calls.extend(dict(item) for item in raw_calls if isinstance(item, Mapping))
     for path in sorted(module_dir.glob("*.write.jsonl")):
         calls.extend(_load_jsonl_tool_calls(path))
     return calls
@@ -8083,11 +7894,7 @@ def _resources_search_attempted_gate(
     writer_tool_calls: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """HARD gate: writer must attempt at least one external-resource search."""
-    attempted = [
-        call
-        for call in writer_tool_calls
-        if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS
-    ]
+    attempted = [call for call in writer_tool_calls if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS]
     search_tools_used = sorted({_tool_name_from_call(call) for call in attempted})
     return {
         "passed": bool(attempted),
@@ -8123,10 +7930,7 @@ def _parse_mcp_search_text_markdown(text: str) -> list[Mapping[str, Any]]:
         author = author.strip(" ,;:-")
         title = source
         if author and grade_match and page_match:
-            title = (
-                f"{author[:1].upper()}{author[1:]} "
-                f"Grade {grade_match.group('grade')}, p.{page_match.group('page')}"
-            )
+            title = f"{author[:1].upper()}{author[1:]} Grade {grade_match.group('grade')}, p.{page_match.group('page')}"
 
         item: dict[str, Any] = {
             "source_type": "textbook",
@@ -8258,11 +8062,7 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         for item in result:
             if not isinstance(item, Mapping):
                 continue
-            if (
-                tool_name == "search_text"
-                and item.get("type") == "text"
-                and isinstance(item.get("text"), str)
-            ):
+            if tool_name == "search_text" and item.get("type") == "text" and isinstance(item.get("text"), str):
                 parsed = _parse_mcp_search_text_markdown(item["text"])
                 if parsed:
                     items.extend(parsed)
@@ -8346,11 +8146,7 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
 
 def _result_source_type(result: Mapping[str, Any]) -> str:
     return str(
-        result.get("source_type")
-        or result.get("type")
-        or result.get("corpus")
-        or result.get("source")
-        or ""
+        result.get("source_type") or result.get("type") or result.get("corpus") or result.get("source") or ""
     ).casefold()
 
 
@@ -8374,10 +8170,7 @@ def _call_text_parts(call: Mapping[str, Any]) -> tuple[str, str]:
 
 
 def _reference_matches_search_call(reference_title: str, call: Mapping[str, Any]) -> bool:
-    return any(
-        _reference_matches_result(reference_title, result)
-        for result in _result_items_from_call(call)
-    )
+    return any(_reference_matches_result(reference_title, result) for result in _result_items_from_call(call))
 
 
 def _reference_matches_result(
@@ -8431,8 +8224,7 @@ def _plan_reference_records(
         records.append(
             {
                 "title": title,
-                "corpus_missing": bool(ref.get("corpus_missing"))
-                or title in missing_from_packet,
+                "corpus_missing": bool(ref.get("corpus_missing")) or title in missing_from_packet,
                 "verbatim_required": ref.get("verbatim_required") is not False,
             }
         )
@@ -8482,22 +8274,14 @@ def _textbook_grounding_gate(
         if len(_textbook_match_tokens(record["quote"])) >= TEXTBOOK_GROUNDING_MIN_WORDS
     ]
     all_writer_calls = _load_writer_tool_calls(module_dir)
-    search_calls = [
-        call
-        for call in all_writer_calls
-        if _tool_name_from_call(call) == "search_text"
-    ]
+    search_calls = [call for call in all_writer_calls if _tool_name_from_call(call) == "search_text"]
     # Per writer_prompt §"Textbook quotes" Step B, writers retrieve the
     # plan-referenced chunk via ``get_chunk_context(chunk_id=...)`` after
     # ``search_text`` resolves the chunk_id. Both call families produce
     # textbook items the matcher needs to see — collecting only one half
     # (the historical state until 2026-05-20) makes the writer's
     # prompt-prescribed retrieval path invisible to the gate.
-    chunk_context_calls = [
-        call
-        for call in all_writer_calls
-        if _tool_name_from_call(call) == "get_chunk_context"
-    ]
+    chunk_context_calls = [call for call in all_writer_calls if _tool_name_from_call(call) == "get_chunk_context"]
     relevant_calls = search_calls + chunk_context_calls
     textbook_results: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
     for call in relevant_calls:
@@ -8513,27 +8297,18 @@ def _textbook_grounding_gate(
         for record in reference_records
         if not record["corpus_missing"] and not record["verbatim_required"]
     ]
-    missing_corpus = [
-        record["title"] for record in reference_records if record["corpus_missing"]
-    ]
+    missing_corpus = [record["title"] for record in reference_records if record["corpus_missing"]]
     for ref in references:
         if ref in downgraded:
             continue
-        ref_results = [
-            result
-            for call, result in textbook_results
-            if _reference_matches_result(ref, result)
-        ]
+        ref_results = [result for call, result in textbook_results if _reference_matches_result(ref, result)]
         for record in long_blockquote_records:
             quote = record["quote"]
             attribution = record.get("attribution", "")
             candidate_results = ref_results
             if not candidate_results and _citation_ref_text_contains(ref, attribution):
                 candidate_results = [result for _call, result in textbook_results]
-            if not any(
-                _contains_textbook_quote(quote, _result_text_for_match(result))
-                for result in candidate_results
-            ):
+            if not any(_contains_textbook_quote(quote, _result_text_for_match(result)) for result in candidate_results):
                 continue
             topic_text = f"{record['section_title']} {plan_reasoning}".strip()
             if not _quote_topic_matches(quote, topic_text):
@@ -8556,11 +8331,7 @@ def _textbook_grounding_gate(
                     topical_mismatches.append("unattributed")
                     continue
                 actual_ref = next(
-                    (
-                        ref
-                        for ref in references
-                        if _reference_matches_result(ref, result)
-                    ),
+                    (ref for ref in references if _reference_matches_result(ref, result)),
                     "unattributed",
                 )
                 if actual_ref == "unattributed":
@@ -8668,11 +8439,7 @@ def _l2_exposure_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any
         "uk_example_sentences": int(policy["min_uk_example_sentences"]),
         "uk_tab3_activities": int(policy["min_uk_tab3_activities"]),
     }
-    reasons = [
-        f"too_few_{key}"
-        for key, required_count in required.items()
-        if observed[key] < required_count
-    ]
+    reasons = [f"too_few_{key}" for key, required_count in required.items() if observed[key] < required_count]
     return {
         "passed": not reasons,
         "required": required,
@@ -8683,19 +8450,11 @@ def _l2_exposure_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any
 
 
 def _count_uk_dialogue_lines(text: str) -> int:
-    count = sum(
-        1
-        for line in text.splitlines()
-        if re.match(r"^\s*>\s", line) and _UK_WORD_RE.search(line)
-    )
+    count = sum(1 for line in text.splitlines() if re.match(r"^\s*>\s", line) and _UK_WORD_RE.search(line))
     for jsx_block in _JSX_BLOCK_RE.findall(text):
         if _jsx_tag(jsx_block) != "DialogueBox":
             continue
-        count += sum(
-            1
-            for value in _jsx_text_values(jsx_block)
-            if _UK_WORD_RE.search(value)
-        )
+        count += sum(1 for value in _jsx_text_values(jsx_block) if _UK_WORD_RE.search(value))
     return count
 
 
@@ -8708,9 +8467,7 @@ def _count_vocab_entries(text: str) -> int:
         cells = [cell.strip() for cell in stripped.strip("|").split("|")]
         if set(cells) <= {"", "---", ":---", "---:", ":---:"}:
             continue
-        if any(_UK_WORD_RE.search(cell) for cell in cells) and any(
-            re.search(r"[A-Za-z]", cell) for cell in cells
-        ):
+        if any(_UK_WORD_RE.search(cell) for cell in cells) and any(re.search(r"[A-Za-z]", cell) for cell in cells):
             count += 1
     count += sum(1 for block in _JSX_BLOCK_RE.findall(text) if _jsx_tag(block) == "VocabCard")
     return count
@@ -8737,11 +8494,7 @@ def _count_uk_example_bullets(text: str) -> int:
 
     Header rows and `---` separator rows are excluded.
     """
-    bullet_count = sum(
-        1
-        for line in text.splitlines()
-        if re.match(r"^\s*[-*]\s+", line) and _UK_WORD_RE.search(line)
-    )
+    bullet_count = sum(1 for line in text.splitlines() if re.match(r"^\s*[-*]\s+", line) and _UK_WORD_RE.search(line))
     table_count = 0
     for line in text.splitlines():
         stripped = line.strip()
@@ -8821,9 +8574,7 @@ def _unsupported_uk_runs(
             run_start = None
             run_end = None
         if run_start is not None and run_end is not None:
-            _append_unsupported_run(
-                offending, tokens, run_start, run_end, max_unsupported, support_proximity
-            )
+            _append_unsupported_run(offending, tokens, run_start, run_end, max_unsupported, support_proximity)
     return offending[:5]
 
 
@@ -8886,11 +8637,7 @@ def _grounded_citation_keys(
     matched = grounding_evidence.get("matched")
     if not isinstance(matched, list):
         return set()
-    return {
-        key
-        for value in matched
-        if (key := extract_citation_key(value)) is not None
-    }
+    return {key for value in matched if (key := extract_citation_key(value)) is not None}
 
 
 def _is_grounded_source_blockquote(
@@ -9017,11 +8764,7 @@ def _split_immersion_sentences(text: str) -> list[str]:
 
 def _long_ukrainian_sentences(text: str) -> list[str]:
     text = _FENCED_CODE_RE.sub(" ", text)
-    return [
-        sentence
-        for sentence in _split_immersion_sentences(text)
-        if len(_UK_WORD_RE.findall(sentence)) > 10
-    ]
+    return [sentence for sentence in _split_immersion_sentences(text) if len(_UK_WORD_RE.findall(sentence)) > 10]
 
 
 def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[str, Any]:
@@ -9066,13 +8809,7 @@ def _activity_type_gate(
 def _ai_slop_gate(text: str) -> dict[str, Any]:
     from scripts.audit.config import AI_CONTAMINATION_PATTERNS
 
-    hits = sorted(
-        {
-            pattern
-            for pattern in AI_CONTAMINATION_PATTERNS
-            if re.search(pattern, text, flags=re.IGNORECASE)
-        }
-    )
+    hits = sorted({pattern for pattern in AI_CONTAMINATION_PATTERNS if re.search(pattern, text, flags=re.IGNORECASE)})
     return {"passed": not hits, "hits": hits}
 
 
@@ -9290,9 +9027,7 @@ def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
             errors.append(f"{activity.get('id', '<missing-id>')}: unknown activity type {activity_type}")
             continue
         required_component_props = [
-            prop["name"]
-            for prop in component.get("props", {}).get("required", [])
-            if isinstance(prop, dict)
+            prop["name"] for prop in component.get("props", {}).get("required", []) if isinstance(prop, dict)
         ]
         # `activity_type` is non-None here (guarded by `component is None`
         # check above), but Pyright can't track that across the dict lookup.
@@ -9305,15 +9040,11 @@ def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
         required_authoring_fields: list[str] = [
             renames.get(comp_prop, comp_prop)
             for comp_prop in required_component_props
-            if isinstance(comp_prop, str)
-            and comp_prop not in _COMPONENT_PROP_GATE_JSX_ONLY_PROPS
+            if isinstance(comp_prop, str) and comp_prop not in _COMPONENT_PROP_GATE_JSX_ONLY_PROPS
         ]
         missing = [field for field in required_authoring_fields if field not in activity]
         if missing:
-            errors.append(
-                f"{activity.get('id', '<missing-id>')}: missing required props "
-                + ", ".join(missing)
-            )
+            errors.append(f"{activity.get('id', '<missing-id>')}: missing required props " + ", ".join(missing))
     return {"passed": not errors, "errors": errors}
 
 
@@ -9331,6 +9062,4 @@ def _strip_frontmatter(text: str) -> str:
 
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
-    return "\n".join(
-        line for line in text.splitlines() if not line.lstrip().startswith("#")
-    )
+    return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
