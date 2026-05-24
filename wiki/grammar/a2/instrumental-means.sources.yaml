@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/instrumental-means.md
+# Source registry for a2/instrumental-means.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -33,4 +33,7 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-65 | Повторення + Моя американська мандрівка | Review + My American
+    (Road) Trip
+  url: https://www.ukrainianlessons.com/episode65/
+  domain: ukrainianlessons.com

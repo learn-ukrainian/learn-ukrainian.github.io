@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/transport.md
+# Source registry for a1/transport.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -22,7 +22,9 @@ sources:
 - id: S4
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: FMU 1-05 | How to Talk about Transport in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu5/
+  domain: ukrainianlessons.com
 - id: S7
   file: ukrainian_wiki/transport_Педагогіка-A1-Transport-Методичний-підхід
   type: ukrainian_wiki

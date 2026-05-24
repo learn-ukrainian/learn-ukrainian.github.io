@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/preferences-and-choices.md
+# Source registry for a2/preferences-and-choices.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -52,12 +52,20 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-51 | Техніка і технології + Давальний відмінок | Electronics and Technology
+    + Dative Case
+  url: https://www.ukrainianlessons.com/episode51/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-52 | Купівля телефона + Давальний відмінок | Buying a Phone in Ukraine
+    + Dative Case
+  url: https://www.ukrainianlessons.com/episode52/
+  domain: ukrainianlessons.com
 - id: S11
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: FMU 1-23 | Vocabulary Booster! Hobbies in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu23/
+  domain: ukrainianlessons.com

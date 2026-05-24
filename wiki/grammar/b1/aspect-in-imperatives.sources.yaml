@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/b1/aspect-in-imperatives.md
+# Source registry for b1/aspect-in-imperatives.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,4 +34,6 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Наказовий спосіб — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
+  domain: uk.wikipedia.org

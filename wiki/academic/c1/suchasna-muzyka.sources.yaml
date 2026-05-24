@@ -1,4 +1,4 @@
-# Source registry for wiki/academic/c1/suchasna-muzyka.md
+# Source registry for c1/suchasna-muzyka.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -49,4 +49,7 @@ sources:
 - id: S13
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 3-86 | Знайомство з директором школи – Meeting the Headmaster of the
+    School in Ukraine + Prefixes в-, у-
+  url: https://www.ukrainianlessons.com/episode86/
+  domain: ukrainianlessons.com

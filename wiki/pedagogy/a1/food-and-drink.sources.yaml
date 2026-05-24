@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/food-and-drink.md
+# Source registry for a1/food-and-drink.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,12 +46,18 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 1-13 | More about Food in Ukrainian
+  url: https://www.ukrainianlessons.com/episode13/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: FMU 1-16 | How to ORDER at the Restaurant in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu16/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: Food — Ukrainian Phrasebook for Helping Refugees
+  url: https://www.ukrainianlessons.com/ph-food/
+  domain: ukrainianlessons.com

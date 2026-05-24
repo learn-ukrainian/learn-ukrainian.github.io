@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/aspect-mastery.md
+# Source registry for a2/aspect-mastery.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -40,4 +40,6 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 27.1 Introduction to Verbal Aspect (Prefixed Perfective Verbs) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+  domain: opentext.ku.edu

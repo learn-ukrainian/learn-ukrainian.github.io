@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/synonyms-antonyms-style.md
+# Source registry for a2/synonyms-antonyms-style.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,8 +34,12 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 16.1 Adjectives (Gender and Number in Nominative) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/16-1/
+  domain: opentext.ku.edu
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 16.2 Soft-Stem Adjectives (Gender and Number in Nominative) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/16-2/
+  domain: opentext.ku.edu

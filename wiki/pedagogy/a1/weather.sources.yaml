@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/weather.md
+# Source registry for a1/weather.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -37,4 +37,6 @@ sources:
 - id: S7
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: FMU 1-28 | How to Talk about Weather in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu28/
+  domain: ukrainianlessons.com

@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/b2/word-formation-person-suffixes.md
+# Source registry for b2/word-formation-person-suffixes.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -40,4 +40,6 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Словотвір — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Словотвір
+  domain: uk.wikipedia.org

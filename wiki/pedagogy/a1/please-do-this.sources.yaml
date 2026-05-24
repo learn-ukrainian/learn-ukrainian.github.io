@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/please-do-this.md
+# Source registry for a1/please-do-this.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,12 +34,21 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 3-111 | Подарунки на День народження – Birthday Presents + Imperative
+    Mood in Ukrainian
+  url: https://www.ukrainianlessons.com/episode111/
+  domain: ukrainianlessons.com
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 3-112 | Майстер-клас з приготування вареників – How to Cook Varenyky
+    + Imperative Mood of the Second Person Plural
+  url: https://www.ukrainianlessons.com/episode112/
+  domain: ukrainianlessons.com
 - id: S8
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 3-113 | Майстер-клас з вишивання – Ukrainian Traditional Embroidery Masterclass
+    + More about the Imperative Mood in Ukrainian
+  url: https://www.ukrainianlessons.com/episode113/
+  domain: ukrainianlessons.com

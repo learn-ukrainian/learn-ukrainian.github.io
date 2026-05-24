@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/verbs-group-two.md
+# Source registry for a1/verbs-group-two.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -45,8 +45,12 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 'Verb Tenses in Ukrainian: Comprehensive Overview Chart'
+  url: https://www.ukrainianlessons.com/ukrainian-tenses/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 1-24 | What a Surprise! Second Conjugation in Ukrainian
+  url: https://www.ukrainianlessons.com/episode24/
+  domain: ukrainianlessons.com

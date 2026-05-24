@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/services-and-communication.md
+# Source registry for a2/services-and-communication.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,4 +46,7 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-53 | Соціальні мережі + Давальний відмінок | Social Media in Ukrainian
+    + Dative Case
+  url: https://www.ukrainianlessons.com/episode53/
+  domain: ukrainianlessons.com

@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/indefinite-negative-pronouns.md
+# Source registry for a2/indefinite-negative-pronouns.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -40,4 +40,6 @@ sources:
 - id: S7
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Indefinite and Negative Pronouns
+  url: https://talkukrainian.com/indefinite-negative-pronouns/
+  domain: talkukrainian.com

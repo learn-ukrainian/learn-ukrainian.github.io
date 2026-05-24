@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/aspect-in-past.md
+# Source registry for a2/aspect-in-past.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -20,4 +20,6 @@ sources:
 - id: S5
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 27.2 Verbal Aspect (Past Tense) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+  domain: opentext.ku.edu

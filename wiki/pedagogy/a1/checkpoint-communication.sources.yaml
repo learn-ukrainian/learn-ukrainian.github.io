@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/checkpoint-communication.md
+# Source registry for a1/checkpoint-communication.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,12 +46,18 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Short and Useful Ukrainian Questions You Should Learn for Your Trip to Ukraine
+  url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: Language & Communication — Ukrainian Phrasebook for Helping Refugees
+  url: https://www.ukrainianlessons.com/ph-language/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: FMU 1-02 | Useful Phrases for Learning Ukrainian
+  url: https://www.ukrainianlessons.com/fmu2/
+  domain: ukrainianlessons.com

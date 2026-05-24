@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/sounds-letters-and-hello.md
+# Source registry for a1/sounds-letters-and-hello.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -53,8 +53,12 @@ sources:
 - id: S10
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Understanding Ukrainian Cyrillic Alphabet
+  url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+  domain: ukrainianlessons.com
 - id: S11
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: Ukrainian alphabet with pronunciation
+  url: https://talkukrainian.com/ukrainian-alphabet/
+  domain: talkukrainian.com

@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/emergencies.md
+# Source registry for a1/emergencies.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -44,4 +44,6 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: How to Say That Something Hurts in Ukrainian
+  url: https://www.ukrainianlessons.com/something-hurts/
+  domain: ukrainianlessons.com

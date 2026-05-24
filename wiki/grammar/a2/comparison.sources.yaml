@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/comparison.md
+# Source registry for a2/comparison.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -52,12 +52,18 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 20.1 Comparative Degree of Adjectives – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/20-1/
+  domain: opentext.ku.edu
 - id: S10
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 20.2 Comparative Degree of Adjectives (Exceptions) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/20-2/
+  domain: opentext.ku.edu
 - id: S11
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: 20.3 Superlative Degree of Adjectives – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/20-3/
+  domain: opentext.ku.edu

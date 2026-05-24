@@ -1,4 +1,4 @@
-# Source registry for wiki/mastery/c2/interpretation-advanced.md
+# Source registry for c2/interpretation-advanced.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,4 +34,7 @@ sources:
 - id: S13
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 2-65 | Повторення + Моя американська мандрівка | Review + My American
+    (Road) Trip
+  url: https://www.ukrainianlessons.com/episode65/
+  domain: ukrainianlessons.com

@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/who-am-i.md
+# Source registry for a1/who-am-i.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S2
@@ -40,7 +40,9 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Polite Phrases in Ukrainian
+  url: https://www.verba.school/post/polite-phrases-in-ukrainian
+  domain: verba.school
 - id: S11
   file: ukrainian_wiki/things-have-gender_Педагогіка-A1-Things-Have-Gender-Деколонізаційні-застереження
   type: ukrainian_wiki

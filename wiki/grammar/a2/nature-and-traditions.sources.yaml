@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/nature-and-traditions.md
+# Source registry for a2/nature-and-traditions.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -51,4 +51,6 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: FMU 1-28 | How to Talk about Weather in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu28/
+  domain: ukrainianlessons.com

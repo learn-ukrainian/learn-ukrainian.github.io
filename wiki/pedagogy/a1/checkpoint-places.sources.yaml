@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/checkpoint-places.md
+# Source registry for a1/checkpoint-places.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -29,11 +29,15 @@ sources:
 - id: S5
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Ukrainian Grammatical Cases
+  url: https://talkukrainian.com/grammatical-cases/
+  domain: talkukrainian.com
 - id: S6
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 1-32 | Shopping for Clothes – Accusative Case in Ukrainian
+  url: https://www.ukrainianlessons.com/episode32/
+  domain: ukrainianlessons.com
 - id: S8
   file: ukrainian_wiki/checkpoint-places_Педагогіка-A1-Checkpoint-Places-Методичний-підхід
   type: ukrainian_wiki

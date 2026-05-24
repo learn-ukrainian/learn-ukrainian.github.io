@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/work-and-food.md
+# Source registry for a2/work-and-food.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -40,15 +40,23 @@ sources:
 - id: S7
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-47 | Гастрономічні фестивалі + Родовий відмінок | Food Festivals +
+    Genitive Case
+  url: https://www.ukrainianlessons.com/episode47/
+  domain: ukrainianlessons.com
 - id: S8
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-46 | У продуктовому магазині + Родовий відмінок | At the Grocery Store
+    + Genitive Case
+  url: https://www.ukrainianlessons.com/episode46/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: 'Food Guide to Lviv: Where and What to Eat in the City of Lion'
+  url: https://www.ukrainianlessons.com/lviv-food-guide/
+  domain: ukrainianlessons.com
 - id: S10
   file: ukrainian_wiki/work-and-food_Граматика-A2-Професії-та-кулінарія-Як-це-пояснюють-у-школі
   type: ukrainian_wiki

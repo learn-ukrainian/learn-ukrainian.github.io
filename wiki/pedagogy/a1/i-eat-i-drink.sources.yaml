@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/i-eat-i-drink.md
+# Source registry for a1/i-eat-i-drink.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,15 +34,21 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 'Знахідний відмінок — Accusative Case in Ukrainian: How to Form and Use It'
+  url: https://www.ukrainianlessons.com/accusativecase/
+  domain: ukrainianlessons.com
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 1-32 | Shopping for Clothes – Accusative Case in Ukrainian
+  url: https://www.ukrainianlessons.com/episode32/
+  domain: ukrainianlessons.com
 - id: S8
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 1-33 | Talking about Books in Ukrainian – Accusative Case of People
+  url: https://www.ukrainianlessons.com/episode33/
+  domain: ukrainianlessons.com
 - id: S9
   file: ukrainian_wiki/i-eat-i-drink_Педагогіка-A1-I-Eat-I-Drink-Методичний-підхід
   type: ukrainian_wiki

@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/numerals-and-cases.md
+# Source registry for a2/numerals-and-cases.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -52,4 +52,6 @@ sources:
 - id: S10
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 16.3 Ordinal Numerals (Gender and Number in Nominative) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/16-3/
+  domain: opentext.ku.edu

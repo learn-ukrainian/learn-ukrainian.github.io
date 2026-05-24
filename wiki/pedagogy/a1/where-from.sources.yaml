@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/where-from.md
+# Source registry for a1/where-from.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,12 +46,20 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 10 Uses of the Genitive Case in Ukrainian
+  url: https://www.ukrainianlessons.com/genitive-case/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-46 | У продуктовому магазині + Родовий відмінок | At the Grocery Store
+    + Genitive Case
+  url: https://www.ukrainianlessons.com/episode46/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 2-47 | Гастрономічні фестивалі + Родовий відмінок | Food Festivals +
+    Genitive Case
+  url: https://www.ukrainianlessons.com/episode47/
+  domain: ukrainianlessons.com

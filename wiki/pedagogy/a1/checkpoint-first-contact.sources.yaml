@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/checkpoint-first-contact.md
+# Source registry for a1/checkpoint-first-contact.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,4 +46,6 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Noun Genders in Ukrainian — Infographic of Basic Rules and Exceptions
+  url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
+  domain: ukrainianlessons.com

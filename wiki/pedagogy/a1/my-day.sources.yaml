@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/my-day.md
+# Source registry for a1/my-day.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -55,8 +55,12 @@ sources:
 - id: S10
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Reflexive Verbs in Ukrainian (Ending with -СЯ, -СЬ)
+  url: https://www.ukrainianlessons.com/reflexive-verbs/
+  domain: ukrainianlessons.com
 - id: S11
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: FMU 1-58 | How to Describe Your Daily Routine in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu58/
+  domain: ukrainianlessons.com

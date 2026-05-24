@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/what-will-happen.md
+# Source registry for a1/what-will-happen.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,15 +34,21 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Майбутній час — Future Tense in Ukrainian (Grammar Tables)
+  url: https://www.ukrainianlessons.com/grammar-future/
+  domain: ukrainianlessons.com
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 1-27 | Winter Traveling in Ukraine – More Past Tense
+  url: https://www.ukrainianlessons.com/episode27/
+  domain: ukrainianlessons.com
 - id: S8
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: Майбутній час — Future Tense in Ukrainian (Grammar Tables)
+  url: https://www.ukrainianlessons.com/grammar-future/
+  domain: ukrainianlessons.com
 - id: S9
   file: ukrainian_wiki/my-plans_Педагогіка-A1-My-Plans-Послідовність-введення
   type: ukrainian_wiki

@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/this-and-that.md
+# Source registry for a1/this-and-that.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -51,4 +51,6 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 'Ukrainian Pronouns ЦЕЙ and ТОЙ: Declension Table'
+  url: https://www.ukrainianlessons.com/pronouns-this-that/
+  domain: ukrainianlessons.com

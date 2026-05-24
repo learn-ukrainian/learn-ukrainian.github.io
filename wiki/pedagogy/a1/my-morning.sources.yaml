@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/my-morning.md
+# Source registry for a1/my-morning.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -22,15 +22,21 @@ sources:
 - id: S5
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 3-109 | На побаченні – On a Date in Ukrainian + Reflexive Verbs
+  url: https://www.ukrainianlessons.com/episode109/
+  domain: ukrainianlessons.com
 - id: S6
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 23.1 Present Tense of -ся Verbs (First Conjugation) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/23-1/
+  domain: opentext.ku.edu
 - id: S7
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: 23.2 Present Tense of -ся Verbs (Second Conjugation) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/23-2/
+  domain: opentext.ku.edu
 - id: S8
   file: ukrainian_wiki/verbs-group-one_Педагогіка-A1-Verbs-Group-One-Послідовність-введення
   type: ukrainian_wiki

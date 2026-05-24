@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/holidays.md
+# Source registry for a1/holidays.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,15 +34,21 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Greetings in Ukrainian for Every Occasion (with Audio Recordings)
+  url: https://www.ukrainianlessons.com/greetings/
+  domain: ukrainianlessons.com
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 'The Magic of Ukrainian Christmas: From Ancient Rituals to Modern Traditions'
+  url: https://www.verba.school/post/the-magic-of-ukrainian-christmas-from-ancient-rituals-to-modern-traditions
+  domain: verba.school
 - id: S8
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: Podcast Episodes on Christmas and New Year in Ukrainian
+  url: https://www.ukrainianlessons.com/christmas-new-year-in-ukraine/
+  domain: ukrainianlessons.com
 - id: S9
   file: ukrainian_wiki/holidays_Педагогіка-A1-Holidays-Методичний-підхід
   type: ukrainian_wiki

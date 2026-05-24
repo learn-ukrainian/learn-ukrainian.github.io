@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/instrumental-accompaniment.md
+# Source registry for a2/instrumental-accompaniment.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,8 +46,13 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-61 | Різдвяна вечеря | Christmas Dinner in Ukraine + Instrumental Case
+  url: https://www.ukrainianlessons.com/episode61/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-62 | Новий рік! | New Year’s Eve in Ukraine + Instrumental Case of
+    Pronouns
+  url: https://www.ukrainianlessons.com/episode62/
+  domain: ukrainianlessons.com
