@@ -91,10 +91,21 @@ class CursorAdapter:
 
         config = tool_config or {}
 
-        # Base argv common to all paths
+        # Base argv common to all paths.
+        #
+        # NOTE on prompt delivery: cursor-agent's `-p`/`--print` is a boolean
+        # toggle for non-interactive mode; passing a literal "-" after it
+        # is parsed as the POSITIONAL prompt argument (the literal "-"
+        # string), NOT a stdin marker. The previous adapter shipped with
+        # `"-p", "-"` and silently fed cursor the single-character prompt
+        # "-" while our 14KB brief sat unread on stdin — manifest as
+        # `output_chars=0` + spurious rate_limited classification when the
+        # `_RATE_LIMIT_RE` regex matched a token inside cursor's empty-
+        # prompt thinking trace. Pass the prompt via stdin alone (cursor
+        # reads stdin in print-mode when no positional prompt is given).
         cmd: list[str] = [
             cursor_bin,
-            "-p", "-",  # Read prompt from stdin
+            "-p",  # Non-interactive print mode; prompt arrives via stdin.
             "--model", model or self.default_model,
             "--output-format", config.get("output_format", "stream-json"),
             "--trust",  # Headless workspace-trust bypass
