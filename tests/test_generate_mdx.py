@@ -21,6 +21,7 @@ from generate_mdx import (
     dump_json_for_jsx,
     escape_jsx,
     fix_html_for_jsx,
+    generate_mdx,
     normalize_mdx,
     parse_anagram,
     parse_cloze,
@@ -34,6 +35,7 @@ from generate_mdx import (
     parse_true_false,
     parse_unjumble,
 )
+from yaml_activities import ActivityParser
 
 # =============================================================================
 # dump_json_for_jsx
@@ -143,6 +145,78 @@ class TestParseFrontmatter:
         fm, body = parse_frontmatter(content)
         assert fm == {}
         assert body.strip() == "Body"
+
+
+def test_v7_tab3_inline_and_aggregate_keeps_inline_activities_with_cross_refs(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: quiz
+  title: act-1 inline greeting
+  items:
+    - question: Choose hello.
+      options: ["привіт", "дякую"]
+      answer: "привіт"
+- id: act-2
+  type: quiz
+  title: act-2 inline thanks
+  items:
+    - question: Choose thanks.
+      options: ["привіт", "дякую"]
+      answer: "дякую"
+- id: act-3
+  type: quiz
+  title: act-3 workbook yes
+  items:
+    - question: Choose yes.
+      options: ["так", "ні"]
+      answer: "так"
+- id: act-4
+  type: quiz
+  title: act-4 workbook no
+  items:
+    - question: Choose no.
+      options: ["так", "ні"]
+      answer: "ні"
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: Inline Aggregate
+subtitle: Test
+---
+# Inline Aggregate
+
+## Section One
+
+Practice here.
+
+<!-- INJECT_ACTIVITY: act-1 -->
+
+## Section Two
+
+Practice there.
+
+<!-- INJECT_ACTIVITY: act-2 -->
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
+    lesson_tab = mdx.split('<TabItem label="Vocabulary">')[0]
+    tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
+
+    assert "INJECT_ACTIVITY" not in lesson_tab
+    assert "act-1 inline greeting" in lesson_tab
+    assert "act-2 inline thanks" in lesson_tab
+
+    for activity_id in ("act-1", "act-2", "act-3", "act-4"):
+        assert activity_id in tab3
+
+    assert "### act-1 inline greeting\n\n*(see lesson)*" in tab3
+    assert "### act-2 inline thanks\n\n*(see lesson)*" in tab3
+    assert "### act-3 workbook yes\n\n<Quiz" in tab3
+    assert "### act-4 workbook no\n\n<Quiz" in tab3
 
 
 # =============================================================================

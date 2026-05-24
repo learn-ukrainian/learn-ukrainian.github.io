@@ -28,10 +28,27 @@ from manifest_utils import get_module_by_slug
 from yaml_activities import Activity, ActivityParser
 
 
-def yaml_activities_to_jsx(activities: list[Activity], is_ukrainian_forced: bool = False) -> str:
+def yaml_activities_to_jsx(
+    activities: list[Activity],
+    is_ukrainian_forced: bool = False,
+    inline_cross_ref_ids: set[str] | None = None,
+) -> str:
     """Convert YAML activities to JSX components using the shared ActivityParser."""
     parser = ActivityParser()
-    return parser.to_mdx(activities, is_ukrainian_forced)
+    if not inline_cross_ref_ids:
+        return parser.to_mdx(activities, is_ukrainian_forced)
+
+    mdx_parts = []
+    cross_ref = "_(дивіться урок)_\n\n" if is_ukrainian_forced else "_(see lesson)_\n\n"
+    for activity in activities:
+        mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
+        if not mdx:
+            continue
+        activity_id = str(getattr(activity, 'id', ''))
+        if activity_id in inline_cross_ref_ids:
+            mdx = re.sub(r'^(### .+?\n\n)', rf'\1{cross_ref}', mdx, count=1)
+        mdx_parts.append(mdx)
+    return '\n\n'.join(mdx_parts)
 
 
 def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str, is_ukrainian_forced: bool = False) -> str:
