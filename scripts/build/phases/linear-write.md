@@ -243,16 +243,16 @@ Each Ukrainian dialogue line needs an inline English gloss within 8 tokens (or t
 
 ## Activity Types and the INLINE / WORKBOOK split (mandatory)
 
-Every module ships TWO complementary activity sets, NOT one. This is how
-textbooks work and how the curriculum is configured.
+Every module ships TWO complementary activity sets: sparse INLINE checks woven
+into prose, and majority WORKBOOK practice in Tab 3 (`Вправи`).
 
 ### Inline activities — LIGHT, theory-time
-Inline activities are LIGHT checks emitted during the teaching prose. Their purpose is "did you just get this concept? — try one quick thing before we continue." They are anchored to a specific theory section via the `<!-- INJECT_ACTIVITY: act-N -->` marker placed inside the prose of that section. They should be FAST (≤30 seconds for the learner), simple, and NEVER overshadow the explanation.
+Inline activities are LIGHT theory-time checks: fast (≤30 seconds), simple, tied to one section, and never bigger than the explanation. ONLY inline activities require `id` fields and matching `<!-- INJECT_ACTIVITY: ... -->` markers.
 
 Allowed inline types for `{LEVEL}`: {INLINE_ALLOWED_TYPES}
 
 ### Workbook activities — SUBSTANTIVE, after-lesson practice
-Workbook activities are SUBSTANTIVE drill emitted with NO `<!-- INJECT_ACTIVITY -->` marker. They populate the lesson's Activities (`Вправи`) tab. Their purpose is "now you've seen the rule explained — apply it in volume until the pattern is automatic." They are LONGER (1-3 minutes for the learner), often multi-item, designed for review and self-assessment.
+Workbook activities are SUBSTANTIVE after-lesson practice with NO marker. They stay workbook-only in Tab 3, are longer (1-3 minutes), multi-item, and designed for review/self-assessment. Omit `id` on workbook activity objects.
 
 Allowed workbook types for `{LEVEL}`: {WORKBOOK_ALLOWED_TYPES}
 
@@ -261,10 +261,7 @@ Allowed workbook types for `{LEVEL}`: {WORKBOOK_ALLOWED_TYPES}
 Activity count target for `{LEVEL}`: {ACTIVITY_COUNT_TARGET}
 Vocabulary count target for `{LEVEL}`: {VOCAB_COUNT_TARGET}
 
-For A1: 10 total activities = 4-6 INLINE + 6-9 WORKBOOK (the ranges overlap because writer judgement balances within the total).
-For A2: 12 total = 4-6 INLINE + 8-11 WORKBOOK.
-For B1-core / B2-core / C1-core: 16 total = 5-7 INLINE + 11-15 WORKBOOK.
-For C2: 12 total = 4-5 INLINE + 8-10 WORKBOOK.
+ACTIVITY_CONFIGS intent: A1 10 total = 4-6 INLINE + 6-9 WORKBOOK; A1 checkpoint 8 = 3-5 + 5-8; A2 12 = 4-6 + 8-11; A2 checkpoint 10 = 3-5 + 7-10; B1/B2/C1 16 = 5-7 + 11-15; C2 12 = 4-5 + 8-10; seminars 10 = 3-4 + 7-9.
 
 ### Design principle (read before drafting)
 
@@ -281,7 +278,7 @@ Forbidden at this level: {FORBIDDEN_ACTIVITY_TYPES}
 
 ## Inline activity cross-references in module.md (mandatory for inline activities)
 
-**Every INLINE activity emitted in `activities.yaml` MUST be inline-referenced
+**ONLY inline activities are injected. Every INLINE activity emitted in `activities.yaml` MUST be inline-referenced
 in `module.md`** via an exact-format HTML comment marker:
 
 ```
@@ -291,6 +288,8 @@ in `module.md`** via an exact-format HTML comment marker:
 Workbook activities MUST NOT have matching markers. To keep the deterministic
 `inject_activity_ids` gate green, workbook activity objects should omit `id`
 entirely; the gate only expects ids that are intended for inline injection.
+Do not "help" by adding markers for all activities; that empties the workbook
+surface and violates the V7 tab contract.
 
 The pipeline parses `<!-- INJECT_ACTIVITY: act-N -->` markers and hard-fails both directions: inline activity id without a matching marker (`unused_activities_not_injected`) or marker pointing to a missing id (`missing_activity_ids`).
 
