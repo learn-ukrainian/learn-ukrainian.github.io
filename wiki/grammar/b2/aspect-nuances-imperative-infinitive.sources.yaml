@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/b2/aspect-nuances-imperative-infinitive.md
+# Source registry for b2/aspect-nuances-imperative-infinitive.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,4 +34,7 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 3-94 | У піцерії – At the Pizzeria + Sound Changes between Imperfective
+    and Perfective Verbs in Ukrainian
+  url: https://www.ukrainianlessons.com/episode94/
+  domain: ukrainianlessons.com

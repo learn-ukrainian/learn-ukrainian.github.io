@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/dative-nouns.md
+# Source registry for a2/dative-nouns.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -52,12 +52,18 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 11.1 Dative Case (Feminine Nouns) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/11-1/
+  domain: opentext.ku.edu
 - id: S10
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 11.2 Dative Case (Masculine and Neuter Nouns) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/11-2/
+  domain: opentext.ku.edu
 - id: S11
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: 11.3 Dative Case (Animate Masculine Nouns) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/11-3/
+  domain: opentext.ku.edu

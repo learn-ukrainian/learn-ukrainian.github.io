@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/plural-nominative-accusative.md
+# Source registry for a2/plural-nominative-accusative.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,12 +46,20 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-42 | Моя кімната – Множина іменників | My Room – Plural Nouns in Ukrainian
+  url: https://www.ukrainianlessons.com/episode42/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-44 | Мої домашні тваринки + Особливі форми множини | My Pets + Special
+    Plural Forms
+  url: https://www.ukrainianlessons.com/episode44/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 2-43 | Шукаю квартиру – Особливі форми множини |  Looking for an Apartment
+    + Special Plural Forms
+  url: https://www.ukrainianlessons.com/episode43/
+  domain: ukrainianlessons.com

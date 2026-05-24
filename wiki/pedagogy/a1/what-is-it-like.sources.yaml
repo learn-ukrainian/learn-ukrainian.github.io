@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/what-is-it-like.md
+# Source registry for a1/what-is-it-like.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,12 +46,19 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Типові прикметники — Common Ukrainian Adjectives (Useful Table and Audio)
+  url: https://www.ukrainianlessons.com/vocabulary-adjectives/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: Прикметники і прислівники — Adjectives and Adverbs in Ukrainian (with Illustrations
+    and Audio)
+  url: https://www.ukrainianlessons.com/adjectives-and-adverbs/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: 16.1 Adjectives (Gender and Number in Nominative) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/16-1/
+  domain: opentext.ku.edu

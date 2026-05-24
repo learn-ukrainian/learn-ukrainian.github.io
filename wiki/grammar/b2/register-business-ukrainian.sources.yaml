@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/b2/register-business-ukrainian.md
+# Source registry for b2/register-business-ukrainian.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,4 +46,6 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Діловодство — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Діловодство
+  domain: uk.wikipedia.org

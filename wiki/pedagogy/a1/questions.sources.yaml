@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/questions.md
+# Source registry for a1/questions.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -45,12 +45,18 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Питальні слова — Question Words in Ukrainian (with Example Sentences)
+  url: https://www.ukrainianlessons.com/question-words/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 'Double Negatives or Double Negation in Ukrainian: 3 Main Rules'
+  url: https://www.ukrainianlessons.com/negation-in-ukrainian/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: Short and Useful Ukrainian Questions You Should Learn for Your Trip to Ukraine
+  url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
+  domain: ukrainianlessons.com

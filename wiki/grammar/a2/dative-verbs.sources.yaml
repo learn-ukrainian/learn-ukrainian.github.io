@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/dative-verbs.md
+# Source registry for a2/dative-verbs.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -39,4 +39,6 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 11.1 Dative Case (Feminine Nouns) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/11-1/
+  domain: opentext.ku.edu

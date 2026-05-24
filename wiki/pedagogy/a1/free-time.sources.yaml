@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/free-time.md
+# Source registry for a1/free-time.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -50,4 +50,6 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 1-33 | Talking about Books in Ukrainian – Accusative Case of People
+  url: https://www.ukrainianlessons.com/episode33/
+  domain: ukrainianlessons.com

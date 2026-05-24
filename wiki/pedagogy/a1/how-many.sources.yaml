@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/how-many.md
+# Source registry for a1/how-many.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -58,12 +58,19 @@ sources:
 - id: S10
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: '1, 2-4, 5+: How to Use Nouns After Numbers in Ukrainian [Free Noun–Numeral
+    Agreement Chart]'
+  url: https://www.ukrainianlessons.com/nouns-after-numbers/
+  domain: ukrainianlessons.com
 - id: S11
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 1-19 | Asking for a Phone Number in Ukrainian
+  url: https://www.ukrainianlessons.com/episode19/
+  domain: ukrainianlessons.com
 - id: S12
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: 7 Facts about Ukrainian Money — Hryvnia (+ Ukrainian Grammar Lesson)
+  url: https://www.ukrainianlessons.com/ukrainian-currency/
+  domain: ukrainianlessons.com

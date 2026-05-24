@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/shopping-and-health.md
+# Source registry for a2/shopping-and-health.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,8 +46,12 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: How to Say That Something Hurts in Ukrainian
+  url: https://www.ukrainianlessons.com/something-hurts/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: FMU 1-52 | Vocabulary Booster! Body Parts in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu52/
+  domain: ukrainianlessons.com

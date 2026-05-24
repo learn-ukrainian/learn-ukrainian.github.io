@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/shopping.md
+# Source registry for a1/shopping.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -34,15 +34,21 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Clothing — Ukrainian Phrasebook for Helping Refugees
+  url: https://www.ukrainianlessons.com/ph-clothing/
+  domain: ukrainianlessons.com
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: Money — Ukrainian Phrasebook for Helping Refugees
+  url: https://www.ukrainianlessons.com/ph-money/
+  domain: ukrainianlessons.com
 - id: S8
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: FMU 1-18 | Vocabulary Booster! Shopping Vocabulary in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu18/
+  domain: ukrainianlessons.com
 - id: S9
   file: ukrainian_wiki/shopping_Педагогіка-A1-Shopping-Послідовність-введення
   type: ukrainian_wiki

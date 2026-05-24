@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/because-and-although.md
+# Source registry for a2/because-and-although.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -65,12 +65,20 @@ sources:
 - id: S11
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-56 | Порада | Asking for Advice + Accusative Case in Ukrainian
+  url: https://www.ukrainianlessons.com/episode56/
+  domain: ukrainianlessons.com
 - id: S12
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-57 | Розклад на тиждень | Your Schedule in Ukrainian + Accusative Case
+    with Prepositions
+  url: https://www.ukrainianlessons.com/episode57/
+  domain: ukrainianlessons.com
 - id: S13
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 2-58 | Запрошення на вечірку | Inviting to a Party in Ukrainian + Accusative
+    Case of Pronouns
+  url: https://www.ukrainianlessons.com/episode58/
+  domain: ukrainianlessons.com

@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/what-happened.md
+# Source registry for a1/what-happened.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -57,8 +57,12 @@ sources:
 - id: S10
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: Минулий час — Past Tense in Ukrainian (with Illustrations and Audio)
+  url: https://www.ukrainianlessons.com/grammar-past-tense/
+  domain: ukrainianlessons.com
 - id: S11
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: Майбутній час — Future Tense in Ukrainian (Grammar Tables)
+  url: https://www.ukrainianlessons.com/grammar-future/
+  domain: ukrainianlessons.com

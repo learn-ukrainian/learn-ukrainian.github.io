@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/imperative-complete.md
+# Source registry for a2/imperative-complete.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -40,8 +40,14 @@ sources:
 - id: S7
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 3-111 | Подарунки на День народження – Birthday Presents + Imperative
+    Mood in Ukrainian
+  url: https://www.ukrainianlessons.com/episode111/
+  domain: ukrainianlessons.com
 - id: S8
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 3-112 | Майстер-клас з приготування вареників – How to Cook Varenyky
+    + Imperative Mood of the Second Person Plural
+  url: https://www.ukrainianlessons.com/episode112/
+  domain: ukrainianlessons.com

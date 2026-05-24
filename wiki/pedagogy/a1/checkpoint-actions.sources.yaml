@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/checkpoint-actions.md
+# Source registry for a1/checkpoint-actions.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -52,4 +52,6 @@ sources:
 - id: S9
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 'Знахідний відмінок — Accusative Case in Ukrainian: How to Form and Use It'
+  url: https://www.ukrainianlessons.com/accusativecase/
+  domain: ukrainianlessons.com

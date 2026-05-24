@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/dative-pronouns.md
+# Source registry for a2/dative-pronouns.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -40,12 +40,18 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 15.1 Personal Pronouns (Dative Case Forms) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/15-1/
+  domain: opentext.ku.edu
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 15.2 Personal Pronouns (Dative Case for Indirect Object) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/15-2/
+  domain: opentext.ku.edu
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: Ukrainian Grammatical Cases
+  url: https://talkukrainian.com/grammatical-cases/
+  domain: talkukrainian.com

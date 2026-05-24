@@ -1,4 +1,4 @@
-# Source registry for wiki/mastery/c2/regional-varieties.md
+# Source registry for c2/regional-varieties.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -49,4 +49,6 @@ sources:
 - id: S13
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 2-80 | Тест з історії України | Ukrainian History Test – Review 71-79
+  url: https://www.ukrainianlessons.com/episode80/
+  domain: ukrainianlessons.com

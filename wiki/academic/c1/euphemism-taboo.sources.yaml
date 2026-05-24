@@ -1,4 +1,4 @@
-# Source registry for wiki/academic/c1/euphemism-taboo.md
+# Source registry for c1/euphemism-taboo.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -49,12 +49,20 @@ sources:
 - id: S11
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 3-102 | Запис до лікаря – Making a Doctor’s Appointment in Ukrainian
+    + Indefinite Adverbs and Pronouns
+  url: https://www.ukrainianlessons.com/episode102/
+  domain: ukrainianlessons.com
 - id: S12
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 3-104 | Здоровий спосіб життя – Healthy Lifestyle + Degrees of Comparison
+    in Ukrainian
+  url: https://www.ukrainianlessons.com/episode104/
+  domain: ukrainianlessons.com
 - id: S13
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 5-170 | 15 фразеологізмів з частинами тіла
+  url: https://www.ukrainianlessons.com/episode170/
+  domain: ukrainianlessons.com

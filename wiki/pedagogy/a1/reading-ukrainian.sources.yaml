@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/reading-ukrainian.md
+# Source registry for a1/reading-ukrainian.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -28,7 +28,9 @@ sources:
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: Ukrainian alphabet with pronunciation
+  url: https://talkukrainian.com/ukrainian-alphabet/
+  domain: talkukrainian.com
 - id: S9
   file: ukrainian_wiki/figurative-motion_Звуки-і-літери-Голосні-звуки
   type: ukrainian_wiki

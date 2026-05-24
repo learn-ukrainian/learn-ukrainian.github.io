@@ -1,4 +1,4 @@
-# Source registry for wiki/academic/c1/halychyna.md
+# Source registry for c1/halychyna.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -44,12 +44,21 @@ sources:
 - id: S11
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 2-71 | Курс з історії України Ч. 1 “Київська Русь” | Ukrainian History
+    Course Part 1
+  url: https://www.ukrainianlessons.com/episode71/
+  domain: ukrainianlessons.com
 - id: S12
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 2-72 | Курс з історії України Ч. 2 “XIII-XVI століття” | Ukrainian History
+    Course Part 2
+  url: https://www.ukrainianlessons.com/episode72/
+  domain: ukrainianlessons.com
 - id: S13
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: ULP 2-73 | Курс з історії України Ч. 3 “Українське козацтво” | Ukrainian
+    History Course Part 3 “Ukrainian Cossacks”
+  url: https://www.ukrainianlessons.com/episode73/
+  domain: ukrainianlessons.com

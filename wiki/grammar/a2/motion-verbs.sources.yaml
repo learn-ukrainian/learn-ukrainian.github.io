@@ -1,4 +1,4 @@
-# Source registry for wiki/grammar/a2/motion-verbs.md
+# Source registry for a2/motion-verbs.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -33,8 +33,12 @@ sources:
 - id: S6
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: 28.3 Verbs of Motion (піти – прийти, поїхати – приїхати) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/28-3/
+  domain: opentext.ku.edu
 - id: S7
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: 27.1 Introduction to Verbal Aspect (Prefixed Perfective Verbs) – Добра форма
+  url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+  domain: opentext.ku.edu

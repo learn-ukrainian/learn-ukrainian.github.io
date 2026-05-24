@@ -1,4 +1,4 @@
-# Source registry for wiki/pedagogy/a1/checkpoint-time-nature.md
+# Source registry for a1/checkpoint-time-nature.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
@@ -46,15 +46,21 @@ sources:
 - id: S8
   file: ext-article-0
   type: external
-  title: ext-article-0
+  title: ULP 1-32 | Shopping for Clothes – Accusative Case in Ukrainian
+  url: https://www.ukrainianlessons.com/episode32/
+  domain: ukrainianlessons.com
 - id: S9
   file: ext-article-1
   type: external
-  title: ext-article-1
+  title: ULP 1-33 | Talking about Books in Ukrainian – Accusative Case of People
+  url: https://www.ukrainianlessons.com/episode33/
+  domain: ukrainianlessons.com
 - id: S10
   file: ext-article-2
   type: external
-  title: ext-article-2
+  title: FMU 1-16 | How to ORDER at the Restaurant in Ukrainian
+  url: https://www.ukrainianlessons.com/fmu16/
+  domain: ukrainianlessons.com
 - id: S11
   file: ukrainian_wiki/nature-and-traditions_Граматика-A2-Пори-року-і-свята-Повна-парадигма-Пори-року-Seasons
   type: ukrainian_wiki
