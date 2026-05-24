@@ -3,10 +3,10 @@ from pathlib import Path
 PHASES_DIR = Path("scripts/build/phases")
 CHECKLIST_HEADING = "## Pre-emit verification"
 OBLIGATION_LABELS = (
-    "Textbook grounding",
-    "Multimedia obligation",
-    "VESUM verification",
-    "Russianism check",
+    "Textbook",
+    "Multimedia",
+    "VESUM",
+    "Russianism",
 )
 
 
