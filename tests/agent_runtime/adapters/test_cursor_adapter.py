@@ -31,7 +31,10 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatc
 
     assert "/usr/local/bin/agent" in plan.cmd
     assert "-p" in plan.cmd
-    assert "-" in plan.cmd
+    # Regression: cursor-agent's -p takes NO argument; a literal "-" after
+    # it is parsed as the positional prompt = the string "-", which causes
+    # the real prompt on stdin to be ignored. Prompt delivery is stdin-only.
+    assert "-" not in plan.cmd
     assert "--model" in plan.cmd
     assert "composer-2.5" in plan.cmd
     assert "--mode" in plan.cmd
@@ -95,6 +98,42 @@ def test_cursor_adapter_build_invocation_danger(adapter, tmp_path, monkeypatch):
     assert "enabled" in plan.cmd
     assert "--yolo" not in plan.cmd
     assert "--force" not in plan.cmd
+
+
+def test_cursor_adapter_no_literal_dash_argument_anywhere(adapter, tmp_path, monkeypatch):
+    """Regression for the 2026-05-24 'cursor reads literal "-" as prompt' bug.
+
+    cursor-agent's `-p`/`--print` is a boolean toggle, NOT a flag that takes
+    "-" to mean "stdin". A bare "-" anywhere in argv after `-p` is parsed as
+    the POSITIONAL prompt = the literal string "-". The adapter therefore
+    must NEVER pass "-" as an argv element. Prompt delivery is stdin-only.
+
+    This regression bit the option-c-plan-reference-match-gate-2026-05-24
+    dispatch on the day PR #2254 merged: 14KB brief sat unread on stdin
+    while cursor processed "-" as a single-char prompt and exited with
+    output_chars=0, classified as rate_limited via a false-positive regex
+    match in `_RATE_LIMIT_RE` against cursor's empty-prompt thinking trace.
+    """
+    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
+
+    for mode in ("read-only", "workspace-write", "danger"):
+        plan = adapter.build_invocation(
+            prompt="real prompt content",
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="t",
+            session_id=None,
+            tool_config={},
+        )
+        assert "-" not in plan.cmd, (
+            f"mode={mode}: literal '-' found in argv {plan.cmd}; "
+            "cursor-agent parses this as positional prompt = '-' string, "
+            "ignoring the real prompt on stdin"
+        )
+        assert plan.stdin_payload == "real prompt content", (
+            f"mode={mode}: stdin_payload not set to the real prompt"
+        )
 
 
 def test_cursor_adapter_parse_response_success(adapter):
