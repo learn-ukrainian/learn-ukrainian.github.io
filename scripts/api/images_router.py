@@ -111,6 +111,7 @@ class _ImageIndex:
                         "path": str(pdf_file),
                         "grade_dir": grade_dir.name,
                         "stem": pdf_file.stem,
+                        "page_count": _read_pdf_page_count(str(pdf_file)),
                     }
 
         self._records = records
@@ -300,10 +301,7 @@ async def list_textbooks():
             for img in imgs
             if img.get("description_uk")
         )
-        # Avoid opening every PDF on each list call — derive from the index
-        # when possible. Image explorer only needs a rough page span here;
-        # per-page context still reads the PDF on demand.
-        page_count = max(pages_with_images.keys(), default=0) if pages_with_images else 0
+        page_count = info.get("page_count", 0)
 
         result.append({
             "stem": stem,
