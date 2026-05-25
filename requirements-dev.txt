@@ -21,7 +21,7 @@ pytest-xdist>=3.6         # parallel test execution (-n auto)
 pytest-mock>=3.14          # fixture-based mocker
 
 # Coverage reporting
-coverage[toml]>=7.6
+coverage[toml]>=7.14.0
 
 # Debugging
 ipython>=8.29
