@@ -60,6 +60,11 @@ jobs:
           PULL_REQUEST_NUMBER: '${{ github.event.pull_request.number || github.event.issue.number }}'
           REPOSITORY: '${{ github.repository }}'
           ADDITIONAL_CONTEXT: '${{ inputs.additional_context }}'
+          # Gemini CLI v0.42+ refuses to run in "untrusted" directories by default.
+          # CI runners are always untrusted (fresh checkout). Setting this env
+          # var bypasses the prompt and lets the headless review run. Per
+          # https://geminicli.com/docs/cli/trusted-folders/#headless-and-automated-environments
+          GEMINI_CLI_TRUST_WORKSPACE: 'true'
         with:
           gcp_location: '${{ vars.GOOGLE_CLOUD_LOCATION }}'
           gcp_project_id: '${{ vars.GOOGLE_CLOUD_PROJECT }}'
