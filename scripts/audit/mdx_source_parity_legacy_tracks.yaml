@@ -1,0 +1,7 @@
+# Legacy tracks that are MDX-only and pre-date the V7 source-artifact contract.
+# Exempted from the MDX-source parity gate.
+# DO NOT GROW THIS LIST. It should shrink as legacy tracks migrate.
+legacy_levels:
+  - hist
+  - bio
+  - lit
