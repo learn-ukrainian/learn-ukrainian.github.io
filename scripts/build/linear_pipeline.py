@@ -1608,9 +1608,11 @@ def _render_wiki_knowledge_packet(
             "activities, or resources. Do not call legacy `scripts.rag` or "
             "Qdrant retrieval for this packet.",
             "",
-            "## Full Wiki Context",
+            "## Compiled Wiki Context",
             "",
-            wiki_packet,
+            "Raw compiled wiki prose is compressed into the targeted excerpts, "
+            "factual anchors, Wiki Obligations Manifest, and Implementation Map "
+            "above. Do not duplicate the full article text in the writer prompt.",
             "",
             "## Plan References",
             "",
@@ -6420,13 +6422,10 @@ def _contract_yaml(plan: Mapping[str, Any]) -> str:
                     "min": int(section["words"] * 0.9),
                     "max": int(section["words"] * 1.1),
                 },
-                "covers": section.get("points", []),
             }
             for section in plan.get("content_outline", [])
         ],
-        "activity_hints": plan.get("activity_hints", []),
-        "vocabulary_required": _required_vocabulary_for_contract(plan),
-        "references": plan.get("references", []),
+        "source_note": "Full plan below is authoritative for points, activity hints, vocabulary, and references.",
     }
     return yaml.safe_dump(contract, allow_unicode=True, sort_keys=False).strip()
 

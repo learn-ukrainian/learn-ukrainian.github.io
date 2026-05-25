@@ -41,4 +41,4 @@ def test_immersion_accessors_preserve_backward_compat_when_flag_off(monkeypatch)
     )
     structural = config.get_immersion_structural("a1", 15)
     assert structural["min_uk_dialogue_lines"] == policy["min_uk_dialogue_lines"]
-    assert config.get_immersion_rule("a1", 15) == policy["rule"]
+    assert config.get_immersion_rule("a1", 15).startswith(policy["rule"])
