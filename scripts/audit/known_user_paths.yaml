@@ -9,6 +9,15 @@ paths:
   - ~/.pyenv/shims/.pyenv-shim
   - ~/.codex/sessions/YYYY/MM/DD/rollout
   - ~/.codex/sessions/2026/04/24/rollout
+  # Glob patterns (require fnmatch support — see lint_session_state.py).
+  # Codex rollout JSONLs include UUIDs and timestamps that change per session;
+  # ephemeral worktree paths under ~/.codex/worktrees/ likewise rotate per
+  # dispatch. Allowlisting the glob keeps handoff docs honest about where
+  # forensics live without forcing per-session allowlist updates.
+  - ~/.codex/sessions/*
+  - ~/.codex/sessions/**
+  - ~/.codex/worktrees/*
+  - ~/.codex/worktrees/**
   - ~/.claude/projects/.../memory/MEMORY.md
   - ~/.claude/projects/.../memory
   - ~/.claude/.../memory/fact-corrections.md
