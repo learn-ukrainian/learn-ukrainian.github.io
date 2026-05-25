@@ -2,7 +2,7 @@ module: a1-004
 level: A1
 sequence: 4
 slug: stress-and-melody
-version: 1.2.1
+version: 1.2.2
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-stress-and-melody
@@ -91,6 +91,22 @@ vocabulary_hints:
   - фотографія (photograph)
   - одинадцять (eleven — stress on `-на-`; classic L2 stress-transfer target)
   - чотирнадцять (fourteen — stress on `-на-`; classic L2 stress-transfer target)
+targets:
+  new_vocabulary:
+    - "наголос"
+    - "замок"
+    - "кава"
+    - "вода"
+    - "столиця"
+    - "атлас"
+    - "орган"
+    - "ранок"
+    - "метро"
+    - "фотографія"
+    - "одинадцять"
+    - "чотирнадцять"
+  new_grammar: []
+  recycle_vocabulary: []
 activity_hints:
 - type: quiz
   focus: Де наголос? Виберіть правильний склад.

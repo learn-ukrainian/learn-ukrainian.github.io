@@ -40,6 +40,8 @@ Every module = ONE `.mdx` at `starlight/src/content/docs/{level}/{slug}.mdx` wit
 
 ### 1.3 Student-aware immersion — the BIG V7 design point
 
+> **PRESENTATION PATTERN — READ FIRST** before any A1/A2 build: [`docs/best-practices/ulp-presentation-pattern.md`](ulp-presentation-pattern.md) — extracted Anna Ohoiko presentation moves (UK-first em-dash gloss, side-by-side bilingual, stress marks, UK-only Q&A, named persona) + S1→S6 progression with the DRASTIC S1→S2 step-change at ~A1 m41. The decision card below specifies the ARCHITECTURE (`compute_immersion_band`, gates, schema); the presentation-pattern doc specifies the WRITER EXECUTION moves. Both are required reading.
+
 `docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md` (ACCEPTED):
 
 - **Anna Ohoiko's ULP S1-S6 is the calibration corpus** (`data/references/private/ULP {1-6}-00`, gitignored)
