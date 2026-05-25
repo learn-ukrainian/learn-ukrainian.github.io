@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import re
 import sys
 from dataclasses import dataclass
@@ -119,6 +120,14 @@ def lint_file(
         for match in PATH_PATTERN.finditer(line):
             reference = match.group(1)
             if reference in allowlist:
+                continue
+            # Glob-style allowlist entries (containing * or ?) cover ephemeral
+            # paths like ~/.codex/sessions/<UUID>/rollout-<timestamp>.jsonl
+            # that change per-session and cannot be enumerated.
+            if any(
+                ("*" in pattern or "?" in pattern) and fnmatch.fnmatchcase(reference, pattern)
+                for pattern in allowlist
+            ):
                 continue
             if not reference_exists(reference, project_root=project_root, home=home):
                 violations.append(Violation(path, line_number, reference))

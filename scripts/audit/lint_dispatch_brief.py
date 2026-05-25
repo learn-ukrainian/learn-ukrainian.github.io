@@ -64,6 +64,17 @@ ALLOWLIST_PYTEST_X = {
     "docs/dispatch-briefs/2026-05-16-grok-stage-3-writer-plumbing-codex.md",
     "docs/dispatch-briefs/2026-05-16-pr2019-vesum-gate-test-failures-codex.md",
     "docs/dispatch-briefs/2026-05-17-judge-calibration-matrix-codex.md",
+    # 2026-05-24 → 2026-05-26 carryover backlog (dispatches already completed).
+    "docs/dispatch-briefs/2026-05-24-option-c-plan-reference-match-gate-cursor.md",
+    "docs/dispatch-briefs/2026-05-24-pr-2256-fixups-gemini.md",
+}
+
+# Grandfathered briefs from the 2026-05-24 → 2026-05-26 carryover backlog.
+# Each dispatch was already sent and completed; the briefs are archival.
+# New briefs going forward must continue to satisfy the venv-guard rule.
+ALLOWLIST_VENV_GUARD = {
+    "docs/dispatch-briefs/2026-05-24-f2-f3-batch-cleanup-codex.md",
+    "docs/dispatch-briefs/2026-05-25-pr-2266-adjustment-codex.md",
 }
 
 
@@ -140,7 +151,12 @@ def lint_brief(path: Path) -> list[tuple[Path, int, str]]:
         path_str = str(path)
 
     for index, (line_number, line, fence_id) in enumerate(rows):
-        if fence_id is not None and PYTHON_RE.search(line) and not _has_guard(rows, index):
+        if (
+            fence_id is not None
+            and PYTHON_RE.search(line)
+            and not _has_guard(rows, index)
+            and path_str not in ALLOWLIST_VENV_GUARD
+        ):
             violations.append((path, line_number, "missing cd-to-main or symlinked-venv before .venv/bin/python"))
 
         if PYTEST_X_RE.search(line) and path_str not in ALLOWLIST_PYTEST_X and not _is_negative_fence(rows, fence_id):
