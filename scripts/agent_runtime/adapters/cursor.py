@@ -20,6 +20,7 @@ Issue: #2253 (Phase 2)
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import shutil
@@ -72,7 +73,7 @@ class CursorAdapter:
             cwd: Working directory for the subprocess.
             model: Model override (e.g. "composer-2.5").
             task_id: Optional task identifier.
-            session_id: Ignored (cursor-agent does not yet support resume).
+            session_id: Session ID to resume (passed by runner or derived).
             tool_config: Config overrides. Supported keys:
                 - ``cursor_workspace``: overrides the ``--workspace`` path.
                 - ``approve_mcps``: bool, toggles ``--approve-mcps``.
@@ -80,9 +81,6 @@ class CursorAdapter:
                 - ``sandbox``: "enabled" | "disabled", toggles ``--sandbox``.
             effort: Logged and ignored (no cursor equivalent today).
         """
-        _ = session_id
-        _ = task_id
-
         if effort:
             _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
 
@@ -90,6 +88,20 @@ class CursorAdapter:
         cursor_bin = shutil.which("agent") or shutil.which("cursor-agent") or "agent"
 
         config = tool_config or {}
+
+        # Workspace resolution
+        workspace = config.get("cursor_workspace") or str(cwd)
+
+        # Snapshot pre-existing transcripts to detect a new one generated during this run
+        self._workspace = workspace
+        self._transcripts_snapshot = self._snapshot_preexisting_transcripts(workspace)
+
+        # Resolve session ID to resume
+        resolved_session_id = session_id
+        if not resolved_session_id and task_id:
+            resolved_session_id = self._find_session_id_by_task_id(task_id)
+            if not resolved_session_id:
+                resolved_session_id = self._find_session_id_on_disk(workspace)
 
         # Base argv common to all paths.
         #
@@ -111,8 +123,9 @@ class CursorAdapter:
             "--trust",  # Headless workspace-trust bypass
         ]
 
-        # Workspace resolution
-        workspace = config.get("cursor_workspace") or str(cwd)
+        if resolved_session_id:
+            cmd.extend(["--resume", resolved_session_id])
+
         cmd.extend(["--workspace", workspace])
 
         # Mode-specific argv assembly
@@ -150,6 +163,74 @@ class CursorAdapter:
             liveness_paths=(),  # rely on stdout streaming
         )
 
+    def _encode_workspace_path(self, workspace_path: str) -> str:
+        """Encode workspace path into the encoded folder name used by Cursor."""
+        cleaned = re.sub(r"[^a-zA-Z0-9]+", "-", workspace_path)
+        return cleaned.strip("-")
+
+    def _snapshot_preexisting_transcripts(self, workspace_path: str) -> set[str]:
+        """Snapshot the transcript directories that exist before the run starts."""
+        encoded = self._encode_workspace_path(workspace_path)
+        path = Path.home() / ".cursor" / "projects" / encoded / "agent-transcripts"
+        preexisting: set[str] = set()
+        if path.exists():
+            try:
+                for entry in path.iterdir():
+                    if entry.is_dir():
+                        preexisting.add(entry.name)
+            except OSError:
+                pass
+        return preexisting
+
+    def _find_session_id_by_task_id(self, task_id: str) -> str | None:
+        """Scan api_usage files for a session_id matching the given task_id."""
+        repo_root = Path(__file__).resolve().parents[3]
+        usage_dir = repo_root / "batch_state" / "api_usage"
+        if not usage_dir.exists():
+            return None
+
+        last_session_id = None
+        try:
+            # Sort files so we check the most recent ones first
+            for file_path in sorted(usage_dir.glob("usage_cursor-*.jsonl"), reverse=True):
+                try:
+                    with open(file_path, encoding="utf-8") as f:
+                        for line in f:
+                            line = line.strip()
+                            if not line:
+                                continue
+                            try:
+                                record = json.loads(line)
+                            except json.JSONDecodeError:
+                                continue
+                            if record.get("task_id") == task_id:
+                                sid = record.get("session_id")
+                                if sid:
+                                    last_session_id = sid
+                except OSError:
+                    continue
+        except Exception:
+            pass
+        return last_session_id
+
+    def _find_session_id_on_disk(self, workspace_path: str) -> str | None:
+        """Find the newest session directory on disk for this workspace."""
+        encoded = self._encode_workspace_path(workspace_path)
+        path = Path.home() / ".cursor" / "projects" / encoded / "agent-transcripts"
+        if not path.exists():
+            return None
+        try:
+            entries = []
+            for entry in path.iterdir():
+                if entry.is_dir():
+                    entries.append(entry)
+            if entries:
+                newest = max(entries, key=lambda p: p.stat().st_mtime)
+                return newest.name
+        except OSError:
+            pass
+        return None
+
     def parse_response(
         self,
         *,
@@ -171,6 +252,34 @@ class CursorAdapter:
         # Parse JSONL events
         events = parse_json_events(stdout, source="cursor", logger=_logger)
         tool_calls = normalize_tool_calls(events)
+
+        # Detect the session ID of the current run
+        session_id = None
+        for event in events:
+            if "sessionId" in event:
+                session_id = str(event["sessionId"])
+                break
+
+        # If not found in stdout events, scan the filesystem for a new transcript
+        if not session_id and getattr(self, "_workspace", None):
+            encoded = self._encode_workspace_path(self._workspace)
+            path = Path.home() / ".cursor" / "projects" / encoded / "agent-transcripts"
+            if path.exists():
+                try:
+                    snapshot = getattr(self, "_transcripts_snapshot", None) or set()
+                    candidates = []
+                    for entry in path.iterdir():
+                        if entry.is_dir() and entry.name not in snapshot:
+                            candidates.append(entry)
+                    if candidates:
+                        newest = max(candidates, key=lambda p: p.stat().st_mtime)
+                        session_id = newest.name
+                except OSError:
+                    pass
+
+        # If still not found, check the disk generally for the newest one
+        if not session_id and getattr(self, "_workspace", None):
+            session_id = self._find_session_id_on_disk(self._workspace)
 
         # The final response is usually the last 'content' or 'text' event
         # in the stream. parse_json_events + normalize_tool_calls handles
@@ -203,6 +312,7 @@ class CursorAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
+            session_id=session_id,
             tool_calls=tool_calls,
         )
 
