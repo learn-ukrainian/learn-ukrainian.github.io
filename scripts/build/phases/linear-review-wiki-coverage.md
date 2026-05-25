@@ -1,3 +1,8 @@
+You are reviewing wiki-obligation coverage for the generated module below.
+Return ONLY the JSON object described in "Response Format — STRICT". Do not
+ask for clarification, do not summarize the prompt, and do not emit prose
+outside the JSON object.
+
 {NORTH_STAR}
 
 {LESSON_CONTRACT}
@@ -166,3 +171,8 @@ Mixed-verdict shape:
 ## Generated Content
 
 {GENERATED_CONTENT}
+
+## Task
+
+Review every obligation in the manifest against the generated content and
+return the required JSON object now. No preamble, no markdown, no questions.

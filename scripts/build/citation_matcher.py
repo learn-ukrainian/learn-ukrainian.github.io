@@ -50,7 +50,7 @@ _CYRILLIC_TO_LATIN = str.maketrans(
 
 _PAGE_RE = re.compile(
     r"(?i)(?:\bp\.?\s*|\bpage\s+|[сc]\.?\s*|\bстор\.?\s*|"
-    r"\bсторінка\s+)(\d+)\b"
+    r"\bсторінка\s+)(?P<page>\d+)(?:\s*[-–—]\s*(?P<page_end>\d+))?\b"
 )
 
 
@@ -59,6 +59,7 @@ class CitationKey:
     author: str
     grade: int
     page: int
+    page_end: int | None = None
 
 
 def normalize_citation_ref(value: Any) -> str:
@@ -102,14 +103,17 @@ def extract_citation_key(value: Any) -> CitationKey | None:
     if len(page_matches) != 1:
         return None
     page_match = page_matches[0]
-    if text[page_match.end() : page_match.end() + 1] in {"-", "–", "—"}:
+    page = int(page_match.group("page"))
+    page_end_text = page_match.group("page_end")
+    page_end = int(page_end_text) if page_end_text is not None else None
+    if page_end is not None and page_end < page:
         return None
 
     author = fold_citation_author(author_match.group(0))
     if not author:
         return None
     grade = int(next(group for group in grade_match.groups() if group is not None))
-    return CitationKey(author=author, grade=grade, page=int(page_match.group(1)))
+    return CitationKey(author=author, grade=grade, page=page, page_end=page_end)
 
 
 def fold_citation_author(author: str) -> str:
@@ -149,8 +153,15 @@ def citation_keys_match(
     *,
     page_tolerance: int = 5,
 ) -> bool:
+    citation_start, citation_end = _page_bounds(citation)
+    plan_start, plan_end = _page_bounds(plan_reference)
     return (
         citation.author == plan_reference.author
         and citation.grade == plan_reference.grade
-        and abs(citation.page - plan_reference.page) <= page_tolerance
+        and citation_start <= plan_end + page_tolerance
+        and plan_start <= citation_end + page_tolerance
     )
+
+
+def _page_bounds(citation: CitationKey) -> tuple[int, int]:
+    return citation.page, citation.page_end if citation.page_end is not None else citation.page

@@ -62,9 +62,17 @@ List every `obligation_id` exactly once across all section blocks with: obligati
 
 Prefer single-call primitives for verification: `verify_quote`, `verify_source_attribution`, `check_modern_form`, `check_russian_shadow`. Use search tools when you need evidence chunks to quote.
 
-Before artifact fences, emit:
-`<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[<deferred IDs>]</implementation_map_audit>`
-If `M < N`, stop and fix the map before writing artifacts.
+Before artifact fences, emit these three audit lines in this exact order:
+
+1. `<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[<deferred IDs>]</implementation_map_audit>`
+2. `<bad_form_audit>italic_bad_form_patterns_found=N converted_to_marker=N remaining=0</bad_form_audit>`
+3. `<activity_split_audit>level={LEVEL} inline_n=N workbook_n=N inline_range=[lo,hi] workbook_range=[lo,hi] split_valid=true|false</activity_split_audit>`
+
+If `M < N`, stop and fix the map before writing artifacts. If
+`bad_form_audit.remaining` is not `0`, convert every remaining italic/bare
+bad-form contrast to `<!-- bad -->...<!-- /bad -->` before writing artifacts.
+If `activity_split_audit.split_valid=false`, rebalance inline vs workbook
+activities before writing artifacts.
 
 ## Tier-1 verification discipline (do this WHILE drafting — #1661)
 

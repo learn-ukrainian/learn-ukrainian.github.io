@@ -1,3 +1,8 @@
+You are reviewing one quality dimension for the generated module below.
+Return ONLY the JSON object described in the response format. Do not ask for
+clarification, do not summarize the prompt, and do not emit prose outside the
+JSON object.
+
 {NORTH_STAR}
 
 {LESSON_CONTRACT}
@@ -256,3 +261,8 @@ them to know what to fix on retry.
 ## Generated Content
 
 {GENERATED_CONTENT}
+
+## Task
+
+Review the assigned dimension `{DIM}` and return the required JSON object now.
+No preamble, no markdown, no questions.

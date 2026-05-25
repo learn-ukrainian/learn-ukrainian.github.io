@@ -389,8 +389,8 @@ def _render_grammar_identify(act: dict) -> str:
     items = []
     for item in act.get("items", []):
         items.append({
-            "text": item.get("word", ""),
-            "form": item.get("task", ""),
+            "text": item.get("text") or item.get("sentence") or item.get("word", ""),
+            "form": item.get("form") or item.get("task") or act.get("instruction", ""),
             "answer": item.get("answer", ""),
         })
 
@@ -459,6 +459,8 @@ def _render_highlight_morphemes(act: dict) -> str:
             {"text": m.get("text", ""), "type": m.get("type", "")}
             for m in item.get("morphemes", [])
         ]
+        if not morphemes and item.get("answer"):
+            morphemes = [{"text": item["answer"], "type": item.get("type", "suffix")}]
         items.append({
             "word": item.get("word", ""),
             "morphemes": morphemes,
@@ -538,9 +540,13 @@ def _render_odd_one_out(act: dict) -> str:
     """odd-one-out → <OddOneOut items={[...]} />"""
     items = []
     for item in act.get("items", []):
+        words = item.get("words") or item.get("options", [])
+        correct = item.get("correct", 0)
+        if item.get("answer") in words:
+            correct = words.index(item["answer"])
         entry = {
-            "words": item.get("words", []),
-            "correct": item.get("correct", 0),
+            "words": words,
+            "correct": correct,
             "explanation": item.get("explanation", ""),
         }
         items.append(entry)

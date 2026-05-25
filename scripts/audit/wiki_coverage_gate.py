@@ -55,6 +55,13 @@ _INLINE_FIELD_RE = re.compile(
     r"(?=\s*[;|]\s*(?:obligation_id|artifact|location|treatment)\s*:|\s*$)",
     re.IGNORECASE,
 )
+_COMPACT_PIPE_ENTRY_RE = re.compile(
+    r"(?:^|\s)(?P<id>[-\w]+)\s*\|\s*"
+    r"(?P<artifact>module\.md|activities\.yaml)\s*\|\s*"
+    r"(?P<location>[^|<\n]+?)\s*\|\s*"
+    r"(?P<treatment>.*?)(?=\s+[-\w]+\s*\|\s*(?:module\.md|activities\.yaml)\s*\||\s*$)",
+    re.IGNORECASE | re.DOTALL,
+)
 
 
 def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
@@ -97,6 +104,14 @@ def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
     entries: dict[str, dict[str, str]] = {}
     for match in matches:
         body = match.group("body")
+        for pipe_match in _COMPACT_PIPE_ENTRY_RE.finditer(body):
+            obligation_id = pipe_match.group("id").strip()
+            entries[obligation_id] = {
+                "obligation_id": obligation_id,
+                "artifact": pipe_match.group("artifact").strip(),
+                "location": pipe_match.group("location").strip(),
+                "treatment": pipe_match.group("treatment").strip(),
+            }
         current_id: str | None = None
         for line in body.splitlines():
             id_match = _OBLIGATION_RE.search(line)
@@ -549,7 +564,9 @@ def _activity_text(activities: list[dict[str, Any]], location: str) -> str:
         return "\n".join(s for activity in activities for s in _flatten_strings(activity))
 
     location_cf = location.casefold().strip()
-    if location_cf in {"activities.yaml", "all", "any", "(any)", "(any activity)"}:
+    if location_cf in {"activities.yaml", "all", "any", "(any)", "(any activity)"} or (
+        "workbook" in location_cf and "error-correction" in location_cf
+    ):
         return "\n".join(s for activity in activities for s in _flatten_strings(activity))
 
     for activity in activities:

@@ -977,9 +977,10 @@ class ActivityParser:
     def _parse_grammar_identify(self, data: dict) -> GrammarIdentifyActivity:
         items = []
         for item_data in data.get('items', []):
+            form = item_data.get('form') or item_data.get('task') or data.get('instruction', '')
             items.append(GrammarIdentifyItem(
-                text=item_data['text'],
-                form=item_data['form'],
+                text=item_data.get('text') or item_data.get('sentence') or item_data.get('word'),
+                form=form,
                 answer=item_data['answer']
             ))
         return GrammarIdentifyActivity(
@@ -1203,6 +1204,12 @@ class ActivityParser:
                     morpheme=str(item['morpheme']),
                     type=str(item.get('type', 'unknown')),
                 ))
+            elif item.get('answer'):
+                morphemes.append(HighlightMorphemeItem(
+                    word=word,
+                    morpheme=str(item['answer']),
+                    type=str(item.get('type', 'suffix')),
+                ))
             else:
                 raise ValueError("highlight-morphemes item requires morphemes")
         if not morphemes:
@@ -1238,18 +1245,21 @@ class ActivityParser:
     def _parse_odd_one_out(self, data: dict) -> OddOneOutActivity:
         items = []
         for item in data.get('items', []):
-            if not isinstance(item.get('words'), list) or not item['words']:
+            words = item.get('words') or item.get('options')
+            if not isinstance(words, list) or not words:
                 raise ValueError("odd-one-out item requires non-empty words list")
             correct = item.get('correct')
+            if correct is None and item.get('answer') in words:
+                correct = words.index(item['answer'])
             if not isinstance(correct, int):
                 raise TypeError("odd-one-out item correct must be an integer")
-            if correct < 0 or correct >= len(item['words']):
+            if correct < 0 or correct >= len(words):
                 raise ValueError("odd-one-out item correct index out of range")
             explanation = item.get('explanation')
             if not isinstance(explanation, str) or not explanation.strip():
                 raise ValueError("odd-one-out item requires explanation")
             items.append(OddOneOutItem(
-                words=[str(word) for word in item['words']],
+                words=[str(word) for word in words],
                 correct=correct,
                 explanation=explanation,
             ))

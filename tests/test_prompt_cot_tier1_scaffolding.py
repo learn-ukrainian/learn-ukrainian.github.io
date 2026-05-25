@@ -152,6 +152,19 @@ def test_writer_prompt_has_tier1_discipline(level: str, slug: str) -> None:
 
 
 @pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
+def test_writer_prompt_mandates_preemit_audit_lines(level: str, slug: str) -> None:
+    rendered = _writer_prompt(level, slug)
+    for marker in (
+        "<implementation_map_audit>",
+        "<bad_form_audit>",
+        "<activity_split_audit>level=",
+    ):
+        assert marker in rendered, (
+            f"Writer pre-emit audit marker missing: {marker!r} for {level}/{slug}"
+        )
+
+
+@pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
 def test_writer_prompt_has_no_unresolved_placeholders(level: str, slug: str) -> None:
     rendered = _writer_prompt(level, slug)
     leftover = sorted(set(PLACEHOLDER_RE.findall(rendered)))

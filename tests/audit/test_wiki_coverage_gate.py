@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from scripts.audit.wiki_coverage_gate import check_wiki_coverage
+from scripts.audit.wiki_coverage_gate import check_wiki_coverage, parse_implementation_map
 from scripts.build.phases.implementation_map import seed_implementation_map
 
 BAN_1_RULE = (
@@ -556,6 +556,62 @@ def test_l2_error_resolves_via_bare_activities_yaml_location() -> None:
         f"err-2 must PASS when the writer's location equals the seeded "
         f"bare-artifact hint and the contrast pair is present anywhere "
         f"in activities.yaml; got reason={err_result['reason']!r}"
+    )
+
+
+def test_parse_implementation_map_accepts_compact_pipe_rows_on_same_line() -> None:
+    """Codex sometimes emits compact implementation-map rows without
+    ``obligation_id:`` labels. The parser must still recognize every row,
+    even when multiple rows share one ``<implementation_map>`` line."""
+    implementation_map = (
+        "<implementation_map>"
+        "err-1 | activities.yaml | workbook error-correction | first contrast. "
+        "err-2 | activities.yaml | workbook error-correction | second contrast. "
+        "ban-1 | module.md | §Intro | absence of banned framing."
+        "</implementation_map>"
+    )
+
+    parsed = parse_implementation_map(implementation_map)
+
+    assert parsed["err-1"]["artifact"] == "activities.yaml"
+    assert parsed["err-1"]["location"] == "workbook error-correction"
+    assert parsed["err-2"]["treatment"] == "second contrast."
+    assert parsed["ban-1"]["artifact"] == "module.md"
+
+
+def test_l2_error_passes_with_compact_pipe_workbook_location() -> None:
+    """The compact Codex pipe-map shape plus a generic workbook location
+    should widen to all activities, then let the substance check decide."""
+    manifest = _phonetic_l2_error_manifest()
+    activities_yaml = (
+        "- type: error-correction\n"
+        "  title: Редагування типових помилок\n"
+        "  items:\n"
+        "    - sentence: 'Вимова: [прокидайешся]'\n"
+        "      error: 'Вимова: [прокидайешся]'\n"
+        "      correction: \"Вимова: [прокидайес':а]\"\n"
+        "      explanation: assimilation rule.\n"
+    )
+    implementation_map = (
+        "<implementation_map>"
+        "err-2 | activities.yaml | workbook error-correction | sentence/error/correction contrast."
+        "</implementation_map>"
+    )
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="# Module body unrelated to err-2.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    err_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "err-2"
+    )
+    assert err_result["status"] == "PASS", (
+        f"err-2 must PASS from compact pipe-map claim when the workbook "
+        f"activity contains the contrast pair; got reason={err_result['reason']!r}"
     )
 
 
