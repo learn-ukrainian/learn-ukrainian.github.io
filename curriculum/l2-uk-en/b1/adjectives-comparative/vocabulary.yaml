@@ -1,0 +1,164 @@
+- lemma: вищий ступінь
+  translation: comparative degree
+  pos: noun phrase
+  usage: Вищий ступінь показує більшу або меншу міру ознаки.
+- lemma: порівняння
+  translation: comparison
+  pos: noun
+  usage: Порівняння потребує другого предмета.
+- lemma: проста форма
+  translation: simple or synthetic form
+  pos: noun phrase
+  usage: Проста форма має один прикметник.
+- lemma: складена форма
+  translation: compound or analytic form
+  pos: noun phrase
+  usage: Складена форма має більш або менш.
+- lemma: суфікс
+  translation: suffix
+  pos: noun
+  usage: Суфікс -іш- творить форму сильніший.
+- lemma: якісний прикметник
+  translation: qualitative adjective
+  pos: noun phrase
+  usage: Якісний прикметник може мати вищий ступінь.
+- lemma: відносний прикметник
+  translation: relative adjective
+  pos: noun phrase
+  usage: Відносний прикметник звичайно не має вищого ступеня.
+- lemma: більш
+  translation: more
+  pos: adverb
+  usage: Більш стоїть перед початковою формою прикметника.
+- lemma: менш
+  translation: less
+  pos: adverb
+  usage: Менш також стоїть перед початковою формою.
+- lemma: набагато
+  translation: much, significantly
+  pos: adverb
+  usage: Набагато підсилює форму вищого ступеня.
+- lemma: початкова форма
+  translation: base form
+  pos: noun phrase
+  usage: Після більш потрібна початкова форма.
+- lemma: ознака
+  translation: feature, quality
+  pos: noun
+  usage: Ознака може мати більшу або меншу міру.
+- lemma: міра
+  translation: degree, measure
+  pos: noun
+  usage: Міра ознаки змінюється в порівнянні.
+- lemma: якість
+  translation: quality
+  pos: noun
+  usage: У певному предметі якості може бути більше.
+- lemma: порівняльна конструкція
+  translation: comparative construction
+  pos: noun phrase
+  usage: Порівняльна конструкція вводить другий предмет.
+- lemma: прийменник
+  translation: preposition
+  pos: noun
+  usage: Прийменник за вимагає знахідного відмінка.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: Сполучник ніж вводить другий компонент порівняння.
+- lemma: звукова зміна
+  translation: sound change
+  pos: noun phrase
+  usage: Звукова зміна пояснює форму дорожчий.
+- lemma: випадання
+  translation: dropping, elision
+  pos: noun
+  usage: Випадання -ок- видно у формі глибший.
+- lemma: суплетивна форма
+  translation: suppletive form
+  pos: noun phrase
+  usage: Кращий є суплетивна форма від гарний.
+- lemma: абсолютна ознака
+  translation: absolute feature
+  pos: noun phrase
+  usage: Абсолютна ознака не має більшої міри.
+- lemma: складний прикметник
+  translation: compound adjective
+  pos: noun phrase
+  usage: Складний прикметник часто не має ступенів порівняння.
+- lemma: масть
+  translation: animal coat color
+  pos: noun
+  usage: Масть тварини не утворює звичайного вищого ступеня.
+- lemma: підсилювач
+  translation: intensifier
+  pos: noun
+  usage: Підсилювач набагато стоїть перед вищим ступенем.
+- lemma: офіційний стиль
+  translation: official style
+  pos: noun phrase
+  usage: Офіційний стиль часто використовує складену форму.
+- lemma: науковий стиль
+  translation: academic style
+  pos: noun phrase
+  usage: Науковий стиль потребує точного формулювання.
+- lemma: розмовне мовлення
+  translation: spoken language
+  pos: noun phrase
+  usage: У розмовному мовленні проста форма є природною.
+- lemma: жартівлива форма
+  translation: playful form
+  pos: noun phrase
+  usage: Жартівлива форма може з'явитися в рекламі.
+- lemma: виняток
+  translation: exception
+  pos: noun
+  usage: Виняток треба вивчати разом із прикладами.
+- lemma: керування
+  translation: case government
+  pos: noun
+  usage: Керування після вищого ступеня потребує за, від або ніж.
+- lemma: переконливий
+  translation: convincing, persuasive
+  pos: adjective
+  usage: Переконливий доказ може бути переконливіший за попередній.
+- lemma: обґрунтований
+  translation: well-founded, justified
+  pos: adjective
+  usage: В офіційному стилі доречно написати більш обґрунтований висновок.
+- lemma: ризикований
+  translation: risky
+  pos: adjective
+  usage: Менш ризикований вибір звучить природно в діловому тексті.
+- lemma: гучний
+  translation: loud
+  pos: adjective
+  usage: Гучний район може бути гучніший за тиху вулицю.
+- lemma: сліпий
+  translation: blind
+  pos: adjective
+  usage: Сліпий називає абсолютну ознаку, тому звичайного вищого ступеня не має.
+- lemma: лисий
+  translation: bald
+  pos: adjective
+  usage: Лисий належить до прикметників з абсолютною ознакою.
+- lemma: босий
+  translation: barefoot
+  pos: adjective
+  usage: Босий не порівнюють за мірою у звичайній граматичній нормі.
+- lemma: голий
+  translation: naked, bare
+  pos: adjective
+  usage: Голий у цьому правилі є прикладом абсолютної ознаки.
+- lemma: живий
+  translation: alive
+  pos: adjective
+  usage: Живий називає стан, який не має звичайного вищого ступеня.
+- lemma: порожній
+  translation: empty
+  pos: adjective
+  usage: Порожній у вправі допомагає впізнати прикметник без ступенів порівняння.
+- lemma: готовий
+  translation: ready
+  pos: adjective
+  usage: Готовий часто подають серед ознак, які не порівнюють за мірою.
