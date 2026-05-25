@@ -2,7 +2,7 @@ module: a1-020
 level: A1
 sequence: 20
 slug: my-morning
-version: 1.2.4
+version: 1.2.3
 title: Мій ранок
 subtitle: Прокидаюся, вмиваюся — зворотні дієслова та ранкова рутина
 focus: grammar
@@ -40,23 +40,6 @@ content_outline:
   words: 300
   points:
   - 'Зворотні дієслова = звичайне дієслово + ся в кінці. я -юся, ти -єшся, він/вона -ється (схема І дієвідміни + ся). Ранкова рутина: прокидатися → вмиватися → одягатися → снідати → йти. Слова послідовності: спочатку, потім, після цього, нарешті. Самоперевірка: Опишіть свій ранок у 4-5 реченнях, використовуючи слова послідовності.'
-targets:
-  # NEW vocabulary introduced by m20. Twelve deduped lemmas consumed by
-  # the learner-state plan-fallback (#2272) for downstream modules' cumulative
-  # vocab window. Mirrors the required + high-value recommended set.
-  new_vocabulary:
-  - прокидатися
-  - вмиватися
-  - одягатися
-  - снідати
-  - збиратися
-  - повертатися
-  - навчатися
-  - поспішати
-  - спочатку
-  - потім
-  - після цього
-  - нарешті
 vocabulary_hints:
   required:
   - прокидатися (to wake up)
@@ -75,18 +58,6 @@ vocabulary_hints:
   - нарешті (finally)
   - вранці (in the morning)
   - пізно (late)
-  # m20 anchor expansion (2026-05-26): pad headroom for vocab_floor gate
-  # (#2296). All 12 verified in VESUM. Topically anchored to morning routine.
-  - чистити зуби (to brush teeth)
-  - причісуватися (to comb one's hair — reflexive, supplements core focus)
-  - рушник (towel)
-  - мило (soap)
-  - зубна паста (toothpaste)
-  - будильник (alarm clock)
-  - сніданок (breakfast — noun form of снідати)
-  - рано (early — contrast partner of пізно)
-  - швидко (quickly)
-  - готовий (ready)
 activity_hints:
 - type: fill-in
   focus: 'Додайте -ся: я вмиваю__ , ти одягаєш__ , він прокидаєть__'
