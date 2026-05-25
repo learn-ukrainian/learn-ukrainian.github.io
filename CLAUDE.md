@@ -25,6 +25,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Topic | Doc |
 | --- | --- |
 | **V7 design + corpus (READ FIRST before any module / writer-prompt work)** | [`v7-design-and-corpus.md`](docs/best-practices/v7-design-and-corpus.md) |
+| **ULP presentation pattern (READ before any A1/A2 build — Anna Ohoiko's 7 practices + S1→S6 progression)** | [`ulp-presentation-pattern.md`](docs/best-practices/ulp-presentation-pattern.md) |
 | Prompt engineering | [`prompt-engineering.md`](docs/best-practices/prompt-engineering.md) |
 | Context engineering | [`context-engineering.md`](docs/best-practices/context-engineering.md) |
 | Code quality | [`code-quality.md`](docs/best-practices/code-quality.md) |
