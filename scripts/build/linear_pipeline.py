@@ -149,6 +149,7 @@ PYTHON_QG_GATE_ORDER = (
     "tool_theatre",
     "activity_schema",
     "word_count",
+    "vocab_count",
     "plan_sections",
     "formatting_standards",
     "vesum_verified",
@@ -179,6 +180,7 @@ WRITER_CORRECTION_GATES = frozenset(
         "mdx_render",
     }
 )
+DETERMINISTIC_VOCAB_FLOOR_GATES = frozenset({"vocab_count", "vocab_floor"})
 DICTIONARY_CANDIDATE_GATES = frozenset(
     {
         "vesum_verified",
@@ -3973,6 +3975,101 @@ def invoke_reviewer_dim(
     return response_text
 
 
+def _gate_int(gate_report: Mapping[str, Any], *keys: str, default: int = 0) -> int:
+    for key in keys:
+        value = gate_report.get(key)
+        if isinstance(value, bool):
+            continue
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            continue
+    return default
+
+
+def _yaml_inline(value: Any) -> str:
+    return yaml.safe_dump(value, allow_unicode=True, sort_keys=False).strip()
+
+
+def _render_vesum_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    missing_tokens = [str(token) for token in gate_report.get("missing", [])]
+    token_text = ", ".join(missing_tokens) if missing_tokens else "(none listed)"
+    return (
+        f"The following tokens FAILED VESUM verification: {token_text}. "
+        "For EACH offending token, find the smallest fix (likely a typo, wrong stress mark, "
+        "or missing/extra character) and replace that EXACT token. Do NOT modify any other "
+        "word in the prose. Do NOT change any prose that does not contain the offending token. "
+        "If you cannot determine the correct form, leave the token as-is with a `<!-- VERIFY -->` "
+        "HTML comment immediately after."
+    )
+
+
+def _render_word_count_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    current_count = _gate_int(gate_report, "count", "actual")
+    target_min = _gate_int(gate_report, "min_with_tolerance", "minimum", "target", default=current_count)
+    target_max = _gate_int(gate_report, "target_max", "max", "target", default=target_min)
+    delta = max(0, target_min - current_count)
+    return (
+        f"Current: {current_count} words. Target: {target_min}-{target_max}. "
+        f"Delta to floor: {delta} words. Append a NEW short section (2-3 sentences) "
+        f"or extend the existing 'Підсумок' / final section with {delta}+10 words. "
+        "Do NOT modify the existing prose, vocab, or dialogues. ONLY append."
+    )
+
+
+def _render_engagement_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    current_callouts = _gate_int(gate_report, "callout_count", "current_callouts")
+    min_callouts = _gate_int(gate_report, "callout_min", "min_callouts", default=1)
+    return (
+        f"Current: {current_callouts} callouts. Target: >={min_callouts}. "
+        "Insert a `:::tip` or `:::note` block at the end of the lesson body with a "
+        "content-anchored mnemonic or cultural note. Do NOT modify existing prose."
+    )
+
+
+def _render_russianisms_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    findings = gate_report.get("critical_findings") or gate_report.get("detections") or gate_report.get("findings") or []
+    return (
+        "The following spans matched Russianism patterns: "
+        f"{_yaml_inline(findings)}. Replace EXACTLY these spans with the suggested Ukrainian "
+        "alternatives or rephrasings. Do NOT modify any other prose."
+    )
+
+
+def _render_l2_exposure_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    observed = gate_report.get("observed")
+    required = gate_report.get("required")
+    current_exposure = 0
+    min_exposure = 0
+    if isinstance(observed, Mapping):
+        current_exposure = _gate_int(observed, "uk_example_sentences")
+    if isinstance(required, Mapping):
+        min_exposure = _gate_int(required, "uk_example_sentences")
+    delta = max(0, min_exposure - current_exposure)
+    return (
+        f"Current: {current_exposure} UK example surfaces. Target: >={min_exposure}. "
+        f"Add {delta}+2 NEW gate-countable Ukrainian example bullets or table rows. "
+        "Do NOT modify existing examples."
+    )
+
+
+def _render_default_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    return (
+        "No gate-specific surgical playbook exists for this gate. Fix only the failed gate "
+        "listed in the YAML feedback above. Apply the smallest append/insert patch possible, "
+        "preserve previously-passing prose byte-for-byte, and do not re-author any section."
+    )
+
+
+GATE_SPECIFIC_INSTRUCTION_RENDERERS: dict[str, Callable[[Mapping[str, Any]], str]] = {
+    "vesum_verified": _render_vesum_surgical_instruction,
+    "word_count": _render_word_count_surgical_instruction,
+    "engagement_floor": _render_engagement_surgical_instruction,
+    "russianisms_strict": _render_russianisms_surgical_instruction,
+    "l2_exposure_floor": _render_l2_exposure_surgical_instruction,
+}
+
+
 def render_writer_correction_prompt(
     *,
     gate: str,
@@ -3981,6 +4078,7 @@ def render_writer_correction_prompt(
     writer: str = "claude-tools",
 ) -> str:
     """Render the ADR-008 patch-bounded writer correction prompt."""
+    renderer = GATE_SPECIFIC_INSTRUCTION_RENDERERS.get(gate, _render_default_surgical_instruction)
     return render_phase_prompt(
         writer_correction_prompt_path(writer),
         {
@@ -3993,6 +4091,7 @@ def render_writer_correction_prompt(
                 allow_unicode=True,
                 sort_keys=False,
             ).strip(),
+            "GATE_SPECIFIC_INSTRUCTIONS": renderer(gate_report),
         },
     )
 
@@ -4318,14 +4417,17 @@ def run_python_qg_with_corrections(
 
     def _run_qg() -> dict[str, Any]:
         if qg_runner is not None:
-            return qg_runner()
-        return run_python_qg(
-            module_dir,
-            plan_path,
-            verify_words_fn=verify_words_fn,
-            ignored_vesum_missing_surfaces=vesum_missing_exclusions,
-            event_sink=event_sink,
-        )
+            report = qg_runner()
+        else:
+            report = run_python_qg(
+                module_dir,
+                plan_path,
+                verify_words_fn=verify_words_fn,
+                ignored_vesum_missing_surfaces=vesum_missing_exclusions,
+                event_sink=event_sink,
+            )
+        _attach_vocab_count_gate(report, module_dir=module_dir, plan_path=plan_path)
+        return report
 
     report = _run_qg()
     while True:
@@ -5173,6 +5275,187 @@ def _annotate_correction_terminal(
         gates["passed"] = False
 
 
+def _attach_vocab_count_gate(report: dict[str, Any], *, module_dir: Path, plan_path: Path) -> None:
+    gates = report.get("gates")
+    if not isinstance(gates, dict) or "vocab_count" in gates:
+        return
+    vocab_path = module_dir / "vocabulary.yaml"
+    if not vocab_path.exists() or not plan_path.exists():
+        return
+    try:
+        plan = plan_check(plan_path)
+        vocabulary = _load_yaml_list(vocab_path, "vocabulary")
+    except LinearPipelineError:
+        return
+    gate_report = _vocab_count_gate(vocabulary, plan)
+    gates["vocab_count"] = gate_report
+    if gate_report.get("passed") is False:
+        gates["passed"] = False
+
+
+def _vocab_count_gate(vocabulary: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
+    floor = _vocab_floor_for_plan(plan)
+    count = len(vocabulary)
+    unused_candidates = _unused_recommended_vocab_candidates(plan, vocabulary)
+    report: dict[str, Any] = {
+        "passed": count >= floor,
+        "count": count,
+        "floor": floor,
+        "candidate_source": "plan.vocabulary_hints.recommended",
+        "unused_recommended_count": len(unused_candidates),
+        "unused_recommended_lemmas": [str(item.get("lemma") or "") for item in unused_candidates],
+    }
+    if count < floor:
+        message = f"vocabulary.yaml has {count} entries; floor is {floor}"
+        if count + len(unused_candidates) < floor:
+            message += "; plan recommends insufficient unused vocabulary to reach floor"
+        report["message"] = message
+    return report
+
+
+def _vocab_floor_for_plan(plan: Mapping[str, Any]) -> int:
+    level = str(plan.get("level") or "").lower()
+    slug = str(plan.get("slug") or "").lower()
+    try:
+        sequence = int(plan.get("sequence") or 0)
+    except (TypeError, ValueError):
+        sequence = 0
+    try:
+        configured = int(_activity_config(level, sequence, slug).get("VOCAB_COUNT_TARGET") or 0)
+    except (LinearPipelineError, KeyError, TypeError, ValueError):
+        configured = 0
+    if "checkpoint" in slug:
+        return configured
+    return max(configured, 25)
+
+
+def _vocab_lemma_key(value: Any) -> str:
+    text = str(value or "").strip().casefold()
+    normalized = unicodedata.normalize("NFKD", text)
+    return "".join(ch for ch in normalized if not unicodedata.combining(ch))
+
+
+def _vocab_item_lemma(item: Mapping[str, Any]) -> str:
+    return str(item.get("lemma") or item.get("word") or "").strip()
+
+
+def _vocab_hint_to_item(item: Any) -> dict[str, Any] | None:
+    if isinstance(item, Mapping):
+        lemma = str(item.get("lemma") or item.get("word") or item.get("term") or "").strip()
+        if not lemma:
+            return None
+        translation = str(item.get("translation") or item.get("definition") or item.get("gloss") or "").strip()
+        pos = str(item.get("pos") or "").strip() or ("phrase" if " " in lemma else "term")
+        usage = str(item.get("usage") or item.get("example") or "").strip()
+        return {
+            "lemma": lemma,
+            "translation": translation,
+            "pos": pos,
+            "usage": usage,
+        }
+    if not isinstance(item, str):
+        return None
+    raw = item.strip()
+    if not raw:
+        return None
+    match = re.match(r"^(?P<lemma>[^()]+?)(?:\s*\((?P<translation>[^)]*)\))?\s*$", raw)
+    if not match:
+        return None
+    lemma = match.group("lemma").strip()
+    if not lemma:
+        return None
+    translation = (match.group("translation") or "").strip()
+    return {
+        "lemma": lemma,
+        "translation": translation,
+        "pos": "phrase" if " " in lemma else "term",
+        "usage": "",
+    }
+
+
+def _unused_recommended_vocab_candidates(
+    plan: Mapping[str, Any],
+    vocabulary: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    hints = plan.get("vocabulary_hints")
+    if not isinstance(hints, Mapping):
+        return []
+    recommended = hints.get("recommended")
+    if not isinstance(recommended, list):
+        return []
+    seen = {_vocab_lemma_key(_vocab_item_lemma(item)) for item in vocabulary}
+    candidates: list[dict[str, Any]] = []
+    for hint in recommended:
+        item = _vocab_hint_to_item(hint)
+        if item is None:
+            continue
+        key = _vocab_lemma_key(item["lemma"])
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        candidates.append(item)
+    return candidates
+
+
+def _coerce_vocab_yaml(vocab_yaml: str | Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    parsed = yaml.safe_load(vocab_yaml) or [] if isinstance(vocab_yaml, str) else list(vocab_yaml)
+    if not isinstance(parsed, list) or not all(isinstance(item, Mapping) for item in parsed):
+        raise LinearPipelineError("vocabulary YAML must be a list of mappings for vocab_floor correction")
+    return [dict(item) for item in parsed]
+
+
+def _correct_vocab_floor(
+    plan: Mapping[str, Any],
+    vocab_yaml: str | Sequence[Mapping[str, Any]],
+    gate_payload: Mapping[str, Any],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    vocabulary = _coerce_vocab_yaml(vocab_yaml)
+    floor = _gate_int(gate_payload, "floor", "minimum", "min_count", "target_min", default=_vocab_floor_for_plan(plan))
+    count_before = len(vocabulary)
+    candidates = _unused_recommended_vocab_candidates(plan, vocabulary)
+    needed = max(0, floor - count_before)
+    added = candidates[:needed]
+    updated = [*vocabulary, *added]
+    exhausted = len(updated) < floor
+    diagnostic: dict[str, Any] = {
+        "kind": "vocab_floor",
+        "candidate_source": "plan.vocabulary_hints.recommended",
+        "floor": floor,
+        "count_before": count_before,
+        "count_after": len(updated),
+        "needed_count": needed,
+        "candidate_count": len(candidates),
+        "added_count": len(added),
+        "added_lemmas": [str(item.get("lemma") or "") for item in added],
+        "exhausted": exhausted,
+    }
+    if exhausted:
+        diagnostic["message"] = (
+            "plan recommends insufficient unused vocabulary to reach floor: "
+            f"count_after={len(updated)} floor={floor}"
+        )
+    return updated, diagnostic
+
+
+def _apply_vocab_floor_correction(
+    *,
+    module_dir: Path,
+    plan_path: Path,
+    gate_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    plan = plan_check(plan_path)
+    vocab_path = module_dir / "vocabulary.yaml"
+    vocabulary = _load_yaml_list(vocab_path, "vocabulary")
+    updated, diagnostic = _correct_vocab_floor(plan, vocabulary, gate_report)
+    vocab_path.write_text(yaml.safe_dump(updated, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    return {
+        "kind": "pipeline_vocab_floor",
+        "gate": "vocab_count",
+        "gate_report": dict(gate_report),
+        "diagnostic": diagnostic,
+    }
+
+
 def _apply_python_qg_correction(
     gate: str,
     qg_report: Mapping[str, Any],
@@ -5204,6 +5487,9 @@ def _apply_python_qg_correction(
                 "gate_report": dict(gate_report),
             },
         )
+    if gate in DETERMINISTIC_VOCAB_FLOOR_GATES:
+        payload = _apply_vocab_floor_correction(module_dir=module_dir, plan_path=plan_path, gate_report=gate_report)
+        return True, frozenset(), payload
     if gate in WRITER_CORRECTION_GATES:
         payload = _apply_writer_correction(
             gate,
