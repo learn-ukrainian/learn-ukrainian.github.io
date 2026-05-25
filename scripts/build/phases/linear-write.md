@@ -136,7 +136,18 @@ Sources in blockquotes/resources must be either in `plan_references` or grounded
 
 **5. End-of-output gate.** Before artifacts, rescan: all Ukrainian forms verified or marker-protected, every source grounded, every quote literal. Omit or rewrite anything unverifiable.
 
-You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER the four artifact fences. Required sub-nodes: `<rescanned_words>`, `<rescanned_sources>`, `<grammar_claims_grounded>`, `<removed_unverified>`. A missing block records `gate_present=false` and the writer is treated as having skipped the protocol.
+You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER the four artifact fences. Required sub-nodes:
+
+- `<rescanned_words>` — list of Ukrainian word forms re-verified during the end-of-output rescan.
+- `<rescanned_sources>` — list of sources re-grounded.
+- `<grammar_claims_grounded>` — list of grammar claims with their cite source.
+- `<removed_unverified>` — list of forms/claims removed because they could not be verified.
+- `<chunk_context_calls>N</chunk_context_calls>` — integer count of `mcp__sources__get_chunk_context` calls you made this turn. **MUST equal the count of `plan_references` entries.** If you wrote `0` here while the plan has textbook references, you have skipped step 3(B) of Textbook grounding — STOP, return to step 3(B), call `get_chunk_context(chunk_id=<ID>)` for each plan reference, then re-emit.
+- `<chunk_context_chunk_ids>` — bullet list of the EXACT chunk_id strings you passed to `get_chunk_context`. The deterministic gate cross-references these against the writer telemetry; mismatches are treated as `tool_theatre` (a hard fail).
+- `<resources_search_calls>N</resources_search_calls>` — integer count of multimedia search calls (`mcp__sources__query_wikipedia` + `mcp__sources__search_external` + `mcp__sources__search_images`). **MUST be ≥ 1.** Other tool calls (`search_text`, `search_style_guide`, `verify_words`, `query_cefr_level`, `query_pravopys`) DO NOT count toward this gate. If you wrote `0` here, STOP, call ONE of the three multimedia tools, then re-emit.
+- `<resources_search_tools>` — bullet list of the exact tool names you called toward the multimedia search obligation (e.g. `mcp__sources__query_wikipedia`).
+
+A missing block records `gate_present=false` and the writer is treated as having skipped the protocol. Lying about counts is detected post-hoc: the pipeline compares your self-reported counts against tool telemetry; a mismatch is treated as `tool_theatre` (hard fail, no correction loop).
 
 **Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
 
@@ -411,6 +422,16 @@ Before artifacts, make the in-scope MCP calls your draft depends on:
 7. Source attribution: `mcp__sources__verify_source_attribution` for every named source claim.
 
 If a required call is missing for your level, make it now. Do not emit artifacts first and hope the gate catches it.
+
+## PRE-EMIT HARD STOP — read this NOW, before any artifact fence
+
+Two writer-failure modes have repeatedly survived earlier prompt strengthening because their MANDATORY language sits in the middle of this 470-line prompt and gets forgotten by emission time. Re-check both BEFORE emitting:
+
+1. **`get_chunk_context` for every plan reference.** Counting `search_text` calls toward `textbook_grounding` is wrong — the gate explicitly rejects builds where `chunk_context_calls=0` even if `search_text_calls > 0`. For EACH entry in `plan.references`, call `mcp__sources__get_chunk_context(chunk_id=<the ID from notes>)`. If your count is currently zero, you have NOT satisfied this obligation, regardless of how many `search_text` calls you made. The blockquote in your draft MUST be ≥30 contiguous words from that returned chunk text, verbatim.
+
+2. **At least ONE multimedia search call.** Counting `search_text`, `search_style_guide`, `verify_words`, `query_pravopys`, `search_definitions`, or `query_cefr_level` toward `resources_search_attempted` is wrong — the gate counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, and `mcp__sources__search_images`. Make at least ONE of these THREE calls before emitting. An empty result is acceptable (omit unverifiable entries from `resources.yaml`); a zero attempt is not.
+
+If your current tool history does not include BOTH of the above, STOP, make the missing calls, then resume to artifact emission. The `<end_gate>` block will require explicit integer counts for both — and the pipeline cross-references those counts against your telemetry. Lying fails the build via `tool_theatre`; honestly reporting zero fails the build via `textbook_grounding` / `resources_search_attempted`. Only doing the calls satisfies both.
 
 ## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
 
