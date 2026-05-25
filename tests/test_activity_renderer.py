@@ -251,6 +251,53 @@ class TestGrammarIdentify:
         assert parsed[0]["text"] == "стіл"
         assert parsed[0]["form"] == "Визначте рід"
 
+    def test_sentence_alias_mapping(self):
+        act = {
+            "type": "grammar-identify",
+            "instruction": "Визначте модель порівняння.",
+            "items": [{"sentence": "Петро вищий за Марію.", "answer": "за + знахідний"}],
+        }
+        jsx = render_activity_to_jsx(act)
+        parsed = _extract_prop(jsx, "items")
+        assert parsed[0]["text"] == "Петро вищий за Марію."
+        assert parsed[0]["form"] == "Визначте модель порівняння."
+
+
+class TestOddOneOut:
+    def test_options_answer_alias_mapping(self):
+        act = {
+            "type": "odd-one-out",
+            "instruction": "Оберіть зайве.",
+            "items": [
+                {
+                    "options": ["сильніший", "молодший", "більш цікавий", "дорожчий"],
+                    "answer": "більш цікавий",
+                    "explanation": "Це складена форма, решта прості.",
+                },
+            ],
+        }
+        jsx = render_activity_to_jsx(act)
+        parsed = _extract_prop(jsx, "items")
+        assert parsed[0]["words"] == [
+            "сильніший",
+            "молодший",
+            "більш цікавий",
+            "дорожчий",
+        ]
+        assert parsed[0]["correct"] == 2
+
+
+class TestHighlightMorphemes:
+    def test_answer_alias_mapping(self):
+        act = {
+            "type": "highlight-morphemes",
+            "instruction": "Позначте суфікс.",
+            "items": [{"word": "сильніший", "answer": "-іш-"}],
+        }
+        jsx = render_activity_to_jsx(act)
+        parsed = _extract_prop(jsx, "items")
+        assert parsed[0]["morphemes"] == [{"text": "-іш-", "type": "suffix"}]
+
 
 class TestObserve:
     def test_basic(self):

@@ -19,6 +19,7 @@ import re
 import pytest
 
 from scripts.build import linear_pipeline
+from scripts.build.phases.implementation_map import seed_implementation_map
 from scripts.common.thresholds import QG_DIMS
 
 REFERENCE_PLANS: tuple[tuple[str, str], ...] = (
@@ -88,6 +89,29 @@ def _writer_prompt(level: str, slug: str) -> str:
     return linear_pipeline.render_phase_prompt(WRITER_TEMPLATE, context)
 
 
+def _writer_family_prompt(level: str, slug: str, writer: str) -> str:
+    plan_path = linear_pipeline.plan_path_for(level, slug)
+    plan = linear_pipeline.plan_check(plan_path)
+    plan_content = plan_path.read_text(encoding="utf-8")
+    wiki_manifest = {
+        "slug": slug,
+        "wiki_path": f"wiki/pedagogy/{level}/{slug}.md",
+        "sequence_steps": [],
+        "l2_errors": [],
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+        "external_resources": [],
+    }
+    return linear_pipeline.render_writer_prompt(
+        plan=plan,
+        plan_content=plan_content,
+        knowledge_packet="Knowledge packet stub for prompt-rendering smoke.",
+        wiki_manifest=wiki_manifest,
+        implementation_map=seed_implementation_map(wiki_manifest, plan=plan),
+        writer=writer,
+    )
+
+
 def _reviewer_prompt(level: str, slug: str, dim: str) -> str:
     plan_path = linear_pipeline.plan_path_for(level, slug)
     plan = linear_pipeline.plan_check(plan_path)
@@ -148,6 +172,41 @@ def test_writer_prompt_has_tier1_discipline(level: str, slug: str) -> None:
     ):
         assert tool in rendered, (
             f"Writer Tier-1 MCP-tool reference missing: {tool!r} for {level}/{slug}"
+        )
+
+
+@pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
+def test_writer_prompt_mandates_preemit_audit_lines(level: str, slug: str) -> None:
+    rendered = _writer_prompt(level, slug)
+    for marker in (
+        "<implementation_map_audit>",
+        "<bad_form_audit>",
+        "<activity_split_audit>level=",
+    ):
+        assert marker in rendered, (
+            f"Writer pre-emit audit marker missing: {marker!r} for {level}/{slug}"
+        )
+
+
+@pytest.mark.parametrize(
+    "writer",
+    (
+        "claude-tools",
+        "codex-tools",
+        "gemini-tools",
+        "deepseek-tools",
+        "grok-tools",
+    ),
+)
+def test_writer_family_prompts_mandate_preemit_audit_lines(writer: str) -> None:
+    rendered = _writer_family_prompt("b1", "adjectives-comparative", writer)
+    for marker in (
+        "<implementation_map_audit>",
+        "<bad_form_audit>",
+        "<activity_split_audit>level=",
+    ):
+        assert marker in rendered, (
+            f"Writer pre-emit audit marker missing: {marker!r} for {writer}"
         )
 
 

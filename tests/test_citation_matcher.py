@@ -90,3 +90,47 @@ class TestCitationKeysMatchAcrossTransliterations:
         wrong_grade = extract_citation_key("Zaharijchuk Grade 2, p.24")
         assert plan_key is not None and wrong_grade is not None
         assert not citation_keys_match(wrong_grade, plan_key)
+
+    def test_extracts_plan_page_range(self):
+        plan_key = extract_citation_key("Авраменко Grade 6, p.124-125")
+
+        assert plan_key is not None
+        assert plan_key.page == 124
+        assert plan_key.page_end == 125
+
+    def test_trailing_page_range_hyphen_is_rejected(self):
+        assert extract_citation_key("Авраменко Grade 6, p.124-") is None
+
+    def test_multi_hyphen_page_range_is_rejected(self):
+        assert extract_citation_key("Авраменко Grade 6, p.124-125-127") is None
+
+    def test_reversed_page_range_is_rejected(self):
+        assert extract_citation_key("Авраменко Grade 6, p.125-124") is None
+
+    def test_ukrainian_page_word_extracts_page_range(self):
+        plan_key = extract_citation_key("Авраменко Grade 6, сторінка 124-125")
+
+        assert plan_key is not None
+        assert plan_key.page == 124
+        assert plan_key.page_end == 125
+
+    def test_result_page_matches_plan_page_range(self):
+        plan_key = extract_citation_key("Авраменко Grade 6, p.124-125")
+        result_key = extract_citation_key("Avramenko Grade 6, p.124")
+
+        assert plan_key is not None and result_key is not None
+        assert citation_keys_match(result_key, plan_key)
+
+    def test_result_page_inside_plan_range_matches(self):
+        plan_key = extract_citation_key("Заболотний Grade 8, p.18-21")
+        result_key = extract_citation_key("Zabolotnyi Grade 8, p.20")
+
+        assert plan_key is not None and result_key is not None
+        assert citation_keys_match(result_key, plan_key)
+
+    def test_page_outside_range_and_tolerance_does_not_match(self):
+        plan_key = extract_citation_key("Заболотний Grade 8, p.18-21")
+        far_key = extract_citation_key("Zabolotnyi Grade 8, p.40")
+
+        assert plan_key is not None and far_key is not None
+        assert not citation_keys_match(far_key, plan_key)
