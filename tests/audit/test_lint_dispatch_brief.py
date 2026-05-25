@@ -28,6 +28,13 @@ cd /some/dir
 .venv/bin/pytest tests/
 .venv/bin/ruff check .
 ```""",
+        "Use `.venv/bin/python` for python script execution.",
+        """```bash
+# Avoid using `.venv/bin/python` directly
+```""",
+        """```bash
+cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/delegate.py
+```""",
     ],
 )
 def test_brief_passes_with_required_venv_guard(tmp_path: Path, body: str) -> None:
@@ -65,6 +72,24 @@ echo "5"
 .venv/bin/python scripts/delegate.py dispatch --task-id 2
 ```""",
             11,
+        ),
+        (
+            """```bash
+git checkout main && .venv/bin/python scripts/delegate.py
+```""",
+            4,
+        ),
+        (
+            """```bash
+cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/example && .venv/bin/python scripts/delegate.py
+```""",
+            4,
+        ),
+        (
+            """```bash
+.venv/bin/python --version
+```""",
+            4,
         ),
     ],
 )
@@ -138,3 +163,38 @@ def test_brief_fails_with_pytest_x(tmp_path: Path, capsys, body: str, line: int)
     assert lint_dispatch_brief.main(["--brief", str(brief)]) == 1
     output = capsys.readouterr().out
     assert f"{brief}:{line}: forbid pytest -x in dispatch briefs" in output
+
+
+def test_brief_custom_project_root(tmp_path: Path) -> None:
+    custom_root = tmp_path / "my-custom-curriculum"
+    custom_root.mkdir()
+
+    brief = tmp_path / "custom_pass.md"
+    brief.write_text(
+        f"# Brief\n\n```bash\ncd {custom_root}\n.venv/bin/python scripts/delegate.py\n```\n",
+        encoding="utf-8",
+    )
+
+    assert lint_dispatch_brief.main(["--brief", str(brief), "--project-root", str(custom_root)]) == 0
+
+
+def test_brief_custom_project_root_fail(tmp_path: Path) -> None:
+    custom_root = tmp_path / "my-custom-curriculum"
+    custom_root.mkdir()
+
+    brief = tmp_path / "custom_fail.md"
+    brief.write_text(
+        "# Brief\n\n```bash\n.venv/bin/python scripts/delegate.py\n```\n",
+        encoding="utf-8",
+    )
+
+    assert lint_dispatch_brief.main(["--brief", str(brief), "--project-root", str(custom_root)]) == 1
+
+
+def test_brief_binary_input_exit_2(tmp_path: Path) -> None:
+    brief = tmp_path / "binary.md"
+    brief.write_bytes(b"\x80\x81\x82")
+
+    with pytest.raises(SystemExit) as exc_info:
+        lint_dispatch_brief.main(["--brief", str(brief)])
+    assert exc_info.value.code == 2

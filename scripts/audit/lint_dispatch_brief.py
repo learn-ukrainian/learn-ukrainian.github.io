@@ -94,26 +94,53 @@ def _contexts(text: str) -> list[tuple[int, str, int | None]]:
     return rows
 
 
-def _has_main_cd(line: str) -> bool:
+def _is_executable_invocation(line: str, match: re.Match[str]) -> bool:
+    match_start = match.start()
+
+    # 1. Check if the match is inside backticks.
+    if line[:match_start].count("`") % 2 != 0:
+        return False
+
+    # 2. Check if the match is the first token of a line or command.
+    prefix = line[:match_start].strip()
+    if not prefix:
+        return True
+
+    # A prompt like $ or %
+    if prefix in ("$", "%"):
+        return True
+
+    # Check if the prefix ends with a command separator (&&, ||, ;, |), possibly followed by space and optional prompt
+    return bool(re.search(r"(?:&&|\|\||[;|])\s*[\$%]?$", prefix))
+
+
+def _find_executable_python_match(line: str) -> re.Match[str] | None:
+    for match in PYTHON_RE.finditer(line):
+        if _is_executable_invocation(line, match):
+            return match
+    return None
+
+
+def _has_main_cd(line: str, project_name: str) -> bool:
     for match in CD_RE.finditer(line):
         path = match.group(1).strip("\"'")
-        if "learn-ukrainian" in path and ".worktrees/" not in path:
+        if (project_name in path or "learn-ukrainian" in path) and ".worktrees" not in path:
             return True
     return False
 
 
-def _has_guard(rows: list[tuple[int, str, int | None]], index: int) -> bool:
+def _has_guard(rows: list[tuple[int, str, int | None]], index: int, project_name: str) -> bool:
     _, line, fence_id = rows[index]
-    python_match = PYTHON_RE.search(line)
+    python_match = _find_executable_python_match(line)
     if python_match:
         prefix = line[: python_match.start()]
-        if _has_main_cd(prefix) or SYMLINK_RE.search(prefix):
+        if _has_main_cd(prefix, project_name) or SYMLINK_RE.search(prefix):
             return True
 
     for _, previous_line, previous_fence_id in rows[max(0, index - 5) : index]:
         if previous_fence_id != fence_id:
             continue
-        if _has_main_cd(previous_line) or SYMLINK_RE.search(previous_line):
+        if _has_main_cd(previous_line, project_name) or SYMLINK_RE.search(previous_line):
             return True
     return False
 
@@ -124,23 +151,34 @@ def _is_negative_fence(rows: list[tuple[int, str, int | None]], fence_id: int | 
     return any(fid == fence_id and NEGATIVE_MARKER_RE.search(line) for _, line, fid in rows)
 
 
-def lint_brief(path: Path) -> list[tuple[Path, int, str]]:
+def lint_brief(path: Path, project_root: Path | None = None) -> list[tuple[Path, int, str]]:
+    if project_root is None:
+        project_root = PROJECT_ROOT
+
+    # Derive project name from project_root path, handling worktrees
+    parts = project_root.parts
+    if ".worktrees" in parts:
+        idx = parts.index(".worktrees")
+        project_name = parts[idx - 1] if idx > 0 else project_root.name
+    else:
+        project_name = project_root.name
+
     try:
         content = path.read_text(encoding="utf-8")
     except UnicodeDecodeError as e:
         print(f"Error: {path} is not a valid UTF-8 file ({e})", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(2)
 
     rows = _contexts(content)
     violations = []
 
     try:
-        path_str = str(path.relative_to(PROJECT_ROOT))
+        path_str = str(path.relative_to(project_root))
     except ValueError:
         path_str = str(path)
 
     for index, (line_number, line, fence_id) in enumerate(rows):
-        if fence_id is not None and PYTHON_RE.search(line) and not _has_guard(rows, index):
+        if fence_id is not None and _find_executable_python_match(line) and not _has_guard(rows, index, project_name):
             violations.append((path, line_number, "missing cd-to-main or symlinked-venv before .venv/bin/python"))
 
         if PYTEST_X_RE.search(line) and path_str not in ALLOWLIST_PYTEST_X and not _is_negative_fence(rows, fence_id):
@@ -188,19 +226,26 @@ Related:
         action="store_true",
         help=f"Scan every markdown brief matching {BRIEFS_GLOB} under the repo root.",
     )
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=PROJECT_ROOT,
+        help="Path to the repository root directory (defaults to auto-detected root).",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    paths = sorted(PROJECT_ROOT.glob(BRIEFS_GLOB)) if args.all else [args.brief]
+    project_root = args.project_root
+    paths = sorted(project_root.glob(BRIEFS_GLOB)) if args.all else [args.brief]
     violations = []
 
     for path in paths:
         if not path.exists() or not path.is_file():
             parser.error(f"brief does not exist or is not a file: {path}")
-        violations.extend(lint_brief(path))
+        violations.extend(lint_brief(path, project_root=project_root))
 
     for path, line_number, msg in violations:
         print(f"{path}:{line_number}: {msg}")
