@@ -998,6 +998,7 @@ def search_sources(
                 limit=limit,
             ),
         )
+    require_textbook_section = strategy == "modern_dense_section"
     if strategy == "modern_dense_section":
         strategy = "unified_dense"
     if strategy != "unified_dense":
@@ -1034,6 +1035,30 @@ def search_sources(
     )
     expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
+    if require_textbook_section and not any(
+        match.get("corpus") == "textbook_sections" for match in capped
+    ):
+        textbook_section = next(
+            (match for match in expanded if match.get("corpus") == "textbook_sections"),
+            None,
+        )
+        if textbook_section is None:
+            raw_textbook_section = next(
+                (match for match in merged if match.get("corpus") == "textbook_sections"),
+                None,
+            )
+            if raw_textbook_section is not None:
+                textbook_section = _expand_neighbor_context(raw_textbook_section)
+        if textbook_section is not None:
+            capped = [
+                textbook_section,
+                *[
+                    match
+                    for match in capped
+                    if match.get("corpus") != "textbook_sections"
+                    or match.get("unit_key") != textbook_section.get("unit_key")
+                ],
+            ]
     return capped[:limit]
 
 

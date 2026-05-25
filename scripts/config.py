@@ -580,6 +580,41 @@ def _structural_immersion_rule(band: dict[str, Any]) -> str:
     return structural + language_roles
 
 
+def _ulp_practices_rule(track: str, module_num: int) -> str:
+    """Return the compact ULP S1 presentation baseline for early A1 prompts."""
+    if track != "a1" or module_num > 25:
+        return ""
+    return (
+        "## ULP Presentation Pattern (A1 S1 baseline)\n"
+        "Follow Anna Ohoiko's Ukrainian-first bilingual practices from "
+        "`docs/best-practices/ulp-presentation-pattern.md`:\n"
+        "Key checks: UK-first presentation; em-dash glosses; stress marks; "
+        "named persona.\n"
+        "1. EM-DASH GLOSS: every UK term in EN narration uses UK-first, "
+        "em-dash gloss order: `Приві́т! — Hi!`; never gloss-first.\n"
+        "2. SIDE-BY-SIDE BILINGUAL: narrative passages of 3+ sentences render "
+        "as a two-column MD table (UK left, EN right) or `<DialogueBox>`-style "
+        "side-by-side translation, not EN-only prose with a vocab dump.\n"
+        "3. STRESS MARKS: every multi-syllable UK term has stress marks "
+        "throughout Tab 1 prose, Tab 2 vocabulary, and Tab 3 activity prompts "
+        "(`Приві́т`, `спра́ви`, `чудо́во`).\n"
+        "4. DIALOGUE UK-ONLY: Tab 1 dialogues use pure Ukrainian named-speaker "
+        "turns first. Translation or breakdown follows after the dialogue; do "
+        "not interleave English inside the UK turn text.\n"
+        "5. UK-ONLY Q&A: Tab 3 comprehension/recall stems and answer options "
+        "are Ukrainian-only for content questions. English appears only as "
+        "secondary UI support where needed.\n"
+        "6. TRANSLATE -> WORKBOOK: EN-to-UK translation is a workbook/booster "
+        "activity in Tab 3, never Tab 1 teaching prose.\n"
+        "7. NAMED PERSONA: Tab 1 uses a named persona or named characters, with "
+        "real Ukrainian places, foods, and activities instead of generic L2 "
+        "fillers.\n"
+        "A1 violations: English-first framing, transliteration tables, inline "
+        "EN glossing inside dialogue turns, single-column EN narration with "
+        "vocab dumps, and abstract 'the student must learn' framing."
+    )
+
+
 def _extend_immersion_band(raw_band: dict[str, Any]) -> dict[str, Any]:
     band = dict(raw_band)
     band["advisory_pct_min"] = int(band.pop("min_pct"))
@@ -793,7 +828,11 @@ def get_immersion_rule(
     learner_state: dict | None = None,
 ) -> str:
     """Return the writer-facing immersion instruction for a track/module pair."""
-    return str(compute_immersion_band(track, module_num, learner_state)["rule"])
+    rule = str(compute_immersion_band(track, module_num, learner_state)["rule"])
+    ulp_rule = _ulp_practices_rule(track, module_num)
+    if ulp_rule:
+        return f"{rule}\n\n{ulp_rule}"
+    return rule
 
 if __name__ == "__main__":
     # Simple CLI test

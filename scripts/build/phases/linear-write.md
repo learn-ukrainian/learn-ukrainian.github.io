@@ -163,9 +163,45 @@ The contract below is generated upstream by `seed_implementation_map` and is byt
 
 ### External Resources — multimedia search obligation
 
-Attempt at least one multimedia/resource discovery call (`query_wikipedia`, `search_external`, `search_images`, or browser search). `resources_search_attempted` rejects zero attempts. If the manifest lists `external_resources`, include all verified URLs with their supplied role.
+Every module MUST attempt to find at least one multimedia external resource
+(YouTube clip, blog post, podcast episode, video documentary, image gallery)
+relevant to the lesson topic. The agent MUST make at least ONE call to:
+- `mcp__sources__query_wikipedia` for Ukrainian Wikipedia context, OR
+- `mcp__sources__search_external` for blog/article search, OR
+- `mcp__sources__search_images` for image/gallery discovery, OR
+- browser-based search if available in this dispatch's tool set.
 
-Every `resources.yaml` entry needs `role`. The only role that does not require a `url` is `role: textbook`. Non-textbook roles (`youtube`, `video`, `blog`, `podcast`, `audio`, `article`, `wiki`) also require a non-empty `url:`. Omit unverifiable non-textbook entries (OMIT THE ENTRY); never emit `url: null`, `url: ""`, `url: TBD`, or a missing `url`.
+If the Wiki Obligations Manifest's `external_resources` section is non-empty,
+those URLs are AUTHORITATIVE — include all of them in `resources.yaml` with the
+supplied role.
+
+If the search returns nothing usable, that is acceptable — but the search attempt MUST be recorded in the writer telemetry. If you cannot find usable resources, you MUST still record the search attempt in writer telemetry.
+Skipping the search fails the `resources_search_attempted` gate.
+
+In `resources.yaml`, every entry MUST have a `role` field. Valid roles:
+`textbook` (📚), `youtube` (📺), `video` (🎥), `blog` (📝), `podcast` (🎧),
+`audio` (🎧), `article` (📄), `wiki` (🔗).
+
+**Schema rule for non-textbook roles: `url:` is REQUIRED.**
+
+The deterministic schema enforces:
+- `role: textbook` entries do NOT require `url:`.
+- All other roles (`youtube`, `video`, `blog`, `podcast`, `audio`, `article`, `wiki`) REQUIRE a non-empty `url:` field. Schema validation halts the build on any missing URL for these roles.
+
+If you cannot provide a **verified** URL for a non-textbook entry — e.g. the
+multimedia search returned no usable URL, or the wiki source registry shows
+only a placeholder identifier like `ext-article-N` with no real title and no
+URL — **OMIT THE ENTRY ENTIRELY**. Do not emit:
+
+- `url: null`
+- `url: ""`
+- `url: TBD`
+- the entry without the `url:` field
+
+All four patterns fail schema validation. The `resources_search_attempted` gate
+counts the multimedia search **attempt** in your telemetry, so honest omission
+of an unverifiable entry does NOT regress the search-obligation gate. Truthful
+omission is preferred over schema violation.
 
 ### Phonetic rules — MUST emit IPA notation
 
@@ -243,7 +279,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 
 **Dialogue format (gate-counted).** Ukrainian dialogue lines must be `<DialogueBox uk="..." en="...">` or `> ` blockquotes. Em-dash-only dialogue under `## Діалоги` is invisible to `l2_exposure_floor` and fails the module.
 
-Each Ukrainian dialogue line needs an inline English gloss within 8 tokens (or the DialogueBox `en` prop). Do not put all translations in a block-bottom gloss.
+Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate.
 
 **UK example-sentence density.** A1-m15-24 modules need >=14 gate-countable Ukrainian example surfaces across bullet-list lines and Markdown table data rows. Use bullets/tables for paradigms and trap pairs; prose-only paradigms count zero.
 
