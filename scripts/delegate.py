@@ -525,17 +525,24 @@ def _validate_existing_worktree(
 
 
 def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
-    """Symlink heavy generated data files into a delegated worktree.
+    """Symlink heavy local-only files into a delegated worktree.
 
-    Worktrees omit gitignored DBs such as data/vesum.db, but Python quality
+    Worktrees omit gitignored DBs and dependency directories, but quality
     gates open them relative to the running checkout. Use symlinks so each
-    delegated worktree sees the same local data without copying multi-GB files.
+    delegated worktree sees the same local files without copying multi-GB
+    directories.
     """
-    for relative_path in ("data/vesum.db", "data/sources.db"):
+    for relative_path in (
+        "data/vesum.db",
+        "data/sources.db",
+        ".venv",
+        "node_modules",
+        "starlight/node_modules",
+    ):
         source = main_repo_root / relative_path
         if not source.exists():
             print(
-                f"⚠️  skipping worktree data link for missing {source}",
+                f"⚠️  skipping worktree link for missing {source}",
                 file=sys.stderr,
             )
             continue
@@ -546,7 +553,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 
         if target.parent.exists() and not target.parent.is_dir():
             print(
-                f"⚠️  skipping worktree data link because {target.parent} "
+                f"⚠️  skipping worktree link because {target.parent} "
                 "is not a directory",
                 file=sys.stderr,
             )
