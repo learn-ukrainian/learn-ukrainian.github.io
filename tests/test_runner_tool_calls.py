@@ -229,6 +229,55 @@ def test_codex_adapter_parses_matching_rollout_tool_calls(
     assert result.tool_calls[0]["output_summary"] == "день: verified"
 
 
+def test_codex_adapter_attaches_function_call_output(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    home = tmp_path / "home"
+    today = datetime.now(UTC)
+    rollout_dir = (
+        home
+        / ".codex"
+        / "sessions"
+        / f"{today.year:04d}"
+        / f"{today.month:02d}"
+        / f"{today.day:02d}"
+    )
+    rollout_dir.mkdir(parents=True)
+    output_file = tmp_path / "codex-output.txt"
+    output_file.write_text("Final answer.", encoding="utf-8")
+    prompt = "Write the module."
+    monkeypatch.setattr(Path, "home", lambda: home)
+    adapter = CodexAdapter()
+    adapter._reset_per_invocation_state()
+
+    rollout = rollout_dir / "rollout-test.jsonl"
+    rollout.write_text(
+        "\n".join(
+            [
+                '{"type":"event_msg","payload":{"type":"user_message","message":"Write the module."}}',
+                '{"type":"response_item","payload":{"type":"function_call","name":"search_text","namespace":"mcp__sources__","arguments":"{\\"query\\":\\"ступені\\"}","call_id":"call-1"}}',
+                '{"type":"response_item","payload":{"type":"function_call_output","call_id":"call-1","output":"Wall time: 0.0010 seconds\\nOutput:\\n[{\\"type\\":\\"text\\",\\"text\\":\\"Found 1 result\\"}]"}}',
+                '{"type":"event_msg","payload":{"type":"mcp_tool_call_end","call_id":"call-2","result":{"Ok":{"content":[{"type":"text","text":"verified"}]}}}}',
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = adapter.parse_response(
+        stdout="session id: 00000000-0000-0000-0000-000000000002",
+        stderr="",
+        returncode=0,
+        output_file=output_file,
+        plan=InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt),
+    )
+
+    assert result.ok is True
+    assert result.tool_calls[0]["name"] == "mcp__sources__search_text"
+    assert result.tool_calls[0]["result"] == [{"type": "text", "text": "Found 1 result"}]
+    assert result.tool_calls[0]["output_summary"] == '[{"text": "Found 1 result", "type": "text"}]'
+
+
 def test_tool_call_output_summary_truncation() -> None:
     summary = summarize_tool_output("x" * 10_000)
 

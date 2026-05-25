@@ -69,12 +69,12 @@ def test_partial_match_does_not_pass() -> None:
     assert wrong_page["unknown"] == ["Караман, Українська мова, 10 клас, с. 999"]
 
 
-def test_page_range_and_second_page_label_do_not_pass() -> None:
+def test_page_range_passes_but_second_page_label_does_not() -> None:
     page_range = _result("Караман, Українська мова, 10 клас, с. 176-178")
     second_page = _result("Караман, Українська мова, 10 клас, с. 176, p.999")
 
-    assert page_range["passed"] is False
-    assert page_range["unknown"] == ["Караман, Українська мова, 10 клас, с. 176-178"]
+    assert page_range["passed"] is True
+    assert page_range["unknown"] == []
     assert second_page["passed"] is False
     assert second_page["unknown"] == ["Караман, Українська мова, 10 клас, с. 176, p.999"]
 

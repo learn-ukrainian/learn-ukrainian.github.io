@@ -228,6 +228,7 @@ def _is_tool_result_payload(payload: Mapping[str, Any]) -> bool:
         "tool_output",
         "function_result",
         "function_call_output",
+        "mcp_tool_call_end",
     } or (
         any(key in payload for key in ("tool_use_id", "tool_call_id", "call_id"))
         and any(key in payload for key in ("content", "output", "result"))
@@ -287,7 +288,32 @@ def _coerce_arguments(value: Any) -> dict[str, Any]:
 def _tool_output(payload: Mapping[str, Any]) -> Any:
     for key in ("output", "result", "content", "observation"):
         if key in payload:
-            return payload.get(key)
+            return _coerce_tool_output(payload.get(key))
+    return None
+
+
+def _coerce_tool_output(value: Any) -> Any:
+    if not isinstance(value, str):
+        return value
+    parsed = _parse_codex_output_envelope(value)
+    return parsed if parsed is not None else value
+
+
+def _parse_codex_output_envelope(value: str) -> Any | None:
+    """Decode Codex CLI ``function_call_output`` wrappers when possible."""
+    candidates = [value.strip()]
+    marker = "\nOutput:\n"
+    if marker in value:
+        candidates.insert(0, value.split(marker, 1)[1].strip())
+    for candidate in candidates:
+        if not candidate:
+            continue
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, (dict, list)):
+            return parsed
     return None
 
 

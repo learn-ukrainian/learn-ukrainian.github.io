@@ -45,26 +45,32 @@ authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 
 ## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)
 
-Before the four artifact fences, emit one `<plan_reasoning section="...">...</plan_reasoning>` block per contracted section. Keep each block <=200 words.
+Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section (<=200 words).
 
 Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
 
-<word_budget>Section word allocation and running total check against {WORD_TARGET} (gate tolerates 8% lower band per scripts/build/linear_pipeline.py::_word_count_gate).</word_budget>
-<plan_vocab>Required plan-vocabulary lemmas used in this section, with the exact Ukrainian sentence that grounds each lemma.</plan_vocab>
-<register>The immersion ratio from the Immersion Rule and how this section preserves it.</register>
+<word_budget>Section word allocation and running total vs {WORD_TARGET}.</word_budget>
+<plan_vocab>Required plan-vocabulary lemmas used here, with the grounding Ukrainian sentence.</plan_vocab>
+<register>Immersion ratio from the Immersion Rule and how this section preserves it.</register>
 <teaching_sequence>Which Knowledge Packet facts/citations this section uses.</teaching_sequence>
 <implementation_map>
 <!-- rule_id: #R-IMPL-MAP-COMPLETE -->
-List every `obligation_id` exactly once across all section blocks with: obligation_id, artifact, location, treatment. Silent omission causes `implementation_map_missing` hard failure. If a row truly cannot fit A1 scope, emit artifact/location `<none>` and treatment `deferred (out of A1 scope) — <one-sentence justification>`.
+List every `obligation_id` exactly once: obligation_id, artifact, location, treatment. Omission causes `implementation_map_missing`. If a row cannot fit A1 scope, emit artifact/location `<none>` and treatment `deferred — <why>`.
 </implementation_map>
-<verification_plan>Specific MCP tools to be called for this section's claims.</verification_plan>
-<verification_trace>Exact tool call signatures you will actually make; omit speculative examples.</verification_trace>
+<verification_plan>MCP tools to call for this section's claims.</verification_plan>
+<verification_trace>Exact tool call signatures; omit speculative examples.</verification_trace>
 
-Prefer single-call primitives for verification: `verify_quote`, `verify_source_attribution`, `check_modern_form`, `check_russian_shadow`. Use search tools when you need evidence chunks to quote.
+Prefer single-call verification: `verify_quote`, `verify_source_attribution`, `check_modern_form`, `check_russian_shadow`. Search for quote evidence.
 
-Before artifact fences, emit:
-`<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[<deferred IDs>]</implementation_map_audit>`
-If `M < N`, stop and fix the map before writing artifacts.
+Emit audit lines in order:
+
+1. `<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[<deferred IDs>]</implementation_map_audit>`
+2. `<bad_form_audit>italic_bad_form_patterns_found=N converted_to_marker=N remaining=0</bad_form_audit>`
+3. `<activity_split_audit>level={LEVEL} inline_n=N workbook_n=N inline_range=[lo,hi] workbook_range=[lo,hi] split_valid=true|false</activity_split_audit>`
+
+If `M < N`, fix the map before artifacts. If `bad_form_audit.remaining != 0`,
+convert remaining italic/bare bad forms to `<!-- bad -->...<!-- /bad -->`.
+If `activity_split_audit.split_valid=false`, rebalance inline/workbook first.
 
 ## Tier-1 verification discipline (do this WHILE drafting — #1661)
 

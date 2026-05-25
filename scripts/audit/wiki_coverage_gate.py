@@ -55,6 +55,54 @@ _INLINE_FIELD_RE = re.compile(
     r"(?=\s*[;|]\s*(?:obligation_id|artifact|location|treatment)\s*:|\s*$)",
     re.IGNORECASE,
 )
+_COMPACT_PIPE_ENTRY_RE = re.compile(
+    r"(?:^|\s)(?:\|\s*)?(?P<id>[-\w]+)\s*\|\s*"
+    r"(?P<artifact>module\.md|activities\.yaml)\s*\|\s*"
+    r"(?P<location>[^|<\n]+?)\s*\|\s*"
+    r"(?P<treatment>.*?)(?=\s+(?:\|\s*)?[-\w]+\s*\|\s*(?:module\.md|activities\.yaml)\s*\||\s*$)",
+    re.IGNORECASE | re.DOTALL,
+)
+_WORKBOOK_AGGREGATE_ACTIVITY_TYPES = (
+    "anagram",
+    "authorial-intent",
+    "cloze",
+    "comparative-study",
+    "count-syllables",
+    "critical-analysis",
+    "debate",
+    "dialect-comparison",
+    "divide-words",
+    "error-correction",
+    "essay-response",
+    "etymology-trace",
+    "fill-in",
+    "grammar-identify",
+    "group-sort",
+    "highlight-morphemes",
+    "mark-the-words",
+    "match-up",
+    "multiple-choice",
+    "observe",
+    "odd-one-out",
+    "order",
+    "paleography-analysis",
+    "phrase-table",
+    "pick-syllables",
+    "quiz",
+    "reading",
+    "source-evaluation",
+    "transcription",
+    "translate",
+    "translation-critique",
+    "true-false",
+    "unjumble",
+)
+_WORKBOOK_AGGREGATE_LOCATION_RE = re.compile(
+    r"^workbook\b.*\b("
+    + "|".join(re.escape(activity_type) for activity_type in _WORKBOOK_AGGREGATE_ACTIVITY_TYPES)
+    + r")\b",
+    re.IGNORECASE,
+)
 
 
 def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
@@ -97,6 +145,14 @@ def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
     entries: dict[str, dict[str, str]] = {}
     for match in matches:
         body = match.group("body")
+        for pipe_match in _COMPACT_PIPE_ENTRY_RE.finditer(body):
+            obligation_id = pipe_match.group("id").strip()
+            entries[obligation_id] = {
+                "obligation_id": obligation_id,
+                "artifact": pipe_match.group("artifact").strip(),
+                "location": pipe_match.group("location").strip(),
+                "treatment": pipe_match.group("treatment").strip().rstrip("|").strip(),
+            }
         current_id: str | None = None
         for line in body.splitlines():
             id_match = _OBLIGATION_RE.search(line)
@@ -549,7 +605,13 @@ def _activity_text(activities: list[dict[str, Any]], location: str) -> str:
         return "\n".join(s for activity in activities for s in _flatten_strings(activity))
 
     location_cf = location.casefold().strip()
-    if location_cf in {"activities.yaml", "all", "any", "(any)", "(any activity)"}:
+    if location_cf in {
+        "activities.yaml",
+        "all",
+        "any",
+        "(any)",
+        "(any activity)",
+    } or _WORKBOOK_AGGREGATE_LOCATION_RE.search(location_cf):
         return "\n".join(s for activity in activities for s in _flatten_strings(activity))
 
     for activity in activities:

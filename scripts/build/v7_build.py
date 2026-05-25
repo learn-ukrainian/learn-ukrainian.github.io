@@ -641,15 +641,41 @@ def _writer_prompt(
     )
 
 
+_PRE_EMIT_AUDIT_LINE_RE = re.compile(
+    r"<(?P<tag>implementation_map_audit|bad_form_audit|activity_split_audit)\b"
+    r"[^>]*>.*?</(?P=tag)>",
+    re.DOTALL,
+)
+
+
+def _writer_preemit_audit_context(module_dir: Path) -> str:
+    path = module_dir / "writer_output.raw.md"
+    if not path.exists():
+        return ""
+    raw_output = path.read_text(encoding="utf-8")
+    lines = [
+        " ".join(match.group(0).split())
+        for match in _PRE_EMIT_AUDIT_LINE_RE.finditer(raw_output)
+    ]
+    if not lines:
+        return ""
+    return "## writer_output.raw.md pre-emit audit lines\n\n" + "\n".join(lines)
+
+
 def _generated_content(module_dir: Path) -> str:
     parts = []
+    audit_context = _writer_preemit_audit_context(module_dir)
+    if audit_context:
+        parts.append(audit_context)
     for artifact in linear_pipeline.WRITER_ARTIFACTS:
         path = module_dir / artifact
         parts.append(f"## {artifact}\n\n{path.read_text(encoding='utf-8')}")
     return "\n\n".join(parts)
 
 
-def _reviewer_for_writer(writer: str) -> str:
+def _reviewer_for_writer(writer: str, reviewer_override: str | None = None) -> str:
+    if reviewer_override:
+        return _normalize_writer(reviewer_override)
     if writer == "claude-tools":
         return "gemini-tools"
     if writer == "grok-tools":
@@ -669,11 +695,12 @@ def _run_llm_qg(
     plan_content: str,
     module_dir: Path,
     writer: str,
+    reviewer_override: str | None = None,
     stdout_silence_timeout: int | None = None,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
-    reviewer = _reviewer_for_writer(writer)
+    reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
 
     assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
@@ -722,13 +749,14 @@ def _run_wiki_coverage_review(
     plan_content: str,
     module_dir: Path,
     writer: str,
+    reviewer_override: str | None = None,
     wiki_manifest: str | Mapping[str, Any],
     wiki_coverage_gate: Mapping[str, Any],
     stdout_silence_timeout: int | None = None,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
-    reviewer = _reviewer_for_writer(writer)
+    reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
 
     assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
@@ -836,6 +864,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "Writer backend for the one-shot V7 write phase "
             "(default: claude-tools; claude/gemini/codex/grok/deepseek/qwen/agy "
             "aliases normalize to <name>-tools)."
+        ),
+    )
+    parser.add_argument(
+        "--reviewer",
+        choices=WRITER_CHOICES,
+        default=None,
+        help=(
+            "Override the reviewer backend for wiki coverage review and LLM QG. "
+            "Defaults to the pipeline's writer-specific reviewer routing; aliases "
+            "normalize to <name>-tools."
         ),
     )
     parser.add_argument(
@@ -996,6 +1034,7 @@ def _run(args: argparse.Namespace) -> int:
     level = args.level.lower()
     slug = args.slug
     writer = _normalize_writer(args.writer)
+    reviewer_override = _normalize_writer(args.reviewer) if args.reviewer else None
     module_started_at = time.monotonic()
     phase = "start"
     timeout_agent = writer
@@ -1249,7 +1288,7 @@ def _run(args: argparse.Namespace) -> int:
 
         phase = "wiki_coverage_review"
         _phase_started(archive, phase)
-        timeout_agent = _reviewer_for_writer(writer)
+        timeout_agent = _reviewer_for_writer(writer, reviewer_override)
         started_at = time.monotonic()
         if (
             resume_enabled
@@ -1266,6 +1305,7 @@ def _run(args: argparse.Namespace) -> int:
                 plan_content=plan_content,
                 module_dir=module_dir,
                 writer=writer,
+                reviewer_override=reviewer_override,
                 wiki_manifest=wiki_manifest,
                 wiki_coverage_gate=wiki_coverage_gate,
                 stdout_silence_timeout=args.writer_timeout,
@@ -1308,7 +1348,7 @@ def _run(args: argparse.Namespace) -> int:
 
         phase = "llm_qg"
         _phase_started(archive, phase)
-        timeout_agent = _reviewer_for_writer(writer)
+        timeout_agent = _reviewer_for_writer(writer, reviewer_override)
         started_at = time.monotonic()
         if (
             resume_enabled
@@ -1325,6 +1365,7 @@ def _run(args: argparse.Namespace) -> int:
                 plan_content=plan_content,
                 module_dir=module_dir,
                 writer=writer,
+                reviewer_override=reviewer_override,
                 stdout_silence_timeout=args.writer_timeout,
             )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)

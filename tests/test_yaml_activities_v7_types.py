@@ -3,6 +3,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from yaml_activities import ActivityParser
@@ -109,3 +111,99 @@ def test_v7_authoring_types_parse_and_render(tmp_path):
 
     assert "ActivityPlaceholder" not in mdx
 
+
+def test_grammar_identify_accepts_sentence_alias(tmp_path):
+    fixture = tmp_path / "grammar.yaml"
+    fixture.write_text(
+        """
+- id: grammar-1
+  type: grammar-identify
+  title: Конструкція
+  instruction: Визначте модель порівняння.
+  items:
+    - sentence: Петро вищий за Марію.
+      answer: за + знахідний відмінок
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+    activities = parser.parse(fixture)
+
+    assert activities[0].items[0].text == "Петро вищий за Марію."
+    assert activities[0].items[0].form == "Визначте модель порівняння."
+    assert "<GrammarIdentify" in parser.to_mdx(activities)
+
+
+def test_grammar_identify_requires_text_sentence_or_word(tmp_path):
+    fixture = tmp_path / "grammar.yaml"
+    fixture.write_text(
+        """
+- id: grammar-1
+  type: grammar-identify
+  title: Конструкція
+  instruction: Визначте модель порівняння.
+  items:
+    - answer: за + знахідний відмінок
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+
+    with pytest.raises(ValueError, match="requires text, sentence, or word"):
+        parser.parse(fixture)
+
+
+def test_odd_one_out_accepts_options_answer_alias(tmp_path):
+    fixture = tmp_path / "odd.yaml"
+    fixture.write_text(
+        """
+- id: odd-1
+  type: odd-one-out
+  title: Зайва форма
+  instruction: Оберіть форму, яка не належить до групи.
+  items:
+    - options: [сильніший, молодший, більш цікавий, дорожчий]
+      answer: більш цікавий
+      explanation: Це складена форма, решта прості.
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+    activities = parser.parse(fixture)
+
+    assert activities[0].items[0].words == [
+        "сильніший",
+        "молодший",
+        "більш цікавий",
+        "дорожчий",
+    ]
+    assert activities[0].items[0].correct == 2
+    assert "<OddOneOut" in parser.to_mdx(activities)
+
+
+def test_highlight_morphemes_accepts_answer_alias(tmp_path):
+    fixture = tmp_path / "morphemes.yaml"
+    fixture.write_text(
+        """
+- id: morphemes-1
+  type: highlight-morphemes
+  title: Суфікси
+  instruction: Позначте суфікс.
+  text: сильніший
+  items:
+    - word: сильніший
+      answer: -іш-
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+    activities = parser.parse(fixture)
+
+    assert activities[0].morphemes[0].word == "сильніший"
+    assert activities[0].morphemes[0].morpheme == "-іш-"
+    assert activities[0].morphemes[0].type == "suffix"
+    assert "<HighlightMorphemes" in parser.to_mdx(activities)

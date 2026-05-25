@@ -152,5 +152,5 @@ def test_normalize_tool_calls_correlates_codex_function_call_output() -> None:
 
     assert len(calls) == 1
     assert calls[0]["name"] == "mcp__sources__search_text"
-    assert calls[0]["result"].startswith("Wall time: 0.0212 seconds\nOutput:\n")
+    assert calls[0]["result"] == [{"type": "text", "text": "Found 10 results"}]
     assert "Found 10 results" in calls[0]["output_summary"]
