@@ -32,7 +32,7 @@ def _parse_vocab_hint_lemma(entry: str) -> str | None:
 
 
 def _load_planned_vocab(track: str, slug: str) -> list[str]:
-    """Load planned vocabulary lemmas from vocabulary_hints."""
+    """Load planned vocabulary lemmas from plan targets and hints."""
     path = CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml"
     if not path.exists():
         return []
@@ -44,14 +44,6 @@ def _load_planned_vocab(track: str, slug: str) -> list[str]:
         return []
 
     if not isinstance(plan, dict):
-        return []
-
-    hints = plan.get("vocabulary_hints")
-    if isinstance(hints, dict):
-        sections = [hints.get("required", []), hints.get("recommended", [])]
-    elif isinstance(hints, list):
-        sections = [hints]
-    else:
         return []
 
     lemmas: list[str] = []
@@ -79,12 +71,23 @@ def _load_planned_vocab(track: str, slug: str) -> list[str]:
             lemmas.append(lemma)
             seen.add(lemma)
 
-    for section in sections:
+    def add_section(section) -> None:
         if isinstance(section, list):
             for entry in section:
                 add_entry(entry)
         else:
             add_entry(section)
+
+    targets = plan.get("targets")
+    if isinstance(targets, dict):
+        add_section(targets.get("new_vocabulary", []))
+
+    hints = plan.get("vocabulary_hints")
+    if isinstance(hints, dict):
+        add_section(hints.get("required", []))
+        add_section(hints.get("recommended", []))
+    elif isinstance(hints, list):
+        add_section(hints)
 
     return lemmas
 
@@ -92,8 +95,8 @@ def _load_planned_vocab(track: str, slug: str) -> list[str]:
 def _load_vocab(track: str, slug: str) -> list[str]:
     """Load vocabulary lemmas for a module."""
     path = CURRICULUM_ROOT / track / slug / "vocabulary.yaml"
-    built_vocab: list[str] = []
     if path.exists():
+        built_vocab: list[str] = []
         try:
             with open(path, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
@@ -107,8 +110,9 @@ def _load_vocab(track: str, slug: str) -> list[str]:
                     ]
         except Exception:
             built_vocab = []
+        return built_vocab
 
-    return built_vocab or _load_planned_vocab(track, slug)
+    return _load_planned_vocab(track, slug)
 
 
 def _load_grammar(track: str, slug: str) -> list[str]:
