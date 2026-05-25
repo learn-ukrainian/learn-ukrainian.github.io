@@ -266,6 +266,19 @@ RESOURCE_GROUPS = (
     ('online', '🔗', 'Online resources', 'Онлайн-ресурси', {'wiki', 'website'}),
 )
 
+_PIPELINE_METADATA_LINE_RE = re.compile(
+    r"\b(?:writer telemetry|retrieved chunk(?:_id)?\b)",
+    re.IGNORECASE,
+)
+_PIPELINE_METADATA_FRAGMENT_RE = re.compile(
+    r"\([^)]*\b(?:packet_)?chunk_id\b[^)]*\)"
+    r"|\([^)]*\b(?:wiki|vesum)_query_id\b[^)]*\)"
+    r"|\bknowledge packet anchor\s+[A-Za-z0-9_-]+\s*:?"
+    r"|\b(?:packet_)?chunk_id\s*[:=]\s*[\w./:-]+"
+    r"|\b(?:wiki|vesum)_query_id\s*[:=]\s*[\w./:-]+",
+    re.IGNORECASE,
+)
+
 LEGACY_RESOURCE_ROLE = {
     'podcasts': 'podcast',
     'youtube': 'youtube',
@@ -318,12 +331,39 @@ def _resource_sort_key(item: dict) -> tuple[int, int, str]:
     )
 
 
+def _public_resource_text(value: object) -> str:
+    """Return learner-facing resource text with pipeline metadata removed."""
+    text = str(value or '').strip()
+    if not text:
+        return ''
+
+    lines = [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip() and not _PIPELINE_METADATA_LINE_RE.search(line)
+    ]
+    text = ' '.join(lines)
+    text = _PIPELINE_METADATA_FRAGMENT_RE.sub('', text)
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r'\s+([,.;:])', r'\1', text)
+    text = re.sub(r'^[\s,.;:()/-]+|[\s,;:()/-]+$', '', text)
+    return text
+
+
+def _public_resource_description(item: dict) -> str:
+    for key in ('match_reason', 'description', 'notes', 'channel', 'source'):
+        desc = _public_resource_text(item.get(key))
+        if desc:
+            return desc
+    return ''
+
+
 def _format_textbook_resource(item: dict) -> list[str]:
-    title = str(item.get('title') or 'Unknown').strip()
-    author = str(item.get('author') or '').strip()
+    title = _public_resource_text(item.get('title')) or 'Unknown'
+    author = _public_resource_text(item.get('author'))
     pages = item.get('pages') or item.get('page') or ''
-    desc = str(item.get('description') or item.get('notes') or '').strip()
-    source_ref = str(item.get('source_ref') or title).strip()
+    desc = _public_resource_description(item)
+    source_ref = _public_resource_text(item.get('source_ref')) or title
 
     display_title = source_ref
     if pages and str(pages) not in display_title:
@@ -340,16 +380,9 @@ def _format_textbook_resource(item: dict) -> list[str]:
 def _format_linked_resource(item: dict) -> str:
     role = _resource_role(item)
     icon = RESOURCE_ROLE_ICONS.get(role, '🔗')
-    title = str(item.get('title') or 'Unknown').strip()
+    title = _public_resource_text(item.get('title')) or 'Unknown'
     url = validate_and_clean_url(str(item.get('url') or ''), title)
-    desc = (
-        item.get('match_reason')
-        or item.get('description')
-        or item.get('notes')
-        or item.get('channel')
-        or item.get('source')
-        or ''
-    )
+    desc = _public_resource_description(item)
     label = f"[{title}]({url})" if url else f"**{title}**"
     suffix = f" — {desc}" if desc else ""
     return f"> - {icon} {label}{suffix}"

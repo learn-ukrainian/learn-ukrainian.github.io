@@ -107,6 +107,12 @@ references:
   pages: "176"
   description: Reflexive verbs with -ся.
   role: textbook
+- title: "Morning routine wiki (wiki_query_id: wiki-123)"
+  url: https://example.com/wiki
+  role: wiki
+  match_reason: "writer telemetry retrieved chunk_id: wiki-123"
+  description: Background article.
+  wiki_query_id: wiki-123
 """,
         encoding="utf-8",
     )
@@ -135,3 +141,10 @@ references:
     assert "INJECT_ACTIVITY" not in mdx
     assert "by Unknown" not in mdx
     assert "Караман" in mdx
+    assert "Morning routine wiki" in mdx
+    assert "Background article." in mdx
+    assert "chunk_id" not in mdx
+    assert "retrieved chunk" not in mdx
+    assert "writer telemetry" not in mdx
+    assert "wiki_query_id" not in mdx
+    assert "vesum_query_id" not in mdx

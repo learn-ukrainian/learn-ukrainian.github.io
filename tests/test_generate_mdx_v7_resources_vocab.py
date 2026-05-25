@@ -114,3 +114,37 @@ def test_format_resources_for_mdx_groups_mixed_roles_with_icons():
     assert "📝 [Morning vocabulary blog](https://example.com/blog)" in mdx
     assert "🎧 [Audio drill](https://example.com/audio)" in mdx
     assert "🔗 [Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx
+
+
+def test_format_resources_for_mdx_strips_pipeline_metadata_from_public_text():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "Захарійчук Grade 1 (chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024)",
+            "source_ref": "Knowledge Packet anchor S1 (chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024): Захарійчук Grade 1",
+            "pages": "24",
+            "notes": (
+                "writer telemetry retrieved chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024\n"
+                "Ранкова рутина у підручнику."
+            ),
+            "packet_chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0024",
+            "role": "textbook",
+        },
+        {
+            "title": "Morning routine article (wiki_query_id: wiki-123)",
+            "url": "https://example.com/morning",
+            "match_reason": "retrieved chunk_id: wiki-123",
+            "description": "Background article.",
+            "wiki_query_id": "wiki-123",
+            "role": "article",
+        },
+    ])
+
+    assert "Захарійчук Grade 1, p. 24" in mdx
+    assert "Ранкова рутина у підручнику." in mdx
+    assert "[Morning routine article](https://example.com/morning)" in mdx
+    assert "Background article." in mdx
+    assert "chunk_id" not in mdx
+    assert "retrieved chunk" not in mdx
+    assert "writer telemetry" not in mdx
+    assert "wiki_query_id" not in mdx
+    assert "vesum_query_id" not in mdx
