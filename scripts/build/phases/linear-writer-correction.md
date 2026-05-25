@@ -33,11 +33,19 @@ Forbidden phrases as instructions or strategy: "regenerate", "rewrite",
 Keep the current structure and patch only the specific failed gate described
 below.
 
+**Do NOT replace any word that is not explicitly listed in the gate feedback
+above.** If the gate names 5 offending tokens, modify exactly 5 tokens. The
+rest of the prose stays byte-for-byte identical.
+
 ## Gate Feedback
 
 ```yaml
 {CORRECTION_SECTION}
 ```
+
+## Surgical instructions for this gate
+
+{GATE_SPECIFIC_INSTRUCTIONS}
 
 ## When `gate = tool_theatre`
 
