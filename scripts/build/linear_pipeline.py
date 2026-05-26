@@ -538,7 +538,7 @@ QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
         r"[ыэёъЫЭЁЪ]",
     ),
     "surzhyk_clean": (
-        r"\bшо\b",
+        # r"\bшо\b",  # Reclassified as register_consistency (WARN), see PR #2294
         r"\bканєшно\b",
         r"\bсчас\b",
         r"\bнє\b",
@@ -6120,6 +6120,7 @@ def run_python_qg(
     )
     record("ai_slop_clean", _ai_slop_gate(prose_text))
     record("russianisms_strict", _russianisms_strict_gate(text_for_quality))
+    record("register_consistency", _register_consistency_gate(module_text, plan))
     record("engagement_floor", _engagement_floor_gate(module_text, plan))
     record("component_props", _component_prop_gate(activities))
     for gate_name, gate_report in _quality_fields(text_for_quality).items():
@@ -9314,6 +9315,60 @@ def _russianisms_strict_gate(text: str) -> dict[str, Any]:
         "warning_findings": warning_findings,
         "critical_count": len(critical_findings),
         "warning_count": len(warning_findings),
+    }
+
+
+def _register_consistency_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    level = str(plan.get("level", "")).lower()
+
+    if level in {"c1", "c2", "pro"}:
+        return {
+            "passed": True,
+            "verdict": "PASS",
+            "severity": "WARN",
+            "violations": [],
+            "violation_count": 0,
+            "scope_level": level,
+        }
+
+    violations = []
+    in_dialogue = False
+    in_code = False
+
+    lines = text.splitlines()
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_code = not in_code
+            continue
+
+        if not in_code and "<DialogueBox" in line:
+            in_dialogue = True
+
+        if in_code or in_dialogue or stripped.startswith(">"):
+            if "</DialogueBox>" in line and not in_code:
+                in_dialogue = False
+            continue
+
+        matches = list(re.finditer(r"(?i)\bшо\b", line))
+        if matches:
+            for match in matches:
+                violations.append({
+                    "form": match.group(0),
+                    "line": i,
+                    "context": stripped[:100]
+                })
+
+        if "</DialogueBox>" in line and not in_code:
+            in_dialogue = False
+
+    return {
+        "passed": True,
+        "verdict": "WARN" if violations else "PASS",
+        "severity": "WARN",
+        "violations": violations,
+        "violation_count": len(violations),
+        "scope_level": level,
     }
 
 

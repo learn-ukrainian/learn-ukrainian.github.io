@@ -291,6 +291,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Dialogue format (gate-counted).** Ukrainian dialogue lines must be `<DialogueBox uk="..." en="...">` or `> ` blockquotes. Em-dash-only dialogue under `## Діалоги` is invisible to `l2_exposure_floor` and fails the module.
 
 Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate.
+`шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. Mention the literary↔colloquial pair in vocab when the module surfaces it.
 
 **UK example-sentence density.** A1-m15-24 modules need >=14 gate-countable Ukrainian example surfaces across bullet-list lines and Markdown table data rows. Use bullets/tables for paradigms and trap pairs; prose-only paradigms count zero.
 
