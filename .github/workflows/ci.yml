@@ -248,6 +248,31 @@ jobs:
           fi
           echo "✅ No new root-level scripts"
 
+  mdx-source-parity:
+    name: MDX Source Parity
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true' && github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install PyYAML
+
+      - name: Check MDX source parity
+        env:
+          MDX_PARITY_BULK_REGEN: ${{ contains(github.event.pull_request.title, '[regen-mdx]') || contains(github.event.pull_request.title, '[bulk-regen]') || contains(github.event.pull_request.body, '[regen-mdx]') || contains(github.event.pull_request.body, '[bulk-regen]') && '1' || '0' }}
+        run: |
+          python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
+
   lesson-schema-drift:
     name: Lesson Schema Drift
     runs-on: ubuntu-latest
