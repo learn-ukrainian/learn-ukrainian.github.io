@@ -4,7 +4,7 @@ This file records the version-lock state of the bio track gap audit SSOT.
 
 ## Version 1.0 (2026-05-26)
 
-**Lock SHA:** (to be recorded on the merge commit of this file into `main`)
+**Lock SHA:** `78c1ee5963` (commit landed 2026-05-26)
 **Total scope:** 130 proposed bio additions + 5 flagged + 6 removed-from-draft
 **Epic:** [#2309](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2309)
 
