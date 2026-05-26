@@ -245,7 +245,7 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 - Slug: {MODULE_SLUG}
 - Topic: {TOPIC_TITLE}
 - Phase: {PHASE}
-- Word target: {WORD_TARGET}
+- Word **minimum**: {WORD_TARGET} — this is a FLOOR, not a target. The `word_count` gate hard-rejects below 92% of this number (8% tolerance per `_WORD_COUNT_TOLERANCE_BELOW`). Overshoot by 10-15% — your self-counted prose total runs ~10-15% higher than the gate's strict tokenization (which excludes markdown comments and may exclude certain JSX attribute text). The 2026-05-23 user direction is explicit: word counts are MINIMUMS; overshoot is welcome, never an error. Empirical evidence (m20 builds #7-#8 with codex-tools): a writer aiming exactly at the target lands 80-95% of the gate's count and triggers a hard fail. Plan your section budgets accordingly — sum your sections to ~1.15× the minimum.
 
 ## Learner State
 
