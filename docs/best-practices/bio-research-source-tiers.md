@@ -64,6 +64,13 @@ archival detail, institutional memory, and field-specific expertise.
   "Carleton URI" label unless the actual paper has been found.
 - Інститут української археографії та джерелознавства ім. М. С. Грушевського
   НАН України — institutional publications and source editions.
+- **Галузевий державний архів СБУ (ГДА СБУ)** — Sectoral State Archive of the
+  Security Service of Ukraine. Canonical primary-source repository for
+  declassified NKVD, MGB, and KGB case files, including the Розстріляне
+  Відродження interrogation/execution records, OUN/UPA underground records, and
+  Soviet-era dissident files (шістдесятники, UHG). Use as primary-source
+  documentation in dossier §10, NOT as authoritative interpretation of the
+  figure's identity or motives.
 - Інститут історії України НАН України electronic library, periodicals, and
   source portals outside ЕІУ.
 - НАН України institute profile pages and university-hosted memorial pages for
