@@ -292,7 +292,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 
 Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate.
 
-`шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, mention the literary↔colloquial pair (`що` literary vs `шо` colloquial) in the vocabulary section so learners know when each is appropriate.
+`шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, add a `note` (or equivalent free-text explanation field per the vocabulary YAML schema) to the `що` entry in `vocabulary.yaml` flagging the literary↔colloquial pair so learners know when each is appropriate. Do NOT add a separate top-level entry for `шо` — VESUM does not codify it and the gate will reject a standalone lemma.
 
 **UK example-sentence density.** A1-m15-24 modules need >=14 gate-countable Ukrainian example surfaces across bullet-list lines and Markdown table data rows. Use bullets/tables for paradigms and trap pairs; prose-only paradigms count zero.
 
@@ -435,7 +435,7 @@ Three writer-failure modes have repeatedly survived earlier prompt strengthening
 
 3. **INJECT_ACTIVITY parity.** Every `INJECT_ACTIVITY id=<X>` reference in `module.md` MUST have a corresponding activity with id `<X>` in `activities.yaml`. The build hard-fails on dangling references via the `inject_activity_ids` gate. Before emitting, count your `INJECT_ACTIVITY` markers in `module.md` and confirm each id is defined in `activities.yaml`.
 
-If your current tool history does not include the first two above, STOP, make the missing calls, then resume to artifact emission. The `<end_gate>` block will require explicit integer counts for both — and the pipeline cross-references those counts against your telemetry. Lying fails the build via `tool_theatre`; honestly reporting zero fails the build via `textbook_grounding` / `resources_search_attempted`. Only doing the calls satisfies both.
+If your current tool history does not include items 1 and 2 above, STOP, make the missing tool calls, then resume to artifact emission. The `<end_gate>` block will require explicit integer counts for both of those tool requirements — and the pipeline cross-references those counts against your telemetry. Lying fails the build via `tool_theatre`; honestly reporting zero fails the build via `textbook_grounding` / `resources_search_attempted`. Only doing the calls satisfies items 1 and 2. Item 3 (INJECT_ACTIVITY parity) is a pre-emit structural check, not a tool-call obligation — verify it in the artifacts you are about to emit.
 
 ## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
 
