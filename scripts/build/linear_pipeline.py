@@ -8681,12 +8681,11 @@ def _textbook_grounding_gate(
     # Diagnostic supplement to the 2026-05-23 reason logic: this block
     # subsumes the prior "diagnostic clarity" gate that only set ``reason``
     # without flipping ``passed``.
-    fetchable_refs = [
-        record["title"]
+    has_fetchable_refs = any(
+        not record["corpus_missing"] and record["verbatim_required"]
         for record in reference_records
-        if not record["corpus_missing"] and record["verbatim_required"]
-    ]
-    if fetchable_refs and not chunk_context_calls:
+    )
+    if has_fetchable_refs and not chunk_context_calls:
         passed = False
         if reason is None or reason == "topical_mismatch":
             reason = "step_b_skipped_no_get_chunk_context"
