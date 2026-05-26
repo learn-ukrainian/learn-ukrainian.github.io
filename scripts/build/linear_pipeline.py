@@ -9318,7 +9318,48 @@ def _russianisms_strict_gate(text: str) -> dict[str, Any]:
     }
 
 
+_CODE_BLOCK_RE = re.compile(r"```.*?```", re.DOTALL)
+_DIALOGUE_BOX_RE = re.compile(
+    r"<DialogueBox\b(?:[^>]*/>|.*?</DialogueBox>)",
+    re.DOTALL | re.IGNORECASE,
+)
+_SHO_RE = re.compile(r"(?i)\bшо\b")
+
+
+def _mask_region(match: re.Match[str]) -> str:
+    """Replace a matched region with spaces while preserving newlines.
+
+    Preserving newlines keeps the line numbers in the masked text aligned
+    with the original text, so the matcher reports the line where ``шо``
+    actually appears in the writer's module.md.
+    """
+    return "".join("\n" if ch == "\n" else " " for ch in match.group(0))
+
+
 def _register_consistency_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    """WARN-only register-consistency gate for the literary↔colloquial pair.
+
+    `шо` (colloquial reduction of `що`) is a native Ukrainian form,
+    NOT surzhyk — Antonenko-Davydovych has no entry for it, Russian has
+    `что`/`[што]` (not `шо`), and `шо` is widespread in colloquial speech
+    across all Ukrainian-speaking regions. The diglossia is a TEACHING
+    TARGET: learners benefit from knowing the literary↔colloquial pair
+    and when each is appropriate.
+
+    This gate flags out-of-register `шо` for A1-B2 modules as WARN (never
+    HARD). A1-B2 learners benefit from explicit register scaffolding; C1+
+    learners are expected to handle the distinction without it. Exempt
+    contexts: ``<DialogueBox>`` JSX blocks (open + close OR self-closing),
+    markdown ``>`` blockquotes, and fenced code blocks — all are legitimate
+    colloquial-register surfaces.
+
+    Pre-mask exempt regions with whitespace (preserving newlines so line
+    numbers stay aligned with the original text), then scan for ``шо`` on
+    the masked text. The masking approach eliminates the line-by-line
+    state-machine edge cases that miss/over-count when JSX tags share a
+    line with prose. See PR #2307 review for the original state-machine
+    bug analysis.
+    """
     level = str(plan.get("level", "")).lower()
 
     if level in {"c1", "c2", "pro"}:
@@ -9331,36 +9372,34 @@ def _register_consistency_gate(text: str, plan: Mapping[str, Any]) -> dict[str, 
             "scope_level": level,
         }
 
-    violations = []
-    in_dialogue = False
-    in_code = False
+    text_masked = _CODE_BLOCK_RE.sub(_mask_region, text)
+    text_masked = _DIALOGUE_BOX_RE.sub(_mask_region, text_masked)
 
-    lines = text.splitlines()
-    for i, line in enumerate(lines, 1):
-        stripped = line.strip()
-        if stripped.startswith("```"):
-            in_code = not in_code
-            continue
+    masked_lines = text_masked.splitlines()
+    original_lines = text.splitlines()
 
-        if not in_code and "<DialogueBox" in line:
-            in_dialogue = True
+    # Mask blockquote lines (those whose stripped form starts with ``>``).
+    # Per-line masking avoids the regex overhead and respects the
+    # line-number alignment guarantee from _mask_region.
+    for idx, line in enumerate(masked_lines):
+        if line.strip().startswith(">"):
+            masked_lines[idx] = " " * len(line)
 
-        if in_code or in_dialogue or stripped.startswith(">"):
-            if "</DialogueBox>" in line and not in_code:
-                in_dialogue = False
-            continue
-
-        matches = list(re.finditer(r"(?i)\bшо\b", line))
-        if matches:
-            for match in matches:
-                violations.append({
+    violations: list[dict[str, Any]] = []
+    for line_no, masked_line in enumerate(masked_lines, 1):
+        for match in _SHO_RE.finditer(masked_line):
+            context_line = (
+                original_lines[line_no - 1].strip()
+                if line_no <= len(original_lines)
+                else ""
+            )
+            violations.append(
+                {
                     "form": match.group(0),
-                    "line": i,
-                    "context": stripped[:100]
-                })
-
-        if "</DialogueBox>" in line and not in_code:
-            in_dialogue = False
+                    "line": line_no,
+                    "context": context_line[:100],
+                }
+            )
 
     return {
         "passed": True,

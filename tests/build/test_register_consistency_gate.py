@@ -110,3 +110,53 @@ print("Шо тут?")
     assert result["passed"] is True
     assert result["verdict"] == "PASS"
     assert result["violation_count"] == 0
+
+
+def test_register_consistency_self_closing_dialogue_box_exempt():
+    """Self-closing <DialogueBox uk="..." en="..." /> on one line -> PASS for that line,
+    but subsequent teacher-voice prose with шо still flagged.
+
+    Regression for the state-machine edge case where `<DialogueBox ... />`
+    set in_dialogue=True without a matching close, suppressing later
+    violations until end-of-file (#2307 review).
+    """
+    text = """
+Перший рядок прози: тут немає порушень.
+
+<DialogueBox uk="Шо ти робиш?" en="What are you doing?" />
+
+Тут teacher-voice: шо це таке?
+"""
+    plan = {"level": "a1"}
+    result = _register_consistency_gate(text, plan)
+    assert result["verdict"] == "WARN"
+    assert result["violation_count"] == 1, (
+        f"Self-closing DialogueBox should exempt only line 4, "
+        f"not suppress later violations; got {result['violations']!r}"
+    )
+    assert result["violations"][0]["line"] == 6
+
+
+def test_register_consistency_inline_tag_on_same_line_as_prose():
+    """A line containing BOTH `<DialogueBox ... />` AND teacher-voice шо.
+
+    Pre-masking approach: the DialogueBox region is replaced with spaces;
+    the surrounding teacher-voice text remains visible to the scanner so
+    шо outside the tag is still flagged.
+
+    The previous line-by-line state machine would set in_dialogue=True at
+    the start of the line and skip violation detection for the whole line,
+    missing the violation.
+    """
+    text = "Прозовий контекст з шо. <DialogueBox uk=\"Шо?\" en=\"What?\" />\n"
+    plan = {"level": "a1"}
+    result = _register_consistency_gate(text, plan)
+    assert result["verdict"] == "WARN"
+    assert result["violation_count"] == 1
+    assert result["violations"][0]["line"] == 1
+    # The `шо` inside the DialogueBox prop must NOT be counted.
+    assert all(
+        v["form"].lower() != "шо" or "DialogueBox" not in v.get("context", "")
+        or v["line"] == 1
+        for v in result["violations"]
+    )
