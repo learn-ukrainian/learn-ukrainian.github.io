@@ -149,7 +149,7 @@ You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER th
 
 A missing block records `gate_present=false` and the writer is treated as having skipped the protocol. Lying about counts is detected post-hoc: the pipeline compares your self-reported counts against tool telemetry; a mismatch is treated as `tool_theatre` (hard fail, no correction loop).
 
-**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
+**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. If you have written a tool name inside `<plan_reasoning>` without making the corresponding tool call in this turn, STOP. Either make the call now, or remove the citation. The pipeline tracks `tool_theatre_violations` and a non-zero count fails the build before publish. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
 
 ## LESSON SOURCE — synthesize this wiki content into the 4-tab format
 
@@ -292,6 +292,8 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 
 Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate.
 
+`шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, add a `note` (or equivalent free-text explanation field per the vocabulary YAML schema) to the `що` entry in `vocabulary.yaml` flagging the literary↔colloquial pair so learners know when each is appropriate. Do NOT add a separate top-level entry for `шо` — VESUM does not codify it and the gate will reject a standalone lemma.
+
 **UK example-sentence density.** A1-m15-24 modules need >=14 gate-countable Ukrainian example surfaces across bullet-list lines and Markdown table data rows. Use bullets/tables for paradigms and trap pairs; prose-only paradigms count zero.
 
 ## Activity Types and the INLINE / WORKBOOK split (mandatory)
@@ -425,13 +427,15 @@ If a required call is missing for your level, make it now. Do not emit artifacts
 
 ## PRE-EMIT HARD STOP — read this NOW, before any artifact fence
 
-Two writer-failure modes have repeatedly survived earlier prompt strengthening because their MANDATORY language sits in the middle of this 470-line prompt and gets forgotten by emission time. Re-check both BEFORE emitting:
+Three writer-failure modes have repeatedly survived earlier prompt strengthening because their MANDATORY language sits in the middle of this 470-line prompt and gets forgotten by emission time. Re-check all three BEFORE emitting:
 
 1. **`get_chunk_context` for every plan reference.** Counting `search_text` calls toward `textbook_grounding` is wrong — the gate explicitly rejects builds where `chunk_context_calls=0` even if `search_text_calls > 0`. For EACH entry in `plan.references`, call `mcp__sources__get_chunk_context(chunk_id=<the ID from notes>)`. If your count is currently zero, you have NOT satisfied this obligation, regardless of how many `search_text` calls you made. The blockquote in your draft MUST be ≥30 contiguous words from that returned chunk text, verbatim.
 
 2. **At least ONE multimedia search call.** Counting `search_text`, `search_style_guide`, `verify_words`, `query_pravopys`, `search_definitions`, or `query_cefr_level` toward `resources_search_attempted` is wrong — the gate counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, and `mcp__sources__search_images`. Make at least ONE of these THREE calls before emitting. An empty result is acceptable (omit unverifiable entries from `resources.yaml`); a zero attempt is not.
 
-If your current tool history does not include BOTH of the above, STOP, make the missing calls, then resume to artifact emission. The `<end_gate>` block will require explicit integer counts for both — and the pipeline cross-references those counts against your telemetry. Lying fails the build via `tool_theatre`; honestly reporting zero fails the build via `textbook_grounding` / `resources_search_attempted`. Only doing the calls satisfies both.
+3. **INJECT_ACTIVITY parity.** Every `INJECT_ACTIVITY id=<X>` reference in `module.md` MUST have a corresponding activity with id `<X>` in `activities.yaml`. The build hard-fails on dangling references via the `inject_activity_ids` gate. Before emitting, count your `INJECT_ACTIVITY` markers in `module.md` and confirm each id is defined in `activities.yaml`.
+
+If your current tool history does not include items 1 and 2 above, STOP, make the missing tool calls, then resume to artifact emission. The `<end_gate>` block will require explicit integer counts for both of those tool requirements — and the pipeline cross-references those counts against your telemetry. Lying fails the build via `tool_theatre`; honestly reporting zero fails the build via `textbook_grounding` / `resources_search_attempted`. Only doing the calls satisfies items 1 and 2. Item 3 (INJECT_ACTIVITY parity) is a pre-emit structural check, not a tool-call obligation — verify it in the artifacts you are about to emit.
 
 ## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
 
