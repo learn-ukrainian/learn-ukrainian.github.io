@@ -597,6 +597,69 @@ def test_parse_implementation_map_accepts_compact_markdown_table_rows() -> None:
     assert parsed["ban-1"]["artifact"] == "module.md"
 
 
+def test_parse_implementation_map_accepts_xml_row_attribute_shape() -> None:
+    """codex-tools (m20 round #11) read the ``<implementation_map>`` parent tag
+    as a cue to nest ``<row .../>`` XML elements with quoted attributes
+    instead of markdown bullets/pipes. The parser MUST recognize this shape:
+    round #11 emitted 18 well-formed XML row entries and the gate failed all
+    18 with ``implementation_map_missing`` because the parser only matched
+    bullet/pipe shapes. Fixture mirrors the exact codex-tools envelope from
+    that build (`a1-my-morning-20260526-200639`)."""
+    implementation_map = """
+<implementation_map>
+<row obligation_id="ban-1" artifact="module.md" location="§Мій ранок" treatment="No Russian-language explanation, parallel, or phonetic comparison appears." />
+<row obligation_id="ban-2" artifact="module.md" location="all prose" treatment="No comparison of Ukrainian -ться to Russian appears." />
+<row obligation_id="err-1" artifact="activities.yaml" location="workbook error-correction" treatment="sentence/error/correction item for Я прокидаюся. / Він прокидається." />
+<row obligation_id="phon-1" artifact="module.md" location="§Дієслова на -ся" treatment="Written -шся maps to spoken [с':а]." />
+<row obligation_id="step-1" artifact="module.md" location="§Дієслова на -ся" treatment="Крок 1 marker with читати paradigm." />
+</implementation_map>
+<implementation_map>No new obligation_id rows here; all 18 rows are listed exactly once in the first implementation_map.</implementation_map>
+"""
+
+    parsed = parse_implementation_map(implementation_map)
+
+    assert set(parsed.keys()) == {"ban-1", "ban-2", "err-1", "phon-1", "step-1"}
+    assert parsed["ban-1"]["artifact"] == "module.md"
+    assert parsed["ban-1"]["location"] == "§Мій ранок"
+    assert parsed["ban-1"]["treatment"].startswith("No Russian-language")
+    assert parsed["err-1"]["artifact"] == "activities.yaml"
+    assert parsed["err-1"]["location"] == "workbook error-correction"
+    assert parsed["phon-1"]["artifact"] == "module.md"
+    assert parsed["phon-1"]["location"] == "§Дієслова на -ся"
+    assert parsed["step-1"]["treatment"] == "Крок 1 marker with читати paradigm."
+
+
+def test_parse_implementation_map_xml_row_tolerates_whitespace_and_self_close_variants() -> None:
+    """The XML-row parser must tolerate the common formatting variants
+    a writer might produce: multi-line attribute layout, attributes in
+    any order, space-around-slash in the closing token, and mixed
+    bullet+XML entries inside one implementation_map block."""
+    implementation_map = """
+<implementation_map>
+<row
+  artifact="module.md"
+  obligation_id="phon-2"
+  location="§Phonetics"
+  treatment="written -ться → spoken [ц':а]"
+/>
+<row obligation_id="ban-3" artifact="module.md" location="§Intro" treatment="absence required"/>
+- obligation_id: step-9; artifact: module.md; location: §Outro; treatment: closing recap
+</implementation_map>
+"""
+
+    parsed = parse_implementation_map(implementation_map)
+
+    assert "phon-2" in parsed
+    assert parsed["phon-2"]["artifact"] == "module.md"
+    assert parsed["phon-2"]["treatment"] == "written -ться → spoken [ц':а]"
+    assert "ban-3" in parsed
+    assert parsed["ban-3"]["location"] == "§Intro"
+    # Bullet entry on the same line as XML rows still parses via the existing
+    # bullet path; the XML parser leaves entries it already added alone.
+    assert parsed["step-9"]["artifact"] == "module.md"
+    assert parsed["step-9"]["treatment"] == "closing recap"
+
+
 def test_l2_error_passes_with_compact_pipe_workbook_location() -> None:
     """The compact Codex pipe-map shape plus a generic workbook location
     should widen to all activities, then let the substance check decide."""
