@@ -291,6 +291,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Dialogue format (gate-counted).** Ukrainian dialogue lines must be `<DialogueBox uk="..." en="...">` or `> ` blockquotes. Em-dash-only dialogue under `## Діалоги` is invisible to `l2_exposure_floor` and fails the module.
 
 Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate.
+`шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. Mention the literary↔colloquial pair in vocab when the module surfaces it.
 
 `шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, add a `note` (or equivalent free-text explanation field per the vocabulary YAML schema) to the `що` entry in `vocabulary.yaml` flagging the literary↔colloquial pair so learners know when each is appropriate. Do NOT add a separate top-level entry for `шо` — VESUM does not codify it and the gate will reject a standalone lemma.
 
