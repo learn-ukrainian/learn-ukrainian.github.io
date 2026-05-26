@@ -52,7 +52,7 @@ Legend: ✓ = wiki-verified in this audit (mcp__sources__query_wikipedia). (G) =
 ### A. Розстріляне Відродження — completion (12)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Михайль Семенко ✓ | Shot 24 Oct 1937, NKVD Kyiv. UA-futurism founder. |
 | Володимир Свідзінський ✓ | Killed by NKVD during 1941 retreat (burned in barn). |
 | Михайло Драй-Хмара ✓ | Neoclassicist «ґроно п'ятірне», died Kolyma 1939. |
@@ -69,7 +69,7 @@ Legend: ✓ = wiki-verified in this audit (mcp__sources__query_wikipedia). (G) =
 ### B. Pre-Soviet imperial-era oppressed (6)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Павло Грабовський (C) | Народовольці, ~20y Siberian exile, died Tobolsk 1902. |
 | Микола Костомаров (C) | Cyril-Methodius Brotherhood, exile to Saratov. Author of "Книги буття українського народу." |
 | Іван Карпенко-Карий (C) | Imperial surveillance, exile. Theatre of corypheus. |
@@ -86,7 +86,7 @@ Legend: ✓ = wiki-verified in this audit (mcp__sources__query_wikipedia). (G) =
 **C.1. First-wave individual émigrés (Революція 1917–22)** (5)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Олександр Олесь ✓ (K) | Emigrated 1919, died occupied Prague 1944. Father of Олег Ольжич. |
 | Володимир Винниченко | UNR Directorate head, fled, died France 1951. «Чорна Пантера», «Сонячна машина». |
 | Іван Багряний ✓ | 16y NKVD prisons/camps → DP → UNRada head. «Тигролови», «Сад Гетсиманський». |
@@ -98,7 +98,7 @@ Legend: ✓ = wiki-verified in this audit (mcp__sources__query_wikipedia). (G) =
 Already in bio from this cluster: Олег Ольжич ✓, Олена Теліга ✓, Юрій Липа ✓.
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Євген Маланюк ✓ (RAG) | UNR Army сотник, «Імператор залізних строф», Prague School flagship poet, 11-klas chapter subject «Український Одіссей». |
 | Юрій Клен / Освальд Бургардт (RAG) | 5th poet of «ґроно п'ятірне» neoclassicists alongside Зеров/Драй-Хмара/Рильський/Филипович; emigrated 1931, died 1947. |
 | Юрій Дараган (RAG) | Prague School founder, історіософські мотиви — Дажбог, варяги, дикий степ. |
@@ -109,7 +109,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 **C.3. МУР / DP-camp / postwar Munich (1945–50)** (6)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Василь Барка ✓ (RAG) | DP → USA. «Жовтий князь» — canonical Holodomor novel. |
 | Віктор Домонтович / В. Петров (RAG) | Intelligence-officer scholar-writer, complex biography, «Доктор Серафікус», «Без ґрунту». |
 | Ігор Костецький (RAG) | МУР theorist, modernist. |
@@ -120,7 +120,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 **C.4. Нью-Йоркська група (NY Group), postwar US** (5)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Богдан Бойчук (RAG) | NY Group founder, modernist poet. |
 | Юрій Тарнавський (RAG) | NY Group, experimentalist. |
 | Емма Андієвська (RAG) | Surrealist poet+painter, Munich. |
@@ -130,7 +130,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 **C.5. Diaspora institution-builders / scholars** (4)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Омелян Пріцак ✓ (RAG) | Founded Harvard Ukrainian Research Institute (HURI), 1973; Институт сходознавства in Kyiv post-1991. |
 | Дмитро Чижевський ✓ (RAG) | Philosopher, literary scholar, slavist; Heidelberg → US universities. Foundational «Історія української літератури». |
 | Юрій Лавриненко (RAG) | Compiled the canonical 1959 Paris antology «Розстріляне відродження» — the work that named the era. |
@@ -141,7 +141,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### D. Survived but censored / coerced + camp-returnees (8)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Павло Тичина ✓ (K) | Coerced/co-opted post-1933, capitulation arc. Bio is the right place to teach «трагічний злам». |
 | Максим Рильський ✓ (C, K-prompted) | Київ Парнас neoclassicist; arrested 1931, ~6mo Lukyanivska prison; capitulated via «Знак терезів» 1932; post-Stalin used Soviet-laureate status to rehabilitate Зеров/Драй-Хмара and shelter шістдесятники. Already in 2 LIT modules. |
 | Володимир Сосюра ✓ | UNR Гайдамацький полк → «Любіть Україну» 1944 → 1951 Pravda attack «Об идеологических извращениях». |
@@ -154,7 +154,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### E. Шістдесятники + Helsinki Group dissidents (29 in E.1, +3 in E.2 = 32) — full coverage per user direction
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Євген Гуцало ✓ (K) | шістдесятники prose, «Ментальність орди». |
 | Микола Руденко ✓ | UHG founder, political prisoner. |
 | Іван Світличний | Critic, nerve center of шістдесятники lit-circle, 7y camps + exile. |
@@ -188,7 +188,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### E.2 — шістдесятники visual + theater (added via RAG sweep)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Лесь Танюк (RAG) | Theater director, founded «Клуб творчої молоді» in Kyiv 1960 — the шістдесятники hub. |
 | Віктор Зарецький (RAG) | Painter, Алла Горська's husband; targeted post-1970 murder of Горська. |
 | Веніамін Кушнір (RAG) | шістдесятники painter. |
@@ -198,7 +198,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### F. War-killed / RF-captured post-2014 (12)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Василь Сліпак (C) | Opera baritone, KIA Donbas 2016. |
 | Олександр Мацієвський (C) | "Слава Україні" execution by RF, 2023. |
 | Володимир Рибак (C) | Horlivka deputy, killed 2014. |
@@ -217,7 +217,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### G. OUN/UPA/UNR military leadership (9) — ⚠️ all require content-warning framing
 
 | Name | Mechanism | Content warning |
-|---|---|---|
+| --- | --- | --- |
 | Степан Бандера ✓ (K) | Polish prisons → Sachsenhausen → KGB assassination Munich 1959. | HIGH |
 | Ярослав Стецько ✓ | Co-author 30 Jun 1941 Akt, Sachsenhausen 1942–44. | HIGH |
 | Андрій Мельник | OUN(m) leader, German camps, emigrated. | MED |
@@ -231,7 +231,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### H. Scholars / scientists oppressed (4)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Михайло Кравчук ✓ | Mathematician, founder of UA math terminology, died Kolyma 1942. Taught Корольов. |
 | Степан Рудницький (C) | Geographer (foundational «Україна — наш рідний край»), shot Sandarmokh 1937. |
 | Дмитро Яворницький (C) | Cossack historian («Історія запорізьких козаків»), censored, died 1940. |
@@ -240,7 +240,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### I. Visual artists + composers oppressed (8)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Василь Барвінський (C) | Composer, 10y Gulag, scores destroyed by Soviet authorities. |
 | Олександр Кошиць | UNR Republican Capella conductor (Щедрик→world), emigré. |
 | Василь Кричевський | Designed UNR trident, emigré. |
@@ -253,7 +253,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### J. Religious martyrs — UGCC + UAOC (11)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Василь Липківський (K) | UAOC Metropolitan, UAOC founder, shot 1937. |
 | Микола Чарнецький ✓ | UGCC bishop, 11y camps, beatified martyr. |
 | Василь Величковський ✓ (C) | UGCC bishop, redemptorist, beatified новомученик. |
@@ -269,7 +269,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ### K. Crimean-Tatar Ukrainian patriots, RF-oppressed (2)
 
 | Name | Mechanism |
-|---|---|
+| --- | --- |
 | Мустафа Джемілєв (C) | Lifelong Crimean Tatar leader, 15y Soviet camps, RF-banned. |
 | Наріман Джелял (C) | Mejlis deputy, RF-jailed since 2021. |
 
@@ -289,7 +289,7 @@ Already in bio from this cluster: Олег Ольжич ✓, Олена Телі
 ## Flagged for user-by-user decision (3)
 
 | Name | Issue | Reviewer recommendation |
-|---|---|---|
+| --- | --- | --- |
 | Аркадій Любченко | VAPLITE secretary, but 1941–44 occupation-era publication record | Include only with explicit honest framing of WWII occupation context |
 | Улас Самчук | «Волинь» trilogy is great UA prose, but newspaper editorship under German occupation | Same — include with content warning |
 | Кирило Стеценко | Composer (UNR-era choral music), but direct oppression mechanism is thin | Lean keep on cultural-significance grounds; alternative is to absorb into a UNR-era-composers seminar |
@@ -380,9 +380,153 @@ Source briefs and raw responses: `/tmp/bio-gap-review/` (brief.md, gemini-respon
 
 ---
 
+## Appendix: canonical slugs for 130 additions
+
+These slugs follow `docs/best-practices/bio-naming-canonical.md`. The table
+omits the `.yaml` suffix; each value is the planned filename stem for
+`curriculum/l2-uk-en/plans/bio/{slug}.yaml`.
+
+Verification snapshot for F4: generated 130 proposed slugs; exact collision
+check against the existing 180 bio plan filenames returned `[]`.
+
+| Block | Figure | Slug | Notes |
+| --- | --- | --- | --- |
+| A | Михайль Семенко | mykhail-semenko | |
+| A | Володимир Свідзінський | volodymyr-svidzinskyi | |
+| A | Михайло Драй-Хмара | mykhailo-drai-khmara | |
+| A | Микола Вороний | mykola-voronyi | given name disambiguates from Block A `marko-voronyi` |
+| A | Михайло Яловий | mykhailo-yalovyi | |
+| A | Григорій Епік | hryhorii-epik | |
+| A | Валер'ян Поліщук | valerian-polishchuk | apostrophe omitted per policy |
+| A | Олекса Влизько | oleksa-vlyzko | |
+| A | Марко Вороний | marko-voronyi | given name disambiguates from Block A `mykola-voronyi` |
+| A | Мирослав Ірчан | myroslav-irchan | |
+| A | Антін Крушельницький | antin-krushelnytskyi | |
+| A | Софія Налепинська-Бойчук | sofiia-nalepynska-boichuk | hyphenated surname preserved as slug segments |
+| B | Павло Грабовський | pavlo-hrabovskyi | |
+| B | Микола Костомаров | mykola-kostomarov | |
+| B | Іван Карпенко-Карий | ivan-karpenko-karyi | hyphenated surname preserved as slug segments |
+| B | Панас Мирний | panas-myrnyi | |
+| B | Іван Манжура | ivan-manzhura | |
+| B | Леонід Глібов | leonid-hlibov | |
+| C | Олександр Олесь | oleksandr-oles | given name disambiguates from existing `oles-honchar` |
+| C | Володимир Винниченко | volodymyr-vynnychenko | |
+| C | Іван Багряний | ivan-bahrianyi | |
+| C | Тодось Осьмачка | todos-osmachka | |
+| C | Василь Королів-Старий | vasyl-koroliv-staryi | hyphenated surname preserved as slug segments |
+| C | Євген Маланюк | yevhen-malaniuk | |
+| C | Юрій Клен / Освальд Бургардт | yurii-klen | canonical pen name; `osvald-burhardt` belongs in aliases |
+| C | Юрій Дараган | yurii-darahan | |
+| C | Наталя Лівицька-Холодна | natalia-livytska-kholodna | hyphenated surname preserved as slug segments |
+| C | Леонід Мосендз | leonid-mosendz | |
+| C | Оксана Лятуринська | oksana-liaturynska | |
+| C | Василь Барка | vasyl-barka | |
+| C | Віктор Домонтович / В. Петров | viktor-domontovych | canonical pen name; `viktor-petrov` belongs in aliases |
+| C | Ігор Костецький | ihor-kostetskyi | |
+| C | Докія Гуменна | dokiia-humenna | |
+| C | Юрій Косач | yurii-kosach | |
+| C | Михайло Орест | mykhailo-orest | |
+| C | Богдан Бойчук | bohdan-boichuk | |
+| C | Юрій Тарнавський | yurii-tarnavskyi | |
+| C | Емма Андієвська | emma-andiievska | |
+| C | Богдан Рубчак | bohdan-rubchak | |
+| C | Віра Вовк | vira-vovk | |
+| C | Омелян Пріцак | omelian-pritsak | |
+| C | Дмитро Чижевський | dmytro-chyzhevskyi | |
+| C | Юрій Лавриненко | yurii-lavrynenko | |
+| C | Олекса Воропай | oleksa-voropai | |
+| D | Павло Тичина | pavlo-tychyna | |
+| D | Максим Рильський | maksym-rylskyi | |
+| D | Володимир Сосюра | volodymyr-sosiura | |
+| D | Юрій Яновський | yurii-yanovskyi | |
+| D | Остап Вишня | ostap-vyshnia | |
+| D | Микола Бажан | mykola-bazhan | |
+| D | Зінаїда Тулуб | zinaida-tulub | |
+| D | Олександр Ковінька | oleksandr-kovinka | |
+| E | Євген Гуцало | yevhen-hutsalo | |
+| E | Микола Руденко | mykola-rudenko | |
+| E | Іван Світличний | ivan-svitlychnyi | |
+| E | Григір Тютюнник | hryhir-tiutiunnyk | given name disambiguates from Block G `yurii-tiutiunnyk` |
+| E | Іван Драч | ivan-drach | |
+| E | Микола Вінграновський | mykola-vinhranovskyi | |
+| E | Опанас Заливаха | opanas-zalyvakha | |
+| E | Стефанія Шабатура | stefaniia-shabatura | |
+| E | Борис Антоненко-Давидович | borys-antonenko-davydovych | hyphenated surname preserved as slug segments |
+| E | Юрій Бадзьо | yurii-badzo | |
+| E | Олекса Тихий | oleksa-tykhyi | |
+| E | Василь Голобородько | vasyl-holoborodko | |
+| E | Сергій Параджанов | serhii-paradzhanov | |
+| E | Валерій Марченко | valerii-marchenko | |
+| E | Юрій Литвин | yurii-lytvyn | |
+| E | Леонід Плющ | leonid-pliushch | |
+| E | Ніна Строката | nina-strokata | |
+| E | Ігор Калинець | ihor-kalynets | given name disambiguates family pair from `iryna-kalynets` |
+| E | Ірина Калинець | iryna-kalynets | given name disambiguates family pair from `ihor-kalynets` |
+| E | Надія Світлична | nadiia-svitlychna | given name disambiguates from Block E `ivan-svitlychnyi` |
+| E | Святослав Караванський | sviatoslav-karavanskyi | |
+| E | Михайло Горинь | mykhailo-horyn | given name disambiguates brother pair from `bohdan-horyn` |
+| E | Богдан Горинь | bohdan-horyn | given name disambiguates brother pair from `mykhailo-horyn` |
+| E | Оксана Мешко | oksana-meshko | |
+| E | Юрій Шухевич | yurii-shukhevych | given name disambiguates from existing `roman-shukhevych` |
+| E | Данило Шумук | danylo-shumuk | |
+| E | Іван Кандиба | ivan-kandyba | |
+| E | Василь Овсієнко | vasyl-ovsiienko | |
+| E | Валентин Мороз | valentyn-moroz | |
+| E | Лесь Танюк | les-taniuk | |
+| E | Віктор Зарецький | viktor-zaretskyi | |
+| E | Веніамін Кушнір | veniamin-kushnir | |
+| F | Василь Сліпак | vasyl-slipak | |
+| F | Олександр Мацієвський | oleksandr-matsiievskyi | |
+| F | Володимир Рибак | volodymyr-rybak | |
+| F | Макс Левін | maks-levin | |
+| F | Ірина Цибух «Чека» | iryna-tsybukh | callsign stays in aliases, not slug |
+| F | Вікторія Рощина | viktoriia-roshchyna | |
+| F | Станіслав Асєєв | stanislav-asieiev | |
+| F | Владислав Єсипенко | vladyslav-yesypenko | |
+| F | Геннадій Афанасьєв | hennadii-afanasiev | |
+| F | Віктор Гурняк | viktor-hurniak | |
+| F | Гліб Бабіч | hlib-babich | |
+| F | Ігор Козловський | ihor-kozlovskyi | |
+| G | Степан Бандера | stepan-bandera | |
+| G | Ярослав Стецько | yaroslav-stetsko | |
+| G | Андрій Мельник | andrii-melnyk | |
+| G | Дмитро Клячківський «Клим Савур» | dmytro-kliachkivskyi | alias `klym-savur` belongs in aliases, not slug |
+| G | Юрій Тютюнник | yurii-tiutiunnyk | given name disambiguates from Block E `hryhir-tiutiunnyk` |
+| G | Августин Волошин | avhustyn-voloshyn | |
+| G | Лев Ребет | lev-rebet | |
+| G | Катерина Зарицька | kateryna-zarytska | |
+| G | Петро Федун-Полтава | petro-fedun-poltava | hyphenated name preserved as slug segments |
+| H | Михайло Кравчук | mykhailo-kravchuk | |
+| H | Степан Рудницький | stepan-rudnytskyi | |
+| H | Дмитро Яворницький | dmytro-yavornytskyi | |
+| H | Катерина Грушевська | kateryna-hrushevska | given name disambiguates from existing `mykhailo-hrushevskyi` |
+| I | Василь Барвінський | vasyl-barvinskyi | |
+| I | Олександр Кошиць | oleksandr-koshyts | |
+| I | Василь Кричевський | vasyl-krychevskyi | |
+| I | Іван Гончар | ivan-honchar | given name disambiguates from existing `oles-honchar` |
+| I | Іван Падалка | ivan-padalka | |
+| I | Василь Седляр | vasyl-sedliar | |
+| I | Ніл Хасевич | nil-khasevych | |
+| I | Данило Щербаківський | danylo-shcherbakivskyi | |
+| J | Василь Липківський | vasyl-lypkivskyi | |
+| J | Микола Чарнецький | mykola-charnetskyi | |
+| J | Василь Величковський | vasyl-velychkovskyi | |
+| J | Йосафат Коциловський | yosafat-kotsylovskyi | |
+| J | Григорій Хомишин | hryhorii-khomyshyn | |
+| J | Микита Будка | mykyta-budka | |
+| J | Климентій Шептицький | klymentii-sheptytskyi | given/monastic name disambiguates from existing brother bio `andrey-sheptytsky` |
+| J | Іван Зятик | ivan-ziatyk | |
+| J | Зиновій Ковалик | zynovii-kovalyk | |
+| J | Теодор Ромжа | teodor-romzha | |
+| J | Петро Вергун | petro-verhun | |
+| K | Мустафа Джемілєв | mustafa-dzhemiliev | |
+| K | Наріман Джелял | nariman-dzhelial | |
+
+---
+
 ## Status
 
-- ✅ List finalized at **127** (4th-pass total).
+- ✅ List finalized at **130** (4th-pass total).
 - ⏳ Awaiting user sign-off to begin Tier 1a writing.
 - ⏳ Sibling issues 1–5 not yet filed.
 
@@ -391,7 +535,8 @@ Source briefs and raw responses: `/tmp/bio-gap-review/` (brief.md, gemini-respon
 - **2026-05-26 1st pass:** Claude consolidated 88 names from 3-way review (Claude + Gemini + Codex).
 - **2026-05-26 2nd pass:** User flagged Рильський missing; re-checked Codex's full original ADD list against the consolidated file; recovered 6 dropped names (5 from Codex's lists, 1 from chain-of-prompting). Total 94.
 - **2026-05-26 3rd pass:** User asked "we have those textbooks in RAG no? why OCR?" — switched from grep-on-OCR to `mcp__sources__search_text`. RAG sweep surfaced the entire missed émigré-literature tradition: Празька школа (6), МУР/DP-Munich (6), Нью-Йоркська група (5), diaspora institution-scholars (3), plus Бажан/Тулуб/Ковінька (capitulator/returnee pattern), Танюк/Зарецький/Кушнір (шістдесятники visual/theater), Манжура (imperial-era censorship). Total 121 + Величковський/Афанасьєв/Гурняк/Бабіч/Козловський retro-recovered = 127.
-- **2026-05-26 4th pass:** Gemini textbook-mining background dispatch returned 86-author canonical roster from 6 grades (5–11). Result: VALIDATED the 127 against textbook canon; surfaced 4 minor candidates for further consideration (Воропай, Королів-Старий, Турянський, Глібов) and confirmed Гаспринський + Умеров belong in the planned Crimean-Tatar coverage sibling audit.
+- **2026-05-26 4th pass:** Gemini textbook-mining background dispatch returned 86-author canonical roster from 6 grades (5–11). Result: VALIDATED the 127 against textbook canon; surfaced 4 minor candidates for further consideration; accepted Воропай, Королів-Старий, and Глібов into Blocks C/B; left Турянський flagged/skip. Final total 130. Гаспринський + Умеров belong in the planned Crimean-Tatar coverage sibling audit.
+- **2026-05-26 F4:** Canonical slug appendix added for all 130 additions; exact collision check against the existing 180 bio slugs returned none.
 
 ## Methodology lessons learned
 
