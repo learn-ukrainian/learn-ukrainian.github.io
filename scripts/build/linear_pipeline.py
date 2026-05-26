@@ -8665,16 +8665,30 @@ def _textbook_grounding_gate(
         if not passed and topical_mismatches
         else None
     )
-    # Diagnostic clarity for rule #R-TEXTBOOK-30W Step B (2026-05-23):
-    # When the gate failed and the writer searched but never called
-    # ``get_chunk_context``, give an explicit "you skipped Step B" reason
-    # rather than a vague ``matched=[]``. Catches the m20 build
-    # ``a1-my-morning-20260523-184413`` failure mode where 2 ``search_text``
-    # calls by topic keyword + 0 ``get_chunk_context`` + wrong-chunk text
-    # pasted into the blockquote produced opaque ``matched=[]`` with no
-    # actionable signal for the writer's self-correction loop.
-    if not passed and search_calls and not chunk_context_calls and reason is None:
-        reason = "step_b_skipped_no_get_chunk_context"
+    # Step B enforcement (#2294, 2026-05-26): writer prompt rule
+    # ``#R-TEXTBOOK-30W`` (B) requires ``mcp__sources__get_chunk_context(
+    # chunk_id=<ID>)`` for every fetchable plan reference (present in corpus
+    # AND verbatim-required). The matcher previously accepted blockquote
+    # evidence derived from ``search_text`` results alone, which let a Step-B-
+    # skipped writer pass the gate. m20 build #4 (a1-my-morning-20260525-
+    # 235634) demonstrated the false-pass: ``search_text_calls=2``,
+    # ``chunk_context_calls=0``, ``passed=true``, with the writer self-
+    # reporting ``<chunk_context_calls>0</chunk_context_calls>``. The prompt
+    # promised "HARD-rejects regardless of blockquote content"; this code
+    # keeps that promise. Downgraded refs (corpus-missing OR verbatim-not-
+    # required) are excluded because the writer cannot fetch a chunk that
+    # does not exist and is not asked to quote verbatim from one.
+    # Diagnostic supplement to the 2026-05-23 reason logic: this block
+    # subsumes the prior "diagnostic clarity" gate that only set ``reason``
+    # without flipping ``passed``.
+    has_fetchable_refs = any(
+        not record["corpus_missing"] and record["verbatim_required"]
+        for record in reference_records
+    )
+    if has_fetchable_refs and not chunk_context_calls:
+        passed = False
+        if reason is None or reason == "topical_mismatch":
+            reason = "step_b_skipped_no_get_chunk_context"
     # Per #1765, missing-corpus citations get rejected here — the proper fix is
     # plan-review-time corpus check that prevents plans from getting this far.
     # Until #1765 lands, this guard prevents shipping false authority.
