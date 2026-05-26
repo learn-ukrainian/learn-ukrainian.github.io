@@ -24,7 +24,7 @@ pytest-mock>=3.14          # fixture-based mocker
 coverage[toml]>=7.14.0
 
 # Debugging
-ipython>=8.29
+ipython>=8.39.0
 ipdb>=0.13.13
 
 # Secret scanning (gitleaks runs in pre-commit + CI; this is a fallback for
