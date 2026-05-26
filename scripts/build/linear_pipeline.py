@@ -8377,6 +8377,29 @@ def _result_items_from_call(call: Mapping[str, Any]) -> list[Mapping[str, Any]]:
                 if parsed:
                     items.extend(parsed)
                     continue
+            # Mirror of the search_text branch above for the
+            # ``get_chunk_context`` canonical MCP content-block shape
+            # ``[{"type": "text", "text": "**[<chunk_id>]** — ..."}]``.
+            # Empirical reference: m20 build #7 (2026-05-26, codex-tools
+            # writer): codex called ``get_chunk_context`` twice and returned
+            # the canonical list-of-text-blocks envelope, but the gate
+            # produced ``matched=[]`` and HARD-rejected on
+            # ``textbook_grounding`` because the items got appended raw
+            # (with ``type="text"`` and no ``source_type``), so
+            # ``_is_textbook_result`` returned False and dropped every chunk.
+            # The dict-shape branch at line 8440 handles the equivalent
+            # ``{"type": "text", "text": "<md>"}`` for get_chunk_context;
+            # this branch closes the LIST-shape gap and is symmetric with
+            # the search_text branch directly above.
+            if (
+                tool_name == "get_chunk_context"
+                and item.get("type") == "text"
+                and isinstance(item.get("text"), str)
+            ):
+                parsed = _parse_mcp_get_chunk_context_markdown(item["text"])
+                if parsed:
+                    items.extend(parsed)
+                    continue
             # Gemini-CLI list-shape MCP response. Empirical evidence: the
             # 2026-05-21 a1/my-morning gemini-tools build wrote the writer
             # call result as

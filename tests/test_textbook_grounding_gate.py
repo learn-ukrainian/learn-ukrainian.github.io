@@ -612,6 +612,79 @@ def test_textbook_grounding_gate_unwraps_gemini_function_response_shape(
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
+def test_textbook_grounding_gate_parses_get_chunk_context_list_shape(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """m20 build #7 (2026-05-26, codex-tools writer) regression.
+
+    Codex-tools returns the canonical MCP content-block envelope as a
+    LIST of text blocks:
+
+        [{"type": "text", "text": "**[<chunk_id>]** — Сторінка N\\n\\n<body>"}]
+
+    The list-branch parser at `_result_items_from_call` already handled
+    this shape for `search_text` (parsing the markdown into structured
+    textbook items). The equivalent branch for `get_chunk_context` was
+    missing — items got appended raw and ``_is_textbook_result`` rejected
+    them (``type="text"`` not ``type="textbook"``). Result: round #7
+    produced ``matched=[]`` and hard-failed `textbook_grounding` despite
+    codex correctly making 2 get_chunk_context calls and pasting verbatim
+    ≥30-word blockquotes from the returned chunks.
+
+    The fix mirrors the search_text list-branch handling. This test pins
+    the exact codex-tools envelope shape so the bug can't silently come
+    back.
+    """
+    body = (
+        "Зворотна форма дієслова показує дію, яка повертається до виконавця. "
+        "Учень умивається, одягається, готується до уроку, вітається з учителем, "
+        "збирається швидко і повертається до щоденної ранкової справи без зайвих "
+        "пояснень сьогодні."
+    )
+    chunk_id = "10-klas-ukrmova-karaman-2018_s0176"
+    chunk_markdown = f"**[{chunk_id}]** — Сторінка 176\n\n{body}"
+
+    # Exact shape codex-tools writer_tool_calls.json round-trip captured
+    # at the 2026-05-26 m20 build #7 artifact:
+    #     /Users/k/.codex/worktrees/.../a1-my-morning-20260526-181133/
+    #     curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json
+    _write_tool_calls(
+        tmp_path,
+        [
+            {
+                "tool": "mcp__sources__get_chunk_context",
+                "args": {"chunk_id": chunk_id, "window": 1},
+                "result": [{"type": "text", "text": chunk_markdown}],
+            }
+        ],
+    )
+
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_lookup_textbook_metadata",
+        lambda source_file: {"author_uk": "Караман", "grade": "10"}
+        if source_file == "10-klas-ukrmova-karaman-2018"
+        else None,
+    )
+
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True, (
+        f"Codex-tools list-shape get_chunk_context envelope must parse "
+        f"into a textbook item; got result={result!r}"
+    )
+    assert result["chunk_context_calls"] == 1
+    assert result["textbook_result_hits"] == 1
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
 def test_parse_mcp_get_chunk_context_markdown_no_db(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
