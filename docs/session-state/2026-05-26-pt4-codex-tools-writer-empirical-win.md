@@ -39,7 +39,8 @@ Read this Pt 4 first. It's a delta on Pt 3 (`2026-05-26-session-close-pt3-direct
 | #6 | post-#2308 | claude-tools | `module_failed` | textbook_grounding (Step B skipped, gate now correctly enforcing), engagement_floor (`#R-VOICE-META`), tool_theatre | **claude-tools structurally skips Step B** — 3 rounds, 3 skips, despite progressively bolder PRE-EMIT HARD STOP language |
 | #7 | post-#2308 | **codex-tools** | `module_failed` | textbook_grounding (`matched=[]` — gate parser bug), word_count 95% | **codex-tools cleared Step B (2 chunk_context calls) + tool_theatre + every other gate**; only failed on gate parser bug + borderline word_count |
 | #8 | post-#2339 (88e2e31f5a) | codex-tools | `module_failed` | **ONLY word_count** (981/1200 = 82%) | Parser fix worked; codex-tools clears 25 of 26 gates; word_count drifted lower this round |
-| #9 (queued) | post-#2340 | codex-tools | expected `module_done` | — | Writer-prompt framing fixed; codex should plan to ~1.15× minimum |
+| #9 | post-#2340 (8e6c44eea3) | codex-tools | `module_failed` | **l2_exposure_floor** (13/14 UK dialogue lines — 1 short), **engagement_floor** (meta narration "in this module") | Word_count fix WORKED: jumped from 981 (R#8) → **1126** (R#9, +145 words, passed). Two NEW small content failures emerged; both addressable with ~5-line writer-prompt addition. |
+| #10 (queued) | post-round-#10-fix | codex-tools | expected `module_done` | — | Trivial writer-prompt patch: explicit "≥14 Ukrainian dialogue lines" + tightened anti-meta-narration ban (avoid "in this module"/"in this lesson"). |
 
 ## Critical empirical conclusions
 
@@ -118,24 +119,28 @@ PRs #2306 + #2307 both hit transient `dorny/paths-filter@<SHA>` codeload failure
 
 ## What's queued for the next session
 
+**Update at session-close (post-round #9 result):** PR #2340 merged. Round #9 fired against `2e063c462b`/`8e6c44eea3`. Result: word_count fix LANDED (1126/1200, passed) but two NEW small failures emerged — `l2_exposure_floor` (13/14 dialogue lines) + `engagement_floor` (meta narration "in this module"). Both addressable with ~5-line writer-prompt patch. Round #10 is the next anchor attempt.
+
 **Immediate (within 30 min of session resume):**
 
-1. **Wait for PR #2340 CI green + merge.** Watcher `btc703xjf` was active at handoff; may have completed or rolled off — check `gh pr view 2340 --json mergeable,mergeStateStatus`.
-2. **Fire m20 round #9** via the bridge:
+1. **Small writer-prompt patch for round #10.** Two additions to `scripts/build/phases/linear-write.md`:
+   - **Hard floor on UK dialogue lines.** Locate the existing dialogue-format guidance (around line 291). Add: *"For A1-A2 modules: emit at least 15 distinct `<DialogueBox uk=...>` Ukrainian dialogue surfaces (the `l2_exposure_floor` gate floor is 14; overshoot by ≥1 for safety). Em-dash bare lines without `en` props do not count."*
+   - **Tighten anti-meta-narration ban.** Locate the existing `#R-VOICE-META` rule. Add explicit banned-phrase list: *"Banned meta-narration phrases (HARD-fail via `engagement_floor`): `in this module`, `in this lesson`, `у цьому уроці`, `у цьому модулі`, `this module covers`, `we will learn`. Speak TO the learner in second person; do not narrate ABOUT the module."*
+2. **Fire m20 round #10** via the bridge (same as round #9 invocation, fresh relay):
    ```bash
    .venv/bin/python scripts/ai_agent_bridge/__main__.py send-codex-ui \
      --thread 019e6063-c3da-78d1-acaa-4cd684a08786 \
      --cwd /Users/krisztiankoos/.codex/worktrees/3a9a/learn-ukrainian \
-     --from-file /tmp/m20-relay-round9.md \
+     --from-file /tmp/m20-relay-round10.md \
      --timeout 5400 --json
    ```
-   Brief should mirror round #8 but reference PR #2340 as the delta. Expect `module_done` and an m20 anchor PR.
+   Expect `module_done` and an m20 anchor PR.
 3. **Verify the m20 PR** that codex opens passes the §4 ten-check + ULP fidelity + CI.
 
-**If round #9 succeeds:**
+**If round #10 succeeds:**
 
 4. Merge the m20 anchor PR.
-5. **Fire round #10 with gemini-tools** (the user's plan: "first codex, then try how gemini fares, then decide who is the final A1 writer"). Pick the gemini quota pool with headroom: gemini-tools / agy-tools / cursor-tools.
+5. **Fire round #11 with gemini-3.1-pro** (the user's plan: "first codex, then try how gemini fares, then decide who is the final A1 writer"). Pick the quota pool with headroom: `--writer gemini-tools` / `agy-tools` / `cursor-tools`.
 6. After both empirical data points: update `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md` with the comparison and the new A1 writer default. **Strong empirical case to flip default from claude-tools.**
 
 **If round #9 fails on word_count again:**
