@@ -88,8 +88,45 @@ def _search_call(title: str = "Караман Grade 10, p.176") -> dict[str, Any
     }
 
 
+def _chunk_context_call(
+    title: str = "Караман Grade 10, p.176",
+    text: str = SEARCH_TEXT,
+    chunk_id: str = "10-klas-ukrmova-karaman-2018_s0176",
+) -> dict[str, Any]:
+    """Build a ``get_chunk_context`` call satisfying the Step B enforcement.
+
+    Writer prompt rule ``#R-TEXTBOOK-30W`` (B) requires
+    ``mcp__sources__get_chunk_context(chunk_id=<ID>)`` for every fetchable
+    plan reference. Before #2294 fixed it, the gate accepted ``search_text``
+    evidence alone — m20 build #4 demonstrated the false-pass with
+    ``chunk_context_calls=0`` and a matched blockquote.
+
+    Use this helper alongside :func:`_search_call` in happy-path tests so
+    the gate's Step B enforcement is satisfied. The pre-bundled dict shape
+    matches the canonical claude/codex anthropic-tools result envelope and
+    does not require monkeypatching ``_lookup_textbook_metadata`` — the
+    matcher reads ``title`` directly from the dict.
+    """
+    return {
+        "tool": "mcp__sources__get_chunk_context",
+        "args": {"chunk_id": chunk_id},
+        "result": [
+            {
+                "title": title,
+                "source_type": "textbook",
+                "text": text,
+                "page": 176,
+                "grade": 10,
+            }
+        ],
+    }
+
+
 def test_textbook_grounding_gate_passes_good_fixture(tmp_path: Path) -> None:
-    _write_tool_calls(tmp_path, [_search_call()])
+    # Step B enforcement (#2294): writer prompt #R-TEXTBOOK-30W (B) requires
+    # a get_chunk_context call. Happy-path tests must include it; the
+    # gate hard-fails without it even when the blockquote matches.
+    _write_tool_calls(tmp_path, [_search_call(), _chunk_context_call()])
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
 
     result = linear_pipeline._textbook_grounding_gate(
@@ -102,10 +139,14 @@ def test_textbook_grounding_gate_passes_good_fixture(tmp_path: Path) -> None:
     assert result["verdict"] == "PASS"
     assert result["matched"] == ["Караман Grade 10, p.176"]
     assert result["search_text_calls"] == 1
+    assert result["chunk_context_calls"] == 1
 
 
 def test_textbook_grounding_gate_rejects_bad_fixture(tmp_path: Path) -> None:
-    _write_tool_calls(tmp_path, [_search_call()])
+    # Bad-fixture path: writer did call get_chunk_context (Step B satisfied),
+    # but the module body's blockquote is off-topic / not contained in the
+    # retrieved chunk — the matcher rejects on content grounds, NOT Step B.
+    _write_tool_calls(tmp_path, [_search_call(), _chunk_context_call()])
     module_text = (FIXTURES / "bad-module.md").read_text(encoding="utf-8")
 
     result = linear_pipeline._textbook_grounding_gate(
@@ -120,7 +161,7 @@ def test_textbook_grounding_gate_rejects_bad_fixture(tmp_path: Path) -> None:
 
 
 def test_textbook_grounding_gate_requires_all_references_above_a1(tmp_path: Path) -> None:
-    _write_tool_calls(tmp_path, [_search_call()])
+    _write_tool_calls(tmp_path, [_search_call(), _chunk_context_call()])
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
 
     result = linear_pipeline._textbook_grounding_gate(
@@ -148,8 +189,25 @@ def test_textbook_grounding_gate_reads_jsonl_writer_trace(tmp_path: Path) -> Non
             "grade": 10,
         },
     }
+    chunk_event = {
+        "event": "writer_tool_call",
+        "tool": "get_chunk_context",
+        "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0176"},
+        "result": [
+            {
+                "title": "Караман Grade 10, p.176",
+                "source_type": "textbook",
+                "text": SEARCH_TEXT,
+                "page": 176,
+                "grade": 10,
+            }
+        ],
+    }
     (tmp_path / "writer_telemetry.jsonl").write_text(
-        json.dumps(event, ensure_ascii=False) + "\n",
+        json.dumps(event, ensure_ascii=False)
+        + "\n"
+        + json.dumps(chunk_event, ensure_ascii=False)
+        + "\n",
         encoding="utf-8",
     )
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
@@ -184,7 +242,8 @@ def test_textbook_grounding_gate_reads_mcp_markdown_result(tmp_path: Path) -> No
                         ),
                     }
                 ],
-            }
+            },
+            _chunk_context_call(),
         ],
     )
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
@@ -197,7 +256,8 @@ def test_textbook_grounding_gate_reads_mcp_markdown_result(tmp_path: Path) -> No
 
     assert result["passed"] is True
     assert result["matched"] == ["Караман Grade 10, p.176"]
-    assert result["textbook_result_hits"] == 1
+    # search_text result hit + chunk_context result hit = 2.
+    assert result["textbook_result_hits"] == 2
 
 
 def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
@@ -227,7 +287,21 @@ def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
                         "grade": 10,
                     }
                 ],
-            }
+            },
+            {
+                # Hermes single-underscore prefix variant of get_chunk_context.
+                "tool": "mcp_sources_get_chunk_context",
+                "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0176"},
+                "result": [
+                    {
+                        "title": "Караман Grade 10, p.176",
+                        "source_type": "textbook",
+                        "text": SEARCH_TEXT,
+                        "page": 176,
+                        "grade": 10,
+                    }
+                ],
+            },
         ],
     )
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
@@ -240,6 +314,7 @@ def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
 
     assert result["passed"] is True
     assert result["search_text_calls"] == 1
+    assert result["chunk_context_calls"] == 1
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
@@ -272,8 +347,29 @@ def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None
         "session_id": "sess_test",
         "ts": 1779220000,
     }
+    chunk_event = {
+        "event": "writer_tool_call",
+        "tool": "mcp_sources_get_chunk_context",
+        "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0176"},
+        "result": [
+            {
+                "title": "Караман Grade 10, p.176",
+                "source_type": "textbook",
+                "text": SEARCH_TEXT,
+                "page": 176,
+                "grade": 10,
+            }
+        ],
+        "duration_ms": 18,
+        "tool_call_id": "call_01_chunk",
+        "session_id": "sess_test",
+        "ts": 1779220001,
+    }
     (tmp_path / "hermes.write.jsonl").write_text(
-        json.dumps(event, ensure_ascii=False) + "\n",
+        json.dumps(event, ensure_ascii=False)
+        + "\n"
+        + json.dumps(chunk_event, ensure_ascii=False)
+        + "\n",
         encoding="utf-8",
     )
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
@@ -286,7 +382,8 @@ def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None
 
     assert result["passed"] is True
     assert result["search_text_calls"] == 1
-    assert result["textbook_result_hits"] == 1
+    assert result["chunk_context_calls"] == 1
+    assert result["textbook_result_hits"] == 2
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
@@ -312,6 +409,16 @@ def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
         "- **Text**:\n"
         f"{SEARCH_TEXT}\n"
     )
+    chunk_event = {
+        "event": "writer_tool_call",
+        "tool": "mcp_sources_get_chunk_context",
+        "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0315"},
+        "result": {"result": inner_markdown},
+        "duration_ms": 12,
+        "tool_call_id": "call_inner_chunk",
+        "session_id": "sess",
+        "ts": 1779220001,
+    }
     (tmp_path / "hermes.write.jsonl").write_text(
         json.dumps(
             {
@@ -326,6 +433,8 @@ def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
             },
             ensure_ascii=False,
         )
+        + "\n"
+        + json.dumps(chunk_event, ensure_ascii=False)
         + "\n",
         encoding="utf-8",
     )
@@ -339,7 +448,10 @@ def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
 
     assert result["passed"] is True
     assert result["search_text_calls"] == 1
-    assert result["textbook_result_hits"] == 1
+    assert result["chunk_context_calls"] == 1
+    # The inner-result unwrap parses the markdown; both calls return the
+    # same parsed chunk so the dedupe path counts a single hit.
+    assert result["textbook_result_hits"] >= 1
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
@@ -664,7 +776,13 @@ def test_wiki_result_does_not_satisfy_gate(tmp_path: Path) -> None:
 
 
 def test_a1_fallback_attributes_to_actual_match(tmp_path: Path) -> None:
-    _write_tool_calls(tmp_path, [_search_call("Кравцова Grade 4, p.113")])
+    _write_tool_calls(
+        tmp_path,
+        [
+            _search_call("Кравцова Grade 4, p.113"),
+            _chunk_context_call("Кравцова Grade 4, p.113"),
+        ],
+    )
     module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
 
     result = linear_pipeline._textbook_grounding_gate(
@@ -690,7 +808,10 @@ def test_blockquote_under_h3_inherits_h2_section_title(tmp_path: Path) -> None:
     build-#7 section title that caused the false REJECT."""
     _write_tool_calls(
         tmp_path,
-        [_search_call("Караман Grade 10, p.176")],
+        [
+            _search_call("Караман Grade 10, p.176"),
+            _chunk_context_call("Караман Grade 10, p.176"),
+        ],
     )
     # SEARCH_TEXT topics: учень, умивається, одягається, готується,
     # зборатися, зворотна, ранкова. The H2 "Зворотні дієслова" shares
@@ -719,6 +840,9 @@ def test_blockquote_under_h3_inherits_h2_section_title(tmp_path: Path) -> None:
 
 
 def test_off_topic_quote_rejected(tmp_path: Path) -> None:
+    # Step B IS satisfied (writer called get_chunk_context), but the chunk
+    # body is off-topic for the module section. Test isolates the matcher's
+    # topical-mismatch logic from the #2294 Step B enforcement.
     _write_tool_calls(
         tmp_path,
         [
@@ -734,7 +858,8 @@ def test_off_topic_quote_rejected(tmp_path: Path) -> None:
                         "grade": 10,
                     }
                 ],
-            }
+            },
+            _chunk_context_call("Караман Grade 10, p.176", text=FARMING_TEXT),
         ],
     )
     module_text = f"## Reflexive Verbs\n\n> **Караман Grade 10, p.176:** {FARMING_TEXT}\n"
@@ -783,7 +908,8 @@ def test_stress_marks_do_not_break_matching(tmp_path: Path) -> None:
                         "grade": 10,
                     }
                 ],
-            }
+            },
+            _chunk_context_call("Караман Grade 10, p.176", text=result_text),
         ],
     )
     module_text = f"## Morning\n\n> **Караман Grade 10, p.176:** {text}\n"
@@ -809,7 +935,8 @@ def test_apostrophes_normalized_for_matching(tmp_path: Path) -> None:
                         "grade": 10,
                     }
                 ],
-            }
+            },
+            _chunk_context_call("Караман Grade 10, p.176", text=APOSTROPHE_TEXT),
         ],
     )
     module_text = (
@@ -874,6 +1001,90 @@ def test_searched_but_skipped_step_b_gets_diagnostic_reason(tmp_path: Path) -> N
     assert result["search_text_calls"] == 1
     assert result["chunk_context_calls"] == 0
     assert result["reason"] == "step_b_skipped_no_get_chunk_context"
+
+
+def test_step_b_enforcement_overrides_search_text_blockquote_match(
+    tmp_path: Path,
+) -> None:
+    """m20 build #4 false-pass regression (#2294, 2026-05-26).
+
+    Empirical evidence from build worktree
+    ``a1-my-morning-20260525-235634``:
+
+    * ``writer_output.raw.md`` self-reports
+      ``<chunk_context_calls>0</chunk_context_calls>``
+    * ``writer_tool_calls.json`` has two ``mcp__sources__search_text`` calls
+      against ``Захарійчук Grade 1, p.24`` and ``p.52`` and zero
+      ``mcp__sources__get_chunk_context`` calls
+    * ``python_qg.json`` recorded ``textbook_grounding: passed=true,
+      search_text_calls=2, chunk_context_calls=0`` — a false pass.
+
+    The writer prompt rule ``#R-TEXTBOOK-30W`` (B) promised the writer:
+
+        "the gate HARD-rejects regardless of blockquote content"
+
+    when ``chunk_context_calls=0``. Before #2294 the gate did NOT keep that
+    promise — it accepted any blockquote that happened to match a search
+    result. With Step B enforcement, the gate hard-fails in this scenario
+    and surfaces ``step_b_skipped_no_get_chunk_context`` so the writer's
+    self-correction loop has an actionable signal.
+
+    This test pins the exact m20 #4 shape: a single ``search_text`` call
+    returning content the writer's blockquote DOES match — without this
+    fix, ``passed=True``; with this fix, ``passed=False`` and the reason
+    is explicit.
+    """
+    _write_tool_calls(tmp_path, [_search_call()])  # No chunk_context call.
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is False, (
+        "m20 build #4 regression: gate must HARD-reject when "
+        "chunk_context_calls=0 and plan_references are fetchable, even when "
+        "search_text evidence happens to satisfy the blockquote matcher."
+    )
+    assert result["verdict"] == "REJECT"
+    assert result["severity"] == "HARD"
+    assert result["search_text_calls"] == 1
+    assert result["chunk_context_calls"] == 0
+    assert result["reason"] == "step_b_skipped_no_get_chunk_context"
+    # Matcher's per-ref result is preserved as diagnostic context for the
+    # writer — the m20 #4 ``matched=[Захарійчук Grade 1, p.24]`` was still
+    # informative even while the overall verdict became REJECT.
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
+def test_step_b_enforcement_does_not_apply_when_all_refs_corpus_missing(
+    tmp_path: Path,
+) -> None:
+    """Carve-out: writers cannot fetch chunks that do not exist.
+
+    When every plan reference is flagged ``corpus_missing: true``, the
+    writer has nothing to ``get_chunk_context`` against. The Step B
+    enforcement (#2294) must NOT fire in that case — the existing
+    ``missing_corpus`` rejection path is the right signal, and adding a
+    spurious Step B reject would mask the real plan-time corpus gap.
+    """
+    module_text = (FIXTURES / "bad-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        {
+            "level": "B1",
+            "references": [
+                {"title": "Absent Grade 9, p.9", "corpus_missing": True},
+            ],
+        },
+        tmp_path,
+    )
+
+    assert result["passed"] is False
+    assert result["reason"] == "corpus_missing"  # NOT step_b_skipped_no_get_chunk_context
 
 
 def test_empty_references_rejected_for_b1_plus(tmp_path: Path) -> None:
