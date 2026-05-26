@@ -18,6 +18,11 @@ paths:
   - ~/.codex/sessions/**
   - ~/.codex/worktrees/*
   - ~/.codex/worktrees/**
+  # Antigravity CLI (`agy`) session storage — path not yet empirically
+  # confirmed but added preemptively per #2285 4-target bridge scope.
+  - ~/.agy
+  - ~/.agy/*
+  - ~/.agy/**
   - ~/.claude/projects/.../memory/MEMORY.md
   - ~/.claude/projects/.../memory
   - ~/.claude/.../memory/fact-corrections.md
