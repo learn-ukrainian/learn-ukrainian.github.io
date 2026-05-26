@@ -62,6 +62,39 @@ _COMPACT_PIPE_ENTRY_RE = re.compile(
     r"(?P<treatment>.*?)(?=\s+(?:\|\s*)?[-\w]+\s*\|\s*(?:module\.md|activities\.yaml)\s*\||\s*$)",
     re.IGNORECASE | re.DOTALL,
 )
+# XML-attribute row shape: writer (codex-tools in particular) reads the
+# `<implementation_map>` XML parent tag as a hint to nest `<row .../>` XML
+# elements with quoted attributes. Both formats are present in the wild —
+# claude-tools emits markdown bullets, codex-tools emits XML rows. Example:
+#
+#   <implementation_map>
+#   <row obligation_id="ban-1" artifact="module.md" location="§Мій ранок"
+#        treatment="No Russian-language explanation appears." />
+#   <row obligation_id="step-2" artifact="module.md" location="§Дiалоги"
+#        treatment="..." />
+#   </implementation_map>
+#
+# Captures the full attribute body of any self-closing <row .../> tag inside
+# an <implementation_map> block. Attribute extraction below pulls the four
+# known fields (obligation_id, artifact, location, treatment). Discovered
+# 2026-05-26 in m20 round #11 build a1-my-morning-20260526-200639, where
+# codex-tools emitted all 18 obligations as <row .../> entries and the gate
+# saw `implementation_map_missing` on every one (coverage 0/18) because the
+# bullet/pipe parsers don't match the XML-attribute shape.
+_ROW_XML_RE = re.compile(
+    # Match `<row attr1="val1" attr2="val2" ... />` where values may contain
+    # `/` and `>` characters (common in treatment text). The body is captured
+    # as a sequence of one-or-more key="value" pairs, NOT as a free-form blob,
+    # so the regex stops cleanly at the closing `/>` even when values contain
+    # slashes (e.g. `treatment="Я прокидаюся. / Він прокидається."`).
+    r"<row\b(?P<attrs>(?:\s+\w+\s*=\s*\"[^\"]*\")+)\s*/\s*>",
+    re.IGNORECASE,
+)
+_ROW_XML_ATTR_RE = re.compile(
+    r"(?P<key>obligation_id|artifact|location|treatment)\s*=\s*"
+    r"\"(?P<value>[^\"]*)\"",
+    re.IGNORECASE | re.DOTALL,
+)
 _WORKBOOK_AGGREGATE_ACTIVITY_TYPES = (
     "anagram",
     "authorial-intent",
@@ -153,6 +186,28 @@ def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
                 "location": pipe_match.group("location").strip(),
                 "treatment": pipe_match.group("treatment").strip().rstrip("|").strip(),
             }
+        # XML-row shape: `<row obligation_id="..." artifact="..." location="..."
+        # treatment="..." />` — extract the attribute block, then pull each
+        # known key=value pair out of it. Per-row obligation_id is required;
+        # rows without it are silently skipped (matches the bullet/pipe
+        # parser's tolerance for malformed lines).
+        for row_match in _ROW_XML_RE.finditer(body):
+            attrs_text = row_match.group("attrs")
+            attrs: dict[str, str] = {}
+            for attr_match in _ROW_XML_ATTR_RE.finditer(attrs_text):
+                attrs[attr_match.group("key").casefold()] = (
+                    attr_match.group("value").strip()
+                )
+            obligation_id = attrs.get("obligation_id", "").strip()
+            if not obligation_id:
+                continue
+            existing = entries.setdefault(
+                obligation_id, {"obligation_id": obligation_id}
+            )
+            for key in ("artifact", "location", "treatment"):
+                value = attrs.get(key)
+                if value:
+                    existing[key] = value
         current_id: str | None = None
         for line in body.splitlines():
             id_match = _OBLIGATION_RE.search(line)
