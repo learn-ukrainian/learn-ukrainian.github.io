@@ -98,6 +98,7 @@ DOWNSTREAM_TOKENS = frozenset(
         "WRITER_MODEL",
         "WRITER_SPECIFIC_DIRECTIVES",
         "WIKI_COVERAGE_GATE",
+        "WIKI_COVERAGE_REQUIRED_ITEMS",
         "WIKI_MANIFEST",
     }
 )

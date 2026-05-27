@@ -844,6 +844,27 @@ def _check_obligation_text(obligation: Mapping[str, Any], target_text: str, arti
 
     if obligation_type == "sequence_step":
         claim = str(obligation.get("required_claim") or obligation.get("heading") or "")
+        normalized_claim = _normalize_required_claim(claim)
+        items = _extract_required_items(normalized_claim)
+
+        # If we have extracted items, use item-level coverage.
+        if items["vocabulary"] or items["examples"]:
+            missing_items = []
+            for word in items["vocabulary"]:
+                if not _contains(target_text, word):
+                    missing_items.append(word)
+            for example in items["examples"]:
+                if not _contains(target_text, example):
+                    missing_items.append(f"«{example}»")
+
+            if not missing_items:
+                return "PASS", "sequence_claim_present"
+            else:
+                return "FAIL", f"sequence_claim_missing: missing {', '.join(missing_items)}"
+
+        # DEPRECATED 2026-05-27: literal Крок N: substring match.
+        # Replaced by _extract_required_items + per-item coverage.
+        # Remove after one successful Phase 2a refire.
         if _claim_markers_present(claim, target_text):
             return "PASS", "sequence_claim_present"
         return "FAIL", "sequence_claim_missing"
@@ -952,8 +973,82 @@ def _phonetic_example_pairs(obligation: Mapping[str, Any]) -> list[tuple[str, ..
 
 def _normalize(text: str) -> str:
     text = re.sub(r"[`*_]", "", text.casefold())
-    text = text.replace("’", "'").replace("ʼ", "'")
+    text = text.replace("’", "\'").replace("ʼ", "\'")
     return re.sub(r"\s+", " ", text)
+
+
+def _strip_step_prefix(text: str) -> str:
+    """Strip leading 'Крок N:', 'Step N:', 'Урок N:' scaffolding labels."""
+    return re.sub(
+        r"^(?:Крок|Step|Урок)\s+\d+:\s*", "", text, flags=re.IGNORECASE
+    ).strip()
+
+
+def _strip_source_markers(text: str) -> str:
+    """Strip inline source-reference markers like [S7] or [S1, S3]."""
+    return re.sub(r"\[[SС]\d+(?:,\s*[SС]\d+)*\]", "", text).strip()
+
+
+def _normalize_required_claim(text: str) -> str:
+    """Apply both strip helpers, collapse whitespace, return pedagogical content."""
+    text = _strip_step_prefix(text)
+    text = _strip_source_markers(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _extract_required_items(claim_text: str) -> dict[str, list[str]]:
+    """Extract item-level requirements (vocabulary, examples) from a claim."""
+    vocabulary: list[str] = []
+    # Vocabulary: find Ukrainian words inside parentheses.
+    for match in re.findall(r"\(([^()]+)\)", claim_text):
+        for token in match.split(","):
+            token = token.strip().strip(" \t\r\n,;:.\"\'")
+            if token and re.search(r"[А-Яа-яІіЇїЄєҐґ]", token):
+                vocabulary.append(token)
+
+    examples: list[str] = []
+
+    def _add_item(val: str):
+        val = val.strip()
+        if not val or not re.search(r"[А-Яа-яІіЇїЄєҐґ]", val):
+            return
+        # If it's a single word, it might be vocabulary.
+        if len(val.split()) > 1:
+            examples.append(val)
+        else:
+            vocabulary.append(val)
+
+    # Examples/Vocabulary: find Ukrainian text inside quotes.
+    # 1. Guillemets «...»
+    for match in re.findall(r"«([^»]+)»", claim_text):
+        _add_item(match)
+    # 2. Double quotes "..."
+    for match in re.findall(r"\"([^\"]+)\"", claim_text):
+        _add_item(match)
+    # 3. Single quotes '...' (only if they look like quotes, not apostrophes)
+    for match in re.findall(r"(?:\s|^)'([^']+)'(?=[\s.,;!?]|$)", claim_text):
+        _add_item(match)
+
+    # Deduplicate while preserving order.
+    seen_vocab: set[str] = set()
+    dedup_vocab = []
+    for v in vocabulary:
+        if v not in seen_vocab:
+            dedup_vocab.append(v)
+            seen_vocab.add(v)
+
+    seen_examples: set[str] = set()
+    dedup_examples = []
+    for e in examples:
+        if e not in seen_examples:
+            dedup_examples.append(e)
+            seen_examples.add(e)
+
+    return {
+        "vocabulary": dedup_vocab,
+        "examples": dedup_examples,
+        "key_phrases": [],  # Substantive content could go here if needed.
+    }
 
 
 def _marker_candidates(text: str) -> list[str]:
