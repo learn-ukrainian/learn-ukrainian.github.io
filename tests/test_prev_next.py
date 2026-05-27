@@ -17,15 +17,13 @@ def test_prev_next_links(monkeypatch):
 
     monkeypatch.setattr("scripts.build.prev_next.get_modules_for_level", mock_get_modules)
 
-    def exists_mock(self):
-        # m19 exists, m20 exists, m21 does not exist, m22 exists
-        return self.name in ("m19.mdx", "m20.mdx", "m22.mdx")
+    def exists_both(self):
+        # m19 exists, m21 exists
+        return self.name in ("m19.mdx", "m21.mdx")
 
-    monkeypatch.setattr(Path, "exists", exists_mock)
+    monkeypatch.setattr(Path, "exists", exists_both)
 
-    # both exist (for m20, prev is m19 which exists. next is m21 which DOES NOT exist. Wait, let's make m21 exist for this test)
-    def exists_all(self): return True
-    monkeypatch.setattr(Path, "exists", exists_all)
+    # both exist (m19 and m21)
     prev_val, next_val = get_prev_next_links("a1", 20)
     assert prev_val == "m19"
     assert next_val == "m21"

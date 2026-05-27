@@ -3419,8 +3419,8 @@ def test_textbook_grounding_matches_punctuation_different_attribution(
         json.dumps(
             [
                 {
-                    "name": "mcp__sources__search_text",
-                    "result": [{"source_type": "textbook", "text": quote}],
+                    "name": "mcp__sources__get_chunk_context",
+                    "result": {"source_type": "textbook", "text": quote},
                 }
             ],
             ensure_ascii=False,

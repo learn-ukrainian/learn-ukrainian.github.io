@@ -312,7 +312,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 
 **Dialogue format (gate-counted).** Ukrainian dialogue lines must be `<DialogueBox uk="..." en="...">` or `> ` blockquotes. Em-dash-only dialogue under `## Діалоги` is invisible to `l2_exposure_floor` and fails the module.
 
-Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate.
+Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate. Every dialogue line needs an **inline English gloss** provided **within 8 tokens** of the Ukrainian text. Place longer expression notes at the **block-bottom** of the component.
 
 **Minimum UK dialogue lines (A1-A2).** For A1 and A2 modules, emit at least **15 distinct gate-countable Ukrainian dialogue surfaces** (`<DialogueBox uk="..." en="...">` entries and `> ` blockquote lines, summed). The `l2_exposure_floor` gate's floor is 14; overshoot by ≥1 for safety. m20 build #9 hit exactly 13 and HARD-failed via `too_few_uk_dialogue_lines`. Count BEFORE emitting: if you have <15, add another exchange to the dialogue section or split a long turn into two shorter ones.
 

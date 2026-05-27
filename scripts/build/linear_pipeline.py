@@ -6713,6 +6713,12 @@ def _contract_yaml(plan: Mapping[str, Any]) -> str:
             }
             for section in plan.get("content_outline", [])
         ],
+        "vocabulary_required": plan.get("vocabulary_hints", {}).get("required", [])
+        if isinstance(plan.get("vocabulary_hints"), dict)
+        else plan.get("vocabulary_hints", []),
+        "vocabulary_optional": plan.get("vocabulary_hints", {}).get("optional", [])
+        if isinstance(plan.get("vocabulary_hints"), dict)
+        else [],
         "source_note": "Full plan below is authoritative for points, activity hints, vocabulary, and references.",
     }
     return yaml.safe_dump(contract, allow_unicode=True, sort_keys=False).strip()
@@ -9535,6 +9541,13 @@ def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
             continue
 
         if re.match(r"^\s*>\s?(.*)$", line):
+            match = re.match(r"^\s*>\s?(.*)$", line)
+            content = match.group(1).strip() if match else ""
+            if content.startswith("[!"):
+                while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
+                    i += 1
+                continue
+
             while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
                 current_quote.append(re.match(r"^\s*>\s?(.*)$", lines[i]).group(1)) # type: ignore
                 i += 1
