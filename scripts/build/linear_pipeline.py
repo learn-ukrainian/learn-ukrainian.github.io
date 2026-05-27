@@ -6092,7 +6092,15 @@ def run_python_qg(
     )
     record("citations_resolve", _citation_gate(resources, plan))
     record("plan_reference_match", _plan_reference_match_gate(resources, plan))
-    record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
+    # record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
+    record(
+        "chunk_context_for_all_refs",
+        _chunk_context_for_all_refs_gate(plan, _load_writer_tool_calls(module_dir), module_dir),
+    )
+    record(
+        "published_quote_for_publishable_refs",
+        _published_quote_for_publishable_refs_gate(module_text, plan, module_dir),
+    )
     record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text))
     record(
         "resources_search_attempted",
@@ -6105,7 +6113,7 @@ def run_python_qg(
         _long_uk_ceiling_gate(
             module_text,
             plan,
-            grounding_evidence=gates.get("textbook_grounding"),
+            grounding_evidence=gates.get("published_quote_for_publishable_refs"),
         ),
     )
     record("component_density", _component_density_gate(module_text, plan))
@@ -8575,6 +8583,210 @@ def _level_requires_references(level: str) -> bool:
     return level.casefold() in {"b1", "b2", "c1", "c2", "pro"}
 
 
+def is_publishable_ref(ref: Mapping[str, Any]) -> bool:
+    """Predicate to determine if a plan reference is appropriate for learner-facing publication.
+
+    Children's primers (Grade 1-3) are internal-only for grounding lexical choices.
+    Grade 7+, adult literature, style guides, and dictionaries are publishable.
+    """
+    if not isinstance(ref, Mapping):
+        return False
+
+    title = str(ref.get("title") or "")
+    notes = str(ref.get("notes") or "")
+    source_type = str(ref.get("source_type") or "").lower()
+    author = str(ref.get("author") or "").lower()
+
+    # 1. source_type check
+    if source_type in {"literature", "style_guide", "dictionary"}:
+        return True
+
+    # 2. author list check
+    # Антоненко-Давидович, Грінченко
+    combined_metadata = (title + " " + author + " " + notes).lower()
+    if re.search(r"антоненко-давидович|грінченк", combined_metadata):
+        return True
+
+    # 3. Grade check
+    grade_val = ref.get("grade")
+    grade_int: int | None = None
+    if isinstance(grade_val, (int, str)):
+        with contextlib.suppress(ValueError, TypeError):
+            grade_int = int(grade_val)
+
+    if grade_int is None:
+        # Try parsing from title or notes: "Grade 7", "7 клас", "7-klas"
+        match = re.search(r"(?i)\b(?:grade|клас|klas|class)[-\s]*(?P<grade>1[01]|[1-9])\b", title + " " + notes)
+        if not match:
+            # Try reverse: "7 grade", "7-klas"
+            match = re.search(r"(?i)\b(?P<grade>1[01]|[1-9])[-\s]*(?:grade|клас|klas|class)\b", title + " " + notes)
+        if match:
+            grade_int = int(match.group("grade"))
+
+    if grade_int is not None:
+        if grade_int >= 7:
+            return True
+        if grade_int in {1, 2, 3}:
+            return False
+
+    # Default to internal-only for ambiguous (no grade, no source_type, no author)
+    # or for grades 4-6 that are not explicitly publishable via other signals.
+    return False
+
+
+def _chunk_context_for_all_refs_gate(
+    plan: Mapping[str, Any],
+    writer_tool_calls: list[Mapping[str, Any]],
+    module_dir: Path,
+) -> dict[str, Any]:
+    """Every plan_reference MUST be retrieved via mcp__sources__get_chunk_context.
+
+    Applies regardless of source grade (Grade 1-3 grounding still needs the full
+    chunk context, even if they don't publish a blockquote).
+    """
+    references = plan.get("references") or plan.get("plan_references") or []
+    if not isinstance(references, list):
+        return {"passed": True, "verdict": "PASS"}
+
+    missing_from_packet = _missing_corpus_refs_from_packet(module_dir)
+    called_chunk_ids = set()
+    for call in writer_tool_calls:
+        if _tool_name_from_call(call) == "get_chunk_context":
+            args = call.get("arguments") or {}
+            chunk_id = args.get("chunk_id")
+            if chunk_id:
+                called_chunk_ids.add(chunk_id)
+
+    violations = []
+    for ref in references:
+        if not isinstance(ref, Mapping):
+            continue
+        title = str(ref.get("title") or "")
+        corpus_missing = bool(ref.get("corpus_missing")) or title in missing_from_packet
+        if corpus_missing:
+            continue
+
+        chunk_id = extract_chunk_id_from_notes(str(ref.get("notes") or ""))
+        if chunk_id and chunk_id not in called_chunk_ids:
+            violations.append({"title": title, "chunk_id": chunk_id})
+
+    if violations:
+        return {
+            "passed": False,
+            "verdict": "REJECT",
+            "severity": "HARD",
+            "reason": "missing_chunk_context_calls",
+            "violations": violations,
+        }
+    return {"passed": True, "verdict": "PASS"}
+
+
+def _published_quote_for_publishable_refs_gate(
+    module_text: str,
+    plan: Mapping[str, Any],
+    module_dir: Path,
+) -> dict[str, Any]:
+    """Only publishable refs (Grade 7+, adult lit, etc.) require a blockquote.
+
+    Verifies a >=30-word blockquote literally appears in module.md and matches
+    the retrieved chunk text. Skips internal-only refs (Grade 1-3).
+    """
+    level = str(plan.get("level") or "").casefold()
+    reference_records = _plan_reference_records(plan, module_dir)
+
+    # Filter to publishable references only
+    raw_refs = plan.get("references") or plan.get("plan_references") or []
+    publishable_titles = set()
+    for ref in raw_refs:
+        if is_publishable_ref(ref):
+            publishable_titles.add(str(ref.get("title") or ""))
+
+    # We only enforce publication for refs that are:
+    # 1. In the plan references
+    # 2. Flagged as publishable by is_publishable_ref
+    # 3. Not corpus-missing (we can't quote what we don't have)
+    # 4. Verbatim-required (some rare seminar refs are topical-only)
+    refs_to_check = [
+        record
+        for record in reference_records
+        if record["title"] in publishable_titles
+        and not record["corpus_missing"]
+        and record["verbatim_required"]
+    ]
+
+    if not refs_to_check:
+        return {"passed": True, "verdict": "PASS", "matched": [], "blockquotes_checked": 0}
+
+    blockquote_records = _extract_blockquote_records(module_text)
+    plan_reasoning = _plan_reasoning_text(module_text)
+    long_blockquote_records = [
+        record
+        for record in blockquote_records
+        if len(_textbook_match_tokens(record["quote"])) >= TEXTBOOK_GROUNDING_MIN_WORDS
+    ]
+
+    all_writer_calls = _load_writer_tool_calls(module_dir)
+    search_calls = [call for call in all_writer_calls if _tool_name_from_call(call) == "search_text"]
+    chunk_context_calls = [call for call in all_writer_calls if _tool_name_from_call(call) == "get_chunk_context"]
+    relevant_calls = search_calls + chunk_context_calls
+
+    textbook_results: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
+    for call in relevant_calls:
+        for result in _result_items_from_call(call):
+            if _is_textbook_result(result):
+                textbook_results.append((call, result))
+
+    matched: dict[str, int] = {}
+    topical_mismatches: list[str] = []
+
+    for record in refs_to_check:
+        ref = record["title"]
+        ref_results = [result for call, result in textbook_results if _reference_matches_result(ref, result)]
+        for b_record in long_blockquote_records:
+            quote = b_record["quote"]
+            attribution = b_record.get("attribution", "")
+            candidate_results = ref_results
+            if not candidate_results and _citation_ref_text_contains(ref, attribution):
+                candidate_results = [result for _call, result in textbook_results]
+
+            if not any(
+                _contains_textbook_quote(quote, _result_text_for_match(result)) for result in candidate_results
+            ):
+                continue
+
+            topic_text = f"{b_record['section_title']} {plan_reasoning}".strip()
+            if not _quote_topic_matches(quote, topic_text):
+                topical_mismatches.append(ref)
+                continue
+
+            matched[ref] = len(_textbook_match_tokens(quote))
+            break
+
+    # If level is A1, we usually only require ONE match total across all refs.
+    # However, this gate is now specifically for PUBLISHABLE refs.
+    # If the plan has 5 Grade 1 refs and 1 Grade 7 ref, and we are A1,
+    # we still want that Grade 7 ref to be quoted if it's there.
+    # Actually, the old gate used `required = 1 if level == "a1" else len(references)`.
+    # We should probably follow similar logic for publishable refs.
+
+    required = 1 if level == "a1" and refs_to_check else len(refs_to_check)
+    passed = len(matched) >= required
+
+    return {
+        "passed": passed,
+        "verdict": "PASS" if passed else "REJECT",
+        "severity": "HARD",
+        "required": required,
+        "matched": list(matched.keys()),
+        "missing": [r["title"] for r in refs_to_check if r["title"] not in matched],
+        "blockquotes_checked": len(long_blockquote_records),
+        "reason": "missing_publishable_quotes" if not passed else None,
+        "topical_mismatches": topical_mismatches,
+    }
+
+
+# DEPRECATED: split into chunk_context_for_all_refs + published_quote_for_publishable_refs as of 2026-05-27.
+# Remove after one successful Phase 2a refire.
 def _textbook_grounding_gate(
     module_text: str,
     plan: Mapping[str, Any],
