@@ -10,9 +10,12 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from ai_llm.fallback import (
+    AGY_GEMINI_MODEL,
     FINAL_GEMINI_MODEL,
     FLASH_GEMINI_MODEL,
     PRIMARY_GEMINI_MODEL,
+    AttemptOutcome,
+    build_gemini_ladder,
     call_gemini_with_fallback,
 )
 
@@ -66,6 +69,37 @@ def _base_env() -> dict[str, str]:
         "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/fake-creds.json",
         "GEMINI_SESSION": "1",
     }
+
+
+def test_build_gemini_ladder_inserts_agy_between_pro_and_flash():
+    ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
+
+    assert [(r.cli, r.model, r.auth_mode) for r in ladder] == [
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "api"),
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "oauth"),
+        ("agy-cli", AGY_GEMINI_MODEL, None),
+        ("gemini-cli", FLASH_GEMINI_MODEL, "api"),
+        ("gemini-cli", FLASH_GEMINI_MODEL, "oauth"),
+        ("gemini-cli", FINAL_GEMINI_MODEL, "api"),
+        ("gemini-cli", FINAL_GEMINI_MODEL, "oauth"),
+    ]
+    assert [r.index for r in ladder] == list(range(1, 8))
+    assert all(r.total == 7 for r in ladder)
+
+
+def test_build_gemini_ladder_without_api_key_keeps_agy_rung():
+    ladder = build_gemini_ladder(
+        allowed_auth_modes=("oauth",),
+    )
+
+    assert [(r.cli, r.model, r.auth_mode) for r in ladder] == [
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "oauth"),
+        ("agy-cli", AGY_GEMINI_MODEL, None),
+        ("gemini-cli", FLASH_GEMINI_MODEL, "oauth"),
+        ("gemini-cli", FINAL_GEMINI_MODEL, "oauth"),
+    ]
+    assert [r.index for r in ladder] == [1, 2, 3, 4]
+    assert all(r.total == 4 for r in ladder)
 
 
 def test_call_gemini_with_fallback_rung1_success(tmp_path):
@@ -141,6 +175,13 @@ def test_call_gemini_with_fallback_all_rungs_rate_limited(tmp_path):
         ]
     )
 
+    def agy_runner(_prompt: str, _timeout_s: int | None) -> AttemptOutcome:
+        return AttemptOutcome(
+            status="rate_limited",
+            elapsed_s=0.1,
+            stderr_excerpt="Agy quota exceeded",
+        )
+
     with patch("ai_llm.fallback.subprocess.Popen", factory):
         result = call_gemini_with_fallback(
             "prompt",
@@ -149,21 +190,99 @@ def test_call_gemini_with_fallback_all_rungs_rate_limited(tmp_path):
             base_env=_base_env(),
             logger=lambda _msg: None,
             sleep_fn=lambda _seconds, _reason: None,
+            agy_runner=agy_runner,
         )
 
     assert result.ok is False
     assert result.response_text is None
-    assert len(result.attempts) == 6
-    assert [attempt.model for attempt in result.attempts] == [
-        PRIMARY_GEMINI_MODEL,
-        PRIMARY_GEMINI_MODEL,
-        FLASH_GEMINI_MODEL,
-        FLASH_GEMINI_MODEL,
-        FINAL_GEMINI_MODEL,
-        FINAL_GEMINI_MODEL,
+    assert len(result.attempts) == 7
+    assert [(attempt.cli, attempt.model) for attempt in result.attempts] == [
+        ("gemini-cli", PRIMARY_GEMINI_MODEL),
+        ("gemini-cli", PRIMARY_GEMINI_MODEL),
+        ("agy-cli", AGY_GEMINI_MODEL),
+        ("gemini-cli", FLASH_GEMINI_MODEL),
+        ("gemini-cli", FLASH_GEMINI_MODEL),
+        ("gemini-cli", FINAL_GEMINI_MODEL),
+        ("gemini-cli", FINAL_GEMINI_MODEL),
     ]
     assert all(attempt.status == "rate_limited" for attempt in result.attempts)
-    assert "all 6 Gemini fallback rungs rate-limited" in (result.error_message or "")
+    assert "all 7 Gemini fallback rungs exhausted" in (result.error_message or "")
+
+
+def test_call_gemini_with_fallback_agy_success_after_pro_rate_limit(tmp_path):
+    factory = _FakePopenFactory(
+        [
+            {"stdout": "", "stderr": "rate_limited 429", "returncode": 1},
+            {"stdout": "", "stderr": "quota", "returncode": 1},
+        ]
+    )
+
+    def agy_runner(_prompt: str, _timeout_s: int | None) -> AttemptOutcome:
+        return AttemptOutcome(
+            status="success",
+            elapsed_s=0.1,
+            response_text="Agy answer" * 20,
+        )
+
+    with patch("ai_llm.fallback.subprocess.Popen", factory):
+        result = call_gemini_with_fallback(
+            "prompt",
+            task_name="unit-test",
+            cwd=tmp_path,
+            base_env=_base_env(),
+            logger=lambda _msg: None,
+            sleep_fn=lambda _seconds, _reason: None,
+            agy_runner=agy_runner,
+        )
+
+    assert result.ok is True
+    assert result.model_used == AGY_GEMINI_MODEL
+    assert result.auth_mode_used is None
+    assert result.cli_used == "agy-cli"
+    assert [(attempt.cli, attempt.model, attempt.status) for attempt in result.attempts] == [
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "rate_limited"),
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "rate_limited"),
+        ("agy-cli", AGY_GEMINI_MODEL, "success"),
+    ]
+
+
+def test_call_gemini_with_fallback_agy_failure_falls_to_flash(tmp_path):
+    factory = _FakePopenFactory(
+        [
+            {"stdout": "", "stderr": "rate_limited 429", "returncode": 1},
+            {"stdout": "", "stderr": "quota", "returncode": 1},
+            {"stdout": "Flash answer" * 20, "stderr": "", "returncode": 0},
+        ]
+    )
+
+    def agy_runner(_prompt: str, _timeout_s: int | None) -> AttemptOutcome:
+        return AttemptOutcome(
+            status="retryable_error",
+            elapsed_s=0.1,
+            stderr_excerpt="agy unavailable",
+        )
+
+    with patch("ai_llm.fallback.subprocess.Popen", factory):
+        result = call_gemini_with_fallback(
+            "prompt",
+            task_name="unit-test",
+            cwd=tmp_path,
+            base_env=_base_env(),
+            logger=lambda _msg: None,
+            sleep_fn=lambda _seconds, _reason: None,
+            agy_runner=agy_runner,
+        )
+
+    assert result.ok is True
+    assert result.model_used == FLASH_GEMINI_MODEL
+    assert result.auth_mode_used == "api"
+    assert result.cli_used == "gemini-cli"
+    assert [(attempt.cli, attempt.model, attempt.status) for attempt in result.attempts] == [
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "rate_limited"),
+        ("gemini-cli", PRIMARY_GEMINI_MODEL, "rate_limited"),
+        ("agy-cli", AGY_GEMINI_MODEL, "retryable_error"),
+        ("gemini-cli", FLASH_GEMINI_MODEL, "success"),
+    ]
 
 
 def test_call_gemini_with_fallback_non_rate_limit_retries_same_rung(tmp_path):
