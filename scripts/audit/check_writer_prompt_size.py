@@ -5,11 +5,17 @@ Per architectural reset 2026-05-23
 decision row C), strip cycle PR-C 2026-05-23): rendered writer prompt must
 stay under WRITER_PROMPT_CEILING_BYTES for all level/module fixtures.
 
-Empirical baseline (post-PR-C):
-- a1/my-morning rendered: ~120KB target, 130KB ceiling (10KB headroom for
-  manifest variance across modules)
-- Below 120KB requires per-module data restructure (PR-D scope: knowledge-packet
-  diet, manifest compression)
+Empirical baseline:
+- 2026-05-23 (PR-C strip): 120KB target, 130KB ceiling (10KB headroom for
+  manifest variance across modules).
+- 2026-05-27 (Path B + 4 hardening PRs #2366/#2367/#2370/#2371): bumped to
+  132KB ceiling. The hardening rules added ~3KB; bumping vs trimming the
+  hardening was the choice (hardening rules are load-bearing per PR #2358's
+  empirical calibration). The pivot to wiki-driven writer (post-2026-05-27)
+  is expected to collapse most rules and let the ceiling drop back to 130KB
+  or below.
+- Below 120KB requires per-module data restructure (knowledge-packet
+  diet, manifest compression).
 
 If a fixture's rendered prompt exceeds the ceiling, fail the build so the strip
 cycle does not regress silently.
@@ -24,7 +30,7 @@ import pytest
 from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
 
-WRITER_PROMPT_CEILING_BYTES = 130 * 1024  # 130KB
+WRITER_PROMPT_CEILING_BYTES = 132 * 1024  # 132KB (bumped from 130KB 2026-05-27)
 
 # Fixture modules to enforce against. Add more as the strip proves out on each
 # level. Start with the A1 anchor.

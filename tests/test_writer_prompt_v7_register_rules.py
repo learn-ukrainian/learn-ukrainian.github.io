@@ -50,6 +50,15 @@ WRITER_RULE_ANCHORS = (
         ),
     ),
     (
+        "#R-PROSE-FLOOR-A1",
+        (
+            "Prose words only — section budget",
+            "count PROSE only",
+            "Structural elements are *bonus density*",
+            "Reach the prose floor BEFORE you optimize",
+        ),
+    ),
+    (
         "#R-CLEAN-TABLES",
         (
             "Tables: bold ONLY the target Ukrainian forms",
