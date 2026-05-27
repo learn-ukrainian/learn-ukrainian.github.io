@@ -13,7 +13,7 @@ WRITER_RULE_ANCHORS = (
         (
             "One teacher voice across the whole module",
             "third-person framing of the learner",
-            "`the student`, `студента`, `the reader`, `учня`",
+            "`the student`, `учня`",
         ),
     ),
     (
@@ -21,7 +21,7 @@ WRITER_RULE_ANCHORS = (
         (
             "A1 explanation prose stays in English",
             "Ukrainian appears only as TARGET",
-            "`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`",
+            "`Запам'ятай...`",
         ),
     ),
     (
@@ -47,6 +47,15 @@ WRITER_RULE_ANCHORS = (
             "Use proper grammatical terminology in English explanations",
             "`a thing`, `an action`, `a word for`, `a doing-word`, `the X-form of Y`",
             "Adult learners benefit from real grammar terms",
+        ),
+    ),
+    (
+        "#R-PROSE-FLOOR-A1",
+        (
+            "Prose words only — section budget",
+            "count PROSE only",
+            "Structural elements are *bonus density*",
+            "Reach the prose floor BEFORE you optimize",
         ),
     ),
     (

@@ -1041,7 +1041,10 @@ def _render_wiki_coverage_required_items(wiki_manifest: str | Mapping[str, Any])
         _normalize_required_claim,
     )
 
-    lines = []
+    lines = [
+        "**Coverage rule**: every listed item MUST appear at least once in `module.md` PROSE (model sentence, definition, or paragraph). A vocab table entry alone is NOT coverage. Structural elements (tables, dialogue boxes) count for vocabulary but NOT for wiki_coverage obligations.",
+        "",
+    ]
     # Sequence steps
     for item in manifest.get("sequence_steps", []):
         oid = str(item.get("id") or "")

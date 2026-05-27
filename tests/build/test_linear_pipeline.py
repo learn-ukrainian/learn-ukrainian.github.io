@@ -2813,7 +2813,7 @@ def test_linear_write_prompt_carries_anti_meta_narration_directive() -> None:
     # The directive references concrete forbidden phrases so the writer can
     # pattern-match. A future agent that wants to soften this should bring
     # data showing the chatty-intro failure mode is gone, not just delete it.
-    for forbidden_phrase in ("Welcome to", "In this section we will learn"):
+    for forbidden_phrase in ("Welcome...", "In this section..."):
         assert forbidden_phrase in prompt_text, (
             f"Anti-meta-narration directive must name {forbidden_phrase!r} as a "
             f"forbidden phrase"
