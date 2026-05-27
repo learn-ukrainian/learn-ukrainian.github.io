@@ -21,13 +21,11 @@ Activities test Ukrainian, not content recall. Pure language mechanics are fine;
 
 Produce exactly four artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`. Plans are immutable; wiki packet and implementation map are source obligations, not optional background.
 
-## Citation authority (read this FIRST, applies to every artifact)
+## Citation authority (applies to every artifact)
 
-The plan's `references` field is the SOLE source of textbook citations for `resources.yaml`. Knowledge Packet anchors (S1, S2, S3, ...) are research material — they help you UNDERSTAND topic context, but they are NOT citation candidates. If a Knowledge Packet anchor points to a chunk OUTSIDE `plan.references`, you MUST NOT cite that chunk in `resources.yaml`.
+`plan.references` is the SOLE source of `resources.yaml` citations. Knowledge Packet anchors (S1, S2, ...) are research material — NOT citation candidates. If a Knowledge Packet anchor points to a chunk OUTSIDE `plan.references`, you MUST NOT cite that chunk.
 
-Concrete example: if `plan.references` lists [Захарійчук Grade 1, p.24] and the Knowledge Packet S1 anchor points to Захарійчук Grade 4 p.150, you cite ONLY Grade 1 p.24. The Grade 4 anchor is research context, not citation material.
-
-This rule overrides any later instruction that suggests "enriching" or "extending" plan_references — those instructions apply within the plan-provided sources, never outside them.
+Concrete example: if `plan.references` lists [Захарійчук Grade 1, p.24] and Knowledge Packet S1 points to Захарійчук Grade 4 p.150, cite ONLY Grade 1 p.24. This overrides any later "enrich plan_references" instruction.
 
 Published tabs are fixed: Tab 1 `Урок` from `module.md`; Tab 2 `Словник` from `vocabulary.yaml`; Tab 3 `Вправи` from `activities.yaml` plus inline cross-references; Tab 4 `Ресурси` from `resources.yaml`.
 
@@ -48,17 +46,13 @@ authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section (<=200 words).
 
 Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
-
-<word_budget>Section word allocation and running total vs {WORD_TARGET}.</word_budget>
-<plan_vocab>Required plan-vocabulary lemmas used here, with the grounding Ukrainian sentence.</plan_vocab>
-<register>Immersion ratio from the Immersion Rule and how this section preserves it.</register>
-<teaching_sequence>Which Knowledge Packet facts/citations this section uses.</teaching_sequence>
-<implementation_map>
-<!-- rule_id: #R-IMPL-MAP-COMPLETE -->
-List every `obligation_id` exactly once: obligation_id, artifact, location, treatment. Omission causes `implementation_map_missing`. If a row cannot fit A1 scope, emit artifact/location `<none>` and treatment `deferred — <why>`.
-</implementation_map>
-<verification_plan>MCP tools to call for this section's claims.</verification_plan>
-<verification_trace>Exact tool call signatures; omit speculative examples.</verification_trace>
+- `<word_budget>`: section word allocation + running total vs {WORD_TARGET}.
+- `<plan_vocab>`: required plan-vocabulary lemmas used + grounding Ukrainian sentence.
+- `<register>`: immersion ratio from the Immersion Rule + how this section preserves it.
+- `<teaching_sequence>`: Knowledge Packet facts/citations this section uses.
+- `<implementation_map>` (<!-- rule_id: #R-IMPL-MAP-COMPLETE -->): list every `obligation_id` exactly once with artifact, location, treatment. Omission causes `implementation_map_missing`. If a row cannot fit A1 scope, emit artifact/location `<none>` and treatment `deferred — <why>`.
+- `<verification_plan>`: MCP tools to call for this section's claims.
+- `<verification_trace>`: exact tool call signatures; omit speculative examples.
 
 Prefer single-call verification: `verify_quote`, `verify_source_attribution`, `check_modern_form`, `check_russian_shadow`. Search for quote evidence.
 
@@ -319,7 +313,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Use grammar terms at A1.** Use proper grammatical terminology in English explanations: **noun**, **verb**, **adjective**, **adverb**, **pronoun**, **reflexive**, **conjugation**. Do NOT paraphrase (`a thing`, `an action`, `a word for`, `a doing-word`, `the X-form of Y`). Adult learners benefit from real grammar terms because they transfer to future modules and outside references.
 
 <!-- rule_id: #R-PROSE-FLOOR-A1 -->
-**Prose words only — section budget.** Per-section word budgets (270-330 for A1) count PROSE only. Callouts (`:::tip`, `:::caution`), dialogue boxes (`<DialogueBox ...>`), table cells, model-sentence bullets, and code/MDX comments do NOT count toward the budget. Structural elements are *bonus density*, not budget. You must STILL include ≥270 words of explanatory prose AROUND tables/callouts — a heading + one paragraph + a table is probably 80-120 prose words plus structural fill, not 270. Reach the prose floor BEFORE you optimize for clean structure; the `plan_sections` and `word_count` gates count prose only.
+**Prose words only — section budget.** Per-section word budgets (270-330 for A1) count PROSE only. Callouts, dialogue boxes, table cells, bullets, comments do NOT count. Structural elements are *bonus density*, not budget — still emit ≥270 words of prose AROUND tables/callouts. Reach the prose floor BEFORE you optimize for clean structure.
 
 <!-- rule_id: #R-CLEAN-TABLES -->
 **Clean table formatting.** Tables: bold ONLY the target Ukrainian forms. Pronoun columns (`я`, `ти`, ...), English headers, and English glosses remain in regular weight. Conjugation tables teaching a present-tense paradigm must include the FULL set of person/number rows: **я / ти / він,вона,воно / ми / ви / вони** (six rows). Vocabulary tables stay two-column unless a third column adds essential teaching value (e.g., stress mark, IPA).
