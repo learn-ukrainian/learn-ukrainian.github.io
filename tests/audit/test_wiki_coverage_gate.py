@@ -203,9 +203,10 @@ def test_sequence_step_passes_when_h1_title_collides_with_h2_section() -> None:
         "## Мій ранок\n\n"
         "**Sequence words** — these are the connective tissue:\n\n"
         "- **спочатку** — first\n- **потім** — then\n"
-        "- **нарешті** — finally\n- **завжди** — always\n\n"
-        "Build a narrative from **іменниками** like **сніданок** "
-        "and **зарядка**, plus **прислівниками** of time.\n\n"
+        "- **нарешті** — finally\n- **завжди** — always\n"
+        "- **ніколи** — never\n\n"
+        "Build a narrative from **іменниками** like **вода**, **сніданок** "
+        "and **зарядка**, plus **прислівниками** of time like **раненько**.\n\n"
         "## Підсумок\n\nWrap-up here.\n"
     )
     implementation_map = {

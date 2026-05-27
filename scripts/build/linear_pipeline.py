@@ -1026,6 +1026,61 @@ def _render_prompt_wiki_manifest(wiki_manifest: str | Mapping[str, Any]) -> str:
     return json.dumps(compact, ensure_ascii=False, indent=2)
 
 
+def _render_wiki_coverage_required_items(wiki_manifest: str | Mapping[str, Any]) -> str:
+    """Render a breakdown of required items for the writer prompt."""
+    if isinstance(wiki_manifest, str):
+        try:
+            manifest = json.loads(wiki_manifest)
+        except json.JSONDecodeError:
+            return ""
+    else:
+        manifest = wiki_manifest
+
+    from scripts.audit.wiki_coverage_gate import (
+        _extract_required_items,
+        _normalize_required_claim,
+    )
+
+    lines = []
+    # Sequence steps
+    for item in manifest.get("sequence_steps", []):
+        oid = str(item.get("id") or "")
+        claim = str(item.get("required_claim") or item.get("heading") or "")
+        if not claim:
+            continue
+        normalized = _normalize_required_claim(claim)
+        extracted = _extract_required_items(normalized)
+
+        if not (extracted["vocabulary"] or extracted["examples"]):
+            continue
+
+        lines.append(f"### {oid} (sequence step)")
+        if extracted["vocabulary"]:
+            lines.append(f"- Vocabulary to introduce: {', '.join(extracted['vocabulary'])}")
+        if extracted["examples"]:
+            lines.append(f"- Required examples: {', '.join(f'«{e}»' for e in extracted['examples'])}")
+        lines.append(f"- Pedagogical goal: {normalized}")
+        lines.append("")
+
+    # L2 errors
+    for item in manifest.get("l2_errors", []):
+        oid = str(item.get("id") or "")
+        incorrect = str(item.get("incorrect") or "")
+        correct = str(item.get("correct") or "")
+        why = str(item.get("why") or "")
+        if not (incorrect or correct):
+            continue
+
+        lines.append(f"### {oid} (L2 error contrast)")
+        lines.append(f"- Required contrast: incorrect `{incorrect}` vs correct `{correct}`")
+        lines.append(f"- Pedagogical goal: {why}")
+        if str(item.get("treatment")) == "contrast_pair":
+             lines.append("- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields")
+        lines.append("")
+
+    return "\n".join(lines).strip()
+
+
 def build_wiki_manifest(
     plan_path: Path | None = None,
     *,
@@ -2784,17 +2839,23 @@ def writer_context(
     learner_state = build_learner_state(level.lower(), sequence)
     activity_config = _activity_config(level, sequence, str(plan["slug"]))
     if wiki_manifest is None:
-        wiki_manifest_text = build_wiki_manifest(level=level.lower(), slug=str(plan["slug"]), plan=plan)
+        wiki_manifest_data = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
+        wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest_data)
+        required_items_text = _render_wiki_coverage_required_items(wiki_manifest_data)
     elif isinstance(wiki_manifest, str):
         wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
+        required_items_text = _render_wiki_coverage_required_items(wiki_manifest)
     else:
         wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
+        required_items_text = _render_wiki_coverage_required_items(wiki_manifest)
+
     if implementation_map is None:
         impl_map_contract = "(no implementation_map provided to render_writer_prompt — gate will fail)"
     else:
         from scripts.build.phases.implementation_map import render_for_writer_prompt
 
         impl_map_contract = render_for_writer_prompt(dict(implementation_map))
+
     return {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
@@ -2806,6 +2867,7 @@ def writer_context(
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
         "WIKI_MANIFEST": wiki_manifest_text,
+        "WIKI_COVERAGE_REQUIRED_ITEMS": required_items_text,
         "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "LEARNER_STATE": format_learner_state(learner_state),
         "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence, learner_state=learner_state),

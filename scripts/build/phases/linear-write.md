@@ -168,6 +168,17 @@ single largest reason A1 modules under-teach.
 
 {WIKI_MANIFEST}
 
+## Wiki Coverage Required Items (per-obligation breakdown)
+
+For each plan reference / wiki obligation, the lesson MUST teach the
+following specific items. Integrate them into the natural lesson
+flow (a model sentence using the noun, a usage example for the
+adverb, a conjugation row, a phonetic transcription). Do NOT echo
+the `Крок N:` label or `[S\d+]` source markers — those are
+writer-side scaffolding (forbidden per `#R-NO-SCAFFOLDING-LEAKS`).
+
+{WIKI_COVERAGE_REQUIRED_ITEMS}
+
 ## Implementation Map Contract
 
 The pipeline has pre-resolved every wiki obligation listed above into a concrete contract: `(obligation_id, artifact, location_hint, treatment_template)`. Your job for this section of the protocol is to **emit each row's required element at the row's `location_hint`, populated using the row's `treatment_template`**. Do NOT invent new obligations beyond those in the manifest. Do NOT skip rows. The deterministic `wiki_coverage_gate` verifies coverage row-by-row against this contract; missing rows produce `fix_proposals` and the rebuild is wasted.
