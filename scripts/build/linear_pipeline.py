@@ -6093,6 +6093,7 @@ def run_python_qg(
     record("citations_resolve", _citation_gate(resources, plan))
     record("plan_reference_match", _plan_reference_match_gate(resources, plan))
     record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
+    record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text))
     record(
         "resources_search_attempted",
         _resources_search_attempted_gate(_load_writer_tool_calls(module_dir)),
@@ -6712,6 +6713,12 @@ def _contract_yaml(plan: Mapping[str, Any]) -> str:
             }
             for section in plan.get("content_outline", [])
         ],
+        "vocabulary_required": plan.get("vocabulary_hints", {}).get("required", [])
+        if isinstance(plan.get("vocabulary_hints"), dict)
+        else plan.get("vocabulary_hints", []),
+        "vocabulary_optional": plan.get("vocabulary_hints", {}).get("optional", [])
+        if isinstance(plan.get("vocabulary_hints"), dict)
+        else [],
         "source_note": "Full plan below is authoritative for points, activity hints, vocabulary, and references.",
     }
     return yaml.safe_dump(contract, allow_unicode=True, sort_keys=False).strip()
@@ -9503,3 +9510,157 @@ def _strip_frontmatter(text: str) -> str:
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
+def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
+    """Verify textbook quote fidelity against the sources DB."""
+    import re
+
+    from rapidfuzz import distance, fuzz
+
+    from scripts.wiki.sources_db import search_textbooks
+
+    violations: list[dict[str, Any]] = []
+    checked = 0
+
+    lines = module_text.splitlines()
+    quotes: list[dict[str, Any]] = []
+
+    current_quote: list[str] = []
+    no_verify = False
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+
+        if re.match(r"^\s*<!--\s*NO_VERIFY:", line):
+            j = i + 1
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            if j < len(lines) and lines[j].strip().startswith(">"):
+                no_verify = True
+            i += 1
+            continue
+
+        if re.match(r"^\s*>\s?(.*)$", line):
+            match = re.match(r"^\s*>\s?(.*)$", line)
+            content = match.group(1).strip() if match else ""
+            if content.startswith("[!"):
+                while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
+                    i += 1
+                continue
+
+            while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
+                current_quote.append(re.match(r"^\s*>\s?(.*)$", lines[i]).group(1)) # type: ignore
+                i += 1
+
+            j = i
+            if j < len(lines) and not lines[j].strip():
+                j += 1
+
+            attr_line = ""
+            if j < len(lines):
+                attr = _extract_textbook_attribution(lines[j])
+                if attr:
+                    attr_line = attr
+
+            quotes.append({
+                "text": "\n".join(current_quote).strip(),
+                "attribution": attr_line,
+                "no_verify": no_verify
+            })
+            current_quote = []
+            no_verify = False
+            continue
+
+        i += 1
+
+    def _normalize(s: str) -> str:
+        s = re.sub(r'[^а-яіїєґА-ЯІЇЄҐ0-9]', '', s.lower())
+        return s
+
+    for q in quotes:
+        text = q["text"]
+        attr = q["attribution"]
+        nv = q["no_verify"]
+
+        if not text:
+            continue
+
+        checked += 1
+
+        if not attr:
+            if not nv:
+                violations.append({
+                    "quote": text,
+                    "attribution": "",
+                    "reason": "Missing attribution without NO_VERIFY"
+                })
+            continue
+
+        if nv:
+            continue
+
+        ukr_words = re.findall(r'[а-яіїєґА-ЯІЇЄҐ]+', text)
+        keywords = {w.lower() for w in ukr_words if len(w) >= 3}
+        if not keywords:
+            continue
+
+        try:
+            hits = search_textbooks(keywords, 20)
+        except Exception:
+            hits = []
+
+        if not hits:
+            violations.append({
+                "quote": text,
+                "attribution": attr,
+                "reason": "No match in textbook corpus"
+            })
+            continue
+
+        norm_quote = _normalize(text)
+        best_diff = float('inf')
+        best_source_text = ""
+
+        for hit in hits:
+            chunk = hit.get("text", "")
+            norm_chunk = _normalize(chunk)
+
+            l_q = len(norm_quote)
+            if l_q == 0:
+                continue
+
+            if norm_quote in norm_chunk:
+                best_diff = 0
+                best_source_text = chunk
+                break
+
+            for k in range(max(1, len(norm_chunk) - l_q + 1)):
+                window = norm_chunk[k:k+l_q]
+                d = distance.Levenshtein.distance(norm_quote, window)
+                if d < best_diff:
+                    best_diff = d
+                    best_source_text = chunk
+
+            if len(norm_chunk) < l_q:
+                d = distance.Levenshtein.distance(norm_quote, norm_chunk)
+                if d < best_diff:
+                    best_diff = d
+                    best_source_text = chunk
+
+        if best_diff >= 3:
+            violations.append({
+                "quote": text,
+                "attribution": attr,
+                "reason": f"Text differs by >=3 chars (diff: {best_diff})",
+                "nearest_source": best_source_text
+            })
+
+    passed = len(violations) == 0
+    return {
+        "passed": passed,
+        "checked": checked,
+        "violations": violations,
+        "message": f"verify_quote: {checked} checked, {len(violations)} violations" if violations else f"verify_quote: {checked} verified",
+        "verdict": "PASS" if passed else "REJECT",
+        "severity": "HARD" if not passed else None
+    }
