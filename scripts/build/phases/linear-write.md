@@ -91,6 +91,10 @@ Stick to **сніданок** (not the Russian-borrowed <!-- bad -->завтра
 (not the surzhyk <!-- bad -->одіватися<!-- /bad -->).
 ```
 
+**Positive requirement for A1-A2 vocabulary modules:** when the module covers vocabulary domains where L1-Russian-exposure learners are likely to substitute Russian borrowings (food/dining, household items, clothing, daily routines, family, body, time-of-day expressions, transportation, common verbs of action), include **AT LEAST ONE** explicit bad-form contrast pair using the marker syntax above. This is a pedagogical tool (contrast pairs accelerate L2 acquisition) AND satisfies the `llm_qg.decolonization` rubric's criterion (b) — see `scripts/build/phases/linear-review-dim.md` § `decolonization`. Empirical evidence (m20 round #12, codex-tools, a1-my-morning-20260526-204640): module had Ukrainian-canonical vocabulary throughout + one stance line but **zero** bad-form markers; under the recalibrated rubric (PR #2358) the reviewer scored decolonization 8.7 (criterion a + c satisfied, b absent) — 0.3 short of the A1 9.0 floor that would have shipped the module. Pick the single most-likely L1 substitution for the module's topic (e.g. for a morning-routine module: завтрак→сніданок is the canonical one) and include it concretely. One marker pair is sufficient; this isn't a quantity gate.
+
+Modules whose topic does NOT involve L1-Russian-substitutable vocabulary (e.g. pure grammar abstractions, IPA-only phonetics drill, formal-letter templates) are exempt — but for those, document the exemption inline in your `<plan_reasoning>` so the reviewer doesn't dock for absence.
+
 Apply the same convention in `module.md`, `activities.yaml` statements/items, and `vocabulary.yaml` usage lines when they name a wrong form. `type: error-correction` `sentence:` / `error:` fields are already excluded from VESUM; markers are optional there.
 
 **CONCRETE FORBIDDEN PATTERNS — HARD REJECT.** These trip `vesum_verified`, `formatting_standards`, or `russianisms_clean` unless the bad form is comment-marked:
