@@ -722,10 +722,37 @@ def _location_text(text: str, location: str) -> str:
     with title-length proximity as a tiebreaker so the deeper match
     wins, but degrade gracefully to the earlier behaviour when only one
     candidate exists.
+
+    Multi-location locations (slash- or comma-joined, e.g. `§Діалоги/§Підсумок`
+    or `§Діалоги, §Підсумок`) are treated as a UNION — the obligation is
+    satisfied if its substance appears in ANY of the named sections, not
+    only the tiebreaker-winner. Returns concatenated section text.
+    Discovered 2026-05-27 in m20 round #15 build a1-my-morning-20260527-073054:
+    codex's implementation_map row claimed `location="§Діалоги/§Підсумок"`
+    for ban-4; the substance was at line 30 in §Діалоги but the title-gap
+    tiebreaker picked §Підсумок (no substance) → ban_substance_missing →
+    halt with 17/18 wiki coverage when actually 18/18 was achievable.
     """
 
     if not location or location.casefold() in {"module.md", "whole file", "file"}:
         return text
+    parts = [
+        part for part in re.split(r"\s*[/,;]\s*", location.strip()) if part.strip()
+    ]
+    if len(parts) > 1:
+        chunks = [_location_text(text, part) for part in parts]
+        # Deduplicate: a single section matching multiple location parts
+        # (rare but possible if writer repeats themselves) shouldn't get
+        # double-counted by substance matchers. Keep insertion order.
+        seen: set[int] = set()
+        out: list[str] = []
+        for chunk in chunks:
+            key = id(chunk) if chunk is text else hash(chunk[:200])
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(chunk)
+        return "\n".join(out)
     location_key = location.strip().lstrip("#§ ").casefold()
     heading_re = re.compile(r"^(?P<marks>#{1,6})\s+(?P<title>.+?)\s*$", re.MULTILINE)
     headings = list(heading_re.finditer(text))
