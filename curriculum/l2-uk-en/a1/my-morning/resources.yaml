@@ -1,12 +1,14 @@
-- title: Захарійчук Grade 4, p.162
-  source_ref: Захарійчук Grade 4, p.162
-  author: Захарійчук
-  pages: "162"
-  description: "Spelling and pronunciation practice for verbs in -ся."
+- title: Захарійчук Grade 1, p.24
   role: textbook
-- title: Захарійчук Grade 4, p.163
-  source_ref: Захарійчук Grade 4, p.163
-  author: Захарійчук
-  pages: "163"
-  description: "Continuation practice for verbs in -ся."
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024
+  notes: 'Plan reference. Grade 1 daily-plan text with routine infinitives: Поснідати,
+    Одягнутися, Прогулятися, Погратися.'
+- title: Захарійчук Grade 1, p.52
   role: textbook
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0052
+  notes: 'Plan reference. Grade 1 self-directed morning sequence: устав, прибрав ліжко,
+    зробив зарядку, поставив чашку, помив посуд.'
+- title: Ранок — Українська Вікіпедія
+  role: wiki
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%B0%D0%BD%D0%BE%D0%BA
+  notes: Brief Ukrainian context for ранок as the beginning of the day.
