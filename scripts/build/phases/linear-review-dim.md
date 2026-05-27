@@ -40,9 +40,59 @@ For `{DIM}` specifically:
   budgets and section presence; you assess whether the pedagogy *works*.
 - `naturalness`: does Ukrainian read as native? The gate confirmed VESUM +
   russianism shadow; you assess flow, register, idiom.
-- `decolonization`: is the framing Ukrainian-centered? The gate confirmed
-  forbidden_words; you assess whether the lesson teaches Ukrainian on its
-  own terms vs as "like Russian but...".
+- `decolonization`: is the lesson teaching Ukrainian **on its own terms**?
+  The gate confirmed forbidden_words.
+
+  **Anchoring principle: teaching codified Ukrainian to learners of a
+  historically depressed language IS the substantive decolonization act.**
+  Do NOT score 9.0+ as requiring extra anti-colonial rhetoric piled on top
+  of clean canonical teaching. That would politicize grammar lessons
+  without adding pedagogical value. The scoring anchor differs by module
+  type:
+
+  **Topic-neutral modules (grammar, vocabulary basics, phonetics):**
+  9.0+ baseline if all three apply:
+  (a) Ukrainian-canonical vocabulary throughout (e.g. `сніданок` not
+  `завтрак`, `рушник` not `полотенце`, `одягатися` not `одіватися`) —
+  using VESUM/Pravopys-2019 codified forms, not Russified or surzhyk
+  approximations.
+  (b) At least one bad-form contrast marker pair
+  (`<!-- bad -->завтрак<!-- /bad -->` → `сніданок`) where learners are
+  likely to encounter the Russified form. Even ONE pair is enough — this
+  isn't a quantity gate.
+  (c) Grammar and morphology presented on Ukrainian terms — VESUM /
+  Pravopys-2019 as the authority — NOT scaffolded through "like Russian
+  but..." or cross-language similarity as the entry point. One brief
+  stance line (e.g. "Ukrainian routine words are short and practical")
+  is a bonus but NOT a requirement to clear 9.0.
+
+  **Topic-loaded modules (history, biography, literature, culture, war,
+  politics):** higher bar because the topic demands it. 9.0+ requires
+  substantive framing: explicit Russification / imperial-framing /
+  Soviet-euphemism rejection where relevant. A history module that says
+  "Civil War" instead of "Українська революція 1917-1921" or "Soviet
+  famine" instead of "Holodomor / genocide", a bio module that uses
+  Russian-imperial transliteration of a Ukrainian figure's name, or a
+  literature module that frames Ukrainian writers as "regional Russian
+  literature" — these fail decolonization regardless of vocabulary
+  cleanliness.
+
+  **REVISE territory (<9.0):**
+  - Leans on Russian to explain Ukrainian ("the Russian equivalent
+    would be...") as the primary scaffolding.
+  - Uses Russified vocabulary unmarked (no bad-form contrast).
+  - Presents Ukrainian as derivative of Russian.
+  - For topic-loaded content, omits substantive framing the topic demands.
+
+  **REJECT territory (<7.0):**
+  - Uses Russocentric periodization or Soviet euphemisms uncritically.
+  - Treats Russian-imperial sources as authoritative on Ukrainian subjects.
+
+  When you score, name the module's TYPE explicitly (topic-neutral vs
+  topic-loaded) in your reasoning and apply the corresponding anchor.
+  A morning-routine grammar module scoring 8.5 because the rubric was
+  read as demanding more rhetoric than the topic supports is a
+  reviewer-protocol failure under this anchor.
 - `tone`: is the teacher's voice consistent and warm? The gate caught
   META_NARRATION; you assess everything else about register.
 
