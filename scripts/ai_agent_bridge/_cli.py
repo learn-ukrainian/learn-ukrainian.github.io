@@ -821,6 +821,49 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Inline message text. Mutually exclusive with --from-file.",
     )
 
+    # send-agy-ui — Antigravity UI bridge mirroring send-codex-ui
+    send_agy_ui_parser = subparsers.add_parser(
+        "send-agy-ui",
+        help="Send a prompt to an Antigravity UI conversation via `agy --print`",
+    )
+    send_agy_ui_parser.add_argument(
+        "--thread",
+        required=False,
+        default=None,
+        help="Antigravity conversation id (omit or pass 'new' for a fresh conversation)",
+    )
+    send_agy_ui_parser.add_argument(
+        "--bridge-id",
+        default=None,
+        help="Correlation id (auto-generated if not given)",
+    )
+    send_agy_ui_parser.add_argument(
+        "--cwd",
+        default=None,
+        help="Working directory for the agy subprocess (default: caller's cwd)",
+    )
+    send_agy_ui_parser.add_argument(
+        "--timeout",
+        type=int,
+        default=1800,
+        help="Max wall-clock seconds (default 1800 = 30min)",
+    )
+    send_agy_ui_parser.add_argument(
+        "--from-file",
+        default=None,
+        help="Read message body from a file (use '-' for stdin)",
+    )
+    send_agy_ui_parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Print result as compact JSON (excludes verbose events list)",
+    )
+    send_agy_ui_parser.add_argument(
+        "message",
+        nargs="?",
+        help="Inline message text. Mutually exclusive with --from-file.",
+    )
+
     # Channel bridge commands (#1190) — registered in _channels_cli
     from ._channels_cli import register_channel_commands
     register_channel_commands(subparsers)
@@ -934,6 +977,25 @@ def _dispatch_command(args):
         if args.message:
             argv += [args.message]
         rc = _ui_codex_cli_main(argv)
+        sys.exit(rc)
+    elif args.command == "send-agy-ui":
+        from ._ui_agy import cli_main as _ui_agy_cli_main
+        argv = []
+        if args.thread:
+            argv += ["--thread", args.thread]
+        if args.bridge_id:
+            argv += ["--bridge-id", args.bridge_id]
+        if args.cwd:
+            argv += ["--cwd", args.cwd]
+        if args.timeout != 1800:
+            argv += ["--timeout", str(args.timeout)]
+        if getattr(args, "json", False):
+            argv += ["--json"]
+        if args.from_file:
+            argv += ["--from-file", args.from_file]
+        if args.message is not None:
+            argv += [args.message]
+        rc = _ui_agy_cli_main(argv)
         sys.exit(rc)
     elif args.command in ("channel", "post", "p", "reconcile", "sync", "discuss"):
         # Channel bridge commands (#1190)
