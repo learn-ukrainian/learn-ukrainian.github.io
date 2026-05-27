@@ -289,6 +289,15 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += f"\nbuild_status: {build_status}"
     if pipeline_version and pipeline_version not in ("v5", "v6"):
         extra_fm_lines += "\ndraft: true"
+
+    try:
+        from scripts.build.prev_next import get_prev_next_links
+        prev_link, next_link = get_prev_next_links(level, module_num)
+        extra_fm_lines += f"\nprev: {prev_link}" if prev_link else "\nprev: false"
+        extra_fm_lines += f"\nnext: {next_link}" if next_link else "\nnext: false"
+    except Exception:
+        pass
+
     frontmatter = f'''---
 title: "{escape_jsx(fm.get('title', 'Untitled'))}"
 description: "{escape_jsx(fm.get('subtitle', ''))}"
