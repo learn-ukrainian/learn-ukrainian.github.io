@@ -783,3 +783,133 @@ def test_l2_error_still_fails_when_workbook_activity_lacks_substance() -> None:
         "the required incorrect/correct contrast pair — the widened "
         "resolution window must not create a false-positive escape hatch"
     )
+
+
+def test_decolonization_ban_substance_resolves_across_slash_joined_locations() -> None:
+    """m20 round #15 (a1-my-morning-20260527-073054) regression: codex emitted
+    `<row obligation_id="ban-4" location="§Діалоги/§Підсумок" .../>` in the
+    implementation_map. The substance was at line 30 (in §Діалоги). The
+    `_location_text` tiebreaker picked §Підсумок (title-gap smaller) which
+    contained no substance → `ban_substance_missing` → 17/18 wiki coverage
+    when 18/18 was achievable. After the slash-union fix, both sections are
+    union-resolved and the substance in §Діалоги counts."""
+    manifest = {
+        "decolonization_bans": [
+            {
+                "id": "ban-4",
+                "rule": (
+                    "використовуємо виключно «рушник» (не «полотенце»), "
+                    "«сніданок» (не «завтрак»), «одягатися» (не «одіватися»)."
+                ),
+                "source_lines": "56",
+            }
+        ]
+    }
+    implementation_map = {
+        "ban-4": {
+            "obligation_id": "ban-4",
+            "artifact": "module.md",
+            "location": "§Діалоги/§Підсумок",
+            "treatment": "substance: marked сніданок/завтрак contrast.",
+        }
+    }
+    module_md = (
+        "# Мій ранок\n\n"
+        "## Діалоги\n\n"
+        "Контролюй чистоту словника: використовуємо виключно **рушник** "
+        "(не **полотенце**), **сніданок** (не **завтрак**), **одягатися** "
+        "(не **одіватися**).\n\n"
+        "## Підсумок\n\n"
+        "Your compact pattern is **ordinary verb ending + -ся**.\n"
+    )
+
+    result = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+    )
+
+    ban_result = next(o for o in result["obligations"] if o["obligation_id"] == "ban-4")
+    assert ban_result["status"] == "PASS", (
+        "slash-joined location §Діалоги/§Підсумок must union-resolve so the "
+        "substance in §Діалоги counts; was the tiebreaker silently picking "
+        "the wrong section?"
+    )
+    assert ban_result["reason"] == "ban_substance_present"
+
+
+def test_decolonization_ban_substance_still_fails_when_no_section_carries_it() -> None:
+    """Companion to the slash-union test: the gate must still HARD-fail when
+    substance is genuinely absent from both named sections."""
+    manifest = {
+        "decolonization_bans": [
+            {
+                "id": "ban-4",
+                "rule": "використовуємо «рушник» (не «полотенце»)",
+                "source_lines": "56",
+            }
+        ]
+    }
+    implementation_map = {
+        "ban-4": {
+            "obligation_id": "ban-4",
+            "artifact": "module.md",
+            "location": "§Діалоги/§Підсумок",
+            "treatment": "substance: marked contrast.",
+        }
+    }
+    module_md = (
+        "# Мій ранок\n\n"
+        "## Діалоги\n\nGood morning. The weather is nice today.\n\n"
+        "## Підсумок\n\nThat is the end.\n"
+    )
+
+    result = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+    )
+
+    ban_result = next(o for o in result["obligations"] if o["obligation_id"] == "ban-4")
+    assert ban_result["status"] == "FAIL"
+    assert ban_result["reason"] == "ban_substance_missing"
+
+
+def test_location_comma_join_also_resolves_as_union() -> None:
+    """Slash is the codex-tools convention; comma is a likely writer
+    alternative. Both should union-resolve to avoid future drift."""
+    manifest = {
+        "sequence_steps": [
+            {
+                "id": "step-1",
+                "required_claim": "Крок 1: introduce regular verb pattern",
+                "step_num": 1,
+                "source_lines": "23",
+            }
+        ]
+    }
+    implementation_map = {
+        "step-1": {
+            "obligation_id": "step-1",
+            "artifact": "module.md",
+            "location": "§Дієслова, §Діалоги",
+            "treatment": "step marker",
+        }
+    }
+    module_md = (
+        "# Module\n\n## Діалоги\n\n**Крок 1** introduces the regular verb "
+        "pattern with the **читати** conjugation.\n\n"
+        "## Дієслова\n\nMore content.\n"
+    )
+
+    result = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md=module_md,
+        activities_yaml="[]",
+    )
+
+    step_result = next(o for o in result["obligations"] if o["obligation_id"] == "step-1")
+    assert step_result["status"] == "PASS"
