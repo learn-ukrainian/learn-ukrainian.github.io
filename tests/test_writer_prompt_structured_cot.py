@@ -32,8 +32,8 @@ def _writer_template() -> str:
 def test_writer_prompt_locks_structured_plan_reasoning_nodes() -> None:
     prompt = _writer_template()
 
-    assert "Emit one `<plan_reasoning section=\"...\">` block per section" in prompt
-    assert "with these sub-nodes:" in prompt
+    assert "Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes" in prompt
+    assert "do not write a single blob of prose" in prompt
     for node in PLAN_REASONING_NODES:
         assert node in prompt
 

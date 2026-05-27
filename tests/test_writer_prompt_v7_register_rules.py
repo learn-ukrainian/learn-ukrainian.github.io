@@ -13,7 +13,7 @@ WRITER_RULE_ANCHORS = (
         (
             "One teacher voice across the whole module",
             "third-person framing of the learner",
-            "`the student`, `учня`",
+            "`the student`, `студента`, `the reader`, `учня`",
         ),
     ),
     (
@@ -21,7 +21,7 @@ WRITER_RULE_ANCHORS = (
         (
             "A1 explanation prose stays in English",
             "Ukrainian appears only as TARGET",
-            "`Запам'ятай...`",
+            "`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`",
         ),
     ),
     (
