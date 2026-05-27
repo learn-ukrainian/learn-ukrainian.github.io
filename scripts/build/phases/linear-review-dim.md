@@ -38,6 +38,35 @@ For `{DIM}` specifically:
 - `pedagogical`: does the sequencing actually teach? Are examples
   illuminating? Does each concept earn the next? The gate confirmed word
   budgets and section presence; you assess whether the pedagogy *works*.
+  REJECT-level failures mirroring writer rules:
+  - Mirrors `#R-NO-SCAFFOLDING-LEAKS`: REJECT writer-side scaffolding leaks.
+    Writer-side scaffolding never appears in module body. Forbidden in
+    published markdown: panel IDs (`P1`, `P2`, ...), Krok-N labels
+    (`Крок 5:`, `Step 5:`), obligation names from the wiki_coverage manifest
+    (`ban-4`, `step-5`, ...), reviewer-fix anchors, phase names, gate names.
+    The module is a finished lesson, not a writer's worksheet.
+  - Mirrors `#R-NO-CHILDREN-PRIMARY-QUOTES`: REJECT `>` blockquotes from
+    textbooks at Grade 1, 2, or 3 levels in the published module body. Grade
+    1-3 RAG hits can still ground lexical choices, but do not surface as
+    quoted material. Default: NO blockquote unless it pedagogically advances
+    the lesson AND comes from an adult-appropriate source (Grade 7+, adult
+    literature, Антоненко-Давидович, style guides). Adult A1 learners are
+    not reading children's primers; reject `Захарійчук, Grade 1, p.24` as
+    lesson prose.
+  - Mirrors `#R-GRAMMAR-TERMS-A1`: REJECT A1 English explanations that avoid
+    the rule: Use proper grammatical terminology in English explanations.
+    The accepted terms are **noun**, **verb**, **adjective**, **adverb**,
+    **pronoun**, **reflexive**, **conjugation**.
+    REJECT folksy paraphrase (`a thing`, `an action`, `a word for`,
+    `a doing-word`, `the X-form of Y`) in lieu of grammar terms.
+  - Mirrors `#R-CLEAN-TABLES`: REJECT bold-everywhere tables. Tables: bold
+    ONLY the target Ukrainian forms; pronoun columns (`я`, `ти`, ...),
+    English headers, and English glosses remain in regular weight. REJECT
+    conjugation tables teaching a present-tense paradigm that omit `ви` or
+    `вони` from the FULL set of person/number rows: **я / ти /
+    він,вона,воно / ми / ви / вони** (six rows). Vocabulary tables stay
+    two-column unless a third column adds essential teaching value (e.g.,
+    stress mark, IPA).
 - `naturalness`: does Ukrainian read as native? The gate confirmed VESUM +
   russianism shadow; you assess flow, register, idiom.
 - `decolonization`: is the lesson teaching Ukrainian **on its own terms**?
@@ -95,6 +124,17 @@ For `{DIM}` specifically:
   reviewer-protocol failure under this anchor.
 - `tone`: is the teacher's voice consistent and warm? The gate caught
   META_NARRATION; you assess everything else about register.
+  REJECT-level failures mirroring writer rules:
+  - Mirrors `#R-SINGLE-VOICE-A1`: REJECT mid-module register shifts (English
+    -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase).
+    The module must have one teacher voice across the whole module: warm,
+    clear, direct ("you" / "your"). REJECT third-person framing of the
+    learner (`the student`, `студента`, `the reader`, `учня`).
+  - Mirrors `#R-AUDIENCE-LANGUAGE-A1`: REJECT Ukrainian metalanguage TO the
+    A1 learner (`Контролюй чистоту словника`, `Рішуче відкидай`,
+    `Запам'ятай...`). A1 explanation prose stays in English. Ukrainian
+    appears only as TARGET: inline vocabulary words with English glosses,
+    dialogue boxes, tables, conjugations, model sentences.
 
 A dim score that re-states what a deterministic gate already enforced is a
 reviewer-protocol failure. Cite something the gate cannot see.

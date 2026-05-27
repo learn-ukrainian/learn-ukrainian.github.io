@@ -120,17 +120,17 @@ Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__chec
 **Grammar claim grounding.** EVERY specific grammar claim (rules about aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or learner-facing meaning distinctions) MUST cite an authoritative source from the Knowledge Packet or a specific school textbook. Name the source in the text or as an HTML comment with concrete metadata: `<!-- VERIFY: source="..." grade="..." author="..." -->`. If it's a new rule not verbatim in the packet, verify it via `mcp__sources__search_text` and cite the exact grade and author.
 
 <!-- rule_id: #R-TEXTBOOK-30W -->
-**Textbook grounding.** For each `plan_references` entry, you MUST retrieve the chunk text from MCP and paste from THAT text verbatim — paraphrasing, topic-keyword search, or pasting from memory all fail this gate.
+**Textbook grounding.** For each `plan_references` entry, you MUST retrieve the chunk text from MCP and use THAT text as grounding — paraphrasing, topic-keyword search, or pasting from memory all fail this gate.
 
 (A) **Identify the chunk_id.** Look at the plan entry's `notes` field. If it contains the literal substring `chunk_id: <ID>` (it usually does — e.g. `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024`), copy that `<ID>` verbatim and go DIRECTLY to step (B). **`search_text` for this reference is FORBIDDEN when notes already gives a chunk_id** — it returns wrong-author chunks for short queries like `"Author p.24"` (FTS5 matches the page number across ALL textbooks; you will get back a chunk from a different book). Only call `mcp__sources__search_text(query="<author surname> p. <page digits>", subject="<corpus>", limit=3)` when `notes` truly lacks a chunk_id. Topic-keyword queries are a separate hard fail mode — never search by what the chunk is ABOUT, only by author + page.
 
 (B) **Retrieve the chunk text.** Call `mcp__sources__get_chunk_context(chunk_id=<ID>)`. This step is MANDATORY — calling `search_text` alone returns a truncated snippet, not the full chunk text. The gate counts `chunk_context_calls`; if zero while `plan_references` is non-empty, the gate HARD-rejects regardless of blockquote content.
 
-(C) **Paste >=30 contiguous Ukrainian words from the returned `text` field into a blockquote.** Verbatim only — no paraphrasing, no translation, no stitching from multiple chunks, no Russian-script characters, no syllable-hyphen removal that breaks contiguity. The gate uses string-containment against the chunk's exact `text`. Each `plan_references` entry needs its own ≥30-word blockquote (one per cited page) — a single aggregate blockquote does not cover multiple references.
+(C) **Surface only adult-appropriate source blockquotes in the published module body.** For Grade 1, 2, or 3 textbook chunks, retrieve the returned `text` field and use it to ground lexical choices, but do NOT paste a `>` blockquote into `module.md`; see `#R-NO-CHILDREN-PRIMARY-QUOTES`. For adult-appropriate sources (Grade 7+, adult literature, Антоненко-Давидович, style guides), paste >=30 contiguous Ukrainian words from the returned `text` field into a blockquote. Verbatim only — no paraphrasing, no translation, no stitching from multiple chunks, no Russian-script characters, no syllable-hyphen removal that breaks contiguity. The gate uses string-containment against the chunk's exact `text`. Each adult-appropriate `plan_references` entry needs its own ≥30-word blockquote (one per cited page) — a single aggregate blockquote does not cover multiple references.
 
 (D) Add the exact citation line immediately after the blockquote: `*— <Author>, Grade <N>, p.<PAGE>*` (em-dash + spaces, italic).
 
-Fewer than 30 words per blockquote, or a blockquote whose text is not literally contained in the returned chunk, makes `textbook_grounding.long_blockquotes_checked` fail and the gate HARD-rejects.
+For adult-appropriate blockquotes, fewer than 30 words per blockquote, or a blockquote whose text is not literally contained in the returned chunk, makes `textbook_grounding.long_blockquotes_checked` fail and the gate HARD-rejects. For Grade 1, 2, or 3 chunks, missing a learner-facing `>` blockquote is correct; the chunk still must be retrieved and used as grounding.
 
 <!-- rule_id: #R-CITE-HONEST -->
 Sources in blockquotes/resources must be either in `plan_references` or grounded in a Knowledge Packet / `search_text` result that appears in writer telemetry, EXCEPT `resources.yaml` entries with `role: textbook`: those come ONLY from `plan.references`. Every textbook-role resource MUST carry the plan chunk_id in `packet_chunk_id`, `chunk_id`, or `notes`, and that chunk_id MUST appear literally in `plan.references[*].notes`. Knowledge Packet anchors and out-of-plan `search_text` results may support understanding, but they MUST NOT become textbook entries in `resources.yaml`.
@@ -291,6 +291,24 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 
 <!-- rule_id: #R-BAD-FORM-MARKER -->
 **Russianism floor.** `russianisms_strict` fails on any critical Russicism/calque/surzhyk finding. Check suspicious forms with `check_russian_shadow`, `search_style_guide`, `search_ua_gec_errors`, `search_heritage`, and `query_pravopys`. Never paste raw Russian forms into prose/dialogue; use a `<!-- VERIFY -->` placeholder or omit.
+
+<!-- rule_id: #R-SINGLE-VOICE-A1 -->
+**Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я прокидаюся** for your own routine." Bad: "the student enters an authentic space."
+
+<!-- rule_id: #R-AUDIENCE-LANGUAGE-A1 -->
+**A1 audience language.** A1 explanation prose stays in English. Ukrainian appears only as TARGET: inline vocabulary words with English glosses, dialogue boxes, tables, conjugations, model sentences. Never use Ukrainian metalanguage TO the learner (`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`), because the learner cannot read Ukrainian explanations yet.
+
+<!-- rule_id: #R-NO-CHILDREN-PRIMARY-QUOTES -->
+**No children-primary blockquotes in adult A1.** No `>` blockquotes from textbooks at Grade 1, 2, or 3 levels in the published module body. Grade 1-3 RAG hits can still ground lexical choices, but do not surface as quoted material. Default: NO blockquote unless it pedagogically advances the lesson AND comes from an adult-appropriate source (Grade 7+, adult literature, Антоненко-Давидович, style guides). Adult A1 learners are not reading children's primers; do not print `Захарійчук, Grade 1, p.24` as lesson prose.
+
+<!-- rule_id: #R-NO-SCAFFOLDING-LEAKS -->
+**No writer-side scaffolding leaks.** Writer-side scaffolding never appears in module body. Forbidden in published markdown: panel IDs (`P1`, `P2`, ...), Krok-N labels (`Крок 5:`, `Step 5:`), obligation names from the wiki_coverage manifest (`ban-4`, `step-5`, ...), reviewer-fix anchors, phase names, gate names. The module is a finished lesson, not a writer's worksheet.
+
+<!-- rule_id: #R-GRAMMAR-TERMS-A1 -->
+**Use grammar terms at A1.** Use proper grammatical terminology in English explanations: **noun**, **verb**, **adjective**, **adverb**, **pronoun**, **reflexive**, **conjugation**. Do NOT paraphrase (`a thing`, `an action`, `a word for`, `a doing-word`, `the X-form of Y`). Adult learners benefit from real grammar terms because they transfer to future modules and outside references.
+
+<!-- rule_id: #R-CLEAN-TABLES -->
+**Clean table formatting.** Tables: bold ONLY the target Ukrainian forms. Pronoun columns (`я`, `ти`, ...), English headers, and English glosses remain in regular weight. Conjugation tables teaching a present-tense paradigm must include the FULL set of person/number rows: **я / ти / він,вона,воно / ми / ви / вони** (six rows). Vocabulary tables stay two-column unless a third column adds essential teaching value (e.g., stress mark, IPA).
 
 **Dialogue format (gate-counted).** Ukrainian dialogue lines must be `<DialogueBox uk="..." en="...">` or `> ` blockquotes. Em-dash-only dialogue under `## Діалоги` is invisible to `l2_exposure_floor` and fails the module.
 
