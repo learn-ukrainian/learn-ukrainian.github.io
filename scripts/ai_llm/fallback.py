@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Literal
 
 PRIMARY_GEMINI_MODEL = "gemini-3.1-pro-preview"
+AGY_GEMINI_MODEL = "gemini-3.5-flash-high"
 FLASH_GEMINI_MODEL = "gemini-3-flash-preview"
 FINAL_GEMINI_MODEL = "gemini-2.5-pro"
 GEMINI_MODEL_LADDER = (
@@ -60,6 +61,7 @@ _RATE_LIMIT_MARKERS = (
 )
 
 AuthMode = Literal["api", "oauth"]
+CliMode = Literal["gemini-cli", "agy-cli"]
 AttemptStatus = Literal["success", "rate_limited", "retryable_error", "timeout", "fatal"]
 
 
@@ -68,7 +70,8 @@ class GeminiRung:
     index: int
     total: int
     model: str
-    auth_mode: AuthMode
+    auth_mode: AuthMode | None
+    cli: CliMode = "gemini-cli"
 
 
 @dataclass(frozen=True)
@@ -86,7 +89,7 @@ class AttemptRecord:
     rung_index: int
     rung_total: int
     model: str
-    auth_mode: AuthMode
+    auth_mode: AuthMode | None
     attempt_index: int
     max_retries: int
     status: AttemptStatus
@@ -95,6 +98,7 @@ class AttemptRecord:
     stderr_excerpt: str | None = None
     note: str | None = None
     response_chars: int = 0
+    cli: CliMode = "gemini-cli"
 
 
 @dataclass(frozen=True)
@@ -103,6 +107,7 @@ class CallResult:
     model_used: str | None
     auth_mode_used: AuthMode | None
     elapsed_s: float
+    cli_used: CliMode | None = None
     attempts: list[AttemptRecord] = field(default_factory=list)
     error_message: str | None = None
 
@@ -132,21 +137,112 @@ def build_gemini_ladder(
     else:
         model_order = [preferred_model, FLASH_GEMINI_MODEL, FINAL_GEMINI_MODEL]
 
-    rungs: list[GeminiRung] = []
-    total = len(model_order) * len(allowed_auth_modes)
+    rung_specs: list[tuple[str, AuthMode | None, CliMode]] = []
+    include_agy = preferred_model == PRIMARY_GEMINI_MODEL and allowed_auth_modes != ("api",)
     for model in model_order:
         for auth_mode in ("api", "oauth"):
             if auth_mode not in allowed_auth_modes:
                 continue
-            rungs.append(
-                GeminiRung(
-                    index=len(rungs) + 1,
-                    total=total,
-                    model=model,
-                    auth_mode=auth_mode,
-                )
-            )
-    return rungs
+            rung_specs.append((model, auth_mode, "gemini-cli"))
+        if include_agy and model == PRIMARY_GEMINI_MODEL:
+            rung_specs.append((AGY_GEMINI_MODEL, None, "agy-cli"))
+
+    total = len(rung_specs)
+    return [
+        GeminiRung(
+            index=index,
+            total=total,
+            model=model,
+            auth_mode=auth_mode,
+            cli=cli,
+        )
+        for index, (model, auth_mode, cli) in enumerate(rung_specs, start=1)
+    ]
+
+
+def _format_rung(rung: GeminiRung) -> str:
+    if rung.cli == "agy-cli":
+        return f"{rung.model} + AGY-CLI"
+    return f"{rung.model} + {str(rung.auth_mode).upper()}"
+
+
+def _format_rung_summary(rung: GeminiRung) -> str:
+    if rung.cli == "agy-cli":
+        return f"{_short_model_label(rung.model)} + AGY"
+    return f"{_short_model_label(rung.model)} + {str(rung.auth_mode).upper()}"
+
+
+def _run_agy_via_runtime(
+    prompt: str,
+    *,
+    task_name: str,
+    timeout_s: int | None,
+    cwd: Path,
+) -> AttemptOutcome:
+    """Invoke agy through the runtime adapter without touching the broker DB."""
+    call_start_mono = time.monotonic()
+    hard_timeout = timeout_s or 24 * 60 * 60
+    try:
+        from agent_runtime import runner as agent_runner
+        from agent_runtime.errors import (
+            AgentStalledError,
+            AgentTimeoutError,
+            AgentUnavailableError,
+            RateLimitedError,
+        )
+
+        result = agent_runner.invoke(
+            "agy",
+            prompt,
+            mode="read-only",
+            cwd=cwd,
+            model=AGY_GEMINI_MODEL,
+            task_id=f"{task_name}-agy-fallback",
+            session_id=None,
+            tool_config=None,
+            entrypoint="fallback-ladder",
+            hard_timeout=hard_timeout,
+            stall_timeout=min(600, hard_timeout),
+        )
+    except RateLimitedError as exc:
+        return AttemptOutcome(
+            status="rate_limited",
+            elapsed_s=time.monotonic() - call_start_mono,
+            stderr_excerpt=str(exc),
+        )
+    except (AgentStalledError, AgentUnavailableError) as exc:
+        return AttemptOutcome(
+            status="retryable_error",
+            elapsed_s=time.monotonic() - call_start_mono,
+            stderr_excerpt=str(exc),
+        )
+    except AgentTimeoutError as exc:
+        return AttemptOutcome(
+            status="timeout",
+            elapsed_s=time.monotonic() - call_start_mono,
+            stderr_excerpt=str(exc),
+        )
+    except Exception as exc:
+        return AttemptOutcome(
+            status="retryable_error",
+            elapsed_s=time.monotonic() - call_start_mono,
+            stderr_excerpt=f"{type(exc).__name__}: {exc}",
+        )
+
+    if result.ok and result.response:
+        return AttemptOutcome(
+            status="success",
+            elapsed_s=result.duration_s,
+            response_text=result.response,
+            stderr_excerpt=result.stderr_excerpt,
+            returncode=result.returncode,
+        )
+    return AttemptOutcome(
+        status="rate_limited" if result.rate_limited else "retryable_error",
+        elapsed_s=result.duration_s,
+        stderr_excerpt=result.stderr_excerpt or "Agy returned no final message",
+        returncode=result.returncode,
+    )
 
 
 def _has_gemini_api_key(env: Mapping[str, str]) -> bool:
@@ -300,7 +396,7 @@ def run_gemini_fallback_ladder(
                 if remaining_s < min_attempt_budget_s:
                     error = (
                         f"{task_name}: no budget left for rung {rung.index}/{rung.total} "
-                        f"({rung.model} + {rung.auth_mode})"
+                        f"({_format_rung(rung)})"
                     )
                     emit(f"  ❌ {error}")
                     _emit_attempt_history(emit, attempts)
@@ -309,14 +405,15 @@ def run_gemini_fallback_ladder(
                         model_used=None,
                         auth_mode_used=None,
                         elapsed_s=time.monotonic() - overall_start,
+                        cli_used=None,
                         attempts=attempts,
                         error_message=error,
                     )
                 timeout_s = min(timeout_s, remaining_s) if timeout_s is not None else remaining_s
 
             emit(
-                f"🎯 Rung {rung.index}/{rung.total}: {rung.model} + "
-                f"{rung.auth_mode.upper()} (attempt {attempt_index}/{max_retries})"
+                f"🎯 Rung {rung.index}/{rung.total}: {_format_rung(rung)} "
+                f"(attempt {attempt_index}/{max_retries})"
             )
             outcome = attempt_runner(rung, attempt_index, timeout_s)
             record = AttemptRecord(
@@ -324,6 +421,7 @@ def run_gemini_fallback_ladder(
                 rung_total=rung.total,
                 model=rung.model,
                 auth_mode=rung.auth_mode,
+                cli=rung.cli,
                 attempt_index=attempt_index,
                 max_retries=max_retries,
                 status=outcome.status,
@@ -339,20 +437,37 @@ def run_gemini_fallback_ladder(
                 response_text = outcome.response_text or ""
                 emit(
                     f"  ✓ Responded in {outcome.elapsed_s:.1f}s ({len(response_text):,} chars). "
-                    f"Model used: {rung.model}, auth: {rung.auth_mode}."
+                    f"Model used: {rung.model}, cli: {rung.cli}."
                 )
                 emit(
-                    f"✓ Gemini via [rung {rung.index}: {_short_model_label(rung.model)} + "
-                    f"{rung.auth_mode.upper()}] in {time.monotonic() - overall_start:.1f}s"
+                    f"✓ Gemini fallback via [rung {rung.index}: "
+                    f"{_format_rung_summary(rung)}] in "
+                    f"{time.monotonic() - overall_start:.1f}s"
                 )
                 return CallResult(
                     response_text=response_text,
                     model_used=rung.model,
                     auth_mode_used=rung.auth_mode,
                     elapsed_s=time.monotonic() - overall_start,
+                    cli_used=rung.cli,
                     attempts=attempts,
                     error_message=None,
                 )
+
+            if rung.cli == "agy-cli":
+                # Agy is a separate-quota probe, not another retry sink. If it
+                # cannot answer once, keep the Gemini ladder moving to flash.
+                excerpt = _clean_excerpt(outcome.stderr_excerpt or outcome.note)
+                next_step = (
+                    f"Advancing to rung {rung.index + 1}."
+                    if rung.index < rung.total
+                    else "No more rungs."
+                )
+                emit(
+                    f"  ⚠️  Agy rung returned {outcome.status} after "
+                    f"{outcome.elapsed_s:.1f}s (detail: {excerpt}). {next_step}"
+                )
+                break
 
             if outcome.status == "rate_limited":
                 excerpt = _clean_excerpt(outcome.stderr_excerpt)
@@ -392,6 +507,7 @@ def run_gemini_fallback_ladder(
                     model_used=None,
                     auth_mode_used=None,
                     elapsed_s=time.monotonic() - overall_start,
+                    cli_used=None,
                     attempts=attempts,
                     error_message=error,
                 )
@@ -413,6 +529,7 @@ def run_gemini_fallback_ladder(
                     model_used=None,
                     auth_mode_used=None,
                     elapsed_s=time.monotonic() - overall_start,
+                    cli_used=None,
                     attempts=attempts,
                     error_message=error,
                 )
@@ -421,7 +538,7 @@ def run_gemini_fallback_ladder(
         else:
             continue
 
-    error = f"{task_name}: all {len(ladder)} Gemini fallback rungs rate-limited"
+    error = f"{task_name}: all {len(ladder)} Gemini fallback rungs exhausted"
     emit(f"  ❌ {error}")
     _emit_attempt_history(emit, attempts)
     return CallResult(
@@ -429,6 +546,7 @@ def run_gemini_fallback_ladder(
         model_used=None,
         auth_mode_used=None,
         elapsed_s=time.monotonic() - overall_start,
+        cli_used=None,
         attempts=attempts,
         error_message=error,
     )
@@ -448,6 +566,7 @@ def call_gemini_with_fallback(
     logger: Callable[[str], None] | None = None,
     sleep_fn: Callable[[int, str], None] | None = None,
     recover_response: Callable[[float, str], str | None] | None = None,
+    agy_runner: Callable[[str, int | None], AttemptOutcome] | None = None,
 ) -> CallResult:
     """Call the Gemini CLI through the shared rung ladder."""
     # Default-timeout changed 2026-04-24 from `min(300 + len//500, 900)` to
@@ -462,8 +581,24 @@ def call_gemini_with_fallback(
     emit = logger or print
 
     def _attempt_runner(rung: GeminiRung, _attempt_index: int, timeout_s: int | None) -> AttemptOutcome:
+        if rung.cli == "agy-cli":
+            if agy_runner is not None:
+                return agy_runner(prompt, timeout_s)
+            return _run_agy_via_runtime(
+                prompt,
+                task_name=task_name,
+                timeout_s=timeout_s,
+                cwd=workdir,
+            )
+
         call_start_wall = time.time()
         call_start_mono = time.monotonic()
+        if rung.auth_mode is None:
+            return AttemptOutcome(
+                status="fatal",
+                elapsed_s=0.0,
+                stderr_excerpt="gemini-cli rung missing auth_mode",
+            )
         env = build_gemini_subprocess_env(rung.auth_mode, base_env=base_env)
         prompt_arg, prompt_file = _gemini_prompt_arg(prompt)
         cmd = [
@@ -613,9 +748,13 @@ def _emit_attempt_history(logger: Callable[[str], None], attempts: list[AttemptR
     logger("  Attempt history:")
     for attempt in attempts:
         detail = _clean_excerpt(attempt.stderr_excerpt)
+        if attempt.cli == "agy-cli":
+            rung_label = f"{attempt.model} + AGY-CLI"
+        else:
+            rung_label = f"{attempt.model} + {str(attempt.auth_mode).upper()}"
         logger(
             f"    - rung {attempt.rung_index}/{attempt.rung_total} "
-            f"{attempt.model} + {attempt.auth_mode.upper()} "
+            f"{rung_label} "
             f"attempt {attempt.attempt_index}/{attempt.max_retries}: "
             f"{attempt.status} in {attempt.elapsed_s:.1f}s (stderr: {detail})"
         )
@@ -624,6 +763,8 @@ def _emit_attempt_history(logger: Callable[[str], None], attempts: list[AttemptR
 def _short_model_label(model: str) -> str:
     if model == PRIMARY_GEMINI_MODEL:
         return "3.1-pro"
+    if model == AGY_GEMINI_MODEL:
+        return "agy-3.5-flash-high"
     if model == FLASH_GEMINI_MODEL:
         return "3-flash"
     if model == FINAL_GEMINI_MODEL:

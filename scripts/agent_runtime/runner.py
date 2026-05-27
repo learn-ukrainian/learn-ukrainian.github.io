@@ -904,6 +904,8 @@ def _build_gemini_attempt_tool_config(
     rung: GeminiRung,
 ) -> dict:
     """Clone tool_config and pin the current ladder rung's auth mode."""
+    if rung.auth_mode is None:
+        return dict(tool_config or {})
     attempt_tool_config = dict(tool_config or {})
     attempt_tool_config["auth_mode"] = (
         "subscription" if rung.auth_mode == "oauth" else "api"
@@ -1313,46 +1315,72 @@ def _invoke_gemini_with_fallback(
     ) -> AttemptOutcome:
         nonlocal last_telemetry
         nonlocal last_tool_calls
-        attempt_tool_config = _build_gemini_attempt_tool_config(tool_config, rung)
-        plan = adapter.build_invocation(
-            prompt=prompt,
-            mode=mode,
-            cwd=cwd,
-            model=rung.model,
-            task_id=task_id,
-            session_id=session_id,
-            tool_config=attempt_tool_config,
-            effort=effort,
-        )
-        last_telemetry = resolve_invocation_telemetry(
-            agent_name=agent_name,
-            plan=plan,
-            requested_model=rung.model,
-            requested_effort=effort,
-        )
-        execution = _execute_invocation_plan(
-            agent_name=agent_name,
-            adapter=adapter,
-            plan=plan,
-            prompt=prompt,
-            mode=mode,
-            cwd=cwd,
-            model=rung.model,
-            task_id=task_id,
-            session_id=session_id,
-            entrypoint=entrypoint,
-            hard_timeout=timeout_s or hard_timeout,
-            stall_timeout=stall_timeout,
-            tool_config=attempt_tool_config,
-            stdout_silence_timeout=stdout_silence_timeout,
-            initial_response_timeout=initial_response_timeout,
-        )
+        try:
+            if rung.cli == "agy-cli":
+                headroom_ok, headroom_reason = has_headroom("agy", rung.model)
+                if not headroom_ok:
+                    return AttemptOutcome(
+                        status="rate_limited",
+                        elapsed_s=0.0,
+                        stderr_excerpt=headroom_reason,
+                    )
+                attempt_agent_name = "agy"
+                attempt_adapter = _load_adapter("agy")
+                attempt_tool_config = _build_gemini_attempt_tool_config(tool_config, rung)
+                attempt_session_id = None
+            else:
+                attempt_agent_name = agent_name
+                attempt_adapter = adapter
+                attempt_tool_config = _build_gemini_attempt_tool_config(tool_config, rung)
+                attempt_session_id = session_id
+
+            plan = attempt_adapter.build_invocation(
+                prompt=prompt,
+                mode=mode,
+                cwd=cwd,
+                model=rung.model,
+                task_id=task_id,
+                session_id=attempt_session_id,
+                tool_config=attempt_tool_config,
+                effort=effort,
+            )
+            last_telemetry = resolve_invocation_telemetry(
+                agent_name=attempt_agent_name,
+                plan=plan,
+                requested_model=rung.model,
+                requested_effort=effort,
+            )
+            execution = _execute_invocation_plan(
+                agent_name=attempt_agent_name,
+                adapter=attempt_adapter,
+                plan=plan,
+                prompt=prompt,
+                mode=mode,
+                cwd=cwd,
+                model=rung.model,
+                task_id=task_id,
+                session_id=attempt_session_id,
+                entrypoint=entrypoint,
+                hard_timeout=timeout_s or hard_timeout,
+                stall_timeout=stall_timeout,
+                tool_config=attempt_tool_config,
+                stdout_silence_timeout=stdout_silence_timeout,
+                initial_response_timeout=initial_response_timeout,
+            )
+        except AgentUnavailableError as exc:
+            if rung.cli == "agy-cli":
+                return AttemptOutcome(
+                    status="retryable_error",
+                    elapsed_s=0.0,
+                    stderr_excerpt=str(exc),
+                )
+            raise
         parse = execution.parse
         last_tool_calls = list(parse.tool_calls)
 
         if execution.kill_reason in ("stdout_silence_timeout", "initial_response_timeout"):
             _raise_for_kill_reason(
-                agent_name=agent_name,
+                agent_name=attempt_agent_name,
                 kill_reason=execution.kill_reason,
                 execution=execution,
                 prompt=prompt,
@@ -1361,7 +1389,7 @@ def _invoke_gemini_with_fallback(
                 mode=mode,
                 task_id=task_id,
                 cwd=cwd,
-                session_id=session_id,
+                session_id=attempt_session_id,
                 stdout_silence_timeout=stdout_silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 stall_timeout=stall_timeout,
