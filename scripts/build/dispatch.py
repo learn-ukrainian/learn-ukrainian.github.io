@@ -699,19 +699,31 @@ def _dispatch_via_runtime(
             _attempt_index: int,
             call_timeout: int | None,
         ) -> AttemptOutcome:
-            auth_mode_label = "OAuth" if rung.auth_mode == "oauth" else "API"
-            label = f"{agent} [{rung.model} + {auth_mode_label}]"
+            # Agy rung (PR #2375): separate-quota probe via Antigravity CLI.
+            # No MCP tool_config (agy doesn't share the gemini-tools MCP plumbing);
+            # caller of the dispatch path that requested MCP grounding may need
+            # to evaluate the agy response independently.
+            is_agy = rung.cli == "agy-cli"
+            if is_agy:
+                attempt_agent = "agy"
+                auth_mode_label = "AGY-CLI"
+                call_tool_config = None
+            else:
+                attempt_agent = runtime_agent_name
+                auth_mode_label = "OAuth" if rung.auth_mode == "oauth" else "API"
+                call_tool_config = dict(tool_config or {})
+                call_tool_config["auth_mode"] = "subscription" if rung.auth_mode == "oauth" else "api"
+            label = f"{attempt_agent} [{rung.model} + {auth_mode_label}]"
             t0 = time.monotonic()
             call_start = datetime.now().astimezone()
-            call_tool_config = dict(tool_config or {})
-            call_tool_config["auth_mode"] = "subscription" if rung.auth_mode == "oauth" else "api"
             try:
-                _pace_gemini_calls()
+                if not is_agy:
+                    _pace_gemini_calls()
                 with _temporary_rate_limit_bypass():
                     result = runtime_invoke(
-                        runtime_agent_name,
+                        attempt_agent,
                         prompt,
-                        mode=runtime_mode,
+                        mode=runtime_mode if not is_agy else "read-only",
                         cwd=PROJECT_ROOT,
                         model=rung.model,
                         task_id=f"{phase}-{orch_dir.name}" if orch_dir else phase,
