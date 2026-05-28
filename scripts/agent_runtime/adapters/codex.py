@@ -34,6 +34,7 @@ import re
 import shutil
 import tempfile
 import unicodedata
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -560,16 +561,12 @@ class CodexAdapter:
         self._last_early_reap_check = now
 
         # Guard 3: mtime gate — quick stat instead of a full file scan.
-        from datetime import UTC, datetime
-
-        today = datetime.now(UTC)
-        sessions_today = (
-            Path.home() / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-        )
         try:
-            if not sessions_today.exists():
-                return False
-            rollouts = list(sessions_today.glob("rollout-*.jsonl"))
+            rollouts = [
+                rollout
+                for directory in self._candidate_rollout_dirs()
+                for rollout in directory.glob("rollout-*.jsonl")
+            ]
             if not rollouts:
                 return False
             newest = max(rollouts, key=lambda p: p.stat().st_mtime)
@@ -595,12 +592,27 @@ class CodexAdapter:
     # Rollout-file recovery (post-completion hang fallback)
     # ---------------------------------------------------------------------
 
-    def _candidate_rollout_dirs(self) -> list[Path]:
-        """Return today's and yesterday's sessions dirs.
+    def _codex_home_path(self) -> Path:
+        """Return the Codex home this invocation should observe."""
+        scope = getattr(self, "_codex_home_scope", None)
+        if scope:
+            return Path(scope)
+        codex_home_env = os.environ.get("CODEX_HOME")
+        if codex_home_env:
+            return Path(codex_home_env)
+        return Path.home() / ".codex"
 
-        Yesterday is included so a call that starts at 23:59 UTC and
-        finishes at 00:01 UTC doesn't miss its own rollout when the
-        day directory rolls over. Codex 2026-04-10 audit finding.
+    def _rollout_discovery_times(self) -> tuple[datetime, datetime]:
+        """Return UTC and local clocks for Codex rollout date-dir discovery."""
+        return datetime.now(UTC), datetime.now().astimezone()
+
+    def _candidate_rollout_dirs(self) -> list[Path]:
+        """Return plausible Codex rollout session dirs.
+
+        Codex stores rollout files under the local-date session dir
+        (``sessions/YYYY/MM/DD``), while this adapter historically scanned
+        UTC-date dirs. Include +/- 1 day around both UTC and local clocks so
+        midnight-straddling runs are found in either direction.
 
         Honors the per-invocation scoped ``$CODEX_HOME`` so the V7
         writer's scoped-tempdir rollouts (materialized by
@@ -623,19 +635,22 @@ class CodexAdapter:
            the orchestrator itself exports CODEX_HOME.
         3. ``~/.codex/sessions/`` — legacy default.
         """
-        from datetime import UTC, datetime, timedelta
-
-        scope = getattr(self, "_codex_home_scope", None)
-        if scope:
-            base = Path(scope) / "sessions"
-        else:
-            codex_home_env = os.environ.get("CODEX_HOME")
-            base = Path(codex_home_env) / "sessions" if codex_home_env else Path.home() / ".codex" / "sessions"
+        base = self._codex_home_path() / "sessions"
+        utc_now, local_now = self._rollout_discovery_times()
+        dates = []
+        seen_dates = set()
+        for anchor in (utc_now, local_now):
+            for delta in (-1, 0, 1):
+                d = (anchor + timedelta(days=delta)).date()
+                if d not in seen_dates:
+                    seen_dates.add(d)
+                    dates.append(d)
         dirs: list[Path] = []
-        for delta in (0, 1):
-            d = datetime.now(UTC) - timedelta(days=delta)
+        seen_dirs: set[Path] = set()
+        for d in dates:
             candidate = base / f"{d.year:04d}" / f"{d.month:02d}" / f"{d.day:02d}"
-            if candidate.exists():
+            if candidate.exists() and candidate not in seen_dirs:
+                seen_dirs.add(candidate)
                 dirs.append(candidate)
         return dirs
 
@@ -872,18 +887,15 @@ class CodexAdapter:
             and only written at the very end on success, but kept as
             a signal for the "Codex is writing the final response" moment.
 
-        We pick the NEWEST rollout-*.jsonl inside today's sessions dir
-        and return it directly (same pattern as the Gemini adapter's
-        newest session-*.json file), so the mtime poller sees every
-        content write, not just directory-level events.
+        We include plausible session dirs around the UTC and local dates
+        so the mtime poller catches Codex startup even when UTC and local
+        dates differ.
         """
-        from datetime import UTC, datetime
-
         paths: list[Path] = []
         if plan.output_file is not None:
             paths.append(plan.output_file)
 
-        codex_home = Path.home() / ".codex"
+        codex_home = self._codex_home_path()
 
         # Secondary / fallback signals
         for rel in ("state_5.sqlite", "history.jsonl", "logs_1.sqlite"):
@@ -891,12 +903,11 @@ class CodexAdapter:
             if candidate.exists():
                 paths.append(candidate)
 
-        # Today's sessions directory (catches startup via dir mtime
-        # bump, but does NOT track subsequent content writes).
-        today = datetime.now(UTC)
-        sessions_today = codex_home / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-        if sessions_today.exists():
-            paths.append(sessions_today)
+        # Plausible sessions directories catch startup via dir mtime bumps
+        # but do NOT track subsequent content writes.
+        for sessions_dir in self._candidate_rollout_dirs():
+            if sessions_dir not in paths:
+                paths.append(sessions_dir)
 
         # Note: we deliberately do NOT include the newest rollout-*.jsonl
         # file here. Earlier versions tried to track it for
