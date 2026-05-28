@@ -656,6 +656,7 @@ def _writer_prompt(
     wiki_manifest: str | Mapping[str, Any],
     implementation_map: Mapping[str, Any],
     writer: str,
+    use_generator: bool = False,
 ) -> str:
     return linear_pipeline.render_writer_prompt(
         plan=plan,
@@ -664,6 +665,7 @@ def _writer_prompt(
         wiki_manifest=wiki_manifest,
         implementation_map=implementation_map,
         writer=writer,
+        use_generator=use_generator,
     )
 
 
@@ -725,6 +727,7 @@ def _run_llm_qg(
     wiki_manifest: str | Mapping[str, Any] | None = None,
     implementation_map: Mapping[str, Any] | None = None,
     stdout_silence_timeout: int | None = None,
+    use_generator: bool = False,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
@@ -746,6 +749,7 @@ def _run_llm_qg(
             dim,
             wiki_manifest,
             implementation_map,
+            use_generator=use_generator,
         )
         (module_dir / f"llm-qg-{dim}-prompt.md").write_text(prompt, encoding="utf-8")
         result = invoke(
@@ -979,6 +983,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "the last failed phase using artifact existence checks."
         ),
     )
+    parser.add_argument(
+        "--use-generator",
+        action="store_true",
+        help=(
+            "V7.2 Step 5 (opt-in): compose the writer + reviewer prompts from "
+            "the universal-rules registry + wiki manifest via "
+            "scripts/build/prompt_generator.py (templates "
+            "linear-write.generated.md / linear-review-dim.generated.md) "
+            "instead of the legacy linear-write.md / linear-review-dim.md. "
+            "Default OFF — the legacy template path is unchanged."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -1069,6 +1085,9 @@ def _run(args: argparse.Namespace) -> int:
     slug = args.slug
     writer = _normalize_writer(args.writer)
     reviewer_override = _normalize_writer(args.reviewer) if args.reviewer else None
+    # Optional flag (argparse always sets it; test SimpleNamespace fixtures may
+    # omit it, mirroring the getattr handling of no_resume below).
+    use_generator = getattr(args, "use_generator", False)
     module_started_at = time.monotonic()
     phase = "start"
     timeout_agent = writer
@@ -1246,6 +1265,7 @@ def _run(args: argparse.Namespace) -> int:
                 wiki_manifest=wiki_manifest,
                 implementation_map=impl_map,
                 writer=writer,
+                use_generator=use_generator,
             )
             # gemini-tools must load .gemini/settings.json from repo root;
             # module_dir cwd would leave its MCP catalog empty. See
@@ -1447,6 +1467,7 @@ def _run(args: argparse.Namespace) -> int:
                 wiki_manifest=wiki_manifest,
                 implementation_map=impl_map,
                 stdout_silence_timeout=args.writer_timeout,
+                use_generator=use_generator,
             )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
         aggregate = llm_qg["aggregate"]
