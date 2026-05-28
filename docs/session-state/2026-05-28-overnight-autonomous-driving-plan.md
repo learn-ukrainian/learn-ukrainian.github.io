@@ -58,4 +58,9 @@ Phase 1 research blocks. In flight: A, C, D, F (54 figures). Remaining un-fired:
 - Don't exceed caps. Don't `--admin` merge past blocking CI. Don't promote m20 if ACs fail. Don't fire Block G (R4) casually — politically-charged doc first + co-review. Don't ScheduleWakeup-poll (watchers drive). Don't wake the user.
 
 ## Progress log
-- 2026-05-28 night: 6 lanes fired (V7.2 Step 6 + bio A/C/D/F = 54 figures). Step 5 already merged (12735cfabb), #2387 closed. Awaiting first watcher re-invocation.
+- 2026-05-28 night: 6 lanes fired (V7.2 Step 6 + bio A/C/D/F = 54 figures). Step 5 already merged (12735cfabb), #2387 closed.
+- 2026-05-29: **V7.2 Step 6 MERGED** (#2399 → `448ca578d8`), **#2388 closed** (single-source loop verified by diff review). → **Step 7 (m20 rebuild) NOW UNBLOCKED = next V7.2 action:** inline build `v7_build.py a1 my-morning --writer codex-tools --worktree --use-generator`, Monitor JSONL, verify ACs, promote. NOT a delegate dispatch.
+- 2026-05-29: **BIO QUALITY CHECKPOINT FIRED A FINDING.** gemini Block D (PR #2400) landed — bio content strong, BUT Section 7 **fabricated 6 "Existing" cross-track files** (none exist; bio plans count=0, Phase 2 not started). = the "compression-without-trace/hallucination" class. **HELD #2400 (NOT merged)**, commented findings. Also 5/6 dossiers wrong issue # (`#2318`→should be **#2317**), 3/6 wrong model ("Gemini 1.5 Pro"→3.1-pro).
+  - **ROOT CAUSE = F5 template Section 7** ("Existing X modules" placeholders, no verify rule). **FIXED** (verify-or-Candidate; bio plans are Phase 2; dossier≠plan). Committed.
+- **⚠️ IN-FLIGHT BIO LANES (Block A codex `b0cu2p8ik`, émigré claude×2 `baww1vvyc`/`bszwanlmc`, R5 agy `b916pc2n5`) read the OLD template → will replicate the Section-7 fabrication.** On each landing: **HOLD the PR, correct Section 7 (verify/relabel "Existing"→"Candidate"), fix issue#(#2317/#2318 as correct)+model metadata, THEN merge.** Do NOT merge any bio PR that asserts non-existent "Existing" paths.
+- New bio fires (R2/R3) now use the FIXED template → clean. R4 (Block G) still gated on politically-charged-bios.md + co-review.

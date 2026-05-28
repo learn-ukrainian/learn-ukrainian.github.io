@@ -11,7 +11,7 @@
 - [ ] ≥3 Tier 1/Tier 2 sources cited (per `bio-research-source-tiers.md`)
 - [ ] Oppression mechanism is specific (dates, document refs, court case numbers, location)
 - [ ] ≥2 primary-source quotes from the figure's own work or recorded speech
-- [ ] Cross-track links to LIT/HIST tracks checked (links verified, gaps noted)
+- [ ] Cross-track links: every path listed as "Existing" VERIFIED present (`test -e`); unbuilt connections listed under "Candidate (Phase 2+)", NEVER as "Existing" — fabricated/assumed paths = gate failure
 - [ ] Naming-canonical applied (slug + aliases listed per #2313)
 - [ ] Image candidate(s) identified per #2316 image-rights policy
 - [ ] Decolonization checklist (#2310) self-applied during writing
@@ -90,14 +90,17 @@ For Block G (politically charged): this section is mandatory and must be longer 
 
 ## 7. Cross-track links
 
-- **Existing LIT modules referencing this figure:**
-  - {path to plans/lit/...yaml} — {brief note}
+> **VERIFY BEFORE ASSERTING (hard rule — fabricated paths = gate failure / hallucination class per audit §methodology-lesson-1).**
+> List a path under "Existing" ONLY after confirming it exists (`test -e <path>`). **Bio plans (`plans/bio/*.yaml`) are Phase 2 and almost none exist yet** — do NOT list them as "Existing." A research dossier at `docs/research/bio/{slug}.md` is NOT a plan at `plans/bio/{slug}.yaml`; do not confuse the two. Anything not yet built goes under "Candidate," never "Existing."
+
+- **Existing LIT modules (VERIFIED present via `test -e`):**
+  - {path to plans/lit/...yaml — only if it actually exists}
+- **Existing HIST modules (VERIFIED present via `test -e`):**
+  - {path to plans/hist/...yaml — only if it actually exists}
+- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
+  - {figure / topic + why connected. Bio-to-bio links live HERE until Phase 2 builds the plans. These are research suggestions, not assertions of existing artifacts.}
 - **Potential LIT additions surfaced by this research:**
   - {if any — file as `bio-expansion-followup` issue, do NOT add unilaterally per audit immutability rule}
-- **Existing HIST modules referencing this figure's era/events:**
-  - {path to plans/hist/...yaml}
-- **Existing bios that connect to this figure:**
-  - {path to plans/bio/...yaml — peers, teachers, family members already covered}
 
 ## 8. Naming-canonical
 
