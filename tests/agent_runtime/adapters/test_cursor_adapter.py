@@ -36,7 +36,11 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatc
     # the real prompt on stdin to be ignored. Prompt delivery is stdin-only.
     assert "-" not in plan.cmd
     assert "--model" in plan.cmd
-    assert "composer-2.5" in plan.cmd
+    # Default flipped from "composer-2.5" to "auto" (2026-05-28). cursor-agent
+    # picks the best available model from the user's plan rather than burning
+    # the per-model composer-2.5 quota every call. Pass an explicit
+    # `model="composer-2.5"` only when that specific model is required.
+    assert "auto" in plan.cmd
     assert "--mode" in plan.cmd
     assert "ask" in plan.cmd
     assert "--trust" in plan.cmd

@@ -139,7 +139,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "cursor": {
         "adapter": "scripts.agent_runtime.adapters.cursor:CursorAdapter",
-        "default_model": "composer-2.5",
+        "default_model": "auto",
         "cost_tier": "low",
         "capabilities": frozenset({
             "content_writing",

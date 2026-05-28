@@ -7,8 +7,12 @@ import pytest
 from scripts.ai_agent_bridge._cursor import CURSOR_DEFAULT_MODEL, _invoke_cursor
 
 
-def test_cursor_default_model_is_composer_2_5():
-    assert CURSOR_DEFAULT_MODEL == "composer-2.5"
+def test_cursor_default_model_is_auto():
+    # Cursor's default model is "auto" so cursor-agent picks the best available
+    # model from the user's plan without burning the per-model composer-2.5
+    # quota. Pass `--model composer-2.5` explicitly only when you specifically
+    # need that model (judge-calibration, A/B comparisons, etc.).
+    assert CURSOR_DEFAULT_MODEL == "auto"
 
 
 def test_invoke_cursor_constructs_correct_argv():

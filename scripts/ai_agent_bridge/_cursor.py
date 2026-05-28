@@ -5,7 +5,12 @@ and single-shot reads through Cursor's Composer or other models.
 
 Invocation pattern:
     .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor <content> \
-      --task-id <task> --model composer-2.5 [--data FILE]
+      --task-id <task> [--model composer-2.5] [--data FILE]
+
+Default model is ``auto`` so cursor-agent picks the best available model from
+the user's plan without burning the per-model composer-2.5 quota. Pass
+``--model composer-2.5`` explicitly only when you specifically need that model
+(e.g. judge-calibration runs or A/B comparisons).
 
 Under the hood: agent -p PROMPT --model MODEL --output-format text --trust
 """
@@ -18,7 +23,7 @@ from pathlib import Path
 
 from ._messaging import acknowledge, send_message
 
-CURSOR_DEFAULT_MODEL = "composer-2.5"
+CURSOR_DEFAULT_MODEL = "auto"
 CURSOR_DEFAULT_TIMEOUT_S = 900
 
 
