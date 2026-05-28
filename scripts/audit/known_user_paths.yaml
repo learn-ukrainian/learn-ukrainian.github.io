@@ -23,6 +23,13 @@ paths:
   - ~/.agy
   - ~/.agy/*
   - ~/.agy/**
+  # Cursor agent transcripts — `~/.cursor/projects/<encoded-cwd>/agent-transcripts/<session_id>/<session_id>.jsonl`.
+  # Per-session UUIDs change every invocation; allowlisting the glob keeps
+  # handoff docs honest about the recovery path used by the bridge fallback
+  # (`_recover_cursor_discuss_response_from_session_log`, PR #2381).
+  - ~/.cursor
+  - ~/.cursor/*
+  - ~/.cursor/**
   - ~/.claude/projects/.../memory/MEMORY.md
   - ~/.claude/projects/.../memory
   - ~/.claude/.../memory/fact-corrections.md
