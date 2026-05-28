@@ -30,7 +30,7 @@ WRITER_RULE_ANCHORS = (
             "No `>` blockquotes from textbooks at Grade 1, 2, or 3 levels "
             "in the published module body",
             "Grade 1-3 RAG hits can still ground lexical choices",
-            "`Захарійчук, Grade 1, p.24`",
+            "`<Author>, Grade 1, p.<P>`",
         ),
     ),
     (

@@ -42,7 +42,7 @@ Upstream guard: the `wiki_completeness_gate` blocks the build BEFORE you run if 
 
 `plan.references` is the SOLE source of `resources.yaml` citations. Knowledge Packet anchors (S1, S2, ...) are research material — NOT citation candidates. If a Knowledge Packet anchor points to a chunk OUTSIDE `plan.references`, you MUST NOT cite that chunk.
 
-Concrete example: if `plan.references` lists [Захарійчук Grade 1, p.24] and Knowledge Packet S1 points to Захарійчук Grade 4 p.150, cite ONLY Grade 1 p.24. This overrides any later "enrich plan_references" instruction.
+Concrete example: if `plan.references` lists [`<Plan Author> Grade <N>, p.<P>`] and Knowledge Packet S1 points to `<Different Author> Grade <M>, p.<Q>`, cite ONLY `<Plan Author> Grade <N>, p.<P>`. This overrides any later "enrich plan_references" instruction.
 
 Published tabs are fixed: Tab 1 `Урок` from `module.md`; Tab 2 `Словник` from `vocabulary.yaml`; Tab 3 `Вправи` from `activities.yaml` plus inline cross-references; Tab 4 `Ресурси` from `resources.yaml`.
 
@@ -91,18 +91,17 @@ If `activity_split_audit.split_valid=false`, rebalance inline/workbook first.
 <!-- rule_id: #R-VESUM-ALL-WORDS -->
 **1. Verify every example word in VESUM** (VESUM all-words coverage). Verify every Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except intentionally bad forms protected by `<!-- bad -->...<!-- /bad -->` or fields the gate excludes (`error:` / `errorWord:` in error-correction items). Selective verification is silent fabrication.
 
-**L2-trap: over-applied reflexive -ся.** Before emitting any `-ся` form, verify it. These always fail as personal reflexives unless VESUM says otherwise: `пити → *п'юся`, `снідати → *снідаюся / *снідається`, `читати → *читаюся`, `писати → *пишуся`.
+**L2-trap: over-applied reflexive -ся.** Before emitting any `-ся` form, verify it. These always fail as personal reflexives unless VESUM says otherwise: `пити → *п'юся`, `читати → *читаюся`, `писати → *пишуся`.
 
 <!-- rule_id: #R-BAD-FORM-MARKER -->
 **Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM and appears only as a teaching contrast MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers in every artifact. Do not use italics or bare prose for bad forms.
 
 ```markdown
-Stick to **сніданок** (not the Russian-borrowed <!-- bad -->завтрак<!-- /bad -->),
-**рушник** (not <!-- bad -->полотенце<!-- /bad -->), and **одягатися**
-(not the surzhyk <!-- bad -->одіватися<!-- /bad -->).
+Stick to **<canonical Ukrainian form>** (not the Russian-borrowed <!-- bad -->X<!-- /bad -->),
+and use **<native Ukrainian verb>** (not the surzhyk <!-- bad -->Y<!-- /bad -->).
 ```
 
-**Positive requirement for A1-A2 vocabulary modules:** when the module covers vocabulary domains where L1-Russian-exposure learners are likely to substitute Russian borrowings (food/dining, household items, clothing, daily routines, family, body, time-of-day expressions, transportation, common verbs of action), include **AT LEAST ONE** explicit bad-form contrast pair using the marker syntax above. This is a pedagogical tool (contrast pairs accelerate L2 acquisition) AND satisfies the `llm_qg.decolonization` rubric's criterion (b) — see `scripts/build/phases/linear-review-dim.md` § `decolonization`. Empirical evidence (m20 round #12, codex-tools, a1-my-morning-20260526-204640): module had Ukrainian-canonical vocabulary throughout + one stance line but **zero** bad-form markers; under the recalibrated rubric (PR #2358) the reviewer scored decolonization 8.7 (criterion a + c satisfied, b absent) — 0.3 short of the A1 9.0 floor that would have shipped the module. Pick the single most-likely L1 substitution for the module's topic (e.g. for a morning-routine module: завтрак→сніданок is the canonical one) and include it concretely. One marker pair is sufficient; this isn't a quantity gate.
+**Positive requirement for A1-A2 vocabulary modules:** when the module covers vocabulary domains where L1-Russian-exposure learners are likely to substitute Russian borrowings (food/dining, household items, clothing, daily routines, family, body, time-of-day expressions, transportation, common verbs of action), include **AT LEAST ONE** explicit bad-form contrast pair using the marker syntax above. This is a pedagogical tool (contrast pairs accelerate L2 acquisition) AND satisfies the `llm_qg.decolonization` rubric's criterion (b) — see `scripts/build/phases/linear-review-dim.md` § `decolonization`. Pick the single most-likely L1 substitution for the module's topic from the wiki/plan/RAG content and include it concretely. One marker pair is sufficient; this isn't a quantity gate.
 
 Modules whose topic does NOT involve L1-Russian-substitutable vocabulary (e.g. pure grammar abstractions, IPA-only phonetics drill, formal-letter templates) are exempt — but for those, document the exemption inline in your `<plan_reasoning>` so the reviewer doesn't dock for absence.
 
@@ -117,7 +116,7 @@ Apply the same convention in `module.md`, `activities.yaml` statements/items, an
 ✅ REQUIRED: `Stick to **X** (not the Russian-borrowed <!-- bad -->Y<!-- /bad -->).`
 When in doubt, omit the bad contrast and teach only the good form.
 
-**Morpheme-bold notation.** Do not put hyphens/slashes inside bold spans: write `прокидаюся (**-ся**)`, not `прокида**ю-ся**` or `**-ся/-сь**`.
+**Morpheme-bold notation.** Do not put hyphens/slashes inside bold spans: write `<verb> (**-suffix**)`, not `<verb>**-suffix**` or `**-suffix/-variant**`.
 
 **Textbook syllable-break notation.** Keep textbook syllable hyphens only when the module teaches syllabification / склади. Otherwise strip display hyphens before learner-facing prose.
 
@@ -271,7 +270,7 @@ Rules of engagement with prior learning (binding):
 
 2. **Don't introduce vocabulary that is neither in the cumulative list nor in this module's declared `vocabulary.yaml`.** From m04 onward this is a HARD audit failure (`unknown_vocab_in_prose`); for m01-m03 it's a WARN. Specifically: every Ukrainian content word in your `module.md` prose, dialogue lines, and example sentences MUST appear either (a) in the cumulative list, (b) in this module's `vocabulary.yaml`, OR (c) be a proper noun / Latin-character borrowing exempt from this rule.
 
-3. **Soft scaffolding via foreshadowing.** When you introduce a new lemma BEFORE its formal vocabulary entry (e.g. you use a word in the lesson prose that gets defined later in `vocabulary.yaml`), provide an inline gloss — `**вмиватися** *(to wash oneself)*` — at first mention. This is the "show before you tell" pattern, not a violation.
+3. **Soft scaffolding via foreshadowing.** When you introduce a new lemma BEFORE its formal vocabulary entry (e.g. you use a word in the lesson prose that gets defined later in `vocabulary.yaml`), provide an inline gloss — `**креслити** *(to draw lines)*` — at first mention. This is the "show before you tell" pattern, not a violation.
 
 4. **Frequency-and-CEFR awareness when introducing new vocab.** Before introducing any non-plan lemma, run the stacked check from §1.2 (Corpus Access). PULS-level → freq-rank → ULP-coverage. If none pass for your `{LEVEL}`, omit and choose differently.
 
@@ -303,13 +302,13 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Russianism floor.** `russianisms_strict` fails on any critical Russicism/calque/surzhyk finding. Check suspicious forms with `check_russian_shadow`, `search_style_guide`, `search_ua_gec_errors`, `search_heritage`, and `query_pravopys`. Never paste raw Russian forms into prose/dialogue; use a `<!-- VERIFY -->` placeholder or omit.
 
 <!-- rule_id: #R-SINGLE-VOICE-A1 -->
-**Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я прокидаюся** for your own routine." Bad: "the student enters an authentic space."
+**Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я креслю** when you describe your own action." Bad: "the student enters an authentic space."
 
 <!-- rule_id: #R-AUDIENCE-LANGUAGE-A1 -->
 **A1 audience language.** A1 explanation prose stays in English. Ukrainian appears only as TARGET: inline vocabulary words with English glosses, dialogue boxes, tables, conjugations, model sentences. Never use Ukrainian metalanguage TO the learner (`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`), because the learner cannot read Ukrainian explanations yet.
 
 <!-- rule_id: #R-NO-CHILDREN-PRIMARY-QUOTES -->
-**No children-primary blockquotes in adult A1.** No `>` blockquotes from textbooks at Grade 1, 2, or 3 levels in the published module body. Grade 1-3 RAG hits can still ground lexical choices, but do not surface as quoted material. Default: NO blockquote unless it pedagogically advances the lesson AND comes from an adult-appropriate source (Grade 7+, adult literature, Антоненко-Давидович, style guides). Adult A1 learners are not reading children's primers; do not print `Захарійчук, Grade 1, p.24` as lesson prose.
+**No children-primary blockquotes in adult A1.** No `>` blockquotes from textbooks at Grade 1, 2, or 3 levels in the published module body. Grade 1-3 RAG hits can still ground lexical choices, but do not surface as quoted material. Default: NO blockquote unless it pedagogically advances the lesson AND comes from an adult-appropriate source (Grade 7+, adult literature, Антоненко-Давидович, style guides). Adult A1 learners are not reading children's primers; do not print `<Author>, Grade 1, p.<P>` as lesson prose.
 
 <!-- rule_id: #R-NO-SCAFFOLDING-LEAKS -->
 **No writer-side scaffolding leaks.** Writer-side scaffolding never appears in module body. Forbidden in published markdown: panel IDs (`P1`, `P2`, ...), Krok-N labels (`Крок 5:`, `Step 5:`), obligation names from the wiki_coverage manifest (`ban-4`, `step-5`, ...), reviewer-fix anchors, phase names, gate names. The module is a finished lesson, not a writer's worksheet.
@@ -327,7 +326,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 
 Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side translation. This satisfies Practice 2 + Practice 4 of ULP for A1 and the `l2_exposure_floor` gate. Em-dash bare lines without an `en` prop fail the gate. Every dialogue line needs an **inline English gloss** provided **within 8 tokens** of the Ukrainian text. Place longer expression notes at the **block-bottom** of the component.
 
-**Minimum UK dialogue lines (A1-A2).** For A1 and A2 modules, emit at least **15 distinct gate-countable Ukrainian dialogue surfaces** (`<DialogueBox uk="..." en="...">` entries and `> ` blockquote lines, summed). The `l2_exposure_floor` gate's floor is 14; overshoot by ≥1 for safety. m20 build #9 hit exactly 13 and HARD-failed via `too_few_uk_dialogue_lines`. Count BEFORE emitting: if you have <15, add another exchange to the dialogue section or split a long turn into two shorter ones.
+**Minimum UK dialogue lines (A1-A2).** For A1 and A2 modules, emit at least **15 distinct gate-countable Ukrainian dialogue surfaces** (`<DialogueBox uk="..." en="...">` entries and `> ` blockquote lines, summed). The `l2_exposure_floor` gate's floor is 14; overshoot by ≥1 for safety. Prior builds have failed at exactly 13 gate-countable lines via `too_few_uk_dialogue_lines`. Count BEFORE emitting: if you have <15, add another exchange to the dialogue section or split a long turn into two shorter ones.
 
 `шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, add a `notes:` field to the `що` entry in `vocabulary.yaml` flagging the literary↔colloquial pair so learners know when each is appropriate (the per-item schema accepts `notes`, NOT `note` — singular fails schema validation). Do NOT add a separate top-level entry for `шо` — VESUM does not codify it and the vocab gate will reject a standalone lemma.
 
@@ -458,10 +457,10 @@ See `## Knowledge Packet` above. This is the same wiki-obligation content; the p
 
 Before artifacts, make the in-scope MCP calls your draft depends on:
 1. Textbook grounding (mandatory chunk_id-first protocol):
-   For each entry in `plan_references`, parse the `notes` field for the literal substring `chunk_id: <ID>` (always present — example: `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024`).
+   For each entry in `plan_references`, parse the `notes` field for the literal substring `chunk_id: <ID>` (always present — example: `chunk_id: <textbook-slug>_s<NNNN>`).
    Call `mcp__sources__get_chunk_context(chunk_id=<ID>)` to fetch the chunk text.
    DO NOT call `mcp__sources__search_text` for plan references — the chunk_id in notes is authoritative.
-   Concrete example: plan says `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024` → call `get_chunk_context(chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0024")`, paste from THAT returned text. Do NOT search by "p.24" — FTS5 will return the wrong author (e.g. Pohribnyi instead of Захарійчук).
+   Concrete example: plan says `chunk_id: <textbook-slug>_s<NNNN>` → call `get_chunk_context(chunk_id="<textbook-slug>_s<NNNN>")`, paste from THAT returned text. Do NOT search by page number — FTS5 can return the wrong author or page.
 2. Multimedia obligation: at least one `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`; `resources_search_attempted` rejects zero attempts.
 3. VESUM: `mcp__sources__verify_words` over every Ukrainian form you will emit.
 4. Russianism/style: `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__check_russian_shadow`, or `mcp__sources__search_heritage` for contrast pairs or suspicious forms.
@@ -497,9 +496,9 @@ Return the visible `<plan_reasoning>` blocks first, then exactly these four fenc
     "instruction": "Complete each sentence with the best word.",
     "items": [
       {
-        "sentence": "Я ____ о сьомій.",
-        "answer": "прокидаюся",
-        "options": ["прокидаюся", "сплю", "йду"]
+        "sentence": "Я ____ схему.",
+        "answer": "креслю",
+        "options": ["креслю", "питаю", "тримаю"]
       }
     ]
   }
@@ -509,10 +508,10 @@ Return the visible `<plan_reasoning>` blocks first, then exactly these four fenc
 ```json file=vocabulary.yaml
 [
   {
-    "lemma": "прокидатися",
-    "translation": "to wake up",
+    "lemma": "креслити",
+    "translation": "to draw lines",
     "pos": "verb",
-    "usage": "Я прокидаюся о сьомій."
+    "usage": "Я креслю схему."
   }
 ]
 ```
