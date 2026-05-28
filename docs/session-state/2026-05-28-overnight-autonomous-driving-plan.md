@@ -10,6 +10,21 @@ mandate: "user 2026-05-28 night: 'keep driving both subprojects, the v7.2 pipeli
 
 **THIS DOC IS THE OPERATING MANUAL.** Each time a watcher re-invokes me, re-read this, act, update the "Progress log" at the bottom.
 
+## 🔴 COLD-RESUME (if the live session died overnight — crash / OOM / machine sleep)
+The live orchestrator session drives via watchers + the Step 7 Monitor. If it's gone, a fresh `claude` resumes the SAME work by:
+1. Read this whole doc + the Progress log (bottom).
+2. `curl -s http://localhost:8765/api/delegate/active` — see which dispatches are still alive.
+3. For each FINISHED-but-unmerged dispatch: `gh pr list --state open` → review per the checklists → hold+correct bio PRs (Section-7 fabrication) → merge clean → close the satisfied issue.
+4. Step 7 build: check `.worktrees/builds/a1-my-morning-20260528-221218/` + `gh run`/build artifacts; if it died, re-fire the inline build (`v7_build.py a1 my-morning --writer codex-tools --worktree --use-generator`).
+5. Re-arm `delegate.py wait <task-id>` watchers for any still-alive dispatch.
+6. Resume the queue (R2/R3 with the FIXED template; R4 last + carefully).
+
+### Live state @ last update (2026-05-29, main `5ef63e8cdc`)
+- **Step 7 m20 build:** RUNNING, worktree `.worktrees/builds/a1-my-morning-20260528-221218`, Monitor task `bfyw3lt11`. In writer phase (codex-tools). Early gates passed (plan/knowledge_packet/wiki_completeness).
+- **Bio PRs:** #2400 (Block D, gemini) **HELD** — Section-7 fabrication + metadata; correct before merge.
+- **In-flight bio (read OLD template → expect Section-7 fabrication; HOLD+correct on landing):** Block A codex `b0cu2p8ik`, émigré C.1+C.2 claude `baww1vvyc`, émigré C.3+C.4+C.5 claude `bszwanlmc`, R5 agy `b916pc2n5`.
+- **Merged:** Step 5 `12735cfabb` (#2387 closed), Step 6 `448ca578d8` (#2388 closed), F5 template fix `5ef63e8cdc`.
+
 ## The loop (event-driven — do NOT ScheduleWakeup-poll)
 Each `delegate.py wait` watcher (run_in_background) re-invokes me on the dispatch's terminal exit. On every re-invocation:
 1. Identify which task landed (`/api/delegate/active` + the watcher id).
