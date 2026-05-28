@@ -79,3 +79,14 @@ Phase 1 research blocks. In flight: A, C, D, F (54 figures). Remaining un-fired:
   - **ROOT CAUSE = F5 template Section 7** ("Existing X modules" placeholders, no verify rule). **FIXED** (verify-or-Candidate; bio plans are Phase 2; dossier≠plan). Committed.
 - **⚠️ IN-FLIGHT BIO LANES (Block A codex `b0cu2p8ik`, émigré claude×2 `baww1vvyc`/`bszwanlmc`, R5 agy `b916pc2n5`) read the OLD template → will replicate the Section-7 fabrication.** On each landing: **HOLD the PR, correct Section 7 (verify/relabel "Existing"→"Candidate"), fix issue#(#2317/#2318 as correct)+model metadata, THEN merge.** Do NOT merge any bio PR that asserts non-existent "Existing" paths.
 - New bio fires (R2/R3) now use the FIXED template → clean. R4 (Block G) still gated on politically-charged-bios.md + co-review.
+- 2026-05-29: **Block A (codex, PR #2401) landed** — 10 dossiers, word counts 1500–1546, **metadata CLEAN** (codex got issue#/model right, unlike gemini). **Same Section-7 fabrication** (20+ non-existent `plans/...yaml` cited as existing) — confirms it's template-systematic, not agent-specific. **HELD #2401.**
+
+## Bio Section-7 correction strategy (DECIDED 2026-05-29)
+Format varies per agent (gemini = "Existing LIT modules…" bullets; codex = prose with `curriculum/l2-uk-en/plans/...` paths + loose "planned"/"Phase 2" notes), so a single sed relabel is NOT safe. **Per held branch, fire a focused codex correction dispatch:** *"Rewrite ONLY Section 7 of each dossier per the updated F5 template (commit `5ef63e8cdc`): `test -e` every path; verified-existing → 'Existing'; everything else → 'Candidate (Phase 2+)'. Fix issue# (#2317 for Block A/D) + model string if wrong. Touch NO other section."* Then re-review (paths verified) + merge + close/update the issue. **Do NOT merge any bio PR until its Section 7 is corrected.** Held PRs: #2400 (Block D, gemini — also needs #2318→#2317 + "Gemini 1.5 Pro" fix), #2401 (Block A, codex — Section 7 only).
+
+## ⏱ OVERNIGHT SCOPE CAP (DECIDED 2026-05-29, user at ~40% ctx, going to sleep)
+This session processes ONLY the **in-flight** work to a clean state, to stay under the compaction line (~target <480K):
+- Land + Section-7-correct + merge: Block A #2401, Block D #2400, émigré C12 `baww1vvyc`, émigré C345 `bszwanlmc`, R5 agy `b916pc2n5`.
+- Finish Step 7 m20 build (`bfyw3lt11`); verify ACs; promote if pass.
+- **DO NOT fire R2/R3 this session.** They use the fixed template and belong to a FRESH morning session (clean context) — see Cold-resume + the #2309 queue above. R4 (Block G) always last + co-review.
+- If context approaches ~480K before in-flight is done, STOP firing corrections, update this log, and leave the rest for the morning session per Cold-resume.
