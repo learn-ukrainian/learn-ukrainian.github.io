@@ -90,3 +90,7 @@ This session processes ONLY the **in-flight** work to a clean state, to stay und
 - Finish Step 7 m20 build (`bfyw3lt11`); verify ACs; promote if pass.
 - **DO NOT fire R2/R3 this session.** They use the fixed template and belong to a FRESH morning session (clean context) — see Cold-resume + the #2309 queue above. R4 (Block G) always last + co-review.
 - If context approaches ~480K before in-flight is done, STOP firing corrections, update this log, and leave the rest for the morning session per Cold-resume.
+
+### Step 7 update (2026-05-29)
+- **First attempt FAILED** (worktree `a1-my-morning-20260528-221218`): `--writer codex-tools` → `mcp_tools_never_invoked` HARD gate (codex-tools `tool_calls_total=0`, tool-theatre on verify_words/etc; MCP resolved fine, codex just doesn't call it). Known behavior per the 2026-05-12 writer-selection decision.
+- **ROOT-CAUSE FIX:** #2389's `--writer codex-tools` is wrong; V7 writer = **claude-tools** (real MCP calls). **Re-fired Step 7 with `--writer claude-tools --use-generator --worktree`**, Monitor `b4vs4yjnr`. #2389 commented with the correction. Claude quota available (pre-June-15, reset). **If re-firing Step 7 in a fresh session: use `--writer claude-tools`, NOT codex-tools.**
