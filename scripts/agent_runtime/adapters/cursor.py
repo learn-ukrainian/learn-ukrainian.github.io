@@ -50,7 +50,7 @@ class CursorAdapter:
     """Adapter for the Cursor agent CLI (``agent`` or ``cursor-agent``)."""
 
     name: str = "cursor"
-    default_model: str = "composer-2.5"
+    default_model: str = "auto"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(

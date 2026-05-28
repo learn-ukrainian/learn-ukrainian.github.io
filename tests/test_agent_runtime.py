@@ -183,9 +183,12 @@ def test_registry_has_known_agents():
 def test_cursor_entry_is_well_formed():
     entry = get_agent_entry("cursor")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.cursor:CursorAdapter"
-    assert entry["default_model"] == "composer-2.5"
+    # Default flipped from "composer-2.5" to "auto" so cursor-agent picks the
+    # best available model from the user's plan instead of burning the
+    # per-model composer-2.5 quota every call.
+    assert entry["default_model"] == "auto"
     assert entry["cli_available"] is True
-    assert entry["resume_policy"] == "never"
+    assert entry["resume_policy"] == "bridge_only"
     assert {"content_writing", "content_review", "adversarial_review"} <= entry["capabilities"]
 
 
@@ -235,7 +238,7 @@ def test_load_adapter_codex():
 def test_load_adapter_cursor():
     adapter = _load_adapter("cursor")
     assert adapter.name == "cursor"
-    assert adapter.default_model == "composer-2.5"
+    assert adapter.default_model == "auto"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
