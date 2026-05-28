@@ -36,5 +36,11 @@ def test_writer_prompt_does_not_require_inline_english_gloss_within_8_tokens() -
 def test_writer_prompt_requires_dialoguebox_side_by_side_translation() -> None:
     prompt = _render_a1_my_morning_prompt()
 
-    assert 'Use `<DialogueBox uk="..." en="...">`' in prompt
+    # The example MUST be self-closing (`/>`): a bare `<DialogueBox ...>` is
+    # invalid MDX and the l2_exposure_floor regex counts it as zero. Codex
+    # copied the previously-malformed example verbatim and silently failed the
+    # dialogue floor on m20 (2026-05-29). The example now teaches valid MDX.
+    assert 'Use `<DialogueBox uk="..." en="..." />`' in prompt
     assert "side-by-side translation" in prompt
+    # The directive must explicitly require the self-closing `/>` form.
+    assert "MUST be self-closing" in prompt

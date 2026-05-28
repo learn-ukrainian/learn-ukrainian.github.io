@@ -377,7 +377,7 @@ for a teacher narrating their own lesson plan. Hold to this register:
 
 **Dialogue format (REQUIRED for gate counting).** All Ukrainian dialogue lines MUST be emitted as one of:
 
-- `<DialogueBox uk="..." en="...">` JSX component (preferred for V7 rendering), or
+- `<DialogueBox uk="..." en="..." />` JSX component (preferred for V7 rendering), or
 - `> `-prefixed Markdown blockquote (Markdown fallback)
 
 The `l2_exposure_floor` gate counts only these two forms. **Em-dash dialogue lines (e.g. `— Привіт, Насте!`) under a `## Діалоги` heading WITHOUT `<DialogueBox>` or `> ` wrapping are an anti-pattern** — the gate cannot count them and the module will fail the dialogue-line floor even when the dialogue is pedagogically present.
@@ -387,7 +387,7 @@ Default to `<DialogueBox>` for new modules; `> ` blockquote acceptable when a mu
 **Inline gloss for dialogue lines (REQUIRED to clear `long_uk_ceiling`).** Each Ukrainian dialogue line MUST have an inline English gloss within 8 tokens of proximity. Two valid shapes:
 
 - Italic gloss directly after the UK line: `— Привіт, Насте! *(Hi, Nastia!)*`
-- Inside the same DialogueBox prop: `<DialogueBox uk="..." en="...">`
+- Inside the same DialogueBox prop: `<DialogueBox uk="..." en="..." />`
 
 **Anti-pattern: block-bottom gloss.** Do NOT emit all UK dialogue lines first and then a separate "translation:" / "English:" block at the bottom. This causes `long_uk_ceiling` to flag the entire UK run as one unsupported segment, even when every line has a corresponding English translation farther down.
 
