@@ -133,11 +133,11 @@ Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__chec
 <!-- rule_id: #R-TEXTBOOK-30W -->
 **Textbook grounding.** For each `plan_references` entry, you MUST retrieve the chunk text from MCP and use THAT text as grounding — paraphrasing, topic-keyword search, or pasting from memory all fail this gate.
 
-(A) **Identify the chunk_id.** Look at the plan entry's `notes` field. If it contains the literal substring `chunk_id: <ID>` (it usually does — e.g. `chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024`), copy that `<ID>` verbatim and go DIRECTLY to step (B). **`search_text` for this reference is FORBIDDEN when notes already gives a chunk_id** — it returns wrong-author chunks for short queries like `"Author p.24"` (FTS5 matches the page number across ALL textbooks; you will get back a chunk from a different book). Only call `mcp__sources__search_text(query="<author surname> p. <page digits>", subject="<corpus>", limit=3)` when `notes` truly lacks a chunk_id. Topic-keyword queries are a separate hard fail mode — never search by what the chunk is ABOUT, only by author + page.
+(A) **Identify the chunk_id.** If `plan_references[*].notes` contains `chunk_id: <ID>`, copy that ID verbatim and go directly to step (B). Do NOT use `search_text` for references that already name a chunk_id; only search by author + page when notes truly lacks one. Topic-keyword searches fail this gate.
 
 (B) **Retrieve the chunk text.** Call `mcp__sources__get_chunk_context(chunk_id=<ID>)`. This step is MANDATORY — calling `search_text` alone returns a truncated snippet, not the full chunk text. The `chunk_context_for_all_refs` gate verifies these calls; if any fetchable reference is missing a `get_chunk_context` call, the gate HARD-rejects regardless of blockquote content.
 
-(C) **Surface only adult-appropriate source blockquotes in the published module body.** For Grade 1, 2, or 3 textbook chunks, retrieve the returned `text` field and use it to ground lexical choices, but do NOT paste a `>` blockquote into `module.md`; see `#R-NO-CHILDREN-PRIMARY-QUOTES`. For adult-appropriate sources (Grade 7+, adult literature, Антоненко-Давидович, style guides), paste >=30 contiguous Ukrainian words from the returned `text` field into a blockquote. Verbatim only — no paraphrasing, no translation, no stitching from multiple chunks, no Russian-script characters, no syllable-hyphen removal that breaks contiguity. The `published_quote_for_publishable_refs` gate uses string-containment against the chunk's exact `text`. Each adult-appropriate `plan_references` entry needs its own ≥30-word blockquote (one per cited page) — a single aggregate blockquote does not cover multiple references.
+(C) **Surface only adult-appropriate source blockquotes.** Grade 1-3 chunks ground choices but do NOT appear as learner-facing `>` blockquotes. Adult-appropriate sources require one verbatim >=30-word Ukrainian blockquote per cited reference; no paraphrasing, translation, stitching, Russian-script text, or syllable-hyphen edits.
 
 (D) Add the exact citation line immediately after the blockquote: `*— <Author>, Grade <N>, p.<PAGE>*` (em-dash + spaces, italic).
 
@@ -259,7 +259,7 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 - Slug: {MODULE_SLUG}
 - Topic: {TOPIC_TITLE}
 - Phase: {PHASE}
-- Word **minimum**: {WORD_TARGET} — this is a FLOOR, not a target. The `word_count` gate hard-rejects below 92% of this number (8% tolerance per `_WORD_COUNT_TOLERANCE_BELOW`). **Overshoot by 18-20%** — your self-counted prose total (run `wc -w` mentally on the rendered module.md) runs ~15-16% higher than the gate's strict tokenization, which excludes (a) markdown comments, (b) JSX tag syntax like `<DialogueBox`/`/>`, (c) JSX attribute prefixes like `uk="`/`en="`, (d) markdown punctuation tokens (`##`, `**`, bare `-` bullets), and (e) tokens not starting with a letter (numbers, `8:00`, page refs). The 2026-05-23 user direction is explicit: word counts are MINIMUMS; overshoot is welcome, never an error. **Empirical evidence (m20 builds #7-#10 with codex-tools):** the gap between `wc -w` self-count and the gate's `_WORD_RE` count is consistently **15-16%** because of JSX dialogue scaffolding. m20 #8: wc=1140, gate=981 (14% gap). m20 #10: wc=1299, gate=1101 (15% gap, 3 words below the 8%-tolerance floor → HARD FAIL after the writer aimed at +8% wc-w overshoot). Plan your section budgets accordingly — sum your sections to **~1.20× the minimum** so the gate count lands at or above the target.
+- Word **minimum**: {WORD_TARGET} — this is a FLOOR. The gate hard-rejects below 92% of this number. Plan section budgets around **~1.20× the minimum** because the strict gate tokenization excludes markdown comments, JSX tag/attribute syntax, punctuation tokens, numbers, and page refs; self-counted `wc -w` usually runs 15-16% high.
 
 ## Learner State
 
@@ -422,6 +422,8 @@ field `items`; do NOT use the React/component prop name `questions`.
 For item-bearing types, include a non-empty `items` array. For numeric arrays
 like `correct_order`, indices are zero-based.
 
+**`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside a `translate` activity's `items:` list MUST use `source` for the text to translate and `options` for target choices; the correct target answer is the option with `correct: true`. For UK→EN translation, `source` is the Ukrainian text and the target English answer lives in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field that the parser cannot consume.
+
 **`error-correction` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside an `error-correction` activity's `items:` list MUST use these EXACT inner field names — they are the schema consumed by `scripts/yaml_activities.py: _parse_error_correction` AND the only fields the `vesum_verified` gate treats as containing intentional misspellings:
 
 ```yaml
@@ -471,15 +473,15 @@ If a required call is missing for your level, make it now. Do not emit artifacts
 
 ## PRE-EMIT HARD STOP — read this NOW, before any artifact fence
 
-Three writer-failure modes have repeatedly survived earlier prompt strengthening because their MANDATORY language sits in the middle of this 470-line prompt and gets forgotten by emission time. Re-check all three BEFORE emitting:
+Re-check these three hard-stop items BEFORE emitting:
 
-1. **`get_chunk_context` for every plan reference.** Counting `search_text` calls toward `textbook_grounding` is wrong — the gate explicitly rejects builds where `chunk_context_calls=0` even if `search_text_calls > 0`. For EACH entry in `plan.references`, call `mcp__sources__get_chunk_context(chunk_id=<the ID from notes>)`. If your count is currently zero, you have NOT satisfied this obligation, regardless of how many `search_text` calls you made. The blockquote in your draft MUST be ≥30 contiguous words from that returned chunk text, verbatim.
+1. **`get_chunk_context` for every plan reference.** `search_text` does NOT count toward `textbook_grounding`; call `mcp__sources__get_chunk_context(chunk_id=<ID from notes>)` for EACH `plan.references` entry. Adult blockquotes must be >=30 contiguous words from that returned chunk text, verbatim.
 
-2. **At least ONE multimedia search call.** Counting `search_text`, `search_style_guide`, `verify_words`, `query_pravopys`, `search_definitions`, or `query_cefr_level` toward `resources_search_attempted` is wrong — the gate counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, and `mcp__sources__search_images`. Make at least ONE of these THREE calls before emitting. An empty result is acceptable (omit unverifiable entries from `resources.yaml`); a zero attempt is not.
+2. **At least ONE multimedia search call.** `resources_search_attempted` counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, and `mcp__sources__search_images`. Make at least one of these calls; empty results are acceptable, zero attempts are not.
 
 3. **INJECT_ACTIVITY parity.** Every `INJECT_ACTIVITY id=<X>` reference in `module.md` MUST have a corresponding activity with id `<X>` in `activities.yaml`. The build hard-fails on dangling references via the `inject_activity_ids` gate. Before emitting, count your `INJECT_ACTIVITY` markers in `module.md` and confirm each id is defined in `activities.yaml`.
 
-If your current tool history does not include items 1 and 2 above, STOP, make the missing tool calls, then resume to artifact emission. The `<end_gate>` block will require explicit integer counts for both of those tool requirements — and the pipeline cross-references those counts against your telemetry. Lying fails the build via `tool_theatre`; honestly reporting zero fails the build via `textbook_grounding` / `resources_search_attempted`. Only doing the calls satisfies items 1 and 2. Item 3 (INJECT_ACTIVITY parity) is a pre-emit structural check, not a tool-call obligation — verify it in the artifacts you are about to emit.
+If tool history lacks items 1 or 2, STOP and make the calls before artifact emission. `<end_gate>` counts are cross-checked against telemetry: lying fails via `tool_theatre`, zero fails via `textbook_grounding` / `resources_search_attempted`. Item 3 is structural; verify it in the artifacts.
 
 ## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
 
