@@ -7,14 +7,14 @@ from pathlib import Path
 from ai_llm.agent_runtime_call import call_agent_with_fallback
 from ai_llm.fallback import CallResult
 
-CLAUDE_MODEL_LADDER = ("claude-opus-4-7", "claude-sonnet-4-5")
+CLAUDE_MODEL_LADDER = ("claude-opus-4-8", "claude-sonnet-4-5")
 
 
 def call_claude_with_fallback(
     prompt: str,
     *,
     task_name: str,
-    preferred_model: str = "claude-opus-4-7",
+    preferred_model: str = "claude-opus-4-8",
     effort: str | None = "xhigh",
     per_rung_timeout_s: int | None = None,
     overall_timeout_s: int | None = None,

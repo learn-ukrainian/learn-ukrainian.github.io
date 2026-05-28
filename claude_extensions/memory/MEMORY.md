@@ -41,7 +41,7 @@ Don't pattern-match on principles ("orchestrate when possible") — match the EX
 | Inline code edit ≤5 LOC, only when fixing a CI failure I just caused | Me, current model |
 | Code change >5 LOC, mechanical / pattern / fixtures | Dispatch — 3:3:3 split: codex (`--agent codex --mode danger --worktree --base main`), claude-headless (architectural / cross-file), gemini (tests, schema migrations, docs-near-code). NOT gemini for: cross-file refactor, security/concurrency, GH-auth, mass mechanical |
 | Wiki/content writing | `delegate.py dispatch --agent gemini` (Gemini sub, unmetered) |
-| Adversarial review of design / ADR / architecture | `delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh` (headless Opus, separate billing) |
+| Adversarial review of design / ADR / architecture | `delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-8 --effort xhigh` (headless Opus, separate billing) |
 | Q&A or single-shot review without need to commit | `ab ask-codex` / `ab ask-gemini --model gemini-3.0-flash-preview` for routine, `--model gemini-3.1-pro-preview` only for deep |
 | Search / grep / "find me X" across files | `Agent` tool with `subagent_type: Explore`, `model: "haiku"` |
 | Status check on running dispatches | Monitor API curl, never inline file scans |

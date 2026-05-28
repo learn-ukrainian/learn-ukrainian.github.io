@@ -461,7 +461,7 @@ def phase_review(ctx: DirectModuleContext) -> bool:
         str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
         "-",
         "--task-id", task_id,
-        "--model", "claude-opus-4-7",
+        "--model", "claude-opus-4-8",
         "--stdout-only",
     ]
 

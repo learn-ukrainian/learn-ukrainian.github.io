@@ -78,7 +78,7 @@ WRITER_CHOICES = (
     "agy-tools",
 )
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
-    "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
+    "claude-tools": {"model": "claude-opus-4-8", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
@@ -126,7 +126,7 @@ REVIEWER_CHOICES = (
     "agy-tools",
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
-    "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
+    "claude-tools": {"model": "claude-opus-4-8", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-5.5", "effort": "high"},
     "grok-tools": {"model": "grok-4.3", "effort": "medium"},
