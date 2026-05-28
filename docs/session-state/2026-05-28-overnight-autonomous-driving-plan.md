@@ -110,3 +110,38 @@ This session processes ONLY the **in-flight** work to a clean state, to stay und
 - **C12** (claude): produced **0 dossiers** (failed; no committed/uncommitted content). Needs RE-FIRE — defer to morning (non-claude agent; émigré C.1+C.2, 11 figures).
 - **R5** (agy): **3 dossiers UNCOMMITTED** in worktree (hlib-babich, maks-levin, viktor-hurniak) of expected 12 — partial + never finalized. Safe in worktree (#M-10). Needs commit+push+PR+Section-7 (and the other ~9 figures — re-fire/continue).
 - **DECISION:** writer-fix is the night's priority (user mandate). Bio finalized as a batch AFTER the codex m20 validates, OR handed to morning if context approaches ~480K. Held PRs are safe.
+
+---
+
+## ★ OVERNIGHT RESULTS + NEXT STEPS (2026-05-29 ~01:35, autonomous) ★
+
+**User mandate this session: "make codex deliver as the writer — he built the first working model, not claude." ACHIEVED + validated. Then hit the next gate in the cascade.**
+
+### TWO root-cause bugs fixed + merged + LIVE-VALIDATED
+1. **Codex "tool theatre" = a TIMEZONE CAPTURE bug** (NOT codex behavior — 2nd time, cf. PR #1907). Adapter scanned UTC-date session dirs; codex (run 22:12Z = 00:12 Budapest) wrote `sessions/2026/05/29` (local). `writer_tool_calls.json=[]` was a parser miss. **Fix: PR #2403 merged `eb7b4c1857`** (`_candidate_rollout_dirs` scans UTC±1 + local±1 under scoped home; `check_early_reap`/`liveness_signal_paths` un-hardcoded `~/.codex`; regression test). Cursor adapter checked CLEAN. **VALIDATED:** codex builds now capture 11+ calls incl `verify_words` ×51/48.
+2. **`<DialogueBox>` directive example was malformed** (missing self-closing `/>`). Gate regex `<DialogueBox\b(?:[^>]*/>|.*?</DialogueBox>)` counts ONLY self-closed/closed tags. Codex copied the example verbatim → 16 valid-content dialogues = invalid MDX = counted ZERO → false `too_few_uk_dialogue_lines`. claude self-corrected with `/>`, masking it for weeks. **Fix: commit `196a4ca7e5`** (self-closing example in R-CLEAN-TABLES + linear-write.md + linear-write-grok.md + explicit requirement + test). **VALIDATED:** build #2 PASSED python_qg/l2_exposure_floor.
+
+### Step 7 m20 cascade — codex-tools, --use-generator (wiki-driven)
+`mcp_tools_never_invoked` ✅FIXED → `python_qg`/`l2_exposure_floor` ✅FIXED → **`wiki_coverage_gate` ❌ BLOCKED at 66.67% (12/18)**.
+
+### ⛔ CURRENT m20 BLOCKER (P0 next-step, dispatch-ready) — err-obligation correction YAML bug
+6 remaining failures = err-1..err-6 (`l2_error`, `implementation_map_missing`). The wiki_coverage correction loop **tries** to inject the err activity + `implementation_map` into `activities.yaml` but produces **invalid YAML every time**, two bugs:
+1. **`implementation_map:` concatenated onto the prior line, no newline:** `...вмиваюся.    implementation_map:` → `mapping values are not allowed here`.
+2. **IPA apostrophe-doubling:** `[прокидайес'':а]` (regression/sibling of PR #2184's `_activity_text` apostrophe fix).
+→ Located in `scripts/build/linear_pipeline.py` wiki_coverage correction YAML injection/serialization (search `wiki_coverage_correction_yaml_invalid`, the activities.yaml fix-application path). ALSO the writer doesn't emit impl_map entries for err obligations on the first pass. **HIGH VALUE: blocks err-coverage for EVERY A1/A2 module with l2_error obligations, not just m20.** Fix → re-fire `v7_build.py a1 my-morning --writer codex-tools --use-generator --worktree` → expect PASS → promote (replaces live PR #2364).
+
+### Follow-up (P2): gate-vs-fix-cap mismatch
+`_validate_reviewer_fix_shapes(max_lines=6, max_chars=240)` makes `l2_exposure_floor` (and any large-structural gate) **un-auto-fixable** — a 14-line dialogue injection always exceeds the cap. The DialogueBox example fix prevents this for compliant writers, but the cap mismatch is latent (a writer that under-produces dialogue can't be auto-corrected).
+
+### Bio (corrected understanding — overnight "fabrication" premise was HALF WRONG)
+- **#2401 Block A (codex): ✅ MERGED `107f4b081c`.** NOT fabricated — cited REAL plan files (`test -e` verified 9/10). Overnight premise "bio plans count=0" conflated unbuilt modules w/ nonexistent plan YAMLs. 10 dossiers 1500-1546w, Tier-1/2, decolonization framing. One flagged НЛО (modern Russian journal, demoted T2) citation in mykhail-semenko — noted on #2317 for review.
+- **#2400 Block D (gemini): HELD — genuinely fabricated** ~20 nonexistent `plans/...yaml` as "Existing" (e.g. rylskyi-neoclassicists, the-great-terror) mixed w/ ~6 real. PLUS metadata: all 6 say `#2318`→#2317, 3/6 "Gemini 1.5 Pro"→gemini-3.1-pro. Needs: relabel fabricated→Candidate(Phase2+) + metadata fix. (Format-variance → codex correction dispatch on the gemini branch, push to same branch.)
+- **C345 (claude):** 15 dossiers committed LOCAL `a2e02ba158`, branch UNPUSHED. Needs push+PR+Section-7 verify (test -e its paths).
+- **C12 (claude):** 0 dossiers — FAILED. Re-fire émigré C.1+C.2 (11 figures) via NON-claude agent.
+- **R5 (agy):** 3 dossiers UNCOMMITTED in worktree (hlib-babich, maks-levin, viktor-hurniak) of ~12. Safe (#M-10). Commit+push+continue remaining.
+
+### Writer policy CONFIRMED
+**codex-tools IS the validated V7 writer** (capture fixed; makes real MCP calls). claude-tools FAILED tonight (CLI hung 883s, no response) + sunset post-June-15. **gemini is NOT free** (user correction — drop that framing). Cursor/codex both run own quota.
+
+### Morning priority order
+P0: fix err-obligation YAML-injection bug (linear_pipeline.py) → re-fire codex m20 → promote. P1: bio #2400 correct+merge, C345 push+PR, R5 finalize, C12 re-fire. P2: gate-vs-fix-cap mismatch. Build forensics retained (#M-10): worktrees `a1-my-morning-20260528-{221218,221953,222759,230427,232046}`.
