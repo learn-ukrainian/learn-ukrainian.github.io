@@ -79,6 +79,11 @@ def _install_v7_fixture(
         lambda **_: {"slug": "fixture", "sequence_steps": []},
     )
     monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "run_wiki_completeness_gate",
+        lambda **_: {"verdict": "PASS", "diagnostic": "fixture"},
+    )
+    monkeypatch.setattr(
         v7_build,
         "seed_implementation_map",
         lambda *_args, **_kwargs: {"schema_version": 1, "entries": []},
@@ -131,10 +136,12 @@ def _install_v7_fixture(
             level="a1",
             slug="fixture",
             writer="claude-tools",
+            reviewer=None,
             dry_run=False,
             out=str(module_dir),
             writer_timeout=5,
             effort=None,  # added 2026-05-13 in 9e5a6496b9 (--effort flag)
+            no_resume=True,
         ),
         tmp_path / "events.jsonl",
     )

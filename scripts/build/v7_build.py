@@ -622,6 +622,31 @@ def _archive_failure(
     )
 
 
+def _archive_failure_best_effort(
+    archive: run_archive.RunArchive | None,
+    *,
+    phase: str,
+    module_dir: Path | None,
+    plan_path: Path | None,
+    exc: Exception,
+) -> None:
+    """Preserve failure artifacts without masking the original terminal event."""
+    try:
+        _archive_failure(
+            archive,
+            phase=phase,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            exc=exc,
+        )
+    except Exception as archive_exc:
+        print(
+            f"v7_build warning: failed to archive failure for phase {phase}: {archive_exc}",
+            file=sys.stderr,
+            flush=True,
+        )
+
+
 def _writer_prompt(
     *,
     plan: Mapping[str, Any],
@@ -1501,13 +1526,6 @@ def _run(args: argparse.Namespace) -> int:
         )
         return 0
     except AgentStalledError as exc:
-        _archive_failure(
-            archive,
-            phase=phase,
-            module_dir=module_dir,
-            plan_path=plan_path,
-            exc=exc,
-        )
         tracker.emit(
             "writer_timeout",
             level=level,
@@ -1520,15 +1538,15 @@ def _run(args: argparse.Namespace) -> int:
             total_wall_time_s=round(time.monotonic() - module_started_at, 3),
         )
         print(f"v7_build timed out in phase {phase}: {exc}", file=sys.stderr, flush=True)
-        return 124
-    except Exception as exc:
-        _archive_failure(
+        _archive_failure_best_effort(
             archive,
             phase=phase,
             module_dir=module_dir,
             plan_path=plan_path,
             exc=exc,
         )
+        return 124
+    except Exception as exc:
         tracker.emit(
             "module_failed",
             level=level,
@@ -1537,6 +1555,13 @@ def _run(args: argparse.Namespace) -> int:
             reason=str(exc)[:500],
         )
         print(f"v7_build failed in phase {phase}: {exc}", file=sys.stderr, flush=True)
+        _archive_failure_best_effort(
+            archive,
+            phase=phase,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            exc=exc,
+        )
         return 1
 
 
