@@ -112,7 +112,7 @@ CASCADE_PER_CALL_MAX_S = _ONE_DAY
 # Use Opus ONLY where deep reasoning is critical (seminar content, final review).
 # Ref: Anthropic guidance (Lydia Hallie, 2026-04-03)
 CLAUDE_SONNET = "claude-sonnet-4-6"
-CLAUDE_OPUS   = "claude-opus-4-7"
+CLAUDE_OPUS   = "claude-opus-4-8"
 
 CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Research — RAG search + summarization
 CLAUDE_MODEL_CORE_CONTENT       = CLAUDE_OPUS    # Content — writing quality needs Opus

@@ -2886,7 +2886,7 @@ def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
 def test_claude_adapter_attributes():
     adapter = ClaudeAdapter()
     assert adapter.name == "claude"
-    assert adapter.default_model == "claude-opus-4-7"
+    assert adapter.default_model == "claude-opus-4-8"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 

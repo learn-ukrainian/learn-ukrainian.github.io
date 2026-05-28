@@ -287,6 +287,7 @@ _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
     "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="gemini-2.5-flash"),
     "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend),
+    "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "grok-4.3": ModelRoute(family="xai", backend=_hermes_backend),
