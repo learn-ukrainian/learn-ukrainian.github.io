@@ -984,7 +984,8 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
     """Return True if `phase`'s on-disk artifact exists and reports success.
 
     The on-disk shapes mirror the success conditions enforced in `_run` itself
-    (see the post-phase guards: `gates.passed`, `wiki_coverage_gate.passed`,
+    (see the post-phase guards: `gates.passed`,
+    `wiki_completeness_gate.verdict == "PASS"`, `wiki_coverage_gate.passed`,
     `wiki_coverage_review.overall_verdict == "PASS"`, and
     `aggregate.terminal_verdict == "PASS"`). Any deviation means the phase
     needs to re-run.
@@ -1009,6 +1010,9 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
             return False
         gates = data.get("gates")
         return isinstance(gates, Mapping) and gates.get("passed") is True
+    if phase == "wiki_completeness_gate":
+        data = _read_json(module_dir / "wiki_completeness_gate.json")
+        return isinstance(data, Mapping) and data.get("verdict") == "PASS"
     if phase == "wiki_coverage_gate":
         data = _read_json(module_dir / "wiki_coverage_gate.json")
         return isinstance(data, Mapping) and data.get("passed") is True
@@ -1110,6 +1114,47 @@ def _run(args: argparse.Namespace) -> int:
             archive=archive,
         )
 
+        module_dir = _resolve_output_dir(args.out, level, slug)
+
+        phase = "wiki_completeness_gate"
+        _phase_started(archive, phase)
+        started_at = time.monotonic()
+        module_dir.mkdir(parents=True, exist_ok=True)
+        if (
+            resume_enabled
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "wiki_completeness_gate")
+        ):
+            wiki_completeness_gate = _read_json(module_dir / "wiki_completeness_gate.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_enabled:
+                force_rerun = True
+            wiki_completeness_gate = linear_pipeline.run_wiki_completeness_gate(
+                level=level,
+                slug=slug,
+                wiki_manifest=wiki_manifest_data,
+            )
+            linear_pipeline.write_json(
+                module_dir / "wiki_completeness_gate.json", wiki_completeness_gate
+            )
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
+        if not isinstance(wiki_completeness_gate, Mapping) or wiki_completeness_gate.get("verdict") != "PASS":
+            diagnostic = (
+                wiki_completeness_gate.get("diagnostic")
+                if isinstance(wiki_completeness_gate, Mapping)
+                else "Wiki completeness gate returned malformed output"
+            )
+            raise linear_pipeline.LinearPipelineError(str(diagnostic))
+
         if args.dry_run:
             sections = [
                 str(item.get("section"))
@@ -1132,8 +1177,6 @@ def _run(args: argparse.Namespace) -> int:
                 duration_s=round(time.monotonic() - module_started_at, 3),
             )
             return 0
-
-        module_dir = _resolve_output_dir(args.out, level, slug)
 
         phase = "writer"
         _phase_started(archive, phase)

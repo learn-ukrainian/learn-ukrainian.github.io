@@ -97,6 +97,24 @@ def test_python_qg_reruns_when_artifact_malformed(module_dir: Path) -> None:
     assert v7_build._phase_artifact_passes(module_dir, "python_qg") is False
 
 
+# ----- wiki_completeness_gate -------------------------------------------------
+
+def test_wiki_completeness_gate_skipped_when_passed(module_dir: Path) -> None:
+    _write_json(
+        module_dir / "wiki_completeness_gate.json",
+        {"verdict": "PASS", "checks": {}},
+    )
+    assert v7_build._phase_artifact_passes(module_dir, "wiki_completeness_gate") is True
+
+
+def test_wiki_completeness_gate_reruns_when_failed(module_dir: Path) -> None:
+    _write_json(
+        module_dir / "wiki_completeness_gate.json",
+        {"verdict": "FAIL", "checks": {}},
+    )
+    assert v7_build._phase_artifact_passes(module_dir, "wiki_completeness_gate") is False
+
+
 # ----- wiki_coverage_gate -----------------------------------------------------
 
 def test_wiki_coverage_gate_skipped_when_passed(module_dir: Path) -> None:

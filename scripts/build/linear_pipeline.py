@@ -920,12 +920,14 @@ def build_wiki_manifest_data(
             "l2_errors",
             "phonetic_rules",
             "decolonization_bans",
+            "wiki_vocabulary_minimum",
         ):
             merged.setdefault(key, [])
             for item in manifest.get(key, []):
                 copied = dict(item)
                 prefix = str(copied.get("id") or "").split("-", 1)[0] or key[:4]
-                copied["id"] = f"{prefix}-{len(merged[key]) + 1}"
+                if "id" in copied:
+                    copied["id"] = f"{prefix}-{len(merged[key]) + 1}"
                 merged[key].append(copied)
         merged.setdefault("external_resources", [])
         merged["external_resources"].extend(manifest.get("external_resources", []))
@@ -933,6 +935,43 @@ def build_wiki_manifest_data(
     if merged is not None:
         validate_manifest(merged)
     return merged or {}
+
+
+def run_wiki_completeness_gate(
+    *,
+    level: str,
+    slug: str,
+    wiki_manifest: Mapping[str, Any] | str | None = None,
+) -> dict[str, Any]:
+    """Run the V7.1 upstream wiki completeness gate for one module."""
+    level_key = level.lower()
+    slug_key = slug.strip()
+    article_paths = _wiki_article_paths(level_key, slug_key)
+    if not article_paths:
+        raise LinearPipelineError(f"No wiki article found for level={level_key!r}, slug={slug_key!r}")
+    from scripts.audit.wiki_completeness_gate import check_wiki_completeness
+
+    # Current build layout resolves to a single canonical wiki article. If a
+    # future module has multiple articles, each must be complete enough to act
+    # as the renderer spine; fail fast on the first thin article.
+    reports = [
+        check_wiki_completeness(path, level=level_key, slug=slug_key)
+        for path in article_paths
+    ]
+    if len(reports) == 1:
+        return reports[0]
+    failed = [report for report in reports if report.get("verdict") != "PASS"]
+    if failed:
+        return failed[0]
+    merged_report = dict(reports[0])
+    merged_report["diagnostic"] = f"{len(reports)} wiki articles passed completeness gate."
+    if wiki_manifest is not None:
+        merged_report["wiki_manifest_slug"] = (
+            wiki_manifest.get("slug")
+            if isinstance(wiki_manifest, Mapping)
+            else slug_key
+        )
+    return merged_report
 
 
 PHONETIC_FORMAT_REFERENCE = (
@@ -1045,6 +1084,17 @@ def _render_wiki_coverage_required_items(wiki_manifest: str | Mapping[str, Any])
         "**Coverage rule**: every listed item MUST appear at least once in `module.md` PROSE (model sentence, definition, or paragraph). A vocab table entry alone is NOT coverage. Structural elements (tables, dialogue boxes) count for vocabulary but NOT for wiki_coverage obligations.",
         "",
     ]
+    # Sequence steps
+    vocab_items = [
+        str(item.get("lemma") or "")
+        for item in manifest.get("wiki_vocabulary_minimum", [])
+        if isinstance(item, Mapping) and item.get("lemma")
+    ]
+    if vocab_items:
+        lines.append("### wiki_vocabulary_minimum")
+        lines.append("- Lemmas: " + ", ".join(vocab_items))
+        lines.append("")
+
     # Sequence steps
     for item in manifest.get("sequence_steps", []):
         oid = str(item.get("id") or "")

@@ -29,6 +29,12 @@ def test_my_morning_manifest_extracts_required_obligations() -> None:
     manifest = extract_manifest(ROOT / "wiki/pedagogy/a1/my-morning.md")
 
     assert manifest["external_resources"] == []
+    assert len(manifest["wiki_vocabulary_minimum"]) == 21
+    assert manifest["wiki_vocabulary_minimum"][0] == {
+        "lemma": "прокидатися",
+        "frequency_tier": "high",
+        "gloss": "базова ранкова дія, з якої починається день",
+    }
     assert len(manifest["l2_errors"]) == 6
     assert len(manifest["sequence_steps"]) == 5
     incorrect = [item["incorrect"] for item in manifest["l2_errors"]]
@@ -40,6 +46,69 @@ def test_my_morning_manifest_extracts_required_obligations() -> None:
     assert "Я користуювася." in incorrect
     assert any(item["written"] == "-шся" and item["spoken"] == "[с':а]" for item in manifest["phonetic_rules"])
     assert any(item["written"] == "-ться" and item["spoken"] == "[ц':а]" for item in manifest["phonetic_rules"])
+
+
+def test_manifest_extracts_vocabulary_minimum_tiers_and_glosses(tmp_path: Path) -> None:
+    wiki = tmp_path / "vocab.md"
+    wiki.write_text(
+        """# Vocabulary fixture
+
+## Словниковий мінімум
+
+- ранок (★★★) — morning [S1].
+- обід (★★) — lunch.
+- вечір (★) — evening.
+""",
+        encoding="utf-8",
+    )
+
+    manifest = extract_manifest(wiki)
+
+    assert manifest["wiki_vocabulary_minimum"] == [
+        {"lemma": "ранок", "frequency_tier": "high", "gloss": "morning"},
+        {"lemma": "обід", "frequency_tier": "mid", "gloss": "lunch"},
+        {"lemma": "вечір", "frequency_tier": "low", "gloss": "evening"},
+    ]
+
+
+def test_manifest_missing_vocabulary_minimum_returns_empty_list(tmp_path: Path) -> None:
+    wiki = tmp_path / "no-vocab.md"
+    wiki.write_text(
+        """# No vocabulary fixture
+
+## Методичний підхід
+
+Є методика.
+""",
+        encoding="utf-8",
+    )
+
+    manifest = extract_manifest(wiki)
+
+    assert manifest["wiki_vocabulary_minimum"] == []
+
+
+def test_manifest_handles_mixed_or_missing_vocabulary_stars(tmp_path: Path) -> None:
+    wiki = tmp_path / "mixed-stars.md"
+    wiki.write_text(
+        """# Mixed stars fixture
+
+## Словниковий мінімум
+
+- кава (★★☆) — coffee.
+- чай () — tea.
+- сік — juice.
+""",
+        encoding="utf-8",
+    )
+
+    manifest = extract_manifest(wiki)
+
+    assert manifest["wiki_vocabulary_minimum"] == [
+        {"lemma": "кава", "frequency_tier": "mid", "gloss": "coffee"},
+        {"lemma": "чай", "frequency_tier": "unknown", "gloss": "tea"},
+        {"lemma": "сік", "frequency_tier": "unknown", "gloss": "juice"},
+    ]
 
 
 def test_manifest_handles_a1_heading_variants() -> None:
