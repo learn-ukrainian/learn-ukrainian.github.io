@@ -46,6 +46,7 @@ import sys
 import time
 import uuid
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
 
 from . import _channels
@@ -60,6 +61,7 @@ _PREFLIGHT_MULTI_STEP_RE = re.compile(
 _ALLOWED_DEADLINE_SECONDS = (300, 600, 900, 1200, 1800, 2400, 3000)
 _GEMINI_AUTH_CHOICES = ["auto", "subscription", "api-key", "api"]
 _DISCUSSION_READONLY_TOOL_CONFIG = {"discussion_readonly": True}
+_CURSOR_SESSION_ID_RE = re.compile(r'"(?:sessionId|session_id)"\s*:\s*"([^"]+)"')
 
 
 def _cli_available_agent(agent: str) -> bool:
@@ -73,6 +75,60 @@ def _cli_available_agent(agent: str) -> bool:
         return bool(get_agent_entry(agent)["cli_available"])
     except KeyError:
         return False
+
+
+def _cursor_session_id_from_result(result: Any) -> str | None:
+    session_id = getattr(result, "session_id", None)
+    if session_id:
+        return str(session_id)
+    match = _CURSOR_SESSION_ID_RE.search(str(getattr(result, "stderr_excerpt", "") or ""))
+    if match:
+        return match.group(1)
+    return None
+
+
+def _cursor_transcript_path(session_id: str, cwd: Path) -> Path | None:
+    try:
+        from agent_runtime.adapters.cursor import CursorAdapter
+    except ImportError:
+        return None
+
+    adapter = CursorAdapter()
+    encoded = adapter._encode_workspace_path(str(cwd))
+    path = (
+        Path.home()
+        / ".cursor"
+        / "projects"
+        / encoded
+        / "agent-transcripts"
+        / session_id
+        / f"{session_id}.jsonl"
+    )
+    return path if path.exists() else None
+
+
+def _recover_cursor_discuss_response_from_session_log(result: Any, cwd: Path) -> str | None:
+    session_id = _cursor_session_id_from_result(result)
+    if not session_id:
+        return None
+    transcript_path = _cursor_transcript_path(session_id, cwd)
+    if transcript_path is None:
+        return None
+    try:
+        transcript = transcript_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+
+    from agent_runtime.adapters.cursor import CursorAdapter
+
+    parsed = CursorAdapter().parse_response(
+        stdout=transcript,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    response = parsed.response.strip()
+    return response or None
 
 
 def _reject_non_cli_agent(agent: str, command: str) -> bool:
@@ -1387,6 +1443,13 @@ def _handle_discuss(args) -> int:
             return (agent_name, f"[error: {type(exc).__name__}: {exc}]", False)
 
         if not result.ok:
+            if agent_name == "cursor":
+                recovered = _recover_cursor_discuss_response_from_session_log(
+                    result,
+                    REPO_ROOT,
+                )
+                if recovered:
+                    return (agent_name, recovered, True)
             return (
                 agent_name,
                 f"[failed: {result.stderr_excerpt or 'no response'}]",

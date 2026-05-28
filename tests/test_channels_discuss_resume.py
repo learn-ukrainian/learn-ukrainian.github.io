@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_agent_bridge import _channels, _cli, _db
+from ai_agent_bridge import _channels, _channels_cli, _cli, _db
 
 
 @pytest.fixture(autouse=True)
@@ -192,3 +192,60 @@ def test_discuss_unknown_agent_defaults_to_no_resume(monkeypatch):
     assert captured_invokes[0][0] == "mystery"
     assert captured_invokes[0][1]["session_id"] is None
     assert captured_invokes[0][1]["entrypoint"] == "bridge"
+
+
+def test_discuss_recovers_cursor_failure_from_session_transcript(
+    tmp_path,
+    monkeypatch,
+):
+    _channels.create_channel("shared")
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+
+    from agent_runtime.adapters.cursor import CursorAdapter
+
+    session_id = "cursor-session-456"
+    encoded = CursorAdapter()._encode_workspace_path(str(_channels_cli.REPO_ROOT))
+    transcript = (
+        tmp_path
+        / ".cursor"
+        / "projects"
+        / encoded
+        / "agent-transcripts"
+        / session_id
+        / f"{session_id}.jsonl"
+    )
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        (
+            '{"role":"assistant","message":{"content":['
+            '{"type":"text","text":"Recovered cursor reply [VOTE: D] [AGREE]"},'
+            '{"type":"tool_use","name":"Read"}]}}\n'
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_runtime_invoke(agent, _prompt, **_kwargs):
+        assert agent == "cursor"
+        result = MagicMock()
+        result.ok = False
+        result.response = ""
+        result.session_id = None
+        result.stderr_excerpt = f'{{"session_id":"{session_id}"}}'
+        return result
+
+    monkeypatch.setattr("agent_runtime.runner.invoke", fake_runtime_invoke)
+
+    exit_code = _run_cli(
+        ["discuss", "shared", "topic", "--with", "cursor", "--max-rounds", "2"]
+    )
+
+    assert exit_code == 0
+    cursor_bodies = [
+        message["body"]
+        for message in _channels.read("shared")
+        if message["from_agent"] == "cursor"
+    ]
+    assert cursor_bodies
+    assert all("Recovered cursor reply [VOTE: D] [AGREE]" in body for body in cursor_bodies)
+    assert not any("[failed:" in body for body in cursor_bodies)

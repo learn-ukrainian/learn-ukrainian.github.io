@@ -1,6 +1,7 @@
 """Tests for CursorAdapter."""
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -187,3 +188,103 @@ def test_cursor_adapter_parse_response_message_format(adapter):
 
     assert result.ok is True
     assert result.response == "Hello world"
+
+
+def test_cursor_adapter_parse_response_legacy_message_string_format(adapter):
+    stdout = """
+{"type": "message", "role": "assistant", "content": "Legacy assistant response"}
+"""
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.response == "Legacy assistant response"
+
+
+def test_cursor_adapter_parse_response_parses_v2026_05_27_single_assistant_message(
+    adapter,
+):
+    stdout = "\n".join(
+        [
+            json.dumps({"type": "system", "session_id": "cursor-session-123"}),
+            json.dumps(
+                {
+                    "role": "assistant",
+                    "message": {
+                        "role": "assistant",
+                        "content": [
+                            {"type": "text", "text": "Hello"},
+                            {"type": "tool_use", "name": "Read"},
+                            {"type": "text", "text": " world"},
+                        ],
+                    },
+                }
+            ),
+        ]
+    )
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.session_id == "cursor-session-123"
+    assert result.response == "Hello world"
+    assert "tool_use" not in result.response
+
+
+def test_cursor_adapter_parse_response_parses_v2026_05_27_assistant_messages(adapter):
+    """cursor-agent v2026.05.27 emits {role, message: {content: [...]}}."""
+    fixture = (
+        Path(__file__).parent
+        / "fixtures"
+        / "cursor_v2026_05_27_session_transcript.jsonl"
+    )
+    stdout = fixture.read_text(encoding="utf-8")
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok, f"Expected ok=True, stderr_excerpt={result.stderr_excerpt!r}"
+    assert result.response, "Response should not be empty"
+    assert "Reading the three module artifacts" in result.response
+    assert "Round 2" in result.response, "r2 content should be present"
+    assert "[VOTE: D]" in result.response, "Final vote should be captured"
+    assert "tool_use" not in result.response
+
+
+def test_cursor_adapter_parse_response_separates_distinct_v2026_05_27_messages(adapter):
+    stdout = "\n".join(
+        [
+            json.dumps(
+                {
+                    "role": "assistant",
+                    "message": {"content": [{"type": "text", "text": "First message."}]},
+                }
+            ),
+            json.dumps(
+                {
+                    "role": "assistant",
+                    "message": {"content": [{"type": "text", "text": "Second message."}]},
+                }
+            ),
+        ]
+    )
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.response == "First message.\n\nSecond message."
