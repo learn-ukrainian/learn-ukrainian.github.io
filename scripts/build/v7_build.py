@@ -23,6 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline, run_archive
 from scripts.build.phases.implementation_map import (
+    read_implementation_map,
     seed_implementation_map,
     write_implementation_map,
 )
@@ -721,6 +722,8 @@ def _run_llm_qg(
     module_dir: Path,
     writer: str,
     reviewer_override: str | None = None,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
     stdout_silence_timeout: int | None = None,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
@@ -741,6 +744,8 @@ def _run_llm_qg(
             plan_content,
             generated_content,
             dim,
+            wiki_manifest,
+            implementation_map,
         )
         (module_dir / f"llm-qg-{dim}-prompt.md").write_text(prompt, encoding="utf-8")
         result = invoke(
@@ -1208,6 +1213,7 @@ def _run(args: argparse.Namespace) -> int:
         timeout_agent = writer
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
+        impl_map_path = module_dir / "implementation_map.json"
         if (
             resume_enabled
             and not force_rerun
@@ -1216,12 +1222,16 @@ def _run(args: argparse.Namespace) -> int:
             writer_output = (module_dir / "writer_output.raw.md").read_text(
                 encoding="utf-8",
             )
+            if impl_map_path.exists():
+                impl_map = read_implementation_map(impl_map_path)
+            else:
+                impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
+                write_implementation_map(impl_map, impl_map_path)
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
             if resume_enabled:
                 force_rerun = True
             impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
-            impl_map_path = module_dir / "implementation_map.json"
             write_implementation_map(impl_map, impl_map_path)
             tracker.emit(
                 "implementation_map_seeded",
@@ -1434,6 +1444,8 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir=module_dir,
                 writer=writer,
                 reviewer_override=reviewer_override,
+                wiki_manifest=wiki_manifest,
+                implementation_map=impl_map,
                 stdout_silence_timeout=args.writer_timeout,
             )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
