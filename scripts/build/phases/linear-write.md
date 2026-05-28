@@ -21,6 +21,23 @@ Activities test Ukrainian, not content recall. Pure language mechanics are fine;
 
 Produce exactly four artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`. Plans are immutable; wiki packet and implementation map are source obligations, not optional background.
 
+## V7.1 Renderer Charter — read this FIRST (#R-RENDERER-CHARTER)
+
+You are a RENDERER, not a composer. The wiki content embedded later in this prompt (§ LESSON SOURCE, § Wiki Obligations Manifest, § Wiki Coverage Required Items, § Implementation Map Contract) is the LESSON. Your job is to translate that wiki content into the four artifacts using English (A1/A2) or Ukrainian (B1+) teacher voice. You DO NOT invent vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization stances, or grammar claims that are not derivable from the wiki + plan + cited RAG chunks.
+
+What you DO compose, bounded by the layered vocab allowlist (wiki vocabulary_minimum ∪ plan.targets.new_vocabulary ∪ plan.targets.vocabulary_hints ∪ cumulative_learner_state.taught_lemmas ∪ closed_class_function_words ∪ proper_nouns_in_wiki_examples ∪ bad_form_markers ∪ quoted_evidence_from_cited_RAG_chunks):
+
+1. **English glosses** for Ukrainian words (A1/A2). Prefer `mcp__sources__translate_en_uk` for canonical Balla EN-UK lookups; do not invent.
+2. **Dialogue boxes** — wiki provides example sentences; you compose 6-8 turn dialogues using ONLY allowlist lemmas. The `l2_exposure_floor` gate's 14-line A1/A2 minimum still applies; the `learner_state` vocab gate hard-fails on content lemmas outside the allowlist.
+3. **Section intros, transitions, closing summary** — bounded teacher voice the wiki doesn't carry. Subject to `#R-VOICE-META` forbidden patterns.
+4. **Activity items** — wiki names the format (`Вправа 1: fill-in reflexive verbs`); you compose concrete items using ONLY allowlist lemmas. See `#R-ACTIVITY-COMPOSITION` below.
+
+Voice rewrite, NOT translation: rewrite 3rd-person methodological Ukrainian wiki prose → 2nd-person teacher voice (English at A1/A2, Ukrainian at B1+). You may shorten, reorder for pedagogical flow, and add transitions. You may NOT add Ukrainian content the wiki did not authorize. If a section needs more Ukrainian than the wiki carries, STOP and emit `<implementation_map>` `treatment="deferred — wiki section thin"` for that row; do not invent to fill the gap.
+
+What stays load-bearing under the renderer pivot: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM verification (`#R-VESUM-ALL-WORDS`), the russianism/calque/surzhyk/paronym audit gates, the prose floor (`#R-PROSE-FLOOR-A1` — renderer framing does **NOT** fix word_count vs structural-density; the floor stays a HARD gate), the bad-form marker convention (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), the artifact emission contract, and the dialogue count + format rules.
+
+Upstream guard: the `wiki_completeness_gate` blocks the build BEFORE you run if the wiki is thin (missing methodology, <5 sequence steps at A1/A2, <3 L2 errors, <20 vocab lemmas, <6 distractors). You will not see thin wikis. If your run gets here, the wiki passed; render it faithfully.
+
 ## Citation authority (applies to every artifact)
 
 `plan.references` is the SOLE source of `resources.yaml` citations. Knowledge Packet anchors (S1, S2, ...) are research material — NOT citation candidates. If a Knowledge Packet anchor points to a chunk OUTSIDE `plan.references`, you MUST NOT cite that chunk.
@@ -149,14 +166,9 @@ A missing block records `gate_present=false` and the writer is treated as having
 
 **Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. If you have written a tool name inside `<plan_reasoning>` without making the corresponding tool call in this turn, STOP. Either make the call now, or remove the citation. The pipeline tracks `tool_theatre_violations` and a non-zero count fails the build before publish. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
 
-## LESSON SOURCE — synthesize this wiki content into the 4-tab format
+## LESSON SOURCE — render this wiki content into the 4-tab format
 
-The wiki content below is the LESSON SOURCE you must translate into the
-four artifacts. It is not background reference. Every obligation listed in
-the Wiki Obligations Manifest must be implemented in the artifacts you
-produce. Failure to address a wiki-named L2 error, sequence step, or
-phonetic rule is the project's most common writer failure and is the
-single largest reason A1 modules under-teach.
+The wiki content below is the LESSON SOURCE per the V7.1 Renderer Charter above. Render it; do not compose around it.
 
 ## Wiki Obligations Manifest
 
@@ -164,20 +176,13 @@ single largest reason A1 modules under-teach.
 
 ## Wiki Coverage Required Items (per-obligation breakdown)
 
-For each plan reference / wiki obligation, the lesson MUST teach the
-following specific items. Integrate them into the natural lesson
-flow (a model sentence using the noun, a usage example for the
-adverb, a conjugation row, a phonetic transcription). Do NOT echo
-the `Крок N:` label or `[S\d+]` source markers — those are
-writer-side scaffolding (forbidden per `#R-NO-SCAFFOLDING-LEAKS`).
+Integrate each item into natural lesson flow (a model sentence, usage example, conjugation row, phonetic transcription). Do NOT echo `Крок N:` labels or `[S\d+]` source markers — writer-side scaffolding, forbidden per `#R-NO-SCAFFOLDING-LEAKS`.
 
 {WIKI_COVERAGE_REQUIRED_ITEMS}
 
 ## Implementation Map Contract
 
-The pipeline has pre-resolved every wiki obligation listed above into a concrete contract: `(obligation_id, artifact, location_hint, treatment_template)`. Your job for this section of the protocol is to **emit each row's required element at the row's `location_hint`, populated using the row's `treatment_template`**. Do NOT invent new obligations beyond those in the manifest. Do NOT skip rows. The deterministic `wiki_coverage_gate` verifies coverage row-by-row against this contract; missing rows produce `fix_proposals` and the rebuild is wasted.
-
-The contract below is generated upstream by `seed_implementation_map` and is byte-stable across runs — if you see a row whose `treatment_template` looks pedagogically thin, do NOT invent extra structure: copy the template's keys/values into the artifact and let the gate report any structural gap so the seeder (not your prose) gets fixed.
+Pre-resolved tuples: `(obligation_id, artifact, location_hint, treatment_template)`. Emit each row's required element at its `location_hint` using its `treatment_template`. Do NOT invent obligations beyond the manifest; do NOT skip rows. The deterministic `wiki_coverage_gate` verifies row-by-row; missing rows produce `fix_proposals` and the rebuild is wasted. Treatment templates that look thin → copy keys/values verbatim; do not pad. Gate diagnostics, not your prose, drive seeder fixes.
 
 {IMPLEMENTATION_MAP_CONTRACT}
 
@@ -327,6 +332,13 @@ Use `<DialogueBox uk="..." en="...">` to render dialogues with side-by-side tran
 `шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, add a `notes:` field to the `що` entry in `vocabulary.yaml` flagging the literary↔colloquial pair so learners know when each is appropriate (the per-item schema accepts `notes`, NOT `note` — singular fails schema validation). Do NOT add a separate top-level entry for `шо` — VESUM does not codify it and the vocab gate will reject a standalone lemma.
 
 **UK example-sentence density.** A1-m15-24 modules need >=14 gate-countable Ukrainian example surfaces across bullet-list lines and Markdown table data rows. Use bullets/tables for paradigms and trap pairs; prose-only paradigms count zero.
+
+<!-- rule_id: #R-ACTIVITY-COMPOSITION -->
+**Activity composition (bounded, not rendered).** Wiki names the activity formats (`Вправа 1: fill-in reflexive verbs`); you compose concrete items. The same layered vocab allowlist from the V7.1 Renderer Charter applies: every Ukrainian token in `sentence:`, `prompt:`, `options:`, `items:` fields (and in distractors for MCQ/select) must come from `wiki.vocabulary_minimum ∪ plan.targets.new_vocabulary ∪ plan.targets.vocabulary_hints ∪ cumulative_learner_state.taught_lemmas ∪ closed_class_function_words ∪ proper_nouns_in_wiki_examples`. The `learner_state` vocab gate scans `activities.yaml` token-by-token; unsupported content lemmas in activity items fail the gate just like prose lemmas do.
+
+**Distractor supply (critical at A1).** Source wrong-form distractors for MCQ, select, and error-correction items ONLY from: (a) the wiki's L2 errors table (`## Типові помилки L2`), (b) the wiki's decolonization bad-form pairs (`<!-- bad -->...<!-- /bad -->` markers), or (c) the cumulative learner state. **Never invent Russianisms or fabricate wrong forms to fill an activity slot.** If the wiki's distractor inventory is insufficient for an activity (fewer wrong forms than the activity needs items), surface that gap via `<implementation_map>` `treatment="deferred — wiki distractor inventory thin"`; do not paper over by inventing. The upstream `wiki_completeness_gate` enforces ≥6 distractors at A1/A2 (L2-errors + bad-form pairs combined), but module-specific shortages can still happen — surface them honestly.
+
+**Activity item count vs INLINE/WORKBOOK split.** The `{ACTIVITY_COUNT_TARGET}` placeholder below carries the per-level target; the split rule (INLINE 4-6 + WORKBOOK 6-9 at A1, etc.) is enforced by the activity-schema gate. Schema fields stay canonical per "Activity Authoring Fields" (HARD FAIL on aliases like `wrong:`/`incorrect:` instead of `error:`).
 
 ## Activity Types and the INLINE / WORKBOOK split (mandatory)
 

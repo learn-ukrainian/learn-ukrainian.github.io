@@ -30,7 +30,7 @@ import pytest
 from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
 
-WRITER_PROMPT_CEILING_BYTES = 132 * 1024  # 132KB (bumped from 130KB 2026-05-27)
+WRITER_PROMPT_CEILING_BYTES = 135 * 1024  # 135KB (bumped from 132KB 2026-05-28 for V7.1 renderer charter; aggressive trim queued — see follow-up issue)
 
 # Fixture modules to enforce against. Add more as the strip proves out on each
 # level. Start with the A1 anchor.
