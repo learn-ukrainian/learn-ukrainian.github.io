@@ -1,4 +1,12 @@
-# Current — multi-agent index (2026-05-28 Pt 15 — V7.2 STEPS 1-4 LANDED, STEP 5 DESIGN-PAUSE for Opus 4.8)
+# Current — multi-agent index (2026-05-28 Pt 16 — V7.2 STEP 5 BRIEF READY, OPUS 4.8 MIGRATED, awaiting fire)
+
+Latest-Brief: docs/session-state/2026-05-28-pt16-v7.2-step5-brief-ready-opus48-migrated.md
+
+> **State (2026-05-28 night):** Main at `31e3806d37`. First **Opus 4.8** session (CLI 2.1.154). Cleared the Pt 15 design pause + did the 4.8 migration. **2 PRs merged**: #2395 (Q2=schema-as-is + Q3=PROMOTE 3 A1 `writer.body` rules → `shared.contract` [required for Step-5 generator/legacy parity] + **Opus 4.7→4.8 live-default migration**) and #2397 (Step 5 `/goal` brief draft + post-4.8 guidance cleanup). **1 issue filed**: #2396 (4-8 judge re-calibration). The 4.8 migration was **SELECTIVE** — only live dispatch/adapter/pipeline defaults moved to `claude-opus-4-8`; `scripts/audit/*` calibration baselines + recorded F1 tables deliberately LEFT at 4-7 (`tests/audit/*` path assertions are coupled; bumping would falsely credit 4.7's numbers to 4.8). **THE ONE NEXT ACTION (user gate): fire Step 5.** Brief is READY at `docs/dispatch-briefs/2026-05-29-v7.2-step5-prompt-generator-claude-goal.md` — `/goal`-structured, grounded in the loader API + real `linear_pipeline.py` call sites (`writer_context` L2893, `review_context` L3699), opt-in `--use-generator` (flag OFF = byte-identical to legacy), single Obligation Checklist (writer+reviewer+gate), M=30. Fire: `claude -p "/goal $(cat docs/dispatch-briefs/2026-05-29-v7.2-step5-prompt-generator-claude-goal.md)" --model claude-opus-4-8 --effort xhigh` in worktree — **confirm Claude quota headroom first** (#M0, competes with interactive seat; codex fallback if tight). Steps 6-8 (#2388/#2389/#2390) blocked behind Step 5. **Don't** re-litigate Q2/Q3 or bump audit baselines; **don't** ship old m20 artifact at `.worktrees/builds/a1-my-morning-20260528-122552`. `review / review` Gemini 7-min timeout is advisory (non-required), confirmed twice via `UNSTABLE`+`MERGEABLE`. Full Pt 16 handoff: `docs/session-state/2026-05-28-pt16-v7.2-step5-brief-ready-opus48-migrated.md`.
+
+---
+
+# Predecessor — 2026-05-28 Pt 15 (V7.2 Steps 1-4 landed, Step 5 design-pause for Opus 4.8)
 
 Latest-Brief: docs/session-state/2026-05-28-pt15-v7.2-steps-1-4-landed-step-5-design-pause.md
 
