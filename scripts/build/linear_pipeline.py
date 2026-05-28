@@ -1779,6 +1779,20 @@ def writer_prompt_path(writer_family: str) -> Path:
     return PROJECT_ROOT / "scripts" / "build" / "phases" / prompt_filename
 
 
+def generated_writer_prompt_path() -> Path:
+    """V7.2 Step 5: the generator-fed writer template (opt-in --use-generator).
+
+    Writer-family agnostic for now — the grok writer variant gets its own
+    generated template in the full-parity follow-up (ADR sequencing step 5+).
+    """
+    return PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-write.generated.md"
+
+
+def generated_review_prompt_path() -> Path:
+    """V7.2 Step 5: the generator-fed per-dimension reviewer template."""
+    return PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-dim.generated.md"
+
+
 def writer_correction_prompt_path(writer_family: str) -> Path:
     prompt_filename = CORRECTION_PROMPT_BY_WRITER.get(
         writer_family,
@@ -1795,9 +1809,11 @@ def render_writer_prompt(
     wiki_manifest: str | Mapping[str, Any] | None = None,
     implementation_map: Mapping[str, Any] | None = None,
     writer: str = "claude-tools",
+    use_generator: bool = False,
 ) -> str:
+    template_path = generated_writer_prompt_path() if use_generator else writer_prompt_path(writer)
     return render_phase_prompt(
-        writer_prompt_path(writer),
+        template_path,
         writer_context(
             plan,
             plan_content,
@@ -1805,6 +1821,7 @@ def render_writer_prompt(
             wiki_manifest,
             implementation_map=implementation_map,
             writer=writer,
+            use_generator=use_generator,
         ),
     )
 
@@ -2890,6 +2907,24 @@ def _enforce_writer_runtime_gates(
     raise LinearPipelineError(f"WRITER_RUNTIME_GATE_FAILED: writer={writer!r} module={module!r} failures=[{classes}]")
 
 
+def _inline_prompt_tokens(text: str, token_map: Mapping[str, Any]) -> str:
+    """Substitute ``{KEY}`` placeholders inside an already-composed block.
+
+    Registry rule bodies can carry build-time ``{TOKEN}`` placeholders (e.g.
+    ``R-ACTIVITY-COMPOSITION`` references ``{ACTIVITY_COUNT_TARGET}``). The
+    generator-composed rules block is itself injected into the prompt as a
+    single ``{GENERATED_*_RULES}`` token, so its inner placeholders must be
+    resolved BEFORE injection — ``render_phase_prompt`` substitutes the outer
+    token last and would otherwise leave the inner ones unresolved. Resolving
+    here (rather than in ``render_phase_prompt``) keeps the legacy path's
+    single-pass substitution untouched, so the flag-OFF output stays
+    byte-identical.
+    """
+    for key, value in token_map.items():
+        text = text.replace(f"{{{key}}}", str(value))
+    return text
+
+
 def writer_context(
     plan: Mapping[str, Any],
     plan_content: str,
@@ -2898,6 +2933,7 @@ def writer_context(
     *,
     implementation_map: Mapping[str, Any] | None = None,
     writer: str | None = None,
+    use_generator: bool = False,
 ) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
@@ -2921,7 +2957,7 @@ def writer_context(
 
         impl_map_contract = render_for_writer_prompt(dict(implementation_map))
 
-    return {
+    context = {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
@@ -2945,6 +2981,21 @@ def writer_context(
         "VOCAB_COUNT_TARGET": activity_config["VOCAB_COUNT_TARGET"],
         "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(activity_config["ALLOWED_ACTIVITY_TYPES"]),
     }
+    if use_generator:
+        # V7.2 Step 5: inject the registry-composed writer-rules block + the
+        # single-source Obligation Checklist for the generator-fed template
+        # (`linear-write.generated.md`). OBLIGATION_CHECKLIST reuses the already
+        # computed required_items_text so the writer prompt, reviewer prompt, and
+        # wiki_coverage_gate all read one rendering. Keyed behind the flag so the
+        # legacy return above stays byte-identical with the flag OFF.
+        from scripts.build.prompt_generator import build_writer_rules_block, track_for_level
+
+        rules_block = build_writer_rules_block(level.lower(), track_for_level(level))
+        # Resolve any build-time tokens the rule bodies carry (e.g.
+        # {ACTIVITY_COUNT_TARGET}) against the context computed above.
+        context["GENERATED_WRITER_RULES"] = _inline_prompt_tokens(rules_block, context)
+        context["OBLIGATION_CHECKLIST"] = required_items_text
+    return context
 
 
 def _render_component_props_schema(allowed_activity_types: str) -> str:
@@ -3703,6 +3754,8 @@ def review_context(
     dim: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     implementation_map: Mapping[str, Any] | None = None,
+    *,
+    use_generator: bool = False,
 ) -> dict[str, str]:
     """Build context for one independent per-dimension LLM QG prompt."""
     if dim not in QG_DIMS:
@@ -3713,8 +3766,10 @@ def review_context(
     if wiki_manifest is None:
         wiki_manifest_data = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
         wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest_data)
+        manifest_for_checklist: str | Mapping[str, Any] = wiki_manifest_data
     else:
         wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
+        manifest_for_checklist = wiki_manifest
 
     if implementation_map is None:
         manifest_for_map = _manifest_mapping(wiki_manifest) if wiki_manifest is not None else wiki_manifest_data
@@ -3731,7 +3786,7 @@ def review_context(
 
         impl_map_contract = render_for_writer_prompt(dict(implementation_map))
 
-    return {
+    context = {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
@@ -3745,6 +3800,26 @@ def review_context(
         "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "DIM": dim,
     }
+    if use_generator:
+        # V7.2 Step 5: inject the registry-composed reviewer-rules block + the
+        # SAME single-source Obligation Checklist the writer received, for the
+        # generator-fed reviewer template (`linear-review-dim.generated.md`).
+        # Keyed behind the flag so the legacy return above stays byte-identical
+        # with the flag OFF.
+        from scripts.build.prompt_generator import (
+            build_obligation_checklist,
+            build_reviewer_rules_block,
+            track_for_level,
+        )
+
+        rules_block = build_reviewer_rules_block(level.lower(), track_for_level(level))
+        # shared.contract rules (e.g. R-ACTIVITY-COMPOSITION) can carry build-time
+        # tokens like {ACTIVITY_COUNT_TARGET}; resolve them against the reviewer
+        # context plus the level's activity config so none survive into the prompt.
+        token_map = {**context, **_activity_config(level, sequence, str(plan["slug"]))}
+        context["GENERATED_REVIEWER_RULES"] = _inline_prompt_tokens(rules_block, token_map)
+        context["OBLIGATION_CHECKLIST"] = build_obligation_checklist(manifest_for_checklist)
+    return context
 
 
 def render_review_prompt(
@@ -3754,9 +3829,16 @@ def render_review_prompt(
     dim: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     implementation_map: Mapping[str, Any] | None = None,
+    *,
+    use_generator: bool = False,
 ) -> str:
+    template_path = (
+        generated_review_prompt_path()
+        if use_generator
+        else PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-dim.md"
+    )
     return render_phase_prompt(
-        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-dim.md",
+        template_path,
         review_context(
             plan,
             plan_content,
@@ -3764,6 +3846,7 @@ def render_review_prompt(
             dim,
             wiki_manifest,
             implementation_map,
+            use_generator=use_generator,
         ),
     )
 
