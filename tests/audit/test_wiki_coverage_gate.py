@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from scripts.audit.wiki_coverage_gate import check_wiki_coverage, parse_implementation_map
 from scripts.build.phases.implementation_map import seed_implementation_map
+
+FIXTURES_DIR = Path(__file__).with_name("fixtures")
 
 BAN_1_RULE = (
     "При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено "
@@ -659,6 +662,71 @@ def test_parse_implementation_map_xml_row_tolerates_whitespace_and_self_close_va
     # bullet path; the XML parser leaves entries it already added alone.
     assert parsed["step-9"]["artifact"] == "module.md"
     assert parsed["step-9"]["treatment"] == "closing recap"
+
+
+def test_parse_implementation_map_accepts_v71_self_closing_inline_fixture() -> None:
+    fixture_text = (
+        FIXTURES_DIR / "v7.1-self-closing-implementation-map.md"
+    ).read_text(encoding="utf-8")
+
+    parsed = parse_implementation_map(fixture_text)
+
+    expected_ids = {
+        "step-1",
+        "step-2",
+        "step-3",
+        "step-4",
+        "step-5",
+        "err-1",
+        "err-2",
+        "err-3",
+        "err-4",
+        "err-5",
+        "err-6",
+        "phon-1",
+        "phon-2",
+        "phon-3",
+        "ban-1",
+        "ban-2",
+        "ban-3",
+        "ban-4",
+    }
+    assert set(parsed) == expected_ids
+    assert len(parsed) == 18
+    assert parsed["step-1"] == {
+        "obligation_id": "step-1",
+        "artifact": "module.md",
+        "location": "Дієслова на -ся",
+        "treatment": "sequence_step",
+    }
+    assert parsed["err-6"]["artifact"] == "activities.yaml"
+    assert parsed["ban-4"]["location"] == "Мій ранок"
+
+
+def test_parse_implementation_map_merges_nested_and_inline_shapes_once() -> None:
+    implementation_map = """
+<implementation_map>
+<row obligation_id="step-1" artifact="module.md" location="§Nested" treatment="legacy row" />
+- obligation_id: err-1; artifact: activities.yaml; location: workbook error-correction; treatment: legacy bullet
+</implementation_map>
+<implementation_map obligation_id="phon-1" artifact="module.md" location="§Inline" treatment="inline tag" />
+<implementation_map obligation_id="step-1" artifact="module.md" location="§Inline override" treatment="inline restatement" />
+<implementation_map obligation_id="ban-1" artifact="module.md" location="§Inline empty" treatment="" />
+"""
+
+    parsed = parse_implementation_map(implementation_map)
+
+    assert set(parsed) == {"step-1", "err-1", "phon-1", "ban-1"}
+    assert len(parsed) == 4
+    assert parsed["err-1"]["artifact"] == "activities.yaml"
+    assert parsed["phon-1"]["treatment"] == "inline tag"
+    assert parsed["ban-1"]["treatment"] == ""
+    assert parsed["step-1"] == {
+        "obligation_id": "step-1",
+        "artifact": "module.md",
+        "location": "§Inline override",
+        "treatment": "inline restatement",
+    }
 
 
 def test_l2_error_passes_with_compact_pipe_workbook_location() -> None:

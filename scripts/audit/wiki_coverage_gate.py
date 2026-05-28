@@ -95,6 +95,10 @@ _ROW_XML_ATTR_RE = re.compile(
     r"\"(?P<value>[^\"]*)\"",
     re.IGNORECASE | re.DOTALL,
 )
+_INLINE_IMPLEMENTATION_MAP_XML_RE = re.compile(
+    r"<implementation_map\b(?P<attrs>(?:\s+\w+\s*=\s*\"[^\"]*\")+)\s*/\s*>",
+    re.IGNORECASE | re.DOTALL,
+)
 _WORKBOOK_AGGREGATE_ACTIVITY_TYPES = (
     "anagram",
     "authorial-intent",
@@ -173,8 +177,6 @@ def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
     the writer's intent if they restate a more refined claim later).
     """
     matches = list(_IMPLEMENTATION_MAP_RE.finditer(text))
-    if not matches:
-        return {}
     entries: dict[str, dict[str, str]] = {}
     for match in matches:
         body = match.group("body")
@@ -228,6 +230,24 @@ def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
                 entries[current_id][field_match.group("key").casefold()] = (
                     field_match.group("value").strip()
                 )
+    # During the V7.2 transition, accept both legacy nested-block maps and
+    # V7.1 self-closing inline `<implementation_map ... />` tags. Step 6's
+    # prompt-generator work will standardize on one canonical shape.
+    for inline_map_match in _INLINE_IMPLEMENTATION_MAP_XML_RE.finditer(text):
+        attrs_text = inline_map_match.group("attrs")
+        attrs: dict[str, str] = {}
+        for attr_match in _ROW_XML_ATTR_RE.finditer(attrs_text):
+            attrs[attr_match.group("key").casefold()] = attr_match.group(
+                "value"
+            ).strip()
+        obligation_id = attrs.get("obligation_id", "").strip()
+        if not obligation_id:
+            continue
+        existing = entries.setdefault(obligation_id, {"obligation_id": obligation_id})
+        for key in ("artifact", "location", "treatment"):
+            value = attrs.get(key)
+            if value is not None:
+                existing[key] = value
     return entries
 
 
