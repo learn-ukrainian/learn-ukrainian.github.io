@@ -1,0 +1,61 @@
+---
+date: 2026-05-28
+session: "Overnight autonomous orchestration — user asleep, mandate: keep driving BOTH the V7.2 pipeline AND the bio-epic (#2309) to completion."
+status: autonomous-overnight-driving
+main_sha: cb759acc1f
+mandate: "user 2026-05-28 night: 'keep driving both subprojects, the v7.2 pipeline and the bio-epic'"
+---
+
+# Overnight autonomous driving plan — V7.2 + bio-epic #2309
+
+**THIS DOC IS THE OPERATING MANUAL.** Each time a watcher re-invokes me, re-read this, act, update the "Progress log" at the bottom.
+
+## The loop (event-driven — do NOT ScheduleWakeup-poll)
+Each `delegate.py wait` watcher (run_in_background) re-invokes me on the dispatch's terminal exit. On every re-invocation:
+1. Identify which task landed (`/api/delegate/active` + the watcher id).
+2. **Review as guardian** (checklist below).
+3. Code PR → merge if clean. Bio PR → spot-check, merge if clean; if not clean, comment fixes + DON'T merge.
+4. **Issue hygiene (user mandate 2026-05-29):** when a merged PR satisfies an issue's ACs, `gh issue close <n>` with an evidence comment (merge SHA + which ACs met). Update the epic #2309 checklist/progress comment as blocks land. Keep sub-issues' state truthful — close only when ACs are genuinely fulfilled, not just "PR merged."
+5. **Fire the next queued unit** on the freed agent (respect caps), commit+push its brief, arm a new watcher.
+6. Update the Progress log.
+
+## In-flight lanes (as of cb759acc1f)
+| Agent | Task | Watcher |
+|---|---|---|
+| claude opus-4-8 | bio R1b émigré C.1+C.2 (11) | baww1vvyc |
+| claude opus-4-8 | bio R1b émigré C.3+C.4+C.5 (15) | bszwanlmc |
+| codex gpt-5.5 | bio R1a Block A Розстріляне (10) | b0cu2p8ik |
+| codex gpt-5.5 | V7.2 Step 6 reviewer single-source (#2388) | bm1ijjkhw |
+| gemini 3.1-pro | bio R1a Block D survived (6) | b4v7w28zr |
+| agy (3.1-pro, TUI-set) | bio R5 Block F war-killed (12) | b916pc2n5 |
+
+## Caps (#M0): 2 claude · 2 codex · 2 gemini · agy separate. NEVER exceed.
+
+## V7.2 pipeline queue
+- **Step 6** (#2388, codex, running) → on clean merge →
+- **Step 7** (#2389, m20 rebuild): **orchestrator-INLINE**, not a dispatch. `v7_build.py a1 my-morning --writer codex-tools --worktree` (+ `--use-generator` to exercise the Step-5 path). Monitor via `Monitor` tool on JSONL. Verify ACs: zero cross-lesson tokens, wiki_coverage_gate passes WITHOUT format-drift, llm_qg PASS+terminal PASS, coherent A1 lesson on read, all python_qg green. Then `promote_module.py --latest --level a1 --slug my-morning`. Replaces live PR #2364. DO NOT promote if any AC fails — diagnose.
+- **Step 8** (#2390): m21+m22 pilot under the generator.
+
+## Bio-epic #2309 queue (fire as lanes free, respecting caps)
+Phase 1 research blocks. In flight: A, C, D, F (54 figures). Remaining un-fired:
+- **R2** (#2319, 31: Blocks B+H+I+J+K) — codex deep-research. Big; fire in sub-batches (~10).
+- **R3** (#2320, 32: Block E шістдесятники/UHG) — codex/gemini. High-value dissident core (Стус, Світличний, Сверстюк…). Sub-batch it.
+- **R4** (#2321, 9+4: Block G OUN/UPA/UNR) — **⚠️ POLITICALLY CHARGED, Tier-4.** codex + Claude xhigh co-review. **READ `docs/best-practices/politically-charged-bios.md` FIRST.** Handle deliberately, NOT casually. Do this block LAST, with a co-review pass.
+
+**Quality checkpoint:** review the FIRST completed bio batch carefully before mass-firing R2/R3. If an agent missed source-tier / decolonization / name-resolution, FIX THE BRIEF before re-firing that pattern.
+
+## Review checklists
+**Code PR (Step 6):** read diff; confirm flag-OFF safety preserved; CI — `Test (pytest)` blocking, `review / review` (Gemini) ADVISORY per #M-0.5 (mergeable:MERGEABLE confirms). Merge `gh pr merge N --squash --delete-branch` (NEVER `--admin`).
+**Bio dossiers:** per figure — ≥~1500 words; ≥3 T1/T2 sources; **NO Russian/Soviet source as authoritative** (only as quoted primary docs); ≥2 primary quotes; honest decolonization framing (esp. Block D accommodation); F4 naming; **R5 `[resolve]` names actually resolved, no fabrication** (Рощина≠Амеліна). If clean → merge PR. If not → comment + hold.
+
+## Hazards / known issues
+- **Git index.lock race:** committing a brief during a dispatch's `git worktree add` fails on `.git/index.lock`. Fix: commit briefs when no fire is mid-worktree-add; if lock is 0-byte + no `git (commit|merge|worktree|add)` proc → `rm -f .git/index.lock`, then commit + `git pull --rebase origin main` + push.
+- **Local main lags origin after a squash-merge:** `git fetch` updates the tracking ref, not local `main`. Always `git pull --rebase origin main` before pushing a new commit.
+- **#M-10:** do NOT delete dispatch worktrees with uncommitted forensics. Leave them.
+- **agy model:** TUI-set to 3.1-pro; telemetry mislabels it 3.5-flash-high (cosmetic).
+
+## What NOT to do
+- Don't exceed caps. Don't `--admin` merge past blocking CI. Don't promote m20 if ACs fail. Don't fire Block G (R4) casually — politically-charged doc first + co-review. Don't ScheduleWakeup-poll (watchers drive). Don't wake the user.
+
+## Progress log
+- 2026-05-28 night: 6 lanes fired (V7.2 Step 6 + bio A/C/D/F = 54 figures). Step 5 already merged (12735cfabb), #2387 closed. Awaiting first watcher re-invocation.
