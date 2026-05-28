@@ -79,13 +79,13 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Feature | How | When |
 | --- | --- | --- |
 | `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** Agents may run V7 builds during autonomous orchestration (per user direction 2026-05-13) — always pass `--worktree`. Filter JSONL events with `grep --line-buffered '^{\"event\"'`. See below. |
-| `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`. `low`: config/typo fixes. `medium`: code fixes (default). `xhigh`: content review, plan review, module building, linguistic analysis on Opus 4.7 — Anthropic notes Opus 4.7 at `high` is weaker than prior versions, so **use `xhigh` where we previously used `high`**. `max`: reserve for deep architecture / adversarial reviews where cost is justified. |
+| `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`. `low`: config/typo fixes. `medium`: code fixes. `high`: **Opus 4.8 default** — most intelligence-sensitive work. `xhigh`: coding/agentic, content review, plan review, module building, linguistic analysis — Anthropic's explicit override for coding on 4.8. Effort matters MORE on 4.8 than prior Opus, so **sweep `medium`/`high`/`xhigh` per route** rather than defaulting to `xhigh` everywhere. `max`: deep architecture / adversarial reviews where correctness outweighs cost. |
 | Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
 | `worktree.sparsePaths` | Configured in settings.json | Subagent worktrees exclude `node_modules/`, `data/` for speed |
 | `PostCompact` hook | Auto-runs after context compaction | Restores current task, open issues, key reminders |
 | `FileChanged` hook | Auto-runs when `curriculum/**/*.md` changes | Triggers audit on module file edits |
-| `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Bumped from `high` → `xhigh` on 2026-04-21 after Anthropic noted Opus 4.7 at `high` underperforms prior versions. |
+| `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Set `xhigh` 2026-04-21; retained for Opus 4.8 — Anthropic recommends `xhigh` for coding/review and a minimum of `high` for intelligence-sensitive work. |
 | `paths:` scoping on rules | Frontmatter in rule files | `ukrainian-linguistics.md` only active for curriculum/orchestration work |
 
 ### Build Monitoring (MANDATORY)

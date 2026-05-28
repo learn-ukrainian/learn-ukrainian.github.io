@@ -7,7 +7,7 @@ from pathlib import Path
 from ai_llm.agent_runtime_call import call_agent_with_fallback
 from ai_llm.fallback import CallResult
 
-CLAUDE_MODEL_LADDER = ("claude-opus-4-8", "claude-sonnet-4-5")
+CLAUDE_MODEL_LADDER = ("claude-opus-4-8", "claude-sonnet-4-6")
 
 
 def call_claude_with_fallback(
