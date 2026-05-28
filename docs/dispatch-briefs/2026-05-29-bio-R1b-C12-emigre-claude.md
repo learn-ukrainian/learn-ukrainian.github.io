@@ -1,0 +1,32 @@
+# Dispatch — Bio epic #2309 / R1b: Block C émigré, sub-batches C.1+C.2 (Claude)
+
+**Agent:** claude `claude-opus-4-8`, `--effort xhigh` (deep-research), `--mode danger`, `--worktree`.
+**Epic:** #2309 · **Issue:** #2318 (R1b, Tier 1b — Block C émigré tradition).
+**Parallel-safe:** independent of the V7.2 leg + the codex Block-A lane (distinct slugs in `docs/research/bio/`).
+
+## #M-4 preamble — verifiable claims (quote raw output)
+- "N dossiers written" → `ls docs/research/bio/*.md` new filenames + `wc -w` per file raw.
+- "commit / PR" → `git log -1 --oneline` + `gh pr view --json url` raw.
+
+## Scope — 11 émigré figures (one ~1500-word dossier each)
+**C.1 first-wave (5):** Олександр Олесь, Володимир Винниченко, Іван Багряний, Тодось Осьмачка, Василь Королів-Старий
+**C.2 Празька школа (6):** Євген Маланюк, Юрій Клен, Юрій Дараган, Наталя Лівицька-Холодна, Леонід Мосендз, Оксана Лятуринська
+
+## Method — match the R1a pilot bar exactly
+- **Template:** `docs/templates/bio-research-dossier-template.md` (F5), section-for-section.
+- **Source tiers:** `docs/best-practices/bio-research-source-tiers.md` (F3). **For Block C, T1 = HURI (Harvard URI) publications, CIUS papers, Сарсель Енциклопедія Українознавства (Кубійович)** — LESS reliance on UA-side encyclopedias. UA Wikipedia = starting point only. **Russian/Soviet sources ONLY as quoted primary documents, NEVER authoritative.**
+- **Exemplars to match:** `docs/research/bio/mykhailo-drai-khmara.md`, `volodymyr-svidzinskyi.md`, `pavlo-tychyna.md`, `volodymyr-sosiura.md` — same depth, ≥4 T1/T2 sources, honest flagging of source disagreements.
+- **Special note (C.1):** first-wave includes UNR-era political context — flag connections to existing UNR bios (Петлюра; Винниченко himself is a UNR figure).
+- **Naming/slugs:** apply F4 transliteration rules; filename = canonical slug.
+
+## Output
+- `docs/research/bio/<slug>.md` per figure (~1500 words). Research dossiers ONLY — no plan YAMLs, no wiki.
+
+## Numbered steps (DISPATCH-BRIEF CHECKLIST)
+1. `--worktree` handles isolation; confirm cwd = worktree, base `origin/main`.
+2. Read F5 + F3 + the 4 exemplars FIRST; then research + write the 11.
+3. Verify each: `wc -w` ≥ ~1500; all template sections present.
+4. Commit, conventional message citing #2318 + #2309.
+5. `git push -u origin <branch>`.
+6. `gh pr create` — cite #2318, #2309; list the 11 figures + word counts.
+7. **NO auto-merge** — orchestrator reviews (source-tier + decolonization spot-check).
