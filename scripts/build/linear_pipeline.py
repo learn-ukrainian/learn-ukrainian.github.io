@@ -1077,8 +1077,26 @@ def _manifest_mapping(wiki_manifest: str | Mapping[str, Any]) -> dict[str, Any] 
     return dict(manifest)
 
 
-def _render_wiki_coverage_required_items(wiki_manifest: str | Mapping[str, Any]) -> str:
+def build_wiki_coverage_obligation_checklist(
+    wiki_manifest: str | Mapping[str, Any],
+    *,
+    seeded_map: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build the structured checklist shared by generated prompts and gate."""
+    from scripts.audit.wiki_coverage_gate import build_obligation_checklist_object
+
+    return build_obligation_checklist_object(wiki_manifest, seeded_map=seeded_map)
+
+
+def _render_wiki_coverage_required_items(
+    wiki_manifest: str | Mapping[str, Any],
+    *,
+    obligation_checklist: Mapping[str, Any] | None = None,
+) -> str:
     """Render a breakdown of required items for the writer prompt."""
+    if obligation_checklist is not None:
+        return _render_structured_wiki_coverage_required_items(obligation_checklist)
+
     if isinstance(wiki_manifest, str):
         try:
             manifest = json.loads(wiki_manifest)
@@ -1141,6 +1159,86 @@ def _render_wiki_coverage_required_items(wiki_manifest: str | Mapping[str, Any])
         lines.append(f"- Pedagogical goal: {why}")
         if str(item.get("treatment")) == "contrast_pair":
              lines.append("- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields")
+        lines.append("")
+
+    return "\n".join(lines).strip()
+
+
+def _render_structured_wiki_coverage_required_items(
+    obligation_checklist: Mapping[str, Any],
+) -> str:
+    """Render the generator checklist object used by the gate."""
+    from scripts.audit.wiki_coverage_gate import obligations_from_checklist
+
+    lines = [
+        "**Coverage rule**: every listed item MUST appear at least once in `module.md` PROSE (model sentence, definition, or paragraph). A vocab table entry alone is NOT coverage. Structural elements (tables, dialogue boxes) count for vocabulary but NOT for wiki_coverage obligations.",
+        "",
+    ]
+    vocab_items = [
+        str(item)
+        for item in obligation_checklist.get("vocabulary_minimum", [])
+        if str(item).strip()
+    ]
+    if vocab_items:
+        lines.append("### wiki_vocabulary_minimum")
+        lines.append("- Lemmas: " + ", ".join(vocab_items))
+        lines.append("")
+
+    for item in obligations_from_checklist(obligation_checklist):
+        oid = str(item.get("id") or "")
+        obligation_type = str(item.get("type") or "")
+        if obligation_type == "sequence_step":
+            lines.append(f"### {oid} (sequence step)")
+            extracted = item.get("required_items")
+            if isinstance(extracted, Mapping):
+                vocabulary = [
+                    str(value)
+                    for value in extracted.get("vocabulary", [])
+                    if str(value).strip()
+                ]
+                examples = [
+                    str(value)
+                    for value in extracted.get("examples", [])
+                    if str(value).strip()
+                ]
+                if vocabulary:
+                    lines.append(f"- Vocabulary to introduce: {', '.join(vocabulary)}")
+                if examples:
+                    lines.append(f"- Required examples: {', '.join(f'«{e}»' for e in examples)}")
+            goal = str(item.get("normalized_claim") or item.get("required_claim") or item.get("heading") or "")
+            if goal:
+                lines.append(f"- Pedagogical goal: {goal}")
+        elif obligation_type == "l2_error":
+            incorrect = str(item.get("incorrect") or "")
+            correct = str(item.get("correct") or "")
+            why = str(item.get("why") or "")
+            if not (incorrect or correct):
+                continue
+            lines.append(f"### {oid} (L2 error contrast)")
+            lines.append(f"- Required contrast: incorrect `{incorrect}` vs correct `{correct}`")
+            if why:
+                lines.append(f"- Pedagogical goal: {why}")
+            if str(item.get("treatment")) == "contrast_pair":
+                lines.append("- Required location: activities.yaml `error-correction` activity, entry with `sentence`, `error`, `correction` fields")
+        elif obligation_type == "phonetic_rule":
+            written = str(item.get("written") or "")
+            spoken = str(item.get("spoken") or "")
+            if not (written or spoken):
+                continue
+            lines.append(f"### {oid} (phonetic rule)")
+            lines.append(f"- Required mapping: written `{written}` -> spoken `{spoken}`")
+            if item.get("examples"):
+                lines.append(f"- Required examples: {json.dumps(item.get('examples'), ensure_ascii=False)}")
+        elif obligation_type == "decolonization_ban":
+            rule = str(item.get("rule") or "")
+            if not rule:
+                continue
+            lines.append(f"### {oid} (decolonization ban)")
+            if item.get("subtype"):
+                lines.append(f"- Subtype: {item['subtype']}")
+            lines.append(f"- Required rule: {rule}")
+        else:
+            lines.append(f"### {oid} ({obligation_type})")
         lines.append("")
 
     return "\n".join(lines).strip()
@@ -1810,6 +1908,7 @@ def render_writer_prompt(
     implementation_map: Mapping[str, Any] | None = None,
     writer: str = "claude-tools",
     use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> str:
     template_path = generated_writer_prompt_path() if use_generator else writer_prompt_path(writer)
     return render_phase_prompt(
@@ -1822,6 +1921,7 @@ def render_writer_prompt(
             implementation_map=implementation_map,
             writer=writer,
             use_generator=use_generator,
+            obligation_checklist=obligation_checklist,
         ),
     )
 
@@ -2934,19 +3034,22 @@ def writer_context(
     implementation_map: Mapping[str, Any] | None = None,
     writer: str | None = None,
     use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     learner_state = build_learner_state(level.lower(), sequence)
     activity_config = _activity_config(level, sequence, str(plan["slug"]))
     if wiki_manifest is None:
-        wiki_manifest_data = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
-        wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest_data)
-        required_items_text = _render_wiki_coverage_required_items(wiki_manifest_data)
+        manifest_for_checklist = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
+        wiki_manifest_text = _render_prompt_wiki_manifest(manifest_for_checklist)
+        required_items_text = _render_wiki_coverage_required_items(manifest_for_checklist)
     elif isinstance(wiki_manifest, str):
+        manifest_for_checklist = wiki_manifest
         wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
         required_items_text = _render_wiki_coverage_required_items(wiki_manifest)
     else:
+        manifest_for_checklist = wiki_manifest
         wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
         required_items_text = _render_wiki_coverage_required_items(wiki_manifest)
 
@@ -2988,13 +3091,29 @@ def writer_context(
         # computed required_items_text so the writer prompt, reviewer prompt, and
         # wiki_coverage_gate all read one rendering. Keyed behind the flag so the
         # legacy return above stays byte-identical with the flag OFF.
-        from scripts.build.prompt_generator import build_writer_rules_block, track_for_level
+        from scripts.build.prompt_generator import (
+            build_obligation_checklist,
+            build_obligation_checklist_object,
+            build_writer_rules_block,
+            track_for_level,
+        )
 
         rules_block = build_writer_rules_block(level.lower(), track_for_level(level))
         # Resolve any build-time tokens the rule bodies carry (e.g.
         # {ACTIVITY_COUNT_TARGET}) against the context computed above.
         context["GENERATED_WRITER_RULES"] = _inline_prompt_tokens(rules_block, context)
-        context["OBLIGATION_CHECKLIST"] = required_items_text
+        checklist = (
+            dict(obligation_checklist)
+            if obligation_checklist is not None
+            else build_obligation_checklist_object(
+                manifest_for_checklist,
+                seeded_map=implementation_map,
+            )
+        )
+        context["OBLIGATION_CHECKLIST"] = build_obligation_checklist(
+            manifest_for_checklist,
+            obligation_checklist=checklist,
+        )
     return context
 
 
@@ -3710,6 +3829,7 @@ def run_wiki_coverage_gate(
     writer_output: str,
     module_dir: Path,
     level: str | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     from scripts.audit.wiki_coverage_gate import check_wiki_coverage_paths
 
@@ -3718,6 +3838,7 @@ def run_wiki_coverage_gate(
         implementation_map=writer_output,
         module_dir=module_dir,
         level=level,
+        obligation_checklist=obligation_checklist,
     )
     if result.get("passed") is False:
         proposals = list(result.get("fix_proposals") or [])
@@ -3756,6 +3877,7 @@ def review_context(
     implementation_map: Mapping[str, Any] | None = None,
     *,
     use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
     """Build context for one independent per-dimension LLM QG prompt."""
     if dim not in QG_DIMS:
@@ -3772,7 +3894,7 @@ def review_context(
         manifest_for_checklist = wiki_manifest
 
     if implementation_map is None:
-        manifest_for_map = _manifest_mapping(wiki_manifest) if wiki_manifest is not None else wiki_manifest_data
+        manifest_for_map = _manifest_mapping(manifest_for_checklist)
         if manifest_for_map is None:
             impl_map_contract = "(no implementation_map provided and wiki_manifest was not parseable)"
         else:
@@ -3808,6 +3930,7 @@ def review_context(
         # with the flag OFF.
         from scripts.build.prompt_generator import (
             build_obligation_checklist,
+            build_obligation_checklist_object,
             build_reviewer_rules_block,
             track_for_level,
         )
@@ -3818,7 +3941,18 @@ def review_context(
         # context plus the level's activity config so none survive into the prompt.
         token_map = {**context, **_activity_config(level, sequence, str(plan["slug"]))}
         context["GENERATED_REVIEWER_RULES"] = _inline_prompt_tokens(rules_block, token_map)
-        context["OBLIGATION_CHECKLIST"] = build_obligation_checklist(manifest_for_checklist)
+        checklist = (
+            dict(obligation_checklist)
+            if obligation_checklist is not None
+            else build_obligation_checklist_object(
+                manifest_for_checklist,
+                seeded_map=implementation_map,
+            )
+        )
+        context["OBLIGATION_CHECKLIST"] = build_obligation_checklist(
+            manifest_for_checklist,
+            obligation_checklist=checklist,
+        )
     return context
 
 
@@ -3831,6 +3965,7 @@ def render_review_prompt(
     implementation_map: Mapping[str, Any] | None = None,
     *,
     use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> str:
     template_path = (
         generated_review_prompt_path()
@@ -3847,6 +3982,7 @@ def render_review_prompt(
             wiki_manifest,
             implementation_map,
             use_generator=use_generator,
+            obligation_checklist=obligation_checklist,
         ),
     )
 
@@ -4764,6 +4900,7 @@ def run_wiki_coverage_with_corrections(
     narrow_corrector: Callable[..., str] | None = None,
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Run wiki_coverage_gate with batched and narrow correction loops.
 
@@ -4782,6 +4919,7 @@ def run_wiki_coverage_with_corrections(
             writer_output=writer_output,
             module_dir=module_dir,
             level=level,
+            obligation_checklist=obligation_checklist,
         )
 
     result = _run_gate()

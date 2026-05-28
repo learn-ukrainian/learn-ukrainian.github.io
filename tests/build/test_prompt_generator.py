@@ -50,6 +50,12 @@ def _emission_order(text: str) -> list[str]:
     return MARKER_COMMENT_RE.findall(text)
 
 
+def _inserted_obligation_checklist(prompt: str) -> str:
+    start = prompt.index("**Coverage rule**:")
+    end = prompt.index("\n\n## Implementation Map Contract", start)
+    return prompt[start:end].strip()
+
+
 @pytest.fixture(scope="module")
 def m20():
     """Real a1/my-morning plan + manifest + implementation map fixtures."""
@@ -168,17 +174,34 @@ def test_a1_only_rules_absent_at_b1():
 
 
 def test_obligation_checklist_is_single_source(m20):
-    checklist = pg.build_obligation_checklist(m20["wiki_manifest"])
+    checklist_obj = pg.build_obligation_checklist_object(
+        m20["wiki_manifest"],
+        seeded_map=m20["implementation_map"],
+    )
+    checklist = pg.build_obligation_checklist(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
     assert checklist, "expected a non-empty checklist for m20"
-    # Same renderer the writer prompt already used for WIKI_COVERAGE_REQUIRED_ITEMS.
-    assert checklist == lp._render_wiki_coverage_required_items(m20["wiki_manifest"])
+    # Same renderer object the writer prompt, reviewer prompt, and gate consume.
+    assert checklist == lp._render_wiki_coverage_required_items(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
 
 
 def test_obligation_checklist_derived_from_wiki_coverage_gate_extraction(m20):
     """The checklist's required vocab must be the gate's extracted required items."""
     from scripts.audit.wiki_coverage_gate import _extract_required_items, _normalize_required_claim
 
-    checklist = pg.build_obligation_checklist(m20["wiki_manifest"])
+    checklist_obj = pg.build_obligation_checklist_object(
+        m20["wiki_manifest"],
+        seeded_map=m20["implementation_map"],
+    )
+    checklist = pg.build_obligation_checklist(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
     required_examples: set[str] = set()
     for item in m20["wiki_manifest"].get("sequence_steps", []):
         claim = str(item.get("required_claim") or item.get("heading") or "")
@@ -193,7 +216,14 @@ def test_obligation_checklist_derived_from_wiki_coverage_gate_extraction(m20):
 
 
 def test_obligation_checklist_identical_in_writer_and_reviewer_prompts(m20):
-    checklist = pg.build_obligation_checklist(m20["wiki_manifest"])
+    checklist_obj = pg.build_obligation_checklist_object(
+        m20["wiki_manifest"],
+        seeded_map=m20["implementation_map"],
+    )
+    checklist = pg.build_obligation_checklist(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
     writer_prompt = lp.render_writer_prompt(
         plan=m20["plan"],
         plan_content=m20["plan_content"],
@@ -202,6 +232,7 @@ def test_obligation_checklist_identical_in_writer_and_reviewer_prompts(m20):
         implementation_map=m20["implementation_map"],
         writer="claude-tools",
         use_generator=True,
+        obligation_checklist=checklist_obj,
     )
     reviewer_prompt = lp.render_review_prompt(
         m20["plan"],
@@ -211,9 +242,10 @@ def test_obligation_checklist_identical_in_writer_and_reviewer_prompts(m20):
         m20["wiki_manifest"],
         m20["implementation_map"],
         use_generator=True,
+        obligation_checklist=checklist_obj,
     )
-    assert checklist in writer_prompt
-    assert checklist in reviewer_prompt
+    assert _inserted_obligation_checklist(writer_prompt) == checklist
+    assert _inserted_obligation_checklist(reviewer_prompt) == checklist
 
 
 # --------------------------------------------------------------------------- #
@@ -286,15 +318,37 @@ def test_writer_prompt_off_byte_identical_to_legacy_template(m20):
 
 
 def test_writer_context_on_adds_generator_keys(m20):
+    checklist_obj = pg.build_obligation_checklist_object(
+        m20["wiki_manifest"],
+        seeded_map=m20["implementation_map"],
+    )
     ctx = lp.writer_context(
         m20["plan"], m20["plan_content"], "KP", m20["wiki_manifest"],
         implementation_map=m20["implementation_map"], writer="claude-tools",
-        use_generator=True,
+        use_generator=True, obligation_checklist=checklist_obj,
     )
     assert "#R-VESUM-ALL-WORDS" in ctx["GENERATED_WRITER_RULES"]
-    assert ctx["OBLIGATION_CHECKLIST"] == ctx["WIKI_COVERAGE_REQUIRED_ITEMS"]
+    assert ctx["OBLIGATION_CHECKLIST"] == pg.build_obligation_checklist(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
     # Build-time tokens inside rule bodies are resolved before injection.
     assert "{ACTIVITY_COUNT_TARGET}" not in ctx["GENERATED_WRITER_RULES"]
+
+
+def test_writer_context_on_without_manifest_builds_checklist(m20):
+    ctx = lp.writer_context(
+        m20["plan"],
+        m20["plan_content"],
+        "KP",
+        wiki_manifest=None,
+        implementation_map=m20["implementation_map"],
+        writer="claude-tools",
+        use_generator=True,
+    )
+
+    assert "OBLIGATION_CHECKLIST" in ctx
+    assert "### step-" in ctx["OBLIGATION_CHECKLIST"]
 
 
 def test_generated_writer_prompt_parity_with_legacy(m20):
@@ -334,14 +388,51 @@ def test_generated_reviewer_prompt_parity_with_legacy(m20):
 
 def test_obligation_checklist_single_source_across_three_consumers(m20):
     """writer prompt == reviewer prompt == build_obligation_checklist text."""
-    checklist = pg.build_obligation_checklist(m20["wiki_manifest"])
+    checklist_obj = pg.build_obligation_checklist_object(
+        m20["wiki_manifest"],
+        seeded_map=m20["implementation_map"],
+    )
+    checklist = pg.build_obligation_checklist(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
     writer_ctx = lp.writer_context(
         m20["plan"], m20["plan_content"], "KP", m20["wiki_manifest"],
         implementation_map=m20["implementation_map"], writer="claude-tools", use_generator=True,
+        obligation_checklist=checklist_obj,
     )
     review_ctx = lp.review_context(
         m20["plan"], m20["plan_content"], "X", "pedagogical",
         m20["wiki_manifest"], m20["implementation_map"], use_generator=True,
+        obligation_checklist=checklist_obj,
     )
     assert checklist == writer_ctx["OBLIGATION_CHECKLIST"]
     assert checklist == review_ctx["OBLIGATION_CHECKLIST"]
+
+
+def test_gate_consumes_obligation_checklist_one_to_one(m20):
+    """wiki_coverage_gate sees the same obligations the renderer emitted."""
+    from scripts.audit.wiki_coverage_gate import obligations_from_checklist
+
+    checklist_obj = pg.build_obligation_checklist_object(
+        m20["wiki_manifest"],
+        seeded_map=m20["implementation_map"],
+    )
+    rendered = pg.build_obligation_checklist(
+        m20["wiki_manifest"],
+        obligation_checklist=checklist_obj,
+    )
+    gate_obligations = obligations_from_checklist(checklist_obj)
+    gate_ids = [str(item["id"]) for item in gate_obligations]
+    rendered_ids = [
+        match
+        for match in re.findall(r"^### (\S+) \(", rendered, flags=re.MULTILINE)
+        if match != "wiki_vocabulary_minimum"
+    ]
+
+    assert len(gate_obligations) == len(m20["implementation_map"]["entries"])
+    assert rendered_ids == gate_ids
+    assert len(rendered_ids) == len(set(rendered_ids)), "no orphan/duplicate rendered obligations"
+    for item in gate_obligations:
+        if item["type"] == "sequence_step":
+            assert item["normalized_claim"] in rendered

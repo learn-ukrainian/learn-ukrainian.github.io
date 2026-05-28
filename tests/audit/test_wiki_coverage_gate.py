@@ -3,7 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from scripts.audit.wiki_coverage_gate import check_wiki_coverage, parse_implementation_map
+from scripts.audit.wiki_coverage_gate import (
+    build_obligation_checklist_object,
+    check_wiki_coverage,
+    parse_implementation_map,
+)
 from scripts.build.phases.implementation_map import seed_implementation_map
 
 FIXTURES_DIR = Path(__file__).with_name("fixtures")
@@ -129,6 +133,49 @@ def test_decolonization_ban_legacy_manifest_without_subtype_field() -> None:
     assert result["status"] == "FAIL"
     assert result["reason"] == "ban_substance_missing"
     assert "subtype" not in result
+
+
+def test_gate_default_path_preserves_legacy_manifest_output() -> None:
+    """Flag-OFF callers do not receive the generator checklist path."""
+    manifest = _ban_manifest(BAN_1_RULE)
+    kwargs = {
+        "manifest": manifest,
+        "implementation_map": _claim(),
+        "module_md": "This module avoids the prohibited framing.",
+        "activities_yaml": "[]",
+    }
+
+    assert check_wiki_coverage(**kwargs) == check_wiki_coverage(
+        **kwargs,
+        obligation_checklist=None,
+    )
+
+
+def test_gate_uses_supplied_obligation_checklist_instead_of_reflattening_manifest() -> None:
+    manifest = _sequence_step_manifest()
+    extra_step = dict(manifest["sequence_steps"][0])
+    extra_step["id"] = "step-6"
+    extra_step["required_claim"] = "Introduce the extra phrase «пізніше»."
+    manifest["sequence_steps"].append(extra_step)
+    checklist = build_obligation_checklist_object(manifest)
+    checklist["obligations"] = checklist["obligations"][:1]
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        obligation_checklist=checklist,
+        implementation_map={
+            "step-5": {
+                "artifact": "module.md",
+                "location": "whole file",
+                "treatment": "first checklist obligation only",
+            }
+        },
+        module_md="The prose includes вода, зарядка, сніданок, раненько, завжди, ніколи.",
+        activities_yaml="[]",
+    )
+
+    assert report["total"] == 1
+    assert [item["obligation_id"] for item in report["obligations"]] == ["step-5"]
 
 
 # Regression tests for two bugs that masked the build #6 a1/my-morning gate

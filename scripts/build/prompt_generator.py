@@ -34,7 +34,7 @@ in the registry"):
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from scripts.build.universal_rules_registry import load_applicable_rules
 
@@ -135,7 +135,23 @@ def build_reviewer_rules_block(
     return _compose_slots(level, track, activity_profile, REVIEWER_SLOT_ORDER)
 
 
-def build_obligation_checklist(wiki_manifest: str | Mapping[str, object]) -> str:
+def build_obligation_checklist_object(
+    wiki_manifest: str | Mapping[str, object],
+    *,
+    seeded_map: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build the structured checklist object used by prompt and gate consumers."""
+    from scripts.build.linear_pipeline import build_wiki_coverage_obligation_checklist
+
+    return build_wiki_coverage_obligation_checklist(wiki_manifest, seeded_map=seeded_map)
+
+
+def build_obligation_checklist(
+    wiki_manifest: str | Mapping[str, object],
+    *,
+    obligation_checklist: Mapping[str, Any] | None = None,
+    seeded_map: Mapping[str, Any] | None = None,
+) -> str:
     """Render the ONE Obligation Checklist from the wiki manifest's required items.
 
     Single source across all three consumers:
@@ -153,4 +169,10 @@ def build_obligation_checklist(wiki_manifest: str | Mapping[str, object]) -> str
     """
     from scripts.build.linear_pipeline import _render_wiki_coverage_required_items
 
-    return _render_wiki_coverage_required_items(wiki_manifest)
+    checklist = obligation_checklist
+    if checklist is None:
+        checklist = build_obligation_checklist_object(wiki_manifest, seeded_map=seeded_map)
+    return _render_wiki_coverage_required_items(
+        wiki_manifest,
+        obligation_checklist=checklist,
+    )

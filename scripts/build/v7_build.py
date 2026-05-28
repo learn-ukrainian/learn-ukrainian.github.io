@@ -657,6 +657,7 @@ def _writer_prompt(
     implementation_map: Mapping[str, Any],
     writer: str,
     use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> str:
     return linear_pipeline.render_writer_prompt(
         plan=plan,
@@ -666,6 +667,7 @@ def _writer_prompt(
         implementation_map=implementation_map,
         writer=writer,
         use_generator=use_generator,
+        obligation_checklist=obligation_checklist,
     )
 
 
@@ -728,6 +730,7 @@ def _run_llm_qg(
     implementation_map: Mapping[str, Any] | None = None,
     stdout_silence_timeout: int | None = None,
     use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
@@ -750,6 +753,7 @@ def _run_llm_qg(
             wiki_manifest,
             implementation_map,
             use_generator=use_generator,
+            obligation_checklist=obligation_checklist,
         )
         (module_dir / f"llm-qg-{dim}-prompt.md").write_text(prompt, encoding="utf-8")
         result = invoke(
@@ -1233,6 +1237,7 @@ def _run(args: argparse.Namespace) -> int:
         started_at = time.monotonic()
         module_dir.mkdir(parents=True, exist_ok=True)
         impl_map_path = module_dir / "implementation_map.json"
+        obligation_checklist: Mapping[str, Any] | None = None
         if (
             resume_enabled
             and not force_rerun
@@ -1246,12 +1251,22 @@ def _run(args: argparse.Namespace) -> int:
             else:
                 impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
                 write_implementation_map(impl_map, impl_map_path)
+            if use_generator:
+                obligation_checklist = linear_pipeline.build_wiki_coverage_obligation_checklist(
+                    wiki_manifest_data,
+                    seeded_map=impl_map,
+                )
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
             if resume_enabled:
                 force_rerun = True
             impl_map = seed_implementation_map(wiki_manifest_data, plan=plan)
             write_implementation_map(impl_map, impl_map_path)
+            if use_generator:
+                obligation_checklist = linear_pipeline.build_wiki_coverage_obligation_checklist(
+                    wiki_manifest_data,
+                    seeded_map=impl_map,
+                )
             tracker.emit(
                 "implementation_map_seeded",
                 slug=slug,
@@ -1266,6 +1281,7 @@ def _run(args: argparse.Namespace) -> int:
                 implementation_map=impl_map,
                 writer=writer,
                 use_generator=use_generator,
+                obligation_checklist=obligation_checklist,
             )
             # gemini-tools must load .gemini/settings.json from repo root;
             # module_dir cwd would leave its MCP catalog empty. See
@@ -1366,6 +1382,7 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir=module_dir,
                 level=level,
                 event_sink=tracker.emit,
+                obligation_checklist=obligation_checklist,
             )
             linear_pipeline.write_json(
                 module_dir / "wiki_coverage_gate.json", wiki_coverage_gate
@@ -1468,6 +1485,7 @@ def _run(args: argparse.Namespace) -> int:
                 implementation_map=impl_map,
                 stdout_silence_timeout=args.writer_timeout,
                 use_generator=use_generator,
+                obligation_checklist=obligation_checklist,
             )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
         aggregate = llm_qg["aggregate"]
