@@ -140,6 +140,7 @@ _WORKBOOK_AGGREGATE_LOCATION_RE = re.compile(
     + r")\b",
     re.IGNORECASE,
 )
+OBLIGATION_CHECKLIST_SCHEMA_VERSION = 1
 
 
 def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
@@ -251,6 +252,68 @@ def parse_implementation_map(text: str) -> dict[str, dict[str, str]]:
     return entries
 
 
+def build_obligation_checklist_object(
+    manifest: Mapping[str, Any] | str | Path,
+    *,
+    seeded_map: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Return the structured checklist shared by prompts and the gate.
+
+    The generated prompt path emits this object as rendered text, then passes
+    the same object into ``check_wiki_coverage``. Sequence-step item extraction
+    happens here once; the gate consumes the stored ``required_items`` instead
+    of re-deriving them when the checklist is supplied.
+    """
+    manifest_data = _load_manifest(manifest)
+    seeded_index = _seeded_obligation_index(seeded_map)
+    obligations: list[dict[str, Any]] = []
+    for obligation in validate_obligations(manifest_data):
+        obligation_id = str(obligation.get("id") or "")
+        enriched = _enrich_obligation_from_seeded_map(
+            obligation,
+            seeded_index.get(obligation_id),
+        )
+        if str(enriched.get("type") or "") == "sequence_step":
+            claim = str(enriched.get("required_claim") or enriched.get("heading") or "")
+            normalized_claim = _normalize_required_claim(claim)
+            enriched["normalized_claim"] = normalized_claim
+            enriched["required_items"] = _extract_required_items(normalized_claim)
+        obligations.append(enriched)
+
+    vocab_minimum = [
+        str(item.get("lemma") or "")
+        for item in manifest_data.get("wiki_vocabulary_minimum", [])
+        if isinstance(item, Mapping) and item.get("lemma")
+    ]
+    return {
+        "schema_version": OBLIGATION_CHECKLIST_SCHEMA_VERSION,
+        "slug": str(manifest_data.get("slug") or ""),
+        "wiki_path": str(manifest_data.get("wiki_path") or ""),
+        "vocabulary_minimum": vocab_minimum,
+        "obligations": obligations,
+    }
+
+
+def obligations_from_checklist(checklist: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Return gate-ready obligations from a structured checklist object."""
+    if checklist.get("schema_version") != OBLIGATION_CHECKLIST_SCHEMA_VERSION:
+        raise ValueError("obligation checklist schema_version must be 1")
+    raw_obligations = checklist.get("obligations")
+    if not isinstance(raw_obligations, Sequence) or isinstance(raw_obligations, (str, bytes)):
+        raise ValueError("obligation checklist obligations must be a list")
+    obligations: list[dict[str, Any]] = []
+    for index, item in enumerate(raw_obligations, start=1):
+        if not isinstance(item, Mapping):
+            raise ValueError(f"obligation checklist obligations[{index}] must be an object")
+        obligation = dict(item)
+        if not str(obligation.get("id") or ""):
+            raise ValueError(f"obligation checklist obligations[{index}] missing id")
+        if not str(obligation.get("type") or ""):
+            raise ValueError(f"obligation checklist obligations[{index}] missing type")
+        obligations.append(obligation)
+    return obligations
+
+
 def validate_obligations(manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
     """Flatten manifest obligations in deterministic manifest order."""
     obligations: list[dict[str, Any]] = []
@@ -277,6 +340,7 @@ def check_wiki_coverage(
     resources_yaml: str = "",
     level: str | None = None,
     seeded_map: Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compare manifest obligations to claimed artifact evidence."""
     map_entries = (
@@ -294,7 +358,12 @@ def check_wiki_coverage(
     obligation_results: list[dict[str, Any]] = []
     seeded_index = _seeded_obligation_index(seeded_map)
 
-    for obligation in validate_obligations(manifest):
+    obligations = (
+        obligations_from_checklist(obligation_checklist)
+        if obligation_checklist is not None
+        else validate_obligations(manifest)
+    )
+    for obligation in obligations:
         obligation_id = str(obligation.get("id") or "")
         obligation = _enrich_obligation_from_seeded_map(
             obligation,
@@ -379,6 +448,7 @@ def check_wiki_coverage_paths(
     module_dir: Path,
     level: str | None = None,
     seeded_map: Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     manifest_data = _load_manifest(manifest)
     implementation_map_path = module_dir / "implementation_map.json"
@@ -395,6 +465,7 @@ def check_wiki_coverage_paths(
         resources_yaml=_read_optional(module_dir / "resources.yaml"),
         level=level,
         seeded_map=seeded_map,
+        obligation_checklist=obligation_checklist,
     )
 
 
@@ -864,8 +935,23 @@ def _check_obligation_text(obligation: Mapping[str, Any], target_text: str, arti
 
     if obligation_type == "sequence_step":
         claim = str(obligation.get("required_claim") or obligation.get("heading") or "")
-        normalized_claim = _normalize_required_claim(claim)
-        items = _extract_required_items(normalized_claim)
+        raw_items = obligation.get("required_items")
+        if isinstance(raw_items, Mapping):
+            items = {
+                "vocabulary": [
+                    str(item)
+                    for item in raw_items.get("vocabulary", [])
+                    if isinstance(item, str)
+                ],
+                "examples": [
+                    str(item)
+                    for item in raw_items.get("examples", [])
+                    if isinstance(item, str)
+                ],
+            }
+        else:
+            normalized_claim = _normalize_required_claim(claim)
+            items = _extract_required_items(normalized_claim)
 
         # If we have extracted items, use item-level coverage.
         if items["vocabulary"] or items["examples"]:
