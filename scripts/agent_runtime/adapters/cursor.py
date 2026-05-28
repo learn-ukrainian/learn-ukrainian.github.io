@@ -256,8 +256,8 @@ class CursorAdapter:
         # Detect the session ID of the current run
         session_id = None
         for event in events:
-            if "sessionId" in event:
-                session_id = str(event["sessionId"])
+            if "sessionId" in event or "session_id" in event:
+                session_id = str(event.get("sessionId") or event.get("session_id"))
                 break
 
         # If not found in stdout events, scan the filesystem for a new transcript
@@ -284,22 +284,35 @@ class CursorAdapter:
         # The final response is usually the last 'content' or 'text' event
         # in the stream. parse_json_events + normalize_tool_calls handles
         # most of this, but we need to extract the assistant's final prose.
-        response = ""
+        response_parts: list[str] = []
+        stream_chunks: list[str] = []
+
+        def flush_stream_chunks() -> None:
+            if stream_chunks:
+                response_parts.append("".join(stream_chunks))
+                stream_chunks.clear()
+
+        def append_message_content(content: object) -> None:
+            text = _extract_text_content(content)
+            if not text:
+                return
+            flush_stream_chunks()
+            response_parts.append(text)
+
         for event in events:
             # Typical cursor event shape: {"type": "text", "content": "..."}
             # or {"type": "message", "role": "assistant", "content": "..."}
             if event.get("type") == "text":
-                response += event.get("content", "")
+                stream_chunks.append(str(event.get("content", "")))
             elif event.get("type") == "message" and event.get("role") == "assistant":
-                content = event.get("content", "")
-                if isinstance(content, list):
-                    for part in content:
-                        if isinstance(part, dict) and part.get("type") == "text":
-                            response += part.get("text", "")
-                elif isinstance(content, str):
-                    response += content
+                append_message_content(event.get("content", ""))
+            elif event.get("role") == "assistant" and isinstance(event.get("message"), dict):
+                # Cursor Agent v2026.05.27+ transcript shape:
+                # {"role": "assistant", "message": {"content": [{"type": "text", ...}]}}
+                append_message_content(event["message"].get("content", ""))
 
-        response = response.strip()
+        flush_stream_chunks()
+        response = "\n\n".join(part.strip() for part in response_parts if part.strip())
 
         ok = returncode == 0 and bool(response) and not rate_limited
 
@@ -320,3 +333,16 @@ class CursorAdapter:
         """Cursor writes to stdout; no separate liveness files."""
         _ = plan
         return ()
+
+
+def _extract_text_content(content: object) -> str:
+    """Extract assistant prose from cursor content, ignoring tool_use blocks."""
+    if isinstance(content, list):
+        chunks: list[str] = []
+        for part in content:
+            if isinstance(part, dict) and part.get("type") == "text":
+                chunks.append(str(part.get("text", "")))
+        return "".join(chunks)
+    if isinstance(content, str):
+        return content
+    return ""
