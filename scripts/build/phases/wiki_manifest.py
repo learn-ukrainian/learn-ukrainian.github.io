@@ -30,6 +30,7 @@ WIKI_MANIFEST_SCHEMA: dict[str, Any] = {
         "l2_errors",
         "phonetic_rules",
         "decolonization_bans",
+        "wiki_vocabulary_minimum",
         "external_resources",
     ],
     "properties": {
@@ -39,6 +40,7 @@ WIKI_MANIFEST_SCHEMA: dict[str, Any] = {
         "l2_errors": {"type": "array"},
         "phonetic_rules": {"type": "array"},
         "decolonization_bans": {"type": "array"},
+        "wiki_vocabulary_minimum": {"type": "array"},
         "external_resources": {
             "type": "array",
             "items": {
@@ -93,6 +95,13 @@ class DecolonizationBan:
 
 
 @dataclass(frozen=True, slots=True)
+class WikiVocabularyMinimum:
+    lemma: str
+    frequency_tier: Literal["high", "mid", "low", "unknown"]
+    gloss: str | None
+
+
+@dataclass(frozen=True, slots=True)
 class ExternalResource:
     role: str
     title: str
@@ -109,12 +118,14 @@ class WikiManifest:
     l2_errors: list[L2Error]
     phonetic_rules: list[PhoneticRule]
     decolonization_bans: list[DecolonizationBan]
+    wiki_vocabulary_minimum: list[WikiVocabularyMinimum]
     external_resources: list[ExternalResource]
 
 
 _SEQUENCE_HEADING_RE = re.compile(r"^##\s+Послідовність\s+(?:викладання|введення)\b", re.IGNORECASE)
 _L2_HEADING_RE = re.compile(r"^##\s+Типові\s+помилки\s+L2\b", re.IGNORECASE)
 _BAN_HEADING_RE = re.compile(r"^##\s+Деколонізаційні\s+застереження\b", re.IGNORECASE)
+_VOCAB_MINIMUM_HEADING_RE = re.compile(r"^##\s+Словниковий\s+мінімум\b", re.IGNORECASE)
 _EXTERNAL_RESOURCES_HEADING_RE = re.compile(
     r"^##\s+(?:Зовнішні\s+ресурси|External\s+Resources)\b",
     re.IGNORECASE,
@@ -128,6 +139,9 @@ _MD_LINK_RE = re.compile(r"\[(?P<title>[^\]]+)\]\((?P<url>[^)]+)\)")
 _BULLET_RESOURCE_RE = re.compile(
     r"^\s*[-*]\s*(?:(?P<role>[A-Za-zА-ЯІЇЄҐа-яіїєґ-]+)\s*[:—-]\s*)?(?P<body>.+?)\s*$"
 )
+_VOCAB_BULLET_RE = re.compile(r"^\s*[-*]\s+(?P<body>.+?)\s*$")
+_VOCAB_PREFIX_STARS_RE = re.compile(r"^(?P<stars>[★☆]{1,8})\s+(?P<body>.+?)$")
+_VOCAB_STARS_RE = re.compile(r"\((?P<stars>[★☆\s]{0,8})\)")
 
 
 def extract_manifest(wiki_path: str | Path) -> dict[str, Any]:
@@ -144,6 +158,7 @@ def extract_manifest(wiki_path: str | Path) -> dict[str, Any]:
         l2_errors=_extract_l2_errors(lines),
         phonetic_rules=_extract_phonetic_rules(lines),
         decolonization_bans=_extract_decolonization_bans(lines),
+        wiki_vocabulary_minimum=_extract_wiki_vocabulary_minimum(lines),
         external_resources=_extract_external_resources(lines),
     )
     manifest_data = asdict(manifest)
@@ -213,6 +228,23 @@ def _clean_optional(text: str | None) -> str | None:
         return None
     cleaned = _clean_inline(text)
     return cleaned or None
+
+
+def _strip_source_markers(text: str) -> str:
+    text = re.sub(r"\[[SС]\d+\]", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip().rstrip(".;")
+
+
+def _frequency_tier(stars: str | None) -> Literal["high", "mid", "low", "unknown"]:
+    count = (stars or "").count("★")
+    if count >= 3:
+        return "high"
+    if count == 2:
+        return "mid"
+    if count == 1:
+        return "low"
+    return "unknown"
 
 
 def _normalize_external_role(raw_role: str | None, *, url: str | None = None) -> str:
@@ -498,3 +530,57 @@ def _extract_decolonization_bans(lines: list[str]) -> list[DecolonizationBan]:
         paragraph_lines.append(line)
     flush(end - 1)
     return bans
+
+
+def _extract_wiki_vocabulary_minimum(lines: list[str]) -> list[WikiVocabularyMinimum]:
+    span = _section_span(lines, _VOCAB_MINIMUM_HEADING_RE)
+    if not span:
+        return []
+    start, end = span
+    items: list[WikiVocabularyMinimum] = []
+    for line in lines[start + 1 : end]:
+        match = _VOCAB_BULLET_RE.match(line)
+        if not match:
+            continue
+        body = _clean_inline(match.group("body"))
+        if not body:
+            continue
+        prefix_star_match = _VOCAB_PREFIX_STARS_RE.match(body)
+        if prefix_star_match:
+            tier = _frequency_tier(prefix_star_match.group("stars"))
+            rest_body = prefix_star_match.group("body").strip()
+            gloss_match = re.search(r"\((?P<gloss>[^)]{1,240})\)\s*$", rest_body)
+            if gloss_match:
+                lemma = _clean_inline(rest_body[: gloss_match.start()])
+                gloss = _clean_optional(_strip_source_markers(gloss_match.group("gloss")))
+            else:
+                parts = re.split(r"\s*[—–-]\s+", rest_body, maxsplit=1)
+                lemma = _clean_inline(parts[0])
+                gloss = _clean_optional(_strip_source_markers(parts[1])) if len(parts) == 2 else None
+        elif star_match := _VOCAB_STARS_RE.search(body):
+            lemma = _clean_inline(body[: star_match.start()])
+            rest = body[star_match.end() :].strip()
+            tier = _frequency_tier(star_match.group("stars"))
+            dash_parts = re.split(r"\s*[—–-]\s+", rest, maxsplit=1)
+            if len(dash_parts) == 2:
+                gloss = _clean_optional(_strip_source_markers(dash_parts[1]))
+            elif rest and not rest.startswith("["):
+                gloss = _clean_optional(_strip_source_markers(rest))
+            else:
+                gloss = None
+        else:
+            parts = re.split(r"\s+[—–-]\s+", body, maxsplit=1)
+            lemma = _clean_inline(parts[0])
+            rest = parts[1].strip() if len(parts) > 1 else ""
+            tier = "unknown"
+            gloss = _clean_optional(_strip_source_markers(rest)) if rest and not rest.startswith("[") else None
+        if not lemma:
+            continue
+        items.append(
+            WikiVocabularyMinimum(
+                lemma=lemma,
+                frequency_tier=tier,
+                gloss=gloss,
+            )
+        )
+    return items
