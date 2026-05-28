@@ -9,19 +9,22 @@ from scripts.audit.check_writer_prompt_size import (
 )
 
 
-def test_ceiling_is_132kb() -> None:
-    """Ceiling is 132KB after 2026-05-27 bump.
+def test_ceiling_is_135kb() -> None:
+    """Ceiling is 135KB after the 2026-05-28 V7.1 charter bump.
 
     Original PR-C 2026-05-23: 130KB (120KB target + 10KB headroom).
     Bumped 2026-05-27 (Path B / PR #2372): 132KB to accommodate 4 hardening PRs
-    (#2366, #2367, #2370, #2371) that added load-bearing #R-* rules. Bumping
-    vs trimming the hardening was the choice; the hardening rules are
-    load-bearing per PR #2358's empirical calibration.
+    (#2366, #2367, #2370, #2371) that added load-bearing #R-* rules.
+    Bumped 2026-05-28 (V7.1 Day 1 / PR #2377): 135KB to accommodate the V7.1
+    Renderer Charter at the top of linear-write.md + the #R-ACTIVITY-COMPOSITION
+    cluster. The charter adds ~3KB; a1/sounds-letters-and-hello was already
+    right at the previous 132KB ceiling.
 
-    The wiki-driven writer pivot (post-2026-05-27 Pt 11) is expected to
-    collapse most rules and let the ceiling drop back to 130KB or below.
+    Aggressive trim (cursor r1: "PR #2260 proved -118 lines viable") is queued
+    as a follow-up — see issue #2378. After that lands, the ceiling can drop
+    back below 130KB and this test's literal will follow.
     """
-    assert WRITER_PROMPT_CEILING_BYTES == 132 * 1024
+    assert WRITER_PROMPT_CEILING_BYTES == 135 * 1024
 
 
 def test_fixture_modules_includes_a1_my_morning() -> None:
