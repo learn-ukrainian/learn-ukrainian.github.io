@@ -5,7 +5,7 @@ applies_to:
   levels: [a1, a2]
   tracks: [core]
   activity_profiles: [all]
-slot: writer.body
+slot: shared.contract
 depends_on: []
 ---
 
