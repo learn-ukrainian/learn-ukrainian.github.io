@@ -1065,6 +1065,18 @@ def _render_prompt_wiki_manifest(wiki_manifest: str | Mapping[str, Any]) -> str:
     return json.dumps(compact, ensure_ascii=False, indent=2)
 
 
+def _manifest_mapping(wiki_manifest: str | Mapping[str, Any]) -> dict[str, Any] | None:
+    if isinstance(wiki_manifest, Mapping):
+        return dict(wiki_manifest)
+    try:
+        manifest = json.loads(wiki_manifest)
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(manifest, Mapping):
+        return None
+    return dict(manifest)
+
+
 def _render_wiki_coverage_required_items(wiki_manifest: str | Mapping[str, Any]) -> str:
     """Render a breakdown of required items for the writer prompt."""
     if isinstance(wiki_manifest, str):
@@ -3689,6 +3701,8 @@ def review_context(
     plan_content: str,
     generated_content: str,
     dim: str,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
     """Build context for one independent per-dimension LLM QG prompt."""
     if dim not in QG_DIMS:
@@ -3696,6 +3710,27 @@ def review_context(
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     learner_state = build_learner_state(level.lower(), sequence)
+    if wiki_manifest is None:
+        wiki_manifest_data = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
+        wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest_data)
+    else:
+        wiki_manifest_text = _render_prompt_wiki_manifest(wiki_manifest)
+
+    if implementation_map is None:
+        manifest_for_map = _manifest_mapping(wiki_manifest) if wiki_manifest is not None else wiki_manifest_data
+        if manifest_for_map is None:
+            impl_map_contract = "(no implementation_map provided and wiki_manifest was not parseable)"
+        else:
+            from scripts.build.phases.implementation_map import render_for_writer_prompt, seed_implementation_map
+
+            impl_map_contract = render_for_writer_prompt(
+                seed_implementation_map(dict(manifest_for_map), plan=dict(plan))
+            )
+    else:
+        from scripts.build.phases.implementation_map import render_for_writer_prompt
+
+        impl_map_contract = render_for_writer_prompt(dict(implementation_map))
+
     return {
         "LEVEL": level,
         "MODULE_NUM": str(sequence),
@@ -3706,6 +3741,8 @@ def review_context(
         "CONTRACT_YAML": _contract_yaml(plan),
         "PLAN_CONTENT": plan_content,
         "GENERATED_CONTENT": generated_content,
+        "WIKI_MANIFEST": wiki_manifest_text,
+        "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "DIM": dim,
     }
 
@@ -3715,10 +3752,19 @@ def render_review_prompt(
     plan_content: str,
     generated_content: str,
     dim: str,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
 ) -> str:
     return render_phase_prompt(
         PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-dim.md",
-        review_context(plan, plan_content, generated_content, dim),
+        review_context(
+            plan,
+            plan_content,
+            generated_content,
+            dim,
+            wiki_manifest,
+            implementation_map,
+        ),
     )
 
 

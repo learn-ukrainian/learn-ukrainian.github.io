@@ -139,6 +139,25 @@ For `{DIM}` specifically:
 A dim score that re-states what a deterministic gate already enforced is a
 reviewer-protocol failure. Cite something the gate cannot see.
 
+## Writer Obligation Context — same source material the writer saw
+
+Use these blocks as context when judging the residual quality dimension. Do
+not turn this into a new scoring dimension and do not re-run the deterministic
+wiki coverage gate; the point is to know what the writer was obligated to
+teach while applying the existing `{DIM}` rubric.
+
+### Wiki Obligations Manifest
+
+```json
+{WIKI_MANIFEST}
+```
+
+### Implementation Map Contract
+
+```text
+{IMPLEMENTATION_MAP_CONTRACT}
+```
+
 The Tier-1 audits below (A through I, expanded in this rebuild) feed evidence
 into specific dims as labeled. Audit F (activity split) → pedagogical +
 engagement. Audit G (corpus access) → all dims, weighted strongest for
