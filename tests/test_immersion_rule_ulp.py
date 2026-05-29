@@ -109,6 +109,35 @@ The word прокидаюся means I wake up. A reflexive verb is a verb that p
     }
 
 
+def test_uk_en_ratio_is_advisory_not_terminal(monkeypatch) -> None:
+    """uk_en_ratio must never drive the REVISE verdict.
+
+    A continuous immersion-ratio band is context-dependent; hard-gating on it is
+    the mechanics-over-teaching trap the ULP harness fix removes. When every
+    structural ULP check passes but the ratio is out of band, the module must
+    still PASS, with the ratio surfaced as an advisory warning.
+    """
+    from scripts.audit import ulp_fidelity_gate as gate
+
+    structural_pass = {"passed": True}
+    monkeypatch.setattr(gate, "_stress_coverage_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_em_dash_gloss_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_dialoguebox_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_section_opener_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_ratio_check", lambda _t, _p: {"passed": False, "pct": 99.0})
+
+    report = gate.check_ulp_fidelity(
+        "irrelevant",
+        {"level": "a1", "sequence": 20, "slug": "fixture"},
+        profile="core",
+    )
+
+    assert report["verdict"] == "PASS"
+    assert report["passed"] is True
+    assert report["failed_checks"] == []
+    assert "uk_en_ratio" in report["warnings"]
+
+
 def test_linear_pipeline_stress_annotation_marks_module_and_vocabulary(
     tmp_path: Path,
 ) -> None:

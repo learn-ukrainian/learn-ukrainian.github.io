@@ -23,6 +23,15 @@ STRESS_MARK = "\u0301"
 STRESS_COVERAGE_MIN = 0.95
 GLOSS_TOKEN_WINDOW = 8
 
+# Terminal ULP checks are deterministic teaching *behaviours* (structural, binary):
+# a genuine ULP lesson either has stress marks, em-dash glosses, UK-only dialogue
+# boxes, and Ukrainian-first openers \u2014 or it does not. uk_en_ratio is deliberately
+# excluded: it is a continuous, context-dependent signal and is ADVISORY only, so a
+# real ULP lesson that lands a few points outside the immersion band is surfaced as
+# a warning, never false-REVISE'd. (Ratio-as-hard-gate is the mechanics-over-teaching
+# trap this whole harness fix removes \u2014 2026-05-30 ULP-harness decision.)
+_TERMINAL_CHECKS = ("stress_coverage", "em_dash_gloss", "dialoguebox_uk_en", "section_openers")
+
 _UK_BASE_CLASS = "А-ЯҐЄІЇа-яґєії"
 _UK_LETTER_CLASS = f"{_UK_BASE_CLASS}\u0301"
 _UK_WORD_RE = re.compile(
@@ -288,6 +297,8 @@ def check_ulp_fidelity(
             "sequence": sequence,
             "profile": profile,
             "reason": "ulp_fidelity applies only to a1/a2 core",
+            "failed_checks": [],
+            "warnings": [],
             "checks": {},
         }
 
@@ -298,7 +309,14 @@ def check_ulp_fidelity(
         "section_openers": _section_opener_check(module_text),
         "uk_en_ratio": _ratio_check(module_text, plan),
     }
-    failed = [name for name, check in checks.items() if check.get("passed") is not True]
+    # Only the deterministic structural checks are terminal. uk_en_ratio is
+    # advisory: it surfaces as a warning but never drives the REVISE verdict.
+    failed = [name for name in _TERMINAL_CHECKS if checks[name].get("passed") is not True]
+    warnings = [
+        name
+        for name, check in checks.items()
+        if name not in _TERMINAL_CHECKS and check.get("passed") is not True
+    ]
     return {
         "passed": not failed,
         "verdict": "PASS" if not failed else "REVISE",
@@ -308,6 +326,7 @@ def check_ulp_fidelity(
         "profile": profile or "core",
         "policy": get_immersion_policy(level, sequence)["key"],
         "failed_checks": failed,
+        "warnings": warnings,
         "checks": checks,
     }
 
