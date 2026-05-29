@@ -22,6 +22,15 @@
 ## Output
 - `docs/research/bio/<slug>.md` per figure (~1500 words). Research dossiers ONLY — no plan YAMLs, no wiki.
 
+## ANTI-FABRICATION (HARD — learned from #2400, which cited ~20 nonexistent plans)
+- §7 Cross-track links: EVERY `curriculum/l2-uk-en/plans/.../*.yaml` path cited as
+  "existing" MUST be verified with `test -e <path>` BEFORE writing it. Cite ONLY
+  paths that exist; if a figure should have a plan but it doesn't exist yet, write
+  "Candidate (Phase 2+)" — NEVER label a nonexistent plan "Existing."
+- If `verify_quote` returns no corpus match, say so honestly and cite the
+  printed/online source consulted — do NOT fabricate a corpus hit.
+- Branch is `claude/bio-r1b-C12-emigre-2026-05-29` (auto-created by --worktree).
+
 ## Numbered steps (DISPATCH-BRIEF CHECKLIST)
 1. `--worktree` handles isolation; confirm cwd = worktree, base `origin/main`.
 2. Read F5 + F3 + the 4 exemplars FIRST; then research + write the 11.
