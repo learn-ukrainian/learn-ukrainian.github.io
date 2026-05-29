@@ -7,7 +7,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from yaml_activities import ActivityParser
+from yaml_activities import ActivityParser, OrderActivity
 
 
 def test_v7_authoring_types_parse_and_render(tmp_path):
@@ -110,6 +110,61 @@ def test_v7_authoring_types_parse_and_render(tmp_path):
         assert tag in mdx
 
     assert "ActivityPlaceholder" not in mdx
+
+
+def test_order_accepts_item_string_permutation_as_correct_order(tmp_path):
+    """Writers (codex on m20 act-3) express order answers as the ordered ITEM
+    STRINGS rather than integer indices. When correct_order is an exact
+    permutation of unique items, the parser resolves it to indices instead of
+    HARD-failing at MDX assembly with 'correct_order must contain integers'.
+    """
+    fixture = tmp_path / "order.yaml"
+    fixture.write_text(
+        """
+- id: order-strings
+  type: order
+  title: Order
+  instruction: Put the morning routine in order.
+  items:
+    - "Потім я вмиваюся."
+    - "Нарешті я йду на роботу."
+    - "Спочатку я прокидаюся."
+    - "Після цього я снідаю."
+  correct_order:
+    - "Спочатку я прокидаюся."
+    - "Потім я вмиваюся."
+    - "Після цього я снідаю."
+    - "Нарешті я йду на роботу."
+""",
+        encoding="utf-8",
+    )
+    parser = ActivityParser()
+    activities = parser.parse(fixture)
+    order_activity = activities[0]
+    assert isinstance(order_activity, OrderActivity)
+    assert order_activity.correct_order == [2, 0, 3, 1]
+    assert "<Order" in parser.to_mdx(activities)
+
+
+def test_order_still_rejects_non_permutation_strings(tmp_path):
+    """A string correct_order that is NOT an exact permutation of items must
+    still fail (no silent coercion of bogus answers)."""
+    fixture = tmp_path / "order_bad.yaml"
+    fixture.write_text(
+        """
+- id: order-bad
+  type: order
+  title: Order
+  instruction: Order them.
+  items: ["a", "b", "c"]
+  correct_order: ["a", "b", "zzz"]
+""",
+        encoding="utf-8",
+    )
+    parser = ActivityParser()
+    # parse() wraps the per-activity TypeError in a ValueError context.
+    with pytest.raises(ValueError, match="must contain integers"):
+        parser.parse(fixture)
 
 
 def test_grammar_identify_accepts_sentence_alias(tmp_path):
