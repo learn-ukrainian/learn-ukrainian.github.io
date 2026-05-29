@@ -1128,6 +1128,17 @@ class ActivityParser:
             raise ValueError("order requires non-empty items list")
         if not isinstance(correct_order, list) or not correct_order:
             raise ValueError("order requires non-empty correct_order list")
+        # Writers (e.g. codex on m20 a1/my-morning act-3) commonly express the
+        # answer as the ordered ITEM STRINGS rather than integer indices into
+        # `items`. When correct_order is an exact permutation of UNIQUE items,
+        # resolve each string to its index — unambiguous, and a natural
+        # authoring form we accept rather than HARD-fail at MDX assembly.
+        str_items = [str(item) for item in items]
+        if (all(isinstance(entry, str) for entry in correct_order)
+                and len(str_items) == len(set(str_items))
+                and len(correct_order) == len(str_items)
+                and set(correct_order) == set(str_items)):
+            correct_order = [str_items.index(entry) for entry in correct_order]
         if not all(isinstance(index, int) for index in correct_order):
             raise TypeError("order correct_order must contain integers")
         if any(index < 0 or index >= len(items) for index in correct_order):
