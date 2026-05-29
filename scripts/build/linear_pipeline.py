@@ -7879,6 +7879,8 @@ def _strip_metalinguistic(text: str) -> str:
       is deliberately non-VESUM and would otherwise be a false positive;
       HTML comments don't render in MDX, so the learner still sees the
       bad form in plain prose for contrast.
+    - `<!-- ... -->` — remaining HTML comments such as VERIFY annotations,
+      after bad-form marker spans have already been removed.
     - `not "форма"` / `not «форма»` — prose-quoted warning examples where the
       quoted form is explicitly marked as wrong.
 
@@ -7892,6 +7894,7 @@ def _strip_metalinguistic(text: str) -> str:
     text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
     text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
     text = _AVOID_MARKER_RE.sub(" ", text)
+    text = _strip_comments(text)
     text = _WARNING_QUOTE_RE.sub(" ", text)
     text = _VESUM_ABBREVIATION_RE.sub(" ", text)
     return text

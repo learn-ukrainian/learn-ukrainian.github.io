@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from scripts.build.linear_pipeline import _vesum_gate
+from scripts.build.linear_pipeline import _build_vesum_text, _vesum_gate
 
 
 def test_mc_distractor_text_not_verified() -> None:
@@ -160,3 +160,66 @@ def test_isolated_misspelling_still_caught() -> None:
     )
 
     assert "вмиваєсся" in result["missing"]
+
+
+def test_build_vesum_text_strips_bad_marker_and_verify_comment_args() -> None:
+    """Cyrillic inside bad markers and VERIFY comments is not learner prose."""
+    module_text = (
+        "the form <!-- bad -->одіватися<!-- /bad --> is not used "
+        "<!-- VERIFY: check_russian_shadow(word='одіватися') -->"
+    )
+
+    text = _build_vesum_text(module_text, [], [], [])
+
+    assert "одіватися" not in text
+
+
+def test_bad_marker_form_stays_excluded_before_comment_stripping() -> None:
+    """Bad marker ordering must remove the inner bad form before HTML comments."""
+    text = _build_vesum_text(
+        "Use одягатися, not <!-- bad -->одіватися<!-- /bad -->.",
+        [],
+        [],
+        [],
+    )
+
+    assert "одягатися" in text
+    assert "одіватися" not in text
+
+
+def test_normal_prose_cyrillic_survives_comment_stripping() -> None:
+    """Only comments and marked bad forms are stripped from VESUM text."""
+    text = _build_vesum_text(
+        "Вона одягається. <!-- VERIFY: word='одіватися' -->",
+        [],
+        [],
+        [],
+    )
+
+    assert "одягається" in text
+    assert "одіватися" not in text
+
+
+def test_vesum_gate_ignores_verify_comment_russianism_end_to_end() -> None:
+    """VERIFY comments with non-VESUM arguments must not fail the gate."""
+    module_text = (
+        "Вона одягається вранці. "
+        "<!-- VERIFY: source='vesum'; check_russian_shadow(word='одіватися') -->"
+    )
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        valid = {"вона", "вранці", "одягається"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    result = _vesum_gate(
+        module_text=module_text,
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is True
+    assert "одіватися" not in sent_for_verification
