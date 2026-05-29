@@ -156,6 +156,15 @@ repos:
         files: ^docs/session-state/.*\.md$
         stages: [pre-commit]
 
+      - id: lint-bio-dossier-xref
+        name: bio dossier §7 cross-track path validator
+        entry: >-
+          bash -c 'for f in "$@"; do bash scripts/pre_commit/project_python.sh
+          scripts/audit/lint_bio_dossier_xref.py --paths "$f" || exit $?; done' --
+        language: system
+        files: ^docs/research/bio/.*\.md$
+        stages: [pre-commit]
+
       - id: lint-agent-trailer
         name: warn on commits missing an X-Agent trailer
         # Warn-only during rollout (2026-05-11). Lint reports missing trailers
