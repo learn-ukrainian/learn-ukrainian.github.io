@@ -81,6 +81,52 @@ def test_scaffolding_leak_gate_allows_english_step_instructions() -> None:
     assert result == {"passed": True, "offending": []}
 
 
+def test_scaffolding_leak_gate_fails_on_internal_artifact_named_in_prose() -> None:
+    # The real build-#6 a1/my-morning leak: an internal pipeline artifact ("the
+    # Knowledge Packet") named in learner-facing body prose. python_qg passed this
+    # build; only the LLM tone reviewer caught it (tone 7.6 REVISE, 2026-05-29).
+    # The gate now catches it deterministically. (#R-NO-SCAFFOLDING-LEAKS)
+    text = (
+        "## Pronunciation\n\n"
+        "Written **-ться** is spoken as **[ц':а]**. "
+        "These rules come from the Knowledge Packet’s phonetic obligations "
+        "for this module.\n"
+    )
+
+    result = _scaffolding_leak_gate(text)
+
+    assert result["passed"] is False
+    assert len(result["offending"]) == 1
+    assert "Knowledge Packet" in result["offending"][0]["text"]
+
+
+def test_scaffolding_leak_gate_flags_implementation_map_and_wiki_manifest() -> None:
+    text = (
+        "## Notes\n\n"
+        "Follow the implementation map for ordering.\n"
+        "The wiki manifest lists every section.\n"
+    )
+
+    result = _scaffolding_leak_gate(text)
+
+    assert result["passed"] is False
+    assert [o["line"] for o in result["offending"]] == [3, 4]
+
+
+def test_scaffolding_leak_gate_allows_knowledge_packet_inside_verify_comment() -> None:
+    # Honest in-comment provenance citations must NOT trip the gate — VERIFY
+    # comments are unrendered and are the sanctioned home for packet provenance.
+    text = (
+        "## Pronunciation\n\n"
+        "Written **-ться** is spoken as **[ц':а]**. "
+        '<!-- VERIFY: source="Knowledge Packet: Мій ранок, phon-1 phon-2" -->\n'
+    )
+
+    result = _scaffolding_leak_gate(text)
+
+    assert result == {"passed": True, "offending": []}
+
+
 def test_scaffolding_leak_gate_is_ordered_but_not_auto_corrected() -> None:
     assert PYTHON_QG_GATE_ORDER.index("formatting_standards") < PYTHON_QG_GATE_ORDER.index(
         "scaffolding_leak"
