@@ -18,19 +18,28 @@ MDX ✅ assembled. **The 4 pipeline bugs are gone.**
 `terminal_verdict=PASS` so it completed). Build #2 scored **7.0 REVISE** — same pipeline, **3.5↔7.0
 run-to-run variance.** Per #M-11 do NOT promote (live PR #2364 stays).
 
-**THE FORK (next chapter — needs a call):** Claude's human read of build #3 module.md = the content
-is reasonable A1 (coherent reflexive-verb dialogue, sensible prose). A 3.5 on that + the wild variance
-echoes the user's prior B2 read (Pt-13: "tone reviewer over-penalizes UK connectors in EN prose for an
-A1 learner") + open issue **#2396** (recalibrate judges with opus-4-8). Two levers, possibly both:
-- **(A) Writer-quality** — wire the 9.5/10 exemplar into the EMPTY `<example>` slot of
-  `linear-write.generated.md` + lean the prompt (Q3 fast-follow #2389). Exemplar SOURCE CONFIRMED present:
-  `.worktrees/builds/a1-my-morning-20260527-185032` (Pt-10 9.5 baseline). NOTE exemplar ADDS bytes → pair with diet.
-- **(B) Reviewer-calibration** — #2396: the subjective-dim judge may be over-penalizing; recalibrate /
-  re-examine the rubric before trusting 3.5 as ground truth. Cheaper to test: read 2-3 dim REJECT
-  evidence blocks in the build's `_orchestration/` + judge if the critiques are fair.
-- Recommend: (B)-quick-check FIRST (is 3.5 real?), THEN (A) exemplar if writer genuinely needs lift.
-- Build #3 artifacts (forensics #M-10): `.worktrees/builds/a1-my-morning-20260529-084958/`
-  (module.md + my-morning.mdx + llm_qg dim evidence in `_orchestration/`).
+**(B) quick-check DONE — the 3.5 is REAL, reviewer is FAIR (NOT over-penalization).** Read the
+naturalness dim evidence (`.../my-morning/llm-qg-naturalness-response.raw.md`): the writer (codex)
+PASTED implementation_map scaffolding VERBATIM into the published "Дієслова на -ся" prose —
+`Крок 1: спершу regular читати ... [S8]`, `Крок 2: use прокидатися... add -ся або -сь, with я/ти
+practice [S3, S6]`, `Крок 4: teach дивитися...; note... [S7]` — i.e. leaked `Крок N:` labels,
+`[SN]` source markers, EN↔UK code-switching, and writer-directed meta-verbs ("teach"/"note").
+Textbook `#R-NO-SCAFFOLDING-LEAKS` / `#R-VOICE-META` violation (same class as Pt-9 "Крок 5:" leak).
+The clean Діалоги section is why it's 3.5 not 0. (Claude's first "content looks reasonable" read was
+INCOMPLETE — only saw the clean dialogue section, missed the leaked verbs section. The quick-check
+caught it.) So #2396 reviewer-calibration is NOT the issue here.
+
+**THE NEXT CHAPTER = WRITER-QUALITY (A), precisely diagnosed:**
+1. **Wire the 9.5/10 exemplar** into the EMPTY `<example>` slot of `scripts/build/phases/linear-write.generated.md`
+   (the generator output). Source CONFIRMED present: `.worktrees/builds/a1-my-morning-20260527-185032`
+   (Pt-10 9.5 baseline module.md — clean prose, no Крок/[SN] leaks). This is #2389. Exemplar ADDS bytes → pair with diet.
+2. **De-scaffold the impl_map → writer-prompt rendering** so `Крок N:` step labels + `[SN]` source markers are
+   NOT presented as copyable prose. The writer must COVER the sequence content but RENDER clean A1 prose, not
+   paste the manifest. (`render_for_writer_prompt` in `scripts/build/phases/implementation_map.py` + the
+   wiki/obligation-checklist rendering feed these markers in.) Recurring leak class — worth a hard pre-emit check.
+3. Re-build m20 → expect naturalness/tone to lift well above 3.5 once the leaks are gone; then verify-before-promote.
+- Build #3 forensics (#M-10): `.worktrees/builds/a1-my-morning-20260529-084958/curriculum/l2-uk-en/a1/my-morning/`
+  (module.md, my-morning.mdx, llm_qg.json + per-dim `llm-qg-*-response.raw.md`). Build #2 (7.0) at `...-082030`.
 
 ## m20 pipeline fixes shipped this session (4 — first-anchor latent-bug sweep)
 1. **#2404** (merged `475030d389`) — wiki_coverage seeded-claim fallback for err-obligations (cursor's catch: gate ignored pre-seeded sidecar) + Goodhart sentinel + correction-YAML validity + de-dup'd err-stub prompt render (under 135KB ceiling).
