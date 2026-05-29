@@ -3873,6 +3873,38 @@ def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> No
         emit_event("writer_negative_example_unmarkered", **fields)
 
 
+def run_stress_annotation(module_dir: Path) -> dict[str, Any]:
+    """Deterministically add Ukrainian stress marks to writer artifacts."""
+    from scripts.pipeline.stress_annotator import annotate_file
+
+    targets = ("module.md", "vocabulary.yaml")
+    counts: dict[str, int] = {}
+    for target in targets:
+        path = module_dir / target
+        _read_required(path)
+        counts[target] = annotate_file(path)
+    return {
+        "passed": True,
+        "phase": "stress_annotation",
+        "files": counts,
+        "total_added": sum(counts.values()),
+    }
+
+
+def run_ulp_fidelity_gate(
+    module_dir: Path,
+    plan_path: Path,
+    *,
+    profile: str | None = None,
+) -> dict[str, Any]:
+    """Run the deterministic ULP fidelity gate on final post-stress module.md."""
+    from scripts.audit.ulp_fidelity_gate import check_ulp_fidelity
+
+    plan = plan_check(plan_path)
+    module_text = _read_required(module_dir / "module.md")
+    return check_ulp_fidelity(module_text, plan, profile=profile)
+
+
 def run_wiki_coverage_gate(
     *,
     manifest: Mapping[str, Any] | str | Path,

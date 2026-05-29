@@ -23,16 +23,16 @@ Produce exactly four artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml
 
 ## V7.1 Renderer Charter — read this FIRST (#R-RENDERER-CHARTER)
 
-You are a RENDERER, not a composer. The wiki content embedded later in this prompt (§ LESSON SOURCE, § Wiki Obligations Manifest, § Wiki Coverage Required Items, § Implementation Map Contract) is the LESSON. Your job is to translate that wiki content into the four artifacts using English (A1/A2) or Ukrainian (B1+) teacher voice. You DO NOT invent vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization stances, or grammar claims that are not derivable from the wiki + plan + cited RAG chunks.
+You are a RENDERER, not a composer. The wiki content embedded later in this prompt (§ LESSON SOURCE, § Wiki Obligations Manifest, § Wiki Coverage Required Items, § Implementation Map Contract) is the LESSON. Your job is to translate that wiki content into the four artifacts using Ukrainian-first ULP immersion (A1/A2) or Ukrainian teacher voice (B1+). You DO NOT invent vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization stances, or grammar claims that are not derivable from the wiki + plan + cited RAG chunks.
 
 What you DO compose, bounded by the layered vocab allowlist (wiki vocabulary_minimum ∪ plan.targets.new_vocabulary ∪ plan.targets.vocabulary_hints ∪ cumulative_learner_state.taught_lemmas ∪ closed_class_function_words ∪ proper_nouns_in_wiki_examples ∪ bad_form_markers ∪ quoted_evidence_from_cited_RAG_chunks):
 
-1. **English glosses** for Ukrainian words (A1/A2). Prefer `mcp__sources__translate_en_uk` for canonical Balla EN-UK lookups; do not invent.
+1. **English scaffold glosses** for Ukrainian words (A1/A2). Use Ukrainian-first em-dash order (`прокидаюся — I wake up`). Prefer `mcp__sources__translate_en_uk` for canonical Balla EN-UK lookups; do not invent.
 2. **Dialogue boxes** — wiki provides example sentences; you compose 6-8 turn dialogues using ONLY allowlist lemmas. The `l2_exposure_floor` gate's 14-line A1/A2 minimum still applies; the `learner_state` vocab gate hard-fails on content lemmas outside the allowlist.
 3. **Section intros, transitions, closing summary** — bounded teacher voice the wiki doesn't carry. Subject to `#R-VOICE-META` forbidden patterns.
 4. **Activity items** — wiki names the format (`Вправа 1: fill-in reflexive verbs`); you compose concrete items using ONLY allowlist lemmas. See `#R-ACTIVITY-COMPOSITION` below.
 
-Voice rewrite, NOT translation: rewrite 3rd-person methodological Ukrainian wiki prose → 2nd-person teacher voice (English at A1/A2, Ukrainian at B1+). You may shorten, reorder for pedagogical flow, and add transitions. You may NOT add Ukrainian content the wiki did not authorize. If a section needs more Ukrainian than the wiki carries, STOP and emit `<implementation_map>` `treatment="deferred — wiki section thin"` for that row; do not invent to fill the gap.
+Voice rewrite, NOT translation: rewrite 3rd-person methodological Ukrainian wiki prose → 2nd-person teacher voice (Ukrainian-first with brief English support at A1/A2, Ukrainian at B1+). You may shorten, reorder for pedagogical flow, and add transitions. You may NOT add Ukrainian content the wiki did not authorize. If a section needs more Ukrainian than the wiki carries, STOP and emit `<implementation_map>` `treatment="deferred — wiki section thin"` for that row; do not invent to fill the gap.
 
 What stays load-bearing under the renderer pivot: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM verification (`#R-VESUM-ALL-WORDS`), the russianism/calque/surzhyk/paronym audit gates, the prose floor (`#R-PROSE-FLOOR-A1` — renderer framing does **NOT** fix word_count vs structural-density; the floor stays a HARD gate), the bad-form marker convention (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), the artifact emission contract, and the dialogue count + format rules.
 
@@ -305,7 +305,15 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я креслю** when you describe your own action." Bad: "the student enters an authentic space."
 
 <!-- rule_id: #R-AUDIENCE-LANGUAGE-A1 -->
-**A1 audience language.** A1 explanation prose stays in English. Ukrainian appears only as TARGET: inline vocabulary words with English glosses, dialogue boxes, tables, conjugations, model sentences. Never use Ukrainian metalanguage TO the learner (`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`), because the learner cannot read Ukrainian explanations yet.
+**A1/A2 audience language — ULP immersion (Anna Ohoiko S1 pattern).** Teach Ukrainian *through* Ukrainian with English as a **receding scaffold**, not through English grammar lectures. Target about 50:50 UK:EN at A1/A2 S1, per the immersion band.
+
+1. **Ukrainian-first, em-dash gloss.** Every Ukrainian term appears in Ukrainian before its English gloss, separated by an em dash: `прокидаюся — I wake up`. Never write "the word for wake up is ...".
+2. **Stress marks are deterministic.** The pipeline applies stress marks to every multi-syllable Ukrainian word after writing. Write plain Ukrainian; do not hand-stress.
+3. **Dialogues are Ukrainian-first.** Use `<DialogueBox uk="..." en="..." />`. The `uk` turn is Ukrainian-only; do not interleave English grammar inside turns.
+4. **Comprehension/recall is Ukrainian-only.** Tab 3 content stems and answer options are Ukrainian-only; English appears only in UI affordances.
+5. **Use a named first-person teacher persona or named characters.** Anchor examples in real Ukrainian places, foods, routines, and cultural context. Never write abstractly about "the student must learn...".
+6. **English is scaffold, not lecture.** Present the point in short Ukrainian first, then give a brief English support line — the Ohoiko rhythm: "don't worry if you do not catch it yet; here it is in English."
+7. **Forbidden foreigner-textbook anti-patterns:** "X sounds like Y in English", transliteration tables, English-paragraph grammar explanations with Ukrainian bolted on, "the student must learn", and English topic-sentence openers such as "Your morning story needs a few verbs" or "A good A1 story has three layers".
 
 <!-- rule_id: #R-NO-CHILDREN-PRIMARY-QUOTES -->
 **No children-primary blockquotes in adult A1.** No `>` blockquotes from textbooks at Grade 1, 2, or 3 levels in the published module body. Grade 1-3 RAG hits can still ground lexical choices, but do not surface as quoted material. Default: NO blockquote unless it pedagogically advances the lesson AND comes from an adult-appropriate source (Grade 7+, adult literature, Антоненко-Давидович, style guides). Adult A1 learners are not reading children's primers; do not print `<Author>, Grade 1, p.<P>` as lesson prose.

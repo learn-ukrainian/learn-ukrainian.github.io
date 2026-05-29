@@ -81,8 +81,8 @@ def test_advisory_pct_always_passes() -> None:
 
     assert result["passed"] is True
     assert result["pct"] == 0.0
-    assert result["min_pct"] == 5
-    assert result["max_pct"] == 25
+    assert result["min_pct"] == 40
+    assert result["max_pct"] == 55
     assert result["policy"] == "a1-m01-03"
 
 

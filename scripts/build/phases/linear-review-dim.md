@@ -130,11 +130,14 @@ For `{DIM}` specifically:
     The module must have one teacher voice across the whole module: warm,
     clear, direct ("you" / "your"). REJECT third-person framing of the
     learner (`the student`, `студента`, `the reader`, `учня`).
-  - Mirrors `#R-AUDIENCE-LANGUAGE-A1`: REJECT Ukrainian metalanguage TO the
-    A1 learner (`Контролюй чистоту словника`, `Рішуче відкидай`,
-    `Запам'ятай...`). A1 explanation prose stays in English. Ukrainian
-    appears only as TARGET: inline vocabulary words with English glosses,
-    dialogue boxes, tables, conjugations, model sentences.
+  - Mirrors `#R-AUDIENCE-LANGUAGE-A1`: REJECT grammar-translation lectures
+    at A1/A2. The module must teach Ukrainian through Ukrainian with English
+    as a receding scaffold: Ukrainian term first, em-dash gloss after
+    (`прокидаюся — I wake up`), `<DialogueBox uk="..." en="..." />` with a
+    Ukrainian-only `uk` turn, Ukrainian-only comprehension/recall content, a
+    named persona or named characters, and no foreigner-textbook anti-patterns
+    such as transliteration tables, "X sounds like Y in English", "the student
+    must learn", or English topic-sentence openers.
 
 A dim score that re-states what a deterministic gate already enforced is a
 reviewer-protocol failure. Cite something the gate cannot see.

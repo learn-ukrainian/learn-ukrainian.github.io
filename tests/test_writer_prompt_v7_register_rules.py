@@ -19,9 +19,10 @@ WRITER_RULE_ANCHORS = (
     (
         "#R-AUDIENCE-LANGUAGE-A1",
         (
-            "A1 explanation prose stays in English",
-            "Ukrainian appears only as TARGET",
-            "`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`",
+            "A1/A2 audience language — ULP immersion",
+            "Ukrainian-first, em-dash gloss",
+            "`прокидаюся — I wake up`",
+            "`<DialogueBox uk=\"...\" en=\"...\" />`",
         ),
     ),
     (

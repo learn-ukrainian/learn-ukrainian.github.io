@@ -19,9 +19,10 @@ REVIEWER_RULE_ANCHORS = (
     (
         "#R-AUDIENCE-LANGUAGE-A1",
         (
-            "REJECT Ukrainian metalanguage TO the A1 learner",
-            "A1 explanation prose stays in English",
-            "`Контролюй чистоту словника`, `Рішуче відкидай`, `Запам'ятай...`",
+            "REJECT grammar-translation lectures",
+            "The module must teach Ukrainian through Ukrainian",
+            "`прокидаюся — I wake up`",
+            "`<DialogueBox uk=\"...\" en=\"...\" />`",
         ),
     ),
     (
