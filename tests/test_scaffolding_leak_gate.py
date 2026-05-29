@@ -113,6 +113,24 @@ def test_scaffolding_leak_gate_flags_implementation_map_and_wiki_manifest() -> N
     assert [o["line"] for o in result["offending"]] == [3, 4]
 
 
+def test_scaffolding_leak_gate_flags_snake_case_artifact_identifiers() -> None:
+    # The artifacts carry snake_case identifier forms in the codebase
+    # (knowledge_packet.md, implementation_map.json); a writer naming the
+    # identifier leaks just as the spaced display form does. The [\s_-]+
+    # separator catches underscore and hyphen variants too.
+    # (gemini-code-assist review, PR #2417.)
+    text = (
+        "## Notes\n\n"
+        "See knowledge_packet for the rules.\n"
+        "Ordering follows the implementation-map.\n"
+    )
+
+    result = _scaffolding_leak_gate(text)
+
+    assert result["passed"] is False
+    assert [o["line"] for o in result["offending"]] == [3, 4]
+
+
 def test_scaffolding_leak_gate_allows_knowledge_packet_inside_verify_comment() -> None:
     # Honest in-comment provenance citations must NOT trip the gate — VERIFY
     # comments are unrendered and are the sanctioned home for packet provenance.

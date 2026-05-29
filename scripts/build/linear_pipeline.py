@@ -8298,9 +8298,12 @@ _SCAFFOLDING_SOURCE_MARKER_RE = re.compile(
 # step-label note above about avoiding false positives on real prose). VERIFY-
 # comment / fenced-code references — e.g. `<!-- VERIFY: source="Knowledge Packet:
 # ..." -->` — are already excluded upstream by _strip_scaffolding_scan_exclusions,
-# so honest in-comment provenance citations do NOT trip this gate.
+# so honest in-comment provenance citations do NOT trip this gate. The inter-word
+# separator is `[\s_-]+` so the snake_case identifier forms these artifacts carry
+# in the codebase (knowledge_packet.md, implementation_map.json, wiki_manifest.json)
+# leak just as the spaced display forms do (gemini-code-assist review, PR #2417).
 _SCAFFOLDING_ARTIFACT_RE = re.compile(
-    r"\b(?:knowledge\s+packet|implementation\s+map|wiki\s+manifest|wiki\s+coverage\s+gate)\b",
+    r"\b(?:knowledge[\s_-]+packet|implementation[\s_-]+map|wiki[\s_-]+manifest|wiki[\s_-]+coverage[\s_-]+gate)\b",
     re.IGNORECASE,
 )
 
