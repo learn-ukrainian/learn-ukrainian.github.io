@@ -301,6 +301,19 @@ def _treatment_template(
         if isinstance(value, str) and value.startswith("<from manifest_payload.") and value.endswith(">"):
             payload_key = value.removeprefix("<from manifest_payload.").removesuffix(">")
             template[key] = manifest_payload.get(payload_key)
+    if obligation_type == "l2_error" and manifest_payload.get("treatment") == "contrast_pair":
+        template["activity_stub"] = {
+            "obligation_id": str(manifest_payload.get("id") or ""),
+            "type": "error-correction",
+            "location_hint": "activities.yaml",
+            "manifest": {
+                "incorrect": manifest_payload.get("incorrect"),
+                "correct": manifest_payload.get("correct"),
+                "why": manifest_payload.get("why"),
+            },
+            "sentence": "",
+            "items": [],
+        }
     return template
 
 

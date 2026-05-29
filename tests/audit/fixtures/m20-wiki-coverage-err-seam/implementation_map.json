@@ -1,0 +1,118 @@
+{
+  "entries": [
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Я прокидаюся. / Він прокидається.",
+        "id": "err-1",
+        "incorrect": "Я прокидаєшся. / Він прокидаюся.",
+        "source_lines": "39",
+        "treatment": "contrast_pair",
+        "why": "Англомовні учні (L2) сприймають -ся як незмінну частку-суфікс і часто забувають змінювати особове закінчення дієслова перед нею, фіксуючи форму інфінітива або одну завчену форму для всіх осіб [S6, S8]."
+      },
+      "obligation_id": "err-1",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Я прокидаюся. / Він прокидається.",
+        "expected_error_value": "Я прокидаєшся. / Він прокидаюся.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Вимова: [прокидайес':а]",
+        "id": "err-2",
+        "incorrect": "Вимова: [прокидайешся]",
+        "source_lines": "40",
+        "treatment": "contrast_pair",
+        "why": "Побуквене прочитання. Учень намагається чітко вимовити звук [ш], хоча українська фонетична норма вимагає повної асиміляції в подовжений м'який [с':а] [S1, S9]."
+      },
+      "obligation_id": "err-2",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Вимова: [прокидайес':а]",
+        "expected_error_value": "Вимова: [прокидайешся]",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Вимова: [одягайец':а]",
+        "id": "err-3",
+        "incorrect": "Вимова: [одягайет'с'а]",
+        "source_lines": "41",
+        "treatment": "contrast_pair",
+        "why": "Відсутність асиміляції звуків [т'] і [с'] в африкату [ц':а]. Англомовний артикуляційний апарат не звик до таких злиттів у кінці слова, тому учні намагаються вимовляти звуки роздільно [S1, S9]."
+      },
+      "obligation_id": "err-3",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Вимова: [одягайец':а]",
+        "expected_error_value": "Вимова: [одягайет'с'а]",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Я миюся. / Я вмиваюся.",
+        "id": "err-4",
+        "incorrect": "Я мию себе.",
+        "source_lines": "42",
+        "treatment": "contrast_pair",
+        "why": "Синтаксична калька з англійської (I wash myself). Хоча українська підручникова норма і пояснює семантику через «дію на себе» [S2, S9], у природному повсякденному мовленні завжди використовується зворотне дієслово."
+      },
+      "obligation_id": "err-4",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Я миюся. / Я вмиваюся.",
+        "expected_error_value": "Я мию себе.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Я дивлюся.",
+        "id": "err-5",
+        "incorrect": "Я дивюся. / Я дивюсь.",
+        "source_lines": "43",
+        "treatment": "contrast_pair",
+        "why": "Ігнорування появи епентетичного (вставного) «л» у дієсловах другої дієвідміни після губних приголосних (б, п, в, м, ф) у 1-й особі однини. Учні механічно додають закінчення до основи інфінітива [S7]."
+      },
+      "obligation_id": "err-5",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Я дивлюся.",
+        "expected_error_value": "Я дивюся. / Я дивюсь.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    },
+    {
+      "artifact": "activities.yaml",
+      "location_hint": "activities.yaml",
+      "manifest_payload": {
+        "correct": "Я користуюся.",
+        "id": "err-6",
+        "incorrect": "Я користуювася.",
+        "source_lines": "44",
+        "treatment": "contrast_pair",
+        "why": "Перенесення інфінітивного суфікса -ва- у форми теперішнього часу. Учні просто не знають правила випадіння цього суфікса в дієсловах на -уватися / -юватися [S6]."
+      },
+      "obligation_id": "err-6",
+      "obligation_type": "l2_error",
+      "treatment_template": {
+        "expected_correction_value": "Я користуюся.",
+        "expected_error_value": "Я користуювася.",
+        "shape": "activities.yaml entry with fields {sentence, error, correction}"
+      }
+    }
+  ]
+}
