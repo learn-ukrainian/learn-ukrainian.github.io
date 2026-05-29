@@ -27,7 +27,7 @@ from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
 )
-from scripts.common.thresholds import LLM_QG_TERMINAL_DIMS, QG_DIMS
+from scripts.common.thresholds import QG_DIMS, terminal_dims_for
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 FETCH_TIMEOUT_S = 30
@@ -725,6 +725,7 @@ def _run_llm_qg(
     plan_content: str,
     module_dir: Path,
     writer: str,
+    profile: str | None = None,
     reviewer_override: str | None = None,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     implementation_map: Mapping[str, Any] | None = None,
@@ -778,7 +779,11 @@ def _run_llm_qg(
         )
         report[dim] = linear_pipeline.parse_review_response(response, dim)
 
-    return linear_pipeline.aggregate_llm_review(report, str(plan["level"]))
+    return linear_pipeline.aggregate_llm_review(
+        report,
+        str(plan["level"]),
+        profile=profile,
+    )
 
 
 def _run_wiki_coverage_review(
@@ -1118,6 +1123,7 @@ def _run(args: argparse.Namespace) -> int:
         plan_content = plan_path.read_text(encoding="utf-8")
         plan = linear_pipeline.load_plan(plan_path)
         linear_pipeline.validate_plan(plan)
+        profile = linear_pipeline.curriculum_profile_for_level(level)
         _phase_done(
             phase,
             started_at,
@@ -1481,6 +1487,7 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir=module_dir,
                 writer=writer,
                 reviewer_override=reviewer_override,
+                profile=profile,
                 wiki_manifest=wiki_manifest,
                 implementation_map=impl_map,
                 stdout_silence_timeout=args.writer_timeout,
@@ -1530,7 +1537,7 @@ def _run(args: argparse.Namespace) -> int:
             failing_terminal_dims = [
                 dim
                 for dim in aggregate.get("failing_dims", ())
-                if dim in LLM_QG_TERMINAL_DIMS
+                if dim in terminal_dims_for(profile)
             ]
             raise linear_pipeline.LinearPipelineError(
                 f"LLM QG terminal verdict was {terminal_verdict} "
