@@ -14,6 +14,7 @@ from pathlib import Path
 import yaml
 
 from .converters import (
+    convert_bad_form_markers,
     convert_callouts,
     normalize_mdx,
     process_dialogues,
@@ -371,10 +372,11 @@ sidebar:
     # =========================================================================
     # Apply shared transforms to all content blocks
     # =========================================================================
-    def _apply_shared_transforms(text: str) -> str:
+    def _apply_shared_transforms(text: str, strip_bad_forms: bool = False) -> str:
         """Apply callout conversion, slug links, HTML fixes, comments, stories, dialogues."""
         text = convert_callouts(text, is_ukrainian_forced)
         text = resolve_slug_links(text)
+        text = convert_bad_form_markers(text, strip_only=strip_bad_forms)
         text = fix_html_for_jsx(text)
         text = re.sub(r'<!--(.*?)-->', r'{/**/}', text, flags=re.DOTALL)
         text = process_story_sections(text)
@@ -382,8 +384,12 @@ sidebar:
         return text
 
     lesson_content = _apply_shared_transforms(lesson_content)
-    vocab_content = _apply_shared_transforms(vocab_content)
-    activities_content = _apply_shared_transforms(activities_content)
+
+    # We pass strip_bad_forms=True to vocab and activities because they contain JSON-embedded JSX props.
+    # Putting <del> inside a JSON string value would render literal <del> text in a card instead of semantic strikethrough.
+    vocab_content = _apply_shared_transforms(vocab_content, strip_bad_forms=True)
+    activities_content = _apply_shared_transforms(activities_content, strip_bad_forms=True)
+
     resources_content = _apply_shared_transforms(resources_content)
 
     # Remove duplicate H1 title (from lesson tab only)

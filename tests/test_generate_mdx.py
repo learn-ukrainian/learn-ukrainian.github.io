@@ -17,6 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from generate_mdx import (
+    convert_bad_form_markers,
     convert_callouts,
     dump_json_for_jsx,
     escape_jsx,
@@ -506,6 +507,34 @@ class TestParseTranslate:
     def test_empty(self):
         assert parse_translate("") == []
 
+
+# =============================================================================
+# convert_bad_form_markers
+# =============================================================================
+
+class TestConvertBadFormMarkers:
+    def test_prose_case(self):
+        content = "Avoid using <!-- bad -->завтрак<!-- /bad --> in Ukrainian."
+        result = convert_bad_form_markers(content)
+        assert result == "Avoid using <del>завтрак</del> in Ukrainian."
+
+    def test_whitespace_variant(self):
+        content = "Avoid using <!--  bad  -->завтрак<!--  /bad  -->."
+        result = convert_bad_form_markers(content)
+        assert result == "Avoid using <del>завтрак</del>."
+
+    def test_strip_only(self):
+        content = '{"label": "Not <!-- bad -->завтрак<!-- /bad -->"}'
+        result = convert_bad_form_markers(content, strip_only=True)
+        assert result == '{"label": "Not завтрак"}'
+
+    def test_orphan_marker_stripped(self):
+        content = "Some text <!-- bad --> orphaned marker."
+        result = convert_bad_form_markers(content)
+        assert result == "Some text  orphaned marker."
+        content2 = "Some text <!-- /bad --> orphaned end marker."
+        result2 = convert_bad_form_markers(content2)
+        assert result2 == "Some text  orphaned end marker."
 
 # =============================================================================
 # convert_callouts

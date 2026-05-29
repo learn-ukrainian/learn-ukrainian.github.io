@@ -12,6 +12,7 @@ like ``from generate_mdx import generate_mdx, escape_jsx``.
 from .converters import (
     CALLOUT_MAP,
     comparative_study_to_jsx,
+    convert_bad_form_markers,
     convert_callouts,
     essay_response_to_jsx,
     highlight_morphemes_to_jsx,
@@ -135,6 +136,7 @@ __all__ = [  # noqa: RUF022 — intentionally grouped by category (Dataclasses, 
     # Converters
     "CALLOUT_MAP",
     "comparative_study_to_jsx",
+    "convert_bad_form_markers",
     "convert_callouts",
     "essay_response_to_jsx",
     "highlight_morphemes_to_jsx",
