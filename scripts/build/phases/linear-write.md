@@ -423,6 +423,8 @@ like `correct_order`, indices are zero-based.
 
 **`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside a `translate` activity's `items:` list MUST use `source` for the text to translate and `options` for target choices; the correct target answer is the option with `correct: true`. For UK→EN translation, `source` is the Ukrainian text and the target English answer lives in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field that the parser cannot consume.
 
+**`quiz` and `translate` item explanations (mandatory teaching feedback — HARD FAIL if missing/empty).** Every item inside a `quiz` or `translate` activity's `items:` list MUST include `explanation: "..."`. Keep it one concise line explaining why the correct option is right; for A1/A2, write this explanation in simple English. Empty strings, whitespace-only strings, or omitted `explanation` fields fail the `quiz_translate_explanations` gate.
+
 **`error-correction` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside an `error-correction` activity's `items:` list MUST use these EXACT inner field names — they are the schema consumed by `scripts/yaml_activities.py: _parse_error_correction` AND the only fields the `vesum_verified` gate treats as containing intentional misspellings:
 
 ```yaml
