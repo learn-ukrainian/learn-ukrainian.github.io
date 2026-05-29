@@ -8287,6 +8287,25 @@ _SCAFFOLDING_STEP_LABEL_RE = re.compile(
 _SCAFFOLDING_SOURCE_MARKER_RE = re.compile(
     r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]"
 )
+# Internal pipeline artifacts that must NEVER be named in learner-facing prose.
+# These are writer-only build objects (the wiki Knowledge Packet, the
+# implementation map, the wiki manifest); a learner is never told a rule "comes
+# from the Knowledge Packet". Build-#6 a1/my-morning tone REVISE (2026-05-29) hung
+# on a single body-prose leak the LLM tone reviewer caught but python_qg did not:
+# "These rules come from the Knowledge Packet's phonetic obligations for this
+# module." (#R-NO-SCAFFOLDING-LEAKS). These phrases have NO legitimate learner-
+# content use at any CEFR level, so the regex is high-precision by design (cf. the
+# step-label note above about avoiding false positives on real prose). VERIFY-
+# comment / fenced-code references — e.g. `<!-- VERIFY: source="Knowledge Packet:
+# ..." -->` — are already excluded upstream by _strip_scaffolding_scan_exclusions,
+# so honest in-comment provenance citations do NOT trip this gate. The inter-word
+# separator is `[\s_-]+` so the snake_case identifier forms these artifacts carry
+# in the codebase (knowledge_packet.md, implementation_map.json, wiki_manifest.json)
+# leak just as the spaced display forms do (gemini-code-assist review, PR #2417).
+_SCAFFOLDING_ARTIFACT_RE = re.compile(
+    r"\b(?:knowledge[\s_-]+packet|implementation[\s_-]+map|wiki[\s_-]+manifest|wiki[\s_-]+coverage[\s_-]+gate)\b",
+    re.IGNORECASE,
+)
 
 
 def _line_preserving_blank(match: re.Match[str]) -> str:
@@ -8320,7 +8339,11 @@ def _scaffolding_leak_gate(text: str) -> dict[str, Any]:
     scan_text = _strip_scaffolding_scan_exclusions(text)
     offending = []
     for line_no, line in enumerate(scan_text.splitlines(), start=1):
-        if _SCAFFOLDING_STEP_LABEL_RE.search(line) or _SCAFFOLDING_SOURCE_MARKER_RE.search(line):
+        if (
+            _SCAFFOLDING_STEP_LABEL_RE.search(line)
+            or _SCAFFOLDING_SOURCE_MARKER_RE.search(line)
+            or _SCAFFOLDING_ARTIFACT_RE.search(line)
+        ):
             offending.append({"line": line_no, "text": line.strip()})
     return {"passed": not offending, "offending": offending}
 
