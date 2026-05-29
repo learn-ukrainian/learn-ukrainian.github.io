@@ -1,4 +1,12 @@
-# Current — multi-agent index (2026-05-29 Pt2 AUTONOMOUS — m20 writer-quality: 3 gate bugs fixed; rebuild #6 in flight; bio epic advanced)
+# Current — multi-agent index (2026-05-29 Pt3 AUTONOMOUS — m20 tone blocker FIXED & merged (#2417); tone-score build blocked by claude-tools runtime hang)
+
+Latest-Brief: docs/session-state/2026-05-29-pt3-tone-leak-gate-fix-shipped-build-runtime-hang.md
+
+> **State (2026-05-29 ~17:40):** Main `fa4abd9c53` (green). **m20 tone REVISE root-caused to ONE body-prose sentence** ("These rules come from the Knowledge Packet's phonetic obligations for this module") — a meta-narration leak `scaffolding_leak` didn't catch; NOT a broad warmth gap (4/5 tone signal already exemplary). **Fixed + merged in PR #2417:** (1) `_scaffolding_leak_gate` + `_SCAFFOLDING_ARTIFACT_RE` (knowledge packet/implementation map/wiki manifest/wiki coverage gate, `[\s_-]+` separator for snake_case identifier forms — gemini-bot catch); (2) `R-CITE-HONEST.md` "name the source in the text" → provenance in `<!-- VERIFY -->` only. **VALIDATED structurally** (build #7): `scaffolding_leak {passed:true}`, 0 body-prose leaks. **BLOCKER: can't yet measure the tone-dim SCORE** — build #7 failed on writer non-determinism (skipped `get_chunk_context`+multimedia search; NOT #2417's fault — those gates are untouched prompt sections), build #8 HUNG 61min bypassing its 30-min writer-timeout (likely claude-tools↔interactive-seat quota contention; sources MCP healthy). **Build #9 in flight DETACHED** (`timeout 2700`, log `/tmp/m20-build9.jsonl`, task `bortezwfo`). **#2418 filed** (retrieval gates have no correction path). **NEXT:** check build #9 → if `module_done`, read tone dim (hypothesis: leak gone → tone ≥8, no exemplar wiring needed); if hangs again → run when interactive seat idle or switch writer. Verify-before-promote = Section-4 ten-check on rendered MDX. DO NOT PROMOTE until tone clears + 10-check; live PR #2364 stays; delete `my-morning-v72-preview.mdx` on promote. Full arc: the Latest-Brief (`...-pt3-...`).
+
+---
+
+# Predecessor — multi-agent index (2026-05-29 Pt2 AUTONOMOUS — m20 writer-quality: 3 gate bugs fixed; rebuild #6 in flight; bio epic advanced)
 
 Latest-Brief: docs/session-state/2026-05-29-pt2-m20-descaffold-validated-3-gate-bugs-bio-epic-advanced.md
 
