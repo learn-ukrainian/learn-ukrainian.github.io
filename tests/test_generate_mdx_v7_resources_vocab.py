@@ -148,3 +148,29 @@ def test_format_resources_for_mdx_strips_pipeline_metadata_from_public_text():
     assert "writer telemetry" not in mdx
     assert "wiki_query_id" not in mdx
     assert "vesum_query_id" not in mdx
+
+
+def test_format_resources_for_mdx_strips_build_speak_notes_from_public_text():
+    resources = [
+        {
+            "title": "Morning routine article",
+            "url": "https://example.com/morning",
+            "notes": (
+                "Plan reference; Used only as grounding for a simple daily plan. "
+                "No Grade 1 blockquote surfaced in module.md. "
+                "chunk_id:abc123 surfaced in module.md"
+            ),
+            "role": "article",
+        },
+    ]
+
+    for is_ukrainian_forced in (False, True):
+        mdx = format_resources_for_mdx(resources, is_ukrainian_forced=is_ukrainian_forced)
+
+        assert "[Morning routine article](https://example.com/morning)" in mdx
+        assert "> - 📄 [Morning routine article](https://example.com/morning)" in mdx
+        assert "Plan reference" not in mdx
+        assert "Used only as grounding" not in mdx
+        assert "No Grade 1 blockquote surfaced" not in mdx
+        assert "surfaced in module.md" not in mdx
+        assert "chunk_id" not in mdx

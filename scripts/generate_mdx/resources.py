@@ -273,6 +273,10 @@ _PIPELINE_METADATA_LINE_RE = re.compile(
 _PIPELINE_METADATA_FRAGMENT_RE = re.compile(
     r"\([^)]*\b(?:packet_)?chunk_id\b[^)]*\)"
     r"|\([^)]*\b(?:wiki|vesum)_query_id\b[^)]*\)"
+    r"|^\s*Plan reference;?\s*"
+    r"|\bUsed\s+(?:only\s+)?as\s+grounding[^.]*\.?"
+    r"|\bNo\s+Grade\s+\d+\s+blockquote\s+surfaced\b[^.]*\.?"
+    r"|\bsurfaced\s+in\s+module\.md\b"
     r"|\bknowledge packet anchor\s+[A-Za-z0-9_-]+\s*:?"
     r"|\b(?:packet_)?chunk_id\s*[:=]\s*[\w./:-]+"
     r"|\b(?:wiki|vesum)_query_id\s*[:=]\s*[\w./:-]+",

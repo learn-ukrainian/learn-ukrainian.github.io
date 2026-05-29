@@ -14,6 +14,7 @@ from pathlib import Path
 import yaml
 
 from .converters import (
+    activity_identity_key,
     convert_bad_form_markers,
     convert_callouts,
     normalize_mdx,
@@ -160,28 +161,33 @@ def _inject_inline_activities(
     body: str,
     yaml_activities: list[Activity] | None,
     is_ukrainian_forced: bool,
-) -> tuple[str, set[str]]:
+) -> tuple[str, set[str], set[int], set[str]]:
     """Replace Tab 1 INJECT_ACTIVITY markers with matching component JSX."""
     if not yaml_activities or "INJECT_ACTIVITY" not in body:
-        return body, set()
+        return body, set(), set(), set()
 
     parser = ActivityParser()
     by_id = {
-        str(getattr(activity, 'id', '')): activity
-        for activity in yaml_activities
+        str(getattr(activity, 'id', '')): (index, activity)
+        for index, activity in enumerate(yaml_activities)
         if getattr(activity, 'id', '')
     }
     injected_ids: set[str] = set()
+    injected_positions: set[int] = set()
+    injected_fingerprints: set[str] = set()
 
     def replace_marker(match: re.Match[str]) -> str:
         activity_id = match.group(1)
-        activity = by_id.get(activity_id)
-        if activity is None:
+        matched = by_id.get(activity_id)
+        if matched is None:
             raise ValueError(f"Unresolved INJECT_ACTIVITY id: {activity_id}")
+        index, activity = matched
         injected_ids.add(activity_id)
+        injected_positions.add(index)
+        injected_fingerprints.add(activity_identity_key(activity))
         return parser._activity_to_mdx(activity, is_ukrainian_forced)
 
-    return _INJECT_ACTIVITY_RE.sub(replace_marker, body), injected_ids
+    return _INJECT_ACTIVITY_RE.sub(replace_marker, body), injected_ids, injected_positions, injected_fingerprints
 
 
 def generate_mdx(
@@ -320,7 +326,12 @@ sidebar:
     # --- TAB 1: Lesson (prose only) ---
     lesson_content = body
     lesson_content = embed_youtube_video_links(lesson_content)
-    lesson_content, injected_activity_ids = _inject_inline_activities(
+    (
+        lesson_content,
+        injected_activity_ids,
+        injected_activity_positions,
+        injected_activity_fingerprints,
+    ) = _inject_inline_activities(
         lesson_content,
         yaml_activities,
         is_ukrainian_forced,
@@ -338,19 +349,21 @@ sidebar:
 
     # --- TAB 3: Activities ---
     tab3_activities = list(yaml_activities or [])
+    no_workbook_msg = (
+        "Немає окремих вправ у робочому зошиті; дивіться вкладку «Урок»."
+        if is_ukrainian_forced
+        else "No workbook activities for this module; see the Lesson tab."
+    )
     if tab3_activities:
         activities_content = yaml_activities_to_jsx(
             tab3_activities,
             is_ukrainian_forced,
             inline_cross_ref_ids=injected_activity_ids,
+            inline_cross_ref_positions=injected_activity_positions,
+            inline_cross_ref_fingerprints=injected_activity_fingerprints,
         )
-    elif yaml_activities and injected_activity_ids:
-        no_workbook_msg = (
-            "Немає окремих вправ у робочому зошиті; дивіться вкладку «Урок»."
-            if is_ukrainian_forced
-            else "No workbook activities for this module; see the Lesson tab."
-        )
-        activities_content = f"*{no_workbook_msg}*"
+        if not activities_content.strip() and injected_activity_ids:
+            activities_content = f"*{no_workbook_msg}*"
     elif activity_plans:
         activities_content = _activity_plans_to_jsx(activity_plans)
     else:
