@@ -18,6 +18,7 @@ main_green: yes
 | #3 (pre-fix) | 3.5 REJECT, all 4 dims rejected | `Крок N:`/`[SN]` scaffolding pasted into prose |
 | #4 (de-scaffold #2412) | 6.8 REVISE, 0 rejected | leak GONE (`scaffolding_leak` gate passes); residual = `_extract_required_items` noise |
 | #5 (de-scaffold + extraction #2415) | FAILED at python_qg | **`scaffolding_leak` PASSES + `register_consistency` PASSES** (both fixes validated!); failed ONLY on 3rd gate bug below |
+| #6 (ALL 3 fixes #2412/#2415/#2416) | **7.6 REVISE, 0 rejected** | python_qg passed in 0.2s (no corrections); artifact CLEAN (0 Крок/[SN], 0 одіватися-in-prose, 0 наприклад-splice). **Dims: pedagogical 8.7 / naturalness 8.3 / decolonization 9.4 / engagement 8.2 / TONE 7.6.** Aggregate = min = tone. **Gap to promote is now TONE alone**, not broad polish. |
 
 **3rd gate bug (PROVEN, fix in flight):** `vesum_verified` false-fails on Cyrillic that appears
 ONLY inside `<!-- VERIFY: ...check_russian_shadow(word='одіватися') -->` annotation comments.
@@ -30,14 +31,18 @@ false-fails. **Fix dispatched:** `vesum-gate-strip-comments-2026-05-29` (codex, 
 add `_strip_comments(text)` AFTER `_AVOID_MARKER_RE` in `_strip_metalinguistic` + tests. Ordering is
 critical (comments-first would expose bad-marker inner text).
 
-**NEXT (resume here):** All 3 gate fixes MERGED (#2412/#2415/#2416). **Rebuild #6 is IN FLIGHT**
-(Monitor `bb4xlus0a`, build worktree `.worktrees/builds/a1-my-morning-20260529-1219*`). On
-`module_done`: **verify-before-promote on FRESH context** (#M-11: read the artifact, not just the
-score — that's how all 3 bugs were caught; do it with clean judgment, not a bloated session). Read
-`llm_qg.json` per-dim + grep module.md for `Крок/[SN]` + `одіватися`-in-prose + register shifts.
-Expect a clean completion + the first real llm_qg score with all fixes. If still <bar (≈8), the last
-lever is **#2389 part 3: wire the 9.5/10 exemplar** into the generator `<example>` slot
-(linear-write.generated.md) via the wiki/RAG composition boundary (NOT a registry rule).
+**NEXT (resume here):** All 3 gate fixes MERGED (#2412/#2415/#2416). **Build #6 DONE = 7.6 REVISE,
+0 rejected, artifact verified clean** (forensics `.worktrees/builds/a1-my-morning-20260529-121952/curriculum/l2-uk-en/a1/my-morning/`).
+**The gap to promote is TONE (7.6) alone** — pedagogical/naturalness/decolonization/engagement are
+8.2–9.4. So the single remaining lever is **#2389 part 3: wire the 9.5/10 exemplar** (source
+`.worktrees/builds/a1-my-morning-20260527-185032` Pt-10 baseline) into the generator `<example>` slot
+(linear-write.generated.md) via the wiki/RAG composition boundary (NOT a registry rule — it's
+lesson-specific substance). The exemplar's warm consistent teacher voice directly targets the tone
+dim. After wiring: rebuild → verify-before-promote ON FRESH CONTEXT (#M-11; read the tone dim
+evidence `llm-qg-tone-response.raw.md` to confirm what it flags). **DO NOT PROMOTE until tone clears
+the bar** (~8 / no-REVISE). Live PR #2364 stays; delete `my-morning-v72-preview.mdx` on promote.
+Optional micro-fix surfaced: `_extract_required_items` salvages only the FIRST infinitive from an
+"X або Y" un-comma'd token (одружуватися dropped from step-3) — negligible for A1, note only.
 **DO NOT PROMOTE until verify clears.** Live PR #2364 (pre-V7.2) stays; delete
 `starlight/src/content/docs/a1/my-morning-v72-preview.mdx` on promote.
 
