@@ -1,4 +1,12 @@
-# Current — multi-agent index (2026-05-29 Pt4 AUTONOMOUS — m20 RENDERED-MDX quality multi-fix; bio resumed; STOP claude-tools/USE roster)
+# Current — multi-agent index (2026-05-29 Pt5 AUTONOMOUS — deepseek review = m20 quality bar; 6 fixes shipped; assembler-injection B2/B3 remain; bio UGCC dossiers)
+
+Latest-Brief: docs/session-state/2026-05-29-pt5-deepseek-review-bar-6-fixes-bio-dossiers.md
+
+> **State (2026-05-29 ~21:35):** Main `2ccc5cb9c0`+ (green). **deepseek's independent review is the authoritative m20 bar — NOT shippable** (`batch_state/tasks/review-m20-codex-build-retry-2026-05-29.result`, 11 tool-backed findings). **6 m20 fixes shipped:** #2417 (artifact-leak gate), #2420 (`<!-- bad -->`→`<del>` render), #2421 (`quiz_translate_explanations` gate), wiki одіватися `52c9deb8a8`, completeness regression `9180c12f95`, wiki зарядка→руханка `2ccc5cb9c0` (Russianism per ЕСУМ/r2u). **KEY REMAINING BLOCKER (B2/B3): MDX assembler injects impl_map text** (`Крок 5` + meta-paragraph in MDX, NOT module.md) — invisible to module.md gates; trace + add rendered-MDX gate. **In flight:** m20 rebuild (`b5yiiklwm`, codex-tools `--use-generator`) → render+verify all deepseek findings on FRESH artifact; bio **#2422** (3 UGCC dossiers, §7-validator-clean) merging. Filed #2418/#2419. **Deliver m20 ONLY when rendered-clean.** Routing: qwen EXCLUDED; claude-tools AVOID (user seat); `--writer codex-tools --use-generator` canonical. Full arc: Latest-Brief (`...-pt5-...`).
+
+---
+
+# Predecessor — multi-agent index (2026-05-29 Pt4 AUTONOMOUS — m20 RENDERED-MDX quality multi-fix; bio resumed; STOP claude-tools/USE roster)
 
 Latest-Brief: docs/session-state/2026-05-29-pt4-m20-quality-multi-fix-bio-resumed.md
 
