@@ -1180,25 +1180,93 @@ def _normalize_required_claim(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+_REQUIRED_VOCAB_STOPWORDS = {
+    "а",
+    "або",
+    "але",
+    "він",
+    "вона",
+    "вони",
+    "воно",
+    "ви",
+    "і",
+    "й",
+    "ми",
+    "напр",
+    "наприклад",
+    "сь",
+    "ся",
+    "та",
+    "ти",
+    "тобто",
+    "тощо",
+    "чи",
+    "я",
+    "зокрема",
+    "-сь",
+    "-ся",
+}
+
+_REQUIRED_VOCAB_SURROUNDING = " \t\r\n,;:.\"'`*_«»"
+
+
+def _clean_required_vocab_candidate(token: str) -> str:
+    return re.sub(r"\s+", " ", token.strip(_REQUIRED_VOCAB_SURROUNDING)).strip()
+
+
+def _is_required_vocab_noise(token: str) -> bool:
+    normalized = token.casefold().strip(_REQUIRED_VOCAB_SURROUNDING)
+    return (
+        not normalized
+        or normalized in _REQUIRED_VOCAB_STOPWORDS
+        or len(normalized) == 1
+        or not re.search(r"[А-Яа-яІіЇїЄєҐґ]", normalized)
+    )
+
+
+def _required_vocab_items_from_parenthetical_token(token: str) -> list[str]:
+    token = _clean_required_vocab_candidate(token)
+    if _is_required_vocab_noise(token):
+        return []
+
+    words = token.split()
+    if len(words) > 2:
+        first_word = _clean_required_vocab_candidate(words[0])
+        # Some source claims write an infinitive lemma with a short descriptive
+        # complement. Keep only the lemma; drop the descriptive phrase itself.
+        if (
+            "«" not in token
+            and "»" not in token
+            and "—" not in token
+            and "-" not in token
+            and re.search(r"(?:ти|тися|тись)$", first_word.casefold())
+            and not _is_required_vocab_noise(first_word)
+        ):
+            return [first_word]
+        return []
+
+    return [token]
+
+
 def _extract_required_items(claim_text: str) -> dict[str, list[str]]:
     """Extract item-level requirements (vocabulary, examples) from a claim."""
     vocabulary: list[str] = []
-    # Vocabulary: find Ukrainian words inside parentheses.
+    # Vocabulary: find plausible Ukrainian lemmas inside parentheses.
     for match in re.findall(r"\(([^()]+)\)", claim_text):
         for token in match.split(","):
-            token = token.strip().strip(" \t\r\n,;:.\"\'")
-            if token and re.search(r"[А-Яа-яІіЇїЄєҐґ]", token):
-                vocabulary.append(token)
+            vocabulary.extend(_required_vocab_items_from_parenthetical_token(token))
 
     examples: list[str] = []
 
     def _add_item(val: str):
-        val = val.strip()
+        val = _clean_required_vocab_candidate(val)
         if not val or not re.search(r"[А-Яа-яІіЇїЄєҐґ]", val):
             return
         # If it's a single word, it might be vocabulary.
         if len(val.split()) > 1:
             examples.append(val)
+        elif _is_required_vocab_noise(val):
+            return
         else:
             vocabulary.append(val)
 
