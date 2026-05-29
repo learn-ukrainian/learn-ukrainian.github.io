@@ -113,10 +113,13 @@ def test_m20_my_morning_wiki_passes_completeness_gate() -> None:
     assert report["verdict"] == "PASS"
     assert report["checks"]["vocabulary_minimum"]["actual"] == 21
     assert report["checks"]["l2_errors"]["actual"] == 6
-    # 2 genuine Russianism pairs (завтрак, полотенце); одіватися removed as a
-    # heritage-mislabel (Грінченко 1907 + СУМ-20, search_heritage Russianism=False) —
-    # wiki fix 52c9deb8a8. Gate still PASS (l2_errors=6 covers the distractor floor).
-    assert report["checks"]["decolonization_pairs"]["actual"] == 2
+    # 1 genuine Russianism pair (завтрак). полотенце removed (2026-05-29): it is
+    # authentic Ukrainian (dim. of полотно — Грінченко 1907, Голоскевич 1929, СУМ-20;
+    # VESUM; check_russian_shadow=False) AND not A1 lexis, so flagging it was a
+    # heritage-mislabel + level over-reach. одіватися removed earlier (52c9deb8a8) for
+    # the same heritage reason. Gate still PASS (a1 minimum=1; l2_errors=6 covers the
+    # distractor floor).
+    assert report["checks"]["decolonization_pairs"]["actual"] == 1
     assert report["checks"]["textbook_exercises"]["actual"] == 5
     assert report["checks"]["chunk_citations_spot_check"]["detail"] == "3/3 verify_quote returned PASS"
 
