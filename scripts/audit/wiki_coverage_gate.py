@@ -369,7 +369,10 @@ def check_wiki_coverage(
             obligation,
             seeded_index.get(obligation_id),
         )
+        seeded_entry = seeded_index.get(obligation_id)
         claim = map_entries.get(obligation_id)
+        if claim is None:
+            claim = _claim_from_seeded_entry(seeded_entry)
         if not claim:
             obligation_results.append(_result(obligation, "FAIL", "implementation_map_missing", evidence_text=""))
             continue
@@ -391,6 +394,8 @@ def check_wiki_coverage(
 
         status, reason = _check_obligation_text(obligation, target_text, artifact)
         obligation_results.append(_result(obligation, status, reason, claim, evidence_text=target_text))
+
+    _apply_l2_error_goodhart_sentinel(obligations, obligation_results)
 
     covered = sum(1 for item in obligation_results if item["status"] == "PASS")
     total = len(obligation_results)
@@ -439,6 +444,25 @@ def _enrich_obligation_from_seeded_map(
     if subtype in {"substance_required", "absence_required"}:
         enriched["subtype"] = subtype
     return enriched
+
+
+def _claim_from_seeded_entry(seeded_entry: Mapping[str, Any] | None) -> dict[str, str] | None:
+    if not seeded_entry:
+        return None
+    artifact = str(seeded_entry.get("artifact") or "").strip()
+    location = str(
+        seeded_entry.get("location")
+        or seeded_entry.get("location_hint")
+        or ""
+    ).strip()
+    if not artifact or not location:
+        return None
+    return {
+        "obligation_id": str(seeded_entry.get("obligation_id") or ""),
+        "artifact": artifact,
+        "location": location,
+        "treatment": str(seeded_entry.get("obligation_type") or ""),
+    }
 
 
 def check_wiki_coverage_paths(
@@ -761,6 +785,16 @@ def _activity_text(activities: list[dict[str, Any]], location: str) -> str:
         return "\n".join(s for activity in activities for s in _flatten_strings(activity))
 
     for activity in activities:
+        activity_type = str(activity.get("type") or "")
+        if activity_type and activity_type.casefold().strip() == location_cf:
+            return "\n".join(
+                s
+                for candidate in activities
+                if str(candidate.get("type") or "").casefold().strip() == location_cf
+                for s in _flatten_strings(candidate)
+            )
+
+    for activity in activities:
         activity_id = str(activity.get("id") or "")
         if activity_id and activity_id in location:
             return "\n".join(_flatten_strings(activity))
@@ -987,6 +1021,37 @@ def _check_obligation_text(obligation: Mapping[str, Any], target_text: str, arti
         return "PASS", "absence_obligation_assumed_satisfied"
 
     return "FAIL", "unknown_obligation_type"
+
+
+def _apply_l2_error_goodhart_sentinel(
+    obligations: Sequence[Mapping[str, Any]],
+    obligation_results: list[dict[str, Any]],
+) -> None:
+    obligations_by_id = {str(item.get("id") or ""): item for item in obligations}
+    seen: dict[tuple[str, str, str, str], list[dict[str, Any]]] = {}
+    for result in obligation_results:
+        if result.get("status") != "PASS" or result.get("type") != "l2_error":
+            continue
+        obligation_id = str(result.get("obligation_id") or "")
+        obligation = obligations_by_id.get(obligation_id)
+        if not obligation or str(obligation.get("treatment") or "") != "contrast_pair":
+            continue
+        claim = _claim(result)
+        artifact = str(claim.get("artifact") or "")
+        location = str(claim.get("location") or "")
+        incorrect = _normalize(str(obligation.get("incorrect") or ""))
+        correct = _normalize(str(obligation.get("correct") or ""))
+        if not artifact or not location or not incorrect or not correct:
+            continue
+        key = (artifact, _normalize(location), incorrect, correct)
+        seen.setdefault(key, []).append(result)
+
+    for duplicates in seen.values():
+        if len(duplicates) < 2:
+            continue
+        for result in duplicates:
+            result["status"] = "FAIL"
+            result["reason"] = "duplicate_l2_error_contrast_claim"
 
 
 def _result(

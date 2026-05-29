@@ -1,0 +1,21 @@
+- type: error-correction
+  instruction: Fix the common error.
+  items:
+  - sentence: Виправ рядок.
+    error: Я прокидаєшся. / Він прокидаюся.
+    correction: Я прокидаюся. / Він прокидається.
+  - sentence: Виправ вимову.
+    error: 'Вимова: [прокидайешся]'
+    correction: 'Вимова: [прокидайес'':а]'
+  - sentence: Виправ вимову.
+    error: 'Вимова: [одягайет''с''а]'
+    correction: 'Вимова: [одягайец'':а]'
+  - sentence: Виправ рядок.
+    error: Я мию себе.
+    correction: Я миюся. / Я вмиваюся.
+  - sentence: Виправ рядок.
+    error: Я дивюся. / Я дивюсь.
+    correction: Я дивлюся.
+  - sentence: Виправ рядок.
+    error: Я користуювася.
+    correction: Я користуюся.

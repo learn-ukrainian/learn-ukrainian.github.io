@@ -5437,7 +5437,8 @@ def _apply_wiki_coverage_fixes(
 ) -> int:
     artifact_path = module_dir / artifact
     original = _read_required(artifact_path)
-    accepted_fixes, rejected_fixes = _validate_reviewer_fix_shapes(fixes)
+    normalized_fixes = _normalize_wiki_coverage_yaml_fixes(artifact, fixes)
+    accepted_fixes, rejected_fixes = _validate_reviewer_fix_shapes(normalized_fixes)
     _emit_reviewer_fix_oversize_rejections(
         rejected_fixes,
         gate="wiki_coverage_gate",
@@ -5499,6 +5500,24 @@ def _count_applicable_reviewer_fixes(text: str, fixes: Sequence[Mapping[str, str
             updated = updated.replace(find, str(fix.get("replace") or ""), 1)
             count += 1
     return count
+
+
+def _normalize_wiki_coverage_yaml_fixes(
+    artifact: str,
+    fixes: Sequence[Mapping[str, str]],
+) -> list[dict[str, str]]:
+    if artifact not in CORRECTION_YAML_ARTIFACT_REQUIRED_FIELDS:
+        return [dict(fix) for fix in fixes]
+    normalized: list[dict[str, str]] = []
+    for fix in fixes:
+        item = {str(key): str(value) for key, value in fix.items()}
+        if "insert_after" in item and "text" in item:
+            anchor = item["insert_after"]
+            insert_text = item["text"]
+            if insert_text and not insert_text.startswith("\n") and not anchor.endswith("\n"):
+                item["text"] = "\n" + insert_text
+        normalized.append(item)
+    return normalized
 
 
 def _reviewer_fix_body(fix: Mapping[str, str]) -> tuple[str, str] | None:

@@ -196,7 +196,7 @@ def test_back_compat_without_seeded_map_emits_degraded_fix_proposals_on_failure(
     assert "no seeded sidecar" in proposal["surgical_diff_hint"]
 
 
-def test_implementation_map_missing_uses_seeded_artifact_and_location_hint() -> None:
+def test_missing_writer_claim_uses_seeded_artifact_and_location_hint() -> None:
     manifest = _sequence_manifest(heading="Morning proof")
 
     report = check_wiki_coverage(
@@ -208,9 +208,13 @@ def test_implementation_map_missing_uses_seeded_artifact_and_location_hint() -> 
     )
 
     proposal = _single_proposal(report)
-    assert proposal["current_artifact_state"] == "MISSING (no <implementation_map> entry from writer)"
-    assert "artifact=module.md" in proposal["surgical_diff_hint"]
-    assert "location=§Morning proof" in proposal["surgical_diff_hint"]
+    assert proposal["failure_reason"] == "claimed_location_missing"
+    assert "writer_claim={'obligation_id': 'step-1', 'artifact': 'module.md'" in proposal[
+        "current_artifact_state"
+    ]
+    assert "Location '§Morning proof' returns empty text in module.md" in proposal[
+        "surgical_diff_hint"
+    ]
     assert proposal["expected_treatment"]
     assert proposal["manifest_payload"]["id"] == "step-1"
 
@@ -550,7 +554,9 @@ def test_paths_auto_loads_seeded_sidecar(tmp_path: Path) -> None:
     )
 
     proposal = _single_proposal(report)
-    assert "location=§Morning proof" in proposal["surgical_diff_hint"]
+    assert "Location '§Morning proof' returns empty text in module.md" in proposal[
+        "surgical_diff_hint"
+    ]
     assert "no seeded sidecar" not in proposal["surgical_diff_hint"]
 
 
@@ -595,7 +601,7 @@ def test_paths_accepts_wiki_markdown_manifest_path(tmp_path: Path) -> None:
     assert len(report["fix_proposals"]) == 18
 
 
-def test_m20_real_world_manifest_synthesizes_ten_fix_proposals() -> None:
+def test_m20_real_world_manifest_synthesizes_seeded_substance_fix_proposals() -> None:
     manifest = extract_manifest(PROJECT_ROOT / "wiki/pedagogy/a1/my-morning.md")
     seeded_map = seed_implementation_map(manifest)
     obligations = validate_obligations(manifest)
@@ -645,7 +651,7 @@ def test_m20_real_world_manifest_synthesizes_ten_fix_proposals() -> None:
         seeded_map=seeded_map,
     )
 
-    assert len(report["fix_proposals"]) == 10
+    assert len(report["fix_proposals"]) == 5
     for proposal in report["fix_proposals"]:
         assert set(proposal) == PROPOSAL_KEYS
         for key in PROPOSAL_KEYS - {"manifest_payload"}:

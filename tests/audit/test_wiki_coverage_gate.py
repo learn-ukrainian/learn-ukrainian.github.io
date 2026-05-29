@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,7 @@ from scripts.audit.wiki_coverage_gate import (
 from scripts.build.phases.implementation_map import seed_implementation_map
 
 FIXTURES_DIR = Path(__file__).with_name("fixtures")
+M20_ERR_SEAM_FIXTURES_DIR = FIXTURES_DIR / "m20-wiki-coverage-err-seam"
 
 BAN_1_RULE = (
     "При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено "
@@ -852,6 +854,135 @@ def test_l2_error_widens_for_any_workbook_aggregate_activity_type() -> None:
         f"activity text and the contrast pair is present; got "
         f"reason={err_result['reason']!r}"
     )
+
+
+def test_m20_err_obligations_resolve_from_forensic_seeded_map_and_activity_type() -> None:
+    manifest = json.loads(
+        (M20_ERR_SEAM_FIXTURES_DIR / "wiki_manifest.json").read_text(encoding="utf-8")
+    )
+    seeded_map = json.loads(
+        (M20_ERR_SEAM_FIXTURES_DIR / "implementation_map.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    writer_output = (M20_ERR_SEAM_FIXTURES_DIR / "writer_output.raw.md").read_text(
+        encoding="utf-8"
+    )
+    activities_yaml = (M20_ERR_SEAM_FIXTURES_DIR / "activities.yaml").read_text(
+        encoding="utf-8"
+    )
+
+    parsed_claims = parse_implementation_map(writer_output)
+    assert "err-1" not in parsed_claims
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=writer_output,
+        module_md="# Мій ранок\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seeded_map,
+    )
+
+    err_results = {
+        item["obligation_id"]: item
+        for item in report["obligations"]
+        if str(item["obligation_id"]).startswith("err-")
+    }
+    assert set(err_results) == {f"err-{index}" for index in range(1, 7)}
+    assert all(item["status"] == "PASS" for item in err_results.values())
+    assert {
+        item["reason"] for item in err_results.values()
+    } == {"contrast_pair_present"}
+    assert "implementation_map_missing" not in {
+        item["reason"] for item in err_results.values()
+    }
+
+
+def test_seeded_fallback_still_fails_when_activity_lacks_substance() -> None:
+    manifest = json.loads(
+        (M20_ERR_SEAM_FIXTURES_DIR / "wiki_manifest.json").read_text(encoding="utf-8")
+    )
+    seeded_map = json.loads(
+        (M20_ERR_SEAM_FIXTURES_DIR / "implementation_map.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    activities_yaml = (M20_ERR_SEAM_FIXTURES_DIR / "activities.yaml").read_text(
+        encoding="utf-8"
+    ).replace("    correction: Я користуюся.", '    correction: ""')
+
+    report = check_wiki_coverage(
+        manifest={**manifest, "l2_errors": [manifest["l2_errors"][-1]]},
+        implementation_map="",
+        module_md="# Мій ранок\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seeded_map,
+    )
+
+    err_result = report["obligations"][0]
+    assert err_result["obligation_id"] == "err-6"
+    assert err_result["status"] == "FAIL"
+    assert err_result["reason"] == "missing_correct"
+    assert err_result["claim"]["artifact"] == "activities.yaml"
+    assert err_result["claim"]["location"] == "activities.yaml"
+
+
+def test_goodhart_sentinel_rejects_duplicate_err_claim_for_same_contrast() -> None:
+    manifest = _phonetic_l2_error_manifest()
+    duplicate = dict(manifest["l2_errors"][0])
+    duplicate["id"] = "err-duplicate"
+    manifest["l2_errors"].append(duplicate)
+    activities_yaml = (
+        "- type: error-correction\n"
+        "  title: One contrast only\n"
+        "  items:\n"
+        "    - sentence: 'Вимова: [прокидайешся]'\n"
+        "      error: 'Вимова: [прокидайешся]'\n"
+        "      correction: \"Вимова: [прокидайес':а]\"\n"
+        "      explanation: assimilation rule.\n"
+    )
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map={
+            "err-2": {
+                "artifact": "activities.yaml",
+                "location": "activities.yaml",
+                "treatment": "contrast_pair",
+            },
+            "err-duplicate": {
+                "artifact": "activities.yaml",
+                "location": "activities.yaml",
+                "treatment": "contrast_pair",
+            },
+        },
+        module_md="# Module body unrelated to err-2.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    reasons = {item["obligation_id"]: item["reason"] for item in report["obligations"]}
+    assert report["passed"] is False
+    assert reasons == {
+        "err-2": "duplicate_l2_error_contrast_claim",
+        "err-duplicate": "duplicate_l2_error_contrast_claim",
+    }
+
+
+def test_l2_error_seed_includes_activity_stub_without_filled_sentence() -> None:
+    seeded = seed_implementation_map(_phonetic_l2_error_manifest())
+    err_entry = next(item for item in seeded["entries"] if item["obligation_id"] == "err-2")
+
+    assert err_entry["artifact"] == "activities.yaml"
+    assert err_entry["location_hint"] == "activities.yaml"
+    stub = err_entry["treatment_template"]["activity_stub"]
+    assert stub["obligation_id"] == "err-2"
+    assert stub["type"] == "error-correction"
+    assert stub["location_hint"] == "activities.yaml"
+    assert stub["manifest"]["incorrect"] == "Вимова: [прокидайешся]"
+    assert stub["manifest"]["correct"] == "Вимова: [прокидайес':а]"
+    assert stub["sentence"] == ""
+    assert stub["items"] == []
 
 
 def test_l2_error_still_fails_when_workbook_activity_lacks_substance() -> None:

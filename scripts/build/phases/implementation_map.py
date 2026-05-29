@@ -301,6 +301,19 @@ def _treatment_template(
         if isinstance(value, str) and value.startswith("<from manifest_payload.") and value.endswith(">"):
             payload_key = value.removeprefix("<from manifest_payload.").removesuffix(">")
             template[key] = manifest_payload.get(payload_key)
+    if obligation_type == "l2_error" and manifest_payload.get("treatment") == "contrast_pair":
+        template["activity_stub"] = {
+            "obligation_id": str(manifest_payload.get("id") or ""),
+            "type": "error-correction",
+            "location_hint": "activities.yaml",
+            "manifest": {
+                "incorrect": manifest_payload.get("incorrect"),
+                "correct": manifest_payload.get("correct"),
+                "why": manifest_payload.get("why"),
+            },
+            "sentence": "",
+            "items": [],
+        }
     return template
 
 
@@ -427,6 +440,17 @@ def render_for_writer_prompt(payload: dict[str, Any]) -> str:
             rows.append(f"  subtype: {entry['subtype']}")
         rows.append("  treatment_template:")
         for key, value in sorted(entry["treatment_template"].items()):
+            # The activity_stub duplicates fields already shown to the writer in this
+            # row and the Obligation Checklist: `manifest` (incorrect/correct/why) is in
+            # expected_error_value/expected_correction_value + the checklist;
+            # `obligation_id` is the row header; `location_hint` is the row's own field.
+            # Rendering them again only bloats the prompt past the size ceiling for no
+            # information gain — emit just the fill-signal (type + empty sentence/items
+            # placeholders). The seeded sidecar keeps the full stub intact for the gate
+            # fallback. See PR #2404 size-regression fix.
+            if key == "activity_stub" and isinstance(value, Mapping):
+                _stub_drop = {"manifest", "obligation_id", "location_hint"}
+                value = {k: v for k, v in value.items() if k not in _stub_drop}
             rows.append(f"    {key}: {_render_template_value(value)}")
     body = "\n".join(rows)
     header = (
