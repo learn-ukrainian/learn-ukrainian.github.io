@@ -14,6 +14,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from generate_mdx import (
@@ -148,7 +150,7 @@ class TestParseFrontmatter:
         assert body.strip() == "Body"
 
 
-def test_v7_tab3_inline_and_aggregate_keeps_inline_activities_with_cross_refs(tmp_path):
+def test_v7_tab3_omits_inline_activities_and_keeps_workbook_only(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
         """
@@ -211,13 +213,134 @@ Practice there.
     assert "act-1 inline greeting" in lesson_tab
     assert "act-2 inline thanks" in lesson_tab
 
-    for activity_id in ("act-1", "act-2", "act-3", "act-4"):
-        assert activity_id in tab3
-
-    assert "### act-1 inline greeting\n\n*(see lesson)*" in tab3
-    assert "### act-2 inline thanks\n\n*(see lesson)*" in tab3
+    assert "act-1 inline greeting" not in tab3
+    assert "act-2 inline thanks" not in tab3
     assert "### act-3 workbook yes\n\n<Quiz" in tab3
     assert "### act-4 workbook no\n\n<Quiz" in tab3
+    assert "*(see lesson)*" not in tab3
+    assert tab3.count("<Quiz") == 2
+
+
+def test_v7_tab3_omits_missing_id_duplicate_of_inline_activity(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: fill-in
+  title: Inline fill duplicate
+  items:
+    - sentence: Я ___ о сьомій.
+      answer: прокидаюся
+      options: [прокидаюся, снідаю]
+- type: fill-in
+  title: Inline fill duplicate
+  items:
+    - sentence: Я ___ о сьомій.
+      answer: прокидаюся
+      options: [прокидаюся, снідаю]
+- id: act-2
+  type: quiz
+  title: Workbook-only quiz
+  items:
+    - question: Choose breakfast.
+      options: [сніданок, ранок]
+      answer: сніданок
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: Missing ID Duplicate
+subtitle: Test
+---
+# Missing ID Duplicate
+
+Practice here.
+
+<!-- INJECT_ACTIVITY: act-1 -->
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
+    lesson_tab = mdx.split('<TabItem label="Vocabulary">')[0]
+    tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
+
+    assert "Inline fill duplicate" in lesson_tab
+    assert "<FillIn" in lesson_tab
+    assert "Inline fill duplicate" not in tab3
+    assert "<FillIn" not in tab3
+    assert "Workbook-only quiz" in tab3
+    assert "<Quiz" in tab3
+
+
+def test_v7_tab3_all_inline_activities_renders_workbook_empty_state(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: quiz
+  title: Inline one
+  items:
+    - question: Choose hello.
+      options: [привіт, дякую]
+      answer: привіт
+- id: act-2
+  type: quiz
+  title: Inline two
+  items:
+    - question: Choose thanks.
+      options: [привіт, дякую]
+      answer: дякую
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: All Inline
+subtitle: Test
+---
+# All Inline
+
+<!-- INJECT_ACTIVITY: act-1 -->
+
+<!-- INJECT_ACTIVITY: act-2 -->
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
+    tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
+
+    assert "No workbook activities for this module; see the Lesson tab." in tab3
+    assert "Inline one" not in tab3
+    assert "Inline two" not in tab3
+    assert "<Quiz" not in tab3
+    assert "*(see lesson)*" not in tab3
+
+
+def test_v7_inline_activity_missing_id_reference_fails_loudly(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: quiz
+  title: Existing activity
+  items:
+    - question: Choose hello.
+      options: [привіт, дякую]
+      answer: привіт
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: Broken Marker
+subtitle: Test
+---
+# Broken Marker
+
+<!-- INJECT_ACTIVITY: act-404 -->
+"""
+
+    with pytest.raises(ValueError, match="Unresolved INJECT_ACTIVITY id: act-404"):
+        generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
 
 
 # =============================================================================

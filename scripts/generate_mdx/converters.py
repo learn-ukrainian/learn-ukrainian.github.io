@@ -10,7 +10,9 @@ from __future__ import annotations
 import json
 import re
 import sys
+from dataclasses import asdict, is_dataclass
 from pathlib import Path
+from typing import Any
 
 from .dataclasses_ import (
     ComparativeStudyData,
@@ -28,25 +30,63 @@ from manifest_utils import get_module_by_slug
 from yaml_activities import Activity, ActivityParser
 
 
+def _activity_id(activity: Activity) -> str:
+    if isinstance(activity, dict):
+        return str(activity.get('id', '') or '').strip()
+    return str(getattr(activity, 'id', '') or '').strip()
+
+
+def activity_identity_key(activity: Activity) -> str:
+    """Return a stable activity key that ignores optional renderer IDs."""
+    if is_dataclass(activity):
+        payload: Any = asdict(activity)
+    elif isinstance(activity, dict):
+        payload = dict(activity)
+    elif hasattr(activity, '__dict__'):
+        payload = dict(vars(activity))
+    else:
+        payload = repr(activity)
+
+    if isinstance(payload, dict):
+        payload.pop('id', None)
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
+
+
 def yaml_activities_to_jsx(
     activities: list[Activity],
     is_ukrainian_forced: bool = False,
     inline_cross_ref_ids: set[str] | None = None,
+    inline_cross_ref_positions: set[int] | None = None,
+    inline_cross_ref_fingerprints: set[str] | None = None,
 ) -> str:
-    """Convert YAML activities to JSX components using the shared ActivityParser."""
+    """Convert YAML activities to JSX components using the shared ActivityParser.
+
+    Activities already injected into the Lesson tab are omitted from the
+    workbook tab. Matching uses ID first, plus the matched list position and a
+    structural fingerprint so idless duplicates do not render in full.
+    """
     parser = ActivityParser()
-    if not inline_cross_ref_ids:
+    inline_ids = {
+        str(activity_id).strip()
+        for activity_id in (inline_cross_ref_ids or set())
+        if str(activity_id).strip()
+    }
+    inline_positions = set(inline_cross_ref_positions or set())
+    inline_fingerprints = set(inline_cross_ref_fingerprints or set())
+    if not (inline_ids or inline_positions or inline_fingerprints):
         return parser.to_mdx(activities, is_ukrainian_forced)
 
     mdx_parts = []
-    cross_ref = "_(дивіться урок)_\n\n" if is_ukrainian_forced else "_(see lesson)_\n\n"
-    for activity in activities:
+    for index, activity in enumerate(activities):
+        if (
+            index in inline_positions
+            or _activity_id(activity) in inline_ids
+            or activity_identity_key(activity) in inline_fingerprints
+        ):
+            continue
         mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
         if not mdx:
             continue
-        activity_id = str(getattr(activity, 'id', ''))
-        if activity_id in inline_cross_ref_ids:
-            mdx = re.sub(r'^(### .+?\n\n)', rf'\1{cross_ref}', mdx, count=1)
         mdx_parts.append(mdx)
     return '\n\n'.join(mdx_parts)
 
