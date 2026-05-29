@@ -41,6 +41,25 @@ caught it.) So #2396 reviewer-calibration is NOT the issue here.
 - Build #3 forensics (#M-10): `.worktrees/builds/a1-my-morning-20260529-084958/curriculum/l2-uk-en/a1/my-morning/`
   (module.md, my-morning.mdx, llm_qg.json + per-dim `llm-qg-*-response.raw.md`). Build #2 (7.0) at `...-082030`.
 
+## Q&A — user questions at session close (answer in next session)
+- **"Can I read the new m20 locally? I see old content."** The live site (`:4321`, dev server
+  running) serves the PROMOTED `starlight/src/content/docs/a1/my-morning.mdx` = **PR #2364**
+  (2026-05-27, pre-V7.2). New builds were NOT promoted (3.5/7.0, below bar + scaffolding leaks) →
+  that's why it's unchanged. **A preview was staged** (untracked temp): `my-morning-v72-preview.mdx`
+  → http://localhost:4321/a1/my-morning-v72-preview/ shows build #3 output (leaks visible). It is the
+  **flawed 3.5 version** for inspection only. **DELETE on promote:**
+  `rm starlight/src/content/docs/a1/my-morning-v72-preview.mdx`. No starlight rebuild needed for dev
+  (Astro hot-reloads content MDX); `draft: true` keeps it out of any prod build.
+- **"v7 or v7.2?"** The PIPELINE is **V7** (`scripts/build/v7_build.py` → `linear_pipeline.py`) — the
+  only live pipeline. **V7.2** is the current work-LEG on V7: the deterministic wiki-driven prompt
+  generator (the `--use-generator` path, `prompt_generator.py` + universal-rules registry, issues
+  #2383-#2390). Same pipeline; V7.2 = the generator composition layer. (V7.1 was an earlier increment.)
+  Build WITHOUT `--use-generator` = legacy V7 templates; WITH = V7.2 generator.
+- **"Progress both bio-epic AND v7 pipeline next session?"** YES — independent tracks, drive in
+  parallel: pipeline via #2389 (exemplar + de-scaffold); bio via dispatches (#2400 fix, R5 agy-3,
+  next epic blocks). Claude has headroom (user-confirmed); codex = writer; avoid gemini for
+  fabrication-risky factual work.
+
 ## m20 pipeline fixes shipped this session (4 — first-anchor latent-bug sweep)
 1. **#2404** (merged `475030d389`) — wiki_coverage seeded-claim fallback for err-obligations (cursor's catch: gate ignored pre-seeded sidecar) + Goodhart sentinel + correction-YAML validity + de-dup'd err-stub prompt render (under 135KB ceiling).
 2. **#2407** (merged `00dd5f18de`) — codex 0.135.0 namespace-join (`mcp__sources` no trailing `__` → `mcp__sourcesget_*` → false `mcp_tools_never_invoked` on EVERY codex build). 3rd capture artifact; autopsy at `docs/bug-autopsies/codex-tool-capture.md`.
