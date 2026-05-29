@@ -16,6 +16,7 @@ from common.thresholds import (
     DimensionFloor,
     LevelThresholds,
     aggregate_review,
+    terminal_dims_for,
 )
 
 EXPECTED_PASS_FLOORS = {
@@ -147,6 +148,32 @@ def test_aggregate_review_rejects_when_any_dim_below_reject_floor() -> None:
     assert verdict.rejected_dims == ("decolonization",)
     assert verdict.min_score == 5.9
     assert verdict.min_dim == "decolonization"
+
+
+def test_aggregate_review_core_profile_keeps_full_reject_terminal_pass() -> None:
+    verdict = aggregate_review(
+        {
+            "pedagogical": 10.0,
+            "naturalness": 10.0,
+            "decolonization": 5.9,
+            "engagement": 10.0,
+            "tone": 10.0,
+        },
+        "A1",
+        profile="core",
+    )
+
+    assert verdict.verdict == "REJECT"
+    assert verdict.terminal_verdict == "PASS"
+    assert verdict.failing_dims == ("decolonization",)
+    assert verdict.rejected_dims == ("decolonization",)
+    assert verdict.warning_dims == ("decolonization",)
+
+
+def test_terminal_dims_for_defaults_to_strict_terminal_set() -> None:
+    assert terminal_dims_for("core") == frozenset()
+    assert terminal_dims_for("seminar") == frozenset({"decolonization"})
+    assert terminal_dims_for(None) == frozenset({"decolonization"})
 
 
 def test_aggregate_review_tolerates_extra_legacy_dims() -> None:

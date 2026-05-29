@@ -78,6 +78,19 @@ be re-added to this set with the agreement-rate justification logged.
 LLM_QG_WARNING_DIMS: frozenset[str] = frozenset(QG_DIMS) - LLM_QG_TERMINAL_DIMS
 """Derived: LLM QG dims whose REJECT verdict is logged but does not terminate."""
 
+
+def terminal_dims_for(profile: str | None) -> frozenset[str]:
+    """Resolve terminal LLM QG dims for a curriculum profile.
+
+    ``core`` modules ship on deterministic gates plus pedagogy; subjective
+    LLM-QG decolonization is warning-only there. Unknown profiles, ``None``,
+    and seminar/track profiles fail closed to the seminar terminal set.
+    """
+    if profile is not None and str(profile).strip().casefold() == "core":
+        return frozenset()
+    return LLM_QG_TERMINAL_DIMS
+
+
 STYLE_REVIEW_TARGET: float = 9.0
 """Style-reviewer verdict target. Stricter than the general reviewer
 because pragmatic authenticity / stylistic consistency / culture-register /
@@ -154,12 +167,12 @@ class ReviewVerdict:
     """Full aggregate verdict across all dims. Used for telemetry and review."""
 
     terminal_verdict: Literal["PASS", "REVISE", "REJECT"]
-    """Verdict computed from LLM_QG_TERMINAL_DIMS only. This gates the build."""
+    """Verdict computed from profile-resolved terminal dims. This gates the build."""
 
     failing_dims: tuple[str, ...]
     rejected_dims: tuple[str, ...]
     warning_dims: tuple[str, ...]
-    """Subset of failing_dims in LLM_QG_WARNING_DIMS, logged but not terminal."""
+    """Subset of failing_dims outside the profile-resolved terminal set."""
 
     min_score: float
     min_dim: str
@@ -287,9 +300,12 @@ def get_naturalness_min(level_code: str | None) -> float:
 def aggregate_review(
     scores: Mapping[str, float],
     level_code: str | None,
+    *,
+    profile: str | None = None,
 ) -> ReviewVerdict:
     """MIN aggregator for Phase 4 LLM QG, terminal/warning split."""
     floors = get_level_thresholds(level_code).review_floors
+    terminal_dims = terminal_dims_for(profile)
     scored_qg = {dim: score for dim, score in scores.items() if dim in floors}
     if not scored_qg:
         raise ValueError(f"No QG dims found in scores: {sorted(scores)}")
@@ -304,7 +320,7 @@ def aggregate_review(
         for dim, score in scored_qg.items()
         if score < floors[dim].reject_floor
     )
-    warnings = tuple(dim for dim in failing if dim in LLM_QG_WARNING_DIMS)
+    warnings = tuple(dim for dim in failing if dim not in terminal_dims)
     min_dim = min(scored_qg, key=scored_qg.__getitem__)
     min_score = scored_qg[min_dim]
 
@@ -316,9 +332,9 @@ def aggregate_review(
     else:
         verdict = "PASS"
 
-    # Terminal verdict: used for build gating. Only terminal dims count.
-    terminal_rejected = tuple(dim for dim in rejected if dim in LLM_QG_TERMINAL_DIMS)
-    terminal_failing = tuple(dim for dim in failing if dim in LLM_QG_TERMINAL_DIMS)
+    # Terminal verdict: used for build gating. Only profile terminal dims count.
+    terminal_rejected = tuple(dim for dim in rejected if dim in terminal_dims)
+    terminal_failing = tuple(dim for dim in failing if dim in terminal_dims)
     if terminal_rejected:
         terminal_verdict: Literal["PASS", "REVISE", "REJECT"] = "REJECT"
     elif terminal_failing:

@@ -791,6 +791,45 @@ def load_yaml(path: Path) -> Any:
     return data
 
 
+def _normalize_curriculum_profile(raw_type: object) -> str | None:
+    value = str(raw_type or "").strip().casefold()
+    if value == "core":
+        return "core"
+    if value in {"seminar", "track"}:
+        return "seminar"
+    return value or None
+
+
+def curriculum_profile_for_level(
+    level_code: str | None,
+    *,
+    curriculum_manifest: Path | None = None,
+) -> str | None:
+    """Resolve a curriculum profile from ``curriculum.yaml``.
+
+    ``type: track`` is the current manifest spelling for seminar tracks.
+    Missing or unknown entries return ``None`` so QG gating fails closed.
+    """
+    if not level_code:
+        return None
+    key = str(level_code).strip().casefold()
+    if not key:
+        return None
+    manifest_path = curriculum_manifest or (
+        PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    )
+    data = load_yaml(manifest_path)
+    if not isinstance(data, Mapping):
+        return None
+    levels = data.get("levels")
+    if not isinstance(levels, Mapping):
+        return None
+    entry = levels.get(key)
+    if not isinstance(entry, Mapping):
+        return None
+    return _normalize_curriculum_profile(entry.get("type"))
+
+
 def plan_path_for(level: str, slug: str) -> Path:
     return PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
 
@@ -4754,6 +4793,7 @@ def aggregate_llm_review(
     report: Mapping[str, Any],
     level_code: str,
     *,
+    profile: str | None = None,
     reviewer: str | None = None,
     module: str | None = None,
     writer_under_review: str | None = None,
@@ -4763,7 +4803,7 @@ def aggregate_llm_review(
 ) -> dict[str, Any]:
     validate_llm_review_report(report)
     scores = {dim: float(report[dim]["score"]) for dim in QG_DIMS}
-    verdict = aggregate_review(scores, level_code)
+    verdict = aggregate_review(scores, level_code, profile=profile)
     weighted_score = _review_weighted_score(scores)
     if reviewer and module and writer_under_review:
         emit_phase_review_summary(
