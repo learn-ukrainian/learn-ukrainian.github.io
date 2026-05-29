@@ -9,6 +9,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, Literal, NotRequired, TypedDict
 
+from scripts.audit.wiki_coverage_gate import strip_writer_scaffolding
+
 ObligationType = Literal[
     "sequence_step",
     "l2_error",
@@ -433,7 +435,7 @@ def render_for_writer_prompt(payload: dict[str, Any]) -> str:
                 f"- obligation_id: {entry['obligation_id']}  "
                 f"(obligation_type: {entry['obligation_type']})",
                 f"  artifact: {entry['artifact']}",
-                f"  location_hint: {entry['location_hint']}",
+                f"  location_hint: {strip_writer_scaffolding(entry['location_hint'])}",
             ]
         )
         if entry.get("subtype"):
@@ -451,6 +453,7 @@ def render_for_writer_prompt(payload: dict[str, Any]) -> str:
             if key == "activity_stub" and isinstance(value, Mapping):
                 _stub_drop = {"manifest", "obligation_id", "location_hint"}
                 value = {k: v for k, v in value.items() if k not in _stub_drop}
+            value = _sanitize_writer_prompt_render_value(value)
             rows.append(f"    {key}: {_render_template_value(value)}")
     body = "\n".join(rows)
     header = (
@@ -460,6 +463,19 @@ def render_for_writer_prompt(payload: dict[str, Any]) -> str:
         "`treatment_template` as the structural blueprint."
     )
     return f"{header}\n\n{body}\n"
+
+
+def _sanitize_writer_prompt_render_value(value: Any) -> Any:
+    if isinstance(value, str):
+        return strip_writer_scaffolding(value)
+    if isinstance(value, Mapping):
+        return {
+            key: _sanitize_writer_prompt_render_value(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [_sanitize_writer_prompt_render_value(item) for item in value]
+    return value
 
 
 def _render_template_value(value: Any) -> str:

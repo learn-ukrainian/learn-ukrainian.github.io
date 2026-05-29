@@ -1157,7 +1157,20 @@ def _strip_step_prefix(text: str) -> str:
 
 def _strip_source_markers(text: str) -> str:
     """Strip inline source-reference markers like [S7] or [S1, S3]."""
-    return re.sub(r"\[[SС]\d+(?:,\s*[SС]\d+)*\]", "", text).strip()
+    return re.sub(r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]", "", text).strip()
+
+
+_WRITER_SCAFFOLDING_STEP_LABEL_RE = re.compile(
+    r"(?:Крок|Step|Урок)\s+\d+\s*:\s*",
+    re.IGNORECASE,
+)
+
+
+def strip_writer_scaffolding(text: str) -> str:
+    """Strip wiki-manifest scaffolding that must not be copyable into prose."""
+    text = _WRITER_SCAFFOLDING_STEP_LABEL_RE.sub("", text)
+    text = _strip_source_markers(text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _normalize_required_claim(text: str) -> str:
@@ -1227,7 +1240,7 @@ def _marker_candidates(text: str) -> list[str]:
     raw_parts = re.split(r"\s*/\s*|\s+або\s+|\s+чи\s+", cleaned)
     parts = []
     for part in raw_parts:
-        part = re.sub(r"\[[SС]\d+\]", "", part)
+        part = re.sub(r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]", "", part)
         part = re.sub(r"[`*_]", "", part).strip(" .;:,")
         if part:
             parts.append(part)
