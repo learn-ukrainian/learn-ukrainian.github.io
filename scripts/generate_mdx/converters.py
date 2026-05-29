@@ -158,6 +158,24 @@ CALLOUT_MAP = {
     'realworld': {'type': 'tip', 'icon': '\U0001f310', 'title': 'Real World', 'uk_title': 'Реальний світ'},
 }
 
+def convert_bad_form_markers(content: str, strip_only: bool = False) -> str:
+    """Convert or strip decolonization markers (<!-- bad -->X<!-- /bad -->).
+
+    If strip_only is True, unwraps to the bare form (X).
+    Otherwise, converts to semantic strikethrough (<del>X</del>).
+    Also strips any orphaned markers.
+    """
+    if strip_only:
+        # Unwrap to bare form X
+        content = re.sub(r'<!--\s*bad\s*-->(.*?)<!--\s*/bad\s*-->', r'\1', content, flags=re.DOTALL)
+    else:
+        # Convert to <del>X</del>
+        content = re.sub(r'<!--\s*bad\s*-->(.*?)<!--\s*/bad\s*-->', r'<del>\1</del>', content, flags=re.DOTALL)
+
+    # Strip any remaining orphaned/unpaired markers so they don't leak
+    content = re.sub(r'<!--\s*/?bad\s*-->', '', content)
+    return content
+
 
 def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
     """Convert GitHub-style callouts to Starlight admonitions.
