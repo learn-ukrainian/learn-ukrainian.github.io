@@ -3,8 +3,8 @@
 **Slug:** `mykola-bazhan`
 **Block:** D (survived-but-censored / coerced / camp-returnees)
 **Tier:** 1a
-**Issue:** #2318
-**Researcher:** Generalist Sub-Agent
+**Issue:** #2317
+**Researcher:** gemini 3.1-pro
 **Completed:** 2026-05-26
 
 ## 1. Verified facts
@@ -87,10 +87,11 @@ From the ode *Товариш стоїть в зореноснім Кремлі* 
 ## 7. Cross-track links
 
 - **Existing LIT modules (planned, discovery state):**
-  - `plans/lit/bazhan-avant-garde.yaml` — focused on *Будівлі* and *Гофманова ніч*.
-  - `plans/lit/stalinist-odes-capitulation.yaml` — comparing his 1932 turn with Tychyna's 1933 turn.
+  - `plans/lit/bazhan-idols.yaml` — focused on *Будівлі* and *Гофманова ніч*.
+  - `plans/lit/bazhan-quiet-step.yaml` — focused on *Будівлі* and *Гофманова ніч*.
+  - `plans/lit/tychyna-soviet-period.yaml` — comparing his 1932 turn with Tychyna's 1933 turn.
 - **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/great-terror-1937.yaml`
+  - `plans/hist/mekhanizm-teroru.yaml`
 - **Connected bios already in place/proposed:**
   - `pavlo-tychyna` (Tier 1a) — the exact same trajectory of "покара славою" and co-option into high government roles.
   - `maksym-rylskyi` (Tier 1a) — arrested in the same 1935 manufactured "Ukrainian Military Organization" case.

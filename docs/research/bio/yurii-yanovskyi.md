@@ -3,8 +3,8 @@
 **Slug:** `yurii-yanovskyi`
 **Block:** D (survived-but-broken / camp-returnees)
 **Tier:** 1a
-**Issue:** #2318
-**Researcher:** Generalist Sub-Agent (Gemini 1.5 Pro)
+**Issue:** #2317
+**Researcher:** gemini 3.1-pro
 **Completed:** 2026-05-28
 
 ---
@@ -80,10 +80,11 @@ From *Вершники* (новела «Подвійне коло», 1935):
 ## 7. Cross-track links
 
 - **Existing LIT modules referencing this figure:**
-  - `plans/lit/neoromanticism-1920s.yaml` — fits perfectly alongside Khvylovyi's romanticism.
-  - `plans/lit/yanovskyi-master-korablya.yaml` — standalone module on his cinematic maritime prose.
+  - `plans/lit/vaplite-literary-avant-garde.yaml` — fits perfectly alongside Khvylovyi's romanticism.
+  - `plans/lit/yanovsky-master-of-the-ship.yaml` — standalone module on his cinematic maritime prose.
+  - `plans/lit/yanovsky-four-sabres.yaml` — connects *Вершники* and *Чотири шаблі*.
 - **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/ukrainian-revolution-factions.yaml` — the Polovets brothers in *Вершники* directly map to the Denikin, Petliura, Makhno, and Bolshevik factions of the 1918-1921 Ukrainian Revolution.
+  - `plans/hist/syntez-revoliutsiia.yaml` — the Polovets brothers in *Вершники* directly map to the Denikin, Petliura, Makhno, and Bolshevik factions of the 1918-1921 Ukrainian Revolution.
 - **Existing bios that connect to this figure:**
   - `plans/bio/oleksandr-dovzhenko.yaml` — close collaborators at the Odessa Film Studio; Dovzhenko is a prototype (the character "To-Ma-Ki") in *Майстер корабля*.
   - `plans/bio/mykola-khvylovyi.yaml` — peers in VAPLITE and leaders of the Ukrainian neoromantic movement.

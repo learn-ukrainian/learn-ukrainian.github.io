@@ -3,8 +3,8 @@
 **Slug:** `ostap-vyshnia`
 **Block:** D (survived-but-censored / coerced / camp-returnees)
 **Tier:** 1a
-**Issue:** #2318
-**Researcher:** Gemini 1.5 Pro
+**Issue:** #2317
+**Researcher:** gemini 3.1-pro
 **Completed:** 2026-05-28
 
 ---
@@ -88,10 +88,10 @@ From the post-war diary *Думи мої, думи мої...*:
 ## 7. Cross-track links
 
 - **Existing LIT modules (planned, discovery state):**
-  - `plans/lit/vyshnia-usmishka.yaml` — Module defining the unique *усмішка* genre.
+  - Potential (Phase 2+) candidate: a module defining the *усмішка* genre (not yet planned).
 - **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/rozstriliane-vidrodzhennia.yaml` — Vyshnia must be explicitly contrasted with those who were shot; his survival illustrates the regime's pragmatic use of terror.
-  - `plans/hist/upa-resistance.yaml` — Context for why the regime needed Vyshnia to write *Самостійна дірка*.
+  - `plans/hist/rozstriliane-vidrodzennia.yaml` — Vyshnia must be explicitly contrasted with those who were shot; his survival illustrates the regime's pragmatic use of terror.
+  - `plans/hist/upa.yaml` — Context for why the regime needed Vyshnia to write *Самостійна дірка*.
 - **Connected bios already in place:**
   - `mykola-khvylovyi.yaml` — Close friend and VAPLITE contemporary.
   - `maksym-rylskyi.yaml` — Vyshnia rushed to Kyiv to financially and morally support Rylsky's family when Rylsky was arrested in 1931. Both share the Block D "survived-but-coerced" trajectory.

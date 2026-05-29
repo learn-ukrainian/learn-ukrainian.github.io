@@ -3,8 +3,8 @@
 **Slug:** `maksym-rylskyi`
 **Block:** D (survived-but-censored / coerced)
 **Tier:** 1a
-**Issue:** #2318
-**Researcher:** Gemini 1.5 Pro
+**Issue:** #2317
+**Researcher:** gemini 3.1-pro
 **Completed:** 2026-05-28
 
 ---
@@ -108,13 +108,14 @@ Also from *Знак терезів*, showing the "double-speak" scholars have id
 ## 7. Cross-track links
 
 - **Existing LIT modules referencing this figure:**
-  - `plans/lit/rylskyi-neoclassicists.yaml` — Focuses on the "Kyiv Parnassus" and the 1920s aesthetic height.
-  - `plans/lit/rylskyi-znak-tereziv.yaml` — Focuses on the 1931 arrest and the psychology of forced socialist realism.
+  - `plans/lit/rylsky-neoclassicism.yaml` — Focuses on the "Kyiv Parnassus" and the 1920s aesthetic height.
+  - `plans/lit/rylsky-liryka.yaml` — Focuses on the 1931 arrest and the psychology of forced socialist realism.
+  - `plans/lit/rylsky-translations.yaml` — Connects to his translation work as a form of cultural preservation.
 - **Potential LIT additions surfaced by this research:**
   - A module in C1 focusing specifically on his translation work as a form of cultural preservation (e.g., translating Mickiewicz to elevate Ukrainian literary language while original poetry was censored).
 - **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/stalinist-terror-intelligentsia.yaml`
-  - `plans/hist/post-war-zhdanovschyna.yaml` (Context for the 1947 ideological attacks against him).
+  - `plans/hist/mekhanizm-teroru.yaml`
+  - `plans/hist/rozstriliane-vidrodzennia.yaml` (Context for the 1947 ideological attacks against him).
 - **Existing bios that connect to this figure:**
   - `pavlo-tychyna.yaml` — Parallel arc of coercion and survival.
   - `mykola-zerov.yaml` — Fellow Neoclassicist, whose execution serves as the counter-factual to Rylskyi's survival.

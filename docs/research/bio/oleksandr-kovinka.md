@@ -3,8 +3,8 @@
 **Slug:** `oleksandr-kovinka`
 **Block:** D (survived-but-broken / camp-returnees)
 **Tier:** 2
-**Issue:** #2318
-**Researcher:** Generalist Sub-Agent
+**Issue:** #2317
+**Researcher:** gemini 3.1-pro
 **Completed:** 2026-05-28
 
 ## 1. Verified facts
@@ -82,10 +82,10 @@ From the humoresque *Хатнє виховання*:
 ## 7. Cross-track links
 
 - **Existing LIT modules referencing this figure / era:**
-  - `plans/lit/ostap-vyshnia.yaml` — Essential pairing. Kovinka is structurally parallel to Vyshnia (both humorists, both 1930s camp survivors, both forced to write "safe" Soviet humor post-WWII).
+  - None currently; Ostap Vyshnia is a research-dossier cross-reference (see `docs/research/bio/ostap-vyshnia.md`).
 - **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/stalinist-terror-1930s.yaml` — The fabrication of "counter-revolutionary organizations" (e.g., the Borotbist case).
-  - `plans/hist/gulag-system-kolyma.yaml` — Dalstroy (Дальбуд) and the specific conditions of Magadan gold mines where Kovinka spent his 12 hardest years.
+  - `plans/hist/mekhanizm-teroru.yaml` — The fabrication of "counter-revolutionary organizations" (e.g., the Borotbist case).
+  - Dalstroy (Дальбуд) and the specific conditions of Magadan gold mines where Kovinka spent his 12 hardest years are relevant historical context, but no dedicated module path currently exists.
 - **Connected bios already in place:**
   - `ostap-vyshnia.yaml` (Tier 1a) — Peers in genre and destiny.
 

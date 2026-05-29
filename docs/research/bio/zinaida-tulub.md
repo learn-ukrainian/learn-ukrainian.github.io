@@ -3,8 +3,8 @@
 **Slug:** `zinaida-tulub`
 **Block:** D (survived-but-broken / camp-returnees)
 **Tier:** 1b
-**Issue:** #2322
-**Researcher:** Gemini Generalist Sub-Agent
+**Issue:** #2317
+**Researcher:** gemini 3.1-pro
 **Completed:** 2026-05-28
 
 ---
@@ -81,10 +81,10 @@ Tulub's literary output is sharply divided by her 19-year exile.
 - **Potential LIT additions surfaced by this research:**
   - A module comparing the 1934 and 1958 editions of *Людолови* as a case study in Soviet censorship and the trauma of the "survived-but-broken" writers. (Needs filing as `bio-expansion-followup`).
 - **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/sahaidachny-era.yaml` — Her novel *Людолови* is the definitive fictionalized account of this exact era.
-  - `plans/hist/the-great-terror.yaml` — Her biography is a perfect case study for the 1937 NKVD quotas and the 1950 "repeat repressions" wave.
+  - `plans/hist/petro-sahaidachnyi.yaml` — Her novel *Людолови* is the definitive fictionalized account of this exact era.
+  - `plans/hist/mekhanizm-teroru.yaml` — Her biography is a perfect case study for the 1937 NKVD quotas and the 1950 "repeat repressions" wave.
 - **Connected bios already in place:**
-  - `taras-shevchenko.yaml` — Subject of her 1964 novel; personal friend of her grandfather.
+  - `plans/bio/taras-shevchenko.yaml` — Subject of her 1964 novel; personal friend of her grandfather.
   - `maksym-rylskyi.yaml` — Rylsky, acting from his position of "co-opted laureate," actively petitioned for her rehabilitation and helped her re-establish herself in Kyiv after 1956.
 
 ## 8. Naming-canonical
