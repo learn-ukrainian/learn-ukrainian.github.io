@@ -148,6 +148,7 @@ _LABEL_LINE_RE = re.compile(
 PYTHON_QG_GATE_ORDER = (
     "tool_theatre",
     "activity_schema",
+    "quiz_translate_explanations",
     "word_count",
     "vocab_count",
     "plan_sections",
@@ -206,6 +207,7 @@ TERMINAL_ZERO_RETRY_GATES = frozenset(
     {
         "component_props",
         "previously_passed_regression",
+        "quiz_translate_explanations",
         "resources_search_attempted",
     }
 )
@@ -750,6 +752,7 @@ _ACTIVITY_ITEM_FIELD_PURPOSES: dict[str, str] = {
     "correction": "the corrected form",
     "answer": "the corrected form",
 }
+_ACTIVITY_EXPLANATION_REQUIRED_TYPES = frozenset({"quiz", "translate"})
 _VESUM_ABBREVIATION_RE = re.compile(r"\bдіал\.", re.IGNORECASE)
 
 # String fields whose values are user-facing prose (subject to AI-slop checks).
@@ -6485,6 +6488,7 @@ def run_python_qg(
         gates["passed"] = False
         return _python_qg_report(plan, gates)
 
+    record("quiz_translate_explanations", _quiz_translate_explanation_gate(activities))
     record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
     record("plan_sections", _section_gate(module_text, plan))
     record("formatting_standards", _formatting_standards_gate(module_text))
@@ -7298,6 +7302,81 @@ def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
         ]
     )
     return "\n".join(lines)
+
+
+def _quiz_translate_explanation_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
+    """Require teaching feedback for quiz and translate multiple-choice items."""
+    violations: list[dict[str, Any]] = []
+    checked = 0
+
+    for activity_index, activity in enumerate(activities, start=1):
+        if not isinstance(activity, Mapping):
+            continue
+        activity_type = str(activity.get("type") or "")
+        if activity_type not in _ACTIVITY_EXPLANATION_REQUIRED_TYPES:
+            continue
+        activity_id = str(activity.get("id") or f"#{activity_index}")
+        items = activity.get("items", [])
+        if not isinstance(items, list):
+            continue
+
+        for item_index, item in enumerate(items, start=1):
+            if not isinstance(item, Mapping):
+                continue
+            checked += 1
+            explanation = item.get("explanation")
+            if isinstance(explanation, str) and explanation.strip():
+                continue
+            if "explanation" not in item:
+                reason = "missing"
+            elif not isinstance(explanation, str):
+                reason = "invalid_type"
+            else:
+                reason = "empty"
+            violations.append(
+                {
+                    "activity_id": activity_id,
+                    "activity_index": activity_index,
+                    "item_index": item_index,
+                    "activity_type": activity_type,
+                    "field": "explanation",
+                    "reason": reason,
+                    "message": (
+                        f"{activity_type} item {item_index} in activity '{activity_id}' "
+                        "must include a non-empty explanation for the correct answer"
+                    ),
+                }
+            )
+
+    report = {
+        "passed": not violations,
+        "checked": checked,
+        "violations": violations,
+    }
+    if violations:
+        report["message"] = _format_quiz_translate_explanation_diagnostic(violations)
+    return report
+
+
+def _format_quiz_translate_explanation_diagnostic(violations: list[dict[str, Any]]) -> str:
+    lines = [
+        f"QUIZ_TRANSLATE_EXPLANATIONS_GATE FAILED: {len(violations)} violations",
+        "",
+    ]
+    for violation in violations[:10]:
+        activity_id = violation["activity_id"]
+        activity_index = violation["activity_index"]
+        item_index = violation["item_index"]
+        activity_type = violation["activity_type"]
+        reason = violation["reason"]
+        lines.append(f"  activity #{activity_index} '{activity_id}' ({activity_type}, item {item_index}):")
+        lines.append(f"    {reason} required field 'explanation'")
+        lines.append("")
+
+    remaining = len(violations) - 10
+    if remaining > 0:
+        lines.append(f"  ... ({remaining} more)")
+    return "\n".join(lines).rstrip()
 
 
 def _word_count(text: str) -> int:
