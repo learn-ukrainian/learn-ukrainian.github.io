@@ -8270,8 +8270,15 @@ def _formatting_standards_gate(text: str) -> dict[str, Any]:
 
 
 _SCAFFOLDING_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+# Gate flags only the UKRAINIAN step labels (Крок/Урок) — the observed leak class
+# is Ukrainian wiki-manifest scaffolding. English "Step N:" is intentionally NOT
+# flagged here: it can appear in legitimate English pedagogical prose (e.g. a
+# how-to sequence), and the source-marker check below already catches the
+# unambiguous `[SN]` signature that accompanies a real leak. (The writer-prompt
+# sanitizer still strips English "Step N:" defensively; this is the published-
+# prose detector, where a false positive blocks a real build.)
 _SCAFFOLDING_STEP_LABEL_RE = re.compile(
-    r"(?:Крок|Step|Урок)\s+\d+\s*:",
+    r"(?:Крок|Урок)\s+\d+\s*:",
     re.IGNORECASE,
 )
 _SCAFFOLDING_SOURCE_MARKER_RE = re.compile(

@@ -67,6 +67,20 @@ def test_scaffolding_leak_gate_passes_on_clean_a1_prose() -> None:
     assert result == {"passed": True, "offending": []}
 
 
+def test_scaffolding_leak_gate_allows_english_step_instructions() -> None:
+    # English "Step N:" can be legitimate published pedagogical prose; only the
+    # Ukrainian Крок/Урок labels and the [SN] source-marker signature indicate a
+    # real wiki-scaffolding leak. (Deepseek review #2412 finding 2a.)
+    text = (
+        "## How to form the present tense\n\n"
+        "Step 1: find the verb stem. Step 2: add the personal ending.\n"
+    )
+
+    result = _scaffolding_leak_gate(text)
+
+    assert result == {"passed": True, "offending": []}
+
+
 def test_scaffolding_leak_gate_is_ordered_but_not_auto_corrected() -> None:
     assert PYTHON_QG_GATE_ORDER.index("formatting_standards") < PYTHON_QG_GATE_ORDER.index(
         "scaffolding_leak"
