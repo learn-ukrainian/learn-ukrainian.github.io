@@ -1,4 +1,12 @@
-# Current — multi-agent index (2026-05-29 Pt3 AUTONOMOUS — m20 tone blocker FIXED & merged (#2417); tone-score build blocked by claude-tools runtime hang)
+# Current — multi-agent index (2026-05-29 Pt4 AUTONOMOUS — m20 RENDERED-MDX quality multi-fix; bio resumed; STOP claude-tools/USE roster)
+
+Latest-Brief: docs/session-state/2026-05-29-pt4-m20-quality-multi-fix-bio-resumed.md
+
+> **State (2026-05-29 ~19:15):** Main `4458999da8` (green). **User-forced reframe: review the RENDERED lesson, not the score.** Systemic root cause: LLM QG reviews `module.md` prose, NEVER the assembled MDX → assembly defects (`{/**/}`, empty explanations, dup activities) invisible to all gates (#M-11 trap). **m20 codex generator build (180702): python_qg ALL PASS + 0 KP leaks (#2417 validated), but 7.5 REVISE on decolonization (одіватися heritage-mislabel) + render defects.** Shipped: **#2417** (artifact-leak gate+prompt), **wiki одіватися fix 52c9deb8a8** (authentic per Грінченко/СУМ-20), **completeness-test regression fix 9180c12f95** (self-caused), **#2420 merged** (`<!-- bad -->`→`<del>`, fixes EVERY decolonization module). **In flight off-seat:** codex `fix-quiz-explanations` (non-empty explanations gate), deepseek `review-m20-codex-build` (content review). **Filed:** #2418 (retrieval correction path), #2419 (heritage-defense gate). **NEXT:** merge explanations fix → rebuild `--writer codex-tools --use-generator` (NEVER claude-tools — user seat) → render → verify ALL clean (4-tab 10-check) → only then deliver. **Bio epic RESUMED:** religious-martyrs/UGCC block dispatched to codex (anti-fabrication; NEVER gemini/agy). **Routing: qwen EXCLUDED (cost); claude-tools/headless avoid (user seat); deepseek=review; codex=writer+bio.** Full arc: the Latest-Brief (`...-pt4-...`).
+
+---
+
+# Predecessor — multi-agent index (2026-05-29 Pt3 AUTONOMOUS — m20 tone blocker FIXED & merged (#2417); tone-score build blocked by claude-tools runtime hang)
 
 Latest-Brief: docs/session-state/2026-05-29-pt3-tone-leak-gate-fix-shipped-build-runtime-hang.md
 
