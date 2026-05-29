@@ -152,6 +152,7 @@ PYTHON_QG_GATE_ORDER = (
     "vocab_count",
     "plan_sections",
     "formatting_standards",
+    "scaffolding_leak",
     "vesum_verified",
     "citations_resolve",
     "textbook_grounding",
@@ -362,6 +363,7 @@ RULE_VOICE_META = "#R-VOICE-META"
 RULE_BAD_FORM_MARKER = "#R-BAD-FORM-MARKER"
 RULE_VESUM_ALL_WORDS = "#R-VESUM-ALL-WORDS"
 RULE_IMPL_MAP_COMPLETE = "#R-IMPL-MAP-COMPLETE"
+RULE_NO_SCAFFOLDING_LEAKS = "#R-NO-SCAFFOLDING-LEAKS"
 RULE_TEXTBOOK_30W = "#R-TEXTBOOK-30W"
 RULE_CITE_HONEST = "#R-CITE-HONEST"
 CORRECTION_PREVIEW_CHARS = 200
@@ -2014,6 +2016,8 @@ def _writer_rule_ids_for_gate_failure(
 ) -> list[str]:
     if gate == "engagement_floor":
         return [RULE_VOICE_META] if report.get("meta_narration_hits") else []
+    if gate == "scaffolding_leak":
+        return [RULE_NO_SCAFFOLDING_LEAKS]
     if gate == "vesum_verified":
         return [RULE_VESUM_ALL_WORDS, RULE_BAD_FORM_MARKER]
     if gate in {"russianisms_strict", "russianisms_clean", "surzhyk_clean", "calques_clean", "paronym_clean"}:
@@ -2033,6 +2037,10 @@ def _writer_rule_evidence_for_gate(
         hits = report.get("meta_narration_hits")
         if isinstance(hits, list):
             return ", ".join(str(hit) for hit in hits[:3])
+    if gate == "scaffolding_leak":
+        offending = report.get("offending")
+        if isinstance(offending, list):
+            return "; ".join(str(item) for item in offending[:3])
     if gate == "vesum_verified":
         missing = report.get("missing")
         if isinstance(missing, list):
@@ -6480,6 +6488,7 @@ def run_python_qg(
     record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
     record("plan_sections", _section_gate(module_text, plan))
     record("formatting_standards", _formatting_standards_gate(module_text))
+    record("scaffolding_leak", _scaffolding_leak_gate(module_text))
     record(
         "vesum_verified",
         _vesum_gate(
@@ -8258,6 +8267,59 @@ def _formatting_standards_gate(text: str) -> dict[str, Any]:
         "malformed_callouts": malformed_callouts,
         "missing_mandatory_callouts": missing_mandatory,
     }
+
+
+_SCAFFOLDING_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+# Gate flags only the UKRAINIAN step labels (Крок/Урок) — the observed leak class
+# is Ukrainian wiki-manifest scaffolding. English "Step N:" is intentionally NOT
+# flagged here: it can appear in legitimate English pedagogical prose (e.g. a
+# how-to sequence), and the source-marker check below already catches the
+# unambiguous `[SN]` signature that accompanies a real leak. (The writer-prompt
+# sanitizer still strips English "Step N:" defensively; this is the published-
+# prose detector, where a false positive blocks a real build.)
+_SCAFFOLDING_STEP_LABEL_RE = re.compile(
+    r"(?:Крок|Урок)\s+\d+\s*:",
+    re.IGNORECASE,
+)
+_SCAFFOLDING_SOURCE_MARKER_RE = re.compile(
+    r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]"
+)
+
+
+def _line_preserving_blank(match: re.Match[str]) -> str:
+    return "\n" * match.group(0).count("\n")
+
+
+def _strip_scaffolding_scan_exclusions(text: str) -> str:
+    text = _SCAFFOLDING_COMMENT_RE.sub(_line_preserving_blank, text)
+    lines: list[str] = []
+    in_fence = False
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        if stripped.startswith("```"):
+            lines.append("\n" if line.endswith("\n") else "")
+            is_just_backticks = not stripped.rstrip().strip("`")
+            single_line_fence = (
+                not is_just_backticks and stripped.rstrip().endswith("```")
+            )
+            if not single_line_fence:
+                in_fence = not in_fence
+            continue
+        if in_fence:
+            lines.append("\n" if line.endswith("\n") else "")
+            continue
+        lines.append(line)
+    return "".join(lines)
+
+
+def _scaffolding_leak_gate(text: str) -> dict[str, Any]:
+    """Fail when writer-only wiki scaffolding leaks into published prose."""
+    scan_text = _strip_scaffolding_scan_exclusions(text)
+    offending = []
+    for line_no, line in enumerate(scan_text.splitlines(), start=1):
+        if _SCAFFOLDING_STEP_LABEL_RE.search(line) or _SCAFFOLDING_SOURCE_MARKER_RE.search(line):
+            offending.append({"line": line_no, "text": line.strip()})
+    return {"passed": not offending, "offending": offending}
 
 
 def _normalize_citation_ref(value: Any) -> str:
