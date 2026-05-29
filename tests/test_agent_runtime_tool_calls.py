@@ -73,6 +73,49 @@ def test_normalize_tool_calls_concatenates_codex_namespace_and_name() -> None:
     }
 
 
+def test_normalize_tool_calls_joins_codex_0135_namespace_without_trailing_sep() -> None:
+    """Codex CLI 0.135.0 dropped the trailing ``__`` from the namespace field:
+    it emits ``{"name": "get_chunk_context", "namespace": "mcp__sources"}``
+    (no separator) instead of 0.132.0's ``"mcp__sources__"``.
+
+    Naive concatenation yields ``mcp__sourcesget_chunk_context`` — still missing
+    the ``__`` join — so the writer-trace-isolation gate flags wrong_tool_family
+    and the tools_writer_runtime_gate HARD-fails ``mcp_tools_never_invoked`` for
+    EVERY codex build under 0.135.0, even though the calls fired. Reference:
+    rollout-2026-05-29T09-59-48 a1/my-morning build (15 valid sources calls
+    misclassified as 0). The join must normalize to exactly one ``__``.
+    """
+    events = [
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "function_call",
+                "name": "get_chunk_context",
+                "namespace": "mcp__sources",
+                "arguments": '{"chunk_id":"1-klas-bukvar_s0024","window":1}',
+                "call_id": "call_0135_a",
+            },
+        },
+        {
+            "type": "response_item",
+            "payload": {
+                "type": "function_call",
+                "name": "verify_words",
+                "namespace": "mcp__sources",
+                "arguments": '{"words":["вмиваюся"]}',
+                "call_id": "call_0135_b",
+            },
+        },
+    ]
+
+    calls = normalize_tool_calls(events)
+
+    assert [call["name"] for call in calls] == [
+        "mcp__sources__get_chunk_context",
+        "mcp__sources__verify_words",
+    ]
+
+
 def test_normalize_tool_calls_extracts_gemini_toolcalls_shape() -> None:
     events = [
         {
