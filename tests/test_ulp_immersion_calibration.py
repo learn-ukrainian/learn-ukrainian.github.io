@@ -39,7 +39,7 @@ def test_ulp_derivation_falls_back_to_static_policy_without_learner_state(monkey
     band = config.compute_immersion_band("a1", 20)
 
     assert band["key"] == "a1-m15-24"
-    assert (band["advisory_pct_min"], band["advisory_pct_max"]) == (15, 24)
+    assert (band["advisory_pct_min"], band["advisory_pct_max"]) == (40, 55)
 
 
 @pytest.mark.parametrize(

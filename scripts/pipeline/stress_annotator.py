@@ -2,7 +2,8 @@
 
 Reads generated .md content, finds Ukrainian words, adds combining acute
 accent (U+0301) on the stressed vowel for words with 2+ syllables.
-Only marks first occurrence of each word form to avoid visual noise.
+Marks every multi-syllable Ukrainian word occurrence. The annotator is
+idempotent: already-stressed words are preserved and are not double-marked.
 
 Uses sentence-level processing for context-aware heteronym disambiguation.
 The Stressifier uses Stanza NLP internally — feeding full sentences allows
@@ -23,23 +24,24 @@ logger = logging.getLogger(__name__)
 
 STRESS_MARK = "\u0301"
 
-# If >5% of body words already have stress marks, the file was likely already annotated.
-# Empirically: vocab_gen.py pre-stresses ~1-2% of body words via inline examples;
-# a fully annotated file has ~15-20%. The 5% threshold sits safely between.
-_ALREADY_STRESSED_THRESHOLD = 0.05
-
 # Match Ukrainian words (2+ Cyrillic chars, may include apostrophe/soft sign/stress mark)
 # Use lookbehind/lookahead instead of \b — \b doesn't work with Cyrillic
 # Include \u0301 (combining acute accent) so already-stressed words are matched whole
+_CYRILLIC_BASE_CLASS = "А-ЯҐЄІЇа-яґєії"
+_CYRILLIC_LETTER_CLASS = f"{_CYRILLIC_BASE_CLASS}\u0301"
 _CYRILLIC_WORD_RE = re.compile(
-    r"(?<![А-ЯҐЄІЇа-яґєіїʼ'\u0301])([А-ЯҐЄІЇа-яґєіїʼ'\u0301]{2,})(?![А-ЯҐЄІЇа-яґєіїʼ'\u0301])",
+    rf"(?<![{_CYRILLIC_LETTER_CLASS}])"
+    rf"([{_CYRILLIC_BASE_CLASS}][{_CYRILLIC_LETTER_CLASS}]*(?:[ʼ'][{_CYRILLIC_BASE_CLASS}][{_CYRILLIC_LETTER_CLASS}]*)*)"
+    rf"(?![{_CYRILLIC_LETTER_CLASS}])",
     re.UNICODE,
 )
 
 # Ukrainian vowels — needed to count syllables
 _VOWELS = set("аеиіїоуюяєАЕИІЇОУЮЯЄ")
 
-# Contexts to skip: inside HTML comments, YAML frontmatter, code blocks, URLs
+# Contexts to skip: inside HTML comments, code blocks, URLs, JSX/HTML tags.
+# DialogueBox uk="..." values are annotated in a focused second pass because
+# they are learner-facing Ukrainian inside an otherwise-skipped JSX tag.
 _SKIP_PATTERNS = [
     re.compile(r"<!--.*?-->", re.DOTALL),
     re.compile(r"```.*?```", re.DOTALL),
@@ -166,6 +168,26 @@ def _build_sentence_stress_map(
     return stress_map
 
 
+_DIALOGUEBOX_UK_ATTR_RE = re.compile(
+    r"(<DialogueBox\b[^>]*\buk\s*=\s*\")(?P<uk>[^\"]*)(\")",
+    re.DOTALL,
+)
+
+
+def _annotate_dialoguebox_uk_attrs(text: str) -> tuple[str, int]:
+    """Annotate Ukrainian inside DialogueBox uk="..." props only."""
+    total = 0
+
+    def replace(match: re.Match[str]) -> str:
+        nonlocal total
+        value = match.group("uk")
+        annotated, count = annotate_stress(value)
+        total += count
+        return f"{match.group(1)}{annotated}{match.group(3)}"
+
+    return _DIALOGUEBOX_UK_ATTR_RE.sub(replace, text), total
+
+
 def annotate_stress(text: str) -> tuple[str, int]:
     """Add stress marks to Ukrainian words in text.
 
@@ -173,9 +195,9 @@ def annotate_stress(text: str) -> tuple[str, int]:
 
     Strategy:
     - Only stress words with 2+ syllables (single-syllable = obvious)
-    - Only stress FIRST occurrence of each word form
     - Skip words inside HTML comments, code blocks, URLs, JSX tags
     - Skip words that already have stress marks
+    - Add a focused second pass for DialogueBox uk="..." values
     - Use ukrainian-word-stress library with SENTENCE context for disambiguation
     """
     skip_ranges = _build_skip_mask(text)
@@ -205,24 +227,13 @@ def annotate_stress(text: str) -> tuple[str, int]:
         if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == clean:
             stress_map[pos] = stressed
 
-    # First pass: find first ANNOTATABLE occurrence of each word form.
-    # Must exclude skip ranges — otherwise the first occurrence lands inside
-    # a code block/tag and all later occurrences are never annotated.
-    first_occurrences: dict[str, int] = {}
-    for i, m in enumerate(matches):
-        word = m.group(1)
-        lower = word.lower().replace(STRESS_MARK, "")
-        if lower not in first_occurrences and not _in_skip_range(m.start(), skip_ranges):
-            first_occurrences[lower] = i
-
-    # Second pass: annotate only first occurrences (reverse for safe replacement)
+    # Annotate every eligible occurrence (reverse for safe replacement).
     result = list(text)
     for i in reversed(range(len(matches))):
         m = matches[i]
         word = m.group(1)
-        lower = word.lower().replace(STRESS_MARK, "")
 
-        if first_occurrences.get(lower) != i:
+        if _in_skip_range(m.start(), skip_ranges):
             continue
 
         if _already_stressed(word):
@@ -239,7 +250,9 @@ def annotate_stress(text: str) -> tuple[str, int]:
         result[start:end] = list(stressed)
         count += 1
 
-    return "".join(result), count
+    annotated = "".join(result)
+    annotated, attr_count = _annotate_dialoguebox_uk_attrs(annotated)
+    return annotated, count + attr_count
 
 
 def annotate_file(path: Path) -> int:
@@ -251,24 +264,6 @@ def annotate_file(path: Path) -> int:
         return 0
 
     text = path.read_text("utf-8")
-
-    # Don't re-annotate if the BODY content already has significant stress marks.
-    # We exclude the Словник/vocabulary section because vocab_gen.py pre-stresses
-    # those words — counting them would falsely trigger the skip threshold.
-    # Find the earliest tab marker to isolate body content
-    body_text = text
-    first_tab_idx = len(text)
-    for tab_marker in ("<!-- TAB:Словник -->", "<!-- TAB:Ресурси -->"):
-        idx = text.find(tab_marker)
-        if idx != -1 and idx < first_tab_idx:
-            first_tab_idx = idx
-    body_text = text[:first_tab_idx]
-
-    existing = body_text.count(STRESS_MARK)
-    word_count = len(body_text.split())
-    if word_count > 0 and existing > word_count * _ALREADY_STRESSED_THRESHOLD:
-        logger.info("stress_annotator: skipping %s — body already has %d stress marks", path.name, existing)
-        return 0
 
     annotated, count = annotate_stress(text)
 

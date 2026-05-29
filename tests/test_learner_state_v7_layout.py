@@ -136,7 +136,7 @@ def test_compute_immersion_band_uses_plan_only_learner_state(tmp_path, monkeypat
         for word_index in range(1, 9)
     ]
     assert band["key"] == "a1-m04-06"
-    assert (band["advisory_pct_min"], band["advisory_pct_max"]) == (8, 30)
+    assert (band["advisory_pct_min"], band["advisory_pct_max"]) == (40, 55)
 
 
 def test_format_learner_state_contains_rule_footer_for_non_empty_state():

@@ -160,11 +160,11 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 5-25% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first with brief English support.\n"
                 "- UKRAINIAN CONTENT: Letters, sounds, words, and very short phrases inline.\n"
                 "- DIALOGUES & READING PRACTICE: Optional ultra-short Ukrainian sentence blocks.\n"
                 "- TABLES: Letter-sound and word-meaning tables are encouraged.\n"
-                "- STRUCTURAL RULE: English carries the explanation. Ukrainian appears in controlled chunks.\n"
+                "- STRUCTURAL RULE: Ukrainian appears first; English glosses support it briefly.\n"
                 "Ukrainian sentences max 10 words."
             ),
         },
@@ -176,11 +176,11 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 8-30% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first with brief English support.\n"
                 "- UKRAINIAN CONTENT: Words and short phrases inline: \"The word **книга** means book.\"\n"
                 "- DIALOGUES & READING PRACTICE: Short Ukrainian sentence blocks are encouraged.\n"
                 "- TABLES: Simple identity, family, or stress-pattern tables.\n"
-                "- STRUCTURAL RULE: English carries the explanation, but short Ukrainian examples should now appear regularly.\n"
+                "- STRUCTURAL RULE: Ukrainian appears first; English glosses support it briefly.\n"
                 "Ukrainian sentences max 10 words."
             ),
         },
@@ -192,10 +192,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 10-38% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first examples with brief English support.\n"
                 "- UKRAINIAN CONTENT: Words and short phrases bolded inline: \"The word **книга** (book) is feminine.\"\n"
                 "- TABLES: Vocabulary tables, word families, simple paradigm tables.\n"
-                "- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. "
+                "- STRUCTURAL RULE: Every section opens Ukrainian-first. Ukrainian words/phrases use em-dash glosses. "
                 "Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.\n"
                 "Ukrainian sentences max 10 words."
             ),
@@ -208,7 +208,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 15-24% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first with brief English support — show the concept, then scaffold.\n"
                 "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
                 "- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.\n"
                 "- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).\n"
@@ -226,7 +226,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 15-40% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first with brief English support — show the concept, then scaffold.\n"
                 "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
                 "- TABLES: Paradigm tables, case endings, vocabulary groups — all cells Ukrainian.\n"
                 "- PATTERN BOXES: Show transformations: `книга → книгу` (nominative → accusative).\n"
@@ -244,7 +244,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 20-40% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. Explain once, then show Ukrainian.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first with brief English support. Show Ukrainian before any scaffold.\n"
                 "- UKRAINIAN NARRATIVE PARAGRAPHS: REQUIRED — minimum 1 per section. "
                 "A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed immediately by a "
                 "`> *English translation*` blockquote.\n"
@@ -265,7 +265,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 25-48% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. Explain once, then show Ukrainian.\n"
+                "- THEORY & EXPLANATION: Ukrainian-first with brief English support. Show Ukrainian before any scaffold.\n"
                 "- UKRAINIAN NARRATIVE PARAGRAPHS: REQUIRED — minimum 2 per section. "
                 "A 4-8 sentence Ukrainian paragraph demonstrating the concept in use, followed immediately by a "
                 "`> *English translation*` blockquote.\n"
@@ -288,7 +288,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 20-48% Ukrainian. Bridge modules continue from late A1.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY: English prose for grammar review and metalanguage introduction.\n"
+                "- THEORY: Ukrainian-first review with brief English support for metalanguage.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.\n"
                 "- HEADERS: Ukrainian with English in parentheses.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
@@ -306,7 +306,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 30-55% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY: English prose for grammar explanations — keep short (2-3 sentences per concept, then immediately show Ukrainian examples).\n"
+                "- THEORY: Ukrainian-first examples with brief English support for grammar.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
                 "- HEADERS: Ukrainian with English in parentheses.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
@@ -329,7 +329,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "rule": (
                 "TARGET: 40-70% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY: English prose for grammar explanations — keep these short (2-3 sentences max per concept).\n"
+                "- THEORY: Ukrainian-first examples with brief English support for grammar.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
                 "- HEADERS: Ukrainian with English in parentheses.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence.\n"
@@ -563,11 +563,50 @@ _IMMERSION_STRUCTURAL_OVERRIDES: dict[str, dict[str, Any]] = {
 }
 
 
+_ULP_S1_IMMERSION_BAND_KEYS = frozenset(
+    {
+        "a1-m01-03",
+        "a1-m04-06",
+        "a1-m07-14",
+        "a1-m15-24",
+        "a1-m25-34",
+        "a1-m35-54",
+        "a1-m55+",
+        "a2-bridge",
+        "a2-ramp",
+        "a2-m01-20",
+    }
+)
+
+
+def _uses_ulp_s1_band(band_key: str) -> bool:
+    return band_key in _ULP_S1_IMMERSION_BAND_KEYS
+
+
+def _ulp_s1_language_roles() -> str:
+    return (
+        "TARGET: 40-55% Ukrainian. ULP S1 bilingual immersion.\n"
+        "## ULP Presentation Pattern (Anna Ohoiko S1 baseline)\n"
+        "LANGUAGE ROLES:\n"
+        "- PRIMARY POSTURE: Ukrainian-first, example-first teaching. English is a brief receding scaffold, not lecture prose.\n"
+        "- EM-DASH GLOSS: Introduce every Ukrainian term before its English gloss: `прокидаюся — I wake up`.\n"
+        "- STRESS MARKS: The pipeline applies stress marks deterministically after writing; write plain Ukrainian.\n"
+        "- DIALOGUES: Use `<DialogueBox uk=\"...\" en=\"...\" />`; each `uk` turn is Ukrainian-only.\n"
+        "- TAB 3 RECALL: Comprehension stems and content options are Ukrainian-only; English appears only in UI affordances.\n"
+        "- PERSONA: Use a named first-person teacher persona or named characters with real Ukrainian cultural anchors.\n"
+        "- FORBIDDEN: English grammar-lecture paragraphs with Ukrainian bolted on, transliteration tables, "
+        "\"X sounds like Y in English\", \"the student must learn\", and English topic-sentence openers.\n"
+        "Ukrainian sentences stay short and concrete; follow Anna Ohoiko's S1 rhythm: short Ukrainian first, then brief English support."
+    )
+
+
 def _structural_immersion_rule(band: dict[str, Any]) -> str:
     old_rule = str(band["rule"])
     language_roles = old_rule
     if old_rule.startswith("TARGET:") and "\n" in old_rule:
         language_roles = old_rule.split("\n", 1)[1]
+    if _uses_ulp_s1_band(str(band["key"])):
+        language_roles = _ulp_s1_language_roles()
     structural = (
         "STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):\n"
         f"- At least N UK dialogue lines (band: {band['min_uk_dialogue_lines']})\n"
@@ -581,44 +620,17 @@ def _structural_immersion_rule(band: dict[str, Any]) -> str:
 
 
 def _ulp_practices_rule(track: str, module_num: int) -> str:
-    """Return the compact ULP S1 presentation baseline for early A1 prompts."""
-    if track != "a1" or module_num > 25:
-        return ""
-    return (
-        "## ULP Presentation Pattern (A1 S1 baseline)\n"
-        "Follow Anna Ohoiko's Ukrainian-first bilingual practices from "
-        "`docs/best-practices/ulp-presentation-pattern.md`:\n"
-        "Key checks: UK-first presentation; em-dash glosses; stress marks; "
-        "named persona.\n"
-        "1. EM-DASH GLOSS: every UK term in EN narration uses UK-first, "
-        "em-dash gloss order: `Приві́т! — Hi!`; never gloss-first.\n"
-        "2. SIDE-BY-SIDE BILINGUAL: narrative passages of 3+ sentences render "
-        "as a two-column MD table (UK left, EN right) or `<DialogueBox>`-style "
-        "side-by-side translation, not EN-only prose with a vocab dump.\n"
-        "3. STRESS MARKS: every multi-syllable UK term has stress marks "
-        "throughout Tab 1 prose, Tab 2 vocabulary, and Tab 3 activity prompts "
-        "(`Приві́т`, `спра́ви`, `чудо́во`).\n"
-        "4. DIALOGUE UK-ONLY: Tab 1 dialogues use pure Ukrainian named-speaker "
-        "turns first. Translation or breakdown follows after the dialogue; do "
-        "not interleave English inside the UK turn text.\n"
-        "5. UK-ONLY Q&A: Tab 3 comprehension/recall stems and answer options "
-        "are Ukrainian-only for content questions. English appears only as "
-        "secondary UI support where needed.\n"
-        "6. TRANSLATE -> WORKBOOK: EN-to-UK translation is a workbook/booster "
-        "activity in Tab 3, never Tab 1 teaching prose.\n"
-        "7. NAMED PERSONA: Tab 1 uses a named persona or named characters, with "
-        "real Ukrainian places, foods, and activities instead of generic L2 "
-        "fillers.\n"
-        "A1 violations: English-first framing, transliteration tables, inline "
-        "EN glossing inside dialogue turns, single-column EN narration with "
-        "vocab dumps, and abstract 'the student must learn' framing."
-    )
+    """Deprecated compatibility hook; ULP S1 is embedded in band roles."""
+    return ""
 
 
 def _extend_immersion_band(raw_band: dict[str, Any]) -> dict[str, Any]:
     band = dict(raw_band)
     band["advisory_pct_min"] = int(band.pop("min_pct"))
     band["advisory_pct_max"] = int(band.pop("max_pct"))
+    if _uses_ulp_s1_band(str(band["key"])):
+        band["advisory_pct_min"] = 40
+        band["advisory_pct_max"] = 55
     structural = {
         **_IMMERSION_STRUCTURAL_DEFAULTS,
         **_IMMERSION_STRUCTURAL_OVERRIDES.get(str(band["key"]), {}),
@@ -833,6 +845,7 @@ def get_immersion_rule(
     if ulp_rule:
         return f"{rule}\n\n{ulp_rule}"
     return rule
+
 
 if __name__ == "__main__":
     # Simple CLI test

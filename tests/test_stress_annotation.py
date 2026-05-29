@@ -251,6 +251,14 @@ class TestURLsUntouched:
 class TestNoDuplicateStress:
     """AC: running annotator twice shouldn't double-stress."""
 
+    def test_marks_every_multi_syllable_occurrence(self):
+        text = "Мама читає. Мама пише."
+        result, count = annotate_stress(text)
+
+        assert count >= 4
+        assert result.count(STRESS_MARK) >= 4
+        assert result.replace(STRESS_MARK, "") == text
+
     def test_idempotent(self):
         text = "Моя бабуся живе у Львові."
         result1, _count1 = annotate_stress(text)
@@ -272,6 +280,22 @@ class TestNoDuplicateStress:
             assert len(positions) <= 1, (
                 f"мама should have at most 1 stress mark after re-annotation, got {len(positions)}"
             )
+
+    def test_single_syllable_and_english_untouched(self):
+        text = "Кіт тут. English morning stays English."
+        result, count = annotate_stress(text)
+
+        assert count == 0
+        assert result == text
+
+    def test_dialoguebox_uk_attr_is_annotated(self):
+        text = '<DialogueBox uk="Моя мама читає." en="My mother reads." />'
+        result, count = annotate_stress(text)
+
+        assert count > 0
+        assert 'en="My mother reads."' in result
+        assert f"ма{STRESS_MARK}ма" in result or f"чита{STRESS_MARK}є" in result
+        assert '<DialogueBox uk="' in result
 
 
 class TestPerformance:
@@ -396,17 +420,19 @@ class TestAnnotateFileSafetyCheck:
         # Body has Ukrainian words that should get stressed
         assert count > 0, "Body content should have been stress-annotated"
 
-    def test_already_stressed_body_skips(self, tmp_path):
-        """If the body itself already has >5% stress marks, skip annotation."""
+    def test_already_stressed_body_is_idempotent(self, tmp_path):
+        """A fully stressed body should not receive duplicate marks."""
         from scripts.pipeline.stress_annotator import annotate_file
 
-        # Body with lots of pre-existing stress marks (>5%)
-        stressed_body = (f"Моя{STRESS_MARK} ма{STRESS_MARK}ма працю{STRESS_MARK}є "
-                        f"в шко{STRESS_MARK}лі дуже до{STRESS_MARK}бре. ") * 30
+        stressed_body = (
+            f"Моя{STRESS_MARK} ма{STRESS_MARK}ма працю{STRESS_MARK}є "
+            f"в шко{STRESS_MARK}лі ду{STRESS_MARK}же до{STRESS_MARK}бре. "
+        ) * 30
         content = f"<!-- TAB:Урок -->\n\n{stressed_body}\n"
 
         md_file = tmp_path / "test-stressed.md"
         md_file.write_text(content, encoding="utf-8")
 
         count = annotate_file(md_file)
-        assert count == 0, "Already-stressed body should be skipped"
+        assert count == 0, "Already-stressed body should be idempotent"
+        assert md_file.read_text(encoding="utf-8") == content

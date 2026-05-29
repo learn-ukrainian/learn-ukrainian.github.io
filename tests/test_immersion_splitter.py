@@ -183,7 +183,7 @@ def test_advisory_immersion_pct_reports_a1_m15_24_policy_cap() -> None:
     )
 
     assert result["policy"] == "a1-m15-24"
-    assert result["max_pct"] == 24
+    assert result["max_pct"] == 55
     assert result["passed"] is True
 
 
@@ -192,25 +192,12 @@ def test_my_morning_immersion_passes() -> None:
     if fixture.exists():
         text = fixture.read_text(encoding="utf-8")
     else:
-        text = """English context keeps the A1 immersion ratio bounded for learners.
-This short grammar note explains the morning routine pattern in plain English.
-Learners read the examples, notice the endings, compare the forms, and then
-practice the dialogue aloud with a partner before writing their own version.
-The surrounding English is intentionally present because early A1 modules need
-clear scaffolding and should not become full immersion lessons yet.
-Additional English teacher notes keep this compact fixture inside the stricter
-policy cap while the Ukrainian examples remain available for sentence checks.
+        text = """Я прокидаюся — I wake up. Мене звати Олена. English support.
 
-Що ти робиш потім?**
-— **Вмиваюся, одягаюся, снідаю.**
-— **А коли ти йдеш на роботу?**
-— **О восьмій
+<DialogueBox uk="Доброго ранку, Олено." en="Good morning, Olena." />
+<DialogueBox uk="Я пишу план і читаю слова." en="I write a plan and read words." />
 
-| Особа | Форма |
-|---|---|
-| я | прокидаюся |
-| ти | прокидаєшся |
-| вона | прокидається |
+Прокидаюся — I wake up. Пишу — I write. Читаю — I read. Short support.
 """
 
     result = _advisory_immersion_pct(text, PLAN)

@@ -1059,6 +1059,17 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
             "implementation_map.json",
         )
         return all((module_dir / name).exists() for name in required)
+    if phase == "stress_annotation":
+        data = _read_json(module_dir / "stress_annotation.json")
+        return (
+            isinstance(data, Mapping)
+            and data.get("passed") is True
+            and (module_dir / "module.md").exists()
+            and (module_dir / "vocabulary.yaml").exists()
+        )
+    if phase == "ulp_fidelity_gate":
+        data = _read_json(module_dir / "ulp_fidelity_gate.json")
+        return isinstance(data, Mapping) and data.get("passed") is True
     if phase == "python_qg":
         data = _read_json(module_dir / "python_qg.json")
         if not isinstance(data, Mapping):
@@ -1333,6 +1344,75 @@ def _run(args: argparse.Namespace) -> int:
             archive=archive,
             artifact_dir=module_dir,
         )
+
+        phase = "stress_annotation"
+        _phase_started(archive, phase)
+        started_at = time.monotonic()
+        if (
+            resume_enabled
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "stress_annotation")
+        ):
+            stress_annotation = _read_json(module_dir / "stress_annotation.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_enabled:
+                force_rerun = True
+            stress_annotation = linear_pipeline.run_stress_annotation(module_dir)
+            linear_pipeline.write_json(
+                module_dir / "stress_annotation.json",
+                stress_annotation,
+            )
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
+        if not isinstance(stress_annotation, Mapping) or stress_annotation.get("passed") is not True:
+            raise linear_pipeline.LinearPipelineError("Stress annotation failed")
+
+        phase = "ulp_fidelity_gate"
+        _phase_started(archive, phase)
+        started_at = time.monotonic()
+        if (
+            resume_enabled
+            and not force_rerun
+            and _phase_artifact_passes(module_dir, "ulp_fidelity_gate")
+        ):
+            ulp_fidelity_gate = _read_json(module_dir / "ulp_fidelity_gate.json")
+            tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
+        else:
+            if resume_enabled:
+                force_rerun = True
+            ulp_fidelity_gate = linear_pipeline.run_ulp_fidelity_gate(
+                module_dir,
+                plan_path,
+                profile=profile,
+            )
+            linear_pipeline.write_json(
+                module_dir / "ulp_fidelity_gate.json",
+                ulp_fidelity_gate,
+            )
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            artifact_dir=module_dir,
+        )
+        if not isinstance(ulp_fidelity_gate, Mapping) or ulp_fidelity_gate.get("passed") is not True:
+            failed = (
+                ulp_fidelity_gate.get("failed_checks")
+                if isinstance(ulp_fidelity_gate, Mapping)
+                else "malformed ulp_fidelity report"
+            )
+            raise linear_pipeline.LinearPipelineError(f"ULP fidelity gate failed: {failed}")
 
         phase = "python_qg"
         _phase_started(archive, phase)
