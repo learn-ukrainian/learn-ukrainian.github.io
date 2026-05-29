@@ -248,10 +248,20 @@ def _tool_name(payload: Mapping[str, Any]) -> str:
     # isolation gate sees bare ``search_text`` (no prefix) and tags it
     # wrong_tool_family. Empirical reference: rollout-2026-05-21T01-37-06
     # for the night a1/my-morning codex-tools build at codex-cli 0.132.0.
+    #
+    # Codex 0.135.0 CHANGED the namespace format: it now drops the trailing
+    # ``__`` and emits ``"namespace": "mcp__sources"`` (no separator). Naive
+    # concatenation then yields ``mcp__sourcessearch_text`` — still missing the
+    # ``__`` join — so the same wrong_tool_family / mcp_tools_never_invoked
+    # HARD-fail returns for EVERY codex build under 0.135.0. Normalize to
+    # exactly one ``__`` between namespace and name so both CLI versions
+    # produce the canonical ``mcp__sources__<tool>``. Empirical reference:
+    # rollout-2026-05-29T09-59-48 a1/my-morning build at codex-cli 0.135.0.
     namespace = payload.get("namespace")
     name = payload.get("name")
     if isinstance(namespace, str) and isinstance(name, str) and namespace and name:
-        return f"{namespace}{name}"
+        separator = "" if namespace.endswith("__") else "__"
+        return f"{namespace}{separator}{name}"
     for key in ("name", "tool_name", "toolName", "function_name", "server_tool_name"):
         value = payload.get(key)
         if isinstance(value, str) and value.strip():
