@@ -1,4 +1,12 @@
-# Current — multi-agent index (2026-05-29 AUTONOMOUS — m20 PIPELINE SOLVED end-to-end; writer-quality is next chapter; 35 bio dossiers merged)
+# Current — multi-agent index (2026-05-29 Pt2 AUTONOMOUS — m20 writer-quality: 3 gate bugs fixed; rebuild #6 in flight; bio epic advanced)
+
+Latest-Brief: docs/session-state/2026-05-29-pt2-m20-descaffold-validated-3-gate-bugs-bio-epic-advanced.md
+
+> **State (2026-05-29 ~12:20):** Main `4c4c045076`. **m20 writer-quality cracked: 3 latent gate bugs fixed + merged** — #2412 (de-scaffold render sanitizer + `scaffolding_leak` gate; killed `Крок/[SN]` leak → 3.5 REJECT became 6.8 REVISE, 0 rejected dims), #2415 (`_extract_required_items` swept наприклад/phrases/pronouns/single-letters into "vocab to introduce" → writer spliced untranslated UA into EN prose → `register_consistency` now PASSES), #2416 (`vesum_verified` false-failed on Cyrillic inside `<!-- VERIFY -->` annotation comments — PROVEN repro, all builds latently affected). **Rebuild #6 IN FLIGHT** (Monitor; worktree `.worktrees/builds/a1-my-morning-20260529-1219*`) — first build with all 3 fixes. **NEXT: verify-before-promote on FRESH context** (#M-11 — all 3 bugs were caught by reading the artifact, not the score). If <bar (~8) → last lever #2389 part 3 (wire 9.5 exemplar into generator `<example>` slot via wiki/RAG composition boundary). DO NOT PROMOTE until verify clears; live PR #2364 stays; delete `my-morning-v72-preview.mdx` on promote. **Bio epic #2309: R5 12/12 (#2409), Block D de-fabbed (#2411, #2400 closed), Helsinki Group 6 founders (#2414); §7 fabrication now DETERMINISTICALLY GATED (#2413 validator, #2410 closed).** Next bio blocks: religious-martyrs/Crimean-Tatar/scientists → route **claude** (proven anti-fabrication) NOT gemini/agy. 7 PRs merged. Full arc: the Latest-Brief (`...-pt2-...`).
+
+---
+
+# Predecessor — multi-agent index (2026-05-29 AUTONOMOUS — m20 PIPELINE SOLVED end-to-end; writer-quality is next chapter; 35 bio dossiers merged)
 
 Latest-Brief: docs/session-state/2026-05-29-autonomous-m20-anchor-firing-bio-merged.md
 
