@@ -91,7 +91,7 @@ Source gap: a page-verified scanned edition of Stetsko's own works was not retri
 
 **Tier 1 (authoritative):**
 - ЕСУ. "Стецько Ярослав Семенович." <https://esu.com.ua/article-884618> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Stetsko, Yaroslav." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesSTStetskoYaroslav.htm> | accessed 2026-05-30.
+- Internet Encyclopedia of Ukraine. "Stetsko, Yaroslav." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CT%5CStetskoYaroslav.htm> | accessed 2026-05-30.
 
 **Tier 2 (institutional):**
 - Ukrainian 10th-grade history textbook RAG excerpts on the 30 June 1941 proclamation and German arrests.

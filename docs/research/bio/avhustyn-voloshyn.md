@@ -12,7 +12,7 @@
 - **Full name (UA, canonical):** Августин Іванович Волошин.
 - **Pseudonyms / aliases:** о. Августин Волошин; Monsignor Avhustyn Voloshyn; English canonical: Avhustyn Voloshyn.
 - **Born:** 17 March 1874 | Kelechyn, Transcarpathia | Austria-Hungary. [T1: ЕСУ — Волошин Августин Іванович] [T1: IEU — Voloshyn, Avhustyn]
-- **Died:** July 1945 | Moscow, USSR | died after Soviet arrest and imprisonment. IEU gives 19 July 1945 in Moscow; Ukrainian textbook RAG says Soviet counterintelligence arrested him on 1 May 1945 and transported him to a Soviet prison where he died; some Ukrainian memorial sources give 11 July, so the dossier flags 19 July as IEU/ESU-preferred pending archival check. [T1: IEU] [T2: textbook RAG]
+- **Died:** July 1945 | Moscow, USSR | died after Soviet arrest and imprisonment. IEU gives 19 July 1945 in Moscow; Ukrainian textbook RAG says Soviet counterintelligence arrested him on 1 May 1945 and transported him to a Soviet prison where he died; some Ukrainian memorial sources give 11 July, so the dossier flags 19 July as IEU/ЕСУ-preferred pending archival check. [T1: IEU] [T2: textbook RAG]
 - **Family / education key facts:** Greek Catholic priest, teacher, pedagogue, publisher, head of the autonomous Carpatho-Ukrainian government, and president of Carpatho-Ukraine declared in Khust on 15 March 1939. [T1: ЕСУ] [T1: IEU]
 
 ## 2. Oppression mechanism

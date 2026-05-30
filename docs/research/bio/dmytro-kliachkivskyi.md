@@ -12,7 +12,7 @@
 - **Full name (UA, canonical):** Дмитро-Роман Семенович Клячківський.
 - **Pseudonyms / aliases:** Клим Савур, Охрім, Білаш; English canonical: Dmytro Kliachkivskyi.
 - **Born:** 4 November 1911 | Zbarazh area, Galicia | Austria-Hungary. ЕСУ and IEU/Savur identify him as the UPA commander known as Klym Savur; use ЕСУ for the full Ukrainian name. [T1: ЕСУ — Клячківський Дмитро-Роман Семенович] [T1: IEU — Savur, Klym]
-- **Died:** 12 February 1945 | near Orzhiv/Klevan area, Rivne region | killed in an NKVD/NKDB operation. [T1: ЕСУ] [T4: Patryliak/Motyka references]
+- **Died:** 12 February 1945 | near Orzhiv/Klevan area, Rivne region | killed in an NKVD/NKGB operation. [T1: ЕСУ] [T4: Patryliak/Motyka references]
 - **Family / education key facts:** Educated in Ukrainian schools in Galicia; joined OUN; became one of the principal OUN-B/UPA commanders in Volhynia and Polissia; remembered as commander of UPA-North. [T1: ЕСУ] [T1: IEU]
 
 No OS/NS discrepancy was found for the death date. The contested point is not the date but command responsibility for anti-Polish violence in Volhynia.
@@ -21,7 +21,7 @@ No OS/NS discrepancy was found for the death date. The contested point is not th
 
 - **What happened:** Soviet security pursuit and killing in the forest near Orzhiv after the return of Soviet power to western Ukraine.
 - **When:** 10-12 February 1945 operation window; death on 12 February 1945.
-- **By whom:** NKVD internal troops and NKDB operative group, according to Ukrainian historical summaries of the Orzhiv operation.
+- **By whom:** NKVD internal troops and NKGB operative group, according to Ukrainian historical summaries of the Orzhiv operation.
 - **Document references:** This pass did not retrieve the full archival file. Secondary summaries refer to Soviet operational records and later Ukrainian scholarly discussion of the Orzhiv operation. Mark the precise fond/opys/sprava as source not found.
 
 Kliachkivskyi's death was a Soviet counterinsurgency killing, not an ordinary battlefield casualty. The mechanism belongs in the dossier because Soviet and later Russian accounts framed UPA as "banditry" while hiding the colonial counterinsurgency context. At the same time, the Soviet source category is dangerous: operational reports can document time, unit, and coercive method, but cannot be treated as authoritative on Ukrainian motives or legitimacy. [T1: ЕСУ] [T2: source-tier policy]
@@ -109,7 +109,7 @@ One disputed order attributed to him concerning Poles is discussed in Motyka thr
 
 ## Decolonization self-check (run before submitting)
 
-- [x] Soviet counterinsurgency named as NKVD/NKDB, not neutralized.
+- [x] Soviet counterinsurgency named as NKVD/NKGB, not neutralized.
 - [x] Volhynia controversy centered and attributed.
 - [x] Polish civilian perspective explicitly included.
 - [x] No Russian-imperial spellings in body prose.
