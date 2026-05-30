@@ -36,6 +36,37 @@ def test_word_count_correction_prompt_is_append_only() -> None:
     assert "ONLY append" in prompt
 
 
+def test_plan_section_gate_matches_stressed_headings() -> None:
+    plan = {"content_outline": [{"section": "Діалоги", "words": 20}]}
+    report = linear_pipeline._section_gate(
+        "# Мій ранок\n\n## Діало́ги\n\nЛіна прокидається рано. Потім вона вмивається.\n",
+        plan,
+    )
+
+    assert report["passed"] is True
+    assert report["missing_headings"] == []
+    assert report["duplicate_headings"] == []
+    assert report["word_budgets"][0]["count"] > 0
+
+
+def test_plan_section_gate_rejects_stress_equivalent_duplicate_headings() -> None:
+    plan = {"content_outline": [{"section": "Діалоги", "words": 20}]}
+    report = linear_pipeline._section_gate(
+        "# Мій ранок\n\n"
+        "## Діало́ги\n\n"
+        "Ліна прокидається рано.\n\n"
+        "## Діалоги\n\n"
+        "Настя прокидається пізно.\n",
+        plan,
+    )
+
+    assert report["passed"] is False
+    assert report["missing_headings"] == []
+    assert report["duplicate_headings"] == [
+        {"section": "Діалоги", "headings": ["Діало́ги", "Діалоги"], "count": 2}
+    ]
+
+
 def test_unhandled_correction_gate_uses_generic_surgical_fallback() -> None:
     prompt = linear_pipeline.render_writer_correction_prompt(
         gate="textbook_grounding",

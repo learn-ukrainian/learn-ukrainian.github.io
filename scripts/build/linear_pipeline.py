@@ -7537,8 +7537,25 @@ def _word_count_gate(text: str, target: int) -> dict[str, Any]:
 
 
 def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
-    headings = {match.group(1).strip() for match in _HEADING_RE.finditer(text)}
-    missing = [section["section"] for section in plan["content_outline"] if section["section"] not in headings]
+    headings_by_key: dict[str, list[str]] = {}
+    for match in _HEADING_RE.finditer(text):
+        raw_heading = match.group(1).strip()
+        headings_by_key.setdefault(_section_heading_key(raw_heading), []).append(raw_heading)
+    missing = []
+    duplicate_headings = []
+    for section in plan["content_outline"]:
+        title = section["section"]
+        matching_headings = headings_by_key.get(_section_heading_key(title), [])
+        if not matching_headings:
+            missing.append(title)
+        elif len(matching_headings) > 1:
+            duplicate_headings.append(
+                {
+                    "section": title,
+                    "headings": matching_headings,
+                    "count": len(matching_headings),
+                }
+            )
     budgets = []
     for section in plan["content_outline"]:
         title = section["section"]
@@ -7584,15 +7601,30 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         # above). A future stricter mode could surface per-section under-min
         # as a separate `plan_sections_balance` advisory gate, but the build
         # halt no longer fires on it.
-        "passed": not missing,
+        "passed": not missing and not duplicate_headings,
         "missing_headings": missing,
+        "duplicate_headings": duplicate_headings,
         "word_budgets": budgets,
     }
 
 
+def _section_heading_key(title: Any) -> str:
+    normalized = unicodedata.normalize("NFD", str(title or "").strip())
+    without_stress = "".join(ch for ch in normalized if ch not in _VESUM_STRESS_MARKS)
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", without_stress)).strip()
+
+
 def _extract_section_text(text: str, title: str) -> str:
-    match = re.search(rf"^##\s+{re.escape(title)}\s*$", text, flags=re.MULTILINE)
-    if not match:
+    title_key = _section_heading_key(title)
+    match = next(
+        (
+            heading_match
+            for heading_match in _HEADING_RE.finditer(text)
+            if _section_heading_key(heading_match.group(1)) == title_key
+        ),
+        None,
+    )
+    if match is None:
         return ""
     next_heading = re.search(r"^##\s+", text[match.end() :], flags=re.MULTILINE)
     if not next_heading:
