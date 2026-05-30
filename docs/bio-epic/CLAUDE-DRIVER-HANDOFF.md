@@ -8,7 +8,7 @@
 > without reading the orchestrator's handoff. User may also hand Claude
 > ad-hoc tasks in-seat.
 
-*Last updated: 2026-05-30. main (Codex's) observed at `c909070166`.*
+*Last updated: 2026-05-30 (Claude session: infra fixes + Phase-2 pilot + first-batch co-review). main (Codex's) observed at `2490db006e`.*
 
 ## ▶ HOW TO RESUME THIS (read FIRST if you are a fresh session)
 
@@ -24,13 +24,22 @@ Codex can also ask the user to launch this seat with `scripts/start-bio-driver.s
 
 ## ⏳ IN-FLIGHT right now
 
-- **Phase 2 plan pilot is unblocked.** Codex/orchestrator merged Block G PR #2441 as `c909070166`
-  and allocated stable Phase-2 ids in `docs/bio-epic/phase-2-sequence-allocation.yaml`.
-- Recommended first pilot: `dmytro-chyzhevskyi` -> `module: bio-222`, `sequence: 222`, plan path
-  `curriculum/l2-uk-en/plans/bio/dmytro-chyzhevskyi.yaml`.
-- Allocation rule: the 130 version-locked audit-appendix slugs get `bio-181` through `bio-310` in
-  appendix order. Seven research dossiers already map to existing plans; do not create a duplicate
-  plan for `levko-lukianenko` because the legacy plan is `levko-lukyanenko` / `bio-134`.
+- **Phase 2 is RUNNING and Codex-owned.** Pilot `dmytro-chyzhevskyi`/bio-222 proven (PR #2453).
+  First scaled batch MERGED — #2457 Semenko (bio-181), #2458 Svidzinskyi (bio-182), #2456
+  Drai-Khmara (bio-183). **Claude audited that batch: PASS** (validated clean, decolonized,
+  anti-hagiographic, sourced — Soviet terror named with case numbers/dates).
+- **Next batch (Codex's to fire):** bio-184 Mykola Voronyi, bio-185 Mykhailo Yalovyi, bio-186
+  Hryhorii Epik.
+- **⚠ DIVISION OF LABOR (settled 2026-05-30):** Codex GENERATES + MERGES Phase-2 plans (writer +
+  DeepSeek-flash/Gemini review, both of which DO have the `sources` MCP). **Claude does NOT fire
+  Phase-2 plan dispatches** — that caused a duplicate-PR collision on the pilot (#2453 vs my closed
+  #2455). Claude's Phase-2 role is **co-reviewer on batches where stakes warrant** (politically
+  charged figures, or when a second adversarial pass plausibly catches what Codex's reviewers
+  miss), gated by a "did it catch anything?" bar — not run by default.
+- Allocation rule (still current): the 130 version-locked audit-appendix slugs get `bio-181`
+  through `bio-310` in appendix order, from `docs/bio-epic/phase-2-sequence-allocation.yaml`. Seven
+  research dossiers already map to existing plans; do not create a duplicate plan for
+  `levko-lukianenko` (legacy plan is `levko-lukyanenko` / `bio-134`).
 
 ## Bio epic #2309 — Phase 1 (Research) state
 
@@ -87,10 +96,27 @@ prose; real open bug = no gate checks teaching coherence (all gates verify form)
 `stress_coverage`→advisory demotion parked in `.worktrees/fix/ulp-stress-advisory`. This is the
 orchestrator's / A1-owner's concern now, not the bio driver's.
 
+## Lessons from the 2026-05-30 Claude session (don't repeat)
+
+1. **CHECK FOR CONCURRENT ORCHESTRATOR WORK BEFORE FIRING.** Before any dispatch on shared/epic
+   territory: `gh pr list --state open` + `curl /api/delegate/active` + `git worktree list` for the
+   SAME item. Two collisions this session from skipping this — the #2440 agent-file dup and the
+   chyzhevskyi pilot dup (#2455, closed). Codex drives Phase-2 generation; assume it may already be
+   on the obvious next item.
+2. **VERIFY CAPABILITY/BEHAVIOR CLAIMS BEFORE STATING THEM (#M-4).** Two wrong assertions this
+   session: a phantom "gemini-dispatch bug" (#2454 — actually duplicate-reaping of the orchestrator's
+   concurrent run) and "DeepSeek/Gemini lack the `sources` MCP" (false — `.mcp.json`,
+   `.gemini/settings.json`, MEMORY #M0 all show they have it). Run the tool before claiming.
+
 ## NEXT ACTION on resume
 
-Resume at **Phase 2 plan YAML pilot**, not Block G. Fire one writer for `dmytro-chyzhevskyi` using
-`module: bio-222` and `sequence: 222` from `docs/bio-epic/phase-2-sequence-allocation.yaml`, then run
-DeepSeek-flash review and `plan-review-seminar`. If the pilot is clean, scale subsequent plan batches
-from the same allocation file. Claude still opens PRs; Codex/orchestrator still owns main merges and
-Phase 3 curriculum registration.
+Phase 2 is Codex-owned and running; **do NOT fire Phase-2 plan dispatches** (collision risk — see
+Division of Labor above). Claude's resume options, in order:
+1. If a new Phase-2 batch has merged since this handoff, **co-review it** (validate + framing
+   spot-read; escalate only if it catches something) — start with Codex's next batch
+   bio-184/185/186 (Voronyi/Yalovyi/Epik).
+2. Otherwise await user direction or an explicit co-review/ad-hoc assignment.
+
+Claude still opens PRs and never merges/commits to main; Codex owns main merges + Phase-3
+curriculum registration. Open follow-ups Claude filed: #2451 (4 sub-1200-word dossiers),
+#2454 (duplicate-dispatch observability).
