@@ -9,14 +9,15 @@
 - Active thread id: `019e77c1-bf07-7de3-9a5b-03d0ae09fedc`
 - Active automation id: `unknown`
 - Replacement generation: `orchestrator-next-20260530T092511Z`
-- Replacement status: `pending_start`
-- Replacement thread id: `not-confirmed`
-- Old automation ready to delete: `False`
+- Replacement status: `started`
+- Replacement thread id: `019e7836-06ef-7973-a630-07824922dfe5`
+- Old automation ready to delete: `True` in the lease after confirmation;
+  do not delete/pause automation unless the user explicitly instructs it.
 - Bootstrap prompt: `.agent/orchestrator-thread-bootstrap.md`
 
 ## Context Budget
 
-Context estimate: 76.0% (below rollover threshold; threshold 82.0%).
+Context estimate: 78.0% (below rollover threshold; threshold 82.0%).
 
 ## Exact Continuation
 
@@ -51,6 +52,10 @@ Important state:
   untracked artifacts owned by other agents.
 - Post-merge hook still prints repeated `error: branch '+' not found` while
   pruning gone-upstream branches. It is noisy but did not block fast-forwards.
+- Replacement Codex thread was created with the app `create_thread` tool, then
+  confirmed via `thread_handoff.py confirm-started`, titled
+  `Orchestrator watchdog replacement`, pinned, and sent a correction telling it
+  to treat `origin/main` / this file as authoritative.
 
 Next decisive action in the replacement thread:
 
@@ -72,7 +77,8 @@ systemic harness/prompt/build issue if the output is still not shippable.
 
 - Repo: `/Users/krisztiankoos/projects/learn-ukrainian`
 - Branch: `main`
-- HEAD: `38eabba928` (`38eabba92816248d72eb6deeaa1fc2dcd6612c84`)
+- HEAD before this confirmation update: `28c3abd31c`
+- Prior code HEAD: `38eabba928` (`38eabba92816248d72eb6deeaa1fc2dcd6612c84`)
 - Upstream: `origin/main`
 - Ahead/behind: `{'ahead': 0, 'behind': 0, 'upstream': 'origin/main'}`
 
@@ -80,11 +86,11 @@ systemic harness/prompt/build issue if the output is still not shippable.
 
 | SHA        | Subject                                                                                |
 | ---------- | -------------------------------------------------------------------------------------- |
+| 28c3abd31c | docs(session-state): prepare Codex rollover handoff                                    |
 | 38eabba928 | fix(v7): correct ULP fidelity failures before abort (#2444)                            |
 | bec9436268 | docs(bio): refresh Claude driver Block G handoff (#2443)                               |
 | 63a752b4a6 | fix(agents): register curriculum-track-orchestrator via claude_extensions SSOT (#2442) |
 | b62df7dea2 | feat(orchestration): add Codex thread handoff guard (#2439)                            |
-| 6b0be005c0 | feat(agents): curriculum-track-orchestrator agent + bio-driver launcher (#2440)        |
 
 ### Modified Files
 
