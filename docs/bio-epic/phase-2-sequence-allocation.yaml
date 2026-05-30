@@ -1,0 +1,971 @@
+# BIO Phase 2 sequence allocation. Orchestrator-owned; update only through a follow-up allocation PR.
+
+---
+version: '2026-05-30'
+issue: 2309
+owner: Codex orchestrator
+base_main: c90907016662ad8898b3f590fbf44aed63613765
+source_audit: docs/audits/bio-track-gap-audit-2026-05-26.md
+ordering_rule: >-
+  Assign the 130 version-locked audit appendix slugs after the current BIO max sequence (180),
+  preserving appendix order. Do not allocate a new plan for research dossiers already mapped in
+  existing_coverage.
+existing_bio_plan_count: 180
+research_dossier_count: 137
+existing_coverage_count: 7
+new_plan_count: 130
+existing_sequence_range:
+- 1
+- 180
+new_sequence_range:
+- 181
+- 310
+pilot:
+  slug: dmytro-chyzhevskyi
+  module: bio-222
+  sequence: 222
+  plan: curriculum/l2-uk-en/plans/bio/dmytro-chyzhevskyi.yaml
+  dossier: docs/research/bio/dmytro-chyzhevskyi.md
+existing_coverage:
+- research_slug: andrey-sheptytsky
+  plan_slug: andrey-sheptytsky
+  module: bio-062
+  sequence: 62
+- research_slug: josyf-slipyj
+  plan_slug: josyf-slipyj
+  module: bio-096
+  sequence: 96
+- research_slug: liubomyr-huzar
+  plan_slug: liubomyr-huzar
+  module: bio-140
+  sequence: 140
+- research_slug: mykhailo-hrushevskyi
+  plan_slug: mykhailo-hrushevskyi
+  module: bio-065
+  sequence: 65
+- research_slug: myroslav-marynovych
+  plan_slug: myroslav-marynovych
+  module: bio-148
+  sequence: 148
+- research_slug: oles-honchar
+  plan_slug: oles-honchar
+  module: bio-130
+  sequence: 130
+- research_slug: levko-lukianenko
+  plan_slug: levko-lukyanenko
+  module: bio-134
+  sequence: 134
+  note: >-
+    Legacy plan filename uses lukyanenko; the Phase-1 dossier uses BGN/PCGN lukianenko. Treat as one
+    figure and do not create a duplicate plan.
+allocations:
+- sequence: 181
+  module: bio-181
+  slug: mykhail-semenko
+  block: A
+  figure: Михайль Семенко
+  plan: curriculum/l2-uk-en/plans/bio/mykhail-semenko.yaml
+  dossier: docs/research/bio/mykhail-semenko.md
+- sequence: 182
+  module: bio-182
+  slug: volodymyr-svidzinskyi
+  block: A
+  figure: Володимир Свідзінський
+  plan: curriculum/l2-uk-en/plans/bio/volodymyr-svidzinskyi.yaml
+  dossier: docs/research/bio/volodymyr-svidzinskyi.md
+- sequence: 183
+  module: bio-183
+  slug: mykhailo-drai-khmara
+  block: A
+  figure: Михайло Драй-Хмара
+  plan: curriculum/l2-uk-en/plans/bio/mykhailo-drai-khmara.yaml
+  dossier: docs/research/bio/mykhailo-drai-khmara.md
+- sequence: 184
+  module: bio-184
+  slug: mykola-voronyi
+  block: A
+  figure: Микола Вороний
+  plan: curriculum/l2-uk-en/plans/bio/mykola-voronyi.yaml
+  dossier: docs/research/bio/mykola-voronyi.md
+- sequence: 185
+  module: bio-185
+  slug: mykhailo-yalovyi
+  block: A
+  figure: Михайло Яловий
+  plan: curriculum/l2-uk-en/plans/bio/mykhailo-yalovyi.yaml
+  dossier: docs/research/bio/mykhailo-yalovyi.md
+- sequence: 186
+  module: bio-186
+  slug: hryhorii-epik
+  block: A
+  figure: Григорій Епік
+  plan: curriculum/l2-uk-en/plans/bio/hryhorii-epik.yaml
+  dossier: docs/research/bio/hryhorii-epik.md
+- sequence: 187
+  module: bio-187
+  slug: valerian-polishchuk
+  block: A
+  figure: Валер'ян Поліщук
+  plan: curriculum/l2-uk-en/plans/bio/valerian-polishchuk.yaml
+  dossier: docs/research/bio/valerian-polishchuk.md
+- sequence: 188
+  module: bio-188
+  slug: oleksa-vlyzko
+  block: A
+  figure: Олекса Влизько
+  plan: curriculum/l2-uk-en/plans/bio/oleksa-vlyzko.yaml
+  dossier: docs/research/bio/oleksa-vlyzko.md
+- sequence: 189
+  module: bio-189
+  slug: marko-voronyi
+  block: A
+  figure: Марко Вороний
+  plan: curriculum/l2-uk-en/plans/bio/marko-voronyi.yaml
+  dossier: docs/research/bio/marko-voronyi.md
+- sequence: 190
+  module: bio-190
+  slug: myroslav-irchan
+  block: A
+  figure: Мирослав Ірчан
+  plan: curriculum/l2-uk-en/plans/bio/myroslav-irchan.yaml
+  dossier: docs/research/bio/myroslav-irchan.md
+- sequence: 191
+  module: bio-191
+  slug: antin-krushelnytskyi
+  block: A
+  figure: Антін Крушельницький
+  plan: curriculum/l2-uk-en/plans/bio/antin-krushelnytskyi.yaml
+  dossier: docs/research/bio/antin-krushelnytskyi.md
+- sequence: 192
+  module: bio-192
+  slug: sofiia-nalepynska-boichuk
+  block: A
+  figure: Софія Налепинська-Бойчук
+  plan: curriculum/l2-uk-en/plans/bio/sofiia-nalepynska-boichuk.yaml
+  dossier: docs/research/bio/sofiia-nalepynska-boichuk.md
+- sequence: 193
+  module: bio-193
+  slug: pavlo-hrabovskyi
+  block: B
+  figure: Павло Грабовський
+  plan: curriculum/l2-uk-en/plans/bio/pavlo-hrabovskyi.yaml
+  dossier: docs/research/bio/pavlo-hrabovskyi.md
+- sequence: 194
+  module: bio-194
+  slug: mykola-kostomarov
+  block: B
+  figure: Микола Костомаров
+  plan: curriculum/l2-uk-en/plans/bio/mykola-kostomarov.yaml
+  dossier: docs/research/bio/mykola-kostomarov.md
+- sequence: 195
+  module: bio-195
+  slug: ivan-karpenko-karyi
+  block: B
+  figure: Іван Карпенко-Карий
+  plan: curriculum/l2-uk-en/plans/bio/ivan-karpenko-karyi.yaml
+  dossier: docs/research/bio/ivan-karpenko-karyi.md
+- sequence: 196
+  module: bio-196
+  slug: panas-myrnyi
+  block: B
+  figure: Панас Мирний
+  plan: curriculum/l2-uk-en/plans/bio/panas-myrnyi.yaml
+  dossier: docs/research/bio/panas-myrnyi.md
+- sequence: 197
+  module: bio-197
+  slug: ivan-manzhura
+  block: B
+  figure: Іван Манжура
+  plan: curriculum/l2-uk-en/plans/bio/ivan-manzhura.yaml
+  dossier: docs/research/bio/ivan-manzhura.md
+- sequence: 198
+  module: bio-198
+  slug: leonid-hlibov
+  block: B
+  figure: Леонід Глібов
+  plan: curriculum/l2-uk-en/plans/bio/leonid-hlibov.yaml
+  dossier: docs/research/bio/leonid-hlibov.md
+- sequence: 199
+  module: bio-199
+  slug: oleksandr-oles
+  block: C
+  figure: Олександр Олесь
+  plan: curriculum/l2-uk-en/plans/bio/oleksandr-oles.yaml
+  dossier: docs/research/bio/oleksandr-oles.md
+- sequence: 200
+  module: bio-200
+  slug: volodymyr-vynnychenko
+  block: C
+  figure: Володимир Винниченко
+  plan: curriculum/l2-uk-en/plans/bio/volodymyr-vynnychenko.yaml
+  dossier: docs/research/bio/volodymyr-vynnychenko.md
+- sequence: 201
+  module: bio-201
+  slug: ivan-bahrianyi
+  block: C
+  figure: Іван Багряний
+  plan: curriculum/l2-uk-en/plans/bio/ivan-bahrianyi.yaml
+  dossier: docs/research/bio/ivan-bahrianyi.md
+- sequence: 202
+  module: bio-202
+  slug: todos-osmachka
+  block: C
+  figure: Тодось Осьмачка
+  plan: curriculum/l2-uk-en/plans/bio/todos-osmachka.yaml
+  dossier: docs/research/bio/todos-osmachka.md
+- sequence: 203
+  module: bio-203
+  slug: vasyl-koroliv-staryi
+  block: C
+  figure: Василь Королів-Старий
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-koroliv-staryi.yaml
+  dossier: docs/research/bio/vasyl-koroliv-staryi.md
+- sequence: 204
+  module: bio-204
+  slug: yevhen-malaniuk
+  block: C
+  figure: Євген Маланюк
+  plan: curriculum/l2-uk-en/plans/bio/yevhen-malaniuk.yaml
+  dossier: docs/research/bio/yevhen-malaniuk.md
+- sequence: 205
+  module: bio-205
+  slug: yurii-klen
+  block: C
+  figure: Юрій Клен / Освальд Бургардт
+  plan: curriculum/l2-uk-en/plans/bio/yurii-klen.yaml
+  dossier: docs/research/bio/yurii-klen.md
+- sequence: 206
+  module: bio-206
+  slug: yurii-darahan
+  block: C
+  figure: Юрій Дараган
+  plan: curriculum/l2-uk-en/plans/bio/yurii-darahan.yaml
+  dossier: docs/research/bio/yurii-darahan.md
+- sequence: 207
+  module: bio-207
+  slug: natalia-livytska-kholodna
+  block: C
+  figure: Наталя Лівицька-Холодна
+  plan: curriculum/l2-uk-en/plans/bio/natalia-livytska-kholodna.yaml
+  dossier: docs/research/bio/natalia-livytska-kholodna.md
+- sequence: 208
+  module: bio-208
+  slug: leonid-mosendz
+  block: C
+  figure: Леонід Мосендз
+  plan: curriculum/l2-uk-en/plans/bio/leonid-mosendz.yaml
+  dossier: docs/research/bio/leonid-mosendz.md
+- sequence: 209
+  module: bio-209
+  slug: oksana-liaturynska
+  block: C
+  figure: Оксана Лятуринська
+  plan: curriculum/l2-uk-en/plans/bio/oksana-liaturynska.yaml
+  dossier: docs/research/bio/oksana-liaturynska.md
+- sequence: 210
+  module: bio-210
+  slug: vasyl-barka
+  block: C
+  figure: Василь Барка
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-barka.yaml
+  dossier: docs/research/bio/vasyl-barka.md
+- sequence: 211
+  module: bio-211
+  slug: viktor-domontovych
+  block: C
+  figure: Віктор Домонтович / В. Петров
+  plan: curriculum/l2-uk-en/plans/bio/viktor-domontovych.yaml
+  dossier: docs/research/bio/viktor-domontovych.md
+- sequence: 212
+  module: bio-212
+  slug: ihor-kostetskyi
+  block: C
+  figure: Ігор Костецький
+  plan: curriculum/l2-uk-en/plans/bio/ihor-kostetskyi.yaml
+  dossier: docs/research/bio/ihor-kostetskyi.md
+- sequence: 213
+  module: bio-213
+  slug: dokiia-humenna
+  block: C
+  figure: Докія Гуменна
+  plan: curriculum/l2-uk-en/plans/bio/dokiia-humenna.yaml
+  dossier: docs/research/bio/dokiia-humenna.md
+- sequence: 214
+  module: bio-214
+  slug: yurii-kosach
+  block: C
+  figure: Юрій Косач
+  plan: curriculum/l2-uk-en/plans/bio/yurii-kosach.yaml
+  dossier: docs/research/bio/yurii-kosach.md
+- sequence: 215
+  module: bio-215
+  slug: mykhailo-orest
+  block: C
+  figure: Михайло Орест
+  plan: curriculum/l2-uk-en/plans/bio/mykhailo-orest.yaml
+  dossier: docs/research/bio/mykhailo-orest.md
+- sequence: 216
+  module: bio-216
+  slug: bohdan-boichuk
+  block: C
+  figure: Богдан Бойчук
+  plan: curriculum/l2-uk-en/plans/bio/bohdan-boichuk.yaml
+  dossier: docs/research/bio/bohdan-boichuk.md
+- sequence: 217
+  module: bio-217
+  slug: yurii-tarnavskyi
+  block: C
+  figure: Юрій Тарнавський
+  plan: curriculum/l2-uk-en/plans/bio/yurii-tarnavskyi.yaml
+  dossier: docs/research/bio/yurii-tarnavskyi.md
+- sequence: 218
+  module: bio-218
+  slug: emma-andiievska
+  block: C
+  figure: Емма Андієвська
+  plan: curriculum/l2-uk-en/plans/bio/emma-andiievska.yaml
+  dossier: docs/research/bio/emma-andiievska.md
+- sequence: 219
+  module: bio-219
+  slug: bohdan-rubchak
+  block: C
+  figure: Богдан Рубчак
+  plan: curriculum/l2-uk-en/plans/bio/bohdan-rubchak.yaml
+  dossier: docs/research/bio/bohdan-rubchak.md
+- sequence: 220
+  module: bio-220
+  slug: vira-vovk
+  block: C
+  figure: Віра Вовк
+  plan: curriculum/l2-uk-en/plans/bio/vira-vovk.yaml
+  dossier: docs/research/bio/vira-vovk.md
+- sequence: 221
+  module: bio-221
+  slug: omelian-pritsak
+  block: C
+  figure: Омелян Пріцак
+  plan: curriculum/l2-uk-en/plans/bio/omelian-pritsak.yaml
+  dossier: docs/research/bio/omelian-pritsak.md
+- sequence: 222
+  module: bio-222
+  slug: dmytro-chyzhevskyi
+  block: C
+  figure: Дмитро Чижевський
+  plan: curriculum/l2-uk-en/plans/bio/dmytro-chyzhevskyi.yaml
+  dossier: docs/research/bio/dmytro-chyzhevskyi.md
+- sequence: 223
+  module: bio-223
+  slug: yurii-lavrynenko
+  block: C
+  figure: Юрій Лавриненко
+  plan: curriculum/l2-uk-en/plans/bio/yurii-lavrynenko.yaml
+  dossier: docs/research/bio/yurii-lavrynenko.md
+- sequence: 224
+  module: bio-224
+  slug: oleksa-voropai
+  block: C
+  figure: Олекса Воропай
+  plan: curriculum/l2-uk-en/plans/bio/oleksa-voropai.yaml
+  dossier: docs/research/bio/oleksa-voropai.md
+- sequence: 225
+  module: bio-225
+  slug: pavlo-tychyna
+  block: D
+  figure: Павло Тичина
+  plan: curriculum/l2-uk-en/plans/bio/pavlo-tychyna.yaml
+  dossier: docs/research/bio/pavlo-tychyna.md
+- sequence: 226
+  module: bio-226
+  slug: maksym-rylskyi
+  block: D
+  figure: Максим Рильський
+  plan: curriculum/l2-uk-en/plans/bio/maksym-rylskyi.yaml
+  dossier: docs/research/bio/maksym-rylskyi.md
+- sequence: 227
+  module: bio-227
+  slug: volodymyr-sosiura
+  block: D
+  figure: Володимир Сосюра
+  plan: curriculum/l2-uk-en/plans/bio/volodymyr-sosiura.yaml
+  dossier: docs/research/bio/volodymyr-sosiura.md
+- sequence: 228
+  module: bio-228
+  slug: yurii-yanovskyi
+  block: D
+  figure: Юрій Яновський
+  plan: curriculum/l2-uk-en/plans/bio/yurii-yanovskyi.yaml
+  dossier: docs/research/bio/yurii-yanovskyi.md
+- sequence: 229
+  module: bio-229
+  slug: ostap-vyshnia
+  block: D
+  figure: Остап Вишня
+  plan: curriculum/l2-uk-en/plans/bio/ostap-vyshnia.yaml
+  dossier: docs/research/bio/ostap-vyshnia.md
+- sequence: 230
+  module: bio-230
+  slug: mykola-bazhan
+  block: D
+  figure: Микола Бажан
+  plan: curriculum/l2-uk-en/plans/bio/mykola-bazhan.yaml
+  dossier: docs/research/bio/mykola-bazhan.md
+- sequence: 231
+  module: bio-231
+  slug: zinaida-tulub
+  block: D
+  figure: Зінаїда Тулуб
+  plan: curriculum/l2-uk-en/plans/bio/zinaida-tulub.yaml
+  dossier: docs/research/bio/zinaida-tulub.md
+- sequence: 232
+  module: bio-232
+  slug: oleksandr-kovinka
+  block: D
+  figure: Олександр Ковінька
+  plan: curriculum/l2-uk-en/plans/bio/oleksandr-kovinka.yaml
+  dossier: docs/research/bio/oleksandr-kovinka.md
+- sequence: 233
+  module: bio-233
+  slug: yevhen-hutsalo
+  block: E
+  figure: Євген Гуцало
+  plan: curriculum/l2-uk-en/plans/bio/yevhen-hutsalo.yaml
+  dossier: docs/research/bio/yevhen-hutsalo.md
+- sequence: 234
+  module: bio-234
+  slug: mykola-rudenko
+  block: E
+  figure: Микола Руденко
+  plan: curriculum/l2-uk-en/plans/bio/mykola-rudenko.yaml
+  dossier: docs/research/bio/mykola-rudenko.md
+- sequence: 235
+  module: bio-235
+  slug: ivan-svitlychnyi
+  block: E
+  figure: Іван Світличний
+  plan: curriculum/l2-uk-en/plans/bio/ivan-svitlychnyi.yaml
+  dossier: docs/research/bio/ivan-svitlychnyi.md
+- sequence: 236
+  module: bio-236
+  slug: hryhir-tiutiunnyk
+  block: E
+  figure: Григір Тютюнник
+  plan: curriculum/l2-uk-en/plans/bio/hryhir-tiutiunnyk.yaml
+  dossier: docs/research/bio/hryhir-tiutiunnyk.md
+- sequence: 237
+  module: bio-237
+  slug: ivan-drach
+  block: E
+  figure: Іван Драч
+  plan: curriculum/l2-uk-en/plans/bio/ivan-drach.yaml
+  dossier: docs/research/bio/ivan-drach.md
+- sequence: 238
+  module: bio-238
+  slug: mykola-vinhranovskyi
+  block: E
+  figure: Микола Вінграновський
+  plan: curriculum/l2-uk-en/plans/bio/mykola-vinhranovskyi.yaml
+  dossier: docs/research/bio/mykola-vinhranovskyi.md
+- sequence: 239
+  module: bio-239
+  slug: opanas-zalyvakha
+  block: E
+  figure: Опанас Заливаха
+  plan: curriculum/l2-uk-en/plans/bio/opanas-zalyvakha.yaml
+  dossier: docs/research/bio/opanas-zalyvakha.md
+- sequence: 240
+  module: bio-240
+  slug: stefaniia-shabatura
+  block: E
+  figure: Стефанія Шабатура
+  plan: curriculum/l2-uk-en/plans/bio/stefaniia-shabatura.yaml
+  dossier: docs/research/bio/stefaniia-shabatura.md
+- sequence: 241
+  module: bio-241
+  slug: borys-antonenko-davydovych
+  block: E
+  figure: Борис Антоненко-Давидович
+  plan: curriculum/l2-uk-en/plans/bio/borys-antonenko-davydovych.yaml
+  dossier: docs/research/bio/borys-antonenko-davydovych.md
+- sequence: 242
+  module: bio-242
+  slug: yurii-badzo
+  block: E
+  figure: Юрій Бадзьо
+  plan: curriculum/l2-uk-en/plans/bio/yurii-badzo.yaml
+  dossier: docs/research/bio/yurii-badzo.md
+- sequence: 243
+  module: bio-243
+  slug: oleksa-tykhyi
+  block: E
+  figure: Олекса Тихий
+  plan: curriculum/l2-uk-en/plans/bio/oleksa-tykhyi.yaml
+  dossier: docs/research/bio/oleksa-tykhyi.md
+- sequence: 244
+  module: bio-244
+  slug: vasyl-holoborodko
+  block: E
+  figure: Василь Голобородько
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-holoborodko.yaml
+  dossier: docs/research/bio/vasyl-holoborodko.md
+- sequence: 245
+  module: bio-245
+  slug: serhii-paradzhanov
+  block: E
+  figure: Сергій Параджанов
+  plan: curriculum/l2-uk-en/plans/bio/serhii-paradzhanov.yaml
+  dossier: docs/research/bio/serhii-paradzhanov.md
+- sequence: 246
+  module: bio-246
+  slug: valerii-marchenko
+  block: E
+  figure: Валерій Марченко
+  plan: curriculum/l2-uk-en/plans/bio/valerii-marchenko.yaml
+  dossier: docs/research/bio/valerii-marchenko.md
+- sequence: 247
+  module: bio-247
+  slug: yurii-lytvyn
+  block: E
+  figure: Юрій Литвин
+  plan: curriculum/l2-uk-en/plans/bio/yurii-lytvyn.yaml
+  dossier: docs/research/bio/yurii-lytvyn.md
+- sequence: 248
+  module: bio-248
+  slug: leonid-pliushch
+  block: E
+  figure: Леонід Плющ
+  plan: curriculum/l2-uk-en/plans/bio/leonid-pliushch.yaml
+  dossier: docs/research/bio/leonid-pliushch.md
+- sequence: 249
+  module: bio-249
+  slug: nina-strokata
+  block: E
+  figure: Ніна Строката
+  plan: curriculum/l2-uk-en/plans/bio/nina-strokata.yaml
+  dossier: docs/research/bio/nina-strokata.md
+- sequence: 250
+  module: bio-250
+  slug: ihor-kalynets
+  block: E
+  figure: Ігор Калинець
+  plan: curriculum/l2-uk-en/plans/bio/ihor-kalynets.yaml
+  dossier: docs/research/bio/ihor-kalynets.md
+- sequence: 251
+  module: bio-251
+  slug: iryna-kalynets
+  block: E
+  figure: Ірина Калинець
+  plan: curriculum/l2-uk-en/plans/bio/iryna-kalynets.yaml
+  dossier: docs/research/bio/iryna-kalynets.md
+- sequence: 252
+  module: bio-252
+  slug: nadiia-svitlychna
+  block: E
+  figure: Надія Світлична
+  plan: curriculum/l2-uk-en/plans/bio/nadiia-svitlychna.yaml
+  dossier: docs/research/bio/nadiia-svitlychna.md
+- sequence: 253
+  module: bio-253
+  slug: sviatoslav-karavanskyi
+  block: E
+  figure: Святослав Караванський
+  plan: curriculum/l2-uk-en/plans/bio/sviatoslav-karavanskyi.yaml
+  dossier: docs/research/bio/sviatoslav-karavanskyi.md
+- sequence: 254
+  module: bio-254
+  slug: mykhailo-horyn
+  block: E
+  figure: Михайло Горинь
+  plan: curriculum/l2-uk-en/plans/bio/mykhailo-horyn.yaml
+  dossier: docs/research/bio/mykhailo-horyn.md
+- sequence: 255
+  module: bio-255
+  slug: bohdan-horyn
+  block: E
+  figure: Богдан Горинь
+  plan: curriculum/l2-uk-en/plans/bio/bohdan-horyn.yaml
+  dossier: docs/research/bio/bohdan-horyn.md
+- sequence: 256
+  module: bio-256
+  slug: oksana-meshko
+  block: E
+  figure: Оксана Мешко
+  plan: curriculum/l2-uk-en/plans/bio/oksana-meshko.yaml
+  dossier: docs/research/bio/oksana-meshko.md
+- sequence: 257
+  module: bio-257
+  slug: yurii-shukhevych
+  block: E
+  figure: Юрій Шухевич
+  plan: curriculum/l2-uk-en/plans/bio/yurii-shukhevych.yaml
+  dossier: docs/research/bio/yurii-shukhevych.md
+- sequence: 258
+  module: bio-258
+  slug: danylo-shumuk
+  block: E
+  figure: Данило Шумук
+  plan: curriculum/l2-uk-en/plans/bio/danylo-shumuk.yaml
+  dossier: docs/research/bio/danylo-shumuk.md
+- sequence: 259
+  module: bio-259
+  slug: ivan-kandyba
+  block: E
+  figure: Іван Кандиба
+  plan: curriculum/l2-uk-en/plans/bio/ivan-kandyba.yaml
+  dossier: docs/research/bio/ivan-kandyba.md
+- sequence: 260
+  module: bio-260
+  slug: vasyl-ovsiienko
+  block: E
+  figure: Василь Овсієнко
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-ovsiienko.yaml
+  dossier: docs/research/bio/vasyl-ovsiienko.md
+- sequence: 261
+  module: bio-261
+  slug: valentyn-moroz
+  block: E
+  figure: Валентин Мороз
+  plan: curriculum/l2-uk-en/plans/bio/valentyn-moroz.yaml
+  dossier: docs/research/bio/valentyn-moroz.md
+- sequence: 262
+  module: bio-262
+  slug: les-taniuk
+  block: E
+  figure: Лесь Танюк
+  plan: curriculum/l2-uk-en/plans/bio/les-taniuk.yaml
+  dossier: docs/research/bio/les-taniuk.md
+- sequence: 263
+  module: bio-263
+  slug: viktor-zaretskyi
+  block: E
+  figure: Віктор Зарецький
+  plan: curriculum/l2-uk-en/plans/bio/viktor-zaretskyi.yaml
+  dossier: docs/research/bio/viktor-zaretskyi.md
+- sequence: 264
+  module: bio-264
+  slug: veniamin-kushnir
+  block: E
+  figure: Веніамін Кушнір
+  plan: curriculum/l2-uk-en/plans/bio/veniamin-kushnir.yaml
+  dossier: docs/research/bio/veniamin-kushnir.md
+- sequence: 265
+  module: bio-265
+  slug: vasyl-slipak
+  block: F
+  figure: Василь Сліпак
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-slipak.yaml
+  dossier: docs/research/bio/vasyl-slipak.md
+- sequence: 266
+  module: bio-266
+  slug: oleksandr-matsiievskyi
+  block: F
+  figure: Олександр Мацієвський
+  plan: curriculum/l2-uk-en/plans/bio/oleksandr-matsiievskyi.yaml
+  dossier: docs/research/bio/oleksandr-matsiievskyi.md
+- sequence: 267
+  module: bio-267
+  slug: volodymyr-rybak
+  block: F
+  figure: Володимир Рибак
+  plan: curriculum/l2-uk-en/plans/bio/volodymyr-rybak.yaml
+  dossier: docs/research/bio/volodymyr-rybak.md
+- sequence: 268
+  module: bio-268
+  slug: maks-levin
+  block: F
+  figure: Макс Левін
+  plan: curriculum/l2-uk-en/plans/bio/maks-levin.yaml
+  dossier: docs/research/bio/maks-levin.md
+- sequence: 269
+  module: bio-269
+  slug: iryna-tsybukh
+  block: F
+  figure: Ірина Цибух «Чека»
+  plan: curriculum/l2-uk-en/plans/bio/iryna-tsybukh.yaml
+  dossier: docs/research/bio/iryna-tsybukh.md
+- sequence: 270
+  module: bio-270
+  slug: viktoriia-roshchyna
+  block: F
+  figure: Вікторія Рощина
+  plan: curriculum/l2-uk-en/plans/bio/viktoriia-roshchyna.yaml
+  dossier: docs/research/bio/viktoriia-roshchyna.md
+- sequence: 271
+  module: bio-271
+  slug: stanislav-asieiev
+  block: F
+  figure: Станіслав Асєєв
+  plan: curriculum/l2-uk-en/plans/bio/stanislav-asieiev.yaml
+  dossier: docs/research/bio/stanislav-asieiev.md
+- sequence: 272
+  module: bio-272
+  slug: vladyslav-yesypenko
+  block: F
+  figure: Владислав Єсипенко
+  plan: curriculum/l2-uk-en/plans/bio/vladyslav-yesypenko.yaml
+  dossier: docs/research/bio/vladyslav-yesypenko.md
+- sequence: 273
+  module: bio-273
+  slug: hennadii-afanasiev
+  block: F
+  figure: Геннадій Афанасьєв
+  plan: curriculum/l2-uk-en/plans/bio/hennadii-afanasiev.yaml
+  dossier: docs/research/bio/hennadii-afanasiev.md
+- sequence: 274
+  module: bio-274
+  slug: viktor-hurniak
+  block: F
+  figure: Віктор Гурняк
+  plan: curriculum/l2-uk-en/plans/bio/viktor-hurniak.yaml
+  dossier: docs/research/bio/viktor-hurniak.md
+- sequence: 275
+  module: bio-275
+  slug: hlib-babich
+  block: F
+  figure: Гліб Бабіч
+  plan: curriculum/l2-uk-en/plans/bio/hlib-babich.yaml
+  dossier: docs/research/bio/hlib-babich.md
+- sequence: 276
+  module: bio-276
+  slug: ihor-kozlovskyi
+  block: F
+  figure: Ігор Козловський
+  plan: curriculum/l2-uk-en/plans/bio/ihor-kozlovskyi.yaml
+  dossier: docs/research/bio/ihor-kozlovskyi.md
+- sequence: 277
+  module: bio-277
+  slug: stepan-bandera
+  block: G
+  figure: Степан Бандера
+  plan: curriculum/l2-uk-en/plans/bio/stepan-bandera.yaml
+  dossier: docs/research/bio/stepan-bandera.md
+- sequence: 278
+  module: bio-278
+  slug: yaroslav-stetsko
+  block: G
+  figure: Ярослав Стецько
+  plan: curriculum/l2-uk-en/plans/bio/yaroslav-stetsko.yaml
+  dossier: docs/research/bio/yaroslav-stetsko.md
+- sequence: 279
+  module: bio-279
+  slug: andrii-melnyk
+  block: G
+  figure: Андрій Мельник
+  plan: curriculum/l2-uk-en/plans/bio/andrii-melnyk.yaml
+  dossier: docs/research/bio/andrii-melnyk.md
+- sequence: 280
+  module: bio-280
+  slug: dmytro-kliachkivskyi
+  block: G
+  figure: Дмитро Клячківський «Клим Савур»
+  plan: curriculum/l2-uk-en/plans/bio/dmytro-kliachkivskyi.yaml
+  dossier: docs/research/bio/dmytro-kliachkivskyi.md
+- sequence: 281
+  module: bio-281
+  slug: yurii-tiutiunnyk
+  block: G
+  figure: Юрій Тютюнник
+  plan: curriculum/l2-uk-en/plans/bio/yurii-tiutiunnyk.yaml
+  dossier: docs/research/bio/yurii-tiutiunnyk.md
+- sequence: 282
+  module: bio-282
+  slug: avhustyn-voloshyn
+  block: G
+  figure: Августин Волошин
+  plan: curriculum/l2-uk-en/plans/bio/avhustyn-voloshyn.yaml
+  dossier: docs/research/bio/avhustyn-voloshyn.md
+- sequence: 283
+  module: bio-283
+  slug: lev-rebet
+  block: G
+  figure: Лев Ребет
+  plan: curriculum/l2-uk-en/plans/bio/lev-rebet.yaml
+  dossier: docs/research/bio/lev-rebet.md
+- sequence: 284
+  module: bio-284
+  slug: kateryna-zarytska
+  block: G
+  figure: Катерина Зарицька
+  plan: curriculum/l2-uk-en/plans/bio/kateryna-zarytska.yaml
+  dossier: docs/research/bio/kateryna-zarytska.md
+- sequence: 285
+  module: bio-285
+  slug: petro-fedun-poltava
+  block: G
+  figure: Петро Федун-Полтава
+  plan: curriculum/l2-uk-en/plans/bio/petro-fedun-poltava.yaml
+  dossier: docs/research/bio/petro-fedun-poltava.md
+- sequence: 286
+  module: bio-286
+  slug: mykhailo-kravchuk
+  block: H
+  figure: Михайло Кравчук
+  plan: curriculum/l2-uk-en/plans/bio/mykhailo-kravchuk.yaml
+  dossier: docs/research/bio/mykhailo-kravchuk.md
+- sequence: 287
+  module: bio-287
+  slug: stepan-rudnytskyi
+  block: H
+  figure: Степан Рудницький
+  plan: curriculum/l2-uk-en/plans/bio/stepan-rudnytskyi.yaml
+  dossier: docs/research/bio/stepan-rudnytskyi.md
+- sequence: 288
+  module: bio-288
+  slug: dmytro-yavornytskyi
+  block: H
+  figure: Дмитро Яворницький
+  plan: curriculum/l2-uk-en/plans/bio/dmytro-yavornytskyi.yaml
+  dossier: docs/research/bio/dmytro-yavornytskyi.md
+- sequence: 289
+  module: bio-289
+  slug: kateryna-hrushevska
+  block: H
+  figure: Катерина Грушевська
+  plan: curriculum/l2-uk-en/plans/bio/kateryna-hrushevska.yaml
+  dossier: docs/research/bio/kateryna-hrushevska.md
+- sequence: 290
+  module: bio-290
+  slug: vasyl-barvinskyi
+  block: I
+  figure: Василь Барвінський
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-barvinskyi.yaml
+  dossier: docs/research/bio/vasyl-barvinskyi.md
+- sequence: 291
+  module: bio-291
+  slug: oleksandr-koshyts
+  block: I
+  figure: Олександр Кошиць
+  plan: curriculum/l2-uk-en/plans/bio/oleksandr-koshyts.yaml
+  dossier: docs/research/bio/oleksandr-koshyts.md
+- sequence: 292
+  module: bio-292
+  slug: vasyl-krychevskyi
+  block: I
+  figure: Василь Кричевський
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-krychevskyi.yaml
+  dossier: docs/research/bio/vasyl-krychevskyi.md
+- sequence: 293
+  module: bio-293
+  slug: ivan-honchar
+  block: I
+  figure: Іван Гончар
+  plan: curriculum/l2-uk-en/plans/bio/ivan-honchar.yaml
+  dossier: docs/research/bio/ivan-honchar.md
+- sequence: 294
+  module: bio-294
+  slug: ivan-padalka
+  block: I
+  figure: Іван Падалка
+  plan: curriculum/l2-uk-en/plans/bio/ivan-padalka.yaml
+  dossier: docs/research/bio/ivan-padalka.md
+- sequence: 295
+  module: bio-295
+  slug: vasyl-sedliar
+  block: I
+  figure: Василь Седляр
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-sedliar.yaml
+  dossier: docs/research/bio/vasyl-sedliar.md
+- sequence: 296
+  module: bio-296
+  slug: nil-khasevych
+  block: I
+  figure: Ніл Хасевич
+  plan: curriculum/l2-uk-en/plans/bio/nil-khasevych.yaml
+  dossier: docs/research/bio/nil-khasevych.md
+- sequence: 297
+  module: bio-297
+  slug: danylo-shcherbakivskyi
+  block: I
+  figure: Данило Щербаківський
+  plan: curriculum/l2-uk-en/plans/bio/danylo-shcherbakivskyi.yaml
+  dossier: docs/research/bio/danylo-shcherbakivskyi.md
+- sequence: 298
+  module: bio-298
+  slug: vasyl-lypkivskyi
+  block: J
+  figure: Василь Липківський
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-lypkivskyi.yaml
+  dossier: docs/research/bio/vasyl-lypkivskyi.md
+- sequence: 299
+  module: bio-299
+  slug: mykola-charnetskyi
+  block: J
+  figure: Микола Чарнецький
+  plan: curriculum/l2-uk-en/plans/bio/mykola-charnetskyi.yaml
+  dossier: docs/research/bio/mykola-charnetskyi.md
+- sequence: 300
+  module: bio-300
+  slug: vasyl-velychkovskyi
+  block: J
+  figure: Василь Величковський
+  plan: curriculum/l2-uk-en/plans/bio/vasyl-velychkovskyi.yaml
+  dossier: docs/research/bio/vasyl-velychkovskyi.md
+- sequence: 301
+  module: bio-301
+  slug: yosafat-kotsylovskyi
+  block: J
+  figure: Йосафат Коциловський
+  plan: curriculum/l2-uk-en/plans/bio/yosafat-kotsylovskyi.yaml
+  dossier: docs/research/bio/yosafat-kotsylovskyi.md
+- sequence: 302
+  module: bio-302
+  slug: hryhorii-khomyshyn
+  block: J
+  figure: Григорій Хомишин
+  plan: curriculum/l2-uk-en/plans/bio/hryhorii-khomyshyn.yaml
+  dossier: docs/research/bio/hryhorii-khomyshyn.md
+- sequence: 303
+  module: bio-303
+  slug: mykyta-budka
+  block: J
+  figure: Микита Будка
+  plan: curriculum/l2-uk-en/plans/bio/mykyta-budka.yaml
+  dossier: docs/research/bio/mykyta-budka.md
+- sequence: 304
+  module: bio-304
+  slug: klymentii-sheptytskyi
+  block: J
+  figure: Климентій Шептицький
+  plan: curriculum/l2-uk-en/plans/bio/klymentii-sheptytskyi.yaml
+  dossier: docs/research/bio/klymentii-sheptytskyi.md
+- sequence: 305
+  module: bio-305
+  slug: ivan-ziatyk
+  block: J
+  figure: Іван Зятик
+  plan: curriculum/l2-uk-en/plans/bio/ivan-ziatyk.yaml
+  dossier: docs/research/bio/ivan-ziatyk.md
+- sequence: 306
+  module: bio-306
+  slug: zynovii-kovalyk
+  block: J
+  figure: Зиновій Ковалик
+  plan: curriculum/l2-uk-en/plans/bio/zynovii-kovalyk.yaml
+  dossier: docs/research/bio/zynovii-kovalyk.md
+- sequence: 307
+  module: bio-307
+  slug: teodor-romzha
+  block: J
+  figure: Теодор Ромжа
+  plan: curriculum/l2-uk-en/plans/bio/teodor-romzha.yaml
+  dossier: docs/research/bio/teodor-romzha.md
+- sequence: 308
+  module: bio-308
+  slug: petro-verhun
+  block: J
+  figure: Петро Вергун
+  plan: curriculum/l2-uk-en/plans/bio/petro-verhun.yaml
+  dossier: docs/research/bio/petro-verhun.md
+- sequence: 309
+  module: bio-309
+  slug: mustafa-dzhemiliev
+  block: K
+  figure: Мустафа Джемілєв
+  plan: curriculum/l2-uk-en/plans/bio/mustafa-dzhemiliev.yaml
+  dossier: docs/research/bio/mustafa-dzhemiliev.md
+- sequence: 310
+  module: bio-310
+  slug: nariman-dzhelial
+  block: K
+  figure: Наріман Джелял
+  plan: curriculum/l2-uk-en/plans/bio/nariman-dzhelial.yaml
+  dossier: docs/research/bio/nariman-dzhelial.md
