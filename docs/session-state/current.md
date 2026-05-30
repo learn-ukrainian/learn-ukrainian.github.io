@@ -38,7 +38,9 @@ Completed in this thread:
 
 Important state:
 
-- Main is clean at `38eabba928` / `origin/main`.
+- Main is clean at `origin/main`; run `git log -1 --oneline` for the exact
+  final handoff commit. The last code change before handoff was `38eabba928`
+  (#2444).
 - Active delegates: 0.
 - Open PRs: only #2441, draft BIO Block G. Its Gemini nits were fixed in
   `0b8d694304`; it remains draft/hold for full Claude+Codex co-review of the
@@ -77,7 +79,8 @@ systemic harness/prompt/build issue if the output is still not shippable.
 
 - Repo: `/Users/krisztiankoos/projects/learn-ukrainian`
 - Branch: `main`
-- HEAD before this confirmation update: `28c3abd31c`
+- Latest HEAD: the handoff commit containing this file; confirm locally with
+  `git log -1 --oneline`.
 - Prior code HEAD: `38eabba928` (`38eabba92816248d72eb6deeaa1fc2dcd6612c84`)
 - Upstream: `origin/main`
 - Ahead/behind: `{'ahead': 0, 'behind': 0, 'upstream': 'origin/main'}`
@@ -86,11 +89,11 @@ systemic harness/prompt/build issue if the output is still not shippable.
 
 | SHA        | Subject                                                                                |
 | ---------- | -------------------------------------------------------------------------------------- |
+| latest     | docs(session-state): confirmed Codex rollover handoff                                  |
 | 28c3abd31c | docs(session-state): prepare Codex rollover handoff                                    |
 | 38eabba928 | fix(v7): correct ULP fidelity failures before abort (#2444)                            |
 | bec9436268 | docs(bio): refresh Claude driver Block G handoff (#2443)                               |
 | 63a752b4a6 | fix(agents): register curriculum-track-orchestrator via claude_extensions SSOT (#2442) |
-| b62df7dea2 | feat(orchestration): add Codex thread handoff guard (#2439)                            |
 
 ### Modified Files
 
