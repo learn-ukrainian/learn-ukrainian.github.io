@@ -10,7 +10,7 @@
 ## 1. Verified facts
 
 - **Full name (UA, canonical):** Седляр Василь Теофанович.
-- **Pseudonyms / aliases:** Vasyl Sedliar, Vasyl Sedljar, Vasyl Sedliar; no stable pseudonym found in retrieved sources.
+- **Pseudonyms / aliases:** Vasyl Sedliar, Vasyl Sedljar; no stable pseudonym found in retrieved sources.
 - **Born:** IEU gives 1899-04-12 in Zhorzhivka, Poltava gubernia. Some modern memorial sources use Khrystivka/Shyshaky-area wording; the retrieved Tier 1 source used here is IEU.
 - **Died:** 1937-07-13 | Kyiv | Ukrainian SSR | executed after NKVD arrest and Soviet charges. Source: IEU "Sedliar, Vasyl."
 - **Family / education key facts:** IEU says he studied at the Kyiv Art School from 1915 to 1919 and at the Ukrainian State Academy of Arts from 1919 to 1922 under Mykhailo Boichuk. He later directed the Mezhyhiria Ceramics Tekhnikum and taught at the Kyiv State Art Institute.

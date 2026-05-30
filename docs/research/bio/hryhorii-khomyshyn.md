@@ -87,7 +87,7 @@ Source: *Українська проблєма* (1932), reprinted by Zbruc as an
 
 - **Best PD/CC portrait:** UGCC bishop profile portrait; rights not established in retrieved page.
 - **Backup candidates:** Wikimedia Commons portrait candidates; verify file-level license before use.
-- **If no PD/CC portrait exists:** Use a rights-cleared image of Stanislaviv/Ioano-Frankivsk cathedral context or Lukianivska prison context.
+- **If no PD/CC portrait exists:** Use a rights-cleared image of Stanislaviv/Ivano-Frankivsk cathedral context or Lukianivska prison context.
 - **Era-appropriate context image:** *Нова Зоря* or *Українська проблема* title page, if rights-cleared.
 
 ## 10. Sources used
