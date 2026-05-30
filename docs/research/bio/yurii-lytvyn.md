@@ -9,7 +9,7 @@
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Юрій Тимонович Литвин. ЕСУ metadata labels the entry "Тимофійович," but the ЕСУ article lead itself, KHPG, and the Ukrainian Literary Encyclopedia corpus give "Тимонович"; this dossier follows the cross-source "Тимонович" form and flags the metadata discrepancy. [S1] [S2] [S3] [S8]
+- **Full name (UA, canonical):** Юрій Тимонович Литвин. ЕСУ metadata labels the entry "Тимофійович," but the ЕСУ article lead itself, KHPG, and the Ukrainian Literary Encyclopedia corpus give "Тимонович"; this dossier follows the cross-source "Тимонович" form and flags the metadata discrepancy <!-- VERIFY -->. [S1] [S2] [S3] [S8]
 - **Pseudonyms / aliases:** Yurii Lytvyn; Yuriy Litvin; Юрій Литвин. Forbidden Russian-imperial form for body prose: `Юрий Тимонович Литвин`. [S1] [S3]
 - **Born:** 26 November 1934, с. Ксаверівка, Vasylkiv district, Kyiv oblast, Ukrainian SSR. KHPG and the Ukrainian Literary Encyclopedia corpus agree. [S1] [S2]
 - **Died:** 5 September 1984, Kuchino / Chusovoy district, Perm oblast, RSFSR; his remains were reburied in Kyiv on 19 November 1989. [S1] [S2] [S3]

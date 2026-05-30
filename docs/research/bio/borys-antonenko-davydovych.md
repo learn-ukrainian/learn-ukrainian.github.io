@@ -11,7 +11,7 @@
 
 - **Full name (UA, canonical):** Борис Дмитрович Антоненко-Давидович. ЕСУ lists the pseudonyms Богдан Вірний, Антоненко Б., and Петро Котик; Ukrainian Wikipedia also notes the birth surname Давидов/Давидів. [S1] [S3]
 - **Pseudonyms / aliases:** Богдан Вірний; Антоненко Б.; Петро Котик; Борис Давидов. Forbidden Russian-imperial form for body prose: `Борис Дмитриевич Антоненко-Давидович`. [S1] [S3]
-- **Born:** 23 July OS / 5 August NS 1899 by ЕСУ, Засулля near Romny, Poltava Governorate, Russian Empire. Ukrainian Wikipedia gives 23 July / 4 August 1899; this one-day NS discrepancy is flagged, and the dossier follows the Tier 1 ЕСУ date. [S1] [S3]
+- **Born:** 23 July OS / 5 August NS 1899 by ЕСУ, Засулля near Romny, Poltava Governorate, Russian Empire. Ukrainian Wikipedia gives 23 July / 4 August 1899; this one-day NS discrepancy is flagged <!-- VERIFY -->, and the dossier follows the Tier 1 ЕСУ date. [S1] [S3]
 - **Died:** 9 May 1984, Kyiv, Ukrainian SSR. ЕСУ, NBU, and Ukrainian Wikipedia agree on the date and place. [S1] [S2] [S3]
 - **Family / education key facts:** He studied at Kharkiv University, Kyiv University, and Kyiv Institute of People's Education but did not complete a diploma; his later professional record included teaching, journalism, editing, literary work, translation, and language-culture writing. [S1] [S3]
 
