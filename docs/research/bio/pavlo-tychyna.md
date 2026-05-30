@@ -140,7 +140,7 @@ From *Партія веде* (Pravda, 21 November 1933), the opening declaration
   - `maksym-rylskyi` (Tier 1a) — parallel capitulation arc with retained late agency
   - `mykola-bazhan` (Tier 1a) — ВАПЛІТЕ co-member, similar pattern
   - `oleksandr-oles` (Tier 1b) — author of the 1928 rebuke verse
-  - `yevhen-malanyuk` (Tier 1b) — author of the 1924 diagnosis
+  - `yevhen-malaniuk` (Tier 1b) — author of the 1924 diagnosis
 
 ## 8. Naming-canonical
 

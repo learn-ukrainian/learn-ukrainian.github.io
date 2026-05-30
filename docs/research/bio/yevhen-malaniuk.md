@@ -1,6 +1,6 @@
 # Євген Маланюк — Research Dossier
 
-**Slug:** `yevhen-malanyuk`
+**Slug:** `yevhen-malaniuk`
 **Block:** C.2 (émigré tradition — Празька школа / Prague School; UNR Army officer)
 **Tier:** 1b
 **Issue:** #2318 (R1b — Tier 1b research, Block C émigré)
@@ -97,12 +97,12 @@
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — UNR context
   - `curriculum/l2-uk-en/plans/bio/oleh-olzhych.yaml` — befriended in Poděbrady; Prague School / OUN milieu
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `yevhen-malanyuk` ↔ `yurii-darahan` (co-founded *Веселка*; Prague School origin); ↔ `oksana-liaturynska` (graves face each other; close friends); ↔ `natalia-livytska-kholodna` (his great unhappy love); ↔ `leonid-mosendz` (Poděbrady circle); ↔ `pavlo-tychyna` (the 1924 diagnosis); ↔ `yurii-klen` (whose son co-edited Klen's works with Маланюк); ↔ Олена Теліга, Юрій Липа.
-  - A `plans/bio/yevhen-malanyuk.yaml` does **not** yet exist — to be created in Phase 2.
+  - Bio-to-bio: `yevhen-malaniuk` ↔ `yurii-darahan` (co-founded *Веселка*; Prague School origin); ↔ `oksana-liaturynska` (graves face each other; close friends); ↔ `natalia-livytska-kholodna` (his great unhappy love); ↔ `leonid-mosendz` (Poděbrady circle); ↔ `pavlo-tychyna` (the 1924 diagnosis); ↔ `yurii-klen` (whose son co-edited Klen's works with Маланюк); ↔ Олена Теліга, Юрій Липа.
+  - A `plans/bio/yevhen-malaniuk.yaml` does **not** yet exist — to be created in Phase 2.
 
 ## 8. Naming-canonical
 
-- **Slug:** `yevhen-malanyuk`
+- **Slug:** `yevhen-malaniuk`
 - **EN canonical (BGN/PCGN 2010):** Yevhen Malaniuk
 - **UA canonical (with patronymic):** Євген Филимонович Маланюк
 - **Aliases (for `aliases:` field):** Маланюк Євген Филимонович; Евген Маланюк (diaspora spelling); Yevhen Malaniuk (IEU)

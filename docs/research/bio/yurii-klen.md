@@ -92,7 +92,7 @@
   - `curriculum/l2-uk-en/plans/bio/mykola-zerov.yaml` — fellow neoclassicist, executed 1937
   - `curriculum/l2-uk-en/plans/bio/pavlo-fylypovych.yaml` — fellow neoclassicist, executed 1937
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `yurii-klen` ↔ `mykhailo-drai-khmara` (research dossier exists at `docs/research/bio/mykhailo-drai-khmara.md`; neoclassicist "грона п'ятірне"); ↔ Максим Рильський (the fifth survivor-by-capitulation); ↔ `leonid-mosendz` (the Горотак collaboration); ↔ `yevhen-malanyuk` (Каравели = neoclassicism + Prague School).
+  - Bio-to-bio: `yurii-klen` ↔ `mykhailo-drai-khmara` (research dossier exists at `docs/research/bio/mykhailo-drai-khmara.md`; neoclassicist "грона п'ятірне"); ↔ Максим Рильський (the fifth survivor-by-capitulation); ↔ `leonid-mosendz` (the Горотак collaboration); ↔ `yevhen-malaniuk` (Каравели = neoclassicism + Prague School).
   - A `plans/bio/yurii-klen.yaml` does **not** yet exist — to be created in Phase 2.
 
 ## 8. Naming-canonical

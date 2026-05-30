@@ -97,7 +97,7 @@
   - `curriculum/l2-uk-en/plans/bio/oleh-olzhych.yaml` — Prague-émigré friend
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — she sculpted his bust
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `oksana-liaturynska` ↔ `yevhen-malanyuk` (graves face each other; close friends); ↔ `yurii-darahan` (*Княжа емаль* dedicated to his memory); ↔ `natalia-livytska-kholodna`, `leonid-mosendz` (Prague circle); ↔ Улас Самчук (her gymnasium-almanac editor; the she-wolf letter's addressee).
+  - Bio-to-bio: `oksana-liaturynska` ↔ `yevhen-malaniuk` (graves face each other; close friends); ↔ `yurii-darahan` (*Княжа емаль* dedicated to his memory); ↔ `natalia-livytska-kholodna`, `leonid-mosendz` (Prague circle); ↔ Улас Самчук (her gymnasium-almanac editor; the she-wolf letter's addressee).
   - Potential LIT addition: a `plans/lit/liaturynska-poetry.yaml` (file as `bio-expansion-followup`).
   - A `plans/bio/oksana-liaturynska.yaml` does **not** yet exist — to be created in Phase 2.
 

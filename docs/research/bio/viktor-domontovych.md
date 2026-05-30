@@ -1,6 +1,6 @@
 # Віктор Платонович Петров (В. Домонтович) — Research Dossier
 
-**Slug:** `viktor-petrov`
+**Slug:** `viktor-domontovych`
 **Block:** C.3 (émigré / postwar МУР tradition — contested émigré whose "emigration" ended in a disputed return)
 **Tier:** 1b
 **Issue:** #2318
@@ -121,8 +121,8 @@ Bio peers in scope: Mykola Zerov (his wife's first husband, executed neoclassici
 
 ## 8. Naming-canonical
 
-- **Slug:** `viktor-petrov`
-- **EN canonical (BGN/PCGN 2010):** Viktor Petrov.
+- **Slug:** `viktor-domontovych`
+- **EN canonical (curriculum / #2309 audit):** Viktor Domontovych; legal/scholarly name Viktor Petrov.
 - **UA canonical:** Петров Віктор Платонович; literary identity В. Домонтович.
 - **Aliases (track for `aliases:`):** В. Домонтович (canonical literary pseudonym); Віктор Домонтович; В. Бер (scholarly pseudonym); Віктор Петренко; Борис Веріго; Viktor Domontovych (EN); "Іванов" (alleged Soviet operational codename — record as alias-with-caveat, not as identity).
 - **Forbidden forms (Russian-imperial / Russified, flag in body text):** Виктор Платонович Петров; "Victor Petrov, Russian/Soviet writer" (Russocentric primary identification — he was a Ukrainian writer).

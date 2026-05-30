@@ -92,7 +92,7 @@
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — the UNR head her father succeeded; she wrote *Я бачив Симона Петлюру*
   - `curriculum/l2-uk-en/plans/bio/olena-teliha.yaml` — co-organiser with her in the «Танк» group
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `natalia-livytska-kholodna` ↔ `yevhen-malanyuk` (who loved her, dedicated poems, and named her the "Ukrainian Akhmatova"); ↔ `yurii-darahan` (Prague-school origin); ↔ `oksana-liaturynska`, `leonid-mosendz` (the émigré circle); ↔ Андрій Лівицький (her father, UNR president-in-exile — bio not yet built).
+  - Bio-to-bio: `natalia-livytska-kholodna` ↔ `yevhen-malaniuk` (who loved her, dedicated poems, and named her the "Ukrainian Akhmatova"); ↔ `yurii-darahan` (Prague-school origin); ↔ `oksana-liaturynska`, `leonid-mosendz` (the émigré circle); ↔ Андрій Лівицький (her father, UNR president-in-exile — bio not yet built).
   - Potential LIT addition: a `plans/lit/livytska-kholodna-poetry.yaml` (file as `bio-expansion-followup`).
   - A `plans/bio/natalia-livytska-kholodna.yaml` does **not** yet exist — to be created in Phase 2.
 
