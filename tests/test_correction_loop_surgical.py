@@ -36,6 +36,92 @@ def test_word_count_correction_prompt_is_append_only() -> None:
     assert "ONLY append" in prompt
 
 
+def test_plan_section_gate_matches_stressed_headings() -> None:
+    plan = {"content_outline": [{"section": "Діалоги", "words": 20}]}
+    report = linear_pipeline._section_gate(
+        "# Мій ранок\n\n## Діало́ги\n\nЛіна прокидається рано. Потім вона вмивається.\n",
+        plan,
+    )
+
+    assert report["passed"] is True
+    assert report["missing_headings"] == []
+    assert report["duplicate_headings"] == []
+    assert report["word_budgets"][0]["count"] > 0
+
+
+def test_plan_section_gate_rejects_stress_equivalent_duplicate_headings() -> None:
+    plan = {"content_outline": [{"section": "Діалоги", "words": 20}]}
+    report = linear_pipeline._section_gate(
+        "# Мій ранок\n\n"
+        "## Діало́ги\n\n"
+        "Ліна прокидається рано.\n\n"
+        "## Діалоги\n\n"
+        "Настя прокидається пізно.\n",
+        plan,
+    )
+
+    assert report["passed"] is False
+    assert report["missing_headings"] == []
+    assert report["duplicate_headings"] == [
+        {"section": "Діалоги", "headings": ["Діало́ги", "Діалоги"], "count": 2}
+    ]
+
+
+def test_plan_section_gate_deduplicates_plan_section_diagnostics() -> None:
+    plan = {
+        "content_outline": [
+            {"section": "Діалоги", "words": 20},
+            {"section": "Діало́ги", "words": 20},
+        ]
+    }
+    report = linear_pipeline._section_gate("# Мій ранок\n\n## Підсумок\n\nТекст.\n", plan)
+
+    assert report["passed"] is False
+    assert report["missing_headings"] == ["Діалоги"]
+    assert report["duplicate_headings"] == []
+
+
+def test_section_heading_key_preserves_falsy_non_none_titles() -> None:
+    assert linear_pipeline._section_heading_key(0) == "0"
+
+
+def test_plan_sections_correction_prompt_allows_duplicate_structural_edit() -> None:
+    prompt = linear_pipeline.render_writer_correction_prompt(
+        gate="plan_sections",
+        gate_report={
+            "passed": False,
+            "missing_headings": [],
+            "duplicate_headings": [
+                {"section": "Діалоги", "headings": ["Діало́ги", "Діалоги"], "count": 2}
+            ],
+        },
+        module_text="# Мій ранок\n\n## Діало́ги\n\nТекст.\n\n## Діалоги\n\nТекст.\n",
+    )
+
+    assert "Duplicate stress-equivalent H2 sections" in prompt
+    assert "keep exactly one `##` heading" in prompt
+    assert "demote supporting duplicate blocks to `###`" in prompt
+    assert "delete an empty/redundant duplicate H2 block" in prompt
+    assert "structural edit needed for the failed gate" in prompt
+    assert "No gate-specific surgical playbook exists" not in prompt
+
+
+def test_plan_sections_correction_prompt_directs_missing_heading_insert() -> None:
+    prompt = linear_pipeline.render_writer_correction_prompt(
+        gate="plan_sections",
+        gate_report={
+            "passed": False,
+            "missing_headings": ["Підсумок"],
+            "duplicate_headings": [],
+        },
+        module_text="# Мій ранок\n\n## Діалоги\n\nТекст.\n",
+    )
+
+    assert "Missing H2 sections: Підсумок" in prompt
+    assert "Add each missing `## <section>` heading" in prompt
+    assert "No gate-specific surgical playbook exists" not in prompt
+
+
 def test_unhandled_correction_gate_uses_generic_surgical_fallback() -> None:
     prompt = linear_pipeline.render_writer_correction_prompt(
         gate="textbook_grounding",
