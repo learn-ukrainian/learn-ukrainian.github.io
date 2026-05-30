@@ -12,7 +12,7 @@
 - **Full name (UA, canonical):** Валерій Веніамінович Марченко. [S1] [S2] [S3]
 - **Pseudonyms / aliases:** Valerii Marchenko; Valery Marchenko; Валерій Марченко. Forbidden Russian-imperial form for body prose: `Валерий Вениаминович Марченко`. [S1] [S2]
 - **Born:** 16 September 1947, Kyiv, Ukrainian SSR. KHPG English and Ukrainian pages and Ukrainian Wikipedia agree. [S1] [S2] [S3]
-- **Died:** KHPG and Ukrainian Wikipedia lead give 7 October 1984, prison hospital in Leningrad; Ukrainian Wikipedia body notes reports of death on 5 October. This dossier flags the date discrepancy and follows KHPG/lead date while noting uncertainty. [S1] [S2] [S3]
+- **Died:** KHPG and Ukrainian Wikipedia lead give 7 October 1984, prison hospital in Leningrad; Ukrainian Wikipedia body notes reports of death on 5 October. This dossier flags the date discrepancy <!-- VERIFY --> and follows KHPG/lead date while noting uncertainty. [S1] [S2] [S3]
 - **Family / education key facts:** Grandson of historian Mykhailo Marchenko; mother Nina Marchenko was a Ukrainian-language teacher and methodology specialist; graduated from Kyiv State University philology; studied Turkic languages as an external student at Baku University; translated from Azerbaijani and Polish. [S1] [S2] [S3]
 
 Марченко is a late-Soviet dissident, translator, journalist, literary scholar, and human-rights activist whose second imprisonment ended in death from untreated severe kidney disease in Soviet custody. [S1] [S2] [S3]

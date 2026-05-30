@@ -10,7 +10,7 @@
 ## 1. Verified facts
 
 - **Full name (UA, canonical):** Олекса Іванович Тихий; Ukrainian Wikipedia gives Олексій Іванович Тихий as the expanded civil form. KHPG uses both Олекса and Олексій in the heading. [S1] [S2] [S3]
-- **Pseudonyms / aliases:** Олекса Тихий; Олексій Тихий; Oleksa Tykhy; Oleskiy Ivanovych Tykhy. Forbidden Russian-imperial form for body prose: `Алексей Иванович Тихий`. [S1] [S2]
+- **Pseudonyms / aliases:** Олекса Тихий; Олексій Тихий; Oleksa Tykhy; Oleksiy Ivanovych Tykhy. Forbidden Russian-imperial form for body prose: `Алексей Иванович Тихий`. [S1] [S2]
 - **Born:** 27 January 1927, хутір Їжівка / Yizhivka, Kostiantynivka district, Donetsk region, Ukrainian SSR. KHPG and Ukrainian Wikipedia agree. [S1] [S2] [S3]
 - **Died:** 6 May 1984, prison hospital of the Perm political labour camps / Perm prison hospital, RSFSR. KHPG and Ukrainian Wikipedia agree. [S1] [S2] [S3]
 - **Family / education key facts:** KHPG says he was born into a peasant family, studied at Zaporizhzhia Agricultural Institute, Dnipropetrovsk Institute for Transport Engineers, and graduated from the philosophy department of Moscow State University. He worked as a teacher of physics, mathematics, and Ukrainian language, and later as a laborer when barred from teaching. [S1] [S2]
@@ -79,7 +79,7 @@ For pedagogy, Tykhy is especially useful in dismantling the false claim that Ukr
 - **Slug:** `oleksa-tykhyi`
 - **EN canonical (BGN/PCGN 2010):** Oleksa Ivanovych Tykhyi
 - **UA canonical (with patronymic if attested):** Олекса Іванович Тихий
-- **Aliases (track these for `aliases:` YAML field):** Олексій Іванович Тихий; Oleksa Tykhy; Oleskiy Tykhy
+- **Aliases (track these for `aliases:` YAML field):** Олексій Іванович Тихий; Oleksa Tykhy; Oleksiy Tykhy
 - **Forbidden forms (Russian-imperial transliterations to flag in body text):** Aleksey Ivanovich Tikhy; Алексей Иванович Тихий
 
 ## 9. Image candidates
