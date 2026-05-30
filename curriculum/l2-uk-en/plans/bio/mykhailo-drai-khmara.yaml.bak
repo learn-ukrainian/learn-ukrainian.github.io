@@ -133,14 +133,13 @@ references:
   type: reference
 - author: Михайло Драй-Хмара
   note: Єдина прижиттєва збірка поезій.
-  title: Проростень
   type: primary
   work: Проростень
 sequence: 183
 slug: mykhailo-drai-khmara
 subtitle: The Neoclassicist Poet and Scholar Consumed by the Terror
 title: 'Михайло Драй-Хмара: Ґроно п''ятірне та доля неокласика'
-version: '4.1'
+version: '4.0'
 vocabulary_hints:
 - definition: молодий пагін рослини; у назві збірки Драй-Хмари — метафора проростання нової поетичної мови
   pos: ч.
