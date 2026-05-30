@@ -101,7 +101,7 @@
 - **Existing BIO plans (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — the other face of the Директорія; Винниченко (civilian head) vs. Петлюра (military head)
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `volodymyr-vynnychenko` ↔ `oleksandr-oles`, `vasyl-koroliv-staryi` (first-wave émigré cohort); ↔ `yevhen-malanyuk` (the Празька школа took the UNR defeat as its founding wound).
+  - Bio-to-bio: `volodymyr-vynnychenko` ↔ `oleksandr-oles`, `vasyl-koroliv-staryi` (first-wave émigré cohort); ↔ `yevhen-malaniuk` (the Празька школа took the UNR defeat as its founding wound).
   - A `plans/bio/volodymyr-vynnychenko.yaml` does **not** yet exist — to be created in Phase 2.
 
 ## 8. Naming-canonical

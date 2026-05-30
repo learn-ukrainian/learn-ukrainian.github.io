@@ -94,7 +94,7 @@
   - `curriculum/l2-uk-en/plans/hist/mekhanizm-teroru.yaml` — the repression apparatus he survived
   - `curriculum/l2-uk-en/plans/hist/rozstriliane-vidrodzennia.yaml` — his МАРС friends (Косинка, Підмогильний, Плужник) were executed in it
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `todos-osmachka` ↔ `ivan-bahrianyi` (both МАРС; Багряний was the last friend to see Осьмачка alive and wrote the moving "Данте" letter about him); ↔ МАРС/Ланка peers Косинка / Підмогильний / Плужник (Block A); ↔ `mykola-zerov` (АСПИС); ↔ `yevhen-malanyuk` (who coined the "син села" phrase).
+  - Bio-to-bio: `todos-osmachka` ↔ `ivan-bahrianyi` (both МАРС; Багряний was the last friend to see Осьмачка alive and wrote the moving "Данте" letter about him); ↔ МАРС/Ланка peers Косинка / Підмогильний / Плужник (Block A); ↔ `mykola-zerov` (АСПИС); ↔ `yevhen-malaniuk` (who coined the "син села" phrase).
   - A `plans/bio/todos-osmachka.yaml` does **not** yet exist — to be created in Phase 2.
 
 ## 8. Naming-canonical

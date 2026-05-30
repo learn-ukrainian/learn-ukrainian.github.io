@@ -97,7 +97,7 @@ Dmytro Dontsov called him "**one of the best, if not the best, of our short-stor
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — UNR context
   - `curriculum/l2-uk-en/plans/bio/olena-teliha.yaml` — fellow вісниківство / *Вісник* circle
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `leonid-mosendz` ↔ `yurii-klen` (the Порфирій Горотак collaboration); ↔ `yevhen-malanyuk`, `yurii-darahan` (Poděbrady / Prague circle); ↔ `ivan-bahrianyi` (the Многогрішний parody).
+  - Bio-to-bio: `leonid-mosendz` ↔ `yurii-klen` (the Порфирій Горотак collaboration); ↔ `yevhen-malaniuk`, `yurii-darahan` (Poděbrady / Prague circle); ↔ `ivan-bahrianyi` (the Многогрішний parody).
   - Potential LIT addition: a `plans/lit/mosendz-prose.yaml` (file as `bio-expansion-followup`).
   - A `plans/bio/leonid-mosendz.yaml` does **not** yet exist — to be created in Phase 2.
 

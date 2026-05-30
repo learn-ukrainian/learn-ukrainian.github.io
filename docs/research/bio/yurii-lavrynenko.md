@@ -1,6 +1,6 @@
 # Юрій Андріянович Лавріненко — Research Dossier
 
-**Slug:** `yurii-lavrinenko`
+**Slug:** `yurii-lavrynenko`
 **Block:** C.5 (émigré scholars who built Ukrainian studies in exile)
 **Tier:** 1b
 **Issue:** #2318
@@ -104,17 +104,17 @@ From his late memoir-reflections (c. 1966+):
 - **The Tychyna exemplar** (`docs/research/bio/pavlo-tychyna.md`) cites this same anthology and Lavrinenko's "покара славою" coinage — Lavrinenko is the critic who framed Tychyna's trajectory.
 - **ISTORIO diaspora cluster:** `plans/istorio/diaspora-naukovtsi.yaml`, `tsykl-kulturnykh-vidrodzhen.yaml` — diaspora scholarship and the cycle of cultural rebirths.
 - **Connected bios already in place:** `plans/bio/george-shevelov.yaml` — Shevelov personally helped Lavrinenko escape to Lviv during WWII; a direct biographical link to a fellow C.5 scholar.
-- **Potential additions (do NOT add unilaterally):** a dedicated `yurii-lavrinenko` bio module would anchor the whole Розстріляне Відродження track; file `bio-expansion-followup` if desired.
+- **Potential additions (do NOT add unilaterally):** a dedicated `yurii-lavrynenko` bio module would anchor the whole Розстріляне Відродження track; file `bio-expansion-followup` if desired.
 
 ## 8. Naming-canonical
 
-- **Slug:** `yurii-lavrinenko`
-- **EN canonical (BGN/PCGN 2010):** Yurii Lavrinenko.
+- **Slug:** `yurii-lavrynenko`
+- **EN canonical (curriculum / #2309 audit):** Yurii Lavrynenko.
 - **UA canonical (with patronymic):** Юрій Андріянович Лавріненко.
 - **Aliases (for `aliases:` field):**
   - "Юрій Лавріненко (canonical UA, ЕСУ)"
   - "Юрій Лавриненко (IEU variant spelling)"
-  - "Yurii Lavrinenko (canonical EN, BGN/PCGN 2010)"
+  - "Yurii Lavrinenko (source-spelling variant)"
   - "Юрій Дивнич (principal pen name)"
   - "Юрій Гайдар / Ю. Ясен / Д. Коларгонець / Ю. А. (further pen names / cryptonym)"
 - **Forbidden forms (flag in body text):** "Юрий Лавриненко", "Юрий Андриянович Лавриненко" (Russified).

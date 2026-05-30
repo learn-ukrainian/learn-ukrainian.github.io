@@ -93,7 +93,7 @@
 - **Existing BIO plans (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — UNR context
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `yurii-darahan` ↔ `yevhen-malanyuk` (co-founded *Веселка*; Yelysavethrad townsmen); ↔ `oksana-liaturynska` (her *Княжа емаль* (1941) is **dedicated to Дараган's memory**); ↔ `natalia-livytska-kholodna`, `leonid-mosendz` (the Prague circle).
+  - Bio-to-bio: `yurii-darahan` ↔ `yevhen-malaniuk` (co-founded *Веселка*; Yelysavethrad townsmen); ↔ `oksana-liaturynska` (her *Княжа емаль* (1941) is **dedicated to Дараган's memory**); ↔ `natalia-livytska-kholodna`, `leonid-mosendz` (the Prague circle).
   - Potential LIT addition: a `plans/lit/darahan-poetry.yaml` (file as `bio-expansion-followup`).
   - A `plans/bio/yurii-darahan.yaml` does **not** yet exist — to be created in Phase 2.
 

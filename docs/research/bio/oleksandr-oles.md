@@ -98,7 +98,7 @@ Note: composers Микола Лисенко, Кирило Стеценко, and 
   - `curriculum/l2-uk-en/plans/bio/oleh-olzhych.yaml` — his son; direct family + ideological link
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — UNR leadership context
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `oleksandr-oles` ↔ `pavlo-tychyna` (Olesʹ authored the 1928 émigré rebuke "І ти продався їм, Тичино…"); ↔ `yevhen-malanyuk` (Празька школа milieu Olesʹ presided over in Prague); ↔ `vasyl-koroliv-staryi` (Prague émigré circle).
+  - Bio-to-bio: `oleksandr-oles` ↔ `pavlo-tychyna` (Olesʹ authored the 1928 émigré rebuke "І ти продався їм, Тичино…"); ↔ `yevhen-malaniuk` (Празька школа milieu Olesʹ presided over in Prague); ↔ `vasyl-koroliv-staryi` (Prague émigré circle).
   - A `plans/bio/oleksandr-oles.yaml` does **not** yet exist — to be created in Phase 2.
 
 ## 8. Naming-canonical
