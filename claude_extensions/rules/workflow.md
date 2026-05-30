@@ -19,7 +19,7 @@ Shell equivalent:
 ```bash
 curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
 curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
-curl -s http://localhost:8765/api/session/current        # only if hash changed
+curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # only if hash changed
 curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
 curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 ```
@@ -45,7 +45,21 @@ Every new session handoff ships as a **PAIR**:
 - **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start entry point. YAML frontmatter + bullet-list body. Agents read THIS.
 - **`docs/session-state/<date>-<slug>.html`** (~20-40KB) — rich human-readable. Narrative, tables, KPIs, callouts. Humans read THIS. Agents only open it if the brief flags something they need narrative for.
 
-**Cold-start rule:** after the Monitor API bootstrap above, locate the top row of `current.md` § "Latest handoff" and read its **Brief** link. Do NOT read the `.html` unless the brief is missing (older rows pre-split) or the brief tells you to.
+**Cold-start rule:** after the Monitor API bootstrap above, use the agent-specific
+session endpoint when you know your role:
+
+```bash
+curl -s 'http://localhost:8765/api/session/current?agent=claude'
+curl -s 'http://localhost:8765/api/session/current?agent=codex'
+curl -s 'http://localhost:8765/api/session/current?agent=gemini'
+curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'
+```
+
+`docs/session-state/current.md` is now a small compatibility router. It keeps
+`Latest-Brief: docs/session-state/current.orchestrator.md` for legacy hooks and
+an `Agent-Handoff:` mapping for `current.<agent>.md`. Read the router only to
+discover paths; detailed state belongs in the agent-specific file. Do NOT read
+the `.html` unless the agent-specific handoff points you there.
 
 ### Brief frontmatter schema (required fields)
 
@@ -90,7 +104,12 @@ Reserve all narrative, anecdotes, KPIs, and rich rationale for the `.html` compa
 
 Brief and HTML are authored together in the same orchestrator turn. Never ship one without the other for sessions going forward.
 
-Every update to `docs/session-state/current.md` MUST also update the top-level `Latest-Brief: docs/session-state/<date>-<slug>-brief.md` marker to the new brief path. The SessionStart hook parses this marker before falling back to table regex; table-format drift would silently reintroduce the old cold-start budget tax.
+Every orchestrator router update to `docs/session-state/current.md` MUST keep
+the top-level `Latest-Brief:` marker and the `Agent-Handoff:` mapping parseable.
+Non-orchestrator agents update only `docs/session-state/current.<agent>.md`
+unless a task explicitly authorizes a router update. The SessionStart hook
+parses `Latest-Brief:` before falling back to table regex; marker drift would
+silently reintroduce the old cold-start budget tax.
 
 ### Backfill policy
 

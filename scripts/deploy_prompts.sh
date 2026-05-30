@@ -41,11 +41,12 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 # cache/ — Monitor API client disk cache (see scripts/ai_agent_bridge/_monitor_cache.py),
 #          stores rules.body/session.body + ETag metadata so cold-start is ~780 B instead of 75 KB.
 #          Runtime-only; NOT source-tracked. rsync --delete must preserve both.
-# orchestrator-thread-bootstrap.md — replacement-thread bootstrap prompt generated into .agent/
-#          by scripts/orchestration/thread_handoff.py (#2439). Runtime-only, machine-specific
-#          (live timestamps + snapshot); NOT source-tracked. Without this entry the deploy aborts
-#          on any machine where the handoff automation has run.
-ORPHAN_PATHS_AGENT="wake cache orchestrator-thread-bootstrap.md"
+# *-thread-bootstrap.md / *-thread-lease.json — replacement-thread handoff
+#          files generated into .agent/ by scripts/orchestration/thread_handoff.py.
+#          Runtime-only, machine-specific (live timestamps + snapshot); NOT
+#          source-tracked. Without these entries the deploy aborts on any
+#          machine where the handoff automation has run.
+ORPHAN_PATHS_AGENT="wake cache *-thread-bootstrap.md *-thread-lease.json"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no claude_extensions equivalent.
@@ -101,7 +102,7 @@ check_orphans() {
         local matched=false
         for d in $declared; do
             # Match if orphan is exactly d or starts with d (for directories)
-            if [[ "$orphan" == "$d" || "$orphan" == "$d"* || "$orphan/" == "$d" ]]; then
+            if [[ "$orphan" == "$d" || "$orphan" == $d || "$orphan" == "$d"* || "$orphan/" == "$d" ]]; then
                 matched=true
                 break
             fi

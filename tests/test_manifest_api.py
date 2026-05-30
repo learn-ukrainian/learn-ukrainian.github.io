@@ -93,7 +93,18 @@ def session_fixture(tmp_path, monkeypatch):
     session_dir = project_root / "docs" / "session-state"
     session_dir.mkdir(parents=True)
     (session_dir / "current.md").write_text(
+        "# Current Session Router\n\n"
+        "Latest-Brief: docs/session-state/current.orchestrator.md\n\n"
+        "Agent-Handoff:\n"
+        "- orchestrator: docs/session-state/current.orchestrator.md\n"
+        "- codex: docs/session-state/current.codex.md\n",
+        encoding="utf-8",
+    )
+    (session_dir / "current.orchestrator.md").write_text(
         "# Current task\n\nWorking on #1309.\n", encoding="utf-8"
+    )
+    (session_dir / "current.codex.md").write_text(
+        "# Codex task\n\nCodex-specific handoff.\n", encoding="utf-8"
     )
     (session_dir / "2026-04-01-old.md").write_text("old handoff\n", encoding="utf-8")
     (session_dir / "2026-04-17-newest.md").write_text("new handoff\n", encoding="utf-8")
@@ -109,18 +120,41 @@ def test_session_current_markdown(session_fixture):
     # Recent handoffs block appended after the current.md body.
     assert "Recent session-state files" in resp.text
     assert "2026-04-17-newest.md" in resp.text
-    # Older handoffs listed too but not current.md itself.
-    assert "current.md" not in resp.text.split("Recent session-state")[1]
+    # Older handoffs listed too but not current router or agent handoff files.
+    recent_block = resp.text.split("Recent session-state")[1]
+    assert "current.md" not in recent_block
+    assert "current.orchestrator.md" not in recent_block
 
 
 def test_session_current_json(session_fixture):
     resp = client.get("/api/session/current?format=json")
     assert resp.status_code == 200
     body = resp.json()
-    assert body["sections"]["current"] == "docs/session-state/current.md"
+    assert body["sections"]["agent"] == "orchestrator"
+    assert body["sections"]["current"] == "docs/session-state/current.orchestrator.md"
+    assert body["sections"]["router"] == "docs/session-state/current.md"
     assert body["sections"]["recent_handoffs"][0].endswith("2026-04-17-newest.md")
     assert body["hash"]
     assert body["bytes"] == len(body["markdown"].encode("utf-8"))
+
+
+def test_session_current_agent_query(session_fixture):
+    resp = client.get("/api/session/current?agent=codex")
+    assert resp.status_code == 200
+    assert "Codex-specific handoff." in resp.text
+    assert "Working on #1309." not in resp.text
+
+
+def test_session_current_router_query(session_fixture):
+    resp = client.get("/api/session/current?agent=router")
+    assert resp.status_code == 200
+    assert "Agent-Handoff:" in resp.text
+    assert "Codex-specific handoff." not in resp.text
+
+
+def test_session_current_rejects_invalid_agent(session_fixture):
+    resp = client.get("/api/session/current?agent=../bad")
+    assert resp.status_code == 400
 
 
 def test_session_current_404_without_current_md(tmp_path, monkeypatch):
