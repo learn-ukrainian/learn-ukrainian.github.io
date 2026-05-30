@@ -26,7 +26,10 @@ will be rejected as `writer_correction_unparseable` and the module will fail.
 
 ## Hard constraint — patch-bounded
 
-Modify in place via append/insert. Never re-author or regenerate.
+Modify in place via append/insert. When the gate-specific instructions
+explicitly name a structural duplication failure, you may make the smallest
+structural edit they allow, such as demoting/deleting a duplicate heading marker
+or merging duplicate section content. Never re-author or regenerate.
 
 Forbidden phrases as instructions or strategy: "regenerate", "rewrite",
 "produce again", "start over". Do not discard the previously-passing prose.
@@ -74,7 +77,8 @@ made in this turn's trace.
 ## Previously-Passing Prose
 
 The following prose passed other gates before this correction. Preserve it
-verbatim except for the smallest append/insert needed for the failed gate.
+verbatim except for the smallest append/insert or explicitly permitted
+structural edit needed for the failed gate.
 Return the FULL patched module.md (the unchanged prose plus your minimal
 patch) inside the single fenced block above.
 

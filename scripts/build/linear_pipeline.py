@@ -4560,6 +4560,34 @@ def _render_l2_exposure_surgical_instruction(gate_report: Mapping[str, Any]) -> 
     )
 
 
+def _render_plan_sections_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    missing_headings = [str(heading) for heading in gate_report.get("missing_headings", [])]
+    duplicate_headings = gate_report.get("duplicate_headings") or []
+    instructions = []
+
+    if missing_headings:
+        instructions.append(
+            "Missing H2 sections: "
+            f"{', '.join(missing_headings)}. Add each missing `## <section>` heading at the "
+            "appropriate plan position with the smallest amount of section content needed."
+        )
+    if duplicate_headings:
+        instructions.append(
+            "Duplicate stress-equivalent H2 sections: "
+            f"{_yaml_inline(duplicate_headings)}. For each duplicate group, keep exactly one "
+            "`##` heading for the planned section. Apply the smallest structural edit: merge "
+            "unique prose under the kept section, demote supporting duplicate blocks to `###`, "
+            "or delete an empty/redundant duplicate H2 block. Do not add a new duplicate heading."
+        )
+    if not instructions:
+        instructions.append(
+            "The plan section structure failed. Use the YAML diagnostic to add missing H2 sections "
+            "or collapse duplicate H2 sections with the smallest structural edit."
+        )
+
+    return " ".join(instructions) + " Preserve all unrelated prose byte-for-byte. Do not re-author the lesson."
+
+
 def _render_ulp_fidelity_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
     failed = gate_report.get("failed_checks") or []
     return (
@@ -4585,6 +4613,7 @@ def _render_default_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
 GATE_SPECIFIC_INSTRUCTION_RENDERERS: dict[str, Callable[[Mapping[str, Any]], str]] = {
     "vesum_verified": _render_vesum_surgical_instruction,
     "word_count": _render_word_count_surgical_instruction,
+    "plan_sections": _render_plan_sections_surgical_instruction,
     "engagement_floor": _render_engagement_surgical_instruction,
     "russianisms_strict": _render_russianisms_surgical_instruction,
     "l2_exposure_floor": _render_l2_exposure_surgical_instruction,
