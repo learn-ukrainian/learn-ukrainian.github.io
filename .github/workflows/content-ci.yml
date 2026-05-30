@@ -1,0 +1,79 @@
+name: Content CI
+
+permissions:
+  contents: read
+
+on:
+  # Advisory content gates intentionally avoid a global path filter.
+  # See ci.yml #1641/#1644: filtered required checks can wedge PRs as "expected".
+  pull_request:
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      content: ${{ steps.filter.outputs.content }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4 - SHA-pinned per supply-chain hardening 2026-05-19
+        id: filter
+        with:
+          filters: |
+            content:
+              - 'docs/research/**'
+              - 'curriculum/**/*.md'
+              - 'curriculum/l2-uk-en/plans/**/*.yaml'
+              - 'plans/**/*.yaml'
+
+  section7-xref:
+    name: Content Gate (Section 7 xref)
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.content == 'true'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Validate changed bio dossier Section 7 paths
+        run: |
+          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          mapfile -t dossiers < <(
+            git diff --name-only --diff-filter=AM origin/main...HEAD -- docs/research/bio \
+              | grep -E '^docs/research/bio/.*\.md$' || true
+          )
+
+          if ((${#dossiers[@]} == 0)); then
+            echo "No changed bio research dossiers."
+            exit 0
+          fi
+
+          python scripts/audit/lint_bio_dossier_xref.py --paths "${dossiers[@]}"
+
+  dossier-wordcount:
+    name: Content Gate (dossier word count)
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.content == 'true'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Check changed dossier word-count floor
+        run: |
+          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          python scripts/audit/check_dossier_wordcount.py --changed
