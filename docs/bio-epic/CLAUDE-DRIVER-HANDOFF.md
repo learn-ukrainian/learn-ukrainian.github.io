@@ -26,7 +26,7 @@ Codex can also ask the user to launch this seat with `scripts/start-bio-driver.s
 
 - **Phase 2 is RUNNING and Codex-owned.** Pilot `dmytro-chyzhevskyi`/bio-222 proven (PR #2453).
   First scaled batch MERGED — #2457 Semenko (bio-181), #2458 Svidzinskyi (bio-182), #2456
-  Drai-Khmara (bio-183). **Claude audited that batch: PASS** (validate clean, decolonized,
+  Drai-Khmara (bio-183). **Claude audited that batch: PASS** (validated clean, decolonized,
   anti-hagiographic, sourced — Soviet terror named with case numbers/dates).
 - **Next batch (Codex's to fire):** bio-184 Mykola Voronyi, bio-185 Mykhailo Yalovyi, bio-186
   Hryhorii Epik.
@@ -116,6 +116,7 @@ Division of Labor above). Claude's resume options, in order:
    spot-read; escalate only if it catches something) — start with Codex's next batch
    bio-184/185/186 (Voronyi/Yalovyi/Epik).
 2. Otherwise await user direction or an explicit co-review/ad-hoc assignment.
+
 Claude still opens PRs and never merges/commits to main; Codex owns main merges + Phase-3
 curriculum registration. Open follow-ups Claude filed: #2451 (4 sub-1200-word dossiers),
 #2454 (duplicate-dispatch observability).
