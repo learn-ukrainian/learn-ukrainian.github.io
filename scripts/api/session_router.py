@@ -3,7 +3,8 @@
 Mounted at /api/session in main.py.
 
 Endpoints:
-    GET /api/session/current              Markdown summary of current session
+    GET /api/session/current              Markdown summary of orchestrator session
+    GET /api/session/current?agent=codex  Markdown summary of Codex session
     GET /api/session/current?format=json  {hash, bytes, sections, markdown}
 
 Why this exists (GH #1309): every agent cold-start was reading
@@ -13,15 +14,16 @@ into one endpoint lets agents check a single hash on
 ``/api/state/manifest`` and only refetch when something changed.
 
 The payload is kept lean on purpose — if an agent needs the full
-session state, the current.md file path is advertised in the JSON
-response so the agent can fall back to a direct read. The endpoint is
-designed for "what do I need to know RIGHT NOW to start working", not
-for forensic archaeology.
+session state, the selected current.<agent>.md file path is advertised
+in the JSON response so the agent can fall back to a direct read. The
+endpoint is designed for "what do I need to know RIGHT NOW to start
+working", not for forensic archaeology.
 """
 
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 from typing import Literal
 
@@ -38,7 +40,9 @@ from .telemetry.response import (
 
 router = APIRouter(tags=["session"])
 
-SESSION_CURRENT_PATH = "docs/session-state/current.md"
+SESSION_ROUTER_PATH = "docs/session-state/current.md"
+DEFAULT_SESSION_AGENT = "orchestrator"
+AGENT_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 
 # How many recent handoff files to include in the consolidated summary.
 # Small on purpose — the manifest is the jump table; this endpoint is
@@ -46,13 +50,13 @@ SESSION_CURRENT_PATH = "docs/session-state/current.md"
 _RECENT_HANDOFFS_N = 3
 
 
-def _read_current_session() -> str:
-    path = PROJECT_ROOT / SESSION_CURRENT_PATH
+def _read_session_file(session_path: str) -> str:
+    path = PROJECT_ROOT / session_path
     if not path.is_file():
         raise HTTPException(
             status_code=404,
             detail=(
-                f"Session state file not found at {SESSION_CURRENT_PATH}. "
+                f"Session state file not found at {session_path}. "
                 "Create it with the current task's context."
             ),
         )
@@ -61,8 +65,67 @@ def _read_current_session() -> str:
     except OSError as exc:
         raise HTTPException(
             status_code=500,
-            detail=f"Could not read {SESSION_CURRENT_PATH}: {exc}",
+            detail=f"Could not read {session_path}: {exc}",
         ) from exc
+
+
+def _normalize_agent(agent: str | None) -> str:
+    normalized = (agent or DEFAULT_SESSION_AGENT).strip().lower()
+    if normalized == "router":
+        return normalized
+    if not AGENT_NAME_RE.fullmatch(normalized):
+        raise HTTPException(
+            status_code=400,
+            detail="agent names must match [a-z][a-z0-9-]*",
+        )
+    return normalized
+
+
+def _parse_agent_handoffs(router_markdown: str) -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    in_mapping = False
+    for raw_line in router_markdown.splitlines():
+        line = raw_line.strip()
+        if line == "Agent-Handoff:":
+            in_mapping = True
+            continue
+        if not in_mapping:
+            continue
+        if not line:
+            break
+        if line.startswith("- "):
+            line = line[2:].strip()
+        if ":" not in line:
+            continue
+        agent, path = [part.strip() for part in line.split(":", 1)]
+        if not AGENT_NAME_RE.fullmatch(agent):
+            continue
+        rel_path = Path(path)
+        if rel_path.is_absolute() or ".." in rel_path.parts:
+            continue
+        mapping[agent] = rel_path.as_posix()
+    return mapping
+
+
+def _resolve_session_path(agent: str) -> str:
+    if agent == "router":
+        return SESSION_ROUTER_PATH
+
+    router_path = PROJECT_ROOT / SESSION_ROUTER_PATH
+    agent_default = f"docs/session-state/current.{agent}.md"
+    if not router_path.is_file():
+        return agent_default
+
+    router_markdown = router_path.read_text(encoding="utf-8", errors="replace")
+    handoffs = _parse_agent_handoffs(router_markdown)
+    if agent in handoffs:
+        return handoffs[agent]
+
+    # Backward compatibility for older current.md files that still contained
+    # the detailed orchestrator handoff rather than an Agent-Handoff router.
+    if agent == DEFAULT_SESSION_AGENT and not handoffs:
+        return SESSION_ROUTER_PATH
+    return agent_default
 
 
 def _recent_handoff_paths() -> list[str]:
@@ -80,15 +143,21 @@ def _recent_handoff_paths() -> list[str]:
     candidates: list[Path] = []
     for pattern in ("*.md", "*.html"):
         candidates.extend(session_dir.glob(pattern))
-    all_handoffs = sorted(p for p in candidates if p.name != "current.md")
+    all_handoffs = sorted(
+        p
+        for p in candidates
+        if p.name != "current.md" and not (p.name.startswith("current.") and p.suffix == ".md")
+    )
     latest = all_handoffs[-_RECENT_HANDOFFS_N:] if all_handoffs else []
     latest.reverse()  # newest first
     return [str(p.relative_to(PROJECT_ROOT)) for p in latest]
 
 
-def _assemble_session() -> tuple[str, dict, str]:
+def _assemble_session(agent: str = DEFAULT_SESSION_AGENT) -> tuple[str, dict, str]:
     """Return (markdown, sections_dict, sha256_hex) for the session view."""
-    current_md = _read_current_session().rstrip() + "\n"
+    normalized_agent = _normalize_agent(agent)
+    current_path = _resolve_session_path(normalized_agent)
+    current_md = _read_session_file(current_path).rstrip() + "\n"
     handoffs = _recent_handoff_paths()
 
     if handoffs:
@@ -107,7 +176,9 @@ def _assemble_session() -> tuple[str, dict, str]:
 
     digest = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
     sections = {
-        "current": SESSION_CURRENT_PATH,
+        "agent": normalized_agent,
+        "current": current_path,
+        "router": SESSION_ROUTER_PATH,
         "recent_handoffs": handoffs,
     }
     return markdown, sections, digest
@@ -116,6 +187,10 @@ def _assemble_session() -> tuple[str, dict, str]:
 @router.get("/current")
 def session_current(
     request: Request,
+    agent: str = Query(
+        DEFAULT_SESSION_AGENT,
+        description="Agent-specific handoff to serve; use 'router' for docs/session-state/current.md.",
+    ),
     format: Literal["markdown", "json"] = Query(
         "markdown",
         description="'markdown' returns text/markdown; 'json' wraps with hash + section map.",
@@ -127,7 +202,7 @@ def session_current(
     ``304 Not Modified`` with no body, so an SDK with a valid local
     cache pays only the TCP round-trip.
     """
-    markdown, sections, digest = _assemble_session()
+    markdown, sections, digest = _assemble_session(agent)
     etag = f'"{digest}"'
 
     if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
@@ -161,10 +236,10 @@ def _cache_headers(etag: str, digest: str) -> dict[str, str]:
     return headers
 
 
-def session_hash() -> str:
+def session_hash(agent: str = DEFAULT_SESSION_AGENT) -> str:
     """Hash-only helper for ``/api/state/manifest``. Returns empty on error."""
     try:
-        _, _, digest = _assemble_session()
+        _, _, digest = _assemble_session(agent)
     except HTTPException:
         return ""
     return digest

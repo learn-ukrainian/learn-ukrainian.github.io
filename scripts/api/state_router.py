@@ -1029,7 +1029,7 @@ async def manifest():
         {
           "generated_at": "2026-04-17T10:15:00Z",
           "rules":   {"hash": "...", "url": "/api/rules?format=markdown"},
-          "session": {"hash": "...", "url": "/api/session/current?format=markdown"},
+          "session": {"hash": "...", "url": "/api/session/current?agent=orchestrator&format=markdown"},
           "orient":  {"url": "/api/orient"},
           "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
         }
@@ -1062,7 +1062,7 @@ async def manifest():
         },
         "session": {
             "hash": session_hash(),
-            "url": "/api/session/current?format=markdown",
+            "url": "/api/session/current?agent=orchestrator&format=markdown",
             "format": "markdown",
             "note": "Current.md + recent session-state handoff filenames.",
         },

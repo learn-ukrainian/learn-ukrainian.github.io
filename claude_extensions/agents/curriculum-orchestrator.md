@@ -10,13 +10,13 @@ initialPrompt: |
   2. Orient via Monitor API, not files:
      - `curl -s --max-time 2 http://localhost:8765/api/state/manifest`
      - `curl -s --max-time 2 'http://localhost:8765/api/rules?format=markdown'` only if rules hash changed
-     - `curl -s --max-time 2 http://localhost:8765/api/session/current` only if session hash changed
+     - `curl -s --max-time 2 'http://localhost:8765/api/session/current?agent=orchestrator'` only if session hash changed
      - `curl -s --max-time 2 http://localhost:8765/api/orient`
      - `curl -s --max-time 2 'http://localhost:8765/api/comms/inbox?agent=claude'`
-  3. Read the latest handoff linked by the top row of `docs/session-state/current.md`.
+  3. Read `docs/session-state/current.orchestrator.md` for the detailed handoff; `current.md` is only the router.
   4. Check `docs/decisions/pending/`; pending decisions block only their declared Scope.
   5. Then begin work. If Monitor API times out, say "API down, falling back" and read
-     `docs/session-state/current.md` -> latest handoff -> `memory/MEMORY.md` -> `CLAUDE.md`.
+     `docs/session-state/current.md` router -> matching `current.<agent>.md` -> `memory/MEMORY.md` -> `CLAUDE.md`.
 
   Standalone session = main orchestrator. Drive the queue without asking when the next
   action is obvious.

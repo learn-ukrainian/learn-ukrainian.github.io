@@ -216,6 +216,7 @@ fi
 # This is the zero-touch rehydrate: current.md keeps a stable Latest-Brief
 # marker so the hook can inject a compact pointer instead of dumping the index.
 HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
+HANDOFF_AGENT="${SESSION_HANDOFF_AGENT:-claude}"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
 
@@ -225,7 +226,7 @@ build_handoff_pointer() {
 PREVIOUS-SESSION HANDOFF — read this brief first, then orient via Monitor API.
 
 Brief: $brief_path
-Read with: Read tool. The brief is ~4KB, YAML frontmatter + bullet body.
+Read with: Read tool. The target is the current agent handoff or a compact brief.
 Cold-start protocol: claude_extensions/rules/workflow.md § "Two-tier handoffs"
 
 ---
@@ -253,9 +254,18 @@ EOF
 }
 
 if [ -f "$HANDOFF_FILE" ]; then
+  AGENT_HANDOFF=$(sed -n "s/^[[:space:]]*-[[:space:]]*${HANDOFF_AGENT}:[[:space:]]*//p" "$HANDOFF_FILE" 2>/dev/null | head -1 | sed 's/[[:space:]]*$//')
+  if [ -n "$AGENT_HANDOFF" ]; then
+    if [ -f "$PROJECT_DIR/$AGENT_HANDOFF" ]; then
+      HANDOFF_CONTEXT=$(build_handoff_pointer "$AGENT_HANDOFF")
+    else
+      HANDOFF_WARNINGS="WARN: Agent-Handoff for $HANDOFF_AGENT pointed to $AGENT_HANDOFF but file missing on disk."
+    fi
+  fi
+
   MARKER_BRIEF=$(grep -m1 '^Latest-Brief:' "$HANDOFF_FILE" 2>/dev/null | sed 's/^Latest-Brief:[[:space:]]*//; s/[[:space:]]*$//')
 
-  if [ -n "$MARKER_BRIEF" ]; then
+  if [ -z "$HANDOFF_CONTEXT" ] && [ -n "$MARKER_BRIEF" ]; then
     if [ -f "$PROJECT_DIR/$MARKER_BRIEF" ]; then
       HANDOFF_CONTEXT=$(build_handoff_pointer "$MARKER_BRIEF")
     else

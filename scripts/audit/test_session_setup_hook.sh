@@ -77,7 +77,26 @@ assert_not_contains "$output" "HEAD BODY SHOULD NOT APPEAR" "marker hit"
 assert_not_contains "$output" "WARN:" "marker hit"
 marker_bytes="$(printf '%s' "$output" | wc -c | tr -d ' ')"
 
-# 2. Table regex fallback.
+# 2. Agent-Handoff mapping wins over the compatibility Latest-Brief marker.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/docs/session-state"
+printf 'orchestrator body\n' > "$fixture_root/docs/session-state/current.orchestrator.md"
+printf 'claude body\n' > "$fixture_root/docs/session-state/current.claude.md"
+cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
+# Current Session Router
+
+Latest-Brief: docs/session-state/current.orchestrator.md
+
+Agent-Handoff:
+- orchestrator: docs/session-state/current.orchestrator.md
+- claude: docs/session-state/current.claude.md
+EOF
+output="$(run_hook "$fixture_root")"
+assert_contains "$output" "Brief: docs/session-state/current.claude.md" "agent handoff"
+assert_not_contains "$output" "Brief: docs/session-state/current.orchestrator.md" "agent handoff"
+assert_not_contains "$output" "WARN:" "agent handoff"
+
+# 3. Table regex fallback.
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/foo"
 printf 'brief body\n' > "$fixture_root/foo/bar-brief.md"
@@ -96,7 +115,7 @@ assert_contains "$output" "WARN: Latest-Brief marker missing in current.md" "tab
 assert_not_contains "$output" "TABLE FALLBACK BODY SHOULD NOT APPEAR" "table fallback"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
 
-# 3. Brief missing.
+# 4. Brief missing.
 setup_fixture "$fixture_root"
 cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
 # Current
@@ -110,7 +129,7 @@ assert_contains "$output" "WARN: Latest-Brief pointed to foo/missing-brief.md bu
 assert_contains "$output" "MISSING MARKER FALLBACK BODY" "missing brief"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
 
-# 4. No handoff table at all.
+# 5. No handoff table at all.
 setup_fixture "$fixture_root"
 cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
 # Current

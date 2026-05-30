@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Prepare and guard Codex orchestrator thread handoffs.
+"""Prepare and guard agent-specific thread handoffs.
 
 The Codex app can expose thread and automation tools to an agent, but a local
 repo script cannot assume those app-only tools exist. This helper gathers the
@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import urllib.error
@@ -25,9 +26,10 @@ from typing import Any
 
 SCHEMA_VERSION = 1
 DEFAULT_MONITOR_BASE_URL = "http://127.0.0.1:8765"
-DEFAULT_STATE_PATH = Path(".agent/orchestrator-thread-lease.json")
-DEFAULT_BOOTSTRAP_PATH = Path(".agent/orchestrator-thread-bootstrap.md")
-DEFAULT_CURRENT_PATH = Path("docs/session-state/current.md")
+DEFAULT_AGENT = "orchestrator"
+DEFAULT_ROUTER_AGENTS = ("orchestrator", "codex", "claude", "gemini")
+AGENT_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
+DEFAULT_ROUTER_PATH = Path("docs/session-state/current.md")
 DEFAULT_STALE_HOURS = 12
 DEFAULT_CONTEXT_THRESHOLD = 82.0
 
@@ -41,6 +43,41 @@ class CommandResult:
 
 def repo_root_from_file() -> Path:
     return Path(__file__).resolve().parents[2]
+
+
+def normalize_agent_name(value: str | None) -> str:
+    agent = (value or DEFAULT_AGENT).strip().lower()
+    if not AGENT_NAME_RE.fullmatch(agent):
+        raise ValueError(
+            "agent names must match [a-z][a-z0-9-]* so handoff paths cannot escape the repo"
+        )
+    return agent
+
+
+def argparse_agent_name(value: str) -> str:
+    try:
+        return normalize_agent_name(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from exc
+
+
+def default_state_path(agent: str) -> Path:
+    return Path(f".agent/{agent}-thread-lease.json")
+
+
+def default_bootstrap_path(agent: str) -> Path:
+    return Path(f".agent/{agent}-thread-bootstrap.md")
+
+
+def default_handoff_path(agent: str) -> Path:
+    return Path(f"docs/session-state/current.{agent}.md")
+
+
+def router_agents(selected_agent: str) -> list[str]:
+    agents = list(DEFAULT_ROUTER_AGENTS)
+    if selected_agent not in agents:
+        agents.append(selected_agent)
+    return agents
 
 
 def utc_now() -> datetime:
@@ -65,9 +102,9 @@ def parse_iso_datetime(value: str | None) -> datetime | None:
 
 def rel(path: Path, root: Path) -> str:
     try:
-        return str(path.resolve().relative_to(root.resolve()))
+        return path.resolve().relative_to(root.resolve()).as_posix()
     except ValueError:
-        return str(path)
+        return path.as_posix()
 
 
 def run_command(
@@ -290,6 +327,7 @@ def generation_id(prefix: str, now: datetime) -> str:
 def prepare_state(
     state: dict[str, Any],
     *,
+    agent: str = DEFAULT_AGENT,
     now: datetime,
     active_thread_id: str | None,
     active_automation_id: str | None,
@@ -299,10 +337,11 @@ def prepare_state(
 ) -> dict[str, Any]:
     prepared = dict(state)
     prepared["schema_version"] = SCHEMA_VERSION
+    prepared["agent"] = agent
 
     active = dict(prepared.get("active") or {})
     if not active.get("generation"):
-        active["generation"] = generation_id("orchestrator", now)
+        active["generation"] = generation_id(agent, now)
         active["started_at"] = isoformat_z(now)
     if active_thread_id:
         active["thread_id"] = active_thread_id
@@ -316,15 +355,15 @@ def prepare_state(
     replacement = dict(prepared.get("replacement") or {})
     if force_new_replacement or replacement.get("status") not in {"pending_start", "started"}:
         replacement = {
-            "generation": generation_id("orchestrator-next", now),
+            "generation": generation_id(f"{agent}-next", now),
             "status": "pending_start",
             "prepared_at": isoformat_z(now),
             "thread_id": None,
-            "bootstrap_prompt_path": str(bootstrap_path),
+            "bootstrap_prompt_path": bootstrap_path.as_posix(),
         }
     else:
         replacement["prepared_at"] = isoformat_z(now)
-        replacement["bootstrap_prompt_path"] = str(bootstrap_path)
+        replacement["bootstrap_prompt_path"] = bootstrap_path.as_posix()
     prepared["replacement"] = replacement
 
     cleanup = dict(prepared.get("cleanup") or {})
@@ -454,6 +493,9 @@ def render_bootstrap_prompt(
     snapshot: dict[str, Any],
     state: dict[str, Any],
     *,
+    agent: str = DEFAULT_AGENT,
+    router_path: Path = DEFAULT_ROUTER_PATH,
+    handoff_path: Path | None = None,
     context_threshold: float,
 ) -> str:
     git = snapshot["git"]
@@ -461,20 +503,27 @@ def render_bootstrap_prompt(
     github = snapshot["github"]
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
-    prompt_path = replacement.get("bootstrap_prompt_path") or str(DEFAULT_BOOTSTRAP_PATH)
+    prompt_path = replacement.get("bootstrap_prompt_path") or default_bootstrap_path(agent).as_posix()
+    handoff_path = handoff_path or default_handoff_path(agent)
+    router_text = router_path.as_posix()
+    handoff_text = handoff_path.as_posix()
     active_generation = active.get("generation") or "unknown"
     replacement_generation = replacement.get("generation") or "unknown"
     context_percent = (state.get("last_handoff") or {}).get("context_percent")
+    agent_label = "Codex orchestrator" if agent == "orchestrator" else agent
 
     return "\n".join([
         f"Work locally in {git.get('repo_root')}.",
         "",
-        "You are the replacement Codex orchestrator thread.",
+        f"You are the replacement {agent_label} thread.",
         f"Replacement generation: {replacement_generation}",
         f"Previous active generation: {active_generation}",
+        f"Agent handoff: {handoff_text}",
+        f"Global router: {router_text}",
         "",
         "Read first:",
-        "- docs/session-state/current.md",
+        f"- {router_text}",
+        f"- {handoff_text}",
         "- AGENTS.md",
         "- docs/best-practices/agent-cooperation.md",
         "- docs/best-practices/codex-thread-handoff.md",
@@ -497,7 +546,7 @@ def render_bootstrap_prompt(
         "",
         "After the replacement thread is actually running, confirm it from the repo root:",
         "```bash",
-        ".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --new-thread-id <replacement-thread-id>",
+        f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent {agent} --new-thread-id <replacement-thread-id>",
         "```",
         "",
         "Only after that command reports old_automation_ready_to_delete=true may the old heartbeat automation be deleted or paused.",
@@ -515,6 +564,7 @@ def render_current_markdown(
     snapshot: dict[str, Any],
     state: dict[str, Any],
     *,
+    agent: str = DEFAULT_AGENT,
     context_threshold: float,
 ) -> str:
     git = snapshot["git"]
@@ -524,13 +574,15 @@ def render_current_markdown(
     replacement = state.get("replacement") or {}
     cleanup = state.get("cleanup") or {}
     handoff = state.get("last_handoff") or {}
-    prompt_path = replacement.get("bootstrap_prompt_path") or str(DEFAULT_BOOTSTRAP_PATH)
+    prompt_path = replacement.get("bootstrap_prompt_path") or default_bootstrap_path(agent).as_posix()
+    title_agent = "Orchestrator" if agent == "orchestrator" else agent.title()
 
     lines = [
-        f"# Current - Codex thread handoff ({snapshot['generated_at']})",
+        f"# Current - {title_agent} thread handoff ({snapshot['generated_at']})",
         "",
         "> Generated by `scripts/orchestration/thread_handoff.py prepare`.",
         "> This is a rollover handoff, not proof that the replacement thread started.",
+        f"> Agent: `{agent}`.",
         "",
         "## Thread Lease",
         "",
@@ -604,12 +656,41 @@ def render_current_markdown(
         "After the new thread is actually running, run:",
         "",
         "```bash",
-        ".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --new-thread-id <replacement-thread-id>",
+        f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent {agent} --new-thread-id <replacement-thread-id>",
         "```",
         "",
         "Do not delete the old heartbeat automation before this confirmation.",
         "",
     ]
+    return "\n".join(lines)
+
+
+def render_router_markdown(
+    *,
+    generated_at: str,
+    default_agent: str,
+    agents: list[str],
+) -> str:
+    default_handoff = default_handoff_path(default_agent).as_posix()
+    lines = [
+        "# Current Session Router",
+        "",
+        f"Latest-Brief: {default_handoff}",
+        "",
+        "Agent-Handoff:",
+    ]
+    for agent in agents:
+        lines.append(f"- {agent}: {default_handoff_path(agent).as_posix()}")
+    lines.extend([
+        "",
+        f"Default-Agent: {default_agent}",
+        f"Generated-At: {generated_at}",
+        "",
+        "This file is a small compatibility router. Detailed thread state lives in",
+        "`docs/session-state/current.<agent>.md`; agents should update only their own",
+        "handoff file unless the task explicitly authorizes a router update.",
+        "",
+    ])
     return "\n".join(lines)
 
 
@@ -702,9 +783,15 @@ def check_state(
 def cmd_prepare(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
     now = utc_now()
-    state_path = repo_root / args.state_file
-    bootstrap_path = repo_root / args.bootstrap_file
-    current_path = repo_root / args.current_file
+    agent = normalize_agent_name(args.agent)
+    state_file = args.state_file or default_state_path(agent)
+    bootstrap_file = args.bootstrap_file or default_bootstrap_path(agent)
+    handoff_file = args.handoff_file or default_handoff_path(agent)
+    router_file = args.current_file or DEFAULT_ROUTER_PATH
+    state_path = repo_root / state_file
+    bootstrap_path = repo_root / bootstrap_file
+    handoff_path = repo_root / handoff_file
+    router_path = repo_root / router_file
 
     state = load_state(state_path)
     state_error = state_error_payload(state, state_path, repo_root)
@@ -718,23 +805,45 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         }
     prepared_state = prepare_state(
         state,
+        agent=agent,
         now=now,
         active_thread_id=args.active_thread_id,
         active_automation_id=args.active_automation_id,
-        bootstrap_path=Path(args.bootstrap_file),
+        bootstrap_path=Path(bootstrap_file),
         context_percent=args.context_percent,
         force_new_replacement=args.force_new_replacement,
     )
     snapshot = gather_snapshot(repo_root, args.monitor_base_url)
-    prompt = render_bootstrap_prompt(snapshot, prepared_state, context_threshold=args.context_threshold)
-    current_md = render_current_markdown(snapshot, prepared_state, context_threshold=args.context_threshold)
+    prompt = render_bootstrap_prompt(
+        snapshot,
+        prepared_state,
+        agent=agent,
+        router_path=Path(router_file),
+        handoff_path=Path(handoff_file),
+        context_threshold=args.context_threshold,
+    )
+    handoff_md = render_current_markdown(
+        snapshot,
+        prepared_state,
+        agent=agent,
+        context_threshold=args.context_threshold,
+    )
+    router_md = render_router_markdown(
+        generated_at=snapshot["generated_at"],
+        default_agent=DEFAULT_AGENT,
+        agents=router_agents(agent),
+    )
 
     if args.dry_run:
         output = {
             "dry_run": True,
-            "state_file": str(state_path),
-            "bootstrap_file": str(bootstrap_path),
-            "current_file": str(current_path),
+            "agent": agent,
+            "state_file": state_path.as_posix(),
+            "bootstrap_file": bootstrap_path.as_posix(),
+            "handoff_file": handoff_path.as_posix(),
+            "router_file": router_path.as_posix(),
+            "current_file": router_path.as_posix(),
+            "would_write_router": bool(args.write_current),
             "old_automation_ready_to_delete": False,
             "bootstrap_prompt": prompt,
         }
@@ -743,17 +852,22 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
     bootstrap_path.parent.mkdir(parents=True, exist_ok=True)
     bootstrap_path.write_text(prompt, encoding="utf-8")
+    handoff_path.parent.mkdir(parents=True, exist_ok=True)
+    handoff_path.write_text(handoff_md, encoding="utf-8")
     write_json_atomic(state_path, prepared_state)
-    wrote_current = False
+    wrote_router = False
     if args.write_current:
-        current_path.parent.mkdir(parents=True, exist_ok=True)
-        current_path.write_text(current_md, encoding="utf-8")
-        wrote_current = True
+        router_path.parent.mkdir(parents=True, exist_ok=True)
+        router_path.write_text(router_md, encoding="utf-8")
+        wrote_router = True
 
     output = {
+        "agent": agent,
         "state_file": rel(state_path, repo_root),
         "bootstrap_file": rel(bootstrap_path, repo_root),
-        "current_file": rel(current_path, repo_root) if wrote_current else None,
+        "handoff_file": rel(handoff_path, repo_root),
+        "router_file": rel(router_path, repo_root) if wrote_router else None,
+        "current_file": rel(router_path, repo_root) if wrote_router else None,
         "replacement_status": prepared_state["replacement"]["status"],
         "old_automation_ready_to_delete": prepared_state["cleanup"]["old_automation_ready_to_delete"],
     }
@@ -763,7 +877,8 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
 def cmd_confirm_started(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
-    state_path = repo_root / args.state_file
+    agent = normalize_agent_name(args.agent)
+    state_path = repo_root / (args.state_file or default_state_path(agent))
     state = load_state(state_path)
     state_error = state_error_payload(state, state_path, repo_root)
     if state_error:
@@ -782,6 +897,7 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
         return 2
     write_json_atomic(state_path, confirmed)
     print(json.dumps({
+        "agent": agent,
         "state_file": rel(state_path, repo_root),
         "replacement_status": confirmed["replacement"]["status"],
         "replacement_thread_id": confirmed["replacement"]["thread_id"],
@@ -792,7 +908,8 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
 
 def cmd_check(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
-    state_path = repo_root / args.state_file
+    agent = normalize_agent_name(args.agent)
+    state_path = repo_root / (args.state_file or default_state_path(agent))
     state = load_state(state_path)
     facts, warnings = check_state(
         state,
@@ -801,7 +918,7 @@ def cmd_check(args: argparse.Namespace) -> int:
         context_percent=args.context_percent,
         context_threshold=args.context_threshold,
     )
-    payload = {"facts": facts, "warnings": warnings, "state_file": rel(state_path, repo_root)}
+    payload = {"agent": agent, "facts": facts, "warnings": warnings, "state_file": rel(state_path, repo_root)}
     print(json.dumps(payload, indent=2))
     return 2 if warnings else 0
 
@@ -821,9 +938,11 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     prepare = subparsers.add_parser("prepare", help="Prepare a rollover handoff and bootstrap prompt.")
-    prepare.add_argument("--state-file", type=Path, default=DEFAULT_STATE_PATH)
-    prepare.add_argument("--bootstrap-file", type=Path, default=DEFAULT_BOOTSTRAP_PATH)
-    prepare.add_argument("--current-file", type=Path, default=DEFAULT_CURRENT_PATH)
+    prepare.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    prepare.add_argument("--state-file", type=Path)
+    prepare.add_argument("--bootstrap-file", type=Path)
+    prepare.add_argument("--handoff-file", type=Path, help="Override docs/session-state/current.<agent>.md.")
+    prepare.add_argument("--current-file", type=Path, help="Override the shared docs/session-state/current.md router.")
     prepare.add_argument("--active-thread-id")
     prepare.add_argument("--active-automation-id")
     prepare.add_argument("--context-percent", type=float)
@@ -834,19 +953,21 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Discard an unreadable lease state file and start a new lease.",
     )
-    prepare.add_argument("--write-current", action="store_true", help="Also overwrite docs/session-state/current.md.")
+    prepare.add_argument("--write-current", action="store_true", help="Also overwrite the shared current.md router.")
     prepare.add_argument("--dry-run", action="store_true", help="Print the generated packet without writing files.")
     prepare.set_defaults(func=cmd_prepare)
 
-    confirm = subparsers.add_parser("confirm-started", help="Confirm that the replacement Codex thread is running.")
-    confirm.add_argument("--state-file", type=Path, default=DEFAULT_STATE_PATH)
+    confirm = subparsers.add_parser("confirm-started", help="Confirm that the replacement agent thread is running.")
+    confirm.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    confirm.add_argument("--state-file", type=Path)
     confirm.add_argument("--new-thread-id", required=True)
     confirm.add_argument("--new-automation-id")
     confirm.add_argument("--confirmed-by", default=os.environ.get("USER", "operator"))
     confirm.set_defaults(func=cmd_confirm_started)
 
     check = subparsers.add_parser("check", help="Detect stale or unsafe handoff state.")
-    check.add_argument("--state-file", type=Path, default=DEFAULT_STATE_PATH)
+    check.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    check.add_argument("--state-file", type=Path)
     check.add_argument("--stale-hours", type=float, default=DEFAULT_STALE_HOURS)
     check.add_argument("--context-percent", type=float)
     check.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)

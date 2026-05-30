@@ -65,7 +65,7 @@ curl -s http://localhost:8765/api/state/manifest
 
 # 2. Only fetch components whose hash changed since last session.
 curl -s http://localhost:8765/api/rules?format=markdown     # ~1.3 KB
-curl -s http://localhost:8765/api/session/current           # ~1-3 KB
+curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # ~1-3 KB
 
 # 3. Always-fresh: git, pipeline, runtime, wiki, health, hints — with meta.
 curl -s http://localhost:8765/api/orient
@@ -690,7 +690,7 @@ curl -s http://localhost:8765/api/state/manifest
 
 # 2. Core context. Only fetch if manifest hash differs from local cache.
 curl -s http://localhost:8765/api/rules?format=markdown
-curl -s http://localhost:8765/api/session/current
+curl -s 'http://localhost:8765/api/session/current?agent=claude'
 
 # 3. Fresh project state.
 curl -s http://localhost:8765/api/orient
@@ -1329,7 +1329,7 @@ hashes against its local cache and only refetches what changed.
 {
   "generated_at": "2026-04-17T10:15:00Z",
   "rules":   {"hash": "abc...", "url": "/api/rules?format=markdown"},
-  "session": {"hash": "def...", "url": "/api/session/current?format=markdown"},
+  "session": {"hash": "def...", "url": "/api/session/current?agent=orchestrator&format=markdown"},
   "orient":  {"url": "/api/orient", "fresh_param": "?fresh=true"},
   "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
 }
@@ -1360,12 +1360,16 @@ to `.claude/rules/` still gets correct content.
   an SDK needs to reconcile the hash against its on-disk cache. With
   telemetry enabled, the response also includes top-level `_telemetry`.
 
-### `GET /api/session/current?format={markdown,json}`
+### `GET /api/session/current?agent={name}&format={markdown,json}`
 
-`docs/session-state/current.md` plus a short list of recent handoff
-filenames (newest first). Kept intentionally small — the endpoint
-answers "what do I need to know RIGHT NOW to keep working", not
-"give me the full history".
+Agent-specific session handoff plus a short list of recent handoff
+filenames (newest first). The default agent is `orchestrator`; use
+`agent=codex`, `agent=claude`, or `agent=gemini` to read that agent's
+`docs/session-state/current.<agent>.md`. Pass `agent=router` only when
+you need the small compatibility router at `docs/session-state/current.md`.
+
+Kept intentionally small — the endpoint answers "what do I need to know RIGHT
+NOW to keep working", not "give me the full history".
 
 With telemetry enabled, `format=markdown` appends the context footer and
 `format=json` adds top-level `_telemetry`.

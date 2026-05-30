@@ -51,6 +51,26 @@ All substantive discussion happens on GitHub where it is persistent and searchab
 
 **Never put full reviews or code in broker messages.** Post on GitHub, then ping with "review posted on #559."
 
+### Thread handoff ownership
+
+`docs/session-state/current.md` is a compatibility router, not a shared scratch
+handoff. It keeps `Latest-Brief: docs/session-state/current.orchestrator.md`
+plus an `Agent-Handoff:` mapping.
+
+Each agent owns one detailed handoff file:
+
+| Agent | Handoff |
+|---|---|
+| orchestrator | `docs/session-state/current.orchestrator.md` |
+| codex | `docs/session-state/current.codex.md` |
+| claude | `docs/session-state/current.claude.md` |
+| gemini | `docs/session-state/current.gemini.md` |
+
+Use `/api/session/current?agent=<name>` or read the matching
+`current.<agent>.md` directly. Only the orchestrator updates the router by
+default; other agents update it only when the task explicitly asks for a router
+change.
+
 ### Runtime layer — single source of truth for agent CLI calls
 
 As of #1184 (April 2026), all three agents (Claude, Gemini, Codex) are
@@ -272,7 +292,7 @@ curl -s http://localhost:8765/api/state/manifest
 
 # 2. Only fetch components whose hash changed since last session.
 curl -s http://localhost:8765/api/rules?format=markdown
-curl -s http://localhost:8765/api/session/current
+curl -s 'http://localhost:8765/api/session/current?agent=claude'
 
 # 3. Always-fresh: git state, pipeline, runtime, wiki, health, hints.
 curl -s http://localhost:8765/api/orient

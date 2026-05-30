@@ -108,7 +108,9 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     prompt = th.render_bootstrap_prompt(sample_snapshot(tmp_path), state, context_threshold=82.0)
 
     assert "You are the replacement Codex orchestrator thread." in prompt
-    assert "confirm-started --new-thread-id <replacement-thread-id>" in prompt
+    assert "docs/session-state/current.md" in prompt
+    assert "docs/session-state/current.orchestrator.md" in prompt
+    assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "Context estimate: 90.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
 
@@ -133,7 +135,156 @@ def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Pa
     assert "## Open PRs" in rendered
     assert "## Delegated Tasks" in rendered
     assert "## Next Commands" in rendered
-    assert "docs/session-state/current.md" in rendered
+    assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in rendered
+
+
+def test_render_router_markdown_contains_parseable_markers():
+    rendered = th.render_router_markdown(
+        generated_at="2026-05-30T08:00:00Z",
+        default_agent="orchestrator",
+        agents=["orchestrator", "codex", "claude", "gemini"],
+    )
+
+    assert "Latest-Brief: docs/session-state/current.orchestrator.md" in rendered
+    assert "Agent-Handoff:" in rendered
+    assert "- codex: docs/session-state/current.codex.md" in rendered
+    assert len(rendered.encode("utf-8")) < 1200
+
+
+def test_default_agent_paths_are_agent_specific():
+    assert th.default_state_path("claude") == Path(".agent/claude-thread-lease.json")
+    assert th.default_bootstrap_path("claude") == Path(".agent/claude-thread-bootstrap.md")
+    assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
+
+
+def test_prepare_orchestrator_writes_router_and_agent_handoff(tmp_path: Path, capsys, monkeypatch):
+    monkeypatch.setattr(th, "gather_snapshot", lambda repo_root, base_url: sample_snapshot(repo_root))
+
+    rc = th.main([
+        "--repo-root",
+        str(tmp_path),
+        "prepare",
+        "--agent",
+        "orchestrator",
+        "--write-current",
+        "--context-percent",
+        "86",
+    ])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert payload["agent"] == "orchestrator"
+    assert payload["state_file"] == ".agent/orchestrator-thread-lease.json"
+    assert payload["bootstrap_file"] == ".agent/orchestrator-thread-bootstrap.md"
+    assert payload["handoff_file"] == "docs/session-state/current.orchestrator.md"
+    assert payload["router_file"] == "docs/session-state/current.md"
+    assert "Latest-Brief: docs/session-state/current.orchestrator.md" in (
+        tmp_path / "docs/session-state/current.md"
+    ).read_text(encoding="utf-8")
+    assert "## Thread Lease" in (
+        tmp_path / "docs/session-state/current.orchestrator.md"
+    ).read_text(encoding="utf-8")
+
+
+def test_prepare_non_orchestrator_does_not_clobber_router_or_orchestrator_handoff(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+):
+    session_dir = tmp_path / "docs/session-state"
+    session_dir.mkdir(parents=True)
+    router_path = session_dir / "current.md"
+    orchestrator_path = session_dir / "current.orchestrator.md"
+    router_path.write_text("router stays\n", encoding="utf-8")
+    orchestrator_path.write_text("orchestrator stays\n", encoding="utf-8")
+    monkeypatch.setattr(th, "gather_snapshot", lambda repo_root, base_url: sample_snapshot(repo_root))
+
+    rc = th.main([
+        "--repo-root",
+        str(tmp_path),
+        "prepare",
+        "--agent",
+        "claude",
+    ])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert payload["agent"] == "claude"
+    assert payload["router_file"] is None
+    assert router_path.read_text(encoding="utf-8") == "router stays\n"
+    assert orchestrator_path.read_text(encoding="utf-8") == "orchestrator stays\n"
+    assert (session_dir / "current.claude.md").is_file()
+    assert (tmp_path / ".agent/claude-thread-lease.json").is_file()
+    assert (tmp_path / ".agent/claude-thread-bootstrap.md").is_file()
+
+
+def test_confirm_started_is_scoped_to_selected_agent(tmp_path: Path, capsys):
+    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
+    agent_dir = tmp_path / ".agent"
+    agent_dir.mkdir()
+    th.write_json_atomic(
+        agent_dir / "orchestrator-thread-lease.json",
+        th.prepare_state(
+            {},
+            agent="orchestrator",
+            now=now,
+            active_thread_id="old-orchestrator",
+            active_automation_id=None,
+            bootstrap_path=Path(".agent/orchestrator-thread-bootstrap.md"),
+            context_percent=None,
+            force_new_replacement=False,
+        ),
+    )
+    th.write_json_atomic(
+        agent_dir / "claude-thread-lease.json",
+        th.prepare_state(
+            {},
+            agent="claude",
+            now=now,
+            active_thread_id="old-claude",
+            active_automation_id=None,
+            bootstrap_path=Path(".agent/claude-thread-bootstrap.md"),
+            context_percent=None,
+            force_new_replacement=False,
+        ),
+    )
+
+    rc = th.main([
+        "--repo-root",
+        str(tmp_path),
+        "confirm-started",
+        "--agent",
+        "claude",
+        "--new-thread-id",
+        "new-claude",
+    ])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert payload["agent"] == "claude"
+    assert payload["state_file"] == ".agent/claude-thread-lease.json"
+    claude_state = json.loads((agent_dir / "claude-thread-lease.json").read_text(encoding="utf-8"))
+    orchestrator_state = json.loads((agent_dir / "orchestrator-thread-lease.json").read_text(encoding="utf-8"))
+    assert claude_state["replacement"]["thread_id"] == "new-claude"
+    assert claude_state["cleanup"]["old_automation_ready_to_delete"] is True
+    assert orchestrator_state["cleanup"]["old_automation_ready_to_delete"] is False
+
+
+def test_confirm_started_missing_agent_prepare_is_safe(tmp_path: Path, capsys):
+    rc = th.main([
+        "--repo-root",
+        str(tmp_path),
+        "confirm-started",
+        "--agent",
+        "gemini",
+        "--new-thread-id",
+        "new-gemini",
+    ])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 2
+    assert "run prepare first" in payload["error"]
+    assert not (tmp_path / ".agent/gemini-thread-lease.json").exists()
 
 
 def test_check_state_flags_pending_and_stale_replacement():

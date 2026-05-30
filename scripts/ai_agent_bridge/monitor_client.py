@@ -126,7 +126,7 @@ class MonitorClient:
             key="session",
             manifest_key="session",
             manifest=manifest,
-            default_url="/api/session/current?format=markdown",
+            default_url="/api/session/current?agent=orchestrator&format=markdown",
         )
 
     # -- internal shared path --------------------------------------

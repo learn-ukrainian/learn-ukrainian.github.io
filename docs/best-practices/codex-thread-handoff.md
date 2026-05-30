@@ -1,7 +1,7 @@
 # Codex Thread Handoff Runbook
 
-This runbook covers overnight orchestrator rollover when a Codex heartbeat
-thread approaches the auto-compaction zone.
+This runbook covers replacement-thread rollover when a Codex, Claude, Gemini,
+or orchestrator heartbeat thread approaches the auto-compaction zone.
 
 ## Verified Capabilities
 
@@ -28,12 +28,22 @@ Verified locally on 2026-05-30:
 ## Architecture
 
 The handoff system uses a local thread lease plus a generated bootstrap
-prompt:
+prompt, scoped by agent name:
 
-- Lease state: `.agent/orchestrator-thread-lease.json` (gitignored)
-- Bootstrap prompt: `.agent/orchestrator-thread-bootstrap.md` (gitignored)
-- Optional tracked handoff update: `docs/session-state/current.md`
+- Lease state: `.agent/<agent>-thread-lease.json` (gitignored)
+- Bootstrap prompt: `.agent/<agent>-thread-bootstrap.md` (gitignored)
+- Tracked agent handoff: `docs/session-state/current.<agent>.md`
+- Compatibility router: `docs/session-state/current.md`
 - Script: `scripts/orchestration/thread_handoff.py`
+
+Agent names are lower-case slugs matching `[a-z][a-z0-9-]*`. The standard
+agents are `orchestrator`, `codex`, `claude`, and `gemini`; additional agents
+can use the same naming rule.
+
+`docs/session-state/current.md` is intentionally small. It is a router with a
+stable `Latest-Brief: docs/session-state/current.orchestrator.md` marker for
+legacy cold-start hooks plus an `Agent-Handoff:` mapping for each agent. Do not
+put detailed state in the router.
 
 The lease records:
 
@@ -48,13 +58,14 @@ The cleanup guard is false after `prepare`. It becomes true only after
 `confirm-started --new-thread-id ...` succeeds. This keeps the old heartbeat
 alive if the replacement thread was not actually started.
 
-## Standard Rollover
+## Standard Orchestrator Rollover
 
 Run this from the repo root when the heartbeat thread enters the rollover
 zone:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+  --agent orchestrator \
   --write-current \
   --context-percent 86
 ```
@@ -63,6 +74,7 @@ If the active thread id or automation id is known, include them:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+  --agent orchestrator \
   --write-current \
   --active-thread-id <current-thread-id> \
   --active-automation-id <old-heartbeat-automation-id> \
@@ -73,7 +85,8 @@ This writes:
 
 - `.agent/orchestrator-thread-lease.json`
 - `.agent/orchestrator-thread-bootstrap.md`
-- `docs/session-state/current.md` only when `--write-current` is present
+- `docs/session-state/current.orchestrator.md`
+- `docs/session-state/current.md` router only when `--write-current` is present
 
 The generated prompt is the exact replacement-thread bootstrap. If the Codex
 app `create_thread` tool is available to the current agent, use it with that
@@ -84,6 +97,7 @@ After the replacement thread is visibly running, confirm it:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
+  --agent orchestrator \
   --new-thread-id <replacement-thread-id>
 ```
 
@@ -91,12 +105,40 @@ Only if the output shows `"old_automation_ready_to_delete": true` may the old
 heartbeat automation be deleted or paused through the Codex app
 `automation_update` tool.
 
+## Non-Orchestrator Agent Rollover
+
+Agents other than the orchestrator write only their own handoff by default:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+  --agent codex \
+  --context-percent 86
+```
+
+That writes `.agent/codex-thread-lease.json`,
+`.agent/codex-thread-bootstrap.md`, and
+`docs/session-state/current.codex.md`. It does not modify
+`docs/session-state/current.md` and does not touch
+`docs/session-state/current.orchestrator.md`.
+
+Only pass `--write-current` for a non-orchestrator agent when the task
+explicitly authorizes a router update. The router must stay tiny and must keep
+`Latest-Brief:` plus the `Agent-Handoff:` mapping.
+
+Confirm the replacement with the same agent name:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
+  --agent codex \
+  --new-thread-id <replacement-thread-id>
+```
+
 ## Safety Checks
 
 Check the lease at any time:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py check
+.venv/bin/python scripts/orchestration/thread_handoff.py check --agent orchestrator
 ```
 
 Warnings mean the old heartbeat automation should stay active. Common
@@ -115,6 +157,7 @@ discard the corrupt lease and start a new one, run:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+  --agent orchestrator \
   --force-reset-state \
   --write-current \
   --context-percent 86
@@ -123,7 +166,7 @@ discard the corrupt lease and start a new one, run:
 Dry-run without writing files:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare --dry-run
+.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent codex --dry-run
 ```
 
 Audit local Codex metadata:
@@ -143,7 +186,9 @@ Include live Monitor API state in the audit:
 At 75 percent context, run `prepare --dry-run` to verify the packet renders.
 
 At 82 percent context or higher, run `prepare --write-current` and start the
-replacement thread. Keep the old heartbeat active until `confirm-started`
+replacement thread for the orchestrator. Other agents run `prepare --agent
+<name>` without `--write-current` unless explicitly asked to update the shared
+router. Keep the old heartbeat active until `confirm-started --agent <name>`
 records the replacement thread id.
 
 At 90 percent context or higher, stop non-handoff work. The current thread
