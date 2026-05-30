@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-"""Check research dossier prose length against the Phase 1 template floor.
+"""Check research dossier total word count against the Phase 1 template floor.
 
-The count is intentionally deterministic and local-only: remove YAML
-frontmatter, fenced code blocks, HTML comments, URLs, and common Markdown
-syntax, then count Unicode alphanumeric runs as words. Link text, heading text,
-and inline-code text remain countable because they are reader-visible prose.
-This is a template-floor guard, not a readability metric.
+The count is the deterministic total whitespace-delimited word count of the
+file (``wc -w`` semantics), matching non-negotiable rule #1 ("Total word count
+>= word_target") and the dossier template's stated range (~1500 target, 1200
+floor).
+
+It is intentionally NOT prose-stripped. The template's 1200/1500/2000 figures
+are total-word figures, and the dossiers were authored against ``wc -w`` of the
+whole file (frontmatter included). Prose-stripping double-discounts them: an
+empirical sweep of the 137-dossier corpus showed a prose-only floor of 1200
+fails 51/137 dossiers including the gold-standard exemplar mykola-kostomarov
+(1147 prose / 1232 total), whereas a total-word floor of 1200 fails only the 4
+genuinely-thin dossiers (979-1017 words). This is a template-floor guard, not a
+readability metric.
 """
 
 from __future__ import annotations
 
 import argparse
-import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -19,15 +26,6 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WORD_FLOOR = 1200
-
-WORD = re.compile(r"[^\W_]+(?:[-'’][^\W_]+)*", re.UNICODE)
-FENCED_BLOCK = re.compile(r"```.*?```", re.DOTALL)
-HTML_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
-HTML_TAG = re.compile(r"<[^>\n]+>")
-INLINE_CODE = re.compile(r"`([^`\n]+)`")
-IMAGE = re.compile(r"!\[([^\]]*)\]\([^)]+\)")
-LINK = re.compile(r"\[([^\]]+)\]\([^)]+\)")
-URL = re.compile(r"https?://\S+|www\.\S+")
 
 
 @dataclass(frozen=True)
@@ -40,43 +38,9 @@ class DossierCount:
         return self.words >= WORD_FLOOR
 
 
-def _strip_yaml_frontmatter(text: str) -> str:
-    lines = text.splitlines()
-    if not lines or lines[0].strip() != "---":
-        return text
-
-    for index, line in enumerate(lines[1:], start=1):
-        if line.strip() == "---":
-            return "\n".join(lines[index + 1 :])
-    return text
-
-
-def _strip_markdown_markup(text: str) -> str:
-    text = _strip_yaml_frontmatter(text)
-    text = FENCED_BLOCK.sub(" ", text)
-    text = HTML_COMMENT.sub(" ", text)
-    text = HTML_TAG.sub(" ", text)
-    text = INLINE_CODE.sub(r"\1", text)
-    text = IMAGE.sub(r"\1", text)
-    text = LINK.sub(r"\1", text)
-    text = URL.sub(" ", text)
-
-    cleaned_lines: list[str] = []
-    for line in text.splitlines():
-        line = re.sub(r"^\s{0,3}#{1,6}\s*", "", line)
-        line = re.sub(r"^\s{0,3}>\s?", "", line)
-        line = re.sub(r"^\s*[-*+]\s+", "", line)
-        line = re.sub(r"^\s*\d+[.)]\s+", "", line)
-        cleaned_lines.append(line)
-
-    text = "\n".join(cleaned_lines)
-    return re.sub(r"[*_~{}\[\]()|:;,.!?/\\]", " ", text)
-
-
 def count_words(path: Path) -> int:
-    text = path.read_text(encoding="utf-8")
-    prose = _strip_markdown_markup(text)
-    return len(WORD.findall(prose))
+    """Total whitespace-delimited word count of the file (wc -w semantics)."""
+    return len(path.read_text(encoding="utf-8").split())
 
 
 def _display_path(path: Path) -> str:
@@ -175,7 +139,7 @@ def print_report(counts: list[DossierCount]) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Check docs/research dossier word counts against the template floor.",
+        description="Check docs/research dossier total word counts against the template floor.",
         epilog=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

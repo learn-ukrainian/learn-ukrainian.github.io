@@ -4,11 +4,16 @@ from pathlib import Path
 
 from scripts.audit import check_dossier_wordcount
 
+# The fixture frontmatter block ("---\ntitle: fixture\n---") contributes 4
+# whitespace-delimited tokens, which the total-word count includes. Subtract
+# them from the body so the file's total word count equals `total_words`.
+_FRONTMATTER_TOKENS = 4
 
-def _write_dossier(root: Path, slug: str, word_count: int) -> Path:
+
+def _write_dossier(root: Path, slug: str, total_words: int) -> Path:
     path = root / "docs" / "research" / "bio" / f"{slug}.md"
     path.parent.mkdir(parents=True, exist_ok=True)
-    body = " ".join(["слово"] * word_count)
+    body = " ".join(["слово"] * (total_words - _FRONTMATTER_TOKENS))
     path.write_text(
         f"""---
 title: fixture
@@ -49,21 +54,25 @@ def test_paths_can_be_relative_to_current_directory(
     assert "1200   1200  PASS" in output
 
 
-def test_wordcount_strips_html_tags_but_keeps_visible_text(
+def test_total_count_includes_markup_and_urls(
     tmp_path: Path, monkeypatch, capsys
 ) -> None:
+    # Total-word count is wc -w semantics: markdown markup, HTML, and URLs all
+    # count as words (unlike a prose-stripping count). 1196 body words + 4
+    # frontmatter tokens = 1200 already; the extra markup tokens push it over.
     monkeypatch.setattr(check_dossier_wordcount, "PROJECT_ROOT", tmp_path)
-    dossier = _write_dossier(tmp_path, "html-fixture", 1199)
+    dossier = _write_dossier(tmp_path, "markup-fixture", 1200)
     dossier.write_text(
-        dossier.read_text(encoding="utf-8") + "\n<div><kbd>слово</kbd></div>\n",
+        dossier.read_text(encoding="utf-8")
+        + "\n[link text](https://example.org/path) <kbd>x</kbd>\n",
         encoding="utf-8",
     )
 
     assert check_dossier_wordcount.main(["--paths", str(dossier)]) == 0
 
     output = capsys.readouterr().out
-    assert "docs/research/bio/html-fixture.md" in output
-    assert "1200   1200  PASS" in output
+    # 1200 + tokens: "[link" "text](https://example.org/path)" "<kbd>x</kbd>" = 1203
+    assert "1203   1200  PASS" in output
 
 
 def test_changed_mode_uses_changed_research_dossiers_only(
