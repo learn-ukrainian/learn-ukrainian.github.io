@@ -3905,6 +3905,51 @@ def run_ulp_fidelity_gate(
     return check_ulp_fidelity(module_text, plan, profile=profile)
 
 
+def run_ulp_fidelity_with_correction(
+    module_dir: Path,
+    plan_path: Path,
+    *,
+    profile: str | None = None,
+    writer: str = "claude-tools",
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None = None,
+    invoker: Callable[..., Any] | None = None,
+) -> dict[str, Any]:
+    """Run ULP fidelity and apply one ADR-008 writer correction when needed."""
+    report = run_ulp_fidelity_gate(module_dir, plan_path, profile=profile)
+    if report.get("passed") is True:
+        return report
+
+    correction_payload = _apply_writer_correction(
+        "ulp_fidelity",
+        report,
+        qg_report={"gates": {"ulp_fidelity": report}},
+        module_dir=module_dir,
+        plan_path=plan_path,
+        writer_corrector=writer_corrector,
+        writer=writer,
+        invoker=invoker,
+    )
+    artifact: dict[str, Any] = {
+        "round": 1,
+        "before": report,
+        "correction": correction_payload,
+    }
+
+    if correction_payload and correction_payload.get("applied") in {
+        "module_patch",
+        "strict_json_artifacts",
+        "writer_artifacts_mapping",
+    }:
+        stress_annotation = run_stress_annotation(module_dir)
+        write_json(module_dir / "stress_annotation.json", stress_annotation)
+        artifact["stress_annotation"] = stress_annotation
+        report = run_ulp_fidelity_gate(module_dir, plan_path, profile=profile)
+        artifact["after"] = report
+
+    write_json(module_dir / "ulp_fidelity_correction_r1.json", artifact)
+    return report
+
+
 def run_wiki_coverage_gate(
     *,
     manifest: Mapping[str, Any] | str | Path,
@@ -4515,6 +4560,20 @@ def _render_l2_exposure_surgical_instruction(gate_report: Mapping[str, Any]) -> 
     )
 
 
+def _render_ulp_fidelity_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
+    failed = gate_report.get("failed_checks") or []
+    return (
+        f"ULP fidelity failed checks: {_yaml_inline(failed)}. "
+        "Patch only `module.md`. Preserve the existing lesson structure, activities, "
+        "vocabulary, citations, and already-good Ukrainian dialogue. Fix terminal ULP "
+        "issues surgically: make every section opener begin with a Ukrainian-first "
+        "example or dialogue chunk followed by an em-dash English gloss; for mixed "
+        "English scaffold lines that introduce Ukrainian terms, use `український термін "
+        "— English gloss` in the same line. Do not add hand stress marks as a goal; the "
+        "pipeline re-runs deterministic stress annotation after your patch."
+    )
+
+
 def _render_default_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
     return (
         "No gate-specific surgical playbook exists for this gate. Fix only the failed gate "
@@ -4529,6 +4588,7 @@ GATE_SPECIFIC_INSTRUCTION_RENDERERS: dict[str, Callable[[Mapping[str, Any]], str
     "engagement_floor": _render_engagement_surgical_instruction,
     "russianisms_strict": _render_russianisms_surgical_instruction,
     "l2_exposure_floor": _render_l2_exposure_surgical_instruction,
+    "ulp_fidelity": _render_ulp_fidelity_surgical_instruction,
 }
 
 

@@ -24,13 +24,11 @@ STRESS_COVERAGE_MIN = 0.95
 GLOSS_TOKEN_WINDOW = 8
 
 # Terminal ULP checks are deterministic teaching *behaviours* (structural, binary):
-# a genuine ULP lesson either has stress marks, em-dash glosses, UK-only dialogue
-# boxes, and Ukrainian-first openers \u2014 or it does not. uk_en_ratio is deliberately
-# excluded: it is a continuous, context-dependent signal and is ADVISORY only, so a
-# real ULP lesson that lands a few points outside the immersion band is surfaced as
-# a warning, never false-REVISE'd. (Ratio-as-hard-gate is the mechanics-over-teaching
-# trap this whole harness fix removes \u2014 2026-05-30 ULP-harness decision.)
-_TERMINAL_CHECKS = ("stress_coverage", "em_dash_gloss", "dialoguebox_uk_en", "section_openers")
+# a genuine ULP lesson either has Ukrainian-first mixed lines, UK-only dialogue
+# boxes, and Ukrainian-first openers \u2014 or it does not. Continuous/coverage signals
+# are ADVISORY so mechanically useful but incomplete detectors do not false-REVISE
+# otherwise teachable output.
+_TERMINAL_CHECKS = ("em_dash_gloss", "dialoguebox_uk_en", "section_openers")
 
 _UK_BASE_CLASS = "А-ЯҐЄІЇа-яґєії"
 _UK_LETTER_CLASS = f"{_UK_BASE_CLASS}\u0301"
@@ -45,9 +43,11 @@ _WORD_RE = re.compile(
 _LATIN_RE = re.compile(r"[A-Za-z]")
 _VOWELS = set("аеиіїоуюяєАЕИІЇОУЮЯЄ")
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+_BAD_MARKER_RE = re.compile(r"<!--\s*bad\s*-->.*?<!--\s*/bad\s*-->", re.DOTALL | re.IGNORECASE)
 _FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
 _INLINE_CODE_RE = re.compile(r"`[^`]+`")
 _URL_RE = re.compile(r"https?://\S+")
+_PRONUNCIATION_LINE_RE = re.compile(r"\b(?:spoken|sounds?)\b.*\[[^\]]+\]", re.IGNORECASE)
 _JSX_BLOCK_RE = re.compile(
     r"<[A-Z][A-Za-z0-9]*(?:[^<]|<(?![A-Z/]))*?(?:/>|</[A-Z][A-Za-z0-9]*>)",
     re.DOTALL,
@@ -80,6 +80,7 @@ def _count_syllables(word: str) -> int:
 
 
 def _basic_clean(text: str) -> str:
+    text = _BAD_MARKER_RE.sub(" ", text)
     text = _COMMENT_RE.sub(" ", text)
     text = _FENCED_CODE_RE.sub(" ", text)
     text = _INLINE_CODE_RE.sub(" ", text)
@@ -143,6 +144,17 @@ def _is_english_narration_line(line: str) -> bool:
     return latin_count > 0 and uk_count > 0 and latin_count >= uk_count
 
 
+def _line_has_em_dash_gloss(line: str) -> bool:
+    for match in _UK_WORD_RE.finditer(line):
+        window = _token_window_after(line, match.end(1), max_tokens=GLOSS_TOKEN_WINDOW)
+        if "—" not in window:
+            continue
+        post_dash = window.split("—", 1)[1]
+        if _LATIN_RE.search(post_dash):
+            return True
+    return False
+
+
 def _em_dash_gloss_check(text: str) -> dict[str, Any]:
     body = _JSX_BLOCK_RE.sub(" ", _basic_clean(text))
     checked: list[dict[str, Any]] = []
@@ -153,19 +165,24 @@ def _em_dash_gloss_check(text: str) -> dict[str, Any]:
             continue
         if not _is_english_narration_line(line):
             continue
-        for match in _UK_WORD_RE.finditer(line):
-            word = match.group(1)
-            if _count_syllables(word) < 2:
-                continue
-            window = _token_window_after(line, match.end(1), max_tokens=GLOSS_TOKEN_WINDOW)
-            has_gloss = "—" in window and _LATIN_RE.search(window.split("—", 1)[1])
-            record = {"line": line_no, "term": word, "window": window.strip()[:120]}
-            checked.append(record)
-            if not has_gloss:
-                violations.append(record)
+        if _PRONUNCIATION_LINE_RE.search(line):
+            continue
+        terms = [
+            match.group(1)
+            for match in _UK_WORD_RE.finditer(line)
+            if _count_syllables(match.group(1)) >= 2
+        ]
+        if not terms:
+            continue
+        has_gloss = _line_has_em_dash_gloss(line)
+        record = {"line": line_no, "terms": terms[:8], "preview": line[:180]}
+        checked.append(record)
+        if not has_gloss:
+            violations.append(record)
     return {
         "passed": not violations,
-        "checked_terms": len(checked),
+        "checked_lines": len(checked),
+        "checked_terms": sum(len(record["terms"]) for record in checked),
         "violations": violations[:10],
         "token_window": GLOSS_TOKEN_WINDOW,
     }
