@@ -51,7 +51,8 @@ Validation already run for the Phase 2 batch before merge:
 
 Important state:
 
-- Main is clean at `2379c38d4c` (`origin/main`).
+- Main is clean at `origin/main`; the last BIO content commit before this
+  handoff-only update is `2379c38d4c`.
 - Active delegates: 0.
 - Open PRs are unrelated to the just-merged BIO batch:
   - #2450 `feat(handoff): add agent-specific thread routers`
@@ -86,7 +87,8 @@ BIO Phase 2 lane unless the user explicitly redirects.
 
 - Repo: `/Users/krisztiankoos/projects/learn-ukrainian`
 - Branch: `main`
-- Latest HEAD: `2379c38d4c` (`feat(bio): add Phase 2 plan for Mykhailo Drai-Khmara (#2456)`)
+- Latest HEAD: the handoff commit containing this file.
+- Last BIO content HEAD: `2379c38d4c` (`feat(bio): add Phase 2 plan for Mykhailo Drai-Khmara (#2456)`)
 - Upstream: `origin/main`
 - Ahead/behind: `0/0`
 
