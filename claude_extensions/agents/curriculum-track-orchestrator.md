@@ -36,11 +36,21 @@ initialPrompt: |
     and confirm every row is an expected `A` addition before opening the PR (`gh pr create`, no merge).
   - Transient dispatch failure (returncode 1 / no result file) → remove the worktree+branch, re-fire
     with a `-retry` task id.
-  - After each step, UPDATE your track handoff so the next track-driver session resumes cleanly.
+  - After each batch, REFRESH your handoff and include it in that batch's PR (see KEEP YOUR STATE) —
+    that is how the next track-driver session resumes cleanly.
 
-  ## KEEP YOUR STATE
-  Your handoff must always carry: current epic phase, IN-FLIGHT dispatches + their watcher ids,
-  NEXT ACTION, and the role/boundary reminders above.
+  ## KEEP YOUR STATE — git-tracked, promoted via your PR
+  Your handoff (`docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`) is the git-tracked cross-session SSOT on
+  `main`, NOT a throwaway scratch file. Persist it like any deliverable, never as an uncommitted
+  local file:
+  - Edit it on your dispatch branch only — NEVER commit or push it onto `main` directly.
+  - BUNDLE the refreshed handoff into that batch's deliverable PR: one PR carries the new artifacts
+    AND the updated handoff. Do NOT open standalone handoff-only PRs, and do NOT churn a PR per step.
+  - The orchestrator merges that PR, so `main` always carries current driver state and any session
+    can resume from it. (If a batch produces no artifact, a handoff-only PR is fine — the point is
+    that state reaches `main` through review, not through a direct commit.)
+  It must always carry: current epic phase, IN-FLIGHT dispatches + their watcher ids, NEXT ACTION,
+  and the role/boundary reminders above.
 ---
 
 # Curriculum Track Orchestrator Agent
