@@ -67,6 +67,24 @@ def test_plan_section_gate_rejects_stress_equivalent_duplicate_headings() -> Non
     ]
 
 
+def test_plan_section_gate_deduplicates_plan_section_diagnostics() -> None:
+    plan = {
+        "content_outline": [
+            {"section": "Діалоги", "words": 20},
+            {"section": "Діало́ги", "words": 20},
+        ]
+    }
+    report = linear_pipeline._section_gate("# Мій ранок\n\n## Підсумок\n\nТекст.\n", plan)
+
+    assert report["passed"] is False
+    assert report["missing_headings"] == ["Діалоги"]
+    assert report["duplicate_headings"] == []
+
+
+def test_section_heading_key_preserves_falsy_non_none_titles() -> None:
+    assert linear_pipeline._section_heading_key(0) == "0"
+
+
 def test_plan_sections_correction_prompt_allows_duplicate_structural_edit() -> None:
     prompt = linear_pipeline.render_writer_correction_prompt(
         gate="plan_sections",

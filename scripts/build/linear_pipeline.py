@@ -7572,9 +7572,14 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         headings_by_key.setdefault(_section_heading_key(raw_heading), []).append(raw_heading)
     missing = []
     duplicate_headings = []
+    seen_keys: set[str] = set()
     for section in plan["content_outline"]:
         title = section["section"]
-        matching_headings = headings_by_key.get(_section_heading_key(title), [])
+        heading_key = _section_heading_key(title)
+        if heading_key in seen_keys:
+            continue
+        seen_keys.add(heading_key)
+        matching_headings = headings_by_key.get(heading_key, [])
         if not matching_headings:
             missing.append(title)
         elif len(matching_headings) > 1:
@@ -7638,7 +7643,8 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _section_heading_key(title: Any) -> str:
-    normalized = unicodedata.normalize("NFD", str(title or "").strip())
+    title_str = str(title) if title is not None else ""
+    normalized = unicodedata.normalize("NFD", title_str.strip())
     without_stress = "".join(ch for ch in normalized if ch not in _VESUM_STRESS_MARKS)
     return re.sub(r"\s+", " ", unicodedata.normalize("NFC", without_stress)).strip()
 
