@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from scripts import config
@@ -102,11 +103,11 @@ The word прокидаюся means I wake up. A reflexive verb is a verb that p
     assert report["passed"] is False
     assert report["verdict"] == "REVISE"
     assert set(report["failed_checks"]) >= {
-        "stress_coverage",
         "em_dash_gloss",
         "dialoguebox_uk_en",
         "section_openers",
     }
+    assert "stress_coverage" in report["warnings"]
 
 
 def test_uk_en_ratio_is_advisory_not_terminal(monkeypatch) -> None:
@@ -136,6 +137,135 @@ def test_uk_en_ratio_is_advisory_not_terminal(monkeypatch) -> None:
     assert report["passed"] is True
     assert report["failed_checks"] == []
     assert "uk_en_ratio" in report["warnings"]
+
+
+def test_stress_coverage_is_advisory_not_terminal(monkeypatch) -> None:
+    from scripts.audit import ulp_fidelity_gate as gate
+
+    structural_pass = {"passed": True}
+    monkeypatch.setattr(gate, "_stress_coverage_check", lambda _t: {"passed": False, "coverage": 0.9})
+    monkeypatch.setattr(gate, "_em_dash_gloss_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_dialoguebox_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_section_opener_check", lambda _t: dict(structural_pass))
+    monkeypatch.setattr(gate, "_ratio_check", lambda _t, _p: dict(structural_pass))
+
+    report = gate.check_ulp_fidelity(
+        "irrelevant",
+        {"level": "a1", "sequence": 20, "slug": "fixture"},
+        profile="core",
+    )
+
+    assert report["verdict"] == "PASS"
+    assert report["passed"] is True
+    assert report["failed_checks"] == []
+    assert "stress_coverage" in report["warnings"]
+
+
+def test_em_dash_gate_is_line_level_for_real_scaffold() -> None:
+    module = """# Мій ра́нок
+
+## Мій ра́нок
+
+**Вода́ — water** can stand after **по́тім**: **По́тім вода́**. **Ру́ханка — light exercise** is a short morning item.
+Written **-шся** is spoken **[с':а]**: **прокида́єшся** -> **[прокидайес':а]**.
+
+<DialogueBox uk="Я прокида́юся." en="I wake up." />
+"""
+
+    report = check_ulp_fidelity(
+        module,
+        {"level": "a1", "sequence": 20, "slug": "fixture"},
+        profile="core",
+    )
+
+    assert "em_dash_gloss" not in report["failed_checks"]
+
+
+def test_em_dash_gate_rejects_distant_punctuation_dash() -> None:
+    module = """# Мій ра́нок
+
+## Мій ра́нок
+
+The word **вода́** is useful in the morning because you see it in routines, and this sentence uses a normal aside after many words — not a glossary pair.
+
+<DialogueBox uk="Я п'ю воду́." en="I drink water." />
+"""
+
+    report = check_ulp_fidelity(
+        module,
+        {"level": "a1", "sequence": 20, "slug": "fixture"},
+        profile="core",
+    )
+
+    assert "em_dash_gloss" in report["failed_checks"]
+
+
+def test_ulp_fidelity_correction_reruns_stress_and_gate(tmp_path: Path) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text(
+        "\n".join(
+            [
+                "level: a1",
+                "sequence: 20",
+                "slug: fixture",
+                "module: 20",
+                "title: Fixture",
+                "subtitle: ULP fixture",
+                "word_target: 300",
+                "content_outline:",
+                "  - section: opener",
+                "    words: 300",
+                "    points:",
+                "      - fixture",
+                "references:",
+                "  - title: Fixture",
+                "    notes: synthetic test plan",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (module_dir / "module.md").write_text(
+        """# Мій ра́нок
+
+## Підсумок
+
+Your clean morning sentence uses **я прокида́юся** before breakfast.
+
+<DialogueBox uk="Я прокида́юся." en="I wake up." />
+""",
+        encoding="utf-8",
+    )
+    (module_dir / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+
+    corrected = """```module.md
+# Мій ра́нок
+
+## Підсумок
+
+**Я прокида́юся ра́но** — I wake up early. This is the clean morning model.
+
+<DialogueBox uk="Я прокида́юся ра́но." en="I wake up early." />
+```"""
+
+    def corrector(_context: linear_pipeline.CorrectionContext) -> str:
+        return corrected
+
+    report = linear_pipeline.run_ulp_fidelity_with_correction(
+        module_dir,
+        plan_path,
+        profile="core",
+        writer="codex-tools",
+        writer_corrector=corrector,
+    )
+
+    assert report["passed"] is True
+    assert (module_dir / "stress_annotation.json").exists()
+    correction = json.loads((module_dir / "ulp_fidelity_correction_r1.json").read_text(encoding="utf-8"))
+    assert correction["correction"]["applied"] == "module_patch"
+    assert correction["after"]["passed"] is True
 
 
 def test_linear_pipeline_stress_annotation_marks_module_and_vocabulary(

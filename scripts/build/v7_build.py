@@ -1388,10 +1388,11 @@ def _run(args: argparse.Namespace) -> int:
         else:
             if resume_enabled:
                 force_rerun = True
-            ulp_fidelity_gate = linear_pipeline.run_ulp_fidelity_gate(
+            ulp_fidelity_gate = linear_pipeline.run_ulp_fidelity_with_correction(
                 module_dir,
                 plan_path,
                 profile=profile,
+                writer=writer,
             )
             linear_pipeline.write_json(
                 module_dir / "ulp_fidelity_gate.json",
