@@ -8,7 +8,7 @@
 > without reading the orchestrator's handoff. User may also hand Claude
 > ad-hoc tasks in-seat.
 
-*Last updated: 2026-05-30. main (Codex's) observed at `a2efa6b148`.*
+*Last updated: 2026-05-30. main (Codex's) observed at `63a752b4a6`.*
 
 ## ▶ HOW TO RESUME THIS (read FIRST if you are a fresh session)
 
@@ -24,30 +24,36 @@ Codex can also ask the user to launch this seat with `scripts/start-bio-driver.s
 
 ## ⏳ IN-FLIGHT right now
 
-- **Block G research dispatch `bio-blockG-2026-05-30`** (codex, base `a2efa6b148`, worktree
-  `.worktrees/dispatch/codex/bio-blockG-2026-05-30`) — the 10 politically-charged figures. Brief:
-  `/tmp/brief-bio-blockG.md`. On completion: **co-review ALL 10 for NPOV-decolonized framing**
-  (esp. §6 contested points), then **OPEN a PR for Codex to merge — do NOT merge yourself.** If the
-  result file is missing / returncode 1 → transient failure, re-fire with a `-retry` task-id.
+- **Block G research PR #2441** (codex, branch `codex/bio-blockG-2026-05-30`, worktree
+  `.worktrees/dispatch/codex/bio-blockG-2026-05-30`) — the 10 politically-charged figures are
+  drafted and pushed. Latest head at this handoff: `0b8d694304` after Codex addressed Gemini's
+  concrete review nits (Stetsko IEU URL, Voloshyn `ЕСУ`, Kliachkivskyi `NKGB`); refreshed GitHub
+  checks are green. The PR remains
+  **draft / hold** pending full Claude+Codex co-review of all 10 dossiers for NPOV-decolonized
+  framing, especially §6 contested points. **Do not merge this yourself.**
 
 ## Bio epic #2309 — Phase 1 (Research) state
 
 - **Non-Block-G research COMPLETE: 127/130 dossier files** on origin/main.
 - **52 dossiers merged this session** (batches 1-9): PRs #2427 #2428 #2429 #2430 #2432 #2433 #2434
   #2436 + Gemini follow-up #2431. All squash-merged green.
+- **Block G research COMPLETE but UNMERGED:** draft PR #2441 adds the 10 F2/politically-charged
+  dossier files (`137` total bio research files on the branch vs `127` on main). Treat it as the
+  review focus, not as a dispatch still to fire.
 - Quality spot-read 6 (Hrushevskyi, Kostomarov, Dzhelial, Lypkivskyi, Kushnir, +early): sourced
   (ESU/IEU/UINP/KHPG), decolonized, anti-fabrication-disciplined, honest "source not found" gaps.
   §7 fabrication deterministically gated by `scripts/audit/lint_bio_dossier_xref.py` (clean each batch).
 
 ## REMAINING to finish the epic
 
-1. **Block G — 10 politically-charged figures (DECISION go/hold with user before firing):**
+1. **Block G — 10 politically-charged figures (draft PR #2441, co-review blocking merge):**
    `stepan-bandera, yaroslav-stetsko, andrii-melnyk, dmytro-kliachkivskyi, yurii-tiutiunnyk,
    avhustyn-voloshyn, lev-rebet, kateryna-zarytska, petro-fedun-poltava` + `nil-khasevych`
    (appendix Block I, mechanism-table G). Epic mandates Codex + Claude co-review; F2 gate doc
-   `docs/best-practices/politically-charged-bios.md` IS shipped (gate open). PLAN: fire codex research
-   under F2 NPOV-but-decolonized framing → co-review all 10 fully → **HOLD merge for explicit sign-off**
-   (no auto-merge on figures Russian disinfo weaponizes).
+   `docs/best-practices/politically-charged-bios.md` IS shipped (gate open). The research dispatch is
+   done; next step is source/content co-review all 10 fully, fix any findings on the PR branch, then
+   **HOLD merge for explicit Codex/orchestrator sign-off** (no auto-merge on figures Russian disinfo
+   weaponizes).
 2. **Dedup #2435 — DONE by Codex (orchestrator).** Resolved in `a2efa6b148`
    "fix(bio): canonicalize duplicate dossier slugs (#2435)". No longer Claude's task.
 3. **Phases 2-5** (per epic #2309): Phase 2 plan YAMLs (`plans/bio/{slug}.yaml`, Gemini default +
@@ -87,5 +93,8 @@ orchestrator's / A1-owner's concern now, not the bio driver's.
 
 ## NEXT ACTION on resume
 
-Resolve Block G **go/hold** + merge-ownership with user → then either fire Block G research (F2 framing,
-hold-merge) or land dedup #2435, then advance to Phase 2.
+Resume at **PR #2441 co-review**, not dispatch. Pull/check
+`.worktrees/dispatch/codex/bio-blockG-2026-05-30`, ignore the unrelated untracked `node_modules`
+directory if still present, review all 10 dossiers for F2/NPOV-decolonized framing and source-chain
+honesty, then either push fixes to `codex/bio-blockG-2026-05-30` or report that #2441 is ready for
+Codex/orchestrator merge sign-off. After Block G lands, advance to Phase 2 plan YAMLs.
