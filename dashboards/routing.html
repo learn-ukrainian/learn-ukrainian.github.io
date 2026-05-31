@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Routing &amp; Usage - ukraine-ops</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+.topbar h1 { font-size: 22px; font-weight: 700; }
+.topbar .sub { font-size: 12px; color: var(--text2); }
+.topbar .spacer { flex: 1; }
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.note { font-size: 12px; color: var(--text3); margin: 4px 0 20px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 18px; margin-bottom: 18px; }
+.card.green { border-left-color: var(--green); }
+.card.orange { border-left-color: var(--orange); }
+.card.purple { border-left-color: var(--purple); }
+.card h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.pill.ok { background: rgba(63,185,80,0.15); color: var(--green); }
+.pill.warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
+.pill.gray { background: rgba(72,79,88,0.2); color: var(--text2); }
+ul { margin: 6px 0 0 18px; font-size: 13px; line-height: 1.55; color: var(--text2); }
+.bar { height: 8px; border-radius: 4px; background: var(--bg3); overflow: hidden; min-width: 90px; }
+.bar > span { display: block; height: 100%; background: var(--blue); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>Agent Routing &amp; Usage</h1>
+  <span class="sub">which agent for what · subscription headroom · dispatch usage snapshot</span>
+  <span class="spacer"></span>
+  <a href="/">&larr; Home</a> &nbsp; <a href="/delegate.html">Delegate</a> &nbsp; <a href="/cost.html">Cost</a> &nbsp; <a href="/runtime.html">Runtime</a>
+</div>
+<div class="container">
+  <p class="note">Static snapshot, refreshed manually by the bio-driver. Live data: <a href="/delegate.html">delegate</a> (dispatch activity), <a href="/cost.html">cost</a> ($ spend), <a href="/runtime.html">runtime</a> (7-day usage). Billed quota lives in each vendor dashboard (cursor.com, Anthropic console, platform.openai.com).</p>
+
+  <div class="card green">
+    <h2>Who should do what (recommended routing)</h2>
+    <table>
+      <tr><th>Work</th><th>Primary</th><th>Backup / notes</th></tr>
+      <tr><td>Bio / seminar plan writing</td><td><b>Cursor (3&times;)</b></td><td>Codex; Claude for most sensitive. Gemini deprioritized (ghost-source history)</td></tr>
+      <tr><td>V7 module content</td><td>Cursor-tools / Claude-tools</td><td>use Cursor to spare the Claude seat</td></tr>
+      <tr><td>Wiki articles</td><td><b>Gemini</b> (unmetered)</td><td>always</td></tr>
+      <tr><td>Novel code / hard debug</td><td><b>Codex</b></td><td>Claude inline only &le;5 LOC</td></tr>
+      <tr><td>Bulk / mechanical code, fixtures, docs</td><td><b>Gemini</b> (unmetered)</td><td>&mdash;</td></tr>
+      <tr><td>Content review (cross-family)</td><td><b>DeepSeek-pro hermes</b></td><td>flaky &rarr; Codex / Claude must backstop</td></tr>
+      <tr><td>PR code review</td><td>DeepSeek-flash / Codex</td><td>off-seat</td></tr>
+      <tr><td>Search / grep</td><td>Explore subagent (haiku)</td><td>cheap</td></tr>
+      <tr><td>qwen</td><td><span class="pill err">never</span></td><td>too expensive (user 2026-05-29)</td></tr>
+    </table>
+  </div>
+
+  <div class="card purple">
+    <h2>Subscription-max guidance</h2>
+    <ul>
+      <li><b>Cursor &mdash; now Pro+ (3&times;).</b> The cheapest top-quality writer; most under-realized subscription. Make it the lead bio/plan writer. (Always driver-finalize its git: it writes but doesn't commit/push.)</li>
+      <li><b>Gemini &mdash; unmetered.</b> Use freely for bulk code, fixtures, wiki, docs.</li>
+      <li><b>Codex &mdash; own weekly quota.</b> Novel impl, hard debug, adversarial review.</li>
+      <li><b>Claude seat &mdash; conserve.</b> Dispatched Claude competes with the interactive seat and sunsets after 2026-06-15 (MEMORY #M0). Reserve for sensitive content + adversarial review.</li>
+      <li><b>DeepSeek &mdash; cheap off-seat review.</b> Cross-family gate, but back it with Codex/Claude (flaky).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Dispatch usage snapshot &mdash; 327 tracked dispatches (batch_state, 2026-05-31)</h2>
+    <table>
+      <tr><th>Agent / model</th><th>Dispatches</th><th>Done</th><th>Signals</th><th>Share</th></tr>
+      <tr><td class="mono">codex / gpt-5.5</td><td>159</td><td>135 (85%)</td><td><span class="pill warn">16 timeouts</span> xhigh runs long</td><td><div class="bar"><span style="width:100%"></span></div></td></tr>
+      <tr><td class="mono">gemini / 3.x</td><td>74</td><td>64 (86%)</td><td><span class="pill ok">healthy</span> unmetered</td><td><div class="bar"><span style="width:47%"></span></div></td></tr>
+      <tr><td class="mono">claude / opus-4.7+4.8</td><td>30</td><td>26</td><td>mostly reviews; seat-shared</td><td><div class="bar"><span style="width:19%"></span></div></td></tr>
+      <tr><td class="mono">deepseek / v4</td><td>24</td><td>20</td><td><span class="pill warn">4 timeouts</span> flaky reviewer</td><td><div class="bar"><span style="width:15%"></span></div></td></tr>
+      <tr><td class="mono">qwen</td><td>17</td><td>11</td><td><span class="pill err">excluded</span> too expensive</td><td><div class="bar"><span style="width:11%"></span></div></td></tr>
+      <tr><td class="mono">cursor / auto</td><td>10</td><td><span class="pill err">0</span></td><td>4 rate_limited (fixed by 3&times;) · 4 needs_finalize · 2 failed</td><td><div class="bar"><span style="width:6%"></span></div></td></tr>
+      <tr><td class="mono">agy / grok</td><td>7 / 4</td><td>experimental</td><td>agy never for facts</td><td><div class="bar"><span style="width:4%"></span></div></td></tr>
+    </table>
+    <p class="note">Outcomes overall: 266 done · 25 timeout · 18 cancelled · 5 failed · 4 rate_limited. The Cursor 3&times; upgrade directly removes the rate-limited failures.</p>
+  </div>
+
+  <div class="card orange">
+    <h2>Live bio epic #2309 lane</h2>
+    <ul>
+      <li>bio-260&rarr;310 (51) &mdash; <span class="pill ok">built + merged</span> @ <span class="mono">f25a2c7e12</span></li>
+      <li>bio-184&rarr;259 (75) &mdash; <span class="pill warn">building</span> 3-way split: Cursor ~30 · Codex ~25 · Claude ~20 (sensitive)</li>
+      <li>Phase-3 curriculum.yaml registration &mdash; <span class="pill gray">blocked</span> until 184-259 lands (position-contiguity)</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
