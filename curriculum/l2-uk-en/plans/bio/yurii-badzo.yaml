@@ -1,0 +1,109 @@
+---
+activity_hints:
+- after_section: 'Тінь: Арешт і вигнання'
+  focus: Хронологія
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: 'Діяльність: «Право жити»'
+  focus: Протест 1965 чи манускрипт?
+  items: 5
+  placement: inline
+  type: true-false
+- focus: Дебати
+  placement: workbook
+  type: debate
+- focus: Аналіз формули
+  placement: workbook
+  type: critical-analysis
+- focus: Есе
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- lit-samvydav-underground-publishing
+- hist-ukrainska-helsinska-hrupa
+- istorio-samvydav-shcho-tse
+- istorio-syntez-dysydentski-dzherela
+content_outline:
+- section: Розминка
+  words: 400
+  points:
+  - '[!biography] Бадзо (1936–2018).'
+  - Чому 1400-сторінковий манускрипт небезпекий?
+- section: 'Формування: Ужгород і наука'
+  words: 1000
+  points:
+  - Народження 1936 р.; Ужгородський університет (1958).
+  - '[!decolonization] Відкритий лист 1971 р. до збору письменників.'
+- section: 'Діяльність: «Право жити»'
+  words: 1200
+  points:
+  - 1965 — протест на прем'єрі «Тіні забутих предків».
+  - 1972–1979 — манускрипт «Право жити».
+  - '[!epistemic-humility] Повний текст манускрипту в досьє не знайдено.'
+- section: 'Тінь: Арешт і вигнання'
+  words: 1600
+  points:
+  - '[!anti-hagiography] 23 квітня 1979 — арешт; 7 років + 5 років вигнання.'
+  - Конфіскація манускрипту; тиск на родину.
+  - '[!myth-buster] Номер справи КДБ не знайдено.'
+- section: 'Підсумок: Видання 1996 р.'
+  words: 1000
+  points:
+  - Звілнення 1988 р.; видання 1996 р.
+  - «Мовна русифікація не слабне...» (2000).
+  - '[!decolonization] Міст від Дзюби до ширшої теорії права жити.'
+focus: Юрій Бадзо — літературознавець, автор «Право жити», політв'язень 1979 р.
+level: BIO
+module: bio-242
+objectives:
+- Відокремити протест 1965 р. від манускрипту «Право жити».
+- Пояснити конфіскацію манускрипту.
+- Аналізувати цитату «Так народилася формула — ПРАВО ЖИТИ».
+- Порівняти тиск на родину.
+pedagogy: CBI
+persona:
+  role: Модератор семінару про право жити і самвидав.
+  voice: Intellectual Historian
+phase: BIO
+references:
+- title: Бадзьо Юрій Васильович (ЕСУ)
+  note: Протест 1965 р., «Право жити».
+  type: reference
+- title: Бадзьо Юрій (КХПГ)
+  note: манускрипт, арешт 1979 р.
+  type: reference
+- author: Юрій Васильович Бадзьо
+  title: Право жити
+  note: '1996.'
+  type: primary
+  work: Право жити
+sequence: 242
+slug: yurii-badzo
+subtitle: The Literary Scholar and the Manuscript the State Feared
+title: 'Юрій Бадзо: право жити'
+version: '1.0'
+vocabulary_hints:
+- word: манускрипт
+  pos: ч.
+  definition: 1400-сторінкове «Право жити»
+- word: самвидав
+  pos: ч.
+  definition: таємна робота 1972–1979 рр.
+- word: асиміляція
+  pos: ж.
+  definition: мовна русифікація в лекції 2000 р.
+- word: вигнання
+  pos: с.
+  definition: 5 років після 7 років ув'язнення
+- word: публіцистика
+  pos: ж.
+  definition: відкритий лист 1971 р.
+- word: філологія
+  pos: ж.
+  definition: освіта в Ужгороді, Інститут літератури
+- word: право
+  pos: с.
+  definition: формула «право жити»
+word_target: 5200

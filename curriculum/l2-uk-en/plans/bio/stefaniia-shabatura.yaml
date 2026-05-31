@@ -1,0 +1,109 @@
+---
+activity_hints:
+- after_section: 'Тінь: Табір і заборон малювати'
+  focus: Хронологія
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: 'Діяльність: Самвидав і захист Мороза'
+  focus: Тексти у справі
+  items: 5
+  placement: inline
+  type: true-false
+- focus: Дебати
+  placement: workbook
+  type: debate
+- focus: Аналіз
+  placement: workbook
+  type: critical-analysis
+- focus: Есе
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- bio-vasyl-stus
+- bio-alla-horska
+- istorio-pislya-stalina-shistdesiatnyky
+- istorio-syntez-dysydentski-dzherela
+- istorio-memorandum-uhh
+content_outline:
+- section: Розминка
+  words: 400
+  points:
+  - '[!biography] Шабатура (1938–2014): гобеленістка, УГГ.'
+  - Чому гобелен і малюнок могли бути небезпекою?
+- section: 'Формування: Львів і «Пролісок»'
+  words: 1000
+  points:
+  - Народження 1938 р.; інститут 1967 р.
+  - '[!decolonization] «козацька торба» в інтерв''ю Овсієнка.'
+  - Клуб «Пролісок».
+- section: 'Діяльність: Самвидав і захист Мороза'
+  words: 1200
+  points:
+  - Гобелени та самвидав.
+  - Арешт 12 січня 1972 р.
+  - '[!epistemic-humility] Номер справи не знайдено.'
+- section: 'Тінь: Табір і заборон малювати'
+  words: 1600
+  points:
+  - 'Вирок 1972 р.: 5 років + 3 роки заслання.'
+  - ЖХ-385/3-4 Барашево.
+  - '[!anti-hagiography] Заборона малювати; голодовки.'
+  - '[!myth-buster] Інвентар знищених малюнків неповний.'
+- section: 'Підсумок: Повернення'
+  words: 1000
+  points:
+  - Повернення 1979 р.; «Меморіал», Рух.
+  - '[!decolonization] Митець і організатор, не лише жертва.'
+focus: Стефанія Шабатура — художниця, політв'язень, членкиня УГГ. Справа 1972 р., заборон малювати, голодовки.
+level: BIO
+module: bio-240
+objectives:
+- Аналізувати біографію художниці-політв'язні.
+- Пояснити ст. 62 КК УРСР.
+- Дослідити заборон малювати.
+- Порівняти ідентичності політв'язень у Барашево.
+pedagogy: CBI
+persona:
+  role: Модератор семінару про жінку-митця і політв'язню.
+  voice: Intellectual Historian
+phase: BIO
+references:
+- title: Шабатура Стефанія Михайлівна (КХПГ)
+  note: Хронологія справи, табір ЖХ-385/3-4.
+  type: reference
+- title: Інтерв'ю Василь Овсієнко (КХПГ)
+  note: «козацька торба», автобіографічний голос.
+  type: reference
+- title: Українська Гельсінкська група (Вікіпедія)
+  note: Контекст членства в УГГ.
+  type: reference
+sequence: 240
+slug: stefaniia-shabatura
+subtitle: The Tapestry Artist, Political Prisoner, and Helsinki Monitor
+title: 'Стефанія Шабатура: гобелен і протест'
+version: '1.0'
+vocabulary_hints:
+- word: гобелен
+  pos: ч.
+  definition: текстильний декоративний твір
+- word: самвидав
+  pos: ч.
+  definition: нелегальне поширення заборонених текстів
+- word: політв'язень
+  pos: ч.
+  definition: ув'язнена за політичні переконання
+- word: голодовка
+  pos: ж.
+  definition: протест проти заборони малювати
+- word: заслання
+  pos: с.
+  definition: 3 роки після 5 років табору
+- word: дисидент
+  pos: ч.
+  definition: інакодумець, правозахисниця
+- word: гельсінкська група
+  pos: ж.
+  definition: Українська Гельсінкська група
+word_target: 5200
