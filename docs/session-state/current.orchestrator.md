@@ -138,11 +138,28 @@ A1 M1-M7 sequence:
   `.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch:
   `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Current pushed head after the M1 rewrite:
-  `c5dd721c04 fix(a1): complete M1 plan coverage`
+- Current pushed head after infra follow-up:
+  `b6dd723acb fix(pipeline): block internal wiki resources`
+- Follow-up commits after the M1 rewrite:
+  - `e514421f78 fix(infra): decouple etymology from lesson builds`
+  - `594c72e928 feat(pipeline): define module archetype contracts`
+  - `f84e8a8702 feat(pipeline): inject module archetype into writer prompts`
+  - `b6dd723acb fix(pipeline): block internal wiki resources`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
+- The writer prompt now receives a `MODULE_ARCHETYPE` block derived from
+  `scripts/pipeline/module_archetypes.py`; it is injected into all linear
+  writer templates (`linear-write.md`, generated, and grok variants).
+- Student-facing `resources.yaml` must not include internal AI-facing wiki
+  paths such as `wiki/pedagogy/...`; the writer artifact validator now blocks
+  `wiki/` and `docs/wiki/` URLs, and A1 M1's resource file has had the internal
+  wiki entry removed.
+- Active read-only delegate at this handoff:
+  `a1-archetype-gate-design` (`codex`, `gpt-5.4-mini`) is investigating the
+  next deterministic gates: introduced-before-use, resource coverage, and
+  archetype-fit. Result path should appear under
+  `batch_state/tasks/a1-archetype-gate-design.result` when done.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route
