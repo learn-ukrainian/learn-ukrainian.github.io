@@ -32,15 +32,20 @@ flight at handoff time; no temp bio worktrees except this handoff branch.*
   must be contiguous — see Phase 3).
 - **Merged this session (23 plans):** gap-fill 220–224 (#2498), 229–232 (#2496), then 233–237 (#2499),
   238–242 (#2500), 243–247 (#2501). All cross-family reviewed by Gemini Pro, all fixes VESUM-verified.
+- **248–252 NOT merged — REJECTED** (closed PR #2503): cursor `--model auto` fabricated a death (see
+  FINDINGS ⛔). **Build 248–259 fresh next session with claude-tools + codex** (writer switch).
 
 ## ▶ NEXT ACTIONS (in order)
-1. **Build 248–259** (12 plans, ~2-3 cursor batches) via the PROVEN PIPELINE below. Slugs (allocation
-   SSOT `docs/bio-epic/phase-2-sequence-allocation.yaml`):
+1. **Build 248–259** (12 plans) via the PROVEN PIPELINE below — **WRITER = claude-tools + codex, NOT
+   cursor** (user 2026-06-01 writer switch; see CURSOR REJECTION in FINDINGS). 1 extra Claude slot is OK.
+   Slugs (allocation SSOT `docs/bio-epic/phase-2-sequence-allocation.yaml`):
    248 leonid-pliushch · 249 nina-strokata · 250 ihor-kalynets · 251 iryna-kalynets ·
    252 nadiia-svitlychna · 253 sviatoslav-karavanskyi · 254 mykhailo-horyn · 255 bohdan-horyn ·
    256 oksana-meshko · 257 yurii-shukhevych · 258 danylo-shumuk · 259 ivan-kandyba.
    (Dissidents/Helsinki/political-prisoners; yurii-shukhevych = son of UPA cmdr Roman Shukhevych —
-   handle NPOV carefully. All 12 dossiers confirmed present on main.)
+   handle NPOV carefully. All 12 dossiers present. **⚠ ihor-kalynets (250) is ALIVE, b.1939 — NO death.**)
+   NOTE: cursor built 248–252 on **CLOSED/REJECTED PR #2503** (branch `cursor/bio-blk5-248-252` kept for
+   reference only) — do NOT reuse it; **rebuild 248–252 fresh** with the new writer.
 2. **Phase 3 registration** (once 181→310 contiguous): append new slugs to `levels.bio.modules` in
    `curriculum/l2-uk-en/curriculum.yaml` in sequence order (currently 180 entries, last
    `anatolii-dimarov`). The list is a FLAT ordered slug list; position i (1-indexed) MUST equal each
@@ -90,6 +95,16 @@ VESUM-verified fixes → driver MERGES.
    worktree is removed — remove worktree first.)
 
 ## ▶ KEY FINDINGS (2026-06-01 — read before building 248–259)
+- **⛔ CURSOR `--model auto` REJECTED for bio (user 2026-06-01) — it FABRICATED.** The 248–252 batch
+  (closed PR #2503) invented a **death date for ihor-kalynets** ("Смерть 28 червня 2025 у Львові") and
+  ghost-sourced it to ESU/KHPG — he is ALIVE (b.1939). A #M-4 / DEATH-ON-LIVING catastrophic violation.
+  Same batch: unparseable YAML (3 unquoted-colon titles), 3 editorial-note leaks ("Block G", "classroom",
+  "у завданні"), and many Russianisms. **Root cause:** `--model auto` re-routes per dispatch, hitting weak
+  models. **Next writer = claude-tools + codex.** If cursor is ever reused for throughput: **PIN
+  `--model composer-2.5` (Cursor's flagship — consistent, well-formed YAML), NEVER `--model auto`** — and
+  still cross-review with Gemini (the fabrication proves ANY writer needs the review gate). Note composer
+  is code-tuned, so for Ukrainian-content register/accuracy claude-tools/codex remain the better fit;
+  cursor+composer is a supplement, not the primary.
 - **Cursor plan quality is INCONSISTENT.** 233–237 was clean (minor calques); 238–242 + 243–247 needed
   3–12 fixes EACH: Russianisms (`голодовка`, `арест`, `місцевих властей`), calques/hallucinations
   (`коерція`, `постумний`, `інакомисляч`, `Дебат` singular ×5, `поколінних ящиків`, `в лінії`), case
