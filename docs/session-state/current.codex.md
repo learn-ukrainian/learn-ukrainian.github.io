@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-05-31T22:00Z)
+# Current - Codex Thread Handoff (2026-06-01T00:20+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `79c8d84fe9 feat(pipeline): gate module archetype fit`
+  `f07757ea58 feat(a1): add M2 reading Ukrainian module`
 
 ## Current Direction
 
@@ -17,7 +17,8 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, or worktrees.
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
-- Do not build M2/M3 yet. Finish the M1 template/gates first.
+- Continue M3 next. M1 and M2 are now built as English-led student
+  textbook/workbook pages and pass deterministic QG.
 
 ## Completed In This Slice
 
@@ -131,8 +132,55 @@ Validation for `79c8d84fe9`:
 
 ## Next Steps
 
-1. Push `79c8d84fe9` and this handoff refresh commit.
-2. Continue toward M2-M7 by applying the now-green M1 archetype/gate stack to
-   M2 (`reading-ukrainian`) before broad generation.
-3. Keep wiki/resource coverage hard. If M2 surfaces manifest/resource gaps,
-   fix content/resources or scoped infra, not by weakening the coverage gates.
+## Latest M2 / M1-M7 Gate Update
+
+Commits after `79c8d84fe9`:
+
+- `42195a1d59 fix(pipeline): gate A1 M1-M7 resource coverage`
+  - `resource_coverage` now applies to A1 M1-M7 archetypes, not only M1.
+  - A1 M2 correctly hard-failed with missing plan references until
+    `resources.yaml` covered the locked plan references.
+  - Manual resource-search telemetry pass-through is still allowed only when
+    deterministic resource coverage has already passed, and only for A1 M1-M7.
+- `48b3b15978 fix(pipeline): allow A1 M2-M7 English section headings`
+  - `plan_sections` still requires every locked plan section.
+  - A1 M1-M7 can satisfy Ukrainian plan section names with approved English
+    student-facing headings, preserving the English-led product direction.
+- `f07757ea58 feat(a1): add M2 reading Ukrainian module`
+  - Added `curriculum/l2-uk-en/a1/reading-ukrainian/{module.md,activities.yaml,
+    vocabulary.yaml,resources.yaml}`.
+  - Added rendered `starlight/src/content/docs/a1/reading-ukrainian.mdx`.
+  - M2 is English-led script-building: syllables, vowel letters, reading words,
+    reading traps, and textbook/workbook check.
+
+Validation after M2:
+
+- M2 `scripts.yaml_activities`: passed.
+- M2 direct `run_python_qg()`: passed.
+  - `resource_coverage`: passed; locked internal wiki references skipped.
+  - `archetype_fit`: passed for `a1-script-building`.
+  - `word_count`: 1160 words, above the 1104 tolerated floor for target 1200.
+- Focused gate suite after infra changes:
+  `tests/test_correction_loop_surgical.py tests/test_contract_compliance.py
+  tests/test_inject_activity_gate.py tests/test_resources_search_gate.py
+  tests/test_plan_reference_match_gate.py
+  tests/test_quiz_translate_explanations_gate.py`: 73 passed.
+- `ruff check` on touched infra/test files: passed.
+- `git diff --check`: passed.
+- `scripts/validate_mdx.py l2-uk-en a1 2`: passed.
+- `npm run build:starlight`: passed; 92 pages built.
+- Local Starlight dev server restarted via `./services.sh restart starlight`
+  from the active worktree and serves
+  `http://127.0.0.1:4321/a1/reading-ukrainian/`.
+- HTML inspection confirmed the page has H1 `Читаємо українською`, English
+  section headings, and rendered activity text. Playwright browser inspection
+  could not run because the local Playwright browser binary is missing.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+
+## Next Steps
+
+1. Commit/push this handoff refresh.
+2. Start M3 (`special-signs`) using the same M1/M2 artifact pattern.
+3. Keep wiki/resource coverage hard. For M3, first check the plan references
+   and wiki manifest, then build the full artifact set and run direct
+   `run_python_qg()` before MDX assembly.

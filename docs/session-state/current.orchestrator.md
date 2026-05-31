@@ -153,6 +153,9 @@ A1 M1-M7 sequence:
   - `04860251b9 fix(a1): replace passive alphabet map`
   - `6ccce0946a fix(a1): close M1 wiki and gate coverage`
   - `79c8d84fe9 feat(pipeline): gate module archetype fit`
+  - `42195a1d59 fix(pipeline): gate A1 M1-M7 resource coverage`
+  - `48b3b15978 fix(pipeline): allow A1 M2-M7 English section headings`
+  - `f07757ea58 feat(a1): add M2 reading Ukrainian module`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
@@ -175,15 +178,14 @@ A1 M1-M7 sequence:
   `vocabulary_hints.required`, then requires the first learner-facing lesson or
   activity use to include an English gloss/explicit introduction. A1 M1 now
   passes this gate after adding same-row glosses for `звук` and `літера`.
-- Second deterministic gate implemented:
-  `resource_coverage` in `scripts/build/linear_pipeline.py`. It is scoped
-  through `resolve_module_archetype()` and only fires for
-  `a1-zero-script-onboarding` for now. It checks non-internal plan references,
-  plan `pronunciation_videos`, and wiki manifest `external_resources` against
+- Second deterministic gate implemented and extended:
+  `resource_coverage` in `scripts/build/linear_pipeline.py` now fires for A1
+  M1-M7 archetypes. It checks non-internal plan references, plan
+  `pronunciation_videos`, and wiki manifest `external_resources` against
   `resources.yaml`; internal AI-facing wiki references are skipped, not
-  published. A1 M1 `resources.yaml` and generated Starlight MDX now list the
-  Anna Ohoiko alphabet overview, playlist, all plan per-letter videos, and the
-  stored course O-video activity reference.
+  published. A1 M1 and M2 now pass this gate. Manual resource-search telemetry
+  pass-through is allowed only for A1 M1-M7 when deterministic coverage has
+  already passed.
 - `inject_activity_ids` now respects the M1-M7 textbook/workbook split. For A1
   zero/script/first-contact archetypes, workbook-only activities are allowed
   while unknown injected ids still fail. A1 M1 now passes this gate with
@@ -214,6 +216,13 @@ A1 M1-M7 sequence:
   decolonization gates. For A1 M1-M7 it checks no internal wiki links,
   English-led surface, workbook activity floor, A1-compatible activity
   families, and a real textbook/workbook split. A1 M1 passes this gate.
+- M2 build completed:
+  `f07757ea58 feat(a1): add M2 reading Ukrainian module` added the English-led
+  `reading-ukrainian` module, activities, vocabulary, resources, and rendered
+  Starlight MDX. Direct M2 `run_python_qg()` passes, including hard
+  `resource_coverage` and `archetype_fit` for `a1-script-building`.
+- `plan_sections` now allows approved English learner-facing headings for A1
+  M1-M7 while still requiring every locked plan section.
 - Validation for `79c8d84fe9`:
   - `tests/test_contract_compliance.py`: 36 passed.
   - focused suite covering contract, inject, resource, plan-reference, and
@@ -223,9 +232,19 @@ A1 M1-M7 sequence:
   - `git diff --check`: passed.
   - `npm run build:starlight`: passed; 91 pages built.
   - pre-commit on commit: passed.
+- Latest validation:
+  - M2 `scripts.yaml_activities`: passed.
+  - M2 direct `run_python_qg()`: passed.
+  - focused gate suite after infra changes: 73 passed.
+  - `scripts/validate_mdx.py l2-uk-en a1 2`: passed.
+  - `npm run build:starlight`: passed; 92 pages built.
+  - local Starlight restarted via `services.sh` and serves
+    `/a1/reading-ukrainian/`.
+  - Playwright browser inspection could not run because the local Playwright
+    browser binary is missing; served HTML was inspected instead.
 - Next implementation target:
-  start applying the M1 archetype/gate stack to M2 (`reading-ukrainian`) before
-  broad M2-M7 generation. Keep wiki/resource coverage hard.
+  build M3 (`special-signs`) with the same full artifact set and direct
+  `run_python_qg()` validation. Keep wiki/resource coverage hard.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route
