@@ -77,7 +77,9 @@ current worktree. In Codex desktop, Starlight is launched inside a detached
 
 1. Define a module archetype contract: learner state, prerequisites, allowed
    tab composition, allowed activity families, resource-placement policy, and
-   acceptance tests.
+   acceptance tests. Initial resolver:
+   `scripts/pipeline/module_archetypes.py`; architecture note:
+   `docs/architecture/module-archetype-contract.md`.
 2. Make the writer pipeline consume plan + config + resources + learner state
    as one contract before drafting.
 3. Add deterministic gates for "introduced before use", plan coverage,
