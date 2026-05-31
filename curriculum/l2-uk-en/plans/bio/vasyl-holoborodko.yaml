@@ -10,7 +10,7 @@ activity_hints:
   items: 5
   placement: inline
   type: true-false
-- focus: Дебат — культурна цензура як форма репресії без ув'язнення
+- focus: Дебати — культурна цензура як форма репресії без ув'язнення
   placement: workbook
   type: debate
 - focus: >-

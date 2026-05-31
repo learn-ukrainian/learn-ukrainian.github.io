@@ -10,7 +10,7 @@ activity_hints:
   items: 5
   placement: inline
   type: true-false
-- focus: Дебат — «найсвіжіший Валуєвський указ» як історична аналогія чи полемічне перебільшення?
+- focus: Дебати — «найсвіжіший Валуєвський указ» як історична аналогія чи полемічне перебільшення?
   placement: workbook
   type: debate
 - focus: >-
