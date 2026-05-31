@@ -337,6 +337,7 @@ RESOURCE_ROLES = frozenset(
         "wiki",
     }
 )
+INTERNAL_RESOURCE_URL_PREFIXES = ("wiki/", "docs/wiki/")
 MULTIMEDIA_SEARCH_TOOLS = frozenset(
     {
         "query_wikipedia",
@@ -7112,14 +7113,22 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
                 )
         if artifact == "resources.yaml":
             role = str(item.get("role") or "").strip()
+            url = str(item.get("url") or "").strip()
+            normalized_url = url.lstrip("./")
             if role not in RESOURCE_ROLES:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} "
                     f"has invalid role {role!r}; allowed: {sorted(RESOURCE_ROLES)}"
                 )
-            if role != "textbook" and not str(item.get("url") or "").strip():
+            if role != "textbook" and not url:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} role {role!r} requires url"
+                )
+            if normalized_url.startswith(INTERNAL_RESOURCE_URL_PREFIXES):
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} has internal "
+                    f"AI-facing resource url {url!r}; resources.yaml must contain "
+                    "student-facing sources only"
                 )
 
 
