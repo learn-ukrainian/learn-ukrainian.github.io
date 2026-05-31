@@ -10,7 +10,7 @@ activity_hints:
   items: 5
   placement: inline
   type: true-false
-- focus: Дебати — формальні права проти ст. 62: чи була аргументація в суді конституційною чи лише моральною?
+- focus: 'Дебати — формальні права проти ст. 62: чи була аргументація в суді конституційною чи лише моральною?'
   placement: workbook
   type: debate
 - focus: >-
@@ -119,7 +119,7 @@ references:
   type: primary
 - author: Ніна Строката-Караванська
   note: Документальне видання про переслідування жінок.
-  title: Ukrainian Women in Soviet Union: Documental Persecution
+  title: 'Ukrainian Women in Soviet Union: Documental Persecution'
   type: primary
   work: Ukrainian Women in Soviet Union
 sequence: 249
