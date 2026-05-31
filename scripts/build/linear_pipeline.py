@@ -7795,12 +7795,42 @@ def _word_count_gate(text: str, target: int) -> dict[str, Any]:
     }
 
 
-_A1_ZERO_SCRIPT_SECTION_ALIASES = {
+_A1_M1_M7_SECTION_ALIASES = {
     "Звуки і літери": ("Sound First, Letter Second",),
     "Голосні звуки": ("Six Vowel Sounds, Ten Letters",),
     "Приголосні звуки": ("Consonant Sounds",),
     "Привіт!": ("Your First Conversation",),
+    "Склади": ("Syllables",),
+    "Голосні літери": ("Vowel Letters",),
+    "Читання слів": ("Reading Words",),
+    "Йотовані голосні як передумова": ("Iotated Vowels First",),
+    "М'який знак": ("The Soft Sign",),
+    "Апостроф": ("The Apostrophe",),
+    "Контраст і типові помилки L2": ("Contrast and L2 Reading Traps",),
+    "Перенос і підсумок": ("Line Breaks and Textbook Check",),
+    "Наголос": ("Stress",),
+    "Інтонація": ("Intonation",),
+    "Читаємо вголос": ("Reading Aloud",),
+    "Діалоги": ("Dialogues",),
+    "Мене звати...": ("My Name Is...",),
+    "Це...": ("This Is...",),
+    "Особові займенники": ("Personal Pronouns",),
+    "Я — студент": ("I Am a Student",),
+    "Звідки?": ("Where From?",),
+    "Сім'я": ("Family",),
+    "У мене є": ("I Have",),
+    "Мій, моя, моє": ("My",),
+    "Що ми знаємо?": ("What We Know",),
+    "Читання": ("Reading",),
+    "Граматика": ("Grammar",),
+    "Діалог": ("Dialogue",),
     "Підсумок": ("Textbook Check",),
+}
+
+_A1_M1_M7_ARCHETYPES = {
+    "a1-zero-script-onboarding",
+    "a1-script-building",
+    "a1-first-contact-survival",
 }
 
 
@@ -7894,8 +7924,8 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
 
 def _section_heading_keys_for_plan_section(title: Any, archetype_key: str | None = None) -> list[str]:
     keys = [_section_heading_key(title)]
-    if archetype_key == "a1-zero-script-onboarding":
-        for alias in _A1_ZERO_SCRIPT_SECTION_ALIASES.get(str(title), ()):
+    if archetype_key in _A1_M1_M7_ARCHETYPES:
+        for alias in _A1_M1_M7_SECTION_ALIASES.get(str(title), ()):
             alias_key = _section_heading_key(alias)
             if alias_key not in keys:
                 keys.append(alias_key)
