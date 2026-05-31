@@ -4,6 +4,7 @@ import RuleBox from '@site/src/components/RuleBox';
 import MythBuster from '@site/src/components/MythBuster';
 import SourceBox from '@site/src/components/SourceBox';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import DialogueBox from '@site/src/components/DialogueBox';
 
 // ── RuleBox ──────────────────────────────────────────────────────────────────
 
@@ -53,6 +54,24 @@ describe('RuleBox', () => {
     );
     expect(container.querySelector('table')).toBeTruthy();
     expect(container.querySelectorAll('td').length).toBe(2);
+  });
+});
+
+// ── DialogueBox ──────────────────────────────────────────────────────────────
+
+describe('DialogueBox', () => {
+  test('renders generated uk/en dialogue props', () => {
+    render(
+      <DialogueBox
+        uk="Марко: Привіт! Як тебе звати?"
+        en="Marko: Hi! What is your name?"
+      />
+    );
+
+    expect(screen.getByText('Марко')).toBeTruthy();
+    expect(screen.getByText('Привіт! Як тебе звати?')).toBeTruthy();
+    expect(screen.getByText('Marko: Hi! What is your name?')).toBeTruthy();
+    expect(screen.queryByText('Діалог')).toBeNull();
   });
 });
 

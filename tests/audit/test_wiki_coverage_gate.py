@@ -62,6 +62,28 @@ def _ban_result(report: dict[str, Any]) -> dict[str, Any]:
     return next(item for item in report["obligations"] if item["obligation_id"] == "ban-1")
 
 
+def test_obligation_checklist_ignores_teacher_facing_chunk_loanword() -> None:
+    manifest = {
+        "slug": "chunk-fixture",
+        "wiki_path": "wiki/pedagogy/a1/chunk-fixture.md",
+        "sequence_steps": [
+            {
+                "id": "step-1",
+                "heading": "Крок 1: Комунікативні чанки",
+                "required_claim": "Ця фраза подається як лексичний моноліт (чанк).",
+            }
+        ],
+        "l2_errors": [],
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+    }
+
+    checklist = build_obligation_checklist_object(manifest)
+    required = checklist["obligations"][0]["required_items"]["vocabulary"]
+
+    assert "чанк" not in required
+
+
 def test_decolonization_ban_substance_required_passes_when_pair_present() -> None:
     manifest = _ban_manifest(BAN_4_RULE)
 

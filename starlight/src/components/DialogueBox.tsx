@@ -24,7 +24,17 @@ interface DialogueBoxProps {
    * @schemaDescription Exchanges value consumed by this component.
    * @ukrainianText true
    */
-  exchanges: DialogueExchange[];
+  exchanges?: DialogueExchange[];
+  /**
+   * @schemaDescription Legacy Ukrainian line consumed by generated MDX.
+   * @ukrainianText true
+   */
+  uk?: string;
+  /**
+   * @schemaDescription Legacy English gloss consumed by generated MDX.
+   * @ukrainianText false
+   */
+  en?: string;
   /**
    * @schemaDescription Display title shown above the component.
    * @ukrainianText true
@@ -39,19 +49,28 @@ interface DialogueBoxProps {
 
 export default function DialogueBox({
   exchanges,
+  uk,
+  en,
   title,
   isUkrainian = true,
 }: DialogueBoxProps) {
-  if (!exchanges || exchanges.length === 0) return null;
+  const usesLegacyLine = (!exchanges || exchanges.length === 0) && Boolean(uk);
+  const normalizedExchanges = exchanges && exchanges.length > 0
+    ? exchanges
+    : uk
+      ? [legacyLineToExchange(uk)]
+      : [];
+
+  if (normalizedExchanges.length === 0) return null;
 
   const headerLabel =
     title || (isUkrainian ? 'Діалог' : 'Dialogue');
 
   return (
     <div className={directStyles.dialogueContainer}>
-      <h3 className={directStyles.dialogueTitle}>{headerLabel}</h3>
+      {!usesLegacyLine && <h3 className={directStyles.dialogueTitle}>{headerLabel}</h3>}
       <div className={directStyles.dialogueExchanges}>
-        {exchanges.map((ex, i) => {
+        {normalizedExchanges.map((ex, i) => {
           const isEven = i % 2 === 0;
           return (
             <div
@@ -67,10 +86,20 @@ export default function DialogueBox({
                 {ex.speaker}
               </div>
               <div className={directStyles.dialogueText}>{ex.text}</div>
+              {en && <div className={directStyles.dialogueTranslation}>{en}</div>}
             </div>
           );
         })}
       </div>
     </div>
   );
+}
+
+function legacyLineToExchange(line: string): DialogueExchange {
+  const [speaker, ...rest] = line.split(':');
+  const text = rest.join(':').trim();
+  if (!text) {
+    return { speaker: '', text: line };
+  }
+  return { speaker: speaker.trim(), text };
 }

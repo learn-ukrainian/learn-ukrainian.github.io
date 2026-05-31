@@ -156,6 +156,25 @@ def test_manifest_accepts_sequence_heading_variants(tmp_path: Path) -> None:
     assert manifest["l2_errors"][0]["incorrect"] == "Я є студент."
 
 
+def test_manifest_strips_html_verify_comments_from_l2_error_cells(tmp_path: Path) -> None:
+    wiki = tmp_path / "verify-comments.md"
+    wiki.write_text(
+        """# Verify comments
+
+## Типові помилки L2
+
+| ❌ Помилково | ✅ Правильно | Чому |
+|---|---|---|
+| Я є студент <!-- VERIFY: hidden reviewer note -->. | Я студент. | Калька. |
+""",
+        encoding="utf-8",
+    )
+
+    manifest = extract_manifest(wiki)
+
+    assert manifest["l2_errors"][0]["incorrect"] == "Я є студент."
+
+
 def test_manifest_extracts_external_resources_section(tmp_path: Path) -> None:
     wiki = tmp_path / "external.md"
     wiki.write_text(

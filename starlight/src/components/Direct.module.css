@@ -657,6 +657,13 @@
   color: var(--ifm-heading-color);
 }
 
+.dialogueTranslation {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--ifm-color-emphasis-700);
+}
+
 /* ─── Shared Animations ─── */
 
 @keyframes shake {
