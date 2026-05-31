@@ -138,14 +138,14 @@ A1 M1-M7 sequence:
   `.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch:
   `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Current pushed head after introduced-before-use follow-up:
-  `b8824bebfc feat(audit): gate A1 M1 introduced-before-use`
+- Latest introduced-before-use implementation commit:
+  `c50829a667 feat(audit): gate A1 M1 introduced-before-use`
 - Follow-up commits after the M1 rewrite:
   - `e514421f78 fix(infra): decouple etymology from lesson builds`
   - `594c72e928 feat(pipeline): define module archetype contracts`
   - `f84e8a8702 feat(pipeline): inject module archetype into writer prompts`
   - `b6dd723acb fix(pipeline): block internal wiki resources`
-  - `b8824bebfc feat(audit): gate A1 M1 introduced-before-use`
+  - `c50829a667 feat(audit): gate A1 M1 introduced-before-use`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
