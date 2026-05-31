@@ -5,185 +5,44 @@
 - lemma: лі́тера
   translation: letter
   pos: noun
-  usage: Це лі́тера А.
-- lemma: голосни́й
+  usage: Це лі́тера П.
+- lemma: голосни́й звук
   translation: vowel sound
-  pos: adjective/noun term
-  usage: Це голосни́й звук.
-- lemma: при́голосний
+  pos: noun phrase
+  usage: '[а] - голосни́й звук.'
+- lemma: при́голосний звук
   translation: consonant sound
-  pos: adjective/noun term
-  usage: Це при́голосний звук.
+  pos: noun phrase
+  usage: '[п] - при́голосний звук.'
 - lemma: Приві́т
-  translation: hi
+  translation: Hi
   pos: phrase
   usage: Приві́т!
-  notes: Stick to Приві́т (not the Russian-borrowed <!-- bad -->прівєт<!-- /bad -->).
 - lemma: До́брий день
-  translation: Good day / Hello
+  translation: Hello / Good day
   pos: phrase
   usage: До́брий день!
-- lemma: До́брого ра́нку
-  translation: Good morning
+- lemma: Як спра́ви?
+  translation: How are you?
   pos: phrase
-  usage: До́брого ра́нку!
-- lemma: До́брий ве́чір
-  translation: Good evening
+  usage: Як спра́ви?
+- lemma: До́бре
+  translation: Fine / good
   pos: phrase
-  usage: До́брий ве́чір!
+  usage: До́бре.
+- lemma: А у тебе́?
+  translation: And you? (after How are you?)
+  pos: phrase
+  usage: До́бре. А у тебе́?
+- lemma: Як тебе́ зва́ти?
+  translation: What is your name?
+  pos: phrase
+  usage: Як тебе́ зва́ти?
+- lemma: Ме́не зва́ти ...
+  translation: My name is ...
+  pos: phrase
+  usage: Ме́не зва́ти Анна.
 - lemma: До поба́чення
   translation: Goodbye
   pos: phrase
   usage: До поба́чення!
-- lemma: як спра́ви
-  translation: how are you
-  pos: phrase
-  usage: Як спра́ви?
-- lemma: до́бре
-  translation: fine, good
-  pos: adverb
-  usage: До́бре.
-- lemma: чудо́во
-  translation: great, wonderful
-  pos: adverb
-  usage: Чудо́во.
-- lemma: норма́льно
-  translation: okay
-  pos: adverb
-  usage: Норма́льно.
-- lemma: ма́ма
-  translation: mother
-  pos: noun
-  usage: Ма́ма.
-- lemma: молоко́
-  translation: milk
-  pos: noun
-  usage: Молоко́.
-- lemma: На все до́бре
-  translation: All the best
-  pos: phrase
-  usage: На все до́бре!
-- lemma: ра́дий
-  translation: glad, masculine
-  pos: adjective
-  usage: Ра́дий тебе́ ба́чити.
-- lemma: ра́да
-  translation: glad, feminine
-  pos: adjective
-  usage: Ра́да тебе́ ба́чити.
-- lemma: ба́чити
-  translation: to see
-  pos: verb
-  usage: Ра́да тебе́ ба́чити.
-- lemma: віта́ти
-  translation: to greet
-  pos: verb
-  usage: Я віта́ю.
-- lemma: я
-  translation: I
-  pos: pronoun
-  usage: Я А́нна.
-- lemma: ти
-  translation: you, informal singular
-  pos: pronoun
-  usage: А ти?
-- lemma: тебе́
-  translation: you, object form
-  pos: pronoun
-  usage: Ра́дий тебе́ ба́чити.
-- lemma: мене́
-  translation: me
-  pos: pronoun
-  usage: Ме́не зва́ти Марко́.
-- lemma: а
-  translation: and / but
-  pos: conjunction
-  usage: А у тебе́?
-- lemma: зва́ти
-  translation: to be called
-  pos: verb
-  usage: Як тебе́ зва́ти?
-- lemma: сло́во
-  translation: word
-  pos: noun
-  usage: Це сло́во.
-- lemma: день
-  translation: day
-  pos: noun
-  usage: До́брий день.
-- lemma: чита́ти
-  translation: to read
-  pos: verb
-  usage: Чита́й сло́во.
-- lemma: повтори́ти
-  translation: to repeat
-  pos: verb
-  usage: Повто́ри звук.
-- lemma: сказа́ти
-  translation: to say
-  pos: verb
-  usage: Скажи́ Приві́т.
-- lemma: написа́ти
-  translation: to write
-  pos: verb
-  usage: Напиши́ лі́теру.
-- lemma: украї́нський
-  translation: Ukrainian, masculine
-  pos: adjective
-  usage: Украї́нський звук.
-- lemma: украї́нська
-  translation: Ukrainian, feminine
-  pos: adjective
-  usage: Украї́нська мо́ва.
-- lemma: абе́тка
-  translation: alphabet
-  pos: noun
-  usage: Украї́нська абе́тка.
-- lemma: го́лос
-  translation: voice
-  pos: noun
-  usage: Го́лос дає́ звук.
-- lemma: серцебиття́
-  translation: heartbeat
-  pos: noun
-  usage: Голосни́й звук — серцебиття́ сло́ва.
-- lemma: відеоуро́к
-  translation: video lesson
-  pos: noun
-  usage: Відеоуро́к пока́зує звук.
-- lemma: архітекту́ра
-  translation: architecture, structure
-  pos: noun
-  usage: Архітекту́ра сло́ва.
-- lemma: хамелео́н
-  translation: chameleon
-  pos: noun
-  usage: Йото́вана лі́тера — хамелео́н.
-- lemma: м'яки́й знак
-  translation: soft sign
-  pos: noun phrase
-  usage: М'яки́й знак не ма́є зву́ка.
-- lemma: апо́стро́ф
-  translation: apostrophe
-  pos: noun
-  usage: Апо́стро́ф розділя́є.
-- lemma: склад
-  translation: syllable
-  pos: noun
-  usage: Склад ма́є голосни́й звук.
-- lemma: чолові́к
-  translation: man
-  pos: noun
-  usage: 'Чолові́к ка́же: Ра́дий.'
-- lemma: жі́нка
-  translation: woman
-  pos: noun
-  usage: 'Жі́нка ка́же: Ра́да.'
-- lemma: фо́рма
-  translation: form
-  pos: noun
-  usage: Фо́рма сло́ва змі́нюється.
-- lemma: ім'я́
-  translation: name
-  pos: noun
-  usage: Моє́ ім'я́ — А́нна.

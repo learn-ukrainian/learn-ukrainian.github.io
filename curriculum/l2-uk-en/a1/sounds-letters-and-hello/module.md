@@ -1,103 +1,171 @@
-# Зву́ки, лі́тери та приві́т
+# Sounds, Letters, and Hello
 
-## Зву́ки і лі́тери
+Welcome to your first Ukrainian lesson. You do not need to read Ukrainian yet. In this lesson, Ukrainian appears in small chunks. Your job is to notice, listen, repeat, and use a few useful phrases.
 
-**Звук** — sound. You hear it. You say it. **Лі́тера** — letter. You see it. You write it. Украї́нське сло́во трима́є оби́дві части́ни ра́зом — one word, two layers: sound and writing.
+By the end, you can:
 
-Олекса́ндр Заболо́тний дає́ коро́тке правило: «Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо». <!-- VERIFY: source="Заболотний 5 клас, p.83", chunk_id="5-klas-ukrmova-zabolotnyi-2023_s0084" --> Це твій пе́рший ключ до украї́нської фоне́тики — the study of speech sounds. Вухо́ ловить звук. Око́ ба́чить лі́теру. Рука́ пи́ше лі́теру як знак для цьо́го зву́ка.
+- say hello and goodbye;
+- answer **Як справи?** with **До́бре**;
+- ask a simple name question;
+- tell the difference between a sound and a letter;
+- recognize the sounds in **Приві́т**, **ма́ма**, **молоко́**, and **день**.
 
-Украї́нська абе́тка ма́є **33 лі́тери** — 33 letters. Украї́нська мо́ва ма́є **38 зву́ків** — 38 sounds. Зву́ків бі́льше, бо одна́ лі́тера і́ноді познача́є два зву́ки. **Я**, **Ю**, **Є**, **Ї** мо́жуть передава́ти [й] плюс голосни́й звук. **Ь**, м'яки́й знак, не ма́є вла́сного зву́ка. Він змі́нює попере́дній при́голосний. Це не дивина́, а норма́льна архітекту́ра украї́нського письма́.
+Keep this rule in mind:
 
-| На письмі́ | У вимо́ві |
+| You hear and say | You see and write |
 | --- | --- |
-| **лі́тера** | **звук** |
-| ба́чиш | чу́єш |
-| пи́шеш | вимовля́єш |
-| знак | го́лос |
+| a **sound** | a **letter** |
+| **звук** | **лі́тера** |
 
-Літвінова ста́вить то́чне пита́ння: чи коре́ктно каза́ти «голосна́ лі́тера»? <!-- VERIFY: source="Літвінова 5 клас, p.130", chunk_id="5-klas-ukrmova-litvinova-2022_s0135" --> То́чна ві́дповідь: **голосни́й звук** — vowel sound. Лі́тера лише́ познача́є звук. Тому́ кажи́ **лі́тера, що познача́є голосни́й звук** — a letter that marks a vowel sound. Коро́тше в живі́й пра́ктиці: **голосни́й звук**, не «голосна́ лі́тера».
+Ukrainian teachers use this distinction from the start: sounds are for your ear and mouth; letters are for your eyes and hand. <!-- VERIFY: source="Заболотний 5 клас, p.83", chunk_id="5-klas-ukrmova-zabolotnyi-2023_s0084" -->
 
-:::tip
-**Приві́т** — украї́нське віта́ння. Stick to **Приві́т** (not the Russian-borrowed <!-- bad -->прівєт<!-- /bad -->). One small spelling choice already trains your ear for Ukrainian, not for a borrowed pattern.
-:::
+## Your First Word
 
-Пе́рший тест ду́же про́сти́й. Якщо́ ти чу́єш [а], це звук. Якщо́ ти ба́чиш **А**, це лі́тера. Якщо́ ти ка́жеш **ма́ма**, ти вимовля́єш зву́ки [м], [а], [м], [а]. Якщо́ ти пи́шеш **ма́ма**, ти ста́виш лі́тери м-а-м-а. Sound first, letter second; Ukrainian reading becomes calmer when this split is clear.
+Your first word is:
+
+**Приві́т!** - Hi!
+
+Say it slowly:
+
+**При-ві́т**
+
+You do not need every letter of the alphabet today. You only need to notice the pieces in this word:
+
+| Letter | Sound | What to do |
+| --- | --- | --- |
+| **П** | [п] | close both lips, then release |
+| **р** | [р] | light Ukrainian **r** |
+| **и** | [и] | short central vowel |
+| **в** | [в] | upper teeth near lower lip |
+| **і** | [і] | smile vowel, like a clean **ee** |
+| **т** | [т] | tongue taps behind teeth |
+
+Now say the whole word:
+
+**Приві́т!**
+
+Use **Приві́т!** with classmates, friends, family, or someone your age. Use it as one whole chunk. Grammar can wait.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-## Голосні́ зву́ки
+## Sound First, Letter Second
 
-[а], [о], [у], [е], [и], [і] — шість про́сти́х голосни́х зву́ків. Six clean vowel sounds. Вони́ передаю́ться лі́терами **а**, **о**, **у**, **е**, **и**, **і**. Пізні́ше ти поба́чиш лі́тери **я**, **ю**, **є**, **ї**, але́ звук тут не нови́й: там працю́є [й] плюс голосни́й або́ м'я́кість попере́днього при́голосного.
+English spelling can be unpredictable. Ukrainian spelling is usually more direct: a letter normally points you toward a sound. That does not mean every letter is simple, but it means you can build reading step by step.
 
-Голосни́й звук утво́рюється го́лосом — with voice. Пові́тря прохо́дить че́рез рот ві́льно. Нема́є перешко́ди від губ, зубі́в чи язика́. Че́рез це голосни́й мо́жна співа́ти. Большако́ва формулю́є це про́сто: голосні́ зву́ки утво́рюються за допомо́гою го́лосу, а у ві́рші «Ле́гко вимовля́ються, ве́село співа́ються!» <!-- VERIFY: source="Большакова, буквар 1 клас, p.24", chunk_id="1-klas-bukvar-bolshakova-2018-1_s0023" -->
+Three key facts are enough for today:
 
-Голосний звук — **серцебиття** слова, its heartbeat. Можна сказа́ти ще прості́ше: голосни́й є серцебиттям слова́. Без голосно́го сло́во розсипа́ється фізи́чно: нема́є скла́ду, нема́є ри́тму, нема́є мі́сця для го́лосу. **Ма́ма** ма́є два [а]. **Молоко́** ма́є три [о]. У сло́ві **день** є оди́н голосни́й звук [е]. Оди́н голосни́й уже́ трима́є ці́ле сло́во.
+1. Ukrainian has **33 letters**.
+2. Ukrainian has **38 sounds**.
+3. Some letters do special jobs, so the numbers are not the same.
 
-Шість чи́стих голосни́х ко́ри́сно тренува́ти ті́лом. Для [і] зроби́ вузьку́ по́смішку — narrow smile. Для [у] округли́ гу́би — round lips. Відеоуроки з вимовою допомагають, бо ти бачиш рот і чуєш звук одночасно. Це фізи́чна впра́ва для артикуляці́йного апара́ту — the speech muscles.
+For example, **ь** is called the soft sign. It has no sound of its own. In **день** - day, it tells you that **н** is soft. You do not pronounce a separate extra sound after **н**.
 
-Захарійчук подає́ звукову́ моде́ль — a sound model: [•] — голосни́й звук, a vowel sound. <!-- VERIFY: source="Захарійчук, буквар 1 клас (НУШ 2025), p.4 resolved for p.13 plan note", chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0002" --> Ма́лий кружо́к — the small circle — працю́є як візуа́льна підка́зка. **Ма́ма**: [•] і [•]. **Молоко́**: [•], [•], [•]. Ти ще не му́сиш будува́ти по́вну схе́му — the full scheme; доста́тньо чу́ти, де сло́во ма́є го́лос.
+You will meet the full alphabet later. Today, read only a few useful words:
 
-У сло́ві **молоко́** ко́жен [о] залиша́ється [о]. Clean [о], not reduced. Украї́нська вимо́ва не про́сить тебе́ наближа́ти [о] до [а]. Скажи́ пові́льно: **мо-ло-ко**. Три [о], три чи́сті уда́ри го́лосу.
+| Word | Meaning | What to notice |
+| --- | --- | --- |
+| **ма́ма** | mother | two **а** sounds |
+| **молоко́** | milk | three clean **о** sounds |
+| **день** | day | **ь** softens **н** |
+| **Приві́т** | hi | two vowel sounds |
+
+## Six Vowel Sounds
+
+Ukrainian has six basic vowel sounds:
+
+**[а] [о] [у] [е] [и] [і]**
+
+A vowel sound is open. Your voice can pass through. You can hold it:
+
+- **а-а-а**
+- **о-о-о**
+- **у-у-у**
+- **і-і-і**
+
+That is why Ukrainian schoolbooks often introduce vowels as sounds you can sing. <!-- VERIFY: source="Большакова, буквар 1 клас, p.24", chunk_id="1-klas-bukvar-bolshakova-2018-1_s0023" -->
+
+Practice only three today:
+
+| Sound | Word | Say it |
+| --- | --- | --- |
+| [а] | **ма́ма** | **ма-ма** |
+| [о] | **молоко́** | **мо-ло-ко** |
+| [і] | **Приві́т** | **ві́т** |
+
+Important habit: Ukrainian **о** stays clean. In **молоко́**, each **о** is still **о**. Say **мо-ло-ко́**, not a blurred English-style vowel.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## При́голосні зву́ки
+## Consonant Sounds
 
-[м], [н], [с], [к], [т], [р] — при́голосні зву́ки. Consonant sounds. Тут го́лос зустріча́є шум або́ ті́льки шум. Губи, зу́би, язи́к чи і́нша части́на ро́та ство́рюють перешко́ду. Спро́буй до́вго співа́ти [а] — ле́гко. Спро́буй до́вго співа́ти чи́стий [к] — нема́є де трима́ти го́лос.
+A consonant sound uses a small block or contact in the mouth: lips, tongue, teeth, or throat. Try it:
 
-При́голосних зву́ків в украї́нській мо́ві **32**. <!-- VERIFY: source="Літвінова 5 клас, p.110 via search result; plan grounding also uses Большакова p.24", chunk_id="1-klas-bukvar-bolshakova-2018-1_s0023" --> Вони дають слову чітку **архітектуру** — structure. Голосні́ даю́ть го́лос, при́голосні буду́ють фо́рму навко́ло нього. **Ма**, **мо**, **му** — це пе́рші склади: при́голосний плюс голосни́й. У сло́ві **ма́ма** при́голосний [м] трима́є фо́рму, а [а] дає́ го́лос.
+- **[м]** - close your lips and hum.
+- **[п]** - close your lips and release without humming.
+- **[т]** - touch your tongue behind your teeth.
+- **[н]** - touch your tongue and let sound pass through your nose.
 
-Захарійчук дає́ ще дві підка́зки для моде́лей: [–] — тверди́й при́голосний звук, [=] — м'яки́й при́голосний звук. <!-- VERIFY: source="Захарійчук, буквар 1 клас (НУШ 2025)", chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0002" --> Ти не му́сиш одра́зу назива́ти всі тверді́ й м'які́ па́ри. До́сить чу́ти, що **день** закі́нчується м'я́ко: [н′]. М'я́кість — real sound quality, not decoration.
+In Ukrainian sound models, a small circle **[•]** often marks a vowel sound. Other marks can show consonants. You do not need to draw full models today. Just learn the habit: find the vowel first. <!-- VERIFY: source="Захарійчук, буквар 1 клас (НУШ 2025), p.13", chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0002" -->
 
-### Йото́вані лі́тери
+Look at **Приві́т**:
 
-**Я**, **Ю**, **Є**, **Ї** — йото́вані лі́тери. У письмі́ вони́ працю́ють як графічні «хамелеони» — their job changes by position. Це не нові голосні звуки, а складна графічна конвенція. На поча́тку сло́ва, пі́сля голосно́го, пі́сля апо́стро́фа або́ пі́сля м'яко́го зна́ка вони́ мо́жуть познача́ти [й] плюс голосни́й: **я** → [йа], **ю** → [йу], **є** → [йе], **ї** → [йі]. Якщо́ **я**, **ю**, **є** стоя́ть безпосере́дньо пі́сля при́голосного, вони́ ча́сто пока́зують м'я́кість попере́днього при́голосного і оди́н голосни́й звук. **Ї** ма́є суво́рий ви́няток: вона́ за́вжди́ дає́ два зву́ки [йі] і не пом'я́кшує попере́дній при́голосний.
+| Part | Type |
+| --- | --- |
+| [п] | consonant |
+| [р] | consonant |
+| [и] | vowel |
+| [в] | consonant |
+| [і] | vowel |
+| [т] | consonant |
 
-### М'яки́й знак та апо́строф
-
-**Ь**, м'який знак, не ма́є вла́сного зву́ка. No sound of its own. Йо́го робо́та — підказа́ти читаче́ві: попере́дній при́голосний тре́ба ви́мовити м'я́ко, ніжні́ше. У сло́ві **день** лі́тера **ь** не додає́ окре́мий звук. Вона́ змі́нює [н] на м'яки́й [н′].
-
-**Апо́стро́ф** — separation mark. Право́пис поя́снює: апо́стро́ф познача́є розді́льність вимо́ви **я**, **ю**, **є**, **ї** пі́сля попере́днього твердо́го при́голосного. <!-- VERIFY: source="Український правопис 2019, §7 Апостроф" --> Він ство́рює бар'є́р: попере́дній при́голосний не пом'я́кшується, а насту́пна йото́вана лі́тера зберіга́є по́вне подві́йне звуча́ння.
+So **Приві́т** has two vowel sounds and four consonant sounds.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-## Приві́т!
+## Your First Conversation
 
-**Приві́т!** — Hi. Це неформа́льне віта́ння для дру́га, по́други, роди́ни або́ люди́ни твого́ ві́ку. **До́брий день!** — Hello / Good day. Це доре́чно форма́льно й нейтра́льно. **До́брого ра́нку!** — Good morning. **До́брий ве́чір!** — Good evening. **До поба́чення!** — Goodbye. Treat each greeting as one whole phrase first; grammar can wait.
+Learn these as whole phrases.
+
+| Ukrainian | English | Use |
+| --- | --- | --- |
+| **Приві́т!** | Hi! | informal |
+| **До́брий день!** | Hello! / Good day! | neutral |
+| **Як спра́ви?** | How are you? | friendly |
+| **До́бре.** | Fine. | simple answer |
+| **А у тебе́?** | And you? | after **Як спра́ви?** |
+| **Як тебе́ зва́ти?** | What is your name? | informal |
+| **Ме́не зва́ти Анна.** | My name is Anna. | name answer |
+| **А тебе́?** | And you? | after a name question |
+| **До поба́чення!** | Goodbye! | leaving |
+
+Read the dialogue. Then say it aloud twice: once as Anna, once as Marko.
 
 <DialogueBox uk="А́нна: Приві́т!" en="Anna: Hi!" />
 <DialogueBox uk="Марко́: Приві́т!" en="Marko: Hi!" />
 <DialogueBox uk="А́нна: Як спра́ви?" en="Anna: How are you?" />
-<DialogueBox uk="Марко́: До́бре." en="Marko: Fine." />
-<DialogueBox uk="А́нна: А у тебе́?" en="Anna: And you?" />
-<DialogueBox uk="Марко́: Чудо́во." en="Marko: Great." />
-<DialogueBox uk="Софія: До́брий день!" en="Sofia: Good day!" />
-<DialogueBox uk="А́нна: До́брий день!" en="Anna: Good day!" />
+<DialogueBox uk="Марко́: До́бре. А у тебе́?" en="Marko: Fine. And you?" />
+<DialogueBox uk="А́нна: До́бре." en="Anna: Fine." />
+
+Now read the name exchange.
+
 <DialogueBox uk="Марко́: Як тебе́ зва́ти?" en="Marko: What is your name?" />
-<DialogueBox uk="Софія: Ме́не зва́ти Софія." en="Sofia: My name is Sofia." />
-<DialogueBox uk="Софія: А тебе́?" en="Sofia: And you?" />
+<DialogueBox uk="Софія: Ме́не зва́ти Софія. А тебе́?" en="Sofia: My name is Sofia. And you?" />
 <DialogueBox uk="Марко́: Ме́не зва́ти Марко́." en="Marko: My name is Marko." />
-<DialogueBox uk="Софія: Ра́да тебе́ ба́чити." en="Sofia: Glad to see you." />
-<DialogueBox uk="Марко́: Ра́дий тебе́ ба́чити." en="Marko: Glad to see you." />
-<DialogueBox uk="А́нна: До поба́чення!" en="Anna: Goodbye!" />
-<DialogueBox uk="Марко́: На все до́бре!" en="Marko: All the best!" />
 
-У фра́зі **Як спра́ви?** ти пита́єш про стан люди́ни. Якщо́ ві́дповідь **До́бре**, скажи́ у відпо́відь: **А у тебе́?** Тут **у тебе́** коре́ктно, бо йде́ться про стан: “with you.” Для і́мені і́нша моде́ль: **Як тебе́ зва́ти?** — **Ме́не зва́ти Марко́.** Пі́сля цього́ ко́ротко: **А тебе́?** Це еліпти́чна фра́за, то́бто по́вна ду́мка без повто́рення всіх слів.
-
-**Радий тебе бачити** каже чоловік. **Рада тебе бачити** каже жінка; це форма, якщо жінка говорить про себе. The adjective changes with the speaker. Це пе́рша зу́стріч із грамати́чним ро́дом — gender. Не тре́ба вчи́ти всю систе́му за́раз; про́сто зв'яжи́ фра́зу зі своїм го́лосом: **ра́дий** або́ **ра́да**.
-
-Прочитай **Привіт** «на гвинтики» — piece by piece. **П** → [п], при́голосний. **р** → [р], при́голосний. **и** → [и], голосни́й. **в** → [в], при́голосний. **і** → [і], голосни́й. **т** → [т], при́голосний. Ра́зом: чоти́ри при́голосні і два голосні́ зву́ки. Ти ба́чиш живу́ структу́ру слова́: голосні́ даю́ть го́лос, при́голосні даю́ть фо́рму.
+Use **А у тебе́?** after **Як спра́ви?** because you are asking about the other person's state. Use **А тебе́?** after **Як тебе́ зва́ти?** because you are asking for the other person's name.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Підсумок
+## Textbook Check
 
-**Звук** — sound: те, що ти чу́єш і вимовля́єш. **Лі́тера** — letter: те, що ти ба́чиш і пи́шеш. Украї́нська абе́тка — the Ukrainian alphabet — ма́є **33 лі́тери**, а украї́нська мо́ва ма́є **38 зву́ків**. Різни́ця — the difference — не випадко́ва: йото́вані лі́тери, м'яки́й знак і тверді́-м'які́ па́ри ро́блять систе́му бага́тшою.
+Before you leave the lesson tab, check that you can do these five things:
 
-**Голосни́й звук** — vowel sound — трима́є склад. **При́голосний звук** — consonant sound — дає́ сло́ву фо́рму. **М'яки́й знак** — soft sign — не звучи́ть сам, але́ змі́нює попере́дній при́голосний. **Апо́стро́ф** — apostrophe — розділя́є і зберіга́є по́вне звуча́ння насту́пної йото́ваної лі́тери. **Ї** за́вжди́ чита́ється [йі].
+- Point to **Приві́т** and say "Hi."
+- Point to **До поба́чення** and say "Goodbye."
+- Answer **Як спра́ви?** with **До́бре.**
+- Say whether **звук** means "sound" or "letter."
+- Count the vowel sounds in **Приві́т**.
 
-Переві́р себе́ ко́ротко — quick self-check. Скі́льки лі́тер — how many letters — в украї́нській абе́тці? Скі́льки зву́ків — how many sounds? Що ти чу́єш: звук чи лі́теру? What do you hear? Що ти пи́шеш? What do you write? Чи коре́ктно каза́ти «голосна́ лі́тера»? Як відпові́сти́ на **Як спра́ви?**? Як сказа́ти **Glad to see you**, якщо́ ти чолові́к? Якщо́ ти жі́нка?
+If that feels manageable, move to the workbook tab. The workbook repeats the same small set in different ways. It is not a test of memory; it is practice for eyes, ears, and mouth.
 
 <!-- INJECT_ACTIVITY: act-5 -->
-
-Украї́нська вимо́ва — Ukrainian pronunciation — ма́є вла́сну ло́гіку і вла́сний ритм. Ти почина́єш із мало́го — start small: **Приві́т**, **До́брий день**, **ма́ма**, **молоко́**, **день**. У цих слова́х уже́ працю́є вся пе́рша схе́ма — the first pattern: звук, лі́тера, го́лос, фо́рма.
