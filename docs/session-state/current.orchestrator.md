@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T22:45Z)
+# Current - Codex orchestrator handoff (2026-05-31T23:05Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -30,7 +30,7 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 - Current authoritative remote head at handoff:
   `836526d165 feat(api): surface bridge activity for orchestrators`
 - Active A1 branch head before handoff-doc commit:
-  `a5c8d98253 feat(a1): add M4 stress and melody module`
+  `1bfcc7a7f9 fix(pipeline): allow zero-word summary sections`
 - Main checkout has unrelated dirty user/Claude files; do not revert:
   - `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`
   - `scripts/deploy_prompts.sh`
@@ -234,6 +234,11 @@ A1 M1-M7 sequence:
   English-led `stress-and-melody` module, activities, vocabulary, resources,
   and rendered Starlight MDX. Direct M4 `run_python_qg()` passes, including
   hard `resource_coverage` and `archetype_fit` for `a1-script-building`.
+- M5 infra unblock completed:
+  `1bfcc7a7f9 fix(pipeline): allow zero-word summary sections` lets
+  `validate_plan()` accept the locked M5 `Підсумок` section with `words: 0`
+  while still rejecting negative or missing section budgets. Regression test
+  coverage was added for `plan_path_for("a1", "who-am-i")`.
 - `plan_sections` now allows approved English learner-facing headings for A1
   M1-M7 while still requiring every locked plan section.
 - Validation for `79c8d84fe9`:
@@ -269,8 +274,11 @@ A1 M1-M7 sequence:
   - local Starlight was restarted from the active worktree and serves
     `/a1/stress-and-melody/`; served HTML and in-app Browser inspection both
     confirmed one H1 and visible Lesson/Vocabulary/Activities/Resources tabs.
+  - M5 infra unblock validation:
+    `tests/test_linear_pipeline_wiki_coverage.py`: 7 passed.
+  - Pre-commit on `1bfcc7a7f9`: passed.
 - Next implementation target:
-  build M5 (`who-am-i`) with the same full artifact set and direct
+  build M5 content (`who-am-i`) with the same full artifact set and direct
   `run_python_qg()` validation. Keep wiki/resource coverage hard.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.

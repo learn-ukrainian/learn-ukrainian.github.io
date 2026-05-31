@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T00:45+02:00)
+# Current - Codex Thread Handoff (2026-06-01T01:05+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `a5c8d98253 feat(a1): add M4 stress and melody module`
+  `1bfcc7a7f9 fix(pipeline): allow zero-word summary sections`
 
 ## Current Direction
 
@@ -240,10 +240,29 @@ Validation after M4:
   the ULP resource text.
 - Pre-commit on `a5c8d98253`: passed.
 
+## Latest M5 Infra Unblock
+
+Commit `1bfcc7a7f9 fix(pipeline): allow zero-word summary sections` unblocked
+M5 plan loading without editing the locked plan:
+
+- `validate_plan()` still rejects missing, non-integer, and negative section
+  word budgets.
+- It now accepts `words: 0`, which the locked M5 `Підсумок` section uses as a
+  heading/self-check-only contract.
+- Added regression coverage in `tests/test_linear_pipeline_wiki_coverage.py`
+  against `plan_path_for("a1", "who-am-i")`.
+
+Validation:
+
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest
+  tests/test_linear_pipeline_wiki_coverage.py -q`: 7 passed.
+- `git diff --check`: passed.
+- Pre-commit on `1bfcc7a7f9`: passed.
+
 ## Next Steps
 
 1. Commit/push this handoff refresh.
-2. Start M5 (`who-am-i`) using the same M1-M4 artifact pattern.
+2. Start M5 content (`who-am-i`) using the same M1-M4 artifact pattern.
 3. Keep wiki/resource coverage hard. For M5, first inspect the plan references
    and wiki manifest, then build the full artifact set and run direct
    `run_python_qg()` before MDX assembly.
