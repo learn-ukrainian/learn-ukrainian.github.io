@@ -156,6 +156,7 @@ A1 M1-M7 sequence:
   - `42195a1d59 fix(pipeline): gate A1 M1-M7 resource coverage`
   - `48b3b15978 fix(pipeline): allow A1 M2-M7 English section headings`
   - `f07757ea58 feat(a1): add M2 reading Ukrainian module`
+  - `440cd017a6 feat(a1): add M3 special signs module`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
@@ -221,6 +222,11 @@ A1 M1-M7 sequence:
   `reading-ukrainian` module, activities, vocabulary, resources, and rendered
   Starlight MDX. Direct M2 `run_python_qg()` passes, including hard
   `resource_coverage` and `archetype_fit` for `a1-script-building`.
+- M3 build completed:
+  `440cd017a6 feat(a1): add M3 special signs module` added the English-led
+  `special-signs` module, activities, vocabulary, resources, and rendered
+  Starlight MDX. Direct M3 `run_python_qg()` passes, including hard
+  `resource_coverage` and `archetype_fit` for `a1-script-building`.
 - `plan_sections` now allows approved English learner-facing headings for A1
   M1-M7 while still requiring every locked plan section.
 - Validation for `79c8d84fe9`:
@@ -242,8 +248,14 @@ A1 M1-M7 sequence:
     `/a1/reading-ukrainian/`.
   - Playwright browser inspection could not run because the local Playwright
     browser binary is missing; served HTML was inspected instead.
+  - M3 `scripts.yaml_activities`: passed.
+  - M3 direct `run_python_qg()`: passed.
+  - `scripts/validate_mdx.py l2-uk-en a1 3`: passed.
+  - `npm run build:starlight`: passed; 93 pages built.
+  - local Starlight was restarted after a hot-reload 500 and now serves
+    `/a1/special-signs/`; served HTML was inspected.
 - Next implementation target:
-  build M3 (`special-signs`) with the same full artifact set and direct
+  build M4 (`stress-and-melody`) with the same full artifact set and direct
   `run_python_qg()` validation. Keep wiki/resource coverage hard.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.

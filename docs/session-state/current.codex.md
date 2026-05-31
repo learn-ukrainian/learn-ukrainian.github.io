@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T00:20+02:00)
+# Current - Codex Thread Handoff (2026-06-01T00:30+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `f07757ea58 feat(a1): add M2 reading Ukrainian module`
+  `440cd017a6 feat(a1): add M3 special signs module`
 
 ## Current Direction
 
@@ -17,7 +17,7 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, or worktrees.
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
-- Continue M3 next. M1 and M2 are now built as English-led student
+- Continue M4 next. M1-M3 are now built as English-led student
   textbook/workbook pages and pass deterministic QG.
 
 ## Completed In This Slice
@@ -177,10 +177,39 @@ Validation after M2:
   could not run because the local Playwright browser binary is missing.
 - `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
 
+## Latest M3 Update
+
+Commit `440cd017a6 feat(a1): add M3 special signs module` added:
+
+- `curriculum/l2-uk-en/a1/special-signs/module.md`
+- `curriculum/l2-uk-en/a1/special-signs/activities.yaml`
+- `curriculum/l2-uk-en/a1/special-signs/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/special-signs/resources.yaml`
+- `starlight/src/content/docs/a1/special-signs.mdx`
+
+M3 is English-led script-building for `ь`, apostrophe, and the contrasts
+`день`, `сім'я`, `буряк`, `бур'ян`, `свято`, `цвях`.
+
+Validation after M3:
+
+- M3 `scripts.yaml_activities`: passed.
+- M3 direct `run_python_qg()`: passed.
+  - `resource_coverage`: passed; locked internal wiki reference skipped.
+  - `archetype_fit`: passed for `a1-script-building`.
+  - `word_count`: 1157 words, above the 1104 tolerated floor for target 1200.
+- `scripts/validate_mdx.py l2-uk-en a1 3`: passed.
+- `npm run build:starlight`: passed; 93 pages built.
+- Local Starlight initially returned HTTP 500 for `/a1/special-signs/` after
+  hot reload; `./services.sh restart starlight` cleared Astro/Vite caches and
+  the route then served correctly.
+- Served HTML inspection confirmed H1 `Особливі знаки`, English section
+  headings, and rendered activity text.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+
 ## Next Steps
 
 1. Commit/push this handoff refresh.
-2. Start M3 (`special-signs`) using the same M1/M2 artifact pattern.
-3. Keep wiki/resource coverage hard. For M3, first check the plan references
+2. Start M4 (`stress-and-melody`) using the same M1-M3 artifact pattern.
+3. Keep wiki/resource coverage hard. For M4, first inspect the plan references
    and wiki manifest, then build the full artifact set and run direct
    `run_python_qg()` before MDX assembly.
