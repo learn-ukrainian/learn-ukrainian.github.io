@@ -113,8 +113,8 @@ persona:
 phase: BIO
 references:
 - note: Сторінка Ватикану про українських мучеників.
-  path: https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html
-  title: Vatican, Ukrainian Greek Catholic martyr biography page
+  path: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  title: Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine
   type: reference
 - note: Профіль владики на сайті Синоду УГКЦ.
   path: https://synod.ugcc.ua/data/vladyka-grygoriy-homyshyn-19207/
