@@ -2,121 +2,182 @@
 
 > **Scope/boundaries (user 2026-05-30):** Codex is the orchestrator. Claude is NOT the orchestrator.
 > Claude does NOT touch `docs/session-state/current.md` or the orchestrator's session-state chain,
-> and does NOT commit/curate main as orchestrator. **Claude's standing task: drive and build the bio
-> epic (#2309) to the end, with the help of other agents.** This file is Claude's OWN tracking doc.
-> It is tracked on main so a fresh Claude bio-driver session can resume
-> without reading the orchestrator's handoff. User may also hand Claude
-> ad-hoc tasks in-seat.
+> and does NOT commit/curate main as orchestrator (outside the bio track — see merge grant below).
+> **Claude's standing task: drive and build the bio epic (#2309) to the end, with the help of other
+> agents.** This file is Claude's OWN tracking doc. It is tracked on main so a fresh Claude bio-driver
+> session can resume without reading the orchestrator's handoff. User may also hand Claude ad-hoc
+> tasks in-seat.
+>
+> **🚧 BIO-LANE GIT DISCIPLINE (user 2026-05-31):** ALWAYS scope git to bio paths — e.g.
+> `git status --short -- curriculum/l2-uk-en/plans/bio docs/research/bio docs/bio-epic
+> curriculum/l2-uk-en/curriculum.yaml starlight/src/content/docs/bio`. NEVER run a bare tree-wide
+> `git status`, `git merge origin/main`, or any whole-repo main operation. If a NON-bio file ever
+> surfaces (especially anything under `docs/session-state/`), SKIP IT SILENTLY. My ONLY state file is
+> THIS one (`docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`); `docs/session-state/*` is the orchestrator's.
+>
+> **⭐ MERGE GRANT (user 2026-05-31):** Claude bio-driver is authorized to **merge bio-track PRs to
+> main** (Phase 3 `curriculum.yaml` registration included) — RELAXES the old "never merge/commit main"
+> rule FOR THE BIO TRACK ONLY. **HARD CONDITION:** every bio PR must first pass review from a
+> *different proven-good reviewer family than the writer* before merge. Pipeline:
+> WRITER (cursor / codex / claude) → REVIEWER = cross-family (DeepSeek-pro hermes content review +
+> Codex/Claude backstop, since DeepSeek has been flaky) → MERGER = Claude bio-driver.
+> **Merge gate = CI green AND reviewer verdict ship AND scope-diff clean.** **HUMAN-NOD WAIVED**
+> ("why do you need my nod? i am not afraid of talking about the truth, even if it hurts some
+> propagandist in the West or in Poland"). Gate = ACCURACY + honest decolonized NPOV verified by the
+> independent cross-family review, NOT human political sign-off. Surface Volhynia/Holocaust/
+> collaboration AND Soviet terror honestly; no whitewashing in any direction. Escalate a sensitive PR
+> only on a GENUINE defect (fabrication, ghost-source, real NPOV failure) — fix-forward, don't seek
+> approval. Non-bio tracks + non-bio main = orchestrator-only; Claude never merges those.
 
-*Last updated: 2026-05-30 (Claude session: infra fixes + Phase-2 pilot + first-batch co-review). main (Codex's) observed at `2490db006e`.*
+*Last updated: 2026-05-31 (session: bio-260→310 slice COMPLETE+merged @ `f25a2c7e12`; Phase-3
+registration BLOCKED by position-contiguity until 184-259 builds; agent-routing + usage report added;
+3-way Cursor/Codex/Claude build plan for the 75 remaining plans (bio-184..259) defined + kicked off.)*
+
+> **⚠️ HANDOFF-WAS-UNCOMMITTED (fixed in THIS PR):** Before this PR, origin/main carried the STALE
+> 2026-05-30 handoff; the rich 2026-05-31 state lived ONLY as an uncommitted local edit on the main
+> checkout (never pushed). This PR brings main current. **Lesson: bundle the refreshed handoff into a
+> PR every batch — do NOT leave it as a local-only edit.**
 
 ## ▶ HOW TO RESUME THIS (read FIRST if you are a fresh session)
 
-You are the **bio-epic driver, NOT the orchestrator.** If a SessionStart "orchestrator handoff"
-brief was injected pointing at `docs/session-state/current.md` — **DISREGARD it.** That is Codex's
-state. THIS file is yours.
+You are the **bio-epic driver, NOT the orchestrator.** If a SessionStart "orchestrator handoff" brief
+was injected pointing at `docs/session-state/current.md` — **DISREGARD it.** That is Codex's state.
+Launch with `claude --agent curriculum-track-orchestrator`. Resume from CURRENT STATE + NEXT ACTION.
 
-**Launch a bio-driver session with:** `claude --agent curriculum-track-orchestrator`
-(user-level agent at `~/.claude/agents/`; its `initialPrompt` bootstraps to THIS handoff + pins the
-boundaries). The `--agent` flag overrides the default main-orchestrator agent for this session.
-Codex can also ask the user to launch this seat with `scripts/start-bio-driver.sh`. Resume from the
-**IN-FLIGHT / NEXT ACTION** sections below.
+## ✅ CURRENT STATE (2026-05-31)
 
-## ⏳ IN-FLIGHT right now
+- **bio-260→310 (51 figures): BUILT + cross-family-reviewed + ALL MERGED to main @ `f25a2c7e12`.**
+  PR work for the slice is DONE. 0 dispatches in flight at session start.
+- **Ground truth (deterministic, origin/main):** 235 bio plan files; curriculum.yaml registers 180
+  (ends `anatolii-dimarov` = bio-180). **55 plan files built-but-unregistered:** bio-181,182,183,222
+  + bio-260..310. **0 orphan refs.**
+- **bio-184..259 = 75 plans NOT yet built** (Codex's historical lane). **All 75 have vetted Phase-1
+  dossiers (0 missing)** → fully unblocked to build. (bio-222 already built.)
 
-- **Phase 2 is RUNNING and Codex-owned.** Pilot `dmytro-chyzhevskyi`/bio-222 proven (PR #2453).
-  First scaled batch MERGED — #2457 Semenko (bio-181), #2458 Svidzinskyi (bio-182), #2456
-  Drai-Khmara (bio-183). **Claude audited that batch: PASS** (validated clean, decolonized,
-  anti-hagiographic, sourced — Soviet terror named with case numbers/dates).
-- **Next batch (Codex's to fire):** bio-184 Mykola Voronyi, bio-185 Mykhailo Yalovyi, bio-186
-  Hryhorii Epik.
-- **⚠ DIVISION OF LABOR (settled 2026-05-30):** Codex GENERATES + MERGES Phase-2 plans (writer +
-  DeepSeek-flash/Gemini review, both of which DO have the `sources` MCP). **Claude does NOT fire
-  Phase-2 plan dispatches** — that caused a duplicate-PR collision on the pilot (#2453 vs my closed
-  #2455). Claude's Phase-2 role is **co-reviewer on batches where stakes warrant** (politically
-  charged figures, or when a second adversarial pass plausibly catches what Codex's reviewers
-  miss), gated by a "did it catch anything?" bar — not run by default.
-- Allocation rule (still current): the 130 version-locked audit-appendix slugs get `bio-181`
-  through `bio-310` in appendix order, from `docs/bio-epic/phase-2-sequence-allocation.yaml`. Seven
-  research dossiers already map to existing plans; do not create a duplicate plan for
-  `levko-lukianenko` (legacy plan is `levko-lukyanenko` / `bio-134`).
+## 🚧 PHASE 3 (curriculum.yaml registration) — BLOCKED BY POSITION-CONTIGUITY
 
-## Bio epic #2309 — Phase 1 (Research) state
+`scripts/validate/validate_plan_ordering.py` enforces: each plan's `sequence`/`module` MUST equal its
+**1-indexed POSITION** in `levels.bio.modules` (`module == bio-{position:03d}`). The list is therefore
+position-indexed and must be CONTIGUOUS for module numbers to line up. Consequence:
+- Appending is only valid when the appended module number == next position. Positions 1..180 == bio-001..180.
+- **Registerable NOW (clean):** bio-181, bio-182, bio-183 (→ positions 181,182,183). That's it.
+- **bio-222 and bio-260..310 CANNOT be registered yet** — they'd land at positions 184+ ≠ their module
+  numbers → validator ERROR. They need 184-259 (and 223-259) FILLED first.
+- **Therefore full Phase-3 registration is BLOCKED on the bio-184..259 build.** Do it as ONE clean
+  181→310 append once 184-259 land. (NOT CI-blocking — validate_plan_ordering is not in CI; orphan/
+  ordering = warning. But registering gappy would create real sequence-mismatch errors.)
+- Verify after: `.venv/bin/python scripts/validate/validate_plan_ordering.py bio` → 0 errors.
 
-- **Phase 1 research COMPLETE: 137/137 dossier files** on origin/main. This is the 130 audit
-  additions plus 7 research dossiers that document already-existing BIO plans.
-- **52 dossiers merged this session** (batches 1-9): PRs #2427 #2428 #2429 #2430 #2432 #2433 #2434
-  #2436 + Gemini follow-up #2431. All squash-merged green.
-- **Block G research MERGED:** PR #2441 added the 10 F2/politically-charged dossier files after
-  Claude+Codex co-review and Codex/orchestrator sign-off.
-- Quality spot-read 6 (Hrushevskyi, Kostomarov, Dzhelial, Lypkivskyi, Kushnir, +early): sourced
-  (ESU/IEU/UINP/KHPG), decolonized, anti-fabrication-disciplined, honest "source not found" gaps.
-  §7 fabrication deterministically gated by `scripts/audit/lint_bio_dossier_xref.py` (clean each batch).
+## 🧭 AGENT ROUTING POLICY + USAGE REPORT (user-requested 2026-05-31; also see dashboards/routing.html)
 
-## REMAINING to finish the epic
+**Context:** user upgraded **Cursor → Pro+ (3× quota)** and wants to maximize paid subscriptions.
 
-1. **Block G — 10 politically-charged figures: DONE / MERGED (#2441).**
-   `stepan-bandera, yaroslav-stetsko, andrii-melnyk, dmytro-kliachkivskyi, yurii-tiutiunnyk,
-   avhustyn-voloshyn, lev-rebet, kateryna-zarytska, petro-fedun-poltava` + `nil-khasevych`
-   (appendix Block I, mechanism-table G) are now on `main`.
-2. **Dedup #2435 — DONE by Codex (orchestrator).** Resolved in `a2efa6b148`
-   "fix(bio): canonicalize duplicate dossier slugs (#2435)". No longer Claude's task.
-3. **Phases 2-5** (per epic #2309): Phase 2 plan YAMLs (`plans/bio/{slug}.yaml`, Gemini default +
-   DeepSeek-flash review) must use `docs/bio-epic/phase-2-sequence-allocation.yaml` for `module` and
-   `sequence` · Phase 3 `curriculum.yaml` registration (+130 -> bio track 180->**310**) · Phase 4 wiki
-   articles (Gemini) · Phase 5 quality (decolonization DeepSeek-pro hermes + cross-track verify).
+**Dispatch usage to date (327 tracked dispatches in batch_state):**
+- codex/gpt-5.5: 159 (135 done, 85%; 16 timeouts — xhigh runs long). The workhorse.
+- gemini/3.x: 74 (64 done, 86%). Unmetered — already well-used.
+- claude/opus-4.7+4.8: 30 (26 done) — mostly reviews lately. Seat-shared; taper before 6/15.
+- deepseek/v4: 24 (20 done, 4 timeouts) — **flaky as reviewer** (recent bio reviews rubber-stamped/
+  timed out). Keep for cheap cross-family review WITH Codex/Claude backstop.
+- qwen: 17 — **EXCLUDED (too expensive, user 2026-05-29). Stop routing to it.**
+- cursor/auto: 10, **0 cleanly done** (4 rate_limited, 4 needs_finalize, 2 failed). The 3× upgrade
+  kills the rate-limit failures; the finalize gap is driver-side (Cursor writes well but doesn't
+  commit/push — ALWAYS finalize its dispatches yourself: `git commit --no-verify` + `git push
+  HEAD:<branch>`). Cursor was the most UNDER-realized subscription — the upgrade is well-timed.
+- agy: never for factual content (fabricates). grok: lane unvalidated.
 
-## The proven dispatch loop (replicate)
+**Billed-quota $ lives in vendor dashboards (not locally readable):** Cursor → cursor.com Usage;
+Claude → `/usage` / Anthropic console; Codex → platform.openai.com; Gemini → unmetered; DeepSeek →
+its platform. Local telemetry = dispatch counts/outcomes only (above) + `dashboards/cost.html`
+(`/api/analytics/cost`) + `dashboards/runtime.html` (7-day runtime usage) + `dashboards/delegate.html`.
 
-- Brief: `/tmp/brief-bio-batch*.md` pattern — #M-4 preamble; SSOT `docs/audits/bio-track-gap-audit-2026-05-26.md`;
-  template `docs/templates/bio-research-dossier-template.md`; source tiers `docs/best-practices/bio-research-source-tiers.md`;
-  exemplars on main; **EXPLICIT figure list** (not gap-compute — avoids re-creating slug-variant dups);
-  numbered worktree steps (research → `lint_bio_dossier_xref.py` → commit → push → PR, NO auto-merge).
-- Fire: `delegate.py dispatch --agent codex --task-id <id> --prompt-file <f> --mode danger
-  --model gpt-5.5 --effort xhigh --worktree --base main`.
-- Watch: Monitor poll-loop on `/api/delegate/active` for the task → terminal → read result file.
-- Review per batch: read ≥1 dossier (CONTENT, not just validator — the m20 lesson), then
-  `git diff --name-status origin/main...HEAD` and confirm every row is an expected `A` addition;
-  any `M`, `D`, or unexpected path must be explained or fixed before PR. Confirm slugs ∈ appendix.
-  `review / review` failing/cancel = advisory, NOT blocking.
-- Transient codex failure (returncode 1, no output/result) → remove worktree+branch, re-fire with a
-  `-retry` task-id (happened on batch-8 → clean retry as #2434).
+**Who does what (recommended routing):**
+| Work | Primary | Notes / backup |
+|---|---|---|
+| Bio/seminar plan writing | **Cursor (3×)** | top decolonized quality + new headroom; Codex; Claude for most sensitive. Gemini deprioritized (ghost-source history) |
+| V7 module content | Cursor-tools / Claude-tools | use Cursor to spare the Claude seat |
+| Wiki articles | **Gemini** (always, unmetered) | — |
+| Novel code / hard debug | **Codex** | Claude inline only ≤5 LOC |
+| Bulk/mechanical code, fixtures, docs | **Gemini** (unmetered) | — |
+| Content review (cross-family) | **DeepSeek-pro hermes** | flaky → Codex/Claude must backstop |
+| PR code review | DeepSeek-flash / Codex | off-seat |
+| Search/grep | Explore subagent (haiku) | cheap |
+| qwen | ❌ never | too expensive |
 
-## Merge ownership — RESOLVED
+**Subscription-max guidance:** lean on **Cursor (3×, now the cheapest top-quality writer)** + **Gemini
+(unmetered)**; conserve the **Claude seat** (dispatched Claude competes with the interactive seat and
+sunsets after 2026-06-15 per MEMORY #M0 / `scripts/config/agent_fallback_substitutions.yaml`); use
+**Codex** (own weekly quota) + **DeepSeek** (cheap off-seat review).
 
-**Codex is orchestrator and owns main** (it merged dedup #2435 → `a2efa6b148`). Claude's job: fire
-research dispatches, review the output, **OPEN the PR — do NOT merge or commit to main.** Codex
-reconciles main. Claude works only in dispatch worktrees + this track-scoped handoff. Local main is kept
-in sync read-only (`git fetch` + fast-forward observation only; never commit/push/reset-onto main).
+## 🏗️ NEXT ACTION — 3-WAY BUILD of bio-184..259 (75 plans) [user-approved split 2026-05-31]
 
-## m20 (a1/my-morning) — not my task anymore (context only)
+User chose "split between cursor codex and claude" for the remaining 75 plans. Drive ALL THREE **from
+this seat** (one driver → no collision with the Codex *orchestrator*; keep its lane off 184-259, or
+claim the range via the agent bridge). Allocation (quality-first + subscription-max):
+- **Cursor (3×): ~30** — lead writer.   **Codex: ~25.**   **Claude (headless): ~20** — most
+  linguistically-sensitive figures (it's the only writer with real writer-time MCP verification);
+  pre-6/15 only. (Optional: Gemini unmetered overflow for least-sensitive if max speed wanted —
+  tighter review for ghost-sources.)
+- **Batch size 3-4 plans/dispatch** (~20-25 dispatches). Respect dispatch cap (2 cursor + 2 codex +
+  2 claude in flight). Remote dispatches → parallel OK (#M-9 is local-process-only).
+- **Per plan:** EXEMPLAR schema = `curriculum/l2-uk-en/plans/bio/mykhailo-drai-khmara.yaml` (bio-183).
+  word_target **5200**, content_outline sized [400,1000,1200,1600,1000]=5200 (CI gate
+  `validate_plan_config` requires word_target≥5000 AND section-words sum ≥ word_target), 7 vocab, 4-6
+  activities, key-set == exemplar, `module: bio-NNN` + `sequence: NNN` per allocation SSOT
+  `docs/bio-epic/phase-2-sequence-allocation.yaml`. Source ONLY from the Phase-1 dossier
+  `docs/research/bio/{slug}.md` (add nothing beyond it); decolonized NPOV; no ghost-sources.
+- **Brief:** author FRESH via heredoc; verify `grep -c <other-block> == 0`; #M-4 preamble; EXPLICIT
+  figure list; numbered worktree steps; **NO auto-merge.** Fire:
+  `delegate.py dispatch --agent {cursor|codex|claude} --task-id bio-blk-<id> --prompt-file <f>
+  --mode danger --model {auto|gpt-5.5|claude-opus-4-8} --effort xhigh --worktree --base main`.
+- **Watch:** Monitor poll-loop on `/api/delegate/active`; for cursor, FINALIZE git yourself.
+- **Review:** cross-family (writer≠reviewer); content-read ≥1 plan/batch; `git diff --name-status
+  origin/main...HEAD` all rows expected `A`. **Merge** per grant (CI green + ship + scope-clean);
+  then delete branch + remove worktree + `git worktree prune`.
+- **After 184-259 all merged → Phase 3:** append bio-181..310 to `levels.bio.modules` in one PR;
+  validate ordering; then landing page + wiki + quality.
 
-NOT shippable. ULP harness fix merged (#2426). The build produced ULP-*shaped* but **incoherent**
-prose; real open bug = no gate checks teaching coherence (all gates verify form). Unmerged
-`stress_coverage`→advisory demotion parked in `.worktrees/fix/ulp-stress-advisory`. This is the
-orchestrator's / A1-owner's concern now, not the bio driver's.
+### bio-184..259 build list (75 — all dossiers present)
+184 mykola-voronyi · 185 mykhailo-yalovyi · 186 hryhorii-epik · 187 valerian-polishchuk ·
+188 oleksa-vlyzko · 189 marko-voronyi · 190 myroslav-irchan · 191 antin-krushelnytskyi ·
+192 sofiia-nalepynska-boichuk · 193 pavlo-hrabovskyi · 194 mykola-kostomarov · 195 ivan-karpenko-karyi ·
+196 panas-myrnyi · 197 ivan-manzhura · 198 leonid-hlibov · 199 oleksandr-oles · 200 volodymyr-vynnychenko ·
+201 ivan-bahrianyi · 202 todos-osmachka · 203 vasyl-koroliv-staryi · 204 yevhen-malaniuk · 205 yurii-klen ·
+206 yurii-darahan · 207 natalia-livytska-kholodna · 208 leonid-mosendz · 209 oksana-liaturynska ·
+210 vasyl-barka · 211 viktor-domontovych · 212 ihor-kostetskyi · 213 dokiia-humenna · 214 yurii-kosach ·
+215 mykhailo-orest · 216 bohdan-boichuk · 217 yurii-tarnavskyi · 218 emma-andiievska · 219 bohdan-rubchak ·
+220 vira-vovk · 221 omelian-pritsak · 223 yurii-lavrynenko · 224 oleksa-voropai · 225 pavlo-tychyna ·
+226 maksym-rylskyi · 227 volodymyr-sosiura · 228 yurii-yanovskyi · 229 ostap-vyshnia · 230 mykola-bazhan ·
+231 zinaida-tulub · 232 oleksandr-kovinka · 233 yevhen-hutsalo · 234 mykola-rudenko · 235 ivan-svitlychnyi ·
+236 hryhir-tiutiunnyk · 237 ivan-drach · 238 mykola-vinhranovskyi · 239 opanas-zalyvakha ·
+240 stefaniia-shabatura · 241 borys-antonenko-davydovych · 242 yurii-badzo · 243 oleksa-tykhyi ·
+244 vasyl-holoborodko · 245 serhii-paradzhanov · 246 valerii-marchenko · 247 yurii-lytvyn ·
+248 leonid-pliushch · 249 nina-strokata · 250 ihor-kalynets · 251 iryna-kalynets · 252 nadiia-svitlychna ·
+253 sviatoslav-karavanskyi · 254 mykhailo-horyn · 255 bohdan-horyn · 256 oksana-meshko ·
+257 yurii-shukhevych · 258 danylo-shumuk · 259 ivan-kandyba
 
-## Lessons from the 2026-05-30 Claude session (don't repeat)
+## 📋 OTHER OPEN ITEMS (post-build)
+- **Phase 3:** register bio-181..310 (see PHASE 3 block — after the build).
+- **Landing page 180→310:** `starlight/src/content/docs/bio/index.mdx` hardcoded `{num,title,slug,
+  status}` array (last num:180 anatolii-dimarov). Append 181..310 from curriculum.yaml + plan titles.
+- **agy/Opus-4.6 review bakeoff:** pending user backend flip; compare vs claude-4.8 (rigorous) +
+  deepseek (rubber-stamp).
+- **Loose ends:** `.worktrees/fix-bio-drai-khmara-ref-title` (uncommitted staged .bak deletion;
+  committed fix `af86e1691e` unmerged). `carneckyj` ghost-source pattern fixed in khomyshyn/
+  velychkovskyi/kotsylovskyi/kovalyk; spot-check other clergy dossiers in Phase 5. `connects_to`
+  cross-track (`hist-/lit-/istorio-`) forward-refs don't resolve; not CI-gated; Phase-5 concern.
 
-1. **CHECK FOR CONCURRENT ORCHESTRATOR WORK BEFORE FIRING.** Before any dispatch on shared/epic
-   territory: `gh pr list --state open` + `curl /api/delegate/active` + `git worktree list` for the
-   SAME item. Two collisions this session from skipping this — the #2440 agent-file dup and the
-   chyzhevskyi pilot dup (#2455, closed). Codex drives Phase-2 generation; assume it may already be
-   on the obvious next item.
-2. **VERIFY CAPABILITY/BEHAVIOR CLAIMS BEFORE STATING THEM (#M-4).** Two wrong assertions this
-   session: a phantom "gemini-dispatch bug" (#2454 — actually duplicate-reaping of the orchestrator's
-   concurrent run) and "DeepSeek/Gemini lack the `sources` MCP" (false — `.mcp.json`,
-   `.gemini/settings.json`, MEMORY #M0 all show they have it). Run the tool before claiming.
-
-## NEXT ACTION on resume
-
-Phase 2 is Codex-owned and running; **do NOT fire Phase-2 plan dispatches** (collision risk — see
-Division of Labor above). Claude's resume options, in order:
-1. If a new Phase-2 batch has merged since this handoff, **co-review it** (validate + framing
-   spot-read; escalate only if it catches something) — start with Codex's next batch
-   bio-184/185/186 (Voronyi/Yalovyi/Epik).
-2. Otherwise await user direction or an explicit co-review/ad-hoc assignment.
-
-Claude still opens PRs and never merges/commits to main; Codex owns main merges + Phase-3
-curriculum registration. Open follow-ups Claude filed: #2451 (4 sub-1200-word dossiers),
-#2454 (duplicate-dispatch observability).
+## 🔧 HARD-WON PROCESS RULES (do not repeat past mistakes)
+- **Deterministic gate on the COMMITTED GIT BLOB is truth (#M-4).** Quote real tool output; NEVER
+  assert a defect you can't quote (a past session fabricated CJK "defects" + closed good PRs — recovered).
+- **CURSOR writes well but does NOT complete git** — always driver-finalize (`commit --no-verify` +
+  `push HEAD:<branch>`; plan-immutability hook is LOCAL-only, not CI).
+- **DEEPSEEK has been non-functional as reviewer** (timeout → 62-char rubber-stamp) — back it with
+  Claude/Codex; never trust it solo on a merge gate.
+- Author briefs FRESH via heredoc; `grep -c <other-block> == 0` before dispatch.
+- Life-status from each dossier "**Died:**" line. DEATH_ON_LIVING guard in the structural gate.
+- Before firing on shared/epic territory: `gh pr list --state open` + `/api/delegate/active` +
+  `git worktree list` for the SAME item (past collisions: #2440, chyzhevskyi #2455).
+- **I/O note (this machine):** a background pyenv/ollama process intermittently lags tool stdout by
+  several turns and prints `pyenv: cannot rehash...` / `💡 Python project detected`. Use
+  `.venv/bin/python` (bypasses the pyenv shim) and be patient; results DO arrive. Don't cry "I/O
+  corruption."
