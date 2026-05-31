@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T00:30+02:00)
+# Current - Codex Thread Handoff (2026-06-01T00:45+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `440cd017a6 feat(a1): add M3 special signs module`
+  `a5c8d98253 feat(a1): add M4 stress and melody module`
 
 ## Current Direction
 
@@ -17,7 +17,7 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, or worktrees.
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
-- Continue M4 next. M1-M3 are now built as English-led student
+- Continue M5 next. M1-M4 are now built as English-led student
   textbook/workbook pages and pass deterministic QG.
 
 ## Completed In This Slice
@@ -206,10 +206,44 @@ Validation after M3:
   headings, and rendered activity text.
 - `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
 
+## Latest M4 Update
+
+Commit `a5c8d98253 feat(a1): add M4 stress and melody module` added:
+
+- `curriculum/l2-uk-en/a1/stress-and-melody/module.md`
+- `curriculum/l2-uk-en/a1/stress-and-melody/activities.yaml`
+- `curriculum/l2-uk-en/a1/stress-and-melody/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/stress-and-melody/resources.yaml`
+- `starlight/src/content/docs/a1/stress-and-melody.mdx`
+
+M4 is English-led script-building for word stress, clear unstressed vowels,
+meaning-changing stress, yes/no rising melody, question-word falling melody,
+and short read-aloud routines.
+
+Validation after M4:
+
+- M4 `scripts.yaml_activities`: passed.
+- M4 direct `run_python_qg()`: passed.
+  - `resource_coverage`: passed; locked internal wiki reference skipped.
+  - `archetype_fit`: passed for `a1-script-building`.
+  - `word_count`: 1251 words, above the 1104 tolerated floor for target 1200.
+  - `vesum_verified`: passed with no missing words.
+- Direct `validate_module()` for directory-layout source and generated MDX:
+  passed with no errors or warnings.
+- `npm run build:starlight`: passed; 94 pages built.
+- Local Starlight was restarted from the active worktree. Served HTML for
+  `/a1/stress-and-melody/` returned HTTP 200, had exactly one H1
+  `Наголос і мелодика`, and contained Lesson/Vocabulary/Activities/Resources
+  tab content.
+- In-app Browser inspection confirmed one H1, no duplicate English H1, visible
+  Lesson/Vocabulary/Activities/Resources tabs, stress/melody activities, and
+  the ULP resource text.
+- Pre-commit on `a5c8d98253`: passed.
+
 ## Next Steps
 
 1. Commit/push this handoff refresh.
-2. Start M4 (`stress-and-melody`) using the same M1-M3 artifact pattern.
-3. Keep wiki/resource coverage hard. For M4, first inspect the plan references
+2. Start M5 (`who-am-i`) using the same M1-M4 artifact pattern.
+3. Keep wiki/resource coverage hard. For M5, first inspect the plan references
    and wiki manifest, then build the full artifact set and run direct
    `run_python_qg()` before MDX assembly.

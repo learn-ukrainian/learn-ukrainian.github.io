@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T22:00Z)
+# Current - Codex orchestrator handoff (2026-05-31T22:45Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -29,6 +29,8 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 - Main checkout branch: `main`
 - Current authoritative remote head at handoff:
   `836526d165 feat(api): surface bridge activity for orchestrators`
+- Active A1 branch head before handoff-doc commit:
+  `a5c8d98253 feat(a1): add M4 stress and melody module`
 - Main checkout has unrelated dirty user/Claude files; do not revert:
   - `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`
   - `scripts/deploy_prompts.sh`
@@ -227,6 +229,11 @@ A1 M1-M7 sequence:
   `special-signs` module, activities, vocabulary, resources, and rendered
   Starlight MDX. Direct M3 `run_python_qg()` passes, including hard
   `resource_coverage` and `archetype_fit` for `a1-script-building`.
+- M4 build completed:
+  `a5c8d98253 feat(a1): add M4 stress and melody module` added the
+  English-led `stress-and-melody` module, activities, vocabulary, resources,
+  and rendered Starlight MDX. Direct M4 `run_python_qg()` passes, including
+  hard `resource_coverage` and `archetype_fit` for `a1-script-building`.
 - `plan_sections` now allows approved English learner-facing headings for A1
   M1-M7 while still requiring every locked plan section.
 - Validation for `79c8d84fe9`:
@@ -254,8 +261,16 @@ A1 M1-M7 sequence:
   - `npm run build:starlight`: passed; 93 pages built.
   - local Starlight was restarted after a hot-reload 500 and now serves
     `/a1/special-signs/`; served HTML was inspected.
+  - M4 `scripts.yaml_activities`: passed.
+  - M4 direct `run_python_qg()`: passed; `resource_coverage`,
+    `archetype_fit`, `vesum_verified`, and `word_count` all passed.
+  - Direct `validate_module()` for directory-layout M4 source and MDX: passed.
+  - `npm run build:starlight`: passed; 94 pages built.
+  - local Starlight was restarted from the active worktree and serves
+    `/a1/stress-and-melody/`; served HTML and in-app Browser inspection both
+    confirmed one H1 and visible Lesson/Vocabulary/Activities/Resources tabs.
 - Next implementation target:
-  build M4 (`stress-and-melody`) with the same full artifact set and direct
+  build M5 (`who-am-i`) with the same full artifact set and direct
   `run_python_qg()` validation. Keep wiki/resource coverage hard.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
