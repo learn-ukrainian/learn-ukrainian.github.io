@@ -5,7 +5,7 @@ activity_hints:
   items: 5
   placement: inline
   type: quiz
-- after_section: 'Свідчення в суді: Відмова від зізнань'
+- after_section: 'Арешт та фабрикація: Механізм репресій'
   focus: Перевірка розуміння свідчень про тортури струмом
   items: 5
   placement: inline
@@ -55,7 +55,7 @@ content_outline:
     побиття для отримання примусового "зізнання".
   - >-
     Судовий процес: мужня відмова Єсипенка від вибитих свідчень у суді та розповідь
-    про методи ФСБ. Вирок: п'ять років колонії.
+    про методи ФСБ. Вирок: шість років колонії (згодом зменшено до п'яти).
   section: 'Арешт та фабрикація: Механізм репресій'
   words: 1200
 - points:
@@ -106,7 +106,7 @@ references:
   type: reference
 sequence: 272
 slug: vladyslav-yesypenko
-subtitle: The Crimean Journalist Imprisoned for the Truth
+subtitle: The Crimean Journalist Who Survived FSB Captivity for the Truth
 title: 'Владислав Єсипенко: Журналістика та опір системі ФСБ'
 version: '4.1'
 vocabulary_hints:
