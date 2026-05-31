@@ -9,8 +9,8 @@ API snapshot per-post — do NOT put that here.
 
 **learn-ukrainian** — an open-source Ukrainian language curriculum for
 English speakers (A1→C2 core + seminar tracks: HIST, BIO, LIT, OES,
-RUTH, ISTORIO, and literary sub-tracks). Built by Claude + Gemini with
-adversarial review between agents.
+RUTH, ISTORIO, and literary sub-tracks). Built by a multi-agent team with
+explicit ownership boundaries and adversarial review between agents.
 
 - Repo: `learn-ukrainian` (all paths in this file are relative to the repo root)
 - License: CC BY-SA 4.0 for content, MIT for build tooling
@@ -19,9 +19,40 @@ adversarial review between agents.
 
 ## Agents & roles
 
-- **Claude** — architecture, code, pipeline, integration, synthesis
-- **Gemini (3.1-pro-preview)** — content writer, code reviewer, adversarial critic
-- **Codex** — code investigations, root-cause analysis, bug hunts. **Reserved — do not delegate coding to Codex on ticket #1190.**
+- **Codex** — main orchestrator for repo-wide queue, GitHub issue memory, A1,
+  tooling, infra, tech debt, integration, and final merge judgment.
+- **Claude** — architecture, sensitive reasoning, deep review, and promoted
+  track orchestration when assigned. BIO is currently Claude/BIO-orchestrator
+  owned.
+- **Cursor** — implementation/content rebuild lane through delegate/bridge.
+- **DeepSeek** — cheap code/content review and deterministic triage through
+  Hermes-backed delegate.
+- **Gemini** — paused for review/merge confidence until the user re-enables it.
+  Do not treat failed/canceled Gemini review checks as decisive on their own.
+
+## Track orchestrators
+
+A promoted track orchestrator owns one curriculum track/epic end-to-end. The
+main orchestrator observes that track, merges when safe, and handles repo-wide
+risks, but does not duplicate or override track-local triage.
+
+Current promoted track boundary:
+
+- **BIO** — owned by the Claude BIO orchestrator. Codex should not triage, fix,
+  merge, or route BIO PRs/content unless Claude explicitly asks for help.
+
+Communication protocol:
+
+- Track source of truth: the track handoff file, e.g.
+  `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`.
+- Main source of truth: `docs/session-state/current.md` router plus
+  `docs/session-state/current.orchestrator.md`.
+- Bridge/channel messages are short pings that point to a PR, issue, or handoff
+  section; durable details live in Git-tracked docs or GitHub.
+- Track update format:
+  `TRACK-UPDATE track=<track> pr=<number|none> state=<blocked|ready|in-flight> owner=<agent> needs=<main-review|merge|codex-help|decision|none> summary=<one sentence>`.
+- Main response format:
+  `MAIN-ACK track=<track> action=<merge-queued|needs-fix|codex-dispatched|noted> scope=<what main will do> boundary=<what remains track-owned>`.
 
 ## Non-negotiable rules (every agent, every post)
 

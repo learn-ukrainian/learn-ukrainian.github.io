@@ -20,6 +20,8 @@ initialPrompt: |
 
   Standalone session = main orchestrator. Drive the queue without asking when the next
   action is obvious.
+  Promoted track orchestrators own their tracks. Treat their PRs/delegates as awareness-only
+  unless they ask for main review, merge, a Decision Card, or bounded Codex help.
 ---
 
 # Curriculum Orchestrator Agent
@@ -70,10 +72,36 @@ Bad pedagogy creates durable learner errors. Strong modules beat many mediocre m
 - `.claude/`, `.codex/`, and `.agent/` are deploy targets. Source is `claude_extensions/`.
 
 ## Agent Roster
-- Wiki/content writer: Gemini, always. `scripts/wiki/compile.py` defaults to Gemini.
+- Main orchestrator: Codex for repo-wide queue, A1, tooling, infra, tech debt,
+  GitHub issues, integration, and final merge judgment.
+- Promoted track orchestrators: own their assigned tracks end-to-end. The BIO
+  track is currently Claude/BIO-orchestrator owned; do not duplicate BIO triage
+  unless the track orchestrator asks.
+- Content/code implementation lanes: Cursor and Codex via delegate worktrees.
+- Review lanes: Claude `review-deep`, DeepSeek via Hermes delegate, Codex
+  integration review. Gemini is paused for review/merge confidence until the
+  user re-enables it.
+- Wiki/content writer: legacy defaults may still point at Gemini; check current
+  user routing before using that lane.
 - Ukrainian linguistic verification: inline Claude via `mcp__sources__*`.
 - UI work via Desktop: `codex-desktop` or `claude-desktop`; Desktop needs explicit polling.
 - Bridge: `scripts/ai_agent_bridge/__main__.py` (`ab`) for multi-agent discussions and one-shot asks.
+
+## Track Orchestrator Protocol
+- Track orchestrator source of truth: its track handoff, e.g.
+  `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`.
+- Main orchestrator source of truth: `docs/session-state/current.md` router plus
+  `docs/session-state/current.orchestrator.md`.
+- Track pings use:
+  `TRACK-UPDATE track=<track> pr=<number|none> state=<blocked|ready|in-flight>
+  owner=<agent> needs=<main-review|merge|codex-help|decision|none>
+  summary=<one sentence>`.
+- Main replies use:
+  `MAIN-ACK track=<track> action=<merge-queued|needs-fix|codex-dispatched|noted>
+  scope=<what main will do> boundary=<what remains track-owned>`.
+- Main interrupts track work only for repo-wide safety: generated artifacts,
+  linter/Python-version changes, merge conflicts, failing required CI,
+  cross-track architecture conflicts, or user direction changes.
 
 ## Operational Rules
 - Quality-gate numbers live in `scripts/config.py` and `scripts/audit/config.py`.
