@@ -11,6 +11,7 @@ Endpoints:
   GET /api/comms/zombies               Stuck patterns
   GET /api/comms/stats                 Rate, latency, error %
   GET /api/comms/health                Broker DB health
+  GET /api/comms/agent-activity        Compact channel activity by agent
   GET /api/comms/batch-progress        Live preseed/batch progress per track
   POST /api/comms/cleanup              Force-ack zombies
   POST /api/comms/acknowledge/{id}     Ack single message
@@ -48,6 +49,13 @@ router = APIRouter(tags=["comms"])
 PID_DIR = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "pids"
 LOG_DIR = PROJECT_ROOT / "logs" / "research-preseed"
 BATCH_LOG_TAIL_BYTES = 256 * 1024
+DEFAULT_ACTIVITY_AGENTS = (
+    "claude",
+    "codex",
+    "gemini",
+    "codex-desktop",
+    "claude-desktop",
+)
 
 
 def _read_tail_text(path, max_bytes: int = BATCH_LOG_TAIL_BYTES) -> tuple[str, bool]:
@@ -107,6 +115,130 @@ def _get_rw_db() -> sqlite3.Connection | None:
     conn = connect_sqlite(str(MESSAGE_DB))
     _tune_db_connection(conn, writable=True)
     return conn
+
+
+def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+    row = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+        (table,),
+    ).fetchone()
+    return row is not None
+
+
+def _parse_agent_csv(raw: str | None) -> list[str]:
+    if raw is None or not raw.strip():
+        return list(DEFAULT_ACTIVITY_AGENTS)
+    agents = []
+    for item in raw.split(","):
+        agent = item.strip()
+        if agent and agent not in agents:
+            agents.append(agent)
+    return agents or list(DEFAULT_ACTIVITY_AGENTS)
+
+
+def _empty_agent_activity(agents: list[str]) -> dict[str, dict]:
+    return {
+        agent: {
+            "pending": 0,
+            "processing": 0,
+            "failed": 0,
+            "recent_deliveries": [],
+            "recent_events": [],
+            "next_actions": [],
+        }
+        for agent in agents
+    }
+
+
+def _empty_agent_activity_response(
+    agents: list[str],
+    *,
+    error: str | None = None,
+) -> dict:
+    response = {
+        "generated_at": datetime.now(UTC).isoformat(),
+        "agents": _empty_agent_activity(agents),
+        "totals": {"pending": 0, "processing": 0, "failed": 0},
+    }
+    if error:
+        response["error"] = error
+    return response
+
+
+def _append_delivery_snapshot(activity: dict[str, dict], row, limit: int) -> None:
+    agent = row["to_agent"]
+    if agent not in activity or len(activity[agent]["recent_deliveries"]) >= limit:
+        return
+    body = row["body"] or ""
+    activity[agent]["recent_deliveries"].append({
+        "delivery_id": row["delivery_id"],
+        "message_id": row["message_id"],
+        "channel": row["channel"],
+        "thread_id": row["thread_id"],
+        "from_agent": row["from_agent"],
+        "to_model": row["to_model"],
+        "status": row["status"],
+        "attempt_count": row["attempt_count"],
+        "retry_after": row["retry_after"],
+        "lease_until": row["lease_until"],
+        "created_at": row["created_at"],
+        "dispatched_at": row["dispatched_at"],
+        "delivered_at": row["delivered_at"],
+        "error": row["error"],
+        "preview": body[:160] + ("..." if len(body) > 160 else ""),
+    })
+
+
+def _append_event_snapshot(activity: dict[str, dict], row, limit: int) -> None:
+    payload = {}
+    if row["payload_json"]:
+        try:
+            payload = json.loads(row["payload_json"])
+        except json.JSONDecodeError:
+            payload = {}
+    event_agents = {
+        agent
+        for agent in (row["to_agent"], payload.get("agent"))
+        if agent in activity
+    }
+    for agent in event_agents:
+        if len(activity[agent]["recent_events"]) >= limit:
+            continue
+        activity[agent]["recent_events"].append({
+            "event_id": row["event_id"],
+            "event": row["event"],
+            "thread_id": row["thread_id"],
+            "delivery_id": row["delivery_id"],
+            "channel": row["channel"],
+            "ts": row["ts"],
+            "payload": payload,
+        })
+
+
+def _add_agent_activity_actions(activity: dict[str, dict]) -> None:
+    for agent, snapshot in activity.items():
+        if snapshot["pending"]:
+            snapshot["next_actions"].append({
+                "kind": "drain_inbox",
+                "command": (
+                    ".venv/bin/python scripts/ai_agent_bridge/__main__.py "
+                    f"inbox run {agent} --until-idle"
+                ),
+            })
+        processing_threads = {
+            row["thread_id"]
+            for row in snapshot["recent_deliveries"]
+            if row["status"] == "processing" and row["thread_id"]
+        }
+        for thread_id in sorted(processing_threads):
+            snapshot["next_actions"].append({
+                "kind": "watch_thread",
+                "thread_id": thread_id,
+                "command": (
+                    ".venv/bin/python scripts/ai_agent_bridge/__main__.py "
+                    f"channel watch {thread_id} --follow --event-stream"
+                ),
+            })
 
 
 # ==================== MESSAGES (legacy broker) ====================
@@ -1497,6 +1629,113 @@ async def messages_by_module(track: str, slug: str, limit: int = 30):
 
 
 # ==================== INBOX (#1309) ====================
+
+
+@router.get("/agent-activity")
+def agent_activity(
+    agents: str | None = Query(
+        None,
+        description="Comma-separated agent names. Defaults to core CLI + desktop agents.",
+    ),
+    limit: int = Query(5, ge=1, le=25, description="Max recent rows per section."),
+):
+    """Compact read-only channel activity snapshot for orchestrators.
+
+    This complements `/api/comms/inbox`: inbox answers "what is waiting
+    for one agent?", while this endpoint answers "what should the
+    orchestrator watch or drain next?" in one cheap API call.
+    """
+    selected_agents = _parse_agent_csv(agents)
+    conn = _get_db()
+    if not conn:
+        return _empty_agent_activity_response(
+            selected_agents,
+            error="Broker DB not found",
+        )
+
+    activity = _empty_agent_activity(selected_agents)
+    totals = {"pending": 0, "processing": 0, "failed": 0}
+
+    try:
+        if not all(
+            _table_exists(conn, table)
+            for table in ("deliveries", "channel_messages")
+        ):
+            response = _empty_agent_activity_response(
+                selected_agents,
+                error="Channel bridge tables not found",
+            )
+            response["agents"] = activity
+            response["totals"] = totals
+            return response
+
+        placeholders = ",".join("?" for _ in selected_agents)
+        count_rows = conn.execute(
+            f"""
+            SELECT to_agent, status, COUNT(*) AS n
+            FROM deliveries
+            WHERE to_agent IN ({placeholders})
+              AND status IN ('pending', 'processing', 'failed')
+            GROUP BY to_agent, status
+            """,
+            selected_agents,
+        ).fetchall()
+        for row in count_rows:
+            agent = row["to_agent"]
+            status = row["status"]
+            count = int(row["n"])
+            if agent in activity:
+                activity[agent][status] = count
+            totals[status] += count
+
+        delivery_rows = conn.execute(
+            f"""
+            SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
+                   d.status, d.dispatched_at, d.delivered_at, d.error,
+                   d.attempt_count, d.retry_after, d.lease_until,
+                   cm.channel, cm.thread_id, cm.from_agent, cm.body,
+                   cm.created_at
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.to_agent IN ({placeholders})
+              AND d.status IN ('pending', 'processing', 'failed')
+            ORDER BY cm.created_at DESC, d.delivery_id DESC
+            LIMIT ?
+            """,
+            [*selected_agents, limit * max(len(selected_agents), 1)],
+        ).fetchall()
+        for row in delivery_rows:
+            _append_delivery_snapshot(activity, row, limit)
+
+        if _table_exists(conn, "channel_events"):
+            event_rows = conn.execute(
+                """
+                SELECT ce.event_id, ce.delivery_id, ce.thread_id, ce.event,
+                       ce.payload_json, ce.ts, d.to_agent, t.channel
+                FROM channel_events ce
+                LEFT JOIN deliveries d ON d.delivery_id = ce.delivery_id
+                LEFT JOIN (
+                    SELECT thread_id, MIN(channel) AS channel
+                    FROM channel_messages
+                    GROUP BY thread_id
+                ) t ON t.thread_id = ce.thread_id
+                ORDER BY ce.event_id DESC
+                LIMIT ?
+                """,
+                (limit * max(len(selected_agents), 1) * 4,),
+            ).fetchall()
+            for row in event_rows:
+                _append_event_snapshot(activity, row, limit)
+    finally:
+        conn.close()
+
+    _add_agent_activity_actions(activity)
+
+    return {
+        "generated_at": datetime.now(UTC).isoformat(),
+        "agents": activity,
+        "totals": totals,
+    }
 
 
 @router.get("/inbox")

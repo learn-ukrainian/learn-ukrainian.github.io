@@ -1031,7 +1031,8 @@ async def manifest():
           "rules":   {"hash": "...", "url": "/api/rules?format=markdown"},
           "session": {"hash": "...", "url": "/api/session/current?agent=orchestrator&format=markdown"},
           "orient":  {"url": "/api/orient"},
-          "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
+          "inbox":   {"url_template": "/api/comms/inbox?agent={name}"},
+          "activity": {"url": "/api/comms/agent-activity"}
         }
 
     ``rules`` and ``session`` expose a content hash so an agent can
@@ -1074,5 +1075,9 @@ async def manifest():
         "inbox": {
             "url_template": "/api/comms/inbox?agent={name}",
             "note": "Read-only view of unread channel deliveries for one agent.",
+        },
+        "activity": {
+            "url": "/api/comms/agent-activity",
+            "note": "Compact channel delivery/event snapshot for orchestration.",
         },
     })
