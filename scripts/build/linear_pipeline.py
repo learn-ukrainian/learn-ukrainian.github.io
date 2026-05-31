@@ -6704,6 +6704,7 @@ def run_python_qg(
         ),
     )
     record("component_density", _component_density_gate(module_text, plan))
+    record("archetype_fit", _archetype_fit_gate(module_text, plan, activities))
     record("inject_activity_ids", _inject_activity_gate(module_text, activities, plan))
     record(
         "activity_types",
@@ -6741,6 +6742,26 @@ def _python_qg_report(
         "plan_references": plan.get("references", []),
         "gates": dict(gates),
     }
+
+
+def _archetype_fit_gate(
+    module_text: str,
+    plan: Mapping[str, Any],
+    activities: list[dict[str, Any]],
+) -> dict[str, Any]:
+    from scripts.audit.checks.contract_compliance import check_archetype_fit
+
+    return check_archetype_fit(
+        module_text,
+        {
+            "module": {
+                "level": str(plan.get("level") or "").lower(),
+                "module_num": int(plan.get("sequence") or 0),
+                "slug": str(plan.get("slug") or ""),
+            }
+        },
+        activities=activities,
+    )
 
 
 def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:

@@ -5,11 +5,14 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import yaml
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from audit.checks.contract_compliance import (
     build_contract_correction_directive,
+    check_archetype_fit,
     check_contract_compliance,
     has_blocking_violations,
 )
@@ -533,3 +536,87 @@ def test_meta_narration_ignores_heading_only_block() -> None:
     report a violation (no prose to flag)."""
     content = "## Let us review\n\n## Next heading\n"
     assert _meta_narration_violations(content) == []
+
+
+# ====================================================================
+# A1 module archetype fit wrapper
+# ====================================================================
+
+
+def test_archetype_fit_accepts_current_m1_textbook_workbook_shape() -> None:
+    module_dir = PROJECT_ROOT / "curriculum/l2-uk-en/a1/sounds-letters-and-hello"
+    content = (module_dir / "module.md").read_text(encoding="utf-8")
+    activities = yaml.safe_load((module_dir / "activities.yaml").read_text(encoding="utf-8"))
+
+    report = check_archetype_fit(
+        content,
+        {"module": {"level": "a1", "module_num": 1}},
+        activities=activities,
+    )
+
+    assert report["passed"] is True
+    assert report["archetype"] == "a1-zero-script-onboarding"
+    checks = {item["name"]: item for item in report["checks"]}
+    assert checks["english_led_surface"]["latin_words"] > checks["english_led_surface"]["cyrillic_words"]
+    assert checks["textbook_workbook_split"]["workbook_only_ids"]
+
+
+def test_archetype_fit_rejects_internal_wiki_links() -> None:
+    report = check_archetype_fit(
+        "## Sound First\nSee wiki/pedagogy/a1/sounds-letters-and-hello.md.",
+        {"module": {"level": "a1", "module_num": 1}},
+        activities=[
+            {"id": "act-1", "type": "quiz"},
+            {"id": "act-2", "type": "match-up"},
+            {"id": "act-3", "type": "fill-in"},
+            {"id": "act-4", "type": "true-false"},
+            {"id": "act-5", "type": "translate"},
+        ],
+    )
+
+    assert report["passed"] is False
+    assert any(item["check"] == "no_internal_wiki_links" for item in report["violations"])
+
+
+def test_archetype_fit_rejects_ukrainian_led_zero_script_surface() -> None:
+    content = (
+        "## Звуки\n"
+        "<!-- INJECT_ACTIVITY: act-1 -->\n"
+        + " ".join(["український"] * 80)
+    )
+    activities = [
+        {"id": "act-1", "type": "quiz"},
+        {"id": "act-2", "type": "match-up"},
+        {"id": "act-3", "type": "fill-in"},
+        {"id": "act-4", "type": "true-false"},
+        {"id": "act-5", "type": "translate"},
+    ]
+
+    report = check_archetype_fit(
+        content,
+        {"module": {"level": "a1", "module_num": 1}},
+        activities=activities,
+    )
+
+    assert report["passed"] is False
+    assert any(item["check"] == "english_led_surface" for item in report["violations"])
+
+
+def test_archetype_fit_rejects_non_a1_workbook_activity_type() -> None:
+    content = "## Sound First\nEnglish first.\n<!-- INJECT_ACTIVITY: act-1 -->"
+    activities = [
+        {"id": "act-1", "type": "quiz"},
+        {"id": "act-2", "type": "essay-response"},
+        {"id": "act-3", "type": "fill-in"},
+        {"id": "act-4", "type": "true-false"},
+        {"id": "act-5", "type": "translate"},
+    ]
+
+    report = check_archetype_fit(
+        content,
+        {"module": {"level": "a1", "module_num": 1}},
+        activities=activities,
+    )
+
+    assert report["passed"] is False
+    assert any(item["check"] == "a1_activity_family" for item in report["violations"])
