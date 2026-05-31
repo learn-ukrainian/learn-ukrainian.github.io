@@ -1554,7 +1554,15 @@ class ActivityParser:
         return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only='react'>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
 
     def _translate_to_mdx(self, activity: TranslateActivity) -> str:
-        items = [{'source': str(i.source), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
+        items = []
+        for item in activity.items:
+            rendered_item = {
+                'source': str(item.source),
+                'options': [{'text': str(o.text), 'correct': o.correct} for o in item.options],
+            }
+            if item.explanation:
+                rendered_item['explanation'] = str(item.explanation)
+            items.append(rendered_item)
         return f"### {self._escape_jsx(activity.title)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:

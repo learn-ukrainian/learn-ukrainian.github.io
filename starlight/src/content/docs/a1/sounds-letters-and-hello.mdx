@@ -57,7 +57,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Lesson">
 
-Welcome to your first Ukrainian lesson. You do not need to read Ukrainian yet. This lesson is English-led. Ukrainian appears in small chunks so you can listen, repeat, notice, and use the first phrases safely.
+You do not need to read Ukrainian yet. This English-led module uses Ukrainian in small chunks so you can listen, repeat, notice, and use the first phrases safely.
 
 By the end, you can:
 
@@ -97,6 +97,10 @@ The numbers are not the same because some letters do more than one job. For exam
 Say this rule aloud:
 
 **Звук = I hear it. Лі́тера = I see it.**
+
+:::tip
+Start with the six clean vowel sounds: **[а] [о] [у] [е] [и] [і]**. They are the course's **серцебиттям** because every Ukrainian **склад** needs a vowel sound. Short **відеоуроки** help you see the mouth shape, especially the narrow smile for **[і]** and rounded lips for **[у]**.
+:::
 
 ### Sound or letter?
 
@@ -197,9 +201,11 @@ Try four:
 
 Ukrainian has 32 consonant sounds and 22 letters that usually mark consonants. Some consonants have hard and soft versions. You do not need the full system today, but you do need three first clues:
 
+Vowels give a syllable its voice. Consonants build the clear **архітектуру** around that voice: lips, teeth, tongue, or throat make the shape.
+
 | Sign or letter | Beginner meaning |
 | --- | --- |
-| **Ь ь** | soft sign; no sound of its own |
+| **Ь ь** | **м'який знак**; no sound of its own |
 | **Г г** | Ukrainian h-like sound |
 | **Ґ ґ** | hard **g** sound |
 | **Щ щ** | two sounds together: **[шч]** |
@@ -210,6 +216,8 @@ Example:
 
 The final **ь** does not add a new vowel. It tells you to make **н** soft.
 
+The letters **Я, Ю, Є** are graphic **хамелеони**: at the start of a word they can show **[й] + vowel**, but after a consonant they can point to softness plus one vowel. **Ї** is the strict exception: always **[йі]**.
+
 ## Full Alphabet Video Pass
 
 This is your first full pass through the alphabet. The goal is not to memorize everything today. The goal is to see every letter, hear a model, and repeat once.
@@ -218,7 +226,7 @@ The alphabet order is:
 
 **А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
 
-Use the video practice in this lesson for all 33 letters. One local source record has no separate per-letter URL for **О**, so this lesson uses the local course's stored **О** video reference from the syllable materials.
+Use the video practice below for all 33 letters. One local source record has no separate per-letter URL for **О**, so the workbook uses the local course's stored **О** video reference from the syllable materials.
 
 ### Full alphabet video pass
 
@@ -300,10 +308,12 @@ You may also hear:
 
 | Ukrainian | English | Who says it? |
 | --- | --- | --- |
-| **Ра́дий тебе́ ба́чити.** | Glad to see you. | a male speaker |
-| **Ра́да тебе́ ба́чити.** | Glad to see you. | a female speaker |
+| **Радий тебе бачити.** | Glad to see you. | a male speaker |
+| **Рада тебе бачити.** | Glad to see you. | a female speaker |
 
-Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking.
+Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking: use **Радий тебе бачити** if the speaker is male, and **Рада тебе бачити** **якщо жінка** is speaking.
+
+The word **Привіт** is useful for your first tiny sound analysis **на гвинтики**: **П-р-и-в-і-т**, four consonant sounds and two vowel sounds.
 
 ### First conversations
 
@@ -321,6 +331,8 @@ Use these as safety checks:
 | Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
 | Treating **Ї** like **І** | **Ї** is **[йі]** |
 | Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
+
+Keep Ukrainian sound categories independent. Do not use another language as the shortcut for **И**, **Е**, **О**, or **Г**. Use the Ukrainian mouth model here: **И** has its own position, unstressed **О** stays **О**, **Добрий день** is the neutral greeting, **Привіт** is the everyday informal greeting, and **Г** is the Ukrainian h-like sound.
 
 ### Pronunciation safety check
 
@@ -365,7 +377,17 @@ The workbook repeats the same ideas in different ways. It is practice for eyes, 
 
 ### Phrase meanings
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Приві́т!", "options": [{"text": "Hi!", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "What is your name?", "correct": false}]}, {"source": "До́брий день!", "options": [{"text": "Hello! / Good day!", "correct": true}, {"text": "Milk!", "correct": false}, {"text": "And you?", "correct": false}]}, {"source": "Доброго ра́нку!", "options": [{"text": "Good morning!", "correct": true}, {"text": "Good evening!", "correct": false}, {"text": "My name is Anna.", "correct": false}]}, {"source": "До́брий ве́чір!", "options": [{"text": "Good evening!", "correct": true}, {"text": "Good morning!", "correct": false}, {"text": "Fine.", "correct": false}]}, {"source": "Як спра́ви?", "options": [{"text": "How are you?", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "Letter", "correct": false}]}, {"source": "До поба́чення!", "options": [{"text": "Goodbye!", "correct": true}, {"text": "Hi!", "correct": false}, {"text": "Sound", "correct": false}]}, {"source": "Ра́да тебе́ ба́чити.", "options": [{"text": "Glad to see you. (female speaker)", "correct": true}, {"text": "What is your name?", "correct": false}, {"text": "Good evening!", "correct": false}]}]`)} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Приві́т!", "options": [{"text": "Hi!", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "What is your name?", "correct": false}], "explanation": "Приві́т is the informal everyday greeting."}, {"source": "До́брий день!", "options": [{"text": "Hello! / Good day!", "correct": true}, {"text": "Milk!", "correct": false}, {"text": "And you?", "correct": false}], "explanation": "До́брий день is the neutral daytime greeting."}, {"source": "Доброго ра́нку!", "options": [{"text": "Good morning!", "correct": true}, {"text": "Good evening!", "correct": false}, {"text": "My name is Anna.", "correct": false}], "explanation": "Ра́нок means morning, so Доброго ра́нку is Good morning."}, {"source": "До́брий ве́чір!", "options": [{"text": "Good evening!", "correct": true}, {"text": "Good morning!", "correct": false}, {"text": "Fine.", "correct": false}], "explanation": "Ве́чір means evening, so До́брий ве́чір is Good evening."}, {"source": "Як спра́ви?", "options": [{"text": "How are you?", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "Letter", "correct": false}], "explanation": "Як спра́ви? asks how someone is doing."}, {"source": "До поба́чення!", "options": [{"text": "Goodbye!", "correct": true}, {"text": "Hi!", "correct": false}, {"text": "Sound", "correct": false}], "explanation": "До поба́чення is the leaving phrase Goodbye."}, {"source": "Ра́да тебе́ ба́чити.", "options": [{"text": "Glad to see you. (female speaker)", "correct": true}, {"text": "What is your name?", "correct": false}, {"text": "Good evening!", "correct": false}], "explanation": "Ра́да is the form a female speaker uses in this phrase."}]`)} />
+
+### Pronunciation traps
+
+<ErrorCorrection client:only='react'>
+  <ErrorCorrectionItem sentence="Do not call А, О, У голосними літерами." errorWord="голосними літерами" correctForm="літерами, що позначають голосні звуки" options={JSON.parse(`["літерами, що позначають голосні звуки", "приголосними літерами"]`)} explanation="Incorrect pattern: Називати літери «А», «О», «У» «голосними літерами» (vowel letters). Correct pattern: Називати їх винятково «літерами, що позначають голосні звуки» або просто говорити про «голосні звуки»." />
+  <ErrorCorrectionItem sentence="Do not say м[а]локо for молоко." errorWord="м[а]локо" correctForm="молоко" options={JSON.parse(`["молоко", "молоко́"]`)} explanation="Incorrect pattern: Вимовляти ненаголошений [о] з наближенням до [а] (наприклад, казати м[а]локо замість молоко). Correct pattern: Завжди вимовляти [о] гранично чітко, без найменшого наближення до [а]: с[о́]л[о]дк[о] [S5]." />
+  <ErrorCorrectionItem sentence="Do not add a tiny sound after день." errorWord="add a tiny sound after день" correctForm="soften н, then stop" options={JSON.parse(`["soften н, then stop", "add і after нь"]`)} explanation="Incorrect pattern: Намагатися артикулювати «Ь» (м'який знак) як окремий, хоч і короткий, звук (наприклад, як редуковане [і]). Correct pattern: Робити попередній приголосний звук м'яким під час вимови, не додаючи після нього жодного окремого звукового елемента (наприклад, у слові день [S11])." />
+  <ErrorCorrectionItem sentence="Do not treat Ї as a softening letter." errorWord="treat Ї as a softening letter" correctForm="read Ї as [йі]" options={JSON.parse(`["read Ї as [йі]", "read Ї as plain [і]"]`)} explanation="Incorrect pattern: Сприймати літеру «Ї» як таку, що може використовуватися для пом'якшення попереднього приголосного (діючи за аналогією з «Я» чи «Ю»). Correct pattern: Неухильно читати «Ї» як повноцінні два звуки [йі], незалежно від того, в якій позиції у слові вона знаходиться [S11]." />
+  <ErrorCorrectionItem sentence="Do not make one fixed glad phrase for every speaker." errorWord="one fixed glad phrase" correctForm="Радий тебе бачити / Рада тебе бачити" options={JSON.parse(`["Радий тебе бачити / Рада тебе бачити", "Радий тебе бачити for everyone"]`)} explanation="Incorrect pattern: Використовувати сталу, незмінну форму прикметника для привітання незалежно від своєї статі (наприклад, коли жінка механічно каже «Радий тебе бачити»). Correct pattern: Суворо узгоджувати прикметник із власною статтю: чоловік обов'язково каже «Радий тебе бачити», а жінка — «Рада тебе бачити» [S1], [S7]." />
+</ErrorCorrection>
 
 </TabItem>
 <TabItem label="Resources">

@@ -4069,6 +4069,35 @@ def test_section_gate_fails_on_missing_heading() -> None:
     assert "Підсумок" in report["missing_headings"]
 
 
+def test_section_gate_accepts_zero_script_heading_aliases() -> None:
+    plan = {
+        "level": "A1",
+        "sequence": 1,
+        "content_outline": [
+            {"section": "Звуки і літери", "words": 20, "points": ["p1"]},
+            {"section": "Голосні звуки", "words": 20, "points": ["p2"]},
+            {"section": "Приголосні звуки", "words": 20, "points": ["p3"]},
+            {"section": "Привіт!", "words": 20, "points": ["p4"]},
+            {"section": "Підсумок", "words": 20, "points": ["p5"]},
+        ],
+    }
+    text = "\n\n".join(
+        [
+            "## Sound First, Letter Second\n\nsound letter",
+            "## Six Vowel Sounds, Ten Letters\n\nvowels",
+            "## Consonant Sounds\n\nconsonants",
+            "## Your First Conversation\n\nhello",
+            "## Textbook Check\n\nsummary",
+        ]
+    )
+
+    report = linear_pipeline._section_gate(text, plan)
+
+    assert report["passed"] is True
+    assert report["missing_headings"] == []
+    assert report["archetype"] == "a1-zero-script-onboarding"
+
+
 def test_section_gate_passes_when_sections_overshoot_max() -> None:
     """Section overshoot (count > max) does not fail the gate either.
 

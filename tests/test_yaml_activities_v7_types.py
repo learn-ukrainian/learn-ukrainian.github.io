@@ -149,6 +149,32 @@ def test_order_accepts_item_string_permutation_as_correct_order(tmp_path):
     assert "<Order" in parser.to_mdx(activities)
 
 
+def test_translate_renderer_preserves_explanations(tmp_path):
+    fixture = tmp_path / "translate.yaml"
+    fixture.write_text(
+        """
+- id: translate-1
+  type: translate
+  title: Meanings
+  items:
+    - source: Привіт!
+      options:
+        - text: Hi!
+          correct: true
+        - text: Goodbye!
+          correct: false
+      explanation: Привіт is informal.
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+    mdx = parser.to_mdx(parser.parse(fixture))
+
+    assert "<Translate" in mdx
+    assert "Привіт is informal." in mdx
+
+
 def test_order_still_rejects_non_permutation_strings(tmp_path):
     """A string correct_order that is NOT an exact permutation of items must
     still fail (no silent coercion of bogus answers)."""

@@ -15,6 +15,7 @@ def test_resources_search_attempted_gate_rejects_missing_search() -> None:
     assert result["severity"] == "HARD"
     assert result["search_attempt_count"] == 0
     assert result["search_tools_used"] == []
+    assert result["manual_coverage_verified"] is False
 
 
 def test_resources_search_attempted_gate_accepts_multimedia_search() -> None:
@@ -30,3 +31,27 @@ def test_resources_search_attempted_gate_accepts_multimedia_search() -> None:
     assert result["passed"] is True
     assert result["search_attempt_count"] == 1
     assert result["search_tools_used"] == ["search_external"]
+    assert result["manual_coverage_verified"] is False
+
+
+def test_resources_search_attempted_gate_accepts_a1_zero_script_manual_coverage() -> None:
+    result = linear_pipeline._resources_search_attempted_gate(
+        [],
+        plan={"level": "A1", "sequence": 1},
+        resource_coverage={"passed": True},
+    )
+
+    assert result["passed"] is True
+    assert result["search_attempt_count"] == 0
+    assert result["manual_coverage_verified"] is True
+
+
+def test_resources_search_attempted_gate_keeps_non_a1_manual_coverage_strict() -> None:
+    result = linear_pipeline._resources_search_attempted_gate(
+        [],
+        plan={"level": "A1", "sequence": 8},
+        resource_coverage={"passed": True},
+    )
+
+    assert result["passed"] is False
+    assert result["manual_coverage_verified"] is False

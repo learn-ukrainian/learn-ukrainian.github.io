@@ -242,6 +242,15 @@ def test_long_uk_ceiling_fail() -> None:
     assert result["offending_runs"][0].startswith("Український студент")
 
 
+def test_long_uk_ceiling_exempts_ukrainian_alphabet_sequence() -> None:
+    text = "**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**"
+
+    result = _long_uk_ceiling_gate(text, A1_EARLY_PLAN)
+
+    assert result["passed"] is True
+    assert result["offending_runs"] == []
+
+
 def test_component_density_dialoguebox_pass() -> None:
     result = _component_density_gate('<DialogueBox text="Привіт!" />', A1_EARLY_PLAN)
 

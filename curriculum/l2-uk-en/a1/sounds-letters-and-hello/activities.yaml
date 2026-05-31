@@ -385,6 +385,7 @@
       correct: false
     - text: What is your name?
       correct: false
+    explanation: Приві́т is the informal everyday greeting.
   - source: До́брий день!
     options:
     - text: Hello! / Good day!
@@ -393,6 +394,7 @@
       correct: false
     - text: And you?
       correct: false
+    explanation: До́брий день is the neutral daytime greeting.
   - source: Доброго ра́нку!
     options:
     - text: Good morning!
@@ -401,6 +403,7 @@
       correct: false
     - text: My name is Anna.
       correct: false
+    explanation: Ра́нок means morning, so Доброго ра́нку is Good morning.
   - source: До́брий ве́чір!
     options:
     - text: Good evening!
@@ -409,6 +412,7 @@
       correct: false
     - text: Fine.
       correct: false
+    explanation: Ве́чір means evening, so До́брий ве́чір is Good evening.
   - source: Як спра́ви?
     options:
     - text: How are you?
@@ -417,6 +421,7 @@
       correct: false
     - text: Letter
       correct: false
+    explanation: Як спра́ви? asks how someone is doing.
   - source: До поба́чення!
     options:
     - text: Goodbye!
@@ -425,6 +430,7 @@
       correct: false
     - text: Sound
       correct: false
+    explanation: До поба́чення is the leaving phrase Goodbye.
   - source: Ра́да тебе́ ба́чити.
     options:
     - text: Glad to see you. (female speaker)
@@ -433,3 +439,44 @@
       correct: false
     - text: Good evening!
       correct: false
+    explanation: Ра́да is the form a female speaker uses in this phrase.
+- id: act-10
+  type: error-correction
+  title: Pronunciation traps
+  instruction: Choose the safer Ukrainian habit.
+  items:
+  - sentence: Do not call А, О, У голосними літерами.
+    error: голосними літерами
+    correction: літерами, що позначають голосні звуки
+    options:
+    - літерами, що позначають голосні звуки
+    - приголосними літерами
+    explanation: 'Incorrect pattern: Називати літери «А», «О», «У» «голосними літерами» (vowel letters). Correct pattern: Називати їх винятково «літерами, що позначають голосні звуки» або просто говорити про «голосні звуки».'
+  - sentence: Do not say м[а]локо for молоко.
+    error: м[а]локо
+    correction: молоко
+    options:
+    - молоко
+    - молоко́
+    explanation: 'Incorrect pattern: Вимовляти ненаголошений [о] з наближенням до [а] (наприклад, казати м[а]локо замість молоко). Correct pattern: Завжди вимовляти [о] гранично чітко, без найменшого наближення до [а]: с[о́]л[о]дк[о] [S5].'
+  - sentence: Do not add a tiny sound after день.
+    error: add a tiny sound after день
+    correction: soften н, then stop
+    options:
+    - soften н, then stop
+    - add і after нь
+    explanation: 'Incorrect pattern: Намагатися артикулювати «Ь» (м''який знак) як окремий, хоч і короткий, звук (наприклад, як редуковане [і]). Correct pattern: Робити попередній приголосний звук м''яким під час вимови, не додаючи після нього жодного окремого звукового елемента (наприклад, у слові день [S11]).'
+  - sentence: Do not treat Ї as a softening letter.
+    error: treat Ї as a softening letter
+    correction: read Ї as [йі]
+    options:
+    - read Ї as [йі]
+    - read Ї as plain [і]
+    explanation: 'Incorrect pattern: Сприймати літеру «Ї» як таку, що може використовуватися для пом''якшення попереднього приголосного (діючи за аналогією з «Я» чи «Ю»). Correct pattern: Неухильно читати «Ї» як повноцінні два звуки [йі], незалежно від того, в якій позиції у слові вона знаходиться [S11].'
+  - sentence: Do not make one fixed glad phrase for every speaker.
+    error: one fixed glad phrase
+    correction: Радий тебе бачити / Рада тебе бачити
+    options:
+    - Радий тебе бачити / Рада тебе бачити
+    - Радий тебе бачити for everyone
+    explanation: 'Incorrect pattern: Використовувати сталу, незмінну форму прикметника для привітання незалежно від своєї статі (наприклад, коли жінка механічно каже «Радий тебе бачити»). Correct pattern: Суворо узгоджувати прикметник із власною статтю: чоловік обов''язково каже «Радий тебе бачити», а жінка — «Рада тебе бачити» [S1], [S7].'

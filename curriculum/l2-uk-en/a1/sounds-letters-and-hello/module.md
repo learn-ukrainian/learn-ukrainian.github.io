@@ -1,6 +1,6 @@
 # Sounds, Letters, and Hello
 
-Welcome to your first Ukrainian lesson. You do not need to read Ukrainian yet. This lesson is English-led. Ukrainian appears in small chunks so you can listen, repeat, notice, and use the first phrases safely.
+You do not need to read Ukrainian yet. This English-led module uses Ukrainian in small chunks so you can listen, repeat, notice, and use the first phrases safely.
 
 By the end, you can:
 
@@ -40,6 +40,10 @@ The numbers are not the same because some letters do more than one job. For exam
 Say this rule aloud:
 
 **Звук = I hear it. Лі́тера = I see it.**
+
+:::tip
+Start with the six clean vowel sounds: **[а] [о] [у] [е] [и] [і]**. They are the course's **серцебиттям** because every Ukrainian **склад** needs a vowel sound. Short **відеоуроки** help you see the mouth shape, especially the narrow smile for **[і]** and rounded lips for **[у]**.
+:::
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -136,9 +140,11 @@ Try four:
 
 Ukrainian has 32 consonant sounds and 22 letters that usually mark consonants. Some consonants have hard and soft versions. You do not need the full system today, but you do need three first clues:
 
+Vowels give a syllable its voice. Consonants build the clear **архітектуру** around that voice: lips, teeth, tongue, or throat make the shape.
+
 | Sign or letter | Beginner meaning |
 | --- | --- |
-| **Ь ь** | soft sign; no sound of its own |
+| **Ь ь** | **м'який знак**; no sound of its own |
 | **Г г** | Ukrainian h-like sound |
 | **Ґ ґ** | hard **g** sound |
 | **Щ щ** | two sounds together: **[шч]** |
@@ -149,6 +155,8 @@ Example:
 
 The final **ь** does not add a new vowel. It tells you to make **н** soft.
 
+The letters **Я, Ю, Є** are graphic **хамелеони**: at the start of a word they can show **[й] + vowel**, but after a consonant they can point to softness plus one vowel. **Ї** is the strict exception: always **[йі]**.
+
 ## Full Alphabet Video Pass
 
 This is your first full pass through the alphabet. The goal is not to memorize everything today. The goal is to see every letter, hear a model, and repeat once.
@@ -157,7 +165,7 @@ The alphabet order is:
 
 **А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
 
-Use the video practice in this lesson for all 33 letters. One local source record has no separate per-letter URL for **О**, so this lesson uses the local course's stored **О** video reference from the syllable materials.
+Use the video practice below for all 33 letters. One local source record has no separate per-letter URL for **О**, so the workbook uses the local course's stored **О** video reference from the syllable materials.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -237,10 +245,12 @@ You may also hear:
 
 | Ukrainian | English | Who says it? |
 | --- | --- | --- |
-| **Ра́дий тебе́ ба́чити.** | Glad to see you. | a male speaker |
-| **Ра́да тебе́ ба́чити.** | Glad to see you. | a female speaker |
+| **Радий тебе бачити.** | Glad to see you. | a male speaker |
+| **Рада тебе бачити.** | Glad to see you. | a female speaker |
 
-Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking.
+Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking: use **Радий тебе бачити** if the speaker is male, and **Рада тебе бачити** **якщо жінка** is speaking.
+
+The word **Привіт** is useful for your first tiny sound analysis **на гвинтики**: **П-р-и-в-і-т**, four consonant sounds and two vowel sounds.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
@@ -256,6 +266,8 @@ Use these as safety checks:
 | Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
 | Treating **Ї** like **І** | **Ї** is **[йі]** |
 | Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
+
+Keep Ukrainian sound categories independent. Do not use another language as the shortcut for **И**, **Е**, **О**, or **Г**. Use the Ukrainian mouth model here: **И** has its own position, unstressed **О** stays **О**, **Добрий день** is the neutral greeting, **Привіт** is the everyday informal greeting, and **Г** is the Ukrainian h-like sound.
 
 <!-- INJECT_ACTIVITY: act-6 -->
 
