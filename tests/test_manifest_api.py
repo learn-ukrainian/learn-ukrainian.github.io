@@ -10,6 +10,7 @@ Covered:
 from __future__ import annotations
 
 import hashlib
+import sqlite3
 
 import pytest
 from fastapi.testclient import TestClient
@@ -188,6 +189,7 @@ def test_manifest_shape_and_hashes(monkeypatch, tmp_path):
     assert body["orient"]["url"] == "/api/orient"
     assert body["orient"]["fresh_param"] == "?fresh=true"
     assert body["inbox"]["url_template"] == "/api/comms/inbox?agent={name}"
+    assert body["activity"]["url"] == "/api/comms/agent-activity"
 
 
 def test_manifest_stays_small():
@@ -290,3 +292,121 @@ def test_inbox_400_on_invalid_agent(monkeypatch):
     body = resp.json()
     assert body["error"] == "invalid agent"
     assert "error_id" in body
+
+
+def test_agent_activity_summarizes_deliveries_and_events(monkeypatch, tmp_path):
+    """The activity endpoint gives orchestrators one compact bridge snapshot."""
+    import scripts.api.comms_router as comms_router
+
+    db_path = tmp_path / "messages.db"
+    conn = sqlite3.connect(db_path)
+    conn.executescript("""
+        CREATE TABLE channels (
+            name TEXT PRIMARY KEY,
+            created_at TEXT,
+            description TEXT,
+            include TEXT,
+            subscribers TEXT
+        );
+        CREATE TABLE channel_messages (
+            message_id TEXT PRIMARY KEY,
+            channel TEXT,
+            thread_id TEXT,
+            parent_id TEXT,
+            correlation_id TEXT,
+            round_index INTEGER,
+            from_agent TEXT,
+            from_model TEXT,
+            kind TEXT,
+            body TEXT,
+            attachments TEXT,
+            context_rev_shared TEXT,
+            context_rev_channel TEXT,
+            monitor_state_snapshot TEXT,
+            created_at TEXT
+        );
+        CREATE TABLE deliveries (
+            delivery_id TEXT PRIMARY KEY,
+            message_id TEXT,
+            to_agent TEXT,
+            to_model TEXT,
+            status TEXT,
+            dispatched_at TEXT,
+            delivered_at TEXT,
+            error TEXT,
+            lease_until TEXT,
+            attempt_count INTEGER DEFAULT 0,
+            retry_after TEXT,
+            last_error_kind TEXT
+        );
+        CREATE TABLE channel_events (
+            event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            delivery_id TEXT,
+            thread_id TEXT,
+            event TEXT,
+            payload_json TEXT,
+            ts TEXT
+        );
+    """)
+    conn.execute(
+        "INSERT INTO channels VALUES (?, ?, ?, ?, ?)",
+        ("reviews", "2026-05-31T10:00:00Z", "", "", ""),
+    )
+    conn.execute(
+        """
+        INSERT INTO channel_messages (
+            message_id, channel, thread_id, parent_id, correlation_id,
+            round_index, from_agent, from_model, kind, body, attachments,
+            context_rev_shared, context_rev_channel, monitor_state_snapshot,
+            created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "m1", "reviews", "t1", None, None, 0, "claude", None, "post",
+            "please handle this bridge item", None, "", "", None,
+            "2026-05-31T10:01:00Z",
+        ),
+    )
+    conn.executemany(
+        """
+        INSERT INTO deliveries (
+            delivery_id, message_id, to_agent, to_model, status,
+            dispatched_at, delivered_at, error, lease_until, attempt_count,
+            retry_after, last_error_kind
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            ("d1", "m1", "codex", None, "pending", None, None, None, None, 0, None, None),
+            ("d2", "m1", "gemini", None, "processing", None, None, None, "2026-05-31T10:20:00Z", 1, None, None),
+        ],
+    )
+    conn.execute(
+        "INSERT INTO channel_events (delivery_id, thread_id, event, payload_json, ts) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (None, "t1", "reply_started", '{"agent": "codex"}', "2026-05-31T10:02:00Z"),
+    )
+    conn.execute(
+        "INSERT INTO channel_events (delivery_id, thread_id, event, payload_json, ts) "
+        "VALUES (?, ?, ?, ?, ?)",
+        ("d2", "t1", "heartbeat", '{"elapsed_s": 60}', "2026-05-31T10:03:00Z"),
+    )
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setattr(comms_router, "MESSAGE_DB", db_path)
+
+    resp = client.get("/api/comms/agent-activity?agents=codex,gemini&limit=2")
+    assert resp.status_code == 200
+    body = resp.json()
+
+    assert body["totals"]["pending"] == 1
+    assert body["totals"]["processing"] == 1
+    assert body["agents"]["codex"]["pending"] == 1
+    assert body["agents"]["codex"]["recent_events"][0]["event"] == "reply_started"
+    assert body["agents"]["codex"]["next_actions"][0]["kind"] == "drain_inbox"
+    assert body["agents"]["gemini"]["processing"] == 1
+    assert body["agents"]["gemini"]["recent_deliveries"][0]["thread_id"] == "t1"
+    assert any(
+        action["kind"] == "watch_thread"
+        for action in body["agents"]["gemini"]["next_actions"]
+    )
