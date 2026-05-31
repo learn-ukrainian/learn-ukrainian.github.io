@@ -278,6 +278,10 @@ Rules of engagement with prior learning (binding):
 
 {LEARNER_STATE}
 
+## Module Archetype Contract
+
+{MODULE_ARCHETYPE}
+
 ## Immersion Rule
 
 {IMMERSION_RULE}

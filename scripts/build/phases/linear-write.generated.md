@@ -90,6 +90,10 @@ gloss it inline at first mention (`**lemma** *(gloss)*`).
 
 {LEARNER_STATE}
 
+## Module Archetype Contract
+
+{MODULE_ARCHETYPE}
+
 ## Immersion Rule
 
 {IMMERSION_RULE}

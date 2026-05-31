@@ -54,6 +54,7 @@ from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state
+from scripts.pipeline.module_archetypes import format_module_archetype, resolve_module_archetype
 
 PLAN_REQUIRED_KEYS = {
     "module",
@@ -3089,6 +3090,7 @@ def writer_context(
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     learner_state = build_learner_state(level.lower(), sequence)
+    module_archetype = resolve_module_archetype(level.lower(), sequence)
     activity_config = _activity_config(level, sequence, str(plan["slug"]))
     if wiki_manifest is None:
         manifest_for_checklist = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
@@ -3124,6 +3126,7 @@ def writer_context(
         "WIKI_COVERAGE_REQUIRED_ITEMS": required_items_text,
         "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "LEARNER_STATE": format_learner_state(learner_state),
+        "MODULE_ARCHETYPE": format_module_archetype(module_archetype),
         "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence, learner_state=learner_state),
         "CONTRACT_YAML": _contract_yaml(plan),
         "ALLOWED_ACTIVITY_TYPES": activity_config["ALLOWED_ACTIVITY_TYPES"],
