@@ -66,9 +66,9 @@ persona:
   voice: Intellectual Historian
 phase: BIO
 references:
-- note: Біографічна довідка Ватикану.
-  path: https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html
-  title: Biographies of Servants of God
+- note: Список беатифікованих УГКЦ під час візиту Папи Івана Павла ІІ (Ватикан, 2001).
+  path: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  title: Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine
   type: reference
 - note: Список беатифікацій в Україні.
   path: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html

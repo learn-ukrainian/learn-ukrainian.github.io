@@ -92,7 +92,7 @@ Source: UGCC vocation article quoting his recollection of religious calling. It 
 
 **Tier 1 (authoritative):**
 - Vatican, "Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine" | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
-- Vatican companion biographies page for Ukrainian Greek Catholic servants of God | https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html | accessed 2026-05-30
+- Vatican companion biographies page for Ukrainian Greek Catholic servants of God | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
 
 **Tier 2 (institutional):**
 - UGCC Synod, "Владика Василь Величковський" | https://synod.ugcc.ua/data/vladyka-vasyl-velychkovskyy-11715/ | accessed 2026-05-30
