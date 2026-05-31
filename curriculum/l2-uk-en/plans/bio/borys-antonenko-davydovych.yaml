@@ -1,0 +1,112 @@
+---
+activity_hints:
+- after_section: 'Тінь: Табір і заслання'
+  focus: Дві хвилі
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: 'Діяльність: «Як ми говоримо»'
+  focus: Чи лише мовознавство?
+  items: 5
+  placement: inline
+  type: true-false
+- focus: Дебати
+  placement: workbook
+  type: debate
+- focus: Аналіз цитати
+  placement: workbook
+  type: critical-analysis
+- focus: Есе
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- lit-antonenko-davydovych-prose
+- lit-antonenko-davydovych-smert
+- c2-lexical-stylistics
+content_outline:
+- section: Розминка
+  words: 400
+  points:
+  - '[!biography] Антоненко-Давидович (1899–1984).'
+  - Чому його зводять лише до «Як ми говоримо»?
+- section: 'Формування: Проза 1920-х'
+  words: 1000
+  points:
+  - «Смерть» (1928), «Землею українською» (1930).
+  - '[!decolonization] «зоологічний націоналізм» — лише радянське звинувачення.'
+- section: 'Діяльність: «Як ми говоримо»'
+  words: 1200
+  points:
+  - «Боротьба за чистоту й високу мовну культуру...»
+  - «Двері відчиняються водієм» — калька.
+  - '[!epistemic-humility] Радянські ярлики — доказ репресій.'
+- section: 'Тінь: Табір і заслання'
+  words: 1600
+  points:
+  - '[!anti-hagiography] Арешт 1935 р.; повторне заслання 1951 р.'
+  - Чорний список 1970 р.
+  - '[!myth-buster] Номер справи не знайдено.'
+- section: 'Підсумок: Спадщина'
+  words: 1000
+  points:
+  - «Сибірські новели» (1989).
+  - '[!decolonization] Мова як громадянська практика.'
+focus: Борис Антоненко-Давидович — прозаїк і мовознавець. Репресії 1930-х, заслання 1950-х, «Як ми говоримо».
+level: BIO
+module: bio-241
+objectives:
+- Аналізувати лінію від «Смерті» до «Як ми говоримо».
+- Пояснити дві хвилі репресій.
+- Використовувати цитати з «Як ми говоримо».
+- Відрізняти радянські ярлики від аналітичних.
+pedagogy: CBI
+persona:
+  role: Модератор семінару про мовну культуру без агіографічного спрощення.
+  voice: Intellectual Historian
+phase: BIO
+references:
+- title: Антоненко-Давидович Борис Дмитрович (ЕСУ)
+  note: Репресії, «Як ми говоримо».
+  type: reference
+- title: Антоненко-Давидович Борис Дмитрович (ЕІУ)
+  note: Енциклопедія історії України.
+  type: reference
+- author: Борис Дмитрович Антоненко-Давидович
+  title: Як ми говоримо
+  note: 1970; мовна культура.
+  type: primary
+  work: Як ми говоримо
+- author: Борис Дмитрович Антоненко-Давидович
+  title: Смерть
+  note: 1928; об'єкт радянських атак.
+  type: primary
+  work: Смерть
+sequence: 241
+slug: borys-antonenko-davydovych
+subtitle: The Prose Writer and Language Guardian Across Two Waves of Repression
+title: 'Борис Антоненко-Давидович: мова і табір'
+version: '1.0'
+vocabulary_hints:
+- word: проза
+  pos: ж.
+  definition: «Смерть», «Землею українською», «Сибірські новели»
+- word: есе
+  pos: ч.
+  definition: мовні поради «Як ми говоримо»
+- word: калька
+  pos: ж.
+  definition: мовний запозичений зворот, напр. «водієм»
+- word: заслання
+  pos: с.
+  definition: довічне заслання 1951 р.
+- word: реабілітація
+  pos: ж.
+  definition: 1956 р., повернення 1957 р.
+- word: табір
+  pos: ч.
+  definition: ГУЛАГ після смертного вироку 1935 р.
+- word: мовознавство
+  pos: с.
+  definition: боротьба за чистоту мови
+word_target: 5200

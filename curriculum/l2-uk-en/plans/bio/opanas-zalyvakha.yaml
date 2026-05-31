@@ -1,0 +1,107 @@
+---
+activity_hints:
+- after_section: 'Тінь: Арешт 1965 року'
+  focus: Ескалація
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: 'Діяльність: Вітраж «Шевченко. Мати»'
+  focus: Знищення вітража
+  items: 5
+  placement: inline
+  type: true-false
+- focus: Дебати
+  placement: workbook
+  type: debate
+- focus: Критичний аналіз
+  placement: workbook
+  type: critical-analysis
+- focus: Есе
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- bio-alla-horska
+- bio-vasyl-stus
+- istorio-pislya-stalina-shistdesiatnyky
+- istorio-kulturna-rezystentsiia
+content_outline:
+- section: Розминка
+  words: 400
+  points:
+  - '[!biography] Знайомство з Опанасом Заливахою (1925–2007).'
+  - Провокаційне питання про ескалацію тиску.
+- section: 'Формування: Косів і Ленінград'
+  words: 1000
+  points:
+  - Практика в Косові 1957 р.
+  - '[!decolonization] Культурний поворот до української ідентичності.'
+  - Переїзд до України 1961 р.
+- section: 'Діяльність: Вітраж «Шевченко. Мати»'
+  words: 1200
+  points:
+  - Виставку 1962 р. закрито (КХПГ).
+  - Вітраж 1964 р. знищено (підручник).
+  - '[!epistemic-humility] Джерело підтверджує знищення, не реконструкцію.'
+- section: 'Тінь: Арешт 1965 року'
+  words: 1600
+  points:
+  - '[!anti-hagiography] Звинувачення у мистецькій позиції.'
+  - Вирок — 5 років таборів (ЕСУ).
+  - '[!myth-buster] Номер справи не знайдено.'
+- section: 'Підсумок: Спадщина'
+  words: 1000
+  points:
+  - Повернення 1970 р.
+  - '[!decolonization] Мистецтво як свідчення, що режим знищував.'
+focus: Опанас Заливаха як художник-шістдесятник і політв'язень. Ескалація тиску — виставка, вітраж, вирок 1965 року.
+level: BIO
+module: bio-239
+objectives:
+- Розрізняти три механізми тиску.
+- Аналізувати поворот після Косова.
+- Порівнювати візуальний спротив з літературою.
+- Оцінити табірну творчість.
+pedagogy: CBI
+persona:
+  role: Модератор семінару про ескалацію тиску на митця.
+  voice: Intellectual Historian
+phase: BIO
+references:
+- title: Заливаха Опанас Іванович (ЕСУ)
+  note: Вирок 1965 р., табір, графіка.
+  type: reference
+- title: Заливаха Опанас Іванович (КХПГ)
+  note: Косів, закрита виставка 1962 р.
+  type: reference
+- title: Вітраж «Шевченко. Мати» (підручник, 11 клас)
+  note: Знищення вітража 1964 р.
+  type: reference
+sequence: 239
+slug: opanas-zalyvakha
+subtitle: The Painter from Exhibition Closure to Political Imprisonment
+title: 'Опанас Заливаха: вітраж і табір'
+version: '1.0'
+vocabulary_hints:
+- word: вітраж
+  pos: ч.
+  definition: складний декоративний твір із кольорового скла
+- word: експозиція
+  pos: ж.
+  definition: публічна виставка; персональну 1962 р. закрито
+- word: екслібрис
+  pos: ч.
+  definition: таємна табірна графіка за даними ЕСУ
+- word: табір
+  pos: ч.
+  definition: табір № 11 у Мордовії
+- word: шістдесятник
+  pos: ч.
+  definition: учасник культурного руху 1960-х
+- word: ідейно ворожий
+  pos: прикм.
+  definition: ярлик комісії щодо вітража в КДУ
+- word: монументальне мистецтво
+  pos: с.
+  definition: мистецтво для архітектурного простору
+word_target: 5200
