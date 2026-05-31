@@ -29,9 +29,44 @@
 > only on a GENUINE defect (fabrication, ghost-source, real NPOV failure) — fix-forward, don't seek
 > approval. Non-bio tracks + non-bio main = orchestrator-only; Claude never merges those.
 
-*Last updated: 2026-05-31 (session: bio-260→310 slice COMPLETE+merged @ `f25a2c7e12`; Phase-3
-registration BLOCKED by position-contiguity until 184-259 builds; agent-routing + usage report added;
-3-way Cursor/Codex/Claude build plan for the 75 remaining plans (bio-184..259) defined + kicked off.)*
+*Last updated: 2026-05-31 (session: bio-260→310 slice COMPLETE+merged; agent-routing + usage report +
+dashboard added; 3-way Cursor/Codex/Claude build of bio-184..259 UNDERWAY — **bio-184..207 MERGED**
+(batches 1+2, 24 plans), **bio plan count on main = 259**. Phase-3 registration still BLOCKED by
+position-contiguity until 208..259 land. Next = batch-3 bio-208..219, then 220..259 (~40 left).)*
+
+> **▶ BUILD PROGRESS (bio-184..259, 3-way split, 12/batch — keep splitting Cursor/Codex/Claude):**
+> - **DONE+merged (count=259):** batch-1 bio-184..195 (#2484 cursor 184-187, #2482 codex 188-191,
+>   #2483 claude 192-195 + fix-forward #2485); batch-2 bio-196..207 (#2487 cursor 196-199, #2486 codex
+>   200-203, #2489 claude 204-207 — Codex cross-family review 4-SHIP/0-fix).
+> - **NEXT — batch-3 bio-208..219:** cursor 208-211 (leonid-mosendz, oksana-liaturynska, vasyl-barka,
+>   viktor-domontovych) · codex 212-215 (ihor-kostetskyi, dokiia-humenna, yurii-kosach, mykhailo-orest)
+>   · claude 216-219 (bohdan-boichuk, yurii-tarnavskyi, emma-andiievska, bohdan-rubchak). Then 220..259.
+>   All dossiers present (verified). bio-222 already built (skip).
+> - **PIPELINE that works:** generate briefs via /tmp/gen_bio_briefs*.py (verify own_all_present +
+>   no_cross), preflight-check slugs absent on origin/main, fire `delegate dispatch --agent {cursor
+>   (--model auto)|codex|claude (--effort xhigh)} --task-id bio-blkN-<agent> --prompt-file ...
+>   --worktree --base main`. Harvest: finalize cursor+claude git (they leave plans uncommitted),
+>   CJK scan (/tmp/cjk_scan*.py) + validate_plan_config (BIO must stay all-valid; the 7 A2/B2/C2
+>   errors are PRE-EXISTING non-bio — ignore) + three-dot scope-diff (all `A`), cross-family review
+>   (Claude reviews cursor+codex inline; fire Codex `review-blkN-claude` for claude-written), merge
+>   per grant, then remove worktree + delete branch + prune.
+>
+> **🔴 HARD PROCESS LESSONS (this session — cost real rework; do NOT repeat):**
+> 1. **NEVER merge a PR in the same action-batch as reading its review.** Read review → evaluate verdict
+>    as a SEPARATE step → only then merge (SHIP) or fix-forward (FIX). I merged #2483 before evaluating
+>    its 1-SHIP/3-FIX review; recovered via fix-forward #2485 (антилицемірний→викривальний, в→у віддалену,
+>    lit-karpenko→lit-drama-karpenko). Batch-2 #2489 done correctly (read 4-SHIP, then merged).
+> 2. **VERIFY a commit exists (`git rev-list --count origin/main..HEAD` ≥ 1) BEFORE `git worktree
+>    remove --force`.** A cancelled Write no-op'd my fix script → no commit → I `--force`-removed the
+>    worktree and LOST the edits (redone). Working-tree edits are NOT safe until committed AND verified.
+> 3. **This machine has SEVERE intermittent I/O lag** = recurring stale `~/.pyenv/shims/.pyenv-shim`
+>    lock (interrupted `pyenv rehash`; `rm -f` it each turn). UNDER LAG, RUN DEPENDENT BASH CALLS ONE
+>    AT A TIME — big parallel batches cascade-fail (one erroring call cancels all siblings; 3× this
+>    session). Don't form conclusions from a cascade-truncated read; re-verify single-call.
+> 4. **CURSOR and (this session) CLAUDE dispatches leave plans UNCOMMITTED** — always driver-finalize.
+>    Stage ONLY the intended new files: the claude 204-207 dispatch also made out-of-scope edits to 3
+>    batch-1 files in its worktree; I committed only the 4 new plans (used a fresh worktree rebased on
+>    current main since the dispatch branch was based on stale main).
 
 > **⚠️ HANDOFF-WAS-UNCOMMITTED (fixed in THIS PR):** Before this PR, origin/main carried the STALE
 > 2026-05-30 handoff; the rich 2026-05-31 state lived ONLY as an uncommitted local edit on the main
