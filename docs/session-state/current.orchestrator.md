@@ -180,14 +180,17 @@ A1 M1-M7 sequence:
   published. A1 M1 `resources.yaml` and generated Starlight MDX now list the
   Anna Ohoiko alphabet overview, playlist, all plan per-letter videos, and the
   stored course O-video activity reference.
+- `inject_activity_ids` now respects the M1-M7 textbook/workbook split. For A1
+  zero/script/first-contact archetypes, workbook-only activities are allowed
+  while unknown injected ids still fail. A1 M1 now passes this gate with
+  `act-4`, `act-7`, `act-8`, and `act-9` classified as workbook-only.
 - Next gate to implement:
   an archetype-fit wrapper in `contract_compliance.py` that aggregates
   deterministic subchecks only.
 - Known remaining full `run_python_qg()` failures on A1 M1 are pre-existing
   M1/template alignment issues, not resource-coverage failures:
   `quiz_translate_explanations`, `plan_sections`, `vesum_verified`,
-  `resources_search_attempted`, `long_uk_ceiling`, `inject_activity_ids`, and
-  `engagement_floor`.
+  `resources_search_attempted`, `long_uk_ceiling`, and `engagement_floor`.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route

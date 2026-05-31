@@ -6700,7 +6700,7 @@ def run_python_qg(
         ),
     )
     record("component_density", _component_density_gate(module_text, plan))
-    record("inject_activity_ids", _inject_activity_gate(module_text, activities))
+    record("inject_activity_ids", _inject_activity_gate(module_text, activities, plan))
     record(
         "activity_types",
         _activity_type_gate(
@@ -10482,11 +10482,25 @@ def _long_ukrainian_sentences(text: str) -> list[str]:
     return [sentence for sentence in _split_immersion_sentences(text) if len(_UK_WORD_RE.findall(sentence)) > 10]
 
 
-def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[str, Any]:
+def _inject_activity_gate(
+    text: str,
+    activities: list[dict[str, Any]],
+    plan: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     ids = {str(activity.get("id")) for activity in activities if activity.get("id")}
     injected = _INJECT_RE.findall(text)
     missing = [activity_id for activity_id in injected if activity_id not in ids]
     unused = sorted(ids - set(injected))
+    workbook_only: list[str] = []
+    if plan is not None:
+        archetype = resolve_module_archetype(str(plan.get("level") or ""), int(plan.get("sequence") or 0))
+        if archetype.get("id") in {
+            "a1-zero-script-onboarding",
+            "a1-script-building",
+            "a1-first-contact-survival",
+        }:
+            workbook_only = unused
+            unused = []
     reasons = []
     if missing:
         reasons.append("missing_activity_ids")
@@ -10497,6 +10511,7 @@ def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[s
         "injected": injected,
         "missing": missing,
         "unused": unused,
+        "workbook_only": workbook_only,
         "reason": ",".join(reasons) or None,
     }
 

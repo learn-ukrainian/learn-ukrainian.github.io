@@ -33,6 +33,11 @@ Latest-Brief: docs/session-state/current.codex.md
 - Backfilled A1 M1 `resources.yaml` and regenerated Starlight MDX so the
   Resources tab lists the Anna Ohoiko alphabet overview, playlist, all plan
   per-letter videos, and the stored O-video activity reference.
+- Adapted `inject_activity_ids` for the M1-M7 English-led textbook/workbook
+  archetypes. The gate still rejects injected ids that do not exist, but
+  workbook-only activities are allowed for A1 zero/script/first-contact modules.
+  A1 M1 now reports `act-4`, `act-7`, `act-8`, and `act-9` as workbook-only
+  instead of unused.
 
 ## Validation
 
@@ -48,6 +53,11 @@ Latest-Brief: docs/session-state/current.codex.md
 - Browser plugin could not attach to the in-app browser in this session
   (`agent.browsers.list()` returned empty), so rendered Resources were verified
   by inspecting generated MDX and built HTML instead.
+- `tests/test_inject_activity_gate.py tests/test_immersion_gates.py tests/test_module_archetypes.py`:
+  22 passed.
+- `ruff check scripts/build/linear_pipeline.py tests/test_inject_activity_gate.py`:
+  passed.
+- Direct A1 M1 `run_python_qg()` report no longer fails `inject_activity_ids`.
 
 ## Known Remaining M1 Gates
 
@@ -63,8 +73,6 @@ outside the resource-coverage slice:
   hand-authored module.
 - `long_uk_ceiling`: raw alphabet row is treated as a long unsupported
   Ukrainian run.
-- `inject_activity_ids`: workbook-only activities are counted as unused by the
-  old inject gate.
 - `engagement_floor`: no callout and one `in this lesson` meta-narration hit.
 
 These are the next infra/content-alignment targets. Do not interpret them as a
