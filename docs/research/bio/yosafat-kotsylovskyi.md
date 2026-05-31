@@ -94,7 +94,7 @@ Source: handwritten loyalty statement quoted by UGCC bishop profile; the UGCC pa
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
-- Vatican, Ukrainian beatification companion biographies page | https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html | accessed 2026-05-30
+- Vatican, Ukrainian beatification companion biographies page | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
 - Vatican, "Beatifications during the Pastoral Visit..." | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
 
 **Tier 2 (institutional):**
