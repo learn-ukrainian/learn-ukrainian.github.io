@@ -19,7 +19,7 @@ Keep this rule in mind from the first minute:
 | You hear and say | You see and write |
 | --- | --- |
 | a **sound** | a **letter** |
-| **звук** | **лі́тера** |
+| **звук** - sound | **лі́тера** - letter |
 
 A **sound** belongs to your ear and mouth. A **letter** belongs to your eyes and hand.
 

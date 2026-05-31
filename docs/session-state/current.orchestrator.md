@@ -138,13 +138,14 @@ A1 M1-M7 sequence:
   `.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch:
   `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Current pushed head after infra follow-up:
-  `b6dd723acb fix(pipeline): block internal wiki resources`
+- Current pushed head after introduced-before-use follow-up:
+  `b8824bebfc feat(audit): gate A1 M1 introduced-before-use`
 - Follow-up commits after the M1 rewrite:
   - `e514421f78 fix(infra): decouple etymology from lesson builds`
   - `594c72e928 feat(pipeline): define module archetype contracts`
   - `f84e8a8702 feat(pipeline): inject module archetype into writer prompts`
   - `b6dd723acb fix(pipeline): block internal wiki resources`
+  - `b8824bebfc feat(audit): gate A1 M1 introduced-before-use`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
@@ -155,11 +156,21 @@ A1 M1-M7 sequence:
   paths such as `wiki/pedagogy/...`; the writer artifact validator now blocks
   `wiki/` and `docs/wiki/` URLs, and A1 M1's resource file has had the internal
   wiki entry removed.
-- Active read-only delegate at this handoff:
-  `a1-archetype-gate-design` (`codex`, `gpt-5.4-mini`) is investigating the
-  next deterministic gates: introduced-before-use, resource coverage, and
-  archetype-fit. Result path should appear under
-  `batch_state/tasks/a1-archetype-gate-design.result` when done.
+- Completed read-only delegate:
+  `a1-archetype-gate-design` (`codex`, `gpt-5.4-mini`) finished successfully;
+  result is in `batch_state/tasks/a1-archetype-gate-design.result`.
+- First deterministic gate implemented:
+  `check_introduced_before_use()` in
+  `scripts/audit/checks/learner_state.py`. It is scoped through
+  `resolve_module_archetype()` and only fires for
+  `a1-zero-script-onboarding` for now. It checks plan-required terms from
+  `vocab_grammar_targets.must_introduce`, `targets.new_vocabulary`, and
+  `vocabulary_hints.required`, then requires the first learner-facing lesson or
+  activity use to include an English gloss/explicit introduction. A1 M1 now
+  passes this gate after adding same-row glosses for `звук` and `літера`.
+- Next gates to implement:
+  resource coverage in the build/publish layer, then an archetype-fit wrapper
+  in `contract_compliance.py` that aggregates deterministic subchecks only.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route
