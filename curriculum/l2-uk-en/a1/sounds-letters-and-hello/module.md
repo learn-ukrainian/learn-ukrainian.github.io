@@ -1,23 +1,47 @@
 # Sounds, Letters, and Hello
 
-Welcome to your first Ukrainian lesson. You do not need to read Ukrainian yet. In this lesson, Ukrainian appears in small chunks. Your job is to notice, listen, repeat, and use a few useful phrases.
+Welcome to your first Ukrainian lesson. You do not need to read Ukrainian yet. This lesson is English-led. Ukrainian appears in small chunks so you can listen, repeat, notice, and use the first phrases safely.
 
 By the end, you can:
 
-- say hello and goodbye;
-- answer **Як справи?** with **До́бре**;
-- ask a simple name question;
-- tell the difference between a sound and a letter;
-- recognize the sounds in **Приві́т**, **ма́ма**, **молоко́**, and **день**.
+- say hello, goodbye, and a simple "How are you?";
+- answer with **До́бре**, **Чудо́во**, or **Норма́льно**;
+- ask and answer a name question;
+- explain the difference between a sound and a letter;
+- recognize all 33 Ukrainian letters at first-pass level;
+- know what **склад** means before the workbook asks you to count syllables;
+- avoid the first pronunciation traps: blurred **о**, confusing **и** and **і**, adding a sound after **ь**, and turning final voiced consonants into voiceless ones.
 
-Keep this rule in mind:
+## Sound First, Letter Second
+
+Keep this rule in mind from the first minute:
 
 | You hear and say | You see and write |
 | --- | --- |
 | a **sound** | a **letter** |
 | **звук** | **лі́тера** |
 
-Ukrainian teachers use this distinction from the start: sounds are for your ear and mouth; letters are for your eyes and hand. <!-- VERIFY: source="Заболотний 5 клас, p.83", chunk_id="5-klas-ukrmova-zabolotnyi-2023_s0084" -->
+A **sound** belongs to your ear and mouth. A **letter** belongs to your eyes and hand.
+
+Three numbers matter in Ukrainian:
+
+| Fact | Meaning |
+| --- | --- |
+| **33 letters** | the Ukrainian alphabet, or **абе́тка** |
+| **38 sounds** | what speakers actually hear and say |
+| **6 vowel sounds** | the open sounds you can sing |
+
+The numbers are not the same because some letters do more than one job. For example:
+
+- **Я, Ю, Є, Ї** can point to more than one sound.
+- **Ь** is the soft sign. It has no sound of its own.
+- Many consonants can be hard or soft.
+
+Say this rule aloud:
+
+**Звук = I hear it. Лі́тера = I see it.**
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ## Your First Word
 
@@ -25,102 +49,152 @@ Your first word is:
 
 **Приві́т!** - Hi!
 
+Use **Приві́т!** with classmates, friends, family, or someone your age. Treat it as one whole chunk today.
+
 Say it slowly:
 
 **При-ві́т**
 
-You do not need every letter of the alphabet today. You only need to notice the pieces in this word:
+Now notice the pieces:
 
-| Letter | Sound | What to do |
+| Letter | Sound | Type |
 | --- | --- | --- |
-| **П** | [п] | close both lips, then release |
-| **р** | [р] | light Ukrainian **r** |
-| **и** | [и] | short central vowel |
-| **в** | [в] | upper teeth near lower lip |
-| **і** | [і] | smile vowel, like a clean **ee** |
-| **т** | [т] | tongue taps behind teeth |
+| **П** | [п] | consonant |
+| **р** | [р] | consonant |
+| **и** | [и] | vowel |
+| **в** | [в] | consonant |
+| **і** | [і] | vowel |
+| **т** | [т] | consonant |
 
-Now say the whole word:
+So **Приві́т** has two vowel sounds and four consonant sounds.
 
-**Приві́т!**
-
-Use **Приві́т!** with classmates, friends, family, or someone your age. Use it as one whole chunk. Grammar can wait.
-
-<!-- INJECT_ACTIVITY: act-1 -->
-
-## Sound First, Letter Second
-
-English spelling can be unpredictable. Ukrainian spelling is usually more direct: a letter normally points you toward a sound. That does not mean every letter is simple, but it means you can build reading step by step.
-
-Three key facts are enough for today:
-
-1. Ukrainian has **33 letters**.
-2. Ukrainian has **38 sounds**.
-3. Some letters do special jobs, so the numbers are not the same.
-
-For example, **ь** is called the soft sign. It has no sound of its own. In **день** - day, it tells you that **н** is soft. You do not pronounce a separate extra sound after **н**.
-
-You will meet the full alphabet later. Today, read only a few useful words:
-
-| Word | Meaning | What to notice |
-| --- | --- | --- |
-| **ма́ма** | mother | two **а** sounds |
-| **молоко́** | milk | three clean **о** sounds |
-| **день** | day | **ь** softens **н** |
-| **Приві́т** | hi | two vowel sounds |
-
-## Six Vowel Sounds
+## Six Vowel Sounds, Ten Letters
 
 Ukrainian has six basic vowel sounds:
 
 **[а] [о] [у] [е] [и] [і]**
 
-A vowel sound is open. Your voice can pass through. You can hold it:
+A vowel sound is open. Your voice passes through without a block. You can hold it and sing it:
 
 - **а-а-а**
 - **о-о-о**
 - **у-у-у**
 - **і-і-і**
 
-That is why Ukrainian schoolbooks often introduce vowels as sounds you can sing. <!-- VERIFY: source="Большакова, буквар 1 клас, p.24", chunk_id="1-klas-bukvar-bolshakova-2018-1_s0023" -->
+There are six vowel sounds, but ten letters that can mark vowel sounds:
 
-Practice only three today:
+| Simple vowel letters | Special vowel letters |
+| --- | --- |
+| **А О У Е И І** | **Я Ю Є Ї** |
 
-| Sound | Word | Say it |
+Do not worry about mastering **Я, Ю, Є, Ї** yet. For now, know their job:
+
+- **Я** can sound like **[йа]** or soften a previous consonant and mark **[а]**.
+- **Ю** can sound like **[йу]** or soften a previous consonant and mark **[у]**.
+- **Є** can sound like **[йе]** or soften a previous consonant and mark **[е]**.
+- **Ї** is special: it is always **[йі]**.
+
+Three useful words:
+
+| Word | Meaning | What to notice |
 | --- | --- | --- |
-| [а] | **ма́ма** | **ма-ма** |
-| [о] | **молоко́** | **мо-ло-ко** |
-| [і] | **Приві́т** | **ві́т** |
+| **ма́ма** | mother | two **а** sounds |
+| **молоко́** | milk | three clean **о** sounds |
+| **Приві́т** | hi | **и** and **і** are different sounds |
 
 Important habit: Ukrainian **о** stays clean. In **молоко́**, each **о** is still **о**. Say **мо-ло-ко́**, not a blurred English-style vowel.
+
+## What Is a Склад?
+
+A **склад** is a syllable. In Ukrainian, every syllable needs a vowel sound. That is why vowels are the "heart" of a syllable.
+
+Use this simple beginner rule:
+
+**Count vowel sounds = count syllables.**
+
+| Word | Vowel sounds | Syllables |
+| --- | --- | --- |
+| **день** | **е** | 1 склад |
+| **ма́ма** | **а + а** | 2 склади |
+| **Приві́т** | **и + і** | 2 склади |
+| **молоко́** | **о + о + о** | 3 склади |
+
+Now the workbook can ask you about **склади** because you know the idea: find the vowel sounds first.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Consonant Sounds
 
-A consonant sound uses a small block or contact in the mouth: lips, tongue, teeth, or throat. Try it:
+A consonant sound uses a small block or contact in the mouth: lips, teeth, tongue, or throat.
+
+Try four:
 
 - **[м]** - close your lips and hum.
 - **[п]** - close your lips and release without humming.
 - **[т]** - touch your tongue behind your teeth.
 - **[н]** - touch your tongue and let sound pass through your nose.
 
-In Ukrainian sound models, a small circle **[•]** often marks a vowel sound. Other marks can show consonants. You do not need to draw full models today. Just learn the habit: find the vowel first. <!-- VERIFY: source="Захарійчук, буквар 1 клас (НУШ 2025), p.13", chunk_id="1-klas-bukvar-zaharijchuk-2025-1_s0002" -->
+Ukrainian has 32 consonant sounds and 22 letters that usually mark consonants. Some consonants have hard and soft versions. You do not need the full system today, but you do need three first clues:
 
-Look at **Приві́т**:
-
-| Part | Type |
+| Sign or letter | Beginner meaning |
 | --- | --- |
-| [п] | consonant |
-| [р] | consonant |
-| [и] | vowel |
-| [в] | consonant |
-| [і] | vowel |
-| [т] | consonant |
+| **Ь ь** | soft sign; no sound of its own |
+| **Г г** | Ukrainian h-like sound |
+| **Ґ ґ** | hard **g** sound |
+| **Щ щ** | two sounds together: **[шч]** |
 
-So **Приві́т** has two vowel sounds and four consonant sounds.
+Example:
+
+**день** - day
+
+The final **ь** does not add a new vowel. It tells you to make **н** soft.
+
+## Full Alphabet Video Pass
+
+This is your first full pass through the alphabet. The goal is not to memorize everything today. The goal is to see every letter, hear a model, and repeat once.
+
+The alphabet order is:
+
+**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
+
+Use the video practice in this lesson for all 33 letters. One local source record has no separate per-letter URL for **О**, so this lesson uses the local course's stored **О** video reference from the syllable materials.
 
 <!-- INJECT_ACTIVITY: act-3 -->
+
+## Stress: Наголос
+
+The little mark in **Приві́т** is the stress mark. Ukrainian stress is called **на́голос**.
+
+Stress tells you which syllable is strongest:
+
+| Word | How to say it |
+| --- | --- |
+| **Приві́т** | stress on **ві́т** |
+| **ма́ма** | stress on the first **ма́** |
+| **молоко́** | stress on **ко́** |
+| **До́брий день** | stress on **До́-** |
+
+Sometimes stress changes meaning. You do not need to use these words yet, but notice the pattern:
+
+| Stress | Meaning |
+| --- | --- |
+| **за́мок** | castle |
+| **замо́к** | lock |
+| **бра́ти** | brothers |
+| **брати́** | to take |
+
+For this course, new Ukrainian words usually show stress so you know what to say aloud.
+
+## Euphony: У/В and І/Й
+
+Ukrainian likes smooth sound flow. This is called **милозву́чність**. At A1, you only need to recognize two common pairs:
+
+| Pair | Beginner idea |
+| --- | --- |
+| **у / в** | Ukrainian may choose the smoother one for the sounds around it |
+| **і / й** | Ukrainian may choose the smoother one for the sounds around it |
+
+You do not need to choose them alone yet. Just notice the idea: Ukrainian often avoids heavy sound piles.
 
 ## Your First Conversation
 
@@ -130,13 +204,18 @@ Learn these as whole phrases.
 | --- | --- | --- |
 | **Приві́т!** | Hi! | informal |
 | **До́брий день!** | Hello! / Good day! | neutral |
+| **До́брого ра́нку!** | Good morning! | morning |
+| **До́брий ве́чір!** | Good evening! | evening |
 | **Як спра́ви?** | How are you? | friendly |
 | **До́бре.** | Fine. | simple answer |
+| **Чудо́во.** | Great. | positive answer |
+| **Норма́льно.** | Okay. | neutral answer |
 | **А у тебе́?** | And you? | after **Як спра́ви?** |
 | **Як тебе́ зва́ти?** | What is your name? | informal |
 | **Ме́не зва́ти Анна.** | My name is Anna. | name answer |
 | **А тебе́?** | And you? | after a name question |
 | **До поба́чення!** | Goodbye! | leaving |
+| **На все до́бре!** | All the best! | friendly goodbye |
 
 Read the dialogue. Then say it aloud twice: once as Anna, once as Marko.
 
@@ -144,7 +223,7 @@ Read the dialogue. Then say it aloud twice: once as Anna, once as Marko.
 <DialogueBox uk="Марко́: Приві́т!" en="Marko: Hi!" />
 <DialogueBox uk="А́нна: Як спра́ви?" en="Anna: How are you?" />
 <DialogueBox uk="Марко́: До́бре. А у тебе́?" en="Marko: Fine. And you?" />
-<DialogueBox uk="А́нна: До́бре." en="Anna: Fine." />
+<DialogueBox uk="А́нна: Чудо́во." en="Anna: Great." />
 
 Now read the name exchange.
 
@@ -154,18 +233,43 @@ Now read the name exchange.
 
 Use **А у тебе́?** after **Як спра́ви?** because you are asking about the other person's state. Use **А тебе́?** after **Як тебе́ зва́ти?** because you are asking for the other person's name.
 
-<!-- INJECT_ACTIVITY: act-4 -->
+You may also hear:
+
+| Ukrainian | English | Who says it? |
+| --- | --- | --- |
+| **Ра́дий тебе́ ба́чити.** | Glad to see you. | a male speaker |
+| **Ра́да тебе́ ба́чити.** | Glad to see you. | a female speaker |
+
+Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking.
+
+<!-- INJECT_ACTIVITY: act-5 -->
+
+## First Pronunciation Traps
+
+Use these as safety checks:
+
+| Trap | Safer habit |
+| --- | --- |
+| Blurring **о** in **молоко́** | Keep every **о** clean: **мо-ло-ко́** |
+| Mixing **и** and **і** | In **Приві́т**, **и** and **і** are different |
+| Pronouncing **ь** as a separate sound | In **день**, **ь** only softens **н** |
+| Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
+| Treating **Ї** like **І** | **Ї** is **[йі]** |
+| Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
+
+<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Textbook Check
 
-Before you leave the lesson tab, check that you can do these five things:
+Before you leave the lesson tab, check that you can do these things:
 
 - Point to **Приві́т** and say "Hi."
 - Point to **До поба́чення** and say "Goodbye."
-- Answer **Як спра́ви?** with **До́бре.**
+- Answer **Як спра́ви?** with **До́бре**, **Чудо́во**, or **Норма́льно**.
 - Say whether **звук** means "sound" or "letter."
+- Say whether **лі́тера** means "sound" or "letter."
+- Explain **склад** in English.
 - Count the vowel sounds in **Приві́т**.
+- Find **Г**, **Ґ**, **Ї**, and **Ь** in the alphabet grid.
 
-If that feels manageable, move to the workbook tab. The workbook repeats the same small set in different ways. It is not a test of memory; it is practice for eyes, ears, and mouth.
-
-<!-- INJECT_ACTIVITY: act-5 -->
+The workbook repeats the same ideas in different ways. It is practice for eyes, ears, and mouth.
