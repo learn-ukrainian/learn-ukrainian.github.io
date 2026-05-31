@@ -93,7 +93,7 @@ Source: *Українська проблєма* (1932), reprinted by Zbruc as an
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
-- Vatican, Ukrainian Greek Catholic martyr biography page | https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html | accessed 2026-05-30
+- Vatican, Ukrainian Greek Catholic martyr biography page | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
 - UGCC Synod, "Владика Григорій Хомишин" | https://synod.ugcc.ua/data/vladyka-grygoriy-homyshyn-19207/ | accessed 2026-05-30
 
 **Tier 2 (institutional):**
