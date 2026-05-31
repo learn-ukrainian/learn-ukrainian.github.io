@@ -1,0 +1,350 @@
+---
+title: "Читаємо українською"
+description: "Від літер до слів та речень"
+sidebar:
+  order: 2
+  label: "02. Читаємо українською"
+pipeline: linear-phase-4
+build_status: validated
+prev: sounds-letters-and-hello
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module turns the alphabet from Module 1 into a reading tool. You still do
+not need long Ukrainian sentences. The goal is smaller and more useful: see a
+word, find its vowel sounds, split it into syllables, and read it without
+guessing from English spelling habits.
+
+By the end, you can:
+
+- count syllables by counting vowel sounds;
+- read simple open syllables such as **ма**, **мо**, **му**, **ми**;
+- keep the six simple vowel sounds clear;
+- explain what **Я, Ю, Є, Ї** do at beginner level;
+- read short practice words such as **ма́ма**, **молоко́**, **день**,
+  **я́блуко**, **люди́на**, and **ву́лиця**;
+- avoid the first reading traps: splitting **дж** and **дз**, ignoring **ь**,
+  blurring **о**, and losing the **й** sound in **ї**.
+
+## Syllables
+
+Start every reading attempt with one question:
+
+**Where are the vowel sounds?**
+
+In Ukrainian, every syllable has a vowel sound. A single vowel can be a whole
+syllable, and a consonant by itself cannot make a syllable. This is the school
+rule behind beginner reading: count the vowel sounds, and you have the number
+of **склади**.
+
+| Word | Vowel letters to notice | Syllables |
+| --- | --- | --- |
+| **день** | **е** | 1 |
+| **ма́ма** | **а + а** | 2 |
+| **молоко́** | **о + о + о** | 3 |
+| **ву́лиця** | **у + и + я** | 3 |
+
+Use a simple body check. Put a hand lightly under your chin and say the word
+slowly. Each open vowel pulse makes the chin move. That movement is not the
+whole science of Ukrainian, but it is a good beginner check before you write or
+choose an answer.
+
+Now build from syllables instead of naming letters one by one:
+
+| Letter path | Reading path |
+| --- | --- |
+| М + А | **ма** |
+| М + О | **мо** |
+| М + У | **му** |
+| М + И | **ми** |
+
+Then join syllables:
+
+**ма + ма = ма́ма**
+**мо + ло + ко = молоко́**
+
+This is why Ukrainian early reading feels different from English. Do not ask,
+"What English word does this look like?" Ask, "Where are the vowel sounds, and
+what syllables do they make?"
+
+:::tip
+When a workbook item asks for **склад**, it means "syllable." Find the vowel
+sound first. That is the anchor.
+:::
+
+### Count vowel sounds
+
+<CountSyllables client:only='react' instruction={"Count the vowel sounds. Each vowel sound makes one склад."} items={JSON.parse(`[{"word": "день", "correct": 1}, {"word": "ма́ма", "correct": 2}, {"word": "молоко́", "correct": 3}, {"word": "ву́лиця", "correct": 3}, {"word": "бібліоте́ка", "correct": 5}, {"word": "Украї́на", "correct": 4}]`)} />
+
+## Vowel Letters
+
+Ukrainian has six simple vowel sounds:
+
+**[а] [о] [у] [е] [и] [і]**
+
+The simple vowel letters are:
+
+**А О У Е И І**
+
+Read them as clean sounds. Do not reduce **о** into an English-style unclear
+vowel. In **молоко́**, every **о** stays **о**:
+
+**молоко́** has three syllables. Say it slowly as three open beats, but keep
+the written word whole on the page.
+
+Now add the four special vowel letters:
+
+**Я Ю Є Ї**
+
+At beginner level, use this two-job rule:
+
+| Letter | At the start of a word or after a vowel/apostrophe | After a consonant |
+| --- | --- | --- |
+| **Я** | **[йа]** as in **я́блуко** | softens the consonant + **[а]** |
+| **Ю** | **[йу]** | softens the consonant + **[у]** |
+| **Є** | **[йе]** | softens the consonant + **[е]** |
+| **Ї** | always **[йі]** | always **[йі]** |
+
+That last line matters. **Ї** is not a softening letter. It is always two
+sounds: **[йі]**. In **Украї́на**, read **ї** as **[йі]**.
+
+Use three safe examples:
+
+| Word | Meaning | What to read |
+| --- | --- | --- |
+| **я́блуко** | apple | **я** starts the word: **[йа]** |
+| **люди́на** | person | **ю** follows **л** and marks softness + **[у]** |
+| **пісня́** | song | **я** follows **н** and marks softness + **[а]** |
+
+You do not need to describe every phonetic detail yet. You need a safe reading
+habit: look at the position of **Я, Ю, Є, Ї**, then read the word slowly.
+
+### Vowel letter jobs
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "clean [а]"}, {"left": "О", "right": "clean [о]"}, {"left": "И", "right": "clean [и]"}, {"left": "І", "right": "clean [і]"}, {"left": "Я at word start", "right": "[йа]"}, {"left": "Ї", "right": "always [йі]"}]`)} />
+
+## Reading Words
+
+Use this three-step reading routine:
+
+1. Find the vowel sounds.
+2. Split the word into syllables.
+3. Read the syllables smoothly, not as separate letter names.
+
+Try the routine with easy words:
+
+| Word | Split | Meaning |
+| --- | --- | --- |
+| **ма́ма** | 2 syllables | mother |
+| **та́то** | 2 syllables | father |
+| **вода́** | 2 syllables | water |
+| **ка́ша** | 2 syllables | porridge |
+| **ву́лиця** | 3 syllables | street |
+| **столи́ця** | 3 syllables | capital |
+
+Longer words are not magic. They are the same routine with more vowel sounds:
+
+| Word | Split | Beginner note |
+| --- | --- | --- |
+| **університе́т** | 5 syllables | read from left to right |
+| **бібліоте́ка** | 5 syllables | **о** is its own vowel pulse |
+| **фотогра́фія** | 5 syllables | final **я** gives the last vowel |
+
+Names of Ukrainian cities are also good reading practice:
+
+| City | Split | Note |
+| --- | --- | --- |
+| **Ки́їв** | 2 syllables | **ї** is **[йі]** |
+| **Львів** | 1 syllable | one vowel sound |
+| **Оде́са** | 3 syllables | initial **О** can stand alone |
+| **Дніпро́** | 2 syllables | consonant cluster, still two vowels |
+| **Полта́ва** | 3 syllables | steady open syllables |
+
+There are three signs or combinations to notice now and study more deeply in
+Module 3:
+
+| Form | Beginner reading habit |
+| --- | --- |
+| **Ь** | no sound of its own; softens the previous consonant |
+| **апо́строф** | keeps the next **я/ю/є/ї** separate with **й** |
+| **ДЖ / ДЗ** | one joined sound, not two broken sounds |
+
+Read **день** with soft **н**, not with an extra vowel after it. Read
+**сім'я́** with a clear break before **я**. Read **джерело́** with joined
+**дж**.
+
+### Split into склади
+
+<DivideWords client:only='react' instruction={"Divide each word into syllables."} items={JSON.parse(`[{"word": "мама", "answer": "ма ма"}, {"word": "молоко", "answer": "мо ло ко"}, {"word": "вулиця", "answer": "ву ли ця"}, {"word": "столиця", "answer": "сто ли ця"}, {"word": "людина", "answer": "лю ди на"}, {"word": "бібліотека", "answer": "біб лі о те ка"}]`)} />
+
+## Reading Traps
+
+English can push you toward the wrong habit. Use these safety checks:
+
+| Trap | Safer Ukrainian habit |
+| --- | --- |
+| Reading letter by letter | Read by syllables: three beats in **молоко́** |
+| Reducing unstressed **о** | Keep **о** clean every time |
+| Reading **дж** as **д + ж** | Join it as one sound |
+| Ignoring **ь** | Make the previous consonant soft |
+| Reading **ї** as plain **і** | Read **ї** as **[йі]** |
+| Treating apostrophe as decoration | Keep the following **й** sound |
+
+Keep the Ukrainian system independent. Do not explain **И**, **І**, **Г**, or
+**О** through another language's alphabet. Build the category from Ukrainian
+examples: **ми**, **діти**, **гора́**, **молоко́**.
+
+### Reading traps
+
+<ErrorCorrection client:only='react'>
+
+  <ErrorCorrectionItem sentence="Do not read молоко as м[а]локо." errorWord="м[а]локо" correctForm="молоко" options={JSON.parse(`["молоко", "blurred о"]`)} explanation="Ukrainian о stays clean; read молоко with three open beats." />
+
+  <ErrorCorrectionItem sentence="Do not read дж as two broken sounds." errorWord="two broken sounds" correctForm="one joined sound" options={JSON.parse(`["one joined sound", "д plus ж"]`)} explanation="ДЖ marks one joined reading unit in words such as джерело." />
+
+  <ErrorCorrectionItem sentence="Do not read Ї as plain І." errorWord="plain І" correctForm="[йі]" options={JSON.parse(`["[йі]", "[і]"]`)} explanation="Ї is always [йі]." />
+
+  <ErrorCorrectionItem sentence="Do not add a vowel after день." errorWord="add a vowel" correctForm="soften н and stop" options={JSON.parse(`["soften н and stop", "add і after нь"]`)} explanation="Ь has no sound of its own; it softens the previous consonant." />
+
+</ErrorCorrection>
+
+## Textbook Check
+
+Use a short partner routine when possible. Student A points to the word.
+Student B says only the number of vowel sounds. Then both students read the
+word aloud. If you are alone, cover the English meaning first, count the vowel
+sounds, and read before you check the translation. This keeps the page from
+becoming a memorized list of English meanings. The reading skill is the target.
+
+When a word feels long, do not panic. Long Ukrainian words are usually long
+because they have more syllables, not because the spelling has become
+unpredictable. **Університе́т** has five vowel sounds. **Бібліоте́ка** also has
+five vowel sounds. The same routine works for both: find the vowels, count the
+beats, then read smoothly. You are not expected to use these words in free
+conversation yet. They are training weights for your eyes and mouth.
+
+You can also mark your confidence after each word:
+
+| Mark | Meaning |
+| --- | --- |
+| **1** | I can find the vowel sounds. |
+| **2** | I can count the syllables. |
+| **3** | I can read the word aloud smoothly. |
+
+The workbook repeats easy words and a few longer words on purpose. Repetition
+is how the alphabet becomes automatic.
+
+Before you leave the lesson tab, check that you can do these things:
+
+- explain **склад** as "syllable";
+- count the vowel sounds in **молоко́**;
+- count three vowel sounds in **ву́лиця**;
+- say why **Ї** is always **[йі]**;
+- read **я́блуко**, **люди́на**, **пісня́**, and **день** slowly;
+- keep **о** clean in **молоко́** and **столи́ця**;
+- say that **дж** and **дз** are joined reading units;
+- avoid Russian or English shortcuts when you describe Ukrainian sounds.
+
+The workbook now gives you short recognition and reading checks. Use the same
+routine every time: vowel sounds first, syllables second, smooth reading third.
+
+### Textbook check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What is a склад?", "options": [{"text": "a syllable", "correct": true}, {"text": "a letter", "correct": false}, {"text": "a greeting", "correct": false}], "explanation": "A склад is a syllable."}, {"question": "How many syllables are in молоко?", "options": [{"text": "3", "correct": true}, {"text": "2", "correct": false}, {"text": "1", "correct": false}], "explanation": "молоко has three vowel sounds and three syllables."}, {"question": "Which letter is always [йі]?", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}, {"text": "И", "correct": false}], "explanation": "Ї is always [йі]."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"склад","translation":"syllable","pos":"noun","example":"У сло́ві ма́ма два склади́.","examples":["syllable","У сло́ві ма́ма два склади́."]},{"word":"голосни́й звук","translation":"vowel sound","pos":"noun phrase","example":"А - голосни́й звук.","examples":["vowel sound","А - голосни́й звук."]},{"word":"при́голосний звук","translation":"consonant sound","pos":"noun phrase","example":"М - при́голосний звук.","examples":["consonant sound","М - при́голосний звук."]},{"word":"чита́ти","translation":"to read","pos":"verb","example":"Я чита́ю сло́во.","examples":["to read","Я чита́ю сло́во."]},{"word":"писа́ти","translation":"to write","pos":"verb","example":"Я пишу́ лі́теру.","examples":["to write","Я пишу́ лі́теру."]},{"word":"ма́ма","translation":"mother","pos":"noun","example":"Ма́ма.","examples":["mother","Ма́ма."]},{"word":"та́то","translation":"father","pos":"noun","example":"Та́то.","examples":["father","Та́то."]},{"word":"молоко́","translation":"milk","pos":"noun","example":"Молоко́.","examples":["milk","Молоко́."]},{"word":"я́блуко","translation":"apple","pos":"noun","example":"Я́блуко.","examples":["apple","Я́блуко."]},{"word":"люди́на","translation":"person","pos":"noun","example":"Люди́на.","examples":["person","Люди́на."]},{"word":"ву́лиця","translation":"street","pos":"noun","example":"Ву́лиця.","examples":["street","Ву́лиця."]},{"word":"столи́ця","translation":"capital","pos":"noun","example":"Ки́їв - столи́ця Украї́ни.","examples":["capital","Ки́їв - столи́ця Украї́ни."]},{"word":"ка́ша","translation":"porridge","pos":"noun","example":"Ка́ша.","examples":["porridge","Ка́ша."]},{"word":"пі́сня","translation":"song","pos":"noun","example":"Пі́сня.","examples":["song","Пі́сня."]},{"word":"день","translation":"day","pos":"noun","example":"День.","examples":["day","День."]},{"word":"о́сінь","translation":"autumn","pos":"noun","example":"О́сінь.","examples":["autumn","О́сінь."]},{"word":"батько́","translation":"father","pos":"noun","example":"Батько́.","examples":["father","Батько́."]},{"word":"вчи́тель","translation":"teacher","pos":"noun","example":"Вчи́тель.","examples":["teacher","Вчи́тель."]},{"word":"джерело́","translation":"source / spring","pos":"noun","example":"Джерело́.","examples":["source / spring","Джерело́."]},{"word":"дзе́ркало","translation":"mirror","pos":"noun","example":"Дзе́ркало.","examples":["mirror","Дзе́ркало."]},{"word":"абе́тка","translation":"alphabet","pos":"noun","example":"Украї́нська абе́тка.","examples":["alphabet","Украї́нська абе́тка."]},{"word":"м'яки́й знак","translation":"soft sign","pos":"noun phrase","example":"Ь - м'яки́й знак.","examples":["soft sign","Ь - м'яки́й знак."]},{"word":"апо́строф","translation":"apostrophe","pos":"noun","example":"В сім'я́ є апо́строф.","examples":["apostrophe","В сім'я́ є апо́строф."]},{"word":"Ки́їв","translation":"Kyiv","pos":"proper noun","example":"Ки́їв - столи́ця Украї́ни.","examples":["Kyiv","Ки́їв - столи́ця Украї́ни."]},{"word":"Украї́на","translation":"Ukraine","pos":"proper noun","example":"Украї́на.","examples":["Ukraine","Украї́на."]},{"word":"так","translation":"yes / like this","pos":"adverb","example":"Так.","examples":["yes / like this","Так."]},{"word":"ні","pos":"particle","example":"Ні.","examples":["Ні."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"склад","back":"syllable"},{"front":"голосни́й звук","back":"vowel sound"},{"front":"при́голосний звук","back":"consonant sound"},{"front":"чита́ти","back":"to read"},{"front":"писа́ти","back":"to write"},{"front":"ма́ма","back":"mother"},{"front":"та́то","back":"father"},{"front":"молоко́","back":"milk"},{"front":"я́блуко","back":"apple"},{"front":"люди́на","back":"person"},{"front":"ву́лиця","back":"street"},{"front":"столи́ця","back":"capital"},{"front":"ка́ша","back":"porridge"},{"front":"пі́сня","back":"song"},{"front":"день","back":"day"},{"front":"о́сінь","back":"autumn"},{"front":"батько́","back":"father"},{"front":"вчи́тель","back":"teacher"},{"front":"джерело́","back":"source / spring"},{"front":"дзе́ркало","back":"mirror"},{"front":"абе́тка","back":"alphabet"},{"front":"м'яки́й знак","back":"soft sign"},{"front":"апо́строф","back":"apostrophe"},{"front":"Ки́їв","back":"Kyiv"},{"front":"Украї́на","back":"Ukraine"},{"front":"так","back":"yes / like this"},{"front":"ні","back":""}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### One, two, or three syllables?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"One syllable": ["день", "Львів"], "Two syllables": ["ма́ма", "та́то", "Ки́їв"], "Three syllables": ["молоко́", "ву́лиця", "столи́ця"]}`)} />
+
+### Reading facts
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Every Ukrainian syllable needs a vowel sound.", "isTrue": true, "explanation": "The vowel sound is the core of the syllable."}, {"statement": "Ї sometimes softens the previous consonant.", "isTrue": false, "explanation": "Ї is always [йі]."}, {"statement": "In молоко, о stays clean.", "isTrue": true, "explanation": "Do not reduce о to an unclear English-style vowel."}, {"statement": "ДЖ and ДЗ should be read as joined units.", "isTrue": true, "explanation": "They are digraph reading units."}]`)} />
+
+### Reading words
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "ма́ма", "options": [{"text": "mother", "correct": true}, {"text": "street", "correct": false}, {"text": "milk", "correct": false}], "explanation": "Ма́ма means mother."}, {"source": "молоко́", "options": [{"text": "milk", "correct": true}, {"text": "apple", "correct": false}, {"text": "day", "correct": false}], "explanation": "Молоко́ means milk."}, {"source": "ву́лиця", "options": [{"text": "street", "correct": true}, {"text": "person", "correct": false}, {"text": "capital", "correct": false}], "explanation": "Ву́лиця means street."}, {"source": "я́блуко", "options": [{"text": "apple", "correct": true}, {"text": "song", "correct": false}, {"text": "mirror", "correct": false}], "explanation": "Я́блуко means apple."}]`)} />
+
+### Vowel reading pass
+
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "А", "word": "ма́ма"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "О", "word": "молоко́"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "У", "word": "ву́лиця"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "И", "word": "ми"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "І", "word": "ді́ти"}]`)} title="Vowel reading pass" />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Большакова, буквар 1 клас, p. 25**
+  syllable rule; every syllable has a vowel sound.
+- 📚 **Большакова, буквар 1 клас, p. 29**
+  sound analysis routine for Ukrainian words.
+- 📚 **Вашуленко, Українська мова 2 клас, p. 23-27**
+  transfer, stress, and iotated-vowel reading context.
+- 📚 **Захарійчук 1 клас (НУШ 2025), p. 13-15**
+  symbols for vowel, hard consonant, and soft consonant sounds.
+- 📚 **Кравцова, Українська мова 2 клас, p. 13**
+  hand-under-chin syllable counting check.
+
+**📺 Videos:**
+- 📺 [Anna Ohoiko — Ukrainian alphabet overview](https://www.youtube.com/watch?v=ksXIXj7CXwc) — Supplemental listening support for the vowel reading pass.
+:::
+
+</TabItem>
+</Tabs>
