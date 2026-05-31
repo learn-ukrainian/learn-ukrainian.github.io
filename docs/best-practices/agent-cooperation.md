@@ -1,7 +1,8 @@
 # Agent Cooperation Best Practices
 
-> **Scope:** How Claude, Gemini, and Codex work together without degrading each other's output quality.
-> Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
+> **Scope:** How Claude, Codex, Cursor, DeepSeek, and track orchestrators work
+> together without degrading each other's output quality.
+> Historical protocol archive: `docs/archive/CLAUDE-GEMINI-COOPERATION.md`
 > Review evidence contract: [`docs/review-protocol.md`](../review-protocol.md)
 >
 > **Runtime layer:** All agent CLI invocations route through `scripts/agent_runtime/`.
@@ -14,8 +15,13 @@
 | Team | Agent | Role |
 |------|-------|------|
 | 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate |
-| 💛 **Жовта команда** (Gold) | Gemini | Content builder, implementer |
-| 🟢 **Зелена команда** (Green) | Codex | Adversarial reviewer, bug finder, code improver |
+| 💛 **Жовта команда** (Gold) | Cursor / track writers | Content builder, implementer |
+| 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
+| ⚙️ **Review lane** | DeepSeek | Cheap code/content review and deterministic triage |
+
+Gemini is currently paused for review/merge confidence until the user re-enables
+that lane. Historical Gemini instructions in this document describe old bridge
+behavior; prefer Claude, Codex, Cursor, and DeepSeek for new orchestration work.
 
 **Both teams are adversarial by design.** The purpose is quality through finding mistakes, not agreement. An approved module means both teams couldn't find serious problems — not that both teams were polite.
 
@@ -50,6 +56,64 @@ All substantive discussion happens on GitHub where it is persistent and searchab
 | **Broker messages** | Short notifications pointing to GitHub | <200 chars |
 
 **Never put full reviews or code in broker messages.** Post on GitHub, then ping with "review posted on #559."
+
+### Track orchestrator promotion
+
+A **track orchestrator** is an agent promoted to own one curriculum track or
+epic end-to-end, such as BIO. Once promoted, that orchestrator owns the track's
+content queue, dispatches, handoff, and PR preparation. The main orchestrator
+does not micromanage that track.
+
+| Scope | Main orchestrator owns | Track orchestrator owns |
+|---|---|---|
+| Branch policy | `main`, merge sequencing, release safety | Dispatch worktrees and PR branches only |
+| State | `docs/session-state/current.orchestrator.md` and router | Track handoff, e.g. `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` |
+| Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
+| Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
+| Merge authority | Final reconcile and merge decision | Open PRs and route track feedback, never merge |
+
+**Boundary rule:** if a track orchestrator exists, the main orchestrator treats
+that track's PRs and delegates as awareness-only unless the track orchestrator
+asks for help. This keeps one owner per workstream and prevents duplicate
+triage.
+
+### Track ↔ main communication protocol
+
+Track orchestrators and the main orchestrator communicate through durable,
+low-noise surfaces:
+
+1. **Track handoff is the track source of truth.** The track orchestrator keeps
+   a track handoff current on its PR branches and bundles handoff updates with
+   the batch PR whenever possible.
+2. **GitHub PRs carry deliverables.** Track orchestrators open PRs with clear
+   scope, validation, active dispatch ids, and blockers. The main orchestrator
+   reads the PR instead of scraping private chat context.
+3. **Bridge messages are pings, not payloads.** Use `ab p` / channel posts only
+   to point to the PR, issue, or handoff section that changed.
+4. **Main only interrupts for repo-wide risk.** Examples: generated artifacts in
+   diff, `.python-version`/linter config changes, merge conflicts, failing
+   required CI, cross-track architectural conflicts, or user direction changes.
+5. **Track asks for help explicitly.** If the track needs Codex, it dispatches
+   or requests a bounded Codex task with a file scope, expected output, and
+   ownership boundary.
+6. **Decisions use Decision Cards.** Cross-track or user-visible choices go to a
+   Decision Card with scope; local track implementation choices stay in the
+   track handoff/PR.
+
+Recommended ping format:
+
+```text
+TRACK-UPDATE track=<track> pr=<number|none> state=<blocked|ready|in-flight>
+owner=<agent> needs=<main-review|merge|codex-help|decision|none>
+summary=<one sentence, link to handoff/PR for details>
+```
+
+Recommended main response format:
+
+```text
+MAIN-ACK track=<track> action=<merge-queued|needs-fix|codex-dispatched|noted>
+scope=<what main will do> boundary=<what remains track-owned>
+```
 
 ### Thread handoff ownership
 
