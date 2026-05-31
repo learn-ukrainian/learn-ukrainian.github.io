@@ -109,6 +109,9 @@ def test_v7_authoring_types_parse_and_render(tmp_path):
     ):
         assert tag in mdx
 
+    assert '### Letters' in mdx
+    assert '<LetterGrid client:only=\'react\'' in mdx
+    assert 'title="Letters"' not in mdx
     assert "ActivityPlaceholder" not in mdx
 
 

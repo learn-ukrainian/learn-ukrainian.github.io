@@ -270,6 +270,6 @@ Before you leave the lesson tab, check that you can do these things:
 - Say whether **лі́тера** means "sound" or "letter."
 - Explain **склад** in English.
 - Count the vowel sounds in **Приві́т**.
-- Find **Г**, **Ґ**, **Ї**, and **Ь** in the alphabet grid.
+- Recognize **Г**, **Ґ**, **Ї**, and **Ь** when the workbook asks for them.
 
 The workbook repeats the same ideas in different ways. It is practice for eyes, ears, and mouth.

@@ -213,208 +213,55 @@
     word: я́блуко
     video: https://www.youtube.com/watch?v=yhSAf41LX8I
 - id: act-4
-  type: letter-grid
-  title: Ukrainian alphabet map
-  instruction: Recognize all 33 letters. You do not need to memorize them all today.
-  letters:
-  - upper: А
-    lower: а
-    emoji: 🔤
-    key_word: анана́с
-    sound_type: vowel
-    note: '[а]'
-  - upper: Б
-    lower: б
-    emoji: 🔤
-    key_word: бана́н
-    sound_type: consonant
-    note: '[б]'
-  - upper: В
-    lower: в
-    emoji: 🔤
-    key_word: вода́
-    sound_type: consonant
-    note: '[в]'
-  - upper: Г
-    lower: г
-    emoji: 🔤
-    key_word: гора́
-    sound_type: consonant
-    note: h-like [г]
-  - upper: Ґ
-    lower: ґ
-    emoji: 🔤
-    key_word: ґу́дзик
-    sound_type: consonant
-    note: hard [g]
-  - upper: Д
-    lower: д
-    emoji: 🔤
-    key_word: дім
-    sound_type: consonant
-    note: '[д]'
-  - upper: Е
-    lower: е
-    emoji: 🔤
-    key_word: екра́н
-    sound_type: vowel
-    note: '[е]'
-  - upper: Є
-    lower: є
-    emoji: 🔤
-    key_word: єно́т
-    sound_type: vowel
-    note: '[йе]'
-  - upper: Ж
-    lower: ж
-    emoji: 🔤
-    key_word: жук
-    sound_type: consonant
-    note: '[ж]'
-  - upper: З
-    lower: з
-    emoji: 🔤
-    key_word: зуб
-    sound_type: consonant
-    note: '[з]'
-  - upper: И
-    lower: и
-    emoji: 🔤
-    key_word: і́ній
-    sound_type: vowel
-    note: '[и]'
-  - upper: І
-    lower: і
-    emoji: 🔤
-    key_word: ім'я́
-    sound_type: vowel
-    note: '[і]'
-  - upper: Ї
-    lower: ї
-    emoji: 🔤
-    key_word: їжа́к
-    sound_type: vowel
-    note: always [йі]
-  - upper: Й
-    lower: й
-    emoji: 🔤
-    key_word: йо́гурт
-    sound_type: consonant
-    note: '[й]'
-  - upper: К
-    lower: к
-    emoji: 🔤
-    key_word: кіт
-    sound_type: consonant
-    note: '[к]'
-  - upper: Л
-    lower: л
-    emoji: 🔤
-    key_word: лимо́н
-    sound_type: consonant
-    note: '[л]'
-  - upper: М
-    lower: м
-    emoji: 🔤
-    key_word: ма́ма
-    sound_type: consonant
-    note: '[м]'
-  - upper: Н
-    lower: н
-    emoji: 🔤
-    key_word: ніс
-    sound_type: consonant
-    note: '[н]'
-  - upper: О
-    lower: о
-    emoji: 🔤
-    key_word: о́ко
-    sound_type: vowel
-    note: clean [о]
-  - upper: П
-    lower: п
-    emoji: 🔤
-    key_word: пес
-    sound_type: consonant
-    note: '[п]'
-  - upper: Р
-    lower: р
-    emoji: 🔤
-    key_word: рука́
-    sound_type: consonant
-    note: '[р]'
-  - upper: С
-    lower: с
-    emoji: 🔤
-    key_word: сон
-    sound_type: consonant
-    note: '[с]'
-  - upper: Т
-    lower: т
-    emoji: 🔤
-    key_word: та́то
-    sound_type: consonant
-    note: '[т]'
-  - upper: У
-    lower: у
-    emoji: 🔤
-    key_word: уро́к
-    sound_type: vowel
-    note: '[у]'
-  - upper: Ф
-    lower: ф
-    emoji: 🔤
-    key_word: фо́то
-    sound_type: consonant
-    note: '[ф]'
-  - upper: Х
-    lower: х
-    emoji: 🔤
-    key_word: ха́та
-    sound_type: consonant
-    note: '[х]'
-  - upper: Ц
-    lower: ц
-    emoji: 🔤
-    key_word: цу́кор
-    sound_type: consonant
-    note: '[ц]'
-  - upper: Ч
-    lower: ч
-    emoji: 🔤
-    key_word: час
-    sound_type: consonant
-    note: '[ч]'
-  - upper: Ш
-    lower: ш
-    emoji: 🔤
-    key_word: шко́ла
-    sound_type: consonant
-    note: '[ш]'
-  - upper: Щ
-    lower: щ
-    emoji: 🔤
-    key_word: щу́ка
-    sound_type: consonant
-    note: '[шч]'
-  - upper: Ь
-    lower: ь
-    emoji: 🔤
-    key_word: день
-    sound_type: special
-    note: no sound
-  - upper: Ю
-    lower: ю
-    emoji: 🔤
-    key_word: ю́шка
-    sound_type: vowel
-    note: '[йу]'
-  - upper: Я
-    lower: я
-    emoji: 🔤
-    key_word: я́блуко
-    sound_type: vowel
-    note: '[йа]'
+  type: quiz
+  title: Find the useful letters
+  instruction: Choose the letter or sign that matches the clue.
+  items:
+  - prompt: Which letter is the hard g sound?
+    options:
+    - text: Ґ
+      correct: true
+    - text: Г
+      correct: false
+    - text: Ї
+      correct: false
+    explanation: Ґ is the hard g sound; Г is the Ukrainian h-like sound.
+  - prompt: Which letter is always [йі]?
+    options:
+    - text: Ї
+      correct: true
+    - text: І
+      correct: false
+    - text: И
+      correct: false
+    explanation: Ї is always [йі]. І is the plain [і] vowel.
+  - prompt: Which sign has no sound of its own?
+    options:
+    - text: Ь
+      correct: true
+    - text: Й
+      correct: false
+    - text: Я
+      correct: false
+    explanation: Ь is the soft sign; it changes the previous consonant.
+  - prompt: Which letter is the clean [о] sound in молоко́?
+    options:
+    - text: О
+      correct: true
+    - text: А
+      correct: false
+    - text: У
+      correct: false
+    explanation: Ukrainian О stays clean in молоко́.
+  - prompt: In Приві́т, which two vowel letters are different?
+    options:
+    - text: И and І
+      correct: true
+    - text: О and У
+      correct: false
+    - text: А and Е
+      correct: false
+    explanation: Приві́т contains both И [и] and І [і].
 - id: act-5
   type: fill-in
   title: First conversations

@@ -38,6 +38,11 @@ Latest-Brief: docs/session-state/current.codex.md
   workbook-only activities are allowed for A1 zero/script/first-contact modules.
   A1 M1 now reports `act-4`, `act-7`, `act-8`, and `act-9` as workbook-only
   instead of unused.
+- Replaced the passive A1 M1 `act-4` letter-grid workbook entry with an active
+  five-question recognition quiz for high-value letters/signs (`Ґ`, `Ї`, `Ь`,
+  `О`, `И/І`) and regenerated the Starlight MDX.
+- Fixed YAML `letter-grid` MDX rendering so it does not display the same title
+  twice, and passed Quiz item explanations through to the React component.
 
 ## Validation
 
@@ -57,6 +62,10 @@ Latest-Brief: docs/session-state/current.codex.md
   22 passed.
 - `ruff check scripts/build/linear_pipeline.py tests/test_inject_activity_gate.py`:
   passed.
+- `tests/test_yaml_activities_v7_types.py tests/test_quiz_translate_explanations_gate.py tests/test_inject_activity_gate.py`:
+  13 passed.
+- `npm test -- tests/unit/Quiz.test.tsx` in `starlight/`: 23 passed.
+- `npm run build:starlight`: passed; 91 pages built.
 - Direct A1 M1 `run_python_qg()` report no longer fails `inject_activity_ids`.
 
 ## Known Remaining M1 Gates

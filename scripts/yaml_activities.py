@@ -1785,8 +1785,7 @@ class ActivityParser:
 
     def _letter_grid_to_mdx(self, activity: LetterGridActivity) -> str:
         heading = activity.title or 'Letter Grid'
-        title_prop = f' title="{self._escape_jsx(activity.title)}"' if activity.title else ''
-        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}}{title_prop} />"
+        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}} />"
 
     def _odd_one_out_to_mdx(self, activity: OddOneOutActivity) -> str:
         heading = activity.title or activity.instruction or 'Odd One Out'

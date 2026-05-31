@@ -184,6 +184,10 @@ A1 M1-M7 sequence:
   zero/script/first-contact archetypes, workbook-only activities are allowed
   while unknown injected ids still fail. A1 M1 now passes this gate with
   `act-4`, `act-7`, `act-8`, and `act-9` classified as workbook-only.
+- A1 M1 `act-4` is no longer a passive alphabet map. It is now an active
+  recognition quiz for high-value letters/signs, and the generated Starlight
+  MDX has been refreshed. The YAML `letter-grid` renderer also no longer
+  duplicates a title as both a heading and component prop.
 - Next gate to implement:
   an archetype-fit wrapper in `contract_compliance.py` that aggregates
   deterministic subchecks only.
