@@ -1,0 +1,116 @@
+- lemma: м'який знак
+  translation: soft sign
+  pos: noun phrase
+  usage: Ь - м'який знак.
+- lemma: апостроф
+  translation: apostrophe
+  pos: noun
+  usage: У слові сім'я є апостроф.
+- lemma: знак
+  translation: sign
+  pos: noun
+  usage: Це знак.
+- lemma: м'який
+  translation: soft
+  pos: adjective
+  usage: Це м'який звук.
+- lemma: твердий
+  translation: hard
+  pos: adjective
+  usage: Це твердий звук.
+- lemma: йотований
+  translation: iotated
+  pos: adjective
+  usage: Я - йотована літера.
+- lemma: роздільно
+  translation: separately
+  pos: adverb
+  usage: Читай роздільно.
+- lemma: злито
+  translation: together / smoothly
+  pos: adverb
+  usage: Читай злито.
+- lemma: день
+  translation: day
+  pos: noun
+  usage: День.
+- lemma: кінь
+  translation: horse
+  pos: noun
+  usage: Кінь.
+- lemma: сіль
+  translation: salt
+  pos: noun
+  usage: Сіль.
+- lemma: вчитель
+  translation: teacher
+  pos: noun
+  usage: Вчитель.
+- lemma: сім'я
+  translation: family
+  pos: noun
+  usage: Сім'я.
+- lemma: м'ясо
+  translation: meat
+  pos: noun
+  usage: М'ясо.
+- lemma: п'ять
+  translation: five
+  pos: numeral
+  usage: П'ять.
+- lemma: дев'ять
+  translation: nine
+  pos: numeral
+  usage: Дев'ять.
+- lemma: ім'я
+  translation: name
+  pos: noun
+  usage: Ім'я.
+- lemma: комп'ютер
+  translation: computer
+  pos: noun
+  usage: Комп'ютер.
+- lemma: буряк
+  translation: beetroot
+  pos: noun
+  usage: Буряк.
+- lemma: бур'ян
+  translation: weed
+  pos: noun
+  usage: Бур'ян.
+- lemma: свято
+  translation: holiday
+  pos: noun
+  usage: Свято.
+- lemma: цвях
+  translation: nail
+  pos: noun
+  usage: Цвях.
+- lemma: маленький
+  translation: small
+  pos: adjective
+  usage: Маленький день.
+- lemma: сьогодні
+  translation: today
+  pos: adverb
+  usage: Сьогодні день.
+- lemma: батько
+  translation: father
+  pos: noun
+  usage: Батько.
+- lemma: ложка
+  translation: spoon
+  pos: noun
+  usage: Ложка.
+- lemma: Мар'яна
+  translation: Mariana
+  pos: proper noun
+  usage: Мар'яна.
+- lemma: дерев'яний
+  translation: wooden
+  pos: adjective
+  usage: Дерев'яний стіл.
+- lemma: пальці
+  translation: fingers
+  pos: noun
+  usage: Пальці.

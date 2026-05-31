@@ -1,0 +1,328 @@
+---
+title: "Особливі знаки"
+description: "Ь, апостроф і три ключові контрасти - день, сім'я, буряк/бур'ян"
+sidebar:
+  order: 3
+  label: "03. Особливі знаки"
+pipeline: linear-phase-4
+build_status: validated
+prev: reading-ukrainian
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module teaches two Ukrainian signs that change how nearby letters are
+read: **ь** and **'**. They are small on the page, but they are not decorative.
+They tell your mouth what to do.
+
+Keep the goal simple. You are not learning every spelling rule today. You are
+learning three beginner contrasts:
+
+- **день**: the soft sign **ь** has no sound, but it softens the consonant
+  before it;
+- **сім'я**: the apostrophe keeps the previous consonant hard and lets you hear
+  **[й]** before **я**;
+- **буряк / бур'ян / свято / цвях**: sometimes **я** softens, sometimes the
+  apostrophe separates, and sometimes there is no apostrophe after a consonant
+  cluster.
+
+By the end, you can:
+
+- recognize **ь** and apostrophe in common A1 words;
+- read **день**, **кінь**, **сіль**, and **вчитель** without adding an extra
+  vowel;
+- read **сім'я**, **м'ясо**, **п'ять**, and **комп'ютер** with a clear **й**
+  after the apostrophe;
+- sort words into "soft sign," "apostrophe," and "no sign";
+- choose the safer form when an English habit creates a mistake.
+
+## Iotated Vowels First
+
+Before the two signs make sense, review the four special vowel letters:
+
+**Я Ю Є Ї**
+
+At beginner level, use this rule:
+
+| Position | Beginner reading habit |
+| --- | --- |
+| **я, ю, є** after a consonant with no apostrophe | the consonant becomes soft, then you read the vowel |
+| **я, ю, є, ї** after an apostrophe | keep the previous consonant hard, then read **[й] + vowel** |
+| **ї** anywhere | always **[йі]** |
+
+Compare two words:
+
+| Word | What happens |
+| --- | --- |
+| **буряк** | no apostrophe; **р** softens before **я** |
+| **бур'ян** | apostrophe; **р** stays hard, then you hear **[йа]** |
+
+The apostrophe is not an English punctuation mark here. In Ukrainian reading,
+it is a sound instruction: do not soften the previous consonant; keep the next
+**й** sound.
+
+Use a listening habit before a spelling habit. Say or hear the word slowly.
+Ask: "Do I hear a separate **й** before **я, ю, є, ї**?" If yes, the apostrophe
+may be part of the spelling. If no, the vowel letter may simply be softening
+the previous consonant. You are still working with prepared words, not guessing
+new spellings alone.
+
+### Soft or separate?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In буряк, what happens before я?", "options": [{"text": "Р softens before я.", "correct": true}, {"text": "There is an apostrophe.", "correct": false}, {"text": "Ї is always [йі].", "correct": false}], "explanation": "Буряк has no apostrophe; р softens before я."}, {"question": "In бур'ян, what does the apostrophe do?", "options": [{"text": "It keeps р hard and lets you hear [йа].", "correct": true}, {"text": "It makes р disappear.", "correct": false}, {"text": "It adds the sound [і].", "correct": false}], "explanation": "The apostrophe separates р from я."}, {"question": "What is always true about Ї?", "options": [{"text": "It is always [йі].", "correct": true}, {"text": "It is silent.", "correct": false}, {"text": "It is the soft sign.", "correct": false}], "explanation": "Ї always represents [йі]."}]`)} />
+
+## The Soft Sign
+
+The soft sign is:
+
+**Ь ь**
+
+Its Ukrainian name is **м'який знак**. It has no sound of its own. It changes
+the consonant before it.
+
+| Word | Meaning | What to notice |
+| --- | --- | --- |
+| **день** | day | final **нь** is soft |
+| **кінь** | horse | final **нь** is soft |
+| **сіль** | salt | final **ль** is soft |
+| **вчитель** | teacher | final **ль** is soft |
+
+Do not read **ь** as **і**, **й**, or a tiny extra vowel. In **день**, stop on
+soft **н**. In **сіль**, stop on soft **л**.
+
+Short contrast pairs show the job:
+
+| Without soft sign | With soft sign | Reading idea |
+| --- | --- | --- |
+| **стан** | **стань** | hard ending vs soft ending |
+| **лан** | **лань** | hard ending vs soft ending |
+| **рис** | **рись** | hard final **с** vs a soft final consonant |
+
+These pairs are reading tools. You do not need to use all of them in
+conversation today. You need to see that **ь** can change the word even though
+it has no sound of its own.
+
+:::tip
+Think of **ь** as a silent instruction for your tongue. It points backward to
+the consonant before it.
+:::
+
+### What does ь do?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "soft final н"}, {"left": "кінь", "right": "soft final н"}, {"left": "сіль", "right": "soft final л"}, {"left": "вчитель", "right": "soft final л"}, {"left": "м'який знак", "right": "no sound of its own"}]`)} />
+
+## The Apostrophe
+
+The apostrophe is:
+
+**'**
+
+In this course, read it as a separation sign. It does not make a pause like a
+full stop. It keeps the previous consonant hard and lets the next **я, ю, є, ї**
+start with **[й]**.
+
+The first A1 model is:
+
+**б, п, в, м, ф, р + apostrophe + я, ю, є, ї**
+
+Start with these words:
+
+| Word | Meaning | What to hear |
+| --- | --- | --- |
+| **сім'я** | family | **м** stays hard, then **[йа]** |
+| **м'ясо** | meat | **м** stays hard, then **[йа]** |
+| **п'ять** | five | **п** stays hard, then **[йа]** |
+| **дев'ять** | nine | **в** stays hard, then **[йа]** |
+| **ім'я** | name | **м** stays hard, then **[йа]** |
+| **комп'ютер** | computer | **п** stays hard, then **[йу]** |
+
+Do not turn the apostrophe into a big break. Read **п'ять** smoothly, with a
+clear **й** sound. The airflow continues; the spelling tells you to separate
+the consonant from the iotated vowel.
+
+For now, do not build a large system from loanwords. **Комп'ютер** is useful
+because learners know the object, but the lesson target is the apostrophe
+itself, not every exception in international words.
+
+### Add the sign
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "сім_я", "answer": "'", "options": ["'", "ь", "no sign"]}, {"sentence": "ден_", "answer": "ь", "options": ["ь", "'", "no sign"]}, {"sentence": "п_ять", "answer": "'", "options": ["'", "ь", "no sign"]}, {"sentence": "свято needs ____.", "answer": "no sign", "options": ["no sign", "'", "ь"]}, {"sentence": "бур_ян", "answer": "'", "options": ["'", "ь", "no sign"]}, {"sentence": "маленький needs ____.", "answer": "ь", "options": ["ь", "'", "no sign"]}]`)} />
+
+## Contrast and L2 Reading Traps
+
+The central contrast is:
+
+| Scenario | Example | Beginner explanation |
+| --- | --- | --- |
+| softness with no apostrophe | **буряк** | **р** softens before **я** |
+| apostrophe | **бур'ян** | **р** stays hard, then **[йа]** |
+| consonant cluster with no apostrophe | **свято**, **цвях** | no apostrophe in these prepared words |
+
+This is why mechanical spelling fails. You cannot simply put apostrophe before
+every **я**. You also cannot ignore apostrophe when it is written.
+
+Use these safe decisions:
+
+| If you see... | Do this |
+| --- | --- |
+| **день**, **кінь**, **сіль** | read the final consonant softly; add no extra vowel |
+| **сім'я**, **м'ясо**, **п'ять** | keep the consonant hard and read the following **й** |
+| **буряк** | no apostrophe; read soft **р** before **я** |
+| **бур'ян** | apostrophe; read hard **р** plus **[йа]** |
+| **свято**, **цвях** | remember them as no-apostrophe words |
+
+Common learner traps:
+
+| Trap | Safer habit |
+| --- | --- |
+| dropping the apostrophe in the family word | write **сім'я** |
+| putting apostrophe into **свято** | keep **свято** with no apostrophe |
+| writing **ден** for **день** | keep **ь** after **н** |
+| inventing a soft-sign version of **ложка** | do not invent a soft sign or soft **л** |
+| treating apostrophe as a hard stop | keep airflow and pronounce **й** |
+
+Keep this module fully Ukrainian-centered. Do not explain the apostrophe
+through another language's alphabet or a "hard sign." Ukrainian has its own
+apostrophe and its own soft sign. Learn them from Ukrainian words.
+
+### Fix common L2 mistakes
+
+<ErrorCorrection client:only='react'>
+  <ErrorCorrectionItem sentence="Do not drop the apostrophe in сім'я." errorWord="сімя" correctForm="сім'я" options={JSON.parse(`["сім'я", "family word without apostrophe"]`)} explanation="The apostrophe is required in сім'я." />
+  <ErrorCorrectionItem sentence="Do not write ден." errorWord="ден" correctForm="день" options={JSON.parse(`["день", "ден"]`)} explanation="День needs the soft sign." />
+  <ErrorCorrectionItem sentence="Do not put apostrophe in свято." errorWord="apostrophe in свято" correctForm="свято" options={JSON.parse(`["свято", "apostrophe spelling"]`)} explanation="Свято is a prepared no-apostrophe word." />
+  <ErrorCorrectionItem sentence="Do not invent a soft sign in ложка." errorWord="льожка" correctForm="ложка" options={JSON.parse(`["ложка", "invented soft-sign spelling"]`)} explanation="Ложка does not have a soft sign after л." />
+  <ErrorCorrectionItem sentence="Do not treat apostrophe as a hard stop." errorWord="hard stop" correctForm="smooth й sound" options={JSON.parse(`["smooth й sound", "full stop"]`)} explanation="The apostrophe separates sounds but does not create a full pause." />
+</ErrorCorrection>
+
+## Line Breaks and Textbook Check
+
+You will sometimes see words split across a line in printed Ukrainian. At this
+level, use only prepared models:
+
+| Whole word | Safe line-break model |
+| --- | --- |
+| **Мар'яна** | `Мар'-яна` |
+| **дерев'яний** | `дерев'-яний` |
+| **бур'ян** | `бур'-ян` |
+| **пальці** | `паль-ці` |
+
+The simple idea: **ь** and apostrophe stay with the letter before them. Also,
+do not leave one single letter alone on a line. You do not need to create new
+line breaks by yourself yet; you only need to recognize the model.
+
+Before you leave the lesson tab, check that you can do these things:
+
+- say that **ь** has no sound of its own;
+- read **день**, **кінь**, **сіль**, and **вчитель** without adding **і**;
+- say that apostrophe keeps the previous consonant hard;
+- read **сім'я**, **м'ясо**, **п'ять**, and **комп'ютер** with **й** after the
+  apostrophe;
+- explain the difference between **буряк** and **бур'ян** in English;
+- remember that **свято** and **цвях** have no apostrophe;
+- choose the correct sign in short prepared words;
+- identify missing-apostrophe, missing-soft-sign, and invented-soft-sign errors.
+
+Use the signs as reading instructions, not decorations. A useful final routine
+is: find the sign, say what it does in English, then read the word once. For
+**день**, say "soft sign, no sound, soft final consonant." For **сім'я**, say
+"apostrophe, hard consonant, then **йа**." For **буряк**, say "no apostrophe,
+soft **р**." For **свято**, say "prepared no-apostrophe word." This routine is
+slow on purpose. It prevents guessing and gives your mouth a stable Ukrainian
+habit before the next module adds stress and melody.
+
+The workbook repeats the same contrasts in several ways: fill-in, sorting,
+matching, error correction, line-break recognition, and quick review.
+
+### Line-break models
+
+<DivideWords client:only='react' instruction={"Choose the prepared line-break model."} items={JSON.parse(`[{"word": "Мар'яна", "answer": "Мар'-яна"}, {"word": "дерев'яний", "answer": "model shown in the lesson"}, {"word": "бур'ян", "answer": "бур'-ян"}, {"word": "пальці", "answer": "паль-ці"}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"м'який знак","translation":"soft sign","pos":"noun phrase","example":"Ь - м'який знак.","examples":["soft sign","Ь - м'який знак."]},{"word":"апостроф","translation":"apostrophe","pos":"noun","example":"У слові сім'я є апостроф.","examples":["apostrophe","У слові сім'я є апостроф."]},{"word":"знак","translation":"sign","pos":"noun","example":"Це знак.","examples":["sign","Це знак."]},{"word":"м'який","translation":"soft","pos":"adjective","example":"Це м'який звук.","examples":["soft","Це м'який звук."]},{"word":"твердий","translation":"hard","pos":"adjective","example":"Це твердий звук.","examples":["hard","Це твердий звук."]},{"word":"йотований","translation":"iotated","pos":"adjective","example":"Я - йотована літера.","examples":["iotated","Я - йотована літера."]},{"word":"роздільно","translation":"separately","pos":"adverb","example":"Читай роздільно.","examples":["separately","Читай роздільно."]},{"word":"злито","translation":"together / smoothly","pos":"adverb","example":"Читай злито.","examples":["together / smoothly","Читай злито."]},{"word":"день","translation":"day","pos":"noun","example":"День.","examples":["day","День."]},{"word":"кінь","translation":"horse","pos":"noun","example":"Кінь.","examples":["horse","Кінь."]},{"word":"сіль","translation":"salt","pos":"noun","example":"Сіль.","examples":["salt","Сіль."]},{"word":"вчитель","translation":"teacher","pos":"noun","example":"Вчитель.","examples":["teacher","Вчитель."]},{"word":"сім'я","translation":"family","pos":"noun","example":"Сім'я.","examples":["family","Сім'я."]},{"word":"м'ясо","translation":"meat","pos":"noun","example":"М'ясо.","examples":["meat","М'ясо."]},{"word":"п'ять","translation":"five","pos":"numeral","example":"П'ять.","examples":["five","П'ять."]},{"word":"дев'ять","translation":"nine","pos":"numeral","example":"Дев'ять.","examples":["nine","Дев'ять."]},{"word":"ім'я","translation":"name","pos":"noun","example":"Ім'я.","examples":["name","Ім'я."]},{"word":"комп'ютер","translation":"computer","pos":"noun","example":"Комп'ютер.","examples":["computer","Комп'ютер."]},{"word":"буряк","translation":"beetroot","pos":"noun","example":"Буряк.","examples":["beetroot","Буряк."]},{"word":"бур'ян","translation":"weed","pos":"noun","example":"Бур'ян.","examples":["weed","Бур'ян."]},{"word":"свято","translation":"holiday","pos":"noun","example":"Свято.","examples":["holiday","Свято."]},{"word":"цвях","translation":"nail","pos":"noun","example":"Цвях.","examples":["nail","Цвях."]},{"word":"маленький","translation":"small","pos":"adjective","example":"Маленький день.","examples":["small","Маленький день."]},{"word":"сьогодні","translation":"today","pos":"adverb","example":"Сьогодні день.","examples":["today","Сьогодні день."]},{"word":"батько","translation":"father","pos":"noun","example":"Батько.","examples":["father","Батько."]},{"word":"ложка","translation":"spoon","pos":"noun","example":"Ложка.","examples":["spoon","Ложка."]},{"word":"Мар'яна","translation":"Mariana","pos":"proper noun","example":"Мар'яна.","examples":["Mariana","Мар'яна."]},{"word":"дерев'яний","translation":"wooden","pos":"adjective","example":"Дерев'яний стіл.","examples":["wooden","Дерев'яний стіл."]},{"word":"пальці","translation":"fingers","pos":"noun","example":"Пальці.","examples":["fingers","Пальці."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"м'який знак","back":"soft sign"},{"front":"апостроф","back":"apostrophe"},{"front":"знак","back":"sign"},{"front":"м'який","back":"soft"},{"front":"твердий","back":"hard"},{"front":"йотований","back":"iotated"},{"front":"роздільно","back":"separately"},{"front":"злито","back":"together / smoothly"},{"front":"день","back":"day"},{"front":"кінь","back":"horse"},{"front":"сіль","back":"salt"},{"front":"вчитель","back":"teacher"},{"front":"сім'я","back":"family"},{"front":"м'ясо","back":"meat"},{"front":"п'ять","back":"five"},{"front":"дев'ять","back":"nine"},{"front":"ім'я","back":"name"},{"front":"комп'ютер","back":"computer"},{"front":"буряк","back":"beetroot"},{"front":"бур'ян","back":"weed"},{"front":"свято","back":"holiday"},{"front":"цвях","back":"nail"},{"front":"маленький","back":"small"},{"front":"сьогодні","back":"today"},{"front":"батько","back":"father"},{"front":"ложка","back":"spoon"},{"front":"Мар'яна","back":"Mariana"},{"front":"дерев'яний","back":"wooden"},{"front":"пальці","back":"fingers"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Sort by sign
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Has ь": ["день", "кінь", "сіль", "вчитель", "маленький"], "Has apostrophe": ["сім'я", "м'ясо", "п'ять", "комп'ютер", "бур'ян"], "No sign": ["буряк", "свято", "цвях", "ложка"]}`)} />
+
+### Sign facts
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ь has no sound of its own.", "isTrue": true, "explanation": "It softens the previous consonant."}, {"statement": "Apostrophe keeps the previous consonant hard.", "isTrue": true, "explanation": "It separates the consonant from the iotated vowel."}, {"statement": "Ї is sometimes silent.", "isTrue": false, "explanation": "Ї is always [йі]."}, {"statement": "Свято has an apostrophe.", "isTrue": false, "explanation": "Свято is a no-apostrophe model word."}]`)} />
+
+### Sign words
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "день", "options": [{"text": "day", "correct": true}, {"text": "meat", "correct": false}, {"text": "family", "correct": false}], "explanation": "День means day."}, {"source": "сім'я", "options": [{"text": "family", "correct": true}, {"text": "salt", "correct": false}, {"text": "holiday", "correct": false}], "explanation": "Сім'я means family."}, {"source": "м'ясо", "options": [{"text": "meat", "correct": true}, {"text": "teacher", "correct": false}, {"text": "nail", "correct": false}], "explanation": "М'ясо means meat."}, {"source": "свято", "options": [{"text": "holiday", "correct": true}, {"text": "weed", "correct": false}, {"text": "horse", "correct": false}], "explanation": "Свято means holiday."}]`)} />
+
+### Correct form
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Choose the correct form for family.", "options": [{"text": "сім'я", "correct": true}, {"text": "family word without apostrophe", "correct": false}], "explanation": "Сім'я needs the apostrophe."}, {"question": "Choose the correct form for day.", "options": [{"text": "день", "correct": true}, {"text": "ден", "correct": false}], "explanation": "День needs the soft sign."}, {"question": "Choose the no-apostrophe word.", "options": [{"text": "свято", "correct": true}, {"text": "apostrophe spelling", "correct": false}], "explanation": "Свято is the prepared no-apostrophe word."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Авраменко, 5 клас, p. 75**
+  soft sign as a marker of consonant softness.
+- 📚 **Большакова, 2 клас, p. 58-59**
+  apostrophe and line-break models.
+- 📚 **Захарійчук, 1 клас (НУШ 2025), p. 97**
+  basic apostrophe rule before я, ю, є, ї.
+:::
+
+</TabItem>
+</Tabs>

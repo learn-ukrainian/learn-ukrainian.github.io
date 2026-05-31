@@ -1,0 +1,250 @@
+- id: act-1
+  type: quiz
+  title: Soft or separate?
+  instruction: Choose the beginner reading explanation.
+  items:
+  - prompt: In буряк, what happens before я?
+    options:
+    - text: Р softens before я.
+      correct: true
+    - text: There is an apostrophe.
+      correct: false
+    - text: Ї is always [йі].
+      correct: false
+    explanation: Буряк has no apostrophe; р softens before я.
+  - prompt: In бур'ян, what does the apostrophe do?
+    options:
+    - text: It keeps р hard and lets you hear [йа].
+      correct: true
+    - text: It makes р disappear.
+      correct: false
+    - text: It adds the sound [і].
+      correct: false
+    explanation: The apostrophe separates р from я.
+  - prompt: What is always true about Ї?
+    options:
+    - text: It is always [йі].
+      correct: true
+    - text: It is silent.
+      correct: false
+    - text: It is the soft sign.
+      correct: false
+    explanation: Ї always represents [йі].
+- id: act-2
+  type: match-up
+  title: What does ь do?
+  instruction: Match each word with the soft-sign clue.
+  pairs:
+  - left: день
+    right: soft final н
+  - left: кінь
+    right: soft final н
+  - left: сіль
+    right: soft final л
+  - left: вчитель
+    right: soft final л
+  - left: м'який знак
+    right: no sound of its own
+- id: act-3
+  type: fill-in
+  title: Add the sign
+  instruction: Choose ь, apostrophe, or no sign.
+  items:
+  - sentence: сім_я
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - no sign
+  - sentence: ден_
+    answer: ь
+    options:
+    - ь
+    - ''''
+    - no sign
+  - sentence: п_ять
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - no sign
+  - sentence: свято needs ____.
+    answer: no sign
+    options:
+    - no sign
+    - ''''
+    - ь
+  - sentence: бур_ян
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - no sign
+  - sentence: маленький needs ____.
+    answer: ь
+    options:
+    - ь
+    - ''''
+    - no sign
+- id: act-4
+  type: error-correction
+  title: Fix common L2 mistakes
+  instruction: Choose the correct Ukrainian form.
+  items:
+  - sentence: Do not drop the apostrophe in сім'я.
+    error: сімя
+    correction: сім'я
+    options:
+    - сім'я
+    - family word without apostrophe
+    explanation: The apostrophe is required in сім'я.
+  - sentence: Do not write ден.
+    error: ден
+    correction: день
+    options:
+    - день
+    - ден
+    explanation: День needs the soft sign.
+  - sentence: Do not put apostrophe in свято.
+    error: apostrophe in свято
+    correction: свято
+    options:
+    - свято
+    - apostrophe spelling
+    explanation: Свято is a prepared no-apostrophe word.
+  - sentence: Do not invent a soft sign in ложка.
+    error: льожка
+    correction: ложка
+    options:
+    - ложка
+    - invented soft-sign spelling
+    explanation: Ложка does not have a soft sign after л.
+  - sentence: Do not treat apostrophe as a hard stop.
+    error: hard stop
+    correction: smooth й sound
+    options:
+    - smooth й sound
+    - full stop
+    explanation: The apostrophe separates sounds but does not create a full pause.
+- id: act-5
+  type: divide-words
+  title: Line-break models
+  instruction: Choose the prepared line-break model.
+  items:
+  - word: Мар'яна
+    answer: Мар'-яна
+  - word: дерев'яний
+    answer: model shown in the lesson
+  - word: бур'ян
+    answer: бур'-ян
+  - word: пальці
+    answer: паль-ці
+- id: act-6
+  type: group-sort
+  title: Sort by sign
+  instruction: Sort each word into the correct group.
+  groups:
+  - label: Has ь
+    items:
+    - день
+    - кінь
+    - сіль
+    - вчитель
+    - маленький
+  - label: Has apostrophe
+    items:
+    - сім'я
+    - м'ясо
+    - п'ять
+    - комп'ютер
+    - бур'ян
+  - label: No sign
+    items:
+    - буряк
+    - свято
+    - цвях
+    - ложка
+- id: act-7
+  type: true-false
+  title: Sign facts
+  instruction: Choose true or false.
+  items:
+  - statement: Ь has no sound of its own.
+    correct: true
+    explanation: It softens the previous consonant.
+  - statement: Apostrophe keeps the previous consonant hard.
+    correct: true
+    explanation: It separates the consonant from the iotated vowel.
+  - statement: Ї is sometimes silent.
+    correct: false
+    explanation: Ї is always [йі].
+  - statement: Свято has an apostrophe.
+    correct: false
+    explanation: Свято is a no-apostrophe model word.
+- id: act-8
+  type: translate
+  title: Sign words
+  instruction: Choose the English meaning.
+  items:
+  - source: день
+    options:
+    - text: day
+      correct: true
+    - text: meat
+      correct: false
+    - text: family
+      correct: false
+    explanation: День means day.
+  - source: сім'я
+    options:
+    - text: family
+      correct: true
+    - text: salt
+      correct: false
+    - text: holiday
+      correct: false
+    explanation: Сім'я means family.
+  - source: м'ясо
+    options:
+    - text: meat
+      correct: true
+    - text: teacher
+      correct: false
+    - text: nail
+      correct: false
+    explanation: М'ясо means meat.
+  - source: свято
+    options:
+    - text: holiday
+      correct: true
+    - text: weed
+      correct: false
+    - text: horse
+      correct: false
+    explanation: Свято means holiday.
+- id: act-9
+  type: quiz
+  title: Correct form
+  instruction: Choose the correctly written word.
+  items:
+  - prompt: Choose the correct form for family.
+    options:
+    - text: сім'я
+      correct: true
+    - text: family word without apostrophe
+      correct: false
+    explanation: Сім'я needs the apostrophe.
+  - prompt: Choose the correct form for day.
+    options:
+    - text: день
+      correct: true
+    - text: ден
+      correct: false
+    explanation: День needs the soft sign.
+  - prompt: Choose the no-apostrophe word.
+    options:
+    - text: свято
+      correct: true
+    - text: apostrophe spelling
+      correct: false
+    explanation: Свято is the prepared no-apostrophe word.
