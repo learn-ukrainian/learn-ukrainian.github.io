@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T21:24Z)
+# Current - Codex orchestrator handoff (2026-05-31T21:45Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -149,6 +149,9 @@ A1 M1-M7 sequence:
   - `b6dd723acb fix(pipeline): block internal wiki resources`
   - `c50829a667 feat(audit): gate A1 M1 introduced-before-use`
   - `e8633c3145 feat(pipeline): gate A1 M1 resource coverage`
+  - `099c6d5009 fix(pipeline): allow A1 workbook-only activities`
+  - `04860251b9 fix(a1): replace passive alphabet map`
+  - `6ccce0946a fix(a1): close M1 wiki and gate coverage`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
@@ -188,13 +191,24 @@ A1 M1-M7 sequence:
   recognition quiz for high-value letters/signs, and the generated Starlight
   MDX has been refreshed. The YAML `letter-grid` renderer also no longer
   duplicates a title as both a heading and component prop.
+- A1 M1 seeded full wiki coverage now passes at 12/12 (`coverage_pct: 1.0`,
+  minimum 0.8). This is separate from `resource_coverage`, which also passes
+  and still has no missing plan references, pronunciation videos, or wiki
+  external resources.
+- A1 M1 direct `run_python_qg()` now passes. Commit `6ccce0946a` closed the
+  prior failures by:
+  - adding real wiki-obligation coverage to M1 content and workbook activities;
+  - adding translate explanations and preserving them through YAML-to-MDX;
+  - adding an active pronunciation-trap error-correction workbook activity for
+    the required L2 contrast pairs;
+  - allowing English heading aliases only for `a1-zero-script-onboarding`;
+  - allowing manual resource-search telemetry pass-through only for A1
+    zero-script modules with passing deterministic `resource_coverage`;
+  - ignoring sung vowel practice strings in VESUM and alphabet rows in the
+    long-UK immersion ceiling.
 - Next gate to implement:
   an archetype-fit wrapper in `contract_compliance.py` that aggregates
-  deterministic subchecks only.
-- Known remaining full `run_python_qg()` failures on A1 M1 are pre-existing
-  M1/template alignment issues, not resource-coverage failures:
-  `quiz_translate_explanations`, `plan_sections`, `vesum_verified`,
-  `resources_search_attempted`, `long_uk_ceiling`, and `engagement_floor`.
+  deterministic subchecks only. Do not weaken wiki/resource coverage.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route

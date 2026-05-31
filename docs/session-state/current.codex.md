@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-05-31T21:24Z)
+# Current - Codex Thread Handoff (2026-05-31T21:45Z)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -8,8 +8,8 @@ Latest-Brief: docs/session-state/current.codex.md
 - Active worktree:
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Latest implementation commit before this handoff:
-  `e8633c3145 feat(pipeline): gate A1 M1 resource coverage`
+- Latest implementation commit:
+  `6ccce0946a fix(a1): close M1 wiki and gate coverage`
 
 ## Current Direction
 
@@ -68,30 +68,42 @@ Latest-Brief: docs/session-state/current.codex.md
 - `npm run build:starlight`: passed; 91 pages built.
 - Direct A1 M1 `run_python_qg()` report no longer fails `inject_activity_ids`.
 
-## Known Remaining M1 Gates
+## Latest M1 Wiki / Gate Closure
 
-Full `run_python_qg()` still fails on pre-existing M1 content/template issues
-outside the resource-coverage slice:
+Commit `6ccce0946a` closed the remaining M1 full `run_python_qg()` failures:
 
-- `quiz_translate_explanations`: activity `act-9` translation items lack
-  explanations.
-- `plan_sections`: hand-authored English headings do not match the locked
-  Ukrainian plan section names.
-- `vesum_verified`: sung vowel strings `ааа`, `ооо`, `ііі`.
-- `resources_search_attempted`: no writer tool-call telemetry for this
-  hand-authored module.
-- `long_uk_ceiling`: raw alphabet row is treated as a long unsupported
-  Ukrainian run.
-- `engagement_floor`: no callout and one `in this lesson` meta-narration hit.
+- Added real M1 wiki-obligation coverage in `module.md` and `activities.yaml`.
+  Seeded full wiki coverage is now 12/12 (`coverage_pct: 1.0`, minimum 0.8).
+- Added explanations to `act-9` translate items and fixed the YAML-to-MDX
+  translate renderer so explanations reach the React `Translate` component.
+- Added an active `act-10` pronunciation-trap error-correction workbook block
+  for the L2 contrast pairs required by the wiki manifest.
+- Scoped `plan_sections` heading aliases to the `a1-zero-script-onboarding`
+  archetype so English-led M1 headings can satisfy locked Ukrainian plan
+  sections without weakening other modules.
+- Scoped `resources_search_attempted` manual pass-through to A1 zero-script
+  modules only when deterministic `resource_coverage` has already passed. This
+  preserves hard wiki/resource coverage while avoiding a telemetry-only failure
+  for the hand-authored M1 template.
+- Taught VESUM to ignore sung vowel practice strings and taught the long-UK
+  immersion gate to ignore Ukrainian alphabet rows.
 
-These are the next infra/content-alignment targets. Do not interpret them as a
-failure of the new `resource_coverage` gate.
+Current direct checks:
+
+- Seeded M1 full wiki coverage: passed, 12/12.
+- Direct A1 M1 `run_python_qg()`: passed.
+- Focused Python tests: 33 passed.
+- Pre-commit on `6ccce0946a`: 200 passed, 1 skipped plus repo hooks.
+- `npm test -- tests/unit/Quiz.test.tsx tests/unit/Translate.test.tsx
+  tests/unit/ErrorCorrection.test.tsx`: 79 passed.
+- `npm run build:starlight`: passed; 91 pages built.
 
 ## Next Steps
 
-1. Push the branch if not already pushed after this handoff.
-2. Decide whether to fix the remaining M1 gates by adapting gates to the new
-   English-led archetype or by small content edits where the gate is still
-   pedagogically correct.
-3. Keep `current.orchestrator.md` in sync after the final push, then create or
-   switch to a fresh Codex thread before context gets high.
+1. Push `6ccce0946a` and the handoff refresh commit.
+2. Use M1 as the zero-script onboarding template and continue infra work toward
+   M2-M7. The next highest-value target is an archetype-fit wrapper in
+   `contract_compliance.py` that aggregates deterministic subchecks without
+   weakening wiki/resource coverage.
+3. After infra wrapper work, start M2 only if M1 remains green and readable in
+   the preview.
