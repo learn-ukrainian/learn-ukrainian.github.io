@@ -29,9 +29,53 @@
 > only on a GENUINE defect (fabrication, ghost-source, real NPOV failure) — fix-forward, don't seek
 > approval. Non-bio tracks + non-bio main = orchestrator-only; Claude never merges those.
 
-*Last updated: 2026-05-31 (session: bio-260→310 slice COMPLETE+merged @ `f25a2c7e12`; Phase-3
-registration BLOCKED by position-contiguity until 184-259 builds; agent-routing + usage report added;
-3-way Cursor/Codex/Claude build plan for the 75 remaining plans (bio-184..259) defined + kicked off.)*
+*Last updated: 2026-05-31 (session: agent-routing report + dashboard added; 3-way Cursor/Codex/Claude
+build of bio-184..259 UNDERWAY — **bio-184..215 MERGED** (batches 1-2 + batch-3 cursor 208-211 #2493 &
+codex 212-215 #2491). **bio plan count on main = 267.** claude 216-219 (#2492) in Codex cross-family
+review. Phase-3 curriculum.yaml registration still BLOCKED by position-contiguity until 208..259 land.
+Next = finish #2492, then batch-4 bio-220..232 (skip pre-built 222), then 233..259 (~37 left).)*
+
+> **▶ BUILD PROGRESS (bio-184..259, 3-way split, 12/batch — keep splitting Cursor/Codex/Claude):**
+> - **DONE+merged (count=267):** batch-1 184..195 (#2484/#2482/#2483 + fix-forward #2485), batch-2
+>   196..207 (#2487/#2486/#2489), batch-3 cursor 208-211 (#2493) + codex 212-215 (#2491).
+> - **IN REVIEW:** batch-3 claude 216-219 (bohdan-boichuk, yurii-tarnavskyi, emma-andiievska,
+>   bohdan-rubchak) = PR #2492; Codex `review-blk3-claude` running. READ its `.result` + confirm
+>   VERDICT=SHIP BEFORE merging (lesson #1 below). NY-Group poets — some living; watch DEATH_ON_LIVING.
+> - **NEXT — batch-4 bio-220..232 (skip 222, pre-built):** cursor 220/221/223/224 (vira-vovk,
+>   omelian-pritsak, yurii-lavrynenko, oleksa-voropai) · codex 225-228 (pavlo-tychyna, maksym-rylskyi,
+>   volodymyr-sosiura, yurii-yanovskyi) · claude 229-232 (ostap-vyshnia, mykola-bazhan, zinaida-tulub,
+>   oleksandr-kovinka). Then 233..259. All dossiers present (verified).
+> - **PIPELINE:** gen briefs via /tmp/gen_bio_briefs*.py (verify own_all_present+no_cross), preflight
+>   slugs absent on origin/main, fire `delegate dispatch --agent {cursor --model auto|codex|claude
+>   --effort xhigh} --task-id bio-blkN-<agent> --prompt-file ... --worktree --base main`. Harvest:
+>   finalize cursor+claude git (they leave plans UNCOMMITTED — stage ONLY the intended new files;
+>   claude also touches out-of-scope files, so use a fresh worktree off origin/main if needed), CJK
+>   scan (/tmp/cjk_scan3.py), validate_plan_config (BIO must stay all-valid; the 7 A2/B2/C2 errors are
+>   PRE-EXISTING non-bio — ignore), three-dot scope-diff all-`A`, cross-family review (Claude reviews
+>   cursor+codex INLINE; fire Codex `review-blkN-claude` for claude-written), merge per grant, then
+>   remove worktree + delete branch + prune.
+> - **STANDALONE HANDOFF PRs ARE BLOCKED** by branch protection (docs-only → required plan/schema
+>   checks are path-skipped → "base branch policy prohibits merge"; NOT a failing test, do NOT
+>   admin-bypass). FIX: BUNDLE the handoff refresh INTO a batch's plan PR (plan-path triggers the
+>   checks). Stale blocked handoff PRs #2490 + this one should be closed once a bundled handoff lands.
+>
+> **🔴 HARD PROCESS LESSONS (this session — cost real rework; do NOT repeat):**
+> 1. **NEVER merge a PR in the same action-batch as reading its review.** Read → evaluate verdict as a
+>    SEPARATE step → then merge (SHIP) or fix-forward (FIX). I merged #2483 before evaluating its
+>    1-SHIP/3-FIX review; recovered via fix-forward #2485. #2489 + batch-3 done correctly.
+> 2. **VERIFY a commit exists (`git rev-list --count origin/main..HEAD` ≥ 1) BEFORE `git worktree
+>    remove --force`.** A cancelled Write no-op'd a fix script → no commit → I `--force`-removed the
+>    worktree and LOST edits (redone). Working-tree edits are NOT safe until committed AND verified.
+> 3. **SEVERE intermittent I/O lag** = recurring stale `~/.pyenv/shims/.pyenv-shim` (interrupted
+>    `pyenv rehash`; `rm -f` it each turn). UNDER LAG RUN DEPENDENT BASH CALLS ONE AT A TIME — big
+>    parallel batches cascade-fail (one erroring call cancels all siblings; 3× this session) AND
+>    truncated reads cause FALSE ALARMS (I wrongly "detected" an orchestrator collision on
+>    ihor-kostetskyi from a lag-garbled read — sentinel re-check proved it ABSENT/clean). SENTINEL-wrap
+>    state reads + dual-channel confirm before any merge/delete.
+> 4. **CURSOR + CLAUDE dispatches leave plans UNCOMMITTED; cursor may report status=failed at the git
+>    step though content is fine; claude also edits out-of-scope files + may branch off stale main.**
+>    Always driver-finalize: stage ONLY the intended new files; use a fresh worktree off current
+>    origin/main when the dispatch branch is stale/dirty.
 
 > **⚠️ HANDOFF-WAS-UNCOMMITTED (fixed in THIS PR):** Before this PR, origin/main carried the STALE
 > 2026-05-30 handoff; the rich 2026-05-31 state lived ONLY as an uncommitted local edit on the main
