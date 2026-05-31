@@ -46,6 +46,17 @@ def test_resources_search_attempted_gate_accepts_a1_zero_script_manual_coverage(
     assert result["manual_coverage_verified"] is True
 
 
+def test_resources_search_attempted_gate_accepts_a1_m1_m7_manual_coverage() -> None:
+    result = linear_pipeline._resources_search_attempted_gate(
+        [],
+        plan={"level": "A1", "sequence": 5},
+        resource_coverage={"passed": True},
+    )
+
+    assert result["passed"] is True
+    assert result["manual_coverage_verified"] is True
+
+
 def test_resources_search_attempted_gate_keeps_non_a1_manual_coverage_strict() -> None:
     result = linear_pipeline._resources_search_attempted_gate(
         [],

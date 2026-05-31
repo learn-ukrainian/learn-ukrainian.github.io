@@ -99,13 +99,13 @@ def test_ignores_non_textbook_roles():
     assert result["passed"] is True
 
 
-def test_resource_coverage_requires_a1_m1_plan_references():
+def test_resource_coverage_requires_a1_m1_m7_plan_references():
     plan = {
         "level": "A1",
-        "sequence": 1,
+        "sequence": 2,
         "references": [
-            {"title": "Большакова, буквар 1 клас, стор. 24"},
-            {"title": "Wiki: pedagogy/a1/sounds-letters-and-hello"},
+            {"title": "Большакова, буквар 1 клас, стор. 25"},
+            {"title": "Wiki: pedagogy/a1/reading-ukrainian"},
         ],
     }
     resources = [{"role": "textbook", "title": "Захарійчук, буквар 1 клас, p. 13"}]
@@ -114,8 +114,8 @@ def test_resource_coverage_requires_a1_m1_plan_references():
 
     assert result["passed"] is False
     assert result["severity"] == "HARD"
-    assert result["missing_plan_references"][0]["title"] == "Большакова, буквар 1 клас, стор. 24"
-    assert result["skipped_internal_references"] == ["Wiki: pedagogy/a1/sounds-letters-and-hello"]
+    assert result["missing_plan_references"][0]["title"] == "Большакова, буквар 1 клас, стор. 25"
+    assert result["skipped_internal_references"] == ["Wiki: pedagogy/a1/reading-ukrainian"]
 
 
 def test_resource_coverage_accepts_title_page_match_and_pronunciation_urls():
@@ -175,8 +175,8 @@ def test_resource_coverage_requires_wiki_external_resource_urls():
 
 
 def test_resource_coverage_skips_other_archetypes():
-    plan = {"level": "A1", "sequence": 2, "references": [{"title": "Missing"}]}
+    plan = {"level": "A1", "sequence": 8, "references": [{"title": "Missing"}]}
 
     result = _resource_coverage_gate([], plan, {"external_resources": []})
 
-    assert result == {"passed": True, "skipped": "not_a1_zero_script_onboarding"}
+    assert result == {"passed": True, "skipped": "not_a1_m1_m7_archetype"}

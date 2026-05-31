@@ -9088,10 +9088,10 @@ def _resource_coverage_gate(
     plan: Mapping[str, Any],
     wiki_manifest: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Ensure A1 M1 required sources and media are canonical resources."""
+    """Ensure A1 M1-M7 required sources and media are canonical resources."""
     contract = resolve_module_archetype(str(plan.get("level") or ""), int(plan.get("sequence") or 0))
-    if contract["id"] != "a1-zero-script-onboarding":
-        return {"passed": True, "skipped": "not_a1_zero_script_onboarding"}
+    if not _is_a1_m1_m7_archetype(contract):
+        return {"passed": True, "skipped": "not_a1_m1_m7_archetype"}
 
     references = plan.get("references") or plan.get("plan_references") or []
     missing_plan_references: list[dict[str, Any]] = []
@@ -9439,7 +9439,15 @@ def _manual_resource_coverage_can_stand_in_for_search_telemetry(
         str(plan.get("level") or ""),
         int(plan.get("sequence") or 0),
     )
-    return archetype.get("id") == "a1-zero-script-onboarding"
+    return _is_a1_m1_m7_archetype(archetype)
+
+
+def _is_a1_m1_m7_archetype(archetype: Mapping[str, Any]) -> bool:
+    return archetype.get("id") in {
+        "a1-zero-script-onboarding",
+        "a1-script-building",
+        "a1-first-contact-survival",
+    }
 
 
 _MCP_SEARCH_TEXT_RESULT_RE = re.compile(
