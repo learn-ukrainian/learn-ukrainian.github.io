@@ -1,5 +1,5 @@
 
-from scripts.build.linear_pipeline import _plan_reference_match_gate
+from scripts.build.linear_pipeline import _plan_reference_match_gate, _resource_coverage_gate
 
 
 def test_passes_when_all_textbook_resources_match_plan_chunk_ids():
@@ -97,3 +97,86 @@ def test_ignores_non_textbook_roles():
 
     result = _plan_reference_match_gate(resources, plan)
     assert result["passed"] is True
+
+
+def test_resource_coverage_requires_a1_m1_plan_references():
+    plan = {
+        "level": "A1",
+        "sequence": 1,
+        "references": [
+            {"title": "Большакова, буквар 1 клас, стор. 24"},
+            {"title": "Wiki: pedagogy/a1/sounds-letters-and-hello"},
+        ],
+    }
+    resources = [{"role": "textbook", "title": "Захарійчук, буквар 1 клас, p. 13"}]
+
+    result = _resource_coverage_gate(resources, plan, {"external_resources": []})
+
+    assert result["passed"] is False
+    assert result["severity"] == "HARD"
+    assert result["missing_plan_references"][0]["title"] == "Большакова, буквар 1 клас, стор. 24"
+    assert result["skipped_internal_references"] == ["Wiki: pedagogy/a1/sounds-letters-and-hello"]
+
+
+def test_resource_coverage_accepts_title_page_match_and_pronunciation_urls():
+    plan = {
+        "level": "A1",
+        "sequence": 1,
+        "references": [
+            {"title": "Большакова, буквар 1 клас, стор. 24"},
+            {"title": "ULP Season 1, Episode 1", "url": "https://www.ukrainianlessons.com/episode1/"},
+        ],
+        "pronunciation_videos": {
+            "overview": "https://www.youtube.com/watch?v=overview",
+            "vowels": {"А": "https://www.youtube.com/watch?v=a"},
+            "consonants": {"М": "https://www.youtube.com/watch?v=m"},
+            "special": {"Ї": "https://www.youtube.com/watch?v=yi"},
+        },
+    }
+    resources = [
+        {"role": "textbook", "title": "Большакова, буквар 1 клас, p. 24"},
+        {"role": "podcast", "title": "ULP Episode 1", "url": "https://www.ukrainianlessons.com/episode1/"},
+        {"role": "youtube", "title": "Overview", "url": "https://www.youtube.com/watch?v=overview"},
+        {"role": "youtube", "title": "А", "url": "https://www.youtube.com/watch?v=a"},
+        {"role": "youtube", "title": "М", "url": "https://www.youtube.com/watch?v=m"},
+        {"role": "youtube", "title": "Ї", "url": "https://www.youtube.com/watch?v=yi"},
+    ]
+
+    result = _resource_coverage_gate(resources, plan, {"external_resources": []})
+
+    assert result["passed"] is True
+    assert result["missing_plan_references"] == []
+    assert result["missing_pronunciation_videos"] == []
+
+
+def test_resource_coverage_requires_wiki_external_resource_urls():
+    plan = {"level": "A1", "sequence": 1, "references": []}
+    resources = []
+    manifest = {
+        "external_resources": [
+            {
+                "role": "youtube",
+                "title": "Video",
+                "url": "https://www.youtube.com/watch?v=abc",
+            }
+        ]
+    }
+
+    result = _resource_coverage_gate(resources, plan, manifest)
+
+    assert result["passed"] is False
+    assert result["missing_wiki_external_resources"] == [
+        {
+            "title": "Video",
+            "role": "youtube",
+            "url": "https://www.youtube.com/watch?v=abc",
+        }
+    ]
+
+
+def test_resource_coverage_skips_other_archetypes():
+    plan = {"level": "A1", "sequence": 2, "references": [{"title": "Missing"}]}
+
+    result = _resource_coverage_gate([], plan, {"external_resources": []})
+
+    assert result == {"passed": True, "skipped": "not_a1_zero_script_onboarding"}

@@ -6671,6 +6671,10 @@ def run_python_qg(
     )
     record("citations_resolve", _citation_gate(resources, plan))
     record("plan_reference_match", _plan_reference_match_gate(resources, plan))
+    wiki_manifest: dict[str, Any] | None = None
+    with contextlib.suppress(LinearPipelineError, ValueError):
+        wiki_manifest = build_wiki_manifest_data(plan_path, plan=plan)
+    record("resource_coverage", _resource_coverage_gate(resources, plan, wiki_manifest))
     # record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
     record(
         "chunk_context_for_all_refs",
@@ -8908,6 +8912,183 @@ def _plan_reference_match_gate(resources: list[dict[str, Any]], plan: Mapping[st
         }
 
     return {"passed": True}
+
+
+def _is_internal_wiki_ref(ref: Mapping[str, Any]) -> bool:
+    title = str(ref.get("title") or "").strip().casefold()
+    url = str(ref.get("url") or "").strip()
+    notes = str(ref.get("notes") or "").strip().casefold()
+    return (
+        title.startswith("wiki:")
+        or url.startswith(("wiki/", "docs/wiki/"))
+        or "wiki/" in notes
+    )
+
+
+def _resource_url_set(resources: list[dict[str, Any]]) -> set[str]:
+    urls: set[str] = set()
+    for resource in resources:
+        for field in ("url", "notes", "description"):
+            value = resource.get(field)
+            if not value:
+                continue
+            urls.update(re.findall(r"https?://[^\s)>,]+", str(value)))
+    return {url.rstrip(".,;") for url in urls}
+
+
+def _resource_chunk_id(resource: Mapping[str, Any]) -> str:
+    chunk_id = resource.get("packet_chunk_id") or resource.get("chunk_id")
+    if not chunk_id and "notes" in resource:
+        chunk_id = extract_chunk_id_from_notes(str(resource["notes"]))
+    return str(chunk_id or "").strip()
+
+
+def _resource_match_tokens(value: Any) -> set[str]:
+    text = str(value or "").casefold()
+    text = re.sub(r"\b(?:стор(?:інка)?|p|page|pages|с)\.?\b", " ", text)
+    return {
+        token
+        for token in re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text)
+        if len(token) >= 3 or token.isdigit()
+    }
+
+
+_RESOURCE_MATCH_STOPWORDS = {
+    "буквар",
+    "клас",
+    "grade",
+    "class",
+    "season",
+    "episode",
+}
+
+
+def _resource_anchor_tokens(value: Any) -> set[str]:
+    return {
+        token
+        for token in _resource_match_tokens(value)
+        if not token.isdigit() and token not in _RESOURCE_MATCH_STOPWORDS
+    }
+
+
+def _plan_ref_covered_by_resource(ref: Mapping[str, Any], resource: Mapping[str, Any]) -> bool:
+    ref_url = str(ref.get("url") or "").strip()
+    if ref_url and ref_url == str(resource.get("url") or "").strip():
+        return True
+
+    ref_chunk_id = extract_chunk_id_from_notes(str(ref.get("notes") or ""))
+    if ref_chunk_id and ref_chunk_id == _resource_chunk_id(resource):
+        return True
+
+    ref_title = str(ref.get("title") or "")
+    resource_title = str(resource.get("source_ref") or resource.get("title") or "")
+    if not ref_title or not resource_title:
+        return False
+
+    if _citation_ref_text_contains(ref_title, resource_title) or _citation_ref_text_contains(resource_title, ref_title):
+        return True
+
+    ref_tokens = _resource_match_tokens(ref_title)
+    resource_tokens = _resource_match_tokens(resource_title)
+    if not ref_tokens or not resource_tokens:
+        return False
+    overlap = ref_tokens & resource_tokens
+    anchor_overlap = _resource_anchor_tokens(ref_title) & _resource_anchor_tokens(resource_title)
+    has_name_overlap = any(not token.isdigit() for token in overlap)
+    has_page_overlap = any(token.isdigit() for token in overlap)
+    return bool(anchor_overlap) and has_name_overlap and (has_page_overlap or len(overlap) >= 3)
+
+
+def _extract_plan_pronunciation_video_urls(plan: Mapping[str, Any]) -> list[dict[str, str]]:
+    videos = plan.get("pronunciation_videos")
+    if not isinstance(videos, Mapping):
+        return []
+
+    records: list[dict[str, str]] = []
+
+    def add(path: str, value: Any) -> None:
+        if isinstance(value, str) and value.startswith(("http://", "https://")):
+            records.append({"path": path, "url": value.strip()})
+
+    add("pronunciation_videos.overview", videos.get("overview"))
+    add("pronunciation_videos.playlist", videos.get("playlist"))
+    for group in ("vowels", "consonants", "special"):
+        group_values = videos.get(group)
+        if not isinstance(group_values, Mapping):
+            continue
+        for key, value in group_values.items():
+            add(f"pronunciation_videos.{group}.{key}", value)
+    return records
+
+
+def _resource_coverage_gate(
+    resources: list[dict[str, Any]],
+    plan: Mapping[str, Any],
+    wiki_manifest: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Ensure A1 M1 required sources and media are canonical resources."""
+    contract = resolve_module_archetype(str(plan.get("level") or ""), int(plan.get("sequence") or 0))
+    if contract["id"] != "a1-zero-script-onboarding":
+        return {"passed": True, "skipped": "not_a1_zero_script_onboarding"}
+
+    references = plan.get("references") or plan.get("plan_references") or []
+    missing_plan_references: list[dict[str, Any]] = []
+    skipped_internal_references: list[str] = []
+    if isinstance(references, list):
+        for ref in references:
+            if not isinstance(ref, Mapping):
+                continue
+            if _is_internal_wiki_ref(ref):
+                skipped_internal_references.append(str(ref.get("title") or ""))
+                continue
+            if any(_plan_ref_covered_by_resource(ref, resource) for resource in resources):
+                continue
+            missing_plan_references.append(
+                {
+                    "title": str(ref.get("title") or ""),
+                    "url": str(ref.get("url") or ""),
+                    "notes": str(ref.get("notes") or ""),
+                }
+            )
+
+    resource_urls = _resource_url_set(resources)
+    missing_pronunciation_videos = [
+        record
+        for record in _extract_plan_pronunciation_video_urls(plan)
+        if record["url"] not in resource_urls
+    ]
+
+    missing_wiki_external_resources: list[dict[str, Any]] = []
+    if wiki_manifest is not None:
+        external_resources = wiki_manifest.get("external_resources", [])
+        if isinstance(external_resources, list):
+            for resource in external_resources:
+                if not isinstance(resource, Mapping):
+                    continue
+                url = str(resource.get("url") or "").strip()
+                if url and url not in resource_urls:
+                    missing_wiki_external_resources.append(
+                        {
+                            "title": str(resource.get("title") or ""),
+                            "role": str(resource.get("role") or ""),
+                            "url": url,
+                        }
+                    )
+
+    passed = not (
+        missing_plan_references
+        or missing_pronunciation_videos
+        or missing_wiki_external_resources
+    )
+    return {
+        "passed": passed,
+        "severity": "HARD" if not passed else None,
+        "missing_plan_references": missing_plan_references,
+        "missing_pronunciation_videos": missing_pronunciation_videos,
+        "missing_wiki_external_resources": missing_wiki_external_resources,
+        "skipped_internal_references": skipped_internal_references,
+        "rule_ids": ["#R-CITE-HONEST", "#R-RESOURCE-COVERAGE"] if not passed else [],
+    }
 
 
 def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
