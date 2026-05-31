@@ -862,7 +862,7 @@ def validate_plan(plan: Mapping[str, Any]) -> None:
             raise LinearPipelineError(f"Plan section {index} must be a mapping")
         if not isinstance(section.get("section"), str) or not section["section"].strip():
             raise LinearPipelineError(f"Plan section {index} missing section title")
-        if not isinstance(section.get("words"), int) or section["words"] <= 0:
+        if not isinstance(section.get("words"), int) or section["words"] < 0:
             raise LinearPipelineError(f"Plan section {section['section']!r} has invalid words")
         points = section.get("points")
         if not isinstance(points, list) or not all(isinstance(p, str) for p in points):
