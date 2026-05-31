@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T08:15Z)
+# Current - Codex orchestrator handoff (2026-05-31T21:24Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -140,12 +140,15 @@ A1 M1-M7 sequence:
   `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest introduced-before-use implementation commit:
   `c50829a667 feat(audit): gate A1 M1 introduced-before-use`
+- Latest resource-coverage implementation commit:
+  `e8633c3145 feat(pipeline): gate A1 M1 resource coverage`
 - Follow-up commits after the M1 rewrite:
   - `e514421f78 fix(infra): decouple etymology from lesson builds`
   - `594c72e928 feat(pipeline): define module archetype contracts`
   - `f84e8a8702 feat(pipeline): inject module archetype into writer prompts`
   - `b6dd723acb fix(pipeline): block internal wiki resources`
   - `c50829a667 feat(audit): gate A1 M1 introduced-before-use`
+  - `e8633c3145 feat(pipeline): gate A1 M1 resource coverage`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
@@ -168,9 +171,23 @@ A1 M1-M7 sequence:
   `vocabulary_hints.required`, then requires the first learner-facing lesson or
   activity use to include an English gloss/explicit introduction. A1 M1 now
   passes this gate after adding same-row glosses for `звук` and `літера`.
-- Next gates to implement:
-  resource coverage in the build/publish layer, then an archetype-fit wrapper
-  in `contract_compliance.py` that aggregates deterministic subchecks only.
+- Second deterministic gate implemented:
+  `resource_coverage` in `scripts/build/linear_pipeline.py`. It is scoped
+  through `resolve_module_archetype()` and only fires for
+  `a1-zero-script-onboarding` for now. It checks non-internal plan references,
+  plan `pronunciation_videos`, and wiki manifest `external_resources` against
+  `resources.yaml`; internal AI-facing wiki references are skipped, not
+  published. A1 M1 `resources.yaml` and generated Starlight MDX now list the
+  Anna Ohoiko alphabet overview, playlist, all plan per-letter videos, and the
+  stored course O-video activity reference.
+- Next gate to implement:
+  an archetype-fit wrapper in `contract_compliance.py` that aggregates
+  deterministic subchecks only.
+- Known remaining full `run_python_qg()` failures on A1 M1 are pre-existing
+  M1/template alignment issues, not resource-coverage failures:
+  `quiz_translate_explanations`, `plan_sections`, `vesum_verified`,
+  `resources_search_attempted`, `long_uk_ceiling`, `inject_activity_ids`, and
+  `engagement_floor`.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route
