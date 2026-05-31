@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "build:full": "BUILD_ETYMOLOGY_ROUTES=1 astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",

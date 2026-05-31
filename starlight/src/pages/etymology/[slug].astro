@@ -3,7 +3,9 @@
  * Dynamic route for ESUM etymology entries.
  *
  * `getStaticPaths` reads the build-time manifest at
- * `src/data/etymology-manifest.json` and emits one Astro page per slug.
+ * `src/data/etymology-manifest.json` and emits one Astro page per slug when
+ * `BUILD_ETYMOLOGY_ROUTES=1` is set. Normal lesson preview/build loops skip
+ * these routes so editing one module does not rebuild the ESUM reference site.
  * Three URL patterns are produced:
  *
  *   /etymology/<slug>/           — single-entry page (24,765 - 2,142 paths)
@@ -70,6 +72,17 @@ type LandingProps = {
 type RouteProps = EntryProps | LandingProps;
 
 export async function getStaticPaths() {
+  const buildEtymologyRoutes = ['1', 'true', 'yes'].includes(
+    (process.env.BUILD_ETYMOLOGY_ROUTES ?? '').toLowerCase(),
+  );
+
+  if (!buildEtymologyRoutes) {
+    console.warn(
+      '[etymology] Skipping ESUM dynamic routes. Set BUILD_ETYMOLOGY_ROUTES=1 for the full reference build.',
+    );
+    return [];
+  }
+
   const data = manifest as Manifest;
   const byPageSlug = new Map<string, EtymEntry>();
   for (const e of data.entries) byPageSlug.set(e.page_slug, e);

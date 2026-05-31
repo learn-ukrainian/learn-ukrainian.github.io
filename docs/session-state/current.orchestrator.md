@@ -132,6 +132,30 @@ A1 M1-M7 sequence:
 6. `my-family`
 7. `checkpoint-first-contact`
 
+## A1 M1 / Infra Update (2026-05-31)
+
+- Active A1 worktree:
+  `.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
+- Branch:
+  `codex/a1-m1-m7-golden-journey-2026-05-30`
+- Current pushed head after the M1 rewrite:
+  `c5dd721c04 fix(a1): complete M1 plan coverage`
+- M1 is a hand-authored zero-learner textbook/workbook template, not a
+  universal golden module for all A1/A2. Treat it as the quality bar for the
+  `A1-zero-script-onboarding` archetype only.
+- Product/infra findings are documented in
+  `docs/architecture/learner-runtime-and-build-split.md`.
+- Normal lesson builds should not rebuild the ESUM etymology dynamic route
+  set. Use `npm run build:starlight` for fast learner-surface builds and
+  `npm run build:starlight:full` only for full reference/deploy builds.
+- `services.sh` should own the local Starlight preview. Run it from the active
+  worktree when previewing that worktree:
+
+```bash
+./services.sh restart starlight
+./services.sh status
+```
+
 ## Restart Commands
 
 ```bash

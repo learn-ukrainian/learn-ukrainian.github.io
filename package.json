@@ -70,6 +70,7 @@
     "api:bg": ".venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --reload --log-config scripts/api/logging.json >> logs/api.log 2>&1 & echo \"PID: $!\" | tee -a logs/api.log",
     "api:logs": "tail -f logs/api.log",
     "build:starlight": "npm run build --prefix starlight",
+    "build:starlight:full": "npm run build:full --prefix starlight",
     "dev:starlight": "npm run dev --prefix starlight"
   },
   "repository": {

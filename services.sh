@@ -32,7 +32,7 @@ mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary}"
 
 # Service definitions: name -> command, port, log file, health checks, process match
-declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH
+declare -A SVC_CMD SVC_PORT SVC_HOST SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH
 
 SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone"
 SVC_PORT[sources]=8766
@@ -50,13 +50,14 @@ SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
 SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
 SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
 
-SVC_CMD[starlight]="npm run dev --prefix starlight -- --force"
+SVC_CMD[starlight]="npm run dev --prefix starlight -- --host 127.0.0.1 --force"
 SVC_PORT[starlight]=4321
+SVC_HOST[starlight]=127.0.0.1
 SVC_LOG[starlight]="$LOGS_DIR/starlight.log"
 SVC_DESC[starlight]="Starlight Dev Server (Astro)"
-SVC_HEALTH[starlight]="http://localhost:4321/"
-SVC_HEALTH_ALT[starlight]="http://127.0.0.1:4321/"
-SVC_MATCH[starlight]="astro dev --force"
+SVC_HEALTH[starlight]="http://127.0.0.1:4321/"
+SVC_HEALTH_ALT[starlight]="http://localhost:4321/"
+SVC_MATCH[starlight]="$PROJECT_ROOT/starlight/node_modules/.bin/astro dev"
 
 ALL_SERVICES="sources api starlight"
 
@@ -75,6 +76,13 @@ _rewrite_legacy_alias() {
 }
 
 _pid_file() { echo "$PIDS_DIR/$1.pid"; }
+
+_tmux_session_name() {
+    local name="$1"
+    local root_hash
+    root_hash="$(printf '%s' "$PROJECT_ROOT" | cksum | awk '{print $1}')"
+    printf 'learn-ukrainian-%s-%s' "$name" "$root_hash"
+}
 
 # ---------------------------------------------------------------------------
 # Restart serialization (cross-process)
@@ -120,12 +128,17 @@ _release_restart_lock() {
 _pid_on_port() {
     local name="$1"
     local port="${SVC_PORT[$name]}"
+    local host="${SVC_HOST[$name]-}"
     if command -v lsof >/dev/null 2>&1; then
         # `|| true` because lsof exits 1 when no listener is found, and with
         # `set -eo pipefail` upstream that bubbles up to the caller. We want
         # an empty-stdout, exit-0 contract so callers can distinguish "no
         # owner" from "lookup failed" purely by the captured value.
-        lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | head -n 1 || true
+        if [[ -n "$host" ]]; then
+            lsof -tiTCP@"$host":"$port" -sTCP:LISTEN 2>/dev/null || true
+        else
+            lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null || true
+        fi
     fi
 }
 
@@ -152,9 +165,53 @@ _verified_port_pid() {
     local name="$1"
     local port_pid
 
-    port_pid="$(_pid_on_port "$name")"
-    if [[ -n "$port_pid" ]] && _pid_matches_service "$name" "$port_pid"; then
-        printf '%s\n' "$port_pid"
+    for port_pid in $(_pid_on_port "$name"); do
+        if [[ -n "$port_pid" ]] && _pid_matches_service "$name" "$port_pid"; then
+            printf '%s\n' "$port_pid"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+_foreign_port_pid() {
+    local name="$1"
+    local port_pid
+
+    for port_pid in $(_pid_on_port "$name"); do
+        if [[ -n "$port_pid" ]] && ! _pid_matches_service "$name" "$port_pid"; then
+            printf '%s\n' "$port_pid"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+_any_port_pid() {
+    local name="$1"
+    local port_pid
+
+    for port_pid in $(_pid_on_port "$name"); do
+        if [[ -n "$port_pid" ]]; then
+            printf '%s\n' "$port_pid"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+_port_owner_label() {
+    local name="$1"
+    local host="${SVC_HOST[$name]-}"
+    local port="${SVC_PORT[$name]}"
+
+    if [[ -n "$host" ]]; then
+        printf '%s:%s' "$host" "$port"
+    else
+        printf '%s' "$port"
     fi
 }
 
@@ -184,6 +241,13 @@ _health_check() {
 
     if _health_probe "$name" "$primary"; then
         return 0
+    fi
+
+    # Host-scoped services must be healthy on their configured bind address.
+    # Otherwise a sibling process on localhost/IPv6 can mask a dead worktree
+    # preview and make `services.sh restart starlight` refuse to respawn it.
+    if [[ -n "${SVC_HOST[$name]-}" ]]; then
+        return 1
     fi
 
     if [[ -n "$alt" ]]; then
@@ -275,27 +339,49 @@ _start_service() {
     # (don't accidentally claim a random foreign process bound to the same
     # port — that would write a wrong PID into our pidfile).
     local port_pid
-    port_pid="$(_pid_on_port "$name")"
+    port_pid="$(_verified_port_pid "$name" || true)"
     if [[ -n "$port_pid" ]]; then
-        if _pid_matches_service "$name" "$port_pid"; then
-            echo "  $name port ${SVC_PORT[$name]} is already bound by PID $port_pid (concurrent start?); not spawning"
-            _sync_pidfile "$name" "$port_pid"
-            return 0
-        else
-            echo "  $name port ${SVC_PORT[$name]} is bound by foreign PID $port_pid; not spawning (free the port and retry)"
-            return 1
-        fi
+        echo "  $name port $(_port_owner_label "$name") is already bound by PID $port_pid (concurrent start?); not spawning"
+        _sync_pidfile "$name" "$port_pid"
+        return 0
+    fi
+
+    port_pid="$(_foreign_port_pid "$name" || true)"
+    if [[ -n "$port_pid" ]]; then
+        echo "  $name port $(_port_owner_label "$name") is bound by foreign PID $port_pid; not spawning (free the port and retry)"
+        return 1
     fi
 
     echo "  Starting $name — ${SVC_DESC[$name]}..."
     cd "$PROJECT_ROOT"
 
-    # shellcheck disable=SC2086
-    nohup ${SVC_CMD[$name]} >> "${SVC_LOG[$name]}" 2>&1 &
-    local pid=$!
+    local pid=""
+    if [[ "$name" == "starlight" ]] && command -v tmux >/dev/null 2>&1; then
+        local session
+        session="$(_tmux_session_name "$name")"
+        tmux kill-session -t "$session" 2>/dev/null || true
+        # shellcheck disable=SC2086
+        tmux new-session -d -s "$session" "cd \"$PROJECT_ROOT\" && ${SVC_CMD[$name]} >> \"${SVC_LOG[$name]}\" 2>&1"
+        for _ in $(seq 1 20); do
+            pid="$(_verified_port_pid "$name" || true)"
+            if [[ -n "$pid" ]]; then
+                break
+            fi
+            sleep 0.25
+        done
+    else
+        # shellcheck disable=SC2086
+        nohup ${SVC_CMD[$name]} </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
+        pid=$!
+    fi
 
-    echo "$pid" > "$(_pid_file "$name")"
-    echo "  $name started (PID $pid, port ${SVC_PORT[$name]}, log ${SVC_LOG[$name]})"
+    if [[ -n "$pid" ]]; then
+        echo "$pid" > "$(_pid_file "$name")"
+        echo "  $name started (PID $pid, port $(_port_owner_label "$name"), log ${SVC_LOG[$name]})"
+    else
+        rm -f "$(_pid_file "$name")"
+        echo "  $name start requested, but no matching listener appeared yet (log ${SVC_LOG[$name]})"
+    fi
 }
 
 _stop_service() {
@@ -329,13 +415,16 @@ _stop_service() {
     fi
 
     rm -f "$pidfile"
+    if [[ "$name" == "starlight" ]] && command -v tmux >/dev/null 2>&1; then
+        tmux kill-session -t "$(_tmux_session_name "$name")" 2>/dev/null || true
+    fi
 
     # Wait for the OS to actually release the listening socket. Process death
     # ≠ port released — macOS holds the socket briefly in TIME_WAIT (or until
     # all child fds close). Without this wait, an immediate _start_service
     # would race a stale port and die with EADDRINUSE.
     for _ in $(seq 1 10); do
-        if [[ -z "$(_pid_on_port "$name")" ]]; then
+        if [[ -z "$(_any_port_pid "$name" || true)" ]]; then
             break
         fi
         sleep 0.5
