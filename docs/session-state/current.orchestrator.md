@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T21:45Z)
+# Current - Codex orchestrator handoff (2026-05-31T22:00Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -152,6 +152,7 @@ A1 M1-M7 sequence:
   - `099c6d5009 fix(pipeline): allow A1 workbook-only activities`
   - `04860251b9 fix(a1): replace passive alphabet map`
   - `6ccce0946a fix(a1): close M1 wiki and gate coverage`
+  - `79c8d84fe9 feat(pipeline): gate module archetype fit`
 - M1 is a hand-authored zero-learner textbook/workbook template, not a
   universal golden module for all A1/A2. Treat it as the quality bar for the
   `A1-zero-script-onboarding` archetype only.
@@ -206,9 +207,25 @@ A1 M1-M7 sequence:
     zero-script modules with passing deterministic `resource_coverage`;
   - ignoring sung vowel practice strings in VESUM and alphabet rows in the
     long-UK immersion ceiling.
-- Next gate to implement:
-  an archetype-fit wrapper in `contract_compliance.py` that aggregates
-  deterministic subchecks only. Do not weaken wiki/resource coverage.
+- Latest deterministic gate implemented:
+  `archetype_fit`. `scripts/audit/checks/contract_compliance.py` now exposes
+  `check_archetype_fit()`, and `scripts/build/linear_pipeline.py` records it in
+  `run_python_qg()`. It does not replace wiki/resource, VESUM, Russianism, or
+  decolonization gates. For A1 M1-M7 it checks no internal wiki links,
+  English-led surface, workbook activity floor, A1-compatible activity
+  families, and a real textbook/workbook split. A1 M1 passes this gate.
+- Validation for `79c8d84fe9`:
+  - `tests/test_contract_compliance.py`: 36 passed.
+  - focused suite covering contract, inject, resource, plan-reference, and
+    translate explanations: 55 passed.
+  - direct A1 M1 `run_python_qg()`: passed.
+  - `ruff check` on touched files: passed.
+  - `git diff --check`: passed.
+  - `npm run build:starlight`: passed; 91 pages built.
+  - pre-commit on commit: passed.
+- Next implementation target:
+  start applying the M1 archetype/gate stack to M2 (`reading-ukrainian`) before
+  broad M2-M7 generation. Keep wiki/resource coverage hard.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.
 - Normal lesson builds should not rebuild the ESUM etymology dynamic route

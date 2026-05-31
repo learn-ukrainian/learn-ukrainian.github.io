@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-05-31T21:45Z)
+# Current - Codex Thread Handoff (2026-05-31T22:00Z)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `6ccce0946a fix(a1): close M1 wiki and gate coverage`
+  `79c8d84fe9 feat(pipeline): gate module archetype fit`
 
 ## Current Direction
 
@@ -100,10 +100,39 @@ Current direct checks:
 
 ## Next Steps
 
-1. Push `6ccce0946a` and the handoff refresh commit.
-2. Use M1 as the zero-script onboarding template and continue infra work toward
-   M2-M7. The next highest-value target is an archetype-fit wrapper in
-   `contract_compliance.py` that aggregates deterministic subchecks without
-   weakening wiki/resource coverage.
-3. After infra wrapper work, start M2 only if M1 remains green and readable in
-   the preview.
+## Latest Archetype-Fit Gate
+
+Commit `79c8d84fe9` added a deterministic `archetype_fit` gate:
+
+- `scripts/audit/checks/contract_compliance.py` now exposes
+  `check_archetype_fit()`.
+- `scripts/build/linear_pipeline.py` records it in `run_python_qg()`.
+- It does not replace wiki/resource, VESUM, Russianism, or decolonization
+  gates. It only checks deterministic artifact shape for the resolved module
+  archetype.
+- For A1 M1-M7 it checks: no internal wiki links, English-led surface,
+  workbook activity floor, A1-compatible activity families, and a real
+  textbook/workbook split.
+- Direct A1 M1 `run_python_qg()` passes with `archetype_fit.passed == true`.
+
+Validation for `79c8d84fe9`:
+
+- `tests/test_contract_compliance.py`: 36 passed.
+- Focused suite:
+  `tests/test_contract_compliance.py tests/test_inject_activity_gate.py
+  tests/test_resources_search_gate.py tests/test_plan_reference_match_gate.py
+  tests/test_quiz_translate_explanations_gate.py`: 55 passed.
+- Direct A1 M1 `run_python_qg()`: passed.
+- `ruff check scripts/audit/checks/contract_compliance.py
+  scripts/build/linear_pipeline.py tests/test_contract_compliance.py`: passed.
+- `git diff --check`: passed.
+- `npm run build:starlight`: passed; 91 pages built.
+- Pre-commit on `79c8d84fe9`: passed.
+
+## Next Steps
+
+1. Push `79c8d84fe9` and this handoff refresh commit.
+2. Continue toward M2-M7 by applying the now-green M1 archetype/gate stack to
+   M2 (`reading-ukrainian`) before broad generation.
+3. Keep wiki/resource coverage hard. If M2 surfaces manifest/resource gaps,
+   fix content/resources or scoped infra, not by weakening the coverage gates.
