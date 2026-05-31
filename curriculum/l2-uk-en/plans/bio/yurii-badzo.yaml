@@ -29,8 +29,8 @@ content_outline:
 - section: Розминка
   words: 400
   points:
-  - '[!biography] Бадзо (1936–2018).'
-  - Чому 1400-сторінковий манускрипт небезпекий?
+  - '[!biography] Бадзьо (1936–2018).'
+  - Чому 1400-сторінковий манускрипт небезпечний?
 - section: 'Формування: Ужгород і наука'
   words: 1000
   points:
@@ -51,10 +51,10 @@ content_outline:
 - section: 'Підсумок: Видання 1996 р.'
   words: 1000
   points:
-  - Звілнення 1988 р.; видання 1996 р.
+  - Звільнення 1988 р.; видання 1996 р.
   - «Мовна русифікація не слабне...» (2000).
   - '[!decolonization] Міст від Дзюби до ширшої теорії права жити.'
-focus: Юрій Бадзо — літературознавець, автор «Право жити», політв'язень 1979 р.
+focus: Юрій Бадзьо — літературознавець, автор «Право жити», політв'язень 1979 р.
 level: BIO
 module: bio-242
 objectives:
@@ -82,7 +82,7 @@ references:
 sequence: 242
 slug: yurii-badzo
 subtitle: The Literary Scholar and the Manuscript the State Feared
-title: 'Юрій Бадзо: право жити'
+title: 'Юрій Бадзьо: право жити'
 version: '1.0'
 vocabulary_hints:
 - word: манускрипт
