@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T23:05Z)
+# Current - Codex orchestrator handoff (2026-05-31T23:22Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -30,7 +30,7 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 - Current authoritative remote head at handoff:
   `836526d165 feat(api): surface bridge activity for orchestrators`
 - Active A1 branch head before handoff-doc commit:
-  `1bfcc7a7f9 fix(pipeline): allow zero-word summary sections`
+  `08fe80bf95 feat(a1): add M5 who am i module`
 - Main checkout has unrelated dirty user/Claude files; do not revert:
   - `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`
   - `scripts/deploy_prompts.sh`
@@ -60,17 +60,10 @@ Check with:
 curl -sS http://127.0.0.1:8765/api/delegate/active
 ```
 
-Active at handoff time:
+Active at M5 handoff time:
 
-- `review-2477-20260531080952` - Claude Opus review-deep for BIO PR #2477.
-- `bio-rebuild-blockI1` - Cursor, running before this handoff.
-- `bio-rebuild-blockG7` - Cursor, running before this handoff.
-- `review-pr2476-plan-ci` - DeepSeek v4 flash read-only triage for BIO PR
-  #2476. Dispatched before the BIO boundary correction; let Claude decide
-  whether to use or ignore the result.
-- `review-pr2474-plan-ci` - DeepSeek v4 flash read-only triage for BIO PR
-  #2474. Dispatched before the BIO boundary correction; let Claude decide
-  whether to use or ignore the result.
+- `bio-blk5-252-255` - Claude Opus BIO delegate, running. This is
+  Claude/BIO-owned; Codex should not inspect or interfere unless asked.
 
 Do not assume the bridge `status` command is authoritative for delegates; use
 `/api/delegate/active` and task logs/state.
@@ -239,6 +232,14 @@ A1 M1-M7 sequence:
   `validate_plan()` accept the locked M5 `Підсумок` section with `words: 0`
   while still rejecting negative or missing section budgets. Regression test
   coverage was added for `plan_path_for("a1", "who-am-i")`.
+- M5 build completed:
+  `08fe80bf95 feat(a1): add M5 who am i module` added the English-led
+  first-contact `who-am-i` module, activities, vocabulary, resources, and
+  rendered Starlight MDX. Direct M5 `run_python_qg()` passes, including hard
+  `resource_coverage`, `archetype_fit` for `a1-first-contact-survival`,
+  VESUM, Russianism, and word-count gates. The implementation also made scoped
+  fixes for wiki HTML comment cleanup, the teacher-facing `чанк` coverage
+  obligation, and generated MDX `DialogueBox uk/en` rendering.
 - `plan_sections` now allows approved English learner-facing headings for A1
   M1-M7 while still requiring every locked plan section.
 - Validation for `79c8d84fe9`:
@@ -277,8 +278,16 @@ A1 M1-M7 sequence:
   - M5 infra unblock validation:
     `tests/test_linear_pipeline_wiki_coverage.py`: 7 passed.
   - Pre-commit on `1bfcc7a7f9`: passed.
+  - M5 content validation:
+    `scripts.yaml_activities`, direct `run_python_qg()`, direct hard wiki
+    coverage, `scripts/validate_mdx.py l2-uk-en a1 5`, direct
+    `validate_module()`, `npm run build:starlight`, focused pytest, focused
+    Starlight unit tests, ruff, and pre-commit all passed.
+  - In-app Browser inspection confirmed `/a1/who-am-i/` renders one H1, visible
+    Lesson/Vocabulary/Activities/Resources tabs, visible dialogue glosses,
+    workbook activities, and only student-facing ULP resources.
 - Next implementation target:
-  build M5 content (`who-am-i`) with the same full artifact set and direct
+  build M6 content (`my-family`) with the same full artifact flow and direct
   `run_python_qg()` validation. Keep wiki/resource coverage hard.
 - Product/infra findings are documented in
   `docs/architecture/learner-runtime-and-build-split.md`.

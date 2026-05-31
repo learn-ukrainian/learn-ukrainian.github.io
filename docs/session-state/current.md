@@ -9,7 +9,7 @@ Agent-Handoff:
 - gemini: docs/session-state/current.gemini.md
 
 Default-Agent: orchestrator
-Generated-At: 2026-05-31T23:05:00Z
+Generated-At: 2026-05-31T23:22:11Z
 
 This file is a small compatibility router. Detailed thread state lives in
 `docs/session-state/current.<agent>.md`; agents should update only their own
