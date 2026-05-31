@@ -294,7 +294,12 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += f"\npipeline: {pipeline_version}"
     if build_status:
         extra_fm_lines += f"\nbuild_status: {build_status}"
-    if pipeline_version and pipeline_version not in ("v5", "v6"):
+    should_hide_draft = (
+        pipeline_version
+        and pipeline_version not in ("v5", "v6")
+        and not (pipeline_version == "linear-phase-4" and build_status in {"validated", "reviewed"})
+    )
+    if should_hide_draft:
         extra_fm_lines += "\ndraft: true"
 
     try:

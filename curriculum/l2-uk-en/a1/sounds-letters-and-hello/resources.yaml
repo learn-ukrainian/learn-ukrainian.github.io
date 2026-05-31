@@ -1,0 +1,29 @@
+- title: Большакова, буквар 1 клас, p. 24
+  role: textbook
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0023
+  notes: 'Plan reference: голосні/приголосні через вірші; retrieved via search_text
+    because plan notes include no literal chunk_id.'
+- title: Захарійчук, буквар 1 клас (НУШ 2025), p. 13
+  role: textbook
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0002
+  notes: 'Plan reference: [•] голосний, [–] твердий приголосний, [=] м''який приголосний;
+    resolved page context from corpus metadata.'
+- title: Заболотний 5 клас, p. 83
+  role: textbook
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0084
+  notes: 'Plan reference: «Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.»'
+- title: Літвінова 5 клас, p. 130
+  role: textbook
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0135
+  notes: 'Plan reference: питання про «голосна літера» / «приголосна літера» and sound-letter
+    distinction.'
+- title: ULP Season 1, Episode 1 — Informal Greetings
+  role: podcast
+  url: https://www.ukrainianlessons.com/episode1/
+  notes: 'Plan reference: Привіт, Як справи?, response models; external search found
+    ULP Episode 1 material.'
+- title: 'Wiki: pedagogy/a1/sounds-letters-and-hello, locked 2026-04-23'
+  role: wiki
+  url: wiki/pedagogy/a1/sounds-letters-and-hello.md
+  notes: 'Plan reference: authoritative pedagogical brief for sequence steps, L2 errors,
+    and greeting chunks.'

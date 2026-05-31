@@ -1,0 +1,467 @@
+- id: act-1
+  type: quiz
+  title: Звук чи літера?
+  instruction: Choose the correct answer.
+  items:
+  - prompt: Що ти чуєш і вимовляєш?
+    options:
+    - text: звук
+      correct: true
+    - text: літера
+      correct: false
+    - text: абетка
+      correct: false
+    explanation: Звук is what you hear and pronounce.
+  - prompt: Що ти бачиш і пишеш?
+    options:
+    - text: звук
+      correct: false
+    - text: літера
+      correct: true
+    - text: голос
+      correct: false
+    explanation: Літера is what you see and write.
+  - prompt: Скільки літер в українській абетці?
+    options:
+    - text: '33'
+      correct: true
+    - text: '38'
+      correct: false
+    - text: '6'
+      correct: false
+    explanation: The Ukrainian alphabet has 33 letters.
+- id: act-2
+  type: watch-and-repeat
+  title: Голосні звуки
+  instruction: Listen and repeat.
+  items:
+  - letter: А
+    sound: '[а]'
+    word: мама
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  - letter: У
+    sound: '[у]'
+    word: урок
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  - letter: Е
+    sound: '[е]'
+    word: екран
+    video: https://www.youtube.com/watch?v=KFlsroBW0dk
+  - letter: И
+    sound: '[и]'
+    word: сир
+    video: https://www.youtube.com/watch?v=W-1rCu0indE
+  - letter: І
+    sound: '[і]'
+    word: ім'я
+    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+- id: act-3
+  type: group-sort
+  title: Голосні і приголосні
+  instruction: Sort the sounds.
+  groups:
+  - label: Голосні звуки
+    items:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[е]'
+    - '[и]'
+    - '[і]'
+  - label: Приголосні звуки
+    items:
+    - '[м]'
+    - '[н]'
+    - '[с]'
+    - '[к]'
+    - '[т]'
+    - '[р]'
+- id: act-4
+  type: fill-in
+  title: Привітання
+  instruction: Complete the dialogue.
+  items:
+  - sentence: ____! Як справи?
+    answer: Привіт
+    options:
+    - Привіт
+    - молоко
+    - літера
+  - sentence: ____. А у тебе?
+    answer: Добре
+    options:
+    - Добре
+    - звук
+    - день
+  - sentence: ____ тебе бачити.
+    answer: Рада
+    options:
+    - Рада
+    - Мама
+    - Літера
+  - sentence: До ____!
+    answer: побачення
+    options:
+    - побачення
+    - справи
+    - голос
+- id: act-5
+  type: true-false
+  title: Підсумкова перевірка
+  instruction: Choose true or false.
+  items:
+  - statement: Звук ти чуєш і вимовляєш.
+    correct: true
+    explanation: Sound belongs to hearing and pronunciation.
+  - statement: Літеру ти бачиш і пишеш.
+    correct: true
+    explanation: A letter belongs to reading and writing.
+  - statement: Українська абетка має 33 літери.
+    correct: true
+    explanation: The Ukrainian alphabet has 33 letters.
+  - statement: Українська мова має 38 звуків.
+    correct: true
+    explanation: The module uses the standard beginner count of 38 sounds.
+  - statement: М'який знак має власний звук.
+    correct: false
+    explanation: The soft sign has no sound of its own.
+  - statement: Ї завжди читається як два звуки.
+    correct: true
+    explanation: Ї is always [йі].
+- type: match-up
+  title: Бачу літеру, чую звук
+  instruction: Match each letter with its sound.
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: М
+    right: '[м]'
+  - left: К
+    right: '[к]'
+  - left: Н
+    right: '[н]'
+- type: letter-grid
+  title: Абетка
+  instruction: Read each letter and key word.
+  letters:
+  - upper: А
+    lower: а
+    emoji: 🍍
+    key_word: ананас
+    sound_type: vowel
+    note: '[а]'
+  - upper: Б
+    lower: б
+    emoji: 🍌
+    key_word: банан
+    sound_type: consonant
+    note: '[б]'
+  - upper: В
+    lower: в
+    emoji: 💧
+    key_word: вода
+    sound_type: consonant
+    note: '[в]'
+  - upper: Г
+    lower: г
+    emoji: ⛰️
+    key_word: гора
+    sound_type: consonant
+    note: '[г]'
+  - upper: Ґ
+    lower: ґ
+    emoji: 🔘
+    key_word: ґудзик
+    sound_type: consonant
+    note: '[ґ]'
+  - upper: Д
+    lower: д
+    emoji: 🏠
+    key_word: дім
+    sound_type: consonant
+    note: '[д]'
+  - upper: Е
+    lower: е
+    emoji: 🖥️
+    key_word: екран
+    sound_type: vowel
+    note: '[е]'
+  - upper: Є
+    lower: є
+    emoji: 🦝
+    key_word: єнот
+    sound_type: iotated
+    note: '[йе]'
+  - upper: Ж
+    lower: ж
+    emoji: 🪲
+    key_word: жук
+    sound_type: consonant
+    note: '[ж]'
+  - upper: З
+    lower: з
+    emoji: 🦷
+    key_word: зуб
+    sound_type: consonant
+    note: '[з]'
+  - upper: И
+    lower: и
+    emoji: 🧀
+    key_word: сир
+    sound_type: vowel
+    note: '[и]'
+  - upper: І
+    lower: і
+    emoji: 🪪
+    key_word: ім'я
+    sound_type: vowel
+    note: '[і]'
+  - upper: Ї
+    lower: ї
+    emoji: 🦔
+    key_word: їжак
+    sound_type: iotated
+    note: '[йі]'
+  - upper: Й
+    lower: й
+    emoji: 🥛
+    key_word: йогурт
+    sound_type: consonant
+    note: '[й]'
+  - upper: К
+    lower: к
+    emoji: 🐈
+    key_word: кіт
+    sound_type: consonant
+    note: '[к]'
+  - upper: Л
+    lower: л
+    emoji: 🍋
+    key_word: лимон
+    sound_type: consonant
+    note: '[л]'
+  - upper: М
+    lower: м
+    emoji: 👩
+    key_word: мама
+    sound_type: consonant
+    note: '[м]'
+  - upper: Н
+    lower: н
+    emoji: 👃
+    key_word: ніс
+    sound_type: consonant
+    note: '[н]'
+  - upper: О
+    lower: о
+    emoji: 👁️
+    key_word: око
+    sound_type: vowel
+    note: '[о]'
+  - upper: П
+    lower: п
+    emoji: 🐕
+    key_word: пес
+    sound_type: consonant
+    note: '[п]'
+  - upper: Р
+    lower: р
+    emoji: ✋
+    key_word: рука
+    sound_type: consonant
+    note: '[р]'
+  - upper: С
+    lower: с
+    emoji: 🌙
+    key_word: сон
+    sound_type: consonant
+    note: '[с]'
+  - upper: Т
+    lower: т
+    emoji: 👨
+    key_word: тато
+    sound_type: consonant
+    note: '[т]'
+  - upper: У
+    lower: у
+    emoji: 📚
+    key_word: урок
+    sound_type: vowel
+    note: '[у]'
+  - upper: Ф
+    lower: ф
+    emoji: 📷
+    key_word: фото
+    sound_type: consonant
+    note: '[ф]'
+  - upper: Х
+    lower: х
+    emoji: 🏠
+    key_word: хата
+    sound_type: consonant
+    note: '[х]'
+  - upper: Ц
+    lower: ц
+    emoji: 🍬
+    key_word: цукор
+    sound_type: consonant
+    note: '[ц]'
+  - upper: Ч
+    lower: ч
+    emoji: 🕒
+    key_word: час
+    sound_type: consonant
+    note: '[ч]'
+  - upper: Ш
+    lower: ш
+    emoji: 🏫
+    key_word: школа
+    sound_type: consonant
+    note: '[ш]'
+  - upper: Щ
+    lower: щ
+    emoji: 🐟
+    key_word: щука
+    sound_type: consonant
+    note: '[шч]'
+  - upper: Ь
+    lower: ь
+    emoji: 📅
+    key_word: день
+    sound_type: special
+    note: no sound
+  - upper: Ю
+    lower: ю
+    emoji: 🥣
+    key_word: юшка
+    sound_type: iotated
+    note: '[йу]'
+  - upper: Я
+    lower: я
+    emoji: 🍎
+    key_word: яблуко
+    sound_type: iotated
+    note: '[йа]'
+- type: count-syllables
+  title: Скільки голосних?
+  instruction: Count the vowel sounds.
+  maxCount: 3
+  items:
+  - word: мама
+    correct: 2
+  - word: молоко
+    correct: 3
+  - word: день
+    correct: 1
+  - word: Привіт
+    correct: 2
+- type: quiz
+  title: Коротка перевірка
+  instruction: Choose the best answer.
+  items:
+  - prompt: Що позначає [•] у звуковій моделі?
+    options:
+    - text: голосний звук
+      correct: true
+    - text: літера
+      correct: false
+    - text: апостроф
+      correct: false
+    explanation: '[•] marks a vowel sound in the model.'
+  - prompt: Яка літера не має власного звука?
+    options:
+    - text: Ь
+      correct: true
+    - text: А
+      correct: false
+    - text: М
+      correct: false
+    explanation: Ь has no sound of its own; it softens the previous consonant.
+  - prompt: Як читається Ї?
+    options:
+    - text: '[йі]'
+      correct: true
+    - text: '[і]'
+      correct: false
+    - text: '[йа]'
+      correct: false
+    explanation: 'Ї always represents two sounds: [йі].'
+- type: error-correction
+  title: Типові помилки
+  instruction: Find the incorrect form, then choose the correction.
+  items:
+  - sentence: Це голосна літера А.
+    error: голосна літера
+    correction: літера, що позначає голосний звук
+    options:
+    - літера, що позначає голосний звук
+    - літера без звука
+    - голосний знак
+    explanation: In Ukrainian terminology, vowel/consonant describes sounds, not letters.
+  - sentence: Молоко читається як малако.
+    error: малако
+    correction: молоко
+    options:
+    - молоко
+    - мама
+    - молока
+    explanation: Ukrainian [о] stays clear in unstressed position.
+  - sentence: М'який знак має власний звук.
+    error: має власний звук
+    correction: не має власного звука
+    options:
+    - не має власного звука
+    - завжди читається [йі]
+    - позначає голосний звук
+    explanation: Ь has no sound; it changes the previous consonant.
+  - sentence: Ї може пом'якшувати попередній приголосний.
+    error: може пом'якшувати
+    correction: завжди читається як [йі]
+    options:
+    - завжди читається як [йі]
+    - читається як [і]
+    - не має власного звука
+    explanation: 'Ї is the strict exception: always [йі].'
+  - sentence: Жінка каже «Радий тебе бачити».
+    error: Радий
+    correction: Рада
+    options:
+    - Рада
+    - Радий
+    - Радо
+    explanation: Радий is masculine; рада is feminine.
+- type: translate
+  title: Фрази
+  instruction: Choose the English meaning.
+  items:
+  - source: Привіт!
+    options:
+    - text: Hi!
+      correct: true
+    - text: Goodbye!
+      correct: false
+    - text: Milk
+      correct: false
+    explanation: Привіт is an informal greeting.
+  - source: Добрий день!
+    options:
+    - text: Good day / Hello!
+      correct: true
+    - text: How are you?
+      correct: false
+    - text: Great
+      correct: false
+    explanation: Добрий день is a neutral formal greeting.
+  - source: До побачення!
+    options:
+    - text: Goodbye!
+      correct: true
+    - text: Good morning!
+      correct: false
+    - text: Fine
+      correct: false
+    explanation: До побачення is the goodbye phrase.

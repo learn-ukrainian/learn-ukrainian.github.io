@@ -119,6 +119,9 @@ references:
 
     mdx = assemble_mdx(module_dir, out_path, plan_path)
 
+    assert "pipeline: linear-phase-4" in mdx
+    assert "build_status: validated" in mdx
+    assert "draft: true" not in mdx
     assert "<DialogueBox" in mdx
     assert "<VocabCard" in mdx
     assert "<FlashcardDeck" in mdx

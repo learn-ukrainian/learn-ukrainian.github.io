@@ -202,6 +202,235 @@ def test_parse_writer_output_strict_json() -> None:
     )
 
 
+def test_parse_writer_output_normalizes_keyed_group_sort_items() -> None:
+    output = """```markdown file=module.md
+# Звуки
+```
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "group-sort",
+    "instruction": "Розподіліть слова.",
+    "groups": [
+      {"name": "Один голосний", "key": "one"},
+      {"name": "Два голосні", "key": "two"}
+    ],
+    "items": [
+      {"word": "дім", "group": "one"},
+      {"word": "сон", "group": "one"},
+      {"word": "мама", "group": "two"}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "звук",
+    "translation": "sound",
+    "pos": "noun",
+    "usage": "Я чую звук."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Заболотний Grade 5, p.83",
+    "role": "textbook",
+    "notes": "Звуки ми чуємо й вимовляємо."
+  }
+]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+    activities = yaml.safe_load(artifacts["activities.yaml"])
+
+    assert "items" not in activities[0]
+    assert activities[0]["groups"] == [
+        {"label": "Один голосний", "items": ["дім", "сон"]},
+        {"label": "Два голосні", "items": ["мама"]},
+    ]
+
+
+def test_parse_writer_output_normalizes_legacy_letter_grid_items() -> None:
+    output = """```markdown file=module.md
+# Звуки
+```
+
+```json file=activities.yaml
+[
+  {
+    "id": "grid-1",
+    "type": "letter-grid",
+    "title": "Абетка",
+    "letters": [
+      {"letter": "А", "word": "ананас", "sound": "[а]", "kind": "vowel"},
+      {"letter": "И", "word": "сир", "sound": "[и]", "kind": "vowel"}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "звук",
+    "translation": "sound",
+    "pos": "noun",
+    "usage": "Я чую звук."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Заболотний Grade 5, p.83",
+    "role": "textbook",
+    "notes": "Звуки ми чуємо й вимовляємо."
+  }
+]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+    activities = yaml.safe_load(artifacts["activities.yaml"])
+
+    assert activities[0]["letters"] == [
+        {
+            "upper": "А",
+            "lower": "а",
+            "emoji": "🍍",
+            "key_word": "ананас",
+            "sound_type": "vowel",
+            "note": "[а]",
+        },
+        {
+            "upper": "И",
+            "lower": "и",
+            "emoji": "🧀",
+            "key_word": "сир",
+            "sound_type": "vowel",
+            "note": "[и]",
+        },
+    ]
+
+
+def test_parse_writer_output_normalizes_count_syllables_answer_alias() -> None:
+    output = """```markdown file=module.md
+# Звуки
+```
+
+```json file=activities.yaml
+[
+  {
+    "id": "count-1",
+    "type": "count-syllables",
+    "title": "Скільки голосних?",
+    "maxCount": 3,
+    "items": [
+      {"word": "мама", "answer": 2},
+      {"word": "день", "answer": 1}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "звук",
+    "translation": "sound",
+    "pos": "noun",
+    "usage": "Я чую звук."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Заболотний Grade 5, p.83",
+    "role": "textbook",
+    "notes": "Звуки ми чуємо й вимовляємо."
+  }
+]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+    activities = yaml.safe_load(artifacts["activities.yaml"])
+
+    assert activities[0]["items"] == [
+        {"word": "мама", "correct": 2},
+        {"word": "день", "correct": 1},
+    ]
+
+
+def test_parse_writer_output_normalizes_watch_and_repeat_url_alias() -> None:
+    output = """```markdown file=module.md
+# Звуки
+```
+
+```json file=activities.yaml
+[
+  {
+    "id": "listen-1",
+    "type": "watch-and-repeat",
+    "title": "Голосні звуки",
+    "items": [
+      {"letter": "А", "word": "мама", "url": "https://www.youtube.com/watch?v=hvB3VpcR3ZE"},
+      {"letter": "У", "word": "урок", "url": "https://youtu.be/VB1O6PmtYRU"}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "звук",
+    "translation": "sound",
+    "pos": "noun",
+    "usage": "Я чую звук."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Заболотний Grade 5, p.83",
+    "role": "textbook",
+    "notes": "Звуки ми чуємо й вимовляємо."
+  }
+]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+    activities = yaml.safe_load(artifacts["activities.yaml"])
+
+    assert activities[0]["items"] == [
+        {
+            "letter": "А",
+            "word": "мама",
+            "video": "https://www.youtube.com/watch?v=hvB3VpcR3ZE",
+        },
+        {
+            "letter": "У",
+            "word": "урок",
+            "video": "https://youtu.be/VB1O6PmtYRU",
+        },
+    ]
+
+
 def test_parse_writer_output_accepts_4backtick_outer_with_inner_3backtick_content() -> None:
     """Pin CommonMark fence-counting for the module.md OUTER fence.
 
@@ -509,6 +738,27 @@ def test_parse_writer_output_rejects_extra_fields_in_vocabulary() -> None:
         match=r"vocabulary\.yaml.*unexpected fields \['kek'\]",
     ):
         linear_pipeline.parse_writer_output_strict_json(output)
+
+
+def test_validate_writer_json_artifact_rejects_vocabulary_cefr_metadata() -> None:
+    """CEFR lookup results are selection evidence, not vocabulary fields."""
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"vocabulary\.yaml schema validation failed: item 1 has "
+        r"unexpected fields \['cefr'\]",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "vocabulary.yaml",
+            [
+                {
+                    "lemma": "звук",
+                    "translation": "sound",
+                    "pos": "noun",
+                    "usage": "Я чую звук.",
+                    "cefr": "A2",
+                }
+            ],
+        )
 
 
 def test_parse_writer_output_rejects_label_vs_fence_name_mismatch() -> None:

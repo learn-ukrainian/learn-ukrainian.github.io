@@ -6753,7 +6753,7 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
         external_resources=resources,
         level=str(plan["level"]).lower(),
         pipeline_version="linear-phase-4",
-        build_status="draft",
+        build_status="validated",
     )
     mdx = mdx.replace("\n{/**/}\n", "\n")
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -6833,8 +6833,197 @@ def _parse_and_dump_writer_json_artifact(
     except ValueError as exc:
         raise LinearPipelineError(f"{artifact} invalid JSON: {exc}") from exc
 
+    _normalize_writer_json_artifact(artifact, parsed)
     _validate_writer_json_artifact(artifact, parsed)
     return yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+
+
+def _normalize_writer_json_artifact(artifact: str, parsed: Any) -> None:
+    """Normalize narrow, lossless legacy writer shapes before validation."""
+    if artifact != "activities.yaml" or not isinstance(parsed, list):
+        return
+    for activity in parsed:
+        if isinstance(activity, dict) and activity.get("type") == "group-sort":
+            _normalize_group_sort_activity(activity)
+        if isinstance(activity, dict) and activity.get("type") == "letter-grid":
+            _normalize_letter_grid_activity(activity)
+        if isinstance(activity, dict) and activity.get("type") == "count-syllables":
+            _normalize_count_syllables_activity(activity)
+        if isinstance(activity, dict) and activity.get("type") == "watch-and-repeat":
+            _normalize_watch_and_repeat_activity(activity)
+
+
+def _group_sort_label(group: Mapping[str, Any]) -> str | None:
+    for field in ("label", "name", "title", "key", "id"):
+        value = group.get(field)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def _group_sort_item_text(item: Mapping[str, Any]) -> str | None:
+    for field in ("word", "text", "label", "item", "value"):
+        value = item.get(field)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def _normalize_group_sort_activity(activity: dict[str, Any]) -> None:
+    """Convert keyed top-level group-sort items into nested group items.
+
+    Writers often use an assessment-style shape:
+    ``groups: [{name, key}], items: [{word, group}]``. The authoring format
+    consumed by the renderer keeps sortable strings inside each group:
+    ``groups: [{label, items}]``. Convert only when every top-level item can
+    be assigned unambiguously; otherwise leave validation to fail loud.
+    """
+    groups = activity.get("groups")
+    if not isinstance(groups, list) or not groups:
+        return
+
+    normalized_groups: list[dict[str, Any]] = []
+    aliases: dict[str, dict[str, Any]] = {}
+    for group in groups:
+        if not isinstance(group, Mapping):
+            return
+        label = _group_sort_label(group)
+        if label is None:
+            return
+        raw_items = group.get("items", [])
+        if raw_items is None:
+            raw_items = []
+        if not isinstance(raw_items, list):
+            return
+        normalized = {
+            "label": label,
+            "items": [str(item).strip() for item in raw_items if str(item).strip()],
+        }
+        normalized_groups.append(normalized)
+        for field in ("key", "id", "label", "name", "title"):
+            value = group.get(field)
+            if isinstance(value, str) and value.strip():
+                aliases[value.strip()] = normalized
+
+    top_level_items = activity.get("items")
+    if top_level_items is not None:
+        if not isinstance(top_level_items, list):
+            return
+        for item in top_level_items:
+            if not isinstance(item, Mapping):
+                return
+            group_key = item.get("group") or item.get("category") or item.get("group_key")
+            text = _group_sort_item_text(item)
+            if not isinstance(group_key, str) or not group_key.strip() or text is None:
+                return
+            target = aliases.get(group_key.strip())
+            if target is None:
+                return
+            target["items"].append(text)
+        activity.pop("items", None)
+
+    activity["groups"] = normalized_groups
+
+
+_LETTER_GRID_EMOJI_BY_KEY_WORD: Mapping[str, str] = {
+    "ананас": "🍍",
+    "банан": "🍌",
+    "вода": "💧",
+    "гора": "⛰️",
+    "ґудзик": "🔘",
+    "дім": "🏠",
+    "екран": "🖥️",
+    "єнот": "🦝",
+    "жук": "🪲",
+    "зуб": "🦷",
+    "сир": "🧀",
+    "ім'я": "🪪",
+    "їжак": "🦔",
+    "йогурт": "🥛",
+    "кіт": "🐈",
+    "лимон": "🍋",
+    "мама": "👩",
+    "ніс": "👃",
+    "око": "👁️",
+    "пес": "🐕",
+    "рука": "✋",
+    "сон": "🌙",
+    "тато": "👨",
+    "урок": "📚",
+    "фото": "📷",
+    "хата": "🏠",
+    "цукор": "🍬",
+    "час": "🕒",
+    "школа": "🏫",
+    "щука": "🐟",
+    "день": "📅",
+    "юшка": "🥣",
+    "яблуко": "🍎",
+}
+
+
+def _normalize_letter_grid_activity(activity: dict[str, Any]) -> None:
+    """Convert common letter-grid aliases into renderer-ready fields."""
+    letters = activity.get("letters")
+    if not isinstance(letters, list) or not letters:
+        return
+
+    normalized_letters: list[dict[str, Any]] = []
+    for entry in letters:
+        if not isinstance(entry, Mapping):
+            return
+        upper = entry.get("upper") or entry.get("letter")
+        key_word = entry.get("key_word") or entry.get("word") or entry.get("example")
+        if not isinstance(upper, str) or not upper.strip():
+            return
+        if not isinstance(key_word, str) or not key_word.strip():
+            return
+        lower = entry.get("lower")
+        if not isinstance(lower, str) or not lower.strip():
+            lower = upper.casefold()
+        emoji = entry.get("emoji")
+        if not isinstance(emoji, str) or not emoji.strip():
+            emoji = _LETTER_GRID_EMOJI_BY_KEY_WORD.get(key_word.casefold(), "🔤")
+
+        normalized = {
+            "upper": upper.strip(),
+            "lower": lower.strip(),
+            "emoji": emoji.strip(),
+            "key_word": key_word.strip(),
+        }
+        sound_type = entry.get("sound_type") or entry.get("kind")
+        if isinstance(sound_type, str) and sound_type.strip():
+            normalized["sound_type"] = sound_type.strip()
+        note = entry.get("note") or entry.get("sound")
+        if isinstance(note, str) and note.strip():
+            normalized["note"] = note.strip()
+        normalized_letters.append(normalized)
+
+    activity["letters"] = normalized_letters
+
+
+def _normalize_count_syllables_activity(activity: dict[str, Any]) -> None:
+    """Convert count-syllables item `answer` aliases into `correct`."""
+    items = activity.get("items")
+    if not isinstance(items, list):
+        return
+    for item in items:
+        if not isinstance(item, dict):
+            return
+        if "correct" not in item and "answer" in item:
+            item["correct"] = item.pop("answer")
+
+
+def _normalize_watch_and_repeat_activity(activity: dict[str, Any]) -> None:
+    """Convert watch-and-repeat item `url` aliases into renderer `video`."""
+    items = activity.get("items")
+    if not isinstance(items, list):
+        return
+    for item in items:
+        if not isinstance(item, dict):
+            return
+        if "video" not in item and "url" in item:
+            item["video"] = item.pop("url")
 
 
 def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:

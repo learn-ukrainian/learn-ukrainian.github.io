@@ -1308,10 +1308,11 @@ def _marker_candidates(text: str) -> list[str]:
     raw_parts = re.split(r"\s*/\s*|\s+або\s+|\s+чи\s+", cleaned)
     parts = []
     for part in raw_parts:
-        part = re.sub(r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]", "", part)
-        part = re.sub(r"[`*_]", "", part).strip(" .;:,")
-        if part:
-            parts.append(part)
+        for candidate in (part, re.sub(r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]", "", part)):
+            candidate = re.sub(r"[`*_]", "", candidate)
+            candidate = re.sub(r"\s+([).,;:!?])", r"\1", candidate).strip(" .;:,")
+            if candidate and candidate not in parts:
+                parts.append(candidate)
     return parts
 
 
