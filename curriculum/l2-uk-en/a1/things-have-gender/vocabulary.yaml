@@ -1,0 +1,192 @@
+- lemma: рід
+  translation: grammatical gender
+  pos: noun
+  usage: Українські іменники мають рід.
+- lemma: іменник
+  translation: noun
+  pos: noun
+  usage: Стіл — це іменник.
+- lemma: хто це?
+  translation: who is this?
+  pos: phrase
+  usage: Хто це? Це тато.
+- lemma: що це?
+  translation: what is this?
+  pos: phrase
+  usage: Що це? Це стіл.
+- lemma: він
+  translation: he / masculine gender-test word
+  pos: pronoun
+  usage: Стіл — він.
+- lemma: вона
+  translation: she / feminine gender-test word
+  pos: pronoun
+  usage: Книга — вона.
+- lemma: воно
+  translation: it / neuter gender-test word
+  pos: pronoun
+  usage: Вікно — воно.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Це мій стіл.
+- lemma: моя
+  translation: my, feminine
+  pos: pronoun
+  usage: Це моя книга.
+- lemma: моє
+  translation: my, neuter
+  pos: pronoun
+  usage: Це моє вікно.
+- lemma: у мене є
+  translation: I have
+  pos: phrase
+  usage: У мене є стіл.
+- lemma: у тебе є
+  translation: do you have / you have
+  pos: phrase
+  usage: У тебе є стіл?
+- lemma: стіл
+  translation: table
+  pos: noun
+  usage: У мене є стіл.
+- lemma: книга
+  translation: book
+  pos: noun
+  usage: Це моя книга.
+- lemma: вікно
+  translation: window
+  pos: noun
+  usage: Моє вікно велике.
+- lemma: кімната
+  translation: room
+  pos: noun
+  usage: Це моя кімната.
+- lemma: ліжко
+  translation: bed
+  pos: noun
+  usage: Це моє ліжко.
+- lemma: стілець
+  translation: chair
+  pos: noun
+  usage: Це мій стілець.
+- lemma: лампа
+  translation: lamp
+  pos: noun
+  usage: Це моя лампа.
+- lemma: телефон
+  translation: phone
+  pos: noun
+  usage: Це мій телефон.
+- lemma: комп'ютер
+  translation: computer
+  pos: noun
+  usage: Це мій комп'ютер.
+- lemma: зошит
+  translation: notebook
+  pos: noun
+  usage: Це мій зошит.
+- lemma: ручка
+  translation: pen
+  pos: noun
+  usage: Це моя ручка.
+- lemma: сумка
+  translation: bag
+  pos: noun
+  usage: Це моя сумка.
+- lemma: крісло
+  translation: armchair
+  pos: noun
+  usage: Це моє крісло.
+- lemma: дзеркало
+  translation: mirror
+  pos: noun
+  usage: Це моє дзеркало.
+- lemma: ключ
+  translation: key
+  pos: noun
+  usage: Це мій ключ.
+- lemma: фото
+  translation: photo
+  pos: noun
+  usage: Це моє фото.
+- lemma: стіна
+  translation: wall
+  pos: noun
+  usage: Це моя стіна.
+- lemma: місто
+  translation: city
+  pos: noun
+  usage: Моє місто велике.
+- lemma: тато
+  translation: dad
+  pos: noun
+  usage: Це мій тато.
+- lemma: батько
+  translation: father
+  pos: noun
+  usage: Це мій батько.
+- lemma: дядько
+  translation: uncle
+  pos: noun
+  usage: Це мій дядько.
+- lemma: собака
+  translation: dog
+  pos: noun
+  usage: Це мій собака.
+- lemma: студент
+  translation: male student
+  pos: noun
+  usage: Він студент.
+- lemma: студентка
+  translation: female student
+  pos: noun
+  usage: Вона студентка.
+- lemma: вчитель
+  translation: male teacher
+  pos: noun
+  usage: Він вчитель.
+- lemma: вчителька
+  translation: female teacher
+  pos: noun
+  usage: Вона вчителька.
+- lemma: учителька
+  translation: female teacher
+  pos: noun
+  usage: Вона учителька.
+- lemma: лікар
+  translation: male doctor
+  pos: noun
+  usage: Він лікар.
+- lemma: лікарка
+  translation: female doctor
+  pos: noun
+  usage: Вона лікарка.
+- lemma: актор
+  translation: male actor
+  pos: noun
+  usage: Він актор.
+- lemma: акторка
+  translation: female actor
+  pos: noun
+  usage: Вона акторка.
+- lemma: співак
+  translation: male singer
+  pos: noun
+  usage: Він співак.
+- lemma: співачка
+  translation: female singer
+  pos: noun
+  usage: Вона співачка.
+- lemma: Микола
+  translation: Mykola
+  pos: proper noun
+  usage: Він Микола.
+- lemma: Ілля
+  translation: Illia
+  pos: proper noun
+  usage: Він Ілля.
+- lemma: Павло
+  translation: Pavlo
+  pos: proper noun
+  usage: Він Павло.
