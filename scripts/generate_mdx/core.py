@@ -446,7 +446,7 @@ sidebar:
         f'{content.strip()}\n\n</TabItem>'
         for en, uk, content in tabs
     )
-    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n\n<HashTabSync client:load />\n'
+    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n\n<HashTabSync />\n'
 
     # Build MDX
     parts = [frontmatter, imports, '', tabbed]

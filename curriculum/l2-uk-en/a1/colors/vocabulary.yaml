@@ -1,0 +1,152 @@
+- lemma: колір
+  translation: color
+  pos: noun
+  usage: Якого кольору стіл?
+- lemma: кольори
+  translation: colors
+  pos: noun
+  usage: Це базові кольори.
+- lemma: якого кольору?
+  translation: what color?
+  pos: phrase
+  usage: Якого кольору светр?
+- lemma: білий
+  translation: white, masculine
+  pos: adj
+  usage: Білий светр.
+- lemma: біла
+  translation: white, feminine
+  pos: adj
+  usage: Біла сорочка.
+- lemma: біле
+  translation: white, neuter
+  pos: adj
+  usage: Біле вікно.
+- lemma: чорний
+  translation: black, masculine
+  pos: adj
+  usage: Чорний телефон.
+- lemma: чорна
+  translation: black, feminine
+  pos: adj
+  usage: Чорна сукня.
+- lemma: червоний
+  translation: red, masculine
+  pos: adj
+  usage: Червоний олівець.
+- lemma: червона
+  translation: red, feminine
+  pos: adj
+  usage: Червона ручка.
+- lemma: червоне
+  translation: red, neuter
+  pos: adj
+  usage: Червоне яблуко.
+- lemma: зелений
+  translation: green, masculine
+  pos: adj
+  usage: Зелений зошит.
+- lemma: зелена
+  translation: green, feminine
+  pos: adj
+  usage: Зелена сумка.
+- lemma: жовтий
+  translation: yellow, masculine
+  pos: adj
+  usage: Жовтий соняшник.
+- lemma: жовта
+  translation: yellow, feminine
+  pos: adj
+  usage: Жовта стрічка.
+- lemma: синій
+  translation: dark blue, masculine
+  pos: adj
+  usage: Синій светр.
+- lemma: синя
+  translation: dark blue, feminine
+  pos: adj
+  usage: Синя ручка.
+- lemma: синє
+  translation: dark blue, neuter
+  pos: adj
+  usage: Синє море.
+- lemma: синьо-жовтий
+  translation: blue-and-yellow
+  pos: adj
+  usage: Синьо-жовтий прапор.
+- lemma: блакитний
+  translation: light blue, masculine
+  pos: adj
+  usage: Блакитний олівець.
+- lemma: блакитне
+  translation: light blue, neuter
+  pos: adj
+  usage: Блакитне небо.
+- lemma: сірий
+  translation: grey, masculine
+  pos: adj
+  usage: Сірий стілець.
+- lemma: сіре
+  translation: grey, neuter
+  pos: adj
+  usage: Сіре пальто.
+- lemma: коричневий
+  translation: brown, masculine
+  pos: adj
+  usage: Коричневий стіл.
+- lemma: коричневі
+  translation: brown, plural
+  pos: adj
+  usage: Коричневі черевики.
+- lemma: рожевий
+  translation: pink, masculine
+  pos: adj
+  usage: Рожевий плакат.
+- lemma: рожева
+  translation: pink, feminine
+  pos: adj
+  usage: Рожева листівка.
+- lemma: помаранчевий
+  translation: orange, masculine
+  pos: adj
+  usage: Помаранчевий олівець.
+- lemma: фіолетовий
+  translation: purple, masculine
+  pos: adj
+  usage: Фіолетовий зошит.
+- lemma: темно-зелений
+  translation: dark green
+  pos: adj
+  usage: Темно-зелений зошит.
+- lemma: світло-синій
+  translation: light blue
+  pos: adj
+  usage: Світло-синій светр.
+- lemma: карі очі
+  translation: brown eyes
+  pos: phrase
+  usage: У неї карі очі.
+- lemma: русяве волосся
+  translation: fair or light-brown hair
+  pos: phrase
+  usage: У нього русяве волосся.
+- lemma: сиве волосся
+  translation: grey hair
+  pos: phrase
+  usage: У бабусі сиве волосся.
+- lemma: руде волосся
+  translation: red hair
+  pos: phrase
+  usage: У хлопчика руде волосся.
+- lemma: настрій
+  translation: mood
+  pos: noun
+  usage: У мене поганий настрій.
+- lemma: сумно
+  translation: sad
+  pos: adv
+  usage: Мені сумно.
+- lemma: прапор
+  translation: flag
+  pos: noun
+  usage: Прапор синьо-жовтий.
