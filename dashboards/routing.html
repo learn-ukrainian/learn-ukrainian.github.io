@@ -41,6 +41,7 @@ ul { margin: 6px 0 0 18px; font-size: 13px; line-height: 1.55; color: var(--text
 .bar { height: 8px; border-radius: 4px; background: var(--bg3); overflow: hidden; min-width: 90px; }
 .bar > span { display: block; height: 100%; background: var(--blue); }
 </style>
+<link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
 <div class="topbar">
@@ -48,6 +49,14 @@ ul { margin: 6px 0 0 18px; font-size: 13px; line-height: 1.55; color: var(--text
   <span class="sub">which agent for what · subscription headroom · dispatch usage snapshot</span>
   <span class="spacer"></span>
   <a href="/">&larr; Home</a> &nbsp; <a href="/delegate.html">Delegate</a> &nbsp; <a href="/cost.html">Cost</a> &nbsp; <a href="/runtime.html">Runtime</a>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/channels.html">Channels</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+  </nav>
 </div>
 <div class="container">
   <p class="note">Static snapshot, refreshed manually by the bio-driver. Live data: <a href="/delegate.html">delegate</a> (dispatch activity), <a href="/cost.html">cost</a> ($ spend), <a href="/runtime.html">runtime</a> (7-day usage). Billed quota lives in each vendor dashboard (cursor.com, Anthropic console, platform.openai.com).</p>
