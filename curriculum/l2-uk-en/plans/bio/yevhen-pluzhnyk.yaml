@@ -25,10 +25,10 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-valerian-pidmohylnyi
-- bio-mykola-kulish
-- lit-pluzhnyk-poetry
-- lit-pluzhnyk-galileo
+- valerian-pidmohylnyi
+- mykola-kulish
+- pluzhnyk-poetry
+- pluzhnyk-galileo
 content_outline:
 - points:
   - >-
