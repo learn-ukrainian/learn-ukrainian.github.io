@@ -156,6 +156,8 @@ class ErrorCorrectionItem:
 class ErrorCorrectionActivity:
     type: str = "error-correction"
     title: str = ""
+    instruction: str = ""
+    anchor_id: str = ""
     items: list[ErrorCorrectionItem] = field(default_factory=list)
 
 
@@ -802,7 +804,12 @@ class ActivityParser:
             options=i.get('options', []),
             explanation=i.get('explanation', ''),
         ) for i in data.get('items', [])]
-        return ErrorCorrectionActivity(title=data.get('title', ''), items=items)
+        return ErrorCorrectionActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            anchor_id=data.get('anchor_id', ''),
+            items=items,
+        )
 
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
         # Support both old and new field names for backwards compatibility
@@ -1547,7 +1554,17 @@ class ActivityParser:
         for i in activity.items:
             opts = self._dump_safe_json([str(opt) for opt in i.options])
             items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(str(i.sentence))}" errorWord="{self._escape_jsx(str(i.error))}" correctForm="{self._escape_jsx(str(i.answer))}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(str(i.explanation))}" />')
-        return f"### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'>\n{chr(10).join(items)}\n</ErrorCorrection>"
+        instruction_prop = (
+            f' instruction="{self._escape_jsx(str(activity.instruction))}"'
+            if activity.instruction
+            else ""
+        )
+        anchor = ""
+        if activity.anchor_id:
+            safe_anchor = re.sub(r"[^A-Za-z0-9_-]+", "-", str(activity.anchor_id)).strip("-")
+            if safe_anchor:
+                anchor = f'<span id="{safe_anchor}"></span>\n\n'
+        return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop}>\n{chr(10).join(items)}\n</ErrorCorrection>"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
         ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])

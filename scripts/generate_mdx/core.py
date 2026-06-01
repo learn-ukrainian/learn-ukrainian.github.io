@@ -280,6 +280,7 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -445,7 +446,7 @@ sidebar:
         f'{content.strip()}\n\n</TabItem>'
         for en, uk, content in tabs
     )
-    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n'
+    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n\n<HashTabSync client:load />\n'
 
     # Build MDX
     parts = [frontmatter, imports, '', tabbed]

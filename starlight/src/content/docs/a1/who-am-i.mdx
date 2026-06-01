@@ -46,6 +46,7 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -336,8 +337,8 @@ Before the workbook, cover the English side and say the Ukrainian aloud:
 | I am from Canada. | **Я з Канади.** |
 
 Use the workbook to make the pieces automatic: register choice, name chunks,
-**це** questions, pronouns, profession pairs, dialogue fill-ins, L2 trap
-correction, native-form choices, and vocabulary recognition.
+**це** questions, pronouns, profession pairs, dialogue fill-ins, safer
+Ukrainian sentence choices, native-form choices, and vocabulary recognition.
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -349,6 +350,19 @@ correction, native-form choices, and vocabulary recognition.
 </TabItem>
 <TabItem label="Activities">
 
+<span id="fix-common-l2-traps"></span>
+
+### Choose the Ukrainian sentence
+
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian identity line.">
+  <ErrorCorrectionItem sentence="Я є студент." errorWord="Я є студент." correctForm="Я студент." options={JSON.parse(`["Я студент.", "Я є студент."]`)} explanation="In present-time identity, say Я студент or Я — студент." />
+  <ErrorCorrectionItem sentence="Моє ім'я є Джон." errorWord="Моє ім'я є Джон." correctForm="Мене звати Джон." options={JSON.parse(`["Мене звати Джон.", "Моє ім'я є Джон."]`)} explanation="Мене звати... is the high-frequency introduction model." />
+  <ErrorCorrectionItem sentence="Я маю 20 років." errorWord="Я маю 20 років." correctForm="Мені 20 років." options={JSON.parse(`["Мені 20 років.", "Я маю 20 років."]`)} explanation="Age uses a different chunk and is not the model for this lesson." />
+  <ErrorCorrectionItem sentence="Оксана каже, &quot;Я (жінка) лікар.&quot;" errorWord="Я (жінка) лікар." correctForm="Я лікарка." options={JSON.parse(`["Я лікарка.", "Я (жінка) лікар."]`)} explanation="Лікарка is the standard feminine form for a woman doctor." />
+  <ErrorCorrectionItem sentence="Воно мій тато." errorWord="Воно" correctForm="Це мій тато." options={JSON.parse(`["Це мій тато.", "Воно мій тато."]`)} explanation="Use це for identifying a person, or він after the person is known." />
+  <ErrorCorrectionItem sentence="Привіт, пане професоре!" errorWord="Привіт" correctForm="Добрий день, пане професоре!" options={JSON.parse(`["Добрий день, пане професоре!", "Привіт, пане професоре!"]`)} explanation="Use Добрий день with a professor or unknown adult." />
+</ErrorCorrection>
+
 ### Profession pairs
 
 <MatchUp client:only='react' pairs={JSON.parse(`[{"left": "студент", "right": "студентка"}, {"left": "вчитель", "right": "вчителька"}, {"left": "лікар", "right": "лікарка"}, {"left": "програміст", "right": "програмістка"}, {"left": "інженер", "right": "інженерка"}, {"left": "українець", "right": "українка"}, {"left": "канадієць", "right": "канадка"}, {"left": "американець", "right": "американка"}]`)} />
@@ -356,17 +370,6 @@ correction, native-form choices, and vocabulary recognition.
 ### Complete the dialogue
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Привіт! Як ___ звати?", "answer": "тебе", "options": ["тебе", "вас", "це"]}, {"sentence": "Мене ___ Олена.", "answer": "звати", "options": ["звати", "це", "з"]}, {"sentence": "Мене звати Марко. ___ тебе?", "answer": "А", "options": ["А", "Хто", "Що"]}, {"sentence": "Добрий день! Як ___ звати?", "answer": "вас", "options": ["вас", "тебе", "я"]}, {"sentence": "Дуже ___!", "answer": "приємно", "options": ["приємно", "Київ", "студентка"]}, {"sentence": "___ ти? Я з Канади.", "answer": "Звідки", "options": ["Звідки", "Хто", "Що"]}]`)} />
-
-### Fix common L2 traps
-
-<ErrorCorrection client:only='react'>
-  <ErrorCorrectionItem sentence="English has I am, but Ukrainian identity lines drop the present-time copula." errorWord="Я є студент." correctForm="Я студент." options={JSON.parse(`["Я студент.", "Я є студент."]`)} explanation="In present-time identity, say Я студент or Я — студент." />
-  <ErrorCorrectionItem sentence="Use the natural name chunk." errorWord="Моє ім'я є Джон." correctForm="Мене звати Джон." options={JSON.parse(`["Мене звати Джон.", "Моє ім'я є Джон."]`)} explanation="Мене звати... is the high-frequency introduction model." />
-  <ErrorCorrectionItem sentence="Treat age as a later memorized model, not an identity pattern today." errorWord="Я маю 20 років." correctForm="Мені 20 років." options={JSON.parse(`["Мені 20 років.", "Я маю 20 років."]`)} explanation="Age uses a different chunk and is not the model for this lesson." />
-  <ErrorCorrectionItem sentence="A woman uses the feminine profession form." errorWord="Я (жінка) лікар." correctForm="Я лікарка." options={JSON.parse(`["Я лікарка.", "Я (жінка) лікар."]`)} explanation="Лікарка is the standard feminine form for a woman doctor." />
-  <ErrorCorrectionItem sentence="Do not use воно for a person." errorWord="Воно мій тато." correctForm="Це мій тато." options={JSON.parse(`["Це мій тато.", "Воно мій тато."]`)} explanation="Use це for identifying a person, or він after the person is known." />
-  <ErrorCorrectionItem sentence="Match greeting to register." errorWord="Привіт, пане професоре!" correctForm="Добрий день, пане професоре!" options={JSON.parse(`["Добрий день, пане професоре!", "Привіт, пане професоре!"]`)} explanation="Use Добрий день with a professor or unknown adult." />
-</ErrorCorrection>
 
 ### Choose the Ukrainian norm
 
@@ -389,3 +392,5 @@ correction, native-form choices, and vocabulary recognition.
 
 </TabItem>
 </Tabs>
+
+<HashTabSync client:load />

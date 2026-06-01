@@ -221,6 +221,22 @@ Practice there.
     assert tab3.count("<Quiz") == 2
 
 
+def test_generated_tabs_include_hash_target_sync_script():
+    md_content = """---
+title: Hash Tab Test
+subtitle: Test
+---
+# Hash Tab Test
+
+Lesson body.
+"""
+
+    mdx = generate_mdx(md_content, 1, level="a1")
+
+    assert "import HashTabSync from '@site/src/components/HashTabSync';" in mdx
+    assert "<HashTabSync client:load />" in mdx
+
+
 def test_v7_tab3_omits_missing_id_duplicate_of_inline_activity(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
