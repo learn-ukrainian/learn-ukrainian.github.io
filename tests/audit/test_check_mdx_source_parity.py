@@ -31,6 +31,15 @@ def test_check_parity_mdx_only(mock_legacy_levels, mock_subprocess):
     assert len(violations) == 1
     assert "MDX file changed but no source files changed" in violations[0][1]
 
+def test_check_parity_level_landing_page(mock_legacy_levels, mock_subprocess):
+    # Level landing pages are generated indexes, not lesson MDX artifacts.
+    mdx_files = [MDX_DIR / "b1" / "index.mdx"]
+    changed_files = {MDX_DIR / "b1" / "index.mdx"}
+    mock_subprocess.return_value = "1 file changed\n" # Not whitespace-only
+
+    violations = check_parity(mdx_files, changed_files)
+    assert len(violations) == 0
+
 def test_check_parity_mdx_and_source(mock_legacy_levels, mock_subprocess):
     # MDX + source diff (pass)
     mdx_files = [MDX_DIR / "a1" / "01-hello.mdx"]

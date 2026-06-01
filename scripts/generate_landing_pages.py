@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import OrderedDict
 from pathlib import Path
 
 import yaml
@@ -30,13 +31,29 @@ TRACK_CONFIG = {
     "c2": {"title": "C2 — Mastery", "uk_title": "Досконало", "uk_sub": "Mastery", "color": "#212121", "word_target": 5000},
 }
 
+B1_UNIT_RANGES = [
+    (1, 10, "M01-M10 · Aspect foundations"),
+    (11, 21, "M11-M21 · Sound changes and noun patterns"),
+    (22, 33, "M22-M33 · Verb systems"),
+    (34, 43, "M34-M43 · Motion and spatial language"),
+    (44, 51, "M44-M51 · Comparison and word formation"),
+    (52, 64, "M52-M64 · Cases, prepositions, and sentence parts"),
+    (65, 74, "M65-M74 · Participles, gerunds, and media"),
+    (75, 84, "M75-M84 · Complex syntax"),
+    (85, 94, "M85-M94 · Register, narrative, and B1 review"),
+]
+
 
 def get_module_status(level: str, slug: str) -> str:
-    """Check if module is built and passing audit."""
+    """Check if module is deployed and, when available, passing audit."""
     status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
-    content_path = CURRICULUM_ROOT / level / f"{slug}.md"
+    content_paths = [
+        CURRICULUM_ROOT / level / f"{slug}.md",
+        CURRICULUM_ROOT / level / slug / "module.md",
+        STARLIGHT_DOCS / level / f"{slug}.mdx",
+    ]
 
-    if not content_path.exists():
+    if not any(path.exists() for path in content_paths):
         return "locked"
 
     if status_path.exists():
@@ -49,6 +66,17 @@ def get_module_status(level: str, slug: str) -> str:
             pass
 
     return "active"  # Content exists but not passing
+
+
+def get_unit_name(level: str, module_num: int, plan: dict) -> str:
+    """Return the learner-facing unit label for a module."""
+    if level == "b1":
+        for start, end, label in B1_UNIT_RANGES:
+            if start <= module_num <= end:
+                return label
+
+    phase = plan.get("phase", "")
+    return phase if phase else f"{level.upper()} Modules"
 
 
 def get_plan_data(level: str, slug: str) -> dict:
@@ -86,18 +114,16 @@ def generate_landing_page(level: str) -> str:
         "word_target": 4000,
     })
 
-    # Group modules by phase — consolidate (same phase may appear at multiple positions)
-    from collections import OrderedDict
+    # Group modules by learner-facing unit while preserving curriculum.yaml order.
     phase_items: OrderedDict[str, list[str]] = OrderedDict()
     done_count = 0
+    active_count = 0
 
     for i, slug in enumerate(modules, 1):
         plan = get_plan_data(level, slug)
         title = plan.get("title", slug.replace("-", " ").title())
         subtitle = plan.get("subtitle", "")
-        phase = plan.get("phase", "")
-
-        unit_name = phase if phase else f"{level.upper()} Modules"
+        unit_name = get_unit_name(level, i, plan)
 
         if unit_name not in phase_items:
             phase_items[unit_name] = []
@@ -105,6 +131,8 @@ def generate_landing_page(level: str) -> str:
         status = get_module_status(level, slug)
         if status == "done":
             done_count += 1
+        elif status == "active":
+            active_count += 1
 
         sub_escaped = escape_js_string(subtitle[:80])
         title_escaped = escape_js_string(title)
@@ -129,7 +157,24 @@ def generate_landing_page(level: str) -> str:
 
     modules_js = "\n".join(modules_js_lines)
 
-    description = f"{config.get('uk_sub', '')} — {len(modules)} modules"
+    planned_count = len(modules) - done_count - active_count
+    if level == "b1":
+        subtitle = f"{active_count} learner page available · {done_count} reviewed · {len(modules)}-module plan"
+        progress_title = "Build status"
+        progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
+        description = f"B1 landing — {len(modules)} modules in curriculum order"
+    else:
+        subtitle = f"{config.get('uk_sub', '')} — {done_count}/{len(modules)} modules complete"
+        progress_title = ""
+        progress_description = ""
+        description = f"{config.get('uk_sub', '')} — {len(modules)} modules"
+
+    progress_props = ""
+    if progress_title:
+        progress_props = (
+            f'\n  progressTitle="{escape_js_string(progress_title)}"'
+            f'\n  progressDescription="{escape_js_string(progress_description)}"'
+        )
 
     mdx = f"""---
 title: "{config['title']}"
@@ -143,7 +188,7 @@ import LevelLanding from '@site/src/components/LevelLanding';
   client:load
   level="{level.upper()}"
   title="{config['uk_title']}"
-  subtitle="{config.get('uk_sub', '')} — {done_count}/{len(modules)} modules complete"
+  subtitle="{escape_js_string(subtitle)}"{progress_props}
   moduleCount={{{len(modules)}}}
   wordTarget={{{config['word_target']}}}
   color="{config['color']}"

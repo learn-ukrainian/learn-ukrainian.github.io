@@ -37,6 +37,8 @@ type LevelLandingProps = {
   totalPlanned?: number; // backwards compat
   hours?: number;
   color?: string;
+  progressTitle?: string;
+  progressDescription?: string;
   modules: UnitGroup[] | OldModuleItem[];
 };
 
@@ -140,6 +142,8 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
   const moduleCount = totalModules || unitGroups.reduce((acc, g) => acc + g.items.length, 0);
   const pct = moduleCount > 0 ? Math.round((doneCount / moduleCount) * 100) : 0;
   const darkerColor = adjustColor(color, -40);
+  const progressTitle = props.progressTitle || 'Your Progress';
+  const progressDescription = props.progressDescription || `${doneCount} of ${moduleCount} completed (${pct}%)`;
 
   return (
     <div className={styles.container}>
@@ -158,8 +162,8 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
       {/* Progress */}
       <div className={styles.progressSection}>
         <div className={styles.progressHeader}>
-          <h3>Your Progress</h3>
-          <span>{doneCount} of {moduleCount} completed ({pct}%)</span>
+          <h3>{progressTitle}</h3>
+          <span>{progressDescription}</span>
         </div>
         <div className={styles.progressBar}>
           <div className={styles.progressFill} style={{ width: `${pct}%`, background: color }} />
