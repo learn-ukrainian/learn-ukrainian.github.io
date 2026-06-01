@@ -195,7 +195,7 @@ tqdm==4.67.3
 transformers==4.57.6
 trec-car-tools==2.6
 typer-slim==0.24.0
-typer==0.25.0
+typer==0.25.1
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzlocal==5.3.1
