@@ -1,10 +1,10 @@
-# Current - Codex Orchestrator Handoff (2026-06-01T08:03Z)
+# Current - Codex Orchestrator Handoff (2026-06-01T16:05Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
 > Handoff-only update. Treat `origin/main` and this file as authoritative for
 > orchestration state; treat the active A1 branch as authoritative for the
-> M1-M11 implementation slice.
+> M1-M12 implementation slice.
 
 ## Role / Direction
 
@@ -21,9 +21,7 @@ Latest-Brief: docs/session-state/current.orchestrator.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `ed01b995e4 feat(a1): add M11 how many module`
-- M11 implementation is committed locally and should be pushed with this
-  handoff commit.
+  `f305dc8347 feat(a1): add M12 this and that module`
 
 ## A1 Built Sequence
 
@@ -38,34 +36,34 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 9. `what-is-it-like`
 10. `colors`
 11. `how-many`
+12. `this-and-that`
 
-Next target: M12 `this-and-that`.
+Next target: M13 `many-things`.
 
-## A1 M11 Update
+## A1 M12 Update
 
-- Commit `ed01b995e4 feat(a1): add M11 how many module` added the full M11
-  artifact set under `curriculum/l2-uk-en/a1/how-many/` plus
-  `starlight/src/content/docs/a1/how-many.mdx`.
-- M11 is English-led A1.2 content for numbers and practical use: counting,
-  prices, age, phone-number grouping, `гривня/гривні/гривень`,
-  `рік/роки/років`, and number-trap repair.
-- Student-facing resources are external only; no internal wiki links.
+- Commit `f305dc8347 feat(a1): add M12 this and that module` added the full
+  M12 artifact set under `curriculum/l2-uk-en/a1/this-and-that/` plus
+  `starlight/src/content/docs/a1/this-and-that.mdx`.
+- Shared rendered-page defect fixed in `starlight/src/components/HashTabSync.tsx`:
+  requested hashes such as `#repair-traps` are restored when Starlight's tabs
+  temporarily replace them with internal `#tab-panel-*` hashes. The schema hash
+  refresh in `docs/lesson-schema.yaml` is part of that component change.
 - Local ignored telemetry file exists for the direct QG resource-search gate:
-  `curriculum/l2-uk-en/a1/how-many/writer_tool_calls.json`.
+  `curriculum/l2-uk-en/a1/this-and-that/writer_tool_calls.json`.
 
 Validation passed:
 
-- Activity parser: 10 activities.
-- Direct M11 `run_python_qg()`: passed.
-- Seeded hard wiki coverage: 14/14 obligations covered.
-- MDX validation for A1 M11: passed.
-- `npm run build:starlight`: passed; 101 pages.
+- Activity parser: 8 activities.
+- Direct M12 `run_python_qg()`: passed.
+- Seeded hard wiki coverage: 18/18 obligations covered.
+- MDX validation for A1 M12: passed.
+- `npm run build:starlight`: passed; 102 pages.
 - Browser/content checks: expected Lesson/Resources content, no internal wiki
   links, teacher labels, visible scaffolding, or injection markers.
-  Local Browser verified `#repair-number-traps` lands on the target after
-  hydration.
+  Local Browser verified `#repair-traps` lands on the target after the
+  `HashTabSync` fix.
 - Targeted pre-commit: passed.
-- X-Agent trailer lint: passed.
 
 ## Restart Commands
 

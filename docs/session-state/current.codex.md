@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T10:03+02:00)
+# Current - Codex Thread Handoff (2026-06-01T18:05+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `ed01b995e4 feat(a1): add M11 how many module`
+  `f305dc8347 feat(a1): add M12 this and that module`
 
 ## Current Direction
 
@@ -17,57 +17,55 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, worktrees, or
   delegates.
 - Do not use Gemini for review confidence.
-- Continue with M12 `this-and-that`. M1-M11 are now English-led student
+- Continue with M13 `many-things`. M1-M12 are now English-led student
   textbook/workbook pages and pass deterministic QG in this worktree.
 
-## Latest M11 Update
+## Latest M12 Update
 
-Commit `ed01b995e4 feat(a1): add M11 how many module` added:
+Commit `f305dc8347 feat(a1): add M12 this and that module` added:
 
-- `curriculum/l2-uk-en/a1/how-many/module.md`
-- `curriculum/l2-uk-en/a1/how-many/activities.yaml`
-- `curriculum/l2-uk-en/a1/how-many/vocabulary.yaml`
-- `curriculum/l2-uk-en/a1/how-many/resources.yaml`
-- `starlight/src/content/docs/a1/how-many.mdx`
+- `curriculum/l2-uk-en/a1/this-and-that/module.md`
+- `curriculum/l2-uk-en/a1/this-and-that/activities.yaml`
+- `curriculum/l2-uk-en/a1/this-and-that/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/this-and-that/resources.yaml`
+- `starlight/src/content/docs/a1/this-and-that.mdx`
 
-M11 is English-led A1.2 grammar-first-contact content for counting, prices,
-age, and phone numbers. It covers `нуль` through `сто`, hundreds/prices through
-`тисяча гривень`, `гривня/гривні/гривень`, `рік/роки/років`,
-`Скільки коштує...?`, `Скільки тобі років?`, `Мені ... років`, and
-phone-number groups. It explicitly repairs the locked number traps:
-`п'ять столів`, `Котра година?`, `Мені 20 років`,
-`перше січня / сьоме травня`, `п'ятдесят / шістдесят`, and
-`тисяча / мільйон`, plus common numeral spellings such as `шість`, `сім`,
-`сімнадцять`, and `дев'яносто`.
+It also updated `starlight/src/components/HashTabSync.tsx` and the generated
+`docs/lesson-schema.yaml` component hash so learner-facing anchors in tabbed
+pages survive Starlight's internal tab-panel hash replacement.
 
-Validation after M11:
+M12 is English-led A1.2 grammar-first-contact content for demonstratives:
+`це`, `цей/ця/це/ці`, `той/та/те/ті`, `чи`, noun-gender agreement, near/far
+choice questions, `та` as demonstrative vs connector, `цю книгу` as a fixed
+object chunk, passive recognition for emphatic/poetic forms, and repair of the
+locked L2 traps.
 
-- `scripts.yaml_activities`: parsed 10 activities.
-- Direct `run_python_qg()` for M11: passed.
-- Direct seeded hard wiki coverage: passed, 14/14 obligations covered.
-- CLI `scripts/validate_mdx.py l2-uk-en a1 11`: passed.
-- `npm run build:starlight`: passed; 101 pages built.
+Validation after M12:
+
+- `scripts.yaml_activities`: parsed 8 activities.
+- Direct `run_python_qg()` for M12: passed.
+- Direct seeded hard wiki coverage: passed, 18/18 obligations covered.
+- CLI `scripts/validate_mdx.py l2-uk-en a1 12`: passed.
+- `npm run build:starlight`: passed; 102 pages built.
 - Local Starlight restarted with `./services.sh restart starlight`.
-- Browser inspection for `/a1/how-many/`:
-  - Lesson tab showed price dialogue, age chunks, phone-number chunks, and
-    number-trap repair.
+- Browser inspection for `/a1/this-and-that/`:
+  - Lesson tab showed expected demonstrative content.
   - Resources tab showed only external learner-facing resources.
-  - No internal wiki links, visible step scaffolding, injection markers, or
-    teacher/writer labels.
-  - Hidden anchor `#repair-number-traps` switched back to Lesson and landed on
-    the target heading.
-- Targeted pre-commit passed for the 5 committed M11 files.
-- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+  - No internal wiki links, teacher labels, visible scaffolding, or injection
+    markers.
+  - `#repair-traps` selected the Lesson tab, preserved the requested hash, and
+    landed on the target heading.
+- Targeted pre-commit passed after staging the schema hash refresh.
 
 ## Next Target
 
-Start M12 `this-and-that`:
+Start M13 `many-things`:
 
-1. Inspect `curriculum/l2-uk-en/plans/a1/this-and-that.yaml`.
+1. Inspect `curriculum/l2-uk-en/plans/a1/many-things.yaml`.
 2. Inspect the relevant locked wiki/pedagogy brief and source/resource sidecar.
 3. Inspect `build_wiki_manifest_data` obligations.
 4. Build `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`,
-   and assembled `starlight/src/content/docs/a1/this-and-that.mdx`.
+   and assembled `starlight/src/content/docs/a1/many-things.mdx`.
 5. Run the same validation gates and commit with
    `X-Agent: codex/a1-m1-m14-golden-journey`.
 
