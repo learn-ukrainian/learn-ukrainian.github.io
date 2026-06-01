@@ -93,6 +93,15 @@ driver applies fixes deterministically → CI green (blocking; `review / review`
   `delegate.py cancel <task-id>` (positional). Watch via Monitor poll-loop on `/api/delegate/active`.
 
 ## ▶ NEXT ACTIONS (in order)
+0. **FIX THE GEMINI DISPATCH BUG #2454 FIRST (user 2026-06-01).** `delegate.py dispatch --agent gemini`
+   gets killed by SIGTERM at ~87s with zero output (codex unaffected). Likely root cause: the delegate
+   silence-timeout watchdog kills gemini-cli when it goes silent during real work (codex emits liveness,
+   gemini doesn't). Investigate `scripts/delegate.py` + `scripts/agent_runtime/` `--silence-timeout` /
+   `--initial-response-timeout` handling for the gemini adapter — either raise/disable silence-timeout for
+   gemini, or watch gemini's session JSONL (`~/.gemini/...`) for liveness like codex's rollout JSONL. Add a
+   regression test. NOTE: delegate.py is shared infra (orchestrator-adjacent) — coordinate / it may be a
+   non-bio PR. Fixing this lets the claude-writer→**gemini-reviewer** path work via dispatch; until then
+   gemini stays on `ab ask-gemini` ONLY. (Reviewer default remains DeepSeek regardless — see banner.)
 1. **Landing page 180→310:** `starlight/src/content/docs/bio/index.mdx` — hardcoded array of
    `{num,title,slug,status}` cards (last num:180 anatolii-dimarov). Append 181..310 from curriculum.yaml +
    plan titles. (Not done this session.)
