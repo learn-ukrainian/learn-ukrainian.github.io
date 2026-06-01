@@ -22,10 +22,10 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-mykola-khvylovyi
-- bio-les-kurbas
-- lit-yohansen-doctor-leonardo
-- hist-rozstriliane-vidrodzennia
+- mykola-khvylovyi
+- les-kurbas
+- yohansen-doctor-leonardo
+- rozstriliane-vidrodzennia
 content_outline:
 - points:
   - >-
