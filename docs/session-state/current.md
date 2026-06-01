@@ -1,125 +1,155 @@
 # Current Session Handoff
 
-Generated-At: 2026-06-01T16:50Z
+Generated-At: 2026-06-01T22:35Z
 
 ## Active Branch
 
-- Worktree:
-  `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
+- Worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Latest implementation commit:
-  `6b57fe4d70 feat(a1): add M14 checkpoint my world module`
-- Latest handoff commit before this refresh:
-  `df4252ac84 docs(orchestration): refresh M14 handoff`
+- Latest pushed commit: `ce21c0494c feat(a1): add M19 questions module`
+- Previous pushed commit: `d69677aad4 feat(a1): add M18 i want i can module`
 
-Recent commits:
+Current worktree state after M19 push:
 
-- `6b57fe4d70 feat(a1): add M14 checkpoint my world module`
-- `df4252ac84 docs(orchestration): refresh M14 handoff`
-- `f6cd35a701 feat(a1): add M13 many things module`
-- `51a958a49b docs(orchestration): refresh M13 handoff`
-- `f305dc8347 feat(a1): add M12 this and that module`
+- Branch aligned with origin at `ce21c0494c`.
+- One pre-existing untracked local artifact remains:
+  `curriculum/l2-uk-en/a1/i-want-i-can/python_qg.local.json`.
+- `curriculum/l2-uk-en/a1/questions/writer_tool_calls.json` is ignored by
+  `.gitignore`; it was not committed.
+- No M20 `my-morning` artifacts exist in the worktree; do not resurrect stale
+  deleted M20 artifacts.
 
-## Current Goal State
+## Shipped This Run
 
-- M1-M14 are built as English-led A1 student textbook/workbook modules.
-- M13 `many-things` and M14 `checkpoint-my-world` are complete and pushed.
-- Next A1 module if continuing: M15 `what-i-like`.
-- BIO remains Claude/BIO-owned; do not touch BIO files, worktrees, delegates,
-  or PRs.
+M18 `i-want-i-can` shipped and pushed in commit `d69677aad4`.
 
-## M14 Summary
+M19 `questions` shipped and pushed in commit `ce21c0494c`; committed files:
 
-Commit `6b57fe4d70 feat(a1): add M14 checkpoint my world module` added:
+- `curriculum/l2-uk-en/a1/questions/module.md`
+- `curriculum/l2-uk-en/a1/questions/activities.yaml`
+- `curriculum/l2-uk-en/a1/questions/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/questions/resources.yaml`
+- `starlight/src/content/docs/a1/questions.mdx`
 
-- `curriculum/l2-uk-en/a1/checkpoint-my-world/module.md`
-- `curriculum/l2-uk-en/a1/checkpoint-my-world/activities.yaml`
-- `curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml`
-- `curriculum/l2-uk-en/a1/checkpoint-my-world/resources.yaml`
-- `starlight/src/content/docs/a1/checkpoint-my-world.mdx`
+## M19 Validation
 
-M14 is the A1.2 checkpoint for "my world." It reviews personal-pronoun chunks,
-noun gender, `мій/моя/моє/мої`, adjective/color agreement, numbers/prices,
-`цей/ця/це/ці` and `той/та/те/ті`, basic plural forms, and a learner-safe
-street-market dialogue with `вишиванка`, `глечик`, `намисто`, and `писанки`.
+M19 passed:
 
-Local ignored telemetry exists for the resource-search gate:
-`curriculum/l2-uk-en/a1/checkpoint-my-world/writer_tool_calls.json`.
+- `python -m scripts.yaml_activities curriculum/l2-uk-en/a1/questions/activities.yaml`
+- direct `run_python_qg()`:
+  - word count 1314/1200
+  - section budgets passed: Dialogues 295, Question Words 314, Negation 282,
+    Summary 292
+- direct seeded hard wiki coverage: 18/18
+- MDX assembly via `scripts.build.linear_pipeline.assemble_mdx`
+- `scripts/validate_mdx.py l2-uk-en a1 19`
+- `npm run build:starlight` (108 pages built)
+- targeted pre-commit on the five committed files
+- `git diff --check`
+- `scripts/audit/lint_agent_trailer.py` before and after commit
+- push-side hooks during `git push`
 
-## M14 Validation
+Browser QA for M19:
 
-- `scripts.yaml_activities`: parsed 8 activities.
-- Direct `run_python_qg()` for M14: passed.
-  - `word_count`: 1327 words, above the 1104 tolerated floor for target 1200.
-  - Resource-search gate passed with local `search_external` telemetry.
-  - Russianism, VESUM, activity type, activity injection, scaffolding leak,
-    resource, component prop, engagement, and contract gates passed.
-- Direct seeded hard wiki coverage: passed, 17/17 obligations covered.
-- CLI `scripts/validate_mdx.py l2-uk-en a1 14`: passed.
-- `npm run build:starlight`: passed; 104 pages built.
-- Local Starlight route `http://127.0.0.1:4321/a1/checkpoint-my-world/`
-  returned `200 OK` after restarting Starlight once to refresh Astro's content
-  cache.
-- In-app Browser checks for `/a1/checkpoint-my-world/`:
-  - Lesson tab showed the expected checkpoint content and inline practice.
-  - Resources tab showed only external UkrainianLessons resources.
-  - Fixed a rendered resource-title punctuation defect by changing the visible
-    title to `Noun Genders in Ukrainian - Infographic`.
-  - No internal `wiki/pedagogy` links, visible scaffolding, injection markers,
-    or teacher/writer labels in the checked tab surfaces.
-  - Hidden anchor `#repair-traps` selected the Lesson tab, preserved the hash,
-    and landed on the repair table after the tab content settled.
-- Targeted pre-commit passed for the 5 committed files.
-- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/lint_agent_trailer.py`
-  passed after the M14 commit; all 54 non-skipped commits in
-  `origin/main..HEAD` carry `X-Agent` trailers.
+- Loaded `http://127.0.0.1:4321/a1/questions/`; H1 `Питання`.
+- Starlight needed one targeted `./services.sh restart starlight` after adding
+  the new content file; after restart the route loaded correctly.
+- Activities tab visible, selected, and nonempty with 8 activities.
+- Clicked a match-up pair: `Хто?` + `asks for a person`; both became matched
+  and disabled.
+- Cleaned a literal `<br />` rendering issue in repair activity prompts by
+  moving exact wiki coverage strings into non-rendered activity notes.
+- Resources tab visible with only external links:
+  `ukrainianlessons.com/negation-in-ukrainian/`,
+  `ukrainianlessons.com/question-words/`,
+  `ukrainianlessons.com/useful-ukrainian-questions/`,
+  `ukrainianlessons.com/episode35/`.
+- No internal wiki/docs resource links in student-facing resources.
+- Current runtime Activities tab hash worked via the tab's actual `href`; the
+  `#repair-traps` in-page anchor link scrolled to the heading.
 
-## Verified Runtime State
+Activity freshness check:
 
-After M14:
+- M15 types: quiz -> match-up -> fill-in -> group-sort -> quiz ->
+  error-correction -> fill-in -> quiz.
+- M16/M17 use verb-table recognition, repeated fill-ins/group-sort, and repair.
+- M18 types: quiz -> order -> fill-in -> unjumble -> true-false -> translate ->
+  match-up -> error-correction.
+- M19 types: match-up -> fill-in -> true-false -> group-sort -> unjumble ->
+  translate -> order -> error-correction.
+- M19 actions are question-word job matching, dialogue gap filling, yes/no
+  intonation recognition, question/answer/negative sorting, negative
+  rebuilding, short translation, home-dialogue ordering, and wiki-specific
+  repair. It is not a vocabulary swap of M15-M18.
 
-- `git status --short --branch`: clean and aligned with origin after pushing
-  `6b57fe4d70`.
-- `./services.sh status`: `sources` running on 8766, `api` running on 8765,
-  `starlight` running on 4321.
-- `curl -sS -I http://127.0.0.1:4321/a1/checkpoint-my-world/`: `200 OK`.
+## M20 Inspection Started
 
-Initial delegation checks at the start of this goal also showed:
+Do not continue in this session without fresh context. M20 inspection only was
+started; no M20 files were created.
 
-- `curl -sS http://127.0.0.1:8765/api/delegate/active`:
-  `{"total":0,"tasks":[]}`.
+M20 plan: `curriculum/l2-uk-en/plans/a1/my-morning.yaml`
 
-## Open Issues / In-Flight Notes
+- Exact H2 sections required:
+  - `Діалоги`
+  - `Дієслова на -ся`
+  - `Мій ранок`
+  - `Підсумок`
+- Target 1200 words; 300 per section.
+- Locked plan references:
+  - `1-klas-bukvar-zaharijchuk-2025-1_s0024`: page 26, simple daily plan with
+    `Поснідати. Одягнутися. Піти до Квака. Прогулятися... Погратися...`
+  - `1-klas-bukvar-zaharijchuk-2025-2_s0052`: page 53, self-directed morning
+    sequence: got up, made bed, did exercise, set a cup, washed dishes after
+    breakfast.
+- `get_chunk_context` was retrieved for both chunk IDs through the sources MCP.
 
-- This handoff refresh should be committed and pushed after M14.
-- Session setup still reports postmortem hygiene issues in
-  `docs/bug-autopsies/codex-tool-capture.md` (`Symptom`, `Root cause`, and
-  `Links` missing). This is out of scope for the A1 slice.
-- `MEMORY.md` is near its line budget; do not add memory unless necessary.
-- ADR warnings and unrelated open issues remain out of scope.
+M20 manifest obligations from `build_wiki_manifest_data`:
+
+- sequence steps: regular first-conjugation endings first; then morning `-ся`
+  verbs with `-сь` after vowels and pronunciation `[с':а]` / `[ц':а]`; then
+  recognition-only `-уватися/-юватися` with `-ва-` drop; then recognition-only
+  second-conjugation `дивитися/вчитися` with `дивлюся`; then routine nouns and
+  sequence/time words.
+- L2 errors to cover in activities:
+  - `Я прокидаєшся. / Він прокидаюся.` -> `Я прокидаюся. / Він прокидається.`
+  - `Вимова: [прокидайешся]` -> `Вимова: [прокидайес':а]`
+  - `Вимова: [одягайет'с'а]` -> `Вимова: [одягайец':а]`
+  - `Я мию себе.` -> `Я миюся. / Я вмиваюся.`
+  - `Я дивюся. / Я дивюсь.` -> `Я дивлюся.`
+  - `Я користуювася.` -> `Я користуюся.`
+- phonetic rules: `-шся` -> `[с':а]`, `-ться` -> `[ц':а]`, `-ся` -> `[с':а]`.
+- decolonization bans: no Russian comparisons for reflexive verbs or
+  pronunciation; do not frame `-ся` as Russian/shared borrowing; use Ukrainian
+  morning vocabulary (`рушник`, `сніданок`) and avoid the bad form `завтрак`.
+
+Suggested M20 resources from searches:
+
+- `https://www.ukrainianlessons.com/reflexive-verbs/`
+- `https://www.ukrainianlessons.com/episode109/`
+- Dobra Forma reflexive verb chapters are listed in the source registry:
+  `https://opentext.ku.edu/dobraforma/chapter/23-1/` and
+  `https://opentext.ku.edu/dobraforma/chapter/23-2/`.
 
 ## Next Steps
 
-If continuing the golden learner journey, start M15 `what-i-like`:
+Continue with M20 `my-morning` only after refreshing context:
 
-1. Inspect `curriculum/l2-uk-en/plans/a1/what-i-like.yaml`, the locked wiki
-   brief, resource obligations, and `build_wiki_manifest_data`.
-2. Build the full artifact set:
-   `curriculum/l2-uk-en/a1/what-i-like/{module.md,activities.yaml,
-   vocabulary.yaml,resources.yaml}` plus
-   `starlight/src/content/docs/a1/what-i-like.mdx`.
-3. Validate with activity parsing, direct `run_python_qg()`, seeded hard wiki
-   coverage, MDX validation, `npm run build:starlight`, browser inspection,
-   targeted pre-commit, and
-   `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/lint_agent_trailer.py`.
-4. Commit and push with:
+1. Create the full M20 artifact set under
+   `curriculum/l2-uk-en/a1/my-morning/` plus
+   `starlight/src/content/docs/a1/my-morning.mdx`.
+2. Include ignored `writer_tool_calls.json` with both locked
+   `get_chunk_context` calls and at least one external resource search.
+3. Validate per user instructions: activity parser, direct QG, seeded wiki
+   coverage, MDX assembly/validation, `npm run build:starlight`, browser QA,
+   targeted pre-commit, and trailer audit.
+4. Commit/push M20 as its own safe slice with:
    `X-Agent: codex/a1-m1-m14-golden-journey`.
 
-## Guardrails
+Guardrails:
 
-- Use `./services.sh` for services.
-- Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
-- Do not touch `.python-version`, `.yamllint`, `.markdownlint.json`,
-  generated `status/*.json`, `audit/*-review.md`, or `review/*-review.md`.
-- Do not use `sys.executable`.
+- Work only in the dispatch worktree above.
+- Use `./services.sh` and
+  `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+- Do not touch BIO-owned work, `.python-version`, `.yamllint`,
+  `.markdownlint.json`, generated status/audit/review files, or root docs.
 - Do not use Gemini for review confidence.
