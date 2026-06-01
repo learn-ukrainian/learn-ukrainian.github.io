@@ -7,7 +7,7 @@ sidebar:
 pipeline: linear-phase-4
 build_status: validated
 prev: things-have-gender
-next: false
+next: colors
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -302,14 +302,7 @@ the adjective traps.
 
 ### Repair adjective agreement
 
-<ErrorCorrection client:only='react' instruction="Fix the adjective or sentence frame.">
-  <ErrorCorrectionItem sentence="Він є добрий студент." errorWord="Він є добрий студент." correctForm="Він добрий студент." options={JSON.parse(`["Він добрий студент.", "Він добра студент.", "Він є добра студент."]`)} explanation="In this present-tense frame, Ukrainian normally omits є." />
-  <ErrorCorrectionItem sentence="Це гарна хлопець." errorWord="Це гарна хлопець." correctForm="Це гарний хлопець." options={JSON.parse(`["Це гарний хлопець.", "Це гарне хлопець.", "Це гарна хлопець."]`)} explanation="Хлопець is masculine." />
-  <ErrorCorrectionItem sentence="Який твоє ім'я?" errorWord="Який твоє ім'я?" correctForm="Яке твоє ім'я? (або: Як тебе звати?)" options={JSON.parse(`["Яке твоє ім'я? (або: Як тебе звати?)", "Яка твоє ім'я?", "Який твоє ім'я?"]`)} explanation="Ім'я is neuter; in real introductions, use Як тебе звати?" />
-  <ErrorCorrectionItem sentence="Вона читає цікавий книжку." errorWord="Вона читає цікавий книжку." correctForm="Вона читає цікаву книжку." options={JSON.parse(`["Вона читає цікаву книжку.", "Вона читає цікавий книжку.", "Вона читає цікаве книжку."]`)} explanation="This is an object form; notice that adjective and noun move together." />
-  <ErrorCorrectionItem sentence="Моя мамалига смачний." errorWord="Моя мамалига смачний." correctForm="Моя мамалига смачна." options={JSON.parse(`["Моя мамалига смачна.", "Моя мамалига смачний.", "Моя мамалига смачне."]`)} explanation="Мамалига is feminine, so use смачна." />
-  <ErrorCorrectionItem sentence="Це мій синій ручка." errorWord="Це мій синій ручка." correctForm="Це моя синя ручка." options={JSON.parse(`["Це моя синя ручка.", "Це мій синій ручка.", "Це моє синє ручка."]`)} explanation="Ручка is feminine, and синій is a soft-stem adjective." />
-</ErrorCorrection>
+<ErrorCorrection client:only='react' instruction="Fix the adjective or sentence frame." items={JSON.parse(`[{"sentence": "Він є добрий студент.", "errorWord": "Він є добрий студент.", "correctForm": "Він добрий студент.", "options": ["Він добрий студент.", "Він добра студент.", "Він є добра студент."], "explanation": "In this present-tense frame, Ukrainian normally omits є."}, {"sentence": "Це гарна хлопець.", "errorWord": "Це гарна хлопець.", "correctForm": "Це гарний хлопець.", "options": ["Це гарний хлопець.", "Це гарне хлопець.", "Це гарна хлопець."], "explanation": "Хлопець is masculine."}, {"sentence": "Який твоє ім'я?", "errorWord": "Який твоє ім'я?", "correctForm": "Яке твоє ім'я? (або: Як тебе звати?)", "options": ["Яке твоє ім'я? (або: Як тебе звати?)", "Яка твоє ім'я?", "Який твоє ім'я?"], "explanation": "Ім'я is neuter; in real introductions, use Як тебе звати?"}, {"sentence": "Вона читає цікавий книжку.", "errorWord": "Вона читає цікавий книжку.", "correctForm": "Вона читає цікаву книжку.", "options": ["Вона читає цікаву книжку.", "Вона читає цікавий книжку.", "Вона читає цікаве книжку."], "explanation": "This is an object form; notice that adjective and noun move together."}, {"sentence": "Моя мамалига смачний.", "errorWord": "Моя мамалига смачний.", "correctForm": "Моя мамалига смачна.", "options": ["Моя мамалига смачна.", "Моя мамалига смачний.", "Моя мамалига смачне."], "explanation": "Мамалига is feminine, so use смачна."}, {"sentence": "Це мій синій ручка.", "errorWord": "Це мій синій ручка.", "correctForm": "Це моя синя ручка.", "options": ["Це моя синя ручка.", "Це мій синій ручка.", "Це моє синє ручка."], "explanation": "Ручка is feminine, and синій is a soft-stem adjective."}]`)} />
 
 ### Adjective trap repair
 
@@ -333,7 +326,45 @@ the adjective traps.
 </TabItem>
 <TabItem label="Activities">
 
-*No workbook activities for this module; see the Lesson tab.*
+### Which question word?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "Який?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Яке?", "correct": false}], "explanation": "Стіл is masculine, so ask Який?"}, {"question": "книга", "options": [{"text": "Яка?", "correct": true}, {"text": "Який?", "correct": false}, {"text": "Яке?", "correct": false}], "explanation": "Книга is feminine, so ask Яка?"}, {"question": "фото", "options": [{"text": "Яке?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Який?", "correct": false}], "explanation": "Фото is neuter in this lesson, so ask Яке?"}, {"question": "кімната", "options": [{"text": "Яка?", "correct": true}, {"text": "Який?", "correct": false}, {"text": "Які?", "correct": false}], "explanation": "Кімната is feminine."}, {"question": "книги", "options": [{"text": "Які?", "correct": true}, {"text": "Яке?", "correct": false}, {"text": "Який?", "correct": false}], "explanation": "Книги is plural, so ask Які?"}, {"question": "вікно", "options": [{"text": "Яке?", "correct": true}, {"text": "Який?", "correct": false}, {"text": "Яка?", "correct": false}], "explanation": "Вікно is neuter."}]`)} />
+
+### Finish the adjective
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "велик__ стіл", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "нов__ книга", "answer": "а", "options": ["а", "ий", "е"]}, {"sentence": "чист__ вікно", "answer": "е", "options": ["е", "ий", "а"]}, {"sentence": "стар__ фото", "answer": "е", "options": ["е", "а", "ий"]}, {"sentence": "дорог__ телефон", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "дешев__ листівка", "answer": "а", "options": ["а", "е", "ий"]}, {"sentence": "гарн__ кімната", "answer": "а", "options": ["а", "ий", "е"]}, {"sentence": "брудн__ дзеркало", "answer": "е", "options": ["е", "а", "ий"]}, {"sentence": "світл__ плакат", "answer": "ий", "options": ["ий", "е", "а"]}, {"sentence": "нов__ книги", "answer": "і", "options": ["і", "а", "е"]}]`)} />
+
+### Sort the chunks
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Який?": ["великий стіл", "новий телефон", "старий атлас", "дорогий плакат"], "Яка?": ["нова книга", "гарна листівка", "чиста кімната", "дешева ручка"], "Яке?": ["старе фото", "чисте вікно", "велике ліжко", "брудне дзеркало"], "Які?": ["нові книги", "гарні речі", "старі фото", "дешеві листівки"]}`)} />
+
+### Match opposites
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "великий", "right": "маленький"}, {"left": "новий", "right": "старий"}, {"left": "гарний", "right": "поганий"}, {"left": "чистий", "right": "брудний"}, {"left": "дорогий", "right": "дешевий"}, {"left": "світлий", "right": "темний"}]`)} />
+
+### Sentence frame
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "The book is new.", "options": [{"text": "Книга нова.", "correct": true}, {"text": "Книга є нова.", "correct": false}, {"text": "Книга новий.", "correct": false}], "explanation": "Ukrainian usually leaves out є in this present-tense frame."}, {"question": "The table is clean.", "options": [{"text": "Стіл чистий.", "correct": true}, {"text": "Стіл чиста.", "correct": false}, {"text": "Стіл є чистий.", "correct": false}], "explanation": "Стіл is masculine, and the no-є frame is natural."}, {"question": "The window is big.", "options": [{"text": "Вікно велике.", "correct": true}, {"text": "Вікно великий.", "correct": false}, {"text": "Вікно велика.", "correct": false}], "explanation": "Вікно is neuter."}, {"question": "A nice postcard", "options": [{"text": "гарна листівка", "correct": true}, {"text": "гарний листівка", "correct": false}, {"text": "гарне листівка", "correct": false}], "explanation": "Листівка is feminine."}, {"question": "A useful atlas", "options": [{"text": "корисний атлас", "correct": true}, {"text": "корисна атлас", "correct": false}, {"text": "корисне атлас", "correct": false}], "explanation": "Атлас is masculine."}, {"question": "Interesting things", "options": [{"text": "цікаві речі", "correct": true}, {"text": "цікава речі", "correct": false}, {"text": "цікаве речі", "correct": false}], "explanation": "Plural chunks use цікаві."}]`)} />
+
+### Describe the room
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Моя кімната ___ і світла.", "answer": "маленька", "options": ["маленька", "маленький", "маленьке"]}, {"sentence": "Стіл ___ і чистий.", "answer": "новий", "options": ["новий", "нова", "нове"]}, {"sentence": "Ліжко старе, ___ зручне.", "answer": "але", "options": ["але", "який", "яка"]}, {"sentence": "Вікно ___ і чисте.", "answer": "велике", "options": ["велике", "великий", "велика"]}, {"sentence": "Книга дорога, ___ листівка дешева.", "answer": "а", "options": ["а", "і", "яке"]}, {"sentence": "У мене є ___ стіл і стара лампа.", "answer": "новий", "options": ["новий", "нова", "нове"]}]`)} />
+
+### Repair adjective agreement
+
+<ErrorCorrection client:only='react' instruction="Fix the adjective or sentence frame." items={JSON.parse(`[{"sentence": "Він є добрий студент.", "errorWord": "Він є добрий студент.", "correctForm": "Він добрий студент.", "options": ["Він добрий студент.", "Він добра студент.", "Він є добра студент."], "explanation": "In this present-tense frame, Ukrainian normally omits є."}, {"sentence": "Це гарна хлопець.", "errorWord": "Це гарна хлопець.", "correctForm": "Це гарний хлопець.", "options": ["Це гарний хлопець.", "Це гарне хлопець.", "Це гарна хлопець."], "explanation": "Хлопець is masculine."}, {"sentence": "Який твоє ім'я?", "errorWord": "Який твоє ім'я?", "correctForm": "Яке твоє ім'я? (або: Як тебе звати?)", "options": ["Яке твоє ім'я? (або: Як тебе звати?)", "Яка твоє ім'я?", "Який твоє ім'я?"], "explanation": "Ім'я is neuter; in real introductions, use Як тебе звати?"}, {"sentence": "Вона читає цікавий книжку.", "errorWord": "Вона читає цікавий книжку.", "correctForm": "Вона читає цікаву книжку.", "options": ["Вона читає цікаву книжку.", "Вона читає цікавий книжку.", "Вона читає цікаве книжку."], "explanation": "This is an object form; notice that adjective and noun move together."}, {"sentence": "Моя мамалига смачний.", "errorWord": "Моя мамалига смачний.", "correctForm": "Моя мамалига смачна.", "options": ["Моя мамалига смачна.", "Моя мамалига смачний.", "Моя мамалига смачне."], "explanation": "Мамалига is feminine, so use смачна."}, {"sentence": "Це мій синій ручка.", "errorWord": "Це мій синій ручка.", "correctForm": "Це моя синя ручка.", "options": ["Це моя синя ручка.", "Це мій синій ручка.", "Це моє синє ручка."], "explanation": "Ручка is feminine, and синій is a soft-stem adjective."}]`)} />
+
+### Adjective trap repair
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Цей суп дуже ___.", "answer": "смачний", "options": ["смачний", "вкусний"]}, {"sentence": "У мене є ___ олівець.", "answer": "жовтий", "options": ["жовтий", "жолтий"]}, {"sentence": "У сусідки ___ кіт.", "answer": "чорний", "options": ["чорний", "черний"]}, {"sentence": "Прапор ___, а не білий.", "answer": "червоний", "options": ["червоний", "красний"]}, {"sentence": "Це ___ фільм.", "answer": "поганий", "options": ["поганий", "плохий"]}, {"sentence": "Це ___ відповідь на запитання.", "answer": "правильна", "options": ["правильна", "вірна"]}, {"sentence": "Дай мені, будь ласка, ___ олівець.", "answer": "будь-який", "options": ["будь-який", "любий"]}, {"sentence": "Сергій — ___ хлопчик.", "answer": "розумний", "options": ["розумний", "умний"]}, {"sentence": "Тарас — ___ учень.", "answer": "лінивий", "options": ["лінивий", "ленивий"]}]`)} />
+
+### Choose the Ukrainian line
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "My room is small but nice.", "options": [{"text": "Моя кімната маленька, але гарна.", "correct": true}, {"text": "Мій кімната маленький, але гарний.", "correct": false}, {"text": "Моє кімната маленьке, але гарне.", "correct": false}], "explanation": "Кімната is feminine."}, {"source": "The table is new and clean.", "options": [{"text": "Стіл новий і чистий.", "correct": true}, {"text": "Стіл нова і чиста.", "correct": false}, {"text": "Стіл нове і чисте.", "correct": false}], "explanation": "Стіл is masculine."}, {"source": "The photo is old.", "options": [{"text": "Фото старе.", "correct": true}, {"text": "Фото стара.", "correct": false}, {"text": "Фото старий.", "correct": false}], "explanation": "Фото is neuter in this lesson."}, {"source": "A cheap postcard", "options": [{"text": "дешева листівка", "correct": true}, {"text": "дешевий листівка", "correct": false}, {"text": "дешеве листівка", "correct": false}], "explanation": "Листівка is feminine."}, {"source": "Good afternoon.", "options": [{"text": "Добрий день.", "correct": true}, {"text": "Добра день.", "correct": false}, {"text": "Добре день.", "correct": false}], "explanation": "День is masculine, so the greeting is Добрий день."}, {"source": "The books are interesting.", "options": [{"text": "Книги цікаві.", "correct": true}, {"text": "Книги цікава.", "correct": false}, {"text": "Книги цікаве.", "correct": false}], "explanation": "Plural chunks use цікаві."}]`)} />
+
+### Quick checkpoint
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Стіл новий.", "isTrue": true, "explanation": "Стіл is masculine, so новий is correct."}, {"statement": "Книга нове.", "isTrue": false, "explanation": "Книга is feminine; say Книга нова."}, {"statement": "Вікно чисте.", "isTrue": true, "explanation": "Вікно is neuter."}, {"statement": "Який кімната?", "isTrue": false, "explanation": "Кімната is feminine; ask Яка кімната?"}, {"statement": "Кімната маленька, але гарна.", "isTrue": true, "explanation": "Both adjectives agree with кімната."}, {"statement": "В українській можна описати річ без є: Книга цікава.", "isTrue": true, "explanation": "This no-є present-tense frame is normal."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">
@@ -353,4 +384,4 @@ the adjective traps.
 </TabItem>
 </Tabs>
 
-<HashTabSync client:load />
+<HashTabSync />

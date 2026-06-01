@@ -213,12 +213,12 @@ Practice there.
     assert "act-1 inline greeting" in lesson_tab
     assert "act-2 inline thanks" in lesson_tab
 
-    assert "act-1 inline greeting" not in tab3
-    assert "act-2 inline thanks" not in tab3
+    assert "act-1 inline greeting" in tab3
+    assert "act-2 inline thanks" in tab3
     assert "### act-3 workbook yes\n\n<Quiz" in tab3
     assert "### act-4 workbook no\n\n<Quiz" in tab3
     assert "*(see lesson)*" not in tab3
-    assert tab3.count("<Quiz") == 2
+    assert tab3.count("<Quiz") == 4
 
 
 def test_generated_tabs_include_hash_target_sync_script():
@@ -234,7 +234,7 @@ Lesson body.
     mdx = generate_mdx(md_content, 1, level="a1")
 
     assert "import HashTabSync from '@site/src/components/HashTabSync';" in mdx
-    assert "<HashTabSync client:load />" in mdx
+    assert "<HashTabSync />" in mdx
 
 
 def test_v7_tab3_omits_missing_id_duplicate_of_inline_activity(tmp_path):
@@ -282,13 +282,13 @@ Practice here.
 
     assert "Inline fill duplicate" in lesson_tab
     assert "<FillIn" in lesson_tab
-    assert "Inline fill duplicate" not in tab3
-    assert "<FillIn" not in tab3
+    assert tab3.count("Inline fill duplicate") == 2
+    assert "<FillIn" in tab3
     assert "Workbook-only quiz" in tab3
     assert "<Quiz" in tab3
 
 
-def test_v7_tab3_all_inline_activities_renders_workbook_empty_state(tmp_path):
+def test_v7_tab3_all_inline_activities_renders_full_workbook(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
         """
@@ -324,11 +324,48 @@ subtitle: Test
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
     tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
 
-    assert "No workbook activities for this module; see the Lesson tab." in tab3
-    assert "Inline one" not in tab3
-    assert "Inline two" not in tab3
-    assert "<Quiz" not in tab3
+    assert "No workbook activities for this module; see the Lesson tab." not in tab3
+    assert "Inline one" in tab3
+    assert "Inline two" in tab3
+    assert tab3.count("<Quiz") == 2
     assert "*(see lesson)*" not in tab3
+
+
+def test_error_correction_renders_structured_items_for_client_interactivity(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: error-correction
+  title: Fix identity trap
+  instruction: Choose the safer sentence.
+  items:
+    - sentence: Я є студент.
+      error: є
+      correction: Я студент.
+      options:
+        - Я студент.
+        - Я є студент.
+      explanation: Present identity usually omits є.
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: Error Correction
+subtitle: Test
+---
+# Error Correction
+
+<!-- INJECT_ACTIVITY: act-1 -->
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
+
+    assert "<ErrorCorrection client:only='react'" in mdx
+    assert "items={JSON.parse(`" in mdx
+    assert "<ErrorCorrectionItem" not in mdx
+    assert '"errorWord": "є"' in mdx
 
 
 def test_v7_inline_activity_missing_id_reference_fails_loudly(tmp_path):

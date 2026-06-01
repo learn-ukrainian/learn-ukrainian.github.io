@@ -7,7 +7,7 @@ sidebar:
 pipeline: linear-phase-4
 build_status: validated
 prev: special-signs
-next: false
+next: who-am-i
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -46,6 +46,7 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -277,15 +278,25 @@ number stress, and a short reading check.
 </TabItem>
 <TabItem label="Activities">
 
+### Where is the stress?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In ка́ва, where is the stress?", "options": [{"text": "first syllable", "correct": true}, {"text": "final syllable", "correct": false}, {"text": "no stress", "correct": false}], "explanation": "Ка́ва is stressed on ка́."}, {"question": "In вода́, where is the stress?", "options": [{"text": "final syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "every syllable equally", "correct": false}], "explanation": "Вода́ is stressed on да́."}, {"question": "In столи́ця, where is the stress?", "options": [{"text": "middle syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "final syllable", "correct": false}], "explanation": "Столи́ця is stressed on ли́."}, {"question": "What should you do with unstressed vowels in молоко́?", "options": [{"text": "Keep each vowel clear.", "correct": true}, {"text": "Drop the first vowel.", "correct": false}, {"text": "Read every о as а.", "correct": false}], "explanation": "Ukrainian unstressed vowels stay clear."}]`)} />
+
+### Melody choice
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Це ка́ва.", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A statement uses falling melody."}, {"question": "Це ка́ва?", "options": [{"text": "rising ↗", "correct": true}, {"text": "falling ↘", "correct": false}], "explanation": "A yes/no question uses rising melody."}, {"question": "Де метро́?", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A question with де uses falling melody at A1."}, {"question": "Як га́рно!", "options": [{"text": "stronger falling ↘↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "An exclamation uses a stronger falling contour."}]`)} />
+
+### Stress changes meaning
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок", "right": "castle"}, {"left": "замо́к", "right": "lock"}, {"left": "а́тлас", "right": "atlas"}, {"left": "атла́с", "right": "satin"}, {"left": "о́рган", "right": "body organ"}, {"left": "орга́н", "right": "musical instrument"}]`)} />
+
+### Punctuation and melody
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ка́ва_", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Це метро́_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Де апте́ка_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Як га́рно_", "answer": "!", "options": ["!", "?", "."]}, {"sentence": "Так, це вода́_", "answer": ".", "options": [".", "?", "!"]}]`)} />
+
 ### Fix stress-transfer traps
 
-<ErrorCorrection client:only='react'>
-  <ErrorCorrectionItem sentence="Keep all vowels clear in молоко́." errorWord="blurred first two vowels" correctForm="мо-ло-ко́" options={JSON.parse(`["мо-ло-ко́", "blurred vowels"]`)} explanation="Ukrainian vowels stay clear outside stress." />
-  <ErrorCorrectionItem sentence="Put stress on the -ме́тр part in кіломе́тр." errorWord="кі́лометр" correctForm="кіломе́тр" options={JSON.parse(`["кіломе́тр", "кі́лометр"]`)} explanation="The prepared model is кіломе́тр." />
-  <ErrorCorrectionItem sentence="Notice mobile stress in кни́жка / книжки́." errorWord="кни́жки" correctForm="книжки́" options={JSON.parse(`["книжки́", "кни́жки"]`)} explanation="This plural model moves stress to the ending." />
-  <ErrorCorrectionItem sentence="Stress -на́- in одина́дцять." errorWord="о́динадцять" correctForm="одина́дцять" options={JSON.parse(`["одина́дцять", "о́динадцять"]`)} explanation="The A1 target has stress on -на́-." />
-  <ErrorCorrectionItem sentence="Stress -на́- in чотирна́дцять." errorWord="чоти́рнадцять" correctForm="чотирна́дцять" options={JSON.parse(`["чотирна́дцять", "чоти́рнадцять"]`)} explanation="The A1 target has stress on -на́-." />
-</ErrorCorrection>
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian reading habit." items={JSON.parse(`[{"sentence": "Keep all vowels clear in молоко́.", "errorWord": "blurred first two vowels", "correctForm": "мо-ло-ко́", "options": ["мо-ло-ко́", "blurred vowels"], "explanation": "Ukrainian vowels stay clear outside stress."}, {"sentence": "Put stress on the -ме́тр part in кіломе́тр.", "errorWord": "кі́лометр", "correctForm": "кіломе́тр", "options": ["кіломе́тр", "кі́лометр"], "explanation": "The prepared model is кіломе́тр."}, {"sentence": "Notice mobile stress in кни́жка / книжки́.", "errorWord": "кни́жки", "correctForm": "книжки́", "options": ["книжки́", "кни́жки"], "explanation": "This plural model moves stress to the ending."}, {"sentence": "Stress -на́- in одина́дцять.", "errorWord": "о́динадцять", "correctForm": "одина́дцять", "options": ["одина́дцять", "о́динадцять"], "explanation": "The A1 target has stress on -на́-."}, {"sentence": "Stress -на́- in чотирна́дцять.", "errorWord": "чоти́рнадцять", "correctForm": "чотирна́дцять", "options": ["чотирна́дцять", "чоти́рнадцять"], "explanation": "The A1 target has stress on -на́-."}]`)} />
 
 ### Sort by stress position
 
@@ -316,3 +327,5 @@ number stress, and a short reading check.
 
 </TabItem>
 </Tabs>
+
+<HashTabSync />

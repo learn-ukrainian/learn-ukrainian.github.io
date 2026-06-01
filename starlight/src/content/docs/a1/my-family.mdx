@@ -7,7 +7,7 @@ sidebar:
 pipeline: linear-phase-4
 build_status: validated
 prev: who-am-i
-next: false
+next: checkpoint-first-contact
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -300,16 +300,25 @@ family-word choices, and quick vocabulary recognition.
 </TabItem>
 <TabItem label="Activities">
 
+### Family photo questions
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You ask one peer whether they have a brother.", "options": [{"text": "У тебе є брат?", "correct": true}, {"text": "У мене є брат?", "correct": false}, {"text": "Це брат?", "correct": false}], "explanation": "У тебе є...? asks one familiar person whether they have someone."}, {"question": "You answer yes and say you have one sister.", "options": [{"text": "Так, у мене є одна сестра.", "correct": true}, {"text": "Так, у тебе є одна сестра.", "correct": false}, {"text": "Так, це одна сестра.", "correct": false}], "explanation": "У мене є... answers for yourself."}, {"question": "You answer no with the safe A1 answer.", "options": [{"text": "Ні.", "correct": true}, {"text": "У мене немає брат.", "correct": false}, {"text": "Ні є брат.", "correct": false}], "explanation": "Keep the negative answer simple at A1."}, {"question": "You ask what his name is.", "options": [{"text": "Як його звати?", "correct": true}, {"text": "Як її звати?", "correct": false}, {"text": "Що його звати?", "correct": false}], "explanation": "Його fits a brother, dad, son, or grandfather."}, {"question": "You identify your mom in a photo.", "options": [{"text": "Це моя мама.", "correct": true}, {"text": "Це мій мама.", "correct": false}, {"text": "Це моє мама.", "correct": false}], "explanation": "Мама is feminine, so use моя."}, {"question": "You identify your parents.", "options": [{"text": "Це мої батьки.", "correct": true}, {"text": "Це мій батьки.", "correct": false}, {"text": "Це моя батьки.", "correct": false}], "explanation": "Батьки is plural, so use мої."}]`)} />
+
+### Family words
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "mother", "right": "мама"}, {"left": "father", "right": "тато"}, {"left": "brother", "right": "брат"}, {"left": "sister", "right": "сестра"}, {"left": "grandmother", "right": "бабуся"}, {"left": "grandfather", "right": "дідусь"}, {"left": "parents", "right": "батьки"}, {"left": "relatives", "right": "родичі"}]`)} />
+
+### Build the I-have chunk
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ мене є брат.", "answer": "У", "options": ["У", "Це", "Хто"]}, {"sentence": "У ___ є сестра.", "answer": "мене", "options": ["мене", "мій", "це"]}, {"sentence": "У ___ є брат?", "answer": "тебе", "options": ["тебе", "мене", "він"]}, {"sentence": "У ___ є діти?", "answer": "вас", "options": ["вас", "твій", "вона"]}, {"sentence": "У мене є ___ брат.", "answer": "один", "options": ["один", "одна", "дві"]}, {"sentence": "У мене є ___ сестра.", "answer": "одна", "options": ["одна", "один", "два"]}, {"sentence": "У мене є ___ брати.", "answer": "два", "options": ["два", "дві", "одна"]}, {"sentence": "У мене є ___ сестри.", "answer": "дві", "options": ["дві", "два", "один"]}]`)} />
+
+### My or your?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ___ брат.", "answer": "мій", "options": ["мій", "моя", "моє", "мої"]}, {"sentence": "Це ___ мама.", "answer": "моя", "options": ["моя", "мій", "моє", "мої"]}, {"sentence": "Це ___ місто.", "answer": "моє", "options": ["моє", "мій", "моя", "мої"]}, {"sentence": "Це ___ батьки.", "answer": "мої", "options": ["мої", "мій", "моя", "моє"]}, {"sentence": "Це ___ тато?", "answer": "твій", "options": ["твій", "твоя", "твоє", "твої"]}, {"sentence": "Це ___ сестра?", "answer": "твоя", "options": ["твоя", "твій", "твоє", "твої"]}, {"sentence": "Це ___ прізвище?", "answer": "твоє", "options": ["твоє", "твій", "твоя", "твої"]}, {"sentence": "Це ___ родичі?", "answer": "твої", "options": ["твої", "твій", "твоя", "твоє"]}]`)} />
+
 ### Choose the Ukrainian family sentence
 
-<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian line.">
-  <ErrorCorrectionItem sentence="Моє ім'я є Джон." errorWord="Моє ім'я є Джон." correctForm="Мене звати Джон." options={JSON.parse(`["Мене звати Джон.", "Моє ім'я є Джон."]`)} explanation="Мене звати... is the natural first-introduction model." />
-  <ErrorCorrectionItem sentence="Я маю 20 років." errorWord="Я маю 20 років." correctForm="Мені 20 років." options={JSON.parse(`["Мені 20 років.", "Я маю 20 років."]`)} explanation="Age uses the chunk Мені ... років." />
-  <ErrorCorrectionItem sentence="Це мій мама." errorWord="Це мій мама." correctForm="Це моя мама." options={JSON.parse(`["Це моя мама.", "Це мій мама."]`)} explanation="Мама is feminine, so use моя." />
-  <ErrorCorrectionItem sentence="Я є брат." errorWord="Я є брат." correctForm="Я брат." options={JSON.parse(`["Я брат.", "Я є брат."]`)} explanation="Present-time identity can omit є." />
-  <ErrorCorrectionItem sentence="Батьки (у значенні батька)" errorWord="Батьки (у значенні батька)" correctForm="Тато / батько" options={JSON.parse(`["Тато / батько", "Батьки"]`)} explanation="Батьки means parents, not one father." />
-  <ErrorCorrectionItem sentence="Чия це? (про брата)" errorWord="Чия це? (про брата)" correctForm="Чий це брат?" options={JSON.parse(`["Чий це брат?", "Чия це?"]`)} explanation="Брат is masculine, so the question word is чий." />
-</ErrorCorrection>
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian line." items={JSON.parse(`[{"sentence": "Моє ім'я є Джон.", "errorWord": "Моє ім'я є Джон.", "correctForm": "Мене звати Джон.", "options": ["Мене звати Джон.", "Моє ім'я є Джон."], "explanation": "Мене звати... is the natural first-introduction model."}, {"sentence": "Я маю 20 років.", "errorWord": "Я маю 20 років.", "correctForm": "Мені 20 років.", "options": ["Мені 20 років.", "Я маю 20 років."], "explanation": "Age uses the chunk Мені ... років."}, {"sentence": "Це мій мама.", "errorWord": "Це мій мама.", "correctForm": "Це моя мама.", "options": ["Це моя мама.", "Це мій мама."], "explanation": "Мама is feminine, so use моя."}, {"sentence": "Я є брат.", "errorWord": "Я є брат.", "correctForm": "Я брат.", "options": ["Я брат.", "Я є брат."], "explanation": "Present-time identity can omit є."}, {"sentence": "Батьки (у значенні батька)", "errorWord": "Батьки (у значенні батька)", "correctForm": "Тато / батько", "options": ["Тато / батько", "Батьки"], "explanation": "Батьки means parents, not one father."}, {"sentence": "Чия це? (про брата)", "errorWord": "Чия це? (про брата)", "correctForm": "Чий це брат?", "options": ["Чий це брат?", "Чия це?"], "explanation": "Брат is masculine, so the question word is чий."}]`)} />
 
 ### Native family words
 
@@ -337,4 +346,4 @@ family-word choices, and quick vocabulary recognition.
 </TabItem>
 </Tabs>
 
-<HashTabSync client:load />
+<HashTabSync />

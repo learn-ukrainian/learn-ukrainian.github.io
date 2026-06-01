@@ -7,7 +7,7 @@ sidebar:
 pipeline: linear-phase-4
 build_status: validated
 prev: reading-ukrainian
-next: false
+next: stress-and-melody
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -46,6 +46,7 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -233,13 +234,7 @@ apostrophe and its own soft sign. Learn them from Ukrainian words.
 
 ### Fix common L2 mistakes
 
-<ErrorCorrection client:only='react'>
-  <ErrorCorrectionItem sentence="Do not drop the apostrophe in сім'я." errorWord="сімя" correctForm="сім'я" options={JSON.parse(`["сім'я", "family word without apostrophe"]`)} explanation="The apostrophe is required in сім'я." />
-  <ErrorCorrectionItem sentence="Do not write ден." errorWord="ден" correctForm="день" options={JSON.parse(`["день", "ден"]`)} explanation="День needs the soft sign." />
-  <ErrorCorrectionItem sentence="Do not put apostrophe in свято." errorWord="apostrophe in свято" correctForm="свято" options={JSON.parse(`["свято", "apostrophe spelling"]`)} explanation="Свято is a prepared no-apostrophe word." />
-  <ErrorCorrectionItem sentence="Do not invent a soft sign in ложка." errorWord="льожка" correctForm="ложка" options={JSON.parse(`["ложка", "invented soft-sign spelling"]`)} explanation="Ложка does not have a soft sign after л." />
-  <ErrorCorrectionItem sentence="Do not treat apostrophe as a hard stop." errorWord="hard stop" correctForm="smooth й sound" options={JSON.parse(`["smooth й sound", "full stop"]`)} explanation="The apostrophe separates sounds but does not create a full pause." />
-</ErrorCorrection>
+<ErrorCorrection client:only='react' instruction="Choose the correct Ukrainian form." items={JSON.parse(`[{"sentence": "Do not drop the apostrophe in сім'я.", "errorWord": "сімя", "correctForm": "сім'я", "options": ["сім'я", "family word without apostrophe"], "explanation": "The apostrophe is required in сім'я."}, {"sentence": "Do not write ден.", "errorWord": "ден", "correctForm": "день", "options": ["день", "ден"], "explanation": "День needs the soft sign."}, {"sentence": "Do not put apostrophe in свято.", "errorWord": "apostrophe in свято", "correctForm": "свято", "options": ["свято", "apostrophe spelling"], "explanation": "Свято is a prepared no-apostrophe word."}, {"sentence": "Do not invent a soft sign in ложка.", "errorWord": "льожка", "correctForm": "ложка", "options": ["ложка", "invented soft-sign spelling"], "explanation": "Ложка does not have a soft sign after л."}, {"sentence": "Do not treat apostrophe as a hard stop.", "errorWord": "hard stop", "correctForm": "smooth й sound", "options": ["smooth й sound", "full stop"], "explanation": "The apostrophe separates sounds but does not create a full pause."}]`)} />
 
 ## Line Breaks and Textbook Check
 
@@ -294,6 +289,26 @@ matching, error correction, line-break recognition, and quick review.
 </TabItem>
 <TabItem label="Activities">
 
+### Soft or separate?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In буряк, what happens before я?", "options": [{"text": "Р softens before я.", "correct": true}, {"text": "There is an apostrophe.", "correct": false}, {"text": "Ї is always [йі].", "correct": false}], "explanation": "Буряк has no apostrophe; р softens before я."}, {"question": "In бур'ян, what does the apostrophe do?", "options": [{"text": "It keeps р hard and lets you hear [йа].", "correct": true}, {"text": "It makes р disappear.", "correct": false}, {"text": "It adds the sound [і].", "correct": false}], "explanation": "The apostrophe separates р from я."}, {"question": "What is always true about Ї?", "options": [{"text": "It is always [йі].", "correct": true}, {"text": "It is silent.", "correct": false}, {"text": "It is the soft sign.", "correct": false}], "explanation": "Ї always represents [йі]."}]`)} />
+
+### What does ь do?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "soft final н"}, {"left": "кінь", "right": "soft final н"}, {"left": "сіль", "right": "soft final л"}, {"left": "вчитель", "right": "soft final л"}, {"left": "м'який знак", "right": "no sound of its own"}]`)} />
+
+### Add the sign
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "сім_я", "answer": "'", "options": ["'", "ь", "no sign"]}, {"sentence": "ден_", "answer": "ь", "options": ["ь", "'", "no sign"]}, {"sentence": "п_ять", "answer": "'", "options": ["'", "ь", "no sign"]}, {"sentence": "свято needs ____.", "answer": "no sign", "options": ["no sign", "'", "ь"]}, {"sentence": "бур_ян", "answer": "'", "options": ["'", "ь", "no sign"]}, {"sentence": "маленький needs ____.", "answer": "ь", "options": ["ь", "'", "no sign"]}]`)} />
+
+### Fix common L2 mistakes
+
+<ErrorCorrection client:only='react' instruction="Choose the correct Ukrainian form." items={JSON.parse(`[{"sentence": "Do not drop the apostrophe in сім'я.", "errorWord": "сімя", "correctForm": "сім'я", "options": ["сім'я", "family word without apostrophe"], "explanation": "The apostrophe is required in сім'я."}, {"sentence": "Do not write ден.", "errorWord": "ден", "correctForm": "день", "options": ["день", "ден"], "explanation": "День needs the soft sign."}, {"sentence": "Do not put apostrophe in свято.", "errorWord": "apostrophe in свято", "correctForm": "свято", "options": ["свято", "apostrophe spelling"], "explanation": "Свято is a prepared no-apostrophe word."}, {"sentence": "Do not invent a soft sign in ложка.", "errorWord": "льожка", "correctForm": "ложка", "options": ["ложка", "invented soft-sign spelling"], "explanation": "Ложка does not have a soft sign after л."}, {"sentence": "Do not treat apostrophe as a hard stop.", "errorWord": "hard stop", "correctForm": "smooth й sound", "options": ["smooth й sound", "full stop"], "explanation": "The apostrophe separates sounds but does not create a full pause."}]`)} />
+
+### Line-break models
+
+<DivideWords client:only='react' instruction={"Choose the prepared line-break model."} items={JSON.parse(`[{"word": "Мар'яна", "answer": "Мар'-яна"}, {"word": "дерев'яний", "answer": "model shown in the lesson"}, {"word": "бур'ян", "answer": "бур'-ян"}, {"word": "пальці", "answer": "паль-ці"}]`)} />
+
 ### Sort by sign
 
 <GroupSort client:only='react' groups={JSON.parse(`{"Has ь": ["день", "кінь", "сіль", "вчитель", "маленький"], "Has apostrophe": ["сім'я", "м'ясо", "п'ять", "комп'ютер", "бур'ян"], "No sign": ["буряк", "свято", "цвях", "ложка"]}`)} />
@@ -326,3 +341,5 @@ matching, error correction, line-break recognition, and quick review.
 
 </TabItem>
 </Tabs>
+
+<HashTabSync />

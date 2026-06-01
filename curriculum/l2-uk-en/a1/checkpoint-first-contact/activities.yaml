@@ -140,57 +140,65 @@
         - звати
       explanation: Дуже приємно познайомитися closes a first meeting.
 - id: act-4
-  type: fill-in
+  type: quiz
   title: Fix common A1.1 traps
   instruction: Choose the normative Ukrainian form.
   items:
-    - sentence: Моє ім'я є Джон.
-      answer: Мене звати Джон.
+    - prompt: Name introduction
       options:
-        - Мене звати Джон.
-        - Моє ім'я є Джон.
+        - text: Мене звати Джон.
+          correct: true
+        - text: Моє ім'я є Джон.
+          correct: false
       explanation: Ukrainian introduces a name with Мене звати...
-    - sentence: Я є студент.
-      answer: Я студент.
+    - prompt: Identity sentence
       options:
-        - Я студент.
-        - Я є студент.
+        - text: Я студент.
+          correct: true
+        - text: Я є студент.
+          correct: false
       explanation: Present identity normally omits є.
-    - sentence: Я маю 20 років.
-      answer: Мені 20 років.
+    - prompt: Age sentence
       options:
-        - Мені 20 років.
-        - Я маю 20 років.
+        - text: Мені 20 років.
+          correct: true
+        - text: Я маю 20 років.
+          correct: false
       explanation: Age uses Мені ... років.
-    - sentence: Привіт, Максим!
-      answer: Привіт, Максиме!
+    - prompt: Direct address
       options:
-        - Привіт, Максиме!
-        - Привіт, Максим!
+        - text: Привіт, Максиме!
+          correct: true
+        - text: Привіт, Максим!
+          correct: false
       explanation: Direct address uses the vocative form in the safe example.
-    - sentence: Здрастуйте! Мене звати Оксана.
-      answer: Добрий день! Мене звати Оксана.
+    - prompt: Safe greeting
       options:
-        - Добрий день! Мене звати Оксана.
-        - Здрастуйте! Мене звати Оксана.
+        - text: Добрий день! Мене звати Оксана.
+          correct: true
+        - text: Здрастуйте! Мене звати Оксана.
+          correct: false
       explanation: Добрий день is the safe standard greeting.
-    - sentence: Моя фамілія Сміт.
-      answer: Моє прізвище Сміт.
+    - prompt: Surname
       options:
-        - Моє прізвище Сміт.
-        - Моя фамілія Сміт.
+        - text: Моє прізвище Сміт.
+          correct: true
+        - text: Моя фамілія Сміт.
+          correct: false
       explanation: Прізвище is the standard Ukrainian word for surname.
-    - sentence: Пока!
-      answer: До побачення!
+    - prompt: Farewell
       options:
-        - До побачення!
-        - Пока!
+        - text: До побачення!
+          correct: true
+        - text: Пока!
+          correct: false
       explanation: До побачення is the safe standard farewell.
-    - sentence: Ігнорування роду іменника
-      answer: Вивчення слова разом із його родом
+    - prompt: Noun gender habit
       options:
-        - Вивчення слова разом із його родом
-        - Ігнорування роду іменника
+        - text: Вивчення слова разом із його родом
+          correct: true
+        - text: Ігнорування роду іменника
+          correct: false
       explanation: Store a Ukrainian noun with its gender cues from the beginning.
 - id: act-5
   type: fill-in

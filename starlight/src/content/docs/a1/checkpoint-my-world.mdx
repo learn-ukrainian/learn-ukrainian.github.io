@@ -287,7 +287,37 @@ authors.
 </TabItem>
 <TabItem label="Activities">
 
-*No workbook activities for this module; see the Lesson tab.*
+### Checkpoint warm-up
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "My name is John.", "options": [{"text": "Мене звати Джон.", "correct": true}, {"text": "Моє ім'я є Джон.", "correct": false}, {"text": "Я є Джон.", "correct": false}], "explanation": "Use Мене звати... for a name."}, {"question": "I am a student.", "options": [{"text": "Я студент.", "correct": true}, {"text": "Я є студент.", "correct": false}, {"text": "Мене студент.", "correct": false}], "explanation": "Present identity normally drops є."}, {"question": "My book is on the table.", "options": [{"text": "Моя книга на столі.", "correct": true}, {"text": "Мій книга на столі.", "correct": false}, {"text": "Моє книга на столі.", "correct": false}], "explanation": "Книга is feminine, so use моя."}, {"question": "I have glasses.", "options": [{"text": "У мене є окуляри.", "correct": true}, {"text": "Вона має один окуляри.", "correct": false}, {"text": "У мене є один окуляри.", "correct": false}], "explanation": "Окуляри is plural-only."}]`)} />
+
+### Gender and control words
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "він"}, {"left": "книга", "right": "вона"}, {"left": "вікно", "right": "воно"}, {"left": "кімната", "right": "вона"}, {"left": "місто", "right": "воно"}, {"left": "книги", "right": "вони"}, {"left": "окуляри", "right": "вони"}, {"left": "телефон", "right": "він"}]`)} />
+
+### Marketplace dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ вишиванка біла.", "answer": "Ця", "options": ["Ця", "Цей", "Це"]}, {"sentence": "___ глечик старий.", "answer": "Той", "options": ["Той", "Та", "Те"]}, {"sentence": "___ намисто гарне.", "answer": "Це", "options": ["Це", "Ця", "Цей"]}, {"sentence": "___ писанки червоні.", "answer": "Ці", "options": ["Ці", "Ця", "Це"]}, {"sentence": "Скільки ___ це намисто?", "answer": "коштує", "options": ["коштує", "звати", "років"]}, {"sentence": "Сто ___.", "answer": "гривень", "options": ["гривень", "роки", "ім'я"]}]`)} />
+
+### Review categories
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Objects": ["стіл", "книга", "вікно", "лампа"], "Colors": ["червоний", "синій", "білий", "жовтий"], "Numbers and prices": ["три", "двадцять", "сто", "гривень"]}`)} />
+
+### Singular, plural, and description
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "Мій стіл великий.", "correct": true}, {"text": "Моя стіл велика.", "correct": false}, {"text": "Моє стіл велике.", "correct": false}], "explanation": "Стіл is masculine."}, {"question": "кімната", "options": [{"text": "Моя кімната чиста.", "correct": true}, {"text": "Мій кімната чистий.", "correct": false}, {"text": "Моє кімната чисте.", "correct": false}], "explanation": "Кімната is feminine."}, {"question": "вікно", "options": [{"text": "Моє вікно чисте.", "correct": true}, {"text": "Моя вікно чиста.", "correct": false}, {"text": "Мій вікно чистий.", "correct": false}], "explanation": "Вікно is neuter."}, {"question": "книги", "options": [{"text": "Мої книги нові.", "correct": true}, {"text": "Моя книги нова.", "correct": false}, {"text": "Мій книги новий.", "correct": false}], "explanation": "Книги is plural."}]`)} />
+
+### Repair checkpoint traps
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я є студент.", "options": [{"text": "Я студент.", "correct": true}, {"text": "Я є студент.", "correct": false}, {"text": "Мене студент.", "correct": false}], "explanation": "Present identity normally drops є."}, {"question": "Моє ім'я є Джон.", "options": [{"text": "Мене звати Джон.", "correct": true}, {"text": "Моє ім'я є Джон.", "correct": false}, {"text": "Я звати Джон.", "correct": false}], "explanation": "Use the name chunk Мене звати..."}, {"question": "Мій книга на столі.", "options": [{"text": "Моя книга на столі.", "correct": true}, {"text": "Мій книга на столі.", "correct": false}, {"text": "Моє книга на столі.", "correct": false}], "explanation": "Книга is feminine."}, {"question": "Вона має один окуляри.", "options": [{"text": "Вона має окуляри. (або У неї є окуляри.)", "correct": true}, {"text": "Вона має один окуляри.", "correct": false}, {"text": "Вона має одна окуляри.", "correct": false}], "explanation": "Окуляри is plural-only."}, {"question": "Я бачу великий кімнату.", "options": [{"text": "Я бачу велику кімнату.", "correct": true}, {"text": "Я бачу великий кімнату.", "correct": false}, {"text": "Я бачу велике кімнату.", "correct": false}], "explanation": "Treat велику кімнату as a safe object chunk."}, {"question": "Мені 20 роки.", "options": [{"text": "Мені 20 років.", "correct": true}, {"text": "Мені 20 роки.", "correct": false}, {"text": "Я маю 20 роки.", "correct": false}], "explanation": "Age uses Мені ... років."}]`)} />
+
+### Write your checkpoint text
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мене ___ Анна.", "answer": "звати", "options": ["звати", "ім'я", "є"]}, {"sentence": "Це ___ кімната.", "answer": "моя", "options": ["моя", "мій", "моє"]}, {"sentence": "Мій стіл ___.", "answer": "великий", "options": ["великий", "велика", "велике"]}, {"sentence": "Моє вікно ___.", "answer": "чисте", "options": ["чисте", "чиста", "чистий"]}, {"sentence": "Ці книги ___.", "answer": "нові", "options": ["нові", "нова", "новий"]}, {"sentence": "Мені 20 ___.", "answer": "років", "options": ["років", "роки", "рік"]}]`)} />
+
+### Ukrainian cultural frame
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "The national flag colors", "options": [{"text": "синьо-жовтий прапор", "correct": true}, {"text": "жовто-синій порядок", "correct": false}, {"text": "синій знак", "correct": false}], "explanation": "Use синьо-жовтий прапор for the Ukrainian flag."}, {"question": "The capital in English-facing text", "options": [{"text": "Kyiv", "correct": true}, {"text": "Kiyiv", "correct": false}, {"text": "Kyjiv", "correct": false}], "explanation": "Kyiv is the Ukrainian form in English."}, {"question": "The Ukrainian currency", "options": [{"text": "гривня", "correct": true}, {"text": "крамниця", "correct": false}, {"text": "прізвище", "correct": false}], "explanation": "Гривня is the Ukrainian currency."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">

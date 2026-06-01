@@ -335,8 +335,8 @@ sidebar:
     (
         lesson_content,
         injected_activity_ids,
-        injected_activity_positions,
-        injected_activity_fingerprints,
+        _injected_activity_positions,
+        _injected_activity_fingerprints,
     ) = _inject_inline_activities(
         lesson_content,
         yaml_activities,
@@ -364,9 +364,6 @@ sidebar:
         activities_content = yaml_activities_to_jsx(
             tab3_activities,
             is_ukrainian_forced,
-            inline_cross_ref_ids=injected_activity_ids,
-            inline_cross_ref_positions=injected_activity_positions,
-            inline_cross_ref_fingerprints=injected_activity_fingerprints,
         )
         if not activities_content.strip() and injected_activity_ids:
             activities_content = f"*{no_workbook_msg}*"

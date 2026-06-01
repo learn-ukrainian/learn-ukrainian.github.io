@@ -150,7 +150,9 @@ class TestMDXGeneration:
         assert '<span id="fix-common-l2-traps"></span>' in mdx
         assert '### Choose the Ukrainian sentence' in mdx
         assert 'instruction="Choose the safer Ukrainian line."' in mdx
-        assert 'sentence="Я є студент."' in mdx
+        assert "items={JSON.parse(`" in mdx
+        assert '"sentence": "Я є студент."' in mdx
+        assert "<ErrorCorrectionItem" not in mdx
 
 
 # =============================================================================

@@ -7,7 +7,7 @@ sidebar:
 pipeline: linear-phase-4
 build_status: validated
 prev: stress-and-melody
-next: false
+next: my-family
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -350,18 +350,27 @@ Ukrainian sentence choices, native-form choices, and vocabulary recognition.
 </TabItem>
 <TabItem label="Activities">
 
+### Formal or informal?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You meet a classmate your age.", "options": [{"text": "Як тебе звати?", "correct": true}, {"text": "Як вас звати?", "correct": false}], "explanation": "Use тебе with one familiar peer."}, {"question": "You meet an unknown adult at orientation.", "options": [{"text": "Як вас звати?", "correct": true}, {"text": "Як тебе звати?", "correct": false}], "explanation": "Use вас with one unknown adult or in a formal setting."}, {"question": "A peer asks your name. You answer and return the question.", "options": [{"text": "Мене звати Олена. А тебе?", "correct": true}, {"text": "Мене звати Олена. А вас?", "correct": false}], "explanation": "The peer situation stays informal."}, {"question": "An instructor asks your name. You answer and return the question.", "options": [{"text": "Мене звати Петро. А вас?", "correct": true}, {"text": "Мене звати Петро. А тебе?", "correct": false}], "explanation": "The instructor situation stays formal."}]`)} />
+
+### Build the name chunk
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ звати Марко.", "answer": "Мене", "options": ["Мене", "Ти", "Це"]}, {"sentence": "Як ___ звати?", "answer": "тебе", "options": ["тебе", "я", "він"]}, {"sentence": "Як ___ звати?", "answer": "вас", "options": ["вас", "вона", "ми"]}, {"sentence": "Дуже ___!", "answer": "приємно", "options": ["приємно", "студент", "звідки"]}, {"sentence": "Мене звати Олена. А ___?", "answer": "тебе", "options": ["тебе", "Київ", "це"]}]`)} />
+
+### This is / Who is this?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Це Андрій.", "right": "This is Andrii."}, {"left": "Це Оксана.", "right": "This is Oksana."}, {"left": "Хто це?", "right": "Who is this?"}, {"left": "Що це?", "right": "What is this?"}, {"left": "Це кава.", "right": "This is coffee."}]`)} />
+
+### Pronoun choice
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "вони", "correct": false}], "explanation": "Я is the speaker."}, {"question": "you, one friend", "options": [{"text": "ти", "correct": true}, {"text": "ви", "correct": false}, {"text": "він", "correct": false}], "explanation": "Ти is one informal you."}, {"question": "you, one unknown adult", "options": [{"text": "ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вона", "correct": false}], "explanation": "Ви is formal for one person and also plural."}, {"question": "she", "options": [{"text": "вона", "correct": true}, {"text": "він", "correct": false}, {"text": "я", "correct": false}], "explanation": "Вона points to a woman or girl."}]`)} />
+
 <span id="fix-common-l2-traps"></span>
 
 ### Choose the Ukrainian sentence
 
-<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian identity line.">
-  <ErrorCorrectionItem sentence="Я є студент." errorWord="Я є студент." correctForm="Я студент." options={JSON.parse(`["Я студент.", "Я є студент."]`)} explanation="In present-time identity, say Я студент or Я — студент." />
-  <ErrorCorrectionItem sentence="Моє ім'я є Джон." errorWord="Моє ім'я є Джон." correctForm="Мене звати Джон." options={JSON.parse(`["Мене звати Джон.", "Моє ім'я є Джон."]`)} explanation="Мене звати... is the high-frequency introduction model." />
-  <ErrorCorrectionItem sentence="Я маю 20 років." errorWord="Я маю 20 років." correctForm="Мені 20 років." options={JSON.parse(`["Мені 20 років.", "Я маю 20 років."]`)} explanation="Age uses a different chunk and is not the model for this lesson." />
-  <ErrorCorrectionItem sentence="Оксана каже, &quot;Я (жінка) лікар.&quot;" errorWord="Я (жінка) лікар." correctForm="Я лікарка." options={JSON.parse(`["Я лікарка.", "Я (жінка) лікар."]`)} explanation="Лікарка is the standard feminine form for a woman doctor." />
-  <ErrorCorrectionItem sentence="Воно мій тато." errorWord="Воно" correctForm="Це мій тато." options={JSON.parse(`["Це мій тато.", "Воно мій тато."]`)} explanation="Use це for identifying a person, or він after the person is known." />
-  <ErrorCorrectionItem sentence="Привіт, пане професоре!" errorWord="Привіт" correctForm="Добрий день, пане професоре!" options={JSON.parse(`["Добрий день, пане професоре!", "Привіт, пане професоре!"]`)} explanation="Use Добрий день with a professor or unknown adult." />
-</ErrorCorrection>
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian identity line." items={JSON.parse(`[{"sentence": "Я є студент.", "errorWord": "Я є студент.", "correctForm": "Я студент.", "options": ["Я студент.", "Я є студент."], "explanation": "In present-time identity, say Я студент or Я — студент."}, {"sentence": "Моє ім'я є Джон.", "errorWord": "Моє ім'я є Джон.", "correctForm": "Мене звати Джон.", "options": ["Мене звати Джон.", "Моє ім'я є Джон."], "explanation": "Мене звати... is the high-frequency introduction model."}, {"sentence": "Я маю 20 років.", "errorWord": "Я маю 20 років.", "correctForm": "Мені 20 років.", "options": ["Мені 20 років.", "Я маю 20 років."], "explanation": "Age uses a different chunk and is not the model for this lesson."}, {"sentence": "Оксана каже, \\"Я (жінка) лікар.\\"", "errorWord": "Я (жінка) лікар.", "correctForm": "Я лікарка.", "options": ["Я лікарка.", "Я (жінка) лікар."], "explanation": "Лікарка is the standard feminine form for a woman doctor."}, {"sentence": "Воно мій тато.", "errorWord": "Воно", "correctForm": "Це мій тато.", "options": ["Це мій тато.", "Воно мій тато."], "explanation": "Use це for identifying a person, or він after the person is known."}, {"sentence": "Привіт, пане професоре!", "errorWord": "Привіт", "correctForm": "Добрий день, пане професоре!", "options": ["Добрий день, пане професоре!", "Привіт, пане професоре!"], "explanation": "Use Добрий день with a professor or unknown adult."}]`)} />
 
 ### Profession pairs
 
@@ -393,4 +402,4 @@ Ukrainian sentence choices, native-form choices, and vocabulary recognition.
 </TabItem>
 </Tabs>
 
-<HashTabSync client:load />
+<HashTabSync />

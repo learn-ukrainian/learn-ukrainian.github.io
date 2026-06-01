@@ -7,7 +7,7 @@ sidebar:
 pipeline: linear-phase-4
 build_status: validated
 prev: sounds-letters-and-hello
-next: false
+next: special-signs
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -46,6 +46,7 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -243,17 +244,7 @@ examples: **ми**, **діти**, **гора́**, **молоко́**.
 
 ### Reading traps
 
-<ErrorCorrection client:only='react'>
-
-  <ErrorCorrectionItem sentence="Do not read молоко as м[а]локо." errorWord="м[а]локо" correctForm="молоко" options={JSON.parse(`["молоко", "blurred о"]`)} explanation="Ukrainian о stays clean; read молоко with three open beats." />
-
-  <ErrorCorrectionItem sentence="Do not read дж as two broken sounds." errorWord="two broken sounds" correctForm="one joined sound" options={JSON.parse(`["one joined sound", "д plus ж"]`)} explanation="ДЖ marks one joined reading unit in words such as джерело." />
-
-  <ErrorCorrectionItem sentence="Do not read Ї as plain І." errorWord="plain І" correctForm="[йі]" options={JSON.parse(`["[йі]", "[і]"]`)} explanation="Ї is always [йі]." />
-
-  <ErrorCorrectionItem sentence="Do not add a vowel after день." errorWord="add a vowel" correctForm="soften н and stop" options={JSON.parse(`["soften н and stop", "add і after нь"]`)} explanation="Ь has no sound of its own; it softens the previous consonant." />
-
-</ErrorCorrection>
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian reading habit." items={JSON.parse(`[{"sentence": "Do not read молоко as м[а]локо.", "errorWord": "м[а]локо", "correctForm": "молоко", "options": ["молоко", "blurred о"], "explanation": "Ukrainian о stays clean; read молоко with three open beats."}, {"sentence": "Do not read дж as two broken sounds.", "errorWord": "two broken sounds", "correctForm": "one joined sound", "options": ["one joined sound", "д plus ж"], "explanation": "ДЖ marks one joined reading unit in words such as джерело."}, {"sentence": "Do not read Ї as plain І.", "errorWord": "plain І", "correctForm": "[йі]", "options": ["[йі]", "[і]"], "explanation": "Ї is always [йі]."}, {"sentence": "Do not add a vowel after день.", "errorWord": "add a vowel", "correctForm": "soften н and stop", "options": ["soften н and stop", "add і after нь"], "explanation": "Ь has no sound of its own; it softens the previous consonant."}]`)} />
 
 ## Textbook Check
 
@@ -309,6 +300,26 @@ routine every time: vowel sounds first, syllables second, smooth reading third.
 </TabItem>
 <TabItem label="Activities">
 
+### Count vowel sounds
+
+<CountSyllables client:only='react' instruction={"Count the vowel sounds. Each vowel sound makes one склад."} items={JSON.parse(`[{"word": "день", "correct": 1}, {"word": "ма́ма", "correct": 2}, {"word": "молоко́", "correct": 3}, {"word": "ву́лиця", "correct": 3}, {"word": "бібліоте́ка", "correct": 5}, {"word": "Украї́на", "correct": 4}]`)} />
+
+### Vowel letter jobs
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "clean [а]"}, {"left": "О", "right": "clean [о]"}, {"left": "И", "right": "clean [и]"}, {"left": "І", "right": "clean [і]"}, {"left": "Я at word start", "right": "[йа]"}, {"left": "Ї", "right": "always [йі]"}]`)} />
+
+### Split into склади
+
+<DivideWords client:only='react' instruction={"Divide each word into syllables."} items={JSON.parse(`[{"word": "мама", "answer": "ма ма"}, {"word": "молоко", "answer": "мо ло ко"}, {"word": "вулиця", "answer": "ву ли ця"}, {"word": "столиця", "answer": "сто ли ця"}, {"word": "людина", "answer": "лю ди на"}, {"word": "бібліотека", "answer": "біб лі о те ка"}]`)} />
+
+### Reading traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian reading habit." items={JSON.parse(`[{"sentence": "Do not read молоко as м[а]локо.", "errorWord": "м[а]локо", "correctForm": "молоко", "options": ["молоко", "blurred о"], "explanation": "Ukrainian о stays clean; read молоко with three open beats."}, {"sentence": "Do not read дж as two broken sounds.", "errorWord": "two broken sounds", "correctForm": "one joined sound", "options": ["one joined sound", "д plus ж"], "explanation": "ДЖ marks one joined reading unit in words such as джерело."}, {"sentence": "Do not read Ї as plain І.", "errorWord": "plain І", "correctForm": "[йі]", "options": ["[йі]", "[і]"], "explanation": "Ї is always [йі]."}, {"sentence": "Do not add a vowel after день.", "errorWord": "add a vowel", "correctForm": "soften н and stop", "options": ["soften н and stop", "add і after нь"], "explanation": "Ь has no sound of its own; it softens the previous consonant."}]`)} />
+
+### Textbook check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What is a склад?", "options": [{"text": "a syllable", "correct": true}, {"text": "a letter", "correct": false}, {"text": "a greeting", "correct": false}], "explanation": "A склад is a syllable."}, {"question": "How many syllables are in молоко?", "options": [{"text": "3", "correct": true}, {"text": "2", "correct": false}, {"text": "1", "correct": false}], "explanation": "молоко has three vowel sounds and three syllables."}, {"question": "Which letter is always [йі]?", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}, {"text": "И", "correct": false}], "explanation": "Ї is always [йі]."}]`)} />
+
 ### One, two, or three syllables?
 
 <GroupSort client:only='react' groups={JSON.parse(`{"One syllable": ["день", "Львів"], "Two syllables": ["ма́ма", "та́то", "Ки́їв"], "Three syllables": ["молоко́", "ву́лиця", "столи́ця"]}`)} />
@@ -348,3 +359,5 @@ routine every time: vowel sounds first, syllables second, smooth reading third.
 
 </TabItem>
 </Tabs>
+
+<HashTabSync />

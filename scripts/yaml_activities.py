@@ -1552,8 +1552,13 @@ class ActivityParser:
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity) -> str:
         items = []
         for i in activity.items:
-            opts = self._dump_safe_json([str(opt) for opt in i.options])
-            items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(str(i.sentence))}" errorWord="{self._escape_jsx(str(i.error))}" correctForm="{self._escape_jsx(str(i.answer))}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(str(i.explanation))}" />')
+            items.append({
+                "sentence": str(i.sentence),
+                "errorWord": str(i.error) if i.error is not None else None,
+                "correctForm": str(i.answer),
+                "options": [str(opt) for opt in i.options],
+                "explanation": str(i.explanation),
+            })
         instruction_prop = (
             f' instruction="{self._escape_jsx(str(activity.instruction))}"'
             if activity.instruction
@@ -1564,7 +1569,8 @@ class ActivityParser:
             safe_anchor = re.sub(r"[^A-Za-z0-9_-]+", "-", str(activity.anchor_id)).strip("-")
             if safe_anchor:
                 anchor = f'<span id="{safe_anchor}"></span>\n\n'
-        return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop}>\n{chr(10).join(items)}\n</ErrorCorrection>"
+        items_json = self._dump_safe_json(items)
+        return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop} items={{JSON.parse(`{items_json}`)}} />"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
         ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])
