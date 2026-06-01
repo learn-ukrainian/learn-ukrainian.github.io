@@ -1,8 +1,8 @@
-module: b1-075
+module: b1-077
 level: B1
-sequence: 75
+sequence: 77
 slug: complex-subordinate-relative
-version: '3.1.3'
+version: '3.1.4'
 title: "Означальні речення"
 subtitle: "Підрядні з який/яка/яке у різних відмінках"
 focus: grammar

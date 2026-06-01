@@ -1,8 +1,8 @@
-module: b1-072
+module: b1-074
 level: B1
-sequence: 72
+sequence: 74
 slug: checkpoint-participles
-version: '3.0.3'
+version: '3.0.4'
 title: "Контрольна робота 6"
 subtitle: "Перевірка знань: дієприкметники, короткі прикметники, дієприслівники, освіта"
 focus: review

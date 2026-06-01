@@ -1,8 +1,8 @@
-module: b1-084
+module: b1-085
 level: B1
-sequence: 84
+sequence: 85
 slug: text-register-formal
-version: '3.1.3'
+version: '3.1.4'
 title: "Офіційний стиль"
 subtitle: "Офіційно-діловий стиль мовлення: документи, заяви, ділове листування"
 focus: grammar

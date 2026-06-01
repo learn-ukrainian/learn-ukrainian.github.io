@@ -1,8 +1,8 @@
-module: b1-092
+module: b1-093
 level: B1
-sequence: 92
+sequence: 93
 slug: comprehensive-b1-review
-version: '3.1.3'
+version: '3.1.4'
 title: Загальне повторення B1
 subtitle: Від фонетики до аргументації — повний огляд граматики B1
 focus: review

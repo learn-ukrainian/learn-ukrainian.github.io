@@ -1,8 +1,8 @@
-module: b1-068
+module: b1-069
 level: B1
-sequence: 68
+sequence: 69
 slug: short-form-adjectives
-version: '3.2'
+version: '3.3'
 title: "Короткі прикметники (зелен, потрібен)"
 subtitle: "Повні та короткі форми якісних прикметників"
 focus: grammar

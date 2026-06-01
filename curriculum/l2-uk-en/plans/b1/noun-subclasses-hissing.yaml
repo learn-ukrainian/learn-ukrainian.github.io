@@ -1,8 +1,8 @@
-module: b1-019
+module: b1-017
 level: B1
-sequence: 19
+sequence: 17
 slug: noun-subclasses-hissing
-version: '3.0.3'
+version: '3.0.4'
 title: 'Іменники на ж, ч, ш, щ'
 subtitle: 'Мішана група II відміни — від сторожа до товариша'
 focus: grammar

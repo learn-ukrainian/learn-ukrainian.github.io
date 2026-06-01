@@ -1,8 +1,8 @@
-module: b1-070
+module: b1-071
 level: B1
-sequence: 70
+sequence: 71
 slug: gerunds-perfective
-version: 3.1.3
+version: 3.1.4
 title: Дієприслівники доконаного виду
 subtitle: 'Попередня дія: прочитавши, дізнавшись, повернувшись'
 focus: grammar

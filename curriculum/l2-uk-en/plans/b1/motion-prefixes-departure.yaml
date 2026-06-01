@@ -1,8 +1,8 @@
-module: b1-037
+module: b1-038
 level: B1
-sequence: 37
+sequence: 38
 slug: motion-prefixes-departure
-version: '3.1.3'
+version: '3.1.4'
 title: "Піти, від'їхати"
 subtitle: "Префікси пі-/по- (вирушання) та від- (віддалення) з дієсловами руху"
 focus: grammar

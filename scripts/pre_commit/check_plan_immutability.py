@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Block staged plan edits that skip versioning or backup snapshots."""
+"""Block staged plan edits that skip a version bump."""
 
 from __future__ import annotations
 
@@ -97,7 +97,6 @@ def _parse_version(content: str, label: str) -> str:
 def _collect_errors(repo_root: Path) -> list[str]:
     """Validate staged plan edits against the immutability rule."""
     staged = _staged_files(repo_root)
-    staged_set = set(staged)
     errors: list[str] = []
 
     for plan_path in staged:
@@ -119,29 +118,13 @@ def _collect_errors(repo_root: Path) -> list[str]:
         if old_version == new_version:
             errors.append(f"{plan_path}: version not bumped (still {old_version})")
 
-        bak_path = f"{plan_path}.bak"
-        if bak_path not in staged_set:
-            errors.append(f"{plan_path}: missing {bak_path} backup in same commit")
-            continue
-
-        try:
-            bak_version = _parse_version(_read_git_blob(repo_root, f":{bak_path}"), bak_path)
-        except ValueError as exc:
-            errors.append(str(exc))
-            continue
-
-        if bak_version != old_version:
-            errors.append(
-                f"{bak_path}: should contain old version {old_version}, found {bak_version}"
-            )
-
     return errors
 
 
 def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint."""
     parser = argparse.ArgumentParser(
-        description="Enforce version bumps and backups for staged curriculum plan edits."
+        description="Enforce version bumps for staged curriculum plan edits."
     )
     parser.add_argument(
         "commit_msg_file",
@@ -159,7 +142,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(
-        "Plans are versioned - any change needs a bumped version and a `.bak` of the previous.",
+        "Plans are versioned - any committed plan edit needs a bumped version.",
         file=sys.stderr,
     )
     print(

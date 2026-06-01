@@ -1,8 +1,8 @@
-module: b1-011
+module: b1-024
 level: B1
-sequence: 11
+sequence: 24
 slug: aspect-in-conditionals
-version: '1.0.3'
+version: '1.0.4'
 title: "Вид в умовних реченнях"
 subtitle: "Якщо зробиш проти якби робив — реальність і вид"
 focus: aspect-conditionals

@@ -1,8 +1,8 @@
-module: b1-020
+module: b1-018
 level: B1
-sequence: 20
+sequence: 18
 slug: restaurant-and-food
-version: '1.0.2'
+version: '1.0.3'
 title: 'Ресторан і їжа'
 subtitle: 'Українська кухня, замовлення у ресторані та відмінювання іменників у контексті їжі'
 focus: thematic-vocabulary

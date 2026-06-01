@@ -1,8 +1,8 @@
-module: b1-021
+module: b1-019
 level: B1
-sequence: 21
+sequence: 19
 slug: noun-subclasses-feminine
-version: '3.0.3'
+version: '3.0.4'
 title: 'Жіночий рід (нульове закінчення)'
 subtitle: 'III відміна — від любові до подорожі'
 focus: grammar

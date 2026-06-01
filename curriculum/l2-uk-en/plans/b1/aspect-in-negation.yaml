@@ -1,8 +1,8 @@
-module: b1-009
+module: b1-008
 level: B1
-sequence: 9
+sequence: 8
 slug: aspect-in-negation
-version: '1.0.2'
+version: '1.0.3'
 title: 'Вид і заперечення'
 subtitle: 'Не робив vs ще не зробив — заперечення факту чи очікування'
 focus: aspect-negation

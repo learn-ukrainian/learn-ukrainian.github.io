@@ -1,8 +1,8 @@
-module: b1-039
+module: b1-037
 level: B1
-sequence: 39
+sequence: 37
 slug: traveling-ukraine
-version: '3.0.3'
+version: '3.0.4'
 title: "Подорож Україною"
 subtitle: "Подорожні розповіді — транспорт, маршрути, пам'ятки"
 focus: communication

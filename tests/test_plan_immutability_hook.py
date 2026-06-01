@@ -91,15 +91,13 @@ def _run_hook(repo: Path, commit_message: str) -> subprocess.CompletedProcess[st
     )
 
 
-def test_plan_edit_with_bumped_version_and_bak_passes(tmp_path: Path):
+def test_plan_edit_with_bumped_version_passes(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH
-    old_content = plan_file.read_text(encoding="utf-8")
 
     _write_plan(plan_file, "1.1", "Updated plan")
-    (repo / f"{PLAN_PATH}.bak").write_text(old_content, encoding="utf-8")
 
-    _git(repo, "add", str(PLAN_PATH), f"{PLAN_PATH}.bak")
+    _git(repo, "add", str(PLAN_PATH))
     result = _run_hook(repo, "feat: update plan\n")
 
     assert result.returncode == 0
@@ -109,19 +107,17 @@ def test_plan_edit_with_bumped_version_and_bak_passes(tmp_path: Path):
 def test_plan_edit_without_version_bump_fails(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH
-    old_content = plan_file.read_text(encoding="utf-8")
 
     _write_plan(plan_file, "1.0", "Updated plan")
-    (repo / f"{PLAN_PATH}.bak").write_text(old_content, encoding="utf-8")
 
-    _git(repo, "add", str(PLAN_PATH), f"{PLAN_PATH}.bak")
+    _git(repo, "add", str(PLAN_PATH))
     result = _run_hook(repo, "feat: mutate plan\n")
 
     assert result.returncode == 1
     assert "version not bumped" in result.stderr
 
 
-def test_plan_edit_without_bak_fails(tmp_path: Path):
+def test_backup_file_is_not_required_by_immutability_hook(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH
 
@@ -130,9 +126,8 @@ def test_plan_edit_without_bak_fails(tmp_path: Path):
     _git(repo, "add", str(PLAN_PATH))
     result = _run_hook(repo, "feat: mutate plan\n")
 
-    assert result.returncode == 1
-    assert "missing" in result.stderr
-    assert ".bak" in result.stderr
+    assert result.returncode == 0
+    assert result.stderr == ""
 
 
 def test_autofix_commit_tag_bypasses_hook(tmp_path: Path):

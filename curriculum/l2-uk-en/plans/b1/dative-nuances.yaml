@@ -1,8 +1,8 @@
-module: b1-053
+module: b1-054
 level: B1
-sequence: 53
+sequence: 54
 slug: dative-nuances
-version: '3.2'
+version: '3.3'
 title: "Давальний відмінок (деталі)"
 subtitle: "Суб'єкт стану, вік, потреба — розширені значення давального"
 focus: grammar

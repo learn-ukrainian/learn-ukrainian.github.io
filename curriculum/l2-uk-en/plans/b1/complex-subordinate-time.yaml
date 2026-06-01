@@ -1,8 +1,8 @@
-module: b1-076
+module: b1-078
 level: B1
-sequence: 76
+sequence: 78
 slug: complex-subordinate-time
-version: '3.1.3'
+version: '3.1.4'
 title: "Часові речення"
 subtitle: "Одночасність і різночасність: коли, поки, доки, щойно"
 focus: grammar

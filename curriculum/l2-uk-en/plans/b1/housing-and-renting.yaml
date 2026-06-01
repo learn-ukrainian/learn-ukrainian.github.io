@@ -1,8 +1,8 @@
-module: b1-031
+module: b1-029
 level: B1
-sequence: 31
+sequence: 29
 slug: housing-and-renting
-version: 3.2.2
+version: 3.2.3
 title: Житло і оренда
 subtitle: Пошук квартири, оренда, комунальні послуги — відмінки в дії
 focus: communication

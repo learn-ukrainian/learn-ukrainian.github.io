@@ -1,8 +1,8 @@
-module: b1-093
+module: b1-094
 level: B1
-sequence: 93
+sequence: 94
 slug: practice-exam
-version: 1.0.3
+version: 1.0.4
 title: 'Пробний екзамен B1'
 subtitle: 'Інтегрований екзамен: читання, аудіювання, письмо, говоріння'
 focus: exam

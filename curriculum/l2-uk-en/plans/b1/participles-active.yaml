@@ -1,8 +1,8 @@
-module: b1-064
+module: b1-065
 level: B1
-sequence: 64
+sequence: 65
 slug: participles-active
-version: '3.1.3'
+version: '3.1.4'
 title: 'Активні дієприкметники'
 subtitle: 'Ознака за дією, яку виконує сам предмет'
 focus: grammar

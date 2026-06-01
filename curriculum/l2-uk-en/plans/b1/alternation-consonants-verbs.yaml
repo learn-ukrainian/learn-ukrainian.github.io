@@ -1,8 +1,8 @@
-module: b1-015
+module: b1-013
 level: B1
-sequence: 15
+sequence: 13
 slug: alternation-consonants-verbs
-version: '3.0.3'
+version: '3.0.4'
 title: "Чергування приголосних (дієслова)"
 subtitle: "Сидіти — сиджу, плакати — плачу: приголосні в дієсловах"
 focus: grammar

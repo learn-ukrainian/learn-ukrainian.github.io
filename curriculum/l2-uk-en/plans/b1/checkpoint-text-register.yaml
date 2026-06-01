@@ -1,8 +1,8 @@
-module: b1-089
+module: b1-090
 level: B1
-sequence: 89
+sequence: 90
 slug: checkpoint-text-register
-version: '3.1.3'
+version: '3.1.4'
 title: "Контрольна робота 8"
 subtitle: "Перевірка знань: стилі мовлення, заперечення, вставні слова, природа, читання"
 focus: review

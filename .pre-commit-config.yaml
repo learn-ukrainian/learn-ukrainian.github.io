@@ -63,8 +63,7 @@ repos:
             \.venv/ |
             node_modules/ |
             scripts/_archived/ |
-            starlight/node_modules/ |
-            curriculum/l2-uk-en/plans/.*\.yaml\.bak$
+            starlight/node_modules/
           )
       - id: check-added-large-files
         name: block accidentally large files
@@ -79,26 +78,22 @@ repos:
   - repo: local
     hooks:
       # Prevent accidentally adding .yaml.bak / .yaml.orig files that
-      # our update_plan_activities.py / other tools create as safety
-      # backups. Versioned curriculum plan snapshots are the exception:
-      # they are required by the plan immutability rule.
+      # local tools create as safety backups.
       - id: no-yaml-backups
         name: block .yaml.bak / .yaml.orig files
         entry: >-
           bash -c 'files=$(git diff --cached --name-only --diff-filter=A |
-          grep -E "\.(yaml|yml)\.(bak|orig)$" |
-          grep -Ev "^curriculum/[^/]+/plans/.+\.yaml\.bak$" || true); if [ -n "$files" ]; then
-          echo "ERROR: Do not commit non-plan backup files:"; echo "$files"; exit 1; fi'
+          grep -E "\.(yaml|yml)\.(bak|orig)$" || true); if [ -n "$files" ]; then
+          echo "ERROR: Do not commit YAML backup files:"; echo "$files"; exit 1; fi'
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       # Plans are immutable once committed. Any staged edit must ship
-      # with a bumped `version` field and a sibling `.bak` snapshot of
-      # the previous content. Run this in the commit-msg stage so the
-      # pipeline's escape-hatch tag is available.
+      # with a bumped `version` field. Run this in the commit-msg stage
+      # so the pipeline's escape-hatch tag is available.
       - id: check-plan-immutability
-        name: enforce plan version bump + .bak
+        name: enforce plan version bump
         entry: bash scripts/pre_commit/project_python.sh scripts/pre_commit/check_plan_immutability.py
         language: system
         always_run: true

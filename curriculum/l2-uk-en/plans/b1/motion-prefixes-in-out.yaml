@@ -1,8 +1,8 @@
-module: b1-038
+module: b1-039
 level: B1
-sequence: 38
+sequence: 39
 slug: motion-prefixes-in-out
-version: '3.1.3'
+version: '3.1.4'
 title: "Зайти, вийти"
 subtitle: "Префікси за- (входження/забігання) та ви- (вихід) з дієсловами руху"
 focus: grammar

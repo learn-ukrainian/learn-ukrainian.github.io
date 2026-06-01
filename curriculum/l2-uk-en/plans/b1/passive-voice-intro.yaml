@@ -1,8 +1,8 @@
-module: b1-029
+module: b1-030
 level: B1
-sequence: 29
+sequence: 30
 slug: passive-voice-intro
-version: '3.0.3'
+version: '3.0.4'
 title: 'Пасивний стан (вступ)'
 subtitle: 'Пасивні конструкції через зворотні дієслова та форми на -но/-то'
 focus: grammar

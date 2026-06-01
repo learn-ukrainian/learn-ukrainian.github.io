@@ -1,8 +1,8 @@
-module: b1-081
+module: b1-052
 level: B1
-sequence: 81
+sequence: 52
 slug: homogeneous-members
-version: 1.0.2
+version: 1.0.3
 title: Однорідні члени речення
 subtitle: Пунктуація, сполучники та узагальнювальне слово
 focus: grammar

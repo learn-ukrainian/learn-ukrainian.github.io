@@ -1,8 +1,8 @@
-module: b1-090
+module: b1-091
 level: B1
-sequence: 90
+sequence: 91
 slug: narrative-mastery
-version: '3.1.3'
+version: '3.1.4'
 title: 'Мистецтво розповіді'
 subtitle: 'Поєднання часів, видів, рухових дієслів і дієприкметників у текстах'
 focus: communication

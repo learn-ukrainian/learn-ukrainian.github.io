@@ -1,8 +1,8 @@
-module: b1-088
+module: b1-089
 level: B1
-sequence: 88
+sequence: 89
 slug: introductory-words
-version: '3.0.3'
+version: '3.0.4'
 title: "Вставні слова та Однорідні члени речення"
 subtitle: "Мабуть, можливо, здається, на жаль — слова, що виражають ставлення мовця"
 focus: grammar

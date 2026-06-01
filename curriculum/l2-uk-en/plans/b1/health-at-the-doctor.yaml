@@ -1,8 +1,8 @@
-module: b1-016
+module: b1-014
 level: B1
-sequence: 16
+sequence: 14
 slug: health-at-the-doctor
-version: 3.0.2
+version: 3.0.3
 title: Здоров'я і медицина
 subtitle: У лікаря — від скарг до рецепта
 focus: communication

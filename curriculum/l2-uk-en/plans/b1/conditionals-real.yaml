@@ -1,8 +1,8 @@
-module: b1-024
+module: b1-022
 level: B1
-sequence: 24
+sequence: 22
 slug: conditionals-real
-version: '3.1.3'
+version: '3.1.4'
 title: 'Умовний спосіб (реальний)'
 subtitle: 'Якщо-речення та реальні умовні конструкції'
 focus: grammar

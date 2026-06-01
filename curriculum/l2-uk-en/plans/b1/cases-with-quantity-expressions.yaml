@@ -1,8 +1,8 @@
-module: b1-061
+module: b1-062
 level: B1
-sequence: 61
+sequence: 62
 slug: cases-with-quantity-expressions
-version: '3.2'
+version: '3.3'
 title: "Кількісні вирази"
 subtitle: "Узгодження числівників з іменниками та неозначено-кількісні слова"
 focus: grammar

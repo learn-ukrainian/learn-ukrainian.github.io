@@ -1,8 +1,8 @@
-module: b1-073
+module: b1-075
 level: B1
-sequence: 73
+sequence: 75
 slug: complex-compound
-version: '3.1.3'
+version: '3.1.4'
 title: "Складносурядне речення"
 subtitle: "Єднальні, протиставні та розділові сполучники"
 focus: grammar

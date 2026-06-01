@@ -1,8 +1,8 @@
-module: b1-086
+module: b1-087
 level: B1
-sequence: 86
+sequence: 87
 slug: text-compression
-version: '3.2'
+version: '3.3'
 title: "Абревіатури та скорочення"
 subtitle: "Складноскорочені слова, абревіатури, графічні скорочення"
 focus: grammar

@@ -1,8 +1,8 @@
-module: b1-074
+module: b1-076
 level: B1
-sequence: 74
+sequence: 76
 slug: complex-subordinate-object
-version: '3.1.3'
+version: '3.1.4'
 title: "З'ясувальні речення"
 subtitle: "Підрядні речення з що, щоб, чи, хто, куди"
 focus: grammar

@@ -1,8 +1,8 @@
-module: b1-065
+module: b1-066
 level: B1
-sequence: 65
+sequence: 66
 slug: participles-passive
-version: '3.3'
+version: '3.4'
 title: "Пасивні дієприкметники"
 subtitle: "Ознака за дією, якої зазнає предмет"
 focus: grammar

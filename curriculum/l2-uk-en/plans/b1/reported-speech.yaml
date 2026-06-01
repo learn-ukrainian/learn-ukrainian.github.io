@@ -1,8 +1,8 @@
-module: b1-082
+module: b1-083
 level: B1
-sequence: 82
+sequence: 83
 slug: reported-speech
-version: '3.1.3'
+version: '3.1.4'
 title: 'Пряма і непряма мова'
 subtitle: 'Передача чужого мовлення: пряма мова, непряма мова, діалог'
 focus: grammar
