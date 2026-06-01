@@ -23,9 +23,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-les-kurbas
-- bio-mykola-khvylovyi
-- hist-rozstriliane-vidrodzennia
+- les-kurbas
+- mykola-khvylovyi
+- rozstriliane-vidrodzennia
 content_outline:
 - points:
   - '[!biography] Знайомство з Анатолем Петрицьким (1895–1964): художник-авангардист і реформатор сценографії,
