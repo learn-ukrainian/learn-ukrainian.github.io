@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T07:37+02:00)
+# Current - Codex Thread Handoff (2026-06-01T08:33+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `a675a2b1c5 feat(a1): add M8 things have gender module`
+  `48e6598fd9 feat(a1): add M9 what is it like module`
 
 ## Current Direction
 
@@ -17,10 +17,57 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, or worktrees.
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
-- Continue M9 next (`what-is-it-like`). M1-M8 are now built as English-led
-  student textbook/workbook pages and pass deterministic QG in this worktree.
+- Continue M10 next (`colors`). M1-M9 are now built as English-led student
+  textbook/workbook pages and pass deterministic QG in this worktree.
 
-## Latest M8 Update
+## Latest M9 Update
+
+Commit `48e6598fd9 feat(a1): add M9 what is it like module` added:
+
+- `curriculum/l2-uk-en/a1/what-is-it-like/module.md`
+- `curriculum/l2-uk-en/a1/what-is-it-like/activities.yaml`
+- `curriculum/l2-uk-en/a1/what-is-it-like/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/what-is-it-like/resources.yaml`
+- `starlight/src/content/docs/a1/what-is-it-like.mdx`
+
+M9 is an English-led A1.2 grammar-first-contact module for descriptive
+adjective agreement: `який / яка / яке / які`, hard nominative endings,
+soft-pattern preview chunks, plural `-і`, room and book-fair descriptions,
+`і`/`а`/`але`, and required adjective trap repair. Student-facing resources
+include Ukrainian Lessons adjective resources, the Anna Ohoiko adjective video
+page, a learner adjective chart, and Dobra Forma adjective practice. Internal
+wiki references are not published.
+
+Validation after M9:
+
+- `scripts.yaml_activities`: parsed 10 activities.
+- Direct `run_python_qg()` for M9: passed.
+  - `resources_search_attempted`: passed with two real `search_external`
+    telemetry calls captured in the local ignored `writer_tool_calls.json`.
+  - `archetype_fit`, `vesum_verified`, `scaffolding_leak`,
+    `russianisms_strict`, `activity_types`, `inject_activity_ids`,
+    `engagement_floor`, and resource gates passed.
+- Direct seeded hard wiki coverage: passed, 17/17 obligations covered.
+- CLI `scripts/validate_mdx.py l2-uk-en a1 9`: passed.
+- `npm run build:starlight`: passed; 99 pages built.
+- Local Starlight restarted with `./services.sh restart starlight`.
+- In-app Browser inspection for `/a1/what-is-it-like/`:
+  - Lesson page showed H1 `Який він?` and inline workbook activities.
+  - Vocabulary tab rendered adjective chunks.
+  - Resources tab showed ULP, Anna Ohoiko, chart, and Dobra Forma resources.
+  - Hidden anchor `#finish-the-adjective` switched back to the Lesson tab.
+  - No internal `wiki/pedagogy` links, no visible `Крок 1:` scaffolding, and
+    no broken bad-form comment markers.
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pre-commit run
+  --files ...`: passed for the 5 committed M9 files.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+
+Next target: M10 `colors`. Start by inspecting
+`curriculum/l2-uk-en/plans/a1/colors.yaml`, the relevant wiki/pedagogy brief,
+resource obligations, and `build_wiki_manifest_data`. Then build the same full
+artifact set and validate with the same gates.
+
+## Prior M8 Update
 
 Commit `a675a2b1c5 feat(a1): add M8 things have gender module` added:
 
@@ -66,11 +113,6 @@ Validation after M8:
   --files ...`: passed for the 5 committed M8 files.
 - `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
 - Commit was pushed to origin.
-
-Next target: M9 `what-is-it-like`. Start by inspecting
-`curriculum/l2-uk-en/plans/a1/what-is-it-like.yaml`, the relevant
-wiki/pedagogy brief, resource obligations, and `build_wiki_manifest_data`.
-Then build the same full artifact set and validate with the same gates.
 
 ## Prior M7 Update
 

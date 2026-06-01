@@ -1,58 +1,57 @@
 # Current Session Handoff
 
-Generated-At: 2026-06-01T05:37Z
+Generated-At: 2026-06-01T06:33Z
 
 ## Active Branch
 
 - Worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `a675a2b1c5 feat(a1): add M8 things have gender module`
-- Remote: implementation commit pushed to
-  `origin/codex/a1-m1-m7-golden-journey-2026-05-30`
+  `48e6598fd9 feat(a1): add M9 what is it like module`
+- Remote: implementation commit is local at this handoff point and should be
+  pushed with the handoff commit.
 
 Recent commits:
 
+- `48e6598fd9 feat(a1): add M9 what is it like module`
+- `9e7c278760 docs(orchestration): refresh M8 handoff`
 - `a675a2b1c5 feat(a1): add M8 things have gender module`
 - `50ba907bd0 docs(orchestration): refresh M7 handoff`
 - `ef9fbee094 feat(a1): add M7 first contact checkpoint`
-- `9846684d28 docs(orchestration): refresh compact handoff`
-- `1ab2f271d5 docs(orchestration): refresh M6 handoff`
 
 ## Current Goal State
 
-- M1-M8 are built and pushed as English-led A1 student textbook/workbook
-  modules.
-- M8 `things-have-gender` is complete and pushed. Validation passed:
-  YAML activities parsed, direct `run_python_qg()` passed, seeded hard wiki
-  coverage passed 15/15, CLI MDX validation passed,
-  `npm run build:starlight` passed with 98 pages, local HTML/browser checks
-  passed for `/a1/things-have-gender/`, pre-commit passed, and X-Agent trailer
-  lint passed.
-- Next module: M9 `what-is-it-like`.
+- M1-M9 are built as English-led A1 student textbook/workbook modules.
+- M9 `what-is-it-like` is complete locally. Validation passed: YAML activities
+  parsed, direct `run_python_qg()` passed, seeded hard wiki coverage passed
+  17/17, CLI MDX validation passed, `npm run build:starlight` passed with 99
+  pages, local in-app browser checks passed for `/a1/what-is-it-like/`,
+  targeted pre-commit passed, and X-Agent trailer lint passed.
+- Next module: M10 `colors`.
 
 ## In-Flight Work
 
-- No content work remains in flight for M8.
-- M8 added:
-  - `curriculum/l2-uk-en/a1/things-have-gender/module.md`
-  - `curriculum/l2-uk-en/a1/things-have-gender/activities.yaml`
-  - `curriculum/l2-uk-en/a1/things-have-gender/vocabulary.yaml`
-  - `curriculum/l2-uk-en/a1/things-have-gender/resources.yaml`
-  - `starlight/src/content/docs/a1/things-have-gender.mdx`
-- Local ignored telemetry file exists for the M8 direct QG resource-search
+- No content work remains in flight for M9.
+- M9 added:
+  - `curriculum/l2-uk-en/a1/what-is-it-like/module.md`
+  - `curriculum/l2-uk-en/a1/what-is-it-like/activities.yaml`
+  - `curriculum/l2-uk-en/a1/what-is-it-like/vocabulary.yaml`
+  - `curriculum/l2-uk-en/a1/what-is-it-like/resources.yaml`
+  - `starlight/src/content/docs/a1/what-is-it-like.mdx`
+- Local ignored telemetry file exists for the M9 direct QG resource-search
   gate:
-  `curriculum/l2-uk-en/a1/things-have-gender/writer_tool_calls.json`.
+  `curriculum/l2-uk-en/a1/what-is-it-like/writer_tool_calls.json`.
   It is intentionally not committed because the repo ignores writer telemetry.
-- Active delegate API last known: `{"total":0,"tasks":[]}`.
+- Active delegate API last known before M9 work: `{"total":0,"tasks":[]}`.
 
 ## Services
 
-Verified 2026-06-01T05:37Z:
+Verified 2026-06-01T06:33Z:
 
 - `sources` running on port 8766.
 - `api` running on port 8765.
-- `starlight` running on port 4321.
+- `starlight` running on port 4321 after
+  `./services.sh restart starlight`.
 
 ## Open Issues
 
@@ -83,8 +82,8 @@ git log --oneline --decorate -10 --no-merges
 curl -sS http://127.0.0.1:8765/api/delegate/active
 ```
 
-If continuing the A1 golden journey, start M9 `what-is-it-like` from the
-locked plan and relevant wiki/pedagogy brief. Preserve the same artifact flow:
-four authoring artifacts, assembled MDX, direct QG, seeded hard wiki coverage,
-MDX validation, Starlight build, served/browser check, pre-commit, trailer lint,
+If continuing the A1 golden journey, start M10 `colors` from the locked plan
+and relevant wiki/pedagogy brief. Preserve the same artifact flow: four
+authoring artifacts, assembled MDX, direct QG, seeded hard wiki coverage, MDX
+validation, Starlight build, served/browser check, pre-commit, trailer lint,
 commit, push, handoff.
