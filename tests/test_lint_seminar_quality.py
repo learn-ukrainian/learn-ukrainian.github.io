@@ -83,6 +83,35 @@ def test_arest_russianism_flagged_high(tmp_path):
     assert ("арест", "Арест", "high") in findings
 
 
+def test_prefixed_arest_is_flagged_but_correct_form_is_not(tmp_path):
+    # Prefixed russianism «заарестовано» (not in VESUM) must be caught...
+    flagged = _lint_dict(tmp_path, {
+        "content_outline": [{"section": "Репресії",
+                             "points": ["Його було заарестовано в 1937 році"]}],
+    })
+    assert "арест" in _rules(flagged)
+    # ...while the correct «заарештовано» (with ш) and медичне «парестезія» are NOT.
+    clean = _lint_dict(tmp_path, {
+        "content_outline": [{"section": "Репресії",
+                             "points": ["Його заарештовано 1937; парестезія була симптомом"]}],
+    })
+    assert "арест" not in _rules(clean)
+
+
+def test_vlast_russian_plural_is_flagged(tmp_path):
+    flagged = _lint_dict(tmp_path, {
+        "content_outline": [{"section": "Війна",
+                             "points": ["Депортований нацистськими властями до Берліна"]}],
+    })
+    assert "власті" in _rules(flagged)
+    # Legitimate «властивість»/«властивий» and Ukrainian «владами» must NOT be flagged.
+    clean = _lint_dict(tmp_path, {
+        "content_outline": [{"section": "Стиль",
+                             "points": ["Властивий йому стиль і художня властивість образів"]}],
+    })
+    assert "власті" not in _rules(clean)
+
+
 def test_postum_russianism_flagged(tmp_path):
     findings = _lint_dict(tmp_path, {
         "content_outline": [{"section": "Спадщина",

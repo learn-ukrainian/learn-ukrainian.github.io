@@ -72,11 +72,14 @@ LATIN = "A-Za-z"
 _UK_LETTER = rf"[{CYRILLIC}'ʼ’]"  # Cyrillic + apostrophe variants
 
 
-def _boundary(stem: str, *, suffix: str = rf"{_UK_LETTER}*") -> re.Pattern[str]:
+def _boundary(stem: str, *, suffix: str = rf"{_UK_LETTER}*", prefix: str = "") -> re.Pattern[str]:
     """Whole-word Cyrillic matcher: ``stem`` not glued to another UK letter on
-    the left, optionally followed by an inflectional suffix on the right."""
+    the left, optionally preceded by ``prefix`` (e.g. ``(?:за|пере)?`` for
+    prefixed russianisms like ``заарестовано``) and followed by an inflectional
+    ``suffix`` on the right. The left-boundary lookbehind sits before the prefix,
+    so ``парестезія`` (preceded by «п», prefix not «за/пере») stays unmatched."""
     return re.compile(
-        rf"(?<!{_UK_LETTER})({stem}{suffix})(?!{_UK_LETTER})",
+        rf"(?<!{_UK_LETTER})({prefix}{stem}{suffix})(?!{_UK_LETTER})",
         re.IGNORECASE,
     )
 
@@ -95,8 +98,8 @@ class Rule:
 
 # ── Curated russianism / calque rules (high precision, proven defects) ────────
 RUSSIANISMS: tuple[Rule, ...] = (
-    Rule("арест", _boundary("арест"), "арешт / заарешт-",
-         "high", "«арест» is a Russianism; Ukrainian is «арешт» (#2528)."),
+    Rule("арест", _boundary("арест", prefix="(?:за|пере)?"), "арешт / заарешт-",
+         "high", "«арест»/«заарестовано» is a Russianism; Ukrainian is «арешт»/«заарештовано» (#2528)."),
     Rule("постум", _boundary("постум"), "посмертно / посмертний",
          "high", "«постумно/постумний» is a Latinism-via-Russian; use «посмертно» (#2528)."),
     Rule("коерція", _boundary("коерц"), "примус",
@@ -107,8 +110,9 @@ RUSSIANISMS: tuple[Rule, ...] = (
          "use «інакодумець»/«дисидент». NB «інакомислення» (abstract noun) is VESUM-codified — do NOT flag it."),
     Rule("голодовка", _boundary("голодовк"), "голодування",
          "advisory", "«голодовка» (hunger strike) is a Russianism; prefer «голодування»."),
-    Rule("власті", _boundary("власт", suffix="і"), "влада / органи влади",
-         "advisory", "«власті» (plural) is a Russianism; Ukrainian uses «влада»/«органи влади»."),
+    Rule("власті", _boundary("власт", suffix="(?:і|ей|ям|ями|ях)"), "влада / органи влади",
+         "advisory", "«власті/властей/властями» (Russian plural of «власть») is a Russianism; "
+         "Ukrainian uses «влада»/«органи влади». (Suffix-gated, so «властивість/властивий» are safe.)"),
     # Prison-sense «термін» → «строк»: ONLY in an imprisonment collocation.
     Rule("термін_строк", _boundary("термін", suffix=rf"{_UK_LETTER}*"),
          "строк (про ув'язнення)", "advisory",

@@ -67,7 +67,7 @@ in flight. Next bio work = NEXT ACTIONS #1 (landing page 180→310) + #3 (pre-re
 `scripts/wiki/sources.py::list_discovery_slugs` reconciles instead of short-circuiting; hermetic regression
 test added; wiki suite 75 passed. **Keystone NEXT ACTIONS #3 ALSO DONE — seminar-quality pre-review linter
 SHIPPED** (`scripts/validate/lint_seminar_quality.py`, branch `bio/seminar-quality-linter`, 21 tests; triage =
-4 HIGH + 1 advisory, all in the new 181–310 plans, zero false positives — see NEXT ACTIONS #3 for the list).
+4 HIGH + 2 advisory, all in the new 181–310 plans, zero false positives — see NEXT ACTIONS #3 for the list).
 NEXT ACTION on resume = (a) fix the 5 linter findings in a small DeepSeek-cross-reviewed content PR, then
 promote the linter to a BLOCKING CI gate; (b) run the Phase-4 discovery pipeline for 181..310, then the CLAUDE
 wiki writer fleet (DeepSeek cross-review). 0 dispatches in flight.** *
@@ -219,14 +219,15 @@ the merged plans; NOT deleted (#M-10 — never destroy unmerged work without the
    `validate_plan_ordering.py`). Precision-first: HIGH = gating set, advisory = review-list, **systemic rules
    collapse** to one line (the «Дебат N:» template = 540 hits / 190 plans). Run:
    `.venv/bin/python scripts/validate/lint_seminar_quality.py --track bio [--severity high] [--json]`.
-   **TRIAGE on origin/main (all VESUM/context-verified, zero false positives):** 4 HIGH + 1 advisory, ALL in the
+   **TRIAGE on origin/main (all VESUM/context-verified, zero false positives):** 4 HIGH + 2 advisory, ALL in the
    NEW 181–310 plans (original 180 clean of these classes):
    `viktor-domontovych` (bio-211) «LIT-модулі» · `myroslav-irchan` (bio-190) «L2-студентам» ·
    `antin-krushelnytskyi` (bio-191) «hindsight-осуду» · `vasyl-barvinskyi` (bio-290) «Арест»→Арешт ·
-   `kateryna-zarytska` (bio-284) prison-sense «термін»→строк (advisory). **NEXT: fix these 5 in a small
-   cross-reviewed (DeepSeek) content PR, then this linter can be promoted to a BLOCKING CI gate (currently
-   manual/pre-review only — it would redden main until the 5 are fixed).** The «Дебат» singular systemic finding
-   is a separate template/stylistic call for the orchestrator.
+   `kateryna-zarytska` (bio-284) prison-sense «термін»→строк (advisory) · `vasyl-barka` «властями»→владою/органами
+   влади (advisory). **NEXT: fix these 6 in a small cross-reviewed (DeepSeek) content PR, then this linter can be
+   promoted to a BLOCKING CI gate (currently manual/pre-review only — it would redden main until they are fixed).**
+   The «Дебат» singular systemic finding is a separate template/stylistic call for the orchestrator. (PR-2539
+   review by gemini added recall for prefixed «заарестовано» + власть-plurals — adopted after FP-verification.)
 4. **Phase 4 — WIKI ARTICLES (writer-fleet job, ~130 articles for bio-181..310, ~285K words):**
    Pipeline = `scripts/wiki/compile.py --track bio --slug <slug> --writer claude [--review]`
    (writer options are only `{gemini, claude, gpt-5.5}`; gpt-5.5=codex=PAUSED; **use `--writer claude`** —
