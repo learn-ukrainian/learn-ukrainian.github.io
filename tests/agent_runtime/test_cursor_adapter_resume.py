@@ -29,6 +29,51 @@ def test_cursor_adapter_resume_first_run(adapter, tmp_path, monkeypatch):
     assert "--resume" not in plan.cmd
 
 
+def test_cursor_adapter_prefers_cursor_agent_over_generic_agent(adapter, tmp_path, monkeypatch):
+    """Regression: a generic ``agent`` binary on PATH (e.g. grok's Grok Build
+    TUI at ~/.local/bin/agent) must NOT shadow ``cursor-agent``. Resolving
+    ``agent`` first silently misfired every cursor dispatch to grok
+    (returncode 2: "a value is required for '--single <PROMPT>'")."""
+    resolved = {
+        "cursor-agent": "/Users/x/.local/bin/cursor-agent",
+        "agent": "/Users/x/.local/bin/agent",  # impostor: grok Build TUI
+    }
+    monkeypatch.setattr("shutil.which", lambda name: resolved.get(name))
+
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id="bin-resolve-1",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[0] == "/Users/x/.local/bin/cursor-agent"
+
+
+def test_cursor_adapter_falls_back_to_agent_when_no_cursor_agent(adapter, tmp_path, monkeypatch):
+    """When ``cursor-agent`` is absent, fall back to a generic ``agent`` binary
+    (legacy cursor installs shipped under the bare ``agent`` name)."""
+    monkeypatch.setattr(
+        "shutil.which",
+        lambda name: "/usr/local/bin/agent" if name == "agent" else None,
+    )
+
+    plan = adapter.build_invocation(
+        prompt="hi",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id="bin-resolve-2",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[0] == "/usr/local/bin/agent"
+
+
 def test_cursor_adapter_resume_explicit_session(adapter, tmp_path, monkeypatch):
     monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/cursor-agent")
 

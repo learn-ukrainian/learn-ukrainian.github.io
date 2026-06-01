@@ -85,7 +85,15 @@ class CursorAdapter:
             _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
 
         # Resolve binary. shutil.which handles PATH lookup.
-        cursor_bin = shutil.which("agent") or shutil.which("cursor-agent") or "agent"
+        # Prefer the UNAMBIGUOUS ``cursor-agent`` name. A generic ``agent`` on
+        # PATH can be a DIFFERENT tool: grok's "Grok Build TUI" installs
+        # ``~/.local/bin/agent``, whose ``-p`` means ``--single <PROMPT>`` (a
+        # value flag), so resolving ``agent`` first silently misfired EVERY
+        # cursor dispatch to grok (returncode 2: "a value is required for
+        # '--single <PROMPT>'"). Resolve ``cursor-agent`` first; fall back to a
+        # generic ``agent`` only when cursor-agent is absent (legacy cursor
+        # installs shipped as ``agent``). (#2309 bio driver, 2026-06-02)
+        cursor_bin = shutil.which("cursor-agent") or shutil.which("agent") or "cursor-agent"
 
         config = tool_config or {}
 
