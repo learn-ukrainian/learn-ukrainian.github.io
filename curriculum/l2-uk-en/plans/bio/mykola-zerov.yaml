@@ -22,9 +22,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-maksym-rylskyi
-- bio-pavlo-fylypovych
-- lit-rylsky-neoclassicism
+- mykhailo-drai-khmara
+- pavlo-fylypovych
+- rylsky-neoclassicism
 content_outline:
 - points:
   - >-
