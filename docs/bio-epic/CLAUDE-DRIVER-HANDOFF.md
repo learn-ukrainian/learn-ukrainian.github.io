@@ -40,6 +40,13 @@
 > with **Gemini Pro as a secondary when a key is fresh**. (DeepSeek is the project's standard VESUM content
 > reviewer per MEMORY #M0.) When the user lifts the codex pause, codex returns as writer/reviewer too.
 >
+> **💰 DEEPSEEK TOPPED UP (user 2026-06-01) — lots of deepseek-pro AND deepseek-fast now. LEAN ON IT.**
+> Cross-family review default = **deepseek-pro hermes** (`--agent deepseek --model deepseek-v4-pro`, with
+> the `sources` MCP: verify_words×N, query_cefr_level, check_russian_shadow) for content/VESUM accuracy;
+> **deepseek-fast** (`--model deepseek-v4-flash`) for code/PR-diff + lighter passes. This makes the
+> claude-writer → deepseek-reviewer pipeline fully reliable with NO Gemini-rotation dependency
+> (cross-family still holds: claude writer ≠ deepseek reviewer). Gemini = nice-to-have secondary only.
+>
 > **CURSOR is still available** (separate quota from codex) as a THROUGHPUT-SUPPLEMENT writer — but ONLY
 > with **`--model composer-2.5` pinned, NEVER `--model auto`** (auto re-routes per dispatch to weak models
 > → the Russianisms / unparseable-YAML / editorial-leak inconsistency that got the cursor batch rejected;
@@ -52,15 +59,34 @@
 
 *Last updated: 2026-06-01 (late). **Phase 2 plan build COMPLETE: main has all 130 new plans, 181→310
 contiguous (310 bio plans total).** Phase 3 registration DONE in this PR (curriculum.yaml bio = 310
-modules, 181→310 position==sequence). 0 dispatches in flight at handoff time.*
+modules, 181→310 position==sequence). **UPDATE (2026-06-01, later): #2513 fully CLOSED — all 9
+Kulish-content-dup rebuilds merged (#2516–2525); `validate_plan_ordering.py` → 0 bio errors. 0 dispatches
+in flight. Next bio work = NEXT ACTIONS #1 (landing page 180→310) + #3 (pre-review linter) + #4 (Phase-4 wikis).** *
 
 ## ▶ CURRENT STATE (2026-06-01)
 - **origin/main: 310 bio plans, 181→310 contiguous (130/130). Phase 2 plan-writing is FINISHED.**
 - **248–259 gap CLOSED this session** (the last gap). Merges: #2505 (248-251 codex), #2507 (252-255
   claude), #2506 (258-259 claude), #2508 (256-257 claude). All cross-family Gemini-Pro reviewed; review
   nits applied + VESUM/web-verified before merge.
-- **Phase 3 registration: DONE (this PR).** curriculum.yaml `levels.bio.modules` went 180 → 310; the new
+- **Phase 3 registration: DONE.** curriculum.yaml `levels.bio.modules` went 180 → 310; the new
   181–310 are position==sequence aligned. `validate_plan_ordering.py` is NOT in CI (advisory).
+- **GitHub hygiene DONE (2026-06-01):** closed 12 completed issues #2318–2329 (Phase 1 research, Phase 2
+  plans, Phase 3 registration) with evidence; updated epic #2309. Open bio issues now = only unfinished
+  work: Phase-4 wikis #2330–2335, Phase-5 quality #2336–2338, cross-track followups #2347/2348/2353.
+  (#2513 CLOSED this session; #2526 = lit-track slug follow-up spun off.)
+
+## ✅ #2513 COMPLETE (2026-06-01, later session) — all 9 Kulish-content-dup plans rebuilt + merged
+**DONE predicate MET:** `validate_plan_ordering.py` on fresh `origin/main` @ `729f18d651` → **0 bio errors**
+(was 23): `Track: bio (310 modules) — ✅ All 310 modules verified`. Issue **#2513 CLOSED**. No file carries
+`slug: mykola-kulish` except the real `mykola-kulish.yaml`.
+- **Part 1 (11 metadata defects):** #2514 (merged earlier).
+- **Part 2 (9 Kulish content-dups, this session):** each rebuilt (research dossier + plan mirroring the
+  `mykhailo-drai-khmara` exemplar), DeepSeek-pro cross-family reviewed, `connects_to` corrected, merged:
+  Зеров bio-092 #2517 · Слісаренко bio-093 #2518 · Петрицький bio-103 #2516 · Йогансен bio-105 #2519 ·
+  Фальківський bio-110 #2520 · Плужник bio-111 #2521 · Косинка bio-112 #2525 · Підмогильний bio-115 #2523 ·
+  Шкурупій bio-116 #2524.
+- **Spun-off follow-up #2526:** 8 `lit`-track slug-mismatch errors still block promoting
+  `validate_plan_ordering.py` to a BLOCKING CI check (mechanism-point-3) — out of bio scope, for lit/orchestrator.
 
 ## ▶ KEY CORRECTION (2026-06-01) — ihor-kalynets is REALLY dead; prior "fabrication" finding was WRONG
 - The previous handoff claimed **cursor "FABRICATED a death date for ihor-kalynets (250); he is ALIVE
@@ -91,6 +117,21 @@ driver applies fixes deterministically → CI green (blocking; `review / review`
 - **Dispatch:** `delegate.py dispatch --agent {claude|codex} --task-id bio-blk5-NNN-MMM --prompt-file <f>
   --mode danger [--model gpt-5.5] --effort xhigh --worktree --base main`. Cancel a runaway with
   `delegate.py cancel <task-id>` (positional). Watch via Monitor poll-loop on `/api/delegate/active`.
+- **#2513 session add-ons (2026-06-01, replicate for any future bio batch):**
+  - **REVIEWER actually used = DeepSeek-pro** (NOT Gemini): `delegate.py dispatch --agent deepseek
+    --model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600`.
+    INLINE all dossiers+plans into ONE prompt; ask for a per-figure `SHIP/FIX-BEFORE-MERGE/BLOCK` table.
+    It ran `verify_words` + `check_russian_shadow` + `query_cefr_level` + `verify_source_attribution`
+    (re-verified primary quotes!) + `test -e` on connects_to. 9/9 confirmed factually sound + VESUM-clean.
+  - **RAISE `--initial-response-timeout 900`** — the default `DEFAULT_INITIAL_RESPONSE_TIMEOUT_S=180`
+    (scripts/delegate.py) kills DeepSeek mid-MCP-work BEFORE first stdout (our first review died at exactly
+    180.6s). Same failure CLASS as the #2454 gemini SIGTERM — a startup-probe kill, not silence-timeout.
+  - **`connects_to` convention = BARE slugs** (no `bio-`/`hist-`/`lit-` prefix; must equal the target's
+    `slug:` field). EVERY claude rebuild emitted prefixed and/or GHOST targets (oleksa-vlyzko, mykola-bazhan,
+    maksym-rylskyi, sandarmoh — none exist as plans). Driver fix: de-prefix + repoint ghosts to a real peer,
+    `glob curriculum/.../*/<bare>.yaml` to confirm each resolves, before merge. **Bake the bare-slug + "only
+    reference plans that already exist" rule into the writer brief so it stops recurring.** (Forward-refs are
+    not CI-gated, but cross-family review flags them FIX-BEFORE-MERGE.)
 
 ## ▶ NEXT ACTIONS (in order)
 0. **FIX THE GEMINI DISPATCH BUG #2454 FIRST (user 2026-06-01).** `delegate.py dispatch --agent gemini`
@@ -105,18 +146,13 @@ driver applies fixes deterministically → CI green (blocking; `review / review`
 1. **Landing page 180→310:** `starlight/src/content/docs/bio/index.mdx` — hardcoded array of
    `{num,title,slug,status}` cards (last num:180 anatolii-dimarov). Append 181..310 from curriculum.yaml +
    plan titles. (Not done this session.)
-2. **Phase-5 cleanup of PRE-EXISTING defects (NOT introduced this epic; surfaced by
-   `validate_plan_ordering.py` — 23 bio errors, all in the original 1–180 plans):**
-   - **`mykola-kulish` slug duplication:** ~8 Executed-Renaissance plan files (anatol-petrytskyi,
-     dmytro-falkivskyi, heo-shkurupii, hryhorii-kosynka, maik-yohansen, mykola-zerov, oleksa-slisarenko,
-     valerian-pidmohylnyi) carry `slug: mykola-kulish` inside the YAML (filename≠slug). Real data bug — fix
-     each plan's `slug`/`module`/`sequence` to match its file.
-   - Legacy `level: C1-BIO` / `module: c1-bio-*` on hryhoriy-skovoroda, lev-danylovych, volodymyr-velykii.
-   - Zero-padding: `bio-04`→`bio-004` etc. (kniaz-yaroslav-mudryi, knyazhna-anna-yaroslavna, olha-kobylianska).
-   - `petro-veskliaov.yaml` slug=`petro-veskliarov` (filename typo vs slug).
-   - Pre-existing language defects from earlier handoff still on main: `постумно` (domontovych, mosendz,
-     liaturynska), `арест` (voronyi), Latin-in-Cyrillic (`Cлово` mikhnovskyi, `риcа` huzar, `Оспiщев`
-     lypynskyi, `мистецтвoм` kholodna). Sweep with the linter below.
+2. **Phase-5 cleanup — the #2513 slug/metadata bugs are DONE; only language defects remain:**
+   - ✅ DONE: 9 `mykola-kulish` content-dups rebuilt (this session, #2516–2525); 11 legacy
+     `level: C1-BIO`/`module: c1-bio-*`/zero-pad/`petro-veskliaov` metadata defects (#2514).
+     `validate_plan_ordering.py` → **0 bio errors**.
+   - STILL PENDING (separate from #2513, pre-existing language defects on main): `постумно` (domontovych,
+     mosendz, liaturynska), `арест` (voronyi), Latin-in-Cyrillic (`Cлово` mikhnovskyi, `риcа` huzar,
+     `Оспiщев` lypynskyi, `мистецтвoм` kholodna). Sweep with the linter below (#3).
 3. **Deterministic pre-review linter** (`scripts/validate/...`): russianism/calque list (арест, постум,
    коерція, голодовка, інакомисляч, місцеві власті, термін-for-sentence) + mixed Latin-in-Cyrillic
    (excluding URLs) + `Дебат` singular. Run BEFORE Gemini to cut review rounds and catch the defects above.
