@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T09:33+02:00)
+# Current - Codex Thread Handoff (2026-06-01T10:03+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `2bc13f6e8c feat(a1): add M10 colors module`
+  `ed01b995e4 feat(a1): add M11 how many module`
 
 ## Current Direction
 
@@ -17,49 +17,57 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, worktrees, or
   delegates.
 - Do not use Gemini for review confidence.
-- Continue with M11 `how-many`. M1-M10 are now English-led student
+- Continue with M12 `this-and-that`. M1-M11 are now English-led student
   textbook/workbook pages and pass deterministic QG in this worktree.
 
-## Latest M10 Update
+## Latest M11 Update
 
-Commit `2bc13f6e8c feat(a1): add M10 colors module` added:
+Commit `ed01b995e4 feat(a1): add M11 how many module` added:
 
-- `curriculum/l2-uk-en/a1/colors/{module.md,activities.yaml,vocabulary.yaml,resources.yaml}`
-- `starlight/src/content/docs/a1/colors.mdx`
+- `curriculum/l2-uk-en/a1/how-many/module.md`
+- `curriculum/l2-uk-en/a1/how-many/activities.yaml`
+- `curriculum/l2-uk-en/a1/how-many/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/how-many/resources.yaml`
+- `starlight/src/content/docs/a1/how-many.mdx`
 
-M10 teaches `Якого кольору...?`, color adjective agreement, the soft `синій`
-pattern, `синій` vs `блакитний`, `синьо-жовтий прапор`, safe appearance
-chunks, and color-trap repair. Resources are external and learner-facing only.
+M11 is English-led A1.2 grammar-first-contact content for counting, prices,
+age, and phone numbers. It covers `нуль` through `сто`, hundreds/prices through
+`тисяча гривень`, `гривня/гривні/гривень`, `рік/роки/років`,
+`Скільки коштує...?`, `Скільки тобі років?`, `Мені ... років`, and
+phone-number groups. It explicitly repairs the locked number traps:
+`п'ять столів`, `Котра година?`, `Мені 20 років`,
+`перше січня / сьоме травня`, `п'ятдесят / шістдесят`, and
+`тисяча / мільйон`, plus common numeral spellings such as `шість`, `сім`,
+`сімнадцять`, and `дев'яносто`.
 
-Related rendering fix:
+Validation after M11:
 
-- `HashTabSync` is now server-rendered for newly assembled modules, and the
-  assembler emits `<HashTabSync />`.
-- The script retries hash scrolling long enough for client-only activity
-  hydration to settle; local Chrome verified `#repair-color-traps` lands on
-  the target heading.
-
-Validation:
-
-- Activities parsed: 10.
-- Direct `run_python_qg()`: passed.
-- Seeded hard wiki coverage: passed, 13/13.
-- `scripts/validate_mdx.py l2-uk-en a1 10`: passed.
-- `npm run build:starlight`: passed, 100 pages.
-- Browser/content checks: no internal wiki links, teacher labels, visible
-  scaffolding, or broken injection markers.
-- Targeted pre-commit: passed.
-- `scripts/audit/lint_agent_trailer.py`: passed for all branch commits.
+- `scripts.yaml_activities`: parsed 10 activities.
+- Direct `run_python_qg()` for M11: passed.
+- Direct seeded hard wiki coverage: passed, 14/14 obligations covered.
+- CLI `scripts/validate_mdx.py l2-uk-en a1 11`: passed.
+- `npm run build:starlight`: passed; 101 pages built.
+- Local Starlight restarted with `./services.sh restart starlight`.
+- Browser inspection for `/a1/how-many/`:
+  - Lesson tab showed price dialogue, age chunks, phone-number chunks, and
+    number-trap repair.
+  - Resources tab showed only external learner-facing resources.
+  - No internal wiki links, visible step scaffolding, injection markers, or
+    teacher/writer labels.
+  - Hidden anchor `#repair-number-traps` switched back to Lesson and landed on
+    the target heading.
+- Targeted pre-commit passed for the 5 committed M11 files.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
 
 ## Next Target
 
-Start M11 `how-many`:
+Start M12 `this-and-that`:
 
-1. Inspect `curriculum/l2-uk-en/plans/a1/how-many.yaml`.
+1. Inspect `curriculum/l2-uk-en/plans/a1/this-and-that.yaml`.
 2. Inspect the relevant locked wiki/pedagogy brief and source/resource sidecar.
 3. Inspect `build_wiki_manifest_data` obligations.
 4. Build `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`,
-   and assembled `starlight/src/content/docs/a1/how-many.mdx`.
+   and assembled `starlight/src/content/docs/a1/this-and-that.mdx`.
 5. Run the same validation gates and commit with
    `X-Agent: codex/a1-m1-m14-golden-journey`.
 

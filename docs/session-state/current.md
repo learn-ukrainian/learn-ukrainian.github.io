@@ -1,121 +1,109 @@
 # Current Session Handoff
 
-Generated-At: 2026-06-01T07:40Z
+Generated-At: 2026-06-01T08:03Z
 
 ## Active Branch
 
 - Worktree:
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Verified HEAD before this handoff edit:
-  `42869f2bc4 docs(orchestration): refresh M10 handoff`
-- Remote: clean and synced with
-  `origin/codex/a1-m1-m7-golden-journey-2026-05-30` before this handoff edit.
+- Latest implementation commit:
+  `ed01b995e4 feat(a1): add M11 how many module`
+- Previous handoff commit:
+  `5031a7d99b docs(orchestration): refresh M11 handoff`
 
 Recent commits:
 
+- `ed01b995e4 feat(a1): add M11 how many module`
+- `5031a7d99b docs(orchestration): refresh M11 handoff`
 - `42869f2bc4 docs(orchestration): refresh M10 handoff`
 - `2bc13f6e8c feat(a1): add M10 colors module`
 - `36b7e734ca docs(orchestration): refresh M9 handoff`
-- `48e6598fd9 feat(a1): add M9 what is it like module`
-- `9e7c278760 docs(orchestration): refresh M8 handoff`
-- `a675a2b1c5 feat(a1): add M8 things have gender module`
 
 ## Current Goal State
 
-- M1-M10 are built as English-led A1 student textbook/workbook modules.
-- M11 `how-many` is the next unfinished module.
-- No M11 authoring files were changed in this session; this handoff only records
-  the completed orientation and inspection before a context reset.
+- M1-M11 are built as English-led A1 student textbook/workbook modules.
+- M11 `how-many` is complete locally and ready to push with this handoff.
+- Next module: M12 `this-and-that`.
 - BIO remains Claude/BIO-owned; do not touch BIO files, worktrees, delegates,
   or PRs.
 
+## M11 Summary
+
+Commit `ed01b995e4 feat(a1): add M11 how many module` added:
+
+- `curriculum/l2-uk-en/a1/how-many/module.md`
+- `curriculum/l2-uk-en/a1/how-many/activities.yaml`
+- `curriculum/l2-uk-en/a1/how-many/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/how-many/resources.yaml`
+- `starlight/src/content/docs/a1/how-many.mdx`
+
+M11 teaches numbers `нуль` through `сто`, useful prices through
+`тисяча гривень`, `Скільки коштує...?`, age chunks
+`Мені/тобі/їй + number + рік/роки/років`, Ukrainian phone-number grouping,
+and number-trap repair. It keeps currency and age agreement as chunks, not a
+case lesson. Collective numerals `двоє`, `троє`, `четверо` are passive
+recognition only.
+
+Local ignored telemetry exists for the resource-search gate:
+`curriculum/l2-uk-en/a1/how-many/writer_tool_calls.json`.
+
+## M11 Validation
+
+- `scripts.yaml_activities`: parsed 10 activities.
+- Direct `run_python_qg()` for M11: passed.
+  - `word_count`: 1343 words, above the 1104 tolerated floor for target 1200.
+  - `resources_search_attempted`: passed with two local
+    `search_external` telemetry calls.
+  - `vesum_verified`, `scaffolding_leak`, `russianisms_strict`,
+    `activity_types`, `inject_activity_ids`, `engagement_floor`,
+    `archetype_fit`, and resource/citation gates passed.
+- Seeded hard wiki coverage: passed, 14/14 obligations covered.
+- CLI `scripts/validate_mdx.py l2-uk-en a1 11`: passed.
+- `npm run build:starlight`: passed; 101 pages built.
+- Local Starlight restarted with `./services.sh restart starlight`.
+- In-app browser checks for `/a1/how-many/`:
+  - Lesson tab showed expected price, age, phone, and number-trap content.
+  - Resources tab showed external learner resources only.
+  - No internal `wiki/pedagogy` links, visible `Крок 1:` scaffolding,
+    injection markers, or teacher/writer labels.
+  - Hidden anchor `#repair-number-traps` returned to the Lesson tab and
+    landed on the target.
+- Targeted pre-commit passed for the 5 committed M11 files.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+
 ## Verified Runtime State
 
-Checked 2026-06-01T07:34Z:
+Checked 2026-06-01T08:03Z:
 
-- `git status --short --branch`: clean at
-  `codex/a1-m1-m7-golden-journey-2026-05-30...origin/codex/a1-m1-m7-golden-journey-2026-05-30`.
+- `git status --short --branch`: branch is ahead of origin by the M11
+  implementation commit before this handoff edit.
 - `./services.sh status`: `sources` running on 8766, `api` running on 8765,
   `starlight` running on 4321.
 - `curl -sS http://127.0.0.1:8765/api/delegate/active`:
   `{"total":0,"tasks":[]}`.
 
-## M11 Inspection Completed
-
-Read these inputs for M11 `how-many`:
-
-- Locked plan: `curriculum/l2-uk-en/plans/a1/how-many.yaml`
-- Wiki review: `wiki/.reviews/pedagogy/a1/how-many-review-LOCKED.md`
-- Wiki brief: `wiki/pedagogy/a1/how-many.md`
-- Source sidecar: `wiki/pedagogy/a1/how-many.sources.yaml`
-- Related OES article checked for context only:
-  `wiki/linguistics/oes/numbers-currency.md`
-- Discovery sidecar:
-  `curriculum/l2-uk-en/a1/discovery/how-many.yaml`
-- Existing module patterns inspected:
-  `curriculum/l2-uk-en/a1/colors/{module.md,activities.yaml,vocabulary.yaml,resources.yaml}`
-  and `curriculum/l2-uk-en/a1/what-is-it-like/activities.yaml`.
-
-Hard M11 obligations from the plan/wiki:
-
-- Teach numbers 0-100 productively, with hundreds/prices up to 1000 as useful
-  chunks.
-- Include three practical contexts: prices, age, and phone-number reading.
-- Keep `Мені/тобі/їй + number + рік/роки/років` as a chunk, not a dative-case
-  lesson.
-- Keep `гривня/гривні/гривень` as a 1 / 2-4 / 5+ chunk, not a genitive-plural
-  lesson.
-- Explicitly repair the locked numerals L2-error table: `шість` not `шесть`,
-  `п'ять` not `пять`, `сім` not `сєм/семь`, `сімнадцять`,
-  `п'ятдесят`, `дев'яносто`, `Мені двадцять років` not English/Russian-style
-  age calques, and `пів на шосту` not `пол-шостого`.
-- Treat collective numerals (`двоє`, `троє`, `четверо`) as passive recognition
-  only.
-- Student-facing resources must be external learner resources only, with no
-  internal wiki links.
-
-## Open Issues / Hygiene Notes
-
-- Session setup reported postmortem hygiene issues in
-  `docs/bug-autopsies/codex-tool-capture.md` (`Symptom`, `Root cause`, and
-  `Links` missing). This is out of scope for A1 M11.
-- `MEMORY.md` is near its line budget; do not add memory unless necessary.
-- ADR hygiene warnings and unrelated open issues remain out of scope.
-
 ## Next Steps
 
-Continue in a fresh Codex thread from this exact worktree:
+Continue M12 `this-and-that`:
 
-1. Re-run the restart commands below.
-2. Generate direct `build_wiki_manifest_data` obligations for
-   `a1/how-many` before writing.
-3. Create the full M11 artifact set:
-   `curriculum/l2-uk-en/a1/how-many/module.md`,
-   `activities.yaml`, `vocabulary.yaml`, `resources.yaml`, and
-   `starlight/src/content/docs/a1/how-many.mdx`.
-4. Validate M11 with activity parsing, direct `run_python_qg()`, seeded hard
-   wiki coverage, MDX assembly/validation, `npm run build:starlight`, browser
-   inspection, targeted pre-commit, and
+1. Inspect `curriculum/l2-uk-en/plans/a1/this-and-that.yaml`, the locked wiki
+   brief, resource obligations, and `build_wiki_manifest_data`.
+2. Build the full M12 artifact set:
+   `curriculum/l2-uk-en/a1/this-and-that/{module.md,activities.yaml,
+   vocabulary.yaml,resources.yaml}` plus
+   `starlight/src/content/docs/a1/this-and-that.mdx`.
+3. Validate with activity parsing, direct `run_python_qg()`, seeded hard wiki
+   coverage, MDX validation, `npm run build:starlight`, browser inspection,
+   targeted pre-commit, and
    `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/lint_agent_trailer.py`.
-5. Commit and push each safe slice with:
+4. Commit and push with:
    `X-Agent: codex/a1-m1-m14-golden-journey`.
-
-## Restart Commands
-
-```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30
-git status --short --branch
-git log --oneline --decorate -10 --no-merges
-./services.sh status
-curl -sS http://127.0.0.1:8765/api/delegate/active
-```
 
 ## Guardrails
 
 - Use `./services.sh` for services.
-- Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` for
-  Python.
+- Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
 - Do not touch `.python-version`, `.yamllint`, `.markdownlint.json`,
   generated `status/*.json`, `audit/*-review.md`, or `review/*-review.md`.
 - Do not use `sys.executable`.
