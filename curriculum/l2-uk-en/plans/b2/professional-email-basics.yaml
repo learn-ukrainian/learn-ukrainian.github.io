@@ -150,6 +150,6 @@ references:
   мовлення
 - 'State Standard 2024: B2 SS 3 — Professional communication themes'
 connects_to:
-  previous: checkpoint-lexicology
+  previous: checkpoint-lexicology-ii
   next: professional-email-advanced
 phase: B2.4 [Communication Skills]

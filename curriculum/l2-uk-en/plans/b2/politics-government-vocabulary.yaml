@@ -175,5 +175,5 @@ references:
 - 'Авраменко, 11 клас (2019): Лексикологія — терміни, професіоналізми, запозичення'
 - 'State Standard 2024: B2 SS 3 (Thematic areas: суспільство, право, економіка)'
 connects_to:
-  previous: checkpoint-register
+  previous: register-practice-cross-register-rewriting
   next: law-justice-vocabulary
