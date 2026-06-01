@@ -64,8 +64,8 @@ content_outline:
   section: 'Дискусія та підсумок: Спадщина'
   words: 700
 focus: 'The anti-hagiographic biography of Volodymyr the Great: his brutal path to power, the pragmatic choice of civilization, his state-building achievements, and the complex legacy of a figure who was both a violent despot and a nation-building saint.'
-level: c1-bio
-module: c1-bio-volodymyr-velykii
+level: BIO
+module: bio-003
 objectives:
 - Аналізувати геополітичне та культурне значення хрещення Русі
 - Оцінювати державотворчі реформи Володимира (адміністративні, фінансові, військові) та їх ціну
