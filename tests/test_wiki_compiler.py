@@ -118,6 +118,30 @@ def attribution_db(tmp_path, monkeypatch):
     return db_path
 
 
+def test_grammar_prompt_emits_v7_completeness_sections():
+    """A2-B2 grammar wikis must satisfy the same upstream completeness gate."""
+    prompt = (
+        Path(_project_root)
+        / "scripts"
+        / "wiki"
+        / "prompts"
+        / "compile_grammar_brief.md"
+    ).read_text(encoding="utf-8")
+
+    for heading in (
+        "## Методичний підхід",
+        "## Послідовність введення",
+        "## Словниковий мінімум",
+        "## Приклади з підручників",
+    ):
+        assert heading in prompt
+
+    assert "`Крок 1: ...`" in prompt
+    assert "B1/B2 дай щонайменше 50 лем" in prompt
+    assert "`<!-- bad -->...<!-- /bad -->`" in prompt
+    assert "`Chunk ID:`" in prompt
+
+
 # ── Tests: _format_sources ───────────────────────────────────────
 
 
