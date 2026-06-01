@@ -1,0 +1,333 @@
+---
+title: "Це і те"
+description: "Цей стіл, та книга — вказуємо на предмети"
+sidebar:
+  order: 12
+  label: "12. Це і те"
+pipeline: linear-phase-4
+build_status: validated
+prev: how-many
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Pointing is useful before you know many sentences. Ukrainian gives you one
+easy word first: **це**. Then it gives you a more precise set: **цей / ця /
+це / ці** for things near you, and **той / та / те / ті** for things farther
+away or already mentioned.
+
+By the end, you can:
+
+- ask **Що це?** and answer **Це стіл** without adding **є**;
+- choose **цей / ця / це / ці** by the noun's gender or plural form;
+- choose **той / та / те / ті** for "that / those";
+- combine pointing words with familiar adjectives and colors;
+- avoid common traps such as **цей є мій стіл**, **це цікавий книга**, and
+  ambiguous **та** in lists.
+
+### Це as a whole sentence
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "This is a table.", "options": [{"text": "Це стіл.", "correct": true}, {"text": "Це є стіл.", "correct": false}, {"text": "Цей є стіл.", "correct": false}], "explanation": "Present-tense Ukrainian normally drops є in this sentence."}, {"question": "Who is this?", "options": [{"text": "Хто це?", "correct": true}, {"text": "Хто цей?", "correct": false}, {"text": "Хто той?", "correct": false}], "explanation": "Use the fixed question Хто це?"}, {"question": "What is this?", "options": [{"text": "Що це?", "correct": true}, {"text": "Що ця?", "correct": false}, {"text": "Що той?", "correct": false}], "explanation": "Що це? is the safe first question."}, {"question": "This is my backpack.", "options": [{"text": "Це мій рюкзак.", "correct": true}, {"text": "Цей є мій рюкзак.", "correct": false}, {"text": "Це є мій рюкзак.", "correct": false}], "explanation": "Keep Це мій рюкзак as one chunk."}]`)} />
+
+## Діалоги
+
+At a table, a bag is close to you and another bag is across the room.
+
+<DialogueBox uk="Ірина: Добрий день! Скільки коштує ця сумка?" en="Iryna: Good afternoon! How much does this bag cost?" />
+<DialogueBox uk="Консультант: Ця червона? Двісті гривень." en="Assistant: This red one? Two hundred hryvnias." />
+<DialogueBox uk="Ірина: Ні, та синя." en="Iryna: No, that blue one." />
+<DialogueBox uk="Консультант: Та синя коштує сто п'ятдесят гривень." en="Assistant: That blue one costs one hundred fifty hryvnias." />
+<DialogueBox uk="Ірина: А цей рюкзак?" en="Iryna: And this backpack?" />
+<DialogueBox uk="Консультант: Цей — сто гривень." en="Assistant: This one is one hundred hryvnias." />
+
+In a room, the same grammar works without prices:
+
+<DialogueBox uk="Оля: Що це?" en="Olia: What is this?" />
+<DialogueBox uk="Дмитро: Це мій стіл." en="Dmytro: This is my table." />
+<DialogueBox uk="Оля: А те?" en="Olia: And that?" />
+<DialogueBox uk="Дмитро: Те — крісло." en="Dmytro: That is an armchair." />
+<DialogueBox uk="Оля: Цей стілець новий?" en="Olia: Is this chair new?" />
+<DialogueBox uk="Дмитро: Так, цей новий, а той старий." en="Dmytro: Yes, this one is new, and that one is old." />
+<DialogueBox uk="Оля: Добре, дякую." en="Olia: Good, thank you." />
+
+The pattern is small:
+
+- **цей** = this one, masculine: **цей рюкзак**, **цей стіл**
+- **ця** = this one, feminine: **ця сумка**, **ця книга**
+- **це** = this one, neuter: **це вікно**, **це радіо**
+- **той / та / те** = that one farther away: **той стіл**, **та книга**,
+  **те вікно**
+
+You already know **Що це? — Це стіл.** Keep that sentence exactly. Ukrainian
+does not need **є** in this present-tense sentence. Say **Це стіл**, not
+**Це є стіл**.
+
+:::tip
+When you point and name a thing, ask two quick questions: is it near or far,
+and what is the noun's gender? Near + **стіл** gives **цей стіл**. Far +
+**книга** gives **та книга**.
+:::
+
+### Noun gender and pointing word
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "цей стіл"}, {"left": "книга", "right": "ця книга"}, {"left": "вікно", "right": "це вікно"}, {"left": "радіо", "right": "це радіо"}, {"left": "ручки", "right": "ці ручки"}, {"left": "телефони", "right": "ці телефони"}]`)} />
+
+## Цей, ця, це
+
+Use **це** in two different ways.
+
+First, **це** can introduce a whole sentence:
+
+- **Що це? — Це стіл.**
+- **Хто це? — Це мама.**
+- **Це мій рюкзак.**
+
+This **це** does not change. It is the safe first model.
+
+Second, **цей / ця / це / ці** can stand before a noun. Then the noun controls
+the form:
+
+| Noun type | Pointing word | Example |
+| --- | --- | --- |
+| **він** masculine | **цей** | **цей стіл**, **цей телефон** |
+| **вона** feminine | **ця** | **ця книга**, **ця сумка** |
+| **воно** neuter | **це** | **це вікно**, **це радіо** |
+| plural | **ці** | **ці ручки**, **ці телефони** |
+
+The logic matches earlier patterns:
+
+| English idea | Masculine | Feminine | Neuter | Plural |
+| --- | --- | --- | --- | --- |
+| my | **мій** | **моя** | **моє** | **мої** |
+| what kind? | **який** | **яка** | **яке** | **які** |
+| this | **цей** | **ця** | **це** | **ці** |
+
+So **цей великий червоний стіл** is not a new grammar mountain. It is the same
+agreement habit: pointing word + adjective + color + noun.
+
+Use **ці** for plural things near you: **ці ручки**, **ці телефони**,
+**ці зелені зошити**. It does not matter whether one object would be masculine
+or feminine. Once the noun is plural, the near pointing word is **ці**.
+
+### Цей, ця, це, ці
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ стіл новий.", "answer": "Цей", "options": ["Цей", "Ця", "Це"]}, {"sentence": "___ книга цікава.", "answer": "Ця", "options": ["Ця", "Цей", "Це"]}, {"sentence": "___ вікно велике.", "answer": "Це", "options": ["Це", "Цей", "Ця"]}, {"sentence": "___ ручки сині.", "answer": "Ці", "options": ["Ці", "Цей", "Ця"]}, {"sentence": "___ телефон чорний.", "answer": "Цей", "options": ["Цей", "Ця", "Ці"]}, {"sentence": "___ сумка червона.", "answer": "Ця", "options": ["Ця", "Це", "Цей"]}]`)} />
+
+## Той, та, те
+
+Use **той / та / те / ті** for "that / those" when the thing is farther away
+or already mentioned.
+
+| Near | Far | Example |
+| --- | --- | --- |
+| **цей стіл** | **той стіл** | This table / that table |
+| **ця книга** | **та книга** | This book / that book |
+| **це вікно** | **те вікно** | This window / that window |
+| **ці ручки** | **ті ручки** | These pens / those pens |
+
+Ask with **який / яка / яке / які**:
+
+- **Який стіл? — Цей чи той?**
+- **Яка сумка? — Ця червона чи та синя?**
+- **Яке вікно? — Це велике чи те маленьке?**
+- **Які ручки? — Ці сині чи ті зелені?**
+
+**Чи** is the question word for "or" here. It helps you choose between two
+visible things.
+
+### Near and far
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "цей стіл", "right": "той стіл"}, {"left": "ця книга", "right": "та книга"}, {"left": "це вікно", "right": "те вікно"}, {"left": "ці ручки", "right": "ті ручки"}, {"left": "цей телефон", "right": "той телефон"}, {"left": "ця сумка", "right": "та сумка"}]`)} />
+
+### Та in two jobs
+
+The word **та** can do two jobs:
+
+| Sentence | Job of **та** |
+| --- | --- |
+| **та книга** | demonstrative: that book |
+| **мама та тато** | connector: mom and dad |
+
+Both are Ukrainian. The problem is ambiguity when you put them too close
+together:
+
+- Hard to read: **У кімнаті є та книга та ручка.**
+- Clearer: **У кімнаті є та книга і ручка.**
+
+At A1, use **і** for lists when **та** already means "that" nearby. This is a
+style safety habit, not a ban on the connector **та**.
+
+Use **ті** for plural things farther away: **ті ручки**, **ті телефони**,
+**ті чорні рюкзаки**. The near/far contrast is now complete: **ці** means
+"these," and **ті** means "those." Keep the question small:
+**Які ручки — ці чи ті?**
+
+### Clear choices with чи
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which table, this one or that one?", "options": [{"text": "Який стіл — цей чи той?", "correct": true}, {"text": "Яка стіл — ця чи та?", "correct": false}, {"text": "Яке стіл — це чи те?", "correct": false}], "explanation": "Стіл is masculine, so use який, цей, той."}, {"question": "Which bag, this red one or that blue one?", "options": [{"text": "Яка сумка — ця червона чи та синя?", "correct": true}, {"text": "Який сумка — цей червоний чи той синій?", "correct": false}, {"text": "Яке сумка — це червоне чи те синє?", "correct": false}], "explanation": "Сумка is feminine, so use яка, ця, та."}, {"question": "Which window, this big one or that small one?", "options": [{"text": "Яке вікно — це велике чи те маленьке?", "correct": true}, {"text": "Яка вікно — ця велика чи та маленька?", "correct": false}, {"text": "Який вікно — цей великий чи той маленький?", "correct": false}], "explanation": "Вікно is neuter, so use яке, це, те."}, {"question": "Make the list clearer.", "options": [{"text": "У кімнаті є та книга і ручка.", "correct": true}, {"text": "У кімнаті є та книга та ручка.", "correct": false}, {"text": "У кімнаті є ця книга ця ручка.", "correct": false}], "explanation": "Use і for the list when та already means that."}]`)} />
+
+## Підсумок
+
+Most of this module stays in the nominative:
+
+- **цей стіл**
+- **ця книга**
+- **це вікно**
+- **той будинок**
+- **та вулиця**
+- **те дерево**
+
+You may also meet two buying chunks:
+
+- **Я хочу цю книгу.**
+- **Я хочу цей олівець.**
+
+Do not build the full case table today. Just notice the useful feminine
+shopping chunk **цю книгу**. If you say **цей книгу**, the pointing word and
+the feminine noun do not match. The safe chunk is **цю книгу**.
+
+You may also see old or emphatic forms:
+
+- **оцей / оця / оце** = this exact one, right here
+- **отой / ота / ото** = that exact one over there
+- **тая / теє / ції** = poetic-looking forms you only need to recognize
+
+Use **цей / ця / це / той / та / те** actively. Treat the other forms as
+recognition items for reading, songs, or later lessons.
+
+### Useful chunks
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я хочу ___ книгу.", "answer": "цю", "options": ["цю", "цей", "це"]}, {"sentence": "Я хочу ___ олівець.", "answer": "цей", "options": ["цей", "цю", "ці"]}, {"sentence": "___ книга цікава.", "answer": "Ця", "options": ["Ця", "Це", "Цей"]}, {"sentence": "___ мій стіл.", "answer": "Це", "options": ["Це", "Цей є", "Той є"]}, {"sentence": "Мене ___ Марк.", "answer": "звати", "options": ["звати", "ім'я є", "є ім'я"]}, {"sentence": "___ 20 років.", "answer": "Мені", "options": ["Мені", "Я маю", "Я є"]}]`)} />
+
+### Repair traps
+
+Keep these repairs close:
+
+| If you want to say... | Use this | Avoid this |
+| --- | --- | --- |
+| This is my table. | **Це мій стіл.** | **Цей є мій стіл.** |
+| This book is interesting. | **Ця книга цікава.** | **Це цікавий книга.** |
+| I am 20 years old. | **Мені 20 років.** | **Я маю 20 років.** |
+| My name is Mark. | **Мене звати Марк.** | **Моє ім'я є Марк.** |
+| I see that boy. | **Я бачу того хлопця.** | **Я бачу теє хлопця.** |
+
+The last two preview later grammar, but they protect you from building a bad
+habit now. **Мене звати** comes from your introduction module, and
+**Мені 20 років** comes from the numbers module.
+
+After prepositions, Ukrainian pronouns often change in a way English does not:
+**з ним**, **у нього**, **у неї**. That is later material. For today, simply
+recognize **Я розмовляю з ним** as the safe chunk, not **з його**.
+
+### Manifest repair rows
+
+<ErrorCorrection client:only='react' instruction="Read the learner trap and choose the repaired Ukrainian chunk.">
+  <ErrorCorrectionItem sentence="Цей є мій стіл" errorWord="❌ «Цей є мій стіл»" correctForm="✅ «Це мій стіл»" options={JSON.parse(`["✅ «Це мій стіл»", "Це є мій стіл", "Цей мій стіл"]`)} explanation="Use universal це and drop є." />
+  <ErrorCorrectionItem sentence="Я маю 20 років" errorWord="❌ «Я маю 20 років »" correctForm="✅ «Мені 20 років»" options={JSON.parse(`["✅ «Мені 20 років»", "Я є 20 років", "Мій вік 20"]`)} explanation="Age uses Мені ... років." />
+  <ErrorCorrectionItem sentence="Моє ім'я є Марк" errorWord="❌ «Моє ім'я є Марк »" correctForm="✅ «Мене звати Марк»" options={JSON.parse(`["✅ «Мене звати Марк»", "Я ім'я Марк", "Моє ім'я Марк"]`)} explanation="Names use Мене звати + name." />
+  <ErrorCorrectionItem sentence="Я бачу теє хлопця" errorWord="❌ «Я бачу теє хлопця»" correctForm="✅ «Я бачу того хлопця»" options={JSON.parse(`["✅ «Я бачу того хлопця»", "Я бачу той хлопця", "Я бачу те хлопця"]`)} explanation="Теє is poetic/passive recognition, not the everyday chunk." />
+  <ErrorCorrectionItem sentence="Я розмовляв з його" errorWord="❌ «Я розмовляв з його»" correctForm="✅ «Я розмовляв з ним»" options={JSON.parse(`["✅ «Я розмовляв з ним»", "Я розмовляв з він", "Я розмовляв його"]`)} explanation="After з, recognize the safe chunk з ним." />
+  <ErrorCorrectionItem sentence="У тому́" errorWord="❌ «У тому́»" correctForm="✅ «У то́му»" options={JSON.parse(`["✅ «У то́му»", "У цей", "На тому"]`)} explanation="This stress point is a later preview, not active A1 production." />
+  <ErrorCorrectionItem sentence="Це цікавий книга" errorWord="❌ «Це цікавий книга»" correctForm="✅ «Ця книга цікава»" options={JSON.parse(`["✅ «Ця книга цікава»", "Цей книга цікавий", "Це цікава книга"]`)} explanation="Before a feminine noun, use ця." />
+</ErrorCorrection>
+
+### Repair the trap
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Fix the sentence: Цей є мій стіл.", "options": [{"text": "Це мій стіл.", "correct": true}, {"text": "Цей є мій стіл.", "correct": false}, {"text": "Це є мій стіл.", "correct": false}], "explanation": "Use universal це and drop є."}, {"question": "Fix the sentence: Це цікавий книга.", "options": [{"text": "Ця книга цікава.", "correct": true}, {"text": "Це цікавий книга.", "correct": false}, {"text": "Цей книга цікавий.", "correct": false}], "explanation": "Книга is feminine, so use ця and feminine цікава."}, {"question": "Fix the sentence: Я маю 20 років.", "options": [{"text": "Мені 20 років.", "correct": true}, {"text": "Я маю 20 років.", "correct": false}, {"text": "Я є 20 років.", "correct": false}], "explanation": "Use the age chunk from the numbers module."}, {"question": "Fix the sentence: Моє ім'я є Марк.", "options": [{"text": "Мене звати Марк.", "correct": true}, {"text": "Моє ім'я є Марк.", "correct": false}, {"text": "Я ім'я Марк.", "correct": false}], "explanation": "Use Мене звати + name."}, {"question": "Choose the everyday A1-safe sentence.", "options": [{"text": "Я бачу того хлопця.", "correct": true}, {"text": "Я бачу теє хлопця.", "correct": false}, {"text": "Я бачу той хлопця.", "correct": false}], "explanation": "Теє is poetic/passive recognition, not everyday A1 speech."}, {"question": "Choose the later-grammar preview chunk.", "options": [{"text": "Я розмовляю з ним.", "correct": true}, {"text": "Я розмовляю з його.", "correct": false}, {"text": "Я розмовляю з він.", "correct": false}], "explanation": "After з, the safe chunk is з ним."}]`)} />
+
+### Mini world check
+
+Look around your room and make six tiny sentences:
+
+- **Це стіл.**
+- **Цей стіл новий.**
+- **Та книга стара.**
+- **Це вікно велике.**
+- **Ці ручки сині.**
+- **Ті телефони чорні.**
+
+Now say three choice questions:
+
+- **Який стіл — цей чи той?**
+- **Яка сумка — ця чи та?**
+- **Які ручки — ці чи ті?**
+
+Keep Ukrainian self-contained. You do not need another language as a bridge for
+these forms. The noun gives you the gender, the pointing word matches it, and
+the distance gives you **this** or **that**.
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"це","translation":"this is; this, neuter","pos":"pronoun","example":"Це стіл. Це вікно.","examples":["this is; this, neuter","Це стіл. Це вікно."]},{"word":"цей","translation":"this, masculine","pos":"pronoun","example":"Цей стіл новий.","examples":["this, masculine","Цей стіл новий."]},{"word":"ця","translation":"this, feminine","pos":"pronoun","example":"Ця книга цікава.","examples":["this, feminine","Ця книга цікава."]},{"word":"ці","translation":"these, plural","pos":"pronoun","example":"Ці ручки сині.","examples":["these, plural","Ці ручки сині."]},{"word":"той","translation":"that, masculine","pos":"pronoun","example":"Той стіл старий.","examples":["that, masculine","Той стіл старий."]},{"word":"та","translation":"that, feminine; and","pos":"pronoun/conjunction","example":"Та книга стара. Мама та тато.","examples":["that, feminine; and","Та книга стара. Мама та тато."]},{"word":"те","translation":"that, neuter","pos":"pronoun","example":"Те вікно маленьке.","examples":["that, neuter","Те вікно маленьке."]},{"word":"ті","translation":"those, plural","pos":"pronoun","example":"Ті телефони чорні.","examples":["those, plural","Ті телефони чорні."]},{"word":"чи","translation":"or, in questions","pos":"conjunction","example":"Цей чи той?","examples":["or, in questions","Цей чи той?"]},{"word":"ось","translation":"here is; look","pos":"particle","example":"Ось ця книга.","examples":["here is; look","Ось ця книга."]},{"word":"тут","translation":"here","pos":"adverb","example":"Цей стіл тут.","examples":["here","Цей стіл тут."]},{"word":"там","translation":"there","pos":"adverb","example":"Той стіл там.","examples":["there","Той стіл там."]},{"word":"який","translation":"which; what kind, masculine","pos":"pronoun","example":"Який стіл?","examples":["which; what kind, masculine","Який стіл?"]},{"word":"яка","translation":"which; what kind, feminine","pos":"pronoun","example":"Яка сумка?","examples":["which; what kind, feminine","Яка сумка?"]},{"word":"яке","translation":"which; what kind, neuter","pos":"pronoun","example":"Яке вікно?","examples":["which; what kind, neuter","Яке вікно?"]},{"word":"які","translation":"which; what kind, plural","pos":"pronoun","example":"Які ручки?","examples":["which; what kind, plural","Які ручки?"]},{"word":"він","translation":"he; it, masculine","pos":"pronoun","example":"Стіл — він.","examples":["he; it, masculine","Стіл — він."]},{"word":"вона","translation":"she; it, feminine","pos":"pronoun","example":"Книга — вона.","examples":["she; it, feminine","Книга — вона."]},{"word":"воно","translation":"it, neuter","pos":"pronoun","example":"Вікно — воно.","examples":["it, neuter","Вікно — воно."]},{"word":"вони","translation":"they","pos":"pronoun","example":"Ручки — вони.","examples":["they","Ручки — вони."]},{"word":"цю книгу","translation":"this book, object chunk","pos":"phrase","example":"Я хочу цю книгу.","examples":["this book, object chunk","Я хочу цю книгу."]},{"word":"цього олівця","translation":"this pencil, recognition chunk","pos":"phrase","example":"Цього олівця is passive recognition here.","examples":["this pencil, recognition chunk","Цього олівця is passive recognition here."]},{"word":"оцей","translation":"this exact one, masculine","pos":"pronoun","example":"Оцей is passive recognition here.","examples":["this exact one, masculine","Оцей is passive recognition here."]},{"word":"оця","translation":"this exact one, feminine","pos":"pronoun","example":"Оця is passive recognition here.","examples":["this exact one, feminine","Оця is passive recognition here."]},{"word":"оце","translation":"this exact one, neuter","pos":"pronoun","example":"Оце is passive recognition here.","examples":["this exact one, neuter","Оце is passive recognition here."]},{"word":"отой","translation":"that exact one, masculine","pos":"pronoun","example":"Отой is passive recognition here.","examples":["that exact one, masculine","Отой is passive recognition here."]},{"word":"ота","translation":"that exact one, feminine","pos":"pronoun","example":"Ота is passive recognition here.","examples":["that exact one, feminine","Ота is passive recognition here."]},{"word":"ото","translation":"that exact one, neuter","pos":"pronoun","example":"Ото is passive recognition here.","examples":["that exact one, neuter","Ото is passive recognition here."]},{"word":"стільки","translation":"so much; that many, recognition","pos":"pronoun","example":"Стільки is passive recognition here.","examples":["so much; that many, recognition","Стільки is passive recognition here."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"це","back":"this is; this, neuter"},{"front":"цей","back":"this, masculine"},{"front":"ця","back":"this, feminine"},{"front":"ці","back":"these, plural"},{"front":"той","back":"that, masculine"},{"front":"та","back":"that, feminine; and"},{"front":"те","back":"that, neuter"},{"front":"ті","back":"those, plural"},{"front":"чи","back":"or, in questions"},{"front":"ось","back":"here is; look"},{"front":"тут","back":"here"},{"front":"там","back":"there"},{"front":"який","back":"which; what kind, masculine"},{"front":"яка","back":"which; what kind, feminine"},{"front":"яке","back":"which; what kind, neuter"},{"front":"які","back":"which; what kind, plural"},{"front":"він","back":"he; it, masculine"},{"front":"вона","back":"she; it, feminine"},{"front":"воно","back":"it, neuter"},{"front":"вони","back":"they"},{"front":"цю книгу","back":"this book, object chunk"},{"front":"цього олівця","back":"this pencil, recognition chunk"},{"front":"оцей","back":"this exact one, masculine"},{"front":"оця","back":"this exact one, feminine"},{"front":"оце","back":"this exact one, neuter"},{"front":"отой","back":"that exact one, masculine"},{"front":"ота","back":"that exact one, feminine"},{"front":"ото","back":"that exact one, neuter"},{"front":"стільки","back":"so much; that many, recognition"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+*No workbook activities for this module; see the Lesson tab.*
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+**📝 Articles:**
+- 📄 [Dobra Forma: Demonstrative Pronouns](https://opentext.ku.edu/dobraforma/chapter/6-2/) — Open textbook explanation for demonstrative pronouns, useful after the lesson.
+- 📄 [Ukrainian Pronouns ЦЕЙ and ТОЙ: Declension Table](https://www.ukrainianlessons.com/pronouns-this-that/) — Learner-safe follow-up for цей/той forms; use only the basic A1 rows now.
+
+**🎧 Audio:**
+- 🎧 [ULP Season 1, Episode 8 — Accusative Case in Ukrainian](https://www.ukrainianlessons.com/episode8/) — Optional later listening for object chunks such as цю книгу; not required for this A1 lesson.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

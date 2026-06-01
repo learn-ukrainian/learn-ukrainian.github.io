@@ -16,6 +16,25 @@ const hashTabSyncScript = `
     }
   }
 
+  const requestedHashId = currentHashId();
+
+  function isInternalTabHash(id) {
+    return /^tab-panel-\\d+$/.test(id);
+  }
+
+  function targetHashId() {
+    const id = currentHashId();
+    if (isInternalTabHash(id) && requestedHashId && !isInternalTabHash(requestedHashId)) {
+      return requestedHashId;
+    }
+    return id;
+  }
+
+  function restoreRequestedHash(id) {
+    if (!id || currentHashId() === id || !window.history || !window.history.replaceState) return;
+    window.history.replaceState(null, '', '#' + encodeURIComponent(id));
+  }
+
   function selectPanelForTarget(target) {
     const panel = target.closest('[role="tabpanel"]');
     if (!panel || !('hidden' in panel) || !panel.hidden) return;
@@ -74,12 +93,13 @@ const hashTabSyncScript = `
   }
 
   function syncHashTab() {
-    const id = currentHashId();
+    const id = targetHashId();
     if (!id) return;
 
     const target = document.getElementById(id);
     if (!target) return;
 
+    restoreRequestedHash(id);
     selectPanelForTarget(target);
     requestAnimationFrame(() => requestAnimationFrame(() => scrollHashTarget(id)));
     [50, 150, 300, 800, 1600, 3000, 5000, 8000, 12000].forEach((delay) => {

@@ -1,0 +1,337 @@
+- id: act-1
+  type: quiz
+  title: Це as a whole sentence
+  instruction: Choose the natural Ukrainian sentence.
+  items:
+    - prompt: This is a table.
+      options:
+        - text: Це стіл.
+          correct: true
+        - text: Це є стіл.
+          correct: false
+        - text: Цей є стіл.
+          correct: false
+      explanation: Present-tense Ukrainian normally drops є in this sentence.
+    - prompt: Who is this?
+      options:
+        - text: Хто це?
+          correct: true
+        - text: Хто цей?
+          correct: false
+        - text: Хто той?
+          correct: false
+      explanation: Use the fixed question Хто це?
+    - prompt: What is this?
+      options:
+        - text: Що це?
+          correct: true
+        - text: Що ця?
+          correct: false
+        - text: Що той?
+          correct: false
+      explanation: Що це? is the safe first question.
+    - prompt: This is my backpack.
+      options:
+        - text: Це мій рюкзак.
+          correct: true
+        - text: Цей є мій рюкзак.
+          correct: false
+        - text: Це є мій рюкзак.
+          correct: false
+      explanation: Keep Це мій рюкзак as one chunk.
+- id: act-2
+  type: match-up
+  title: Noun gender and pointing word
+  instruction: Match the noun with the near pointing phrase.
+  pairs:
+    - left: стіл
+      right: цей стіл
+    - left: книга
+      right: ця книга
+    - left: вікно
+      right: це вікно
+    - left: радіо
+      right: це радіо
+    - left: ручки
+      right: ці ручки
+    - left: телефони
+      right: ці телефони
+- id: act-3
+  type: fill-in
+  title: Цей, ця, це, ці
+  instruction: Choose the near pointing word.
+  items:
+    - sentence: ___ стіл новий.
+      answer: Цей
+      options:
+        - Цей
+        - Ця
+        - Це
+      explanation: Стіл is masculine, so use цей.
+    - sentence: ___ книга цікава.
+      answer: Ця
+      options:
+        - Ця
+        - Цей
+        - Це
+      explanation: Книга is feminine, so use ця.
+    - sentence: ___ вікно велике.
+      answer: Це
+      options:
+        - Це
+        - Цей
+        - Ця
+      explanation: Вікно is neuter, so use це.
+    - sentence: ___ ручки сині.
+      answer: Ці
+      options:
+        - Ці
+        - Цей
+        - Ця
+      explanation: Ручки is plural, so use ці.
+    - sentence: ___ телефон чорний.
+      answer: Цей
+      options:
+        - Цей
+        - Ця
+        - Ці
+      explanation: Телефон is masculine.
+    - sentence: ___ сумка червона.
+      answer: Ця
+      options:
+        - Ця
+        - Це
+        - Цей
+      explanation: Сумка is feminine.
+- id: act-4
+  type: match-up
+  title: Near and far
+  instruction: Match each near phrase with the far phrase.
+  pairs:
+    - left: цей стіл
+      right: той стіл
+    - left: ця книга
+      right: та книга
+    - left: це вікно
+      right: те вікно
+    - left: ці ручки
+      right: ті ручки
+    - left: цей телефон
+      right: той телефон
+    - left: ця сумка
+      right: та сумка
+- id: act-5
+  type: quiz
+  title: Clear choices with чи
+  instruction: Choose the clear question or answer.
+  items:
+    - prompt: Which table, this one or that one?
+      options:
+        - text: Який стіл — цей чи той?
+          correct: true
+        - text: Яка стіл — ця чи та?
+          correct: false
+        - text: Яке стіл — це чи те?
+          correct: false
+      explanation: Стіл is masculine, so use який, цей, той.
+    - prompt: Which bag, this red one or that blue one?
+      options:
+        - text: Яка сумка — ця червона чи та синя?
+          correct: true
+        - text: Який сумка — цей червоний чи той синій?
+          correct: false
+        - text: Яке сумка — це червоне чи те синє?
+          correct: false
+      explanation: Сумка is feminine, so use яка, ця, та.
+    - prompt: Which window, this big one or that small one?
+      options:
+        - text: Яке вікно — це велике чи те маленьке?
+          correct: true
+        - text: Яка вікно — ця велика чи та маленька?
+          correct: false
+        - text: Який вікно — цей великий чи той маленький?
+          correct: false
+      explanation: Вікно is neuter, so use яке, це, те.
+    - prompt: Make the list clearer.
+      options:
+        - text: У кімнаті є та книга і ручка.
+          correct: true
+        - text: У кімнаті є та книга та ручка.
+          correct: false
+        - text: У кімнаті є ця книга ця ручка.
+          correct: false
+      explanation: Use і for the list when та already means that.
+- id: act-6
+  type: fill-in
+  title: Useful chunks
+  instruction: Choose the safe A1 chunk.
+  items:
+    - sentence: Я хочу ___ книгу.
+      answer: цю
+      options:
+        - цю
+        - цей
+        - це
+      explanation: Treat цю книгу as a buying chunk for now.
+    - sentence: Я хочу ___ олівець.
+      answer: цей
+      options:
+        - цей
+        - цю
+        - ці
+      explanation: Олівець is masculine; this A1 chunk stays simple.
+    - sentence: ___ книга цікава.
+      answer: Ця
+      options:
+        - Ця
+        - Це
+        - Цей
+      explanation: Before a feminine noun, use ця.
+    - sentence: ___ мій стіл.
+      answer: Це
+      options:
+        - Це
+        - Цей є
+        - Той є
+      explanation: Це мій стіл is the natural sentence.
+    - sentence: Мене ___ Марк.
+      answer: звати
+      options:
+        - звати
+        - ім'я є
+        - є ім'я
+      explanation: Use Мене звати + name.
+    - sentence: ___ 20 років.
+      answer: Мені
+      options:
+        - Мені
+        - Я маю
+        - Я є
+      explanation: Age uses the Мені ... років chunk.
+- id: act-7
+  type: quiz
+  title: Repair the trap
+  instruction: Choose the repaired sentence.
+  # wiki err-1: ❌ «Цей є мій стіл» -> ✅ «Це мій стіл»
+  # wiki err-2: ❌ «Я маю 20 років » -> ✅ «Мені 20 років»
+  # wiki err-3: ❌ «Моє ім'я є Марк » -> ✅ «Мене звати Марк»
+  # wiki err-4: ❌ «Я бачу теє хлопця» -> ✅ «Я бачу того хлопця»
+  # wiki err-5: ❌ «Я розмовляв з його» -> ✅ «Я розмовляв з ним»
+  # wiki err-6: ❌ «У тому́» -> ✅ «У то́му»
+  # wiki err-7: ❌ «Це цікавий книга» -> ✅ «Ця книга цікава»
+  items:
+    - prompt: "Fix the sentence: Цей є мій стіл."
+      options:
+        - text: Це мій стіл.
+          correct: true
+        - text: Цей є мій стіл.
+          correct: false
+        - text: Це є мій стіл.
+          correct: false
+      explanation: Use universal це and drop є.
+    - prompt: "Fix the sentence: Це цікавий книга."
+      options:
+        - text: Ця книга цікава.
+          correct: true
+        - text: Це цікавий книга.
+          correct: false
+        - text: Цей книга цікавий.
+          correct: false
+      explanation: Книга is feminine, so use ця and feminine цікава.
+    - prompt: "Fix the sentence: Я маю 20 років."
+      options:
+        - text: Мені 20 років.
+          correct: true
+        - text: Я маю 20 років.
+          correct: false
+        - text: Я є 20 років.
+          correct: false
+      explanation: Use the age chunk from the numbers module.
+    - prompt: "Fix the sentence: Моє ім'я є Марк."
+      options:
+        - text: Мене звати Марк.
+          correct: true
+        - text: Моє ім'я є Марк.
+          correct: false
+        - text: Я ім'я Марк.
+          correct: false
+      explanation: Use Мене звати + name.
+    - prompt: Choose the everyday A1-safe sentence.
+      options:
+        - text: Я бачу того хлопця.
+          correct: true
+        - text: Я бачу теє хлопця.
+          correct: false
+        - text: Я бачу той хлопця.
+          correct: false
+      explanation: Теє is poetic/passive recognition, not everyday A1 speech.
+    - prompt: Choose the later-grammar preview chunk.
+      options:
+        - text: Я розмовляю з ним.
+          correct: true
+        - text: Я розмовляю з його.
+          correct: false
+        - text: Я розмовляю з він.
+          correct: false
+      explanation: After з, the safe chunk is з ним.
+- id: act-8
+  type: error-correction
+  title: Manifest repair rows
+  instruction: Read the learner trap and choose the repaired Ukrainian chunk.
+  items:
+    - sentence: Цей є мій стіл
+      error: "❌ «Цей є мій стіл»"
+      answer: "✅ «Це мій стіл»"
+      options:
+        - "✅ «Це мій стіл»"
+        - "Це є мій стіл"
+        - "Цей мій стіл"
+      explanation: Use universal це and drop є.
+    - sentence: Я маю 20 років
+      error: "❌ «Я маю 20 років »"
+      answer: "✅ «Мені 20 років»"
+      options:
+        - "✅ «Мені 20 років»"
+        - "Я є 20 років"
+        - "Мій вік 20"
+      explanation: Age uses Мені ... років.
+    - sentence: Моє ім'я є Марк
+      error: "❌ «Моє ім'я є Марк »"
+      answer: "✅ «Мене звати Марк»"
+      options:
+        - "✅ «Мене звати Марк»"
+        - "Я ім'я Марк"
+        - "Моє ім'я Марк"
+      explanation: Names use Мене звати + name.
+    - sentence: Я бачу теє хлопця
+      error: "❌ «Я бачу теє хлопця»"
+      answer: "✅ «Я бачу того хлопця»"
+      options:
+        - "✅ «Я бачу того хлопця»"
+        - "Я бачу той хлопця"
+        - "Я бачу те хлопця"
+      explanation: Теє is poetic/passive recognition, not the everyday chunk.
+    - sentence: Я розмовляв з його
+      error: "❌ «Я розмовляв з його»"
+      answer: "✅ «Я розмовляв з ним»"
+      options:
+        - "✅ «Я розмовляв з ним»"
+        - "Я розмовляв з він"
+        - "Я розмовляв його"
+      explanation: After з, recognize the safe chunk з ним.
+    - sentence: У тому́
+      error: "❌ «У тому́»"
+      answer: "✅ «У то́му»"
+      options:
+        - "✅ «У то́му»"
+        - "У цей"
+        - "На тому"
+      explanation: This stress point is a later preview, not active A1 production.
+    - sentence: Це цікавий книга
+      error: "❌ «Це цікавий книга»"
+      answer: "✅ «Ця книга цікава»"
+      options:
+        - "✅ «Ця книга цікава»"
+        - "Цей книга цікавий"
+        - "Це цікава книга"
+      explanation: Before a feminine noun, use ця.
