@@ -1,0 +1,224 @@
+- lemma: скільки
+  translation: how many, how much
+  pos: adv
+  usage: Скільки коштує торт?
+- lemma: коштує
+  translation: costs
+  pos: verb
+  usage: Скільки коштує сумка?
+- lemma: нуль
+  translation: zero
+  pos: numeral
+  usage: Нуль дев'яносто сім.
+- lemma: один
+  translation: one, masculine
+  pos: numeral
+  usage: Один олівець.
+- lemma: одна
+  translation: one, feminine
+  pos: numeral
+  usage: Одна гривня.
+- lemma: одне
+  translation: one, neuter
+  pos: numeral
+  usage: Одне тістечко.
+- lemma: два
+  translation: two, masculine/neuter
+  pos: numeral
+  usage: Два олівці.
+- lemma: дві
+  translation: two, feminine
+  pos: numeral
+  usage: Дві ручки.
+- lemma: три
+  translation: three
+  pos: numeral
+  usage: Три роки.
+- lemma: чотири
+  translation: four
+  pos: numeral
+  usage: Чотири гривні.
+- lemma: п'ять
+  translation: five
+  pos: numeral
+  usage: П'ять зошитів.
+- lemma: шість
+  translation: six
+  pos: numeral
+  usage: Шість студентів.
+- lemma: сім
+  translation: seven
+  pos: numeral
+  usage: Сім книжок.
+- lemma: вісім
+  translation: eight
+  pos: numeral
+  usage: Вісім гривень.
+- lemma: дев'ять
+  translation: nine
+  pos: numeral
+  usage: Дев'ять років.
+- lemma: десять
+  translation: ten
+  pos: numeral
+  usage: Десять гривень.
+- lemma: одинадцять
+  translation: eleven
+  pos: numeral
+  usage: Одинадцять років.
+- lemma: дванадцять
+  translation: twelve
+  pos: numeral
+  usage: Дванадцять років.
+- lemma: тринадцять
+  translation: thirteen
+  pos: numeral
+  usage: Тринадцять зошитів.
+- lemma: чотирнадцять
+  translation: fourteen
+  pos: numeral
+  usage: Чотирнадцять гривень.
+- lemma: п'ятнадцять
+  translation: fifteen
+  pos: numeral
+  usage: П'ятнадцять гривень.
+- lemma: шістнадцять
+  translation: sixteen
+  pos: numeral
+  usage: Шістнадцять років.
+- lemma: сімнадцять
+  translation: seventeen
+  pos: numeral
+  usage: Сімнадцять гривень.
+- lemma: вісімнадцять
+  translation: eighteen
+  pos: numeral
+  usage: Їй вісімнадцять.
+- lemma: дев'ятнадцять
+  translation: nineteen
+  pos: numeral
+  usage: Дев'ятнадцять років.
+- lemma: двадцять
+  translation: twenty
+  pos: numeral
+  usage: Мені двадцять років.
+- lemma: тридцять
+  translation: thirty
+  pos: numeral
+  usage: Мені тридцять два.
+- lemma: сорок
+  translation: forty
+  pos: numeral
+  usage: Сорок п'ять.
+- lemma: п'ятдесят
+  translation: fifty
+  pos: numeral
+  usage: Сто п'ятдесят гривень.
+- lemma: шістдесят
+  translation: sixty
+  pos: numeral
+  usage: Шістдесят сім.
+- lemma: сімдесят
+  translation: seventy
+  pos: numeral
+  usage: Сімдесят гривень.
+- lemma: вісімдесят
+  translation: eighty
+  pos: numeral
+  usage: Бабусі вісімдесят років.
+- lemma: дев'яносто
+  translation: ninety
+  pos: numeral
+  usage: Нуль дев'яносто сім.
+- lemma: сто
+  translation: one hundred
+  pos: numeral
+  usage: Сто гривень.
+- lemma: двісті
+  translation: two hundred
+  pos: numeral
+  usage: Двісті гривень.
+- lemma: триста
+  translation: three hundred
+  pos: numeral
+  usage: Триста гривень.
+- lemma: чотириста
+  translation: four hundred
+  pos: numeral
+  usage: Чотириста гривень.
+- lemma: п'ятсот
+  translation: five hundred
+  pos: numeral
+  usage: П'ятсот гривень.
+- lemma: тисяча
+  translation: one thousand
+  pos: noun
+  usage: Тисяча гривень.
+- lemma: гривня
+  translation: hryvnia, singular
+  pos: noun
+  usage: Одна гривня.
+- lemma: гривні
+  translation: hryvnias, 2-4 chunk
+  pos: noun
+  usage: Дві гривні.
+- lemma: гривень
+  translation: hryvnias, 5+ chunk
+  pos: noun
+  usage: П'ять гривень.
+- lemma: копійка
+  translation: kopeck, singular
+  pos: noun
+  usage: Одна копійка.
+- lemma: копійки
+  translation: kopecks, 2-4 chunk
+  pos: noun
+  usage: Дві копійки.
+- lemma: копійок
+  translation: kopecks, 5+ chunk
+  pos: noun
+  usage: П'ять копійок.
+- lemma: рік
+  translation: year, after 1
+  pos: noun
+  usage: Мені двадцять один рік.
+- lemma: роки
+  translation: years, after 2-4
+  pos: noun
+  usage: Мені двадцять два роки.
+- lemma: років
+  translation: years, after 5+ and teens
+  pos: noun
+  usage: Мені двадцять років.
+- lemma: номер телефону
+  translation: phone number
+  pos: phrase
+  usage: Мій номер телефону — нуль дев'яносто сім.
+- lemma: мені
+  translation: to me, age chunk
+  pos: pronoun
+  usage: Мені двадцять років.
+- lemma: тобі
+  translation: to you, age chunk
+  pos: pronoun
+  usage: Скільки тобі років?
+- lemma: їй
+  translation: to her, age chunk
+  pos: pronoun
+  usage: Їй вісімнадцять.
+- lemma: пів на шосту
+  translation: half past five, time chunk
+  pos: phrase
+  usage: Зараз пів на шосту.
+- lemma: двоє
+  translation: two people/things, passive recognition
+  pos: numeral
+  usage: Двоє is passive recognition only here.
+- lemma: троє
+  translation: three people/things, passive recognition
+  pos: numeral
+  usage: Троє is passive recognition only here.
+- lemma: четверо
+  translation: four people/things, passive recognition
+  pos: numeral
+  usage: Четверо is passive recognition only here.
