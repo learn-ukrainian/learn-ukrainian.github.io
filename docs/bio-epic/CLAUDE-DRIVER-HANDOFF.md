@@ -40,6 +40,13 @@
 > with **Gemini Pro as a secondary when a key is fresh**. (DeepSeek is the project's standard VESUM content
 > reviewer per MEMORY #M0.) When the user lifts the codex pause, codex returns as writer/reviewer too.
 >
+> **💰 DEEPSEEK TOPPED UP (user 2026-06-01) — lots of deepseek-pro AND deepseek-fast now. LEAN ON IT.**
+> Cross-family review default = **deepseek-pro hermes** (`--agent deepseek --model deepseek-v4-pro`, with
+> the `sources` MCP: verify_words×N, query_cefr_level, check_russian_shadow) for content/VESUM accuracy;
+> **deepseek-fast** (`--model deepseek-v4-flash`) for code/PR-diff + lighter passes. This makes the
+> claude-writer → deepseek-reviewer pipeline fully reliable with NO Gemini-rotation dependency
+> (cross-family still holds: claude writer ≠ deepseek reviewer). Gemini = nice-to-have secondary only.
+>
 > **CURSOR is still available** (separate quota from codex) as a THROUGHPUT-SUPPLEMENT writer — but ONLY
 > with **`--model composer-2.5` pinned, NEVER `--model auto`** (auto re-routes per dispatch to weak models
 > → the Russianisms / unparseable-YAML / editorial-leak inconsistency that got the cursor batch rejected;
@@ -59,8 +66,25 @@ modules, 181→310 position==sequence). 0 dispatches in flight at handoff time.*
 - **248–259 gap CLOSED this session** (the last gap). Merges: #2505 (248-251 codex), #2507 (252-255
   claude), #2506 (258-259 claude), #2508 (256-257 claude). All cross-family Gemini-Pro reviewed; review
   nits applied + VESUM/web-verified before merge.
-- **Phase 3 registration: DONE (this PR).** curriculum.yaml `levels.bio.modules` went 180 → 310; the new
+- **Phase 3 registration: DONE.** curriculum.yaml `levels.bio.modules` went 180 → 310; the new
   181–310 are position==sequence aligned. `validate_plan_ordering.py` is NOT in CI (advisory).
+- **GitHub hygiene DONE (2026-06-01):** closed 12 completed issues #2318–2329 (Phase 1 research, Phase 2
+  plans, Phase 3 registration) with evidence; updated epic #2309. Open bio issues now = only unfinished
+  work: Phase-4 wikis #2330–2335, Phase-5 quality #2336–2338, #2513, cross-track followups #2347/2348/2353.
+
+## ⏳ IN-FLIGHT AT HANDOFF (2026-06-01) — #2513 rebuild wave 1
+**#2513 (pre-existing original-1-180 debt) Part 1 DONE** (PR #2514: 11 metadata fixes; ordering 23→9).
+**Part 2 (9 Kulish-content-dup rebuilds) IN PROGRESS** — 3 **claude** dispatches running when I handed off:
+- watcher: Monitor on `/api/delegate/active` for task-ids `bio-rebuild-mykola-zerov`,
+  `bio-rebuild-oleksa-slisarenko`, `bio-rebuild-anatol-petrytskyi` (branches `claude/bio-rebuild-<slug>`).
+  **RESUME:** `curl /api/delegate/active`; when terminal, each opened a PR (or finalize: gate → DeepSeek-pro
+  cross-review → merge). Read the produced dossier + plan (content, not just validators).
+- **6 still QUEUED** (research-grounded rebuild, claude writer + deepseek review, NO codex): maik-yohansen
+  (105), dmytro-falkivskyi (110), yevhen-pluzhnyk (111), hryhorii-kosynka (112), valerian-pidmohylnyi (115),
+  heo-shkurupii (116). Brief pattern: `/tmp/brief-rebuild-<slug>.md` (this session) = research via
+  `mcp__sources` → dossier `docs/research/bio/<slug>.md` → plan (overwrite the corrupt Kulish-dup file),
+  module `bio-NNN`, seq = registered position.
+- **DONE predicate for #2513:** `validate_plan_ordering.py` → **0 bio errors** (currently 9).
 
 ## ▶ KEY CORRECTION (2026-06-01) — ihor-kalynets is REALLY dead; prior "fabrication" finding was WRONG
 - The previous handoff claimed **cursor "FABRICATED a death date for ihor-kalynets (250); he is ALIVE
