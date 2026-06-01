@@ -25,21 +25,30 @@
 > **⛔ NO CODEX FOR BIO (user 2026-06-01) — STANDING UNTIL THE USER LIFTS IT.** All codex quota is
 > reserved for building A1. Do **NOT** `delegate.py dispatch --agent codex` (or `ab ask-codex`) for any
 > bio work until the user explicitly says codex is available again. **This is fully manageable without
-> codex** — proof: 8 of this session's 12 plans (252–259) were claude-tools-written + Gemini-Pro-reviewed,
-> zero codex. **Without-codex pipeline:** WRITER = `--agent claude` (claude-tools; primary, proven) OR
-> `--agent gemini`; REVIEWER = Gemini Pro `ab ask-gemini --model gemini-3.1-pro-preview` (cross-family vs a
-> claude writer) — if the writer is Gemini, use claude or deepseek as the cross-family reviewer instead.
-> DeepSeek is also available for review. Mechanical/doc work = claude inline. **When the user lifts this,
-> codex returns as a valid writer/reviewer.**
+> codex** — proof: 8 of this session's 12 plans (252–259) were claude-tools-written, zero codex.
+>
+> **WRITER = `--agent claude` (claude-tools) is the STRONG PRIMARY (user 2026-06-01): "extra Claude
+> resources" — lean on it.** Weekly Claude ~61% used + Anthropic doubled limits to mid-July. Fan out a
+> CLAUDE writer fleet (multiple parallel `--agent claude` dispatches) for content-scale work. cursor
+> (`--model composer-2.5` ONLY) is a throughput supplement; codex is OFF.
+>
+> **⚠ GEMINI IS METERED + RATE-LIMITED, NOT unmetered (user 2026-06-01 correction).** The user rotates
+> Gemini keys/accounts often; I MUST handle Gemini failures gracefully — on rate-limit/SIGTERM, FALL BACK
+> to **DeepSeek**, never block. Always call Gemini via `ab ask-gemini` (NOT `delegate dispatch --agent
+> gemini` — #2454 SIGTERM-at-87s). So: **REVIEWER (cross-family vs a claude writer) = DeepSeek-pro hermes
+> as the RELIABLE DEFAULT** (`--agent deepseek --model deepseek-v4-pro`, off-seat, not quota-constrained),
+> with **Gemini Pro as a secondary when a key is fresh**. (DeepSeek is the project's standard VESUM content
+> reviewer per MEMORY #M0.) When the user lifts the codex pause, codex returns as writer/reviewer too.
 >
 > **CURSOR is still available** (separate quota from codex) as a THROUGHPUT-SUPPLEMENT writer — but ONLY
 > with **`--model composer-2.5` pinned, NEVER `--model auto`** (auto re-routes per dispatch to weak models
 > → the Russianisms / unparseable-YAML / editorial-leak inconsistency that got the cursor batch rejected;
 > note the ihor-kalynets "fabrication" was NOT real, see KEY CORRECTION). composer-2.5 is code-tuned, so
 > for Ukrainian register/accuracy **claude-tools remains the better primary**; cursor+composer is a
-> supplement, and STILL needs the Gemini-Pro cross-family review (cursor/composer is its own family).
-> Bottom line: the remaining bio work (landing page, Phase-5 cleanup, linter, wiki, decolonization pass)
-> does NOT need a writer fleet — claude inline + Gemini + DeepSeek cover it without codex OR cursor.
+> supplement, and STILL needs a cross-family review.
+> Bottom line: landing page / Phase-5 cleanup / linter are mechanical (claude inline). **Phase-4 WIKIS
+> ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
+> fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
 *Last updated: 2026-06-01 (late). **Phase 2 plan build COMPLETE: main has all 130 new plans, 181→310
 contiguous (310 bio plans total).** Phase 3 registration DONE in this PR (curriculum.yaml bio = 310
@@ -102,8 +111,17 @@ driver applies fixes deterministically → CI green (blocking; `review / review`
 3. **Deterministic pre-review linter** (`scripts/validate/...`): russianism/calque list (арест, постум,
    коерція, голодовка, інакомисляч, місцеві власті, термін-for-sentence) + mixed Latin-in-Cyrillic
    (excluding URLs) + `Дебат` singular. Run BEFORE Gemini to cut review rounds and catch the defects above.
-4. **Phases 4–5 per epic #2309:** wiki articles (Gemini), decolonization quality pass (DeepSeek-pro
-   hermes), cross-track `connects_to` verification (hist-/lit-/istorio- forward-refs not CI-gated).
+4. **Phase 4 — WIKI ARTICLES (writer-fleet job, ~130 articles for bio-181..310, ~285K words):**
+   Pipeline = `scripts/wiki/compile.py --track bio --slug <slug> --writer claude [--review]`
+   (writer options are only `{gemini, claude, gpt-5.5}`; gpt-5.5=codex=PAUSED; **use `--writer claude`** —
+   strong primary, extra Claude resources). **Run a CLAUDE writer fleet** (parallel per-slug, or
+   `--all --track bio --limit N`), capped at the in-flight dispatch limit; Monitor on `/api/delegate/active`.
+   The original 180 bio wikis are 100% done (~400K w); only 181..310 remain. **NOTE:** wiki *discovery*
+   may still show 180 until it re-reads the updated curriculum.yaml (310) — confirm `compile.py --track
+   bio --list` surfaces 181..310 first; if not, find/refresh the discovery source. Cross-review each
+   article with **DeepSeek** (claude writer → non-claude reviewer); Gemini only if a fresh key is at hand.
+5. **Phase 5 quality:** decolonization pass (DeepSeek-pro hermes), cross-track `connects_to` verification
+   (hist-/lit-/istorio- forward-refs not CI-gated).
 
 ## ▶ LOOSE ENDS
 - `drai-khmara-ref-title` worktree loose end: **RESOLVED/obsolete** — the ref-title fix is already on main
