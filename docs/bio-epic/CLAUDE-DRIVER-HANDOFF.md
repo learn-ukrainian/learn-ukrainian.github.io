@@ -61,7 +61,13 @@
 contiguous (310 bio plans total).** Phase 3 registration DONE in this PR (curriculum.yaml bio = 310
 modules, 181→310 position==sequence). **UPDATE (2026-06-01, later): #2513 fully CLOSED — all 9
 Kulish-content-dup rebuilds merged (#2516–2525); `validate_plan_ordering.py` → 0 bio errors. 0 dispatches
-in flight. Next bio work = NEXT ACTIONS #1 (landing page 180→310) + #3 (pre-review linter) + #4 (Phase-4 wikis).** *
+in flight. Next bio work = NEXT ACTIONS #1 (landing page 180→310) + #3 (pre-review linter) + #4 (Phase-4 wikis).**
+**UPDATE (2026-06-01, session 3): Phase-4 PREREQUISITE DONE — wiki discovery bug fixed (branch
+`bio/fix-wiki-discovery`, this PR): `compile.py --track bio --list` now surfaces all 310 (was 180);
+`scripts/wiki/sources.py::list_discovery_slugs` reconciles instead of short-circuiting; hermetic regression
+test added; wiki suite 75 passed. NEXT ACTION on resume = run the Phase-4 discovery pipeline for 181..310,
+then the CLAUDE wiki writer fleet (DeepSeek cross-review). Remaining keystone NEXT ACTIONS #3 (seminar-quality
+pre-review linter for #2535) still open. 0 dispatches in flight.** *
 
 ## ▶ CURRENT STATE (2026-06-01)
 - **SESSION 2 (later, 2026-06-01) shipped:** #2513 fully closed (9 Kulish-dup rebuilds, all DeepSeek
@@ -210,17 +216,20 @@ the merged plans; NOT deleted (#M-10 — never destroy unmerged work without the
    strong primary, extra Claude resources). **Run a CLAUDE writer fleet** (parallel per-slug, or
    `--all --track bio --limit N`), capped at the in-flight dispatch limit; Monitor on `/api/delegate/active`.
    The original 180 bio wikis are 100% done (~400K w); only 181..310 remain.
-   **⛔ PHASE-4 PREREQUISITE — DISCOVERY BUG DIAGNOSED (2026-06-01), fix this FIRST:** wiki discovery reads
-   `curriculum/l2-uk-en/bio/discovery/*.yaml` (180 files = the original 180). The 130 new figures (181..310)
-   have NO discovery file → `compile.py --track bio --list` shows **180, not 310** (verified: mykhail-semenko,
-   nariman-dzhelial MISSING; zerov/pidmohylnyi/shkurupii appear only because their seq is in the 1..180 range).
-   ROOT CAUSE: `scripts/wiki/sources.py::list_discovery_slugs` (~lines 233-247) **returns early when the
-   discovery dir already has ANY .yaml** (`if slugs: return slugs`) — so it never reconciles newly-added plans.
-   `_auto_generate_discovery` already skips per-file-if-exists, so the FIX = make `list_discovery_slugs`
-   reconcile (always generate the MISSING plan slugs) instead of short-circuiting. Small shared-infra PR
-   (`scripts/wiki/sources.py`) + a test asserting all current plan slugs surface; #M-7 run pytest. THEN run
-   the claude wiki fleet (`--all --track bio --limit N` or per-slug). Cross-review each article with **DeepSeek**
-   (claude writer → non-claude reviewer); Gemini only if a fresh key is at hand.
+   **✅ PHASE-4 PREREQUISITE — DISCOVERY BUG FIXED (PR `bio/fix-wiki-discovery`, this batch).**
+   Was: wiki discovery reads `curriculum/l2-uk-en/bio/discovery/*.yaml` (180 files = the original 180); the 130
+   new figures (181..310) had NO discovery file → `compile.py --track bio --list` showed **180, not 310**.
+   ROOT CAUSE: `scripts/wiki/sources.py::list_discovery_slugs` returned early when the discovery dir already had
+   ANY .yaml (`if slugs: return slugs`), never reconciling newly-added plans. FIX (shipped): `list_discovery_slugs`
+   now ALWAYS runs `_auto_generate_discovery` (which skips per-file-if-exists, so existing files are untouched and
+   only the missing ones are created), then returns the full glob. Verified: `--list` now prints **310 modules**
+   and surfaces mykhail-semenko / nariman-dzhelial / dmytro-chyzhevskyi. Hermetic regression test added
+   (`tests/test_wiki_sources.py::test_list_discovery_slugs_reconciles_new_plans`); full wiki suite 75 passed.
+   NOTE: the auto-generated stubs are EMPTY fallbacks (`rag_chunks: []`, `warning: "Auto-generated from plan"`) —
+   NOT committed in the fix PR; they regenerate on compile. Real per-figure discovery data (RAG chunks) for
+   181..310 is a Phase-4 sub-step (run the discovery pipeline, then commit those). THEN run the claude wiki fleet
+   (`--all --track bio --limit N` or per-slug). Cross-review each article with **DeepSeek** (claude writer →
+   non-claude reviewer); Gemini only if a fresh key is at hand.
 5. **Phase 5 quality:** decolonization pass (DeepSeek-pro hermes), cross-track `connects_to` verification
    (hist-/lit-/istorio- forward-refs not CI-gated).
 
