@@ -1,0 +1,282 @@
+- id: act-1
+  type: match-up
+  title: Reading line to skill
+  instruction: Match each checkpoint line with the skill it proves.
+  pairs:
+    - left: Я прокидаюся о сьомій.
+      right: reflexive routine
+    - left: Я люблю читати.
+      right: like + infinitive
+    - left: Вона працює в школі.
+      right: Group One -ува-
+    - left: Ти пишеш гарно.
+      right: писати change
+    - left: Вони роблять швидко.
+      right: Group Two plural
+    - left: Я можу готувати.
+      right: modal + infinitive
+    - left: Коли ти можеш?
+      right: question word
+    - left: Ніхто не читає.
+      right: negative
+- id: act-2
+  type: true-false
+  title: Action diagnostics
+  instruction: Decide whether each line uses the checkpoint pattern safely.
+  items:
+    - statement: Я працюю кожного дня.
+      correct: true
+      explanation: Працюю is the я form of працювати.
+    - statement: Вона працює в школі.
+      correct: true
+      explanation: Працювати changes to працює with вона.
+    - statement: Ви пишите дуже гарно.
+      correct: false
+      explanation: Use Ви пишете дуже гарно.
+    - statement: Вони роботь швидко.
+      correct: false
+      explanation: Use Вони роблять швидко.
+    - statement: Він хоче кави.
+      correct: true
+      explanation: Хоче is the safe він form.
+    - statement: Я є читаю книгу.
+      correct: false
+      explanation: Use Я читаю книгу.
+    - statement: Я прокидаюся о сьомій.
+      correct: true
+      explanation: Прокидаюся is a safe -ся routine form.
+    - statement: Ніхто не читає.
+      correct: true
+      explanation: Keep не before the verb.
+- id: act-3
+  type: group-sort
+  title: Skill stations
+  instruction: Sort each chunk by the skill it checks.
+  groups:
+    - name: Group One
+      items:
+        - я читаю
+        - ти пишеш
+        - вони працюють
+        - ми малюємо
+    - name: Group Two
+      items:
+        - я говорю
+        - ти говориш
+        - вони роблять
+        - ви бачите
+    - name: Modal + infinitive
+      items:
+        - хочу читати
+        - можу готувати
+        - мушу працювати
+        - може допомагати
+    - name: Question words
+      items:
+        - де ти працюєш?
+        - коли ти можеш?
+        - що ти читаєш?
+        - як ми говоримо?
+- id: act-4
+  type: fill-in
+  title: Roommate dialogue gaps
+  instruction: Complete the dialogue with the checkpoint form.
+  items:
+    - sentence: "Олег: Коли ти ___?"
+      answer: прокидаєшся
+      options:
+        - прокидаєшся
+        - працюєш
+        - пишеш
+      explanation: The question asks about the morning routine.
+    - sentence: "Марина: Я ___ о сьомій."
+      answer: прокидаюся
+      options:
+        - прокидаюся
+        - читаю
+        - роблю
+      explanation: With я, use прокидаюся.
+    - sentence: "Олег: Де ти ___?"
+      answer: працюєш
+      options:
+        - працюєш
+        - можеш
+        - хочеш
+      explanation: Де asks for the work place.
+    - sentence: "Марина: Я ___ в школі."
+      answer: працюю
+      options:
+        - працюю
+        - працює
+        - працюємо
+      explanation: With я, use працюю.
+    - sentence: "Олег: Ти ___ читати ввечері?"
+      answer: любиш
+      options:
+        - любиш
+        - читаєш
+        - робиш
+      explanation: Любиш + infinitive asks about liking an action.
+    - sentence: "Марина: Не можу зараз, ___ працювати."
+      answer: мушу
+      options:
+        - мушу
+        - читаю
+        - говорю
+      explanation: Мушу + infinitive means I have to.
+- id: act-5
+  type: odd-one-out
+  title: Find the form that does not fit
+  instruction: Choose the chunk that belongs to a different checkpoint skill.
+  items:
+    - words:
+        - я читаю
+        - ти читаєш
+        - вони читають
+        - ти говориш
+      answer: ти говориш
+      explanation: Ти говориш is Group Two; the others are Group One читати.
+    - words:
+        - хочу читати
+        - можу готувати
+        - мушу працювати
+        - я читаю
+      answer: я читаю
+      explanation: Я читаю is a person form, not modal + infinitive.
+    - words:
+        - хто
+        - коли
+        - куди
+        - працюю
+      answer: працюю
+      explanation: Працюю is a verb form; the others are question words.
+    - words:
+        - я прокидаюся
+        - ти вмиваєшся
+        - вона одягається
+        - я снідаю
+      answer: я снідаю
+      explanation: Снідаю is not a -ся verb.
+- id: act-6
+  type: unjumble
+  title: Rebuild checkpoint lines
+  instruction: Put the words in a safe A1.3 order.
+  items:
+    - words:
+        - Я
+        - люблю
+        - читати
+      answer: Я люблю читати
+    - words:
+        - Вона
+        - працює
+        - в школі
+      answer: Вона працює в школі
+    - words:
+        - Ми
+        - говоримо
+        - українською
+      answer: Ми говоримо українською
+    - words:
+        - Коли
+        - ти
+        - можеш
+      answer: Коли ти можеш
+    - words:
+        - Я
+        - мушу
+        - працювати
+      answer: Я мушу працювати
+    - words:
+        - Вони
+        - роблять
+        - швидко
+      answer: Вони роблять швидко
+- id: act-7
+  type: quiz
+  title: Choose the answer job
+  instruction: Choose the line that answers the question.
+  items:
+    - prompt: "Коли ти прокидаєшся?"
+      options:
+        - text: О сьомій.
+          correct: true
+        - text: У школі.
+          correct: false
+        - text: Українською.
+          correct: false
+      explanation: Коли asks about time.
+    - prompt: "Де ти працюєш?"
+      options:
+        - text: В офісі.
+          correct: true
+        - text: О восьмій.
+          correct: false
+        - text: Тому що мушу.
+          correct: false
+      explanation: Де asks about place.
+    - prompt: "Що ти любиш?"
+      options:
+        - text: Читати.
+          correct: true
+        - text: Удома.
+          correct: false
+        - text: Завтра.
+          correct: false
+      explanation: Що asks for the action or thing.
+    - prompt: "Як ми говоримо?"
+      options:
+        - text: Українською.
+          correct: true
+        - text: Увечері.
+          correct: false
+        - text: У школі.
+          correct: false
+      explanation: Як asks how.
+- id: act-8
+  type: fill-in
+  title: Repair by building the safe line
+  instruction: Build the corrected line from the checkpoint prompt.
+  items:
+    - sentence: "I work every day: Я ___ кожного дня."
+      answer: працюю
+      options:
+        - працюю
+        - читаю
+        - пишу
+      explanation: Repair for Я працювати кожного дня.
+    - sentence: "She works at school: Вона ___ в школі."
+      answer: працює
+      options:
+        - працює
+        - читає
+        - готує
+      explanation: "Repair for <!-- bad -->Вона працюває в школі<!-- /bad -->."
+    - sentence: "I read a book: Я ___ книгу."
+      answer: читаю
+      options:
+        - читаю
+        - пишу
+        - бачу
+      explanation: Repair for Я є читаю книгу.
+    - sentence: "You write very nicely: Ви ___ дуже гарно."
+      answer: пишете
+      options:
+        - пишете
+        - читаєте
+        - говорите
+      explanation: "Repair for <!-- bad -->Ви пишите дуже гарно<!-- /bad -->."
+    - sentence: "They work fast: Вони ___ швидко."
+      answer: роблять
+      options:
+        - роблять
+        - говорять
+        - читають
+      explanation: "Repair for <!-- bad -->Вони роботь швидко<!-- /bad -->."
+    - sentence: "He wants coffee: Він ___ кави."
+      answer: хоче
+      options:
+        - хоче
+        - любить
+        - п'є
+      explanation: "Repair for <!-- bad -->Він хотіє кави<!-- /bad -->."
