@@ -14,128 +14,89 @@
 > `docs/session-state/*`), SKIP IT SILENTLY. My ONLY state file is THIS one.
 >
 > **⭐ MERGE GRANT (user 2026-05-31):** Claude bio-driver is authorized to **merge bio-track PRs to main**
-> (incl. Phase-3 `curriculum.yaml`). **HARD CONDITION:** every bio PR first passes review from a
-> *different proven reviewer family than the writer*. **HUMAN-NOD WAIVED** — the gate is ACCURACY +
-> honest decolonized NPOV verified by cross-family review, NOT political sign-off. Once review=ship +
-> CI green + scope-clean → MERGE (OUN/UPA, clergy, war-dead included; tell the truth in every direction).
-> Escalate to the human ONLY on a GENUINE defect (fabrication / ghost-source / real NPOV failure) and
-> fix-forward. Non-bio main = orchestrator-only.
+> (incl. Phase-3 `curriculum.yaml`). **HARD CONDITION:** every bio PR carrying NEW Ukrainian content first
+> passes review from a *different proven reviewer family than the writer* (Gemini Pro = cross-family for
+> claude/codex writers). **HUMAN-NOD WAIVED** — the gate is ACCURACY + honest decolonized NPOV verified by
+> cross-family review, NOT political sign-off. Once review=ship + CI green (blocking) + scope-clean →
+> MERGE (OUN/UPA, clergy, war-dead included; tell the truth in every direction). Mechanical PRs (curriculum
+> registration, this handoff) need no linguistic cross-review — the content was reviewed at plan-merge.
+> Escalate to the human ONLY on a GENUINE defect. Non-bio main = orchestrator-only.
 
-*Last updated: 2026-06-01. Phase 2 plan build ~96% done: main has **298 bio plans, contiguous 181→247**
-+ slice 260→310. **Only 248–259 (12 plans) remain to build**, then Phase 3 registration. 0 dispatches in
-flight at handoff time; no temp bio worktrees except this handoff branch.*
+*Last updated: 2026-06-01 (late). **Phase 2 plan build COMPLETE: main has all 130 new plans, 181→310
+contiguous (310 bio plans total).** Phase 3 registration DONE in this PR (curriculum.yaml bio = 310
+modules, 181→310 position==sequence). 0 dispatches in flight at handoff time.*
 
 ## ▶ CURRENT STATE (2026-06-01)
+- **origin/main: 310 bio plans, 181→310 contiguous (130/130). Phase 2 plan-writing is FINISHED.**
+- **248–259 gap CLOSED this session** (the last gap). Merges: #2505 (248-251 codex), #2507 (252-255
+  claude), #2506 (258-259 claude), #2508 (256-257 claude). All cross-family Gemini-Pro reviewed; review
+  nits applied + VESUM/web-verified before merge.
+- **Phase 3 registration: DONE (this PR).** curriculum.yaml `levels.bio.modules` went 180 → 310; the new
+  181–310 are position==sequence aligned. `validate_plan_ordering.py` is NOT in CI (advisory).
 
-- **origin/main:** 298 bio plans. Contiguous **181→247**. Single remaining gap: **248–259** (12 plans).
-  Slice **260→310** fully merged. Phase 3 registration is BLOCKED only until 248–259 lands (registration
-  must be contiguous — see Phase 3).
-- **Merged this session (23 plans):** gap-fill 220–224 (#2498), 229–232 (#2496), then 233–237 (#2499),
-  238–242 (#2500), 243–247 (#2501). All cross-family reviewed by Gemini Pro, all fixes VESUM-verified.
-- **248–252 NOT merged — REJECTED** (closed PR #2503): cursor `--model auto` fabricated a death (see
-  FINDINGS ⛔). **Build 248–259 fresh next session with claude-tools + codex** (writer switch).
+## ▶ KEY CORRECTION (2026-06-01) — ihor-kalynets is REALLY dead; prior "fabrication" finding was WRONG
+- The previous handoff claimed **cursor "FABRICATED a death date for ihor-kalynets (250); he is ALIVE
+  (b.1939)"** and used it as the headline reason for the cursor→claude/codex writer switch. **That claim
+  is FALSE.** Ihor Kalynets **really died 28 June 2025 in Lviv, aged 85** (web-verified: RBC-Ukraine,
+  Hromadske, Detector Media, Radio Svoboda, ZAXID, Babel, Glavcom, Fakty + uk.wikipedia; announced by his
+  daughter Dzvinka Kalynets-Mamchur). The dossier `docs/research/bio/ihor-kalynets.md` correctly records
+  the death (ESU updated + KHPG memorial). Cursor wrote a TRUE fact; the rejecting driver pattern-matched
+  it to the death-on-living failure mode without web-checking. **Lesson:** before rejecting a "death on a
+  living person" as fabrication, WEB-VERIFY (recent deaths post-date older reference works). The rebuilt
+  bio-250 plan (#2505) records the real 2025-06-28 death with an `[!epistemic-humility]` note. The
+  writer-switch still stands on cursor's OTHER real defects (unparseable YAML, Russianisms, editorial leaks).
+
+## ▶ THE PROVEN PIPELINE (what worked this session — replicate)
+WRITER = claude-tools / codex (NOT cursor for bio) → driver deterministic gate → REVIEWER = Gemini Pro
+(cross-family, via `ab ask-gemini --task-id review-bio-NNN --model gemini-3.1-pro-preview --review
+--stdout-only --no-github --output-path <f> - < <prompt>`; INLINE the plan YAML into the review prompt —
+do NOT rely on Gemini file-reads) → driver VESUM/web-verifies each FIX (reject false positives!) →
+driver applies fixes deterministically → CI green (blocking; `review / review` = advisory) → driver MERGES.
+- **Driver gate (deterministic):** strict key-set == exemplar `mykhailo-drai-khmara.yaml`; config gate
+  (wt=5200, outline [400,1000,1200,1600,1000]); 7 vocab; 4-6 activities w/ `after_section` matching a real
+  section; module/sequence; **mixed-script scan EXCLUDING URLs** (uk.wikipedia.org paths legitimately mix
+  Latin domain + Cyrillic title — do NOT flag those); russianism scan.
+- **#M-4 wins this session:** (1) Gemini false-positively "fixed" «арешт»→«арешт» claiming it read «арест»
+  — byte-check (`xxd`: ш=d188 not с=d181) refuted it, no change applied. (2) Verified term→строк (SUM:
+  «відсидів строк»), суперлатив→твердження (Anglicism), Огладів→Оглядів (place name, web-verified) BEFORE
+  applying. Always verify a reviewer's fix before applying it.
+- **Dispatch:** `delegate.py dispatch --agent {claude|codex} --task-id bio-blk5-NNN-MMM --prompt-file <f>
+  --mode danger [--model gpt-5.5] --effort xhigh --worktree --base main`. Cancel a runaway with
+  `delegate.py cancel <task-id>` (positional). Watch via Monitor poll-loop on `/api/delegate/active`.
 
 ## ▶ NEXT ACTIONS (in order)
-1. **Build 248–259** (12 plans) via the PROVEN PIPELINE below — **WRITER = claude-tools + codex, NOT
-   cursor** (user 2026-06-01 writer switch; see CURSOR REJECTION in FINDINGS). 1 extra Claude slot is OK.
-   Slugs (allocation SSOT `docs/bio-epic/phase-2-sequence-allocation.yaml`):
-   248 leonid-pliushch · 249 nina-strokata · 250 ihor-kalynets · 251 iryna-kalynets ·
-   252 nadiia-svitlychna · 253 sviatoslav-karavanskyi · 254 mykhailo-horyn · 255 bohdan-horyn ·
-   256 oksana-meshko · 257 yurii-shukhevych · 258 danylo-shumuk · 259 ivan-kandyba.
-   (Dissidents/Helsinki/political-prisoners; yurii-shukhevych = son of UPA cmdr Roman Shukhevych —
-   handle NPOV carefully. All 12 dossiers present. **⚠ ihor-kalynets (250) is ALIVE, b.1939 — NO death.**)
-   NOTE: cursor built 248–252 on **CLOSED/REJECTED PR #2503** (branch `cursor/bio-blk5-248-252` kept for
-   reference only) — do NOT reuse it; **rebuild 248–252 fresh** with the new writer.
-2. **Phase 3 registration** (once 181→310 contiguous): append new slugs to `levels.bio.modules` in
-   `curriculum/l2-uk-en/curriculum.yaml` in sequence order (currently 180 entries, last
-   `anatolii-dimarov`). The list is a FLAT ordered slug list; position i (1-indexed) MUST equal each
-   plan's `sequence` field — `scripts/validate/validate_plan_ordering.py` enforces this, so NO GAPS
-   (that's why registration waits for contiguity). Verify with that script. NOT in CI (orphan = warning),
-   so it's a follow-on, not a merge blocker.
-3. **Landing page 180→310:** `starlight/src/content/docs/bio/index.mdx` — hardcoded array of
-   `{num,title,slug,status}` cards (last num:180 anatolii-dimarov). Append 181..310 from curriculum.yaml
-   + plan titles.
-4. **Add deterministic linter gate** (see FINDINGS) + Phase-5 cleanup of pre-existing defects.
-
-## ▶ THE PROVEN PIPELINE (replicate exactly — this is what works)
-WRITER = cursor (`--model auto`) → driver gate → REVIEWER = Gemini Pro (cross-family) → driver applies
-VESUM-verified fixes → driver MERGES.
-1. **Brief** (fresh heredoc per batch): `/tmp/brief-bio-blk5-NNN-MMM.md`. Include #M-4 preamble; the
-   explicit slug→seq table; "MIRROR exemplar `curriculum/l2-uk-en/plans/bio/mykhailo-drai-khmara.yaml`";
-   HARD constraints (wt=5200, content_outline [400,1000,1200,1600,1000], 5 sections, 7 vocab, 4-6
-   activities with real `after_section` anchors, level/phase BIO, cefr_min C1, pedagogy CBI); LANGUAGE
-   HYGIENE list (write `арешт` not «арест», `посмертний` not «постумний», `примус` not «коерція»,
-   `довічне заслання` not «вічне», `Дебати` not «Дебат», `голодування` not «голодовка», `інакодумець`
-   not «інакомисляч», NO Latin-in-Cyrillic, "dialect ≠ language"); "delete any generator scripts before
-   commit"; "you are ALREADY in the worktree, do NOT git worktree add"; numbered steps (write→validate→
-   `git add` ONLY the N plans→`commit --no-verify`→`push HEAD:cursor/bio-blk5-NNN-MMM`→`gh pr create`→
-   NO auto-merge).
-2. **Fire:** `.venv/bin/python scripts/delegate.py dispatch --agent cursor --task-id bio-blk5-NNN-MMM
-   --prompt-file <brief> --mode danger --model auto --worktree --base main`.
-3. **Watch:** Bash `run_in_background` until the task leaves `/api/delegate/active` (cursor marks
-   status=`failed` with returncode 0 even on success — it writes+commits but does NOT push/PR; that's
-   normal, driver finalizes).
-4. **Driver gate** (deterministic, on the worktree files): strict key-set == exemplar; config gate
-   (wt≥5000 AND outline sum≥wt); mixed-script scan (Latin letter inside a Cyrillic word — already caught
-   `вітражa`); scope = exactly N `A` plan files (no stray `scripts/` generators).
-5. **Finalize:** `git push -u origin HEAD:<branch>` + `gh pr create` (cursor usually didn't).
-6. **Cross-family review:** `ab ask-gemini --task-id review-bio-NNN-MMM --model gemini-3.1-pro-preview
-   --review --stdout-only - < <review-brief>` run in background (NOT `delegate.py dispatch --agent gemini`
-   — that hits the #2454 SIGTERM-at-87s bug). Review brief points Gemini at the worktree plan paths;
-   dimensions = factual accuracy / decolonized NPOV / source integrity / language hygiene.
-7. **Apply fixes:** for each Gemini FIX/BLOCK, VESUM-verify (`mcp__sources__verify_words`) BEFORE applying
-   (#M-4 — never apply an unverified "fix"); verify names against the DOSSIER (`docs/research/bio/{slug}.md`).
-   Apply deterministically (python str.replace with per-string assert), re-scan, `commit --no-verify` +
-   push to update the PR. NOTE: watch case/gender agreement (e.g. `повоєнну коерцію`→`повоєнний примус`);
-   line-folded YAML scalars need the embedded `\n    ` in the match.
-8. **Merge:** when blocking CI green (`Curriculum Plans`+`Test (pytest)`+`Activities & Vocab`+`Content
-   Gate`s pass; `review / review` = advisory, non-blocking; state UNSTABLE is fine if only that fails) AND
-   Gemini ship AND scope clean → `gh pr merge N --squash --delete-branch`. Then `git worktree remove
-   --force <wt>` + `git branch -D <branch>` + `git worktree prune`. (Local branch delete fails until the
-   worktree is removed — remove worktree first.)
-
-## ▶ KEY FINDINGS (2026-06-01 — read before building 248–259)
-- **⛔ CURSOR `--model auto` REJECTED for bio (user 2026-06-01) — it FABRICATED.** The 248–252 batch
-  (closed PR #2503) invented a **death date for ihor-kalynets** ("Смерть 28 червня 2025 у Львові") and
-  ghost-sourced it to ESU/KHPG — he is ALIVE (b.1939). A #M-4 / DEATH-ON-LIVING catastrophic violation.
-  Same batch: unparseable YAML (3 unquoted-colon titles), 3 editorial-note leaks ("Block G", "classroom",
-  "у завданні"), and many Russianisms. **Root cause:** `--model auto` re-routes per dispatch, hitting weak
-  models. **Next writer = claude-tools + codex.** If cursor is ever reused for throughput: **PIN
-  `--model composer-2.5` (Cursor's flagship — consistent, well-formed YAML), NEVER `--model auto`** — and
-  still cross-review with Gemini (the fabrication proves ANY writer needs the review gate). Note composer
-  is code-tuned, so for Ukrainian-content register/accuracy claude-tools/codex remain the better fit;
-  cursor+composer is a supplement, not the primary.
-- **Cursor plan quality is INCONSISTENT.** 233–237 was clean (minor calques); 238–242 + 243–247 needed
-  3–12 fixes EACH: Russianisms (`голодовка`, `арест`, `місцевих властей`), calques/hallucinations
-  (`коерція`, `постумний`, `інакомисляч`, `Дебат` singular ×5, `поколінних ящиків`, `в лінії`), case
-  errors, a misspelled name (`Бадзо`→`Бадзьо`), mixed-script (`вітражa`, `постumне`), and a
-  **decolonization error** (`гуцульська мова`→`гуцульський говір` — Hutsul is a dialect, not a language;
-  "language" framing = imperial-division). One plan (shabatura) was also thin with placeholder activity
-  focuses. **The Gemini Pro cross-family review (user's call) is ESSENTIAL — it catches what cursor and a
-  same-family reviewer miss. Do NOT skip it. Do NOT self-review claude-written plans.**
-- **TODO — deterministic pre-review linter** (`scripts/validate/...` or a gate): flag russianisms/calques
-  from a known list + mixed Latin/Cyrillic-in-word + `Дебат` singular, BEFORE Gemini. Recurring offenders
-  are already added to the cursor brief. This same linter catches the **pre-existing defects already on
-  main**: `постумно` (domontovych, mosendz, liaturynska), `арест` (voronyi), Latin-in-Cyrillic (`Cлово`
-  mikhnovskyi, `риcа` huzar, `Оспiщев` lypynskyi, `мистецтвoм` kholodna). → Phase-5 cleanup pass.
-- **pyenv noise FIXED** (env, not bio): `.bashrc` `pyenv init - bash` ran a rehash on every shell init,
-  contending on the `~/.pyenv/shims/.pyenv-shim` mutex under concurrent shells → 60s-timeout errors. Fix:
-  `--no-rehash` on the init line + cleared the stale lock. Verified. (If it returns: `rm -f
-  ~/.pyenv/shims/.pyenv-shim`.)
+1. **Landing page 180→310:** `starlight/src/content/docs/bio/index.mdx` — hardcoded array of
+   `{num,title,slug,status}` cards (last num:180 anatolii-dimarov). Append 181..310 from curriculum.yaml +
+   plan titles. (Not done this session.)
+2. **Phase-5 cleanup of PRE-EXISTING defects (NOT introduced this epic; surfaced by
+   `validate_plan_ordering.py` — 23 bio errors, all in the original 1–180 plans):**
+   - **`mykola-kulish` slug duplication:** ~8 Executed-Renaissance plan files (anatol-petrytskyi,
+     dmytro-falkivskyi, heo-shkurupii, hryhorii-kosynka, maik-yohansen, mykola-zerov, oleksa-slisarenko,
+     valerian-pidmohylnyi) carry `slug: mykola-kulish` inside the YAML (filename≠slug). Real data bug — fix
+     each plan's `slug`/`module`/`sequence` to match its file.
+   - Legacy `level: C1-BIO` / `module: c1-bio-*` on hryhoriy-skovoroda, lev-danylovych, volodymyr-velykii.
+   - Zero-padding: `bio-04`→`bio-004` etc. (kniaz-yaroslav-mudryi, knyazhna-anna-yaroslavna, olha-kobylianska).
+   - `petro-veskliaov.yaml` slug=`petro-veskliarov` (filename typo vs slug).
+   - Pre-existing language defects from earlier handoff still on main: `постумно` (domontovych, mosendz,
+     liaturynska), `арест` (voronyi), Latin-in-Cyrillic (`Cлово` mikhnovskyi, `риcа` huzar, `Оспiщев`
+     lypynskyi, `мистецтвoм` kholodna). Sweep with the linter below.
+3. **Deterministic pre-review linter** (`scripts/validate/...`): russianism/calque list (арест, постум,
+   коерція, голодовка, інакомисляч, місцеві власті, термін-for-sentence) + mixed Latin-in-Cyrillic
+   (excluding URLs) + `Дебат` singular. Run BEFORE Gemini to cut review rounds and catch the defects above.
+4. **Phases 4–5 per epic #2309:** wiki articles (Gemini), decolonization quality pass (DeepSeek-pro
+   hermes), cross-track `connects_to` verification (hist-/lit-/istorio- forward-refs not CI-gated).
 
 ## ▶ LOOSE ENDS
-- `.worktrees/fix-bio-drai-khmara-ref-title` — committed fix `af86e1691e` (adds missing ref title +
-  drops a `.bak`) UNMERGED. PR it + merge.
-- **carneckyj ghost-source: RESOLVED** on main (Phase-5 sweep clean). Only residual: `zynovii-kovalyk.md`
-  dossier line 97 still cites the `_carneckyj_sp.html` combined page while its plan uses the generic
-  group page — low-sev (Kovalyk IS on that page); normalize for consistency if touching it.
-- `connects_to` cross-track targets (`hist-/lit-/istorio-`) don't resolve (forward-refs); NOT CI-gated;
-  Phase-5 cross-track-verify concern.
-- agy/Opus-4.6-high review bakeoff still pending user backend flip.
+- `drai-khmara-ref-title` worktree loose end: **RESOLVED/obsolete** — the ref-title fix is already on main
+  (exemplar has all 5 reference titles) and that worktree's commit `af86e1691e` adds a junk `.bak`; do NOT
+  PR it. Prune the worktree if it lingers.
+- `connects_to` cross-track targets (`hist-/lit-/istorio-`) are forward-refs; not CI-gated; Phase-5 concern.
+- Capacity (user 2026-06-01): user authorized **3× claude writers** for the final batch; weekly Claude only
+  ~61% used + Anthropic doubled limits to mid-July. claude-tools is an excellent bio plan writer (handled
+  the living bohdan-horyn and the NPOV-sensitive yurii-shukhevych with exemplary discipline).
 
 ## ▶ EXEMPLAR + REFERENCE
-- Plan exemplar (mirror key set): `curriculum/l2-uk-en/plans/bio/mykhailo-drai-khmara.yaml` (bio-183).
-- Dossiers: `docs/research/bio/{slug}.md` (Phase-1 complete, all present). Allocation SSOT:
-  `docs/bio-epic/phase-2-sequence-allocation.yaml` (130 new plans, seq 181–310).
-- Capacity (user 2026-05-31/06-01): 1 EXTRA Claude dispatch slot OK (weekly only ~61% used). Gemini Pro
-  endorsed as cross-family reviewer. Writer = cursor (writer swap from gemini, user 2026-05-31).
+- Plan exemplar (mirror key set, 19 keys): `curriculum/l2-uk-en/plans/bio/mykhailo-drai-khmara.yaml` (bio-183).
+- Dossiers: `docs/research/bio/{slug}.md` (Phase-1 complete). Allocation SSOT:
+  `docs/bio-epic/phase-2-sequence-allocation.yaml` (seq 181–310; authoritative seq→slug).
+- Config gate: `scripts/validate/validate_plan_config.py bio/<slug>` (CI "Curriculum Plans").
