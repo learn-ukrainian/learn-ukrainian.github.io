@@ -21,6 +21,25 @@
 > MERGE (OUN/UPA, clergy, war-dead included; tell the truth in every direction). Mechanical PRs (curriculum
 > registration, this handoff) need no linguistic cross-review — the content was reviewed at plan-merge.
 > Escalate to the human ONLY on a GENUINE defect. Non-bio main = orchestrator-only.
+>
+> **⛔ NO CODEX FOR BIO (user 2026-06-01) — STANDING UNTIL THE USER LIFTS IT.** All codex quota is
+> reserved for building A1. Do **NOT** `delegate.py dispatch --agent codex` (or `ab ask-codex`) for any
+> bio work until the user explicitly says codex is available again. **This is fully manageable without
+> codex** — proof: 8 of this session's 12 plans (252–259) were claude-tools-written + Gemini-Pro-reviewed,
+> zero codex. **Without-codex pipeline:** WRITER = `--agent claude` (claude-tools; primary, proven) OR
+> `--agent gemini`; REVIEWER = Gemini Pro `ab ask-gemini --model gemini-3.1-pro-preview` (cross-family vs a
+> claude writer) — if the writer is Gemini, use claude or deepseek as the cross-family reviewer instead.
+> DeepSeek is also available for review. Mechanical/doc work = claude inline. **When the user lifts this,
+> codex returns as a valid writer/reviewer.**
+>
+> **CURSOR is still available** (separate quota from codex) as a THROUGHPUT-SUPPLEMENT writer — but ONLY
+> with **`--model composer-2.5` pinned, NEVER `--model auto`** (auto re-routes per dispatch to weak models
+> → the Russianisms / unparseable-YAML / editorial-leak inconsistency that got the cursor batch rejected;
+> note the ihor-kalynets "fabrication" was NOT real, see KEY CORRECTION). composer-2.5 is code-tuned, so
+> for Ukrainian register/accuracy **claude-tools remains the better primary**; cursor+composer is a
+> supplement, and STILL needs the Gemini-Pro cross-family review (cursor/composer is its own family).
+> Bottom line: the remaining bio work (landing page, Phase-5 cleanup, linter, wiki, decolonization pass)
+> does NOT need a writer fleet — claude inline + Gemini + DeepSeek cover it without codex OR cursor.
 
 *Last updated: 2026-06-01 (late). **Phase 2 plan build COMPLETE: main has all 130 new plans, 181→310
 contiguous (310 bio plans total).** Phase 3 registration DONE in this PR (curriculum.yaml bio = 310
