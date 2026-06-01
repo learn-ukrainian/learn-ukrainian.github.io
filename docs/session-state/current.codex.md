@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T02:01+02:00)
+# Current - Codex Thread Handoff (2026-06-01T02:25+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `17b5f9fe8e fix(a1): repair M5 activity hash target`
+  `5dec6241f6 feat(a1): add M6 my family module`
 
 ## Current Direction
 
@@ -17,9 +17,58 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, or worktrees.
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
-- Continue M6 next. M1-M5 are now built as English-led student
-  textbook/workbook pages and pass deterministic QG. The M5 rendered learner
-  defect at `/a1/who-am-i/#fix-common-l2-traps` is fixed.
+- Continue M7 next (`checkpoint-first-contact`). M1-M6 are now built as
+  English-led student textbook/workbook pages and pass deterministic QG. The
+  M5 rendered learner defect at `/a1/who-am-i/#fix-common-l2-traps` is fixed.
+  M6 `/a1/my-family/` is live locally and browser-inspected.
+
+## Latest M6 Update
+
+Commit `5dec6241f6 feat(a1): add M6 my family module` added:
+
+- `curriculum/l2-uk-en/a1/my-family/module.md`
+- `curriculum/l2-uk-en/a1/my-family/activities.yaml`
+- `curriculum/l2-uk-en/a1/my-family/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/my-family/resources.yaml`
+- `starlight/src/content/docs/a1/my-family.mdx`
+
+M6 is an English-led first-contact family/photo module covering `сім'я`,
+`родина`, close family words, `У мене є`, `мій/моя/моє/мої`,
+`твій/твоя/твоє/твої`, fixed `його/її`, recognition-only patronymics, and
+learner-safe native family-word choices. Student-facing resources include only
+the three locked ULP references; the internal wiki reference is skipped.
+
+Validation after M6:
+
+- `scripts.yaml_activities`: parsed 8 activities.
+- Direct `run_python_qg()` for M6: passed.
+  - `word_count`: 1373 words, above the 1104 tolerated floor for target 1200.
+  - `resource_coverage`: passed; internal wiki reference skipped.
+  - `archetype_fit`: passed for `a1-first-contact-survival`.
+  - `vesum_verified`, `russianisms_strict`, and `inject_activity_ids`: passed.
+- Direct seeded hard wiki coverage: passed, 16/16 obligations covered.
+- Direct `validate_module()` for directory-layout source and generated MDX:
+  passed with no errors or warnings.
+- `npm run build:starlight`: passed; 96 pages built.
+- Local Starlight restarted with `./services.sh restart starlight`.
+- HTML check for `/a1/my-family/`: H1 `Моя сім'я`, Lesson/Vocabulary/
+  Activities/Resources tabs, expected dialogue/activity/resource text, no
+  `Russian-influenced` placeholders, and no internal `wiki/pedagogy` links.
+- In-app Browser inspection:
+  - Lesson tab selected cleanly and showed the family dialogue, inline
+    `Family photo questions`, Ukrainian sentence surfaces, no internal wiki,
+    and no placeholder distractors.
+  - Activities tab selected cleanly through DOM control and showed workbook
+    activity content including `Native family words`.
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pre-commit run
+  --files ...`: passed for the 5 M6 files.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+- Commit was pushed to origin.
+
+Next target: M7 `checkpoint-first-contact`. Start by inspecting
+`curriculum/l2-uk-en/plans/a1/checkpoint-first-contact.yaml`, the relevant
+wiki/pedagogy brief, resource obligations, and `build_wiki_manifest_data`.
+Then build the same full artifact set and validate with the same gates.
 
 ## Completed In This Slice
 

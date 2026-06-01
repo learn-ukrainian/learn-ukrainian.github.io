@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-06-01T00:01Z)
+# Current - Codex orchestrator handoff (2026-06-01T00:25Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -30,7 +30,7 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 - Current authoritative remote head at handoff:
   `836526d165 feat(api): surface bridge activity for orchestrators`
 - Active A1 branch head before handoff-doc commit:
-  `08fe80bf95 feat(a1): add M5 who am i module`
+  `5dec6241f6 feat(a1): add M6 my family module`
 - Main checkout has unrelated dirty user/Claude files; do not revert:
   - `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`
   - `scripts/deploy_prompts.sh`
@@ -60,10 +60,8 @@ Check with:
 curl -sS http://127.0.0.1:8765/api/delegate/active
 ```
 
-Active at M5 handoff time:
-
-- `bio-blk5-252-255` - Claude Opus BIO delegate, running. This is
-  Claude/BIO-owned; Codex should not inspect or interfere unless asked.
+Active at M6 handoff time: none (`/api/delegate/active` returned
+`{"total":0,"tasks":[]}`).
 
 Do not assume the bridge `status` command is authoritative for delegates; use
 `/api/delegate/active` and task logs/state.
@@ -126,6 +124,32 @@ A1 M1-M7 sequence:
 5. `who-am-i`
 6. `my-family`
 7. `checkpoint-first-contact`
+
+## A1 M6 Update (2026-06-01)
+
+- Commit `5dec6241f6 feat(a1): add M6 my family module` is pushed on
+  `codex/a1-m1-m7-golden-journey-2026-05-30`.
+- Added the full M6 artifact set:
+  `curriculum/l2-uk-en/a1/my-family/{module.md,activities.yaml,
+  vocabulary.yaml,resources.yaml}` plus
+  `starlight/src/content/docs/a1/my-family.mdx`.
+- M6 is English-led first-contact family/photo content: family words,
+  `У мене є`, `мій/моя/моє/мої`, `твій/твоя/твоє/твої`, fixed `його/її`,
+  recognition-only patronymics, native family-word choices, and ULP resources.
+- Validation passed:
+  - `scripts.yaml_activities`: 8 activities parsed.
+  - Direct M6 `run_python_qg()`: passed, including `resource_coverage`,
+    `archetype_fit`, `vesum_verified`, `russianisms_strict`, and
+    `inject_activity_ids`.
+  - Direct seeded hard wiki coverage: 16/16 obligations covered.
+  - Direct directory-layout `validate_module()`: passed.
+  - `npm run build:starlight`: passed; 96 pages built.
+  - Local HTML/browser checks for `/a1/my-family/`: H1 `Моя сім'я`, expected
+    tabs/content/resources, no internal wiki links, and no English placeholder
+    distractors.
+  - `.venv/bin/pre-commit run --files ...`: passed for M6 files.
+  - `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+- Next A1 target is M7 `checkpoint-first-contact`.
 
 ## A1 M1 / Infra Update (2026-05-31)
 
