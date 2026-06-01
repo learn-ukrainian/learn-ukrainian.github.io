@@ -1,0 +1,160 @@
+- lemma: кімната
+  translation: room
+  pos: noun
+  usage: Це моя кімната.
+- lemma: стіл
+  translation: table
+  pos: noun
+  usage: Мій стіл великий.
+- lemma: книга
+  translation: book
+  pos: noun
+  usage: Моя книга нова.
+- lemma: книги
+  translation: books
+  pos: noun plural
+  usage: Ці книги нові.
+- lemma: вікно
+  translation: window
+  pos: noun
+  usage: Моє вікно чисте.
+- lemma: вікна
+  translation: windows
+  pos: noun plural
+  usage: Вікна чисті.
+- lemma: лампа
+  translation: lamp
+  pos: noun
+  usage: Ця лампа біла.
+- lemma: сумка
+  translation: bag
+  pos: noun
+  usage: Та сумка синя.
+- lemma: окуляри
+  translation: glasses, plural-only
+  pos: noun plural
+  usage: У мене є окуляри.
+- lemma: двері
+  translation: door; doors, plural-only
+  pos: noun plural
+  usage: Ці двері білі.
+- lemma: ліки
+  translation: medicine, plural-only
+  pos: noun plural
+  usage: Ліки тут.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Мій стіл.
+- lemma: моя
+  translation: my, feminine
+  pos: pronoun
+  usage: Моя кімната.
+- lemma: моє
+  translation: my, neuter
+  pos: pronoun
+  usage: Моє місто.
+- lemma: мої
+  translation: my, plural
+  pos: pronoun
+  usage: Мої книги.
+- lemma: цей
+  translation: this, masculine
+  pos: pronoun
+  usage: Цей стіл.
+- lemma: ця
+  translation: this, feminine
+  pos: pronoun
+  usage: Ця лампа.
+- lemma: це
+  translation: this, neuter; this is
+  pos: pronoun
+  usage: Це намисто.
+- lemma: ці
+  translation: these
+  pos: pronoun
+  usage: Ці книги.
+- lemma: той
+  translation: that, masculine
+  pos: pronoun
+  usage: Той глечик.
+- lemma: та
+  translation: that, feminine
+  pos: pronoun
+  usage: Та сумка.
+- lemma: те
+  translation: that, neuter
+  pos: pronoun
+  usage: Те вікно.
+- lemma: ті
+  translation: those
+  pos: pronoun
+  usage: Ті зошити.
+- lemma: великий
+  translation: big, masculine
+  pos: adjective
+  usage: Великий стіл.
+- lemma: велика
+  translation: big, feminine
+  pos: adjective
+  usage: Велика кімната.
+- lemma: велике
+  translation: big, neuter
+  pos: adjective
+  usage: Велике вікно.
+- lemma: великі
+  translation: big, plural
+  pos: adjective
+  usage: Великі кімнати.
+- lemma: синій
+  translation: dark blue, masculine
+  pos: adjective
+  usage: Синій зошит.
+- lemma: синя
+  translation: dark blue, feminine
+  pos: adjective
+  usage: Синя сумка.
+- lemma: синє
+  translation: dark blue, neuter
+  pos: adjective
+  usage: Синє вікно.
+- lemma: сині
+  translation: dark blue, plural
+  pos: adjective
+  usage: Сині зошити.
+- lemma: білий
+  translation: white, masculine
+  pos: adjective
+  usage: Білий сніг.
+- lemma: біла
+  translation: white, feminine
+  pos: adjective
+  usage: Біла лампа.
+- lemma: біле
+  translation: white, neuter
+  pos: adjective
+  usage: Біле вікно.
+- lemma: білі
+  translation: white, plural
+  pos: adjective
+  usage: Білі стіни.
+- lemma: гривня
+  translation: hryvnia
+  pos: noun
+  usage: Одна гривня.
+- lemma: гривень
+  translation: hryvnias, price chunk
+  pos: noun plural
+  usage: Сто гривень.
+- lemma: прізвище
+  translation: surname
+  pos: noun
+  usage: Моє прізвище.
+- lemma: Мене звати
+  translation: my name is
+  pos: phrase
+  usage: Мене звати Анна.
+- lemma: Мені 20 років
+  translation: I am 20 years old
+  pos: phrase
+  usage: Мені 20 років.

@@ -1,0 +1,305 @@
+---
+title: "Підсумок: Мій світ"
+description: "Чи вмієте ви описувати речі, рахувати та вказувати на них?"
+sidebar:
+  order: 14
+  label: "14. Підсумок: Мій світ"
+pipeline: linear-phase-4
+build_status: validated
+prev: many-things
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This checkpoint ties together the A1.2 world: things, gender, descriptions,
+colors, numbers, pointing words, and simple plurals. Nothing here needs a new
+grammar rule. You are testing whether the pieces can work together in a short
+real-life scene.
+
+By the end, you can:
+
+- choose noun gender with **він / вона / воно** and use **мій / моя / моє**;
+- describe objects with **великий / велика / велике / великі** and colors;
+- count and ask prices with familiar number chunks;
+- point with **цей / ця / це / ці** and **той / та / те / ті**;
+- use familiar plural forms such as **столи**, **книги**, **вікна**;
+- read and produce a 6-10 sentence description of your own small world.
+
+
+### Checkpoint warm-up
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "My name is John.", "options": [{"text": "Мене звати Джон.", "correct": true}, {"text": "Моє ім'я є Джон.", "correct": false}, {"text": "Я є Джон.", "correct": false}], "explanation": "Use Мене звати... for a name."}, {"question": "I am a student.", "options": [{"text": "Я студент.", "correct": true}, {"text": "Я є студент.", "correct": false}, {"text": "Мене студент.", "correct": false}], "explanation": "Present identity normally drops є."}, {"question": "My book is on the table.", "options": [{"text": "Моя книга на столі.", "correct": true}, {"text": "Мій книга на столі.", "correct": false}, {"text": "Моє книга на столі.", "correct": false}], "explanation": "Книга is feminine, so use моя."}, {"question": "I have glasses.", "options": [{"text": "У мене є окуляри.", "correct": true}, {"text": "Вона має один окуляри.", "correct": false}, {"text": "У мене є один окуляри.", "correct": false}], "explanation": "Окуляри is plural-only."}]`)} />
+
+## Що ми знаємо?
+
+You have six small toolkits from Modules 8-13.
+
+| Toolkit | You can now do this |
+| --- | --- |
+| Gender | connect **стіл** with **він**, **книга** with **вона**, **вікно** with **воно** |
+| Possession | choose **мій**, **моя**, **моє**, **мої** |
+| Description | say **великий стіл**, **нова книга**, **чисте вікно** |
+| Colors | use **червоний**, **синій**, **блакитний**, **білий**, **чорний**, **жовтий** |
+| Numbers and prices | ask **Скільки коштує...?** and answer with **гривень** |
+| Pointing and plural | use **цей / ця / це / ці**, **той / та / те / ті**, **столи**, **книги**, **вікна** |
+
+The older first-contact chunks still matter. You can say **Мене звати...**,
+not **Моє ім'я є...**, and **Я студент / студентка** without adding **є**.
+The pronouns **я, ти, він, вона, воно, ми, ви, вони** help you keep track of
+people and things.
+
+This checkpoint uses Ukrainian directly. Learn **українська мова** on its own
+terms. Do not use Russian as a sound bridge, spelling bridge, or cultural
+standard. In course examples, keep the clean Ukrainian choices:
+**Добрий день**, **До побачення**, **тато**, **прізвище**.
+
+:::tip
+Use the noun as the control word. Ask: is it **він**, **вона**, **воно**, or
+plural? Then choose the pointing word, possessive, and adjective.
+:::
+
+### Gender and control words
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "він"}, {"left": "книга", "right": "вона"}, {"left": "вікно", "right": "воно"}, {"left": "кімната", "right": "вона"}, {"left": "місто", "right": "воно"}, {"left": "книги", "right": "вони"}, {"left": "окуляри", "right": "вони"}, {"left": "телефон", "right": "він"}]`)} />
+
+## Читання
+
+Read this short text aloud. It uses the A1.2 world: room objects, colors,
+prices, pointing words, and plural nouns.
+
+<DialogueBox uk="Це моя кімната." en="This is my room." />
+<DialogueBox uk="Мій стіл великий і новий." en="My table is big and new." />
+<DialogueBox uk="Ця лампа біла, а та лампа жовта." en="This lamp is white, and that lamp is yellow." />
+<DialogueBox uk="На столі є три книги." en="There are three books on the table." />
+<DialogueBox uk="Ці книги нові." en="These books are new." />
+<DialogueBox uk="Ті зошити сині." en="Those notebooks are blue." />
+<DialogueBox uk="Моє вікно чисте." en="My window is clean." />
+<DialogueBox uk="Стіни білі." en="The walls are white." />
+<DialogueBox uk="У мене є окуляри." en="I have glasses." />
+<DialogueBox uk="Мені 20 років." en="I am 20 years old." />
+
+Now read the marketplace scene. The cultural words are there for context:
+**вишиванка**, **глечик**, **намисто**, **писанки**. You only need to use the
+grammar around them.
+
+<DialogueBox uk="Іванко: Катю, що це?" en="Ivanko: Katia, what is this?" />
+<DialogueBox uk="Катя: Це вишиванка. Вона біла і синя." en="Katia: This is an embroidered shirt. It is white and blue." />
+<DialogueBox uk="Іванко: А той глечик?" en="Ivanko: And that clay jug?" />
+<DialogueBox uk="Катя: Той глечик старий, але гарний." en="Katia: That clay jug is old, but beautiful." />
+<DialogueBox uk="Іванко: Ці писанки червоні чи жовті?" en="Ivanko: Are these pysanky red or yellow?" />
+<DialogueBox uk="Катя: Ці писанки червоні, жовті й сині." en="Katia: These pysanky are red, yellow, and blue." />
+<DialogueBox uk="Іванко: Скільки коштує намисто?" en="Ivanko: How much does the necklace cost?" />
+<DialogueBox uk="Катя: Сто гривень." en="Katia: One hundred hryvnias." />
+
+The cultural frame stays Ukrainian: **синьо-жовтий прапор**, **Тризуб**,
+**Київ**, and **гривня** are the precise forms to keep. In English-facing
+text, use **Kyiv**.
+
+### Marketplace dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ вишиванка біла.", "answer": "Ця", "options": ["Ця", "Цей", "Це"]}, {"sentence": "___ глечик старий.", "answer": "Той", "options": ["Той", "Та", "Те"]}, {"sentence": "___ намисто гарне.", "answer": "Це", "options": ["Це", "Ця", "Цей"]}, {"sentence": "___ писанки червоні.", "answer": "Ці", "options": ["Ці", "Ця", "Це"]}, {"sentence": "Скільки ___ це намисто?", "answer": "коштує", "options": ["коштує", "звати", "років"]}, {"sentence": "Сто ___.", "answer": "гривень", "options": ["гривень", "роки", "ім'я"]}]`)} />
+
+## Граматика
+
+Review the control questions.
+
+| Question | Use it for | Examples |
+| --- | --- | --- |
+| **Хто?** | people | **студент**, **мама**, **вчителька** |
+| **Що?** | things | **стіл**, **книга**, **вікно** |
+| **Який?** | masculine description | **великий стіл**, **синій зошит** |
+| **Яка?** | feminine description | **нова книга**, **чиста кімната** |
+| **Яке?** | neuter description | **біле вікно**, **моє місто** |
+| **Які?** | plural description | **великі кімнати**, **вечірні міста** |
+
+Nouns that name things still have gender. Store a new noun with a cue:
+**словник** is **він**, **кімната** is **вона**, **місто** is **воно**.
+The nominative singular habit lets you build **білий сніг**, **біла шубка**,
+and **біле козенятко**. The checkpoint uses the same idea with familiar words:
+**великий стіл**, **велика кімната**, **велике вікно**.
+
+Possessives behave like adjectives:
+
+| English | Masculine | Feminine | Neuter | Plural |
+| --- | --- | --- | --- | --- |
+| my | **мій телефон** | **моя кімната** | **моє місто** | **мої книги** |
+| your | **твій зошит** | **твоя лампа** | **твоє вікно** | **твої ручки** |
+
+Adjectives use the endings you already practiced:
+
+- masculine: **який? великий**, **чистий**, **синій**; endings **-ий**, **-ій**
+- feminine: **яка? велика**, **чиста**, **синя**; endings **-а**, **-я**
+- neuter: **яке? велике**, **чисте**, **синє**; endings **-е**, **-є**
+- plural: **які? великі**, **чисті**, **сині**; shared ending **-і**
+
+Plural-only words, or **множинні іменники**, remain whole-word items for now:
+**окуляри**, **двері**, **ліки**, **шахи**. Collective singular words such as **дітвора** and
+**студентство** are passive recognition only.
+
+### Review categories
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Objects": ["стіл", "книга", "вікно", "лампа"], "Colors": ["червоний", "синій", "білий", "жовтий"], "Numbers and prices": ["три", "двадцять", "сто", "гривень"]}`)} />
+
+## Діалог
+
+Use the full checkpoint conversation at a Ukrainian street market.
+
+<DialogueBox uk="Іванко: Добрий день! Це ваша крамниця?" en="Ivanko: Good afternoon! Is this your stall?" />
+<DialogueBox uk="Катя: Так, це моя крамниця. Я Катя." en="Katia: Yes, this is my stall. I am Katia." />
+<DialogueBox uk="Іванко: Мене звати Іванко. Дуже приємно." en="Ivanko: My name is Ivanko. Nice to meet you." />
+<DialogueBox uk="Катя: Мені теж. Що тобі подобається?" en="Katia: Me too. What do you like?" />
+<DialogueBox uk="Іванко: Мені подобається ця вишиванка. Вона біла?" en="Ivanko: I like this embroidered shirt. Is it white?" />
+<DialogueBox uk="Катя: Так, вона біла і синя." en="Katia: Yes, it is white and blue." />
+<DialogueBox uk="Іванко: А той глечик? Він новий?" en="Ivanko: And that clay jug? Is it new?" />
+<DialogueBox uk="Катя: Ні, він старий, але гарний." en="Katia: No, it is old but beautiful." />
+<DialogueBox uk="Іванко: Ці писанки маленькі?" en="Ivanko: Are these pysanky small?" />
+<DialogueBox uk="Катя: Так, ці писанки маленькі й червоні." en="Katia: Yes, these pysanky are small and red." />
+<DialogueBox uk="Іванко: Скільки коштує це намисто?" en="Ivanko: How much does this necklace cost?" />
+<DialogueBox uk="Катя: Сто гривень." en="Katia: One hundred hryvnias." />
+<DialogueBox uk="Іванко: Добре. Я хочу це намисто." en="Ivanko: Good. I want this necklace." />
+<DialogueBox uk="Катя: Будь ласка. До побачення!" en="Katia: Here you are. Goodbye!" />
+
+This dialogue checks all A1.2 skills at once: gender (**вона**, **він**),
+agreement (**біла**, **синя**, **старий**, **маленькі**), pointing
+(**ця**, **той**, **ці**, **це**), prices (**сто гривень**), and plural forms
+(**писанки маленькі**).
+
+### Singular, plural, and description
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "Мій стіл великий.", "correct": true}, {"text": "Моя стіл велика.", "correct": false}, {"text": "Моє стіл велике.", "correct": false}], "explanation": "Стіл is masculine."}, {"question": "кімната", "options": [{"text": "Моя кімната чиста.", "correct": true}, {"text": "Мій кімната чистий.", "correct": false}, {"text": "Моє кімната чисте.", "correct": false}], "explanation": "Кімната is feminine."}, {"question": "вікно", "options": [{"text": "Моє вікно чисте.", "correct": true}, {"text": "Моя вікно чиста.", "correct": false}, {"text": "Мій вікно чистий.", "correct": false}], "explanation": "Вікно is neuter."}, {"question": "книги", "options": [{"text": "Мої книги нові.", "correct": true}, {"text": "Моя книги нова.", "correct": false}, {"text": "Мій книги новий.", "correct": false}], "explanation": "Книги is plural."}]`)} />
+
+## 📋 Підсумок
+
+Make your own 6-10 sentence checkpoint text. Keep it personal and small. This
+is your connected production task: write about a normal day or favorite things,
+show noun-adjective agreement, and use pronouns clearly.
+
+In Ukrainian terms, this is a **зв'язне висловлювання**: a **коротку
+розповідь** of **6–10 речень** about your **звичайний день** or **улюблені
+речі**. Show that you can **узгоджувати іменники з прикметниками** and use
+**займенники** clearly.
+
+Use this frame:
+
+1. **Мене звати...**
+2. **Це моя кімната / мій стіл / моє місто.**
+3. **Мій / моя / моє ... великий / велика / велике.**
+4. **Ця ... біла, а та ... синя.**
+5. **У мене є три...**
+6. **Ці ... нові.**
+7. **Скільки коштує...?**
+8. **... гривень.**
+
+One safe model:
+
+<DialogueBox uk="Мене звати Анна." en="My name is Anna." />
+<DialogueBox uk="Це моя кімната." en="This is my room." />
+<DialogueBox uk="Мій стіл великий, а моє вікно чисте." en="My table is big, and my window is clean." />
+<DialogueBox uk="Ця лампа біла, а та сумка синя." en="This lamp is white, and that bag is blue." />
+<DialogueBox uk="У мене є три книги." en="I have three books." />
+<DialogueBox uk="Ці книги нові." en="These books are new." />
+<DialogueBox uk="Мені 20 років." en="I am 20 years old." />
+
+### Repair traps
+
+Keep these repairs close:
+
+| Avoid | Use | Why |
+| --- | --- | --- |
+| **Я є студент.** | **Я студент.** | present identity normally drops **є** |
+| **Моє ім'я є Джон.** | **Мене звати Джон.** | name chunk |
+| **Мій книга на столі.** | **Моя книга на столі.** | **книга** is feminine |
+| **Вона має один окуляри.** | **Вона має окуляри.** / **У неї є окуляри.** | **окуляри** is plural-only |
+| **Я бачу великий кімнату.** | **Я бачу велику кімнату.** | feminine object chunk |
+| **Мені 20 роки.** | **Мені 20 років.** | age chunk |
+
+Historical and cultural facts stay precise when they appear later:
+the Holodomor is **1932-1933**, and Ukrainian literature examples belong to
+the Ukrainian canon. Do not present Russian-imperial figures as Ukrainian
+authors.
+
+### Repair checkpoint traps
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я є студент.", "options": [{"text": "Я студент.", "correct": true}, {"text": "Я є студент.", "correct": false}, {"text": "Мене студент.", "correct": false}], "explanation": "Present identity normally drops є."}, {"question": "Моє ім'я є Джон.", "options": [{"text": "Мене звати Джон.", "correct": true}, {"text": "Моє ім'я є Джон.", "correct": false}, {"text": "Я звати Джон.", "correct": false}], "explanation": "Use the name chunk Мене звати..."}, {"question": "Мій книга на столі.", "options": [{"text": "Моя книга на столі.", "correct": true}, {"text": "Мій книга на столі.", "correct": false}, {"text": "Моє книга на столі.", "correct": false}], "explanation": "Книга is feminine."}, {"question": "Вона має один окуляри.", "options": [{"text": "Вона має окуляри. (або У неї є окуляри.)", "correct": true}, {"text": "Вона має один окуляри.", "correct": false}, {"text": "Вона має одна окуляри.", "correct": false}], "explanation": "Окуляри is plural-only."}, {"question": "Я бачу великий кімнату.", "options": [{"text": "Я бачу велику кімнату.", "correct": true}, {"text": "Я бачу великий кімнату.", "correct": false}, {"text": "Я бачу велике кімнату.", "correct": false}], "explanation": "Treat велику кімнату as a safe object chunk."}, {"question": "Мені 20 роки.", "options": [{"text": "Мені 20 років.", "correct": true}, {"text": "Мені 20 роки.", "correct": false}, {"text": "Я маю 20 роки.", "correct": false}], "explanation": "Age uses Мені ... років."}]`)} />
+
+### Write your checkpoint text
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мене ___ Анна.", "answer": "звати", "options": ["звати", "ім'я", "є"]}, {"sentence": "Це ___ кімната.", "answer": "моя", "options": ["моя", "мій", "моє"]}, {"sentence": "Мій стіл ___.", "answer": "великий", "options": ["великий", "велика", "велике"]}, {"sentence": "Моє вікно ___.", "answer": "чисте", "options": ["чисте", "чиста", "чистий"]}, {"sentence": "Ці книги ___.", "answer": "нові", "options": ["нові", "нова", "новий"]}, {"sentence": "Мені 20 ___.", "answer": "років", "options": ["років", "роки", "рік"]}]`)} />
+
+### Ukrainian cultural frame
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "The national flag colors", "options": [{"text": "синьо-жовтий прапор", "correct": true}, {"text": "жовто-синій порядок", "correct": false}, {"text": "синій знак", "correct": false}], "explanation": "Use синьо-жовтий прапор for the Ukrainian flag."}, {"question": "The capital in English-facing text", "options": [{"text": "Kyiv", "correct": true}, {"text": "Kiyiv", "correct": false}, {"text": "Kyjiv", "correct": false}], "explanation": "Kyiv is the Ukrainian form in English."}, {"question": "The Ukrainian currency", "options": [{"text": "гривня", "correct": true}, {"text": "крамниця", "correct": false}, {"text": "прізвище", "correct": false}], "explanation": "Гривня is the Ukrainian currency."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"кімната","translation":"room","pos":"noun","example":"Це моя кімната.","examples":["room","Це моя кімната."]},{"word":"стіл","translation":"table","pos":"noun","example":"Мій стіл великий.","examples":["table","Мій стіл великий."]},{"word":"книга","translation":"book","pos":"noun","example":"Моя книга нова.","examples":["book","Моя книга нова."]},{"word":"книги","translation":"books","pos":"noun plural","example":"Ці книги нові.","examples":["books","Ці книги нові."]},{"word":"вікно","translation":"window","pos":"noun","example":"Моє вікно чисте.","examples":["window","Моє вікно чисте."]},{"word":"вікна","translation":"windows","pos":"noun plural","example":"Вікна чисті.","examples":["windows","Вікна чисті."]},{"word":"лампа","translation":"lamp","pos":"noun","example":"Ця лампа біла.","examples":["lamp","Ця лампа біла."]},{"word":"сумка","translation":"bag","pos":"noun","example":"Та сумка синя.","examples":["bag","Та сумка синя."]},{"word":"окуляри","translation":"glasses, plural-only","pos":"noun plural","example":"У мене є окуляри.","examples":["glasses, plural-only","У мене є окуляри."]},{"word":"двері","translation":"door; doors, plural-only","pos":"noun plural","example":"Ці двері білі.","examples":["door; doors, plural-only","Ці двері білі."]},{"word":"ліки","translation":"medicine, plural-only","pos":"noun plural","example":"Ліки тут.","examples":["medicine, plural-only","Ліки тут."]},{"word":"мій","translation":"my, masculine","pos":"pronoun","example":"Мій стіл.","examples":["my, masculine","Мій стіл."]},{"word":"моя","translation":"my, feminine","pos":"pronoun","example":"Моя кімната.","examples":["my, feminine","Моя кімната."]},{"word":"моє","translation":"my, neuter","pos":"pronoun","example":"Моє місто.","examples":["my, neuter","Моє місто."]},{"word":"мої","translation":"my, plural","pos":"pronoun","example":"Мої книги.","examples":["my, plural","Мої книги."]},{"word":"цей","translation":"this, masculine","pos":"pronoun","example":"Цей стіл.","examples":["this, masculine","Цей стіл."]},{"word":"ця","translation":"this, feminine","pos":"pronoun","example":"Ця лампа.","examples":["this, feminine","Ця лампа."]},{"word":"це","translation":"this, neuter; this is","pos":"pronoun","example":"Це намисто.","examples":["this, neuter; this is","Це намисто."]},{"word":"ці","translation":"these","pos":"pronoun","example":"Ці книги.","examples":["these","Ці книги."]},{"word":"той","translation":"that, masculine","pos":"pronoun","example":"Той глечик.","examples":["that, masculine","Той глечик."]},{"word":"та","translation":"that, feminine","pos":"pronoun","example":"Та сумка.","examples":["that, feminine","Та сумка."]},{"word":"те","translation":"that, neuter","pos":"pronoun","example":"Те вікно.","examples":["that, neuter","Те вікно."]},{"word":"ті","translation":"those","pos":"pronoun","example":"Ті зошити.","examples":["those","Ті зошити."]},{"word":"великий","translation":"big, masculine","pos":"adjective","example":"Великий стіл.","examples":["big, masculine","Великий стіл."]},{"word":"велика","translation":"big, feminine","pos":"adjective","example":"Велика кімната.","examples":["big, feminine","Велика кімната."]},{"word":"велике","translation":"big, neuter","pos":"adjective","example":"Велике вікно.","examples":["big, neuter","Велике вікно."]},{"word":"великі","translation":"big, plural","pos":"adjective","example":"Великі кімнати.","examples":["big, plural","Великі кімнати."]},{"word":"синій","translation":"dark blue, masculine","pos":"adjective","example":"Синій зошит.","examples":["dark blue, masculine","Синій зошит."]},{"word":"синя","translation":"dark blue, feminine","pos":"adjective","example":"Синя сумка.","examples":["dark blue, feminine","Синя сумка."]},{"word":"синє","translation":"dark blue, neuter","pos":"adjective","example":"Синє вікно.","examples":["dark blue, neuter","Синє вікно."]},{"word":"сині","translation":"dark blue, plural","pos":"adjective","example":"Сині зошити.","examples":["dark blue, plural","Сині зошити."]},{"word":"білий","translation":"white, masculine","pos":"adjective","example":"Білий сніг.","examples":["white, masculine","Білий сніг."]},{"word":"біла","translation":"white, feminine","pos":"adjective","example":"Біла лампа.","examples":["white, feminine","Біла лампа."]},{"word":"біле","translation":"white, neuter","pos":"adjective","example":"Біле вікно.","examples":["white, neuter","Біле вікно."]},{"word":"білі","translation":"white, plural","pos":"adjective","example":"Білі стіни.","examples":["white, plural","Білі стіни."]},{"word":"гривня","translation":"hryvnia","pos":"noun","example":"Одна гривня.","examples":["hryvnia","Одна гривня."]},{"word":"гривень","translation":"hryvnias, price chunk","pos":"noun plural","example":"Сто гривень.","examples":["hryvnias, price chunk","Сто гривень."]},{"word":"прізвище","translation":"surname","pos":"noun","example":"Моє прізвище.","examples":["surname","Моє прізвище."]},{"word":"Мене звати","translation":"my name is","pos":"phrase","example":"Мене звати Анна.","examples":["my name is","Мене звати Анна."]},{"word":"Мені 20 років","translation":"I am 20 years old","pos":"phrase","example":"Мені 20 років.","examples":["I am 20 years old","Мені 20 років."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"кімната","back":"room"},{"front":"стіл","back":"table"},{"front":"книга","back":"book"},{"front":"книги","back":"books"},{"front":"вікно","back":"window"},{"front":"вікна","back":"windows"},{"front":"лампа","back":"lamp"},{"front":"сумка","back":"bag"},{"front":"окуляри","back":"glasses, plural-only"},{"front":"двері","back":"door; doors, plural-only"},{"front":"ліки","back":"medicine, plural-only"},{"front":"мій","back":"my, masculine"},{"front":"моя","back":"my, feminine"},{"front":"моє","back":"my, neuter"},{"front":"мої","back":"my, plural"},{"front":"цей","back":"this, masculine"},{"front":"ця","back":"this, feminine"},{"front":"це","back":"this, neuter; this is"},{"front":"ці","back":"these"},{"front":"той","back":"that, masculine"},{"front":"та","back":"that, feminine"},{"front":"те","back":"that, neuter"},{"front":"ті","back":"those"},{"front":"великий","back":"big, masculine"},{"front":"велика","back":"big, feminine"},{"front":"велике","back":"big, neuter"},{"front":"великі","back":"big, plural"},{"front":"синій","back":"dark blue, masculine"},{"front":"синя","back":"dark blue, feminine"},{"front":"синє","back":"dark blue, neuter"},{"front":"сині","back":"dark blue, plural"},{"front":"білий","back":"white, masculine"},{"front":"біла","back":"white, feminine"},{"front":"біле","back":"white, neuter"},{"front":"білі","back":"white, plural"},{"front":"гривня","back":"hryvnia"},{"front":"гривень","back":"hryvnias, price chunk"},{"front":"прізвище","back":"surname"},{"front":"Мене звати","back":"my name is"},{"front":"Мені 20 років","back":"I am 20 years old"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+*No workbook activities for this module; see the Lesson tab.*
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [100 Most Common Words in Ukrainian](https://www.ukrainianlessons.com/100words/) — Optional vocabulary review after the checkpoint; use for recognition, not new required words.
+- 📄 [Noun Genders in Ukrainian - Infographic](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Learner-safe review of masculine, feminine, and neuter noun gender.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
