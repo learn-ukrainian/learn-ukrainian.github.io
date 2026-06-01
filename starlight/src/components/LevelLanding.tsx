@@ -142,8 +142,8 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
   const moduleCount = totalModules || unitGroups.reduce((acc, g) => acc + g.items.length, 0);
   const pct = moduleCount > 0 ? Math.round((doneCount / moduleCount) * 100) : 0;
   const darkerColor = adjustColor(color, -40);
-  const progressTitle = props.progressTitle || 'Your Progress';
-  const progressDescription = props.progressDescription || `${doneCount} of ${moduleCount} completed (${pct}%)`;
+  const progressTitle = props.progressTitle ?? 'Your Progress';
+  const progressDescription = props.progressDescription ?? `${doneCount} of ${moduleCount} completed (${pct}%)`;
 
   return (
     <div className={styles.container}>

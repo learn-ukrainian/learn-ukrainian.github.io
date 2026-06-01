@@ -44,6 +44,17 @@ B1_UNIT_RANGES = [
 ]
 
 
+def truncate_card_subtitle(text: str, limit: int = 96) -> str:
+    """Trim generated card subtitles without cutting through a word."""
+    if len(text) <= limit:
+        return text
+
+    shortened = text[:limit].rstrip()
+    if " " in shortened:
+        shortened = shortened.rsplit(" ", 1)[0]
+    return shortened
+
+
 def get_module_status(level: str, slug: str) -> str:
     """Check if module is deployed and, when available, passing audit."""
     status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
@@ -134,7 +145,7 @@ def generate_landing_page(level: str) -> str:
         elif status == "active":
             active_count += 1
 
-        sub_escaped = escape_js_string(subtitle[:80])
+        sub_escaped = escape_js_string(truncate_card_subtitle(subtitle))
         title_escaped = escape_js_string(title)
 
         phase_items[unit_name].append(
@@ -159,7 +170,8 @@ def generate_landing_page(level: str) -> str:
 
     planned_count = len(modules) - done_count - active_count
     if level == "b1":
-        subtitle = f"{active_count} learner page available · {done_count} reviewed · {len(modules)}-module plan"
+        page_label = "page" if active_count == 1 else "pages"
+        subtitle = f"{active_count} learner {page_label} available · {done_count} reviewed · {len(modules)}-module plan"
         progress_title = "Build status"
         progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
         description = f"B1 landing — {len(modules)} modules in curriculum order"
