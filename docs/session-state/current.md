@@ -1,19 +1,20 @@
 # Current Session Handoff
 
-Generated-At: 2026-06-01T08:03Z
+Generated-At: 2026-06-01T15:28Z
 
 ## Active Branch
 
 - Worktree:
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
+- Latest handoff commit:
+  `13cb273fda docs(orchestration): refresh M11 handoff`
 - Latest implementation commit:
   `ed01b995e4 feat(a1): add M11 how many module`
-- Previous handoff commit:
-  `5031a7d99b docs(orchestration): refresh M11 handoff`
 
 Recent commits:
 
+- `13cb273fda docs(orchestration): refresh M11 handoff`
 - `ed01b995e4 feat(a1): add M11 how many module`
 - `5031a7d99b docs(orchestration): refresh M11 handoff`
 - `42869f2bc4 docs(orchestration): refresh M10 handoff`
@@ -23,7 +24,7 @@ Recent commits:
 ## Current Goal State
 
 - M1-M11 are built as English-led A1 student textbook/workbook modules.
-- M11 `how-many` is complete locally and ready to push with this handoff.
+- M11 `how-many` is complete and pushed.
 - Next module: M12 `this-and-that`.
 - BIO remains Claude/BIO-owned; do not touch BIO files, worktrees, delegates,
   or PRs.
@@ -74,14 +75,25 @@ Local ignored telemetry exists for the resource-search gate:
 
 ## Verified Runtime State
 
-Checked 2026-06-01T08:03Z:
+Checked 2026-06-01T15:28Z:
 
-- `git status --short --branch`: branch is ahead of origin by the M11
-  implementation commit before this handoff edit.
+- `git status --short --branch`: clean and synced at
+  `codex/a1-m1-m7-golden-journey-2026-05-30...origin/codex/a1-m1-m7-golden-journey-2026-05-30`.
 - `./services.sh status`: `sources` running on 8766, `api` running on 8765,
   `starlight` running on 4321.
 - `curl -sS http://127.0.0.1:8765/api/delegate/active`:
   `{"total":0,"tasks":[]}`.
+
+## Open Issues / In-Flight Notes
+
+- This handoff refresh is the only in-flight edit in the current thread.
+- Start a fresh Codex thread before authoring M12; current thread context is
+  at the auto-compact threshold.
+- Session setup still reports postmortem hygiene issues in
+  `docs/bug-autopsies/codex-tool-capture.md` (`Symptom`, `Root cause`, and
+  `Links` missing). This is out of scope for the A1 M12 slice.
+- `MEMORY.md` is near its line budget; do not add memory unless necessary.
+- ADR warnings and unrelated open issues remain out of scope.
 
 ## Next Steps
 
