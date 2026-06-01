@@ -137,6 +137,45 @@ driver applies fixes deterministically → CI green (blocking; `review / review`
     reference plans that already exist" rule into the writer brief so it stops recurring.** (Forward-refs are
     not CI-gated, but cross-family review flags them FIX-BEFORE-MERGE.)
 
+## ▶ SEMINAR QUALITY STANDARD + EXISTING-180 AUDIT (Codex 2026-06-01, user-endorsed)
+**Seminars are source-first, stricter than core.** BIO/HIST/ISTORIO/LIT/OES/RUTH are NOT generic language
+lessons — every module needs **source pack · factual checks · decolonization checks · citation discipline ·
+domain review** (Codex framing). **BIO stays Claude-owned** — keep that boundary. Other seminars are
+DEFERRED (bio only for now).
+
+**NEW WORKSTREAM — audit the EXISTING 180 bio plans + their 180 wikis to this standard.** They predate the
+epic and carry real debt — this session proved it: #2513 (9 original plans were Kulish content-duplicates),
+#2451 (4 short dossiers), #2528 (постум/арест/Latin-homoglyph defects in ~10 mostly-original-180 plans). The
+180 wikis have the same exposure (ghost sources, decolonization gaps, citation drift). Execute EFFICIENTLY —
+do NOT blind-LLM-review 360 artifacts:
+1. **Deterministic linter FIRST (= NEXT ACTIONS #3, now the keystone):** russianisms/calques + Latin-in-Cyrillic
+   (excl. URLs/acronyms like X-променів/STEM/IEU) + ghost `connects_to` (bare-slug resolution) + **ghost sources**
+   (`references[].path` URL-slug/title naming a DIFFERENT person than the figure — the real seminar failure mode)
+   + word-floor (≥1200 dossier / config word_target) + citation resolution. Run across ALL 310 plans + 180 wikis
+   → triage list.
+2. **Triage:** mechanical defects → fix deterministically (like #2528); substantive → source-first cross-review.
+3. **Source-first cross-review** (DeepSeek of record; grok UNDER VALIDATION) on flagged artifacts + a calibration
+   sample, scored against the dossier as ground truth. Fix by severity. Anti-fabrication (#M-4) over count.
+
+## ▶ GROK EVAL (2026-06-01) — PROMISING, UNDER VALIDATION, DO NOT TRUST YET (user: "test more")
+New standalone **grok CLI** (`~/.local/bin/grok` v0.2.16, logged in via grok.com) exposes
+`grok-composer-2.5-fast` (default) + `grok-build` (NO grok-4.3 in this CLI). `sources` MCP is WIRED into
+`~/.grok/config.toml` (34 tools, handshake OK). One-shot reviewer use works TODAY (read-only, no delegate
+adapter needed): `grok --prompt-file <f> -m grok-composer-2.5-fast --always-approve`. Tests so far: both models
+6/6 on a deterministic VESUM micro-test with raw-quote #M-4 discipline; grok-build self-initiated a follow-up
+verify; grok-composer's wave-1 head-to-head **beat DeepSeek once** (it `git ls-tree`-verified `maksym-rylskyi.yaml`
+exists on origin/main → DeepSeek had false-positived it a ghost). **STILL: keep DeepSeek-pro hermes as reviewer
+OF RECORD; validate grok over more plans first.** WRITER use needs the delegate grok adapter built (currently a
+stub `agent_runtime/adapters/grok.py`; registry only knows grok-4.3). The `maksym-rylskyi` finding means zerov's
+merged `connects_to` uses `mykhailo-drai-khmara` (also valid, fellow Neoclassicist) — NOT a defect, no fix.
+
+## ▶ GIT/GITHUB HYGIENE (2026-06-01, done) — bio lane clean
+Deleted 17 stale bio local branches (merged/backed-up/closed); removed obsolete scratch
+`phase2-word-target-defects-2026-05-31.txt`; pruned obsolete `drai-khmara-ref-title` worktree. Bio dirty tree
+clean · 0 bio worktrees · 0 open bio PRs. **PENDING user decision:** 4 `cursor/bio-rebuild-block{G7,I1,I2,J2}`
+local branches each have 2 local-only (unpushed) commits — the rejected cursor word-target batch, superseded by
+the merged plans; NOT deleted (#M-10 — never destroy unmerged work without the nod). Drop on user OK.
+
 ## ▶ NEXT ACTIONS (in order)
 0. **FIX THE GEMINI DISPATCH BUG #2454 FIRST (user 2026-06-01).** `delegate.py dispatch --agent gemini`
    gets killed by SIGTERM at ~87s with zero output (codex unaffected). Likely root cause: the delegate
