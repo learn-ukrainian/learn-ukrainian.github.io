@@ -115,8 +115,8 @@ def _is_metadata_only_edit(old_content: str, new_content: str) -> bool:
     without inventing backup files. Content-bearing plan edits still need the
     normal version bump and previous-content snapshot.
     """
-    old_plan = dict(_parse_plan(old_content, "old plan"))
-    new_plan = dict(_parse_plan(new_content, "new plan"))
+    old_plan = _parse_plan(old_content, "old plan")
+    new_plan = _parse_plan(new_content, "new plan")
 
     for key in METADATA_ONLY_FIELDS:
         old_plan.pop(key, None)
