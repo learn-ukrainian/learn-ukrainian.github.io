@@ -1,0 +1,120 @@
+- lemma: говорити
+  translation: to speak; to talk
+  pos: infinitive
+  usage: Я говорю українською.
+- lemma: говорю
+  translation: I speak
+  pos: verb form
+  usage: Я говорю українською.
+- lemma: говориш
+  translation: you speak
+  pos: verb form
+  usage: Ти говориш українською?
+- lemma: говорить
+  translation: he/she speaks
+  pos: verb form
+  usage: Вона говорить.
+- lemma: говорять
+  translation: they speak
+  pos: verb form
+  usage: Вони говорять українською.
+- lemma: робити
+  translation: to do; to make
+  pos: infinitive
+  usage: Я роблю вправу.
+- lemma: роблю
+  translation: I do; I make
+  pos: verb form
+  usage: Я роблю вправу.
+- lemma: робиш
+  translation: you do
+  pos: verb form
+  usage: Ти робиш вправу?
+- lemma: роблять
+  translation: they do
+  pos: verb form
+  usage: Вони роблять вправу.
+- lemma: бачити
+  translation: to see
+  pos: infinitive
+  usage: Я бачу слово.
+- lemma: бачу
+  translation: I see
+  pos: verb form
+  usage: Я бачу це слово.
+- lemma: бачиш
+  translation: you see
+  pos: verb form
+  usage: Ти бачиш це слово?
+- lemma: бачать
+  translation: they see
+  pos: verb form
+  usage: Вони бачать слово.
+- lemma: вчити
+  translation: to learn; to teach
+  pos: infinitive
+  usage: Ми вчимо українську.
+- lemma: вчу
+  translation: I learn
+  pos: verb form
+  usage: Я вчу українську.
+- lemma: просити
+  translation: to ask for
+  pos: infinitive
+  usage: Ти просиш каву?
+- lemma: прошу
+  translation: I ask for
+  pos: verb form
+  usage: Я прошу каву.
+- lemma: ходити
+  translation: to go regularly; to walk
+  pos: infinitive
+  usage: Я ходжу до школи.
+- lemma: ходжу
+  translation: I go
+  pos: verb form
+  usage: Я ходжу до школи.
+- lemma: ходять
+  translation: they go
+  pos: verb form
+  usage: Вони ходять до школи.
+- lemma: стояти
+  translation: to stand
+  pos: infinitive
+  usage: Він стоїть.
+- lemma: стоїть
+  translation: he/she stands
+  pos: verb form
+  usage: Він стоїть.
+- lemma: сидіти
+  translation: to sit
+  pos: infinitive
+  usage: Я сиджу.
+- lemma: сиджу
+  translation: I sit
+  pos: verb form
+  usage: Я сиджу тут.
+- lemma: спати
+  translation: to sleep
+  pos: infinitive
+  usage: Вони сплять.
+- lemma: їсти
+  translation: to eat
+  pos: infinitive
+  usage: Ти їси.
+- lemma: дати
+  translation: to give
+  pos: infinitive
+  usage: Я дам.
+- lemma: трохи
+  translation: a little
+  pos: adverb
+  usage: Я трохи говорю.
+- lemma: добре
+  translation: well
+  pos: adverb
+  usage: Ти добре говориш.
+- lemma: увечері
+  translation: in the evening
+  pos: adverb
+  usage: Увечері вони ходять до школи.
