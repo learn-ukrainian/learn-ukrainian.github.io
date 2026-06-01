@@ -123,5 +123,5 @@ references:
 - title: Авраменко Grade 10, p. 45-50
   notes: Стилістика займенників та морфологічна норма.
 connects_to:
-- b2-057 (advanced-case-semantics)
-- b2-059 (some-other-grammar-module)
+- b2-051 (advanced-case-semantics)
+- b2-053 (checkpoint-cases-morphology)
