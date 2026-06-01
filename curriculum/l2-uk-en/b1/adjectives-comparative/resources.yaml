@@ -1,18 +1,53 @@
-- title: Авраменко Grade 6, p.124-125
-  role: textbook
-  notes: Ступені порівняння якісних прикметників і вправи на просту та складену форму.
-- title: Litvinova Grade 6, p.198
-  role: textbook
-  notes: Проста і складена форма вищого ступеня з прикладами тренувальних вправ.
-- title: Заболотний Grade 6, p.137
-  role: textbook
-  notes: Пояснення, які прикметники звичайно не утворюють ступенів порівняння.
-- title: Заболотний Grade 8, p.18-21
-  role: textbook
-  notes: Зведена таблиця ступенів порівняння та правописних змін у формах.
-- title: Авраменко Grade 11, p.29
-  role: textbook
-  notes: Стилістичне зауваження про жартівливі рекламні форми (приклад найкрабовіші).
-- title: Заболотний Grade 8, p.28
-  role: textbook
-  notes: Приклади з підсилювачами типу **набагато швидше** і суміжні правописні спостереження.
+[
+  {
+    "title": "Авраменко Grade 6, p.124-125",
+    "role": "textbook",
+    "notes": "Ступені порівняння якісних прикметників: чергування, суплетивні форми, категорії прикметників, які не утворюють ступенів порівняння. Chunk ID: 6-klas-ukrmova-avramenko-2023_s0132",
+    "chunk_id": "6-klas-ukrmova-avramenko-2023_s0132"
+  },
+  {
+    "title": "Литвінова Grade 6, p.198",
+    "role": "textbook",
+    "notes": "Таблиця творення ступенів порівняння: проста (суфікси) та складена (більш/менш), найвищий ступінь. Plan reference."
+  },
+  {
+    "title": "Заболотний, Grade 6, p.137",
+    "role": "textbook",
+    "notes": "Визначення найвищого ступеня, повний перелік прикметників без ступенів порівняння. Chunk ID: 6-klas-ukrmova-zabolotnyi-2020_s0139",
+    "chunk_id": "6-klas-ukrmova-zabolotnyi-2020_s0139"
+  },
+  {
+    "title": "Авраменко, Grade 11, p.29",
+    "role": "textbook",
+    "notes": "Стилістичне зауваження: жартівливі форми вищого ступеня від відносних прикметників у рекламі. Chunk ID: 11-klas-ukrajinska-mova-avramenko-2019_s0041",
+    "chunk_id": "11-klas-ukrajinska-mova-avramenko-2019_s0041"
+  },
+  {
+    "title": "Заболотний Grade 8, p.18-21",
+    "role": "textbook",
+    "notes": "Повна таблиця творення для обох ступенів, синонімічні конструкції. Plan reference."
+  },
+  {
+    "title": "Заболотний Grade 8, p.28",
+    "role": "textbook",
+    "notes": "Зведена таблиця форм ступенів порівняння прикметників і прислівників поруч. Plan reference."
+  },
+  {
+    "title": "Ukrainian Lessons Podcast — Episode 104: Degrees of Comparison",
+    "role": "youtube",
+    "url": "https://www.youtube.com/watch?v=9wsTNIfx3Sc",
+    "notes": "Cтупені порівняння прикметників і прислівників у контексті здорового способу життя."
+  },
+  {
+    "title": "Добра форма — 20.1 Comparative Degree of Adjectives",
+    "role": "article",
+    "url": "https://opentext.ku.edu/dobraforma/chapter/20-1/",
+    "notes": "Порівняльний ступінь прикметників: конструкції з ніж, суфікси -ш- та -іш-."
+  },
+  {
+    "title": "Ступенювання — Вікіпедія",
+    "role": "wiki",
+    "url": "https://uk.wikipedia.org/wiki/Ступенювання",
+    "notes": "Оглядова стаття про ступені порівняння в українській мові."
+  }
+]

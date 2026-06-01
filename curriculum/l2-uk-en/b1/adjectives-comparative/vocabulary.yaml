@@ -1,164 +1,278 @@
-- lemma: вищий ступінь
-  translation: comparative degree
-  pos: noun phrase
-  usage: Вищий ступінь показує більшу або меншу міру ознаки.
-- lemma: порівняння
-  translation: comparison
-  pos: noun
-  usage: Порівняння потребує другого предмета.
-- lemma: проста форма
-  translation: simple or synthetic form
-  pos: noun phrase
-  usage: Проста форма має один прикметник.
-- lemma: складена форма
-  translation: compound or analytic form
-  pos: noun phrase
-  usage: Складена форма має більш або менш.
-- lemma: суфікс
-  translation: suffix
-  pos: noun
-  usage: Суфікс -іш- творить форму сильніший.
-- lemma: якісний прикметник
-  translation: qualitative adjective
-  pos: noun phrase
-  usage: Якісний прикметник може мати вищий ступінь.
-- lemma: відносний прикметник
-  translation: relative adjective
-  pos: noun phrase
-  usage: Відносний прикметник звичайно не має вищого ступеня.
-- lemma: більш
-  translation: more
-  pos: adverb
-  usage: Більш стоїть перед початковою формою прикметника.
-- lemma: менш
-  translation: less
-  pos: adverb
-  usage: Менш також стоїть перед початковою формою.
-- lemma: набагато
-  translation: much, significantly
-  pos: adverb
-  usage: Набагато підсилює форму вищого ступеня.
-- lemma: початкова форма
-  translation: base form
-  pos: noun phrase
-  usage: Після більш потрібна початкова форма.
-- lemma: ознака
-  translation: feature, quality
-  pos: noun
-  usage: Ознака може мати більшу або меншу міру.
-- lemma: міра
-  translation: degree, measure
-  pos: noun
-  usage: Міра ознаки змінюється в порівнянні.
-- lemma: якість
-  translation: quality
-  pos: noun
-  usage: У певному предметі якості може бути більше.
-- lemma: порівняльна конструкція
-  translation: comparative construction
-  pos: noun phrase
-  usage: Порівняльна конструкція вводить другий предмет.
-- lemma: прийменник
-  translation: preposition
-  pos: noun
-  usage: Прийменник за вимагає знахідного відмінка.
-- lemma: сполучник
-  translation: conjunction
-  pos: noun
-  usage: Сполучник ніж вводить другий компонент порівняння.
-- lemma: звукова зміна
-  translation: sound change
-  pos: noun phrase
-  usage: Звукова зміна пояснює форму дорожчий.
-- lemma: випадання
-  translation: dropping, elision
-  pos: noun
-  usage: Випадання -ок- видно у формі глибший.
-- lemma: суплетивна форма
-  translation: suppletive form
-  pos: noun phrase
-  usage: Кращий є суплетивна форма від гарний.
-- lemma: абсолютна ознака
-  translation: absolute feature
-  pos: noun phrase
-  usage: Абсолютна ознака не має більшої міри.
-- lemma: складний прикметник
-  translation: compound adjective
-  pos: noun phrase
-  usage: Складний прикметник часто не має ступенів порівняння.
-- lemma: масть
-  translation: animal coat color
-  pos: noun
-  usage: Масть тварини не утворює звичайного вищого ступеня.
-- lemma: підсилювач
-  translation: intensifier
-  pos: noun
-  usage: Підсилювач набагато стоїть перед вищим ступенем.
-- lemma: офіційний стиль
-  translation: official style
-  pos: noun phrase
-  usage: Офіційний стиль часто використовує складену форму.
-- lemma: науковий стиль
-  translation: academic style
-  pos: noun phrase
-  usage: Науковий стиль потребує точного формулювання.
-- lemma: розмовне мовлення
-  translation: spoken language
-  pos: noun phrase
-  usage: У розмовному мовленні проста форма є природною.
-- lemma: жартівлива форма
-  translation: playful form
-  pos: noun phrase
-  usage: Жартівлива форма може з'явитися в рекламі.
-- lemma: виняток
-  translation: exception
-  pos: noun
-  usage: Виняток треба вивчати разом із прикладами.
-- lemma: керування
-  translation: case government
-  pos: noun
-  usage: Керування після вищого ступеня потребує за, від або ніж.
-- lemma: переконливий
-  translation: convincing, persuasive
-  pos: adjective
-  usage: Переконливий доказ може бути переконливіший за попередній.
-- lemma: обґрунтований
-  translation: well-founded, justified
-  pos: adjective
-  usage: В офіційному стилі доречно написати більш обґрунтований висновок.
-- lemma: ризикований
-  translation: risky
-  pos: adjective
-  usage: Менш ризикований вибір звучить природно в діловому тексті.
-- lemma: гучний
-  translation: loud
-  pos: adjective
-  usage: Гучний район може бути гучніший за тиху вулицю.
-- lemma: сліпий
-  translation: blind
-  pos: adjective
-  usage: Сліпий називає абсолютну ознаку, тому звичайного вищого ступеня не має.
-- lemma: лисий
-  translation: bald
-  pos: adjective
-  usage: Лисий належить до прикметників з абсолютною ознакою.
-- lemma: босий
-  translation: barefoot
-  pos: adjective
-  usage: Босий не порівнюють за мірою у звичайній граматичній нормі.
-- lemma: голий
-  translation: naked, bare
-  pos: adjective
-  usage: Голий у цьому правилі є прикладом абсолютної ознаки.
-- lemma: живий
-  translation: alive
-  pos: adjective
-  usage: Живий називає стан, який не має звичайного вищого ступеня.
-- lemma: порожній
-  translation: empty
-  pos: adjective
-  usage: Порожній у вправі допомагає впізнати прикметник без ступенів порівняння.
-- lemma: готовий
-  translation: ready
-  pos: adjective
-  usage: Готовий часто подають серед ознак, які не порівнюють за мірою.
+[
+  {
+    "lemma": "ви́щий сту́пінь",
+    "translation": "comparative degree",
+    "pos": "noun phrase",
+    "usage": "Ви́щий сту́пінь пока́зує бі́льшу мі́ру озна́ки."
+  },
+  {
+    "lemma": "найви́щий сту́пінь",
+    "translation": "superlative degree",
+    "pos": "noun phrase",
+    "usage": "Найви́щий сту́пінь ми вивча́тимемо в насту́пному мо́дулі."
+  },
+  {
+    "lemma": "сту́пені порівняння",
+    "translation": "degrees of comparison",
+    "pos": "noun phrase",
+    "usage": "Сту́пені порівняння ма́ють лише́ я́кісні прикме́тники."
+  },
+  {
+    "lemma": "я́кісний прикме́тник",
+    "translation": "qualitative adjective",
+    "pos": "noun phrase",
+    "usage": "Я́кісний прикме́тник виража́є озна́ку, що ма́є мі́ру."
+  },
+  {
+    "lemma": "відно́сний прикме́тник",
+    "translation": "relative adjective",
+    "pos": "noun phrase",
+    "usage": "Відно́сний прикме́тник назива́є озна́ку че́рез матеріа́л."
+  },
+  {
+    "lemma": "присві́йний прикме́тник",
+    "translation": "possessive adjective",
+    "pos": "noun phrase",
+    "usage": "Присві́йний прикме́тник вка́зує на нале́жність."
+  },
+  {
+    "lemma": "про́ста́ фо́рма",
+    "translation": "simple/synthetic form",
+    "pos": "noun phrase",
+    "usage": "Про́ста́ фо́рма тво́риться за допомо́гою су́фіксів -іш- або́ -ш-."
+  },
+  {
+    "lemma": "скла́дена фо́рма",
+    "translation": "compound/analytic form",
+    "pos": "noun phrase",
+    "usage": "Скла́дена фо́рма: більш або́ менш + початко́ва фо́рма."
+  },
+  {
+    "lemma": "початко́ва фо́рма",
+    "translation": "base form (N.sg.m.)",
+    "pos": "noun phrase",
+    "usage": "Більш і менш поє́днуються лише́ з початко́вою фо́рмою."
+  },
+  {
+    "lemma": "осно́ва",
+    "translation": "stem (of a word)",
+    "pos": "noun",
+    "usage": "Су́фікс -іш- додає́ться до осно́ви прикме́тника."
+  },
+  {
+    "lemma": "ко́рінь",
+    "translation": "root (of a word)",
+    "pos": "noun",
+    "usage": "Коро́тший су́фікс -ш- додає́ться безпосере́дньо до ко́реня."
+  },
+  {
+    "lemma": "су́фікс",
+    "translation": "suffix",
+    "pos": "noun",
+    "usage": "Су́фікси -іш- і -ш- тво́рять про́сту́ фо́рму ви́щого сту́пеня."
+  },
+  {
+    "lemma": "префікс",
+    "translation": "prefix",
+    "pos": "noun",
+    "usage": "Префікс най- тво́рить найви́щий сту́пінь порівняння."
+  },
+  {
+    "lemma": "більш",
+    "translation": "more (compound comparative)",
+    "pos": "adverb",
+    "usage": "Більш ціка́вий — це скла́дена фо́рма ви́щого сту́пеня."
+  },
+  {
+    "lemma": "менш",
+    "translation": "less (compound comparative)",
+    "pos": "adverb",
+    "usage": "Це завда́ння менш складне, ніж попере́днє."
+  },
+  {
+    "lemma": "найбі́льш",
+    "translation": "most (compound superlative)",
+    "pos": "adverb",
+    "usage": "Найбі́льш поши́рена фо́рма — про́ста́."
+  },
+  {
+    "lemma": "найме́нш",
+    "translation": "least (compound superlative)",
+    "pos": "adverb",
+    "usage": "Це найме́нш зру́чний варіа́нт."
+  },
+  {
+    "lemma": "сильні́ший",
+    "translation": "stronger",
+    "pos": "adjective (comparative)",
+    "usage": "Він сильні́ший за мене́."
+  },
+  {
+    "lemma": "моло́дший",
+    "translation": "younger",
+    "pos": "adjective (comparative)",
+    "usage": "Моя́ сестра́ моло́дша за мене́."
+  },
+  {
+    "lemma": "старший",
+    "translation": "older (of people)",
+    "pos": "adjective (comparative)",
+    "usage": "Мій брат старший на два ро́ки́."
+  },
+  {
+    "lemma": "до́вший",
+    "translation": "longer",
+    "pos": "adjective (comparative)",
+    "usage": "Ця доро́га до́вша, ніж та."
+  },
+  {
+    "lemma": "ви́щий",
+    "translation": "higher, taller",
+    "pos": "adjective (comparative)",
+    "usage": "Гове́рла ви́ща за всі і́нші го́ри."
+  },
+  {
+    "lemma": "доро́жчий",
+    "translation": "more expensive",
+    "pos": "adjective (comparative)",
+    "usage": "Ка́ва доро́жча, ніж чай."
+  },
+  {
+    "lemma": "бли́жчий",
+    "translation": "closer",
+    "pos": "adjective (comparative)",
+    "usage": "Цей магази́н бли́жчий."
+  },
+  {
+    "lemma": "ни́жчий",
+    "translation": "lower",
+    "pos": "adjective (comparative)",
+    "usage": "Ціна́ ни́жча, ніж я очі́кував."
+  },
+  {
+    "lemma": "кра́щий",
+    "translation": "better",
+    "pos": "adjective (comparative)",
+    "usage": "Це кра́щий результа́т."
+  },
+  {
+    "lemma": "гі́рший",
+    "translation": "worse",
+    "pos": "adjective (comparative)",
+    "usage": "Пого́да сього́дні гі́рша, ніж учо́ра."
+  },
+  {
+    "lemma": "бі́льший",
+    "translation": "bigger, larger",
+    "pos": "adjective (comparative)",
+    "usage": "Ки́їв бі́льший за Львів."
+  },
+  {
+    "lemma": "ме́нший",
+    "translation": "smaller",
+    "pos": "adjective (comparative)",
+    "usage": "Ця кімна́та ме́нша за ту."
+  },
+  {
+    "lemma": "ціка́віший",
+    "translation": "more interesting",
+    "pos": "adjective (comparative)",
+    "usage": "Цей фільм ціка́віший."
+  },
+  {
+    "lemma": "важли́ві́ший",
+    "translation": "more important",
+    "pos": "adjective (comparative)",
+    "usage": "Це пита́ння важли́ві́ше за попере́днє."
+  },
+  {
+    "lemma": "набага́то",
+    "translation": "much, significantly (intensifier)",
+    "pos": "adverb",
+    "usage": "Цей фільм набага́то ціка́віший."
+  },
+  {
+    "lemma": "зна́чно",
+    "translation": "considerably (intensifier)",
+    "pos": "adverb",
+    "usage": "Він зна́чно старший за мене́."
+  },
+  {
+    "lemma": "де́що",
+    "translation": "somewhat",
+    "pos": "adverb",
+    "usage": "Завда́ння де́що складні́ше."
+  },
+  {
+    "lemma": "тро́хи",
+    "translation": "a little, somewhat",
+    "pos": "adverb",
+    "usage": "Вона́ тро́хи моло́дша."
+  },
+  {
+    "lemma": "ще",
+    "translation": "even (intensifier)",
+    "pos": "adverb",
+    "usage": "Цей варіа́нт ще кра́щий."
+  },
+  {
+    "lemma": "за",
+    "translation": "than (prep. + Acc.)",
+    "pos": "preposition",
+    "usage": "Ви́щий за мене́."
+  },
+  {
+    "lemma": "від",
+    "translation": "than (prep. + Gen.)",
+    "pos": "preposition",
+    "usage": "Ви́щий від мене́."
+  },
+  {
+    "lemma": "ніж",
+    "translation": "than (conjunction)",
+    "pos": "conjunction",
+    "usage": "Ви́щий, ніж я."
+  },
+  {
+    "lemma": "чергува́ння при́голосних",
+    "translation": "consonant alternation",
+    "pos": "noun phrase",
+    "usage": "Чергува́ння при́голосних відбу́вається при тво́ренні ви́щого сту́пеня."
+  },
+  {
+    "lemma": "випада́ння су́фікса",
+    "translation": "suffix dropping",
+    "pos": "noun phrase",
+    "usage": "Випада́ння су́фікса -ок- у сло́ві глибо́кий → гли́бший."
+  },
+  {
+    "lemma": "абсолю́тна озна́ка",
+    "translation": "absolute quality",
+    "pos": "noun phrase",
+    "usage": "Прикме́тники з абсолю́тною озна́кою не ма́ють сту́пенів порівняння."
+  },
+  {
+    "lemma": "складний прикме́тник",
+    "translation": "compound adjective",
+    "pos": "noun phrase",
+    "usage": "Складні прикме́тники не утво́рюють сту́пенів порівняння."
+  },
+  {
+    "lemma": "стилісти́чна но́рма",
+    "translation": "stylistic norm",
+    "pos": "noun phrase",
+    "usage": "Скла́дена фо́рма — це стилісти́чна но́рма для офіці́йних те́кстів."
+  },
+  {
+    "lemma": "порівня́льна констру́кція",
+    "translation": "comparative construction",
+    "pos": "noun phrase",
+    "usage": "Три порівня́льні констру́кції: за, від, ніж."
+  },
+  {
+    "lemma": "відмі́нювання",
+    "translation": "declension",
+    "pos": "noun",
+    "usage": "Фо́рми ви́щого сту́пеня підляга́ють звича́йному відмі́нюванню."
+  }
+]
