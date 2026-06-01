@@ -1,13 +1,13 @@
 # Current Session Handoff
 
-Generated-At: 2026-06-01T22:38Z
+Generated-At: 2026-06-02T00:42+0200
 
 ## Active Branch
 
 - Worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
-- Pre-refresh HEAD / origin:
-  `a982daed6fcd8f28670d9b48c56d5b19a8555c51`
+- Current verified pre-refresh HEAD / origin:
+  `8d30ff2246 docs(session): refresh A1 M20 handoff`
 - Previous committed handoff:
   `a982daed6f docs(session): refresh A1 journey handoff`
 - Latest shipped modules:
@@ -17,7 +17,7 @@ Generated-At: 2026-06-01T22:38Z
 
 Current worktree state:
 
-- Branch aligned with origin before this handoff refresh.
+- Branch aligned with origin at `8d30ff2246` before this handoff refresh.
 - Only visible untracked file:
   `curriculum/l2-uk-en/a1/i-want-i-can/python_qg.local.json`
   (pre-existing local artifact; do not stage unless explicitly requested).
@@ -61,7 +61,7 @@ M19 `questions` shipped and pushed in `ce21c0494c`; committed files:
 - `curriculum/l2-uk-en/a1/questions/resources.yaml`
 - `starlight/src/content/docs/a1/questions.mdx`
 
-Handoff-only commit `a982daed6f` followed M19.
+Handoff-only commits `a982daed6f` and `8d30ff2246` followed M19.
 
 ## M19 Validation Snapshot
 
@@ -96,7 +96,9 @@ Activity freshness check for M19:
 ## M20 Inspection Completed Only
 
 Context pressure is now the quality risk. M20 was inspected, but no artifacts
-were written.
+were written. A continuation attempt on 2026-06-02 stopped immediately because
+the session was still past the critical compaction threshold; it verified state
+only and did not create M20 content.
 
 M20 plan: `curriculum/l2-uk-en/plans/a1/my-morning.yaml`
 
