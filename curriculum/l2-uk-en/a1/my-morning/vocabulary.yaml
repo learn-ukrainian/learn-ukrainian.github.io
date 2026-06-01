@@ -1,0 +1,172 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: infinitive
+  usage: Я прокидаюся о сьомій.
+- lemma: прокидаюся
+  translation: I wake up
+  pos: verb form
+  usage: Я прокидаюся рано.
+- lemma: прокидаєшся
+  translation: you wake up
+  pos: verb form
+  usage: Коли ти прокидаєшся?
+- lemma: прокидається
+  translation: he/she wakes up
+  pos: verb form
+  usage: Вона прокидається о восьмій.
+- lemma: вставати
+  translation: to get up
+  pos: infinitive
+  usage: Я встаю рано.
+- lemma: вмиватися
+  translation: to wash up
+  pos: infinitive
+  usage: Потім я вмиваюся.
+- lemma: вмиваюся
+  translation: I wash up
+  pos: verb form
+  usage: Я вмиваюся у ванній.
+- lemma: митися
+  translation: to wash oneself
+  pos: infinitive
+  usage: Я миюся вранці.
+- lemma: одягатися
+  translation: to get dressed
+  pos: infinitive
+  usage: Я одягаюся швидко.
+- lemma: одягаюся
+  translation: I get dressed
+  pos: verb form
+  usage: Після цього я одягаюся.
+- lemma: збиратися
+  translation: to get ready
+  pos: infinitive
+  usage: Ми збираємося вдома.
+- lemma: збираюся
+  translation: I get ready
+  pos: verb form
+  usage: Я збираюся на роботу.
+- lemma: розчісуватися
+  translation: to comb one's hair
+  pos: infinitive
+  usage: Я розчісуюся вранці.
+- lemma: снідати
+  translation: to have breakfast
+  pos: infinitive
+  usage: Я снідаю вдома.
+- lemma: снідаю
+  translation: I have breakfast
+  pos: verb form
+  usage: Після цього я снідаю.
+- lemma: чистити зуби
+  translation: to brush teeth
+  pos: phrase
+  usage: Я чищу зуби.
+- lemma: дивитися
+  translation: to watch; to look
+  pos: infinitive
+  usage: Я дивлюся в дзеркало.
+- lemma: дивлюся
+  translation: I watch; I look
+  pos: verb form
+  usage: Я дивлюся в дзеркало.
+- lemma: користуватися
+  translation: to use
+  pos: infinitive
+  usage: Я користуюся телефоном.
+- lemma: користуюся
+  translation: I use
+  pos: verb form
+  usage: Я користуюся телефоном.
+- lemma: навчатися
+  translation: to study; to learn
+  pos: infinitive
+  usage: Я навчаюся вранці.
+- lemma: навчаюся
+  translation: I study; I learn
+  pos: verb form
+  usage: Я навчаюся вдома.
+- lemma: йти
+  translation: to go
+  pos: infinitive
+  usage: Я йду на роботу.
+- lemma: йду
+  translation: I go
+  pos: verb form
+  usage: Нарешті я йду до школи.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Це мій ранок.
+- lemma: вранці
+  translation: in the morning
+  pos: adverb
+  usage: Вранці я снідаю.
+- lemma: рано
+  translation: early
+  pos: adverb
+  usage: Я прокидаюся рано.
+- lemma: пізно
+  translation: late
+  pos: adverb
+  usage: У суботу я прокидаюся пізно.
+- lemma: швидко
+  translation: quickly
+  pos: adverb
+  usage: Я швидко одягаюся.
+- lemma: завжди
+  translation: always
+  pos: adverb
+  usage: Я завжди снідаю.
+- lemma: ніколи
+  translation: never
+  pos: adverb
+  usage: Я ніколи не снідаю пізно.
+- lemma: спочатку
+  translation: first
+  pos: sequence word
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then
+  pos: sequence word
+  usage: Потім я вмиваюся.
+- lemma: після цього
+  translation: after that
+  pos: sequence phrase
+  usage: Після цього я снідаю.
+- lemma: нарешті
+  translation: finally
+  pos: sequence word
+  usage: Нарешті я йду на роботу.
+- lemma: вода
+  translation: water
+  pos: noun
+  usage: Я п'ю воду.
+- lemma: рушник
+  translation: towel
+  pos: noun
+  usage: У ванній є рушник.
+- lemma: мило
+  translation: soap
+  pos: noun
+  usage: Тут є мило.
+- lemma: зубна паста
+  translation: toothpaste
+  pos: noun phrase
+  usage: Тут є зубна паста.
+- lemma: сніданок
+  translation: breakfast
+  pos: noun
+  usage: Це мій сніданок.
+- lemma: руханка
+  translation: short exercise routine
+  pos: noun
+  usage: Я роблю руханку.
+- lemma: будильник
+  translation: alarm clock
+  pos: noun
+  usage: Будильник дзвонить о сьомій.
+- lemma: дзеркало
+  translation: mirror
+  pos: noun
+  usage: Я дивлюся в дзеркало.

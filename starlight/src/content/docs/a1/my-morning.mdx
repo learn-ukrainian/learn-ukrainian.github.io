@@ -1,0 +1,326 @@
+---
+title: "Мій ранок"
+description: "Прокидаюся, вмиваюся — зворотні дієслова та ранкова рутина"
+sidebar:
+  order: 20
+  label: "20. Мій ранок"
+pipeline: linear-phase-4
+build_status: validated
+prev: questions
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Morning routines are a good place to learn Ukrainian verbs with **-ся / -сь**.
+Many of them describe an action that stays with the person who does it:
+**я прокидаюся** (I wake up), **я вмиваюся** (I wash up), **я одягаюся** (I get
+dressed). The ending before **-ся** still changes for the person. The small
+piece **-ся** does not replace the verb ending.
+
+Start from the Group One pattern you already know. A regular verb like
+**читати** gives the endings **-ю, -єш, -є, -ємо, -єте, -ють**. A regular
+reflexive verb keeps those endings and then adds **-ся**:
+
+| Person | Regular verb | With -ся |
+| --- | --- | --- |
+| я | **читаю** | **прокидаюся** |
+| ти | **читаєш** | **прокидаєшся** |
+| він / вона | **читає** | **прокидається** |
+| ми | **читаємо** | **прокидаємося** |
+| ви | **читаєте** | **прокидаєтеся** |
+| вони | **читають** | **прокидаються** |
+
+You may see a shorter **-сь** after a vowel, especially in quick speech or
+informal writing: **прокидаюся / прокидаюсь**. For your own writing, use the
+full form **-ся** first. Recognize **-сь**, but keep your active pattern
+simple.
+
+### Hear the reflexive ending
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In прокидаєшся, the written -шся is pronounced like [с':а].", "isTrue": true, "explanation": "Say [прокидайес':а], not each written letter separately."}, {"statement": "In одягається, the written -ться is pronounced like [ц':а].", "isTrue": true, "explanation": "The final sounds merge smoothly."}, {"statement": "Прокидаєшся should be pronounced [прокидайешся] letter by letter.", "isTrue": false, "explanation": "Do not keep a separate [ш] sound here."}, {"statement": "The spelling -ся can sound like [с':а].", "isTrue": true, "explanation": "This is the soft final sound to recognize."}]`)} />
+
+## Діалоги
+
+Read the first dialogue as a morning check-in between roommates. The Ukrainian
+chunks are short and repeat the same safe pattern.
+
+<DialogueBox uk="Ліна: Коли ти прокидаєшся?" en="Lina: When do you wake up?" />
+<DialogueBox uk="Настя: Я прокидаюся о сьомій." en="Nastia: I wake up at seven." />
+<DialogueBox uk="Ліна: Що ти робиш потім?" en="Lina: What do you do then?" />
+<DialogueBox uk="Настя: Вмиваюся, одягаюся і снідаю." en="Nastia: I wash up, get dressed, and have breakfast." />
+<DialogueBox uk="Ліна: Ти поспішаєш?" en="Lina: Are you hurrying?" />
+<DialogueBox uk="Настя: Так, трохи. Потім я йду на роботу." en="Nastia: Yes, a little. Then I go to work." />
+<DialogueBox uk="Ліна: У ванній є рушник?" en="Lina: Is there a towel in the bathroom?" />
+<DialogueBox uk="Настя: Так, є рушник, мило і зубна паста." en="Nastia: Yes, there is a towel, soap, and toothpaste." />
+<DialogueBox uk="Ліна: Ти робиш руханку?" en="Lina: Do you do a short exercise routine?" />
+<DialogueBox uk="Настя: Так, але швидко." en="Nastia: Yes, but quickly." />
+
+Notice the difference between a reflexive morning action and a regular action.
+**Вмиваюся** and **одягаюся** end in **-ся**. **Снідаю** does not. You do not
+need to say **я мию себе** for a normal morning routine. The natural A1 line is
+**я вмиваюся** or **я миюся**.
+
+The object words stay simple. A towel, soap, toothpaste, and breakfast are not
+grammar goals by themselves; they make the routine concrete. If a sentence gets
+too long, split it: **Я вмиваюся. У мене є рушник. Потім снідаю.** Short
+sentences are still real Ukrainian when the order is clear.
+
+The second dialogue compares a weekday and a free morning.
+
+<DialogueBox uk="Настя: У суботу я не поспішаю." en="Nastia: On Saturday I do not hurry." />
+<DialogueBox uk="Настя: Прокидаюся пізно і снідаю вдома." en="Nastia: I wake up late and have breakfast at home." />
+<DialogueBox uk="Ліна: А я вранці навчаюся." en="Lina: And I study in the morning." />
+<DialogueBox uk="Ліна: Потім збираюся і гуляю." en="Lina: Then I get ready and walk." />
+
+**Навчатися** is also a **-ся** verb: **я навчаюся**, **ти навчаєшся**. Some
+verbs on **-уватися / -юватися** change the inside of the word in the present
+tense. Recognize **користуватися -> користуюся, користуєшся**, not
+<del>користуювася</del>. That pattern is useful later; today you
+only need to recognize it.
+
+### Add the morning ending
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Ти ___ рано?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається"]}, {"sentence": "Вона ___ швидко.", "answer": "одягається", "options": ["одягається", "одягаюся", "одягаєшся"]}, {"sentence": "Я ___ у ванній.", "answer": "вмиваюся", "options": ["вмиваюся", "вмиваєшся", "вмивається"]}, {"sentence": "Ми ___ вдома.", "answer": "збираємося", "options": ["збираємося", "збираєтеся", "збираються"]}, {"sentence": "Вони ___ о восьмій.", "answer": "прокидаються", "options": ["прокидаються", "прокидаємося", "прокидаєтеся"]}]`)} />
+
+## Дієслова на -ся
+
+Build the form in two moves. First choose the normal present-tense ending. Then
+add **-ся**.
+
+| Infinitive | я | ти | він / вона |
+| --- | --- | --- | --- |
+| **прокидатися** | **прокидаюся** | **прокидаєшся** | **прокидається** |
+| **умиватися / вмиватися** | **вмиваюся** | **вмиваєшся** | **вмивається** |
+| **одягатися** | **одягаюся** | **одягаєшся** | **одягається** |
+| **збиратися** | **збираюся** | **збираєшся** | **збирається** |
+
+The pronunciation is not letter by letter. In **ти прокидаєшся**, the written
+ending **-шся** is pronounced like **[с':а]**: **[прокидайес':а]**. In
+**вона одягається**, the written ending **-ться** is pronounced like
+**[ц':а]**: **[одягайец':а]**. The simple written **-ся** is also pronounced
+softly: **[с':а]**.
+
+Do not force the spelling into the sound. Write **прокидаєшся** and
+**одягається**. Say them smoothly.
+
+:::tip
+When a sentence starts with **я**, look for **-юся** first: **я прокидаюся**,
+**я вмиваюся**, **я одягаюся**. When the sentence starts with **ти**, look for
+**-єшся**: **ти прокидаєшся**, **ти вмиваєшся**.
+:::
+
+Some useful verbs belong to a different pattern. **Дивитися** gives
+**я дивлюся**, not <del>я дивюся</del>. **Вчитися** gives
+**я вчуся**. These are recognition forms today. Use them in ready chunks, but
+do not try to rebuild the whole second-conjugation reflexive table yet.
+
+### Reflexive or regular
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I wash up in the morning.", "options": [{"text": "Я вмиваюся вранці.", "correct": true}, {"text": "Я мию себе вранці.", "correct": false}, {"text": "Я вмиваю вранці.", "correct": false}], "explanation": "The routine action is Я вмиваюся."}, {"question": "I have breakfast at home.", "options": [{"text": "Я снідаю вдома.", "correct": true}, {"text": "Я снідаюся вдома.", "correct": false}, {"text": "Я сніданок вдома.", "correct": false}], "explanation": "Снідати is regular here; do not add -ся."}, {"question": "I get dressed quickly.", "options": [{"text": "Я швидко одягаюся.", "correct": true}, {"text": "Я швидко одягаю.", "correct": false}, {"text": "Я швидко одягатися.", "correct": false}], "explanation": "Use the present form одягаюся."}, {"question": "I use a phone.", "options": [{"text": "Я користуюся телефоном.", "correct": true}, {"text": "Я користуювася телефоном.", "correct": false}, {"text": "Я користую телефоном.", "correct": false}], "explanation": "Recognize користуватися -> користуюся."}]`)} />
+
+### Put the morning in order
+
+<Order client:only='react' items={JSON.parse(`["Спочатку я прокидаюся.", "Потім вмиваюся.", "Після цього одягаюся.", "Потім снідаю.", "Нарешті йду на роботу."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4]`)} instruction={"Put the routine from first to last."} isUkrainian={false} />
+
+## Мій ранок
+
+Now turn the verb forms into a small story. The sequence words are:
+**спочатку** (first), **потім** (then), **після цього** (after that), and
+**нарешті** (finally). These words let you keep the grammar simple and still
+sound organized.
+
+Here is a safe model:
+
+**Спочатку я прокидаюся о сьомій. Потім вмиваюся і чищу зуби. Після цього
+одягаюся і снідаю. Нарешті я йду на роботу.**
+
+Add concrete morning words only when they help the story. **Вода** is water.
+**Рушник** is a towel. **Мило** is soap. **Зубна паста** is toothpaste.
+**Сніданок** is breakfast as a noun, while **снідати** is the action "to have
+breakfast." **Руханка** is a short morning exercise routine. You may also hear
+friendly time words such as **раненько** (nice and early) and **швиденько**
+(quickly, lightly). A compact story can use two or three of these:
+
+**У ванній є рушник, мило і зубна паста. Я швидко вмиваюся. Потім роблю
+руханку і снідаю.**
+
+Use **завжди** and **ніколи** with **не** when you talk about habits:
+**Я завжди снідаю. Я ніколи не снідаю пізно.** Ukrainian keeps **не** before
+the verb in the negative habit.
+
+The verb **йти** is irregular: **я йду**, **ти йдеш**, **він / вона йде**.
+Learn these as ready chunks for the end of the morning story: **я йду на
+роботу**, **ти йдеш до школи**, **вона йде в університет**.
+
+Make your own four-sentence version by changing only the time, place, and one
+object. Keep the verbs stable while you change details: **о сьомій**, **о
+восьмій**, **вдома**, **до школи**, **на роботу**, **в університет**. This keeps
+the morning story useful without forcing you to invent new grammar. A good A1
+answer can be direct: **Спочатку я прокидаюся о восьмій. Потім вмиваюся. Після
+цього снідаю. Нарешті йду в університет.**
+
+### Finish the roommate dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Коли ти ___?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається"]}, {"sentence": "Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Що ти робиш ___?", "answer": "потім", "options": ["потім", "сніданок", "рушник"]}, {"sentence": "Я вмиваюся і ___.", "answer": "одягаюся", "options": ["одягаюся", "одягаєшся", "одягається"]}, {"sentence": "Після цього я ___.", "answer": "снідаю", "options": ["снідаю", "снідаєшся", "сніданок"]}]`)} />
+
+### Active pattern or recognition chunk
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Build with Group One + -ся": ["прокидаюся", "прокидаєшся", "одягається", "збираємося", "вмиваються"], "Recognize as a ready chunk": ["дивлюся", "вчуся", "користуюся"], "No -ся today": ["снідаю", "п'ю воду", "йду на роботу"]}`)} />
+
+## 📋 Підсумок
+
+The active pattern is regular verb form plus **-ся**: **я прокидаюся**,
+**ти прокидаєшся**, **він прокидається**. The person ending still matters. Do
+not write <del>я прокидаєшся</del> or
+<del>він прокидаюся</del>.
+
+For pronunciation, remember three written-to-spoken pairs:
+
+| Written | Say |
+| --- | --- |
+| **-шся** | **[с':а]** |
+| **-ться** | **[ц':а]** |
+| **-ся** | **[с':а]** |
+
+For your own A1 story, keep the order simple:
+
+1. **Спочатку я прокидаюся.**
+2. **Потім вмиваюся і одягаюся.**
+3. **Після цього снідаю.**
+4. **Нарешті йду на роботу / до школи / в університет.**
+
+### Repair traps
+
+| Avoid | Use | Why |
+| --- | --- | --- |
+| <del>Я прокидаєшся.</del> | **Я прокидаюся.** | **я** needs **-юся** |
+| <del>Він прокидаюся.</del> | **Він прокидається.** | **він** needs **-ється** |
+| **[прокидайешся]** | **[прокидайес':а]** | written **-шся** is not pronounced letter by letter |
+| **[одягайет'с'а]** | **[одягайец':а]** | written **-ться** is pronounced **[ц':а]** |
+| <del>Я мию себе.</del> | **Я миюся. / Я вмиваюся.** | the routine action is reflexive |
+| <del>Я дивюся.</del> / <del>Я дивюсь.</del> | **Я дивлюся.** | learn this second-conjugation form as a ready chunk |
+| <del>Я користуювася.</del> | **Я користуюся.** | **-ува-** drops in the present-tense form |
+| <del>завтрак</del> | **сніданок** | use the Ukrainian breakfast word |
+
+Do not explain these endings through any other language. Ukrainian has its own
+clear pattern: choose the Ukrainian verb form, add **-ся / -сь**, and pronounce
+the final cluster smoothly.
+
+### Build my morning line
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "First I wake up.", "options": [{"text": "Спочатку я прокидаюся.", "correct": true}, {"text": "Спочатку я прокидаєшся.", "correct": false}, {"text": "Спочатку я прокидатися.", "correct": false}], "explanation": "Я needs прокидаюся."}, {"source": "Then I wash up.", "options": [{"text": "Потім я вмиваюся.", "correct": true}, {"text": "Потім я мию себе.", "correct": false}, {"text": "Потім я вмиваєшся.", "correct": false}], "explanation": "Use the routine verb вмиваюся."}, {"source": "After that I have breakfast.", "options": [{"text": "Після цього я снідаю.", "correct": true}, {"text": "Після цього я снідаюся.", "correct": false}, {"text": "Після цього я сніданок.", "correct": false}], "explanation": "Снідати is regular in this routine."}, {"source": "Finally I go to work.", "options": [{"text": "Нарешті я йду на роботу.", "correct": true}, {"text": "Нарешті я йдеш на роботу.", "correct": false}, {"text": "Нарешті я йти на роботу.", "correct": false}], "explanation": "Learn я йду as the ready chunk."}]`)} />
+
+<span id="repair-traps"></span>
+
+### Repair morning traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я прокидаєшся.", "errorWord": "Я прокидаєшся.", "correctForm": "Я прокидаюся.", "options": ["Я прокидаюся.", "Я прокидаєшся.", "Я прокидається."], "explanation": "Я uses the -юся form."}, {"sentence": "Він прокидаюся.", "errorWord": "Він прокидаюся.", "correctForm": "Він прокидається.", "options": ["Він прокидається.", "Він прокидаюся.", "Він прокидаєшся."], "explanation": "Він uses the -ється form."}, {"sentence": "Вимова: [прокидайешся].", "errorWord": "[прокидайешся]", "correctForm": "[прокидайес':а]", "options": ["[прокидайес':а]", "[прокидайешся]", "[прокидайец':а]"], "explanation": "Written -шся is pronounced [с':а]."}, {"sentence": "Вимова: [одягайет'с'а].", "errorWord": "[одягайет'с'а]", "correctForm": "[одягайец':а]", "options": ["[одягайец':а]", "[одягайет'с'а]", "[одягайес':а]"], "explanation": "Written -ться is pronounced [ц':а]."}, {"sentence": "Я мию себе.", "errorWord": "Я мию себе.", "correctForm": "Я вмиваюся.", "options": ["Я вмиваюся.", "Я мию себе.", "Я вмиваю себе."], "explanation": "The natural routine verb is reflexive."}, {"sentence": "Я дивюся / Я дивюсь.", "errorWord": "Я дивюся / Я дивюсь.", "correctForm": "Я дивлюся.", "options": ["Я дивлюся.", "Я дивлюся в дзеркало.", "Я дивлюся фільм."], "explanation": "Learn я дивлюся as a ready chunk."}, {"sentence": "Я користуювася.", "errorWord": "Я користуювася.", "correctForm": "Я користуюся.", "options": ["Я користуюся.", "Я користуюся телефоном.", "Я використовую телефон."], "explanation": "The -ува- part drops in the present-tense form."}, {"sentence": "Це мій завтрак.", "errorWord": "завтрак", "correctForm": "Це мій сніданок.", "options": ["Це мій сніданок.", "Це мій завтрак.", "Це моя снідати."], "explanation": "Use сніданок for breakfast."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"прокидатися","translation":"to wake up","pos":"infinitive","example":"Я прокидаюся о сьомій.","examples":["to wake up","Я прокидаюся о сьомій."]},{"word":"прокидаюся","translation":"I wake up","pos":"verb form","example":"Я прокидаюся рано.","examples":["I wake up","Я прокидаюся рано."]},{"word":"прокидаєшся","translation":"you wake up","pos":"verb form","example":"Коли ти прокидаєшся?","examples":["you wake up","Коли ти прокидаєшся?"]},{"word":"прокидається","translation":"he/she wakes up","pos":"verb form","example":"Вона прокидається о восьмій.","examples":["he/she wakes up","Вона прокидається о восьмій."]},{"word":"вставати","translation":"to get up","pos":"infinitive","example":"Я встаю рано.","examples":["to get up","Я встаю рано."]},{"word":"вмиватися","translation":"to wash up","pos":"infinitive","example":"Потім я вмиваюся.","examples":["to wash up","Потім я вмиваюся."]},{"word":"вмиваюся","translation":"I wash up","pos":"verb form","example":"Я вмиваюся у ванній.","examples":["I wash up","Я вмиваюся у ванній."]},{"word":"митися","translation":"to wash oneself","pos":"infinitive","example":"Я миюся вранці.","examples":["to wash oneself","Я миюся вранці."]},{"word":"одягатися","translation":"to get dressed","pos":"infinitive","example":"Я одягаюся швидко.","examples":["to get dressed","Я одягаюся швидко."]},{"word":"одягаюся","translation":"I get dressed","pos":"verb form","example":"Після цього я одягаюся.","examples":["I get dressed","Після цього я одягаюся."]},{"word":"збиратися","translation":"to get ready","pos":"infinitive","example":"Ми збираємося вдома.","examples":["to get ready","Ми збираємося вдома."]},{"word":"збираюся","translation":"I get ready","pos":"verb form","example":"Я збираюся на роботу.","examples":["I get ready","Я збираюся на роботу."]},{"word":"розчісуватися","translation":"to comb one's hair","pos":"infinitive","example":"Я розчісуюся вранці.","examples":["to comb one's hair","Я розчісуюся вранці."]},{"word":"снідати","translation":"to have breakfast","pos":"infinitive","example":"Я снідаю вдома.","examples":["to have breakfast","Я снідаю вдома."]},{"word":"снідаю","translation":"I have breakfast","pos":"verb form","example":"Після цього я снідаю.","examples":["I have breakfast","Після цього я снідаю."]},{"word":"чистити зуби","translation":"to brush teeth","pos":"phrase","example":"Я чищу зуби.","examples":["to brush teeth","Я чищу зуби."]},{"word":"дивитися","translation":"to watch; to look","pos":"infinitive","example":"Я дивлюся в дзеркало.","examples":["to watch; to look","Я дивлюся в дзеркало."]},{"word":"дивлюся","translation":"I watch; I look","pos":"verb form","example":"Я дивлюся в дзеркало.","examples":["I watch; I look","Я дивлюся в дзеркало."]},{"word":"користуватися","translation":"to use","pos":"infinitive","example":"Я користуюся телефоном.","examples":["to use","Я користуюся телефоном."]},{"word":"користуюся","translation":"I use","pos":"verb form","example":"Я користуюся телефоном.","examples":["I use","Я користуюся телефоном."]},{"word":"навчатися","translation":"to study; to learn","pos":"infinitive","example":"Я навчаюся вранці.","examples":["to study; to learn","Я навчаюся вранці."]},{"word":"навчаюся","translation":"I study; I learn","pos":"verb form","example":"Я навчаюся вдома.","examples":["I study; I learn","Я навчаюся вдома."]},{"word":"йти","translation":"to go","pos":"infinitive","example":"Я йду на роботу.","examples":["to go","Я йду на роботу."]},{"word":"йду","translation":"I go","pos":"verb form","example":"Нарешті я йду до школи.","examples":["I go","Нарешті я йду до школи."]},{"word":"ранок","translation":"morning","pos":"noun","example":"Це мій ранок.","examples":["morning","Це мій ранок."]},{"word":"вранці","translation":"in the morning","pos":"adverb","example":"Вранці я снідаю.","examples":["in the morning","Вранці я снідаю."]},{"word":"рано","translation":"early","pos":"adverb","example":"Я прокидаюся рано.","examples":["early","Я прокидаюся рано."]},{"word":"пізно","translation":"late","pos":"adverb","example":"У суботу я прокидаюся пізно.","examples":["late","У суботу я прокидаюся пізно."]},{"word":"швидко","translation":"quickly","pos":"adverb","example":"Я швидко одягаюся.","examples":["quickly","Я швидко одягаюся."]},{"word":"завжди","translation":"always","pos":"adverb","example":"Я завжди снідаю.","examples":["always","Я завжди снідаю."]},{"word":"ніколи","translation":"never","pos":"adverb","example":"Я ніколи не снідаю пізно.","examples":["never","Я ніколи не снідаю пізно."]},{"word":"спочатку","translation":"first","pos":"sequence word","example":"Спочатку я прокидаюся.","examples":["first","Спочатку я прокидаюся."]},{"word":"потім","translation":"then","pos":"sequence word","example":"Потім я вмиваюся.","examples":["then","Потім я вмиваюся."]},{"word":"після цього","translation":"after that","pos":"sequence phrase","example":"Після цього я снідаю.","examples":["after that","Після цього я снідаю."]},{"word":"нарешті","translation":"finally","pos":"sequence word","example":"Нарешті я йду на роботу.","examples":["finally","Нарешті я йду на роботу."]},{"word":"вода","translation":"water","pos":"noun","example":"Я п'ю воду.","examples":["water","Я п'ю воду."]},{"word":"рушник","translation":"towel","pos":"noun","example":"У ванній є рушник.","examples":["towel","У ванній є рушник."]},{"word":"мило","translation":"soap","pos":"noun","example":"Тут є мило.","examples":["soap","Тут є мило."]},{"word":"зубна паста","translation":"toothpaste","pos":"noun phrase","example":"Тут є зубна паста.","examples":["toothpaste","Тут є зубна паста."]},{"word":"сніданок","translation":"breakfast","pos":"noun","example":"Це мій сніданок.","examples":["breakfast","Це мій сніданок."]},{"word":"руханка","translation":"short exercise routine","pos":"noun","example":"Я роблю руханку.","examples":["short exercise routine","Я роблю руханку."]},{"word":"будильник","translation":"alarm clock","pos":"noun","example":"Будильник дзвонить о сьомій.","examples":["alarm clock","Будильник дзвонить о сьомій."]},{"word":"дзеркало","translation":"mirror","pos":"noun","example":"Я дивлюся в дзеркало.","examples":["mirror","Я дивлюся в дзеркало."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"прокидатися","back":"to wake up"},{"front":"прокидаюся","back":"I wake up"},{"front":"прокидаєшся","back":"you wake up"},{"front":"прокидається","back":"he/she wakes up"},{"front":"вставати","back":"to get up"},{"front":"вмиватися","back":"to wash up"},{"front":"вмиваюся","back":"I wash up"},{"front":"митися","back":"to wash oneself"},{"front":"одягатися","back":"to get dressed"},{"front":"одягаюся","back":"I get dressed"},{"front":"збиратися","back":"to get ready"},{"front":"збираюся","back":"I get ready"},{"front":"розчісуватися","back":"to comb one's hair"},{"front":"снідати","back":"to have breakfast"},{"front":"снідаю","back":"I have breakfast"},{"front":"чистити зуби","back":"to brush teeth"},{"front":"дивитися","back":"to watch; to look"},{"front":"дивлюся","back":"I watch; I look"},{"front":"користуватися","back":"to use"},{"front":"користуюся","back":"I use"},{"front":"навчатися","back":"to study; to learn"},{"front":"навчаюся","back":"I study; I learn"},{"front":"йти","back":"to go"},{"front":"йду","back":"I go"},{"front":"ранок","back":"morning"},{"front":"вранці","back":"in the morning"},{"front":"рано","back":"early"},{"front":"пізно","back":"late"},{"front":"швидко","back":"quickly"},{"front":"завжди","back":"always"},{"front":"ніколи","back":"never"},{"front":"спочатку","back":"first"},{"front":"потім","back":"then"},{"front":"після цього","back":"after that"},{"front":"нарешті","back":"finally"},{"front":"вода","back":"water"},{"front":"рушник","back":"towel"},{"front":"мило","back":"soap"},{"front":"зубна паста","back":"toothpaste"},{"front":"сніданок","back":"breakfast"},{"front":"руханка","back":"short exercise routine"},{"front":"будильник","back":"alarm clock"},{"front":"дзеркало","back":"mirror"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Hear the reflexive ending
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In прокидаєшся, the written -шся is pronounced like [с':а].", "isTrue": true, "explanation": "Say [прокидайес':а], not each written letter separately."}, {"statement": "In одягається, the written -ться is pronounced like [ц':а].", "isTrue": true, "explanation": "The final sounds merge smoothly."}, {"statement": "Прокидаєшся should be pronounced [прокидайешся] letter by letter.", "isTrue": false, "explanation": "Do not keep a separate [ш] sound here."}, {"statement": "The spelling -ся can sound like [с':а].", "isTrue": true, "explanation": "This is the soft final sound to recognize."}]`)} />
+
+### Add the morning ending
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Ти ___ рано?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається"]}, {"sentence": "Вона ___ швидко.", "answer": "одягається", "options": ["одягається", "одягаюся", "одягаєшся"]}, {"sentence": "Я ___ у ванній.", "answer": "вмиваюся", "options": ["вмиваюся", "вмиваєшся", "вмивається"]}, {"sentence": "Ми ___ вдома.", "answer": "збираємося", "options": ["збираємося", "збираєтеся", "збираються"]}, {"sentence": "Вони ___ о восьмій.", "answer": "прокидаються", "options": ["прокидаються", "прокидаємося", "прокидаєтеся"]}]`)} />
+
+### Reflexive or regular
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I wash up in the morning.", "options": [{"text": "Я вмиваюся вранці.", "correct": true}, {"text": "Я мию себе вранці.", "correct": false}, {"text": "Я вмиваю вранці.", "correct": false}], "explanation": "The routine action is Я вмиваюся."}, {"question": "I have breakfast at home.", "options": [{"text": "Я снідаю вдома.", "correct": true}, {"text": "Я снідаюся вдома.", "correct": false}, {"text": "Я сніданок вдома.", "correct": false}], "explanation": "Снідати is regular here; do not add -ся."}, {"question": "I get dressed quickly.", "options": [{"text": "Я швидко одягаюся.", "correct": true}, {"text": "Я швидко одягаю.", "correct": false}, {"text": "Я швидко одягатися.", "correct": false}], "explanation": "Use the present form одягаюся."}, {"question": "I use a phone.", "options": [{"text": "Я користуюся телефоном.", "correct": true}, {"text": "Я користуювася телефоном.", "correct": false}, {"text": "Я користую телефоном.", "correct": false}], "explanation": "Recognize користуватися -> користуюся."}]`)} />
+
+### Put the morning in order
+
+<Order client:only='react' items={JSON.parse(`["Спочатку я прокидаюся.", "Потім вмиваюся.", "Після цього одягаюся.", "Потім снідаю.", "Нарешті йду на роботу."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4]`)} instruction={"Put the routine from first to last."} isUkrainian={false} />
+
+### Finish the roommate dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Коли ти ___?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається"]}, {"sentence": "Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Що ти робиш ___?", "answer": "потім", "options": ["потім", "сніданок", "рушник"]}, {"sentence": "Я вмиваюся і ___.", "answer": "одягаюся", "options": ["одягаюся", "одягаєшся", "одягається"]}, {"sentence": "Після цього я ___.", "answer": "снідаю", "options": ["снідаю", "снідаєшся", "сніданок"]}]`)} />
+
+### Active pattern or recognition chunk
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Build with Group One + -ся": ["прокидаюся", "прокидаєшся", "одягається", "збираємося", "вмиваються"], "Recognize as a ready chunk": ["дивлюся", "вчуся", "користуюся"], "No -ся today": ["снідаю", "п'ю воду", "йду на роботу"]}`)} />
+
+### Build my morning line
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "First I wake up.", "options": [{"text": "Спочатку я прокидаюся.", "correct": true}, {"text": "Спочатку я прокидаєшся.", "correct": false}, {"text": "Спочатку я прокидатися.", "correct": false}], "explanation": "Я needs прокидаюся."}, {"source": "Then I wash up.", "options": [{"text": "Потім я вмиваюся.", "correct": true}, {"text": "Потім я мию себе.", "correct": false}, {"text": "Потім я вмиваєшся.", "correct": false}], "explanation": "Use the routine verb вмиваюся."}, {"source": "After that I have breakfast.", "options": [{"text": "Після цього я снідаю.", "correct": true}, {"text": "Після цього я снідаюся.", "correct": false}, {"text": "Після цього я сніданок.", "correct": false}], "explanation": "Снідати is regular in this routine."}, {"source": "Finally I go to work.", "options": [{"text": "Нарешті я йду на роботу.", "correct": true}, {"text": "Нарешті я йдеш на роботу.", "correct": false}, {"text": "Нарешті я йти на роботу.", "correct": false}], "explanation": "Learn я йду as the ready chunk."}]`)} />
+
+<span id="repair-traps"></span>
+
+### Repair morning traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я прокидаєшся.", "errorWord": "Я прокидаєшся.", "correctForm": "Я прокидаюся.", "options": ["Я прокидаюся.", "Я прокидаєшся.", "Я прокидається."], "explanation": "Я uses the -юся form."}, {"sentence": "Він прокидаюся.", "errorWord": "Він прокидаюся.", "correctForm": "Він прокидається.", "options": ["Він прокидається.", "Він прокидаюся.", "Він прокидаєшся."], "explanation": "Він uses the -ється form."}, {"sentence": "Вимова: [прокидайешся].", "errorWord": "[прокидайешся]", "correctForm": "[прокидайес':а]", "options": ["[прокидайес':а]", "[прокидайешся]", "[прокидайец':а]"], "explanation": "Written -шся is pronounced [с':а]."}, {"sentence": "Вимова: [одягайет'с'а].", "errorWord": "[одягайет'с'а]", "correctForm": "[одягайец':а]", "options": ["[одягайец':а]", "[одягайет'с'а]", "[одягайес':а]"], "explanation": "Written -ться is pronounced [ц':а]."}, {"sentence": "Я мию себе.", "errorWord": "Я мию себе.", "correctForm": "Я вмиваюся.", "options": ["Я вмиваюся.", "Я мию себе.", "Я вмиваю себе."], "explanation": "The natural routine verb is reflexive."}, {"sentence": "Я дивюся / Я дивюсь.", "errorWord": "Я дивюся / Я дивюсь.", "correctForm": "Я дивлюся.", "options": ["Я дивлюся.", "Я дивлюся в дзеркало.", "Я дивлюся фільм."], "explanation": "Learn я дивлюся as a ready chunk."}, {"sentence": "Я користуювася.", "errorWord": "Я користуювася.", "correctForm": "Я користуюся.", "options": ["Я користуюся.", "Я користуюся телефоном.", "Я використовую телефон."], "explanation": "The -ува- part drops in the present-tense form."}, {"sentence": "Це мій завтрак.", "errorWord": "завтрак", "correctForm": "Це мій сніданок.", "options": ["Це мій сніданок.", "Це мій завтрак.", "Це моя снідати."], "explanation": "Use сніданок for breakfast."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Present Tense of -ся Verbs: First Conjugation](https://opentext.ku.edu/dobraforma/chapter/23-1/) — Follow-up grammar reference for the Group One + -ся pattern.
+- 📄 [Present Tense of -ся Verbs: Second Conjugation](https://opentext.ku.edu/dobraforma/chapter/23-2/) — Use only for recognition forms like я дивлюся after the workbook.
+
+**🎧 Audio:**
+- 🎧 [ULP 3-109: Reflexive Verbs in Ukrainian](https://www.ukrainianlessons.com/episode109/) — Optional listening after the lesson for more -ся verbs in natural speech.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
