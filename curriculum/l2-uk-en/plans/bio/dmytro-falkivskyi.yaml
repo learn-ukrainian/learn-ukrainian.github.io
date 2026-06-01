@@ -25,9 +25,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-hryhorii-kosynka
-- bio-oleksa-vlyzko
-- hist-rozstriliane-vidrodzennia
+- hryhorii-kosynka
+- yevhen-pluzhnyk
+- rozstriliane-vidrodzennia
 content_outline:
 - points:
   - >-
