@@ -1,0 +1,120 @@
+- lemma: читати
+  translation: to read
+  pos: infinitive
+  usage: Я читаю текст.
+- lemma: читаю
+  translation: I read; I am reading
+  pos: verb form
+  usage: Я читаю книжку.
+- lemma: читаєш
+  translation: you read; you are reading
+  pos: verb form
+  usage: Ти читаєш книгу?
+- lemma: читає
+  translation: he/she reads
+  pos: verb form
+  usage: Вона читає.
+- lemma: читаємо
+  translation: we read
+  pos: verb form
+  usage: Ми читаємо текст.
+- lemma: читаєте
+  translation: you all read
+  pos: verb form
+  usage: Ви читаєте?
+- lemma: читають
+  translation: they read
+  pos: verb form
+  usage: Вони читають.
+- lemma: знати
+  translation: to know
+  pos: infinitive
+  usage: Я знаю це слово.
+- lemma: знаю
+  translation: I know
+  pos: verb form
+  usage: Я знаю це слово.
+- lemma: знаєш
+  translation: you know
+  pos: verb form
+  usage: Ти знаєш Київ?
+- lemma: знає
+  translation: he/she knows
+  pos: verb form
+  usage: Вона знає відповідь.
+- lemma: працювати
+  translation: to work
+  pos: infinitive
+  usage: Я працюю вдома.
+- lemma: працюю
+  translation: I work
+  pos: verb form
+  usage: Я працюю сьогодні.
+- lemma: працюєш
+  translation: you work
+  pos: verb form
+  usage: Ти працюєш сьогодні?
+- lemma: працюють
+  translation: they work
+  pos: verb form
+  usage: Вони працюють.
+- lemma: готувати
+  translation: to cook; to prepare
+  pos: infinitive
+  usage: Ми готуємо вечерю.
+- lemma: готую
+  translation: I cook
+  pos: verb form
+  usage: Я готую каву.
+- lemma: готуєш
+  translation: you cook
+  pos: verb form
+  usage: Ти готуєш вечерю?
+- lemma: слухати
+  translation: to listen
+  pos: infinitive
+  usage: Вона слухає музику.
+- lemma: слухаю
+  translation: I listen
+  pos: verb form
+  usage: Я слухаю музику.
+- lemma: гуляти
+  translation: to walk
+  pos: infinitive
+  usage: Вони гуляють.
+- lemma: розуміти
+  translation: to understand
+  pos: infinitive
+  usage: Я розумію.
+- lemma: розумію
+  translation: I understand
+  pos: verb form
+  usage: Я розумію.
+- lemma: розумієш
+  translation: you understand
+  pos: verb form
+  usage: Ти розумієш?
+- lemma: відпочивати
+  translation: to rest
+  pos: infinitive
+  usage: Ти відпочиваєш вдома?
+- lemma: плавати
+  translation: to swim
+  pos: infinitive
+  usage: Ти плаваєш у басейні?
+- lemma: вечеря
+  translation: dinner
+  pos: noun
+  usage: Ми готуємо вечерю.
+- lemma: музика
+  translation: music
+  pos: noun
+  usage: Вона слухає музику.
+- lemma: текст
+  translation: text
+  pos: noun
+  usage: Я читаю текст.
+- lemma: книжка
+  translation: book
+  pos: noun
+  usage: Я читаю книжку.
