@@ -231,17 +231,28 @@ def list_discovery_slugs_readonly(track: str) -> list[str]:
 
 
 def list_discovery_slugs(track: str) -> list[str]:
-    """List all module slugs, auto-generating discovery files when needed."""
-    discovery_dir = CURRICULUM_DIR / track / "discovery"
+    """List all module slugs, reconciling plans with discovery files.
 
-    if discovery_dir.exists():
-        slugs = sorted(p.stem for p in discovery_dir.glob("*.yaml"))
-        if slugs:
-            return slugs
+    Auto-generates a discovery file for any plan that lacks one. This runs on
+    every call: ``_auto_generate_discovery`` skips slugs that already have a
+    discovery file, so existing files are untouched and only the missing ones
+    are created.
+
+    Reconciling — rather than short-circuiting on the first non-empty glob —
+    fixes the Phase-4 wiki-discovery gap (#2535): a track whose discovery dir
+    was seeded earlier (e.g. bio's original 180) must still surface
+    later-added plans (bio-181..310), not just the slugs that happened to have
+    a discovery file at seed time. ``list_discovery_slugs_readonly`` provides
+    the same reconciled view without the on-disk side effect for callers that
+    must not write.
+    """
+    discovery_dir = CURRICULUM_DIR / track / "discovery"
 
     plan_files = _plan_files(track)
     if plan_files:
         _auto_generate_discovery(track, plan_files, discovery_dir)
+
+    if discovery_dir.exists():
         return sorted(p.stem for p in discovery_dir.glob("*.yaml"))
 
     return []
