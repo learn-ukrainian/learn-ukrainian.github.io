@@ -1,6 +1,6 @@
-module: b1-060
+module: b1-061
 level: B1
-sequence: 60
+sequence: 61
 slug: cases-with-ordinal-numerals
 version: '3.2'
 title: "Порядкові числівники і відмінки"

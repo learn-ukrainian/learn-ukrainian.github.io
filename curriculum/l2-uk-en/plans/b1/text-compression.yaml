@@ -1,6 +1,6 @@
-module: b1-086
+module: b1-087
 level: B1
-sequence: 86
+sequence: 87
 slug: text-compression
 version: '3.2'
 title: "Абревіатури та скорочення"
@@ -186,14 +186,13 @@ activity_hints:
   - type: match-up
     focus: "З'єднайте терміни з розділу «Граматичні особливості абревіатур» з їхніми визначеннями."
 connects_to:
-  - "b1-077 (Офіційний стиль — абревіатури are essential in formal documents)"
+  - "b1-085 (Офіційний стиль — абревіатури are essential in formal documents)"
   - "b1-080 (Подвійне заперечення — continues grammar of B1.8 phase)"
-  - "b1-087 (Суспільство i медіа — abbreviations in news and media)"
-  - "b1-084 (Контрольна робота 9 — checkpoint testing abbreviation competence)"
+  - "b1-073 (Суспільство i медіа — abbreviations in news and media)"
+  - "b1-090 (Контрольна робота 8 — checkpoint testing abbreviation competence)"
 prerequisites:
-  - "b1-077 (text-register-formal — official style where абревіатури are most common)"
-  - "b1-052 (numerals-declension — number agreement rules)"
-  - "b1-053 (numerals-agreement — числівник-іменник agreement)"
+  - "b1-085 (text-register-formal — official style where абревіатури are most common)"
+  - "b1-062 (cases-with-quantity-expressions — number agreement rules)"
 grammar:
   - "Абревіація: types of abbreviated word formation in Ukrainian"
   - "Граматичний рід абревіатур determined by головне слово"

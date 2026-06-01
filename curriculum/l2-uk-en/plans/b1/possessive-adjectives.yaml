@@ -160,15 +160,15 @@ activity_hints:
   focus: 'З''єднайте терміни з розділу «Творення від II відміни: суфікси -ів/-їв»
     з їхніми визначеннями.'
 connects_to:
-- b1-047 (word-formation-adjectives — adjective formation, broader context)
+- b1-048 (word-formation-adjectives — adjective formation, broader context)
 - b1-044 (adjectives-comparative — adjective system, degrees of comparison)
 - b1-003 (people-and-relationships — family vocabulary, genitive vs possessive 
   adj)
 - b1-051 (checkpoint-comparison — checkpoint testing adjective forms)
 prerequisites:
 - A2 completion (basic adjective agreement, noun declension classes)
-- b1-013 through b1-018 (noun subclasses and consonant alternations)
-- b1-044 through b1-048 (adjective comparison and word formation foundations)
+- b1-012 through b1-019 (alternation-consonants-nouns through noun-subclasses-feminine)
+- b1-044 through b1-048 (adjectives-comparative through word-formation-adjectives foundations)
 grammar:
 - 'Творення присвійних прикметників: -ів/-їв від II відміни, -ин/-ін/-їн від I відміни'
 - 'Чергування приголосних у -ин формах: г→ж, к→ч, х→ш'

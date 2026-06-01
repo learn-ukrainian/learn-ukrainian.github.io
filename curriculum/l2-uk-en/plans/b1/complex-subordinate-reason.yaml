@@ -1,6 +1,6 @@
-module: b1-077
+module: b1-079
 level: B1
-sequence: 77
+sequence: 79
 slug: complex-subordinate-reason
 version: '3.1.3'
 title: "Речення причини"

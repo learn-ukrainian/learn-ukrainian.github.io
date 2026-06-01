@@ -1,6 +1,6 @@
-module: b1-020
+module: b1-018
 level: B1
-sequence: 20
+sequence: 18
 slug: restaurant-and-food
 version: '1.0.2'
 title: 'Ресторан і їжа'
