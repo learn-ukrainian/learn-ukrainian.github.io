@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T02:25+02:00)
+# Current - Codex Thread Handoff (2026-06-01T02:42+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `5dec6241f6 feat(a1): add M6 my family module`
+  `ef9fbee094 feat(a1): add M7 first contact checkpoint`
 
 ## Current Direction
 
@@ -17,10 +17,60 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, or worktrees.
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
-- Continue M7 next (`checkpoint-first-contact`). M1-M6 are now built as
+- Continue M8 next (`things-have-gender`). M1-M7 are now built as
   English-led student textbook/workbook pages and pass deterministic QG. The
   M5 rendered learner defect at `/a1/who-am-i/#fix-common-l2-traps` is fixed.
-  M6 `/a1/my-family/` is live locally and browser-inspected.
+  M7 `/a1/checkpoint-first-contact/` is live locally and browser-inspected.
+
+## Latest M7 Update
+
+Commit `ef9fbee094 feat(a1): add M7 first contact checkpoint` added:
+
+- `curriculum/l2-uk-en/a1/checkpoint-first-contact/module.md`
+- `curriculum/l2-uk-en/a1/checkpoint-first-contact/activities.yaml`
+- `curriculum/l2-uk-en/a1/checkpoint-first-contact/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/checkpoint-first-contact/resources.yaml`
+- `starlight/src/content/docs/a1/checkpoint-first-contact.mdx`
+
+M7 is an English-led A1.1 checkpoint for script reading, greeting/farewell
+chunks, self-introduction, origin, profession/status, age, family lines,
+vocative recognition, and common first-contact traps. Student-facing resources
+include only the locked ULP Episode 10 reference; the internal wiki reference is
+skipped.
+
+Validation after M7:
+
+- `scripts.yaml_activities`: parsed 9 activities.
+- Direct `run_python_qg()` for M7: passed.
+  - `word_count`: 1745 words, above the 1104 tolerated floor for target 1200.
+  - `resource_coverage`: passed; internal wiki reference skipped.
+  - `archetype_fit`: passed for `a1-first-contact-survival`.
+  - `vesum_verified`, `scaffolding_leak`, `long_uk_ceiling`,
+    `russianisms_strict`, `activity_types`, and `inject_activity_ids`: passed.
+- Direct seeded hard wiki coverage: passed, 17/17 obligations covered.
+- Direct `validate_module()` for directory-layout source and generated MDX:
+  passed with no errors and one warning from hidden/commented wiki-obligation
+  text; CLI `scripts/validate_mdx.py l2-uk-en a1 7` passed.
+- `npm run build:starlight`: passed; 97 pages built.
+- Local Starlight restarted with `./services.sh restart starlight`.
+- Served HTML check for `/a1/checkpoint-first-contact/`: HTTP 200, one H1
+  `Підсумок: Перший контакт`, expected lesson/activity/resource text, no
+  internal `wiki/pedagogy` links, and no visible `Крок 1:` scaffolding.
+- In-app Browser inspection:
+  - Lesson tab showed `First-contact readiness` and the Bogdan/Solomiia
+    dialogue.
+  - Activities tab showed `Fix common A1.1 traps` and workbook checks.
+  - Resources tab showed `ULP Season 1, Episode 10`; no internal wiki link or
+    visible step scaffolding.
+- `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pre-commit run
+  --files ...`: passed for the 5 M7 files.
+- `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+- Commit was pushed to origin.
+
+Next target: M8 `things-have-gender`. Start by inspecting
+`curriculum/l2-uk-en/plans/a1/things-have-gender.yaml`, the relevant
+wiki/pedagogy brief, resource obligations, and `build_wiki_manifest_data`.
+Then build the same full artifact set and validate with the same gates.
 
 ## Latest M6 Update
 

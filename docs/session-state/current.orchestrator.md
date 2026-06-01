@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-06-01T00:25Z)
+# Current - Codex orchestrator handoff (2026-06-01T00:42Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -30,7 +30,7 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 - Current authoritative remote head at handoff:
   `836526d165 feat(api): surface bridge activity for orchestrators`
 - Active A1 branch head before handoff-doc commit:
-  `5dec6241f6 feat(a1): add M6 my family module`
+  `ef9fbee094 feat(a1): add M7 first contact checkpoint`
 - Main checkout has unrelated dirty user/Claude files; do not revert:
   - `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`
   - `scripts/deploy_prompts.sh`
@@ -124,6 +124,35 @@ A1 M1-M7 sequence:
 5. `who-am-i`
 6. `my-family`
 7. `checkpoint-first-contact`
+
+## A1 M7 Update (2026-06-01)
+
+- Commit `ef9fbee094 feat(a1): add M7 first contact checkpoint` is pushed on
+  `codex/a1-m1-m7-golden-journey-2026-05-30`.
+- Added the full M7 artifact set:
+  `curriculum/l2-uk-en/a1/checkpoint-first-contact/{module.md,
+  activities.yaml,vocabulary.yaml,resources.yaml}` plus
+  `starlight/src/content/docs/a1/checkpoint-first-contact.mdx`.
+- M7 is an English-led A1.1 checkpoint for reading, greetings, name/origin,
+  profession/status, age, family lines, vocative recognition, and required
+  first-contact L2 trap repairs. Student-facing resources include only ULP
+  Episode 10; internal wiki reference is skipped.
+- Validation passed:
+  - `scripts.yaml_activities`: 9 activities parsed.
+  - Direct M7 `run_python_qg()`: passed, including `resource_coverage`,
+    `archetype_fit`, `vesum_verified`, `scaffolding_leak`,
+    `russianisms_strict`, `activity_types`, and `inject_activity_ids`.
+  - Direct seeded hard wiki coverage: 17/17 obligations covered.
+  - Direct directory-layout `validate_module()`: passed with no errors; CLI
+    `scripts/validate_mdx.py l2-uk-en a1 7` passed.
+  - `npm run build:starlight`: passed; 97 pages built.
+  - Local HTML/browser checks for `/a1/checkpoint-first-contact/`: H1
+    `Підсумок: Перший контакт`, expected Lesson/Activities/Resources content,
+    ULP Episode 10 resource visible, no internal wiki links, and no visible
+    `Крок 1:` scaffolding.
+  - `.venv/bin/pre-commit run --files ...`: passed for M7 files.
+  - `scripts/audit/lint_agent_trailer.py`: all branch commits pass.
+- Next A1 target is M8 `things-have-gender`.
 
 ## A1 M6 Update (2026-06-01)
 
