@@ -175,14 +175,14 @@ activity_hints:
       (-ити, -увати, -нути)
     items: 6
 connects_to:
-  - b1-023 (Пасивний стан — passive, completing voice system)
-  - b1-025 (Щоденне життя — communication module applying all Phase 3 grammar)
-  - b1-029 to b1-033 (Motion verb prefixes — spatial prefixes in detail)
-  - b1-043 (Творення прикметників — adjective word formation parallel)
-  - b1-044 (Творення назв осіб i місць — noun word formation parallel)
+  - b1-030 (Пасивний стан — passive, completing voice system)
+  - b1-007 (Щоденне життя — communication module applying all Phase 3 grammar)
+  - b1-036 to b1-043 (motion-prefixes-arrival through checkpoint-motion — spatial prefixes in detail)
+  - b1-048 (Творення прикметників — adjective word formation parallel)
+  - b1-050 (Творення назв осіб i місць — noun word formation parallel)
 prerequisites:
-  - b1-023 (Passive voice — completes voice system before word formation)
-  - b1-010 (Чергування приголосних у дієсловах — consonant changes in verb 
+  - b1-030 (passive-voice-intro — completes voice system before word formation)
+  - b1-013 (Чергування приголосних у дієсловах — consonant changes in verb
     stems)
 grammar:
   - 'Префіксальне творення: в-/у-, ви-, при-, від-, пере-, на-, за-, по-, роз-, до-,

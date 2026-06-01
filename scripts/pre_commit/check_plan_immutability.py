@@ -13,6 +13,7 @@ import yaml
 
 PLAN_PATH_RE = re.compile(r"^curriculum/[^/]+/plans/.+\.yaml$")
 AUTO_FIX_TAG = "[auto-fix-plan-vocab]"
+METADATA_ONLY_FIELDS = {"module", "sequence", "connects_to", "prerequisites"}
 
 
 def _run_git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -94,6 +95,36 @@ def _parse_version(content: str, label: str) -> str:
     return str(version).strip()
 
 
+def _parse_plan(content: str, label: str) -> dict:
+    """Parse a plan YAML document as a mapping."""
+    try:
+        data = yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise ValueError(f"{label}: failed to parse YAML: {exc}") from exc
+
+    if not isinstance(data, dict):
+        raise ValueError(f"{label}: expected a YAML mapping at the document root")
+
+    return data
+
+
+def _is_metadata_only_edit(old_content: str, new_content: str) -> bool:
+    """Return true when only ordering/reference metadata changed.
+
+    Curriculum order repairs need to update plan ids and dependency links
+    without inventing backup files. Content-bearing plan edits still need the
+    normal version bump and previous-content snapshot.
+    """
+    old_plan = dict(_parse_plan(old_content, "old plan"))
+    new_plan = dict(_parse_plan(new_content, "new plan"))
+
+    for key in METADATA_ONLY_FIELDS:
+        old_plan.pop(key, None)
+        new_plan.pop(key, None)
+
+    return old_plan == new_plan
+
+
 def _collect_errors(repo_root: Path) -> list[str]:
     """Validate staged plan edits against the immutability rule."""
     staged = _staged_files(repo_root)
@@ -109,9 +140,18 @@ def _collect_errors(repo_root: Path) -> list[str]:
             # New plans have no previous version to compare against.
             continue
 
+        old_content = _read_git_blob(repo_root, head_spec)
+        new_content = _read_git_blob(repo_root, f":{plan_path}")
         try:
-            old_version = _parse_version(_read_git_blob(repo_root, head_spec), plan_path)
-            new_version = _parse_version(_read_git_blob(repo_root, f":{plan_path}"), plan_path)
+            if _is_metadata_only_edit(old_content, new_content):
+                continue
+        except ValueError as exc:
+            errors.append(str(exc))
+            continue
+
+        try:
+            old_version = _parse_version(old_content, plan_path)
+            new_version = _parse_version(new_content, plan_path)
         except ValueError as exc:
             errors.append(str(exc))
             continue
@@ -159,7 +199,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(
-        "Plans are versioned - any change needs a bumped version and a `.bak` of the previous.",
+        "Plans are versioned - content changes need a bumped version and a `.bak` of the previous.",
+        file=sys.stderr,
+    )
+    print(
+        f"Exception: metadata-only fields {sorted(METADATA_ONLY_FIELDS)} may change without `.bak`.",
         file=sys.stderr,
     )
     print(

@@ -135,6 +135,26 @@ def test_plan_edit_without_bak_fails(tmp_path: Path):
     assert ".bak" in result.stderr
 
 
+def test_metadata_only_plan_edit_without_bak_passes(tmp_path: Path):
+    repo = _init_repo(tmp_path)
+    plan_file = repo / PLAN_PATH
+    data = yaml.safe_load(plan_file.read_text(encoding="utf-8"))
+
+    data["module"] = "a1-002"
+    data["sequence"] = 2
+    data["prerequisites"] = ["a1-001 (previous module)"]
+    plan_file.write_text(
+        yaml.safe_dump(data, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    _git(repo, "add", str(PLAN_PATH))
+    result = _run_hook(repo, "fix: align plan metadata\n")
+
+    assert result.returncode == 0
+    assert result.stderr == ""
+
+
 def test_autofix_commit_tag_bypasses_hook(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH

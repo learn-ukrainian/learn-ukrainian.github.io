@@ -1,6 +1,6 @@
-module: b1-068
+module: b1-069
 level: B1
-sequence: 68
+sequence: 69
 slug: short-form-adjectives
 version: '3.2'
 title: "Короткі прикметники (зелен, потрібен)"
@@ -153,10 +153,10 @@ activity_hints:
   - type: match-up
     focus: "З'єднайте терміни з розділу «Які прикметники мають короткі форми?» з їхніми визначеннями."
 connects_to:
-  - "b1-057 (Активні дієприкметники — related morphological forms)"
-  - "b1-077 (Лексична стилістика — register and stylistic choices)"
+  - "b1-065 (Активні дієприкметники — related morphological forms)"
+  - "b1-085 (Лексична стилістика — register and stylistic choices)"
 prerequisites:
-  - "b1-059 (Participle phrases — Phase 7 grammar sequence)"
+  - "b1-067 (participle-phrases — Phase 7 grammar sequence)"
 grammar:
   - "Короткі прикметники: тільки називний відмінок, рід, число"
   - "Тільки якісні прикметники мають короткі форми"
