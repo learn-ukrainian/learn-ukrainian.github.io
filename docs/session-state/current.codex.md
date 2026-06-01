@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T01:22+02:00)
+# Current - Codex Thread Handoff (2026-06-01T02:01+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `08fe80bf95 feat(a1): add M5 who am i module`
+  `17b5f9fe8e fix(a1): repair M5 activity hash target`
 
 ## Current Direction
 
@@ -18,7 +18,8 @@ Latest-Brief: docs/session-state/current.codex.md
 - Do not use Gemini for review confidence.
 - Keep using `services.sh` for local services.
 - Continue M6 next. M1-M5 are now built as English-led student
-  textbook/workbook pages and pass deterministic QG.
+  textbook/workbook pages and pass deterministic QG. The M5 rendered learner
+  defect at `/a1/who-am-i/#fix-common-l2-traps` is fixed.
 
 ## Completed In This Slice
 
@@ -308,6 +309,48 @@ Validation after M5:
   Marko dialogue with English glosses, M5 workbook activities, and ULP
   resources only.
 - Pre-commit on `08fe80bf95`: passed, including affected pytest and repository
+  hooks.
+
+## Latest M5 Rendered Page Repair
+
+Commit `17b5f9fe8e fix(a1): repair M5 activity hash target` fixed the
+learner-facing defect reported at `/a1/who-am-i/#fix-common-l2-traps`:
+
+- Replaced the English teacher-facing `act-7` error-correction prompts with
+  visible Ukrainian sentence surfaces.
+- Renamed the activity to `Choose the Ukrainian sentence`.
+- Preserved the legacy `#fix-common-l2-traps` URL through an explicit
+  `anchor_id` in `activities.yaml`.
+- Moved the repaired activity to the first workbook position in the Activities
+  tab so the exact legacy URL opens on the right tab with the corrected activity
+  immediately visible in the constrained in-app browser viewport.
+- Added `HashTabSync` to generated tabbed MDX so hash targets inside hidden
+  Starlight tabs activate the containing tab before attempting to scroll.
+- Extended `scripts/yaml_activities.py` so error-correction activities preserve
+  optional `instruction` and `anchor_id` fields in generated MDX.
+- Regenerated M5 MDX and `docs/lesson-schema.yaml`; the schema update is the
+  hook-generated contract entry for the new `HashTabSync` component.
+
+Validation after the repair:
+
+- M5 `scripts.yaml_activities`: passed.
+- Focused Python tests:
+  `tests/test_yaml_activities.py tests/test_generate_mdx.py`: 107 passed.
+- Direct M5 `run_python_qg()`: passed, including `resource_coverage`,
+  `archetype_fit`, `vesum_verified`, `russianisms_clean`, and
+  `inject_activity_ids`.
+- Direct hard wiki coverage: passed, 15/15 obligations covered.
+- Direct `validate_module()` for directory-layout M5 source and MDX: passed
+  with no errors or warnings.
+- `npm test -- tests/unit/HashTabSync.test.tsx tests/unit/ErrorCorrection.test.tsx`:
+  35 passed.
+- `npm run build:starlight`: passed; 95 pages built.
+- In-app Browser inspection of
+  `http://127.0.0.1:4321/a1/who-am-i/#fix-common-l2-traps` confirmed:
+  selected tab `Activities`, first visible activity heading
+  `Choose the Ukrainian sentence`, legacy hash target present, no old English
+  teacher prompt phrases, and all six Ukrainian sentence surfaces visible.
+- Pre-commit on `17b5f9fe8e`: passed, including affected pytest and repository
   hooks.
 
 Next target: M6 `my-family`.

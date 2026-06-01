@@ -1,4 +1,4 @@
-# Current - Codex orchestrator handoff (2026-05-31T23:22Z)
+# Current - Codex orchestrator handoff (2026-06-01T00:01Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
@@ -240,6 +240,15 @@ A1 M1-M7 sequence:
   VESUM, Russianism, and word-count gates. The implementation also made scoped
   fixes for wiki HTML comment cleanup, the teacher-facing `чанк` coverage
   obligation, and generated MDX `DialogueBox uk/en` rendering.
+- M5 rendered-page repair completed:
+  `17b5f9fe8e fix(a1): repair M5 activity hash target` fixed the reported
+  learner defect at `/a1/who-am-i/#fix-common-l2-traps`. The old English
+  teacher-facing error-correction prompts were replaced with Ukrainian
+  learner-visible sentences, the legacy anchor is preserved, the repaired block
+  is now first in the Activities tab, and generated tabbed MDX includes
+  `HashTabSync` so hash targets inside hidden Starlight tabs activate their
+  tab. The schema drift hook regenerated `docs/lesson-schema.yaml` for the new
+  component contract.
 - `plan_sections` now allows approved English learner-facing headings for A1
   M1-M7 while still requiring every locked plan section.
 - Validation for `79c8d84fe9`:
@@ -286,6 +295,16 @@ A1 M1-M7 sequence:
   - In-app Browser inspection confirmed `/a1/who-am-i/` renders one H1, visible
     Lesson/Vocabulary/Activities/Resources tabs, visible dialogue glosses,
     workbook activities, and only student-facing ULP resources.
+  - M5 rendered-page repair validation:
+    `scripts.yaml_activities`, direct hard wiki coverage 15/15, direct
+    `run_python_qg()`, direct `validate_module()`,
+    `tests/test_yaml_activities.py tests/test_generate_mdx.py`, Starlight
+    `HashTabSync`/`ErrorCorrection` unit tests, ruff,
+    `npm run build:starlight`, in-app Browser inspection of the exact legacy
+    hash URL, and pre-commit all passed. Browser evidence for the exact URL:
+    selected tab `Activities`, first visible activity
+    `Choose the Ukrainian sentence`, no old English teacher phrases, and all
+    six Ukrainian sentence surfaces visible.
 - Next implementation target:
   build M6 content (`my-family`) with the same full artifact flow and direct
   `run_python_qg()` validation. Keep wiki/resource coverage hard.
