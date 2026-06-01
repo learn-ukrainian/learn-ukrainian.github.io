@@ -1,10 +1,10 @@
-# Current - Codex Orchestrator Handoff (2026-06-01T16:28Z)
+# Current - Codex Orchestrator Handoff (2026-06-01T16:50Z)
 
 Latest-Brief: docs/session-state/current.orchestrator.md
 
 > Handoff-only update. Treat `origin/main` and this file as authoritative for
 > orchestration state; treat the active A1 branch as authoritative for the
-> M1-M13 implementation slice.
+> M1-M14 implementation slice.
 
 ## Role / Direction
 
@@ -21,7 +21,7 @@ Latest-Brief: docs/session-state/current.orchestrator.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `f6cd35a701 feat(a1): add M13 many things module`
+  `6b57fe4d70 feat(a1): add M14 checkpoint my world module`
 
 ## A1 Built Sequence
 
@@ -38,30 +38,36 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 11. `how-many`
 12. `this-and-that`
 13. `many-things`
+14. `checkpoint-my-world`
 
-Next target: M14 `checkpoint-my-world`.
+Next target if continuing: M15 `what-i-like`.
 
-## A1 M13 Update
+## A1 M14 Update
 
-- Commit `f6cd35a701 feat(a1): add M13 many things module` added the full
-  M13 artifact set under `curriculum/l2-uk-en/a1/many-things/` plus
-  `starlight/src/content/docs/a1/many-things.mdx`.
+- Commit `6b57fe4d70 feat(a1): add M14 checkpoint my world module` added the
+  full M14 artifact set under
+  `curriculum/l2-uk-en/a1/checkpoint-my-world/` plus
+  `starlight/src/content/docs/a1/checkpoint-my-world.mdx`.
 - Local ignored telemetry file exists for the direct QG resource-search gate:
-  `curriculum/l2-uk-en/a1/many-things/writer_tool_calls.json`.
+  `curriculum/l2-uk-en/a1/checkpoint-my-world/writer_tool_calls.json`.
 
 Validation passed:
 
 - Activity parser: 8 activities.
-- Direct M13 `run_python_qg()`: passed.
-- Seeded hard wiki coverage: 18/18 obligations covered.
-- MDX validation for A1 M13: passed.
-- `npm run build:starlight`: passed; 103 pages.
-- Browser/content checks: expected Lesson/Resources content, no internal wiki
-  links, teacher labels, visible scaffolding, or injection markers.
-  Local Browser verified `#repair-traps` lands on the target and selects the
-  Lesson tab.
+- Direct M14 `run_python_qg()`: passed.
+- Seeded hard wiki coverage: 17/17 obligations covered.
+- MDX validation for A1 M14: passed.
+- `npm run build:starlight`: passed; 104 pages.
+- Browser/content checks:
+  - Lesson and Resources tabs rendered expected learner-facing content.
+  - Resources tab linked only to UkrainianLessons external resources.
+  - Resource title punctuation defect was fixed.
+  - No internal wiki links, teacher labels, visible scaffolding, or injection
+    markers were found in checked surfaces.
+  - Local Browser verified `#repair-traps` selects Lesson and lands on the
+    repair table after tab content settles.
 - Targeted pre-commit: passed.
-- Agent-trailer lint: passed before the M13 commit.
+- Agent-trailer lint: passed after the M14 commit.
 
 ## Restart Commands
 

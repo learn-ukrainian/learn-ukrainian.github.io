@@ -1,4 +1,4 @@
-# Current - Codex Thread Handoff (2026-06-01T18:28+02:00)
+# Current - Codex Thread Handoff (2026-06-01T18:50+02:00)
 
 Latest-Brief: docs/session-state/current.codex.md
 
@@ -9,7 +9,7 @@ Latest-Brief: docs/session-state/current.codex.md
   `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-m1-m7-golden-journey-2026-05-30`
 - Branch: `codex/a1-m1-m7-golden-journey-2026-05-30`
 - Latest implementation commit:
-  `f6cd35a701 feat(a1): add M13 many things module`
+  `6b57fe4d70 feat(a1): add M14 checkpoint my world module`
 
 ## Current Direction
 
@@ -17,57 +17,49 @@ Latest-Brief: docs/session-state/current.codex.md
 - BIO remains Claude/BIO-owned; do not touch BIO files, PRs, worktrees, or
   delegates.
 - Do not use Gemini for review confidence.
-- Continue with M14 `checkpoint-my-world`. M1-M13 are now English-led student
-  textbook/workbook pages and pass deterministic QG in this worktree.
+- M1-M14 are now English-led student textbook/workbook pages and pass
+  deterministic QG in this worktree.
+- Next module if continuing: M15 `what-i-like`.
 
-## Latest M13 Update
+## Latest M14 Update
 
-Commit `f6cd35a701 feat(a1): add M13 many things module` added:
+Commit `6b57fe4d70 feat(a1): add M14 checkpoint my world module` added:
 
-- `curriculum/l2-uk-en/a1/many-things/module.md`
-- `curriculum/l2-uk-en/a1/many-things/activities.yaml`
-- `curriculum/l2-uk-en/a1/many-things/vocabulary.yaml`
-- `curriculum/l2-uk-en/a1/many-things/resources.yaml`
-- `starlight/src/content/docs/a1/many-things.mdx`
+- `curriculum/l2-uk-en/a1/checkpoint-my-world/module.md`
+- `curriculum/l2-uk-en/a1/checkpoint-my-world/activities.yaml`
+- `curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml`
+- `curriculum/l2-uk-en/a1/checkpoint-my-world/resources.yaml`
+- `starlight/src/content/docs/a1/checkpoint-my-world.mdx`
 
-M13 is English-led A1.2 grammar-first-contact content for plural things:
-nominative plural noun chunks, plural adjective **-і**, plural helpers
-`ці/ті/мої/які`, small pronoun chunks for `ми/ви/нас/вас/нам/вам/нами/вами`,
-plural-only and collective-singular recognition, and a controlled recap of
-`два/три/чотири` versus later `5+` chunks.
+M14 is the A1.2 "my world" checkpoint. It reviews self-presentation chunks,
+gender, possessives, adjective/color agreement, demonstratives, prices,
+simple plurals, and a street-market dialogue using Ukrainian cultural items.
 
-Validation after M13:
+Validation after M14:
 
 - `scripts.yaml_activities`: parsed 8 activities.
-- Direct `run_python_qg()` for M13: passed.
-- Direct seeded hard wiki coverage: passed, 18/18 obligations covered.
-- CLI `scripts/validate_mdx.py l2-uk-en a1 13`: passed.
-- `npm run build:starlight`: passed; 103 pages built.
-- Local Starlight restarted with `./services.sh restart starlight`.
-- Browser inspection for `/a1/many-things/`:
-  - Lesson tab showed expected plural content.
-  - Resources tab showed only external learner-facing resources.
+- Direct `run_python_qg()` for M14: passed; word count 1327.
+- Direct seeded hard wiki coverage: passed, 17/17 obligations covered.
+- CLI `scripts/validate_mdx.py l2-uk-en a1 14`: passed.
+- `npm run build:starlight`: passed; 104 pages built.
+- Local Starlight serves `/a1/checkpoint-my-world/` with `200 OK`.
+- Browser inspection:
+  - Lesson tab showed expected checkpoint content and inline practice.
+  - Resources tab showed only external UkrainianLessons resources.
+  - Resource title rendering was repaired by using
+    `Noun Genders in Ukrainian - Infographic`.
+  - `#repair-traps` selected Lesson and landed on the repair table after tab
+    content settled.
   - No internal wiki links, teacher labels, visible scaffolding, or injection
-    markers.
-  - `#repair-traps` selected the Lesson tab, preserved the requested hash, and
-    landed on the target heading.
+    markers were found in checked surfaces.
 - Targeted pre-commit passed.
-- Agent-trailer lint passed before the M13 commit.
+- Agent-trailer lint passed after the M14 commit; all 54 non-skipped commits in
+  `origin/main..HEAD` carry `X-Agent` trailers.
 
-Local ignored telemetry exists for the direct QG resource-search gate:
-`curriculum/l2-uk-en/a1/many-things/writer_tool_calls.json`.
+Local ignored telemetry exists for direct QG resource-search gates:
 
-## Next Target
-
-Start M14 `checkpoint-my-world`:
-
-1. Inspect `curriculum/l2-uk-en/plans/a1/checkpoint-my-world.yaml`.
-2. Inspect the relevant locked wiki/pedagogy brief and source/resource sidecar.
-3. Inspect `build_wiki_manifest_data` obligations.
-4. Build `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`,
-   and assembled `starlight/src/content/docs/a1/checkpoint-my-world.mdx`.
-5. Run the same validation gates and commit with
-   `X-Agent: codex/a1-m1-m14-golden-journey`.
+- `curriculum/l2-uk-en/a1/many-things/writer_tool_calls.json`
+- `curriculum/l2-uk-en/a1/checkpoint-my-world/writer_tool_calls.json`
 
 ## Guardrails
 
