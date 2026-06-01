@@ -24,9 +24,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-valerian-pidmohylnyi
-- lit-kosynka-short-fiction
-- hist-rozstriliane-vidrodzennia
+- valerian-pidmohylnyi
+- kosynka-short-fiction
+- rozstriliane-vidrodzennia
 content_outline:
 - points:
   - >-
