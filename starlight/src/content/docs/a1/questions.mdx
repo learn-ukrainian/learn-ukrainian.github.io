@@ -1,0 +1,334 @@
+---
+title: "Питання"
+description: "Хто? Що? Де? — як запитувати про світ"
+sidebar:
+  order: 19
+  label: "19. Питання"
+pipeline: linear-phase-4
+build_status: validated
+prev: i-want-i-can
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Questions turn the verbs from the last lessons into real conversation. You can
+ask who, what, where, where to, when, why, and how without changing the whole
+sentence shape. The safest A1 pattern is:
+
+| Need | Start with | Example |
+| --- | --- | --- |
+| a person | **Хто...?** | **Хто ти?** |
+| a thing or action | **Що...?** | **Що ти робиш?** |
+| a place | **Де...?** | **Де ти живеш?** |
+| a direction | **Куди...?** | **Куди ти ходиш?** |
+| time | **Коли...?** | **Коли ти працюєш?** |
+| reason | **Чому...?** | **Чому ти не працюєш?** |
+| manner | **Як...?** | **Як тебе звати?** |
+
+For a yes/no question, keep the same words and raise your voice at the end:
+**Ти говориш українською?** You may also recognize **чи** at the start:
+**Чи ти читаєш?** For today, intonation is the active tool and **чи** is a clear
+written or careful-speech option.
+
+### Question-word jobs
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Хто?", "right": "asks for a person"}, {"left": "Що?", "right": "asks for a thing, topic, or action"}, {"left": "Де?", "right": "asks for a place"}, {"left": "Куди?", "right": "asks for a direction"}, {"left": "Коли?", "right": "asks for time"}, {"left": "Чому?", "right": "asks for a reason"}, {"left": "Як?", "right": "asks for manner or a fixed social phrase"}]`)} />
+
+## Діалоги
+
+Start with questions that identify a person, a thing, a place, and a time.
+Read the first dialogue as a small interview. The answers are short on purpose:
+you are practicing the question word, not long explanations.
+
+<DialogueBox uk="Анна: Хто ти?" en="Anna: Who are you?" />
+<DialogueBox uk="Том: Я студент." en="Tom: I am a student." />
+<DialogueBox uk="Анна: Що ти вивчаєш?" en="Anna: What are you studying?" />
+<DialogueBox uk="Том: Я вивчаю українську." en="Tom: I am studying Ukrainian." />
+<DialogueBox uk="Анна: Де ти живеш?" en="Anna: Where do you live?" />
+<DialogueBox uk="Том: Я живу в Києві." en="Tom: I live in Kyiv." />
+<DialogueBox uk="Анна: Коли ти працюєш?" en="Anna: When do you work?" />
+<DialogueBox uk="Том: Вранці." en="Tom: In the morning." />
+
+Notice that **хто** asks about people and other living beings, or **істоти**.
+**Що** asks about things, topics, actions, and other **неістоти**. At A1, keep
+them in these simple forms. Later you will meet forms such as **кого** and
+**чого**, but today the active questions are **Хто це?** and **Що це?**
+
+Now add the home dialogue from the plan. It shows a question plus a very common
+negative answer.
+
+<DialogueBox uk="Денис: Де моя книга?" en="Denys: Where is my book?" />
+<DialogueBox uk="Оля: Я не знаю." en="Olia: I do not know." />
+<DialogueBox uk="Денис: А хто знає?" en="Denys: And who knows?" />
+<DialogueBox uk="Оля: Мама знає." en="Olia: Mom knows." />
+<DialogueBox uk="Денис: Чому мама?" en="Denys: Why Mom?" />
+<DialogueBox uk="Оля: Тому що вона все знає!" en="Olia: Because she knows everything!" />
+
+**Я не знаю** is the model negative. Ukrainian writes **не** as a separate word
+before the verb: **не знаю**, **не хочу**, **не можу**, **не розумію**. Do not
+attach it to the verb.
+
+### Interview gaps
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ ти?", "answer": "Хто", "options": ["Хто", "Що", "Де"]}, {"sentence": "___ ти вивчаєш?", "answer": "Що", "options": ["Що", "Де", "Коли"]}, {"sentence": "___ ти живеш?", "answer": "Де", "options": ["Де", "Хто", "Чому"]}, {"sentence": "___ ти працюєш?", "answer": "Коли", "options": ["Коли", "Куди", "Як"]}, {"sentence": "___ ти не працюєш?", "answer": "Чому", "options": ["Чому", "Що", "Хто"]}, {"sentence": "___ справи?", "answer": "Як", "options": ["Як", "Де", "Коли"]}]`)} />
+
+## Питальні слова
+
+Think of each question word as a job. **Хто?** finds a person: **Хто говорить?**
+**Що?** finds a thing or action: **Що ти робиш?** **Де?** finds a location:
+**Де книга?** **Куди?** finds a direction after movement: **Куди ти ходиш?**
+**Коли?** finds time: **Коли ти працюєш?** **Чому?** asks for a reason, and the
+answer often starts with **тому що**: **Чому? Тому що я мушу працювати.**
+**Як?** asks for manner or a fixed social phrase: **Як справи? Як тебе звати?**
+
+The clean written order is often:
+
+| Frame | Example |
+| --- | --- |
+| question word + person + verb | **Де ти живеш?** |
+| question word + verb + person | **Що робить Анна?** |
+| question word + short noun phrase | **Де моя книга?** |
+
+Ukrainian word order is flexible, so you may hear **Ти де живеш?** in natural
+speech. For your own A1 writing, start with the question word: **Де ти живеш?**
+It is clear, neutral, and easy to check.
+
+For yes/no questions, use intonation first. **Ти читаєш.** is a statement. With
+a rising voice, **Ти читаєш?** becomes "Are you reading?" If the intonation is
+hard to hear or you want a clear written marker, put **чи** first:
+**Чи любиш ти читати?** This is useful to recognize, but you do not need to add
+**чи** to every spoken question.
+
+:::tip
+When you write, give the reader one clear signal. Either start with a question
+word like **де**, **коли**, or **чому**, or keep the sentence order and add the
+question mark for a yes/no question: **Ти знаєш?**
+:::
+
+Three question words are recognition-only today. **Який / яка / яке / які** ask
+about quality: **Який цей суп?** **Чий / чия / чиє / чиї** ask about ownership:
+**Чия це книжка?** **Котрий** asks about an ordered choice. They change for
+gender or number, so use them only in the ready examples for now. You may also
+recognize **звідки** in the travel question **Звідки ти?** It means "where from"
+and belongs with the same family of unchanged place questions.
+
+### Yes/no question signals
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ти говориш українською? can be a yes/no question with rising intonation.", "isTrue": true, "explanation": "Ukrainian can use the same word order plus rising intonation."}, {"statement": "Чи ти читаєш? is a clear written or careful-speech question marker.", "isTrue": true, "explanation": "Чи is useful to recognize, but optional in active A1 speech."}, {"statement": "Every Ukrainian yes/no question must begin with чи.", "isTrue": false, "explanation": "Intonation is enough for many everyday yes/no questions."}, {"statement": "Ти читаєш. and Ти читаєш? have the same words but different sentence force.", "isTrue": true, "explanation": "The period makes a statement; the question mark and voice make a question."}]`)} />
+
+## Заперечення
+
+The first negative pattern is simple: **не + verb**. Put **не** directly before
+the verb you are making negative.
+
+| Positive | Negative |
+| --- | --- |
+| **Я знаю.** | **Я не знаю.** |
+| **Ти розумієш?** | **Ти не розумієш?** |
+| **Він працює.** | **Він не працює.** |
+| **Я хочу читати.** | **Я не хочу читати.** |
+| **Я можу піти.** | **Я не можу піти.** |
+
+For spelling, say the two words separately in your head: **не знаю**,
+**не знаєш**, **не хочу**, **не можу**. The quoted classroom model is
+**«не знаєш»**: the negative particle stays separate. Much later you may meet
+verbs that only live with **не**, such as **нехтувати**, **ненавидіти**, and
+**нездужати**. Do not use those as the A1 rule; they are exceptions to
+recognize.
+
+Use **ні** as a short "no" answer: **Ні, я не знаю.** When **ні-** starts words
+such as **ніхто**, **нічого**, **ніколи**, and **ніде**, Ukrainian still keeps
+**не** with the verb. Treat the whole sentence as one pattern:
+
+| Meaning | Ukrainian pattern |
+| --- | --- |
+| nobody knows | **Ніхто не знає.** |
+| I know nothing | **Я нічого не знаю.** |
+| nobody speaks | **Ніхто не говорить.** |
+| I never work at night | **Я ніколи не працюю вночі.** |
+| the book is nowhere | **Книги ніде немає.** |
+
+English often uses one negative word. Ukrainian uses the negative word plus
+**не** before the verb. This is not extra logic to explain away; it is the
+standard Ukrainian pattern.
+
+Two later shapes are useful to recognize. First, **ніщо** is the dictionary-like
+"nothing" form, while **нічого** is the form you will often see in **Я нічого
+не знаю**. Second, a preposition can split a negative pronoun: **ні в що не
+вірю**, **ні в кого не питаю**, **ні до чого не торкаюся**, **«ні з яким»**.
+Do not build new sentences with this yet; just recognize the three-word split
+after a preposition.
+
+### Question, answer, or negative
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Information question": ["Хто ти?", "Що ти робиш?", "Де книга?", "Коли ти працюєш?"], "Short answer": ["Я студент.", "У Києві.", "Вранці."], "Negative sentence": ["Я не знаю.", "Він не працює.", "Ніхто не говорить."]}`)} />
+
+### Rebuild the negative
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "не / Я / знаю", "answer": "Я не знаю"}, {"jumbled": "не / Ти / розумієш", "answer": "Ти не розумієш"}, {"jumbled": "не / хочу / Я / читати", "answer": "Я не хочу читати"}, {"jumbled": "не / можу / Я / піти", "answer": "Я не можу піти"}, {"jumbled": "не / Ніхто / говорить", "answer": "Ніхто не говорить"}, {"jumbled": "нічого / не / Я / знаю", "answer": "Я нічого не знаю"}]`)} />
+
+## 📋 Підсумок
+
+You now have three small tools for everyday questions. First, start with a
+question word when you need information: **Хто? Що? Де? Куди? Коли? Чому? Як?**
+Second, use rising intonation for a yes/no question: **Ти говориш
+українською?** Third, make a negative by placing **не** before the verb:
+**Я не знаю**, **Я не хочу**, **Я не можу**.
+
+Build a short interview with three questions:
+
+1. **Хто ти?**
+2. **Що ти вивчаєш?**
+3. **Де ти живеш?**
+
+Then build two safe negatives:
+
+1. **Я не знаю.**
+2. **Ніхто не говорить.**
+
+When you check your own writing, use this order. Find the question word. Check
+that **хто** points to a person and **що** points to a thing, topic, or action.
+If the sentence is yes/no, make sure the written question mark is there and say
+it with rising intonation. If the sentence is negative, find the verb and put
+**не** right before it.
+
+### Repair traps
+
+| Avoid | Use | Why |
+| --- | --- | --- |
+| <del>Я бачу нікого.</del> | **Я нікого не бачу.** | negative pronoun + **не** before the verb |
+| <del>Хто це книжка?</del> | **Чия це книжка?** | ownership uses **чия**, not **хто** |
+| <del>Хто є ця книжка?</del> | **Чия це книжка?** | do not insert **є** here |
+| <del>Я не вірю в ніщо.</del> | **Я ні в що не вірю.** | a preposition splits **ні + що** |
+| <del>Я незнаю.</del> | **Я не знаю.** | **не** is separate before the verb |
+| flat **Ти читаєш?** | **Ти читаєш?** with rising intonation, or **Чи ти читаєш?** | yes/no questions need a question signal |
+| <del>Неде.</del> / <del>Ні де.</del> | **Ніде.** | **ніде** is one word |
+| <del>Як є цей суп?</del> / <del>Як цей суп?</del> | **Який цей суп?** | quality uses **який** |
+
+Keep the active set small. Produce **хто, що, де, куди, коли, чому, як** and
+**не + verb**. Recognize **чи**, **який**, **чий**, **котрий**, and the split
+shape **ні в що**, but do not make them your main production task today.
+
+### Build the short question
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Who are you?", "options": [{"text": "Хто ти?", "correct": true}, {"text": "Що ти?", "correct": false}, {"text": "Де ти?", "correct": false}], "explanation": "Хто asks for a person."}, {"source": "What are you studying?", "options": [{"text": "Що ти вивчаєш?", "correct": true}, {"text": "Хто ти вивчаєш?", "correct": false}, {"text": "Коли ти вивчаєш?", "correct": false}], "explanation": "Що asks for the topic."}, {"source": "Where do you live?", "options": [{"text": "Де ти живеш?", "correct": true}, {"text": "Куди ти живеш?", "correct": false}, {"text": "Чому ти живеш?", "correct": false}], "explanation": "Де asks for location."}, {"source": "I do not know.", "options": [{"text": "Я не знаю.", "correct": true}, {"text": "Я незнаю.", "correct": false}, {"text": "Я знаю не.", "correct": false}], "explanation": "Write не separately before знаю."}]`)} />
+
+### Find the book
+
+<Order client:only='react' items={JSON.parse(`["Де моя книга?", "Я не знаю.", "А хто знає?", "Мама знає.", "Чому мама?", "Тому що вона все знає!"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the home exchange in a natural order."} isUkrainian={false} />
+
+<span id="repair-traps"></span>
+
+### Repair question and negative traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "I see nobody. Я бачу нікого.", "errorWord": "Я бачу нікого.", "correctForm": "Я нікого не бачу.", "options": ["Я нікого не бачу.", "Я бачу нікого.", "Я нікого бачу."], "explanation": "Ukrainian keeps не before the verb with нікого."}, {"sentence": "Who is this book? Хто це книжка? / Хто є ця книжка?", "errorWord": "Хто це книжка? / Хто є ця книжка?", "correctForm": "Чия це книжка?", "options": ["Чия це книжка?", "Хто це книжка?", "Хто є ця книжка?"], "explanation": "Ownership uses чия for книжка."}, {"sentence": "Who is this book? Хто є ця книжка?", "errorWord": "Хто є ця книжка?", "correctForm": "Чия це книжка?", "options": ["Чия це книжка?", "Хто є ця книжка?", "Що є ця книжка?"], "explanation": "Do not insert є; use the ownership question word."}, {"sentence": "I don't believe in nothing. Я не вірю в ніщо.", "errorWord": "Я не вірю в ніщо.", "correctForm": "Я ні в що не вірю.", "options": ["Я ні в що не вірю.", "Я не вірю в ніщо.", "Я в ніщо не вірю."], "explanation": "A preposition splits ні + що into ні в що."}, {"sentence": "I dont know. The learner wrote не + знаю as one word.", "errorWord": "не + знаю written as one word", "correctForm": "Я не знаю.", "options": ["Я не знаю.", "Я знаю не.", "Ні, я знаю."], "explanation": "Не is a separate word before the verb."}, {"sentence": "Do you read? Ти читаєш? (without rising intonation).", "errorWord": "Ти читаєш? (без підвищення інтонації)", "correctForm": "Чи ти читаєш?", "options": ["Чи ти читаєш?", "Ти читаєш.", "Ти читати?"], "explanation": "If intonation is not clear, чи can mark the question."}, {"sentence": "Nowhere. Неде. / Ні де.", "errorWord": "Неде. / Ні де.", "correctForm": "Ніде.", "options": ["Ніде.", "Неде.", "Ні де."], "explanation": "Ніде is one word."}, {"sentence": "Nowhere. Ні де.", "errorWord": "Ні де.", "correctForm": "Ніде.", "options": ["Ніде.", "Ні де.", "Не де."], "explanation": "Write ніде together."}, {"sentence": "How is this soup? Як є цей суп? / Як цей суп?", "errorWord": "Як є цей суп? / Як цей суп?", "correctForm": "Який цей суп?", "options": ["Який цей суп?", "Як є цей суп?", "Як цей суп?"], "explanation": "Quality uses який."}, {"sentence": "How is this soup? Як цей суп?", "errorWord": "Як цей суп?", "correctForm": "Який цей суп?", "options": ["Який цей суп?", "Як цей суп?", "Що цей суп?"], "explanation": "Як asks manner; який asks quality."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"хто","translation":"who","pos":"question word","example":"Хто ти?","examples":["who","Хто ти?"]},{"word":"що","translation":"what","pos":"question word","example":"Що ти вивчаєш?","examples":["what","Що ти вивчаєш?"]},{"word":"де","translation":"where","pos":"question word","example":"Де ти живеш?","examples":["where","Де ти живеш?"]},{"word":"куди","translation":"where to","pos":"question word","example":"Куди ти ходиш?","examples":["where to","Куди ти ходиш?"]},{"word":"коли","translation":"when","pos":"question word","example":"Коли ти працюєш?","examples":["when","Коли ти працюєш?"]},{"word":"чому","translation":"why","pos":"question word","example":"Чому ти не працюєш?","examples":["why","Чому ти не працюєш?"]},{"word":"як","translation":"how","pos":"question word","example":"Як справи?","examples":["how","Як справи?"]},{"word":"чи","translation":"whether; question marker","pos":"particle","example":"Чи ти читаєш?","examples":["whether; question marker","Чи ти читаєш?"]},{"word":"не","translation":"not","pos":"particle","example":"Я не знаю.","examples":["not","Я не знаю."]},{"word":"ні","pos":"particle","example":"Ні, я не знаю.","examples":["Ні, я не знаю."]},{"word":"ніхто","translation":"nobody","pos":"negative pronoun","example":"Ніхто не говорить.","examples":["nobody","Ніхто не говорить."]},{"word":"ніщо","translation":"nothing","pos":"negative pronoun","example":"Ніщо не допомагає.","examples":["nothing","Ніщо не допомагає."]},{"word":"нічого","translation":"nothing; not anything","pos":"pronoun form","example":"Я нічого не знаю.","examples":["nothing; not anything","Я нічого не знаю."]},{"word":"ніколи","translation":"never","pos":"negative adverb","example":"Я ніколи не працюю вночі.","examples":["never","Я ніколи не працюю вночі."]},{"word":"ніде","translation":"nowhere","pos":"negative adverb","example":"Книги ніде немає.","examples":["nowhere","Книги ніде немає."]},{"word":"знати","translation":"to know","pos":"infinitive","example":"Я знаю.","examples":["to know","Я знаю."]},{"word":"знаю","translation":"I know","pos":"verb form","example":"Я не знаю.","examples":["I know","Я не знаю."]},{"word":"розуміти","translation":"to understand","pos":"infinitive","example":"Я розумію.","examples":["to understand","Я розумію."]},{"word":"жити","translation":"to live","pos":"infinitive","example":"Де ти живеш?","examples":["to live","Де ти живеш?"]},{"word":"живеш","translation":"you live","pos":"verb form","example":"Де ти живеш?","examples":["you live","Де ти живеш?"]},{"word":"вивчати","translation":"to study","pos":"infinitive","example":"Що ти вивчаєш?","examples":["to study","Що ти вивчаєш?"]},{"word":"вивчаєш","translation":"you study","pos":"verb form","example":"Що ти вивчаєш?","examples":["you study","Що ти вивчаєш?"]},{"word":"говорити","translation":"to speak","pos":"infinitive","example":"Ти говориш українською?","examples":["to speak","Ти говориш українською?"]},{"word":"працювати","translation":"to work","pos":"infinitive","example":"Коли ти працюєш?","examples":["to work","Коли ти працюєш?"]},{"word":"вранці","translation":"in the morning","pos":"adverb","example":"Я працюю вранці.","examples":["in the morning","Я працюю вранці."]},{"word":"тому що","translation":"because","pos":"phrase","example":"Тому що вона все знає.","examples":["because","Тому що вона все знає."]},{"word":"звідки","translation":"where from","pos":"question word","example":"Звідки ти?","examples":["where from","Звідки ти?"]},{"word":"який","translation":"what kind; which","pos":"question word","example":"Який цей суп?","examples":["what kind; which","Який цей суп?"]},{"word":"чий","translation":"whose","pos":"question word","example":"Чия це книжка?","examples":["whose","Чия це книжка?"]},{"word":"котрий","translation":"which one in order","pos":"question word","example":"Котрий урок?","examples":["which one in order","Котрий урок?"]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"хто","back":"who"},{"front":"що","back":"what"},{"front":"де","back":"where"},{"front":"куди","back":"where to"},{"front":"коли","back":"when"},{"front":"чому","back":"why"},{"front":"як","back":"how"},{"front":"чи","back":"whether; question marker"},{"front":"не","back":"not"},{"front":"ні","back":""},{"front":"ніхто","back":"nobody"},{"front":"ніщо","back":"nothing"},{"front":"нічого","back":"nothing; not anything"},{"front":"ніколи","back":"never"},{"front":"ніде","back":"nowhere"},{"front":"знати","back":"to know"},{"front":"знаю","back":"I know"},{"front":"розуміти","back":"to understand"},{"front":"жити","back":"to live"},{"front":"живеш","back":"you live"},{"front":"вивчати","back":"to study"},{"front":"вивчаєш","back":"you study"},{"front":"говорити","back":"to speak"},{"front":"працювати","back":"to work"},{"front":"вранці","back":"in the morning"},{"front":"тому що","back":"because"},{"front":"звідки","back":"where from"},{"front":"який","back":"what kind; which"},{"front":"чий","back":"whose"},{"front":"котрий","back":"which one in order"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Question-word jobs
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Хто?", "right": "asks for a person"}, {"left": "Що?", "right": "asks for a thing, topic, or action"}, {"left": "Де?", "right": "asks for a place"}, {"left": "Куди?", "right": "asks for a direction"}, {"left": "Коли?", "right": "asks for time"}, {"left": "Чому?", "right": "asks for a reason"}, {"left": "Як?", "right": "asks for manner or a fixed social phrase"}]`)} />
+
+### Interview gaps
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ ти?", "answer": "Хто", "options": ["Хто", "Що", "Де"]}, {"sentence": "___ ти вивчаєш?", "answer": "Що", "options": ["Що", "Де", "Коли"]}, {"sentence": "___ ти живеш?", "answer": "Де", "options": ["Де", "Хто", "Чому"]}, {"sentence": "___ ти працюєш?", "answer": "Коли", "options": ["Коли", "Куди", "Як"]}, {"sentence": "___ ти не працюєш?", "answer": "Чому", "options": ["Чому", "Що", "Хто"]}, {"sentence": "___ справи?", "answer": "Як", "options": ["Як", "Де", "Коли"]}]`)} />
+
+### Yes/no question signals
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ти говориш українською? can be a yes/no question with rising intonation.", "isTrue": true, "explanation": "Ukrainian can use the same word order plus rising intonation."}, {"statement": "Чи ти читаєш? is a clear written or careful-speech question marker.", "isTrue": true, "explanation": "Чи is useful to recognize, but optional in active A1 speech."}, {"statement": "Every Ukrainian yes/no question must begin with чи.", "isTrue": false, "explanation": "Intonation is enough for many everyday yes/no questions."}, {"statement": "Ти читаєш. and Ти читаєш? have the same words but different sentence force.", "isTrue": true, "explanation": "The period makes a statement; the question mark and voice make a question."}]`)} />
+
+### Question, answer, or negative
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Information question": ["Хто ти?", "Що ти робиш?", "Де книга?", "Коли ти працюєш?"], "Short answer": ["Я студент.", "У Києві.", "Вранці."], "Negative sentence": ["Я не знаю.", "Він не працює.", "Ніхто не говорить."]}`)} />
+
+### Rebuild the negative
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "не / Я / знаю", "answer": "Я не знаю"}, {"jumbled": "не / Ти / розумієш", "answer": "Ти не розумієш"}, {"jumbled": "не / хочу / Я / читати", "answer": "Я не хочу читати"}, {"jumbled": "не / можу / Я / піти", "answer": "Я не можу піти"}, {"jumbled": "не / Ніхто / говорить", "answer": "Ніхто не говорить"}, {"jumbled": "нічого / не / Я / знаю", "answer": "Я нічого не знаю"}]`)} />
+
+### Build the short question
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Who are you?", "options": [{"text": "Хто ти?", "correct": true}, {"text": "Що ти?", "correct": false}, {"text": "Де ти?", "correct": false}], "explanation": "Хто asks for a person."}, {"source": "What are you studying?", "options": [{"text": "Що ти вивчаєш?", "correct": true}, {"text": "Хто ти вивчаєш?", "correct": false}, {"text": "Коли ти вивчаєш?", "correct": false}], "explanation": "Що asks for the topic."}, {"source": "Where do you live?", "options": [{"text": "Де ти живеш?", "correct": true}, {"text": "Куди ти живеш?", "correct": false}, {"text": "Чому ти живеш?", "correct": false}], "explanation": "Де asks for location."}, {"source": "I do not know.", "options": [{"text": "Я не знаю.", "correct": true}, {"text": "Я незнаю.", "correct": false}, {"text": "Я знаю не.", "correct": false}], "explanation": "Write не separately before знаю."}]`)} />
+
+### Find the book
+
+<Order client:only='react' items={JSON.parse(`["Де моя книга?", "Я не знаю.", "А хто знає?", "Мама знає.", "Чому мама?", "Тому що вона все знає!"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the home exchange in a natural order."} isUkrainian={false} />
+
+<span id="repair-traps"></span>
+
+### Repair question and negative traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "I see nobody. Я бачу нікого.", "errorWord": "Я бачу нікого.", "correctForm": "Я нікого не бачу.", "options": ["Я нікого не бачу.", "Я бачу нікого.", "Я нікого бачу."], "explanation": "Ukrainian keeps не before the verb with нікого."}, {"sentence": "Who is this book? Хто це книжка? / Хто є ця книжка?", "errorWord": "Хто це книжка? / Хто є ця книжка?", "correctForm": "Чия це книжка?", "options": ["Чия це книжка?", "Хто це книжка?", "Хто є ця книжка?"], "explanation": "Ownership uses чия for книжка."}, {"sentence": "Who is this book? Хто є ця книжка?", "errorWord": "Хто є ця книжка?", "correctForm": "Чия це книжка?", "options": ["Чия це книжка?", "Хто є ця книжка?", "Що є ця книжка?"], "explanation": "Do not insert є; use the ownership question word."}, {"sentence": "I don't believe in nothing. Я не вірю в ніщо.", "errorWord": "Я не вірю в ніщо.", "correctForm": "Я ні в що не вірю.", "options": ["Я ні в що не вірю.", "Я не вірю в ніщо.", "Я в ніщо не вірю."], "explanation": "A preposition splits ні + що into ні в що."}, {"sentence": "I dont know. The learner wrote не + знаю as one word.", "errorWord": "не + знаю written as one word", "correctForm": "Я не знаю.", "options": ["Я не знаю.", "Я знаю не.", "Ні, я знаю."], "explanation": "Не is a separate word before the verb."}, {"sentence": "Do you read? Ти читаєш? (without rising intonation).", "errorWord": "Ти читаєш? (без підвищення інтонації)", "correctForm": "Чи ти читаєш?", "options": ["Чи ти читаєш?", "Ти читаєш.", "Ти читати?"], "explanation": "If intonation is not clear, чи can mark the question."}, {"sentence": "Nowhere. Неде. / Ні де.", "errorWord": "Неде. / Ні де.", "correctForm": "Ніде.", "options": ["Ніде.", "Неде.", "Ні де."], "explanation": "Ніде is one word."}, {"sentence": "Nowhere. Ні де.", "errorWord": "Ні де.", "correctForm": "Ніде.", "options": ["Ніде.", "Ні де.", "Не де."], "explanation": "Write ніде together."}, {"sentence": "How is this soup? Як є цей суп? / Як цей суп?", "errorWord": "Як є цей суп? / Як цей суп?", "correctForm": "Який цей суп?", "options": ["Який цей суп?", "Як є цей суп?", "Як цей суп?"], "explanation": "Quality uses який."}, {"sentence": "How is this soup? Як цей суп?", "errorWord": "Як цей суп?", "correctForm": "Який цей суп?", "options": ["Який цей суп?", "Як цей суп?", "Що цей суп?"], "explanation": "Як asks manner; який asks quality."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Double Negatives in Ukrainian](https://www.ukrainianlessons.com/negation-in-ukrainian/) — Read after the workbook for more examples of ніхто не and нічого не.
+- 📄 [Question Words in Ukrainian](https://www.ukrainianlessons.com/question-words/) — Follow-up examples for хто, що, де, куди, коли, чому, як, який, and чий.
+- 📄 [Useful Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) — Short travel-friendly question phrases for extra practice.
+
+**🎧 Audio:**
+- 🎧 [ULP Episode 35: Question Words in Ukrainian](https://www.ukrainianlessons.com/episode35/) — Extra listening for question words and Ukrainian question intonation after the lesson.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

@@ -1,0 +1,120 @@
+- lemma: хто
+  translation: who
+  pos: question word
+  usage: Хто ти?
+- lemma: що
+  translation: what
+  pos: question word
+  usage: Що ти вивчаєш?
+- lemma: де
+  translation: where
+  pos: question word
+  usage: Де ти живеш?
+- lemma: куди
+  translation: where to
+  pos: question word
+  usage: Куди ти ходиш?
+- lemma: коли
+  translation: when
+  pos: question word
+  usage: Коли ти працюєш?
+- lemma: чому
+  translation: why
+  pos: question word
+  usage: Чому ти не працюєш?
+- lemma: як
+  translation: how
+  pos: question word
+  usage: Як справи?
+- lemma: чи
+  translation: whether; question marker
+  pos: particle
+  usage: Чи ти читаєш?
+- lemma: не
+  translation: not
+  pos: particle
+  usage: Я не знаю.
+- lemma: ні
+  translation: no
+  pos: particle
+  usage: Ні, я не знаю.
+- lemma: ніхто
+  translation: nobody
+  pos: negative pronoun
+  usage: Ніхто не говорить.
+- lemma: ніщо
+  translation: nothing
+  pos: negative pronoun
+  usage: Ніщо не допомагає.
+- lemma: нічого
+  translation: nothing; not anything
+  pos: pronoun form
+  usage: Я нічого не знаю.
+- lemma: ніколи
+  translation: never
+  pos: negative adverb
+  usage: Я ніколи не працюю вночі.
+- lemma: ніде
+  translation: nowhere
+  pos: negative adverb
+  usage: Книги ніде немає.
+- lemma: знати
+  translation: to know
+  pos: infinitive
+  usage: Я знаю.
+- lemma: знаю
+  translation: I know
+  pos: verb form
+  usage: Я не знаю.
+- lemma: розуміти
+  translation: to understand
+  pos: infinitive
+  usage: Я розумію.
+- lemma: жити
+  translation: to live
+  pos: infinitive
+  usage: Де ти живеш?
+- lemma: живеш
+  translation: you live
+  pos: verb form
+  usage: Де ти живеш?
+- lemma: вивчати
+  translation: to study
+  pos: infinitive
+  usage: Що ти вивчаєш?
+- lemma: вивчаєш
+  translation: you study
+  pos: verb form
+  usage: Що ти вивчаєш?
+- lemma: говорити
+  translation: to speak
+  pos: infinitive
+  usage: Ти говориш українською?
+- lemma: працювати
+  translation: to work
+  pos: infinitive
+  usage: Коли ти працюєш?
+- lemma: вранці
+  translation: in the morning
+  pos: adverb
+  usage: Я працюю вранці.
+- lemma: тому що
+  translation: because
+  pos: phrase
+  usage: Тому що вона все знає.
+- lemma: звідки
+  translation: where from
+  pos: question word
+  usage: Звідки ти?
+- lemma: який
+  translation: what kind; which
+  pos: question word
+  usage: Який цей суп?
+- lemma: чий
+  translation: whose
+  pos: question word
+  usage: Чия це книжка?
+- lemma: котрий
+  translation: which one in order
+  pos: question word
+  usage: Котрий урок?
