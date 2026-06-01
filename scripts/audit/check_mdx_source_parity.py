@@ -85,6 +85,9 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
         level = parts[0]
         slug = rel_path.stem
 
+        if len(parts) == 2 and slug == "index":
+            continue
+
         if level in legacy_levels:
             continue
 
@@ -165,9 +168,11 @@ def main(argv: list[str] | None = None) -> int:
             if len(parts) < 2:
                 continue
             level = parts[0]
+            slug = rel_path.stem
+            if len(parts) == 2 and slug == "index":
+                continue
             if level in legacy_levels:
                 continue
-            slug = rel_path.stem
             expected_source_dir = SOURCE_DIR / level / slug
             if not expected_source_dir.exists():
                 violations.append((mdx_path, f"Missing source directory: {expected_source_dir}"))
