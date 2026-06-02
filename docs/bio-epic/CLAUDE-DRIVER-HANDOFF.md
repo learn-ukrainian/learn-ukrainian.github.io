@@ -22,10 +22,11 @@
 > registration, this handoff) need no linguistic cross-review — the content was reviewed at plan-merge.
 > Escalate to the human ONLY on a GENUINE defect. Non-bio main = orchestrator-only.
 >
-> **⛔ NO CODEX FOR BIO (user 2026-06-01) — STANDING UNTIL THE USER LIFTS IT.** All codex quota is
-> reserved for building A1. Do **NOT** `delegate.py dispatch --agent codex` (or `ab ask-codex`) for any
-> bio work until the user explicitly says codex is available again. **This is fully manageable without
-> codex** — proof: 8 of this session's 12 plans (252–259) were claude-tools-written, zero codex.
+> **✅ CODEX UNLOCKED FOR BIO @ 1 CONCURRENT SEAT (user 2026-06-02).** The 2026-06-01 pause is LIFTED —
+> user raised codex to 20× and freed **one concurrent seat** for bio. Run **at most ONE** `delegate.py
+> dispatch --agent codex --model gpt-5.5 --effort xhigh --worktree --base main` at a time (ideal for
+> structured tooling/validators + cross-family review vs a claude writer). Claude stays the abundant PRIMARY
+> writer fleet (multiple parallel); codex is one extra lane; DeepSeek off-seat for review.
 >
 > **WRITER = `--agent claude` (claude-tools) is the STRONG PRIMARY (user 2026-06-01): "extra Claude
 > resources" — lean on it.** Weekly Claude ~61% used + Anthropic doubled limits to mid-July. Fan out a
@@ -56,6 +57,80 @@
 > Bottom line: landing page / Phase-5 cleanup / linter are mechanical (claude inline). **Phase-4 WIKIS
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
+
+## ▶▶ CURRENT SESSION STATE (2026-06-02) — EXISTING-180 AUDIT COMPLETE + REMEDIATION IN FLIGHT (#2535)
+
+**THIS is the live workstream. Read this block first.** Per user direction: audit + uplift the EXISTING
+1–180 bio plans/wikis to the source-first seminar standard (#2535). User chose the **Hybrid** path (cheap
+wins now → staged dossier/wiki rebuild). User: "be vigilant", "use the claude compute", codex unlocked @ 1 seat.
+
+### Audit result — ALL 180 original figures reviewed (15-batch Claude source-first review fleet + deterministic checks)
+**30 BLOCK · 82 FIX · 56 SHIP (~17% BLOCK).** Review result files: `batch_state/tasks/bio-audit-rev-b{1..15}.result`
+(NOT git-tracked — findings captured here). **ROOT CAUSE (unifying): 165/180 lack a dossier** → writer had no
+sources → fabricated or off-topic ("ghost") wiki. New 181–310 HAVE dossiers but **0 wikis** (Phase-4 pending) — mirror gap.
+
+**Defect buckets (the remediation work-list):**
+1. **Wrong-person (Kulish-dup) wikis — 9 (deterministic, authoritative):** `mykola-zerov, oleksa-slisarenko,
+   anatol-petrytskyi, maik-yohansen, dmytro-falkivskyi, yevhen-pluzhnyk, hryhorii-kosynka, valerian-pidmohylnyi,
+   heo-shkurupii`. Root cause = their `curriculum/l2-uk-en/bio/discovery/{slug}.yaml` `query_keywords`+`rag_chunks`
+   are Mykola Kulish's (2026-04-14 cohort-collapse; all are Розстріляне відродження). #2513 fixed the PLANS only;
+   wikis never regenerated. **compile.py builds wikis from DISCOVERY, not the dossier** — so fix = regenerate
+   discovery → recompile. (LLM review undercounted [caught 4]; the deterministic wiki-H1 check is authoritative.
+   `panteleimon-kulish` is a REAL distinct person — do NOT touch.)
+2. **Fabricated identity in the PLAN — ~5 (highest priority, teach falsehoods):** `berta-rapoport` (real: world's
+   1st woman sea captain, branded "doctor"), `klavdiya-latysheva` (mathematician, branded "pilot"), `mariia-voiakovska`
+   (fabricated Vienna birth + name Вояко→Вояківська), `valentyna-radzymovska` (framed executed — actually emigrated,
+   died Illinois 1953; wrong patronymic Павлівна→Василівна), `petro-veskliaov` (malformed slug — needs ID).
+3. **Decolonization / myth — 3:** `knyahynia-olha` + `volodymyr-monomakh` cite Синопсис Київський (1674 pan-Russian
+   imperial text) as a *decolonial* authority (INVERSION); `maksym-berezovskyy` "beat Mozart at Bologna" myth-as-fact
+   + 4 date errors (myth repeated in `dmytro-bortnyanskyy`).
+4. **Ghost wikis — ~17 confirmed BLOCK + ~34 suspect pool** (disclaim having sources, fill with off-topic theory):
+   incl. mykola-leontovych, both Patons, george-shevelov, josyf-slipyj, serhii-plokhy, yaroslav-hrytsak, serge-lifar,
+   taras-shevchenko (citation-grade only). Confirm suspects per-file (the new wiki linter / `check_citation_resolution`).
+5. **82 FIX-level:** dates/genealogy/names, `[S#]` non-resolution (no bibliography corpus-wide), `type:primary`
+   mislabels (incl. Russian-state portal Історія.РФ, Wikipedia tagged primary).
+
+### IN-FLIGHT right now (watchers armed) — verify via `curl -sS http://127.0.0.1:8765/api/delegate/active`
+- **`bio-prevention-gates`** (codex, Stage 0, watcher `by372p7zk`): 5 deterministic gates → PR (no merge). Gates:
+  wiki text-scan linter (the task cursor couldn't do), discovery-topic≠figure, wiki-H1≠figure, VERIFY-marker,
+  `[S#]`-resolution. Brief: `/tmp/brief-bio-stage0-gates.md`.
+- **`bio-fix-kulish-wikis`** (claude, Stage 1, watcher `bbww2pto7`): regen 9 Kulish discovery → recompile wikis → PR
+  (no merge). Brief: `/tmp/brief-bio-stage1-kulish.md`. Acceptance = each wiki H1 names the correct figure (not Kulish).
+- **PR #2549** (cursor-adapter fix, open, awaiting orchestrator merge): grok's CLI installed `~/.local/bin/agent`
+  which shadowed `cursor-agent` in `scripts/agent_runtime/adapters/cursor.py` → every `delegate --agent cursor`
+  silently misfired to grok (returncode 2 `--single`). Fix prefers `cursor-agent`. **CURSOR LANE IS DEAD until #2549 merges.**
+
+### MECHANICAL CHEAP-WIN — COMPUTED, NOT yet committed (plan-versioning hook): 107 dead `wiki/bio/`→`wiki/figures/`
+reference-path fixes. Deterministic self-ref remap (basename==slug → `wiki/figures/{slug}.md`). **A raw 107-plan edit is
+BLOCKED by the `enforce plan version bump + .bak` pre-commit hook — apply via the `apply-plan-fixes` skill / proper
+versioning flow (`.bak` + version bump per plan), NOT a raw edit.** This handoff PR therefore carries ONLY the handoff.
+Re-run the deterministic remap over all 310 plans, version + commit in the cheap-wins PR. **5 genuine dead NON-self refs
+left for Stage 2** (remove/re-cite, NOT self-remap): les-kurbas→`wiki/events/rozstriliane-vidrodzhennia`,
+oleh-olzhych→`wiki/history/sachsenhausen`, mariia-prymachenko→`wiki/bio/prymachenko-museum-fire`,
+vasyl-kuk→`wiki/sources/avr-org-ua`, vasyl-vyshyvanyi→`wiki/bio/sources/vyshyvanyi-memoirs`.
+
+### NEXT ACTION ON RESUME (in order)
+1. **Harvest the 2 in-flight dispatches** (codex gates, claude kulish) → read result/PR. Verify the 9 rebuilt Kulish
+   wikis pass the new gates; **DeepSeek-pro cross-review** (cross-family) → merge Stage 1 PR. Promote gates PR (then
+   wire them BLOCKING once defects cleared).
+2. **PR the mechanical cheap-wins** (107 paths + this handoff) — no cross-review needed (mechanical). Add VERIFY-marker
+   strip + `type:primary` re-tag if not folded into the gates PR.
+3. **Stage 2 — ~5 fabricated identities:** source-first rebuild (correct dossier→plan→wiki, web/VESUM-verified). Claude
+   + the 1 codex seat. Highest priority. + resolve the 5 dead non-self refs + the Синопсис ×2 / Mozart fixes.
+4. **Stage 3 — the big uplift:** 165 missing dossiers + ~173 wikis (43 broken original [9 Kulish done in St.1 + ~34 ghost]
+   + 130 new 181–310). Claude + codex (1 seat) writer fleets, DeepSeek cross-review, gated. **RE-OFFER THE WORKFLOW** to
+   the user here — capped fan-out is the right tool for 300+ artifacts ("workflow" keyword = opt-in).
+5. **181–310 deep-audit pass** (only got cross-review at plan-merge; same lens owed; their wikis audited as Phase-4 builds them through the gates).
+
+### Pipeline facts learned this session (don't re-derive)
+- `compile.py --slug X --track bio --writer claude --force` builds a wiki from `bio/discovery/{slug}.yaml`
+  (`gather_discovery_sources` + `_slug_to_topic`); **dossier is NOT read by compile.py.** Writer options:
+  `{gemini, claude, gpt-5.5}`. `rebuild.py` = heavyweight track-phased orchestrator (not per-slug).
+- The 180 wikis live in `wiki/figures/{slug}.md`; discovery in `curriculum/l2-uk-en/bio/discovery/{slug}.yaml`.
+- Deterministic validators on origin/main: `validate_plan_config.py bio` (✅ 310 valid), `validate_plan_ordering.py`
+  (✅ 0 bio err), `lint_bio_dossier_xref.py` (✅), `lint_seminar_quality.py` (plan-only until the wiki-linter PR lands).
+
+---
 
 *Last updated: 2026-06-01 (late). **Phase 2 plan build COMPLETE: main has all 130 new plans, 181→310
 contiguous (310 bio plans total).** Phase 3 registration DONE in this PR (curriculum.yaml bio = 310
