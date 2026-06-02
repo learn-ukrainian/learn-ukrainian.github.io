@@ -1,0 +1,264 @@
+- id: act-1
+  type: quiz
+  title: Static place signals
+  instruction: Choose the line that answers the question Де?
+  items:
+    - prompt: "Which line answers Де?"
+      options:
+        - text: "Олена в школі."
+          correct: true
+        - text: "Тарас іде в школу."
+          correct: false
+        - text: "Ми їдемо в місто."
+          correct: false
+      explanation: В школі describes static location.
+    - prompt: "Choose the static location line."
+      options:
+        - text: "Мама на роботі."
+          correct: true
+        - text: "Ми їдемо в місто."
+          correct: false
+        - text: "Я йду на роботу."
+          correct: false
+      explanation: На роботі answers Де?
+    - prompt: "Which line answers where the book is?"
+      options:
+        - text: "Книга на столі."
+          correct: true
+        - text: "Я йду на пошту."
+          correct: false
+        - text: "Книга до столу."
+          correct: false
+      explanation: На столі answers Де?
+    - prompt: "Choose the static place sentence."
+      options:
+        - text: "Банк у центрі."
+          correct: true
+        - text: "Він їде до лікарні."
+          correct: false
+        - text: "Я йду в банк."
+          correct: false
+      explanation: У центрі describes where the bank is.
+- id: act-2
+  type: match-up
+  title: Base word to place chunk
+  instruction: Match each dictionary form with the A1 place phrase.
+  pairs:
+    - left: "школа"
+      right: "в школі"
+    - left: "робота"
+      right: "на роботі"
+    - left: "банк"
+      right: "у банку"
+    - left: "магазин"
+      right: "у магазині"
+    - left: "вулиця"
+      right: "на вулиці"
+    - left: "місто"
+      right: "у місті"
+    - left: "пошта"
+      right: "на пошті"
+    - left: "Київ"
+      right: "у Києві"
+- id: act-3
+  type: fill-in
+  title: Answer Де?
+  instruction: Choose the correct place phrase for each sentence.
+  items:
+    - sentence: "Олена ___ (школа)."
+      answer: "в школі"
+      options:
+        - "в школі"
+        - "в школа"
+        - "на школа"
+      explanation: Школа changes to школі after в.
+    - sentence: "Тарас ___ (робота)."
+      answer: "на роботі"
+      options:
+        - "на роботі"
+        - "в робота"
+        - "на робота"
+      explanation: The common chunk is на роботі.
+    - sentence: "Максим ___ (банк)."
+      answer: "у банку"
+      options:
+        - "у банку"
+        - "у банк"
+        - "на банку"
+      explanation: Bank as a contained institution uses у банку.
+    - sentence: "Ми ___ (місто)."
+      answer: "у місті"
+      options:
+        - "у місті"
+        - "на місті"
+        - "у місто"
+      explanation: Static city location is у місті.
+    - sentence: "Аптека ___ (вулиця)."
+      answer: "на вулиці"
+      options:
+        - "на вулиці"
+        - "в вулиці"
+        - "на вулиця"
+      explanation: Street location uses на вулиці.
+    - sentence: "Я живу ___ (Київ)."
+      answer: "у Києві"
+      options:
+        - "у Києві"
+        - "в Київ"
+        - "на Києві"
+      explanation: "Cities use в/у plus locative: у Києві."
+    - sentence: "Софія ___ (лікарня)."
+      answer: "у лікарні"
+      options:
+        - "у лікарні"
+        - "на лікарні"
+        - "у лікарня"
+      explanation: Лікарня changes to лікарні.
+    - sentence: "Я ___ (пошта)."
+      answer: "на пошті"
+      options:
+        - "на пошті"
+        - "у пошті"
+        - "на пошта"
+      explanation: The traditional chunk is на пошті.
+- id: act-4
+  type: group-sort
+  title: В/у or на shelves
+  instruction: Sort each chunk by the preposition pattern it uses.
+  groups:
+    - name: "В/у: contained place or city"
+      items:
+        - "в школі"
+        - "у банку"
+        - "в магазині"
+        - "у лікарні"
+        - "в Одесі"
+    - name: "На: open place, event, or traditional chunk"
+      items:
+        - "на роботі"
+        - "на вулиці"
+        - "на площі"
+        - "на уроці"
+        - "на пошті"
+- id: act-5
+  type: order
+  title: Build the neighbor note
+  instruction: Put the note in an order that moves from greeting to places to personal context.
+  is_ukrainian: true
+  items:
+    - "Добрий день! Де банк?"
+    - "Банк у центрі, біля пошти."
+    - "Пошта на площі."
+    - "Я працюю в офісі."
+    - "Моя сестра вчиться в школі."
+    - "Ми живемо в Україні, у Києві."
+  correct_order: [0, 1, 2, 3, 4, 5]
+- id: act-6
+  type: odd-one-out
+  title: Which question fits?
+  instruction: Choose the line that does not match the question pattern.
+  items:
+    - words:
+        - "Мама на роботі."
+        - "Оксана гуляє у парку."
+        - "Банк у центрі."
+        - "Він іде в школу."
+      answer: "Він іде в школу."
+      explanation: The first three answer Де?; іде в школу answers Куди?
+    - words:
+        - "Я їду в місто."
+        - "Він іде в школу."
+        - "Ми йдемо на пошту."
+        - "Книга на столі."
+      answer: "Книга на столі."
+      explanation: The first three show direction; на столі is static location.
+    - words:
+        - "На білочці руда шубка."
+        - "На мені светр."
+        - "На ньому куртка."
+        - "Ми дали білочці горішки."
+      answer: "Ми дали білочці горішки."
+      explanation: The first three use на кому? for location; дали білочці answers кому?
+    - words:
+        - "у Києві"
+        - "у Львові"
+        - "в Одесі"
+        - "на Києві"
+      answer: "на Києві"
+      explanation: Cities use в/у plus locative, not на.
+- id: act-7
+  type: true-false
+  title: Locative guardrails
+  instruction: Decide whether the statement matches this lesson.
+  items:
+    - statement: "Місцевий відмінок usually answers Де?"
+      answer: true
+      explanation: This module uses locative for static place.
+    - statement: "The helper questions are на/у кому? на/у чому?"
+      answer: true
+      explanation: These are the A1 helper questions for the locative case.
+    - statement: "Cities use на: на Києві, на Львові."
+      answer: false
+      explanation: "Use в/у with cities: у Києві, у Львові."
+    - statement: "The respectful country phrase is в Україні."
+      answer: true
+      explanation: Use в Україні for Ukraine.
+    - statement: "Я живу в Київ is a finished A1 locative sentence."
+      answer: false
+      explanation: "The place form is Києві: Я живу в Києві."
+    - statement: "На пошті is a common traditional chunk."
+      answer: true
+      explanation: Learn пошта together with на пошті.
+- id: act-8
+  type: error-correction
+  title: Repair locative interference
+  instruction: Choose the natural Ukrainian repair for each learner sentence.
+  items:
+    - sentence: "Я живу в Київ."
+      error: "в Київ"
+      correction: "Я живу в Києві."
+      options:
+        - "Я живу в Києві."
+        - "Я живу в Київ."
+        - "Я живу на Києві."
+      explanation: Static city location needs the locative form Києві.
+    - sentence: "Книга столі."
+      error: "столі"
+      correction: "Книга на столі."
+      options:
+        - "Книга на столі."
+        - "Книга столі."
+        - "Книга в стіл."
+      explanation: Ukrainian locative place phrases normally need a preposition.
+    - sentence: "Я в пошті."
+      error: "в пошті"
+      correction: "Я на пошті."
+      options:
+        - "Я на пошті."
+        - "Я в пошті."
+        - "Я у пошта."
+      explanation: The common institution chunk is на пошті.
+    - sentence: "Гроші в рукі."
+      error: "рукі"
+      correction: "Гроші в руці."
+      options:
+        - "Гроші в руці."
+        - "Гроші в рукі."
+        - "Гроші на рука."
+      explanation: Рука changes to руці in this locative phrase.
+    - sentence: "Він іде в школі."
+      error: "в школі"
+      correction: "Він іде в школу."
+      options:
+        - "Він іде в школу."
+        - "Він іде в школі."
+        - "Він є в школі."
+      explanation: Іде asks Куди?, so this is direction, not static Де?
+    - sentence: "Добрий день. Де є мій тато?"
+      error: "Де є"
+      correction: "Добрий день! Де мій тато?"
+      options:
+        - "Добрий день! Де мій тато?"
+        - "Добрий день. Де є мій тато?"
+        - "Добрий день! Де на мій тато?"
+      explanation: Ukrainian normally omits the present-tense linking verb here.
