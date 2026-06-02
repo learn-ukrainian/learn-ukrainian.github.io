@@ -1,0 +1,148 @@
+- word: їжа
+  translation: food
+  pos: noun
+  example: "Їжа дуже смачна."
+- word: напій
+  translation: drink
+  pos: noun
+  example: "Кава - гарячий напій."
+- word: хліб
+  translation: bread
+  pos: noun
+  example: "Я їм хліб з маслом."
+- word: кава
+  translation: coffee
+  pos: noun
+  example: "Мені каву з молоком, будь ласка."
+- word: чай
+  translation: tea
+  pos: noun
+  example: "Чай без цукру, будь ласка."
+- word: вода
+  translation: water
+  pos: noun
+  example: "Я п'ю воду."
+- word: молоко
+  translation: milk
+  pos: noun
+  example: "Кава з молоком."
+- word: сік
+  translation: juice
+  pos: noun
+  example: "Сік солодкий."
+- word: м'ясо
+  translation: meat
+  pos: noun
+  example: "Для борщу потрібно м'ясо."
+- word: риба
+  translation: fish
+  pos: noun
+  example: "На вечерю риба з рисом."
+- word: суп
+  translation: soup
+  pos: noun
+  example: "Я їм суп."
+- word: борщ
+  translation: borscht
+  pos: noun
+  example: "Борщ дуже смачний."
+- word: вареники
+  translation: varenyky
+  pos: noun
+  example: "Я люблю вареники із сиром."
+- word: сало
+  translation: salo
+  pos: noun
+  example: "Сало - українська культурна їжа."
+- word: сніданок
+  translation: breakfast
+  pos: noun
+  example: "На сніданок я їм кашу."
+- word: обід
+  translation: lunch
+  pos: noun
+  example: "На обід я їм борщ."
+- word: вечеря
+  translation: dinner
+  pos: noun
+  example: "Вечеря вдома."
+- word: снідати
+  translation: to have breakfast
+  pos: verb
+  example: "Я снідаю вдома."
+- word: обідати
+  translation: to have lunch
+  pos: verb
+  example: "Вдень я обідаю."
+- word: вечеряти
+  translation: to have dinner
+  pos: verb
+  example: "Увечері я вечеряю."
+- word: каша
+  translation: porridge
+  pos: noun
+  example: "Каша гаряча."
+- word: сир
+  translation: cheese; cottage cheese
+  pos: noun
+  example: "Вареники із сиром."
+- word: масло
+  translation: butter
+  pos: noun
+  example: "Хліб з маслом."
+- word: яйце
+  translation: egg
+  pos: noun
+  example: "На столі яйце."
+- word: картопля
+  translation: potato
+  pos: noun
+  example: "Смажена картопля."
+- word: буряк
+  translation: beet
+  pos: noun
+  example: "Для борщу потрібен буряк."
+- word: капуста
+  translation: cabbage
+  pos: noun
+  example: "Для борщу потрібна капуста."
+- word: цукор
+  translation: sugar
+  pos: noun
+  example: "Чай без цукру."
+- word: сіль
+  translation: salt
+  pos: noun
+  example: "Сіль солона."
+- word: сметана
+  translation: sour cream
+  pos: noun
+  example: "Борщ зі сметаною."
+- word: компот
+  translation: compote
+  pos: noun
+  example: "Я п'ю компот."
+- word: смажений
+  translation: fried
+  pos: adjective
+  example: "Смажена картопля."
+- word: смачний
+  translation: tasty
+  pos: adjective
+  example: "Борщ дуже смачний."
+- word: без цукру
+  translation: without sugar
+  pos: chunk
+  example: "Чай без цукру."
+- word: без молока
+  translation: without milk
+  pos: chunk
+  example: "Кава без молока."
+- word: з молоком
+  translation: with milk
+  pos: chunk
+  example: "Кава з молоком."
+- word: Смачного!
+  translation: Enjoy your meal!
+  pos: phrase
+  example: "Смачного!"
