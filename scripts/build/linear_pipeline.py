@@ -303,9 +303,15 @@ WRITER_ALLOWED_TOOL_PREFIXES = (
 # wrong_tool_family on the one annotation call and discards a successful
 # build. See `curriculum/l2-uk-en/_orchestration/a1/my-morning/runs/20260520-234426/`
 # for the smoking-gun trace.
+#
+# Claude Code 2.1.159 may emit `ToolSearch` before a sources MCP call when
+# selecting dynamically exposed MCP tools. Treat that as discovery metadata,
+# not content grounding. The positive source-call gate below still hard-fails
+# when no real `mcp__sources__*` call follows.
 WRITER_AGENT_ANNOTATION_TOOLS = frozenset(
     {
         "update_topic",  # gemini-cli 0.42.0+ strategic-intent / title / summary
+        "ToolSearch",  # claude-code 2.1.159+ dynamic MCP tool discovery
     }
 )
 WRITER_INFRA_DENYLIST_PATHS = (
