@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 1687
-**Total words:** 3,817,415
+**Total articles:** 1686
+**Total words:** 3,823,989
 
 ## Academic
 
@@ -145,7 +145,7 @@ Auto-generated index of compiled wiki articles.
 
 - [Біографія: Агатангел Кримський: Поліглот і мученик науки](figures/ahatanhel-krymskyi.md) (2,777 words)
 - [Біографія: Алла Горська: Душа розбитого вітража](figures/alla-horska.md) (1,897 words)
-- [Микола Куліш: Драматургія мовного вибору та абсурду](figures/anatol-petrytskyi.md) (1,856 words)
+- [Анатоль Петрицький: авангард, утрати й ціна виживання](figures/anatol-petrytskyi.md) (2,768 words)
 - [Біографія: Анатолій Дімаров: Прожити й розповісти](figures/anatolii-dimarov.md) (2,862 words)
 - [Біографія: Митрополит Андрей Шептицький: Пастир і рятівник](figures/andrey-sheptytsky.md) (2,239 words)
 - [Біографія: Андрій Чайковський: Адвокат нації](figures/andrii-chaikovskyi.md) (2,571 words)
@@ -159,18 +159,18 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Борис Патон: Академік століття](figures/borys-paton.md) (2,041 words)
 - [Біографія: Данило Апостол: Останній обраний гетьман](figures/danylo-apostol.md) (2,063 words)
 - [Біографія: Данило Галицький: Король Русі](figures/danylo-halytskyi.md) (2,174 words)
-- [Біографія: Дмитро Бортнянський: Придворний маестро](figures/dmytro-bortnyanskyy.md) (2,879 words)
+- [Біографія: Дмитро Бортнянський: Придворний маестро](figures/dmytro-bortnyanskyy.md) (2,927 words)
 - [Дмитро Донцов: Ідеолог українського націоналізму](figures/dmytro-dontsov.md) (2,189 words)
-- [Біографія: Микола Куліш: Модерніст, сатирик, мученик](figures/dmytro-falkivskyi.md) (1,714 words)
+- [Дмитро Фальківський: поет Полісся й жертва терору 1934](figures/dmytro-falkivskyi.md) (3,271 words)
 - [Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців](figures/dmytro-kotsyubailo.md) (1,855 words)
 - [Біографія: Дмитро Павличко: Поет і дипломат](figures/dmytro-pavlychko.md) (1,709 words)
 - [Біографія: Дмитро Вишневецький: Байда — Перший Гетьман](figures/dmytro-vyshnevetsky.md) (1,936 words)
 - [Біографія: Юрій Шевельов: Архітектор української лінгвістики](figures/george-shevelov.md) (1,597 words)
 - [Біографія: Галина Пагутяк: Архітекторка химерних світів](figures/halyna-pahutyak.md) (2,787 words)
 - [Біографія: Ганна Барвінок: Письменниця і етнографка](figures/hanna-barvinok.md) (1,879 words)
-- [Біографія: Микола Куліш: Драматургія на межі](figures/heo-shkurupii.md) (1,496 words)
+- [Ґео Шкурупій: «Король Футуропрерій» Розстріляного відродження](figures/heo-shkurupii.md) (2,954 words)
 - [Біографія: Гнат Хоткевич: Людина-оркестр](figures/hnat-khotkevych.md) (1,900 words)
-- [Біографія: Микола Куліш: Драматург на роздоріжжі ідентичностей](figures/hryhorii-kosynka.md) (2,061 words)
+- [Григорій Косинка: біографічний профіль новеліста Розстріляного відродження](figures/hryhorii-kosynka.md) (2,738 words)
 - [Біографія: Григорій Квітка-Основ'яненко: Батько української прози](figures/hryhoriy-kvitka-osnovianenko.md) (3,115 words)
 - [Біографія: Григорій Сковорода: Мандрівний філософ](figures/hryhoriy-skovoroda.md) (2,245 words)
 - [Біографія: Ілля Чернілевський](figures/illia-chernilevskyi.md) (1,977 words)
@@ -195,7 +195,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Клавдія Латишева: Піонерка авіації](figures/klavdiya-latysheva.md) (2,233 words)
 - [Біографія: Князь Святослав: Воїн-завойовник](figures/kniaz-sviatoslav.md) (1,942 words)
 - [Біографія: Князь Ярослав Мудрий: Законодавець](figures/kniaz-yaroslav-mudryi.md) (3,048 words)
-- [Біографія: Княгиня Ольга: Архітекторка держави](figures/knyahynia-olha.md) (2,022 words)
+- [Біографія: Княгиня Ольга: Архітекторка держави](figures/knyahynia-olha.md) (2,034 words)
 - [Біографія: Анна Ярославна: Королева Франції](figures/knyazhna-anna-yaroslavna.md) (2,709 words)
 - [Біографія: Кость Гордієнко: Останній Лицар Запорожжя](figures/kost-hordiyenko.md) (2,676 words)
 - [Біографія: Костянтин Іванович Острозький: Гетьман двох народів](figures/kostiantyn-ostrozky-elder.md) (2,403 words)
@@ -211,8 +211,8 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Ліна Костенко: Совість і голос епохи](figures/lina-kostenko.md) (2,295 words)
 - [Біографія: Любомир Гузар: Моральний авторитет нації](figures/liubomyr-huzar.md) (3,119 words)
 - [Біографія: Людмила Старицька-Черняхівська: Драматургиня](figures/liudmyla-starytska.md) (1,751 words)
-- [Біографія: Микола Куліш: Драматург на межі світів](figures/maik-yohansen.md) (1,779 words)
-- [Біографія: Максим Березовський: Трагедія втраченого генія](figures/maksym-berezovskyy.md) (1,937 words)
+- [Майк Йогансен: авангард, містифікація і розстріляне слово](figures/maik-yohansen.md) (2,861 words)
+- [Біографія: Максим Березовський: Трагедія втраченого генія](figures/maksym-berezovskyy.md) (2,046 words)
 - [Біографія: Максим «Далі» Кривцов](figures/maksym-kryvtsov.md) (2,458 words)
 - [Марія Примаченко: Світ фантастичних звірів та символ спротиву](figures/mariia-prymachenko.md) (1,790 words)
 - [Біографія: Марія Вояковська-Грушевська: Більше, ніж тінь](figures/mariia-voiakovska.md) (2,087 words)
@@ -239,7 +239,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Микола Міхновський: Ідеолог самостійництва](figures/mykola-mikhnovskyi.md) (2,590 words)
 - [Біографія: Микола Погрібний: Голос українського ефіру](figures/mykola-pohribnyi.md) (1,983 words)
 - [Біографія: Микола Василенко в інтелектуальному та правовому контексті епохи](figures/mykola-vasylenko.md) (2,010 words)
-- [Біографія: Микола Куліш: Трагедія автора комедій](figures/mykola-zerov.md) (2,961 words)
+- [Микола Зеров: лідер київських неокласиків і дорога до Сандармоху](figures/mykola-zerov.md) (2,194 words)
 - [Біографія: Мирослав Маринович: Совість нації](figures/myroslav-marynovych.md) (1,910 words)
 - [Біографія: Наталя Яковенко: Матріарх критичної історії](figures/natalia-yakovenko.md) (2,309 words)
 - [Біографія: Наталія Полонська-Василенко: Історикиня](figures/nataliia-polonska-vasylenko.md) (2,336 words)
@@ -250,7 +250,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Олег Антонов: Крила України та геній авіації](figures/oleg-antonov.md) (2,426 words)
 - [Біографія: Олег Сенцов: Режисер власної долі та воїн](figures/oleg-sentsov.md) (1,967 words)
 - [Біографія: Олег Ольжич: Камінь з Божої пращі](figures/oleh-olzhych.md) (1,862 words)
-- [Біографія: Микола Куліш: Трагедія національного драматурга](figures/oleksa-slisarenko.md) (1,938 words)
+- [Олекса Слісаренко: поет і прозаїк Розстріляного відродження](figures/oleksa-slisarenko.md) (3,060 words)
 - [Біографія: Олександр Потебня: Філософ мови](figures/oleksander-potebnya.md) (2,982 words)
 - [Біографія: Олександр Архипенко: Скульптор авангарду](figures/oleksandr-arkhypenko.md) (1,891 words)
 - [Олександр Богомазов: Український футурист та теоретик авангарду](figures/oleksandr-bohomazov.md) (2,702 words)
@@ -290,7 +290,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Тарас Прохасько: Станіславський феномен](figures/taras-prokhasko.md) (1,962 words)
 - [Біографія: Тарас Шевченко: Національний Пророк](figures/taras-shevchenko.md) (1,861 words)
 - [Біографія: Валентина Радзимовська: Життя, наука та терор в епоху тоталітаризму](figures/valentyna-radzymovska.md) (1,924 words)
-- [Біографія: Микола Куліш: Драматургія мовного розколу](figures/valerian-pidmohylnyi.md) (2,133 words)
+- [Валер'ян Підмогильний: рання біографія, літературний старт і репресований канон](figures/valerian-pidmohylnyi.md) (2,666 words)
 - [Василь Кук: Останній Головний командир УПА та еволюція українського спротиву](figures/vasyl-kuk.md) (2,262 words)
 - [Василь Шкляр: Майстер історичного роману та деколонізація національної пам'яті](figures/vasyl-shkliar.md) (1,794 words)
 - [Біографія: Василь Стефаник: Слово як крик душі](figures/vasyl-stefanyk.md) (2,382 words)
@@ -304,7 +304,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Віра Холодна: Королева німого кіно](figures/vira-kholodna.md) (1,788 words)
 - [Біографія: Віталій Портников: Журналіст і аналітик (Професійний контекст)](figures/vitaly-portnikov.md) (2,356 words)
 - [Біографія: Володимир Івасюк: Автор Червоної рути](figures/volodymyr-ivasyuk.md) (2,056 words)
-- [Біографія: Володимир Мономах — Укріплювач Русі та мислитель](figures/volodymyr-monomakh.md) (1,856 words)
+- [Біографія: Володимир Мономах — Укріплювач Русі та мислитель](figures/volodymyr-monomakh.md) (1,900 words)
 - [Володимир Самійленко: Поет, сатирик і будівничий мови на тлі імперських репресій](figures/volodymyr-samiilenko.md) (2,244 words)
 - [Володимир Вакуленко: життя, творчість та мучеництво за українське слово](figures/volodymyr-vakulenko.md) (2,370 words)
 - [Володимир Великий: Святий, грішник, архітектор](figures/volodymyr-velykii.md) (1,601 words)
@@ -313,7 +313,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Євген Чикаленко: Меценат і видавець](figures/yevhen-chykalenko.md) (2,021 words)
 - [Біографія: Євген Коновалець: Полковник і організатор](figures/yevhen-konovalets.md) (2,745 words)
 - [Біографія: Євген Патон: Інженер, що з'єднав Україну](figures/yevhen-paton.md) (2,028 words)
-- [Біографія: Микола Куліш: Трагедія національного драматурга](figures/yevhen-pluzhnyk.md) (2,495 words)
+- [Євген Плужник: тихий лірик Розстріляного відродження](figures/yevhen-pluzhnyk.md) (2,623 words)
 - [Біографія: Євген Сверстюк: Моральний авторитет нації](figures/yevhen-sverstiuk.md) (2,680 words)
 - [Біографія: Юліан Бачинський: Теоретик незалежності](figures/yulian-bachynskyi.md) (1,823 words)
 - [Біографія: Юрій Андрухович: Карнавал на руїнах імперії](figures/yuri-andrukhovych.md) (2,878 words)
@@ -439,7 +439,7 @@ Auto-generated index of compiled wiki articles.
 - [Граматика B1: Вид і заперечення](grammar/b1/aspect-in-negation.md) (2,088 words)
 - [Граматика B1: Вид у минулому часі](grammar/b1/aspect-past-tense.md) (2,271 words)
 - [Граматика B1: Майбутній час і вид дієслова](grammar/b1/b1-baseline-future-aspect.md) (2,074 words)
-- [Граматика B1: Минуле і теперішнє](grammar/b1/b1-baseline-past-present.md) (2,596 words)
+- [Граматика B1: Минуле і теперішнє](grammar/b1/b1-baseline-past-present.md) (4,014 words)
 - [Граматика B1: Порядкові числівники і відмінки](grammar/b1/cases-with-ordinal-numerals.md) (2,340 words)
 - [Граматика B1: Кількісні вирази](grammar/b1/cases-with-quantity-expressions.md) (2,215 words)
 - [Граматика B1: Контрольна робота: вид дієслова](grammar/b1/checkpoint-aspect.md) (2,194 words)
@@ -1549,7 +1549,7 @@ Auto-generated index of compiled wiki articles.
 - [Педагогіка A1: Моє місто](pedagogy/a1/my-city.md) (2,041 words)
 - [Педагогіка A1: Мій день](pedagogy/a1/my-day.md) (1,956 words)
 - [Педагогіка A1: Моя сім'я](pedagogy/a1/my-family.md) (1,938 words)
-- [Педагогіка A1: Мій ранок](pedagogy/a1/my-morning.md) (1,888 words)
+- [Педагогіка A1: Мій ранок](pedagogy/a1/my-morning.md) (2,039 words)
 - [Педагогіка A1: Мої плани](pedagogy/a1/my-plans.md) (1,785 words)
 - [Педагогіка A1: Моя історія](pedagogy/a1/my-story.md) (1,703 words)
 - [Педагогіка A1: Люди навколо мене](pedagogy/a1/people-around-me.md) (2,200 words)
@@ -1720,8 +1720,4 @@ Auto-generated index of compiled wiki articles.
 - [Історія України: Зборівська та Білоцерківська угоди](periods/zborivska-bila-tserkva.md) (2,576 words)
 - [Історія України: Злочини колонізаторів та національна стійкість у XVI–XVIII століттях](periods/zlochyny-stiikist.md) (2,896 words)
 - [Історія України: ЗУНР, Акт Злуки та їхні історичні передумови](periods/zunr.md) (2,673 words)
-
-## Root
-
-- [Література для молоді: Володимир Рутківський, "Джури": Народження нації в плавнях](rutkivsky-dzhury-2.md) (1,910 words)
 
