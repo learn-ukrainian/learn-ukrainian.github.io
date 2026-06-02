@@ -103,4 +103,16 @@ rag_literary:
     Г. Шкурупій, О. Полторацький та інші. Засновники організації проголошували гасла
     про «нову форму», переносячи на радянський ґрунт різні течії та формалістичні
     прийоми.
-warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection. Canonical name form: Ґео Шкурупій (with ґ).'
+- chunk_id: ieu-shkurupii-biography
+  source_type: literary
+  source_name: 'Internet Encyclopedia of Ukraine — "Shkurupii, Geo" (Ivan Koshelivets)'
+  work: 'Internet Encyclopedia of Ukraine'
+  author: 'Ivan Koshelivets'
+  url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm'
+  text: |
+    Shkurupii, Geo [Шкурупій, Ґео] (Yurii), b 20 April 1903 in Bendery, Bessarabia
+    gubernia, now in Moldova, d 8 December 1937 in Leningrad. An active member of the
+    Association of Panfuturists and Komunkult, and subsequently Nova Generatsiia. He was
+    arrested in 1934, sentenced to 10 years in concentration camps, resentenced by a
+    special NKVD tribunal, and shot.
+warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection. Canonical name form: Ґео Шкурупій (with ґ). IEU death-date chunk added 2026-06-02 (#2535) to lift the date (8 Dec 1937 Leningrad — NOT Sandarmokh) off Wikipedia-only support and clear the compile VERIFY-marker gate.'
