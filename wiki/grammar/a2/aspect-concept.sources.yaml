@@ -31,3 +31,10 @@ sources:
   title: Ìорôологічна норма (p. 30)
   page: 30
   grade: 11
+- id: S6
+  file: vesum-verify-aspect-concept-2026-06-02
+  type: morphological-dictionary
+  title: VESUM verification for A2.1 aspect forms
+  notes: Verified помити, зробити, вивчити, сказати, завантажено,
+    завантажений, надіслано, надісланий, прийняти, ухвалювати, ухвалити;
+    принімати not found.
