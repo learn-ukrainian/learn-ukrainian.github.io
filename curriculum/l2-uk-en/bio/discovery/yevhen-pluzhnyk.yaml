@@ -100,4 +100,19 @@ rag_literary:
     Де українців два, там і лінгвістів двоє.
 
     Як два по два чотири: лівіють погляди — псуються і маніри.
-warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection.'
+- chunk_id: eiu-pluzhnyk-biohrafiia
+  source_type: literary
+  source_name: 'Енциклопедія історії України — «ПЛУЖНИК Євген Павлович» (Герасимова Г. П.)'
+  work: 'Енциклопедія історії України'
+  author: 'Герасимова Г. П.'
+  url: 'https://www.history.org.ua/?termin=Pluzhnyk_Y'
+  text: |
+    ПЛУЖНИК Євген Павлович (псевд. — Кантемирянин; 26(14).12.1898, слобода
+    Кантемирівка, нині с-ще міськ. типу Воронезької обл., РФ — 02.02.1936) —
+    український поет. Народився в багатодітній селянсько-ремісничій родині. Закінчив
+    гімназію 1918; по тому родина переїхала в Україну. Навчання у ветеринарному та
+    музично-драматичному інститутах покинув. 1923—1928 учителював у с. Багачка
+    Миргородського р-ну. Заарештований 4 грудня 1934; страта була замінена 10-ма
+    роками ув'язнення. Помер від туберкульозу на Соловках, похований у братській
+    могилі. Реабілітований 1956.
+warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection. ЕІУ death-date chunk added 2026-06-02 (#2535) to lift the date off Wikipedia-only support and clear the compile VERIFY-marker gate.'

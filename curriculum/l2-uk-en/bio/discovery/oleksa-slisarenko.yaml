@@ -101,4 +101,17 @@ rag_literary:
     М. Терещенко незабаром перейшли до революційної «пролетарської» поезії, а
     О. Слісаренко — до футуризму («Байда», вибрана лірика, 1928) і пізніше до шукань
     у сюжетній прозі.
-warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection.'
+- chunk_id: eiu-slisarenko-biohrafiia
+  source_type: literary
+  source_name: 'Енциклопедія історії України — «СЛІСАРЕНКО Олекса Андрійович» (Герасимова Г. П.)'
+  work: 'Енциклопедія історії України'
+  author: 'Герасимова Г. П.'
+  url: 'https://www.history.org.ua/?termin=Slisarenko_O'
+  text: |
+    СЛІСАРЕНКО Олекса Андрійович (справжнє прізв. — Сніцар; другий псевд. — Омелько
+    Буц; 28.03.1891, с. Канівцеве, нині село Великобурлуцького р-ну Харків. обл. —
+    03.11.1937) — український поет і прозаїк. Належав до літературних угруповань
+    «Музагет», Аспанфут, Комункульт, ВАПЛІТЕ (1926—28) і «Техно-мистецької групи А»
+    (1929). Заарештований 29 квітня 1934, отримав 10 років концтаборів і згодом був
+    страчений на Соловках. Реабілітований 1957.
+warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection. ЕІУ death-date chunk added 2026-06-02 (#2535) to lift the date off Wikipedia-only support and clear the compile VERIFY-marker gate. NOTE: ЕІУ writes "страчений на Соловках"; the precise locus is урочище Сандармох (Карелія), the Solovki-etap execution of 3 Nov 1937, kept in the Wikipedia chunk. SURNAME: established real surname is Снісар (uk.wiki, father Андрій Прокопович Снісар); ЕІУ gives the minority variant Сніцар — the wiki should use Снісар.'

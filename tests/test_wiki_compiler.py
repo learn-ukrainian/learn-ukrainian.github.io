@@ -806,6 +806,7 @@ class TestCompileCommand:
             dry_run=False,
             review=False,
             writer="gemini",
+            allow_verify_markers=False,
         )
 
     def test_review_flag_delegates_to_review_article(self):

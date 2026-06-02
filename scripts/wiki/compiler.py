@@ -16,7 +16,10 @@ from pathlib import Path
 from ai_llm.claude_call import call_claude_with_fallback
 from ai_llm.codex_call import call_codex_with_fallback
 from ai_llm.fallback import CallResult, call_gemini_with_fallback, visible_sleep
-from validate.check_wiki_verify_markers import assert_no_verify_markers
+from validate.check_wiki_verify_markers import (
+    assert_no_verify_markers,
+    find_verify_markers_text,
+)
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
 from .source_attribution import resolve_chunk_attribution
@@ -58,6 +61,7 @@ def compile_article(
     force: bool = False,
     dry_run: bool = False,
     writer: str = "gemini",
+    allow_verify_markers: bool = False,
 ) -> Path | None:
     """Compile a single wiki article from source material.
 
@@ -161,6 +165,7 @@ def compile_article(
             article_text=response.strip() + "\n",
             sources=sources,
             force=force,
+            allow_verify_markers=allow_verify_markers,
         )
     except ValueError as exc:
         print(f"  ❌ {exc}")
@@ -498,9 +503,28 @@ def _write_article_bundle_atomic(
     article_text: str,
     sources: list[dict],
     force: bool = False,
+    allow_verify_markers: bool = False,
 ) -> None:
-    """Write article + sidecar via temp files so markdown lands last."""
-    assert_no_verify_markers(article_text, path=article_path)
+    """Write article + sidecar via temp files so markdown lands last.
+
+    The ``<!-- VERIFY -->`` gate normally raises (hard write-block) so an
+    unsourced new article never reaches the reader. ``allow_verify_markers``
+    DOWNGRADES that to advisory: the article is written and the surviving
+    markers are logged as review TODOs. Use ONLY to replace a known-wrong
+    existing wiki, where the correct-subject article — even carrying a few
+    honest VERIFY flags — is strictly better than the live wrong-subject one.
+    """
+    if allow_verify_markers:
+        advisory = find_verify_markers_text(article_text, path=str(article_path))
+        if advisory:
+            print(
+                f"  ⚠️  ADVISORY: writing despite {len(advisory)} VERIFY marker(s) "
+                "(--allow-verify-markers); review TODO:"
+            )
+            for finding in advisory[:5]:
+                print(f"     - {finding.path}:{finding.line}: {finding.marker}")
+    else:
+        assert_no_verify_markers(article_text, path=article_path)
     registry = _build_sources_registry(
         article_path,
         sources,

@@ -86,7 +86,11 @@ def cyrillic_tokens(text: str) -> list[str]:
 
 def token_keys(token: str) -> set[str]:
     """Return conservative stem keys for Ukrainian name-token matching."""
-    base = token.casefold().replace("’", "'").replace("ʼ", "'")
+    # Normalize ґ→г: the restored letter ґ was banned under Soviet orthography,
+    # so the same person's name appears with either letter across sources
+    # (e.g. canonical «Ґео Шкурупій» vs a plan title «Гео Шкурупій»). For
+    # person-identity matching they are the same name.
+    base = token.casefold().replace("’", "'").replace("ʼ", "'").replace("ґ", "г")
     keys = {base}
     for suffix in UKRAINIAN_SUFFIXES:
         if base.endswith(suffix) and len(base) - len(suffix) >= 4:

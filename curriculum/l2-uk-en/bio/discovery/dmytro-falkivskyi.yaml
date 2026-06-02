@@ -105,4 +105,20 @@ rag_literary:
     В болотах я родився і зріс.
     Я люблю свою хату поліську…
     Я люблю свій зажурений ліс…
-warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection.'
+- chunk_id: eiu-falkivskyi-biohrafiia
+  source_type: literary
+  source_name: 'Енциклопедія історії України — «ФАЛЬКІВСЬКИЙ Дмитро Никанорович» (Герасимова Г. П.)'
+  work: 'Енциклопедія історії України'
+  author: 'Герасимова Г. П.'
+  url: 'https://www.history.org.ua/?termin=Falkivskyj_D'
+  text: |
+    ФАЛЬКІВСЬКИЙ Дмитро Никанорович (справжнє прізв. — Левчук; 03.11(22.10).1898,
+    с. Великі Липеси, нині село Брестської обл., Білорусь — 16.12.1934, м. Київ) —
+    український поет. Народився в робітничій родині. Навчався в сільській школі та
+    Берестейській (Брест-Литовській) гімназії, якої не закінчив через Першу світову
+    війну. Під час революції працював у більшовицькому підпіллі; 1920—23 перебував у
+    Червоній армії та у ВЧК; із 1923 — на журналістській і творчій роботі в Києві.
+    У грудні 1934 заарештований за фальшивим звинуваченням у терористичній
+    діяльності. 14 грудня 1934 засуджений до смерті. Страчений у м. Київ.
+    Реабілітований наприкінці 1950-х рр.
+warning: 'Manually enriched 2026-06-02 from query_wikipedia (extract) + search_literary (#2535). Replaces the auto-generated Mykola-Kulish-duplicate scaffold that had empty rag_chunks and caused a source-starved wiki rejection. ЕІУ death-date chunk added 2026-06-02 (#2535) to lift the date off Wikipedia-only support and clear the compile VERIFY-marker gate.'

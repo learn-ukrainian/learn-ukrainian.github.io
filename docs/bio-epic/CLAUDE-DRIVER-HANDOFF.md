@@ -58,6 +58,92 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶ SESSION UPDATE (2026-06-02, LATE) — 4-DEFERRED-WIKIS ROOT CAUSE IS SYSTEMIC, NOT A DEAD-DATE GAP (read FIRST)
+
+**Branch `bio/fix-4-deferred-wikis` (PR #2574): DONE — all 4 wikis recompiled to the CORRECT subject and
+ship (advisory VERIFY markers as review TODOs), plus authoritative ЕІУ/IEU spine chunks, an opt-in pipeline
+flag, a subject-gate ґ/г fix, and this handoff. The gate blocker was bigger than the prior handoff assumed;
+I decided option (C) and executed it. 0 dispatches fired (all inline diagnosis + WebFetch + local codex
+compiles via `--writer gpt-5.5`). DeepSeek cross-family review DONE: 3 SHIP + 1 FIX (slisarenko
+«найвищу кару»→«смертну кару», applied). **PR #2574 is review-clean + CI-green + MERGE-READY.**
+
+### What the prior handoff got wrong about the 4 deferred wikis
+The prior (PM) block said the fix was "add an authoritative ЕІУ/encyclopedic **death-date** chunk so the
+date is un-hedgeable, then `compile.py --writer gpt-5.5 --force`." **That is necessary but FAR from
+sufficient.** Empirically reproduced (3 falkivskyi + 1 pluzhnyk codex compiles, ~160s each):
+
+- `compile_article` does NOT write the `.md` if codex emits **any** `<!-- VERIFY -->` marker — it raises
+  before the atomic write, so the OLD Kulish wiki stays (that's why git shows the wikis unchanged after a
+  "failed" compile, and why the H1 is still Kulish). The gate is a hard **write-block**, not advisory.
+- The wiki prompt `scripts/wiki/prompts/compile_article.md` (lines 46/50/124) ORDERS the writer: *any*
+  historical claim (date, name, **event, education, place, motive**) resting **only on a `source_type:
+  wikipedia` chunk** must get `<!-- VERIFY -->`. `compile.py` reads ONLY the discovery, **never the
+  dossier** — so even dossier-corroborated facts trip the gate if the discovery's only source for them is
+  a Wikipedia chunk.
+- So adding ONE ЕІУ death-date chunk just moves the marker to the next Wikipedia-only detail. Observed
+  cascade on falkivskyi: death-date → birth/real-surname/birthplace → **surname-change motive**; on
+  pluzhnyk → **gymnasium/Kyiv-institute education sequence**. Every figure's discovery is Wikipedia-rich
+  but ЕІУ-thin, and ЕІУ never has Wikipedia's granularity, so **there is always a Wikipedia-only detail
+  left to flag.** This is SYSTEMIC, not a per-figure data gap.
+- Brute-forcing it = stripping granular biographical detail from the Wikipedia chunks until none is
+  Wikipedia-only. That is lossy and, for figures like **falkivskyi**, editorially fraught: his
+  surname-change motive ("страх помсти за причетність до масових убивств") is a **deliberate
+  anti-hagiography / decolonization point in the vetted dossier** (he was perpetrator-then-victim). I will
+  NOT silently sanitize that.
+
+### What I DID this session (all #M-4 verified, verbatim sources)
+- Added a non-Wikipedia authoritative biographical chunk (`source_type: literary`, so the writer treats it
+  as primary, not the demoted `ext-wikipedia-*` tier) to each of the 4 discovery `rag_literary` lists:
+  **ЕІУ** (Герасимова Г. П., resource.history.org.ua, verbatim) for falkivskyi / pluzhnyk / slisarenko;
+  **IEU** (encyclopediaofukraine.com, Koshelivets, verbatim) for shkurupii. Each covers the full spine
+  (name, real surname, birth date+place, death date+place, repression, rehabilitation). Death dates
+  cross-checked vs dossiers: falkivskyi 16.12.1934 Київ · pluzhnyk 02.02.1936 Соловки (TB) · slisarenko
+  03.11.1937 (Сандармох locus kept in the Wikipedia chunk; ЕІУ says "на Соловках") · shkurupii 08.12.1937
+  Ленінград (NOT Sandarmokh; name Ґео). slisarenko surname noted: established = Снісар; ЕІУ minority = Сніцар.
+- Fixed an infra gotcha: a manual worktree has NO `data/sources.db` (gitignored 1.68 GB) → enrichment
+  `search_sources` crashes (`no such table: textbooks_fts`). FIX: symlink `<wt>/data/sources.db` and
+  `vesum.db` → main repo (gitignored, zero git impact). **Bake this into any future manual-worktree compile.**
+
+### DECISION MADE + EXECUTED — option (C): advisory gate, ship now, backfill later (user 2026-06-02: "it's on you, you're the orchestrator")
+A wiki about the RIGHT person carrying VERIFY markers is strictly better than a live wiki about the WRONG
+person (Mykola Kulish), and the markers are honest source-criticism — a positive signal on a source-first
+seminar track, not a defect. The hard write-block was designed to stop bad NEW wikis; on a recompile over a
+known-wrong wiki its failure mode is perverse (it preserves the worse artifact). So I shipped:
+- **`--allow-verify-markers`** (commit `6f7522c7`): opt-in flag, default OFF (strict gate unchanged), that
+  writes the corrected article and logs surviving markers as `verify_marker_advisory` review TODOs. Threaded
+  through `compile_article`/`_write_article_bundle_atomic`/`cmd_compile_one`/`cmd_compile_all` + CLI. 3 hermetic tests.
+- **4 recompiled wikis** (commit `0807360`): all name the right figure, all pass `check_wiki_subject`.
+  Content spot-read (falkivskyi full + slisarenko/shkurupii landmines): decolonized, accurate, dates correct,
+  falkivskyi's ВЧК perpetrator-past handled honestly (not sanitized), shkurupii = Ленінград-not-Sandarmokh + Ґео,
+  slisarenko surfaces the Снісар/Сніцар variant with attribution. Marker counts 11–18 = backfill TODO.
+- **ґ→г subject-gate fix** (`bio_subjects.same_person`): canonical «Ґео» H1 now matches a Soviet-orthography
+  «Гео» plan title (same person); without it shkurupii false-positived the H1 gate. Hermetic test added.
+- **Infra gotcha**: a manual worktree has NO `data/sources.db` (gitignored 1.68 GB) → enrichment crashes
+  (`no such table: textbooks_fts`). FIX: symlink `<wt>/data/{sources,vesum}.db` → main repo. Bake into future compiles.
+
+### KNOWN FOLLOW-UPS (quality-debt, tracked — not blockers)
+1. **Marker backfill**: the writer flags routine Wikipedia-sourced facts (journal names, group memberships)
+   as well as contestable ones, so counts are 11–18/article. Two durable fixes: (a) relax
+   `scripts/wiki/prompts/compile_article.md` so the writer flags only EXTRAORDINARY/contestable claims, not
+   every routine biographical fact sourced to Wikipedia; (b) keep backfilling ЕІУ/scholarly chunks into discovery.
+2. **shkurupii plan title** uses Soviet-orthography «Гео» — fix to canonical «Ґео» via the plan-versioning flow
+   (`.bak` + version bump). The ґ/г gate fix makes this non-urgent (gate passes either way).
+3. **wiki/index.md regen**: deferred to main (orchestrator) — the worktree regen also dropped `rutkivsky-dzhury-2.md`
+   and caught up many stale #2565 titles; run `compile.py --update-index` on main once these land.
+
+### NEXT ACTION ON RESUME
+1. **MERGE PR #2574** — DeepSeek cross-family review DONE (3 SHIP + 1 FIX applied), CI green, 74 wiki tests
+   pass. #M-4 note: DeepSeek tagged «найвищу кару» a Russianism at confidence 1.0, but my independent
+   `check_russian_shadow` showed the proposed «смертну кару» scores IDENTICALLY (1.0) — the tool flags the
+   accusative «кару» morphology, not «найвища». Applied the change anyway as a clarity/decolonization win
+   (names the death sentence plainly vs the Soviet «найвища кара» euphemism), not as a confirmed Russianism.
+   (PR carries shared wiki-pipeline infra beyond the bio-content merge-grant scope — orchestrator/human does
+   the literal main-merge per the driver boundary.)
+2. After merge: `compile.py --update-index` on main (index regen, drops nothing). Then pursue follow-up #1
+   (relax `compile_article.md` so the writer flags only contestable claims → cut marker counts) + Phase-4 (bio-181..310).
+
+---
+
 ## ▶▶▶ SESSION UPDATE (2026-06-02, PM) — 6 PRs MERGED + 2 ROOT-CAUSE LEARNINGS (read FIRST)
 
 This Claude bio-driver session shipped **6 PRs to main** against #2535, each cross-family (DeepSeek) reviewed:

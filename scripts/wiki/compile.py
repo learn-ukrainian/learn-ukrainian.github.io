@@ -303,7 +303,8 @@ def cmd_list(track: str) -> None:
 
 def cmd_compile_one(track: str, slug: str, *, force: bool = False,
                     dry_run: bool = False, review: bool = False,
-                    writer: str = "gemini") -> bool:
+                    writer: str = "gemini",
+                    allow_verify_markers: bool = False) -> bool:
     """Compile a single wiki article from a discovery file.
 
     ``review``: run the per-dim review orchestrator (independent model
@@ -352,6 +353,7 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
         force=force or is_compiled(article_key),
         dry_run=dry_run,
         writer=writer,
+        allow_verify_markers=allow_verify_markers,
     )
     print(f"    ✓ compile_article in {time.monotonic() - t_stage:.1f}s", flush=True)
 
@@ -374,14 +376,26 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
             print(f"    ✓ discipline in {time.monotonic() - t_stage:.1f}s", flush=True)
             marker_findings = _verify_marker_survivors(result)
             if marker_findings:
-                print("  ❌ VERIFY marker survivor(s) after compile:")
-                for finding in marker_findings[:5]:
-                    print(f"     - {finding.path}:{finding.line}: {finding.marker}")
-                log_event(
-                    track, slug, "verify_marker_fail",
-                    markers=len(marker_findings),
-                )
-                return False
+                if allow_verify_markers:
+                    print(
+                        f"  ⚠️  ADVISORY: {len(marker_findings)} VERIFY marker(s) after "
+                        "compile (--allow-verify-markers); shipping with review TODO:"
+                    )
+                    for finding in marker_findings[:5]:
+                        print(f"     - {finding.path}:{finding.line}: {finding.marker}")
+                    log_event(
+                        track, slug, "verify_marker_advisory",
+                        markers=len(marker_findings),
+                    )
+                else:
+                    print("  ❌ VERIFY marker survivor(s) after compile:")
+                    for finding in marker_findings[:5]:
+                        print(f"     - {finding.path}:{finding.line}: {finding.marker}")
+                    log_event(
+                        track, slug, "verify_marker_fail",
+                        markers=len(marker_findings),
+                    )
+                    return False
 
             t_stage = time.monotonic()
             print("  📑 Updating index + logging event...", flush=True)
@@ -650,7 +664,8 @@ def cmd_review_existing(track: str, *, slug: str | None = None,
 
 def cmd_compile_all(track: str, *, limit: int | None = None,
                     force: bool = False, dry_run: bool = False,
-                    review: bool = False, writer: str = "gemini") -> None:
+                    review: bool = False, writer: str = "gemini",
+                    allow_verify_markers: bool = False) -> None:
     """Compile all articles for a track."""
     slugs = list_discovery_slugs(track)
     if not slugs:
@@ -688,6 +703,7 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
                 track, slug,
                 force=force, dry_run=dry_run,
                 review=review, writer=writer,
+                allow_verify_markers=allow_verify_markers,
             )
         except KeyboardInterrupt:
             # Explicit interrupt — stop the whole batch but leave state clean
@@ -887,6 +903,16 @@ def main() -> None:
             "pedagogy)."
         ),
     )
+    parser.add_argument(
+        "--allow-verify-markers", action="store_true",
+        help=(
+            "DOWNGRADE the <!-- VERIFY --> write-block to advisory: write the "
+            "article even if the writer flagged claims, logging the markers as "
+            "review TODOs. Use ONLY to replace a known-wrong existing wiki, where "
+            "the correct-subject article (with a few honest flags) beats the live "
+            "wrong-subject one. Default off — the strict gate stays."
+        ),
+    )
     parser.add_argument("--review", action="store_true",
                         help="Run per-dim + MIN review after compile "
                              "(strict persona, independent model calls, "
@@ -925,6 +951,7 @@ def main() -> None:
             args.track, args.slug,
             force=args.force, dry_run=args.dry_run,
             review=args.review, writer=args.writer,
+            allow_verify_markers=args.allow_verify_markers,
         )
         sys.exit(0 if success else 1)
 
@@ -933,6 +960,7 @@ def main() -> None:
             args.track,
             limit=args.limit, force=args.force, dry_run=args.dry_run,
             review=args.review, writer=args.writer,
+            allow_verify_markers=args.allow_verify_markers,
         )
         return
 
