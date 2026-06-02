@@ -75,7 +75,6 @@ No source disagreements on the core dates. **Birthplace correction logged:** the
 > Paths under **Existing** verified present via `test -e` on 2026-06-02.
 
 - **Existing BIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/mykhailo-kravchuk.yaml` — her direct collaborator (joint 1936 report; she compiled his monograph bibliography); arrested 1938, died Kolyma 1942. The terror that frames §2.
   - `curriculum/l2-uk-en/plans/bio/kateryna-yushchenko.yaml` — pioneering Ukrainian computer scientist; another woman first in a male-dominated Kyiv STEM field.
   - `curriculum/l2-uk-en/plans/bio/berta-rapoport.yaml` — woman who broke a gender barrier in a male profession (the maritime parallel).
 - **Existing LIT modules (VERIFIED present via `test -e`):**
@@ -83,6 +82,7 @@ No source disagreements on the core dates. **Birthplace correction logged:** the
 - **Existing HIST modules (VERIFIED present via `test -e`):**
   - none verified for this figure.
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
+  - `mykhailo-kravchuk` (bio) — her direct collaborator (joint 1936 report; she compiled his monograph bibliography); arrested 1938, died Kolyma 1942; the terror that frames §2. **RECOMMENDED future module — does NOT yet exist; do not add to `connects_to` until built.**
   - A HIST topic on the destruction of the Kyiv scientific schools (Розстріляне відродження in the sciences) would contextualise §2.
   - A women-in-STEM / фемінітиви language thread.
 
