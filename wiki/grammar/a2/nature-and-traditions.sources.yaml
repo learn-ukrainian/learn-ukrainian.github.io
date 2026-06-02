@@ -54,3 +54,15 @@ sources:
   title: FMU 1-28 | How to Talk about Weather in Ukrainian
   url: https://www.ukrainianlessons.com/fmu28/
   domain: ukrainianlessons.com
+- id: S10
+  file: grac-frequency-rizdvo-velykden-2026-06-02
+  type: external
+  title: GRAC corpus frequency check for Різдво and Великдень
+  url: https://uacorpus.org/
+  domain: uacorpus.org
+  notes: 'query_grac: Різдво frequency 22,342 / 11.04 per million; Великдень frequency 15,071 / 7.45 per million.'
+- id: S11
+  file: vesum-verify-words-rizdvo-velykden-2026-06-02
+  type: morphological-dictionary
+  title: VESUM verification check for Різдво and Великдень
+  notes: 'mcp__sources.verify_words returned NOT FOUND for both lemmas; explicit whitelist required rather than removal.'

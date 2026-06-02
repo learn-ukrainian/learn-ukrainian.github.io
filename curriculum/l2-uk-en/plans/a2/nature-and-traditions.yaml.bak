@@ -2,7 +2,7 @@ module: a2-060
 level: A2
 sequence: 60
 slug: nature-and-traditions
-version: 1.0.5
+version: 1.0.4
 title: Пори року і свята
 subtitle: Природа, пори року та українські традиції
 focus: communication
@@ -62,8 +62,8 @@ vocabulary_hints:
   - зима (winter)
   - погода (weather)
   - свято (holiday)
-  # Vocab note: raw VESUM contains lowercase різдво/великдень; retain capitalized holiday names with source evidence.
-  # Evidence: VESUM lowercase hits; GRAC Різдво 22,342 / 11.04 per million; Великдень 15,071 / 7.45 per million.
+  # Vocab whitelist: VESUM misses these proper-name holiday lemmas, but retain them.
+  # Evidence: GRAC Різдво 22,342 / 11.04 per million; Великдень 15,071 / 7.45 per million.
   # Textbook support: Litvinova Grade 6 §26 includes both names in holiday/number exercises.
   - Різдво (Christmas)
   - Великдень (Easter)
@@ -95,22 +95,16 @@ references:
 - title: Большакова Grade 2, Пори року
   notes: 'Сезонна лексика та описи з підручників для початкової школи'
 - title: GRAC corpus frequency check (2026-06-02)
-  notes: 'Різдво: 22,342 tokens / 11.04 per million; Великдень: 15,071 tokens / 7.45 per million. Retain both capitalized holiday names.'
+  notes: 'Різдво: 22,342 tokens / 11.04 per million; Великдень: 15,071 tokens / 7.45 per million. Retain both despite VESUM misses.'
 - title: VESUM verification check (2026-06-02)
-  notes: 'Raw VESUM corpus contains lowercase різдво and великдень; exact capitalized proper-name checks may be case-sensitive, so keep the capitalized holiday names with explicit evidence.'
+  notes: 'VESUM returned NOT FOUND for Різдво and Великдень; treat as explicit proper-name holiday whitelist, not vocabulary removal.'
 - title: Литвинова Grade 6, §26
   notes: 'Різдво and Великдень appear in textbook noun-number / holiday capitalization exercises.'
 plan_fixes:
-- version: 1.0.5
-  date: '2026-06-03'
-  ref: '#2578 review'
-  trigger: 'Review noted that lowercase різдво and великдень are present in raw VESUM.'
-  changes:
-  - 'Corrected VESUM notes: raw VESUM lowercase forms exist; capitalized holiday-name entries remain retained with GRAC and textbook evidence.'
 - version: 1.0.4
   date: '2026-06-02'
   ref: '#2560'
-  trigger: 'A2 readiness audit flagged VESUM handling for required holiday vocabulary Різдво and Великдень.'
+  trigger: 'A2 readiness audit noted VESUM misses for required holiday vocabulary Різдво and Великдень.'
   changes:
   - 'Retained both required lemmas and added explicit whitelist/source notes.'
-  - 'Evidence: raw VESUM lowercase hits; GRAC Різдво 11.04 per million and Великдень 7.45 per million; Litvinova Grade 6 §26 textbook exercises include both holiday names.'
+  - 'Evidence: VESUM NOT FOUND; GRAC Різдво 11.04 per million and Великдень 7.45 per million; Litvinova Grade 6 §26 textbook exercises include both holiday names.'
