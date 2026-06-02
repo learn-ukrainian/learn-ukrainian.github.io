@@ -75,6 +75,7 @@ def _ts() -> str:
     """Compact HH:MM:SS timestamp for log lines."""
     return datetime.now().strftime("%H:%M:%S")
 
+from validate.check_wiki_verify_markers import find_verify_markers_text
 from wiki.compiler import WRITER_CHOICES, compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
 from wiki.enrichment import enrich_sources
@@ -371,6 +372,16 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
                 source_count=len(all_chunks),
             )
             print(f"    ✓ discipline in {time.monotonic() - t_stage:.1f}s", flush=True)
+            marker_findings = _verify_marker_survivors(result)
+            if marker_findings:
+                print("  ❌ VERIFY marker survivor(s) after compile:")
+                for finding in marker_findings[:5]:
+                    print(f"     - {finding.path}:{finding.line}: {finding.marker}")
+                log_event(
+                    track, slug, "verify_marker_fail",
+                    markers=len(marker_findings),
+                )
+                return False
 
             t_stage = time.monotonic()
             print("  📑 Updating index + logging event...", flush=True)
@@ -477,6 +488,15 @@ def _run_discipline_checks_and_repair(
     )
 
 
+def _verify_marker_survivors(article_path: Path):
+    """Return VERIFY marker findings for a compiled article, if any."""
+    try:
+        text = article_path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    return find_verify_markers_text(text, path=str(article_path))
+
+
 def _compiled_article_is_ready(track: str, slug: str) -> bool:
     """Return True when an article is fully compiled and safe to skip.
 
@@ -495,6 +515,8 @@ def _compiled_article_is_ready(track: str, slug: str) -> bool:
     try:
         article_text = article_path.read_text(encoding="utf-8")
     except OSError:
+        return False
+    if find_verify_markers_text(article_text, path=str(article_path)):
         return False
 
     registry_path = registry_path_for(article_path)

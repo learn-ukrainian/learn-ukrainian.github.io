@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.join(_project_root, "scripts"))
 from validate.lint_seminar_quality import (
     _scan_latin_in_cyrillic,
     lint_plan,
+    lint_text,
 )
 
 # ── Latin-in-Cyrillic: defects ───────────────────────────────────────────────
@@ -175,3 +176,32 @@ def test_clean_plan_has_no_findings(tmp_path):
         "activity_hints": [{"focus": "Дискусія про неокласицизм", "type": "debate"}],
     })
     assert findings == []
+
+
+def test_wiki_text_mode_flags_same_defect_classes(tmp_path):
+    article = tmp_path / "subject.md"
+    article.write_text(
+        "# Постать\n\n"
+        "Арест і LIT-модулі лишилися в статті.\n",
+        encoding="utf-8",
+    )
+
+    findings = {(f.rule, f.text, f.field) for f in lint_text(article)}
+
+    assert ("арест", "Арест", "line 3") in findings
+    assert ("latin_in_cyrillic", "LIT-модулі", "line 3") in findings
+
+
+def test_wiki_text_mode_allowlists_urls_code_and_legitimate_latin(tmp_path):
+    article = tmp_path / "subject.md"
+    article.write_text(
+        "# Постать\n\n"
+        "Дослідження X-променів, STEM-освіта, IEU та Ems-указ.\n"
+        "Посилання https://example.com/Арест і `LIT-модулі` не є прозою.\n"
+        "```\n"
+        "Арест і LIT-модулі всередині коду.\n"
+        "```\n",
+        encoding="utf-8",
+    )
+
+    assert lint_text(article) == []

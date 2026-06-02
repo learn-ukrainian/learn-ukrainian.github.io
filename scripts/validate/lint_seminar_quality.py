@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic seminar-quality language linter for curriculum plan YAMLs.
+"""Deterministic seminar-quality language linter for seminar plans and wiki text.
 
 Seminar tracks (bio/hist/lit/istorio/oes/ruth) are *source-first* and stricter
 than core language lessons. Two language-quality defect classes recur in the
@@ -30,6 +30,7 @@ Use
     .venv/bin/python scripts/validate/lint_seminar_quality.py                 # all bio plans
     .venv/bin/python scripts/validate/lint_seminar_quality.py --track bio --json
     .venv/bin/python scripts/validate/lint_seminar_quality.py --paths curriculum/l2-uk-en/plans/bio/viktor-domontovych.yaml
+    .venv/bin/python scripts/validate/lint_seminar_quality.py --paths wiki/figures
     .venv/bin/python scripts/validate/lint_seminar_quality.py --severity high  # gate on HIGH only
 
 Exit codes
@@ -57,6 +58,7 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PLANS_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
+WIKI_FIGURES_DIR = PROJECT_ROOT / "wiki" / "figures"
 
 # Plan keys whose string values are identifiers / citation metadata, NOT prose.
 # We never scan these: they legitimately carry ASCII slugs, module ids, and URLs.
@@ -140,6 +142,8 @@ _ROMAN_RE = re.compile(r"^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})
 
 # A whitespace token is a URL/citation if it looks like one — never script-mix-flag it.
 _URL_RE = re.compile(r"(https?://|www\.|\w+\.(?:org|com|net|ua|gov|edu)\b|wikipedia|@)", re.IGNORECASE)
+_INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
+_BARE_URL_RE = re.compile(r"https?://\S+|www\.\S+|\b\S+\.(?:org|com|net|ua|gov|edu)\S*", re.IGNORECASE)
 
 _HAS_CYR = re.compile(rf"[{CYRILLIC}]")
 _HAS_LAT = re.compile(rf"[{LATIN}]")
@@ -264,22 +268,115 @@ def lint_plan(path: Path) -> list[Finding]:
     return findings
 
 
+def _strip_fenced_code(text: str) -> str:
+    """Remove fenced-code bodies while preserving line numbers."""
+    cleaned: list[str] = []
+    in_fence = False
+    for line in text.splitlines():
+        stripped = line.lstrip()
+        if stripped.startswith(("```", "~~~")):
+            in_fence = not in_fence
+            cleaned.append("")
+            continue
+        cleaned.append("" if in_fence else line)
+    return "\n".join(cleaned)
+
+
+def _sanitize_text_line(line: str) -> str:
+    """Drop text-mode allowlisted spans before applying prose rules."""
+    line = _INLINE_CODE_RE.sub(" ", line)
+    return _BARE_URL_RE.sub(" ", line)
+
+
+def lint_text(path: Path) -> list[Finding]:
+    """Lint a Markdown/wiki text file with the same language-quality rules."""
+    findings: list[Finding] = []
+    try:
+        raw_text = path.read_text(encoding="utf-8")
+    except OSError as exc:  # pragma: no cover - surfaced as a finding
+        return [Finding(str(path), "<read>", "unreadable", "high",
+                        str(exc)[:120], "", "Text file failed to read.", "")]
+
+    try:
+        rel = str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        rel = str(path)
+
+    text = _strip_fenced_code(raw_text)
+    for line_no, raw_line in enumerate(text.splitlines(), 1):
+        value = _sanitize_text_line(raw_line)
+        if not _HAS_CYR.search(value):
+            continue
+        field = f"line {line_no}"
+        for rule in RUSSIANISMS:
+            if rule.requires_context and not any(c in value for c in rule.requires_context):
+                continue
+            m = rule.pattern.search(value)
+            if m:
+                hit = m.group(1)
+                findings.append(Finding(rel, field, rule.key, rule.severity, hit,
+                                        rule.suggestion, rule.note, _excerpt(value, hit)))
+        for token, sev, note in _scan_latin_in_cyrillic(value):
+            findings.append(Finding(rel, field, "latin_in_cyrillic", sev, token,
+                                    "pure Cyrillic / spell out in Ukrainian", note,
+                                    _excerpt(value, token)))
+    return findings
+
+
 _SEV_ORDER = {"high": 2, "advisory": 1}
+
+
+def _mode_for_path(path: Path, requested: str) -> str:
+    if requested != "auto":
+        return requested
+    return "text" if path.suffix.lower() == ".md" else "plan"
+
+
+def _iter_dir_paths(path: Path, requested: str) -> list[Path]:
+    suffixes = {".yaml"} if requested == "plan" else {".md"} if requested == "text" else {".yaml", ".md"}
+    return sorted(
+        p for p in path.rglob("*")
+        if p.is_file()
+        and p.suffix.lower() in suffixes
+        and not p.name.startswith(".")
+        and not p.name.endswith(".bak")
+        and not p.name.endswith(".sources.yaml")
+    )
 
 
 def _resolve_paths(args: argparse.Namespace) -> list[Path]:
     if args.paths:
-        return [Path(p) for p in args.paths]
+        resolved: list[Path] = []
+        for raw_path in args.paths:
+            path = Path(raw_path)
+            if path.is_dir():
+                resolved.extend(_iter_dir_paths(path, args.format))
+            else:
+                resolved.append(path)
+        return resolved
+    if args.format == "text":
+        return sorted(WIKI_FIGURES_DIR.glob("*.md"))
     track_dir = PLANS_DIR / args.track
     return sorted(p for p in track_dir.glob("*.yaml")
                   if not p.name.startswith(".") and not p.name.endswith(".bak"))
+
+
+def _summary_unit(paths: list[Path], requested: str) -> str:
+    modes = {_mode_for_path(path, requested) for path in paths}
+    if modes == {"plan"}:
+        return "plan(s)"
+    if modes == {"text"}:
+        return "text file(s)"
+    return "file(s)"
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--track", default="bio", help="Track under plans/ (default: bio).")
-    ap.add_argument("--paths", nargs="*", help="Explicit plan files (overrides --track).")
+    ap.add_argument("--paths", nargs="*", help="Explicit files/directories (overrides --track).")
+    ap.add_argument("--format", choices=("plan", "text", "auto"), default="auto",
+                    help="Input format: plan YAML, text Markdown, or auto by suffix (default: auto).")
     ap.add_argument("--json", action="store_true", help="Emit findings as JSON.")
     ap.add_argument("--severity", choices=("high", "advisory"), default="advisory",
                     help="Minimum severity to report and to gate exit code on (default: advisory).")
@@ -293,9 +390,8 @@ def main(argv: list[str] | None = None) -> int:
     paths = _resolve_paths(args)
     all_findings: list[Finding] = []
     for path in paths:
-        all_findings.extend(
-            f for f in lint_plan(path) if _SEV_ORDER.get(f.severity, 2) >= threshold
-        )
+        lint_fn = lint_text if _mode_for_path(path, args.format) == "text" else lint_plan
+        all_findings.extend(f for f in lint_fn(path) if _SEV_ORDER.get(f.severity, 2) >= threshold)
 
     if args.json:
         print(json.dumps([asdict(f) for f in all_findings], ensure_ascii=False, indent=2))
@@ -304,6 +400,7 @@ def main(argv: list[str] | None = None) -> int:
         # per-plan defect. Collapse those into one summary line instead of spamming
         # a line per occurrence (e.g. the «Дебат N:» activity-heading template).
         rule_counts = Counter(f.rule for f in all_findings)
+        unit = _summary_unit(paths, args.format)
         rule_files: dict[str, set[str]] = {}
         for f in all_findings:
             rule_files.setdefault(f.rule, set()).add(f.file)
@@ -325,12 +422,12 @@ def main(argv: list[str] | None = None) -> int:
                 for r in sorted(systemic, key=lambda r: -rule_counts[r]):
                     eg = sorted(rule_files[r])[0]
                     print(f"  ⚠️  [{r}] {rule_counts[r]} hits across "
-                          f"{len(rule_files[r])} plan(s) — e.g. {eg}")
+                          f"{len(rule_files[r])} {unit} — e.g. {eg}")
         n_high = sum(1 for f in all_findings if f.severity == "high")
         n_adv = len(all_findings) - n_high
         flagged = len({f.file for f in all_findings})
         print(f"\n{'─' * 60}")
-        print(f"Scanned {len(paths)} plan(s) · {flagged} flagged · "
+        print(f"Scanned {len(paths)} {unit} · {flagged} flagged · "
               f"{len(systemic)} systemic rule(s) · {n_high} high · {n_adv} advisory")
 
     return 1 if all_findings else 0
