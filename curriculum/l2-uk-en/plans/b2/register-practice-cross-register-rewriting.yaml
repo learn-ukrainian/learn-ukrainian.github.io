@@ -181,5 +181,5 @@ references:
   pages: SS 4.4
   topic: Стилістика (B2)
 connects_to:
-  previous: register-religious-ukrainian
-  next: checkpoint-register
+  previous: checkpoint-register-domain
+  next: politics-government-vocabulary

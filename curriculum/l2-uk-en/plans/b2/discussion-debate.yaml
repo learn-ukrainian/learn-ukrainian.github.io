@@ -147,6 +147,6 @@ references:
 - Ворон А. А. Українська мова. 11 клас (2019) — Академічне красномовство
 - 'State Standard 2024: B2 SS 3 — Professional communication, debate skills'
 connects_to:
-  previous: presentation-skills-advanced
+  previous: presentation-skills
   next: checkpoint-communication
 phase: B2.4 [Communication Skills]
