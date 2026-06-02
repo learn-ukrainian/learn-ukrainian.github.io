@@ -1,0 +1,136 @@
+- word: куди
+  translation: where to
+  pos: adverb
+  example: "Куди ти йдеш?"
+- word: де
+  translation: where
+  pos: adverb
+  example: "Де ти зараз?"
+- word: тут
+  translation: here
+  pos: adverb
+  example: "Школа тут."
+- word: там
+  translation: there
+  pos: adverb
+  example: "Парк там."
+- word: вдома
+  translation: at home
+  pos: adverb
+  example: "Я вдома."
+- word: близько
+  translation: near; close
+  pos: adverb
+  example: "Аптека близько."
+- word: далеко
+  translation: far
+  pos: adverb
+  example: "Вокзал далеко."
+- word: в
+  translation: in; at; to
+  pos: preposition
+  example: "Я йду в банк."
+- word: у
+  translation: in; at; to
+  pos: preposition
+  example: "Я йду у школу."
+- word: на
+  translation: on; at; to
+  pos: preposition
+  example: "Я йду на роботу."
+- word: до
+  translation: to; toward
+  pos: preposition
+  example: "Я йду до лікаря."
+- word: іти
+  translation: to go on foot
+  pos: verb
+  example: "Я йду в магазин."
+- word: йти
+  translation: to go on foot
+  pos: verb
+  example: "Куди ти йдеш?"
+- word: їхати
+  translation: to go by transport
+  pos: verb
+  example: "Ми їдемо на вокзал."
+- word: повертатися
+  translation: to return
+  pos: verb
+  example: "Я повертаюся додому."
+- word: додому
+  translation: homeward
+  pos: adverb
+  example: "Я йду додому."
+- word: місто
+  translation: city; town
+  pos: noun
+  example: "Ми їдемо у місто."
+- word: парк
+  translation: park
+  pos: noun
+  example: "Я йду у парк."
+- word: школа
+  translation: school
+  pos: noun
+  example: "Олена йде у школу."
+- word: робота
+  translation: work
+  pos: noun
+  example: "Степан іде на роботу."
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Я йду у магазин."
+- word: банк
+  translation: bank
+  pos: noun
+  example: "Тато йде у банк."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "Я йду в аптеку."
+- word: бібліотека
+  translation: library
+  pos: noun
+  example: "Ми йдемо у бібліотеку."
+- word: ресторан
+  translation: restaurant
+  pos: noun
+  example: "Вони йдуть у ресторан."
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Ходімо в кафе."
+- word: вокзал
+  translation: train station
+  pos: noun
+  example: "Вона їде на вокзал."
+- word: зупинка
+  translation: stop
+  pos: noun
+  example: "Я йду на зупинку."
+- word: лікар
+  translation: doctor
+  pos: noun
+  example: "Марко йде до лікаря."
+- word: бабуся
+  translation: grandmother
+  pos: noun
+  example: "Олена йде до бабусі."
+- word: Київ
+  translation: Kyiv
+  pos: proper noun
+  example: "Брат їде в Київ."
+- word: Україна
+  translation: Ukraine
+  pos: proper noun
+  example: "Ми їдемо в Україну."
+- word: Львів
+  translation: Lviv
+  pos: proper noun
+  example: "Я їду у Львів."
+- word: Одеса
+  translation: Odesa
+  pos: proper noun
+  example: "Олена їде в Одесу."
