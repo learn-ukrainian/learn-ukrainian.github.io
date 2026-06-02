@@ -1,0 +1,132 @@
+- word: транспорт
+  translation: transport
+  pos: noun
+  example: "Транспорт у місті зручний."
+- word: автобус
+  translation: bus
+  pos: noun
+  example: "Я їду автобусом."
+- word: метро
+  translation: metro; subway
+  pos: noun
+  example: "Ми їдемо на метро."
+- word: таксі
+  translation: taxi
+  pos: noun
+  example: "Вона їде на таксі."
+- word: потяг
+  translation: train
+  pos: noun
+  example: "Потяг рушає о дев'ятій."
+- word: трамвай
+  translation: tram
+  pos: noun
+  example: "Трамвай їде до центру."
+- word: тролейбус
+  translation: trolleybus
+  pos: noun
+  example: "Тролейбус номер сім."
+- word: маршрутка
+  translation: route minibus
+  pos: noun
+  example: "Маршрутка біля зупинки."
+- word: літак
+  translation: plane
+  pos: noun
+  example: "Ми летимо літаком."
+- word: корабель
+  translation: ship
+  pos: noun
+  example: "Вони пливуть кораблем."
+- word: машина
+  translation: car
+  pos: noun
+  example: "Тато їде машиною."
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "Один квиток до Львова, будь ласка."
+- word: зупинка
+  translation: stop
+  pos: noun
+  example: "Де зупинка автобуса?"
+- word: вокзал
+  translation: station
+  pos: noun
+  example: "Я їду на вокзал."
+- word: пасажир
+  translation: passenger
+  pos: noun
+  example: "Пасажир купує квиток."
+- word: водій
+  translation: driver
+  pos: noun
+  example: "Водій каже: Добрий день."
+- word: двері
+  translation: doors
+  pos: noun
+  example: "Обережно, двері зачиняються!"
+- word: їхати
+  translation: to go by transport
+  pos: verb
+  example: "Я їду автобусом."
+- word: летіти
+  translation: to fly
+  pos: verb
+  example: "Ми летимо літаком."
+- word: пливти
+  translation: to go by water; to swim
+  pos: verb
+  example: "Вони пливуть кораблем."
+- word: рушати
+  translation: to set off; to start moving
+  pos: verb
+  example: "Потяг рушає."
+- word: відбувати
+  translation: to depart
+  pos: verb
+  example: "Автобус відбуває з Києва."
+- word: вирушати
+  translation: to set out
+  pos: verb
+  example: "Ми вирушаємо в дорогу."
+- word: приїхати
+  translation: to arrive by transport
+  pos: verb
+  example: "Я приїхав на вокзал."
+- word: дістатися
+  translation: to get to
+  pos: verb
+  example: "Як дістатися до вокзалу?"
+- word: розраховуватися
+  translation: to pay; to settle up
+  pos: verb
+  example: "Розраховуйтесь, будь ласка, за проїзд."
+- word: поступатися
+  translation: to give up; to yield
+  pos: verb
+  example: "Поступайтесь місцем старшому."
+- word: проїзд
+  translation: fare; passage
+  pos: noun
+  example: "Сплачуйте за проїзд."
+- word: прямо
+  translation: straight ahead
+  pos: adverb
+  example: "Ідіть прямо."
+- word: направо
+  translation: to the right
+  pos: adverb
+  example: "Поверніть направо."
+- word: наліво
+  translation: to the left
+  pos: adverb
+  example: "Поверніть наліво."
+- word: один бік
+  translation: one way
+  pos: phrase
+  example: "В один бік чи туди й назад?"
+- word: туди й назад
+  translation: round trip; there and back
+  pos: phrase
+  example: "Мені квиток туди й назад."
