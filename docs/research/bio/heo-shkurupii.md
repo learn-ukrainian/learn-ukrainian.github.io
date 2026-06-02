@@ -1,4 +1,4 @@
-# Гео (Ґео) Данилович Шкурупій — Research Dossier
+# Ґео Шкурупій (Георгій Данилович) — Research Dossier
 
 **Slug:** `heo-shkurupii`
 **Block:** A (executed / killed in Soviet captivity)
@@ -13,7 +13,7 @@
 - [x] Oppression mechanism is specific (dates, agency, sentence, archival case framing)
 - [x] ≥2 primary-source quotes from his own work / recorded statement
 - [x] Cross-track links checked (`test -e`); unbuilt links listed as Candidate
-- [x] Naming-canonical applied (Гео / Ґео orthography flagged)
+- [x] Naming-canonical applied (Ґео canonical; Гео noted as Soviet-era de-ґ variant)
 - [x] Image candidate(s) identified
 - [x] Decolonization checklist self-applied
 
@@ -95,7 +95,7 @@ His own recorded words documenting falsification of testimony under pressure —
 
 - **What modern UA scholarship debates:** how seriously to take panfuturist theory vs. treating it as provocation; whether his strongest legacy is the experimental novel *Двері в день* or the early lyric. Yaryna Tsymbal's recent work reframes him as a major, unjustly forgotten 1920s figure, not a footnote to Семенко. [T5: Тиждень — Цимбал; T2/T4: Ільницький]
 - **What gets simplified in popular memory:** he is often reduced to "a futurist who was shot". The richer truth is a writer who moved through futurism into prose, cinema and reportage, and who actively *resisted* the falsified charges in court.
-- **Orthography of the name:** modern editions (Смолоскип, 2013) and Ukrainian Wikipedia restore **Ґео** (with ґ); the form **Гео** without ґ reflects the Soviet-era abolition of the letter. This module uses the slug `heo-shkurupii` / title "Гео" per project naming convention, while noting Ґео as the modern restored form.
+- **Orthography of the name:** the canonical form is **Ґео** (with ґ) — the figure's own pen-name, restored in modern editions (Смолоскип, 2013) and used as the Ukrainian Wikipedia article title (`Ґео Шкурупій`). The form **Гео** without ґ reflects the Soviet-era abolition of the letter ґ (1933 reform; restored 1990) and is treated here as a historical variant, NOT the canonical name. The slug remains `heo-shkurupii` (a Latin transliteration that does not encode ґ); all Ukrainian-language prose must use **Ґео Шкурупій**.
 - **Where Russocentric framing attacks:** Soviet/Russian summaries inherit the security-police vocabulary ("терорист", "буржуазний націоналіст") and the УРЕ silence; these are evidence of the regime's framing, not reliable identity claims (see source-tier special rule).
 
 ## 7. Cross-track links
