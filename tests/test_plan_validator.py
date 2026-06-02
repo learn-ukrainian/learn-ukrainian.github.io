@@ -126,6 +126,44 @@ def test_plan_review_passes_with_only_in_corpus_refs(tmp_path: Path) -> None:
     assert check_textbook_references_in_corpus(plan, db_path) == []
 
 
+def test_plan_review_handles_empty_string_corpus_grade(tmp_path: Path) -> None:
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("CREATE TABLE textbooks (source_file TEXT, grade TEXT, author TEXT)")
+    conn.execute(
+        "INSERT INTO textbooks (source_file, grade, author) VALUES (?, ?, ?)",
+        ("10-klas-ukrmova-karaman-2018", "", "karaman"),
+    )
+    conn.commit()
+    conn.close()
+    plan = {"references": [{"title": "Караман Grade 10, p.179"}]}
+
+    assert check_textbook_references_in_corpus(plan, db_path) == []
+
+
+def test_plan_review_accepts_primary_school_author_aliases(tmp_path: Path) -> None:
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("CREATE TABLE textbooks (source_file TEXT, grade TEXT, author TEXT)")
+    conn.executemany(
+        "INSERT INTO textbooks (source_file, grade, author) VALUES (?, ?, ?)",
+        [
+            ("3-klas-ukrainska-mova-ponomarova-2020-1", "3", "ponomarova"),
+            ("4-klas-ukrayinska-mova-varzatska-2021-1", "4", "varzatska"),
+        ],
+    )
+    conn.commit()
+    conn.close()
+    plan = {
+        "references": [
+            {"title": "Пономарова Grade 3, p.86"},
+            {"title": "Варзацька 4 клас, стор. 41"},
+        ]
+    }
+
+    assert check_textbook_references_in_corpus(plan, db_path) == []
+
+
 def test_plan_review_handles_empty_references(tmp_path: Path) -> None:
     db_path = tmp_path / "sources.db"
     _write_sources_db(db_path)
