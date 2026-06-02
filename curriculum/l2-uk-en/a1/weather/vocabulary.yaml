@@ -1,0 +1,168 @@
+- word: погода
+  translation: weather
+  pos: noun
+  example: "Яка сьогодні погода?"
+- word: тепло
+  translation: warm
+  pos: adverb
+  example: "Сьогодні тепло."
+- word: холодно
+  translation: cold
+  pos: adverb
+  example: "Надворі холодно."
+- word: сонячно
+  translation: sunny
+  pos: adverb
+  example: "Завтра буде сонячно."
+- word: хмарно
+  translation: cloudy
+  pos: adverb
+  example: "Сьогодні хмарно."
+- word: спекотно
+  translation: hot
+  pos: adverb
+  example: "Влітку спекотно."
+- word: прохолодно
+  translation: cool
+  pos: adverb
+  example: "Увечері прохолодно."
+- word: дощ
+  translation: rain
+  pos: noun
+  example: "Іде дощ."
+- word: сніг
+  translation: snow
+  pos: noun
+  example: "Іде сніг."
+- word: сонце
+  translation: sun
+  pos: noun
+  example: "Світить сонце."
+- word: вітер
+  translation: wind
+  pos: noun
+  example: "Дме вітер."
+- word: мороз
+  translation: frost; freezing cold
+  pos: noun
+  example: "Взимку мороз."
+- word: опади
+  translation: precipitation
+  pos: noun
+  example: "Дощ і сніг - це опади."
+- word: іде дощ
+  translation: it is raining
+  pos: weather chunk
+  example: "Зараз іде дощ."
+- word: іде сніг
+  translation: it is snowing
+  pos: weather chunk
+  example: "Взимку іде сніг."
+- word: дме вітер
+  translation: the wind is blowing
+  pos: weather chunk
+  example: "Сьогодні дме вітер."
+- word: світить сонце
+  translation: the sun is shining
+  pos: weather chunk
+  example: "Світить сонце."
+- word: надворі
+  translation: outside; outdoors
+  pos: adverb
+  example: "Надворі тепло."
+- word: на вулиці
+  translation: outside; in the street
+  pos: phrase
+  example: "На вулиці холодно."
+- word: сьогодні
+  translation: today
+  pos: adverb
+  example: "Сьогодні хмарно."
+- word: завтра
+  translation: tomorrow
+  pos: adverb
+  example: "Завтра буде тепло."
+- word: вчора
+  translation: yesterday
+  pos: adverb
+  example: "Вчора було холодно."
+- word: градус
+  translation: degree
+  pos: noun
+  example: "Плюс двадцять градусів."
+- word: плюс
+  translation: plus
+  pos: temperature word
+  example: "Сьогодні плюс двадцять."
+- word: мінус
+  translation: minus
+  pos: temperature word
+  example: "Сьогодні мінус десять."
+- word: гарний
+  translation: good; beautiful
+  pos: adjective
+  example: "Сьогодні гарна погода."
+- word: поганий
+  translation: bad
+  pos: adjective
+  example: "Сьогодні погана погода."
+- word: теплий
+  translation: warm
+  pos: adjective
+  example: "Мені подобається теплий дощ."
+- word: холодний
+  translation: cold
+  pos: adjective
+  example: "Холодний день."
+- word: зима
+  translation: winter
+  pos: noun
+  example: "Взимку холодно."
+- word: весна
+  translation: spring
+  pos: noun
+  example: "Навесні тепло."
+- word: літо
+  translation: summer
+  pos: noun
+  example: "Влітку спекотно."
+- word: осінь
+  translation: autumn; fall
+  pos: noun
+  example: "Восени часто йде дощ."
+- word: взимку
+  translation: in winter
+  pos: adverb
+  example: "Взимку іде сніг."
+- word: навесні
+  translation: in spring
+  pos: adverb
+  example: "Навесні світить сонце."
+- word: влітку
+  translation: in summer
+  pos: adverb
+  example: "Влітку тепло."
+- word: восени
+  translation: in autumn
+  pos: adverb
+  example: "Восени хмарно."
+- word: Мені холодно.
+  translation: I am cold.
+  pos: state chunk
+  example: "Увечері мені холодно."
+- word: Мені подобається...
+  translation: I like...
+  pos: preference chunk
+  example: "Мені подобається весна."
+- word: завірюха
+  translation: snowstorm
+  pos: passive noun
+  example: "Завірюха - зимове слово."
+- word: віхола
+  translation: snowstorm; blizzard
+  pos: passive noun
+  example: "Віхола - зимове слово."
+- word: сніговій
+  translation: snowstorm
+  pos: passive noun
+  example: "Сніговій - зимове слово."
