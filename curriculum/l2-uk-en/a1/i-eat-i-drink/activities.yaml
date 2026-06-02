@@ -1,0 +1,318 @@
+- id: act-1
+  type: fill-in
+  title: Direct object endings
+  instruction: Choose the correct direct-object form after їсти or пити.
+  items:
+    - sentence: "Я їм ___."
+      answer: "рибу"
+      options:
+        - "рибу"
+        - "риба"
+        - "рибі"
+      explanation: "Риба is feminine, so direct object is рибу."
+    - sentence: "Вона п'є ___."
+      answer: "воду"
+      options:
+        - "воду"
+        - "вода"
+        - "воді"
+      explanation: "Вода becomes воду after п'є."
+    - sentence: "Він їсть ___."
+      answer: "хліб"
+      options:
+        - "хліб"
+        - "хлібу"
+        - "хлібом"
+      explanation: "Хліб is masculine inanimate and stays хліб."
+    - sentence: "Ми п'ємо ___."
+      answer: "молоко"
+      options:
+        - "молоко"
+        - "молоку"
+        - "молоком"
+      explanation: "Молоко is neuter and stays молоко."
+    - sentence: "Вони їдять ___."
+      answer: "кашу"
+      options:
+        - "кашу"
+        - "каша"
+        - "каші"
+      explanation: "Каша becomes кашу."
+    - sentence: "Ти п'єш ___."
+      answer: "каву"
+      options:
+        - "каву"
+        - "кава"
+        - "каві"
+      explanation: "Кава becomes каву."
+    - sentence: "Я їм ___."
+      answer: "суп"
+      options:
+        - "суп"
+        - "супу"
+        - "супом"
+      explanation: "Суп is masculine inanimate and stays суп."
+    - sentence: "Вона їсть ___."
+      answer: "картоплю"
+      options:
+        - "картоплю"
+        - "картопля"
+        - "картоплі"
+      explanation: "Картопля ends in -я, so direct object is картоплю."
+- id: act-2
+  type: quiz
+  title: Choose the food line
+  instruction: Pick the natural A1 line.
+  items:
+    - prompt: "Я п'ю..."
+      options:
+        - text: "каву"
+          correct: true
+        - text: "кава"
+          correct: false
+        - text: "кави"
+          correct: false
+      explanation: "After п'ю, feminine кава becomes каву."
+    - prompt: "Він їсть..."
+      options:
+        - text: "рибу"
+          correct: true
+        - text: "риба"
+          correct: false
+        - text: "рибі"
+          correct: false
+      explanation: "Риба becomes рибу as a direct object."
+    - prompt: "Ми п'ємо..."
+      options:
+        - text: "сік"
+          correct: true
+        - text: "соку"
+          correct: false
+        - text: "соком"
+          correct: false
+      explanation: "Сік is masculine inanimate and stays сік."
+    - prompt: "Вона їсть..."
+      options:
+        - text: "м'ясо"
+          correct: true
+        - text: "м'ясу"
+          correct: false
+        - text: "м'яса"
+          correct: false
+      explanation: "М'ясо is neuter and stays м'ясо."
+    - prompt: "Вони п'ють..."
+      options:
+        - text: "воду"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "воді"
+          correct: false
+      explanation: "Вода becomes воду."
+    - prompt: "Ти їси..."
+      options:
+        - text: "кашу"
+          correct: true
+        - text: "каша"
+          correct: false
+        - text: "каші"
+          correct: false
+      explanation: "Каша becomes кашу."
+- id: act-3
+  type: match-up
+  title: Verb person pairs
+  instruction: Match each subject with the correct form.
+  pairs:
+    - left: "я + їсти"
+      right: "я їм"
+    - left: "ти + їсти"
+      right: "ти їси"
+    - left: "він + їсти"
+      right: "він їсть"
+    - left: "ми + їсти"
+      right: "ми їмо"
+    - left: "вони + їсти"
+      right: "вони їдять"
+    - left: "я + пити"
+      right: "я п'ю"
+    - left: "ми + пити"
+      right: "ми п'ємо"
+    - left: "вони + пити"
+      right: "вони п'ють"
+- id: act-4
+  type: fill-in
+  title: Eat and drink forms
+  instruction: Choose the correct form of їсти or пити.
+  items:
+    - sentence: "Я ___ суп."
+      answer: "їм"
+      options:
+        - "їм"
+        - "їси"
+        - "їсть"
+      explanation: "Я uses їм."
+    - sentence: "Ми ___ чай."
+      answer: "п'ємо"
+      options:
+        - "п'ємо"
+        - "п'єте"
+        - "п'ють"
+      explanation: "Ми uses п'ємо."
+    - sentence: "Вона ___ хліб."
+      answer: "їсть"
+      options:
+        - "їсть"
+        - "їст"
+        - "їси"
+      explanation: "Вона uses їсть with the soft sign."
+    - sentence: "Вони ___ воду."
+      answer: "п'ють"
+      options:
+        - "п'ють"
+        - "п'єте"
+        - "п'ю"
+      explanation: "Вони uses п'ють."
+    - sentence: "Ти ___ рибу?"
+      answer: "їси"
+      options:
+        - "їси"
+        - "їсиш"
+        - "їсть"
+      explanation: "Ти uses the short form їси."
+    - sentence: "Ви ___ каву?"
+      answer: "п'єте"
+      options:
+        - "п'єте"
+        - "п'ємо"
+        - "п'єш"
+      explanation: "Ви uses п'єте."
+    - sentence: "Він ___ сік."
+      answer: "п'є"
+      options:
+        - "п'є"
+        - "п'ю"
+        - "п'єш"
+      explanation: "Він uses п'є."
+    - sentence: "Вони ___ кашу."
+      answer: "їдять"
+      options:
+        - "їдять"
+        - "їдете"
+        - "їсте"
+      explanation: "Вони uses їдять."
+- id: act-5
+  type: group-sort
+  title: What changes in the direct object?
+  instruction: Sort each noun by what happens after їм or п'ю.
+  groups:
+    - name: "Changes to -у/-ю"
+      items:
+        - "кава -> каву"
+        - "вода -> воду"
+        - "риба -> рибу"
+        - "каша -> кашу"
+        - "картопля -> картоплю"
+    - name: "No change"
+      items:
+        - "хліб -> хліб"
+        - "сік -> сік"
+        - "молоко -> молоко"
+        - "м'ясо -> м'ясо"
+        - "яблуко -> яблуко"
+- id: act-6
+  type: true-false
+  title: Direct object checks
+  instruction: Decide whether each statement fits the A1 rule.
+  items:
+    - statement: "Я п'ю каву is correct."
+      answer: true
+      explanation: "Кава becomes каву."
+    - statement: "Я п'ю кава is correct."
+      answer: false
+      explanation: "Use каву after п'ю."
+    - statement: "Я їм хліб is correct."
+      answer: true
+      explanation: "Хліб stays хліб."
+    - statement: "Ми п'ємо молоко is correct."
+      answer: true
+      explanation: "Молоко stays молоко."
+    - statement: "Ти їсиш яблуко is correct."
+      answer: false
+      explanation: "The correct verb form is ти їси."
+    - statement: "Він їст суп is correct."
+      answer: false
+      explanation: "Use він їсть with the soft sign."
+    - statement: "Я хочу пити is a safe A1 line."
+      answer: true
+      explanation: "Хотіти can take an infinitive."
+    - statement: "Я хочу воду is also possible."
+      answer: true
+      explanation: "Вода becomes воду as the object of хочу."
+- id: act-7
+  type: order
+  title: Lunch-box conversation
+  instruction: Put the conversation in a natural order.
+  is_ukrainian: true
+  items:
+    - "Що ти їси на обід?"
+    - "Я їм суп і салат."
+    - "А що ти п'єш?"
+    - "Я п'ю воду або сік."
+    - "Олена їсть хліб з маслом."
+    - "Діти п'ють молоко."
+    - "Смачного!"
+  correct_order: [0, 1, 2, 3, 4, 5, 6]
+- id: act-8
+  type: error-correction
+  title: Repair eat and drink interference
+  instruction: Choose the clean Ukrainian repair.
+  anchor_id: repair-i-eat-i-drink-interference
+  items:
+    - sentence: "Я є їм хліб."
+      error: "Я є їм хліб."
+      answer: "Я їм хліб."
+      options:
+        - "Я їм хліб."
+        - "Я є їм хліб."
+        - "Я є їсти хліб."
+      explanation: "Do not use є as an English-style helper."
+    - sentence: "Я хочу вода."
+      error: "Я хочу вода."
+      answer: "Я хочу пити. або Я хочу воду."
+      options:
+        - "Я хочу пити. або Я хочу воду."
+        - "Я хочу вода."
+        - "Я хочу воді."
+      explanation: "Use an infinitive or the direct object воду."
+    - sentence: "Він їст суп."
+      error: "Він їст суп."
+      answer: "Він їсть суп."
+      options:
+        - "Він їсть суп."
+        - "Він їст суп."
+        - "Він їси суп."
+      explanation: "Write їсть with the soft sign."
+    - sentence: "Ти їсиш яблуко."
+      error: "Ти їсиш яблуко."
+      answer: "Ти їси яблуко."
+      options:
+        - "Ти їси яблуко."
+        - "Ти їсиш яблуко."
+        - "Ти їсть яблуко."
+      explanation: "The form is ти їси."
+    - sentence: "Я мию мене."
+      error: "Я мию мене."
+      answer: "Я вмиваюся."
+      options:
+        - "Я вмиваюся."
+        - "Я мию мене."
+        - "Я мию я."
+      explanation: "Use the Ukrainian reflexive verb вмиватися."
+    - sentence: "На перерві: Я п'ю кава."
+      error: "Я п'ю кава."
+      answer: "Я п'ю каву."
+      options:
+        - "Я п'ю кава."
+        - "Я п'ю каві."
+        - "Я п'ю каву."
+      explanation: "Кава becomes каву after п'ю."
