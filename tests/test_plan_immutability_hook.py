@@ -142,6 +142,8 @@ def test_metadata_only_plan_edit_without_bak_passes(tmp_path: Path):
 
     data["module"] = "a1-002"
     data["sequence"] = 2
+    data["slug"] = "test-plan-renumbered"
+    data["level"] = "A1"
     data["prerequisites"] = ["a1-001 (previous module)"]
     plan_file.write_text(
         yaml.safe_dump(data, allow_unicode=True, sort_keys=False),

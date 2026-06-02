@@ -13,7 +13,7 @@ import yaml
 
 PLAN_PATH_RE = re.compile(r"^curriculum/[^/]+/plans/.+\.yaml$")
 AUTO_FIX_TAG = "[auto-fix-plan-vocab]"
-METADATA_ONLY_FIELDS = {"module", "sequence", "connects_to", "prerequisites"}
+METADATA_ONLY_FIELDS = {"module", "sequence", "slug", "level", "connects_to", "prerequisites"}
 
 
 def _run_git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
