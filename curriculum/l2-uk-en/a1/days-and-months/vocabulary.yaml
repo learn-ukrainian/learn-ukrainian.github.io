@@ -1,0 +1,248 @@
+- word: понеділок
+  translation: Monday
+  pos: noun
+  example: "Сьогодні понеділок."
+- word: вівторок
+  translation: Tuesday
+  pos: noun
+  example: "Завтра вівторок."
+- word: середа
+  translation: Wednesday
+  pos: noun
+  example: "У середу зустріч."
+- word: четвер
+  translation: Thursday
+  pos: noun
+  example: "Сьогодні четвер."
+- word: п'ятниця
+  translation: Friday
+  pos: noun
+  example: "У п'ятницю фільм."
+- word: субота
+  translation: Saturday
+  pos: noun
+  example: "В суботу я гуляю."
+- word: неділя
+  translation: Sunday
+  pos: noun
+  example: "В неділю я відпочиваю."
+- word: тиждень
+  translation: week
+  pos: noun
+  example: "Це мій тиждень."
+- word: день
+  translation: day
+  pos: noun
+  example: "Який сьогодні день?"
+- word: місяць
+  translation: month
+  pos: noun
+  example: "Який зараз місяць?"
+- word: рік
+  translation: year
+  pos: noun
+  example: "У році дванадцять місяців."
+- word: сьогодні
+  translation: today
+  pos: adverb
+  example: "Сьогодні вівторок."
+- word: завтра
+  translation: tomorrow
+  pos: adverb
+  example: "Завтра середа."
+- word: учора
+  translation: yesterday
+  pos: adverb
+  example: "Учора понеділок."
+- word: у понеділок
+  translation: on Monday
+  pos: calendar chunk
+  example: "У понеділок я працюю."
+- word: у вівторок
+  translation: on Tuesday
+  pos: calendar chunk
+  example: "У вівторок урок."
+- word: у середу
+  translation: on Wednesday
+  pos: calendar chunk
+  example: "У середу зустріч."
+- word: у четвер
+  translation: on Thursday
+  pos: calendar chunk
+  example: "У четвер кава."
+- word: у п'ятницю
+  translation: on Friday
+  pos: calendar chunk
+  example: "У п'ятницю фільм."
+- word: в суботу
+  translation: on Saturday
+  pos: calendar chunk
+  example: "В суботу я гуляю."
+- word: в неділю
+  translation: on Sunday
+  pos: calendar chunk
+  example: "В неділю я вдома."
+- word: січень
+  translation: January
+  pos: noun
+  example: "Січень — це зима."
+- word: лютий
+  translation: February
+  pos: noun
+  example: "Лютий — це зима."
+- word: березень
+  translation: March
+  pos: noun
+  example: "Березень — це весна."
+- word: квітень
+  translation: April
+  pos: noun
+  example: "Квітень — це весна."
+- word: травень
+  translation: May
+  pos: noun
+  example: "Травень — це весна."
+- word: червень
+  translation: June
+  pos: noun
+  example: "Червень — це літо."
+- word: липень
+  translation: July
+  pos: noun
+  example: "Липень — це літо."
+- word: серпень
+  translation: August
+  pos: noun
+  example: "Серпень — це літо."
+- word: вересень
+  translation: September
+  pos: noun
+  example: "Вересень — це осінь."
+- word: жовтень
+  translation: October
+  pos: noun
+  example: "Жовтень — це осінь."
+- word: листопад
+  translation: November
+  pos: noun
+  example: "Листопад — це осінь."
+- word: грудень
+  translation: December
+  pos: noun
+  example: "Грудень — це зима."
+- word: у січні
+  translation: in January
+  pos: month chunk
+  example: "Свято у січні."
+- word: у березні
+  translation: in March
+  pos: month chunk
+  example: "День народження у березні."
+- word: у серпні
+  translation: in August
+  pos: month chunk
+  example: "Канікули у серпні."
+- word: у листопаді
+  translation: in November
+  pos: month chunk
+  example: "Вистава у листопаді."
+- word: зима
+  translation: winter
+  pos: noun
+  example: "Зима холодна."
+- word: весна
+  translation: spring
+  pos: noun
+  example: "Весна тепла."
+- word: літо
+  translation: summer
+  pos: noun
+  example: "Літо тепле."
+- word: осінь
+  translation: autumn; fall
+  pos: noun
+  example: "Осінь гарна."
+- word: взимку
+  translation: in winter
+  pos: adverb
+  example: "Взимку холодно."
+- word: навесні
+  translation: in spring
+  pos: adverb
+  example: "Навесні світить сонце."
+- word: влітку
+  translation: in summer
+  pos: adverb
+  example: "Влітку тепло."
+- word: восени
+  translation: in autumn
+  pos: adverb
+  example: "Восени йде дощ."
+- word: сонце
+  translation: sun
+  pos: noun
+  example: "Сонце світить."
+- word: дощ
+  translation: rain
+  pos: noun
+  example: "Іде дощ."
+- word: сніг
+  translation: snow
+  pos: noun
+  example: "Падає сніг."
+- word: вітер
+  translation: wind
+  pos: noun
+  example: "Дме вітер."
+- word: мороз
+  translation: frost; freezing cold
+  pos: noun
+  example: "Взимку мороз."
+- word: дата
+  translation: date
+  pos: noun
+  example: "Це важлива дата."
+- word: свято
+  translation: holiday
+  pos: noun
+  example: "Свято у січні."
+- word: день народження
+  translation: birthday
+  pos: phrase
+  example: "Коли твій день народження?"
+- word: першого січня
+  translation: on January first
+  pos: date chunk
+  example: "Свято першого січня."
+- word: п'ятнадцятого березня
+  translation: on March fifteenth
+  pos: date chunk
+  example: "День народження п'ятнадцятого березня."
+- word: двадцять другого серпня
+  translation: on August twenty-second
+  pos: date chunk
+  example: "День народження двадцять другого серпня."
+- word: першого вересня
+  translation: on September first
+  pos: date chunk
+  example: "Школа починається першого вересня."
+- word: коли?
+  translation: when?
+  pos: question word
+  example: "Коли зустріч?"
+- word: якого числа?
+  translation: what date?
+  pos: question chunk
+  example: "Якого числа день народження?"
+- word: планувати
+  translation: to plan
+  pos: infinitive
+  example: "Я планую тиждень."
+- word: народитися
+  translation: to be born
+  pos: infinitive
+  example: "Я народився першого січня."
+- word: святкувати
+  translation: to celebrate
+  pos: infinitive
+  example: "Ми святкуємо в суботу."
