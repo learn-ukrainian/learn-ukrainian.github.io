@@ -1,0 +1,180 @@
+- word: час
+  translation: time
+  pos: noun
+  example: "Час іде швидко."
+- word: година
+  translation: hour; o'clock
+  pos: noun
+  example: "Зараз сьома година."
+- word: хвилина
+  translation: minute
+  pos: noun
+  example: "П'ять хвилин по восьмій."
+- word: Котра година?
+  translation: What time is it?
+  pos: question chunk
+  example: "Котра година? — Десята."
+- word: О котрій?
+  translation: At what time?
+  pos: question chunk
+  example: "О котрій зустріч?"
+- word: о десятій
+  translation: at ten
+  pos: time chunk
+  example: "Зустріч о десятій."
+- word: об одинадцятій
+  translation: at eleven
+  pos: time chunk
+  example: "Фільм об одинадцятій."
+- word: пів на восьму
+  translation: half past seven
+  pos: time chunk
+  example: "Зараз пів на восьму."
+- word: чверть на дванадцяту
+  translation: quarter past eleven
+  pos: time chunk
+  example: "Зараз чверть на дванадцяту."
+- word: п'ять по восьмій
+  translation: five past eight
+  pos: time chunk
+  example: "Зараз п'ять по восьмій."
+- word: за десять шоста
+  translation: ten to six
+  pos: time chunk
+  example: "Зараз за десять шоста."
+- word: у понеділок
+  translation: on Monday
+  pos: calendar chunk
+  example: "У понеділок я працюю."
+- word: у суботу
+  translation: on Saturday
+  pos: calendar chunk
+  example: "У суботу ходімо в парк."
+- word: у січні
+  translation: in January
+  pos: calendar chunk
+  example: "День народження у січні."
+- word: у жовтні
+  translation: in October
+  pos: calendar chunk
+  example: "Мій день народження у жовтні."
+- word: взимку
+  translation: in winter
+  pos: adverb
+  example: "Взимку холодно."
+- word: навесні
+  translation: in spring
+  pos: adverb
+  example: "Навесні тепло."
+- word: влітку
+  translation: in summer
+  pos: adverb
+  example: "Влітку сонячно."
+- word: восени
+  translation: in autumn
+  pos: adverb
+  example: "Восени часто йде дощ."
+- word: тепло
+  translation: warm
+  pos: weather word
+  example: "Сьогодні тепло."
+- word: холодно
+  translation: cold
+  pos: weather word
+  example: "Надворі холодно."
+- word: сонячно
+  translation: sunny
+  pos: weather word
+  example: "У четвер сонячно."
+- word: хмарно
+  translation: cloudy
+  pos: weather word
+  example: "Сьогодні хмарно."
+- word: іде дощ
+  translation: it is raining
+  pos: weather chunk
+  example: "Зараз іде дощ."
+- word: іде сніг
+  translation: it is snowing
+  pos: weather chunk
+  example: "Взимку іде сніг."
+- word: світить сонце
+  translation: the sun is shining
+  pos: weather chunk
+  example: "Вранці світить сонце."
+- word: ліс
+  translation: forest
+  pos: noun
+  example: "У лісі зелена трава."
+- word: трава
+  translation: grass
+  pos: noun
+  example: "Трава зелена."
+- word: спочатку
+  translation: first
+  pos: sequence word
+  example: "Спочатку я прокидаюся."
+- word: потім
+  translation: then
+  pos: sequence word
+  example: "Потім я працюю."
+- word: після цього
+  translation: after that
+  pos: sequence chunk
+  example: "Після цього я гуляю."
+- word: нарешті
+  translation: finally
+  pos: sequence word
+  example: "Нарешті я читаю."
+- word: прокидатися
+  translation: to wake up
+  pos: verb
+  example: "Я прокидаюся о сьомій."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Я працюю з дев'ятої до п'ятої."
+- word: відпочивати
+  translation: to rest
+  pos: verb
+  example: "У неділю я відпочиваю."
+- word: читати
+  translation: to read
+  pos: verb
+  example: "Ввечері я читаю."
+- word: слухати музику
+  translation: to listen to music
+  pos: phrase
+  example: "Я слухаю музику ввечері."
+- word: ходити в музей
+  translation: to go to a museum
+  pos: phrase
+  example: "Якщо буде дощ, ходімо в музей."
+- word: ходити в кіно
+  translation: to go to the cinema
+  pos: phrase
+  example: "Ввечері ходімо в кіно."
+- word: грати у футбол
+  translation: to play football
+  pos: phrase
+  example: "У суботу я граю у футбол."
+- word: часто
+  translation: often
+  pos: adverb
+  example: "Я часто читаю."
+- word: рідко
+  translation: rarely
+  pos: adverb
+  example: "Ввечері я рідко працюю."
+- word: якщо буде дощ
+  translation: if it rains
+  pos: weather condition
+  example: "Якщо буде дощ, ходімо в музей."
+- word: Київ
+  translation: Kyiv
+  pos: proper noun
+  example: "У суботу друзі їдуть до Києва."
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "Вони мають гривні на квитки."
