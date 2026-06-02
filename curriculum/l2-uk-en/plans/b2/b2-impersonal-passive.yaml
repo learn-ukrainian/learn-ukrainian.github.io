@@ -136,7 +136,7 @@ references:
   topic: Безособові форми на -но/-то vs дієприкметники-присудки
 connects_to:
   previous: past-passive-participles
-  next: reflexive-passive
+  next: dim-zhytlo
 prerequisites:
 - past-passive-participles
 grammar:

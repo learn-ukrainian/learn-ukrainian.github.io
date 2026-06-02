@@ -182,7 +182,7 @@ references:
   pages: B2, SS 4.3
   topic: Syntax — one-member sentences
 connects_to:
-  previous: secondary-sentence-members
+  previous: sport-i-dozvillia
   next: homogeneous-members
 changelog:
 - version: '1.3'

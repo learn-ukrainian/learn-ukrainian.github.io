@@ -137,7 +137,7 @@ references:
   pages: §75, с. 187
   topic: Зворотний стан дієслова
 connects_to:
-  previous: b2-impersonal-passive
+  previous: dim-zhytlo
   next: third-person-plural-passive
 prerequisites:
 - b2-impersonal-passive

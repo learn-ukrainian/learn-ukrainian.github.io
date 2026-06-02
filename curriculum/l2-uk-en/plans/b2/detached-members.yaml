@@ -182,5 +182,5 @@ references:
   pages: B2, SS 4.3
   topic: Syntax — detached members
 connects_to:
-  previous: parenthetical-expressions
-  next: multi-clause-sentences
+  previous: homogeneous-members
+  next: checkpoint-syntax-i

@@ -176,7 +176,7 @@ references:
   pages: B2, SS 4.3
   topic: Syntax — phrase structure
 connects_to:
-  previous: checkpoint-passive-voice
+  previous: zdorovya-i-medytsyna
   next: predicate-types
 changelog:
 - version: '1.3'
