@@ -195,7 +195,7 @@ references:
   topic: Пасивний стан, видові пари в пасиві
 connects_to:
   previous: third-person-plural-passive
-  next: active-participles-present
+  next: pobut-shchodenne
 changelog:
 - version: '1.2'
   date: '2023-10-27'
