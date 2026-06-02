@@ -185,6 +185,22 @@ def test_curriculum_writer_agent_exposes_v72_source_tools() -> None:
     assert missing == []
 
 
+def test_claude_writer_agent_deploys_from_tracked_source(tmp_path: Path) -> None:
+    source = tmp_path / "claude_extensions" / "agents" / "curriculum-writer.md"
+    target = tmp_path / ".claude" / "agents" / "curriculum-writer.md"
+    source.parent.mkdir(parents=True)
+    source.write_text("tools: ToolSearch, mcp__sources__verify_words\n", encoding="utf-8")
+
+    first = linear_pipeline.ensure_claude_writer_agent_deployed(source_path=source, target_path=target)
+
+    assert first["changed"] is True
+    assert target.read_text(encoding="utf-8") == source.read_text(encoding="utf-8")
+
+    second = linear_pipeline.ensure_claude_writer_agent_deployed(source_path=source, target_path=target)
+
+    assert second["changed"] is False
+
+
 def test_mixed_writer_fails_isolation() -> None:
     records = classify_writer_trace(
         [

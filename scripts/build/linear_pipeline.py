@@ -39,6 +39,8 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "claude_extensions" / "agents" / "curriculum-writer.md"
+CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.build.citation_matcher import (
@@ -330,6 +332,30 @@ WRITER_INFRA_DENYLIST_PATHS = (
     "*orchestration*",
     "*dispatch*",
 )
+
+
+def ensure_claude_writer_agent_deployed(
+    *,
+    source_path: Path = CLAUDE_WRITER_AGENT_SOURCE,
+    target_path: Path = CLAUDE_WRITER_AGENT_TARGET,
+) -> dict[str, Any]:
+    """Materialize the tracked Claude writer agent into the runtime tree.
+
+    Claude Code resolves `--agent curriculum-writer` from `.claude/agents`
+    in or above the run cwd. V7 builds run from nested worktrees, so relying
+    on an ancestor checkout's ignored `.claude` copy can select stale tools.
+    """
+    source_text = _read_required(source_path)
+    previous_text = target_path.read_text(encoding="utf-8") if target_path.exists() else None
+    changed = previous_text != source_text
+    if changed:
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        target_path.write_text(source_text, encoding="utf-8")
+    return {
+        "source": str(source_path),
+        "path": str(target_path),
+        "changed": changed,
+    }
 RESOURCE_ROLES = frozenset(
     {
         "textbook",
@@ -3465,6 +3491,8 @@ def _runtime_tool_config(
         codex_home_override = _ensure_codex_writer_home(event_sink=event_sink)
         tool_config["codex_home_override"] = codex_home_override
     if agent_label == "claude-tools":
+        deploy_result = ensure_claude_writer_agent_deployed()
+        _emit(event_sink, "claude_writer_agent_deployed", writer=agent_label, **deploy_result)
         tool_config["agent"] = "curriculum-writer"
     assert tool_config.get("output_format") == "stream-json", (
         f"tool-call writers must keep output_format='stream-json'; got {tool_config.get('output_format')!r}"
