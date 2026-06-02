@@ -2,48 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/anatol-petrytskyi_Біографія-Микола-Куліш-Драматургія-мовного-вибору-та-абсурду-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія мовного вибору та абсурду'
-  section_path: 'Біографія: Микола Куліш: Драматургія мовного вибору та абсурду >
-    Короткий зміст'
+  file: wave7-entsyklopediia-ukrainoznavstva_c2034
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
 - id: S2
-  file: ukrainian_wiki/mykola-zerov_Біографія-Микола-Куліш-Трагедія-автора-комедій-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія автора комедій'
-  section_path: 'Біографія: Микола Куліш: Трагедія автора комедій > Короткий зміст'
+  file: wave7-krypyakevych-istkult_c0627
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
 - id: S3
-  file: ukrainian_wiki/yevhen-pluzhnyk_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
-  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Короткий
-    зміст'
+  file: pluzhnyk-aforyzmy
+  type: unknown
+  title: pluzhnyk-aforyzmy
 - id: S4
-  file: ukrainian_wiki/maik-yohansen_Біографія-Микола-Куліш-Драматург-на-межі-світів-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматург на межі світів'
-  section_path: 'Біографія: Микола Куліш: Драматург на межі світів > Короткий зміст'
+  file: eiu-pluzhnyk-biohrafiia
+  type: unknown
+  title: eiu-pluzhnyk-biohrafiia
 - id: S5
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1346
-  type: textbook
-  title: Модерна драматургія  117
-  page: 117
-  grade: 11
+  file: uk-wikipedia-pluzhnyk-zhyttiepys
+  type: wikipedia
+  title: uk-wikipedia-pluzhnyk-zhyttiepys
 - id: S6
-  file: ukrainian_wiki/oleksa-slisarenko_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
-  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Короткий
-    зміст'
+  file: uk-wikipedia-pluzhnyk-aresht-smert
+  type: wikipedia
+  title: uk-wikipedia-pluzhnyk-aresht-smert
 - id: S7
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1096
-  type: textbook
-  title: МОДЕРНА ДРАМАТУРГІЯ (p. 116)
-  page: 116
-  grade: 11
-- id: S8
-  file: ukrainian_wiki/oleksa-slisarenko_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
-  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Деколонізаційна
-    перспектива'
+  file: uk-wikipedia-pluzhnyk-literaturna-diialnist
+  type: wikipedia
+  title: uk-wikipedia-pluzhnyk-literaturna-diialnist

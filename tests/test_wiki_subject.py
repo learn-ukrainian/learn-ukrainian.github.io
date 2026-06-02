@@ -83,6 +83,20 @@ def test_wiki_subject_distinguishes_two_kulish_figures(tmp_path):
     assert check_wiki_file(path, plan_title="Пантелеймон Куліш: Європеєць на хуторі") is not None
 
 
+def test_wiki_subject_accepts_geo_shkurupii_g_letter_variant(tmp_path):
+    # Canonical H1 uses the restored letter ґ («Ґео»); the plan title carries
+    # the Soviet-orthography г («Гео»). Same person — must NOT be flagged.
+    path = _write_wiki(
+        tmp_path,
+        "heo-shkurupii",
+        "Ґео Шкурупій: «Король Футуропрерій» Розстріляного відродження",
+    )
+
+    assert check_wiki_file(
+        path, plan_title="Гео Шкурупій: Король футуропрерій та доля футуриста"
+    ) is None
+
+
 def test_wiki_subject_verify_marker_gate_flags_survivor():
     findings = find_verify_markers_text("Текст <!-- VERIFY: дата -->\nVERIFY: джерело")
 

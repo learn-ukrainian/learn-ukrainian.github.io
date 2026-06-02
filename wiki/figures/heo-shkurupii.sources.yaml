@@ -2,47 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/anatol-petrytskyi_Біографія-Микола-Куліш-Драматургія-мовного-вибору-та-абсурду-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія мовного вибору та абсурду'
-  section_path: 'Біографія: Микола Куліш: Драматургія мовного вибору та абсурду >
-    Короткий зміст'
-- id: S2
-  file: ukrainian_wiki/heo-shkurupii_Біографія-Микола-Куліш-Драматургія-на-межі-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія на межі'
-  section_path: 'Біографія: Микола Куліш: Драматургія на межі > Деколонізаційна перспектива'
-- id: S3
-  file: ukrainian_wiki/heo-shkurupii_Біографія-Микола-Куліш-Драматургія-на-межі-Основний-зміст-Переоцінка-літературного-канону-та-Розстріляне-відродження
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія на межі'
-  section_path: 'Біографія: Микола Куліш: Драматургія на межі > Основний зміст > Переоцінка
-    літературного канону та «Розстріляне відродження»'
-- id: S4
-  file: ukrainian_wiki/heo-shkurupii_Біографія-Микола-Куліш-Драматургія-на-межі-Основний-зміст-Трагікомічний-конфлікт-особистості-та-системи
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія на межі'
-  section_path: 'Біографія: Микола Куліш: Драматургія на межі > Основний зміст > Трагікомічний
-    конфлікт особистості та системи'
-- id: S5
-  file: wave8-hrabovych-do-istoriyi_c0713
+  file: wave7-entsyklopediia-ukrainoznavstva_c2019
   type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: shkurupii-skarha-trybunal-1935
+  type: unknown
+  title: shkurupii-skarha-trybunal-1935
+- id: S3
+  file: ukrlib-sosyura_c0262
+  type: literary
+  title: Володимир Сосюра. Третя рота
+  author: Сосюра В.
+- id: S4
+  file: ieu-shkurupii-biography
+  type: unknown
+  title: ieu-shkurupii-biography
+- id: S5
+  file: uk-wikipedia-shkurupii-zhyttiepys-aresht
+  type: wikipedia
+  title: uk-wikipedia-shkurupii-zhyttiepys-aresht
 - id: S6
-  file: ukrainian_wiki/heo-shkurupii_Біографія-Микола-Куліш-Драматургія-на-межі-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія на межі'
-  section_path: 'Біографія: Микола Куліш: Драматургія на межі > Короткий зміст'
+  file: uk-wikipedia-shkurupii-sud-zahybel
+  type: wikipedia
+  title: uk-wikipedia-shkurupii-sud-zahybel
 - id: S7
-  file: ukrainian_wiki/yevhen-pluzhnyk_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
-  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Короткий
-    зміст'
-- id: S8
-  file: ukrainian_wiki/heo-shkurupii_Біографія-Микола-Куліш-Драматургія-на-межі-Основний-зміст-Український-модернізм-1920-х-років-та-свобода-творчості
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія на межі'
-  section_path: 'Біографія: Микола Куліш: Драматургія на межі > Основний зміст > Український
-    модернізм 1920-х років та свобода творчості'
+  file: uk-wikipedia-shkurupii-tvorchist
+  type: wikipedia
+  title: uk-wikipedia-shkurupii-tvorchist
