@@ -1,0 +1,273 @@
+- id: act-1
+  type: group-sort
+  title: Three place questions
+  instruction: Sort each chunk by the question it answers.
+  groups:
+    - name: "Де?"
+      items:
+        - "в Україні"
+        - "у Києві"
+        - "на роботі"
+        - "у школі"
+    - name: "Куди?"
+      items:
+        - "в Україну"
+        - "у Київ"
+        - "на роботу"
+        - "у школу"
+    - name: "Звідки?"
+      items:
+        - "з України"
+        - "з Києва"
+        - "з роботи"
+        - "зі школи"
+- id: act-2
+  type: quiz
+  title: Origin or current home
+  instruction: Choose the phrase that fits the question.
+  items:
+    - prompt: "Звідки ти?"
+      options:
+        - text: "Я з України."
+          correct: true
+        - text: "Я в Україні."
+          correct: false
+        - text: "Я в Україну."
+          correct: false
+      explanation: "Звідки? asks for origin or source: з України."
+    - prompt: "Де ти зараз живеш?"
+      options:
+        - text: "У Києві."
+          correct: true
+        - text: "У Київ."
+          correct: false
+        - text: "З Києва."
+          correct: false
+      explanation: "Де? asks for static location: у Києві."
+    - prompt: "Куди ти їдеш?"
+      options:
+        - text: "В Україну."
+          correct: true
+        - text: "В Україні."
+          correct: false
+        - text: "З України."
+          correct: false
+      explanation: "Куди? asks for destination: в Україну."
+    - prompt: "З якого міста Олена?"
+      options:
+        - text: "Вона зі Львова."
+          correct: true
+        - text: "Вона у Львові."
+          correct: false
+        - text: "Вона у Львів."
+          correct: false
+      explanation: "Origin from Lviv is зі Львова."
+    - prompt: "Звідки Марко йде?"
+      options:
+        - text: "З роботи."
+          correct: true
+        - text: "На роботу."
+          correct: false
+        - text: "На роботі."
+          correct: false
+      explanation: "Coming from work uses з роботи."
+    - prompt: "Де Анна навчається?"
+      options:
+        - text: "У школі."
+          correct: true
+        - text: "Зі школи."
+          correct: false
+        - text: "У школу."
+          correct: false
+      explanation: "A static study place answers де?"
+- id: act-3
+  type: fill-in
+  title: Student badge origins
+  instruction: Complete each badge line with the safe from-place chunk.
+  items:
+    - sentence: "Звідки ти? — Я ___."
+      answer: "з України"
+      options:
+        - "з України"
+        - "в Україну"
+        - "в Україні"
+      explanation: "Origin uses з України."
+    - sentence: "Анна ___."
+      answer: "з Канади"
+      options:
+        - "з Канади"
+        - "в Канаді"
+        - "у Канаду"
+      explanation: "Country origin uses з + from-place form."
+    - sentence: "Ми ___, а ви?"
+      answer: "з Києва"
+      options:
+        - "з Києва"
+        - "у Києві"
+        - "у Київ"
+      explanation: "Kyiv changes to з Києва."
+    - sentence: "Джон ___."
+      answer: "зі США"
+      options:
+        - "зі США"
+        - "з США"
+        - "у США"
+      explanation: "Use зі США for easier pronunciation."
+    - sentence: "Мій друг ___."
+      answer: "з Німеччини"
+      options:
+        - "з Німеччини"
+        - "у Німеччину"
+        - "в Німеччині"
+      explanation: "Звідки? uses з Німеччини."
+    - sentence: "Олена живе в Києві, але вона ___."
+      answer: "зі Львова"
+      options:
+        - "зі Львова"
+        - "у Львові"
+        - "до Львова"
+      explanation: "Origin from Lviv is зі Львова."
+- id: act-4
+  type: match-up
+  title: Base name to from-place form
+  instruction: Match each base place name with the chunk that answers Звідки?
+  pairs:
+    - left: "Україна"
+      right: "з України"
+    - left: "Канада"
+      right: "з Канади"
+    - left: "Київ"
+      right: "з Києва"
+    - left: "Львів"
+      right: "зі Львова"
+    - left: "Одеса"
+      right: "з Одеси"
+    - left: "Харків"
+      right: "з Харкова"
+    - left: "США"
+      right: "зі США"
+    - left: "школа"
+      right: "зі школи"
+- id: act-5
+  type: order
+  title: International meet-up
+  instruction: Put the introduction exchange in a natural order.
+  is_ukrainian: true
+  items:
+    - "Добрий день! Мене звати Анна."
+    - "Дуже приємно. Мене звати Марко."
+    - "Звідки ти, Анно?"
+    - "Я з Канади, із Торонто. А ти?"
+    - "Я з України, з Києва."
+    - "Чудово. Говорімо українською."
+  correct_order: [0, 1, 2, 3, 4, 5]
+- id: act-6
+  type: true-false
+  title: Toponym and identity guardrails
+  instruction: Decide whether the statement fits this lesson.
+  items:
+    - statement: "Україна, Київ, Львів, and Канада are proper names and use capital letters."
+      correct: true
+      explanation: "Country and city names are proper names."
+    - statement: "Я з Києва is the safe answer to Звідки ти?"
+      correct: true
+      explanation: "Київ changes to Києва after з."
+    - statement: "Я є з України is the natural A1 identity line."
+      correct: false
+      explanation: "Say Я з України without є."
+    - statement: "Вона львів'янка matches a woman from Lviv."
+      correct: true
+      explanation: "Use the feminine demonym."
+    - statement: "Kiev is the course English spelling for Київ."
+      correct: false
+      explanation: "Use Kyiv / Київ."
+    - statement: "Зі США is easier and safer than з США."
+      correct: true
+      explanation: "Зі avoids a hard consonant cluster."
+- id: act-7
+  type: odd-one-out
+  title: Find the from-place mismatch
+  instruction: Choose the line that does not fit the pattern.
+  items:
+    - words:
+        - "з України"
+        - "з Канади"
+        - "з Києва"
+        - "у Києві"
+      answer: "у Києві"
+      explanation: "У Києві answers де?, not звідки?"
+    - words:
+        - "в Україну"
+        - "у Київ"
+        - "на роботу"
+        - "з роботи"
+      answer: "з роботи"
+      explanation: "З роботи answers звідки?, not куди?"
+    - words:
+        - "українець"
+        - "українка"
+        - "киянин"
+        - "з України"
+      answer: "з України"
+      explanation: "The first three name people; з України names origin."
+    - words:
+        - "Kyiv"
+        - "Lviv"
+        - "Odesa"
+        - "Odessa"
+      answer: "Odessa"
+      explanation: "Use Odesa for the Ukrainian city name in English."
+- id: act-8
+  type: error-correction
+  title: Repair where-from interference
+  instruction: Choose the natural Ukrainian repair.
+  anchor_id: repair-where-from-interference
+  items:
+    - sentence: "Я з Київ."
+      error: "з Київ"
+      answer: "Я з Києва."
+      options:
+        - "Я з Києва."
+        - "Я з Київ."
+        - "Я в Києва."
+      explanation: "Звідки? uses the from-place form Києва."
+    - sentence: "Я є з України."
+      error: "є"
+      answer: "Я з України."
+      options:
+        - "Я з України."
+        - "Я є з України."
+        - "Я маю з України."
+      explanation: "Drop є in this present identity line."
+    - sentence: "Він живе в Київ."
+      error: "в Київ"
+      answer: "Він живе в Києві."
+      options:
+        - "Він живе в Києві."
+        - "Він живе в Київ."
+        - "Він живе з Києва."
+      explanation: "Живе answers де?, so use в Києві."
+    - sentence: "Вона львів'янин."
+      error: "львів'янин"
+      answer: "Вона львів'янка."
+      options:
+        - "Вона львів'янка."
+        - "Вона львів'янин."
+        - "Вона з львів'янин."
+      explanation: "Use the feminine demonym for вона."
+    - sentence: "Я з США. (Вимова: з-США)"
+      error: "з США"
+      answer: "Я зі США."
+      options:
+        - "Я зі США."
+        - "Я з США."
+        - "Я в США."
+      explanation: "Use зі before США."
+    - sentence: "Я з місто Львів."
+      error: "з місто Львів"
+      answer: "Я зі Львова. (або Я з міста Львова)"
+      options:
+        - "Я зі Львова. (або Я з міста Львова)"
+        - "Я зі Львова."
+        - "Я з місто Львів."
+      explanation: "In speech, say the city name in the from-place form."
