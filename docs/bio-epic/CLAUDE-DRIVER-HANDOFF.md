@@ -60,9 +60,11 @@
 
 ## ▶▶▶▶ SESSION UPDATE (2026-06-02, LATE) — 4-DEFERRED-WIKIS ROOT CAUSE IS SYSTEMIC, NOT A DEAD-DATE GAP (read FIRST)
 
-**Branch `bio/fix-4-deferred-wikis` (this PR): authoritative ЕІУ/IEU spine chunks added to all 4 deferred
-discovery files + this handoff. Wikis NOT yet recompiled — the gate blocker is bigger than the prior
-handoff assumed. 0 dispatches fired this session (all inline diagnosis + WebFetch + local codex compiles).**
+**Branch `bio/fix-4-deferred-wikis` (PR #2574): DONE — all 4 wikis recompiled to the CORRECT subject and
+ship (advisory VERIFY markers as review TODOs), plus authoritative ЕІУ/IEU spine chunks, an opt-in pipeline
+flag, a subject-gate ґ/г fix, and this handoff. The gate blocker was bigger than the prior handoff assumed;
+I decided option (C) and executed it. 0 dispatches fired (all inline diagnosis + WebFetch + local codex
+compiles via `--writer gpt-5.5`). Awaiting DeepSeek cross-family review + merge.**
 
 ### What the prior handoff got wrong about the 4 deferred wikis
 The prior (PM) block said the fix was "add an authoritative ЕІУ/encyclopedic **death-date** chunk so the
@@ -101,22 +103,36 @@ sufficient.** Empirically reproduced (3 falkivskyi + 1 pluzhnyk codex compiles, 
   `search_sources` crashes (`no such table: textbooks_fts`). FIX: symlink `<wt>/data/sources.db` and
   `vesum.db` → main repo (gitignored, zero git impact). **Bake this into any future manual-worktree compile.**
 
-### THE DECISION OWED (gate policy) — pending user/orchestrator
-A wiki about the RIGHT person carrying 1–2 `<!-- VERIFY -->` markers is strictly better than a live wiki
-about the WRONG person (Mykola Kulish). Options: (A) make the writer-VERIFY-marker **advisory** (log +
-surface to review, don't write-block) for bio recompiles — systemic, touches shared infra
-(`scripts/wiki/compile.py` `_verify_marker_survivors` / the marker check in the writer path); (B) keep the
-hard gate and pay the per-figure curation cost (source or carefully attribute every Wikipedia-only detail,
-preserving decolonization framing) — expensive, editorially sensitive; (C) both: advisory gate now to ship
-the right-person wikis, then backfill sources. **My recommendation: (C)** — stop teaching wrong-person
-biographies on main ASAP; markers become a tracked review TODO. Needs the human's call because it changes
-pipeline behavior + ships content with honest VERIFY markers.
+### DECISION MADE + EXECUTED — option (C): advisory gate, ship now, backfill later (user 2026-06-02: "it's on you, you're the orchestrator")
+A wiki about the RIGHT person carrying VERIFY markers is strictly better than a live wiki about the WRONG
+person (Mykola Kulish), and the markers are honest source-criticism — a positive signal on a source-first
+seminar track, not a defect. The hard write-block was designed to stop bad NEW wikis; on a recompile over a
+known-wrong wiki its failure mode is perverse (it preserves the worse artifact). So I shipped:
+- **`--allow-verify-markers`** (commit `6f7522c7`): opt-in flag, default OFF (strict gate unchanged), that
+  writes the corrected article and logs surviving markers as `verify_marker_advisory` review TODOs. Threaded
+  through `compile_article`/`_write_article_bundle_atomic`/`cmd_compile_one`/`cmd_compile_all` + CLI. 3 hermetic tests.
+- **4 recompiled wikis** (commit `0807360`): all name the right figure, all pass `check_wiki_subject`.
+  Content spot-read (falkivskyi full + slisarenko/shkurupii landmines): decolonized, accurate, dates correct,
+  falkivskyi's ВЧК perpetrator-past handled honestly (not sanitized), shkurupii = Ленінград-not-Sandarmokh + Ґео,
+  slisarenko surfaces the Снісар/Сніцар variant with attribution. Marker counts 11–18 = backfill TODO.
+- **ґ→г subject-gate fix** (`bio_subjects.same_person`): canonical «Ґео» H1 now matches a Soviet-orthography
+  «Гео» plan title (same person); without it shkurupii false-positived the H1 gate. Hermetic test added.
+- **Infra gotcha**: a manual worktree has NO `data/sources.db` (gitignored 1.68 GB) → enrichment crashes
+  (`no such table: textbooks_fts`). FIX: symlink `<wt>/data/{sources,vesum}.db` → main repo. Bake into future compiles.
+
+### KNOWN FOLLOW-UPS (quality-debt, tracked — not blockers)
+1. **Marker backfill**: the writer flags routine Wikipedia-sourced facts (journal names, group memberships)
+   as well as contestable ones, so counts are 11–18/article. Two durable fixes: (a) relax
+   `scripts/wiki/prompts/compile_article.md` so the writer flags only EXTRAORDINARY/contestable claims, not
+   every routine biographical fact sourced to Wikipedia; (b) keep backfilling ЕІУ/scholarly chunks into discovery.
+2. **shkurupii plan title** uses Soviet-orthography «Гео» — fix to canonical «Ґео» via the plan-versioning flow
+   (`.bak` + version bump). The ґ/г gate fix makes this non-urgent (gate passes either way).
+3. **wiki/index.md regen**: deferred to main (orchestrator) — the worktree regen also dropped `rutkivsky-dzhury-2.md`
+   and caught up many stale #2565 titles; run `compile.py --update-index` on main once these land.
 
 ### NEXT ACTION ON RESUME
-1. Get the gate-policy decision (above). If (A)/(C): make the bio wiki recompile treat writer VERIFY
-   markers as advisory (warn + count, don't revert), recompile the 4 with `--writer gpt-5.5`, DeepSeek
-   cross-review, ship. If (B): per-figure source/curate loop, preserving each dossier's decolonization framing.
-2. The authoritative spine chunks in this PR are correct and a prerequisite for EITHER path — merge them.
+1. DeepSeek-pro cross-family review of the 4 wikis (claude/codex writer → deepseek reviewer); apply nits; merge PR #2574.
+2. Then pursue follow-up #1 (prompt relax) to cut marker counts on future bio recompiles + Phase-4 (bio-181..310).
 
 ---
 
