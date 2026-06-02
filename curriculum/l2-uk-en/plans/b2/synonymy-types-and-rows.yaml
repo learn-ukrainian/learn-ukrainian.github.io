@@ -152,5 +152,5 @@ references:
   стилях'
 - 'State Standard 2024: B2 SS 4.4 — Lexicology'
 connects_to:
-  previous: pronoun-system-advanced
+  previous: checkpoint-morphology
   next: synonymy-in-registers
