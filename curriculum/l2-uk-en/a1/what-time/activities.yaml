@@ -1,0 +1,259 @@
+- id: act-1
+  type: quiz
+  title: Choose the clock answer
+  instruction: Choose the safe answer to "Котра година?"
+  items:
+    - prompt: "1:00"
+      options:
+        - text: Перша.
+          correct: true
+        - text: Один година.
+          correct: false
+        - text: О першій.
+          correct: false
+      explanation: "Котра година? asks for the clock label: перша."
+    - prompt: "5:00"
+      options:
+        - text: П'ята.
+          correct: true
+        - text: П'ять годин.
+          correct: false
+        - text: О п'ятій.
+          correct: false
+      explanation: "П'ята is the point on the clock; п'ять годин is duration."
+    - prompt: "8:00"
+      options:
+        - text: Восьма.
+          correct: true
+        - text: Вісім годин.
+          correct: false
+        - text: У восьмій.
+          correct: false
+      explanation: "Use the feminine ordinal form for the hour."
+    - prompt: "11:00"
+      options:
+        - text: Одинадцята.
+          correct: true
+        - text: Об одинадцятій.
+          correct: false
+        - text: Одинадцять годин.
+          correct: false
+      explanation: "Одинадцята answers what time it is now."
+- id: act-2
+  type: match-up
+  title: Digital time to Ukrainian chunk
+  instruction: Match the digital time with the Ukrainian phrase.
+  pairs:
+    - left: "2:00"
+      right: друга
+    - left: "4:00"
+      right: четверта
+    - left: "7:00"
+      right: сьома
+    - left: "10:00"
+      right: десята
+    - left: "1:30"
+      right: пів на другу
+    - left: "6:30"
+      right: пів на сьому
+    - left: "7:15"
+      right: чверть на восьму
+    - left: "7:45"
+      right: за чверть восьма
+- id: act-3
+  type: fill-in
+  title: Schedule time gaps
+  instruction: Choose the schedule chunk that completes the sentence.
+  items:
+    - sentence: "Я прокидаюся ___."
+      answer: о сьомій
+      options:
+        - о сьомій
+        - сьома
+        - у сім годин
+      explanation: "A scheduled action uses о + the schedule form."
+    - sentence: "Ми снідаємо ___."
+      answer: о восьмій
+      options:
+        - о восьмій
+        - восьма
+        - у восьму
+      explanation: "Use о восьмій for at eight."
+    - sentence: "Зустріч ___."
+      answer: о другій
+      options:
+        - о другій
+        - друга
+        - у два
+      explanation: "Meetings happen о другій."
+    - sentence: "Фільм починається ___."
+      answer: об одинадцятій
+      options:
+        - об одинадцятій
+        - о одинадцятій
+        - одинадцята
+      explanation: "Before одинадцятій, use об."
+    - sentence: "Обід ___."
+      answer: о першій дня
+      options:
+        - о першій дня
+        - перша дня
+        - у один день
+      explanation: "О першій дня means at one in the afternoon."
+    - sentence: "Вечеря ___."
+      answer: о сьомій вечора
+      options:
+        - о сьомій вечора
+        - сьома вечора
+        - у сьому вечора
+      explanation: "Use о сьомій for the scheduled action."
+- id: act-4
+  type: true-false
+  title: Full hour or duration
+  instruction: Decide whether each note is safe for this lesson.
+  items:
+    - statement: "Зараз п'ята means it is five o'clock."
+      correct: true
+      explanation: "П'ята is the clock-hour label."
+    - statement: "П'ять годин means five o'clock."
+      correct: false
+      explanation: "П'ять годин means a duration of five hours."
+    - statement: "Котра година? asks for the current time."
+      correct: true
+      explanation: "Answer with перша, друга, третя, and so on."
+    - statement: "О котрій годині? asks when an action happens."
+      correct: true
+      explanation: "Answer with о першій, о другій, о третій."
+    - statement: "Пів на восьму means 7:30."
+      correct: true
+      explanation: "The half-hour chunk looks toward the next hour."
+    - statement: "Пів восьмої is the safe A1 chunk."
+      correct: false
+      explanation: "Use пів на восьму."
+- id: act-5
+  type: group-sort
+  title: What job does the phrase do?
+  instruction: Sort each phrase by its time job.
+  groups:
+    - name: Clock answer
+      items:
+        - перша
+        - п'ята
+        - десята
+        - дванадцята
+    - name: Schedule answer
+      items:
+        - о першій
+        - о п'ятій
+        - об одинадцятій
+        - о дванадцятій
+    - name: Time of day
+      items:
+        - ранку
+        - дня
+        - вечора
+        - ночі
+- id: act-6
+  type: order
+  title: Set the meeting time
+  instruction: Put the phone exchange in a natural order.
+  items:
+    - Добрий день! Котра година?
+    - Зараз десята.
+    - О котрій ти працюєш?
+    - Я працюю о дев'ятій.
+    - Тоді зустріч о другій?
+    - Так, о другій добре.
+  correct_order:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+- id: act-7
+  type: translate
+  title: Build a safe time line
+  instruction: Choose the Ukrainian line that matches the English prompt.
+  items:
+    - source: "It is seven now."
+      options:
+        - text: Зараз сьома.
+          correct: true
+        - text: Зараз сім годин.
+          correct: false
+        - text: Зараз є сім.
+          correct: false
+      explanation: "Clock time uses the ordinal hour word."
+    - source: "I wake up at seven in the morning."
+      options:
+        - text: Я прокидаюся о сьомій ранку.
+          correct: true
+        - text: Я прокидаюся у сім годин.
+          correct: false
+        - text: Я прокидаюся сьома ранку.
+          correct: false
+      explanation: "A schedule uses о сьомій."
+    - source: "The meeting is at two."
+      options:
+        - text: Зустріч о другій.
+          correct: true
+        - text: Зустріч у дві години.
+          correct: false
+        - text: Зустріч друга.
+          correct: false
+      explanation: "Use о другій for the planned time."
+    - source: "It is half past six."
+      options:
+        - text: Пів на сьому.
+          correct: true
+        - text: Пів сьомої.
+          correct: false
+        - text: Половина після шостої.
+          correct: false
+      explanation: "The safe chunk is пів на + next hour."
+- id: act-8
+  type: error-correction
+  title: Repair time traps
+  instruction: Choose the standard Ukrainian repair.
+  items:
+    - sentence: "Зараз є п'ять годин."
+      error: "Зараз є п'ять годин."
+      answer: "Зараз п'ята (година)."
+      options:
+        - "Зараз п'ята (година)."
+        - "Зараз є п'ять годин."
+        - "Зараз о п'ятій."
+      explanation: "For clock time, use the feminine ordinal hour and no є."
+    - sentence: "Уроки починаються у вісім годин."
+      error: "у вісім годин"
+      answer: "Уроки починаються о восьмій."
+      options:
+        - "Уроки починаються о восьмій."
+        - "Уроки починаються у вісім годин."
+        - "Уроки починаються восьма."
+      explanation: "Scheduled time uses о/об, not у/в."
+    - sentence: "Чверть після сьомої."
+      error: "після"
+      answer: "Чверть на восьму. (або чверть по сьомій)"
+      options:
+        - "Чверть на восьму. (або чверть по сьомій)"
+        - "Чверть після сьомої."
+        - "Чверть без восьмої."
+      explanation: "Use на or по for the first half of the hour."
+    - sentence: "Пів восьмої."
+      error: "Пів восьмої."
+      answer: "Пів на восьму."
+      options:
+        - "Пів на восьму."
+        - "Пів восьмої."
+        - "Половина після сьомої."
+      explanation: "На is part of the half-hour chunk."
+    - sentence: "Без двадцяти три."
+      error: "Без"
+      answer: "За двадцять третя. (або двадцять до третьої)"
+      options:
+        - "За двадцять третя. (або двадцять до третьої)"
+        - "Без двадцяти три."
+        - "Після двадцяти третьої."
+      explanation: "Use за or до, not без, for time before the next hour."
