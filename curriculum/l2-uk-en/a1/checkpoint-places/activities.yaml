@@ -1,0 +1,336 @@
+- id: act-1
+  type: match-up
+  title: Place question to answer
+  instruction: Match each question with the answer that proves the right checkpoint skill.
+  pairs:
+    - left: "Де Анна?"
+      right: "Вона в Києві."
+    - left: "Куди вона йде?"
+      right: "Вона йде в музей."
+    - left: "Звідки вона?"
+      right: "Вона з Канади."
+    - left: "Як вона їде?"
+      right: "Вона їде на метро."
+    - left: "Як дістатися?"
+      right: "Ідіть прямо і направо."
+    - left: "Де музей?"
+      right: "Музей на площі."
+    - left: "Куди їде автобус?"
+      right: "На вокзал."
+    - left: "Звідки йде студент?"
+      right: "Зі школи."
+- id: act-2
+  type: quiz
+  title: Choose the city move
+  instruction: Choose the line that fits the question.
+  items:
+    - prompt: "Де ти живеш?"
+      options:
+        - text: "Я живу в Одесі."
+          correct: true
+        - text: "Я живу в Одесу."
+          correct: false
+        - text: "Я живу з Одеси."
+          correct: false
+      explanation: "Де? with жити uses the static place chunk в Одесі."
+    - prompt: "Куди ти йдеш?"
+      options:
+        - text: "Я йду в музей."
+          correct: true
+        - text: "Я йду в музеї."
+          correct: false
+        - text: "Я йду з музею."
+          correct: false
+      explanation: "Куди? with йти uses a destination chunk."
+    - prompt: "Звідки ти?"
+      options:
+        - text: "Я з України."
+          correct: true
+        - text: "Я в Україні."
+          correct: false
+        - text: "Я в Україну."
+          correct: false
+      explanation: "Звідки? asks for source or origin."
+    - prompt: "Як ти їдеш до центру?"
+      options:
+        - text: "На метро."
+          correct: true
+        - text: "У метрою."
+          correct: false
+        - text: "З метро."
+          correct: false
+      explanation: "На метро is the safe transport chunk."
+    - prompt: "Де вокзал?"
+      options:
+        - text: "На площі, направо."
+          correct: true
+        - text: "На площу, направо."
+          correct: false
+        - text: "З площі, направо."
+          correct: false
+      explanation: "Де? asks for the static place на площі."
+    - prompt: "Куди ти їдеш завтра?"
+      options:
+        - text: "У Львів."
+          correct: true
+        - text: "У Львові."
+          correct: false
+        - text: "Зі Львова."
+          correct: false
+      explanation: "Куди? asks for the destination У Львів."
+- id: act-3
+  type: group-sort
+  title: A1.5 city shelves
+  instruction: Sort each chunk by its place function.
+  groups:
+    - name: "Де?"
+      items:
+        - "у центрі"
+        - "на площі"
+        - "в Одесі"
+        - "на роботі"
+    - name: "Куди?"
+      items:
+        - "у музей"
+        - "на вокзал"
+        - "в Україну"
+        - "на пляж"
+    - name: "Звідки?"
+      items:
+        - "з України"
+        - "зі школи"
+        - "з роботи"
+        - "з Києва"
+    - name: "Route or transport"
+      items:
+        - "на метро"
+        - "автобусом"
+        - "прямо"
+        - "направо"
+- id: act-4
+  type: fill-in
+  title: Odesa call gaps
+  instruction: Choose the chunk that completes the video call.
+  items:
+    - sentence: "Я зараз ___ Одесі."
+      answer: "в"
+      options:
+        - "в"
+        - "у"
+        - "з"
+      explanation: "Before the vowel in Одесі, в is the smoother choice."
+    - sentence: "Я ___ Дерибасівській вулиці."
+      answer: "на"
+      options:
+        - "на"
+        - "в"
+        - "з"
+      explanation: "Use на with street location: на вулиці."
+    - sentence: "Я йду ___ кафе."
+      answer: "з"
+      options:
+        - "з"
+        - "в"
+        - "на"
+      explanation: "Йду з кафе answers звідки?"
+    - sentence: "Потім я йду ___ порт."
+      answer: "у"
+      options:
+        - "у"
+        - "в"
+        - "з"
+      explanation: "Before a consonant, у порт is a smooth destination chunk."
+    - sentence: "Після порту я йду ___ пляж."
+      answer: "на"
+      options:
+        - "на"
+        - "в"
+        - "з"
+      explanation: "На пляж is the safe destination chunk."
+    - sentence: "Увечері я їду ___."
+      answer: "на вокзал"
+      options:
+        - "на вокзал"
+        - "на вокзалі"
+        - "з вокзалу"
+      explanation: "Їду asks куди?, so use на вокзал."
+- id: act-5
+  type: true-false
+  title: Ready checkpoint lines
+  instruction: Decide whether each line is ready for an A1.5 place answer.
+  items:
+    - statement: "Музей у центрі."
+      answer: true
+      explanation: "This answers де? with a static place chunk."
+    - statement: "Я йду в школу."
+      answer: true
+      explanation: "Йду asks куди?, so в школу is correct."
+    - statement: "Я в школа."
+      answer: false
+      explanation: "Static place needs в школі."
+    - statement: "Вона працює на пошті."
+      answer: true
+      explanation: "На пошті is the safe Ukrainian chunk."
+    - statement: "Я з Америки."
+      answer: true
+      explanation: "Звідки? uses the from-place form."
+    - statement: "Книга є на столі."
+      answer: false
+      explanation: "A natural A1 location line is Книга на столі."
+    - statement: "Ідіть прямо, потім направо."
+      answer: true
+      explanation: "This is a clear route instruction."
+    - statement: "Я з США."
+      answer: false
+      explanation: "Use зі США to avoid the heavy cluster."
+- id: act-6
+  type: odd-one-out
+  title: Find the route mismatch
+  instruction: Choose the line that does not fit the route pattern.
+  items:
+    - words:
+        - "у центрі"
+        - "на площі"
+        - "в Одесі"
+        - "у музей"
+      answer: "у музей"
+      explanation: "У музей answers куди?; the others answer де?"
+    - words:
+        - "у музей"
+        - "на вокзал"
+        - "в Україну"
+        - "у центрі"
+      answer: "у центрі"
+      explanation: "У центрі is static; the others are destinations."
+    - words:
+        - "з України"
+        - "з роботи"
+        - "зі школи"
+        - "на роботу"
+      answer: "на роботу"
+      explanation: "На роботу answers куди?; the others answer звідки?"
+    - words:
+        - "на метро"
+        - "автобусом"
+        - "пішки"
+        - "у школі"
+      answer: "у школі"
+      explanation: "У школі is a location, not a transport or route method."
+    - words:
+        - "Київ"
+        - "Львів"
+        - "Одеса"
+        - "Kiev"
+      answer: "Kiev"
+      explanation: "Use Kyiv in English and Київ in Ukrainian."
+    - words:
+        - "прямо"
+        - "направо"
+        - "наліво"
+        - "з України"
+      answer: "з України"
+      explanation: "З України is origin, not a route direction."
+- id: act-7
+  type: quiz
+  title: Repair checkpoint-places interference
+  instruction: Choose the natural Ukrainian repair.
+  anchor_id: repair-checkpoint-places-interference
+  items:
+    - prompt: "Repair: Я в школа."
+      options:
+        - text: "Я в школі."
+          correct: true
+        - text: "Я в школа."
+          correct: false
+        - text: "Я з школи."
+          correct: false
+      explanation: "Де? needs в/у plus the static place form."
+    - prompt: "Repair: Я іду в школі."
+      options:
+        - text: "Я іду в школу."
+          correct: true
+        - text: "Я іду в школі."
+          correct: false
+        - text: "Я іду зі школи."
+          correct: false
+      explanation: "Іду asks куди?, so use the destination chunk."
+    - prompt: "Repair: Я працюю в пошті."
+      options:
+        - text: "Я працюю на пошті."
+          correct: true
+        - text: "Я працюю в пошті."
+          correct: false
+        - text: "Я працюю до пошти."
+          correct: false
+      explanation: "The safe Ukrainian chunk is на пошті."
+    - prompt: "Repair: Книга є на столі."
+      options:
+        - text: "Книга на столі."
+          correct: true
+        - text: "Книга є на столі."
+          correct: false
+        - text: "Книга в стіл."
+          correct: false
+      explanation: "Ukrainian normally omits the present helper in this place line."
+    - prompt: "Repair: Вона живе Київ."
+      options:
+        - text: "Вона живе в Києві."
+          correct: true
+        - text: "Вона живе Київ."
+          correct: false
+        - text: "Вона живе в Київ."
+          correct: false
+      explanation: "Живе answers де? and needs в/у plus locative."
+    - prompt: "Repair: Я з Америці."
+      options:
+        - text: "Я з Америки."
+          correct: true
+        - text: "Я з Америці."
+          correct: false
+        - text: "Я в Америку."
+          correct: false
+      explanation: "Звідки? uses a from-place form, not the static place form."
+- id: act-8
+  type: unjumble
+  title: Rebuild final city lines
+  instruction: Put the words in a safe A1.5 order.
+  items:
+    - words:
+        - "Я"
+        - "в"
+        - "Києві"
+        - "у"
+        - "центрі"
+      answer: "Я в Києві у центрі"
+    - words:
+        - "Я"
+        - "йду"
+        - "в"
+        - "музей"
+      answer: "Я йду в музей"
+    - words:
+        - "Я"
+        - "з"
+        - "України"
+      answer: "Я з України"
+    - words:
+        - "Ідіть"
+        - "прямо"
+        - "потім"
+        - "направо"
+      answer: "Ідіть прямо потім направо"
+    - words:
+        - "Увечері"
+        - "я"
+        - "їду"
+        - "на"
+        - "вокзал"
+        - "на"
+        - "метро"
+      answer: "Увечері я їду на вокзал на метро"
+    - words:
+        - "Вона"
+        - "йде"
+        - "зі"
+        - "школи"
+      answer: "Вона йде зі школи"
