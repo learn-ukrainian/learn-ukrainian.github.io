@@ -16,6 +16,7 @@ from pathlib import Path
 from ai_llm.claude_call import call_claude_with_fallback
 from ai_llm.codex_call import call_codex_with_fallback
 from ai_llm.fallback import CallResult, call_gemini_with_fallback, visible_sleep
+from validate.check_wiki_verify_markers import assert_no_verify_markers
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
 from .source_attribution import resolve_chunk_attribution
@@ -154,12 +155,16 @@ def compile_article(
     # Write the article
     article_path = WIKI_DIR / domain / f"{slug}.md"
     article_path.parent.mkdir(parents=True, exist_ok=True)
-    _write_article_bundle_atomic(
-        article_path,
-        article_text=response.strip() + "\n",
-        sources=sources,
-        force=force,
-    )
+    try:
+        _write_article_bundle_atomic(
+            article_path,
+            article_text=response.strip() + "\n",
+            sources=sources,
+            force=force,
+        )
+    except ValueError as exc:
+        print(f"  ❌ {exc}")
+        return None
 
     word_count = len(response.split())
     print(f"  ✅ Wrote {article_path.relative_to(WIKI_DIR)} ({word_count} words)")
@@ -495,6 +500,7 @@ def _write_article_bundle_atomic(
     force: bool = False,
 ) -> None:
     """Write article + sidecar via temp files so markdown lands last."""
+    assert_no_verify_markers(article_text, path=article_path)
     registry = _build_sources_registry(
         article_path,
         sources,
