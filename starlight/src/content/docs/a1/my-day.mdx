@@ -1,0 +1,320 @@
+---
+title: "Мій день"
+description: "Спочатку, потім, нарешті — як розповісти про свій день"
+sidebar:
+  order: 25
+  label: "25. Мій день"
+pipeline: linear-phase-4
+build_status: validated
+prev: weather
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This lesson turns the earlier A1 pieces into one connected day. You already
+know actions, clock time, days of the week, and simple weather. Now you will
+link them with sequence words so your Ukrainian sounds like a small story, not
+separate flashcards.
+
+By the end, you can:
+
+- name parts of the day: **вранці**, **вдень**, **після обіду**, **ввечері**,
+  **вночі**;
+- connect routine actions with **спочатку**, **потім**, **після цього**, and
+  **нарешті**;
+- use time chunks such as **о сьомій**, **о першій**, **пів на восьму**;
+- plan one day with **я планую**, **хочу + infinitive**, **маю + infinitive**,
+  and **мені потрібно + infinitive**;
+- repair unsafe routine and time phrases such as **Сім годин**, **У шість
+  годин**, **Пів сьомої**, **Без десяти шість**, **приймаю душ**, and
+  **Давайте підемо**.
+
+### Parts of the day in a real diary
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокидаюся і снідаю.", "answer": "вранці", "options": ["вранці", "вночі", "після обіду"]}, {"sentence": "___ я працюю з дев'ятої до п'ятої.", "answer": "вдень", "options": ["вдень", "вночі", "вранці"]}, {"sentence": "___ я обідаю о першій.", "answer": "вдень", "options": ["вдень", "вночі", "ввечері"]}, {"sentence": "___ я дивлюся фільм.", "answer": "ввечері", "options": ["ввечері", "вранці", "вночі"]}, {"sentence": "___ я лягаю спати.", "answer": "вночі", "options": ["вночі", "вдень", "вранці"]}, {"sentence": "___ я маю зробити домашнє завдання.", "answer": "після обіду", "options": ["після обіду", "вранці", "пів на восьму"]}]`)} />
+
+## Діалоги
+
+The first scene is a short diary conversation after a normal day. The past-time
+forms appear as ready chunks only. You do not need the grammar of the past tense
+yet.
+
+<DialogueBox uk="Друг: Як пройшов твій день?" en="Friend: How was your day?" />
+<DialogueBox uk="Автор: Добре! Вранці я працював." en="Writer: Good! In the morning I worked." />
+<DialogueBox uk="Друг: А потім?" en="Friend: And then?" />
+<DialogueBox uk="Автор: Потім обідав о першій." en="Writer: Then I had lunch at one." />
+<DialogueBox uk="Друг: А після обіду?" en="Friend: And after lunch?" />
+<DialogueBox uk="Автор: Після обіду гуляв. Ввечері дивився фільм і читав книгу." en="Writer: After lunch I walked. In the evening I watched a film and read a book." />
+
+Copy the story shape: time chunk + action. **Вранці я працював** is useful for
+recognition, but your main A1 speaking line can stay in the present:
+**Вранці я працюю. Потім обідаю. Ввечері читаю.**
+
+The second scene plans tomorrow. The future appears as **буду + infinitive**,
+also as a ready chunk.
+
+<DialogueBox uk="Друг: Що ти будеш робити завтра?" en="Friend: What will you do tomorrow?" />
+<DialogueBox uk="Автор: Вранці буду працювати." en="Writer: In the morning I will work." />
+<DialogueBox uk="Друг: А після обіду?" en="Friend: And after lunch?" />
+<DialogueBox uk="Автор: Буду вивчати українську." en="Writer: I will study Ukrainian." />
+<DialogueBox uk="Друг: А ввечері?" en="Friend: And in the evening?" />
+<DialogueBox uk="Автор: Ходімо в парк! Буде тепло." en="Writer: Let's go to the park! It will be warm." />
+
+Use **Ходімо!** as one whole invitation chunk. Do not build **Давайте
+підемо!** at A1. For time questions, keep **Котра година?** and **О котрій
+годині?**. Do not ask **Який час?** for clock time.
+
+### Put the diary in order
+
+<Order client:only='react' items={JSON.parse(`["О сьомій я прокидаюся.", "Спочатку роблю зарядку.", "Потім снідаю.", "О дев'ятій працюю.", "О першій обідаю.", "Після обіду читаю.", "Ввечері дивлюся фільм.", "Нарешті лягаю спати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the diary lines from morning to night."} isUkrainian={false} />
+
+## Мій типовий день
+
+Start with the time frame. The simplest day words are:
+
+| Noun | Time chunk |
+| --- | --- |
+| **ранок** | **вранці** |
+| **день** | **вдень** |
+| **вечір** | **ввечері** |
+| **ніч** | **вночі** |
+
+Add **сьогодні** and **завтра** for one specific day, and use weekday chunks
+from Module 23: **у понеділок**, **у середу**, **в суботу**.
+
+Now add regular routine actions. The grammar label is not your task today, but
+these are regular-day actions in the first person:
+
+<DialogueBox uk="Вранці я прокидаюся і снідаю." en="In the morning I wake up and have breakfast." />
+<DialogueBox uk="Потім я вмиваюся і одягаюся." en="Then I wash and get dressed." />
+<DialogueBox uk="О дев'ятій я працюю." en="At nine I work." />
+<DialogueBox uk="О першій я обідаю." en="At one I have lunch." />
+<DialogueBox uk="Після обіду я читаю або відпочиваю." en="After lunch I read or rest." />
+<DialogueBox uk="Ввечері я вечеряю і дивлюся фільм." en="In the evening I have dinner and watch a film." />
+<DialogueBox uk="Вночі я лягаю спати." en="At night I go to bed." />
+
+Many morning verbs use **-ся**: **прокидатися**, **вмиватися**,
+**одягатися**. Learn the **я** forms as chunks: **я прокидаюся**, **я
+вмиваюся**, **я одягаюся**. You are talking about regular routine, so keep the
+action simple: **я снідаю**, **я працюю**, **я обідаю**, **я читаю**. The
+dictionary verbs behind these lines are **вмиватися, працювати, обідати,
+читати**.
+
+Add the clock only when it helps. **Котра година?** asks "What time is it?"
+**О котрій годині?** asks "At what time?" For full hours, Ukrainian uses the
+hour as an order word: **перша**, **друга**, **сьома**. For action time, use
+**о/об**: **о сьомій годині**, **о дев'ятій**, **об одинадцятій**. For half
+past, keep the chunk **пів на сьому** or **пів на восьму**.
+
+### Routine action to useful time
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "прокидаюся", "right": "о сьомій"}, {"left": "роблю зарядку", "right": "спочатку"}, {"left": "снідаю", "right": "вранці"}, {"left": "обідаю", "right": "о першій"}, {"left": "читаю", "right": "після обіду"}, {"left": "вечеряю", "right": "ввечері"}, {"left": "лягаю спати", "right": "вночі"}, {"left": "планую читати", "right": "у середу"}]`)} />
+
+### Planning conversation choices
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти будеш робити завтра?", "options": [{"text": "Вранці буду працювати.", "correct": true}, {"text": "Вранці я працював учора.", "correct": false}, {"text": "Який час завтра?", "correct": false}], "explanation": "Буду працювати is a ready future chunk."}, {"question": "О котрій ти прокидаєшся?", "options": [{"text": "О сьомій.", "correct": true}, {"text": "Сім годин.", "correct": false}, {"text": "У сім годин.", "correct": false}], "explanation": "Use о + ordinal time chunk."}, {"question": "Хочеш гуляти ввечері?", "options": [{"text": "Так. Ходімо в парк!", "correct": true}, {"text": "Так. Давайте підемо в парк!", "correct": false}, {"text": "Так. Який час парк?", "correct": false}], "explanation": "Ходімо! is the safe A1 invitation chunk."}, {"question": "Яка сьогодні погода?", "options": [{"text": "Сьогодні тепло.", "correct": true}, {"text": "Сьогодні є тепло.", "correct": false}, {"text": "Погода є добре.", "correct": false}], "explanation": "Weather state chunks stay short."}]`)} />
+
+## Від ранку до вечора
+
+Sequence words make the day readable. Use them at the front of a short line.
+
+| Sequence word | Use it |
+| --- | --- |
+| **спочатку** | first |
+| **потім** | then |
+| **після цього** | after that |
+| **після обіду** | after lunch |
+| **також** | also |
+| **нарешті** | finally |
+
+Here is a complete A1 day:
+
+<DialogueBox uk="Сьогодні понеділок." en="Today is Monday." />
+<DialogueBox uk="Вранці холодно, але сонячно." en="In the morning it is cold but sunny." />
+<DialogueBox uk="О сьомій я прокидаюся." en="At seven I wake up." />
+<DialogueBox uk="Спочатку роблю зарядку і беру душ." en="First I exercise and take a shower." />
+<DialogueBox uk="Потім снідаю." en="Then I have breakfast." />
+<DialogueBox uk="О дев'ятій працюю." en="At nine I work." />
+<DialogueBox uk="О першій обідаю." en="At one I have lunch." />
+<DialogueBox uk="Після обіду я маю зробити домашнє завдання." en="After lunch I have to do homework." />
+<DialogueBox uk="У середу я планую читати." en="On Wednesday I plan to read." />
+<DialogueBox uk="Мені потрібно зробити план." en="I need to make a plan." />
+<DialogueBox uk="Ввечері хочу гуляти, бо буде тепло." en="In the evening I want to walk because it will be warm." />
+<DialogueBox uk="Нарешті о десятій лягаю спати." en="Finally, at ten I go to bed." />
+
+For minutes, do not overload yourself. At A1, recognize only the safe shapes
+you have already seen: **чверть на восьму**, **п'ять по восьмій**, **за десять
+сьома**, **десять до шостої**. The time prepositions are **на**, **по**,
+**за**, and **до**. Avoid **без** and **після** for clock time. Say **за
+десять шоста** or **десять до шостої**, not **Без десяти шість**. Say **п'ять
+по восьмій** or **п'ять хвилин на дев'яту**, not **П'ять після восьми**. Keep
+**пів** only inside the safe half-hour chunk: **пів на сьому**.
+
+Planning uses light chunks, not a full future-tense lesson:
+
+<DialogueBox uk="Я планую читати." en="I plan to read." />
+<DialogueBox uk="Я хочу гуляти." en="I want to walk." />
+<DialogueBox uk="Я маю зробити план." en="I have to make a plan." />
+<DialogueBox uk="Мені потрібно зробити домашнє завдання." en="I need to do homework." />
+
+The dictionary verb is **планувати**, but the useful A1 line is **я планую**.
+For duty, keep the paired chunk **маю / мені потрібно** plus an infinitive.
+
+### Day shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Morning": ["вранці", "я прокидаюся", "роблю зарядку", "снідаю"], "Day and afternoon": ["вдень", "о першій", "обідаю", "після обіду"], "Evening and night": ["ввечері", "вечеряю", "вночі", "лягаю спати"], "Planning chunks": ["я планую", "хочу читати", "маю зробити", "мені потрібно"]}`)} />
+
+### Build connected day lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Вранці / я / прокидаюся", "answer": "Вранці я прокидаюся"}, {"jumbled": "Спочатку / я / снідаю", "answer": "Спочатку я снідаю"}, {"jumbled": "О / першій / я / обідаю", "answer": "О першій я обідаю"}, {"jumbled": "Після / обіду / я / читаю", "answer": "Після обіду я читаю"}, {"jumbled": "У / середу / я / планую / читати", "answer": "У середу я планую читати"}, {"jumbled": "Нарешті / я / лягаю / спати", "answer": "Нарешті я лягаю спати"}]`)} />
+
+## 📋 Підсумок
+
+Build a day from three parts:
+
+**Time + sequence + action = a connected story.**
+
+<DialogueBox uk="О сьомій прокидаюся." en="At seven I wake up." />
+<DialogueBox uk="Спочатку снідаю." en="First I have breakfast." />
+<DialogueBox uk="Потім працюю." en="Then I work." />
+<DialogueBox uk="Після обіду відпочиваю." en="After lunch I rest." />
+<DialogueBox uk="Ввечері читаю." en="In the evening I read." />
+<DialogueBox uk="Нарешті лягаю спати." en="Finally I go to bed." />
+
+:::caution
+Keep routine time Ukrainian. Routine and clock phrases are often affected by
+Russian-language interference, so do not present those models as acceptable
+spoken options. Avoid **без** for approaching time: not **без п'ятнадцяти
+три**, not **без двадцяти чотири**. Ukrainian uses order words with
+**година**: **друга година**, **п'ята година**, **сьома година**. For half
+past, say **пів на сьому** or **пів на першу**, not **пів сьомої** or
+**пів першої**. Use **Добрий день** and **До побачення**, not **Здрастуйте**
+or **Пока**. In family routine lines, use **тато**, not **папа**.
+
+Тема розпорядку дня та часу є однією з найбільш уражених російськомовною
+інтерференцією. That is why this lesson gives the Ukrainian chunks first and
+does not teach Russian-influenced time models as normal alternatives.
+:::
+
+Write your own six-line day. Use one line for the morning, one for work or
+study, one for lunch, one for weather, one for a plan, and one for the evening:
+
+<DialogueBox uk="Сьогодні середа." en="Today is Wednesday." />
+<DialogueBox uk="Вранці я прокидаюся о сьомій." en="In the morning I wake up at seven." />
+<DialogueBox uk="Спочатку беру душ і снідаю." en="First I take a shower and have breakfast." />
+<DialogueBox uk="О дев'ятій я працюю." en="At nine I work." />
+<DialogueBox uk="Після обіду я планую читати." en="After lunch I plan to read." />
+<DialogueBox uk="Ввечері лягаю спати о десятій." en="In the evening I go to bed at ten." />
+
+### Repair clock and birthday traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safe Ukrainian repair." items={JSON.parse(`[{"sentence": "Сім годин. (Seven o'clock)", "errorWord": "Сім годин", "correctForm": "Сьома година.", "options": ["Сьома година.", "Сім годин.", "Сьомий година."], "explanation": "For clock time, use the feminine ordinal hour."}, {"sentence": "У шість годин. (At six o'clock)", "errorWord": "У шість годин", "correctForm": "О шостій (годині).", "options": ["О шостій (годині).", "У шість годин.", "На шість година."], "explanation": "Action time uses о/об plus the time chunk."}, {"sentence": "Пів сьомої. (Half past six)", "errorWord": "Пів сьомої", "correctForm": "Пів на сьому.", "options": ["Пів на сьому.", "Пів сьомої.", "Половина сьома."], "explanation": "Use пів на + next hour."}, {"sentence": "Без десяти шість. (Ten to six)", "errorWord": "Без десяти шість", "correctForm": "За десять шоста.", "options": ["За десять шоста.", "Десять до шостої.", "Без десяти шість."], "explanation": "Use за or до, not без."}, {"sentence": "Моє день народження. (My birthday)", "errorWord": "Моє", "correctForm": "Мій день народження.", "options": ["Мій день народження.", "Моє день народження.", "Моя день народження."], "explanation": "День is masculine, so use мій."}, {"sentence": "П'ять після восьми. (Five past eight)", "errorWord": "після", "correctForm": "П'ять по восьмій.", "options": ["П'ять по восьмій.", "П'ять хвилин на дев'яту.", "П'ять після восьми."], "explanation": "Use по or на for this clock phrase, not після."}]`)} />
+
+### Repair routine Ukrainian
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вранці я ___.", "answer": "беру душ", "options": ["беру душ", "приймаю душ", "маю душ"]}, {"sentence": "Коли я хворий, я ___.", "answer": "п'ю ліки", "options": ["п'ю ліки", "приймаю ліки", "беру ліки"]}, {"sentence": "___ зараз? — Восьма.", "answer": "Котра година", "options": ["Котра година", "Який час", "Скільки години"]}, {"sentence": "___ в парк після обіду!", "answer": "Ходімо", "options": ["Ходімо", "Давайте підемо", "Пішли давайте"]}, {"sentence": "О восьмій годині я їм ___.", "answer": "сніданок", "options": ["сніданок", "завтрак", "ранкову їжу"]}, {"sentence": "Мама готує дуже ___ обід.", "answer": "смачний", "options": ["смачний", "вкусний", "смаковий"]}, {"sentence": "Ввечері я хочу ___.", "answer": "поїсти", "options": ["поїсти", "покушати", "їстися"]}, {"sentence": "О сьомій я ___ і встав.", "answer": "прокинувся", "options": ["прокинувся", "проснувся", "прокидав"]}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"день","translation":"day","pos":"noun","example":"Це мій день.","examples":["day","Це мій день."]},{"word":"ранок","translation":"morning","pos":"noun","example":"Ранок починається о сьомій.","examples":["morning","Ранок починається о сьомій."]},{"word":"вечір","translation":"evening","pos":"noun","example":"Вечір тихий.","examples":["evening","Вечір тихий."]},{"word":"ніч","translation":"night","pos":"noun","example":"Вночі я сплю.","examples":["night","Вночі я сплю."]},{"word":"година","translation":"hour; o'clock","pos":"noun","example":"Котра година?","examples":["hour; o'clock","Котра година?"]},{"word":"хвилина","translation":"minute","pos":"noun","example":"П'ять хвилин.","examples":["minute","П'ять хвилин."]},{"word":"вранці","translation":"in the morning","pos":"adverb","example":"Вранці я снідаю.","examples":["in the morning","Вранці я снідаю."]},{"word":"вдень","translation":"during the day","pos":"adverb","example":"Вдень я працюю.","examples":["during the day","Вдень я працюю."]},{"word":"ввечері","translation":"in the evening","pos":"adverb","example":"Ввечері я читаю.","examples":["in the evening","Ввечері я читаю."]},{"word":"вночі","translation":"at night","pos":"adverb","example":"Вночі я сплю.","examples":["at night","Вночі я сплю."]},{"word":"після обіду","translation":"after lunch; in the afternoon","pos":"time chunk","example":"Після обіду я відпочиваю.","examples":["after lunch; in the afternoon","Після обіду я відпочиваю."]},{"word":"спочатку","translation":"first","pos":"sequence word","example":"Спочатку я снідаю.","examples":["first","Спочатку я снідаю."]},{"word":"потім","translation":"then","pos":"sequence word","example":"Потім я працюю.","examples":["then","Потім я працюю."]},{"word":"після цього","translation":"after that","pos":"sequence word","example":"Після цього я читаю.","examples":["after that","Після цього я читаю."]},{"word":"також","translation":"also","pos":"adverb","example":"Також я вчу українську.","examples":["also","Також я вчу українську."]},{"word":"нарешті","translation":"finally","pos":"sequence word","example":"Нарешті я лягаю спати.","examples":["finally","Нарешті я лягаю спати."]},{"word":"прокидатися","translation":"to wake up","pos":"verb","example":"Я прокидаюся о сьомій.","examples":["to wake up","Я прокидаюся о сьомій."]},{"word":"вмиватися","translation":"to wash oneself","pos":"verb","example":"Я вмиваюся вранці.","examples":["to wash oneself","Я вмиваюся вранці."]},{"word":"одягатися","translation":"to get dressed","pos":"verb","example":"Я одягаюся.","examples":["to get dressed","Я одягаюся."]},{"word":"снідати","translation":"to have breakfast","pos":"verb","example":"Я снідаю вранці.","examples":["to have breakfast","Я снідаю вранці."]},{"word":"обідати","translation":"to have lunch","pos":"verb","example":"Я обідаю о першій.","examples":["to have lunch","Я обідаю о першій."]},{"word":"вечеряти","translation":"to have dinner","pos":"verb","example":"Ми вечеряємо ввечері.","examples":["to have dinner","Ми вечеряємо ввечері."]},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю вдень.","examples":["to work","Я працюю вдень."]},{"word":"відпочивати","translation":"to rest","pos":"verb","example":"Після обіду я відпочиваю.","examples":["to rest","Після обіду я відпочиваю."]},{"word":"читати","translation":"to read","pos":"verb","example":"Я читаю книгу.","examples":["to read","Я читаю книгу."]},{"word":"дивитися","translation":"to watch","pos":"verb","example":"Я дивлюся фільм.","examples":["to watch","Я дивлюся фільм."]},{"word":"лягати спати","translation":"to go to bed","pos":"phrase","example":"Я лягаю спати о десятій.","examples":["to go to bed","Я лягаю спати о десятій."]},{"word":"робити зарядку","translation":"to exercise","pos":"phrase","example":"Спочатку роблю зарядку.","examples":["to exercise","Спочатку роблю зарядку."]},{"word":"брати душ","translation":"to take a shower","pos":"phrase","example":"Вранці я беру душ.","examples":["to take a shower","Вранці я беру душ."]},{"word":"пити ліки","translation":"to take medicine","pos":"phrase","example":"Я п'ю ліки.","examples":["to take medicine","Я п'ю ліки."]},{"word":"Котра година?","translation":"What time is it?","pos":"question chunk","example":"Котра година? — Восьма.","examples":["What time is it?","Котра година? — Восьма."]},{"word":"О котрій годині?","translation":"At what time?","pos":"question chunk","example":"О котрій годині ти працюєш?","examples":["At what time?","О котрій годині ти працюєш?"]},{"word":"о сьомій","translation":"at seven","pos":"time chunk","example":"О сьомій я прокидаюся.","examples":["at seven","О сьомій я прокидаюся."]},{"word":"пів на восьму","translation":"half past seven","pos":"time chunk","example":"Зараз пів на восьму.","examples":["half past seven","Зараз пів на восьму."]},{"word":"план","translation":"plan","pos":"noun","example":"Це мій план.","examples":["plan","Це мій план."]},{"word":"планувати","translation":"to plan","pos":"verb","example":"Я планую читати.","examples":["to plan","Я планую читати."]},{"word":"мені потрібно","translation":"I need","pos":"modal chunk","example":"Мені потрібно зробити план.","examples":["I need","Мені потрібно зробити план."]},{"word":"я маю","translation":"I have to","pos":"modal chunk","example":"Я маю зробити домашнє завдання.","examples":["I have to","Я маю зробити домашнє завдання."]},{"word":"Ходімо!","translation":"Let's go!","pos":"invitation chunk","example":"Ходімо в парк!","examples":["Let's go!","Ходімо в парк!"]},{"word":"типовий","translation":"typical","pos":"adjective","example":"Це мій типовий день.","examples":["typical","Це мій типовий день."]},{"word":"вільний","translation":"free","pos":"adjective","example":"У мене є вільний час.","examples":["free","У мене є вільний час."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"день","back":"day"},{"front":"ранок","back":"morning"},{"front":"вечір","back":"evening"},{"front":"ніч","back":"night"},{"front":"година","back":"hour; o'clock"},{"front":"хвилина","back":"minute"},{"front":"вранці","back":"in the morning"},{"front":"вдень","back":"during the day"},{"front":"ввечері","back":"in the evening"},{"front":"вночі","back":"at night"},{"front":"після обіду","back":"after lunch; in the afternoon"},{"front":"спочатку","back":"first"},{"front":"потім","back":"then"},{"front":"після цього","back":"after that"},{"front":"також","back":"also"},{"front":"нарешті","back":"finally"},{"front":"прокидатися","back":"to wake up"},{"front":"вмиватися","back":"to wash oneself"},{"front":"одягатися","back":"to get dressed"},{"front":"снідати","back":"to have breakfast"},{"front":"обідати","back":"to have lunch"},{"front":"вечеряти","back":"to have dinner"},{"front":"працювати","back":"to work"},{"front":"відпочивати","back":"to rest"},{"front":"читати","back":"to read"},{"front":"дивитися","back":"to watch"},{"front":"лягати спати","back":"to go to bed"},{"front":"робити зарядку","back":"to exercise"},{"front":"брати душ","back":"to take a shower"},{"front":"пити ліки","back":"to take medicine"},{"front":"Котра година?","back":"What time is it?"},{"front":"О котрій годині?","back":"At what time?"},{"front":"о сьомій","back":"at seven"},{"front":"пів на восьму","back":"half past seven"},{"front":"план","back":"plan"},{"front":"планувати","back":"to plan"},{"front":"мені потрібно","back":"I need"},{"front":"я маю","back":"I have to"},{"front":"Ходімо!","back":"Let's go!"},{"front":"типовий","back":"typical"},{"front":"вільний","back":"free"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Parts of the day in a real diary
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокидаюся і снідаю.", "answer": "вранці", "options": ["вранці", "вночі", "після обіду"]}, {"sentence": "___ я працюю з дев'ятої до п'ятої.", "answer": "вдень", "options": ["вдень", "вночі", "вранці"]}, {"sentence": "___ я обідаю о першій.", "answer": "вдень", "options": ["вдень", "вночі", "ввечері"]}, {"sentence": "___ я дивлюся фільм.", "answer": "ввечері", "options": ["ввечері", "вранці", "вночі"]}, {"sentence": "___ я лягаю спати.", "answer": "вночі", "options": ["вночі", "вдень", "вранці"]}, {"sentence": "___ я маю зробити домашнє завдання.", "answer": "після обіду", "options": ["після обіду", "вранці", "пів на восьму"]}]`)} />
+
+### Put the diary in order
+
+<Order client:only='react' items={JSON.parse(`["О сьомій я прокидаюся.", "Спочатку роблю зарядку.", "Потім снідаю.", "О дев'ятій працюю.", "О першій обідаю.", "Після обіду читаю.", "Ввечері дивлюся фільм.", "Нарешті лягаю спати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the diary lines from morning to night."} isUkrainian={false} />
+
+### Routine action to useful time
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "прокидаюся", "right": "о сьомій"}, {"left": "роблю зарядку", "right": "спочатку"}, {"left": "снідаю", "right": "вранці"}, {"left": "обідаю", "right": "о першій"}, {"left": "читаю", "right": "після обіду"}, {"left": "вечеряю", "right": "ввечері"}, {"left": "лягаю спати", "right": "вночі"}, {"left": "планую читати", "right": "у середу"}]`)} />
+
+### Planning conversation choices
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти будеш робити завтра?", "options": [{"text": "Вранці буду працювати.", "correct": true}, {"text": "Вранці я працював учора.", "correct": false}, {"text": "Який час завтра?", "correct": false}], "explanation": "Буду працювати is a ready future chunk."}, {"question": "О котрій ти прокидаєшся?", "options": [{"text": "О сьомій.", "correct": true}, {"text": "Сім годин.", "correct": false}, {"text": "У сім годин.", "correct": false}], "explanation": "Use о + ordinal time chunk."}, {"question": "Хочеш гуляти ввечері?", "options": [{"text": "Так. Ходімо в парк!", "correct": true}, {"text": "Так. Давайте підемо в парк!", "correct": false}, {"text": "Так. Який час парк?", "correct": false}], "explanation": "Ходімо! is the safe A1 invitation chunk."}, {"question": "Яка сьогодні погода?", "options": [{"text": "Сьогодні тепло.", "correct": true}, {"text": "Сьогодні є тепло.", "correct": false}, {"text": "Погода є добре.", "correct": false}], "explanation": "Weather state chunks stay short."}]`)} />
+
+### Day shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Morning": ["вранці", "я прокидаюся", "роблю зарядку", "снідаю"], "Day and afternoon": ["вдень", "о першій", "обідаю", "після обіду"], "Evening and night": ["ввечері", "вечеряю", "вночі", "лягаю спати"], "Planning chunks": ["я планую", "хочу читати", "маю зробити", "мені потрібно"]}`)} />
+
+### Build connected day lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Вранці / я / прокидаюся", "answer": "Вранці я прокидаюся"}, {"jumbled": "Спочатку / я / снідаю", "answer": "Спочатку я снідаю"}, {"jumbled": "О / першій / я / обідаю", "answer": "О першій я обідаю"}, {"jumbled": "Після / обіду / я / читаю", "answer": "Після обіду я читаю"}, {"jumbled": "У / середу / я / планую / читати", "answer": "У середу я планую читати"}, {"jumbled": "Нарешті / я / лягаю / спати", "answer": "Нарешті я лягаю спати"}]`)} />
+
+### Repair clock and birthday traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safe Ukrainian repair." items={JSON.parse(`[{"sentence": "Сім годин. (Seven o'clock)", "errorWord": "Сім годин", "correctForm": "Сьома година.", "options": ["Сьома година.", "Сім годин.", "Сьомий година."], "explanation": "For clock time, use the feminine ordinal hour."}, {"sentence": "У шість годин. (At six o'clock)", "errorWord": "У шість годин", "correctForm": "О шостій (годині).", "options": ["О шостій (годині).", "У шість годин.", "На шість година."], "explanation": "Action time uses о/об plus the time chunk."}, {"sentence": "Пів сьомої. (Half past six)", "errorWord": "Пів сьомої", "correctForm": "Пів на сьому.", "options": ["Пів на сьому.", "Пів сьомої.", "Половина сьома."], "explanation": "Use пів на + next hour."}, {"sentence": "Без десяти шість. (Ten to six)", "errorWord": "Без десяти шість", "correctForm": "За десять шоста.", "options": ["За десять шоста.", "Десять до шостої.", "Без десяти шість."], "explanation": "Use за or до, not без."}, {"sentence": "Моє день народження. (My birthday)", "errorWord": "Моє", "correctForm": "Мій день народження.", "options": ["Мій день народження.", "Моє день народження.", "Моя день народження."], "explanation": "День is masculine, so use мій."}, {"sentence": "П'ять після восьми. (Five past eight)", "errorWord": "після", "correctForm": "П'ять по восьмій.", "options": ["П'ять по восьмій.", "П'ять хвилин на дев'яту.", "П'ять після восьми."], "explanation": "Use по or на for this clock phrase, not після."}]`)} />
+
+### Repair routine Ukrainian
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вранці я ___.", "answer": "беру душ", "options": ["беру душ", "приймаю душ", "маю душ"]}, {"sentence": "Коли я хворий, я ___.", "answer": "п'ю ліки", "options": ["п'ю ліки", "приймаю ліки", "беру ліки"]}, {"sentence": "___ зараз? — Восьма.", "answer": "Котра година", "options": ["Котра година", "Який час", "Скільки години"]}, {"sentence": "___ в парк після обіду!", "answer": "Ходімо", "options": ["Ходімо", "Давайте підемо", "Пішли давайте"]}, {"sentence": "О восьмій годині я їм ___.", "answer": "сніданок", "options": ["сніданок", "завтрак", "ранкову їжу"]}, {"sentence": "Мама готує дуже ___ обід.", "answer": "смачний", "options": ["смачний", "вкусний", "смаковий"]}, {"sentence": "Ввечері я хочу ___.", "answer": "поїсти", "options": ["поїсти", "покушати", "їстися"]}, {"sentence": "О сьомій я ___ і встав.", "answer": "прокинувся", "options": ["прокинувся", "проснувся", "прокидав"]}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Daily Routines](https://thelanguages.com/learn/ukrainian/foundations/vocabulary/4/) — Learner-safe A1 daily-routine vocabulary with simple Ukrainian example sentences.
+- 📄 [Dative Pronouns and Подобатися](https://opentext.ku.edu/dobraforma/chapter/15-1/) — Useful follow-up for dative chunks such as мені потрібно.
+- 📄 [Котра година? Time Vocabulary in Ukrainian](https://www.ukrainianlessons.com/grammar-time/) — Follow-up reference for Ukrainian clock-time chunks used in a daily schedule.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
