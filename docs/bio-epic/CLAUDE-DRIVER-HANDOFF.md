@@ -65,7 +65,11 @@ ship (advisory VERIFY markers as review TODOs), plus authoritative ЕІУ/IEU sp
 flag, a subject-gate ґ/г fix, and this handoff. The gate blocker was bigger than the prior handoff assumed;
 I decided option (C) and executed it. 0 dispatches fired (all inline diagnosis + WebFetch + local codex
 compiles via `--writer gpt-5.5`). DeepSeek cross-family review DONE: 3 SHIP + 1 FIX (slisarenko
-«найвищу кару»→«смертну кару», applied). **PR #2574 is review-clean + CI-green + MERGE-READY.**
+«найвищу кару»→«смертну кару», applied). **PR #2574 MERGED to main (`c3e0e759d2`, 2026-06-02).** The 4
+wiki pages on main now name the correct figures (no more Mykola Kulish). **`wiki/index.md` regenerated in a
+follow-up (this PR)** — it also corrected 5 OTHER stale #2565 Kulish titles in the index (zerov, petrytskyi,
+yohansen, kosynka, pidmohylnyi were rebuilt but the index was never refreshed) and dropped a duplicate
+`rutkivsky-dzhury-2` root orphan (real `literature/works/` entry kept; total 1687→1686).
 
 ### What the prior handoff got wrong about the 4 deferred wikis
 The prior (PM) block said the fix was "add an authoritative ЕІУ/encyclopedic **death-date** chunk so the
@@ -128,19 +132,19 @@ known-wrong wiki its failure mode is perverse (it preserves the worse artifact).
    every routine biographical fact sourced to Wikipedia; (b) keep backfilling ЕІУ/scholarly chunks into discovery.
 2. **shkurupii plan title** uses Soviet-orthography «Гео» — fix to canonical «Ґео» via the plan-versioning flow
    (`.bak` + version bump). The ґ/г gate fix makes this non-urgent (gate passes either way).
-3. **wiki/index.md regen**: deferred to main (orchestrator) — the worktree regen also dropped `rutkivsky-dzhury-2.md`
-   and caught up many stale #2565 titles; run `compile.py --update-index` on main once these land.
+3. **wiki/index.md regen: DONE** (this PR) — corrected the 4 figures + 5 stale #2565 titles (zerov,
+   petrytskyi, yohansen, kosynka, pidmohylnyi) and removed the duplicate `rutkivsky-dzhury-2` root orphan
+   (the real `literature/works/` entry is kept). The "drop" was a phantom-duplicate removal, not a regression.
 
-### NEXT ACTION ON RESUME
-1. **MERGE PR #2574** — DeepSeek cross-family review DONE (3 SHIP + 1 FIX applied), CI green, 74 wiki tests
-   pass. #M-4 note: DeepSeek tagged «найвищу кару» a Russianism at confidence 1.0, but my independent
-   `check_russian_shadow` showed the proposed «смертну кару» scores IDENTICALLY (1.0) — the tool flags the
-   accusative «кару» morphology, not «найвища». Applied the change anyway as a clarity/decolonization win
-   (names the death sentence plainly vs the Soviet «найвища кара» euphemism), not as a confirmed Russianism.
-   (PR carries shared wiki-pipeline infra beyond the bio-content merge-grant scope — orchestrator/human does
-   the literal main-merge per the driver boundary.)
-2. After merge: `compile.py --update-index` on main (index regen, drops nothing). Then pursue follow-up #1
-   (relax `compile_article.md` so the writer flags only contestable claims → cut marker counts) + Phase-4 (bio-181..310).
+### NEXT ACTION ON RESUME — the 4-deferred-wikis P0 is CLOSED + merged. Next bio work:
+1. **Follow-up #1 — relax the writer prompt** (`scripts/wiki/prompts/compile_article.md`) so the wiki writer
+   flags only EXTRAORDINARY/contestable claims, not every routine Wikipedia-sourced biographical fact. This
+   cuts the 11–18 advisory-marker counts on future bio recompiles. Cross-review the prompt change.
+2. **Phase-4 wikis (bio-181..310)** — the big remaining build: ~130 new wiki articles. `--writer gpt-5.5`
+   (codex; claude --writer is broken for wikis — root-cause learning above), DeepSeek cross-review, gated.
+   RE-OFFER THE WORKFLOW to the user (capped fan-out is the right tool for 130 artifacts).
+3. **Rest of the #2535 existing-180 audit backlog** (the remaining BLOCK/FIX items past the 4 wikis).
+4. Optional tidy: shkurupii plan title «Гео»→«Ґео» (follow-up #2 above; non-urgent, gate passes either way).
 
 ---
 
