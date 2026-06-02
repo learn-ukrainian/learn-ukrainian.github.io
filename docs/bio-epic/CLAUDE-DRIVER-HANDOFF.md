@@ -58,6 +58,61 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶ SESSION UPDATE (2026-06-02, PM) — 6 PRs MERGED + 2 ROOT-CAUSE LEARNINGS (read FIRST)
+
+This Claude bio-driver session shipped **6 PRs to main** against #2535, each cross-family (DeepSeek) reviewed:
+- **#2561** Stage-0 prevention gates (validators: check_wiki_subject, check_discovery_integrity,
+  check_citation_resolution, check_wiki_verify_markers + lint_seminar_quality wiki-scan). NOT yet wired
+  BLOCKING in CI (would redden main until the known defects clear).
+- **#2564** 3 fabricated-identity plans rebuilt: berta-rapoport (doctor→**first woman sea-captain**),
+  klavdiya-latysheva (pilot→**mathematician**), valentyna-radzymovska (Terror-execution myth→**emigrated,
+  died USA 1953**). DeepSeek caught + I fixed a ghost `connects_to: mykhailo-kravchuk`.
+- **#2565** 5 Розстріляне-відродження wikis rebuilt from Kulish content-dups (zerov, petrytskyi,
+  yohansen, kosynka, pidmohylnyi) — real 1841–2861w sourced articles.
+- **#2566** dossiers + **enriched discovery** for the 4 source-starved figures (slisarenko, falkivskyi,
+  pluzhnyk, shkurupii) + new shkurupii dossier. All SHIP.
+- **#2567** mariia-voiakovska rebuilt (Vienna fabrication → **Підгайчики/Галичина 1868, Вояківська**).
+- **#2568** decolonization + factual: Синопсис-inversion ×2 (knyahynia-olha, volodymyr-monomakh) +
+  Mozart-Bologna myth demoted ×2 (berezovskyy, bortnyanskyy) + date fixes.
+
+### TWO ROOT-CAUSE LEARNINGS (do NOT re-derive)
+1. **`compile.py --writer claude` is BROKEN for wikis** — it emits chat-narration ("Done. Here's what I
+   did…") instead of article text, and compile.py writes that to the `.md`. **USE `--writer gpt-5.5`
+   (codex) for ALL wiki compiles** (clean articles). claude is fine for PLANS / DOSSIERS / agent
+   dispatches (Stage 2 + the dossier/plan rebuilds all worked). **Seat split: codex=wikis,
+   claude=plans+dossiers, deepseek=review.**
+2. **codex hedges thin-source DEATH dates with `<!-- VERIFY -->` → the #2561 check_wiki_verify_markers
+   gate correctly BLOCKS the write (rc=1), leaving the old broken wiki.** This is why the **4 wikis
+   (slisarenko, falkivskyi, pluzhnyk, shkurupii) are DEFERRED** — their dossiers+discovery are correct
+   on main (#2566) but the recompile fails on the hedge. FIX: add an authoritative ЕІУ/encyclopedic
+   death-date source chunk to each discovery so the date is un-hedgeable, then `compile.py
+   --writer gpt-5.5 --force` → verify H1 → commit.
+
+### DEFERRED FOLLOW-UPS (resume queue, priority order)
+- **(P0) 4 deferred wikis** — resolve the death-date hedge (above) → recompile (codex) → verify → PR →
+  DeepSeek → merge. DeepSeek-verified dates: slisarenko **3 Nov 1937 Сандармох** · falkivskyi
+  **16 Dec 1934 Київ** · pluzhnyk **2 Feb 1936 Соловки** · shkurupii **8 Dec 1937 Ленінград** (a
+  SEPARATE execution from the Sandarmokh batch — do not conflate). shkurupii name = **Ґео** (ґ).
+- **petro-veskliaov.yaml → petro-vesklyarov.yaml** filename rename (internal `slug:` already correct, content OK).
+- **wiki/index.md regen** — excluded from #2565 (stale worktree copy at 1686); run `compile.py --update-index` on main.
+- **107 mechanical wiki-path remaps** (cheap-wins) — via the apply-plan-fixes versioning flow (`.bak`+bump).
+- Remaining #2535 audit backlog (rest of 30 BLOCK / 82 FIX) + Phase-4 wikis bio-181..310.
+
+### SEAT + BILLING (user 2026-06-02)
+- **June-15 cliff**: `claude -p` (all `delegate --agent claude`) moves OFF subscription onto a metered
+  Agent SDK credit at full API rates; interactive Claude stays on subscription. → **front-load claude
+  NOW** (pre-cliff, ~61% weekly used). User authorized **3× claude seats — USE THEM**. Do NOT build a
+  TOS-gray `-p` workaround.
+- Fleet that worked this session: **3× claude** (plans/dossiers, parallel) + **1 codex** (wikis,
+  `--writer gpt-5.5`) + **deepseek** off-seat (cross-review ~160–230s, reliable, not quota-bound).
+  gemini = `ab ask-gemini` only; cursor dead until #2549.
+- **DeepSeek can FALSE-POSITIVE ghost slugs** (it flagged kateryna-hrushevska as ghost, but it EXISTS on
+  main — `git ls-tree` confirms). ALWAYS deterministically verify a reviewer's ghost-slug finding before acting.
+
+*main observed at `6a4a6e42b6` after this session's 6 merges.*
+
+---
+
 ## ▶▶ CURRENT SESSION STATE (2026-06-02) — EXISTING-180 AUDIT COMPLETE + REMEDIATION IN FLIGHT (#2535)
 
 **THIS is the live workstream. Read this block first.** Per user direction: audit + uplift the EXISTING
