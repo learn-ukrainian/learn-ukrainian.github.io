@@ -64,7 +64,8 @@
 ship (advisory VERIFY markers as review TODOs), plus authoritative ЕІУ/IEU spine chunks, an opt-in pipeline
 flag, a subject-gate ґ/г fix, and this handoff. The gate blocker was bigger than the prior handoff assumed;
 I decided option (C) and executed it. 0 dispatches fired (all inline diagnosis + WebFetch + local codex
-compiles via `--writer gpt-5.5`). Awaiting DeepSeek cross-family review + merge.**
+compiles via `--writer gpt-5.5`). DeepSeek cross-family review DONE: 3 SHIP + 1 FIX (slisarenko
+«найвищу кару»→«смертну кару», applied). **PR #2574 is review-clean + CI-green + MERGE-READY.**
 
 ### What the prior handoff got wrong about the 4 deferred wikis
 The prior (PM) block said the fix was "add an authoritative ЕІУ/encyclopedic **death-date** chunk so the
@@ -131,8 +132,15 @@ known-wrong wiki its failure mode is perverse (it preserves the worse artifact).
    and caught up many stale #2565 titles; run `compile.py --update-index` on main once these land.
 
 ### NEXT ACTION ON RESUME
-1. DeepSeek-pro cross-family review of the 4 wikis (claude/codex writer → deepseek reviewer); apply nits; merge PR #2574.
-2. Then pursue follow-up #1 (prompt relax) to cut marker counts on future bio recompiles + Phase-4 (bio-181..310).
+1. **MERGE PR #2574** — DeepSeek cross-family review DONE (3 SHIP + 1 FIX applied), CI green, 74 wiki tests
+   pass. #M-4 note: DeepSeek tagged «найвищу кару» a Russianism at confidence 1.0, but my independent
+   `check_russian_shadow` showed the proposed «смертну кару» scores IDENTICALLY (1.0) — the tool flags the
+   accusative «кару» morphology, not «найвища». Applied the change anyway as a clarity/decolonization win
+   (names the death sentence plainly vs the Soviet «найвища кара» euphemism), not as a confirmed Russianism.
+   (PR carries shared wiki-pipeline infra beyond the bio-content merge-grant scope — orchestrator/human does
+   the literal main-merge per the driver boundary.)
+2. After merge: `compile.py --update-index` on main (index regen, drops nothing). Then pursue follow-up #1
+   (relax `compile_article.md` so the writer flags only contestable claims → cut marker counts) + Phase-4 (bio-181..310).
 
 ---
 
