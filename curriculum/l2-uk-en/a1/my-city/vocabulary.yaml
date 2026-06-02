@@ -1,0 +1,176 @@
+- word: місто
+  translation: city; town
+  pos: noun
+  example: "Моє місто — Київ."
+- word: вулиця
+  translation: street
+  pos: noun
+  example: "Аптека на вулиці Шевченка."
+- word: центр
+  translation: center; downtown
+  pos: noun
+  example: "Бібліотека в центрі."
+- word: парк
+  translation: park
+  pos: noun
+  example: "Парк близько."
+- word: дім
+  translation: home
+  pos: noun
+  example: "Біля дому є магазин."
+- word: будинок
+  translation: building; house
+  pos: noun
+  example: "Це мій будинок."
+- word: школа
+  translation: school
+  pos: noun
+  example: "Школа далеко."
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Я купую хліб у магазині."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "Я купую ліки в аптеці."
+- word: бібліотека
+  translation: library
+  pos: noun
+  example: "Я читаю у бібліотеці."
+- word: лікарня
+  translation: hospital
+  pos: noun
+  example: "Лікар працює у лікарні."
+- word: супермаркет
+  translation: supermarket
+  pos: noun
+  example: "Мама в супермаркеті."
+- word: ресторан
+  translation: restaurant
+  pos: noun
+  example: "Ми вечеряємо у ресторані."
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Друзі п'ють каву в кафе."
+- word: банк
+  translation: bank
+  pos: noun
+  example: "Тато у банку."
+- word: пошта
+  translation: post office
+  pos: noun
+  example: "Я на пошті."
+- word: вокзал
+  translation: train station
+  pos: noun
+  example: "Вона на вокзалі."
+- word: готель
+  translation: hotel
+  pos: noun
+  example: "Турист у готелі."
+- word: музей
+  translation: museum
+  pos: noun
+  example: "Учні в музеї."
+- word: театр
+  translation: theater
+  pos: noun
+  example: "Актор у театрі."
+- word: кінотеатр
+  translation: movie theater
+  pos: noun
+  example: "Ми в кінотеатрі."
+- word: церква
+  translation: church
+  pos: noun
+  example: "Церква біля площі."
+- word: стадіон
+  translation: stadium
+  pos: noun
+  example: "Матч на стадіоні."
+- word: університет
+  translation: university
+  pos: noun
+  example: "Бібліотека біля університету."
+- word: площа
+  translation: square
+  pos: noun
+  example: "Пошта на площі."
+- word: зупинка
+  translation: stop; station stop
+  pos: noun
+  example: "Зупинка біля дому."
+- word: транспорт
+  translation: transport
+  pos: noun
+  example: "Транспорт у місті."
+- word: метро
+  translation: metro; subway
+  pos: noun
+  example: "Станція метро близько."
+- word: тут
+  translation: here
+  pos: adverb
+  example: "Магазин тут."
+- word: там
+  translation: there
+  pos: adverb
+  example: "Парк там."
+- word: далеко
+  translation: far
+  pos: adverb
+  example: "Школа далеко."
+- word: близько
+  translation: near; close
+  pos: adverb
+  example: "Кафе близько."
+- word: біля
+  translation: near; by
+  pos: preposition
+  example: "Бібліотека біля парку."
+- word: праворуч
+  translation: to the right
+  pos: adverb
+  example: "Аптека праворуч."
+- word: ліворуч
+  translation: to the left
+  pos: adverb
+  example: "Музей ліворуч."
+- word: прямо
+  translation: straight ahead
+  pos: adverb
+  example: "Ідіть прямо."
+- word: лікар
+  translation: doctor
+  pos: noun
+  example: "Лікар у лікарні."
+- word: архітектор
+  translation: architect
+  pos: noun
+  example: "Архітектор у місті."
+- word: кухар
+  translation: cook; chef
+  pos: noun
+  example: "Кухар у ресторані."
+- word: менеджер
+  translation: manager
+  pos: noun
+  example: "Менеджер в офісі."
+- word: банкір
+  translation: banker
+  pos: noun
+  example: "Банкір у банку."
+- word: офіціант
+  translation: waiter
+  pos: noun
+  example: "Офіціант у кафе."
+- word: продавець
+  translation: salesperson
+  pos: noun
+  example: "Продавець у магазині."
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "Гривня — валюта України."
