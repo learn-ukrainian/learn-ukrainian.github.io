@@ -53,7 +53,7 @@
 - `1658` — **Suppression of Pushkar-Barabash revolt**, a bloody internal crisis that weakened his legitimacy. [T1: IEU; T3]
 - `16 September 1658` — **Hadiach Treaty**, projecting the Grand Duchy of Rus' as a third component of the Commonwealth. [T1: IEU; T2: NBUV; treaty text]
 - `1658-1659` — **Cossack-Muscovite war** after Hadiach. [T1: IEU; T3]
-- `8 July 1659` — **Konotop victory** over Muscovite forces with Crimean/Polish support; a tactical triumph without durable political settlement. [T1: IEU; T3]
+- `29 June (O.S.) = 9 July (N.S.) 1659` — **Konotop victory** over Muscovite forces with Crimean/Polish support (the decisive Sosnivka cavalry battle; the engagement spans 28–29 June O.S.); a tactical triumph without durable political settlement. [T3: uk.wikipedia — «9 липня 1659»; T1: IEU] **[Source/calendar note, flagged not smoothed: uk.wikipedia dates the decisive day 29.06 O.S. = 9.07 N.S.; an "8 July" form counts from 28.06 O.S.]**
 - `September 1659` — resignation/flight after loss of support; Yurii Khmelnytskyy rises. [T1: IEU]
 - `1664` — execution by Polish authorities; a tragic end by the side he had tried to use as counterweight to Moscow. [T1: IEU; T3]
 

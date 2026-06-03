@@ -65,7 +65,7 @@ Sirko left no literary corpus; "works" means campaigns, offices, and preserved l
 
 > "липня 12 числа ... оволоділи єсми ними"
 
-Context: a rare first-person military report, useful for showing real correspondence rather than folklore. `verify_quote(author="Сірко")` returned **matched: false, best_confidence: 0.0, matched_lines: []**. Use only with source-context citation; do not claim corpus verification.
+Context: a rare first-person military report, useful for showing real correspondence rather than folklore. `verify_quote(author="Сірко")` returned **matched: false, best_confidence: 0.0, matched_lines: []** — the literary corpus simply lacks this administrative document; the full letter text **is attested in uk.wikipedia (§ Чигиринські походи)**, so this is corroborated source-tradition, not an unsourced claim. Cite with source-context; do not claim *corpus* verification.
 
 **Quote 2 — Velychko on Sirko's death:**
 

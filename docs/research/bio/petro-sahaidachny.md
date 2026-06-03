@@ -67,7 +67,7 @@ Sahaidachny was not a writer with a stable corpus; "works" here means political,
 
 **Excerpt 1 — Yakiv Sobieski on Khotyn, as transmitted in Ukrainian source tradition:**
 
-> "Справжніми переможцями під Хотином ... були козаки."
+> "Справжніми переможцями під Хотином ... і рятівниками Речі Посполитої були козаки."
 
 Context: this supports the lesson's claim that Cossacks were not decorative auxiliaries at Khotyn. `verify_quote(author="Собеський")` returned **matched: false, best_confidence: 0.0, matched_lines: []**; use as an attributed source-tradition excerpt, not corpus-attested quotation.
 

@@ -66,7 +66,7 @@
 
 > "нѣтъ теперь болѣе Сѣчи Запорожской"
 
-Context: the empire declared the Sich politically nonexistent. `verify_quote(author="Катерина II")` returned **matched: false, best_confidence: 0.0, matched_lines: []**.
+Context: the empire declared the Sich politically nonexistent. `verify_quote(author="Катерина II")` returned **matched: false, best_confidence: 0.0, matched_lines: []** — the literary corpus holds no imperial decrees; the manifesto text «…що нѣтъ теперь болѣе Сѣчи Запорожской…» **is attested in uk.wikipedia** citing the 3 Aug 1775 manifesto, so it is corroborated source-tradition.
 
 **Excerpt 2 — Solovki imprisonment order language:**
 
