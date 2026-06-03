@@ -1,0 +1,160 @@
+- word: наказовий спосіб
+  translation: imperative mood; command form
+  pos: noun phrase
+  example: "Наказовий спосіб допомагає просити про дію."
+- word: будь ласка
+  translation: please
+  pos: chunk
+  example: "Читайте, будь ласка."
+- word: читати
+  translation: to read
+  pos: verb
+  example: "Я хочу читати текст."
+- word: читай
+  translation: read! (ti)
+  pos: command
+  example: "Олено, читай."
+- word: читайте
+  translation: read! (vy; polite or plural)
+  pos: command
+  example: "Читайте текст, будь ласка."
+- word: писати
+  translation: to write
+  pos: verb
+  example: "Я люблю писати."
+- word: пиши
+  translation: write! (ti)
+  pos: command
+  example: "Пиши речення."
+- word: пишіть
+  translation: write! (vy; polite or plural)
+  pos: command
+  example: "Пишіть речення."
+- word: слухати
+  translation: to listen
+  pos: verb
+  example: "Я хочу слухати."
+- word: слухай
+  translation: listen! (ti)
+  pos: command
+  example: "Тарасе, слухай."
+- word: слухайте
+  translation: listen! (vy; polite or plural)
+  pos: command
+  example: "Слухайте мене."
+- word: дивитися
+  translation: to look; to watch
+  pos: verb
+  example: "Я хочу дивитися."
+- word: дивись
+  translation: look! (ti)
+  pos: command
+  example: "Дивись сюди."
+- word: дивіться
+  translation: look! (vy; polite or plural)
+  pos: command
+  example: "Дивіться сюди."
+- word: говорити
+  translation: to speak
+  pos: verb
+  example: "Я хочу говорити українською."
+- word: говори
+  translation: speak! (ti)
+  pos: command
+  example: "Говори повільно."
+- word: говоріть
+  translation: speak! (vy; polite or plural)
+  pos: command
+  example: "Говоріть повільно, будь ласка."
+- word: дати
+  translation: to give
+  pos: verb
+  example: "Я хочу дати меню."
+- word: дай
+  translation: give! (ti)
+  pos: command
+  example: "Дай меню, будь ласка."
+- word: дайте
+  translation: give! (vy; polite or plural)
+  pos: command
+  example: "Дайте рахунок, будь ласка."
+- word: сказати
+  translation: to say; to tell
+  pos: verb
+  example: "Я хочу сказати."
+- word: скажи
+  translation: say!; tell! (ti)
+  pos: command
+  example: "Скажи, що ти хочеш."
+- word: скажіть
+  translation: say!; tell! (vy; polite or plural)
+  pos: command
+  example: "Скажіть ще раз, будь ласка."
+- word: іти
+  translation: to go
+  pos: verb
+  example: "Я хочу іти."
+- word: іди
+  translation: go! (ti)
+  pos: command
+  example: "Іди додому."
+- word: ідіть
+  translation: go! (vy; polite or plural)
+  pos: command
+  example: "Ідіть сюди."
+- word: відкрити
+  translation: to open
+  pos: verb
+  example: "Я хочу відкрити двері."
+- word: відкрий
+  translation: open! (ti)
+  pos: command
+  example: "Відкрий двері."
+- word: відкрийте
+  translation: open! (vy; polite or plural)
+  pos: command
+  example: "Відкрийте підручники."
+- word: сісти
+  translation: to sit down
+  pos: verb
+  example: "Я хочу сісти."
+- word: сядь
+  translation: sit down! (ti)
+  pos: command
+  example: "Сядь тут."
+- word: сядьте
+  translation: sit down! (vy; polite or plural)
+  pos: command
+  example: "Сядьте тут, будь ласка."
+- word: підручник
+  translation: textbook
+  pos: noun
+  example: "Відкрийте підручник."
+- word: сторінка
+  translation: page
+  pos: noun
+  example: "Сторінка двадцять три."
+- word: речення
+  translation: sentence
+  pos: noun
+  example: "Напишіть три речення."
+- word: м'яч
+  translation: ball
+  pos: noun
+  example: "Принеси м'яч."
+- word: конуси
+  translation: cones
+  pos: noun
+  example: "Розстав конуси."
+- word: сітка
+  translation: net
+  pos: noun
+  example: "Натягни сітку."
+- word: рушники
+  translation: towels
+  pos: noun
+  example: "Поклади рушники на лавку."
+- word: лавка
+  translation: bench
+  pos: noun
+  example: "Рушники на лавці."
