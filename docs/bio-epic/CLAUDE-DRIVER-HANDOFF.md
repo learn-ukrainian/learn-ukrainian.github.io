@@ -144,16 +144,27 @@ Policy: OPEN dossier PRs, do NOT self-merge (orchestrator promotes; dossiers ind
 "Нестор"). FIXES APPLIED + pushed: monomakh ×3 (#2597), shevchenko arrest-date note (#2596). → batch
 brief LESSON 4 added: never claim a tool score you didn't get.
 
-**WAVE-2 DONE (12 dossiers, PRs #2598 batchB + #2599 batchA) — DeepSeek review IN FLIGHT (`review-wave2-12`).**
-batchA: mariya-pavlova, volodymyr-samiilenko, mykola-vasylenko, oleksandr-hrekiv, oleksandr-bohomazov,
-mariia-prymachenko. batchB: kateryna-yushchenko, mykola-pohribnyi, yevhen-sverstiuk, dmytro-pavlychko,
-ivan-mykolaichuk, vitaly-portnikov. **HARVEST: read `review-wave2-12.result` → apply fixes → leave open.**
+**WAVE-2 DONE + REVIEWED — ALL 12 SHIP (PRs #2598 batchB + #2599 batchA).** DeepSeek `review-wave2-12`:
+12/12 SHIP, zero dossier defects; every per-figure trap handled (prymachenko both-sides surname;
+pavlychko unverified smear omitted; pohribnyi wrong dates caught). No fixes needed.
 
-**IN FLIGHT (2026-06-03):**
-- `review-wave2-12` (deepseek) — cross-review of the 12 wave-2 dossiers.
-- `bio-dossier-wave3-finishP1` (claude) — kuzma-skryabin, pavlo-sheremet, yuriy-ruf (⚠person-substitution
-  vs Артур Дронь), oleksandra-matviichuk (living, Nobel 2022). **Finishes P1 (last 4; petro-veskliaov
-  deferred for slug rename).** HARVEST: diff-scope + DeepSeek review + apply fixes → PR open.
+**WAVE-3 DONE — P1 COMPLETE (PR #2600: kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk).**
+DeepSeek `review-wave3-4` IN FLIGHT (LAST unharvested item) — HARVEST: read `batch_state/tasks/review-wave3-4.result`,
+apply any fix (esp. CONFIRM yuriy-ruf is the real poet/soldier, NOT Артур Дронь), leave PR open.
+
+**P1 STATUS: 21/22 DONE** (5 wave-1 + 12 wave-2 + 4 wave-3). Only `petro-veskliaov` deferred (do its
+slug rename →`petro-vesklyarov` first, then dossier).
+
+**⚑ NEW FOLLOW-UP — 5 PLAN-LEVEL errors the wave-2 dossiers caught (fix via plan-versioning flow `.bak`+bump;
+NOT dossier defects):** (1) `pohribnyi` dates 1931-2003→1920-05-13..1994-03-31; (2) `vitaly-portnikov`
+patronymic Янович→Едуардович; (3) `oleksandr-bohomazov` birthplace Ямпіль→Янків Ріг/Іванівка + «Пилярі»
+1914→1927; (4) `mykola-vasylenko` case СВУ→«Київський обласний центр дій» (1923-24); (5) `dmytro-pavlychko`
+remove «жидівська мафія» attribution (unsourced) → replace w/ documented controversies.
+
+**OPEN PRs (all awaiting orchestrator promotion):** #2593 (prompt+handoff) · #2595 leontovych · #2596
+shevchenko · #2597 olha/monomakh/berezovskyy · #2598 wave2-B (6) · #2599 wave2-A (6) · #2600 wave3 (4).
+
+**IN FLIGHT (2026-06-03):** `review-wave3-4` (deepseek) — only remaining; harvest next.
 
 **NEXT (resume): harvest wave-2 → DeepSeek review → apply fixes → leave PRs open. Then P1 remainder
 (kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk + petro-veskliaov-after-rename) →
