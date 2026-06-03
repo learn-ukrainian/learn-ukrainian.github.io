@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (IEU directly fetched; ЕУ/«Енциклопедія українознавства» directly read in corpus; uk.wikipedia cross-checked; Tier-4 Крип'якевич/Попович/Кониський from corpus)
 - [x] Oppression mechanism is specific (named censorship regime that cut off her Ukrainian milieu + contested-authorship diminishment + Russification) — handled honestly per the ⚠
-- [x] ≥2 primary-source quotes (2 from «Інститутка»; **honestly flagged as NOT corpus-verified** — `verify_quote` = 0.0; her texts are not in `ukrlib`; sourced to e-text. Plus 1 corpus-verified tribute *about* her.)
+- [x] ≥2 primary-source quotes (2 from «Інститутка», **corpus-verified at 1.0** in `ukrlib-vovchok`; plus 1 corpus-verified tribute *about* her.)
 - [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -63,19 +63,19 @@ Selected canon, chronological (Tier 1 dates; variance flagged):
 
 ## 4. Primary-source quotes (≥2 required)
 
-> **Honest tool note (#M-4):** Marko Vovchok's own texts are **not ingested** in the project `ukrlib` `verify_quote` corpus — author "Марко Вовчок" returned **best_confidence 0.0, no matched lines**. The two primary quotes below are therefore **not corpus-scored**; their wording is from public e-text editions (cited), and the gap is recorded in §10. (The corpus *does* hold a verifiable tribute *about* her — Quote 3 — and rich Tier-4 commentary.)
+> **Tool note (#M-4):** «Інститутка» **is ingested** in the project `verify_quote` corpus as `ukrlib-vovchok`; both primary quotes below **verify at confidence 1.0** (re-checked this pass — an earlier query by the bare author string "Марко Вовчок" missed the corpus and wrongly returned 0.0; the corrected lookup matches verbatim). The corpus also holds a verifiable tribute *about* her (Quote 3) plus rich Tier-4 commentary.
 
 **Quote 1 — opening of «Інститутка» (pub. 1862), the serf narrator Устина:**
 
 > «Люди дивуються, що я весела: надійсь, горя-біди не знала.»
 
-The deceptively cheerful first line of Ukraine's first social novella — irony that the rest of the text unfolds into the reality of serf bondage. [Primary: УкрЛіб e-text; NOT corpus-verified — see §10]
+The deceptively cheerful first line of Ukraine's first social novella — irony that the rest of the text unfolds into the reality of serf bondage. [Primary: «Інститутка», corpus `ukrlib-vovchok` — `verify_quote` = 1.0]
 
 **Quote 2 — Устина on freedom, near the close of «Інститутка»:**
 
 > «Поздоров його, Мати Божа: я вільна! І ходжу, і говорю, і дивлюсь — байдуже мені, що й є ті пани у світі!»
 
-The anti-serfdom climax in a woman's first-person voice — freedom felt in the body (walking, speaking, looking). Pedagogically central to why Shevchenko crowned her. [Primary: УкрЛіб e-text; NOT corpus-verified — see §10]
+The anti-serfdom climax in a woman's first-person voice — freedom felt in the body (walking, speaking, looking). Pedagogically central to why Shevchenko crowned her. [Primary: «Інститутка», corpus `ukrlib-vovchok` — `verify_quote` = 1.0]
 
 **Quote 3 (corpus-verified — a tribute *about* her, by Yurii Fedkovych):**
 
@@ -161,9 +161,9 @@ Found in the project corpus (Крип'якевич, *Історія україн
 - fr.wikipedia "Maroussia" + Médiathèque de Sèvres — the **«Le Temps» feuilleton 15.12.1875–09.01.1876** and 1878 book dates (§1 date fix), corroborating IEU's 1878.
 - УкрЛіб (ukrlib.com.ua), "Інститутка" full text — verbatim §4 quotes.
 
-**Primary-source documents accessed (in transcription):** «Інститутка» (openings/close, §4) via public e-text; **not** corpus-scored.
+**Primary-source documents accessed:** «Інститутка» (openings/close, §4) — **corpus-verified at 1.0 in `ukrlib-vovchok`** (cross-checked against the public e-text).
 
-**Honest gaps:** Her own texts are absent from the `ukrlib` `verify_quote` corpus, so §4 Quotes 1–2 carry e-text provenance, not a confidence score (`verify_quote` = 0.0). Birth year (1833/1834) and «Інститутка»'s exact first-publication year (1860/1862) are genuinely variant across sources and flagged, not resolved. The authorship of «Народні оповідання» (§6) is an open scholarly question this dossier records rather than settles.
+**Honest gaps:** Birth year (1833/1834) and «Інститутка»'s exact first-publication year (1860/1862) are genuinely variant across sources and flagged, not resolved. (§4 Quotes 1–2 are corpus-verified at 1.0 in `ukrlib-vovchok` — an earlier author-string query miss wrongly suggested her texts were absent; corrected.) The authorship of «Народні оповідання» (§6) is an open scholarly question this dossier records rather than settles.
 
 ---
 

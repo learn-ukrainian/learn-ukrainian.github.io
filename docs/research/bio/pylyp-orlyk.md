@@ -24,7 +24,7 @@
 - **Full name (UA, canonical):** Пилип Степанович Орлик; of a Czech-Polish baronial line settled in the Велике князівство Литовське. [T1: IEU — "Orlyk, Pylyp"; T3: uk.wikipedia]
 - **Pseudonyms / aliases:** none. Russian-imperial transliteration (forbidden in body text, listed only in §8): Филипп Орлик; the propaganda framing «зрадник/мазепинець».
 - **Born:** **11 October 1672** (21 October N.S.) | село **Косута**, Ошмянський (Ашмянський) повіт, Віленське воєводство, Велике князівство Литовське (нині Білорусь). [T1: IEU — "b 11 October 1672 in Kosuta, Ashmiany county, Wilno voivodeship, Lithuania"; T3: uk.wikipedia]
-- **Died:** **26 May 1742** (aged 69) | **Ясси (Iași)**, Молдавія (Ottoman protectorate; нині Румунія) | in emigration. [T1: IEU — "d 26 May 1742 in Iaşi, Moldavia"]
+- **Died:** **24 May 1742** (aged 69) | **Ясси (Iași)**, Молдавія (Ottoman protectorate; нині Румунія) | in emigration. **[Source disagreement, flagged not smoothed: uk.wikipedia gives 24 травня 1742 (consensus UA dating, adopted as the lead); T1 IEU gives "26 May 1742" — recorded, not adopted.]**
 - **Education:** the Jesuit college in **Вільно (Vilnius)** and the **Києво-Могилянський колегіум** (until 1694) — a Latinate Baroque education that shaped the Constitution's legal-humanist idiom. [T1: IEU]
 - **Office:** **Генеральний писар** (general chancellor) under Mazepa and his closest aide; after Mazepa's death (1709), **elected Hetman in exile at Бендери on 5 April 1710** (16 April N.S.). Hetman-in-exile until his death (1710–1742). [T1: IEU — "appointed Orlyk as general chancellor… on 16 April 1710 Orlyk was elected hetman… in Bendery"; T3: uk.wikipedia]
 
