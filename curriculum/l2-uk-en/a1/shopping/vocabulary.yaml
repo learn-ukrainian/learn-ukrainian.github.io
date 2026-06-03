@@ -1,0 +1,200 @@
+- word: покупки
+  translation: shopping
+  pos: noun
+  example: "Сьогодні у нас покупки."
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Магазин поруч."
+- word: супермаркет
+  translation: supermarket
+  pos: noun
+  example: "Молоко в супермаркеті."
+- word: ринок
+  translation: market
+  pos: noun
+  example: "Яблука на ринку."
+- word: крамниця
+  translation: small shop
+  pos: noun
+  example: "Це маленька крамниця."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "Аптека там."
+- word: м'ясний відділ
+  translation: meat department
+  pos: phrase
+  example: "М'ясо в м'ясному відділі."
+- word: молочний відділ
+  translation: dairy department
+  pos: phrase
+  example: "Сир у молочному відділі."
+- word: книгарня
+  translation: bookshop
+  pos: noun
+  example: "Книжка в книгарні."
+- word: продавчиня
+  translation: saleswoman
+  pos: noun
+  example: "Продавчиня каже ціну."
+- word: касирка
+  translation: cashier
+  pos: noun
+  example: "Касирка каже: З вас сто гривень."
+- word: ціна
+  translation: price
+  pos: noun
+  example: "Ціна висока."
+- word: коштувати
+  translation: to cost
+  pos: verb
+  example: "Скільки коштує сир?"
+- word: скільки
+  translation: how much; how many
+  pos: adverb
+  example: "Скільки коштує хліб?"
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "Одна гривня."
+- word: гривні
+  translation: hryvnias
+  pos: noun
+  example: "Тридцять дві гривні."
+- word: гривень
+  translation: hryvnias
+  pos: noun
+  example: "Сто гривень."
+- word: грн
+  translation: UAH; hryvnia abbreviation
+  pos: abbreviation
+  example: "Ціна: 40 грн."
+- word: картка
+  translation: card
+  pos: noun
+  example: "Можна карткою?"
+- word: готівка
+  translation: cash
+  pos: noun
+  example: "Можна готівкою?"
+- word: карткою
+  translation: by card
+  pos: chunk
+  example: "Карткою, будь ласка."
+- word: готівкою
+  translation: in cash
+  pos: chunk
+  example: "Готівкою, будь ласка."
+- word: купити
+  translation: to buy
+  pos: verb
+  example: "Я хочу купити хліб."
+- word: купувати
+  translation: to buy; to be buying
+  pos: verb
+  example: "Ми купуємо молоко."
+- word: платити
+  translation: to pay
+  pos: verb
+  example: "Я плачу карткою."
+- word: заплатити
+  translation: to pay
+  pos: verb
+  example: "Я хочу заплатити."
+- word: розрахуватися
+  translation: to pay; to settle up
+  pos: verb
+  example: "Можна розрахуватися карткою?"
+- word: кілограм
+  translation: kilogram
+  pos: noun
+  example: "Кілограм яблук."
+- word: літр
+  translation: liter
+  pos: noun
+  example: "Літр молока."
+- word: пляшка
+  translation: bottle
+  pos: noun
+  example: "Пляшка води."
+- word: пачка
+  translation: pack
+  pos: noun
+  example: "Пачка чаю."
+- word: буханка
+  translation: loaf
+  pos: noun
+  example: "Буханка хліба."
+- word: один кілограм яблук
+  translation: one kilogram of apples
+  pos: chunk
+  example: "Дайте один кілограм яблук."
+- word: два кілограми помідорів
+  translation: two kilograms of tomatoes
+  pos: chunk
+  example: "Дайте два кілограми помідорів."
+- word: літр молока
+  translation: a liter of milk
+  pos: chunk
+  example: "Дайте літр молока."
+- word: пляшка води
+  translation: a bottle of water
+  pos: chunk
+  example: "Пляшка води коштує десять гривень."
+- word: дорого
+  translation: expensive
+  pos: adverb
+  example: "Дорого!"
+- word: дешево
+  translation: cheap
+  pos: adverb
+  example: "Дешево!"
+- word: дешевший
+  translation: cheaper
+  pos: adjective
+  example: "А є дешевший сир?"
+- word: дешевша
+  translation: cheaper
+  pos: adjective
+  example: "А є дешевша вода?"
+- word: знижка
+  translation: discount
+  pos: noun
+  example: "Є знижка?"
+- word: чек
+  translation: receipt
+  pos: noun
+  example: "Можна чек?"
+- word: купюра
+  translation: banknote
+  pos: noun
+  example: "Це купюра."
+- word: пін-код
+  translation: PIN code
+  pos: noun
+  example: "Введіть пін-код."
+- word: бюджет
+  translation: budget
+  pos: noun
+  example: "Це мій бюджет."
+- word: безкоштовно
+  translation: free of charge
+  pos: adverb
+  example: "Це безкоштовно."
+- word: безготівковий розрахунок
+  translation: cashless payment
+  pos: phrase
+  example: "Картка - це безготівковий розрахунок."
+- word: готівковий розрахунок
+  translation: cash payment
+  pos: phrase
+  example: "Готівка - це готівковий розрахунок."
+- word: винен
+  translation: owing
+  pos: adjective
+  example: "Скільки я вам винен?"
+- word: приміряти
+  translation: to try on
+  pos: verb
+  example: "Я хочу приміряти пальто."
