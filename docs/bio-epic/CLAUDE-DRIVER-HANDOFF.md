@@ -58,6 +58,38 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, LATE NIGHT) — +8 DOSSIERS MERGED; BOTH WRITER LANES HIT LIMITS; FLEET PAUSED (read FIRST)
+
+**Supersedes the NIGHT block's "fire next wave (2 claude + 1 codex)" — that cadence overran the limits this segment. New cadence below.**
+
+**STATE:** origin/main `93c04025ff` · `docs/research/bio/` = **227 dossiers** (was 219). Deterministic queue (plans−dossiers) = **84** (effective ~82: `levko-lukyanenko` plan already has the variant dossier `levko-lukianenko.md`; `petro-veskliaov` deferred pending slug rename →`petro-vesklyarov`).
+
+**MERGED THIS SEGMENT (8 dossiers, all DeepSeek-SHIP `review-bio-waveK-salvage`, zero fixes, CI green, scope-clean):**
+- **#2669 Wave K (codex gpt-5.5):** volodymyr-velykii · kniaz-yaroslav-mudryi · kniaz-sviatoslav · roman-mstyslavych · danylo-halytskyi · lev-danylovych (Kyivan-Rus/Galicia-Volhynia rulers). Codex carried its Wave-H strength: tiered `[T1:IEU]/[T2:search_text]` cites, honest `verify_quote` scores (danylo's Hrushevsky quote verified **0.9167**), Синопсис correctly named the imperial myth's *carrier* not a decolonial authority, every date-guard resolved (Lev d.~1301-not-1308; Mstislav-co-rule post-1024; father d.1170-not-1173).
+- **#2670 salvage (claude):** symon-petliura + lina-kostenko — the 2 fully-written dossiers rescued from the limit-killed claude waves (see lesson). Both SHIP; strong anti-hagiography + honest-gap discipline.
+
+**⚠⚠ DUAL-LIMIT LESSON (do NOT re-derive) — BOTH writer lanes hit limits in one session:**
+1. **claude 5h limit:** firing **2 parallel `--agent claude` dispatches (waves I+J) + the interactive driver seat** overran the rolling 5h window (user confirmed: *"we hit 5h limit"*). Both died `returncode 1`, `response_chars 0` at ~532s, having written only their FIRST dossier each (petliura, kostenko — salvaged into #2670). **POLICY: dispatched claude capped at 1 concurrent — NEVER 2. The interactive driver seat counts toward the 5h pool.**
+2. **codex rate_limited:** after the ~2.5h Wave K succeeded, Wave L immediately returned `status: rate_limited` / `stderr: "codex/gpt-5.5 rate limited: OpenAI Codex v0.136.0"` (no work written). Codex burned its budget on Wave K. (A `bio-p2-waveL-retry` diagnostic was fired to distinguish per-minute vs hard-cap.)
+3. **POLICY: when BOTH lanes are limited, PAUSE writers — do not thrash quota.** DeepSeek (off-seat, Hermes `-z` one-shot) is review-only — NOT an agentic writer (can't drive worktree→lint→commit→PR).
+
+**3RD-WRITER ASSESSMENT (user asked 2026-06-03 "one codex, one claude, and the third who? only if strong trusted"):** **No qualified 3rd strong-trusted agentic writer exists today.** codex+claude are the only two. gemini-3.1-pro = strong model but **dispatch-writer broken (#2454 SIGTERM @87s)** — only `ab ask-gemini` Q&A works; cursor = supplement-grade + **dead until #2549** (unmerged); deepseek/grok = Hermes one-shot (reviewers, not agentic writers); qwen excluded (cost); agy fabricates §7. **THE ONE UNLOCK = fix #2454** → gemini becomes the genuine 3rd agentic writer (it was the cross-family reviewer of record pre-DeepSeek). Pending user nod; note it ALSO needs a live agent lane to dispatch the fix.
+
+**FLEET (this segment, post-limits):** **1 codex** (separate quota, when not rate-limited) + **1 claude capped** (when 5h window clear) + **DeepSeek off-seat reviewer**. gemini = `ab ask-gemini` only; cursor dead.
+
+**RESERVED / QUEUED:**
+- **`roman-shukhevych`** — held for the single claude seat once the 5h window clears (the most NPOV-severe figure; claude handled the shukhevych family well before). Brief in `/tmp/brief-bio-p2-waveI.md` (figure 3, full Schutzmannschaft-201 / Volhynia-Motyka / Himka warnings).
+- **codex Wave L** (4 statehood: konovalets, bolbochan, mikhnovskyi, chykalenko) — brief `/tmp/brief-bio-p2-waveL.md`; pending codex reset (retry `bio-p2-waveL-retry` in flight).
+- **codex Wave M** (5 writers: zabuzhko, zhadan, andrukhovych, vynnychuk, shkliar) — derive from `/tmp/brief-bio-p2-waveJ.md` minus kostenko; pending codex reset.
+
+**2 PHASE-4 BACKFILL NOTES (advisory from DeepSeek — NOT dossier defects, fix at lesson/wiki build):**
+- `petliura`: lock the anti-pogrom order number/date (dossier cites наказ ч.131 26.08.1919 per Hunczak; corpus showed a different 17 Jun 1919 order) to the Hunczak edition used in the student module.
+- `danylo`: lock the exact Hrushevsky quote edition (full archaic line "на скільки він був сином минувшого, а не чоловіком будущини") before student-facing text.
+
+**NEXT ACTION ON RESUME:** when a writer lane recovers — fire Wave L (4 statehood) + Wave M (5 writers) on codex (1 seat, sequential) and `shukhevych` on the 1 claude seat; DeepSeek cross-review each (inline ONLY the new files); merge per grant once SHIP + CI green + scope-clean; recompute the self-correcting queue. If both lanes stay capped, hold and let quotas reset (don't thrash). Re-offer the #2454 fix to unlock gemini as the 3rd writer.
+
+---
+
 ## ▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, NIGHT) — P2 DOSSIER PRODUCTION RUNNING (48 merged, ~92 left) (read FIRST)
 
 **Supersedes the block below's "NEXT ACTION: fire P2 batch 1" — P2 waves 1–2 are DONE & merged.**
