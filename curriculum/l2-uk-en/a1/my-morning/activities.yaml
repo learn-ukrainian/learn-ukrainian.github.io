@@ -1,202 +1,294 @@
 - id: act-1
-  type: quiz
-  title: Ранковий діалог
-  instruction: Choose the best reply.
+  type: true-false
+  title: Hear the reflexive ending
+  instruction: Decide whether each pronunciation note is safe for this lesson.
   items:
-  - question: Коли ти прокидаєшся?
-    options:
-    - Я прокидаюся о сьомій.
-    - Я сніданок.
-    - Я робота.
-    answer: Я прокидаюся о сьомій.
-  - question: Що ти робиш потім?
-    options:
-    - Вмиваюся і одягаюся.
-    - О восьмій.
-    - Доброго ранку.
-    answer: Вмиваюся і одягаюся.
+    - statement: In прокидаєшся, the written -шся is pronounced like [с':а].
+      answer: true
+      explanation: Say [прокидайес':а], not each written letter separately.
+    - statement: In одягається, the written -ться is pronounced like [ц':а].
+      answer: true
+      explanation: The final sounds merge smoothly.
+    - statement: Прокидаєшся should be pronounced [прокидайешся] letter by letter.
+      answer: false
+      explanation: Do not keep a separate [ш] sound here.
+    - statement: The spelling -ся can sound like [с':а].
+      answer: true
+      explanation: This is the soft final sound to recognize.
 - id: act-2
   type: fill-in
-  title: Додай -ся
-  instruction: Complete the morning forms.
+  title: Add the morning ending
+  instruction: Choose the complete -ся form that fits the person.
   items:
-  - sentence: Я вмиваю__.
-    answer: ся
-    options:
-    - ся
-    - ти
-    - є
-  - sentence: Ти одягаєш__.
-    answer: ся
-    options:
-    - ся
-    - ю
-    - є
-  - sentence: Він прокидаєть__.
-    answer: ся
-    options:
-    - ся
-    - ти
-    - ю
+    - sentence: Я ___ о сьомій.
+      answer: прокидаюся
+      options:
+        - прокидаюся
+        - прокидаєшся
+        - прокидається
+      explanation: Я uses -юся.
+    - sentence: Ти ___ рано?
+      answer: прокидаєшся
+      options:
+        - прокидаєшся
+        - прокидаюся
+        - прокидається
+      explanation: Ти uses -єшся.
+    - sentence: Вона ___ швидко.
+      answer: одягається
+      options:
+        - одягається
+        - одягаюся
+        - одягаєшся
+      explanation: Вона uses -ється.
+    - sentence: Я ___ у ванній.
+      answer: вмиваюся
+      options:
+        - вмиваюся
+        - вмиваєшся
+        - вмивається
+      explanation: Я uses -юся after the Group One stem.
+    - sentence: Ми ___ вдома.
+      answer: збираємося
+      options:
+        - збираємося
+        - збираєтеся
+        - збираються
+      explanation: Ми uses -ємося.
+    - sentence: Вони ___ о восьмій.
+      answer: прокидаються
+      options:
+        - прокидаються
+        - прокидаємося
+        - прокидаєтеся
+      explanation: Вони uses -ються.
 - id: act-3
-  type: observe
-  title: Письмо і вимова
-  instruction: Read the written form and the spoken target.
-  examples:
-  - прокидаєшся → [прокидайес':а]
-  - одягається → [одягайец':а]
-  - миюся → [с':а]
-  prompt: Which written ending gives [ц':а]?
+  type: quiz
+  title: Reflexive or regular
+  instruction: Choose the natural Ukrainian morning line.
+  items:
+    - prompt: I wash up in the morning.
+      options:
+        - text: Я вмиваюся вранці.
+          correct: true
+        - text: Я мию себе вранці.
+          correct: false
+        - text: Я вмиваю вранці.
+          correct: false
+      explanation: The routine action is Я вмиваюся.
+    - prompt: I have breakfast at home.
+      options:
+        - text: Я снідаю вдома.
+          correct: true
+        - text: Я снідаюся вдома.
+          correct: false
+        - text: Я сніданок вдома.
+          correct: false
+      explanation: Снідати is regular here; do not add -ся.
+    - prompt: I get dressed quickly.
+      options:
+        - text: Я швидко одягаюся.
+          correct: true
+        - text: Я швидко одягаю.
+          correct: false
+        - text: Я швидко одягатися.
+          correct: false
+      explanation: Use the present form одягаюся.
+    - prompt: I use a phone.
+      options:
+        - text: Я користуюся телефоном.
+          correct: true
+        - text: Я користуювася телефоном.
+          correct: false
+        - text: Я користую телефоном.
+          correct: false
+      explanation: Recognize користуватися -> користуюся.
 - id: act-4
   type: order
-  title: Мій ранок
-  instruction: Put the routine in a natural order.
+  title: Put the morning in order
+  instruction: Put the routine from first to last.
   items:
-  - Спочатку я прокидаюся.
-  - Потім я вмиваюся.
-  - Після цього я снідаю.
-  - Нарешті я йду на роботу.
+    - Спочатку я прокидаюся.
+    - Потім вмиваюся.
+    - Після цього одягаюся.
+    - Потім снідаю.
+    - Нарешті йду на роботу.
   correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-- type: fill-in
-  title: Форми ранку
-  instruction: Complete each sentence.
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+- id: act-5
+  type: fill-in
+  title: Finish the roommate dialogue
+  instruction: Choose the word or phrase that completes each line.
   items:
-  - sentence: Я ____ о сьомій.
-    answer: прокидаюся
-    options:
-    - прокидаюся
-    - прокидаєшся
-    - прокидається
-  - sentence: Ти ____ швидко.
-    answer: одягаєшся
-    options:
-    - одягаюся
-    - одягаєшся
-    - одягається
-  - sentence: Він ____ рано.
-    answer: прокидається
-    options:
-    - прокидаюся
-    - прокидаєшся
-    - прокидається
-  - sentence: Я ____ телефоном.
-    answer: користуюся
-    options:
-    - користуюся
-    - користуєшся
-    - користується
-  - sentence: Я ____ в дзеркало.
-    answer: дивлюся
-    options:
-    - дивлюся
-    - дивишся
-    - дивиться
-  - sentence: Нарешті я ____ на роботу.
-    answer: йду
-    options:
-    - йду
-    - йдеш
-    - йде
-- type: quiz
-  title: Зворотне чи ні
-  instruction: Choose the natural Ukrainian sentence.
+    - sentence: Коли ти ___?
+      answer: прокидаєшся
+      options:
+        - прокидаєшся
+        - прокидаюся
+        - прокидається
+      explanation: The question asks ти.
+    - sentence: Я ___ о сьомій.
+      answer: прокидаюся
+      options:
+        - прокидаюся
+        - прокидаєшся
+        - прокидається
+      explanation: The answer starts with я.
+    - sentence: Що ти робиш ___?
+      answer: потім
+      options:
+        - потім
+        - сніданок
+        - рушник
+      explanation: Потім asks for the next action.
+    - sentence: Я вмиваюся і ___.
+      answer: одягаюся
+      options:
+        - одягаюся
+        - одягаєшся
+        - одягається
+      explanation: The speaker is я.
+    - sentence: Після цього я ___.
+      answer: снідаю
+      options:
+        - снідаю
+        - снідаєшся
+        - сніданок
+      explanation: Снідаю is the verb form.
+- id: act-6
+  type: group-sort
+  title: Active pattern or recognition chunk
+  instruction: Sort each form by how you should treat it today.
+  groups:
+    - name: Build with Group One + -ся
+      items:
+        - прокидаюся
+        - прокидаєшся
+        - одягається
+        - збираємося
+        - вмиваються
+    - name: Recognize as a ready chunk
+      items:
+        - дивлюся
+        - вчуся
+        - користуюся
+    - name: No -ся today
+      items:
+        - снідаю
+        - п'ю воду
+        - йду на роботу
+- id: act-7
+  type: translate
+  title: Build my morning line
+  instruction: Choose the Ukrainian line that matches the English prompt.
   items:
-  - question: I wash in the morning.
-    options:
-    - Я вмиваюся вранці.
-    - Я вмиваю вранці.
-    answer: Я вмиваюся вранці.
-  - question: I eat breakfast.
-    options:
-    - Я снідаю.
-    - Я снідаюся.
-    answer: Я снідаю.
-  - question: I get ready.
-    options:
-    - Я збираюся.
-    - Я збираю.
-    answer: Я збираюся.
-  - question: I use a towel.
-    options:
-    - Я користуюся рушником.
-    - Я користую рушник.
-    answer: Я користуюся рушником.
-  - question: You wake up.
-    options:
-    - Ти прокидаєшся.
-    - Ти прокидаюся.
-    answer: Ти прокидаєшся.
-  - question: She goes to work.
-    options:
-    - Вона йде на роботу.
-    - Вона йду на роботу.
-    answer: Вона йде на роботу.
-- id: error-correction
+    - source: First I wake up.
+      options:
+        - text: Спочатку я прокидаюся.
+          correct: true
+        - text: Спочатку я прокидаєшся.
+          correct: false
+        - text: Спочатку я прокидатися.
+          correct: false
+      explanation: Я needs прокидаюся.
+    - source: Then I wash up.
+      options:
+        - text: Потім я вмиваюся.
+          correct: true
+        - text: Потім я мию себе.
+          correct: false
+        - text: Потім я вмиваєшся.
+          correct: false
+      explanation: Use the routine verb вмиваюся.
+    - source: After that I have breakfast.
+      options:
+        - text: Після цього я снідаю.
+          correct: true
+        - text: Після цього я снідаюся.
+          correct: false
+        - text: Після цього я сніданок.
+          correct: false
+      explanation: Снідати is regular in this routine.
+    - source: Finally I go to work.
+      options:
+        - text: Нарешті я йду на роботу.
+          correct: true
+        - text: Нарешті я йдеш на роботу.
+          correct: false
+        - text: Нарешті я йти на роботу.
+          correct: false
+      explanation: Learn я йду as the ready chunk.
+- id: act-8
   type: error-correction
-  title: Виправ помилку
-  instruction: Find the error and use the correction.
+  title: Repair morning traps
+  instruction: Choose the standard Ukrainian repair.
+  anchor_id: repair-traps
   items:
-  - sentence: Я прокидаєшся. / Він прокидаюся.
-    error: Я прокидаєшся. / Він прокидаюся.
-    correction: Я прокидаюся. / Він прокидається.
-    explanation: Match the verb form to я or він.
-  - sentence: 'Вимова: [прокидайешся]'
-    error: 'Вимова: [прокидайешся]'
-    correction: 'Вимова: [прокидайес'':а]'
-    explanation: Written -шся is pronounced [с':а].
-  - sentence: 'Вимова: [одягайет''с''а]'
-    error: 'Вимова: [одягайет''с''а]'
-    correction: 'Вимова: [одягайец'':а]'
-    explanation: Written -ться is pronounced [ц':а].
-  - sentence: Я мию себе.
-    error: Я мию себе.
-    correction: Я миюся. / Я вмиваюся.
-    explanation: Use the reflexive morning verb.
-  - sentence: Я дивюся. / Я дивюсь.
-    error: Я дивюся. / Я дивюсь.
-    correction: Я дивлюся.
-    explanation: The first-person form is дивлюся.
-  - sentence: Я користуювася.
-    error: Я користуювася.
-    correction: Я користуюся.
-    explanation: The -ва- drops in the present form.
-- type: match-up
-  title: Слова послідовності
-  instruction: Match the Ukrainian word to English.
-  pairs:
-  - left: спочатку
-    right: first
-  - left: потім
-    right: then
-  - left: після цього
-    right: after that
-  - left: нарешті
-    right: finally
-- type: true-false
-  title: Чистий ранок
-  instruction: Choose true or false.
-  items:
-  - statement: Сніданок, not the Russian-borrowed <!-- bad -->завтрак<!-- /bad -->.
-    answer: true
-  - statement: Я прокидаюся means I wake up.
-    answer: true
-  - statement: Я снідаюся is the normal form for I eat breakfast.
-    answer: false
-  - statement: Ти одягаєшся means you get dressed.
-    answer: true
-- type: match-up
-  title: Три речення
-  instruction: Match each English line with its Ukrainian translation.
-  pairs:
-  - left: First I wake up.
-    right: Спочатку я прокидаюся.
-  - left: Then I wash.
-    right: Потім я вмиваюся.
-  - left: After that I eat breakfast.
-    right: Після цього я снідаю.
-  - left: Finally I go to work.
-    right: Нарешті я йду на роботу.
+    - sentence: Я прокидаєшся.
+      error: Я прокидаєшся.
+      answer: Я прокидаюся.
+      options:
+        - Я прокидаюся.
+        - Я прокидаєшся.
+        - Я прокидається.
+      explanation: Я uses the -юся form.
+    - sentence: Він прокидаюся.
+      error: Він прокидаюся.
+      answer: Він прокидається.
+      options:
+        - Він прокидається.
+        - Він прокидаюся.
+        - Він прокидаєшся.
+      explanation: Він uses the -ється form.
+    - sentence: "Вимова: [прокидайешся]."
+      error: "[прокидайешся]"
+      answer: "[прокидайес':а]"
+      options:
+        - "[прокидайес':а]"
+        - "[прокидайешся]"
+        - "[прокидайец':а]"
+      explanation: Written -шся is pronounced [с':а].
+    - sentence: "Вимова: [одягайет'с'а]."
+      error: "[одягайет'с'а]"
+      answer: "[одягайец':а]"
+      options:
+        - "[одягайец':а]"
+        - "[одягайет'с'а]"
+        - "[одягайес':а]"
+      explanation: Written -ться is pronounced [ц':а].
+    - sentence: Я мию себе.
+      error: Я мию себе.
+      answer: Я вмиваюся.
+      options:
+        - Я вмиваюся.
+        - Я мию себе.
+        - Я вмиваю себе.
+      explanation: The natural routine verb is reflexive.
+    - sentence: Я дивюся / Я дивюсь.
+      error: Я дивюся / Я дивюсь.
+      answer: Я дивлюся.
+      options:
+        - Я дивлюся.
+        - Я дивлюся в дзеркало.
+        - Я дивлюся фільм.
+      explanation: Learn я дивлюся as a ready chunk.
+    - sentence: Я користуювася.
+      error: Я користуювася.
+      answer: Я користуюся.
+      options:
+        - Я користуюся.
+        - Я користуюся телефоном.
+        - Я використовую телефон.
+      explanation: The -ува- part drops in the present-tense form.
+    - sentence: Це мій завтрак.
+      error: завтрак
+      answer: Це мій сніданок.
+      options:
+        - Це мій сніданок.
+        - Це мій завтрак.
+        - Це моя снідати.
+      explanation: Use сніданок for breakfast.
