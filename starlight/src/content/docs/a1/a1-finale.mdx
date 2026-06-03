@@ -1,0 +1,270 @@
+---
+title: "Фінал А1"
+description: "Один повний день в українському місті"
+sidebar:
+  order: 55
+  label: "55. Фінал А1"
+pipeline: linear-phase-4
+build_status: validated
+prev: emergencies
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Translate from '@site/src/components/Translate';
+import Order from '@site/src/components/Order';
+import DialogueBox from '@site/src/components/DialogueBox';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+# Фінал А1
+
+This is the final A1 integration module. It does **not** introduce new
+grammar. You will use the tools you already have for one complete day in a
+Ukrainian city.
+
+The task is simple: speak clearly in short A1 lines.
+
+| Need | A1 tool |
+| --- | --- |
+| introduce yourself | **Мене звати... Я з...** |
+| talk about today | **Сьогодні я... Зараз я...** |
+| talk about yesterday | **Учора я був / була... Я снідав / снідала...** |
+| talk about tomorrow | **Завтра я буду...** |
+| ask in the city | **Вибачте, як дістатися до...?** |
+| buy or order | **Будь ласка... Скільки коштує?** |
+| repair | **Повторіть, будь ласка. Повільніше, будь ласка.** |
+| ask for help | **Мені потрібна допомога.** |
+
+:::tip[A1 boundary]
+Keep the speech short. Use known chunks, known time words, and the compound
+future **буду / будемо + infinitive**.
+:::
+
+### Complete the A1 line
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Учора я ___ у кафе.", "answer": "снідав", "options": ["снідав", "снідаю", "буду снідати"]}, {"sentence": "Зараз я ___ на метро.", "answer": "їду", "options": ["їду", "їхав", "буду їхати"]}, {"sentence": "Завтра я ___ гуляти в парку.", "answer": "буду", "options": ["буду", "був", "є"]}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Сувенір", "Квиток"]}]`)} />
+
+## Ранок
+
+You wake up in Kyiv on the last day of A1.
+
+<DialogueBox uk="Я прокинувся в готелі о сьомій. Сьогодні тепло і сонячно." en="I woke up in the hotel at seven. Today it is warm and sunny." />
+<DialogueBox uk="Зараз я йду в кафе. Я хочу каву з молоком і круасан." en="Now I am going to a cafe. I want coffee with milk and a croissant." />
+<DialogueBox uk="Добрий день. Будь ласка, каву з молоком і круасан." en="Good afternoon. Coffee with milk and a croissant, please." />
+<DialogueBox uk="Скільки коштує?" en="How much does it cost?" />
+<DialogueBox uk="Сто двадцять гривень." en="One hundred twenty hryvnias." />
+<DialogueBox uk="Дякую. До побачення." en="Thank you. Goodbye." />
+
+This morning scene repeats many earlier skills: greeting, food, numbers, money,
+and polite phrases. It also uses time naturally:
+
+- **Я прокинувся / прокинулася** - past.
+- **Зараз я йду** - present.
+- **Далі я буду їхати в центр** - future.
+
+After breakfast, you need transport.
+
+<DialogueBox uk="Вибачте, як дістатися до Хрещатика?" en="Excuse me, how do I get to Khreshchatyk?" />
+<DialogueBox uk="Їдьте на метро. Станція Хрещатик." en="Go by metro. Khreshchatyk station." />
+<DialogueBox uk="Мені потрібна зелена лінія?" en="Do I need the green line?" />
+<DialogueBox uk="Так, зелена лінія." en="Yes, the green line." />
+<DialogueBox uk="Повторіть, будь ласка." en="Please repeat." />
+<DialogueBox uk="Зелена лінія. Одна станція." en="The green line. One station." />
+
+The repair phrase is not a failure. It is an A1 success: you keep the
+conversation open.
+
+### Put the final day in order
+
+<Order client:only='react' items={JSON.parse(`["Я прокинувся в готелі.", "Я снідав у кафе.", "Я їхав на метро в центр.", "Я купив сувенір.", "Я обідав з Оленою.", "Ми ходили в кіно.", "Я повернувся в готель."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6]`)} instruction={"Arrange the events from morning to night."} isUkrainian={false} />
+
+## День
+
+Now you are in the city center. You can describe what you see and do.
+
+| Situation | A1 sentence |
+| --- | --- |
+| street | **Це широка вулиця.** |
+| shop | **Тут великий магазин.** |
+| souvenir | **Я хочу купити сувенір.** |
+| price | **Скільки коштує ця листівка?** |
+| choice | **Я беру цю листівку.** |
+| thanks | **Дякую, гарного дня.** |
+
+<DialogueBox uk="Продавець: Добрий день. Чим можу допомогти?" en="Seller: Good afternoon. How can I help?" />
+<DialogueBox uk="Учень: Добрий день. Скільки коштує ця листівка?" en="Learner: Good afternoon. How much does this postcard cost?" />
+<DialogueBox uk="Продавець: П'ятдесят гривень." en="Seller: Fifty hryvnias." />
+<DialogueBox uk="Учень: Добре, я беру. І ще цей магніт, будь ласка." en="Learner: Good, I'll take it. And also this magnet, please." />
+<DialogueBox uk="Продавець: Разом сто гривень." en="Seller: One hundred hryvnias together." />
+<DialogueBox uk="Учень: Карткою можна?" en="Learner: Can I pay by card?" />
+<DialogueBox uk="Продавець: Так, можна." en="Seller: Yes, you can." />
+
+Later you meet a new friend, Олена.
+
+<DialogueBox uk="Олена: Привіт! Ти звідки?" en="Olena: Hi! Where are you from?" />
+<DialogueBox uk="Учень: Я з Канади. Я вивчаю українську." en="Learner: I am from Canada. I am learning Ukrainian." />
+<DialogueBox uk="Олена: Ти добре говориш. Що ти робив сьогодні?" en="Olena: You speak well. What did you do today?" />
+<DialogueBox uk="Учень: Зранку я снідав у кафе. Потім я їхав на метро і купив сувенір." en="Learner: In the morning I had breakfast at a cafe. Then I rode the metro and bought a souvenir." />
+<DialogueBox uk="Олена: Ходімо обідати." en="Olena: Let's go have lunch." />
+<DialogueBox uk="Учень: Добре. Я хочу борщ і воду." en="Learner: Good. I want borshch and water." />
+
+This is integrated A1 speech. You do not explain grammar. You choose the phrase
+that fits the situation.
+
+### Situation and phrase
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "introducing yourself", "right": "Мене звати..."}, {"left": "asking for directions", "right": "Як дістатися до метро?"}, {"left": "ordering coffee", "right": "Каву з молоком, будь ласка."}, {"left": "asking the price", "right": "Скільки коштує?"}, {"left": "repairing understanding", "right": "Повторіть, будь ласка."}, {"left": "asking for help", "right": "Мені потрібна допомога."}]`)} />
+
+### Sort your A1 toolkit
+
+<GroupSort client:only='react' groups={JSON.parse(`{"people": ["Мене звати", "Я з Канади", "Це моя подруга"], "city": ["Де метро?", "Я на вулиці", "Як дістатися до центру?"], "food and shopping": ["Каву, будь ласка", "Скільки коштує?", "Я беру це"], "time": ["Учора я був", "Зараз я йду", "Завтра я буду читати"]}`)} />
+
+## Вечір
+
+In the evening, you can talk about the whole day and make simple plans.
+
+<DialogueBox uk="Олена: Що будемо робити ввечері?" en="Olena: What will we do this evening?" />
+<DialogueBox uk="Учень: Ходімо в кіно. О котрій?" en="Learner: Let's go to the cinema. At what time?" />
+<DialogueBox uk="Олена: О сьомій." en="Olena: At seven." />
+<DialogueBox uk="Учень: Добре. Після кіно ми будемо вечеряти?" en="Learner: Good. After the movie, will we have dinner?" />
+<DialogueBox uk="Олена: Так, біля метро є ресторан." en="Olena: Yes, there is a restaurant near the metro." />
+
+At night, you write a short message to your teacher.
+
+**Сьогодні був чудовий день. Зранку я снідав у кафе. Потім я їхав на метро в
+центр. Вдень я купив сувенір і обідав з Оленою. Ввечері ми ходили в кіно.
+Зараз я в готелі. Завтра я буду гуляти в парку і буду повторювати українську.**
+
+Notice the three time zones:
+
+| Time word | Verb shape | Example |
+| --- | --- | --- |
+| **зранку / вдень / ввечері** | past for the finished day | **я снідав, я купив, ми ходили** |
+| **зараз** | present for now | **я в готелі** |
+| **завтра** | compound future | **я буду гуляти, буду повторювати** |
+
+This is enough for an A1 final story. It has a place, actions, people, food,
+transport, money, and plans.
+
+### Choose the A1 response
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "A cashier says: Сто гривень.", "options": [{"text": "Карткою можна?", "correct": true}, {"text": "Я з Канади.", "correct": false}, {"text": "Мені холодно.", "correct": false}], "explanation": "Карткою можна? fits payment."}, {"question": "A friend asks: Що ти робив сьогодні?", "options": [{"text": "Зранку я снідав у кафе.", "correct": true}, {"text": "Завтра я снідав у кафе.", "correct": false}, {"text": "Я метро коштує.", "correct": false}], "explanation": "The question asks about earlier today, so a past line fits."}, {"question": "You did not understand the direction.", "options": [{"text": "Повторіть, будь ласка.", "correct": true}, {"text": "Я беру це.", "correct": false}, {"text": "Він мій тато.", "correct": false}], "explanation": "Use a repair phrase."}, {"question": "You want to talk about tomorrow.", "options": [{"text": "Завтра я буду гуляти.", "correct": true}, {"text": "Завтра я гуляв.", "correct": false}, {"text": "Учора я буду гуляти.", "correct": false}], "explanation": "Завтра pairs with буду + infinitive."}]`)} />
+
+### A1 finale check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Мене звати Сара. Я з Канади.", "isTrue": true, "explanation": "This is clear A1 identity language."}, {"statement": "Вчора я снідаю у кафе.", "isTrue": false, "explanation": "Use past after Вчора: я снідав / снідала."}, {"statement": "Зараз я їду на метро.", "isTrue": true, "explanation": "Зараз plus present їду is clear."}, {"statement": "Завтра я буду читати українську.", "isTrue": true, "explanation": "Буду + infinitive is the A1 future."}, {"statement": "Моє ім'я є Адам.", "isTrue": false, "explanation": "Use Мене звати Адам."}]`)} />
+
+### Build final A1 lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Учора / я / снідав / у / кафе.", "answer": "Учора я снідав у кафе."}, {"jumbled": "Зараз / я / їду / на / метро.", "answer": "Зараз я їду на метро."}, {"jumbled": "Завтра / я / буду / гуляти / в / парку.", "answer": "Завтра я буду гуляти в парку."}, {"jumbled": "Повторіть, / будь / ласка.", "answer": "Повторіть, будь ласка."}]`)} />
+
+## Чекліст А1
+
+You can now handle short everyday exchanges.
+
+| Area | Can-do sentence |
+| --- | --- |
+| identity | **Мене звати... Я з...** |
+| family and people | **Це моя подруга. Вона добра.** |
+| routine | **Я прокидаюся о сьомій.** |
+| likes | **Мені подобається кава.** |
+| time | **Зараз десята. Сьогодні середа.** |
+| weather | **Сьогодні холодно, але сонячно.** |
+| city | **Де метро? Як дістатися до центру?** |
+| cafe | **Будь ласка, борщ і воду.** |
+| shopping | **Скільки коштує? Я беру це.** |
+| requests | **Повторіть, будь ласка.** |
+| health | **У мене болить голова. Мені потрібен лікар.** |
+| emergency language | **Допоможіть! Подзвоніть за номером 112.** |
+| past | **Учора я був / була в кафе.** |
+| future | **Завтра я буду читати.** |
+
+### Останній діалог
+
+<DialogueBox uk="Студент 1: Я закінчив А1. Вітаю!" en="Student 1: I finished A1. Congratulations!" />
+<DialogueBox uk="Студент 2: Вітаю! Що ти тепер можеш?" en="Student 2: Congratulations! What can you do now?" />
+<DialogueBox uk="Студент 1: Я можу представитися, замовити їжу, купити квиток і попросити допомогу." en="Student 1: I can introduce myself, order food, buy a ticket, and ask for help." />
+<DialogueBox uk="Студент 2: А що ти будеш робити далі?" en="Student 2: And what will you do next?" />
+<DialogueBox uk="Студент 1: Я буду говорити щодня. Я буду читати короткі тексти. Я буду слухати українську." en="Student 1: I will speak every day. I will read short texts. I will listen to Ukrainian." />
+<DialogueBox uk="Студент 2: Чудовий план. До зустрічі!" en="Student 2: Great plan. See you!" />
+
+### Final story frame
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мене ___.", "answer": "звати", "options": ["звати", "коштує", "болить"]}, {"sentence": "Зранку я ___ у кафе.", "answer": "снідав", "options": ["снідав", "кафе", "буду"]}, {"sentence": "Ввечері ми ___ в кіно.", "answer": "ходили", "options": ["ходили", "кіно", "сім"]}, {"sentence": "Завтра я ___ повторювати українську.", "answer": "буду", "options": ["буду", "був", "є"]}]`)} />
+
+## Підсумок
+
+Your final A1 task is a ten-sentence story about one day.
+
+Use this frame:
+
+1. **Мене звати... Я з...**
+2. **Сьогодні я в...**
+3. **Зранку я...**
+4. **Потім я...**
+5. **Вдень я...**
+6. **Я купив / купила...**
+7. **Я зустрів / зустріла...**
+8. **Ввечері я...**
+9. **Зараз я...**
+10. **Завтра я буду...**
+
+Short signpost: A2 will help you speak and read longer connected texts. For
+today, the win is A1: clear short speech in real situations.
+
+Вітаю. Це початок, і це вже багато.
+
+### Finish A1
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "My name is Adam. I am from Canada.", "options": [{"text": "Мене звати Адам. Я з Канади.", "correct": true}, {"text": "Моє ім'я є Адам. Я маю Канада.", "correct": false}, {"text": "Адам коштує Канада.", "correct": false}], "explanation": "Use Мене звати... and Я з..."}, {"source": "Yesterday I bought a souvenir.", "options": [{"text": "Учора я купив сувенір.", "correct": true}, {"text": "Завтра я купив сувенір.", "correct": false}, {"text": "Сувенір мене звати.", "correct": false}], "explanation": "Учора points to the past."}, {"source": "Tomorrow I will read Ukrainian.", "options": [{"text": "Завтра я буду читати українську.", "correct": true}, {"text": "Учора я буду читати українську.", "correct": false}, {"text": "Завтра я читав українську.", "correct": false}], "explanation": "Use завтра + буду читати."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+## Словник
+
+| Word | Translation | Example |
+| --- | --- | --- |
+| **фінал** | finale | **Це фінал А1.** |
+| **готовий** | ready | **Я готовий до нового дня.** |
+| **готова** | ready | **Я готова говорити українською.** |
+| **вітаю** | congratulations | **Вітаю, ти закінчив А1.** |
+| **початок** | beginning | **Це тільки початок.** |
+| **сувенір** | souvenir | **Я купив сувенір.** |
+| **листівка** | postcard | **Ця листівка коштує п'ятдесят гривень.** |
+| **магніт** | magnet | **Я беру цей магніт.** |
+| **квиток** | ticket | **Мені потрібен квиток.** |
+| **картка** | card | **Карткою можна?** |
+| **готель** | hotel | **Я в готелі.** |
+| **центр** | center | **Я їду в центр.** |
+| **лінія** | line | **Мені потрібна зелена лінія.** |
+| **карта** | map | **Я дивлюся на карту.** |
+| **круасан** | croissant | **Будь ласка, круасан.** |
+| **борщ** | borshch | **Я хочу борщ і воду.** |
+| **познайомитися** | to meet | **Я хочу познайомитися з Оленою.** |
+| **повторювати** | to review | **Я буду повторювати українську.** |
+| **подорожувати** | to travel | **Я буду подорожувати Україною.** |
+| **щодня** | every day | **Я буду говорити щодня.** |
+| **чудовий** | wonderful | **Сьогодні був чудовий день.** |
+| **зрозуміло** | understood | **Добре, зрозуміло.** |
+
+</TabItem>
+<TabItem label="Resources">
+
+## Resources
+
+- 🔗 **Plan: A1 finale** — Source plan for M55 final A1 integration: one full day in a Ukrainian city. (curriculum/l2-uk-en/plans/a1/a1-finale.yaml)
+- 🔗 **Wiki: pedagogy/a1/a1-finale** — Pedagogical brief for integrated A1 review and final communicative simulation. (wiki/pedagogy/a1/a1-finale)
+- 🔁 **Internal module M52: my story** — Reuses the past-present-future story frame without adding new grammar. (curriculum/l2-uk-en/a1/my-story/module.md)
+- 🔁 **Internal module M54: emergencies** — Reuses A1 help, repair, and emergency-language chunks in the final checklist. (curriculum/l2-uk-en/a1/emergencies/module.md)
+
+</TabItem>
+</Tabs>
