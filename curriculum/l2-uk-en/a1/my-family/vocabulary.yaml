@@ -1,0 +1,256 @@
+- lemma: сім'я
+  translation: family, close household
+  pos: noun
+  usage: Це моя сім'я.
+- lemma: родина
+  translation: family or kin
+  pos: noun
+  usage: У мене велика родина.
+- lemma: мама
+  translation: mom
+  pos: noun
+  usage: Це моя мама.
+- lemma: мати
+  translation: mother
+  pos: noun
+  usage: Це моя мати.
+- lemma: тато
+  translation: dad
+  pos: noun
+  usage: Це мій тато.
+- lemma: батько
+  translation: father
+  pos: noun
+  usage: Це мій батько.
+- lemma: брат
+  translation: brother
+  pos: noun
+  usage: У мене є брат.
+- lemma: сестра
+  translation: sister
+  pos: noun
+  usage: У мене є сестра.
+- lemma: син
+  translation: son
+  pos: noun
+  usage: Це мій син.
+- lemma: дочка
+  translation: daughter
+  pos: noun
+  usage: Це моя дочка.
+- lemma: донька
+  translation: daughter
+  pos: noun
+  usage: Це моя донька.
+- lemma: бабуся
+  translation: grandmother
+  pos: noun
+  usage: Це моя бабуся.
+- lemma: дідусь
+  translation: grandfather
+  pos: noun
+  usage: Це мій дідусь.
+- lemma: батьки
+  translation: parents
+  pos: noun plural
+  usage: Це мої батьки.
+- lemma: родичі
+  translation: relatives
+  pos: noun plural
+  usage: Це мої родичі.
+- lemma: дядько
+  translation: uncle
+  pos: noun
+  usage: Це мій дядько.
+- lemma: тітка
+  translation: aunt
+  pos: noun
+  usage: Це моя тітка.
+- lemma: дружина
+  translation: wife
+  pos: noun
+  usage: Моя дружина — вчителька.
+- lemma: чоловік
+  translation: man / husband
+  pos: noun
+  usage: Мій чоловік працює в лікарні.
+- lemma: дитина
+  translation: child
+  pos: noun
+  usage: Це маленька дитина.
+- lemma: маля
+  translation: small child
+  pos: noun
+  usage: Це маля.
+- lemma: молодший
+  translation: younger
+  pos: adjective
+  usage: Це мій молодший брат.
+- lemma: старший
+  translation: older
+  pos: adjective
+  usage: Це мій старший брат.
+- lemma: одружений
+  translation: married
+  pos: adjective
+  usage: Мій брат одружений.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Це мій брат.
+- lemma: моя
+  translation: my, feminine
+  pos: pronoun
+  usage: Це моя сестра.
+- lemma: моє
+  translation: my, neuter
+  pos: pronoun
+  usage: Це моє місто.
+- lemma: мої
+  translation: my, plural
+  pos: pronoun
+  usage: Це мої батьки.
+- lemma: твій
+  translation: your, masculine informal
+  pos: pronoun
+  usage: Це твій брат?
+- lemma: твоя
+  translation: your, feminine informal
+  pos: pronoun
+  usage: Це твоя мама?
+- lemma: твоє
+  translation: your, neuter informal
+  pos: pronoun
+  usage: Це твоє прізвище?
+- lemma: твої
+  translation: your, plural informal
+  pos: pronoun
+  usage: Це твої родичі?
+- lemma: його
+  translation: his / him, fixed possessive here
+  pos: pronoun
+  usage: Його звати Коля.
+- lemma: її
+  translation: her, fixed possessive here
+  pos: pronoun
+  usage: Її звати Катя.
+- lemma: їхній
+  translation: their
+  pos: pronoun
+  usage: Це їхній дідусь.
+- lemma: у мене є
+  translation: I have
+  pos: phrase
+  usage: У мене є брат.
+- lemma: у тебе є
+  translation: you have, informal
+  pos: phrase
+  usage: У тебе є сестра?
+- lemma: у вас є
+  translation: you have, formal or plural
+  pos: phrase
+  usage: У вас є діти?
+- lemma: один
+  translation: one, masculine
+  pos: numeral
+  usage: один брат
+- lemma: одна
+  translation: one, feminine
+  pos: numeral
+  usage: одна сестра
+- lemma: два
+  translation: two, masculine/neuter
+  pos: numeral
+  usage: два брати
+- lemma: дві
+  translation: two, feminine
+  pos: numeral
+  usage: дві сестри
+- lemma: чи
+  translation: or / whether in questions
+  pos: conjunction
+  usage: У тебе є брати чи сестри?
+- lemma: тільки
+  translation: only
+  pos: adverb
+  usage: У мене тільки один брат.
+- lemma: ім'я
+  translation: given name
+  pos: noun
+  usage: Моє ім'я Марко.
+- lemma: прізвище
+  translation: surname
+  pos: noun
+  usage: Моє прізвище Коваленко.
+- lemma: по батькові
+  translation: patronymic
+  pos: phrase
+  usage: Василівно — це по батькові.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це?
+- lemma: що
+  translation: what
+  pos: pronoun
+  usage: Що це?
+- lemma: де
+  translation: where
+  pos: adverb
+  usage: Де твій брат?
+- lemma: чий
+  translation: whose, masculine
+  pos: pronoun
+  usage: Чий це брат?
+- lemma: чия
+  translation: whose, feminine
+  pos: pronoun
+  usage: Чия це сестра?
+- lemma: який
+  translation: what kind of / which, masculine
+  pos: pronoun
+  usage: Який він?
+- lemma: звати
+  translation: to call / be named
+  pos: verb
+  usage: Його звати Коля.
+- lemma: жити
+  translation: to live
+  pos: verb
+  usage: Він живе в Києві.
+- lemma: працювати
+  translation: to work
+  pos: verb
+  usage: Вона працює в школі.
+- lemma: любити
+  translation: to love / like
+  pos: verb
+  usage: Я люблю свою сім'ю.
+- lemma: актор
+  translation: actor
+  pos: noun
+  usage: Він актор.
+- lemma: художник
+  translation: artist
+  pos: noun
+  usage: Він художник.
+- lemma: співак
+  translation: singer
+  pos: noun
+  usage: Він співак.
+- lemma: журналіст
+  translation: journalist
+  pos: noun
+  usage: Він журналіст.
+- lemma: журналістка
+  translation: female journalist
+  pos: noun
+  usage: Моя мама — журналістка.
+- lemma: вчителька
+  translation: female teacher
+  pos: noun
+  usage: Моя мама — вчителька.
+- lemma: інженер
+  translation: engineer
+  pos: noun
+  usage: Мій тато — інженер.

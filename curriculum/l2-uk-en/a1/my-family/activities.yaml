@@ -1,0 +1,394 @@
+- id: act-1
+  type: quiz
+  title: Family photo questions
+  instruction: Choose the Ukrainian line that fits the photo exchange.
+  items:
+    - prompt: You ask one peer whether they have a brother.
+      options:
+        - text: У тебе є брат?
+          correct: true
+        - text: У мене є брат?
+          correct: false
+        - text: Це брат?
+          correct: false
+      explanation: У тебе є...? asks one familiar person whether they have someone.
+    - prompt: You answer yes and say you have one sister.
+      options:
+        - text: Так, у мене є одна сестра.
+          correct: true
+        - text: Так, у тебе є одна сестра.
+          correct: false
+        - text: Так, це одна сестра.
+          correct: false
+      explanation: У мене є... answers for yourself.
+    - prompt: You answer no with the safe A1 answer.
+      options:
+        - text: Ні.
+          correct: true
+        - text: У мене немає брат.
+          correct: false
+        - text: Ні є брат.
+          correct: false
+      explanation: Keep the negative answer simple at A1.
+    - prompt: You ask what his name is.
+      options:
+        - text: Як його звати?
+          correct: true
+        - text: Як її звати?
+          correct: false
+        - text: Що його звати?
+          correct: false
+      explanation: Його fits a brother, dad, son, or grandfather.
+    - prompt: You identify your mom in a photo.
+      options:
+        - text: Це моя мама.
+          correct: true
+        - text: Це мій мама.
+          correct: false
+        - text: Це моє мама.
+          correct: false
+      explanation: Мама is feminine, so use моя.
+    - prompt: You identify your parents.
+      options:
+        - text: Це мої батьки.
+          correct: true
+        - text: Це мій батьки.
+          correct: false
+        - text: Це моя батьки.
+          correct: false
+      explanation: Батьки is plural, so use мої.
+- id: act-2
+  type: match-up
+  title: Family words
+  instruction: Match the English cue with the Ukrainian family word.
+  pairs:
+    - left: mother
+      right: мама
+    - left: father
+      right: тато
+    - left: brother
+      right: брат
+    - left: sister
+      right: сестра
+    - left: grandmother
+      right: бабуся
+    - left: grandfather
+      right: дідусь
+    - left: parents
+      right: батьки
+    - left: relatives
+      right: родичі
+- id: act-3
+  type: fill-in
+  title: Build the I-have chunk
+  instruction: Choose the word or phrase that completes the family sentence.
+  items:
+    - sentence: ___ мене є брат.
+      answer: У
+      options:
+        - У
+        - Це
+        - Хто
+      explanation: У мене є... is the whole I-have chunk.
+    - sentence: У ___ є сестра.
+      answer: мене
+      options:
+        - мене
+        - мій
+        - це
+      explanation: У мене є... answers for yourself.
+    - sentence: У ___ є брат?
+      answer: тебе
+      options:
+        - тебе
+        - мене
+        - він
+      explanation: У тебе є...? asks one familiar person.
+    - sentence: У ___ є діти?
+      answer: вас
+      options:
+        - вас
+        - твій
+        - вона
+      explanation: У вас є...? is formal or plural.
+    - sentence: У мене є ___ брат.
+      answer: один
+      options:
+        - один
+        - одна
+        - дві
+      explanation: Брат is masculine, so use один.
+    - sentence: У мене є ___ сестра.
+      answer: одна
+      options:
+        - одна
+        - один
+        - два
+      explanation: Сестра is feminine, so use одна.
+    - sentence: У мене є ___ брати.
+      answer: два
+      options:
+        - два
+        - дві
+        - одна
+      explanation: Брати uses два.
+    - sentence: У мене є ___ сестри.
+      answer: дві
+      options:
+        - дві
+        - два
+        - один
+      explanation: Сестри uses дві.
+- id: act-4
+  type: fill-in
+  title: My or your?
+  instruction: Choose the possessive form that matches the family word.
+  items:
+    - sentence: Це ___ брат.
+      answer: мій
+      options:
+        - мій
+        - моя
+        - моє
+        - мої
+      explanation: Брат is masculine.
+    - sentence: Це ___ мама.
+      answer: моя
+      options:
+        - моя
+        - мій
+        - моє
+        - мої
+      explanation: Мама is feminine.
+    - sentence: Це ___ місто.
+      answer: моє
+      options:
+        - моє
+        - мій
+        - моя
+        - мої
+      explanation: Місто is neuter.
+    - sentence: Це ___ батьки.
+      answer: мої
+      options:
+        - мої
+        - мій
+        - моя
+        - моє
+      explanation: Батьки is plural.
+    - sentence: Це ___ тато?
+      answer: твій
+      options:
+        - твій
+        - твоя
+        - твоє
+        - твої
+      explanation: Тато is masculine even though it ends in -о.
+    - sentence: Це ___ сестра?
+      answer: твоя
+      options:
+        - твоя
+        - твій
+        - твоє
+        - твої
+      explanation: Сестра is feminine.
+    - sentence: Це ___ прізвище?
+      answer: твоє
+      options:
+        - твоє
+        - твій
+        - твоя
+        - твої
+      explanation: Прізвище is neuter.
+    - sentence: Це ___ родичі?
+      answer: твої
+      options:
+        - твої
+        - твій
+        - твоя
+        - твоє
+      explanation: Родичі is plural.
+- id: act-5
+  type: error-correction
+  title: Choose the Ukrainian family sentence
+  instruction: Choose the safer Ukrainian line.
+  items:
+    - sentence: Моє ім'я є Джон.
+      error: Моє ім'я є Джон.
+      correction: Мене звати Джон.
+      options:
+        - Мене звати Джон.
+        - Моє ім'я є Джон.
+      explanation: Мене звати... is the natural first-introduction model.
+    - sentence: Я маю 20 років.
+      error: Я маю 20 років.
+      correction: Мені 20 років.
+      options:
+        - Мені 20 років.
+        - Я маю 20 років.
+      explanation: Age uses the chunk Мені ... років.
+    - sentence: Це мій мама.
+      error: Це мій мама.
+      correction: Це моя мама.
+      options:
+        - Це моя мама.
+        - Це мій мама.
+      explanation: Мама is feminine, so use моя.
+    - sentence: Я є брат.
+      error: Я є брат.
+      correction: Я брат.
+      options:
+        - Я брат.
+        - Я є брат.
+      explanation: Present-time identity can omit є.
+    - sentence: Батьки (у значенні батька)
+      error: Батьки (у значенні батька)
+      correction: Тато / батько
+      options:
+        - Тато / батько
+        - Батьки
+      explanation: Батьки means parents, not one father.
+    - sentence: Чия це? (про брата)
+      error: Чия це? (про брата)
+      correction: Чий це брат?
+      options:
+        - Чий це брат?
+        - Чия це?
+      explanation: Брат is masculine, so the question word is чий.
+- id: act-6
+  type: fill-in
+  title: Native family words
+  instruction: Fill the sentence with the native Ukrainian family word.
+  items:
+    - sentence: Моя ___ — вчителька.
+      answer: дружина
+      options:
+        - дружина
+        - сестра
+      explanation: Дружина is the Ukrainian word for wife.
+    - sentence: Мій ___ працює в лікарні.
+      answer: чоловік
+      options:
+        - чоловік
+        - тато
+      explanation: Чоловік can mean man or husband by context.
+    - sentence: Це моя ___ Тетяна.
+      answer: бабуся
+      options:
+        - бабуся
+        - мама
+      explanation: Бабуся is the Ukrainian word for grandmother.
+    - sentence: Це мої ___.
+      answer: родичі
+      options:
+        - родичі
+        - батьки
+      explanation: Родичі means relatives.
+    - sentence: Це маленька ___.
+      answer: дитина
+      options:
+        - дитина
+        - сім'я
+      explanation: Дитина is the Ukrainian word for child.
+    - sentence: Це мій ___ брат.
+      answer: молодший
+      options:
+        - молодший
+        - старший
+      explanation: Молодший means younger.
+    - sentence: Мій старший брат уже ___.
+      answer: одружений
+      options:
+        - одружений
+        - студент
+      explanation: Одружений means married.
+- id: act-7
+  type: fill-in
+  title: Complete the photo dialogue
+  instruction: Choose the missing word from the family conversation.
+  items:
+    - sentence: Це ___ сім'я на фотографії.
+      answer: моя
+      options:
+        - моя
+        - мій
+        - моє
+      explanation: Сім'я is feminine.
+    - sentence: ___ це? Це мій тато.
+      answer: Хто
+      options:
+        - Хто
+        - Що
+        - Де
+      explanation: Use хто for a person.
+    - sentence: Це моя сестра. ___ звати Катя.
+      answer: Її
+      options:
+        - Її
+        - Його
+        - Вони
+      explanation: Її fits a sister.
+    - sentence: Це мій брат. ___ звати Коля.
+      answer: Його
+      options:
+        - Його
+        - Її
+        - Вона
+      explanation: Його fits a brother.
+    - sentence: А це ___ бабуся?
+      answer: твоя
+      options:
+        - твоя
+        - твій
+        - твоє
+      explanation: Бабуся is feminine.
+- id: act-8
+  type: translate
+  title: Family vocabulary quick check
+  instruction: Choose the English meaning.
+  items:
+    - source: сім'я
+      options:
+        - text: family, close household
+          correct: true
+        - text: surname
+          correct: false
+        - text: profession
+          correct: false
+      explanation: Сім'я is the close family word.
+    - source: родина
+      options:
+        - text: family or kin
+          correct: true
+        - text: only one parent
+          correct: false
+        - text: first name
+          correct: false
+      explanation: Родина often sounds wider than сім'я.
+    - source: У мене є брат.
+      options:
+        - text: I have a brother.
+          correct: true
+        - text: You have a brother.
+          correct: false
+        - text: This is my brother.
+          correct: false
+      explanation: У мене є... is the I-have chunk.
+    - source: Це моя сестра.
+      options:
+        - text: This is my sister.
+          correct: true
+        - text: This is my brother.
+          correct: false
+        - text: This is her sister.
+          correct: false
+      explanation: Моя matches сестра.
+    - source: Чий це брат?
+      options:
+        - text: Whose brother is this?
+          correct: true
+        - text: Who is this sister?
+          correct: false
+        - text: Do you have a brother?
+          correct: false
+      explanation: Чий asks whose and matches брат.
