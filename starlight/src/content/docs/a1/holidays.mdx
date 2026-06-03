@@ -1,0 +1,370 @@
+---
+title: "Свята"
+description: "Привітання, родинні традиції та державні свята України"
+sidebar:
+  order: 46
+  label: "46. Свята"
+pipeline: linear-phase-4
+build_status: validated
+prev: when-and-where
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module gives you practical holiday speech, not a long calendar lecture.
+You will learn to greet someone, write one short message, and say what people do
+at a few Ukrainian holidays.
+
+Active phrases:
+
+- **З Новим роком!** - Happy New Year!
+- **З Різдвом Христовим!** - Merry Christmas!
+- **З Великоднем!** - Happy Easter!
+- **З Днем Незалежності України!** - Happy Independence Day of Ukraine!
+- **Вітаю з...** - I greet/congratulate you on...
+- **Бажаю...** - I wish...
+
+At A1, learn these as ready chunks. Do not stop to build the whole instrumental
+case. First say the greeting naturally.
+
+:::tip[Two different patterns]
+Use **святкувати + назва свята** for the holiday itself:
+**Ми святкуємо Різдво.**
+
+Use **на + свято** when you mean time:
+**На Різдво ми співаємо колядки.**
+:::
+
+### Match the holiday and date
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"Новий рік","right":"1 січня"},{"left":"Різдво Христове","right":"25 грудня"},{"left":"День Незалежності України","right":"24 серпня"},{"left":"День Соборності України","right":"22 січня"}]`)} />
+
+## Діалоги
+
+### Листівка до зимових свят
+
+<DialogueBox uk="Марта: Привіт, Даниле! Я пишу листівку бабусі." en="Marta: Hi, Danylo! I am writing a card to my grandmother." />
+<DialogueBox uk="Данило: Що ти пишеш?" en="Danylo: What are you writing?" />
+<DialogueBox uk="Марта: Вітаю з Новим роком! Бажаю здоров'я і радості." en="Marta: Happy New Year! I wish you health and joy." />
+<DialogueBox uk="Данило: Гарно. А я пишу другові: З Різдвом Христовим!" en="Danylo: Nice. And I am writing to a friend: Merry Christmas!" />
+<DialogueBox uk="Марта: Додай: веселих свят і добрих канікул." en="Marta: Add: happy holidays and good vacation." />
+<DialogueBox uk="Данило: Добре. Це коротко і тепло." en="Danylo: Good. It is short and warm." />
+
+This is the most useful holiday skill: a short message. A good A1 card can be
+only two lines:
+
+**Вітаю з Новим роком! Бажаю здоров'я і радості.**
+
+You can change only the holiday name:
+
+- **Вітаю з Різдвом Христовим!**
+- **Вітаю з Великоднем!**
+- **Вітаю з Днем Незалежності України!**
+
+### Що ви робите на Різдво і Великдень?
+
+<DialogueBox uk="Алекс: Оксано, що ви робите на Різдво?" en="Alex: Oksana, what do you do at Christmas?" />
+<DialogueBox uk="Оксана: Ми святкуємо вдома. Співаємо колядки і приймаємо гостей." en="Oksana: We celebrate at home. We sing koliadky and receive guests." />
+<DialogueBox uk="Алекс: А на Великдень?" en="Alex: And at Easter?" />
+<DialogueBox uk="Оксана: На Великдень ми печемо паски і фарбуємо яйця." en="Oksana: At Easter we bake pasky and dye eggs." />
+<DialogueBox uk="Алекс: Я знаю, що писанка дуже гарна." en="Alex: I know that a pysanka is very beautiful." />
+<DialogueBox uk="Оксана: Так. З Великоднем!" en="Oksana: Yes. Happy Easter!" />
+
+Keep the two grammar patterns separate:
+
+- **Ми святкуємо Різдво.**
+- **На Різдво ми співаємо колядки.**
+- **Ми святкуємо Великдень.**
+- **На Великдень ми печемо паски.**
+
+This avoids the common English transfer **святкувати на Різдво**. Ukrainian
+uses **святкувати Різдво** without **на**.
+
+### Державне свято
+
+<DialogueBox uk="Софія: Коли День Незалежності України?" en="Sofiia: When is Independence Day of Ukraine?" />
+<DialogueBox uk="Ігор: Двадцять четвертого серпня." en="Ihor: On the twenty-fourth of August." />
+<DialogueBox uk="Софія: Це державне свято України." en="Sofiia: It is a state holiday of Ukraine." />
+<DialogueBox uk="Ігор: На це свято люди бачать синьо-жовті прапори." en="Ihor: On this holiday people see blue-and-yellow flags." />
+<DialogueBox uk="Софія: З Днем Незалежності України!" en="Sofiia: Happy Independence Day of Ukraine!" />
+<DialogueBox uk="Ігор: Дякую!" en="Ihor: Thank you!" />
+
+The active date is:
+
+- **24 серпня - День Незалежності України.**
+
+Recognition date:
+
+- **22 січня - День Соборності України.**
+
+At A1, keep this block factual and calm: date, name, greeting, flag, public
+event. The goal is usable Ukrainian, not a speech.
+
+### Holiday greetings
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Вітаю з ___!","answer":"Новим роком","options":["Новим роком","Новий рік","Новому році"]},{"sentence":"З ___ Христовим!","answer":"Різдвом","options":["Різдвом","Різдво","Різдві"]},{"sentence":"З ___!","answer":"Великоднем","options":["Великоднем","Великдень","Великодні"]},{"sentence":"З Днем ___ України!","answer":"Незалежності","options":["Незалежності","Незалежність","Незалежністю"]}]`)} />
+
+## Формули привітання
+
+Holiday greetings often use **з + a fixed holiday form**. Learn the whole
+phrase:
+
+| English idea | Ukrainian chunk |
+| --- | --- |
+| Happy New Year | **З Новим роком!** |
+| Merry Christmas | **З Різдвом Христовим!** |
+| Happy Easter | **З Великоднем!** |
+| Happy Independence Day of Ukraine | **З Днем Незалежності України!** |
+
+The longer frame is also useful:
+
+- **Вітаю з Новим роком!**
+- **Вітаю з Різдвом Христовим!**
+- **Вітаю з Великоднем!**
+- **Вітаю з Днем Незалежності України!**
+
+Then add one simple wish:
+
+- **Бажаю здоров'я.**
+- **Бажаю радості.**
+- **Бажаю добрих канікул.**
+- **Бажаю миру і добра.**
+
+Do not write **Вітаю з Новий рік**. The A1 repair is simple: memorize **з
+Новим роком** as one block. Do the same with **з Різдвом**, **з Великоднем**,
+and **з Днем Незалежності України**.
+
+Capital letters also matter. Write **Новий рік** with a capital first word.
+Write **День Незалежності України** as the official name.
+
+For speaking practice, keep one rhythm: greeting, wish, close. For example:
+**Олено, з Новим роком! Бажаю здоров'я і радості. Гарних канікул!** You can
+swap only the name and the holiday. This gives you a real message without
+inventing new grammar. It also keeps the tone warm and Ukrainian: short,
+direct, and personal.
+
+### Святкувати or на?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Ми ___ Різдво вдома.","answer":"святкуємо","options":["святкуємо","на","з"]},{"sentence":"___ Різдво ми співаємо колядки.","answer":"На","options":["На","З","Святкуємо"]},{"sentence":"Ми ___ Великдень з родиною.","answer":"святкуємо","options":["святкуємо","на","у"]},{"sentence":"___ Великдень ми печемо паски.","answer":"На","options":["На","З","Святкуємо"]},{"sentence":"Я ___ День Незалежності України.","answer":"святкую","options":["святкую","на","вітаю"]},{"sentence":"___ Новий рік ми даруємо подарунки.","answer":"На","options":["На","З","Святкуємо"]}]`)} />
+
+## Родинні свята
+
+### Новий рік і Різдво
+
+Useful dates:
+
+- **1 січня - Новий рік.**
+- **25 грудня - Різдво Христове.**
+
+Useful words:
+
+- **листівка** - greeting card;
+- **подарунок** - gift;
+- **родина** - family;
+- **гість** - guest;
+- **колядка** - Christmas carol;
+- **щедрівка** - Shchedryi Vechir / New Year cycle song.
+
+Keep the cultural distinction clear:
+
+- **На Різдво співають колядки.**
+- **На Щедрий вечір звучать щедрівки.**
+
+Do not put **колядки** and **щедрівки** into one generic basket. The words name
+different parts of the Ukrainian winter cycle.
+
+### Великдень
+
+Useful words:
+
+- **паска** - Easter bread;
+- **писанка** - decorated Easter egg;
+- **фарбувати яйця** - to dye eggs;
+- **пекти паски** - to bake pasky.
+
+Neutral A1 greeting:
+
+- **З Великоднем!**
+
+Traditional greeting for recognition:
+
+- **Христос воскрес! - Воістину воскрес!**
+
+You can recognize the traditional formula, but your active A1 phrase can stay
+simple: **З Великоднем!**
+
+### What belongs to which holiday?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question":"Що співають на Різдво?","options":[{"text":"колядки","correct":true},{"text":"щедрівки","correct":false},{"text":"писанки","correct":false}],"explanation":"Колядки belong to Christmas."},{"question":"Що звучить на Щедрий вечір?","options":[{"text":"щедрівки","correct":true},{"text":"колядки","correct":false},{"text":"паски","correct":false}],"explanation":"Щедрівки belong to Щедрий вечір."},{"question":"Що печуть на Великдень?","options":[{"text":"паски","correct":true},{"text":"листівки","correct":false},{"text":"прапори","correct":false}],"explanation":"Паска is Easter bread."},{"question":"Що часто бачать на День Незалежності України?","options":[{"text":"синьо-жовті прапори","correct":true},{"text":"писанки","correct":false},{"text":"колядки","correct":false}],"explanation":"The flag is a state symbol."}]`)} />
+
+### Short holiday card
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Вітаю тебе з ___! Бажаю веселих свят.","answer":"Новим роком","options":["Новим роком","Новий рік","Новому році"]},{"sentence":"З ___ Христовим! Бажаю здоров'я.","answer":"Різдвом","options":["Різдвом","Різдво","Різдві"]},{"sentence":"З ___! Бажаю добра.","answer":"Великоднем","options":["Великоднем","Великдень","Великодні"]},{"sentence":"Двадцять четвертого серпня - День ___ України.","answer":"Незалежності","options":["Незалежності","Незалежність","Незалежністю"]}]`)} />
+
+## Державні свята і підсумок
+
+Two dates for this module:
+
+| Date | Holiday | A1 sentence |
+| --- | --- | --- |
+| **24 серпня** | **День Незалежності України** | **Це державне свято України.** |
+| **22 січня** | **День Соборності України** | **Це важлива дата України.** |
+
+For **День Незалежності України**, an A1 learner can say:
+
+- **Двадцять четвертого серпня - День Незалежності України.**
+- **Це державне свято України.**
+- **Люди вітають одне одного.**
+- **Люди бачать синьо-жовті прапори.**
+- **З Днем Незалежності України!**
+
+This module uses a decolonized Ukrainian frame by centering current Ukrainian
+dates, Ukrainian terms, Ukrainian family traditions, and Ukrainian state
+symbols. Use **Великдень**, **Київ**, **синьо-жовтий прапор**, **колядки**, and
+**щедрівки** as Ukrainian words in their own system.
+
+<span id="підсумок"></span>
+
+## 📋 Підсумок
+
+You can now do four practical things:
+
+1. Greet someone for a holiday:
+   **З Новим роком! З Різдвом Христовим! З Великоднем!**
+2. Write a short card:
+   **Вітаю з Новим роком! Бажаю здоров'я і радості.**
+3. Separate the two patterns:
+   **Ми святкуємо Різдво. На Різдво ми співаємо колядки.**
+4. Name the key state holiday:
+   **24 серпня - День Незалежності України.**
+
+<span id="repair-holidays-interference"></span>
+
+### Ремонти
+
+| Learner sentence | Better Ukrainian |
+| --- | --- |
+| <del>**Вітаю з Новий рік!**</del> | **Вітаю з Новим роком!** |
+| <del>**Ми святкуємо на Різдво.**</del> | **Ми святкуємо Різдво.** |
+| <del>**Ми співаємо колядки на Новий рік.**</del> | **На Різдво ми співаємо колядки.** |
+| <del>**З днем незалежності україни!**</del> | **З Днем Незалежності України!** |
+| <del>**Пасха**</del> | **Великдень** |
+
+### Holiday shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Новий рік":["1 січня","З Новим роком!","подарунок"],"Різдво":["25 грудня","колядка","З Різдвом Христовим!"],"Великдень":["паска","писанка","З Великоднем!"],"Державні дати":["24 серпня","22 січня","синьо-жовтий прапор"]}`)} />
+
+### Holiday checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement":"З Новим роком is a fixed greeting chunk.","isTrue":true,"explanation":"At A1, learn the whole phrase."},{"statement":"Святкувати Різдво is a good Ukrainian pattern.","isTrue":true,"explanation":"Святкувати takes the holiday name directly."},{"statement":"На Різдво ми співаємо колядки is a time phrase.","isTrue":true,"explanation":"На + holiday tells when something happens."},{"statement":"Колядки and щедрівки are the same word.","isTrue":false,"explanation":"They belong to different parts of the winter cycle."},{"statement":"25 грудня is the date used here for Різдво Христове.","isTrue":true,"explanation":"This module uses the current Ukrainian date."},{"statement":"Паска and писанка belong to the Easter block.","isTrue":true,"explanation":"They are Великдень words."},{"statement":"День Незалежності України is on 24 серпня.","isTrue":true,"explanation":"That is the active state-holiday date."},{"statement":"Пасха is the preferred active A1 word in this module.","isTrue":false,"explanation":"Use Великдень as the active word."}]`)} />
+
+### Repair holiday interference
+
+<ErrorCorrection client:only='react' instruction="Correct the greeting, pattern, or holiday word." items={JSON.parse(`[{"sentence":"Вітаю з Новий рік!","errorWord":"Новий рік","correctForm":"Новим роком","options":[],"explanation":"Use the fixed chunk з Новим роком."},{"sentence":"Ми святкуємо на Різдво.","errorWord":"святкуємо на Різдво","correctForm":"святкуємо Різдво","options":[],"explanation":"Use святкувати + holiday name."},{"sentence":"На Різдво ми співаємо щедрівки.","errorWord":"щедрівки","correctForm":"колядки","options":[],"explanation":"Use колядки for Christmas."},{"sentence":"З днем незалежності україни!","errorWord":"днем незалежності україни","correctForm":"Днем Незалежності України","options":[],"explanation":"Use the official capitalization in the holiday name."},{"sentence":"З Великдень!","errorWord":"Великдень","correctForm":"Великоднем","options":[],"explanation":"Use the fixed greeting З Великоднем."},{"sentence":"Ми печемо писанки.","errorWord":"печемо писанки","correctForm":"фарбуємо яйця / робимо писанки","options":[],"explanation":"You bake pasky; you decorate or dye eggs."},{"sentence":"День Незалежності України - 22 січня.","errorWord":"22 січня","correctForm":"24 серпня","options":[],"explanation":"24 серпня is Independence Day of Ukraine."},{"sentence":"Пасха - мій улюблений день.","errorWord":"Пасха","correctForm":"Великдень","options":[],"explanation":"Use Великдень as the active Ukrainian word."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"свято","translation":"holiday","pos":"noun","example":"Це українське свято.","examples":["holiday","Це українське свято."]},{"word":"святкувати","translation":"to celebrate","pos":"verb","example":"Ми святкуємо Різдво.","examples":["to celebrate","Ми святкуємо Різдво."]},{"word":"Новий рік","translation":"New Year","pos":"noun phrase","example":"З Новим роком!","examples":["New Year","З Новим роком!"]},{"word":"Різдво Христове","translation":"Christmas","pos":"noun phrase","example":"З Різдвом Христовим!","examples":["Christmas","З Різдвом Христовим!"]},{"word":"Великдень","translation":"Easter","pos":"noun","example":"З Великоднем!","examples":["Easter","З Великоднем!"]},{"word":"День Незалежності України","translation":"Independence Day of Ukraine","pos":"noun phrase","example":"З Днем Незалежності України!","examples":["Independence Day of Ukraine","З Днем Незалежності України!"]},{"word":"День Соборності України","translation":"Unity Day of Ukraine","pos":"noun phrase","example":"День Соборності України - 22 січня.","examples":["Unity Day of Ukraine","День Соборності України - 22 січня."]},{"word":"вітати","translation":"to greet; to congratulate","pos":"verb","example":"Я вітаю друга зі святом.","examples":["to greet; to congratulate","Я вітаю друга зі святом."]},{"word":"бажати","translation":"to wish","pos":"verb","example":"Бажаю здоров'я.","examples":["to wish","Бажаю здоров'я."]},{"word":"здоров'я","translation":"health","pos":"noun","example":"Бажаю здоров'я.","examples":["health","Бажаю здоров'я."]},{"word":"радість","translation":"joy","pos":"noun","example":"Бажаю радості.","examples":["joy","Бажаю радості."]},{"word":"добро","translation":"goodness; kindness","pos":"noun","example":"Бажаю добра.","examples":["goodness; kindness","Бажаю добра."]},{"word":"мир","translation":"peace","pos":"noun","example":"Бажаю миру.","examples":["peace","Бажаю миру."]},{"word":"листівка","translation":"greeting card","pos":"noun","example":"Я пишу листівку.","examples":["greeting card","Я пишу листівку."]},{"word":"подарунок","translation":"gift","pos":"noun","example":"Це подарунок.","examples":["gift","Це подарунок."]},{"word":"родина","translation":"family","pos":"noun","example":"Ми святкуємо з родиною.","examples":["family","Ми святкуємо з родиною."]},{"word":"гість","translation":"guest","pos":"noun","example":"Гість іде додому.","examples":["guest","Гість іде додому."]},{"word":"колядка","translation":"Christmas carol","pos":"noun","example":"На Різдво співають колядки.","examples":["Christmas carol","На Різдво співають колядки."]},{"word":"щедрівка","translation":"Shchedryi Vechir song","pos":"noun","example":"На Щедрий вечір звучать щедрівки.","examples":["Shchedryi Vechir song","На Щедрий вечір звучать щедрівки."]},{"word":"Щедрий вечір","translation":"Shchedryi Vechir","pos":"noun phrase","example":"На Щедрий вечір звучать щедрівки.","examples":["Shchedryi Vechir","На Щедрий вечір звучать щедрівки."]},{"word":"паска","translation":"Easter bread","pos":"noun","example":"На Великдень печуть паски.","examples":["Easter bread","На Великдень печуть паски."]},{"word":"писанка","translation":"decorated Easter egg","pos":"noun","example":"Писанка дуже гарна.","examples":["decorated Easter egg","Писанка дуже гарна."]},{"word":"фарбувати яйця","translation":"to dye eggs","pos":"verb phrase","example":"Ми фарбуємо яйця.","examples":["to dye eggs","Ми фарбуємо яйця."]},{"word":"пекти паски","translation":"to bake pasky","pos":"verb phrase","example":"Ми печемо паски.","examples":["to bake pasky","Ми печемо паски."]},{"word":"державне свято","translation":"state holiday","pos":"noun phrase","example":"Це державне свято України.","examples":["state holiday","Це державне свято України."]},{"word":"прапор","translation":"flag","pos":"noun","example":"Я бачу прапор.","examples":["flag","Я бачу прапор."]},{"word":"синьо-жовтий","translation":"blue-and-yellow","pos":"adjective","example":"Це синьо-жовтий прапор.","examples":["blue-and-yellow","Це синьо-жовтий прапор."]},{"word":"подія","translation":"event","pos":"noun","example":"Це святкова подія.","examples":["event","Це святкова подія."]},{"word":"канікули","translation":"vacation; school break","pos":"noun","example":"Бажаю добрих канікул.","examples":["vacation; school break","Бажаю добрих канікул."]},{"word":"Христос воскрес","translation":"Christ is risen","pos":"phrase","example":"Христос воскрес! - Воістину воскрес!","examples":["Christ is risen","Христос воскрес! - Воістину воскрес!"]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"свято","back":"holiday"},{"front":"святкувати","back":"to celebrate"},{"front":"Новий рік","back":"New Year"},{"front":"Різдво Христове","back":"Christmas"},{"front":"Великдень","back":"Easter"},{"front":"День Незалежності України","back":"Independence Day of Ukraine"},{"front":"День Соборності України","back":"Unity Day of Ukraine"},{"front":"вітати","back":"to greet; to congratulate"},{"front":"бажати","back":"to wish"},{"front":"здоров'я","back":"health"},{"front":"радість","back":"joy"},{"front":"добро","back":"goodness; kindness"},{"front":"мир","back":"peace"},{"front":"листівка","back":"greeting card"},{"front":"подарунок","back":"gift"},{"front":"родина","back":"family"},{"front":"гість","back":"guest"},{"front":"колядка","back":"Christmas carol"},{"front":"щедрівка","back":"Shchedryi Vechir song"},{"front":"Щедрий вечір","back":"Shchedryi Vechir"},{"front":"паска","back":"Easter bread"},{"front":"писанка","back":"decorated Easter egg"},{"front":"фарбувати яйця","back":"to dye eggs"},{"front":"пекти паски","back":"to bake pasky"},{"front":"державне свято","back":"state holiday"},{"front":"прапор","back":"flag"},{"front":"синьо-жовтий","back":"blue-and-yellow"},{"front":"подія","back":"event"},{"front":"канікули","back":"vacation; school break"},{"front":"Христос воскрес","back":"Christ is risen"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Match the holiday and date
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"Новий рік","right":"1 січня"},{"left":"Різдво Христове","right":"25 грудня"},{"left":"День Незалежності України","right":"24 серпня"},{"left":"День Соборності України","right":"22 січня"}]`)} />
+
+### Holiday greetings
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Вітаю з ___!","answer":"Новим роком","options":["Новим роком","Новий рік","Новому році"]},{"sentence":"З ___ Христовим!","answer":"Різдвом","options":["Різдвом","Різдво","Різдві"]},{"sentence":"З ___!","answer":"Великоднем","options":["Великоднем","Великдень","Великодні"]},{"sentence":"З Днем ___ України!","answer":"Незалежності","options":["Незалежності","Незалежність","Незалежністю"]}]`)} />
+
+### Святкувати or на?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Ми ___ Різдво вдома.","answer":"святкуємо","options":["святкуємо","на","з"]},{"sentence":"___ Різдво ми співаємо колядки.","answer":"На","options":["На","З","Святкуємо"]},{"sentence":"Ми ___ Великдень з родиною.","answer":"святкуємо","options":["святкуємо","на","у"]},{"sentence":"___ Великдень ми печемо паски.","answer":"На","options":["На","З","Святкуємо"]},{"sentence":"Я ___ День Незалежності України.","answer":"святкую","options":["святкую","на","вітаю"]},{"sentence":"___ Новий рік ми даруємо подарунки.","answer":"На","options":["На","З","Святкуємо"]}]`)} />
+
+### What belongs to which holiday?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question":"Що співають на Різдво?","options":[{"text":"колядки","correct":true},{"text":"щедрівки","correct":false},{"text":"писанки","correct":false}],"explanation":"Колядки belong to Christmas."},{"question":"Що звучить на Щедрий вечір?","options":[{"text":"щедрівки","correct":true},{"text":"колядки","correct":false},{"text":"паски","correct":false}],"explanation":"Щедрівки belong to Щедрий вечір."},{"question":"Що печуть на Великдень?","options":[{"text":"паски","correct":true},{"text":"листівки","correct":false},{"text":"прапори","correct":false}],"explanation":"Паска is Easter bread."},{"question":"Що часто бачать на День Незалежності України?","options":[{"text":"синьо-жовті прапори","correct":true},{"text":"писанки","correct":false},{"text":"колядки","correct":false}],"explanation":"The flag is a state symbol."}]`)} />
+
+### Short holiday card
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Вітаю тебе з ___! Бажаю веселих свят.","answer":"Новим роком","options":["Новим роком","Новий рік","Новому році"]},{"sentence":"З ___ Христовим! Бажаю здоров'я.","answer":"Різдвом","options":["Різдвом","Різдво","Різдві"]},{"sentence":"З ___! Бажаю добра.","answer":"Великоднем","options":["Великоднем","Великдень","Великодні"]},{"sentence":"Двадцять четвертого серпня - День ___ України.","answer":"Незалежності","options":["Незалежності","Незалежність","Незалежністю"]}]`)} />
+
+### Holiday shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Новий рік":["1 січня","З Новим роком!","подарунок"],"Різдво":["25 грудня","колядка","З Різдвом Христовим!"],"Великдень":["паска","писанка","З Великоднем!"],"Державні дати":["24 серпня","22 січня","синьо-жовтий прапор"]}`)} />
+
+### Holiday checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement":"З Новим роком is a fixed greeting chunk.","isTrue":true,"explanation":"At A1, learn the whole phrase."},{"statement":"Святкувати Різдво is a good Ukrainian pattern.","isTrue":true,"explanation":"Святкувати takes the holiday name directly."},{"statement":"На Різдво ми співаємо колядки is a time phrase.","isTrue":true,"explanation":"На + holiday tells when something happens."},{"statement":"Колядки and щедрівки are the same word.","isTrue":false,"explanation":"They belong to different parts of the winter cycle."},{"statement":"25 грудня is the date used here for Різдво Христове.","isTrue":true,"explanation":"This module uses the current Ukrainian date."},{"statement":"Паска and писанка belong to the Easter block.","isTrue":true,"explanation":"They are Великдень words."},{"statement":"День Незалежності України is on 24 серпня.","isTrue":true,"explanation":"That is the active state-holiday date."},{"statement":"Пасха is the preferred active A1 word in this module.","isTrue":false,"explanation":"Use Великдень as the active word."}]`)} />
+
+### Repair holiday interference
+
+<ErrorCorrection client:only='react' instruction="Correct the greeting, pattern, or holiday word." items={JSON.parse(`[{"sentence":"Вітаю з Новий рік!","errorWord":"Новий рік","correctForm":"Новим роком","options":[],"explanation":"Use the fixed chunk з Новим роком."},{"sentence":"Ми святкуємо на Різдво.","errorWord":"святкуємо на Різдво","correctForm":"святкуємо Різдво","options":[],"explanation":"Use святкувати + holiday name."},{"sentence":"На Різдво ми співаємо щедрівки.","errorWord":"щедрівки","correctForm":"колядки","options":[],"explanation":"Use колядки for Christmas."},{"sentence":"З днем незалежності україни!","errorWord":"днем незалежності україни","correctForm":"Днем Незалежності України","options":[],"explanation":"Use the official capitalization in the holiday name."},{"sentence":"З Великдень!","errorWord":"Великдень","correctForm":"Великоднем","options":[],"explanation":"Use the fixed greeting З Великоднем."},{"sentence":"Ми печемо писанки.","errorWord":"печемо писанки","correctForm":"фарбуємо яйця / робимо писанки","options":[],"explanation":"You bake pasky; you decorate or dye eggs."},{"sentence":"День Незалежності України - 22 січня.","errorWord":"22 січня","correctForm":"24 серпня","options":[],"explanation":"24 серпня is Independence Day of Ukraine."},{"sentence":"Пасха - мій улюблений день.","errorWord":"Пасха","correctForm":"Великдень","options":[],"explanation":"Use Великдень as the active Ukrainian word."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 **Wiki: pedagogy/a1/holidays (LOCKED 2026-04-23)** — Authoritative locked pedagogical brief for greeting formulas, святкувати vs на + свято, колядки vs щедрівки, Easter basics, and the lean state-holiday block.
+- 🔗 [Кодекс законів про працю України, стаття 73](https://zakon.rada.gov.ua/laws/show/322-08) — Freshness check for current official holiday dates, including 24 серпня and 25 грудня.
+- 🔗 [UINP: День Соборності](https://uinp.gov.ua/tegy/den-sobornosti) — Freshness check for 22 січня as День Соборності України, including 2026 materials.
+- 🔗 [Ukrainian Lessons Podcast Episode 23](https://www.ukrainianlessons.com/episode23/) — Learner-facing support for Ukrainian holidays and celebration vocabulary.
+- 🔗 **Заболотний Grade 6 holiday capitalization tasks** — Source-registry support for holiday names, capitalization, and short card-writing situations.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

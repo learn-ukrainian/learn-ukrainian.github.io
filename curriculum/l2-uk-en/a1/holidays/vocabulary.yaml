@@ -1,0 +1,120 @@
+- word: свято
+  translation: holiday
+  pos: noun
+  example: "Це українське свято."
+- word: святкувати
+  translation: to celebrate
+  pos: verb
+  example: "Ми святкуємо Різдво."
+- word: Новий рік
+  translation: New Year
+  pos: noun phrase
+  example: "З Новим роком!"
+- word: Різдво Христове
+  translation: Christmas
+  pos: noun phrase
+  example: "З Різдвом Христовим!"
+- word: Великдень
+  translation: Easter
+  pos: noun
+  example: "З Великоднем!"
+- word: День Незалежності України
+  translation: Independence Day of Ukraine
+  pos: noun phrase
+  example: "З Днем Незалежності України!"
+- word: День Соборності України
+  translation: Unity Day of Ukraine
+  pos: noun phrase
+  example: "День Соборності України - 22 січня."
+- word: вітати
+  translation: to greet; to congratulate
+  pos: verb
+  example: "Я вітаю друга зі святом."
+- word: бажати
+  translation: to wish
+  pos: verb
+  example: "Бажаю здоров'я."
+- word: здоров'я
+  translation: health
+  pos: noun
+  example: "Бажаю здоров'я."
+- word: радість
+  translation: joy
+  pos: noun
+  example: "Бажаю радості."
+- word: добро
+  translation: goodness; kindness
+  pos: noun
+  example: "Бажаю добра."
+- word: мир
+  translation: peace
+  pos: noun
+  example: "Бажаю миру."
+- word: листівка
+  translation: greeting card
+  pos: noun
+  example: "Я пишу листівку."
+- word: подарунок
+  translation: gift
+  pos: noun
+  example: "Це подарунок."
+- word: родина
+  translation: family
+  pos: noun
+  example: "Ми святкуємо з родиною."
+- word: гість
+  translation: guest
+  pos: noun
+  example: "Гість іде додому."
+- word: колядка
+  translation: Christmas carol
+  pos: noun
+  example: "На Різдво співають колядки."
+- word: щедрівка
+  translation: Shchedryi Vechir song
+  pos: noun
+  example: "На Щедрий вечір звучать щедрівки."
+- word: Щедрий вечір
+  translation: Shchedryi Vechir
+  pos: noun phrase
+  example: "На Щедрий вечір звучать щедрівки."
+- word: паска
+  translation: Easter bread
+  pos: noun
+  example: "На Великдень печуть паски."
+- word: писанка
+  translation: decorated Easter egg
+  pos: noun
+  example: "Писанка дуже гарна."
+- word: фарбувати яйця
+  translation: to dye eggs
+  pos: verb phrase
+  example: "Ми фарбуємо яйця."
+- word: пекти паски
+  translation: to bake pasky
+  pos: verb phrase
+  example: "Ми печемо паски."
+- word: державне свято
+  translation: state holiday
+  pos: noun phrase
+  example: "Це державне свято України."
+- word: прапор
+  translation: flag
+  pos: noun
+  example: "Я бачу прапор."
+- word: синьо-жовтий
+  translation: blue-and-yellow
+  pos: adjective
+  example: "Це синьо-жовтий прапор."
+- word: подія
+  translation: event
+  pos: noun
+  example: "Це святкова подія."
+- word: канікули
+  translation: vacation; school break
+  pos: noun
+  example: "Бажаю добрих канікул."
+- word: Христос воскрес
+  translation: Christ is risen
+  pos: phrase
+  example: "Христос воскрес! - Воістину воскрес!"
