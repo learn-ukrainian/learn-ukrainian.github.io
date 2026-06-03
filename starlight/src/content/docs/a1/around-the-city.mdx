@@ -1,0 +1,308 @@
+---
+title: "У місті"
+description: "Де/куди + напрямки — орієнтування містом українською"
+sidebar:
+  order: 33
+  label: "33. У місті"
+pipeline: linear-phase-4
+build_status: validated
+prev: transport
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This lesson combines the last five modules into one real city skill. You will
+ask for a route, follow simple directions, describe your neighborhood, and
+switch between **де?**, **куди?**, and transport phrases without stopping.
+
+By the end, you can:
+
+- ask **Вибачте, як дістатися до...?**;
+- understand **ідіть прямо**, **направо**, **наліво**, **на розі**;
+- say where something is: **в аптеці**, **на площі**, **у центрі**;
+- say where you go: **в магазин**, **на роботу**, **до бібліотеки**;
+- describe a daily route with **пішки**, **на метро**, **автобусом**, and
+  **п'ять хвилин**.
+
+### Direction words
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ідіть ___, потім направо.", "answer": "прямо", "options": ["прямо", "пішки", "поруч"]}, {"sentence": "Вибачте, як ___ до музею?", "answer": "дістатися", "options": ["дістатися", "вдома", "живу"]}, {"sentence": "Аптека близько. Ідіть прямо п'ять ___.", "answer": "хвилин", "options": ["хвилин", "район", "центр"]}, {"sentence": "Потім ідіть ___, школа там.", "answer": "направо", "options": ["направо", "пішки", "вдома"]}, {"sentence": "Йдіть прямо, а потім ___.", "answer": "наліво", "options": ["наліво", "центр", "зупинка"]}, {"sentence": "Ресторан поруч. Ідіть прямо і ___.", "answer": "направо", "options": ["направо", "район", "куди"]}]`)} />
+
+## Діалоги
+
+The first dialogue is a street question. Use **Вибачте** before asking a
+stranger.
+
+<DialogueBox uk="Турист: Вибачте, як дістатися до бібліотеки?" en="Tourist: Excuse me, how do I get to the library?" />
+<DialogueBox uk="Містянка: Ідіть прямо, потім направо. Бібліотека на розі." en="Local woman: Go straight, then right. The library is on the corner." />
+<DialogueBox uk="Турист: А музей?" en="Tourist: And the museum?" />
+<DialogueBox uk="Містянка: Музей далеко. Їдьте на метро до центру." en="Local woman: The museum is far. Go by metro to the center." />
+<DialogueBox uk="Турист: Дякую!" en="Tourist: Thank you!" />
+<DialogueBox uk="Містянка: Будь ласка. Гарного дня!" en="Local woman: You're welcome. Have a good day!" />
+
+The answer combines old tools: direction words, city places, and transport.
+**Бібліотека на розі** answers **де?**. **Ідіть прямо** and **їдьте на метро**
+answer what to do next.
+
+The second dialogue describes a daily route.
+
+<DialogueBox uk="Гід: Як ти дістаєшся на роботу?" en="Guide: How do you get to work?" />
+<DialogueBox uk="Олена: Спочатку йду на зупинку." en="Olena: First I walk to the stop." />
+<DialogueBox uk="Гід: А потім?" en="Guide: And then?" />
+<DialogueBox uk="Олена: Потім їду автобусом до центру." en="Olena: Then I go by bus to the center." />
+<DialogueBox uk="Гід: Де твоя робота?" en="Guide: Where is your work?" />
+<DialogueBox uk="Олена: Робота в офісі на площі. Потім іду пішки п'ять хвилин." en="Olena: Work is in an office on the square. Then I walk five minutes." />
+
+:::tip
+For city routes, build in three beats: **де я зараз?**, **куди далі?**,
+**чим або як?** Example: **Я на зупинці. Їду до центру. Потім іду пішки.**
+:::
+
+### Де or куди in context
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я зараз...", "options": [{"text": "в парку", "correct": true}, {"text": "в парк", "correct": false}, {"text": "до парку", "correct": false}], "explanation": "Зараз asks де?"}, {"question": "Я йду...", "options": [{"text": "в магазин", "correct": true}, {"text": "в магазині", "correct": false}, {"text": "на магазині", "correct": false}], "explanation": "Йду asks куди?"}, {"question": "Магазин на...", "options": [{"text": "вулиці", "correct": true}, {"text": "вулицю", "correct": false}, {"text": "вулиця", "correct": false}], "explanation": "На вулиці answers де?"}, {"question": "Потім їду на...", "options": [{"text": "роботу", "correct": true}, {"text": "роботі", "correct": false}, {"text": "робота", "correct": false}], "explanation": "Їду на роботу answers куди?"}, {"question": "Ми зараз у...", "options": [{"text": "центрі", "correct": true}, {"text": "центр", "correct": false}, {"text": "центру", "correct": false}], "explanation": "Зараз у центрі is static."}, {"question": "Вона йде в...", "options": [{"text": "офіс", "correct": true}, {"text": "офісі", "correct": false}, {"text": "офісу", "correct": false}], "explanation": "Йде в офіс answers куди?"}]`)} />
+
+## Де і куди разом
+
+**Називний відмінок як база.** Start by naming the city object before you move
+or locate it: **місто**, **вулиця**, **парк**, **школа**. The base sentences
+are simple: **Це Київ. Це вулиця. Це великий парк.** Once the object is clear,
+you can attach a place form or a direction form.
+
+**Статичне розташування: Місцевий відмінок.** The question **Де ти живеш?** needs a location
+answer. Use state verbs such as **жити**, **бути**, and **працювати** with
+**в/у** or **на** plus the locative: **я вдома**, **ми в школі**, **мама на
+роботі**, **я живу в Києві**, **банк у центрі**. The habit is:
+**питання де? → прийменник → закінчення місцевого відмінка**. Say this pattern
+before you answer a route question. It keeps **я в школі**, **мама на роботі**,
+and **ми у центрі** in the static lane instead of turning every place into a
+destination.
+
+**Розширення дієслівного ряду.** After **жити**, use everyday verbs that also
+need a place: **вчитись у школі**, **гуляти в парку**, **працювати в офісі**,
+**купувати хліб у магазині**. You can add a small demonstrative chunk:
+**у цьому місті**, **у тому місті**, **на цій вулиці**.
+
+**Напрямок: Знахідний відмінок.** The question **куди?** is dynamic. Use motion verbs such as
+**іти** and **їхати**. At A1 the most useful direction prepositions are
+**до** and **в/у**: **іти до бібліотеки**, **їхати до центру**, **йти в парк**,
+**їхати в місто**. Keep the contrast visible: static place uses the locative,
+dynamic direction uses the accusative or **до + genitive**.
+In a real route, you often alternate the two: **Музей у центрі** answers
+**де?**, but **їдьте до центру** answers **куди?**. **Парк поруч** tells you
+where it is; **йдіть у парк** tells you where to go.
+
+| Situation | Question | Model | Example |
+| --- | --- | --- | --- |
+| static place | **де?** | **в/на + місцевий** | **Я в парку.** |
+| direction | **куди?** | **в/на + знахідний** | **Я йду в парк.** |
+| destination with **до** | **куди?** | **до + родовий** | **Я йду до бібліотеки.** |
+| transport | **чим? / як?** | **автобусом / на метро** | **Їду автобусом.** |
+
+### City questions
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Вибачте, як дістатися до бібліотеки?", "right": "Ідіть прямо, потім направо."}, {"left": "Де музей?", "right": "Він у центрі."}, {"left": "Як ти дістаєшся на роботу?", "right": "Їду автобусом."}, {"left": "Школа далеко?", "right": "Ні, близько. П'ять хвилин пішки."}, {"left": "Куди ви йдете?", "right": "У магазин."}, {"left": "Де ти живеш?", "right": "На вулиці Франка."}]`)} />
+
+### Daily city route
+
+<Order client:only='react' items={JSON.parse(`["Спочатку я йду на зупинку.", "Потім їду автобусом до центру.", "Після цього йду пішки п'ять хвилин.", "Робота в офісі на площі.", "Після роботи йду в магазин.", "Потім повертаюся додому."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the route in a natural order."} isUkrainian={false} />
+
+## Мій район
+
+A neighborhood description combines existence, distance, and route:
+
+**Я живу на вулиці Франка. Біля мого дому є парк і магазин. Аптека близько:
+п'ять хвилин пішки. Школа далеко, треба їхати автобусом. У моєму районі є
+кафе, ресторан і бібліотека.**
+
+Use these practical words:
+
+| Word | Meaning | Example |
+| --- | --- | --- |
+| **район** | neighborhood | **Мій район тихий.** |
+| **центр** | center | **Музей у центрі.** |
+| **поруч** | nearby | **Кафе поруч.** |
+| **пішки** | on foot | **Я йду пішки.** |
+| **хвилина** | minute | **П'ять хвилин пішки.** |
+| **на околиці** | on the outskirts | **Школа на околиці.** |
+
+Direction commands are polite previews of the imperative. Learn them as fixed
+route words: **ідіть прямо**, **ідіть направо**, **ідіть наліво**, **їдьте на
+метро**, **їдьте автобусом**. The next grammar module can explain command
+forms; today you only need to understand and reuse them.
+
+You may hear more spatial words later: **над**, **під**, **між**, **перед**,
+**за**. For static position they use the instrumental case; for direction they
+can take the accusative. That is a preview, not a new A1 table. For now, keep
+the live city route short: **прямо**, **направо**, **наліво**, **до центру**,
+**на розі**.
+
+Keep the city Ukrainian. Use **Київ**, **Харків**, **Одеса**, **Миколаїв** and
+Ukrainian phonetics. Do not explain **у/в** through another language; it is
+Ukrainian **милозвучність**. People pay in **гривня**, and the flag over city
+buildings is **синьо-жовтий**. A polite street opening is **Добрий день**. When
+you introduce yourself, say **Мене звати Олена**. For age, say **Мені двадцять
+років**.
+
+### City route shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Where now": ["у парку", "на площі", "у центрі", "на вулиці"], "Where to": ["в парк", "на роботу", "до бібліотеки", "у магазин"], "How": ["пішки", "автобусом", "на метро", "п'ять хвилин"], "Direction commands": ["ідіть прямо", "направо", "наліво", "їдьте"]}`)} />
+
+### Find the city mismatch
+
+<OddOneOut client:only='react' instruction={"Choose the phrase that does not fit the pattern."} items={JSON.parse(`[{"words": ["в аптеці", "на площі", "у центрі", "в аптеку"], "correct": 3, "explanation": "В аптеку answers куди?; the others answer де?"}, {"words": ["в магазин", "на роботу", "до бібліотеки", "на роботі"], "correct": 3, "explanation": "На роботі is static."}, {"words": ["Київ", "Харків", "Одеса", "Kiev"], "correct": 3, "explanation": "Use Kyiv / Київ."}, {"words": ["Добрий день", "Мене звати Олена", "Мені двадцять років", "Моє ім'я є Олена"], "correct": 3, "explanation": "Use Мене звати..."}]`)} />
+
+<span id="підсумок"></span>
+
+## 📋 Підсумок
+
+Use one compact route frame:
+
+1. **Де зараз?** — **Я на площі. Бібліотека на розі.**
+2. **Куди далі?** — **Ідіть прямо. Потім направо. Їдьте до центру.**
+3. **Як?** — **Пішки п'ять хвилин. На метро. Автобусом.**
+4. **Де кінець маршруту?** — **Музей у центрі. Робота в офісі на площі.**
+
+Common repairs:
+
+| Learner line | Better line |
+| --- | --- |
+| Я живу Київ. / Я бути школа. | **Я живу в Києві. / Я в школі.** |
+| Я йду в парк. (when you mean "I am walking in the park") | **Я гуляю в парку.** |
+| Кіт на столі (when you mean "in the desk") | **Кіт у столі.** |
+| Я даю гроші місті. | **Я даю гроші місту.** |
+| Я живу у Одесі. | **Я живу в Одесі.** |
+| Я йду до місті. | **Я йду до міста.** |
+
+Self-check:
+
+1. Ask a stranger for a route: **Вибачте, як дістатися до бібліотеки?**
+2. Give two commands: **Ідіть прямо, потім направо.**
+3. Say where the place is: **Бібліотека на розі.**
+4. Describe your route: **Я йду на зупинку, їду автобусом, потім іду пішки.**
+5. Describe your neighborhood: **У моєму районі є парк, аптека і кафе.**
+
+Final mini-route:
+
+**Я живу на вулиці Франка. Зранку йду на зупинку п'ять хвилин пішки. Потім їду
+автобусом до центру. Робота в офісі на площі. Після роботи йду в магазин, а
+потім додому.**
+
+Make the route personal by replacing only three words: your street, your
+transport, and your destination. Keep the grammar frame stable: **на вулиці**,
+**на зупинку**, **автобусом / на метро**, **до центру**, **в офісі**, **у
+магазин**. This turns the city vocabulary into a reusable map script.
+
+### City language guardrails
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Use гривня for city prices in this course.", "isTrue": true, "explanation": "The course uses Ukrainian currency."}, {"statement": "Синьо-жовтий is the flag-color form used here.", "isTrue": true, "explanation": "Use синьо-жовтий."}, {"statement": "У/в is explained through Ukrainian милозвучність.", "isTrue": true, "explanation": "Do not explain it through another language."}, {"statement": "Мені двадцять років is the age pattern.", "isTrue": true, "explanation": "Age uses the dative pattern."}, {"statement": "До always takes a local-place ending like місті.", "isTrue": false, "explanation": "До takes genitive: до міста."}]`)} />
+
+### Repair city-route interference
+
+<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian city sentence." items={JSON.parse(`[{"sentence": "Я живу Київ. / Я бути школа.", "errorWord": "живу Київ / бути школа", "correctForm": "Я живу в Києві. / Я в школі.", "options": ["Я живу в Києві. / Я в школі.", "Я живу Київ. / Я бути школа.", "Я живу до Києва. / Я школа."], "explanation": "Де? needs в/у or на plus the locative."}, {"sentence": "Я йду в парк. (коли означає локацію \\"I am walking in the park\\")", "errorWord": "йду в парк", "correctForm": "Я гуляю в парку.", "options": ["Я гуляю в парку.", "Я йду в парк.", "Я гуляю в парк."], "explanation": "Use гуляти в парку for walking inside the park."}, {"sentence": "Кіт на столі (замість в столі - \\"in the desk\\")", "errorWord": "на столі", "correctForm": "Кіт у столі.", "options": ["Кіт у столі.", "Кіт на столі.", "Кіт до столу."], "explanation": "Choose в/у or на by the real location."}, {"sentence": "Я даю гроші місті.", "errorWord": "місті", "correctForm": "Я даю гроші місту.", "options": ["Я даю гроші місту.", "Я даю гроші місті.", "Я даю гроші в місто."], "explanation": "Давальний uses місту without a preposition."}, {"sentence": "Я живу у Одесі.", "errorWord": "у Одесі", "correctForm": "Я живу в Одесі.", "options": ["Я живу в Одесі.", "Я живу у Одесі.", "Я живу до Одеси."], "explanation": "Use в before a vowel for милозвучність."}, {"sentence": "Я йду до місті.", "errorWord": "до місті", "correctForm": "Я йду до міста.", "options": ["Я йду до міста.", "Я йду до місті.", "Я йду в місті."], "explanation": "До takes genitive: міста."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"місто","translation":"city; town","pos":"noun","example":"Це велике місто.","examples":["city; town","Це велике місто."]},{"word":"вулиця","translation":"street","pos":"noun","example":"Я живу на вулиці Франка.","examples":["street","Я живу на вулиці Франка."]},{"word":"район","translation":"neighborhood; district","pos":"noun","example":"Мій район тихий.","examples":["neighborhood; district","Мій район тихий."]},{"word":"центр","translation":"center","pos":"noun","example":"Музей у центрі.","examples":["center","Музей у центрі."]},{"word":"площа","translation":"square","pos":"noun","example":"Робота на площі.","examples":["square","Робота на площі."]},{"word":"парк","translation":"park","pos":"noun","example":"Я гуляю в парку.","examples":["park","Я гуляю в парку."]},{"word":"школа","translation":"school","pos":"noun","example":"Ми в школі.","examples":["school","Ми в школі."]},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Я йду в магазин.","examples":["shop; store","Я йду в магазин."]},{"word":"супермаркет","translation":"supermarket","pos":"noun","example":"Супермаркет поруч.","examples":["supermarket","Супермаркет поруч."]},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Аптека близько.","examples":["pharmacy","Аптека близько."]},{"word":"лікарня","translation":"hospital","pos":"noun","example":"Лікарня далеко.","examples":["hospital","Лікарня далеко."]},{"word":"банк","translation":"bank","pos":"noun","example":"Банк у центрі.","examples":["bank","Банк у центрі."]},{"word":"пошта","translation":"post office","pos":"noun","example":"Пошта на розі.","examples":["post office","Пошта на розі."]},{"word":"зупинка","translation":"stop","pos":"noun","example":"Я йду на зупинку.","examples":["stop","Я йду на зупинку."]},{"word":"вокзал","translation":"station","pos":"noun","example":"Як дістатися до вокзалу?","examples":["station","Як дістатися до вокзалу?"]},{"word":"станція","translation":"station","pos":"noun","example":"Станція метро поруч.","examples":["station","Станція метро поруч."]},{"word":"метро","translation":"metro","pos":"noun","example":"Їдьте на метро до центру.","examples":["metro","Їдьте на метро до центру."]},{"word":"автобус","translation":"bus","pos":"noun","example":"Я їду автобусом.","examples":["bus","Я їду автобусом."]},{"word":"трамвай","translation":"tram","pos":"noun","example":"Трамвай їде прямо.","examples":["tram","Трамвай їде прямо."]},{"word":"музей","translation":"museum","pos":"noun","example":"Де музей?","examples":["museum","Де музей?"]},{"word":"театр","translation":"theater","pos":"noun","example":"Театр у центрі.","examples":["theater","Театр у центрі."]},{"word":"кінотеатр","translation":"movie theater","pos":"noun","example":"Кінотеатр на вулиці.","examples":["movie theater","Кінотеатр на вулиці."]},{"word":"стадіон","translation":"stadium","pos":"noun","example":"Стадіон далеко.","examples":["stadium","Стадіон далеко."]},{"word":"пішки","translation":"on foot","pos":"adverb","example":"П'ять хвилин пішки.","examples":["on foot","П'ять хвилин пішки."]},{"word":"хвилина","translation":"minute","pos":"noun","example":"Одна хвилина.","examples":["minute","Одна хвилина."]},{"word":"вибачте","translation":"excuse me","pos":"phrase","example":"Вибачте, як дістатися до бібліотеки?","examples":["excuse me","Вибачте, як дістатися до бібліотеки?"]},{"word":"дістатися","translation":"to get to","pos":"verb","example":"Як дістатися до центру?","examples":["to get to","Як дістатися до центру?"]},{"word":"ідіть","translation":"go; walk (polite command)","pos":"verb","example":"Ідіть прямо.","examples":["go; walk (polite command)","Ідіть прямо."]},{"word":"їдьте","translation":"go by transport (polite command)","pos":"verb","example":"Їдьте на метро.","examples":["go by transport (polite command)","Їдьте на метро."]},{"word":"поруч","translation":"nearby","pos":"adverb","example":"Кафе поруч.","examples":["nearby","Кафе поруч."]},{"word":"прямо","translation":"straight ahead","pos":"adverb","example":"Ідіть прямо.","examples":["straight ahead","Ідіть прямо."]},{"word":"направо","translation":"to the right","pos":"adverb","example":"Потім направо.","examples":["to the right","Потім направо."]},{"word":"наліво","translation":"to the left","pos":"adverb","example":"Потім наліво.","examples":["to the left","Потім наліво."]},{"word":"праворуч","translation":"on the right","pos":"adverb","example":"Готель праворуч.","examples":["on the right","Готель праворуч."]},{"word":"ліворуч","translation":"on the left","pos":"adverb","example":"Музей ліворуч.","examples":["on the left","Музей ліворуч."]},{"word":"гривня","translation":"hryvnia","pos":"noun","example":"Квиток коштує двадцять гривень.","examples":["hryvnia","Квиток коштує двадцять гривень."]},{"word":"синьо-жовтий","translation":"blue-and-yellow","pos":"adjective","example":"Синьо-жовтий прапор над будівлею.","examples":["blue-and-yellow","Синьо-жовтий прапор над будівлею."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"місто","back":"city; town"},{"front":"вулиця","back":"street"},{"front":"район","back":"neighborhood; district"},{"front":"центр","back":"center"},{"front":"площа","back":"square"},{"front":"парк","back":"park"},{"front":"школа","back":"school"},{"front":"магазин","back":"shop; store"},{"front":"супермаркет","back":"supermarket"},{"front":"аптека","back":"pharmacy"},{"front":"лікарня","back":"hospital"},{"front":"банк","back":"bank"},{"front":"пошта","back":"post office"},{"front":"зупинка","back":"stop"},{"front":"вокзал","back":"station"},{"front":"станція","back":"station"},{"front":"метро","back":"metro"},{"front":"автобус","back":"bus"},{"front":"трамвай","back":"tram"},{"front":"музей","back":"museum"},{"front":"театр","back":"theater"},{"front":"кінотеатр","back":"movie theater"},{"front":"стадіон","back":"stadium"},{"front":"пішки","back":"on foot"},{"front":"хвилина","back":"minute"},{"front":"вибачте","back":"excuse me"},{"front":"дістатися","back":"to get to"},{"front":"ідіть","back":"go; walk (polite command)"},{"front":"їдьте","back":"go by transport (polite command)"},{"front":"поруч","back":"nearby"},{"front":"прямо","back":"straight ahead"},{"front":"направо","back":"to the right"},{"front":"наліво","back":"to the left"},{"front":"праворуч","back":"on the right"},{"front":"ліворуч","back":"on the left"},{"front":"гривня","back":"hryvnia"},{"front":"синьо-жовтий","back":"blue-and-yellow"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Direction words
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ідіть ___, потім направо.", "answer": "прямо", "options": ["прямо", "пішки", "поруч"]}, {"sentence": "Вибачте, як ___ до музею?", "answer": "дістатися", "options": ["дістатися", "вдома", "живу"]}, {"sentence": "Аптека близько. Ідіть прямо п'ять ___.", "answer": "хвилин", "options": ["хвилин", "район", "центр"]}, {"sentence": "Потім ідіть ___, школа там.", "answer": "направо", "options": ["направо", "пішки", "вдома"]}, {"sentence": "Йдіть прямо, а потім ___.", "answer": "наліво", "options": ["наліво", "центр", "зупинка"]}, {"sentence": "Ресторан поруч. Ідіть прямо і ___.", "answer": "направо", "options": ["направо", "район", "куди"]}]`)} />
+
+### Де or куди in context
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я зараз...", "options": [{"text": "в парку", "correct": true}, {"text": "в парк", "correct": false}, {"text": "до парку", "correct": false}], "explanation": "Зараз asks де?"}, {"question": "Я йду...", "options": [{"text": "в магазин", "correct": true}, {"text": "в магазині", "correct": false}, {"text": "на магазині", "correct": false}], "explanation": "Йду asks куди?"}, {"question": "Магазин на...", "options": [{"text": "вулиці", "correct": true}, {"text": "вулицю", "correct": false}, {"text": "вулиця", "correct": false}], "explanation": "На вулиці answers де?"}, {"question": "Потім їду на...", "options": [{"text": "роботу", "correct": true}, {"text": "роботі", "correct": false}, {"text": "робота", "correct": false}], "explanation": "Їду на роботу answers куди?"}, {"question": "Ми зараз у...", "options": [{"text": "центрі", "correct": true}, {"text": "центр", "correct": false}, {"text": "центру", "correct": false}], "explanation": "Зараз у центрі is static."}, {"question": "Вона йде в...", "options": [{"text": "офіс", "correct": true}, {"text": "офісі", "correct": false}, {"text": "офісу", "correct": false}], "explanation": "Йде в офіс answers куди?"}]`)} />
+
+### City questions
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Вибачте, як дістатися до бібліотеки?", "right": "Ідіть прямо, потім направо."}, {"left": "Де музей?", "right": "Він у центрі."}, {"left": "Як ти дістаєшся на роботу?", "right": "Їду автобусом."}, {"left": "Школа далеко?", "right": "Ні, близько. П'ять хвилин пішки."}, {"left": "Куди ви йдете?", "right": "У магазин."}, {"left": "Де ти живеш?", "right": "На вулиці Франка."}]`)} />
+
+### Daily city route
+
+<Order client:only='react' items={JSON.parse(`["Спочатку я йду на зупинку.", "Потім їду автобусом до центру.", "Після цього йду пішки п'ять хвилин.", "Робота в офісі на площі.", "Після роботи йду в магазин.", "Потім повертаюся додому."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the route in a natural order."} isUkrainian={false} />
+
+### City route shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Where now": ["у парку", "на площі", "у центрі", "на вулиці"], "Where to": ["в парк", "на роботу", "до бібліотеки", "у магазин"], "How": ["пішки", "автобусом", "на метро", "п'ять хвилин"], "Direction commands": ["ідіть прямо", "направо", "наліво", "їдьте"]}`)} />
+
+### Find the city mismatch
+
+<OddOneOut client:only='react' instruction={"Choose the phrase that does not fit the pattern."} items={JSON.parse(`[{"words": ["в аптеці", "на площі", "у центрі", "в аптеку"], "correct": 3, "explanation": "В аптеку answers куди?; the others answer де?"}, {"words": ["в магазин", "на роботу", "до бібліотеки", "на роботі"], "correct": 3, "explanation": "На роботі is static."}, {"words": ["Київ", "Харків", "Одеса", "Kiev"], "correct": 3, "explanation": "Use Kyiv / Київ."}, {"words": ["Добрий день", "Мене звати Олена", "Мені двадцять років", "Моє ім'я є Олена"], "correct": 3, "explanation": "Use Мене звати..."}]`)} />
+
+### City language guardrails
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Use гривня for city prices in this course.", "isTrue": true, "explanation": "The course uses Ukrainian currency."}, {"statement": "Синьо-жовтий is the flag-color form used here.", "isTrue": true, "explanation": "Use синьо-жовтий."}, {"statement": "У/в is explained through Ukrainian милозвучність.", "isTrue": true, "explanation": "Do not explain it through another language."}, {"statement": "Мені двадцять років is the age pattern.", "isTrue": true, "explanation": "Age uses the dative pattern."}, {"statement": "До always takes a local-place ending like місті.", "isTrue": false, "explanation": "До takes genitive: до міста."}]`)} />
+
+### Repair city-route interference
+
+<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian city sentence." items={JSON.parse(`[{"sentence": "Я живу Київ. / Я бути школа.", "errorWord": "живу Київ / бути школа", "correctForm": "Я живу в Києві. / Я в школі.", "options": ["Я живу в Києві. / Я в школі.", "Я живу Київ. / Я бути школа.", "Я живу до Києва. / Я школа."], "explanation": "Де? needs в/у or на plus the locative."}, {"sentence": "Я йду в парк. (коли означає локацію \\"I am walking in the park\\")", "errorWord": "йду в парк", "correctForm": "Я гуляю в парку.", "options": ["Я гуляю в парку.", "Я йду в парк.", "Я гуляю в парк."], "explanation": "Use гуляти в парку for walking inside the park."}, {"sentence": "Кіт на столі (замість в столі - \\"in the desk\\")", "errorWord": "на столі", "correctForm": "Кіт у столі.", "options": ["Кіт у столі.", "Кіт на столі.", "Кіт до столу."], "explanation": "Choose в/у or на by the real location."}, {"sentence": "Я даю гроші місті.", "errorWord": "місті", "correctForm": "Я даю гроші місту.", "options": ["Я даю гроші місту.", "Я даю гроші місті.", "Я даю гроші в місто."], "explanation": "Давальний uses місту without a preposition."}, {"sentence": "Я живу у Одесі.", "errorWord": "у Одесі", "correctForm": "Я живу в Одесі.", "options": ["Я живу в Одесі.", "Я живу у Одесі.", "Я живу до Одеси."], "explanation": "Use в before a vowel for милозвучність."}, {"sentence": "Я йду до місті.", "errorWord": "до місті", "correctForm": "Я йду до міста.", "options": ["Я йду до міста.", "Я йду до місті.", "Я йду в місті."], "explanation": "До takes genitive: міста."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 [Communicative Ukrainian: Transport and Directions](https://ukrainianlanguage.uk/communicative/module02/pg02-5.htm) — Reachable practical reference for route and direction phrases.
+- 🔗 [Ukrainian Course: Nouns in the Accusative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-accusative-case/) — Reachable accusative-case table for destination forms.
+- 🔗 [Ukrainian Course: Nouns in the Prepositional Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-prepositional-case/) — Reachable locative/prepositional-case table for static city locations.
+- 🔗 [Ukrainian Language: Unit 10, Page 1](https://ukrainianlanguage.uk/read/unit10/page10-1.htm) — Reachable beginner city-place reading page.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

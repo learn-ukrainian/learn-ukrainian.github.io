@@ -1,0 +1,148 @@
+- word: місто
+  translation: city; town
+  pos: noun
+  example: "Це велике місто."
+- word: вулиця
+  translation: street
+  pos: noun
+  example: "Я живу на вулиці Франка."
+- word: район
+  translation: neighborhood; district
+  pos: noun
+  example: "Мій район тихий."
+- word: центр
+  translation: center
+  pos: noun
+  example: "Музей у центрі."
+- word: площа
+  translation: square
+  pos: noun
+  example: "Робота на площі."
+- word: парк
+  translation: park
+  pos: noun
+  example: "Я гуляю в парку."
+- word: школа
+  translation: school
+  pos: noun
+  example: "Ми в школі."
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Я йду в магазин."
+- word: супермаркет
+  translation: supermarket
+  pos: noun
+  example: "Супермаркет поруч."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "Аптека близько."
+- word: лікарня
+  translation: hospital
+  pos: noun
+  example: "Лікарня далеко."
+- word: банк
+  translation: bank
+  pos: noun
+  example: "Банк у центрі."
+- word: пошта
+  translation: post office
+  pos: noun
+  example: "Пошта на розі."
+- word: зупинка
+  translation: stop
+  pos: noun
+  example: "Я йду на зупинку."
+- word: вокзал
+  translation: station
+  pos: noun
+  example: "Як дістатися до вокзалу?"
+- word: станція
+  translation: station
+  pos: noun
+  example: "Станція метро поруч."
+- word: метро
+  translation: metro
+  pos: noun
+  example: "Їдьте на метро до центру."
+- word: автобус
+  translation: bus
+  pos: noun
+  example: "Я їду автобусом."
+- word: трамвай
+  translation: tram
+  pos: noun
+  example: "Трамвай їде прямо."
+- word: музей
+  translation: museum
+  pos: noun
+  example: "Де музей?"
+- word: театр
+  translation: theater
+  pos: noun
+  example: "Театр у центрі."
+- word: кінотеатр
+  translation: movie theater
+  pos: noun
+  example: "Кінотеатр на вулиці."
+- word: стадіон
+  translation: stadium
+  pos: noun
+  example: "Стадіон далеко."
+- word: пішки
+  translation: on foot
+  pos: adverb
+  example: "П'ять хвилин пішки."
+- word: хвилина
+  translation: minute
+  pos: noun
+  example: "Одна хвилина."
+- word: вибачте
+  translation: excuse me
+  pos: phrase
+  example: "Вибачте, як дістатися до бібліотеки?"
+- word: дістатися
+  translation: to get to
+  pos: verb
+  example: "Як дістатися до центру?"
+- word: ідіть
+  translation: go; walk (polite command)
+  pos: verb
+  example: "Ідіть прямо."
+- word: їдьте
+  translation: go by transport (polite command)
+  pos: verb
+  example: "Їдьте на метро."
+- word: поруч
+  translation: nearby
+  pos: adverb
+  example: "Кафе поруч."
+- word: прямо
+  translation: straight ahead
+  pos: adverb
+  example: "Ідіть прямо."
+- word: направо
+  translation: to the right
+  pos: adverb
+  example: "Потім направо."
+- word: наліво
+  translation: to the left
+  pos: adverb
+  example: "Потім наліво."
+- word: праворуч
+  translation: on the right
+  pos: adverb
+  example: "Готель праворуч."
+- word: ліворуч
+  translation: on the left
+  pos: adverb
+  example: "Музей ліворуч."
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "Квиток коштує двадцять гривень."
+- word: синьо-жовтий
+  translation: blue-and-yellow
+  pos: adjective
+  example: "Синьо-жовтий прапор над будівлею."
