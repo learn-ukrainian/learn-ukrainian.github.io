@@ -1,0 +1,156 @@
+- word: сполучник
+  translation: conjunction; connector
+  pos: noun
+  example: "І - це сполучник."
+- word: і
+  translation: and
+  pos: conjunction
+  example: "Я читаю і пишу."
+- word: й
+  translation: and; smooth variant of і
+  pos: conjunction
+  example: "Мама й тато вдома."
+- word: та
+  translation: and; sometimes but later
+  pos: conjunction
+  example: "Хліб та масло на столі."
+- word: а
+  translation: and; but; while
+  pos: conjunction
+  example: "Я хочу каву, а ти?"
+- word: але
+  translation: but
+  pos: conjunction
+  example: "Я хочу, але не можу."
+- word: або
+  translation: or
+  pos: conjunction
+  example: "Кава або чай?"
+- word: чи
+  translation: or; whether
+  pos: conjunction
+  example: "Ви студент чи лікар?"
+- word: бо
+  translation: because
+  pos: conjunction
+  example: "Я не йду, бо я хворий."
+- word: тому що
+  translation: because
+  pos: conjunction
+  example: "Ми вдома, тому що йде дощ."
+- word: тому
+  translation: therefore; that is why
+  pos: adverb
+  example: "Йде дощ, тому ми вдома."
+- word: чому
+  translation: why
+  pos: adverb
+  example: "Чому ти вдома?"
+- word: також
+  translation: also
+  pos: adverb
+  example: "Я також хочу чай."
+- word: теж
+  translation: also; too
+  pos: adverb
+  example: "Я теж хочу."
+- word: проте
+  translation: however; but
+  pos: conjunction
+  example: "Ми втомилися, проте не запізнилися."
+- word: зате
+  translation: but; on the other hand
+  pos: conjunction
+  example: "Далеко, зате красиво."
+- word: однак
+  translation: however
+  pos: conjunction
+  example: "Це цікаво, однак складно."
+- word: щоб
+  translation: so that; in order to
+  pos: conjunction
+  example: "Я хочу, щоб ти прийшов."
+- word: якщо
+  translation: if
+  pos: conjunction
+  example: "Якщо буде час, я прийду."
+- word: коли
+  translation: when
+  pos: conjunction
+  example: "Коли ти вдома?"
+- word: поки
+  translation: while; until
+  pos: conjunction
+  example: "Почекай, поки я пишу."
+- word: відколи
+  translation: since when
+  pos: conjunction
+  example: "Відколи ти тут?"
+- word: причина
+  translation: reason; cause
+  pos: noun
+  example: "Я знаю причину."
+- word: думка
+  translation: thought; opinion
+  pos: noun
+  example: "Це моя думка."
+- word: питання
+  translation: question
+  pos: noun
+  example: "Це просте питання."
+- word: відповідь
+  translation: answer
+  pos: noun
+  example: "Це правильна відповідь."
+- word: думати
+  translation: to think
+  pos: verb
+  example: "Я думаю про відповідь."
+- word: знати
+  translation: to know
+  pos: verb
+  example: "Я знаю це слово."
+- word: вважати
+  translation: to consider; to think
+  pos: verb
+  example: "Я вважаю, що це правильно."
+- word: правильно
+  translation: correctly; right
+  pos: adverb
+  example: "Це правильно."
+- word: неправильно
+  translation: incorrectly; wrong
+  pos: adverb
+  example: "Це неправильно."
+- word: Карпати
+  translation: the Carpathians
+  pos: proper noun
+  example: "Ми їдемо в Карпати."
+- word: море
+  translation: sea
+  pos: noun
+  example: "Море тепле."
+- word: гори
+  translation: mountains
+  pos: noun
+  example: "Гори гарні."
+- word: відпустка
+  translation: vacation
+  pos: noun
+  example: "Відпустка в Карпатах."
+- word: тістечко
+  translation: small cake; pastry
+  pos: noun
+  example: "Я хочу тістечко."
+- word: дієта
+  translation: diet
+  pos: noun
+  example: "Я на дієті."
+- word: без цукру
+  translation: without sugar
+  pos: phrase
+  example: "Чай без цукру."
+- word: дешевше
+  translation: cheaper
+  pos: adverb
+  example: "Там дешевше."
