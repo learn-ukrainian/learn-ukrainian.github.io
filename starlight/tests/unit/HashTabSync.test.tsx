@@ -1,6 +1,6 @@
-import { render, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import HashTabSync from '@site/src/components/HashTabSync';
+import { installHashTabSync } from '@site/src/components/HashTabSync';
 
 const originalScrollIntoView = Element.prototype.scrollIntoView;
 
@@ -9,6 +9,7 @@ describe('HashTabSync', () => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
     Element.prototype.scrollIntoView = originalScrollIntoView;
+    delete window.__learnUkrainianHashTabSyncInstalled;
     document.body.innerHTML = '';
     window.history.pushState(null, '', '/');
   });
@@ -35,7 +36,8 @@ describe('HashTabSync', () => {
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
 
-    render(<HashTabSync />);
+    installHashTabSync();
+    window.dispatchEvent(new Event('hashchange'));
 
     await waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
   });

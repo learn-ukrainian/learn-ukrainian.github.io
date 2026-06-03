@@ -216,7 +216,7 @@ def _line_range(start_index: int, end_index: int) -> str:
 
 
 def _clean_inline(text: str) -> str:
-    text = re.sub(r"<!--.*?-->", "", text)
+    text = re.sub(r"<!--[\s\S]*?-->", "", text)
     text = text.replace("`", "")
     text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)
     text = re.sub(r"\*(.*?)\*", r"\1", text)

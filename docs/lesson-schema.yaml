@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: starlight/src/components/{*.tsx, *.astro}
-  components_sha256: 3bf28f9d54170972998098495684c6a3bf43b57ab719ac34259dcaa1713cfdd0
+  components_sha256: 6db64e93a28d7b0734e239386a03d68b37e6fcb4fa769d70cbacb0b456c88294
   config_tables_sha256: e7e2ba824c0d215f2854d9bb923e6e02b7370bba1323d0dad57d730db940d62b
   lesson_contract_sha256: 65b526cf5be1d7f399412b0ce8891809d9a572445cb72e34a7fd061f16311b6b
 components:

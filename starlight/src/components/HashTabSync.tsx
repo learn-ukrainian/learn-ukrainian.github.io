@@ -2,8 +2,19 @@ import React from 'react';
 
 export interface HashTabSyncProps {}
 
-const hashTabSyncScript = `
-(() => {
+type StarlightTabsElement = HTMLElement & {
+  switchTab?: (tab: Element, index: number, animate?: boolean) => void;
+};
+
+declare global {
+  interface Window {
+    __learnUkrainianHashTabSyncInstalled?: boolean;
+  }
+}
+
+export function installHashTabSync() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
   let originalHtmlOverflowAnchor;
   let originalBodyOverflowAnchor;
   let restoreOverflowAnchorTimer;
@@ -35,11 +46,11 @@ const hashTabSyncScript = `
     window.history.replaceState(null, '', '#' + encodeURIComponent(id));
   }
 
-  function selectPanelForTarget(target) {
+  function selectPanelForTarget(target: HTMLElement) {
     const panel = target.closest('[role="tabpanel"]');
     if (!panel || !('hidden' in panel) || !panel.hidden) return;
 
-    const tabs = panel.closest('starlight-tabs');
+    const tabs = panel.closest('starlight-tabs') as StarlightTabsElement | null;
     if (!tabs) return;
 
     const panels = Array.from(tabs.querySelectorAll(':scope > [role="tabpanel"]'));
@@ -72,7 +83,7 @@ const hashTabSyncScript = `
     }, 1800);
   }
 
-  function scrollHashTarget(id) {
+  function scrollHashTarget(id: string) {
     const target = document.getElementById(id);
     if (!target) return;
 
@@ -116,8 +127,9 @@ const hashTabSyncScript = `
   [0, 100, 300, 800, 2000, 3500].forEach((delay) => {
     window.setTimeout(syncHashTab, delay);
   });
-})();
-`;
+}
+
+const hashTabSyncScript = `(${installHashTabSync.toString()})();`;
 
 export default function HashTabSync(_props: HashTabSyncProps) {
   return <script dangerouslySetInnerHTML={{ __html: hashTabSyncScript }} />;
