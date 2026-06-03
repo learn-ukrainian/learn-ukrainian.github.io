@@ -43,3 +43,17 @@ sources:
   title: § 38. Написання не з дієсловами
   page: 88
   grade: 7
+- id: S8
+  file: 7-klas-ukrmova-litvinova-2024_s0047
+  type: textbook
+  title: § 9. Часи дієслова
+  page: 44
+  grade: 7
+  notes: Дієслова раптової чи одноразової дії без видових варіантів; зітхнути
+    — зітхнув.
+- id: S9
+  file: vesum-verify-aspect-in-vocabulary-2026-06-02
+  type: morphological-dictionary
+  title: VESUM verification for A2.1 aspect vocabulary
+  notes: Verified сказати as the perfective partner used in the говорити —
+    сказати lexical pair.

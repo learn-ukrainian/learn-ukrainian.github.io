@@ -31,3 +31,36 @@ sources:
   title: Присудок — головний член речення,
   page: 108
   grade: 5
+- id: S6
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s0079
+  type: textbook
+  title: ВІДМІНЮВАННЯ ПРИКМЕТНИКІВ
+  page: 45
+  grade: 4
+  notes: Таблиця форм синій, синя, синє, сині; множина для всіх родів.
+- id: S7
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0075
+  type: textbook
+  title: Урок розвитку мовлення. Створення реклами
+  page: 73
+  grade: 4
+  notes: У називному відмінку множини прикметники всіх родів мають закінчення
+    -і.
+- id: S8
+  file: vesum-verify-liudyna-adjectives-2026-06-02
+  type: morphological-dictionary
+  title: VESUM verification for A2.1 appearance adjectives
+  notes: Verified синій, синя, синє, сині and кошлатий.
+- id: S9
+  file: 6-klas-ukrmova-avramenko-2023_s0069
+  type: textbook
+  title: § 34. Суфікси -ськ-, -цьк-, -зьк- і -ств-, -цтв-, -зтв
+  page: 155
+  grade: 6
+  notes: Сполучні о, е, є у складних словах.
+- id: S10
+  file: ukrainian_wiki/how-many:p12-12
+  type: ukrainian_wiki
+  title: "Педагогіка A1: How Many"
+  notes: Вік подається як давальна конструкція на зразок Скільки тобі років?
+    / Мені десять років.
