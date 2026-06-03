@@ -58,6 +58,22 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, EVENING) — P1 (22 worst-first) FULLY LANDED ON MAIN + P2 STARTED (read FIRST)
+
+**Supersedes the "OPEN PRs / awaiting orchestrator promotion / IN-FLIGHT" status in every block below — those P1 PRs are now MERGED to main.**
+
+**MERGED ALL 7 P1 PRs this session** (user 2026-06-03 re-confirmed the merge-grant: *"merge all 7"*):
+- **6 dossier PRs → 21 dossiers on main** (#2595 leontovych · #2596 shevchenko · #2597 olha/monomakh/berezovskyy · #2598 wave2-B[6] · #2599 wave2-A[6] · #2600 wave3[4]). `docs/research/bio/` on origin/main = **171** (was 150). Each: DeepSeek cross-reviewed (21/22 SHIP), passed the BLOCKING §7-xref + dossier-word-count CI gates, pure additions, no collisions; leontovych content spot-read = genuinely sourced/decolonized (verbatim Cheka рапорт, unsmoothed source-disagreement notes). main `2a28f1fc7c`.
+- **#2593 → wiki VERIFY-marker prompt relaxation + this handoff** (`scripts/wiki/prompts/compile_article.md`). Shared wiki infra. **A2 impact verified BEFORE merge: ZERO effect on the in-flight A2 work** — the 13 A2 PRs (#2579–2592) hand-edit `wiki/grammar/a2/*.md` + `plans/a2/*.yaml` and do NOT recompile via `compile.py`, so no file overlap + no behavioral dependency — and **net-positive for future A2/hist/lit compiles** (removes the over-aggressive VERIFY-marker flood A2 is currently hand-clearing across those 13 PRs). **TODO this session: notify orchestrator the shared prompt changed.**
+
+**P2 METHOD = PROVEN SERIAL LOOP** (user 2026-06-03 chose serial over the capped Workflow). ~5–6 figures/batch · claude writer fleet · DeepSeek cross-review per batch · PRs OPENED then MERGED per the grant once review=SHIP + CI green + scope-clean.
+
+**petro-veskliaov still deferred** until its slug rename →`petro-vesklyarov` (rename via plan-versioning `.bak`+bump first, then its dossier).
+
+**NEXT ACTION (this session, in order):** (1) merge #2593 [done as this PR lands]; (2) notify orchestrator re: shared `compile_article.md` change; (3) fire P2 batch 1 — ~5–6 of the 139 remaining ungrounded original-180 dossiers (priority list `/tmp/dossier-priority2-rest.txt`, recomputable; template `/tmp/brief-bio-dossier-batch-TEMPLATE.md` + 4 lessons + per-figure audit warnings from `batch_state/tasks/bio-audit-rev-b*.result`), DeepSeek-review, merge. Queued after: Task-#6 5 plan-level fixes (pohribnyi dates · portnikov patronymic · bohomazov birthplace+date · vasylenko case · pavlychko smear) via plan-versioning; then the wiki half (verify/rebuild 180 original wikis vs new dossiers + Phase-4 130 new 181–310 wikis).
+
+---
+
 ## ▶▶▶▶▶ SESSION UPDATE (2026-06-03) — ORIGINAL 1–180 LACK DOSSIERS (160/180); FULL UPLIFT SCOPED (read FIRST)
 
 **THE HEADLINE (deterministically verified on origin/main, this session):** the original 180 bio
