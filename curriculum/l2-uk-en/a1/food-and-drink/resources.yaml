@@ -1,0 +1,29 @@
+- title: "Ukrainian Lessons Podcast Episode 11"
+  role: podcast lesson
+  source_ref: "ULP Season 1, Episode 11"
+  url: https://www.ukrainianlessons.com/episode11/
+  notes: "Beginner Ukrainian food and cafe language connected to the plan reference."
+- title: "Ukrainian Lessons Podcast Episode 12"
+  role: podcast lesson
+  source_ref: "ULP Season 1, Episode 12"
+  url: https://www.ukrainianlessons.com/episode12/
+  notes: "Additional beginner food, drink, and ordering practice."
+- title: "Ukrainian Lessons Podcast Episode 13"
+  role: podcast lesson
+  source_ref: "ULP Season 1, Episode 13"
+  url: https://www.ukrainianlessons.com/episode13/
+  notes: "Continuation of the food/cafe cluster named in the plan."
+- title: "Ukrainian Course: Nouns in the Instrumental Case"
+  role: grammar table
+  source_ref: "ukrainiancourse.com"
+  url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-instrumental-case/
+  notes: "Reference for forms behind chunks like кава з молоком; not used as a formal A1 case lesson."
+- title: "Ukrainian Course: Nouns in the Genitive Case"
+  role: grammar table
+  source_ref: "ukrainiancourse.com"
+  url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-genitive-case/
+  notes: "Reference for forms behind chunks like без цукру; not used as a formal A1 case lesson."
+- title: "Wiki: pedagogy/a1/food-and-drink"
+  role: internal wiki
+  source_ref: "Wiki: pedagogy/a1/food-and-drink (LOCKED 2026-04-23)"
+  notes: "Authoritative locked pedagogical brief for M36."
