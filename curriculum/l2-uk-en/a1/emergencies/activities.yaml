@@ -1,0 +1,234 @@
+- id: act-1
+  type: fill-in
+  title: Complete the emergency line
+  instruction: Choose the word or number that completes the phrase.
+  items:
+    - sentence: "___! Тут аварія."
+      answer: "Допоможіть"
+      options:
+        - "Допоможіть"
+        - "Дякую"
+        - "Вітаю"
+      explanation: "Допоможіть is the help call."
+    - sentence: "Подзвоніть за номером ___."
+      answer: "112"
+      options:
+        - "112"
+        - "55"
+        - "800"
+      explanation: "112 is the single emergency number."
+    - sentence: "Мене ___ Анна."
+      answer: "звати"
+      options:
+        - "звати"
+        - "болить"
+        - "адреса"
+      explanation: "Мене звати gives your name."
+    - sentence: "Я ___ вулиці Шевченка."
+      answer: "на"
+      options:
+        - "на"
+        - "о"
+        - "до"
+      explanation: "Use на вулиці for on a street."
+- id: act-2
+  type: match-up
+  title: Numbers and services
+  instruction: Match each number with the service word.
+  pairs:
+    - left: "112"
+      right: "екстрена допомога"
+    - left: "101"
+      right: "служба порятунку"
+    - left: "102"
+      right: "поліція"
+    - left: "103"
+      right: "швидка"
+    - left: "104"
+      right: "газова служба"
+- id: act-3
+  type: group-sort
+  title: Sort emergency words
+  instruction: Put each phrase into the right group.
+  groups:
+    - name: "numbers"
+      items:
+        - "112"
+        - "101"
+        - "102"
+        - "103"
+        - "104"
+    - name: "problems"
+      items:
+        - "Тут аварія"
+        - "Тут пожежа"
+        - "Мені погано"
+        - "Я загубив паспорт"
+    - name: "place and identity"
+      items:
+        - "Я на вулиці"
+        - "Я біля метро"
+        - "Мене звати"
+        - "Мій номер телефону"
+- id: act-4
+  type: quiz
+  title: Choose the emergency phrase
+  instruction: Pick the clearest A1 phrase.
+  items:
+    - prompt: "You need to say: There is a fire here."
+      options:
+        - text: "Тут пожежа."
+          correct: true
+        - text: "Тут паспорт."
+          correct: false
+        - text: "Мене пожежа."
+          correct: false
+      explanation: "Тут пожежа is the short problem sentence."
+    - prompt: "You need police."
+      options:
+        - text: "Потрібна поліція."
+          correct: true
+        - text: "Потрібна аптека."
+          correct: false
+        - text: "Поліція болить."
+          correct: false
+      explanation: "Потрібна поліція asks for police help."
+    - prompt: "You want someone to call 103."
+      options:
+        - text: "Подзвоніть за номером 103, будь ласка."
+          correct: true
+        - text: "Я номер сто три."
+          correct: false
+        - text: "Сто три звати."
+          correct: false
+      explanation: "Use Подзвоніть за номером..."
+- id: act-5
+  type: true-false
+  title: Emergency language check
+  instruction: Decide whether the phrase is clear emergency language.
+  items:
+    - statement: "Допоможіть! Тут аварія."
+      answer: true
+      explanation: "This gives a help call and a problem."
+    - statement: "Я на вулиці Франка."
+      answer: true
+      explanation: "This gives a location."
+    - statement: "Мене номер Анна."
+      answer: false
+      explanation: "Use Мене звати Анна."
+    - statement: "Потрібна швидка."
+      answer: true
+      explanation: "This asks for an ambulance."
+    - statement: "Подзвоніть за номером голова."
+      answer: false
+      explanation: "A phone phrase needs a number."
+- id: act-6
+  type: unjumble
+  title: Build emergency lines
+  instruction: Put the words in a natural order.
+  items:
+    - words: "Допоможіть!/Тут/аварія."
+      answer: "Допоможіть! Тут аварія."
+    - words: "Я/на/вулиці/Шевченка."
+      answer: "Я на вулиці Шевченка."
+    - words: "Мене/звати/Анна."
+      answer: "Мене звати Анна."
+    - words: "Подзвоніть/за/номером/112."
+      answer: "Подзвоніть за номером 112."
+- id: act-7
+  type: fill-in
+  title: Location details
+  instruction: Choose the location word that fits.
+  items:
+    - sentence: "Я ___ метро."
+      answer: "біля"
+      options:
+        - "біля"
+        - "звати"
+        - "номер"
+      explanation: "Біля means near."
+    - sentence: "Будинок ___."
+      answer: "п'ять"
+      options:
+        - "п'ять"
+        - "поліція"
+        - "швидка"
+      explanation: "Будинок п'ять gives a building number."
+    - sentence: "Я ___ готелі."
+      answer: "в"
+      options:
+        - "в"
+        - "о"
+        - "за"
+      explanation: "Use в готелі for in a hotel."
+    - sentence: "Я ___ аптеки."
+      answer: "навпроти"
+      options:
+        - "навпроти"
+        - "повторіть"
+        - "аварія"
+      explanation: "Навпроти means opposite."
+- id: act-8
+  type: quiz
+  title: Personal information
+  instruction: Choose the answer that matches the question.
+  items:
+    - prompt: "Як вас звати?"
+      options:
+        - text: "Мене звати Сара."
+          correct: true
+        - text: "Я на вулиці Сара."
+          correct: false
+        - text: "Потрібна Сара."
+          correct: false
+      explanation: "Мене звати... answers the name question."
+    - prompt: "Ваш номер телефону?"
+      options:
+        - text: "Мій номер телефону: нуль дев'яносто сім..."
+          correct: true
+        - text: "Мене звати телефон."
+          correct: false
+        - text: "Тут телефон пожежа."
+          correct: false
+      explanation: "Мій номер телефону... gives the number."
+    - prompt: "Ви розумієте?"
+      options:
+        - text: "Я трохи розумію. Повторіть, будь ласка."
+          correct: true
+        - text: "Я вулиці розумію."
+          correct: false
+        - text: "Паспорт повторіть номер."
+          correct: false
+      explanation: "Use a repair phrase when understanding is limited."
+- id: act-9
+  type: translate
+  title: Emergency message
+  instruction: Choose the Ukrainian phrase that matches the English prompt.
+  items:
+    - source: "Help! There is an accident here."
+      options:
+        - text: "Допоможіть! Тут аварія."
+          correct: true
+        - text: "Дякую! Тут аптека."
+          correct: false
+        - text: "Мене звати аварія."
+          correct: false
+      explanation: "Use Допоможіть and Тут аварія."
+    - source: "I am on Shevchenka Street."
+      options:
+        - text: "Я на вулиці Шевченка."
+          correct: true
+        - text: "Я о вулиці Шевченка."
+          correct: false
+        - text: "Я номер Шевченка."
+          correct: false
+      explanation: "Use на вулиці for on a street."
+    - source: "Please call 102."
+      options:
+        - text: "Подзвоніть за номером 102, будь ласка."
+          correct: true
+        - text: "Повторіть номер 102 звати."
+          correct: false
+        - text: "Сто два на вулиці."
+          correct: false
+      explanation: "Use Подзвоніть за номером..."
