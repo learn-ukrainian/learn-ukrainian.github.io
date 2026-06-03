@@ -1,0 +1,418 @@
+---
+title: "Кольори"
+description: "Синій, жовтий — кольори України та вашого світу"
+sidebar:
+  order: 10
+  label: "10. Кольори"
+pipeline: linear-phase-4
+build_status: validated
+prev: what-is-it-like
+next: how-many
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+You already know how Ukrainian adjectives change with a noun:
+**новий стіл**, **нова книга**, **нове фото**, **нові речі**. Colors use the
+same habit. The noun still chooses the ending.
+
+By the end, you can:
+
+- ask **Якого кольору...?** as one ready question chunk;
+- name core colors such as **червоний**, **жовтий**, **зелений**, **синій**,
+  **білий**, and **чорний**;
+- change color endings for masculine, feminine, neuter, and plural nouns;
+- recognize why **синій** is a soft-pattern color: **синій / синя / синє**;
+- keep **синій** and **блакитний** apart in useful visual contexts;
+- describe a few people safely with chunks such as **карі очі**,
+  **русяве волосся**, **сиве волосся**, and **руде волосся**.
+
+Keep the goal practical. You are not learning every shade or every case.
+You are learning to ask about color and attach one color to one familiar noun.
+
+### Ask about color
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You point to a pencil and ask its color.", "options": [{"text": "Якого кольору олівець?", "correct": true}, {"text": "Який колір є олівець?", "correct": false}, {"text": "Якого кольору є олівець?", "correct": false}], "explanation": "Learn Якого кольору...? as one question chunk without є."}, {"question": "Якого кольору светр?", "options": [{"text": "Синій.", "correct": true}, {"text": "Синя.", "correct": false}, {"text": "Синє.", "correct": false}], "explanation": "Светр is masculine, so the short answer is синій."}, {"question": "Якого кольору ручка?", "options": [{"text": "Червона.", "correct": true}, {"text": "Червоний.", "correct": false}, {"text": "Червоне.", "correct": false}], "explanation": "Ручка is feminine."}, {"question": "Якого кольору вікно?", "options": [{"text": "Біле.", "correct": true}, {"text": "Білий.", "correct": false}, {"text": "Біла.", "correct": false}], "explanation": "Вікно is neuter."}, {"question": "Якого кольору соняшники?", "options": [{"text": "Жовті.", "correct": true}, {"text": "Жовта.", "correct": false}, {"text": "Жовте.", "correct": false}], "explanation": "Соняшники is plural."}, {"question": "Якого кольору прапор України?", "options": [{"text": "Синьо-жовтий.", "correct": true}, {"text": "Блакитно-жовтий.", "correct": false}, {"text": "Сіро-жовтий.", "correct": false}], "explanation": "The standard chunk is синьо-жовтий прапор."}]`)} />
+
+## Діалоги
+
+Start with the question, not with a color list. Say **Якого кольору...?** as a
+single chunk. You do not need to analyze why the form is **якого** yet.
+
+For reception (**Рецепція**), hear the question with a picture or **або аудіо**
+and answer first with the dictionary form (**словникова форма**). In practice,
+that means:
+
+- **Якого кольору олівець?** — **Червоний.**
+- **Якого кольору светр?** — **Синій.**
+- **Якого кольору прапор?** — **Синьо-жовтий.**
+
+At a small flower market, Natalka is choosing a bouquet:
+
+<DialogueBox uk="Наталка: Які гарні троянди! Якого вони кольору?" en="Natalka: What nice roses! What color are they?" />
+<DialogueBox uk="Продавець: Червоні." en="Seller: Red." />
+<DialogueBox uk="Наталка: А ці лілії білі?" en="Natalka: And are these lilies white?" />
+<DialogueBox uk="Продавець: Так, білі лілії." en="Seller: Yes, white lilies." />
+<DialogueBox uk="Наталка: Мені подобаються жовті соняшники." en="Natalka: I like the yellow sunflowers." />
+<DialogueBox uk="Продавець: Добре. Загорнути букет?" en="Seller: Good. Shall I wrap the bouquet?" />
+<DialogueBox uk="Наталка: Так, дякую. У синю стрічку." en="Natalka: Yes, thank you. In a blue ribbon." />
+
+The phrase **Мені подобаються...** is a ready chunk here. Store it for
+recognition. The productive work today is color.
+
+Notice the rhythm of the exchange. The question can point to one thing or many
+things: **Якого кольору ваза?**, **Якого кольору троянди?**. The answer may be
+one word: **синя**, **червоні**, **білі**. That is enough for A1. If you are
+not sure about the ending, answer with the full noun chunk: **синя ваза**,
+**червоні троянди**, **білі лілії**. The noun helps your mouth choose the
+right color form.
+
+Repeat the question aloud before you choose an answer. The question is stable,
+and the answer is flexible.
+
+### Color endings
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "червон__ олівець", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "червон__ ручка", "answer": "а", "options": ["а", "ий", "е"]}, {"sentence": "червон__ яблуко", "answer": "е", "options": ["е", "а", "ий"]}, {"sentence": "біл__ светр", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "біл__ сорочка", "answer": "а", "options": ["а", "ий", "е"]}, {"sentence": "сір__ пальто", "answer": "е", "options": ["е", "ий", "а"]}, {"sentence": "зелен__ зошит", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "рожев__ листівка", "answer": "а", "options": ["а", "е", "ий"]}, {"sentence": "син__ книга", "answer": "я", "options": ["я", "ій", "є"]}, {"sentence": "син__ вікно", "answer": "є", "options": ["є", "ій", "я"]}]`)} />
+
+## Кольори
+
+Here are the core colors as beginner chunks. Learn the masculine form first,
+then change the ending only when you attach it to a noun.
+
+| Color | Meaning | Example chunk |
+| --- | --- | --- |
+| **білий** | white | **білий светр** |
+| **чорний** | black | **чорний телефон** |
+| **червоний** | red | **червоний олівець** |
+| **зелений** | green | **зелений зошит** |
+| **жовтий** | yellow | **жовтий соняшник** |
+| **синій** | dark blue, deep blue | **синій светр** |
+| **блакитний** | light blue, sky blue | **блакитне небо** |
+| **сірий** | grey | **сіре пальто** |
+| **коричневий** | brown | **коричневий стіл** |
+| **рожевий** | pink | **рожева листівка** |
+| **помаранчевий** | orange | **помаранчевий олівець** |
+| **фіолетовий** | purple | **фіолетова ручка** |
+
+Now use **узгодження**, agreement. A color is an adjective, so it changes to
+match the noun. You already know the pattern from module 9:
+
+| Noun | Ask | Color chunk |
+| --- | --- | --- |
+| **олівець** | **Якого кольору олівець?** | **червоний олівець** |
+| **ручка** | **Якого кольору ручка?** | **червона ручка** |
+| **яблуко** | **Якого кольору яблуко?** | **червоне яблуко** |
+| plural things | **Якого кольору речі?** | **червоні речі** |
+
+The useful format is **noun + color** in your head: **олівець червоний**,
+**ручка червона**, **яблуко червоне**. When the color comes before the noun,
+the ending is the same: **червоний олівець**, **червона ручка**,
+**червоне яблуко**.
+
+Only one basic color is a new pattern today: **синій**. It is soft:
+**синій стіл**, **синя книга**, **синє вікно**, **сині речі**. Treat it as a
+small exception that still obeys the same noun-matching habit.
+
+The other common colors here use the familiar hard pattern:
+**жовтий / жовта / жовте**, **зелений / зелена / зелене**,
+**чорний / чорна / чорне**, **білий / біла / біле**. Say them with objects you
+already know: **жовта стрічка**, **зелений зошит**, **чорна сукня**,
+**біле вікно**. You are not building a color dictionary; you are building
+usable pairs.
+
+### Hard or soft color
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Hard pattern -ий/-а/-е": ["червоний олівець", "жовта стрічка", "зелене яблуко", "білий светр", "чорна сукня", "сіре пальто", "коричневі черевики", "помаранчевий олівець"], "Soft pattern -ій/-я/-є": ["синій светр", "синя ручка", "синє море", "сині речі"]}`)} />
+
+:::tip
+Do not memorize colors alone. Pair each color with a noun:
+**червона ручка**, **білий светр**, **синє море**, **жовті соняшники**.
+The noun keeps the ending honest.
+:::
+
+## Якого кольору?
+
+After short answers, build small sentences. This is **предикативне
+використання**: the color describes the noun after the noun. Ukrainian usually
+does not need **є** in this present-tense frame.
+
+| English idea | Ukrainian line |
+| --- | --- |
+| The dress is red. | **Сукня червона.** |
+| I have a blue sweater. | **У мене синій светр.** |
+| I am a student. | **Я студент.** |
+
+The same no-**є** rhythm works across the course:
+
+- **Книга нова.**
+- **Сукня червона.**
+- **Светр синій.**
+- **Пальто сіре.**
+
+Liza and Dmytro are planning what to wear:
+
+<DialogueBox uk="Ліза: Що мені одягнути на вечірку?" en="Liza: What should I wear to the party?" />
+<DialogueBox uk="Дмитро: Чорну сукню. І сіре пальто зверху." en="Dmytro: A black dress. And a grey coat on top." />
+<DialogueBox uk="Ліза: А черевики?" en="Liza: And shoes?" />
+<DialogueBox uk="Дмитро: Коричневі." en="Dmytro: Brown." />
+<DialogueBox uk="Ліза: А як я впізнаю Олю?" en="Liza: And how will I recognize Olia?" />
+<DialogueBox uk="Дмитро: У неї карі очі й русяве волосся." en="Dmytro: She has brown eyes and fair hair." />
+<DialogueBox uk="Ліза: А білий светр?" en="Liza: And the white sweater?" />
+<DialogueBox uk="Дмитро: Ні, білий светр сьогодні не треба." en="Dmytro: No, the white sweater is not needed today." />
+
+You saw **чорну сукню** in that dialogue because the dress is an object in the
+sentence. Do not turn that into a full case lesson today. Your productive A1
+chunks are still **чорна сукня** and **Сукня чорна**.
+
+### Синій or блакитний
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "A clear sky", "options": [{"text": "блакитне небо", "correct": true}, {"text": "синьо-жовте небо", "correct": false}, {"text": "коричневе небо", "correct": false}], "explanation": "For a clear sky, use блакитне небо."}, {"question": "The Ukrainian flag", "options": [{"text": "синьо-жовтий прапор", "correct": true}, {"text": "блакитно-жовтий прапор", "correct": false}, {"text": "голубо-жовтий прапор", "correct": false}], "explanation": "The standard phrase is синьо-жовтий прапор."}, {"question": "A dark blue sweater", "options": [{"text": "синій светр", "correct": true}, {"text": "блакитна светр", "correct": false}, {"text": "синє светр", "correct": false}], "explanation": "Светр is masculine; синій also signals deep blue."}, {"question": "A light-blue postcard", "options": [{"text": "блакитна листівка", "correct": true}, {"text": "синій листівка", "correct": false}, {"text": "блакитне листівка", "correct": false}], "explanation": "Листівка is feminine."}, {"question": "Deep water", "options": [{"text": "синє море", "correct": true}, {"text": "блакитний море", "correct": false}, {"text": "синя море", "correct": false}], "explanation": "Море is neuter; синє море is a stable chunk."}, {"question": "A notebook that is dark green", "options": [{"text": "темно-зелений зошит", "correct": true}, {"text": "темна-зелена зошит", "correct": false}, {"text": "зелено-темний зошит", "correct": false}], "explanation": "Treat темно-зелений as one compound color chunk."}]`)} />
+
+## Синій ≠ блакитний
+
+English often says "blue" for everything. Ukrainian gives you two active A1
+choices:
+
+| Ukrainian | Use it for | Chunk |
+| --- | --- | --- |
+| **синій** | dark or deep blue | **синє море**, **синій светр** |
+| **блакитний** | light blue, sky blue | **блакитне небо** |
+
+You do not need a **лекцію про спектр**. Use stable pictures. A clear sky is
+**блакитне небо**. Deep water or ink can be **синє море** or **синє чорнило**.
+The state flag of Ukraine is **синьо-жовтий прапор**. Keep that exact phrase.
+
+Two compound color chunks are useful:
+
+- **темно-зелений зошит** — a dark-green notebook
+- **світло-синій светр** — a light-blue sweater
+
+At A1, just recognize the hyphen in these chunks. You do not need to create a
+large family of compound color words.
+
+Keep the contrast physical. Imagine a marker filled with deep ink:
+**синій маркер**. Imagine a clear spring sky: **блакитне небо**. Imagine a
+postcard with the state flag: **синьо-жовтий прапор**. If another blue word
+appears in a text, you can recognize it passively, but your active pair is
+simple: **синій** for dark or deep blue, **блакитний** for light or sky blue.
+This is a Ukrainian color habit, not an English one-word transfer.
+
+Here is the safest memory rule. **Синій** belongs with strong blue things:
+**синій маркер**, **синє море**, **синє чорнило**. **Блакитний** belongs with
+light-blue things: **блакитна листівка**, **блакитне небо**. When you talk
+about Ukraine's flag, do not choose between those two ordinary adjective forms.
+Use the fixed compound adjective **синьо-жовтий**. The hyphen shows that the
+two colors work together as one description: **синьо-жовтий прапор**,
+**синьо-жовта стрічка**.
+
+Practice the contrast with one question: **Якого кольору небо?** If it is a
+clear, bright sky, answer **блакитне**. If you point to deep water, answer
+**синє**.
+
+### Appearance chunks
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "карі очі", "right": "brown eyes"}, {"left": "русяве волосся", "right": "fair or light-brown hair"}, {"left": "сиве волосся", "right": "grey hair"}, {"left": "руде волосся", "right": "red hair"}, {"left": "блакитне небо", "right": "light-blue sky"}, {"left": "синьо-жовтий прапор", "right": "Ukrainian flag colors"}]`)} />
+
+## Зовнішність
+
+People are not always described by the same simple palette you use for objects.
+Store these as ready chunks:
+
+| Chunk | Meaning |
+| --- | --- |
+| **карі очі** | brown eyes |
+| **русяве волосся** | fair or light-brown hair |
+| **сиве волосся** | grey hair |
+| **руде волосся** | red hair |
+
+The words **рудий** and **сивий** are especially useful **для волосся**. If you
+read a story, you may also recognize **голубий** or **білосніжний**. Treat
+those as passive recognition for now. You do not need to produce them in your
+own A1 descriptions.
+
+Say:
+
+- **У неї карі очі.**
+- **У нього русяве волосся.**
+- **У бабусі сиве волосся.**
+- **У хлопчика руде волосся.**
+
+Do not copy English color idioms word for word. If you mean "I feel blue,"
+say **Мені сумно** or **У мене поганий настрій**.
+
+### Repair color traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian correction." items={JSON.parse(`[{"sentence": "Сукня є червона.", "errorWord": "Сукня є червона.", "correctForm": "Сукня червона.", "options": ["Сукня червона.", "Сукня червоний.", "Сукня є червоний."], "explanation": "In this present-tense frame, Ukrainian normally omits є."}, {"sentence": "Якого кольору є светр?", "errorWord": "Якого кольору є светр?", "correctForm": "Якого кольору светр?", "options": ["Якого кольору светр?", "Яка кольору светр?", "Якого кольору є светр?"], "explanation": "Keep Якого кольору...? as one chunk without є."}, {"sentence": "Блакитно-жовтий прапор.", "errorWord": "Блакитно-жовтий прапор.", "correctForm": "Синьо-жовтий прапор.", "options": ["Синьо-жовтий прапор.", "Блакитно-жовтий прапор.", "Жовто-блакитний прапор."], "explanation": "The standard chunk for Ukraine's flag is синьо-жовтий прапор."}, {"sentence": "У мене є синій настрій.", "errorWord": "У мене є синій настрій.", "correctForm": "Мені сумно. / У мене поганий настрій.", "options": ["Мені сумно. / У мене поганий настрій.", "У мене є синій настрій.", "Я синій сьогодні."], "explanation": "Do not copy the English color idiom. Use a Ukrainian mood phrase."}, {"sentence": "Вона має червоне волосся.", "errorWord": "Вона має червоне волосся.", "correctForm": "У неї руде волосся.", "options": ["У неї руде волосся.", "Вона має червоне волосся.", "У неї червоний волосся."], "explanation": "For red hair, use руде волосся; for possession, use У неї..."}, {"sentence": "ЧорнИй, білИй (з наголосом на закінченні)", "errorWord": "ЧорнИй, білИй (з наголосом на закінченні)", "correctForm": "ЧОрний, бІлий", "options": ["ЧОрний, бІлий", "ЧорнИй, білИй", "чорний, білий"], "explanation": "In these common color words, stress is on the root."}]`)} />
+
+## 📋 Підсумок
+
+Your checklist is short:
+
+1. Ask **Якого кольору...?**
+2. Choose a color.
+3. Let the noun choose the ending.
+
+Try it with three things near you:
+
+<DialogueBox uk="Якого кольору стіл?" en="What color is the table?" />
+<DialogueBox uk="Стіл коричневий." en="The table is brown." />
+<DialogueBox uk="Якого кольору ручка?" en="What color is the pen?" />
+<DialogueBox uk="Ручка синя." en="The pen is blue." />
+<DialogueBox uk="Якого кольору фото?" en="What color is the photo?" />
+<DialogueBox uk="Фото чорно-біле." en="The photo is black and white." />
+
+Then add one person-description chunk:
+
+- **У неї карі очі.**
+- **У нього русяве волосся.**
+- **У бабусі сиве волосся.**
+
+Avoid three traps. First, do not insert **є** into **Сукня червона** or
+**Якого кольору светр?** Second, do not call the Ukrainian flag
+**блакитно-жовтий**; the course phrase is **синьо-жовтий прапор**. Third, do
+not translate English color idioms literally. Keep Ukrainian chunks Ukrainian.
+
+For your own mini-check, choose three nouns from earlier modules and attach
+colors to them. Use one masculine noun, one feminine noun, and one neuter noun:
+**светр синій**, **ручка синя**, **вікно синє**. Then switch to another color:
+**светр білий**, **ручка біла**, **вікно біле**. Finally, try one plural line:
+**книги зелені** or **черевики коричневі**.
+
+When you speak, keep the sentence short. **Якого кольору ручка? Ручка синя.**
+**Якого кольору пальто? Пальто сіре.** **Якого кольору прапор? Прапор
+синьо-жовтий.** This is enough for a useful A1 exchange. The next module will
+add counting; for now, one noun plus one color is the goal.
+
+End with one small spoken chain: **Якого кольору? Білий, біла, біле. Чорний,
+чорна, чорне. Синій, синя, синє.** Then choose one real object and say one
+sentence about it.
+
+### Room and clothes colors
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Моя кімната ___.", "answer": "біла", "options": ["біла", "білий", "біле"]}, {"sentence": "Стіл ___.", "answer": "коричневий", "options": ["коричневий", "коричнева", "коричневе"]}, {"sentence": "Пальто ___.", "answer": "сіре", "options": ["сіре", "сірий", "сіра"]}, {"sentence": "У мене ___ светр.", "answer": "синій", "options": ["синій", "синя", "синє"]}, {"sentence": "У неї ___ очі.", "answer": "карі", "options": ["карі", "коричневі", "каре"]}, {"sentence": "У нього ___ волосся.", "answer": "русяве", "options": ["русяве", "русявий", "русий"]}, {"sentence": "У бабусі ___ волосся.", "answer": "сиве", "options": ["сиве", "сива", "сивий"]}, {"sentence": "Це ___ небо.", "answer": "блакитне", "options": ["блакитне", "блакитний", "блакитна"]}]`)} />
+
+### Choose the Ukrainian line
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "The dress is red.", "options": [{"text": "Сукня червона.", "correct": true}, {"text": "Сукня є червона.", "correct": false}, {"text": "Сукня червоний.", "correct": false}], "explanation": "No є is needed, and сукня is feminine."}, {"source": "I have a blue sweater.", "options": [{"text": "У мене синій светр.", "correct": true}, {"text": "У мене синя светр.", "correct": false}, {"text": "У мене є блакитно светр.", "correct": false}], "explanation": "Светр is masculine; синій is the soft color form."}, {"source": "The sky is light blue.", "options": [{"text": "Небо блакитне.", "correct": true}, {"text": "Небо блакитний.", "correct": false}, {"text": "Небо синя.", "correct": false}], "explanation": "Небо is neuter, and блакитний means light blue."}, {"source": "She has brown eyes.", "options": [{"text": "У неї карі очі.", "correct": true}, {"text": "Вона має коричневі очі.", "correct": false}, {"text": "У неї коричневе очі.", "correct": false}], "explanation": "Use the fixed chunk карі очі."}, {"source": "He has grey hair.", "options": [{"text": "У нього сиве волосся.", "correct": true}, {"text": "У нього сіре волосся.", "correct": false}, {"text": "Він має сивий волосся.", "correct": false}], "explanation": "Use сиве волосся and the У нього... frame."}, {"source": "The flag is blue and yellow.", "options": [{"text": "Прапор синьо-жовтий.", "correct": true}, {"text": "Прапор блакитно-жовтий.", "correct": false}, {"text": "Прапор синій і жовта.", "correct": false}], "explanation": "Keep синьо-жовтий as the fixed flag color chunk."}]`)} />
+
+### Color checkpoint
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Якого кольору светр?", "isTrue": true, "explanation": "This is the standard color question chunk."}, {"statement": "Якого кольору є светр?", "isTrue": false, "explanation": "Do not insert є into this question."}, {"statement": "Ручка синя.", "isTrue": true, "explanation": "Ручка is feminine, and синій becomes синя."}, {"statement": "Вікно синій.", "isTrue": false, "explanation": "Вікно is neuter; say Вікно синє."}, {"statement": "Синій and блакитний are both active A1 words here.", "isTrue": true, "explanation": "Синій is dark/deep blue; блакитний is light/sky blue."}, {"statement": "Голубий is a production target here.", "isTrue": false, "explanation": "It is passive recognition only here."}, {"statement": "У неї карі очі.", "isTrue": true, "explanation": "Карі очі is a natural fixed chunk."}, {"statement": "The Ukrainian flag chunk is синьо-жовтий прапор.", "isTrue": true, "explanation": "Keep this exact phrase."}]`)} />
+
+### Color chunks
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "червоний олівець", "right": "red pencil"}, {"left": "червона ручка", "right": "red pen"}, {"left": "червоне яблуко", "right": "red apple"}, {"left": "блакитне небо", "right": "light-blue sky"}, {"left": "синє море", "right": "deep-blue sea"}, {"left": "чорна сукня", "right": "black dress"}, {"left": "білий светр", "right": "white sweater"}, {"left": "коричневі черевики", "right": "brown shoes"}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"колір","translation":"color","pos":"noun","example":"Якого кольору стіл?","examples":["color","Якого кольору стіл?"]},{"word":"кольори","translation":"colors","pos":"noun","example":"Це базові кольори.","examples":["colors","Це базові кольори."]},{"word":"якого кольору?","translation":"what color?","pos":"phrase","example":"Якого кольору светр?","examples":["what color?","Якого кольору светр?"]},{"word":"білий","translation":"white, masculine","pos":"adj","example":"Білий светр.","examples":["white, masculine","Білий светр."]},{"word":"біла","translation":"white, feminine","pos":"adj","example":"Біла сорочка.","examples":["white, feminine","Біла сорочка."]},{"word":"біле","translation":"white, neuter","pos":"adj","example":"Біле вікно.","examples":["white, neuter","Біле вікно."]},{"word":"чорний","translation":"black, masculine","pos":"adj","example":"Чорний телефон.","examples":["black, masculine","Чорний телефон."]},{"word":"чорна","translation":"black, feminine","pos":"adj","example":"Чорна сукня.","examples":["black, feminine","Чорна сукня."]},{"word":"червоний","translation":"red, masculine","pos":"adj","example":"Червоний олівець.","examples":["red, masculine","Червоний олівець."]},{"word":"червона","translation":"red, feminine","pos":"adj","example":"Червона ручка.","examples":["red, feminine","Червона ручка."]},{"word":"червоне","translation":"red, neuter","pos":"adj","example":"Червоне яблуко.","examples":["red, neuter","Червоне яблуко."]},{"word":"зелений","translation":"green, masculine","pos":"adj","example":"Зелений зошит.","examples":["green, masculine","Зелений зошит."]},{"word":"зелена","translation":"green, feminine","pos":"adj","example":"Зелена сумка.","examples":["green, feminine","Зелена сумка."]},{"word":"жовтий","translation":"yellow, masculine","pos":"adj","example":"Жовтий соняшник.","examples":["yellow, masculine","Жовтий соняшник."]},{"word":"жовта","translation":"yellow, feminine","pos":"adj","example":"Жовта стрічка.","examples":["yellow, feminine","Жовта стрічка."]},{"word":"синій","translation":"dark blue, masculine","pos":"adj","example":"Синій светр.","examples":["dark blue, masculine","Синій светр."]},{"word":"синя","translation":"dark blue, feminine","pos":"adj","example":"Синя ручка.","examples":["dark blue, feminine","Синя ручка."]},{"word":"синє","translation":"dark blue, neuter","pos":"adj","example":"Синє море.","examples":["dark blue, neuter","Синє море."]},{"word":"синьо-жовтий","translation":"blue-and-yellow","pos":"adj","example":"Синьо-жовтий прапор.","examples":["blue-and-yellow","Синьо-жовтий прапор."]},{"word":"блакитний","translation":"light blue, masculine","pos":"adj","example":"Блакитний олівець.","examples":["light blue, masculine","Блакитний олівець."]},{"word":"блакитне","translation":"light blue, neuter","pos":"adj","example":"Блакитне небо.","examples":["light blue, neuter","Блакитне небо."]},{"word":"сірий","translation":"grey, masculine","pos":"adj","example":"Сірий стілець.","examples":["grey, masculine","Сірий стілець."]},{"word":"сіре","translation":"grey, neuter","pos":"adj","example":"Сіре пальто.","examples":["grey, neuter","Сіре пальто."]},{"word":"коричневий","translation":"brown, masculine","pos":"adj","example":"Коричневий стіл.","examples":["brown, masculine","Коричневий стіл."]},{"word":"коричневі","translation":"brown, plural","pos":"adj","example":"Коричневі черевики.","examples":["brown, plural","Коричневі черевики."]},{"word":"рожевий","translation":"pink, masculine","pos":"adj","example":"Рожевий плакат.","examples":["pink, masculine","Рожевий плакат."]},{"word":"рожева","translation":"pink, feminine","pos":"adj","example":"Рожева листівка.","examples":["pink, feminine","Рожева листівка."]},{"word":"помаранчевий","translation":"orange, masculine","pos":"adj","example":"Помаранчевий олівець.","examples":["orange, masculine","Помаранчевий олівець."]},{"word":"фіолетовий","translation":"purple, masculine","pos":"adj","example":"Фіолетовий зошит.","examples":["purple, masculine","Фіолетовий зошит."]},{"word":"темно-зелений","translation":"dark green","pos":"adj","example":"Темно-зелений зошит.","examples":["dark green","Темно-зелений зошит."]},{"word":"світло-синій","translation":"light blue","pos":"adj","example":"Світло-синій светр.","examples":["light blue","Світло-синій светр."]},{"word":"карі очі","translation":"brown eyes","pos":"phrase","example":"У неї карі очі.","examples":["brown eyes","У неї карі очі."]},{"word":"русяве волосся","translation":"fair or light-brown hair","pos":"phrase","example":"У нього русяве волосся.","examples":["fair or light-brown hair","У нього русяве волосся."]},{"word":"сиве волосся","translation":"grey hair","pos":"phrase","example":"У бабусі сиве волосся.","examples":["grey hair","У бабусі сиве волосся."]},{"word":"руде волосся","translation":"red hair","pos":"phrase","example":"У хлопчика руде волосся.","examples":["red hair","У хлопчика руде волосся."]},{"word":"настрій","translation":"mood","pos":"noun","example":"У мене поганий настрій.","examples":["mood","У мене поганий настрій."]},{"word":"сумно","translation":"sad","pos":"adv","example":"Мені сумно.","examples":["sad","Мені сумно."]},{"word":"прапор","translation":"flag","pos":"noun","example":"Прапор синьо-жовтий.","examples":["flag","Прапор синьо-жовтий."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"колір","back":"color"},{"front":"кольори","back":"colors"},{"front":"якого кольору?","back":"what color?"},{"front":"білий","back":"white, masculine"},{"front":"біла","back":"white, feminine"},{"front":"біле","back":"white, neuter"},{"front":"чорний","back":"black, masculine"},{"front":"чорна","back":"black, feminine"},{"front":"червоний","back":"red, masculine"},{"front":"червона","back":"red, feminine"},{"front":"червоне","back":"red, neuter"},{"front":"зелений","back":"green, masculine"},{"front":"зелена","back":"green, feminine"},{"front":"жовтий","back":"yellow, masculine"},{"front":"жовта","back":"yellow, feminine"},{"front":"синій","back":"dark blue, masculine"},{"front":"синя","back":"dark blue, feminine"},{"front":"синє","back":"dark blue, neuter"},{"front":"синьо-жовтий","back":"blue-and-yellow"},{"front":"блакитний","back":"light blue, masculine"},{"front":"блакитне","back":"light blue, neuter"},{"front":"сірий","back":"grey, masculine"},{"front":"сіре","back":"grey, neuter"},{"front":"коричневий","back":"brown, masculine"},{"front":"коричневі","back":"brown, plural"},{"front":"рожевий","back":"pink, masculine"},{"front":"рожева","back":"pink, feminine"},{"front":"помаранчевий","back":"orange, masculine"},{"front":"фіолетовий","back":"purple, masculine"},{"front":"темно-зелений","back":"dark green"},{"front":"світло-синій","back":"light blue"},{"front":"карі очі","back":"brown eyes"},{"front":"русяве волосся","back":"fair or light-brown hair"},{"front":"сиве волосся","back":"grey hair"},{"front":"руде волосся","back":"red hair"},{"front":"настрій","back":"mood"},{"front":"сумно","back":"sad"},{"front":"прапор","back":"flag"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Ask about color
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You point to a pencil and ask its color.", "options": [{"text": "Якого кольору олівець?", "correct": true}, {"text": "Який колір є олівець?", "correct": false}, {"text": "Якого кольору є олівець?", "correct": false}], "explanation": "Learn Якого кольору...? as one question chunk without є."}, {"question": "Якого кольору светр?", "options": [{"text": "Синій.", "correct": true}, {"text": "Синя.", "correct": false}, {"text": "Синє.", "correct": false}], "explanation": "Светр is masculine, so the short answer is синій."}, {"question": "Якого кольору ручка?", "options": [{"text": "Червона.", "correct": true}, {"text": "Червоний.", "correct": false}, {"text": "Червоне.", "correct": false}], "explanation": "Ручка is feminine."}, {"question": "Якого кольору вікно?", "options": [{"text": "Біле.", "correct": true}, {"text": "Білий.", "correct": false}, {"text": "Біла.", "correct": false}], "explanation": "Вікно is neuter."}, {"question": "Якого кольору соняшники?", "options": [{"text": "Жовті.", "correct": true}, {"text": "Жовта.", "correct": false}, {"text": "Жовте.", "correct": false}], "explanation": "Соняшники is plural."}, {"question": "Якого кольору прапор України?", "options": [{"text": "Синьо-жовтий.", "correct": true}, {"text": "Блакитно-жовтий.", "correct": false}, {"text": "Сіро-жовтий.", "correct": false}], "explanation": "The standard chunk is синьо-жовтий прапор."}]`)} />
+
+### Color endings
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "червон__ олівець", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "червон__ ручка", "answer": "а", "options": ["а", "ий", "е"]}, {"sentence": "червон__ яблуко", "answer": "е", "options": ["е", "а", "ий"]}, {"sentence": "біл__ светр", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "біл__ сорочка", "answer": "а", "options": ["а", "ий", "е"]}, {"sentence": "сір__ пальто", "answer": "е", "options": ["е", "ий", "а"]}, {"sentence": "зелен__ зошит", "answer": "ий", "options": ["ий", "а", "е"]}, {"sentence": "рожев__ листівка", "answer": "а", "options": ["а", "е", "ий"]}, {"sentence": "син__ книга", "answer": "я", "options": ["я", "ій", "є"]}, {"sentence": "син__ вікно", "answer": "є", "options": ["є", "ій", "я"]}]`)} />
+
+### Hard or soft color
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Hard pattern -ий/-а/-е": ["червоний олівець", "жовта стрічка", "зелене яблуко", "білий светр", "чорна сукня", "сіре пальто", "коричневі черевики", "помаранчевий олівець"], "Soft pattern -ій/-я/-є": ["синій светр", "синя ручка", "синє море", "сині речі"]}`)} />
+
+### Синій or блакитний
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "A clear sky", "options": [{"text": "блакитне небо", "correct": true}, {"text": "синьо-жовте небо", "correct": false}, {"text": "коричневе небо", "correct": false}], "explanation": "For a clear sky, use блакитне небо."}, {"question": "The Ukrainian flag", "options": [{"text": "синьо-жовтий прапор", "correct": true}, {"text": "блакитно-жовтий прапор", "correct": false}, {"text": "голубо-жовтий прапор", "correct": false}], "explanation": "The standard phrase is синьо-жовтий прапор."}, {"question": "A dark blue sweater", "options": [{"text": "синій светр", "correct": true}, {"text": "блакитна светр", "correct": false}, {"text": "синє светр", "correct": false}], "explanation": "Светр is masculine; синій also signals deep blue."}, {"question": "A light-blue postcard", "options": [{"text": "блакитна листівка", "correct": true}, {"text": "синій листівка", "correct": false}, {"text": "блакитне листівка", "correct": false}], "explanation": "Листівка is feminine."}, {"question": "Deep water", "options": [{"text": "синє море", "correct": true}, {"text": "блакитний море", "correct": false}, {"text": "синя море", "correct": false}], "explanation": "Море is neuter; синє море is a stable chunk."}, {"question": "A notebook that is dark green", "options": [{"text": "темно-зелений зошит", "correct": true}, {"text": "темна-зелена зошит", "correct": false}, {"text": "зелено-темний зошит", "correct": false}], "explanation": "Treat темно-зелений as one compound color chunk."}]`)} />
+
+### Appearance chunks
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "карі очі", "right": "brown eyes"}, {"left": "русяве волосся", "right": "fair or light-brown hair"}, {"left": "сиве волосся", "right": "grey hair"}, {"left": "руде волосся", "right": "red hair"}, {"left": "блакитне небо", "right": "light-blue sky"}, {"left": "синьо-жовтий прапор", "right": "Ukrainian flag colors"}]`)} />
+
+### Repair color traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian correction." items={JSON.parse(`[{"sentence": "Сукня є червона.", "errorWord": "Сукня є червона.", "correctForm": "Сукня червона.", "options": ["Сукня червона.", "Сукня червоний.", "Сукня є червоний."], "explanation": "In this present-tense frame, Ukrainian normally omits є."}, {"sentence": "Якого кольору є светр?", "errorWord": "Якого кольору є светр?", "correctForm": "Якого кольору светр?", "options": ["Якого кольору светр?", "Яка кольору светр?", "Якого кольору є светр?"], "explanation": "Keep Якого кольору...? as one chunk without є."}, {"sentence": "Блакитно-жовтий прапор.", "errorWord": "Блакитно-жовтий прапор.", "correctForm": "Синьо-жовтий прапор.", "options": ["Синьо-жовтий прапор.", "Блакитно-жовтий прапор.", "Жовто-блакитний прапор."], "explanation": "The standard chunk for Ukraine's flag is синьо-жовтий прапор."}, {"sentence": "У мене є синій настрій.", "errorWord": "У мене є синій настрій.", "correctForm": "Мені сумно. / У мене поганий настрій.", "options": ["Мені сумно. / У мене поганий настрій.", "У мене є синій настрій.", "Я синій сьогодні."], "explanation": "Do not copy the English color idiom. Use a Ukrainian mood phrase."}, {"sentence": "Вона має червоне волосся.", "errorWord": "Вона має червоне волосся.", "correctForm": "У неї руде волосся.", "options": ["У неї руде волосся.", "Вона має червоне волосся.", "У неї червоний волосся."], "explanation": "For red hair, use руде волосся; for possession, use У неї..."}, {"sentence": "ЧорнИй, білИй (з наголосом на закінченні)", "errorWord": "ЧорнИй, білИй (з наголосом на закінченні)", "correctForm": "ЧОрний, бІлий", "options": ["ЧОрний, бІлий", "ЧорнИй, білИй", "чорний, білий"], "explanation": "In these common color words, stress is on the root."}]`)} />
+
+### Room and clothes colors
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Моя кімната ___.", "answer": "біла", "options": ["біла", "білий", "біле"]}, {"sentence": "Стіл ___.", "answer": "коричневий", "options": ["коричневий", "коричнева", "коричневе"]}, {"sentence": "Пальто ___.", "answer": "сіре", "options": ["сіре", "сірий", "сіра"]}, {"sentence": "У мене ___ светр.", "answer": "синій", "options": ["синій", "синя", "синє"]}, {"sentence": "У неї ___ очі.", "answer": "карі", "options": ["карі", "коричневі", "каре"]}, {"sentence": "У нього ___ волосся.", "answer": "русяве", "options": ["русяве", "русявий", "русий"]}, {"sentence": "У бабусі ___ волосся.", "answer": "сиве", "options": ["сиве", "сива", "сивий"]}, {"sentence": "Це ___ небо.", "answer": "блакитне", "options": ["блакитне", "блакитний", "блакитна"]}]`)} />
+
+### Choose the Ukrainian line
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "The dress is red.", "options": [{"text": "Сукня червона.", "correct": true}, {"text": "Сукня є червона.", "correct": false}, {"text": "Сукня червоний.", "correct": false}], "explanation": "No є is needed, and сукня is feminine."}, {"source": "I have a blue sweater.", "options": [{"text": "У мене синій светр.", "correct": true}, {"text": "У мене синя светр.", "correct": false}, {"text": "У мене є блакитно светр.", "correct": false}], "explanation": "Светр is masculine; синій is the soft color form."}, {"source": "The sky is light blue.", "options": [{"text": "Небо блакитне.", "correct": true}, {"text": "Небо блакитний.", "correct": false}, {"text": "Небо синя.", "correct": false}], "explanation": "Небо is neuter, and блакитний means light blue."}, {"source": "She has brown eyes.", "options": [{"text": "У неї карі очі.", "correct": true}, {"text": "Вона має коричневі очі.", "correct": false}, {"text": "У неї коричневе очі.", "correct": false}], "explanation": "Use the fixed chunk карі очі."}, {"source": "He has grey hair.", "options": [{"text": "У нього сиве волосся.", "correct": true}, {"text": "У нього сіре волосся.", "correct": false}, {"text": "Він має сивий волосся.", "correct": false}], "explanation": "Use сиве волосся and the У нього... frame."}, {"source": "The flag is blue and yellow.", "options": [{"text": "Прапор синьо-жовтий.", "correct": true}, {"text": "Прапор блакитно-жовтий.", "correct": false}, {"text": "Прапор синій і жовта.", "correct": false}], "explanation": "Keep синьо-жовтий as the fixed flag color chunk."}]`)} />
+
+### Color checkpoint
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Якого кольору светр?", "isTrue": true, "explanation": "This is the standard color question chunk."}, {"statement": "Якого кольору є светр?", "isTrue": false, "explanation": "Do not insert є into this question."}, {"statement": "Ручка синя.", "isTrue": true, "explanation": "Ручка is feminine, and синій becomes синя."}, {"statement": "Вікно синій.", "isTrue": false, "explanation": "Вікно is neuter; say Вікно синє."}, {"statement": "Синій and блакитний are both active A1 words here.", "isTrue": true, "explanation": "Синій is dark/deep blue; блакитний is light/sky blue."}, {"statement": "Голубий is a production target here.", "isTrue": false, "explanation": "It is passive recognition only here."}, {"statement": "У неї карі очі.", "isTrue": true, "explanation": "Карі очі is a natural fixed chunk."}, {"statement": "The Ukrainian flag chunk is синьо-жовтий прапор.", "isTrue": true, "explanation": "Keep this exact phrase."}]`)} />
+
+### Color chunks
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "червоний олівець", "right": "red pencil"}, {"left": "червона ручка", "right": "red pen"}, {"left": "червоне яблуко", "right": "red apple"}, {"left": "блакитне небо", "right": "light-blue sky"}, {"left": "синє море", "right": "deep-blue sea"}, {"left": "чорна сукня", "right": "black dress"}, {"left": "білий светр", "right": "white sweater"}, {"left": "коричневі черевики", "right": "brown shoes"}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Clothing — Ukrainian Phrasebook for Helping Refugees](https://www.ukrainianlessons.com/ph-clothing/) — Learner-safe clothing vocabulary that supports color descriptions of everyday items.
+- 📄 [Colors in Ukrainian + Pronunciation Trainer](https://www.ukrainianlessons.com/episode25/) — Ukrainian Lessons episode page with core color vocabulary and pronunciation practice, useful after the module.
+- 📄 [Dobra Forma: Adjectives (Gender and Number in Nominative](https://opentext.ku.edu/dobraforma/chapter/16-1/) — Open textbook practice for adjective agreement in the nominative pattern reused by colors.
+- 📄 [Shopping for Clothes in Ukrainian](https://www.ukrainianlessons.com/episode32/) — Follow-up clothing context for color chunks; use for recognition, not for a full case lesson yet.
+- 📄 [Типові прикметники — Common Ukrainian Adjectives](https://www.ukrainianlessons.com/vocabulary-adjectives/) — Extra adjective repetition with audio for learners who want more color-adjective practice.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
