@@ -1,0 +1,208 @@
+- lemma: я
+  translation: I
+  pos: pronoun
+  usage: Я з України.
+- lemma: ти
+  translation: you, informal singular
+  pos: pronoun
+  usage: Звідки ти?
+- lemma: він
+  translation: he
+  pos: pronoun
+  usage: Він зі Львова.
+- lemma: вона
+  translation: she
+  pos: pronoun
+  usage: Вона — лікарка.
+- lemma: ми
+  translation: we
+  pos: pronoun
+  usage: Ми студенти.
+- lemma: ви
+  translation: you, formal or plural
+  pos: pronoun
+  usage: Як вас звати?
+- lemma: вони
+  translation: they
+  pos: pronoun
+  usage: Вони з України.
+- lemma: мене звати
+  translation: my name is
+  pos: phrase
+  usage: Мене звати Олена.
+- lemma: як тебе звати?
+  translation: what is your name? informal
+  pos: phrase
+  usage: Як тебе звати?
+- lemma: як вас звати?
+  translation: what is your name? formal
+  pos: phrase
+  usage: Як вас звати?
+- lemma: а тебе?
+  translation: and yours? informal
+  pos: phrase
+  usage: А тебе?
+- lemma: а вас?
+  translation: and yours? formal
+  pos: phrase
+  usage: А вас?
+- lemma: дуже приємно
+  translation: pleased to meet you
+  pos: phrase
+  usage: Дуже приємно!
+- lemma: це
+  translation: this is / this
+  pos: pronoun
+  usage: Це Оксана.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це?
+- lemma: що
+  translation: what
+  pos: pronoun
+  usage: Що це?
+- lemma: звідки
+  translation: where from
+  pos: adverb
+  usage: Звідки ти?
+- lemma: з
+  translation: from
+  pos: preposition
+  usage: Я з Канади.
+- lemma: зі
+  translation: from
+  pos: preposition
+  usage: Він зі Львова.
+- lemma: Україна
+  translation: Ukraine
+  pos: proper noun
+  usage: Я з України.
+- lemma: Канада
+  translation: Canada
+  pos: proper noun
+  usage: Я з Канади.
+- lemma: Німеччина
+  translation: Germany
+  pos: proper noun
+  usage: Я з Німеччини.
+- lemma: Штати
+  translation: the States
+  pos: proper noun plural
+  usage: Я зі Штатів.
+- lemma: Київ
+  translation: Kyiv
+  pos: proper noun
+  usage: Я з Києва.
+- lemma: Львів
+  translation: Lviv
+  pos: proper noun
+  usage: Він зі Львова.
+- lemma: Одеса
+  translation: Odesa
+  pos: proper noun
+  usage: Вона з Одеси.
+- lemma: українець
+  translation: Ukrainian man
+  pos: noun
+  usage: Андрій — українець.
+- lemma: українка
+  translation: Ukrainian woman
+  pos: noun
+  usage: Олена — українка.
+- lemma: канадієць
+  translation: Canadian man
+  pos: noun
+  usage: Марко — канадієць.
+- lemma: канадка
+  translation: Canadian woman
+  pos: noun
+  usage: Олена — канадка.
+- lemma: студент
+  translation: male student
+  pos: noun
+  usage: Я — студент.
+- lemma: студентка
+  translation: female student
+  pos: noun
+  usage: Я — студентка.
+- lemma: вчитель
+  translation: male teacher
+  pos: noun
+  usage: Він — вчитель.
+- lemma: вчителька
+  translation: female teacher
+  pos: noun
+  usage: Вона — вчителька.
+- lemma: лікар
+  translation: male doctor
+  pos: noun
+  usage: Він — лікар.
+- lemma: лікарка
+  translation: female doctor
+  pos: noun
+  usage: Вона — лікарка.
+- lemma: програміст
+  translation: male programmer
+  pos: noun
+  usage: Марко — програміст.
+- lemma: програмістка
+  translation: female programmer
+  pos: noun
+  usage: Олена — програмістка.
+- lemma: інженер
+  translation: male engineer
+  pos: noun
+  usage: Андрій — інженер.
+- lemma: інженерка
+  translation: female engineer
+  pos: noun
+  usage: Оксана — інженерка.
+- lemma: тато
+  translation: dad
+  pos: noun
+  usage: Це мій тато.
+- lemma: мама
+  translation: mom
+  pos: noun
+  usage: Це моя мама.
+- lemma: дружина
+  translation: wife
+  pos: noun
+  usage: Це моя дружина.
+- lemma: подруга
+  translation: female friend
+  pos: noun
+  usage: Це моя подруга.
+- lemma: вибачте
+  translation: excuse me
+  pos: interjection
+  usage: Вибачте, як вас звати?
+- lemma: пробачте
+  translation: excuse me / forgive me
+  pos: interjection
+  usage: Пробачте.
+- lemma: дякую
+  translation: thank you
+  pos: interjection
+  usage: Дякую!
+- lemma: спасибі
+  translation: thank you
+  pos: interjection
+  usage: Спасибі!
+- lemma: теж
+  translation: also / too
+  pos: adverb
+  usage: Мені теж приємно.
+- lemma: також
+  translation: also
+  pos: adverb
+  usage: Мені також приємно.
+- lemma: добрий день
+  translation: good afternoon / hello
+  pos: phrase
+  usage: Добрий день!
+- lemma: привіт
+  translation: hi
+  pos: interjection
+  usage: Привіт!
