@@ -1,0 +1,72 @@
+- word: завтра
+  translation: tomorrow
+  pos: adverb
+  example: "Завтра я буду працювати."
+- word: буду
+  translation: I will
+  pos: verb
+  example: "Я буду читати."
+- word: будеш
+  translation: you will
+  pos: verb
+  example: "Ти будеш робити?"
+- word: буде
+  translation: he/she/it will
+  pos: verb
+  example: "Вона буде читати."
+- word: будемо
+  translation: we will
+  pos: verb
+  example: "Ми будемо гуляти."
+- word: будете
+  translation: you will, plural or formal
+  pos: verb
+  example: "Ви будете говорити?"
+- word: будуть
+  translation: they will
+  pos: verb
+  example: "Вони будуть відпочивати."
+- word: робити
+  translation: to do
+  pos: verb
+  example: "Що ти будеш робити?"
+- word: відпочивати
+  translation: to rest
+  pos: verb
+  example: "У суботу ми будемо відпочивати."
+- word: наступний
+  translation: next
+  pos: adjective
+  example: "Наступного тижня вони будуть працювати."
+- word: тиждень
+  translation: week
+  pos: noun
+  example: "Наступний тиждень буде спокійний."
+- word: план
+  translation: plan
+  pos: noun
+  example: "Мій план: я буду читати."
+- word: звучати
+  translation: to sound
+  pos: verb
+  example: "План буде звучати просто."
+- word: футбол
+  translation: football
+  pos: noun
+  example: "Ми будемо дивитися футбол."
+- word: зараз
+  translation: now
+  pos: adverb
+  example: "Зараз я читаю."
+- word: читати
+  translation: to read
+  pos: verb
+  example: "Завтра я буду читати."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Завтра я буду працювати."
+- word: готувати
+  translation: to cook
+  pos: verb
+  example: "Ввечері я буду готувати."
