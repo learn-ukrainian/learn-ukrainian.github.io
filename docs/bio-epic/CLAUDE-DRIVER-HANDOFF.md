@@ -148,9 +148,10 @@ brief LESSON 4 added: never claim a tool score you didn't get.
 12/12 SHIP, zero dossier defects; every per-figure trap handled (prymachenko both-sides surname;
 pavlychko unverified smear omitted; pohribnyi wrong dates caught). No fixes needed.
 
-**WAVE-3 DONE — P1 COMPLETE (PR #2600: kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk).**
-DeepSeek `review-wave3-4` IN FLIGHT (LAST unharvested item) — HARVEST: read `batch_state/tasks/review-wave3-4.result`,
-apply any fix (esp. CONFIRM yuriy-ruf is the real poet/soldier, NOT Артур Дронь), leave PR open.
+**WAVE-3 DONE + REVIEWED — ALL 4 SHIP (PR #2600: kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk).**
+DeepSeek `review-wave3-4`: 4/4 SHIP, no fixes. ruf person-substitution guard PASSED (real Юрій Руф/Дадак,
+b.1980 Бережани d.2022; zero Артур Дронь); skryabin death = ДТП not repression (honest); sheremet no
+editorial markers; matviichuk Nobel correctly scoped + living-NPOV. **P1 = 21/22 COMPLETE + fully reviewed.**
 
 **P1 STATUS: 21/22 DONE** (5 wave-1 + 12 wave-2 + 4 wave-3). Only `petro-veskliaov` deferred (do its
 slug rename →`petro-vesklyarov` first, then dossier).
@@ -164,7 +165,19 @@ remove «жидівська мафія» attribution (unsourced) → replace w/ 
 **OPEN PRs (all awaiting orchestrator promotion):** #2593 (prompt+handoff) · #2595 leontovych · #2596
 shevchenko · #2597 olha/monomakh/berezovskyy · #2598 wave2-B (6) · #2599 wave2-A (6) · #2600 wave3 (4).
 
-**IN FLIGHT (2026-06-03):** `review-wave3-4` (deepseek) — only remaining; harvest next.
+**IN FLIGHT (2026-06-03):** NONE — 0 dispatches active; all wave PRs open + reviewed; clean milestone.
+
+**RESUME HERE (next session / user):**
+1. **P2 — 139 remaining dossiers** (`/tmp/dossier-priority2-rest.txt`, recomputable). Best via the capped
+   **Workflow** (user opt-in: "use a workflow" [+budget]); else serial loop with the proven template
+   (`/tmp/brief-bio-dossier-batch-TEMPLATE.md`, 4 lessons) + per-figure audit warnings from
+   `batch_state/tasks/bio-audit-rev-b*.result`. ~5-6/batch, 2-claude cap, DeepSeek review per batch, PRs open.
+2. **petro-veskliaov** — do slug rename →`petro-vesklyarov` first, then its dossier.
+3. **Task #6 — 5 plan-level errors** (pohribnyi dates / portnikov patronymic / bohomazov birthplace+date /
+   vasylenko case / pavlychko smear) via plan-versioning flow.
+4. **Wiki half** (once #2593 on main): verify/rebuild 180 original wikis vs their new dossiers + Phase-4
+   (130 new wikis 181-310). Reviewer brief MUST cross-check every `ext-wikipedia-*`-backed claim vs the
+   dossier (DeepSeek Edit-2 mitigation from the prompt PR).
 
 **NEXT (resume): harvest wave-2 → DeepSeek review → apply fixes → leave PRs open. Then P1 remainder
 (kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk + petro-veskliaov-after-rename) →
