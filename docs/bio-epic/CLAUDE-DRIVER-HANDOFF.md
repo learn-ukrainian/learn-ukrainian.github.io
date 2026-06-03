@@ -58,12 +58,12 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
-## ▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, NIGHT) — P2 DOSSIER PRODUCTION RUNNING (30 merged, ~110 left) (read FIRST)
+## ▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, NIGHT) — P2 DOSSIER PRODUCTION RUNNING (48 merged, ~92 left) (read FIRST)
 
 **Supersedes the block below's "NEXT ACTION: fire P2 batch 1" — P2 waves 1–2 are DONE & merged.**
 
-**STATE:** `docs/research/bio/` on origin/main = **201 dossiers** (was 150 at session start). The original-180
-dossier gap is now **~110** (recompute deterministically: `git ls-tree -r --name-only origin/main
+**STATE:** `docs/research/bio/` on origin/main = **219 dossiers** (was 150 at session start). The original-180
+dossier gap is now **~92** (recompute deterministically: `git ls-tree -r --name-only origin/main
 curriculum/l2-uk-en/plans/bio/` minus `…docs/research/bio/` = plans-without-dossier; that set IS the queue,
 self-correcting, so a resume never redoes finished figures). `petro-veskliaov` still DEFERRED (slug rename
 →`petro-vesklyarov` first).
@@ -74,7 +74,15 @@ self-correcting, so a resume never redoes finished figures). `petro-veskliaov` s
 - **Wave C #2604:** khvylovyi · mykola-kulish · les-kurbas · stus · symonenko · dziuba
 - **Wave D #2605:** nechuy-levytskyi · kvitka-osnovianenko · marko-vovchok · mazepa · pylyp-orlyk · khmelnytskyy
 - **Wave E #2606:** panteleimon-kulish · hrinchenko · starytsky · kropyvnytskyi · olena-pchilka · stefanyk
-(Plus the prior session's P1 21 dossiers #2595–2600 + prompt PR #2593 — all merged by me this session.)
+- **Wave F #2609 (claude):** boichuk · malevich · arkhypenko · serge-lifar · vira-kholodna · krushelnytska — 6/6 SHIP
+- **Wave G #2610 (claude):** korolyov · kondratiuk · vernadskyi · puliui · amosov · antonov — 6/6 SHIP
+- **Wave H #2611 (CODEX gpt-5.5):** sahaidachny · ivan-sirko · polubotok · kalnyshevskyy · danylo-apostol · vyhovskyi — 2 SHIP + 4 minor fixes applied (Konotop OS/NS date · Sobieski quote · 2 quote-corroboration notes)
+(Plus the prior session's P1 21 dossiers #2595–2600 + prompt PR #2593 — all merged by me this session. **Session total = 69 dossiers.**)
+
+**CODEX-LANE DATA POINT (Wave H = first codex dossier wave):** viable but needs MORE review-fixing than claude
+(4 minor fixes vs 0/wave for claude) and writes **leaner** dossiers (~1,640 vs ~2,500 words). All factually
+sound; nothing fabricated. Keep codex as the 1 extra lane **WITH DeepSeek cross-review** — the backstop matters
+more for codex. (DeepSeek also recurred its ghost-slug false-positive on Wave C; always git-verify "missing-plan" findings.)
 
 **FLEET (user 2026-06-03):** ran 3 writers/wave briefly, user CUT to **2 claude**, then **CONFIRMED add 1
 codex** → current cadence = **2 claude + 1 codex writers per wave**. claude = `--agent claude` (claude-tools);
