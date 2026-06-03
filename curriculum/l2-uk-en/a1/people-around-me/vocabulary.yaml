@@ -1,0 +1,208 @@
+- word: люди
+  translation: people
+  pos: noun
+  example: "Це люди навколо мене."
+- word: хто
+  translation: who
+  pos: pronoun
+  example: "Хто це?"
+- word: що
+  translation: what
+  pos: pronoun
+  example: "Що це?"
+- word: кого
+  translation: whom
+  pos: pronoun
+  example: "Кого ти бачиш?"
+- word: бачити
+  translation: to see
+  pos: verb
+  example: "Я бачу маму."
+- word: знати
+  translation: to know
+  pos: verb
+  example: "Я знаю Олену."
+- word: любити
+  translation: to love
+  pos: verb
+  example: "Я люблю тата."
+- word: чекати
+  translation: to wait for
+  pos: verb
+  example: "Я чекаю лікаря."
+- word: шукати
+  translation: to look for
+  pos: verb
+  example: "Я шукаю подругу."
+- word: познайомити
+  translation: to introduce
+  pos: verb
+  example: "Я тебе познайомлю."
+- word: мама
+  translation: mom
+  pos: noun
+  example: "Це моя мама."
+- word: маму
+  translation: mom (object form)
+  pos: noun
+  example: "Я бачу маму."
+- word: тато
+  translation: dad
+  pos: noun
+  example: "Це мій тато."
+- word: тата
+  translation: dad (object form)
+  pos: noun
+  example: "Я люблю тата."
+- word: брат
+  translation: brother
+  pos: noun
+  example: "Це мій брат."
+- word: брата
+  translation: brother (object form)
+  pos: noun
+  example: "Я бачу брата."
+- word: сестра
+  translation: sister
+  pos: noun
+  example: "Це моя сестра."
+- word: сестру
+  translation: sister (object form)
+  pos: noun
+  example: "Я знаю сестру."
+- word: друг
+  translation: male friend
+  pos: noun
+  example: "Це мій друг."
+- word: друга
+  translation: male friend (object form)
+  pos: noun
+  example: "Я знаю друга."
+- word: подруга
+  translation: female friend
+  pos: noun
+  example: "Це моя подруга."
+- word: подругу
+  translation: female friend (object form)
+  pos: noun
+  example: "Я шукаю подругу."
+- word: Олена
+  translation: Olena
+  pos: proper noun
+  example: "Це Олена."
+- word: Олену
+  translation: Olena (object form)
+  pos: proper noun
+  example: "Я знаю Олену."
+- word: вчитель
+  translation: teacher
+  pos: noun
+  example: "Це вчитель."
+- word: вчителя
+  translation: teacher (object form)
+  pos: noun
+  example: "Я знаю вчителя."
+- word: учитель
+  translation: teacher
+  pos: noun
+  example: "Учитель у класі."
+- word: учителька
+  translation: female teacher
+  pos: noun
+  example: "Це учителька."
+- word: вчителька
+  translation: female teacher
+  pos: noun
+  example: "Я знаю вчительку."
+- word: лікар
+  translation: doctor
+  pos: noun
+  example: "Це лікар."
+- word: лікаря
+  translation: doctor (object form)
+  pos: noun
+  example: "Я чекаю лікаря."
+- word: сусід
+  translation: male neighbor
+  pos: noun
+  example: "Це мій сусід."
+- word: сусіда
+  translation: male neighbor (object form)
+  pos: noun
+  example: "Я бачу сусіда."
+- word: колега
+  translation: colleague
+  pos: noun
+  example: "Це мій колега."
+- word: викладач
+  translation: lecturer
+  pos: noun
+  example: "Це викладач."
+- word: продавець
+  translation: seller
+  pos: noun
+  example: "Продавець у магазині."
+- word: покупець
+  translation: buyer
+  pos: noun
+  example: "Покупець чекає."
+- word: директор
+  translation: director
+  pos: noun
+  example: "Директор тут."
+- word: дитина
+  translation: child
+  pos: noun
+  example: "Це дитина."
+- word: людина
+  translation: person
+  pos: noun
+  example: "Це добра людина."
+- word: мене
+  translation: me
+  pos: pronoun
+  example: "Вона знає мене."
+- word: тебе
+  translation: you
+  pos: pronoun
+  example: "Я тебе бачу."
+- word: його
+  translation: him; it
+  pos: pronoun
+  example: "Я чекаю його."
+- word: її
+  translation: her; it
+  pos: pronoun
+  example: "Я знаю її."
+- word: нас
+  translation: us
+  pos: pronoun
+  example: "Вони бачать нас."
+- word: вас
+  translation: you plural/formal
+  pos: pronoun
+  example: "Я знаю вас."
+- word: їх
+  translation: them
+  pos: pronoun
+  example: "Ми бачимо їх."
+- word: істота
+  translation: animate being
+  pos: noun
+  example: "Брат - це істота."
+- word: неістота
+  translation: inanimate thing
+  pos: noun
+  example: "Хліб - це неістота."
+- word: натовп
+  translation: crowd
+  pos: noun
+  example: "Ми бачимо великий натовп."
+- word: група
+  translation: group
+  pos: noun
+  example: "Це група."
+- word: прізвище
+  translation: surname
+  pos: noun
+  example: "Яке твоє прізвище?"
