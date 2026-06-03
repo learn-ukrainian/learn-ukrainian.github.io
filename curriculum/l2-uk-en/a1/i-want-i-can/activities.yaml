@@ -1,0 +1,282 @@
+- id: act-1
+  type: quiz
+  title: Choose the safe modal line
+  instruction: Choose the Ukrainian line that fits each situation.
+  items:
+    - prompt: You want to read, not say that you are reading now.
+      options:
+        - text: Я хочу читати.
+          correct: true
+        - text: Я хочу читаю.
+          correct: false
+        - text: Я хотіти читати.
+          correct: false
+      explanation: After хочу, keep the second action in the -ти form.
+    - prompt: You can help someone.
+      options:
+        - text: Я можу допомогти.
+          correct: true
+        - text: Я можеш допомогти.
+          correct: false
+        - text: Я можу допомагаю.
+          correct: false
+      explanation: Я uses можу, then the infinitive допомогти.
+    - prompt: You have to work.
+      options:
+        - text: Я мушу працювати.
+          correct: true
+        - text: Я мусиш працювати.
+          correct: false
+        - text: Я мушу працюю.
+          correct: false
+      explanation: Learn я мушу plus an infinitive.
+- id: act-2
+  type: order
+  title: Build tonight's plan
+  instruction: Put the short exchange in a natural order.
+  items:
+    - Ти хочеш піти в кіно?
+    - Так, я хочу піти.
+    - Ти можеш сьогодні?
+    - На жаль, не можу.
+    - Я мушу працювати.
+    - Добре, завтра гуляємо.
+  correct_order:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+- id: act-3
+  type: fill-in
+  title: Хотіти forms
+  instruction: Choose the form of хотіти that fits the person.
+  items:
+    - sentence: Я ___ читати.
+      answer: хочу
+      options:
+        - хочу
+        - хочеш
+        - хоче
+      explanation: Я хочу.
+    - sentence: Ти ___ гуляти?
+      answer: хочеш
+      options:
+        - хочеш
+        - хочу
+        - хочемо
+      explanation: Ти хочеш.
+    - sentence: Вона ___ каву.
+      answer: хоче
+      options:
+        - хоче
+        - хочуть
+        - хочете
+      explanation: Вона хоче.
+    - sentence: Ми ___ піти.
+      answer: хочемо
+      options:
+        - хочемо
+        - хочете
+        - хочуть
+      explanation: Ми хочемо.
+    - sentence: Ви ___ каву?
+      answer: хочете
+      options:
+        - хочете
+        - хочемо
+        - хоче
+      explanation: Ви хочете.
+    - sentence: Вони ___ працювати.
+      answer: хочуть
+      options:
+        - хочуть
+        - хоче
+        - хочеш
+      explanation: Вони хочуть.
+- id: act-4
+  type: unjumble
+  title: Put the helper before the action
+  instruction: Rebuild each sentence with the helper verb before the infinitive.
+  items:
+    - words:
+        - можу
+        - Я
+        - допомогти
+      answer: Я можу допомогти
+    - words:
+        - Ти
+        - читати
+        - можеш
+      answer: Ти можеш читати
+    - words:
+        - піти
+        - Вона
+        - може
+      answer: Вона може піти
+    - words:
+        - працювати
+        - Ми
+        - можемо
+      answer: Ми можемо працювати
+    - words:
+        - можете
+        - Ви
+        - порадити
+      answer: Ви можете порадити
+    - words:
+        - гуляти
+        - Вони
+        - можуть
+      answer: Вони можуть гуляти
+- id: act-5
+  type: true-false
+  title: Modal job check
+  instruction: Decide whether each statement is safe for this lesson.
+  items:
+    - statement: After хочу, use an infinitive in Я хочу читати.
+      answer: true
+      explanation: Читати is the action word after хочу.
+    - statement: Я не можу піти is a complete safe negative.
+      answer: true
+      explanation: Не stands before можу, then the action follows.
+    - statement: Мусити always means an emergency right now.
+      answer: false
+      explanation: Мусити marks obligation; urgency comes from context.
+    - statement: In a café, Можна мені, будь ласка, каву? is a polite service chunk.
+      answer: true
+      explanation: Use this chunk before practicing blunt wants in service speech.
+- id: act-6
+  type: translate
+  title: Café politeness
+  instruction: Choose the polite Ukrainian café line.
+  items:
+    - source: Ask for coffee politely.
+      options:
+        - text: Можна мені, будь ласка, каву?
+          correct: true
+        - text: Я хочу кава.
+          correct: false
+        - text: Дай кава.
+          correct: false
+      explanation: Можна мені, будь ласка, каву? is the safe service chunk.
+    - source: Ask what the server can recommend.
+      options:
+        - text: Що можете порадити?
+          correct: true
+        - text: Що можу порадити?
+          correct: false
+        - text: Що хочеш порадити?
+          correct: false
+      explanation: Ви можете gives the polite можете.
+    - source: Accept the borshch suggestion.
+      options:
+        - text: Тоді ще борщ, будь ласка.
+          correct: true
+        - text: Тоді я хочеш борщ.
+          correct: false
+        - text: Тоді борщ хочу ти.
+          correct: false
+      explanation: Тоді ще борщ, будь ласка is a natural A1 order chunk.
+- id: act-7
+  type: match-up
+  title: Situation to line
+  instruction: Match each English situation to the Ukrainian line.
+  pairs:
+    - left: You want to go tomorrow.
+      right: Я хочу піти завтра.
+    - left: You cannot go today.
+      right: Сьогодні я не можу піти.
+    - left: You have to work.
+      right: Я мушу працювати.
+    - left: You ask what the server can recommend.
+      right: Що можете порадити?
+    - left: You ask for coffee politely.
+      right: Можна мені, будь ласка, каву?
+- id: act-8
+  type: error-correction
+  title: Repair modal-verb traps
+  instruction: Choose the standard Ukrainian repair.
+  anchor_id: repair-traps
+  items:
+    - sentence: Я хочу до їсти.
+      error: Я хочу до їсти.
+      answer: Я хочу їсти.
+      options:
+        - Я хочу їсти.
+        - Я хочу до їсти.
+        - Я хочу їм.
+      explanation: Ukrainian infinitives already carry the action form; do not add до.
+    - sentence: Я їсту / Я їмлю.
+      error: Я їсту / Я їмлю.
+      answer: Я їм.
+      options:
+        - Я їм.
+        - Я їсту.
+        - Я їмлю.
+      explanation: Їсти has a special ready chunk, я їм.
+    - sentence: Я хочу читаю.
+      error: Я хочу читаю.
+      answer: Я хочу читати.
+      options:
+        - Я хочу читати.
+        - Я хочу читаю.
+        - Я хотіти читати.
+      explanation: The second action stays in the infinitive.
+    - sentence: Ти хоче гуляти?
+      error: Ти хоче гуляти?
+      answer: Ти хочеш гуляти?
+      options:
+        - Ти хочеш гуляти?
+        - Ти хоче гуляти?
+        - Ти хочу гуляти?
+      explanation: Ти uses хочеш.
+    - sentence: Я могу допомогти.
+      error: Я могу допомогти.
+      answer: Я можу допомогти.
+      options:
+        - Я можу допомогти.
+        - Я могу допомогти.
+        - Я можеш допомогти.
+      explanation: Ukrainian uses можу.
+    - sentence: Я мусю працювати.
+      error: Я мусю працювати.
+      answer: Я мушу працювати.
+      options:
+        - Я мушу працювати.
+        - Я мусю працювати.
+        - Я мусиш працювати.
+      explanation: Learn я мушу as a ready chunk.
+    - sentence: Я не можу не.
+      error: Я не можу не.
+      answer: Я не можу піти.
+      options:
+        - Я не можу піти.
+        - Я не можу не.
+        - Я не може піти.
+      explanation: Finish не можу with an action.
+    - sentence: Я п'ю кава.
+      error: Я п'ю кава.
+      answer: Я п'ю каву.
+      options:
+        - Я п'ю каву.
+        - Я п'ю кава.
+        - Я п'ю кави.
+      explanation: A familiar feminine object changes кава to каву.
+    - sentence: Я хочу кава.
+      error: Я хочу кава.
+      answer: Можна мені, будь ласка, каву?
+      options:
+        - Можна мені, будь ласка, каву?
+        - Я хочу кава.
+        - Можна я кава?
+      explanation: Use the polite café chunk for service speech.
+    - sentence: Він смієтся / бореться.
+      error: Він смієтся / бореться.
+      answer: Він сміється / борешся.
+      options:
+        - Він сміється / борешся.
+        - Він смієтся / бореться.
+        - Він сміється / борешться.
+      explanation: This is recognition-only spelling and pronunciation for -ся verbs.

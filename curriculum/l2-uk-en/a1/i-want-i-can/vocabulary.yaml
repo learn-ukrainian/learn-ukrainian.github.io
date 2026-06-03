@@ -1,0 +1,144 @@
+- lemma: хотіти
+  translation: to want
+  pos: infinitive
+  usage: Я хочу читати.
+- lemma: хочу
+  translation: I want
+  pos: verb form
+  usage: Я хочу каву.
+- lemma: хочеш
+  translation: you want
+  pos: verb form
+  usage: Ти хочеш гуляти?
+- lemma: хоче
+  translation: he/she wants
+  pos: verb form
+  usage: Вона хоче каву.
+- lemma: хочемо
+  translation: we want
+  pos: verb form
+  usage: Ми хочемо піти.
+- lemma: хочете
+  translation: you all want; formal you want
+  pos: verb form
+  usage: Ви хочете каву?
+- lemma: хочуть
+  translation: they want
+  pos: verb form
+  usage: Вони хочуть працювати.
+- lemma: могти
+  translation: to be able; can
+  pos: infinitive
+  usage: Я можу допомогти.
+- lemma: можу
+  translation: I can
+  pos: verb form
+  usage: Я можу читати.
+- lemma: можеш
+  translation: you can
+  pos: verb form
+  usage: Ти можеш допомогти?
+- lemma: може
+  translation: he/she can
+  pos: verb form
+  usage: Він може піти.
+- lemma: можемо
+  translation: we can
+  pos: verb form
+  usage: Ми можемо працювати.
+- lemma: можете
+  translation: you all can; formal you can
+  pos: verb form
+  usage: Що можете порадити?
+- lemma: можуть
+  translation: they can
+  pos: verb form
+  usage: Вони можуть гуляти.
+- lemma: мусити
+  translation: to have to; must
+  pos: infinitive
+  usage: Я мушу працювати.
+- lemma: мушу
+  translation: I have to
+  pos: verb form
+  usage: Я мушу працювати.
+- lemma: мусиш
+  translation: you have to
+  pos: verb form
+  usage: Ти мусиш читати?
+- lemma: мусить
+  translation: he/she has to
+  pos: verb form
+  usage: Вона мусить чекати.
+- lemma: мусимо
+  translation: we have to
+  pos: verb form
+  usage: Ми мусимо вчити.
+- lemma: мусите
+  translation: you all have to; formal you have to
+  pos: verb form
+  usage: Ви мусите чекати?
+- lemma: мусять
+  translation: they have to
+  pos: verb form
+  usage: Вони мусять працювати.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: Читати - інфінітив.
+- lemma: піти
+  translation: to go
+  pos: infinitive
+  usage: Я хочу піти в кіно.
+- lemma: допомогти
+  translation: to help
+  pos: infinitive
+  usage: Ти можеш допомогти?
+- lemma: працювати
+  translation: to work
+  pos: infinitive
+  usage: Я мушу працювати.
+- lemma: їсти
+  translation: to eat
+  pos: infinitive
+  usage: Я не хочу їсти.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Це кава.
+- lemma: каву
+  translation: coffee (object form)
+  pos: noun form
+  usage: Можна мені каву?
+- lemma: борщ
+  translation: borshch
+  pos: noun
+  usage: Борщ дуже смачний.
+- lemma: порадити
+  translation: to recommend; to advise
+  pos: infinitive
+  usage: Що можете порадити?
+- lemma: шкода
+  translation: that's a pity; unfortunately
+  pos: expression
+  usage: Шкода. Я не можу.
+- lemma: на жаль
+  translation: unfortunately
+  pos: phrase
+  usage: На жаль, не можу.
+- lemma: можна
+  translation: may; is it possible
+  pos: modal word
+  usage: Можна мені каву?
+- lemma: тоді
+  translation: then
+  pos: adverb
+  usage: Тоді ще борщ.
+- lemma: ще
+  translation: more; also
+  pos: adverb
+  usage: Тоді ще борщ.
+- lemma: треба
+  translation: need to; should
+  pos: modal word
+  usage: Треба читати.
