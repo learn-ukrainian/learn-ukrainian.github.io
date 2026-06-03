@@ -1,0 +1,72 @@
+- word: план
+  translation: plan
+  pos: noun
+  example: "У мене є план на тиждень."
+- word: тиждень
+  translation: week
+  pos: noun
+  example: "Це мій тиждень."
+- word: вільний
+  translation: free, available
+  pos: adjective
+  example: "Ти будеш вільний у суботу?"
+- word: зустріч
+  translation: meeting
+  pos: noun
+  example: "У середу буде зустріч."
+- word: відпочивати
+  translation: to rest
+  pos: verb
+  example: "У неділю я буду відпочивати."
+- word: прибирати
+  translation: to clean
+  pos: verb
+  example: "У суботу я буду прибирати квартиру."
+- word: вечірка
+  translation: party
+  pos: noun
+  example: "У п'ятницю буде вечірка."
+- word: зустрінемося
+  translation: let's meet
+  pos: phrase
+  example: "Давай зустрінемося о п'ятій."
+- word: з задоволенням
+  translation: with pleasure
+  pos: phrase
+  example: "З задоволенням!"
+- word: на жаль
+  translation: unfortunately
+  pos: phrase
+  example: "На жаль, не можу."
+- word: допізна
+  translation: until late
+  pos: adverb
+  example: "У понеділок я буду працювати допізна."
+- word: звичайно
+  translation: of course
+  pos: adverb
+  example: "Звичайно буду!"
+- word: квартира
+  translation: apartment
+  pos: noun
+  example: "Я буду прибирати квартиру."
+- word: кіно
+  translation: cinema, film
+  pos: noun
+  example: "Ходімо в кіно о шостій."
+- word: вчити
+  translation: to study, to learn
+  pos: verb
+  example: "Я буду вчити українську."
+- word: о третій
+  translation: at three
+  pos: phrase
+  example: "О третій ми будемо гуляти."
+- word: о шостій
+  translation: at six
+  pos: phrase
+  example: "О шостій ми будемо дивитися кіно."
+- word: Ходімо
+  translation: let's go
+  pos: phrase
+  example: "Ходімо в кіно!"
