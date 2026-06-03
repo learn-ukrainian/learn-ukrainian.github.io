@@ -58,6 +58,60 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶ SESSION UPDATE (2026-06-03) — ORIGINAL 1–180 LACK DOSSIERS (160/180); FULL UPLIFT SCOPED (read FIRST)
+
+**THE HEADLINE (deterministically verified on origin/main, this session):** the original 180 bio
+figures were NEVER systematically dossier'd. Only **20/180 have a dossier** (19 exact + the
+`levko-lukianenko`→`levko-lukyanenko` variant); **~160 lack one entirely** — including the
+foundational figures **Taras Shevchenko, Ivan Franko, Lesya Ukrainka, Skovoroda, both Patons,
+Leontovych**. Their wikis are LIVE on the site but **ungrounded** — that is the real root cause
+behind the #2535 "ghost/fabricated" audit findings. (Phase 1 produced 137 dossiers, but those were
+the 130 NEW figures + 7 documenting existing plans — NOT a pass over the original 180.) No unmerged
+dossier work exists (checked: 0 untracked, 0 dossier branches).
+
+**THE MIRROR-IMAGE STATE (origin/main: 310 plans · 150 dossiers · 180 wikis):**
+- **Original 1–180:** have WIKIS, lack DOSSIERS (~160/180 missing).
+- **New 181–310:** have DOSSIERS (130/130), lack WIKIS (0/130 — Phase 4 pending).
+- True epic end-state = **every figure has BOTH a sourced dossier AND a source-grounded wiki.**
+- Unified pipeline: **[dossier] → discovery → wiki → dossier-grounded review → gate.** Original-180
+  start at `[dossier]`; new-130 start at `discovery`.
+
+**USER DECISIONS (2026-06-03):**
+1. **Full uplift** — build ALL ~160 missing dossiers for 1–180 (Phase-1 quality, sourced,
+   anti-fabrication gated by `lint_bio_dossier_xref.py`), THEN dossier-grounded wiki verify/rebuild.
+   NOT just the ~17 BLOCK ghosts (those are a subset of the dossier gap).
+2. **Interleave** the two halves: original-180 dossier-building ∥ Phase-4 new-130 wiki-building,
+   across available seats.
+3. **Decide the Workflow (capped fan-out) AFTER a pilot** validates both pipelines via the serial
+   dispatch loop. (~290 artifacts total → Workflow is the right scale tool; needs the opt-in.)
+
+**SHIPPED THIS SESSION (PR pending — bundle this handoff):** VERIFY-marker prompt relaxation
+(`scripts/wiki/prompts/compile_article.md`, commit `2a2bbcf2e7` + cross-review amendment). Narrows
+`<!-- VERIFY -->` to *extraordinary/contestable* Wikipedia-only claims (was: every routine
+Wikipedia-only fact → 11–18 markers/article → hard write-block → recompiles failed). DeepSeek
+cross-review = FIX-BEFORE-MERGE: **Edit 1 ADOPTED** (bullet-2 anchored to "де українські джерела
+самі між собою не збігаються" — attested source-disagreement, not the writer's politics). **Edit 2
+(inline `(лише wiki)` note) DEFERRED to the review layer** — would pollute published prose; the
+signal already exists deterministically (`{slug}.sources.yaml` maps each `[S#]`→chunk_id, so
+`ext-wikipedia-*`-backed claims are greppable). Mitigation lives in the wiki-review brief:
+"cross-check every `ext-wikipedia-*`-backed claim against the dossier."
+
+**NEXT ACTION ON RESUME:**
+1. Land the prompt-relaxation PR (this handoff bundled). Shared wiki infra → orchestrator reconciles
+   (or merge per bio merge-grant if treated as bio-scoped; it is motivated by + only affects bio Phase-4
+   + #2535 today).
+2. **PILOT both pipelines (serial dispatch loop, no Workflow yet):**
+   - *Original-180 path:* pick 1 high-value ungrounded figure (e.g. `taras-shevchenko` or
+     `ivan-franko`) → build dossier → discovery → recompile wiki (codex `--writer gpt-5.5` + relaxed
+     prompt + `--allow-verify-markers`; symlink `<wt>/data/{sources,vesum}.db`→main) → verify subject
+     + sources → DeepSeek dossier-grounded review.
+   - *New-130 path:* pick 1 figure WITH a dossier (181–310) → build real discovery → compile wiki →
+     review. Confirm the relaxed prompt drops the marker count (the empirical proof of the PR).
+3. If both pilots clean → bring the user a **capped Workflow proposal** (cost + structure) for the
+   ~290-artifact scale-up, then fan out.
+
+**IN-FLIGHT:** none (DeepSeek prompt review harvested + applied; 0 dispatches active).
+
 ## ▶▶▶▶ SESSION UPDATE (2026-06-02, LATE) — 4-DEFERRED-WIKIS ROOT CAUSE IS SYSTEMIC, NOT A DEAD-DATE GAP (read FIRST)
 
 **Branch `bio/fix-4-deferred-wikis` (PR #2574): DONE — all 4 wikis recompiled to the CORRECT subject and
