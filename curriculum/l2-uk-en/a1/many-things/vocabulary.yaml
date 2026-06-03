@@ -1,0 +1,204 @@
+- lemma: стіл
+  translation: table, singular
+  pos: noun
+  usage: Це стіл.
+- lemma: столи
+  translation: tables
+  pos: noun
+  usage: Столи великі.
+- lemma: стілець
+  translation: chair, singular
+  pos: noun
+  usage: Це стілець.
+- lemma: стільці
+  translation: chairs
+  pos: noun
+  usage: Стільці старі.
+- lemma: книга
+  translation: book, singular
+  pos: noun
+  usage: Ця книга нова.
+- lemma: книги
+  translation: books
+  pos: noun
+  usage: Книги нові.
+- lemma: вікно
+  translation: window, singular
+  pos: noun
+  usage: Це вікно.
+- lemma: вікна
+  translation: windows
+  pos: noun
+  usage: Вікна чисті.
+- lemma: зошит
+  translation: notebook, singular
+  pos: noun
+  usage: Це мій зошит.
+- lemma: зошити
+  translation: notebooks
+  pos: noun
+  usage: Три зошити тут.
+- lemma: ручка
+  translation: pen, singular
+  pos: noun
+  usage: Це ручка.
+- lemma: ручки
+  translation: pens
+  pos: noun
+  usage: Ці ручки сині.
+- lemma: сумка
+  translation: bag, singular
+  pos: noun
+  usage: Ця сумка червона.
+- lemma: сумки
+  translation: bags
+  pos: noun
+  usage: Сумки чорні.
+- lemma: лампа
+  translation: lamp, singular
+  pos: noun
+  usage: Лампа біла.
+- lemma: лампи
+  translation: lamps
+  pos: noun
+  usage: Лампи жовті.
+- lemma: крісло
+  translation: armchair, singular
+  pos: noun
+  usage: Це крісло.
+- lemma: крісла
+  translation: armchairs
+  pos: noun
+  usage: Крісла чисті.
+- lemma: дзеркало
+  translation: mirror, singular
+  pos: noun
+  usage: Дзеркало нове.
+- lemma: дзеркала
+  translation: mirrors
+  pos: noun
+  usage: Дзеркала чисті.
+- lemma: річ
+  translation: thing
+  pos: noun
+  usage: Це моя річ.
+- lemma: речі
+  translation: things
+  pos: noun
+  usage: Це мої речі.
+- lemma: ці
+  translation: these
+  pos: pronoun
+  usage: Ці столи великі.
+- lemma: ті
+  translation: those
+  pos: pronoun
+  usage: Ті стільці старі.
+- lemma: мої
+  translation: my, plural
+  pos: pronoun
+  usage: Мої зошити сині.
+- lemma: які
+  translation: which; what kind, plural
+  pos: pronoun
+  usage: Які ручки?
+- lemma: ми
+  translation: we
+  pos: pronoun
+  usage: Ми тут.
+- lemma: ви
+  translation: you, plural or formal
+  pos: pronoun
+  usage: Ви тут?
+- lemma: нас
+  translation: us
+  pos: pronoun
+  usage: Для нас.
+- lemma: вас
+  translation: you, plural/formal object
+  pos: pronoun
+  usage: Для вас.
+- lemma: нам
+  translation: to us
+  pos: pronoun
+  usage: Нам треба три зошити.
+- lemma: вам
+  translation: to you
+  pos: pronoun
+  usage: Вам треба ручки.
+- lemma: нами
+  translation: with us
+  pos: pronoun
+  usage: З нами.
+- lemma: вами
+  translation: with you
+  pos: pronoun
+  usage: З вами.
+- lemma: гроші
+  translation: money, plural-only
+  pos: noun
+  usage: Це гроші.
+- lemma: двері
+  translation: door; doors, plural-only form
+  pos: noun
+  usage: Ці двері старі.
+- lemma: окуляри
+  translation: glasses, plural-only
+  pos: noun
+  usage: Мої окуляри тут.
+- lemma: молодь
+  translation: youth, collective singular
+  pos: noun
+  usage: Молодь тут.
+- lemma: дітвора
+  translation: children as a group, collective singular
+  pos: noun
+  usage: Дітвора там.
+- lemma: птаство
+  translation: birds as a group, collective singular
+  pos: noun
+  usage: Птаство тут.
+- lemma: великий
+  translation: big, masculine
+  pos: adjective
+  usage: Великий стіл.
+- lemma: великі
+  translation: big, plural
+  pos: adjective
+  usage: Великі столи.
+- lemma: нові
+  translation: new, plural
+  pos: adjective
+  usage: Нові книги.
+- lemma: чисті
+  translation: clean, plural
+  pos: adjective
+  usage: Чисті вікна.
+- lemma: сині
+  translation: blue, plural
+  pos: adjective
+  usage: Сині зошити.
+- lemma: осінні
+  translation: autumn, plural adjective
+  pos: adjective
+  usage: Осінні ранки.
+- lemma: два зошити
+  translation: two notebooks
+  pos: phrase
+  usage: Два зошити тут.
+- lemma: три книги
+  translation: three books
+  pos: phrase
+  usage: Три книги тут.
+- lemma: чотири смартфони
+  translation: four smartphones
+  pos: phrase
+  usage: Чотири смартфони тут.
+- lemma: п'ять зошитів
+  translation: five notebooks, later 5+ chunk
+  pos: phrase
+  usage: П'ять зошитів is a recognition chunk here.
+- lemma: двоє дверей
+  translation: two doors, collective-number chunk
+  pos: phrase
+  usage: Двоє дверей is passive recognition here.
