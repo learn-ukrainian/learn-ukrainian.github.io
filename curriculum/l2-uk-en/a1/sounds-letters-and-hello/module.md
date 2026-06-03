@@ -42,7 +42,7 @@ Say this rule aloud:
 **Звук = I hear it. Лі́тера = I see it.**
 
 :::tip
-Start with the six clean vowel sounds: **[а] [о] [у] [е] [и] [і]**. They are the course's **серцебиттям** because every Ukrainian **склад** needs a vowel sound. Short **відеоуроки** help you see the mouth shape, especially the narrow smile for **[і]** and rounded lips for **[у]**.
+Start with the six clean vowel sounds: **[а] [о] [у] [е] [и] [і]**. They are the course's **heartbeat** (**серцебиття**) because every Ukrainian **склад** needs a vowel sound. Short **відеоуроки** help you see the mouth shape, especially the narrow smile for **[і]** and rounded lips for **[у]**.
 :::
 
 <!-- INJECT_ACTIVITY: act-1 -->
@@ -140,7 +140,7 @@ Try four:
 
 Ukrainian has 32 consonant sounds and 22 letters that usually mark consonants. Some consonants have hard and soft versions. You do not need the full system today, but you do need three first clues:
 
-Vowels give a syllable its voice. Consonants build the clear **архітектуру** around that voice: lips, teeth, tongue, or throat make the shape.
+Vowels give a syllable its voice. Consonants build the clear **architecture** (**архітектура**) around that voice: lips, teeth, tongue, or throat make the shape.
 
 | Sign or letter | Beginner meaning |
 | --- | --- |
@@ -155,7 +155,7 @@ Example:
 
 The final **ь** does not add a new vowel. It tells you to make **н** soft.
 
-The letters **Я, Ю, Є** are graphic **хамелеони**: at the start of a word they can show **[й] + vowel**, but after a consonant they can point to softness plus one vowel. **Ї** is the strict exception: always **[йі]**.
+The letters **Я, Ю, Є** are graphic **chameleons** (**хамелеони**): at the start of a word they can show **[й] + vowel**, but after a consonant they can point to softness plus one vowel. **Ї** is the strict exception: always **[йі]**.
 
 ## Full Alphabet Video Pass
 
@@ -248,9 +248,9 @@ You may also hear:
 | **Радий тебе бачити.** | Glad to see you. | a male speaker |
 | **Рада тебе бачити.** | Glad to see you. | a female speaker |
 
-Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking: use **Радий тебе бачити** if the speaker is male, and **Рада тебе бачити** **якщо жінка** is speaking.
+Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking: use **Радий тебе бачити** if the speaker is male, and **Рада тебе бачити** if the speaker is female.
 
-The word **Привіт** is useful for your first tiny sound analysis **на гвинтики**: **П-р-и-в-і-т**, four consonant sounds and two vowel sounds.
+The word **Привіт** is useful for your first tiny sound analysis down to the details (**на гвинтики**): **П-р-и-в-і-т**, four consonant sounds and two vowel sounds.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 

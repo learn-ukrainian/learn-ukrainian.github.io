@@ -41,9 +41,9 @@
     explanation: The six basic vowel sounds are [а], [о], [у], [е], [и], [і].
   - prompt: Does ь have its own sound?
     options:
-    - text: No
+    - text: 'No'
       correct: true
-    - text: Yes
+    - text: 'Yes'
       correct: false
     - text: Only in Приві́т
       correct: false
@@ -122,7 +122,7 @@
     video: https://www.youtube.com/watch?v=BhASNxitC1A
   - letter: И
     sound: '[и]'
-    word: і́ній
+    word: сир
     video: https://www.youtube.com/watch?v=W-1rCu0indE
   - letter: І
     sound: '[і]'
