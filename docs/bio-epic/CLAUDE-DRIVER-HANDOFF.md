@@ -112,6 +112,46 @@ signal already exists deterministically (`{slug}.sources.yaml` maps each `[S#]`�
 
 **IN-FLIGHT:** none (DeepSeek prompt review harvested + applied; 0 dispatches active).
 
+## ▶ AUTONOMOUS RUN LOG (2026-06-03, user at work — drive without questions)
+
+**Dossier PIPELINE PROVEN + SCALING.** User away; serial dispatch loop (NO Workflow — needs opt-in).
+Policy: OPEN dossier PRs, do NOT self-merge (orchestrator promotes; dossiers independent → no blocking).
+
+**Proven assets (reuse):**
+- Batch brief template: `/tmp/brief-bio-dossier-batch-TEMPLATE.md` — `{{FIGURES}}` placeholder + 3
+  hard-won lessons (verify every source URL actually resolves; self-check must match content, mark
+  `[N/A]` otherwise; never conflate completion vs premiere/anniversary dates). **Per-figure warnings
+  are load-bearing** — pull each figure's defect from `batch_state/tasks/bio-audit-rev-b*.result`
+  (BLOCK rows) and add a `⚠`-note (Синопсис-inversion, Mozart-myth, contested surname, wrong dates,
+  unverified smear, ghost-identity) — the writers heed them.
+- Dispatch: `delegate.py dispatch --agent claude --task-id <id> --prompt-file <f> --mode danger
+  --effort xhigh --worktree --base main`. ~5-6 figures/batch, 2-claude cap. DeepSeek review off-seat
+  (`--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900`);
+  INLINE dossiers into the review brief via `cat` (read-only deepseek runs on main, can't see branches).
+- Priority order in Task-list / here: **P1 = 22 BLOCK+no-dossier (worst-first)**, then **P2 = 139**
+  (`/tmp/dossier-priority2-rest.txt`, recomputable). SKIP `petro-veskliaov` until its slug rename
+  (→`petro-vesklyarov`) is resolved.
+
+**DONE / OPEN PRs (all awaiting orchestrator promotion — NOT self-merged):**
+- #2593 wiki VERIFY-marker prompt relaxation (+ this handoff) — DeepSeek-reviewed.
+- #2595 dossier `mykola-leontovych` (PILOT) — DeepSeek FIX applied (opera 1975; dead URLs; self-check).
+- #2596 dossier `taras-shevchenko` — spot-read clean (4 quotes verify_quote-confirmed).
+- #2597 dossiers `knyahynia-olha` + `volodymyr-monomakh` + `maksym-berezovskyy` — Синопсис critiqued
+  (not inverted), cap-myth via anachronism, Mozart-legend in §6. Spot-read clean.
+
+**IN FLIGHT (2026-06-03):**
+- `review-wave1-4dossiers` (deepseek) — combined cross-review of #2596+#2597's 4 dossiers.
+- `bio-dossier-wave2-batchA` (claude) — mariya-pavlova, volodymyr-samiilenko, mykola-vasylenko,
+  oleksandr-hrekiv, oleksandr-bohomazov, mariia-prymachenko.
+- `bio-dossier-wave2-batchB` (claude) — kateryna-yushchenko, mykola-pohribnyi, yevhen-sverstiuk,
+  dmytro-pavlychko, ivan-mykolaichuk, vitaly-portnikov.
+
+**NEXT (resume): harvest wave-2 → DeepSeek review → apply fixes → leave PRs open. Then P1 remainder
+(kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk + petro-veskliaov-after-rename) →
+P2 (139) in ~5-6/batch waves. THEN the wiki half (discovery→codex compile w/ relaxed prompt→review→
+rebuild) once #2593 is on main + Phase-4. Re-offer the capped Workflow to the user for the ~290-artifact
+remainder when they're back (it's the right scale tool; needs opt-in).**
+
 ## ▶▶▶▶ SESSION UPDATE (2026-06-02, LATE) — 4-DEFERRED-WIKIS ROOT CAUSE IS SYSTEMIC, NOT A DEAD-DATE GAP (read FIRST)
 
 **Branch `bio/fix-4-deferred-wikis` (PR #2574): DONE — all 4 wikis recompiled to the CORRECT subject and
