@@ -18,9 +18,9 @@ from urllib.parse import quote
 import requests
 
 try:
-    from audit.sum11_sovietization_scan import classify_entry
-except ImportError:  # pragma: no cover - direct package import fallback
     from scripts.audit.sum11_sovietization_scan import classify_entry
+except ImportError:  # pragma: no cover - scripts/ on PYTHONPATH fallback
+    from audit.sum11_sovietization_scan import classify_entry
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 DEFAULT_USER_AGENT = (

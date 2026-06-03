@@ -122,6 +122,24 @@ def _chunk_context_call(
     }
 
 
+def test_blockquoted_attribution_is_not_part_of_quote_record() -> None:
+    records = linear_pipeline._extract_blockquote_records(
+        """
+> Це тестова цитата, яка збігається ідеально.
+>
+> *— Захарійчук, Grade 1, p.24*
+"""
+    )
+
+    assert records == [
+        {
+            "quote": "Це тестова цитата, яка збігається ідеально.",
+            "section_title": "",
+            "attribution": "Захарійчук, Grade 1, p.24",
+        }
+    ]
+
+
 def test_textbook_grounding_gate_passes_good_fixture(tmp_path: Path) -> None:
     # Step B enforcement (#2294): writer prompt #R-TEXTBOOK-30W (B) requires
     # a get_chunk_context call. Happy-path tests must include it; the

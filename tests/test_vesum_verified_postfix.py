@@ -553,6 +553,106 @@ def test_vesum_gate_ignores_morphological_stem_fragments() -> None:
     assert seen == [["користуватися"]]
 
 
+def test_vesum_gate_ignores_markdown_wrapped_trailing_stems() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {"від", "виростає", "основи", "пишу"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="Від основи **писа-** виростає **пишу**.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [["виростає", "від", "основи", "пишу"]]
+
+
+def test_vesum_gate_ignores_plain_trailing_stem_labels() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {"відкиньте", "і", "отримаєте", "основу", "інфінітива"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="Відки́ньте -ти, і отри́маєте осно́ву інфініти́ва: писа-.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [["відкиньте", "основу", "отримаєте", "інфінітива"]]
+
+
+def test_vesum_gate_still_catches_markdown_wrapped_complete_misspelling() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        valid = {"помилка", "тут"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="Помилка **пишаа** тут.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["**пишаа**"]
+
+
+def test_vesum_gate_ignores_textbook_attribution_lines() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {"валідна", "цитата"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="> Валідна цитата.\n>\n> *— Литвінова, Grade 7, p.41*",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [["валідна", "цитата"]]
+
+
+def test_litvinova_author_variant_is_proper_name_metadata() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        return {word: [] for word in words}
+
+    gate = _vesum_gate(
+        module_text="",
+        activities=[],
+        vocabulary=[],
+        resources=[{"title": "Литвінова Grade 7, p.30-47"}],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [[]]
+
+
 def test_proper_noun_genitive_resolves() -> None:
     seen: list[list[str]] = []
 

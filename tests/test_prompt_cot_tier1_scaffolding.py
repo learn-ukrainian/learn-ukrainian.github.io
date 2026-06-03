@@ -210,6 +210,15 @@ def test_writer_family_prompts_mandate_preemit_audit_lines(writer: str) -> None:
         )
 
 
+def test_activity_authoring_schema_marks_id_contextual_and_title_required() -> None:
+    rendered = linear_pipeline._render_component_props_schema("grammar-identify, essay-response")
+
+    assert "contextual authoring fields: id (required for inline activities; omit for workbook)" in rendered
+    assert "- grammar-identify:\n    required authoring fields: items, title, type" in rendered
+    assert "- essay-response:\n    required authoring fields: min_words, model_answer, peer_review_guidelines, prompt, rubric, source_reading, title, type" in rendered
+    assert "required authoring fields: id" not in rendered
+
+
 @pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
 def test_writer_prompt_has_no_unresolved_placeholders(level: str, slug: str) -> None:
     rendered = _writer_prompt(level, slug)

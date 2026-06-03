@@ -41,6 +41,10 @@ PROPER_NAME_WHITELIST: set[str] = {
     "Котляревський", "Леонтович", "Лисенко",
     "Большакова", "Вашуленко", "Захарійчук", "Кравцова", "Авраменко",
     "Заболотний", "Літвінова", "Білоус",
+    # Citation matcher canonicalizes this plan spelling to `Літвінова`;
+    # VESUM still sees resource titles literally, so whitelist the surfaced
+    # author-name variant as proper-name metadata.
+    "Литвінова",
     # Added 2026-04-26 (round 3.5, #1602): textbook author cited in the
     # A1/20 plan references (`Караман Grade 10, p.176`). Common declined
     # forms included so citations like "За Караманом" or "у Карамана"

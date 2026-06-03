@@ -18,6 +18,23 @@ def test_match(monkeypatch):
     assert result["passed"] is True
     assert result["violations"] == []
 
+def test_match_with_blockquoted_attribution(monkeypatch):
+    """Blockquoted citation lines are attribution, not quote text."""
+
+    def mock_search(keywords, limit=20):
+        return [{"text": "Це тестова цитата, яка збігається ідеально."}]
+
+    monkeypatch.setattr("scripts.wiki.sources_db.search_textbooks", mock_search)
+
+    module_text = """
+> Це тестова цитата, яка збігається ідеально.
+>
+> *— Захарійчук, Grade 1, p.24*
+"""
+    result = _textbook_quote_fidelity_gate(module_text)
+    assert result["passed"] is True
+    assert result["violations"] == []
+
 
 def test_mismatch(monkeypatch):
     """Test 2 — mismatch (m20 Кнак regression)"""
@@ -76,14 +93,63 @@ def test_partial_mismatch(monkeypatch):
 
 
 def test_no_attribution():
-    """Test 4a — no-attribution"""
+    """Test 4a — publishable-length no-attribution"""
     module_text = """
-> Це цитата без джерела.
+> Це довга цитата без джерела, яка виглядає як опублікований уривок із підручника для перевірки читання, має багато слів, не є коротким навчальним прикладом і потребує точного посилання на джерело.
+> Вона продовжується другим реченням, щоб упевнено перейти поріг опублікованого уривка для перевірки.
 """
     result = _textbook_quote_fidelity_gate(module_text)
     assert result["passed"] is False
     assert len(result["violations"]) > 0
     assert "Missing attribution without NO_VERIFY" in result["violations"][0]["reason"]
+
+def test_short_unattributed_example_blockquote_is_not_textbook_quote():
+    """Short learner examples may use blockquotes without becoming citations."""
+    module_text = """
+> Він проки́нувся, встав, одягну́вся і ви́йшов з до́му.
+"""
+    result = _textbook_quote_fidelity_gate(module_text)
+    assert result["passed"] is True
+    assert result["checked"] == 0
+    assert result["violations"] == []
+
+
+def test_dialogue_blockquote_is_not_textbook_quote():
+    """Speaker-labeled dialogue blocks are learner content, not citations."""
+    module_text = """
+> **Дари́на:** Олексі́ю, як ти прові́в лі́то?
+> **Олексі́й:** Я працюва́в у видавни́цтві.
+> **Дари́на:** Тепе́р шука́ю нову́ робо́ту.
+"""
+    result = _textbook_quote_fidelity_gate(module_text)
+    assert result["passed"] is True
+    assert result["checked"] == 0
+    assert result["violations"] == []
+
+
+def test_dash_dialogue_blockquote_is_not_textbook_quote():
+    """Dash-led dialogue blocks are learner content, not citations."""
+    module_text = """
+> — Як ти почу́ваєшся сього́дні?
+> — Кра́ще, дя́кую. Учо́ра я відпочива́в.
+"""
+    result = _textbook_quote_fidelity_gate(module_text)
+    assert result["passed"] is True
+    assert result["checked"] == 0
+    assert result["violations"] == []
+
+
+def test_dialogue_continuation_lines_are_not_textbook_quote():
+    """Continuation lines after explicit turns still form learner dialogue."""
+    module_text = """
+> **Дари́на:** Олексі́ю, як ти прові́в лі́то і що ти роби́в, коли поверну́вся до Ки́єва?
+> Я чу́ла, що ти багато́ подорожува́в, а тепе́р зно́ву працю́єш над своє́ю статте́ю.
+> **Олексі́й:** Так, я ї́здив до Львова́, зустріча́вся з дру́зями, а за́раз пишу́ текст для журна́лу.
+"""
+    result = _textbook_quote_fidelity_gate(module_text)
+    assert result["passed"] is True
+    assert result["checked"] == 0
+    assert result["violations"] == []
 
 
 def test_no_attribution_with_opt_out():
@@ -189,7 +255,7 @@ def test_core_level_matches_default_textbook_behavior(monkeypatch):
     assert calls == {"literary": 0, "textbooks": 2}
 
 
-def test_core_level_does_not_accept_seminar_embedded_attribution(monkeypatch):
+def test_core_level_accepts_blockquoted_textbook_attribution(monkeypatch):
     calls = {"textbooks": 0}
 
     def mock_search_textbooks(keywords, limit=20):
@@ -207,6 +273,6 @@ def test_core_level_does_not_accept_seminar_embedded_attribution(monkeypatch):
     core_result = _textbook_quote_fidelity_gate(module_text, level="a1")
 
     assert core_result == default_result
-    assert core_result["passed"] is False
-    assert core_result["violations"][0]["reason"] == "Missing attribution without NO_VERIFY"
-    assert calls == {"textbooks": 0}
+    assert core_result["passed"] is True
+    assert core_result["violations"] == []
+    assert calls == {"textbooks": 2}

@@ -28,6 +28,7 @@ from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from fnmatch import fnmatch
+from functools import cache, lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -671,6 +672,16 @@ _MORPHEME_FRAGMENT_RE = re.compile(
     r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])[*_`]{0,2}-[*_`]{0,2}"
     r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*[*_`]{0,2}"
 )
+_MARKDOWN_TRAILING_STEM_FRAGMENT_RE = re.compile(
+    r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])(?:"
+    r"[*_`]{1,2}[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*-[*_`]{1,2}"
+    r"|[*_`]{1,2}[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*[*_`]{1,2}-"
+    r")(?![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])"
+)
+_PLAIN_TRAILING_STEM_FRAGMENT_RE = re.compile(
+    r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]{2,}-"
+    r"(?![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])"
+)
 _PRONUNCIATION_CUE_PATTERN = re.compile(
     r"(?:sounds?\s+like|звучить\s+як|вимовляється\s+як|вимова[:\s])\s*\*\*[^*]+\*\*",
     re.IGNORECASE,
@@ -815,7 +826,11 @@ _ACTIVITY_ITEM_FIELD_PURPOSES: dict[str, str] = {
     "answer": "the corrected form",
 }
 _ACTIVITY_EXPLANATION_REQUIRED_TYPES = frozenset({"quiz", "translate"})
-_VESUM_ABBREVIATION_RE = re.compile(r"\bдіал\.", re.IGNORECASE)
+_VESUM_ABBREVIATION_RE = re.compile(r"\b(?:діал|недок|док)\.", re.IGNORECASE)
+_TEXTBOOK_ATTRIBUTION_HINT_RE = re.compile(
+    r"\b(?:Grade\s+\d+|p\.\s*\d+)\b",
+    re.IGNORECASE,
+)
 
 # String fields whose values are user-facing prose (subject to AI-slop checks).
 # YAML structural keys like `correction:` and `correctAnswer:` are deliberately
@@ -3276,11 +3291,13 @@ def _render_component_props_schema(allowed_activity_types: str) -> str:
                 "(see #1604 for schema drift)"
             )
             continue
-        content_fields = sorted(fields - _UNIVERSAL_AUTHORING_FIELDS)
-        optional_fields = sorted((fields & _UNIVERSAL_AUTHORING_FIELDS) - {"id", "type"})
-        required = ["id", "type", *content_fields]
+        content_fields = fields - _UNIVERSAL_AUTHORING_FIELDS
+        component_required = _component_required_authoring_fields(activity_type)
+        required = sorted((content_fields | component_required | {"type"}) - {"id"})
+        optional_fields = sorted(((fields & _UNIVERSAL_AUTHORING_FIELDS) - {"id", "type"}) - set(required))
         lines.append(f"- {activity_type}:")
         lines.append(f"    required authoring fields: {', '.join(required)}")
+        lines.append("    contextual authoring fields: id (required for inline activities; omit for workbook)")
         lines.append(f"    optional authoring fields: {', '.join(optional_fields) or '—'}")
     if not lines:
         return "(no allowed activity types resolved against authoring schema)"
@@ -7516,6 +7533,28 @@ _COMPONENT_PROP_GATE_JSX_ONLY_PROPS: frozenset[str] = frozenset(
 )
 
 
+@cache
+def _component_required_authoring_fields(activity_type: str) -> frozenset[str]:
+    schema = yaml.safe_load((PROJECT_ROOT / "docs" / "lesson-schema.yaml").read_text(encoding="utf-8")) or {}
+    components = schema.get("components", {})
+    by_type = {
+        data.get("activity_type"): data
+        for data in components.values()
+        if isinstance(data, dict) and data.get("activity_type")
+    }
+    component = by_type.get(activity_type)
+    if component is None:
+        return frozenset()
+    renames = _COMPONENT_TO_AUTHORING_RENAMES.get(activity_type, {})
+    return frozenset(
+        renames.get(comp_prop, comp_prop)
+        for prop in component.get("props", {}).get("required", [])
+        if isinstance(prop, dict)
+        and isinstance((comp_prop := prop.get("name")), str)
+        and comp_prop not in _COMPONENT_PROP_GATE_JSX_ONLY_PROPS
+    )
+
+
 def _strip_outer_code_fence(text: str) -> str:
     stripped = text.strip()
     match = re.match(r"^```(?:json|yaml|yml)?\s*\n(?P<body>.*)\n```\s*$", stripped, re.DOTALL)
@@ -9128,6 +9167,21 @@ def _walk_artifact_strings(
     return out
 
 
+def _looks_like_textbook_attribution(attribution: str) -> bool:
+    return bool(_TEXTBOOK_ATTRIBUTION_HINT_RE.search(attribution))
+
+
+def _strip_textbook_attribution_lines(text: str) -> str:
+    lines: list[str] = []
+    for line in text.splitlines():
+        attribution = _extract_textbook_attribution(line)
+        if attribution and _looks_like_textbook_attribution(attribution):
+            lines.append(" ")
+            continue
+        lines.append(line)
+    return "\n".join(lines)
+
+
 def _strip_metalinguistic(text: str) -> str:
     """Strip phonetic transcriptions, code, blank syntax, and morpheme labels.
 
@@ -9140,8 +9194,12 @@ def _strip_metalinguistic(text: str) -> str:
       `**-ться**`, and `-**юся**`. The regex lookbehind protects legitimate
       hyphenated compounds (`темно-синій`) where the char before `-` is a
       word char.
+    - trailing stem notation like `писа-`, `**писа-**`, or `**користу**-`.
+      These are grammar labels, not standalone word forms.
     - `sounds like **...**` — cue-prefixed bold pronunciation transcriptions.
-    - `діал.` — textbook abbreviation for `діалектне`, not a lemma.
+    - abbreviations like `діал.`, `недок.`, and `док.` — textbook or
+      grammar metadata, not lemmas.
+    - textbook attribution lines such as `> *— Захарійчук, Grade 1, p.24*`.
     - `<!-- bad -->форма<!-- /bad -->` — pedagogical Russianism / surzhyk /
       calque callouts in prose (e.g. "stick to сніданок, not the
       Russian-borrowed `<!-- bad -->завтрак<!-- /bad -->`"). The bad form
@@ -9161,7 +9219,10 @@ def _strip_metalinguistic(text: str) -> str:
     text = _BRACKETS_RE.sub(" ", text)
     text = _BRACES_RE.sub(" ", text)
     text = _PRONUNCIATION_CUE_PATTERN.sub(" ", text)
+    text = _MARKDOWN_TRAILING_STEM_FRAGMENT_RE.sub(" ", text)
+    text = _PLAIN_TRAILING_STEM_FRAGMENT_RE.sub(" ", text)
     text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
+    text = _strip_textbook_attribution_lines(text)
     text = _AVOID_MARKER_RE.sub(" ", text)
     text = _strip_comments(text)
     text = _WARNING_QUOTE_RE.sub(" ", text)
@@ -9358,6 +9419,10 @@ def _activity_vesum_text(
     only the option equal to the answer is verified; sibling distractors can be
     fabricated wrong forms.
 
+    For `highlight-morphemes`, the carrier word and visible activity text are
+    verified, but `morphemes:` / `morpheme:` values are word-part labels such as
+    `писа` or `-іш-`, not standalone VESUM lemmas.
+
     For true-false activities, false statements are intentional wrong claims
     and may contain fabricated Ukrainian forms. Only true statements are
     verified; missing answers fail soft by skipping the statement. True
@@ -9455,6 +9520,8 @@ def _activity_vesum_text(
                     # rationale doesn't change with shape: a fill-in answer
                     # is always a suffix fragment.  Skip unconditionally.
                     # See #1967.
+                    continue
+                if activity_type == "highlight-morphemes" and key in {"morphemes", "morpheme"}:
                     continue
                 if key == "options" and ("answer" in node or "correctAnswer" in node):
                     walk_answer_options(
@@ -9925,9 +9992,19 @@ def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
             current_section = re.sub(r"[*_`~]+", "", heading.group("title")).strip()
         match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
         if match:
+            body = match.group("body")
+            attribution = _extract_textbook_attribution(body)
+            if attribution and _looks_like_textbook_attribution(attribution) and current:
+                while current and not current[-1].strip():
+                    current.pop()
+                flush_quote()
+                if pending_attribution_index is not None:
+                    quotes[pending_attribution_index]["attribution"] = attribution
+                    pending_attribution_index = None
+                continue
             if not current:
                 quote_section = current_section
-            current.append(match.group("body"))
+            current.append(body)
             continue
         if current:
             flush_quote()
@@ -9950,11 +10027,33 @@ def _extract_blockquotes(text: str) -> list[str]:
 
 
 def _extract_textbook_attribution(line: str) -> str:
-    stripped = line.strip().strip("*_`~ ")
+    stripped = re.sub(r"^\s*>\s?", "", line).strip().strip("*_`~ ")
     match = re.match(r"^[—–-]\s*(?P<body>.+?)\s*$", stripped)
     if match is None:
         return ""
     return match.group("body").strip().strip("*_`~ ")
+
+
+def _looks_like_dialogue_blockquote(text: str) -> bool:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if len(lines) < 2:
+        return False
+    turn_starts = 0
+    seen_turn = False
+    for line in lines:
+        normalized = unicodedata.normalize("NFD", line)
+        normalized = "".join(char for char in normalized if char not in _VESUM_STRESS_MARKS)
+        normalized = unicodedata.normalize("NFC", normalized)
+        normalized = re.sub(r"[*_`~]+", "", normalized).strip()
+        if _looks_like_textbook_attribution(normalized):
+            return False
+        if re.match(r"^[А-ЯІЇЄҐ][А-ЯІЇЄҐа-яіїєґ'ʼ -]{1,40}:\s+", normalized) or normalized.startswith("— "):
+            turn_starts += 1
+            seen_turn = True
+            continue
+        if not seen_turn:
+            return False
+    return turn_starts >= 2
 
 
 def _normalize_match_text(text: str) -> str:
@@ -11695,22 +11794,7 @@ def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
         if component is None:
             errors.append(f"{activity.get('id', '<missing-id>')}: unknown activity type {activity_type}")
             continue
-        required_component_props = [
-            prop["name"] for prop in component.get("props", {}).get("required", []) if isinstance(prop, dict)
-        ]
-        # `activity_type` is non-None here (guarded by `component is None`
-        # check above), but Pyright can't track that across the dict lookup.
-        renames = _COMPONENT_TO_AUTHORING_RENAMES.get(activity_type or "", {})
-        # Translate component-prop names to authoring field names; skip
-        # JSX-only props that aren't represented as top-level YAML fields.
-        # `isinstance(comp_prop, str)` narrows the type for `renames.get`
-        # (required_component_props comes from `prop["name"]` over a
-        # dict[str, Any], so its element type is Any from Pyright's POV).
-        required_authoring_fields: list[str] = [
-            renames.get(comp_prop, comp_prop)
-            for comp_prop in required_component_props
-            if isinstance(comp_prop, str) and comp_prop not in _COMPONENT_PROP_GATE_JSX_ONLY_PROPS
-        ]
+        required_authoring_fields = sorted(_component_required_authoring_fields(str(activity_type)))
         missing = [field for field in required_authoring_fields if field not in activity]
         if missing:
             errors.append(f"{activity.get('id', '<missing-id>')}: missing required props " + ", ".join(missing))
@@ -11732,10 +11816,10 @@ def _strip_frontmatter(text: str) -> str:
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
+
+
 def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) -> dict[str, Any]:
     """Verify textbook quote fidelity against the sources DB."""
-    import re
-
     from rapidfuzz import distance
 
     from scripts.wiki.sources_db import search_literary, search_textbooks
@@ -11791,24 +11875,35 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
                     i += 1
                 continue
 
+            attr_line = ""
             while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
-                current_quote.append(re.match(r"^\s*>\s?(.*)$", lines[i]).group(1)) # type: ignore
+                body = re.match(r"^\s*>\s?(.*)$", lines[i]).group(1) # type: ignore
+                attribution = _extract_textbook_attribution(body)
+                if attribution and _looks_like_textbook_attribution(attribution) and current_quote:
+                    while current_quote and not current_quote[-1].strip():
+                        current_quote.pop()
+                    attr_line = attribution
+                    i += 1
+                    break
+                current_quote.append(body)
                 i += 1
 
-            j = i
-            if j < len(lines) and not lines[j].strip():
-                j += 1
+            if not attr_line:
+                j = i
+                if j < len(lines) and not lines[j].strip():
+                    j += 1
 
-            if level_key in SEMINAR_LEVELS:
+                if j < len(lines):
+                    attr = _extract_textbook_attribution(lines[j])
+                    if attr:
+                        attr_line = attr
+
+            if level_key in SEMINAR_LEVELS and not attr_line:
                 quote_text, embedded_attr = _extract_embedded_attribution(current_quote)
+                if embedded_attr:
+                    attr_line = embedded_attr
             else:
                 quote_text = "\n".join(current_quote).strip()
-                embedded_attr = ""
-            attr_line = embedded_attr
-            if j < len(lines):
-                attr = _extract_textbook_attribution(lines[j])
-                if attr:
-                    attr_line = attr
 
             quotes.append({
                 "text": quote_text,
@@ -11837,6 +11932,12 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
         nv = q["no_verify"]
 
         if not text:
+            continue
+
+        if not attr and _looks_like_dialogue_blockquote(text):
+            continue
+
+        if not attr and len(_textbook_match_tokens(text)) < TEXTBOOK_GROUNDING_MIN_WORDS:
             continue
 
         checked += 1

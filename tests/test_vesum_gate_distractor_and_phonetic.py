@@ -186,6 +186,27 @@ def test_dialect_abbreviation_not_verified() -> None:
     assert "діал" not in sent_for_verification
 
 
+def test_aspect_abbreviations_not_verified() -> None:
+    """Grammar abbreviations `недок.` and `док.` are metadata, not lemmas."""
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: [{"lemma": word}] for word in words}
+
+    result = _vesum_gate(
+        module_text="Писати (недок.) і написати (док.) утворюють видову пару.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is True
+    assert "недок" not in sent_for_verification
+    assert "док" not in sent_for_verification
+
+
 def test_pronunciation_transcription_stripped_in_prose() -> None:
     """A bold phonetic form following 'sounds like' must not hit VESUM."""
     module_text = (
@@ -290,3 +311,37 @@ def test_vesum_gate_ignores_verify_comment_russianism_end_to_end() -> None:
 
     assert result["passed"] is True
     assert "одіватися" not in sent_for_verification
+
+
+def test_highlight_morpheme_fragments_not_verified() -> None:
+    """Morpheme labels are fragments; the carrier word remains verified."""
+    activity = {
+        "type": "highlight-morphemes",
+        "text": "писав",
+        "items": [
+            {
+                "word": "писав",
+                "morphemes": [
+                    {"text": "писа", "type": "stem"},
+                    {"morpheme": "-в", "type": "suffix"},
+                ],
+            }
+        ],
+    }
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: [{"lemma": word}] for word in words}
+
+    result = _vesum_gate(
+        module_text="",
+        activities=[activity],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is True
+    assert "писав" in sent_for_verification
+    assert "писа" not in sent_for_verification
