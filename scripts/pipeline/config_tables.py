@@ -270,7 +270,7 @@ _A1_PHASE_CONSTRAINTS: dict[str, str] = {
         "participles, passive voice, complex subordinate clauses"
     ),
     "A1.4": (
-        "GRAMMAR CONSTRAINTS (A1.4 — Time & Nature, M22-M28):\n"
+        "GRAMMAR CONSTRAINTS (A1.4 — Time & Nature, M22-M27):\n"
         "Time expressions, days, months, weather, daily routines.\n\n"
         "ALLOWED:\n"
         "- All present tense (from A1.3)\n"
@@ -281,7 +281,7 @@ _A1_PHASE_CONSTRAINTS: dict[str, str] = {
         "participles, passive voice, complex subordination"
     ),
     "A1.5": (
-        "GRAMMAR CONSTRAINTS (A1.5 — Places & Movement, M29-M36):\n"
+        "GRAMMAR CONSTRAINTS (A1.5 — Places & Movement, M28-M35):\n"
         "Euphony, locative, accusative direction, genitive origin.\n\n"
         "ALLOWED:\n"
         "- Euphony rules (у/в, і/й, з/із/зі)\n"
@@ -293,7 +293,7 @@ _A1_PHASE_CONSTRAINTS: dict[str, str] = {
         "participles, passive voice, complex subordination"
     ),
     "A1.6": (
-        "GRAMMAR CONSTRAINTS (A1.6 — Food & Shopping, M37-M43):\n"
+        "GRAMMAR CONSTRAINTS (A1.6 — Food & Shopping, M36-M41):\n"
         "Instrumental з, accusative objects, genitive quantities.\n\n"
         "ALLOWED:\n"
         "- Instrumental case with 'з' (кава з молоком)\n"
@@ -305,7 +305,7 @@ _A1_PHASE_CONSTRAINTS: dict[str, str] = {
         "participles, passive voice, complex subordination"
     ),
     "A1.7": (
-        "GRAMMAR CONSTRAINTS (A1.7 — People & Communication, M44-M50):\n"
+        "GRAMMAR CONSTRAINTS (A1.7 — People & Communication, M42-M47):\n"
         "Vocative, imperative, dative, conjunctions, subordinate clauses.\n\n"
         "ALLOWED:\n"
         "- Vocative case (Олено! Тарасе!)\n"
@@ -317,7 +317,7 @@ _A1_PHASE_CONSTRAINTS: dict[str, str] = {
         "BANNED: Past/future tense, participles, passive voice"
     ),
     "A1.8": (
-        "GRAMMAR CONSTRAINTS (A1.8 — Past, Future & Graduation, M51-M60):\n"
+        "GRAMMAR CONSTRAINTS (A1.8 — Past, Future & Graduation, M48-M55):\n"
         "Full A1 grammar including past and future tense.\n\n"
         "ALLOWED:\n"
         "- Past tense (він читав, вона читала — gendered!)\n"

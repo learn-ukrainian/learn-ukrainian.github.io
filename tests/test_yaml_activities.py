@@ -125,6 +125,35 @@ class TestMDXGeneration:
         assert '### Test Quiz' in mdx # H3 Header check
         assert 'questions={JSON.parse' in mdx
 
+    def test_error_correction_mdx_keeps_instruction_and_legacy_anchor(self, parser, tmp_path):
+        """Error-correction activities can preserve student instructions and old anchors."""
+        yaml_file = tmp_path / 'error_correction_anchor.yaml'
+        yaml_file.write_text(
+            "- id: act-7\n"
+            "  type: error-correction\n"
+            "  title: Choose the Ukrainian sentence\n"
+            "  anchor_id: fix-common-l2-traps\n"
+            "  instruction: Choose the safer Ukrainian line.\n"
+            "  items:\n"
+            "    - sentence: Я є студент.\n"
+            "      error: Я є студент.\n"
+            "      correction: Я студент.\n"
+            "      options:\n"
+            "        - Я студент.\n"
+            "        - Я є студент.\n"
+            "      explanation: Present identity lines skip English-style am.\n",
+            encoding='utf-8',
+        )
+
+        mdx = parser.to_mdx(parser.parse(yaml_file))
+
+        assert '<span id="fix-common-l2-traps"></span>' in mdx
+        assert '### Choose the Ukrainian sentence' in mdx
+        assert 'instruction="Choose the safer Ukrainian line."' in mdx
+        assert "items={JSON.parse(`" in mdx
+        assert '"sentence": "Я є студент."' in mdx
+        assert "<ErrorCorrectionItem" not in mdx
+
 
 # =============================================================================
 # INTEGRATION TESTS

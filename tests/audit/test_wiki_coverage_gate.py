@@ -62,6 +62,28 @@ def _ban_result(report: dict[str, Any]) -> dict[str, Any]:
     return next(item for item in report["obligations"] if item["obligation_id"] == "ban-1")
 
 
+def test_obligation_checklist_ignores_teacher_facing_chunk_loanword() -> None:
+    manifest = {
+        "slug": "chunk-fixture",
+        "wiki_path": "wiki/pedagogy/a1/chunk-fixture.md",
+        "sequence_steps": [
+            {
+                "id": "step-1",
+                "heading": "Крок 1: Комунікативні чанки",
+                "required_claim": "Ця фраза подається як лексичний моноліт (чанк).",
+            }
+        ],
+        "l2_errors": [],
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+    }
+
+    checklist = build_obligation_checklist_object(manifest)
+    required = checklist["obligations"][0]["required_items"]["vocabulary"]
+
+    assert "чанк" not in required
+
+
 def test_decolonization_ban_substance_required_passes_when_pair_present() -> None:
     manifest = _ban_manifest(BAN_4_RULE)
 
@@ -512,6 +534,74 @@ def test_l2_error_passes_when_marker_contains_apostrophe() -> None:
     assert err_result["status"] == "PASS", (
         f"err-2 should PASS when activity contains the correct apostrophe "
         f"marker; got reason={err_result['reason']!r}"
+    )
+
+
+def test_l2_error_passes_when_correction_contains_source_marker() -> None:
+    """Source markers like [S11] are citation metadata, not learner text.
+
+    The marker matcher must accept an activity correction that reproduces the
+    wiki manifest verbatim with a source marker inside terminal punctuation.
+    """
+    manifest = {
+        "slug": "fixture",
+        "wiki_path": "wiki/pedagogy/a1/fixture.md",
+        "sequence_steps": [],
+        "l2_errors": [
+            {
+                "id": "err-3",
+                "incorrect": (
+                    "Намагатися артикулювати «Ь» (м'який знак) як окремий, "
+                    "хоч і короткий, звук (наприклад, як редуковане [і])."
+                ),
+                "correct": (
+                    "Робити попередній приголосний звук м'яким під час вимови, "
+                    "не додаючи після нього жодного окремого звукового елемента "
+                    "(наприклад, у слові день [S11])."
+                ),
+                "why": "Ь has no sound of its own.",
+                "treatment": "contrast_pair",
+                "source_lines": "48",
+            }
+        ],
+        "phonetic_rules": [],
+        "decolonization_bans": [],
+        "external_resources": [],
+    }
+    activities_yaml = (
+        "- type: error-correction\n"
+        "  title: Типові помилки\n"
+        "  items:\n"
+        "    - sentence: Намагатися артикулювати «Ь» (м'який знак) як окремий, "
+        "хоч і короткий, звук (наприклад, як редуковане [і]).\n"
+        "      error: Намагатися артикулювати «Ь» (м'який знак) як окремий, "
+        "хоч і короткий, звук (наприклад, як редуковане [і]).\n"
+        "      correction: Робити попередній приголосний звук м'яким під час вимови, "
+        "не додаючи після нього жодного окремого звукового елемента "
+        "(наприклад, у слові день [S11]).\n"
+    )
+    implementation_map = {
+        "err-3": {
+            "artifact": "activities.yaml",
+            "location": "activities.yaml",
+            "treatment": "contrast_pair",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="# Module body unrelated to err-3.\n",
+        activities_yaml=activities_yaml,
+        seeded_map=seed_implementation_map(manifest),
+    )
+
+    err_result = next(
+        item for item in report["obligations"] if item["obligation_id"] == "err-3"
+    )
+    assert err_result["status"] == "PASS", (
+        f"err-3 should PASS with the manifest source marker intact; got "
+        f"reason={err_result['reason']!r}"
     )
 
 

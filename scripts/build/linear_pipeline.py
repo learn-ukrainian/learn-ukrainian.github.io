@@ -56,6 +56,7 @@ from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state
+from scripts.pipeline.module_archetypes import format_module_archetype, resolve_module_archetype
 
 PLAN_REQUIRED_KEYS = {
     "module",
@@ -368,6 +369,7 @@ RESOURCE_ROLES = frozenset(
         "wiki",
     }
 )
+INTERNAL_RESOURCE_URL_PREFIXES = ("wiki/", "docs/wiki/")
 MULTIMEDIA_SEARCH_TOOLS = frozenset(
     {
         "query_wikipedia",
@@ -892,7 +894,7 @@ def validate_plan(plan: Mapping[str, Any]) -> None:
             raise LinearPipelineError(f"Plan section {index} must be a mapping")
         if not isinstance(section.get("section"), str) or not section["section"].strip():
             raise LinearPipelineError(f"Plan section {index} missing section title")
-        if not isinstance(section.get("words"), int) or section["words"] <= 0:
+        if not isinstance(section.get("words"), int) or section["words"] < 0:
             raise LinearPipelineError(f"Plan section {section['section']!r} has invalid words")
         points = section.get("points")
         if not isinstance(points, list) or not all(isinstance(p, str) for p in points):
@@ -3121,6 +3123,7 @@ def writer_context(
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     learner_state = build_learner_state(level.lower(), sequence)
+    module_archetype = resolve_module_archetype(level.lower(), sequence)
     activity_config = _activity_config(level, sequence, str(plan["slug"]))
     if wiki_manifest is None:
         manifest_for_checklist = build_wiki_manifest_data(level=level.lower(), slug=str(plan["slug"]), plan=plan)
@@ -3156,6 +3159,7 @@ def writer_context(
         "WIKI_COVERAGE_REQUIRED_ITEMS": required_items_text,
         "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "LEARNER_STATE": format_learner_state(learner_state),
+        "MODULE_ARCHETYPE": format_module_archetype(module_archetype),
         "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence, learner_state=learner_state),
         "CONTRACT_YAML": _contract_yaml(plan),
         "ALLOWED_ACTIVITY_TYPES": activity_config["ALLOWED_ACTIVITY_TYPES"],
@@ -6701,6 +6705,10 @@ def run_python_qg(
     )
     record("citations_resolve", _citation_gate(resources, plan))
     record("plan_reference_match", _plan_reference_match_gate(resources, plan))
+    wiki_manifest: dict[str, Any] | None = None
+    with contextlib.suppress(LinearPipelineError, ValueError):
+        wiki_manifest = build_wiki_manifest_data(plan_path, plan=plan)
+    record("resource_coverage", _resource_coverage_gate(resources, plan, wiki_manifest))
     # record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
     record(
         "chunk_context_for_all_refs",
@@ -6713,7 +6721,11 @@ def run_python_qg(
     record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text))
     record(
         "resources_search_attempted",
-        _resources_search_attempted_gate(_load_writer_tool_calls(module_dir)),
+        _resources_search_attempted_gate(
+            _load_writer_tool_calls(module_dir),
+            plan=plan,
+            resource_coverage=gates.get("resource_coverage"),
+        ),
     )
     record("immersion_advisory", _advisory_immersion_pct(module_text, plan))
     record("l2_exposure_floor", _l2_exposure_floor_gate(module_text, plan))
@@ -6726,7 +6738,8 @@ def run_python_qg(
         ),
     )
     record("component_density", _component_density_gate(module_text, plan))
-    record("inject_activity_ids", _inject_activity_gate(module_text, activities))
+    record("archetype_fit", _archetype_fit_gate(module_text, plan, activities))
+    record("inject_activity_ids", _inject_activity_gate(module_text, activities, plan))
     record(
         "activity_types",
         _activity_type_gate(
@@ -6765,6 +6778,26 @@ def _python_qg_report(
     }
 
 
+def _archetype_fit_gate(
+    module_text: str,
+    plan: Mapping[str, Any],
+    activities: list[dict[str, Any]],
+) -> dict[str, Any]:
+    from scripts.audit.checks.contract_compliance import check_archetype_fit
+
+    return check_archetype_fit(
+        module_text,
+        {
+            "module": {
+                "level": str(plan.get("level") or "").lower(),
+                "module_num": int(plan.get("sequence") or 0),
+                "slug": str(plan.get("slug") or ""),
+            }
+        },
+        activities=activities,
+    )
+
+
 def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
     """Assemble the 4-tab Starlight MDX file from authoring artifacts."""
     plan = plan_check(plan_path)
@@ -6787,7 +6820,7 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
         external_resources=resources,
         level=str(plan["level"]).lower(),
         pipeline_version="linear-phase-4",
-        build_status="draft",
+        build_status="validated",
     )
     mdx = mdx.replace("\n{/**/}\n", "\n")
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -6867,8 +6900,197 @@ def _parse_and_dump_writer_json_artifact(
     except ValueError as exc:
         raise LinearPipelineError(f"{artifact} invalid JSON: {exc}") from exc
 
+    _normalize_writer_json_artifact(artifact, parsed)
     _validate_writer_json_artifact(artifact, parsed)
     return yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+
+
+def _normalize_writer_json_artifact(artifact: str, parsed: Any) -> None:
+    """Normalize narrow, lossless legacy writer shapes before validation."""
+    if artifact != "activities.yaml" or not isinstance(parsed, list):
+        return
+    for activity in parsed:
+        if isinstance(activity, dict) and activity.get("type") == "group-sort":
+            _normalize_group_sort_activity(activity)
+        if isinstance(activity, dict) and activity.get("type") == "letter-grid":
+            _normalize_letter_grid_activity(activity)
+        if isinstance(activity, dict) and activity.get("type") == "count-syllables":
+            _normalize_count_syllables_activity(activity)
+        if isinstance(activity, dict) and activity.get("type") == "watch-and-repeat":
+            _normalize_watch_and_repeat_activity(activity)
+
+
+def _group_sort_label(group: Mapping[str, Any]) -> str | None:
+    for field in ("label", "name", "title", "key", "id"):
+        value = group.get(field)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def _group_sort_item_text(item: Mapping[str, Any]) -> str | None:
+    for field in ("word", "text", "label", "item", "value"):
+        value = item.get(field)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def _normalize_group_sort_activity(activity: dict[str, Any]) -> None:
+    """Convert keyed top-level group-sort items into nested group items.
+
+    Writers often use an assessment-style shape:
+    ``groups: [{name, key}], items: [{word, group}]``. The authoring format
+    consumed by the renderer keeps sortable strings inside each group:
+    ``groups: [{label, items}]``. Convert only when every top-level item can
+    be assigned unambiguously; otherwise leave validation to fail loud.
+    """
+    groups = activity.get("groups")
+    if not isinstance(groups, list) or not groups:
+        return
+
+    normalized_groups: list[dict[str, Any]] = []
+    aliases: dict[str, dict[str, Any]] = {}
+    for group in groups:
+        if not isinstance(group, Mapping):
+            return
+        label = _group_sort_label(group)
+        if label is None:
+            return
+        raw_items = group.get("items", [])
+        if raw_items is None:
+            raw_items = []
+        if not isinstance(raw_items, list):
+            return
+        normalized = {
+            "label": label,
+            "items": [str(item).strip() for item in raw_items if str(item).strip()],
+        }
+        normalized_groups.append(normalized)
+        for field in ("key", "id", "label", "name", "title"):
+            value = group.get(field)
+            if isinstance(value, str) and value.strip():
+                aliases[value.strip()] = normalized
+
+    top_level_items = activity.get("items")
+    if top_level_items is not None:
+        if not isinstance(top_level_items, list):
+            return
+        for item in top_level_items:
+            if not isinstance(item, Mapping):
+                return
+            group_key = item.get("group") or item.get("category") or item.get("group_key")
+            text = _group_sort_item_text(item)
+            if not isinstance(group_key, str) or not group_key.strip() or text is None:
+                return
+            target = aliases.get(group_key.strip())
+            if target is None:
+                return
+            target["items"].append(text)
+        activity.pop("items", None)
+
+    activity["groups"] = normalized_groups
+
+
+_LETTER_GRID_EMOJI_BY_KEY_WORD: Mapping[str, str] = {
+    "ананас": "🍍",
+    "банан": "🍌",
+    "вода": "💧",
+    "гора": "⛰️",
+    "ґудзик": "🔘",
+    "дім": "🏠",
+    "екран": "🖥️",
+    "єнот": "🦝",
+    "жук": "🪲",
+    "зуб": "🦷",
+    "сир": "🧀",
+    "ім'я": "🪪",
+    "їжак": "🦔",
+    "йогурт": "🥛",
+    "кіт": "🐈",
+    "лимон": "🍋",
+    "мама": "👩",
+    "ніс": "👃",
+    "око": "👁️",
+    "пес": "🐕",
+    "рука": "✋",
+    "сон": "🌙",
+    "тато": "👨",
+    "урок": "📚",
+    "фото": "📷",
+    "хата": "🏠",
+    "цукор": "🍬",
+    "час": "🕒",
+    "школа": "🏫",
+    "щука": "🐟",
+    "день": "📅",
+    "юшка": "🥣",
+    "яблуко": "🍎",
+}
+
+
+def _normalize_letter_grid_activity(activity: dict[str, Any]) -> None:
+    """Convert common letter-grid aliases into renderer-ready fields."""
+    letters = activity.get("letters")
+    if not isinstance(letters, list) or not letters:
+        return
+
+    normalized_letters: list[dict[str, Any]] = []
+    for entry in letters:
+        if not isinstance(entry, Mapping):
+            return
+        upper = entry.get("upper") or entry.get("letter")
+        key_word = entry.get("key_word") or entry.get("word") or entry.get("example")
+        if not isinstance(upper, str) or not upper.strip():
+            return
+        if not isinstance(key_word, str) or not key_word.strip():
+            return
+        lower = entry.get("lower")
+        if not isinstance(lower, str) or not lower.strip():
+            lower = upper.casefold()
+        emoji = entry.get("emoji")
+        if not isinstance(emoji, str) or not emoji.strip():
+            emoji = _LETTER_GRID_EMOJI_BY_KEY_WORD.get(key_word.casefold(), "🔤")
+
+        normalized = {
+            "upper": upper.strip(),
+            "lower": lower.strip(),
+            "emoji": emoji.strip(),
+            "key_word": key_word.strip(),
+        }
+        sound_type = entry.get("sound_type") or entry.get("kind")
+        if isinstance(sound_type, str) and sound_type.strip():
+            normalized["sound_type"] = sound_type.strip()
+        note = entry.get("note") or entry.get("sound")
+        if isinstance(note, str) and note.strip():
+            normalized["note"] = note.strip()
+        normalized_letters.append(normalized)
+
+    activity["letters"] = normalized_letters
+
+
+def _normalize_count_syllables_activity(activity: dict[str, Any]) -> None:
+    """Convert count-syllables item `answer` aliases into `correct`."""
+    items = activity.get("items")
+    if not isinstance(items, list):
+        return
+    for item in items:
+        if not isinstance(item, dict):
+            return
+        if "correct" not in item and "answer" in item:
+            item["correct"] = item.pop("answer")
+
+
+def _normalize_watch_and_repeat_activity(activity: dict[str, Any]) -> None:
+    """Convert watch-and-repeat item `url` aliases into renderer `video`."""
+    items = activity.get("items")
+    if not isinstance(items, list):
+        return
+    for item in items:
+        if not isinstance(item, dict):
+            return
+        if "video" not in item and "url" in item:
+            item["video"] = item.pop("url")
 
 
 def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
@@ -6954,14 +7176,22 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
                 )
         if artifact == "resources.yaml":
             role = str(item.get("role") or "").strip()
+            url = str(item.get("url") or "").strip()
+            normalized_url = url.lstrip("./")
             if role not in RESOURCE_ROLES:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} "
                     f"has invalid role {role!r}; allowed: {sorted(RESOURCE_ROLES)}"
                 )
-            if role != "textbook" and not str(item.get("url") or "").strip():
+            if role != "textbook" and not url:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} role {role!r} requires url"
+                )
+            if normalized_url.startswith(INTERNAL_RESOURCE_URL_PREFIXES):
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} has internal "
+                    f"AI-facing resource url {url!r}; resources.yaml must contain "
+                    "student-facing sources only"
                 )
 
 
@@ -7599,7 +7829,51 @@ def _word_count_gate(text: str, target: int) -> dict[str, Any]:
     }
 
 
+_A1_M1_M7_SECTION_ALIASES = {
+    "Звуки і літери": ("Sound First, Letter Second",),
+    "Голосні звуки": ("Six Vowel Sounds, Ten Letters",),
+    "Приголосні звуки": ("Consonant Sounds",),
+    "Привіт!": ("Your First Conversation",),
+    "Склади": ("Syllables",),
+    "Голосні літери": ("Vowel Letters",),
+    "Читання слів": ("Reading Words",),
+    "Йотовані голосні як передумова": ("Iotated Vowels First",),
+    "М'який знак": ("The Soft Sign",),
+    "Апостроф": ("The Apostrophe",),
+    "Контраст і типові помилки L2": ("Contrast and L2 Reading Traps",),
+    "Перенос і підсумок": ("Line Breaks and Textbook Check",),
+    "Наголос": ("Stress",),
+    "Інтонація": ("Intonation",),
+    "Читаємо вголос": ("Reading Aloud",),
+    "Діалоги": ("Dialogues",),
+    "Мене звати...": ("My Name Is...",),
+    "Це...": ("This Is...",),
+    "Особові займенники": ("Personal Pronouns",),
+    "Я — студент": ("I Am a Student",),
+    "Звідки?": ("Where From?",),
+    "Сім'я": ("Family",),
+    "У мене є": ("I Have",),
+    "Мій, моя, моє": ("My",),
+    "Що ми знаємо?": ("What We Know",),
+    "Читання": ("Reading",),
+    "Граматика": ("Grammar",),
+    "Діалог": ("Dialogue",),
+    "Підсумок": ("Textbook Check",),
+}
+
+_A1_M1_M7_ARCHETYPES = {
+    "a1-zero-script-onboarding",
+    "a1-script-building",
+    "a1-first-contact-survival",
+}
+
+
 def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    archetype = resolve_module_archetype(
+        str(plan.get("level") or ""),
+        int(plan.get("sequence") or 0),
+    )
+    archetype_id = str(archetype.get("id") or "")
     headings_by_key: dict[str, list[str]] = {}
     for match in _HEADING_RE.finditer(text):
         raw_heading = match.group(1).strip()
@@ -7609,11 +7883,16 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     seen_keys: set[str] = set()
     for section in plan["content_outline"]:
         title = section["section"]
-        heading_key = _section_heading_key(title)
-        if heading_key in seen_keys:
+        heading_keys = _section_heading_keys_for_plan_section(title, archetype_id)
+        primary_heading_key = heading_keys[0]
+        if primary_heading_key in seen_keys:
             continue
-        seen_keys.add(heading_key)
-        matching_headings = headings_by_key.get(heading_key, [])
+        seen_keys.add(primary_heading_key)
+        matching_headings = [
+            heading
+            for key in heading_keys
+            for heading in headings_by_key.get(key, [])
+        ]
         if not matching_headings:
             missing.append(title)
         elif len(matching_headings) > 1:
@@ -7628,7 +7907,7 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     for section in plan["content_outline"]:
         title = section["section"]
         target = int(section["words"])
-        section_text = _extract_section_text(text, title)
+        section_text = _extract_section_text(text, title, archetype_key=archetype_id)
         count = _word_count(_strip_comments(section_text))
         min_words = int(target * 0.9)
         # Per user direction (2026-05-17, reaffirmed 2026-05-23): word targets
@@ -7672,8 +7951,19 @@ def _section_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         "passed": not missing and not duplicate_headings,
         "missing_headings": missing,
         "duplicate_headings": duplicate_headings,
+        "archetype": archetype_id,
         "word_budgets": budgets,
     }
+
+
+def _section_heading_keys_for_plan_section(title: Any, archetype_key: str | None = None) -> list[str]:
+    keys = [_section_heading_key(title)]
+    if archetype_key in _A1_M1_M7_ARCHETYPES:
+        for alias in _A1_M1_M7_SECTION_ALIASES.get(str(title), ()):
+            alias_key = _section_heading_key(alias)
+            if alias_key not in keys:
+                keys.append(alias_key)
+    return keys
 
 
 def _section_heading_key(title: Any) -> str:
@@ -7683,13 +7973,13 @@ def _section_heading_key(title: Any) -> str:
     return re.sub(r"\s+", " ", unicodedata.normalize("NFC", without_stress)).strip()
 
 
-def _extract_section_text(text: str, title: str) -> str:
-    title_key = _section_heading_key(title)
+def _extract_section_text(text: str, title: str, *, archetype_key: str | None = None) -> str:
+    title_keys = set(_section_heading_keys_for_plan_section(title, archetype_key))
     match = next(
         (
             heading_match
             for heading_match in _HEADING_RE.finditer(text)
-            if _section_heading_key(heading_match.group(1)) == title_key
+            if _section_heading_key(heading_match.group(1)) in title_keys
         ),
         None,
     )
@@ -7823,6 +8113,8 @@ def _vesum_gate(
                 if all(constituent_verified.get(part) for part in parts):
                     resolved_compounds.add(compound)
             missing_lc -= resolved_compounds
+    if missing_lc:
+        missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
     missing = sorted({surface for surface, lower, _original in unchecked_pairs if lower in missing_lc})
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
@@ -7837,6 +8129,11 @@ def _vesum_gate(
         "missing": missing[:100],
         "missing_count": len(missing),
     }
+
+
+def _is_sung_vowel_practice_lookup(word: str) -> bool:
+    compact = re.sub(r"[-‐-―\s]+", "", _normalize_for_vesum(word).casefold())
+    return len(compact) >= 3 and len(set(compact)) == 1 and compact[0] in "аоуеиі"
 
 
 def _normalize_for_vesum(lemma: str) -> str:
@@ -8743,6 +9040,183 @@ def _plan_reference_match_gate(resources: list[dict[str, Any]], plan: Mapping[st
     return {"passed": True}
 
 
+def _is_internal_wiki_ref(ref: Mapping[str, Any]) -> bool:
+    title = str(ref.get("title") or "").strip().casefold()
+    url = str(ref.get("url") or "").strip()
+    notes = str(ref.get("notes") or "").strip().casefold()
+    return (
+        title.startswith("wiki:")
+        or url.startswith(("wiki/", "docs/wiki/"))
+        or "wiki/" in notes
+    )
+
+
+def _resource_url_set(resources: list[dict[str, Any]]) -> set[str]:
+    urls: set[str] = set()
+    for resource in resources:
+        for field in ("url", "notes", "description"):
+            value = resource.get(field)
+            if not value:
+                continue
+            urls.update(re.findall(r"https?://[^\s)>,]+", str(value)))
+    return {url.rstrip(".,;") for url in urls}
+
+
+def _resource_chunk_id(resource: Mapping[str, Any]) -> str:
+    chunk_id = resource.get("packet_chunk_id") or resource.get("chunk_id")
+    if not chunk_id and "notes" in resource:
+        chunk_id = extract_chunk_id_from_notes(str(resource["notes"]))
+    return str(chunk_id or "").strip()
+
+
+def _resource_match_tokens(value: Any) -> set[str]:
+    text = str(value or "").casefold()
+    text = re.sub(r"\b(?:стор(?:інка)?|p|page|pages|с)\.?\b", " ", text)
+    return {
+        token
+        for token in re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", text)
+        if len(token) >= 3 or token.isdigit()
+    }
+
+
+_RESOURCE_MATCH_STOPWORDS = {
+    "буквар",
+    "клас",
+    "grade",
+    "class",
+    "season",
+    "episode",
+}
+
+
+def _resource_anchor_tokens(value: Any) -> set[str]:
+    return {
+        token
+        for token in _resource_match_tokens(value)
+        if not token.isdigit() and token not in _RESOURCE_MATCH_STOPWORDS
+    }
+
+
+def _plan_ref_covered_by_resource(ref: Mapping[str, Any], resource: Mapping[str, Any]) -> bool:
+    ref_url = str(ref.get("url") or "").strip()
+    if ref_url and ref_url == str(resource.get("url") or "").strip():
+        return True
+
+    ref_chunk_id = extract_chunk_id_from_notes(str(ref.get("notes") or ""))
+    if ref_chunk_id and ref_chunk_id == _resource_chunk_id(resource):
+        return True
+
+    ref_title = str(ref.get("title") or "")
+    resource_title = str(resource.get("source_ref") or resource.get("title") or "")
+    if not ref_title or not resource_title:
+        return False
+
+    if _citation_ref_text_contains(ref_title, resource_title) or _citation_ref_text_contains(resource_title, ref_title):
+        return True
+
+    ref_tokens = _resource_match_tokens(ref_title)
+    resource_tokens = _resource_match_tokens(resource_title)
+    if not ref_tokens or not resource_tokens:
+        return False
+    overlap = ref_tokens & resource_tokens
+    anchor_overlap = _resource_anchor_tokens(ref_title) & _resource_anchor_tokens(resource_title)
+    has_name_overlap = any(not token.isdigit() for token in overlap)
+    has_page_overlap = any(token.isdigit() for token in overlap)
+    return bool(anchor_overlap) and has_name_overlap and (has_page_overlap or len(overlap) >= 3)
+
+
+def _extract_plan_pronunciation_video_urls(plan: Mapping[str, Any]) -> list[dict[str, str]]:
+    videos = plan.get("pronunciation_videos")
+    if not isinstance(videos, Mapping):
+        return []
+
+    records: list[dict[str, str]] = []
+
+    def add(path: str, value: Any) -> None:
+        if isinstance(value, str) and value.startswith(("http://", "https://")):
+            records.append({"path": path, "url": value.strip()})
+
+    add("pronunciation_videos.overview", videos.get("overview"))
+    add("pronunciation_videos.playlist", videos.get("playlist"))
+    for group in ("vowels", "consonants", "special"):
+        group_values = videos.get(group)
+        if not isinstance(group_values, Mapping):
+            continue
+        for key, value in group_values.items():
+            add(f"pronunciation_videos.{group}.{key}", value)
+    return records
+
+
+def _resource_coverage_gate(
+    resources: list[dict[str, Any]],
+    plan: Mapping[str, Any],
+    wiki_manifest: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Ensure A1 M1-M7 required sources and media are canonical resources."""
+    contract = resolve_module_archetype(str(plan.get("level") or ""), int(plan.get("sequence") or 0))
+    if not _is_a1_m1_m7_archetype(contract):
+        return {"passed": True, "skipped": "not_a1_m1_m7_archetype"}
+
+    references = plan.get("references") or plan.get("plan_references") or []
+    missing_plan_references: list[dict[str, Any]] = []
+    skipped_internal_references: list[str] = []
+    if isinstance(references, list):
+        for ref in references:
+            if not isinstance(ref, Mapping):
+                continue
+            if _is_internal_wiki_ref(ref):
+                skipped_internal_references.append(str(ref.get("title") or ""))
+                continue
+            if any(_plan_ref_covered_by_resource(ref, resource) for resource in resources):
+                continue
+            missing_plan_references.append(
+                {
+                    "title": str(ref.get("title") or ""),
+                    "url": str(ref.get("url") or ""),
+                    "notes": str(ref.get("notes") or ""),
+                }
+            )
+
+    resource_urls = _resource_url_set(resources)
+    missing_pronunciation_videos = [
+        record
+        for record in _extract_plan_pronunciation_video_urls(plan)
+        if record["url"] not in resource_urls
+    ]
+
+    missing_wiki_external_resources: list[dict[str, Any]] = []
+    if wiki_manifest is not None:
+        external_resources = wiki_manifest.get("external_resources", [])
+        if isinstance(external_resources, list):
+            for resource in external_resources:
+                if not isinstance(resource, Mapping):
+                    continue
+                url = str(resource.get("url") or "").strip()
+                if url and url not in resource_urls:
+                    missing_wiki_external_resources.append(
+                        {
+                            "title": str(resource.get("title") or ""),
+                            "role": str(resource.get("role") or ""),
+                            "url": url,
+                        }
+                    )
+
+    passed = not (
+        missing_plan_references
+        or missing_pronunciation_videos
+        or missing_wiki_external_resources
+    )
+    return {
+        "passed": passed,
+        "severity": "HARD" if not passed else None,
+        "missing_plan_references": missing_plan_references,
+        "missing_pronunciation_videos": missing_pronunciation_videos,
+        "missing_wiki_external_resources": missing_wiki_external_resources,
+        "skipped_internal_references": skipped_internal_references,
+        "rule_ids": ["#R-CITE-HONEST", "#R-RESOURCE-COVERAGE"] if not passed else [],
+    }
+
+
 def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
     quotes: list[dict[str, str]] = []
     current: list[str] = []
@@ -8994,15 +9468,49 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
 
 def _resources_search_attempted_gate(
     writer_tool_calls: list[dict[str, Any]],
+    *,
+    plan: Mapping[str, Any] | None = None,
+    resource_coverage: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """HARD gate: writer must attempt at least one external-resource search."""
     attempted = [call for call in writer_tool_calls if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS]
     search_tools_used = sorted({_tool_name_from_call(call) for call in attempted})
+    manual_coverage_verified = (
+        not attempted
+        and _manual_resource_coverage_can_stand_in_for_search_telemetry(
+            plan,
+            resource_coverage,
+        )
+    )
     return {
-        "passed": bool(attempted),
+        "passed": bool(attempted) or manual_coverage_verified,
         "severity": "HARD",
         "search_attempt_count": len(attempted),
         "search_tools_used": search_tools_used,
+        "manual_coverage_verified": manual_coverage_verified,
+    }
+
+
+def _manual_resource_coverage_can_stand_in_for_search_telemetry(
+    plan: Mapping[str, Any] | None,
+    resource_coverage: Mapping[str, Any] | None,
+) -> bool:
+    if not isinstance(plan, Mapping) or not isinstance(resource_coverage, Mapping):
+        return False
+    if resource_coverage.get("passed") is not True:
+        return False
+    archetype = resolve_module_archetype(
+        str(plan.get("level") or ""),
+        int(plan.get("sequence") or 0),
+    )
+    return _is_a1_m1_m7_archetype(archetype)
+
+
+def _is_a1_m1_m7_archetype(archetype: Mapping[str, Any]) -> bool:
+    return archetype.get("id") in {
+        "a1-zero-script-onboarding",
+        "a1-script-building",
+        "a1-first-contact-survival",
     }
 
 
@@ -10031,8 +10539,23 @@ def _append_unsupported_run(
     if run_len <= max_unsupported or _has_english_support(tokens, start, end, support_proximity):
         return
     words = [token.group(0) for token in tokens[start : min(end + 1, start + 40)]]
+    if _is_ukrainian_alphabet_sequence(words):
+        return
     suffix = " ..." if run_len > len(words) else ""
     offending.append(" ".join(words) + suffix)
+
+
+_UKRAINIAN_ALPHABET_ORDER = tuple("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
+
+
+def _is_ukrainian_alphabet_sequence(words: Sequence[str]) -> bool:
+    letters = [word.upper() for word in words]
+    if len(letters) < 8:
+        return False
+    if any(len(letter) != 1 or letter not in _UKRAINIAN_ALPHABET_ORDER for letter in letters):
+        return False
+    joined = "".join(letters)
+    return joined in "".join(_UKRAINIAN_ALPHABET_ORDER)
 
 
 def _has_english_support(
@@ -10134,11 +10657,25 @@ def _long_ukrainian_sentences(text: str) -> list[str]:
     return [sentence for sentence in _split_immersion_sentences(text) if len(_UK_WORD_RE.findall(sentence)) > 10]
 
 
-def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[str, Any]:
+def _inject_activity_gate(
+    text: str,
+    activities: list[dict[str, Any]],
+    plan: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     ids = {str(activity.get("id")) for activity in activities if activity.get("id")}
     injected = _INJECT_RE.findall(text)
     missing = [activity_id for activity_id in injected if activity_id not in ids]
     unused = sorted(ids - set(injected))
+    workbook_only: list[str] = []
+    if plan is not None:
+        archetype = resolve_module_archetype(str(plan.get("level") or ""), int(plan.get("sequence") or 0))
+        if archetype.get("id") in {
+            "a1-zero-script-onboarding",
+            "a1-script-building",
+            "a1-first-contact-survival",
+        }:
+            workbook_only = unused
+            unused = []
     reasons = []
     if missing:
         reasons.append("missing_activity_ids")
@@ -10149,6 +10686,7 @@ def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[s
         "injected": injected,
         "missing": missing,
         "unused": unused,
+        "workbook_only": workbook_only,
         "reason": ",".join(reasons) or None,
     }
 

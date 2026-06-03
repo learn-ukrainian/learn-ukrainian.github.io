@@ -101,6 +101,11 @@ interface QuizQuestionItem {
    * @ukrainianText true
    */
   options: Array<{ text: string; correct: boolean }>;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
 }
 
 interface QuizProps {
@@ -162,6 +167,7 @@ export default function Quiz({ questions, instruction, children, isUkrainian }: 
               question={item.question}
               options={optionTexts}
               correctIndex={correctIndex >= 0 ? correctIndex : 0}
+              explanation={item.explanation}
               isUkrainian={isUkrainian}
             />
           );

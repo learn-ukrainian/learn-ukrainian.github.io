@@ -116,6 +116,26 @@ def test_format_resources_for_mdx_groups_mixed_roles_with_icons():
     assert "🔗 [Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx
 
 
+def test_format_resources_for_mdx_filters_internal_wiki_references():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "Wiki: pedagogy/a1/sounds-letters-and-hello, locked 2026-04-23",
+            "url": "wiki/pedagogy/a1/sounds-letters-and-hello.md",
+            "notes": "AI-facing pedagogical brief.",
+            "role": "wiki",
+        },
+        {
+            "title": "Wikipedia article",
+            "url": "https://uk.wikipedia.org/wiki/Ранок",
+            "role": "wiki",
+        },
+    ])
+
+    assert "pedagogy/a1/sounds-letters-and-hello" not in mdx
+    assert "AI-facing pedagogical brief" not in mdx
+    assert "[Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx
+
+
 def test_format_resources_for_mdx_strips_pipeline_metadata_from_public_text():
     mdx = format_resources_for_mdx([
         {

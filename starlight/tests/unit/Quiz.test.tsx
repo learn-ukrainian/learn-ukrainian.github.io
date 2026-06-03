@@ -156,6 +156,7 @@ describe('Quiz wrapper', () => {
   const questionsProp = [
     {
       question: 'Q1?',
+      explanation: 'Q1 explanation.',
       options: [
         { text: 'a', correct: false },
         { text: 'b', correct: true },
@@ -209,6 +210,17 @@ describe('Quiz wrapper', () => {
     const fb = firstQuestion.querySelector('[data-activity="quiz-feedback"]');
     expect(fb).toBeInTheDocument();
     expect(fb!.getAttribute('data-correct')).toBe('true');
+  });
+
+  test('passes per-question explanations through to QuizQuestion', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Quiz questions={questionsProp} />);
+
+    const firstQuestion = container.querySelectorAll<HTMLElement>('[data-activity="quiz-question"]')[0];
+    const bBtn = within(firstQuestion).getByRole('button', { name: 'b' });
+    await user.click(bBtn);
+
+    expect(firstQuestion.textContent).toContain('Q1 explanation.');
   });
 
   test('renders children when no questions prop is passed', () => {

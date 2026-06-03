@@ -60,6 +60,7 @@ DOWNSTREAM_TOKENS = frozenset(
         "LEVEL_CONTEXT",
         "MANIFEST_PAYLOAD",
         "MIN_TYPES_UNIQUE",
+        "MODULE_ARCHETYPE",
         "MODULE_CONTENT",
         "MODULE_NUM",
         "MODULE_SLUG",

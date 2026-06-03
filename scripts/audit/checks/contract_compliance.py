@@ -4,6 +4,13 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from collections.abc import Mapping, Sequence
+from typing import Any
+
+try:
+    from scripts.pipeline.module_archetypes import resolve_module_archetype
+except ModuleNotFoundError:  # pragma: no cover - bare scripts/ path compatibility
+    from pipeline.module_archetypes import resolve_module_archetype
 
 _SECTION_RE = re.compile(r"^##\s+(.+)$", re.MULTILINE)
 _ACTIVITY_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->")
@@ -55,6 +62,37 @@ _BANNED_TOKENS = (
     "приймати участь",
     "приймати рішення",
 )
+
+_A1_M1_M7_ARCHETYPES = {
+    "a1-zero-script-onboarding",
+    "a1-script-building",
+    "a1-first-contact-survival",
+}
+
+_A1_M1_M7_ACTIVITY_TYPES = {
+    "count-syllables",
+    "divide-words",
+    "error-correction",
+    "fill-in",
+    "group-sort",
+    "letter-grid",
+    "listen-and-choose",
+    "match-up",
+    "order",
+    "pick-syllables",
+    "quiz",
+    "select",
+    "translate",
+    "true-false",
+    "watch-and-repeat",
+}
+
+_INTERNAL_WIKI_LINK_RE = re.compile(
+    r"(?:^|[\s\"'(<])(?:docs/)?wiki/[^\s\"')>]+",
+    re.IGNORECASE,
+)
+_LATIN_WORD_RE = re.compile(r"\b[A-Za-z][A-Za-z'-]*\b")
+_CYRILLIC_WORD_RE = re.compile(r"\b[А-Яа-яІіЇїЄєҐґ][А-Яа-яІіЇїЄєҐґ'’ʼ-]*\b")
 
 
 def _normalize_section_title(title: str) -> str:
@@ -323,6 +361,154 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
         })
 
     return violations
+
+
+def check_archetype_fit(
+    content: str,
+    contract: Mapping[str, Any] | None = None,
+    *,
+    level: str | None = None,
+    module_num: int | None = None,
+    activities: Sequence[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Return a deterministic module-archetype fit report.
+
+    This is intentionally a shape gate, not a replacement for wiki/resource,
+    VESUM, Russianism, or review gates. It only checks properties that can be
+    verified from the current artifacts without LLM judgment.
+    """
+
+    module = dict((contract or {}).get("module") or {}) if isinstance(contract, Mapping) else {}
+    resolved_level = str(level or module.get("level") or "").lower()
+    try:
+        resolved_module_num = int(module_num if module_num is not None else module.get("module_num"))
+    except (TypeError, ValueError):
+        resolved_module_num = 0
+
+    if not resolved_level or resolved_module_num <= 0:
+        return {
+            "passed": True,
+            "skipped": "missing_level_or_module_num",
+            "checks": [],
+            "violations": [],
+        }
+
+    archetype = resolve_module_archetype(resolved_level, resolved_module_num)
+    archetype_id = str(archetype.get("id") or "")
+    checks: list[dict[str, Any]] = []
+
+    def add_check(
+        name: str,
+        passed: bool,
+        *,
+        severity: str = "ERROR",
+        message: str = "",
+        **details: Any,
+    ) -> None:
+        record: dict[str, Any] = {
+            "name": name,
+            "passed": bool(passed),
+            "severity": severity,
+            "message": message,
+        }
+        record.update(details)
+        checks.append(record)
+
+    artifact_text = "\n".join([content or "", _flatten_activity_text(activities)])
+    internal_links = sorted(set(_INTERNAL_WIKI_LINK_RE.findall(artifact_text)))
+    add_check(
+        "no_internal_wiki_links",
+        not internal_links,
+        message="Student-facing artifacts must not expose internal wiki paths.",
+        links=internal_links[:10],
+    )
+
+    if archetype_id in _A1_M1_M7_ARCHETYPES:
+        counts = _language_counts(content)
+        add_check(
+            "english_led_surface",
+            counts["latin_words"] >= counts["cyrillic_words"],
+            message="A1 M1-M7 must be English-led with Ukrainian in controlled chunks.",
+            **counts,
+        )
+
+        activity_types = _activity_types(activities)
+        add_check(
+            "workbook_activity_floor",
+            len(activity_types) >= 5,
+            message="A1 M1-M7 need a real workbook surface, not only lesson prose.",
+            activity_count=len(activity_types),
+        )
+        unsupported_activity_types = sorted(set(activity_types) - _A1_M1_M7_ACTIVITY_TYPES)
+        add_check(
+            "a1_activity_family",
+            not unsupported_activity_types,
+            message="Activity types must fit A1 zero/script/first-contact workbook families.",
+            unsupported_activity_types=unsupported_activity_types,
+            activity_types=activity_types,
+        )
+
+        injected = [_normalize_marker(marker) for marker in _ACTIVITY_RE.findall(content)]
+        workbook_only = sorted(set(activity.get("id", "") for activity in activities or []) - set(injected))
+        add_check(
+            "textbook_workbook_split",
+            bool(injected) and bool(workbook_only),
+            message="A1 M1-M7 should have both inline practice and workbook-only review.",
+            injected_markers=injected,
+            workbook_only_ids=workbook_only,
+        )
+
+    violations = [
+        {
+            "type": "ARCHETYPE_FIT",
+            "severity": check["severity"],
+            "section": "(whole module)",
+            "message": check["message"] or f"Archetype fit check failed: {check['name']}",
+            "check": check["name"],
+        }
+        for check in checks
+        if check.get("passed") is False and check.get("severity") == "ERROR"
+    ]
+    return {
+        "passed": not violations,
+        "archetype": archetype_id,
+        "label": archetype.get("label"),
+        "checks": checks,
+        "violations": violations,
+    }
+
+
+def _flatten_activity_text(activities: Sequence[Mapping[str, Any]] | None) -> str:
+    if not activities:
+        return ""
+    strings: list[str] = []
+    stack: list[Any] = list(activities)
+    while stack:
+        value = stack.pop()
+        if isinstance(value, str):
+            strings.append(value)
+        elif isinstance(value, Mapping):
+            stack.extend(value.values())
+        elif isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+            stack.extend(value)
+    return "\n".join(strings)
+
+
+def _activity_types(activities: Sequence[Mapping[str, Any]] | None) -> list[str]:
+    return [
+        str(activity.get("type") or "").strip()
+        for activity in activities or []
+        if str(activity.get("type") or "").strip()
+    ]
+
+
+def _language_counts(content: str) -> dict[str, int]:
+    stripped = re.sub(r"```.*?```", " ", content or "", flags=re.DOTALL)
+    stripped = re.sub(r"`[^`]+`", " ", stripped)
+    return {
+        "latin_words": len(_LATIN_WORD_RE.findall(stripped)),
+        "cyrillic_words": len(_CYRILLIC_WORD_RE.findall(stripped)),
+    }
 
 
 def _find_meta_opener(content: str) -> str | None:
