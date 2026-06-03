@@ -1,0 +1,358 @@
+---
+title: "Дні та місяці"
+description: "У понеділок, у січні — календар українською"
+sidebar:
+  order: 23
+  label: "23. Дні та місяці"
+pipeline: linear-phase-4
+build_status: validated
+prev: what-time
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This lesson gives you the calendar chunks you need for simple plans. Ukrainian
+calendar words are not just labels. They connect time with routine, weather,
+nature, and personal dates. Keep the grammar light: learn the useful forms as
+ready chunks first.
+
+By the end, you can:
+
+- say the seven days of the week and answer **Який сьогодні день?**;
+- plan with **у понеділок**, **у середу**, **в суботу**, **в неділю**;
+- say the twelve months and group them by season;
+- use **взимку**, **навесні**, **влітку**, **восени**;
+- give a simple date such as **п'ятнадцятого березня** without an English
+  preposition;
+- repair unsafe calendar phrases such as **On понеділок**, **в Перше січня**,
+  **в Січень**, **в літо**, and **Сьогодні є вівторок**.
+
+### Put the week in order
+
+<Order client:only='react' items={JSON.parse(`["понеділок", "вівторок", "середа", "четвер", "п'ятниця", "субота", "неділя"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6]`)} instruction={"Put the days from Monday to Sunday."} isUkrainian={false} />
+
+## Діалоги
+
+The first scene is at a clinic reception desk. It uses days of the week because
+appointments happen on a specific day.
+
+<DialogueBox uk="Пацієнт: Добрий день. Мені потрібен лікар." en="Patient: Good afternoon. I need a doctor." />
+<DialogueBox uk="Реєстраторка: Добрий день. У понеділок о дев'ятій можна?" en="Receptionist: Good afternoon. Is Monday at nine possible?" />
+<DialogueBox uk="Пацієнт: У понеділок я працюю. А у середу?" en="Patient: On Monday I work. What about Wednesday?" />
+<DialogueBox uk="Реєстраторка: У середу о другій є час." en="Receptionist: On Wednesday at two there is a slot." />
+<DialogueBox uk="Пацієнт: Добре, у середу о другій." en="Patient: Good, Wednesday at two." />
+<DialogueBox uk="Реєстраторка: Записано. До побачення!" en="Receptionist: Booked. Goodbye!" />
+
+Use standard Ukrainian greetings here: **Добрий день** and **До побачення**.
+Do not import classroom habits such as **Здрастуйте** or **Пока**. This lesson
+builds a Ukrainian calendar from Ukrainian words, sounds, and social formulas.
+
+Notice the useful shape: **у понеділок**, **у середу**, **у п'ятницю**,
+**в суботу**, **в неділю**. Treat these as whole calendar chunks. Do not use
+English **on**. Say **У понеділок я працюю**, not **On понеділок я працюю**.
+
+The second scene connects months, dates, and seasons.
+
+<DialogueBox uk="Оля: Коли у тебе день народження?" en="Olia: When is your birthday?" />
+<DialogueBox uk="Марко: У березні." en="Marko: In March." />
+<DialogueBox uk="Оля: Якого числа?" en="Olia: What date?" />
+<DialogueBox uk="Марко: П'ятнадцятого березня. А у тебе?" en="Marko: The fifteenth of March. And yours?" />
+<DialogueBox uk="Оля: У мене двадцять другого серпня." en="Olia: Mine is the twenty-second of August." />
+<DialogueBox uk="Марко: Це влітку!" en="Marko: That is in summer!" />
+
+There are two different jobs here. **У березні** answers "in which month?"
+**П'ятнадцятого березня** answers "on what date?" Ukrainian does not need a
+preposition before this date. Learn a few dates as whole chunks: **першого
+січня**, **восьмого березня**, **п'ятнадцятого березня**, **двадцять другого
+серпня**, **першого вересня**.
+
+### Clinic appointment day
+
+<Quiz client:only='react' questions={JSON.parse(`[]`)} />
+
+## Дні тижня
+
+The seven days are all written with small letters in Ukrainian:
+**понеділок**, **вівторок**, **середа**, **четвер**, **п'ятниця**,
+**субота**, **неділя**. English writes Monday with a capital letter. Ukrainian
+does not. The same lowercase habit will apply to months.
+
+Use the base form when you identify the day. A grammar book can call this the
+**Називний відмінок**, but your A1 task is simply to copy the safe line:
+
+| Question | Safe answer |
+| --- | --- |
+| **Який сьогодні день?** | **Сьогодні понеділок.** |
+| **Який завтра день?** | **Завтра вівторок.** |
+| **Який був учора день?** | **Учора неділя.** |
+
+In the present tense, do not force **є** into this sentence. **Сьогодні
+вівторок** is the safe A1 line. **Сьогодні є вівторок** copies English "is"
+too closely.
+
+You can also make tiny time sentences with **сьогодні**, **завтра**, and
+**вчора**: **Сьогодні вівторок. Завтра буде сонце. Вчора була неділя.**
+
+When you say that an action happens on a day, use the planned-day chunk:
+
+| Base word | Planning chunk |
+| --- | --- |
+| понеділок | **у понеділок** |
+| вівторок | **у вівторок** |
+| середа | **у середу** |
+| четвер | **у четвер** |
+| п'ятниця | **у п'ятницю** |
+| субота | **в суботу** |
+| неділя | **в неділю** |
+
+For now, do not analyze the case ending. Copy the full chunk. Combine it with
+time from Module 22: **У середу о другій я маю зустріч. У п'ятницю о шостій я
+вечеряю вдома. В суботу я гуляю. В неділю я відпочиваю.**
+The question is **Коли?** and the answer uses **в/у** plus the weekday chunk:
+**У середу я планую урок.**
+The same planning question will later connect to seasons: **влітку** and
+**взимку** are season-time chunks.
+
+The word **тиждень** means "week" in the standard language. In some speech,
+**неділя** can mean a week, but in this course **неділя** is the day Sunday.
+Use **тиждень** for the seven-day period.
+
+### Day planning chunks
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я працюю ___.", "answer": "у понеділок", "options": ["у понеділок", "on понеділок", "понеділок"]}, {"sentence": "Ми вивчаємо українську ___.", "answer": "у вівторок", "options": ["у вівторок", "в вівторок", "вівторок"]}, {"sentence": "Зустріч ___.", "answer": "у середу", "options": ["у середу", "середа", "на середу"]}, {"sentence": "Кава ___.", "answer": "у четвер", "options": ["у четвер", "четвер", "на четвер"]}, {"sentence": "Фільм ___.", "answer": "у п'ятницю", "options": ["у п'ятницю", "п'ятниця", "в п'ятниця"]}, {"sentence": "Я гуляю ___.", "answer": "в суботу", "options": ["в суботу", "субота", "на субота"]}, {"sentence": "Я відпочиваю ___.", "answer": "в неділю", "options": ["в неділю", "неділя", "on неділя"]}]`)} />
+
+### Calendar shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Days": ["понеділок", "середа", "п'ятниця", "неділя"], "Months": ["січень", "квітень", "липень", "листопад"], "Seasons": ["зима", "весна", "літо", "осінь"], "Nature and weather": ["сонце", "дощ", "сніг", "вітер"]}`)} />
+
+## Місяці і пори року
+
+The twelve month names are also lowercase:
+
+| Season | Months |
+| --- | --- |
+| **зима** | **грудень**, **січень**, **лютий** |
+| **весна** | **березень**, **квітень**, **травень** |
+| **літо** | **червень**, **липень**, **серпень** |
+| **осінь** | **вересень**, **жовтень**, **листопад** |
+
+Many Ukrainian month names are transparent nature words. This is a good memory
+tool. **Січень** can be remembered with **сікти**: **січень (від «сікти», час
+вирубування лісу)**. **Лютий** points to fierce cold. **Березень** points to
+**береза** and spring sap. **Квітень** points to **час цвітіння**. **Липень**
+points to the linden tree. **Листопад** is the falling of leaves. Keep these
+Ukrainian images. Do not explain the months by comparing them with Russian
+month names or by calling them variants of another language.
+
+When you answer "in which month?", use a month chunk:
+These month chunks also use **у/в**:
+
+| Month | In the month |
+| --- | --- |
+| січень | **у січні** |
+| лютий | **у лютому** |
+| березень | **у березні** |
+| квітень | **у квітні** |
+| травень | **у травні** |
+| червень | **у червні** |
+| липень | **у липні** |
+| серпень | **у серпні** |
+| вересень | **у вересні** |
+| жовтень | **у жовтні** |
+| листопад | **у листопаді** |
+| грудень | **у грудні** |
+
+For seasons, the most useful A1 words are adverbs:
+**взимку**, **навесні**, **влітку**, **восени**. They are better calendar
+chunks than English-style **в літо** or **в зиму**. Use them with simple
+sentences that bridge into the next weather lesson: **Взимку холодно. Навесні
+світить сонце. Влітку тепло. Восени часто йде дощ. Взимку падає сніг.**
+You can also recognize
+basic nature words now: **сонце**, **небо**, **дощ**, **сніг**, **вітер**,
+**мороз**. Keep three model weather sentences for recognition:
+**Сонце світить. Дощ іде. Сніг падає.** For a season identity line, say:
+**Це зима. Це весна. Це літо. Це осінь.**
+
+Dates need one more chunk. Ukrainian asks **якого числа?** and answers with a
+date form. First separate **скільки?** from **котрий?**: a week has **сім**
+days, but Sunday is the **сьомий** day if you count from Monday. At A1, learn
+only common examples:
+
+| Meaning | Safe Ukrainian date |
+| --- | --- |
+| January 1 | **першого січня** |
+| March 15 | **п'ятнадцятого березня** |
+| August 22 | **двадцять другого серпня** |
+| September 1 | **першого вересня** |
+
+The full rule is: **порядковий числівник у родовому відмінку + назва місяця у
+родовому відмінку**. You do not need to build the whole paradigm today; copy
+the chunks. There is no **в** before these dates. Say **Я народився першого
+січня**, not **Я народився в Перше січня**. The question is still **Коли?**
+After **з** in greetings, keep the month in the date form too:
+**Вітаю з 1 вересня!** The month stays **вересня**, not **вересням**.
+
+### Month, season, memory hook
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "січень", "right": "зима"}, {"left": "березень", "right": "весна"}, {"left": "липень", "right": "літо"}, {"left": "листопад", "right": "осінь"}, {"left": "квітень", "right": "flowers"}, {"left": "липень", "right": "linden tree"}, {"left": "листопад", "right": "falling leaves"}, {"left": "березень", "right": "birch"}]`)} />
+
+### Calendar safety checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ukrainian writes понеділок and січень with lowercase letters in normal sentences.", "isTrue": false, "explanation": "Days and months are common nouns in Ukrainian."}, {"statement": "Сьогодні є вівторок is the safest A1 sentence.", "isTrue": false, "explanation": "Use Сьогодні вівторок without є."}, {"statement": "Взимку, навесні, влітку, восени are useful season chunks.", "isTrue": false, "explanation": "These adverbs are the safe A1 forms."}, {"statement": "Я народився першого січня uses no preposition before the date.", "isTrue": false, "explanation": "Dates use the date chunk directly."}, {"statement": "В літо is the safe chunk for in summer.", "isTrue": false, "explanation": "Use влітку."}, {"statement": "У березні answers in which month.", "isTrue": false, "explanation": "У березні is the month chunk."}]`)} />
+
+## 📋 Підсумок
+
+Keep four calendar cards.
+
+First: identify the day.
+
+<DialogueBox uk="Який сьогодні день?" en="What day is today?" />
+<DialogueBox uk="Сьогодні четвер." en="Today is Thursday." />
+
+Second: plan with a day chunk and a time chunk.
+
+<DialogueBox uk="У середу о другій я маю зустріч." en="On Wednesday at two I have a meeting." />
+<DialogueBox uk="В суботу я гуляю." en="On Saturday I take a walk." />
+
+Third: name the month and season.
+
+<DialogueBox uk="Мій день народження у березні." en="My birthday is in March." />
+<DialogueBox uk="Березень — це весна." en="March is spring." />
+<DialogueBox uk="Влітку тепло." en="In summer it is warm." />
+
+Fourth: give a date as a chunk.
+
+<DialogueBox uk="Коли твій день народження?" en="When is your birthday?" />
+<DialogueBox uk="П'ятнадцятого березня." en="On the fifteenth of March." />
+
+:::caution
+Keep the calendar fully Ukrainian and use a **деколонізований підхід**. Use
+lowercase day and month names, nature memory hooks for Ukrainian months, and
+the date pattern **першого січня**. Avoid **російські концептуальні,
+фонетичні чи лексичні вливання**, especially those **що історично закріпилися**
+in older teaching habits or everyday surzhyk. Avoid Russian comparisons,
+Russian-style month explanations, and mixed date forms such as **з 1 вересням**.
+For seasons, prefer **взимку**, **навесні**, **влітку**, **восени**.
+:::
+
+Write your own five-line calendar. Use one line for today, one for a weekday
+plan, one for a month, one for a season, and one for a birthday:
+
+<DialogueBox uk="Сьогодні понеділок." en="Today is Monday." />
+<DialogueBox uk="У середу о другій я працюю." en="On Wednesday at two I work." />
+<DialogueBox uk="Мій день народження у серпні." en="My birthday is in August." />
+<DialogueBox uk="Восени часто йде дощ." en="In autumn it often rains." />
+<DialogueBox uk="День народження двадцять другого серпня." en="The birthday is on August twenty-second." />
+
+### Build calendar lines
+
+<Translate client:only='react' questions={JSON.parse(`[]`)} />
+
+### Repair calendar traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safe Ukrainian calendar form." items={JSON.parse(`[{"sentence": "On понеділок я працюю.", "errorWord": "On понеділок", "correctForm": "У понеділок я працюю.", "options": ["У понеділок я працюю.", "On понеділок я працюю.", "На понеділок я працюю."], "explanation": "Use у/в with weekday chunks, not English on."}, {"sentence": "Я народився в Перше січня.", "errorWord": "в Перше січня", "correctForm": "Я народився першого січня.", "options": ["Я народився першого січня.", "Я народився в Перше січня.", "Я народився у перший січень."], "explanation": "Date chunks do not need в."}, {"sentence": "Вітаю з 1 вересням!", "errorWord": "вересням", "correctForm": "Вітаю з 1 вересня!", "options": ["Вітаю з 1 вересня!", "Вітаю з 1 вересням!", "Вітаю з 1 вересень!"], "explanation": "In dates, keep the month in the date form."}, {"sentence": "Моє улюблене свято в Січень.", "errorWord": "в Січень", "correctForm": "Моє улюблене свято в січні.", "options": ["Моє улюблене свято в січні.", "Моє улюблене свято в Січень.", "Моє улюблене свято у січень."], "explanation": "Use lowercase and the month chunk в січні."}, {"sentence": "Ми поїдемо в літо.", "errorWord": "в літо", "correctForm": "Ми поїдемо влітку.", "options": ["Ми поїдемо влітку.", "Ми поїдемо в літо.", "Ми поїдемо літо."], "explanation": "Use the season adverb влітку."}, {"sentence": "Сьогодні є вівторок.", "errorWord": "є", "correctForm": "Сьогодні вівторок.", "options": ["Сьогодні вівторок.", "Сьогодні є вівторок.", "Сьогодні у вівторок."], "explanation": "Do not copy English is into this line."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"понеділок","translation":"Monday","pos":"noun","example":"Сьогодні понеділок.","examples":["Monday","Сьогодні понеділок."]},{"word":"вівторок","translation":"Tuesday","pos":"noun","example":"Завтра вівторок.","examples":["Tuesday","Завтра вівторок."]},{"word":"середа","translation":"Wednesday","pos":"noun","example":"У середу зустріч.","examples":["Wednesday","У середу зустріч."]},{"word":"четвер","translation":"Thursday","pos":"noun","example":"Сьогодні четвер.","examples":["Thursday","Сьогодні четвер."]},{"word":"п'ятниця","translation":"Friday","pos":"noun","example":"У п'ятницю фільм.","examples":["Friday","У п'ятницю фільм."]},{"word":"субота","translation":"Saturday","pos":"noun","example":"В суботу я гуляю.","examples":["Saturday","В суботу я гуляю."]},{"word":"неділя","translation":"Sunday","pos":"noun","example":"В неділю я відпочиваю.","examples":["Sunday","В неділю я відпочиваю."]},{"word":"тиждень","translation":"week","pos":"noun","example":"Це мій тиждень.","examples":["week","Це мій тиждень."]},{"word":"день","translation":"day","pos":"noun","example":"Який сьогодні день?","examples":["day","Який сьогодні день?"]},{"word":"місяць","translation":"month","pos":"noun","example":"Який зараз місяць?","examples":["month","Який зараз місяць?"]},{"word":"рік","translation":"year","pos":"noun","example":"У році дванадцять місяців.","examples":["year","У році дванадцять місяців."]},{"word":"сьогодні","translation":"today","pos":"adverb","example":"Сьогодні вівторок.","examples":["today","Сьогодні вівторок."]},{"word":"завтра","translation":"tomorrow","pos":"adverb","example":"Завтра середа.","examples":["tomorrow","Завтра середа."]},{"word":"учора","translation":"yesterday","pos":"adverb","example":"Учора понеділок.","examples":["yesterday","Учора понеділок."]},{"word":"у понеділок","translation":"on Monday","pos":"calendar chunk","example":"У понеділок я працюю.","examples":["on Monday","У понеділок я працюю."]},{"word":"у вівторок","translation":"on Tuesday","pos":"calendar chunk","example":"У вівторок урок.","examples":["on Tuesday","У вівторок урок."]},{"word":"у середу","translation":"on Wednesday","pos":"calendar chunk","example":"У середу зустріч.","examples":["on Wednesday","У середу зустріч."]},{"word":"у четвер","translation":"on Thursday","pos":"calendar chunk","example":"У четвер кава.","examples":["on Thursday","У четвер кава."]},{"word":"у п'ятницю","translation":"on Friday","pos":"calendar chunk","example":"У п'ятницю фільм.","examples":["on Friday","У п'ятницю фільм."]},{"word":"в суботу","translation":"on Saturday","pos":"calendar chunk","example":"В суботу я гуляю.","examples":["on Saturday","В суботу я гуляю."]},{"word":"в неділю","translation":"on Sunday","pos":"calendar chunk","example":"В неділю я вдома.","examples":["on Sunday","В неділю я вдома."]},{"word":"січень","translation":"January","pos":"noun","example":"Січень — це зима.","examples":["January","Січень — це зима."]},{"word":"лютий","translation":"February","pos":"noun","example":"Лютий — це зима.","examples":["February","Лютий — це зима."]},{"word":"березень","translation":"March","pos":"noun","example":"Березень — це весна.","examples":["March","Березень — це весна."]},{"word":"квітень","translation":"April","pos":"noun","example":"Квітень — це весна.","examples":["April","Квітень — це весна."]},{"word":"травень","translation":"May","pos":"noun","example":"Травень — це весна.","examples":["May","Травень — це весна."]},{"word":"червень","translation":"June","pos":"noun","example":"Червень — це літо.","examples":["June","Червень — це літо."]},{"word":"липень","translation":"July","pos":"noun","example":"Липень — це літо.","examples":["July","Липень — це літо."]},{"word":"серпень","translation":"August","pos":"noun","example":"Серпень — це літо.","examples":["August","Серпень — це літо."]},{"word":"вересень","translation":"September","pos":"noun","example":"Вересень — це осінь.","examples":["September","Вересень — це осінь."]},{"word":"жовтень","translation":"October","pos":"noun","example":"Жовтень — це осінь.","examples":["October","Жовтень — це осінь."]},{"word":"листопад","translation":"November","pos":"noun","example":"Листопад — це осінь.","examples":["November","Листопад — це осінь."]},{"word":"грудень","translation":"December","pos":"noun","example":"Грудень — це зима.","examples":["December","Грудень — це зима."]},{"word":"у січні","translation":"in January","pos":"month chunk","example":"Свято у січні.","examples":["in January","Свято у січні."]},{"word":"у березні","translation":"in March","pos":"month chunk","example":"День народження у березні.","examples":["in March","День народження у березні."]},{"word":"у серпні","translation":"in August","pos":"month chunk","example":"Канікули у серпні.","examples":["in August","Канікули у серпні."]},{"word":"у листопаді","translation":"in November","pos":"month chunk","example":"Вистава у листопаді.","examples":["in November","Вистава у листопаді."]},{"word":"зима","translation":"winter","pos":"noun","example":"Зима холодна.","examples":["winter","Зима холодна."]},{"word":"весна","translation":"spring","pos":"noun","example":"Весна тепла.","examples":["spring","Весна тепла."]},{"word":"літо","translation":"summer","pos":"noun","example":"Літо тепле.","examples":["summer","Літо тепле."]},{"word":"осінь","translation":"autumn; fall","pos":"noun","example":"Осінь гарна.","examples":["autumn; fall","Осінь гарна."]},{"word":"взимку","translation":"in winter","pos":"adverb","example":"Взимку холодно.","examples":["in winter","Взимку холодно."]},{"word":"навесні","translation":"in spring","pos":"adverb","example":"Навесні світить сонце.","examples":["in spring","Навесні світить сонце."]},{"word":"влітку","translation":"in summer","pos":"adverb","example":"Влітку тепло.","examples":["in summer","Влітку тепло."]},{"word":"восени","translation":"in autumn","pos":"adverb","example":"Восени йде дощ.","examples":["in autumn","Восени йде дощ."]},{"word":"сонце","translation":"sun","pos":"noun","example":"Сонце світить.","examples":["sun","Сонце світить."]},{"word":"дощ","translation":"rain","pos":"noun","example":"Іде дощ.","examples":["rain","Іде дощ."]},{"word":"сніг","translation":"snow","pos":"noun","example":"Падає сніг.","examples":["snow","Падає сніг."]},{"word":"вітер","translation":"wind","pos":"noun","example":"Дме вітер.","examples":["wind","Дме вітер."]},{"word":"мороз","translation":"frost; freezing cold","pos":"noun","example":"Взимку мороз.","examples":["frost; freezing cold","Взимку мороз."]},{"word":"дата","translation":"date","pos":"noun","example":"Це важлива дата.","examples":["date","Це важлива дата."]},{"word":"свято","translation":"holiday","pos":"noun","example":"Свято у січні.","examples":["holiday","Свято у січні."]},{"word":"день народження","translation":"birthday","pos":"phrase","example":"Коли твій день народження?","examples":["birthday","Коли твій день народження?"]},{"word":"першого січня","translation":"on January first","pos":"date chunk","example":"Свято першого січня.","examples":["on January first","Свято першого січня."]},{"word":"п'ятнадцятого березня","translation":"on March fifteenth","pos":"date chunk","example":"День народження п'ятнадцятого березня.","examples":["on March fifteenth","День народження п'ятнадцятого березня."]},{"word":"двадцять другого серпня","translation":"on August twenty-second","pos":"date chunk","example":"День народження двадцять другого серпня.","examples":["on August twenty-second","День народження двадцять другого серпня."]},{"word":"першого вересня","translation":"on September first","pos":"date chunk","example":"Школа починається першого вересня.","examples":["on September first","Школа починається першого вересня."]},{"word":"коли?","translation":"when?","pos":"question word","example":"Коли зустріч?","examples":["when?","Коли зустріч?"]},{"word":"якого числа?","translation":"what date?","pos":"question chunk","example":"Якого числа день народження?","examples":["what date?","Якого числа день народження?"]},{"word":"планувати","translation":"to plan","pos":"infinitive","example":"Я планую тиждень.","examples":["to plan","Я планую тиждень."]},{"word":"народитися","translation":"to be born","pos":"infinitive","example":"Я народився першого січня.","examples":["to be born","Я народився першого січня."]},{"word":"святкувати","translation":"to celebrate","pos":"infinitive","example":"Ми святкуємо в суботу.","examples":["to celebrate","Ми святкуємо в суботу."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"понеділок","back":"Monday"},{"front":"вівторок","back":"Tuesday"},{"front":"середа","back":"Wednesday"},{"front":"четвер","back":"Thursday"},{"front":"п'ятниця","back":"Friday"},{"front":"субота","back":"Saturday"},{"front":"неділя","back":"Sunday"},{"front":"тиждень","back":"week"},{"front":"день","back":"day"},{"front":"місяць","back":"month"},{"front":"рік","back":"year"},{"front":"сьогодні","back":"today"},{"front":"завтра","back":"tomorrow"},{"front":"учора","back":"yesterday"},{"front":"у понеділок","back":"on Monday"},{"front":"у вівторок","back":"on Tuesday"},{"front":"у середу","back":"on Wednesday"},{"front":"у четвер","back":"on Thursday"},{"front":"у п'ятницю","back":"on Friday"},{"front":"в суботу","back":"on Saturday"},{"front":"в неділю","back":"on Sunday"},{"front":"січень","back":"January"},{"front":"лютий","back":"February"},{"front":"березень","back":"March"},{"front":"квітень","back":"April"},{"front":"травень","back":"May"},{"front":"червень","back":"June"},{"front":"липень","back":"July"},{"front":"серпень","back":"August"},{"front":"вересень","back":"September"},{"front":"жовтень","back":"October"},{"front":"листопад","back":"November"},{"front":"грудень","back":"December"},{"front":"у січні","back":"in January"},{"front":"у березні","back":"in March"},{"front":"у серпні","back":"in August"},{"front":"у листопаді","back":"in November"},{"front":"зима","back":"winter"},{"front":"весна","back":"spring"},{"front":"літо","back":"summer"},{"front":"осінь","back":"autumn; fall"},{"front":"взимку","back":"in winter"},{"front":"навесні","back":"in spring"},{"front":"влітку","back":"in summer"},{"front":"восени","back":"in autumn"},{"front":"сонце","back":"sun"},{"front":"дощ","back":"rain"},{"front":"сніг","back":"snow"},{"front":"вітер","back":"wind"},{"front":"мороз","back":"frost; freezing cold"},{"front":"дата","back":"date"},{"front":"свято","back":"holiday"},{"front":"день народження","back":"birthday"},{"front":"першого січня","back":"on January first"},{"front":"п'ятнадцятого березня","back":"on March fifteenth"},{"front":"двадцять другого серпня","back":"on August twenty-second"},{"front":"першого вересня","back":"on September first"},{"front":"коли?","back":"when?"},{"front":"якого числа?","back":"what date?"},{"front":"планувати","back":"to plan"},{"front":"народитися","back":"to be born"},{"front":"святкувати","back":"to celebrate"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Put the week in order
+
+<Order client:only='react' items={JSON.parse(`["понеділок", "вівторок", "середа", "четвер", "п'ятниця", "субота", "неділя"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6]`)} instruction={"Put the days from Monday to Sunday."} isUkrainian={false} />
+
+### Clinic appointment day
+
+<Quiz client:only='react' questions={JSON.parse(`[]`)} />
+
+### Day planning chunks
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я працюю ___.", "answer": "у понеділок", "options": ["у понеділок", "on понеділок", "понеділок"]}, {"sentence": "Ми вивчаємо українську ___.", "answer": "у вівторок", "options": ["у вівторок", "в вівторок", "вівторок"]}, {"sentence": "Зустріч ___.", "answer": "у середу", "options": ["у середу", "середа", "на середу"]}, {"sentence": "Кава ___.", "answer": "у четвер", "options": ["у четвер", "четвер", "на четвер"]}, {"sentence": "Фільм ___.", "answer": "у п'ятницю", "options": ["у п'ятницю", "п'ятниця", "в п'ятниця"]}, {"sentence": "Я гуляю ___.", "answer": "в суботу", "options": ["в суботу", "субота", "на субота"]}, {"sentence": "Я відпочиваю ___.", "answer": "в неділю", "options": ["в неділю", "неділя", "on неділя"]}]`)} />
+
+### Calendar shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Days": ["понеділок", "середа", "п'ятниця", "неділя"], "Months": ["січень", "квітень", "липень", "листопад"], "Seasons": ["зима", "весна", "літо", "осінь"], "Nature and weather": ["сонце", "дощ", "сніг", "вітер"]}`)} />
+
+### Month, season, memory hook
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "січень", "right": "зима"}, {"left": "березень", "right": "весна"}, {"left": "липень", "right": "літо"}, {"left": "листопад", "right": "осінь"}, {"left": "квітень", "right": "flowers"}, {"left": "липень", "right": "linden tree"}, {"left": "листопад", "right": "falling leaves"}, {"left": "березень", "right": "birch"}]`)} />
+
+### Calendar safety checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ukrainian writes понеділок and січень with lowercase letters in normal sentences.", "isTrue": false, "explanation": "Days and months are common nouns in Ukrainian."}, {"statement": "Сьогодні є вівторок is the safest A1 sentence.", "isTrue": false, "explanation": "Use Сьогодні вівторок without є."}, {"statement": "Взимку, навесні, влітку, восени are useful season chunks.", "isTrue": false, "explanation": "These adverbs are the safe A1 forms."}, {"statement": "Я народився першого січня uses no preposition before the date.", "isTrue": false, "explanation": "Dates use the date chunk directly."}, {"statement": "В літо is the safe chunk for in summer.", "isTrue": false, "explanation": "Use влітку."}, {"statement": "У березні answers in which month.", "isTrue": false, "explanation": "У березні is the month chunk."}]`)} />
+
+### Build calendar lines
+
+<Translate client:only='react' questions={JSON.parse(`[]`)} />
+
+### Repair calendar traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safe Ukrainian calendar form." items={JSON.parse(`[{"sentence": "On понеділок я працюю.", "errorWord": "On понеділок", "correctForm": "У понеділок я працюю.", "options": ["У понеділок я працюю.", "On понеділок я працюю.", "На понеділок я працюю."], "explanation": "Use у/в with weekday chunks, not English on."}, {"sentence": "Я народився в Перше січня.", "errorWord": "в Перше січня", "correctForm": "Я народився першого січня.", "options": ["Я народився першого січня.", "Я народився в Перше січня.", "Я народився у перший січень."], "explanation": "Date chunks do not need в."}, {"sentence": "Вітаю з 1 вересням!", "errorWord": "вересням", "correctForm": "Вітаю з 1 вересня!", "options": ["Вітаю з 1 вересня!", "Вітаю з 1 вересням!", "Вітаю з 1 вересень!"], "explanation": "In dates, keep the month in the date form."}, {"sentence": "Моє улюблене свято в Січень.", "errorWord": "в Січень", "correctForm": "Моє улюблене свято в січні.", "options": ["Моє улюблене свято в січні.", "Моє улюблене свято в Січень.", "Моє улюблене свято у січень."], "explanation": "Use lowercase and the month chunk в січні."}, {"sentence": "Ми поїдемо в літо.", "errorWord": "в літо", "correctForm": "Ми поїдемо влітку.", "options": ["Ми поїдемо влітку.", "Ми поїдемо в літо.", "Ми поїдемо літо."], "explanation": "Use the season adverb влітку."}, {"sentence": "Сьогодні є вівторок.", "errorWord": "є", "correctForm": "Сьогодні вівторок.", "options": ["Сьогодні вівторок.", "Сьогодні є вівторок.", "Сьогодні у вівторок."], "explanation": "Do not copy English is into this line."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Days of the Week in Ukrainian](https://www.ukrainianlessons.com/vocabulary-days/) — Illustrated learner-safe list of Ukrainian weekday names with audio support.
+- 📄 [Days, Months and Seasons in Ukrainian](https://talkukrainian.com/days-months-seasons/) — Compact learner reference for days, months, and seasons in one place.
+- 📄 [Genitive Case of Adjectives and Ordinal Numerals](https://opentext.ku.edu/dobraforma/chapter/17-4/) — Follow-up grammar reference for Ukrainian date expressions such as first of January.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
