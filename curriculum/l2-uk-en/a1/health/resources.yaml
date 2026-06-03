@@ -1,0 +1,16 @@
+- title: "Wiki: pedagogy/a1/health"
+  role: internal wiki
+  source_ref: "Wiki: pedagogy/a1/health"
+  notes: "Pedagogical brief for body-part vocabulary, physical-state chunks, and L2 repair traps."
+- title: "State Standard 2024, §3"
+  role: standard reference
+  source_ref: "State Standard 2024, §3"
+  notes: "Plan reference for health as a basic communicative topic."
+- title: "Internal module M43: please-do-this"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/please-do-this/module.md"
+  notes: "Reuses polite request chunks such as Повторіть, будь ласка."
+- title: "Internal module M30: my-city"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/my-city/module.md"
+  notes: "Reuses city-place words such as аптека and лікарня as location vocabulary."

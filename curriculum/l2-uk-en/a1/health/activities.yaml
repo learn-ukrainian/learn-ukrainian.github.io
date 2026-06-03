@@ -1,0 +1,239 @@
+- id: act-1
+  type: fill-in
+  title: Complete the health phrase
+  instruction: Choose the word that completes the A1 phrase.
+  items:
+    - sentence: "У мене болить ___."
+      answer: "голова"
+      options:
+        - "голова"
+        - "лікар"
+        - "аптека"
+      explanation: "Голова is a body part, so it fits after болить."
+    - sentence: "Мені потрібен ___."
+      answer: "лікар"
+      options:
+        - "лікар"
+        - "голова"
+        - "кашель"
+      explanation: "Лікар means doctor."
+    - sentence: "У мене ___."
+      answer: "температура"
+      options:
+        - "температура"
+        - "праворуч"
+        - "квиток"
+      explanation: "У мене температура is a fixed symptom phrase."
+    - sentence: "___, будь ласка."
+      answer: "Повторіть"
+      options:
+        - "Повторіть"
+        - "Болить"
+        - "Нежить"
+      explanation: "Повторіть, будь ласка asks someone to repeat."
+- id: act-2
+  type: match-up
+  title: Body words
+  instruction: Match each Ukrainian body word with English.
+  pairs:
+    - left: "голова"
+      right: "head"
+    - left: "горло"
+      right: "throat"
+    - left: "живіт"
+      right: "stomach"
+    - left: "спина"
+      right: "back"
+    - left: "рука"
+      right: "hand / arm"
+    - left: "нога"
+      right: "leg / foot"
+    - left: "зуб"
+      right: "tooth"
+    - left: "вухо"
+      right: "ear"
+- id: act-3
+  type: group-sort
+  title: Sort health words
+  instruction: Put each phrase into the right group.
+  groups:
+    - name: "body parts"
+      items:
+        - "голова"
+        - "горло"
+        - "живіт"
+        - "спина"
+        - "зуб"
+    - name: "symptom phrases"
+      items:
+        - "У мене температура"
+        - "У мене кашель"
+        - "У мене нежить"
+        - "Мені погано"
+    - name: "help phrases"
+      items:
+        - "Мені потрібен лікар"
+        - "Де тут аптека?"
+        - "Повторіть, будь ласка"
+- id: act-4
+  type: quiz
+  title: Choose the clear A1 phrase
+  instruction: Choose the phrase that communicates the problem clearly.
+  items:
+    - prompt: "You want to say: My stomach hurts."
+      options:
+        - text: "У мене болить живіт."
+          correct: true
+        - text: "Я живіт болить."
+          correct: false
+        - text: "Мій живіт є болить."
+          correct: false
+      explanation: "Use У мене болить + body part."
+    - prompt: "You need a doctor."
+      options:
+        - text: "Мені потрібен лікар."
+          correct: true
+        - text: "Я потрібно лікар."
+          correct: false
+        - text: "Лікар болить."
+          correct: false
+      explanation: "Мені потрібен лікар is the fixed help phrase."
+    - prompt: "You do not understand."
+      options:
+        - text: "Я не розумію."
+          correct: true
+        - text: "Я не аптека."
+          correct: false
+        - text: "У мене розумію."
+          correct: false
+      explanation: "Я не розумію is the repair phrase."
+- id: act-5
+  type: true-false
+  title: Phrase-level health check
+  instruction: Decide whether the sentence is a clear A1 health phrase.
+  items:
+    - statement: "У мене болить горло."
+      answer: true
+      explanation: "This follows У мене болить + body part."
+    - statement: "Моя голова болить."
+      answer: false
+      explanation: "Use the more natural A1 phrase: У мене болить голова."
+    - statement: "У мене кашель."
+      answer: true
+      explanation: "This is a fixed symptom phrase."
+    - statement: "Я є хворий."
+      answer: false
+      explanation: "Drop є: Я хворий."
+    - statement: "Мені потрібен лікар."
+      answer: true
+      explanation: "This is the help phrase."
+- id: act-6
+  type: unjumble
+  title: Build health lines
+  instruction: Put the words in a natural order.
+  items:
+    - words: "У/мене/болить/голова"
+      answer: "У мене болить голова."
+    - words: "Мені/потрібен/лікар"
+      answer: "Мені потрібен лікар."
+    - words: "Я/не/розумію"
+      answer: "Я не розумію."
+    - words: "Повторіть/будь/ласка"
+      answer: "Повторіть, будь ласка."
+- id: act-7
+  type: fill-in
+  title: Doctor or pharmacy phrases
+  instruction: Choose the phrase that fits the short situation.
+  items:
+    - sentence: "Добрий день. У мене болить ___."
+      answer: "спина"
+      options:
+        - "спина"
+        - "лікар"
+        - "аптека"
+      explanation: "Спина is a body part."
+    - sentence: "Вибачте. Де тут ___?"
+      answer: "аптека"
+      options:
+        - "аптека"
+        - "болить"
+        - "нога"
+      explanation: "Де тут аптека? asks for the pharmacy."
+    - sentence: "Мені ___."
+      answer: "погано"
+      options:
+        - "погано"
+        - "голова"
+        - "кашель"
+      explanation: "Мені погано means I feel bad."
+    - sentence: "___, будь ласка. Я не розумію."
+      answer: "Повільніше"
+      options:
+        - "Повільніше"
+        - "Голова"
+        - "Температура"
+      explanation: "Повільніше asks someone to speak more slowly."
+- id: act-8
+  type: quiz
+  title: Repair health phrases
+  instruction: Choose the natural Ukrainian repair.
+  items:
+    - prompt: "Repair: Моя рука болить."
+      options:
+        - text: "У мене болить рука."
+          correct: true
+        - text: "У мене рука лікар."
+          correct: false
+        - text: "Рука потрібен мене."
+          correct: false
+      explanation: "Use У мене болить + body part."
+    - prompt: "Repair: Я потрібно лікар."
+      options:
+        - text: "Мені потрібен лікар."
+          correct: true
+        - text: "Я потрібен лікар."
+          correct: false
+        - text: "Лікар потрібно я."
+          correct: false
+      explanation: "Use the fixed phrase Мені потрібен лікар."
+    - prompt: "Repair: У мене є нежить."
+      options:
+        - text: "У мене нежить."
+          correct: true
+        - text: "Я нежить болить."
+          correct: false
+        - text: "Нежить потрібен."
+          correct: false
+      explanation: "Use the simple phrase У мене нежить."
+- id: act-9
+  type: translate
+  title: Say what hurts
+  instruction: Choose the Ukrainian phrase that matches the English prompt.
+  items:
+    - source: "My throat hurts."
+      options:
+        - text: "У мене болить горло."
+          correct: true
+        - text: "Мені потрібен лікар."
+          correct: false
+        - text: "У мене нежить."
+          correct: false
+      explanation: "Use У мене болить + горло."
+    - source: "I need a doctor."
+      options:
+        - text: "Мені потрібен лікар."
+          correct: true
+        - text: "У мене болить зуб."
+          correct: false
+        - text: "Де тут аптека?"
+          correct: false
+      explanation: "Мені потрібен лікар is the help phrase."
+    - source: "Please repeat."
+      options:
+        - text: "Повторіть, будь ласка."
+          correct: true
+        - text: "Мені погано."
+          correct: false
+        - text: "У мене кашель."
+          correct: false
+      explanation: "Use Повторіть, будь ласка."
