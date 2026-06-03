@@ -1,0 +1,72 @@
+- word: учора
+  translation: yesterday
+  pos: adverb
+  example: "Учора я прокинулася рано."
+- word: зранку
+  translation: in the morning
+  pos: adverb
+  example: "Зранку я поснідала."
+- word: вдень
+  translation: in the afternoon
+  pos: adverb
+  example: "Вдень я обідала з колегою."
+- word: ввечері
+  translation: in the evening
+  pos: adverb
+  example: "Ввечері я дивилася серіал."
+- word: потім
+  translation: then
+  pos: adverb
+  example: "Потім я пішла на роботу."
+- word: спочатку
+  translation: first
+  pos: adverb
+  example: "Спочатку я поснідала."
+- word: нарешті
+  translation: finally
+  pos: adverb
+  example: "Нарешті я лягла спати."
+- word: прокинутися
+  translation: to wake up
+  pos: verb
+  example: "Я прокинулася о сьомій."
+- word: поснідати
+  translation: to have breakfast
+  pos: verb
+  example: "Я поснідала вдома."
+- word: обідати
+  translation: to have lunch
+  pos: verb
+  example: "Я обідала в кафе."
+- word: повернутися
+  translation: to return
+  pos: verb
+  example: "Я повернулася додому."
+- word: лягти
+  translation: to lie down
+  pos: verb
+  example: "Я лягла спати."
+- word: звичайний
+  translation: ordinary
+  pos: adjective
+  example: "Учора був звичайний день."
+- word: продукти
+  translation: groceries
+  pos: noun plural
+  example: "Я купила продукти."
+- word: серіал
+  translation: TV series
+  pos: noun
+  example: "Я дивилася серіал."
+- word: колега
+  translation: colleague
+  pos: noun
+  example: "Я обідала з колегою."
+- word: офіс
+  translation: office
+  pos: noun
+  example: "Я працювала в офісі."
+- word: додому
+  translation: homeward, home
+  pos: adverb
+  example: "Я повернулася додому."
