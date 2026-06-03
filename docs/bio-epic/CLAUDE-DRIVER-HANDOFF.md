@@ -58,6 +58,59 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, NIGHT) — P2 DOSSIER PRODUCTION RUNNING (30 merged, ~110 left) (read FIRST)
+
+**Supersedes the block below's "NEXT ACTION: fire P2 batch 1" — P2 waves 1–2 are DONE & merged.**
+
+**STATE:** `docs/research/bio/` on origin/main = **201 dossiers** (was 150 at session start). The original-180
+dossier gap is now **~110** (recompute deterministically: `git ls-tree -r --name-only origin/main
+curriculum/l2-uk-en/plans/bio/` minus `…docs/research/bio/` = plans-without-dossier; that set IS the queue,
+self-correcting, so a resume never redoes finished figures). `petro-veskliaov` still DEFERRED (slug rename
+→`petro-vesklyarov` first).
+
+**MERGED THIS SESSION (30 P2 dossiers, all DeepSeek cross-reviewed, §7+word-count CI gates green):**
+- **Wave A #2602:** franko · lesya-ukrainka · skovoroda · kotliarevskyi · kobylianska · kotsiubynsky
+- **Wave B #2603:** borys-paton · yevhen-paton · lysenko · dovzhenko · bilokur · drahomanov
+- **Wave C #2604:** khvylovyi · mykola-kulish · les-kurbas · stus · symonenko · dziuba
+- **Wave D #2605:** nechuy-levytskyi · kvitka-osnovianenko · marko-vovchok · mazepa · pylyp-orlyk · khmelnytskyy
+- **Wave E #2606:** panteleimon-kulish · hrinchenko · starytsky · kropyvnytskyi · olena-pchilka · stefanyk
+(Plus the prior session's P1 21 dossiers #2595–2600 + prompt PR #2593 — all merged by me this session.)
+
+**FLEET (user 2026-06-03):** ran 3 writers/wave briefly, user CUT to **2 claude**, then **CONFIRMED add 1
+codex** → current cadence = **2 claude + 1 codex writers per wave**. claude = `--agent claude` (claude-tools);
+codex = `--agent codex --model gpt-5.5` (separate quota, 1 seat). Reviewer = **DeepSeek-pro** off-seat,
+cross-family for BOTH claude and codex writers. gemini = `ab ask-gemini` only (metered); cursor dead until #2549.
+
+**PROVEN LOOP (replicate per wave):** (1) pick ~6 figures/batch from the recomputed queue, embed per-figure
+**audit warnings** from `batch_state/tasks/bio-audit-rev-b*.result` (load-bearing). (2) Brief template lives at
+`/tmp/brief-bio-p2-wave{A..E}.md` (recompute from those if /tmp lost — TODO: persist to docs/). (3) Fire
+`delegate.py dispatch --agent {claude|codex} --task-id bio-p2-wave<X> --prompt-file <f> --mode danger --effort
+xhigh --worktree --base main` (codex adds `--model gpt-5.5`). (4) Watch via backgrounded `until`-loop on
+`/api/delegate/active`. (5) Per wave: read ≥1 dossier (m20 lesson) + verify scope (`gh pr view --json files`
+= 6 `docs/research/bio/*.md`) + gates. (6) DeepSeek cross-review: build prompt inlining ONLY the 6 new files
+(NOT a worktree glob — that pulls all 200+ dossiers), `--agent deepseek --model deepseek-v4-pro --mode read-only
+--initial-response-timeout 900 --silence-timeout 3600`, prompt MUST end with "your FINAL message must be the
+full verdict table" (the first review silent-failed at 32 bytes / "Review complete" without it). (7) Apply FIX
+after deterministic verification; merge SHIP per grant; clean worktrees.
+
+**TWO LESSONS THIS SESSION (do NOT re-derive):**
+1. **DeepSeek ghost-slug FALSE-POSITIVE recurred (Wave C):** it flagged 15 "Existing BIO plans" as MISSING →
+   `git ls-tree origin/main curriculum/l2-uk-en/plans/bio/` proved ALL 15 EXIST. The §7 CI gate (passing) is
+   authoritative. **ALWAYS git-verify a DeepSeek "missing plan/ghost slug" finding before acting** (matches the
+   prior kateryna-hrushevska note). Wave C was therefore merged as SHIP.
+2. **claude writer under-claimed `verify_quote` (Marko Vovchok):** `verify_quote(author="Марко Вовчок")` returned
+   0.0 and the dossier wrongly declared "her texts absent from corpus / honest gap." The texts ARE ingested as
+   corpus **`ukrlib-vovchok`** and both quotes verify at **1.0**. A bare author-name query can false-0.0; the
+   author's own works live under `ukrlib-<surname>`. **Bake into the writer brief** as lesson #5.
+
+**NEXT ACTION ON RESUME:** fire the next wave (**2 claude + 1 codex**) of ~6 figures each from the recomputed
+~110-queue, worst/foundational-first, with per-figure audit warnings → DeepSeek review → merge → refresh THIS
+handoff. Also still queued: Task-#6 five plan-level fixes (pohribnyi dates · portnikov patronymic · bohomazov
+birthplace+date · vasylenko case · pavlychko smear) via plan-versioning; then the wiki half (verify/rebuild 180
+original wikis vs the new dossiers + Phase-4 130 new 181–310 wikis).
+
+---
+
 ## ▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, EVENING) — P1 (22 worst-first) FULLY LANDED ON MAIN + P2 STARTED (read FIRST)
 
 **Supersedes the "OPEN PRs / awaiting orchestrator promotion / IN-FLIGHT" status in every block below — those P1 PRs are now MERGED to main.**
