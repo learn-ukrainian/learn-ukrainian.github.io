@@ -1,0 +1,24 @@
+- title: "Synthesis of M42-M46 content"
+  role: checkpoint source
+  source_ref: "A1.7 modules 42-46"
+  notes: "No new material: integrates vocative address, imperative requests, sentence connectors, що/де/коли frames, and holiday greetings."
+- title: "Wiki: pedagogy/a1/hey-friend"
+  role: internal wiki
+  source_ref: "M42 vocative address brief"
+  notes: "Checkpoint support for calling forms such as Олено, Тарасе, Маріє, друже."
+- title: "Wiki: pedagogy/a1/please-do-this"
+  role: internal wiki
+  source_ref: "M43 imperative/request brief"
+  notes: "Checkpoint support for polite requests and ти/ви command forms."
+- title: "Wiki: pedagogy/a1/linking-ideas"
+  role: internal wiki
+  source_ref: "M44 connector brief"
+  notes: "Checkpoint support for і, а, але, бо, and тому що."
+- title: "Wiki: pedagogy/a1/when-and-where"
+  role: internal wiki
+  source_ref: "M45 what/where/when brief"
+  notes: "Checkpoint support for short що/де/коли detail frames and comma habits."
+- title: "Wiki: pedagogy/a1/holidays"
+  role: internal wiki
+  source_ref: "M46 holidays brief"
+  notes: "Checkpoint support for Ukrainian holiday greetings and the святкувати vs на + свято contrast."
