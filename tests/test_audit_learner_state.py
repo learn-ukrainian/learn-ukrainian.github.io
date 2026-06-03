@@ -248,6 +248,51 @@ def test_introduced_before_use_flags_unglossed_first_mention():
     assert violations[0]["severity"] == "HARD"
 
 
+def test_introduced_before_use_matches_whitespace_and_apostrophe_variants():
+    content = "# Demo\n\n## Lesson\n\nSay п'ю\tводу now.\n\nLater: **пʼю воду** - I drink water.\n"
+
+    violations = learner_state_checks.check_introduced_before_use(
+        content,
+        "a1",
+        1,
+        plan={"vocabulary_hints": {"required": ["пʼю воду"]}},
+    )
+
+    assert violations
+    assert violations[0]["term"] == "пʼю воду"
+    assert violations[0]["line"] == 5
+
+
+def test_introduced_before_use_preserves_line_numbers_after_non_body_blocks():
+    content = (
+        "---\n"
+        "title: Demo\n"
+        "---\n"
+        "\n"
+        "```text\n"
+        "Привіт inside a code block is ignored.\n"
+        "```\n"
+        "\n"
+        "<!-- bad -->\n"
+        "Привіт inside a bad block is ignored.\n"
+        "<!-- /bad -->\n"
+        "\n"
+        "## Lesson\n"
+        "\n"
+        "Say Привіт three times.\n"
+    )
+
+    violations = learner_state_checks.check_introduced_before_use(
+        content,
+        "a1",
+        1,
+        plan={"vocabulary_hints": {"required": ["Привіт (hi)"]}},
+    )
+
+    assert violations
+    assert violations[0]["line"] == 15
+
+
 def test_introduced_before_use_is_scoped_to_zero_script_archetype():
     content = "# Demo\n\n## Lesson\n\nSay Привіт three times.\n"
 

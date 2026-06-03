@@ -336,12 +336,13 @@ def _collect_introduce_before_use_terms(plan: Mapping[str, Any] | None) -> set[s
 def _normalize_sequence_text(text: str) -> str:
     decomposed = unicodedata.normalize("NFD", text)
     without_marks = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
-    return re.sub(r"\s+", " ", without_marks.casefold()).strip()
+    normalized_apostrophes = re.sub(r"[’ʼ]", "'", without_marks)
+    return re.sub(r"\s+", " ", normalized_apostrophes.casefold()).strip()
 
 
 def _term_pattern(term: str) -> re.Pattern[str]:
     normalized = _normalize_sequence_text(term)
-    escaped = re.escape(normalized).replace(r"\ ", r"\s+")
+    escaped = r"\s+".join(re.escape(part) for part in normalized.split())
     return re.compile(rf"(?<![a-zа-яіїєґ]){escaped}(?![a-zа-яіїєґ])", re.IGNORECASE)
 
 
@@ -378,19 +379,59 @@ def _line_is_introduction(line: str, term: str) -> bool:
 
 def _iter_sequence_lines(content: str, module_dir: str | Path | None) -> list[tuple[int, str, str]]:
     """Return learner-facing lines in lesson order, then workbook/activity text."""
-    text = re.sub(r"^---\n.*?\n---\n", "", content, flags=re.DOTALL)
-    text = re.sub(r"```.*?```", " ", text, flags=re.DOTALL)
-    text = re.sub(r"<!--\s*bad\s*-->.*?<!--\s*/bad\s*-->", " ", text, flags=re.IGNORECASE | re.DOTALL)
-
     lines: list[tuple[int, str, str]] = []
+    in_frontmatter = False
+    in_code_block = False
+    in_bad_block = False
     in_teaching_body = False
-    for line_num, line in enumerate(text.splitlines(), 1):
-        if re.match(r"^#{2,3}\s+", line):
+
+    for line_num, line in enumerate(content.splitlines(), 1):
+        stripped = line.strip()
+
+        if line_num == 1 and stripped == "---":
+            in_frontmatter = True
+            continue
+        if in_frontmatter:
+            if stripped == "---":
+                in_frontmatter = False
+            continue
+
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block:
+            continue
+
+        cleaned_line = line
+        while True:
+            if in_bad_block:
+                end_match = re.search(r"<!--\s*/bad\s*-->", cleaned_line, flags=re.IGNORECASE)
+                if end_match is None:
+                    cleaned_line = ""
+                    break
+                cleaned_line = cleaned_line[end_match.end() :]
+                in_bad_block = False
+                continue
+
+            start_match = re.search(r"<!--\s*bad\s*-->", cleaned_line, flags=re.IGNORECASE)
+            if start_match is None:
+                break
+
+            end_match = re.search(r"<!--\s*/bad\s*-->", cleaned_line[start_match.end() :], flags=re.IGNORECASE)
+            if end_match is None:
+                cleaned_line = cleaned_line[: start_match.start()]
+                in_bad_block = True
+                break
+
+            end = start_match.end() + end_match.end()
+            cleaned_line = f"{cleaned_line[: start_match.start()]} {cleaned_line[end:]}"
+
+        if re.match(r"^#{2,3}\s+", cleaned_line):
             in_teaching_body = True
             continue
-        if not in_teaching_body or _line_is_sequence_exempt(line):
+        if not in_teaching_body or _line_is_sequence_exempt(cleaned_line):
             continue
-        lines.append((line_num, line, _normalize_sequence_text(line)))
+        lines.append((line_num, cleaned_line, _normalize_sequence_text(cleaned_line)))
 
     if module_dir is not None:
         activities_path = Path(module_dir) / "activities.yaml"

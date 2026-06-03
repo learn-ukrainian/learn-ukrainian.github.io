@@ -86,7 +86,7 @@ export default function DialogueBox({
                 {ex.speaker}
               </div>
               <div className={directStyles.dialogueText}>{ex.text}</div>
-              {en && <div className={directStyles.dialogueTranslation}>{en}</div>}
+              {usesLegacyLine && en && <div className={directStyles.dialogueTranslation}>{en}</div>}
             </div>
           );
         })}

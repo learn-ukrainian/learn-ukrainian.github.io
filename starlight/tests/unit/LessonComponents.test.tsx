@@ -73,6 +73,22 @@ describe('DialogueBox', () => {
     expect(screen.getByText('Marko: Hi! What is your name?')).toBeTruthy();
     expect(screen.queryByText('Діалог')).toBeNull();
   });
+
+  test('does not repeat legacy gloss for structured exchanges', () => {
+    render(
+      <DialogueBox
+        exchanges={[
+          { speaker: 'Марко', text: 'Привіт!' },
+          { speaker: 'Олена', text: 'Вітаю!' },
+        ]}
+        en="Legacy gloss"
+      />
+    );
+
+    expect(screen.getByText('Марко')).toBeTruthy();
+    expect(screen.getByText('Олена')).toBeTruthy();
+    expect(screen.queryByText('Legacy gloss')).toBeNull();
+  });
 });
 
 // ── MythBuster ───────────────────────────────────────────────────────────────
