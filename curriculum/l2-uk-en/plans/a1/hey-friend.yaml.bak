@@ -2,7 +2,7 @@ module: a1-042
 level: A1
 sequence: 42
 slug: hey-friend
-version: '1.3.1'
+version: '1.3.0'
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-scale-batch-2
@@ -183,8 +183,8 @@ register: розмовний
 references:
 - title: State Standard 2024, §4.2.3.4
   notes: 'Кличний відмінок — форми звертання. Обсяг для A1: лише поширені моделі.'
-- title: Літвінова Grade 6, p.140
-  notes: Кличний відмінок; для A1 брати лише поширені звертання як готові chunks.
+- title: 'Підручник 4 класу: Кличний відмінок (Заболотний)'
+  notes: Слово-помічник Кл. (!). Жіночий -а→-о, чоловічий твердий→-е, м'який→-ю.
 - title: 'Wiki: pedagogy/a1/hey-friend (LOCKED 2026-04-23)'
   notes: >-
     Authoritative pedagogical brief — see Step 1 (base -о/-ю forms),
@@ -192,10 +192,6 @@ references:
     to pin at A1), and "Типові помилки L2" table (7 verified L2-error
     pairs the match-up activity drills).
 changelog:
-- version: '1.3.1'
-  date: '2026-06-02'
-  changes:
-  - Replaced ghost Grade 4 Заболотний vocative reference with in-corpus Літвінова Grade 6, p.140.
 - version: '1.3.0'
   date: '2026-04-23'
   changes:

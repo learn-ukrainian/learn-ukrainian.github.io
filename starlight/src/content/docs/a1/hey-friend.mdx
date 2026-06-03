@@ -1,0 +1,454 @@
+---
+title: "Гей, друже!"
+description: "Олено! Тарасе! Друже! Мамо! — звертання до людей на ім'я"
+sidebar:
+  order: 42
+  label: "42. Гей, друже!"
+pipeline: linear-phase-4
+build_status: validated
+prev: checkpoint-food-shopping
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+A1.7 begins with a very common Ukrainian habit: when you speak **to** a
+person, the name or role often has a calling form.
+
+You already know how to talk **about** people:
+
+- **Це Олена.**
+- **Це Тарас.**
+- **Це мій друг.**
+- **Це моя мама.**
+
+Now learn how to call them:
+
+- **Олено, привіт!**
+- **Тарасе, ходи сюди!**
+- **Гей, друже!**
+- **Мамо, де телефон?**
+
+By the end, you can:
+
+- recognize the practical calling form, the **кличний відмінок**;
+- call common names and family words: **Олено**, **Тарасе**, **мамо**,
+  **бабусю**;
+- use friend and polite address chunks: **друже**, **пане**, **пані**;
+- choose the reliable A1 endings **-о**, **-е**, and **-ю**;
+- avoid copied or shortened forms that do not fit standard Ukrainian address.
+
+Keep this lesson practical. You are not learning a full case lecture. You are
+learning what to say when you want a real person to look at you.
+
+:::tip[Fast check]
+If the person should answer you, use the calling form: **Олено! Тарасе!
+Друже! Мамо!**
+:::
+
+### Talking about or calling
+
+<GroupSort client:only='react' groups={JSON.parse(`{"About the person": ["Олена", "Тарас", "Андрій", "Марія", "мама", "друг"], "Calling the person": ["Олено", "Тарасе", "Андрію", "Маріє", "мамо", "друже"]}`)} />
+
+## Діалоги
+
+### На вечірці
+
+<DialogueBox uk="Олена: Привіт, Тарасе!" en="Olena: Hi, Taras!" />
+<DialogueBox uk="Тарас: Привіт, Олено! Як справи?" en="Taras: Hi, Olena! How are you?" />
+<DialogueBox uk="Олена: Добре, дякую. А це мій брат Андрій." en="Olena: Good, thanks. And this is my brother Andrii." />
+<DialogueBox uk="Тарас: Андрію, привіт!" en="Taras: Andrii, hi!" />
+<DialogueBox uk="Андрій: Привіт, друже!" en="Andrii: Hi, friend!" />
+<DialogueBox uk="Олена: Тарасе, ходи сюди. Тут наша подруга Марія." en="Olena: Taras, come here. Our friend Mariia is here." />
+<DialogueBox uk="Тарас: Маріє, радий тебе бачити!" en="Taras: Mariia, glad to see you!" />
+
+Notice the small switch:
+
+| About the person | To the person |
+| --- | --- |
+| **Олена** тут. | **Олено**, привіт! |
+| **Тарас** тут. | **Тарасе**, ходи сюди! |
+| Це **Андрій**. | **Андрію**, привіт! |
+| Це **Марія**. | **Маріє**, радий тебе бачити! |
+
+The English sentence keeps the same name. Ukrainian changes the form when the
+speaker addresses the person directly. Treat the form as a ready calling
+shape: **Олено**, **Тарасе**, **Андрію**, **Маріє**.
+
+### Удома
+
+<DialogueBox uk="Син: Мамо, де мій телефон?" en="Son: Mom, where is my phone?" />
+<DialogueBox uk="Мама: На столі, синку." en="Mom: On the table, son." />
+<DialogueBox uk="Дочка: Тату, а де ключі?" en="Daughter: Dad, and where are the keys?" />
+<DialogueBox uk="Тато: У кишені, дочко." en="Dad: In the pocket, daughter." />
+<DialogueBox uk="Олена: Бабусю, ми йдемо!" en="Olena: Grandma, we are leaving!" />
+<DialogueBox uk="Бабуся: Добре, діти. Будьте обережні!" en="Grandma: All right, children. Be careful!" />
+
+Family words are especially useful as whole chunks:
+
+- **мамо** - Mom!
+- **тату** - Dad!
+- **синку** - son!
+- **дочко** - daughter!
+- **бабусю** - Grandma!
+- **дідусю** - Grandpa!
+
+Do not shorten **мамо** to a clipped form. Use the full Ukrainian address
+chunk: **Мамо, де телефон?**
+
+### Choose the calling form
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "___, привіт!", "options": [{"text": "Олено", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олену", "correct": false}], "explanation": "Use Олено when speaking to Olena."}, {"question": "Як справи, ___?", "options": [{"text": "Тарасе", "correct": true}, {"text": "Тарас", "correct": false}, {"text": "Тарасу", "correct": false}], "explanation": "Use Тарасе as the calling form."}, {"question": "___, де мій телефон?", "options": [{"text": "Мамо", "correct": true}, {"text": "Мама", "correct": false}, {"text": "Маму", "correct": false}], "explanation": "Use the full address chunk Мамо."}, {"question": "Ходи сюди, ___!", "options": [{"text": "Іване", "correct": true}, {"text": "Іван", "correct": false}, {"text": "Івану", "correct": false}], "explanation": "Іван becomes Іване when you call him."}, {"question": "Будь обережний, ___!", "options": [{"text": "синку", "correct": true}, {"text": "синок", "correct": false}, {"text": "синке", "correct": false}], "explanation": "Синку is the family address chunk."}, {"question": "Привіт, ___!", "options": [{"text": "Андрію", "correct": true}, {"text": "Андрій", "correct": false}, {"text": "Андріє", "correct": false}], "explanation": "Андрій becomes Андрію."}, {"question": "Добрий день, ___ Іване!", "options": [{"text": "пане", "correct": true}, {"text": "пан", "correct": false}, {"text": "пану", "correct": false}], "explanation": "Use пане in polite address."}, {"question": "Гей, ___!", "options": [{"text": "друже", "correct": true}, {"text": "друг", "correct": false}, {"text": "другу", "correct": false}], "explanation": "Друже is the friend-address chunk."}]`)} />
+
+## Кличний відмінок
+
+The **кличний відмінок** is the Ukrainian calling form. Use it when you speak
+directly to a person.
+
+Compare:
+
+| Sentence | Meaning | What is happening? |
+| --- | --- | --- |
+| **Олена прийшла.** | Olena came. | We talk about Olena. |
+| **Олено, привіт!** | Olena, hi! | We speak to Olena. |
+| **Тарас тут.** | Taras is here. | We talk about Taras. |
+| **Тарасе, ходи сюди!** | Taras, come here! | We call Taras. |
+| **Друг чекає.** | A friend is waiting. | We talk about a friend. |
+| **Гей, друже!** | Hey, friend! | We call a friend. |
+
+This is why the module title is **Гей, друже!** The dictionary word is
+**друг**, but the friendly address is **друже**.
+
+At A1, use a small set of trusted address patterns.
+
+| Pattern | Dictionary form | Calling form |
+| --- | --- | --- |
+| feminine **-а** | **Олена**, **мама**, **сестра**, **подруга** | **Олено**, **мамо**, **сестро**, **подруго** |
+| feminine **-ія** | **Марія**, **Надія** | **Маріє**, **Надіє** |
+| feminine **-ся** | **бабуся** | **бабусю** |
+| masculine hard consonant | **Тарас**, **Іван**, **брат**, **пан** | **Тарасе**, **Іване**, **брате**, **пане** |
+| masculine **-й** or soft sound | **Андрій**, **дідусь**, **вчитель** | **Андрію**, **дідусю**, **вчителю** |
+| friend chunk | **друг** | **друже** |
+
+You do not need to explain every Ukrainian name. You need to notice the common
+shape and use the common line. If you are speaking to the person, choose the
+calling form.
+
+### Name to address
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена -> ___", "answer": "Олено", "options": ["Олено", "Олена", "Олену"]}, {"sentence": "Тарас -> ___", "answer": "Тарасе", "options": ["Тарасе", "Тарас", "Тарасу"]}, {"sentence": "мама -> ___", "answer": "мамо", "options": ["мамо", "мама", "маму"]}, {"sentence": "Іван -> ___", "answer": "Іване", "options": ["Іване", "Іван", "Івану"]}, {"sentence": "сестра -> ___", "answer": "сестро", "options": ["сестро", "сестра", "сестру"]}, {"sentence": "Андрій -> ___", "answer": "Андрію", "options": ["Андрію", "Андрій", "Андріє"]}, {"sentence": "подруга -> ___", "answer": "подруго", "options": ["подруго", "подруга", "подругу"]}, {"sentence": "брат -> ___", "answer": "брате", "options": ["брате", "брат", "брату"]}, {"sentence": "Марія -> ___", "answer": "Маріє", "options": ["Маріє", "Марія", "Марію"]}, {"sentence": "бабуся -> ___", "answer": "бабусю", "options": ["бабусю", "бабуся", "бабусе"]}]`)} />
+
+## Закінчення кличного відмінка
+
+Start with the three endings you will meet most often.
+
+### -о
+
+Many feminine names and family words on **-а** change to **-о**:
+
+- **Олена -> Олено**
+- **Оксана -> Оксано**
+- **мама -> мамо**
+- **сестра -> сестро**
+- **подруга -> подруго**
+
+Use them in short lines:
+
+- **Олено, привіт!**
+- **Мамо, де телефон?**
+- **Сестро, ходи сюди.**
+- **Подруго, дякую!**
+
+### -е
+
+Many masculine names and words with a hard final consonant add **-е**:
+
+- **Тарас -> Тарасе**
+- **Іван -> Іване**
+- **брат -> брате**
+- **пан -> пане**
+
+Use them in short lines:
+
+- **Тарасе, як справи?**
+- **Іване, це моя сестра.**
+- **Брате, ходімо.**
+- **Пане Іване, добрий день.**
+
+### -ю
+
+Masculine names and words with **-й** or a soft ending often use **-ю**:
+
+- **Андрій -> Андрію**
+- **Сергій -> Сергію**
+- **дідусь -> дідусю**
+- **вчитель -> вчителю**
+
+Use them in short lines:
+
+- **Андрію, привіт!**
+- **Сергію, дякую.**
+- **Дідусю, ми вдома.**
+- **Вчителю, можна питання?**
+
+Some calling forms are best learned as chunks. **Друг -> друже** has a sound
+change, but at A1 you do not need a sound-change rule. Just keep **друже** as
+the friend-address word: **Привіт, друже!**
+
+### Calling endings
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-о": ["Олено", "мамо", "сестро", "подруго"], "-е": ["Тарасе", "Іване", "брате", "пане"], "-ю": ["Андрію", "дідусю", "вчителю", "бабусю"]}`)} />
+
+### Ввічливе звертання
+
+For polite address, use **пан**, **пані**, and the person's name carefully.
+
+| About the person | To the person |
+| --- | --- |
+| **пан Іван** | **пане Іване** |
+| **пан Сергій** | **пане Сергію** |
+| **пані Оксана** | **пані Оксано** |
+| **пані Марія** | **пані Маріє** |
+
+The role word and the name both need attention:
+
+- **Добрий день, пане Іване!**
+- **Дякую, пані Оксано.**
+- **Пане Сергію, ходімо.**
+- **Пані Маріє, ось меню.**
+
+At A1, do not build long formal titles or patronymics. Recognize that
+**Володимире Олексійовичу** exists, but do not drill it here. Your active
+goal is the useful daily line: **пане Іване**, **пані Оксано**.
+
+Also keep the adjective simple if it appears before the address. Say
+**Шановний пане Іване!**, not a changed adjective form. This is useful for
+recognition, but the everyday A1 path is shorter: **Добрий день, пане Іване!**
+
+### Calling in dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— ___, привіт! Як справи?", "answer": "Олено", "options": ["Олено", "Олена", "Олену"]}, {"sentence": "— Добре, дякую, ___!", "answer": "Тарасе", "options": ["Тарасе", "Тарас", "Тарасу"]}, {"sentence": "— ___, де мій телефон?", "answer": "Мамо", "options": ["Мамо", "Мама", "Маму"]}, {"sentence": "— На столі, ___.", "answer": "синку", "options": ["синку", "синок", "сина"]}, {"sentence": "— ___, ми йдемо!", "answer": "Бабусю", "options": ["Бабусю", "Бабуся", "Бабусі"]}, {"sentence": "— Добре, до побачення, ___!", "answer": "Андрію", "options": ["Андрію", "Андрій", "Андрія"]}, {"sentence": "— Добрий день, ___ Оксано.", "answer": "пані", "options": ["пані", "пан", "пану"]}, {"sentence": "— ___, радий тебе бачити!", "answer": "Друже", "options": ["Друже", "Друг", "Другу"]}]`)} />
+
+### Типові помилки
+
+The main learner error is using the dictionary form when speaking directly to
+someone. Repair it immediately:
+
+| Problem | Use |
+| --- | --- |
+| **Привіт, Антон!** | **Привіт, Антоне!** |
+| **Добрий ранок, мій друг!** | **Добрий ранок, мій друже!** |
+| **Пане Сергій!** | **Пане Сергію!** |
+| **Привіт, Надія!** | **Привіт, Надіє!** |
+| **Шановному пане Іване!** | **Шановний пане Іване!** |
+| **Я є Джон.** | **Мене звати Джон.** |
+
+The last line is not a vocative ending. It is a familiar introduction repair:
+use **Мене звати...** for "My name is...". A greeting lesson often brings this
+back because learners meet names and address at the same time.
+
+This matches the wiki sequence for writers:
+
+- **Крок 1. Базові вітання та формули знайомства.** Use **Добрий день**,
+  **Привіт, друже!**, and **Мене звати...**. Do not translate "I am..." as
+  **Я...** when you introduce your name. In the wiki's shorthand, choose
+  **«Мене звати…»**, not **«Я…»**, for a name introduction.
+- **Крок 2. Іменники жіночого роду (І відміна) на -а/-я.** The active A1
+  pattern is **мамо**, **Олено**, **Маріє**. School labels may mention
+  **Миколо**, **країно**, **Ілле**, and **круче**; treat those as recognition
+  examples, not new drilling.
+- **Крок 3. Іменники чоловічого роду (ІІ відміна) твердої групи.** Use
+  **-е** forms like **Богдане**, **голубе**, **пане**, **брате**, **друже**,
+  **Іване**. Keep **друг -> друже** and **юнак -> юначе** as chunks before
+  any sound-change explanation.
+- **Крок 4. Іменники чоловічого роду на -й та -ь (м'яка група).** Use
+  **-ю** forms like **Ігорю**, **Сергію**, **Володю**, plus friendly family
+  chunks such as **матусю**, **бабусю**, **доню**, **татусю**.
+- **Крок 5. Складні звертання та посади.** For **рольове слово + ім'я**,
+  both address words matter: **пане Іване**, **колего Олено**,
+  **панно Тетяно**, **пане президенте**, **пані голово**. At A1, use only
+  the simple daily subset.
+
+For Ukrainian cultural and decolonized language, use standard Ukrainian names
+and address chunks. Say **Марійко** or **Маріє** for a Ukrainian **Марія**,
+depending on the relationship and exact name form. Say **Світлано** for
+**Світлана**. Say **тітко Світлано** or **дядьку Петре** when the family role
+is part of the address. Avoid copied non-Ukrainian name shapes and clipped
+family calls.
+
+Use Ukrainian etiquette words cleanly:
+
+- **«Добрий день»**, not <del>«Здрастуйте»</del> or
+  <del>«Здравствуйте»</del>.
+- **«До побачення»**, not <del>«Пока»</del>.
+- **«тато»**, not <del>«папа»</del> for a family father.
+- **«прізвище»**, not <del>«фамілія»</del> for surname.
+
+### Repair address mistakes
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Привіт, Антон!", "right": "Привіт, Антоне!"}, {"left": "Я є Джон.", "right": "Мене звати Джон."}, {"left": "Добрий ранок, мій друг!", "right": "Добрий ранок, мій друже!"}, {"left": "Шановному пане Іване!", "right": "Шановний пане Іване!"}, {"left": "Пане Сергій!", "right": "Пане Сергію!"}, {"left": "Привіт, Надія!", "right": "Привіт, Надіє!"}, {"left": "Маша, привіт!", "right": "Марійко, привіт!"}, {"left": "Свєта, добрий день!", "right": "Світлано, добрий день!"}, {"left": "Ма, де телефон?", "right": "Мамо, де телефон?"}, {"left": "Тьотя Свєта, привіт!", "right": "Тітко Світлано, привіт!"}]`)} />
+
+<span id="підсумок"></span>
+
+## 📋 Підсумок
+
+Use this small map when you need to call someone:
+
+| Dictionary form | Calling form | A1 line |
+| --- | --- | --- |
+| **Олена** | **Олено** | **Олено, привіт!** |
+| **Марія** | **Маріє** | **Маріє, дякую.** |
+| **Тарас** | **Тарасе** | **Тарасе, ходи сюди.** |
+| **Андрій** | **Андрію** | **Андрію, як справи?** |
+| **мама** | **мамо** | **Мамо, де телефон?** |
+| **тато** | **тату** | **Тату, я вдома.** |
+| **бабуся** | **бабусю** | **Бабусю, ми йдемо.** |
+| **друг** | **друже** | **Гей, друже!** |
+| **пан Іван** | **пане Іване** | **Добрий день, пане Іване!** |
+
+Self-check:
+
+- Are you talking **about** the person? Use the dictionary form:
+  **Олена тут.**
+- Are you speaking **to** the person? Use the calling form:
+  **Олено, привіт!**
+- Is the address a chunk you already know? Use it whole:
+  **мамо**, **тату**, **друже**, **пане**, **пані**.
+
+Keep the clean Ukrainian etiquette set in the same place as your address
+forms: **«Добрий день»** (not <del>«Здрастуйте»</del> or
+<del>«Здравствуйте»</del>), **«До побачення»** (not
+<del>«Пока»</del>), **«тато»** (not
+<del>«папа»</del> for a family father), and **«прізвище»**
+(not <del>«фамілія»</del> for surname).
+
+Next module adds small polite commands and requests. That will pair naturally
+with address forms: **Олено, зроби це, будь ласка.** For now, keep the command
+simple and focus on the address: **Олено! Тарасе! Друже! Мамо!**
+
+<span id="repair-hey-friend-interference"></span>
+
+### Ремонти
+
+| Problem | Use |
+| --- | --- |
+| dictionary name as address | **Олено, привіт! / Тарасе, ходи сюди!** |
+| wrong friend address | **Гей, друже!** |
+| clipped family call | **Мамо, де телефон?** |
+| borrowed name shape | **Марійко / Маріє**, not a copied form |
+| borrowed name shape for Світлана | **Світлано** |
+| missing double address | **пане Іване / пані Оксано** |
+| over-explaining at A1 | learn **Олено**, **Тарасе**, **Андрію**, **мамо**, **друже** as useful calling forms |
+
+### Calling form checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Олена is the form for talking about Olena; Олено is for speaking to her.", "isTrue": true, "explanation": "Use Олено in direct address."}, {"statement": "Гей, друже! is a useful friend-address chunk.", "isTrue": true, "explanation": "Друже is the module's anchor calling form."}, {"statement": "At A1, you must explain every vocative ending from a full case table.", "isTrue": false, "explanation": "This lesson uses practical calling forms, not a full lecture."}, {"statement": "Пане Іване is a polite address to Ivan.", "isTrue": true, "explanation": "Both пане and Іване are address forms."}, {"statement": "Пані Оксано uses пані plus the calling form Оксано.", "isTrue": true, "explanation": "Пані stays пані; the name changes."}, {"statement": "Мамо is the full Ukrainian address chunk for Mom.", "isTrue": true, "explanation": "Use Мамо, not a clipped form."}, {"statement": "Привіт, Надія! is the target A1 address form.", "isTrue": false, "explanation": "Use Привіт, Надіє!"}, {"statement": "Добрий день and До побачення are the clean etiquette forms here.", "isTrue": true, "explanation": "The lesson keeps Ukrainian greeting and goodbye language clean."}]`)} />
+
+### Fix the address
+
+<ErrorCorrection client:only='react' instruction="Correct the address form in each sentence." items={JSON.parse(`[{"sentence": "Олена, привіт!", "errorWord": "Олена", "correctForm": "Олено", "options": [], "explanation": "Use Олено when speaking to her."}, {"sentence": "Тарас, ходи сюди!", "errorWord": "Тарас", "correctForm": "Тарасе", "options": [], "explanation": "Use Тарасе in direct address."}, {"sentence": "Привіт, друг!", "errorWord": "друг", "correctForm": "друже", "options": [], "explanation": "Use the friend-address chunk друже."}, {"sentence": "Пане Сергій, добрий день!", "errorWord": "Сергій", "correctForm": "Сергію", "options": [], "explanation": "Use Сергію after пане."}, {"sentence": "Привіт, Надія!", "errorWord": "Надія", "correctForm": "Надіє", "options": [], "explanation": "Use Надіє when speaking to Nadija."}, {"sentence": "Мама, де телефон?", "errorWord": "Мама", "correctForm": "Мамо", "options": [], "explanation": "Use Мамо as the full family address chunk."}, {"sentence": "Доброго ранку, мій друг!", "errorWord": "друг", "correctForm": "друже", "options": [], "explanation": "Use мій друже in address."}, {"sentence": "Пані Оксана, ось меню.", "errorWord": "Оксана", "correctForm": "Оксано", "options": [], "explanation": "Use Оксано with пані in address."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"кличний відмінок","translation":"vocative case; calling form","pos":"noun phrase","example":"Кличний відмінок допомагає звертатися до людини.","examples":["vocative case; calling form","Кличний відмінок допомагає звертатися до людини."]},{"word":"звертання","translation":"address; speaking to someone","pos":"noun","example":"Олено - це звертання.","examples":["address; speaking to someone","Олено - це звертання."]},{"word":"гей","translation":"hey","pos":"interjection","example":"Гей, друже!","examples":["hey","Гей, друже!"]},{"word":"друже","translation":"friend! (vocative)","pos":"chunk","example":"Привіт, друже!","examples":["friend! (vocative)","Привіт, друже!"]},{"word":"друг","translation":"male friend","pos":"noun","example":"Це мій друг.","examples":["male friend","Це мій друг."]},{"word":"подруга","translation":"female friend","pos":"noun","example":"Це моя подруга.","examples":["female friend","Це моя подруга."]},{"word":"подруго","translation":"female friend! (vocative)","pos":"chunk","example":"Подруго, дякую!","examples":["female friend! (vocative)","Подруго, дякую!"]},{"word":"брат","translation":"brother","pos":"noun","example":"Це мій брат.","examples":["brother","Це мій брат."]},{"word":"брате","translation":"brother! (vocative)","pos":"chunk","example":"Брате, ходімо.","examples":["brother! (vocative)","Брате, ходімо."]},{"word":"сестра","translation":"sister","pos":"noun","example":"Це моя сестра.","examples":["sister","Це моя сестра."]},{"word":"сестро","translation":"sister! (vocative)","pos":"chunk","example":"Сестро, ходи сюди.","examples":["sister! (vocative)","Сестро, ходи сюди."]},{"word":"мама","translation":"mom","pos":"noun","example":"Це моя мама.","examples":["mom","Це моя мама."]},{"word":"мамо","translation":"Mom! (vocative)","pos":"chunk","example":"Мамо, де телефон?","examples":["Mom! (vocative)","Мамо, де телефон?"]},{"word":"тато","translation":"dad","pos":"noun","example":"Це мій тато.","examples":["dad","Це мій тато."]},{"word":"тату","translation":"Dad! (vocative)","pos":"chunk","example":"Тату, я вдома.","examples":["Dad! (vocative)","Тату, я вдома."]},{"word":"синку","translation":"son! (vocative)","pos":"chunk","example":"На столі, синку.","examples":["son! (vocative)","На столі, синку."]},{"word":"дочко","translation":"daughter! (vocative)","pos":"chunk","example":"У кишені, дочко.","examples":["daughter! (vocative)","У кишені, дочко."]},{"word":"бабуся","translation":"grandmother","pos":"noun","example":"Це моя бабуся.","examples":["grandmother","Це моя бабуся."]},{"word":"бабусю","translation":"Grandma! (vocative)","pos":"chunk","example":"Бабусю, ми йдемо.","examples":["Grandma! (vocative)","Бабусю, ми йдемо."]},{"word":"дідусь","translation":"grandfather","pos":"noun","example":"Це мій дідусь.","examples":["grandfather","Це мій дідусь."]},{"word":"дідусю","translation":"Grandpa! (vocative)","pos":"chunk","example":"Дідусю, ми вдома.","examples":["Grandpa! (vocative)","Дідусю, ми вдома."]},{"word":"Олена","translation":"Olena","pos":"proper noun","example":"Олена тут.","examples":["Olena","Олена тут."]},{"word":"Олено","translation":"Olena! (vocative)","pos":"proper noun","example":"Олено, привіт!","examples":["Olena! (vocative)","Олено, привіт!"]},{"word":"Тарас","translation":"Taras","pos":"proper noun","example":"Тарас тут.","examples":["Taras","Тарас тут."]},{"word":"Тарасе","translation":"Taras! (vocative)","pos":"proper noun","example":"Тарасе, ходи сюди.","examples":["Taras! (vocative)","Тарасе, ходи сюди."]},{"word":"Андрій","translation":"Andrii","pos":"proper noun","example":"Це Андрій.","examples":["Andrii","Це Андрій."]},{"word":"Андрію","translation":"Andrii! (vocative)","pos":"proper noun","example":"Андрію, привіт!","examples":["Andrii! (vocative)","Андрію, привіт!"]},{"word":"Марія","translation":"Mariia","pos":"proper noun","example":"Це Марія.","examples":["Mariia","Це Марія."]},{"word":"Маріє","translation":"Mariia! (vocative)","pos":"proper noun","example":"Маріє, дякую.","examples":["Mariia! (vocative)","Маріє, дякую."]},{"word":"Надія","translation":"Nadiia","pos":"proper noun","example":"Це Надія.","examples":["Nadiia","Це Надія."]},{"word":"Надіє","translation":"Nadiia! (vocative)","pos":"proper noun","example":"Привіт, Надіє!","examples":["Nadiia! (vocative)","Привіт, Надіє!"]},{"word":"Іван","translation":"Ivan","pos":"proper noun","example":"Це Іван.","examples":["Ivan","Це Іван."]},{"word":"Іване","translation":"Ivan! (vocative)","pos":"proper noun","example":"Іване, це моя сестра.","examples":["Ivan! (vocative)","Іване, це моя сестра."]},{"word":"Сергій","translation":"Serhii","pos":"proper noun","example":"Це Сергій.","examples":["Serhii","Це Сергій."]},{"word":"Сергію","translation":"Serhii! (vocative)","pos":"proper noun","example":"Сергію, дякую.","examples":["Serhii! (vocative)","Сергію, дякую."]},{"word":"пан","translation":"Mr.; sir","pos":"noun","example":"Це пан Іван.","examples":["Mr.; sir","Це пан Іван."]},{"word":"пане","translation":"Mr.!; sir! (vocative)","pos":"chunk","example":"Добрий день, пане Іване!","examples":["Mr.!; sir! (vocative)","Добрий день, пане Іване!"]},{"word":"пані","translation":"Ms.; Mrs.; ma'am","pos":"noun","example":"Добрий день, пані Оксано.","examples":["Ms.; Mrs.; ma'am","Добрий день, пані Оксано."]},{"word":"вчитель","translation":"teacher","pos":"noun","example":"Це вчитель.","examples":["teacher","Це вчитель."]},{"word":"вчителю","translation":"teacher! (vocative)","pos":"chunk","example":"Вчителю, можна питання?","examples":["teacher! (vocative)","Вчителю, можна питання?"]},{"word":"прізвище","translation":"surname","pos":"noun","example":"Яке твоє прізвище?","examples":["surname","Яке твоє прізвище?"]},{"word":"Добрий день","translation":"Good afternoon; hello","pos":"chunk","example":"Добрий день, пане Іване!","examples":["Good afternoon; hello","Добрий день, пане Іване!"]},{"word":"До побачення","translation":"goodbye","pos":"chunk","example":"До побачення, Андрію!","examples":["goodbye","До побачення, Андрію!"]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"кличний відмінок","back":"vocative case; calling form"},{"front":"звертання","back":"address; speaking to someone"},{"front":"гей","back":"hey"},{"front":"друже","back":"friend! (vocative)"},{"front":"друг","back":"male friend"},{"front":"подруга","back":"female friend"},{"front":"подруго","back":"female friend! (vocative)"},{"front":"брат","back":"brother"},{"front":"брате","back":"brother! (vocative)"},{"front":"сестра","back":"sister"},{"front":"сестро","back":"sister! (vocative)"},{"front":"мама","back":"mom"},{"front":"мамо","back":"Mom! (vocative)"},{"front":"тато","back":"dad"},{"front":"тату","back":"Dad! (vocative)"},{"front":"синку","back":"son! (vocative)"},{"front":"дочко","back":"daughter! (vocative)"},{"front":"бабуся","back":"grandmother"},{"front":"бабусю","back":"Grandma! (vocative)"},{"front":"дідусь","back":"grandfather"},{"front":"дідусю","back":"Grandpa! (vocative)"},{"front":"Олена","back":"Olena"},{"front":"Олено","back":"Olena! (vocative)"},{"front":"Тарас","back":"Taras"},{"front":"Тарасе","back":"Taras! (vocative)"},{"front":"Андрій","back":"Andrii"},{"front":"Андрію","back":"Andrii! (vocative)"},{"front":"Марія","back":"Mariia"},{"front":"Маріє","back":"Mariia! (vocative)"},{"front":"Надія","back":"Nadiia"},{"front":"Надіє","back":"Nadiia! (vocative)"},{"front":"Іван","back":"Ivan"},{"front":"Іване","back":"Ivan! (vocative)"},{"front":"Сергій","back":"Serhii"},{"front":"Сергію","back":"Serhii! (vocative)"},{"front":"пан","back":"Mr.; sir"},{"front":"пане","back":"Mr.!; sir! (vocative)"},{"front":"пані","back":"Ms.; Mrs.; ma'am"},{"front":"вчитель","back":"teacher"},{"front":"вчителю","back":"teacher! (vocative)"},{"front":"прізвище","back":"surname"},{"front":"Добрий день","back":"Good afternoon; hello"},{"front":"До побачення","back":"goodbye"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Talking about or calling
+
+<GroupSort client:only='react' groups={JSON.parse(`{"About the person": ["Олена", "Тарас", "Андрій", "Марія", "мама", "друг"], "Calling the person": ["Олено", "Тарасе", "Андрію", "Маріє", "мамо", "друже"]}`)} />
+
+### Choose the calling form
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "___, привіт!", "options": [{"text": "Олено", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олену", "correct": false}], "explanation": "Use Олено when speaking to Olena."}, {"question": "Як справи, ___?", "options": [{"text": "Тарасе", "correct": true}, {"text": "Тарас", "correct": false}, {"text": "Тарасу", "correct": false}], "explanation": "Use Тарасе as the calling form."}, {"question": "___, де мій телефон?", "options": [{"text": "Мамо", "correct": true}, {"text": "Мама", "correct": false}, {"text": "Маму", "correct": false}], "explanation": "Use the full address chunk Мамо."}, {"question": "Ходи сюди, ___!", "options": [{"text": "Іване", "correct": true}, {"text": "Іван", "correct": false}, {"text": "Івану", "correct": false}], "explanation": "Іван becomes Іване when you call him."}, {"question": "Будь обережний, ___!", "options": [{"text": "синку", "correct": true}, {"text": "синок", "correct": false}, {"text": "синке", "correct": false}], "explanation": "Синку is the family address chunk."}, {"question": "Привіт, ___!", "options": [{"text": "Андрію", "correct": true}, {"text": "Андрій", "correct": false}, {"text": "Андріє", "correct": false}], "explanation": "Андрій becomes Андрію."}, {"question": "Добрий день, ___ Іване!", "options": [{"text": "пане", "correct": true}, {"text": "пан", "correct": false}, {"text": "пану", "correct": false}], "explanation": "Use пане in polite address."}, {"question": "Гей, ___!", "options": [{"text": "друже", "correct": true}, {"text": "друг", "correct": false}, {"text": "другу", "correct": false}], "explanation": "Друже is the friend-address chunk."}]`)} />
+
+### Name to address
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена -> ___", "answer": "Олено", "options": ["Олено", "Олена", "Олену"]}, {"sentence": "Тарас -> ___", "answer": "Тарасе", "options": ["Тарасе", "Тарас", "Тарасу"]}, {"sentence": "мама -> ___", "answer": "мамо", "options": ["мамо", "мама", "маму"]}, {"sentence": "Іван -> ___", "answer": "Іване", "options": ["Іване", "Іван", "Івану"]}, {"sentence": "сестра -> ___", "answer": "сестро", "options": ["сестро", "сестра", "сестру"]}, {"sentence": "Андрій -> ___", "answer": "Андрію", "options": ["Андрію", "Андрій", "Андріє"]}, {"sentence": "подруга -> ___", "answer": "подруго", "options": ["подруго", "подруга", "подругу"]}, {"sentence": "брат -> ___", "answer": "брате", "options": ["брате", "брат", "брату"]}, {"sentence": "Марія -> ___", "answer": "Маріє", "options": ["Маріє", "Марія", "Марію"]}, {"sentence": "бабуся -> ___", "answer": "бабусю", "options": ["бабусю", "бабуся", "бабусе"]}]`)} />
+
+### Calling endings
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-о": ["Олено", "мамо", "сестро", "подруго"], "-е": ["Тарасе", "Іване", "брате", "пане"], "-ю": ["Андрію", "дідусю", "вчителю", "бабусю"]}`)} />
+
+### Calling in dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— ___, привіт! Як справи?", "answer": "Олено", "options": ["Олено", "Олена", "Олену"]}, {"sentence": "— Добре, дякую, ___!", "answer": "Тарасе", "options": ["Тарасе", "Тарас", "Тарасу"]}, {"sentence": "— ___, де мій телефон?", "answer": "Мамо", "options": ["Мамо", "Мама", "Маму"]}, {"sentence": "— На столі, ___.", "answer": "синку", "options": ["синку", "синок", "сина"]}, {"sentence": "— ___, ми йдемо!", "answer": "Бабусю", "options": ["Бабусю", "Бабуся", "Бабусі"]}, {"sentence": "— Добре, до побачення, ___!", "answer": "Андрію", "options": ["Андрію", "Андрій", "Андрія"]}, {"sentence": "— Добрий день, ___ Оксано.", "answer": "пані", "options": ["пані", "пан", "пану"]}, {"sentence": "— ___, радий тебе бачити!", "answer": "Друже", "options": ["Друже", "Друг", "Другу"]}]`)} />
+
+### Repair address mistakes
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Привіт, Антон!", "right": "Привіт, Антоне!"}, {"left": "Я є Джон.", "right": "Мене звати Джон."}, {"left": "Добрий ранок, мій друг!", "right": "Добрий ранок, мій друже!"}, {"left": "Шановному пане Іване!", "right": "Шановний пане Іване!"}, {"left": "Пане Сергій!", "right": "Пане Сергію!"}, {"left": "Привіт, Надія!", "right": "Привіт, Надіє!"}, {"left": "Маша, привіт!", "right": "Марійко, привіт!"}, {"left": "Свєта, добрий день!", "right": "Світлано, добрий день!"}, {"left": "Ма, де телефон?", "right": "Мамо, де телефон?"}, {"left": "Тьотя Свєта, привіт!", "right": "Тітко Світлано, привіт!"}]`)} />
+
+### Calling form checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Олена is the form for talking about Olena; Олено is for speaking to her.", "isTrue": true, "explanation": "Use Олено in direct address."}, {"statement": "Гей, друже! is a useful friend-address chunk.", "isTrue": true, "explanation": "Друже is the module's anchor calling form."}, {"statement": "At A1, you must explain every vocative ending from a full case table.", "isTrue": false, "explanation": "This lesson uses practical calling forms, not a full lecture."}, {"statement": "Пане Іване is a polite address to Ivan.", "isTrue": true, "explanation": "Both пане and Іване are address forms."}, {"statement": "Пані Оксано uses пані plus the calling form Оксано.", "isTrue": true, "explanation": "Пані stays пані; the name changes."}, {"statement": "Мамо is the full Ukrainian address chunk for Mom.", "isTrue": true, "explanation": "Use Мамо, not a clipped form."}, {"statement": "Привіт, Надія! is the target A1 address form.", "isTrue": false, "explanation": "Use Привіт, Надіє!"}, {"statement": "Добрий день and До побачення are the clean etiquette forms here.", "isTrue": true, "explanation": "The lesson keeps Ukrainian greeting and goodbye language clean."}]`)} />
+
+### Fix the address
+
+<ErrorCorrection client:only='react' instruction="Correct the address form in each sentence." items={JSON.parse(`[{"sentence": "Олена, привіт!", "errorWord": "Олена", "correctForm": "Олено", "options": [], "explanation": "Use Олено when speaking to her."}, {"sentence": "Тарас, ходи сюди!", "errorWord": "Тарас", "correctForm": "Тарасе", "options": [], "explanation": "Use Тарасе in direct address."}, {"sentence": "Привіт, друг!", "errorWord": "друг", "correctForm": "друже", "options": [], "explanation": "Use the friend-address chunk друже."}, {"sentence": "Пане Сергій, добрий день!", "errorWord": "Сергій", "correctForm": "Сергію", "options": [], "explanation": "Use Сергію after пане."}, {"sentence": "Привіт, Надія!", "errorWord": "Надія", "correctForm": "Надіє", "options": [], "explanation": "Use Надіє when speaking to Nadija."}, {"sentence": "Мама, де телефон?", "errorWord": "Мама", "correctForm": "Мамо", "options": [], "explanation": "Use Мамо as the full family address chunk."}, {"sentence": "Доброго ранку, мій друг!", "errorWord": "друг", "correctForm": "друже", "options": [], "explanation": "Use мій друже in address."}, {"sentence": "Пані Оксана, ось меню.", "errorWord": "Оксана", "correctForm": "Оксано", "options": [], "explanation": "Use Оксано with пані in address."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 [Ukrainian Course: Vocative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-vocative-case/) — Reference table for Ukrainian vocative forms; module narrows it to A1 address chunks.
+- 🔗 [Ukrainian Lessons Podcast Episode 4](https://www.ukrainianlessons.com/episode4/) — Beginner greeting and name-exchange context reused for direct address practice.
+- 🔗 **Wiki: pedagogy/a1/hey-friend** — Authoritative locked pedagogical brief for M42 hey-friend, including the L2-error repairs and decolonized address guidance.
+- 🔗 **Літвінова Grade 6, p.140** — Vocative case in address; adapted here as practical A1 calling chunks rather than a full case table.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
