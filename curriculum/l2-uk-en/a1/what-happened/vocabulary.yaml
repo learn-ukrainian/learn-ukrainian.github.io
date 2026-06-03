@@ -1,0 +1,80 @@
+- word: учора
+  translation: yesterday
+  pos: adverb
+  example: "Учора я читав."
+- word: робити
+  translation: to do
+  pos: verb
+  example: "Що ти робив?"
+- word: читати
+  translation: to read
+  pos: verb
+  example: "Вона читала книжку."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Ми працювали разом."
+- word: гуляти
+  translation: to walk
+  pos: verb
+  example: "Він гуляв у парку."
+- word: готувати
+  translation: to cook
+  pos: verb
+  example: "Олена готувала вечерю."
+- word: дивитися
+  translation: to watch
+  pos: verb
+  example: "Тарас дивився фільм."
+- word: говорити
+  translation: to speak
+  pos: verb
+  example: "Марія говорила телефоном."
+- word: минулий
+  translation: past
+  pos: adjective
+  example: "Це минулий час."
+- word: вихідні
+  translation: weekend
+  pos: noun plural
+  example: "Як ти провів вихідні?"
+- word: субота
+  translation: Saturday
+  pos: noun
+  example: "У суботу ми гуляли."
+- word: неділя
+  translation: Sunday
+  pos: noun
+  example: "У неділю він читав."
+- word: разом
+  translation: together
+  pos: adverb
+  example: "Вони працювали разом."
+- word: фільм
+  translation: film
+  pos: noun
+  example: "Ми дивилися фільм."
+- word: книжка
+  translation: book
+  pos: noun
+  example: "Я читала книжку."
+- word: вечеря
+  translation: dinner
+  pos: noun
+  example: "Вона готувала вечерю."
+- word: парк
+  translation: park
+  pos: noun
+  example: "Він гуляв у парку."
+- word: рід
+  translation: gender
+  pos: noun
+  example: "Минулий час показує рід."
+- word: особа
+  translation: person
+  pos: noun
+  example: "Це не особа."
+- word: закінчення
+  translation: ending
+  pos: noun
+  example: "Закінчення -ла жіноче."
