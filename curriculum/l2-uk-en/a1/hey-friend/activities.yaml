@@ -1,0 +1,348 @@
+- id: act-1
+  type: group-sort
+  title: Talking about or calling
+  instruction: Sort each form by how it is used.
+  groups:
+    - name: "About the person"
+      items:
+        - "Олена"
+        - "Тарас"
+        - "Андрій"
+        - "Марія"
+        - "мама"
+        - "друг"
+    - name: "Calling the person"
+      items:
+        - "Олено"
+        - "Тарасе"
+        - "Андрію"
+        - "Маріє"
+        - "мамо"
+        - "друже"
+- id: act-2
+  type: quiz
+  title: Choose the calling form
+  instruction: Pick the form that fits direct address.
+  items:
+    - prompt: "___, привіт!"
+      options:
+        - text: "Олено"
+          correct: true
+        - text: "Олена"
+          correct: false
+        - text: "Олену"
+          correct: false
+      explanation: "Use Олено when speaking to Olena."
+    - prompt: "Як справи, ___?"
+      options:
+        - text: "Тарасе"
+          correct: true
+        - text: "Тарас"
+          correct: false
+        - text: "Тарасу"
+          correct: false
+      explanation: "Use Тарасе as the calling form."
+    - prompt: "___, де мій телефон?"
+      options:
+        - text: "Мамо"
+          correct: true
+        - text: "Мама"
+          correct: false
+        - text: "Маму"
+          correct: false
+      explanation: "Use the full address chunk Мамо."
+    - prompt: "Ходи сюди, ___!"
+      options:
+        - text: "Іване"
+          correct: true
+        - text: "Іван"
+          correct: false
+        - text: "Івану"
+          correct: false
+      explanation: "Іван becomes Іване when you call him."
+    - prompt: "Будь обережний, ___!"
+      options:
+        - text: "синку"
+          correct: true
+        - text: "синок"
+          correct: false
+        - text: "синке"
+          correct: false
+      explanation: "Синку is the family address chunk."
+    - prompt: "Привіт, ___!"
+      options:
+        - text: "Андрію"
+          correct: true
+        - text: "Андрій"
+          correct: false
+        - text: "Андріє"
+          correct: false
+      explanation: "Андрій becomes Андрію."
+    - prompt: "Добрий день, ___ Іване!"
+      options:
+        - text: "пане"
+          correct: true
+        - text: "пан"
+          correct: false
+        - text: "пану"
+          correct: false
+      explanation: "Use пане in polite address."
+    - prompt: "Гей, ___!"
+      options:
+        - text: "друже"
+          correct: true
+        - text: "друг"
+          correct: false
+        - text: "другу"
+          correct: false
+      explanation: "Друже is the friend-address chunk."
+- id: act-3
+  type: fill-in
+  title: Name to address
+  instruction: Choose the calling form.
+  items:
+    - sentence: "Олена -> ___"
+      answer: "Олено"
+      options:
+        - "Олено"
+        - "Олена"
+        - "Олену"
+      explanation: "Олена becomes Олено in address."
+    - sentence: "Тарас -> ___"
+      answer: "Тарасе"
+      options:
+        - "Тарасе"
+        - "Тарас"
+        - "Тарасу"
+      explanation: "Тарас becomes Тарасе."
+    - sentence: "мама -> ___"
+      answer: "мамо"
+      options:
+        - "мамо"
+        - "мама"
+        - "маму"
+      explanation: "Use мамо when calling mom."
+    - sentence: "Іван -> ___"
+      answer: "Іване"
+      options:
+        - "Іване"
+        - "Іван"
+        - "Івану"
+      explanation: "Іван becomes Іване."
+    - sentence: "сестра -> ___"
+      answer: "сестро"
+      options:
+        - "сестро"
+        - "сестра"
+        - "сестру"
+      explanation: "Сестра becomes сестро."
+    - sentence: "Андрій -> ___"
+      answer: "Андрію"
+      options:
+        - "Андрію"
+        - "Андрій"
+        - "Андріє"
+      explanation: "Андрій becomes Андрію."
+    - sentence: "подруга -> ___"
+      answer: "подруго"
+      options:
+        - "подруго"
+        - "подруга"
+        - "подругу"
+      explanation: "Подруга becomes подруго."
+    - sentence: "брат -> ___"
+      answer: "брате"
+      options:
+        - "брате"
+        - "брат"
+        - "брату"
+      explanation: "Брат becomes брате."
+    - sentence: "Марія -> ___"
+      answer: "Маріє"
+      options:
+        - "Маріє"
+        - "Марія"
+        - "Марію"
+      explanation: "Марія becomes Маріє."
+    - sentence: "бабуся -> ___"
+      answer: "бабусю"
+      options:
+        - "бабусю"
+        - "бабуся"
+        - "бабусе"
+      explanation: "Бабусю is the family address form."
+- id: act-4
+  type: group-sort
+  title: Calling endings
+  instruction: Sort the calling forms by their ending.
+  groups:
+    - name: "-о"
+      items:
+        - "Олено"
+        - "мамо"
+        - "сестро"
+        - "подруго"
+    - name: "-е"
+      items:
+        - "Тарасе"
+        - "Іване"
+        - "брате"
+        - "пане"
+    - name: "-ю"
+      items:
+        - "Андрію"
+        - "дідусю"
+        - "вчителю"
+        - "бабусю"
+- id: act-5
+  type: fill-in
+  title: Calling in dialogue
+  instruction: Complete each dialogue line with the calling form.
+  items:
+    - sentence: "— ___, привіт! Як справи?"
+      answer: "Олено"
+      options:
+        - "Олено"
+        - "Олена"
+        - "Олену"
+      explanation: "The speaker is talking to Olena."
+    - sentence: "— Добре, дякую, ___!"
+      answer: "Тарасе"
+      options:
+        - "Тарасе"
+        - "Тарас"
+        - "Тарасу"
+      explanation: "Use Тарасе in address."
+    - sentence: "— ___, де мій телефон?"
+      answer: "Мамо"
+      options:
+        - "Мамо"
+        - "Мама"
+        - "Маму"
+      explanation: "Use Мамо as the full Ukrainian address chunk."
+    - sentence: "— На столі, ___."
+      answer: "синку"
+      options:
+        - "синку"
+        - "синок"
+        - "сина"
+      explanation: "Синку is the address form."
+    - sentence: "— ___, ми йдемо!"
+      answer: "Бабусю"
+      options:
+        - "Бабусю"
+        - "Бабуся"
+        - "Бабусі"
+      explanation: "Use Бабусю when speaking to grandma."
+    - sentence: "— Добре, до побачення, ___!"
+      answer: "Андрію"
+      options:
+        - "Андрію"
+        - "Андрій"
+        - "Андрія"
+      explanation: "Андрій becomes Андрію."
+    - sentence: "— Добрий день, ___ Оксано."
+      answer: "пані"
+      options:
+        - "пані"
+        - "пан"
+        - "пану"
+      explanation: "Пані does not change, but the name uses Оксано."
+    - sentence: "— ___, радий тебе бачити!"
+      answer: "Друже"
+      options:
+        - "Друже"
+        - "Друг"
+        - "Другу"
+      explanation: "Use the chunk Друже."
+- id: act-6
+  type: match-up
+  title: Repair address mistakes
+  instruction: Match each learner mistake with a natural Ukrainian repair.
+  pairs:
+    - left: "Привіт, Антон!"
+      right: "Привіт, Антоне!"
+    - left: "Я є Джон."
+      right: "Мене звати Джон."
+    - left: "Добрий ранок, мій друг!"
+      right: "Добрий ранок, мій друже!"
+    - left: "Шановному пане Іване!"
+      right: "Шановний пане Іване!"
+    - left: "Пане Сергій!"
+      right: "Пане Сергію!"
+    - left: "Привіт, Надія!"
+      right: "Привіт, Надіє!"
+    - left: "Маша, привіт!"
+      right: "Марійко, привіт!"
+    - left: "Свєта, добрий день!"
+      right: "Світлано, добрий день!"
+    - left: "Ма, де телефон?"
+      right: "Мамо, де телефон?"
+    - left: "Тьотя Свєта, привіт!"
+      right: "Тітко Світлано, привіт!"
+- id: act-7
+  type: true-false
+  title: Calling form checks
+  instruction: Decide whether each statement fits this lesson.
+  items:
+    - statement: "Олена is the form for talking about Olena; Олено is for speaking to her."
+      answer: true
+      explanation: "Use Олено in direct address."
+    - statement: "Гей, друже! is a useful friend-address chunk."
+      answer: true
+      explanation: "Друже is the module's anchor calling form."
+    - statement: "At A1, you must explain every vocative ending from a full case table."
+      answer: false
+      explanation: "This lesson uses practical calling forms, not a full lecture."
+    - statement: "Пане Іване is a polite address to Ivan."
+      answer: true
+      explanation: "Both пане and Іване are address forms."
+    - statement: "Пані Оксано uses пані plus the calling form Оксано."
+      answer: true
+      explanation: "Пані stays пані; the name changes."
+    - statement: "Мамо is the full Ukrainian address chunk for Mom."
+      answer: true
+      explanation: "Use Мамо, not a clipped form."
+    - statement: "Привіт, Надія! is the target A1 address form."
+      answer: false
+      explanation: "Use Привіт, Надіє!"
+    - statement: "Добрий день and До побачення are the clean etiquette forms here."
+      answer: true
+      explanation: "The lesson keeps Ukrainian greeting and goodbye language clean."
+- id: act-8
+  type: error-correction
+  title: Fix the address
+  instruction: Correct the address form in each sentence.
+  items:
+    - sentence: "Олена, привіт!"
+      error: "Олена"
+      correction: "Олено"
+      explanation: "Use Олено when speaking to her."
+    - sentence: "Тарас, ходи сюди!"
+      error: "Тарас"
+      correction: "Тарасе"
+      explanation: "Use Тарасе in direct address."
+    - sentence: "Привіт, друг!"
+      error: "друг"
+      correction: "друже"
+      explanation: "Use the friend-address chunk друже."
+    - sentence: "Пане Сергій, добрий день!"
+      error: "Сергій"
+      correction: "Сергію"
+      explanation: "Use Сергію after пане."
+    - sentence: "Привіт, Надія!"
+      error: "Надія"
+      correction: "Надіє"
+      explanation: "Use Надіє when speaking to Nadija."
+    - sentence: "Мама, де телефон?"
+      error: "Мама"
+      correction: "Мамо"
+      explanation: "Use Мамо as the full family address chunk."
+    - sentence: "Доброго ранку, мій друг!"
+      error: "друг"
+      correction: "друже"
+      explanation: "Use мій друже in address."
+    - sentence: "Пані Оксана, ось меню."
+      error: "Оксана"
+      correction: "Оксано"
+      explanation: "Use Оксано with пані in address."
