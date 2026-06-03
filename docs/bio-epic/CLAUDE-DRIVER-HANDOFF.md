@@ -139,12 +139,21 @@ Policy: OPEN dossier PRs, do NOT self-merge (orchestrator promotes; dossiers ind
 - #2597 dossiers `knyahynia-olha` + `volodymyr-monomakh` + `maksym-berezovskyy` — Синопсис critiqued
   (not inverted), cap-myth via anachronism, Mozart-legend in §6. Spot-read clean.
 
+**WAVE-1 REVIEWED (DeepSeek combined):** shevchenko/olha/berezovskyy SHIP; monomakh FIX-BEFORE-MERGE
+(self-check claimed verify_quote 0.99 but tool returns 0.0 — quotes genuine, corpus attributes ПВЛ to
+"Нестор"). FIXES APPLIED + pushed: monomakh ×3 (#2597), shevchenko arrest-date note (#2596). → batch
+brief LESSON 4 added: never claim a tool score you didn't get.
+
+**WAVE-2 DONE (12 dossiers, PRs #2598 batchB + #2599 batchA) — DeepSeek review IN FLIGHT (`review-wave2-12`).**
+batchA: mariya-pavlova, volodymyr-samiilenko, mykola-vasylenko, oleksandr-hrekiv, oleksandr-bohomazov,
+mariia-prymachenko. batchB: kateryna-yushchenko, mykola-pohribnyi, yevhen-sverstiuk, dmytro-pavlychko,
+ivan-mykolaichuk, vitaly-portnikov. **HARVEST: read `review-wave2-12.result` → apply fixes → leave open.**
+
 **IN FLIGHT (2026-06-03):**
-- `review-wave1-4dossiers` (deepseek) — combined cross-review of #2596+#2597's 4 dossiers.
-- `bio-dossier-wave2-batchA` (claude) — mariya-pavlova, volodymyr-samiilenko, mykola-vasylenko,
-  oleksandr-hrekiv, oleksandr-bohomazov, mariia-prymachenko.
-- `bio-dossier-wave2-batchB` (claude) — kateryna-yushchenko, mykola-pohribnyi, yevhen-sverstiuk,
-  dmytro-pavlychko, ivan-mykolaichuk, vitaly-portnikov.
+- `review-wave2-12` (deepseek) — cross-review of the 12 wave-2 dossiers.
+- `bio-dossier-wave3-finishP1` (claude) — kuzma-skryabin, pavlo-sheremet, yuriy-ruf (⚠person-substitution
+  vs Артур Дронь), oleksandra-matviichuk (living, Nobel 2022). **Finishes P1 (last 4; petro-veskliaov
+  deferred for slug rename).** HARVEST: diff-scope + DeepSeek review + apply fixes → PR open.
 
 **NEXT (resume): harvest wave-2 → DeepSeek review → apply fixes → leave PRs open. Then P1 remainder
 (kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk + petro-veskliaov-after-rename) →
