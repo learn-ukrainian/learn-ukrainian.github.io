@@ -1,0 +1,84 @@
+- word: екстрена ситуація
+  translation: emergency
+  pos: phrase
+  example: "Це екстрена ситуація."
+- word: допомога
+  translation: help
+  pos: noun
+  example: "Мені потрібна допомога."
+- word: допоможіть
+  translation: help
+  pos: phrase
+  example: "Допоможіть! Тут аварія."
+- word: подзвоніть
+  translation: please call
+  pos: phrase
+  example: "Подзвоніть за номером 112."
+- word: номер
+  translation: number
+  pos: noun
+  example: "Мій номер телефону..."
+- word: служба
+  translation: service
+  pos: noun
+  example: "Це служба 112."
+- word: порятунок
+  translation: rescue
+  pos: noun
+  example: "101 — служба порятунку."
+- word: пожежа
+  translation: fire
+  pos: noun
+  example: "Тут пожежа."
+- word: аварія
+  translation: accident
+  pos: noun
+  example: "Тут аварія."
+- word: поліція
+  translation: police
+  pos: noun
+  example: "Потрібна поліція."
+- word: швидка
+  translation: ambulance
+  pos: noun
+  example: "Потрібна швидка."
+- word: газ
+  translation: gas
+  pos: noun
+  example: "Потрібна газова служба."
+- word: паспорт
+  translation: passport
+  pos: noun
+  example: "Я загубив паспорт."
+- word: адреса
+  translation: address
+  pos: noun
+  example: "Адреса: вулиця Франка, будинок десять."
+- word: будинок
+  translation: building
+  pos: noun
+  example: "Будинок п'ять."
+- word: вулиця
+  translation: street
+  pos: noun
+  example: "Я на вулиці Шевченка."
+- word: біля
+  translation: near
+  pos: preposition
+  example: "Я біля метро."
+- word: навпроти
+  translation: opposite
+  pos: preposition
+  example: "Я навпроти аптеки."
+- word: прізвище
+  translation: surname
+  pos: noun
+  example: "Моє прізвище Браун."
+- word: повторіть
+  translation: please repeat
+  pos: phrase
+  example: "Повторіть, будь ласка."
+- word: повільніше
+  translation: more slowly
+  pos: phrase
+  example: "Повільніше, будь ласка."

@@ -1,0 +1,295 @@
+---
+title: "Екстрені ситуації"
+description: "Допоможіть! Викличте швидку! — українська для виживання"
+sidebar:
+  order: 54
+  label: "54. Екстрені ситуації"
+pipeline: linear-phase-4
+build_status: validated
+prev: health
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Translate from '@site/src/components/Translate';
+import DialogueBox from '@site/src/components/DialogueBox';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module gives you **emergency language** for a short clear call or for
+asking another person to call.
+
+Official Ukrainian emergency numbers checked on 2026-06-03:
+
+| Number | Ukrainian label | English check |
+| --- | --- | --- |
+| **112** | **єдиний номер екстреної допомоги** | single emergency number |
+| **101** | **служба порятунку / пожежна допомога** | rescue / fire |
+| **102** | **поліція** | police |
+| **103** | **швидка медична допомога** | ambulance / emergency medical help |
+| **104** | **аварійна газова служба** | gas emergency service |
+
+For A1, you can use **112** as the main number and still recognize the direct
+service numbers.
+
+The core call frame is:
+
+**Допоможіть! Тут аварія. Я на вулиці Шевченка, будинок п'ять. Мене звати
+Анна.**
+
+| Step | Phrase |
+| --- | --- |
+| call for help | **Допоможіть!** |
+| say the problem | **Тут аварія / пожежа.** |
+| say the place | **Я на вулиці... біля...** |
+| say your name | **Мене звати...** |
+| repair | **Повторіть, будь ласка.** |
+
+:::tip[A1 boundary]
+Stay with language. Say the problem, place, name, and phone number in short A1
+phrases.
+:::
+
+### Complete the emergency line
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"___! Тут аварія.","answer":"Допоможіть","options":["Допоможіть","Дякую","Вітаю"]},{"sentence":"Подзвоніть за номером ___.","answer":"112","options":["112","55","800"]},{"sentence":"Мене ___ Анна.","answer":"звати","options":["звати","болить","адреса"]},{"sentence":"Я ___ вулиці Шевченка.","answer":"на","options":["на","о","до"]}]`)} />
+
+## Діалоги
+
+### Дзвінок на 112
+
+<DialogueBox uk="Оператор: Служба 112. Слухаю вас." en="Operator: 112 service. I am listening." />
+<DialogueBox uk="Анна: Допоможіть! Тут аварія." en="Anna: Help! There is an accident here." />
+<DialogueBox uk="Оператор: Де ви?" en="Operator: Where are you?" />
+<DialogueBox uk="Анна: Я на вулиці Шевченка, будинок п'ять." en="Anna: I am on Shevchenka Street, building five." />
+<DialogueBox uk="Оператор: Як вас звати?" en="Operator: What is your name?" />
+<DialogueBox uk="Анна: Мене звати Анна Коваль." en="Anna: My name is Anna Koval." />
+<DialogueBox uk="Оператор: Ваш номер телефону?" en="Operator: Your phone number?" />
+<DialogueBox uk="Анна: Нуль дев'яносто три, сто двадцять, сорок п'ять, шістдесят сім." en="Anna: Zero ninety-three, one hundred twenty, forty-five, sixty-seven." />
+
+This call uses only four learner jobs:
+
+- **Допоможіть!**
+- **Тут аварія.**
+- **Я на вулиці...**
+- **Мене звати...**
+
+If the operator speaks quickly, use **Повторіть, будь ласка** or
+**Повільніше, будь ласка**.
+
+### Попросіть людину подзвонити
+
+<DialogueBox uk="Турист: Вибачте! Допоможіть, будь ласка." en="Tourist: Excuse me! Help, please." />
+<DialogueBox uk="Перехожий: Що сталося?" en="Passerby: What happened?" />
+<DialogueBox uk="Турист: Тут пожежа. Подзвоніть за номером 101, будь ласка." en="Tourist: There is a fire here. Please call 101." />
+<DialogueBox uk="Перехожий: Де?" en="Passerby: Where?" />
+<DialogueBox uk="Турист: Тут, біля метро." en="Tourist: Here, near the metro." />
+<DialogueBox uk="Перехожий: Як вас звати?" en="Passerby: What is your name?" />
+<DialogueBox uk="Турист: Мене звати Марко. Я не розумію швидко." en="Tourist: My name is Marko. I do not understand fast speech." />
+<DialogueBox uk="Перехожий: Добре, я говорю повільно." en="Passerby: Okay, I am speaking slowly." />
+
+The phrase **Подзвоніть за номером...** is useful when another person has the
+phone. Keep the number clear:
+
+- **Подзвоніть за номером 112.**
+- **Подзвоніть за номером 101.**
+- **Подзвоніть за номером 102.**
+- **Подзвоніть за номером 103.**
+- **Подзвоніть за номером 104.**
+
+### Numbers and services
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"112","right":"екстрена допомога"},{"left":"101","right":"служба порятунку"},{"left":"102","right":"поліція"},{"left":"103","right":"швидка"},{"left":"104","right":"газова служба"}]`)} />
+
+## Номери і служби
+
+Learn the numbers as chunks. Do not translate every word during a call.
+
+| Number | Say it | Service word |
+| --- | --- | --- |
+| **112** | **один один два** | **екстрена допомога** |
+| **101** | **один нуль один** | **служба порятунку / пожежна допомога** |
+| **102** | **один нуль два** | **поліція** |
+| **103** | **один нуль три** | **швидка** |
+| **104** | **один нуль чотири** | **газова служба** |
+
+Useful words:
+
+| Ukrainian | English check |
+| --- | --- |
+| **допомога** | help |
+| **допоможіть** | help me / help |
+| **екстрена ситуація** | emergency |
+| **аварія** | accident |
+| **пожежа** | fire |
+| **поліція** | police |
+| **швидка** | ambulance |
+| **газ** | gas |
+| **паспорт** | passport |
+| **телефон** | phone |
+
+### Sort emergency words
+
+<GroupSort client:only='react' groups={JSON.parse(`{"numbers":["112","101","102","103","104"],"problems":["Тут аварія","Тут пожежа","Мені погано","Я загубив паспорт"],"place and identity":["Я на вулиці","Я біля метро","Мене звати","Мій номер телефону"]}`)} />
+
+### Choose the emergency phrase
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question":"You need to say: There is a fire here.","options":[{"text":"Тут пожежа.","correct":true},{"text":"Тут паспорт.","correct":false},{"text":"Мене пожежа.","correct":false}],"explanation":"Тут пожежа is the short problem sentence."},{"question":"You need police.","options":[{"text":"Потрібна поліція.","correct":true},{"text":"Потрібна аптека.","correct":false},{"text":"Поліція болить.","correct":false}],"explanation":"Потрібна поліція asks for police help."},{"question":"You want someone to call 103.","options":[{"text":"Подзвоніть за номером 103, будь ласка.","correct":true},{"text":"Я номер сто три.","correct":false},{"text":"Сто три звати.","correct":false}],"explanation":"Use Подзвоніть за номером..."}]`)} />
+
+## Що сталося?
+
+Use one short problem sentence.
+
+| Problem | A1 sentence |
+| --- | --- |
+| accident | **Тут аварія.** |
+| fire | **Тут пожежа.** |
+| police help | **Потрібна поліція.** |
+| ambulance | **Потрібна швидка.** |
+| gas problem | **Потрібна газова служба.** |
+| lost passport | **Я загубив / загубила паспорт.** |
+| I feel unwell | **Мені погано.** |
+| someone feels unwell | **Людині погано.** |
+
+Use **загубив** if you speak as a man or boy. Use **загубила** if you speak as
+a woman or girl.
+
+For an A1 call, one problem sentence is enough. Add location next. Keep each
+line separate: help, problem, place, identity, repair.
+
+### Emergency language check
+
+<TrueFalse client:only='react' instruction="Decide whether the phrase is clear emergency language." items={JSON.parse(`[{"statement":"Допоможіть! Тут аварія.","isTrue":true,"explanation":"This gives a help call and a problem."},{"statement":"Я на вулиці Франка.","isTrue":true,"explanation":"This gives a location."},{"statement":"Мене номер Анна.","isTrue":false,"explanation":"Use Мене звати Анна."},{"statement":"Потрібна швидка.","isTrue":true,"explanation":"This asks for an ambulance."},{"statement":"Подзвоніть за номером голова.","isTrue":false,"explanation":"A phone phrase needs a number."}]`)} />
+
+### Build emergency lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"words":"Допоможіть!/Тут/аварія.","answer":"Допоможіть! Тут аварія."},{"words":"Я/на/вулиці/Шевченка.","answer":"Я на вулиці Шевченка."},{"words":"Мене/звати/Анна.","answer":"Мене звати Анна."},{"words":"Подзвоніть/за/номером/112.","answer":"Подзвоніть за номером 112."}]`)} />
+
+## Де ви?
+
+Emergency language needs place words you already know from the city modules.
+
+| Need | Phrase |
+| --- | --- |
+| street | **Я на вулиці Шевченка.** |
+| building | **Будинок п'ять.** |
+| near | **Я біля метро.** |
+| in a place | **Я в готелі.** |
+| opposite | **Я навпроти аптеки.** |
+| city | **Я в Києві.** |
+
+You can combine them:
+
+**Я в Києві, на вулиці Франка, будинок десять.**
+
+**Я біля метро, навпроти аптеки.**
+
+**Я в готелі. Адреса: вулиця Лесі Українки, будинок два.**
+
+Say numbers slowly. If you need time to repeat, use:
+
+**Повільніше, будь ласка. Я повторюю адресу.**
+
+### Location details
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Я ___ метро.","answer":"біля","options":["біля","звати","номер"]},{"sentence":"Будинок ___.","answer":"п'ять","options":["п'ять","поліція","швидка"]},{"sentence":"Я ___ готелі.","answer":"в","options":["в","о","за"]},{"sentence":"Я ___ аптеки.","answer":"навпроти","options":["навпроти","повторіть","аварія"]}]`)} />
+
+### Особиста інформація
+
+The operator or helper may ask for basic personal information. These are A1
+identity chunks.
+
+| Question | Answer frame |
+| --- | --- |
+| **Як вас звати?** | **Мене звати...** |
+| **Ваше прізвище?** | **Моє прізвище...** |
+| **Ваш номер телефону?** | **Мій номер телефону...** |
+| **Ви звідки?** | **Я з Канади / Польщі / США.** |
+| **Ви розумієте?** | **Я трохи розумію. Повторіть, будь ласка.** |
+
+Keep the answer slow and separate:
+
+**Мене звати Сара. Моє прізвище Браун. Мій номер телефону: нуль дев'яносто
+сім, триста десять, двадцять два, сорок один.**
+
+This is not a story. It is a clear information block.
+
+### Personal information
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question":"Як вас звати?","options":[{"text":"Мене звати Сара.","correct":true},{"text":"Я на вулиці Сара.","correct":false},{"text":"Потрібна Сара.","correct":false}],"explanation":"Мене звати... answers the name question."},{"question":"Ваш номер телефону?","options":[{"text":"Мій номер телефону: нуль дев'яносто сім...","correct":true},{"text":"Мене звати телефон.","correct":false},{"text":"Тут телефон пожежа.","correct":false}],"explanation":"Мій номер телефону... gives the number."},{"question":"Ви розумієте?","options":[{"text":"Я трохи розумію. Повторіть, будь ласка.","correct":true},{"text":"Я вулиці розумію.","correct":false},{"text":"Паспорт повторіть номер.","correct":false}],"explanation":"Use a repair phrase when understanding is limited."}]`)} />
+
+## Підсумок
+
+Your A1 emergency-language toolkit:
+
+| Need | Phrase |
+| --- | --- |
+| help | **Допоможіть!** |
+| ask another person to call | **Подзвоніть за номером 112, будь ласка.** |
+| accident | **Тут аварія.** |
+| fire | **Тут пожежа.** |
+| ambulance | **Потрібна швидка.** |
+| police | **Потрібна поліція.** |
+| gas service | **Потрібна газова служба.** |
+| location | **Я на вулиці... Я біля...** |
+| identity | **Мене звати... Моє прізвище...** |
+| repair | **Повторіть, будь ласка. Повільніше, будь ласка.** |
+
+One complete A1 call can be very short:
+
+<DialogueBox uk="Допоможіть! Тут пожежа. Я в Києві, на вулиці Франка, будинок десять. Мене звати Сара Браун. Мій номер телефону: нуль дев'яносто сім, триста десять, двадцять два, сорок один. Повторіть, будь ласка." en="Help! There is a fire here. I am in Kyiv, on Franka Street, building ten. My name is Sarah Brown. My phone number is zero ninety-seven, three hundred ten, twenty-two, forty-one. Please repeat." />
+
+That is the goal: a clear problem, a clear place, and clear identity words.
+
+### Emergency message
+
+<Translate client:only='react' instruction="Choose the Ukrainian phrase that matches the English prompt." questions={JSON.parse(`[{"source":"Help! There is an accident here.","options":[{"text":"Допоможіть! Тут аварія.","correct":true},{"text":"Дякую! Тут аптека.","correct":false},{"text":"Мене звати аварія.","correct":false}],"explanation":"Use Допоможіть and Тут аварія."},{"source":"I am on Shevchenka Street.","options":[{"text":"Я на вулиці Шевченка.","correct":true},{"text":"Я о вулиці Шевченка.","correct":false},{"text":"Я номер Шевченка.","correct":false}],"explanation":"Use на вулиці for on a street."},{"source":"Please call 102.","options":[{"text":"Подзвоніть за номером 102, будь ласка.","correct":true},{"text":"Повторіть номер 102 звати.","correct":false},{"text":"Сто два на вулиці.","correct":false}],"explanation":"Use Подзвоніть за номером..."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+## Словник
+
+| Word | Translation | Example |
+| --- | --- | --- |
+| **екстрена ситуація** | emergency | **Це екстрена ситуація.** |
+| **допомога** | help | **Мені потрібна допомога.** |
+| **допоможіть** | help | **Допоможіть! Тут аварія.** |
+| **подзвоніть** | please call | **Подзвоніть за номером 112.** |
+| **номер** | number | **Мій номер телефону...** |
+| **служба** | service | **Це служба 112.** |
+| **порятунок** | rescue | **101 — служба порятунку.** |
+| **пожежа** | fire | **Тут пожежа.** |
+| **аварія** | accident | **Тут аварія.** |
+| **поліція** | police | **Потрібна поліція.** |
+| **швидка** | ambulance | **Потрібна швидка.** |
+| **газ** | gas | **Потрібна газова служба.** |
+| **паспорт** | passport | **Я загубив паспорт.** |
+| **адреса** | address | **Адреса: вулиця Франка, будинок десять.** |
+| **будинок** | building | **Будинок п'ять.** |
+| **вулиця** | street | **Я на вулиці Шевченка.** |
+| **біля** | near | **Я біля метро.** |
+| **навпроти** | opposite | **Я навпроти аптеки.** |
+| **прізвище** | surname | **Моє прізвище Браун.** |
+| **повторіть** | please repeat | **Повторіть, будь ласка.** |
+| **повільніше** | more slowly | **Повільніше, будь ласка.** |
+
+</TabItem>
+<TabItem label="Resources">
+
+## Resources
+
+- 🔗 **State Emergency Service of Ukraine: contacts** — Official DSNS contact page checked 2026-06-03; lists **112, 101, 102, 103, 104**.
+- 🔗 **National Police of Ukraine / MVS: 112 service routing** — Official 2025 police/MVS item checked 2026-06-03; confirms 112 routes calls to **101, 102, 103, 104** as needed.
+- 🔗 **Wiki: pedagogy/a1/emergencies** — Pedagogical brief for A1 emergency speech, fixed help phrases, and number practice.
+- 🔁 **Internal module M53: health** — Reuses health phrases such as **Мені погано** and **Потрібна швидка** in emergency-language contexts.
+
+</TabItem>
+</Tabs>
