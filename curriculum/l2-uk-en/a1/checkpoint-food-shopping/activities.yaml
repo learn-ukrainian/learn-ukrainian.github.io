@@ -1,0 +1,375 @@
+- id: act-1
+  type: group-sort
+  title: Food by gender
+  instruction: Sort the foods by the review groups.
+  groups:
+    - name: "Masculine"
+      items:
+        - "сир"
+        - "борщ"
+        - "хліб"
+        - "чай"
+    - name: "Feminine"
+      items:
+        - "вода"
+        - "кава"
+        - "каша"
+        - "піца"
+    - name: "Neuter"
+      items:
+        - "молоко"
+        - "яблуко"
+        - "меню"
+        - "м'ясо"
+    - name: "Plural"
+      items:
+        - "вареники"
+        - "помідори"
+        - "тарілки"
+        - "склянки"
+- id: act-2
+  type: quiz
+  title: Accusative checkpoint
+  instruction: Choose the correct object form.
+  items:
+    - prompt: "Я їм ___."
+      options:
+        - text: "салат"
+          correct: true
+        - text: "салата"
+          correct: false
+        - text: "салату"
+          correct: false
+      explanation: "Салат is masculine inanimate and stays салат."
+    - prompt: "Я бачу ___."
+      options:
+        - text: "брата"
+          correct: true
+        - text: "брат"
+          correct: false
+        - text: "брату"
+          correct: false
+      explanation: "Брат is a male person, so use брата."
+    - prompt: "Я п'ю ___."
+      options:
+        - text: "воду"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "води"
+          correct: false
+      explanation: "Вода becomes воду for the direct object."
+    - prompt: "Я знаю ___."
+      options:
+        - text: "Олену"
+          correct: true
+        - text: "Олена"
+          correct: false
+        - text: "Олени"
+          correct: false
+      explanation: "Use Олену after знаю."
+    - prompt: "Я люблю ___."
+      options:
+        - text: "борщ"
+          correct: true
+        - text: "борщу"
+          correct: false
+        - text: "борщем"
+          correct: false
+      explanation: "Борщ is food and stays борщ."
+    - prompt: "Я чекаю ___."
+      options:
+        - text: "друга"
+          correct: true
+        - text: "друг"
+          correct: false
+        - text: "другу"
+          correct: false
+      explanation: "Use друга for the person you are waiting for."
+    - prompt: "Я купую ___."
+      options:
+        - text: "хліб"
+          correct: true
+        - text: "хліба"
+          correct: false
+        - text: "хлібу"
+          correct: false
+      explanation: "Хліб stays хліб here."
+    - prompt: "Я бачу ___."
+      options:
+        - text: "лікаря"
+          correct: true
+        - text: "лікар"
+          correct: false
+        - text: "лікарю"
+          correct: false
+      explanation: "Use лікаря after бачу."
+    - prompt: "Я їм ___."
+      options:
+        - text: "піцу"
+          correct: true
+        - text: "піца"
+          correct: false
+        - text: "піци"
+          correct: false
+      explanation: "Choose піцу after я їм."
+    - prompt: "Я люблю ___."
+      options:
+        - text: "маму"
+          correct: true
+        - text: "мама"
+          correct: false
+        - text: "мами"
+          correct: false
+      explanation: "Use маму as the direct object."
+- id: act-3
+  type: fill-in
+  title: Market and cafe day
+  instruction: Choose the word or phrase that completes the dialogue.
+  items:
+    - sentence: "— Що ти їси на сніданок? — Я їм ___ і п'ю каву."
+      answer: "кашу"
+      options:
+        - "кашу"
+        - "каша"
+        - "каші"
+      explanation: "After я їм, choose кашу."
+    - sentence: "— Потім іду на ринок. Скільки ___ помідори?"
+      answer: "коштують"
+      options:
+        - "коштують"
+        - "коштує"
+        - "коштувати"
+      explanation: "Use коштують with plural помідори."
+    - sentence: "— Тридцять ___."
+      answer: "гривень"
+      options:
+        - "гривень"
+        - "гривні"
+        - "гривня"
+      explanation: "30 uses гривень."
+    - sentence: "— Дайте ___ яблук, будь ласка."
+      answer: "кілограм"
+      options:
+        - "кілограм"
+        - "літр"
+        - "пляшку"
+      explanation: "Use кілограм яблук."
+    - sentence: "— Потім у кафе: ___ борщ і воду, будь ласка."
+      answer: "Мені"
+      options:
+        - "Мені"
+        - "Я"
+        - "Мною"
+      explanation: "Мені begins the cafe order chunk."
+    - sentence: "— Рахунок, будь ласка. Можна ___?"
+      answer: "карткою"
+      options:
+        - "карткою"
+        - "картка"
+        - "картки"
+      explanation: "Карткою is the payment chunk."
+    - sentence: "— О, я бачу ___! Олено, привіт!"
+      answer: "Олену"
+      options:
+        - "Олену"
+        - "Олена"
+        - "Олени"
+      explanation: "The greeting uses Олено, but the object is Олену."
+    - sentence: "— Ти знаєш мого ___?"
+      answer: "брата"
+      options:
+        - "брата"
+        - "брат"
+        - "братом"
+      explanation: "Use брата for мого брата."
+- id: act-4
+  type: match-up
+  title: Situation to phrase
+  instruction: Match each situation with the phrase you can say.
+  pairs:
+    - left: "In the checkpoint cafe, you ask for coffee with milk."
+      right: "Мені каву з молоком, будь ласка."
+    - left: "You ask for the price."
+      right: "Скільки коштує?"
+    - left: "At the register, you check whether card payment is possible."
+      right: "Можна карткою?"
+    - left: "The server asks where you will eat."
+      right: "Тут чи із собою?"
+    - left: "You ask for one kilogram of apples."
+      right: "Дайте кілограм яблук."
+    - left: "The price feels high."
+      right: "Дорого!"
+    - left: "You ask if a seat is free."
+      right: "Тут вільно?"
+    - left: "After lunch, you thank the server for the meal."
+      right: "Було дуже смачно, дякую!"
+- id: act-5
+  type: true-false
+  title: Food-shopping checks
+  instruction: Decide whether each statement fits A1.6.
+  items:
+    - statement: "Борщ is presented as a Ukrainian cultural food form."
+      answer: true
+      explanation: "The checkpoint keeps борщ in Ukrainian cultural context."
+    - statement: "Вареники з картоплею is treated as a useful food chunk."
+      answer: true
+      explanation: "Use the phrase as a memorized chunk here."
+    - statement: "Adding -а to борщ is not the A1.6 target form."
+      answer: false
+      explanation: "Use Я люблю борщ."
+    - statement: "Мені каву з молоком, будь ласка is a cafe order."
+      answer: true
+      explanation: "It is the ordering frame from M38."
+    - statement: "Скільки коштують помідори? asks a price for plural tomatoes."
+      answer: true
+      explanation: "Plural помідори takes коштують."
+    - statement: "Я знаю брата uses кого? for a person."
+      answer: true
+      explanation: "The person form is брата."
+    - statement: "Смачного! is a natural line when serving guests."
+      answer: true
+      explanation: "Use Смачного! before eating."
+    - statement: "This checkpoint starts A1.7 phone and email content."
+      answer: false
+      explanation: "A1.7 comes next; this checkpoint closes A1.6."
+- id: act-6
+  type: unjumble
+  title: Build food-shopping lines
+  instruction: Put each line in the correct word order.
+  items:
+    - words: ["Анна", "йде", "на", "ринок"]
+      answer: "Анна йде на ринок."
+    - words: ["Вона", "купує", "помідори", "сир", "і", "хліб"]
+      answer: "Вона купує помідори, сир і хліб."
+    - words: ["З", "вас", "сто", "сорок", "гривень"]
+      answer: "З вас сто сорок гривень."
+    - words: ["Анна", "платить", "карткою"]
+      answer: "Анна платить карткою."
+    - words: ["Потім", "Анна", "йде", "в", "кафе"]
+      answer: "Потім Анна йде в кафе."
+    - words: ["Вона", "замовляє", "борщ", "і", "каву", "з", "молоком"]
+      answer: "Вона замовляє борщ і каву з молоком."
+    - words: ["У", "кафе", "Анна", "бачить", "Олену"]
+      answer: "У кафе Анна бачить Олену."
+    - words: ["Анна", "готує", "вареники", "з", "картоплею"]
+      answer: "Анна готує вареники з картоплею."
+    - words: ["Гості", "беруть", "тарілки", "і", "склянки"]
+      answer: "Гості беруть тарілки і склянки."
+    - words: ["Анна", "каже", "Смачного"]
+      answer: "Анна каже: Смачного!"
+- id: act-7
+  type: fill-in
+  title: Serve the table
+  instruction: Complete the dinner scene.
+  items:
+    - sentence: "Анна готує ___ з картоплею."
+      answer: "вареники"
+      options:
+        - "вареники"
+        - "рахунок"
+        - "картку"
+      explanation: "Вареники з картоплею is the food chunk."
+    - sentence: "Вона ставить на стіл ___."
+      answer: "тарілки"
+      options:
+        - "тарілки"
+        - "гривні"
+        - "лікаря"
+      explanation: "Тарілки go on the table."
+    - sentence: "Гості беруть ___."
+      answer: "склянки"
+      options:
+        - "склянки"
+        - "магазин"
+        - "брата"
+      explanation: "Склянки are glasses."
+    - sentence: "Анна каже: ___"
+      answer: "Смачного!"
+      options:
+        - "Смачного!"
+        - "Скільки коштує?"
+        - "Плачу карткою."
+      explanation: "Смачного! is the meal line."
+    - sentence: "Олена бере ___ хліба."
+      answer: "шматок"
+      options:
+        - "шматок"
+        - "літр"
+        - "пляшку"
+      explanation: "Use шматок хліба."
+    - sentence: "Анна наливає ___ води."
+      answer: "склянку"
+      options:
+        - "склянку"
+        - "кілограм"
+        - "буханку"
+      explanation: "Use склянку води."
+- id: act-8
+  type: quiz
+  title: Repair A1.6 interference
+  instruction: Pick the A1.6 sentence you would actually say.
+  items:
+    - prompt: "Repair: Я хочу вода."
+      options:
+        - text: "Я хочу воду. (Або: Я хочу води)."
+          correct: true
+        - text: "Я хочу вода."
+          correct: false
+        - text: "Я хочу водою."
+          correct: false
+      explanation: "Use the direct-object form or the memorized service chunk."
+    - prompt: "Repair: Я люблю борща."
+      options:
+        - text: "Я люблю борщ."
+          correct: true
+        - text: "Я люблю борща."
+          correct: false
+        - text: "Я люблю борщу."
+          correct: false
+      explanation: "Борщ stays борщ as a food object."
+    - prompt: "Repair: Смачний кава."
+      options:
+        - text: "Смачна кава."
+          correct: true
+        - text: "Смачний кава."
+          correct: false
+        - text: "Смачне кава."
+          correct: false
+      explanation: "Кава is feminine: смачна кава."
+    - prompt: "Repair: Я є голодний."
+      options:
+        - text: "Я голодний. (Або: Я хочу їсти)."
+          correct: true
+        - text: "Я є голодний."
+          correct: false
+        - text: "Я маю голодний."
+          correct: false
+      explanation: "Omit є in this present-tense state line."
+    - prompt: "Repair: Моє ім'я є Джон, і я хочу меню."
+      options:
+        - text: "Мене звати Джон, дайте меню."
+          correct: true
+        - text: "Моє ім'я є Джон, і я хочу меню."
+          correct: false
+        - text: "Я є Джон і я маю меню."
+          correct: false
+      explanation: "Use Мене звати for introducing yourself."
+    - prompt: "Repair: Чи не могли б ви дати мені рахунок?"
+      options:
+        - text: "Дайте, будь ласка, рахунок."
+          correct: true
+        - text: "Чи не могли б ви дати мені рахунок?"
+          correct: false
+        - text: "Дайте мені рахунком."
+          correct: false
+      explanation: "The A1 service request is direct and polite."
+    - prompt: "Repair: Я плачу рублями."
+      options:
+        - text: "Я плачу гривнями."
+          correct: true
+        - text: "Я плачу рублями."
+          correct: false
+        - text: "Я плачу гривень."
+          correct: false
+      explanation: "Use гривня for Ukrainian currency."

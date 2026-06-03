@@ -1,0 +1,360 @@
+---
+title: "Підсумок: Їжа та покупки"
+description: "Чи вмієте ви замовляти їжу та купувати речі українською?"
+sidebar:
+  order: 41
+  label: "41. Підсумок: Їжа та покупки"
+pipeline: linear-phase-4
+build_status: validated
+prev: people-around-me
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This checkpoint closes A1.6. It does not add a new grammar point. It asks you
+to use the skills from M36-M40 in one realistic flow: talk about food, buy
+ingredients, order in a cafe, pay, and talk about the people you meet.
+
+By the end, you can:
+
+- name food and drinks from M36;
+- say what you eat and drink with direct objects from M37;
+- order politely in a cafe from M38;
+- ask prices and pay from M39;
+- use **кого?** forms for people from M40;
+- keep Ukrainian food and payment language clean: **сир**, **страва**,
+  **гривня**, **Смачного!**
+
+### Food by gender
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Masculine": ["сир", "борщ", "хліб", "чай"], "Feminine": ["вода", "кава", "каша", "піца"], "Neuter": ["молоко", "яблуко", "меню", "м'ясо"], "Plural": ["вареники", "помідори", "тарілки", "склянки"]}`)} />
+
+## Що ми знаємо?
+
+A1.6 started with food words. Review the food by gender and by use:
+
+| Group | Examples |
+| --- | --- |
+| masculine | **сир**, **борщ**, **хліб**, **чай**, **сік** |
+| feminine | **вода**, **кава**, **каша**, **картопля**, **піца** |
+| neuter | **молоко**, **яблуко**, **меню**, **м'ясо** |
+| plural | **вареники**, **помідори**, **яблука**, **тарілки**, **склянки** |
+
+The wiki reminder is explicit: **чоловічий: сир, борщ; жіночий: вода, кава;
+середній: молоко, яблуко**. Use endings only as a recognition aid:
+**-а/-я** often points to feminine, **-о/-е** often points to neuter, and a
+zero ending often points to masculine.
+
+You can describe food without a long adjective lesson:
+
+- **свіжий хліб**
+- **гаряча кава**
+- **солодке яблуко**
+- **смачний борщ**
+- **холодна вода**
+
+Ask the noun's question: **борщ який? гарячий**, **кава яка? солодка**,
+**молоко яке? свіже**. The adjective stays connected to the noun.
+
+You also know daily food verbs as blocks: **я хочу**, **ти любиш**,
+**я їм**, **я п'ю**. You may recognize past forms such as **побачив** and
+**заварив**, but the checkpoint works with present-day A1 actions.
+
+### Accusative checkpoint
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я їм ___.", "options": [{"text": "салат", "correct": true}, {"text": "салата", "correct": false}, {"text": "салату", "correct": false}], "explanation": "Салат is masculine inanimate and stays салат."}, {"question": "Я бачу ___.", "options": [{"text": "брата", "correct": true}, {"text": "брат", "correct": false}, {"text": "брату", "correct": false}], "explanation": "Брат is a male person, so use брата."}, {"question": "Я п'ю ___.", "options": [{"text": "воду", "correct": true}, {"text": "вода", "correct": false}, {"text": "води", "correct": false}], "explanation": "Вода becomes воду for the direct object."}, {"question": "Я знаю ___.", "options": [{"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олени", "correct": false}], "explanation": "Use Олену after знаю."}, {"question": "Я люблю ___.", "options": [{"text": "борщ", "correct": true}, {"text": "борщу", "correct": false}, {"text": "борщем", "correct": false}], "explanation": "Борщ is food and stays борщ."}, {"question": "Я чекаю ___.", "options": [{"text": "друга", "correct": true}, {"text": "друг", "correct": false}, {"text": "другу", "correct": false}], "explanation": "Use друга for the person you are waiting for."}, {"question": "Я купую ___.", "options": [{"text": "хліб", "correct": true}, {"text": "хліба", "correct": false}, {"text": "хлібу", "correct": false}], "explanation": "Хліб stays хліб here."}, {"question": "Я бачу ___.", "options": [{"text": "лікаря", "correct": true}, {"text": "лікар", "correct": false}, {"text": "лікарю", "correct": false}], "explanation": "Use лікаря after бачу."}, {"question": "Я їм ___.", "options": [{"text": "піцу", "correct": true}, {"text": "піца", "correct": false}, {"text": "піци", "correct": false}], "explanation": "Choose піцу after я їм."}, {"question": "Я люблю ___.", "options": [{"text": "маму", "correct": true}, {"text": "мама", "correct": false}, {"text": "мами", "correct": false}], "explanation": "Use маму as the direct object."}]`)} />
+
+## Читання
+
+Read the story aloud. It combines the whole A1.6 day.
+
+<DialogueBox uk="Сьогодні Анна готує вечерю." en="Today Anna is preparing dinner." />
+<DialogueBox uk="Вранці вона йде на ринок." en="In the morning she goes to the market." />
+<DialogueBox uk="Вона купує помідори, сир, хліб і кілограм яблук." en="She buys tomatoes, cheese, bread, and a kilogram of apples." />
+<DialogueBox uk="Продавчиня каже: З вас сто сорок гривень." en="The saleswoman says: That is one hundred forty hryvnias." />
+<DialogueBox uk="Анна платить карткою." en="Anna pays by card." />
+<DialogueBox uk="Потім Анна йде в кафе." en="Then Anna goes to a cafe." />
+<DialogueBox uk="Вона замовляє борщ, воду і каву з молоком." en="She orders borscht, water, and coffee with milk." />
+<DialogueBox uk="Офіціантка питає: Вам тут чи із собою?" en="The server asks: For here or to go?" />
+<DialogueBox uk="Анна відповідає: Тут, будь ласка." en="Anna answers: For here, please." />
+<DialogueBox uk="У кафе Анна бачить Олену і знайомить її з братом." en="In the cafe Anna sees Olena and introduces her to her brother." />
+<DialogueBox uk="Увечері Анна готує вареники з картоплею, салат і чай." en="In the evening Anna prepares varenyky with potato, salad, and tea." />
+<DialogueBox uk="Гості сідають за стіл, беруть тарілки і склянки." en="The guests sit at the table and take plates and glasses." />
+<DialogueBox uk="Анна каже: Смачного!" en="Anna says: Bon appetit!" />
+
+Answer:
+
+- What does Anna buy at the market?
+- How much does she pay?
+- What does she order in the cafe?
+- Whom does Anna see?
+- What does she cook in the evening?
+- What does she say to the guests?
+
+Use Ukrainian cultural forms clearly: **борщ**, **вареники**, and **сало** are
+Ukrainian food words in this course, not generic regional labels. **Вареники з
+картоплею** is a memorized food chunk here, just like **кава з молоком**.
+
+### Market and cafe day
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Що ти їси на сніданок? — Я їм ___ і п'ю каву.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "— Потім іду на ринок. Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "— Тридцять ___.", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}, {"sentence": "— Дайте ___ яблук, будь ласка.", "answer": "кілограм", "options": ["кілограм", "літр", "пляшку"]}, {"sentence": "— Потім у кафе: ___ борщ і воду, будь ласка.", "answer": "Мені", "options": ["Мені", "Я", "Мною"]}, {"sentence": "— Рахунок, будь ласка. Можна ___?", "answer": "карткою", "options": ["карткою", "картка", "картки"]}, {"sentence": "— О, я бачу ___! Олено, привіт!", "answer": "Олену", "options": ["Олену", "Олена", "Олени"]}, {"sentence": "— Ти знаєш мого ___?", "answer": "брата", "options": ["брата", "брат", "братом"]}]`)} />
+
+## Граматика
+
+Use this as a repair map.
+
+### Food and direct objects
+
+For food and drinks, ask **що?**
+
+| Dictionary form | A1 line |
+| --- | --- |
+| **вода** | **Я п'ю воду.** |
+| **кава** | **Я п'ю каву.** |
+| **каша** | **Я їм кашу.** |
+| **піца** | **Я їм піцу.** |
+| **сир** | **Я люблю сир.** |
+| **борщ** | **Я люблю борщ.** |
+
+Female nouns on **-а/-я** often change to **-у/-ю**: **вода → воду**,
+**кава → каву**. Masculine inanimate food words often stay unchanged:
+**сир → сир**, **борщ → борщ**, **хліб → хліб**. Your food lines are simple:
+**Я їм сир**, **Я люблю борщ**. In school terms, the direct object can show
+full coverage: **купи сіль**. You can recognize the wider contrast in examples
+like **зустріти сусіда** and **написати твір**, but this checkpoint only asks
+you to use food and people forms you already know. Some service chunks use a
+partitive shape: **купи солі**, **Дайте води**, **Хочу чаю**. Keep those as
+memorized chunks, not as a new case lesson.
+
+:::tip[Checkpoint habit]
+When you are unsure, choose the A1 sentence you can say quickly: **Я п'ю
+воду**, **Я люблю борщ**, **Мені каву, будь ласка**. Accuracy here means
+using a reliable small phrase, not explaining a full case table.
+:::
+
+### Cafe and shopping frames
+
+Use these lines as whole service phrases:
+
+- **Мені каву, будь ласка.**
+- **Дайте, будь ласка, рахунок.**
+- **Рахунок, будь ласка.**
+- **Можна карткою?**
+- **Карткою, будь ласка.**
+- **Скільки коштує?**
+- **Скільки коштують помідори?**
+- **Дайте кілограм яблук, будь ласка.**
+
+Prices stay practical: **одна гривня**, **дві гривні**, **п'ять гривень**,
+**двісті п'ятдесят гривень**.
+
+### People around the table
+
+For people, ask **кого?**
+
+| Person | A1 line |
+| --- | --- |
+| **мама** | **Я бачу маму.** |
+| **Олена** | **Я знаю Олену.** |
+| **брат** | **Я знаю брата.** |
+| **друг** | **Я чекаю друга.** |
+| **лікар** | **Я бачу лікаря.** |
+
+This is the A1.6 contrast: **Я люблю борщ** but **Я люблю брата**.
+
+### Situation to phrase
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "In the checkpoint cafe, you ask for coffee with milk.", "right": "Мені каву з молоком, будь ласка."}, {"left": "You ask for the price.", "right": "Скільки коштує?"}, {"left": "At the register, you check whether card payment is possible.", "right": "Можна карткою?"}, {"left": "The server asks where you will eat.", "right": "Тут чи із собою?"}, {"left": "You ask for one kilogram of apples.", "right": "Дайте кілограм яблук."}, {"left": "The price feels high.", "right": "Дорого!"}, {"left": "You ask if a seat is free.", "right": "Тут вільно?"}, {"left": "After lunch, you thank the server for the meal.", "right": "Було дуже смачно, дякую!"}]`)} />
+
+## Діалог
+
+### День покупок і їжі
+
+<DialogueBox uk="Олена: Що ти їси на сніданок?" en="Olena: What do you eat for breakfast?" />
+<DialogueBox uk="Анна: Я їм кашу і п'ю каву з молоком." en="Anna: I eat porridge and drink coffee with milk." />
+<DialogueBox uk="Олена: А потім?" en="Olena: And then?" />
+<DialogueBox uk="Анна: Потім іду на ринок." en="Anna: Then I go to the market." />
+<DialogueBox uk="Анна: Скільки коштують помідори?" en="Anna: How much are the tomatoes?" />
+<DialogueBox uk="Продавчиня: Тридцять гривень." en="Saleswoman: Thirty hryvnias." />
+<DialogueBox uk="Анна: Дайте кілограм, будь ласка." en="Anna: Give me a kilogram, please." />
+<DialogueBox uk="Олена: А потім у кафе?" en="Olena: And then in the cafe?" />
+<DialogueBox uk="Анна: Мені борщ і воду, будь ласка." en="Anna: Borscht and water for me, please." />
+<DialogueBox uk="Анна: О, я бачу Олену! Олено, привіт!" en="Anna: Oh, I see Olena! Olena, hi!" />
+<DialogueBox uk="Анна: Ти знаєш мого брата?" en="Anna: Do you know my brother?" />
+
+### Ще одне замовлення
+
+<DialogueBox uk="Олена: Що ти замовила?" en="Olena: What did you order?" />
+<DialogueBox uk="Анна: Я вже замовила борщ і чай." en="Anna: I already ordered borscht and tea." />
+<DialogueBox uk="Олена: Я візьму вареники з картоплею і компот." en="Olena: I will take varenyky with potato and kompot." />
+<DialogueBox uk="Анна: Чудовий вибір! Хочеш салат?" en="Anna: Great choice! Do you want salad?" />
+<DialogueBox uk="Олена: Так, я візьму овочевий салат і шматок хліба." en="Olena: Yes, I will take a vegetable salad and a piece of bread." />
+<DialogueBox uk="Олена: Дайте нам, будь ласка, ще одну склянку води." en="Olena: Please give us one more glass of water." />
+
+### Оплата і прощання
+
+<DialogueBox uk="Анна: Скільки коштує наш обід разом?" en="Anna: How much is our lunch together?" />
+<DialogueBox uk="Офіціантка: Двісті п'ятдесят гривень." en="Server: Two hundred fifty hryvnias." />
+<DialogueBox uk="Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох." en="Anna: Please give us the bill. I am paying for both of us." />
+<DialogueBox uk="Олена: Дякую, було дуже смачно!" en="Olena: Thank you, it was very tasty!" />
+<DialogueBox uk="Анна: Скуштуй ще цей десерт із подругою наступного разу." en="Anna: Try this dessert with a friend next time." />
+<DialogueBox uk="Олена: Гаразд, до зустрічі!" en="Olena: All right, see you!" />
+
+The dialogue is a role play. It uses etiquette formulas and a cafe invitation
+idea: **Хочеш, аби твої друзі розділили з тобою свято?** For A1, that becomes
+a simple invitation: **Ходімо в кафе. Я хочу каву і торт.**
+
+### Food-shopping checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Борщ is presented as a Ukrainian cultural food form.", "isTrue": true, "explanation": "The checkpoint keeps борщ in Ukrainian cultural context."}, {"statement": "Вареники з картоплею is treated as a useful food chunk.", "isTrue": true, "explanation": "Use the phrase as a memorized chunk here."}, {"statement": "Adding -а to борщ is not the A1.6 target form.", "isTrue": false, "explanation": "Use Я люблю борщ."}, {"statement": "Мені каву з молоком, будь ласка is a cafe order.", "isTrue": true, "explanation": "It is the ordering frame from M38."}, {"statement": "Скільки коштують помідори? asks a price for plural tomatoes.", "isTrue": true, "explanation": "Plural помідори takes коштують."}, {"statement": "Я знаю брата uses кого? for a person.", "isTrue": true, "explanation": "The person form is брата."}, {"statement": "Смачного! is a natural line when serving guests.", "isTrue": true, "explanation": "Use Смачного! before eating."}, {"statement": "This checkpoint starts A1.7 phone and email content.", "isTrue": false, "explanation": "A1.7 comes next; this checkpoint closes A1.6."}]`)} />
+
+## 📋 Підсумок
+
+You can now handle a small Ukrainian food-and-shopping day:
+
+- say **я снідаю**, **я обідаю**, **я вечеряю**;
+- order food and drinks: **Мені борщ і воду, будь ласка**;
+- use clean food words: **сир**, **смажена картопля**, **страва**;
+- say **Смачного!** when serving guests;
+- ask price: **Скільки коштує?**
+- buy a quantity: **кілограм яблук**, **пляшка води**, **пачка чаю**;
+- pay: **Можна карткою? / Карткою, будь ласка**;
+- talk about people: **я бачу Олену**, **я знаю брата**.
+
+Next comes A1.7 communication: phone, email, and planning. Do not move there
+inside this checkpoint. Finish A1.6 by making the food-shopping story smooth.
+
+<span id="repair-checkpoint-food-shopping-interference"></span>
+
+### Ремонти
+
+| Problem | Use |
+| --- | --- |
+| **Я хочу вода.** | **Я хочу воду. / Я хочу води.** |
+| **Я люблю борща.** | **Я люблю борщ.** |
+| **Смачний кава.** | **Смачна кава.** |
+| **Я є голодний.** | **Я голодний. / Я хочу їсти.** |
+| **Моє ім'я є Джон, і я хочу меню.** | **Мене звати Джон, дайте меню.** |
+| **Чи не могли б ви дати мені рахунок?** | **Дайте, будь ласка, рахунок.** |
+| payment with a non-Ukrainian currency | **Я плачу гривнями.** |
+
+### Build food-shopping lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Анна / йде / на / ринок", "answer": "Анна йде на ринок."}, {"jumbled": "Вона / купує / помідори / сир / і / хліб", "answer": "Вона купує помідори, сир і хліб."}, {"jumbled": "З / вас / сто / сорок / гривень", "answer": "З вас сто сорок гривень."}, {"jumbled": "Анна / платить / карткою", "answer": "Анна платить карткою."}, {"jumbled": "Потім / Анна / йде / в / кафе", "answer": "Потім Анна йде в кафе."}, {"jumbled": "Вона / замовляє / борщ / і / каву / з / молоком", "answer": "Вона замовляє борщ і каву з молоком."}, {"jumbled": "У / кафе / Анна / бачить / Олену", "answer": "У кафе Анна бачить Олену."}, {"jumbled": "Анна / готує / вареники / з / картоплею", "answer": "Анна готує вареники з картоплею."}, {"jumbled": "Гості / беруть / тарілки / і / склянки", "answer": "Гості беруть тарілки і склянки."}, {"jumbled": "Анна / каже / Смачного", "answer": "Анна каже: Смачного!"}]`)} />
+
+### Serve the table
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Анна готує ___ з картоплею.", "answer": "вареники", "options": ["вареники", "рахунок", "картку"]}, {"sentence": "Вона ставить на стіл ___.", "answer": "тарілки", "options": ["тарілки", "гривні", "лікаря"]}, {"sentence": "Гості беруть ___.", "answer": "склянки", "options": ["склянки", "магазин", "брата"]}, {"sentence": "Анна каже: ___", "answer": "Смачного!", "options": ["Смачного!", "Скільки коштує?", "Плачу карткою."]}, {"sentence": "Олена бере ___ хліба.", "answer": "шматок", "options": ["шматок", "літр", "пляшку"]}, {"sentence": "Анна наливає ___ води.", "answer": "склянку", "options": ["склянку", "кілограм", "буханку"]}]`)} />
+
+### Repair A1.6 interference
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Repair: Я хочу вода.", "options": [{"text": "Я хочу воду. (Або: Я хочу води).", "correct": true}, {"text": "Я хочу вода.", "correct": false}, {"text": "Я хочу водою.", "correct": false}], "explanation": "Use the direct-object form or the memorized service chunk."}, {"question": "Repair: Я люблю борща.", "options": [{"text": "Я люблю борщ.", "correct": true}, {"text": "Я люблю борща.", "correct": false}, {"text": "Я люблю борщу.", "correct": false}], "explanation": "Борщ stays борщ as a food object."}, {"question": "Repair: Смачний кава.", "options": [{"text": "Смачна кава.", "correct": true}, {"text": "Смачний кава.", "correct": false}, {"text": "Смачне кава.", "correct": false}], "explanation": "Кава is feminine: смачна кава."}, {"question": "Repair: Я є голодний.", "options": [{"text": "Я голодний. (Або: Я хочу їсти).", "correct": true}, {"text": "Я є голодний.", "correct": false}, {"text": "Я маю голодний.", "correct": false}], "explanation": "Omit є in this present-tense state line."}, {"question": "Repair: Моє ім'я є Джон, і я хочу меню.", "options": [{"text": "Мене звати Джон, дайте меню.", "correct": true}, {"text": "Моє ім'я є Джон, і я хочу меню.", "correct": false}, {"text": "Я є Джон і я маю меню.", "correct": false}], "explanation": "Use Мене звати for introducing yourself."}, {"question": "Repair: Чи не могли б ви дати мені рахунок?", "options": [{"text": "Дайте, будь ласка, рахунок.", "correct": true}, {"text": "Чи не могли б ви дати мені рахунок?", "correct": false}, {"text": "Дайте мені рахунком.", "correct": false}], "explanation": "The A1 service request is direct and polite."}, {"question": "Repair: Я плачу рублями.", "options": [{"text": "Я плачу гривнями.", "correct": true}, {"text": "Я плачу рублями.", "correct": false}, {"text": "Я плачу гривень.", "correct": false}], "explanation": "Use гривня for Ukrainian currency."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"підсумок","translation":"checkpoint; summary","pos":"noun","example":"Це підсумок про їжу та покупки.","examples":["checkpoint; summary","Це підсумок про їжу та покупки."]},{"word":"їжа","translation":"food","pos":"noun","example":"Їжа на столі.","examples":["food","Їжа на столі."]},{"word":"напій","translation":"drink","pos":"noun","example":"Вода - це напій.","examples":["drink","Вода - це напій."]},{"word":"вода","translation":"water","pos":"noun","example":"Я п'ю воду.","examples":["water","Я п'ю воду."]},{"word":"кава","translation":"coffee","pos":"noun","example":"Я п'ю каву з молоком.","examples":["coffee","Я п'ю каву з молоком."]},{"word":"чай","translation":"tea","pos":"noun","example":"Хочу чаю.","examples":["tea","Хочу чаю."]},{"word":"молоко","translation":"milk","pos":"noun","example":"Молоко в склянці.","examples":["milk","Молоко в склянці."]},{"word":"сік","translation":"juice","pos":"noun","example":"Я п'ю сік.","examples":["juice","Я п'ю сік."]},{"word":"сир","translation":"cheese","pos":"noun","example":"Я люблю сир.","examples":["cheese","Я люблю сир."]},{"word":"хліб","translation":"bread","pos":"noun","example":"Свіжий хліб на столі.","examples":["bread","Свіжий хліб на столі."]},{"word":"борщ","translation":"borscht","pos":"noun","example":"Я люблю борщ.","examples":["borscht","Я люблю борщ."]},{"word":"вареники","translation":"varenyky","pos":"noun","example":"Анна готує вареники з картоплею.","examples":["varenyky","Анна готує вареники з картоплею."]},{"word":"сало","translation":"salo","pos":"noun","example":"Сало - українське слово для цієї страви.","examples":["salo","Сало - українське слово для цієї страви."]},{"word":"каша","translation":"porridge","pos":"noun","example":"Я їм кашу на сніданок.","examples":["porridge","Я їм кашу на сніданок."]},{"word":"салат","translation":"salad","pos":"noun","example":"Олена бере овочевий салат.","examples":["salad","Олена бере овочевий салат."]},{"word":"смажена картопля","translation":"fried potatoes","pos":"phrase","example":"Смажена картопля гаряча.","examples":["fried potatoes","Смажена картопля гаряча."]},{"word":"яблуко","translation":"apple","pos":"noun","example":"Солодке яблуко.","examples":["apple","Солодке яблуко."]},{"word":"яблука","translation":"apples","pos":"noun","example":"Дайте кілограм яблук.","examples":["apples","Дайте кілограм яблук."]},{"word":"помідори","translation":"tomatoes","pos":"noun","example":"Скільки коштують помідори?","examples":["tomatoes","Скільки коштують помідори?"]},{"word":"страва","translation":"dish","pos":"noun","example":"Це українська страва.","examples":["dish","Це українська страва."]},{"word":"смачний","translation":"tasty","pos":"adjective","example":"Смачний борщ.","examples":["tasty","Смачний борщ."]},{"word":"смачна","translation":"tasty","pos":"adjective","example":"Смачна кава.","examples":["tasty","Смачна кава."]},{"word":"свіжа","translation":"fresh","pos":"adjective","example":"Свіжа вода.","examples":["fresh","Свіжа вода."]},{"word":"свіжий","translation":"fresh","pos":"adjective","example":"Свіжий хліб.","examples":["fresh","Свіжий хліб."]},{"word":"гаряча","translation":"hot","pos":"adjective","example":"Гаряча кава.","examples":["hot","Гаряча кава."]},{"word":"холодна","translation":"cold","pos":"adjective","example":"Холодна вода.","examples":["cold","Холодна вода."]},{"word":"я снідаю","translation":"I eat breakfast","pos":"chunk","example":"Я снідаю вдома.","examples":["I eat breakfast","Я снідаю вдома."]},{"word":"я обідаю","translation":"I eat lunch","pos":"chunk","example":"Я обідаю в кафе.","examples":["I eat lunch","Я обідаю в кафе."]},{"word":"я вечеряю","translation":"I eat dinner","pos":"chunk","example":"Я вечеряю з друзями.","examples":["I eat dinner","Я вечеряю з друзями."]},{"word":"їсти","translation":"to eat","pos":"verb","example":"Я хочу їсти.","examples":["to eat","Я хочу їсти."]},{"word":"пити","translation":"to drink","pos":"verb","example":"Я хочу пити.","examples":["to drink","Я хочу пити."]},{"word":"хотіти","translation":"to want","pos":"verb","example":"Я хочу воду.","examples":["to want","Я хочу воду."]},{"word":"любити","translation":"to love; to like","pos":"verb","example":"Я люблю борщ.","examples":["to love; to like","Я люблю борщ."]},{"word":"я їм","translation":"I eat","pos":"chunk","example":"Я їм сир.","examples":["I eat","Я їм сир."]},{"word":"я п'ю","translation":"I drink","pos":"chunk","example":"Я п'ю каву.","examples":["I drink","Я п'ю каву."]},{"word":"я хочу","translation":"I want","pos":"chunk","example":"Я хочу чаю.","examples":["I want","Я хочу чаю."]},{"word":"ти любиш","translation":"you like","pos":"chunk","example":"Ти любиш борщ?","examples":["you like","Ти любиш борщ?"]},{"word":"ринок","translation":"market","pos":"noun","example":"Анна йде на ринок.","examples":["market","Анна йде на ринок."]},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Магазин поруч.","examples":["shop; store","Магазин поруч."]},{"word":"кафе","translation":"cafe","pos":"noun","example":"Анна йде в кафе.","examples":["cafe","Анна йде в кафе."]},{"word":"продавчиня","translation":"saleswoman","pos":"noun","example":"Продавчиня каже ціну.","examples":["saleswoman","Продавчиня каже ціну."]},{"word":"офіціантка","translation":"server; waitress","pos":"noun","example":"Офіціантка дає меню.","examples":["server; waitress","Офіціантка дає меню."]},{"word":"меню","translation":"menu","pos":"noun","example":"Дайте меню, будь ласка.","examples":["menu","Дайте меню, будь ласка."]},{"word":"рахунок","translation":"bill","pos":"noun","example":"Рахунок, будь ласка.","examples":["bill","Рахунок, будь ласка."]},{"word":"ціна","translation":"price","pos":"noun","example":"Ціна висока.","examples":["price","Ціна висока."]},{"word":"коштувати","translation":"to cost","pos":"verb","example":"Скільки коштує хліб?","examples":["to cost","Скільки коштує хліб?"]},{"word":"скільки коштує","translation":"how much does it cost","pos":"chunk","example":"Скільки коштує сир?","examples":["how much does it cost","Скільки коштує сир?"]},{"word":"скільки коштують","translation":"how much do they cost","pos":"chunk","example":"Скільки коштують помідори?","examples":["how much do they cost","Скільки коштують помідори?"]},{"word":"гривня","translation":"hryvnia","pos":"noun","example":"Одна гривня.","examples":["hryvnia","Одна гривня."]},{"word":"гривні","translation":"hryvnias","pos":"noun","example":"Дві гривні.","examples":["hryvnias","Дві гривні."]},{"word":"гривень","translation":"hryvnias","pos":"noun","example":"П'ять гривень.","examples":["hryvnias","П'ять гривень."]},{"word":"картка","translation":"card","pos":"noun","example":"Можна карткою?","examples":["card","Можна карткою?"]},{"word":"карткою","translation":"by card","pos":"chunk","example":"Карткою, будь ласка.","examples":["by card","Карткою, будь ласка."]},{"word":"готівкою","translation":"in cash","pos":"chunk","example":"Готівкою, будь ласка.","examples":["in cash","Готівкою, будь ласка."]},{"word":"купити","translation":"to buy","pos":"verb","example":"Я хочу купити хліб.","examples":["to buy","Я хочу купити хліб."]},{"word":"купувати","translation":"to buy; to be buying","pos":"verb","example":"Анна купує помідори.","examples":["to buy; to be buying","Анна купує помідори."]},{"word":"платити","translation":"to pay","pos":"verb","example":"Анна платить карткою.","examples":["to pay","Анна платить карткою."]},{"word":"кілограм","translation":"kilogram","pos":"noun","example":"Кілограм яблук.","examples":["kilogram","Кілограм яблук."]},{"word":"пляшка води","translation":"bottle of water","pos":"chunk","example":"Пляшка води коштує десять гривень.","examples":["bottle of water","Пляшка води коштує десять гривень."]},{"word":"пачка чаю","translation":"pack of tea","pos":"chunk","example":"Дайте пачку чаю.","examples":["pack of tea","Дайте пачку чаю."]},{"word":"шматок хліба","translation":"piece of bread","pos":"chunk","example":"Олена бере шматок хліба.","examples":["piece of bread","Олена бере шматок хліба."]},{"word":"склянка","translation":"glass","pos":"noun","example":"Склянка води.","examples":["glass","Склянка води."]},{"word":"склянку","translation":"glass (object form)","pos":"noun","example":"Анна наливає склянку води.","examples":["glass (object form)","Анна наливає склянку води."]},{"word":"тарілка","translation":"plate","pos":"noun","example":"Тарілка на столі.","examples":["plate","Тарілка на столі."]},{"word":"тарілки","translation":"plates","pos":"noun","example":"Гості беруть тарілки.","examples":["plates","Гості беруть тарілки."]},{"word":"кого","translation":"whom","pos":"pronoun","example":"Кого ти бачиш?","examples":["whom","Кого ти бачиш?"]},{"word":"бачити","translation":"to see","pos":"verb","example":"Я бачу Олену.","examples":["to see","Я бачу Олену."]},{"word":"знати","translation":"to know","pos":"verb","example":"Я знаю брата.","examples":["to know","Я знаю брата."]},{"word":"чекати","translation":"to wait for","pos":"verb","example":"Я чекаю друга.","examples":["to wait for","Я чекаю друга."]},{"word":"мама","translation":"mom","pos":"noun","example":"Я бачу маму.","examples":["mom","Я бачу маму."]},{"word":"брат","translation":"brother","pos":"noun","example":"Це мій брат.","examples":["brother","Це мій брат."]},{"word":"брата","translation":"brother (object form)","pos":"noun","example":"Я знаю брата.","examples":["brother (object form)","Я знаю брата."]},{"word":"друг","translation":"male friend","pos":"noun","example":"Це мій друг.","examples":["male friend","Це мій друг."]},{"word":"друга","translation":"male friend (object form)","pos":"noun","example":"Я чекаю друга.","examples":["male friend (object form)","Я чекаю друга."]},{"word":"Олена","translation":"Olena","pos":"proper noun","example":"Це Олена.","examples":["Olena","Це Олена."]},{"word":"Олену","translation":"Olena (object form)","pos":"proper noun","example":"Я бачу Олену.","examples":["Olena (object form)","Я бачу Олену."]},{"word":"лікар","translation":"doctor","pos":"noun","example":"Це лікар.","examples":["doctor","Це лікар."]},{"word":"лікаря","translation":"doctor (object form)","pos":"noun","example":"Я бачу лікаря.","examples":["doctor (object form)","Я бачу лікаря."]},{"word":"сусід","translation":"male neighbor","pos":"noun","example":"Це мій сусід.","examples":["male neighbor","Це мій сусід."]},{"word":"сусіда","translation":"male neighbor (object form)","pos":"noun","example":"Я хочу зустріти сусіда.","examples":["male neighbor (object form)","Я хочу зустріти сусіда."]},{"word":"Смачного!","translation":"Bon appetit!","pos":"phrase","example":"Анна каже: Смачного!","examples":["Bon appetit!","Анна каже: Смачного!"]},{"word":"Дайте, будь ласка","translation":"Please give","pos":"chunk","example":"Дайте, будь ласка, рахунок.","examples":["Please give","Дайте, будь ласка, рахунок."]},{"word":"Мені каву, будь ласка","translation":"Coffee for me, please","pos":"chunk","example":"Мені каву, будь ласка.","examples":["Coffee for me, please","Мені каву, будь ласка."]},{"word":"Можна карткою?","translation":"Can I pay by card?","pos":"chunk","example":"Можна карткою?","examples":["Can I pay by card?","Можна карткою?"]},{"word":"Тут, будь ласка","translation":"For here, please","pos":"chunk","example":"Тут, будь ласка.","examples":["For here, please","Тут, будь ласка."]},{"word":"із собою","translation":"to go","pos":"chunk","example":"Вам тут чи із собою?","examples":["to go","Вам тут чи із собою?"]},{"word":"дорого","translation":"expensive","pos":"adverb","example":"Дорого!","examples":["expensive","Дорого!"]},{"word":"дешево","translation":"cheap","pos":"adverb","example":"Дешево!","examples":["cheap","Дешево!"]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"підсумок","back":"checkpoint; summary"},{"front":"їжа","back":"food"},{"front":"напій","back":"drink"},{"front":"вода","back":"water"},{"front":"кава","back":"coffee"},{"front":"чай","back":"tea"},{"front":"молоко","back":"milk"},{"front":"сік","back":"juice"},{"front":"сир","back":"cheese"},{"front":"хліб","back":"bread"},{"front":"борщ","back":"borscht"},{"front":"вареники","back":"varenyky"},{"front":"сало","back":"salo"},{"front":"каша","back":"porridge"},{"front":"салат","back":"salad"},{"front":"смажена картопля","back":"fried potatoes"},{"front":"яблуко","back":"apple"},{"front":"яблука","back":"apples"},{"front":"помідори","back":"tomatoes"},{"front":"страва","back":"dish"},{"front":"смачний","back":"tasty"},{"front":"смачна","back":"tasty"},{"front":"свіжа","back":"fresh"},{"front":"свіжий","back":"fresh"},{"front":"гаряча","back":"hot"},{"front":"холодна","back":"cold"},{"front":"я снідаю","back":"I eat breakfast"},{"front":"я обідаю","back":"I eat lunch"},{"front":"я вечеряю","back":"I eat dinner"},{"front":"їсти","back":"to eat"},{"front":"пити","back":"to drink"},{"front":"хотіти","back":"to want"},{"front":"любити","back":"to love; to like"},{"front":"я їм","back":"I eat"},{"front":"я п'ю","back":"I drink"},{"front":"я хочу","back":"I want"},{"front":"ти любиш","back":"you like"},{"front":"ринок","back":"market"},{"front":"магазин","back":"shop; store"},{"front":"кафе","back":"cafe"},{"front":"продавчиня","back":"saleswoman"},{"front":"офіціантка","back":"server; waitress"},{"front":"меню","back":"menu"},{"front":"рахунок","back":"bill"},{"front":"ціна","back":"price"},{"front":"коштувати","back":"to cost"},{"front":"скільки коштує","back":"how much does it cost"},{"front":"скільки коштують","back":"how much do they cost"},{"front":"гривня","back":"hryvnia"},{"front":"гривні","back":"hryvnias"},{"front":"гривень","back":"hryvnias"},{"front":"картка","back":"card"},{"front":"карткою","back":"by card"},{"front":"готівкою","back":"in cash"},{"front":"купити","back":"to buy"},{"front":"купувати","back":"to buy; to be buying"},{"front":"платити","back":"to pay"},{"front":"кілограм","back":"kilogram"},{"front":"пляшка води","back":"bottle of water"},{"front":"пачка чаю","back":"pack of tea"},{"front":"шматок хліба","back":"piece of bread"},{"front":"склянка","back":"glass"},{"front":"склянку","back":"glass (object form)"},{"front":"тарілка","back":"plate"},{"front":"тарілки","back":"plates"},{"front":"кого","back":"whom"},{"front":"бачити","back":"to see"},{"front":"знати","back":"to know"},{"front":"чекати","back":"to wait for"},{"front":"мама","back":"mom"},{"front":"брат","back":"brother"},{"front":"брата","back":"brother (object form)"},{"front":"друг","back":"male friend"},{"front":"друга","back":"male friend (object form)"},{"front":"Олена","back":"Olena"},{"front":"Олену","back":"Olena (object form)"},{"front":"лікар","back":"doctor"},{"front":"лікаря","back":"doctor (object form)"},{"front":"сусід","back":"male neighbor"},{"front":"сусіда","back":"male neighbor (object form)"},{"front":"Смачного!","back":"Bon appetit!"},{"front":"Дайте, будь ласка","back":"Please give"},{"front":"Мені каву, будь ласка","back":"Coffee for me, please"},{"front":"Можна карткою?","back":"Can I pay by card?"},{"front":"Тут, будь ласка","back":"For here, please"},{"front":"із собою","back":"to go"},{"front":"дорого","back":"expensive"},{"front":"дешево","back":"cheap"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Food by gender
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Masculine": ["сир", "борщ", "хліб", "чай"], "Feminine": ["вода", "кава", "каша", "піца"], "Neuter": ["молоко", "яблуко", "меню", "м'ясо"], "Plural": ["вареники", "помідори", "тарілки", "склянки"]}`)} />
+
+### Accusative checkpoint
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я їм ___.", "options": [{"text": "салат", "correct": true}, {"text": "салата", "correct": false}, {"text": "салату", "correct": false}], "explanation": "Салат is masculine inanimate and stays салат."}, {"question": "Я бачу ___.", "options": [{"text": "брата", "correct": true}, {"text": "брат", "correct": false}, {"text": "брату", "correct": false}], "explanation": "Брат is a male person, so use брата."}, {"question": "Я п'ю ___.", "options": [{"text": "воду", "correct": true}, {"text": "вода", "correct": false}, {"text": "води", "correct": false}], "explanation": "Вода becomes воду for the direct object."}, {"question": "Я знаю ___.", "options": [{"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олени", "correct": false}], "explanation": "Use Олену after знаю."}, {"question": "Я люблю ___.", "options": [{"text": "борщ", "correct": true}, {"text": "борщу", "correct": false}, {"text": "борщем", "correct": false}], "explanation": "Борщ is food and stays борщ."}, {"question": "Я чекаю ___.", "options": [{"text": "друга", "correct": true}, {"text": "друг", "correct": false}, {"text": "другу", "correct": false}], "explanation": "Use друга for the person you are waiting for."}, {"question": "Я купую ___.", "options": [{"text": "хліб", "correct": true}, {"text": "хліба", "correct": false}, {"text": "хлібу", "correct": false}], "explanation": "Хліб stays хліб here."}, {"question": "Я бачу ___.", "options": [{"text": "лікаря", "correct": true}, {"text": "лікар", "correct": false}, {"text": "лікарю", "correct": false}], "explanation": "Use лікаря after бачу."}, {"question": "Я їм ___.", "options": [{"text": "піцу", "correct": true}, {"text": "піца", "correct": false}, {"text": "піци", "correct": false}], "explanation": "Choose піцу after я їм."}, {"question": "Я люблю ___.", "options": [{"text": "маму", "correct": true}, {"text": "мама", "correct": false}, {"text": "мами", "correct": false}], "explanation": "Use маму as the direct object."}]`)} />
+
+### Market and cafe day
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Що ти їси на сніданок? — Я їм ___ і п'ю каву.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "— Потім іду на ринок. Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "— Тридцять ___.", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}, {"sentence": "— Дайте ___ яблук, будь ласка.", "answer": "кілограм", "options": ["кілограм", "літр", "пляшку"]}, {"sentence": "— Потім у кафе: ___ борщ і воду, будь ласка.", "answer": "Мені", "options": ["Мені", "Я", "Мною"]}, {"sentence": "— Рахунок, будь ласка. Можна ___?", "answer": "карткою", "options": ["карткою", "картка", "картки"]}, {"sentence": "— О, я бачу ___! Олено, привіт!", "answer": "Олену", "options": ["Олену", "Олена", "Олени"]}, {"sentence": "— Ти знаєш мого ___?", "answer": "брата", "options": ["брата", "брат", "братом"]}]`)} />
+
+### Situation to phrase
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "In the checkpoint cafe, you ask for coffee with milk.", "right": "Мені каву з молоком, будь ласка."}, {"left": "You ask for the price.", "right": "Скільки коштує?"}, {"left": "At the register, you check whether card payment is possible.", "right": "Можна карткою?"}, {"left": "The server asks where you will eat.", "right": "Тут чи із собою?"}, {"left": "You ask for one kilogram of apples.", "right": "Дайте кілограм яблук."}, {"left": "The price feels high.", "right": "Дорого!"}, {"left": "You ask if a seat is free.", "right": "Тут вільно?"}, {"left": "After lunch, you thank the server for the meal.", "right": "Було дуже смачно, дякую!"}]`)} />
+
+### Food-shopping checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Борщ is presented as a Ukrainian cultural food form.", "isTrue": true, "explanation": "The checkpoint keeps борщ in Ukrainian cultural context."}, {"statement": "Вареники з картоплею is treated as a useful food chunk.", "isTrue": true, "explanation": "Use the phrase as a memorized chunk here."}, {"statement": "Adding -а to борщ is not the A1.6 target form.", "isTrue": false, "explanation": "Use Я люблю борщ."}, {"statement": "Мені каву з молоком, будь ласка is a cafe order.", "isTrue": true, "explanation": "It is the ordering frame from M38."}, {"statement": "Скільки коштують помідори? asks a price for plural tomatoes.", "isTrue": true, "explanation": "Plural помідори takes коштують."}, {"statement": "Я знаю брата uses кого? for a person.", "isTrue": true, "explanation": "The person form is брата."}, {"statement": "Смачного! is a natural line when serving guests.", "isTrue": true, "explanation": "Use Смачного! before eating."}, {"statement": "This checkpoint starts A1.7 phone and email content.", "isTrue": false, "explanation": "A1.7 comes next; this checkpoint closes A1.6."}]`)} />
+
+### Build food-shopping lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Анна / йде / на / ринок", "answer": "Анна йде на ринок."}, {"jumbled": "Вона / купує / помідори / сир / і / хліб", "answer": "Вона купує помідори, сир і хліб."}, {"jumbled": "З / вас / сто / сорок / гривень", "answer": "З вас сто сорок гривень."}, {"jumbled": "Анна / платить / карткою", "answer": "Анна платить карткою."}, {"jumbled": "Потім / Анна / йде / в / кафе", "answer": "Потім Анна йде в кафе."}, {"jumbled": "Вона / замовляє / борщ / і / каву / з / молоком", "answer": "Вона замовляє борщ і каву з молоком."}, {"jumbled": "У / кафе / Анна / бачить / Олену", "answer": "У кафе Анна бачить Олену."}, {"jumbled": "Анна / готує / вареники / з / картоплею", "answer": "Анна готує вареники з картоплею."}, {"jumbled": "Гості / беруть / тарілки / і / склянки", "answer": "Гості беруть тарілки і склянки."}, {"jumbled": "Анна / каже / Смачного", "answer": "Анна каже: Смачного!"}]`)} />
+
+### Serve the table
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Анна готує ___ з картоплею.", "answer": "вареники", "options": ["вареники", "рахунок", "картку"]}, {"sentence": "Вона ставить на стіл ___.", "answer": "тарілки", "options": ["тарілки", "гривні", "лікаря"]}, {"sentence": "Гості беруть ___.", "answer": "склянки", "options": ["склянки", "магазин", "брата"]}, {"sentence": "Анна каже: ___", "answer": "Смачного!", "options": ["Смачного!", "Скільки коштує?", "Плачу карткою."]}, {"sentence": "Олена бере ___ хліба.", "answer": "шматок", "options": ["шматок", "літр", "пляшку"]}, {"sentence": "Анна наливає ___ води.", "answer": "склянку", "options": ["склянку", "кілограм", "буханку"]}]`)} />
+
+### Repair A1.6 interference
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Repair: Я хочу вода.", "options": [{"text": "Я хочу воду. (Або: Я хочу води).", "correct": true}, {"text": "Я хочу вода.", "correct": false}, {"text": "Я хочу водою.", "correct": false}], "explanation": "Use the direct-object form or the memorized service chunk."}, {"question": "Repair: Я люблю борща.", "options": [{"text": "Я люблю борщ.", "correct": true}, {"text": "Я люблю борща.", "correct": false}, {"text": "Я люблю борщу.", "correct": false}], "explanation": "Борщ stays борщ as a food object."}, {"question": "Repair: Смачний кава.", "options": [{"text": "Смачна кава.", "correct": true}, {"text": "Смачний кава.", "correct": false}, {"text": "Смачне кава.", "correct": false}], "explanation": "Кава is feminine: смачна кава."}, {"question": "Repair: Я є голодний.", "options": [{"text": "Я голодний. (Або: Я хочу їсти).", "correct": true}, {"text": "Я є голодний.", "correct": false}, {"text": "Я маю голодний.", "correct": false}], "explanation": "Omit є in this present-tense state line."}, {"question": "Repair: Моє ім'я є Джон, і я хочу меню.", "options": [{"text": "Мене звати Джон, дайте меню.", "correct": true}, {"text": "Моє ім'я є Джон, і я хочу меню.", "correct": false}, {"text": "Я є Джон і я маю меню.", "correct": false}], "explanation": "Use Мене звати for introducing yourself."}, {"question": "Repair: Чи не могли б ви дати мені рахунок?", "options": [{"text": "Дайте, будь ласка, рахунок.", "correct": true}, {"text": "Чи не могли б ви дати мені рахунок?", "correct": false}, {"text": "Дайте мені рахунком.", "correct": false}], "explanation": "The A1 service request is direct and polite."}, {"question": "Repair: Я плачу рублями.", "options": [{"text": "Я плачу гривнями.", "correct": true}, {"text": "Я плачу рублями.", "correct": false}, {"text": "Я плачу гривень.", "correct": false}], "explanation": "Use гривня for Ukrainian currency."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 **Synthesis of M36-M40 content** — Checkpoint source obligation: no new A1.7 material, only food, cafe, shopping, and people integration.
+- 🔗 [Ukrainian Course: Nouns in the Accusative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-accusative-case/) — Reference already used in A1.6; M41 keeps it as review of direct-object forms.
+- 🔗 [Ukrainian Lessons Podcast Episode 11 lesson notes](https://www.ukrainianlessons.com/wp-content/uploads/2017/05/ULP-1-11-Lesson-Notes.pdf) — Accepted A1.6 food and cafe source reused from M38; supports ordering language without adding new checkpoint content.
+- 🔗 [Ukrainian Lessons Podcast Episode 12](https://www.ukrainianlessons.com/episode12/) — Accepted A1.6 food and drink source reused from M36 and M38.
+- 🔗 [Ukrainian Lessons Podcast Episode 31](https://www.ukrainianlessons.com/episode31/) — Accepted A1.6 shopping source reused from M39 for prices and payment.
+- 🔗 [ULP Season 1 episode index - Episode 33](https://www.ukrainianlessons.com/season1/) — Accepted M40 index source for animate accusative review around people.
+- 🔗 **Wiki: pedagogy/a1/checkpoint-food-shopping** — Authoritative pedagogical brief for M41 checkpoint-food-shopping.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
