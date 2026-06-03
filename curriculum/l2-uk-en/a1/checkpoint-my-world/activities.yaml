@@ -1,0 +1,311 @@
+- id: act-1
+  type: quiz
+  title: Checkpoint warm-up
+  instruction: Choose the safe Ukrainian line.
+  items:
+    - prompt: My name is John.
+      options:
+        - text: Мене звати Джон.
+          correct: true
+        - text: Моє ім'я є Джон.
+          correct: false
+        - text: Я є Джон.
+          correct: false
+      explanation: Use Мене звати... for a name.
+    - prompt: I am a student.
+      options:
+        - text: Я студент.
+          correct: true
+        - text: Я є студент.
+          correct: false
+        - text: Мене студент.
+          correct: false
+      explanation: Present identity normally drops є.
+    - prompt: My book is on the table.
+      options:
+        - text: Моя книга на столі.
+          correct: true
+        - text: Мій книга на столі.
+          correct: false
+        - text: Моє книга на столі.
+          correct: false
+      explanation: Книга is feminine, so use моя.
+    - prompt: I have glasses.
+      options:
+        - text: У мене є окуляри.
+          correct: true
+        - text: Вона має один окуляри.
+          correct: false
+        - text: У мене є один окуляри.
+          correct: false
+      explanation: Окуляри is plural-only.
+- id: act-2
+  type: match-up
+  title: Gender and control words
+  instruction: Match each noun with the control word.
+  pairs:
+    - left: стіл
+      right: він
+    - left: книга
+      right: вона
+    - left: вікно
+      right: воно
+    - left: кімната
+      right: вона
+    - left: місто
+      right: воно
+    - left: книги
+      right: вони
+    - left: окуляри
+      right: вони
+    - left: телефон
+      right: він
+- id: act-3
+  type: fill-in
+  title: Marketplace dialogue
+  instruction: Complete the checkpoint dialogue.
+  items:
+    - sentence: ___ вишиванка біла.
+      answer: Ця
+      options:
+        - Ця
+        - Цей
+        - Це
+      explanation: Вишиванка is feminine in this context.
+    - sentence: ___ глечик старий.
+      answer: Той
+      options:
+        - Той
+        - Та
+        - Те
+      explanation: Глечик is masculine.
+    - sentence: ___ намисто гарне.
+      answer: Це
+      options:
+        - Це
+        - Ця
+        - Цей
+      explanation: Намисто is neuter.
+    - sentence: ___ писанки червоні.
+      answer: Ці
+      options:
+        - Ці
+        - Ця
+        - Це
+      explanation: Писанки is plural.
+    - sentence: Скільки ___ це намисто?
+      answer: коштує
+      options:
+        - коштує
+        - звати
+        - років
+      explanation: Скільки коштує...? asks a price.
+    - sentence: Сто ___.
+      answer: гривень
+      options:
+        - гривень
+        - роки
+        - ім'я
+      explanation: Сто гривень is the price chunk.
+- id: act-4
+  type: group-sort
+  title: Review categories
+  instruction: Sort the words by checkpoint category.
+  groups:
+    - name: Objects
+      items:
+        - стіл
+        - книга
+        - вікно
+        - лампа
+    - name: Colors
+      items:
+        - червоний
+        - синій
+        - білий
+        - жовтий
+    - name: Numbers and prices
+      items:
+        - три
+        - двадцять
+        - сто
+        - гривень
+- id: act-5
+  type: quiz
+  title: Singular, plural, and description
+  instruction: Choose the sentence that matches the noun.
+  items:
+    - prompt: стіл
+      options:
+        - text: Мій стіл великий.
+          correct: true
+        - text: Моя стіл велика.
+          correct: false
+        - text: Моє стіл велике.
+          correct: false
+      explanation: Стіл is masculine.
+    - prompt: кімната
+      options:
+        - text: Моя кімната чиста.
+          correct: true
+        - text: Мій кімната чистий.
+          correct: false
+        - text: Моє кімната чисте.
+          correct: false
+      explanation: Кімната is feminine.
+    - prompt: вікно
+      options:
+        - text: Моє вікно чисте.
+          correct: true
+        - text: Моя вікно чиста.
+          correct: false
+        - text: Мій вікно чистий.
+          correct: false
+      explanation: Вікно is neuter.
+    - prompt: книги
+      options:
+        - text: Мої книги нові.
+          correct: true
+        - text: Моя книги нова.
+          correct: false
+        - text: Мій книги новий.
+          correct: false
+      explanation: Книги is plural.
+- id: act-6
+  type: quiz
+  title: Repair checkpoint traps
+  instruction: Choose the corrected Ukrainian sentence.
+  items:
+    - prompt: Я є студент.
+      options:
+        - text: Я студент.
+          correct: true
+        - text: Я є студент.
+          correct: false
+        - text: Мене студент.
+          correct: false
+      explanation: Present identity normally drops є.
+    - prompt: Моє ім'я є Джон.
+      options:
+        - text: Мене звати Джон.
+          correct: true
+        - text: Моє ім'я є Джон.
+          correct: false
+        - text: Я звати Джон.
+          correct: false
+      explanation: Use the name chunk Мене звати...
+    - prompt: Мій книга на столі.
+      options:
+        - text: Моя книга на столі.
+          correct: true
+        - text: Мій книга на столі.
+          correct: false
+        - text: Моє книга на столі.
+          correct: false
+      explanation: Книга is feminine.
+    - prompt: Вона має один окуляри.
+      options:
+        - text: Вона має окуляри. (або У неї є окуляри.)
+          correct: true
+        - text: Вона має один окуляри.
+          correct: false
+        - text: Вона має одна окуляри.
+          correct: false
+      explanation: Окуляри is plural-only.
+    - prompt: Я бачу великий кімнату.
+      options:
+        - text: Я бачу велику кімнату.
+          correct: true
+        - text: Я бачу великий кімнату.
+          correct: false
+        - text: Я бачу велике кімнату.
+          correct: false
+      explanation: Treat велику кімнату as a safe object chunk.
+    - prompt: Мені 20 роки.
+      options:
+        - text: Мені 20 років.
+          correct: true
+        - text: Мені 20 роки.
+          correct: false
+        - text: Я маю 20 роки.
+          correct: false
+      explanation: Age uses Мені ... років.
+- id: act-7
+  type: fill-in
+  title: Write your checkpoint text
+  instruction: Complete a short personal description.
+  items:
+    - sentence: Мене ___ Анна.
+      answer: звати
+      options:
+        - звати
+        - ім'я
+        - є
+      explanation: Мене звати... is the name chunk.
+    - sentence: Це ___ кімната.
+      answer: моя
+      options:
+        - моя
+        - мій
+        - моє
+      explanation: Кімната is feminine.
+    - sentence: Мій стіл ___.
+      answer: великий
+      options:
+        - великий
+        - велика
+        - велике
+      explanation: Стіл is masculine.
+    - sentence: Моє вікно ___.
+      answer: чисте
+      options:
+        - чисте
+        - чиста
+        - чистий
+      explanation: Вікно is neuter.
+    - sentence: Ці книги ___.
+      answer: нові
+      options:
+        - нові
+        - нова
+        - новий
+      explanation: Книги is plural.
+    - sentence: Мені 20 ___.
+      answer: років
+      options:
+        - років
+        - роки
+        - рік
+      explanation: Use the learned age chunk.
+- id: act-8
+  type: quiz
+  title: Ukrainian cultural frame
+  instruction: Choose the learner-safe course form.
+  items:
+    - prompt: The national flag colors
+      options:
+        - text: синьо-жовтий прапор
+          correct: true
+        - text: жовто-синій порядок
+          correct: false
+        - text: синій знак
+          correct: false
+      explanation: Use синьо-жовтий прапор for the Ukrainian flag.
+    - prompt: The capital in English-facing text
+      options:
+        - text: Kyiv
+          correct: true
+        - text: Kiyiv
+          correct: false
+        - text: Kyjiv
+          correct: false
+      explanation: Kyiv is the Ukrainian form in English.
+    - prompt: The Ukrainian currency
+      options:
+        - text: гривня
+          correct: true
+        - text: крамниця
+          correct: false
+        - text: прізвище
+          correct: false
+      explanation: Гривня is the Ukrainian currency.
