@@ -1,0 +1,88 @@
+- word: фінал
+  translation: finale
+  pos: noun
+  example: "Це фінал А1."
+- word: готовий
+  translation: ready
+  pos: adjective
+  example: "Я готовий до нового дня."
+- word: готова
+  translation: ready
+  pos: adjective
+  example: "Я готова говорити українською."
+- word: вітаю
+  translation: congratulations
+  pos: phrase
+  example: "Вітаю, ти закінчив А1."
+- word: початок
+  translation: beginning
+  pos: noun
+  example: "Це тільки початок."
+- word: сувенір
+  translation: souvenir
+  pos: noun
+  example: "Я купив сувенір."
+- word: листівка
+  translation: postcard
+  pos: noun
+  example: "Ця листівка коштує п'ятдесят гривень."
+- word: магніт
+  translation: magnet
+  pos: noun
+  example: "Я беру цей магніт."
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "Мені потрібен квиток."
+- word: картка
+  translation: card
+  pos: noun
+  example: "Карткою можна?"
+- word: готель
+  translation: hotel
+  pos: noun
+  example: "Я в готелі."
+- word: центр
+  translation: center
+  pos: noun
+  example: "Я їду в центр."
+- word: лінія
+  translation: line
+  pos: noun
+  example: "Мені потрібна зелена лінія."
+- word: карта
+  translation: map
+  pos: noun
+  example: "Я дивлюся на карту."
+- word: круасан
+  translation: croissant
+  pos: noun
+  example: "Будь ласка, круасан."
+- word: борщ
+  translation: borshch
+  pos: noun
+  example: "Я хочу борщ і воду."
+- word: познайомитися
+  translation: to meet
+  pos: verb
+  example: "Я хочу познайомитися з Оленою."
+- word: повторювати
+  translation: to review
+  pos: verb
+  example: "Я буду повторювати українську."
+- word: подорожувати
+  translation: to travel
+  pos: verb
+  example: "Я буду подорожувати Україною."
+- word: щодня
+  translation: every day
+  pos: adverb
+  example: "Я буду говорити щодня."
+- word: чудовий
+  translation: wonderful
+  pos: adjective
+  example: "Сьогодні був чудовий день."
+- word: зрозуміло
+  translation: understood
+  pos: phrase
+  example: "Добре, зрозуміло."
