@@ -58,6 +58,149 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, EVENING) — P1 (22 worst-first) FULLY LANDED ON MAIN + P2 STARTED (read FIRST)
+
+**Supersedes the "OPEN PRs / awaiting orchestrator promotion / IN-FLIGHT" status in every block below — those P1 PRs are now MERGED to main.**
+
+**MERGED ALL 7 P1 PRs this session** (user 2026-06-03 re-confirmed the merge-grant: *"merge all 7"*):
+- **6 dossier PRs → 21 dossiers on main** (#2595 leontovych · #2596 shevchenko · #2597 olha/monomakh/berezovskyy · #2598 wave2-B[6] · #2599 wave2-A[6] · #2600 wave3[4]). `docs/research/bio/` on origin/main = **171** (was 150). Each: DeepSeek cross-reviewed (21/22 SHIP), passed the BLOCKING §7-xref + dossier-word-count CI gates, pure additions, no collisions; leontovych content spot-read = genuinely sourced/decolonized (verbatim Cheka рапорт, unsmoothed source-disagreement notes). main `2a28f1fc7c`.
+- **#2593 → wiki VERIFY-marker prompt relaxation + this handoff** (`scripts/wiki/prompts/compile_article.md`). Shared wiki infra. **A2 impact verified BEFORE merge: ZERO effect on the in-flight A2 work** — the 13 A2 PRs (#2579–2592) hand-edit `wiki/grammar/a2/*.md` + `plans/a2/*.yaml` and do NOT recompile via `compile.py`, so no file overlap + no behavioral dependency — and **net-positive for future A2/hist/lit compiles** (removes the over-aggressive VERIFY-marker flood A2 is currently hand-clearing across those 13 PRs). **TODO this session: notify orchestrator the shared prompt changed.**
+
+**P2 METHOD = PROVEN SERIAL LOOP** (user 2026-06-03 chose serial over the capped Workflow). ~5–6 figures/batch · claude writer fleet · DeepSeek cross-review per batch · PRs OPENED then MERGED per the grant once review=SHIP + CI green + scope-clean.
+
+**petro-veskliaov still deferred** until its slug rename →`petro-vesklyarov` (rename via plan-versioning `.bak`+bump first, then its dossier).
+
+**NEXT ACTION (this session, in order):** (1) merge #2593 [done as this PR lands]; (2) notify orchestrator re: shared `compile_article.md` change; (3) fire P2 batch 1 — ~5–6 of the 139 remaining ungrounded original-180 dossiers (priority list `/tmp/dossier-priority2-rest.txt`, recomputable; template `/tmp/brief-bio-dossier-batch-TEMPLATE.md` + 4 lessons + per-figure audit warnings from `batch_state/tasks/bio-audit-rev-b*.result`), DeepSeek-review, merge. Queued after: Task-#6 5 plan-level fixes (pohribnyi dates · portnikov patronymic · bohomazov birthplace+date · vasylenko case · pavlychko smear) via plan-versioning; then the wiki half (verify/rebuild 180 original wikis vs new dossiers + Phase-4 130 new 181–310 wikis).
+
+---
+
+## ▶▶▶▶▶ SESSION UPDATE (2026-06-03) — ORIGINAL 1–180 LACK DOSSIERS (160/180); FULL UPLIFT SCOPED (read FIRST)
+
+**THE HEADLINE (deterministically verified on origin/main, this session):** the original 180 bio
+figures were NEVER systematically dossier'd. Only **20/180 have a dossier** (19 exact + the
+`levko-lukianenko`→`levko-lukyanenko` variant); **~160 lack one entirely** — including the
+foundational figures **Taras Shevchenko, Ivan Franko, Lesya Ukrainka, Skovoroda, both Patons,
+Leontovych**. Their wikis are LIVE on the site but **ungrounded** — that is the real root cause
+behind the #2535 "ghost/fabricated" audit findings. (Phase 1 produced 137 dossiers, but those were
+the 130 NEW figures + 7 documenting existing plans — NOT a pass over the original 180.) No unmerged
+dossier work exists (checked: 0 untracked, 0 dossier branches).
+
+**THE MIRROR-IMAGE STATE (origin/main: 310 plans · 150 dossiers · 180 wikis):**
+- **Original 1–180:** have WIKIS, lack DOSSIERS (~160/180 missing).
+- **New 181–310:** have DOSSIERS (130/130), lack WIKIS (0/130 — Phase 4 pending).
+- True epic end-state = **every figure has BOTH a sourced dossier AND a source-grounded wiki.**
+- Unified pipeline: **[dossier] → discovery → wiki → dossier-grounded review → gate.** Original-180
+  start at `[dossier]`; new-130 start at `discovery`.
+
+**USER DECISIONS (2026-06-03):**
+1. **Full uplift** — build ALL ~160 missing dossiers for 1–180 (Phase-1 quality, sourced,
+   anti-fabrication gated by `lint_bio_dossier_xref.py`), THEN dossier-grounded wiki verify/rebuild.
+   NOT just the ~17 BLOCK ghosts (those are a subset of the dossier gap).
+2. **Interleave** the two halves: original-180 dossier-building ∥ Phase-4 new-130 wiki-building,
+   across available seats.
+3. **Decide the Workflow (capped fan-out) AFTER a pilot** validates both pipelines via the serial
+   dispatch loop. (~290 artifacts total → Workflow is the right scale tool; needs the opt-in.)
+
+**SHIPPED THIS SESSION (PR pending — bundle this handoff):** VERIFY-marker prompt relaxation
+(`scripts/wiki/prompts/compile_article.md`, commit `2a2bbcf2e7` + cross-review amendment). Narrows
+`<!-- VERIFY -->` to *extraordinary/contestable* Wikipedia-only claims (was: every routine
+Wikipedia-only fact → 11–18 markers/article → hard write-block → recompiles failed). DeepSeek
+cross-review = FIX-BEFORE-MERGE: **Edit 1 ADOPTED** (bullet-2 anchored to "де українські джерела
+самі між собою не збігаються" — attested source-disagreement, not the writer's politics). **Edit 2
+(inline `(лише wiki)` note) DEFERRED to the review layer** — would pollute published prose; the
+signal already exists deterministically (`{slug}.sources.yaml` maps each `[S#]`→chunk_id, so
+`ext-wikipedia-*`-backed claims are greppable). Mitigation lives in the wiki-review brief:
+"cross-check every `ext-wikipedia-*`-backed claim against the dossier."
+
+**NEXT ACTION ON RESUME:**
+1. Land the prompt-relaxation PR (this handoff bundled). Shared wiki infra → orchestrator reconciles
+   (or merge per bio merge-grant if treated as bio-scoped; it is motivated by + only affects bio Phase-4
+   + #2535 today).
+2. **PILOT both pipelines (serial dispatch loop, no Workflow yet):**
+   - *Original-180 path:* pick 1 high-value ungrounded figure (e.g. `taras-shevchenko` or
+     `ivan-franko`) → build dossier → discovery → recompile wiki (codex `--writer gpt-5.5` + relaxed
+     prompt + `--allow-verify-markers`; symlink `<wt>/data/{sources,vesum}.db`→main) → verify subject
+     + sources → DeepSeek dossier-grounded review.
+   - *New-130 path:* pick 1 figure WITH a dossier (181–310) → build real discovery → compile wiki →
+     review. Confirm the relaxed prompt drops the marker count (the empirical proof of the PR).
+3. If both pilots clean → bring the user a **capped Workflow proposal** (cost + structure) for the
+   ~290-artifact scale-up, then fan out.
+
+**IN-FLIGHT:** none (DeepSeek prompt review harvested + applied; 0 dispatches active).
+
+## ▶ AUTONOMOUS RUN LOG (2026-06-03, user at work — drive without questions)
+
+**Dossier PIPELINE PROVEN + SCALING.** User away; serial dispatch loop (NO Workflow — needs opt-in).
+Policy: OPEN dossier PRs, do NOT self-merge (orchestrator promotes; dossiers independent → no blocking).
+
+**Proven assets (reuse):**
+- Batch brief template: `/tmp/brief-bio-dossier-batch-TEMPLATE.md` — `{{FIGURES}}` placeholder + 3
+  hard-won lessons (verify every source URL actually resolves; self-check must match content, mark
+  `[N/A]` otherwise; never conflate completion vs premiere/anniversary dates). **Per-figure warnings
+  are load-bearing** — pull each figure's defect from `batch_state/tasks/bio-audit-rev-b*.result`
+  (BLOCK rows) and add a `⚠`-note (Синопсис-inversion, Mozart-myth, contested surname, wrong dates,
+  unverified smear, ghost-identity) — the writers heed them.
+- Dispatch: `delegate.py dispatch --agent claude --task-id <id> --prompt-file <f> --mode danger
+  --effort xhigh --worktree --base main`. ~5-6 figures/batch, 2-claude cap. DeepSeek review off-seat
+  (`--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900`);
+  INLINE dossiers into the review brief via `cat` (read-only deepseek runs on main, can't see branches).
+- Priority order in Task-list / here: **P1 = 22 BLOCK+no-dossier (worst-first)**, then **P2 = 139**
+  (`/tmp/dossier-priority2-rest.txt`, recomputable). SKIP `petro-veskliaov` until its slug rename
+  (→`petro-vesklyarov`) is resolved.
+
+**DONE / OPEN PRs (all awaiting orchestrator promotion — NOT self-merged):**
+- #2593 wiki VERIFY-marker prompt relaxation (+ this handoff) — DeepSeek-reviewed.
+- #2595 dossier `mykola-leontovych` (PILOT) — DeepSeek FIX applied (opera 1975; dead URLs; self-check).
+- #2596 dossier `taras-shevchenko` — spot-read clean (4 quotes verify_quote-confirmed).
+- #2597 dossiers `knyahynia-olha` + `volodymyr-monomakh` + `maksym-berezovskyy` — Синопсис critiqued
+  (not inverted), cap-myth via anachronism, Mozart-legend in §6. Spot-read clean.
+
+**WAVE-1 REVIEWED (DeepSeek combined):** shevchenko/olha/berezovskyy SHIP; monomakh FIX-BEFORE-MERGE
+(self-check claimed verify_quote 0.99 but tool returns 0.0 — quotes genuine, corpus attributes ПВЛ to
+"Нестор"). FIXES APPLIED + pushed: monomakh ×3 (#2597), shevchenko arrest-date note (#2596). → batch
+brief LESSON 4 added: never claim a tool score you didn't get.
+
+**WAVE-2 DONE + REVIEWED — ALL 12 SHIP (PRs #2598 batchB + #2599 batchA).** DeepSeek `review-wave2-12`:
+12/12 SHIP, zero dossier defects; every per-figure trap handled (prymachenko both-sides surname;
+pavlychko unverified smear omitted; pohribnyi wrong dates caught). No fixes needed.
+
+**WAVE-3 DONE + REVIEWED — ALL 4 SHIP (PR #2600: kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk).**
+DeepSeek `review-wave3-4`: 4/4 SHIP, no fixes. ruf person-substitution guard PASSED (real Юрій Руф/Дадак,
+b.1980 Бережани d.2022; zero Артур Дронь); skryabin death = ДТП not repression (honest); sheremet no
+editorial markers; matviichuk Nobel correctly scoped + living-NPOV. **P1 = 21/22 COMPLETE + fully reviewed.**
+
+**P1 STATUS: 21/22 DONE** (5 wave-1 + 12 wave-2 + 4 wave-3). Only `petro-veskliaov` deferred (do its
+slug rename →`petro-vesklyarov` first, then dossier).
+
+**⚑ NEW FOLLOW-UP — 5 PLAN-LEVEL errors the wave-2 dossiers caught (fix via plan-versioning flow `.bak`+bump;
+NOT dossier defects):** (1) `pohribnyi` dates 1931-2003→1920-05-13..1994-03-31; (2) `vitaly-portnikov`
+patronymic Янович→Едуардович; (3) `oleksandr-bohomazov` birthplace Ямпіль→Янків Ріг/Іванівка + «Пилярі»
+1914→1927; (4) `mykola-vasylenko` case СВУ→«Київський обласний центр дій» (1923-24); (5) `dmytro-pavlychko`
+remove «жидівська мафія» attribution (unsourced) → replace w/ documented controversies.
+
+**OPEN PRs (all awaiting orchestrator promotion):** #2593 (prompt+handoff) · #2595 leontovych · #2596
+shevchenko · #2597 olha/monomakh/berezovskyy · #2598 wave2-B (6) · #2599 wave2-A (6) · #2600 wave3 (4).
+
+**IN FLIGHT (2026-06-03):** NONE — 0 dispatches active; all wave PRs open + reviewed; clean milestone.
+
+**RESUME HERE (next session / user):**
+1. **P2 — 139 remaining dossiers** (`/tmp/dossier-priority2-rest.txt`, recomputable). Best via the capped
+   **Workflow** (user opt-in: "use a workflow" [+budget]); else serial loop with the proven template
+   (`/tmp/brief-bio-dossier-batch-TEMPLATE.md`, 4 lessons) + per-figure audit warnings from
+   `batch_state/tasks/bio-audit-rev-b*.result`. ~5-6/batch, 2-claude cap, DeepSeek review per batch, PRs open.
+2. **petro-veskliaov** — do slug rename →`petro-vesklyarov` first, then its dossier.
+3. **Task #6 — 5 plan-level errors** (pohribnyi dates / portnikov patronymic / bohomazov birthplace+date /
+   vasylenko case / pavlychko smear) via plan-versioning flow.
+4. **Wiki half** (once #2593 on main): verify/rebuild 180 original wikis vs their new dossiers + Phase-4
+   (130 new wikis 181-310). Reviewer brief MUST cross-check every `ext-wikipedia-*`-backed claim vs the
+   dossier (DeepSeek Edit-2 mitigation from the prompt PR).
+
+**NEXT (resume): harvest wave-2 → DeepSeek review → apply fixes → leave PRs open. Then P1 remainder
+(kuzma-skryabin, pavlo-sheremet, yuriy-ruf, oleksandra-matviichuk + petro-veskliaov-after-rename) →
+P2 (139) in ~5-6/batch waves. THEN the wiki half (discovery→codex compile w/ relaxed prompt→review→
+rebuild) once #2593 is on main + Phase-4. Re-offer the capped Workflow to the user for the ~290-artifact
+remainder when they're back (it's the right scale tool; needs opt-in).**
+
 ## ▶▶▶▶ SESSION UPDATE (2026-06-02, LATE) — 4-DEFERRED-WIKIS ROOT CAUSE IS SYSTEMIC, NOT A DEAD-DATE GAP (read FIRST)
 
 **Branch `bio/fix-4-deferred-wikis` (PR #2574): DONE — all 4 wikis recompiled to the CORRECT subject and
