@@ -1,0 +1,64 @@
+- word: історія
+  translation: story, history
+  pos: noun
+  example: "Це моя історія."
+- word: народитися
+  translation: to be born
+  pos: verb
+  example: "Я народився в Канаді."
+- word: народилася
+  translation: was born (feminine)
+  pos: verb
+  example: "Вона народилася у Львові."
+- word: раніше
+  translation: earlier, before
+  pos: adverb
+  example: "Раніше я жив у Торонто."
+- word: зараз
+  translation: now
+  pos: adverb
+  example: "Зараз я живу в Києві."
+- word: далі
+  translation: next, further
+  pos: adverb
+  example: "Далі я буду вчити українську."
+- word: у дитинстві
+  translation: in childhood
+  pos: phrase
+  example: "У дитинстві я ходила в школу."
+- word: жити
+  translation: to live
+  pos: verb
+  example: "Я буду жити у Львові."
+- word: жив
+  translation: lived (masculine)
+  pos: verb
+  example: "Раніше я жив у Варшаві."
+- word: жила
+  translation: lived (feminine)
+  pos: verb
+  example: "Раніше я жила в Одесі."
+- word: переїхати
+  translation: to move, relocate
+  pos: verb
+  example: "Потім я переїхав у Київ."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Далі я буду працювати тут."
+- word: вивчати
+  translation: to study
+  pos: verb
+  example: "Зараз я вивчаю українську."
+- word: подорожувати
+  translation: to travel
+  pos: verb
+  example: "Ми будемо подорожувати Україною."
+- word: родина
+  translation: family
+  pos: noun
+  example: "Моя родина говорить українською."
+- word: щодня
+  translation: every day
+  pos: adverb
+  example: "Я буду говорити українською щодня."

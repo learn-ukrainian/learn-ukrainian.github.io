@@ -1,0 +1,16 @@
+- title: "Wiki: pedagogy/a1/my-story"
+  role: internal wiki
+  source_ref: "Wiki: pedagogy/a1/my-story"
+  notes: "Pedagogical brief for A1 first-person life stories, time sequencing, and micro-narratives."
+- title: "State Standard 2024, §4.2.4.1"
+  role: standard reference
+  source_ref: "State Standard 2024, §4.2.4.1"
+  notes: "Plan reference for combining past, present, and future in short communicative narratives."
+- title: "Internal module M48: what-happened"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/what-happened/module.md"
+  notes: "Reuses past-tense gender endings without expanding beyond the taught A1 set."
+- title: "Internal module M50: what-will-happen"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/what-will-happen/module.md"
+  notes: "Reuses compound future only: буду / буде / будемо + infinitive."
