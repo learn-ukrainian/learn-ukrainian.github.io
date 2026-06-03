@@ -1,0 +1,120 @@
+- word: що
+  translation: what; that
+  pos: question word; connector
+  example: "Я знаю, що це кафе."
+- word: де
+  translation: where
+  pos: question word; connector
+  example: "Я знаю, де парк."
+- word: коли
+  translation: when
+  pos: question word; connector
+  example: "Скажи, коли урок."
+- word: знати
+  translation: to know
+  pos: verb
+  example: "Я знаю, де кафе."
+- word: не знати
+  translation: not to know
+  pos: verb phrase
+  example: "Я не знаю, де магазин."
+- word: думати
+  translation: to think
+  pos: verb
+  example: "Я думаю, що це добре."
+- word: казати
+  translation: to say; to tell
+  pos: verb
+  example: "Вона каже, що урок сьогодні."
+- word: сказати
+  translation: to say; to tell
+  pos: verb
+  example: "Скажи, коли зустріч."
+- word: речення
+  translation: sentence
+  pos: noun
+  example: "Це коротке речення."
+- word: кома
+  translation: comma
+  pos: noun
+  example: "Тут потрібна кома."
+- word: частина
+  translation: part
+  pos: noun
+  example: "Це друга частина речення."
+- word: деталь
+  translation: detail
+  pos: noun
+  example: "Скажи одну деталь."
+- word: факт
+  translation: fact
+  pos: noun
+  example: "Це простий факт."
+- word: місце
+  translation: place
+  pos: noun
+  example: "Де це місце?"
+- word: час
+  translation: time
+  pos: noun
+  example: "Коли цей час?"
+- word: урок
+  translation: lesson
+  pos: noun
+  example: "Скажи, коли урок."
+- word: зустріч
+  translation: meeting
+  pos: noun
+  example: "Я знаю, коли зустріч."
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Я знаю, де кафе."
+- word: парк
+  translation: park
+  pos: noun
+  example: "Ти знаєш, де парк?"
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Я не знаю, де магазин."
+- word: фонтан
+  translation: fountain
+  pos: noun
+  example: "Я біля фонтану."
+- word: будинок
+  translation: building; house
+  pos: noun
+  example: "Це будинок, що стоїть біля дерева."
+- word: дерево
+  translation: tree
+  pos: noun
+  example: "Дерево біля будинку."
+- word: вулиця
+  translation: street
+  pos: noun
+  example: "Де ця вулиця?"
+- word: близько
+  translation: close; nearby
+  pos: adverb
+  example: "Магазин близько."
+- word: саме
+  translation: exactly
+  pos: adverb
+  example: "Я не знаю, де саме."
+- word: тут
+  translation: here
+  pos: adverb
+  example: "Він тут."
+- word: там
+  translation: there
+  pos: adverb
+  example: "Парк там."
+- word: правильно
+  translation: correctly; right
+  pos: adverb
+  example: "Це правильно."
+- word: добре
+  translation: good; well
+  pos: adverb; adjective
+  example: "Я думаю, що це добре."
