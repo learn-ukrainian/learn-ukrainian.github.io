@@ -2,7 +2,7 @@ module: a1-037
 level: A1
 sequence: 37
 slug: i-eat-i-drink
-version: '1.2.3'
+version: '1.2.2'
 title: Я їм, я п'ю
 subtitle: Я їм хліб, п'ю каву — знахідний відмінок для того, що ви їсте та п'єте
 focus: grammar
@@ -121,5 +121,5 @@ references:
 - title: ULP Season 1, Episode 32
   url: https://www.ukrainianlessons.com/episode32/
   notes: Знайомство зі знахідним відмінком — неістоти.
-- title: Заболотний Grade 6, p.94
-  notes: 'Підхід української школи: знахідний відмінок як предмет, на який спрямована дія; бачу що? кого?'
+- title: 'Підручник 4 класу: Знахідний відмінок (Заболотний)'
+  notes: 'Підхід української школи: бачу що? кого?'
