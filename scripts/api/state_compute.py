@@ -37,21 +37,10 @@ from .state_helpers import (
     # BACKWARD-COMPAT: v3/v2 parsers needed for modules not yet rebuilt on v6
     parse_v3_phase_status,
     parse_v5_phase_status,
+    plan_has_revision_log,
     read_v2_state,
     read_v3_state,
 )
-
-
-def _plan_has_revision_log(plan_path: Path) -> bool:
-    """Return true when a plan records versioned fixes in its YAML."""
-    try:
-        data = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
-        return False
-    if not isinstance(data, dict):
-        return False
-    fixes = data.get("plan_fixes")
-    return isinstance(fixes, list) and bool(fixes)
 
 
 def severity_key(m: dict) -> int:
@@ -284,7 +273,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
         "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
         "final_review": get_final_review_info(track_dir, slug),
-        "enriched": _plan_has_revision_log(plan_file),
+        "enriched": plan_has_revision_log(plan_file),
         "quick_verify": _get_quick_verify(orch_dir),
         "consultations": state_data.get("consultations", []),
         "comms": get_broker_messages_for_slug(slug, limit=15),

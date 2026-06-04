@@ -77,6 +77,7 @@ _PIPELINE_PHASE_LABELS = _V6_PHASE_LABELS
 
 CURRICULUM_YAML = CURRICULUM_ROOT / "curriculum.yaml"
 PLANS_ROOT = CURRICULUM_ROOT / "plans"
+_EMPTY_YAML_VALUES = {"", "[]", "null", "Null", "NULL", "~"}
 
 # Track -> profile mapping. Professional tracks were deleted 2026-04-10
 # (STEM will eventually replace them; that work is not in this issue).
@@ -92,6 +93,38 @@ PROFILE_MAP = {
     "lit-crimea": "seminar",
     "oes": "seminar", "ruth": "seminar",
 }
+
+
+def plan_has_revision_log(plan_path: Path) -> bool:
+    """Return true when a plan has a non-empty top-level plan_fixes list."""
+    try:
+        lines = plan_path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return False
+
+    for index, line in enumerate(lines):
+        if not line.startswith("plan_fixes:"):
+            continue
+
+        value = line.partition(":")[2].strip()
+        if " #" in value:
+            value = value.split(" #", 1)[0].strip()
+        if value.startswith("#"):
+            value = ""
+        if value not in _EMPTY_YAML_VALUES:
+            return True
+
+        for child in lines[index + 1:]:
+            stripped = child.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            if stripped.startswith("-"):
+                return True
+            if not child.startswith((" ", "\t")):
+                return False
+        return False
+
+    return False
 
 # Legacy phase orders kept for parsing historical state files only.
 # Prefer ``V6_PHASE_ORDER`` for any new code.

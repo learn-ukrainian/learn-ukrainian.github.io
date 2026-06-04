@@ -97,6 +97,36 @@ class TestComputeShippable:
         assert _compute_shippable("pass", None) is False
 
 
+class TestPlanRevisionLog:
+    def test_block_style_plan_fixes_count_as_enriched(self, tmp_path):
+        from scripts.api.state_helpers import plan_has_revision_log
+
+        plan = tmp_path / "plan.yaml"
+        plan.write_text(
+            "module: a2-001\n"
+            "plan_fixes:\n"
+            "- version: 1.2.4\n"
+            "  changes:\n"
+            "  - Added readiness metadata.\n",
+            encoding="utf-8",
+        )
+
+        assert plan_has_revision_log(plan) is True
+
+    def test_empty_plan_fixes_do_not_count_as_enriched(self, tmp_path):
+        from scripts.api.state_helpers import plan_has_revision_log
+
+        plan = tmp_path / "plan.yaml"
+        plan.write_text("module: a2-001\nplan_fixes: []\n", encoding="utf-8")
+
+        assert plan_has_revision_log(plan) is False
+
+    def test_missing_plan_does_not_count_as_enriched(self, tmp_path):
+        from scripts.api.state_helpers import plan_has_revision_log
+
+        assert plan_has_revision_log(tmp_path / "missing.yaml") is False
+
+
 class TestGetStressIssues:
     def test_no_screen_result(self, module_tree):
         from scripts.api.state_compute import _get_stress_issues

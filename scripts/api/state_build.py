@@ -7,8 +7,6 @@ aggregation. All functions are sync and designed for asyncio.to_thread().
 import json
 from datetime import UTC, datetime
 
-import yaml
-
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
@@ -23,6 +21,7 @@ from .state_helpers import (
     get_audit_status,
     get_final_review_info,
     get_plan_slugs,
+    plan_has_revision_log,
     read_v2_state,
     read_v3_state,
 )
@@ -36,18 +35,6 @@ except ImportError:
         "annotate", "vocab", "enrich", "verify", "review", "stress",
         "publish", "audit",
     ]
-
-
-def _plan_has_revision_log(plan_path) -> bool:
-    """Return true when a plan records versioned fixes in its YAML."""
-    try:
-        data = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
-        return False
-    if not isinstance(data, dict):
-        return False
-    fixes = data.get("plan_fixes")
-    return isinstance(fixes, list) and bool(fixes)
 
 
 def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
@@ -200,7 +187,7 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
         if _compute_shippable(audit["status"], review_data["score"]):
             shippable += 1
 
-        if _plan_has_revision_log(plan_dir / f"{slug}.yaml"):
+        if plan_has_revision_log(plan_dir / f"{slug}.yaml"):
             enriched += 1
 
         fr_r, fr_a, fr_att = _check_final_review_health(track_dir, num, slug)
@@ -310,8 +297,12 @@ def compute_enrichment_status(track: str | None) -> dict:
         if not plan_slugs:
             continue
         plan_dir = PLANS_ROOT / track_id
-        enriched = sum(1 for _, slug in plan_slugs if _plan_has_revision_log(plan_dir / f"{slug}.yaml"))
-        not_enriched = [slug for _, slug in plan_slugs if not _plan_has_revision_log(plan_dir / f"{slug}.yaml")]
+        revision_logs = [
+            (slug, plan_has_revision_log(plan_dir / f"{slug}.yaml"))
+            for _, slug in plan_slugs
+        ]
+        enriched = sum(1 for _slug, has_revision_log in revision_logs if has_revision_log)
+        not_enriched = [slug for slug, has_revision_log in revision_logs if not has_revision_log]
         total = len(plan_slugs)
         tracks[track_id] = {
             "total": total, "enriched": enriched, "pending": total - enriched,
