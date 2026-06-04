@@ -60,6 +60,7 @@ class TestExtractStressedWords:
         assert words[0][1] == 2  # line 2
 
 
+@pytest.mark.slow
 class TestVerifyStressMarks:
     """Integration tests — require ukrainian-word-stress + Stanza model."""
 
