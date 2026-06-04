@@ -58,6 +58,44 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶▶▶▶▶▶ SESSION-END HANDOFF (2026-06-04) — RESUME HERE (read FIRST, above the fleet table)
+
+**Session wrapped by user ("do a session handoff, continue next one"). The fleet routing table + Jun-18 agy
+migration + seat-utilization are in the block below (#2678). This is the DELTA + resume checklist.**
+
+### 🔧 IN-FLIGHT DISPATCHES — harvest these FIRST next session (`curl -sS http://127.0.0.1:8765/api/delegate/active`)
+1. **`fix-ulp-stress` (claude)** — fixing the **ULP-stress pytest RED on main** (the critical-path blocker). Failing:
+   `test_immersion_rule_ulp::{test_ulp_fidelity_correction_reruns_stress_and_gate, test_linear_pipeline_stress_annotation_marks_module_and_vocabulary}`
+   + `test_post_processor_mutation_invariant[stress_annotator…]`. Clue baked in: PASS ~130 commits back, FAIL on
+   current main → recent regression in `scripts/build/stress_annotator.py`/`linear_pipeline.py`. Brief: `/tmp/brief-fix-ulp-stress.md`.
+   **Next session: harvest the PR → verify pytest green → merge. THIS UNBLOCKS #2675 (agy --model) + the gemini→agy migration.**
+2. **`bio-expand-scholars` (codex)** — expanding the 6 thin gemini scholar dossiers (#2676 shipped at 797–1036w < 1200
+   floor) to ≥1500w. Next session: harvest → DeepSeek review → verify all ≥1500w → merge.
+3. **`#2675` (agy adapter --model fix)** — OPEN, BLOCKED by the ULP-stress red. Merge once #1 greens main.
+
+### 🛰 GROK ACCESS — UPDATED ROUTING (user 2026-06-04)
+grok-4.3 (and grok models) = via **hermes OR opencode — BOTH point to the xAI SuperGrok sub.** NOT cursor.
+**⚠ hermes is currently being REBUILT** → use **opencode** meanwhile, or wait for hermes. Then run the grok-4.3
+PROSE eval (a small dossier batch) and judge. grok-build stays CODE-only.
+
+### ✅ MERGED THIS SESSION-SEGMENT
+- #2669 Wave K (6 codex rulers) · #2670 salvage (petliura+kostenko) · #2672 gemini living-writers (3) · #2673 codex
+  (vynnychuk+shkliar) · #2674 claude statehood incl. **shukhevych** (exemplary NPOV) · #2676 gemini scholars (6, THIN→expanding)
+  · #2677 claude early-modern (6) · #2549 cursor fix · #2671/#2678 handoff saves.
+- **Dossiers on main ≈ 243; queue ≈ 62** (recompute: `plans − dossiers`, self-correcting).
+- 2 Phase-4 backfill notes (mohyla OS/NS birth-date clarity; boretskyi "October 1620" + IEU URL) — accurate, polish-only.
+
+### ▶ NEXT-SESSION CHECKLIST (priority order)
+1. Harvest `fix-ulp-stress` → merge → **escalate done** (unblocks agy). If it failed, re-fire to codex.
+2. Harvest `bio-expand-scholars` → review → merge (verify ≥1500w each).
+3. Merge #2675 (agy) once main green → start gemini→agy registry cutover (**Jun-18 hard deadline, ~2 wks**).
+4. Wire grok via **opencode** (hermes rebuilding) → grok-4.3 prose eval.
+5. Continue dossier rounds from the ~62 queue: codex + claude[cap-1] + gemini[brief MUST say ≥1500w] + agy (once #2675 lands).
+   **ALWAYS word-count-check gemini/agy output before merge** (the gate is advisory — it does NOT block).
+6. Optional improve: ship `scripts/agent_seat_utilization.py` (on-demand kubedojo report); rebalance load off claude/deepseek onto codex/cursor/agy/grok.
+
+---
+
 ## ▶▶▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-04) — FLEET ROUTING LOCKED + GEMINI-CLI RETIRES JUNE 18 → MIGRATE TO AGY (read FIRST)
 
 **This block is the SSOT for the agent fleet + the urgent gemini→agy migration. Supersedes earlier fleet notes.**
