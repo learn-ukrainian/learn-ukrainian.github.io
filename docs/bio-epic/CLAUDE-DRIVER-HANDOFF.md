@@ -58,7 +58,43 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
-## ▶▶▶▶▶▶▶▶▶▶ SESSION-END HANDOFF (2026-06-04) — RESUME HERE (read FIRST, above the fleet table)
+## ▶▶▶▶▶▶▶▶▶▶▶ SESSION-END HANDOFF (2026-06-04, CONT.) — RESUME HERE (LATEST; supersedes block below)
+
+*main observed at `160a74dac0` (after this session's 3 dossier-batch merges). Local main kept read-only-synced; orchestrator owns main + the 77-PR drain.*
+
+### ✅ DONE THIS SESSION
+- **Git sorted (P0 at start):** local `main` was **123 commits behind** origin with a dirty non-bio tree (stale ULP-stress attempt + redundant session-state copies). Stashed the cruft (recoverable `stash@{0}`), fast-forwarded local main. Bio lane clean. (Mid-session I briefly worked the grok edit in the MAIN checkout → user flagged it → moved to a worktree. **Lesson: NEVER edit in the main checkout; always a worktree.**)
+- **DOSSIER ROUND — 18 merged, queue 62→43.** 3-writer batch (user-approved claude+codex+cursor, 6 each), all **6/6 SHIP**, dual/single cross-family reviewed, **§7-xref clean on main (verified)**, **zero fabrication shipped**:
+  - **#2687** cursor (composer-2.5): dimarov, chaikovskyi, antonych, stupka, vilde, zankovetska.
+  - **#2688** claude: dontsov, horska, kotsyubailo, handziuk, kryvtsov, ivan-lypa (Kerch-not-Poltava fix applied).
+  - **#2689** codex: krymskyi, liatoshynskyi, bortnyanskyy (Mozart-myth demoted), khotkevych, vyshnevetsky, hordiyenko (Історія.РФ dropped).
+- **#2680 (6 scholar expansions) — HELD, fabrication caught.** DeepSeek + my own `verify_quote` found codex **altered Ohienko's attested «одна літературна мова, один правопис» into an invented triad «одна мова, одна церква, одна держава»** (the триад is NOT attested; the real slogan verifies 1.0 from 3 corpus sources). Fix-request routed to codex (bridge msg **1121**); codex re-pushes its own branch. DO NOT merge #2680 until fixed + re-reviewed.
+- **grok PROVEN + WIRED.** Ground-checked via `hermes --provider xai-oauth`: **grok-4.20-0309-reasoning** (content/NPOV/living-person review) + **grok-build-0.1** (code review) — both disciplined, zero fabrication. Adapter wired on branch **`claude/wire-grok-hermes-xai`** (worktree `.worktrees/dispatch/claude/wire-grok-hermes-xai`) — HELD (code → blocked by main-red; grok-self-reviewed the diff). Registry default → grok-4.20-0309-reasoning, +code_review capability.
+- **agy re-tested (user: "don't be static").** Model-picking is **NOT live on main** — `ask-agy --to-model` is ignored, it ran `gemini-3.5-flash-high`; needs **#2675** merged (the agy `--model` wire, open, blocked by main-red). BUT even on Flash agy did NOT fabricate people (4/5 §7 slugs exact; 5th = real person, wrong romanization). **The stale "agy never for factual / fabricates §7" verdict is overstated — re-baseline + re-confirm on Gemini 3.1 Pro once #2675 lands** (also unblocks the June-18 gemini→agy migration).
+
+### 🚦 FLEET ROUTING — UPDATES (supersede the table below)
+- **Reviewer-of-record = DeepSeek-pro** (`--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600`): corpus-grounded `verify_quote` fabrication-catcher — it caught the Ohienko fabrication grok MISSED. **Always run verify_quote on every §4 quote (non-negotiable post-Ohienko).**
+- **grok-4.20-0309-reasoning = strong SECOND reviewer** (NPOV + living-person lens; it caught living-person nuance DeepSeek missed). **Use BOTH, not grok solo** — each catches what the other misses. **grok-build-0.1 = code review.** All via `hermes --provider xai-oauth` (idle paid xAI sub — lean on it; off-seat).
+- **cursor = throughput-supplement** (`--model composer-2.5` PINNED). Per user: barely-used API → its `rate_limited` is **throughput throttling, NOT budget exhaustion** — keep in rotation, fire smaller batches, **salvage committed work on rate-limit** (cursor #2687 rate-limited before PR; driver pushed+PR'd it; it passed clean). composer-2.5 produced honest, decolonized, gate-clean dossiers (better than the lane's reputation).
+- **DISPATCH-WRITER briefs MUST carry:** the #M-4 anti-fabrication preamble + **the Ohienko quote lesson** (never alter/invent a quote; if not in corpus, cite a specific edition or flag "не в корпусі") + the bare-slug §7 rule + per-figure audit warnings from `batch_state/tasks/bio-audit-rev-b*.result`.
+
+### 🔴 NON-BIO CONTEXT (orchestrator owns; I advised only)
+- **77-PR pileup root cause:** ONE flaky **required** check (`Test (pytest)` — stanza UK-model md5 race under `pytest -n auto`) + a **50-deep DEPENDENT a1-stack train**. Only `Test (pytest)` is branch-protection-required. **#2681** (filelock, by `fix-ulp-stress`) fixes the race — GREEN, unmerged, it's the **keystone** to drain the queue (non-bio → orchestrator merges). CI is currently SATURATED (even docs-only bio PRs queued behind the train).
+- Round-2 operating-model input + "switch off Gemini Code Assist (the 6 `gemini-*.yml`; retires Jun-18; advisory-only, not required)" recommendation sent to codex (bridge msgs **1120/1121**).
+- **I HELD the next dossier round** to avoid worsening CI saturation — resume firing once the queue drains.
+
+### 📋 MODULE-BUILD TODOs (from reviews — NOT dossier-blocking; fix at wiki/module stage)
+cursor: pin wiki/memoir-attributed quotes to named sources (stupka + vilde need ≥2 verbatim quotes; zankovetska paraphrase→exact 1883 text). claude: ivan-lypa add Огієнко *Наша культура* 1937 page-ref; dontsov verify 1-day DOB (christening record №214). codex: vyshnevetsky §4 Baida confidence is 0.96 not the stated 1.0 (monomakh LESSON-4: never claim a tool score you didn't get).
+
+### ▶ NEXT ACTION ON RESUME
+1. **#2680**: when codex re-pushes the fix, re-review (DeepSeek + verify_quote) → merge.
+2. **Continue the dossier queue (43 left)** in ~6-figure batches (claude + codex + cursor[composer]; agy once #2675 lands), DeepSeek+grok dual cross-review per batch, merge per grant. **HOLD if CI still saturated** — don't add to the train.
+3. **grok-wiring PR** (`claude/wire-grok-hermes-xai`): push + open once main is green (post-#2681); grok-build can review.
+4. **agy**: re-baseline on Gemini 3.1 Pro + re-test factual §7 once #2675 merges (June-18 deadline).
+
+---
+
+## ▶▶▶▶▶▶▶▶▶▶ SESSION-END HANDOFF (2026-06-04) — (earlier; superseded by the block above)
 
 **Session wrapped by user ("do a session handoff, continue next one"). The fleet routing table + Jun-18 agy
 migration + seat-utilization are in the block below (#2678). This is the DELTA + resume checklist.**
