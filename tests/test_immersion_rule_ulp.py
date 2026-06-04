@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts import config
 from scripts.audit.ulp_fidelity_gate import _UK_WORD_RE, check_ulp_fidelity
 from scripts.build import linear_pipeline, v7_build
@@ -200,6 +202,11 @@ The word **вода́** is useful in the morning because you see it in routines,
     assert "em_dash_gloss" in report["failed_checks"]
 
 
+# Loads the live Stanza Ukrainian model (run_ulp_fidelity_with_correction →
+# run_stress_annotation). Non-hermetic: the model download flakes the md5 check
+# in parallel CI. Marked `slow` so the required pytest selection
+# (`-k "not slow"`) excludes it; it still runs in the slow/nightly path.
+@pytest.mark.slow
 def test_ulp_fidelity_correction_reruns_stress_and_gate(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -268,6 +275,8 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
     assert correction["after"]["passed"] is True
 
 
+# Loads the live Stanza Ukrainian model (run_stress_annotation). See note above.
+@pytest.mark.slow
 def test_linear_pipeline_stress_annotation_marks_module_and_vocabulary(
     tmp_path: Path,
 ) -> None:

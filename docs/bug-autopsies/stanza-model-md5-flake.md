@@ -53,6 +53,34 @@ a comment in `ci.yml` explaining why the exclusion is load-bearing, and records
 this autopsy. Out of scope: vendoring/pinning the model with an integrity check
 for the `slow`/local path (follow-up).
 
+### Gap closed 2026-06-05 (`fix/stanza-slow-marker-ci-hermetic`)
+
+#2691's `slow`-marking was **incomplete** — it covered `test_stress_annotation.py`
+but missed two other model-loading test paths that stayed in the required gate:
+
+- `tests/test_post_processor_mutation_invariant.py` — its parametrized
+  `test_post_processor_stays_in_class` runs over *every* registered processor,
+  including `pipeline.stress_annotator.annotate_stress`, which loads Stanza (25
+  fixture params).
+- `tests/test_immersion_rule_ulp.py::test_ulp_fidelity_correction_reruns_stress_and_gate`
+  and `::test_linear_pipeline_stress_annotation_marks_module_and_vocabulary` —
+  both call `run_stress_annotation` / `run_ulp_fidelity_with_correction`.
+
+Because the model download is intermittently corrupt, these passed on a clean
+download and failed on a corrupt one — so the required `Test (pytest)` check
+flaked on every `requirements-lock.txt` PR (e.g. dependabot #2543/#2710 red while
+#2545/#2542/#2541 green on the same day). The fix marks exactly those model-backed
+parametrizations/tests `slow`; the surgical marker on the post-processor test
+keeps all *other* processors' invariant checks in the required gate. Verified:
+required selector now collects 0 stress_annotator params and 0 of the 2 immersion
+model tests; the `slow` subset still passes (27 passed) when run with the model.
+
+**Residual risk:** the existing prevention only guards the *selector* (`-k "not
+slow"`); it does not guarantee a newly-added model-loading test gets the `slow`
+marker. A future test that constructs the Stressifier without the marker would
+re-introduce the leak. The durable guard (a collection-time assertion that no
+required test imports/constructs the model) remains a follow-up.
+
 ## Prevention
 
 - **Required CI must be hermetic** — no live model/network downloads in the
