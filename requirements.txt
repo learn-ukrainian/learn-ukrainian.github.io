@@ -27,7 +27,7 @@ pymorphy3-dicts-uk
 ukrainian-word-stress>=1.0
 
 # Testing
-pytest>=9.0
+pytest>=9.0.3
 pytest-cov>=7.0
 
 # Linting
@@ -38,7 +38,7 @@ aiosqlite>=0.22
 
 # Web scraping (for resource discovery)
 beautifulsoup4>=4.14
-requests>=2.32
+requests>=2.33.0
 
 # YouTube ingestion
 yt-dlp>=2026.3.17
