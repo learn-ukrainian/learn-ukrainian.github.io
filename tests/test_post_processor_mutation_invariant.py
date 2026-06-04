@@ -64,17 +64,30 @@ _ALL_FIXTURES: list[Fixture] = _POST_PROCESSOR_CORPUS + [
 ]
 
 
+# Processors that load a live ML model when invoked. Exercising them downloads
+# the Stanza Ukrainian model, which is non-hermetic and flakes Stanza's md5
+# check under parallel CI (`ValueError: md5 for .../uk/tokenize/iu.pt ...`).
+# Their parametrizations are marked `slow` so the required pytest selection
+# (`-k "not slow"`) excludes them — keeping the required gate hermetic per the
+# #2691 invariant — while every other processor's invariant check still runs.
+# They continue to run in the slow/nightly path. See
+# docs/bug-autopsies/stanza-model-md5-flake.md.
+_MODEL_BACKED_PROCESSORS = {"pipeline.stress_annotator.annotate_stress"}
+
+
 def _processor_fixture_params() -> list[pytest.param]:
     # Sort both axes so pytest-xdist test IDs are stable across workers;
     # sets/frozensets hash differently per-interpreter (#1461 lesson).
     params = []
     for processor_name in sorted(REGISTRY.keys()):
+        marks = (pytest.mark.slow,) if processor_name in _MODEL_BACKED_PROCESSORS else ()
         for fixture in sorted(_ALL_FIXTURES, key=lambda f: f.id):
             params.append(
                 pytest.param(
                     processor_name,
                     fixture,
                     id=f"{processor_name}[{fixture.id}]",
+                    marks=marks,
                 )
             )
     return params
