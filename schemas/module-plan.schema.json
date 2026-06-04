@@ -33,7 +33,7 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+$"
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
     },
     "title": {
       "type": "string",
@@ -59,7 +59,13 @@
         "literature",
         "integration",
         "checkpoint",
-        "professional"
+        "professional",
+        "review",
+        "communication",
+        "bridge",
+        "phonetics",
+        "morphology",
+        "syntax-cases"
       ],
       "description": "Primary focus of the module"
     },
@@ -70,7 +76,10 @@
         "PPP",
         "seminar",
         "workshop",
-        "review"
+        "review",
+        "Review",
+        "TBL",
+        "Bridge"
       ],
       "description": "Teaching approach"
     },
@@ -219,32 +228,75 @@
       "type": "array",
       "description": "Unique dialogue settings with specific objects and genders. See docs/best-practices/dialogue-situations.md",
       "items": {
-        "type": "object",
-        "required": [
-          "setting",
-          "speakers",
-          "motivation"
-        ],
-        "properties": {
-          "setting": {
-            "type": "string",
-            "minLength": 30,
-            "description": "WHERE + WHAT: specific location and objects with gender labels (m/f/n/pl)"
-          },
-          "speakers": {
-            "type": "array",
-            "items": {
-              "type": "string"
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "setting",
+              "speakers",
+              "motivation"
+            ],
+            "properties": {
+              "setting": {
+                "type": "string",
+                "minLength": 30,
+                "description": "WHERE + WHAT: specific location and objects with gender labels (m/f/n/pl)"
+              },
+              "speakers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "description": "Speaker names with roles in Ukrainian"
+              },
+              "motivation": {
+                "type": "string",
+                "description": "WHY: which grammar this setting naturally produces"
+              },
+              "key_vocabulary": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Optional vocabulary anchors used by legacy A2 bridge plans"
+              }
             },
-            "minItems": 1,
-            "description": "Speaker names with roles in Ukrainian"
+            "additionalProperties": false
           },
-          "motivation": {
-            "type": "string",
-            "description": "WHY: which grammar this setting naturally produces"
+          {
+            "type": "object",
+            "required": [
+              "situation",
+              "functions",
+              "key_vocabulary"
+            ],
+            "properties": {
+              "situation": {
+                "type": "string",
+                "minLength": 30,
+                "description": "Legacy A2 scenario description"
+              },
+              "functions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "description": "Legacy A2 communicative functions"
+              },
+              "key_vocabulary": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "description": "Legacy A2 vocabulary anchors"
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        ]
       }
     },
     "reading_situations": {
@@ -478,7 +530,7 @@
         "properties": {
           "version": {
             "type": "string",
-            "pattern": "^[0-9]+\\.[0-9]+$"
+            "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
           },
           "date": {
             "type": "string",

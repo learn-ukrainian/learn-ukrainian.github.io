@@ -130,6 +130,28 @@ class TestPlanYamlSchemaCheck:
         error_violations = [v for v in violations if v["severity"] == "error"]
         assert len(error_violations) > 0
 
+    def test_a2_plans_match_module_schema(self):
+        plans_dir = (
+            Path(__file__).parent.parent
+            / "curriculum"
+            / "l2-uk-en"
+            / "plans"
+            / "a2"
+        )
+        failures = {}
+
+        for plan_path in sorted(plans_dir.glob("*.yaml")):
+            violations = check_plan_yaml_schema(str(plan_path), "a2", 0)
+            errors = [
+                violation["message"]
+                for violation in violations
+                if violation["severity"] == "error"
+            ]
+            if errors:
+                failures[plan_path.name] = errors
+
+        assert failures == {}
+
 
 # =============================================================================
 # META YAML SCHEMA AUDIT CHECK TESTS
