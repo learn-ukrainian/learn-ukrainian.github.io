@@ -181,7 +181,7 @@ soupsieve==2.8.3
 sqlite-vec==0.1.9
 sse-starlette==3.2.0
 stanza==1.11.0
-starlette==0.50.0
+starlette==1.0.1
 stevedore==5.7.0
 surya-ocr==0.17.1
 sympy==1.14.0
