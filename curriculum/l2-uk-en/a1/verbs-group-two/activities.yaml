@@ -1,0 +1,281 @@
+- id: act-1
+  type: quiz
+  title: Group Two warm-up
+  instruction: Choose the safe Group Two line.
+  items:
+    - prompt: I speak Ukrainian.
+      options:
+        - text: Я говорю українською.
+          correct: true
+        - text: Я говориш українською.
+          correct: false
+        - text: Я говорити українською.
+          correct: false
+      explanation: Я uses говорю.
+    - prompt: You see the word.
+      options:
+        - text: Ти бачиш слово.
+          correct: true
+        - text: Ти бачу слово.
+          correct: false
+        - text: Ти бачити слово.
+          correct: false
+      explanation: Ти uses бачиш.
+    - prompt: They are doing an exercise.
+      options:
+        - text: Вони роблять вправу.
+          correct: true
+        - text: Вони роблять вправа.
+          correct: false
+        - text: Вони робити вправу.
+          correct: false
+      explanation: Вони роблять is the Group Two form.
+- id: act-2
+  type: match-up
+  title: Говорити table
+  instruction: Match the person with the present-tense form.
+  pairs:
+    - left: я
+      right: говорю
+    - left: ти
+      right: говориш
+    - left: він / вона
+      right: говорить
+    - left: ми
+      right: говоримо
+    - left: ви
+      right: говорите
+    - left: вони
+      right: говорять
+- id: act-3
+  type: fill-in
+  title: Говорити, робити, бачити
+  instruction: Choose the form that fits the person.
+  items:
+    - sentence: Я ___ українською.
+      answer: говорю
+      options:
+        - говорю
+        - говориш
+        - говорить
+      explanation: Я говорю.
+    - sentence: Ти ___ українською?
+      answer: говориш
+      options:
+        - говориш
+        - говорю
+        - говоримо
+      explanation: Ти говориш.
+    - sentence: Він ___.
+      answer: говорить
+      options:
+        - говорить
+        - говорите
+        - говорять
+      explanation: Він говорить.
+    - sentence: Я ___ вправу.
+      answer: роблю
+      options:
+        - роблю
+        - робиш
+        - робить
+      explanation: Я роблю is a ready chunk.
+    - sentence: Ти ___ слово?
+      answer: бачиш
+      options:
+        - бачиш
+        - бачу
+        - бачить
+      explanation: Ти бачиш.
+    - sentence: Вони ___ слово.
+      answer: бачать
+      options:
+        - бачать
+        - бачиш
+        - бачу
+      explanation: Вони бачать.
+- id: act-4
+  type: group-sort
+  title: Group One or Group Two
+  instruction: Sort the they-forms by group.
+  groups:
+    - name: І дієвідміна / Group One
+      items:
+        - читають
+        - слухають
+        - гуляють
+    - name: ІІ дієвідміна / Group Two
+      items:
+        - говорять
+        - роблять
+        - бачать
+        - ходять
+        - стоять
+        - сидять
+- id: act-5
+  type: fill-in
+  title: Ready я chunks
+  instruction: Choose the ready first-person chunk.
+  items:
+    - sentence: Я ___ вправу.
+      answer: роблю
+      options:
+        - роблю
+        - робиш
+        - робить
+      explanation: Learn я роблю as a chunk.
+    - sentence: Я ___ до школи.
+      answer: ходжу
+      options:
+        - ходжу
+        - ходиш
+        - ходить
+      explanation: Learn я ходжу as a chunk.
+    - sentence: Я ___ каву.
+      answer: прошу
+      options:
+        - прошу
+        - просиш
+        - просить
+      explanation: Learn я прошу as a chunk.
+    - sentence: Я ___ тут.
+      answer: сиджу
+      options:
+        - сиджу
+        - сидиш
+        - сидить
+      explanation: Learn я сиджу as a chunk.
+- id: act-6
+  type: quiz
+  title: Recognition-only forms
+  instruction: Choose the form you should recognize, not overbuild.
+  items:
+    - prompt: They sleep.
+      options:
+        - text: Вони сплять.
+          correct: true
+        - text: Вони спати.
+          correct: false
+        - text: Вони спить.
+          correct: false
+      explanation: Recognize вони сплять.
+    - prompt: You eat.
+      options:
+        - text: Ти їси.
+          correct: true
+        - text: Ти їсть.
+          correct: false
+        - text: Ти їдять.
+          correct: false
+      explanation: Recognize ти їси.
+    - prompt: They eat.
+      options:
+        - text: Вони їдять.
+          correct: true
+        - text: Вони їси.
+          correct: false
+        - text: Вони їсть.
+          correct: false
+      explanation: Recognize вони їдять.
+- id: act-7
+  type: error-correction
+  title: Repair Group Two traps
+  instruction: Choose the standard Ukrainian repair.
+  anchor_id: group-two-repairs
+  items:
+    - sentence: Вони робуть
+      error: Вони робуть
+      answer: Вони роблять
+      options:
+        - Вони роблять
+        - Вони працюють
+        - Вони читають
+      explanation: Робити uses вони роблять.
+    - sentence: Ти бачеш
+      error: Ти бачеш
+      answer: Ти бачиш
+      options:
+        - Ти бачиш
+        - Ти говориш
+        - Ти робиш
+      explanation: Group Two uses бачиш.
+    - sentence: Я сидю
+      error: Я сидю
+      answer: Я сиджу
+      options:
+        - Я сиджу
+        - Я ходжу
+        - Я бачу
+      explanation: Learn я сиджу as a ready chunk.
+    - sentence: Він стоє
+      error: Він стоє
+      answer: Він стоїть
+      options:
+        - Він стоїть
+        - Він сидить
+        - Він говорить
+      explanation: Стояти gives він стоїть.
+    - sentence: Я сплю, ти сплєш
+      error: Я сплю, ти сплєш
+      answer: Я сплю, ти спиш
+      options:
+        - Я сплю, ти спиш
+        - Я сплю, ти їси
+        - Я сплю, ти сидиш
+      explanation: Recognize ти спиш; do not invent the form.
+    - sentence: Я є студент
+      error: Я є студент
+      answer: Я студент
+      options:
+        - Я студент
+        - Я вчитель
+        - Я Томас
+      explanation: Ukrainian can use Я студент without є.
+    - sentence: Моє ім'я є Томас
+      error: Моє ім'я є Томас
+      answer: Мене звати Томас
+      options:
+        - Мене звати Томас
+        - Я студент Томас
+        - Це Томас
+      explanation: Use Мене звати for names.
+    - sentence: Я маю 20 років
+      error: Я маю 20 років
+      answer: Мені 20 років
+      options:
+        - Мені 20 років
+        - Я студент 20 років
+        - Це 20 років
+      explanation: Use Мені plus age.
+- id: act-8
+  type: quiz
+  title: Mini conversation
+  instruction: Choose the best next line.
+  items:
+    - prompt: Ти говориш українською?
+      options:
+        - text: Так, я говорю українською.
+          correct: true
+        - text: Так, я говориш українською.
+          correct: false
+        - text: Так, я говорити українською.
+          correct: false
+      explanation: Я говорю.
+    - prompt: Що ти робиш?
+      options:
+        - text: Я роблю вправу.
+          correct: true
+        - text: Я робиш вправу.
+          correct: false
+        - text: Я робити вправу.
+          correct: false
+      explanation: Я роблю is the safe answer.
+    - prompt: Ти бачиш це слово?
+      options:
+        - text: Так, я бачу це слово.
+          correct: true
+        - text: Так, я бачиш це слово.
+          correct: false
+        - text: Так, я бачити це слово.
+          correct: false
+      explanation: Я бачу.

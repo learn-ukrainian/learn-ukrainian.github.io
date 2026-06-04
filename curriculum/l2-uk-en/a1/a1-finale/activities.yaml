@@ -1,0 +1,227 @@
+- id: act-1
+  type: fill-in
+  title: Complete the A1 line
+  instruction: Choose the word or phrase that fits the time and situation.
+  items:
+    - sentence: "Учора я ___ у кафе."
+      answer: "снідав"
+      options:
+        - "снідав"
+        - "снідаю"
+        - "буду снідати"
+      explanation: "Учора points to the past."
+    - sentence: "Зараз я ___ на метро."
+      answer: "їду"
+      options:
+        - "їду"
+        - "їхав"
+        - "буду їхати"
+      explanation: "Зараз points to the present."
+    - sentence: "Завтра я ___ гуляти в парку."
+      answer: "буду"
+      options:
+        - "буду"
+        - "був"
+        - "є"
+      explanation: "Буду + infinitive is the A1 future."
+    - sentence: "___, будь ласка."
+      answer: "Повторіть"
+      options:
+        - "Повторіть"
+        - "Сувенір"
+        - "Квиток"
+      explanation: "Повторіть, будь ласка is the repair phrase."
+- id: act-2
+  type: order
+  title: Put the final day in order
+  instruction: Arrange the events from morning to night.
+  items:
+    - "Я прокинувся в готелі."
+    - "Я снідав у кафе."
+    - "Я їхав на метро в центр."
+    - "Я купив сувенір."
+    - "Я обідав з Оленою."
+    - "Ми ходили в кіно."
+    - "Я повернувся в готель."
+  correct_order: [0, 1, 2, 3, 4, 5, 6]
+- id: act-3
+  type: match-up
+  title: Situation and phrase
+  instruction: Match each everyday situation with the A1 phrase.
+  pairs:
+    - left: "introducing yourself"
+      right: "Мене звати..."
+    - left: "asking for directions"
+      right: "Як дістатися до метро?"
+    - left: "ordering coffee"
+      right: "Каву з молоком, будь ласка."
+    - left: "asking the price"
+      right: "Скільки коштує?"
+    - left: "repairing understanding"
+      right: "Повторіть, будь ласка."
+    - left: "asking for help"
+      right: "Мені потрібна допомога."
+- id: act-4
+  type: group-sort
+  title: Sort your A1 toolkit
+  instruction: Put each phrase into the right communication group.
+  groups:
+    - name: "people"
+      items:
+        - "Мене звати"
+        - "Я з Канади"
+        - "Це моя подруга"
+    - name: "city"
+      items:
+        - "Де метро?"
+        - "Я на вулиці"
+        - "Як дістатися до центру?"
+    - name: "food and shopping"
+      items:
+        - "Каву, будь ласка"
+        - "Скільки коштує?"
+        - "Я беру це"
+    - name: "time"
+      items:
+        - "Учора я був"
+        - "Зараз я йду"
+        - "Завтра я буду читати"
+- id: act-5
+  type: quiz
+  title: Choose the A1 response
+  instruction: Pick the response that fits the situation.
+  items:
+    - prompt: "A cashier says: Сто гривень."
+      options:
+        - text: "Карткою можна?"
+          correct: true
+        - text: "Я з Канади."
+          correct: false
+        - text: "Мені холодно."
+          correct: false
+      explanation: "Карткою можна? fits payment."
+    - prompt: "A friend asks: Що ти робив сьогодні?"
+      options:
+        - text: "Зранку я снідав у кафе."
+          correct: true
+        - text: "Завтра я снідав у кафе."
+          correct: false
+        - text: "Я метро коштує."
+          correct: false
+      explanation: "The question asks about earlier today, so a past line fits."
+    - prompt: "You did not understand the direction."
+      options:
+        - text: "Повторіть, будь ласка."
+          correct: true
+        - text: "Я беру це."
+          correct: false
+        - text: "Він мій тато."
+          correct: false
+      explanation: "Use a repair phrase."
+    - prompt: "You want to talk about tomorrow."
+      options:
+        - text: "Завтра я буду гуляти."
+          correct: true
+        - text: "Завтра я гуляв."
+          correct: false
+        - text: "Учора я буду гуляти."
+          correct: false
+      explanation: "Завтра pairs with буду + infinitive."
+- id: act-6
+  type: true-false
+  title: A1 finale check
+  instruction: Decide whether the line is clear A1 Ukrainian.
+  items:
+    - statement: "Мене звати Сара. Я з Канади."
+      answer: true
+      explanation: "This is clear A1 identity language."
+    - statement: "Вчора я снідаю у кафе."
+      answer: false
+      explanation: "Use past after Вчора: я снідав / снідала."
+    - statement: "Зараз я їду на метро."
+      answer: true
+      explanation: "Зараз plus present їду is clear."
+    - statement: "Завтра я буду читати українську."
+      answer: true
+      explanation: "Буду + infinitive is the A1 future."
+    - statement: "Моє ім'я є Адам."
+      answer: false
+      explanation: "Use Мене звати Адам."
+- id: act-7
+  type: unjumble
+  title: Build final A1 lines
+  instruction: Put the words in a natural order.
+  items:
+    - words: "Учора/я/снідав/у/кафе."
+      answer: "Учора я снідав у кафе."
+    - words: "Зараз/я/їду/на/метро."
+      answer: "Зараз я їду на метро."
+    - words: "Завтра/я/буду/гуляти/в/парку."
+      answer: "Завтра я буду гуляти в парку."
+    - words: "Повторіть,/будь/ласка."
+      answer: "Повторіть, будь ласка."
+- id: act-8
+  type: fill-in
+  title: Final story frame
+  instruction: Choose the phrase that completes the ten-sentence story frame.
+  items:
+    - sentence: "Мене ___."
+      answer: "звати"
+      options:
+        - "звати"
+        - "коштує"
+        - "болить"
+      explanation: "Мене звати introduces your name."
+    - sentence: "Зранку я ___ у кафе."
+      answer: "снідав"
+      options:
+        - "снідав"
+        - "кафе"
+        - "буду"
+      explanation: "This is a past line in the story."
+    - sentence: "Ввечері ми ___ в кіно."
+      answer: "ходили"
+      options:
+        - "ходили"
+        - "кіно"
+        - "сім"
+      explanation: "Ходили is the past plural form already practiced."
+    - sentence: "Завтра я ___ повторювати українську."
+      answer: "буду"
+      options:
+        - "буду"
+        - "був"
+        - "є"
+      explanation: "Use буду + infinitive for a future plan."
+- id: act-9
+  type: translate
+  title: Finish A1
+  instruction: Choose the Ukrainian phrase that matches the English prompt.
+  items:
+    - source: "My name is Adam. I am from Canada."
+      options:
+        - text: "Мене звати Адам. Я з Канади."
+          correct: true
+        - text: "Моє ім'я є Адам. Я маю Канада."
+          correct: false
+        - text: "Адам коштує Канада."
+          correct: false
+      explanation: "Use Мене звати... and Я з..."
+    - source: "Yesterday I bought a souvenir."
+      options:
+        - text: "Учора я купив сувенір."
+          correct: true
+        - text: "Завтра я купив сувенір."
+          correct: false
+        - text: "Сувенір мене звати."
+          correct: false
+      explanation: "Учора points to the past."
+    - source: "Tomorrow I will read Ukrainian."
+      options:
+        - text: "Завтра я буду читати українську."
+          correct: true
+        - text: "Учора я буду читати українську."
+          correct: false
+        - text: "Завтра я читав українську."
+          correct: false
+      explanation: "Use завтра + буду читати."

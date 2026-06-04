@@ -1,0 +1,160 @@
+- lemma: дія
+  translation: action
+  pos: noun
+  usage: Це дія.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: Читати - це інфінітив.
+- lemma: читати
+  translation: to read
+  pos: infinitive
+  usage: Я люблю читати.
+- lemma: читаю
+  translation: I read
+  pos: verb form
+  usage: Я читаю книгу.
+- lemma: писати
+  translation: to write
+  pos: infinitive
+  usage: Мушу писати сьогодні.
+- lemma: пишу
+  translation: I write
+  pos: verb form
+  usage: Я пишу лист.
+- lemma: пишеш
+  translation: you write
+  pos: verb form
+  usage: Ти пишеш гарно.
+- lemma: працювати
+  translation: to work
+  pos: infinitive
+  usage: Я мушу працювати.
+- lemma: працюю
+  translation: I work
+  pos: verb form
+  usage: Я працюю вдома.
+- lemma: працюєш
+  translation: you work
+  pos: verb form
+  usage: Де ти працюєш?
+- lemma: працює
+  translation: he/she works
+  pos: verb form
+  usage: Вона працює в школі.
+- lemma: говорити
+  translation: to speak
+  pos: infinitive
+  usage: Можу говорити українською.
+- lemma: говорю
+  translation: I speak
+  pos: verb form
+  usage: Я говорю українською.
+- lemma: говориш
+  translation: you speak
+  pos: verb form
+  usage: Ти говориш українською.
+- lemma: говоримо
+  translation: we speak
+  pos: verb form
+  usage: Ми говоримо українською.
+- lemma: робити
+  translation: to do; to make
+  pos: infinitive
+  usage: Що ти робиш?
+- lemma: роблять
+  translation: they do; they make
+  pos: verb form
+  usage: Вони роблять швидко.
+- lemma: любити
+  translation: to like; to love
+  pos: infinitive
+  usage: Я люблю читати.
+- lemma: хочу
+  translation: I want
+  pos: modal verb form
+  usage: Я хочу гуляти.
+- lemma: можу
+  translation: I can
+  pos: modal verb form
+  usage: Я можу готувати.
+- lemma: мушу
+  translation: I have to
+  pos: modal verb form
+  usage: Я мушу працювати.
+- lemma: хотіти
+  translation: to want
+  pos: infinitive
+  usage: Він хоче кави.
+- lemma: хоче
+  translation: he/she wants
+  pos: verb form
+  usage: Він хоче кави.
+- lemma: прокидатися
+  translation: to wake up
+  pos: infinitive
+  usage: Я прокидаюся о сьомій.
+- lemma: прокидаюся
+  translation: I wake up
+  pos: reflexive verb form
+  usage: Я прокидаюся рано.
+- lemma: вмиватися
+  translation: to wash up
+  pos: infinitive
+  usage: Потім вмиваюся.
+- lemma: вмиваюся
+  translation: I wash up
+  pos: reflexive verb form
+  usage: Я вмиваюся вранці.
+- lemma: дивитися
+  translation: to watch; to look
+  pos: infinitive
+  usage: Я дивлюся фільм.
+- lemma: дивлюся
+  translation: I watch; I look
+  pos: reflexive verb form
+  usage: Нарешті я дивлюся фільм.
+- lemma: хто
+  translation: who
+  pos: question word
+  usage: Хто працює?
+- lemma: що
+  translation: what
+  pos: question word
+  usage: Що ти читаєш?
+- lemma: де
+  translation: where
+  pos: question word
+  usage: Де ти працюєш?
+- lemma: куди
+  translation: where to
+  pos: question word
+  usage: Куди ти йдеш?
+- lemma: коли
+  translation: when
+  pos: question word
+  usage: Коли ти можеш?
+- lemma: чому
+  translation: why
+  pos: question word
+  usage: Чому ти не можеш?
+- lemma: як
+  translation: how
+  pos: question word
+  usage: Як ми говоримо?
+- lemma: спочатку
+  translation: first
+  pos: sequence word
+  usage: Спочатку я прокидаюся.
+- lemma: потім
+  translation: then
+  pos: sequence word
+  usage: Потім снідаю.
+- lemma: після цього
+  translation: after that
+  pos: sequence phrase
+  usage: Після цього працюю.
+- lemma: нарешті
+  translation: finally
+  pos: sequence word
+  usage: Нарешті дивлюся фільм.

@@ -1,0 +1,322 @@
+---
+title: "Здоров'я"
+description: "У мене болить голова — частини тіла та симптоми"
+sidebar:
+  order: 53
+  label: "53. Здоров'я"
+pipeline: linear-phase-4
+build_status: validated
+prev: my-story
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Translate from '@site/src/components/Translate';
+import DialogueBox from '@site/src/components/DialogueBox';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module gives you **language for saying what hurts**. It does not teach you
+how to judge a medical problem. At A1, your job is small and practical:
+
+**У мене болить голова. Мені потрібен лікар.**
+
+| Need | A1 phrase |
+| --- | --- |
+| say what hurts | **У мене болить...** |
+| say a simple symptom | **У мене температура / кашель / нежить.** |
+| ask for a doctor | **Мені потрібен лікар.** |
+| ask for repetition | **Повторіть, будь ласка.** |
+| say you do not understand | **Я не розумію.** |
+
+The core phrase is:
+
+**У мене болить + body part.**
+
+Learn it as one phrase. Do not turn it into English word order.
+
+:::tip[A1 boundary]
+This is phrase practice only. Say the symptom, ask for help, and stop. Do not
+guess what the problem is or tell anyone what to do.
+:::
+
+### Complete the health phrase
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"У мене болить ___.","answer":"голова","options":["голова","лікар","аптека"]},{"sentence":"Мені потрібен ___.","answer":"лікар","options":["лікар","голова","кашель"]},{"sentence":"У мене ___.","answer":"температура","options":["температура","праворуч","квиток"]},{"sentence":"___, будь ласка.","answer":"Повторіть","options":["Повторіть","Болить","Нежить"]}]`)} />
+
+## Діалоги
+
+### Що у вас болить?
+
+<DialogueBox uk="Лікар: Добрий день. Що у вас болить?" en="Doctor: Good afternoon. What hurts?" />
+<DialogueBox uk="Анна: Добрий день. У мене болить голова." en="Anna: Good afternoon. My head hurts." />
+<DialogueBox uk="Лікар: Ще щось?" en="Doctor: Anything else?" />
+<DialogueBox uk="Анна: У мене болить горло. І в мене температура." en="Anna: My throat hurts. And I have a fever." />
+<DialogueBox uk="Лікар: Повторіть, будь ласка: голова і горло?" en="Doctor: Please repeat: head and throat?" />
+<DialogueBox uk="Анна: Так. Голова і горло." en="Anna: Yes. Head and throat." />
+<DialogueBox uk="Лікар: Зрозуміло." en="Doctor: Understood." />
+<DialogueBox uk="Анна: Дякую." en="Anna: Thank you." />
+
+The learner line is short:
+
+- **У мене болить голова.**
+- **У мене болить горло.**
+- **У мене температура.**
+
+No extra explanation is needed. In real life, a professional asks the follow-up
+questions. Your A1 task is to make the first message clear.
+
+### В аптеці
+
+<DialogueBox uk="Покупець: Добрий день. Де тут аптека?" en="Customer: Good afternoon. Where is the pharmacy here?" />
+<DialogueBox uk="Жінка: Аптека прямо і праворуч." en="Woman: The pharmacy is straight ahead and to the right." />
+<DialogueBox uk="Покупець: Дякую." en="Customer: Thank you." />
+<DialogueBox uk="Фармацевт: Добрий день." en="Pharmacist: Good afternoon." />
+<DialogueBox uk="Покупець: Добрий день. У мене болить живіт." en="Customer: Good afternoon. My stomach hurts." />
+<DialogueBox uk="Фармацевт: Я вас розумію. Вам потрібен лікар?" en="Pharmacist: I understand you. Do you need a doctor?" />
+<DialogueBox uk="Покупець: Так, мені потрібен лікар. Я не розумію адресу." en="Customer: Yes, I need a doctor. I do not understand the address." />
+<DialogueBox uk="Фармацевт: Повторюю повільно." en="Pharmacist: I will repeat slowly." />
+
+This dialogue practices location and help language. It keeps the learner's
+message to a clear first report. The useful phrases are:
+
+- **Де тут аптека?**
+- **У мене болить живіт.**
+- **Мені потрібен лікар.**
+- **Повторіть, будь ласка.**
+
+### Body words
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"голова","right":"head"},{"left":"горло","right":"throat"},{"left":"живіт","right":"stomach"},{"left":"спина","right":"back"},{"left":"рука","right":"hand / arm"},{"left":"нога","right":"leg / foot"},{"left":"зуб","right":"tooth"},{"left":"вухо","right":"ear"}]`)} />
+
+## Тіло
+
+Learn a small set of body words. You do not need anatomy. You need common words
+that can fit after **У мене болить...**
+
+| Ukrainian | English | A1 phrase |
+| --- | --- | --- |
+| **голова** | head | **У мене болить голова.** |
+| **горло** | throat | **У мене болить горло.** |
+| **живіт** | stomach | **У мене болить живіт.** |
+| **спина** | back | **У мене болить спина.** |
+| **рука** | hand / arm | **У мене болить рука.** |
+| **нога** | leg / foot | **У мене болить нога.** |
+| **зуб** | tooth | **У мене болить зуб.** |
+| **вухо** | ear | **У мене болить вухо.** |
+| **око** | eye | **У мене болить око.** |
+| **ніс** | nose | **У мене нежить.** |
+
+For **рука** and **нога**, Ukrainian uses one broad word:
+
+- **рука** can mean the hand or the arm;
+- **нога** can mean the foot or the leg.
+
+That is enough for A1. If someone needs more detail, they will ask.
+
+### Short answers to short questions
+
+Health conversations often move quickly, so short answers are normal. You do
+not need a long explanation.
+
+| Question | Safe A1 answer |
+| --- | --- |
+| **Що у вас болить?** | **У мене болить голова.** |
+| **Ще щось?** | **Так, горло.** / **Ні.** |
+| **Вам потрібен лікар?** | **Так, мені потрібен лікар.** |
+| **Ви розумієте?** | **Ні, я не розумію.** |
+| **Повторити?** | **Так, повторіть, будь ласка.** |
+
+You can also answer with one word when the question already gives the frame:
+
+- **Що болить?** - **Голова.**
+- **Де аптека?** - **Прямо і праворуч.**
+- **Вам погано?** - **Так, мені погано.**
+
+For A1, this is a success. You heard the key question and gave the key word.
+Clear short speech is better than a long sentence with many mistakes.
+
+### Sort health words
+
+<GroupSort client:only='react' groups={JSON.parse(`{"body parts":["голова","горло","живіт","спина","зуб"],"symptom phrases":["У мене температура","У мене кашель","У мене нежить","Мені погано"],"help phrases":["Мені потрібен лікар","Де тут аптека?","Повторіть, будь ласка"]}`)} />
+
+### Choose the clear A1 phrase
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question":"You want to say: My stomach hurts.","options":[{"text":"У мене болить живіт.","correct":true},{"text":"Я живіт болить.","correct":false},{"text":"Мій живіт є болить.","correct":false}],"explanation":"Use У мене болить + body part."},{"question":"You need a doctor.","options":[{"text":"Мені потрібен лікар.","correct":true},{"text":"Я потрібно лікар.","correct":false},{"text":"Лікар болить.","correct":false}],"explanation":"Мені потрібен лікар is the fixed help phrase."},{"question":"You do not understand.","options":[{"text":"Я не розумію.","correct":true},{"text":"Я не аптека.","correct":false},{"text":"У мене розумію.","correct":false}],"explanation":"Я не розумію is the repair phrase."}]`)} />
+
+## У мене болить...
+
+The phrase does not change much:
+
+| English need | Ukrainian phrase |
+| --- | --- |
+| My head hurts. | **У мене болить голова.** |
+| My throat hurts. | **У мене болить горло.** |
+| My stomach hurts. | **У мене болить живіт.** |
+| My back hurts. | **У мене болить спина.** |
+| My arm / hand hurts. | **У мене болить рука.** |
+| My leg / foot hurts. | **У мене болить нога.** |
+| My tooth hurts. | **У мене болить зуб.** |
+
+Other useful fixed phrases:
+
+| English need | Ukrainian phrase |
+| --- | --- |
+| I have a fever. | **У мене температура.** |
+| I have a cough. | **У мене кашель.** |
+| I have a runny nose. | **У мене нежить.** |
+| I feel bad. | **Мені погано.** |
+| I am sick. | **Я хворий / хвора.** |
+| I need a doctor. | **Мені потрібен лікар.** |
+
+Use **хворий** if you speak as a man or boy. Use **хвора** if you speak as a
+woman or girl.
+
+### Phrase-level health check
+
+<TrueFalse client:only='react' instruction="Decide whether the sentence is a clear A1 health phrase." items={JSON.parse(`[{"statement":"У мене болить горло.","isTrue":true,"explanation":"This follows У мене болить + body part."},{"statement":"Моя голова болить.","isTrue":false,"explanation":"Use the more natural A1 phrase: У мене болить голова."},{"statement":"У мене кашель.","isTrue":true,"explanation":"This is a fixed symptom phrase."},{"statement":"Я є хворий.","isTrue":false,"explanation":"Drop є: Я хворий."},{"statement":"Мені потрібен лікар.","isTrue":true,"explanation":"This is the help phrase."}]`)} />
+
+### Build health lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"words":"У/мене/болить/голова","answer":"У мене болить голова."},{"words":"Мені/потрібен/лікар","answer":"Мені потрібен лікар."},{"words":"Я/не/розумію","answer":"Я не розумію."},{"words":"Повторіть/будь/ласка","answer":"Повторіть, будь ласка."}]`)} />
+
+## Просити про допомогу
+
+When you are not sure what to say, keep the message in three short lines.
+
+| Step | Phrase |
+| --- | --- |
+| greeting | **Добрий день.** |
+| symptom | **У мене болить...** |
+| help | **Мені потрібен лікар.** |
+
+Examples:
+
+**Добрий день. У мене болить голова. Мені потрібен лікар.**
+
+**Добрий день. У мене кашель. Я не розумію. Повторіть, будь ласка.**
+
+**Вибачте. Де тут лікарня? Мені потрібен лікар.**
+
+If the other person speaks too fast, use repair phrases from earlier modules:
+
+- **Повторіть, будь ласка.**
+- **Повільніше, будь ласка.**
+- **Я не розумію.**
+- **Ви говорите англійською?**
+
+These phrases are often more useful than trying to build a long sentence.
+
+### Three useful scripts
+
+Use these scripts as ready-made cards. Replace only the body word or place word.
+
+**Script 1: at a reception desk**
+
+<DialogueBox uk="Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка." en="Good afternoon. My back hurts. I need a doctor. I do not understand. Please repeat." />
+
+**Script 2: asking for a place**
+
+<DialogueBox uk="Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка." en="Excuse me. Where is the hospital here? I feel unwell. Please speak more slowly." />
+
+**Script 3: describing two symptoms**
+
+<DialogueBox uk="Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар." en="Good afternoon. My throat hurts. I have a cough. I need a doctor." />
+
+These scripts repeat the same safe pattern: greet, name the symptom, ask for a
+doctor, and use a repair phrase. You can say them slowly and still be clear.
+
+### Doctor or pharmacy phrases
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Добрий день. У мене болить ___.","answer":"спина","options":["спина","лікар","аптека"]},{"sentence":"Вибачте. Де тут ___?","answer":"аптека","options":["аптека","болить","нога"]},{"sentence":"Мені ___.","answer":"погано","options":["погано","голова","кашель"]},{"sentence":"___, будь ласка. Я не розумію.","answer":"Повільніше","options":["Повільніше","Голова","Температура"]}]`)} />
+
+### Repair traps
+
+Keep the Ukrainian phrase shape.
+
+| Learner sentence | Better A1 sentence |
+| --- | --- |
+| <del>**Моя голова болить.**</del> | **У мене болить голова.** |
+| <del>**Я маю біль голова.**</del> | **У мене болить голова.** |
+| <del>**Я є хворий.**</del> | **Я хворий.** |
+| <del>**Я потрібно лікар.**</del> | **Мені потрібен лікар.** |
+| <del>**У мене є нежить.**</del> | **У мене нежить.** |
+
+These repairs are about natural Ukrainian phrases. You do not need to name the
+grammar. Memorize the safe chunks and use them.
+
+### Repair health phrases
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question":"Repair: Моя рука болить.","options":[{"text":"У мене болить рука.","correct":true},{"text":"У мене рука лікар.","correct":false},{"text":"Рука потрібен мене.","correct":false}],"explanation":"Use У мене болить + body part."},{"question":"Repair: Я потрібно лікар.","options":[{"text":"Мені потрібен лікар.","correct":true},{"text":"Я потрібен лікар.","correct":false},{"text":"Лікар потрібно я.","correct":false}],"explanation":"Use the fixed phrase Мені потрібен лікар."},{"question":"Repair: У мене є нежить.","options":[{"text":"У мене нежить.","correct":true},{"text":"Я нежить болить.","correct":false},{"text":"Нежить потрібен.","correct":false}],"explanation":"Use the simple phrase У мене нежить."}]`)} />
+
+## Підсумок
+
+Your A1 health toolkit:
+
+| Need | Phrase |
+| --- | --- |
+| what hurts | **У мене болить голова / горло / живіт / спина / рука / нога / зуб.** |
+| simple symptom | **У мене температура / кашель / нежить.** |
+| state | **Мені погано. Я хворий / хвора.** |
+| ask for help | **Мені потрібен лікар.** |
+| location | **Де тут аптека? Де тут лікарня?** |
+| repair | **Повторіть, будь ласка. Я не розумію.** |
+
+One complete A1 message can be this short:
+
+<DialogueBox uk="Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка." en="Good afternoon. My throat hurts. I have a fever. I need a doctor. Please repeat." />
+
+That is enough for this module: say the symptom, ask for help, and use repair
+phrases when you need them.
+
+### Say what hurts
+
+<Translate client:only='react' instruction="Choose the Ukrainian phrase that matches the English prompt." questions={JSON.parse(`[{"source":"My throat hurts.","options":[{"text":"У мене болить горло.","correct":true},{"text":"Мені потрібен лікар.","correct":false},{"text":"У мене нежить.","correct":false}],"explanation":"Use У мене болить + горло."},{"source":"I need a doctor.","options":[{"text":"Мені потрібен лікар.","correct":true},{"text":"У мене болить зуб.","correct":false},{"text":"Де тут аптека?","correct":false}],"explanation":"Мені потрібен лікар is the help phrase."},{"source":"Please repeat.","options":[{"text":"Повторіть, будь ласка.","correct":true},{"text":"Мені погано.","correct":false},{"text":"У мене кашель.","correct":false}],"explanation":"Use Повторіть, будь ласка."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+## Словник
+
+| Word | Translation | Example |
+| --- | --- | --- |
+| **здоров'я** | health | **Це тема про здоров'я.** |
+| **голова** | head | **У мене болить голова.** |
+| **горло** | throat | **У мене болить горло.** |
+| **живіт** | stomach | **У мене болить живіт.** |
+| **спина** | back | **У мене болить спина.** |
+| **рука** | hand, arm | **У мене болить рука.** |
+| **нога** | leg, foot | **У мене болить нога.** |
+| **зуб** | tooth | **У мене болить зуб.** |
+| **вухо** | ear | **У мене болить вухо.** |
+| **око** | eye | **У мене болить око.** |
+| **ніс** | nose | **У мене нежить.** |
+| **болить** | hurts | **У мене болить голова.** |
+| **температура** | fever, temperature | **У мене температура.** |
+| **кашель** | cough | **У мене кашель.** |
+| **нежить** | runny nose | **У мене нежить.** |
+| **лікар** | doctor | **Мені потрібен лікар.** |
+| **лікарня** | hospital | **Де тут лікарня?** |
+| **аптека** | pharmacy | **Де тут аптека?** |
+| **хворий / хвора** | sick | **Я хворий. Я хвора.** |
+| **погано** | badly, unwell | **Мені погано.** |
+
+</TabItem>
+<TabItem label="Resources">
+
+## Resources
+
+- 🔗 **Wiki: pedagogy/a1/health** — Pedagogical brief for body-part vocabulary, physical-state chunks, and L2 repair traps.
+- 📘 **State Standard 2024, §3** — Plan reference for health as a basic communicative topic.
+- 🔁 **Internal module M43: please-do-this** — Reuses polite request chunks such as **Повторіть, будь ласка**.
+- 🔁 **Internal module M30: my-city** — Reuses city-place words such as **аптека** and **лікарня** as location vocabulary.
+
+</TabItem>
+</Tabs>

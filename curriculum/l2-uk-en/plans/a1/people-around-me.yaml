@@ -2,7 +2,7 @@ module: a1-040
 level: A1
 sequence: 40
 slug: people-around-me
-version: '1.2.1'
+version: '1.2.2'
 title: Люди навколо мене
 subtitle: Я бачу маму, знаю Олену — знахідний відмінок для істот
 focus: grammar
@@ -153,5 +153,5 @@ references:
 - title: ULP Season 1, Episode 33
   url: https://www.ukrainianlessons.com/episode33/
   notes: Знахідний відмінок — іменники-істоти.
-- title: 'Підручник 4 класу: Знахідний відмінок (Заболотний)'
-  notes: 'Підхід української школи: бачу кого? що? — знахідний відмінок істот дорівнює формі родового.'
+- title: Літвінова Grade 6, p.122
+  notes: 'Знахідний відмінок із розрізненням істота/неістота; для A1 лишити як бачу кого? що?'

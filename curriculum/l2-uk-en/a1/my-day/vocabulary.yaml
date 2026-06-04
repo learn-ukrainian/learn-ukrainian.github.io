@@ -1,0 +1,164 @@
+- word: день
+  translation: day
+  pos: noun
+  example: "Це мій день."
+- word: ранок
+  translation: morning
+  pos: noun
+  example: "Ранок починається о сьомій."
+- word: вечір
+  translation: evening
+  pos: noun
+  example: "Вечір тихий."
+- word: ніч
+  translation: night
+  pos: noun
+  example: "Вночі я сплю."
+- word: година
+  translation: hour; o'clock
+  pos: noun
+  example: "Котра година?"
+- word: хвилина
+  translation: minute
+  pos: noun
+  example: "П'ять хвилин."
+- word: вранці
+  translation: in the morning
+  pos: adverb
+  example: "Вранці я снідаю."
+- word: вдень
+  translation: during the day
+  pos: adverb
+  example: "Вдень я працюю."
+- word: ввечері
+  translation: in the evening
+  pos: adverb
+  example: "Ввечері я читаю."
+- word: вночі
+  translation: at night
+  pos: adverb
+  example: "Вночі я сплю."
+- word: після обіду
+  translation: after lunch; in the afternoon
+  pos: time chunk
+  example: "Після обіду я відпочиваю."
+- word: спочатку
+  translation: first
+  pos: sequence word
+  example: "Спочатку я снідаю."
+- word: потім
+  translation: then
+  pos: sequence word
+  example: "Потім я працюю."
+- word: після цього
+  translation: after that
+  pos: sequence word
+  example: "Після цього я читаю."
+- word: також
+  translation: also
+  pos: adverb
+  example: "Також я вчу українську."
+- word: нарешті
+  translation: finally
+  pos: sequence word
+  example: "Нарешті я лягаю спати."
+- word: прокидатися
+  translation: to wake up
+  pos: verb
+  example: "Я прокидаюся о сьомій."
+- word: вмиватися
+  translation: to wash oneself
+  pos: verb
+  example: "Я вмиваюся вранці."
+- word: одягатися
+  translation: to get dressed
+  pos: verb
+  example: "Я одягаюся."
+- word: снідати
+  translation: to have breakfast
+  pos: verb
+  example: "Я снідаю вранці."
+- word: обідати
+  translation: to have lunch
+  pos: verb
+  example: "Я обідаю о першій."
+- word: вечеряти
+  translation: to have dinner
+  pos: verb
+  example: "Ми вечеряємо ввечері."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Я працюю вдень."
+- word: відпочивати
+  translation: to rest
+  pos: verb
+  example: "Після обіду я відпочиваю."
+- word: читати
+  translation: to read
+  pos: verb
+  example: "Я читаю книгу."
+- word: дивитися
+  translation: to watch
+  pos: verb
+  example: "Я дивлюся фільм."
+- word: лягати спати
+  translation: to go to bed
+  pos: phrase
+  example: "Я лягаю спати о десятій."
+- word: робити зарядку
+  translation: to exercise
+  pos: phrase
+  example: "Спочатку роблю зарядку."
+- word: брати душ
+  translation: to take a shower
+  pos: phrase
+  example: "Вранці я беру душ."
+- word: пити ліки
+  translation: to take medicine
+  pos: phrase
+  example: "Я п'ю ліки."
+- word: Котра година?
+  translation: What time is it?
+  pos: question chunk
+  example: "Котра година? — Восьма."
+- word: О котрій годині?
+  translation: At what time?
+  pos: question chunk
+  example: "О котрій годині ти працюєш?"
+- word: о сьомій
+  translation: at seven
+  pos: time chunk
+  example: "О сьомій я прокидаюся."
+- word: пів на восьму
+  translation: half past seven
+  pos: time chunk
+  example: "Зараз пів на восьму."
+- word: план
+  translation: plan
+  pos: noun
+  example: "Це мій план."
+- word: планувати
+  translation: to plan
+  pos: verb
+  example: "Я планую читати."
+- word: мені потрібно
+  translation: I need
+  pos: modal chunk
+  example: "Мені потрібно зробити план."
+- word: я маю
+  translation: I have to
+  pos: modal chunk
+  example: "Я маю зробити домашнє завдання."
+- word: Ходімо!
+  translation: Let's go!
+  pos: invitation chunk
+  example: "Ходімо в парк!"
+- word: типовий
+  translation: typical
+  pos: adjective
+  example: "Це мій типовий день."
+- word: вільний
+  translation: free
+  pos: adjective
+  example: "У мене є вільний час."

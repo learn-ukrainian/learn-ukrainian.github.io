@@ -1,0 +1,308 @@
+- id: act-1
+  type: fill-in
+  title: Choose що, де, or коли
+  instruction: Complete each A1 sentence with the right connector.
+  items:
+    - sentence: "Я знаю, ___ це кафе."
+      answer: "що"
+      options:
+        - "що"
+        - "де"
+        - "коли"
+      explanation: "Use що for a fact or content."
+    - sentence: "Я не знаю, ___ парк."
+      answer: "де"
+      options:
+        - "де"
+        - "що"
+        - "коли"
+      explanation: "Use де for a place."
+    - sentence: "Скажи, ___ урок."
+      answer: "коли"
+      options:
+        - "коли"
+        - "де"
+        - "що"
+      explanation: "Use коли for a time."
+    - sentence: "Вона каже, ___ магазин близько."
+      answer: "що"
+      options:
+        - "що"
+        - "коли"
+        - "де"
+      explanation: "Каже, що introduces what she says."
+    - sentence: "Я знаю, ___ ти живеш."
+      answer: "де"
+      options:
+        - "де"
+        - "що"
+        - "куди"
+      explanation: "Живеш is a static place, so use де."
+    - sentence: "Ти знаєш, ___ зустріч?"
+      answer: "коли"
+      options:
+        - "коли"
+        - "що"
+        - "де"
+      explanation: "A meeting needs a time."
+    - sentence: "Я думаю, ___ це правильно."
+      answer: "що"
+      options:
+        - "що"
+        - "де"
+        - "коли"
+      explanation: "Думаю, що is a useful fact frame."
+    - sentence: "Скажи, ___ нове кафе."
+      answer: "де"
+      options:
+        - "де"
+        - "коли"
+        - "що"
+      explanation: "A cafe location needs де."
+- id: act-2
+  type: quiz
+  title: Question word or connector?
+  instruction: Decide what role the word has in each sentence.
+  items:
+    - prompt: "Де кафе?"
+      options:
+        - text: "question word"
+          correct: true
+        - text: "connector"
+          correct: false
+        - text: "reason word"
+          correct: false
+      explanation: "The sentence asks a question and ends with a question mark."
+    - prompt: "Я знаю, де кафе."
+      options:
+        - text: "connector"
+          correct: true
+        - text: "question word"
+          correct: false
+        - text: "choice word"
+          correct: false
+      explanation: "Де connects the detail to Я знаю."
+    - prompt: "Коли урок?"
+      options:
+        - text: "question word"
+          correct: true
+        - text: "connector"
+          correct: false
+        - text: "contrast word"
+          correct: false
+      explanation: "It asks for a time."
+    - prompt: "Скажи, коли урок."
+      options:
+        - text: "connector"
+          correct: true
+        - text: "question word"
+          correct: false
+        - text: "add word"
+          correct: false
+      explanation: "Коли connects the time detail to Скажи."
+    - prompt: "Що це?"
+      options:
+        - text: "question word"
+          correct: true
+        - text: "connector"
+          correct: false
+        - text: "place word"
+          correct: false
+      explanation: "It asks what something is."
+    - prompt: "Я думаю, що це добре."
+      options:
+        - text: "connector"
+          correct: true
+        - text: "question word"
+          correct: false
+        - text: "time word"
+          correct: false
+      explanation: "Що connects the thought to its content."
+- id: act-3
+  type: fill-in
+  title: Build the frame
+  instruction: Choose the missing first-part frame.
+  items:
+    - sentence: "___, що це добре."
+      answer: "Я думаю"
+      options:
+        - "Я думаю"
+        - "Де"
+        - "Коли"
+      explanation: "Я думаю, що is a common frame."
+    - sentence: "___, де магазин."
+      answer: "Я не знаю"
+      options:
+        - "Я не знаю"
+        - "Що"
+        - "Але"
+      explanation: "Я не знаю, де asks for a place detail."
+    - sentence: "___, коли зустріч."
+      answer: "Скажи"
+      options:
+        - "Скажи"
+        - "Де"
+        - "Бо"
+      explanation: "Скажи, коли asks someone to give the time."
+    - sentence: "___, що урок сьогодні."
+      answer: "Вона каже"
+      options:
+        - "Вона каже"
+        - "Коли"
+        - "Чи"
+      explanation: "Каже, що introduces what someone says."
+    - sentence: "___, де парк."
+      answer: "Ти знаєш"
+      options:
+        - "Ти знаєш"
+        - "Що"
+        - "Коли"
+      explanation: "Ти знаєш, де is a place question inside a sentence."
+    - sentence: "___, що він тут."
+      answer: "Я знаю"
+      options:
+        - "Я знаю"
+        - "Де"
+        - "Куди"
+      explanation: "Я знаю, що introduces a fact."
+- id: act-4
+  type: quiz
+  title: Where does the comma go?
+  instruction: Choose the Ukrainian sentence with the correct comma.
+  items:
+    - prompt: "I know where the cafe is."
+      options:
+        - text: "Я знаю, де кафе."
+          correct: true
+        - text: "Я знаю де кафе."
+          correct: false
+        - text: "Я, знаю де кафе."
+          correct: false
+      explanation: "Put the comma before де."
+    - prompt: "I think that this is good."
+      options:
+        - text: "Я думаю, що це добре."
+          correct: true
+        - text: "Я думаю що це добре."
+          correct: false
+        - text: "Я, думаю що це добре."
+          correct: false
+      explanation: "Put the comma before що."
+    - prompt: "Tell me when the lesson is."
+      options:
+        - text: "Скажи, коли урок."
+          correct: true
+        - text: "Скажи коли урок."
+          correct: false
+        - text: "Скажи коли, урок."
+          correct: false
+      explanation: "Put the comma before коли."
+    - prompt: "She says that the shop is close."
+      options:
+        - text: "Вона каже, що магазин близько."
+          correct: true
+        - text: "Вона каже що магазин близько."
+          correct: false
+        - text: "Вона, каже що магазин близько."
+          correct: false
+      explanation: "Каже, що uses a comma before що."
+- id: act-5
+  type: match-up
+  title: Word job
+  instruction: Match each connector with its A1 job.
+  pairs:
+    - left: "що"
+      right: "fact or content"
+    - left: "де"
+      right: "place"
+    - left: "коли"
+      right: "time"
+    - left: "Я знаю, що..."
+      right: "I know that..."
+    - left: "Я знаю, де..."
+      right: "I know where..."
+    - left: "Скажи, коли..."
+      right: "Tell me when..."
+- id: act-6
+  type: unjumble
+  title: Build short complex sentences
+  instruction: Put the words in a natural order.
+  items:
+    - words: ["Я", "знаю", "що", "це", "кафе"]
+      answer: "Я знаю, що це кафе."
+    - words: ["Я", "не", "знаю", "де", "парк"]
+      answer: "Я не знаю, де парк."
+    - words: ["Скажи", "коли", "урок"]
+      answer: "Скажи, коли урок."
+    - words: ["Вона", "каже", "що", "магазин", "близько"]
+      answer: "Вона каже, що магазин близько."
+    - words: ["Ти", "знаєш", "де", "нове", "кафе"]
+      answer: "Ти знаєш, де нове кафе?"
+    - words: ["Я", "думаю", "що", "це", "правильно"]
+      answer: "Я думаю, що це правильно."
+- id: act-7
+  type: true-false
+  title: Connector checks
+  instruction: Decide whether each statement fits this A1 module.
+  items:
+    - statement: "Що can ask a question and can also connect a fact."
+      answer: true
+      explanation: "Що це? and Я знаю, що це кафе both work."
+    - statement: "Де is the basic word for a static place."
+      answer: true
+      explanation: "Use де in Де кафе? and Я знаю, де кафе."
+    - statement: "Коли is useful for asking or giving a time."
+      answer: true
+      explanation: "Коли урок? and Скажи, коли урок."
+    - statement: "Ukrainian never writes a comma before що, де, or коли."
+      answer: false
+      explanation: "When these words connect two parts, write the comma before them."
+    - statement: "Куди ти живеш? is the best A1 question for a home address."
+      answer: false
+      explanation: "Use Де ти живеш? for a static place."
+    - statement: "At A1, the second part should stay short."
+      answer: true
+      explanation: "Short frames are the goal here."
+    - statement: "Що is a universal replacement for де and коли."
+      answer: false
+      explanation: "Use де for place and коли for time."
+    - statement: "Я думаю, що це добре is a useful A1 frame."
+      answer: true
+      explanation: "It is short and practical."
+- id: act-8
+  type: error-correction
+  title: Repair what, where, when
+  instruction: Correct the connector, comma, or place/time word.
+  items:
+    - sentence: "Я знаю де кафе."
+      error: "знаю де"
+      correction: "знаю, де"
+      explanation: "Add the comma before де."
+    - sentence: "Скажи коли урок."
+      error: "Скажи коли"
+      correction: "Скажи, коли"
+      explanation: "Add the comma before коли."
+    - sentence: "Я думаю що це добре."
+      error: "думаю що"
+      correction: "думаю, що"
+      explanation: "Add the comma before що."
+    - sentence: "Куди ти живеш?"
+      error: "Куди"
+      correction: "Де"
+      explanation: "Use де for a static place."
+    - sentence: "Я знаю, що парк."
+      error: "що"
+      correction: "де"
+      explanation: "A park location needs де."
+    - sentence: "Скажи, що зустріч."
+      error: "що"
+      correction: "коли"
+      explanation: "A meeting time needs коли."
+    - sentence: "Вона каже що урок сьогодні."
+      error: "каже що"
+      correction: "каже, що"
+      explanation: "Add the comma before що."
+    - sentence: "Я не знаю, куди магазин."
+      error: "куди"
+      correction: "де"
+      explanation: "A shop is located somewhere, so use де."

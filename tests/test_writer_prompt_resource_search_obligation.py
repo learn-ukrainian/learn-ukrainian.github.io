@@ -32,6 +32,21 @@ def test_a1_writer_prompt_requires_resource_search_attempt_telemetry() -> None:
     assert "MUST still record the search attempt in writer telemetry" in prompt
 
 
+def test_a1_m1_writer_prompt_includes_zero_script_archetype() -> None:
+    prompt = _render_prompt("a1", "sounds-letters-and-hello")
+
+    assert "MODULE ARCHETYPE: a1-zero-script-onboarding" in prompt
+    assert "Every Ukrainian term used in an activity must be introduced first." in prompt
+    assert "Product tabs: Lesson, Workbook, Vocabulary, Resources" in prompt
+
+
+def test_b1_writer_prompt_includes_core_archetype() -> None:
+    prompt = _render_prompt("b1", "adjectives-comparative", validate=False)
+
+    assert "MODULE ARCHETYPE: b1-plus-core" in prompt
+    assert "Ukrainian-only body" in prompt
+
+
 def test_c1_writer_prompt_requires_resource_search_attempt_telemetry() -> None:
     prompt = _render_prompt("c1", "abstract-writing", validate=False)
 

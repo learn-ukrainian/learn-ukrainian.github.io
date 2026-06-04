@@ -1,0 +1,156 @@
+- lemma: який
+  translation: what kind, masculine
+  pos: pronoun
+  usage: Який стіл?
+- lemma: яка
+  translation: what kind, feminine
+  pos: pronoun
+  usage: Яка книга?
+- lemma: яке
+  translation: what kind, neuter
+  pos: pronoun
+  usage: Яке фото?
+- lemma: які
+  translation: what kind, plural
+  pos: pronoun
+  usage: Які речі?
+- lemma: великий
+  translation: big, masculine
+  pos: adj
+  usage: Це великий стіл.
+- lemma: велика
+  translation: big, feminine
+  pos: adj
+  usage: Це велика кімната.
+- lemma: велике
+  translation: big, neuter
+  pos: adj
+  usage: Це велике вікно.
+- lemma: маленький
+  translation: small, masculine
+  pos: adj
+  usage: Це маленький плакат.
+- lemma: новий
+  translation: new, masculine
+  pos: adj
+  usage: Стіл новий.
+- lemma: нова
+  translation: new, feminine
+  pos: adj
+  usage: Книга нова.
+- lemma: нове
+  translation: new, neuter
+  pos: adj
+  usage: Фото нове.
+- lemma: старий
+  translation: old, masculine
+  pos: adj
+  usage: Атлас старий.
+- lemma: стара
+  translation: old, feminine
+  pos: adj
+  usage: Лампа стара.
+- lemma: старе
+  translation: old, neuter
+  pos: adj
+  usage: Ліжко старе.
+- lemma: гарний
+  translation: nice, beautiful, masculine
+  pos: adj
+  usage: Плакат гарний.
+- lemma: гарна
+  translation: nice, beautiful, feminine
+  pos: adj
+  usage: Листівка гарна.
+- lemma: гарне
+  translation: nice, beautiful, neuter
+  pos: adj
+  usage: Вікно гарне.
+- lemma: поганий
+  translation: bad, masculine
+  pos: adj
+  usage: Це поганий фільм.
+- lemma: чистий
+  translation: clean, masculine
+  pos: adj
+  usage: Стіл чистий.
+- lemma: чиста
+  translation: clean, feminine
+  pos: adj
+  usage: Кімната чиста.
+- lemma: чисте
+  translation: clean, neuter
+  pos: adj
+  usage: Вікно чисте.
+- lemma: брудний
+  translation: dirty, masculine
+  pos: adj
+  usage: Дзеркало брудне.
+- lemma: дорогий
+  translation: expensive, masculine
+  pos: adj
+  usage: Телефон дорогий.
+- lemma: дешевий
+  translation: cheap, masculine
+  pos: adj
+  usage: Плакат дешевий.
+- lemma: світлий
+  translation: light, bright, masculine
+  pos: adj
+  usage: Клас світлий.
+- lemma: темний
+  translation: dark, masculine
+  pos: adj
+  usage: Коридор темний.
+- lemma: цікавий
+  translation: interesting, masculine
+  pos: adj
+  usage: Це цікавий атлас.
+- lemma: цікава
+  translation: interesting, feminine
+  pos: adj
+  usage: Це цікава книга.
+- lemma: цікаве
+  translation: interesting, neuter
+  pos: adj
+  usage: Це цікаве фото.
+- lemma: смачний
+  translation: tasty, masculine
+  pos: adj
+  usage: Це смачний суп.
+- lemma: правильний
+  translation: correct, masculine
+  pos: adj
+  usage: Це правильний приклад.
+- lemma: розумний
+  translation: smart, masculine
+  pos: adj
+  usage: Сергій розумний.
+- lemma: лінивий
+  translation: lazy, masculine
+  pos: adj
+  usage: Учень лінивий.
+- lemma: а
+  translation: and / but for contrast
+  pos: conj
+  usage: Стіл новий, а стілець старий.
+- lemma: але
+  translation: but
+  pos: conj
+  usage: Кімната маленька, але гарна.
+- lemma: і
+  translation: and
+  pos: conj
+  usage: Книга нова і цікава.
+- lemma: атлас
+  translation: atlas
+  pos: noun
+  usage: Атлас старий.
+- lemma: листівка
+  translation: postcard
+  pos: noun
+  usage: Листівка дешева.
+- lemma: плакат
+  translation: poster
+  pos: noun
+  usage: Плакат великий.

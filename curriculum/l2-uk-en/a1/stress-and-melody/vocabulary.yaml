@@ -1,0 +1,212 @@
+- lemma: наголос
+  translation: stress / accent
+  pos: noun
+  usage: Наголос у слові ка́ва.
+- lemma: мелодика
+  translation: melody / intonation
+  pos: noun
+  usage: Мелодика речення.
+- lemma: склад
+  translation: syllable
+  pos: noun
+  usage: Один склад.
+- lemma: наголошений
+  translation: stressed
+  pos: adjective
+  usage: Наголошений склад.
+- lemma: ненаголошений
+  translation: unstressed
+  pos: adjective
+  usage: Ненаголошений склад.
+- lemma: голосний
+  translation: vowel
+  pos: adjective / noun
+  usage: Голосний звук.
+- lemma: звук
+  translation: sound
+  pos: noun
+  usage: Звук о.
+- lemma: слово
+  translation: word
+  pos: noun
+  usage: Слово ка́ва.
+- lemma: речення
+  translation: sentence
+  pos: noun
+  usage: Речення має мелодику.
+- lemma: питання
+  translation: question
+  pos: noun
+  usage: Це питання.
+- lemma: так
+  translation: "yes"
+  pos: particle
+  usage: Так.
+- lemma: ні
+  translation: "no"
+  pos: particle
+  usage: Ні.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це?
+- lemma: що
+  translation: what
+  pos: pronoun
+  usage: Що це?
+- lemma: де
+  translation: where
+  pos: adverb
+  usage: Де метро́?
+- lemma: коли
+  translation: when
+  pos: adverb
+  usage: Коли?
+- lemma: як
+  translation: how
+  pos: adverb
+  usage: Як спра́ви?
+- lemma: це
+  translation: this is / this
+  pos: pronoun
+  usage: Це ка́ва.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Ка́ва.
+- lemma: вода
+  translation: water
+  pos: noun
+  usage: Вода́.
+- lemma: столиця
+  translation: capital
+  pos: noun
+  usage: Ки́їв - столи́ця.
+- lemma: замок
+  translation: castle / lock
+  pos: noun
+  usage: За́мок і замо́к.
+- lemma: атлас
+  translation: atlas / satin
+  pos: noun
+  usage: А́тлас і атла́с.
+- lemma: орган
+  translation: organ
+  pos: noun
+  usage: О́рган і орга́н.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Ра́нок.
+- lemma: метро
+  translation: metro
+  pos: noun
+  usage: Метро́.
+- lemma: фотографія
+  translation: photograph
+  pos: noun
+  usage: Фотогра́фія.
+- lemma: одинадцять
+  translation: eleven
+  pos: numeral
+  usage: Одина́дцять.
+- lemma: чотирнадцять
+  translation: fourteen
+  pos: numeral
+  usage: Чотирна́дцять.
+- lemma: мама
+  translation: mother
+  pos: noun
+  usage: Ма́ма.
+- lemma: тато
+  translation: father
+  pos: noun
+  usage: Та́то.
+- lemma: книга
+  translation: book
+  pos: noun
+  usage: Кни́га.
+- lemma: зима
+  translation: winter
+  pos: noun
+  usage: Зима́.
+- lemma: рука
+  translation: hand / arm
+  pos: noun
+  usage: Рука́.
+- lemma: кафе
+  translation: cafe
+  pos: noun
+  usage: Кафе́.
+- lemma: молоко
+  translation: milk
+  pos: noun
+  usage: Молоко́.
+- lemma: книжка
+  translation: small book
+  pos: noun
+  usage: Кни́жка.
+- lemma: книжки
+  translation: books
+  pos: noun plural
+  usage: Книжки́.
+- lemma: людина
+  translation: person
+  pos: noun
+  usage: Люди́на.
+- lemma: українська
+  translation: Ukrainian
+  pos: adjective
+  usage: Украї́нська мова.
+- lemma: відпочинок
+  translation: rest / vacation
+  pos: noun
+  usage: Відпочи́нок.
+- lemma: кілометр
+  translation: kilometer
+  pos: noun
+  usage: Кіломе́тр.
+- lemma: маленький
+  translation: small
+  pos: adjective
+  usage: Мале́нький.
+- lemma: аптека
+  translation: pharmacy
+  pos: noun
+  usage: Апте́ка.
+- lemma: гарно
+  translation: nicely / beautiful
+  pos: adverb
+  usage: Як га́рно!
+- lemma: привіт
+  translation: hi
+  pos: interjection
+  usage: Приві́т!
+- lemma: справи
+  translation: things / affairs
+  pos: noun plural
+  usage: Як спра́ви?
+- lemma: добре
+  translation: good / well
+  pos: adverb
+  usage: До́бре!
+- lemma: у тебе
+  translation: and you / with you
+  pos: phrase
+  usage: А у те́бе?
+- lemma: Оля
+  translation: Olia
+  pos: proper noun
+  usage: О́ля.
+- lemma: Тарас
+  translation: Taras
+  pos: proper noun
+  usage: Тара́с.
+- lemma: Київ
+  translation: Kyiv
+  pos: proper noun
+  usage: Ки́їв.
+- lemma: Україна
+  translation: Ukraine
+  pos: proper noun
+  usage: Украї́на.

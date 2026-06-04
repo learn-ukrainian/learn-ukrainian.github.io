@@ -504,6 +504,36 @@ class TestGenerateMdxFrontmatter:
         result = generate_mdx(md, 1, pipeline_version="v6", build_status="validated")
         assert "draft: true" not in result
 
+    def test_linear_phase_4_has_no_draft(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import generate_mdx
+
+        md = self._make_minimal_md()
+        result = generate_mdx(
+            md,
+            1,
+            pipeline_version="linear-phase-4",
+            build_status="validated",
+        )
+        assert "pipeline: linear-phase-4" in result
+        assert "build_status: validated" in result
+        assert "draft: true" not in result
+
+    def test_linear_phase_4_draft_stays_draft(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import generate_mdx
+
+        md = self._make_minimal_md()
+        result = generate_mdx(
+            md,
+            1,
+            pipeline_version="linear-phase-4",
+            build_status="draft",
+        )
+        assert "draft: true" in result
+
     def test_v5_frontmatter(self):
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))

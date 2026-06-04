@@ -114,6 +114,22 @@ def test_vesum_gate_missing_report_preserves_decorated_surface() -> None:
     assert gate["missing"] == ["вмива́ю**ся**"]
 
 
+def test_vesum_gate_ignores_sung_vowel_practice_strings() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {word: [] for word in words}
+
+    gate = _vesum_gate(
+        module_text="Sing а-а-а and ооо, but фейкслово still fails.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["фейкслово"]
+
+
 def test_vesum_gate_ignores_morphological_stem_fragments() -> None:
     module_text = (
         "Verbs like **користуватися** lose the suffix **-ва-** in the present "

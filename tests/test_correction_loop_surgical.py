@@ -81,6 +81,31 @@ def test_plan_section_gate_deduplicates_plan_section_diagnostics() -> None:
     assert report["duplicate_headings"] == []
 
 
+def test_plan_section_gate_accepts_a1_script_building_english_headings() -> None:
+    plan = {
+        "level": "A1",
+        "sequence": 2,
+        "content_outline": [
+            {"section": "Склади", "words": 20},
+            {"section": "Голосні літери", "words": 20},
+            {"section": "Читання слів", "words": 20},
+            {"section": "Підсумок", "words": 20},
+        ],
+    }
+    report = linear_pipeline._section_gate(
+        "# Reading Ukrainian\n\n"
+        "## Syllables\n\nCount the vowel sounds first.\n\n"
+        "## Vowel Letters\n\nRead the clean vowels aloud.\n\n"
+        "## Reading Words\n\nBuild from syllables into words.\n\n"
+        "## Textbook Check\n\nCheck that you can read the sample words.\n",
+        plan,
+    )
+
+    assert report["passed"] is True
+    assert report["missing_headings"] == []
+    assert report["archetype"] == "a1-script-building"
+
+
 def test_section_heading_key_preserves_falsy_non_none_titles() -> None:
     assert linear_pipeline._section_heading_key(0) == "0"
 

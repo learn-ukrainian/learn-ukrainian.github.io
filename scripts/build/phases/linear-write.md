@@ -278,6 +278,10 @@ Rules of engagement with prior learning (binding):
 
 {LEARNER_STATE}
 
+## Module Archetype Contract
+
+{MODULE_ARCHETYPE}
+
 ## Immersion Rule
 
 {IMMERSION_RULE}
@@ -429,6 +433,21 @@ field `items`; do NOT use the React/component prop name `questions`.
 For item-bearing types, include a non-empty `items` array. For numeric arrays
 like `correct_order`, indices are zero-based.
 
+**`group-sort` shape (mandatory canonical fields).** Use `groups` as an array
+of objects shaped like `{"label": "Group name", "items": ["word 1", "word 2"]}`.
+Do NOT emit a separate top-level `items` array, `key`, or `{word, group}` pairs.
+
+**`letter-grid` shape (mandatory canonical fields).** Each entry in `letters`
+MUST use `upper`, `lower`, `emoji`, `key_word`, and optional `sound_type`/`note`.
+Do NOT use aliases such as `letter`, `word`, `sound`, or `kind`.
+
+**`count-syllables` item shape (mandatory canonical fields).** Each item MUST
+use `word` and integer `correct`. Do NOT use `answer`; the renderer rejects it.
+
+**`watch-and-repeat` item shape (mandatory canonical fields).** Each item MUST
+use `video` for the YouTube/video URL. Do NOT use `url`; the renderer reads
+only `video`.
+
 **`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside a `translate` activity's `items:` list MUST use `source` for the text to translate and `options` for target choices; the correct target answer is the option with `correct: true`. For UK→EN translation, `source` is the Ukrainian text and the target English answer lives in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field that the parser cannot consume.
 
 **`quiz` and `translate` item explanations (mandatory teaching feedback — HARD FAIL if missing/empty).** Every item inside a `quiz` or `translate` activity's `items:` list MUST include `explanation: "..."`. Keep it one concise line explaining why the correct option is right; for A1/A2, write this explanation in simple English. Empty strings, whitespace-only strings, or omitted `explanation` fields fail the `quiz_translate_explanations` gate.
@@ -525,6 +544,11 @@ Return the visible `<plan_reasoning>` blocks first, then exactly these four fenc
   }
 ]
 ```
+
+Vocabulary entries MUST use only these item fields: `lemma`, `translation`,
+`pos`, `usage`, and optional `notes`, `examples`, `tags`. CEFR/frequency
+lookups are selection evidence only; do NOT emit metadata fields such as
+`cefr`, `level`, `frequency`, `register`, `gender`, or `example`.
 
 ```json file=resources.yaml
 [

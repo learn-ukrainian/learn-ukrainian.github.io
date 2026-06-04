@@ -1,0 +1,400 @@
+---
+title: "Що буде?"
+description: "Я буду читати — ваш перший майбутній час"
+sidebar:
+  order: 50
+  label: "50. Що буде?"
+pipeline: linear-phase-4
+build_status: validated
+prev: yesterday
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Now move from **учора** to **завтра**. The A1 future pattern for this step is
+only:
+
+**буду / будеш / буде / будемо / будете / будуть + infinitive**
+
+The first word changes. The infinitive stays the same:
+
+| Person | Future pattern | English check |
+| --- | --- | --- |
+| **я** | **я буду читати** | I will read |
+| **ти** | **ти будеш читати** | you will read |
+| **він / вона** | **він буде читати / вона буде читати** | he or she will read |
+| **ми** | **ми будемо читати** | we will read |
+| **ви** | **ви будете читати** | you will read |
+| **вони** | **вони будуть читати** | they will read |
+
+:::tip[One moving part]
+In this A1 pattern, change only **бути**: **буду**, **будеш**, **буде**,
+**будемо**, **будете**, **будуть**. Keep the second verb as an infinitive:
+**читати**, **робити**, **відпочивати**.
+:::
+
+### Match the future form
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "буду"}, {"left": "ти", "right": "будеш"}, {"left": "він / вона", "right": "буде"}, {"left": "ми", "right": "будемо"}, {"left": "ви", "right": "будете"}, {"left": "вони", "right": "будуть"}]`)} />
+
+## Діалоги
+
+### Плани на завтра
+
+<DialogueBox uk="Олена: Що ти будеш робити завтра?" en="Olena: What will you do tomorrow?" />
+<DialogueBox uk="Тарас: Завтра я буду працювати." en="Taras: Tomorrow I will work." />
+<DialogueBox uk="Олена: А ввечері?" en="Olena: And in the evening?" />
+<DialogueBox uk="Тарас: Ввечері я буду готувати вечерю." en="Taras: In the evening I will cook dinner." />
+<DialogueBox uk="Тарас: А що буде робити Анна?" en="Taras: And what will Anna do?" />
+<DialogueBox uk="Олена: Вона буде читати книжку." en="Olena: She will read a book." />
+<DialogueBox uk="Тарас: А ми будемо гуляти?" en="Taras: And will we walk?" />
+<DialogueBox uk="Олена: Так, ми будемо гуляти в парку." en="Olena: Yes, we will walk in the park." />
+
+Every answer uses **буду / буде / будемо + infinitive**:
+
+- **я буду працювати** - I will work;
+- **я буду готувати** - I will cook;
+- **вона буде читати** - she will read;
+- **ми будемо гуляти** - we will walk.
+
+The question uses the same pattern:
+
+**Що ти будеш робити завтра?** - What will you do tomorrow?
+
+### Вихідні
+
+<DialogueBox uk="Максим: Що ви будете робити на вихідних?" en="Maksym: What will you do on the weekend?" />
+<DialogueBox uk="Олена: У суботу ми будемо відпочивати." en="Olena: On Saturday we will rest." />
+<DialogueBox uk="Максим: А в неділю?" en="Maksym: And on Sunday?" />
+<DialogueBox uk="Олена: У неділю я буду готувати, а Тарас буде дивитися футбол." en="Olena: On Sunday I will cook, and Taras will watch football." />
+<DialogueBox uk="Максим: Звучить добре." en="Maksym: Sounds good." />
+<DialogueBox uk="Олена: Наступного тижня ми будемо працювати багато." en="Olena: Next week we will work a lot." />
+
+This dialogue adds planning words:
+
+- **на вихідних** - on the weekend;
+- **у суботу** - on Saturday;
+- **у неділю** - on Sunday;
+- **наступного тижня** - next week;
+- **план** - plan;
+- **звучить добре** - sounds good.
+
+### Build the compound future
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Завтра я ___ працювати.", "answer": "буду", "options": ["буду", "буде", "будемо"]}, {"sentence": "Що ти ___ робити ввечері?", "answer": "будеш", "options": ["будеш", "буду", "будете"]}, {"sentence": "Вона ___ читати книжку.", "answer": "буде", "options": ["буде", "будуть", "будемо"]}, {"sentence": "Ми ___ дивитися футбол.", "answer": "будемо", "options": ["будемо", "буде", "буду"]}, {"sentence": "Ви ___ гуляти в парку?", "answer": "будете", "options": ["будете", "будеш", "будуть"]}, {"sentence": "Вони ___ відпочивати.", "answer": "будуть", "options": ["будуть", "будемо", "буде"]}]`)} />
+
+## Майбутній час
+
+The A1 compound future has two parts:
+
+| Part | What changes? | Example |
+| --- | --- | --- |
+| **бути** in the future | changes by person | **я буду**, **ти будеш**, **ми будемо** |
+| infinitive | does not change | **читати**, **робити**, **гуляти** |
+
+Use the table as a map:
+
+| Person | With **робити** | English check |
+| --- | --- | --- |
+| **я** | **я буду робити** | I will do |
+| **ти** | **ти будеш робити** | you will do |
+| **він / вона** | **він буде робити / вона буде робити** | he or she will do |
+| **ми** | **ми будемо робити** | we will do |
+| **ви** | **ви будете робити** | you will do |
+| **вони** | **вони будуть робити** | they will do |
+
+Keep the infinitive unchanged after the future form:
+
+- **я буду читати**;
+- **ти будеш працювати**;
+- **вона буде готувати**;
+- **ми будемо дивитися**;
+- **ви будете говорити**;
+- **вони будуть відпочивати**.
+
+Do not add a present-tense ending after **буду**. The second verb stays in its
+dictionary form: **буду читати**, **будемо робити**, **будуть гуляти**.
+
+Compare the three A1 time frames:
+
+| Time | Signal | Example |
+| --- | --- | --- |
+| past | **учора** | **Учора я читав / читала.** |
+| present | **зараз** | **Зараз я читаю.** |
+| future | **завтра** | **Завтра я буду читати.** |
+
+Past changes for gender in the singular. Present changes by person. In this
+future pattern, **бути** changes by person and the infinitive stays fixed.
+
+### Future pattern check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which sentence means I will read?", "options": [{"text": "Я буду читати.", "correct": true}, {"text": "Я буду читаю.", "correct": false}, {"text": "Я читаю завтра.", "correct": false}], "explanation": "Use буду + infinitive: буду читати."}, {"question": "What stays unchanged after будемо?", "options": [{"text": "The infinitive.", "correct": true}, {"text": "A present-tense ending.", "correct": false}, {"text": "A past-tense ending.", "correct": false}], "explanation": "The second verb stays in the infinitive."}, {"question": "Which form fits ми?", "options": [{"text": "Ми будемо робити.", "correct": true}, {"text": "Ми буде робити.", "correct": false}, {"text": "Ми будеш робити.", "correct": false}], "explanation": "Ми takes будемо."}, {"question": "Which question asks about tomorrow?", "options": [{"text": "Що ти будеш робити завтра?", "correct": true}, {"text": "Що ти робиш учора?", "correct": false}, {"text": "Що ти робив зараз?", "correct": false}], "explanation": "Будеш робити завтра is the future question."}]`)} />
+
+### Sort the time frames
+
+<GroupSort client:only='react' groups={JSON.parse(`{"past": ["Учора я читав.", "Учора вона працювала."], "present": ["Зараз я читаю.", "Зараз ми працюємо."], "future": ["Завтра я буду читати.", "Наступного тижня ми будемо працювати."]}`)} />
+
+## Практика
+
+Start with the question:
+
+**Що ти будеш робити завтра?** - What will you do tomorrow?
+
+Answer with **я буду + infinitive**:
+
+| Ukrainian answer | English check |
+| --- | --- |
+| **Я буду працювати.** | I will work. |
+| **Я буду читати.** | I will read. |
+| **Я буду готувати вечерю.** | I will cook dinner. |
+| **Я буду відпочивати.** | I will rest. |
+| **Я буду дивитися футбол.** | I will watch football. |
+
+Make short plans for different people:
+
+| Plan | English check |
+| --- | --- |
+| **Завтра Олена буде читати.** | Tomorrow Olena will read. |
+| **У суботу ми будемо гуляти.** | On Saturday we will walk. |
+| **Ввечері ви будете говорити з другом.** | In the evening you will speak with a friend. |
+| **Наступного тижня вони будуть працювати.** | Next week they will work. |
+
+Use the same simple order:
+
+1. time word: **завтра**, **у суботу**, **ввечері**;
+2. person: **я**, **ти**, **вона**, **ми**;
+3. future form of **бути**;
+4. infinitive.
+
+Examples:
+
+- **Завтра я буду робити домашнє завдання.**
+- **Ввечері ти будеш відпочивати.**
+- **У суботу ми будемо дивитися футбол.**
+- **Наступного тижня вони будуть працювати.**
+
+If the plan sounds too long, shorten it. **Я буду читати.** is a complete A1
+future sentence. **Ми будемо відпочивати.** is also complete.
+
+### Mini planner
+
+Use the future form to answer a practical question. Keep the answer short:
+
+| Question | Answer | English check |
+| --- | --- | --- |
+| **Що ти будеш робити завтра зранку?** | **Я буду працювати.** | I will work. |
+| **Що ти будеш робити вдень?** | **Я буду читати.** | I will read. |
+| **Що ви будете робити ввечері?** | **Ми будемо дивитися футбол.** | We will watch football. |
+| **Що вони будуть робити на вихідних?** | **Вони будуть відпочивати.** | They will rest. |
+
+You can answer with only one verb, or add one small detail:
+
+- **Я буду працювати завтра.**
+- **Ти будеш читати вдома.**
+- **Вона буде готувати вечерю.**
+- **Ми будемо гуляти в парку.**
+- **Вони будуть говорити з другом.**
+
+The second verb still does not change. It is always the infinitive:
+**працювати**, **читати**, **готувати**, **гуляти**, **говорити**.
+
+If you hear a long English future sentence, compress it for A1. "Tomorrow I
+will probably work at home in the morning" can become **Завтра зранку я буду
+працювати вдома.** That is enough. Keep one time word, one person, one future
+form of **бути**, and one infinitive.
+
+For a quick spoken answer, repeat the pattern twice: **Завтра я буду
+працювати. Ввечері я буду відпочивати.** The repetition is useful because the
+infinitives stay visible.
+
+### Check the compound future
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я буду читати завтра.", "isTrue": true, "explanation": "Буду + читати is correct."}, {"statement": "Ти будеш робити ввечері?", "isTrue": true, "explanation": "Будеш + робити is correct."}, {"statement": "Вона буде читає книжку.", "isTrue": false, "explanation": "After буде, use читати."}, {"statement": "Ми будемо дивитися футбол.", "isTrue": true, "explanation": "Будемо + дивитися is correct."}, {"statement": "Вони будуть працюють.", "isTrue": false, "explanation": "After будуть, use працювати."}, {"statement": "Ви будете гуляти в парку?", "isTrue": true, "explanation": "Будете + гуляти is correct."}]`)} />
+
+### Build future sentences
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Завтра / я / буду / працювати", "answer": "Завтра я буду працювати."}, {"jumbled": "Що / ти / будеш / робити / ввечері", "answer": "Що ти будеш робити ввечері?"}, {"jumbled": "Вона / буде / читати / книжку", "answer": "Вона буде читати книжку."}, {"jumbled": "Ми / будемо / дивитися / футбол", "answer": "Ми будемо дивитися футбол."}, {"jumbled": "Вони / будуть / відпочивати", "answer": "Вони будуть відпочивати."}]`)} />
+
+### From now to tomorrow
+
+<Order client:only='react' items={JSON.parse(`["Зараз я читаю.", "Ввечері я буду готувати.", "Завтра я буду працювати.", "Наступного тижня я буду відпочивати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3]`)} instruction={"Put the mini-sequence in a natural time order."} isUkrainian={false} />
+
+### Repair traps
+
+The most common A1 trap is mixing future **бути** with a changed second verb.
+Repair it by returning the second verb to the infinitive:
+
+| Learner sentence | Better A1 sentence |
+| --- | --- |
+| <del>**Я буду читаю завтра.**</del> | **Я буду читати завтра.** |
+| <del>**Ти будеш робиш ввечері?**</del> | **Ти будеш робити ввечері?** |
+| <del>**Ми будемо дивимося футбол.**</del> | **Ми будемо дивитися футбол.** |
+| <del>**Вони будуть працюють.**</del> | **Вони будуть працювати.** |
+
+The repair is always the same: after **буду / будеш / буде / будемо / будете /
+будуть**, use an infinitive.
+
+Another trap is choosing the wrong future form of **бути**:
+
+| Person | Repair |
+| --- | --- |
+| <del>**я буде робити**</del> | **я буду робити** |
+| <del>**ти буду робити**</del> | **ти будеш робити** |
+| <del>**ми буде робити**</del> | **ми будемо робити** |
+| <del>**вони будемо робити**</del> | **вони будуть робити** |
+
+### Keep the infinitive
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я буду ___ завтра.", "answer": "читати", "options": ["читати", "читаю", "читав"]}, {"sentence": "Ти будеш ___ ввечері?", "answer": "робити", "options": ["робити", "робиш", "робив"]}, {"sentence": "Вона буде ___ вечерю.", "answer": "готувати", "options": ["готувати", "готує", "готувала"]}, {"sentence": "Ми будемо ___ футбол.", "answer": "дивитися", "options": ["дивитися", "дивимося", "дивилися"]}, {"sentence": "Вони будуть ___.", "answer": "відпочивати", "options": ["відпочивати", "відпочивають", "відпочивали"]}]`)} />
+
+## 📋 Підсумок
+
+Use this compact map:
+
+| Person | Future of **бути** | Full A1 future |
+| --- | --- | --- |
+| **я** | **буду** | **я буду читати** |
+| **ти** | **будеш** | **ти будеш читати** |
+| **він / вона** | **буде** | **він буде читати / вона буде читати** |
+| **ми** | **будемо** | **ми будемо читати** |
+| **ви** | **будете** | **ви будете читати** |
+| **вони** | **будуть** | **вони будуть читати** |
+
+Ask:
+
+**Що ти будеш робити завтра?**
+
+Answer:
+
+**Я буду + infinitive.**
+
+Self-check:
+
+1. Can you choose the right form: **я буду**, **ти будеш**, **ми будемо**?
+2. Can you keep the second verb unchanged: **буду читати**, **будемо робити**?
+3. Can you make a plan with a time word: **Завтра я буду працювати**?
+
+Stop with the compound future. The next module uses this same pattern for
+plans and invitations with days and times.
+
+### Say future plans
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Tomorrow I will work.", "options": [{"text": "Завтра я буду працювати.", "correct": true}, {"text": "Учора я працював.", "correct": false}, {"text": "Зараз я працюю.", "correct": false}], "explanation": "Tomorrow needs буду працювати."}, {"source": "What will you do in the evening?", "options": [{"text": "Що ти будеш робити ввечері?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що ти робиш зараз?", "correct": false}], "explanation": "Use будеш робити for you will do."}, {"source": "We will watch football.", "options": [{"text": "Ми будемо дивитися футбол.", "correct": true}, {"text": "Ми дивимося футбол.", "correct": false}, {"text": "Ми дивилися футбол.", "correct": false}], "explanation": "Use будемо дивитися."}, {"source": "They will rest.", "options": [{"text": "Вони будуть відпочивати.", "correct": true}, {"text": "Вони відпочивають.", "correct": false}, {"text": "Вони відпочивали.", "correct": false}], "explanation": "Use будуть відпочивати."}]`)} />
+
+### Repair future forms
+
+<ErrorCorrection client:only='react' instruction="Fix the sentence by using буду + infinitive." items={JSON.parse(`[{"sentence": "Я буду читаю завтра.", "errorWord": "читаю", "correctForm": "читати", "options": [], "explanation": "After буду, use the infinitive читати."}, {"sentence": "Ти будеш робиш ввечері?", "errorWord": "робиш", "correctForm": "робити", "options": [], "explanation": "After будеш, use робити."}, {"sentence": "Вона буде читає книжку.", "errorWord": "читає", "correctForm": "читати", "options": [], "explanation": "After буде, use читати."}, {"sentence": "Ми будемо дивимося футбол.", "errorWord": "дивимося", "correctForm": "дивитися", "options": [], "explanation": "After будемо, use дивитися."}, {"sentence": "Ми будемо читаємо текст.", "errorWord": "Ми будемо читаємо текст.", "correctForm": "Ми будемо читати текст.", "options": [], "explanation": "In the compound future, only будемо changes; the second verb stays читати."}, {"sentence": "Вони будуть працюють.", "errorWord": "працюють", "correctForm": "працювати", "options": [], "explanation": "After будуть, use працювати."}, {"sentence": "Я буде робити завтра.", "errorWord": "буде", "correctForm": "буду", "options": [], "explanation": "Я takes буду."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"завтра","translation":"tomorrow","pos":"adverb","example":"Завтра я буду працювати.","examples":["tomorrow","Завтра я буду працювати."]},{"word":"буду","translation":"I will","pos":"verb","example":"Я буду читати.","examples":["I will","Я буду читати."]},{"word":"будеш","translation":"you will","pos":"verb","example":"Ти будеш робити?","examples":["you will","Ти будеш робити?"]},{"word":"буде","translation":"he/she/it will","pos":"verb","example":"Вона буде читати.","examples":["he/she/it will","Вона буде читати."]},{"word":"будемо","translation":"we will","pos":"verb","example":"Ми будемо гуляти.","examples":["we will","Ми будемо гуляти."]},{"word":"будете","translation":"you will, plural or formal","pos":"verb","example":"Ви будете говорити?","examples":["you will, plural or formal","Ви будете говорити?"]},{"word":"будуть","translation":"they will","pos":"verb","example":"Вони будуть відпочивати.","examples":["they will","Вони будуть відпочивати."]},{"word":"робити","translation":"to do","pos":"verb","example":"Що ти будеш робити?","examples":["to do","Що ти будеш робити?"]},{"word":"відпочивати","translation":"to rest","pos":"verb","example":"У суботу ми будемо відпочивати.","examples":["to rest","У суботу ми будемо відпочивати."]},{"word":"наступний","translation":"next","pos":"adjective","example":"Наступного тижня вони будуть працювати.","examples":["next","Наступного тижня вони будуть працювати."]},{"word":"тиждень","translation":"week","pos":"noun","example":"Наступний тиждень буде спокійний.","examples":["week","Наступний тиждень буде спокійний."]},{"word":"план","translation":"plan","pos":"noun","example":"Мій план: я буду читати.","examples":["plan","Мій план: я буду читати."]},{"word":"звучати","translation":"to sound","pos":"verb","example":"План буде звучати просто.","examples":["to sound","План буде звучати просто."]},{"word":"футбол","translation":"football","pos":"noun","example":"Ми будемо дивитися футбол.","examples":["football","Ми будемо дивитися футбол."]},{"word":"зараз","translation":"now","pos":"adverb","example":"Зараз я читаю.","examples":["now","Зараз я читаю."]},{"word":"читати","translation":"to read","pos":"verb","example":"Завтра я буду читати.","examples":["to read","Завтра я буду читати."]},{"word":"працювати","translation":"to work","pos":"verb","example":"Завтра я буду працювати.","examples":["to work","Завтра я буду працювати."]},{"word":"готувати","translation":"to cook","pos":"verb","example":"Ввечері я буду готувати.","examples":["to cook","Ввечері я буду готувати."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"завтра","back":"tomorrow"},{"front":"буду","back":"I will"},{"front":"будеш","back":"you will"},{"front":"буде","back":"he/she/it will"},{"front":"будемо","back":"we will"},{"front":"будете","back":"you will, plural or formal"},{"front":"будуть","back":"they will"},{"front":"робити","back":"to do"},{"front":"відпочивати","back":"to rest"},{"front":"наступний","back":"next"},{"front":"тиждень","back":"week"},{"front":"план","back":"plan"},{"front":"звучати","back":"to sound"},{"front":"футбол","back":"football"},{"front":"зараз","back":"now"},{"front":"читати","back":"to read"},{"front":"працювати","back":"to work"},{"front":"готувати","back":"to cook"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Match the future form
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "буду"}, {"left": "ти", "right": "будеш"}, {"left": "він / вона", "right": "буде"}, {"left": "ми", "right": "будемо"}, {"left": "ви", "right": "будете"}, {"left": "вони", "right": "будуть"}]`)} />
+
+### Build the compound future
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Завтра я ___ працювати.", "answer": "буду", "options": ["буду", "буде", "будемо"]}, {"sentence": "Що ти ___ робити ввечері?", "answer": "будеш", "options": ["будеш", "буду", "будете"]}, {"sentence": "Вона ___ читати книжку.", "answer": "буде", "options": ["буде", "будуть", "будемо"]}, {"sentence": "Ми ___ дивитися футбол.", "answer": "будемо", "options": ["будемо", "буде", "буду"]}, {"sentence": "Ви ___ гуляти в парку?", "answer": "будете", "options": ["будете", "будеш", "будуть"]}, {"sentence": "Вони ___ відпочивати.", "answer": "будуть", "options": ["будуть", "будемо", "буде"]}]`)} />
+
+### Future pattern check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which sentence means I will read?", "options": [{"text": "Я буду читати.", "correct": true}, {"text": "Я буду читаю.", "correct": false}, {"text": "Я читаю завтра.", "correct": false}], "explanation": "Use буду + infinitive: буду читати."}, {"question": "What stays unchanged after будемо?", "options": [{"text": "The infinitive.", "correct": true}, {"text": "A present-tense ending.", "correct": false}, {"text": "A past-tense ending.", "correct": false}], "explanation": "The second verb stays in the infinitive."}, {"question": "Which form fits ми?", "options": [{"text": "Ми будемо робити.", "correct": true}, {"text": "Ми буде робити.", "correct": false}, {"text": "Ми будеш робити.", "correct": false}], "explanation": "Ми takes будемо."}, {"question": "Which question asks about tomorrow?", "options": [{"text": "Що ти будеш робити завтра?", "correct": true}, {"text": "Що ти робиш учора?", "correct": false}, {"text": "Що ти робив зараз?", "correct": false}], "explanation": "Будеш робити завтра is the future question."}]`)} />
+
+### Sort the time frames
+
+<GroupSort client:only='react' groups={JSON.parse(`{"past": ["Учора я читав.", "Учора вона працювала."], "present": ["Зараз я читаю.", "Зараз ми працюємо."], "future": ["Завтра я буду читати.", "Наступного тижня ми будемо працювати."]}`)} />
+
+### Check the compound future
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я буду читати завтра.", "isTrue": true, "explanation": "Буду + читати is correct."}, {"statement": "Ти будеш робити ввечері?", "isTrue": true, "explanation": "Будеш + робити is correct."}, {"statement": "Вона буде читає книжку.", "isTrue": false, "explanation": "After буде, use читати."}, {"statement": "Ми будемо дивитися футбол.", "isTrue": true, "explanation": "Будемо + дивитися is correct."}, {"statement": "Вони будуть працюють.", "isTrue": false, "explanation": "After будуть, use працювати."}, {"statement": "Ви будете гуляти в парку?", "isTrue": true, "explanation": "Будете + гуляти is correct."}]`)} />
+
+### Build future sentences
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Завтра / я / буду / працювати", "answer": "Завтра я буду працювати."}, {"jumbled": "Що / ти / будеш / робити / ввечері", "answer": "Що ти будеш робити ввечері?"}, {"jumbled": "Вона / буде / читати / книжку", "answer": "Вона буде читати книжку."}, {"jumbled": "Ми / будемо / дивитися / футбол", "answer": "Ми будемо дивитися футбол."}, {"jumbled": "Вони / будуть / відпочивати", "answer": "Вони будуть відпочивати."}]`)} />
+
+### From now to tomorrow
+
+<Order client:only='react' items={JSON.parse(`["Зараз я читаю.", "Ввечері я буду готувати.", "Завтра я буду працювати.", "Наступного тижня я буду відпочивати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3]`)} instruction={"Put the mini-sequence in a natural time order."} isUkrainian={false} />
+
+### Keep the infinitive
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я буду ___ завтра.", "answer": "читати", "options": ["читати", "читаю", "читав"]}, {"sentence": "Ти будеш ___ ввечері?", "answer": "робити", "options": ["робити", "робиш", "робив"]}, {"sentence": "Вона буде ___ вечерю.", "answer": "готувати", "options": ["готувати", "готує", "готувала"]}, {"sentence": "Ми будемо ___ футбол.", "answer": "дивитися", "options": ["дивитися", "дивимося", "дивилися"]}, {"sentence": "Вони будуть ___.", "answer": "відпочивати", "options": ["відпочивати", "відпочивають", "відпочивали"]}]`)} />
+
+### Say future plans
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Tomorrow I will work.", "options": [{"text": "Завтра я буду працювати.", "correct": true}, {"text": "Учора я працював.", "correct": false}, {"text": "Зараз я працюю.", "correct": false}], "explanation": "Tomorrow needs буду працювати."}, {"source": "What will you do in the evening?", "options": [{"text": "Що ти будеш робити ввечері?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що ти робиш зараз?", "correct": false}], "explanation": "Use будеш робити for you will do."}, {"source": "We will watch football.", "options": [{"text": "Ми будемо дивитися футбол.", "correct": true}, {"text": "Ми дивимося футбол.", "correct": false}, {"text": "Ми дивилися футбол.", "correct": false}], "explanation": "Use будемо дивитися."}, {"source": "They will rest.", "options": [{"text": "Вони будуть відпочивати.", "correct": true}, {"text": "Вони відпочивають.", "correct": false}, {"text": "Вони відпочивали.", "correct": false}], "explanation": "Use будуть відпочивати."}]`)} />
+
+### Repair future forms
+
+<ErrorCorrection client:only='react' instruction="Fix the sentence by using буду + infinitive." items={JSON.parse(`[{"sentence": "Я буду читаю завтра.", "errorWord": "читаю", "correctForm": "читати", "options": [], "explanation": "After буду, use the infinitive читати."}, {"sentence": "Ти будеш робиш ввечері?", "errorWord": "робиш", "correctForm": "робити", "options": [], "explanation": "After будеш, use робити."}, {"sentence": "Вона буде читає книжку.", "errorWord": "читає", "correctForm": "читати", "options": [], "explanation": "After буде, use читати."}, {"sentence": "Ми будемо дивимося футбол.", "errorWord": "дивимося", "correctForm": "дивитися", "options": [], "explanation": "After будемо, use дивитися."}, {"sentence": "Ми будемо читаємо текст.", "errorWord": "Ми будемо читаємо текст.", "correctForm": "Ми будемо читати текст.", "options": [], "explanation": "In the compound future, only будемо changes; the second verb stays читати."}, {"sentence": "Вони будуть працюють.", "errorWord": "працюють", "correctForm": "працювати", "options": [], "explanation": "After будуть, use працювати."}, {"sentence": "Я буде робити завтра.", "errorWord": "буде", "correctForm": "буду", "options": [], "explanation": "Я takes буду."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 **State Standard 2024, §4.2.4.1** — for the compound future pattern with бути plus infinitive.
+- 🔗 [ULP Season 1, Episode 28](https://www.ukrainianlessons.com/episode28/) — Learner-facing support for future tense in short plans and predictions.
+- 🔗 **Wiki: pedagogy/a1/what-will-happen** — Pedagogical brief for A1 compound future, person forms of бути, and future-plan repairs.
+- 🔗 **Підручник для 3-4 класів — Майбутній час** — Source-registry support for introducing future-tense signal words and the compound future form.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

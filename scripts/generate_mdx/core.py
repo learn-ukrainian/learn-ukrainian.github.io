@@ -280,6 +280,7 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -294,7 +295,12 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += f"\npipeline: {pipeline_version}"
     if build_status:
         extra_fm_lines += f"\nbuild_status: {build_status}"
-    if pipeline_version and pipeline_version not in ("v5", "v6"):
+    should_hide_draft = (
+        pipeline_version
+        and pipeline_version not in ("v5", "v6")
+        and not (pipeline_version == "linear-phase-4" and build_status in {"validated", "reviewed"})
+    )
+    if should_hide_draft:
         extra_fm_lines += "\ndraft: true"
 
     try:
@@ -329,8 +335,8 @@ sidebar:
     (
         lesson_content,
         injected_activity_ids,
-        injected_activity_positions,
-        injected_activity_fingerprints,
+        _injected_activity_positions,
+        _injected_activity_fingerprints,
     ) = _inject_inline_activities(
         lesson_content,
         yaml_activities,
@@ -358,9 +364,6 @@ sidebar:
         activities_content = yaml_activities_to_jsx(
             tab3_activities,
             is_ukrainian_forced,
-            inline_cross_ref_ids=injected_activity_ids,
-            inline_cross_ref_positions=injected_activity_positions,
-            inline_cross_ref_fingerprints=injected_activity_fingerprints,
         )
         if not activities_content.strip() and injected_activity_ids:
             activities_content = f"*{no_workbook_msg}*"
@@ -440,7 +443,7 @@ sidebar:
         f'{content.strip()}\n\n</TabItem>'
         for en, uk, content in tabs
     )
-    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n'
+    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n\n<HashTabSync />\n'
 
     # Build MDX
     parts = [frontmatter, imports, '', tabbed]

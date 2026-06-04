@@ -1,0 +1,33 @@
+- title: "Ukrainian Lessons Podcast Episode 11 lesson notes"
+  role: podcast lesson notes
+  source_ref: "ULP Season 1, Episode 11"
+  url: https://www.ukrainianlessons.com/wp-content/uploads/2017/05/ULP-1-11-Lesson-Notes.pdf
+  notes: "Accepted A1.6 food and cafe source reused from M38; supports ordering language without adding new checkpoint content."
+- title: "Ukrainian Lessons Podcast Episode 12"
+  role: podcast lesson
+  source_ref: "ULP Season 1, Episode 12"
+  url: https://www.ukrainianlessons.com/episode12/
+  notes: "Accepted A1.6 food and drink source reused from M36 and M38."
+- title: "Ukrainian Lessons Podcast Episode 31"
+  role: podcast lesson
+  source_ref: "ULP Season 1, Episode 31"
+  url: https://www.ukrainianlessons.com/episode31/
+  notes: "Accepted A1.6 shopping source reused from M39 for prices and payment."
+- title: "Ukrainian Course: Nouns in the Accusative Case"
+  role: grammar table
+  source_ref: "ukrainiancourse.com"
+  url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-accusative-case/
+  notes: "Reference already used in A1.6; M41 keeps it as review of direct-object forms."
+- title: "ULP Season 1 episode index - Episode 33"
+  role: podcast lesson index
+  source_ref: "ULP Season 1, Episode 33"
+  url: https://www.ukrainianlessons.com/season1/
+  notes: "Accepted M40 index source for animate accusative review around people."
+- title: "Synthesis of M36-M40 content"
+  role: internal synthesis
+  source_ref: "Synthesis of M36-M40 content"
+  notes: "Checkpoint source obligation: no new A1.7 material, only food, cafe, shopping, and people integration."
+- title: "Wiki: pedagogy/a1/checkpoint-food-shopping"
+  role: internal wiki
+  source_ref: "Wiki: pedagogy/a1/checkpoint-food-shopping"
+  notes: "Authoritative pedagogical brief for M41 checkpoint-food-shopping."

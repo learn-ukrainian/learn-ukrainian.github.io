@@ -33,11 +33,9 @@ describe('Astro build renders all pages', () => {
   // a chance to fire. Match the external timeout to keep the outer
   // bound consistent.
   //
-  // Build scope: ~22 base pages + 31,336 etymology dynamic-route pages
-  // (PR #1998, /etymology/[slug].astro). Local 8GB heap on M-series:
-  // ~56s. CI runner (Ubuntu x86, slower per-core): allow 4 min, with
-  // 5 min vitest outer bound. Bump these if etymology corpus grows
-  // significantly.
+  // Default build scope excludes ESUM dynamic routes. Use
+  // `BUILD_ETYMOLOGY_ROUTES=1 npm run build` only for full reference/deploy
+  // builds; normal lesson CI should stay fast enough for author iteration.
   it('astro build succeeds with zero errors', () => {
     try {
       buildOutput = execSync('npm run build 2>&1', {

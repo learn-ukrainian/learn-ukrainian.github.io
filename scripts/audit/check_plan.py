@@ -135,6 +135,10 @@ _AUTHOR_ALIASES = {
     "litvinova": "litvinova",
     "онатій": "onatiy",
     "onatiy": "onatiy",
+    "пономарова": "ponomarova",
+    "ponomarova": "ponomarova",
+    "варзацька": "varzatska",
+    "varzatska": "varzatska",
 }
 
 
@@ -497,6 +501,17 @@ def _looks_like_textbook_reference(source_name: str) -> bool:
     return bool(author and grade)
 
 
+def _coerce_textbook_grade(grade: object, source_file: str) -> int | None:
+    grade_text = str(grade).strip() if grade is not None else ""
+    if grade_text:
+        try:
+            return int(grade_text)
+        except ValueError:
+            pass
+    _author, source_grade, _year = _textbook_reference_parts(source_file)
+    return source_grade
+
+
 def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
     if not sources_db.exists():
         raise FileNotFoundError(
@@ -514,7 +529,7 @@ def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
         {
             "source_file": str(source_file or ""),
             "normalized_source_file": _normalize_source_name(str(source_file or "")),
-            "grade": int(grade) if grade is not None else None,
+            "grade": _coerce_textbook_grade(grade, str(source_file or "")),
             "author": str(author or "").casefold(),
         }
         for source_file, grade, author in rows

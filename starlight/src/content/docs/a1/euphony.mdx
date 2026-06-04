@@ -1,0 +1,343 @@
+---
+title: "Милозвучність"
+description: "У/в, і/й, з/із/зі — українська звучить красиво"
+sidebar:
+  order: 28
+  label: "28. Милозвучність"
+pipeline: linear-phase-4
+build_status: validated
+prev: checkpoint-time-nature
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This lesson starts A1.5 with a sound habit you will use in every place phrase.
+Ukrainian often chooses between two tiny words so that the line is easy to say:
+**у/в**, **і/й**, and **з**, **із**, **зі**. Do not treat them as random spelling
+variants. Read the line aloud, listen to the sounds on both sides, and choose
+the form that keeps the sentence smooth.
+
+By the end, you can:
+
+- choose **у** or **в** in short city and place lines;
+- choose **і** or **й** when two people, places, or things are connected;
+- recognize **з**, **із**, and **зі** in simple phrases;
+- repair common learner lines such as **Вона у школі** and **Брат й сестра**;
+- use euphony while talking about places in **Київ**, **Львів**, an **офіс**, a
+  **парк**, a **театр**, or a **школа**.
+
+### Hear the smoother line
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "After a vowel before Kyiv, choose the smoother place phrase.", "options": [{"text": "Я живу в Києві.", "correct": true}, {"text": "Я живу у Києві.", "correct": false}, {"text": "Я живу Києві.", "correct": false}], "explanation": "After живу, в Києві gives a smooth vowel-consonant link."}, {"question": "Before Львів, choose the form that avoids a hard cluster.", "options": [{"text": "Сестра у Львові.", "correct": true}, {"text": "Сестра в Львові.", "correct": false}, {"text": "Сестра Львові.", "correct": false}], "explanation": "Use у before Львів to avoid a heavy в лв cluster."}, {"question": "Connect mother and father.", "options": [{"text": "Мама й тато вдома.", "correct": true}, {"text": "Мама і тато вдома.", "correct": false}, {"text": "Мама з тато вдома.", "correct": false}], "explanation": "After a vowel before тато, й sounds smooth."}, {"question": "Connect brother and sister.", "options": [{"text": "Брат і сестра в школі.", "correct": true}, {"text": "Брат й сестра в школі.", "correct": false}, {"text": "Брат з сестра в школі.", "correct": false}], "explanation": "Between consonants, і is easier than й."}, {"question": "Choose the common smooth phrase with мною.", "options": [{"text": "зі мною", "correct": true}, {"text": "з мною", "correct": false}, {"text": "із мною", "correct": false}], "explanation": "Зі мною is the common smooth A1 phrase."}]`)} />
+
+## Діалоги
+
+Begin with practical hearing. **Практичне відчуття звучності** means you read
+pairs aloud and notice which one gives your mouth an easier path. Say both
+versions slowly. Treat this as a short **розморожування** for your mouth before
+you make a grammar choice:
+
+| Easier | Harder |
+| --- | --- |
+| **працюють у нас** | працюють в нас |
+| **в Києві** | у Києві |
+| **у Львові** | в Львові |
+| **мама й тато** | мама і тато |
+
+You do not need a long theory before speaking. The first question is simple:
+which version has fewer heavy sound collisions?
+
+<DialogueBox uk="Наталка: Де ти живеш?" en="Natalka: Where do you live?" />
+<DialogueBox uk="Марко: Я живу в Києві. А ти?" en="Marko: I live in Kyiv. And you?" />
+<DialogueBox uk="Наталка: Я живу у Львові." en="Natalka: I live in Lviv." />
+<DialogueBox uk="Марко: У Львові гарно?" en="Marko: Is it nice in Lviv?" />
+<DialogueBox uk="Наталка: Так. А в Києві великий парк." en="Natalka: Yes. And in Kyiv there is a big park." />
+
+Notice **живу в Києві** but **живу у Львові**. The meaning is the same: in or
+at a place. The sound neighborhood is different. After **живу**, the sound ends
+in a vowel, so **в Києві** is easy. Before **Львові**, Ukrainian avoids a hard
+cluster, so **у Львові** is smoother.
+
+The second dialogue connects people and a plan.
+
+<DialogueBox uk="Олена: Ти й Іван ідете в театр?" en="Olena: Are you and Ivan going to the theater?" />
+<DialogueBox uk="Софія: Ні, я і Максим ідемо в парк." en="Sofiia: No, Maksym and I are going to the park." />
+<DialogueBox uk="Олена: А Іван і Яна?" en="Olena: And Ivan and Yana?" />
+<DialogueBox uk="Софія: Вони йдуть у театр." en="Sofiia: They are going to the theater." />
+
+Use **й** after a vowel when the next word begins cleanly: **ти й Іван**.
+Use **і** between consonants: **Максим іде**, **брат і сестра**. Keep **і**
+before **Яна**, **ютуб**, **яблуко**, **є** or **ї**, because those letters
+begin with a [й]-sound in speech.
+
+### Sound-neighbor shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"У": ["у Львові", "у школі", "у вівторок"], "В": ["в Києві", "в офісі", "в аптеці"], "І": ["брат і сестра", "Марія і Яна", "І він іде"], "Й": ["мама й тато", "ти й Іван", "Олена й Анна"]}`)} />
+
+## У чи В?
+
+The core pattern is the **базове правило між голосними й приголосними**. When a
+tiny connector stands between sounds, Ukrainian tries to avoid two heavy
+consonants in a row and two open vowels in a row. Read the tiny examples
+**день у день** and **дощ іде**; the small word changes the rhythm of the whole
+phrase.
+
+Use this as an A1 working rule:
+
+| Sound neighborhood | Safer choice | Example |
+| --- | --- | --- |
+| after a vowel + before a normal consonant | **в** | **Вона в школі.** |
+| after a consonant + before a consonant | **у** | **Тарас у школі.** |
+| start of a sentence before a consonant | **У** | **У місті цікаво.** |
+| start of a sentence before a vowel | **В** | **В Одесі тепло.** |
+| before words like **Львів** or **фірма** | usually **у** | **сестра у Львові** |
+
+Say the pairs aloud:
+
+<DialogueBox uk="Вона в школі." en="She is at school." />
+<DialogueBox uk="Тарас у школі." en="Taras is at school." />
+<DialogueBox uk="Я працюю в офісі." en="I work in an office." />
+<DialogueBox uk="Максим працює у банку." en="Maksym works in a bank." />
+<DialogueBox uk="У місті є аптека." en="There is a pharmacy in the city." />
+<DialogueBox uk="В університеті тихо." en="It is quiet at the university." />
+
+The **position at the beginning of a sentence or after a pause** is about
+sentence edges. At the beginning of a sentence, choose the form that gives the
+first word a clean launch. Before a consonant, use **У**: **У парку тепло. У
+школі урок.** Before a vowel, use **В**: **В офісі тихо. В аптеці черга.**
+Another safe sentence-start example is **Іде дощ.** The same check works after
+punctuation pauses: **коми** and **двокрапки** often give the next phrase a new
+sound start.
+
+After a comma, pause, or colon, the same idea returns:
+
+<DialogueBox uk="Так, у нас є час." en="Yes, we have time." />
+<DialogueBox uk="Сьогодні тепло: у парку багато людей." en="It is warm today: there are many people in the park." />
+
+**Фонетичні винятки** keep the line from becoming physically awkward. Before
+words like **Львів**, **фірма**, **твій**, or **хвилина**, prefer **у**, even
+when a simple pattern might suggest **в**:
+
+| Prefer | Avoid |
+| --- | --- |
+| **сестра у Львові** | сестра в Львові |
+| **звернувся у фірму** | звернувся в фірму |
+| **квиток у кіно** | квиток в кіно |
+
+The same principle appears in words such as **учитель/вчитель** and
+**уже/вже**. At A1, notice the idea but do not overwork it. Your main job is to
+read short place lines aloud and choose the smoother form.
+
+### У чи в around town
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вона ___ школі.", "answer": "в", "options": ["в", "у", "зі"]}, {"sentence": "Тарас ___ школі.", "answer": "у", "options": ["у", "в", "й"]}, {"sentence": "Я працюю ___ офісі.", "answer": "в", "options": ["в", "у", "із"]}, {"sentence": "Максим працює ___ банку.", "answer": "у", "options": ["у", "в", "з"]}, {"sentence": "___ місті цікаво.", "answer": "У", "options": ["У", "В", "Й"]}, {"sentence": "___ Одесі тепло.", "answer": "В", "options": ["В", "У", "Із"]}, {"sentence": "Сестра ___ Львові.", "answer": "у", "options": ["у", "в", "з"]}, {"sentence": "Квиток ___ кіно.", "answer": "у", "options": ["у", "в", "й"]}]`)} />
+
+### Context to smooth link
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Вона + школа", "right": "Вона в школі."}, {"left": "Тарас + школа", "right": "Тарас у школі."}, {"left": "мама + тато", "right": "мама й тато"}, {"left": "брат + сестра", "right": "брат і сестра"}, {"left": "я + Максим", "right": "я і Максим"}, {"left": "ти + Іван", "right": "ти й Іван"}, {"left": "з + мною", "right": "зі мною"}, {"left": "з + Одеси", "right": "з Одеси"}]`)} />
+
+## І чи Й? З, із, чи зі?
+
+For **і/й**, use the same sound logic.
+
+| Situation | Safer choice | Example |
+| --- | --- | --- |
+| between consonants | **і** | **брат і сестра** |
+| after a vowel before a vowel | **й** | **мама й тато** |
+| at the beginning of a sentence | **І** | **І він іде.** |
+| before **я, ю, є, ї, й** | **і** | **Марія і Яна** |
+
+Say these aloud:
+
+<DialogueBox uk="Брат і сестра в школі." en="Brother and sister are at school." />
+<DialogueBox uk="Мама й тато в театрі." en="Mother and father are at the theater." />
+<DialogueBox uk="Марія і Яна в місті." en="Mariia and Yana are in the city." />
+<DialogueBox uk="Відео і ютуб - це тема для перерви." en="Video and YouTube are a break topic." />
+
+A later recognition note: sometimes **і** stays because two ideas are being
+contrasted or named as a pair. This is **логічне зіставлення**:
+**Шевченко і сучасність**, **батьки і діти**, **добро і зло**. For now, keep
+the examples as fixed reading lines. Do not use this preview to guess freely in
+your own sentences yet.
+
+Now add the smaller set **з**, **із**, **зі**. The basic meanings can be "from" or
+"with"; the spelling depends on the next sounds.
+
+| Form | Safe A1 examples |
+| --- | --- |
+| **з** | **з Одеси**, **з другом**, **з Іваном** |
+| **із** | **із сестрою**, **із школи** |
+| **зі** | **зі мною**, **зі святом**, **зі школи** |
+
+You will see both **із школи** and **зі школи** in real Ukrainian. At A1, use
+**зі** in very common clusters like **зі мною**, **зі святом**, and **зі
+школи**. The goal is not to memorize a giant table. The goal is to hear that
+**з мною** is cramped, while **зі мною** is easy.
+
+:::tip
+When you are unsure, read the whole phrase aloud once. Do not translate "in" or
+"and" first and then choose a Ukrainian form. Choose the Ukrainian sound that
+lets the phrase move smoothly.
+:::
+
+### Find the rough sound
+
+<OddOneOut client:only='react' instruction={"Choose the line that does not sound smooth."} items={JSON.parse(`[{"words": ["Я живу в Києві.", "Я живу у Львові.", "У місті цікаво.", "Сестра в Львові."], "correct": 3, "explanation": "Use у Львові to avoid the heavy cluster."}, {"words": ["Брат і сестра.", "Мама й тато.", "Марія і Яна.", "Брат й сестра."], "correct": 3, "explanation": "Between consonants, use і."}, {"words": ["Вона в школі.", "Тарас у школі.", "Максим у банку.", "Вона у школі."], "correct": 3, "explanation": "After Вона, use в школі."}, {"words": ["зі мною", "зі святом", "з Одеси", "з мною"], "correct": 3, "explanation": "Зі мною is the common smooth phrase."}, {"words": ["Відео і ютуб.", "Марія і Яна.", "Олена й Анна.", "Відео й ютуб."], "correct": 3, "explanation": "Before ютуб, keep і to avoid a doubled й sound."}]`)} />
+
+### Pause and beginning checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У парку тепло.", "isTrue": true, "explanation": "At the start before a consonant, У is smooth."}, {"statement": "В офісі тихо.", "isTrue": true, "explanation": "At the start before a vowel, В is smooth."}, {"statement": "Так, у нас є час.", "isTrue": true, "explanation": "After a pause, у нас is natural."}, {"statement": "В місті цікаво.", "isTrue": false, "explanation": "At the start before місті, use У місті."}, {"statement": "І він іде.", "isTrue": true, "explanation": "At the beginning, І is safe."}, {"statement": "Марія й Яна в аптеці.", "isTrue": false, "explanation": "Before Яна, keep і: Марія і Яна."}]`)} />
+
+## 📋 Підсумок
+
+Euphony is not decoration. It is a normal Ukrainian habit that keeps speech
+flowing. Use this self-check:
+
+1. Read the words around the gap.
+2. Ask whether the neighbors are vowels, normal consonants, or hard clusters.
+3. Choose the smoother tiny word.
+4. Read the full sentence aloud.
+
+Keep these repair pairs in memory:
+
+| Unsafe learner line | Safe line |
+| --- | --- |
+| Вона у школі. | **Вона в школі.** |
+| Брат й сестра. | **Брат і сестра.** |
+| В місті цікаво. | **У місті цікаво.** |
+| Відео й ютуб. | **Відео і ютуб.** |
+| Звернувся в фірму. | **Звернувся у фірму.** |
+| Вони вдосконалюють... | **Вони удосконалюють...** |
+
+For the next places lessons, you will reuse these choices constantly:
+
+<DialogueBox uk="Я живу в Києві." en="I live in Kyiv." />
+<DialogueBox uk="Сестра у Львові." en="My sister is in Lviv." />
+<DialogueBox uk="У місті є парк і театр." en="There is a park and a theater in the city." />
+<DialogueBox uk="Мама й тато в офісі." en="Mother and father are at the office." />
+<DialogueBox uk="Я йду зі школи." en="I am coming from school." />
+
+One last practice line:
+
+<DialogueBox uk="У вівторок Іван і Яна працюють в офісі, а ввечері йдуть у театр." en="On Tuesday Ivan and Yana work in an office, and in the evening they go to the theater." />
+
+If you can say that line smoothly, you are ready for **Де це?**
+
+Use the same four-part check with your own lines: **Я живу в Києві**, **сестра
+у Львові**, **брат і сестра**, **мама й тато**. Then add a place from A1.5:
+**у місті**, **в офісі**, **у парку**, **в аптеці**. If the line feels crowded,
+try the other tiny word and read it again. This is normal practice, not a
+mistake.
+
+### Read the city note aloud
+
+<Order client:only='react' items={JSON.parse(`["У місті є школа.", "В офісі працює Іван.", "Мама й тато в парку.", "Брат і сестра йдуть у театр.", "Софія зі мною.", "У вівторок ми йдемо в кіно."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the note in an order that moves from place to people to plan."} isUkrainian={false} />
+
+### Repair euphony interference
+
+<ErrorCorrection client:only='react' instruction="Choose the smooth Ukrainian repair for each learner sentence." items={JSON.parse(`[{"sentence": "Вона у школі.", "errorWord": "у школі", "correctForm": "Вона в школі.", "options": ["Вона в школі.", "Вона у школі.", "Вона й школі."], "explanation": "Вона ends in a vowel, so use в школі."}, {"sentence": "Брат й сестра.", "errorWord": "й сестра", "correctForm": "Брат і сестра.", "options": ["Брат і сестра.", "Брат й сестра.", "Брат у сестра."], "explanation": "Between consonants, use і."}, {"sentence": "В місті цікаво.", "errorWord": "В місті", "correctForm": "У місті цікаво.", "options": ["У місті цікаво.", "В місті цікаво.", "Й місті цікаво."], "explanation": "At the start before a consonant, use У."}, {"sentence": "Відео й ютуб.", "errorWord": "й ютуб", "correctForm": "Відео і ютуб.", "options": ["Відео і ютуб.", "Відео й ютуб.", "Відео у ютуб."], "explanation": "Before ютуб, keep і to avoid a doubled й sound."}, {"sentence": "Звернувся в фірму.", "errorWord": "в фірму", "correctForm": "Звернувся у фірму.", "options": ["Звернувся у фірму.", "Звернувся в фірму.", "Звернувся й фірму."], "explanation": "Before ф, use у to avoid в ф."}, {"sentence": "Вони вдосконалюють...", "errorWord": "вдосконалюють", "correctForm": "Вони удосконалюють...", "options": ["Вони удосконалюють...", "Вони вдосконалюють...", "Вони покращують..."], "explanation": "After the consonant in Вони, use the smoother у- form here."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"милозвучність","translation":"euphony; smooth sound flow","pos":"noun","example":"Милозвучність допомагає говорити плавно.","examples":["euphony; smooth sound flow","Милозвучність допомагає говорити плавно."]},{"word":"у/в","translation":"in; at","pos":"alternating preposition","example":"Я живу в Києві, а сестра у Львові.","examples":["in; at","Я живу в Києві, а сестра у Львові."]},{"word":"і/й","translation":"and","pos":"alternating conjunction","example":"Брат і сестра, мама й тато.","examples":["and","Брат і сестра, мама й тато."]},{"word":"з, із, зі","translation":"from; with","pos":"alternating preposition","example":"Я йду зі школи.","examples":["from; with","Я йду зі школи."]},{"word":"звук","translation":"sound","pos":"noun","example":"Цей звук легкий.","examples":["sound","Цей звук легкий."]},{"word":"голосний","translation":"vowel","pos":"adjective/noun","example":"А - голосний звук.","examples":["vowel","А - голосний звук."]},{"word":"приголосний","translation":"consonant","pos":"adjective/noun","example":"М - приголосний звук.","examples":["consonant","М - приголосний звук."]},{"word":"Київ","translation":"Kyiv","pos":"proper noun","example":"Я живу в Києві.","examples":["Kyiv","Я живу в Києві."]},{"word":"Львів","translation":"Lviv","pos":"proper noun","example":"Сестра у Львові.","examples":["Lviv","Сестра у Львові."]},{"word":"місто","translation":"city","pos":"noun","example":"У місті цікаво.","examples":["city","У місті цікаво."]},{"word":"школа","translation":"school","pos":"noun","example":"Вона в школі.","examples":["school","Вона в школі."]},{"word":"робота","translation":"work; job","pos":"noun","example":"Робота в офісі.","examples":["work; job","Робота в офісі."]},{"word":"офіс","translation":"office","pos":"noun","example":"Я працюю в офісі.","examples":["office","Я працюю в офісі."]},{"word":"парк","translation":"park","pos":"noun","example":"У парку тепло.","examples":["park","У парку тепло."]},{"word":"театр","translation":"theater","pos":"noun","example":"Ми йдемо у театр.","examples":["theater","Ми йдемо у театр."]},{"word":"кіно","translation":"cinema; movie theater","pos":"noun","example":"Квиток у кіно.","examples":["cinema; movie theater","Квиток у кіно."]},{"word":"банк","translation":"bank","pos":"noun","example":"Максим працює у банку.","examples":["bank","Максим працює у банку."]},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"В аптеці черга.","examples":["pharmacy","В аптеці черга."]},{"word":"університет","translation":"university","pos":"noun","example":"В університеті тихо.","examples":["university","В університеті тихо."]},{"word":"учитель","translation":"teacher","pos":"noun","example":"Учитель у школі.","examples":["teacher","Учитель у школі."]},{"word":"Іван","translation":"Ivan","pos":"proper noun","example":"Ти й Іван ідете в театр?","examples":["Ivan","Ти й Іван ідете в театр?"]},{"word":"Яна","translation":"Yana","pos":"proper noun","example":"Марія і Яна в місті.","examples":["Yana","Марія і Яна в місті."]},{"word":"Ялта","translation":"Yalta","pos":"proper noun","example":"Марія і Ялта - важкі сусіди для й.","examples":["Yalta","Марія і Ялта - важкі сусіди для й."]},{"word":"яблуко","translation":"apple","pos":"noun","example":"І яблуко, і апельсин.","examples":["apple","І яблуко, і апельсин."]},{"word":"ютуб","translation":"YouTube","pos":"noun","example":"Відео і ютуб.","examples":["YouTube","Відео і ютуб."]},{"word":"акваріум","translation":"aquarium","pos":"noun","example":"Риба в акваріумі.","examples":["aquarium","Риба в акваріумі."]},{"word":"фотографія","translation":"photograph","pos":"noun","example":"Фотографія у файлі.","examples":["photograph","Фотографія у файлі."]},{"word":"вівторок","translation":"Tuesday","pos":"noun","example":"У вівторок урок.","examples":["Tuesday","У вівторок урок."]},{"word":"брат","translation":"brother","pos":"noun","example":"Брат і сестра.","examples":["brother","Брат і сестра."]},{"word":"сестра","translation":"sister","pos":"noun","example":"Брат і сестра в школі.","examples":["sister","Брат і сестра в школі."]},{"word":"мама","translation":"mother","pos":"noun","example":"Мама й тато вдома.","examples":["mother","Мама й тато вдома."]},{"word":"тато","translation":"father","pos":"noun","example":"Мама й тато в театрі.","examples":["father","Мама й тато в театрі."]},{"word":"мною","translation":"me; with me","pos":"pronoun form","example":"Софія зі мною.","examples":["me; with me","Софія зі мною."]},{"word":"свято","translation":"holiday; celebration","pos":"noun","example":"Зі святом!","examples":["holiday; celebration","Зі святом!"]},{"word":"жити","translation":"to live","pos":"verb","example":"Я живу в Києві.","examples":["to live","Я живу в Києві."]},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю в офісі.","examples":["to work","Я працюю в офісі."]},{"word":"вчитися","translation":"to study","pos":"verb","example":"Я вчуся в університеті.","examples":["to study","Я вчуся в університеті."]},{"word":"удосконалювати","translation":"to improve","pos":"verb","example":"Вони удосконалюють план.","examples":["to improve","Вони удосконалюють план."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"милозвучність","back":"euphony; smooth sound flow"},{"front":"у/в","back":"in; at"},{"front":"і/й","back":"and"},{"front":"з, із, зі","back":"from; with"},{"front":"звук","back":"sound"},{"front":"голосний","back":"vowel"},{"front":"приголосний","back":"consonant"},{"front":"Київ","back":"Kyiv"},{"front":"Львів","back":"Lviv"},{"front":"місто","back":"city"},{"front":"школа","back":"school"},{"front":"робота","back":"work; job"},{"front":"офіс","back":"office"},{"front":"парк","back":"park"},{"front":"театр","back":"theater"},{"front":"кіно","back":"cinema; movie theater"},{"front":"банк","back":"bank"},{"front":"аптека","back":"pharmacy"},{"front":"університет","back":"university"},{"front":"учитель","back":"teacher"},{"front":"Іван","back":"Ivan"},{"front":"Яна","back":"Yana"},{"front":"Ялта","back":"Yalta"},{"front":"яблуко","back":"apple"},{"front":"ютуб","back":"YouTube"},{"front":"акваріум","back":"aquarium"},{"front":"фотографія","back":"photograph"},{"front":"вівторок","back":"Tuesday"},{"front":"брат","back":"brother"},{"front":"сестра","back":"sister"},{"front":"мама","back":"mother"},{"front":"тато","back":"father"},{"front":"мною","back":"me; with me"},{"front":"свято","back":"holiday; celebration"},{"front":"жити","back":"to live"},{"front":"працювати","back":"to work"},{"front":"вчитися","back":"to study"},{"front":"удосконалювати","back":"to improve"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Hear the smoother line
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "After a vowel before Kyiv, choose the smoother place phrase.", "options": [{"text": "Я живу в Києві.", "correct": true}, {"text": "Я живу у Києві.", "correct": false}, {"text": "Я живу Києві.", "correct": false}], "explanation": "After живу, в Києві gives a smooth vowel-consonant link."}, {"question": "Before Львів, choose the form that avoids a hard cluster.", "options": [{"text": "Сестра у Львові.", "correct": true}, {"text": "Сестра в Львові.", "correct": false}, {"text": "Сестра Львові.", "correct": false}], "explanation": "Use у before Львів to avoid a heavy в лв cluster."}, {"question": "Connect mother and father.", "options": [{"text": "Мама й тато вдома.", "correct": true}, {"text": "Мама і тато вдома.", "correct": false}, {"text": "Мама з тато вдома.", "correct": false}], "explanation": "After a vowel before тато, й sounds smooth."}, {"question": "Connect brother and sister.", "options": [{"text": "Брат і сестра в школі.", "correct": true}, {"text": "Брат й сестра в школі.", "correct": false}, {"text": "Брат з сестра в школі.", "correct": false}], "explanation": "Between consonants, і is easier than й."}, {"question": "Choose the common smooth phrase with мною.", "options": [{"text": "зі мною", "correct": true}, {"text": "з мною", "correct": false}, {"text": "із мною", "correct": false}], "explanation": "Зі мною is the common smooth A1 phrase."}]`)} />
+
+### Sound-neighbor shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"У": ["у Львові", "у школі", "у вівторок"], "В": ["в Києві", "в офісі", "в аптеці"], "І": ["брат і сестра", "Марія і Яна", "І він іде"], "Й": ["мама й тато", "ти й Іван", "Олена й Анна"]}`)} />
+
+### У чи в around town
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вона ___ школі.", "answer": "в", "options": ["в", "у", "зі"]}, {"sentence": "Тарас ___ школі.", "answer": "у", "options": ["у", "в", "й"]}, {"sentence": "Я працюю ___ офісі.", "answer": "в", "options": ["в", "у", "із"]}, {"sentence": "Максим працює ___ банку.", "answer": "у", "options": ["у", "в", "з"]}, {"sentence": "___ місті цікаво.", "answer": "У", "options": ["У", "В", "Й"]}, {"sentence": "___ Одесі тепло.", "answer": "В", "options": ["В", "У", "Із"]}, {"sentence": "Сестра ___ Львові.", "answer": "у", "options": ["у", "в", "з"]}, {"sentence": "Квиток ___ кіно.", "answer": "у", "options": ["у", "в", "й"]}]`)} />
+
+### Context to smooth link
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Вона + школа", "right": "Вона в школі."}, {"left": "Тарас + школа", "right": "Тарас у школі."}, {"left": "мама + тато", "right": "мама й тато"}, {"left": "брат + сестра", "right": "брат і сестра"}, {"left": "я + Максим", "right": "я і Максим"}, {"left": "ти + Іван", "right": "ти й Іван"}, {"left": "з + мною", "right": "зі мною"}, {"left": "з + Одеси", "right": "з Одеси"}]`)} />
+
+### Find the rough sound
+
+<OddOneOut client:only='react' instruction={"Choose the line that does not sound smooth."} items={JSON.parse(`[{"words": ["Я живу в Києві.", "Я живу у Львові.", "У місті цікаво.", "Сестра в Львові."], "correct": 3, "explanation": "Use у Львові to avoid the heavy cluster."}, {"words": ["Брат і сестра.", "Мама й тато.", "Марія і Яна.", "Брат й сестра."], "correct": 3, "explanation": "Between consonants, use і."}, {"words": ["Вона в школі.", "Тарас у школі.", "Максим у банку.", "Вона у школі."], "correct": 3, "explanation": "After Вона, use в школі."}, {"words": ["зі мною", "зі святом", "з Одеси", "з мною"], "correct": 3, "explanation": "Зі мною is the common smooth phrase."}, {"words": ["Відео і ютуб.", "Марія і Яна.", "Олена й Анна.", "Відео й ютуб."], "correct": 3, "explanation": "Before ютуб, keep і to avoid a doubled й sound."}]`)} />
+
+### Pause and beginning checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У парку тепло.", "isTrue": true, "explanation": "At the start before a consonant, У is smooth."}, {"statement": "В офісі тихо.", "isTrue": true, "explanation": "At the start before a vowel, В is smooth."}, {"statement": "Так, у нас є час.", "isTrue": true, "explanation": "After a pause, у нас is natural."}, {"statement": "В місті цікаво.", "isTrue": false, "explanation": "At the start before місті, use У місті."}, {"statement": "І він іде.", "isTrue": true, "explanation": "At the beginning, І is safe."}, {"statement": "Марія й Яна в аптеці.", "isTrue": false, "explanation": "Before Яна, keep і: Марія і Яна."}]`)} />
+
+### Read the city note aloud
+
+<Order client:only='react' items={JSON.parse(`["У місті є школа.", "В офісі працює Іван.", "Мама й тато в парку.", "Брат і сестра йдуть у театр.", "Софія зі мною.", "У вівторок ми йдемо в кіно."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the note in an order that moves from place to people to plan."} isUkrainian={false} />
+
+### Repair euphony interference
+
+<ErrorCorrection client:only='react' instruction="Choose the smooth Ukrainian repair for each learner sentence." items={JSON.parse(`[{"sentence": "Вона у школі.", "errorWord": "у школі", "correctForm": "Вона в школі.", "options": ["Вона в школі.", "Вона у школі.", "Вона й школі."], "explanation": "Вона ends in a vowel, so use в школі."}, {"sentence": "Брат й сестра.", "errorWord": "й сестра", "correctForm": "Брат і сестра.", "options": ["Брат і сестра.", "Брат й сестра.", "Брат у сестра."], "explanation": "Between consonants, use і."}, {"sentence": "В місті цікаво.", "errorWord": "В місті", "correctForm": "У місті цікаво.", "options": ["У місті цікаво.", "В місті цікаво.", "Й місті цікаво."], "explanation": "At the start before a consonant, use У."}, {"sentence": "Відео й ютуб.", "errorWord": "й ютуб", "correctForm": "Відео і ютуб.", "options": ["Відео і ютуб.", "Відео й ютуб.", "Відео у ютуб."], "explanation": "Before ютуб, keep і to avoid a doubled й sound."}, {"sentence": "Звернувся в фірму.", "errorWord": "в фірму", "correctForm": "Звернувся у фірму.", "options": ["Звернувся у фірму.", "Звернувся в фірму.", "Звернувся й фірму."], "explanation": "Before ф, use у to avoid в ф."}, {"sentence": "Вони вдосконалюють...", "errorWord": "вдосконалюють", "correctForm": "Вони удосконалюють...", "options": ["Вони удосконалюють...", "Вони вдосконалюють...", "Вони покращують..."], "explanation": "After the consonant in Вони, use the smoother у- form here."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Difference between Ukrainian Prepositions У (В) and На](https://www.ukrainianlessons.com/prepositions-u-na/) — Learner-facing reference for the common у/в place-preposition contrast used in this module.
+- 📄 [Ukrainian Conjunctions](https://www.ukrainianlessons.com/ukrainian-conjunctions/) — Follow-up reference for Ukrainian conjunctions, including і and й in connected speech.
+- 📄 [Основні випадки чергування у-в, і-й, з, із, зі](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) — Ukrainian-language reference page for the full euphony set: у/в, і/й, з, із, зі.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

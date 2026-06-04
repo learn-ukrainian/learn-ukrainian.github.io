@@ -1,0 +1,338 @@
+- id: act-1
+  type: quiz
+  title: Хто чи що?
+  instruction: Choose whether the word answers хто? or що?
+  items:
+    - prompt: "учитель"
+      options:
+        - text: "хто?"
+          correct: true
+        - text: "що?"
+          correct: false
+      explanation: "A teacher is a person."
+    - prompt: "директор"
+      options:
+        - text: "хто?"
+          correct: true
+        - text: "що?"
+          correct: false
+      explanation: "A director is a person."
+    - prompt: "тато"
+      options:
+        - text: "хто?"
+          correct: true
+        - text: "що?"
+          correct: false
+      explanation: "Тато is a person."
+    - prompt: "кіт"
+      options:
+        - text: "хто?"
+          correct: true
+        - text: "що?"
+          correct: false
+      explanation: "Animals answer хто? in this grammar contrast."
+    - prompt: "дерево"
+      options:
+        - text: "що?"
+          correct: true
+        - text: "хто?"
+          correct: false
+      explanation: "Plants are граматичні неістоти in Ukrainian."
+    - prompt: "хліб"
+      options:
+        - text: "що?"
+          correct: true
+        - text: "хто?"
+          correct: false
+      explanation: "Хліб is a thing."
+    - prompt: "книга"
+      options:
+        - text: "що?"
+          correct: true
+        - text: "хто?"
+          correct: false
+      explanation: "Книга is a thing."
+    - prompt: "подруга"
+      options:
+        - text: "хто?"
+          correct: true
+        - text: "що?"
+          correct: false
+      explanation: "Подруга is a person."
+- id: act-2
+  type: fill-in
+  title: Я бачу...
+  instruction: Choose the object form that completes the sentence.
+  items:
+    - sentence: "Я бачу ___."
+      answer: "маму"
+      options:
+        - "маму"
+        - "мама"
+        - "мами"
+      explanation: "Мама becomes маму."
+    - sentence: "Я бачу ___."
+      answer: "брата"
+      options:
+        - "брата"
+        - "брат"
+        - "брату"
+      explanation: "A male person changes: брат -> брата."
+    - sentence: "Я знаю ___."
+      answer: "Олену"
+      options:
+        - "Олену"
+        - "Олена"
+        - "Олени"
+      explanation: "Олена becomes Олену."
+    - sentence: "Я знаю ___."
+      answer: "друга"
+      options:
+        - "друга"
+        - "друг"
+        - "другу"
+      explanation: "Друг becomes друга."
+    - sentence: "Я люблю ___."
+      answer: "тата"
+      options:
+        - "тата"
+        - "тато"
+        - "таті"
+      explanation: "Тато becomes тата."
+    - sentence: "Я чекаю ___."
+      answer: "вчителя"
+      options:
+        - "вчителя"
+        - "вчитель"
+        - "вчителю"
+      explanation: "Вчитель becomes вчителя."
+    - sentence: "Я шукаю ___."
+      answer: "подругу"
+      options:
+        - "подругу"
+        - "подруга"
+        - "подруги"
+      explanation: "Подруга becomes подругу."
+    - sentence: "Я бачу ___."
+      answer: "сусіда"
+      options:
+        - "сусіда"
+        - "сусід"
+        - "сусіду"
+      explanation: "Сусід becomes сусіда."
+    - sentence: "Я чекаю ___."
+      answer: "лікаря"
+      options:
+        - "лікаря"
+        - "лікар"
+        - "лікарю"
+      explanation: "Лікар becomes лікаря."
+    - sentence: "Я знаю ___."
+      answer: "сестру"
+      options:
+        - "сестру"
+        - "сестра"
+        - "сестри"
+      explanation: "Сестра becomes сестру."
+- id: act-3
+  type: group-sort
+  title: Кого or що shelves
+  instruction: Sort the object forms by the question they answer.
+  groups:
+    - name: "Істоти: кого?"
+      items:
+        - "брата"
+        - "маму"
+        - "друга"
+        - "лікаря"
+        - "Олену"
+        - "сусіда"
+    - name: "Неістоти: що?"
+      items:
+        - "хліб"
+        - "каву"
+        - "воду"
+        - "чай"
+        - "борщ"
+        - "дерево"
+- id: act-4
+  type: match-up
+  title: Dictionary form to object form
+  instruction: Match the dictionary form with the direct-object form.
+  pairs:
+    - left: "мама"
+      right: "маму"
+    - left: "Олена"
+      right: "Олену"
+    - left: "сестра"
+      right: "сестру"
+    - left: "подруга"
+      right: "подругу"
+    - left: "брат"
+      right: "брата"
+    - left: "друг"
+      right: "друга"
+    - left: "лікар"
+      right: "лікаря"
+    - left: "сусід"
+      right: "сусіда"
+- id: act-5
+  type: fill-in
+  title: People dialogue
+  instruction: Complete the short dialogue about people around you.
+  items:
+    - sentence: "— Кого ти ___?"
+      answer: "бачиш"
+      options:
+        - "бачиш"
+        - "бачити"
+        - "бачить"
+      explanation: "Кого ти бачиш? asks whom you see."
+    - sentence: "— Я бачу ___ і маму."
+      answer: "брата"
+      options:
+        - "брата"
+        - "брат"
+        - "братом"
+      explanation: "Брат becomes брата."
+    - sentence: "— Ти знаєш мого ___ Тараса?"
+      answer: "друга"
+      options:
+        - "друга"
+        - "друг"
+        - "другу"
+      explanation: "Мого друга is the object phrase."
+    - sentence: "— Ні, я не ___ твого друга."
+      answer: "знаю"
+      options:
+        - "знаю"
+        - "знає"
+        - "знати"
+      explanation: "Я знаю / не знаю."
+    - sentence: "— А кого ти ___?"
+      answer: "чекаєш"
+      options:
+        - "чекаєш"
+        - "чекати"
+        - "чекає"
+      explanation: "Кого ти чекаєш? asks whom you are waiting for."
+    - sentence: "— Я чекаю ___."
+      answer: "лікаря"
+      options:
+        - "лікаря"
+        - "лікар"
+        - "лікарем"
+      explanation: "Лікар becomes лікаря."
+- id: act-6
+  type: true-false
+  title: Animate accusative checks
+  instruction: Decide whether each statement fits the lesson.
+  items:
+    - statement: "Кого? is the question for people and animals as direct objects."
+      answer: true
+      explanation: "Use кого? for animate direct objects."
+    - statement: "Я бачу хліб keeps хліб unchanged."
+      answer: true
+      explanation: "Хліб is an inanimate masculine noun in this A1 pattern."
+    - statement: "Я бачу брата changes брат because брат is a male person."
+      answer: true
+      explanation: "Male animate nouns change in this object position."
+    - statement: "Мама becomes маму, like кава becomes каву."
+      answer: true
+      explanation: "The feminine object ending is familiar from M37."
+    - statement: "Дерево answers хто? in Ukrainian grammar."
+      answer: false
+      explanation: "Дерево answers що?"
+    - statement: "Я бачу його is a useful pronoun chunk."
+      answer: true
+      explanation: "Його is an object pronoun chunk."
+    - statement: "Натовп is treated as a person for this contrast."
+      answer: false
+      explanation: "Натовп is a collective noun treated as inanimate."
+    - statement: "Plural instrumental endings are the main A1 goal here."
+      answer: false
+      explanation: "They are only a later bridge note."
+- id: act-7
+  type: order
+  title: Introduce a brother
+  instruction: Put the dialogue in order.
+  is_ukrainian: true
+  items:
+    - "Кого ти бачиш на фото?"
+    - "Я бачу маму і тата."
+    - "А хто це?"
+    - "Це мій брат."
+    - "Ти знаєш мого брата?"
+    - "Ні, я не знаю твого брата."
+    - "Ходімо, я тебе познайомлю!"
+  correct_order: [0, 1, 2, 3, 4, 5, 6]
+- id: act-8
+  type: error-correction
+  title: Repair people-around-me interference
+  instruction: Choose the clean Ukrainian repair.
+  anchor_id: repair-people-around-me-interference
+  items:
+    - sentence: "Я бачу мій брат."
+      error: "Я бачу мій брат."
+      answer: "Я бачу мого брата."
+      options:
+        - "Я бачу мого брата."
+        - "Я бачу мій брат."
+        - "Я бачу моїм братом."
+      explanation: "Use the object phrase мого брата."
+    - sentence: "Дерево — це хто?"
+      error: "Дерево — це хто?"
+      answer: "Дерево — це що?"
+      options:
+        - "Дерево — це що?"
+        - "Дерево — це хто?"
+        - "Дерево — це кого?"
+      explanation: "Plants answer що? in Ukrainian grammar."
+    - sentence: "Я люблю він."
+      error: "Я люблю він."
+      answer: "Я люблю його."
+      options:
+        - "Я люблю його."
+        - "Я люблю він."
+        - "Я люблю йому."
+      explanation: "Use the object pronoun його."
+    - sentence: "Ми бачимо велику натовп."
+      error: "Ми бачимо велику натовп."
+      answer: "Ми бачимо великий натовп."
+      options:
+        - "Ми бачимо великий натовп."
+        - "Ми бачимо велику натовп."
+        - "Ми бачимо великого натовпа."
+      explanation: "Натовп is treated as inanimate here."
+    - sentence: "Я зустрів сусіду."
+      error: "Я зустрів сусіду."
+      answer: "Я зустрів сусіда."
+      options:
+        - "Я зустрів сусіда."
+        - "Я зустрів сусіду."
+        - "Я зустрів сусідом."
+      explanation: "Сусід becomes сусіда."
+    - sentence: "Він має 20 років."
+      error: "Він має 20 років."
+      answer: "Йому 20 років."
+      options:
+        - "Йому 20 років."
+        - "Він має 20 років."
+        - "Його 20 років."
+      explanation: "Age uses йому in this chunk."
+    - sentence: "Я є студент."
+      error: "Я є студент."
+      answer: "Я студент."
+      options:
+        - "Я студент."
+        - "Я є студент."
+        - "Я маю студент."
+      explanation: "In this basic identity line, omit є."
+    - sentence: "Яка твоя фамілія?"
+      error: "Яка твоя фамілія?"
+      answer: "Яке твоє прізвище?"
+      options:
+        - "Яке твоє прізвище?"
+        - "Яка твоя фамілія?"
+        - "Який твій фамілія?"
+      explanation: "Use прізвище for surname."

@@ -1,0 +1,16 @@
+- title: "Plan: A1 finale"
+  role: internal plan
+  source_ref: "curriculum/l2-uk-en/plans/a1/a1-finale.yaml"
+  notes: "Source plan for M55 final A1 integration: one full day in a Ukrainian city."
+- title: "Wiki: pedagogy/a1/a1-finale"
+  role: internal wiki
+  source_ref: "wiki/pedagogy/a1/a1-finale"
+  notes: "Pedagogical brief for integrated A1 review and final communicative simulation."
+- title: "Internal module M52: my story"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/my-story/module.md"
+  notes: "Reuses the past-present-future story frame without adding new grammar."
+- title: "Internal module M54: emergencies"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/emergencies/module.md"
+  notes: "Reuses A1 help, repair, and emergency-language chunks in the final checklist."

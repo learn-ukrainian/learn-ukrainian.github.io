@@ -301,6 +301,22 @@ def _resource_role(item: dict, legacy_bucket: str | None = None) -> str:
     return 'textbook'
 
 
+def _is_publishable_resource(item: dict, role: str) -> bool:
+    """Return whether a resource belongs in learner-facing pages."""
+    title = _public_resource_text(item.get('title')).casefold()
+    url = str(item.get('url') or '').strip()
+    normalized_url = url.lstrip("./")
+
+    return not (
+        role == 'wiki'
+        and (
+            title.startswith('wiki:')
+            or normalized_url.startswith('wiki/')
+            or normalized_url.startswith('docs/wiki/')
+        )
+    )
+
+
 def _iter_resources_by_role(resources: dict | list) -> dict[str, list[dict]]:
     grouped: dict[str, list[dict]] = {group_id: [] for group_id, *_ in RESOURCE_GROUPS}
     if isinstance(resources, list):
@@ -320,6 +336,8 @@ def _iter_resources_by_role(resources: dict | list) -> dict[str, list[dict]]:
             if not isinstance(item, dict):
                 continue
             role = _resource_role(item, bucket)
+            if not _is_publishable_resource(item, role):
+                continue
             group_id = role_to_group.get(role, 'online')
             grouped[group_id].append({**item, 'role': role})
     return grouped

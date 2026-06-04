@@ -389,3 +389,33 @@ def test_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> None:
             module="a1/1",
             phase_writer_summary={"tool_calls_total": 0},
         )
+
+
+def test_resources_artifact_rejects_internal_wiki_urls() -> None:
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match="student-facing sources only",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "resources.yaml",
+            [
+                {
+                    "title": "Wiki: pedagogy/a1/sounds-letters-and-hello",
+                    "role": "wiki",
+                    "url": "wiki/pedagogy/a1/sounds-letters-and-hello.md",
+                }
+            ],
+        )
+
+
+def test_resources_artifact_accepts_public_wikipedia_urls() -> None:
+    linear_pipeline._validate_writer_json_artifact(
+        "resources.yaml",
+        [
+            {
+                "title": "Wikipedia article",
+                "role": "wiki",
+                "url": "https://uk.wikipedia.org/wiki/Ранок",
+            }
+        ],
+    )

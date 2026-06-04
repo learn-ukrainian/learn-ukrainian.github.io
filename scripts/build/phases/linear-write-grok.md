@@ -335,6 +335,10 @@ Words and grammar listed in **Cumulative vocabulary** / **Grammar already taught
 
 {LEARNER_STATE}
 
+## Module Archetype Contract
+
+{MODULE_ARCHETYPE}
+
 ## Immersion Rule
 
 {IMMERSION_RULE}

@@ -1,0 +1,414 @@
+---
+title: "Що сталося?"
+description: "Він читав, вона читала — минулий час і рід"
+sidebar:
+  order: 48
+  label: "48. Що сталося?"
+pipeline: linear-phase-4
+build_status: validated
+prev: checkpoint-communication
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+You already know how present-tense verbs change for the person:
+**я читаю**, **ти читаєш**, **він читає**. Past tense is different. In the
+simple A1 pattern here, the past verb shows **gender in the singular**, not
+person.
+
+| Speaker or subject | Past form |
+| --- | --- |
+| **я** if the speaker is male | **я читав** |
+| **я** if the speaker is female | **я читала** |
+| **він** | **він читав** |
+| **вона** | **вона читала** |
+| **воно** | **воно читало** |
+| **вони / ми** | **вони читали / ми читали** |
+
+The useful question is:
+
+**Що ти робив?** - What were you doing? (to a male speaker)
+
+**Що ти робила?** - What were you doing? (to a female speaker)
+
+:::tip[Gender, not person]
+In the past tense, **я читав**, **ти читав**, and **він читав** can share the
+same ending because the ending is masculine singular. The ending is not the
+person ending from the present tense.
+:::
+
+### Past endings map
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "він", "right": "-в"}, {"left": "вона", "right": "-ла"}, {"left": "воно", "right": "-ло"}, {"left": "вони", "right": "-ли"}, {"left": "ми", "right": "-ли"}, {"left": "Олена", "right": "-ла"}, {"left": "Тарас", "right": "-в"}, {"left": "друзі", "right": "-ли"}]`)} />
+
+## Діалоги
+
+### Понеділок на роботі
+
+<DialogueBox uk="Олена: Що ти робив учора?" en="Olena: What were you doing yesterday?" />
+<DialogueBox uk="Тарас: Я читав книжку." en="Taras: I was reading a book." />
+<DialogueBox uk="Тарас: А ти що робила?" en="Taras: And what were you doing?" />
+<DialogueBox uk="Олена: Я готувала вечерю." en="Olena: I was cooking dinner." />
+<DialogueBox uk="Олена: А що робив Іван?" en="Olena: And what was Ivan doing?" />
+<DialogueBox uk="Тарас: Він гуляв у парку." en="Taras: He was walking in the park." />
+<DialogueBox uk="Тарас: А Марія?" en="Taras: And Mariia?" />
+<DialogueBox uk="Олена: Вона працювала вдома." en="Olena: She was working at home." />
+
+The grammar work is small but important:
+
+- **Тарас** says **я читав** because he is male.
+- **Олена** says **я готувала** because she is female.
+- **Іван** takes **гуляв**.
+- **Марія** takes **працювала**.
+
+### Вихідні
+
+<DialogueBox uk="Марія: Як ти провів вихідні?" en="Mariia: How did you spend the weekend?" />
+<DialogueBox uk="Іван: Добре. У суботу я гуляв." en="Ivan: Good. On Saturday I walked." />
+<DialogueBox uk="Іван: У неділю я дивився фільм." en="Ivan: On Sunday I watched a film." />
+<DialogueBox uk="Іван: А ти що робила?" en="Ivan: And what were you doing?" />
+<DialogueBox uk="Марія: Я ходила в кафе." en="Mariia: I went to a cafe." />
+<DialogueBox uk="Марія: Ми їли торт." en="Mariia: We ate cake." />
+<DialogueBox uk="Іван: Ви пили каву?" en="Ivan: Did you drink coffee?" />
+<DialogueBox uk="Марія: Так, ми пили каву." en="Mariia: Yes, we drank coffee." />
+
+Notice the plural forms: **ми їли**, **ми пили**, **ви пили**. In the plural,
+use **-ли**. Do not add present-tense person endings after it.
+
+### Choose the past form
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Учора він ___ книжку.", "answer": "читав", "options": ["читав", "читала", "читали"]}, {"sentence": "Олена ___ вечерю.", "answer": "готувала", "options": ["готувала", "готував", "готували"]}, {"sentence": "Ми ___ в парку.", "answer": "гуляли", "options": ["гуляли", "гуляв", "гуляла"]}, {"sentence": "Вони ___ разом.", "answer": "працювали", "options": ["працювали", "працював", "працювало"]}, {"sentence": "Тарас ___ фільм.", "answer": "дивився", "options": ["дивився", "дивилася", "дивилися"]}, {"sentence": "Марія ___ телефоном.", "answer": "говорила", "options": ["говорила", "говорив", "говорили"]}]`)} />
+
+## Минулий час
+
+The A1 way to build many past-tense forms is:
+
+**infinitive base + past ending**
+
+For verbs ending in **-ти**, remove **-ти** and add the ending:
+
+| Infinitive | він | вона | воно | вони |
+| --- | --- | --- | --- | --- |
+| **читати** | **читав** | **читала** | **читало** | **читали** |
+| **працювати** | **працював** | **працювала** | **працювало** | **працювали** |
+| **гуляти** | **гуляв** | **гуляла** | **гуляло** | **гуляли** |
+| **готувати** | **готував** | **готувала** | **готувало** | **готували** |
+| **говорити** | **говорив** | **говорила** | **говорило** | **говорили** |
+
+The endings are the lesson:
+
+- masculine singular: **-в**;
+- feminine singular: **-ла**;
+- neuter singular: **-ло**;
+- plural: **-ли**.
+
+Compare present and past:
+
+| Present: person | Past: gender |
+| --- | --- |
+| **я читаю** | **я читав / читала** |
+| **я працюю** | **я працював / працювала** |
+| **ти читаєш** | **ти читав / читала** |
+| **він читає** | **він читав** |
+| **ми читаємо** | **ми читали** |
+| **ви читаєте** | **ви читали** |
+| **вони читають** | **вони читали** |
+
+Good A1 questions:
+
+- **Що ти робив учора, Іване?** - Ivan, what were you doing yesterday?
+- **Що ти робила учора, Олено?** - Olena, what were you doing yesterday?
+- **Що вони робили у неділю?** - What were they doing on Sunday?
+
+Short details help the past sentence sound real:
+
+**Розширення речення другорядними членами** means a past sentence can grow by
+one small detail at a time.
+
+- **що?** - **Я їв сніданок.** / **Я їла сніданок.**
+- **куди?** - **Я йшов до школи.** / **Я йшла до школи.**
+- **яку?** - **Я читав цікаву книжку.** / **Я читала цікаву книжку.**
+
+The time marker **вчора** tells you the action is before now. The beginner
+formation is still the same: use **-в** for masculine, **-ла для жіночого**
+forms, **-ло** for neuter, and **-ли** for plural.
+
+School Ukrainian often asks **що зробив?** or **що зробила?** to notice gender:
+**Місяць згубив намистинки. Ніч згубила намистинки.** You only need the idea:
+masculine subject, masculine past form; feminine subject, feminine past form.
+
+Keep the grammar here narrow. Later Ukrainian will give you more verb choices.
+For this A1 step, practice only the endings **-в**, **-ла**, **-ло**, and
+**-ли** with familiar verbs.
+
+### Gender, not person
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Why can я читав and ти читав have the same ending?", "options": [{"text": "Because past tense marks masculine singular here.", "correct": true}, {"text": "Because я and ти always use one ending.", "correct": false}, {"text": "Because Ukrainian has no person forms.", "correct": false}], "explanation": "The past ending shows gender in the singular, not person."}, {"question": "Which form fits a female speaker saying I read?", "options": [{"text": "Я читала.", "correct": true}, {"text": "Я читав.", "correct": false}, {"text": "Я читали.", "correct": false}], "explanation": "A female speaker uses the feminine form читала."}, {"question": "Which form fits a group?", "options": [{"text": "Ми читали.", "correct": true}, {"text": "Ми читав.", "correct": false}, {"text": "Ми читала.", "correct": false}], "explanation": "Plural past uses -ли."}, {"question": "Which question fits Ivan?", "options": [{"text": "Що ти робив?", "correct": true}, {"text": "Що ти робила?", "correct": false}, {"text": "Що ти робило?", "correct": false}], "explanation": "Ivan is male, so ask робив."}]`)} />
+
+### Sort the forms
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-в": ["читав", "працював", "гуляв"], "-ла": ["читала", "працювала", "гуляла"], "-ло": ["читало", "працювало", "гуляло"], "-ли": ["читали", "працювали", "гуляли"]}`)} />
+
+## Практика
+
+Start with one subject and one action:
+
+- **Тарас читав.** - Taras was reading.
+- **Олена читала.** - Olena was reading.
+- **Кіно було цікаве.** - The movie was interesting.
+- **Друзі читали.** - The friends were reading.
+
+Then add a place or time:
+
+- **Учора Тарас читав книжку.** - Yesterday Taras read a book.
+- **Учора Олена готувала вечерю.** - Yesterday Olena cooked dinner.
+- **У суботу ми гуляли в парку.** - On Saturday we walked in the park.
+- **У неділю вони дивилися фільм.** - On Sunday they watched a film.
+
+For **я**, choose the ending for the speaker:
+
+| Speaker | Sentence |
+| --- | --- |
+| male speaker | **Я працював учора.** |
+| female speaker | **Я працювала учора.** |
+| a group | **Ми працювали учора.** |
+
+For **ти**, choose the ending for the person you are speaking to:
+
+- to Ivan: **Ти читав?**
+- to Olena: **Ти читала?**
+- to two friends: **Ви читали?**
+
+That is why the past tense is not a person table. **Я**, **ти**, and **він**
+can all use **читав** when the subject is masculine singular. **Я**, **ти**,
+and **вона** can all use **читала** when the subject is feminine singular.
+
+### Check the past form
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Олена читала книжку.", "isTrue": true, "explanation": "Олена is feminine singular, so читала fits."}, {"statement": "Тарас читала книжку.", "isTrue": false, "explanation": "Use Тарас читав."}, {"statement": "Вони працювали разом.", "isTrue": true, "explanation": "Вони takes the plural form -ли."}, {"statement": "Ми читалимо текст.", "isTrue": false, "explanation": "Do not add present endings. Use Ми читали текст."}, {"statement": "Сонце працювало.", "isTrue": true, "explanation": "Сонце is neuter, so -ло fits."}, {"statement": "Я буду читав завтра.", "isTrue": false, "explanation": "After буду, use the infinitive: буду читати."}]`)} />
+
+### Build short past sentences
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Учора / Тарас / читав / книжку", "answer": "Учора Тарас читав книжку."}, {"jumbled": "Олена / готувала / вечерю", "answer": "Олена готувала вечерю."}, {"jumbled": "Ми / гуляли / в / парку", "answer": "Ми гуляли в парку."}, {"jumbled": "Вони / працювали / разом", "answer": "Вони працювали разом."}, {"jumbled": "Що / ти / робив / учора", "answer": "Що ти робив учора?"}, {"jumbled": "Що / ти / робила / учора", "answer": "Що ти робила учора?"}]`)} />
+
+### From one subject to many
+
+<Order client:only='react' items={JSON.parse(`["він читав", "вона читала", "воно читало", "вони читали"]`)} correct_order={JSON.parse(`[0, 1, 2, 3]`)} instruction={"Put the transformation path in order."} isUkrainian={false} />
+
+### Repair traps
+
+Use the repair list to keep English habits from taking over:
+
+| Learner sentence | Better Ukrainian |
+| --- | --- |
+| <del>**Чоловік: Я читала.**</del> | **Чоловік: Я читав.** |
+| <del>**Жінка: Я читав.**</del> | **Жінка: Я читала.** |
+| <del>**Сонце встав.**</del> | **Сонце встало.** |
+| <del>**Я буду читав завтра.**</del> | **Я буду читати завтра.** |
+
+The last line looks ahead to future tense. The repair is simple for now:
+after **буду**, use the infinitive **читати**, not a past form.
+
+Some verb pairs will later show more meaning differences, for example
+**читав** and **прочитав**, or **летіли** and **полетіли**. Do not study that
+system here. For this A1 lesson, your job is only to match the past ending to
+the subject.
+
+Later grammar will use words like **процес**, **незавершена дія**, and
+**результат**. That is not your task now. Later grammar will also show
+consonant-stem forms.
+
+**Знайомство з основами на приголосний** comes later. Forms such as **ніс**,
+**віз**, and **мерз** are not the active A1 pattern. For today, stay with regular
+forms like **читав**, **читала**, **читало**, **читали**.
+
+The next grammar step is **майбутнього часу і наказового способу**, future
+time and requests. For now, one future repair is enough: after **буду**, use an
+infinitive, as in **Я буду читати завтра.**
+
+### Mini story practice
+
+Use one speaker and keep the gender consistent:
+
+**Male speaker:** **Учора я працював. Потім я гуляв. Увечері я дивився фільм.**
+
+Yesterday I worked. Then I walked. In the evening I watched a film.
+
+**Female speaker:** **Учора я працювала. Потім я гуляла. Увечері я дивилася фільм.**
+
+Yesterday I worked. Then I walked. In the evening I watched a film.
+
+The story can be short. What matters is that every past form agrees with the
+same speaker. Do not start with **я працював** and then switch to
+**я гуляла** unless the speaker changes. A clean A1 story repeats one pattern
+until your ear notices it.
+
+### Repair the A1 past tense
+
+<ErrorCorrection client:only='react' instruction="Fix the sentence by choosing the correct A1 form." items={JSON.parse(`[{"sentence": "Чоловік: Я читала. Жінка: Я читав.", "errorWord": "Чоловік: Я читала. Жінка: Я читав.", "correctForm": "Чоловік: Я читав. Жінка: Я читала.", "options": [], "explanation": "The male speaker uses читав; the female speaker uses читала."}, {"sentence": "Чоловік: Я читала.", "errorWord": "читала", "correctForm": "читав", "options": [], "explanation": "A male speaker says Я читав."}, {"sentence": "Жінка: Я читав.", "errorWord": "читав", "correctForm": "читала", "options": [], "explanation": "A female speaker says Я читала."}, {"sentence": "Ми читалимо текст.", "errorWord": "читалимо", "correctForm": "читали", "options": [], "explanation": "Past plural is читали; do not add -мо."}, {"sentence": "Вони читалить текст.", "errorWord": "читалить", "correctForm": "читали", "options": [], "explanation": "Past plural is читали; do not add present endings."}, {"sentence": "Сонце встав.", "errorWord": "встав", "correctForm": "Сонце встало.", "options": [], "explanation": "Сонце is neuter, so use -ло."}, {"sentence": "Я буду читав завтра.", "errorWord": "читав", "correctForm": "читати", "options": [], "explanation": "After буду, use the infinitive читати."}, {"sentence": "Він принісв книгу. або Він везв сумку.", "errorWord": "принісв / везв", "correctForm": "Він приніс книгу. / Він віз сумку.", "options": [], "explanation": "This is later recognition only; do not build these forms by the A1 regular pattern."}]`)} />
+
+## 📋 Підсумок
+
+Use this compact map:
+
+| Need | Pattern | Example |
+| --- | --- | --- |
+| male singular | **-в** | **він читав** |
+| female singular | **-ла** | **вона читала** |
+| neuter singular | **-ло** | **воно читало** |
+| plural | **-ли** | **вони читали** |
+
+Ask about yesterday:
+
+- **Що ти робив учора?**
+- **Що ти робила учора?**
+- **Що ви робили учора?**
+
+Answer with one clear sentence:
+
+- **Я читав книжку.**
+- **Я читала книжку.**
+- **Ми гуляли в парку.**
+
+Self-check:
+
+1. Can you say **я читав** or **я читала** for yourself?
+2. Can you change **він працював** to **вона працювала**?
+3. Can you change **вона говорила** to **вони говорили**?
+
+Stop here when the endings feel visible. The next module uses the same forms
+to tell a simple story about yesterday.
+
+### Say it in Ukrainian
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Yesterday he read a book.", "options": [{"text": "Учора він читав книжку.", "correct": true}, {"text": "Учора вона читала книжку.", "correct": false}, {"text": "Учора вони читали книжку.", "correct": false}], "explanation": "He is masculine singular, so use читав."}, {"source": "Yesterday she cooked dinner.", "options": [{"text": "Учора вона готувала вечерю.", "correct": true}, {"text": "Учора він готував вечерю.", "correct": false}, {"text": "Учора ми готували вечерю.", "correct": false}], "explanation": "She is feminine singular, so use готувала."}, {"source": "We walked in the park.", "options": [{"text": "Ми гуляли в парку.", "correct": true}, {"text": "Він гуляв у парку.", "correct": false}, {"text": "Вона гуляла в парку.", "correct": false}], "explanation": "We is plural, so use гуляли."}, {"source": "What were you doing yesterday? (to Ivan)", "options": [{"text": "Що ти робив учора?", "correct": true}, {"text": "Що ти робила учора?", "correct": false}, {"text": "Що ви робили учора?", "correct": false}], "explanation": "Ivan is male, so the question uses робив."}, {"source": "What were you doing yesterday? (to Olena)", "options": [{"text": "Що ти робила учора?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що вони робили учора?", "correct": false}], "explanation": "Olena is female, so the question uses робила."}]`)} />
+
+### Find the ending that does not fit
+
+<OddOneOut client:only='react' instruction={"Choose the form that does not belong in each set."} items={JSON.parse(`[{"words": ["читала", "працювала", "гуляли"], "correct": 2, "explanation": "Гуляли is plural, not feminine singular."}, {"words": ["читали", "говорили", "говорив"], "correct": 2, "explanation": "Говорив is masculine singular."}, {"words": ["читав", "готував", "готувала"], "correct": 2, "explanation": "Готувала is feminine singular."}, {"words": ["читало", "працювало", "працювали"], "correct": 2, "explanation": "Працювали is plural."}]`)} />
+
+<span id="repair-past-gender-interference"></span>
+
+### Ремонти
+
+| Problem | Use |
+| --- | --- |
+| one past form for every person | **я читав / ти читав / він читав** only when the subject is masculine |
+| present ending after past stem | **ми читали** |
+| wrong speaker gender | **я читав** for a male speaker; **я читала** for a female speaker |
+| forgotten neuter | **воно працювало** |
+| future built with a past form | **я буду читати** |
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"учора","translation":"yesterday","pos":"adverb","example":"Учора я читав.","examples":["yesterday","Учора я читав."]},{"word":"робити","translation":"to do","pos":"verb","example":"Що ти робив?","examples":["to do","Що ти робив?"]},{"word":"читати","translation":"to read","pos":"verb","example":"Вона читала книжку.","examples":["to read","Вона читала книжку."]},{"word":"працювати","translation":"to work","pos":"verb","example":"Ми працювали разом.","examples":["to work","Ми працювали разом."]},{"word":"гуляти","translation":"to walk","pos":"verb","example":"Він гуляв у парку.","examples":["to walk","Він гуляв у парку."]},{"word":"готувати","translation":"to cook","pos":"verb","example":"Олена готувала вечерю.","examples":["to cook","Олена готувала вечерю."]},{"word":"дивитися","translation":"to watch","pos":"verb","example":"Тарас дивився фільм.","examples":["to watch","Тарас дивився фільм."]},{"word":"говорити","translation":"to speak","pos":"verb","example":"Марія говорила телефоном.","examples":["to speak","Марія говорила телефоном."]},{"word":"минулий","translation":"past","pos":"adjective","example":"Це минулий час.","examples":["past","Це минулий час."]},{"word":"вихідні","translation":"weekend","pos":"noun plural","example":"Як ти провів вихідні?","examples":["weekend","Як ти провів вихідні?"]},{"word":"субота","translation":"Saturday","pos":"noun","example":"У суботу ми гуляли.","examples":["Saturday","У суботу ми гуляли."]},{"word":"неділя","translation":"Sunday","pos":"noun","example":"У неділю він читав.","examples":["Sunday","У неділю він читав."]},{"word":"разом","translation":"together","pos":"adverb","example":"Вони працювали разом.","examples":["together","Вони працювали разом."]},{"word":"фільм","translation":"film","pos":"noun","example":"Ми дивилися фільм.","examples":["film","Ми дивилися фільм."]},{"word":"книжка","translation":"book","pos":"noun","example":"Я читала книжку.","examples":["book","Я читала книжку."]},{"word":"вечеря","translation":"dinner","pos":"noun","example":"Вона готувала вечерю.","examples":["dinner","Вона готувала вечерю."]},{"word":"парк","translation":"park","pos":"noun","example":"Він гуляв у парку.","examples":["park","Він гуляв у парку."]},{"word":"рід","translation":"gender","pos":"noun","example":"Минулий час показує рід.","examples":["gender","Минулий час показує рід."]},{"word":"особа","translation":"person","pos":"noun","example":"Це не особа.","examples":["person","Це не особа."]},{"word":"закінчення","translation":"ending","pos":"noun","example":"Закінчення -ла жіноче.","examples":["ending","Закінчення -ла жіноче."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"учора","back":"yesterday"},{"front":"робити","back":"to do"},{"front":"читати","back":"to read"},{"front":"працювати","back":"to work"},{"front":"гуляти","back":"to walk"},{"front":"готувати","back":"to cook"},{"front":"дивитися","back":"to watch"},{"front":"говорити","back":"to speak"},{"front":"минулий","back":"past"},{"front":"вихідні","back":"weekend"},{"front":"субота","back":"Saturday"},{"front":"неділя","back":"Sunday"},{"front":"разом","back":"together"},{"front":"фільм","back":"film"},{"front":"книжка","back":"book"},{"front":"вечеря","back":"dinner"},{"front":"парк","back":"park"},{"front":"рід","back":"gender"},{"front":"особа","back":"person"},{"front":"закінчення","back":"ending"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Past endings map
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "він", "right": "-в"}, {"left": "вона", "right": "-ла"}, {"left": "воно", "right": "-ло"}, {"left": "вони", "right": "-ли"}, {"left": "ми", "right": "-ли"}, {"left": "Олена", "right": "-ла"}, {"left": "Тарас", "right": "-в"}, {"left": "друзі", "right": "-ли"}]`)} />
+
+### Choose the past form
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Учора він ___ книжку.", "answer": "читав", "options": ["читав", "читала", "читали"]}, {"sentence": "Олена ___ вечерю.", "answer": "готувала", "options": ["готувала", "готував", "готували"]}, {"sentence": "Ми ___ в парку.", "answer": "гуляли", "options": ["гуляли", "гуляв", "гуляла"]}, {"sentence": "Вони ___ разом.", "answer": "працювали", "options": ["працювали", "працював", "працювало"]}, {"sentence": "Тарас ___ фільм.", "answer": "дивився", "options": ["дивився", "дивилася", "дивилися"]}, {"sentence": "Марія ___ телефоном.", "answer": "говорила", "options": ["говорила", "говорив", "говорили"]}]`)} />
+
+### Gender, not person
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Why can я читав and ти читав have the same ending?", "options": [{"text": "Because past tense marks masculine singular here.", "correct": true}, {"text": "Because я and ти always use one ending.", "correct": false}, {"text": "Because Ukrainian has no person forms.", "correct": false}], "explanation": "The past ending shows gender in the singular, not person."}, {"question": "Which form fits a female speaker saying I read?", "options": [{"text": "Я читала.", "correct": true}, {"text": "Я читав.", "correct": false}, {"text": "Я читали.", "correct": false}], "explanation": "A female speaker uses the feminine form читала."}, {"question": "Which form fits a group?", "options": [{"text": "Ми читали.", "correct": true}, {"text": "Ми читав.", "correct": false}, {"text": "Ми читала.", "correct": false}], "explanation": "Plural past uses -ли."}, {"question": "Which question fits Ivan?", "options": [{"text": "Що ти робив?", "correct": true}, {"text": "Що ти робила?", "correct": false}, {"text": "Що ти робило?", "correct": false}], "explanation": "Ivan is male, so ask робив."}]`)} />
+
+### Sort the forms
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-в": ["читав", "працював", "гуляв"], "-ла": ["читала", "працювала", "гуляла"], "-ло": ["читало", "працювало", "гуляло"], "-ли": ["читали", "працювали", "гуляли"]}`)} />
+
+### Check the past form
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Олена читала книжку.", "isTrue": true, "explanation": "Олена is feminine singular, so читала fits."}, {"statement": "Тарас читала книжку.", "isTrue": false, "explanation": "Use Тарас читав."}, {"statement": "Вони працювали разом.", "isTrue": true, "explanation": "Вони takes the plural form -ли."}, {"statement": "Ми читалимо текст.", "isTrue": false, "explanation": "Do not add present endings. Use Ми читали текст."}, {"statement": "Сонце працювало.", "isTrue": true, "explanation": "Сонце is neuter, so -ло fits."}, {"statement": "Я буду читав завтра.", "isTrue": false, "explanation": "After буду, use the infinitive: буду читати."}]`)} />
+
+### Build short past sentences
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Учора / Тарас / читав / книжку", "answer": "Учора Тарас читав книжку."}, {"jumbled": "Олена / готувала / вечерю", "answer": "Олена готувала вечерю."}, {"jumbled": "Ми / гуляли / в / парку", "answer": "Ми гуляли в парку."}, {"jumbled": "Вони / працювали / разом", "answer": "Вони працювали разом."}, {"jumbled": "Що / ти / робив / учора", "answer": "Що ти робив учора?"}, {"jumbled": "Що / ти / робила / учора", "answer": "Що ти робила учора?"}]`)} />
+
+### From one subject to many
+
+<Order client:only='react' items={JSON.parse(`["він читав", "вона читала", "воно читало", "вони читали"]`)} correct_order={JSON.parse(`[0, 1, 2, 3]`)} instruction={"Put the transformation path in order."} isUkrainian={false} />
+
+### Repair the A1 past tense
+
+<ErrorCorrection client:only='react' instruction="Fix the sentence by choosing the correct A1 form." items={JSON.parse(`[{"sentence": "Чоловік: Я читала. Жінка: Я читав.", "errorWord": "Чоловік: Я читала. Жінка: Я читав.", "correctForm": "Чоловік: Я читав. Жінка: Я читала.", "options": [], "explanation": "The male speaker uses читав; the female speaker uses читала."}, {"sentence": "Чоловік: Я читала.", "errorWord": "читала", "correctForm": "читав", "options": [], "explanation": "A male speaker says Я читав."}, {"sentence": "Жінка: Я читав.", "errorWord": "читав", "correctForm": "читала", "options": [], "explanation": "A female speaker says Я читала."}, {"sentence": "Ми читалимо текст.", "errorWord": "читалимо", "correctForm": "читали", "options": [], "explanation": "Past plural is читали; do not add -мо."}, {"sentence": "Вони читалить текст.", "errorWord": "читалить", "correctForm": "читали", "options": [], "explanation": "Past plural is читали; do not add present endings."}, {"sentence": "Сонце встав.", "errorWord": "встав", "correctForm": "Сонце встало.", "options": [], "explanation": "Сонце is neuter, so use -ло."}, {"sentence": "Я буду читав завтра.", "errorWord": "читав", "correctForm": "читати", "options": [], "explanation": "After буду, use the infinitive читати."}, {"sentence": "Він принісв книгу. або Він везв сумку.", "errorWord": "принісв / везв", "correctForm": "Він приніс книгу. / Він віз сумку.", "options": [], "explanation": "This is later recognition only; do not build these forms by the A1 regular pattern."}]`)} />
+
+### Say it in Ukrainian
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Yesterday he read a book.", "options": [{"text": "Учора він читав книжку.", "correct": true}, {"text": "Учора вона читала книжку.", "correct": false}, {"text": "Учора вони читали книжку.", "correct": false}], "explanation": "He is masculine singular, so use читав."}, {"source": "Yesterday she cooked dinner.", "options": [{"text": "Учора вона готувала вечерю.", "correct": true}, {"text": "Учора він готував вечерю.", "correct": false}, {"text": "Учора ми готували вечерю.", "correct": false}], "explanation": "She is feminine singular, so use готувала."}, {"source": "We walked in the park.", "options": [{"text": "Ми гуляли в парку.", "correct": true}, {"text": "Він гуляв у парку.", "correct": false}, {"text": "Вона гуляла в парку.", "correct": false}], "explanation": "We is plural, so use гуляли."}, {"source": "What were you doing yesterday? (to Ivan)", "options": [{"text": "Що ти робив учора?", "correct": true}, {"text": "Що ти робила учора?", "correct": false}, {"text": "Що ви робили учора?", "correct": false}], "explanation": "Ivan is male, so the question uses робив."}, {"source": "What were you doing yesterday? (to Olena)", "options": [{"text": "Що ти робила учора?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що вони робили учора?", "correct": false}], "explanation": "Olena is female, so the question uses робила."}]`)} />
+
+### Find the ending that does not fit
+
+<OddOneOut client:only='react' instruction={"Choose the form that does not belong in each set."} items={JSON.parse(`[{"words": ["читала", "працювала", "гуляли"], "correct": 2, "explanation": "Гуляли is plural, not feminine singular."}, {"words": ["читали", "говорили", "говорив"], "correct": 2, "explanation": "Говорив is masculine singular."}, {"words": ["читав", "готував", "готувала"], "correct": 2, "explanation": "Готувала is feminine singular."}, {"words": ["читало", "працювало", "працювали"], "correct": 2, "explanation": "Працювали is plural."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 **State Standard 2024, §4.2.4.1** — for past-tense agreement of verbs by gender and number.
+- 🔗 [Ukrainian Lessons Podcast Episodes 26-27](https://www.ukrainianlessons.com/episode26/) — Learner-facing support for Ukrainian past tense and short past-event narration.
+- 🔗 **Wiki: pedagogy/a1/what-happened** — Pedagogical brief for A1 past-tense gender endings, L2 repairs, and decolonized framing.
+- 🔗 **Підручник 3-4 класу — Минулий час** — Source-registry support for forming past tense with -в, -ла, -ло, -ли.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

@@ -1,0 +1,152 @@
+- word: милозвучність
+  translation: euphony; smooth sound flow
+  pos: noun
+  example: "Милозвучність допомагає говорити плавно."
+- word: у/в
+  translation: in; at
+  pos: alternating preposition
+  example: "Я живу в Києві, а сестра у Львові."
+- word: і/й
+  translation: and
+  pos: alternating conjunction
+  example: "Брат і сестра, мама й тато."
+- word: з, із, зі
+  translation: from; with
+  pos: alternating preposition
+  example: "Я йду зі школи."
+- word: звук
+  translation: sound
+  pos: noun
+  example: "Цей звук легкий."
+- word: голосний
+  translation: vowel
+  pos: adjective/noun
+  example: "А - голосний звук."
+- word: приголосний
+  translation: consonant
+  pos: adjective/noun
+  example: "М - приголосний звук."
+- word: Київ
+  translation: Kyiv
+  pos: proper noun
+  example: "Я живу в Києві."
+- word: Львів
+  translation: Lviv
+  pos: proper noun
+  example: "Сестра у Львові."
+- word: місто
+  translation: city
+  pos: noun
+  example: "У місті цікаво."
+- word: школа
+  translation: school
+  pos: noun
+  example: "Вона в школі."
+- word: робота
+  translation: work; job
+  pos: noun
+  example: "Робота в офісі."
+- word: офіс
+  translation: office
+  pos: noun
+  example: "Я працюю в офісі."
+- word: парк
+  translation: park
+  pos: noun
+  example: "У парку тепло."
+- word: театр
+  translation: theater
+  pos: noun
+  example: "Ми йдемо у театр."
+- word: кіно
+  translation: cinema; movie theater
+  pos: noun
+  example: "Квиток у кіно."
+- word: банк
+  translation: bank
+  pos: noun
+  example: "Максим працює у банку."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "В аптеці черга."
+- word: університет
+  translation: university
+  pos: noun
+  example: "В університеті тихо."
+- word: учитель
+  translation: teacher
+  pos: noun
+  example: "Учитель у школі."
+- word: Іван
+  translation: Ivan
+  pos: proper noun
+  example: "Ти й Іван ідете в театр?"
+- word: Яна
+  translation: Yana
+  pos: proper noun
+  example: "Марія і Яна в місті."
+- word: Ялта
+  translation: Yalta
+  pos: proper noun
+  example: "Марія і Ялта - важкі сусіди для й."
+- word: яблуко
+  translation: apple
+  pos: noun
+  example: "І яблуко, і апельсин."
+- word: ютуб
+  translation: YouTube
+  pos: noun
+  example: "Відео і ютуб."
+- word: акваріум
+  translation: aquarium
+  pos: noun
+  example: "Риба в акваріумі."
+- word: фотографія
+  translation: photograph
+  pos: noun
+  example: "Фотографія у файлі."
+- word: вівторок
+  translation: Tuesday
+  pos: noun
+  example: "У вівторок урок."
+- word: брат
+  translation: brother
+  pos: noun
+  example: "Брат і сестра."
+- word: сестра
+  translation: sister
+  pos: noun
+  example: "Брат і сестра в школі."
+- word: мама
+  translation: mother
+  pos: noun
+  example: "Мама й тато вдома."
+- word: тато
+  translation: father
+  pos: noun
+  example: "Мама й тато в театрі."
+- word: мною
+  translation: me; with me
+  pos: pronoun form
+  example: "Софія зі мною."
+- word: свято
+  translation: holiday; celebration
+  pos: noun
+  example: "Зі святом!"
+- word: жити
+  translation: to live
+  pos: verb
+  example: "Я живу в Києві."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Я працюю в офісі."
+- word: вчитися
+  translation: to study
+  pos: verb
+  example: "Я вчуся в університеті."
+- word: удосконалювати
+  translation: to improve
+  pos: verb
+  example: "Вони удосконалюють план."

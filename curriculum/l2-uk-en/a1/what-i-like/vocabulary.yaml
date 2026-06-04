@@ -1,0 +1,84 @@
+- lemma: любити
+  translation: to like; to love
+  pos: verb
+  usage: Я люблю читати.
+- lemma: люблю
+  translation: I like
+  pos: verb form
+  usage: Я люблю музику.
+- lemma: любиш
+  translation: you like
+  pos: verb form
+  usage: Ти любиш готувати?
+- lemma: подобається
+  translation: is pleasing; like
+  pos: verb chunk
+  usage: Мені подобається ця книга.
+- lemma: мені подобається
+  translation: I like
+  pos: phrase
+  usage: Мені подобається музика.
+- lemma: тобі подобається
+  translation: you like
+  pos: phrase
+  usage: Тобі подобається цей фільм?
+- lemma: читати
+  translation: to read
+  pos: infinitive
+  usage: Я люблю читати.
+- lemma: гуляти
+  translation: to walk
+  pos: infinitive
+  usage: Я люблю гуляти.
+- lemma: готувати
+  translation: to cook
+  pos: infinitive
+  usage: Я люблю готувати.
+- lemma: слухати
+  translation: to listen
+  pos: infinitive
+  usage: Я люблю слухати музику.
+- lemma: дивитися
+  translation: to watch
+  pos: infinitive
+  usage: Я люблю дивитися фільм.
+- lemma: грати
+  translation: to play
+  pos: infinitive
+  usage: Я люблю грати.
+- lemma: малювати
+  translation: to draw
+  pos: infinitive
+  usage: Я люблю малювати.
+- lemma: співати
+  translation: to sing
+  pos: infinitive
+  usage: Я люблю співати.
+- lemma: музика
+  translation: music
+  pos: noun
+  usage: Мені подобається музика.
+- lemma: музику
+  translation: music, object chunk
+  pos: noun chunk
+  usage: Я люблю музику.
+- lemma: фільм
+  translation: film
+  pos: noun
+  usage: Мені подобається цей фільм.
+- lemma: книга
+  translation: book
+  pos: noun
+  usage: Мені подобається ця книга.
+- lemma: улюблений
+  translation: favorite, masculine
+  pos: adjective
+  usage: Це мій улюблений спорт.
+- lemma: захоплення
+  translation: interest; hobby
+  pos: noun
+  usage: Моє захоплення - музика.
+- lemma: брати участь
+  translation: to take part
+  pos: phrase
+  usage: Я беру участь.

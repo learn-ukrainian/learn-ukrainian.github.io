@@ -1,0 +1,457 @@
+- id: act-1
+  type: quiz
+  title: Who or what?
+  instruction: Choose the question or pronoun that fits the noun.
+  items:
+    - prompt: тато
+      options:
+        - text: Хто це?
+          correct: true
+        - text: Що це?
+          correct: false
+        - text: Воно?
+          correct: false
+      explanation: Тато is a person word, so ask Хто це?
+    - prompt: стіл
+      options:
+        - text: Що це?
+          correct: true
+        - text: Хто це?
+          correct: false
+        - text: Вона?
+          correct: false
+      explanation: Стіл is a thing word, so ask Що це?
+    - prompt: сестра
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Сестра is feminine.
+    - prompt: брат
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Брат is masculine.
+    - prompt: книга
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Книга is feminine.
+    - prompt: вікно
+      options:
+        - text: воно
+          correct: true
+        - text: вона
+          correct: false
+        - text: він
+          correct: false
+      explanation: Вікно is neuter.
+- id: act-2
+  type: group-sort
+  title: Sort by gender
+  instruction: Sort each noun by its A1 gender signal.
+  groups:
+    - label: він / мій
+      items:
+        - стіл
+        - телефон
+        - зошит
+        - ключ
+        - тато
+    - label: вона / моя
+      items:
+        - книга
+        - лампа
+        - кімната
+        - ручка
+        - сестра
+    - label: воно / моє
+      items:
+        - вікно
+        - ліжко
+        - крісло
+        - дзеркало
+        - фото
+- id: act-3
+  type: quiz
+  title: Він, вона, or воно?
+  instruction: Choose the Ukrainian gender-test word.
+  items:
+    - prompt: стіл
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Стіл ends in a consonant and is masculine.
+    - prompt: книга
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Книга is feminine.
+    - prompt: вікно
+      options:
+        - text: воно
+          correct: true
+        - text: він
+          correct: false
+        - text: вона
+          correct: false
+      explanation: Вікно is neuter.
+    - prompt: телефон
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Телефон is masculine.
+    - prompt: лампа
+      options:
+        - text: вона
+          correct: true
+        - text: воно
+          correct: false
+        - text: він
+          correct: false
+      explanation: Лампа is feminine.
+    - prompt: ліжко
+      options:
+        - text: воно
+          correct: true
+        - text: вона
+          correct: false
+        - text: він
+          correct: false
+      explanation: Ліжко is neuter.
+    - prompt: тато
+      options:
+        - text: він
+          correct: true
+        - text: воно
+          correct: false
+        - text: вона
+          correct: false
+      explanation: Тато is masculine because it names a male person.
+    - prompt: Микола
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Микола is a masculine name.
+- id: act-4
+  type: fill-in
+  title: My object
+  instruction: Choose мій, моя, or моє.
+  items:
+    - sentence: Це ___ стіл.
+      answer: мій
+      options:
+        - мій
+        - моя
+        - моє
+      explanation: Стіл is masculine.
+    - sentence: Це ___ книга.
+      answer: моя
+      options:
+        - моя
+        - мій
+        - моє
+      explanation: Книга is feminine.
+    - sentence: Це ___ вікно.
+      answer: моє
+      options:
+        - моє
+        - мій
+        - моя
+      explanation: Вікно is neuter.
+    - sentence: Це ___ кімната.
+      answer: моя
+      options:
+        - моя
+        - мій
+        - моє
+      explanation: Кімната is feminine.
+    - sentence: Це ___ ліжко.
+      answer: моє
+      options:
+        - моє
+        - моя
+        - мій
+      explanation: Ліжко is neuter.
+    - sentence: Це ___ телефон.
+      answer: мій
+      options:
+        - мій
+        - моя
+        - моє
+      explanation: Телефон is masculine.
+    - sentence: Це ___ ручка.
+      answer: моя
+      options:
+        - моя
+        - мій
+        - моє
+      explanation: Ручка is feminine.
+    - sentence: Це ___ фото.
+      answer: моє
+      options:
+        - моє
+        - моя
+        - мій
+      explanation: Фото is neuter in this lesson.
+- id: act-5
+  type: match-up
+  title: Room and bag words
+  instruction: Match each Ukrainian noun with its English cue.
+  pairs:
+    - left: стіл
+      right: table
+    - left: книга
+      right: book
+    - left: вікно
+      right: window
+    - left: кімната
+      right: room
+    - left: ліжко
+      right: bed
+    - left: телефон
+      right: phone
+    - left: ручка
+      right: pen
+    - left: зошит
+      right: notebook
+- id: act-6
+  type: fill-in
+  title: I have objects
+  instruction: Complete the object sentence.
+  items:
+    - sentence: ___ мене є стіл.
+      answer: У
+      options:
+        - У
+        - Це
+        - Хто
+      explanation: У мене є... is the I-have chunk.
+    - sentence: У мене ___ книга.
+      answer: є
+      options:
+        - є
+        - звати
+        - моя
+      explanation: У мене є... stays as one chunk.
+    - sentence: У ___ є телефон?
+      answer: тебе
+      options:
+        - тебе
+        - мене
+        - мій
+      explanation: У тебе є...? asks one familiar person.
+    - sentence: У мене є ___.
+      answer: вікно
+      options:
+        - вікно
+        - він
+        - моя
+      explanation: Вікно is an object noun after У мене є.
+    - sentence: Де стіл? ___ тут.
+      answer: Він
+      options:
+        - Він
+        - Вона
+        - Воно
+      explanation: Стіл is masculine, so use він.
+    - sentence: Де книга? ___ тут.
+      answer: Вона
+      options:
+        - Вона
+        - Він
+        - Воно
+      explanation: Книга is feminine, so use вона.
+    - sentence: Де вікно? ___ там.
+      answer: Воно
+      options:
+        - Воно
+        - Вона
+        - Він
+      explanation: Вікно is neuter, so use воно.
+- id: act-7
+  type: error-correction
+  title: Fix gender traps
+  instruction: Choose the safer Ukrainian sentence.
+  items:
+    - sentence: Мій книга, мій ручка (якщо говорить чоловік).
+      error: Мій книга, мій ручка (якщо говорить чоловік).
+      correction: Моя книга, моя ручка.
+      options:
+        - Моя книга, моя ручка.
+        - Мій книга, мій ручка.
+      explanation: The possessive follows the nouns книга and ручка, not the speaker.
+    - sentence: Мій книга тут.
+      error: Мій книга тут.
+      correction: Моя книга тут.
+      options:
+        - Моя книга тут.
+        - Мій книга тут.
+      explanation: Книга is feminine, so use моя.
+    - sentence: Мій ручка там.
+      error: Мій ручка там.
+      correction: Моя ручка там.
+      options:
+        - Моя ручка там.
+        - Мій ручка там.
+      explanation: Ручка is feminine, so use моя.
+    - sentence: Де стіл? — Воно там. (Where is the table? — It is there.)
+      error: Де стіл? — Воно там. (Where is the table? — It is there.)
+      correction: Де стіл? — Він там.
+      options:
+        - Де стіл? — Він там.
+        - Де стіл? — Воно там.
+      explanation: Стіл is masculine, so the pronoun is він.
+    - sentence: Це моя тато.
+      error: Це моя тато.
+      correction: Це мій тато.
+      options:
+        - Це мій тато.
+        - Це моя тато.
+      explanation: Тато is masculine.
+    - sentence: Вона Микола.
+      error: Вона Микола.
+      correction: Він Микола.
+      options:
+        - Він Микола.
+        - Вона Микола.
+      explanation: Микола is a masculine name.
+    - sentence: Моя собака дуже гарна.
+      error: Моя собака дуже гарна.
+      correction: Мій собака дуже гарний.
+      options:
+        - Мій собака дуже гарний.
+        - Моя собака дуже гарна.
+      explanation: Собака is masculine in Ukrainian; memorize мій собака.
+    - sentence: Я є студент.
+      error: Я є студент.
+      correction: Я студент.
+      options:
+        - Я студент.
+        - Я є студент.
+      explanation: Present identity normally omits є.
+    - sentence: Моє ім'я є Джон.
+      error: Моє ім'я є Джон.
+      correction: Мене звати Джон.
+      options:
+        - Мене звати Джон.
+        - Моє ім'я є Джон.
+      explanation: Мене звати... is the safe name chunk.
+- id: act-8
+  type: quiz
+  title: Gender-flip diagnostic
+  instruction: Choose the Ukrainian gender-test word. These are diagnostic props, not new active vocabulary.
+  items:
+    - prompt: Який у мене сильний біль у плечі!
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Біль is masculine in Ukrainian.
+    - prompt: Український степ широкий і вітряний.
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Степ is masculine in Ukrainian.
+    - prompt: Цей розпис на стіні — робота українського художника.
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Розпис is masculine in Ukrainian.
+    - prompt: Давній літопис розповідає про Київську Русь.
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Літопис is masculine in Ukrainian.
+    - prompt: "Книжне / урочисте: у далеку путь."
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+      explanation: Путь is feminine in this diagnostic expression.
+- id: act-9
+  type: quiz
+  title: Profession forms
+  instruction: Choose the natural profession form.
+  items:
+    - prompt: She is a teacher.
+      options:
+        - text: Вона вчителька.
+          correct: true
+        - text: Вона вчитель.
+          correct: false
+        - text: Воно вчителька.
+          correct: false
+      explanation: Use the feminine profession form for a woman.
+    - prompt: She is a doctor.
+      options:
+        - text: Вона лікарка.
+          correct: true
+        - text: Вона лікар.
+          correct: false
+        - text: Він лікарка.
+          correct: false
+      explanation: Лікарка is the feminine form.
+    - prompt: He is a student.
+      options:
+        - text: Він студент.
+          correct: true
+        - text: Він студентка.
+          correct: false
+        - text: Вона студент.
+          correct: false
+      explanation: Студент is the masculine form.
+    - prompt: She is an actor.
+      options:
+        - text: Вона акторка.
+          correct: true
+        - text: Вона актор.
+          correct: false
+        - text: Воно акторка.
+          correct: false
+      explanation: Акторка is the feminine profession form.

@@ -1,0 +1,128 @@
+- word: перевірка
+  translation: checkpoint; check
+  pos: noun
+  example: "Це перевірка спілкування."
+- word: спілкування
+  translation: communication
+  pos: noun
+  example: "Спілкування важливе."
+- word: друзі
+  translation: friends
+  pos: noun
+  example: "Друзі, добрий день!"
+- word: Олено
+  translation: Olena, addressed
+  pos: name in vocative
+  example: "Олено, допоможи."
+- word: Тарасе
+  translation: Taras, addressed
+  pos: name in vocative
+  example: "Тарасе, постав стіл."
+- word: Маріє
+  translation: Mariia, addressed
+  pos: name in vocative
+  example: "Маріє, принеси листівки."
+- word: друже
+  translation: friend, addressed
+  pos: noun in vocative
+  example: "Друже, допоможи."
+- word: принеси
+  translation: bring
+  pos: imperative
+  example: "Принеси листівки."
+- word: постав
+  translation: put; set up
+  pos: imperative
+  example: "Постав стіл."
+- word: напиши
+  translation: write
+  pos: imperative
+  example: "Напиши привітання."
+- word: допоможи
+  translation: help
+  pos: imperative
+  example: "Допоможи мені."
+- word: дайте
+  translation: give, polite/plural
+  pos: imperative
+  example: "Дайте маркер, будь ласка."
+- word: заходьте
+  translation: come in, polite/plural
+  pos: imperative
+  example: "Друзі, заходьте."
+- word: будь ласка
+  translation: please
+  pos: phrase
+  example: "Допоможи, будь ласка."
+- word: листівка
+  translation: greeting card
+  pos: noun
+  example: "Я пишу листівку."
+- word: маркер
+  translation: marker
+  pos: noun
+  example: "Я беру маркер."
+- word: плакат
+  translation: poster
+  pos: noun
+  example: "Олена несе плакат."
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "У нас є квитки."
+- word: напій
+  translation: drink
+  pos: noun
+  example: "На столі є напої."
+- word: стіл
+  translation: table
+  pos: noun
+  example: "Стіл біля вікна."
+- word: стілець
+  translation: chair
+  pos: noun
+  example: "Де стільці?"
+- word: ярмарок
+  translation: fair
+  pos: noun
+  example: "Це шкільний ярмарок."
+- word: привітання
+  translation: greeting
+  pos: noun
+  example: "Напиши привітання."
+- word: готово
+  translation: ready
+  pos: adverb
+  example: "Все готово."
+- word: зайнятий
+  translation: busy
+  pos: adjective
+  example: "Я зайнятий."
+- word: де
+  translation: where
+  pos: connector
+  example: "Я знаю, де маркери."
+- word: що
+  translation: what; that
+  pos: connector
+  example: "Я думаю, що все готово."
+- word: коли
+  translation: when
+  pos: connector
+  example: "Скажи, коли зустріч."
+- word: З Новим роком
+  translation: Happy New Year
+  pos: greeting
+  example: "З Новим роком!"
+- word: З Різдвом Христовим
+  translation: Merry Christmas
+  pos: greeting
+  example: "З Різдвом Христовим!"
+- word: З Великоднем
+  translation: Happy Easter
+  pos: greeting
+  example: "З Великоднем!"
+- word: З Днем Незалежності України
+  translation: Happy Independence Day of Ukraine
+  pos: greeting
+  example: "З Днем Незалежності України!"

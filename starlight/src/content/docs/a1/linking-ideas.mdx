@@ -1,0 +1,433 @@
+---
+title: "Зв'язок думок"
+description: "І, а, але, бо — як поєднувати свої думки"
+sidebar:
+  order: 44
+  label: "44. Зв'язок думок"
+pipeline: linear-phase-4
+build_status: validated
+prev: please-do-this
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+You already know how to greet, call a person, and ask for action. Now you can
+make your Ukrainian sound less like separate flashcards and more like one clear
+thought.
+
+Use short linking words:
+
+- **і / й / та** - and, adding one more thing;
+- **а** - and/but, comparing two people or facts;
+- **але** - but, a stronger contrast;
+- **або / чи** - or, a choice;
+- **бо / тому що** - because, a reason.
+
+By the end, you can say:
+
+- **Я люблю каву і чай.** - I like coffee and tea.
+- **Я хочу каву, а ти?** - I want coffee, and you?
+- **Я хочу, але не можу.** - I want to, but I cannot.
+- **Я не йду, бо я хворий.** - I am not going because I am sick.
+- **Я вчу українську, тому що люблю Україну.** - I study Ukrainian because I
+  love Ukraine.
+
+This is not a syntax lecture. Treat each connector as a practical tool for one
+A1 sentence.
+
+:::tip[One simple habit]
+Put a comma before **а**, **але**, **бо**, and **тому що** when they link two
+parts of a thought: **Я працюю, а брат навчається.**
+:::
+
+### Pick the connector
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я читаю ___ пишу.", "answer": "і", "options": ["і", "але", "бо"]}, {"sentence": "Я хочу каву, ___ ти?", "answer": "а", "options": ["а", "і", "бо"]}, {"sentence": "Я хочу, ___ не можу.", "answer": "але", "options": ["але", "і", "чи"]}, {"sentence": "Я не йду, ___ я хворий.", "answer": "бо", "options": ["бо", "а", "або"]}, {"sentence": "Мама ___ тато вдома.", "answer": "й", "options": ["й", "але", "тому що"]}, {"sentence": "Хліб ___ масло на столі.", "answer": "та", "options": ["та", "бо", "а"]}, {"sentence": "Кава ___ чай?", "answer": "або", "options": ["або", "але", "тому що"]}, {"sentence": "Ви студент ___ лікар?", "answer": "чи", "options": ["чи", "бо", "та"]}]`)} />
+
+## Діалоги
+
+### У кафе
+
+<DialogueBox uk="Олена: Ти хочеш каву чи чай?" en="Olena: Do you want coffee or tea?" />
+<DialogueBox uk="Тарас: Каву, бо я дуже втомлений." en="Taras: Coffee, because I am very tired." />
+<DialogueBox uk="Олена: А я хочу чай, але без цукру." en="Olena: And I want tea, but without sugar." />
+<DialogueBox uk="Тарас: Ходімо в кафе, і я візьму ще тістечко." en="Taras: Let's go to a cafe, and I will take a cake too." />
+<DialogueBox uk="Олена: Я теж хочу, але я на дієті." en="Olena: I want one too, but I am on a diet." />
+<DialogueBox uk="Тарас: Добре, тоді кава і чай." en="Taras: All right, then coffee and tea." />
+
+Notice the job of each connector:
+
+- **чи** offers a choice: coffee or tea;
+- **бо** answers **чому?**;
+- **а** compares two people: you want coffee, I want tea;
+- **але** shows a limit or contrast;
+- **і** simply adds one more action or item.
+
+### Про день
+
+<DialogueBox uk="Андрій: Що ти робила сьогодні?" en="Andrii: What did you do today?" />
+<DialogueBox uk="Марія: Я працювала, а потім ходила в магазин." en="Mariia: I worked, and then I went to the store." />
+<DialogueBox uk="Андрій: Я хотів зателефонувати, але ти не відповідала." en="Andrii: I wanted to call, but you did not answer." />
+<DialogueBox uk="Марія: Вибач, бо телефон був без звуку." en="Mariia: Sorry, because the phone was on silent." />
+<DialogueBox uk="Андрій: Нічого. Завтра я вільний, і ми можемо зустрітися." en="Andrii: No problem. Tomorrow I am free, and we can meet." />
+<DialogueBox uk="Марія: Добре. Я знаю кафе, і воно близько." en="Mariia: Good. I know a cafe, and it is close." />
+
+In a daily story, connectors make the order of thoughts easy to follow:
+**працювала, а потім ходила**; **хотів, але ти не відповідала**; **вільний, і
+ми можемо зустрітися**.
+
+### Відпустка: Карпати чи море?
+
+<DialogueBox uk="Іван: Куди поїдемо у відпустку: в Карпати чи на море?" en="Ivan: Where shall we go on vacation: to the Carpathians or to the sea?" />
+<DialogueBox uk="Леся: Гори гарні, але далеко." en="Lesia: The mountains are beautiful, but far away." />
+<DialogueBox uk="Іван: Море тепле, бо літо." en="Ivan: The sea is warm because it is summer." />
+<DialogueBox uk="Леся: Я хочу в гори, а ти - на море?" en="Lesia: I want to go to the mountains, and you to the sea?" />
+<DialogueBox uk="Іван: Поїдемо в Карпати, бо там дешевше." en="Ivan: Let's go to the Carpathians because it is cheaper there." />
+<DialogueBox uk="Леся: Добре. Карпати і море - це дві хороші ідеї, але зараз оберімо Карпати." en="Lesia: Good. The Carpathians and the sea are two good ideas, but now let us choose the Carpathians." />
+
+This dialogue uses the plan scene. Keep the sentence work simple:
+**Карпати чи море?** **Гори гарні, але далеко.** **Море тепле, бо літо.**
+
+### What does it do?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я люблю каву і чай.", "options": [{"text": "adds one more thing", "correct": true}, {"text": "gives a reason", "correct": false}, {"text": "shows a strong contrast", "correct": false}], "explanation": "І adds tea to coffee."}, {"question": "Я працюю, а брат навчається.", "options": [{"text": "compares two facts", "correct": true}, {"text": "asks for a reason", "correct": false}, {"text": "makes a list only", "correct": false}], "explanation": "А places two facts next to each other."}, {"question": "Я хочу, але не можу.", "options": [{"text": "shows contrast", "correct": true}, {"text": "offers a choice", "correct": false}, {"text": "adds one more item", "correct": false}], "explanation": "Але turns the meaning."}, {"question": "Я вдома, бо я хворий.", "options": [{"text": "gives a reason", "correct": true}, {"text": "makes a choice", "correct": false}, {"text": "names two people", "correct": false}], "explanation": "Бо answers чому?"}, {"question": "Ти хочеш каву чи чай?", "options": [{"text": "offers a choice in a question", "correct": true}, {"text": "shows a contrast", "correct": false}, {"text": "means therefore", "correct": false}], "explanation": "Чи is useful in choice questions."}, {"question": "Ми вдома, тому що йде дощ.", "options": [{"text": "gives a reason", "correct": true}, {"text": "starts a list", "correct": false}, {"text": "means and", "correct": false}], "explanation": "Тому що means because."}]`)} />
+
+## Сполучники
+
+**Сполучник** is the school word for a connector. At A1, you do not need to
+sort a whole grammar system. You need to know what each little word does in a
+real sentence.
+
+> Для поєднання однорідних членів речення та рівноправних частин
+> складного речення послуговуємося сполучниками сурядності: Скрізь
+> добре, а вдома найліпше (нар. тв.).
+> Для зв'язку залежної частини складного речення з головною -
+> сполучниками підрядності.
+> — Авраменко Grade 7, p.175
+
+That school reference explains the larger grammar category. Your active A1 task
+is smaller: use the connector to add, compare, choose, or give a reason.
+
+| Connector | Use | A1 example |
+| --- | --- | --- |
+| **і** | add | **Я читаю і пишу.** |
+| **й** | add, often after a vowel for sound | **Мама й тато вдома.** |
+| **та** | add; later also can mean **але** | **Хліб та масло на столі.** |
+| **а** | compare or shift | **Я студент, а вона лікарка.** |
+| **але** | contrast | **Я хочу піцу, але вона дорога.** |
+| **або** | choice | **Кава або чай?** |
+| **чи** | choice, especially in questions | **Ви студент чи лікар?** |
+
+### Add one more thing: і, й, та
+
+Use **і** for the basic "and":
+
+- **Я читаю і пишу.**
+- **У мене є яблука і банани.**
+- **Олена і Тарас у кафе.**
+
+Use **й** when it makes the line smoother, especially near vowels:
+
+- **Мама й тато вдома.**
+- **Олена й Андрій друзі.**
+
+Use **та** like a slightly more written or neat **і**:
+
+- **Батько та мати вдома.**
+- **Хліб та масло на столі.**
+- **Карпати та море - дві ідеї.**
+
+For A1 production, **та** mostly means **і**. Just recognize that later you may
+see **та** with a contrast meaning, close to **але**. Do not turn that into a
+new rule today.
+
+### Compare: а
+
+Use **а** when two people, choices, or facts stand next to each other:
+
+- **Я хочу каву, а ти?**
+- **Я працюю, а брат навчається.**
+- **Олена читає, а Тарас пише.**
+- **Я люблю гори, а вона любить море.**
+
+This is often not as strong as English "but." Think "and as for..." or "while."
+The comma before **а** is part of the writing habit.
+
+### Contrast: але
+
+Use **але** when the second part changes or limits the first part:
+
+- **Я хочу, але не можу.**
+- **Море тепле, але далеко.**
+- **Кава добра, але дорога.**
+- **Він молодий, але розумний.**
+
+The comma before **але** is also a writing habit. You do not need to name the
+sentence type. You only need to see the turn in meaning.
+
+### Choose: або, чи
+
+Use **або** for a simple choice:
+
+- **Кава або чай?**
+- **Сьогодні або завтра?**
+- **Ми їдемо в Карпати або на море.**
+
+Use **чи** often in questions:
+
+- **Ти студент чи лікар?**
+- **Ви хочете каву чи чай?**
+- **Це питання чи відповідь?**
+
+The larger school category calls **або** and **чи** **розділові сполучники**.
+For now, do not overexplain the difference. If you are offering a choice in a
+question, **чи** is a very useful word.
+
+### Reason answers
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я вчу українську, ___ люблю Україну.", "answer": "бо", "options": ["бо", "а", "але"]}, {"sentence": "Ми не гуляємо, ___ йде дощ.", "answer": "тому що", "options": ["тому що", "чи", "і"]}, {"sentence": "Олена читає, ___ має іспит.", "answer": "бо", "options": ["бо", "або", "та"]}, {"sentence": "Я вдома, ___ я хворий.", "answer": "тому що", "options": ["тому що", "а", "чи"]}, {"sentence": "Марко купує воду, ___ хоче пити.", "answer": "бо", "options": ["бо", "але", "й"]}, {"sentence": "Вони чекають, ___ автобус спізнюється.", "answer": "тому що", "options": ["тому що", "або", "та"]}]`)} />
+
+### Connector shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"add": ["і", "й", "та"], "compare or contrast": ["а", "але", "проте", "зате"], "choice": ["або", "чи"], "reason": ["бо", "тому що"], "recognize later": ["щоб", "якщо", "коли", "поки", "відколи"]}`)} />
+
+## Бо і тому що
+
+When someone asks **чому?**, Ukrainian has two very useful answers:
+
+- **бо** - short and natural in speech;
+- **тому що** - a little longer and also very common.
+
+Both are good Ukrainian. **Бо** is not wrong or careless. It is a normal,
+high-frequency way to give a reason.
+
+### Бо
+
+Use **бо** for a short reason:
+
+- **Я не йду, бо я хворий.**
+- **Я втомлений, бо багато працював.**
+- **Ми не гуляємо, бо йде дощ.**
+- **Я вчу українську, бо люблю Україну.**
+
+The reason comes after **бо**. In writing, put a comma before **бо**.
+
+### Тому що
+
+Use **тому що** for the same reason function:
+
+- **Я не йду, тому що я хворий.**
+- **Ми не гуляємо, тому що йде дощ.**
+- **Марія читає, тому що має іспит.**
+- **Я вважаю, що це правильно, тому що відповідь проста.**
+
+Here **тому що** means "because." The word **тому** alone can mean "therefore"
+or "that is why":
+
+- **Йде дощ, тому ми вдома.** - It is raining; therefore we are at home.
+- **Ми вдома, тому що йде дощ.** - We are at home because it is raining.
+
+Keep this contrast practical. Do not build long written arguments yet.
+
+### Щоб, проте, зате: recognition only
+
+You will also see forms to recognize:
+
+- **щоб** is written together when it means purpose: **Я хочу, щоб ти прийшов.**
+- **що б** can be two separate words in another structure. At A1, just do not
+  split **щоб** in a purpose sentence.
+- **проте**, **зате**, and **однак** often work like a more written **але**.
+- **якщо**, **коли**, **поки**, and **відколи** belong to later sentence work.
+
+Long connectors such as **у зв'язку з тим що**, **з тієї причини що**, and
+**незважаючи на те що** are outside this early module. You may see them later;
+do not use them as A1 production targets.
+
+### Build connected sentences
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / читаю / і / пишу", "answer": "Я читаю і пишу."}, {"jumbled": "Я / хочу / каву / а / ти", "answer": "Я хочу каву, а ти?"}, {"jumbled": "Гори / гарні / але / далеко", "answer": "Гори гарні, але далеко."}, {"jumbled": "Море / тепле / бо / літо", "answer": "Море тепле, бо літо."}, {"jumbled": "Ви / студент / чи / лікар", "answer": "Ви студент чи лікар?"}, {"jumbled": "Ми / вдома / тому / що / йде / дощ", "answer": "Ми вдома, тому що йде дощ."}]`)} />
+
+<span id="підсумок"></span>
+
+## 📋 Підсумок
+
+Use this A1 map:
+
+| Meaning | Connector | Example |
+| --- | --- | --- |
+| add | **і / й / та** | **Я читаю і пишу.** |
+| compare | **а** | **Я працюю, а брат навчається.** |
+| contrast | **але** | **Я хочу, але не можу.** |
+| choose | **або / чи** | **Кава або чай? Ти студент чи лікар?** |
+| reason | **бо / тому що** | **Я не йду, бо хворий.** |
+
+Comma habit:
+
+- comma before **а**: **Я працюю, а брат навчається.**
+- comma before **але**: **Я хочу, але не можу.**
+- comma before **бо**: **Я вдома, бо я хворий.**
+- comma before **тому що**: **Я вдома, тому що йде дощ.**
+- no comma in a simple list with one **і**: **яблука, банани і груші**.
+
+### Common repairs
+
+| Learner sentence | Better Ukrainian |
+| --- | --- |
+| <del>**Він вивчає українську, тому що це є цікаво.**</del> | **Він вивчає українську, тому що це цікаво.** |
+| <del>**Я не прийшов, що я захворів.**</del> | **Я не прийшов, бо я захворів.** |
+| <del>**Я поважаю його за те що він дуже сміливий.**</del> | **Я поважаю його за те, що він дуже сміливий.** |
+| <del>**Я працюю а мій брат навчається в університеті.**</del> | **Я працюю, а мій брат навчається в університеті.** |
+| <del>**Він дуже хоче що б ми всі прийшли.**</del> | **Він дуже хоче, щоб ми всі прийшли.** |
+| <del>**Добрий день, я маю 20 років, і я студент.**</del> | **Добрий день, мені 20 років, і я студент.** |
+| <del>**Я купив яблука і банани і груші.**</del> | **Я купив яблука, банани і груші.** |
+
+The first repair keeps the Ukrainian present tense clean: do not copy "is" into
+**це цікаво**. The second repair uses **бо** or **тому що** for a reason, not a
+general **що**. The comma repairs build the writing habit before the learner
+needs formal syntax.
+
+Keep the decolonized language habit too. Do not use Russian as a shortcut, and
+do not copy banned forms into Ukrainian. For these connector habits, that means:
+
+- use **бо**, **тому що**, or later **оскільки**, not <del>**так як**</del>;
+- use **Добрий день**, not <del>**Здрастуйте**</del>;
+- use **До побачення** when saying goodbye, not <del>**пока**</del>;
+- say **Київ**, **гривня**, and **синьо-жовтий стяг** when those words appear.
+
+Next module asks when and where something happens. These connectors prepare you
+to make a sentence that is not only correct, but connected:
+**Я вдома, бо йде дощ, а завтра ми зустрінемося.**
+
+<span id="repair-linking-ideas-interference"></span>
+
+### Ремонти
+
+Use this mini-checklist when English sentence habits push too hard:
+
+| Check | Repair |
+| --- | --- |
+| Did I copy **is**? | **це цікаво**, not <del>**це є цікаво**</del> |
+| Did I use **що** for "because"? | **бо** or **тому що** |
+| Did I forget a comma before **а**, **але**, **бо**, **тому що**? | Add the comma. |
+| Did I split **щоб** in a purpose sentence? | Write **щоб** together. |
+| Did I repeat **і** in a list? | Use commas, then one final **і**. |
+
+### Repair linking interference
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "<del>Він вивчає українську, тому що це є цікаво.</del>", "right": "Він вивчає українську, тому що це цікаво."}, {"left": "<del>Я не прийшов, що я захворів.</del>", "right": "Я не прийшов, бо я захворів. (або тому що)"}, {"left": "<del>Я поважаю його за те що він дуже сміливий. (написання разом)</del>", "right": "Я поважаю його за те, що він дуже сміливий."}, {"left": "<del>Я працюю а мій брат навчається в університеті. (без коми)</del>", "right": "Я працюю, а мій брат навчається в університеті."}, {"left": "<del>Він дуже хоче що б ми всі прийшли.</del>", "right": "Він дуже хоче, щоб ми всі прийшли."}, {"left": "<del>Добрий день, я маю 20 років, і я студент.</del>", "right": "Добрий день, мені 20 років, і я студент."}, {"left": "<del>Я купив яблука і банани і груші.</del>", "right": "Я купив яблука, банани і груші."}]`)} />
+
+### Connector checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "І, й, and та can add one more item or action.", "isTrue": true, "explanation": "They are useful A1 and-forms."}, {"statement": "А often compares two people, facts, or choices.", "isTrue": true, "explanation": "Я працюю, а брат навчається is a comparison."}, {"statement": "Але gives a stronger contrast than simple addition.", "isTrue": true, "explanation": "Але turns or limits the first part."}, {"statement": "Бо is wrong Ukrainian and should be avoided.", "isTrue": false, "explanation": "Бо is normal Ukrainian for giving a reason."}, {"statement": "Тому що answers чому?", "isTrue": true, "explanation": "Тому що means because."}, {"statement": "Use що alone to mean because in A1 Ukrainian.", "isTrue": false, "explanation": "Use бо or тому що for a reason."}, {"statement": "The active target is full formal syntax theory.", "isTrue": false, "explanation": "The active target is practical sentence linking."}, {"statement": "In a simple list, яблука, банани і груші is a good pattern.", "isTrue": true, "explanation": "Use commas, then one final і."}]`)} />
+
+### Fix the linked sentence
+
+<ErrorCorrection client:only='react' instruction="Correct the connector, comma, or copied structure." items={JSON.parse(`[{"sentence": "Він вивчає українську, тому що це є цікаво.", "errorWord": "є", "correctForm": "", "options": [], "explanation": "Do not copy present-tense is into це цікаво."}, {"sentence": "Я не прийшов, що я захворів.", "errorWord": "що", "correctForm": "бо", "options": [], "explanation": "Use бо or тому що for a reason."}, {"sentence": "Я поважаю його за те що він дуже сміливий.", "errorWord": "за те що", "correctForm": "за те, що", "options": [], "explanation": "Write за те separately and add the comma before що."}, {"sentence": "Я працюю а мій брат навчається в університеті.", "errorWord": "працюю а", "correctForm": "працюю, а", "options": [], "explanation": "Add the comma before а."}, {"sentence": "Він дуже хоче що б ми всі прийшли.", "errorWord": "що б", "correctForm": "щоб", "options": [], "explanation": "Use щоб together in this purpose sentence, with a comma before it in the full repair."}, {"sentence": "Добрий день, я маю 20 років, і я студент.", "errorWord": "я маю 20 років", "correctForm": "мені 20 років", "options": [], "explanation": "Use мені 20 років for age."}, {"sentence": "Я купив яблука і банани і груші.", "errorWord": "яблука і банани і груші", "correctForm": "яблука, банани і груші", "options": [], "explanation": "Use commas for the list, then one final і."}, {"sentence": "Я вдома бо я хворий.", "errorWord": "вдома бо", "correctForm": "вдома, бо", "options": [], "explanation": "Add the comma before бо."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"сполучник","translation":"conjunction; connector","pos":"noun","example":"І - це сполучник.","examples":["conjunction; connector","І - це сполучник."]},{"word":"і","translation":"and","pos":"conjunction","example":"Я читаю і пишу.","examples":["and","Я читаю і пишу."]},{"word":"й","translation":"and; smooth variant of і","pos":"conjunction","example":"Мама й тато вдома.","examples":["and; smooth variant of і","Мама й тато вдома."]},{"word":"та","translation":"and; sometimes but later","pos":"conjunction","example":"Хліб та масло на столі.","examples":["and; sometimes but later","Хліб та масло на столі."]},{"word":"а","translation":"and; but; while","pos":"conjunction","example":"Я хочу каву, а ти?","examples":["and; but; while","Я хочу каву, а ти?"]},{"word":"але","translation":"but","pos":"conjunction","example":"Я хочу, але не можу.","examples":["but","Я хочу, але не можу."]},{"word":"або","translation":"or","pos":"conjunction","example":"Кава або чай?","examples":["or","Кава або чай?"]},{"word":"чи","translation":"or; whether","pos":"conjunction","example":"Ви студент чи лікар?","examples":["or; whether","Ви студент чи лікар?"]},{"word":"бо","translation":"because","pos":"conjunction","example":"Я не йду, бо я хворий.","examples":["because","Я не йду, бо я хворий."]},{"word":"тому що","translation":"because","pos":"conjunction","example":"Ми вдома, тому що йде дощ.","examples":["because","Ми вдома, тому що йде дощ."]},{"word":"тому","translation":"therefore; that is why","pos":"adverb","example":"Йде дощ, тому ми вдома.","examples":["therefore; that is why","Йде дощ, тому ми вдома."]},{"word":"чому","translation":"why","pos":"adverb","example":"Чому ти вдома?","examples":["why","Чому ти вдома?"]},{"word":"також","translation":"also","pos":"adverb","example":"Я також хочу чай.","examples":["also","Я також хочу чай."]},{"word":"теж","translation":"also; too","pos":"adverb","example":"Я теж хочу.","examples":["also; too","Я теж хочу."]},{"word":"проте","translation":"however; but","pos":"conjunction","example":"Ми втомилися, проте не запізнилися.","examples":["however; but","Ми втомилися, проте не запізнилися."]},{"word":"зате","translation":"but; on the other hand","pos":"conjunction","example":"Далеко, зате красиво.","examples":["but; on the other hand","Далеко, зате красиво."]},{"word":"однак","translation":"however","pos":"conjunction","example":"Це цікаво, однак складно.","examples":["however","Це цікаво, однак складно."]},{"word":"щоб","translation":"so that; in order to","pos":"conjunction","example":"Я хочу, щоб ти прийшов.","examples":["so that; in order to","Я хочу, щоб ти прийшов."]},{"word":"якщо","translation":"if","pos":"conjunction","example":"Якщо буде час, я прийду.","examples":["if","Якщо буде час, я прийду."]},{"word":"коли","translation":"when","pos":"conjunction","example":"Коли ти вдома?","examples":["when","Коли ти вдома?"]},{"word":"поки","translation":"while; until","pos":"conjunction","example":"Почекай, поки я пишу.","examples":["while; until","Почекай, поки я пишу."]},{"word":"відколи","translation":"since when","pos":"conjunction","example":"Відколи ти тут?","examples":["since when","Відколи ти тут?"]},{"word":"причина","translation":"reason; cause","pos":"noun","example":"Я знаю причину.","examples":["reason; cause","Я знаю причину."]},{"word":"думка","translation":"thought; opinion","pos":"noun","example":"Це моя думка.","examples":["thought; opinion","Це моя думка."]},{"word":"питання","translation":"question","pos":"noun","example":"Це просте питання.","examples":["question","Це просте питання."]},{"word":"відповідь","translation":"answer","pos":"noun","example":"Це правильна відповідь.","examples":["answer","Це правильна відповідь."]},{"word":"думати","translation":"to think","pos":"verb","example":"Я думаю про відповідь.","examples":["to think","Я думаю про відповідь."]},{"word":"знати","translation":"to know","pos":"verb","example":"Я знаю це слово.","examples":["to know","Я знаю це слово."]},{"word":"вважати","translation":"to consider; to think","pos":"verb","example":"Я вважаю, що це правильно.","examples":["to consider; to think","Я вважаю, що це правильно."]},{"word":"правильно","translation":"correctly; right","pos":"adverb","example":"Це правильно.","examples":["correctly; right","Це правильно."]},{"word":"неправильно","translation":"incorrectly; wrong","pos":"adverb","example":"Це неправильно.","examples":["incorrectly; wrong","Це неправильно."]},{"word":"Карпати","translation":"the Carpathians","pos":"proper noun","example":"Ми їдемо в Карпати.","examples":["the Carpathians","Ми їдемо в Карпати."]},{"word":"море","translation":"sea","pos":"noun","example":"Море тепле.","examples":["sea","Море тепле."]},{"word":"гори","translation":"mountains","pos":"noun","example":"Гори гарні.","examples":["mountains","Гори гарні."]},{"word":"відпустка","translation":"vacation","pos":"noun","example":"Відпустка в Карпатах.","examples":["vacation","Відпустка в Карпатах."]},{"word":"тістечко","translation":"small cake; pastry","pos":"noun","example":"Я хочу тістечко.","examples":["small cake; pastry","Я хочу тістечко."]},{"word":"дієта","translation":"diet","pos":"noun","example":"Я на дієті.","examples":["diet","Я на дієті."]},{"word":"без цукру","translation":"without sugar","pos":"phrase","example":"Чай без цукру.","examples":["without sugar","Чай без цукру."]},{"word":"дешевше","translation":"cheaper","pos":"adverb","example":"Там дешевше.","examples":["cheaper","Там дешевше."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"сполучник","back":"conjunction; connector"},{"front":"і","back":"and"},{"front":"й","back":"and; smooth variant of і"},{"front":"та","back":"and; sometimes but later"},{"front":"а","back":"and; but; while"},{"front":"але","back":"but"},{"front":"або","back":"or"},{"front":"чи","back":"or; whether"},{"front":"бо","back":"because"},{"front":"тому що","back":"because"},{"front":"тому","back":"therefore; that is why"},{"front":"чому","back":"why"},{"front":"також","back":"also"},{"front":"теж","back":"also; too"},{"front":"проте","back":"however; but"},{"front":"зате","back":"but; on the other hand"},{"front":"однак","back":"however"},{"front":"щоб","back":"so that; in order to"},{"front":"якщо","back":"if"},{"front":"коли","back":"when"},{"front":"поки","back":"while; until"},{"front":"відколи","back":"since when"},{"front":"причина","back":"reason; cause"},{"front":"думка","back":"thought; opinion"},{"front":"питання","back":"question"},{"front":"відповідь","back":"answer"},{"front":"думати","back":"to think"},{"front":"знати","back":"to know"},{"front":"вважати","back":"to consider; to think"},{"front":"правильно","back":"correctly; right"},{"front":"неправильно","back":"incorrectly; wrong"},{"front":"Карпати","back":"the Carpathians"},{"front":"море","back":"sea"},{"front":"гори","back":"mountains"},{"front":"відпустка","back":"vacation"},{"front":"тістечко","back":"small cake; pastry"},{"front":"дієта","back":"diet"},{"front":"без цукру","back":"without sugar"},{"front":"дешевше","back":"cheaper"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Pick the connector
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я читаю ___ пишу.", "answer": "і", "options": ["і", "але", "бо"]}, {"sentence": "Я хочу каву, ___ ти?", "answer": "а", "options": ["а", "і", "бо"]}, {"sentence": "Я хочу, ___ не можу.", "answer": "але", "options": ["але", "і", "чи"]}, {"sentence": "Я не йду, ___ я хворий.", "answer": "бо", "options": ["бо", "а", "або"]}, {"sentence": "Мама ___ тато вдома.", "answer": "й", "options": ["й", "але", "тому що"]}, {"sentence": "Хліб ___ масло на столі.", "answer": "та", "options": ["та", "бо", "а"]}, {"sentence": "Кава ___ чай?", "answer": "або", "options": ["або", "але", "тому що"]}, {"sentence": "Ви студент ___ лікар?", "answer": "чи", "options": ["чи", "бо", "та"]}]`)} />
+
+### What does it do?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я люблю каву і чай.", "options": [{"text": "adds one more thing", "correct": true}, {"text": "gives a reason", "correct": false}, {"text": "shows a strong contrast", "correct": false}], "explanation": "І adds tea to coffee."}, {"question": "Я працюю, а брат навчається.", "options": [{"text": "compares two facts", "correct": true}, {"text": "asks for a reason", "correct": false}, {"text": "makes a list only", "correct": false}], "explanation": "А places two facts next to each other."}, {"question": "Я хочу, але не можу.", "options": [{"text": "shows contrast", "correct": true}, {"text": "offers a choice", "correct": false}, {"text": "adds one more item", "correct": false}], "explanation": "Але turns the meaning."}, {"question": "Я вдома, бо я хворий.", "options": [{"text": "gives a reason", "correct": true}, {"text": "makes a choice", "correct": false}, {"text": "names two people", "correct": false}], "explanation": "Бо answers чому?"}, {"question": "Ти хочеш каву чи чай?", "options": [{"text": "offers a choice in a question", "correct": true}, {"text": "shows a contrast", "correct": false}, {"text": "means therefore", "correct": false}], "explanation": "Чи is useful in choice questions."}, {"question": "Ми вдома, тому що йде дощ.", "options": [{"text": "gives a reason", "correct": true}, {"text": "starts a list", "correct": false}, {"text": "means and", "correct": false}], "explanation": "Тому що means because."}]`)} />
+
+### Reason answers
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я вчу українську, ___ люблю Україну.", "answer": "бо", "options": ["бо", "а", "але"]}, {"sentence": "Ми не гуляємо, ___ йде дощ.", "answer": "тому що", "options": ["тому що", "чи", "і"]}, {"sentence": "Олена читає, ___ має іспит.", "answer": "бо", "options": ["бо", "або", "та"]}, {"sentence": "Я вдома, ___ я хворий.", "answer": "тому що", "options": ["тому що", "а", "чи"]}, {"sentence": "Марко купує воду, ___ хоче пити.", "answer": "бо", "options": ["бо", "але", "й"]}, {"sentence": "Вони чекають, ___ автобус спізнюється.", "answer": "тому що", "options": ["тому що", "або", "та"]}]`)} />
+
+### Connector shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"add": ["і", "й", "та"], "compare or contrast": ["а", "але", "проте", "зате"], "choice": ["або", "чи"], "reason": ["бо", "тому що"], "recognize later": ["щоб", "якщо", "коли", "поки", "відколи"]}`)} />
+
+### Build connected sentences
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / читаю / і / пишу", "answer": "Я читаю і пишу."}, {"jumbled": "Я / хочу / каву / а / ти", "answer": "Я хочу каву, а ти?"}, {"jumbled": "Гори / гарні / але / далеко", "answer": "Гори гарні, але далеко."}, {"jumbled": "Море / тепле / бо / літо", "answer": "Море тепле, бо літо."}, {"jumbled": "Ви / студент / чи / лікар", "answer": "Ви студент чи лікар?"}, {"jumbled": "Ми / вдома / тому / що / йде / дощ", "answer": "Ми вдома, тому що йде дощ."}]`)} />
+
+### Repair linking interference
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Він вивчає українську, тому що це є цікаво.", "right": "Він вивчає українську, тому що це цікаво."}, {"left": "Я не прийшов, що я захворів.", "right": "Я не прийшов, бо я захворів. (або тому що)"}, {"left": "Я поважаю його за те що він дуже сміливий. (написання разом)", "right": "Я поважаю його за те, що він дуже сміливий."}, {"left": "Я працюю а мій брат навчається в університеті. (без коми)", "right": "Я працюю, а мій брат навчається в університеті."}, {"left": "Він дуже хоче що б ми всі прийшли.", "right": "Він дуже хоче, щоб ми всі прийшли."}, {"left": "Добрий день, я маю 20 років, і я студент.", "right": "Добрий день, мені 20 років, і я студент."}, {"left": "Я купив яблука і банани і груші.", "right": "Я купив яблука, банани і груші."}]`)} />
+
+### Connector checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "І, й, and та can add one more item or action.", "isTrue": true, "explanation": "They are useful A1 and-forms."}, {"statement": "А often compares two people, facts, or choices.", "isTrue": true, "explanation": "Я працюю, а брат навчається is a comparison."}, {"statement": "Але gives a stronger contrast than simple addition.", "isTrue": true, "explanation": "Але turns or limits the first part."}, {"statement": "Бо is wrong Ukrainian and should be avoided.", "isTrue": false, "explanation": "Бо is normal Ukrainian for giving a reason."}, {"statement": "Тому що answers чому?", "isTrue": true, "explanation": "Тому що means because."}, {"statement": "Use що alone to mean because in A1 Ukrainian.", "isTrue": false, "explanation": "Use бо or тому що for a reason."}, {"statement": "The active target is full formal syntax theory.", "isTrue": false, "explanation": "The active target is practical sentence linking."}, {"statement": "In a simple list, яблука, банани і груші is a good pattern.", "isTrue": true, "explanation": "Use commas, then one final і."}]`)} />
+
+### Fix the linked sentence
+
+<ErrorCorrection client:only='react' instruction="Correct the connector, comma, or copied structure." items={JSON.parse(`[{"sentence": "Він вивчає українську, тому що це є цікаво.", "errorWord": "є", "correctForm": "", "options": [], "explanation": "Do not copy present-tense is into це цікаво."}, {"sentence": "Я не прийшов, що я захворів.", "errorWord": "що", "correctForm": "бо", "options": [], "explanation": "Use бо or тому що for a reason."}, {"sentence": "Я поважаю його за те що він дуже сміливий.", "errorWord": "за те що", "correctForm": "за те, що", "options": [], "explanation": "Write за те separately and add the comma before що."}, {"sentence": "Я працюю а мій брат навчається в університеті.", "errorWord": "працюю а", "correctForm": "працюю, а", "options": [], "explanation": "Add the comma before а."}, {"sentence": "Він дуже хоче що б ми всі прийшли.", "errorWord": "що б", "correctForm": "щоб", "options": [], "explanation": "Use щоб together in this purpose sentence, with a comma before it in the full repair."}, {"sentence": "Добрий день, я маю 20 років, і я студент.", "errorWord": "я маю 20 років", "correctForm": "мені 20 років", "options": [], "explanation": "Use мені 20 років for age."}, {"sentence": "Я купив яблука і банани і груші.", "errorWord": "яблука і банани і груші", "correctForm": "яблука, банани і груші", "options": [], "explanation": "Use commas for the list, then one final і."}, {"sentence": "Я вдома бо я хворий.", "errorWord": "вдома бо", "correctForm": "вдома, бо", "options": [], "explanation": "Add the comma before бо."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 **State Standard 2024, §4.3.2** — for basic compound and complex sentence connectors; adapted here as A1 sentence-building only.
+- 🔗 [Ukrainian Lessons: 7 Most Common Ukrainian Conjunctions](https://www.ukrainianlessons.com/ukrainian-conjunctions/) — Learner-facing support for і, й, та, а, але, або, and чи.
+- 🔗 [Ukrainian Lessons: Difference Between тому and тому що](https://www.ukrainianlessons.com/tomu-and-tomu-shcho/) — Support for distinguishing тому from тому що in reason/result sentences.
+- 🔗 [Ukrainian Lessons: Ukrainian Punctuation](https://www.ukrainianlessons.com/ukrainian-punctuation/) — Support for comma habits before contrast and subordinate connectors, adapted here to A1.
+- 🔗 **Wiki: pedagogy/a1/linking-ideas** — Authoritative pedagogical brief for M44 linking ideas, including sequence, L2 repairs, punctuation cautions, and decolonization guidance.
+- 🔗 **Авраменко Grade 7, §80** — for conjunction groups; narrowed to і/й/та, а, але, або/чи, бо, and тому що.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

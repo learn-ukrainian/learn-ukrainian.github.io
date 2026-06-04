@@ -1,0 +1,168 @@
+- word: звідки
+  translation: where from
+  pos: adverb
+  example: "Звідки ти?"
+- word: з
+  translation: from
+  pos: preposition
+  example: "Я з України."
+- word: із
+  translation: from
+  pos: preposition
+  example: "Анна із Торонто."
+- word: зі
+  translation: from
+  pos: preposition
+  example: "Я зі Львова."
+- word: Україна
+  translation: Ukraine
+  pos: proper noun
+  example: "Я з України."
+- word: Київ
+  translation: Kyiv
+  pos: proper noun
+  example: "Марко з Києва."
+- word: Львів
+  translation: Lviv
+  pos: proper noun
+  example: "Олена зі Львова."
+- word: Одеса
+  translation: Odesa
+  pos: proper noun
+  example: "Я з Одеси."
+- word: Харків
+  translation: Kharkiv
+  pos: proper noun
+  example: "Він з Харкова."
+- word: Дніпро
+  translation: Dnipro
+  pos: proper noun
+  example: "Дніпро — велике місто."
+- word: Канада
+  translation: Canada
+  pos: proper noun
+  example: "Анна з Канади."
+- word: США
+  translation: USA
+  pos: proper noun
+  example: "Джон зі США."
+- word: Англія
+  translation: England
+  pos: proper noun
+  example: "Вони з Англії."
+- word: Німеччина
+  translation: Germany
+  pos: proper noun
+  example: "Мій друг з Німеччини."
+- word: Польща
+  translation: Poland
+  pos: proper noun
+  example: "Ми з Польщі."
+- word: Франція
+  translation: France
+  pos: proper noun
+  example: "Марі з Франції."
+- word: Італія
+  translation: Italy
+  pos: proper noun
+  example: "Лука з Італії."
+- word: Японія
+  translation: Japan
+  pos: proper noun
+  example: "Юкі з Японії."
+- word: місто
+  translation: city; town
+  pos: noun
+  example: "Київ — місто."
+- word: країна
+  translation: country
+  pos: noun
+  example: "Україна — країна."
+- word: столиця
+  translation: capital city
+  pos: noun
+  example: "Київ — столиця України."
+- word: вулиця
+  translation: street
+  pos: noun
+  example: "Вулиця Хрещатик у Києві."
+- word: площа
+  translation: square
+  pos: noun
+  example: "Соборна площа в центрі."
+- word: село
+  translation: village
+  pos: noun
+  example: "Це маленьке село."
+- word: адреса
+  translation: address
+  pos: noun
+  example: "Моя адреса в Києві."
+- word: українець
+  translation: Ukrainian man
+  pos: noun
+  example: "Він українець."
+- word: українка
+  translation: Ukrainian woman
+  pos: noun
+  example: "Вона українка."
+- word: киянин
+  translation: man from Kyiv
+  pos: noun
+  example: "Марко киянин."
+- word: киянка
+  translation: woman from Kyiv
+  pos: noun
+  example: "Оксана киянка."
+- word: львів'янин
+  translation: man from Lviv
+  pos: noun
+  example: "Тарас львів'янин."
+- word: львів'янка
+  translation: woman from Lviv
+  pos: noun
+  example: "Олена львів'янка."
+- word: харків'янин
+  translation: man from Kharkiv
+  pos: noun
+  example: "Сергій харків'янин."
+- word: харків'янка
+  translation: woman from Kharkiv
+  pos: noun
+  example: "Ірина харків'янка."
+- word: одесит
+  translation: man from Odesa
+  pos: noun
+  example: "Він одесит."
+- word: одеситка
+  translation: woman from Odesa
+  pos: noun
+  example: "Вона одеситка."
+- word: жити
+  translation: to live
+  pos: verb
+  example: "Я живу в Києві."
+- word: мандрувати
+  translation: to travel
+  pos: verb
+  example: "Ми мандруємо Україною."
+- word: північний
+  translation: northern
+  pos: adjective
+  example: "Це північний район."
+- word: південний
+  translation: southern
+  pos: adjective
+  example: "Одеса — південне місто."
+- word: західний
+  translation: western
+  pos: adjective
+  example: "Львів — західне місто."
+- word: східний
+  translation: eastern
+  pos: adjective
+  example: "Харків — східне місто."
+- word: додому
+  translation: homeward; home
+  pos: adverb
+  example: "Після школи я йду додому."

@@ -1,0 +1,269 @@
+- id: act-1
+  type: quiz
+  title: Де or куди?
+  instruction: Choose the question that matches the sentence.
+  items:
+    - prompt: "Я йду в банк."
+      options:
+        - text: "Куди?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Хто?"
+          correct: false
+      explanation: "Йду shows movement, so ask куди?"
+    - prompt: "Оксана на пошті."
+      options:
+        - text: "Де?"
+          correct: true
+        - text: "Куди?"
+          correct: false
+        - text: "Коли?"
+          correct: false
+      explanation: "На пошті is a static location."
+    - prompt: "Ми їдемо у Львів."
+      options:
+        - text: "Куди?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Що?"
+          correct: false
+      explanation: "Їдемо is movement by transport."
+    - prompt: "Книжка на столі."
+      options:
+        - text: "Де?"
+          correct: true
+        - text: "Куди?"
+          correct: false
+        - text: "Звідки?"
+          correct: false
+      explanation: "На столі answers where the book is."
+    - prompt: "Марко йде до лікаря."
+      options:
+        - text: "Куди?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Який?"
+          correct: false
+      explanation: "До лікаря is a person destination."
+- id: act-2
+  type: fill-in
+  title: Direction chunks
+  instruction: Complete each movement sentence.
+  items:
+    - sentence: "Я йду ___ банк."
+      answer: "у"
+      options:
+        - "у"
+        - "на"
+        - "до"
+      explanation: "The direction chunk is у банк."
+    - sentence: "Олена йде ___ роботу."
+      answer: "на"
+      options:
+        - "на"
+        - "в"
+        - "біля"
+      explanation: "Use на роботу for going to work."
+    - sentence: "Ми йдемо в ___."
+      answer: "аптеку"
+      options:
+        - "аптеку"
+        - "аптеці"
+        - "аптека"
+      explanation: "Куди? changes аптека to аптеку."
+    - sentence: "Степан іде у ___."
+      answer: "бібліотеку"
+      options:
+        - "бібліотеку"
+        - "бібліотеці"
+        - "бібліотека"
+      explanation: "Куди? uses у бібліотеку."
+    - sentence: "Я їду ___ вокзал."
+      answer: "на"
+      options:
+        - "на"
+        - "в"
+        - "у"
+      explanation: "The route chunk is на вокзал."
+    - sentence: "Марко йде ___ лікаря."
+      answer: "до"
+      options:
+        - "до"
+        - "в"
+        - "на"
+      explanation: "A person destination uses до."
+- id: act-3
+  type: group-sort
+  title: Four route shelves
+  instruction: Sort each chunk by what it does.
+  groups:
+    - name: "Static де?"
+      items:
+        - "у школі"
+        - "на роботі"
+        - "у банку"
+        - "на столі"
+    - name: "Direction куди?"
+      items:
+        - "у школу"
+        - "на роботу"
+        - "у банк"
+        - "на вокзал"
+    - name: "To a person"
+      items:
+        - "до лікаря"
+        - "до мами"
+        - "до бабусі"
+        - "до Оксани"
+    - name: "No case ending"
+      items:
+        - "тут"
+        - "там"
+        - "вдома"
+        - "далеко"
+- id: act-4
+  type: match-up
+  title: Static to direction
+  instruction: Match each static place chunk to the movement chunk.
+  pairs:
+    - left: "у школі"
+      right: "у школу"
+    - left: "на роботі"
+      right: "на роботу"
+    - left: "в аптеці"
+      right: "в аптеку"
+    - left: "у бібліотеці"
+      right: "у бібліотеку"
+    - left: "у банку"
+      right: "у банк"
+    - left: "у парку"
+      right: "у парк"
+    - left: "в Одесі"
+      right: "в Одесу"
+    - left: "в Україні"
+      right: "в Україну"
+- id: act-5
+  type: true-false
+  title: Movement guardrails
+  instruction: Decide whether the statement fits the lesson.
+  items:
+    - statement: "Іти usually means going on foot."
+      answer: true
+      explanation: "Use іти for walking or general movement."
+    - statement: "Їхати usually means going by transport."
+      answer: true
+      explanation: "Use їхати when a vehicle is part of the idea."
+    - statement: "Я йду в школу answers куди?"
+      answer: true
+      explanation: "It is movement toward school."
+    - statement: "Я в школі answers куди?"
+      answer: false
+      explanation: "Я в школі answers де?"
+    - statement: "Use до for a person destination."
+      answer: true
+      explanation: "Say до лікаря, до мами, до бабусі."
+    - statement: "Kyiv is the Ukrainian English form for Київ."
+      answer: true
+      explanation: "Use Київ / Kyiv."
+- id: act-6
+  type: order
+  title: Saturday errands
+  instruction: Put the route in a natural order.
+  is_ukrainian: true
+  items:
+    - "Спочатку я йду в банк."
+    - "Потім я йду на пошту."
+    - "Після цього йду в аптеку."
+    - "Потім їду на вокзал."
+    - "Увечері йду до Оксани."
+    - "Нарешті повертаюся додому."
+  correct_order: [0, 1, 2, 3, 4, 5]
+- id: act-7
+  type: odd-one-out
+  title: Find the wrong route
+  instruction: Choose the phrase that does not fit the pattern.
+  items:
+    - words:
+        - "у школу"
+        - "на роботу"
+        - "в аптеку"
+        - "у школі"
+      answer: "у школі"
+      explanation: "The first three answer куди?; у школі answers де?"
+    - words:
+        - "у банку"
+        - "на роботі"
+        - "в аптеці"
+        - "в аптеку"
+      answer: "в аптеку"
+      explanation: "В аптеку is direction; the others are static locations."
+    - words:
+        - "до лікаря"
+        - "до мами"
+        - "до бабусі"
+        - "на лікаря"
+      answer: "на лікаря"
+      explanation: "A person destination uses до."
+    - words:
+        - "в Україну"
+        - "у Львів"
+        - "в Одесу"
+        - "у Києві"
+      answer: "у Києві"
+      explanation: "У Києві is static; the others are directions."
+- id: act-8
+  type: error-correction
+  title: Repair where-to interference
+  instruction: Choose the natural Ukrainian sentence.
+  items:
+    - sentence: "Я йду в школі."
+      error: "в школі"
+      correction: "Я йду в школу."
+      options:
+        - "Я йду в школу."
+        - "Я йду в школі."
+        - "Я йду школа."
+      explanation: "Йду asks куди?, so use в школу."
+    - sentence: "Я живу Київ."
+      error: "живу Київ"
+      correction: "Я живу в Києві. (або у Києві)"
+      options:
+        - "Я живу в Києві. (або у Києві)"
+        - "Я живу Київ."
+        - "Я живу до Києва."
+      explanation: "Жити answers де? and needs в/у plus locative."
+    - sentence: "Я йду в лікаря."
+      error: "в лікаря"
+      correction: "Я йду до лікаря."
+      options:
+        - "Я йду до лікаря."
+        - "Я йду в лікаря."
+        - "Я йду на лікаря."
+      explanation: "Use до for a person destination."
+    - sentence: "Ми були в концерті."
+      error: "в концерті"
+      correction: "Ми були на концерті."
+      options:
+        - "Ми були на концерті."
+        - "Ми були в концерті."
+        - "Ми були до концерту."
+      explanation: "The familiar event chunk is на концерті."
+    - sentence: "Книжка на столу."
+      error: "на столу"
+      correction: "Книжка на столі."
+      options:
+        - "Книжка на столі."
+        - "Книжка на столу."
+        - "Книжка в стіл."
+      explanation: "Static surface location uses на столі."
+    - sentence: "Аптека — в аптекі."
+      error: "в аптекі"
+      correction: "Аптека — в аптеці."
+      options:
+        - "Аптека — в аптеці."
+        - "Аптека — в аптекі."
+        - "Аптека — в аптеку."
+      explanation: "Аптека changes to в аптеці for де?"

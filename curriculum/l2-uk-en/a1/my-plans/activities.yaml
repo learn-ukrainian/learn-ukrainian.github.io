@@ -1,0 +1,284 @@
+- id: act-1
+  type: fill-in
+  title: Build a dated plan
+  instruction: Choose the word that completes the plan.
+  items:
+    - sentence: "У ___ я буду працювати."
+      answer: "понеділок"
+      options:
+        - "понеділок"
+        - "третій"
+        - "шостій"
+      explanation: "У понеділок names the day."
+    - sentence: "У суботу ___ я буду прибирати квартиру."
+      answer: "зранку"
+      options:
+        - "зранку"
+        - "о"
+        - "план"
+      explanation: "Зранку names the part of the day."
+    - sentence: "___ шостій ми будемо дивитися кіно."
+      answer: "О"
+      options:
+        - "О"
+        - "У"
+        - "На"
+      explanation: "Use о with clock time."
+    - sentence: "У неділю він буде ___."
+      answer: "відпочивати"
+      options:
+        - "відпочивати"
+        - "відпочиває"
+        - "відпочивав"
+      explanation: "After буде, use the infinitive."
+    - sentence: "У п'ятницю ввечері буде ___."
+      answer: "вечірка"
+      options:
+        - "вечірка"
+        - "квартира"
+        - "тиждень"
+      explanation: "Вечірка means party."
+- id: act-2
+  type: match-up
+  title: Invitations and answers
+  instruction: Match each invitation with a natural answer.
+  pairs:
+    - left: "Ходімо в кіно!"
+      right: "З задоволенням!"
+    - left: "Давай зустрінемося о п'ятій!"
+      right: "Чудово! До зустрічі!"
+    - left: "Ти будеш вільний у суботу?"
+      right: "На жаль, не можу."
+    - left: "Ходімо в кафе о шостій!"
+      right: "Добре! О шостій."
+    - left: "Ти будеш на вечірці?"
+      right: "Звичайно буду!"
+- id: act-3
+  type: quiz
+  title: Planning pattern
+  instruction: Choose the sentence that stays in the A1 planning pattern.
+  items:
+    - prompt: "Which line gives a day, time, and compound future?"
+      options:
+        - text: "У суботу о третій я буду готувати."
+          correct: true
+        - text: "У суботу о третій я готую вчора."
+          correct: false
+        - text: "У суботу о третій я готував."
+          correct: false
+      explanation: "The plan uses day + time + буду + infinitive."
+    - prompt: "Which invitation reuses the M43 chunk?"
+      options:
+        - text: "Ходімо в кіно!"
+          correct: true
+        - text: "Я буду кіно."
+          correct: false
+        - text: "Кіно буде прибирати."
+          correct: false
+      explanation: "Ходімо is a familiar invitation chunk."
+    - prompt: "Which answer politely refuses?"
+      options:
+        - text: "На жаль, не можу."
+          correct: true
+        - text: "З задоволенням!"
+          correct: false
+        - text: "Звичайно буду!"
+          correct: false
+      explanation: "На жаль, не можу is a polite refusal."
+    - prompt: "Which phrase asks about availability?"
+      options:
+        - text: "Ти будеш вільна у суботу?"
+          correct: true
+        - text: "Ти була вільна учора?"
+          correct: false
+        - text: "Ти вільна о вчора?"
+          correct: false
+      explanation: "Будеш вільна asks about future availability."
+- id: act-4
+  type: group-sort
+  title: Sort planning phrases
+  instruction: Put each phrase into the right planning group.
+  groups:
+    - name: "days"
+      items:
+        - "у понеділок"
+        - "у середу"
+        - "у суботу"
+        - "в неділю"
+    - name: "times"
+      items:
+        - "о третій"
+        - "о п'ятій"
+        - "о шостій"
+        - "ввечері"
+    - name: "invitations"
+      items:
+        - "Ходімо в кіно!"
+        - "Давай зустрінемося!"
+    - name: "answers"
+      items:
+        - "З задоволенням!"
+        - "На жаль, не можу."
+        - "Звичайно буду!"
+- id: act-5
+  type: true-false
+  title: Check the weekly plan
+  instruction: Decide whether each line is a clear A1 plan.
+  items:
+    - statement: "У суботу я буду прибирати квартиру."
+      answer: true
+      explanation: "Буду + прибирати is correct."
+    - statement: "У неділю ми будемо відпочивати."
+      answer: true
+      explanation: "Будемо + відпочивати is correct."
+    - statement: "О шостій ви будете дивитеся кіно."
+      answer: false
+      explanation: "After будете, use дивитися."
+    - statement: "У п'ятницю ввечері буде вечірка."
+      answer: true
+      explanation: "This is a clear scheduled event."
+    - statement: "У середу я буду вчу українську."
+      answer: false
+      explanation: "After буду, use вчити."
+    - statement: "Ти будеш вільний у суботу?"
+      answer: true
+      explanation: "This asks about future availability."
+- id: act-6
+  type: unjumble
+  title: Build planning lines
+  instruction: Put the words in a natural order.
+  items:
+    - words: ["У", "суботу", "я", "буду", "прибирати", "квартиру"]
+      answer: "У суботу я буду прибирати квартиру."
+    - words: ["О", "шостій", "ми", "будемо", "дивитися", "кіно"]
+      answer: "О шостій ми будемо дивитися кіно."
+    - words: ["Ти", "будеш", "вільна", "у", "суботу"]
+      answer: "Ти будеш вільна у суботу?"
+    - words: ["Давай", "зустрінемося", "о", "п'ятій"]
+      answer: "Давай зустрінемося о п'ятій!"
+    - words: ["На", "жаль", "не", "можу"]
+      answer: "На жаль, не можу."
+- id: act-7
+  type: order
+  title: Put the week in order
+  instruction: Arrange the days from Monday to Sunday.
+  items:
+    - "У понеділок я буду працювати."
+    - "У вівторок я буду вчити українську."
+    - "У середу буде зустріч."
+    - "У четвер я буду готувати."
+    - "У п'ятницю буде вечірка."
+    - "У суботу я буду прибирати."
+    - "В неділю я буду відпочивати."
+  correct_order: [0, 1, 2, 3, 4, 5, 6]
+- id: act-8
+  type: fill-in
+  title: Complete the week schedule
+  instruction: Choose the future form or planning phrase.
+  items:
+    - sentence: "У вівторок я ___ українську."
+      answer: "буду вчити"
+      options:
+        - "буду вчити"
+        - "вчив"
+        - "вчу"
+      explanation: "Use буду + infinitive for a future plan."
+    - sentence: "У середу ми ___ вечерю."
+      answer: "будемо готувати"
+      options:
+        - "будемо готувати"
+        - "готували"
+        - "готуємо"
+      explanation: "Use будемо + infinitive."
+    - sentence: "У четвер вона ___ допізна."
+      answer: "буде працювати"
+      options:
+        - "буде працювати"
+        - "працювала"
+        - "працює"
+      explanation: "Use буде + infinitive."
+    - sentence: "___, не можу. У суботу я буду працювати."
+      answer: "На жаль"
+      options:
+        - "На жаль"
+        - "Звичайно"
+        - "З задоволенням"
+      explanation: "На жаль, не можу is a polite refusal."
+- id: act-9
+  type: translate
+  title: Say your plans
+  instruction: Choose the Ukrainian sentence that matches the English prompt.
+  items:
+    - source: "On Saturday I will clean the apartment."
+      options:
+        - text: "У суботу я буду прибирати квартиру."
+          correct: true
+        - text: "У суботу я прибираю вчора."
+          correct: false
+        - text: "У суботу я прибирала учора."
+          correct: false
+      explanation: "Use буду прибирати for a future plan."
+    - source: "At six we will watch a film."
+      options:
+        - text: "О шостій ми будемо дивитися кіно."
+          correct: true
+        - text: "О шостій ми дивилися кіно."
+          correct: false
+        - text: "О шостій ми дивимося учора."
+          correct: false
+      explanation: "Use о шостій + будемо дивитися."
+    - source: "Will you be free on Saturday? (to a female friend)"
+      options:
+        - text: "Ти будеш вільна у суботу?"
+          correct: true
+        - text: "Ти була вільна у суботу?"
+          correct: false
+        - text: "Ти буде вільна у суботу?"
+          correct: false
+      explanation: "Ти takes будеш."
+    - source: "Unfortunately, I cannot."
+      options:
+        - text: "На жаль, не можу."
+          correct: true
+        - text: "З задоволенням!"
+          correct: false
+        - text: "Звичайно буду!"
+          correct: false
+      explanation: "На жаль, не можу is the polite refusal."
+- id: act-10
+  type: error-correction
+  title: Repair plan sentences
+  instruction: Fix the weekly plan by keeping the compound future.
+  items:
+    - sentence: "У суботу я буду прибираю квартиру."
+      error: "прибираю"
+      correction: "прибирати"
+      explanation: "After буду, use the infinitive прибирати."
+    - sentence: "У неділю ми будемо відпочиваємо."
+      error: "відпочиваємо"
+      correction: "відпочивати"
+      explanation: "After будемо, use відпочивати."
+    - sentence: "О шостій ви будете дивитеся кіно."
+      error: "дивитеся"
+      correction: "дивитися"
+      explanation: "After будете, use дивитися."
+    - sentence: "Вони будуть готують на вечірку."
+      error: "готують"
+      correction: "готувати"
+      explanation: "After будуть, use готувати."
+    - sentence: "У середу я буду вчу українську."
+      error: "вчу"
+      correction: "вчити"
+      explanation: "After буду, use вчити."
+    - sentence: "Я буду роблю домашнє завдання."
+      error: "Я буду роблю домашнє завдання."
+      correction: "Я буду робити домашнє завдання."
+      explanation: "After буду, use the infinitive робити."
+    - sentence: "На понеділок я маю урок."
+      error: "На понеділок"
+      correction: "У понеділок"
+      explanation: "Use у with weekdays: у понеділок."
+    - sentence: "На шостій ми будемо дивитися кіно."
+      error: "На шостій"
+      correction: "О шостій"
+      explanation: "Use о with clock time: о шостій."

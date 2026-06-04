@@ -1,0 +1,172 @@
+- word: кличний відмінок
+  translation: vocative case; calling form
+  pos: noun phrase
+  example: "Кличний відмінок допомагає звертатися до людини."
+- word: звертання
+  translation: address; speaking to someone
+  pos: noun
+  example: "Олено - це звертання."
+- word: гей
+  translation: hey
+  pos: interjection
+  example: "Гей, друже!"
+- word: друже
+  translation: friend! (vocative)
+  pos: chunk
+  example: "Привіт, друже!"
+- word: друг
+  translation: male friend
+  pos: noun
+  example: "Це мій друг."
+- word: подруга
+  translation: female friend
+  pos: noun
+  example: "Це моя подруга."
+- word: подруго
+  translation: female friend! (vocative)
+  pos: chunk
+  example: "Подруго, дякую!"
+- word: брат
+  translation: brother
+  pos: noun
+  example: "Це мій брат."
+- word: брате
+  translation: brother! (vocative)
+  pos: chunk
+  example: "Брате, ходімо."
+- word: сестра
+  translation: sister
+  pos: noun
+  example: "Це моя сестра."
+- word: сестро
+  translation: sister! (vocative)
+  pos: chunk
+  example: "Сестро, ходи сюди."
+- word: мама
+  translation: mom
+  pos: noun
+  example: "Це моя мама."
+- word: мамо
+  translation: Mom! (vocative)
+  pos: chunk
+  example: "Мамо, де телефон?"
+- word: тато
+  translation: dad
+  pos: noun
+  example: "Це мій тато."
+- word: тату
+  translation: Dad! (vocative)
+  pos: chunk
+  example: "Тату, я вдома."
+- word: синку
+  translation: son! (vocative)
+  pos: chunk
+  example: "На столі, синку."
+- word: дочко
+  translation: daughter! (vocative)
+  pos: chunk
+  example: "У кишені, дочко."
+- word: бабуся
+  translation: grandmother
+  pos: noun
+  example: "Це моя бабуся."
+- word: бабусю
+  translation: Grandma! (vocative)
+  pos: chunk
+  example: "Бабусю, ми йдемо."
+- word: дідусь
+  translation: grandfather
+  pos: noun
+  example: "Це мій дідусь."
+- word: дідусю
+  translation: Grandpa! (vocative)
+  pos: chunk
+  example: "Дідусю, ми вдома."
+- word: Олена
+  translation: Olena
+  pos: proper noun
+  example: "Олена тут."
+- word: Олено
+  translation: Olena! (vocative)
+  pos: proper noun
+  example: "Олено, привіт!"
+- word: Тарас
+  translation: Taras
+  pos: proper noun
+  example: "Тарас тут."
+- word: Тарасе
+  translation: Taras! (vocative)
+  pos: proper noun
+  example: "Тарасе, ходи сюди."
+- word: Андрій
+  translation: Andrii
+  pos: proper noun
+  example: "Це Андрій."
+- word: Андрію
+  translation: Andrii! (vocative)
+  pos: proper noun
+  example: "Андрію, привіт!"
+- word: Марія
+  translation: Mariia
+  pos: proper noun
+  example: "Це Марія."
+- word: Маріє
+  translation: Mariia! (vocative)
+  pos: proper noun
+  example: "Маріє, дякую."
+- word: Надія
+  translation: Nadiia
+  pos: proper noun
+  example: "Це Надія."
+- word: Надіє
+  translation: Nadiia! (vocative)
+  pos: proper noun
+  example: "Привіт, Надіє!"
+- word: Іван
+  translation: Ivan
+  pos: proper noun
+  example: "Це Іван."
+- word: Іване
+  translation: Ivan! (vocative)
+  pos: proper noun
+  example: "Іване, це моя сестра."
+- word: Сергій
+  translation: Serhii
+  pos: proper noun
+  example: "Це Сергій."
+- word: Сергію
+  translation: Serhii! (vocative)
+  pos: proper noun
+  example: "Сергію, дякую."
+- word: пан
+  translation: Mr.; sir
+  pos: noun
+  example: "Це пан Іван."
+- word: пане
+  translation: Mr.!; sir! (vocative)
+  pos: chunk
+  example: "Добрий день, пане Іване!"
+- word: пані
+  translation: Ms.; Mrs.; ma'am
+  pos: noun
+  example: "Добрий день, пані Оксано."
+- word: вчитель
+  translation: teacher
+  pos: noun
+  example: "Це вчитель."
+- word: вчителю
+  translation: teacher! (vocative)
+  pos: chunk
+  example: "Вчителю, можна питання?"
+- word: прізвище
+  translation: surname
+  pos: noun
+  example: "Яке твоє прізвище?"
+- word: Добрий день
+  translation: Good afternoon; hello
+  pos: chunk
+  example: "Добрий день, пане Іване!"
+- word: До побачення
+  translation: goodbye
+  pos: chunk
+  example: "До побачення, Андрію!"

@@ -1,0 +1,364 @@
+---
+title: "Дієслова другої групи"
+description: "Говорю, говориш, говорить — друга модель"
+sidebar:
+  order: 17
+  label: "17. Дієслова другої групи"
+pipeline: linear-phase-4
+build_status: validated
+prev: verbs-group-one
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Group Two is your second present-tense verb pattern. The clearest beginner
+signal is the **вони** form: Group One often ends in **-ють** or **-уть**,
+while Group Two often ends in **-ять** or **-ать**. Today you will use a few
+safe Group Two verbs, then compare them with the Group One forms from the last
+lesson.
+
+By the end, you can:
+
+- say **Я говорю**, **Ти говориш**, and **Він говорить**;
+- use **робити**, **бачити**, **вчити**, **просити**, and **ходити** in short chunks;
+- recognize **вони говорять**, **вони роблять**, **вони бачать**, and **вони ходять**;
+- compare **І дієвідміна** and **ІІ дієвідміна** by the **вони** ending;
+- keep tricky first-person forms such as **роблю** and **ходжу** as ready chunks;
+- recognize exceptions such as **спати**, **дати**, and **їсти** without making them active grammar yet.
+
+### Group Two warm-up
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I speak Ukrainian.", "options": [{"text": "Я говорю українською.", "correct": true}, {"text": "Я говориш українською.", "correct": false}, {"text": "Я говорити українською.", "correct": false}], "explanation": "Я uses говорю."}, {"question": "You see the word.", "options": [{"text": "Ти бачиш слово.", "correct": true}, {"text": "Ти бачу слово.", "correct": false}, {"text": "Ти бачити слово.", "correct": false}], "explanation": "Ти uses бачиш."}, {"question": "They are doing an exercise.", "options": [{"text": "Вони роблять вправу.", "correct": true}, {"text": "Вони роблять вправа.", "correct": false}, {"text": "Вони робити вправу.", "correct": false}], "explanation": "Вони роблять is the Group Two form."}]`)} />
+
+## Діалоги
+
+Marta and Oleh are still studying. This time they talk about speaking,
+seeing, doing, asking, and walking.
+
+<DialogueBox uk="Марта: Олеже, ти говориш українською?" en="Marta: Oleh, do you speak Ukrainian?" />
+<DialogueBox uk="Олег: Так, я говорю українською." en="Oleh: Yes, I speak Ukrainian." />
+<DialogueBox uk="Марта: Анна говорить англійською?" en="Marta: Does Anna speak English?" />
+<DialogueBox uk="Олег: Так, вона говорить англійською." en="Oleh: Yes, she speaks English." />
+<DialogueBox uk="Марта: Що ти робиш?" en="Marta: What are you doing?" />
+<DialogueBox uk="Олег: Я роблю вправу." en="Oleh: I am doing an exercise." />
+<DialogueBox uk="Марта: Ти бачиш це слово?" en="Marta: Do you see this word?" />
+<DialogueBox uk="Олег: Так, я бачу це слово." en="Oleh: Yes, I see this word." />
+<DialogueBox uk="Марта: Ми вчимо нові форми?" en="Marta: Are we learning new forms?" />
+<DialogueBox uk="Олег: Так, ми вчимо нові форми." en="Oleh: Yes, we are learning new forms." />
+<DialogueBox uk="Марта: Вони ходять до школи?" en="Marta: Do they go to school?" />
+<DialogueBox uk="Олег: Так, вони ходять до школи." en="Oleh: Yes, they go to school." />
+
+:::tip
+Use the **вони** form as your quick check: **читають** points to Group One,
+while **говорять** points to Group Two.
+:::
+
+### Говорити table
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "говорю"}, {"left": "ти", "right": "говориш"}, {"left": "він / вона", "right": "говорить"}, {"left": "ми", "right": "говоримо"}, {"left": "ви", "right": "говорите"}, {"left": "вони", "right": "говорять"}]`)} />
+
+## Друга дієвідміна
+
+The textbook label for this pattern is **друга дієвідміна**, or **ІІ
+дієвідміна**. The Group One label from the previous lesson is **І
+дієвідміна**. At A1, do not memorize every rule behind those labels. Use the
+visible forms.
+
+| Quick test | Group One | Group Two |
+| --- | --- | --- |
+| they read / speak | **вони читають** | **вони говорять** |
+| they listen / do | **вони слухають** | **вони роблять** |
+| they walk / see | **вони гуляють** | **вони бачать** |
+
+Group Two often has **и** in **ти** and **ми** forms: **говориш**,
+**говоримо**, **робиш**, **робимо**. This Ukrainian vowel **[и]** belongs to
+the Ukrainian sound map. For the **українського голосного звука [и]**, listen
+inside the **закінченнях -иш, -имо**: **говориш**, **говоримо**, **робиш**,
+**робимо**. Build the sound from Ukrainian examples, then connect it to the
+written ending.
+
+Here is the anchor verb **говорити**:
+
+| Person | Form | Safe sentence |
+| --- | --- | --- |
+| я | **говорю** | **Я говорю українською.** |
+| ти | **говориш** | **Ти говориш українською?** |
+| він/вона | **говорить** | **Вона говорить.** |
+| ми | **говоримо** | **Ми говоримо повільно.** |
+| ви | **говорите** | **Ви говорите?** |
+| вони | **говорять** | **Вони говорять українською.** |
+
+The most important active contrast today is small:
+
+- **читати** -> **ти читаєш**, **вони читають**;
+- **говорити** -> **ти говориш**, **вони говорять**;
+- **робити** -> **ти робиш**, **вони роблять**.
+
+> II дієвідміна.
+> Особові закінчення: -у (-ю), -иш (-їш), -ить, -іть (-їть), -имо, -імо (їмо), -ите (-їте), -ать (-ять): спішу, спішиш, спішить, спішимо, спішите, спішать. В основі наявні суфікси -а-, -и-, -і-(-ї-) (що випадають в особових формах).
+
+*— Караман Grade 10, p.179*
+
+That source note is for orientation only. Your active verbs are **говорити**,
+**робити**, **бачити**, **вчити**, **просити**, and **ходити**.
+
+### Говорити, робити, бачити
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить"]}, {"sentence": "Ти ___ українською?", "answer": "говориш", "options": ["говориш", "говорю", "говоримо"]}, {"sentence": "Він ___.", "answer": "говорить", "options": ["говорить", "говорите", "говорять"]}, {"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Ти ___ слово?", "answer": "бачиш", "options": ["бачиш", "бачу", "бачить"]}, {"sentence": "Вони ___ слово.", "answer": "бачать", "options": ["бачать", "бачиш", "бачу"]}]`)} />
+
+### Говорити, робити, бачити
+
+Use these three verbs first.
+
+| Infinitive | I | you | he/she | they |
+| --- | --- | --- | --- | --- |
+| **говорити** | **говорю** | **говориш** | **говорить** | **говорять** |
+| **робити** | **роблю** | **робиш** | **робить** | **роблять** |
+| **бачити** | **бачу** | **бачиш** | **бачить** | **бачать** |
+
+The **я** form can change inside the word. Do not calculate it today. Learn a
+`готовий чанк`: **я роблю**, **я ходжу**, **я прошу**, **я сиджу**, **я бачу**.
+Then use the simple **ти** and **він/вона** forms:
+
+<DialogueBox uk="Я роблю вправу." en="I am doing an exercise." />
+<DialogueBox uk="Ти робиш вправу?" en="Are you doing an exercise?" />
+<DialogueBox uk="Він робить вправу." en="He is doing an exercise." />
+<DialogueBox uk="Я бачу слово." en="I see a word." />
+<DialogueBox uk="Ти бачиш слово?" en="Do you see a word?" />
+
+When you write your own line, choose one verb and one useful object. Keep the
+object familiar:
+
+| Verb chunk | Add this | Sentence |
+| --- | --- | --- |
+| **я роблю** | **вправу** | **Я роблю вправу.** |
+| **я бачу** | **слово** | **Я бачу слово.** |
+| **я прошу** | **каву** | **Я прошу каву.** |
+| **я ходжу** | **до школи** | **Я ходжу до школи.** |
+
+This is enough for real speech. You do not need to explain why **робити**
+gives **роблю** before you can use **Я роблю вправу**.
+
+### Group One or Group Two
+
+<GroupSort client:only='react' groups={JSON.parse(`{"І дієвідміна / Group One": ["читають", "слухають", "гуляють"], "ІІ дієвідміна / Group Two": ["говорять", "роблять", "бачать", "ходять", "стоять", "сидять"]}`)} />
+
+## Група I чи II?
+
+Use the **вони** ending when you need a fast comparison.
+
+| Infinitive | They form | Group |
+| --- | --- | --- |
+| **читати** | **вони читають** | Group One |
+| **слухати** | **вони слухають** | Group One |
+| **говорити** | **вони говорять** | Group Two |
+| **робити** | **вони роблять** | Group Two |
+| **бачити** | **вони бачать** | Group Two |
+| **ходити** | **вони ходять** | Group Two |
+| **стояти** | **вони стоять** | Group Two |
+| **сидіти** | **вони сидять** | Group Two |
+
+**Стояти** and **сидіти** are useful but slightly tricky, so keep them in
+short present-tense chunks:
+
+<DialogueBox uk="Він стоїть." en="He is standing." />
+<DialogueBox uk="Вона сидить." en="She is sitting." />
+<DialogueBox uk="Вони стоять." en="They are standing." />
+<DialogueBox uk="Вони сидять." en="They are sitting." />
+
+### Ready я chunks
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Я ___ до школи.", "answer": "ходжу", "options": ["ходжу", "ходиш", "ходить"]}, {"sentence": "Я ___ каву.", "answer": "прошу", "options": ["прошу", "просиш", "просить"]}, {"sentence": "Я ___ тут.", "answer": "сиджу", "options": ["сиджу", "сидиш", "сидить"]}]`)} />
+
+### More useful Group Two chunks
+
+Use these in small sentences:
+
+| Infinitive | I | you | he/she | we | they |
+| --- | --- | --- | --- | --- | --- |
+| **вчити** | **вчу** | **вчиш** | **вчить** | **вчимо** | **вчать** |
+| **просити** | **прошу** | **просиш** | **просить** | **просимо** | **просять** |
+| **ходити** | **ходжу** | **ходиш** | **ходить** | **ходимо** | **ходять** |
+| **любити** | **люблю** | **любиш** | **любить** | **любимо** | **люблять** |
+
+You already know **любити** from preferences. Now you can recognize why
+**ти любиш** and **вони люблять** fit the Group Two pattern.
+
+<DialogueBox uk="Я ходжу до школи." en="I go to school." />
+<DialogueBox uk="Ти просиш каву?" en="Are you asking for coffee?" />
+<DialogueBox uk="Ми вчимо українську." en="We are learning Ukrainian." />
+<DialogueBox uk="Вони люблять музику." en="They like music." />
+
+### Recognition-only forms
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "They sleep.", "options": [{"text": "Вони сплять.", "correct": true}, {"text": "Вони спати.", "correct": false}, {"text": "Вони спить.", "correct": false}], "explanation": "Recognize вони сплять."}, {"question": "You eat.", "options": [{"text": "Ти їси.", "correct": true}, {"text": "Ти їсть.", "correct": false}, {"text": "Ти їдять.", "correct": false}], "explanation": "Recognize ти їси."}, {"question": "They eat.", "options": [{"text": "Вони їдять.", "correct": true}, {"text": "Вони їси.", "correct": false}, {"text": "Вони їсть.", "correct": false}], "explanation": "Recognize вони їдять."}]`)} />
+
+### Recognition-only exceptions
+
+Some verbs are common but irregular enough to wait. Recognize these, but do
+not build full tables today:
+
+| Infinitive | Recognition form |
+| --- | --- |
+| **спати** | **вони сплять** |
+| **бігти** | later verb |
+| **боятися** | later verb |
+| **дати** | **я дам** |
+| **їсти** | **ти їси**, **вони їдять** |
+
+If you see **я сплю**, answer only the one line you know. Do not invent the
+whole table yet.
+
+The recognition-only list protects your active practice. You can understand
+**вони сплять** or **ти їси** when you meet them, but your speaking task stays
+with the regular Group Two chunks above. This keeps the lesson useful without
+turning every exception into a table.
+
+<span id="group-two-repairs"></span>
+
+### Repair Group Two traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Вони робуть", "errorWord": "Вони робуть", "correctForm": "Вони роблять", "options": ["Вони роблять", "Вони працюють", "Вони читають"], "explanation": "Робити uses вони роблять."}, {"sentence": "Ти бачеш", "errorWord": "Ти бачеш", "correctForm": "Ти бачиш", "options": ["Ти бачиш", "Ти говориш", "Ти робиш"], "explanation": "Group Two uses бачиш."}, {"sentence": "Я сидю", "errorWord": "Я сидю", "correctForm": "Я сиджу", "options": ["Я сиджу", "Я ходжу", "Я бачу"], "explanation": "Learn я сиджу as a ready chunk."}, {"sentence": "Він стоє", "errorWord": "Він стоє", "correctForm": "Він стоїть", "options": ["Він стоїть", "Він сидить", "Він говорить"], "explanation": "Стояти gives він стоїть."}, {"sentence": "Я сплю, ти сплєш", "errorWord": "Я сплю, ти сплєш", "correctForm": "Я сплю, ти спиш", "options": ["Я сплю, ти спиш", "Я сплю, ти їси", "Я сплю, ти сидиш"], "explanation": "Recognize ти спиш; do not invent the form."}, {"sentence": "Я є студент", "errorWord": "Я є студент", "correctForm": "Я студент", "options": ["Я студент", "Я вчитель", "Я Томас"], "explanation": "Ukrainian can use Я студент without є."}, {"sentence": "Моє ім'я є Томас", "errorWord": "Моє ім'я є Томас", "correctForm": "Мене звати Томас", "options": ["Мене звати Томас", "Я студент Томас", "Це Томас"], "explanation": "Use Мене звати for names."}, {"sentence": "Я маю 20 років", "errorWord": "Я маю 20 років", "correctForm": "Мені 20 років", "options": ["Мені 20 років", "Я студент 20 років", "Це 20 років"], "explanation": "Use Мені plus age."}]`)} />
+
+## 📋 Підсумок
+
+Keep three ideas separate.
+
+| Job | Tool | Example |
+| --- | --- | --- |
+| speak or ask about language | **говорити** | **Я говорю українською.** |
+| do an exercise | **робити** | **Я роблю вправу.** |
+| see a word | **бачити** | **Я бачу слово.** |
+| compare groups | **вони** ending | **читають** vs **говорять** |
+
+Build a short answer:
+
+1. **Я говорю українською.**
+2. **Я роблю вправу.**
+3. **Я бачу це слово.**
+4. **Ти бачиш це слово?**
+5. **Ми вчимо українську.**
+6. **Вони ходять до школи.**
+
+Repair the common traps by choosing the ready Ukrainian form:
+
+| Watch for | Use |
+| --- | --- |
+| Group One ending on **робити** | **Вони роблять.** |
+| **е** where Group Two needs **и** | **Ти бачиш.** |
+| invented **я** form | **Я сиджу.** |
+| old identity pattern | **Я студент.** |
+| English-style name phrase | **Мене звати Томас.** |
+| English-style age phrase | **Мені 20 років.** |
+
+### Mini conversation
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти говориш українською?", "options": [{"text": "Так, я говорю українською.", "correct": true}, {"text": "Так, я говориш українською.", "correct": false}, {"text": "Так, я говорити українською.", "correct": false}], "explanation": "Я говорю."}, {"question": "Що ти робиш?", "options": [{"text": "Я роблю вправу.", "correct": true}, {"text": "Я робиш вправу.", "correct": false}, {"text": "Я робити вправу.", "correct": false}], "explanation": "Я роблю is the safe answer."}, {"question": "Ти бачиш це слово?", "options": [{"text": "Так, я бачу це слово.", "correct": true}, {"text": "Так, я бачиш це слово.", "correct": false}, {"text": "Так, я бачити це слово.", "correct": false}], "explanation": "Я бачу."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"говорити","translation":"to speak; to talk","pos":"infinitive","example":"Я говорю українською.","examples":["to speak; to talk","Я говорю українською."]},{"word":"говорю","translation":"I speak","pos":"verb form","example":"Я говорю українською.","examples":["I speak","Я говорю українською."]},{"word":"говориш","translation":"you speak","pos":"verb form","example":"Ти говориш українською?","examples":["you speak","Ти говориш українською?"]},{"word":"говорить","translation":"he/she speaks","pos":"verb form","example":"Вона говорить.","examples":["he/she speaks","Вона говорить."]},{"word":"говорять","translation":"they speak","pos":"verb form","example":"Вони говорять українською.","examples":["they speak","Вони говорять українською."]},{"word":"робити","translation":"to do; to make","pos":"infinitive","example":"Я роблю вправу.","examples":["to do; to make","Я роблю вправу."]},{"word":"роблю","translation":"I do; I make","pos":"verb form","example":"Я роблю вправу.","examples":["I do; I make","Я роблю вправу."]},{"word":"робиш","translation":"you do","pos":"verb form","example":"Ти робиш вправу?","examples":["you do","Ти робиш вправу?"]},{"word":"роблять","translation":"they do","pos":"verb form","example":"Вони роблять вправу.","examples":["they do","Вони роблять вправу."]},{"word":"бачити","translation":"to see","pos":"infinitive","example":"Я бачу слово.","examples":["to see","Я бачу слово."]},{"word":"бачу","translation":"I see","pos":"verb form","example":"Я бачу це слово.","examples":["I see","Я бачу це слово."]},{"word":"бачиш","translation":"you see","pos":"verb form","example":"Ти бачиш це слово?","examples":["you see","Ти бачиш це слово?"]},{"word":"бачать","translation":"they see","pos":"verb form","example":"Вони бачать слово.","examples":["they see","Вони бачать слово."]},{"word":"вчити","translation":"to learn; to teach","pos":"infinitive","example":"Ми вчимо українську.","examples":["to learn; to teach","Ми вчимо українську."]},{"word":"вчу","translation":"I learn","pos":"verb form","example":"Я вчу українську.","examples":["I learn","Я вчу українську."]},{"word":"просити","translation":"to ask for","pos":"infinitive","example":"Ти просиш каву?","examples":["to ask for","Ти просиш каву?"]},{"word":"прошу","translation":"I ask for","pos":"verb form","example":"Я прошу каву.","examples":["I ask for","Я прошу каву."]},{"word":"ходити","translation":"to go regularly; to walk","pos":"infinitive","example":"Я ходжу до школи.","examples":["to go regularly; to walk","Я ходжу до школи."]},{"word":"ходжу","translation":"I go","pos":"verb form","example":"Я ходжу до школи.","examples":["I go","Я ходжу до школи."]},{"word":"ходять","translation":"they go","pos":"verb form","example":"Вони ходять до школи.","examples":["they go","Вони ходять до школи."]},{"word":"стояти","translation":"to stand","pos":"infinitive","example":"Він стоїть.","examples":["to stand","Він стоїть."]},{"word":"стоїть","translation":"he/she stands","pos":"verb form","example":"Він стоїть.","examples":["he/she stands","Він стоїть."]},{"word":"сидіти","translation":"to sit","pos":"infinitive","example":"Я сиджу.","examples":["to sit","Я сиджу."]},{"word":"сиджу","translation":"I sit","pos":"verb form","example":"Я сиджу тут.","examples":["I sit","Я сиджу тут."]},{"word":"спати","translation":"to sleep","pos":"infinitive","example":"Вони сплять.","examples":["to sleep","Вони сплять."]},{"word":"їсти","translation":"to eat","pos":"infinitive","example":"Ти їси.","examples":["to eat","Ти їси."]},{"word":"дати","translation":"to give","pos":"infinitive","example":"Я дам.","examples":["to give","Я дам."]},{"word":"трохи","translation":"a little","pos":"adverb","example":"Я трохи говорю.","examples":["a little","Я трохи говорю."]},{"word":"добре","translation":"well","pos":"adverb","example":"Ти добре говориш.","examples":["well","Ти добре говориш."]},{"word":"увечері","translation":"in the evening","pos":"adverb","example":"Увечері вони ходять до школи.","examples":["in the evening","Увечері вони ходять до школи."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"говорити","back":"to speak; to talk"},{"front":"говорю","back":"I speak"},{"front":"говориш","back":"you speak"},{"front":"говорить","back":"he/she speaks"},{"front":"говорять","back":"they speak"},{"front":"робити","back":"to do; to make"},{"front":"роблю","back":"I do; I make"},{"front":"робиш","back":"you do"},{"front":"роблять","back":"they do"},{"front":"бачити","back":"to see"},{"front":"бачу","back":"I see"},{"front":"бачиш","back":"you see"},{"front":"бачать","back":"they see"},{"front":"вчити","back":"to learn; to teach"},{"front":"вчу","back":"I learn"},{"front":"просити","back":"to ask for"},{"front":"прошу","back":"I ask for"},{"front":"ходити","back":"to go regularly; to walk"},{"front":"ходжу","back":"I go"},{"front":"ходять","back":"they go"},{"front":"стояти","back":"to stand"},{"front":"стоїть","back":"he/she stands"},{"front":"сидіти","back":"to sit"},{"front":"сиджу","back":"I sit"},{"front":"спати","back":"to sleep"},{"front":"їсти","back":"to eat"},{"front":"дати","back":"to give"},{"front":"трохи","back":"a little"},{"front":"добре","back":"well"},{"front":"увечері","back":"in the evening"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Group Two warm-up
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I speak Ukrainian.", "options": [{"text": "Я говорю українською.", "correct": true}, {"text": "Я говориш українською.", "correct": false}, {"text": "Я говорити українською.", "correct": false}], "explanation": "Я uses говорю."}, {"question": "You see the word.", "options": [{"text": "Ти бачиш слово.", "correct": true}, {"text": "Ти бачу слово.", "correct": false}, {"text": "Ти бачити слово.", "correct": false}], "explanation": "Ти uses бачиш."}, {"question": "They are doing an exercise.", "options": [{"text": "Вони роблять вправу.", "correct": true}, {"text": "Вони роблять вправа.", "correct": false}, {"text": "Вони робити вправу.", "correct": false}], "explanation": "Вони роблять is the Group Two form."}]`)} />
+
+### Говорити table
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "говорю"}, {"left": "ти", "right": "говориш"}, {"left": "він / вона", "right": "говорить"}, {"left": "ми", "right": "говоримо"}, {"left": "ви", "right": "говорите"}, {"left": "вони", "right": "говорять"}]`)} />
+
+### Говорити, робити, бачити
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить"]}, {"sentence": "Ти ___ українською?", "answer": "говориш", "options": ["говориш", "говорю", "говоримо"]}, {"sentence": "Він ___.", "answer": "говорить", "options": ["говорить", "говорите", "говорять"]}, {"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Ти ___ слово?", "answer": "бачиш", "options": ["бачиш", "бачу", "бачить"]}, {"sentence": "Вони ___ слово.", "answer": "бачать", "options": ["бачать", "бачиш", "бачу"]}]`)} />
+
+### Group One or Group Two
+
+<GroupSort client:only='react' groups={JSON.parse(`{"І дієвідміна / Group One": ["читають", "слухають", "гуляють"], "ІІ дієвідміна / Group Two": ["говорять", "роблять", "бачать", "ходять", "стоять", "сидять"]}`)} />
+
+### Ready я chunks
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Я ___ до школи.", "answer": "ходжу", "options": ["ходжу", "ходиш", "ходить"]}, {"sentence": "Я ___ каву.", "answer": "прошу", "options": ["прошу", "просиш", "просить"]}, {"sentence": "Я ___ тут.", "answer": "сиджу", "options": ["сиджу", "сидиш", "сидить"]}]`)} />
+
+### Recognition-only forms
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "They sleep.", "options": [{"text": "Вони сплять.", "correct": true}, {"text": "Вони спати.", "correct": false}, {"text": "Вони спить.", "correct": false}], "explanation": "Recognize вони сплять."}, {"question": "You eat.", "options": [{"text": "Ти їси.", "correct": true}, {"text": "Ти їсть.", "correct": false}, {"text": "Ти їдять.", "correct": false}], "explanation": "Recognize ти їси."}, {"question": "They eat.", "options": [{"text": "Вони їдять.", "correct": true}, {"text": "Вони їси.", "correct": false}, {"text": "Вони їсть.", "correct": false}], "explanation": "Recognize вони їдять."}]`)} />
+
+<span id="group-two-repairs"></span>
+
+### Repair Group Two traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Вони робуть", "errorWord": "Вони робуть", "correctForm": "Вони роблять", "options": ["Вони роблять", "Вони працюють", "Вони читають"], "explanation": "Робити uses вони роблять."}, {"sentence": "Ти бачеш", "errorWord": "Ти бачеш", "correctForm": "Ти бачиш", "options": ["Ти бачиш", "Ти говориш", "Ти робиш"], "explanation": "Group Two uses бачиш."}, {"sentence": "Я сидю", "errorWord": "Я сидю", "correctForm": "Я сиджу", "options": ["Я сиджу", "Я ходжу", "Я бачу"], "explanation": "Learn я сиджу as a ready chunk."}, {"sentence": "Він стоє", "errorWord": "Він стоє", "correctForm": "Він стоїть", "options": ["Він стоїть", "Він сидить", "Він говорить"], "explanation": "Стояти gives він стоїть."}, {"sentence": "Я сплю, ти сплєш", "errorWord": "Я сплю, ти сплєш", "correctForm": "Я сплю, ти спиш", "options": ["Я сплю, ти спиш", "Я сплю, ти їси", "Я сплю, ти сидиш"], "explanation": "Recognize ти спиш; do not invent the form."}, {"sentence": "Я є студент", "errorWord": "Я є студент", "correctForm": "Я студент", "options": ["Я студент", "Я вчитель", "Я Томас"], "explanation": "Ukrainian can use Я студент without є."}, {"sentence": "Моє ім'я є Томас", "errorWord": "Моє ім'я є Томас", "correctForm": "Мене звати Томас", "options": ["Мене звати Томас", "Я студент Томас", "Це Томас"], "explanation": "Use Мене звати for names."}, {"sentence": "Я маю 20 років", "errorWord": "Я маю 20 років", "correctForm": "Мені 20 років", "options": ["Мені 20 років", "Я студент 20 років", "Це 20 років"], "explanation": "Use Мені plus age."}]`)} />
+
+### Mini conversation
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти говориш українською?", "options": [{"text": "Так, я говорю українською.", "correct": true}, {"text": "Так, я говориш українською.", "correct": false}, {"text": "Так, я говорити українською.", "correct": false}], "explanation": "Я говорю."}, {"question": "Що ти робиш?", "options": [{"text": "Я роблю вправу.", "correct": true}, {"text": "Я робиш вправу.", "correct": false}, {"text": "Я робити вправу.", "correct": false}], "explanation": "Я роблю is the safe answer."}, {"question": "Ти бачиш це слово?", "options": [{"text": "Так, я бачу це слово.", "correct": true}, {"text": "Так, я бачиш це слово.", "correct": false}, {"text": "Так, я бачити це слово.", "correct": false}], "explanation": "Я бачу."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Ukrainian Tenses: Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Optional overview for learners who want to place present tense in the larger tense system.
+
+**🎧 Audio:**
+- 🎧 [ULP 1-24 | Present Tense: Group Two Verbs](https://www.ukrainianlessons.com/episode24/) — Learner-safe follow-up for Group Two present-tense verbs.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

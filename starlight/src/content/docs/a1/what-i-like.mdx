@@ -1,0 +1,329 @@
+---
+title: "Що я люблю"
+description: "Я люблю читати — ваші перші дієслова"
+sidebar:
+  order: 15
+  label: "15. Що я люблю"
+pipeline: linear-phase-4
+build_status: validated
+prev: checkpoint-my-world
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Here are two safe ways to talk about preferences. Use **Я люблю + an action
+word** when you like doing something, and use **Мені подобається + a thing**
+when a thing is pleasing to you. You do not need a case table yet. You need a
+few useful chunks that let you ask, answer, and say one small personal
+sentence.
+
+By the end, you can:
+
+- say what you like doing with **Я люблю читати**;
+- recognize the infinitive shape **-ти** in action words;
+- ask **Що ти любиш робити?** and answer with one or two actions;
+- say whether a thing is pleasing with **Мені подобається...**;
+- make a simple negative sentence with **не**;
+- avoid common preference traps such as **Я люблю малюю** and **Я подобається це**.
+
+### Preference warm-up
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to read.", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Я люблю читаю.", "correct": false}, {"text": "Я подобається читати.", "correct": false}], "explanation": "Use Я люблю plus the -ти action word."}, {"question": "I like music.", "options": [{"text": "Мені подобається музика.", "correct": true}, {"text": "Я подобається музика.", "correct": false}, {"text": "Мені подобається музику.", "correct": false}], "explanation": "Мені подобається is the safe chunk for liking a thing."}, {"question": "Do you like to cook?", "options": [{"text": "Ти любиш готувати?", "correct": true}, {"text": "Ти любиш готуєш?", "correct": false}, {"text": "Тобі любиш готувати?", "correct": false}], "explanation": "The question keeps любиш plus an infinitive."}]`)} />
+
+## Діалоги
+
+At a language exchange, Anna and Viktor are having tea. The sentences stay
+small, but they already sound like a real first conversation about interests.
+
+<DialogueBox uk="Анна: Добрий день, Вікторе!" en="Anna: Good afternoon, Viktor!" />
+<DialogueBox uk="Віктор: Добрий день, Анно!" en="Viktor: Good afternoon, Anna!" />
+<DialogueBox uk="Анна: Що ти любиш робити?" en="Anna: What do you like to do?" />
+<DialogueBox uk="Віктор: Я люблю читати." en="Viktor: I like to read." />
+<DialogueBox uk="Анна: А ти любиш слухати музику?" en="Anna: And do you like to listen to music?" />
+<DialogueBox uk="Віктор: Так, я люблю слухати музику." en="Viktor: Yes, I like to listen to music." />
+<DialogueBox uk="Віктор: А ти?" en="Viktor: And you?" />
+<DialogueBox uk="Анна: Я люблю малювати і гуляти." en="Anna: I like to draw and walk." />
+
+Now the same people talk about things, not actions.
+
+<DialogueBox uk="Анна: Тобі подобається ця книга?" en="Anna: Do you like this book?" />
+<DialogueBox uk="Віктор: Так, мені подобається ця книга." en="Viktor: Yes, I like this book." />
+<DialogueBox uk="Анна: А цей фільм?" en="Anna: And this film?" />
+<DialogueBox uk="Віктор: Ні, мені не подобається цей фільм." en="Viktor: No, I do not like this film." />
+<DialogueBox uk="Віктор: Мені подобається музика." en="Viktor: I like music." />
+<DialogueBox uk="Анна: Мені теж." en="Anna: Me too." />
+
+The question **Що ти любиш робити?** is your main tool. The short answer
+**А ти?** keeps the conversation moving without a new grammar rule. You can
+also hear other people: **ти любиш**, **він любить**, **вона любить**, **ми
+любимо**, **ви любите**, **вони люблять**. For now, use **я люблю** and **ти
+любиш** actively; recognize the rest.
+
+:::tip
+**Добрий день!** is a safe formal greeting for this kind of first
+conversation.
+:::
+
+### Infinitive actions
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "читати", "right": "to read"}, {"left": "гуляти", "right": "to walk"}, {"left": "готувати", "right": "to cook"}, {"left": "слухати", "right": "to listen"}, {"left": "дивитися", "right": "to watch"}, {"left": "грати", "right": "to play"}, {"left": "малювати", "right": "to draw"}, {"left": "співати", "right": "to sing"}]`)} />
+
+## Я люблю...
+
+Use **Я люблю + infinitive** for actions. In Ukrainian grammar terms, this is
+**Я люблю + інфінітив**. An infinitive is the dictionary shape of an action
+word. Your active infinitives here end in **-ти**:
+
+| English | Ukrainian action word | Safe sentence |
+| --- | --- | --- |
+| to read | **читати** | **Я люблю читати.** |
+| to walk | **гуляти** | **Я люблю гуляти.** |
+| to cook | **готувати** | **Я люблю готувати.** |
+| to listen | **слухати** | **Я люблю слухати музику.** |
+| to watch | **дивитися** | **Я люблю дивитися фільм.** |
+| to play | **грати** | **Я люблю грати.** |
+| to draw | **малювати** | **Я люблю малювати.** |
+
+Do not change the second verb. English may say "I like reading" or "I like to
+read." Ukrainian gives you one safe A1 habit:
+
+**Я люблю читати.** = I like to read.
+
+The action word stays in the **-ти** form. That protects you from a common
+trap: **Я люблю малюю** is not the pattern. Use **Я люблю малювати**.
+
+You can also put a thing after **люблю**, but keep this very small today.
+Grammar books call this **Я люблю + іменник у знахідному відмінку**. You do
+not need the full case pattern yet; just notice that some feminine words
+change shape after **люблю**:
+
+| Thing | Safe object chunk |
+| --- | --- |
+| **музика** | **Я люблю музику.** |
+| **книга** | **Я люблю книгу.** |
+
+Do not turn this into a full case lesson. Learn **музику** and **книгу** as
+useful chunks, then use **Мені подобається...** when you want an easier path
+for things.
+
+### Build Я люблю
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я люблю ___.", "answer": "читати", "options": ["читати", "читаю", "читаєш"]}, {"sentence": "Я люблю ___ музику.", "answer": "слухати", "options": ["слухати", "слухаю", "слухає"]}, {"sentence": "Ти любиш ___?", "answer": "готувати", "options": ["готувати", "готуєш", "готую"]}, {"sentence": "Вона любить ___.", "answer": "малювати", "options": ["малювати", "малює", "малюю"]}, {"sentence": "Ми любимо ___.", "answer": "гуляти", "options": ["гуляти", "гуляємо", "гуляє"]}, {"sentence": "Вони люблять ___.", "answer": "співати", "options": ["співати", "співають", "співає"]}]`)} />
+
+## Мені подобається...
+
+Use **Мені подобається + thing** when a thing, place, or activity is pleasing
+to you. At A1, treat **мені подобається** as one ready chunk.
+
+<DialogueBox uk="Мені подобається музика." en="I like music." />
+<DialogueBox uk="Мені подобається ця книга." en="I like this book." />
+<DialogueBox uk="Мені подобається Київ." en="I like Kyiv." />
+<DialogueBox uk="Тобі подобається цей фільм?" en="Do you like this film?" />
+<DialogueBox uk="Так, мені подобається." en="Yes, I like it." />
+<DialogueBox uk="Ні, мені не подобається." en="No, I do not like it." />
+
+The feeling is not built like English. Do not say **Я подобається це**. The
+safe sentence is **Мені подобається це**. You will study why **мені** works
+later. Today, it is a chunk.
+
+For actions, **Я люблю + -ти** is usually cleaner:
+
+| If you like an action | If you like a thing |
+| --- | --- |
+| **Я люблю читати.** | **Мені подобається ця книга.** |
+| **Я люблю готувати.** | **Мені подобається кава.** |
+| **Я люблю слухати музику.** | **Мені подобається музика.** |
+
+Add **не** right before the preference verb:
+
+- **Я не люблю готувати.**
+- **Мені не подобається цей фільм.**
+- **Тобі не подобається кава?**
+
+For "favorite," use **улюблений** with things: **улюблений спорт**,
+**улюблена книга**, **улюблене місто**. Keep this family as your normal A1
+pattern for favorite things.
+
+### Action or thing
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Я люблю + action": ["читати", "гуляти", "готувати", "малювати"], "Мені подобається + thing": ["музика", "книга", "фільм", "Київ"]}`)} />
+
+### Later words to recognize
+
+Ukrainian has richer words for interests. Keep these as recognition only:
+
+- **захоплення** = a hobby or interest;
+- **вподобання** = preferences;
+- **займатися спортом** = to do sports;
+- **захоплюватися чимось** = to be keen on something;
+- **цікавитися чимось** = to be interested in something.
+
+You may hear the А2-style question **Чим ти захоплюєшся?**. Understand it as
+"What are you interested in?", but answer today with the simpler **Я люблю...**
+or **Мені подобається...** pattern.
+
+They are useful, but most of them need later case grammar. For today, your
+productive tools are smaller:
+
+<DialogueBox uk="Я люблю читати." en="I like to read." />
+<DialogueBox uk="Мені подобається музика." en="I like music." />
+<DialogueBox uk="Моє захоплення - музика." en="My interest is music." />
+
+One more clean Ukrainian chunk matters: **брати участь**. If you mean "take
+part," use **Я беру участь**. Do not build the habit **Я приймаю участь**.
+
+### Люблю or подобається
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to walk.", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Мені подобається гуляю.", "correct": false}, {"text": "Я люблю гуляю.", "correct": false}], "explanation": "Use Я люблю plus гуляти for an action."}, {"question": "I like this film.", "options": [{"text": "Мені подобається цей фільм.", "correct": true}, {"text": "Я подобається цей фільм.", "correct": false}, {"text": "Мені люблю цей фільм.", "correct": false}], "explanation": "Use Мені подобається for a thing."}, {"question": "I do not like to cook.", "options": [{"text": "Я не люблю готувати.", "correct": true}, {"text": "Я люблю не готувати.", "correct": false}, {"text": "Я не люблю готую.", "correct": false}], "explanation": "Put не before люблю, then use the -ти action."}, {"question": "I do not like this book.", "options": [{"text": "Мені не подобається ця книга.", "correct": true}, {"text": "Мені подобається не ця книга.", "correct": false}, {"text": "Я не подобається ця книга.", "correct": false}], "explanation": "Put не before подобається."}]`)} />
+
+## 📋 Підсумок
+
+Keep two preference lanes separate.
+
+| Use this | For this | Example |
+| --- | --- | --- |
+| **Я люблю + -ти** | actions | **Я люблю читати.** |
+| **Я люблю + object chunk** | a few learned things | **Я люблю музику.** |
+| **Мені подобається + thing** | things, places, media | **Мені подобається ця книга.** |
+
+Build a short personal answer:
+
+1. **Я люблю читати.**
+2. **Я люблю гуляти.**
+3. **Я не люблю готувати.**
+4. **Мені подобається музика.**
+5. **Мені подобається ця книга.**
+6. **А ти?**
+
+### Repair traps
+
+| Avoid | Use | Why |
+| --- | --- | --- |
+| **Я люблю малюю.** | **Я люблю малювати.** | the second action stays in **-ти** |
+| **Я люблю музика.** | **Я люблю музику.** | learn **музику** as a small object chunk |
+| **Я подобається це.** | **Мені подобається це.** | use the ready chunk **мені подобається** |
+| wrong favorite word with **спорт** | **Це мій улюблений спорт.** | use **улюблений** for favorite things |
+| **Моє улюблене хобі...** | **Моє захоплення...** / **Моє хобі...** | avoid the tautology |
+| **Я приймаю участь.** | **Я беру участь.** | Ukrainian uses **брати участь** |
+
+<span id="repair-traps"></span>
+
+### Repair preference traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я люблю малюю.", "errorWord": "Я люблю малюю.", "correctForm": "Я люблю малювати.", "options": ["Я люблю малювати.", "Я люблю малюю.", "Я подобається малювати."], "explanation": "The second action stays in the -ти form."}, {"sentence": "Я люблю музика.", "errorWord": "Я люблю музика.", "correctForm": "Я люблю музику.", "options": ["Я люблю музику.", "Я люблю музика.", "Мені люблю музика."], "explanation": "Learn музику as the small object chunk."}, {"sentence": "Я подобається це.", "errorWord": "Я подобається це.", "correctForm": "Мені подобається це.", "options": ["Мені подобається це.", "Я подобається це.", "Мене подобається це."], "explanation": "Use the ready chunk Мені подобається."}, {"sentence": "Це мій любимий спорт.", "errorWord": "Це мій любимий спорт.", "correctForm": "Це мій улюблений спорт.", "options": ["Це мій улюблений спорт.", "Це улюблений спорт.", "Це моя улюблена книга."], "explanation": "Use улюблений for favorite things."}, {"sentence": "Моє улюблене хобі...", "errorWord": "Моє улюблене хобі...", "correctForm": "Моє захоплення...", "options": ["Моє захоплення...", "Моє улюблене хобі...", "Моя улюблена книга..."], "explanation": "Моє захоплення is cleaner."}, {"sentence": "Я приймаю участь.", "errorWord": "Я приймаю участь.", "correctForm": "Я беру участь.", "options": ["Я беру участь.", "Я приймаю участь.", "Я маю участь."], "explanation": "Ukrainian uses брати участь."}]`)} />
+
+### Make it negative
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ люблю готувати.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Мені ___ подобається цей фільм.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Тобі ___ подобається кава?", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Вони ___ люблять співати.", "answer": "не", "options": ["не", "ні", "немає"]}]`)} />
+
+### Your short answer
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти любиш робити?", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Мені подобається читати.", "correct": false}, {"text": "Я читаєш.", "correct": false}], "explanation": "Answer with Я люблю plus an action."}, {"question": "Тобі подобається ця книга?", "options": [{"text": "Так, мені подобається.", "correct": true}, {"text": "Так, я подобається.", "correct": false}, {"text": "Так, мені люблю.", "correct": false}], "explanation": "The short answer keeps мені подобається."}, {"question": "А ти?", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Ти люблю гуляти.", "correct": false}, {"text": "Я любиш гуляти.", "correct": false}], "explanation": "For yourself, use Я люблю."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"любити","translation":"to like; to love","pos":"verb","example":"Я люблю читати.","examples":["to like; to love","Я люблю читати."]},{"word":"люблю","translation":"I like","pos":"verb form","example":"Я люблю музику.","examples":["I like","Я люблю музику."]},{"word":"любиш","translation":"you like","pos":"verb form","example":"Ти любиш готувати?","examples":["you like","Ти любиш готувати?"]},{"word":"подобається","translation":"is pleasing; like","pos":"verb chunk","example":"Мені подобається ця книга.","examples":["is pleasing; like","Мені подобається ця книга."]},{"word":"мені подобається","translation":"I like","pos":"phrase","example":"Мені подобається музика.","examples":["I like","Мені подобається музика."]},{"word":"тобі подобається","translation":"you like","pos":"phrase","example":"Тобі подобається цей фільм?","examples":["you like","Тобі подобається цей фільм?"]},{"word":"читати","translation":"to read","pos":"infinitive","example":"Я люблю читати.","examples":["to read","Я люблю читати."]},{"word":"гуляти","translation":"to walk","pos":"infinitive","example":"Я люблю гуляти.","examples":["to walk","Я люблю гуляти."]},{"word":"готувати","translation":"to cook","pos":"infinitive","example":"Я люблю готувати.","examples":["to cook","Я люблю готувати."]},{"word":"слухати","translation":"to listen","pos":"infinitive","example":"Я люблю слухати музику.","examples":["to listen","Я люблю слухати музику."]},{"word":"дивитися","translation":"to watch","pos":"infinitive","example":"Я люблю дивитися фільм.","examples":["to watch","Я люблю дивитися фільм."]},{"word":"грати","translation":"to play","pos":"infinitive","example":"Я люблю грати.","examples":["to play","Я люблю грати."]},{"word":"малювати","translation":"to draw","pos":"infinitive","example":"Я люблю малювати.","examples":["to draw","Я люблю малювати."]},{"word":"співати","translation":"to sing","pos":"infinitive","example":"Я люблю співати.","examples":["to sing","Я люблю співати."]},{"word":"музика","translation":"music","pos":"noun","example":"Мені подобається музика.","examples":["music","Мені подобається музика."]},{"word":"музику","translation":"music, object chunk","pos":"noun chunk","example":"Я люблю музику.","examples":["music, object chunk","Я люблю музику."]},{"word":"фільм","translation":"film","pos":"noun","example":"Мені подобається цей фільм.","examples":["film","Мені подобається цей фільм."]},{"word":"книга","translation":"book","pos":"noun","example":"Мені подобається ця книга.","examples":["book","Мені подобається ця книга."]},{"word":"улюблений","translation":"favorite, masculine","pos":"adjective","example":"Це мій улюблений спорт.","examples":["favorite, masculine","Це мій улюблений спорт."]},{"word":"захоплення","translation":"interest; hobby","pos":"noun","example":"Моє захоплення - музика.","examples":["interest; hobby","Моє захоплення - музика."]},{"word":"брати участь","translation":"to take part","pos":"phrase","example":"Я беру участь.","examples":["to take part","Я беру участь."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"любити","back":"to like; to love"},{"front":"люблю","back":"I like"},{"front":"любиш","back":"you like"},{"front":"подобається","back":"is pleasing; like"},{"front":"мені подобається","back":"I like"},{"front":"тобі подобається","back":"you like"},{"front":"читати","back":"to read"},{"front":"гуляти","back":"to walk"},{"front":"готувати","back":"to cook"},{"front":"слухати","back":"to listen"},{"front":"дивитися","back":"to watch"},{"front":"грати","back":"to play"},{"front":"малювати","back":"to draw"},{"front":"співати","back":"to sing"},{"front":"музика","back":"music"},{"front":"музику","back":"music, object chunk"},{"front":"фільм","back":"film"},{"front":"книга","back":"book"},{"front":"улюблений","back":"favorite, masculine"},{"front":"захоплення","back":"interest; hobby"},{"front":"брати участь","back":"to take part"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Preference warm-up
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to read.", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Я люблю читаю.", "correct": false}, {"text": "Я подобається читати.", "correct": false}], "explanation": "Use Я люблю plus the -ти action word."}, {"question": "I like music.", "options": [{"text": "Мені подобається музика.", "correct": true}, {"text": "Я подобається музика.", "correct": false}, {"text": "Мені подобається музику.", "correct": false}], "explanation": "Мені подобається is the safe chunk for liking a thing."}, {"question": "Do you like to cook?", "options": [{"text": "Ти любиш готувати?", "correct": true}, {"text": "Ти любиш готуєш?", "correct": false}, {"text": "Тобі любиш готувати?", "correct": false}], "explanation": "The question keeps любиш plus an infinitive."}]`)} />
+
+### Infinitive actions
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "читати", "right": "to read"}, {"left": "гуляти", "right": "to walk"}, {"left": "готувати", "right": "to cook"}, {"left": "слухати", "right": "to listen"}, {"left": "дивитися", "right": "to watch"}, {"left": "грати", "right": "to play"}, {"left": "малювати", "right": "to draw"}, {"left": "співати", "right": "to sing"}]`)} />
+
+### Build Я люблю
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я люблю ___.", "answer": "читати", "options": ["читати", "читаю", "читаєш"]}, {"sentence": "Я люблю ___ музику.", "answer": "слухати", "options": ["слухати", "слухаю", "слухає"]}, {"sentence": "Ти любиш ___?", "answer": "готувати", "options": ["готувати", "готуєш", "готую"]}, {"sentence": "Вона любить ___.", "answer": "малювати", "options": ["малювати", "малює", "малюю"]}, {"sentence": "Ми любимо ___.", "answer": "гуляти", "options": ["гуляти", "гуляємо", "гуляє"]}, {"sentence": "Вони люблять ___.", "answer": "співати", "options": ["співати", "співають", "співає"]}]`)} />
+
+### Action or thing
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Я люблю + action": ["читати", "гуляти", "готувати", "малювати"], "Мені подобається + thing": ["музика", "книга", "фільм", "Київ"]}`)} />
+
+### Люблю or подобається
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to walk.", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Мені подобається гуляю.", "correct": false}, {"text": "Я люблю гуляю.", "correct": false}], "explanation": "Use Я люблю plus гуляти for an action."}, {"question": "I like this film.", "options": [{"text": "Мені подобається цей фільм.", "correct": true}, {"text": "Я подобається цей фільм.", "correct": false}, {"text": "Мені люблю цей фільм.", "correct": false}], "explanation": "Use Мені подобається for a thing."}, {"question": "I do not like to cook.", "options": [{"text": "Я не люблю готувати.", "correct": true}, {"text": "Я люблю не готувати.", "correct": false}, {"text": "Я не люблю готую.", "correct": false}], "explanation": "Put не before люблю, then use the -ти action."}, {"question": "I do not like this book.", "options": [{"text": "Мені не подобається ця книга.", "correct": true}, {"text": "Мені подобається не ця книга.", "correct": false}, {"text": "Я не подобається ця книга.", "correct": false}], "explanation": "Put не before подобається."}]`)} />
+
+<span id="repair-traps"></span>
+
+### Repair preference traps
+
+<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я люблю малюю.", "errorWord": "Я люблю малюю.", "correctForm": "Я люблю малювати.", "options": ["Я люблю малювати.", "Я люблю малюю.", "Я подобається малювати."], "explanation": "The second action stays in the -ти form."}, {"sentence": "Я люблю музика.", "errorWord": "Я люблю музика.", "correctForm": "Я люблю музику.", "options": ["Я люблю музику.", "Я люблю музика.", "Мені люблю музика."], "explanation": "Learn музику as the small object chunk."}, {"sentence": "Я подобається це.", "errorWord": "Я подобається це.", "correctForm": "Мені подобається це.", "options": ["Мені подобається це.", "Я подобається це.", "Мене подобається це."], "explanation": "Use the ready chunk Мені подобається."}, {"sentence": "Це мій любимий спорт.", "errorWord": "Це мій любимий спорт.", "correctForm": "Це мій улюблений спорт.", "options": ["Це мій улюблений спорт.", "Це улюблений спорт.", "Це моя улюблена книга."], "explanation": "Use улюблений for favorite things."}, {"sentence": "Моє улюблене хобі...", "errorWord": "Моє улюблене хобі...", "correctForm": "Моє захоплення...", "options": ["Моє захоплення...", "Моє улюблене хобі...", "Моя улюблена книга..."], "explanation": "Моє захоплення is cleaner."}, {"sentence": "Я приймаю участь.", "errorWord": "Я приймаю участь.", "correctForm": "Я беру участь.", "options": ["Я беру участь.", "Я приймаю участь.", "Я маю участь."], "explanation": "Ukrainian uses брати участь."}]`)} />
+
+### Make it negative
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ люблю готувати.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Мені ___ подобається цей фільм.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Тобі ___ подобається кава?", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Вони ___ люблять співати.", "answer": "не", "options": ["не", "ні", "немає"]}]`)} />
+
+### Your short answer
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти любиш робити?", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Мені подобається читати.", "correct": false}, {"text": "Я читаєш.", "correct": false}], "explanation": "Answer with Я люблю plus an action."}, {"question": "Тобі подобається ця книга?", "options": [{"text": "Так, мені подобається.", "correct": true}, {"text": "Так, я подобається.", "correct": false}, {"text": "Так, мені люблю.", "correct": false}], "explanation": "The short answer keeps мені подобається."}, {"question": "А ти?", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Ти люблю гуляти.", "correct": false}, {"text": "Я любиш гуляти.", "correct": false}], "explanation": "For yourself, use Я люблю."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Emotions in Ukrainian](https://www.ukrainianlessons.com/emotions-in-ukrainian/) — Optional vocabulary support for simple likes and feelings; use for recognition, not as required A1 grammar.
+
+**🎧 Audio:**
+- 🎧 [ULP 1-14 | Hobbies and Interests in Ukrainian](https://www.ukrainianlessons.com/episode14/) — Learner-safe follow-up for hobbies and the Я люблю... pattern.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

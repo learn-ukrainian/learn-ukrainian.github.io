@@ -2,7 +2,7 @@ module: a1-031
 level: A1
 sequence: 31
 slug: where-to
-version: 1.1.1
+version: 1.1.2
 title: Куди?
 subtitle: Іду в банк, на роботу — знахідний відмінок для позначення напрямку
 focus: grammar
@@ -78,8 +78,8 @@ grammar:
 - 'Дієслова руху: іти (пішки) проти їхати (транспортом)'
 register: розмовний
 references:
-- title: Таблиця відмінків за 4 клас
-  notes: Зн. (бачу) — кого? що? Метод допоміжних слів.
+- title: Варзацька Grade 4, p.38
+  notes: Таблиця відмінків із допоміжними словами; Зн. (бачу) — кого? що?
 - title: ULP Season 1, Episode 18
   url: https://www.ukrainianlessons.com/episode18/
   notes: Знахідний відмінок для позначення напрямку.

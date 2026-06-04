@@ -1,0 +1,376 @@
+---
+title: "У кафе"
+description: "У кафе — замовлення, оплата та культура кафе"
+sidebar:
+  order: 38
+  label: "38. У кафе"
+pipeline: linear-phase-4
+build_status: validated
+prev: i-eat-i-drink
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module turns the food words and direct-object forms from M36-M37 into a
+real cafe visit. You will greet the server, read a small menu, order food or
+drink, answer **Вам тут чи із собою?**, pay, and leave politely.
+
+The cafe patterns are chunks first:
+
+- **Мені каву, будь ласка.**
+- **Дайте, будь ласка, борщ.**
+- **Можна воду?**
+- **Рахунок, будь ласка.**
+- **Можна карткою?**
+- **Тут, будь ласка. / Із собою, будь ласка.**
+
+By the end, you can:
+
+- order food and drinks with **мені + direct object**;
+- use polite requests: **можна...?**, **дайте, будь ласка...**,
+  **принесіть, будь ласка...**;
+- ask practical menu questions: **Що ви рекомендуєте?**, **Це гостре?**,
+  **Скільки коштує?**;
+- answer format and size questions with chunks: **із собою**,
+  **велику каву**, **маленьку каву**;
+- ask for the bill and pay with **карткою** or **готівкою**;
+- avoid cafe Russianisms and calques such as **<del>счет</del>**,
+  **<del>на винос</del>**, and
+  **<del>пірожене</del>**.
+
+:::caution
+Treat **велику каву** and **маленьку каву** as whole ordering chunks. This is
+not an adjective-declension lesson.
+:::
+
+### Cafe line to function
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Рахунок, будь ласка.", "right": "ask for the bill"}, {"left": "Що ви рекомендуєте?", "right": "ask for a recommendation"}, {"left": "Мені борщ, будь ласка.", "right": "order food"}, {"left": "Скільки коштує?", "right": "ask the price"}, {"left": "Можна карткою?", "right": "ask to pay by card"}, {"left": "Дуже смачно!", "right": "praise the food"}, {"left": "Тут вільно?", "right": "ask about a free seat"}, {"left": "Вам тут чи із собою?", "right": "ask about format"}, {"left": "Велику каву, будь ласка.", "right": "order a size chunk"}]`)} />
+
+## Діалоги
+
+### Замовлення в кафе
+
+<DialogueBox uk="Офіціантка: Добрий день! Ось меню." en="Server: Good afternoon! Here is the menu." />
+<DialogueBox uk="Клієнт: Дякую. Що ви рекомендуєте?" en="Customer: Thank you. What do you recommend?" />
+<DialogueBox uk="Офіціантка: Борщ дуже смачний." en="Server: The borscht is very tasty." />
+<DialogueBox uk="Клієнт: Добре, мені борщ і хліб, будь ласка." en="Customer: Good, borscht and bread for me, please." />
+<DialogueBox uk="Офіціантка: А що будете пити?" en="Server: And what will you drink?" />
+<DialogueBox uk="Клієнт: Каву з молоком." en="Customer: Coffee with milk." />
+<DialogueBox uk="Офіціантка: Добре, одну хвилинку." en="Server: Good, one minute." />
+
+The greeting is **Добрий день!** in a neutral public-service scene. Depending
+on the time, **Доброго ранку!** and **Добрий вечір!** are also normal. If you need
+attention, use **перепрошую** or **вибачте**. Do not call a server
+**<del>жіночко</del>** or **<del>молодий чоловіче</del>**.
+Those are not respectful cafe forms. A simple **перепрошую** is enough.
+
+The order uses M37 directly: **мені борщ**, **мені хліб**, **каву з молоком**.
+Masculine inanimate **борщ** and **хліб** stay the same; feminine **кава**
+appears as **каву**. At A1, the goal is not a full case chart. The goal is a
+usable cafe line.
+
+### Оплата рахунку
+
+<DialogueBox uk="Клієнт: Рахунок, будь ласка." en="Customer: The bill, please." />
+<DialogueBox uk="Офіціантка: Ось, будь ласка. Сто двадцять гривень." en="Server: Here you are. One hundred twenty hryvnias." />
+<DialogueBox uk="Клієнт: Можна карткою?" en="Customer: Can I pay by card?" />
+<DialogueBox uk="Офіціантка: Так, звичайно." en="Server: Yes, of course." />
+<DialogueBox uk="Клієнт: Дякую, дуже смачно було!" en="Customer: Thank you, it was very tasty!" />
+<DialogueBox uk="Офіціантка: Дякуємо, приходьте ще!" en="Server: Thank you, come again!" />
+
+In many Ukrainian cafes, the bill does not always arrive automatically. Ask:
+**Рахунок, будь ласка.** You can pay **карткою** or **готівкою**. A common tip
+is about ten percent, but it is not automatic and not a grammar point. The safe
+praise line is **Дуже смачно було!** or **Все було дуже смачно!**
+
+### Кава із собою
+
+<DialogueBox uk="Бариста: Доброго ранку!" en="Barista: Good morning!" />
+<DialogueBox uk="Гість: Доброго ранку. Велику каву, будь ласка." en="Guest: Good morning. A large coffee, please." />
+<DialogueBox uk="Бариста: Вам тут чи із собою?" en="Barista: For here or to go?" />
+<DialogueBox uk="Гість: Із собою, дякую." en="Guest: To go, thank you." />
+<DialogueBox uk="Бариста: Щось іще?" en="Barista: Anything else?" />
+<DialogueBox uk="Гість: Ні, дякую." en="Guest: No, thank you." />
+<DialogueBox uk="Бариста: З вас сімдесят п'ять гривень." en="Barista: That will be seventy-five hryvnias." />
+
+The course form is **кава із собою**, not
+**<del>кава на винос</del>**. The question **Вам тут чи із
+собою?** is a modern cafe chunk. Answer with **тут, будь ласка** or
+**із собою, будь ласка**.
+
+### Order with мені
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мені ___, будь ласка.", "answer": "каву", "options": ["каву", "кава", "каві"]}, {"sentence": "Мені ___, будь ласка.", "answer": "воду", "options": ["воду", "вода", "водою"]}, {"sentence": "Мені ___, будь ласка.", "answer": "борщ", "options": ["борщ", "борщу", "борщем"]}, {"sentence": "Мені ___, будь ласка.", "answer": "салат", "options": ["салат", "салату", "салатом"]}, {"sentence": "Дайте, будь ласка, ___.", "answer": "чай", "options": ["чай", "чаю", "чаєм"]}, {"sentence": "Я буду ___.", "answer": "піцу", "options": ["піцу", "піца", "піці"]}, {"sentence": "Можна ___?", "answer": "хліб", "options": ["хліб", "хліба", "хлібом"]}, {"sentence": "Мені ___ із собою, будь ласка.", "answer": "маленьку каву", "options": ["маленьку каву", "маленька кава", "маленької кави"]}]`)} />
+
+## Як замовити
+
+Use these frames for **замовлення**. They are polite, short, and useful.
+
+| Need | Pattern | Example |
+| --- | --- | --- |
+| order for yourself | **Мені ___, будь ласка.** | **Мені каву, будь ласка.** |
+| ask if possible | **Можна ___?** | **Можна воду?** |
+| direct polite request | **Дайте, будь ласка, ___.** | **Дайте, будь ласка, борщ.** |
+| request service | **Принесіть, будь ласка, ___.** | **Принесіть, будь ласка, чай.** |
+| future choice | **Я буду ___.** | **Я буду салат.** |
+| another item | **Ще одну ___.** | **Ще одну каву, будь ласка.** |
+
+The blank is normally the direct object from M37. This is why **кава** becomes
+**каву** and **вода** becomes **воду**:
+
+<DialogueBox uk="Мені каву, будь ласка." en="Coffee for me, please." />
+<DialogueBox uk="Можна воду?" en="May I have water?" />
+<DialogueBox uk="Дайте, будь ласка, піцу." en="Please give me pizza." />
+<DialogueBox uk="Принесіть, будь ласка, чай." en="Please bring tea." />
+<DialogueBox uk="Я буду маленьку каву." en="I'll have a small coffee." />
+
+In a short service exchange, **прОшу** can mean "please" as an inserted polite
+word. Keep the stress on the first syllable in that use: **прОшу**. Do not
+turn this into a verb lesson here; it is a cafe politeness chunk.
+
+Ask these menu questions as whole lines:
+
+- **Що ви рекомендуєте?**
+- **А що це?**
+- **Це гостре?**
+- **Це з м'ясом?**
+- **Скільки коштує?**
+- **Є вегетаріанське меню?**
+
+For size, stay with the cafe chunks **велику каву** and **маленьку каву**.
+Do not stop to explain adjective endings here. The learner needs to hear and
+use the complete order:
+
+<DialogueBox uk="Велику каву, будь ласка." en="A large coffee, please." />
+<DialogueBox uk="Маленьку каву із собою, будь ласка." en="A small coffee to go, please." />
+
+### What do you say?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to order coffee.", "options": [{"text": "Мені каву, будь ласка.", "correct": true}, {"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}], "explanation": "Мені каву, будь ласка is an order."}, {"question": "You want to pay.", "options": [{"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Можна меню?", "correct": false}, {"text": "Це гостре?", "correct": false}], "explanation": "Ask for the bill with рахунок."}, {"question": "You want to know the price.", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Тут вільно?", "correct": false}], "explanation": "Скільки коштує? asks how much it costs."}, {"question": "You want a recommendation.", "options": [{"text": "Що ви рекомендуєте?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Все було дуже смачно!", "correct": false}], "explanation": "Рекомендуєте asks the server to recommend."}, {"question": "You want to praise the food.", "options": [{"text": "Все було дуже смачно!", "correct": true}, {"text": "Можна карткою?", "correct": false}, {"text": "Без цукру.", "correct": false}], "explanation": "This is the praise line after eating."}, {"question": "You want to know whether a seat is free.", "options": [{"text": "Тут вільно?", "correct": true}, {"text": "Ще одну каву, будь ласка.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": false}], "explanation": "Тут вільно? asks if the place is free."}, {"question": "You want to know whether a dish is spicy.", "options": [{"text": "Це гостре?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Скільки коштує?", "correct": false}], "explanation": "Гостре means spicy here."}, {"question": "You want to pay by card.", "options": [{"text": "Можна карткою?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}], "explanation": "Карткою is the card-payment chunk."}]`)} />
+
+## 🏺 Культура кафе
+
+**Кафе** is usually more informal than **ресторан**. A cafe may have table
+service, counter service, or a menu on the wall. A restaurant is more formal
+and often slower. You can use the same polite language in both.
+
+Useful cafe words:
+
+| Ukrainian | Meaning |
+| --- | --- |
+| **кафе** | cafe |
+| **кав'ярня** | coffee shop |
+| **меню** | menu |
+| **рахунок** | bill |
+| **офіціант / офіціантка** | waiter / waitress |
+| **бариста** | barista |
+| **чайові** | tip |
+| **картка** | card |
+| **готівка** | cash |
+
+Ask for a seat or menu politely:
+
+<DialogueBox uk="Тут вільно?" en="Is this free?" />
+<DialogueBox uk="Можна меню?" en="May I have the menu?" />
+<DialogueBox uk="Перепрошую, можна рахунок?" en="Excuse me, may I have the bill?" />
+
+If the server offers something extra, answer softly:
+
+<DialogueBox uk="Щось іще?" en="Anything else?" />
+<DialogueBox uk="Ні, дякую." en="No, thank you." />
+<DialogueBox uk="Дякую, не треба." en="Thank you, no need." />
+<DialogueBox uk="Дякую, але я не хочу." en="Thank you, but I do not want it." />
+<DialogueBox uk="Спасибі, але наступним разом." en="Thanks, but next time." />
+<DialogueBox uk="Так, із задоволенням." en="Yes, with pleasure." />
+<DialogueBox uk="Охоче." en="Gladly." />
+
+A busy barista may ask **Вам тут чи з собою?**. This course keeps the answer
+chunk as **із собою, будь ласка** or **тут, будь ласка**.
+
+Keep shared food words such as **вода**, **молоко**, and **меню** inside
+Ukrainian. They do not need comparison to another language. Ukrainian cafe
+speech has its own etiquette and rhythm.
+
+### Complete the cafe dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Добрий день! Ось ___.", "answer": "меню", "options": ["меню", "рахунок", "картка"]}, {"sentence": "Дякую. Що ви ___?", "answer": "рекомендуєте", "options": ["рекомендуєте", "коштуєте", "платите"]}, {"sentence": "Борщ дуже ___.", "answer": "смачний", "options": ["смачний", "вільний", "картковий"]}, {"sentence": "Добре, ___ борщ і хліб, будь ласка.", "answer": "мені", "options": ["мені", "я", "мене"]}, {"sentence": "А що будете ___?", "answer": "пити", "options": ["пити", "читати", "платити"]}, {"sentence": "Добре, одну ___.", "answer": "хвилинку", "options": ["хвилинку", "годину", "картку"]}]`)} />
+
+### Кав'ярні ремонти
+
+Use Ukrainian cafe words, not Russian or hybrid service language.
+
+| Avoid | Use |
+| --- | --- |
+| **<del>счет</del>** | **рахунок** |
+| **<del>на винос</del>** | **із собою** |
+| **<del>пірожене</del>** | **тістечко** |
+| **<del>кулечок</del>** | **пакетик** |
+| **<del>вкусна кава</del>** | **смачна кава** |
+| **<del>трубочка</del>** for a drinking straw | **соломинка** |
+| **<del>чашку кофе</del>** | **чашку кави** |
+
+The phrase **кава із собою** is the clean order. You may hear other forms in
+the world, but this course gives you the Ukrainian standard to use.
+
+### Cafe culture checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Рахунок, будь ласка asks for the bill.", "isTrue": true, "explanation": "Рахунок is the bill."}, {"statement": "Вам тут чи із собою? asks whether the order is for here or to go.", "isTrue": true, "explanation": "Тут and із собою are the format answers."}, {"statement": "Велику каву is taught here as an adjective table.", "isTrue": false, "explanation": "It is taught as one cafe chunk."}, {"statement": "Кава на винос is the course form.", "isTrue": false, "explanation": "Use кава із собою."}, {"statement": "Можна карткою? asks whether card payment is possible.", "isTrue": true, "explanation": "Карткою is the card-payment chunk."}, {"statement": "Дуже смачно було! is a food praise line.", "isTrue": true, "explanation": "Use it after the meal."}, {"statement": "Пірожене is the course word for pastry.", "isTrue": false, "explanation": "Use тістечко."}, {"statement": "Перепрошую is a polite way to get attention.", "isTrue": true, "explanation": "It is a neutral service-scene attention getter."}]`)} />
+
+## 📋 Підсумок
+
+A complete cafe visit can stay small:
+
+<DialogueBox uk="Добрий день! Можна меню?" en="Good afternoon! May I have the menu?" />
+<DialogueBox uk="Що ви рекомендуєте?" en="What do you recommend?" />
+<DialogueBox uk="Мені борщ і хліб, будь ласка." en="Borscht and bread for me, please." />
+<DialogueBox uk="А мені маленьку каву із собою." en="And a small coffee to go for me." />
+<DialogueBox uk="Рахунок, будь ласка." en="The bill, please." />
+<DialogueBox uk="Можна карткою?" en="Can I pay by card?" />
+<DialogueBox uk="Дякую, все було дуже смачно!" en="Thank you, everything was very tasty!" />
+<DialogueBox uk="До побачення!" en="Goodbye!" />
+
+Self-check:
+
+- greet with **Добрий день** or **Доброго ранку**;
+- ask for attention with **перепрошую** or **вибачте**;
+- order with **мені...**, **можна...?**, or **дайте, будь ласка...**;
+- answer **Вам тут чи із собою?**;
+- ask for the bill with **рахунок, будь ласка**;
+- pay with **карткою** or **готівкою**;
+- leave with **До побачення** or **Усього найкращого**.
+
+<span id="repair-at-the-cafe-interference"></span>
+
+### Ремонти
+
+| Avoid | Use |
+| --- | --- |
+| **<del>Доброго дня!</del>** as a neutral greeting | **Добрий день!** |
+| **<del>Вибачаюсь!</del>** | **Вибачте! / Перепрошую!** |
+| **<del>Я хочу кава.</del>** | **Я хочу каву. / Дайте каву.** |
+| **<del>ПрошУ</del>** as "please" | **ПрОшу** as a polite inserted word |
+| **<del>[балєт], [проблєма]</del>** | **[балет], [проблема]** |
+| **<del>Здрастуйте! / Пока!</del>** | **Добрий день! / До побачення!** |
+
+### One cafe visit
+
+<Order client:only='react' items={JSON.parse(`["Добрий день! Можна меню?", "Що ви рекомендуєте?", "Мені борщ і хліб, будь ласка.", "А мені маленьку каву із собою.", "Рахунок, будь ласка.", "Можна карткою?", "Дякую, все було дуже смачно!", "До побачення!"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the cafe visit in order."} isUkrainian={false} />
+
+### Cafe shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Greeting or attention": ["Добрий день!", "Доброго ранку!", "Перепрошую."], "Ordering": ["Мені каву, будь ласка.", "Дайте, будь ласка, борщ.", "Велику каву із собою."], "Questions": ["Що ви рекомендуєте?", "Скільки коштує?", "Це гостре?"], "Payment or closing": ["Рахунок, будь ласка.", "Можна карткою?", "До побачення!"]}`)} />
+
+<span id="repair-at-the-cafe-interference"></span>
+
+### Repair cafe interference
+
+<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "Доброго дня!", "errorWord": "Доброго дня!", "correctForm": "Добрий день!", "options": ["Добрий день!", "Доброго дня!", "Добрий дня!"], "explanation": "Use Добрий день as the neutral greeting."}, {"sentence": "Вибачаюсь!", "errorWord": "Вибачаюсь!", "correctForm": "Вибачте! / Перепрошую!", "options": ["Вибачте! / Перепрошую!", "Вибачаюсь!", "Я вибачаю себе!"], "explanation": "Use Вибачте or Перепрошую."}, {"sentence": "Я хочу кава.", "errorWord": "Я хочу кава.", "correctForm": "Я хочу каву. / Дайте каву.", "options": ["Я хочу каву. / Дайте каву.", "Я хочу кава.", "Я хочу каві."], "explanation": "Кава becomes каву in this request."}, {"sentence": "ПрошУ (як прохання)", "errorWord": "ПрошУ (як прохання)", "correctForm": "ПрОшу (як \\"будь ласка\\")", "options": ["ПрОшу (як \\"будь ласка\\")", "ПрошУ (як прохання)", "Прошу без наголосу."], "explanation": "As a polite inserted word meaning please, the stress is ПрОшу."}, {"sentence": "[балєт], [проблєма]", "errorWord": "[балєт], [проблєма]", "correctForm": "[балет], [проблема]", "options": ["[балет], [проблема]", "[балєт], [проблєма]", "[балет], [проблєма]"], "explanation": "Keep л before е hard in these examples."}, {"sentence": "Здрастуйте! / Пока!", "errorWord": "Здрастуйте! / Пока!", "correctForm": "Добрий день! / До побачення!", "options": ["Добрий день! / До побачення!", "Здрастуйте! / Пока!", "Добрий день! / Пока!"], "explanation": "Use Ukrainian greeting and goodbye formulas."}, {"sentence": "Можна счет?", "errorWord": "счет", "correctForm": "Можна рахунок?", "options": ["Можна рахунок?", "Можна счет?", "Можна рахунка?"], "explanation": "Use рахунок."}, {"sentence": "Кава на винос.", "errorWord": "на винос", "correctForm": "Кава із собою.", "options": ["Кава із собою.", "Кава на винос.", "Кава з себе."], "explanation": "The course chunk is із собою."}, {"sentence": "Дайте пірожене.", "errorWord": "пірожене", "correctForm": "Дайте тістечко.", "options": ["Дайте тістечко.", "Дайте пірожене.", "Дайте тісто."], "explanation": "Use тістечко."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"кафе","translation":"cafe","pos":"noun","example":"Ми в кафе.","examples":["cafe","Ми в кафе."]},{"word":"кав'ярня","translation":"coffee shop","pos":"noun","example":"Це маленька кав'ярня.","examples":["coffee shop","Це маленька кав'ярня."]},{"word":"меню","translation":"menu","pos":"noun","example":"Можна меню?","examples":["menu","Можна меню?"]},{"word":"рахунок","translation":"bill","pos":"noun","example":"Рахунок, будь ласка.","examples":["bill","Рахунок, будь ласка."]},{"word":"замовляти","translation":"to order","pos":"verb","example":"Я замовляю каву.","examples":["to order","Я замовляю каву."]},{"word":"офіціант","translation":"waiter","pos":"noun","example":"Офіціант приносить меню.","examples":["waiter","Офіціант приносить меню."]},{"word":"офіціантка","translation":"waitress","pos":"noun","example":"Офіціантка приносить рахунок.","examples":["waitress","Офіціантка приносить рахунок."]},{"word":"бариста","translation":"barista","pos":"noun","example":"Бариста питає: Вам тут чи із собою?","examples":["barista","Бариста питає: Вам тут чи із собою?"]},{"word":"смачно","translation":"tasty; deliciously","pos":"adverb","example":"Дуже смачно було!","examples":["tasty; deliciously","Дуже смачно було!"]},{"word":"будь ласка","translation":"please","pos":"phrase","example":"Мені каву, будь ласка.","examples":["please","Мені каву, будь ласка."]},{"word":"перепрошую","translation":"excuse me","pos":"phrase","example":"Перепрошую, можна рахунок?","examples":["excuse me","Перепрошую, можна рахунок?"]},{"word":"вибачте","translation":"excuse me; sorry","pos":"phrase","example":"Вибачте, можна меню?","examples":["excuse me; sorry","Вибачте, можна меню?"]},{"word":"тут","translation":"here","pos":"adverb","example":"Тут, будь ласка.","examples":["here","Тут, будь ласка."]},{"word":"із собою","translation":"to go; with me","pos":"chunk","example":"Каву із собою, будь ласка.","examples":["to go; with me","Каву із собою, будь ласка."]},{"word":"велику каву","translation":"a large coffee","pos":"chunk","example":"Велику каву, будь ласка.","examples":["a large coffee","Велику каву, будь ласка."]},{"word":"маленьку каву","translation":"a small coffee","pos":"chunk","example":"Маленьку каву із собою, будь ласка.","examples":["a small coffee","Маленьку каву із собою, будь ласка."]},{"word":"ресторан","translation":"restaurant","pos":"noun","example":"Ресторан формальніший, ніж кафе.","examples":["restaurant","Ресторан формальніший, ніж кафе."]},{"word":"рекомендувати","translation":"to recommend","pos":"verb","example":"Що ви рекомендуєте?","examples":["to recommend","Що ви рекомендуєте?"]},{"word":"чайові","translation":"tip; gratuity","pos":"noun","example":"Чайові - це не обов'язково.","examples":["tip; gratuity","Чайові - це не обов'язково."]},{"word":"готівка","translation":"cash","pos":"noun","example":"Можна готівкою?","examples":["cash","Можна готівкою?"]},{"word":"картка","translation":"card","pos":"noun","example":"Можна карткою?","examples":["card","Можна карткою?"]},{"word":"гостре","translation":"spicy","pos":"adjective","example":"Це гостре?","examples":["spicy","Це гостре?"]},{"word":"вегетаріанське меню","translation":"vegetarian menu","pos":"phrase","example":"Є вегетаріанське меню?","examples":["vegetarian menu","Є вегетаріанське меню?"]},{"word":"тістечко","translation":"pastry; small cake","pos":"noun","example":"Дайте тістечко.","examples":["pastry; small cake","Дайте тістечко."]},{"word":"пакетик","translation":"small bag","pos":"noun","example":"Пакетик, будь ласка.","examples":["small bag","Пакетик, будь ласка."]},{"word":"соломинка","translation":"drinking straw","pos":"noun","example":"Можна соломинку?","examples":["drinking straw","Можна соломинку?"]},{"word":"гривня","translation":"hryvnia","pos":"noun","example":"З вас сімдесят п'ять гривень.","examples":["hryvnia","З вас сімдесят п'ять гривень."]},{"word":"До побачення!","translation":"Goodbye!","pos":"phrase","example":"До побачення!","examples":["Goodbye!","До побачення!"]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"кафе","back":"cafe"},{"front":"кав'ярня","back":"coffee shop"},{"front":"меню","back":"menu"},{"front":"рахунок","back":"bill"},{"front":"замовляти","back":"to order"},{"front":"офіціант","back":"waiter"},{"front":"офіціантка","back":"waitress"},{"front":"бариста","back":"barista"},{"front":"смачно","back":"tasty; deliciously"},{"front":"будь ласка","back":"please"},{"front":"перепрошую","back":"excuse me"},{"front":"вибачте","back":"excuse me; sorry"},{"front":"тут","back":"here"},{"front":"із собою","back":"to go; with me"},{"front":"велику каву","back":"a large coffee"},{"front":"маленьку каву","back":"a small coffee"},{"front":"ресторан","back":"restaurant"},{"front":"рекомендувати","back":"to recommend"},{"front":"чайові","back":"tip; gratuity"},{"front":"готівка","back":"cash"},{"front":"картка","back":"card"},{"front":"гостре","back":"spicy"},{"front":"вегетаріанське меню","back":"vegetarian menu"},{"front":"тістечко","back":"pastry; small cake"},{"front":"пакетик","back":"small bag"},{"front":"соломинка","back":"drinking straw"},{"front":"гривня","back":"hryvnia"},{"front":"До побачення!","back":"Goodbye!"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Cafe line to function
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Рахунок, будь ласка.", "right": "ask for the bill"}, {"left": "Що ви рекомендуєте?", "right": "ask for a recommendation"}, {"left": "Мені борщ, будь ласка.", "right": "order food"}, {"left": "Скільки коштує?", "right": "ask the price"}, {"left": "Можна карткою?", "right": "ask to pay by card"}, {"left": "Дуже смачно!", "right": "praise the food"}, {"left": "Тут вільно?", "right": "ask about a free seat"}, {"left": "Вам тут чи із собою?", "right": "ask about format"}, {"left": "Велику каву, будь ласка.", "right": "order a size chunk"}]`)} />
+
+### Order with мені
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мені ___, будь ласка.", "answer": "каву", "options": ["каву", "кава", "каві"]}, {"sentence": "Мені ___, будь ласка.", "answer": "воду", "options": ["воду", "вода", "водою"]}, {"sentence": "Мені ___, будь ласка.", "answer": "борщ", "options": ["борщ", "борщу", "борщем"]}, {"sentence": "Мені ___, будь ласка.", "answer": "салат", "options": ["салат", "салату", "салатом"]}, {"sentence": "Дайте, будь ласка, ___.", "answer": "чай", "options": ["чай", "чаю", "чаєм"]}, {"sentence": "Я буду ___.", "answer": "піцу", "options": ["піцу", "піца", "піці"]}, {"sentence": "Можна ___?", "answer": "хліб", "options": ["хліб", "хліба", "хлібом"]}, {"sentence": "Мені ___ із собою, будь ласка.", "answer": "маленьку каву", "options": ["маленьку каву", "маленька кава", "маленької кави"]}]`)} />
+
+### What do you say?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to order coffee.", "options": [{"text": "Мені каву, будь ласка.", "correct": true}, {"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}], "explanation": "Мені каву, будь ласка is an order."}, {"question": "You want to pay.", "options": [{"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Можна меню?", "correct": false}, {"text": "Це гостре?", "correct": false}], "explanation": "Ask for the bill with рахунок."}, {"question": "You want to know the price.", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Тут вільно?", "correct": false}], "explanation": "Скільки коштує? asks how much it costs."}, {"question": "You want a recommendation.", "options": [{"text": "Що ви рекомендуєте?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Все було дуже смачно!", "correct": false}], "explanation": "Рекомендуєте asks the server to recommend."}, {"question": "You want to praise the food.", "options": [{"text": "Все було дуже смачно!", "correct": true}, {"text": "Можна карткою?", "correct": false}, {"text": "Без цукру.", "correct": false}], "explanation": "This is the praise line after eating."}, {"question": "You want to know whether a seat is free.", "options": [{"text": "Тут вільно?", "correct": true}, {"text": "Ще одну каву, будь ласка.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": false}], "explanation": "Тут вільно? asks if the place is free."}, {"question": "You want to know whether a dish is spicy.", "options": [{"text": "Це гостре?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Скільки коштує?", "correct": false}], "explanation": "Гостре means spicy here."}, {"question": "You want to pay by card.", "options": [{"text": "Можна карткою?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}], "explanation": "Карткою is the card-payment chunk."}]`)} />
+
+### Complete the cafe dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Добрий день! Ось ___.", "answer": "меню", "options": ["меню", "рахунок", "картка"]}, {"sentence": "Дякую. Що ви ___?", "answer": "рекомендуєте", "options": ["рекомендуєте", "коштуєте", "платите"]}, {"sentence": "Борщ дуже ___.", "answer": "смачний", "options": ["смачний", "вільний", "картковий"]}, {"sentence": "Добре, ___ борщ і хліб, будь ласка.", "answer": "мені", "options": ["мені", "я", "мене"]}, {"sentence": "А що будете ___?", "answer": "пити", "options": ["пити", "читати", "платити"]}, {"sentence": "Добре, одну ___.", "answer": "хвилинку", "options": ["хвилинку", "годину", "картку"]}]`)} />
+
+### Cafe culture checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Рахунок, будь ласка asks for the bill.", "isTrue": true, "explanation": "Рахунок is the bill."}, {"statement": "Вам тут чи із собою? asks whether the order is for here or to go.", "isTrue": true, "explanation": "Тут and із собою are the format answers."}, {"statement": "Велику каву is taught here as an adjective table.", "isTrue": false, "explanation": "It is taught as one cafe chunk."}, {"statement": "Кава на винос is the course form.", "isTrue": false, "explanation": "Use кава із собою."}, {"statement": "Можна карткою? asks whether card payment is possible.", "isTrue": true, "explanation": "Карткою is the card-payment chunk."}, {"statement": "Дуже смачно було! is a food praise line.", "isTrue": true, "explanation": "Use it after the meal."}, {"statement": "Пірожене is the course word for pastry.", "isTrue": false, "explanation": "Use тістечко."}, {"statement": "Перепрошую is a polite way to get attention.", "isTrue": true, "explanation": "It is a neutral service-scene attention getter."}]`)} />
+
+### One cafe visit
+
+<Order client:only='react' items={JSON.parse(`["Добрий день! Можна меню?", "Що ви рекомендуєте?", "Мені борщ і хліб, будь ласка.", "А мені маленьку каву із собою.", "Рахунок, будь ласка.", "Можна карткою?", "Дякую, все було дуже смачно!", "До побачення!"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the cafe visit in order."} isUkrainian={false} />
+
+### Cafe shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Greeting or attention": ["Добрий день!", "Доброго ранку!", "Перепрошую."], "Ordering": ["Мені каву, будь ласка.", "Дайте, будь ласка, борщ.", "Велику каву із собою."], "Questions": ["Що ви рекомендуєте?", "Скільки коштує?", "Це гостре?"], "Payment or closing": ["Рахунок, будь ласка.", "Можна карткою?", "До побачення!"]}`)} />
+
+<span id="repair-at-the-cafe-interference"></span>
+
+### Repair cafe interference
+
+<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "Доброго дня!", "errorWord": "Доброго дня!", "correctForm": "Добрий день!", "options": ["Добрий день!", "Доброго дня!", "Добрий дня!"], "explanation": "Use Добрий день as the neutral greeting."}, {"sentence": "Вибачаюсь!", "errorWord": "Вибачаюсь!", "correctForm": "Вибачте! / Перепрошую!", "options": ["Вибачте! / Перепрошую!", "Вибачаюсь!", "Я вибачаю себе!"], "explanation": "Use Вибачте or Перепрошую."}, {"sentence": "Я хочу кава.", "errorWord": "Я хочу кава.", "correctForm": "Я хочу каву. / Дайте каву.", "options": ["Я хочу каву. / Дайте каву.", "Я хочу кава.", "Я хочу каві."], "explanation": "Кава becomes каву in this request."}, {"sentence": "ПрошУ (як прохання)", "errorWord": "ПрошУ (як прохання)", "correctForm": "ПрОшу (як \\"будь ласка\\")", "options": ["ПрОшу (як \\"будь ласка\\")", "ПрошУ (як прохання)", "Прошу без наголосу."], "explanation": "As a polite inserted word meaning please, the stress is ПрОшу."}, {"sentence": "[балєт], [проблєма]", "errorWord": "[балєт], [проблєма]", "correctForm": "[балет], [проблема]", "options": ["[балет], [проблема]", "[балєт], [проблєма]", "[балет], [проблєма]"], "explanation": "Keep л before е hard in these examples."}, {"sentence": "Здрастуйте! / Пока!", "errorWord": "Здрастуйте! / Пока!", "correctForm": "Добрий день! / До побачення!", "options": ["Добрий день! / До побачення!", "Здрастуйте! / Пока!", "Добрий день! / Пока!"], "explanation": "Use Ukrainian greeting and goodbye formulas."}, {"sentence": "Можна счет?", "errorWord": "счет", "correctForm": "Можна рахунок?", "options": ["Можна рахунок?", "Можна счет?", "Можна рахунка?"], "explanation": "Use рахунок."}, {"sentence": "Кава на винос.", "errorWord": "на винос", "correctForm": "Кава із собою.", "options": ["Кава із собою.", "Кава на винос.", "Кава з себе."], "explanation": "The course chunk is із собою."}, {"sentence": "Дайте пірожене.", "errorWord": "пірожене", "correctForm": "Дайте тістечко.", "options": ["Дайте тістечко.", "Дайте пірожене.", "Дайте тісто."], "explanation": "Use тістечко."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 **State Standard 2024, Topic 3 (ресторан** — Communicative situation for ordering food and drinks.
+- 🔗 [ULP Season 1, Episode 11 lesson notes](https://www.ukrainianlessons.com/wp-content/uploads/2017/05/ULP-1-11-Lesson-Notes.pdf) — Beginner cafe and food-ordering language connected to the plan reference.
+- 🔗 [ULP Season 1, Episode 12](https://www.ukrainianlessons.com/episode12/) — Continuation of beginner cafe, food, and drink ordering practice.
+- 🔗 **Wiki: pedagogy/a1/at-the-cafe** — Authoritative locked pedagogical brief for M38.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

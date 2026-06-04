@@ -1,0 +1,368 @@
+---
+title: "Будь ласка, зроби це"
+description: "Читай! Скажіть! Дайте! — як просити людей щось зробити"
+sidebar:
+  order: 43
+  label: "43. Будь ласка, зроби це"
+pipeline: linear-phase-4
+build_status: validated
+prev: hey-friend
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+You can now call a person naturally: **Олено! Тарасе! Друже!** This module
+adds the next useful piece: asking someone to do something.
+
+Ukrainian uses short command/request forms:
+
+- **Читай, будь ласка.** - Read, please.
+- **Читайте, будь ласка.** - Please read. (polite or plural)
+- **Дай мені меню, будь ласка.** - Give me the menu, please.
+- **Дайте рахунок, будь ласка.** - Please give the bill.
+
+By the end, you can:
+
+- recognize the school term **наказовий спосіб**;
+- use common **ти** commands with one familiar person;
+- use common **ви** commands with a teacher, server, stranger, or group;
+- soften a command with **будь ласка**;
+- keep the lesson practical: commands and polite requests, not a full verb
+  paradigm.
+
+:::tip[Polite habit]
+For A1, build the whole line: **Олено, прочитай, будь ласка.** Address +
+action + **будь ласка** is clear and friendly.
+:::
+
+### Build the command
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ___ текст, будь ласка.", "answer": "читай", "options": ["читай", "читати", "читаєш"]}, {"sentence": "Пане Іване, ___ текст, будь ласка.", "answer": "читайте", "options": ["читайте", "читати", "читаєте"]}, {"sentence": "Тарасе, ___ речення.", "answer": "пиши", "options": ["пиши", "писати", "пишеш"]}, {"sentence": "Студенти, ___ речення.", "answer": "пишіть", "options": ["пишіть", "писати", "пишете"]}, {"sentence": "Маріє, ___ мене, будь ласка.", "answer": "слухай", "options": ["слухай", "слухати", "слухаєш"]}, {"sentence": "Друзі, ___ мене.", "answer": "слухайте", "options": ["слухайте", "слухати", "слухаєте"]}, {"sentence": "___ меню, будь ласка.", "answer": "Дайте", "options": ["Дайте", "Дати", "Даєте"]}, {"sentence": "___, що ти хочеш.", "answer": "Скажи", "options": ["Скажи", "Сказати", "Скажеш"]}]`)} />
+
+## Діалоги
+
+### У класі
+
+<DialogueBox uk="Учителька: Відкрийте підручники, будь ласка." en="Teacher: Open your textbooks, please." />
+<DialogueBox uk="Студент: Вибачте, яку сторінку?" en="Student: Excuse me, which page?" />
+<DialogueBox uk="Учителька: Сторінку двадцять три. Читайте текст." en="Teacher: Page twenty-three. Read the text." />
+<DialogueBox uk="Учителька: Тепер пишіть. Напишіть три речення." en="Teacher: Now write. Write three sentences." />
+<DialogueBox uk="Студент: Можна запитати?" en="Student: May I ask?" />
+<DialogueBox uk="Учителька: Так, запитуйте!" en="Teacher: Yes, ask!" />
+
+Classroom Ukrainian gives you many polite **ви** commands:
+**відкрийте**, **читайте**, **пишіть**, **напишіть**, **запитуйте**. They are
+normal instructions, especially with **будь ласка**.
+
+### Між друзями
+
+<DialogueBox uk="Олена: Тарасе, слухай, ходімо в кафе!" en="Olena: Taras, listen, let's go to a cafe!" />
+<DialogueBox uk="Тарас: Добре. Іди, я зараз." en="Taras: All right. Go, I am coming." />
+<DialogueBox uk="Олена: Подивись, яка гарна погода!" en="Olena: Look, what nice weather!" />
+<DialogueBox uk="Тарас: Так! Сідай тут." en="Taras: Yes! Sit here." />
+<DialogueBox uk="Олена: Дай мені меню, будь ласка." en="Olena: Give me the menu, please." />
+<DialogueBox uk="Тарас: Ось, дивись." en="Taras: Here, look." />
+<DialogueBox uk="Олена: Скажи, що ти хочеш?" en="Olena: Tell me what you want." />
+<DialogueBox uk="Тарас: Я хочу каву." en="Taras: I want coffee." />
+
+Friend language uses **ти** forms: **слухай**, **іди**, **подивись**,
+**сідай**, **дай**, **дивись**, **скажи**. These can sound warm, not rude,
+when the relationship and intonation fit.
+
+### На тренуванні
+
+<DialogueBox uk="Тренер: Олено, принеси м'яч, будь ласка." en="Coach: Olena, bring the ball, please." />
+<DialogueBox uk="Тренер: Тарасе, розстав конуси." en="Coach: Taras, set out the cones." />
+<DialogueBox uk="Тренер: Андрію, натягни сітку." en="Coach: Andrii, tighten the net." />
+<DialogueBox uk="Тренер: Маріє, поклади рушники на лавку." en="Coach: Mariia, put the towels on the bench." />
+<DialogueBox uk="Тренер: Друзі, відкрийте двері." en="Coach: Friends, open the door." />
+
+The volleyball scene from the plan is useful because every command has a
+visible action: **принеси**, **розстав**, **натягни**, **поклади**,
+**відкрийте**. Keep them as practical sports instructions.
+
+### Ti or vy?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You ask one friend to read.", "options": [{"text": "Читай, будь ласка.", "correct": true}, {"text": "Читайте, будь ласка.", "correct": false}, {"text": "Читати, будь ласка.", "correct": false}], "explanation": "One friend takes the ти form читай."}, {"question": "You ask a teacher to read.", "options": [{"text": "Читайте, будь ласка.", "correct": true}, {"text": "Читай, будь ласка.", "correct": false}, {"text": "Читаєте, будь ласка.", "correct": false}], "explanation": "A teacher takes polite ви."}, {"question": "You ask a server for the bill.", "options": [{"text": "Дайте рахунок, будь ласка.", "correct": true}, {"text": "Дай рахунок, будь ласка.", "correct": false}, {"text": "Дати рахунок, будь ласка.", "correct": false}], "explanation": "Use polite дайте with a server."}, {"question": "You ask one close friend for the menu.", "options": [{"text": "Дай меню, будь ласка.", "correct": true}, {"text": "Дайте меню, будь ласка.", "correct": false}, {"text": "Даєш меню, будь ласка.", "correct": false}], "explanation": "Use дай with one close person."}, {"question": "A teacher gives a class instruction.", "options": [{"text": "Пишіть речення.", "correct": true}, {"text": "Пиши речення.", "correct": false}, {"text": "Писати речення.", "correct": false}], "explanation": "The class takes the plural form пишіть."}, {"question": "A friend asks you to look.", "options": [{"text": "Подивись!", "correct": true}, {"text": "Дивитися!", "correct": false}, {"text": "Дивишся!", "correct": false}], "explanation": "Подивись is a useful ти command."}, {"question": "You politely ask someone to say it again.", "options": [{"text": "Скажіть ще раз, будь ласка.", "correct": true}, {"text": "Сказати ще раз, будь ласка.", "correct": false}, {"text": "Скажете ще раз, будь ласка.", "correct": false}], "explanation": "Скажіть is the polite command form."}, {"question": "A coach asks the team to open the door.", "options": [{"text": "Відкрийте двері.", "correct": true}, {"text": "Відкрий двері.", "correct": false}, {"text": "Відкрити двері.", "correct": false}], "explanation": "The team takes the plural command відкрийте."}]`)} />
+
+## Наказовий спосіб
+
+The school term is **наказовий спосіб**. It covers commands, requests,
+instructions, and invitations. At A1, use only two active forms:
+
+| Use | One person | Polite or plural |
+| --- | --- | --- |
+| read | **читай** | **читайте** |
+| write | **пиши** | **пишіть** |
+| listen | **слухай** | **слухайте** |
+| speak | **говори** | **говоріть** |
+| look | **дивись** | **дивіться** |
+| go | **іди** | **ідіть** |
+| give | **дай** | **дайте** |
+| say/tell | **скажи** | **скажіть** |
+
+The social choice is the important part:
+
+- Use **ти** with a friend, child, close family member, or one teammate:
+  **Тарасе, читай.**
+- Use **ви** with a teacher, server, stranger, older person, or more than one
+  person: **Пане Іване, читайте.**
+- Add **будь ласка** to make the request polite:
+  **Дайте меню, будь ласка.**
+
+This is direct Ukrainian, not rude Ukrainian. **Читай!** can be a normal class
+instruction. **Дай, будь ласка** can be a friendly request. Tone, relationship,
+and **будь ласка** do the politeness work.
+
+### Command shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"ти: one familiar person": ["читай", "пиши", "слухай", "дай", "скажи", "іди"], "ви: polite or plural": ["читайте", "пишіть", "слухайте", "дайте", "скажіть", "ідіть"]}`)} />
+
+## Як утворити?
+
+For A1, learn the common forms as pairs.
+
+### The ti form
+
+Use **ти** commands with one familiar person:
+
+| Infinitive | ти command | A1 line |
+| --- | --- | --- |
+| **читати** | **читай** | **Олено, читай.** |
+| **слухати** | **слухай** | **Тарасе, слухай.** |
+| **писати** | **пиши** | **Пиши речення.** |
+| **говорити** | **говори** | **Говори повільно.** |
+| **дивитися** | **дивись** | **Подивись сюди.** |
+| **іти** | **іди** | **Іди додому.** |
+| **дати** | **дай** | **Дай меню, будь ласка.** |
+| **сказати** | **скажи** | **Скажи, що ти хочеш.** |
+| **сісти** | **сядь** | **Сядь тут.** |
+| **відкрити** | **відкрий** | **Відкрий двері.** |
+
+### The vy form
+
+For polite speech or a group, the form often adds **-те** or **-іть**:
+
+| ти | ви |
+| --- | --- |
+| **читай** | **читайте** |
+| **слухай** | **слухайте** |
+| **пиши** | **пишіть** |
+| **говори** | **говоріть** |
+| **дивись** | **дивіться** |
+| **ходи** | **ходіть** |
+| **дай** | **дайте** |
+| **скажи** | **скажіть** |
+| **іди** | **ідіть** |
+| **сядь** | **сядьте** |
+| **відкрий** | **відкрийте** |
+
+Do not overbuild the rule. Many forms are short and frequent. Memorize the
+ones you need for real requests: **дайте**, **скажіть**, **відкрийте**,
+**пишіть**, **читайте**.
+
+### Recognition-only repairs
+
+The wiki mentions wider imperative material so writers do not create mistakes.
+At A1, recognize these patterns; do not produce a full table:
+
+- **Recognition note 1: Базові інструкції (2-га особа однини і множини).** Start with
+  **ти/ви** contrasts such as **пробач - пробачте**, **допоможи -
+  допоможіть**, **читай**, **пиши**, **слухай**. Forms like **доповідай** and
+  **розповідай** from **доповісти** and **розповісти** show that not every
+  command is formed mechanically from the infinitive.
+- **Recognition note 2: Форми спільної дії (1-ша особа множини).** Later you will meet
+  **-мо** forms such as **співаймо** and **робімо**. For now, just know that
+  Ukrainian has native forms for "let's"; do not build them with **давай**.
+- **Recognition note 3: Третя особа та частки «хай/нехай».** Later you will recognize
+  **хай пробачить**, **нехай допоможе**, **хай пишуть**, **хай скаже**, and
+  **хай сядуть**. Do not use an infinitive after **хай**.
+- **Recognition note 4: Фонетичні та орфографічні обмеження.** In imperative forms after
+  **в, п, ж, ч, ш, р**, do not write a soft sign: **поставмо**, **сипмо**,
+  **їжмо**, **кличмо**, **облишмо**, **вірмо**. Other forms may have a soft
+  sign for sounds like [д'], [т'], [з'], [с'], [ц'], [л'], [н'], as in
+  **виходьте**, **погодься**, **посунься**, **підносься**, **погляньмо**.
+- **Recognition note 5: Поглиблення через паралельні форми.** Later, A2 can recognize
+  pairs such as **ходіть - ходіте** and **варіть - `варіте`**, and strict
+  commands such as **Стояти!**. Do not make these the active A1 target.
+
+### Polite request order
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Олено / читай / будь / ласка", "answer": "Олено, читай, будь ласка."}, {"jumbled": "Пане / Іване / читайте / будь / ласка", "answer": "Пане Іване, читайте, будь ласка."}, {"jumbled": "Дайте / мені / меню / будь / ласка", "answer": "Дайте мені меню, будь ласка."}, {"jumbled": "Дай / мені / меню / будь / ласка", "answer": "Дай мені меню, будь ласка."}, {"jumbled": "Скажіть / ще / раз / будь / ласка", "answer": "Скажіть ще раз, будь ласка."}, {"jumbled": "Відкрийте / підручники / будь / ласка", "answer": "Відкрийте підручники, будь ласка."}]`)} />
+
+## 📋 Підсумок
+
+<span id="підсумок"></span>
+
+Use this as your active A1 request map:
+
+| Situation | Say this |
+| --- | --- |
+| to a friend | **Олено, читай, будь ласка.** |
+| to a teacher or stranger | **Читайте, будь ласка.** |
+| asking for a menu | **Дайте меню, будь ласка.** |
+| asking a friend for the menu | **Дай меню, будь ласка.** |
+| asking someone to say something | **Скажи / скажіть, будь ласка.** |
+| class instruction | **Відкрийте підручники. Пишіть речення.** |
+| cafe request | **Дайте рахунок, будь ласка.** |
+
+Common repairs:
+
+| Problem | Use |
+| --- | --- |
+| infinitive as request | **Будь ласка, читай текст. / Будь ласка, читайте текст.** |
+| copied "let's" pattern | **Робімо це зараз!** |
+| infinitive after **хай** | **Хай він працює.** |
+| soft sign copied into a command | **Постав книгу на стіл.** |
+| mechanical form from **доповісти** | **Доповідай керівнику.** |
+| mixed ending | **Читаймо разом!** |
+
+The active lesson remains simple: **читай / читайте**, **пиши / пишіть**,
+**дай / дайте**, **скажи / скажіть**, plus **будь ласка**. Use the wider
+repairs only to avoid common interference.
+
+Keep the decolonized grammar habit: Ukrainian does not need **«давай»** as a
+form-building shortcut for commands. Use the Ukrainian command form itself:
+**слухаймо** when that later form is in scope, and **слухай / слухайте** here.
+For spelling, do not explain Ukrainian by saying "like another language but
+without a soft sign." Treat forms such as **постав**, **вір**, and **їж** as
+Ukrainian patterns in their own right. The learner builds Ukrainian from
+Ukrainian.
+
+Next module links short ideas. You will be able to say:
+**Олено, читай і пиши, будь ласка.** For now, keep one clear action at a time.
+
+<span id="repair-please-do-this-interference"></span>
+
+### Ремонти
+
+| Problem | Use |
+| --- | --- |
+| <del>**Будь ласка, читати текст.**</del> | **Будь ласка, читай текст. / Будь ласка, читайте текст.** |
+| <del>**Давай робити це зараз.**</del> | **Робімо це зараз!** |
+| <del>**Хай він працювати.**</del> | **Хай він працює.** |
+| <del>**Поставь книгу на стіл.**</del> | **Постав книгу на стіл.** |
+| <del>**Доповіди керівнику.**</del> | **Доповідай керівнику.** |
+| <del>**Читаємте разом!**</del> | **Читаймо разом!** |
+
+### Address plus command
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ___ книжку!", "answer": "дай", "options": ["дай", "дайте", "дати"]}, {"sentence": "Пане Іване, ___ книжку!", "answer": "дайте", "options": ["дайте", "дай", "дати"]}, {"sentence": "Тарасе, ___ сюди.", "answer": "іди", "options": ["іди", "ідіть", "іти"]}, {"sentence": "Друзі, ___ сюди.", "answer": "ідіть", "options": ["ідіть", "іди", "іти"]}, {"sentence": "Маріє, ___, що ти хочеш.", "answer": "скажи", "options": ["скажи", "скажіть", "сказати"]}, {"sentence": "Пані Оксано, ___, будь ласка.", "answer": "скажіть", "options": ["скажіть", "скажи", "сказати"]}]`)} />
+
+### Request checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Будь ласка makes a command or request more polite.", "isTrue": true, "explanation": "Add будь ласка for polite requests."}, {"statement": "Читай and читайте are both useful A1 command forms.", "isTrue": true, "explanation": "Читай is ти; читайте is ви."}, {"statement": "The active A1 target is every imperative person and number.", "isTrue": false, "explanation": "This module actively uses only ти and ви forms."}, {"statement": "Дайте рахунок, будь ласка is a polite cafe request.", "isTrue": true, "explanation": "Use дайте with a server."}, {"statement": "Будь ласка, читати текст is the target request form.", "isTrue": false, "explanation": "Use читай or читайте, not the infinitive."}, {"statement": "Давай is not used here as a shortcut for building Ukrainian imperatives.", "isTrue": true, "explanation": "Use the Ukrainian command form itself."}, {"statement": "Поставь is the Ukrainian spelling target.", "isTrue": false, "explanation": "Use постав."}, {"statement": "Олено, прочитай, будь ласка combines address and request.", "isTrue": true, "explanation": "Address plus command plus будь ласка is a good A1 pattern."}]`)} />
+
+### Repair imperative interference
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "<del>Будь ласка, читати текст.</del>", "right": "Будь ласка, читай(те) текст."}, {"left": "<del>Давай робити це зараз.</del>", "right": "Робімо це зараз!"}, {"left": "<del>Хай він працювати.</del>", "right": "Хай він працює."}, {"left": "<del>Поставь книгу на стіл.</del>", "right": "Постав книгу на стіл."}, {"left": "<del>Доповіди керівнику.</del>", "right": "Доповідай керівнику."}, {"left": "<del>Читаємте разом!</del>", "right": "Читаймо разом!"}]`)} />
+
+### Fix the request
+
+<ErrorCorrection client:only='react' instruction="Correct the command or request form." items={JSON.parse(`[{"sentence": "Будь ласка, читати текст.", "errorWord": "читати", "correctForm": "читай", "options": [], "explanation": "Use читай with one familiar person, or читайте for polite ви."}, {"sentence": "Пане Іване, читати текст, будь ласка.", "errorWord": "читати", "correctForm": "читайте", "options": [], "explanation": "Use читайте for polite address."}, {"sentence": "Дайте меню? Ні: дати меню, будь ласка.", "errorWord": "дати", "correctForm": "дайте", "options": [], "explanation": "Use дайте in the polite request."}, {"sentence": "Поставь книгу на стіл.", "errorWord": "Поставь", "correctForm": "Постав", "options": [], "explanation": "Do not write a soft sign here."}, {"sentence": "Хай він працювати.", "errorWord": "працювати", "correctForm": "працює", "options": [], "explanation": "After хай, use a finite verb form."}, {"sentence": "Читаємте разом!", "errorWord": "Читаємте", "correctForm": "Читаймо", "options": [], "explanation": "Use the single Ukrainian form Читаймо for this repair."}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"наказовий спосіб","translation":"imperative mood; command form","pos":"noun phrase","example":"Наказовий спосіб допомагає просити про дію.","examples":["imperative mood; command form","Наказовий спосіб допомагає просити про дію."]},{"word":"будь ласка","translation":"please","pos":"chunk","example":"Читайте, будь ласка.","examples":["please","Читайте, будь ласка."]},{"word":"читати","translation":"to read","pos":"verb","example":"Я хочу читати текст.","examples":["to read","Я хочу читати текст."]},{"word":"читай","translation":"read! (ti)","pos":"command","example":"Олено, читай.","examples":["read! (ti)","Олено, читай."]},{"word":"читайте","translation":"read! (vy; polite or plural)","pos":"command","example":"Читайте текст, будь ласка.","examples":["read! (vy; polite or plural)","Читайте текст, будь ласка."]},{"word":"писати","translation":"to write","pos":"verb","example":"Я люблю писати.","examples":["to write","Я люблю писати."]},{"word":"пиши","translation":"write! (ti)","pos":"command","example":"Пиши речення.","examples":["write! (ti)","Пиши речення."]},{"word":"пишіть","translation":"write! (vy; polite or plural)","pos":"command","example":"Пишіть речення.","examples":["write! (vy; polite or plural)","Пишіть речення."]},{"word":"слухати","translation":"to listen","pos":"verb","example":"Я хочу слухати.","examples":["to listen","Я хочу слухати."]},{"word":"слухай","translation":"listen! (ti)","pos":"command","example":"Тарасе, слухай.","examples":["listen! (ti)","Тарасе, слухай."]},{"word":"слухайте","translation":"listen! (vy; polite or plural)","pos":"command","example":"Слухайте мене.","examples":["listen! (vy; polite or plural)","Слухайте мене."]},{"word":"дивитися","translation":"to look; to watch","pos":"verb","example":"Я хочу дивитися.","examples":["to look; to watch","Я хочу дивитися."]},{"word":"дивись","translation":"look! (ti)","pos":"command","example":"Дивись сюди.","examples":["look! (ti)","Дивись сюди."]},{"word":"дивіться","translation":"look! (vy; polite or plural)","pos":"command","example":"Дивіться сюди.","examples":["look! (vy; polite or plural)","Дивіться сюди."]},{"word":"говорити","translation":"to speak","pos":"verb","example":"Я хочу говорити українською.","examples":["to speak","Я хочу говорити українською."]},{"word":"говори","translation":"speak! (ti)","pos":"command","example":"Говори повільно.","examples":["speak! (ti)","Говори повільно."]},{"word":"говоріть","translation":"speak! (vy; polite or plural)","pos":"command","example":"Говоріть повільно, будь ласка.","examples":["speak! (vy; polite or plural)","Говоріть повільно, будь ласка."]},{"word":"дати","translation":"to give","pos":"verb","example":"Я хочу дати меню.","examples":["to give","Я хочу дати меню."]},{"word":"дай","translation":"give! (ti)","pos":"command","example":"Дай меню, будь ласка.","examples":["give! (ti)","Дай меню, будь ласка."]},{"word":"дайте","translation":"give! (vy; polite or plural)","pos":"command","example":"Дайте рахунок, будь ласка.","examples":["give! (vy; polite or plural)","Дайте рахунок, будь ласка."]},{"word":"сказати","translation":"to say; to tell","pos":"verb","example":"Я хочу сказати.","examples":["to say; to tell","Я хочу сказати."]},{"word":"скажи","translation":"say!; tell! (ti)","pos":"command","example":"Скажи, що ти хочеш.","examples":["say!; tell! (ti)","Скажи, що ти хочеш."]},{"word":"скажіть","translation":"say!; tell! (vy; polite or plural)","pos":"command","example":"Скажіть ще раз, будь ласка.","examples":["say!; tell! (vy; polite or plural)","Скажіть ще раз, будь ласка."]},{"word":"іти","translation":"to go","pos":"verb","example":"Я хочу іти.","examples":["to go","Я хочу іти."]},{"word":"іди","translation":"go! (ti)","pos":"command","example":"Іди додому.","examples":["go! (ti)","Іди додому."]},{"word":"ідіть","translation":"go! (vy; polite or plural)","pos":"command","example":"Ідіть сюди.","examples":["go! (vy; polite or plural)","Ідіть сюди."]},{"word":"відкрити","translation":"to open","pos":"verb","example":"Я хочу відкрити двері.","examples":["to open","Я хочу відкрити двері."]},{"word":"відкрий","translation":"open! (ti)","pos":"command","example":"Відкрий двері.","examples":["open! (ti)","Відкрий двері."]},{"word":"відкрийте","translation":"open! (vy; polite or plural)","pos":"command","example":"Відкрийте підручники.","examples":["open! (vy; polite or plural)","Відкрийте підручники."]},{"word":"сісти","translation":"to sit down","pos":"verb","example":"Я хочу сісти.","examples":["to sit down","Я хочу сісти."]},{"word":"сядь","translation":"sit down! (ti)","pos":"command","example":"Сядь тут.","examples":["sit down! (ti)","Сядь тут."]},{"word":"сядьте","translation":"sit down! (vy; polite or plural)","pos":"command","example":"Сядьте тут, будь ласка.","examples":["sit down! (vy; polite or plural)","Сядьте тут, будь ласка."]},{"word":"підручник","translation":"textbook","pos":"noun","example":"Відкрийте підручник.","examples":["textbook","Відкрийте підручник."]},{"word":"сторінка","translation":"page","pos":"noun","example":"Сторінка двадцять три.","examples":["page","Сторінка двадцять три."]},{"word":"речення","translation":"sentence","pos":"noun","example":"Напишіть три речення.","examples":["sentence","Напишіть три речення."]},{"word":"м'яч","translation":"ball","pos":"noun","example":"Принеси м'яч.","examples":["ball","Принеси м'яч."]},{"word":"конуси","translation":"cones","pos":"noun","example":"Розстав конуси.","examples":["cones","Розстав конуси."]},{"word":"сітка","translation":"net","pos":"noun","example":"Натягни сітку.","examples":["net","Натягни сітку."]},{"word":"рушники","translation":"towels","pos":"noun","example":"Поклади рушники на лавку.","examples":["towels","Поклади рушники на лавку."]},{"word":"лавка","translation":"bench","pos":"noun","example":"Рушники на лавці.","examples":["bench","Рушники на лавці."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"наказовий спосіб","back":"imperative mood; command form"},{"front":"будь ласка","back":"please"},{"front":"читати","back":"to read"},{"front":"читай","back":"read! (ti)"},{"front":"читайте","back":"read! (vy; polite or plural)"},{"front":"писати","back":"to write"},{"front":"пиши","back":"write! (ti)"},{"front":"пишіть","back":"write! (vy; polite or plural)"},{"front":"слухати","back":"to listen"},{"front":"слухай","back":"listen! (ti)"},{"front":"слухайте","back":"listen! (vy; polite or plural)"},{"front":"дивитися","back":"to look; to watch"},{"front":"дивись","back":"look! (ti)"},{"front":"дивіться","back":"look! (vy; polite or plural)"},{"front":"говорити","back":"to speak"},{"front":"говори","back":"speak! (ti)"},{"front":"говоріть","back":"speak! (vy; polite or plural)"},{"front":"дати","back":"to give"},{"front":"дай","back":"give! (ti)"},{"front":"дайте","back":"give! (vy; polite or plural)"},{"front":"сказати","back":"to say; to tell"},{"front":"скажи","back":"say!; tell! (ti)"},{"front":"скажіть","back":"say!; tell! (vy; polite or plural)"},{"front":"іти","back":"to go"},{"front":"іди","back":"go! (ti)"},{"front":"ідіть","back":"go! (vy; polite or plural)"},{"front":"відкрити","back":"to open"},{"front":"відкрий","back":"open! (ti)"},{"front":"відкрийте","back":"open! (vy; polite or plural)"},{"front":"сісти","back":"to sit down"},{"front":"сядь","back":"sit down! (ti)"},{"front":"сядьте","back":"sit down! (vy; polite or plural)"},{"front":"підручник","back":"textbook"},{"front":"сторінка","back":"page"},{"front":"речення","back":"sentence"},{"front":"м'яч","back":"ball"},{"front":"конуси","back":"cones"},{"front":"сітка","back":"net"},{"front":"рушники","back":"towels"},{"front":"лавка","back":"bench"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Build the command
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ___ текст, будь ласка.", "answer": "читай", "options": ["читай", "читати", "читаєш"]}, {"sentence": "Пане Іване, ___ текст, будь ласка.", "answer": "читайте", "options": ["читайте", "читати", "читаєте"]}, {"sentence": "Тарасе, ___ речення.", "answer": "пиши", "options": ["пиши", "писати", "пишеш"]}, {"sentence": "Студенти, ___ речення.", "answer": "пишіть", "options": ["пишіть", "писати", "пишете"]}, {"sentence": "Маріє, ___ мене, будь ласка.", "answer": "слухай", "options": ["слухай", "слухати", "слухаєш"]}, {"sentence": "Друзі, ___ мене.", "answer": "слухайте", "options": ["слухайте", "слухати", "слухаєте"]}, {"sentence": "___ меню, будь ласка.", "answer": "Дайте", "options": ["Дайте", "Дати", "Даєте"]}, {"sentence": "___, що ти хочеш.", "answer": "Скажи", "options": ["Скажи", "Сказати", "Скажеш"]}]`)} />
+
+### Ti or vy?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You ask one friend to read.", "options": [{"text": "Читай, будь ласка.", "correct": true}, {"text": "Читайте, будь ласка.", "correct": false}, {"text": "Читати, будь ласка.", "correct": false}], "explanation": "One friend takes the ти form читай."}, {"question": "You ask a teacher to read.", "options": [{"text": "Читайте, будь ласка.", "correct": true}, {"text": "Читай, будь ласка.", "correct": false}, {"text": "Читаєте, будь ласка.", "correct": false}], "explanation": "A teacher takes polite ви."}, {"question": "You ask a server for the bill.", "options": [{"text": "Дайте рахунок, будь ласка.", "correct": true}, {"text": "Дай рахунок, будь ласка.", "correct": false}, {"text": "Дати рахунок, будь ласка.", "correct": false}], "explanation": "Use polite дайте with a server."}, {"question": "You ask one close friend for the menu.", "options": [{"text": "Дай меню, будь ласка.", "correct": true}, {"text": "Дайте меню, будь ласка.", "correct": false}, {"text": "Даєш меню, будь ласка.", "correct": false}], "explanation": "Use дай with one close person."}, {"question": "A teacher gives a class instruction.", "options": [{"text": "Пишіть речення.", "correct": true}, {"text": "Пиши речення.", "correct": false}, {"text": "Писати речення.", "correct": false}], "explanation": "The class takes the plural form пишіть."}, {"question": "A friend asks you to look.", "options": [{"text": "Подивись!", "correct": true}, {"text": "Дивитися!", "correct": false}, {"text": "Дивишся!", "correct": false}], "explanation": "Подивись is a useful ти command."}, {"question": "You politely ask someone to say it again.", "options": [{"text": "Скажіть ще раз, будь ласка.", "correct": true}, {"text": "Сказати ще раз, будь ласка.", "correct": false}, {"text": "Скажете ще раз, будь ласка.", "correct": false}], "explanation": "Скажіть is the polite command form."}, {"question": "A coach asks the team to open the door.", "options": [{"text": "Відкрийте двері.", "correct": true}, {"text": "Відкрий двері.", "correct": false}, {"text": "Відкрити двері.", "correct": false}], "explanation": "The team takes the plural command відкрийте."}]`)} />
+
+### Command shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"ти: one familiar person": ["читай", "пиши", "слухай", "дай", "скажи", "іди"], "ви: polite or plural": ["читайте", "пишіть", "слухайте", "дайте", "скажіть", "ідіть"]}`)} />
+
+### Polite request order
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Олено / читай / будь / ласка", "answer": "Олено, читай, будь ласка."}, {"jumbled": "Пане / Іване / читайте / будь / ласка", "answer": "Пане Іване, читайте, будь ласка."}, {"jumbled": "Дайте / мені / меню / будь / ласка", "answer": "Дайте мені меню, будь ласка."}, {"jumbled": "Дай / мені / меню / будь / ласка", "answer": "Дай мені меню, будь ласка."}, {"jumbled": "Скажіть / ще / раз / будь / ласка", "answer": "Скажіть ще раз, будь ласка."}, {"jumbled": "Відкрийте / підручники / будь / ласка", "answer": "Відкрийте підручники, будь ласка."}]`)} />
+
+### Address plus command
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ___ книжку!", "answer": "дай", "options": ["дай", "дайте", "дати"]}, {"sentence": "Пане Іване, ___ книжку!", "answer": "дайте", "options": ["дайте", "дай", "дати"]}, {"sentence": "Тарасе, ___ сюди.", "answer": "іди", "options": ["іди", "ідіть", "іти"]}, {"sentence": "Друзі, ___ сюди.", "answer": "ідіть", "options": ["ідіть", "іди", "іти"]}, {"sentence": "Маріє, ___, що ти хочеш.", "answer": "скажи", "options": ["скажи", "скажіть", "сказати"]}, {"sentence": "Пані Оксано, ___, будь ласка.", "answer": "скажіть", "options": ["скажіть", "скажи", "сказати"]}]`)} />
+
+### Request checks
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Будь ласка makes a command or request more polite.", "isTrue": true, "explanation": "Add будь ласка for polite requests."}, {"statement": "Читай and читайте are both useful A1 command forms.", "isTrue": true, "explanation": "Читай is ти; читайте is ви."}, {"statement": "The active A1 target is every imperative person and number.", "isTrue": false, "explanation": "This module actively uses only ти and ви forms."}, {"statement": "Дайте рахунок, будь ласка is a polite cafe request.", "isTrue": true, "explanation": "Use дайте with a server."}, {"statement": "Будь ласка, читати текст is the target request form.", "isTrue": false, "explanation": "Use читай or читайте, not the infinitive."}, {"statement": "Давай is not used here as a shortcut for building Ukrainian imperatives.", "isTrue": true, "explanation": "Use the Ukrainian command form itself."}, {"statement": "Поставь is the Ukrainian spelling target.", "isTrue": false, "explanation": "Use постав."}, {"statement": "Олено, прочитай, будь ласка combines address and request.", "isTrue": true, "explanation": "Address plus command plus будь ласка is a good A1 pattern."}]`)} />
+
+### Repair imperative interference
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Будь ласка, читати текст.", "right": "Будь ласка, читай(те) текст."}, {"left": "Давай робити це зараз.", "right": "Робімо це зараз!"}, {"left": "Хай він працювати.", "right": "Хай він працює."}, {"left": "Поставь книгу на стіл.", "right": "Постав книгу на стіл."}, {"left": "Доповіди керівнику.", "right": "Доповідай керівнику."}, {"left": "Читаємте разом!", "right": "Читаймо разом!"}]`)} />
+
+### Fix the request
+
+<ErrorCorrection client:only='react' instruction="Correct the command or request form." items={JSON.parse(`[{"sentence": "Будь ласка, читати текст.", "errorWord": "читати", "correctForm": "читай", "options": [], "explanation": "Use читай with one familiar person, or читайте for polite ви."}, {"sentence": "Пане Іване, читати текст, будь ласка.", "errorWord": "читати", "correctForm": "читайте", "options": [], "explanation": "Use читайте for polite address."}, {"sentence": "Дайте меню? Ні: дати меню, будь ласка.", "errorWord": "дати", "correctForm": "дайте", "options": [], "explanation": "Use дайте in the polite request."}, {"sentence": "Поставь книгу на стіл.", "errorWord": "Поставь", "correctForm": "Постав", "options": [], "explanation": "Do not write a soft sign here."}, {"sentence": "Хай він працювати.", "errorWord": "працювати", "correctForm": "працює", "options": [], "explanation": "After хай, use a finite verb form."}, {"sentence": "Читаємте разом!", "errorWord": "Читаємте", "correctForm": "Читаймо", "options": [], "explanation": "Use the single Ukrainian form Читаймо for this repair."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🔗 Online resources:**
+- 🔗 [Ukrainian Course: Free Ukrainian Course Lesson 12](https://www.ukrainiancourse.com/free-ukrainian-courses/free-ukrainian-course-lesson-12/) — Reference for imperative forms; module narrows the material to practical A1 commands and requests.
+- 🔗 [Ukrainian Lessons: How to Ask for and Give Help in Ukrainian](https://www.ukrainianlessons.com/ask-for-help/) — Learner-facing support for polite Ukrainian requests with будь ласка.
+- 🔗 **Wiki: pedagogy/a1/please-do-this** — Authoritative pedagogical brief for M43 please-do-this, including L2 interference repairs and decolonized imperative guidance.
+- 🔗 **Підручник 5 класу: Наказовий спосіб (Заболотний** — for forming imperative mood from verb stems; adapted here to active A1 ти/ви request forms only.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

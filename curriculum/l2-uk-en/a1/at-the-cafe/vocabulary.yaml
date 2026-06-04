@@ -1,0 +1,112 @@
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Ми в кафе."
+- word: кав'ярня
+  translation: coffee shop
+  pos: noun
+  example: "Це маленька кав'ярня."
+- word: меню
+  translation: menu
+  pos: noun
+  example: "Можна меню?"
+- word: рахунок
+  translation: bill
+  pos: noun
+  example: "Рахунок, будь ласка."
+- word: замовляти
+  translation: to order
+  pos: verb
+  example: "Я замовляю каву."
+- word: офіціант
+  translation: waiter
+  pos: noun
+  example: "Офіціант приносить меню."
+- word: офіціантка
+  translation: waitress
+  pos: noun
+  example: "Офіціантка приносить рахунок."
+- word: бариста
+  translation: barista
+  pos: noun
+  example: "Бариста питає: Вам тут чи із собою?"
+- word: смачно
+  translation: tasty; deliciously
+  pos: adverb
+  example: "Дуже смачно було!"
+- word: будь ласка
+  translation: please
+  pos: phrase
+  example: "Мені каву, будь ласка."
+- word: перепрошую
+  translation: excuse me
+  pos: phrase
+  example: "Перепрошую, можна рахунок?"
+- word: вибачте
+  translation: excuse me; sorry
+  pos: phrase
+  example: "Вибачте, можна меню?"
+- word: тут
+  translation: here
+  pos: adverb
+  example: "Тут, будь ласка."
+- word: із собою
+  translation: to go; with me
+  pos: chunk
+  example: "Каву із собою, будь ласка."
+- word: велику каву
+  translation: a large coffee
+  pos: chunk
+  example: "Велику каву, будь ласка."
+- word: маленьку каву
+  translation: a small coffee
+  pos: chunk
+  example: "Маленьку каву із собою, будь ласка."
+- word: ресторан
+  translation: restaurant
+  pos: noun
+  example: "Ресторан формальніший, ніж кафе."
+- word: рекомендувати
+  translation: to recommend
+  pos: verb
+  example: "Що ви рекомендуєте?"
+- word: чайові
+  translation: tip; gratuity
+  pos: noun
+  example: "Чайові - це не обов'язково."
+- word: готівка
+  translation: cash
+  pos: noun
+  example: "Можна готівкою?"
+- word: картка
+  translation: card
+  pos: noun
+  example: "Можна карткою?"
+- word: гостре
+  translation: spicy
+  pos: adjective
+  example: "Це гостре?"
+- word: вегетаріанське меню
+  translation: vegetarian menu
+  pos: phrase
+  example: "Є вегетаріанське меню?"
+- word: тістечко
+  translation: pastry; small cake
+  pos: noun
+  example: "Дайте тістечко."
+- word: пакетик
+  translation: small bag
+  pos: noun
+  example: "Пакетик, будь ласка."
+- word: соломинка
+  translation: drinking straw
+  pos: noun
+  example: "Можна соломинку?"
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "З вас сімдесят п'ять гривень."
+- word: До побачення!
+  translation: Goodbye!
+  pos: phrase
+  example: "До побачення!"

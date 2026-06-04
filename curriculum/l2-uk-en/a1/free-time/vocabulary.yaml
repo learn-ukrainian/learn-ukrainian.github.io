@@ -1,0 +1,172 @@
+- word: вільний час
+  translation: free time
+  pos: noun phrase
+  example: "У вільний час я читаю."
+- word: вихідні
+  translation: weekend; days off
+  pos: plural noun
+  example: "У вихідні я відпочиваю."
+- word: хобі
+  translation: hobby
+  pos: noun
+  example: "Моє хобі — музика."
+- word: спорт
+  translation: sport
+  pos: noun
+  example: "Я люблю спорт."
+- word: футбол
+  translation: football; soccer
+  pos: noun
+  example: "Я граю у футбол."
+- word: баскетбол
+  translation: basketball
+  pos: noun
+  example: "Ми граємо у баскетбол."
+- word: теніс
+  translation: tennis
+  pos: noun
+  example: "Вона грає у теніс."
+- word: музика
+  translation: music
+  pos: noun
+  example: "Я слухаю музику."
+- word: фільм
+  translation: film; movie
+  pos: noun
+  example: "Я дивлюся фільм."
+- word: кіно
+  translation: cinema; movie theater
+  pos: noun
+  example: "Ходімо в кіно."
+- word: театр
+  translation: theater
+  pos: noun
+  example: "Ми ходимо в театр."
+- word: концерт
+  translation: concert
+  pos: noun
+  example: "Вони ходять на концерт."
+- word: музей
+  translation: museum
+  pos: noun
+  example: "Ходімо в музей."
+- word: гурток
+  translation: club; activity group
+  pos: noun
+  example: "Це музичний гурток."
+- word: читати
+  translation: to read
+  pos: verb
+  example: "Я читаю книгу."
+- word: слухати
+  translation: to listen
+  pos: verb
+  example: "Я слухаю музику."
+- word: дивитися
+  translation: to watch
+  pos: verb
+  example: "Я дивлюся фільми."
+- word: гуляти
+  translation: to walk
+  pos: verb
+  example: "Я гуляю в парку."
+- word: відпочивати
+  translation: to rest
+  pos: verb
+  example: "Я відпочиваю вдома."
+- word: грати
+  translation: to play
+  pos: verb
+  example: "Я граю у футбол."
+- word: займатися спортом
+  translation: to do sport
+  pos: phrase
+  example: "Я займаюся спортом."
+- word: малювати
+  translation: to draw
+  pos: verb
+  example: "Я іноді малюю."
+- word: фотографувати
+  translation: to take photos
+  pos: verb
+  example: "У Карпатах я фотографую."
+- word: грати у футбол
+  translation: to play football
+  pos: phrase
+  example: "Він грає у футбол."
+- word: грати на гітарі
+  translation: to play guitar
+  pos: phrase
+  example: "Вона грає на гітарі."
+- word: ходити в кіно
+  translation: to go to the cinema
+  pos: phrase
+  example: "Ми ходимо в кіно раз на місяць."
+- word: ходити в театр
+  translation: to go to the theater
+  pos: phrase
+  example: "Вони ходять в театр."
+- word: ходити на концерт
+  translation: to go to a concert
+  pos: phrase
+  example: "Я хочу ходити на концерт."
+- word: завжди
+  translation: always
+  pos: adverb
+  example: "Я завжди читаю ввечері."
+- word: зазвичай
+  translation: usually
+  pos: adverb
+  example: "Я зазвичай гуляю у вихідні."
+- word: часто
+  translation: often
+  pos: adverb
+  example: "Я часто слухаю музику."
+- word: іноді
+  translation: sometimes
+  pos: adverb
+  example: "Я іноді малюю."
+- word: інколи
+  translation: sometimes
+  pos: adverb
+  example: "Інколи ми ходимо в музей."
+- word: рідко
+  translation: rarely
+  pos: adverb
+  example: "Я рідко ходжу в театр."
+- word: ніколи
+  translation: never
+  pos: adverb
+  example: "Я ніколи не працюю у неділю."
+- word: раз на тиждень
+  translation: once a week
+  pos: frequency chunk
+  example: "Я ходжу в кіно раз на тиждень."
+- word: двічі на тиждень
+  translation: twice a week
+  pos: frequency chunk
+  example: "Вона грає у теніс двічі на тиждень."
+- word: тричі на тиждень
+  translation: three times a week
+  pos: frequency chunk
+  example: "Вони тренуються тричі на тиждень."
+- word: раз на місяць
+  translation: once a month
+  pos: frequency chunk
+  example: "Ми ходимо в театр раз на місяць."
+- word: Ходімо!
+  translation: Let's go!
+  pos: invitation chunk
+  example: "Ходімо в кіно!"
+- word: Давай!
+  translation: Let's!
+  pos: informal invitation chunk
+  example: "Давай грати разом!"
+- word: як часто?
+  translation: how often?
+  pos: question chunk
+  example: "Як часто ти граєш у футбол?"
+- word: у вихідні
+  translation: on weekends
+  pos: time chunk
+  example: "У вихідні я читаю."

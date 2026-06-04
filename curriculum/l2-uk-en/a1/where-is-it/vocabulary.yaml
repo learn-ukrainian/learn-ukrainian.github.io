@@ -1,0 +1,180 @@
+- word: де
+  translation: where
+  pos: question word
+  example: "Де школа?"
+- word: місцевий відмінок
+  translation: locative case
+  pos: grammar term
+  example: "Місцевий відмінок відповідає на питання де?"
+- word: в/у
+  translation: in; at
+  pos: preposition
+  example: "Я живу в Україні."
+- word: на
+  translation: on; at
+  pos: preposition
+  example: "Мама на роботі."
+- word: школа
+  translation: school
+  pos: noun
+  example: "Олена в школі."
+- word: робота
+  translation: work; job
+  pos: noun
+  example: "Тарас на роботі."
+- word: банк
+  translation: bank
+  pos: noun
+  example: "Максим у банку."
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Я в магазині."
+- word: вулиця
+  translation: street
+  pos: noun
+  example: "Аптека на вулиці."
+- word: місто
+  translation: city; town
+  pos: noun
+  example: "Ми у місті."
+- word: парк
+  translation: park
+  pos: noun
+  example: "Оксана гуляє у парку."
+- word: лікарня
+  translation: hospital
+  pos: noun
+  example: "Софія у лікарні."
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Ми в кафе."
+- word: площа
+  translation: square
+  pos: noun
+  example: "Пошта на площі."
+- word: вокзал
+  translation: train station
+  pos: noun
+  example: "Тато на вокзалі."
+- word: пошта
+  translation: post office
+  pos: noun
+  example: "Я на пошті."
+- word: офіс
+  translation: office
+  pos: noun
+  example: "Марко в офісі."
+- word: поверх
+  translation: floor; storey
+  pos: noun
+  example: "Офіс на другому поверсі."
+- word: центр
+  translation: center; downtown
+  pos: noun
+  example: "Банк у центрі."
+- word: стіл
+  translation: table; desk
+  pos: noun
+  example: "Книга на столі."
+- word: кімната
+  translation: room
+  pos: noun
+  example: "Я в кімнаті."
+- word: будинок
+  translation: building; house
+  pos: noun
+  example: "Кафе в будинку."
+- word: село
+  translation: village
+  pos: noun
+  example: "Бабуся в селі."
+- word: річка
+  translation: river
+  pos: noun
+  example: "Парк біля річки."
+- word: Україна
+  translation: Ukraine
+  pos: proper noun
+  example: "Я живу в Україні."
+- word: Київ
+  translation: Kyiv
+  pos: proper noun
+  example: "Я живу у Києві."
+- word: Львів
+  translation: Lviv
+  pos: proper noun
+  example: "Сестра у Львові."
+- word: Одеса
+  translation: Odesa
+  pos: proper noun
+  example: "Друг в Одесі."
+- word: Хрещатик
+  translation: Khreshchatyk
+  pos: proper noun
+  example: "Офіс на Хрещатику."
+- word: бути
+  translation: to be
+  pos: verb
+  example: "Я був у парку."
+- word: жити
+  translation: to live
+  pos: verb
+  example: "Я живу в Києві."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Я працюю в офісі."
+- word: гуляти
+  translation: to walk; to stroll
+  pos: verb
+  example: "Ми гуляємо у парку."
+- word: стояти
+  translation: to stand
+  pos: verb
+  example: "Автобус стоїть на площі."
+- word: лежати
+  translation: to lie; be lying
+  pos: verb
+  example: "Книга лежить на столі."
+- word: сидіти
+  translation: to sit
+  pos: verb
+  example: "Кіт сидить на дивані."
+- word: іти
+  translation: to go on foot
+  pos: verb
+  example: "Він іде в школу."
+- word: їхати
+  translation: to go by transport
+  pos: verb
+  example: "Ми їдемо в місто."
+- word: біля
+  translation: near; by
+  pos: preposition
+  example: "Банк біля пошти."
+- word: до
+  translation: to; toward
+  pos: preposition
+  example: "Я йду до школи."
+- word: рука
+  translation: hand; arm
+  pos: noun
+  example: "Гроші в руці."
+- word: нога
+  translation: leg; foot
+  pos: noun
+  example: "На нозі черевик."
+- word: горох
+  translation: peas
+  pos: noun
+  example: "У горосі є білок."
+- word: білочка
+  translation: squirrel
+  pos: noun
+  example: "На білочці руда шубка."
+- word: тато
+  translation: dad; father
+  pos: noun
+  example: "Де мій тато?"

@@ -1,0 +1,302 @@
+- id: act-1
+  type: group-sort
+  title: A1.4 skill map
+  instruction: Sort each line by the checkpoint skill it proves.
+  groups:
+    - name: Clock time
+      items:
+        - Котра година?
+        - Зараз сьома.
+        - Зустріч о десятій.
+    - name: Calendar
+      items:
+        - У суботу.
+        - У жовтні.
+        - Влітку.
+    - name: Weather
+      items:
+        - Сьогодні тепло.
+        - Іде дощ.
+        - Надворі хмарно.
+    - name: Free-time plan
+      items:
+        - Ходімо в музей.
+        - Давай слухати музику.
+        - Я часто читаю.
+- id: act-2
+  type: match-up
+  title: Question to checkpoint answer
+  instruction: Match each question with the answer that fits a weekend plan.
+  pairs:
+    - left: Котра година?
+      right: Десята тридцять.
+    - left: О котрій зустріч?
+      right: О першій.
+    - left: Яка сьогодні погода?
+      right: Тепло і сонячно.
+    - left: Коли твій день народження?
+      right: У жовтні.
+    - left: Що ти робиш у суботу?
+      right: Граю у футбол.
+    - left: Як часто ти читаєш?
+      right: Кожен день ввечері.
+    - left: Ходімо в парк!
+      right: Добре, о котрій?
+    - left: Що ти будеш робити завтра?
+      right: Буду працювати.
+- id: act-3
+  type: fill-in
+  title: Weekend plan gaps
+  instruction: Choose the checkpoint chunk that completes the plan.
+  items:
+    - sentence: "Зустріч ___ годині."
+      answer: "о п'ятій"
+      options:
+        - "о п'ятій"
+        - "в п'ятій"
+        - "у п'ята"
+      explanation: Schedule time uses о/об plus the hour chunk.
+    - sentence: "Ми йдемо в кіно ___."
+      answer: у суботу
+      options:
+        - у суботу
+        - в суботі
+        - на суботу
+      explanation: Use у/в plus the day chunk.
+    - sentence: "Мій день народження ___."
+      answer: у січні
+      options:
+        - у січні
+        - в січень
+        - січень
+      explanation: Months answer коли? with у/в plus the month form.
+    - sentence: "Сьогодні ___ і холодно."
+      answer: іде дощ
+      options:
+        - іде дощ
+        - іде дощова
+        - дощить холод
+      explanation: Іде дощ is the safe weather chunk.
+    - sentence: "Взимку дуже ___."
+      answer: холодно
+      options:
+        - холодно
+        - спекотно
+        - тепло
+      explanation: Winter connects naturally with cold weather.
+    - sentence: "Я прокидаюся о сьомій ___."
+      answer: ранку
+      options:
+        - ранку
+        - рано
+        - вранці
+      explanation: Use ранку to clarify 7 AM after the clock time.
+- id: act-4
+  type: quiz
+  title: Build the Saturday trip
+  instruction: Choose the line that fits each part of the travel plan.
+  items:
+    - prompt: "Start with the day and destination."
+      options:
+        - text: "У суботу ми їдемо до Києва."
+          correct: true
+        - text: "На суботу ми їдемо в Київ."
+          correct: false
+        - text: "У суботі ми їдемо Київ."
+          correct: false
+      explanation: Use у суботу and до Києва.
+    - prompt: "Give the meeting time."
+      options:
+        - text: "Зустріч о десятій ранку."
+          correct: true
+        - text: "Зустріч в десять годин."
+          correct: false
+        - text: "Зустріч на десяту ранку."
+          correct: false
+      explanation: Schedule time uses о plus the time chunk.
+    - prompt: "Add the weather."
+      options:
+        - text: "Буде тепло і сонячно."
+          correct: true
+        - text: "Погода буде тепла і сонячна."
+          correct: false
+        - text: "Це є тепло і сонячно."
+          correct: false
+      explanation: Short weather chunks are enough.
+    - prompt: "Add a first action."
+      options:
+        - text: "Спочатку гуляємо в парку."
+          correct: true
+        - text: "На початку ми є гуляємо в парку."
+          correct: false
+        - text: "Перший гуляємо у парк."
+          correct: false
+      explanation: Спочатку connects the action safely.
+    - prompt: "Add a rain alternative."
+      options:
+        - text: "Якщо буде дощ, спочатку йдемо в музей."
+          correct: true
+        - text: "Якщо є дощ, спочатку ходимо до музей."
+          correct: false
+        - text: "Коли дощова, спочатку йдемо музей."
+          correct: false
+      explanation: Якщо буде дощ is the safe condition chunk.
+- id: act-5
+  type: odd-one-out
+  title: Find the unsafe checkpoint chunk
+  instruction: Choose the line that does not fit the safe A1.4 pattern.
+  items:
+    - words:
+        - "Зустріч о п'ятій."
+        - "Фільм о десятій годині."
+        - "Кава об одинадцятій."
+        - "Зустріч в п'ять годин."
+      answer: "Зустріч в п'ять годин."
+      explanation: Schedule time uses о/об.
+    - words:
+        - "Пів на восьму."
+        - "Пів на шосту."
+        - "Чверть на дванадцяту."
+        - "Пів восьмої."
+      answer: "Пів восьмої."
+      explanation: The checkpoint chunk is пів на plus the next hour.
+    - words:
+        - "Іде дощ."
+        - "Сьогодні тепло."
+        - "Надворі хмарно."
+        - "Він іде дощ."
+      answer: "Він іде дощ."
+      explanation: Weather can be an impersonal Ukrainian sentence.
+    - words:
+        - "Взимку."
+        - "Навесні."
+        - "Влітку."
+        - "Весною."
+      answer: "Весною."
+      explanation: Навесні is the safe A1 season chunk in this checkpoint.
+    - words:
+        - "Я студент."
+        - "Мені 20 років."
+        - "Він спортсмен."
+        - "Я є студент."
+      answer: "Я є студент."
+      explanation: Ukrainian normally omits the present-tense helper here.
+- id: act-6
+  type: true-false
+  title: Checkpoint readiness checks
+  instruction: Decide whether each line is ready for an A1.4 checkpoint answer.
+  items:
+    - statement: "У суботу о десятій ходімо в парк."
+      answer: true
+      explanation: Day plus time plus invitation is a complete plan.
+    - statement: "Влітку часто тепло і сонячно."
+      answer: true
+      explanation: Влітку is the safe season chunk.
+    - statement: "Я працюю з дев'ятої до п'ятої."
+      answer: true
+      explanation: This workday range is useful and safe at A1.
+    - statement: "Сьогодні холодно, тому я читаю вдома."
+      answer: true
+      explanation: Weather plus reason plus action is a good checkpoint line.
+    - statement: "Мені подобається весна."
+      answer: true
+      explanation: Мені подобається is the safe preference chunk.
+    - statement: "О першій ходімо в музей."
+      answer: true
+      explanation: The schedule chunk о першій combines naturally with an invitation.
+- id: act-7
+  type: unjumble
+  title: Rebuild integrated checkpoint lines
+  instruction: Put the words in a safe A1.4 order.
+  items:
+    - words:
+        - У
+        - суботу
+        - о
+        - десятій
+        - ходімо
+        - в
+        - парк
+      answer: У суботу о десятій ходімо в парк
+    - words:
+        - Якщо
+        - буде
+        - дощ
+        - ходімо
+        - в
+        - музей
+      answer: Якщо буде дощ ходімо в музей
+    - words:
+        - Взимку
+        - ліс
+        - холодний
+      answer: Взимку ліс холодний
+    - words:
+        - Я
+        - працюю
+        - з
+        - дев'ятої
+        - до
+        - п'ятої
+      answer: Я працюю з дев'ятої до п'ятої
+    - words:
+        - Зараз
+        - п'ять
+        - по
+        - восьмій
+      answer: Зараз п'ять по восьмій
+    - words:
+        - Я
+        - хочу
+        - вставати
+        - о
+        - шостій
+        - ранку
+      answer: Я хочу вставати о шостій ранку
+- id: act-8
+  type: fill-in
+  title: Final repair gaps
+  instruction: Choose the full repair for each unsafe checkpoint sentence.
+  items:
+    - sentence: "Season repair: ___"
+      answer: "Взимку я люблю читати книжки."
+      options:
+        - "Взимку я люблю читати книжки."
+        - "Зимою я люблю читати книжки."
+        - "На зимі я люблю читати книжки."
+      explanation: Use the adverbial season chunk взимку.
+    - sentence: "Five-past-eight repair: ___"
+      answer: "Фільм починається п'ять по восьмій."
+      options:
+        - "Фільм починається п'ять по восьмій."
+        - "Фільм починається п'ять після восьмої."
+        - "Фільм починається п'ять в восьмій."
+      explanation: Use по, not an English-style after phrase.
+    - sentence: "Ten-to-six repair: ___"
+      answer: "Автобус приїде за десять шоста."
+      options:
+        - "Автобус приїде за десять шоста."
+        - "Автобус приїде без десяти шість."
+        - "Автобус приїде до десяти шість."
+      explanation: Use за for this approaching-hour chunk.
+    - sentence: "Twenty-to-six repair: ___"
+      answer: "Урок закінчується о двадцятій хвилині на шосту."
+      options:
+        - "Урок закінчується о двадцятій хвилині на шосту."
+        - "Урок закінчується в двадцять хвилин шостої."
+        - "Урок закінчується двадцять після п'ятої."
+      explanation: Use the Ukrainian на pattern for minutes in this checkpoint.
+    - sentence: "Name and age repair: ___"
+      answer: "Мене звати Джон, і мені 20 років."
+      options:
+        - "Мене звати Джон, і мені 20 років."
+        - "Моє ім'я є Джон, і я маю 20 років."
+        - "Я є Джон, і я маю 20 років."
+      explanation: Use мене звати and мені for age.
+    - sentence: "Student line repair: ___"
+      answer: "У понеділок я студент."
+      options:
+        - "У понеділок я студент."
+        - "У понеділок я є студент."
+        - "У понеділок мене студент."
+      explanation: Ukrainian normally omits the present-tense helper in this line.

@@ -1,0 +1,116 @@
+- lemma: це
+  translation: this is; this, neuter
+  pos: pronoun
+  usage: Це стіл. Це вікно.
+- lemma: цей
+  translation: this, masculine
+  pos: pronoun
+  usage: Цей стіл новий.
+- lemma: ця
+  translation: this, feminine
+  pos: pronoun
+  usage: Ця книга цікава.
+- lemma: ці
+  translation: these, plural
+  pos: pronoun
+  usage: Ці ручки сині.
+- lemma: той
+  translation: that, masculine
+  pos: pronoun
+  usage: Той стіл старий.
+- lemma: та
+  translation: that, feminine; and
+  pos: pronoun/conjunction
+  usage: Та книга стара. Мама та тато.
+- lemma: те
+  translation: that, neuter
+  pos: pronoun
+  usage: Те вікно маленьке.
+- lemma: ті
+  translation: those, plural
+  pos: pronoun
+  usage: Ті телефони чорні.
+- lemma: чи
+  translation: or, in questions
+  pos: conjunction
+  usage: Цей чи той?
+- lemma: ось
+  translation: here is; look
+  pos: particle
+  usage: Ось ця книга.
+- lemma: тут
+  translation: here
+  pos: adverb
+  usage: Цей стіл тут.
+- lemma: там
+  translation: there
+  pos: adverb
+  usage: Той стіл там.
+- lemma: який
+  translation: which; what kind, masculine
+  pos: pronoun
+  usage: Який стіл?
+- lemma: яка
+  translation: which; what kind, feminine
+  pos: pronoun
+  usage: Яка сумка?
+- lemma: яке
+  translation: which; what kind, neuter
+  pos: pronoun
+  usage: Яке вікно?
+- lemma: які
+  translation: which; what kind, plural
+  pos: pronoun
+  usage: Які ручки?
+- lemma: він
+  translation: he; it, masculine
+  pos: pronoun
+  usage: Стіл — він.
+- lemma: вона
+  translation: she; it, feminine
+  pos: pronoun
+  usage: Книга — вона.
+- lemma: воно
+  translation: it, neuter
+  pos: pronoun
+  usage: Вікно — воно.
+- lemma: вони
+  translation: they
+  pos: pronoun
+  usage: Ручки — вони.
+- lemma: цю книгу
+  translation: this book, object chunk
+  pos: phrase
+  usage: Я хочу цю книгу.
+- lemma: цього олівця
+  translation: this pencil, recognition chunk
+  pos: phrase
+  usage: Цього олівця is passive recognition here.
+- lemma: оцей
+  translation: this exact one, masculine
+  pos: pronoun
+  usage: Оцей is passive recognition here.
+- lemma: оця
+  translation: this exact one, feminine
+  pos: pronoun
+  usage: Оця is passive recognition here.
+- lemma: оце
+  translation: this exact one, neuter
+  pos: pronoun
+  usage: Оце is passive recognition here.
+- lemma: отой
+  translation: that exact one, masculine
+  pos: pronoun
+  usage: Отой is passive recognition here.
+- lemma: ота
+  translation: that exact one, feminine
+  pos: pronoun
+  usage: Ота is passive recognition here.
+- lemma: ото
+  translation: that exact one, neuter
+  pos: pronoun
+  usage: Ото is passive recognition here.
+- lemma: стільки
+  translation: so much; that many, recognition
+  pos: pronoun
+  usage: Стільки is passive recognition here.

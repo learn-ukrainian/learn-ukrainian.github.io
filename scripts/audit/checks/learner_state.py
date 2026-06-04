@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
@@ -15,6 +16,11 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - CLI path compatibility
     from config import get_immersion_structural
     from pipeline.learner_state import build_learner_state
+
+try:
+    from scripts.pipeline.module_archetypes import resolve_module_archetype
+except ModuleNotFoundError:  # pragma: no cover - CLI path compatibility
+    from pipeline.module_archetypes import resolve_module_archetype
 
 VerifyWordsFn = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
 
@@ -285,6 +291,211 @@ def _plan_vocab_entries(plan: Mapping[str, Any] | None, source: str) -> set[str]
         for entry in hints:
             add_entry(entry)
     return entries
+
+
+def _collect_introduce_before_use_terms(plan: Mapping[str, Any] | None) -> set[str]:
+    """Return plan terms that must be introduced before zero-learner use."""
+    if not isinstance(plan, Mapping):
+        return set()
+
+    terms: set[str] = set()
+
+    def add_entry(entry: Any) -> None:
+        raw: str | None = None
+        if isinstance(entry, str):
+            raw = entry
+        elif isinstance(entry, Mapping):
+            for key in ("lemma", "word", "term", "text", "value"):
+                value = entry.get(key)
+                if isinstance(value, str):
+                    raw = value
+                    break
+        if raw:
+            term = re.split(r"\s+\(|\s+[—–]\s+", raw, maxsplit=1)[0].strip()
+            if term:
+                terms.add(term)
+
+    vocab_grammar_targets = plan.get("vocab_grammar_targets")
+    if isinstance(vocab_grammar_targets, Mapping):
+        for entry in vocab_grammar_targets.get("must_introduce", []) or []:
+            add_entry(entry)
+
+    targets = plan.get("targets")
+    if isinstance(targets, Mapping):
+        for entry in targets.get("new_vocabulary", []) or []:
+            add_entry(entry)
+
+    hints = plan.get("vocabulary_hints")
+    if isinstance(hints, Mapping):
+        for entry in hints.get("required", []) or []:
+            add_entry(entry)
+
+    return terms
+
+
+def _normalize_sequence_text(text: str) -> str:
+    decomposed = unicodedata.normalize("NFD", text)
+    without_marks = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
+    normalized_apostrophes = re.sub(r"[’ʼ]", "'", without_marks)
+    return re.sub(r"\s+", " ", normalized_apostrophes.casefold()).strip()
+
+
+def _term_pattern(term: str) -> re.Pattern[str]:
+    normalized = _normalize_sequence_text(term)
+    escaped = r"\s+".join(re.escape(part) for part in normalized.split())
+    return re.compile(rf"(?<![a-zа-яіїєґ]){escaped}(?![a-zа-яіїєґ])", re.IGNORECASE)
+
+
+def _line_is_sequence_exempt(line: str) -> bool:
+    stripped = line.strip()
+    return (
+        not stripped
+        or stripped.startswith("#")
+        or stripped.startswith(">")
+        or stripped.startswith("<!--")
+        or stripped.startswith("| ---")
+        or stripped.startswith("---")
+    )
+
+
+def _line_is_introduction(line: str, term: str) -> bool:
+    stripped = line.strip()
+    if not stripped:
+        return False
+    # English-led zero-learner introductions normally place the gloss on the
+    # same line: `**Привіт** - Hi`, `**склад** is a syllable`, or table rows
+    # such as `| **мама** | mother |`.
+    has_latin_gloss = bool(re.search(r"[A-Za-z]", stripped))
+    has_intro_marker = bool(
+        re.search(r"\b(is|means|meaning|called|called a|belongs to)\b|[-=]|→|\|", stripped, re.IGNORECASE)
+    )
+    if has_latin_gloss and has_intro_marker:
+        return True
+
+    normalized_line = _normalize_sequence_text(stripped)
+    normalized_term = _normalize_sequence_text(term)
+    return f"{normalized_term} (" in normalized_line or f"{normalized_term} - " in normalized_line
+
+
+def _iter_sequence_lines(content: str, module_dir: str | Path | None) -> list[tuple[int, str, str]]:
+    """Return learner-facing lines in lesson order, then workbook/activity text."""
+    lines: list[tuple[int, str, str]] = []
+    in_frontmatter = False
+    in_code_block = False
+    in_bad_block = False
+    in_teaching_body = False
+
+    for line_num, line in enumerate(content.splitlines(), 1):
+        stripped = line.strip()
+
+        if line_num == 1 and stripped == "---":
+            in_frontmatter = True
+            continue
+        if in_frontmatter:
+            if stripped == "---":
+                in_frontmatter = False
+            continue
+
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block:
+            continue
+
+        cleaned_line = line
+        while True:
+            if in_bad_block:
+                end_match = re.search(r"<!--\s*/bad\s*-->", cleaned_line, flags=re.IGNORECASE)
+                if end_match is None:
+                    cleaned_line = ""
+                    break
+                cleaned_line = cleaned_line[end_match.end() :]
+                in_bad_block = False
+                continue
+
+            start_match = re.search(r"<!--\s*bad\s*-->", cleaned_line, flags=re.IGNORECASE)
+            if start_match is None:
+                break
+
+            end_match = re.search(r"<!--\s*/bad\s*-->", cleaned_line[start_match.end() :], flags=re.IGNORECASE)
+            if end_match is None:
+                cleaned_line = cleaned_line[: start_match.start()]
+                in_bad_block = True
+                break
+
+            end = start_match.end() + end_match.end()
+            cleaned_line = f"{cleaned_line[: start_match.start()]} {cleaned_line[end:]}"
+
+        if re.match(r"^#{2,3}\s+", cleaned_line):
+            in_teaching_body = True
+            continue
+        if not in_teaching_body or _line_is_sequence_exempt(cleaned_line):
+            continue
+        lines.append((line_num, cleaned_line, _normalize_sequence_text(cleaned_line)))
+
+    if module_dir is not None:
+        activities_path = Path(module_dir) / "activities.yaml"
+        if activities_path.exists():
+            data = _load_json_or_yaml(activities_path)
+            activity_text = yaml.safe_dump(data, allow_unicode=True, sort_keys=False) if data is not None else ""
+            for offset, line in enumerate(activity_text.splitlines(), 1):
+                if _line_is_sequence_exempt(line):
+                    continue
+                lines.append((100_000 + offset, line, _normalize_sequence_text(line)))
+
+    return lines
+
+
+def check_introduced_before_use(
+    content: str,
+    level: str,
+    module_num: int,
+    module_dir: str | Path | None = None,
+    *,
+    plan: Mapping[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Flag required A1 M1 terms whose first learner-facing use lacks a gloss."""
+    contract = resolve_module_archetype(level.lower(), module_num)
+    if contract.get("id") != "a1-zero-script-onboarding":
+        return []
+
+    plan_data = plan or _load_plan_for_module(module_dir, level.lower())
+    terms = sorted(_collect_introduce_before_use_terms(plan_data), key=str.casefold)
+    if not terms:
+        return []
+
+    sequence_lines = _iter_sequence_lines(content, module_dir)
+    violations: list[dict[str, Any]] = []
+    for term in terms:
+        pattern = _term_pattern(term)
+        first_hit: tuple[int, str] | None = None
+        for line_num, raw_line, normalized_line in sequence_lines:
+            if pattern.search(normalized_line):
+                first_hit = (line_num, raw_line.strip())
+                break
+        if first_hit is None:
+            continue
+
+        line_num, raw_line = first_hit
+        if _line_is_introduction(raw_line, term):
+            continue
+        location = "activities.yaml" if line_num >= 100_000 else "module.md"
+        display_line = line_num - 100_000 if line_num >= 100_000 else line_num
+        violations.append(
+            {
+                "type": "introduced_before_use",
+                "severity": "HARD",
+                "term": term,
+                "line": display_line,
+                "location": location,
+                "issue": (
+                    f"Required zero-learner term '{term}' is first used in "
+                    f"{location}:{display_line} without an English gloss or explicit introduction."
+                ),
+                "fix": "Introduce the term before this use, or add an inline English gloss at first mention.",
+            }
+        )
+    return violations
 
 
 def _wiki_vocabulary_entries(wiki_manifest: Mapping[str, Any] | None) -> set[str]:
@@ -590,6 +801,13 @@ def check_learner_state(
 ) -> list[dict[str, Any]]:
     """Run all learner-state checks for a module."""
     return [
+        *check_introduced_before_use(
+            content,
+            level,
+            module_num,
+            module_dir,
+            plan=plan,
+        ),
         *check_unknown_vocabulary(
             content,
             level,

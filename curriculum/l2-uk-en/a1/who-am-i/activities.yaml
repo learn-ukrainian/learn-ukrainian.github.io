@@ -1,0 +1,345 @@
+- id: act-1
+  type: quiz
+  title: Formal or informal?
+  instruction: Choose the phrase that fits the social situation.
+  items:
+    - prompt: You meet a classmate your age.
+      options:
+        - text: Як тебе звати?
+          correct: true
+        - text: Як вас звати?
+          correct: false
+      explanation: Use тебе with one familiar peer.
+    - prompt: You meet an unknown adult at orientation.
+      options:
+        - text: Як вас звати?
+          correct: true
+        - text: Як тебе звати?
+          correct: false
+      explanation: Use вас with one unknown adult or in a formal setting.
+    - prompt: A peer asks your name. You answer and return the question.
+      options:
+        - text: Мене звати Олена. А тебе?
+          correct: true
+        - text: Мене звати Олена. А вас?
+          correct: false
+      explanation: The peer situation stays informal.
+    - prompt: An instructor asks your name. You answer and return the question.
+      options:
+        - text: Мене звати Петро. А вас?
+          correct: true
+        - text: Мене звати Петро. А тебе?
+          correct: false
+      explanation: The instructor situation stays formal.
+- id: act-2
+  type: fill-in
+  title: Build the name chunk
+  instruction: Choose the missing word or phrase.
+  items:
+    - sentence: ___ звати Марко.
+      answer: Мене
+      options:
+        - Мене
+        - Ти
+        - Це
+      explanation: Мене звати... is the whole chunk for my name is.
+    - sentence: Як ___ звати?
+      answer: тебе
+      options:
+        - тебе
+        - я
+        - він
+      explanation: Як тебе звати? is informal.
+    - sentence: Як ___ звати?
+      answer: вас
+      options:
+        - вас
+        - вона
+        - ми
+      explanation: Як вас звати? is formal or plural.
+    - sentence: Дуже ___!
+      answer: приємно
+      options:
+        - приємно
+        - студент
+        - звідки
+      explanation: Дуже приємно closes the introduction after names.
+    - sentence: Мене звати Олена. А ___?
+      answer: тебе
+      options:
+        - тебе
+        - Київ
+        - це
+      explanation: А тебе? returns the name question informally.
+- id: act-3
+  type: match-up
+  title: This is / Who is this?
+  instruction: Match the Ukrainian phrase with the English cue.
+  pairs:
+    - left: Це Андрій.
+      right: This is Andrii.
+    - left: Це Оксана.
+      right: This is Oksana.
+    - left: Хто це?
+      right: Who is this?
+    - left: Що це?
+      right: What is this?
+    - left: Це кава.
+      right: This is coffee.
+- id: act-4
+  type: quiz
+  title: Pronoun choice
+  instruction: Choose the pronoun that fits the English cue.
+  items:
+    - prompt: I
+      options:
+        - text: я
+          correct: true
+        - text: ти
+          correct: false
+        - text: вони
+          correct: false
+      explanation: Я is the speaker.
+    - prompt: you, one friend
+      options:
+        - text: ти
+          correct: true
+        - text: ви
+          correct: false
+        - text: він
+          correct: false
+      explanation: Ти is one informal you.
+    - prompt: you, one unknown adult
+      options:
+        - text: ви
+          correct: true
+        - text: ти
+          correct: false
+        - text: вона
+          correct: false
+      explanation: Ви is formal for one person and also plural.
+    - prompt: she
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: я
+          correct: false
+      explanation: Вона points to a woman or girl.
+- id: act-7
+  type: error-correction
+  title: Choose the Ukrainian sentence
+  anchor_id: fix-common-l2-traps
+  instruction: Choose the safer Ukrainian identity line.
+  items:
+    - sentence: Я є студент.
+      error: Я є студент.
+      correction: Я студент.
+      options:
+        - Я студент.
+        - Я є студент.
+      explanation: In present-time identity, say Я студент or Я — студент.
+    - sentence: Моє ім'я є Джон.
+      error: Моє ім'я є Джон.
+      correction: Мене звати Джон.
+      options:
+        - Мене звати Джон.
+        - Моє ім'я є Джон.
+      explanation: Мене звати... is the high-frequency introduction model.
+    - sentence: Я маю 20 років.
+      error: Я маю 20 років.
+      correction: Мені 20 років.
+      options:
+        - Мені 20 років.
+        - Я маю 20 років.
+      explanation: Age uses a different chunk and is not the model for this lesson.
+    - sentence: Оксана каже, "Я (жінка) лікар."
+      error: Я (жінка) лікар.
+      correction: Я лікарка.
+      options:
+        - Я лікарка.
+        - Я (жінка) лікар.
+      explanation: Лікарка is the standard feminine form for a woman doctor.
+    - sentence: Воно мій тато.
+      error: Воно
+      correction: Це мій тато.
+      options:
+        - Це мій тато.
+        - Воно мій тато.
+      explanation: Use це for identifying a person, or він after the person is known.
+    - sentence: Привіт, пане професоре!
+      error: Привіт
+      correction: Добрий день, пане професоре!
+      options:
+        - Добрий день, пане професоре!
+        - Привіт, пане професоре!
+      explanation: Use Добрий день with a professor or unknown adult.
+- id: act-5
+  type: match-up
+  title: Profession pairs
+  instruction: Match the masculine and feminine profession forms.
+  pairs:
+    - left: студент
+      right: студентка
+    - left: вчитель
+      right: вчителька
+    - left: лікар
+      right: лікарка
+    - left: програміст
+      right: програмістка
+    - left: інженер
+      right: інженерка
+    - left: українець
+      right: українка
+    - left: канадієць
+      right: канадка
+    - left: американець
+      right: американка
+- id: act-6
+  type: fill-in
+  title: Complete the dialogue
+  instruction: Choose the phrase that completes the first meeting.
+  items:
+    - sentence: Привіт! Як ___ звати?
+      answer: тебе
+      options:
+        - тебе
+        - вас
+        - це
+      explanation: Привіт points to an informal peer situation.
+    - sentence: Мене ___ Олена.
+      answer: звати
+      options:
+        - звати
+        - це
+        - з
+      explanation: Мене звати... is the name chunk.
+    - sentence: Мене звати Марко. ___ тебе?
+      answer: А
+      options:
+        - А
+        - Хто
+        - Що
+      explanation: А тебе? returns the question.
+    - sentence: Добрий день! Як ___ звати?
+      answer: вас
+      options:
+        - вас
+        - тебе
+        - я
+      explanation: Добрий день fits the formal version here.
+    - sentence: Дуже ___!
+      answer: приємно
+      options:
+        - приємно
+        - Київ
+        - студентка
+      explanation: Дуже приємно follows the name exchange.
+    - sentence: ___ ти? Я з Канади.
+      answer: Звідки
+      options:
+        - Звідки
+        - Хто
+        - Що
+      explanation: Звідки asks where someone is from.
+- id: act-8
+  type: fill-in
+  title: Choose the Ukrainian norm
+  instruction: Fill the sentence with the native Ukrainian choice.
+  items:
+    - sentence: Це мій ___.
+      answer: тато
+      options:
+        - тато
+        - Russian-influenced dad word
+      explanation: Тато is the native Ukrainian choice for dad.
+    - sentence: Це моя ___ Марія.
+      answer: дружина
+      options:
+        - дружина
+        - Russian-influenced wife word
+      explanation: Дружина is the native Ukrainian choice for wife.
+    - sentence: ___, як вас звати?
+      answer: Вибачте
+      options:
+        - Вибачте
+        - Russian-influenced excuse-me word
+      explanation: Вибачте and пробачте are safe Ukrainian choices.
+    - sentence: ___, дуже приємно!
+      answer: Дякую
+      options:
+        - Дякую
+        - Russian-style thank-you word
+      explanation: Дякую and спасибі are safe Ukrainian choices.
+    - sentence: Мені ___ приємно.
+      answer: теж
+      options:
+        - теж
+        - Russian-style also word
+      explanation: Теж and також are safe Ukrainian choices.
+    - sentence: Оксана — ___.
+      answer: інженерка
+      options:
+        - інженерка
+        - masculine generic for a woman
+      explanation: Use the feminitive for a woman when the Ukrainian form exists.
+- id: act-9
+  type: translate
+  title: First-contact vocabulary
+  instruction: Choose the English meaning.
+  items:
+    - source: Мене звати...
+      options:
+        - text: My name is...
+          correct: true
+        - text: Where are you from?
+          correct: false
+        - text: This is...
+          correct: false
+      explanation: Мене звати... is the name chunk.
+    - source: Як тебе звати?
+      options:
+        - text: What is your name? informal
+          correct: true
+        - text: Who is this?
+          correct: false
+        - text: I am from Ukraine.
+          correct: false
+      explanation: Тебе marks the informal version.
+    - source: Як вас звати?
+      options:
+        - text: What is your name? formal
+          correct: true
+        - text: And yours? informal
+          correct: false
+        - text: This is Kyiv.
+          correct: false
+      explanation: Вас marks the formal version.
+    - source: Дуже приємно!
+      options:
+        - text: Pleased to meet you!
+          correct: true
+        - text: Goodbye!
+          correct: false
+        - text: Where from?
+          correct: false
+      explanation: Дуже приємно closes the introduction politely.
+    - source: Звідки ти?
+      options:
+        - text: Where are you from? informal
+          correct: true
+        - text: What is this?
+          correct: false
+        - text: I am a student.
+          correct: false
+      explanation: Звідки asks from where.
+    - source: Я — студентка.
+      options:
+        - text: I am a female student.
+          correct: true
+        - text: She is a doctor.
+          correct: false
+        - text: My name is...
+          correct: false
+      explanation: Студентка is the feminine form.

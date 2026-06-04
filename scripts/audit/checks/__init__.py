@@ -74,6 +74,7 @@ from .imperial_terminology import (
     check_imperial_terminology,
 )
 from .learner_state import (
+    check_introduced_before_use,
     check_known_grammar_re_explanation,
     check_learner_state,
     check_unknown_vocabulary,
@@ -147,6 +148,7 @@ __all__ = [
     'check_grammar_violations',
     # Imperial Terminology
     'check_imperial_terminology',
+    'check_introduced_before_use',
     'check_known_grammar_re_explanation',
     'check_learner_state',
     'check_mark_the_words_answers_in_text',

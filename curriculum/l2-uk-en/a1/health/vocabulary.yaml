@@ -1,0 +1,84 @@
+- word: здоров'я
+  translation: health
+  pos: noun
+  example: "Це тема про здоров'я."
+- word: голова
+  translation: head
+  pos: noun
+  example: "У мене болить голова."
+- word: горло
+  translation: throat
+  pos: noun
+  example: "У мене болить горло."
+- word: живіт
+  translation: stomach
+  pos: noun
+  example: "У мене болить живіт."
+- word: спина
+  translation: back
+  pos: noun
+  example: "У мене болить спина."
+- word: рука
+  translation: hand, arm
+  pos: noun
+  example: "У мене болить рука."
+- word: нога
+  translation: leg, foot
+  pos: noun
+  example: "У мене болить нога."
+- word: зуб
+  translation: tooth
+  pos: noun
+  example: "У мене болить зуб."
+- word: вухо
+  translation: ear
+  pos: noun
+  example: "У мене болить вухо."
+- word: око
+  translation: eye
+  pos: noun
+  example: "У мене болить око."
+- word: ніс
+  translation: nose
+  pos: noun
+  example: "У мене нежить."
+- word: болить
+  translation: hurts
+  pos: verb
+  example: "У мене болить голова."
+- word: температура
+  translation: fever, temperature
+  pos: noun
+  example: "У мене температура."
+- word: кашель
+  translation: cough
+  pos: noun
+  example: "У мене кашель."
+- word: нежить
+  translation: runny nose
+  pos: noun
+  example: "У мене нежить."
+- word: лікар
+  translation: doctor
+  pos: noun
+  example: "Мені потрібен лікар."
+- word: лікарня
+  translation: hospital
+  pos: noun
+  example: "Де тут лікарня?"
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "Де тут аптека?"
+- word: хворий
+  translation: sick, masculine
+  pos: adjective
+  example: "Я хворий."
+- word: хвора
+  translation: sick, feminine
+  pos: adjective
+  example: "Я хвора."
+- word: погано
+  translation: badly, unwell
+  pos: adverb
+  example: "Мені погано."

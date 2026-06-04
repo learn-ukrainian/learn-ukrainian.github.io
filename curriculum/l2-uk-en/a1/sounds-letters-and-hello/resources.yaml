@@ -1,0 +1,201 @@
+- title: Большакова, буквар 1 клас, p. 24
+  role: textbook
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0023
+  notes: 'Plan reference: голосні/приголосні через вірші; retrieved via search_text
+    because plan notes include no literal chunk_id.'
+- title: Захарійчук, буквар 1 клас (НУШ 2025), p. 13
+  role: textbook
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0002
+  notes: 'Plan reference: [•] голосний, [–] твердий приголосний, [=] м''який приголосний;
+    resolved page context from corpus metadata.'
+- title: Заболотний 5 клас, p. 83
+  role: textbook
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0084
+  notes: 'Plan reference: «Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.»'
+- title: Літвінова 5 клас, p. 130
+  role: textbook
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0135
+  notes: 'Plan reference: питання про «голосна літера» / «приголосна літера» and sound-letter
+    distinction.'
+- title: ULP Season 1, Episode 1 — Informal Greetings
+  role: podcast
+  url: https://www.ukrainianlessons.com/episode1/
+  notes: 'Plan reference: Привіт, Як справи?, response models; external search found
+    ULP Episode 1 material.'
+- title: Anna Ohoiko — Ukrainian alphabet overview
+  role: youtube
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: overview for the full Ukrainian alphabet.'
+- title: Anna Ohoiko — Ukrainian alphabet pronunciation playlist
+  role: youtube
+  url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: playlist for per-letter Ukrainian pronunciation
+    practice.'
+- title: Anna Ohoiko — Letter А pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: А.'
+- title: Anna Ohoiko — Letter Б pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Б.'
+- title: Anna Ohoiko — Letter В pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: В.'
+- title: Anna Ohoiko — Letter Г pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=gVnclpSI0DU
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Г.'
+- title: Anna Ohoiko — Letter Ґ pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ґ.'
+- title: Anna Ohoiko — Letter Д pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Д.'
+- title: Anna Ohoiko — Letter Е pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=KFlsroBW0dk
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Е.'
+- title: Anna Ohoiko — Letter Є pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Є.'
+- title: Anna Ohoiko — Letter Ж pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=dIrGVcqPwqM
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ж.'
+- title: Anna Ohoiko — Letter З pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=BhASNxitC1A
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: З.'
+- title: Anna Ohoiko — Letter И pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=W-1rCu0indE
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: И.'
+- title: Anna Ohoiko — Letter І pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: І.'
+- title: Anna Ohoiko — Letter Ї pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ї.'
+- title: Anna Ohoiko — Letter Й pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=aq0cjB90s3w
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Й.'
+- title: Anna Ohoiko — Letter К pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: К.'
+- title: Anna Ohoiko — Letter Л pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Л.'
+- title: Anna Ohoiko — Letter М pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=Ez95H4ibuJo
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: М.'
+- title: Anna Ohoiko — Letter Н pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Н.'
+- title: Anna Ohoiko — Letter О pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  channel: Ukrainian Lessons
+  notes: 'Activity pronunciation video: О; the locked plan currently has no separate
+    О URL, but the workbook includes the stored course reference.'
+- title: Anna Ohoiko — Letter П pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=JksSjjxyW5Y
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: П.'
+- title: Anna Ohoiko — Letter Р pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Р.'
+- title: Anna Ohoiko — Letter С pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: С.'
+- title: Anna Ohoiko — Letter Т pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Т.'
+- title: Anna Ohoiko — Letter У pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: У.'
+- title: Anna Ohoiko — Letter Ф pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=haHRsFFZRQI
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ф.'
+- title: Anna Ohoiko — Letter Х pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=vpr58zJSJKc
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Х.'
+- title: Anna Ohoiko — Letter Ц pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=u44eCjR2Oz8
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ц.'
+- title: Anna Ohoiko — Letter Ч pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ч.'
+- title: Anna Ohoiko — Letter Ш pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ш.'
+- title: Anna Ohoiko — Letter Щ pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=QmBLieIuf6Q
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Щ.'
+- title: Anna Ohoiko — Letter Ь pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ь.'
+- title: Anna Ohoiko — Letter Ю pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Ю.'
+- title: Anna Ohoiko — Letter Я pronunciation
+  role: youtube
+  url: https://www.youtube.com/watch?v=yhSAf41LX8I
+  channel: Ukrainian Lessons
+  notes: 'Plan pronunciation video: Я.'

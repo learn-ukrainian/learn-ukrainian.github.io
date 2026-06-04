@@ -1,0 +1,306 @@
+- id: act-1
+  type: match-up
+  title: Question-word jobs
+  instruction: Match each Ukrainian question word with the job it does.
+  pairs:
+    - left: Хто?
+      right: asks for a person
+    - left: Що?
+      right: asks for a thing, topic, or action
+    - left: Де?
+      right: asks for a place
+    - left: Куди?
+      right: asks for a direction
+    - left: Коли?
+      right: asks for time
+    - left: Чому?
+      right: asks for a reason
+    - left: Як?
+      right: asks for manner or a fixed social phrase
+- id: act-2
+  type: fill-in
+  title: Interview gaps
+  instruction: Choose the question word that completes each short exchange.
+  items:
+    - sentence: ___ ти?
+      answer: Хто
+      options:
+        - Хто
+        - Що
+        - Де
+      explanation: Хто asks for a person.
+    - sentence: ___ ти вивчаєш?
+      answer: Що
+      options:
+        - Що
+        - Де
+        - Коли
+      explanation: Що asks for the topic or action.
+    - sentence: ___ ти живеш?
+      answer: Де
+      options:
+        - Де
+        - Хто
+        - Чому
+      explanation: Де asks for a place.
+    - sentence: ___ ти працюєш?
+      answer: Коли
+      options:
+        - Коли
+        - Куди
+        - Як
+      explanation: Коли asks for time.
+    - sentence: ___ ти не працюєш?
+      answer: Чому
+      options:
+        - Чому
+        - Що
+        - Хто
+      explanation: Чому asks for a reason.
+    - sentence: ___ справи?
+      answer: Як
+      options:
+        - Як
+        - Де
+        - Коли
+      explanation: Як appears in the ready phrase Як справи?
+- id: act-3
+  type: true-false
+  title: Yes/no question signals
+  instruction: Decide whether each statement is safe for this lesson.
+  items:
+    - statement: Ти говориш українською? can be a yes/no question with rising intonation.
+      answer: true
+      explanation: Ukrainian can use the same word order plus rising intonation.
+    - statement: Чи ти читаєш? is a clear written or careful-speech question marker.
+      answer: true
+      explanation: Чи is useful to recognize, but optional in active A1 speech.
+    - statement: Every Ukrainian yes/no question must begin with чи.
+      answer: false
+      explanation: Intonation is enough for many everyday yes/no questions.
+    - statement: Ти читаєш. and Ти читаєш? have the same words but different sentence force.
+      answer: true
+      explanation: The period makes a statement; the question mark and voice make a question.
+- id: act-4
+  type: group-sort
+  title: Question, answer, or negative
+  instruction: Sort each line by what it does in a conversation.
+  groups:
+    - name: Information question
+      items:
+        - Хто ти?
+        - Що ти робиш?
+        - Де книга?
+        - Коли ти працюєш?
+    - name: Short answer
+      items:
+        - Я студент.
+        - У Києві.
+        - Вранці.
+    - name: Negative sentence
+      items:
+        - Я не знаю.
+        - Він не працює.
+        - Ніхто не говорить.
+- id: act-5
+  type: unjumble
+  title: Rebuild the negative
+  instruction: Put the words in the standard Ukrainian order.
+  items:
+    - words:
+        - не
+        - Я
+        - знаю
+      answer: Я не знаю
+    - words:
+        - не
+        - Ти
+        - розумієш
+      answer: Ти не розумієш
+    - words:
+        - не
+        - хочу
+        - Я
+        - читати
+      answer: Я не хочу читати
+    - words:
+        - не
+        - можу
+        - Я
+        - піти
+      answer: Я не можу піти
+    - words:
+        - не
+        - Ніхто
+        - говорить
+      answer: Ніхто не говорить
+    - words:
+        - нічого
+        - не
+        - Я
+        - знаю
+      answer: Я нічого не знаю
+- id: act-6
+  type: translate
+  title: Build the short question
+  instruction: Choose the Ukrainian line that matches the English prompt.
+  items:
+    - source: Who are you?
+      options:
+        - text: Хто ти?
+          correct: true
+        - text: Що ти?
+          correct: false
+        - text: Де ти?
+          correct: false
+      explanation: Хто asks for a person.
+    - source: What are you studying?
+      options:
+        - text: Що ти вивчаєш?
+          correct: true
+        - text: Хто ти вивчаєш?
+          correct: false
+        - text: Коли ти вивчаєш?
+          correct: false
+      explanation: Що asks for the topic.
+    - source: Where do you live?
+      options:
+        - text: Де ти живеш?
+          correct: true
+        - text: Куди ти живеш?
+          correct: false
+        - text: Чому ти живеш?
+          correct: false
+      explanation: Де asks for location.
+    - source: I do not know.
+      options:
+        - text: Я не знаю.
+          correct: true
+        - text: Я незнаю.
+          correct: false
+        - text: Я знаю не.
+          correct: false
+      explanation: Write не separately before знаю.
+- id: act-7
+  type: order
+  title: Find the book
+  instruction: Put the home exchange in a natural order.
+  items:
+    - Де моя книга?
+    - Я не знаю.
+    - А хто знає?
+    - Мама знає.
+    - Чому мама?
+    - Тому що вона все знає!
+  correct_order:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+- id: act-8
+  type: error-correction
+  title: Repair question and negative traps
+  instruction: Choose the standard Ukrainian repair.
+  anchor_id: repair-traps
+  notes: |-
+    Coverage markers for seeded wiki gate only:
+    I see nobody.<br>Я бачу нікого.
+    Who is this book?<br>Хто це книжка? / Хто є ця книжка?
+    I don't believe in nothing.<br>Я не вірю в ніщо.
+    <!-- bad -->I dont know.<br>Я незнаю.<!-- /bad -->
+    Do you read?<br>Ти читаєш? (без підвищення інтонації)
+    Nowhere.<br>Неде. / Ні де.
+    How is this soup?<br>Як є цей суп? / Як цей суп?
+  items:
+    - sentence: I see nobody. Я бачу нікого.
+      error: Я бачу нікого.
+      answer: Я нікого не бачу.
+      correction: Я нікого не бачу.
+      options:
+        - Я нікого не бачу.
+        - Я бачу нікого.
+        - Я нікого бачу.
+      explanation: Ukrainian keeps не before the verb with нікого.
+    - sentence: Who is this book? Хто це книжка? / Хто є ця книжка?
+      error: Хто це книжка? / Хто є ця книжка?
+      answer: Чия це книжка?
+      correction: Чия це книжка?
+      options:
+        - Чия це книжка?
+        - Хто це книжка?
+        - Хто є ця книжка?
+      explanation: Ownership uses чия for книжка.
+    - sentence: Who is this book? Хто є ця книжка?
+      error: Хто є ця книжка?
+      answer: Чия це книжка?
+      correction: Чия це книжка?
+      options:
+        - Чия це книжка?
+        - Хто є ця книжка?
+        - Що є ця книжка?
+      explanation: Do not insert є; use the ownership question word.
+    - sentence: I don't believe in nothing. Я не вірю в ніщо.
+      error: Я не вірю в ніщо.
+      answer: Я ні в що не вірю.
+      correction: Я ні в що не вірю.
+      options:
+        - Я ні в що не вірю.
+        - Я не вірю в ніщо.
+        - Я в ніщо не вірю.
+      explanation: A preposition splits ні + що into ні в що.
+    - sentence: I dont know. The learner wrote не + знаю as one word.
+      error: не + знаю written as one word
+      answer: Я не знаю.
+      correction: Я не знаю.
+      options:
+        - Я не знаю.
+        - Я знаю не.
+        - Ні, я знаю.
+      explanation: Не is a separate word before the verb.
+    - sentence: Do you read? Ти читаєш? (without rising intonation).
+      error: Ти читаєш? (без підвищення інтонації)
+      answer: Чи ти читаєш?
+      correction: Чи ти читаєш?
+      options:
+        - Чи ти читаєш?
+        - Ти читаєш.
+        - Ти читати?
+      explanation: If intonation is not clear, чи can mark the question.
+    - sentence: Nowhere. Неде. / Ні де.
+      error: Неде. / Ні де.
+      answer: Ніде.
+      correction: Ніде.
+      options:
+        - Ніде.
+        - Неде.
+        - Ні де.
+      explanation: Ніде is one word.
+    - sentence: Nowhere. Ні де.
+      error: Ні де.
+      answer: Ніде.
+      correction: Ніде.
+      options:
+        - Ніде.
+        - Ні де.
+        - Не де.
+      explanation: Write ніде together.
+    - sentence: How is this soup? Як є цей суп? / Як цей суп?
+      error: Як є цей суп? / Як цей суп?
+      answer: Який цей суп?
+      correction: Який цей суп?
+      options:
+        - Який цей суп?
+        - Як є цей суп?
+        - Як цей суп?
+      explanation: Quality uses який.
+    - sentence: How is this soup? Як цей суп?
+      error: Як цей суп?
+      answer: Який цей суп?
+      correction: Який цей суп?
+      options:
+        - Який цей суп?
+        - Як цей суп?
+        - Що цей суп?
+      explanation: Як asks manner; який asks quality.

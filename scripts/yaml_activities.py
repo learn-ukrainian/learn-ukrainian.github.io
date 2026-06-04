@@ -156,6 +156,8 @@ class ErrorCorrectionItem:
 class ErrorCorrectionActivity:
     type: str = "error-correction"
     title: str = ""
+    instruction: str = ""
+    anchor_id: str = ""
     items: list[ErrorCorrectionItem] = field(default_factory=list)
 
 
@@ -802,7 +804,12 @@ class ActivityParser:
             options=i.get('options', []),
             explanation=i.get('explanation', ''),
         ) for i in data.get('items', [])]
-        return ErrorCorrectionActivity(title=data.get('title', ''), items=items)
+        return ErrorCorrectionActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            anchor_id=data.get('anchor_id', ''),
+            items=items,
+        )
 
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
         # Support both old and new field names for backwards compatibility
@@ -1545,16 +1552,40 @@ class ActivityParser:
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity) -> str:
         items = []
         for i in activity.items:
-            opts = self._dump_safe_json([str(opt) for opt in i.options])
-            items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(str(i.sentence))}" errorWord="{self._escape_jsx(str(i.error))}" correctForm="{self._escape_jsx(str(i.answer))}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(str(i.explanation))}" />')
-        return f"### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'>\n{chr(10).join(items)}\n</ErrorCorrection>"
+            items.append({
+                "sentence": str(i.sentence),
+                "errorWord": str(i.error) if i.error is not None else None,
+                "correctForm": str(i.answer),
+                "options": [str(opt) for opt in i.options],
+                "explanation": str(i.explanation),
+            })
+        instruction_prop = (
+            f' instruction="{self._escape_jsx(str(activity.instruction))}"'
+            if activity.instruction
+            else ""
+        )
+        anchor = ""
+        if activity.anchor_id:
+            safe_anchor = re.sub(r"[^A-Za-z0-9_-]+", "-", str(activity.anchor_id)).strip("-")
+            if safe_anchor:
+                anchor = f'<span id="{safe_anchor}"></span>\n\n'
+        items_json = self._dump_safe_json(items)
+        return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop} items={{JSON.parse(`{items_json}`)}} />"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
         ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])
         return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only='react'>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
 
     def _translate_to_mdx(self, activity: TranslateActivity) -> str:
-        items = [{'source': str(i.source), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
+        items = []
+        for item in activity.items:
+            rendered_item = {
+                'source': str(item.source),
+                'options': [{'text': str(o.text), 'correct': o.correct} for o in item.options],
+            }
+            if item.explanation:
+                rendered_item['explanation'] = str(item.explanation)
+            items.append(rendered_item)
         return f"### {self._escape_jsx(activity.title)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
@@ -1785,8 +1816,7 @@ class ActivityParser:
 
     def _letter_grid_to_mdx(self, activity: LetterGridActivity) -> str:
         heading = activity.title or 'Letter Grid'
-        title_prop = f' title="{self._escape_jsx(activity.title)}"' if activity.title else ''
-        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}}{title_prop} />"
+        return f"### {self._escape_jsx(heading)}\n\n<LetterGrid client:only='react' letters={{JSON.parse(`{self._dump_safe_json(activity.letters)}`)}} />"
 
     def _odd_one_out_to_mdx(self, activity: OddOneOutActivity) -> str:
         heading = activity.title or activity.instruction or 'Odd One Out'

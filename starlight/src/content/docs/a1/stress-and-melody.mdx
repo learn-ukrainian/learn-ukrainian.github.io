@@ -1,0 +1,331 @@
+---
+title: "Наголос і мелодика"
+description: "Наголос змінює значення, інтонація змінює намір"
+sidebar:
+  order: 4
+  label: "04. Наголос і мелодика"
+pipeline: linear-phase-4
+build_status: validated
+prev: special-signs
+next: who-am-i
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+This module teaches two things you cannot see in ordinary Ukrainian spelling:
+word stress and sentence melody. A printed word usually does not show stress.
+A printed sentence shows only a small clue: **.**, **?**, or **!**. Your job
+today is to build a slow, reliable reading habit.
+
+Keep the target modest. You are not memorizing every stress pattern in
+Ukrainian. You are learning why stress matters, how to read prepared words with
+stress marks, and how to use three beginner sentence melodies.
+
+By the end, you can:
+
+- explain that **наголос** means word stress;
+- read prepared A1 words such as **ка́ва**, **вода́**, **ра́нок**, and
+  **метро́** with the marked syllable stronger and a little longer;
+- avoid reducing clear Ukrainian vowels in unstressed syllables;
+- recognize pairs where stress changes meaning, such as **за́мок** and
+  **замо́к**;
+- use falling melody for statements, rising melody for yes/no questions, and
+  falling melody for questions with **хто**, **що**, **де**, **коли**, or
+  **як**;
+- read a short greeting dialogue with a Ukrainian-centered rhythm.
+
+## Stress
+
+**Наголос** is the syllable you say with more force and a little more length.
+In learning materials, this course marks it with an accent: **ка́ва**,
+**вода́**, **молоко́**. In normal Ukrainian texts, the mark is usually absent,
+so you learn stress as part of each new word.
+
+Ukrainian stress is free. That means it can fall near the beginning, middle, or
+end of a word. Compare these prepared words:
+
+| Model | Read it slowly |
+| --- | --- |
+| first syllable | **ма́ма**, **та́то**, **ра́нок**, **ка́ва**, **кни́га** |
+| final syllable | **вода́**, **зима́**, **рука́**, **метро́**, **кафе́** |
+| middle syllable | **столи́ця**, **люди́на**, **оди́надцять** |
+
+There is no useful shortcut for A1 learners. Treat stress as part of the word,
+just like spelling. When you add a word to your notebook, add its stress too:
+**ка́ва**, not just кава.
+
+A second habit matters just as much: do not blur unstressed vowels. In
+**молоко́**, the first two **о** sounds stay Ukrainian **о**. They are lighter
+than the stressed final **о**, but they do not become a neutral sound. Read
+slowly first: **мо-ло-ко́**. Keep every vowel clear, then speed up.
+
+Some Ukrainian words move stress when the form changes. For now, only notice
+the idea. A word like **кни́жка** can become **книжки́** in plural. That is a
+future grammar habit, but you can already hear that Ukrainian stress can move.
+
+Stress can also change meaning. These pairs look the same until you hear the
+stress:
+
+| Pair | Meaning |
+| --- | --- |
+| **за́мок** | castle |
+| **замо́к** | lock |
+| **а́тлас** | atlas |
+| **атла́с** | satin |
+| **о́рган** | body organ |
+| **орга́н** | musical instrument |
+
+Do not guess these from spelling alone. Use the stress mark when it is given,
+and check a dictionary such as goroh.pp.ua when you are unsure.
+
+### Where is the stress?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In ка́ва, where is the stress?", "options": [{"text": "first syllable", "correct": true}, {"text": "final syllable", "correct": false}, {"text": "no stress", "correct": false}], "explanation": "Ка́ва is stressed on ка́."}, {"question": "In вода́, where is the stress?", "options": [{"text": "final syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "every syllable equally", "correct": false}], "explanation": "Вода́ is stressed on да́."}, {"question": "In столи́ця, where is the stress?", "options": [{"text": "middle syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "final syllable", "correct": false}], "explanation": "Столи́ця is stressed on ли́."}, {"question": "What should you do with unstressed vowels in молоко́?", "options": [{"text": "Keep each vowel clear.", "correct": true}, {"text": "Drop the first vowel.", "correct": false}, {"text": "Read every о as а.", "correct": false}], "explanation": "Ukrainian unstressed vowels stay clear."}]`)} />
+
+## Intonation
+
+**Мелодика** is the movement of the voice across a whole sentence. For A1, use
+three safe models:
+
+| Sentence type | Model | Voice |
+| --- | --- | --- |
+| statement | **Це ка́ва.** | falling **↘** |
+| yes/no question | **Це ка́ва?** | rising **↗** |
+| exclamation | **Як га́рно!** | stronger falling **↘↘** |
+
+The same words can change intent when the melody changes. **Це ка́ва.** tells
+someone what it is. **Це ка́ва?** asks for confirmation. The punctuation helps
+you choose the melody, but your voice must still do the work.
+
+Now add the most important beginner exception. A question with a question word
+usually falls, not rises:
+
+| Question word | Example | Melody |
+| --- | --- | --- |
+| **що** | **Що це?** | falling **↘** |
+| **де** | **Де метро́?** | falling **↘** |
+| **як** | **Як спра́ви?** | falling **↘** |
+| **хто** | **Хто це?** | falling **↘** |
+
+But a yes/no question rises:
+
+| Yes/no question | Melody |
+| --- | --- |
+| **Це метро́?** | rising **↗** |
+| **Це вода́?** | rising **↗** |
+| **А у те́бе?** | rising **↗** |
+
+Logical stress is the important word inside the sentence. In **Це ка́ва?**,
+you can make **ка́ва** the important word if you are checking the object. In
+**А у те́бе?**, the important part is **те́бе** because you are turning the
+question back to the other person. At A1, do not overthink it. Mark the
+important word, then let the question melody rise or fall according to the
+sentence type.
+
+Keep the explanation Ukrainian-centered. Do not compare Ukrainian rhythm to
+another language as the main teaching tool. Listen to the Ukrainian words,
+notice the stress, and copy the contour.
+
+### Melody choice
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Це ка́ва.", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A statement uses falling melody."}, {"question": "Це ка́ва?", "options": [{"text": "rising ↗", "correct": true}, {"text": "falling ↘", "correct": false}], "explanation": "A yes/no question uses rising melody."}, {"question": "Де метро́?", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A question with де uses falling melody at A1."}, {"question": "Як га́рно!", "options": [{"text": "stronger falling ↘↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "An exclamation uses a stronger falling contour."}]`)} />
+
+## Reading Aloud
+
+Use this three-step routine for longer words:
+
+1. Split the word into syllables.
+2. Find the stressed syllable.
+3. Read the whole word in a natural tempo.
+
+Practice:
+
+| Whole word | Stressed part to notice |
+| --- | --- |
+| **украї́нська** | the **ї́н** part is strongest |
+| **фотогра́фія** | the **гра́** part is strongest |
+| **відпочи́нок** | the **чи́** part is strongest |
+| **одина́дцять** | the **на́** part is strongest |
+| **чотирна́дцять** | the **на́** part is strongest |
+
+For the full number words below, put stress on **на́**:
+**одина́дцять**, **чотирна́дцять**. This protects you from the common habit of
+pulling stress to the first syllable. When you write these in your notebook,
+write the full word with the stress mark, then underline only the strong part.
+That keeps the spelling intact while still making the sound pattern visible.
+
+:::tip
+For this module, a stress mark is a training wheel. It is not usually printed
+in ordinary Ukrainian texts, but it helps your eyes remember the sound until
+the word becomes familiar.
+:::
+
+Read the small dialogue from Module 1 with melody:
+
+<DialogueBox uk="О́ля: Приві́т! ↘" en="Olia: Hi!" />
+<DialogueBox uk="Тара́с: Приві́т! Як спра́ви? ↘" en="Taras: Hi! How are things?" />
+<DialogueBox uk="О́ля: До́бре! А у те́бе? ↗" en="Olia: Good! And you?" />
+<DialogueBox uk="Тара́с: До́бре! ↘" en="Taras: Good!" />
+
+Notice two details. **Як спра́ви?** has the question word **як**, so the
+beginner model is falling. **А у те́бе?** is a yes/no-style return question, so
+it rises. Keep every vowel clear in **Приві́т**, **До́бре**, and **те́бе**.
+
+Now read a second tiny exchange. It uses the same words, but the punctuation
+changes your melody:
+
+<DialogueBox uk="О́ля: Це ка́ва. ↘" en="Olia: This is coffee." />
+<DialogueBox uk="Тара́с: Це ка́ва? ↗" en="Taras: Is this coffee?" />
+<DialogueBox uk="О́ля: Так, це ка́ва. ↘" en="Olia: Yes, this is coffee." />
+<DialogueBox uk="Тара́с: Де вода́? ↘" en="Taras: Where is the water?" />
+<DialogueBox uk="О́ля: Ось вода́. ↘" en="Olia: Here is water." />
+<DialogueBox uk="Тара́с: Як га́рно! ↘↘" en="Taras: How nice!" />
+
+### Stress changes meaning
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок", "right": "castle"}, {"left": "замо́к", "right": "lock"}, {"left": "а́тлас", "right": "atlas"}, {"left": "атла́с", "right": "satin"}, {"left": "о́рган", "right": "body organ"}, {"left": "орга́н", "right": "musical instrument"}]`)} />
+
+Common L2 traps now become workbook habits:
+
+| Trap | Safer Ukrainian habit |
+| --- | --- |
+| blurring unstressed vowels in **молоко́** | keep **мо-ло-ко́** clear |
+| reading **кіломе́тр** with first-syllable stress | stress the **-ме́тр** part |
+| keeping stress fixed in **кни́жка / книжки́** | notice that stress can move |
+| always emphasizing a pronoun | put logical stress on the meaningful word |
+| reading **мале́нький** with first-syllable stress | stress the middle part of **мале́нький** |
+| reading **одина́дцять** or **чотирна́дцять** with early stress | stress **на́** |
+
+You do not need to produce all of these words fluently today. You need to
+recognize the safer habit and avoid building the wrong one.
+
+## Textbook Check
+
+Before you leave the lesson tab, check four things aloud:
+
+- What is **наголос**?
+- Can stress change meaning? Say **за́мок** and **замо́к**.
+- Which melody do you use for **Це апте́ка?**
+- Which melody do you use for **Де метро́?**
+
+Final reading:
+
+<DialogueBox uk="Це апте́ка? ↗" en="Is this a pharmacy?" />
+<DialogueBox uk="Так, це апте́ка. ↘" en="Yes, this is a pharmacy." />
+<DialogueBox uk="Як га́рно! ↘↘" en="How nice!" />
+
+The workbook repeats the same skills in several modes: stress choice,
+homograph matching, punctuation and melody, clear-vowel error correction,
+number stress, and a short reading check.
+
+### Punctuation and melody
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ка́ва_", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Це метро́_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Де апте́ка_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Як га́рно_", "answer": "!", "options": ["!", "?", "."]}, {"sentence": "Так, це вода́_", "answer": ".", "options": [".", "?", "!"]}]`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"наголос","translation":"stress / accent","pos":"noun","example":"Наголос у слові ка́ва.","examples":["stress / accent","Наголос у слові ка́ва."]},{"word":"мелодика","translation":"melody / intonation","pos":"noun","example":"Мелодика речення.","examples":["melody / intonation","Мелодика речення."]},{"word":"склад","translation":"syllable","pos":"noun","example":"Один склад.","examples":["syllable","Один склад."]},{"word":"наголошений","translation":"stressed","pos":"adjective","example":"Наголошений склад.","examples":["stressed","Наголошений склад."]},{"word":"ненаголошений","translation":"unstressed","pos":"adjective","example":"Ненаголошений склад.","examples":["unstressed","Ненаголошений склад."]},{"word":"голосний","translation":"vowel","pos":"adjective / noun","example":"Голосний звук.","examples":["vowel","Голосний звук."]},{"word":"звук","translation":"sound","pos":"noun","example":"Звук о.","examples":["sound","Звук о."]},{"word":"слово","translation":"word","pos":"noun","example":"Слово ка́ва.","examples":["word","Слово ка́ва."]},{"word":"речення","translation":"sentence","pos":"noun","example":"Речення має мелодику.","examples":["sentence","Речення має мелодику."]},{"word":"питання","translation":"question","pos":"noun","example":"Це питання.","examples":["question","Це питання."]},{"word":"так","translation":"yes","pos":"particle","example":"Так.","examples":["yes","Так."]},{"word":"ні","translation":"no","pos":"particle","example":"Ні.","examples":["no","Ні."]},{"word":"хто","translation":"who","pos":"pronoun","example":"Хто це?","examples":["who","Хто це?"]},{"word":"що","translation":"what","pos":"pronoun","example":"Що це?","examples":["what","Що це?"]},{"word":"де","translation":"where","pos":"adverb","example":"Де метро́?","examples":["where","Де метро́?"]},{"word":"коли","translation":"when","pos":"adverb","example":"Коли?","examples":["when","Коли?"]},{"word":"як","translation":"how","pos":"adverb","example":"Як спра́ви?","examples":["how","Як спра́ви?"]},{"word":"це","translation":"this is / this","pos":"pronoun","example":"Це ка́ва.","examples":["this is / this","Це ка́ва."]},{"word":"кава","translation":"coffee","pos":"noun","example":"Ка́ва.","examples":["coffee","Ка́ва."]},{"word":"вода","translation":"water","pos":"noun","example":"Вода́.","examples":["water","Вода́."]},{"word":"столиця","translation":"capital","pos":"noun","example":"Ки́їв - столи́ця.","examples":["capital","Ки́їв - столи́ця."]},{"word":"замок","translation":"castle / lock","pos":"noun","example":"За́мок і замо́к.","examples":["castle / lock","За́мок і замо́к."]},{"word":"атлас","translation":"atlas / satin","pos":"noun","example":"А́тлас і атла́с.","examples":["atlas / satin","А́тлас і атла́с."]},{"word":"орган","translation":"organ","pos":"noun","example":"О́рган і орга́н.","examples":["organ","О́рган і орга́н."]},{"word":"ранок","translation":"morning","pos":"noun","example":"Ра́нок.","examples":["morning","Ра́нок."]},{"word":"метро","translation":"metro","pos":"noun","example":"Метро́.","examples":["metro","Метро́."]},{"word":"фотографія","translation":"photograph","pos":"noun","example":"Фотогра́фія.","examples":["photograph","Фотогра́фія."]},{"word":"одинадцять","translation":"eleven","pos":"numeral","example":"Одина́дцять.","examples":["eleven","Одина́дцять."]},{"word":"чотирнадцять","translation":"fourteen","pos":"numeral","example":"Чотирна́дцять.","examples":["fourteen","Чотирна́дцять."]},{"word":"мама","translation":"mother","pos":"noun","example":"Ма́ма.","examples":["mother","Ма́ма."]},{"word":"тато","translation":"father","pos":"noun","example":"Та́то.","examples":["father","Та́то."]},{"word":"книга","translation":"book","pos":"noun","example":"Кни́га.","examples":["book","Кни́га."]},{"word":"зима","translation":"winter","pos":"noun","example":"Зима́.","examples":["winter","Зима́."]},{"word":"рука","translation":"hand / arm","pos":"noun","example":"Рука́.","examples":["hand / arm","Рука́."]},{"word":"кафе","translation":"cafe","pos":"noun","example":"Кафе́.","examples":["cafe","Кафе́."]},{"word":"молоко","translation":"milk","pos":"noun","example":"Молоко́.","examples":["milk","Молоко́."]},{"word":"книжка","translation":"small book","pos":"noun","example":"Кни́жка.","examples":["small book","Кни́жка."]},{"word":"книжки","translation":"books","pos":"noun plural","example":"Книжки́.","examples":["books","Книжки́."]},{"word":"людина","translation":"person","pos":"noun","example":"Люди́на.","examples":["person","Люди́на."]},{"word":"українська","translation":"Ukrainian","pos":"adjective","example":"Украї́нська мова.","examples":["Ukrainian","Украї́нська мова."]},{"word":"відпочинок","translation":"rest / vacation","pos":"noun","example":"Відпочи́нок.","examples":["rest / vacation","Відпочи́нок."]},{"word":"кілометр","translation":"kilometer","pos":"noun","example":"Кіломе́тр.","examples":["kilometer","Кіломе́тр."]},{"word":"маленький","translation":"small","pos":"adjective","example":"Мале́нький.","examples":["small","Мале́нький."]},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Апте́ка.","examples":["pharmacy","Апте́ка."]},{"word":"гарно","translation":"nicely / beautiful","pos":"adverb","example":"Як га́рно!","examples":["nicely / beautiful","Як га́рно!"]},{"word":"привіт","translation":"hi","pos":"interjection","example":"Приві́т!","examples":["hi","Приві́т!"]},{"word":"справи","translation":"things / affairs","pos":"noun plural","example":"Як спра́ви?","examples":["things / affairs","Як спра́ви?"]},{"word":"добре","translation":"good / well","pos":"adverb","example":"До́бре!","examples":["good / well","До́бре!"]},{"word":"у тебе","translation":"and you / with you","pos":"phrase","example":"А у те́бе?","examples":["and you / with you","А у те́бе?"]},{"word":"Оля","translation":"Olia","pos":"proper noun","example":"О́ля.","examples":["Olia","О́ля."]},{"word":"Тарас","translation":"Taras","pos":"proper noun","example":"Тара́с.","examples":["Taras","Тара́с."]},{"word":"Київ","translation":"Kyiv","pos":"proper noun","example":"Ки́їв.","examples":["Kyiv","Ки́їв."]},{"word":"Україна","translation":"Ukraine","pos":"proper noun","example":"Украї́на.","examples":["Ukraine","Украї́на."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"наголос","back":"stress / accent"},{"front":"мелодика","back":"melody / intonation"},{"front":"склад","back":"syllable"},{"front":"наголошений","back":"stressed"},{"front":"ненаголошений","back":"unstressed"},{"front":"голосний","back":"vowel"},{"front":"звук","back":"sound"},{"front":"слово","back":"word"},{"front":"речення","back":"sentence"},{"front":"питання","back":"question"},{"front":"так","back":"yes"},{"front":"ні","back":"no"},{"front":"хто","back":"who"},{"front":"що","back":"what"},{"front":"де","back":"where"},{"front":"коли","back":"when"},{"front":"як","back":"how"},{"front":"це","back":"this is / this"},{"front":"кава","back":"coffee"},{"front":"вода","back":"water"},{"front":"столиця","back":"capital"},{"front":"замок","back":"castle / lock"},{"front":"атлас","back":"atlas / satin"},{"front":"орган","back":"organ"},{"front":"ранок","back":"morning"},{"front":"метро","back":"metro"},{"front":"фотографія","back":"photograph"},{"front":"одинадцять","back":"eleven"},{"front":"чотирнадцять","back":"fourteen"},{"front":"мама","back":"mother"},{"front":"тато","back":"father"},{"front":"книга","back":"book"},{"front":"зима","back":"winter"},{"front":"рука","back":"hand / arm"},{"front":"кафе","back":"cafe"},{"front":"молоко","back":"milk"},{"front":"книжка","back":"small book"},{"front":"книжки","back":"books"},{"front":"людина","back":"person"},{"front":"українська","back":"Ukrainian"},{"front":"відпочинок","back":"rest / vacation"},{"front":"кілометр","back":"kilometer"},{"front":"маленький","back":"small"},{"front":"аптека","back":"pharmacy"},{"front":"гарно","back":"nicely / beautiful"},{"front":"привіт","back":"hi"},{"front":"справи","back":"things / affairs"},{"front":"добре","back":"good / well"},{"front":"у тебе","back":"and you / with you"},{"front":"Оля","back":"Olia"},{"front":"Тарас","back":"Taras"},{"front":"Київ","back":"Kyiv"},{"front":"Україна","back":"Ukraine"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Where is the stress?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In ка́ва, where is the stress?", "options": [{"text": "first syllable", "correct": true}, {"text": "final syllable", "correct": false}, {"text": "no stress", "correct": false}], "explanation": "Ка́ва is stressed on ка́."}, {"question": "In вода́, where is the stress?", "options": [{"text": "final syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "every syllable equally", "correct": false}], "explanation": "Вода́ is stressed on да́."}, {"question": "In столи́ця, where is the stress?", "options": [{"text": "middle syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "final syllable", "correct": false}], "explanation": "Столи́ця is stressed on ли́."}, {"question": "What should you do with unstressed vowels in молоко́?", "options": [{"text": "Keep each vowel clear.", "correct": true}, {"text": "Drop the first vowel.", "correct": false}, {"text": "Read every о as а.", "correct": false}], "explanation": "Ukrainian unstressed vowels stay clear."}]`)} />
+
+### Melody choice
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Це ка́ва.", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A statement uses falling melody."}, {"question": "Це ка́ва?", "options": [{"text": "rising ↗", "correct": true}, {"text": "falling ↘", "correct": false}], "explanation": "A yes/no question uses rising melody."}, {"question": "Де метро́?", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A question with де uses falling melody at A1."}, {"question": "Як га́рно!", "options": [{"text": "stronger falling ↘↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "An exclamation uses a stronger falling contour."}]`)} />
+
+### Stress changes meaning
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок", "right": "castle"}, {"left": "замо́к", "right": "lock"}, {"left": "а́тлас", "right": "atlas"}, {"left": "атла́с", "right": "satin"}, {"left": "о́рган", "right": "body organ"}, {"left": "орга́н", "right": "musical instrument"}]`)} />
+
+### Punctuation and melody
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ка́ва_", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Це метро́_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Де апте́ка_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Як га́рно_", "answer": "!", "options": ["!", "?", "."]}, {"sentence": "Так, це вода́_", "answer": ".", "options": [".", "?", "!"]}]`)} />
+
+### Fix stress-transfer traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian reading habit." items={JSON.parse(`[{"sentence": "Keep all vowels clear in молоко́.", "errorWord": "blurred first two vowels", "correctForm": "мо-ло-ко́", "options": ["мо-ло-ко́", "blurred vowels"], "explanation": "Ukrainian vowels stay clear outside stress."}, {"sentence": "Put stress on the -ме́тр part in кіломе́тр.", "errorWord": "кі́лометр", "correctForm": "кіломе́тр", "options": ["кіломе́тр", "кі́лометр"], "explanation": "The prepared model is кіломе́тр."}, {"sentence": "Notice mobile stress in кни́жка / книжки́.", "errorWord": "кни́жки", "correctForm": "книжки́", "options": ["книжки́", "кни́жки"], "explanation": "This plural model moves stress to the ending."}, {"sentence": "Stress -на́- in одина́дцять.", "errorWord": "о́динадцять", "correctForm": "одина́дцять", "options": ["одина́дцять", "о́динадцять"], "explanation": "The A1 target has stress on -на́-."}, {"sentence": "Stress -на́- in чотирна́дцять.", "errorWord": "чоти́рнадцять", "correctForm": "чотирна́дцять", "options": ["чотирна́дцять", "чоти́рнадцять"], "explanation": "The A1 target has stress on -на́-."}]`)} />
+
+### Sort by stress position
+
+<GroupSort client:only='react' groups={JSON.parse(`{"First syllable": ["ма́ма", "та́то", "ра́нок", "ка́ва"], "Middle syllable": ["столи́ця", "люди́на", "одина́дцять", "чотирна́дцять"], "Final syllable": ["вода́", "зима́", "рука́", "метро́"]}`)} />
+
+### Stress and melody facts
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ukrainian stress can fall on different syllables.", "isTrue": true, "explanation": "Stress is free, so learn it with each word."}, {"statement": "Ordinary Ukrainian texts usually mark every stress.", "isTrue": false, "explanation": "Stress marks appear in learning materials and dictionaries, not most ordinary texts."}, {"statement": "A yes/no question such as Це вода́? rises at A1.", "isTrue": true, "explanation": "Yes/no questions use rising melody."}, {"statement": "A question with де always needs rising melody at A1.", "isTrue": false, "explanation": "A question with a question word such as де uses falling melody."}]`)} />
+
+### New stress words
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "наголос", "options": [{"text": "stress / accent", "correct": true}, {"text": "lock", "correct": false}, {"text": "water", "correct": false}], "explanation": "Наголос means word stress or accent."}, {"source": "ка́ва", "options": [{"text": "coffee", "correct": true}, {"text": "capital", "correct": false}, {"text": "morning", "correct": false}], "explanation": "Ка́ва means coffee."}, {"source": "вода́", "options": [{"text": "water", "correct": true}, {"text": "photograph", "correct": false}, {"text": "atlas", "correct": false}], "explanation": "Вода́ means water."}, {"source": "столи́ця", "options": [{"text": "capital", "correct": true}, {"text": "metro", "correct": false}, {"text": "family", "correct": false}], "explanation": "Столи́ця means capital."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Авраменко Grade 5, p.19**
+  sentence intonation categories and punctuation patterns.
+- 📚 **Заболотний Grade 5, p.73**
+  38 sounds and stress as the louder/longer syllable; stress is free and mobile.
+
+**🎧 Audio:**
+- 🎧 [ULP Season 1, Episode 5 - Pronunciation Trainer](https://www.ukrainianlessons.com/episode5/) — beginner stress practice with numerals.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

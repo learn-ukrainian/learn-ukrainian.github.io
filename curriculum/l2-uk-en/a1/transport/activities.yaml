@@ -1,0 +1,249 @@
+- id: act-1
+  type: match-up
+  title: Transport to situation
+  instruction: Match each situation with the natural transport word.
+  pairs:
+    - left: "airport to hotel, faster but expensive"
+      right: "таксі"
+    - left: "city route number seven"
+      right: "автобус"
+    - left: "underground city travel"
+      right: "метро"
+    - left: "rail trip to Lviv"
+      right: "потяг"
+    - left: "city rails on the street"
+      right: "трамвай"
+    - left: "electric city bus with wires"
+      right: "тролейбус"
+    - left: "flight to another country"
+      right: "літак"
+    - left: "small route minibus"
+      right: "маршрутка"
+- id: act-2
+  type: fill-in
+  title: Ticket window
+  instruction: Complete the ticket-buying lines.
+  items:
+    - sentence: "Один ___ до Львова, будь ласка."
+      answer: "квиток"
+      options:
+        - "квиток"
+        - "зупинка"
+        - "водій"
+      explanation: "Use квиток for a ticket."
+    - sentence: "___ коштує квиток?"
+      answer: "Скільки"
+      options:
+        - "Скільки"
+        - "Куди"
+        - "Де"
+      explanation: "Скільки коштує? asks the price."
+    - sentence: "В один бік чи ___ й назад?"
+      answer: "туди"
+      options:
+        - "туди"
+        - "там"
+        - "тут"
+      explanation: "Туди й назад means there and back."
+    - sentence: "Потяг відбуває ___ дев'ятій."
+      answer: "о"
+      options:
+        - "о"
+        - "в"
+        - "на"
+      explanation: "Use о with time: о дев'ятій."
+    - sentence: "Колія ___."
+      answer: "третя"
+      options:
+        - "третя"
+        - "три"
+        - "третє"
+      explanation: "Колія is feminine: третя."
+- id: act-3
+  type: quiz
+  title: Автобусом чи на метро?
+  instruction: Choose the natural travel model.
+  items:
+    - prompt: "How do you say by bus?"
+      options:
+        - text: "автобусом"
+          correct: true
+        - text: "за автобусом"
+          correct: false
+        - text: "на автобусі"
+          correct: false
+      explanation: "Use the instrumental: автобусом."
+    - prompt: "How do you say by metro?"
+      options:
+        - text: "на метро"
+          correct: true
+        - text: "метром"
+          correct: false
+        - text: "на метрі"
+          correct: false
+      explanation: "Метро does not change: на метро."
+    - prompt: "How do you say by taxi?"
+      options:
+        - text: "на таксі"
+          correct: true
+        - text: "таксієм"
+          correct: false
+        - text: "в таксію"
+          correct: false
+      explanation: "Таксі does not change: на таксі."
+    - prompt: "How do you say by train?"
+      options:
+        - text: "потягом"
+          correct: true
+        - text: "за потягом"
+          correct: false
+        - text: "до потяга"
+          correct: false
+      explanation: "Use potiahom: потягом."
+- id: act-4
+  type: group-sort
+  title: Passenger shelves
+  instruction: Sort the words and phrases by role.
+  groups:
+    - name: "Vehicles"
+      items:
+        - "автобус"
+        - "метро"
+        - "таксі"
+        - "трамвай"
+    - name: "Passenger words"
+      items:
+        - "квиток"
+        - "зупинка"
+        - "вокзал"
+        - "пасажир"
+    - name: "Direction words"
+      items:
+        - "прямо"
+        - "направо"
+        - "наліво"
+        - "до центру"
+    - name: "Public phrases"
+      items:
+        - "Обережно, двері зачиняються!"
+        - "Сплачуйте за проїзд."
+        - "Поступайтесь місцем старшому."
+- id: act-5
+  type: order
+  title: Airport to hotel route
+  instruction: Put the route instructions in a helpful order.
+  is_ukrainian: true
+  items:
+    - "Вийдіть з аеропорту."
+    - "Знайдіть зупинку автобуса."
+    - "Їдьте автобусом до метро."
+    - "Потім їдьте на метро до центру."
+    - "На станції йдіть прямо."
+    - "Готель праворуч."
+  correct_order: [0, 1, 2, 3, 4, 5]
+- id: act-6
+  type: true-false
+  title: Transport culture
+  instruction: Decide whether the statement fits the lesson.
+  items:
+    - statement: "Добрий день is a natural polite opening."
+      answer: true
+      explanation: "Use Добрий день in transport dialogues."
+    - statement: "Квиток is the lesson word for ticket."
+      answer: true
+      explanation: "Use квиток."
+    - statement: "Зупинка is the lesson word for stop."
+      answer: true
+      explanation: "Use зупинка."
+    - statement: "Потяг рушає is a natural transport sentence."
+      answer: true
+      explanation: "Рушає works for a vehicle starting to move."
+    - statement: "Я в автобусі means I am inside the bus."
+      answer: true
+      explanation: "That is static location."
+- id: act-7
+  type: odd-one-out
+  title: Find the odd transport chunk
+  instruction: Choose the phrase that does not fit the pattern.
+  items:
+    - words:
+        - "автобусом"
+        - "потягом"
+        - "трамваєм"
+        - "на метрі"
+      answer: "на метрі"
+      explanation: "Use на метро."
+    - words:
+        - "квиток"
+        - "зупинка"
+        - "вокзал"
+        - "білет"
+      answer: "білет"
+      explanation: "Use квиток in this lesson."
+    - words:
+        - "у таксі"
+        - "на метро"
+        - "у метро"
+        - "в таксію"
+      answer: "в таксію"
+      explanation: "Таксі does not change."
+    - words:
+        - "потяг рушає"
+        - "автобус відбуває"
+        - "ми вирушаємо"
+        - "брати автобус"
+      answer: "брати автобус"
+      explanation: "Say їхати автобусом or сідати в автобус."
+- id: act-8
+  type: error-correction
+  title: Repair transport interference
+  instruction: Choose the natural Ukrainian transport sentence.
+  items:
+    - sentence: "Брати автобус (Take a bus)"
+      error: "брати автобус"
+      correction: "Їхати автобусом / Сідати в автобус"
+      options:
+        - "Їхати автобусом / Сідати в автобус"
+        - "Брати автобус"
+        - "Їхати за автобусом"
+      explanation: "Ukrainian uses the transport as means or says to get into it."
+    - sentence: "Автобус відправляється"
+      error: "відправляється"
+      correction: "Автобус відбуває / Автобус рушає"
+      options:
+        - "Автобус відбуває / Автобус рушає"
+        - "Автобус відправляється"
+        - "Автобус бере дорогу"
+      explanation: "For a vehicle, use відбуває or рушає."
+    - sentence: "Ми відправляємося в дорогу"
+      error: "відправляємося"
+      correction: "Ми вирушаємо в дорогу"
+      options:
+        - "Ми вирушаємо в дорогу"
+        - "Ми відправляємося в дорогу"
+        - "Ми рушає автобусом"
+      explanation: "For people starting a trip, use вирушаємо."
+    - sentence: "Їхати за автобусом (Travel by bus)"
+      error: "за автобусом"
+      correction: "Їхати автобусом"
+      options:
+        - "Їхати автобусом"
+        - "Їхати за автобусом"
+        - "Їхати біля автобуса"
+      explanation: "Means of transport uses the instrumental without a preposition."
+    - sentence: "В таксію / на метрі (In the taxi / on the metro)"
+      error: "таксію / метрі"
+      correction: "У таксі / на метро"
+      options:
+        - "У таксі / на метро"
+        - "В таксію / на метрі"
+        - "У таксієм / на метрою"
+      explanation: "Таксі and метро do not change."
+    - sentence: "Я приїхав на вокзалі"
+      error: "на вокзалі"
+      correction: "Я приїхав на вокзал"
+      options:
+        - "Я приїхав на вокзал"
+        - "Я приїхав на вокзалі"
+        - "Я в вокзал приїхав"
+      explanation: "Приїхав answers куди?, so use на вокзал."

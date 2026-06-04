@@ -1,0 +1,200 @@
+- lemma: ім'я
+  translation: first name
+  pos: noun
+  usage: Моє ім'я Олена.
+- lemma: прізвище
+  translation: surname
+  pos: noun
+  usage: Моє прізвище Мельник.
+- lemma: знайомство
+  translation: acquaintance / introduction
+  pos: noun
+  usage: Це перше знайомство.
+- lemma: познайомитися
+  translation: to meet / get acquainted
+  pos: verb
+  usage: Дуже приємно познайомитися!
+- lemma: професія
+  translation: profession
+  pos: noun
+  usage: Моя професія — вчителька.
+- lemma: національність
+  translation: nationality
+  pos: noun
+  usage: Моя національність — канадка.
+- lemma: походження
+  translation: origin
+  pos: noun
+  usage: Походження відповідає на питання Звідки ти?
+- lemma: Вітаю
+  translation: hello / greetings
+  pos: interjection
+  usage: Вітаю! Мене звати Олена.
+- lemma: Добрий день
+  translation: good afternoon / hello
+  pos: phrase
+  usage: Добрий день!
+- lemma: Привіт
+  translation: hi
+  pos: interjection
+  usage: Привіт!
+- lemma: До побачення
+  translation: goodbye
+  pos: phrase
+  usage: До побачення!
+- lemma: Бувай
+  translation: bye
+  pos: interjection
+  usage: Бувай!
+- lemma: Дуже приємно
+  translation: very nice to meet you
+  pos: phrase
+  usage: Дуже приємно!
+- lemma: Мені теж
+  translation: me too
+  pos: phrase
+  usage: Мені теж.
+- lemma: мене звати
+  translation: my name is
+  pos: phrase
+  usage: Мене звати Богдан.
+- lemma: як тебе звати?
+  translation: what is your name? informal
+  pos: phrase
+  usage: Як тебе звати?
+- lemma: звідки ти?
+  translation: where are you from? informal
+  pos: phrase
+  usage: Звідки ти?
+- lemma: я з
+  translation: I am from
+  pos: phrase
+  usage: Я з Канади.
+- lemma: мені 20 років
+  translation: I am 20 years old
+  pos: phrase
+  usage: Мені 20 років.
+- lemma: у мене є
+  translation: I have
+  pos: phrase
+  usage: У мене є сестра.
+- lemma: у тебе є
+  translation: do you have / you have
+  pos: phrase
+  usage: У тебе є брат?
+- lemma: студент
+  translation: male student
+  pos: noun
+  usage: Я студент.
+- lemma: студентка
+  translation: female student
+  pos: noun
+  usage: Я студентка.
+- lemma: вчитель
+  translation: male teacher
+  pos: noun
+  usage: Він вчитель.
+- lemma: вчителька
+  translation: female teacher
+  pos: noun
+  usage: Вона вчителька.
+- lemma: інженер
+  translation: engineer
+  pos: noun
+  usage: Мій тато — інженер.
+- lemma: лікар
+  translation: male doctor
+  pos: noun
+  usage: Він лікар.
+- lemma: лікарка
+  translation: female doctor
+  pos: noun
+  usage: Вона лікарка.
+- lemma: українець
+  translation: Ukrainian man
+  pos: noun
+  usage: Андрій — українець.
+- lemma: українка
+  translation: Ukrainian woman
+  pos: noun
+  usage: Олена — українка.
+- lemma: канадієць
+  translation: Canadian man
+  pos: noun
+  usage: Марко — канадієць.
+- lemma: канадка
+  translation: Canadian woman
+  pos: noun
+  usage: Олена — канадка.
+- lemma: сім'я
+  translation: family, close household
+  pos: noun
+  usage: Це моя сім'я.
+- lemma: родина
+  translation: family or kin
+  pos: noun
+  usage: Це моя родина.
+- lemma: мама
+  translation: mom
+  pos: noun
+  usage: Це моя мама.
+- lemma: тато
+  translation: dad
+  pos: noun
+  usage: Це мій тато.
+- lemma: брат
+  translation: brother
+  pos: noun
+  usage: У мене є брат.
+- lemma: сестра
+  translation: sister
+  pos: noun
+  usage: У мене є сестра.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Це мій брат.
+- lemma: моя
+  translation: my, feminine
+  pos: pronoun
+  usage: Це моя мама.
+- lemma: моє
+  translation: my, neuter
+  pos: pronoun
+  usage: Це моє прізвище.
+- lemma: мої
+  translation: my, plural
+  pos: pronoun
+  usage: Це мої батьки.
+- lemma: його
+  translation: his / him
+  pos: pronoun
+  usage: Його звати Назар.
+- lemma: її
+  translation: her
+  pos: pronoun
+  usage: Її звати Ірина.
+- lemma: словник
+  translation: dictionary
+  pos: noun
+  usage: Це мій словник.
+- lemma: адреса
+  translation: address
+  pos: noun
+  usage: Це моя адреса.
+- lemma: гривня
+  translation: hryvnia, Ukrainian currency
+  pos: noun
+  usage: Гривня — валюта України.
+- lemma: чат
+  translation: chat
+  pos: noun
+  usage: Це чат курсу.
+- lemma: Богдане
+  translation: Bohdan, vocative
+  pos: proper noun form
+  usage: Привіт, Богдане!
+- lemma: Соломіє
+  translation: Solomiia, vocative
+  pos: proper noun form
+  usage: Дуже приємно, Соломіє.

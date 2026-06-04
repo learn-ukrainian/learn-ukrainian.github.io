@@ -1,0 +1,352 @@
+- word: підсумок
+  translation: checkpoint; summary
+  pos: noun
+  example: "Це підсумок про їжу та покупки."
+- word: їжа
+  translation: food
+  pos: noun
+  example: "Їжа на столі."
+- word: напій
+  translation: drink
+  pos: noun
+  example: "Вода - це напій."
+- word: вода
+  translation: water
+  pos: noun
+  example: "Я п'ю воду."
+- word: кава
+  translation: coffee
+  pos: noun
+  example: "Я п'ю каву з молоком."
+- word: чай
+  translation: tea
+  pos: noun
+  example: "Хочу чаю."
+- word: молоко
+  translation: milk
+  pos: noun
+  example: "Молоко в склянці."
+- word: сік
+  translation: juice
+  pos: noun
+  example: "Я п'ю сік."
+- word: сир
+  translation: cheese
+  pos: noun
+  example: "Я люблю сир."
+- word: хліб
+  translation: bread
+  pos: noun
+  example: "Свіжий хліб на столі."
+- word: борщ
+  translation: borscht
+  pos: noun
+  example: "Я люблю борщ."
+- word: вареники
+  translation: varenyky
+  pos: noun
+  example: "Анна готує вареники з картоплею."
+- word: сало
+  translation: salo
+  pos: noun
+  example: "Сало - українське слово для цієї страви."
+- word: каша
+  translation: porridge
+  pos: noun
+  example: "Я їм кашу на сніданок."
+- word: салат
+  translation: salad
+  pos: noun
+  example: "Олена бере овочевий салат."
+- word: смажена картопля
+  translation: fried potatoes
+  pos: phrase
+  example: "Смажена картопля гаряча."
+- word: яблуко
+  translation: apple
+  pos: noun
+  example: "Солодке яблуко."
+- word: яблука
+  translation: apples
+  pos: noun
+  example: "Дайте кілограм яблук."
+- word: помідори
+  translation: tomatoes
+  pos: noun
+  example: "Скільки коштують помідори?"
+- word: страва
+  translation: dish
+  pos: noun
+  example: "Це українська страва."
+- word: смачний
+  translation: tasty
+  pos: adjective
+  example: "Смачний борщ."
+- word: смачна
+  translation: tasty
+  pos: adjective
+  example: "Смачна кава."
+- word: свіжа
+  translation: fresh
+  pos: adjective
+  example: "Свіжа вода."
+- word: свіжий
+  translation: fresh
+  pos: adjective
+  example: "Свіжий хліб."
+- word: гаряча
+  translation: hot
+  pos: adjective
+  example: "Гаряча кава."
+- word: холодна
+  translation: cold
+  pos: adjective
+  example: "Холодна вода."
+- word: я снідаю
+  translation: I eat breakfast
+  pos: chunk
+  example: "Я снідаю вдома."
+- word: я обідаю
+  translation: I eat lunch
+  pos: chunk
+  example: "Я обідаю в кафе."
+- word: я вечеряю
+  translation: I eat dinner
+  pos: chunk
+  example: "Я вечеряю з друзями."
+- word: їсти
+  translation: to eat
+  pos: verb
+  example: "Я хочу їсти."
+- word: пити
+  translation: to drink
+  pos: verb
+  example: "Я хочу пити."
+- word: хотіти
+  translation: to want
+  pos: verb
+  example: "Я хочу воду."
+- word: любити
+  translation: to love; to like
+  pos: verb
+  example: "Я люблю борщ."
+- word: я їм
+  translation: I eat
+  pos: chunk
+  example: "Я їм сир."
+- word: я п'ю
+  translation: I drink
+  pos: chunk
+  example: "Я п'ю каву."
+- word: я хочу
+  translation: I want
+  pos: chunk
+  example: "Я хочу чаю."
+- word: ти любиш
+  translation: you like
+  pos: chunk
+  example: "Ти любиш борщ?"
+- word: ринок
+  translation: market
+  pos: noun
+  example: "Анна йде на ринок."
+- word: магазин
+  translation: shop; store
+  pos: noun
+  example: "Магазин поруч."
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Анна йде в кафе."
+- word: продавчиня
+  translation: saleswoman
+  pos: noun
+  example: "Продавчиня каже ціну."
+- word: офіціантка
+  translation: server; waitress
+  pos: noun
+  example: "Офіціантка дає меню."
+- word: меню
+  translation: menu
+  pos: noun
+  example: "Дайте меню, будь ласка."
+- word: рахунок
+  translation: bill
+  pos: noun
+  example: "Рахунок, будь ласка."
+- word: ціна
+  translation: price
+  pos: noun
+  example: "Ціна висока."
+- word: коштувати
+  translation: to cost
+  pos: verb
+  example: "Скільки коштує хліб?"
+- word: скільки коштує
+  translation: how much does it cost
+  pos: chunk
+  example: "Скільки коштує сир?"
+- word: скільки коштують
+  translation: how much do they cost
+  pos: chunk
+  example: "Скільки коштують помідори?"
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "Одна гривня."
+- word: гривні
+  translation: hryvnias
+  pos: noun
+  example: "Дві гривні."
+- word: гривень
+  translation: hryvnias
+  pos: noun
+  example: "П'ять гривень."
+- word: картка
+  translation: card
+  pos: noun
+  example: "Можна карткою?"
+- word: карткою
+  translation: by card
+  pos: chunk
+  example: "Карткою, будь ласка."
+- word: готівкою
+  translation: in cash
+  pos: chunk
+  example: "Готівкою, будь ласка."
+- word: купити
+  translation: to buy
+  pos: verb
+  example: "Я хочу купити хліб."
+- word: купувати
+  translation: to buy; to be buying
+  pos: verb
+  example: "Анна купує помідори."
+- word: платити
+  translation: to pay
+  pos: verb
+  example: "Анна платить карткою."
+- word: кілограм
+  translation: kilogram
+  pos: noun
+  example: "Кілограм яблук."
+- word: пляшка води
+  translation: bottle of water
+  pos: chunk
+  example: "Пляшка води коштує десять гривень."
+- word: пачка чаю
+  translation: pack of tea
+  pos: chunk
+  example: "Дайте пачку чаю."
+- word: шматок хліба
+  translation: piece of bread
+  pos: chunk
+  example: "Олена бере шматок хліба."
+- word: склянка
+  translation: glass
+  pos: noun
+  example: "Склянка води."
+- word: склянку
+  translation: glass (object form)
+  pos: noun
+  example: "Анна наливає склянку води."
+- word: тарілка
+  translation: plate
+  pos: noun
+  example: "Тарілка на столі."
+- word: тарілки
+  translation: plates
+  pos: noun
+  example: "Гості беруть тарілки."
+- word: кого
+  translation: whom
+  pos: pronoun
+  example: "Кого ти бачиш?"
+- word: бачити
+  translation: to see
+  pos: verb
+  example: "Я бачу Олену."
+- word: знати
+  translation: to know
+  pos: verb
+  example: "Я знаю брата."
+- word: чекати
+  translation: to wait for
+  pos: verb
+  example: "Я чекаю друга."
+- word: мама
+  translation: mom
+  pos: noun
+  example: "Я бачу маму."
+- word: брат
+  translation: brother
+  pos: noun
+  example: "Це мій брат."
+- word: брата
+  translation: brother (object form)
+  pos: noun
+  example: "Я знаю брата."
+- word: друг
+  translation: male friend
+  pos: noun
+  example: "Це мій друг."
+- word: друга
+  translation: male friend (object form)
+  pos: noun
+  example: "Я чекаю друга."
+- word: Олена
+  translation: Olena
+  pos: proper noun
+  example: "Це Олена."
+- word: Олену
+  translation: Olena (object form)
+  pos: proper noun
+  example: "Я бачу Олену."
+- word: лікар
+  translation: doctor
+  pos: noun
+  example: "Це лікар."
+- word: лікаря
+  translation: doctor (object form)
+  pos: noun
+  example: "Я бачу лікаря."
+- word: сусід
+  translation: male neighbor
+  pos: noun
+  example: "Це мій сусід."
+- word: сусіда
+  translation: male neighbor (object form)
+  pos: noun
+  example: "Я хочу зустріти сусіда."
+- word: Смачного!
+  translation: Bon appetit!
+  pos: phrase
+  example: "Анна каже: Смачного!"
+- word: Дайте, будь ласка
+  translation: Please give
+  pos: chunk
+  example: "Дайте, будь ласка, рахунок."
+- word: Мені каву, будь ласка
+  translation: Coffee for me, please
+  pos: chunk
+  example: "Мені каву, будь ласка."
+- word: Можна карткою?
+  translation: Can I pay by card?
+  pos: chunk
+  example: "Можна карткою?"
+- word: Тут, будь ласка
+  translation: For here, please
+  pos: chunk
+  example: "Тут, будь ласка."
+- word: із собою
+  translation: to go
+  pos: chunk
+  example: "Вам тут чи із собою?"
+- word: дорого
+  translation: expensive
+  pos: adverb
+  example: "Дорого!"
+- word: дешево
+  translation: cheap
+  pos: adverb
+  example: "Дешево!"
