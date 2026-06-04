@@ -2,7 +2,7 @@ module: a2-037
 level: A2
 sequence: 37
 slug: all-cases-practice
-version: 1.0.5
+version: 1.0.6
 title: Все разом
 subtitle: Розширені діалоги з усіма сімома відмінками в однині та множині
 focus: grammar
@@ -71,16 +71,16 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: 'Заповнення пропусків у діалозі правильними формами — представлено всі 7 відмінків, як в однині, так і в множині'
-  items: 8
+  items: 10
 - type: quiz
   focus: 'Визначення відмінка виділеного іменника та пояснення причини (дієслово чи прийменник-маркер)'
-  items: 8
+  items: 10
 - type: match-up
   focus: 'Поєднання половин речень так, щоб форма відмінка в першій половині узгоджувалася з прийменником/дієсловом у другій'
-  items: 8
+  items: 10
 - type: error-correction
   focus: 'Пошук та виправлення помилкових закінчень у всіх 7 відмінках (наприклад, *допомагаю сестру → сестрі, *багато студенти → студентів)'
-  items: 6
+  items: 10
 references:
 - title: Заболотний Grade 6, §§59-70
   notes: 'Повна парадигма відмінювання із вправами на комбінування всіх відмінків'
@@ -98,3 +98,8 @@ plan_fixes:
   changes:
   - 'Replaced the planning phrase with normative Поїдьмо so the plan no longer models давай/давайте as imperative formation.'
   - 'Evidence: Avramenko 2019 Grade 11 §17 and Litvinova 2024 Grade 7 §11 reject давай/давайте for literary imperative formation.'
+- version: 1.0.6
+  date: '2026-06-03'
+  trigger: Issue #2558 A2 activity hint density readiness audit found practice hints below the A2-checkpoint item floor.
+  changes:
+  - raise fill-in, quiz, match-up, and error-correction activity_hints item counts to 10

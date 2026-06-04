@@ -2,7 +2,7 @@ module: a2-034
 level: A2
 sequence: 34
 slug: plural-other-cases
-version: 1.0.4
+version: 1.0.3
 title: З друзями, для дітей
 subtitle: Давальний, орудний та місцевий відмінки множини
 focus: grammar
@@ -83,15 +83,9 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Виправити неправильні відмінкові закінчення в реченнях'
-  items: 8
+  items: 6
 references:
 - title: Заболотний Grade 6, §§63-65
   notes: 'Закінчення Дав., Оруд., Місц. множини зі вправами'
 - title: Кравцова Grade 4, с. 46-48
   notes: 'Розрізнення давального та місцевого відмінків — прості вправи на розпізнавання відмінка за запитальними словами'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
-  changes:
-  - raise error-correction activity_hints item count from 6 to 8

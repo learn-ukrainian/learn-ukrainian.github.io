@@ -2,7 +2,7 @@ module: a2-040
 level: A2
 sequence: 40
 slug: aspect-in-past
-version: 1.0.4
+version: 1.0.3
 title: Що ти робив? А що зробив?
 subtitle: Вид дієслова в минулому часі — процес чи результат
 focus: grammar
@@ -83,16 +83,10 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Виправлення неправильного вживання виду дієслова в реченнях'
-  items: 8
+  items: 6
 references:
 - title: Заболотний Grade 6, §52-54
   notes: 'Вид дієслова в минулому часі — контраст процесу та результату'
 - title: 'ULP: Past Tense and Aspect'
   url: https://www.ukrainianlessons.com/grammar-hub/
   notes: 'Практичні приклади вибору виду в минулому часі'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
-  changes:
-  - raise error-correction activity_hints item count from 6 to 8

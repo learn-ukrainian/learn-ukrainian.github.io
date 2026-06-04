@@ -2,7 +2,7 @@ module: a2-035
 level: A2
 sequence: 35
 slug: dozvillia-i-khobi
-version: 1.0.4
+version: 1.0.5
 title: Чим ти захоплюєшся? Дозвілля та хобі
 subtitle: Вільний час, спорт, розваги та плани на вихідні — з відмінками
 focus: communication
@@ -92,7 +92,7 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Виправити помилки у відмінках у реченнях про дозвілля (наприклад, *захоплююся плавання → плаванням, *ходжу в кіно → потрібен місцевий відмінок? Ні — знахідний правильний для напрямку)'
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, §40-42
   notes: Тема «Дозвілля», лексика вільного часу та розваг
@@ -113,3 +113,8 @@ plan_fixes:
   changes:
   - 'Replaced давай-based invitations and agreement with normative Ходімо / Пограймо models.'
   - 'Evidence: Avramenko 2019 Grade 11 §17 and Litvinova 2024 Grade 7 §11 reject давай/давайте for literary imperative formation.'
+- version: 1.0.5
+  date: '2026-06-03'
+  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
+  changes:
+  - raise error-correction activity_hints item count from 6 to 8

@@ -2,7 +2,7 @@ module: a2-038
 level: A2
 sequence: 38
 slug: home-and-daily-life
-version: 1.0.4
+version: 1.0.3
 title: Мій дім, мій день
 subtitle: Описуємо помешкання, меблі та щоденний розпорядок із повною системою відмінків
 focus: communication
@@ -83,16 +83,10 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Знайдіть та виправте граматичні помилки в реченнях'
-  items: 8
+  items: 6
 references:
 - title: Заболотний Grade 5, §§25-28
   notes: 'Опис місць та щоденних дій — вживання відмінків у контексті'
 - title: 'ULP: Home and Daily Routine'
   url: https://www.ukrainianlessons.com/season3/
   notes: 'Словник для опису дому та щоденного розпорядку з аудіо'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
-  changes:
-  - raise error-correction activity_hints item count from 6 to 8

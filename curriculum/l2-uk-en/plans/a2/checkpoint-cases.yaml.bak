@@ -2,7 +2,7 @@ module: a2-039
 level: A2
 sequence: 39
 slug: checkpoint-cases
-version: 1.0.4
+version: 1.0.3
 title: 'Контрольна точка: Відмінки та множина'
 subtitle: 'Перевірка знань: усі відмінки в однині та множині'
 focus: review
@@ -61,24 +61,18 @@ vocabulary_hints:
 activity_hints:
 - type: fill-in
   focus: 'Змішане тренування відмінків — доповнити речення, що вимагають усіх 7 відмінків в однині та множині'
-  items: 10
+  items: 8
 - type: quiz
   focus: 'Виправлення помилок — знайти та виправити відмінкові помилки в реченнях'
-  items: 10
+  items: 8
 - type: group-sort
   focus: 'Відсортувати форми іменників за відмінками (називний, родовий, давальний, знахідний, орудний, місцевий, кличний)'
-  items: 10
+  items: 8
 - type: error-correction
   focus: 'Знайти та виправити змішані відмінкові помилки в реченнях — неправильні закінчення після прийменників, плутанина істот/неістот, помилки в родовому відмінку множини'
-  items: 10
+  items: 6
 references:
 - title: Заболотний Grade 6, Повторення вивченого
   notes: 'Підсумкові вправи до розділу, що охоплюють усі відмінки'
 - title: Варзацька Grade 4, с. 38
   notes: 'Повна таблиця відмінювання — усі відмінки, однина і множина, для довідки'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found checkpoint hints below the A2-checkpoint item floor.
-  changes:
-  - raise fill-in, quiz, group-sort, and error-correction activity_hints item counts to 10
