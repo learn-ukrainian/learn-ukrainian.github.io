@@ -58,7 +58,32 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
-## ▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, WAVE-1+2) — RESUME HERE (LATEST; supersedes blocks below)
+## ▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, WAVE-1/2/2b DONE; WAVE-3 IN-FLIGHT) — RESUME HERE (LATEST)
+
+*main `aa0da0ed66`. This session merged #2680 + 6 dossier PRs (#2692/2693/2694/2696/2697/2698) + 2 handoff PRs (#2695, this). **36 new dossiers landed; queue 43→7.** Local main read-only-synced; orchestrator owns main.*
+
+### ✅ DONE THIS SESSION (queue 43 → 7)
+- **#2680 Ohienko fabrication FIXED+MERGED** — codex's re-push still had the invented triad «одна мова, одна церква, одна держава»; `verify_quote` proved the real slogan «…одна літературна мова… один правопис» =1.0; I fixed it (cross-family to codex) + swept all 6 quotes. **LESSON: CI-green ≠ content-correct.**
+- **WAVE-1 (18):** #2693 claude (OUN/war-dead), #2692 codex (medieval), #2694 cursor (artists). DeepSeek 18/18 SHIP + my verify_quote/search_literary sweep. Fixed a cursor Latin-transliteration defect (semen-hulak).
+- **WAVE-2 (12):** #2696 claude (dissidents/UPA/war-dead), #2697 cursor (writers/feminists). DeepSeek 10 SHIP + 2 factual FIX (pahutyak Shevchenko-Prize work=«Слуга з Добромиля»; fishbein Stus year=2000) — both Wikipedia-verified + fixed. **codex rate-limited (0 written) → its 6 figures re-fired to claude (bio-w2b).**
+- **WAVE-2b (6):** #2698 claude (statehood/historians: bachynskyi, yurii-lypa, rudnytska, trylovskyi, yakovenko, polonska-vasylenko). DeepSeek 6/6 SHIP. claude self-corrected my brief anchors (yakovenko «Дзеркала ідентичності» 2012; trylovskyi Vienna=military-not-law; bachynskyi Lviv+Berlin) — all confirmed.
+
+### 🔧 IN-FLIGHT — harvest NEXT (`curl -sS http://127.0.0.1:8765/api/delegate/active`)
+- **`bio-w3-claude`** (THE FINAL 6, fired from main `aa0da0ed66`): andriy-pilshchykov, leonid-kadenyuk, mykhailo-yangel, pavlo-fylypovych (⚠ plan has a GHOST source — esu URL resolves to a Soviet pilot; use REAL sources), sofiya-okunevska, yuriy-lvovych. Brief `/tmp/brief-bio-w3-claude.md`.
+- **Harvest loop (proven 4× this session):** read result / salvage if `needs_finalize` (commit+push+PR) → read ≥1 dossier + scope-check (`git diff --name-status origin/main...HEAD`, all `A` under docs/research/bio/) → ONE DeepSeek-pro dispatch inlining ONLY the new files (`--model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600`; prompt template `/tmp/deepseek-w2b-review.md`; MUST end "your FINAL message must be the full verdict table") → MY `verify_quote`+`search_literary` sweep on every §4 quote → fix deterministically (verify each fix via query_wikipedia before applying) → merge per grant (CI green + cross-family + bio-only scope) → clean worktrees.
+
+### ▶ NEXT ACTION ON RESUME
+1. **Harvest `bio-w3-claude`** → review → merge. **That makes the dossier-uplift phase COMPLETE** (queue → 1 = only `petro-veskliaov`, deferred until its slug rename →`petro-vesklyarov`).
+2. **`petro-veskliaov`:** do the slug rename (plan-versioning `.bak`+bump → `petro-vesklyarov`), then write its dossier. Queue → 0. Phase done.
+3. **Then PHASE-4 — the WIKI half** (the big remaining build): verify/rebuild the original-180 wikis against their new dossiers + build the 130 new wikis (bio-181..310). Pipeline `scripts/wiki/compile.py --track bio --slug X --writer claude`; the discovery bug + VERIFY-marker relaxation are already on main. Cross-review each with DeepSeek.
+4. **Deferred tooling (off critical path):** grok-wiring PR `claude/wire-grok-hermes-xai` (push+open; main green); #2675 agy `--model` (pytest red — needs rebase onto post-#2681 main; non-bio → orchestrator merges).
+
+### 📊 STATE / FLEET
+origin/main `aa0da0ed66`. **303 dossiers / 310 plans → queue 7** (6 in bio-w3 in-flight + petro-veskliaov deferred). Reviewer-of-record **DeepSeek-pro** (corpus-grounded; caught both wave-2 factual errors); grok-4.20 via `hermes --provider xai-oauth` = strong second when context allows. Writers: **claude = strongest + most reliable this session** (cap 1 dispatched + interactive seat); **codex rate-limits easily** (re-fire its work to claude when it does); **cursor[composer-2.5]** = throughput supplement, salvage on rate-limit, ALWAYS Latin-transliteration-scan its output (wave-1 had romanization; wave-2 was clean once the brief said "Cyrillic only"). Per-figure audit warnings: `grep -rhiE "\| *\**\[?{slug}" batch_state/tasks/bio-audit-rev-b*.result`. Brief template `/tmp/brief-bio-w1-claude.md`.
+
+---
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, WAVE-1+2) — (earlier; superseded by the block above)
 
 *main observed at `09a69854c9` (after this session merged #2680 + wave-1 batches #2692/#2693/#2694). Local main read-only-synced; orchestrator owns main.*
 
