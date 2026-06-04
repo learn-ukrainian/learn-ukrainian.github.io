@@ -1,0 +1,63 @@
+name: Security Audit (advisory)
+
+# Report-only dependency-vulnerability visibility over the dependabot backlog.
+# This NEVER blocks a PR — it is a dashboard, not a gate. Deterministic merge
+# gating stays with `Test (pytest)` (branch protection) and code-level findings
+# stay with CodeQL. Promote a step to a hard gate (drop `continue-on-error`)
+# only once the existing backlog is drained, or branch protection would wedge.
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  schedule:
+    # Weekly Monday 09:00 UTC — surfaces newly-disclosed advisories between PRs.
+    - cron: '0 9 * * 1'
+  workflow_dispatch: {}
+
+jobs:
+  pip-audit:
+    name: pip-audit (advisory)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: pip-audit (report-only)
+        continue-on-error: true
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          echo "::group::pip-audit (requirements-lock.txt)"
+          pip-audit -r requirements-lock.txt --desc --progress-spinner=off || true
+          echo "::endgroup::"
+
+  npm-audit:
+    name: npm-audit (advisory)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: starlight/package-lock.json
+
+      - name: npm audit (report-only)
+        working-directory: starlight
+        continue-on-error: true
+        run: |
+          echo "::group::npm audit (production deps)"
+          npm audit --omit=dev || true
+          echo "::endgroup::"
+          echo "::group::npm audit (all, summary)"
+          npm audit || true
+          echo "::endgroup::"
