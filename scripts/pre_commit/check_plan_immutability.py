@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Block staged plan edits that skip versioning or backup snapshots."""
+"""Block staged plan edits that skip versioning or add backup snapshots."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ import yaml
 PLAN_PATH_RE = re.compile(r"^curriculum/[^/]+/plans/.+\.yaml$")
 AUTO_FIX_TAG = "[auto-fix-plan-vocab]"
 METADATA_ONLY_FIELDS = {"module", "sequence", "slug", "level", "connects_to", "prerequisites"}
+YAML_BACKUP_SUFFIXES = (".yaml.bak", ".yml.bak", ".yaml.orig", ".yml.orig")
 
 
 def _run_git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -45,6 +46,11 @@ def _staged_files(repo_root: Path) -> list[str]:
 def _is_plan_path(path: str) -> bool:
     """True when the staged path is a curriculum plan YAML file."""
     return bool(PLAN_PATH_RE.match(path))
+
+
+def _is_yaml_backup_path(path: str) -> bool:
+    """True when a staged path is a YAML backup artifact."""
+    return path.endswith(YAML_BACKUP_SUFFIXES)
 
 
 def _git_blob_exists(repo_root: Path, spec: str) -> bool:
@@ -108,6 +114,25 @@ def _parse_plan(content: str, label: str) -> dict:
     return data
 
 
+def _version_parts(version: str) -> tuple[int, ...] | None:
+    """Parse a dotted numeric version, returning None for custom schemes."""
+    parts = version.split(".")
+    if not parts or any(not part.isdigit() for part in parts):
+        return None
+    return tuple(int(part) for part in parts)
+
+
+def _is_version_increment(old_version: str, new_version: str) -> bool:
+    """Return true when the new version is strictly newer than the old one."""
+    old_parts = _version_parts(old_version)
+    new_parts = _version_parts(new_version)
+    if old_parts is None or new_parts is None:
+        return new_version != old_version
+
+    width = max(len(old_parts), len(new_parts))
+    return old_parts + (0,) * (width - len(old_parts)) < new_parts + (0,) * (width - len(new_parts))
+
+
 def _is_metadata_only_edit(old_content: str, new_content: str) -> bool:
     """Return true when only ordering/reference metadata changed.
 
@@ -128,8 +153,13 @@ def _is_metadata_only_edit(old_content: str, new_content: str) -> bool:
 def _collect_errors(repo_root: Path) -> list[str]:
     """Validate staged plan edits against the immutability rule."""
     staged = _staged_files(repo_root)
-    staged_set = set(staged)
     errors: list[str] = []
+
+    for path in staged:
+        if _is_yaml_backup_path(path):
+            errors.append(
+                f"{path}: YAML backup artifacts are no longer tracked; bump the plan version instead"
+            )
 
     for plan_path in staged:
         if not _is_plan_path(plan_path):
@@ -156,24 +186,8 @@ def _collect_errors(repo_root: Path) -> list[str]:
             errors.append(str(exc))
             continue
 
-        if old_version == new_version:
-            errors.append(f"{plan_path}: version not bumped (still {old_version})")
-
-        bak_path = f"{plan_path}.bak"
-        if bak_path not in staged_set:
-            errors.append(f"{plan_path}: missing {bak_path} backup in same commit")
-            continue
-
-        try:
-            bak_version = _parse_version(_read_git_blob(repo_root, f":{bak_path}"), bak_path)
-        except ValueError as exc:
-            errors.append(str(exc))
-            continue
-
-        if bak_version != old_version:
-            errors.append(
-                f"{bak_path}: should contain old version {old_version}, found {bak_version}"
-            )
+        if not _is_version_increment(old_version, new_version):
+            errors.append(f"{plan_path}: version not incremented ({old_version} -> {new_version})")
 
     return errors
 
@@ -181,7 +195,7 @@ def _collect_errors(repo_root: Path) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint."""
     parser = argparse.ArgumentParser(
-        description="Enforce version bumps and backups for staged curriculum plan edits."
+        description="Enforce version bumps and block backup artifacts for staged curriculum plan edits."
     )
     parser.add_argument(
         "commit_msg_file",
@@ -199,11 +213,16 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(
-        "Plans are versioned - content changes need a bumped version and a `.bak` of the previous.",
+        "Plans are versioned - content changes need an incremented `version:` field.",
         file=sys.stderr,
     )
     print(
-        f"Exception: metadata-only fields {sorted(METADATA_ONLY_FIELDS)} may change without `.bak`.",
+        "Do not stage `.yaml.bak` plan backups; previous versions live in git history "
+        "(`git show HEAD:<path>`).",
+        file=sys.stderr,
+    )
+    print(
+        f"Exception: metadata-only fields {sorted(METADATA_ONLY_FIELDS)} may change without a version bump.",
         file=sys.stderr,
     )
     print(

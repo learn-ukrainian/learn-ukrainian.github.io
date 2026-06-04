@@ -37,7 +37,17 @@ def _project_python() -> str:
     Use the repository-local virtualenv explicitly so subprocess checks run
     with the same pyenv-backed dependencies as project scripts.
     """
-    return str(REPO_ROOT / ".venv" / "bin" / "python")
+    local_python = REPO_ROOT / ".venv" / "bin" / "python"
+    if local_python.exists():
+        return str(local_python)
+
+    common_dir = subprocess.check_output(
+        ["git", "-C", str(REPO_ROOT), "rev-parse", "--git-common-dir"],
+        env=_clean_env(),
+        text=True,
+    ).strip()
+    shared_python = Path(common_dir).resolve().parent / ".venv" / "bin" / "python"
+    return str(shared_python)
 
 
 def _write_plan(path: Path, version: str, title: str) -> str:
@@ -91,15 +101,13 @@ def _run_hook(repo: Path, commit_message: str) -> subprocess.CompletedProcess[st
     )
 
 
-def test_plan_edit_with_bumped_version_and_bak_passes(tmp_path: Path):
+def test_plan_edit_with_bumped_version_and_no_bak_passes(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH
-    old_content = plan_file.read_text(encoding="utf-8")
 
     _write_plan(plan_file, "1.1", "Updated plan")
-    (repo / f"{PLAN_PATH}.bak").write_text(old_content, encoding="utf-8")
 
-    _git(repo, "add", str(PLAN_PATH), f"{PLAN_PATH}.bak")
+    _git(repo, "add", str(PLAN_PATH))
     result = _run_hook(repo, "feat: update plan\n")
 
     assert result.returncode == 0
@@ -109,30 +117,42 @@ def test_plan_edit_with_bumped_version_and_bak_passes(tmp_path: Path):
 def test_plan_edit_without_version_bump_fails(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH
-    old_content = plan_file.read_text(encoding="utf-8")
 
     _write_plan(plan_file, "1.0", "Updated plan")
+
+    _git(repo, "add", str(PLAN_PATH))
+    result = _run_hook(repo, "feat: mutate plan\n")
+
+    assert result.returncode == 1
+    assert "version not incremented" in result.stderr
+
+
+def test_plan_edit_with_yaml_bak_fails(tmp_path: Path):
+    repo = _init_repo(tmp_path)
+    plan_file = repo / PLAN_PATH
+    old_content = plan_file.read_text(encoding="utf-8")
+
+    _write_plan(plan_file, "1.1", "Updated plan")
     (repo / f"{PLAN_PATH}.bak").write_text(old_content, encoding="utf-8")
 
     _git(repo, "add", str(PLAN_PATH), f"{PLAN_PATH}.bak")
     result = _run_hook(repo, "feat: mutate plan\n")
 
     assert result.returncode == 1
-    assert "version not bumped" in result.stderr
+    assert "YAML backup artifacts are no longer tracked" in result.stderr
 
 
-def test_plan_edit_without_bak_fails(tmp_path: Path):
+def test_comment_only_plan_edit_without_bump_passes(tmp_path: Path):
     repo = _init_repo(tmp_path)
     plan_file = repo / PLAN_PATH
 
-    _write_plan(plan_file, "1.1", "Updated plan")
+    plan_file.write_text(plan_file.read_text(encoding="utf-8") + "\n# local note\n", encoding="utf-8")
 
     _git(repo, "add", str(PLAN_PATH))
-    result = _run_hook(repo, "feat: mutate plan\n")
+    result = _run_hook(repo, "docs: add plan note\n")
 
-    assert result.returncode == 1
-    assert "missing" in result.stderr
-    assert ".bak" in result.stderr
+    assert result.returncode == 0
+    assert result.stderr == ""
 
 
 def test_metadata_only_plan_edit_without_bak_passes(tmp_path: Path):

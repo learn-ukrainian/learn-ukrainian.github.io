@@ -2,7 +2,7 @@
 
 Reads plan YAML files, identifies vague activity_hints (no Ukrainian text,
 no exercise markers like ↔/→/___/{}), sends them to Gemini with the full
-plan context, and writes back upgraded hints with version bump + backup.
+plan context, and writes back upgraded hints with a version bump.
 
 Usage:
     .venv/bin/python scripts/tools/upgrade_activity_hints.py a1 sounds-letters-and-hello
@@ -302,11 +302,6 @@ def upgrade_plan(
     if "plan_fixes" not in plan:
         plan["plan_fixes"] = []
     plan["plan_fixes"].append(fix_entry)
-
-    # Backup and write
-    backup_path = plan_path.with_suffix(".yaml.bak")
-    shutil.copy2(plan_path, backup_path)
-    print(f"  Backup: {backup_path.name}")
 
     plan_path.write_text(
         yaml.dump(plan, allow_unicode=True, default_flow_style=False, sort_keys=False),

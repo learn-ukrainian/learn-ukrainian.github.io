@@ -362,7 +362,7 @@ Returns:
 - `prompt_review` — whether `/prompt-review` has been run (bool, checks `audit/{slug}-prompt-review.md`)
 - `content_review` — whether `/content-review` has been run (bool, checks `audit/{slug}-content-review.md`)
 - `final_review` — verdict (APPROVE/NEEDS_WORK), issue count, issue summaries
-- `enriched` — whether plan was enriched (`.yaml.bak` exists)
+- `enriched` — whether the plan records versioned changes in `plan_fixes`
 - `consultations` — list of consultation attempts from `--consult` runs (num, outcome, scope, action, confidence, timestamp)
 - `comms` — last 15 broker messages related to this module's slug
 
@@ -419,7 +419,7 @@ ETA is calculated from the rate of recent Phase B completions. Cache TTL: 30 sec
 
 ### `GET /api/state/enrichment-status[?track=x]`
 
-Which plans are enriched per track. Checks for `.yaml.bak` files in `plans/`.
+Which plans are enriched per track. Checks for a non-empty `plan_fixes` list in the plan YAML; tracked `.yaml.bak` files are legacy artifacts and no longer count.
 
 ```bash
 curl -s http://localhost:8765/api/state/enrichment-status | python3 -m json.tool

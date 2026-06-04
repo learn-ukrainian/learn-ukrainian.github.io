@@ -21,6 +21,7 @@ from .state_helpers import (
     get_audit_status,
     get_final_review_info,
     get_plan_slugs,
+    plan_has_revision_log,
     read_v2_state,
     read_v3_state,
 )
@@ -186,7 +187,7 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
         if _compute_shippable(audit["status"], review_data["score"]):
             shippable += 1
 
-        if (plan_dir / f"{slug}.yaml.bak").exists():
+        if plan_has_revision_log(plan_dir / f"{slug}.yaml"):
             enriched += 1
 
         fr_r, fr_a, fr_att = _check_final_review_health(track_dir, num, slug)
@@ -296,8 +297,12 @@ def compute_enrichment_status(track: str | None) -> dict:
         if not plan_slugs:
             continue
         plan_dir = PLANS_ROOT / track_id
-        enriched = sum(1 for _, slug in plan_slugs if (plan_dir / f"{slug}.yaml.bak").exists())
-        not_enriched = [slug for _, slug in plan_slugs if not (plan_dir / f"{slug}.yaml.bak").exists()]
+        revision_logs = [
+            (slug, plan_has_revision_log(plan_dir / f"{slug}.yaml"))
+            for _, slug in plan_slugs
+        ]
+        enriched = sum(1 for _slug, has_revision_log in revision_logs if has_revision_log)
+        not_enriched = [slug for slug, has_revision_log in revision_logs if not has_revision_log]
         total = len(plan_slugs)
         tracks[track_id] = {
             "total": total, "enriched": enriched, "pending": total - enriched,

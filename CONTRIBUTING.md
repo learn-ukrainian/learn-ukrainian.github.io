@@ -131,7 +131,7 @@ After that, every `git commit` runs:
 - `ruff check` on changed `scripts/` files (blocks bad imports, multi-statement lines, etc.)
 - `gitleaks` secret scan on staged changes
 - YAML syntax check + large-file / merge-conflict detection
-- Block accidental `.yaml.bak` / `.yaml.orig` commits, except versioned plan snapshots under `curriculum/*/plans/**`
+- Block accidental `.yaml.bak` / `.yaml.orig` commits. Plan history lives in git, and content-bearing plan edits must bump `version:`.
 - Block bare `python` / `python3` in new shell scripts
 
 Run manually across the whole repo:

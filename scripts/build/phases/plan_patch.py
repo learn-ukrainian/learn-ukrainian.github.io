@@ -3,7 +3,8 @@
 This phase reads structured review outputs from the review loop, extracts the
 recurring structural complaints, and asks Gemini for a minimal structured plan
 patch. The patch is applied locally with the project's existing plan versioning
-conventions: ``.bak`` backup, patch-version bump, and ``plan_fixes`` changelog.
+conventions: patch-version bump and ``plan_fixes`` changelog. Prior versions
+live in git history, not tracked backup files.
 """
 
 from __future__ import annotations
@@ -571,8 +572,6 @@ def apply_plan_patch_response(
         updated["plan_fixes"] = []
     updated["plan_fixes"].append(fix_entry)
 
-    backup_path = plan_path.with_suffix(".yaml.bak")
-    write_text_atomic(backup_path, original_plan_text, encoding="utf-8")
     write_text_atomic(
         plan_path,
         yaml.safe_dump(updated, allow_unicode=True, sort_keys=False),

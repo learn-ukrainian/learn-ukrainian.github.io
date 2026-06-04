@@ -55,7 +55,7 @@
 | P4-A | Citation resolution invariant — every `[S\d+]` resolves to `sources.db` | Codex |
 | P4-B | Unicode round-trip golden corpus — extends #1448 tokenizer fix | Codex |
 | P4-C | Post-processor mutation-class invariant — stress annotator may only add marks | Codex |
-| P4-D | Plan immutability pre-commit hook — no in-place edit without `.bak` + version bump | Codex |
+| P4-D | Plan immutability pre-commit hook — no content-bearing edit without a version bump; no tracked `.yaml.bak` plan artifacts | Codex |
 | P4-E | Rules deployment invariant — CI fails if `diff claude_extensions/rules/ .claude/rules/` non-empty | Codex |
 | **#1351** | Rank-order test for pedagogical-grade retrieval — existing issue, already a Phase 4 fit | (existing) |
 

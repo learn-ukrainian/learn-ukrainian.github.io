@@ -39,7 +39,7 @@ check → research → skeleton → write → activities → enrich → verify �
 
 ## Non-negotiables
 
-1. **Plans are the source of truth.** Never silently modify a plan — bump the version and backup the old one.
+1. **Plans are the source of truth.** Never silently modify a plan — increment `version:` and record the rationale in the plan. Prior versions live in git history, not `.yaml.bak` files.
 2. **Audit gates must ALL be green.** No "good enough" if one gate is failing.
 3. **Word targets are minimums.** Expand content, never lower the target.
 4. **Reviewer is not the writer.** Enforced by `SELF_REVIEW_DETECTED` audit gate.

@@ -77,6 +77,10 @@ tmp/
 temp/
 *.tmp
 *.pid
+*.yaml.bak
+*.yml.bak
+*.yaml.orig
+*.yml.orig
 .venv/
 .agent/
 # Temporary/sample images in docs (textbook screenshots, vision test outputs)
