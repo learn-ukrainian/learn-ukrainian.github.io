@@ -271,7 +271,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Петро Калнишевський: Останній кошовий](figures/petro-kalnyshevskyy.md) (2,336 words)
 - [Біографія: Петро Могила: Засновник академії та реформатор церкви](figures/petro-mohyla.md) (2,633 words)
 - [Біографія: Петро Сагайдачний: Гетьман-Державник](figures/petro-sahaidachny.md) (1,943 words)
-- [Біографія: Дід Панас та архетип українського національного казкаря](figures/petro-veskliaov.md) (2,414 words)
+- [Біографія: Дід Панас та архетип українського національного казкаря](figures/petro-vesklyarov.md) (2,414 words)
 - [Біографія: Пилип Орлик: Автор першої української конституції](figures/pylyp-orlyk.md) (1,947 words)
 - [Біографія: Роксолана: Від рабині до султанші](figures/roksolana.md) (2,703 words)
 - [Біографія: Роман Мстиславич: Засновник Галицько-Волинської держави](figures/roman-mstyslavych.md) (1,752 words)

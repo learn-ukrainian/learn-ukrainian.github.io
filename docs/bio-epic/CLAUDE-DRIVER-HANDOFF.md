@@ -58,7 +58,39 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
-## ▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, WAVE-1/2/2b DONE; WAVE-3 IN-FLIGHT) — RESUME HERE (LATEST)
+## ▶▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, DOSSIER PHASE COMPLETE → PHASE-4 WIKI STRATEGY) — RESUME HERE (LATEST)
+
+*main `005c3c084b` (GREEN — #2691 stanza-CI-recovery + #2681 stanza-race fix landed → CI no longer saturated; content PRs merge again). Local main read-only-synced; orchestrator owns main.*
+
+### ✅ DOSSIER UPLIFT PHASE = COMPLETE (310/310)
+- **309/310 dossiers on main at session start**; the ONLY remaining gap was `petro-veskliaov` (bio-126, **Дід Панас**). This session closed it → **queue 0.**
+  - **PR (this batch):** codex dispatch `bio-126-vesklyarov` (branch `codex/bio-126-vesklyarov`, commit `f0dd18b5c6`) wrote dossier `docs/research/bio/petro-vesklyarov.md` (2768w) + fixed the misspelled slug `petro-veskliaov`→`petro-vesklyarov` across plan (versioning `.bak`+bump), `curriculum.yaml:793`, `index.mdx:142`, `wiki/figures/*.md`+`*.sources.yaml`, `wiki/index.md`, and a gitflow.md doc example. Validators green (bio 310 modules 0 errors; §7 xref clean; index.mdx 310 cards). Diff scope-checked = all expected.
+  - **#M-4 WIN:** my brief assumed surname «Весклярів»; codex VERIFIED via ЕСУ + Wikipedia that the canonical nominative is «**Вескляров**» and refused my unverified form (slug `petro-vesklyarov` matches «Вескляров»). All §4 quotes `verify_quote=0.0` → honestly marked NOT corpus-confirmed; the obscene-signoff legend flagged "DO NOT teach as fact"; Soviet title/workplace named without hagiography; Jewish birth-name variants (Пінхас/Вексляр) handled as source-tier caution. DeepSeek cross-family review (codex writer → deepseek) dispatched `review-petro-vesklyarov`.
+- **Prior session's WAVE-3 (final 6) confirmed merged** (303→309 dossiers): `comm(plans,dossiers)` shows zero w3 slugs missing.
+
+### 🔑 PHASE-4 = THE WIKI HALF (epic's largest remaining phase) — STRATEGY (user is deciding)
+**State:** 180/310 wikis exist (original 1-180); **0/130 for the new 181-310**. The original 180 were written BEFORE their dossiers existed (dossiers are THIS uplift's product) → they are **structurally ungrounded relative to the dossiers**.
+**ROOT CAUSE (verified this session):** `scripts/wiki/compile.py` builds from `discovery/*.yaml`, **NEVER the dossier** (`git grep dossier scripts/wiki/` = empty). ⇒ A rewrite TODAY would re-create ungrounded wikis. **Grounding the pipeline is the UNCONDITIONAL prerequisite** for both the 180-rewrite and the 130-new.
+**#2535 audit of the 180:** 30 BLOCK / 82 FIX / 56 SHIP (~31% clean); several BLOCK already remediated (Kulish #2565, fabricated identities #2564, 4 deferred #2574).
+**MY RECOMMENDED SEQUENCE** (user raised "maybe rewrite ALL 180 wikis"; my take = triage+ground-first, PENDING their confirm):
+1. **Ground the pipeline** — feed the dossier into discovery enrichment as the authoritative source tier (lean: enrich-discovery, NOT rewrite compile.py). Code dispatch. HIGHEST LEVERAGE.
+2. **Dossier-grounded triage of the 180** — deterministic + LLM check each wiki vs its dossier → ALIGNED(keep) / DIVERGENT(rewrite) / BLOCK(rewrite). Converts "feeling" into a real rewrite count.
+3. **Pilot** the grounded pipeline on 2-3 figures (1 divergent original-180, 1 new 181-310).
+4. **One capped Workflow** = rewrite-set(180) + all-130-new, dossier-grounded, DeepSeek cross-review each. **Needs user "use a workflow" opt-in + token budget.**
+Expectation: triage likely flags MOST of the 180 → we probably rewrite the majority, but evidence-driven, skip the genuinely-clean ones, and step 1 is required either way.
+
+### ▶ NEXT ACTION ON RESUME
+1. Merge the petro-vesklyarov PR once DeepSeek SHIP + CI green (per grant) → dossier phase 310/310 truly done.
+2. **Phase-4 step 1** — ground the wiki pipeline (dossier→discovery enrichment). Code dispatch (claude/codex), cross-review.
+3. **Phase-4 step 2** — triage the 180 → bring the user the rewrite count + a costed capped-Workflow proposal for step 4.
+4. Deferred tooling (off critical path): grok-wiring PR `claude/wire-grok-hermes-xai` (push+open, main green now); **#2675 agy `--model`** is STALE (base 24 commits behind origin/main → its pytest red is on OLD main; needs rebase onto current green main; non-bio infra → orchestrator merges; June-18 gemini→agy deadline).
+
+### 📊 STATE / FLEET
+origin/main `005c3c084b` GREEN. **310 plans / 310 dossiers** (after petro-vesklyarov). Reviewer-of-record **DeepSeek-pro** (`--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600`); grok-4.20 via `hermes --provider xai-oauth` = strong second. Writers: **claude** strongest (cap 1 dispatched + interactive seat), **codex** 1 seat (rate-limits easily; re-fire its work to claude when it does), **cursor[composer-2.5]** supplement (ALWAYS Latin-transliteration-scan its output). Every writer brief carries the #M-4 preamble + Ohienko-quote lesson (never alter/invent a quote) + bare-slug §7 rule.
+
+---
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, WAVE-1/2/2b DONE; WAVE-3 IN-FLIGHT) — (earlier; superseded by the block above)
 
 *main `aa0da0ed66`. This session merged #2680 + 6 dossier PRs (#2692/2693/2694/2696/2697/2698) + 2 handoff PRs (#2695, this). **36 new dossiers landed; queue 43→7.** Local main read-only-synced; orchestrator owns main.*
 

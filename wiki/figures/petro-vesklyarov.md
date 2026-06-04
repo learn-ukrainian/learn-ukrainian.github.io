@@ -1,7 +1,7 @@
 # Біографія: Дід Панас та архетип українського національного казкаря
 
 <!-- wiki-meta
-slug: petro-veskliaov
+slug: petro-vesklyarov
 domain: figures
 tracks: [hist, bio, lit, lit-essay, lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama]
 compiled: 2026-04-26
