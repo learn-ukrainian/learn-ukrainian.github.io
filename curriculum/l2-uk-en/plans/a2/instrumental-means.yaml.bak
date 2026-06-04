@@ -2,7 +2,7 @@ module: a2-025
 level: A2
 sequence: 25
 slug: instrumental-means
-version: 1.0.4
+version: 1.0.3
 title: Ручкою, автобусом
 subtitle: Орудний відмінок без прийменника для знаряддя та засобу
 focus: grammar
@@ -88,7 +88,7 @@ activity_hints:
   items: 8
 - type: unjumble
   focus: 'Перевпорядкуйте слова, щоб утворити правильні словосполучення в орудному відмінку, що виражають знаряддя або засіб пересування'
-  items: 8
+  items: 6
 references:
 - title: Кравцова Grade 4, с. 56-57
   notes: 'Вправи на відкриття закінчень орудного відмінка чоловічого роду (-ом, -ем, -єм) з дієсловами знаряддя (писати, малювати)'
@@ -97,9 +97,3 @@ references:
 - title: 'ULP: Ukrainian Cases — Instrumental'
   url: https://www.ukrainianlessons.com/instrumental-case/
   notes: 'Функції знаряддя та транспорту орудного відмінка'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found unjumble below the A2 item floor.
-  changes:
-  - raise unjumble activity_hints item count from 6 to 8

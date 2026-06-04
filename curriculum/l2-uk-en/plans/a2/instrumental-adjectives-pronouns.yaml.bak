@@ -2,7 +2,7 @@ module: a2-029
 level: A2
 sequence: 29
 slug: instrumental-adjectives-pronouns
-version: 1.0.4
+version: 1.0.3
 title: З моїм найкращим другом
 subtitle: Узгодження прикметників та займенників в орудному відмінку
 focus: grammar
@@ -88,7 +88,7 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Знайдіть та виправте помилки узгодження у словосполученнях в орудному відмінку (напр., *з моїм новою другом → з моїм новим другом, *моєю великим містом → моїм великим містом)'
-  items: 8
+  items: 6
 references:
 - title: Захарійчук Grade 4, с. 85-92
   notes: 'Повні таблиці відмінювання прикметників твердої та м''якої груп, включаючи закінчення орудного відмінка (-им/-ою та -ім/-ьою)'
@@ -96,9 +96,3 @@ references:
   notes: 'Таблиця відмінювання займенників, що показує форми орудного відмінка (моїм, такою, усім) з приміткою, що присвійні займенники відмінюються як прикметники'
 - title: Авраменко Grade 11, с. 25
   notes: 'Довідкова таблиця відмінювання прикметників — тверда група (білий → білим/білою) та м''яка група (синій → синім/синьою)'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
-  changes:
-  - raise error-correction activity_hints item count from 6 to 8

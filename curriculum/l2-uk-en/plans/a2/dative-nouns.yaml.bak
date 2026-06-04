@@ -2,7 +2,7 @@ module: a2-018
 level: A2
 sequence: 18
 slug: dative-nouns
-version: 1.0.4
+version: 1.0.3
 title: Студентові, сестрі, дитині
 subtitle: Закінчення давального відмінка іменників усіх родів
 focus: grammar
@@ -86,7 +86,7 @@ activity_hints:
   items: 8
 - type: unjumble
   focus: Розташувати слова у правильному порядку, щоб утворити правильні конструкції в давальному відмінку з непрямими додатками (наприклад, подарувати братові книгу)
-  items: 8
+  items: 6
 references:
 - title: Заболотний Grade 10, §157
   notes: Закінчення давального відмінка для іменників чоловічого роду ІІ відміни з паралельними закінченнями -ові/-еві/-єві та -у/-ю, стилістичне правило їх чергування
@@ -94,9 +94,3 @@ references:
   notes: Закінчення давального відмінка однини для іменників чоловічого роду за групами відмінювання (тверда, м'яка, мішана)
 - title: Кравцова Grade 4, §135
   notes: Розрізнення давального та місцевого відмінків — спільні закінчення, різні функції
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found unjumble below the A2 item floor.
-  changes:
-  - raise unjumble activity_hints item count from 6 to 8

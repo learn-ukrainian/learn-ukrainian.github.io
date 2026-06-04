@@ -2,7 +2,7 @@ module: a2-019
 level: A2
 sequence: 19
 slug: dative-adjectives-pronouns
-version: 1.0.4
+version: 1.0.3
 title: Моєму другові, нашій вчительці
 subtitle: Узгодження прикметників та присвійних займенників у давальному відмінку
 focus: grammar
@@ -86,7 +86,7 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Знайти та виправити помилки узгодження прикметників та займенників в іменникових групах у давальному відмінку (наприклад, *моїй другові → моєму другові, *нашому вчительці → нашій вчительці)'
-  items: 8
+  items: 6
 references:
 - title: Заболотний Grade 10, §157
   notes: Парадигма давального відмінка з прикладами узгодження прикметника та іменника
@@ -95,9 +95,3 @@ references:
 - title: 'ULP: Ukrainian Possessive Pronouns'
   url: https://www.ukrainianlessons.com/possessive-pronouns/
   notes: Відмінювання присвійних займенників у всіх відмінках
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
-  changes:
-  - raise error-correction activity_hints item count from 6 to 8

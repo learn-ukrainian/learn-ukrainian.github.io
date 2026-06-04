@@ -2,7 +2,7 @@ module: a2-031
 level: A2
 sequence: 31
 slug: checkpoint-instrumental
-version: 1.0.4
+version: 1.0.3
 title: 'Контрольна точка: Орудний відмінок'
 subtitle: 'Перевірка знань: усі функції орудного відмінка'
 focus: review
@@ -63,16 +63,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: 'Змішаний тест на орудний відмінок, що охоплює всі функції з М21-М26'
-  items: 10
+  items: 8
 - type: fill-in
   focus: 'Трансформація речень — поставити іменникові словосполучення в орудний відмінок із правильним узгодженням'
-  items: 10
+  items: 8
 - type: group-sort
   focus: 'Відсортувати речення в орудному відмінку за функцією (інструмент, супутник, професія, просторова, часова)'
-  items: 10
+  items: 8
 - type: error-correction
   focus: 'Знайти та виправити граматичні помилки в реченнях, що охоплюють теми модуля'
-  items: 10
+  items: 6
 references:
 - title: Захарійчук Grade 4, с. 62-69
   notes: 'Повний розділ про орудний відмінок — закінчення, прийменники, вправи для всіх родів'
@@ -80,9 +80,3 @@ references:
   notes: 'Вправи на повторення орудного відмінка в ширшому контексті відмінювання'
 - title: Голуб Grade 6, с. 179
   notes: 'Таблиці відмінювання займенників для повторення форм займенників в орудному відмінку'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found checkpoint hints below the A2-checkpoint item floor.
-  changes:
-  - raise quiz, fill-in, group-sort, and error-correction activity_hints item counts to 10

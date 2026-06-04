@@ -2,7 +2,7 @@ module: a2-032
 level: A2
 sequence: 32
 slug: plural-nominative-accusative
-version: 1.0.4
+version: 1.0.3
 title: Багато людей, багато речей
 subtitle: Множина називного та знахідного відмінків для всіх відмін
 focus: grammar
@@ -77,15 +77,9 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Знайти та виправити неправильні закінчення іменників у множині в називному та знахідному відмінках (наприклад, *дітей грають → діти грають, *бачу студенти → студентів)'
-  items: 8
+  items: 6
 references:
 - title: Заболотний Grade 6, §§59-61
   notes: 'Утворення називного та знахідного відмінків множини, розрізнення істот/неістот'
 - title: Літвінова Grade 6, с. 157-162
   notes: 'Таблиці відмінювання в множині для всіх відмін із вправами'
-plan_fixes:
-- version: 1.0.4
-  date: '2026-06-03'
-  trigger: Issue #2558 A2 activity hint density readiness audit found error-correction below the A2 item floor.
-  changes:
-  - raise error-correction activity_hints item count from 6 to 8
