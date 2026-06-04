@@ -25,7 +25,7 @@ Start every reading attempt with one question:
 In Ukrainian, every syllable has a vowel sound. A single vowel can be a whole
 syllable, and a consonant by itself cannot make a syllable. This is the school
 rule behind beginner reading: count the vowel sounds, and you have the number
-of **склади**.
+of **склади́**.
 
 | Word | Vowel letters to notice | Syllables |
 | --- | --- | --- |
@@ -102,7 +102,7 @@ Use three safe examples:
 | --- | --- | --- |
 | **я́блуко** | apple | **я** starts the word: **[йа]** |
 | **люди́на** | person | **ю** follows **л** and marks softness + **[у]** |
-| **пісня́** | song | **я** follows **н** and marks softness + **[а]** |
+| **пі́сня** | song | **я** follows **н** and marks softness + **[а]** |
 
 You do not need to describe every phonetic detail yet. You need a safe reading
 habit: look at the position of **Я, Ю, Є, Ї**, then read the word slowly.
@@ -176,7 +176,7 @@ English can push you toward the wrong habit. Use these safety checks:
 
 Keep the Ukrainian system independent. Do not explain **И**, **І**, **Г**, or
 **О** through another language's alphabet. Build the category from Ukrainian
-examples: **ми**, **діти**, **гора́**, **молоко́**.
+examples: **ми**, **ді́ти**, **гора́**, **молоко́**.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -212,7 +212,7 @@ Before you leave the lesson tab, check that you can do these things:
 - count the vowel sounds in **молоко́**;
 - count three vowel sounds in **ву́лиця**;
 - say why **Ї** is always **[йі]**;
-- read **я́блуко**, **люди́на**, **пісня́**, and **день** slowly;
+- read **я́блуко**, **люди́на**, **пі́сня**, and **день** slowly;
 - keep **о** clean in **молоко́** and **столи́ця**;
 - say that **дж** and **дз** are joined reading units;
 - avoid Russian or English shortcuts when you describe Ukrainian sounds.

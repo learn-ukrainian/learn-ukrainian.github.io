@@ -62,10 +62,10 @@
   translation: autumn
   pos: noun
   usage: О́сінь.
-- lemma: батько́
+- lemma: ба́тько
   translation: father
   pos: noun
-  usage: Батько́.
+  usage: Ба́тько.
 - lemma: вчи́тель
   translation: teacher
   pos: noun
@@ -89,7 +89,7 @@
 - lemma: апо́строф
   translation: apostrophe
   pos: noun
-  usage: В сім'я́ є апо́строф.
+  usage: У сло́ві «сім'я́» є апо́строф.
 - lemma: Ки́їв
   translation: Kyiv
   pos: proper noun

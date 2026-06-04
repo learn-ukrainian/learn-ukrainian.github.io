@@ -35,7 +35,7 @@
     right: always [йі]
 - id: act-3
   type: divide-words
-  title: Split into склади
+  title: Split into склади́
   instruction: Divide each word into syllables.
   items:
   - word: мама
@@ -49,7 +49,7 @@
   - word: людина
     answer: лю ди на
   - word: бібліотека
-    answer: біб лі о те ка
+    answer: бі блі о те ка
 - id: act-4
   type: error-correction
   title: Reading traps
