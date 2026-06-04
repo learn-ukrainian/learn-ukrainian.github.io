@@ -70,7 +70,7 @@ Stage by file group:
 ```bash
 git add scripts/build_module_v5.py scripts/pipeline_v5.py  # scripts
 git add claude_extensions/phases/gemini/phase-A-seminar.md     # templates
-git add curriculum/l2-uk-en/plans/bio/petro-veskliaov.yaml  # content fixes
+git add curriculum/l2-uk-en/plans/bio/petro-vesklyarov.yaml  # content fixes
 ```
 
 ### What NOT to commit together
