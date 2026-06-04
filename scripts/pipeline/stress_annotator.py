@@ -16,8 +16,11 @@ Issue: #981, #1019
 
 from __future__ import annotations
 
+import contextlib
 import logging
+import os
 import re
+import tempfile
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -54,13 +57,68 @@ _SKIP_PATTERNS = [
 _stressifier = None
 
 
+def _stanza_download_lock_path() -> Path:
+    """Path to the inter-process lock guarding first-time Stanza model setup.
+
+    Keyed to the shared Stanza resources directory (``STANZA_RESOURCES_DIR``
+    or ``~/stanza_resources``) so that every process that downloads into that
+    directory contends on the same lock. Falls back to the system temp dir if
+    the resources directory cannot be created.
+    """
+    base = os.environ.get("STANZA_RESOURCES_DIR") or os.path.join(
+        os.path.expanduser("~"), "stanza_resources"
+    )
+    if not base.startswith("~"):
+        try:
+            Path(base).mkdir(parents=True, exist_ok=True)
+            return Path(base) / ".uk-model-download.lock"
+        except OSError:
+            pass
+    return Path(tempfile.gettempdir()) / "stanza-uk-model-download.lock"
+
+
+@contextlib.contextmanager
+def _model_download_lock():
+    """Serialize first-time Stressifier construction across processes.
+
+    The Stressifier constructor lazily downloads the Stanza Ukrainian model
+    into a shared resources directory. When several processes start cold at
+    once — ``pytest -n auto`` workers, or concurrent V7 builds — they each
+    write the same model file simultaneously, corrupting it and tripping
+    Stanza's md5 check (``ValueError: md5 for .../uk/tokenize/iu.pt is ...,
+    expected ...``) — a flaky ``Test (pytest)`` failure on the whole
+    stress_annotator mutation class plus the ULP stress tests. Holding an
+    inter-process file lock around construction makes the download/load
+    atomic, so only the first process downloads and the rest load the
+    verified file from disk.
+    """
+    try:
+        from filelock import FileLock, Timeout
+    except ImportError:
+        # filelock is a pinned dependency, but never let its absence turn a
+        # working stress pass into a hard failure — degrade to unlocked.
+        yield
+        return
+
+    lock = FileLock(str(_stanza_download_lock_path()), timeout=900)
+    try:
+        with lock:
+            yield
+    except Timeout:
+        # Extremely unlikely (a model download takes seconds). Proceed
+        # unlocked rather than introducing a new failure mode.
+        logger.warning("stress_annotator: timed out acquiring model download lock; proceeding unlocked")
+        yield
+
+
 def _get_stressifier():
     """Lazy load the Stressifier (loads Stanza model on first call)."""
     global _stressifier
     if _stressifier is None:
         from ukrainian_word_stress import Stressifier, StressSymbol
 
-        _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent)
+        with _model_download_lock():
+            _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent)
     return _stressifier
 
 

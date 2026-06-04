@@ -10,7 +10,12 @@ Validates post-processing stress annotation:
 
 from __future__ import annotations
 
+import contextlib
+import subprocess
+import sys
 import time
+import types
+from pathlib import Path
 
 from scripts.pipeline.stress_annotator import (
     STRESS_MARK,
@@ -436,3 +441,92 @@ class TestAnnotateFileSafetyCheck:
         count = annotate_file(md_file)
         assert count == 0, "Already-stressed body should be idempotent"
         assert md_file.read_text(encoding="utf-8") == content
+
+
+# ---------------------------------------------------------------------------
+# Stanza model-download concurrency guard (CI flake regression)
+#
+# The Stressifier constructor lazily downloads the Stanza UK model into a
+# shared resources dir. Under `pytest -n auto` (and concurrent V7 builds),
+# multiple processes raced to write the same file, corrupting it and tripping
+# Stanza's md5 check — failing the whole stress_annotator mutation class plus
+# the ULP stress tests. `_get_stressifier` now serializes construction with an
+# inter-process file lock. These tests pin that contract without touching the
+# network or loading the real model.
+# ---------------------------------------------------------------------------
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+# Each worker increments a shared counter via a non-atomic read-modify-write
+# inside the download lock. With the lock, the final value equals the worker
+# count; without it, the deliberate sleep window guarantees lost updates.
+_LOCK_COUNTER_SNIPPET = """\
+import os, sys, time
+sys.path.insert(0, {repo_root!r})
+os.environ["STANZA_RESOURCES_DIR"] = {resources_dir!r}
+from scripts.pipeline.stress_annotator import _model_download_lock
+counter = {counter!r}
+with _model_download_lock():
+    value = int(open(counter).read())
+    time.sleep(0.05)
+    open(counter, "w").write(str(value + 1))
+"""
+
+
+class TestModelDownloadLock:
+    """The lazy Stressifier load must be concurrency-safe across processes."""
+
+    def test_lock_path_keyed_to_stanza_resources_dir(self, tmp_path, monkeypatch):
+        from scripts.pipeline import stress_annotator as sa
+
+        monkeypatch.setenv("STANZA_RESOURCES_DIR", str(tmp_path))
+        assert sa._stanza_download_lock_path() == tmp_path / ".uk-model-download.lock"
+
+    def test_get_stressifier_constructs_inside_download_lock(self, monkeypatch):
+        """Construction must happen *inside* the lock, never before/after it."""
+        from scripts.pipeline import stress_annotator as sa
+
+        events: list[str] = []
+
+        @contextlib.contextmanager
+        def fake_lock():
+            events.append("lock-enter")
+            try:
+                yield
+            finally:
+                events.append("lock-exit")
+
+        class FakeStressifier:
+            def __init__(self, *args, **kwargs):
+                events.append("construct")
+
+        fake_module = types.SimpleNamespace(
+            Stressifier=FakeStressifier,
+            StressSymbol=types.SimpleNamespace(CombiningAcuteAccent="́"),
+        )
+        monkeypatch.setitem(sys.modules, "ukrainian_word_stress", fake_module)
+        monkeypatch.setattr(sa, "_model_download_lock", fake_lock)
+        monkeypatch.setattr(sa, "_stressifier", None)
+
+        sa._get_stressifier()
+
+        assert events == ["lock-enter", "construct", "lock-exit"]
+
+    def test_model_download_lock_serializes_across_processes(self, tmp_path):
+        """Concurrent cold starts must not interleave (the #1448-style race)."""
+        counter = tmp_path / "counter.txt"
+        counter.write_text("0", encoding="utf-8")
+
+        snippet = _LOCK_COUNTER_SNIPPET.format(
+            repo_root=str(REPO_ROOT),
+            resources_dir=str(tmp_path),
+            counter=str(counter),
+        )
+
+        worker_count = 5
+        python = REPO_ROOT / ".venv/bin/python"
+        procs = [subprocess.Popen([str(python), "-c", snippet]) for _ in range(worker_count)]
+        for proc in procs:
+            assert proc.wait(timeout=120) == 0, "lock worker subprocess failed"
+
+        # No lost updates → every worker's increment landed.
+        assert counter.read_text(encoding="utf-8") == str(worker_count)
