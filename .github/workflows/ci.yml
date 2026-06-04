@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       code: ${{ steps.filter.outputs.code }}
+      python: ${{ steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -63,6 +64,19 @@ jobs:
               - 'docs/lesson-contract.md'
               - 'docs/lesson-schema.yaml'
               - 'starlight/**'
+            python:
+              - '.github/workflows/ci.yml'
+              - 'requirements*.txt'
+              - 'requirements.lock'
+              - 'pyproject.toml'
+              - 'scripts/**/*.py'
+              - 'tests/**/*.py'
+              - 'claude_extensions/**'
+              - 'gemini_extensions/**'
+              - 'scripts/build/phases/**/*.md'
+              - 'scripts/build/contracts/**/*.md'
+              - 'docs/lesson-contract.md'
+              - 'docs/lesson-schema.yaml'
 
   lint:
     name: Lint (ruff)
@@ -320,7 +334,7 @@ jobs:
     # job is skipped because lint failed, the required check never reports
     # and the PR blocks indefinitely. Use `!cancelled()` so the job always
     # runs (unless the workflow itself is cancelled). Inner steps below
-    # gate on `needs.changes.outputs.code` and `needs.lint.result` to skip
+    # gate on `needs.changes.outputs.python` and `needs.lint.result` to skip
     # the pytest body cleanly when not needed; the job still exits success
     # → required check satisfied.
     if: '!cancelled()'
@@ -328,10 +342,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-        if: needs.changes.outputs.code == 'true'
+        if: needs.changes.outputs.python == 'true'
 
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        if: needs.changes.outputs.code == 'true'
+        if: needs.changes.outputs.python == 'true'
         with:
           python-version: '3.12'
           cache: 'pip'
@@ -340,7 +354,7 @@ jobs:
             pyproject.toml
 
       - name: Install dependencies
-        if: needs.changes.outputs.code == 'true'
+        if: needs.changes.outputs.python == 'true'
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
@@ -351,7 +365,7 @@ jobs:
           .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
 
       - name: Run tests
-        if: needs.changes.outputs.code == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
+        if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
           common_args=(
             tests/
@@ -386,7 +400,7 @@ jobs:
           .venv/bin/python -m pytest "${common_args[@]}"
 
       - name: Run tests with coverage
-        if: needs.changes.outputs.code == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           # Gradual path: 30 (2025) → 35 (now, 2026-04) → 50 (mid-2026) → 80 on
           # critical paths (dispatch, activity_repair, audit/core). Measured
@@ -435,7 +449,7 @@ jobs:
           .venv/bin/python -m pytest "${common_args[@]}" "${coverage_args[@]}"
 
       - name: Upload coverage
-        if: always() && needs.changes.outputs.code == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.python == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-report
