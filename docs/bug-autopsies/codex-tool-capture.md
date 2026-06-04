@@ -2,15 +2,15 @@
 
 **Category:** codex-tool-capture · **Severity:** build-breaking (HARD-fail) · **Recurrences:** 3
 
-## Symptom (identical each time)
-A codex-tools V7 build HARD-fails the writer phase with
+## Symptom
+(Identical each time.) A codex-tools V7 build HARD-fails the writer phase with
 `WRITER_RUNTIME_GATE_FAILED: failures=[mcp_tools_never_invoked]`
 (`phase_writer_summary` shows `tool_calls_total=0`) **even though the codex
 writer actually made many valid `mcp__sources__*` calls** — provable from the
 raw rollout JSONL. The build dies before reaching content gates. The failure is
 a **measurement artifact**, not a writer-behavior failure.
 
-## Root pattern
+## Root cause
 The codex CLI's tool-call recording format is **unstable across versions**, and
 our capture/normalization layer (`scripts/agent_runtime/tool_calls.py` +
 `scripts/agent_runtime/adapters/codex.py`) is tightly coupled to a specific
@@ -60,3 +60,9 @@ real, or did the measurement break?"* before treating it as a behavior verdict �
 especially for an external tool (codex CLI) whose output format we don't control.
 This is the same conceptual failure as the secret-leakage recurrences (a parser
 silently degrading when the upstream format changes), applied to telemetry.
+
+## Links
+
+- Issue: #2407 (prior recurrences #1907, #2403)
+- Fix: `00dd5f18de` — fix(codex-adapter): normalize namespace/name join for
+  codex 0.135.0 (no trailing `__`) (#2407)

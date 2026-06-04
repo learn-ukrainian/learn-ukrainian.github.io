@@ -1,65 +1,49 @@
 # GitHub Workflows
 
-This repository uses a **multi-agent coordination protocol** for AI-assisted development.
+CI, security, and deploy automation for the learn-ukrainian curriculum.
 
 ## Active Workflows
 
-| Workflow | Purpose | Trigger | Status |
-|----------|---------|---------|--------|
-| `deploy-pages.yml` | Deploy Docusaurus to GitHub Pages | Push to main | ✅ Active |
-| `validate-yaml.yml` | Validate YAML syntax | PR/Push | ✅ Active |
+| Workflow | Purpose | Trigger | Notes |
+|----------|---------|---------|-------|
+| `ci.yml` | Lint (ruff), Quality Gates (radon), Lint Prompts, root-script guard, MDX source parity, lesson-schema drift, **Test (pytest)**, Frontend (build + vitest), Secret Scanning (trufflehog) | PR / push to main | `Test (pytest)` is the only **required** status check. Required path is hermetic — no network model downloads (Stanza/HF tests are `slow` and excluded; see `docs/bug-autopsies/stanza-model-md5-flake.md`). pytest gates on **Python** paths only; `starlight/**` gates the frontend job, so content/MDX PRs skip pytest. |
+| `content-ci.yml` | Advisory content gates (bio dossier Section-7 xref, dossier word-count) | PR | Non-blocking; unfiltered `pull_request` so it never wedges as "expected". |
+| `security-audit.yml` | Advisory dependency-vuln report (`pip-audit` + `npm audit`) | PR / weekly | Report-only; visibility layer over the dependabot backlog. Does not block. |
+| `zizmor.yml` | Static security analysis of all workflow YAML | PR / push / weekly | SARIF → Security tab. Runs `--offline`. |
+| `validate-yaml.yml` | YAML syntax / schema validation | PR / push | |
+| `rules-deployment-check.yml` | Agent-rule deploy idempotency check | PR / push | |
+| `deploy-pages.yml` | Build Starlight + deploy to GitHub Pages | **Manual** (`workflow_dispatch`) | Auto-deploy on push is intentionally disabled. |
 
-## Multi-Agent Coordination
+## Supply-chain hardening
 
-See `docs/dev/AGENT_COORDINATION.md` for the complete multi-agent protocol.
+- **All actions are SHA-pinned** (not tag-pinned). Dependabot's `github-actions`
+  ecosystem keeps the pins fresh (7-day cooldown). See `.github/dependabot.yml`.
+- **`persist-credentials: false`** on checkouts that don't push.
+- **Least privilege**: top-level `permissions: contents: read`; per-job
+  escalation only where needed.
+- **Secret scanning** via trufflehog (`--results=verified,unknown`).
+- **CodeQL** runs via GitHub default setup (Python / JS / TS / Actions).
 
-### Agent Roles
+## Security gates (layered, non-wedging)
 
-| Agent | Role | Tool | Invocation |
-|-------|------|------|------------|
-| **C1-a** | Coordinator | Gemini 2.5 Pro | Antigravity IDE |
-| **C1-b** | Implementer | Gemini 2.5 Pro | Antigravity IDE |
-| **C1-c** | Reviewer | Claude Code | Claude Code IDE |
-| **G1** | Specialized Tasks | Gemini | gemini-cli (GitHub Actions) |
+1. **Auto-remediate** — Dependabot covers every ecosystem (github-actions, npm,
+   **pip**) with automated security fixes enabled. Security PRs land continuously.
+2. **Block-new** — CodeQL + (recommended) required-check promotion of
+   `Secret Scanning` / `CodeQL`. Promoting a check to *required* is a
+   branch-protection change and is done deliberately, not in-queue.
+3. **Visibility** — `security-audit.yml` reports the live vuln count per PR.
 
-### Gemini Automation (gemini-cli)
+## Gemini CI automation — retired (2026-06-04)
 
-Gemini agent automation is configured via **`.github/commands/*.toml`** files:
-
-- **`gemini-invoke.toml`** - Plan → Approve → Execute workflow for issue/PR tasks
-- **`gemini-triage.toml`** - Automatic issue labeling on trigger
-- **`gemini-review.toml`** - Comprehensive PR code review
-- **`gemini-scheduled-triage.toml`** - Batch issue triage on schedule
-
-These use gemini-cli's MCP tool system with built-in authentication (no API keys required in repo).
-
-## Why No Claude Workflows?
-
-**C1-c (Claude Code) operates via IDE, not GitHub Actions.**
-
-The multi-agent protocol coordinates agents through:
-- Issue/PR comments for task assignment
-- `AGENT_COORDINATION.md` for role definitions
-- Direct IDE access for full project context
-
-GitHub Actions workflows would create **isolated Claude instances** that:
-- ❌ Lack full project context
-- ❌ Don't coordinate with C1-a/C1-b/G1
-- ❌ Require API keys (`CLAUDE_CODE_OAUTH_TOKEN` secret)
-- ❌ Break the multi-agent coordination protocol
-
-Instead, C1-c is invoked manually via IDE when assigned review tasks by C1-a.
-
-## Security
-
-All workflows follow security best practices:
-- No secrets stored in repository (gemini-cli uses external auth)
-- User input treated as untrusted data
-- No command substitution (`$(...)`, `<(...)`, `>(...)`)
-- Conventional Commits for all automated changes
+The previous `gemini-*.yml` workflows + `.github/commands/gemini-*.toml`
+configs (gemini-cli PR/issue automation) were disabled in #2683 and removed
+here. Gemini review/triage proved unreliable for merge confidence; agent
+coordination now runs through the bridge (`scripts/ai_agent_bridge`) and
+`scripts/delegate.py`, not GitHub Actions. See
+`docs/best-practices/agent-cooperation.md`.
 
 ## References
 
-- **Multi-Agent Protocol:** `docs/dev/AGENT_COORDINATION.md`
-- **Workflow Audit:** `docs/dev/GITHUB_WORKFLOWS_AUDIT.md`
-- **gemini-cli Documentation:** https://github.com/google/generative-ai-python
+- **Agent cooperation:** `docs/best-practices/agent-cooperation.md`
+- **Workflow audit:** `docs/dev/GITHUB_WORKFLOWS_AUDIT.md`
+- **Stanza CI autopsy:** `docs/bug-autopsies/stanza-model-md5-flake.md`
