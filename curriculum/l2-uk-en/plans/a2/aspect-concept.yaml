@@ -2,7 +2,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: 1.2.4
+version: 1.2.5
 title: Зроблено чи в процесі? Вступ до виду дієслова
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -76,10 +76,16 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: 'Пошук і виправлення помилок у виборі виду в реченнях (напр., *Він щодня зробив вправи → робив, *Вона довго написала листа → писала)'
-  items: 6
+  items: 8
 references:
 - title: Авраменко Grade 7, §28-30
   notes: 'Вид дієслова: доконаний і недоконаний — концепція виду вивчається в програмі 7-го класу'
 - title: 'ULP: Ukrainian Verb Aspect'
   url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
   notes: Недоконаний проти доконаного виду
+plan_fixes:
+- version: 1.2.5
+  date: '2026-06-02'
+  trigger: 'Issue #2558: config-derived A2 activity hint density audit found below-floor item counts.'
+  changes:
+  - raise error-correction activity_hints items from 6 to 8 to meet the A2 floor

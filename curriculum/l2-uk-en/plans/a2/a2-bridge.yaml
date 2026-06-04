@@ -2,7 +2,7 @@ module: a2-001
 level: A2
 sequence: 1
 slug: a2-bridge
-version: 1.2.4
+version: 1.2.5
 title: Ласкаво просимо до рівня А2
 subtitle: Огляд граматики рівня А1 та підготовка до нових тем
 focus: review
@@ -102,7 +102,7 @@ activity_hints:
   items: 8
 - type: error-correction
   focus: Виправлення помилок у милозвучності
-  items: 6
+  items: 8
 references:
 - title: Заболотний Grade 5, §1-10
   notes: Повторення вивченого в початкових класах
@@ -113,3 +113,8 @@ plan_fixes:
     marks deterministically AFTER review; plans must be stress-free.
   changes:
   - strip U+0301 from all string values (2 removals)
+- version: 1.2.5
+  date: '2026-06-02'
+  trigger: 'Issue #2558: config-derived A2 activity hint density audit found below-floor item counts.'
+  changes:
+  - raise error-correction activity_hints items from 6 to 8 to meet the A2 floor

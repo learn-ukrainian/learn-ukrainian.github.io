@@ -2,7 +2,7 @@ module: a2-016
 level: A2
 sequence: 16
 slug: checkpoint-genitive
-version: 1.0.5
+version: 1.0.4
 title: Контрольна робота — родовий відмінок
 subtitle: Перевірка знань з модулів модулі №8–13 — прийменники, узгодження, множина, ситуації
 focus: review
@@ -64,28 +64,19 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: 'Визначити прийменник родового відмінка та його функцію в контекстних реченнях'
-  items: 10
+  items: 8
 - type: fill-in
   focus: 'Доповнити речення, що вимагають родового відмінка однини та множини з правильним узгодженням'
-  items: 10
+  items: 8
 - type: match-up
   focus: 'З''єднати ситуації (на ринку, у лікаря, орієнтування) з правильними виразами в родовому відмінку'
-  items: 10
+  items: 8
 - type: error-correction
   focus: 'Знайти та виправити граматичні помилки в реченнях, що охоплюють теми модуля'
-  items: 10
+  items: 6
 references:
 - title: Заболотний Grade 5-6
   notes: 'Комплексне повторення родового відмінка — прийменники, узгодження та множина'
 - title: 'ULP: 10 Uses of Genitive Case'
   url: https://www.ukrainianlessons.com/genitive-case/
   notes: 'Повний огляд для повторення та самостійного вивчення'
-plan_fixes:
-- version: 1.0.5
-  date: '2026-06-02'
-  trigger: 'Issue #2558: config-derived A2-checkpoint activity hint density audit found below-floor item counts.'
-  changes:
-  - raise quiz activity_hints items from 8 to 10 to meet the A2-checkpoint floor
-  - raise fill-in activity_hints items from 8 to 10 to meet the A2-checkpoint floor
-  - raise match-up activity_hints items from 8 to 10 to meet the A2-checkpoint floor
-  - raise error-correction activity_hints items from 6 to 10 to meet the A2-checkpoint floor

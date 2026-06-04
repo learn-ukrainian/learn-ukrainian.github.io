@@ -2,7 +2,7 @@ module: a2-007
 level: A2
 sequence: 7
 slug: foundations-practice
-version: 1.1.4
+version: 1.1.3
 title: Перші кроки в А2
 subtitle: Практикуємо видові пари та родовий відмінок у діалогах
 focus: communication
@@ -67,22 +67,16 @@ vocabulary_hints:
 activity_hints:
   - type: quiz
     focus: 'Рольова гра: Плануємо вечірку (вид дієслова в майбутньому часі)'
-    items: 10
+    items: 8
   - type: fill-in
     focus: 'Рольова гра: Купівля продуктів'
-    items: 10
+    items: 8
   - type: match-up
     focus: 'Доповнення історії: Обери правильний вид'
-    items: 10
+    items: 8
   - type: match-up
     focus: Відповіді на запитання за коротким текстом
-    items: 10
+    items: 8
 references:
   - title: Заболотний Grade 5-6
     notes: Повторення вивченого
-plan_fixes:
-  - version: 1.1.4
-    date: '2026-06-02'
-    trigger: 'Issue #2558: config-derived A2-checkpoint activity hint density audit classified practice/review slugs with the 10-item floor.'
-    changes:
-      - raise all activity_hints items from 8 to 10 to meet the A2-checkpoint floor

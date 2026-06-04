@@ -2,7 +2,7 @@ module: a2-013
 level: A2
 sequence: 13
 slug: genitive-adjectives-pronouns
-version: 1.1.5
+version: 1.1.4
 title: Мого друга, цієї книги
 subtitle: Узгодження прикметників, присвійних та вказівних займенників у родовому відмінку
 focus: grammar
@@ -80,16 +80,10 @@ activity_hints:
     items: 8
   - type: error-correction
     focus: 'Знайдіть та виправте помилки в узгодженні прикметника з іменником у фразах родового відмінка (наприклад, *нової друга → нового друга, *цієї будинку → цього будинку)'
-    items: 8
+    items: 6
 references:
   - title: Заболотний Grade 6, §48-49
     notes: Відмінювання прикметників, присвійних та вказівних займенників
   - title: 'ULP: Ukrainian Adjective Declension'
     url: https://www.ukrainianlessons.com/adjective-declension/
     notes: Закінчення прикметників у різних відмінках
-plan_fixes:
-  - version: 1.1.5
-    date: '2026-06-02'
-    trigger: 'Issue #2558: config-derived A2 activity hint density audit found below-floor item counts.'
-    changes:
-      - raise error-correction activity_hints items from 6 to 8 to meet the A2 floor

@@ -2,7 +2,7 @@ module: a2-008
 level: A2
 sequence: 8
 slug: checkpoint-foundations
-version: 1.1.4
+version: 1.1.3
 title: 'Контрольна точка: Основи А2'
 subtitle: 'Перевірка знань: вид дієслова та родовий відмінок'
 focus: review
@@ -59,25 +59,16 @@ vocabulary_hints:
 activity_hints:
 - type: quiz
   focus: 'Змішаний граматичний тест'
-  items: 10
+  items: 8
 - type: fill-in
   focus: 'Тренування трансформації речень'
-  items: 10
+  items: 8
 - type: fill-in
   focus: 'Короткі письмові відповіді з використанням родового відмінка та видів дієслова'
-  items: 10
+  items: 6
 - type: error-correction
   focus: 'Знайти та виправити змішані граматичні помилки — неправильний вибір виду дієслова, неправильні закінчення родового відмінка, помилки узгодження'
-  items: 10
+  items: 6
 references:
 - title: Заболотний Grade 5-6
   notes: 'Повторення вивченого'
-plan_fixes:
-- version: 1.1.4
-  date: '2026-06-02'
-  trigger: 'Issue #2558: config-derived A2-checkpoint activity hint density audit found below-floor item counts.'
-  changes:
-  - raise quiz activity_hints items from 8 to 10 to meet the A2-checkpoint floor
-  - raise first fill-in activity_hints items from 8 to 10 to meet the A2-checkpoint floor
-  - raise second fill-in activity_hints items from 6 to 10 to meet the A2-checkpoint floor
-  - raise error-correction activity_hints items from 6 to 10 to meet the A2-checkpoint floor
