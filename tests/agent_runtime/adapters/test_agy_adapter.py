@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.build import linear_pipeline
@@ -39,6 +40,43 @@ def _write_transcript(app_data: Path) -> None:
         (FIXTURES / "verify_words_transcript.jsonl").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
+
+
+def test_build_invocation_passes_model_flag(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(agy_module.shutil, "which", lambda name: "/bin/agy")
+
+    plan = AgyAdapter().build_invocation(
+        prompt="Reply with AGY_OK",
+        mode="danger",
+        cwd=tmp_path,
+        model="Gemini 3.1 Pro (High)",
+        task_id="agy-model-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[:3] == ["/bin/agy", "-p", "Reply with AGY_OK"]
+    model_index = plan.cmd.index("--model")
+    assert plan.cmd[model_index + 1] == "Gemini 3.1 Pro (High)"
+
+
+def test_build_invocation_omits_model_flag_when_model_is_none(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(agy_module.shutil, "which", lambda name: "/bin/agy")
+
+    plan = AgyAdapter().build_invocation(
+        prompt="Reply with AGY_OK",
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id="agy-model-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[:3] == ["/bin/agy", "-p", "Reply with AGY_OK"]
+    assert "--model" not in plan.cmd
 
 
 def test_parse_response_extracts_mcp_calls_from_real_agy_transcript(

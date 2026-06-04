@@ -7,30 +7,28 @@ seminar-track writer ADR at
 `docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md`
 adds it as candidate D pending empirical testing.
 
-Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
+Known behavioral facts as of agy 1.0.5 (verified locally 2026-06-04):
 
 - Headless prompt mode is ``agy -p "<prompt>"``. Stdin prompts are ignored.
 - Resume/new conversation is ``--conversation=<uuid>``.
+- When the caller provides ``model``, the adapter passes it through as
+  ``--model "<display name>"``. Passing ``None`` leaves agy on its own
+  default / configured model.
 - Write-capable modes use ``--dangerously-skip-permissions``. Read-only
   hangs on interactive permission prompts; callers must force
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
 - Print-mode stdout is the final answer only. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
   ``--log-file`` path for each invocation.
-- ``agy`` model selection is controlled by the interactive TUI and persists
-  across ``agy -p`` invocations; there is no CLI model flag. The runtime
-  records the caller-passed ``model`` in the JSONL audit row for
-  provenance only.
 - ``agy plugin`` only exposes ``import gemini|claude``, ``install``,
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
-  and ``import gemini`` is a no-op in a default install. The adapter
-  accepts ``tool_config["mcp_server_names"]`` for API parity with
-  ``GeminiAdapter`` but does not act on it today; wire ``agy plugin
-  enable <name>`` once concrete MCP servers are available.
+  and ``import gemini`` is a no-op in a default install.
 
 MCP plugin enablement is managed by agy's local configuration rather than a
 per-invocation CLI flag. The adapter accepts tool_config for API parity but
-does not mutate agy's MCP setup.
+does not mutate agy's MCP setup. The ``sources`` MCP works with Antigravity's
+``httpUrl`` streamable-HTTP config at
+``~/.gemini/antigravity-cli/mcp_config.json``.
 
 Differences from the kubedojo source:
 
@@ -99,10 +97,10 @@ class AgyAdapter:
     ) -> InvocationPlan:
         """Build the ``agy`` print-mode invocation.
 
-        ``model`` is intentionally not mapped to a CLI flag. The active
-        model is whichever model the operator selected in the ``agy`` TUI
-        panel. ``effort`` is accepted for protocol uniformity but is a
-        no-op until agy exposes a reasoning-effort flag (follow-up #1396).
+        ``model`` is mapped to ``agy --model`` when provided. ``None`` leaves
+        agy on its configured/default model. ``effort`` is accepted for
+        protocol uniformity but is a no-op until agy exposes a
+        reasoning-effort flag (follow-up #1396).
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -140,6 +138,8 @@ class AgyAdapter:
             "--log-file",
             str(log_path),
         ]
+        if model:
+            cmd.extend(["--model", model])
 
         if session_id:
             cmd.append(f"--conversation={session_id}")
@@ -148,7 +148,6 @@ class AgyAdapter:
         # not a per-invocation CLI flag like gemini-cli. tool_config is
         # accepted for parity but not acted on yet.
         _ = tool_config
-        _ = model
 
         return InvocationPlan(
             cmd=cmd,

@@ -38,6 +38,37 @@ No other subprocess building anywhere else in the codebase. If you find
 yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 `runner.invoke()`.
 
+## Agy setup for sources MCP
+
+`delegate.py dispatch --agent agy --model "Gemini 3.1 Pro (High)"` now
+passes the model display name through to `agy --model`. If `model=None`,
+the adapter omits `--model` and leaves Antigravity on its configured
+default.
+
+Agy does not take MCP servers as a per-invocation CLI flag. Configure
+`sources` in `~/.gemini/antigravity-cli/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "sources": {
+      "httpUrl": "http://127.0.0.1:8766/mcp"
+    }
+  }
+}
+```
+
+As of `agy` 1.0.5, that `httpUrl` streamable-HTTP config can invoke
+`sources` tools directly, so no stdio bridge is required. Verify the
+server is alive before dispatching a dossier writer:
+
+```bash
+curl -sS -X POST http://127.0.0.1:8766/mcp \
+  -H 'content-type: application/json' \
+  -H 'accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"p","version":"1"}}}'
+```
+
 ## Add a new agent in 20 lines
 
 1. Copy `scripts/agent_runtime/adapters/_template.py` to `adapters/youragent.py`.
