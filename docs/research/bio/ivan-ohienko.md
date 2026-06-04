@@ -53,9 +53,9 @@ The later *Історія української літературної мов
 **Context:** Pedagogically vital for C1 learners exploring the connection between language and national survival, reflecting Ohienko's core philosophy.
 
 **Quote 2:**
-> «Для одного народу — одна мова, одна церква, одна держава.»
-**Source:** Public addresses / UNR period policy framing.
-**Context:** Summarizes his political and spiritual triad. Useful for discussing the autocephaly movement and state-building.
+> «Для одного народу — одна літературна мова й вимова, один правопис!»
+**Source:** Програмне гасло часопису «Рідна Мова» (Варшава, 1933–1939), сформульоване самим видавцем; його часто наводять із розгорненням «Це цемент соборності нації!» (І. Огієнко). Зафіксовано в підручниках української мови (10 кл., Караман) та в студіях з історії української літературної мови.
+**Context:** Ohienko's orthographic-unity principle — one standard literary language, pronunciation and orthography as the «cement» of a single nation. He pursued it through lifelong codification work (e.g. the journal *Рідна Мова* and *Словник слів, у літературній мові не вживаних*). Useful for discussing standardisation versus dialect, and how norm-building answered the imperial denial of Ukrainian as a distinct language. (Earlier draft mis-attributed to Ohienko an unattested «одна мова, одна церква, одна держава» triad — replaced here with his verifiable slogan; `verify_quote` = 1.0.)
 
 ## 5. Language register
 
