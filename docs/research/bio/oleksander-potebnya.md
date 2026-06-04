@@ -36,6 +36,12 @@ Cite: [T1: ЕСУ — Потебня Олександр Опанасович]; [
 
 **LINGUISTIC GUARD:** In his phonological work, Potebnya accurately analyzed the development of East Slavic languages. Crucially, words like ворота/золото/болото are examples of the **FIRST** повноголосся (pleophony: TorT/TolT → -оро-/-оло-), NOT "друге повноголосся". Potebnya was instrumental in establishing the scientific basis for East Slavic dialectology.
 
+*Мысль и язык* is the entry point for his philosophy of language, but it should not be treated as an isolated aphorism about "language and thought." Its core idea is that language participates in the formation of thought through the word's internal form, so poetic image, folklore, grammar, and national memory become connected fields of inquiry. This is why Potebnya's literary theory and his historical linguistics belong together: the same scholar who analyzed symbols in Slavic folk poetry also asked how grammatical categories preserve older forms of collective experience. [T1: ЕСУ — Потебня Олександр Опанасович]; [T3: uk.wikipedia — Потебня Олександр Опанасович].
+
+The Kharkiv school deepens that point. The school is usually described as a psychological direction in linguistics founded around Potebnya's teaching and lectures at Kharkiv University under the influence of Humboldtian ideas. Its later significance lies in its combination of phonetics, semantics, dialectology, and literary theory. For Ukrainian studies, the important detail is that Potebnya's work on East Slavic dialectology systematized features that distinguished Ukrainian from other Slavic languages, including sound developments and dialect boundaries, while still using the terminology of his imperial academic environment. [T2: Інститут мовознавства імені О. О. Потебні НАН України]; [T3: uk.wikipedia — Харківська лінгвістична школа].
+
+*Із записок з руської граматики* requires careful title handling. The title reflects 19th-century terminology, but the work is not a simple "Russian grammar" in a modern national sense. It uses comparative-historical method across the East Slavic field and draws heavily on Ukrainian material. In a decolonized module, the teaching move is to explain the historical term before interpreting the argument, so students do not mistake an imperial-era title for evidence that Potebnya denied Ukrainian linguistic distinctiveness. [T1: ЕІУ — Потебня Олександр Опанасович]; [T3: uk.wikipedia — Потебня Олександр Опанасович].
+
 ## 4. Primary-source quotes (≥2 required)
 
 **Quote 1:**
@@ -55,11 +61,17 @@ Cite: [T1: ЕСУ — Потебня Олександр Опанасович]; [
 - **Lexicon notes:** Terms like внутрішня форма слова (inner form of the word), повноголосся (pleophony), етимологія, фольклор.
 - **Stylistic features:** Analytical, dense, philosophical. He combined rigorous historical phonology with the psychology of folklore.
 
+The register is difficult because it layers several historical constraints. Potebnya's major theoretical prose often appears in Russian because the imperial state blocked Ukrainian from public educational and scholarly use, yet the evidentiary base repeatedly returns to Ukrainian songs, dialect forms, and historical phonology. Learners therefore need two warnings: do not modernize the terminology too quickly, and do not let the language of publication determine the national meaning of the scholarship. His Ukrainian reception often translates key concepts, while serious study still has to recognize the original titles and the 19th-century academic idiom. [T1: IEU — Potebnia, Oleksandr]; [T3: uk.wikipedia — Потебня Олександр Опанасович].
+
 ## 6. Contested points
 
 - **Debated in scholarship:** The extent of his "Russianness" vs "Ukrainianness." Soviet historiography exclusively labeled him a "Russian philologist," while modern Ukrainian scholarship reclaims him as a foundational Ukrainian thinker who systematically proved the independence of the Ukrainian language.
 - **Simplified in memory:** Often reduced to just a grammarian, missing his profound philosophical contributions to aesthetics and the psychology of creativity (the "inner form of the word").
 - **Russian disinformation:** Russian academic circles still appropriate him entirely, ignoring his active participation in the Kharkiv Hromada and his explicit defenses of the Ukrainian language's right to exist independently of Russian.
+
+The reception problem is not solved by simply replacing one ownership label with another. Potebnya was trained and employed inside imperial institutions, wrote many works in the imposed scholarly language of that system, and used terminology that now needs explanation. At the same time, his research repeatedly undermined the imperial habit of treating Ukrainian as derivative or merely provincial. His later Ukrainian reception, including the 1992 New York edition *Мова. Національність. Денаціоналізація* with an introductory study by Shevelov, foregrounded precisely the parts of his thought that Soviet presentation had flattened: language rights, the damage of denationalization, and the intellectual dignity of Ukrainian materials. [T4: Потебня — *Мова. Національність. Денаціоналізація*]; [T1: ЕІУ — Потебня Олександр Опанасович].
+
+This makes him especially useful for advanced learners because he exposes the traps of source language, title language, and disciplinary inheritance. A Russocentric reading can appropriate him by counting publication language; an uncritical nationalist reading can ignore the imperial categories he actually used. The dossier should instead teach students to read him historically: Potebnya's work came from a constrained multilingual scholarly world, but his arguments gave Ukrainian linguistics tools for defending independent development, especially in phonology, dialectology, and the theory of national language. [T2: Інститут мовознавства імені О. О. Потебні НАН України]; [T3: uk.wikipedia — Потебня Олександр Опанасович].
 
 ## 7. Cross-track links
 
@@ -97,9 +109,14 @@ Cite: [T1: ЕСУ — Потебня Олександр Опанасович]; [
 
 **Tier 2 (institutional):**
 - Інститут мовознавства імені О. О. Потебні НАН України (Institute profile).
+- *Українська мова: енциклопедія* (local corpus: `wave4-ukrainska-mova-encyclopedia`).
 
 **Tier 3 (encyclopedic):**
 - Українська Вікіпедія. "Потебня Олександр Опанасович" (used for timeline verification).
+- Українська Вікіпедія. "Харківська лінгвістична школа" (used for school context).
+
+**Tier 4 (modern scholarly post-1991):**
+- Потебня О. *Мова. Національність. Денаціоналізація. Статті і фрагменти*. Упорядкування і вступна стаття Ю. Шевельова. Нью-Йорк: УВАН, 1992.
 
 ---
 
