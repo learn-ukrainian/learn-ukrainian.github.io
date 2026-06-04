@@ -1,16 +1,10 @@
 name: '🔀 Gemini Dispatch'
 
+# Disabled during PR queue recovery (#2682): Gemini Code Assist / Gemini CLI
+# review is advisory, noisy across the backlog, and retiring. Keep this manual
+# trigger only so no PR, issue, or comment event can spend Gemini quota.
 on:
-  pull_request:
-    types:
-      - 'opened'
-  issues:
-    types:
-      - 'opened'
-      - 'reopened'
-  issue_comment:
-    types:
-      - 'created'
+  workflow_dispatch:
 
 defaults:
   run:
@@ -18,21 +12,10 @@ defaults:
 
 jobs:
   dispatch:
+    if: ${{ false }}
     # For PRs: only if not from a fork
     # For issues: only on open/reopen
     # For comments: only if user types @gemini-cli and is OWNER/MEMBER/COLLABORATOR
-    if: |-
-      (
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.fork == false
-      ) || (
-        github.event_name == 'issues' &&
-        contains(fromJSON('["opened", "reopened"]'), github.event.action)
-      ) || (
-        github.event.sender.type == 'User' &&
-        startsWith(github.event.comment.body || github.event.review.body || github.event.issue.body, '@gemini-cli') &&
-        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association || github.event.review.author_association || github.event.issue.author_association)
-      )
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'

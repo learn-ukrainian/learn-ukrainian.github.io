@@ -25,6 +25,7 @@ defaults:
 
 jobs:
   triage:
+    if: ${{ false }}
     runs-on: 'ubuntu-latest'
     timeout-minutes: 7
     outputs:
@@ -105,11 +106,10 @@ jobs:
           prompt: '/gemini-triage'
 
   label:
+    if: ${{ false }}
     runs-on: 'ubuntu-latest'
     needs:
       - 'triage'
-    if: |-
-      ${{ needs.triage.outputs.selected_labels != '' }}
     permissions:
       contents: 'read'
       issues: 'write'
