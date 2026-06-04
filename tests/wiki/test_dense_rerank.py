@@ -25,6 +25,11 @@ def test_encode_texts_preserves_original_order_after_sorted_batching(monkeypatch
 
     monkeypatch.setattr(
         dense_rerank,
+        "_token_count",
+        lambda text, *, max_length: max(1, len(text.split())),
+    )
+    monkeypatch.setattr(
+        dense_rerank,
         "_sorted_token_batches",
         lambda _texts, **_kwargs: [[1, 2], [0]],
     )

@@ -11,6 +11,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from wiki import sources_db
 
 
+class FakeTokenizer:
+    def encode(self, text: str, **_kwargs) -> list[int]:
+        return list(range(len(text.split())))
+
+
 def _make_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:", check_same_thread=False)
     conn.row_factory = sqlite3.Row
@@ -136,6 +141,7 @@ def test_search_sources_uses_query_builder_and_dense_rerank(monkeypatch, tmp_pat
     _seed_conn(conn)
     monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
     monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections",))
+    monkeypatch.setattr(sources_db, "_get_tokenizer", lambda: FakeTokenizer())
     monkeypatch.setattr(
         sources_db,
         "build_query_buckets",

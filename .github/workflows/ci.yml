@@ -350,6 +350,20 @@ jobs:
           .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
           .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
 
+      - name: Prewarm Stanza resources
+        if: needs.changes.outputs.code == 'true'
+        run: |
+          stanza_resources_dir="$RUNNER_TEMP/stanza_resources"
+          echo "STANZA_RESOURCES_DIR=$stanza_resources_dir" >> "$GITHUB_ENV"
+          rm -rf "$stanza_resources_dir"
+          mkdir -p "$stanza_resources_dir"
+          STANZA_RESOURCES_DIR="$stanza_resources_dir" .venv/bin/python - <<'PY'
+          from ukrainian_word_stress import Stressifier, StressSymbol
+
+          stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent)
+          stressifier("Моя мама читає.")
+          PY
+
       - name: Run tests
         if: needs.changes.outputs.code == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
