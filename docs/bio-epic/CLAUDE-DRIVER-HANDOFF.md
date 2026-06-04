@@ -58,7 +58,37 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
-## ▶▶▶▶▶▶▶▶▶▶▶ SESSION-END HANDOFF (2026-06-04, CONT.) — RESUME HERE (LATEST; supersedes block below)
+## ▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, WAVE-1+2) — RESUME HERE (LATEST; supersedes blocks below)
+
+*main observed at `09a69854c9` (after this session merged #2680 + wave-1 batches #2692/#2693/#2694). Local main read-only-synced; orchestrator owns main.*
+
+### ✅ DONE THIS SESSION
+- **#2680 Ohienko fabrication FIXED + MERGED.** Codex's re-push had NOT removed the fabrication — line 56 still carried the invented triad «одна мова, одна церква, одна держава». Deterministically (`verify_quote`) confirmed Ohienko's real slogan «Для одного народу — одна літературна мова… один правопис» = **confidence 1.0** (3 literary sources + 2 Grade-10 textbooks); the triad is unattested. Codex had failed the fix TWICE → I corrected it myself (cross-family to codex; the fix IS the corpus verification), swept all 6 dossiers' §4 quotes, merged (CI green, bio-only). **LESSON: CI-green ≠ content-correct (#M-11); always re-verify the actual quote, not just the gate.**
+- **WAVE-1 dossiers — 18 LANDED (queue 43→25).** 3-writer batch, all DeepSeek cross-reviewed (18/18 SHIP) + my own `verify_quote`/`search_literary` sweep on every §4 quote:
+  - **#2693 claude** (OUN/war-dead): olena-teliha, oleh-olzhych, viacheslav-lypynskyi, vasyl-vyshyvanyi, victoria-amelina, volodymyr-vakulenko. **Exemplary #M-4** — caught a fabrication risk in its OWN memory («невгасима»→corpus-attested «невідгадана сила»); honestly diagnosed verify_quote author-scoping vs `search_literary` (the marko-vovchok lesson, done right).
+  - **#2692 codex** (medieval): roksolana, nestor-litopysets, knyazhna-anna-yaroslavna, mykhailo-chernihivskyi, yuriy-nemyrych, kostiantyn-ostrozky-elder. **Exemplary anti-fabrication** — for anna/roksolana (no verifiable verbatim quote) it REFUSED to invent, documenting «ANNA REGINA»/Venetian «Sultana, ch'è di Rusi» + explicit "what NOT to quote" notes. Codex learned the Ohienko lesson.
+  - **#2694 cursor[composer-2.5]** (artists): kvitka-tsisyk, nina-matviyenko, volodymyr-ivasyuk, semen-hulak-artemovskyy, mariya-matios, taras-prokhasko. Salvaged (rate-limited pre-finalize → I committed+pushed+PR'd). **I caught + FIXED a Latin-transliteration register defect** in semen-hulak (opera title/quotes romanized) → restored corpus-verbatim Cyrillic (Popovych `68ba0555_c0737` + Спогади про Шевченка `955b1bc8_c0256`). DeepSeek SHIP'd it but missed the romanization — deterministic self-check caught it. **LESSON: always Latin-transliteration-scan cursor[composer] output.**
+
+### 🔧 IN-FLIGHT — harvest these NEXT (`curl -sS http://127.0.0.1:8765/api/delegate/active`)
+**WAVE-2 (3 writers, fired from main `09a69854`, ~30-60min):**
+- **`bio-w2-claude`** (dissidents/UPA/war-dead): viacheslav-chornovil, oleg-sentsov, roman-ratushny, vasyl-kuk, olena-stepaniv, olha-basarab. Brief `/tmp/brief-bio-w2-claude.md`.
+- **`bio-w2-codex`** (statehood/historians): yulian-bachynskyi, yurii-lypa, milena-rudnytska, kyrylo-trylovskyi, natalia-yakovenko, nataliia-polonska-vasylenko. Brief `/tmp/brief-bio-w2-codex.md`.
+- **`bio-w2-cursor`** (writers/feminists): liudmyla-starytska, hanna-barvinok, nataliya-kobrynska, moisei-fishbein, illia-chernilevskyi (⚠ plan falsely says "Gen Z/22yrs" — he was b.1991 d.2022 = age 30 Millennial), halyna-pahutyak. Brief `/tmp/brief-bio-w2-cursor.md`.
+- **Harvest loop (proven this session):** read result files / salvage cursor if `needs_finalize` (commit+push+PR) → read ≥1 dossier + scope-check (`git diff --name-status origin/main...HEAD`) → ONE DeepSeek-pro dispatch inlining ONLY the new files (`/tmp/deepseek-w1-review.md` template, raised timeouts 900/3600) → MY `verify_quote`+`search_literary` sweep on every §4 quote → fix deterministically → merge per grant (CI green + cross-family + bio-scope) → clean worktrees.
+
+### ▶ NEXT ACTION ON RESUME
+1. **Harvest wave-2** (above) → review → merge. Bundle a handoff refresh into one wave-2 PR.
+2. **Wave-3 — the LAST 6** dossiers (after wave-2): andriy-pilshchykov, leonid-kadenyuk, mykhailo-yangel, pavlo-fylypovych, sofiya-okunevska, yuriy-lvovych. (`petro-veskliaov` stays deferred until its slug rename →`petro-vesklyarov`.) Then the dossier-uplift phase is COMPLETE (queue→0 + the 1 deferred).
+3. Per-figure audit warnings: `grep -rhiE "\| *\**\[?{slug}" batch_state/tasks/bio-audit-rev-b*.result`. Brief template: `/tmp/brief-bio-w1-claude.md` (has #M-4 + Ohienko lesson + Cyrillic-only + numbered steps).
+4. Then the WIKI half (Phase-4): verify/rebuild original-180 wikis vs new dossiers + 130 new 181–310 wikis.
+5. Deferred tooling (off critical path): grok-wiring PR `claude/wire-grok-hermes-xai` (push+open, main green now); #2675 agy `--model` (pytest red — needs rebase onto post-#2681 main; non-bio → orchestrator merges).
+
+### 📊 STATE
+origin/main `09a69854c9`. **285 dossiers / 310 plans → queue 25** (24 writable + petro-veskliaov deferred). Open PRs ~24, dropping (keystone #2681 stanza-race fix merged; CI no longer saturated). Reviewer-of-record = **DeepSeek-pro** (`--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600`); grok-4.20 via `hermes --provider xai-oauth` = strong second. Writers: claude (cap 1 dispatched + interactive seat) + codex (1 seat) + cursor (`--model composer-2.5` PINNED; salvage on rate-limit; ALWAYS Latin-transliteration-scan its output).
+
+---
+
+## ▶▶▶▶▶▶▶▶▶▶▶ SESSION-END HANDOFF (2026-06-04, CONT.) — (earlier; superseded by the block above)
 
 *main observed at `160a74dac0` (after this session's 3 dossier-batch merges). Local main kept read-only-synced; orchestrator owns main + the 77-PR drain.*
 
