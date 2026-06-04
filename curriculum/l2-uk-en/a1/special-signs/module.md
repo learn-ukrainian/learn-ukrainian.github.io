@@ -9,18 +9,18 @@ learning three beginner contrasts:
 
 - **день**: the soft sign **ь** has no sound, but it softens the consonant
   before it;
-- **сім'я**: the apostrophe keeps the previous consonant hard and lets you hear
+- **сім'я́**: the apostrophe keeps the previous consonant hard and lets you hear
   **[й]** before **я**;
-- **буряк / бур'ян / свято / цвях**: sometimes **я** softens, sometimes the
+- **буря́к / бур'я́н / свя́то / цвях**: sometimes **я** softens, sometimes the
   apostrophe separates, and sometimes there is no apostrophe after a consonant
   cluster.
 
 By the end, you can:
 
 - recognize **ь** and apostrophe in common A1 words;
-- read **день**, **кінь**, **сіль**, and **вчитель** without adding an extra
+- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding an extra
   vowel;
-- read **сім'я**, **м'ясо**, **п'ять**, and **комп'ютер** with a clear **й**
+- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with a clear **й**
   after the apostrophe;
 - sort words into "soft sign," "apostrophe," and "no sign";
 - choose the safer form when an English habit creates a mistake.
@@ -43,8 +43,8 @@ Compare two words:
 
 | Word | What happens |
 | --- | --- |
-| **буряк** | no apostrophe; **р** softens before **я** |
-| **бур'ян** | apostrophe; **р** stays hard, then you hear **[йа]** |
+| **буря́к** | no apostrophe; **р** softens before **я** |
+| **бур'я́н** | apostrophe; **р** stays hard, then you hear **[йа]** |
 
 The apostrophe is not an English punctuation mark here. In Ukrainian reading,
 it is a sound instruction: do not soften the previous consonant; keep the next
@@ -64,7 +64,7 @@ The soft sign is:
 
 **Ь ь**
 
-Its Ukrainian name is **м'який знак**. It has no sound of its own. It changes
+Its Ukrainian name is **м'яки́й знак**. It has no sound of its own. It changes
 the consonant before it.
 
 | Word | Meaning | What to notice |
@@ -72,7 +72,7 @@ the consonant before it.
 | **день** | day | final **нь** is soft |
 | **кінь** | horse | final **нь** is soft |
 | **сіль** | salt | final **ль** is soft |
-| **вчитель** | teacher | final **ль** is soft |
+| **вчи́тель** | teacher | final **ль** is soft |
 
 Do not read **ь** as **і**, **й**, or a tiny extra vowel. In **день**, stop on
 soft **н**. In **сіль**, stop on soft **л**.
@@ -114,18 +114,18 @@ Start with these words:
 
 | Word | Meaning | What to hear |
 | --- | --- | --- |
-| **сім'я** | family | **м** stays hard, then **[йа]** |
-| **м'ясо** | meat | **м** stays hard, then **[йа]** |
+| **сім'я́** | family | **м** stays hard, then **[йа]** |
+| **м'я́со** | meat | **м** stays hard, then **[йа]** |
 | **п'ять** | five | **п** stays hard, then **[йа]** |
-| **дев'ять** | nine | **в** stays hard, then **[йа]** |
-| **ім'я** | name | **м** stays hard, then **[йа]** |
-| **комп'ютер** | computer | **п** stays hard, then **[йу]** |
+| **де́в'ять** | nine | **в** stays hard, then **[йа]** |
+| **ім'я́** | name | **м** stays hard, then **[йа]** |
+| **комп'ю́тер** | computer | **п** stays hard, then **[йу]** |
 
 Do not turn the apostrophe into a big break. Read **п'ять** smoothly, with a
 clear **й** sound. The airflow continues; the spelling tells you to separate
 the consonant from the iotated vowel.
 
-For now, do not build a large system from loanwords. **Комп'ютер** is useful
+For now, do not build a large system from loanwords. **Комп'ю́тер** is useful
 because learners know the object, but the lesson target is the apostrophe
 itself, not every exception in international words.
 
@@ -137,9 +137,9 @@ The central contrast is:
 
 | Scenario | Example | Beginner explanation |
 | --- | --- | --- |
-| softness with no apostrophe | **буряк** | **р** softens before **я** |
-| apostrophe | **бур'ян** | **р** stays hard, then **[йа]** |
-| consonant cluster with no apostrophe | **свято**, **цвях** | no apostrophe in these prepared words |
+| softness with no apostrophe | **буря́к** | **р** softens before **я** |
+| apostrophe | **бур'я́н** | **р** stays hard, then **[йа]** |
+| consonant cluster with no apostrophe | **свя́то**, **цвях** | no apostrophe in these prepared words |
 
 This is why mechanical spelling fails. You cannot simply put apostrophe before
 every **я**. You also cannot ignore apostrophe when it is written.
@@ -149,19 +149,19 @@ Use these safe decisions:
 | If you see... | Do this |
 | --- | --- |
 | **день**, **кінь**, **сіль** | read the final consonant softly; add no extra vowel |
-| **сім'я**, **м'ясо**, **п'ять** | keep the consonant hard and read the following **й** |
-| **буряк** | no apostrophe; read soft **р** before **я** |
-| **бур'ян** | apostrophe; read hard **р** plus **[йа]** |
-| **свято**, **цвях** | remember them as no-apostrophe words |
+| **сім'я́**, **м'я́со**, **п'ять** | keep the consonant hard and read the following **й** |
+| **буря́к** | no apostrophe; read soft **р** before **я** |
+| **бур'я́н** | apostrophe; read hard **р** plus **[йа]** |
+| **свя́то**, **цвях** | remember them as no-apostrophe words |
 
 Common learner traps:
 
 | Trap | Safer habit |
 | --- | --- |
-| dropping the apostrophe in the family word | write **сім'я** |
-| putting apostrophe into **свято** | keep **свято** with no apostrophe |
+| dropping the apostrophe in the family word | write **сім'я́** |
+| putting apostrophe into **свя́то** | keep **свя́то** with no apostrophe |
 | writing **ден** for **день** | keep **ь** after **н** |
-| inventing a soft-sign version of **ложка** | do not invent a soft sign or soft **л** |
+| inventing a soft-sign version of **ло́жка** | do not invent a soft sign or soft **л** |
 | treating apostrophe as a hard stop | keep airflow and pronounce **й** |
 
 Keep this module fully Ukrainian-centered. Do not explain the apostrophe
@@ -177,10 +177,10 @@ level, use only prepared models:
 
 | Whole word | Safe line-break model |
 | --- | --- |
-| **Мар'яна** | `Мар'-яна` |
-| **дерев'яний** | `дерев'-яний` |
-| **бур'ян** | `бур'-ян` |
-| **пальці** | `паль-ці` |
+| **Мар'я́на** | `Мар'-яна` |
+| **дерев'я́ний** | `дерев'-яний` |
+| **бур'я́н** | `бур'-ян` |
+| **па́льці** | `паль-ці` |
 
 The simple idea: **ь** and apostrophe stay with the letter before them. Also,
 do not leave one single letter alone on a line. You do not need to create new
@@ -189,20 +189,20 @@ line breaks by yourself yet; you only need to recognize the model.
 Before you leave the lesson tab, check that you can do these things:
 
 - say that **ь** has no sound of its own;
-- read **день**, **кінь**, **сіль**, and **вчитель** without adding **і**;
+- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding **і**;
 - say that apostrophe keeps the previous consonant hard;
-- read **сім'я**, **м'ясо**, **п'ять**, and **комп'ютер** with **й** after the
+- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with **й** after the
   apostrophe;
-- explain the difference between **буряк** and **бур'ян** in English;
-- remember that **свято** and **цвях** have no apostrophe;
+- explain the difference between **буря́к** and **бур'я́н** in English;
+- remember that **свя́то** and **цвях** have no apostrophe;
 - choose the correct sign in short prepared words;
 - identify missing-apostrophe, missing-soft-sign, and invented-soft-sign errors.
 
 Use the signs as reading instructions, not decorations. A useful final routine
 is: find the sign, say what it does in English, then read the word once. For
-**день**, say "soft sign, no sound, soft final consonant." For **сім'я**, say
-"apostrophe, hard consonant, then **йа**." For **буряк**, say "no apostrophe,
-soft **р**." For **свято**, say "prepared no-apostrophe word." This routine is
+**день**, say "soft sign, no sound, soft final consonant." For **сім'я́**, say
+"apostrophe, hard consonant, then **йа**." For **буря́к**, say "no apostrophe,
+soft **р**." For **свя́то**, say "prepared no-apostrophe word." This routine is
 slow on purpose. It prevents guessing and gives your mouth a stable Ukrainian
 habit before the next module adds stress and melody.
 

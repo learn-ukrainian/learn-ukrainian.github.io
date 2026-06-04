@@ -3,7 +3,7 @@
   title: Soft or separate?
   instruction: Choose the beginner reading explanation.
   items:
-  - prompt: In буряк, what happens before я?
+  - prompt: In буря́к, what happens before я?
     options:
     - text: Р softens before я.
       correct: true
@@ -11,8 +11,8 @@
       correct: false
     - text: Ї is always [йі].
       correct: false
-    explanation: Буряк has no apostrophe; р softens before я.
-  - prompt: In бур'ян, what does the apostrophe do?
+    explanation: Буря́к has no apostrophe; р softens before я.
+  - prompt: In бур'я́н, what does the apostrophe do?
     options:
     - text: It keeps р hard and lets you hear [йа].
       correct: true
@@ -41,9 +41,9 @@
     right: soft final н
   - left: сіль
     right: soft final л
-  - left: вчитель
+  - left: вчи́тель
     right: soft final л
-  - left: м'який знак
+  - left: м'яки́й знак
     right: no sound of its own
 - id: act-3
   type: fill-in
@@ -68,7 +68,7 @@
     - ''''
     - ь
     - no sign
-  - sentence: свято needs ____.
+  - sentence: свя́то needs ____.
     answer: no sign
     options:
     - no sign
@@ -80,7 +80,7 @@
     - ''''
     - ь
     - no sign
-  - sentence: маленький needs ____.
+  - sentence: мале́нький needs ____.
     answer: ь
     options:
     - ь
@@ -91,13 +91,13 @@
   title: Fix common L2 mistakes
   instruction: Choose the correct Ukrainian form.
   items:
-  - sentence: Do not drop the apostrophe in сім'я.
+  - sentence: Do not write сімя without the apostrophe.
     error: сімя
-    correction: сім'я
+    correction: сім'я́
     options:
-    - сім'я
+    - сім'я́
     - family word without apostrophe
-    explanation: The apostrophe is required in сім'я.
+    explanation: The apostrophe is required in сім'я́.
   - sentence: Do not write ден.
     error: ден
     correction: день
@@ -105,22 +105,22 @@
     - день
     - ден
     explanation: День needs the soft sign.
-  - sentence: Do not put apostrophe in свято.
-    error: apostrophe in свято
-    correction: свято
+  - sentence: Do not write св'ято with an apostrophe.
+    error: св'ято
+    correction: свя́то
     options:
-    - свято
-    - apostrophe spelling
-    explanation: Свято is a prepared no-apostrophe word.
-  - sentence: Do not invent a soft sign in ложка.
+    - свя́то
+    - св'ято
+    explanation: Свя́то is a prepared no-apostrophe word.
+  - sentence: Do not write льожка with an invented soft sign.
     error: льожка
-    correction: ложка
+    correction: ло́жка
     options:
-    - ложка
+    - ло́жка
     - invented soft-sign spelling
-    explanation: Ложка does not have a soft sign after л.
-  - sentence: Do not treat apostrophe as a hard stop.
-    error: hard stop
+    explanation: Ло́жка does not have a soft sign after л.
+  - sentence: Do not read сім'я́ as сім-пауза-я.
+    error: сім-пауза-я
     correction: smooth й sound
     options:
     - smooth й sound
@@ -131,13 +131,13 @@
   title: Line-break models
   instruction: Choose the prepared line-break model.
   items:
-  - word: Мар'яна
+  - word: Мар'я́на
     answer: Мар'-яна
-  - word: дерев'яний
-    answer: model shown in the lesson
-  - word: бур'ян
+  - word: дерев'я́ний
+    answer: дерев'-яний
+  - word: бур'я́н
     answer: бур'-ян
-  - word: пальці
+  - word: па́льці
     answer: паль-ці
 - id: act-6
   type: group-sort
@@ -149,21 +149,21 @@
     - день
     - кінь
     - сіль
-    - вчитель
-    - маленький
+    - вчи́тель
+    - мале́нький
   - label: Has apostrophe
     items:
-    - сім'я
-    - м'ясо
+    - сім'я́
+    - м'я́со
     - п'ять
-    - комп'ютер
-    - бур'ян
+    - комп'ю́тер
+    - бур'я́н
   - label: No sign
     items:
-    - буряк
-    - свято
+    - буря́к
+    - свя́то
     - цвях
-    - ложка
+    - ло́жка
 - id: act-7
   type: true-false
   title: Sign facts
@@ -178,9 +178,9 @@
   - statement: Ї is sometimes silent.
     correct: false
     explanation: Ї is always [йі].
-  - statement: Свято has an apostrophe.
+  - statement: Свя́то has an apostrophe.
     correct: false
-    explanation: Свято is a no-apostrophe model word.
+    explanation: Свя́то is a no-apostrophe model word.
 - id: act-8
   type: translate
   title: Sign words
@@ -195,7 +195,7 @@
     - text: family
       correct: false
     explanation: День means day.
-  - source: сім'я
+  - source: сім'я́
     options:
     - text: family
       correct: true
@@ -203,8 +203,8 @@
       correct: false
     - text: holiday
       correct: false
-    explanation: Сім'я means family.
-  - source: м'ясо
+    explanation: Сім'я́ means family.
+  - source: м'я́со
     options:
     - text: meat
       correct: true
@@ -212,8 +212,8 @@
       correct: false
     - text: nail
       correct: false
-    explanation: М'ясо means meat.
-  - source: свято
+    explanation: М'я́со means meat.
+  - source: свя́то
     options:
     - text: holiday
       correct: true
@@ -221,7 +221,7 @@
       correct: false
     - text: horse
       correct: false
-    explanation: Свято means holiday.
+    explanation: Свя́то means holiday.
 - id: act-9
   type: quiz
   title: Correct form
@@ -229,11 +229,11 @@
   items:
   - prompt: Choose the correct form for family.
     options:
-    - text: сім'я
+    - text: сім'я́
       correct: true
     - text: family word without apostrophe
       correct: false
-    explanation: Сім'я needs the apostrophe.
+    explanation: Сім'я́ needs the apostrophe.
   - prompt: Choose the correct form for day.
     options:
     - text: день
@@ -243,8 +243,8 @@
     explanation: День needs the soft sign.
   - prompt: Choose the no-apostrophe word.
     options:
-    - text: свято
+    - text: свя́то
       correct: true
     - text: apostrophe spelling
       correct: false
-    explanation: Свято is the prepared no-apostrophe word.
+    explanation: Свя́то is the prepared no-apostrophe word.
