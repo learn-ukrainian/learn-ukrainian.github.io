@@ -25,6 +25,7 @@ defaults:
 
 jobs:
   invoke:
+    if: ${{ false }}
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'

@@ -1,20 +1,9 @@
 name: '📋 Gemini Scheduled Issue Triage'
 
+# Disabled during PR queue recovery (#2682): Gemini Code Assist / Gemini CLI
+# triage is advisory, noisy across the backlog, and retiring. Keep this manual
+# trigger only so schedules, PRs, and pushes cannot spend Gemini quota.
 on:
-  schedule:
-    - cron: '0 * * * *' # Runs every hour
-  pull_request:
-    branches:
-      - 'main'
-      - 'release/**/*'
-    paths:
-      - '.github/workflows/gemini-scheduled-triage.yml'
-  push:
-    branches:
-      - 'main'
-      - 'release/**/*'
-    paths:
-      - '.github/workflows/gemini-scheduled-triage.yml'
   workflow_dispatch:
 
 concurrency:
@@ -27,6 +16,7 @@ defaults:
 
 jobs:
   triage:
+    if: ${{ false }}
     runs-on: 'ubuntu-latest'
     timeout-minutes: 7
     permissions:
@@ -130,14 +120,10 @@ jobs:
           prompt: '/gemini-scheduled-triage'
 
   label:
+    if: ${{ false }}
     runs-on: 'ubuntu-latest'
     needs:
       - 'triage'
-    if: |-
-      needs.triage.outputs.available_labels != '' &&
-      needs.triage.outputs.available_labels != '[]' &&
-      needs.triage.outputs.triaged_issues != '' &&
-      needs.triage.outputs.triaged_issues != '[]'
     permissions:
       contents: 'read'
       issues: 'write'
