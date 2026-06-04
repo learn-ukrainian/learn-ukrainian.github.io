@@ -17,6 +17,8 @@ import time
 import types
 from pathlib import Path
 
+import pytest
+
 from scripts.pipeline.stress_annotator import (
     STRESS_MARK,
     _build_skip_mask,
@@ -128,6 +130,7 @@ class TestInSkipRange:
 # Integration tests for annotate_stress
 # ---------------------------------------------------------------------------
 
+@pytest.mark.slow
 class TestApostropheWords:
     """AC: apostrophe words (сім'я, м'ясо) stressed correctly."""
 
@@ -167,6 +170,7 @@ class TestApostropheWords:
             )
 
 
+@pytest.mark.slow
 class TestProperNouns:
     """AC: proper nouns not double-stressed."""
 
@@ -201,6 +205,7 @@ class TestProperNouns:
             assert len(positions) <= 1
 
 
+@pytest.mark.slow
 class TestCodeBlocksUntouched:
     """AC: words inside code blocks should not get stress marks."""
 
@@ -228,6 +233,7 @@ class TestCodeBlocksUntouched:
         )
 
 
+@pytest.mark.slow
 class TestURLsUntouched:
     """AC: URLs should not get stress marks."""
 
@@ -253,6 +259,7 @@ class TestURLsUntouched:
         assert "</div>" in result
 
 
+@pytest.mark.slow
 class TestNoDuplicateStress:
     """AC: running annotator twice shouldn't double-stress."""
 
@@ -303,6 +310,7 @@ class TestNoDuplicateStress:
         assert '<DialogueBox uk="' in result
 
 
+@pytest.mark.slow
 class TestPerformance:
     """AC: annotating a 1500-word module takes <5 seconds."""
 
@@ -338,6 +346,7 @@ class TestPerformance:
         assert count > 0, "Should have stressed at least some words"
 
 
+@pytest.mark.slow
 class TestHeteronyms:
     """AC: heteronyms handled by Stanza context.
 
@@ -373,6 +382,7 @@ class TestHeteronyms:
             assert isinstance(result, str)
 
 
+@pytest.mark.slow
 class TestRealModuleContent:
     """Test with content from actual A1 module files."""
 
@@ -400,6 +410,7 @@ class TestRealModuleContent:
 # annotate_file — safety check fix (#1052)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.slow
 class TestAnnotateFileSafetyCheck:
     """The 2% safety check should only count stress marks in the body,
     not in Словник/Ресурси tabs that are pre-stressed by vocab_gen.py."""
@@ -455,6 +466,19 @@ class TestAnnotateFileSafetyCheck:
 # network or loading the real model.
 # ---------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _venv_python() -> Path:
+    """Return the local or parent workspace venv Python for subprocess tests."""
+    local = REPO_ROOT / ".venv/bin/python"
+    if local.exists():
+        return local
+    for parent in REPO_ROOT.parents:
+        candidate = parent / ".venv/bin/python"
+        if candidate.exists():
+            return candidate
+    return local
+
 
 # Each worker increments a shared counter via a non-atomic read-modify-write
 # inside the download lock. With the lock, the final value equals the worker
@@ -523,7 +547,7 @@ class TestModelDownloadLock:
         )
 
         worker_count = 5
-        python = REPO_ROOT / ".venv/bin/python"
+        python = _venv_python()
         procs = [subprocess.Popen([str(python), "-c", snippet]) for _ in range(worker_count)]
         for proc in procs:
             assert proc.wait(timeout=120) == 0, "lock worker subprocess failed"

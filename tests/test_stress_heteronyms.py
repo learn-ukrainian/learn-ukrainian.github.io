@@ -14,6 +14,8 @@ from ukrainian_word_stress import Stressifier, StressSymbol
 
 STRESS = "\u0301"  # combining acute accent
 
+pytestmark = pytest.mark.slow
+
 
 @pytest.fixture(scope="module")
 def stressifier():
