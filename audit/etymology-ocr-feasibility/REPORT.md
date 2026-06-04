@@ -207,8 +207,10 @@ To reproduce a single OCR run:
 opj_decompress -i 'data/raw/esum/jp2-staging/tom 5 (Р - Т)_jp2/tom 5 (Р - Т)_0216.jp2' \
                -o /tmp/p0216.png
 
-# Apple Vision:
-swift audit/etymology-ocr-feasibility/scripts/apple_vision_ocr.swift /tmp/p0216.png
+# Apple Vision (apple_vision_ocr.swift removed 2026-06-05 — it was the repo's only
+# Swift file and tripped CodeQL's Swift language detection; recover from git history
+# if you need to rerun this concluded feasibility comparison):
+# swift audit/etymology-ocr-feasibility/scripts/apple_vision_ocr.swift /tmp/p0216.png
 
 # Surya OCR:
 .venv/bin/python audit/etymology-ocr-feasibility/scripts/run_surya.py /tmp/p0216.png

@@ -1,6 +1,6 @@
 import re
 
-with open("curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md", "r", encoding="utf-8") as f:
+with open("curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md", encoding="utf-8") as f:
     text = f.read()
 
 # Fix the grammar violation (Уявіть, що ви) -> (Уявіть: ви)
@@ -8,33 +8,33 @@ text = text.replace("Уявіть, що ви в Україні", "Уявіть: 
 
 # Remove inline translations in parentheses that I added
 replacements = {
-    r" \((Welcome to the next major stage)\)": ". \g<1>",
-    r" \((Let us start with a quick review)\)": ". \g<1>",
-    r" \((In this module)\)": ". \g<1>",
-    r" \((We are adding)\)": ". \g<1>",
-    r" \((Let's look at some examples)\)": ". \g<1>",
-    r" \((Watch this video guide)\)": ". \g<1>",
-    r" \((Let's practice)\)": ". \g<1>",
-    r" \((Now we encounter)\)": ". \g<1>",
-    r" \((We return)\)": ". \g<1>",
-    r" \((Finally, we have)\)": ". \g<1>",
-    r" \((You now know)\)": ". \g<1>",
-    r" \((Let's explore)\)": ". \g<1>",
-    r" \((For practice)\)": ". \g<1>",
-    r" \((Check yourself)\)": " - \g<1>",
-    r" \((In the next module)\)": ". \g<1>",
-    r" \((Watch how the lips form a distinct smile)\)": ". \g<1>",
-    r" \((Here is the video demonstration)\)": ". \g<1>",
-    r" \((Here is the video guide)\)": ". \g<1>",
-    r" \((Watch the pronunciation guide here)\)": ". \g<1>",
-    r" \((Watch the video for the exact articulation)\)": ". \g<1>",
-    r" \((Watch the explanation here)\)": ". \g<1>",
-    r" \((Let's combine some food vocabulary)\)": ". \g<1>",
-    r" \((Let's look at common beverages)\)": ". \g<1>",
-    r" \((Let's build a phrase)\)": ". \g<1>",
-    r" \((Now you can read)\)": ". \g<1>",
-    r" \((Imagine you are in Ukraine)\)": ". \g<1>",
-    r" \((We begin)\)": ". \g<1>"
+    r" \((Welcome to the next major stage)\)": r". \g<1>",
+    r" \((Let us start with a quick review)\)": r". \g<1>",
+    r" \((In this module)\)": r". \g<1>",
+    r" \((We are adding)\)": r". \g<1>",
+    r" \((Let's look at some examples)\)": r". \g<1>",
+    r" \((Watch this video guide)\)": r". \g<1>",
+    r" \((Let's practice)\)": r". \g<1>",
+    r" \((Now we encounter)\)": r". \g<1>",
+    r" \((We return)\)": r". \g<1>",
+    r" \((Finally, we have)\)": r". \g<1>",
+    r" \((You now know)\)": r". \g<1>",
+    r" \((Let's explore)\)": r". \g<1>",
+    r" \((For practice)\)": r". \g<1>",
+    r" \((Check yourself)\)": r" - \g<1>",
+    r" \((In the next module)\)": r". \g<1>",
+    r" \((Watch how the lips form a distinct smile)\)": r". \g<1>",
+    r" \((Here is the video demonstration)\)": r". \g<1>",
+    r" \((Here is the video guide)\)": r". \g<1>",
+    r" \((Watch the pronunciation guide here)\)": r". \g<1>",
+    r" \((Watch the video for the exact articulation)\)": r". \g<1>",
+    r" \((Watch the explanation here)\)": r". \g<1>",
+    r" \((Let's combine some food vocabulary)\)": r". \g<1>",
+    r" \((Let's look at common beverages)\)": r". \g<1>",
+    r" \((Let's build a phrase)\)": r". \g<1>",
+    r" \((Now you can read)\)": r". \g<1>",
+    r" \((Imagine you are in Ukraine)\)": r". \g<1>",
+    r" \((We begin)\)": r". \g<1>"
 }
 
 for pattern, replacement in replacements.items():
