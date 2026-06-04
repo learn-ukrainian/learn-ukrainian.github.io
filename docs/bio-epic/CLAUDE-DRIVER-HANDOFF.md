@@ -58,7 +58,37 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
-## ▶▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, DOSSIER PHASE COMPLETE → PHASE-4 WIKI STRATEGY) — RESUME HERE (LATEST)
+## ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, PHASE-4 KEYSTONE MERGED + STAGE-0 SHIPPED) — RESUME HERE (LATEST)
+
+*main has the dossier-grounded compiler + 310/310 dossiers. Local read-only-synced; orchestrator owns main.*
+
+### ✅ DONE THIS SESSION
+- **Dossier phase COMPLETE → 310/310.** Closed the last gap `petro-veskliaov`→`petro-vesklyarov` (Дід Панас): dossier (2768w, DeepSeek SHIP, all §4 quotes verify_quote=0.0 honestly marked) + slug rename. **PR #2701 MERGED.** (#M-4 win: codex verified canonical «Вескляров» via ЕСУ + rejected my unverified «Весклярів».)
+- **🔑 PHASE-4 KEYSTONE MERGED — PR #2702.** `compile.py`/`compiler.py` now load `docs/research/{track}/{slug}.md` and inject it as an AUTHORITATIVE grounding tier in the writer prompt (`load_dossier_text` + `dossier_text`→`_build_prompt`). Conditional + **verified no-op for tracks without dossiers** (a1/a2/folk unchanged). DeepSeek-fast cross-family code review = SHIP; ruff + 81 wiki tests pass (mine). Track-agnostic → once hist/lit have dossiers, their wikis auto-ground too. **The wiki compiler is no longer ungrounded.**
+- **Bio issue + git hygiene** (user-requested): epic #2309 status comment posted; #2535 (dossier-half done, wiki-half=Phase-4) + #2451 (4 sub-1200w clergy dossiers, fold into Phase-4) commented; stale `bio-w2-codex` worktree+branch removed (0 unmerged commits). Bio lane clean.
+- **STAGE-0 shipped (this PR):** `docs/bio-epic/phase-4-wiki-queue.md` (310-row ordered queue, **sequential 1→310** per user "from start to end"; 180 rewrite + 130 new; 130 wikis MISSING) + `docs/bio-epic/phase-4-wiki-rubric.md` (11-gate review scorecard).
+
+### 🧭 PHASE-4 PLAN (user 2026-06-04: "rewrite ALL from start to end, order not chaos, slow start then ramp, figure out best writers/reviewers")
+1. ✅ Foundation: keystone grounding fix (DONE) + queue manifest + rubric (DONE this PR).
+2. **▶ NEXT = STAGE-1 BAKEOFF (slow start).** Pick ~5 representative figures (1 foundational e.g. taras-shevchenko, 1 NPOV-hard, 1 thin-source, 1 known-ghost from 180, 1 new-130). Compile each with EACH writer the pipeline supports — `compile.py --track bio --slug X --writer {claude, gpt-5.5, gemini}` (now dossier-grounded). Score each output with DeepSeek-pro + grok-4.20 vs the rubric+dossier. **Pick best writer + reviewer-of-record.** ⚠ Prior session flagged `--writer claude` emits chat-narration for wikis (#2563) — the bakeoff confirms if that survives grounding.
+3. Stage-2: calibrated small batches (sequential), merge per grant. Measure cost/article.
+4. Stage-3: ramp the remainder via a **capped Workflow** (needs user "use a workflow" opt-in + token budget — bring a costed proposal from bakeoff numbers).
+
+### ⚠ KEY STAGE-0 FINDINGS
+- **The 130 new figures (181–310) have NO discovery files** (only 180 on main). Now that the compiler reads the dossier, **the bakeoff MUST test whether a dossier-only compile suffices** for a new-130 figure (the dossier is rich/tiered). If yes → skip an expensive discovery-build for 130; if no → building discovery for 181–310 is a Stage-0 work item. (Test by compiling a 181-310 slug and judging the result.)
+- #2535 audit triage data (BLOCK/FIX/SHIP) is on disk (`batch_state/tasks/bio-audit-rev-b*.result`) — use as RISK annotation, but ORDER is sequential per user.
+- **⚠ ULP-stress CI flakiness** (`test_immersion_rule_ulp` + `test_post_processor_mutation_invariant[stress_annotator]`) flakes EVERY Python PR (pass locally, fail in CI intermittently — stanza model/`-n auto`). Re-run `gh run rerun <id> --failed` clears it. Non-bio infra → orchestrator's #2682/#2691 domain; flag if it stops clearing on re-run.
+
+### 📌 HELD / DEFERRED (off critical path)
+- `claude/wire-grok-hermes-xai` worktree — uncommitted grok-adapter WIP (PROTECTED #M-10; deferred non-bio tooling; main green now so could be committed+PR'd when picked up).
+- #2675 agy `--model` — STALE PR (base behind; needs rebase; non-bio → orchestrator). June-18 gemini→agy deadline.
+
+### 📊 FLEET (unchanged)
+Reviewer-of-record DeepSeek-pro (`--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600`); grok-4.20 via hermes xai-oauth = strong second. Wiki WRITERS are pipeline-internal (`compile.py --writer {claude|gpt-5.5|gemini}`), NOT delegate dispatch — bakeoff picks the best. Code review = DeepSeek-fast (`--model deepseek-v4-flash`). Merge per bio grant (SHIP + CI green + scope-clean).
+
+---
+
+## ▶▶▶▶▶▶▶▶▶▶▶▶▶▶ SESSION HANDOFF (2026-06-04, DOSSIER PHASE COMPLETE → PHASE-4 WIKI STRATEGY) — (earlier; superseded by the block above)
 
 *main `005c3c084b` (GREEN — #2691 stanza-CI-recovery + #2681 stanza-race fix landed → CI no longer saturated; content PRs merge again). Local main read-only-synced; orchestrator owns main.*
 
