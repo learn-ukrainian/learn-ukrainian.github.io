@@ -84,6 +84,7 @@ from wiki.sources import (
     list_discovery_slugs,
     list_discovery_slugs_readonly,
     list_literary_sources,
+    load_dossier_text,
 )
 from wiki.sources_schema import (
     extract_short_citation_ids,
@@ -342,6 +343,7 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
 
     # Build a human-readable topic from discovery keywords (Ukrainian) or slug (fallback)
     topic = _slug_to_topic(slug, track, sources_info)
+    dossier_text = load_dossier_text(track, slug)
 
     t_stage = time.monotonic()
     result = compile_article(
@@ -354,6 +356,7 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
         dry_run=dry_run,
         writer=writer,
         allow_verify_markers=allow_verify_markers,
+        dossier_text=dossier_text,
     )
     print(f"    ✓ compile_article in {time.monotonic() - t_stage:.1f}s", flush=True)
 

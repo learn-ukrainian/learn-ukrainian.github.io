@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-from .config import CURRICULUM_DIR, LITERARY_DIR, TEXTBOOK_CHUNKS_DIR
+from .config import CURRICULUM_DIR, LITERARY_DIR, PROJECT_ROOT, TEXTBOOK_CHUNKS_DIR
 
 LITERARY_LANGUAGE_PERIODS = ("modern", "middle_ukrainian", "old_east_slavic")
 _LANGUAGE_PERIOD_ALIASES = {
@@ -207,6 +207,14 @@ def load_discovery(track: str, slug: str) -> dict | None:
         return None
     with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+def load_dossier_text(track: str, slug: str) -> str | None:
+    """Load the verified research dossier for a track slug, if present."""
+    path = PROJECT_ROOT / "docs" / "research" / track / f"{slug}.md"
+    if not path.is_file():
+        return None
+    return path.read_text(encoding="utf-8")
 
 
 def _plan_files(track: str) -> list[Path]:

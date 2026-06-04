@@ -62,6 +62,7 @@ def compile_article(
     dry_run: bool = False,
     writer: str = "gemini",
     allow_verify_markers: bool = False,
+    dossier_text: str | None = None,
 ) -> Path | None:
     """Compile a single wiki article from source material.
 
@@ -74,6 +75,7 @@ def compile_article(
         force: Recompile even if already compiled.
         dry_run: Print prompt but don't call the writer.
         writer: Writer agent key: "gemini", "claude", or "gpt-5.5".
+        dossier_text: Verified research dossier text for authoritative grounding.
 
     Returns:
         Path to the written article, or None on failure.
@@ -93,6 +95,7 @@ def compile_article(
             sources=sources,
             track=track,
             generated_by_model="unknown",
+            dossier_text=dossier_text,
         )
         formatted_sources = _format_sources(sources)
         print(f"\n{'═' * 60}")
@@ -118,6 +121,7 @@ def compile_article(
         sources=sources,
         track=track,
         generated_by_model="unknown",
+        dossier_text=dossier_text,
     )
 
     # Call writer
@@ -187,7 +191,8 @@ def compile_article(
 
 def _build_prompt(*, topic: str, slug: str, domain: str,
                   sources: list[dict], track: str = "",
-                  generated_by_model: str = "unknown") -> str:
+                  generated_by_model: str = "unknown",
+                  dossier_text: str | None = None) -> str:
     """Build the Gemini prompt from template + source material.
 
     Uses track-specific prompt when available (A1 pedagogy, A2-B2 grammar,
@@ -236,6 +241,10 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     )
     citation_discipline = render_citation_discipline_block(len(sources))
     canonical_anchors = render_canonical_anchors_for_writer()
+    dossier_section = _format_dossier_section(dossier_text)
+    prepend_dossier_section = bool(
+        dossier_section and "{dossier_section}" not in template
+    )
 
     prompt = template
     prompt = prompt.replace("{topic}", topic)
@@ -248,7 +257,29 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     prompt = prompt.replace("{generated_by_model}", generated_by_model)
     prompt = prompt.replace("{citation_discipline}", citation_discipline)
     prompt = prompt.replace("{canonical_anchors}", canonical_anchors)
+    prompt = prompt.replace("{dossier_section}", dossier_section)
+    if prepend_dossier_section:
+        prompt = dossier_section + prompt
     return prompt
+
+
+def _format_dossier_section(dossier_text: str | None) -> str:
+    """Render the optional authoritative dossier prompt block."""
+    if not dossier_text:
+        return ""
+    dossier_body = dossier_text.rstrip()
+    return (
+        "## AUTHORITATIVE DOSSIER "
+        "(ground every factual claim in THIS — it is verified + source-tiered)\n\n"
+        f"{dossier_body}\n\n"
+        "RULES: Treat the dossier above as the ground truth. Every "
+        "name/date/place/claim in the article must be consistent with it. Use "
+        "the retrieved SOURCE CHUNKS below for additional verbatim quotes and "
+        "breadth, but where a chunk (esp. a Wikipedia-only chunk) conflicts "
+        "with the dossier, the DOSSIER WINS. Do NOT introduce facts that "
+        "contradict the dossier. Do NOT invent quotes — if the dossier marks "
+        "a quote as not corpus-confirmed, keep that caution.\n\n"
+    )
 
 
 def _normalize_generated_by_model(model_used: str | None) -> str:
