@@ -58,6 +58,85 @@
 > ARE a writer-fleet job** (~130 new articles for bio-181..310, ~285K words) — run a **CLAUDE writer
 > fleet** (see NEXT ACTIONS #4), cross-reviewed by DeepSeek. No codex needed.
 
+## ▶▶▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-04) — FLEET ROUTING LOCKED + GEMINI-CLI RETIRES JUNE 18 → MIGRATE TO AGY (read FIRST)
+
+**This block is the SSOT for the agent fleet + the urgent gemini→agy migration. Supersedes earlier fleet notes.**
+
+### ⏰ HARD DEADLINE: gemini-cli is RETIRED **June 18, 2026** (no grace period; Google announced 2026-05-08)
+`--agent gemini` (gemini-cli) **STOPS SERVING June 18** for Pro/Ultra tiers — any script calling `gemini` breaks
+with no warning. Replacement = **Antigravity CLI = `agy`** (Go rewrite, Gemini 3.1 Pro). **We MUST migrate the
+gemini content-writer route → agy before June 18 (~2 weeks).** agy is verified working this session (Gemini 3.1
+Pro High + `sources` MCP both confirmed). Migration steps: (1) **merge #2675** (agy adapter now passes `--model`)
+— BLOCKED, see main-red below; (2) consolidate the registry so `--agent gemini` work routes to agy (or switch
+ops to `--agent agy --model "Gemini 3.1 Pro (High)"`); (3) cut over + delete the gemini-cli route. Refs:
+developers.googleblog.com "Transitioning Gemini CLI to Antigravity CLI"; theregister 2026-05-20.
+
+### 🚦 FLEET ROUTING TABLE (user-confirmed 2026-06-03/04) — the SSOT
+| Lane | Invocation | Role | Status |
+|---|---|---|---|
+| **codex** | `--agent codex --model gpt-5.5 --effort xhigh` | **content writer** (dossier/prose/wiki) | ✅ proven; 1 concurrent seat for bio |
+| **claude** | `--agent claude --effort xhigh` | **content writer** — strongest NPOV/prose | ✅ proven; **CAP at 1 dispatched** (5h-limit lesson) |
+| **gemini** | `--agent gemini --model gemini-3.1-pro-preview --initial-response-timeout 900 --silence-timeout 3600` | **content writer** | ✅ proven (raised timeouts beat #2454) — **DIES June 18 → agy** |
+| **agy** | `--agent agy --model "Gemini 3.1 Pro (High)"` | content writer (gemini SUCCESSOR) | ✅ works (MCP+model verified); adapter fix #2675 BLOCKED |
+| **deepseek** | `--agent deepseek --model deepseek-v4-pro --mode read-only --initial-response-timeout 900 --silence-timeout 3600` | **reviewer** (off-seat, cross-family to ALL writers) | ✅ reliable; recurring ghost-slug FALSE-POS → always git-verify |
+| **cursor** | `--agent cursor --model composer-2.5` (or `auto`) | **code/throughput ONLY — NOT prose** | ✅ fixed (#2549); composer superior; **never route grok through it (wastes credit)** |
+| **grok-build** | `grok -m grok-build` (grok CLI) | **coding only — NEVER Ukrainian content** | available |
+| **grok-4.3** | via **hermes/opencode** (NOT cursor) | content CANDIDATE (under eval) | ⏸ access path TBD (user: "opencode or hermes") |
+> Cross-family review rule (merge grant): every content PR reviewed by a DIFFERENT family than the writer.
+> deepseek is cross-family to codex/claude/gemini/agy → the universal reviewer. NEVER gemini-reviews-agy (same family).
+
+### 📊 SEAT UTILIZATION (7-day, 214 dispatches, as of 2026-06-04 — regenerate from `batch_state/tasks/*.json`)
+claude **30%** (65, main-quota+5h-limit, metered after Jun-15) · codex **26%** (55, healthy sub) · deepseek **21%**
+(44, METERED $) · gemini **14%** (29, free but DIES Jun-18) · cursor **9%** (19, flat sub, mostly `auto`→pin composer)
+· agy **1%** (2) · grok **0** (idle paid sub) · hermes/opencode/qwen 0.
+**REBALANCE:** we over-lean the 2 costliest/riskiest lanes (claude main-quota + deepseek metered) while 3 PAID subs
+sit idle (cursor flat-rate, agy Google pool, grok xAI sub). Actions: (1) shift writer load claude→codex/agy;
+(2) migrate gemini→agy (Jun-18 + frees cost); (3) pin cursor=composer-2.5 (kill `auto`); (4) wake grok via
+hermes/opencode; (5) trim deepseek $ by letting a free seat cross-review where possible.
+TODO: ship `scripts/agent_seat_utilization.py` for an on-demand kubedojo-style report.
+
+### 🔴 MAIN-RED BLOCKER (escalate to orchestrator — blocks the June-18 migration)
+Main's full pytest is RED on **`test_immersion_rule_ulp` + `test_post_processor_mutation_invariant[stress_annotator]`**
+(ULP stress-annotation subsystem; consistent with the uncommitted `scripts/build/linear_pipeline.py` churn + parked
+`.worktrees/fix/ulp-stress-advisory`). This is NON-BIO (A1/orchestrator domain) but it **blocks EVERY Python PR** —
+including **#2675 (agy `--model` fix)** and the gemini→agy registry consolidation. **The June-18 gemini migration
+cannot land until main's stress pytest is green.** Bio dossier PRs (docs-only) are path-filtered and unaffected.
+
+### 📚 LESSONS THIS SESSION (do NOT re-derive)
+1. **Dual-limit:** claude 5h-limit (2 parallel dispatched + interactive overran) AND codex rate_limited (after a
+   2.5h run) hit in one session. → dispatched claude **CAP 1**; when both lanes limited, PAUSE — don't thrash.
+2. **gemini works as a dispatch writer** with raised timeouts (#2454 SIGTERM was the watchdog, not a hard break).
+3. **gemini UNDER-WRITES (variable length).** Scholars batch #2676 shipped 6 dossiers at **797–1036 words < the
+   WORD_FLOOR=1200** (`scripts/audit/check_dossier_wordcount.py`). The word-count Content Gate is **ADVISORY (not a
+   required check)** → it does NOT block merge. **MANDATORY: word-count-check gemini/agy output BEFORE merge; gemini
+   briefs MUST specify ≥1500 words.** The 6 thin ones are being expanded (codex `bio-expand-scholars`). gemini's
+   #2672 living-writers batch was fine (1314–1388). claude/codex run 1700–3700.
+4. **agy MCP** works with `~/.gemini/antigravity-cli/mcp_config.json` = `{"sources":{"httpUrl":"http://127.0.0.1:8766/mcp"}}`;
+   invoke prompt as the VALUE of `-p`. My initial "hang" was a cold-start/invocation fluke; it's reliable now.
+5. **cursor-agent** exposes grok-4.3/grok-build/gemini-3.1-pro/sonnet — but per user, **cursor = composer-2.5/auto only.**
+
+### ✅ BIO PRODUCTION (core mission — healthy)
+origin/main `~2bc5bf548c`; **237 dossiers** (+more pending), **queue ~74→62**. This session merged **~21 dossiers**:
+Wave K (6 codex rulers #2669), salvage (petliura+kostenko #2670), gemini living-writers (#2672), codex
+vynnychuk/shkliar (#2673), claude statehood incl. **shukhevych** (#2674, exemplary NPOV), gemini scholars (#2676,
+thin → expanding). Queue is self-correcting (`plans − dossiers`). `petro-veskliaov` still deferred (slug rename).
+
+### IN-FLIGHT (verify `curl -sS http://127.0.0.1:8765/api/delegate/active`)
+- `bio-claude-earlymodern` (claude) — 6 early-modern church/Cossack founders (Mohyla/Smotrytskyi/Boretskyi/Kosiv/Ostrozky/Nalyvaiko).
+- `bio-expand-scholars` (codex) — expanding the 6 thin scholar dossiers to ≥1500w.
+- `#2675` agy adapter fix — OPEN, blocked by main-red pytest.
+- grok-4.3 eval — PAUSED (need hermes/opencode access path).
+
+### NEXT ACTIONS ON RESUME (priority)
+1. **ESCALATE** the main-red ULP-stress pytest + the June-18 gemini→agy deadline to the orchestrator/user (the
+   migration cannot land until main is green; ~2 weeks left).
+2. Review+merge `bio-claude-earlymodern` (DeepSeek) and `bio-expand-scholars` (DeepSeek; verify all ≥1500w).
+3. Continue dossier rounds from the ~62 queue (codex + claude[cap1] + gemini[≥1500w brief]; agy once #2675 lands).
+4. Confirm grok-4.3 access (hermes `--agent grok` vs opencode) → run the prose eval OFF cursor.
+5. Once main green: merge #2675 → consolidate gemini→agy registry → cut over before June 18.
+
+---
+
 ## ▶▶▶▶▶▶▶▶ SESSION UPDATE (2026-06-03, LATE NIGHT) — +8 DOSSIERS MERGED; BOTH WRITER LANES HIT LIMITS; FLEET PAUSED (read FIRST)
 
 **Supersedes the NIGHT block's "fire next wave (2 claude + 1 codex)" — that cadence overran the limits this segment. New cadence below.**
