@@ -78,17 +78,15 @@ repos:
   # --- Local hooks (project-specific) ---
   - repo: local
     hooks:
-      # Prevent accidentally adding .yaml.bak / .yaml.orig files that
-      # our update_plan_activities.py / other tools create as safety
-      # backups. Versioned curriculum plan snapshots are the exception:
-      # they are required by the plan immutability rule.
+      # Prevent accidentally adding .yaml.bak / .yaml.orig files. Plan
+      # history lives in git and the plan immutability hook enforces
+      # version bumps for content-bearing edits.
       - id: no-yaml-backups
         name: block .yaml.bak / .yaml.orig files
         entry: >-
-          bash -c 'files=$(git diff --cached --name-only --diff-filter=A |
-          grep -E "\.(yaml|yml)\.(bak|orig)$" |
-          grep -Ev "^curriculum/[^/]+/plans/.+\.yaml\.bak$" || true); if [ -n "$files" ]; then
-          echo "ERROR: Do not commit non-plan backup files:"; echo "$files"; exit 1; fi'
+          bash -c 'files=$(git diff --cached --name-only --diff-filter=AMR |
+          grep -E "\.(yaml|yml)\.(bak|orig)$" || true); if [ -n "$files" ]; then
+          echo "ERROR: Do not commit YAML backup files:"; echo "$files"; exit 1; fi'
         language: system
         pass_filenames: false
         stages: [pre-commit]

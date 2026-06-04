@@ -142,9 +142,9 @@ Plans in `plans/` are the source of truth. They require user approval to change.
 
 > `plans/{level}/{slug}.yaml` → VERSIONED (immutable without approval)
 
-**When build can't meet plan:** STOP → report "Plan requires X but Y isn't achievable because Z" → propose new plan version → user approves → backup old plan as `.bak` → write new version with bumped `version` field.
+**When build can't meet plan:** STOP → report "Plan requires X but Y isn't achievable because Z" → propose new plan version → user approves → write the new plan with an incremented `version` field. Prior versions live in git history (`git show HEAD:<path>`), not tracked `.bak` files.
 
-**Never** silently modify plan files, lower word_target to match output, or skip the backup step.
+**Never** silently modify plan files, lower word_target to match output, or stage plan `.yaml.bak` files.
 
 **Exception**: The pipeline may auto-fix plan `vocabulary_hints` entries that fail VESUM verification. Changes are version-bumped and logged in `plan_fixes`. Content outline, objectives, and word targets remain immutable.
 

@@ -33,7 +33,7 @@ linguistic quality. Pipeline plumbing discussions go in #pipeline.
 1. **Textbook grounding.** Dialogues come from real textbook situations (Большакова, Вашуленко for A1-A2; Заболотний, Авраменко for B1+), not invented drills.
 2. **Adult register at A2+.** A2 must NOT coast on A1 simplicity — more turns, more stakes, richer vocabulary, less hand-holding.
 3. **Culturally Ukrainian, not ESL-generic.** Real Kyiv / Lviv / Chernivtsi / village contexts — never anonymized "the city," "the cafe," "Mark and Anna."
-4. **Plans are immutable source of truth.** Plan in `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` defines what the module must contain. Disagreement with the plan = bump the version + backup, never silently mutate.
+4. **Plans are immutable source of truth.** Plan in `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` defines what the module must contain. Disagreement with the plan = increment `version:` and record the rationale in the plan, never silently mutate or stage `.yaml.bak`.
 
 ## Who reviews what
 

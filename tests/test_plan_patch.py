@@ -279,7 +279,7 @@ noise after
     assert result.applied is True
     assert result.new_version == "2.0.1"
     assert result.change_count == 2
-    assert plan_path.with_suffix(".yaml.bak").exists()
+    assert not plan_path.with_suffix(".yaml.bak").exists()
 
     updated = yaml.safe_load(plan_path.read_text("utf-8"))
     assert updated["version"] == "2.0.1"

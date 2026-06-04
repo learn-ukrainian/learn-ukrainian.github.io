@@ -7,14 +7,20 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/validate-yaml.yml'
       - 'curriculum/**/*.yaml'
+      - 'curriculum/l2-uk-en/plans/**/*.yaml.bak'
       - 'schemas/**'
       - 'scripts/*.py'
+      - 'scripts/validate/**/*.py'
   pull_request:
     paths:
+      - '.github/workflows/validate-yaml.yml'
       - 'curriculum/**/*.yaml'
+      - 'curriculum/l2-uk-en/plans/**/*.yaml.bak'
       - 'schemas/**'
       - 'scripts/*.py'
+      - 'scripts/validate/**/*.py'
   workflow_dispatch:
 
 jobs:
@@ -129,6 +135,36 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
+
+      - name: Block tracked plan backup artifacts
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          else
+            echo "No diff to inspect for ${{ github.event_name }}."
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          mapfile -t backup_files < <(
+            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
+              ':(glob)curriculum/l2-uk-en/plans/**/*.yaml.bak'
+          )
+
+          if ((${#backup_files[@]} > 0)); then
+            echo "::error::Plan backup artifacts must not be committed; bump version and rely on git history."
+            printf '  %s\n' "${backup_files[@]}"
+            exit 1
+          fi
+
+          echo "✅ No added or modified plan backup artifacts."
 
       - name: Collect changed plan YAML
         id: changed-plans
