@@ -295,7 +295,7 @@ Rules of engagement with prior learning (binding):
 ## Tone and immersion (mandatory)
 
 <!-- rule_id: #R-VOICE-META -->
-Write for an adult learner, not for a teacher reading a lesson plan. No English meta-narration; the complete forbidden phrase list is in the Writer Charter. Open sections directly with the grammar fact, a Ukrainian example/dialogue line, or a one-sentence English scaffold.
+Write for an adult learner, not for a teacher reading a lesson plan. No English meta-narration; the complete forbidden phrase list is in the Writer Charter. Do not write teacher-plan narration such as "this section teaches", "learners will", or "the activity asks". Open sections directly with the grammar fact, a Ukrainian example/dialogue line, or a one-sentence English scaffold.
 
 English is only for translation, gloss, and short scaffolds. Honor the Immersion Rule exactly; B1+ body text outside Tab 2 is 100% Ukrainian.
 

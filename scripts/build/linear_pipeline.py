@@ -10761,6 +10761,9 @@ _CALLOUT_PATTERN = re.compile(
 _META_NARRATION_PATTERNS = (
     r"\bLet us (?:begin|explore|examine|look|learn|see|consider|now)\b",
     r"\bIn this (?:section|module|lesson|chapter|unit)\b",
+    r"\bThis section teaches\b",
+    r"\b(?:learners|students) will\b",
+    r"\bThe (?:activity|exercise) asks\b",
     r"\bWelcome to (?:[ABC][12]\b|the [ABC][12]\b)",
     r"\bCongratulations on completing\b",
     r"\bYou have unlocked\b",

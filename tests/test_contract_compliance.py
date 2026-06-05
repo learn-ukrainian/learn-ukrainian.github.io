@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
@@ -379,6 +381,25 @@ def test_meta_narration_flags_in_this_section_opener() -> None:
     violations = _meta_narration_violations(content)
     assert len(violations) == 1
     assert "In this section" in violations[0]["message"]
+
+
+@pytest.mark.parametrize(
+    "opener",
+    [
+        "This section teaches the letter names.",
+        "Learners will identify the first three vowels.",
+        "The activity asks you to match letters.",
+    ],
+)
+def test_meta_narration_flags_teacher_plan_voice_openers(opener: str) -> None:
+    content = (
+        "## Intro\n"
+        "\n"
+        f"{opener} Start with **а**, **о**, and **і**.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+    assert violations[0]["type"] == "META_NARRATION"
 
 
 def test_meta_narration_flags_now_lets_opener() -> None:

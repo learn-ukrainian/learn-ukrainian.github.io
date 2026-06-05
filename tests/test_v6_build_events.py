@@ -16,9 +16,14 @@ import pytest
 import yaml
 
 WORKTREE_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = WORKTREE_ROOT
-if not (REPO_ROOT / ".venv" / "bin" / "python").exists() and WORKTREE_ROOT.parent.name == ".worktrees":
-    REPO_ROOT = WORKTREE_ROOT.parent.parent
+REPO_ROOT = next(
+    (
+        candidate
+        for candidate in (WORKTREE_ROOT, *WORKTREE_ROOT.parents)
+        if (candidate / ".venv" / "bin" / "python").exists()
+    ),
+    WORKTREE_ROOT,
+)
 VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 
 SCRIPTS_DIR = WORKTREE_ROOT / "scripts"
@@ -123,6 +128,39 @@ def _event_lines(output: str) -> list[dict]:
         if line.startswith("{\"event\""):
             events.append(json.loads(line))
     return events
+
+
+def test_force_preflight_blocks_cleanup_when_local_dbs_are_missing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    level = "a2"
+    slug = "a2-force-preflight"
+    curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
+
+    cleanup_calls: list[tuple[str, str]] = []
+    missing_data = tmp_path / "missing-data"
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "SOURCES_DB_PATH", missing_data / "sources.db")
+    monkeypatch.setattr(v6_build, "VESUM_DB_PATH", missing_data / "vesum.db")
+    monkeypatch.setattr(
+        v6_build,
+        "_force_reset_module",
+        lambda level_arg, slug_arg, **_kwargs: cleanup_calls.append((level_arg, slug_arg)),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", level, "1", "--force", "--step", "check"],
+    )
+
+    assert v6_build.main() is False
+    assert cleanup_calls == []
+    output = capsys.readouterr().out
+    assert "--force preflight failed" in output
+    assert "sources.db" in output
+    assert "vesum.db" in output
 
 
 def _single_module_tree(tmp_path: Path, level: str = "a2", slug: str = "a2-bridge") -> Path:
@@ -284,6 +322,84 @@ def test_step_review_emits_review_score_event(
     assert review_events[0]["slug"] == slug
     assert review_events[0]["round"] == 1
     assert review_events[0]["score"] == 9.0
+
+
+def test_parse_per_dimension_review_normalizes_tolerant_header() -> None:
+    raw = (
+        "## Dimension\n"
+        "id: naturalness\n"
+        "name: Naturalness\n"
+        "Score: 8.5\n"
+        "Verdict: revise\n\n"
+        "## Evidence\n"
+        "- Українською: конкретний доказ.\n\n"
+        "## Findings\n"
+        "None.\n\n"
+        "## Verdict Reason\n"
+        "Scoped to naturalness.\n"
+    )
+
+    parsed = v6_build._parse_per_dimension_review(
+        raw,
+        dimension_id="naturalness",
+        dimension_name="Naturalness",
+    )
+
+    assert parsed.score == 8.5
+    assert parsed.verdict == "REVISE"
+    assert parsed.review_text.startswith("score: 8.5/10\nverdict: REVISE\n")
+
+
+def test_step_review_retries_malformed_per_dimension_header(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    level = "a2"
+    slug = "a2-review-format-retry"
+    curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.write_text(_compliant_module_content(), "utf-8")
+
+    phases_dir = tmp_path / "scripts" / "build" / "phases"
+    phases_dir.mkdir(parents=True, exist_ok=True)
+    _write_per_dim_review_templates(phases_dir)
+
+    import build.dispatch as dispatch
+
+    calls: list[str] = []
+
+    def fake_dispatch(*args, **kwargs):
+        phase = kwargs["phase"]
+        calls.append(phase)
+        dim_id = phase.removeprefix("review-").removesuffix("-format-retry")
+        dim_name = next(
+            spec["label"]
+            for spec in v6_build.REVIEW_DIMENSIONS
+            if spec["id"] == dim_id
+        )
+        if phase == "review-naturalness":
+            return (
+                True,
+                "## Dimension\n"
+                "id: naturalness\n"
+                "name: Naturalness\n\n"
+                "## Evidence\n"
+                "- Українською: missing header on first try.\n",
+            )
+        return True, _per_dim_review_response(dim_id, dim_name, 9.0, "PASS")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+    monkeypatch.setattr(v6_build, "REVIEW_DIMENSION_CONCURRENCY", 1)
+    monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
+    monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
+
+    passed, score, raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
+
+    assert passed is True
+    assert score == 9.0
+    assert "review-naturalness-format-retry" in calls
+    assert "## Verdict: PASS" in raw
 
 
 def test_step_review_treats_subthreshold_empty_findings_as_non_blocking(

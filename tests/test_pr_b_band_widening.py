@@ -1,5 +1,7 @@
 """Tests for PR-B band widening: word_count tolerance + callout_min (2026-05-23)."""
 
+import pytest
+
 from scripts.build.linear_pipeline import (
     _engagement_floor_gate,
     _word_count_gate,
@@ -101,3 +103,18 @@ def test_engagement_floor_callout_min_is_1() -> None:
     plan = {"word_target": 100, "level": "a1"}
     report = _engagement_floor_gate(text, plan)
     assert report["callout_min"] == 1
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        ":::tip\nA mnemonic.\n:::\n\nThis section teaches the alphabet.",
+        ":::tip\nA mnemonic.\n:::\n\nLearners will compare **а** and **о**.",
+        ":::tip\nA mnemonic.\n:::\n\nThe activity asks you to hear **і**.",
+    ],
+)
+def test_engagement_floor_flags_teacher_plan_meta_narration(text: str) -> None:
+    plan = {"word_target": 100, "level": "a1"}
+    report = _engagement_floor_gate(text, plan)
+    assert report["passed"] is False
+    assert len(report["meta_narration_hits"]) == 1
