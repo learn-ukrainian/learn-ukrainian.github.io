@@ -52,3 +52,20 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 5
+    # Block constrained transitive bumps that requirements-lock.txt (a flat,
+    # fully-pinned lock) lets Dependabot propose past their parent's pin,
+    # producing structurally un-mergeable PRs. See issue #2716.
+    ignore:
+      # pydantic-core is pinned EXACTLY by pydantic (pydantic==2.12.5 requires
+      # pydantic-core==2.41.5). A standalone bump fails deterministically at
+      # import: `SystemError: ... pydantic-core ... incompatible ... requires
+      # 2.41.5`. It must move only via a pydantic bump (which recomputes the
+      # lock and brings a matching pydantic-core). Closed PR: #2540.
+      - dependency-name: "pydantic-core"
+      # starlette is capped by fastapi (fastapi==0.136.1 requires
+      # starlette<0.51.0); starlette 1.x makes the lock unresolvable by pip.
+      # Allow 0.50.x patches but block >=0.51 until a fastapi bump loosens the
+      # cap — REMOVE this entry when fastapi supports starlette 1.x. Closed
+      # PR: #2710.
+      - dependency-name: "starlette"
+        versions: [">=0.51.0"]
