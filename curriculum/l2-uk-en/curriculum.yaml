@@ -1919,30 +1919,58 @@ levels:
   folk:
     type: track
     modules:
+      # Folk track expanded 27 -> 42 (broad folk CULTURE, C1+), de-imperialized.
+      # Build order + slug renames/folds per docs/folk-epic/phase-folk-queue.md +
+      # folk-ssot-migration.md (GPT cross-check bridge #1148). Plan-file + code (FOLK_DOMAIN_MAP,
+      # module_archetypes folk-experiential) migration tracked in folk-ssot-migration.md.
+      # A · Frame / worldview / magic
+      - narodna-kultura-yak-systema
+      - narodni-viruvannia-mifolohiia-demonolohiia
+      - zamovliannia-zaklynannia-prymovky
+      # B · Calendar ritual cycle
+      - kalendarna-obriadovist-zvychai
       - koliadky-shchedrivky
       - vesnianky-hayivky
-      - rusalni-pisni
-      - kupalski-pisni
-      - obzhynkovi-pisni
+      - kupalski-rusalni-pisni
+      - zhnyvarski-obzhynkovi-pisni
+      # C · Family rite
+      - rodynna-obriadovist-zvychai
       - vesilni-pisni
       - holosinnya
+      # D · Epic / kobzar (bylyny de-weighted 9->1)
+      - dumy-nevilnytski-lytsarski
+      - dumy-sotsialno-pobutovi
+      - kobzarstvo-lirnytstvo
+      - bylyny-kyivskoho-tsyklu
+      # E · Song (historical / lyric / social / resistance / literary-origin)
+      - istorychni-pisni
+      - striletski-povstanski-pisni
+      - rodynno-pobutovi-pisni
+      - kolomyiky
+      - suspilno-pobutovi-pisni
+      - narodni-balady
+      - pisni-literaturnoho-pokhodzhennia
+      # F · Prose / paremia / child
       - charivni-kazky
       - kazky-pro-tvaryn
       - sotsialno-pobutovi-kazky
       - narodni-lehendy
       - istorychni-perekazy
-      - bylyny-kyivskoho-tsyklu
-      - bohatyri-illiya-dobrynia
-      - zastavy-bohatyrski
-      - bylyny-sotsialni
-      - pokhodzhennia-dum
-      - dumy-nevilnytski
-      - dumy-lytsarski
-      - dumy-sotsialno-pobutovi
-      - kobzarstvo-fenomen
-      - narodni-balady
-      - chumatski-burlatski-pisni
+      - narodni-opovidannia-buvalshchyny-memoraty
       - prykazky-ta-pryslivia
       - zahadky
       - narodni-anekdoty
-      - rodynna-liryka-kolomyiky
+      - dytiachyi-folklor-kolyskovi
+      # G · Drama / music / dance
+      - vertep-narodna-drama
+      - narodni-muzychni-instrumenty
+      - narodni-tantsi
+      # H · Material / everyday culture
+      - pysankarstvo
+      - narodna-vyshyvka-rushnyk-strii
+      - narodni-remesla-ta-khudozhni-promysly
+      - narodne-zhytlo-sadyba-hospodarstvo
+      - narodna-kukhnia-obriadova-yizha
+      # I · Regional / high-culture synthesis
+      - rehionalni-etnokulturni-tradytsii
+      - narodna-kultura-ta-vysoka-kultura-mistky

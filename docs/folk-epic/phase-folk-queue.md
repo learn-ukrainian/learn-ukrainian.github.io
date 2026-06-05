@@ -43,7 +43,7 @@ the pilot *dossier* is the calendar-rite topic because it produces concrete verb
 | 08 | `zhnyvarski-obzhynkovi-pisni` | B · Calendar | Harvest cycle. **Renamed** from `obzhynkovi-pisni` (GPT). |
 | 09 | `rodynna-obriadovist-zvychai` | C · Family rite | **NEW (GPT)** — birth/christening, wedding, funeral, housewarming as a ritual *system*. |
 | 10 | `vesilni-pisni` | C · Family rite | Wedding songs (within the family-rite arc). |
-| 11 | `holosinnia` | C · Family rite | Laments (funeral). |
+| 11 | `holosinnya` | C · Family rite | Laments (funeral). Carry-forward; existing slug spelling kept. |
 | 12 | `dumy-nevilnytski-lytsarski` | D · Epic/kobzar | Captivity + knightly dumy. |
 | 13 | `dumy-sotsialno-pobutovi` | D · Epic/kobzar | Social dumy. |
 | 14 | `kobzarstvo-lirnytstvo` | D · Epic/kobzar | **Renamed** from `kobzarstvo-fenomen` (GPT): guilds, blind performers, ліра, псальми, repression, performance context. **Folds** `pokhodzhennia-dum` (theory/history, not a genre). |

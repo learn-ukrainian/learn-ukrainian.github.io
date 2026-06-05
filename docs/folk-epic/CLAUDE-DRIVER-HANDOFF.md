@@ -108,19 +108,29 @@ NEXT-ACTION item 1 is DONE — the 4 foundation docs now exist (mirror bio's Sta
   cross-family (GPT↔Claude), no DeepSeek; OPEN-PR-no-self-merge.
 - `docs/folk-epic/folk-experiential-archetype-spec.md` — 4-tab shell + families #40–45 + 3 multimodal
   blocks + myth-box; "more prose in Урок" feedback baked in (item 2 done).
+- `docs/folk-epic/folk-ssot-migration.md` — **executable** old-27→new-42 slug map (carry/rename/fold-
+  archive/new) + per-file deltas. **`curriculum.yaml` folk block UPDATED to the 42-topic order in this
+  PR** (manifest lane, CI-safe). Plan-file migration + the 2 code surfaces (`compile.py
+  FOLK_DOMAIN_MAP`, `module_archetypes.py` folk-experiential) = GPT dispatch, gated on merge.
 
 ### ▶ NEXT ACTIONS ON RESUME (folk, in order)
 1. **Open the Stage-0 PR** (this branch; no self-merge) bundling the 4 docs + this handoff →
    **TRACK-UPDATE needs=merge** to orchestrator. *(In flight as of this session — see IN-FLIGHT.)*
-2. **On Stage-0 merge → dispatch the pilot dossier** `kalendarna-obriadovist-zvychai` (GPT + Claude
-   both picked it; best shows folk as a SYSTEM). Writer = **GPT now** (`delegate.py dispatch --agent
-   codex --model gpt-5.5 --worktree --base main`, brief = schema + rubric + queue row) / Claude after
-   June 8; cross-family review = the other; corpus-hammer (`verify_quote` every folk text). Gate on
-   merge because `--worktree` builds from origin/main (unmerged specs won't reach the child). Then
-   dossier → grounded wiki (`compile.py --writer {gpt-5.5|claude}`, dossier-grounded since #2702).
-3. Then the build-order first-6: `narodna-kultura-yak-systema` → pilot → `narodni-viruvannia-…` →
+2. **On Stage-0 merge → dispatch GPT the SSOT migration** (`folk-ssot-migration.md` is the brief):
+   `git mv` 5 renames + archive 6 folded plan files → `plans/folk/_archive/`; create new plan stubs
+   (C1+, schema-valid, `status: stub`); re-key `compile.py FOLK_DOMAIN_MAP` to 42; register
+   `folk-experiential` in `module_archetypes.py` + route `track=="folk"`; regenerate discovery. One
+   worktree PR (`--agent codex --model gpt-5.5 --worktree --base main`), NO auto-merge. **#M-10: archive,
+   never delete — folded files carry real rag_chunks.** Gated on Stage-0 merge so the worktree sees the
+   updated `curriculum.yaml`.
+3. **Then dispatch the pilot dossier** `kalendarna-obriadovist-zvychai` (GPT + Claude both picked it;
+   best shows folk as a SYSTEM). Writer = **GPT now** (brief = schema + rubric + queue row) / Claude
+   after June 8; cross-family review = the other; corpus-hammer (`verify_quote` every folk text). Then
+   dossier → grounded wiki (`compile.py --writer {gpt-5.5|claude}`; needs the migrated FOLK_DOMAIN_MAP
+   entry, hence after step 2).
+4. Then the build-order first-6: `narodna-kultura-yak-systema` → pilot → `narodni-viruvannia-…` →
    `koliadky-shchedrivky` → `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`.
-4. Optional: design the **lit-drama** variant (≈80% assembled from folk parts) when convenient.
+5. Optional: design the **lit-drama** variant (≈80% assembled from folk parts) when convenient.
 
 ### 📊 CORPUS FACTS (folk is well-sourced — verified)
 collection_stats: textbooks 25,714 · literary_texts 137,688 · sum11 127,069 · grinchenko 67,275. Verified
