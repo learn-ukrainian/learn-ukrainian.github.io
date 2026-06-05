@@ -156,3 +156,27 @@ def test_category_f_excludes_worktrees(tmp_path):
 
     assert any("mod/orchestration" in h and ".worktrees" not in h for h in hits)
     assert not any(".worktrees" in h for h in hits)
+
+
+def test_category_a_run_cmd_error(tmp_path, monkeypatch):
+    p = tmp_path / "obs.py"
+    p.write_text("OBSOLETE\ndef foo(): pass", encoding="utf-8")
+
+    def mock_run_cmd(*args, **kwargs):
+        raise RuntimeError("Subprocess crash")
+
+    monkeypatch.setattr("scripts.audit.find_dead_code.run_cmd", mock_run_cmd)
+
+    hits = category_a(tmp_path)
+    assert len(hits) == 1
+    assert "NEEDS-MANUAL-REVIEW: category A scan error: Subprocess crash" in hits[0]
+
+
+def test_category_f_scan_error(tmp_path, monkeypatch):
+    def mock_rglob(*args, **kwargs):
+        raise OSError("Read error")
+
+    monkeypatch.setattr(Path, "rglob", mock_rglob)
+    hits = category_f(tmp_path)
+    assert len(hits) == 2
+    assert "NEEDS-MANUAL-REVIEW: category F scan error: Read error" in hits[1]

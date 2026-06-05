@@ -40,7 +40,7 @@ def run_cmd(cmd, cwd=None):
     try:
         res = subprocess.run(cmd, cwd=cwd, shell=isinstance(cmd, str), capture_output=True, text=True, check=False)
         return res
-    except FileNotFoundError:
+    except OSError:
         return None
 
 
@@ -52,30 +52,30 @@ def category_a(root: Path):
                 continue
             try:
                 content = p.read_text(encoding="utf-8")
-                if "OBSOLETE" in content:
-                    # check for callers
-                    stem = p.stem
-                    cmd = [
-                        "ugrep",
-                        "-rlw",
-                        stem,
-                        str(root),
-                        *_ugrep_exclude_flags(),
-                    ]
-                    res = run_cmd(cmd)
-                    if res and res.stdout.strip():
-                        callers = res.stdout.strip().splitlines()
-                        callers = [c for c in callers if str(p) not in c and "__pycache__" not in c]
-                        if callers:
-                            hits.append(f"{p.relative_to(root)} (has callers: {len(callers)})")
-                        else:
-                            hits.append(f"{p.relative_to(root)} (no live callers found)")
+            except Exception:
+                continue
+            if "OBSOLETE" in content:
+                # check for callers
+                stem = p.stem
+                cmd = [
+                    "ugrep",
+                    "-rlw",
+                    stem,
+                    str(root),
+                    *_ugrep_exclude_flags(),
+                ]
+                res = run_cmd(cmd)
+                if res and res.stdout.strip():
+                    callers = res.stdout.strip().splitlines()
+                    callers = [c for c in callers if str(p) not in c and "__pycache__" not in c]
+                    if callers:
+                        hits.append(f"{p.relative_to(root)} (has callers: {len(callers)})")
                     else:
                         hits.append(f"{p.relative_to(root)} (no live callers found)")
-            except Exception:
-                pass
-    except Exception:
-        pass
+                else:
+                    hits.append(f"{p.relative_to(root)} (no live callers found)")
+    except Exception as exc:
+        hits.append(f"NEEDS-MANUAL-REVIEW: category A scan error: {exc}")
     return hits
 
 
@@ -170,14 +170,17 @@ def category_e(root: Path):
 
 def category_f(root: Path):
     hits = ["NEEDS-MANUAL-REVIEW: Candidates for orphaned orchestration artifacts:"]
-    for d in root.rglob("orchestration"):
-        if (
-            d.is_dir()
-            and not _is_excluded(d)
-            and not (d / "status.json").exists()
-            and not (d.parent / "status.json").exists()
-        ):
-            hits.append(str(d.relative_to(root)))
+    try:
+        for d in root.rglob("orchestration"):
+            if (
+                d.is_dir()
+                and not _is_excluded(d)
+                and not (d / "status.json").exists()
+                and not (d.parent / "status.json").exists()
+            ):
+                hits.append(str(d.relative_to(root)))
+    except Exception as exc:
+        hits.append(f"NEEDS-MANUAL-REVIEW: category F scan error: {exc}")
     if len(hits) == 1:
         hits.append("No obvious candidates found.")
     return hits
