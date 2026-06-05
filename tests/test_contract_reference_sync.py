@@ -140,7 +140,7 @@ def test_reviewer_template_carries_immersion_rule_placeholder(dim: str) -> None:
 
     Before GH #1431 this placeholder only existed in the writer prompt —
     reviewers had no access to the level-immersion contract and
-    mis-scored English-dominant A1 prose as a pedagogical defect.
+    mis-scored allowed A1 English support as a pedagogical defect.
     """
     template = _reviewer_template(dim)
     text = template.read_text("utf-8")
@@ -166,21 +166,26 @@ def test_naturalness_reviewer_carries_allow_list_literal() -> None:
 
 
 def test_actionable_reviewer_carries_level_calibration() -> None:
-    """Actionable (= Pedagogical axis) mis-scored English-dominant A1 prose
-    as a pedagogical defect in Round-1 colors. Its prompt must now explicitly
-    calibrate scoring against the level-band scaffolding rule."""
+    """Actionable (= Pedagogical axis) must calibrate A1 scoring against the
+    level-band scaffolding rule without treating English lecture-prose as
+    automatically correct."""
     template = _reviewer_template("actionable")
     text = template.read_text("utf-8")
     # Calibration clause must name the band direction.
     assert "A1" in text, (
         "Actionable reviewer must mention A1 level calibration explicitly."
     )
-    # It must tell the reviewer NOT to penalize English-dominant prose at A1.
+    # It must allow concise English support while enforcing Ukrainian anchors.
     lowered = text.lower()
-    assert "english-dominant" in lowered or "english explanatory" in lowered, (
-        "Actionable reviewer must reference English-dominant scaffolding "
-        "as contractually correct at A1 early bands — the Round-1 "
-        "Pedagogical 4/10 miscalibration pin."
+    assert "brief english scaffolding" in lowered, (
+        "Actionable reviewer must allow brief English scaffolding at A1."
+    )
+    assert "ukrainian-first" in lowered, (
+        "Actionable reviewer must require Ukrainian-first teaching anchors."
+    )
+    assert "english lecture-prose replaces" in lowered, (
+        "Actionable reviewer must penalize English lecture-prose when it "
+        "replaces Ukrainian-first anchors."
     )
 
 
