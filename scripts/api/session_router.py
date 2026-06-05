@@ -23,6 +23,7 @@ working", not for forensic archaeology.
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 from pathlib import Path
 from typing import Literal
@@ -57,12 +58,20 @@ def _safe_project_path(rel_path: str) -> Path:
     paths are filtered for ``..``/absolute in ``_parse_agent_handoffs``. This
     is an explicit second containment barrier: resolve the candidate and
     confirm it stays inside the project root. Defense-in-depth against path
-    traversal (CWE-22) and a sanitizer the static analyzer can see — closes
-    the two ``py/path-injection`` HIGH alerts on this file.
+    traversal (CWE-22).
+
+    The containment guard uses a normalized-prefix check
+    (``str.startswith(root + os.sep)``) rather than ``root in
+    candidate.parents``: both reject the same escapes, but only the prefix
+    form is a sanitizer CodeQL's ``py/path-injection`` query recognizes as a
+    barrier — the ``.parents`` form left the alerts open (#2540-era scan).
+    The trailing ``os.sep`` prevents a sibling-prefix bypass (``/rootX`` is
+    not inside ``/root``); ``candidate == root`` is allowed explicitly.
     """
     root = PROJECT_ROOT.resolve()
     candidate = (root / rel_path).resolve()
-    if candidate != root and root not in candidate.parents:
+    root_str = str(root)
+    if str(candidate) != root_str and not str(candidate).startswith(root_str + os.sep):
         raise HTTPException(
             status_code=400,
             detail="Resolved session path escapes the project root.",
