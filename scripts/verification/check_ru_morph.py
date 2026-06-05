@@ -11,8 +11,6 @@ We determine a 'Russian pattern' if:
 A default threshold of 0.7 correctly separates Russian shadows from clean Ukrainian words.
 """
 
-from typing import Optional
-
 from pymorphy3 import MorphAnalyzer
 
 # Global analyzers

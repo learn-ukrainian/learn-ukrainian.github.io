@@ -1,5 +1,4 @@
 import sys
-from pprint import pprint
 
 # Assuming scripts directory is in PYTHONPATH or we can just append it
 sys.path.append('.')
