@@ -4,6 +4,13 @@
 > document may be used by planners, wiki compilers, writers, reviewers, and audit
 > agents. It does not authorize copying any commercial workbook.
 
+Companion retrofit docs:
+
+- `docs/pedagogy/a1-a2-core-retrofit-audit.md` defines the pre-rewrite audit
+  protocol for A1/A2 core slices.
+- `docs/pedagogy/a1-a2-retrofit-template.md` gives the compact CORE teaching
+  evidence packet shape.
+
 ## Status
 
 This standard was informed by private, read-only benchmark review of strong A1
