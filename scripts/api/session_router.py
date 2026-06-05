@@ -60,23 +60,24 @@ def _safe_project_path(rel_path: str) -> Path:
     confirm it stays inside the project root. Defense-in-depth against path
     traversal (CWE-22).
 
-    The containment guard uses a normalized-prefix check
-    (``str.startswith(root + os.sep)``) rather than ``root in
-    candidate.parents``: both reject the same escapes, but only the prefix
-    form is a sanitizer CodeQL's ``py/path-injection`` query recognizes as a
-    barrier — the ``.parents`` form left the alerts open (#2540-era scan).
-    The trailing ``os.sep`` prevents a sibling-prefix bypass (``/rootX`` is
-    not inside ``/root``); ``candidate == root`` is allowed explicitly.
+    The containment guard normalizes with ``os.path.realpath`` and checks a
+    ``startswith(root + os.sep)`` prefix. This specific ``os.path`` idiom is
+    the form CodeQL's ``py/path-injection`` query recognizes as a sanitizing
+    barrier. Earlier attempts did NOT clear the alerts: ``root in
+    candidate.parents`` (#2706) and the pathlib ``str(Path.resolve())
+    .startswith(...)`` form (#2727) are both correct at runtime but invisible
+    to the static analyzer (confirmed: the post-#2727 scan still flagged this
+    function). The trailing ``os.sep`` prevents a sibling-prefix bypass
+    (``/rootX`` is not inside ``/root``); ``candidate == root`` is allowed.
     """
-    root = PROJECT_ROOT.resolve()
-    candidate = (root / rel_path).resolve()
-    root_str = str(root)
-    if str(candidate) != root_str and not str(candidate).startswith(root_str + os.sep):
+    root = os.path.realpath(PROJECT_ROOT)
+    candidate = os.path.realpath(os.path.join(root, rel_path))
+    if candidate != root and not candidate.startswith(root + os.sep):
         raise HTTPException(
             status_code=400,
             detail="Resolved session path escapes the project root.",
         )
-    return candidate
+    return Path(candidate)
 
 
 def _read_session_file(session_path: str) -> str:
