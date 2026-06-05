@@ -1,0 +1,7 @@
+id: mc_test_1
+type: multiple-choice
+options:
+  - text: "книга"
+    correct: true
+  - text: "олівець"
+    correct: false

@@ -1,0 +1,10 @@
+[
+  {
+    "source_type": "textbook",
+    "title": "Title",
+    "text": "some text",
+    "author": "Author",
+    "grade": "10",
+    "page": "15"
+  }
+]
