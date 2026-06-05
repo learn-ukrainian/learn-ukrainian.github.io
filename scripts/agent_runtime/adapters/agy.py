@@ -17,10 +17,14 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
 - Print-mode stdout is the final answer only. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
   ``--log-file`` path for each invocation.
-- ``agy`` model selection is controlled by the interactive TUI and persists
-  across ``agy -p`` invocations; there is no CLI model flag. The runtime
-  records the caller-passed ``model`` in the JSONL audit row for
-  provenance only.
+- Per-invocation model is ``--model "<Display Name>"`` where the display name
+  is one of the strings printed by ``agy models`` (e.g. ``Gemini 3.1 Pro
+  (High)``). The runtime slug (``gemini-3.1-pro-high``) and the display string
+  normalize to the same key (see ``_normalize_model``), so callers may pass
+  either; unrecognized/empty falls back to ``default_model``. ``--model``
+  OVERRIDES the TUI selection (empirically verified 2026-06-05). The bare slug
+  is NOT accepted by ``--model`` — agy wants the display label; mapping
+  slug→label is the whole fix.
 - ``agy plugin`` only exposes ``import gemini|claude``, ``install``,
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
   and ``import gemini`` is a no-op in a default install. The adapter
@@ -77,6 +81,37 @@ _STDOUT_MARKER_RE = re.compile(
 )
 _STDOUT_RESULT_PREFIX = "⎿"
 
+# Canonical model display strings accepted by ``agy --model`` (verbatim from
+# ``agy models``). A caller may pass a slug (``gemini-3.1-pro-high``) or the
+# display string; ``_normalize_model`` collapses both to the same key so either
+# form resolves here. Empirically (2026-06-05 probe) passing the display label
+# to ``agy -p --model`` OVERRIDES the TUI selection: the log emits a benign
+# ``resolver.go ... defaulting to CCPA`` line, then ``Propagating selected model
+# override to backend: label="<name>"`` with the requested model. The bare slug
+# is NOT accepted by ``--model`` (the real #2731 bug), so we always map to the
+# display string before passing it.
+_AGY_MODEL_NAMES: tuple[str, ...] = (
+    "Gemini 3.5 Flash (Medium)",
+    "Gemini 3.5 Flash (High)",
+    "Gemini 3.5 Flash (Low)",
+    "Gemini 3.1 Pro (Low)",
+    "Gemini 3.1 Pro (High)",
+    "Claude Sonnet 4.6 (Thinking)",
+    "Claude Opus 4.6 (Thinking)",
+    "GPT-OSS 120B (Medium)",
+)
+
+
+def _normalize_model(value: str) -> str:
+    """Collapse a model identifier to its alphanumeric-lowercase form so a slug
+    (``gemini-3.1-pro-high``) and the CLI display string (``Gemini 3.1 Pro
+    (High)``) map to the same key."""
+    return re.sub(r"[^a-z0-9]", "", value.lower())
+
+
+# normalized identifier -> canonical ``agy --model`` display string
+_AGY_MODEL_BY_NORMALIZED: dict[str, str] = {_normalize_model(name): name for name in _AGY_MODEL_NAMES}
+
 
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
@@ -99,19 +134,20 @@ class AgyAdapter:
     ) -> InvocationPlan:
         """Build the ``agy`` print-mode invocation.
 
-        ``model`` is intentionally NOT mapped to agy's ``--model`` flag. On agy
-        1.0.5 the flag's resolver does not recognise the runtime model ids:
-        BOTH ``gemini-3.1-pro-high`` and the ``"Gemini 3.1 Pro (High)"`` label
-        log ``Model ID ... not in local config, defaulting to CCPA`` and
-        DOWNGRADE off the operator's selection (verified 2026-06-05 via the agy
-        log). Headless ``agy -p`` with no ``--model`` correctly uses the model
-        persisted in ``~/.gemini/antigravity-cli/settings.json`` — the
-        TUI-selected model, which agy propagates to the backend
-        (``Propagating selected model override ... label="Gemini 3.1 Pro
-        (High)"``). So model selection for agy dispatch is an OPERATOR setting
-        (pick the model in the agy TUI), not a per-invocation flag. ``effort``
-        is a no-op for the same reason (#1396). #2731 (which passed ``--model``)
-        was reverted here because it forced the CCPA downgrade.
+        ``model`` is mapped to ``agy --model "<Display Name>"`` via
+        :func:`_resolve_model_flag` (slug or display string both accepted). This
+        OVERRIDES the operator's TUI selection, making per-dispatch model choice
+        deterministic. An unrecognized/empty value falls back to
+        ``default_model``; if even that is unmappable the flag is omitted and agy
+        uses its TUI-selected model. ``effort`` remains a no-op (#1396).
+
+        Root cause of the #2731 saga (corrected 2026-06-05): #2731 passed the
+        bare slug ``gemini-3.1-pro-high`` to ``--model``, which agy does not
+        accept; the #2735 revert then misread the benign ``resolver.go ...
+        defaulting to CCPA`` log line as proof the display label fails too. A
+        direct probe (TUI on Pro, ``--model "Gemini 3.5 Flash (High)"``) showed
+        agy propagated Flash to the backend — the label works; only the slug
+        format was ever the problem.
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -141,8 +177,6 @@ class AgyAdapter:
         # parity, but agy has no finer-grained permission model than this
         # single flag. Callers (delegate.py/dispatch_smart.py) should force
         # mode=danger for --agent agy to avoid accidental routes around this.
-        # NOTE: no `--model` — see the docstring. Passing it downgrades to
-        # CCPA; the model is the operator's agy-TUI-persisted selection.
         cmd: list[str] = [
             agy_bin,
             "-p",
@@ -152,6 +186,10 @@ class AgyAdapter:
             str(log_path),
         ]
 
+        resolved_model = self._resolve_model_flag(model)
+        if resolved_model:
+            cmd += ["--model", resolved_model]
+
         if session_id:
             cmd.append(f"--conversation={session_id}")
 
@@ -159,7 +197,6 @@ class AgyAdapter:
         # not a per-invocation CLI flag like gemini-cli. tool_config is
         # accepted for parity but not acted on yet.
         _ = tool_config
-        _ = model
 
         return InvocationPlan(
             cmd=cmd,
@@ -170,6 +207,22 @@ class AgyAdapter:
             env_unsets=(),
             liveness_paths=(log_path,),
         )
+
+    def _resolve_model_flag(self, model: str | None) -> str | None:
+        """Map a runtime model slug (or display string) to the canonical
+        ``agy --model`` display value.
+
+        Tries the caller's ``model`` first, then ``default_model``, so a stale
+        placeholder or an empty value degrades to the adapter default rather
+        than passing an invalid flag. Returns ``None`` only when neither maps,
+        leaving the flag unset so agy uses its TUI-selected model.
+        """
+        for candidate in (model, self.default_model):
+            if candidate:
+                resolved = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(candidate))
+                if resolved:
+                    return resolved
+        return None
 
     def parse_response(
         self,
