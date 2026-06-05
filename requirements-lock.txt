@@ -143,7 +143,6 @@ pymorphy3-dicts-uk==2.4.1.1.1663094765
 pymorphy3==2.0.6
 pymorphy3==2.0.6
 PyMuPDF==1.27.1
-PyPDF2==3.0.1
 pypdf==6.10.2
 pypdfium2==4.30.0
 pyproject_hooks==1.2.0
