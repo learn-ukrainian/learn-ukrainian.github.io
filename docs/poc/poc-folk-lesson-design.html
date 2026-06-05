@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Folk-Experiential Lesson Design — learn-ukrainian</title>
+<!--
+  FOLK-EXPERIENTIAL archetype POC (Claude, bio/folk driver).
+  Worked example: koliadky-shchedrivky (Щедрівки) — fully corpus-sourced.
+  Reuses the poc-lesson-design.html design system; ADDS the folk-only surfaces:
+    1. Audio block (hear the sung text — folk is oral)
+    2. Symbolic-decode block (read a visual/material code — image hotspots)
+    3. High-culture bridge box (folk -> opera/film/art)
+    4. Folk activity families #40-#45 (aural genre-ID, symbolic decode,
+       ritual sequencing, variant comparison, motif/formula, performance)
+  Source-analysis families (#20-31) stay available; this layer is ADDITIVE.
+-->
+<style>
+  :root {
+    --blue:#0057B8; --yellow:#FFD700; --blue-light:#E8F0FE; --yellow-light:#FFF9E0;
+    --green:#2E7D32; --green-light:#E8F5E9; --red:#C62828; --red-light:#FFEBEE;
+    --purple:#6A1B9A; --purple-light:#F3E5F5; --orange:#E65100; --orange-light:#FFF3E0;
+    --teal:#00695C; --teal-light:#E0F2F1; --brown:#5D4037; --brown-light:#EFEBE9;
+    --folk:#A4133C; --folk-2:#C9621A; --folk-light:#FBE9EC;
+    --gray-50:#FAFAFA; --gray-100:#F5F5F5; --gray-200:#EEEEEE; --gray-300:#E0E0E0;
+    --gray-600:#757575; --gray-800:#424242; --gray-900:#212121;
+    --radius:12px; --shadow:0 2px 8px rgba(0,0,0,0.08); --shadow-lg:0 4px 16px rgba(0,0,0,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--gray-900);background:var(--gray-50);line-height:1.7;}
+
+  .module-switch{background:var(--gray-900);color:white;padding:10px 24px;display:flex;align-items:center;gap:16px;font-size:13px;position:sticky;top:0;z-index:100;}
+  .module-switch .poc-label{margin-left:auto;color:var(--yellow);font-weight:600;letter-spacing:0.5px;}
+  .module-switch .arch{background:var(--folk);padding:3px 10px;border-radius:5px;color:white;font-weight:700;}
+
+  .header{padding:24px 0;border-bottom:4px solid var(--yellow);background:linear-gradient(135deg,var(--folk),var(--folk-2));color:white;}
+  .header-inner{max-width:840px;margin:0 auto;padding:0 24px;}
+  .level-badge{display:inline-block;background:var(--yellow);color:var(--gray-900);font-weight:700;font-size:12px;padding:2px 10px;border-radius:4px;margin-bottom:8px;}
+  .header h1{font-size:26px;font-weight:700;margin-bottom:4px;}
+  .header .subtitle{opacity:0.9;font-size:14px;}
+
+  .tabs-container{max-width:840px;margin:0 auto;padding:0 24px;}
+  .tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-top:20px;overflow-x:auto;}
+  .tab{padding:11px 20px;font-size:14px;font-weight:600;color:var(--gray-600);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+  .tab:hover{color:var(--folk);}
+  .tab.active{color:var(--folk);border-bottom-color:var(--folk);}
+  .tab-content{display:none;padding:28px 0 60px;}
+  .tab-content.active{display:block;}
+  .content-area{max-width:840px;margin:0 auto;padding:0 24px;}
+
+  h2{font-size:20px;color:var(--folk);margin:28px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--yellow);}
+  h2:first-child{margin-top:0;}
+  h3{font-size:17px;margin:20px 0 10px;color:var(--gray-800);}
+  p{margin-bottom:14px;font-size:15px;}
+  .new-tag{display:inline-block;background:var(--folk);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;vertical-align:middle;letter-spacing:.5px;margin-left:8px;}
+
+  /* ---- NEW #1: Audio block (folk is oral — you HEAR the text) ---- */
+  .audio-block{background:#1c1230;color:#fff;border-radius:var(--radius);padding:18px 20px;margin:22px 0;box-shadow:var(--shadow-lg);}
+  .audio-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .audio-play{width:46px;height:46px;border-radius:50%;background:var(--yellow);color:#1c1230;border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .audio-meta{font-size:13px;opacity:.85;}
+  .audio-meta strong{display:block;font-size:15px;opacity:1;}
+  .waveform{display:flex;align-items:flex-end;gap:3px;height:34px;margin:10px 0 14px;}
+  .waveform span{flex:1;background:linear-gradient(var(--yellow),var(--folk-2));border-radius:2px;opacity:.55;animation:wv 1.1s ease-in-out infinite;}
+  @keyframes wv{0%,100%{height:20%}50%{height:100%}}
+  .synced-lyric{background:rgba(255,255,255,.07);border-left:3px solid var(--yellow);border-radius:8px;padding:12px 16px;font-style:italic;line-height:1.9;font-size:15px;}
+  .synced-lyric .lit{background:rgba(255,215,0,.28);border-radius:3px;padding:0 2px;}
+
+  /* primary source / myth (reused from seminar design system) */
+  .source-box{background:var(--purple-light);border:2px solid var(--purple);border-radius:var(--radius);padding:18px 22px;margin:22px 0;}
+  .source-box-header{font-weight:700;color:var(--purple);margin-bottom:8px;font-size:15px;}
+  .source-box blockquote{font-style:italic;border-left:3px solid var(--purple);padding-left:14px;margin:10px 0;color:var(--gray-800);white-space:pre-line;}
+  .source-box .source-cite{font-size:13px;color:var(--gray-600);text-align:right;}
+  .myth-box{background:var(--red-light);border:2px solid var(--red);border-radius:var(--radius);padding:18px 22px;margin:22px 0;}
+  .myth-box-header{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;margin-bottom:10px;color:var(--red);}
+  .myth-box .myth-claim{background:rgba(198,40,40,.08);padding:10px 14px;border-radius:8px;margin:8px 0;font-style:italic;border-left:3px solid var(--red);}
+  .myth-box .myth-truth{background:var(--green-light);padding:10px 14px;border-radius:8px;margin:8px 0;border-left:3px solid var(--green);}
+
+  /* ---- NEW #2: Symbolic-decode block (read a visual/material code) ---- */
+  .decode-block{margin:22px 0;}
+  .decode-stage{position:relative;background:linear-gradient(135deg,#2a1a3a,#4a148c);border-radius:var(--radius);min-height:240px;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden;box-shadow:var(--shadow);}
+  .decode-scene{font-size:13px;opacity:.5;text-align:center;padding:20px;}
+  .hotspot{position:absolute;width:26px;height:26px;border-radius:50%;background:var(--yellow);color:#1c1230;font-weight:700;border:2px solid #fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 0 6px rgba(255,215,0,.25);transition:transform .15s;}
+  .hotspot:hover{transform:scale(1.18);}
+  .decode-info{margin-top:12px;background:var(--folk-light);border:1px solid var(--folk);border-radius:8px;padding:12px 16px;font-size:14px;min-height:48px;}
+  .decode-info .ds-sym{font-weight:700;color:var(--folk);}
+
+  /* ---- NEW #3: High-culture bridge ---- */
+  .bridge-box{background:var(--teal-light);border:2px solid var(--teal);border-radius:var(--radius);padding:18px 22px;margin:22px 0;}
+  .bridge-head{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--teal);font-size:16px;margin-bottom:10px;}
+  .bridge-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;}
+  .bridge-node{background:#fff;border:1px solid var(--teal);border-radius:8px;padding:6px 12px;font-weight:600;}
+  .bridge-arrow{color:var(--teal);font-weight:700;}
+
+  /* ritual timeline */
+  .ritual-timeline{counter-reset:rt;margin:14px 0;}
+  .rt-step{position:relative;padding:10px 14px 10px 44px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;font-size:14px;}
+  .rt-step::before{counter-increment:rt;content:counter(rt);position:absolute;left:10px;top:9px;width:24px;height:24px;background:var(--folk);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+
+  /* exercise wrapper + badges (reused) */
+  .exercise{background:#fff;border-radius:var(--radius);border:2px solid var(--gray-200);padding:22px;margin:22px 0;box-shadow:var(--shadow);}
+  .exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+  .exercise-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;color:#fff;letter-spacing:.3px;}
+  .exercise-title{font-weight:700;font-size:15px;}
+  .exercise-num{margin-left:auto;color:var(--gray-300);font-weight:700;font-size:13px;}
+  .exercise-instruction{font-size:14px;color:var(--gray-600);margin-bottom:12px;}
+  .badge-aural{background:var(--folk);} .badge-decode{background:var(--purple);}
+  .badge-ritual{background:var(--orange);} .badge-variant{background:var(--teal);}
+  .badge-motif{background:var(--blue);} .badge-perform{background:var(--green);}
+  .opt{padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:8px;margin:7px 0;cursor:pointer;font-size:14px;transition:all .15s;}
+  .opt:hover{border-color:var(--folk);background:var(--folk-light);}
+  .opt.right{border-color:var(--green);background:var(--green-light);}
+  .opt.wrong{border-color:var(--red);background:var(--red-light);}
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .match-grid .opt{margin:0;text-align:center;}
+  table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px;}
+  table.cmp th{text-align:left;padding:7px 10px;background:var(--folk-light);}
+  table.cmp td{padding:6px 8px;border-bottom:1px solid var(--gray-200);}
+  table.cmp input{width:100%;border:1px solid var(--gray-300);border-radius:6px;padding:6px 8px;font-size:13px;}
+  .ta{width:100%;min-height:80px;border:1px solid var(--gray-300);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;margin-top:8px;}
+  .mt-passage{background:var(--gray-100);border-radius:8px;padding:12px 16px;font-style:italic;line-height:1.9;}
+  .mt-passage .formula{background:var(--yellow-light);border-bottom:2px solid var(--yellow);cursor:pointer;}
+  .rec-btn{display:inline-flex;align-items:center;gap:8px;background:var(--folk);color:#fff;border:none;padding:10px 18px;border-radius:24px;font-size:14px;cursor:pointer;font-weight:600;}
+  .vocab-table{width:100%;border-collapse:collapse;font-size:14px;}
+  .vocab-table th{text-align:left;padding:8px 10px;background:var(--folk-light);}
+  .vocab-table td{padding:8px 10px;border-bottom:1px solid var(--gray-200);}
+  .note{background:var(--blue-light);border-left:3px solid var(--blue);border-radius:8px;padding:12px 16px;margin:16px 0;font-size:14px;}
+  .res-item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--gray-200);border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+  .res-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto;}
+</style>
+</head>
+<body>
+
+<div class="module-switch">
+  <span class="arch">FOLK-EXPERIENTIAL</span>
+  <label>archetype proposal — additive to seminar-source-analysis</label>
+  <span class="poc-label">POC · learn-ukrainian</span>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <span class="level-badge">C1 · ФОЛЬКЛОР</span>
+    <h1>Колядки та щедрівки</h1>
+    <div class="subtitle">Carols &amp; Shchedrivky — the winter-cycle ritual song</div>
+  </div>
+</div>
+
+<div class="tabs-container">
+  <div class="tabs">
+    <button class="tab active" data-tab="urok">Урок</button>
+    <button class="tab" data-tab="slovnyk">Словник</button>
+    <button class="tab" data-tab="zoshyt">Зошит</button>
+    <button class="tab" data-tab="resursy">Ресурси</button>
+  </div>
+</div>
+
+<div class="content-area">
+
+  <!-- ================= УРОК ================= -->
+  <div id="urok" class="tab-content active">
+    <h2>Що таке щедрівка</h2>
+    <p>Щедрівки — старовинні обрядові <strong>величальні пісні</strong> зимового циклу, які виконують у Щедрий вечір (напередодні Нового року за юліанським календарем). Їхня мета — «ублагати духів неба й землі сприяти в господарстві наступного року». Це не просто пісня, а <strong>дія</strong>: гурт обходить двори, славить господаря, отримує дари.</p>
+
+    <!-- NEW #1: audio -->
+    <div class="audio-block">
+      <div class="audio-head">
+        <button class="audio-play" onclick="this.textContent=this.textContent==='▶'?'⏸':'▶';document.getElementById('wf').style.animationPlayState='running'">&#x25B6;</button>
+        <div class="audio-meta"><strong>«Щедрик» — народна щедрівка</strong>обробка М. Леонтовича · слухай і стеж за текстом</div>
+      </div>
+      <div class="waveform" id="wf">
+        <span style="animation-delay:0s"></span><span style="animation-delay:.1s"></span><span style="animation-delay:.2s"></span><span style="animation-delay:.05s"></span><span style="animation-delay:.3s"></span><span style="animation-delay:.15s"></span><span style="animation-delay:.25s"></span><span style="animation-delay:.08s"></span><span style="animation-delay:.18s"></span><span style="animation-delay:.28s"></span><span style="animation-delay:.12s"></span><span style="animation-delay:.22s"></span><span style="animation-delay:.04s"></span><span style="animation-delay:.16s"></span><span style="animation-delay:.26s"></span>
+      </div>
+      <div class="synced-lyric"><span class="lit">Щедрик, щедрик, щедрівочка,</span> / Прилетіла ластівочка. / Стала собі щебетати, / Господаря викликати…</div>
+      <p style="font-size:12px;opacity:.6;margin:8px 0 0">POC: audio src wired from corpus recording at build; text is verify_quote-confirmed in the dossier.</p>
+    </div>
+
+    <div class="source-box">
+      <div class="source-box-header">Першоджерело: щедрівка «Щедрик»</div>
+      <blockquote>Щедрик, щедрик, щедрівочка,
+Прилетіла ластівочка.
+Стала собі щебетати,
+Господаря викликати:
+— Вийди, вийди, господарю,
+Подивися на кошару.
+Там овечки покотились,
+А ягнички народились…</blockquote>
+      <div class="source-cite">— укр. народна щедрівка (6-klas-ukrlit-avramenko-2023; 6-klas-ukrlit-zabolotnyi-2023) · verify_quote → dossier</div>
+    </div>
+
+    <!-- NEW #2: symbolic decode -->
+    <h3>Символи щедрівки <span class="new-tag">DECODE</span></h3>
+    <p>Натисни на позначки — щедрівка закодована давнім світоглядом, а не просто описує село.</p>
+    <div class="decode-block">
+      <div class="decode-stage">
+        <div class="decode-scene">[ілюстрація щедрування: господар, кошара, ластівка — image from corpus SigLIP search at build ]</div>
+        <div class="hotspot" style="top:30%;left:22%" onclick="decode('ластівка','Прилітає навесні — а щедрівку співають узимку. Чому? Бо праукраїнський Новий рік святкували 20 березня (весняне рівнодення). Ластівка приносила звістку про новий рік — образ пережив зміну календаря.')">1</div>
+        <div class="hotspot" style="top:58%;left:64%" onclick="decode('кошара','Овечки «покотились», ягнички «народились» — магія примноження. Величальна пісня не описує, а програмує достаток на новий рік.')">2</div>
+        <div class="hotspot" style="top:40%;left:46%" onclick="decode('Маланка і Василь','Обовʼязкові персонажі дійства: Маланка (за пізнішою фольклорною традицією — дочка богині Лади) і Василь (місяць). Обряд, а не концерт.')">3</div>
+      </div>
+      <div class="decode-info" id="dinfo">Натисни позначку, щоб прочитати символ…</div>
+    </div>
+
+    <!-- NEW #3: myth box (decolonization + oppression thesis + bio bridge) -->
+    <div class="myth-box">
+      <div class="myth-box-header">&#x2694; Руйнуємо міф</div>
+      <div class="myth-claim">«Carol of the Bells» — американська (або «російська») різдвяна класика.</div>
+      <div class="myth-truth"><strong>Насправді:</strong> це українська щедрівка «Щедрик» в обробці <strong>Миколи Леонтовича</strong> (1916; світова премʼєра — хор О. Кошиця, 1922, Нью-Йорк). Англійський текст «Carol of the Bells» написали лише 1936 р. Леонтовича <strong>вбив агент ЧК у 1921 році</strong> — композитор світового хіта загинув від рук тієї ж імперії, яка згодом привласнювала його музику. <em>(Звʼязок із треком «bio»: Леонтович.)</em></div>
+    </div>
+
+    <!-- NEW: high-culture bridge -->
+    <div class="bridge-box">
+      <div class="bridge-head">&#x1F3BC; Місток до високої культури</div>
+      <div class="bridge-flow">
+        <span class="bridge-node">народна щедрівка</span><span class="bridge-arrow">&#x2192;</span>
+        <span class="bridge-node">Леонтович «Щедрик» (1916)</span><span class="bridge-arrow">&#x2192;</span>
+        <span class="bridge-node">«Carol of the Bells»</span><span class="bridge-arrow">&#x2192;</span>
+        <span class="bridge-node">«Home Alone», «Harry Potter»</span>
+      </div>
+      <p style="margin:12px 0 0;font-size:14px">Так фольклор живить високу культуру — рівно те, чому опера «Запорожець за Дунаєм» нечитувана без народної основи.</p>
+    </div>
+  </div>
+
+  <!-- ================= СЛОВНИК ================= -->
+  <div id="slovnyk" class="tab-content">
+    <h2>Словник</h2>
+    <table class="vocab-table">
+      <tr><th>Слово</th><th>Значення</th><th>Приклад</th></tr>
+      <tr><td><strong>щедрівка</strong></td><td>shchedrivka (New-Year well-wishing song)</td><td>співати щедрівки</td></tr>
+      <tr><td><strong>величальна</strong></td><td>laudatory, glorifying (song)</td><td>величальна обрядова пісня</td></tr>
+      <tr><td><strong>кошара</strong></td><td>sheepfold</td><td>подивися на кошару</td></tr>
+      <tr><td><strong>обряд</strong></td><td>rite, ritual</td><td>обрядова пісня</td></tr>
+      <tr><td><strong>гурт</strong></td><td>group (of carolers)</td><td>гурт щедрувальників</td></tr>
+      <tr><td><strong>дійство</strong></td><td>ritual performance, enactment</td><td>святкове дійство</td></tr>
+    </table>
+    <div class="note"><strong>Жива мовна традиція:</strong> у колядках уживають вітання в <em>називному</em> відмінку — «Добрий вечір тобі, <u>пане господарю</u>!» (не «Доброго вечора»). Фольклор зберігає давню граматичну форму. <span style="color:var(--gray-600)">(heritage-defense flagged via search_heritage.)</span></div>
+  </div>
+
+  <!-- ================= ЗОШИТ ================= -->
+  <div id="zoshyt" class="tab-content">
+    <h2>Зошит <span class="new-tag">FOLK ACTIVITY FAMILIES #40–45</span></h2>
+    <p style="color:var(--gray-600);font-size:14px">Folk-specific families. The source-analysis families (#20–31) remain available; these are the ones folk needs that bio/hist/lit don't.</p>
+
+    <!-- #40 Aural Genre-ID -->
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-aural">Aural Genre-ID</span><span class="exercise-title">Упізнай жанр на слух</span><span class="exercise-num">#40</span></div>
+      <div class="exercise-instruction">&#x25B6; Прослухай фрагмент. До якого жанру зимового циклу він належить?</div>
+      <div class="opt" onclick="pick(this,false)">Веснянка (весняний цикл)</div>
+      <div class="opt" onclick="pick(this,true)">Щедрівка (величальна, новорічна — рефрен, заклик до господаря)</div>
+      <div class="opt" onclick="pick(this,false)">Голосіння (похоронний жанр)</div>
+    </div>
+
+    <!-- #41 Symbolic Decoding -->
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-decode">Symbolic Decode</span><span class="exercise-title">Розкодуй символ</span><span class="exercise-num">#41</span></div>
+      <div class="exercise-instruction">Зʼєднай образ зі значенням.</div>
+      <div class="match-grid">
+        <div class="opt">ластівка</div><div class="opt" onclick="pick(this,true)">звістка про прадавній весняний Новий рік</div>
+        <div class="opt">овечки «покотились»</div><div class="opt" onclick="pick(this,true)">магія примноження достатку</div>
+      </div>
+    </div>
+
+    <!-- #42 Ritual Sequencing -->
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-ritual">Ritual Sequencing</span><span class="exercise-title">Віднови послідовність обряду</span><span class="exercise-num">#42</span></div>
+      <div class="exercise-instruction">Перетягни етапи Щедрого вечора у правильному порядку (POC: drag-order at build).</div>
+      <div class="ritual-timeline">
+        <div class="rt-step">Гурт збирається, обирає Маланку й Василя</div>
+        <div class="rt-step">Обхід дворів, спів щедрівок під вікнами</div>
+        <div class="rt-step">Величання господаря, побажання достатку</div>
+        <div class="rt-step">Господар обдаровує щедрувальників</div>
+      </div>
+    </div>
+
+    <!-- #43 Variant Comparison -->
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-variant">Variant Compare</span><span class="exercise-title">Порівняй регіональні варіанти</span><span class="exercise-num">#43</span></div>
+      <div class="exercise-instruction">Дві версії щедрівки з різних регіонів. Заповни таблицю.</div>
+      <table class="cmp">
+        <tr><th>Ознака</th><th>Наддніпрянський</th><th>Карпатський</th></tr>
+        <tr><td>Образ-рефрен</td><td><input placeholder="…"></td><td><input placeholder="…"></td></tr>
+        <tr><td>Персонажі дійства</td><td><input placeholder="…"></td><td><input placeholder="…"></td></tr>
+      </table>
+    </div>
+
+    <!-- #44 Motif / Formula -->
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-motif">Motif / Formula</span><span class="exercise-title">Знайди обрядову формулу</span><span class="exercise-num">#44</span></div>
+      <div class="exercise-instruction">Клацни сталу величальну/етикетну формулу в тексті.</div>
+      <div class="mt-passage">«<span class="formula" onclick="pick(this,true)">Добрий вечір тобі, пане господарю</span>! Застеляйте столи, та все килимами. Та кладіть калачі з ярої пшениці…»</div>
+    </div>
+
+    <!-- #45 Performance -->
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-perform">Performance</span><span class="exercise-title">Заспівай / продекламуй</span><span class="exercise-num">#45</span></div>
+      <div class="exercise-instruction">Фольклор живе у виконанні. Прослухай зразок, повтори рефрен, запиши себе.</div>
+      <button class="rec-btn">&#x25CF; Записати виконання</button>
+      <p style="font-size:12px;color:var(--gray-600);margin-top:8px">POC: mic capture + self-review at build; optional auto-feedback on rhythm.</p>
+    </div>
+  </div>
+
+  <!-- ================= РЕСУРСИ ================= -->
+  <div id="resursy" class="tab-content">
+    <h2>Ресурси</h2>
+    <div class="res-item"><div class="res-icon" style="background:var(--folk-light);color:var(--folk)">&#9834;</div><div><strong>Аудіо:</strong> «Щедрик» (хорова обробка М. Леонтовича) + польова щедрівка — corpus recordings.</div></div>
+    <div class="res-item"><div class="res-icon" style="background:var(--purple-light);color:var(--purple)">&#9638;</div><div><strong>Зображення:</strong> щедрування, вертеп, зірка — SigLIP image search over the textbook corpus.</div></div>
+    <div class="res-item"><div class="res-icon" style="background:var(--blue-light);color:var(--blue)">&#9635;</div><div><strong>Джерела:</strong> 6-klas-ukrlit-avramenko-2023; 6-klas-ukrlit-zabolotnyi-2023; 6-klas-ukrmova-litvinova-2023 (corpus, tier 1).</div></div>
+    <div class="res-item"><div class="res-icon" style="background:var(--teal-light);color:var(--teal)">&#8644;</div><div><strong>Перехресно:</strong> bio → Микола Леонтович; folk → «Маланка», «вертеп».</div></div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.onclick=function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.getElementById(t.dataset.tab).classList.add('active');
+    };
+  });
+  function decode(sym,txt){
+    var el=document.getElementById('dinfo');
+    el.textContent='';
+    var b=document.createElement('span'); b.className='ds-sym'; b.textContent=sym+': ';
+    el.appendChild(b); el.appendChild(document.createTextNode(txt));
+  }
+  function pick(el,ok){el.classList.remove('right','wrong');el.classList.add(ok?'right':'wrong');}
+</script>
+</body>
+</html>
