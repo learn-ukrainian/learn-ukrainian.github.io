@@ -167,14 +167,10 @@ def _build(tmp_path: Path, *, model: str | None):
     )
 
 
-def test_build_invocation_passes_explicit_model(tmp_path: Path) -> None:
-    plan = _build(tmp_path, model="gemini-3.1-pro-high")
-    # `--model <value>` must be present as adjacent argv tokens (agy 1.0.5+).
-    assert "--model" in plan.cmd
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "gemini-3.1-pro-high"
-
-
-def test_build_invocation_falls_back_to_default_model(tmp_path: Path) -> None:
-    plan = _build(tmp_path, model=None)
-    assert "--model" in plan.cmd
-    assert plan.cmd[plan.cmd.index("--model") + 1] == AgyAdapter.default_model
+def test_build_invocation_does_not_pass_model_flag(tmp_path: Path) -> None:
+    # agy 1.0.5's --model resolver does not recognise the runtime model ids
+    # and downgrades to CCPA; model is the operator's agy-TUI-persisted
+    # selection, so the adapter must NOT pass --model. (Reverts #2731.)
+    for model in ("gemini-3.1-pro-high", "Gemini 3.1 Pro (High)", None):
+        plan = _build(tmp_path, model=model)
+        assert "--model" not in plan.cmd, f"--model leaked for model={model!r}"

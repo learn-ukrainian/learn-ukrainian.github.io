@@ -99,12 +99,19 @@ class AgyAdapter:
     ) -> InvocationPlan:
         """Build the ``agy`` print-mode invocation.
 
-        ``model`` is passed through to agy's ``--model`` flag (added in agy
-        1.0.5; verified against 1.0.5 — tokens like ``gemini-3.1-pro-high``).
-        When ``None`` we fall back to ``default_model``. ``effort`` is
-        accepted for protocol uniformity but is a no-op: agy encodes the
-        reasoning tier in the model id itself (the ``-high``/``-low`` suffix),
-        so there is no separate effort flag (#1396).
+        ``model`` is intentionally NOT mapped to agy's ``--model`` flag. On agy
+        1.0.5 the flag's resolver does not recognise the runtime model ids:
+        BOTH ``gemini-3.1-pro-high`` and the ``"Gemini 3.1 Pro (High)"`` label
+        log ``Model ID ... not in local config, defaulting to CCPA`` and
+        DOWNGRADE off the operator's selection (verified 2026-06-05 via the agy
+        log). Headless ``agy -p`` with no ``--model`` correctly uses the model
+        persisted in ``~/.gemini/antigravity-cli/settings.json`` — the
+        TUI-selected model, which agy propagates to the backend
+        (``Propagating selected model override ... label="Gemini 3.1 Pro
+        (High)"``). So model selection for agy dispatch is an OPERATOR setting
+        (pick the model in the agy TUI), not a per-invocation flag. ``effort``
+        is a no-op for the same reason (#1396). #2731 (which passed ``--model``)
+        was reverted here because it forced the CCPA downgrade.
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -127,7 +134,6 @@ class AgyAdapter:
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         log_path = _build_log_path(task_id)
-        resolved_model = model or self.default_model
         # `--dangerously-skip-permissions` is unconditional: any tool-using
         # prompt (file read, shell call) triggers an interactive permission
         # prompt that would hang a headless dispatch waiting for human input.
@@ -135,16 +141,13 @@ class AgyAdapter:
         # parity, but agy has no finer-grained permission model than this
         # single flag. Callers (delegate.py/dispatch_smart.py) should force
         # mode=danger for --agent agy to avoid accidental routes around this.
-        # `--model` selects the per-invocation model (agy 1.0.5+); without it
-        # agy would use whatever the TUI last persisted, which is non-
-        # deterministic for headless dispatch.
+        # NOTE: no `--model` — see the docstring. Passing it downgrades to
+        # CCPA; the model is the operator's agy-TUI-persisted selection.
         cmd: list[str] = [
             agy_bin,
             "-p",
             prompt,
             "--dangerously-skip-permissions",
-            "--model",
-            resolved_model,
             "--log-file",
             str(log_path),
         ]
@@ -156,6 +159,7 @@ class AgyAdapter:
         # not a per-invocation CLI flag like gemini-cli. tool_config is
         # accepted for parity but not acted on yet.
         _ = tool_config
+        _ = model
 
         return InvocationPlan(
             cmd=cmd,
