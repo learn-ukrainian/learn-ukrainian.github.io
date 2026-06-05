@@ -77,10 +77,12 @@
   The rebuild should audit whether M1-M7 supply enough useful, recycled
   beginner vocabulary for the first-contact slice, but must not chase an
   arbitrary vocabulary-volume quota or import an external sequence.
-- M5-M7 contain the only blocking plan-level language-risk debt in this slice.
+- M5 and M7 contain the blocking plan-level language-risk debt in this slice.
   The issue is not that the questioned forms are nonexistent; the issue is
   that early A1 plans frame register and official-use contrasts too bluntly for
-  learners.
+  learners. M6 is already more nuanced in its locked plan, but its wiki/support
+  packet and reusable prompt/rule guidance still need alignment so later agents
+  do not reintroduce overcorrection.
 - Existing project rule `gf-012` already permits natural memorized chunks before
   formal grammar. Therefore chunks such as name, origin, and possession frames
   are not plan defects by themselves. The repair need is to keep them as chunks,
@@ -99,7 +101,7 @@
 | M3 special signs | No blocking current plan debt found. | Needs clearer compact packet for soft sign, apostrophe, and verified example selection. | Current lesson is English-led and does not normalize Ukrainian prompts. | Needs recognition and controlled contrast work before short production. | Needs verified sign and spelling-pattern recycling into M4 and M7. | Needs lawful audio, visual contrast support, and handwriting recognition. | Needs teacher/tutor feedback for spelling-pronunciation contrast and fossilized error prevention. | Prompt/review rules must prevent English explanation from replacing contrast practice. | Ready for wiki and prompt repair before rebuild. |
 | M4 stress and melody | No blocking current plan debt found. | Needs explicit listening-first support packet; stress and intonation cannot be taught safely as text-only explanation. | Current lesson is English-framed and underserves pronunciation/listening. | Needs listen-before-read, mark-what-you-hear, repeat, and controlled repair tasks. | Needs stress recycling from M1-M3 into M5-M7. | High audio/listening debt; lawful audio or link/embed strategy required. Cursive recognition still absent. | Needs teacher/tutor correction for stress, rhythm, and intonation. | This is pipeline/review debt as well as module debt because text-only generation cannot satisfy the lesson job. | Needs prompt/media strategy first, then wiki repair, then rebuild. |
 | M5 who am I | Blocking plan debt: a zero-word summary section and over-blunt register framing around family/name terms. | Wiki/support packet has stale or overly absolute wording and should align with dictionary-grounded register nuance. | Current lesson is English-led and cannot carry the intended first-contact immersion. | Needs recognition -> controlled self-introduction -> short production with model answers. | Needs recycling of greetings, letters, stress, and name/origin frames without importing broad new grammar. | Needs lawful visuals for identity/origin contexts, listening models, and handwriting recognition of known words. | Needs teacher/conversation feedback for names, origin lines, and short self-introduction. | Prompt/rule guidance should preserve memorized chunks under `gf-012` and avoid over-auditing them. | Ready for plan repair plus wiki/prompt repair before rebuild. |
-| M6 my family | Blocking plan debt: family-term register contrast is too blunt for early A1 and should be standardized across the curriculum. | Wiki appears broader than the current early-family scope and needs tighter retrofit packeting. | Current lesson is English-led and not a safe final output for family-language onboarding. | Needs photo/relationship recognition, controlled family sentences, and short speaking/writing frames. | Needs family vocabulary recycling and careful handling of natural possession chunks without case analysis. | Needs lawful family-image strategy, audio models, and handwriting recognition for family labels. | Needs teacher/conversation feedback for family introductions and pronunciation. | Register guidance belongs in global rule/prompt guidance, not only this module. | Ready for plan repair plus wiki/prompt repair before rebuild. |
+| M6 my family | No blocking current plan debt found; current plan already avoids the earlier overcorrection around family terms, but should be preserved during later alignment. | Wiki appears broader than the current early-family scope and needs tighter retrofit packeting plus register nuance aligned to the locked plan. | Current lesson is English-led and not a safe final output for family-language onboarding. | Needs photo/relationship recognition, controlled family sentences, and short speaking/writing frames. | Needs family vocabulary recycling and careful handling of natural possession chunks without case analysis. | Needs lawful family-image strategy, audio models, and handwriting recognition for family labels. | Needs teacher/conversation feedback for family introductions and pronunciation. | Register guidance belongs in global rule/prompt guidance, not only this module, so future modules do not undo the plan nuance. | Ready for wiki/prompt repair before rebuild. |
 | M7 first-contact checkpoint | Blocking plan debt: checkpoint still inherits over-blunt family/name-register contrasts and needs policy on checkpoint word target/focus. | Wiki/support packet has stale verification notes and should become a compact checkpoint evidence packet. | Current checkpoint is English-framed despite Ukrainian-first intent. | Needs cumulative recognition, controlled review, short production, and feedback loops across M1-M6. | Needs deliberate recycling map for letters, sounds, stress, greeting, identity, and family language. | Needs listening checkpoint, lawful visual prompts, and handwriting recognition review. | Needs teacher/tutor conversation checkpoint path, not just self-study answers. | Prompt/review guidance must define how A1 checkpoints assess immersion without overload. | Ready for plan and wiki repair before rebuild. |
 
 ## Protocol Debt-Class Mapping
@@ -125,8 +127,9 @@ the canonical retrofit protocol, map them as follows:
 - M1-M4 plans are not blocking this retrofit slice.
 - M5 needs plan repair for the zero-word summary section and register-sensitive
   name/family framing.
-- M6 needs plan repair for the family-term register contrast and for keeping
-  possession chunks as memorized language under `gf-012`.
+- M6 does not need blocking plan repair in this slice. Preserve its current
+  nuance around family terms, and make the wiki/prompt guidance explicit enough
+  that possession chunks remain memorized language under `gf-012`.
 - M7 needs plan repair for inherited register contrasts and for checkpoint
   word-target/focus policy.
 
@@ -198,7 +201,7 @@ the canonical retrofit protocol, map them as follows:
   guidance need a way to require lawful audio/link/listening scaffolds where
   the lesson job depends on sound.
 - Family/name register rules should be codified globally or in prompt/rule
-  guidance before M5-M7 plans are repaired, so later A1/A2 modules do not
+  guidance before M5 and M7 plans are repaired, so later A1/A2 modules do not
   repeat the same overcorrection.
 - Prompt fixes should be backed by deterministic audit or review gates where
   practical, especially for Ukrainian-first starts, controlled English, stress
@@ -224,7 +227,7 @@ the canonical retrofit protocol, map them as follows:
    - Add deterministic audit/review coverage where practical for Ukrainian-first
      starts, controlled English, A1 stress annotation, and other repeatable
      gates; do not rely only on writer prose instructions.
-   - Repair M5, M6, and M7 plan defects.
+   - Repair M5 and M7 plan defects, and preserve M6's existing plan nuance.
    - Keep natural memorized chunks as allowed under `gf-012`.
 2. Wiki/support fixes for issue #2713.
    - Create compact retrofit packets for M1-M7.
