@@ -352,6 +352,50 @@ def _save_dispatch_log(
             _log(f"  ⚠️  Session analysis skipped: {type(exc).__name__}: {exc}")
 
 
+def _save_dispatch_started_log(
+    orch_dir: Path,
+    phase: str,
+    agent: str,
+    *,
+    model: str | None = None,
+    effort: str | None = None,
+    prompt_chars: int = 0,
+    timeout: int | None = None,
+    initial_response_timeout: int | None = None,
+    mcp_tools: bool = False,
+) -> Path:
+    """Persist a pre-call dispatch marker before the agent subprocess runs."""
+    log_dir = orch_dir / "dispatch"
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    seq = _PHASE_SEQ.get(phase, "99")
+    now = datetime.now()
+    ts = now.strftime("%Y%m%d-%H%M%S-%f")
+    suffix = f"{time.monotonic_ns() % 1_000_000_000:09d}"
+    path = log_dir / f"{seq}-{phase}-{ts}-{suffix}-started.json"
+    path.write_text(
+        json.dumps(
+            {
+                "timestamp": now.isoformat(),
+                "phase": phase,
+                "agent": agent,
+                "model": model,
+                "effort": effort,
+                "status": "started",
+                "prompt_chars": prompt_chars,
+                "prompt_tokens_est": _estimate_tokens(prompt_chars, None),
+                "timeout_s": timeout,
+                "initial_response_timeout_s": initial_response_timeout,
+                "mcp_tools": mcp_tools,
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
+    _log(f"  📋 Dispatch started → dispatch/{path.name}")
+    return path
+
+
 # ---------------------------------------------------------------------------
 # Unified dispatch
 # ---------------------------------------------------------------------------
@@ -367,6 +411,7 @@ def dispatch_agent(
     allowed_tools: str | None = None,
     model: str | None = None,
     cascade_per_call_max_s: int | None = None,
+    initial_response_timeout: int | None = None,
 ) -> tuple[bool, str]:
     """Unified dispatcher for Gemini and Claude subprocess calls.
 
@@ -380,6 +425,9 @@ def dispatch_agent(
         mcp_tools: Whether MCP tools are enabled for this dispatch.
         allowed_tools: Comma-separated Claude --allowedTools string (Claude only).
         model: Model override. If None, resolved from batch_gemini_config.
+        initial_response_timeout: Optional startup guard. When set, the runtime
+            kills the subprocess if no stdout/stderr/liveness activity appears
+            within this many seconds.
 
     Returns:
         (success, stdout_text)
@@ -425,6 +473,7 @@ def dispatch_agent(
             is_gemini=is_gemini,
             runtime_agent_name="gemini" if is_gemini else "codex",
             cascade_per_call_max_s=cascade_per_call_max_s,
+            initial_response_timeout=initial_response_timeout,
         )
     if is_claude:
         return _dispatch_claude_via_runtime(
@@ -437,6 +486,7 @@ def dispatch_agent(
             allowed_tools=allowed_tools,
             model=model,
             agent_label=agent_label,
+            initial_response_timeout=initial_response_timeout,
         )
     return False, ""
 
@@ -452,6 +502,7 @@ def _dispatch_claude_via_runtime(
     allowed_tools: str | None,
     model: str,
     agent_label: str,
+    initial_response_timeout: int | None,
 ) -> tuple[bool, str]:
     """Route Claude dispatch through scripts.agent_runtime.runner.invoke().
 
@@ -481,6 +532,15 @@ def _dispatch_claude_via_runtime(
     claude_effort = "xhigh"
     t0 = time.monotonic()
     call_start = datetime.now().astimezone()
+    _save_dispatch_started_log(
+        orch_dir, phase, agent_label,
+        model=model,
+        effort=claude_effort,
+        prompt_chars=len(prompt),
+        timeout=timeout,
+        initial_response_timeout=initial_response_timeout,
+        mcp_tools=mcp_tools,
+    )
     try:
         result = runtime_invoke(
             "claude",
@@ -496,6 +556,7 @@ def _dispatch_claude_via_runtime(
             entrypoint="dispatch",
             hard_timeout=timeout,
             effort=claude_effort,  # postmortem 2026-04-23: pin explicitly, never inherit default
+            initial_response_timeout=initial_response_timeout,
             # Stall budget is generous: Gemini/Claude CAN reasonably go
             # silent for 5+ minutes during long reasoning bursts (especially
             # skeleton + review phases). 600s = 10 min. The liveness-file
@@ -561,6 +622,7 @@ def _dispatch_via_runtime(
     is_gemini: bool,
     runtime_agent_name: str,
     cascade_per_call_max_s: int | None,
+    initial_response_timeout: int | None,
 ) -> tuple[bool, str]:
     """Route Codex + Gemini dispatch through scripts.agent_runtime.runner.invoke().
 
@@ -599,6 +661,14 @@ def _dispatch_via_runtime(
         """One invocation. Returns (ok, response, stderr_excerpt, duration, returncode)."""
         t0 = time.monotonic()
         call_start = datetime.now().astimezone()
+        _save_dispatch_started_log(
+            orch_dir, phase, label,
+            model=call_model,
+            prompt_chars=len(prompt),
+            timeout=call_timeout,
+            initial_response_timeout=initial_response_timeout,
+            mcp_tools=mcp_tools,
+        )
         try:
             result = runtime_invoke(
                 runtime_agent_name,
@@ -611,6 +681,7 @@ def _dispatch_via_runtime(
                 tool_config=tool_config,
                 entrypoint="dispatch",
                 hard_timeout=call_timeout,
+                initial_response_timeout=initial_response_timeout,
                 # See 180→600 rationale in _dispatch_claude_via_runtime
                 # above. Same reasoning applies to Gemini (reasoning bursts
                 # silence stdout for 3-5 min) and Codex (-o file redirects
@@ -716,6 +787,15 @@ def _dispatch_via_runtime(
             label = f"{attempt_agent} [{rung.model} + {auth_mode_label}]"
             t0 = time.monotonic()
             call_start = datetime.now().astimezone()
+            call_timeout_effective = call_timeout or per_call_cap
+            _save_dispatch_started_log(
+                orch_dir, phase, label,
+                model=rung.model,
+                prompt_chars=len(prompt),
+                timeout=call_timeout_effective,
+                initial_response_timeout=initial_response_timeout,
+                mcp_tools=mcp_tools and not is_agy,
+            )
             try:
                 if not is_agy:
                     _pace_gemini_calls()
@@ -730,8 +810,9 @@ def _dispatch_via_runtime(
                         session_id=None,
                         tool_config=call_tool_config,
                         entrypoint="dispatch",
-                        hard_timeout=call_timeout or per_call_cap,
-                        stall_timeout=min(600, call_timeout or per_call_cap),
+                        hard_timeout=call_timeout_effective,
+                        initial_response_timeout=initial_response_timeout,
+                        stall_timeout=min(600, call_timeout_effective),
                     )
                 elapsed = time.monotonic() - t0
                 _save_dispatch_log(

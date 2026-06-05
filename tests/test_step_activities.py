@@ -21,6 +21,8 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from build.v6_build import (
+    ACTIVITY_DISPATCH_HARD_TIMEOUT,
+    ACTIVITY_DISPATCH_INITIAL_RESPONSE_TIMEOUT,
     _check_activity_semantics,
     step_activities,
 )
@@ -362,6 +364,237 @@ class TestStepActivitiesIntegration:
         assert len(data.get("inline", [])) == 1
         assert len(data.get("workbook", [])) == 3
 
+    def test_step_forwards_activity_startup_timeout(self, tmp_module):
+        """Activity dispatch should opt into a bounded startup no-output guard."""
+        tp = tmp_module["tmp_path"]
+        captured: dict[str, object] = {}
+
+        def mock_dispatch(_prompt, **kwargs):
+            captured.update(kwargs)
+            return True, VALID_YAML
+
+        with (
+            patch("build.v6_build.CURRICULUM_ROOT", tp / "curriculum" / "l2-uk-en"),
+            patch("build.v6_build.PROJECT_ROOT", tp),
+            patch("build.v6_build.PHASES_DIR", tp / "scripts" / "build" / "phases"),
+            patch("build.dispatch.dispatch_agent", side_effect=mock_dispatch),
+        ):
+            result = step_activities(
+                tmp_module["content_path"],
+                tmp_module["level"],
+                8,
+                tmp_module["slug"],
+                writer="claude-tools",
+            )
+
+        assert result is not None
+        assert captured["agent"] == "claude-tools"
+        assert captured["phase"] == "activities"
+        assert captured["timeout"] == ACTIVITY_DISPATCH_HARD_TIMEOUT
+        assert (
+            captured["initial_response_timeout"]
+            == ACTIVITY_DISPATCH_INITIAL_RESPONSE_TIMEOUT
+        )
+
+    def test_step_omits_deterministic_letter_hints_from_model_prompt(self, tmp_module):
+        """A1 letter-grid/watch-and-repeat hints are deterministic, not LLM work."""
+        tp = tmp_module["tmp_path"]
+        plan_path = (
+            tp
+            / "curriculum"
+            / "l2-uk-en"
+            / "plans"
+            / tmp_module["level"]
+            / f"{tmp_module['slug']}.yaml"
+        )
+        plan = yaml.safe_load(plan_path.read_text())
+        plan["letter_module"] = True
+        plan["activity_hints"] = [
+            {"type": "quiz", "focus": "quiz focus"},
+            {"type": "letter-grid", "focus": "grid focus"},
+            {"type": "watch-and-repeat", "focus": "watch focus"},
+        ]
+        plan["vocabulary_hints"] = {
+            "required": ["мама"],
+            "recommended": [
+                {"word": "А", "key_word": "ананас"},
+                {"word": "мама"},
+            ],
+        }
+        plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), "utf-8")
+
+        template_path = tp / "scripts" / "build" / "phases" / "v6-activities.md"
+        template_path.write_text(
+            "Hints\n{PLAN_ACTIVITY_HINTS}\n"
+            "Vocab\n{PLAN_VOCABULARY}\n"
+            "Inline\n{INLINE_ALLOWED_TYPES}\n"
+            "Workbook\n{WORKBOOK_PRIORITY_TYPES}\n"
+            "Content\n{MODULE_CONTENT}\n",
+            "utf-8",
+        )
+
+        captured: dict[str, str] = {}
+
+        def mock_dispatch(prompt, **_kwargs):
+            captured["prompt"] = prompt
+            return True, VALID_YAML
+
+        with (
+            patch("build.v6_build.CURRICULUM_ROOT", tp / "curriculum" / "l2-uk-en"),
+            patch("build.v6_build.PROJECT_ROOT", tp),
+            patch("build.v6_build.PHASES_DIR", tp / "scripts" / "build" / "phases"),
+            patch("build.dispatch.dispatch_agent", side_effect=mock_dispatch),
+        ):
+            result = step_activities(
+                tmp_module["content_path"],
+                tmp_module["level"],
+                1,
+                tmp_module["slug"],
+                writer="claude-tools",
+            )
+
+        assert result is not None
+        prompt = captured["prompt"]
+        assert "quiz focus" in prompt
+        assert "grid focus" not in prompt
+        assert "watch focus" not in prompt
+        assert "word: А" not in prompt
+
+        prompt_before_content = prompt.split("Content", maxsplit=1)[0]
+        assert "letter-grid" not in prompt_before_content
+        assert "watch-and-repeat" not in prompt_before_content
+
+    def test_step_omits_deterministic_letter_markers_from_model_prompt(self, tmp_module):
+        """Deterministic letter markers should not count as model inline work."""
+        tp = tmp_module["tmp_path"]
+        plan_path = (
+            tp
+            / "curriculum"
+            / "l2-uk-en"
+            / "plans"
+            / tmp_module["level"]
+            / f"{tmp_module['slug']}.yaml"
+        )
+        plan = yaml.safe_load(plan_path.read_text())
+        plan["letter_module"] = True
+        plan["activity_hints"] = [
+            {"type": "quiz", "focus": "quiz focus"},
+            {"type": "letter-grid", "focus": "grid focus"},
+            {"type": "watch-and-repeat", "focus": "watch focus"},
+        ]
+        plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), "utf-8")
+
+        tmp_module["content_path"].write_text(
+            "## First\n\n"
+            "<!-- INJECT_ACTIVITY: quiz-genders -->\n\n"
+            "## Letters\n\n"
+            "<!-- INJECT_ACTIVITY: letter-grid-alphabet -->\n\n"
+            "## Videos\n\n"
+            "<!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko -->\n",
+            "utf-8",
+        )
+
+        template_path = tp / "scripts" / "build" / "phases" / "v6-activities.md"
+        template_path.write_text(
+            "InlineTarget={INLINE_MIN}\n"
+            "Markers\n{INJECTION_MARKERS}\n"
+            "Content\n{MODULE_CONTENT}\n",
+            "utf-8",
+        )
+
+        captured: dict[str, str] = {}
+
+        def mock_dispatch(prompt, **_kwargs):
+            captured["prompt"] = prompt
+            return True, VALID_YAML
+
+        with (
+            patch("build.v6_build.CURRICULUM_ROOT", tp / "curriculum" / "l2-uk-en"),
+            patch("build.v6_build.PROJECT_ROOT", tp),
+            patch("build.v6_build.PHASES_DIR", tp / "scripts" / "build" / "phases"),
+            patch("build.dispatch.dispatch_agent", side_effect=mock_dispatch),
+        ):
+            result = step_activities(
+                tmp_module["content_path"],
+                tmp_module["level"],
+                1,
+                tmp_module["slug"],
+                writer="claude-tools",
+            )
+
+        assert result is not None
+        prompt = captured["prompt"]
+        assert "InlineTarget=1" in prompt
+        assert "quiz-genders" in prompt
+        assert "letter-grid-alphabet" not in prompt
+        assert "watch-and-repeat-ohoiko" not in prompt
+
+    def test_deterministic_only_letter_hints_skip_dispatch(self, tmp_module):
+        """If all activity hints are deterministic abetka work, do not call an LLM."""
+        tp = tmp_module["tmp_path"]
+        plan_path = (
+            tp
+            / "curriculum"
+            / "l2-uk-en"
+            / "plans"
+            / tmp_module["level"]
+            / f"{tmp_module['slug']}.yaml"
+        )
+        plan = yaml.safe_load(plan_path.read_text())
+        plan["letter_module"] = True
+        plan["activity_hints"] = [
+            {"type": "letter-grid", "focus": "grid focus"},
+            {"type": "watch-and-repeat", "focus": "watch focus"},
+        ]
+        plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), "utf-8")
+
+        abetka_dir = tp / "curriculum" / "l2-uk-direct" / "a1"
+        abetka_dir.mkdir(parents=True)
+        (abetka_dir / "abetka-1.yaml").write_text(
+            yaml.safe_dump(
+                {
+                    "letters": [
+                        {
+                            "upper": "А",
+                            "lower": "а",
+                            "sound_type": "vowel",
+                            "key_word": "ананас",
+                            "pronunciation_video": "https://example.test/a",
+                        },
+                        {
+                            "upper": "М",
+                            "lower": "м",
+                            "sound_type": "consonant",
+                            "key_word": "мама",
+                            "pronunciation_video": "https://example.test/m",
+                        },
+                    ],
+                },
+                allow_unicode=True,
+            ),
+            "utf-8",
+        )
+
+        with (
+            patch("build.v6_build.CURRICULUM_ROOT", tp / "curriculum" / "l2-uk-en"),
+            patch("build.v6_build.PROJECT_ROOT", tp),
+            patch("build.v6_build.PHASES_DIR", tp / "scripts" / "build" / "phases"),
+            patch("build.dispatch.dispatch_agent") as mock_dispatch,
+        ):
+            result = step_activities(
+                tmp_module["content_path"],
+                tmp_module["level"],
+                1,
+                tmp_module["slug"],
+                writer="claude-tools",
+            )
+
+        assert result is not None
+        mock_dispatch.assert_not_called()
+        data = yaml.safe_load(result.read_text())
+        activity_types = {activity["type"] for activity in data["workbook"]}
+        assert {"letter-grid", "watch-and-repeat"} <= activity_types
+
     def test_step_retries_on_invalid_yaml(self, tmp_module):
         """step_activities retries when YAML is invalid, then succeeds."""
         tp = tmp_module["tmp_path"]
@@ -458,3 +691,14 @@ class TestStepActivitiesIntegration:
             )
 
         assert result is None
+        state_path = (
+            tp
+            / "curriculum"
+            / "l2-uk-en"
+            / tmp_module["level"]
+            / "orchestration"
+            / tmp_module["slug"]
+            / "state.json"
+        )
+        state = json.loads(state_path.read_text())
+        assert state["phases"]["activities"]["status"] == "failed"

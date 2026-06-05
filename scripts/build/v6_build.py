@@ -77,7 +77,6 @@ from batch_gemini_config import (
     # stable again, re-add the import and flip v6_build.GEMINI_FAMILY.fast
     # back to FLASH_MODEL.
     PRO_MODEL,
-    TIMEOUT_ACTIVITIES,
     TIMEOUT_ANNOTATE,
     TIMEOUT_PRE_VERIFY,
     TIMEOUT_PUBLISH,
@@ -119,6 +118,10 @@ from common.thresholds import (
     STYLE_REVIEW_DIMENSION_FLOOR,
     STYLE_REVIEW_TARGET,
 )
+
+ACTIVITY_DISPATCH_HARD_TIMEOUT = 600
+ACTIVITY_DISPATCH_INITIAL_RESPONSE_TIMEOUT = 180
+_DETERMINISTIC_ABETKA_ACTIVITY_TYPES = {"letter-grid", "watch-and-repeat"}
 
 _LEGACY_PLAN_HASH_DRIFT_DETECTOR = detect_plan_hash_drift
 
@@ -7256,6 +7259,117 @@ def _build_activity_level_context(level: str, module_num: int, plan: dict) -> st
     )
 
 
+def _activity_hint_type(hint: object) -> str:
+    if not isinstance(hint, dict):
+        return ""
+    return str(hint.get("type") or "").strip()
+
+
+def _uses_deterministic_abetka_activities(plan: dict) -> bool:
+    if not bool(plan.get("letter_module")):
+        return False
+    hints = plan.get("activity_hints", [])
+    if not isinstance(hints, list):
+        return False
+    return any(
+        _activity_hint_type(hint) in _DETERMINISTIC_ABETKA_ACTIVITY_TYPES
+        for hint in hints
+    )
+
+
+def _model_activity_hints(plan: dict) -> list[object]:
+    hints = plan.get("activity_hints", [])
+    if not isinstance(hints, list):
+        return []
+    if not _uses_deterministic_abetka_activities(plan):
+        return list(hints)
+    return [
+        hint for hint in hints
+        if _activity_hint_type(hint) not in _DETERMINISTIC_ABETKA_ACTIVITY_TYPES
+    ]
+
+
+def _marker_matches_activity_type(marker: str, activity_types: set[str]) -> bool:
+    token = marker.split(",", 1)[0].splitlines()[0].strip().lower()
+    return any(
+        token == activity_type or token.startswith(f"{activity_type}-")
+        for activity_type in activity_types
+    )
+
+
+def _remove_activity_markers_from_content(content: str, activity_types: set[str]) -> str:
+    if not activity_types:
+        return content
+
+    def replace_marker(match: re.Match[str]) -> str:
+        marker = match.group(1)
+        if _marker_matches_activity_type(marker, activity_types):
+            return ""
+        return match.group(0)
+
+    return re.sub(
+        r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->",
+        replace_marker,
+        content,
+        flags=re.DOTALL,
+    )
+
+
+def _remove_activity_types_csv(value: object, blocked: set[str]) -> str:
+    if not value:
+        return ""
+    return ", ".join(
+        item for item in (part.strip() for part in str(value).split(","))
+        if item and item not in blocked
+    )
+
+
+def _is_single_letter_vocab_entry(entry: object) -> bool:
+    if isinstance(entry, str):
+        return len(entry.strip()) == 1
+    if isinstance(entry, dict):
+        word = str(entry.get("word") or "").strip()
+        return len(word) == 1
+    return False
+
+
+def _activity_prompt_vocab_hints(plan: dict) -> object:
+    vocab_hints = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
+    if not _uses_deterministic_abetka_activities(plan) or not isinstance(vocab_hints, dict):
+        return vocab_hints
+
+    slimmed = dict(vocab_hints)
+    recommended = slimmed.get("recommended")
+    if isinstance(recommended, list):
+        slimmed["recommended"] = [
+            entry for entry in recommended
+            if not _is_single_letter_vocab_entry(entry)
+        ]
+    return slimmed
+
+
+def _write_activity_shell(level: str, slug: str) -> Path:
+    activities_dir = CURRICULUM_ROOT / level / "activities"
+    activities_dir.mkdir(parents=True, exist_ok=True)
+    output_path = activities_dir / f"{slug}.yaml"
+    output_path.write_text(
+        yaml.dump(
+            {
+                "version": "1.0",
+                "module": slug,
+                "level": level.lower(),
+                "inline": [],
+                "workbook": [],
+            },
+            allow_unicode=True,
+            default_flow_style=False,
+            sort_keys=False,
+        ),
+        "utf-8",
+    )
+    return output_path
+
+
 def _build_pedagogy_patterns(plan: dict, level: str) -> str:
     """Load pedagogy pattern library and select patterns matching this module's topic.
 
@@ -7398,21 +7512,71 @@ def step_activities(
     if not plan_path.exists():
         _log(f"  ❌ Plan not found: {plan_path}")
         return None
-    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    plan = yaml.safe_load(plan_path.read_text("utf-8")) or {}
 
-    # Load module content
-    module_content = content_path.read_text("utf-8")
+    all_activity_hints = plan.get("activity_hints", [])
+    if not isinstance(all_activity_hints, list):
+        all_activity_hints = []
+    model_activity_hints = _model_activity_hints(plan)
+    deterministic_activity_types = {
+        _activity_hint_type(hint)
+        for hint in all_activity_hints
+        if _activity_hint_type(hint) in _DETERMINISTIC_ABETKA_ACTIVITY_TYPES
+    }
+    deterministic_hint_count = len(all_activity_hints) - len(model_activity_hints)
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    if deterministic_hint_count:
+        _log(
+            "  🧩 "
+            f"{deterministic_hint_count} A1 letter activity hint(s) will be "
+            "injected deterministically, not generated by the model"
+        )
+
+    if deterministic_hint_count and not model_activity_hints:
+        prompt_path = orch_dir / "v6-activities-prompt.md"
+        prompt_path.write_text(
+            "Deterministic A1 letter activities only; no LLM dispatch was needed.\n",
+            "utf-8",
+        )
+        output_path = _write_activity_shell(level, slug)
+        _inject_abetka_activities(output_path, level, slug)
+        _log(f"  ✅ Deterministic activities generated → {output_path}")
+        _save_v6_state(level, slug, "activities")
+        return output_path
 
     # Extract injection markers from prose — writers use various formats:
     # <!-- INJECT_ACTIVITY: quiz-case-identification -->  (strict kebab-case)
     # <!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->  (type + description)
     # <!-- INJECT_ACTIVITY: quiz, Case Identification Drill, 8 items -->  (with count)
+    module_content = content_path.read_text("utf-8")
     injection_markers = re.findall(
         r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->", module_content
     )
-    marker_count = len(injection_markers)
-    if injection_markers:
-        markers_text = "\n".join(f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in injection_markers)
+    model_injection_markers = list(injection_markers)
+    if deterministic_activity_types:
+        model_injection_markers = [
+            marker for marker in injection_markers
+            if not _marker_matches_activity_type(marker, deterministic_activity_types)
+        ]
+        omitted_markers = len(injection_markers) - len(model_injection_markers)
+        if omitted_markers:
+            module_content = _remove_activity_markers_from_content(
+                module_content, deterministic_activity_types,
+            )
+            _log(
+                "  🧩 "
+                f"{omitted_markers} deterministic A1 letter marker(s) omitted "
+                "from the model prompt"
+            )
+
+    marker_count = len(model_injection_markers)
+    if model_injection_markers:
+        markers_text = "\n".join(
+            f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in model_injection_markers
+        )
     else:
         markers_text = "(No injection markers found in prose. All activities will go to workbook.)"
     markers_text = _format_prompt_literal_block(
@@ -7420,7 +7584,7 @@ def step_activities(
     )
 
     # Build activity hints text
-    activity_hints = plan.get("activity_hints", [])
+    activity_hints = model_activity_hints
     if activity_hints:
         hints_text = yaml.dump(activity_hints, allow_unicode=True, default_flow_style=False)
     else:
@@ -7430,7 +7594,7 @@ def step_activities(
     )
 
     # Build vocabulary text
-    vocab_hints = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
+    vocab_hints = _activity_prompt_vocab_hints(plan)
     vocab_text = yaml.dump(vocab_hints, allow_unicode=True, default_flow_style=False)
     vocab_text = _format_prompt_literal_block("Plan Vocabulary", vocab_text, language="yaml")
     module_content = _format_prompt_literal_block(
@@ -7478,6 +7642,13 @@ def step_activities(
     forbidden_types = activity_config.get("FORBIDDEN_ACTIVITY_TYPES", "")
     allowed_types = activity_config.get("ALLOWED_ACTIVITY_TYPES", "")
     required_types = activity_config.get("REQUIRED_TYPES", "")
+    if deterministic_activity_types:
+        inline_allowed = _remove_activity_types_csv(inline_allowed, deterministic_activity_types)
+        workbook_allowed = _remove_activity_types_csv(workbook_allowed, deterministic_activity_types)
+        inline_priority = _remove_activity_types_csv(inline_priority, deterministic_activity_types)
+        workbook_priority = _remove_activity_types_csv(workbook_priority, deterministic_activity_types)
+        allowed_types = _remove_activity_types_csv(allowed_types, deterministic_activity_types)
+        required_types = _remove_activity_types_csv(required_types, deterministic_activity_types)
     letter_module_active = "true" if bool(plan.get("letter_module")) else "false"
     seminar_type_reference = _format_seminar_type_reference(level, plan)
 
@@ -7523,8 +7694,6 @@ def step_activities(
         prompt = prompt.replace(key, value)
 
     # Save prompt for inspection
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-    orch_dir.mkdir(parents=True, exist_ok=True)
     prompt_path = orch_dir / "v6-activities-prompt.md"
     prompt_path.write_text(prompt, "utf-8")
     _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
@@ -7544,6 +7713,10 @@ def step_activities(
     else:
         base_writer = writer
     error_context = ""
+    activity_initial_response_timeout = min(
+        ACTIVITY_DISPATCH_INITIAL_RESPONSE_TIMEOUT,
+        ACTIVITY_DISPATCH_HARD_TIMEOUT,
+    )
 
     for attempt in range(1, max_retries + 2):
         _log(f"\n  📝 Activity generation attempt {attempt}/{max_retries + 1}")
@@ -7563,22 +7736,26 @@ def step_activities(
         if "gemini" in base_writer:
             ok, raw = _dispatch(
                 current_prompt, agent="gemini-tools", phase="activities",
-                orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES, mcp_tools=True,
+                orch_dir=orch_dir, timeout=ACTIVITY_DISPATCH_HARD_TIMEOUT,
+                mcp_tools=True,
+                initial_response_timeout=activity_initial_response_timeout,
             )
         elif "codex" in base_writer:
             # Codex uses shell commands for verification, not MCP.
             # workspace-write mode set by dispatch via agent name suffix.
             ok, raw = _dispatch(
                 current_prompt, agent="codex-tools", phase="activities",
-                orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES,
+                orch_dir=orch_dir, timeout=ACTIVITY_DISPATCH_HARD_TIMEOUT,
+                initial_response_timeout=activity_initial_response_timeout,
             )
         else:
             # Activities are structured YAML — use fast model, not thinking
             ok, raw = _dispatch(
                 current_prompt, agent="claude-tools", phase="activities",
-                orch_dir=orch_dir, timeout=TIMEOUT_ACTIVITIES,
+                orch_dir=orch_dir, timeout=ACTIVITY_DISPATCH_HARD_TIMEOUT,
                 mcp_tools=True, allowed_tools=CLAUDE_WRITER_TOOLS,
                 model=CLAUDE_FAMILY.fast,
+                initial_response_timeout=activity_initial_response_timeout,
             )
 
         if not ok or not raw:
@@ -7745,6 +7922,7 @@ def step_activities(
         return output_path
 
     _log(f"  ❌ Activity generation failed after {max_retries + 1} attempts")
+    _save_v6_state(level, slug, "activities", status="failed")
     return None
 
 
