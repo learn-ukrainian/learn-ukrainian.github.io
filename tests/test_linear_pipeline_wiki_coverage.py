@@ -58,12 +58,12 @@ def test_build_wiki_manifest_renders_my_morning_json() -> None:
     assert '"external_resources": []' in manifest
 
 
-def test_plan_check_accepts_zero_word_summary_section() -> None:
+def test_who_am_i_summary_has_retrofit_word_budget() -> None:
     plan = linear_pipeline.plan_check(linear_pipeline.plan_path_for("a1", "who-am-i"))
 
     assert plan["slug"] == "who-am-i"
     assert any(
-        section["section"] == "Підсумок" and section["words"] == 0
+        section["section"] == "Підсумок" and section["words"] == 100
         for section in plan["content_outline"]
     )
 

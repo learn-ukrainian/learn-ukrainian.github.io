@@ -8,6 +8,27 @@ compiled: 2026-04-26
 generated_by_model: gemini-3.1-pro-preview
 -->
 
+## A1/A2 Retrofit Evidence Packet
+
+- Ukrainian-first entry: start with a family photo, label, or short exchange:
+  `Це моя мама`, `У мене є брат`, then add brief English support.
+- Controlled English: treat `У мене є`, `у тебе є`, `мій/моя/моє`, and
+  simple relationship lines as memorized chunks; do not drill genitive or full
+  possession paradigms.
+- Sequence: recognize family labels in images, choose the matching pronoun,
+  complete controlled family sentences, then say or write two short personal
+  lines.
+- Register nuance: preserve the locked plan's nuance. Use `тато` as the
+  active beginner default, but do not mark `папа` as a dictionary-backed error.
+  Keep patronymics as recognition-only formal-register signals.
+- Recycling: connect M5 name/origin/profession frames to family vocabulary and
+  send the combined self-and-family frame into the checkpoint.
+- Visual/audio/cursive support: use original, generated, public-domain, or
+  licensed family images; add audio models and cursive recognition of known
+  family words before copying.
+- Teacher-feedback loop: invite tutor feedback on family introductions,
+  pronunciation, and whether the learner's personal examples sound natural.
+
 ## Методичний підхід
 
 Тема «Моя сім'я» є засадничою і фундаментальною для старту мовного рівня А1, оскільки вона дозволяє органічно поєднати засвоєння найуживанішої базової лексики із введенням ключових граматичних категорій, таких як рід іменників та узгодження із присвійними займенниками у природному контексті [S9]. В українській дидактиці, що відображена у підручниках для початкової та середньої школи, педагоги категорично уникають абстрактного теоретизування на ранніх етапах. Натомість мовний матеріал подається через моделювання живих комунікативних ситуацій: знайомство, розповідь про себе та своє безпосереднє оточення [S9].
@@ -44,7 +65,7 @@ generated_by_model: gemini-3.1-pro-preview
 Англомовні учні схильні здійснювати несвідоме перенесення (інтерференцію) граматичних та синтаксичних структур рідної мови на українську. Автору необхідно передбачити ці пастки та превентивно їх знімати у текстах пояснень та практичних вправах.
 
 | ❌ Помилково | ✅ Правильно | Чому (Природа помилки та як запобігти) |
-|---|---|---|
+| --- | --- | --- |
 | Моє ім'я є Джон <!-- VERIFY: name_introduction — Калька з англ. My name is X; українська модель безособова Canonical form: «Мене звати [ім'я]» -->. | Мене звати Джон. | **Синтаксична калька.** Учні копіюють англійську модель (My name is X). В українській мові нормативною є безособова конструкція із знахідним відмінком («мене») та дієсловом «звати» [S9]. |
 | Я маю 20 років <!-- VERIFY: age_model — Калька рос. Мне N лет + англ. I have N years; українська — датив особи + кількість Canonical form: «Мені [N] років» -->. | Мені 20 років. | **Структурне перенесення.** В англійській вік виражається через дієслово-зв'язку (I am 20 years old). Нормативна українська модель використовує давальний відмінок суб'єкта [S10]. Пояснюйте це як концепцію "To me is X years". |
 | Це мій мама. | Це моя мама. | **Відсутність узгодження.** В англійській мові займенник (my) не змінюється. Учні схильні брати словникову (чоловічу) форму "мій" як універсальну для всіх іменників. Слід постійно наголошувати, що займенник підлаштовується під рід об'єкта, про який іде мова [S2]. |

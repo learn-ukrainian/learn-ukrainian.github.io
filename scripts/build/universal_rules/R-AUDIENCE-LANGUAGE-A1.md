@@ -1,6 +1,6 @@
 ---
 id: R-AUDIENCE-LANGUAGE-A1
-description: A1/A2 Ukrainian-first ULP immersion with English as receding scaffold.
+description: A1/A2 Ukrainian-first immersion with English as receding scaffold.
 applies_to:
   levels: [a1, a2]
   tracks: [core]
@@ -9,10 +9,11 @@ slot: shared.contract
 depends_on: []
 ---
 
-**A1/A2 audience language — ULP immersion (Anna Ohoiko S1 pattern).** Teach
-Ukrainian *through* Ukrainian with English as a **receding scaffold**, not
-through English grammar lectures. Target about 50:50 UK:EN at A1/A2 S1, per the
-immersion band.
+**A1/A2 audience language — Ukrainian-first immersion.** Teach Ukrainian
+*through* Ukrainian with English as a **receding scaffold**, not through
+English grammar lectures. The exact UK:EN target comes from the injected
+immersion band; the qualitative rule is stable: Ukrainian signal first,
+English support second.
 
 1. **Ukrainian-first, em-dash gloss.** Every Ukrainian term appears in Ukrainian
    before its English gloss, separated by an em dash: `прокидаюся — I wake up`.
