@@ -1,9 +1,9 @@
 # Repo Cleanup Plan — 2026 Q2
 
-> **Status:** PROPOSED, awaiting Phase 0 completion before Phase 1 kicks off.
-> **Anchor issue:** filed as the epic-tracker, see issue with title `[EPIC] Repo cleanup — stale code + obsolete docs sprint`.
-> **Last updated:** 2026-05-10
-> **Owner:** orchestrator (Claude) for Phases 0-2; dispatched per-category for Phase 3.
+> **Status:** Phases 0-2 DONE. Phase 1 tool merged (#2741, `.worktrees`/`archive` fix #2746); Phase 2 inventory triaged + 9 sub-issues filed 2026-06-06 (#2747-2755; H had 0 hits). **Phase 3 parked** until a 1-2 day window with NO concurrent feature work.
+> **Anchor issue:** #1863 (`[EPIC] Repo cleanup — stale code + obsolete docs sprint (2026 Q2)`).
+> **Last updated:** 2026-06-06
+> **Owner:** orchestrator (Claude) for Phases 0-2; dispatched per-category for Phase 3 (routes in each sub-issue).
 
 ## Why this plan exists
 
