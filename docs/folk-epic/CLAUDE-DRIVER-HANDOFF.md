@@ -97,15 +97,29 @@ types #20-31, all source/text analysis) on a fixed 4-tab shell (Урок·Сло
   families #50-54. Serves all 8 lit sub-tracks (genre diffs = content/register at plan level).
 - **Net: 2 page archetypes + 1 shared module — NOT 13 designs.** oes/ruth/hist/istorio/bio need NO new page.
 
+### ✅ STAGE-0 FOUNDATION LOCKED (2026-06-06, branch `claude/folk-stage0-lock`, PR pending)
+NEXT-ACTION item 1 is DONE — the 4 foundation docs now exist (mirror bio's Stage-0):
+- `docs/folk-epic/phase-folk-queue.md` — **42-topic** ordered, de-imperialized queue; every GPT #1148
+  refinement applied (bylyny 9→1, pokhodzhennia-dum fold, full rename/add set); pilot marked; block
+  balance table vs GPT targets.
+- `docs/folk-epic/folk-dossier-schema.md` — the 10-section quality contract + REQUIRED multimodal-hook
+  block (image chunk_ids / named recordings / ritual sequence / motif inventory).
+- `docs/folk-epic/folk-review-rubric.md` — corpus-hammer rubric; `verify_quote` every folk text;
+  cross-family (GPT↔Claude), no DeepSeek; OPEN-PR-no-self-merge.
+- `docs/folk-epic/folk-experiential-archetype-spec.md` — 4-tab shell + families #40–45 + 3 multimodal
+  blocks + myth-box; "more prose in Урок" feedback baked in (item 2 done).
+
 ### ▶ NEXT ACTIONS ON RESUME (folk, in order)
-1. **Lock the folk foundation** (this branch is Stage-0): apply the GPT refinements → final ~41-topic
-   ordered queue doc (`docs/folk-epic/phase-folk-queue.md`) + the dossier schema + a corpus-heavy review
-   rubric + the `folk-experiential` archetype spec (activity families #40-45 + the 2 multimodal blocks, on
-   the existing 4-tab shell) as a hand-off for GPT. Mirror bio's Stage-0.
-2. **More prose** in the folk-experiential Урок design (user feedback).
-3. **First dossier — pilot `kalendarna-obriadovist-zvychai`** (GPT + Claude both picked it; best shows folk
-   as a SYSTEM). Writer = GPT now / Claude after June 8; cross-family review = the other; corpus-hammer
-   (`verify_quote` every folk text). Then dossier → grounded wiki (compile.py is dossier-grounded since #2702).
+1. **Open the Stage-0 PR** (this branch; no self-merge) bundling the 4 docs + this handoff →
+   **TRACK-UPDATE needs=merge** to orchestrator. *(In flight as of this session — see IN-FLIGHT.)*
+2. **On Stage-0 merge → dispatch the pilot dossier** `kalendarna-obriadovist-zvychai` (GPT + Claude
+   both picked it; best shows folk as a SYSTEM). Writer = **GPT now** (`delegate.py dispatch --agent
+   codex --model gpt-5.5 --worktree --base main`, brief = schema + rubric + queue row) / Claude after
+   June 8; cross-family review = the other; corpus-hammer (`verify_quote` every folk text). Gate on
+   merge because `--worktree` builds from origin/main (unmerged specs won't reach the child). Then
+   dossier → grounded wiki (`compile.py --writer {gpt-5.5|claude}`, dossier-grounded since #2702).
+3. Then the build-order first-6: `narodna-kultura-yak-systema` → pilot → `narodni-viruvannia-…` →
+   `koliadky-shchedrivky` → `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`.
 4. Optional: design the **lit-drama** variant (≈80% assembled from folk parts) when convenient.
 
 ### 📊 CORPUS FACTS (folk is well-sourced — verified)
@@ -116,8 +130,15 @@ on народні інструменти (бандура/трембіта/цим
 despite "no YT". `compile.py --writer {gemini,claude,gpt-5.5}` (NO agy arm — would need wiring); dossier
 grounding live (#2702). Folk discovery already exists (27 files, real rag_chunks); 0 folk dossiers; 0 folk modules.
 
-### 🗂 ARTIFACTS THIS SESSION
+### 🗂 ARTIFACTS
+**Prior session (merged via #2745):**
 - `docs/poc/poc-folk-lesson-design.html` (folk-experiential archetype POC)
 - `docs/poc/poc-lit-lesson-design.html` (all-round lit archetype POC)
 - GPT folk-taxonomy cross-check = bridge msg #1148 (`ab read 1148`)
-- This handoff. **PR: OPEN (no self-merge) — folk-foundation Stage-0.**
+
+**This session (branch `claude/folk-stage0-lock`, Stage-0 lock — PR pending, NO self-merge):**
+- `docs/folk-epic/phase-folk-queue.md` (42-topic locked queue)
+- `docs/folk-epic/folk-dossier-schema.md` (10-section contract + multimodal hooks)
+- `docs/folk-epic/folk-review-rubric.md` (corpus-hammer rubric)
+- `docs/folk-epic/folk-experiential-archetype-spec.md` (module archetype spec for GPT)
+- This handoff (refreshed). **PR carries all 5 + handoff; orchestrator promotes.**
