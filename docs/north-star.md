@@ -445,7 +445,7 @@ audit pipeline branches) is filed as a Phase 2 sub-issue under EPIC
 ---
 
 **Phase 0 closeout actions** (after this commit):
-1. Update `docs/session-state/2026-04-25-evening-reboot-decision.md`
+1. Update `docs/session-state/archive/2026-04-25-evening-reboot-decision.md`
    line 82: `Зошит` → `Вправи` (lesson contract P1).
 2. File the Phase 2 `scripts/config.py` IMMERSION_POLICIES B1
    cleanup issue per P7.

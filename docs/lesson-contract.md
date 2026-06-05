@@ -267,7 +267,7 @@ the dictionary destination is real. Source: panel consensus
 ---
 
 **Phase 0 closeout actions** (after this commit):
-1. Update `docs/session-state/2026-04-25-evening-reboot-decision.md`
+1. Update `docs/session-state/archive/2026-04-25-evening-reboot-decision.md`
    line 82: `Зошит` → `Вправи` per P1.
 2. File `scripts/config.py` IMMERSION_POLICIES B1 cleanup issue
    (Phase 2 sub-issue under EPIC #1577) — delete `b1-m01-05`,

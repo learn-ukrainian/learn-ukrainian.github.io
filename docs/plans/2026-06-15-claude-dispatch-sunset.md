@@ -153,7 +153,7 @@ Historical records found by grep:
 | `docs/dispatch-briefs/2026-05-06-1754-claude-keychain-user-env.md:25,114` | Historical auth-fix brief; do not edit. |
 | `docs/dispatch-briefs/2026-05-13-routing-budget-observability.md:19,31` | Historical routing-budget test brief; do not edit. |
 | `docs/dispatch-briefs/2026-05-19-four-deliverable-docs-codex.md:116,121,122` | This dispatch brief; do not edit as part of the plan. |
-| `docs/session-state/2026-04-22-afternoon-ops-infra-pass.md:39` | Historical session state; do not edit. |
+| `docs/session-state/archive/2026-04-22-afternoon-ops-infra-pass.md:39` | Historical session state; do not edit. |
 | `docs/session-state/2026-05-06-evening-tech-debt-arc-and-auth-cascades.md:130` | Historical failed review attempt; do not edit. |
 | `docs/session-state/2026-05-13-late-routing-economics-corpus-expansion-brief.md:73` | Historical source for the routing economics shift; cite, do not edit. |
 | `docs/session-state/current.md:41` | Rolling handoff file; update only through the normal session-state process. |

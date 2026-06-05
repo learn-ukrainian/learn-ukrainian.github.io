@@ -89,4 +89,4 @@ git fetch origin main
 ## Related
 
 - Predecessor brief: `docs/dispatch-briefs/2026-05-05-codeql-followups-syntax-and-safejoin.md`
-- Predecessor session handoff: `docs/session-state/2026-05-05-codeql-cleanup-and-adr008-resolution.md` (note: predicted this exact failure mode — "If CodeQL flags a new issue, it's likely the `# codeql[<rule-id>] - <reason>` syntax I introduced isn't recognized by the project's CodeQL config — fall back to repo-level config exclusion in `.github/codeql/codeql-config.yml`")
+- Predecessor session handoff: `docs/session-state/archive/2026-05-05-codeql-cleanup-and-adr008-resolution.md` (note: predicted this exact failure mode — "If CodeQL flags a new issue, it's likely the `# codeql[<rule-id>] - <reason>` syntax I introduced isn't recognized by the project's CodeQL config — fall back to repo-level config exclusion in `.github/codeql/codeql-config.yml`")

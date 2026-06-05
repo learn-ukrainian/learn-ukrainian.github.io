@@ -46,7 +46,7 @@ Originally lived in `.worktrees/verify-a1-1-phaseA-v5/` on branch
 `verify/a1-1-phaseA-v5`. That branch was part of EPIC #1550 (a1/1
 verification on the v5/v6 pipeline) — the pre-reboot verification
 pass that ran into the early reboot decision (2026-04-25 evening,
-`docs/session-state/2026-04-25-evening-reboot-decision.md`).
+`docs/session-state/archive/2026-04-25-evening-reboot-decision.md`).
 
 The branch's commits all merged to main; the worktree retained these
 two files as uncommitted work-in-progress. With the reboot superseding
@@ -56,7 +56,7 @@ the only material with durable value — pipeline-specific artifacts
 deleted as v5-era.
 
 Preserved 2026-04-26 by Claude (late-evening session) before removing
-the v5 worktree. See `docs/session-state/2026-04-26-qg-bugfix-shipped.md`
+the v5 worktree. See `docs/session-state/archive/2026-04-26-qg-bugfix-shipped.md`
 for that session's context.
 
 ---

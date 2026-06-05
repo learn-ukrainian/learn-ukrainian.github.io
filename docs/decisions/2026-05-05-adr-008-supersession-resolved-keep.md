@@ -85,4 +85,4 @@ Estimated effort: 15 minutes including adversarial review.
 ---
 
 **File location:** `docs/decisions/pending/2026-05-05-adr-008-supersession-question.md`
-**Cross-references:** ADR-008 (`docs/decisions/2026-04-28-targeted-gate-correction-paths.md`), ADR-007 (`docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md`), implementation PR #1636, deliberation-validation handoff `docs/session-state/2026-05-05-deliberation-architecture-validated.md`, deliberation-protocol-fix commit `872d8791`.
+**Cross-references:** ADR-008 (`docs/decisions/2026-04-28-targeted-gate-correction-paths.md`), ADR-007 (`docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md`), implementation PR #1636, deliberation-validation handoff `docs/session-state/archive/2026-05-05-deliberation-architecture-validated.md`, deliberation-protocol-fix commit `872d8791`.
