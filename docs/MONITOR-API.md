@@ -1737,7 +1737,7 @@ Worktree classification:
 
 ### Force-preview — `GET /api/artifacts/{track}/{slug}/force-preview`
 
-Exact list of files `v6_build.py {track} {num} --force` would delete,
+Exact list of files `v7_build.py {track} {slug} --worktree --force` would delete,
 classified by category. **Never** deletes anything.
 
 ```json
@@ -1842,7 +1842,7 @@ revision of this endpoint was removed per reviewer BLOCKER on
 
 ## Build Event Stream (#1180)
 
-`scripts/build/v6_build.py` now emits monitor-friendly JSON lines to `stdout` alongside the existing human-readable logs. Each event is exactly one line, includes `event` and `ts`, and is flushed immediately with `print(..., flush=True)`.
+`scripts/build/v7_build.py` now emits monitor-friendly JSON lines to `stdout` alongside the existing human-readable logs. Each event is exactly one line, includes `event` and `ts`, and is flushed immediately with `print(..., flush=True)`.
 
 Example stream:
 
@@ -1862,7 +1862,7 @@ Conceptual Claude Code `Monitor` usage:
 
 ```text
 Monitor
-  command: .venv/bin/python scripts/build/v6_build.py a2 1 --resume
+  command: .venv/bin/python scripts/build/v7_build.py a2 m01-bridge --worktree --resume
   stream: stdout
   parse: JSONL lines whose objects contain "event"
   ignore: human-readable log lines that are not JSON

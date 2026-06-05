@@ -435,7 +435,7 @@ PLACEHOLDERS = {
 
 # Downstream-substituted tokens (.format(**ctx) sites). NOT Phase-0
 # concerns; this list exists only so the typo guard knows to skip
-# them. Keep in sync with v6_build.py / linear_pipeline.py.
+# them. Keep in sync with linear_pipeline.py.
 DOWNSTREAM_TOKENS = frozenset({
     "LEVEL", "MODULE_NUM", "TOPIC_TITLE", "PHASE", "WORD_TARGET",
     "WORD_CEILING", "SUMMARY_HEADING", "IMMERSION_RULE",
@@ -520,8 +520,8 @@ caller — typically `Path(...).read_text()` — replaces with
   even though the typo guard runs first.
 - **Downstream-token registry is explicit, not inferred.** The
   generator can't statically know what `.format(**ctx)` keys
-  v6_build.py uses — they're hardcoded in `DOWNSTREAM_TOKENS` and
-  drift with v6_build.py changes. This is acceptable maintenance
+  linear_pipeline.py uses — they're hardcoded in `DOWNSTREAM_TOKENS` and
+  drift with linear_pipeline.py changes. This is acceptable maintenance
   overhead because the registry change is one-line per new token,
   caught by the typo guard if forgotten.
 

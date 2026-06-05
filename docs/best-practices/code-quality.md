@@ -10,12 +10,12 @@
 
 ```bash
 # ✅ Correct
-.venv/bin/python scripts/build/v6_build.py a1 1
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/sounds-letters-and-hello.md
 
 # ❌ Wrong
-python3 scripts/build/v6_build.py a1 1   # missing deps
-python scripts/build/v6_build.py a1 1    # wrong version
+python3 scripts/build/v7_build.py a1 m01-alphabet --worktree   # missing deps
+python scripts/build/v7_build.py a1 m01-alphabet --worktree    # wrong version
 ```
 
 **Why:** The venv uses pyenv Python 3.12.8 compiled with `--enable-loadable-sqlite-extensions` for sqlite-vec. Homebrew Python will silently fail on vector search.
@@ -31,7 +31,9 @@ rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 
 | Script | Use for | Status |
 |--------|---------|--------|
-| `scripts/build/v6_build.py` | All new builds (17-phase pipeline) | **Current (V6)** |
+| `scripts/build/v7_build.py` | V7 pipeline orchestrator (CLI entry point) | **Current (V7)** |
+| `scripts/build/linear_pipeline.py` | V7 linear execution engine | **Current (V7)** |
+| `scripts/build/v6_build.py` | Legacy v6 pipeline | **RETIRED** |
 | `scripts/build/dispatch.py` | Agent subprocess dispatch (Claude/Gemini/Codex) | **Current** |
 | `scripts/build/enrich.py` | Deterministic post-write enrichment | **Current** |
 | `scripts/build/activity_repair.py` | Deterministic activity fixer (#1185) | **Current** |
@@ -40,7 +42,7 @@ rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 | `scripts/build/build_module_v5.py` (+ stub at scripts/build_module_v5.py) | Legacy v5 entrypoint | **RETIRED** — do not use |
 | `scripts/build/pipeline_v5.py` (+ stub at scripts/pipeline_v5.py) | Legacy v5 phases | **RETIRED** — do not use |
 
-Always use V6. The v5 files remain only so old session state files can still
+Always use V7. The legacy files remain only so old session state files can still
 be loaded for forensic analysis — no new code should import them.
 
 ---
@@ -157,7 +159,7 @@ Strings containing colons followed by content must be single-quoted:
 
 ## Logging Conventions
 
-Use the `_log()` helper from `scripts/build/v6_build.py` — it writes to stdout
+Use the `_log()` helper from `scripts/build/linear_pipeline.py` — it writes to stdout
 and to the module's orchestration state.json phase log. Pipeline modules should
 import it or define a thin proxy; ad-hoc scripts can use stdlib `print()` but
 must prefix messages with a two-space indent + phase tag to stay grep-able.
