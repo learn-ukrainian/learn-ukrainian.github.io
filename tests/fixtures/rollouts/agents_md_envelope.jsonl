@@ -1,0 +1,1 @@
+{"type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "text", "text": "system context AGENTS.md"}, {"type": "text", "text": "real prompt"}]}}

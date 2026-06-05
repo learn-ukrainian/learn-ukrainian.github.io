@@ -1,0 +1,7 @@
+id: mc_test_1
+type: multiple-choice
+options:
+  - text: "правильно"
+    correct: true
+  - text: "неправильно"
+    correct: false
