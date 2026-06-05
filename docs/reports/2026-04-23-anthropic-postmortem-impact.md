@@ -119,7 +119,7 @@ scripts/batch/batch_gemini_config.py            (grep)
 .claude/settings.json                           (read)
 claude_extensions/settings.json                 (read)
 docs/agent-runtime-guide.md                     (read)
-docs/session-state/2026-04-23-late-evening-handoff.md  (read)
+docs/session-state/archive/2026-04-23-late-evening-handoff.md  (read)
 ```
 
 No source code modified. No commits. No worktree. Active Codex dispatches on EPIC #1451 Phase 1 (worktrees `codex-1452-alignment-manifest`, `codex-1453-sidecar-freshness`) untouched.

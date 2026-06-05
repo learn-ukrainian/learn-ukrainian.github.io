@@ -1,6 +1,6 @@
 # Session Handoff — 2026-05-06 evening (Path A: unblock + bakeoff)
 
-> **Predecessor:** `docs/session-state/2026-05-06-runbook-strand-1-and-bakeoff-validation.md` (the runbook this session is executing)
+> **Predecessor:** `docs/session-state/archive/2026-05-06-runbook-strand-1-and-bakeoff-validation.md` (the runbook this session is executing)
 > **Goal:** unblock Claude headless dispatch (#1754), ship strand-1 (#1720), re-run bakeoff, propose writer-selection. Then A1 building unlocks for next session.
 > **User context:** "i can not be always here, you need to be able to work without me." Operate autonomously. Don't ask permission for in-plan execution.
 >

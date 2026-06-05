@@ -140,5 +140,5 @@ Same situation as #1687 — pre-created worktree on gemini branch. Dispatch will
 
 ## Related
 
-- Predecessor session handoff: `docs/session-state/2026-05-05-codeql-cleanup-and-adr008-resolution.md` (lines 38-42 documenting the Codex catch)
+- Predecessor session handoff: `docs/session-state/archive/2026-05-05-codeql-cleanup-and-adr008-resolution.md` (lines 38-42 documenting the Codex catch)
 - Predecessor brief: `docs/dispatch-briefs/2026-05-05-codeql-D-js-html-xss.md` (the original Gemini brief that only escaped `hit.text`)

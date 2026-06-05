@@ -132,4 +132,3 @@ Step-by-step build plan now documented at **`docs/architecture/ROADMAP-two-track
 ## Rollback / safety
 
 Nothing to roll back. No destructive ops. Working tree unchanged except untracked files. Stage (c) commit can stay — it's correct code gated on a schema that #1337 was supposed to supply. Fix direction is forward (ship #1337), not backward (revert stage c).
-
