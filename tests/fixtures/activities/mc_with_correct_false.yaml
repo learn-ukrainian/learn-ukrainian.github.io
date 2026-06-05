@@ -1,7 +1,7 @@
 id: mc_test_1
 type: multiple-choice
 options:
-  - text: "правильно"
+  - text: "книга"
     correct: true
-  - text: "неправильно"
+  - text: "олівець"
     correct: false
