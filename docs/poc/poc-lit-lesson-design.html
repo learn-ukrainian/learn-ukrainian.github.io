@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Literature Lesson Design (all-round) — learn-ukrainian</title>
+<!--
+  ALL-ROUND LIT archetype POC (Claude, design lane).
+  Serves the WHOLE lit family: lit, lit-essay, lit-war, lit-hist-fic, lit-youth,
+  lit-fantastika, lit-humor, lit-drama (435 plans).
+  Worked example: Леся Українка «Лісова пісня» (драма-феєрія) — corpus-sourced.
+  Reuses the seminar/folk design system. Components:
+    - Close-reading annotation (click a line -> literary device/meaning)   [NEW lit]
+    - Prosody / scansion (stress + meter marking)                           [NEW lit]
+    - Narrative-structure map (пролог + 3 дії, season-coded)                [NEW lit]
+    - Dramatic / performance block (audio of staging + role)   [SHARED with folk]
+    - myth-box (decolonization) + source-box + essay            [reused seminar]
+  Source-analysis families (#20-31) stay available; lit families #50-54 added.
+-->
+<style>
+  :root{
+    --blue:#0057B8;--yellow:#FFD700;--blue-light:#E8F0FE;--yellow-light:#FFF9E0;
+    --green:#2E7D32;--green-light:#E8F5E9;--red:#C62828;--red-light:#FFEBEE;
+    --purple:#6A1B9A;--purple-light:#F3E5F5;--orange:#E65100;--orange-light:#FFF3E0;
+    --teal:#00695C;--teal-light:#E0F2F1;--brown:#5D4037;--brown-light:#EFEBE9;
+    --lit:#1B4332;--lit-2:#40916C;--lit-light:#E7F1EC;
+    --gray-50:#FAFAFA;--gray-100:#F5F5F5;--gray-200:#EEEEEE;--gray-300:#E0E0E0;
+    --gray-600:#757575;--gray-800:#424242;--gray-900:#212121;
+    --radius:12px;--shadow:0 2px 8px rgba(0,0,0,0.08);--shadow-lg:0 4px 16px rgba(0,0,0,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--gray-900);background:var(--gray-50);line-height:1.7;}
+  .module-switch{background:var(--gray-900);color:#fff;padding:10px 24px;display:flex;align-items:center;gap:16px;font-size:13px;position:sticky;top:0;z-index:100;}
+  .module-switch .poc-label{margin-left:auto;color:var(--yellow);font-weight:600;letter-spacing:.5px;}
+  .module-switch .arch{background:var(--lit-2);padding:3px 10px;border-radius:5px;color:#fff;font-weight:700;}
+  .header{padding:24px 0;border-bottom:4px solid var(--yellow);background:linear-gradient(135deg,var(--lit),var(--lit-2));color:#fff;}
+  .header-inner{max-width:840px;margin:0 auto;padding:0 24px;}
+  .level-badge{display:inline-block;background:var(--yellow);color:var(--gray-900);font-weight:700;font-size:12px;padding:2px 10px;border-radius:4px;margin-bottom:8px;}
+  .header h1{font-size:26px;font-weight:700;margin-bottom:4px;}
+  .header .subtitle{opacity:.9;font-size:14px;}
+  .tabs-container{max-width:840px;margin:0 auto;padding:0 24px;}
+  .tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-top:20px;overflow-x:auto;}
+  .tab{padding:11px 20px;font-size:14px;font-weight:600;color:var(--gray-600);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+  .tab:hover{color:var(--lit-2);}
+  .tab.active{color:var(--lit);border-bottom-color:var(--lit);}
+  .tab-content{display:none;padding:28px 0 60px;}
+  .tab-content.active{display:block;}
+  .content-area{max-width:840px;margin:0 auto;padding:0 24px;}
+  h2{font-size:20px;color:var(--lit);margin:28px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--yellow);}
+  h2:first-child{margin-top:0;}
+  h3{font-size:17px;margin:20px 0 10px;color:var(--gray-800);}
+  p{margin-bottom:14px;font-size:15px;}
+  .new-tag{display:inline-block;background:var(--lit-2);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;vertical-align:middle;letter-spacing:.5px;margin-left:8px;}
+  .shared-tag{display:inline-block;background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;vertical-align:middle;letter-spacing:.5px;margin-left:8px;}
+
+  /* NEW lit: close-reading annotation */
+  .cr-block{margin:22px 0;}
+  .cr-text{background:#fff;border:2px solid var(--lit-light);border-left:4px solid var(--lit);border-radius:var(--radius);padding:18px 22px;font-size:16px;line-height:2.1;box-shadow:var(--shadow);}
+  .cr-text .anno{background:var(--lit-light);border-bottom:2px dotted var(--lit-2);cursor:pointer;padding:0 2px;border-radius:3px;}
+  .cr-text .anno:hover{background:var(--yellow-light);}
+  .cr-info{margin-top:12px;background:var(--lit-light);border:1px solid var(--lit-2);border-radius:8px;padding:12px 16px;font-size:14px;min-height:48px;}
+  .cr-info .cr-dev{font-weight:700;color:var(--lit);}
+
+  /* NEW lit: prosody / scansion */
+  .scan{background:#1a2e23;color:#fff;border-radius:var(--radius);padding:18px 20px;margin:22px 0;box-shadow:var(--shadow-lg);}
+  .scan-line{font-size:20px;letter-spacing:.5px;line-height:2.6;}
+  .syl{display:inline-block;position:relative;padding:0 1px;}
+  .syl .mark{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--yellow);}
+  .syl.str{font-weight:700;}
+  .scan-key{font-size:12px;opacity:.7;margin-top:14px;}
+
+  /* NEW lit: narrative-structure map */
+  .nstruct{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap;}
+  .ns-node{flex:1;min-width:150px;background:#fff;border:1px solid var(--gray-200);border-top:4px solid var(--lit-2);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);}
+  .ns-node .ns-act{font-weight:700;color:var(--lit);font-size:13px;}
+  .ns-node .ns-season{font-size:12px;color:var(--orange);font-weight:600;margin:2px 0 6px;}
+  .ns-node .ns-beat{font-size:13px;color:var(--gray-800);}
+
+  /* SHARED (folk): audio / dramatic performance */
+  .audio-block{background:#1c1230;color:#fff;border-radius:var(--radius);padding:18px 20px;margin:22px 0;box-shadow:var(--shadow-lg);}
+  .audio-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .audio-play{width:46px;height:46px;border-radius:50%;background:var(--yellow);color:#1c1230;border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .audio-meta{font-size:13px;opacity:.85;}.audio-meta strong{display:block;font-size:15px;opacity:1;}
+  .role-line{background:rgba(255,255,255,.07);border-left:3px solid var(--yellow);border-radius:8px;padding:12px 16px;font-size:15px;line-height:1.9;margin-top:6px;}
+  .role-line .who{color:var(--yellow);font-weight:700;}
+  .role-line .stage{font-style:italic;opacity:.7;font-size:13px;}
+
+  /* reused seminar */
+  .source-box{background:var(--purple-light);border:2px solid var(--purple);border-radius:var(--radius);padding:18px 22px;margin:22px 0;}
+  .source-box-header{font-weight:700;color:var(--purple);margin-bottom:8px;font-size:15px;}
+  .source-box blockquote{font-style:italic;border-left:3px solid var(--purple);padding-left:14px;margin:10px 0;color:var(--gray-800);white-space:pre-line;}
+  .source-box .source-cite{font-size:13px;color:var(--gray-600);text-align:right;}
+  .myth-box{background:var(--red-light);border:2px solid var(--red);border-radius:var(--radius);padding:18px 22px;margin:22px 0;}
+  .myth-box-header{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;margin-bottom:10px;color:var(--red);}
+  .myth-box .myth-claim{background:rgba(198,40,40,.08);padding:10px 14px;border-radius:8px;margin:8px 0;font-style:italic;border-left:3px solid var(--red);}
+  .myth-box .myth-truth{background:var(--green-light);padding:10px 14px;border-radius:8px;margin:8px 0;border-left:3px solid var(--green);}
+  .bridge-box{background:var(--teal-light);border:2px solid var(--teal);border-radius:var(--radius);padding:16px 20px;margin:22px 0;font-size:14px;}
+  .bridge-box b{color:var(--teal);}
+
+  .exercise{background:#fff;border-radius:var(--radius);border:2px solid var(--gray-200);padding:22px;margin:22px 0;box-shadow:var(--shadow);}
+  .exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+  .exercise-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;color:#fff;letter-spacing:.3px;}
+  .exercise-title{font-weight:700;font-size:15px;}
+  .exercise-num{margin-left:auto;color:var(--gray-300);font-weight:700;font-size:13px;}
+  .exercise-instruction{font-size:14px;color:var(--gray-600);margin-bottom:12px;}
+  .badge-close{background:var(--lit);}.badge-prosody{background:var(--purple);}.badge-theme{background:var(--teal);}
+  .badge-nstruct{background:var(--blue);}.badge-drama{background:var(--orange);}.badge-essay{background:var(--brown);}
+  .opt{padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:8px;margin:7px 0;cursor:pointer;font-size:14px;transition:all .15s;}
+  .opt:hover{border-color:var(--lit-2);background:var(--lit-light);}
+  .opt.right{border-color:var(--green);background:var(--green-light);}.opt.wrong{border-color:var(--red);background:var(--red-light);}
+  .ta{width:100%;min-height:90px;border:1px solid var(--gray-300);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;margin-top:8px;}
+  .essay-rubric{display:grid;gap:6px;margin-top:10px;}
+  .rubric-item{font-size:13px;background:var(--gray-100);border-radius:6px;padding:6px 10px;}
+  .rubric-item b{color:var(--lit);}
+  .vocab-table{width:100%;border-collapse:collapse;font-size:14px;}
+  .vocab-table th{text-align:left;padding:8px 10px;background:var(--lit-light);}
+  .vocab-table td{padding:8px 10px;border-bottom:1px solid var(--gray-200);}
+  .res-item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--gray-200);border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+  .res-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto;}
+  .serves{background:var(--lit-light);border-radius:10px;padding:12px 16px;margin:16px 0;font-size:13px;color:var(--gray-800);}
+  .serves b{color:var(--lit);}
+</style>
+</head>
+<body>
+
+<div class="module-switch">
+  <span class="arch">ALL-ROUND LIT</span>
+  <label>one page for the whole lit family (8 sub-tracks · 435 plans)</label>
+  <span class="poc-label">POC · learn-ukrainian</span>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <span class="level-badge">C1+ · ЛІТЕРАТУРА</span>
+    <h1>Леся Українка — «Лісова пісня»</h1>
+    <div class="subtitle">Drama-feeria · neoromanticism — verse drama on a folk-mythological base</div>
+  </div>
+</div>
+
+<div class="tabs-container">
+  <div class="tabs">
+    <button class="tab active" data-tab="urok">Урок</button>
+    <button class="tab" data-tab="slovnyk">Словник</button>
+    <button class="tab" data-tab="zoshyt">Зошит</button>
+    <button class="tab" data-tab="resursy">Ресурси</button>
+  </div>
+</div>
+
+<div class="content-area">
+
+  <!-- ===================== УРОК ===================== -->
+  <div id="urok" class="tab-content active">
+    <div class="serves">This one page serves every lit sub-track. <b>Close-reading + prosody + narrative-structure</b> cover lit / essay / war / hist-fic / youth / fantastika / humor; the <b>dramatic-performance block</b> (shared with folk) covers <b>lit-drama</b>. Genre differences are content/register, set in the plan.</div>
+
+    <h2>Жанр і задум</h2>
+    <p>«Лісова пісня» (1911) — <strong>драма-феєрія</strong> Лесі Українки, вершина українського неоромантизму. Драма побудована на <strong>народній демонології</strong> (Мавка, Лісовик, Перелесник), а її конфлікт — між духовною красою і приземленим практицизмом — піднесено до символічного узагальнення.</p>
+
+    <!-- NEW lit: close-reading -->
+    <h3>Пильне читання <span class="new-tag">CLOSE-READING</span></h3>
+    <p>Натисни підкреслені місця — текст працює через троп і підтекст, а не буквально.</p>
+    <div class="cr-block">
+      <div class="cr-text">«У тебе <span class="anno" onclick="cr('Епітетний контраст','«голос чистий» (слух) проти «очі непрозорі» (зір) — синестезійний контраст, що відразу викриває роздвоєну натуру Лукаша: дар є, але душа «непрозора».')">голос чистий, як струмок, / а очі — непрозорі</span>. … Не зневажай <span class="anno" onclick="cr('Метафора-засторога','«душі своєї цвіту» — цвіт як метафора духовного потенціалу; Мавчине застереження стане пророчим, бо Лукаш «не зміг своїм життям до себе дорівнятись».')">душі своєї цвіту</span>, / бо з нього виросло кохання наше!»</div>
+      <div class="cr-info" id="crinfo">Натисни підкреслене місце, щоб прочитати аналіз…</div>
+    </div>
+
+    <div class="source-box">
+      <div class="source-box-header">Першоджерело: «Лісова пісня», дія I</div>
+      <blockquote>Не зневажай душі своєї цвіту,
+бо з нього виросло кохання наше!</blockquote>
+      <div class="source-cite">— Леся Українка, «Лісова пісня» (10-klas-ukrlit-borzenko) · verify_quote → dossier</div>
+    </div>
+
+    <!-- NEW lit: prosody / scansion -->
+    <h3>Версифікація <span class="new-tag">PROSODY</span></h3>
+    <p>Вірш драми — переважно <strong>п’ятистопний ямб</strong>. Познач наголоси, щоб почути ритм:</p>
+    <div class="scan">
+      <div class="scan-line">
+        <span class="syl">Не</span> <span class="syl str"><span class="mark">´</span>зне</span><span class="syl">ва</span><span class="syl str"><span class="mark">´</span>жай</span> <span class="syl">ду</span><span class="syl str"><span class="mark">´</span>ші</span> <span class="syl">сво</span><span class="syl str"><span class="mark">´</span>є</span><span class="syl">ї</span> <span class="syl str"><span class="mark">´</span>цві</span><span class="syl">ту</span>
+      </div>
+      <div class="scan-key">´ = наголошений склад · ямб = ◡ —́ (нена­голошений + наголошений)</div>
+    </div>
+
+    <!-- NEW lit: narrative structure -->
+    <h3>Композиція <span class="new-tag">STRUCTURE</span></h3>
+    <p>Пролог + три дії, прив’язані до пір року — природа дзеркалить душевні зміни:</p>
+    <div class="nstruct">
+      <div class="ns-node"><div class="ns-act">Пролог</div><div class="ns-season">поза часом</div><div class="ns-beat">Світ міфічних істот; умовний, символічний ключ.</div></div>
+      <div class="ns-node"><div class="ns-act">Дія I</div><div class="ns-season">весна</div><div class="ns-beat">Зародження кохання Мавки й Лукаша; гармонія людини і природи.</div></div>
+      <div class="ns-node"><div class="ns-act">Дія II</div><div class="ns-season">пізнє літо</div><div class="ns-beat">Конфлікт мрії та буденності; зрада.</div></div>
+      <div class="ns-node"><div class="ns-act">Дія III</div><div class="ns-season">пізня осінь</div><div class="ns-beat">Непоправна втрата; запізніле прозріння.</div></div>
+    </div>
+
+    <!-- SHARED (folk): dramatic performance — covers lit-drama -->
+    <h3>Драматичне виконання <span class="shared-tag">SHARED · folk-drama module</span></h3>
+    <div class="audio-block">
+      <div class="audio-head">
+        <button class="audio-play" onclick="this.textContent=this.textContent==='▶'?'⏸':'▶'">&#x25B6;</button>
+        <div class="audio-meta"><strong>Фінальний монолог Мавки</strong>сценічний запис · стеж за роллю та ремаркою</div>
+      </div>
+      <div class="role-line"><span class="who">МАВКА:</span> «…ти душу дав мені, як гострий ніж / дає вербовій тихій гілці голос». <span class="stage">(голос промовляє вже в чарівній грі сопілки)</span></div>
+      <p style="font-size:12px;opacity:.6;margin:10px 0 0">POC: staging audio + role/ремарка at build; для lit-drama додається завдання «читання за ролями».</p>
+    </div>
+
+    <!-- decolonization -->
+    <div class="myth-box">
+      <div class="myth-box-header">&#x2694; Руйнуємо міф</div>
+      <div class="myth-claim">Леся Українка — «хвора поетеса», авторка кількох патріотичних віршів.</div>
+      <div class="myth-truth"><strong>Насправді:</strong> модерністка світового рівня — неоромантична драматургиня, перекладачка, критикиня; «Лісова пісня» — філософська драма про свободу духу. Радянський канон звужував її до «Contra spem spero» й образу страждання, щоб приховати її антиімперський модернізм і феміністичну думку.</div>
+    </div>
+
+    <div class="bridge-box"><b>Перехресні зв’язки:</b> folk → народна демонологія (Мавка, Лісовик, Перелесник); bio → М. Драй-Хмара (його оцінка: «трагедія високої душі, що заблудилась серед болота буденного життя»).</div>
+  </div>
+
+  <!-- ===================== СЛОВНИК ===================== -->
+  <div id="slovnyk" class="tab-content">
+    <h2>Словник</h2>
+    <table class="vocab-table">
+      <tr><th>Слово / термін</th><th>Значення</th><th>Приклад</th></tr>
+      <tr><td><strong>драма-феєрія</strong></td><td>drama-feeria (fairy/verse drama)</td><td>жанр «Лісової пісні»</td></tr>
+      <tr><td><strong>неоромантизм</strong></td><td>neoromanticism</td><td>вершина укр. неоромантизму</td></tr>
+      <tr><td><strong>ремарка</strong></td><td>stage direction</td><td>розгорнуті ремарки</td></tr>
+      <tr><td><strong>підтекст</strong></td><td>subtext</td><td>роль підтексту в образі Мавки</td></tr>
+      <tr><td><strong>символ</strong></td><td>symbol</td><td>Мавка як складний символ</td></tr>
+      <tr><td><strong>метаморфоза</strong></td><td>metamorphosis</td><td>перетворення на вербу</td></tr>
+    </table>
+  </div>
+
+  <!-- ===================== ЗОШИТ ===================== -->
+  <div id="zoshyt" class="tab-content">
+    <h2>Зошит <span class="new-tag">LIT FAMILIES #50–54</span></h2>
+    <p style="color:var(--gray-600);font-size:14px">Literary families added to the source-analysis set (#20–31 remain available — авторський задум, есе, порівняння, критика перекладу).</p>
+
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-close">Close-reading</span><span class="exercise-title">Назви троп</span><span class="exercise-num">#50</span></div>
+      <div class="exercise-instruction">«голос чистий, як струмок, а очі — непрозорі». Який прийом несе характеристику Лукаша?</div>
+      <div class="opt" onclick="pick(this,false)">Гіпербола</div>
+      <div class="opt" onclick="pick(this,true)">Контрастний епітет / синестезія (чистий голос ↔ непрозорі очі)</div>
+      <div class="opt" onclick="pick(this,false)">Метонімія</div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-prosody">Prosody</span><span class="exercise-title">Визнач розмір</span><span class="exercise-num">#51</span></div>
+      <div class="exercise-instruction">Познач наголоси у рядку (POC: click-to-mark at build) і визнач віршовий розмір.</div>
+      <div class="opt" onclick="pick(this,true)">Ямб (◡ —́)</div>
+      <div class="opt" onclick="pick(this,false)">Хорей (—́ ◡)</div>
+      <div class="opt" onclick="pick(this,false)">Дактиль (—́ ◡ ◡)</div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-theme">Theme-trace</span><span class="exercise-title">Простеж мотив</span><span class="exercise-num">#52</span></div>
+      <div class="exercise-instruction">Простеж мотив «сопілки/голосу» крізь три дії — як він змінює значення від кохання до втрати?</div>
+      <textarea class="ta" placeholder="Дія I … Дія II … Дія III …"></textarea>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-nstruct">Structure</span><span class="exercise-title">Зістав композицію та пори року</span><span class="exercise-num">#53</span></div>
+      <div class="exercise-instruction">З’єднай дію з її сезоном і драматичною функцією (POC: drag-match at build).</div>
+      <div class="opt" onclick="pick(this,true)">Дія I — весна — зародження кохання</div>
+      <div class="opt" onclick="pick(this,true)">Дія III — пізня осінь — втрата і прозріння</div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-drama">Dramatic reading</span><span class="exercise-title">Читання за ролями</span><span class="exercise-num">#54 · shared</span></div>
+      <div class="exercise-instruction">Озвуч монолог Мавки з потрібною інтонацією; запиши й порівняй зі сценічним записом.</div>
+      <button class="audio-play" style="background:var(--orange);color:#fff;width:auto;height:auto;padding:9px 18px;border-radius:22px;font-size:14px;font-weight:600">&#x25CF; Записати читання</button>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header"><span class="exercise-badge badge-essay">Essay</span><span class="exercise-title">Есе</span><span class="exercise-num">#21 · reused</span></div>
+      <div class="exercise-instruction">«Чи є фінал «Лісової пісні» поразкою чи перемогою духу?» Аргументуй, спираючись на текст. 250–400 слів.</div>
+      <textarea class="ta" placeholder="Напишіть есе українською мовою…"></textarea>
+      <div class="essay-rubric">
+        <div class="rubric-item"><b>Текстова опора:</b> щонайменше дві цитати з твору</div>
+        <div class="rubric-item"><b>Аргументація:</b> чітка теза + розвиток</div>
+        <div class="rubric-item"><b>Мова:</b> академічний стиль українською</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== РЕСУРСИ ===================== -->
+  <div id="resursy" class="tab-content">
+    <h2>Ресурси</h2>
+    <div class="res-item"><div class="res-icon" style="background:var(--lit-light);color:var(--lit)">&#128214;</div><div><strong>Текст:</strong> «Лісова пісня» (повний текст, дія I–III) — corpus literary_texts.</div></div>
+    <div class="res-item"><div class="res-icon" style="background:#1c1230;color:var(--yellow)">&#9834;</div><div><strong>Сценічний запис:</strong> фінальний монолог Мавки — для lit-drama (shared performance module).</div></div>
+    <div class="res-item"><div class="res-icon" style="background:var(--blue-light);color:var(--blue)">&#9635;</div><div><strong>Джерела:</strong> 10-klas-ukrlit-borzenko-2018-prof; листи Лесі Українки до матері й сестри (авторський задум).</div></div>
+    <div class="res-item"><div class="res-icon" style="background:var(--teal-light);color:var(--teal)">&#8644;</div><div><strong>Перехресно:</strong> folk → народна демонологія; bio → М. Драй-Хмара.</div></div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.onclick=function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.getElementById(t.dataset.tab).classList.add('active');
+    };
+  });
+  function cr(dev,txt){
+    var el=document.getElementById('crinfo'); el.textContent='';
+    var b=document.createElement('span'); b.className='cr-dev'; b.textContent=dev+': ';
+    el.appendChild(b); el.appendChild(document.createTextNode(txt));
+  }
+  function pick(el,ok){el.classList.remove('right','wrong');el.classList.add(ok?'right':'wrong');}
+</script>
+</body>
+</html>
