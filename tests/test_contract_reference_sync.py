@@ -123,6 +123,15 @@ def test_writer_prompt_carries_section_4_allow_list() -> None:
         )
 
 
+def test_writer_prompt_forbids_teacher_plan_meta_narration() -> None:
+    text = WRITER_PROMPT_PATH.read_text("utf-8")
+    for phrase in ("this section teaches", "learners will", "the activity asks"):
+        assert phrase in text, (
+            f"Writer prompt must forbid teacher-plan phrase '{phrase}' "
+            "for A1/A2 learner-facing prose."
+        )
+
+
 @pytest.mark.parametrize("dim", REVIEWER_DIMS)
 def test_reviewer_template_references_shared_contract(dim: str) -> None:
     template = _reviewer_template(dim)

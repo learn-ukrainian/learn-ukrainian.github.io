@@ -594,7 +594,7 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules, and you must not merge scenes in a way that drops required setting nouns from the plan.
 
   {DIALOGUE_SITUATIONS}
-- **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
+- **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"), and don't expose teacher-plan wording ("this section teaches", "learners will", "the activity asks"). Just teach. Example:
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
   GOOD: "Ukrainian spelling is highly phonetic — what you see is what you hear."

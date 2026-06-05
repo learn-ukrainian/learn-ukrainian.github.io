@@ -537,6 +537,7 @@ def _get_failing_audit_gates(level: str, slug: str) -> tuple[str, list[str]]:
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+VESUM_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
 PIDRUCHNYK_URLS_PATH = PROJECT_ROOT / "data" / "pidruchnyk_urls.yaml"
 
 _PIDRUCHNYK_AUTHOR_NAMES = {
@@ -1250,6 +1251,30 @@ def _force_reset_module(level: str, slug: str, *, reset_memory: bool = False) ->
     if mdx.exists():
         mdx.unlink()
         _log(f"  🧹 Removed published MDX: {mdx.name}")
+
+
+def _missing_force_reset_prerequisites() -> list[Path]:
+    """Return local DB prerequisites required before destructive ``--force``.
+
+    The full rebuild/review loop consumes local ignored SQLite DBs after the
+    cleanup step. If they are missing, deleting old outputs first leaves the
+    module worse off and still unable to rebuild.
+    """
+    required = (SOURCES_DB_PATH, VESUM_DB_PATH)
+    return [path for path in required if not path.exists()]
+
+
+def _run_force_reset_preflight() -> bool:
+    missing = _missing_force_reset_prerequisites()
+    if not missing:
+        _log("   ✅ --force preflight passed: local sources/VESUM DBs found")
+        return True
+
+    _log("   ❌ --force preflight failed: required local DB prerequisites are missing")
+    for path in missing:
+        _log(f"      missing: {path}")
+    _log("      Refusing to delete existing module outputs before rebuild prerequisites are ready.")
+    return False
 
 
 def _log(msg: str):
@@ -5531,6 +5556,117 @@ def _summarize_review_evidence(text: str, *, limit: int = 200) -> str:
     return summary[: limit - 3].rstrip() + "..."
 
 
+_PER_DIM_CANONICAL_SCORE_RE = re.compile(
+    r"(?im)^score:\s*(\d+(?:\.\d+)?)\s*/\s*10\s*$"
+)
+_PER_DIM_TOLERANT_SCORE_RE = re.compile(
+    r"(?im)^score:\s*(\d+(?:\.\d+)?)(?:\s*/\s*10|\s+out\s+of\s+10)?\s*$"
+)
+_PER_DIM_VERDICT_RE = re.compile(
+    r"(?im)^verdict:\s*(PASS|REVISE|REJECT)\s*$"
+)
+
+
+def _coerce_per_dimension_score(value: object) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        score = float(value)
+    elif isinstance(value, str):
+        match = re.fullmatch(
+            r"\s*(\d+(?:\.\d+)?)(?:\s*/\s*10|\s+out\s+of\s+10)?\s*",
+            value,
+            flags=re.IGNORECASE,
+        )
+        if not match:
+            return None
+        score = float(match.group(1))
+    else:
+        return None
+    if not 0 <= score <= 10:
+        return None
+    return round(score, 1)
+
+
+def _coerce_per_dimension_verdict(value: object) -> str | None:
+    verdict = str(value or "").strip().upper()
+    return verdict if verdict in {"PASS", "REVISE", "REJECT"} else None
+
+
+def _per_dimension_header_region(review_text: str) -> str:
+    stripped = _strip_outer_code_fence(review_text)
+    evidence_match = re.search(r"(?im)^##\s*Evidence\b", stripped)
+    if evidence_match:
+        return stripped[: evidence_match.start()]
+    return "\n".join(stripped.splitlines()[:15])
+
+
+def _normalizable_per_dimension_header(review_text: str) -> tuple[float | None, str | None]:
+    """Extract an unambiguous score/verdict pair from top-level review metadata."""
+    header = _per_dimension_header_region(review_text)
+    score_match = _PER_DIM_TOLERANT_SCORE_RE.search(header)
+    verdict_match = _PER_DIM_VERDICT_RE.search(header)
+    score = _coerce_per_dimension_score(score_match.group(1) if score_match else None)
+    verdict = _coerce_per_dimension_verdict(verdict_match.group(1) if verdict_match else None)
+    if score is not None and verdict is not None:
+        return score, verdict
+
+    with suppress(Exception):
+        maybe_yaml = yaml.safe_load(_strip_outer_code_fence(review_text))
+        if isinstance(maybe_yaml, dict):
+            score = _coerce_per_dimension_score(maybe_yaml.get("score"))
+            verdict = _coerce_per_dimension_verdict(maybe_yaml.get("verdict"))
+            if score is not None and verdict is not None:
+                return score, verdict
+
+    return None, None
+
+
+def _normalize_per_dimension_review_header(review_text: str) -> tuple[str, float, str]:
+    score, verdict = _normalizable_per_dimension_header(review_text)
+    if score is None or verdict is None:
+        missing = []
+        if score is None:
+            missing.append("score")
+        if verdict is None:
+            missing.append("verdict")
+        raise ValueError("review output missing " + "/".join(missing) + " header")
+
+    header = _per_dimension_header_region(review_text)
+    canonical_score = _PER_DIM_CANONICAL_SCORE_RE.search(header)
+    canonical_verdict = _PER_DIM_VERDICT_RE.search(header)
+    if canonical_score and canonical_verdict:
+        return review_text, score, verdict
+
+    normalized = f"score: {score:.1f}/10\nverdict: {verdict}\n\n{review_text.lstrip()}"
+    return normalized, score, verdict
+
+
+def _build_per_dimension_review_format_retry_prompt(
+    original_prompt: str,
+    *,
+    dimension_id: str,
+    parse_error: str,
+    malformed_output: str,
+) -> str:
+    output_literal = _format_prompt_literal_block(
+        "Malformed Review Output",
+        malformed_output[:8000],
+        language="markdown",
+    )
+    return (
+        original_prompt
+        + "\n\n## Output Format Repair Retry\n\n"
+        f"The previous `{dimension_id}` review could not be parsed: {parse_error}.\n"
+        "Do not change the review judgment. Re-emit the same review in the required "
+        "format and start the response with exactly these two top-level lines:\n\n"
+        "score: X.X/10\n"
+        "verdict: PASS | REVISE | REJECT\n\n"
+        "Then include the usual `## Evidence`, `## Findings`, and `## Verdict Reason` sections.\n\n"
+        f"{output_literal}\n"
+    )
+
+
 def _parse_per_dimension_review(
     review_text: str,
     *,
@@ -5538,18 +5674,13 @@ def _parse_per_dimension_review(
     dimension_name: str,
 ) -> PerDimensionReviewResult:
     """Parse a single per-dimension reviewer response."""
-    score_match = re.search(r"(?im)^score:\s*(\d+(?:\.\d+)?)/10\s*$", review_text)
-    verdict_match = re.search(r"(?im)^verdict:\s*(PASS|REVISE|REJECT)\s*$", review_text)
-    if score_match is None or verdict_match is None:
-        raise ValueError(
-            f"{dimension_id} review output missing score/verdict header"
-        )
+    review_text, score, verdict = _normalize_per_dimension_review_header(review_text)
 
     return PerDimensionReviewResult(
         dimension_id=dimension_id,
         dimension_name=dimension_name,
-        score=round(float(score_match.group(1)), 1),
-        verdict=verdict_match.group(1).upper(),
+        score=score,
+        verdict=verdict,
         evidence=_summarize_review_evidence(_extract_markdown_section(review_text, "Evidence")),
         review_text=review_text,
         findings=tuple(_extract_structured_findings(review_text)),
@@ -6682,7 +6813,7 @@ def _resolve_verify_flags(flags: list[dict]) -> list[dict]:
 
     import sqlite3
 
-    vesum_db = PROJECT_ROOT / "data" / "vesum.db"
+    vesum_db = VESUM_DB_PATH
     if not vesum_db.exists():
         return flags
 
@@ -7882,7 +8013,7 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
     """
     import sqlite3
 
-    vesum_db = PROJECT_ROOT / "data" / "vesum.db"
+    vesum_db = VESUM_DB_PATH
     if not vesum_db.exists():
         return ""
 
@@ -8128,19 +8259,45 @@ def step_review(content_path: Path, level: str, module_num: int,
         _log("  📡 Monitor telemetry injected")
 
     def _run_dimension_review(spec: dict) -> PerDimensionReviewResult:
-        ok, raw = _dispatch_review_prompt(
-            prompts_by_dim[spec["id"]],
-            reviewer=reviewer,
-            reviewer_agent=reviewer_agent,
-            orch_dir=orch_dir,
-            phase=f"review-{spec['id']}",
-        )
-        if not ok or not raw:
-            raise RuntimeError(f"reviewer returned no output for {spec['id']}")
-        return _parse_per_dimension_review(
-            raw,
-            dimension_id=spec["id"],
-            dimension_name=spec["label"],
+        prompt = prompts_by_dim[spec["id"]]
+        parse_errors: list[str] = []
+        raw = ""
+        for attempt in (1, 2):
+            phase = f"review-{spec['id']}"
+            if attempt == 2:
+                phase += "-format-retry"
+            ok, raw = _dispatch_review_prompt(
+                prompt,
+                reviewer=reviewer,
+                reviewer_agent=reviewer_agent,
+                orch_dir=orch_dir,
+                phase=phase,
+            )
+            if not ok or not raw:
+                raise RuntimeError(f"reviewer returned no output for {spec['id']}")
+            try:
+                return _parse_per_dimension_review(
+                    raw,
+                    dimension_id=spec["id"],
+                    dimension_name=spec["label"],
+                )
+            except ValueError as exc:
+                parse_errors.append(str(exc))
+                if attempt == 2:
+                    break
+                _log(
+                    f"  ⚠️  {spec['label']} review output malformed "
+                    f"({exc}); retrying format repair"
+                )
+                prompt = _build_per_dimension_review_format_retry_prompt(
+                    prompts_by_dim[spec["id"]],
+                    dimension_id=spec["id"],
+                    parse_error=str(exc),
+                    malformed_output=raw,
+                )
+        reason = "; ".join(parse_errors) or "unknown parse error"
+        raise RuntimeError(
+            f"{spec['id']} review output malformed after retry: {reason}"
         )
 
     results_by_id: dict[str, PerDimensionReviewResult] = {}
@@ -10909,6 +11066,9 @@ def main():
         # Runs before resume logic — after reset there are no phases to resume.
         if args.force:
             _log("   🔄 --force: resetting module to source of truth...")
+            if not _run_force_reset_preflight():
+                _emit_module_failed("force-preflight", "missing rebuild prerequisites")
+                return False
             _force_reset_module(args.level, slug, reset_memory=args.reset_memory)
             # --force implies a full rebuild from the beginning.
             if args.resume:
@@ -11954,4 +12114,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(0 if main() is not False else 1)
-

@@ -170,6 +170,9 @@ These are content-free. They inflate word count without teaching:
 - "In this section, we will explore..." followed by nothing specific
   (the Announcer — note: "In this module..." + a specific teaching
   point IS allowed; the banned pattern is the empty transition)
+- "This section teaches...", "learners will...", "the activity asks..."
+  (teacher-plan narration — the module speaks to the learner, not about
+  the build plan or learner cohort)
 - "This is a very important concept that you will use frequently in
   your daily life." (no specific teaching — the Filler)
 - Repeated boilerplate across more than one section

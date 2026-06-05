@@ -27,6 +27,9 @@ _ACTIVITY_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->")
 # the Dimension 6 deduction rubric in ``scripts/build/phases/v6-review.md``.
 _META_OPENER_PATTERNS = (
     re.compile(r"^In this (?:section|module|lesson)\b", re.IGNORECASE),
+    re.compile(r"^This section teaches\b", re.IGNORECASE),
+    re.compile(r"^(?:Learners|Students) will\b", re.IGNORECASE),
+    re.compile(r"^The (?:activity|exercise) asks\b", re.IGNORECASE),
     re.compile(r"^Let us\b", re.IGNORECASE),
     re.compile(r"^(?:Now,?\s+)?Let'?s\b", re.IGNORECASE),
 )
