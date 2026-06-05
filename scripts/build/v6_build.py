@@ -7289,6 +7289,32 @@ def _model_activity_hints(plan: dict) -> list[object]:
     ]
 
 
+def _marker_matches_activity_type(marker: str, activity_types: set[str]) -> bool:
+    token = marker.split(",", 1)[0].splitlines()[0].strip().lower()
+    return any(
+        token == activity_type or token.startswith(f"{activity_type}-")
+        for activity_type in activity_types
+    )
+
+
+def _remove_activity_markers_from_content(content: str, activity_types: set[str]) -> str:
+    if not activity_types:
+        return content
+
+    def replace_marker(match: re.Match[str]) -> str:
+        marker = match.group(1)
+        if _marker_matches_activity_type(marker, activity_types):
+            return ""
+        return match.group(0)
+
+    return re.sub(
+        r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->",
+        replace_marker,
+        content,
+        flags=re.DOTALL,
+    )
+
+
 def _remove_activity_types_csv(value: object, blocked: set[str]) -> str:
     if not value:
         return ""
@@ -7521,19 +7547,36 @@ def step_activities(
         _save_v6_state(level, slug, "activities")
         return output_path
 
-    # Load module content
-    module_content = content_path.read_text("utf-8")
-
     # Extract injection markers from prose — writers use various formats:
     # <!-- INJECT_ACTIVITY: quiz-case-identification -->  (strict kebab-case)
     # <!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->  (type + description)
     # <!-- INJECT_ACTIVITY: quiz, Case Identification Drill, 8 items -->  (with count)
+    module_content = content_path.read_text("utf-8")
     injection_markers = re.findall(
         r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->", module_content
     )
-    marker_count = len(injection_markers)
-    if injection_markers:
-        markers_text = "\n".join(f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in injection_markers)
+    model_injection_markers = list(injection_markers)
+    if deterministic_activity_types:
+        model_injection_markers = [
+            marker for marker in injection_markers
+            if not _marker_matches_activity_type(marker, deterministic_activity_types)
+        ]
+        omitted_markers = len(injection_markers) - len(model_injection_markers)
+        if omitted_markers:
+            module_content = _remove_activity_markers_from_content(
+                module_content, deterministic_activity_types,
+            )
+            _log(
+                "  🧩 "
+                f"{omitted_markers} deterministic A1 letter marker(s) omitted "
+                "from the model prompt"
+            )
+
+    marker_count = len(model_injection_markers)
+    if model_injection_markers:
+        markers_text = "\n".join(
+            f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in model_injection_markers
+        )
     else:
         markers_text = "(No injection markers found in prose. All activities will go to workbook.)"
     markers_text = _format_prompt_literal_block(

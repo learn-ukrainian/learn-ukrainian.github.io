@@ -464,6 +464,71 @@ class TestStepActivitiesIntegration:
         assert "letter-grid" not in prompt_before_content
         assert "watch-and-repeat" not in prompt_before_content
 
+    def test_step_omits_deterministic_letter_markers_from_model_prompt(self, tmp_module):
+        """Deterministic letter markers should not count as model inline work."""
+        tp = tmp_module["tmp_path"]
+        plan_path = (
+            tp
+            / "curriculum"
+            / "l2-uk-en"
+            / "plans"
+            / tmp_module["level"]
+            / f"{tmp_module['slug']}.yaml"
+        )
+        plan = yaml.safe_load(plan_path.read_text())
+        plan["letter_module"] = True
+        plan["activity_hints"] = [
+            {"type": "quiz", "focus": "quiz focus"},
+            {"type": "letter-grid", "focus": "grid focus"},
+            {"type": "watch-and-repeat", "focus": "watch focus"},
+        ]
+        plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), "utf-8")
+
+        tmp_module["content_path"].write_text(
+            "## First\n\n"
+            "<!-- INJECT_ACTIVITY: quiz-genders -->\n\n"
+            "## Letters\n\n"
+            "<!-- INJECT_ACTIVITY: letter-grid-alphabet -->\n\n"
+            "## Videos\n\n"
+            "<!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko -->\n",
+            "utf-8",
+        )
+
+        template_path = tp / "scripts" / "build" / "phases" / "v6-activities.md"
+        template_path.write_text(
+            "InlineTarget={INLINE_MIN}\n"
+            "Markers\n{INJECTION_MARKERS}\n"
+            "Content\n{MODULE_CONTENT}\n",
+            "utf-8",
+        )
+
+        captured: dict[str, str] = {}
+
+        def mock_dispatch(prompt, **_kwargs):
+            captured["prompt"] = prompt
+            return True, VALID_YAML
+
+        with (
+            patch("build.v6_build.CURRICULUM_ROOT", tp / "curriculum" / "l2-uk-en"),
+            patch("build.v6_build.PROJECT_ROOT", tp),
+            patch("build.v6_build.PHASES_DIR", tp / "scripts" / "build" / "phases"),
+            patch("build.dispatch.dispatch_agent", side_effect=mock_dispatch),
+        ):
+            result = step_activities(
+                tmp_module["content_path"],
+                tmp_module["level"],
+                1,
+                tmp_module["slug"],
+                writer="claude-tools",
+            )
+
+        assert result is not None
+        prompt = captured["prompt"]
+        assert "InlineTarget=1" in prompt
+        assert "quiz-genders" in prompt
+        assert "letter-grid-alphabet" not in prompt
+        assert "watch-and-repeat-ohoiko" not in prompt
+
     def test_deterministic_only_letter_hints_skip_dispatch(self, tmp_module):
         """If all activity hints are deterministic abetka work, do not call an LLM."""
         tp = tmp_module["tmp_path"]
