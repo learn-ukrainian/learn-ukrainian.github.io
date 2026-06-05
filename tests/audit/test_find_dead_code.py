@@ -1,4 +1,15 @@
-from scripts.audit.find_dead_code import category_a, category_b, category_c, category_d, category_g, main
+from pathlib import Path
+
+from scripts.audit.find_dead_code import (
+    _is_excluded,
+    category_a,
+    category_b,
+    category_c,
+    category_d,
+    category_f,
+    category_g,
+    main,
+)
 
 
 def test_category_a(tmp_path):
@@ -107,3 +118,41 @@ def test_smoke_main(tmp_path, monkeypatch):
     ]
     for c in categories:
         assert c in content
+
+
+def test_is_excluded():
+    # .worktrees (live dispatch worktrees = full repo copies) and archive
+    # (Phase-4 holding pen) must be excluded; normal source paths must not.
+    assert _is_excluded(Path("/repo/.worktrees/dispatch/x/scripts/foo.py"))
+    assert _is_excluded(Path("/repo/archive/2026-06-06-cleanup-1/old.py"))
+    assert _is_excluded(Path("/repo/.venv/lib/python/site-packages/x.py"))
+    assert _is_excluded(Path("/repo/node_modules/pkg/index.js"))
+    assert not _is_excluded(Path("/repo/scripts/build/v7_build.py"))
+
+
+def test_category_a_excludes_worktrees(tmp_path):
+    # An OBSOLETE module in the live tree is flagged; an identical one inside
+    # .worktrees/ (a full repo copy) must NOT be — else every hit is counted
+    # once per active worktree (the 2026-06-06 77%-pollution bug).
+    (tmp_path / "live.py").write_text("OBSOLETE\ndef foo(): pass", encoding="utf-8")
+    wt = tmp_path / ".worktrees" / "dispatch" / "x"
+    wt.mkdir(parents=True)
+    (wt / "copy.py").write_text("OBSOLETE\ndef foo(): pass", encoding="utf-8")
+
+    hits = category_a(tmp_path)
+
+    assert any("live.py" in h for h in hits)
+    assert not any(".worktrees" in h for h in hits)
+
+
+def test_category_f_excludes_worktrees(tmp_path):
+    # An orphaned orchestration dir in the live tree is a candidate; one inside
+    # .worktrees/ must NOT be (484 of the polluted F hits were worktree copies).
+    (tmp_path / "mod" / "orchestration").mkdir(parents=True)
+    wt_orch = tmp_path / ".worktrees" / "dispatch" / "x" / "mod" / "orchestration"
+    wt_orch.mkdir(parents=True)
+
+    hits = category_f(tmp_path)
+
+    assert any("mod/orchestration" in h and ".worktrees" not in h for h in hits)
+    assert not any(".worktrees" in h for h in hits)

@@ -3,6 +3,38 @@ import datetime
 import subprocess
 from pathlib import Path
 
+# Directory NAMES never walked by the filesystem scanners (categories A/B/F).
+# Critically includes `.worktrees`: live dispatch worktrees are full repo
+# copies, so scanning them multiplies every hit by the number of active
+# worktrees (observed 2026-06-06: 11 worktrees → 77% of the report was
+# `.worktrees/` noise). `archive` is the Phase-4 holding pen for already-
+# triaged deletions — re-reporting it as "dead code" is pure noise. The other
+# names are virtualenvs / vendored deps / VCS internals.
+EXCLUDE_DIR_NAMES = (
+    ".venv",
+    "embed-venv",
+    "node_modules",
+    "site-packages",
+    ".git",
+    ".worktrees",
+    "archive",
+)
+
+
+def _is_excluded(path: Path) -> bool:
+    """True if any path component is an excluded directory name."""
+    return any(part in EXCLUDE_DIR_NAMES for part in path.parts)
+
+
+def _ugrep_exclude_flags() -> list[str]:
+    """`--exclude-dir=<name>` flags for every excluded directory."""
+    return [f"--exclude-dir={name}" for name in EXCLUDE_DIR_NAMES]
+
+
+def _vulture_exclude_glob() -> str:
+    """Comma-joined `*/<name>/*` globs for vulture's --exclude."""
+    return ",".join(f"*/{name}/*" for name in EXCLUDE_DIR_NAMES)
+
 
 def run_cmd(cmd, cwd=None):
     try:
@@ -16,7 +48,7 @@ def category_a(root: Path):
     hits = []
     try:
         for p in root.rglob("*.py"):
-            if ".venv" in p.parts or "node_modules" in p.parts or ".git" in p.parts:
+            if _is_excluded(p):
                 continue
             try:
                 content = p.read_text(encoding="utf-8")
@@ -28,9 +60,7 @@ def category_a(root: Path):
                         "-rlw",
                         stem,
                         str(root),
-                        "--exclude-dir=.git",
-                        "--exclude-dir=node_modules",
-                        "--exclude-dir=.venv",
+                        *_ugrep_exclude_flags(),
                     ]
                     res = run_cmd(cmd)
                     if res and res.stdout.strip():
@@ -60,7 +90,7 @@ def category_b(root: Path):
             "--min-confidence",
             "80",
             "--exclude",
-            "*/.venv/*,*/embed-venv/*,*/node_modules/*,*/site-packages/*",
+            _vulture_exclude_glob(),
         ]
     )
     if not res:
@@ -143,8 +173,7 @@ def category_f(root: Path):
     for d in root.rglob("orchestration"):
         if (
             d.is_dir()
-            and ".venv" not in d.parts
-            and "node_modules" not in d.parts
+            and not _is_excluded(d)
             and not (d / "status.json").exists()
             and not (d.parent / "status.json").exists()
         ):
@@ -235,7 +264,10 @@ def main():
 
     categories = {
         "A Marked-obsolete code (M)": (category_a, "Grep for OBSOLETE banners; check live callers via ugrep."),
-        "B Dead Python (L)": (category_b, "vulture --min-confidence 80 (excludes .venv/embed-venv/node_modules/site-packages)."),
+        "B Dead Python (L)": (
+            category_b,
+            "vulture --min-confidence 80 (excludes .venv/embed-venv/node_modules/site-packages/.git/.worktrees/archive).",
+        ),
         "C Stale docs (L)": (category_c, "ugrep v6_build|pipeline_v5 in docs/ excluding specific subdirs."),
         "D Generated artifacts that escaped (L)": (
             category_d,
