@@ -47,3 +47,15 @@ def test_read_session_file_rejects_escape():
     with pytest.raises(HTTPException) as exc:
         _read_session_file("../../../../etc/passwd")
     assert exc.value.status_code == 400
+
+
+def test_safe_path_rejects_sibling_prefix():
+    # A sibling directory that shares PROJECT_ROOT's name as a string prefix
+    # (e.g. /…/learn-ukrainian-evil vs /…/learn-ukrainian) must be rejected.
+    # Guards the trailing-os.sep in the containment check — a plain
+    # startswith(root) without the separator would let this through.
+    root = PROJECT_ROOT.resolve()
+    sibling = f"../{root.name}-evil/secret"
+    with pytest.raises(HTTPException) as exc:
+        _safe_project_path(sibling)
+    assert exc.value.status_code == 400
