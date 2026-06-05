@@ -216,4 +216,4 @@ yarl==1.22.0
 youtube-transcript-api==1.2.4
 yt-dlp==2026.3.17
 zeroconf==0.149.7
-zlib-state==0.1.10
+zlib-state==0.1.12
