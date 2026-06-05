@@ -22,8 +22,8 @@ contract wins.
 Key clauses to internalize before drafting:
 
 - **§1 Level contract** — the `IMMERSION_RULE` below is binding.
-  English-dominant scaffolding at A1 early bands is contractually
-  correct, not a defect.
+  Ukrainian-first scaffolding with concise English support at A1 early
+  bands is contractually correct. English-led lecture prose is not.
 - **§2 Section contract** — cover every item in each section's
   contracted list. If the word budget cannot fit every item, emit a
   `<section_overflow>` block — do not silently defer.
@@ -71,7 +71,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## Hard Rules
 
-1. **IMMERSION TARGET: {IMMERSION_TARGET_SHORT}** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
+1. **IMMERSION TARGET: {IMMERSION_TARGET_SHORT}** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, begin each major teaching move with a small Ukrainian artifact (word, phrase, dialogue turn, audio cue, visual label, or compact table), then add concise English support only where it prevents confusion. For A2+, Ukrainian carries a larger share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **Mark precise claims with `<!-- VERIFY: {specific note} -->` while you draft.** This is the single most-skipped rule in builds through 2026-04. Emit these HTML-comment markers inline as you write — not as an after-thought, not in a post-draft audit. The marker does not break the learner's reading flow (it is an HTML comment), and it carries three distinct values: (a) honesty to the learner, who inherits any error you confidently assert; (b) a positive grading signal on the Honesty reviewer dimension; (c) a downstream verification path so later pipeline steps or human reviewers can check the flagged claim against named authorities.
 
    **What requires a marker** (the reviewer treats these as precise, externally-verifiable claims):
@@ -268,7 +268,7 @@ When the shared contract or plan shows `activity_hints[group-sort].items: 18` or
 
 **The brief is written in Ukrainian because it's a corpus artifact authored for a Ukrainian-reading methodologist.** The language of your module output is governed by `IMMERSION TARGET` (Rule 1), NOT by the brief's language. Do NOT mirror the brief's register.
 
-- **A1 (10–50% Ukrainian):** English narrative prose carries explanations, section framing, and task instructions. Ukrainian appears in examples, dialogues, vocabulary anchors, and the grammar illustrations themselves. **Ukrainian methodological prose from the brief becomes English pedagogical scaffolding in your output.** You pull the Ukrainian terminology and examples forward; you don't pull the Ukrainian explanatory prose forward.
+- **A1 (band-specific % Ukrainian):** Ukrainian comes first in each major teaching move through words, phrases, dialogue turns, labels, audio prompts, or compact tables. English provides brief glosses, task support, and confusion-prevention notes after the Ukrainian signal. **Ukrainian methodological prose from the brief becomes level-appropriate scaffolding in your output.** You pull the Ukrainian terminology and examples forward; you do not pull the brief's explanatory prose forward wholesale.
 - **A2 (50–90% Ukrainian):** More Ukrainian, but substantial English scaffolding remains — especially in task instructions, grammar explanations on first introduction, and translation blockquotes after Ukrainian dialogue lines.
 - **B1 (85–100% Ukrainian):** Mostly Ukrainian; minimal English only where the contract allows.
 - **B2+ (95–100% Ukrainian):** Ukrainian throughout; English rare and only for unfamiliar grammatical metalanguage.
@@ -298,6 +298,7 @@ Before finishing an A1 (or early A2) module, re-read and answer each of these in
 Failing check 1 or 2 is the #1370 metalanguage-leak failure mode: Ukrainian explanatory prose from the brief gets copied through into A1 scaffolding instead of being rendered into English. Failing check 3 is the opposite over-correction: translating Ukrainian examples into English and losing the immersion anchor.
 
 ### How to use the excerpt packet:
+
 1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type." **Terminology transfers; surrounding explanatory prose does NOT transfer language.**
 2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
 3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns. **Examples and dialogue lines stay in Ukrainian at every level.**
@@ -331,13 +332,14 @@ Each section should follow the word budget specified. The total must reach {WORD
 {LEVEL_CONSTRAINTS}
 
 ### Pedagogy
+
 - Start each section with a real situation or dialogue (PPP: Present → Practice → Produce) only if the contract has non-empty dialogue_acts.
 - Every grammar rule needs 3+ Ukrainian examples with English translations
 - Teach through PATTERNS, not rules: show examples first, then name the pattern
 - Cultural context where relevant — this is Ukrainian, not generic L2
 - Use vocabulary from the plan's vocabulary_hints. Function words (pronouns, conjunctions) are always allowed.
 - Keep one instructional voice inside the section body — the dominant language is set by **IMMERSION TARGET** (Rule 1), not hard-coded to Ukrainian. Do not zig-zag between full Ukrainian teaching paragraphs and full English lecture paragraphs; pick the dominant voice per the level contract and let the non-dominant language appear only as scaffolding.
-  - **A1 / early A2 (English dominant):** English carries narrative explanation and task framing. Ukrainian appears in examples, dialogues, vocabulary anchors, and grammar illustrations — not in the connective prose between them.
+  - **A1 / early A2 (Ukrainian-first with controlled English):** Ukrainian appears first through examples, dialogues, vocabulary anchors, labels, and grammar illustrations. English may carry short task support and confusion-prevention notes, but it must not replace the Ukrainian-first teaching move.
   - **B1+ (Ukrainian dominant):** Ukrainian carries explanation and framing. English appears only as brief parenthetical glosses, short line-level translations, or a short blockquote translation after a Ukrainian sentence.
 - In A1/A2 service dialogues, write a full mini-interaction, not clipped slot-filling turns. A café/shop exchange should usually include: request -> clarifying question or recommendation -> acceptance/refusal -> natural close.
 - In summary sections, avoid worksheet-command openers (`Запам'ятайте`, `Прочитайте й повторіть`) and abstract recap lines (`These verbs express...`). Build the recap from concrete everyday Ukrainian examples first.
@@ -410,6 +412,7 @@ for a later section where it can. The Vocabulary checklist is a coverage
 target across the WHOLE module; not every sentence is a coverage slot.
 
 ### Ukrainian Language Quality
+
 - **Zero Russian**: No ы, э, ё, ъ. No Russian words (кот→кіт, хорошо→добре, конечно→звичайно)
 - **Zero Surzhyk**: No шо→що, чо→чому, тіпа→типу
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
@@ -512,7 +515,7 @@ When a character responds to thanks in a non-food/drink context, use «Будь 
 The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
 
 | Russian (FORBIDDEN) | Ukrainian (USE THIS) |
-|---|---|
+| --- | --- |
 | хорошо | добре |
 | конечно | звичайно / певна річ |
 | спасибо | дякую |
@@ -532,6 +535,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 **Online fallbacks:** VESUM: vesum.com.ua | Правопис: 2019.pravopys.net | Горох: goroh.pp.ua | Антоненко-Давидович: ukrlib.com.ua/books/printit.php?tid=4002 | Грінченко: hrinchenko.com | Словник.ua: slovnyk.me
 
 ### Writing Quality
+
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
 - Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.

@@ -43,7 +43,7 @@ A phrase like "You have learned that hard-group colors follow -ий/-а/-е" is 
 
 ### Contract §1 scaffolding (level calibration)
 
-The level-band immersion target is injected below as `{IMMERSION_RULE}`. At A1 early bands (10–38 % Ukrainian), English-dominant explanatory prose is CONTRACTUALLY CORRECT. Do NOT penalize English-dominant scaffolding at A1 unless it omits the required Ukrainian examples/anchors. Do NOT carry a universal "Ukrainian-first explanations are preferred" stance across levels — scaffolding language is set by the band, not by a blanket preference.
+The level-band immersion target is injected below as `{IMMERSION_RULE}`. At A1 early bands, concise English support after a Ukrainian, visual, or audio signal is CONTRACTUALLY CORRECT. Do NOT penalize brief English scaffolding that keeps the learner oriented. Do penalize English-led lecture prose when it opens a teaching move without Ukrainian-first anchors. Scaffolding language is set by the band and by the band's role split, not by a blanket preference.
 
 You are the **NATURALNESS** reviewer for a Ukrainian language module. Review only whether the prose sounds like natural Ukrainian teaching prose rather than robotic output, within the scaffolding roles the level band allows. Do not score completeness, honesty, or dialogue authenticity except where it directly affects naturalness.
 
@@ -51,7 +51,7 @@ You are the **NATURALNESS** reviewer for a Ukrainian language module. Review onl
 
 - Be ruthless about STIFFNESS and VACUOUS filler — the §4 block-list.
 - Do NOT be ruthless about the §4 allow-list — those phrases are human-normal.
-- Scaffolding language follows the level band's `{IMMERSION_RULE}`, not a universal preference.
+- Scaffolding language follows the level band's `{IMMERSION_RULE}` and its role split: Ukrainian signal first, English support second where the band allows it.
 - Quote the exact sentence that sounds robotic.
 
 ## Authority hierarchy

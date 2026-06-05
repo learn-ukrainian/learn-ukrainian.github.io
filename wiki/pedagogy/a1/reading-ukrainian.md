@@ -8,6 +8,24 @@ compiled: 2026-04-26
 generated_by_model: gemini-3.1-pro-preview
 -->
 
+## A1/A2 Retrofit Evidence Packet
+
+- Ukrainian-first entry: start from print on the page, not an English reading
+  lecture. Let learners point, match, or mark before the explanation.
+- Controlled English: define only the immediate reading job in English after
+  the Ukrainian word, letter, or syllable is visible.
+- Sequence: recognize letters and syllables, read/match familiar words, sort
+  print patterns, then read one short supported line aloud.
+- Recycling: bring M1 greetings and sound-letter terms into M3-M4; send known
+  word-reading confidence into the M7 checkpoint.
+- Visual/audio/cursive support: use lawful print cards, large-type contrast
+  tables, short listening models, and print-to-cursive matching for known
+  words; do not require extended handwriting yet.
+- Teacher-feedback loop: add a tutor check for decoding, stress placement in
+  read-aloud practice, and rhythm before learners memorize errors.
+- IP boundary: all visuals, audio, and handwriting samples must be original,
+  generated, public-domain, properly licensed, or lawfully linked.
+
 ## Методичний підхід
 
 Українська методика навчання читання на ранніх етапах спирається на глибоке усвідомлення звукової природи мови, де голосні звуки відіграють ключову роль. Як навчає у своєму підручнику для 1 класу методистка Ірина Большакова, знайомство з мовою починається через фізичне відчуття голосних звуків: «Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються, весело співаються!» [S9]. Цей підхід є фундаментальним: українські педагоги пояснюють, що голосні — це звуки, які утворюються виключно за допомогою голосу, коли струмінь повітря вільно проходить крізь ротову порожнину, не зустрічаючи перешкод у вигляді губ чи зубів [S9], [S10]. Для візуалізації цього відкритого стану рота у звукових моделях шкільних підручників (зокрема, у Ганни Захарійчук для 1 класу) голосний звук традиційно позначається кружечком — `[•]` [S9], [S10].
@@ -43,7 +61,7 @@ generated_by_model: gemini-3.1-pro-preview
 На рівні А1 англомовні учні часто спираються на фонетичні патерни рідної мови. Автор-письменник має заздалегідь підготувати вправи, які нівелюють цю структурну інтерференцію.
 
 | ❌ Помилково (L2 Interference) | ✅ Правильно (Ukrainian Norm) | Чому виникає і як запобігти |
-|---|---|---|
+| --- | --- | --- |
 | Вимова диграфів ДЖ і ДЗ як двох окремих, розірваних звуків (`[д] + [ж]`). | Один злитий африкат `/d͡ʒ/` або `/d͡z/` (схожий на звуки в англійських словах *jeans* чи *kids*). | Англомовний мозок бачить дві окремі літери й артикулює їх послідовно. Слід пояснювати, що це єдина фонема, яка потребує злитої артикуляції [S7]. |
 | Читання йотованих Я, Ю, Є після приголосного як `[й]` + голосний (наприклад, `[д-й-а-к-у-й-у]`). | Пом'якшений приголосний + чистий голосний (наприклад, `/dʲa/`). | Учні ігнорують або не розуміють функцію палаталізації (пом'якшення). Треба наголошувати, що у словах типу «дякую» звук `/j/` не вимовляється [S7]. |
 | Редукція ненаголошеного `[о]` до `[а]` (акання). | Чітка і повна вимова `[о]` незалежно від того, падає на нього наголос чи ні. | В англійській мові ненаголошені голосні зазвичай редукуються у нейтральний шва. В українській `[о]` ніколи не перетворюється на `[а]` [S10]. |
@@ -119,6 +137,7 @@ generated_by_model: gemini-3.1-pro-preview
 - *Методична цінність:* Надійно та системно закріплює базову категоризацію української графіки, чітко розмежовуючи голосні та приголосні для подальшого вивчення морфології.
 
 ## Пов'язані статті
+
 - Основи української фонетики (A1)
 - Український алфавіт та правила читання: від літер до складів
 - Диграфи та африкати в українській мові

@@ -44,28 +44,31 @@ carve-out: vocabulary translations and idiom/expression notes remain
 English there because they are structural L1 anchors, not body prose.
 
 **Writer side.** Match the band's target and language roles. If the
-band says "English carries the explanation, Ukrainian appears in
-examples / dialogues / vocabulary anchors," do exactly that. Do NOT
-translate Ukrainian explanatory prose from the wiki brief into the
-module — the brief's language and the module's scaffolding language
-are independent.
+band says "Ukrainian-first with brief English support," start each
+major teaching move with a Ukrainian word, phrase, dialogue turn,
+audio cue, visual label, or compact table, then add only the English
+support needed to prevent confusion. Do NOT translate Ukrainian
+explanatory prose from the wiki brief wholesale into the module — the
+brief's language and the module's scaffolding language are independent.
 
 **Reviewer side.** Score scaffolding language ONLY against the band's
-target and roles. English-dominant prose at A1 early bands is
-contractually correct, not a defect. Score <8 on a language-related
-dimension ONLY if:
+target and roles. At A1 early bands, brief English support after a
+Ukrainian signal is contractually correct; English-led lecture prose
+that opens without a Ukrainian, visual, or audio anchor is not. Score
+<8 on a language-related dimension ONLY if:
 
-- the module falls OUTSIDE the band's quantitative target (too much
-  Ukrainian at A1/A2, or any non-Tab-2 English at B1+); OR
+- the module falls OUTSIDE the band's quantitative target or qualitative
+  role split (English replaces Ukrainian-first anchors at A1/A2, too much
+  Ukrainian overwhelms early A1, or any non-Tab-2 English appears at B1+); OR
 - Ukrainian examples are translated into English in their anchor role
   (Ukrainian examples must stay Ukrainian at every level); OR
 - scaffolding-language roles are mixed chaotically (paragraphs
   zig-zag between full Ukrainian and full English in the same
   section).
 
-**Reviewer must NOT penalize:** English explanatory prose between
-Ukrainian examples at A1, English task instructions at A1/A2, or
-short English glosses after Ukrainian dialogue turns at A1.
+**Reviewer must NOT penalize:** concise English glosses or explanations
+after Ukrainian examples at A1, controlled English task support at
+A1/A2, or short English glosses after Ukrainian dialogue turns at A1.
 
 ## §2 Section contract — cover every item
 
@@ -111,7 +114,7 @@ contract that was moved to Section N+1 without overflow disclosure).
 
 **Authority:** plan YAML `dialogue_acts[*]` when present, plus
 `mcp__sources__search_sources` over `textbook_sections` +
-`ukrainian_wiki` + ULP.
+`ukrainian_wiki` + approved public resource indexes.
 
 When a section's contract includes dialogue (the section is `Діалоги`,
 `Dialogues`, or any section whose contract lists a `dialogue_acts`

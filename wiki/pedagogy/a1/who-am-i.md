@@ -8,6 +8,26 @@ compiled: 2026-04-26
 generated_by_model: gemini-3.1-pro-preview
 -->
 
+## A1/A2 Retrofit Evidence Packet
+
+- Ukrainian-first entry: open from short self-introduction chunks:
+  `Мене звати...`, `А тебе?`, `Я з...`, with English glosses after the chunk.
+- Controlled English: keep `Мене звати`, origin lines, and profession frames
+  as memorized chunks under `gf-012`; do not analyze case or copula grammar.
+- Sequence: recognize greeting/name chunks, complete controlled exchanges,
+  choose formal vs informal address, then produce a two- or three-line
+  introduction.
+- Register nuance: `тато` is the beginner active default; do not teach
+  attested family variants as nonexistent Ukrainian. Keep true Russianisms and
+  calques as explicit contrast pairs only when verified by project tools.
+- Recycling: reuse greetings, letters, stress, name/origin frames, and
+  feminitive profession defaults; send them forward into M6 and M7.
+- Visual/audio/cursive support: use original or licensed name cards, map or
+  origin visuals, short listening models, and cursive recognition of known
+  names or greetings before handwriting production.
+- Teacher-feedback loop: add native-teacher feedback on pronunciation, name
+  forms, origin lines, and the learner's short spoken introduction.
+
 ## Методичний підхід
 
 Тема «Хто я?» (самоідентифікація та представлення) є фундаментальною відправною точкою для будь-якого курсу української мови рівня А1. Українські педагоги, укладаючи підручники для початкової та середньої школи, підходять до цієї теми через призму комунікативної доцільності та поступового нарощування граматичного апарату. Замість сухого заучування парадигм відмінювання, знайомство з особовими займенниками та базовими іменниками відбувається через моделювання реальних життєвих ситуацій. Наприклад, тема органічно вводиться через комунікативні ситуації, що моделюють знайомство та розповідь про себе, забезпечуючи учня інструментами для негайної взаємодії [S13].

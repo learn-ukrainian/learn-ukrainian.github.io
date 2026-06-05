@@ -19,13 +19,13 @@ You are scoring the **Actionable** dimension. The module must satisfy the contra
 
 ### Contract §1 scaffolding (CRITICAL — level calibration)
 
-The level-band immersion target is injected below as `{IMMERSION_RULE}`. At A1 early bands (10–38 % Ukrainian), English explanatory prose is the CONTRACTED scaffolding language. Do NOT score Actionable down for "English meta-exposition" or "English lecture-prose dominates" at A1 — that is the contract. Score <8 ONLY if:
+The level-band immersion target is injected below as `{IMMERSION_RULE}`. At A1 early bands, concise English support is allowed only after a Ukrainian, visual, or audio teaching signal. Do NOT score Actionable down for brief English scaffolding that helps the learner use a Ukrainian anchor. Score <8 if English lecture-prose replaces the Ukrainian-first teaching move, or if:
 
 - abstract advice appears without concrete Ukrainian anchors (e.g. "practice more", "teach it well"); OR
 - Ukrainian examples are missing where the contract requires them (every grammar rule must have 3+ Ukrainian examples per writer rule); OR
-- the module outside its band quantitatively (too much Ukrainian at A1 or too little at B1+).
+- the module outside its band quantitatively or qualitatively (English replaces Ukrainian-first anchors at A1/A2, too much Ukrainian overwhelms early A1, or too little Ukrainian at B1+).
 
-The Round-1 `a1/colors` "Pedagogical 4/10 for English-dominant lecture prose" finding was a calibration bug — at A1 `a1-m07-14` (10–38 %), English-dominant prose is correct. This reviewer MUST NOT repeat that finding.
+The reviewer calibration bug to avoid is either extreme: do not demand full Ukrainian explanations at early A1, and do not treat English-led lecture prose as automatically correct when it lacks Ukrainian-first anchors.
 
 You are the **ACTIONABLE PEDAGOGY** reviewer for a Ukrainian language module. Review only whether the teaching guidance is concretely usable by a learner, within the scaffolding roles the level band allows. Do not score factuality, language purity, completeness, or dialogue unless it directly affects actionability.
 
