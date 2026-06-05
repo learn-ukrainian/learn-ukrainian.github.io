@@ -388,6 +388,47 @@ class TestDispatchAgent:
         assert kwargs["entrypoint"] == "dispatch"
         assert kwargs["effort"] == "xhigh"
 
+    @patch("agent_runtime.runner.invoke")
+    def test_claude_dispatch_writes_started_marker_and_forwards_startup_timeout(
+        self,
+        mock_invoke,
+        tmp_path,
+    ):
+        from agent_runtime.result import Result
+
+        mock_invoke.return_value = Result(
+            ok=True, agent="claude", model="claude-haiku-4-7", mode="read-only",
+            response="version: \"1.0\"", stderr_excerpt=None, duration_s=1.0,
+            session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
+        )
+
+        ok, raw = dispatch_agent(
+            "activity prompt",
+            agent="claude-tools",
+            phase="activities",
+            orch_dir=tmp_path,
+            timeout=600,
+            initial_response_timeout=180,
+            mcp_tools=True,
+            allowed_tools=CLAUDE_WRITER_TOOLS,
+            model="claude-haiku-4-7",
+        )
+
+        assert ok is True
+        assert raw == "version: \"1.0\""
+        kwargs = mock_invoke.call_args.kwargs
+        assert kwargs["hard_timeout"] == 600
+        assert kwargs["initial_response_timeout"] == 180
+
+        started_file = next((tmp_path / "dispatch").glob("*-activities-*-started.json"))
+        started = json.loads(started_file.read_text())
+        assert started["status"] == "started"
+        assert started["phase"] == "activities"
+        assert started["timeout_s"] == 600
+        assert started["initial_response_timeout_s"] == 180
+        assert started["prompt_chars"] == len("activity prompt")
+
     @patch.dict("os.environ", {}, clear=True)
     @patch("agent_runtime.runner.invoke")
     def test_codex_dispatch_read_only_mode(self, mock_invoke, tmp_path):
