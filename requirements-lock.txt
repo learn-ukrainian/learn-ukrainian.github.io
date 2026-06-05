@@ -202,7 +202,7 @@ tzlocal==5.3.1
 ukrainian_word_stress==1.1.1
 unlzw3==0.2.3
 urllib3==2.7.0
-uvicorn==0.40.0
+uvicorn==0.48.0
 virtualenv==21.3.3
 vulture==2.16
 warc3-wet-clueweb09==0.2.5
