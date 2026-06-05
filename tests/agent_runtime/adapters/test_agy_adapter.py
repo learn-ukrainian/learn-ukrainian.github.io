@@ -153,3 +153,28 @@ def test_render_writer_prompt_omits_agy_directives_for_other_writers() -> None:
 
     assert "## agy-tools writer directives" not in prompt
     assert "Do NOT issue curl-via-Bash for MCP retrieval" not in prompt
+
+
+def _build(tmp_path: Path, *, model: str | None):
+    return AgyAdapter().build_invocation(
+        prompt="hello",
+        mode="danger",
+        cwd=tmp_path,
+        model=model,
+        task_id="t-1",
+        session_id=None,
+        tool_config=None,
+    )
+
+
+def test_build_invocation_passes_explicit_model(tmp_path: Path) -> None:
+    plan = _build(tmp_path, model="gemini-3.1-pro-high")
+    # `--model <value>` must be present as adjacent argv tokens (agy 1.0.5+).
+    assert "--model" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "gemini-3.1-pro-high"
+
+
+def test_build_invocation_falls_back_to_default_model(tmp_path: Path) -> None:
+    plan = _build(tmp_path, model=None)
+    assert "--model" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--model") + 1] == AgyAdapter.default_model
