@@ -46,34 +46,22 @@ Core levels (A1-C2) are 100% compiled. If any are missing:
 ### Single Module
 
 ```bash
-# Module numbers are 1-indexed, matching order in curriculum.yaml
-.venv/bin/python scripts/build/v6_build.py a1 1
+# Modules use the slug from curriculum.yaml
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
 ```
 
 ### Batch (Range)
 
-```bash
-# A1: 55 modules (1-55)
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55
-
-# A2: 69 modules (1-69)
-.venv/bin/python scripts/build/v6_build.py a2 1 --range 69
-
-# B1: 94 modules (1-94)
-.venv/bin/python scripts/build/v6_build.py b1 1 --range 94
-
-# B2: 93 modules (1-93)
-.venv/bin/python scripts/build/v6_build.py b2 1 --range 93
-```
+V7 is single-module per invocation (no `--range`). To run a batch, use standard shell loops or CI orchestration over the module list.
 
 ### Writer / Reviewer
 
 ```bash
 # Default: gemini-tools writes, cross-agent reviews
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
 
 # Explicit Gemini writes + Gemini reviews (current setup)
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55 \
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree \
   --writer gemini-tools --reviewer gemini-tools
 ```
 
@@ -81,16 +69,16 @@ Core levels (A1-C2) are 100% compiled. If any are missing:
 
 ```bash
 # Auto (default): preserve current environment behavior
-.venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --writer gemini-tools
 
 # Subscription / OAuth: strip GEMINI_API_KEY and GOOGLE_API_KEY for this run
 GEMINI_AUTH_MODE=subscription \
-  .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools
+  .venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --writer gemini-tools
 
 # API key: preserve key env vars explicitly
 GEMINI_AUTH_MODE=api \
   GEMINI_API_KEY=... \
-  .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools
+  .venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --writer gemini-tools
 ```
 
 `GEMINI_AUTH_MODE=subscription|api|auto` only affects Gemini CLI launches.
@@ -99,21 +87,21 @@ Claude and Codex paths ignore it.
 ### Resume (continue from where it stopped)
 
 ```bash
-# Resume all incomplete modules in range — skips completed phases
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55 --resume
+# Resume an incomplete module — skips completed phases
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --resume
 
 # Resume from a specific step (e.g., after first pass stops at review)
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55 --step publish --resume
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --step publish --resume
 ```
 
 ### Specific Steps Only
 
 ```bash
-# Run only audit+heal+publish for modules that stopped at stress/review
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55 --step publish --resume
+# Run only audit+heal+publish for a module that stopped at stress/review
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --step publish --resume
 
 # Run only review pass
-.venv/bin/python scripts/build/v6_build.py a1 1 --range 55 --step review --resume
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --step review --resume
 ```
 
 ---

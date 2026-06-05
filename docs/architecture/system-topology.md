@@ -30,7 +30,7 @@ graph TB
     end
 
     subgraph Pipeline["scripts/build/ — v6 pipeline"]
-        V6[v6_build.py<br/>17 phases]
+        V7[v7_build.py<br/>linear_pipeline.py]
         DispatchAgent[dispatch_agent]
         SessionAnalysis[session_analysis.py]
     end
@@ -107,7 +107,7 @@ graph TB
     RuntimeR --> Usage
     DelegateR --> TaskState
 
-    V6 --> Starlight
+    V7 --> Starlight
     Starlight --> MDX
 
     Gemini -.->|MCP| RAGServer
@@ -117,10 +117,10 @@ graph TB
 
 ## Data flows
 
-### Building a module (v6 pipeline)
+### Building a module (v7 pipeline)
 
 ```
-user → v6_build.py {level} {num}
+user → v7_build.py {level} {slug} --worktree
   → loads plans/{level}/{slug}.yaml
   → loads wiki/{domain}/{slug}.md (knowledge packet)
   → dispatch_agent() per phase
@@ -180,7 +180,7 @@ user → compile.py --track hist --slug kyivan-rus
 
 | Path | Purpose |
 |------|---------|
-| `scripts/build/v6_build.py` | The one pipeline entry point |
+| `scripts/build/v7_build.py` | The one pipeline entry point |
 | `scripts/agent_runtime/runner.py` | The one LLM dispatch function |
 | `scripts/api/main.py` | The one API server |
 | `scripts/wiki/compile.py` | The one wiki compiler |

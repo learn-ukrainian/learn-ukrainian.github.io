@@ -2,7 +2,7 @@
 
 Current operational reference for repo-local scripts and agent workflows.
 
-- Main build entry point: `.venv/bin/python scripts/build/v6_build.py {level} {num}`
+- Main build entry point: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree`
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
 - This document intentionally omits retired pipelines and legacy script paths
 
@@ -342,7 +342,7 @@ Additional audit guardrails:
 
 ### Build pipeline entry point
 
-`.venv/bin/python scripts/build/v6_build.py {level} {num}` is the single end-to-end build entry point. It drives the write -> enrich -> review -> audit -> publish chain.
+`.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` is the single end-to-end build entry point. It drives the write -> enrich -> review -> audit -> publish chain.
 
 ### Agent runtime
 
@@ -371,25 +371,22 @@ Use two entry points depending on the job:
 
 | Need | Entry point |
 |---|---|
-| Full module build | `.venv/bin/python scripts/build/v6_build.py {level} {num}` |
+| Full module build | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` |
 | Validate existing content | `npm run audit`, `npm run pipeline`, `npm run generate:json` |
 
-### `scripts/build/v6_build.py`
+### `scripts/build/v7_build.py`
 
 Single end-to-end build entry point.
 
 ```bash
 # Single module
-.venv/bin/python scripts/build/v6_build.py a1 5
-
-# Range
-.venv/bin/python scripts/build/v6_build.py a1 7 --range 14
+.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree
 
 # Resume from prior state
-.venv/bin/python scripts/build/v6_build.py hist 12 --resume
+.venv/bin/python scripts/build/v7_build.py hist m12-kyivan-rus --worktree --resume
 
 # Run a specific step only
-.venv/bin/python scripts/build/v6_build.py b1 9 --step review
+.venv/bin/python scripts/build/v7_build.py b1 m09-travel --worktree --step review
 ```
 
 Useful flags:
@@ -401,11 +398,11 @@ Useful flags:
 
 #### Build monitoring with Claude Code `Monitor` tool
 
-v6_build.py emits JSONL events on stdout (`module_start`, `phase_done`, `review_score`, `module_done`, `module_failed`, `batch_done`). Use the Claude Code `Monitor` tool to stream these as notifications:
+v7_build.py emits JSONL events on stdout (`module_start`, `phase_done`, `review_score`, `module_done`, `module_failed`, `batch_done`). Use the Claude Code `Monitor` tool to stream these as notifications:
 
 ```
 Monitor(
-    command=".venv/bin/python -u scripts/build/v6_build.py a1 1 --range 55 --resume 2>&1 | grep --line-buffered '^{\"event\"'",
+    command=".venv/bin/python -u scripts/build/v7_build.py a1 m01-alphabet --worktree --resume 2>&1 | grep --line-buffered '^{\"event\"'",
     description="A1 build events",
     persistent=True,
     timeout_ms=3600000
@@ -437,7 +434,7 @@ npm run pipeline l2-uk-en a1 5
 npm run generate:json l2-uk-en a1 5
 ```
 
-`pipeline.py` is the technical validation pipeline. It is not the same thing as the end-to-end build orchestrator in `scripts/build/v6_build.py`.
+`pipeline.py` is the technical validation pipeline. It is not the same thing as the end-to-end build orchestrator in `scripts/build/v7_build.py`.
 
 ---
 
@@ -489,7 +486,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 
 | Script | Purpose | Command |
 |---|---|---|
-| `scripts/build/v6_build.py` | End-to-end module build | `.venv/bin/python scripts/build/v6_build.py a1 5` |
+| `scripts/build/v7_build.py` | End-to-end module build | `.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree` |
 | `scripts/audit_level.py` | Audit a level, module, or range | `npm run audit -- b1 1-10` |
 | `scripts/audit_module.py` | Audit a single module file | `.venv/bin/python scripts/audit_module.py <file>` |
 | `scripts/pipeline.py` | Technical validation pipeline | `npm run pipeline l2-uk-en a1 5` |
@@ -895,7 +892,7 @@ ab channel tail reviews --thread THREAD_ID
 ab channel new mytopic --include shared --agents claude,gemini,codex
 
 # Post — short form (one recipient)
-ab p reviews gemini "Review the v6 heal-loop changes in scripts/build/v6_build.py"
+ab p reviews gemini "Review the heal-loop changes in scripts/build/linear_pipeline.py"
 
 # Post — long form (multi-recipient, threading)
 ab post reviews "Adversarial review of #1299 docs patch" --to gemini,codex --parent MSG_ID
@@ -994,7 +991,7 @@ Use `delegate.py status-or-fail <task-id>` before reporting async task state fro
 
 Two event surfaces, split by agent:
 
-- **Claude Code** has a built-in `Monitor` tool that streams stdout events as notifications with ~zero context cost. Use it to watch `v6_build.py` JSONL events, `ab channel watch --event-stream`, or any long-running command. Invoke the tool directly — do **not** wrap it in a shell poll loop.
+- **Claude Code** has a built-in `Monitor` tool that streams stdout events as notifications with ~zero context cost. Use it to watch `v7_build.py` JSONL events, `ab channel watch --event-stream`, or any long-running command. Invoke the tool directly — do **not** wrap it in a shell poll loop.
 - **Gemini / Codex** (headless) do not have `Monitor`. Poll the Monitor API via `curl` when they need to check state.
 
 State queries (all agents):
@@ -1074,7 +1071,7 @@ ab converse "Let's plan the A1/1 build" --task-id a1-1-planning \
 | Build one module | `/module {level} {num}` |
 | Full seminar rebuild | `/full-rebuild {track} {slug}` |
 | Full core rebuild | `/full-rebuild-core {level} {num}` |
-| Full v6 build via script | `.venv/bin/python scripts/build/v6_build.py {level} {num}` |
+| Full v7 build via script | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` |
 | Audit a module or range | `npm run audit -- {level} {num|range}` |
 | Run technical validation | `npm run pipeline l2-uk-en {level} {num}` |
 | Generate app JSON | `npm run generate:json l2-uk-en {level} {num}` |

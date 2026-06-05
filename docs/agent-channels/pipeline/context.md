@@ -1,8 +1,8 @@
-# pipeline — v6 build, audit, dispatch
+# pipeline — v7 build, audit, dispatch
 
-This channel is for conversations about the V6 module build pipeline
+This channel is for conversations about the V7 module build pipeline
 and its supporting infrastructure. If you're posting here, you're
-discussing `scripts/build/v6_build.py`, `scripts/build/quick_verify.py`,
+discussing `scripts/build/v7_build.py`, `scripts/build/quick_verify.py`,
 `scripts/audit/**`, `scripts/build/dispatch.py`, the agent_runtime
 adapter, or anything else that touches how a module goes from plan →
 prose → audit → review → publish.
@@ -29,7 +29,7 @@ check → research → skeleton → write → activities → enrich → verify �
 
 | File | What |
 |---|---|
-| `scripts/build/v6_build.py` | 6000-line god object — main pipeline orchestrator |
+| `scripts/build/v7_build.py` | CLI entry point for linear_pipeline execution |
 | `scripts/build/quick_verify.py` | Post-write structural checks |
 | `scripts/build/phases/v6-write.md` | Write-phase prompt template |
 | `scripts/build/dispatch.py` | Agent invocation (Gemini/Claude tools mode) |
@@ -47,7 +47,7 @@ check → research → skeleton → write → activities → enrich → verify �
 ## Common commands
 
 ```bash
-.venv/bin/python scripts/build/v6_build.py a1 3               # build module 3 of A1
-.venv/bin/python scripts/build/v6_build.py b1 N --slug X --step write --resume  # re-run write
+.venv/bin/python scripts/build/v7_build.py a1 m03-slug --worktree               # build module 3 of A1
+.venv/bin/python scripts/build/v7_build.py b1 mX-slug --worktree --step write --resume  # re-run write
 .venv/bin/python -m pytest tests/test_quick_verify.py         # unit tests
 ```
