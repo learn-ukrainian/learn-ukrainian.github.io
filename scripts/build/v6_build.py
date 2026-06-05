@@ -1264,6 +1264,11 @@ def _missing_force_reset_prerequisites() -> list[Path]:
     return [path for path in required if not path.exists()]
 
 
+def _vesum_db_path() -> Path:
+    """Return the VESUM DB path relative to the current project root."""
+    return PROJECT_ROOT / "data" / "vesum.db"
+
+
 def _run_force_reset_preflight() -> bool:
     missing = _missing_force_reset_prerequisites()
     if not missing:
@@ -6813,7 +6818,7 @@ def _resolve_verify_flags(flags: list[dict]) -> list[dict]:
 
     import sqlite3
 
-    vesum_db = VESUM_DB_PATH
+    vesum_db = _vesum_db_path()
     if not vesum_db.exists():
         return flags
 
@@ -8013,7 +8018,7 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
     """
     import sqlite3
 
-    vesum_db = VESUM_DB_PATH
+    vesum_db = _vesum_db_path()
     if not vesum_db.exists():
         return ""
 
