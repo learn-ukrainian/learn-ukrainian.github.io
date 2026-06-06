@@ -27,7 +27,7 @@
 Два практичні маркери для цього блоку:
 
 - Я, Ю, Є, Ї показують йотований склад або м'якість попереднього приголосного.
--  Ь не має власного звуку, воно лише пом'якшує попередній приголосний.
+- Ь не має власного звуку, воно лише пом'якшує попередній приголосний.
 
 ## Голосні звуки (швидка база)
 
@@ -47,7 +47,7 @@
 Кожний склад має **1 голосний звук**.
 
 - **ма́ма** → а + а = 2 склади
-- **мо́локо** → о + о + о = 3 склади
+- **молоко́** → о + о + о = 3 склади
 - **приві́т** → и + і = 2 склади
 
 ### Практика з інтервалом
@@ -101,7 +101,7 @@
 
 - сніг
 - вода́
-- око́
+- о́ко
 - ніс
 - ма́ма
 
@@ -137,38 +137,38 @@
 
 | Літера | Звук | Невелике слово | Відео |
 | --- | --- | --- | --- |
-| А | [а] | ананас | https://www.youtube.com/watch?v=hvB3VpcR3ZE |
-| Б | [б] | бандура | https://www.youtube.com/watch?v=V1hxBE_JbGg |
+| А | [а] | анана́с | https://www.youtube.com/watch?v=hvB3VpcR3ZE |
+| Б | [б] | банду́ра | https://www.youtube.com/watch?v=V1hxBE_JbGg |
 | В | [в] | вода́ | https://www.youtube.com/watch?v=aFcvYfvQ2X4 |
 | Г | [ɦ] | гора́ | https://www.youtube.com/watch?v=gVnclpSI0DU |
-| Ґ | [g] | ґудзик | https://www.youtube.com/watch?v=gNjHqjTW9WQ |
+| Ґ | [g] | ґу́дзик | https://www.youtube.com/watch?v=gNjHqjTW9WQ |
 | Д | [д] | дім | https://www.youtube.com/watch?v=g4Bh-lqzd48 |
-| Е | [е] | екран | https://www.youtube.com/watch?v=KFlsroBW0dk |
-| Є | [йе] | єнот | https://www.youtube.com/watch?v=O0bwRyyBQSc |
+| Е | [е] | екра́н | https://www.youtube.com/watch?v=KFlsroBW0dk |
+| Є | [йе] | єно́т | https://www.youtube.com/watch?v=O0bwRyyBQSc |
 | Ж | [ж] | жук | https://www.youtube.com/watch?v=dIrGVcqPwqM |
-| З | [з] | зошит | https://www.youtube.com/watch?v=BhASNxitC1A |
+| З | [з] | зуб | https://www.youtube.com/watch?v=BhASNxitC1A |
 | И | [и] | сир | https://www.youtube.com/watch?v=W-1rCu0indE |
-| І | [і] | і́м'я | https://www.youtube.com/watch?v=Z9TH0H4ShGo |
-| Ї | [йі] | їжа | https://www.youtube.com/watch?v=UcjdjQXhAY8 |
+| І | [і] | ім'я́ | https://www.youtube.com/watch?v=Z9TH0H4ShGo |
+| Ї | [йі] | їжа́к | https://www.youtube.com/watch?v=UcjdjQXhAY8 |
 | Й | [й] | йо́гурт | https://www.youtube.com/watch?v=aq0cjB90s3w |
 | К | [к] | кіт | https://www.youtube.com/watch?v=J7sGEI4-xJo |
 | Л | [л] | лис | https://www.youtube.com/watch?v=v6-3Xg52Buk |
-| М | [м] | мама | https://www.youtube.com/watch?v=Ez95H4ibuJo |
+| М | [м] | ма́ма | https://www.youtube.com/watch?v=Ez95H4ibuJo |
 | Н | [н] | ніс | https://www.youtube.com/watch?v=vNUfiKHPYaU |
-| О | [о] | око | https://www.youtube.com/watch?v=gJFxRIPRZbI |
+| О | [о] | о́ко | https://www.youtube.com/watch?v=gJFxRIPRZbI |
 | П | [п] | піт | https://www.youtube.com/watch?v=JksSjjxyW5Y |
-| Р | [р] | рука | https://www.youtube.com/watch?v=fMGsQ5KPQgg |
+| Р | [р] | рука́ | https://www.youtube.com/watch?v=fMGsQ5KPQgg |
 | С | [с] | сон | https://www.youtube.com/watch?v=7UsFBgSL91E |
-| Т | [т] | тато | https://www.youtube.com/watch?v=m-jcLR_gK0k |
-| У | [у] | у́рок | https://www.youtube.com/watch?v=VB1O6PmtYRU |
-| Ф | [ф] | фото | https://www.youtube.com/watch?v=haHRsFFZRQI |
-| Х | [х] | хата | https://www.youtube.com/watch?v=vpr58zJSJKc |
-| Ц | [ц] | цукор | https://www.youtube.com/watch?v=u44eCjR2Oz8 |
-| Ч | [ч] | чай | https://www.youtube.com/watch?v=UsJkbdsY2RA |
-| Ш | [ш] | школа́ | https://www.youtube.com/watch?v=1D-6MIw3OXY |
-| Щ | [шч] | щука́ | https://www.youtube.com/watch?v=QmBLieIuf6Q |
+| Т | [т] | та́то | https://www.youtube.com/watch?v=m-jcLR_gK0k |
+| У | [у] | уро́к | https://www.youtube.com/watch?v=VB1O6PmtYRU |
+| Ф | [ф] | фо́то | https://www.youtube.com/watch?v=haHRsFFZRQI |
+| Х | [х] | ха́та | https://www.youtube.com/watch?v=vpr58zJSJKc |
+| Ц | [ц] | цу́кор | https://www.youtube.com/watch?v=u44eCjR2Oz8 |
+| Ч | [ч] | час | https://www.youtube.com/watch?v=UsJkbdsY2RA |
+| Ш | [ш] | шко́ла | https://www.youtube.com/watch?v=1D-6MIw3OXY |
+| Щ | [шч] | щу́ка | https://www.youtube.com/watch?v=QmBLieIuf6Q |
 | Ь | — (беззвучна) | день | https://www.youtube.com/watch?v=cJlal8XKBxo |
-| Ю | [йу] | юшка | https://www.youtube.com/watch?v=9JdIBYCTWGw |
+| Ю | [йу] | ю́шка | https://www.youtube.com/watch?v=9JdIBYCTWGw |
 | Я | [йа] | я́блуко | https://www.youtube.com/watch?v=yhSAf41LX8I |
 
 ### Мікро-режим слуху
@@ -183,8 +183,8 @@
 
 - Приві́т
 - До́брий день
-- До́брого ранку
-- До́брий вечір
+- До́брого ра́нку
+- До́брий ве́чір
 - До поба́чення
 - На все до́бре
 

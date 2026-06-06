@@ -2,22 +2,22 @@
   translation: sound
   pos: noun
   usage: Усе починається зі звука.
-- lemma: літера
+- lemma: лі́тера
   translation: letter
   pos: noun
-  usage: Літера показує, як звук записати.
-- lemma: абетка
+  usage: Лі́тера показує, як звук записати.
+- lemma: абе́тка
   translation: alphabet
   pos: noun
-  usage: Українська абетка має 33 літери.
-- lemma: голосний звук
+  usage: Украї́нська абе́тка має 33 лі́тери.
+- lemma: голосни́й звук
   translation: vowel sound
   pos: noun phrase
-  usage: А, О, У, Е, И, І — це літери, що позначають голосні звуки.
-- lemma: приголосний звук
+  usage: А — голосни́й звук.
+- lemma: при́голосний звук
   translation: consonant sound
   pos: noun phrase
-  usage: П, Р, М, Н — літери, що позначають приголосні звуки.
+  usage: П — при́голосний звук.
 - lemma: склад
   translation: syllable
   pos: noun
@@ -26,10 +26,10 @@
   translation: stress
   pos: noun
   usage: У слові Приві́т наголос на «ві́т».
-- lemma: м'який знак
+- lemma: м'яки́й знак
   translation: soft sign
   pos: noun phrase
-  usage: У слові день м'який знак пом'якшує [н].
+  usage: У слові день м'яки́й знак пом'якшує [н].
 - lemma: Приві́т
   translation: hi
   pos: phrase
@@ -38,14 +38,14 @@
   translation: hello
   pos: phrase
   usage: До́брий день, Марко.
-- lemma: До́брого ранку
+- lemma: До́брого ра́нку
   translation: good morning
   pos: phrase
-  usage: До́брого ранку, пане Іване.
-- lemma: До́брий вечір
+  usage: До́брого ра́нку, пане Іване.
+- lemma: До́брий ве́чір
   translation: good evening
   pos: phrase
-  usage: До́брий вечір! Ласкаво просимо.
+  usage: До́брий ве́чір! Ласкаво просимо.
 - lemma: До поба́чення
   translation: goodbye
   pos: phrase
@@ -94,22 +94,22 @@
   translation: glad to see you (feminine)
   pos: phrase
   usage: Рада тебе́ бачити.
-- lemma: мама
+- lemma: ма́ма
   translation: mom/mother
   pos: noun
-  usage: Мама.
-- lemma: тато
+  usage: Ма́ма.
+- lemma: та́то
   translation: dad
   pos: noun
-  usage: Тато.
+  usage: Та́то.
 - lemma: молоко́
   translation: milk
   pos: noun
   usage: Молоко́.
-- lemma: око́
+- lemma: о́ко
   translation: eye
   pos: noun
-  usage: Око́.
+  usage: О́ко.
 - lemma: дім
   translation: home
   pos: noun

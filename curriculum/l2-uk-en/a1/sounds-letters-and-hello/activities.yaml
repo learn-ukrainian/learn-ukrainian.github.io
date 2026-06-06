@@ -38,13 +38,13 @@
     - О
     correct: 1
     explanation: Ь — м'який знак, він коригує попередній приголосний.
-  - question: Яке слово має два голосні звуки?
+  - question: Яке слово має три голосні звуки?
     options:
     - Приві́т
-    - Ма́ма
+    - молоко́
     - Мов
     correct: 1
-    explanation: Ма́ма має два звуки [а] + [а].
+    explanation: Молоко́ має три голосні звуки [о] + [о] + [о].
 
 - id: act-2
   type: count-syllables
@@ -54,15 +54,15 @@
   items:
   - word: ма́ма
     correct: 2
-  - word: мо́локо
+  - word: молоко́
     correct: 3
   - word: вода́
     correct: 2
   - word: приві́т
     correct: 2
-  - word: око́
+  - word: о́ко
     correct: 2
-  - word: тато́
+  - word: та́то
     correct: 2
 
 - id: act-3
@@ -101,10 +101,10 @@
   instruction: Дивись відео, проговорюй літеру, звук і слово.
   items:
   - letter: А
-    word: ананас
+    word: анана́с
     video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
   - letter: Б
-    word: бандура
+    word: банду́ра
     video: https://www.youtube.com/watch?v=V1hxBE_JbGg
   - letter: В
     word: вода́
@@ -113,34 +113,34 @@
     word: гора́
     video: https://www.youtube.com/watch?v=gVnclpSI0DU
   - letter: Ґ
-    word: ґудзик
+    word: ґу́дзик
     video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
   - letter: Д
     word: дім
     video: https://www.youtube.com/watch?v=g4Bh-lqzd48
   - letter: Е
-    word: єно́т
+    word: екра́н
     video: https://www.youtube.com/watch?v=KFlsroBW0dk
   - letter: Є
-    word: єнот
+    word: єно́т
     video: https://www.youtube.com/watch?v=O0bwRyyBQSc
   - letter: Ж
     word: жук
     video: https://www.youtube.com/watch?v=dIrGVcqPwqM
   - letter: З
-    word: замок
+    word: зуб
     video: https://www.youtube.com/watch?v=BhASNxitC1A
   - letter: И
     word: сир
     video: https://www.youtube.com/watch?v=W-1rCu0indE
   - letter: І
-    word: і́м'я
+    word: ім'я́
     video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
   - letter: Ї
-    word: їжак
+    word: їжа́к
     video: https://www.youtube.com/watch?v=UcjdjQXhAY8
   - letter: Й
-    word: йогурт
+    word: йо́гурт
     video: https://www.youtube.com/watch?v=aq0cjB90s3w
   - letter: К
     word: кіт
@@ -149,55 +149,55 @@
     word: лис
     video: https://www.youtube.com/watch?v=v6-3Xg52Buk
   - letter: М
-    word: мама
+    word: ма́ма
     video: https://www.youtube.com/watch?v=Ez95H4ibuJo
   - letter: Н
     word: ніс
     video: https://www.youtube.com/watch?v=vNUfiKHPYaU
   - letter: О
-    word: око́
+    word: о́ко
     video: https://www.youtube.com/watch?v=gJFxRIPRZbI
   - letter: П
     word: піт
     video: https://www.youtube.com/watch?v=JksSjjxyW5Y
   - letter: Р
-    word: рука
+    word: рука́
     video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
   - letter: С
     word: сон
     video: https://www.youtube.com/watch?v=7UsFBgSL91E
   - letter: Т
-    word: тато
+    word: та́то
     video: https://www.youtube.com/watch?v=m-jcLR_gK0k
   - letter: У
-    word: урок
+    word: уро́к
     video: https://www.youtube.com/watch?v=VB1O6PmtYRU
   - letter: Ф
-    word: фольга
+    word: фо́то
     video: https://www.youtube.com/watch?v=haHRsFFZRQI
   - letter: Х
-    word: хата
+    word: ха́та
     video: https://www.youtube.com/watch?v=vpr58zJSJKc
   - letter: Ц
-    word: цукор
+    word: цу́кор
     video: https://www.youtube.com/watch?v=u44eCjR2Oz8
   - letter: Ч
-    word: чай
+    word: час
     video: https://www.youtube.com/watch?v=UsJkbdsY2RA
   - letter: Ш
-    word: школа́
+    word: шко́ла
     video: https://www.youtube.com/watch?v=1D-6MIw3OXY
   - letter: Щ
-    word: щука́
+    word: щу́ка
     video: https://www.youtube.com/watch?v=QmBLieIuf6Q
   - letter: Ь
     word: день
     video: https://www.youtube.com/watch?v=cJlal8XKBxo
   - letter: Ю
-    word: юшка
+    word: ю́шка
     video: https://www.youtube.com/watch?v=9JdIBYCTWGw
   - letter: Я
-    word: яблуко
+    word: я́блуко
     video: https://www.youtube.com/watch?v=yhSAf41LX8I
 
 - id: act-5
