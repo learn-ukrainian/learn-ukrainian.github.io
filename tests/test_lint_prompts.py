@@ -227,18 +227,3 @@ class TestScanIntegration:
         assert len(retired_files) >= 5, (
             f"Expected 5+ retired templates, found {len(retired_files)}"
         )
-
-    def test_no_retired_referenced_in_pipeline(self):
-        """Pipeline v5 should not reference any retired template names."""
-        retired_dir = ROOT / "claude_extensions" / "phases" / "gemini" / "_retired"
-        if not retired_dir.exists():
-            pytest.skip("No retired directory")
-
-        retired_names = {f.stem for f in retired_dir.glob("*.md")}
-        pipeline_path = ROOT / "scripts" / "build" / "pipeline_v5.py"
-        if not pipeline_path.exists():
-            pytest.skip("pipeline_v5.py not found")
-
-        pipeline_text = pipeline_path.read_text()
-        referenced = {name for name in retired_names if name in pipeline_text}
-        assert not referenced, f"Pipeline references retired templates: {referenced}"

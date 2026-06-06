@@ -739,38 +739,6 @@ class TestLoadState:
 
 
 # ============================================================================
-# v5 Phase Terminology — Issue #817
-# ============================================================================
-
-class TestV5PhaseTerminology:
-    """Ensure pipeline_lib.py uses v5 named phases in log messages, not legacy v3/v4 labels."""
-
-    def test_no_phase_2_colon_in_pipeline_lib(self):
-        """pipeline_lib.py must not contain 'Phase 2:' — all content logs use 'content:'."""
-        pipeline_lib_path = Path("scripts/pipeline_lib.py")
-        assert pipeline_lib_path.exists(), "pipeline_lib.py not found"
-        source = pipeline_lib_path.read_text(encoding="utf-8")
-        occurrences = [
-            (i + 1, line.strip())
-            for i, line in enumerate(source.splitlines())
-            if "Phase 2:" in line
-        ]
-        assert occurrences == [], (
-            "Found legacy 'Phase 2:' in pipeline_lib.py at lines: "
-            + ", ".join(str(lineno) for lineno, _ in occurrences)
-        )
-
-    def test_content_phase_label_present(self):
-        """Pipeline should use 'content:' label in content phase functions."""
-        # Content adoption/generation in pipeline_lib, skip/post-gates in pipeline_v5
-        pipeline_lib_source = Path("scripts/pipeline/core.py").read_text(encoding="utf-8")
-        pipeline_v5_source = Path("scripts/build/pipeline_v5.py").read_text(encoding="utf-8")
-        combined = pipeline_lib_source + pipeline_v5_source
-        assert "content: SKIP (already complete)" in combined
-        assert "content: FAIL" in combined
-
-
-# ============================================================================
 # SELF_AUDIT_SNIPPET nested CONTENT_PATH resolution — Issue #817
 # ============================================================================
 

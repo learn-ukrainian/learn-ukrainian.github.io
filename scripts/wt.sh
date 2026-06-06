@@ -26,24 +26,13 @@ green()  { printf '\033[0;32m%s\033[0m\n' "$*"; }
 yellow() { printf '\033[0;33m%s\033[0m\n' "$*"; }
 bold()   { printf '\033[1m%s\033[0m\n' "$*"; }
 
-# Check for active builds — process detection (always works) + API (when available)
+# Check for active builds via API.
 # Returns: 0 = no builds, 2 = builds active
 # Prints build info to stdout when builds detected
 check_active_builds() {
     local found=0
 
-    # Method 1: Process detection (reliable, no server needed)
-    local pids
-    pids=$(pgrep -f 'build_module_v5\.py' 2>/dev/null || true)
-    if [ -n "$pids" ]; then
-        local -a pid_array
-        mapfile -t pid_array <<< "$pids"
-        local count=${#pid_array[@]}
-        echo "  $count build_module_v5.py process(es) running (PIDs: ${pids//$'\n'/ })"
-        found=1
-    fi
-
-    # Method 2: API check (skip health pre-check — curl already handles timeouts)
+    # API check (skip health pre-check — curl already handles timeouts)
     local active
     active=$(curl -s --max-time 3 "$API_BASE/api/batch/active" 2>/dev/null || true)
     if [ -n "$active" ] && [ "$active" != "[]" ] && [ "$active" != "null" ]; then

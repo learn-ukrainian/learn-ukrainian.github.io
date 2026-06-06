@@ -1,6 +1,6 @@
-"""Tests for batch_otaman, batch_dispatcher, batch_fix_review, tools.agent_watcher, batch.preseed_runner.
+"""Tests for batch_otaman, batch_dispatcher, batch_fix_review, and tools.agent_watcher.
 
-Targets ~200+ tests across 5 scripts. Heavy mocking of subprocess, filesystem, etc.
+Targets batch/agent helper coverage with heavy mocking of subprocess, filesystem, etc.
 """
 
 import json
@@ -1302,211 +1302,6 @@ class TestAgentWatcherSaveStuckReport:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# batch.preseed_runner.py
-# ═══════════════════════════════════════════════════════════════════════
-
-class TestPreseedRunnerScanTrack:
-    def test_scan_nonexistent_track(self, tmp_path):
-        import batch.preseed_runner
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            result = batch.preseed_runner.scan_track("nonexistent")
-            assert result["total"] == 0
-            assert result["remaining_count"] == 0
-
-    def test_scan_with_plans(self, tmp_path):
-        import batch.preseed_runner
-        plans_dir = tmp_path / "plans" / "test-track"
-        plans_dir.mkdir(parents=True)
-        (plans_dir / "module-a.yaml").write_text("title: A")
-        (plans_dir / "module-b.yaml").write_text("title: B")
-
-        research_dir = tmp_path / "test-track" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "module-a-research.md").write_text("done")
-
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            with patch("batch_gemini_config.get_module_index", side_effect=Exception("no index")):
-                result = batch.preseed_runner.scan_track("test-track")
-                assert result["total"] == 2
-                assert result["done"] == 1
-                assert result["remaining_count"] == 1
-
-
-class TestPreseedRunnerGetAllRemaining:
-    def test_no_plans_dir(self, tmp_path):
-        import batch.preseed_runner
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            assert batch.preseed_runner.get_all_remaining_tracks() == []
-
-    def test_with_tracks(self, tmp_path):
-        import batch.preseed_runner
-        plans_root = tmp_path / "plans"
-        plans_root.mkdir()
-        track_dir = plans_root / "mytrack"
-        track_dir.mkdir()
-        (track_dir / "mod1.yaml").write_text("title: M1")
-
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            with patch("batch_gemini_config.get_module_index", side_effect=Exception("no")):
-                tracks = batch.preseed_runner.get_all_remaining_tracks()
-                assert "mytrack" in tracks
-
-
-class TestPreseedRunnerRunTrack:
-    @patch("subprocess.Popen")
-    def test_run_track_success(self, mock_popen, tmp_path):
-        import batch.preseed_runner
-
-        mock_proc = MagicMock()
-        mock_proc.communicate.return_value = ("Success output", None)
-        mock_proc.returncode = 0
-        mock_popen.return_value = mock_proc
-
-        log_file = tmp_path / "logs" / "test.log"
-
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            with patch("batch.preseed_runner.scan_track", return_value={
-                "track": "test", "total": 1, "done": 0,
-                "remaining_count": 1, "remaining": [(1, "mod1")],
-            }):
-                result = batch.preseed_runner.run_track("test", "slot-1", log_file)
-                assert result["passed"] == 1
-                assert result["failed"] == 0
-
-    def test_run_track_nothing_to_do(self, tmp_path):
-        import batch.preseed_runner
-        log_file = tmp_path / "logs" / "test.log"
-        with patch("batch.preseed_runner.scan_track", return_value={
-            "track": "test", "total": 0, "done": 0,
-            "remaining_count": 0, "remaining": [],
-        }):
-            result = batch.preseed_runner.run_track("test", "slot-1", log_file)
-            assert result["passed"] == 0
-
-    def test_run_track_dry_run(self, tmp_path):
-        import batch.preseed_runner
-        log_file = tmp_path / "logs" / "test.log"
-        with patch("batch.preseed_runner.scan_track", return_value={
-            "track": "test", "total": 2, "done": 0,
-            "remaining_count": 2, "remaining": [(1, "mod1"), (2, "mod2")],
-        }):
-            result = batch.preseed_runner.run_track("test", "slot-1", log_file, dry_run=True)
-            assert result["passed"] == 2
-            assert result["failed"] == 0
-
-    @patch("subprocess.Popen")
-    def test_run_track_failure(self, mock_popen, tmp_path):
-        import batch.preseed_runner
-        mock_proc = MagicMock()
-        mock_proc.communicate.return_value = ("Error", None)
-        mock_proc.returncode = 1
-        mock_popen.return_value = mock_proc
-
-        log_file = tmp_path / "logs" / "test.log"
-        with patch("batch.preseed_runner.scan_track", return_value={
-            "track": "test", "total": 1, "done": 0,
-            "remaining_count": 1, "remaining": [(1, "mod1")],
-        }):
-            result = batch.preseed_runner.run_track("test", "slot-1", log_file)
-            assert result["failed"] == 1
-
-    @patch("subprocess.Popen")
-    def test_run_track_timeout(self, mock_popen, tmp_path):
-        import batch.preseed_runner
-        mock_proc = MagicMock()
-        mock_proc.communicate.side_effect = subprocess.TimeoutExpired("cmd", 600)
-        mock_proc.kill = MagicMock()
-        mock_proc.wait = MagicMock()
-        mock_popen.return_value = mock_proc
-
-        log_file = tmp_path / "logs" / "test.log"
-        with patch("batch.preseed_runner.scan_track", return_value={
-            "track": "test", "total": 1, "done": 0,
-            "remaining_count": 1, "remaining": [(1, "mod1")],
-        }):
-            result = batch.preseed_runner.run_track("test", "slot-1", log_file)
-            assert result["failed"] == 1
-
-    @patch("subprocess.Popen", side_effect=Exception("spawn failed"))
-    def test_run_track_exception(self, mock_popen, tmp_path):
-        import batch.preseed_runner
-        log_file = tmp_path / "logs" / "test.log"
-        with patch("batch.preseed_runner.scan_track", return_value={
-            "track": "test", "total": 1, "done": 0,
-            "remaining_count": 1, "remaining": [(1, "mod1")],
-        }):
-            result = batch.preseed_runner.run_track("test", "slot-1", log_file)
-            assert result["failed"] == 1
-
-    def test_run_track_stop_requested(self, tmp_path):
-        import batch.preseed_runner
-        log_file = tmp_path / "logs" / "test.log"
-        old_stop = batch.preseed_runner._stop_requested
-        try:
-            batch.preseed_runner._stop_requested = True
-            with patch("batch.preseed_runner.scan_track", return_value={
-                "track": "test", "total": 2, "done": 0,
-                "remaining_count": 2, "remaining": [(1, "mod1"), (2, "mod2")],
-            }):
-                result = batch.preseed_runner.run_track("test", "slot-1", log_file)
-                assert result["passed"] == 0
-        finally:
-            batch.preseed_runner._stop_requested = old_stop
-
-
-class TestPreseedRunnerSignalHandler:
-    def test_first_ctrl_c(self):
-        import batch.preseed_runner
-        old = batch.preseed_runner._stop_requested
-        try:
-            batch.preseed_runner._stop_requested = False
-            batch.preseed_runner._signal_handler(signal.SIGINT, None)
-            assert batch.preseed_runner._stop_requested is True
-        finally:
-            batch.preseed_runner._stop_requested = old
-
-    def test_second_ctrl_c_kills(self):
-        import batch.preseed_runner
-        old = batch.preseed_runner._stop_requested
-        try:
-            batch.preseed_runner._stop_requested = True
-            with pytest.raises(SystemExit):
-                batch.preseed_runner._signal_handler(signal.SIGINT, None)
-        finally:
-            batch.preseed_runner._stop_requested = old
-
-
-class TestPreseedRunnerRunParallel:
-    @patch("batch.preseed_runner.run_track")
-    @patch("batch.preseed_runner.scan_track")
-    def test_parallel_dry_run(self, mock_scan, mock_run, tmp_path):
-        import batch.preseed_runner
-        mock_scan.return_value = {"remaining_count": 5}
-        mock_run.return_value = {"track": "test", "passed": 5, "failed": 0, "skipped": 0}
-
-        old_stop = batch.preseed_runner._stop_requested
-        batch.preseed_runner._stop_requested = False
-        try:
-            batch.preseed_runner.run_parallel(["test"], slots=1, dry_run=True)
-        finally:
-            batch.preseed_runner._stop_requested = old_stop
-
-    @patch("batch.preseed_runner.run_track")
-    @patch("batch.preseed_runner.scan_track")
-    def test_parallel_multiple_tracks(self, mock_scan, mock_run, tmp_path):
-        import batch.preseed_runner
-        mock_scan.return_value = {"remaining_count": 3}
-        mock_run.return_value = {"track": "t", "passed": 3, "failed": 0, "skipped": 0}
-
-        old_stop = batch.preseed_runner._stop_requested
-        batch.preseed_runner._stop_requested = False
-        try:
-            batch.preseed_runner.run_parallel(["track1", "track2"], slots=2, dry_run=True)
-        finally:
-            batch.preseed_runner._stop_requested = old_stop
-
-
-# ═══════════════════════════════════════════════════════════════════════
 # Additional edge case tests
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -1647,33 +1442,6 @@ class TestBatchOtamanResourceExhausted:
         )
         result = dispatch_otaman("a1", 1, "test-slug", timeout=5)
         assert result["quota_hit"] is True
-
-
-class TestPreseedRunnerScanWithIndex:
-    def test_scan_with_module_index(self, tmp_path):
-        import batch.preseed_runner
-
-        plans_dir = tmp_path / "plans" / "test"
-        plans_dir.mkdir(parents=True)
-        (plans_dir / "mod-a.yaml").write_text("title: A")
-        (plans_dir / "mod-b.yaml").write_text("title: B")
-
-        research_dir = tmp_path / "test" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "mod-a-research.md").write_text("done")
-
-        mock_idx = {
-            "total": 2,
-            "num_to_slug": {1: "mod-a", 2: "mod-b"},
-            "slug_to_num": {"mod-a": 1, "mod-b": 2},
-        }
-
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            with patch("batch_gemini_config.get_module_index", return_value=mock_idx):
-                result = batch.preseed_runner.scan_track("test")
-                assert result["done"] == 1
-                assert result["remaining_count"] == 1
-                assert (2, "mod-b") in result["remaining"]
 
 
 class TestBatchDispatcherUpdateTrackStates:
@@ -2033,46 +1801,6 @@ class TestAgentWatcherEdgeCases:
             assert len(msgs) == 0
 
 
-class TestPreseedRunnerEdgeCases:
-    def test_scan_empty_track(self, tmp_path):
-        import batch.preseed_runner
-        plans_dir = tmp_path / "plans" / "empty"
-        plans_dir.mkdir(parents=True)
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            with patch("batch_gemini_config.get_module_index", side_effect=Exception("no")):
-                result = batch.preseed_runner.scan_track("empty")
-                assert result["total"] == 0
-                assert result["done"] == 0
-
-    def test_get_all_remaining_no_remaining(self, tmp_path):
-        import batch.preseed_runner
-        plans_root = tmp_path / "plans"
-        plans_root.mkdir()
-        track_dir = plans_root / "complete"
-        track_dir.mkdir()
-        (track_dir / "mod1.yaml").write_text("title: M1")
-
-        research_dir = tmp_path / "complete" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "mod1-research.md").write_text("done")
-
-        with patch.object(batch.preseed_runner, "CURRICULUM", tmp_path):
-            with patch("batch_gemini_config.get_module_index", side_effect=Exception("no")):
-                tracks = batch.preseed_runner.get_all_remaining_tracks()
-                assert "complete" not in tracks
-
-    def test_run_parallel_empty_tracks(self):
-        import batch.preseed_runner
-        old_stop = batch.preseed_runner._stop_requested
-        batch.preseed_runner._stop_requested = False
-        try:
-            with patch("batch.preseed_runner.scan_track", return_value={"remaining_count": 0}):
-                with patch("batch.preseed_runner.run_track", return_value={"track": "x", "passed": 0, "failed": 0, "skipped": 0}):
-                    batch.preseed_runner.run_parallel([], slots=1)
-        finally:
-            batch.preseed_runner._stop_requested = old_stop
-
-
 class TestBatchFixReviewCountItemsEdgeCases:
     def _import(self):
         from batch.batch_fix_review import count_items
@@ -2318,5 +2046,3 @@ class TestBatchDispatcherRunningTrackCleanup:
         d._update_track_states(scan)
         # RUNNING with no lock -> reset to PENDING then re-evaluated
         assert dstate["state"] in (TrackState.PENDING, TrackState.ELIGIBLE)
-
-
