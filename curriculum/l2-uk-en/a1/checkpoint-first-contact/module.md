@@ -234,6 +234,6 @@ Your final model can be simple:
 <DialogueBox uk="У мене є брат." en="I have a brother." />
 <DialogueBox uk="Дуже приємно познайомитися!" en="Very nice to meet you!" />
 
-Workbook practice now checks the same skills in different directions: read,
-choose, match, complete, correct, order, and translate. Passing the workbook
-means the A1.1 first-contact spine is ready for the next module.
+Use the workbook for extra practice: quick translation, vocabulary mapping,
+and digital chat etiquette. Passing the workbook means the A1.1 first-contact
+spine is ready for the next module.
