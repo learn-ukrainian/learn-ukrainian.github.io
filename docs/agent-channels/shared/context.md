@@ -46,7 +46,7 @@ Communication protocol:
 - Track source of truth: the track handoff file, e.g.
   `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`.
 - Main source of truth: `docs/session-state/current.md` router plus
-  `docs/session-state/current.orchestrator.md`.
+  `docs/session-state/codex-orchestrator-handoff.md`.
 - Bridge/channel messages are short pings that point to a PR, issue, or handoff
   section; durable details live in Git-tracked docs or GitHub.
 - Track update format:
