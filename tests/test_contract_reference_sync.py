@@ -23,7 +23,6 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CONTRACT_PATH = REPO_ROOT / "scripts" / "build" / "contracts" / "module-contract.md"
 WRITER_PROMPT_PATH = REPO_ROOT / "scripts" / "build" / "phases" / "v6-write.md"
 REVIEWER_DIR = REPO_ROOT / "scripts" / "build" / "phases" / "v6-review"
-CHUNK_BUILDER_PATH = REPO_ROOT / "scripts" / "build" / "v6_build.py"
 
 CONTRACT_RELATIVE_PATH = "scripts/build/contracts/module-contract.md"
 
@@ -217,40 +216,6 @@ def test_plan_adherence_reviewer_credits_section_overflow() -> None:
     )
 
 
-def test_chunk_builder_carries_shared_contract_clauses() -> None:
-    """The chunked writer path (`_build_chunk_prompt`) generates prompts
-    inline, not from the v6-write.md template. It must therefore carry
-    the same §2 + §3 clauses directly so chunked builds stay calibrated."""
-    text = CHUNK_BUILDER_PATH.read_text("utf-8")
-    assert CONTRACT_RELATIVE_PATH in text, (
-        "Chunk-prompt builder must reference the shared contract path."
-    )
-    assert "<section_overflow>" in text, (
-        "Chunk-prompt builder must carry the §2 overflow protocol."
-    )
-    assert "search_sources" in text, (
-        "Chunk-prompt builder must carry the §3 dialogue-retrieval mandate."
-    )
-
-
-def test_v6_build_injects_immersion_rule_into_reviewer_replacements() -> None:
-    """The reviewer replacements dict in v6_build.py MUST include
-    {IMMERSION_RULE} so the placeholder resolves at prompt-build time.
-    Before GH #1431 only the writer dict had it."""
-    text = CHUNK_BUILDER_PATH.read_text("utf-8")
-    # Find the reviewer replacements section (near the per-dim review prompt build).
-    assert '"{IMMERSION_RULE}"' in text, (
-        "v6_build.py must inject {IMMERSION_RULE} into reviewer replacements "
-        "so per-dim prompts get the level-band policy at build time."
-    )
-    # Both writer and reviewer sides must end up with the placeholder populated.
-    occurrences = text.count('"{IMMERSION_RULE}"')
-    assert occurrences >= 2, (
-        "Expected {IMMERSION_RULE} in both writer and reviewer replacement "
-        f"dicts; found {occurrences} occurrence(s)."
-    )
-
-
 # ═══════════════════════════════════════════════════════════════════
 # §7a canonical anchors pin-tests — 2026-04-23
 # ═══════════════════════════════════════════════════════════════════
@@ -296,26 +261,6 @@ def test_reviewer_template_carries_canonical_anchors_placeholder(dim: str) -> No
         f"Reviewer template for {dim!r} missing "
         "{CANONICAL_ANCHORS_REVIEWER} placeholder. Contract §7a "
         "requires this dim to REJECT on anchor violations."
-    )
-
-
-def test_v6_build_injects_canonical_anchors_replacements() -> None:
-    """v6_build.py replacements dicts (writer + reviewer) must invoke
-    _build_canonical_anchors_replacements so the two keys resolve at
-    prompt-build time. Without this, the placeholder literal leaks
-    into the prompt and the discipline rules are silently dropped."""
-    text = CHUNK_BUILDER_PATH.read_text("utf-8")
-    assert "_build_canonical_anchors_replacements" in text, (
-        "v6_build.py must import and call _build_canonical_anchors_replacements."
-    )
-    # The helper must be called from at least the writer AND reviewer
-    # replacements blocks — counting `**_build_canonical_anchors_replacements`
-    # occurrences catches the case where someone calls it once but forgets
-    # the other side.
-    splat_occurrences = text.count("**_build_canonical_anchors_replacements()")
-    assert splat_occurrences >= 2, (
-        "Expected **_build_canonical_anchors_replacements() call in both "
-        f"writer and reviewer replacements dicts; found {splat_occurrences}."
     )
 
 

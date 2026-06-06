@@ -12,9 +12,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import build.v6_build as v6_build
 import migrate.migrate_v6_plan_hashes as migrate_plan_hashes
-from build.io_utils import plan_hash
 from build.phases.plan_validator import validate_plan_consistency
 from build.plan_tracking import PLAN_HASH_PHASES
 
@@ -80,7 +78,7 @@ def _write_state(
 ) -> Path:
     phases = {
         phase: {"status": "complete", "ts": "2026-04-10T00:00:00+00:00"}
-        for phase in v6_build._ALL_PHASES
+        for phase in (*PLAN_HASH_PHASES, "publish")
     }
     if tracked_hash is not None:
         for phase in PLAN_HASH_PHASES:
@@ -104,79 +102,6 @@ def _write_state(
         "## Verdict: PASS\nscore 9.0/10\n", "utf-8",
     )
     return state_path
-
-
-def test_hash_mismatch_triggers_stale_on_downstream_phases(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    level = "b1"
-    slug = "hash-drift-integration"
-    _write_manifest(curriculum_root, level=level, slug=slug)
-    plan_path = _write_plan(curriculum_root, level=level, slug=slug, title="Original plan")
-    state_path = _write_state(
-        curriculum_root,
-        level=level,
-        slug=slug,
-        tracked_hash=plan_hash(plan_path),
-    )
-
-    plan_path.write_text(
-        plan_path.read_text("utf-8").replace("Original plan", "Updated plan"),
-        "utf-8",
-    )
-
-    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
-    monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
-    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["v6_build.py", level, "1", "--step", "review", "--writer", "codex"],
-    )
-
-    assert v6_build.main() is False
-
-    updated_state = json.loads(state_path.read_text("utf-8"))
-    for phase in PLAN_HASH_PHASES:
-        assert updated_state["phases"][phase]["status"] == "stale"
-        assert updated_state["phases"][phase]["stale_reason"] == v6_build._PLAN_HASH_DRIFT_REASON
-
-
-def test_resume_reruns_after_plan_version_bump(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    level = "b1"
-    slug = "resume-plan-bump"
-    plan_path = _write_plan(curriculum_root, level=level, slug=slug, title="Resume plan")
-    _write_state(
-        curriculum_root,
-        level=level,
-        slug=slug,
-        tracked_hash=plan_hash(plan_path),
-    )
-
-    plan_path.write_text(
-        plan_path.read_text("utf-8").replace("Resume plan", "Resume plan v2"),
-        "utf-8",
-    )
-
-    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
-
-    resume_plan = v6_build._build_resume_invalidation_plan(
-        level,
-        slug,
-        "publish",
-        review_threshold=8.0,
-    )
-
-    assert resume_plan.should_skip is False
-    assert resume_plan.reason == v6_build._PLAN_HASH_DRIFT_REASON
-    assert {"skeleton", "write"}.issubset(set(resume_plan.invalidate_phases))
 
 
 def test_two_track_migration_flags_both_correctly(

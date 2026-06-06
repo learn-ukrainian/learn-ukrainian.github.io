@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -8,7 +7,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from build.phases.honesty_annotator import annotate_content
-from build.v6_build import step_honesty_annotate
 
 
 def _annotated_line(text: str) -> str:
@@ -162,23 +160,3 @@ def test_pre_phase_a_sample_would_gain_markers() -> None:
     assert annotated != content
     assert annotated.count("<!-- VERIFY: precise claim") >= 4
     assert len(log) >= 4
-
-
-def test_step_honesty_annotate_writes_content_and_log(tmp_path: Path) -> None:
-    content_path = tmp_path / "a1" / "fixture.md"
-    content_path.parent.mkdir(parents=True)
-    content_path.write_text("Ukrainian has 33 letters.\nPlain line.\n", "utf-8")
-    orch_dir = tmp_path / "a1" / "orchestration" / "fixture"
-
-    assert step_honesty_annotate(content_path, "a1", "fixture", orch_dir) is True
-
-    annotated = content_path.read_text("utf-8")
-    assert "Ukrainian has 33 letters. <!-- VERIFY: precise claim (33 letters) -->" in annotated
-
-    log_path = orch_dir / "honesty-annotations.json"
-    assert log_path.exists()
-    payload = json.loads(log_path.read_text("utf-8"))
-    assert payload[0]["line_num"] == 1
-    assert payload[0]["line"] == "Ukrainian has 33 letters."
-    assert payload[0]["matches"] == ["33 letters"]
-    assert payload[0]["marker"] == " <!-- VERIFY: precise claim (33 letters) -->"

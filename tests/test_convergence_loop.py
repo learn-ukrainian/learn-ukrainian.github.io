@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 import build.convergence_loop as convergence_loop
-from build import module_memory, v6_build
+from build import module_memory
 from build.convergence_loop import (
     ConvergenceContext,
     MutationSummary,
@@ -343,55 +343,6 @@ def test_prompt_hash_is_deterministic_for_same_prompt_across_runs(tmp_path: Path
 
     assert len(memory["history"]) == 2
     assert memory["history"][0]["prompt_hash"] == memory["history"][1]["prompt_hash"]
-
-
-def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp_path: Path) -> None:
-    # This test reads live curriculum artifacts that can be reset by operators
-    # between builds (see GH #1525 handoff). Skip when the fixtures are absent
-    # rather than fail — the preconditional absence is orthogonal to what the
-    # test asserts. Follow-up: move fixtures into tests/fixtures/ (#1526).
-    review_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "review"
-    cached_reviews = [
-        review_dir / "sounds-letters-and-hello-review-r2.md",
-        review_dir / "sounds-letters-and-hello-review-r3.md",
-    ]
-    missing = [p for p in cached_reviews if not p.exists()]
-    if missing:
-        pytest.skip(
-            "cached review fixtures absent (module was reset to pre-R2 state): "
-            + ", ".join(p.name for p in missing)
-        )
-
-    observations = []
-    for index, review_path in enumerate(cached_reviews, start=1):
-        review_text = review_path.read_text("utf-8")
-        parsed = v6_build._parse_review_result(review_text)
-        observations.append(
-            ReviewObservation(
-                passed=parsed.passed,
-                score=parsed.score,
-                review_text=review_text,
-                findings=tuple(v6_build._extract_structured_findings(review_text)),
-                dim_floor_dimensions=tuple(
-                    v6_build._normalized_dimension_name(item.get("name", ""))
-                    for item in parsed.parsed_scores
-                    if int(item.get("score", 10) or 10) < v6_build.REVIEW_TARGET_SCORE
-                ),
-                content_hash=f"cached-hash-{index}",
-                patch_available=bool(v6_build._parse_review_fixes(review_text)),
-                parsed_scores=tuple(parsed.parsed_scores),
-                reviewer="claude",
-                writer_model_version="gemini-3.1-pro-preview",
-                reviewer_model_version="claude-opus-4-6",
-            )
-        )
-    observations.append(observations[-1])
-
-    harness = Harness(observations, tmp_path)
-    result = run_convergence_loop(harness.context())
-
-    assert result.terminal in {"pass", "plan_revision_request"}
-    assert result.terminal != "budget_exhausted"
 
 
 def test_recoverable_validation_error_routes_to_plan_revision_request(tmp_path: Path) -> None:

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import ast
 import copy
 import functools
 import hashlib
@@ -18,6 +17,7 @@ from typing import Any
 
 import yaml
 from build.phases import wiki_compressor
+from common import thresholds
 
 from audit import config as audit_config
 
@@ -37,16 +37,11 @@ _PATH_ATTRS = {
     "PHASE_TEMPLATES_ROOT",
     "CLAUDE_PHASES_ROOT",
     "GEMINI_PHASES_ROOT",
-    "V6_BUILD_PATH",
 }
 
 
 def _default_project_root() -> Path:
     return Path(__file__).resolve().parents[2]
-
-
-def _default_v6_build_path() -> Path:
-    return _default_project_root() / "scripts" / "build" / "v6_build.py"
 
 
 def _static_default_attr(name: str) -> Any:
@@ -66,13 +61,11 @@ def _static_default_attr(name: str) -> Any:
         return _default_project_root() / ".claude" / "phases" / "claude"
     if name == "GEMINI_PHASES_ROOT":
         return _default_project_root() / ".gemini" / "phases" / "gemini"
-    if name == "V6_BUILD_PATH":
-        return _default_v6_build_path()
     raise AttributeError(f"module 'alignment_manifest' has no attribute {name!r}")
 
 
 def _v6_build_module() -> Any | None:
-    v6_build_path = _default_v6_build_path().resolve()
+    v6_build_path = (_default_project_root() / "scripts" / "build" / "v6_build.py").resolve()
 
     frame = inspect.currentframe()
     while frame is not None:
@@ -127,13 +120,6 @@ def _resolve_attr(name: str) -> Any:
         return _resolve_attr("PROJECT_ROOT") / ".claude" / "phases" / "claude"
     if name == "GEMINI_PHASES_ROOT":
         return _resolve_attr("PROJECT_ROOT") / ".gemini" / "phases" / "gemini"
-    if name == "V6_BUILD_PATH":
-        module_file = getattr(v6_build, "__file__", None) if v6_build is not None else None
-        return (
-            Path(module_file).resolve()
-            if module_file is not None
-            else _default_v6_build_path()
-        )
     if name == "REVIEW_TARGET_SCORE":
         return _review_target_score()
     raise AttributeError(f"module 'alignment_manifest' has no attribute {name!r}")
@@ -148,61 +134,15 @@ def _module_attr(name: str) -> Any:
     return _resolve_attr(name)
 
 
-def _load_v6_build_constant(name: str) -> Any:
-    v6_build = _v6_build_module()
-    if v6_build is not None and hasattr(v6_build, name):
-        return getattr(v6_build, name)
-
-    v6_build_path = _module_attr("V6_BUILD_PATH")
-    module = ast.parse(v6_build_path.read_text("utf-8"))
-    # Index top-level assigns so we can resolve Name aliases (e.g.
-    # ``REVIEW_TARGET_SCORE = REVIEW_PASS_FLOOR``) without importing
-    # v6_build. Maps target-name → (RHS AST node).
-    top_level_values: dict[str, Any] = {}
-    for node in module.body:
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name):
-                    top_level_values[target.id] = node.value
-        elif (
-            isinstance(node, ast.AnnAssign)
-            and isinstance(node.target, ast.Name)
-            and node.value is not None
-        ):
-            top_level_values[node.target.id] = node.value
-
-    def _resolve_node(value_node: ast.AST, seen: set[str]) -> Any:
-        if isinstance(value_node, ast.Name):
-            if value_node.id in seen:
-                raise RuntimeError(
-                    f"Cycle resolving {name} in {v6_build_path}: {' -> '.join(seen)}"
-                )
-            seen.add(value_node.id)
-            if value_node.id in top_level_values:
-                return _resolve_node(top_level_values[value_node.id], seen)
-            # Imported name — try the common.thresholds source of truth.
-            from common import thresholds as _thresholds
-            if hasattr(_thresholds, value_node.id):
-                return getattr(_thresholds, value_node.id)
-        return ast.literal_eval(value_node)
-
-    if name in top_level_values:
-        return _resolve_node(top_level_values[name], set())
-    raise RuntimeError(f"Could not load {name} from {v6_build_path}")
-
-
 @functools.lru_cache(maxsize=1)
 def _review_target_score() -> float:
     """Lazy accessor for REVIEW_TARGET_SCORE.
 
-    Loading at import time was brittle: it ran AST parsing on
-    `v6_build.py` on every import of this module, which broke tests
-    that monkeypatch `PROJECT_ROOT` (the constant was already
-    evaluated against the real path before the fixture ran) and failed
-    with `FileNotFoundError` whenever this module was imported outside
-    a full checkout. Flagged by gemini-review on PR #1468.
+    Kept as a lazy accessor so tests can still monkeypatch the public
+    module attribute before composing a manifest, while the default now
+    comes from the thresholds source of truth instead of retired V6 code.
     """
-    return float(_load_v6_build_constant("REVIEW_TARGET_SCORE"))
+    return float(thresholds.REVIEW_PASS_FLOOR)
 
 
 def __getattr__(name: str) -> Any:
