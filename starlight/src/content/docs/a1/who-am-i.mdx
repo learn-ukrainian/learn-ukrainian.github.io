@@ -4,8 +4,6 @@ description: "Мене звати... — ваша перша справжня р
 sidebar:
   order: 5
   label: "05. Хто я?"
-pipeline: linear-phase-4
-build_status: validated
 prev: stress-and-melody
 next: my-family
 ---
@@ -336,9 +334,9 @@ Before the workbook, cover the English side and say the Ukrainian aloud:
 | Where are you from? informal | **Звідки ти?** |
 | I am from Canada. | **Я з Канади.** |
 
-Use the workbook to make the pieces automatic: register choice, name chunks,
-**це** questions, pronouns, profession pairs, dialogue fill-ins, safer
-Ukrainian sentence choices, native-form choices, and vocabulary recognition.
+Use the workbook for extra practice: profession pairs, dialogue fill-ins,
+safer Ukrainian sentence choices, native-form choices, and vocabulary
+recognition.
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -349,22 +347,6 @@ Ukrainian sentence choices, native-form choices, and vocabulary recognition.
 
 </TabItem>
 <TabItem label="Activities">
-
-### Formal or informal?
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "You meet a classmate your age.", "options": [{"text": "Як тебе звати?", "correct": true}, {"text": "Як вас звати?", "correct": false}], "explanation": "Use тебе with one familiar peer."}, {"question": "You meet an unknown adult at orientation.", "options": [{"text": "Як вас звати?", "correct": true}, {"text": "Як тебе звати?", "correct": false}], "explanation": "Use вас with one unknown adult or in a formal setting."}, {"question": "A peer asks your name. You answer and return the question.", "options": [{"text": "Мене звати Олена. А тебе?", "correct": true}, {"text": "Мене звати Олена. А вас?", "correct": false}], "explanation": "The peer situation stays informal."}, {"question": "An instructor asks your name. You answer and return the question.", "options": [{"text": "Мене звати Петро. А вас?", "correct": true}, {"text": "Мене звати Петро. А тебе?", "correct": false}], "explanation": "The instructor situation stays formal."}]`)} />
-
-### Build the name chunk
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ звати Марко.", "answer": "Мене", "options": ["Мене", "Ти", "Це"]}, {"sentence": "Як ___ звати?", "answer": "тебе", "options": ["тебе", "я", "він"]}, {"sentence": "Як ___ звати?", "answer": "вас", "options": ["вас", "вона", "ми"]}, {"sentence": "Дуже ___!", "answer": "приємно", "options": ["приємно", "студент", "звідки"]}, {"sentence": "Мене звати Олена. А ___?", "answer": "тебе", "options": ["тебе", "Київ", "це"]}]`)} />
-
-### This is / Who is this?
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Це Андрій.", "right": "This is Andrii."}, {"left": "Це Оксана.", "right": "This is Oksana."}, {"left": "Хто це?", "right": "Who is this?"}, {"left": "Що це?", "right": "What is this?"}, {"left": "Це кава.", "right": "This is coffee."}]`)} />
-
-### Pronoun choice
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "вони", "correct": false}], "explanation": "Я is the speaker."}, {"question": "you, one friend", "options": [{"text": "ти", "correct": true}, {"text": "ви", "correct": false}, {"text": "він", "correct": false}], "explanation": "Ти is one informal you."}, {"question": "you, one unknown adult", "options": [{"text": "ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вона", "correct": false}], "explanation": "Ви is formal for one person and also plural."}, {"question": "she", "options": [{"text": "вона", "correct": true}, {"text": "він", "correct": false}, {"text": "я", "correct": false}], "explanation": "Вона points to a woman or girl."}]`)} />
 
 <span id="fix-common-l2-traps"></span>
 

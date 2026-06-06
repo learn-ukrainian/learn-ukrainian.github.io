@@ -270,6 +270,6 @@ Before the workbook, cover the English side and say the Ukrainian aloud:
 | Where are you from? informal | **Звідки ти?** |
 | I am from Canada. | **Я з Канади.** |
 
-Use the workbook to make the pieces automatic: register choice, name chunks,
-**це** questions, pronouns, profession pairs, dialogue fill-ins, safer
-Ukrainian sentence choices, native-form choices, and vocabulary recognition.
+Use the workbook for extra practice: profession pairs, dialogue fill-ins,
+safer Ukrainian sentence choices, native-form choices, and vocabulary
+recognition.
