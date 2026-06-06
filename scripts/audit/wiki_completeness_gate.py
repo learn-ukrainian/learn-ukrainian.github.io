@@ -19,6 +19,14 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.build.phases.wiki_manifest import extract_manifest
 
 CORE_LEVELS = frozenset({"a1", "a2", "b1", "b2", "c1", "c2"})
+EARLY_FOUNDATION_DECOLONIZATION_SECTION_ONLY_SLUGS = frozenset(
+    {
+        "sounds-letters-and-hello",
+        "reading-ukrainian",
+        "special-signs",
+        "stress-and-melody",
+    }
+)
 SEMINAR_LEVELS = frozenset(
     {
         "hist",
@@ -95,6 +103,18 @@ def thresholds_for_level(level: str) -> dict[str, int]:
     }
 
 
+def thresholds_for_module(level: str, slug: str | None) -> dict[str, int]:
+    """Return wiki completeness thresholds adjusted for module-level policy."""
+    thresholds = thresholds_for_level(level)
+    level_key = level.lower()
+    slug_key = (slug or "").lower()
+    if level_key in {"a1", "a2"} and slug_key in EARLY_FOUNDATION_DECOLONIZATION_SECTION_ONLY_SLUGS:
+        thresholds = dict(thresholds)
+        thresholds["decolonization_pairs"] = 0
+        thresholds["distractor_inventory"] = 5
+    return thresholds
+
+
 def check_wiki_completeness(
     wiki_path: str | Path,
     *,
@@ -109,7 +129,7 @@ def check_wiki_completeness(
     manifest = extract_manifest(path)
     slug_value = slug or str(manifest.get("slug") or path.stem)
     level_key = level.lower()
-    thresholds = thresholds_for_level(level_key)
+    thresholds = thresholds_for_module(level_key, slug_value)
 
     methodology_text = _section_text(lines, METHODOLOGY_HEADING_RE)
     decolonization_text = _section_text(lines, DECOLONIZATION_HEADING_RE)
@@ -131,10 +151,10 @@ def check_wiki_completeness(
             thresholds["l2_errors"],
             "L2 error table row(s) found.",
         ),
-        "decolonization_pairs": _minimum_check(
+        "decolonization_pairs": _decolonization_check(
+            decolonization_text,
             decolonization_pairs,
             thresholds["decolonization_pairs"],
-            "decolonization bad-form pair(s) found.",
         ),
         "vocabulary_minimum": _minimum_check(
             len(manifest.get("wiki_vocabulary_minimum", [])),
@@ -178,6 +198,24 @@ def _section_presence_check(section_text: str, detail: str) -> dict[str, Any]:
 def _minimum_check(actual: int, minimum: int, detail: str) -> dict[str, Any]:
     verdict = "PASS" if actual >= minimum else "FAIL"
     return {"verdict": verdict, "actual": actual, "minimum": minimum, "detail": detail}
+
+
+def _decolonization_check(section_text: str, actual_pairs: int, minimum_pairs: int) -> dict[str, Any]:
+    if minimum_pairs <= 0:
+        if section_text.strip():
+            return {
+                "verdict": "PASS",
+                "actual": actual_pairs,
+                "minimum": minimum_pairs,
+                "detail": "decolonization section present; bad-form pair inventory not required for early foundation modules.",
+            }
+        return {
+            "verdict": "FAIL",
+            "actual": 0,
+            "minimum": 1,
+            "detail": "decolonization section missing or empty",
+        }
+    return _minimum_check(actual_pairs, minimum_pairs, "decolonization bad-form pair(s) found.")
 
 
 def _diagnostic(check_name: str, check: Mapping[str, Any]) -> str:

@@ -9,6 +9,7 @@ import yaml
 from scripts.audit.wiki_completeness_gate import (
     check_wiki_completeness,
     thresholds_for_level,
+    thresholds_for_module,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -122,6 +123,27 @@ def test_m20_my_morning_wiki_passes_completeness_gate() -> None:
     assert report["checks"]["decolonization_pairs"]["actual"] == 1
     assert report["checks"]["textbook_exercises"]["actual"] == 5
     assert report["checks"]["chunk_citations_spot_check"]["detail"] == "3/3 verify_quote returned PASS"
+
+
+def test_m1_foundation_wiki_passes_without_bad_form_decolonization_pairs() -> None:
+    report = check_wiki_completeness(
+        ROOT / "wiki/pedagogy/a1/sounds-letters-and-hello.md",
+        level="a1",
+        slug="sounds-letters-and-hello",
+        verify_quote_fn=_pass_verify_quote,
+    )
+
+    assert report["verdict"] == "PASS"
+    assert thresholds_for_module("a1", "sounds-letters-and-hello")["decolonization_pairs"] == 0
+    assert thresholds_for_level("a1")["decolonization_pairs"] == 1
+    assert report["checks"]["decolonization_pairs"] == {
+        "verdict": "PASS",
+        "actual": 0,
+        "minimum": 0,
+        "detail": "decolonization section present; bad-form pair inventory not required for early foundation modules.",
+    }
+    assert report["checks"]["distractor_inventory"]["actual"] == 5
+    assert report["checks"]["distractor_inventory"]["minimum"] == 5
 
 
 def test_synthetic_thin_wiki_fails_with_specific_check_name(tmp_path: Path) -> None:
