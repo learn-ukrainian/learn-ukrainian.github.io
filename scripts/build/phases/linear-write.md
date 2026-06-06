@@ -101,9 +101,9 @@ Stick to **<canonical Ukrainian form>** (not the Russian-borrowed <!-- bad -->X<
 and use **<native Ukrainian verb>** (not the surzhyk <!-- bad -->Y<!-- /bad -->).
 ```
 
-**Positive requirement for A1-A2 vocabulary modules:** when the module covers vocabulary domains where L1-Russian-exposure learners are likely to substitute Russian borrowings (food/dining, household items, clothing, daily routines, family, body, time-of-day expressions, transportation, common verbs of action), include **AT LEAST ONE** explicit bad-form contrast pair using the marker syntax above. This is a pedagogical tool (contrast pairs accelerate L2 acquisition) AND satisfies the `llm_qg.decolonization` rubric's criterion (b) — see `scripts/build/phases/linear-review-dim.md` § `decolonization`. Pick the single most-likely L1 substitution for the module's topic from the wiki/plan/RAG content and include it concretely. One marker pair is sufficient; this isn't a quantity gate.
+**Learner-facing bad-form contrast is optional, level-sensitive, and contextualized.** For A1-A2, do not require a blanket bad-form contrast pair. Use contrast only when the wiki/plan explicitly authorizes it and the module context supports learner-facing decolonization practice. When authorized, include at least one explicit bad-form contrast pair using the marker syntax above and verify each wrong form.
 
-Modules whose topic does NOT involve L1-Russian-substitutable vocabulary (e.g. pure grammar abstractions, IPA-only phonetics drill, formal-letter templates) are exempt — but for those, document the exemption inline in your `<plan_reasoning>` so the reviewer doesn't dock for absence.
+Modules that do not yet support learner-facing contrast (early phonetics/morphology, early greetings, M1-M4 foundations) should normally omit bad-form contrasts and satisfy decolonization by strict canonical-first teaching. If contrast is intentionally deferred, document that decision in `<plan_reasoning>` with an explicit readiness rationale.
 
 Apply the same convention in `module.md`, `activities.yaml` statements/items, and `vocabulary.yaml` usage lines when they name a wrong form. `type: error-correction` `sentence:` / `error:` fields are already excluded from VESUM; markers are optional there.
 

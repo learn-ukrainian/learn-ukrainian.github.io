@@ -45,10 +45,12 @@ judgment regex cannot make. For `{DIM}`:
 
   **Topic-neutral modules (grammar, vocab, phonetics):** 9.0+ baseline if
   (a) Ukrainian-canonical vocabulary throughout (`сніданок` not `завтрак`),
-  using VESUM/Pravopys-2019 forms; (b) at least one bad-form contrast marker
-  pair where learners would meet the Russified form (even ONE is enough); (c)
-  grammar presented on Ukrainian terms, NOT scaffolded through "like Russian
-  but...".
+  using VESUM/Pravopys-2019 forms; (b) if learner-facing contrast is
+  authorized for this module, include at least one bad-form contrast marker
+  pair where learners would meet the Russified form; (c) grammar presented on
+  Ukrainian terms, NOT scaffolded through "like Russian but...". If contrast is
+  not authorized or deferred, criterion (b) is met by strict absence-only
+  decolonization (no Russian-as-reference framing, no unmarked bad forms).
 
   **Topic-loaded modules (history, biography, literature, culture, war,
   politics):** higher bar — 9.0+ requires substantive framing (explicit
