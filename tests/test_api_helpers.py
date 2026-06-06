@@ -604,7 +604,7 @@ class TestComputePipelineTrack:
 
     def test_v6_phase_order_and_labels(self):
         from scripts.api.state_coverage import compute_pipeline_track
-        from scripts.build.v6_build import PHASE_LABELS, PHASES
+        from scripts.build.phase_constants import PHASE_LABELS, PHASES
 
         level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
         plan_slugs = [(1, "test-slug")]

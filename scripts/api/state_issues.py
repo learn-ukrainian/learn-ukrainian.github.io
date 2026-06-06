@@ -25,7 +25,7 @@ from .state_helpers import (
 )
 
 try:
-    from scripts.build.v6_build import PHASES as V6_PHASES
+    from scripts.build.phase_constants import PHASES as V6_PHASES
 except ImportError:
     V6_PHASES = [
         "check", "research", "skeleton", "pre-verify", "write",

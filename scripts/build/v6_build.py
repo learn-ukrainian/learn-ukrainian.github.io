@@ -1359,21 +1359,14 @@ def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS
     raise V6StateError(f"Invalid result for phase {phase}: {result!r}")
 
 
-# All phases in pipeline order (used by --resume).
-#
-# Also exported as ``PHASES`` for out-of-process consumers that need the
-# canonical v6 phase list — specifically the monitor API's state_helpers
-# module, which used to import from the retired pipeline_v5 module. Do
-# NOT delete either alias — ``_ALL_PHASES`` is referenced locally by the
-# many resume/state helpers throughout this file, while ``PHASES`` is the
-# stable public name. They must stay in sync (which is free — they're
-# the same list object).
-_ALL_PHASES = [
-    "check", "research", "skeleton", "pre-verify", "write", "honesty-annotate",
-    "exercises", "activities", "repair", "activity-pre-validate", "verify-exercises", "annotate",
-    "vocab", "enrich", "verify", "review", "review-style", "stress", "publish", "audit",
-]
-PHASES = _ALL_PHASES
+# Phase order + labels now live in ``scripts/build/phase_constants.py`` so the
+# Monitor API (state_* modules) can read them WITHOUT importing this 12K-line,
+# OBSOLETE build entrypoint (#2747 / #1863). Re-imported here for this file's
+# internal resume/state helpers and for back-compat with its test suite.
+# ``_ALL_PHASES`` is the internal alias; ``PHASES``/``PHASE_LABELS`` are public.
+from build.phase_constants import ALL_PHASES as _ALL_PHASES
+from build.phase_constants import PHASE_LABELS, PHASES
+
 _PHASE_SATISFIED_STATUSES = {"complete", "skipped"}
 _PLAN_HASH_STALE_PHASES = tuple(phase for phase in PLAN_HASH_PHASES if phase in {
     "skeleton",
@@ -1396,33 +1389,7 @@ _PLAN_HASH_ABORT_MESSAGE = (
     "Plan changed since last write — re-run from skeleton to rebuild with updated plan"
 )
 
-# Human-friendly labels for the v6 phases. Exposed alongside ``PHASES``
-# for API consumers that want to render a phase name in a UI. Keys match
-# ``PHASES`` exactly; any phase without an explicit label falls back to
-# its kebab-case id via ``PHASE_LABELS.get(name, name)``.
-PHASE_LABELS: dict[str, str] = {
-    "check": "Plan check",
-    "research": "Research",
-    "skeleton": "Skeleton",
-    "pre-verify": "Pre-verify",
-    "write": "Write content",
-    "honesty-annotate": "Honesty annotate",
-    "exercises": "Exercises",
-    "activities": "Activities",
-    "repair": "Repair",
-    "activity-pre-validate": "Activity pre-validation",
-    "verify-exercises": "Verify exercises",
-    "annotate": "Annotate",
-    "vocab": "Vocabulary",
-    "vocab-check": "Vocabulary coverage check",
-    "enrich": "Enrich",
-    "verify": "Verify content",
-    "review": "Review",
-    "review-style": "Style review",
-    "stress": "Stress marks",
-    "publish": "Publish MDX",
-    "audit": "Audit",
-}
+# (PHASE_LABELS is imported above from build.phase_constants.)
 
 
 def _phase_names_with_status(

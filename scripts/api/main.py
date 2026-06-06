@@ -696,7 +696,7 @@ async def orient(fresh: bool = False):
 async def get_config():
     # Import pipeline phase config — single source of truth
     try:
-        from scripts.build.v6_build import PHASE_LABELS, PHASES
+        from scripts.build.phase_constants import PHASE_LABELS, PHASES
         pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
     except ImportError:
         pipeline_info = {}
