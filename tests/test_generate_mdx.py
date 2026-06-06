@@ -154,34 +154,39 @@ def test_v7_tab3_omits_inline_activities_and_keeps_workbook_only(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
         """
-- id: act-1
-  type: quiz
-  title: act-1 inline greeting
-  items:
-    - question: Choose hello.
-      options: ["привіт", "дякую"]
-      answer: "привіт"
-- id: act-2
-  type: quiz
-  title: act-2 inline thanks
-  items:
-    - question: Choose thanks.
-      options: ["привіт", "дякую"]
-      answer: "дякую"
-- id: act-3
-  type: quiz
-  title: act-3 workbook yes
-  items:
-    - question: Choose yes.
-      options: ["так", "ні"]
-      answer: "так"
-- id: act-4
-  type: quiz
-  title: act-4 workbook no
-  items:
-    - question: Choose no.
-      options: ["так", "ні"]
-      answer: "ні"
+version: "1.0"
+module: inline-aggregate
+level: a1
+inline:
+  - id: act-1
+    type: quiz
+    title: act-1 inline greeting
+    items:
+      - question: Choose hello.
+        options: ["привіт", "дякую"]
+        answer: "привіт"
+  - id: act-2
+    type: quiz
+    title: act-2 inline thanks
+    items:
+      - question: Choose thanks.
+        options: ["привіт", "дякую"]
+        answer: "дякую"
+workbook:
+  - id: act-3
+    type: quiz
+    title: act-3 workbook yes
+    items:
+      - question: Choose yes.
+        options: ["так", "ні"]
+        answer: "так"
+  - id: act-4
+    type: quiz
+    title: act-4 workbook no
+    items:
+      - question: Choose no.
+        options: ["так", "ні"]
+        answer: "ні"
 """,
         encoding="utf-8",
     )
@@ -213,12 +218,12 @@ Practice there.
     assert "act-1 inline greeting" in lesson_tab
     assert "act-2 inline thanks" in lesson_tab
 
-    assert "act-1 inline greeting" in tab3
-    assert "act-2 inline thanks" in tab3
+    assert "act-1 inline greeting" not in tab3
+    assert "act-2 inline thanks" not in tab3
     assert "### act-3 workbook yes\n\n<Quiz" in tab3
     assert "### act-4 workbook no\n\n<Quiz" in tab3
     assert "*(see lesson)*" not in tab3
-    assert tab3.count("<Quiz") == 4
+    assert tab3.count("<Quiz") == 2
 
 
 def test_generated_tabs_include_hash_target_sync_script():
@@ -282,13 +287,13 @@ Practice here.
 
     assert "Inline fill duplicate" in lesson_tab
     assert "<FillIn" in lesson_tab
-    assert tab3.count("Inline fill duplicate") == 2
-    assert "<FillIn" in tab3
+    assert "Inline fill duplicate" not in tab3
+    assert "<FillIn" not in tab3
     assert "Workbook-only quiz" in tab3
     assert "<Quiz" in tab3
 
 
-def test_v7_tab3_all_inline_activities_renders_full_workbook(tmp_path):
+def test_v7_tab3_all_inline_activities_renders_empty_workbook_message(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
         """
@@ -324,10 +329,10 @@ subtitle: Test
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
     tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
 
-    assert "No workbook activities for this module; see the Lesson tab." not in tab3
-    assert "Inline one" in tab3
-    assert "Inline two" in tab3
-    assert tab3.count("<Quiz") == 2
+    assert "No workbook activities for this module; see the Lesson tab." in tab3
+    assert "Inline one" not in tab3
+    assert "Inline two" not in tab3
+    assert "<Quiz" not in tab3
     assert "*(see lesson)*" not in tab3
 
 
