@@ -15,6 +15,9 @@ User queued this explicitly. Two parts:
    - GitHub Actions hardening: token scope/permissions, `zizmor` (already in CI), pinned action SHAs vs tags, `pull_request_target` usage.
    - Agent-dispatch + MCP attack surface (delegate.py spawns CLIs with `--mode danger` in worktrees; MCP servers; `ANTHROPIC_API_KEY`/secrets handling — see MEMORY #M-5).
    - The local API server (localhost:8765) exposure.
+   - **LIVE LEAD:** GitHub flagged **1 moderate Dependabot alert** on the default branch (2026-06-06 push):
+     `https://github.com/learn-ukrainian/learn-ukrainian.github.io/security/dependabot/1` — triage it in the audit.
+     Also cross-ref open issue #2732 (latent inscriptis↔lxml / curl_cffi dep conflict).
    Deliverable: HTML report (ai→human per #M-2), filed under `audit/` or `docs/`, with prioritized findings + fixes.
 
 ## ✅ DONE THIS SESSION
