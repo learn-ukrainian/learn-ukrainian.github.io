@@ -80,15 +80,19 @@ For `{DIM}` specifically:
   type:
 
   **Topic-neutral modules (grammar, vocabulary basics, phonetics):**
-  9.0+ baseline if all three apply:
+  9.0+ baseline if all three apply when learner-facing contrast is explicitly authorized;
+  if contrast is deferred for foundational modules, baseline is still possible when (a), (c), and strict anti-Russian-as-reference execution are present.
   (a) Ukrainian-canonical vocabulary throughout (e.g. `сніданок` not
   `завтрак`, `рушник` not `полотенце`, `одягатися` not `одіватися`) —
   using VESUM/Pravopys-2019 codified forms, not Russified or surzhyk
   approximations.
-  (b) At least one bad-form contrast marker pair
+  (b) If the module is authorized for learner-facing bad-form contrast,
+  include at least one bad-form contrast marker pair
   (`<!-- bad -->завтрак<!-- /bad -->` → `сніданок`) where learners are
-  likely to encounter the Russified form. Even ONE pair is enough — this
-  isn't a quantity gate.
+  likely to encounter the Russified form.
+  If no contrast is authorized, this point is satisfied through clear absence-only
+  decolonization: no Russian-as-reference framing, no raw bad-form insertion, and
+  full VESUM/Pravopys-2019 form coverage.
   (c) Grammar and morphology presented on Ukrainian terms — VESUM /
   Pravopys-2019 as the authority — NOT scaffolded through "like Russian
   but..." or cross-language similarity as the entry point. One brief
