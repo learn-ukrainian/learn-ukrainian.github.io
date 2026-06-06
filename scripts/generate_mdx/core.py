@@ -304,7 +304,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += "\ndraft: true"
 
     try:
-        from scripts.build.prev_next import get_prev_next_links
+        from build.prev_next import get_prev_next_links
         prev_link, next_link = get_prev_next_links(level, module_num)
         extra_fm_lines += f"\nprev: {prev_link}" if prev_link else "\nprev: false"
         extra_fm_lines += f"\nnext: {next_link}" if next_link else "\nnext: false"
@@ -543,14 +543,21 @@ def main():
             output_dir = STARLIGHT_DOCS_DIR / mod.level
             output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Find the physical file
+        # Find the physical file. Newer v7 modules use a folder layout:
+        # a1/<slug>/module.md with sibling activities/vocabulary/resources YAML.
         level_dir = CURRICULUM_DIR / lang_pair / mod.level
         md_file = level_dir / f"{mod.slug}.md"
+        module_dir = level_dir / mod.slug
 
         if not md_file.exists():
-            print(f"DEBUG: Checked path {md_file.absolute()}")
-            print(f"  \u26a0\ufe0f  Physical file not found for slug '{mod.slug}' in {mod.level}")
-            continue
+            folder_md_file = module_dir / "module.md"
+            if folder_md_file.exists():
+                md_file = folder_md_file
+            else:
+                print(f"DEBUG: Checked path {md_file.absolute()}")
+                print(f"DEBUG: Checked path {folder_md_file.absolute()}")
+                print(f"  \u26a0\ufe0f  Physical file not found for slug '{mod.slug}' in {mod.level}")
+                continue
 
         # Read and convert
         md_content = md_file.read_text(encoding='utf-8')
@@ -585,6 +592,10 @@ def main():
 
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
+        if not vocab_file.exists():
+            folder_vocab_file = module_dir / "vocabulary.yaml"
+            if folder_vocab_file.exists():
+                vocab_file = folder_vocab_file
 
         vocab_items = None
         if vocab_file.exists():
@@ -601,6 +612,10 @@ def main():
 
         # Load ACTIVITIES
         yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"
+        if not yaml_file.exists():
+            folder_yaml_file = module_dir / "activities.yaml"
+            if folder_yaml_file.exists():
+                yaml_file = folder_yaml_file
 
         yaml_activities = None
         if yaml_file.exists():
@@ -627,8 +642,19 @@ def main():
         module_id = f"{mod.level}-{mod.slug}"
         module_resources = all_resources.get(module_id, {})
 
+        folder_resources_file = module_dir / "resources.yaml"
+        if folder_resources_file.exists():
+            try:
+                with open(folder_resources_file, encoding='utf-8') as f:
+                    resource_data = yaml.safe_load(f)
+                if isinstance(resource_data, list | dict):
+                    module_resources = resource_data
+            except Exception as e:
+                print(f'\n❌ CRITICAL: Error parsing YAML resources for {mod.slug}: {e}')
+                sys.exit(1)
+
         # Add pronunciation videos from plan to resources
-        if plan_data and plan_data.get("pronunciation_videos"):
+        if isinstance(module_resources, dict) and plan_data and plan_data.get("pronunciation_videos"):
             pv = plan_data["pronunciation_videos"]
             yt_resources = module_resources.get("youtube", [])
             if pv.get("overview"):
