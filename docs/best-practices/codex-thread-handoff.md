@@ -93,6 +93,16 @@ app `create_thread` tool is available to the current agent, use it with that
 prompt. If it is not available, create one new Codex UI thread manually and
 paste the generated prompt. That is the only unavoidable UI action.
 
+The generated bootstrap also tells the replacement thread to read the
+orchestrator worker inbox:
+
+```bash
+.venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results
+```
+
+That inbox summarizes delegate task state and result excerpts so the new
+thread does not have to rediscover raw files under `batch_state/tasks/`.
+
 After the replacement thread is visibly running, confirm it:
 
 ```bash
@@ -168,6 +178,53 @@ Dry-run without writing files:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent codex --dry-run
 ```
+
+## Worker Run Inbox
+
+Use `scripts/orchestration/orchestrator_control.py` when worker dispatch state
+must survive a thread rollover. It keeps a gitignored run ledger under
+`batch_state/orchestrator-runs/` and reads delegate state from
+`batch_state/tasks/`.
+
+Create a run:
+
+```bash
+.venv/bin/python scripts/orchestration/orchestrator_control.py start-run \
+  --run-id a1-gate-policy \
+  --description "A1 gate policy repair"
+```
+
+Dispatch a worker and record it in that run:
+
+```bash
+.venv/bin/python scripts/orchestration/orchestrator_control.py dispatch \
+  --run-id a1-gate-policy \
+  --task-id a1-gate-policy-worker \
+  --agent codex \
+  --mode danger \
+  --worktree \
+  --prompt-file /tmp/a1-gate-policy-worker.md
+```
+
+Attach an already-started delegate task:
+
+```bash
+.venv/bin/python scripts/orchestration/orchestrator_control.py add-task \
+  --run-id a1-gate-policy \
+  --task-id a1-existing-worker
+```
+
+Read the worker inbox from any current or replacement thread:
+
+```bash
+.venv/bin/python scripts/orchestration/orchestrator_control.py inbox \
+  --run-id a1-gate-policy \
+  --include-results
+```
+
+Without `--run-id`, `inbox` shows recent delegate tasks. The markdown output is
+intended for humans; pass `--format json` when another tool needs a structured
+packet.
 
 Audit local Codex metadata:
 
