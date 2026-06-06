@@ -8,7 +8,7 @@ Work in this order:
 1. hear a sound;
 2. see the letter;
 3. repeat a short word;
-4. use one greeting chunk.
+4. use one greeting phrase.
 
 You do not need long Ukrainian sentences yet. You need a few stable anchors:
 **звук**, **лі́тера**, **ма́ма**, **молоко́**, **Приві́т**, and
@@ -140,9 +140,9 @@ to master all 33 letters in one sitting. Repeat a small group, then add more.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Приві́т: first greeting chunks
+## Приві́т: first greeting phrases
 
-Use these as whole chunks first. Grammar can wait.
+Use these as whole phrases first. Grammar can wait.
 
 | Ukrainian | English support |
 | --- | --- |
@@ -183,7 +183,7 @@ Keep this module small and clean:
 1. Keep **о** clear in **молоко́**.
 2. Hear the difference between **и** and **і** in **Приві́т**.
 3. Remember that **Ь** has no sound of its own.
-4. Use **Приві́т**, **До́брий день**, and **Мене́ зва́ти...** as whole chunks.
+4. Use **Приві́т**, **До́брий день**, and **Мене́ зва́ти...** as whole phrases.
 
 End with one reliable line:
 
