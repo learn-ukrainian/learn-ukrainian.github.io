@@ -264,14 +264,14 @@ curriculum/l2-uk-en/
 ├── plans/{level}/{slug}.yaml     # SOURCE OF TRUTH (immutable)
 ├── {level}/meta/{slug}.yaml      # Build config (mutable)
 ├── {level}/{num}-{slug}.md       # Lesson content
-├── {level}/activities/{slug}.yaml # Activities (bare list at root!)
+├── {level}/activities/{slug}.yaml # Activities (V1 bare list or V2 inline/workbook)
 ├── {level}/vocabulary/{slug}.yaml # Vocabulary
 ├── {level}/status/{slug}.json    # AUTO-GENERATED — never include in PRs
 └── {level}/audit/{slug}-review.md # AUTO-GENERATED — never include in PRs
 ```
 
 **Key facts:**
-- Activity YAML must be a bare list at root, NOT wrapped in `activities:` key
+- Activity YAML may be V1 bare list at root for simple modules, or V2 object with `inline:` and `workbook:` lists when Lesson-tab activities must be separated from Workbook/Activities-tab practice; never wrap the list in an `activities:` key
 - Word targets in plans are MINIMUMS, not maximums
 - Dependencies: `pyproject.toml` (NOT `requirements.txt` — it doesn't exist)
 - Repo: `learn-ukrainian/learn-ukrainian.github.io`
