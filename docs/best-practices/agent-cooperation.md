@@ -67,7 +67,7 @@ does not micromanage that track.
 | Scope | Main orchestrator owns | Track orchestrator owns |
 |---|---|---|
 | Branch policy | `main`, merge sequencing, release safety | Dispatch worktrees and PR branches only |
-| State | `docs/session-state/current.orchestrator.md` and router | Track handoff, e.g. `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` |
+| State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff, e.g. `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
 | Merge authority | Final reconcile and merge decision | Open PRs and route track feedback, never merge |
@@ -118,20 +118,29 @@ scope=<what main will do> boundary=<what remains track-owned>
 ### Thread handoff ownership
 
 `docs/session-state/current.md` is a compatibility router, not a shared scratch
-handoff. It keeps `Latest-Brief: docs/session-state/current.orchestrator.md`
-plus an `Agent-Handoff:` mapping.
+handoff. It keeps `Latest-Brief:` plus an `Agent-Handoff:` mapping.
 
-Each agent owns one detailed handoff file:
+Durable role handoffs and thread rollover packets are separate:
 
-| Agent | Handoff |
+| Agent | Durable role handoff |
 |---|---|
-| orchestrator | `docs/session-state/current.orchestrator.md` |
+| orchestrator | `docs/session-state/codex-orchestrator-handoff.md` |
 | codex | `docs/session-state/current.codex.md` |
 | claude | `docs/session-state/current.claude.md` |
 | gemini | `docs/session-state/current.gemini.md` |
 
+Thread rollover packets are generated locally under
+`.agent/<agent>-thread-handoff.md` by
+`scripts/orchestration/thread_handoff.py prepare`. They are for moving a
+saturated thread to a fresh thread; do not use them as the durable orchestrator
+state file.
+
+For compatibility, `docs/session-state/current.orchestrator.md` remains a thin
+pointer to `docs/session-state/codex-orchestrator-handoff.md` while older
+routers and cold-start hooks still reference it.
+
 Use `/api/session/current?agent=<name>` or read the matching
-`current.<agent>.md` directly. Only the orchestrator updates the router by
+durable role handoff directly. Only the orchestrator updates the router by
 default; other agents update it only when the task explicitly asks for a router
 change.
 

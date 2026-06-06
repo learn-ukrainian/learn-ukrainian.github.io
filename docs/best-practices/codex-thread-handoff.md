@@ -27,12 +27,23 @@ Verified locally on 2026-05-30:
 
 ## Architecture
 
-The handoff system uses a local thread lease plus a generated bootstrap
+The handoff system has three separate layers:
+
+- Durable role handoff: repo-tracked state for the role an agent is playing.
+- Thread rollover packet: local state for replacing one saturated thread with
+  a fresh thread.
+- Worker inbox: delegate task state and result excerpts collected from
+  `batch_state/tasks/`.
+
+The thread rollover layer uses a local thread lease plus a generated bootstrap
 prompt, scoped by agent name:
 
 - Lease state: `.agent/<agent>-thread-lease.json` (gitignored)
 - Bootstrap prompt: `.agent/<agent>-thread-bootstrap.md` (gitignored)
-- Tracked agent handoff: `docs/session-state/current.<agent>.md`
+- Thread rollover packet: `.agent/<agent>-thread-handoff.md` (gitignored)
+- Durable Codex orchestrator handoff:
+  `docs/session-state/codex-orchestrator-handoff.md`
+- Other durable agent handoffs: `docs/session-state/current.<agent>.md`
 - Compatibility router: `docs/session-state/current.md`
 - Script: `scripts/orchestration/thread_handoff.py`
 
@@ -41,9 +52,12 @@ agents are `orchestrator`, `codex`, `claude`, and `gemini`; additional agents
 can use the same naming rule.
 
 `docs/session-state/current.md` is intentionally small. It is a router with a
-stable `Latest-Brief: docs/session-state/current.orchestrator.md` marker for
-legacy cold-start hooks plus an `Agent-Handoff:` mapping for each agent. Do not
-put detailed state in the router.
+stable `Latest-Brief:` marker plus an `Agent-Handoff:` mapping for each agent.
+Do not put detailed state in the router.
+
+For compatibility, `docs/session-state/current.orchestrator.md` remains as a
+thin pointer to `docs/session-state/codex-orchestrator-handoff.md`. Do not put
+new detailed orchestrator state in the pointer.
 
 The lease records:
 
@@ -85,7 +99,7 @@ This writes:
 
 - `.agent/orchestrator-thread-lease.json`
 - `.agent/orchestrator-thread-bootstrap.md`
-- `docs/session-state/current.orchestrator.md`
+- `.agent/orchestrator-thread-handoff.md`
 - `docs/session-state/current.md` router only when `--write-current` is present
 
 The generated prompt is the exact replacement-thread bootstrap. If the Codex
@@ -102,6 +116,13 @@ orchestrator worker inbox:
 
 That inbox summarizes delegate task state and result excerpts so the new
 thread does not have to rediscover raw files under `batch_state/tasks/`.
+
+The replacement thread reads both durable role state and thread rollover state:
+
+- durable role state:
+  `docs/session-state/codex-orchestrator-handoff.md`
+- local thread rollover packet:
+  `.agent/orchestrator-thread-handoff.md`
 
 After the replacement thread is visibly running, confirm it:
 
@@ -127,9 +148,8 @@ Agents other than the orchestrator write only their own handoff by default:
 
 That writes `.agent/codex-thread-lease.json`,
 `.agent/codex-thread-bootstrap.md`, and
-`docs/session-state/current.codex.md`. It does not modify
-`docs/session-state/current.md` and does not touch
-`docs/session-state/current.orchestrator.md`.
+`.agent/codex-thread-handoff.md`. It does not modify
+`docs/session-state/current.md` and does not touch durable role handoff files.
 
 Only pass `--write-current` for a non-orchestrator agent when the task
 explicitly authorizes a router update. The router must stay tiny and must keep

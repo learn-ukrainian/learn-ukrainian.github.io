@@ -95,13 +95,13 @@ def session_fixture(tmp_path, monkeypatch):
     session_dir.mkdir(parents=True)
     (session_dir / "current.md").write_text(
         "# Current Session Router\n\n"
-        "Latest-Brief: docs/session-state/current.orchestrator.md\n\n"
+        "Latest-Brief: docs/session-state/codex-orchestrator-handoff.md\n\n"
         "Agent-Handoff:\n"
-        "- orchestrator: docs/session-state/current.orchestrator.md\n"
+        "- orchestrator: docs/session-state/codex-orchestrator-handoff.md\n"
         "- codex: docs/session-state/current.codex.md\n",
         encoding="utf-8",
     )
-    (session_dir / "current.orchestrator.md").write_text(
+    (session_dir / "codex-orchestrator-handoff.md").write_text(
         "# Current task\n\nWorking on #1309.\n", encoding="utf-8"
     )
     (session_dir / "current.codex.md").write_text(
@@ -124,7 +124,7 @@ def test_session_current_markdown(session_fixture):
     # Older handoffs listed too but not current router or agent handoff files.
     recent_block = resp.text.split("Recent session-state")[1]
     assert "current.md" not in recent_block
-    assert "current.orchestrator.md" not in recent_block
+    assert "codex-orchestrator-handoff.md" not in recent_block
 
 
 def test_session_current_json(session_fixture):
@@ -132,7 +132,7 @@ def test_session_current_json(session_fixture):
     assert resp.status_code == 200
     body = resp.json()
     assert body["sections"]["agent"] == "orchestrator"
-    assert body["sections"]["current"] == "docs/session-state/current.orchestrator.md"
+    assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
     assert body["sections"]["router"] == "docs/session-state/current.md"
     assert body["sections"]["recent_handoffs"][0].endswith("2026-04-17-newest.md")
     assert body["hash"]
@@ -144,6 +144,33 @@ def test_session_current_agent_query(session_fixture):
     assert resp.status_code == 200
     assert "Codex-specific handoff." in resp.text
     assert "Working on #1309." not in resp.text
+
+
+def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_path, monkeypatch):
+    project_root = tmp_path
+    session_dir = project_root / "docs" / "session-state"
+    session_dir.mkdir(parents=True)
+    (session_dir / "current.md").write_text(
+        "# Current Session Router\n\n"
+        "Latest-Brief: docs/session-state/current.orchestrator.md\n\n"
+        "Agent-Handoff:\n"
+        "- orchestrator: docs/session-state/current.orchestrator.md\n",
+        encoding="utf-8",
+    )
+    (session_dir / "current.orchestrator.md").write_text(
+        "# Pointer\n\nSee durable state.\n", encoding="utf-8"
+    )
+    (session_dir / "codex-orchestrator-handoff.md").write_text(
+        "# Durable task\n\nDurable orchestrator state.\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+
+    resp = client.get("/api/session/current?format=json")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "Durable orchestrator state." in body["markdown"]
+    assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
 
 
 def test_session_current_router_query(session_fixture):

@@ -30,6 +30,7 @@ DEFAULT_AGENT = "orchestrator"
 DEFAULT_ROUTER_AGENTS = ("orchestrator", "codex", "claude", "gemini")
 AGENT_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 DEFAULT_ROUTER_PATH = Path("docs/session-state/current.md")
+ORCHESTRATOR_HANDOFF_PATH = Path("docs/session-state/codex-orchestrator-handoff.md")
 DEFAULT_STALE_HOURS = 12
 DEFAULT_CONTEXT_THRESHOLD = 82.0
 
@@ -69,7 +70,13 @@ def default_bootstrap_path(agent: str) -> Path:
     return Path(f".agent/{agent}-thread-bootstrap.md")
 
 
+def default_thread_handoff_path(agent: str) -> Path:
+    return Path(f".agent/{agent}-thread-handoff.md")
+
+
 def default_handoff_path(agent: str) -> Path:
+    if agent == DEFAULT_AGENT:
+        return ORCHESTRATOR_HANDOFF_PATH
     return Path(f"docs/session-state/current.{agent}.md")
 
 
@@ -496,6 +503,7 @@ def render_bootstrap_prompt(
     agent: str = DEFAULT_AGENT,
     router_path: Path = DEFAULT_ROUTER_PATH,
     handoff_path: Path | None = None,
+    role_handoff_path: Path | None = None,
     context_threshold: float,
 ) -> str:
     git = snapshot["git"]
@@ -504,9 +512,11 @@ def render_bootstrap_prompt(
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or default_bootstrap_path(agent).as_posix()
-    handoff_path = handoff_path or default_handoff_path(agent)
+    handoff_path = handoff_path or default_thread_handoff_path(agent)
+    role_handoff_path = role_handoff_path or default_handoff_path(agent)
     router_text = router_path.as_posix()
-    handoff_text = handoff_path.as_posix()
+    handoff_text = role_handoff_path.as_posix()
+    thread_handoff_text = handoff_path.as_posix()
     active_generation = active.get("generation") or "unknown"
     replacement_generation = replacement.get("generation") or "unknown"
     context_percent = (state.get("last_handoff") or {}).get("context_percent")
@@ -518,12 +528,14 @@ def render_bootstrap_prompt(
         f"You are the replacement {agent_label} thread.",
         f"Replacement generation: {replacement_generation}",
         f"Previous active generation: {active_generation}",
-        f"Agent handoff: {handoff_text}",
+        f"Role handoff: {handoff_text}",
+        f"Thread handoff: {thread_handoff_text}",
         f"Global router: {router_text}",
         "",
         "Read first:",
         f"- {router_text}",
         f"- {handoff_text}",
+        f"- {thread_handoff_text}",
         "- AGENTS.md",
         "- docs/best-practices/agent-cooperation.md",
         "- docs/best-practices/codex-thread-handoff.md",
@@ -566,6 +578,7 @@ def render_current_markdown(
     state: dict[str, Any],
     *,
     agent: str = DEFAULT_AGENT,
+    role_handoff_path: Path | None = None,
     context_threshold: float,
 ) -> str:
     git = snapshot["git"]
@@ -576,6 +589,7 @@ def render_current_markdown(
     cleanup = state.get("cleanup") or {}
     handoff = state.get("last_handoff") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or default_bootstrap_path(agent).as_posix()
+    role_handoff = (role_handoff_path or default_handoff_path(agent)).as_posix()
     title_agent = "Orchestrator" if agent == "orchestrator" else agent.title()
 
     lines = [
@@ -595,6 +609,7 @@ def render_current_markdown(
         f"- Replacement thread id: `{replacement.get('thread_id') or 'not-confirmed'}`",
         f"- Old automation ready to delete: `{cleanup.get('old_automation_ready_to_delete', False)}`",
         f"- Bootstrap prompt: `{prompt_path}`",
+        f"- Durable role handoff: `{role_handoff}`",
         "",
         "## Context Budget",
         "",
@@ -688,9 +703,9 @@ def render_router_markdown(
         f"Default-Agent: {default_agent}",
         f"Generated-At: {generated_at}",
         "",
-        "This file is a small compatibility router. Detailed thread state lives in",
-        "`docs/session-state/current.<agent>.md`; agents should update only their own",
-        "handoff file unless the task explicitly authorizes a router update.",
+        "This file is a small compatibility router. Durable role state lives in",
+        "the mapped Agent-Handoff files. Thread rollover packets live under",
+        "`.agent/<agent>-thread-handoff.md` unless explicitly overridden.",
         "",
     ])
     return "\n".join(lines)
@@ -788,11 +803,13 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     agent = normalize_agent_name(args.agent)
     state_file = args.state_file or default_state_path(agent)
     bootstrap_file = args.bootstrap_file or default_bootstrap_path(agent)
-    handoff_file = args.handoff_file or default_handoff_path(agent)
+    handoff_file = args.handoff_file or default_thread_handoff_path(agent)
+    role_handoff_file = default_handoff_path(agent)
     router_file = args.current_file or DEFAULT_ROUTER_PATH
     state_path = repo_root / state_file
     bootstrap_path = repo_root / bootstrap_file
     handoff_path = repo_root / handoff_file
+    role_handoff_path = repo_root / role_handoff_file
     router_path = repo_root / router_file
 
     state = load_state(state_path)
@@ -822,12 +839,14 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         agent=agent,
         router_path=Path(router_file),
         handoff_path=Path(handoff_file),
+        role_handoff_path=Path(role_handoff_file),
         context_threshold=args.context_threshold,
     )
     handoff_md = render_current_markdown(
         snapshot,
         prepared_state,
         agent=agent,
+        role_handoff_path=Path(role_handoff_file),
         context_threshold=args.context_threshold,
     )
     router_md = render_router_markdown(
@@ -843,6 +862,8 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             "state_file": state_path.as_posix(),
             "bootstrap_file": bootstrap_path.as_posix(),
             "handoff_file": handoff_path.as_posix(),
+            "thread_handoff_file": handoff_path.as_posix(),
+            "role_handoff_file": role_handoff_path.as_posix(),
             "router_file": router_path.as_posix(),
             "current_file": router_path.as_posix(),
             "would_write_router": bool(args.write_current),
@@ -868,6 +889,8 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         "state_file": rel(state_path, repo_root),
         "bootstrap_file": rel(bootstrap_path, repo_root),
         "handoff_file": rel(handoff_path, repo_root),
+        "thread_handoff_file": rel(handoff_path, repo_root),
+        "role_handoff_file": rel(role_handoff_path, repo_root),
         "router_file": rel(router_path, repo_root) if wrote_router else None,
         "current_file": rel(router_path, repo_root) if wrote_router else None,
         "replacement_status": prepared_state["replacement"]["status"],
@@ -943,7 +966,7 @@ def build_parser() -> argparse.ArgumentParser:
     prepare.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     prepare.add_argument("--state-file", type=Path)
     prepare.add_argument("--bootstrap-file", type=Path)
-    prepare.add_argument("--handoff-file", type=Path, help="Override docs/session-state/current.<agent>.md.")
+    prepare.add_argument("--handoff-file", type=Path, help="Override the local thread rollover handoff path.")
     prepare.add_argument("--current-file", type=Path, help="Override the shared docs/session-state/current.md router.")
     prepare.add_argument("--active-thread-id")
     prepare.add_argument("--active-automation-id")

@@ -14,7 +14,7 @@ into one endpoint lets agents check a single hash on
 ``/api/state/manifest`` and only refetch when something changed.
 
 The payload is kept lean on purpose — if an agent needs the full
-session state, the selected current.<agent>.md file path is advertised
+session state, the selected mapped agent handoff path is advertised
 in the JSON response so the agent can fall back to a direct read. The
 endpoint is designed for "what do I need to know RIGHT NOW to start
 working", not for forensic archaeology.
@@ -42,6 +42,8 @@ from .telemetry.response import (
 router = APIRouter(tags=["session"])
 
 SESSION_ROUTER_PATH = "docs/session-state/current.md"
+ORCHESTRATOR_HANDOFF_PATH = "docs/session-state/codex-orchestrator-handoff.md"
+LEGACY_ORCHESTRATOR_HANDOFF_PATH = "docs/session-state/current.orchestrator.md"
 DEFAULT_SESSION_AGENT = "orchestrator"
 AGENT_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 
@@ -149,7 +151,14 @@ def _resolve_session_path(agent: str) -> str:
     router_markdown = router_path.read_text(encoding="utf-8", errors="replace")
     handoffs = _parse_agent_handoffs(router_markdown)
     if agent in handoffs:
-        return handoffs[agent]
+        handoff_path = handoffs[agent]
+        if (
+            agent == DEFAULT_SESSION_AGENT
+            and handoff_path == LEGACY_ORCHESTRATOR_HANDOFF_PATH
+            and (PROJECT_ROOT / ORCHESTRATOR_HANDOFF_PATH).is_file()
+        ):
+            return ORCHESTRATOR_HANDOFF_PATH
+        return handoff_path
 
     # Backward compatibility for older current.md files that still contained
     # the detailed orchestrator handoff rather than an Agent-Handoff router.
@@ -170,13 +179,14 @@ def _recent_handoff_paths() -> list[str]:
     session_dir = PROJECT_ROOT / "docs" / "session-state"
     if not session_dir.is_dir():
         return []
+    excluded_names = {"current.md", Path(ORCHESTRATOR_HANDOFF_PATH).name}
     candidates: list[Path] = []
     for pattern in ("*.md", "*.html"):
         candidates.extend(session_dir.glob(pattern))
     all_handoffs = sorted(
         p
         for p in candidates
-        if p.name != "current.md" and not (p.name.startswith("current.") and p.suffix == ".md")
+        if p.name not in excluded_names and not (p.name.startswith("current.") and p.suffix == ".md")
     )
     latest = all_handoffs[-_RECENT_HANDOFFS_N:] if all_handoffs else []
     latest.reverse()  # newest first

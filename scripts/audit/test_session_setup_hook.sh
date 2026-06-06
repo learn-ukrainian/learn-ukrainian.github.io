@@ -80,20 +80,20 @@ marker_bytes="$(printf '%s' "$output" | wc -c | tr -d ' ')"
 # 2. Agent-Handoff mapping wins over the compatibility Latest-Brief marker.
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/docs/session-state"
-printf 'orchestrator body\n' > "$fixture_root/docs/session-state/current.orchestrator.md"
+printf 'orchestrator body\n' > "$fixture_root/docs/session-state/codex-orchestrator-handoff.md"
 printf 'claude body\n' > "$fixture_root/docs/session-state/current.claude.md"
 cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
 # Current Session Router
 
-Latest-Brief: docs/session-state/current.orchestrator.md
+Latest-Brief: docs/session-state/codex-orchestrator-handoff.md
 
 Agent-Handoff:
-- orchestrator: docs/session-state/current.orchestrator.md
+- orchestrator: docs/session-state/codex-orchestrator-handoff.md
 - claude: docs/session-state/current.claude.md
 EOF
 output="$(run_hook "$fixture_root")"
 assert_contains "$output" "Brief: docs/session-state/current.claude.md" "agent handoff"
-assert_not_contains "$output" "Brief: docs/session-state/current.orchestrator.md" "agent handoff"
+assert_not_contains "$output" "Brief: docs/session-state/codex-orchestrator-handoff.md" "agent handoff"
 assert_not_contains "$output" "WARN:" "agent handoff"
 
 # 3. Table regex fallback.

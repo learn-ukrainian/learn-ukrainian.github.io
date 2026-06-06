@@ -1365,8 +1365,11 @@ to `.claude/rules/` still gets correct content.
 Agent-specific session handoff plus a short list of recent handoff
 filenames (newest first). The default agent is `orchestrator`; use
 `agent=codex`, `agent=claude`, or `agent=gemini` to read that agent's
-`docs/session-state/current.<agent>.md`. Pass `agent=router` only when
-you need the small compatibility router at `docs/session-state/current.md`.
+mapped handoff file. The Codex orchestrator handoff lives at
+`docs/session-state/codex-orchestrator-handoff.md`; other durable agent
+handoffs normally use `docs/session-state/current.<agent>.md`. Pass
+`agent=router` only when you need the small compatibility router at
+`docs/session-state/current.md`.
 
 Kept intentionally small — the endpoint answers "what do I need to know RIGHT
 NOW to keep working", not "give me the full history".

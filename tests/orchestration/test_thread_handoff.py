@@ -109,7 +109,8 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
 
     assert "You are the replacement Codex orchestrator thread." in prompt
     assert "docs/session-state/current.md" in prompt
-    assert "docs/session-state/current.orchestrator.md" in prompt
+    assert "Role handoff: docs/session-state/codex-orchestrator-handoff.md" in prompt
+    assert "Thread handoff: .agent/orchestrator-thread-handoff.md" in prompt
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "Context estimate: 90.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
@@ -138,6 +139,7 @@ def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Pa
     assert "## Next Commands" in rendered
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in rendered
     assert "orchestrator_control.py inbox --recent 20 --include-results" in rendered
+    assert "Durable role handoff: `docs/session-state/codex-orchestrator-handoff.md`" in rendered
 
 
 def test_render_router_markdown_contains_parseable_markers():
@@ -147,8 +149,9 @@ def test_render_router_markdown_contains_parseable_markers():
         agents=["orchestrator", "codex", "claude", "gemini"],
     )
 
-    assert "Latest-Brief: docs/session-state/current.orchestrator.md" in rendered
+    assert "Latest-Brief: docs/session-state/codex-orchestrator-handoff.md" in rendered
     assert "Agent-Handoff:" in rendered
+    assert "- orchestrator: docs/session-state/codex-orchestrator-handoff.md" in rendered
     assert "- codex: docs/session-state/current.codex.md" in rendered
     assert len(rendered.encode("utf-8")) < 1200
 
@@ -156,6 +159,8 @@ def test_render_router_markdown_contains_parseable_markers():
 def test_default_agent_paths_are_agent_specific():
     assert th.default_state_path("claude") == Path(".agent/claude-thread-lease.json")
     assert th.default_bootstrap_path("claude") == Path(".agent/claude-thread-bootstrap.md")
+    assert th.default_thread_handoff_path("claude") == Path(".agent/claude-thread-handoff.md")
+    assert th.default_handoff_path("orchestrator") == Path("docs/session-state/codex-orchestrator-handoff.md")
     assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
 
 
@@ -178,13 +183,15 @@ def test_prepare_orchestrator_writes_router_and_agent_handoff(tmp_path: Path, ca
     assert payload["agent"] == "orchestrator"
     assert payload["state_file"] == ".agent/orchestrator-thread-lease.json"
     assert payload["bootstrap_file"] == ".agent/orchestrator-thread-bootstrap.md"
-    assert payload["handoff_file"] == "docs/session-state/current.orchestrator.md"
+    assert payload["handoff_file"] == ".agent/orchestrator-thread-handoff.md"
+    assert payload["thread_handoff_file"] == ".agent/orchestrator-thread-handoff.md"
+    assert payload["role_handoff_file"] == "docs/session-state/codex-orchestrator-handoff.md"
     assert payload["router_file"] == "docs/session-state/current.md"
-    assert "Latest-Brief: docs/session-state/current.orchestrator.md" in (
+    assert "Latest-Brief: docs/session-state/codex-orchestrator-handoff.md" in (
         tmp_path / "docs/session-state/current.md"
     ).read_text(encoding="utf-8")
     assert "## Thread Lease" in (
-        tmp_path / "docs/session-state/current.orchestrator.md"
+        tmp_path / ".agent/orchestrator-thread-handoff.md"
     ).read_text(encoding="utf-8")
 
 
@@ -196,9 +203,11 @@ def test_prepare_non_orchestrator_does_not_clobber_router_or_orchestrator_handof
     session_dir = tmp_path / "docs/session-state"
     session_dir.mkdir(parents=True)
     router_path = session_dir / "current.md"
-    orchestrator_path = session_dir / "current.orchestrator.md"
+    orchestrator_path = session_dir / "codex-orchestrator-handoff.md"
+    claude_path = session_dir / "current.claude.md"
     router_path.write_text("router stays\n", encoding="utf-8")
     orchestrator_path.write_text("orchestrator stays\n", encoding="utf-8")
+    claude_path.write_text("claude role stays\n", encoding="utf-8")
     monkeypatch.setattr(th, "gather_snapshot", lambda repo_root, base_url: sample_snapshot(repo_root))
 
     rc = th.main([
@@ -215,7 +224,8 @@ def test_prepare_non_orchestrator_does_not_clobber_router_or_orchestrator_handof
     assert payload["router_file"] is None
     assert router_path.read_text(encoding="utf-8") == "router stays\n"
     assert orchestrator_path.read_text(encoding="utf-8") == "orchestrator stays\n"
-    assert (session_dir / "current.claude.md").is_file()
+    assert claude_path.read_text(encoding="utf-8") == "claude role stays\n"
+    assert (tmp_path / ".agent/claude-thread-handoff.md").is_file()
     assert (tmp_path / ".agent/claude-thread-lease.json").is_file()
     assert (tmp_path / ".agent/claude-thread-bootstrap.md").is_file()
 
