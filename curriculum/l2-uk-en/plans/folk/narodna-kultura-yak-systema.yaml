@@ -1,0 +1,68 @@
+activity_hints:
+- type: aural-genre-id
+  placement: workbook
+  focus: Aural markers or performance context, when dossier sources support audio
+- type: symbolic-decoding
+  placement: workbook
+  focus: Motif, image, or formula decoding from dossier evidence
+- type: variant-comparison
+  placement: workbook
+  focus: Regional, temporal, or performance variants
+cefr_min: C1
+connects_to:
+- narodni-viruvannia-mifolohiia-demonolohiia
+content_outline:
+- section: Постановка проблеми
+  words: 600
+  points:
+  - 'Stub: dossier will supply the opening problem, corpus anchors, and framing constraints.'
+- section: Корпус і контекст
+  words: 1200
+  points:
+  - 'Stub: dossier will supply verified texts, images, recordings, or material-culture evidence.'
+- section: Поетика, символіка і виконання
+  words: 1400
+  points:
+  - 'Stub: dossier will specify motifs, formulas, performance sequence, and regional variation.'
+- section: Деколонізаційна рамка
+  words: 900
+  points:
+  - 'Stub: dossier will identify imperial, Soviet, or romantic-nationalist myths to correct.'
+- section: Підсумок
+  words: 900
+  points:
+  - 'Stub: module build will synthesize why this folk form matters now.'
+focus: Systems overview of Ukrainian folk culture across ritual, genre, region, performance, and oral-written
+  boundaries
+level: FOLK
+module: folk-001
+objectives:
+- Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
+- Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
+- Розпізнавати імперські, радянські або романтизовані міфи в описі теми й формулювати коректну рамку.
+pedagogy: CBI
+persona:
+  role: Модератор фольклористичного семінару з увагою до корпусу, виконання і матеріальної культури
+  voice: Folklore-seminar facilitator
+phase: FOLK.A
+references:
+- title: "Народна культура як система"
+  note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
+  type: pending
+sequence: 1
+slug: narodna-kultura-yak-systema
+status: stub
+subtitle: Folk Culture as a System
+title: Народна культура як система
+version: '0.1'
+vocabulary_hints:
+- word: обряд
+  pos: ч.
+  definition: усталена символічна дія або послідовність дій у традиційній культурі
+- word: мотив
+  pos: ч.
+  definition: повторюваний образ, сюжетний елемент або символічна формула
+- word: варіант
+  pos: ч.
+  definition: регіональна, часова або виконавська форма того самого тексту чи практики
+word_target: 5000

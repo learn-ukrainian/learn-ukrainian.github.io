@@ -11,7 +11,6 @@ from typing import Any
 
 SEMINAR_TRACKS = {
     "bio",
-    "folk",
     "hist",
     "istorio",
     "lit",
@@ -196,7 +195,7 @@ MODULE_ARCHETYPES: dict[str, dict[str, Any]] = {
     },
     "seminar-source-analysis": {
         "label": "Seminar source analysis",
-        "scope": "BIO, HIST, LIT, OES, RUTH, FOLK, ISTORIO and seminar variants",
+        "scope": "BIO, HIST, LIT, OES, RUTH, ISTORIO and seminar variants",
         "teaching_language": "Ukrainian academic prose.",
         "learner_assumptions": [
             "Learner is ready for source-based analytical work.",
@@ -224,6 +223,41 @@ MODULE_ARCHETYPES: dict[str, dict[str, Any]] = {
             "no shallow summary",
         ],
     },
+    "folk-experiential": {
+        "label": "Folk experiential",
+        "scope": "FOLK track modules",
+        "teaching_language": "Ukrainian C1+ cultural prose with corpus-grounded explanation.",
+        "learner_assumptions": [
+            "Learner can read extended Ukrainian academic prose.",
+            "Folk culture is aural, performative, symbolic, and material, not only textual.",
+            "Lesson prose must be rich enough to stand on its own before activities.",
+            "Activities may use recordings, images, ritual sequences, variants, formulas, and performance tasks.",
+        ],
+        "must_introduce_before_use": True,
+        "tab_contract": DEFAULT_TAB_CONTRACT,
+        "lesson_blocks": [
+            "audio-block: pair a named recording with a verify_quote-confirmed text when dossier sources support audio",
+            "symbolic-decode: use dossier image chunk_ids and clickable hotspots to decode motifs or symbols",
+            "high-culture bridge: connect the folk form to opera, literature, art, or modern cultural circulation",
+            "myth-box: correct imperial, Soviet, or romantic-nationalist myths with dossier-grounded evidence",
+        ],
+        "activity_families": [
+            "#40 Aural Genre-ID",
+            "#41 Symbolic Decoding",
+            "#42 Ritual Sequencing",
+            "#43 Variant Comparison",
+            "#44 Motif / Formula",
+            "#45 Performance",
+        ],
+        "review_gates": [
+            "4-tab shell intact and no tab empty",
+            "audio/symbolic-decode/high-culture bridge used where dossier evidence supports them",
+            "at least one decolonization myth-box",
+            "rich corpus-grounded Ukrainian lesson prose",
+            "folk activity families #40-#45 instead of generic seminar-only tasks",
+            "Resources are dossier-derived; no YouTube resources",
+        ],
+    },
 }
 
 
@@ -246,6 +280,8 @@ def resolve_module_archetype(track: str, module_num: int) -> dict[str, Any]:
         archetype_id = "a1-a2-expansion-ramp"
     elif normalized_track in CORE_TRACKS:
         archetype_id = "b1-plus-core"
+    elif normalized_track == "folk":
+        archetype_id = "folk-experiential"
     elif normalized_track in SEMINAR_TRACKS:
         archetype_id = "seminar-source-analysis"
     else:
@@ -274,6 +310,11 @@ def format_module_archetype(contract: dict[str, Any]) -> str:
         "- Product tabs: " + ", ".join(contract["tab_contract"]["product_tabs"]),
         "- Current Starlight tabs: " + ", ".join(contract["tab_contract"]["starlight_current_tabs"]),
         "- Resource policy: " + contract["tab_contract"]["resource_policy"],
+    ])
+    if lesson_blocks := contract.get("lesson_blocks"):
+        lines.extend(["", "Required lesson blocks:"])
+        lines.extend(f"- {item}" for item in lesson_blocks)
+    lines.extend([
         "",
         "Allowed activity families:",
     ])

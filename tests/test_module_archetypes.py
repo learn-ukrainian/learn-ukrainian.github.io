@@ -41,6 +41,23 @@ def test_seminar_tracks_use_source_analysis_archetype():
     assert "seminar activity family" in contract["review_gates"]
 
 
+def test_folk_uses_experiential_archetype():
+    contract = resolve_module_archetype("folk", 4)
+
+    assert contract["id"] == "folk-experiential"
+    assert "#40 Aural Genre-ID" in contract["activity_families"]
+    assert "#45 Performance" in contract["activity_families"]
+    assert any("audio-block" in block for block in contract["lesson_blocks"])
+    assert any("myth-box" in block for block in contract["lesson_blocks"])
+
+
+def test_other_seminar_tracks_remain_source_analysis():
+    seminar_tracks = ("bio", "hist", "istorio", "oes", "ruth", "lit", "lit-drama")
+
+    for track in seminar_tracks:
+        assert resolve_module_archetype(track, 1)["id"] == "seminar-source-analysis"
+
+
 def test_format_module_archetype_is_prompt_ready():
     text = format_module_archetype(resolve_module_archetype("a1", 1))
 
@@ -48,3 +65,14 @@ def test_format_module_archetype_is_prompt_ready():
     assert "Product tabs: Lesson, Workbook, Vocabulary, Resources" in text
     assert "Current Starlight tabs: Lesson, Vocabulary, Activities, Resources" in text
     assert "Allowed activity families:" in text
+
+
+def test_format_folk_archetype_includes_lesson_blocks():
+    text = format_module_archetype(resolve_module_archetype("folk", 1))
+
+    assert "MODULE ARCHETYPE: folk-experiential" in text
+    assert "Required lesson blocks:" in text
+    assert "audio-block" in text
+    assert "symbolic-decode" in text
+    assert "high-culture bridge" in text
+    assert "myth-box" in text

@@ -642,12 +642,13 @@ class TestSlugToTopic:
 class TestDomainMapping:
     def test_folk_domain_map(self):
         from wiki.compile import _get_domain
-        assert _get_domain("folk", "dumy-lytsarski") == "folk/genres"
+        # Updated for the 27->42 folk SSOT migration (renames/folds + new domain grouping)
+        assert _get_domain("folk", "dumy-nevilnytski-lytsarski") == "folk/genres"
         assert _get_domain("folk", "koliadky-shchedrivky") == "folk/ritual"
-        assert _get_domain("folk", "kobzarstvo-fenomen") == "folk/tradition"
+        assert _get_domain("folk", "kobzarstvo-lirnytstvo") == "folk/genres"
         assert _get_domain("folk", "prykazky-ta-pryslivia") == "folk/short-forms"
-        assert _get_domain("folk", "narodni-balady") == "folk/prose"
-        assert _get_domain("folk", "chumatski-burlatski-pisni") == "folk/lyric"
+        assert _get_domain("folk", "narodni-balady") == "folk/lyric"
+        assert _get_domain("folk", "suspilno-pobutovi-pisni") == "folk/lyric"
 
     def test_other_tracks(self):
         from wiki.compile import _get_domain
