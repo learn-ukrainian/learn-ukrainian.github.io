@@ -4,8 +4,6 @@ description: "Наголос змінює значення, інтонація �
 sidebar:
   order: 4
   label: "04. Наголос і мелодика"
-pipeline: linear-phase-4
-build_status: validated
 prev: special-signs
 next: who-am-i
 ---
@@ -260,9 +258,8 @@ Final reading:
 <DialogueBox uk="Так, це апте́ка. ↘" en="Yes, this is a pharmacy." />
 <DialogueBox uk="Як га́рно! ↘↘" en="How nice!" />
 
-The workbook repeats the same skills in several modes: stress choice,
-homograph matching, punctuation and melody, clear-vowel error correction,
-number stress, and a short reading check.
+The workbook adds extra practice with the same skills: clear-vowel error
+correction, stress sorting, quick facts, and word recognition.
 
 ### Punctuation and melody
 
@@ -277,22 +274,6 @@ number stress, and a short reading check.
 
 </TabItem>
 <TabItem label="Activities">
-
-### Where is the stress?
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "In ка́ва, where is the stress?", "options": [{"text": "first syllable", "correct": true}, {"text": "final syllable", "correct": false}, {"text": "no stress", "correct": false}], "explanation": "Ка́ва is stressed on ка́."}, {"question": "In вода́, where is the stress?", "options": [{"text": "final syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "every syllable equally", "correct": false}], "explanation": "Вода́ is stressed on да́."}, {"question": "In столи́ця, where is the stress?", "options": [{"text": "middle syllable", "correct": true}, {"text": "first syllable", "correct": false}, {"text": "final syllable", "correct": false}], "explanation": "Столи́ця is stressed on ли́."}, {"question": "What should you do with unstressed vowels in молоко́?", "options": [{"text": "Keep each vowel clear.", "correct": true}, {"text": "Drop the first vowel.", "correct": false}, {"text": "Read every о as а.", "correct": false}], "explanation": "Ukrainian unstressed vowels stay clear."}]`)} />
-
-### Melody choice
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Це ка́ва.", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A statement uses falling melody."}, {"question": "Це ка́ва?", "options": [{"text": "rising ↗", "correct": true}, {"text": "falling ↘", "correct": false}], "explanation": "A yes/no question uses rising melody."}, {"question": "Де метро́?", "options": [{"text": "falling ↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "A question with де uses falling melody at A1."}, {"question": "Як га́рно!", "options": [{"text": "stronger falling ↘↘", "correct": true}, {"text": "rising ↗", "correct": false}], "explanation": "An exclamation uses a stronger falling contour."}]`)} />
-
-### Stress changes meaning
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок", "right": "castle"}, {"left": "замо́к", "right": "lock"}, {"left": "а́тлас", "right": "atlas"}, {"left": "атла́с", "right": "satin"}, {"left": "о́рган", "right": "body organ"}, {"left": "орга́н", "right": "musical instrument"}]`)} />
-
-### Punctuation and melody
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ка́ва_", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Це метро́_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Де апте́ка_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Як га́рно_", "answer": "!", "options": ["!", "?", "."]}, {"sentence": "Так, це вода́_", "answer": ".", "options": [".", "?", "!"]}]`)} />
 
 ### Fix stress-transfer traps
 
