@@ -37,7 +37,7 @@ def register_existing() -> None:
     # DETERMINISTIC_STRIP — strips content only, never introduces new
     # codepoints.
     register_post_processor(
-        "build.v6_build._post_process_content",
+        "build.content_cleanup.post_process_content",
         MutationClass.DETERMINISTIC_STRIP,
     )
 
@@ -58,11 +58,11 @@ def get_processor_callable(name: str):
 
         return _invoke_stress
 
-    if name == "build.v6_build._post_process_content":
+    if name == "build.content_cleanup.post_process_content":
         import tempfile
 
         def _invoke_post_process(text: str) -> str:
-            from build.v6_build import _post_process_content
+            from build.content_cleanup import post_process_content
 
             with tempfile.NamedTemporaryFile(
                 mode="w",
@@ -74,7 +74,7 @@ def get_processor_callable(name: str):
                 handle.write(text)
                 tmp_path = Path(handle.name)
             try:
-                _post_process_content(tmp_path)
+                post_process_content(tmp_path)
                 return tmp_path.read_text("utf-8")
             finally:
                 tmp_path.unlink(missing_ok=True)

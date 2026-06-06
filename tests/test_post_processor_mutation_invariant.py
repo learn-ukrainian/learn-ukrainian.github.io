@@ -144,7 +144,7 @@ def test_every_registered_processor_has_a_resolver() -> None:
 # post-review mutator; the test forces an explicit class declaration.
 _EXPECTED_REGISTRATIONS = {
     "pipeline.stress_annotator.annotate_stress",
-    "build.v6_build._post_process_content",
+    "build.content_cleanup.post_process_content",
 }
 
 
