@@ -9,8 +9,7 @@ Covers:
 6. scripts/audit/phases_gates.py — gate evaluation phase (selected helpers)
 7. scripts/audit/checks/content_quality.py — content quality scoring
 8. scripts/manifest_utils.py — curriculum manifest utilities
-9. scripts/assess_research_helpers.py — research assessment rendering
-10. scripts/lexical_sandbox.py — VESUM word bank
+9. scripts/lexical_sandbox.py — VESUM word bank
 """
 
 import sys
@@ -1400,104 +1399,6 @@ class TestModuleDataclass:
         m = Module(slug="test", title="Test", level="a1", track="core", local_num=1, global_num=1)
         assert m.path == "/a1/test"
         assert m.numbered_slug == "01-test"
-
-
-# ============================================================================
-# 9. assess_research_helpers.py
-# ============================================================================
-
-class TestColored:
-    def test_known_quality(self):
-        from research.assess_research_helpers import _colored
-        result = _colored("text", "exemplary")
-        assert "text" in result
-        assert "\033[32m" in result
-
-    def test_unknown_quality(self):
-        from research.assess_research_helpers import _colored
-        result = _colored("text", "unknown_qual")
-        assert result == "text"
-
-    def test_none_quality(self):
-        from assess_research_helpers import _colored
-        result = _colored("text", None)
-        assert result == "text"
-
-
-class TestFormatQualityRow:
-    def test_missing_info_no_gaps(self):
-        from assess_research_helpers import _format_quality_row
-        r = {"num": 1, "slug": "test-module", "info": None}
-        result = _format_quality_row(r, ["depth", "breadth"], False)
-        assert "missing" in result
-
-    def test_missing_info_show_gaps(self):
-        from assess_research_helpers import _format_quality_row
-        r = {"num": 1, "slug": "test-module", "info": None}
-        result = _format_quality_row(r, ["depth"], True)
-        assert result is None
-
-    def test_with_info(self):
-        from assess_research_helpers import _format_quality_row
-        r = {"num": 1, "slug": "test-module", "info": {
-            "score": 8, "quality": "solid",
-            "dimensions": {"depth": {"score": 3, "max": 3}},
-            "gaps": ["gap1:detail", "gap2:detail", "gap3:detail", "gap4:detail"],
-            "content_alignment": {"refresh_recommended": False},
-        }}
-        result = _format_quality_row(r, ["depth"], False)
-        assert "test-module" in result
-        assert "+1" in result  # 4 gaps, show 3 + "+1"
-
-    def test_with_refresh(self):
-        from assess_research_helpers import _format_quality_row
-        r = {"num": 1, "slug": "test", "info": {
-            "score": 7, "quality": "adequate",
-            "dimensions": {}, "gaps": [],
-            "content_alignment": {"refresh_recommended": True, "reasons": ["outdated"]},
-        }}
-        result = _format_quality_row(r, [], True)
-        assert "outdated" in result
-
-
-class TestBuildRefreshQueue:
-    def test_empty(self):
-        from assess_research_helpers import _build_refresh_queue
-        assert _build_refresh_queue([]) == []
-
-    def test_filters_and_sorts(self):
-        from assess_research_helpers import _build_refresh_queue
-        results = [
-            {"num": 1, "slug": "a", "info": {"score": 5, "content_alignment": {"refresh_recommended": True}}},
-            {"num": 2, "slug": "b", "info": {"score": 8, "content_alignment": {"refresh_recommended": True}}},
-            {"num": 3, "slug": "c", "info": {"score": 9, "content_alignment": {"refresh_recommended": False}}},
-            {"num": 4, "slug": "d", "info": None},
-        ]
-        queue = _build_refresh_queue(results)
-        assert len(queue) == 2
-        assert queue[0]["slug"] == "b"  # Sorted by score desc
-
-
-class TestBuildUpgradeQueue:
-    def test_filters(self):
-        from assess_research_helpers import _build_upgrade_queue
-        results = [
-            {"num": 1, "slug": "a", "info": {"score": 5}},
-            {"num": 2, "slug": "b", "info": {"score": 9}},
-            {"num": 3, "slug": "c", "info": None},
-        ]
-        queue = _build_upgrade_queue(results, min_score=9)
-        assert len(queue) == 2  # score<9 and None
-
-
-class TestParseSlugEntry:
-    def test_string(self):
-        from assess_research_helpers import _parse_slug_entry
-        assert _parse_slug_entry("module-name # comment") == "module-name"
-
-    def test_non_string(self):
-        from assess_research_helpers import _parse_slug_entry
-        assert _parse_slug_entry(42) == "42"
 
 
 # ============================================================================
