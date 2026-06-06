@@ -20,7 +20,7 @@ from typing import Any
 import yaml
 from batch_gemini_config import PRO_MODEL
 from build.io_utils import write_text_atomic
-from build.v6_build import _format_prompt_literal_block, _strip_prompt_control_tags
+from build.prompt_literals import _format_prompt_literal_block, _strip_prompt_control_tags
 from common.thresholds import STYLE_REVIEW_TARGET
 from gemini_output import extract_delimited
 from tools.plan_autofix import _bump_version
