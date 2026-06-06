@@ -1,63 +1,72 @@
-# Current - Claude Thread Handoff (2026-06-06, cleanup + A-migration session)
+# Current — Claude Thread Handoff (2026-06-06, deploy-fix + #2747 full v5/v6 cleanup + security queued)
 
 > Read `docs/session-state/current.md` (router) first, then this file.
-> origin/main at handoff: `35cacd8bde` (FF first thing). Tech-debt cleanup session, user-directed.
+> origin/main at handoff: see Restart block (FF first). Long session: deploy fix → #2747 finished → **security investigation is the NEXT task (not started)**.
 
-## ⏳ FINALIZE FIRST: `a-slice2` → PR #2765 (A migration slice 2) — REVIEWED CLEAN, merging
-Slice 2 finished cleanly (codex, PR #2765). **I reviewed the diff: PASS** — exactly 3 files
-(new `scripts/build/prompt_literals.py` + `v6_build.py` + `plan_patch.py`), no scope creep, 7 defs
-(5 regexes + 2 funcs) moved, v6_build re-imports all 7 (back-compat), `plan_patch.py` repointed.
-CI was pending `Test (pytest)` at handoff; a watcher was armed to merge on green.
-**On wake:** `gh pr view 2765 --json mergeStateStatus,statusCheckRollup`. If green/CLEAN:
-`gh pr merge 2765 --squash --delete-branch`, then `git worktree remove --force
-.worktrees/dispatch/codex/a-slice2`. If pytest failed: read the failure, fix in the worktree
-(the diff is a pure move — a fail is likely a missed re-import name), re-verify, merge.
+## ▶ NEXT TASK (not started) — SECURITY INVESTIGATION (user priority)
+User queued this explicitly. Two parts:
+1. **Study the "Miasma Worm" article:** `https://thehackernews.com/2026/06/miasma-worm-hits-73-microsoft-github.html`
+   — ⚠️ **403 on WebFetch/curl** (thehackernews bot-protection). MUST read via Chrome tools:
+   `ToolSearch select:mcp__claude-in-chrome__tabs_context_mcp` → `tabs_create_mcp` → `navigate` → `get_page_text`.
+   Per #M-1: browser tools, not curl/WebFetch. Capture: the supply-chain vector (npm/postinstall? GitHub
+   Actions? stolen PAT? self-propagation?), IOCs, ecosystems hit, mitigations.
+2. **Audit OUR defense-in-depth vs. unexpected supply-chain attacks.** Concrete surfaces to assess:
+   - Dependency pinning / lockfiles (uv.lock, package-lock.json, .dagger), `pip-audit`/`npm-audit` (advisory in CI — should they be blocking?), `gitleaks` (blocking ✓).
+   - GitHub Actions hardening: token scope/permissions, `zizmor` (already in CI), pinned action SHAs vs tags, `pull_request_target` usage.
+   - Agent-dispatch + MCP attack surface (delegate.py spawns CLIs with `--mode danger` in worktrees; MCP servers; `ANTHROPIC_API_KEY`/secrets handling — see MEMORY #M-5).
+   - The local API server (localhost:8765) exposure.
+   Deliverable: HTML report (ai→human per #M-2), filed under `audit/` or `docs/`, with prioritized findings + fixes.
 
 ## ✅ DONE THIS SESSION
 
-### #1863 Repo cleanup sprint — Phase 3 EXECUTED (user said "have them done")
-7 of 9 categories CLOSED, 6 PRs merged:
-- B #2748 (PR #2757) 2 dead imports · C #2749 (PR #2758) 7 docs V6→V7 · D #2750 (PR #2761) 41 `.bak` removed ·
-  E #2751 (PR #2760) **78 session-state handoffs archived** · F #2752 / I #2754 / J #2755 = no-op (investigated).
-- **Tool fixed twice:** #2746 (`.worktrees`/`archive` exclusion — was inflating the report 77%), #2756 (surface scan failures).
-- Epic #1863 Phase-3 box checked; full outcome in epic body + comments.
+### Deploy fix + main-worktree guard hardening (PR #2767, merged)
+- Root cause: an in-session local `guard-main-worktree.sh` was written to the deploy TARGET `.claude/hooks/`
+  (gitignored, untracked) + wired only in `.claude/settings.local.json` → rsync `--delete` aborted deploy.
+- Removed the orphan; deploy clean (zero drift). Folded its useful protection (block `git branch -D/-M/-f` in
+  main) into the tracked quote-aware `claude_extensions/hooks/guard-branch-switch-in-main.py` + 38-case test.
+  `git reset --hard` intentionally left allowed (user choice: force-deletes only). Guard is live + verified.
 
-### 2 categories RECLASSIFIED as deferred refactors (proven unsafe to delete — OPEN)
-- **A #2747** — `v6_build`/v5 still imported by live code (Monitor API, V7 pipeline, research-preseed). Migration, not deletion. **Being actively migrated — see below.**
-- **G #2753** — 63 of 85 "duplicate" files are LIVE back-compat shims (every zero-import shim is invoked by path; `generate_level_status` has 29 callers). 22 are legit per-package names. Zero safe deletes — rename refactor. DEFERRED.
+### #2747 — legacy v5/v6 + dead-code cleanup FULLY COMPLETE (user: "fully finish that ticket")
+All phases merged (or merging — see #2773 below). v5 AND v6 build paths are GONE from main.
+- Slices 1–3 (#2764/#2765/#2770): extracted v6_build shared symbols (phase_constants, prompt_literals,
+  content_cleanup) → no live import of v6_build.
+- Phase 4 (#2771): deleted `v6_build.py` (~12K lines) + its test suite. **Codex dispatch TIMED OUT mid-run**
+  (silence-timeout 1800s too tight for the full-suite run); I took over the worktree, **reverted 2 codex
+  overreaches** (a V7 writer-prompt behavior change ported into `linear_pipeline`; a dead `step_honesty_annotate`
+  ported into `honesty_annotator`), fixed the test, 8203 passed, API import 41/41 clean.
+- Phase 5 (#2772, merged): deleted v5 entrypoints (`build_module_v5.py`, `pipeline_v5.py` 187KB, 2 root shims)
+  + the dormant research-preseed chain (`assess_research.py`+stub, `assess_research_helpers.py`,
+  `assess_research_queue.py`, `check_rag_coverage.py`, `preseed_runner.py`, `tools/test_pipeline.py`) +
+  v5-coupled tests. De-v5'd `comms_router` (process-finder) + `test_plan_adherence` + `wt.sh`. Clean, no overreach.
+- Phase 6+7 (#2773, MERGED): deleted `scripts/oneoff/` (225 one-offs, zero importers) + `scripts/build/_archive/`
+  (v6 code archive). pytest collected 8139 clean. **#2747 is CLOSED (COMPLETED). v5+v6+dead-code cleanup DONE.**
 
-### A migration (#2747) — driving it slice by slice
-- ✅ **Slice 1 MERGED (#2764):** `PHASES`/`PHASE_LABELS` → new `scripts/build/phase_constants.py`; Monitor
-  API (5 files) + 2 tests repointed; v6_build re-imports (identity preserved). 343 tests green.
-- ⏳ **Slice 2 in-flight** (a-slice2, above): prompt-literal helpers → `prompt_literals.py`, decouple `plan_patch.py`.
-- ▶ **NEXT — Slice 3:** extract `_post_process_content` (v6_build.py:6315, DEEP — assess coupling first; it
-  may pull in many internals) → repoint `scripts/build/post_processors/_migrations.py:65`. After 2-3,
-  **no live (non-test) code imports v6_build.**
-- ⏸ **Slices 4-5 (CHECKPOINT before these — design call needed):** (4) ~15 test files import v6_build
-  internals (`step_write`, `step_check`, `_parse_skeleton_sections`…) — keep as renamed tested library vs
-  retire with build path? (5) migrate research-preseed (`assess_research_queue.py`, `preseed_runner.py`)
-  off the `build_module_v5.py` subprocess, or keep v5 as the research builder. Full roadmap in #2747 comments.
+## ⚠ KEPT (do NOT delete) — load-bearing, verified live
+- `scripts/pipeline/` package (core/fixes/parsing/state/dispatch) — used by V7 `linear_pipeline`, audit, API.
+- `scripts/pipeline_lib.py`; `scripts/research/research_quality.py` + `research_markdown_utils.py` (API research dep).
+- Forensic `./archive/` (4.5M audits/evidence/memory) + `docs/archive/` (1.4M handoffs) — historical (#M-10),
+  retained by default. User has NOT asked to remove these.
 
-## ⚠ GOTCHAS (hit this session)
-- **index.lock races**: concurrent agents (folk-orchestrator + cursor active in THIS checkout) + pre-commit's
-  stash step cause transient `.git[/worktrees/*]/index.lock`. If a commit fails on it: confirm no real git
-  proc (`pgrep -fl git`), `rm -f` the stale lock, retry. Hit 3×.
-- **guard-main-worktree hook blocks `git branch -D` in the main dir** — do worktree cleanup WITHOUT
-  `git branch -D` (the `--delete-branch` on merge handles the remote; local refs linger harmlessly).
-  Lingering local branch `claude/extract-phase-constants` (merged, harmless).
-- **agy #2739 false-timeout is INTERMITTENT** — pass `--initial-response-timeout 600`; cleanup-E hit
-  needs_finalize and I recovered it manually. agy `--model "Gemini 3.5 Flash (High)"`, trailer `X-Agent: gemini/<id>`.
-- **Local main has folk-agent's unpushed commit** (`dc0e2c9517`-class) — do NOT push local main; merge PRs
-  server-side via `gh`, operate via worktrees branched from origin/main.
+## 🔌 LOCAL API SERVER — protection map (user stressed: "our local api server is important")
+API (`scripts/api/*`, localhost:8765) depends on cleanup-adjacent code ONLY via: `pipeline/` (state,
+consultation) + `research_quality` (assess_research_compat/find_research_path/get_rubric) — ALL KEPT.
+Verified at EVERY phase with a 41/41 `scripts/api/*` import smoke. No API import of v5/v6/queue/preseed.
 
-## NOT TOUCHED (other lanes — awareness only)
-PR #2763 (folk SSOT migration — folk agent), #2601 (B1 pilot draft, codex). Issue #2532 (B1 cleanup, codex).
+## ⚠ GOTCHAS / LESSONS
+- **Codex over-engineers "to keep tests passing"** — it ports dead functions into live modules instead of
+  deleting the dead test. Phase-5 brief added a hard "NO porting / NO new functionality" rule → came back clean.
+  ALWAYS review dispatched cleanup PRs for *added* `def`/`class`/`import` in live source.
+- **Dispatch silence-timeout sizing:** full-suite runs go silent for minutes. Use `--silence-timeout 3000+`
+  for cleanup/test-heavy dispatches (1800 killed phase 4 mid-run).
+- 7 local pytest failures are PRE-EXISTING + local-env-only (`test_monitor_client_sdk` etag/httpx +
+  `test_writer_prompt_render_size` ceiling) — they PASS in CI. Don't chase them.
+- index.lock races from concurrent agents: `pgrep -fl "git "` (ignore fsmonitor daemon), `rm -f` stale lock, retry.
 
 ## Restart
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
 git fetch origin main && git merge --ff-only origin/main && git rev-parse --short HEAD
-cat batch_state/tasks/a-slice2.json   # FINALIZE a-slice2 first (see top)
-curl -s http://localhost:8765/api/delegate/active
-gh pr list --state open --json number,title,isDraft
+gh pr list --state open --json number,title  # confirm #2773 merged; #2601 = other lane
+gh issue view 2747 --json state              # confirm CLOSED
+# then: SECURITY INVESTIGATION (see top). Browser for the article; audit our supply-chain posture.
 ```
