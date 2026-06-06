@@ -206,7 +206,7 @@ soft **р**." For **свя́то**, say "prepared no-apostrophe word." This rout
 slow on purpose. It prevents guessing and gives your mouth a stable Ukrainian
 habit before the next module adds stress and melody.
 
-The workbook repeats the same contrasts in several ways: fill-in, sorting,
-matching, error correction, line-break recognition, and quick review.
+The workbook adds extra practice with the same contrasts: sorting, quick
+facts, word recognition, and choosing the correct written form.
 
 <!-- INJECT_ACTIVITY: act-5 -->
