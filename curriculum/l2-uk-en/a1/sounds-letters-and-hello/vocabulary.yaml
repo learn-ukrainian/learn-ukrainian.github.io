@@ -10,14 +10,14 @@
   translation: alphabet
   pos: noun
   usage: Українська абетка має 33 літери.
-- lemma: голосний
-  translation: vowel
-  pos: adjective
-  usage: А, О, У, Е, И, І — це літера, що позначає голосний.
-- lemma: приголосний
-  translation: consonant
-  pos: adjective
-  usage: П, Р, М, Н — приголосні звуки.
+- lemma: голосний звук
+  translation: vowel sound
+  pos: noun phrase
+  usage: А, О, У, Е, И, І — це літери, що позначають голосні звуки.
+- lemma: приголосний звук
+  translation: consonant sound
+  pos: noun phrase
+  usage: П, Р, М, Н — літери, що позначають приголосні звуки.
 - lemma: склад
   translation: syllable
   pos: noun
@@ -78,10 +78,10 @@
   translation: what's your name
   pos: phrase
   usage: Як тебе́ зва́ти?
-- lemma: Мене зва́ть
+- lemma: Мене́ зва́ти
   translation: my name is
   pos: phrase
-  usage: Мене зва́ть Анна.
+  usage: Мене́ зва́ти Анна.
 - lemma: А тебе́
   translation: and you
   pos: phrase
@@ -146,14 +146,6 @@
   translation: day
   pos: noun
   usage: Сьогодні день.
-- lemma: вечеря
-  translation: dinner
-  pos: noun
-  usage: Увечері їмо вечерю.
-- lemma: їсти
-  translation: to eat
-  pos: verb
-  usage: Ми ї́мо молоко.
 - lemma: вода́
   translation: water
   pos: noun

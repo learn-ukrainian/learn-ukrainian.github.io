@@ -20,7 +20,7 @@
 
 Усього в абетці 33 літери, але в мовленні ми працюємо з 38 звуками.
 
-### Why this matters (for you)
+### Чому це важливо
 
 Тому що одна літера може позначати кілька звуків, а деякі літери допомагають читати і вимовляти сусідні звуки.
 
@@ -143,7 +143,7 @@
 | Г | [ɦ] | гора́ | https://www.youtube.com/watch?v=gVnclpSI0DU |
 | Ґ | [g] | ґудзик | https://www.youtube.com/watch?v=gNjHqjTW9WQ |
 | Д | [д] | дім | https://www.youtube.com/watch?v=g4Bh-lqzd48 |
-| Е | [е] | е́крана | https://www.youtube.com/watch?v=KFlsroBW0dk |
+| Е | [е] | екран | https://www.youtube.com/watch?v=KFlsroBW0dk |
 | Є | [йе] | єнот | https://www.youtube.com/watch?v=O0bwRyyBQSc |
 | Ж | [ж] | жук | https://www.youtube.com/watch?v=dIrGVcqPwqM |
 | З | [з] | зошит | https://www.youtube.com/watch?v=BhASNxitC1A |
@@ -157,7 +157,7 @@
 | Н | [н] | ніс | https://www.youtube.com/watch?v=vNUfiKHPYaU |
 | О | [о] | око | https://www.youtube.com/watch?v=gJFxRIPRZbI |
 | П | [п] | піт | https://www.youtube.com/watch?v=JksSjjxyW5Y |
-| Р | [р] | рота́ | https://www.youtube.com/watch?v=fMGsQ5KPQgg |
+| Р | [р] | рука | https://www.youtube.com/watch?v=fMGsQ5KPQgg |
 | С | [с] | сон | https://www.youtube.com/watch?v=7UsFBgSL91E |
 | Т | [т] | тато | https://www.youtube.com/watch?v=m-jcLR_gK0k |
 | У | [у] | у́рок | https://www.youtube.com/watch?v=VB1O6PmtYRU |
@@ -177,9 +177,9 @@
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Перші вітання: recognition → production
+## Перші вітання: розпізнавання → коротка відповідь
 
-Тепер вводимо перші сталi chunks:
+Тепер вводимо перші сталі фрази:
 
 - Приві́т
 - До́брий день
@@ -195,16 +195,15 @@
 3) До́бре / Чудо́во / Норма́льно
 4) А у тебе?
 5) Як тебе́ зва́ти?
-6) Мене́ зва́ть ...
+6) Мене́ зва́ти ...
 7) А тебе́?
 
 <DialogueBox uk="Приві́т!" en="Hi!" />
 <DialogueBox uk="Як спра́ви?" en="How are you?" />
 <DialogueBox uk="До́бре." en="Fine." />
 <DialogueBox uk="А у тебе́?" en="And you?" />
-<DialogueBox uk="А я́ка́що?" en="And what about you?" />
 <DialogueBox uk="Як тебе́ зва́ти?" en="What's your name?" />
-<DialogueBox uk="Мене зва́ть Анна." en="My name is Anna." />
+<DialogueBox uk="Мене́ зва́ти Анна." en="My name is Anna." />
 <DialogueBox uk="А тебе́?" en="And you?" />
 
 > Використовуй «А у тебе?» лише після стану **Як спра́ви?**
@@ -232,6 +231,6 @@
 
 Завершуючи, виконай 2 хвилини тихого повтору:
 
-- Приві́т! Приві́т, як тебе́ зва́ти? До́бре. До́бре, А у тебе́?
+- Приві́т! Як тебе́ зва́ти? Мене́ зва́ти Анна. А тебе́?
 
 Працюємо повторно з усіма 4 секціями: звук, літера, вітання, діалог.
