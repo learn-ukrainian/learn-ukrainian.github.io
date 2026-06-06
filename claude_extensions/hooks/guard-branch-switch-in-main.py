@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""PreToolUse guard — block branch switches in the MAIN worktree.
+"""PreToolUse guard — block branch switches / force-deletes in the MAIN worktree.
 
 Reads the Claude Code hook payload on stdin (JSON with `tool_name` +
 `tool_input.command`) and exits with code 2 if the command would switch
-branches in the main worktree. Exit 0 in all other cases.
+branches or force-delete/force-rename a branch in the main worktree.
+Exit 0 in all other cases.
 
 Why Python and not bash? Distinguishing a literal `git checkout -b ...`
 INVOCATION from the SAME STRING appearing inside a quoted
@@ -21,13 +22,16 @@ Blocked in the MAIN worktree:
   - git switch -c <name>
   - git switch <non-main-branch>
   - git checkout <non-main-branch>          (when target is a branch, not a path)
+  - git branch -D / -M / -f <name>          (force-delete / force-rename a branch)
 
 Allowed in the MAIN worktree:
   - git checkout main / master / HEAD / HEAD~N
   - git checkout -- <path>                  (file-level discard / restore)
+  - git branch -d / -m <name>               (safe delete-if-merged / rename)
+  - git branch <name>                       (create; does not switch)
   - git status / git log / git worktree add / ...
   - non-git commands
-  - git commit -m "...body mentioning git checkout -b..."
+  - git commit -m "...body mentioning git checkout -b... / git branch -D..."
 """
 from __future__ import annotations
 
@@ -117,6 +121,31 @@ def _segments(command: str) -> list[list[str]]:
     return segments
 
 
+def _branch_force_reason(args: list[str]) -> str | None:
+    """Reason string if a `git branch` invocation force-deletes/force-renames.
+
+    Blocks only the irreversible variants in the main worktree:
+      - `git branch -D <name>`        (force delete, == --delete --force)
+      - `git branch -M <old> <new>`   (force rename/move)
+      - `git branch -f <name> <ref>`  / `--force` (force-move a ref)
+      - any combined short cluster carrying D/M/f (e.g. `-Df`)
+
+    Intentionally ALLOWED (non-destructive): `-d` (delete-if-merged),
+    `-m` (rename), plain `git branch` (list), `git branch <name>` (create).
+    Uppercase D/M and lowercase `f` are the force indicators; their
+    lowercase counterparts `d`/`m` are the safe ops, so a simple
+    character-membership test discriminates correctly.
+    """
+    for a in args:
+        if a == "--force":
+            return "git branch --force rewrites/force-deletes a branch ref in the main worktree"
+        # Single-dash short flag cluster (e.g. -D, -M, -f, -Df). Long flags
+        # (`--`) other than --force are not force ops and fall through.
+        if len(a) >= 2 and a[0] == "-" and a[1] != "-" and any(c in a[1:] for c in ("D", "M", "f")):
+            return f"git branch {a} force-deletes/force-renames a branch in the main worktree"
+    return None
+
+
 def _segment_is_dangerous(seg: list[str]) -> str | None:
     """Return a human-readable reason string if seg is a dangerous git op,
     else None."""
@@ -140,12 +169,19 @@ def _segment_is_dangerous(seg: list[str]) -> str | None:
     if i >= len(seg):
         return None
     verb = seg[i]
+    args = seg[i + 1:]
+
+    # `git branch -D/-M/-f` force-deletes or force-renames a branch ref —
+    # destructive and irreversible in the MAIN worktree. Safe variants
+    # (`-d` delete-if-merged, `-m` rename, plain list/create) are allowed.
+    if verb == "branch":
+        return _branch_force_reason(args)
+
     if verb not in SWITCH_VERBS:
         return None
 
     # Now we're on `git ... <checkout|switch> <args...>`. Decide if this
     # would switch the branch state of the current worktree.
-    args = seg[i + 1:]
 
     # File-level checkout: `git checkout -- <path>` or `git checkout
     # <treeish> -- <path>`. The presence of `--` means path-restoration,
