@@ -11,9 +11,9 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+from build.linear_pipeline import _build_wiki_packet
 from build.phases.plan_contract import build_contract
 from build.phases.wiki_compressor import compress_wiki_packet
-from build.v6_build import _build_wiki_packet
 
 
 @pytest.mark.parametrize(
