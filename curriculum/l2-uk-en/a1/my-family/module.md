@@ -220,6 +220,5 @@ Use native Ukrainian family words in the workbook: **дружина** for wife,
 **одружений** for married. Do not turn these into a Russian comparison lesson;
 just choose the Ukrainian word.
 
-Workbook practice will make the pieces automatic: family vocabulary, **У мене
-є** questions, possessive forms, dialogue blanks, required L2 traps, native
-family-word choices, and quick vocabulary recognition.
+Use the workbook for extra practice: safer Ukrainian family sentences, native
+family-word choices, photo-dialogue blanks, and quick vocabulary recognition.
