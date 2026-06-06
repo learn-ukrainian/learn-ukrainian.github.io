@@ -122,26 +122,6 @@
   translation: sleep/dream
   pos: noun
   usage: Сон.
-- lemma: я
-  translation: I
-  pos: pronoun
-  usage: Я — Анна.
-- lemma: ти
-  translation: you
-  pos: pronoun
-  usage: Ти вчишся українською?
-- lemma: ми
-  translation: we
-  pos: pronoun
-  usage: Ми вчимося разом.
-- lemma: ви
-  translation: you (formal)
-  pos: pronoun
-  usage: Ви привітні.
-- lemma: це
-  translation: this/is
-  pos: pronoun
-  usage: Це важливо.
 - lemma: день
   translation: day
   pos: noun
