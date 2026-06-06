@@ -1,121 +1,117 @@
 - lemma: звук
   translation: sound
   pos: noun
-  usage: Це звук [а].
-- lemma: лі́тера
+  usage: Усе починається зі звука.
+- lemma: літера
   translation: letter
   pos: noun
-  usage: Це лі́тера П.
-- lemma: абе́тка
+  usage: Літера показує, як звук записати.
+- lemma: абетка
   translation: alphabet
   pos: noun
-  usage: Украї́нська абе́тка має 33 лі́тери.
-- lemma: голосни́й звук
-  translation: vowel sound
-  pos: noun phrase
-  usage: '[а] - голосни́й звук.'
-- lemma: при́голосний звук
-  translation: consonant sound
-  pos: noun phrase
-  usage: '[п] - при́голосний звук.'
+  usage: Українська абетка має 33 літери.
+- lemma: голосний
+  translation: vowel
+  pos: adjective
+  usage: А, О, У, Е, И, І — це літера, що позначає голосний.
+- lemma: приголосний
+  translation: consonant
+  pos: adjective
+  usage: П, Р, М, Н — приголосні звуки.
 - lemma: склад
   translation: syllable
   pos: noun
-  usage: У сло́ві ма́ма два склади́.
+  usage: Ма́ма має два склади.
 - lemma: на́голос
   translation: stress
   pos: noun
-  usage: У сло́ві Приві́т на́голос на і.
-- lemma: м'яки́й знак
+  usage: У слові Приві́т наголос на «ві́т».
+- lemma: м'який знак
   translation: soft sign
   pos: noun phrase
-  usage: Ь - м'яки́й знак.
-- lemma: апо́строф
-  translation: apostrophe
-  pos: noun
-  usage: У сло́ві «ім'я́» є апо́строф.
+  usage: У слові день м'який знак пом'якшує [н].
 - lemma: Приві́т
-  translation: Hi
+  translation: hi
   pos: phrase
-  usage: Приві́т!
+  usage: Приві́т! Як тебе́ зва́ти?
 - lemma: До́брий день
-  translation: Hello / Good day
+  translation: hello
   pos: phrase
-  usage: До́брий день!
-- lemma: До́брого ра́нку
-  translation: Good morning
+  usage: До́брий день, Марко.
+- lemma: До́брого ранку
+  translation: good morning
   pos: phrase
-  usage: До́брого ра́нку!
-- lemma: До́брий ве́чір
-  translation: Good evening
+  usage: До́брого ранку, пане Іване.
+- lemma: До́брий вечір
+  translation: good evening
   pos: phrase
-  usage: До́брий ве́чір!
-- lemma: Як спра́ви?
-  translation: How are you?
+  usage: До́брий вечір! Ласкаво просимо.
+- lemma: До поба́чення
+  translation: goodbye
+  pos: phrase
+  usage: До поба́чення! До зустрічі.
+- lemma: На все до́бре
+  translation: all the best
+  pos: phrase
+  usage: На все до́бре, Маріє.
+- lemma: Як спра́ви
+  translation: how are you
   pos: phrase
   usage: Як спра́ви?
 - lemma: До́бре
-  translation: Fine / good
-  pos: phrase
-  usage: До́бре.
+  translation: fine
+  pos: adverb
+  usage: До́бре. Дякую.
 - lemma: Чудо́во
-  translation: Great / wonderful
-  pos: phrase
-  usage: Чудо́во.
+  translation: great
+  pos: adjective
+  usage: Чудо́во! Мені дуже приємно.
 - lemma: Норма́льно
-  translation: Okay / normal
+  translation: okay
+  pos: adverb
+  usage: Норма́льно. А в тебе?
+- lemma: А у тебе́
+  translation: and you
   pos: phrase
-  usage: Норма́льно.
-- lemma: А у тебе́?
-  translation: And you? (after How are you?)
-  pos: phrase
-  usage: До́бре. А у тебе́?
-- lemma: Як тебе́ зва́ти?
-  translation: What is your name?
+  usage: Як спра́ви? До́бре. А у тебе́?
+- lemma: Як тебе́ зва́ти
+  translation: what's your name
   pos: phrase
   usage: Як тебе́ зва́ти?
-- lemma: Ме́не зва́ти ...
-  translation: My name is ...
+- lemma: Мене зва́ть
+  translation: my name is
   pos: phrase
-  usage: Ме́не зва́ти Анна.
-- lemma: А тебе́?
-  translation: And you? (after a name question)
+  usage: Мене зва́ть Анна.
+- lemma: А тебе́
+  translation: and you
   pos: phrase
-  usage: Ме́не зва́ти Софія. А тебе́?
-- lemma: До поба́чення
-  translation: Goodbye
+  usage: Як тебе́ зва́ти? А тебе́?
+- lemma: Радий тебе́ бачити
+  translation: glad to see you (masculine)
   pos: phrase
-  usage: До поба́чення!
-- lemma: На все до́бре
-  translation: All the best
+  usage: Радий тебе́ бачити.
+- lemma: Рада тебе́ бачити
+  translation: glad to see you (feminine)
   pos: phrase
-  usage: На все до́бре!
-- lemma: Ра́дий тебе́ ба́чити
-  translation: Glad to see you (male speaker)
-  pos: phrase
-  usage: Ра́дий тебе́ ба́чити.
-- lemma: Ра́да тебе́ ба́чити
-  translation: Glad to see you (female speaker)
-  pos: phrase
-  usage: Ра́да тебе́ ба́чити.
-- lemma: ма́ма
-  translation: mother
+  usage: Рада тебе́ бачити.
+- lemma: мама
+  translation: mom/mother
   pos: noun
-  usage: Ма́ма.
-- lemma: та́то
-  translation: father
+  usage: Мама.
+- lemma: тато
+  translation: dad
   pos: noun
-  usage: Та́то.
+  usage: Тато.
 - lemma: молоко́
   translation: milk
   pos: noun
   usage: Молоко́.
-- lemma: о́ко
+- lemma: око́
   translation: eye
   pos: noun
-  usage: О́ко.
+  usage: Око́.
 - lemma: дім
-  translation: house / home
+  translation: home
   pos: noun
   usage: Дім.
 - lemma: ніс
@@ -123,6 +119,42 @@
   pos: noun
   usage: Ніс.
 - lemma: сон
-  translation: sleep / dream
+  translation: sleep/dream
   pos: noun
   usage: Сон.
+- lemma: я
+  translation: I
+  pos: pronoun
+  usage: Я — Анна.
+- lemma: ти
+  translation: you
+  pos: pronoun
+  usage: Ти вчишся українською?
+- lemma: ми
+  translation: we
+  pos: pronoun
+  usage: Ми вчимося разом.
+- lemma: ви
+  translation: you (formal)
+  pos: pronoun
+  usage: Ви привітні.
+- lemma: це
+  translation: this/is
+  pos: pronoun
+  usage: Це важливо.
+- lemma: день
+  translation: day
+  pos: noun
+  usage: Сьогодні день.
+- lemma: вечеря
+  translation: dinner
+  pos: noun
+  usage: Увечері їмо вечерю.
+- lemma: їсти
+  translation: to eat
+  pos: verb
+  usage: Ми ї́мо молоко.
+- lemma: вода́
+  translation: water
+  pos: noun
+  usage: Вода́.
