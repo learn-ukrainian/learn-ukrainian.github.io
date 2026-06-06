@@ -33,6 +33,8 @@ from .utils import CURRICULUM_DIR, PROJECT_ROOT, SCRIPT_DIR, STARLIGHT_DOCS_DIR,
 # Ensure scripts/ is on sys.path for sibling imports
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from manifest_utils import CORE_LEVELS, TRACKS, Module, get_modules_for_level
 from slug_utils import to_bare_slug

@@ -203,7 +203,7 @@
 - id: act-5
   type: fill-in
   title: Short dialogue
-  instruction: Choose the chunk that completes the first dialogue.
+  instruction: Choose the phrase that completes the first dialogue.
   items:
   - sentence: Приві́т! ___ спра́ви?
     answer: Як
