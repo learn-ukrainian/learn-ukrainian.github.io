@@ -35,8 +35,8 @@ from .review_parsing import count_review_issues, extract_plan_verdict, extract_r
 
 # Import canonical phase list from pipeline
 try:
-    from scripts.build.v6_build import PHASE_LABELS as V6_PHASE_LABELS
-    from scripts.build.v6_build import PHASES as V6_PHASES
+    from scripts.build.phase_constants import PHASE_LABELS as V6_PHASE_LABELS
+    from scripts.build.phase_constants import PHASES as V6_PHASES
 except ImportError:
     V6_PHASES = [
         "check", "research", "skeleton", "pre-verify", "write",

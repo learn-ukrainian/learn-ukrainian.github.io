@@ -70,7 +70,7 @@ class TestConfigEndpoint:
         assert "pipeline" in data
 
     def test_uses_v6_pipeline_constants(self):
-        from scripts.build.v6_build import PHASE_LABELS, PHASES
+        from scripts.build.phase_constants import PHASE_LABELS, PHASES
 
         data = client.get("/api/config").json()
         assert data["pipeline"]["phases"] == PHASES

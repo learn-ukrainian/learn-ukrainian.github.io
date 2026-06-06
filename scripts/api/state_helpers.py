@@ -47,8 +47,8 @@ _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
 # than an empty list — an empty phase list silently breaks coverage
 # endpoints.
 try:
-    from build.v6_build import PHASE_LABELS as _V6_PHASE_LABELS
-    from build.v6_build import PHASES as _V6_PHASES
+    from build.phase_constants import PHASE_LABELS as _V6_PHASE_LABELS
+    from build.phase_constants import PHASES as _V6_PHASES
 except ImportError:
     _V6_PHASES = [
         "check", "research", "skeleton", "pre-verify", "write",
