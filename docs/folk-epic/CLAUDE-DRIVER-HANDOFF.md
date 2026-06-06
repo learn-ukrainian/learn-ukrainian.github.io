@@ -12,8 +12,12 @@
 > `starlight/src/content/docs/folk`, `wiki/folk`). Never a tree-wide `git status`/main op. If a non-folk
 > file surfaces (esp. `docs/session-state/*`), SKIP SILENTLY.
 >
-> **⚖ MERGE POLICY:** the bio merge-grant was bio-specific. For FOLK, **OPEN PRs, do NOT self-merge** —
-> user/orchestrator promotes (until the user extends a folk grant).
+> **⚖ MERGE POLICY (UPDATED 2026-06-06):** the folk driver **HAS a merge grant**. User: *"every track
+> has merge grant otherwise we will have a deadlock."* So: branch → PR → CI-green → **self-merge**
+> (review body+diff+CI, `gh pr merge N --squash --delete-branch`; hold only on a BLOCKING CI fail per
+> #M-0.5). Still **no direct commits to `main`** — everything routes through a PR; the grant only lifts
+> the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
+> under this grant (commit `abf280f490`).
 
 ## ▶▶▶ SESSION HANDOFF (2026-06-06, FOLK SCOPE + TAXONOMY + DESIGN ARCHETYPES) — RESUME HERE
 
@@ -114,23 +118,23 @@ NEXT-ACTION item 1 is DONE — the 4 foundation docs now exist (mirror bio's Sta
   FOLK_DOMAIN_MAP`, `module_archetypes.py` folk-experiential) = GPT dispatch, gated on merge.
 
 ### ▶ NEXT ACTIONS ON RESUME (folk, in order)
-1. **Open the Stage-0 PR** (this branch; no self-merge) bundling the 4 docs + this handoff →
-   **TRACK-UPDATE needs=merge** to orchestrator. *(In flight as of this session — see IN-FLIGHT.)*
-2. **On Stage-0 merge → dispatch GPT the SSOT migration** (`folk-ssot-migration.md` is the brief):
+0. ✅ **DONE — Stage-0 PR #2759 self-merged** (commit `abf280f490`) under the new merge grant. main now
+   carries the 4 design docs + `curriculum.yaml` folk 27→42 + `folk-ssot-migration.md`.
+1. **Dispatch GPT the SSOT migration** (`folk-ssot-migration.md` is the brief):
    `git mv` 5 renames + archive 6 folded plan files → `plans/folk/_archive/`; create new plan stubs
    (C1+, schema-valid, `status: stub`); re-key `compile.py FOLK_DOMAIN_MAP` to 42; register
    `folk-experiential` in `module_archetypes.py` + route `track=="folk"`; regenerate discovery. One
    worktree PR (`--agent codex --model gpt-5.5 --worktree --base main`), NO auto-merge. **#M-10: archive,
    never delete — folded files carry real rag_chunks.** Gated on Stage-0 merge so the worktree sees the
    updated `curriculum.yaml`.
-3. **Then dispatch the pilot dossier** `kalendarna-obriadovist-zvychai` (GPT + Claude both picked it;
+2. **Then dispatch the pilot dossier** `kalendarna-obriadovist-zvychai` (GPT + Claude both picked it;
    best shows folk as a SYSTEM). Writer = **GPT now** (brief = schema + rubric + queue row) / Claude
    after June 8; cross-family review = the other; corpus-hammer (`verify_quote` every folk text). Then
    dossier → grounded wiki (`compile.py --writer {gpt-5.5|claude}`; needs the migrated FOLK_DOMAIN_MAP
    entry, hence after step 2).
-4. Then the build-order first-6: `narodna-kultura-yak-systema` → pilot → `narodni-viruvannia-…` →
+3. Then the build-order first-6: `narodna-kultura-yak-systema` → pilot → `narodni-viruvannia-…` →
    `koliadky-shchedrivky` → `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`.
-5. Optional: design the **lit-drama** variant (≈80% assembled from folk parts) when convenient.
+4. Optional: design the **lit-drama** variant (≈80% assembled from folk parts) when convenient.
 
 ### 📊 CORPUS FACTS (folk is well-sourced — verified)
 collection_stats: textbooks 25,714 · literary_texts 137,688 · sum11 127,069 · grinchenko 67,275. Verified
