@@ -1,124 +1,63 @@
-# Current - Claude Thread Handoff (2026-06-06)
+# Current - Claude Thread Handoff (2026-06-06, cleanup + A-migration session)
 
 > Read `docs/session-state/current.md` (router) first, then this file.
-> origin/main at handoff: `61058d58c4` (local synced). FF first thing anyway.
+> origin/main at handoff: `35cacd8bde` (FF first thing). Tech-debt cleanup session, user-directed.
 
-## ✅ #1863 Phase 2 DONE THIS SESSION (2026-06-06)
-Ran `find_dead_code.py`; **first finding was a tool bug** — it walked `.worktrees/` (11 live
-worktrees = full repo copies), making **77% of the report noise** (2460/3202 hits) + 6m16s runtime.
-- **Fixed + merged #2746**: centralized `EXCLUDE_DIR_NAMES` + `_is_excluded()`/`_ugrep_exclude_flags()`/
-  `_vulture_exclude_glob()`; added `.worktrees` + `archive`. 3187→712 hits, runtime 6m16s→1m03s (6×).
-  3 regression tests; tests/audit green (471). Only A/B/F walk from root — C/D/E/G/H/I/J already scoped safe.
-- **Triaged the clean 712-hit report** (PASS/REVIEW/KEEP) — key false-positive carve-outs: B's ~129
-  `tests/` hits are pytest fixtures (vulture flags injection params); A self-matches its own `"OBSOLETE"`
-  search string; F's `scripts/orchestration`/`folk/orchestration` are live; G mixes legit per-package
-  names (`config.py` etc.) with real root-level rename-leftovers.
-- **Filed 9 sub-issues** under #1863 (H=0 hits): A #2747, B #2748, C #2749, D #2750, E #2751,
-  F #2752, G #2753, I #2754, J #2755. Epic body + checklist updated; triage = #1863 comments.
-- **Phase 3 is PARKED** — plan requires a 1-2 day window with NO concurrent feature work (A1/B1/bio/folk
-  active). At Phase-3 start: re-run the tool for a fresh list, then dispatch per the routes in each issue.
+## ⏳ FINALIZE FIRST: `a-slice2` → PR #2765 (A migration slice 2) — REVIEWED CLEAN, merging
+Slice 2 finished cleanly (codex, PR #2765). **I reviewed the diff: PASS** — exactly 3 files
+(new `scripts/build/prompt_literals.py` + `v6_build.py` + `plan_patch.py`), no scope creep, 7 defs
+(5 regexes + 2 funcs) moved, v6_build re-imports all 7 (back-compat), `plan_patch.py` repointed.
+CI was pending `Test (pytest)` at handoff; a watcher was armed to merge on green.
+**On wake:** `gh pr view 2765 --json mergeStateStatus,statusCheckRollup`. If green/CLEAN:
+`gh pr merge 2765 --squash --delete-branch`, then `git worktree remove --force
+.worktrees/dispatch/codex/a-slice2`. If pytest failed: read the failure, fix in the worktree
+(the diff is a pure move — a fail is likely a missed re-import name), re-verify, merge.
 
-## ▶ NEXT SESSION: continue TECH DEBT (user direction 2026-06-05)
-Keep agy working the tech-debt backlog, **Flash 3.5 High for coding** (routing below).
-Candidates: dispatch agy-Flash on a bounded coding task (**#2739** wrapper-finalize — bounded but
-**infra-sensitive** delegate/runner, scope carefully), or other bounded open issues.
-AVOID #2378 / EPICs / A1-A2 (Codex) / bio (Claude). Cleanup Phase 3 (#2747-2755) waits for a quiet window.
+## ✅ DONE THIS SESSION
 
-## ✅ NO LIVE DISPATCHES. Clean stopping point.
-0 active delegates. Only open PR is **#2601** (B1 pilot, draft, **codex-owned — awareness only**).
-Security: dependabot **1** (idna `.dagger/uv.lock`, tracked #2732 Part 2), code-scanning **0**.
+### #1863 Repo cleanup sprint — Phase 3 EXECUTED (user said "have them done")
+7 of 9 categories CLOSED, 6 PRs merged:
+- B #2748 (PR #2757) 2 dead imports · C #2749 (PR #2758) 7 docs V6→V7 · D #2750 (PR #2761) 41 `.bak` removed ·
+  E #2751 (PR #2760) **78 session-state handoffs archived** · F #2752 / I #2754 / J #2755 = no-op (investigated).
+- **Tool fixed twice:** #2746 (`.worktrees`/`archive` exclusion — was inflating the report 77%), #2756 (surface scan failures).
+- Epic #1863 Phase-3 box checked; full outcome in epic body + comments.
 
-## ⚠ OPEN: CodeQL "config problem" (user flagged, awaiting their exact symptom)
-Investigated 2026-06-05: CodeQL is **functionally green** — default setup, 3 analyses
-(`actions`, `javascript-typescript`, `python`) all success, **no errors**, 0 alerts, NOT blocking
-(branch protection = only `Test (pytest)`). **The one concrete defect:** default-setup `languages`
-lists **5** (`actions, javascript, javascript-typescript, python, typescript`) but only **3** run —
-`javascript`+`typescript` are **stale/redundant** (superseded by `javascript-typescript`). Likely the
-"needs attention" warning in Settings → Code security. **Fix (unconfirmed it's the right symptom):**
-`gh api -X PATCH repos/learn-ukrainian/learn-ukrainian.github.io/code-scanning/default-setup` with
-`languages=[actions,javascript-typescript,python]`. User hadn't confirmed whether that's what they see
-vs a different banner — get the exact symptom before PATCHing their security config.
+### 2 categories RECLASSIFIED as deferred refactors (proven unsafe to delete — OPEN)
+- **A #2747** — `v6_build`/v5 still imported by live code (Monitor API, V7 pipeline, research-preseed). Migration, not deletion. **Being actively migrated — see below.**
+- **G #2753** — 63 of 85 "duplicate" files are LIVE back-compat shims (every zero-import shim is invoked by path; `generate_level_status` has 29 callers). 22 are legit per-package names. Zero safe deletes — rename refactor. DEFERRED.
 
-## 🧹 Git + issue hygiene (done 2026-06-05)
-- Git: main synced; `git remote prune` clean; my worktrees removed. **11 dispatch worktrees REMAIN —
-  all other lanes** (Codex A1/B1/C1 with uncommitted work, Cursor, `fix/ulp-stress-advisory`) — left
-  per track-ownership + #M-10 (don't delete worktrees with uncommitted/unpushed work). Local dirty:
-  only `current.{claude,codex}.md` (intentional handoff working docs).
-- Issues: **#2739 retitled** (intermittent finalize + trailer bug) + updated with findings;
-  **#2732 labeled** `tech-debt`. No issue was directly closed by this session's PRs.
+### A migration (#2747) — driving it slice by slice
+- ✅ **Slice 1 MERGED (#2764):** `PHASES`/`PHASE_LABELS` → new `scripts/build/phase_constants.py`; Monitor
+  API (5 files) + 2 tests repointed; v6_build re-imports (identity preserved). 343 tests green.
+- ⏳ **Slice 2 in-flight** (a-slice2, above): prompt-literal helpers → `prompt_literals.py`, decouple `plan_patch.py`.
+- ▶ **NEXT — Slice 3:** extract `_post_process_content` (v6_build.py:6315, DEEP — assess coupling first; it
+  may pull in many internals) → repoint `scripts/build/post_processors/_migrations.py:65`. After 2-3,
+  **no live (non-test) code imports v6_build.**
+- ⏸ **Slices 4-5 (CHECKPOINT before these — design call needed):** (4) ~15 test files import v6_build
+  internals (`step_write`, `step_check`, `_parse_skeleton_sections`…) — keep as renamed tested library vs
+  retire with build path? (5) migrate research-preseed (`assess_research_queue.py`, `preseed_runner.py`)
+  off the `build_module_v5.py` subprocess, or keep v5 as the research builder. Full roadmap in #2747 comments.
 
-## 🔑 BIGGEST THING THIS THREAD: agy `--model` WORKS (#2742 merged)
-The long-standing "NEVER pass `--model` to agy / it downgrades to CCPA" rule was a **MISDIAGNOSIS**.
-- Root cause: #2731 passed the **slug** `gemini-3.1-pro-high`, which agy's `--model` flag rejects.
-  agy wants the **display label** (`"Gemini 3.1 Pro (High)"`, from `agy models`). The #2735 revert
-  then misread a **benign** `resolver.go … defaulting to CCPA` log line as "the label fails too."
-- **Empirically disproven** (probe + e2e through the adapter): `agy -p --model "Gemini 3.5 Flash (High)"`
-  with the TUI on Pro logged `Propagating selected model override to backend: label="Gemini 3.5 Flash
-  (High)"` and ran Flash. **`--model` OVERRIDES the TUI selection.**
-- Fix (ports `kubedojo/scripts/agent_runtime/adapters/agy.py`, PR #2742): adapter `_normalize_model`
-  collapses slug↔label, `_resolve_model_flag` maps either to the canonical label, and passes
-  `--model "<label>"`. Unknown/empty → `default_model`; unmappable → flag omitted. 8 adapter tests.
-- **Bonus:** passing `--model` makes telemetry record the REAL model (was a hardcoded
-  `LEARN_UK_AGY_MODEL` default — do not trust the model field on no-`--model` runs).
-- **Dispatch now:** `delegate.py dispatch --agent agy --model "Gemini 3.5 Flash (High)" --task-id <id>
-  --mode danger --worktree --base main --prompt-file <brief>` (slug OR label both accepted).
-- kubedojo is at `/Users/krisztiankoos/projects/kubedojo` — useful reference repo (it had fixed this).
+## ⚠ GOTCHAS (hit this session)
+- **index.lock races**: concurrent agents (folk-orchestrator + cursor active in THIS checkout) + pre-commit's
+  stash step cause transient `.git[/worktrees/*]/index.lock`. If a commit fails on it: confirm no real git
+  proc (`pgrep -fl git`), `rm -f` the stale lock, retry. Hit 3×.
+- **guard-main-worktree hook blocks `git branch -D` in the main dir** — do worktree cleanup WITHOUT
+  `git branch -D` (the `--delete-branch` on merge handles the remote; local refs linger harmlessly).
+  Lingering local branch `claude/extract-phase-constants` (merged, harmless).
+- **agy #2739 false-timeout is INTERMITTENT** — pass `--initial-response-timeout 600`; cleanup-E hit
+  needs_finalize and I recovered it manually. agy `--model "Gemini 3.5 Flash (High)"`, trailer `X-Agent: gemini/<id>`.
+- **Local main has folk-agent's unpushed commit** (`dc0e2c9517`-class) — do NOT push local main; merge PRs
+  server-side via `gh`, operate via worktrees branched from origin/main.
 
-## 🔑 MODEL ROUTING DEFAULT (user direction 2026-06-05)
-- **agy CODING → `Gemini 3.5 Flash (High)`.** **agy CONTENT/creative writing → `Gemini 3.1 Pro (High)`.**
-- Basis: a controlled bakeoff (below) where **Flash beat Pro on coding (N=1)**. Creative→Pro is the
-  user's prior, **untested** — validate it next time we do agy content work (agy is a pending
-  seminar-track writer candidate; that's the place to test Pro-for-writing). Keep scoring; not dogma.
-
-## ✅ #1863 Phase 1 DONE — dead-code inventory tool merged (#2741)
-`scripts/audit/find_dead_code.py` (report-only, categories A–J) + `tests/audit/test_find_dead_code.py`
-on main. agy authored (3.1 Pro run); DeepSeek+Claude review (REQUEST-CHANGES) → I fixed (category-D
-`git ls-files -i` needed `-c`; vulture `--exclude`; G/J renamed; deterministic sort; report git-ignored;
-trailer) → merged. **NEXT: #1863 Phase 2** = run the merged tool, triage the report, file the 10
-category sub-issues (orchestrator work, ~1hr; see `docs/cleanup-plan-2026-q2.md`). Cleanup PRs are
-strict: one-category-per-PR, adversarial-review-mandatory, archive-before-delete, NEVER touch curriculum.
-
-## Pro vs Flash bakeoff (N=1, same #1863 brief)
-| | Pro 3.1 High (#2741 raw) | Flash 3.5 High (preserved: `origin/agy/deadcode-tool-1863-flash`) |
-|---|---|---|
-| Category D `git ls-files -i` | ❌ missing `-c` (real bug) | ✅ `-i -c` + try/except |
-| Tests | 6 | 11 |
-| size / ruff / runs | 295 ln / ✅ / ✅ | 595 ln / ✅ / ✅ |
-| X-Agent trailer | ❌ `agy` | ❌ `agy` |
-Flash won. Flash artifact NOT merged (would conflict + needs own full review); fold its try/except
-robustness into a follow-up if wanted.
-
-## agy lane — operating notes (UPDATED; supersedes the old "never --model" rule)
-- **`--model` works — pass the label or slug** (see above). Model is now a per-dispatch choice.
-- **X-Agent trailer:** agy stamps `X-Agent: agy`, which FAILS `lint_agent_trailer.py` (`agy` is not a
-  valid agent in the regex — valid: claude/codex/gemini/grok/deepseek-v4-pro/cursor/dependabot/claude-inline).
-  **Future agy briefs MUST instruct `X-Agent: gemini/<task-id>`** (agy is Gemini-backed). Alternatively a
-  1-line linter change could add `agy` — open choice, not yet done. I amended #2741's commit to `gemini/`.
-- **needs_finalize is INTERMITTENT** (not always, #2739): the #1905 run timed out before commit
-  (recover: review dirty worktree → commit `X-Agent: gemini/<id>` → push → PR); but the #1863 and the
-  Flash runs committed + opened PRs cleanly. Mixed.
-- Auth: headless works via macOS keyring after an interactive `agy login` (cmd not in `--help`).
-
-## Earlier this session (already landed)
-- **curl_cffi HIGH CVE fixed** (#2740): 1-line `--no-deps` lock bump; alert #119 auto-closed. The lock
-  is systemically un-clean-resolvable (#1634-class: inscriptis/lxml + pillow/marker-pdf) → #2732
-  re-scoped to lock-health. idna `.dagger` = #2732 Part 2 (needs dagger SDK env).
-- **Dependabot drain: 8/8** (#2719-2726). **Code-scanning 2→0** (path-injection dismissed as documented
-  CodeQL false-positives — #2733's realpath sanitizer is sound; scan still flags it).
-- **Filed:** #2738 (MC distractor VESUM design Q), #2739 (agy needs_finalize). Both still open.
-
-## Pending agy tech-debt work (user: "keep him working" on tech-debt, Flash for coding)
-Bounded coding candidates scanned from open issues (most others are Codex/Claude-lane):
-- **#2739** agy wrapper auto-finalize (option 2: returncode 0 + dirty + 0 commits → auto-commit/push/PR).
-  Bounded + valuable but infra-sensitive (delegate/runner) — review carefully.
-- **#1863 Phase 2** (mine, not agy): run tool → triage → file sub-issues. Natural next step.
-- AVOID handing agy: #2378 (load-bearing linear-write.md trim, #M-11), EPICs, A1/A2 (Codex), bio (Claude).
+## NOT TOUCHED (other lanes — awareness only)
+PR #2763 (folk SSOT migration — folk agent), #2601 (B1 pilot draft, codex). Issue #2532 (B1 cleanup, codex).
 
 ## Restart
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
 git fetch origin main && git merge --ff-only origin/main && git rev-parse --short HEAD
+cat batch_state/tasks/a-slice2.json   # FINALIZE a-slice2 first (see top)
 curl -s http://localhost:8765/api/delegate/active
 gh pr list --state open --json number,title,isDraft
-.venv/bin/python scripts/audit/find_dead_code.py --root . --output /tmp/inv.md  # Phase 2 starts here
 ```
