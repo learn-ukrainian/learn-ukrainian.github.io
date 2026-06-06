@@ -27,7 +27,64 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION HANDOFF (2026-06-06, FOLK SCOPE + TAXONOMY + DESIGN ARCHETYPES) — RESUME HERE
+## ▶▶▶ SESSION 2 HANDOFF (2026-06-06 #2 — FOUNDATION + PILOT SHIPPED) — **RESUME HERE**
+
+### ✅ SHIPPED THIS SESSION (all on `main`, self-merged under the folk grant)
+- **Stage-0 foundation** (#2759 `abf280f490`): `phase-folk-queue.md` (42-topic de-imperialized
+  queue) · `folk-dossier-schema.md` (10-section contract + multimodal hooks) · `folk-review-rubric.md`
+  (corpus-hammer) · `folk-experiential-archetype-spec.md` · `curriculum.yaml` folk **27→42**.
+- **Merge grant recorded** (#2762): folk driver self-merges green PRs (still no direct commits to main).
+- **SSOT migration 27→42** (#2763 `d44931b2e9`): plans/folk 5 renames + 6 folds→`_archive` + 21 stubs ·
+  `compile.py FOLK_DOMAIN_MAP` 42 slugs · `module_archetypes.py` **folk-experiential** registered +
+  routed (`resolve("folk")→folk-experiential`, bio unchanged). *(I caught + fixed 2 CI bugs GPT left:
+  empty stub `references`, stale domain-map test — finalize pattern below.)*
+- **★ PILOT DOSSIER** `kalendarna-obriadovist-zvychai` (#2768 `0722cb4c76`, 51KB / +515): GPT wrote,
+  **Claude cross-family corpus-hammer review PASSED** — independently re-ran `verify_quote` on 3 of 7
+  fragments (all matched 1.0, exact chunk IDs), confirmed the honest Щедрик do-not-quote (matched
+  false 0.5 — corpus has the title, not the lyric), re-checked `check_russian_shadow` (clean),
+  §9 decolonization exemplary (Берегиня flagged as modern reconstruction; regional variation surfaced).
+  **This is the quality bar for every folk dossier.**
+
+### 🔭 IN-FLIGHT: **NONE.** No dispatches active. main clean. (verify: `curl -s :8765/api/delegate/active`)
+
+### ▶ NEXT ACTIONS (optimal order) — RESUME HERE
+1. **Wiki-gen the pilot** (validate dossier→wiki half): `.venv/bin/python scripts/wiki/compile.py
+   --writer gpt-5.5 --dossier docs/research/folk/kalendarna-obriadovist-zvychai.md` (domain
+   `folk/ritual` exists). Review the wiki against `folk-review-rubric.md`, self-merge.
+2. **Drive build-order dossiers 2→6** via the PROVEN LOOP (below): `narodna-kultura-yak-systema` →
+   `narodni-viruvannia-mifolohiia-demonolohiia` → `koliadky-shchedrivky` → `rodynna-obriadovist-zvychai`
+   → `dumy-nevilnytski-lytsarski`. Full queue: `docs/folk-epic/phase-folk-queue.md`.
+3. **After June 8:** Claude content-writing bench lifts → Claude can WRITE dossiers too (cross-family:
+   GPT writes → Claude reviews, OR Claude writes → GPT reviews). Until then GPT writes, Claude reviews.
+
+### 🔁 THE PROVEN DOSSIER LOOP (what worked this session — reuse it)
+1. Brief = `/tmp/<slug>-brief.md` referencing the 3 specs (schema/rubric/queue-row) + #M-4 preamble +
+   corpus-hammer mandate (`verify_quote` every text) + "NO auto-merge". (Pilot brief template:
+   the structure in this session's `/tmp/folk-pilot-dossier-brief.md`.)
+2. Fire: `delegate.py dispatch --agent codex --task-id folk-dossier-<slug> --prompt-file <brief>
+   --mode danger --model gpt-5.5 --effort xhigh --worktree --base main` (NO `--allow-merge`).
+3. Watch: background poll-loop on `/api/delegate/active` for the task id (it notifies on exit). NB the
+   dispatch may end `rc=-9` (silence-timeout SIGKILL) AFTER it committed + opened its PR — check
+   `gh pr list --head codex/<branch>`, don't assume failure (#M-8).
+4. **REVIEW (mandatory, Claude's lane — analysis, allowed during bench):** read the dossier CONTENT;
+   **independently re-run `verify_quote`** on a sample of §4 texts (don't trust self-report, #M-11);
+   spot-check `check_russian_shadow`; read §9 decolonization. SHIP only if quote-integrity +
+   decolonization hold.
+5. If small CI/reconciliation bugs: fix IN THE WORKTREE; if it's a plan-file edit blocked by the
+   `version not incremented` gate, `git reset --soft HEAD~1` + recommit so files are "new vs parent"
+   (the gate exempts new files) → `git push --force-with-lease`.
+6. Self-merge (`gh pr merge N --squash --delete-branch`) → `git worktree remove --force <path>`.
+
+### ⚠ CARRY-FORWARD GAPS / NOTES
+- **SigLIP `search_images` is DEFERRED for this track** ("will be available for l2-uk-direct") → folk
+  dossiers can't yet capture image `chunk_id`s; symbolic-decode visuals are pending. Don't fabricate
+  IDs (pilot recorded the raw tool failure honestly). Revisit when image search is wired for l2-uk-en.
+- New plan stubs carry a placeholder `references` (title + "pending dossier" note) to pass
+  `validate_plan`; real corpus sources get added when each topic's dossier is written.
+
+---
+
+## ▶▶▶ SESSION 1 HANDOFF (2026-06-06, FOLK SCOPE + TAXONOMY + DESIGN ARCHETYPES) — reference
 
 ### ✅ DECISIONS LOCKED THIS SESSION (all user-confirmed)
 1. **Track = FOLK, broad scope.** Not oral-folklore-only — **broad folk CULTURE** (oral genres + music +
@@ -131,13 +188,9 @@ NEXT-ACTION item 1 is DONE — the 4 foundation docs now exist (mirror bio's Sta
    files + `_archive/` for the 6 folds) · `compile.py FOLK_DOMAIN_MAP` 42 slugs · `module_archetypes.py`
    **folk-experiential** registered + routed (`resolve("folk")→folk-experiential`, verified) · the 4
    design docs · `folk-ssot-migration.md`. Foundation ↔ registry are now consistent.
-1. 🔄 **IN-FLIGHT — pilot dossier** `kalendarna-obriadovist-zvychai` dispatched to GPT (task
-   `folk-pilot-dossier-kalendarna`, branch `codex/folk-pilot-dossier-kalendarna`, base `d44931b2e9`,
-   NO auto-merge). **ON COMPLETION:** Claude runs the cross-family **CORPUS-HAMMER review** per
-   `folk-review-rubric.md` (re-`verify_quote` every folk text, `check_russian_shadow`,
-   `query_cefr_level`, decolonization gates incl. Берегиня caution), apply fixes, **self-merge** under
-   the grant. *(Reviewing = analysis → allowed despite the June-8 content-WRITING bench; Claude takes
-   over writing after June 8.)*
+1. ✅ **DONE (superseded by SESSION 2 block at top) — pilot dossier** `kalendarna-obriadovist-zvychai`
+   shipped (#2768 `0722cb4c76`), corpus-hammer review PASSED. See the SESSION 2 RESUME-HERE block for
+   current state + next actions.
 2. **Then dossier → grounded wiki:** `compile.py --writer {gpt-5.5|claude} --dossier
    docs/research/folk/kalendarna-obriadovist-zvychai.md` (its `folk/ritual` domain now exists).
 3. Then the build-order first-6: `narodna-kultura-yak-systema` → (pilot ✓) → `narodni-viruvannia-…` →
