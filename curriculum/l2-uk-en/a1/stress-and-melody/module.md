@@ -196,8 +196,7 @@ Final reading:
 <DialogueBox uk="Так, це апте́ка. ↘" en="Yes, this is a pharmacy." />
 <DialogueBox uk="Як га́рно! ↘↘" en="How nice!" />
 
-The workbook repeats the same skills in several modes: stress choice,
-homograph matching, punctuation and melody, clear-vowel error correction,
-number stress, and a short reading check.
+The workbook adds extra practice with the same skills: clear-vowel error
+correction, stress sorting, quick facts, and word recognition.
 
 <!-- INJECT_ACTIVITY: act-4 -->
