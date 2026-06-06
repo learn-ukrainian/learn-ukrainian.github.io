@@ -1,50 +1,50 @@
 - id: act-1
   type: quiz
-  title: Звук або літера
-  instruction: Вибери правильну відповідь.
+  title: Sound or letter
+  instruction: Choose the correct anchor.
   items:
-  - question: Що ми **чуємо** і вимовляємо?
+  - question: What do we hear and pronounce?
     options:
-    - Літера
+    - лі́тера
     - Звук
     - Слово
     correct: 1
-    explanation: Звук — це те, що чуємо, літера — те, що бачимо.
-  - question: Що ми **бачимо** в письмі?
+    explanation: Звук is what we hear and pronounce.
+  - question: What do we see in writing?
     options:
     - Звук
-    - Літера
+    - лі́тера
     - Вимова
     correct: 1
-    explanation: Літера — це графічний знак.
-  - question: Скільки літер у сучасній українській абетці?
+    explanation: Лі́тера is the written sign.
+  - question: How many letters are in the Ukrainian alphabet?
     options:
     - '38'
     - '33'
     - '6'
     correct: 1
-    explanation: У стандартній українській абетці 33 літери.
-  - question: Чому літер 33, а звуків 38?
+    explanation: The standard Ukrainian alphabet has 33 letters.
+  - question: Why can 33 letters point to more sounds?
     options:
-    - Через різну вимову твердих/м'яких звуків
-    - Через йотовані літери, поділи за м'якістю та особливі знаки
-    - Через діалектні варіанти
-    correct: 1
-    explanation: Я/Ю/Є/Ї і інші позиційні чергування збільшують кількість звуків.
-  - question: Який знак не має власного звуку?
+    - Some letters have more than one job
+    - English spelling changes Ukrainian sounds
+    - Every letter is silent
+    correct: 0
+    explanation: Some Ukrainian letters can point to more than one sound or modify a nearby sound.
+  - question: Which sign has no sound of its own?
     options:
     - А
     - Ь
     - О
     correct: 1
-    explanation: Ь — м'який знак, він коригує попередній приголосний.
-  - question: Яке слово має три голосні звуки?
+    explanation: Ь has no sound of its own.
+  - question: Which word has three vowel sounds?
     options:
     - Приві́т
     - молоко́
     - Мов
     correct: 1
-    explanation: Молоко́ має три голосні звуки [о] + [о] + [о].
+    explanation: Молоко́ has three vowel sounds, о + о + о.
 
 - id: act-2
   type: count-syllables
@@ -85,9 +85,9 @@
   - left: Ч
     right: "[ч]"
   - left: Ь
-    right: м'якість попереднього приголосного
+    right: softens the previous consonant
   - left: Я
-    right: "[йа] або м'якість попереднього приголосного"
+    right: "[йа] or softens the previous consonant"
   - left: Ї
     right: "[йі]"
   - left: Щ
@@ -202,8 +202,8 @@
 
 - id: act-5
   type: fill-in
-  title: Короткий діалог
-  instruction: Заповни пропуски в першому діалозі.
+  title: Short dialogue
+  instruction: Choose the chunk that completes the first dialogue.
   items:
   - sentence: Приві́т! ___ спра́ви?
     answer: Як
@@ -211,7 +211,7 @@
     - Як
     - Що
     - Де
-  - sentence: До́бре. ___ у тебе?
+  - sentence: До́бре. ___ у тебе́?
     answer: А
     options:
     - А
@@ -223,13 +223,13 @@
     - А тебе́
     - А у тебе́
     - А тобі́
-  - sentence: "___ тебе́ бачити! (каже жінка)"
+  - sentence: "___ тебе́ бачити! (woman speaker)"
     answer: Рада
     options:
     - Рада
     - Радий
     - Раді
-  - sentence: "___ тебе́ бачити! (каже чоловік)"
+  - sentence: "___ тебе́ бачити! (man speaker)"
     answer: Радий
     options:
     - Радий
