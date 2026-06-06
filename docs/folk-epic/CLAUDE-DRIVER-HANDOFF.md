@@ -12,6 +12,14 @@
 > `starlight/src/content/docs/folk`, `wiki/folk`). Never a tree-wide `git status`/main op. If a non-folk
 > file surfaces (esp. `docs/session-state/*`), SKIP SILENTLY.
 >
+> **🌲 WORKTREE-ONLY (HARD, user 2026-06-06 — "you do this every fucking time"):** the main project
+> checkout's HEAD STAYS ON `main`. NEVER `git checkout -b` / `git switch` / `git branch -f` /
+> `git reset --hard` in the main dir. ALL driver branch work goes in a worktree:
+> `git worktree add .worktrees/dispatch/claude/<task> -b claude/<task> origin/main` → `cd` in → work →
+> PR → self-merge → `git worktree remove`. A local PreToolUse guard enforces this for Claude
+> (`.claude/hooks/guard-main-worktree.sh`); git has no abortable pre-checkout hook, so the guard is
+> command-level/per-tool. Dispatched agents are already worktree-forced by `delegate.py`.
+>
 > **⚖ MERGE POLICY (UPDATED 2026-06-06):** the folk driver **HAS a merge grant**. User: *"every track
 > has merge grant otherwise we will have a deadlock."* So: branch → PR → CI-green → **self-merge**
 > (review body+diff+CI, `gh pr merge N --squash --delete-branch`; hold only on a BLOCKING CI fail per
@@ -118,22 +126,23 @@ NEXT-ACTION item 1 is DONE — the 4 foundation docs now exist (mirror bio's Sta
   FOLK_DOMAIN_MAP`, `module_archetypes.py` folk-experiential) = GPT dispatch, gated on merge.
 
 ### ▶ NEXT ACTIONS ON RESUME (folk, in order)
-0. ✅ **DONE — Stage-0 PR #2759 self-merged** (commit `abf280f490`) under the new merge grant. main now
-   carries the 4 design docs + `curriculum.yaml` folk 27→42 + `folk-ssot-migration.md`.
-1. **Dispatch GPT the SSOT migration** (`folk-ssot-migration.md` is the brief):
-   `git mv` 5 renames + archive 6 folded plan files → `plans/folk/_archive/`; create new plan stubs
-   (C1+, schema-valid, `status: stub`); re-key `compile.py FOLK_DOMAIN_MAP` to 42; register
-   `folk-experiential` in `module_archetypes.py` + route `track=="folk"`; regenerate discovery. One
-   worktree PR (`--agent codex --model gpt-5.5 --worktree --base main`), NO auto-merge. **#M-10: archive,
-   never delete — folded files carry real rag_chunks.** Gated on Stage-0 merge so the worktree sees the
-   updated `curriculum.yaml`.
-2. **Then dispatch the pilot dossier** `kalendarna-obriadovist-zvychai` (GPT + Claude both picked it;
-   best shows folk as a SYSTEM). Writer = **GPT now** (brief = schema + rubric + queue row) / Claude
-   after June 8; cross-family review = the other; corpus-hammer (`verify_quote` every folk text). Then
-   dossier → grounded wiki (`compile.py --writer {gpt-5.5|claude}`; needs the migrated FOLK_DOMAIN_MAP
-   entry, hence after step 2).
-3. Then the build-order first-6: `narodna-kultura-yak-systema` → pilot → `narodni-viruvannia-…` →
+0. ✅ **DONE — foundation fully merged.** Stage-0 #2759 (`abf280f490`) + merge-grant #2762 + SSOT
+   migration #2763 (`d44931b2e9`). main now carries: `curriculum.yaml` folk **42** · `plans/folk` (42
+   files + `_archive/` for the 6 folds) · `compile.py FOLK_DOMAIN_MAP` 42 slugs · `module_archetypes.py`
+   **folk-experiential** registered + routed (`resolve("folk")→folk-experiential`, verified) · the 4
+   design docs · `folk-ssot-migration.md`. Foundation ↔ registry are now consistent.
+1. 🔄 **IN-FLIGHT — pilot dossier** `kalendarna-obriadovist-zvychai` dispatched to GPT (task
+   `folk-pilot-dossier-kalendarna`, branch `codex/folk-pilot-dossier-kalendarna`, base `d44931b2e9`,
+   NO auto-merge). **ON COMPLETION:** Claude runs the cross-family **CORPUS-HAMMER review** per
+   `folk-review-rubric.md` (re-`verify_quote` every folk text, `check_russian_shadow`,
+   `query_cefr_level`, decolonization gates incl. Берегиня caution), apply fixes, **self-merge** under
+   the grant. *(Reviewing = analysis → allowed despite the June-8 content-WRITING bench; Claude takes
+   over writing after June 8.)*
+2. **Then dossier → grounded wiki:** `compile.py --writer {gpt-5.5|claude} --dossier
+   docs/research/folk/kalendarna-obriadovist-zvychai.md` (its `folk/ritual` domain now exists).
+3. Then the build-order first-6: `narodna-kultura-yak-systema` → (pilot ✓) → `narodni-viruvannia-…` →
    `koliadky-shchedrivky` → `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`.
+   Writer = GPT now / Claude after June 8; cross-family review = the other (no DeepSeek for culture).
 4. Optional: design the **lit-drama** variant (≈80% assembled from folk parts) when convenient.
 
 ### 📊 CORPUS FACTS (folk is well-sourced — verified)
