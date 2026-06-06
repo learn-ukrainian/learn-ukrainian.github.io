@@ -113,6 +113,7 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "Context estimate: 90.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
+    assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
 
 
 def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Path):
@@ -136,6 +137,7 @@ def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Pa
     assert "## Delegated Tasks" in rendered
     assert "## Next Commands" in rendered
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in rendered
+    assert "orchestrator_control.py inbox --recent 20 --include-results" in rendered
 
 
 def test_render_router_markdown_contains_parseable_markers():
