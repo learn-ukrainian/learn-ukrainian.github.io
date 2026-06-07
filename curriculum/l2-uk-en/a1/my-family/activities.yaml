@@ -90,7 +90,7 @@ inline:
           - У
           - Це
           - Хто
-        explanation: У мене є... — цілий блок для "I have".
+        explanation: У мене є... — цілий блок, щоб сказати, що хтось або щось є в мене.
       - sentence: У ___ є сестра.
         answer: мене
         options:
@@ -220,44 +220,44 @@ workbook:
         options:
           - Мене звати Джон.
           - Моє ім'я є Джон.
-        explanation: Мене звати... is the natural first-introduction model.
+        explanation: Мене звати... — природна модель першого представлення.
       - sentence: Я маю 20 років.
         error: Я маю 20 років.
         correction: Мені 20 років.
         options:
           - Мені 20 років.
           - Я маю 20 років.
-        explanation: Age uses the chunk Мені ... років.
+        explanation: Вік подаємо блоком Мені ... років.
       - sentence: Це мій мама.
         error: Це мій мама.
         correction: Це моя мама.
         options:
           - Це моя мама.
           - Це мій мама.
-        explanation: Мама is feminine, so use моя.
+        explanation: Мама — жіночого роду, тому вживай моя.
       - sentence: Я є брат.
         error: Я є брат.
         correction: Я брат.
         options:
           - Я брат.
           - Я є брат.
-        explanation: Present-time identity can omit є.
+        explanation: Теперішня ідентичність може не мати є.
       - sentence: Батьки (у значенні батька)
         error: Батьки (у значенні батька)
         correction: Тато / батько
         options:
           - Тато / батько
           - Батьки
-        explanation: Батьки means parents, not one father.
+        explanation: Батьки означає маму й тата або кількох батьків, а не одного тата.
       - sentence: Чия це? (про брата)
         error: Чия це? (про брата)
         correction: Чий це брат?
         options:
           - Чий це брат?
           - Чия це?
-        explanation: Брат is masculine, so the question word is чий.
+        explanation: Брат — чоловічого роду, тому питальне слово чий.
   - type: fill-in
-    title: Native family words
+    title: Українські родинні слова
     instruction: Заповни речення українським родинним словом.
     items:
       - sentence: Моя ___ — вчителька.
@@ -265,45 +265,45 @@ workbook:
         options:
           - дружина
           - сестра
-        explanation: Дружина is the Ukrainian word for wife.
+        explanation: Дружина — українське слово для жінки в шлюбі.
       - sentence: Мій ___ працює в лікарні.
         answer: чоловік
         options:
           - чоловік
           - тато
-        explanation: Чоловік can mean man or husband by context.
+        explanation: Чоловік може означати людину чоловічої статі або партнера в шлюбі за контекстом.
       - sentence: Це моя ___ Тетяна.
         answer: бабуся
         options:
           - бабуся
           - мама
-        explanation: Бабуся is the Ukrainian word for grandmother.
+        explanation: Бабуся називає маму мами або тата.
       - sentence: Це мої ___.
         answer: родичі
         options:
           - родичі
           - батьки
-        explanation: Родичі means relatives.
+        explanation: Родичі — це люди з родини.
       - sentence: Це маленька ___.
         answer: дитина
         options:
           - дитина
           - сім'я
-        explanation: Дитина is the Ukrainian word for child.
+        explanation: Дитина — українське слово для малюка або сина чи доньки.
       - sentence: Це мій ___ брат.
         answer: молодший
         options:
           - молодший
           - старший
-        explanation: Молодший means younger.
+        explanation: Молодший означає менший за віком.
       - sentence: Мій старший брат уже ___.
         answer: одружений
         options:
           - одружений
           - студент
-        explanation: Одружений means married.
+        explanation: Одружений означає, що людина має дружину або чоловіка.
   - type: fill-in
-    title: Complete the photo dialogue
+    title: Доповни фотодіалог
     instruction: Обери пропущене слово з родинної розмови.
     items:
       - sentence: Це ___ сім'я на фотографії.
@@ -312,7 +312,7 @@ workbook:
           - моя
           - мій
           - моє
-        explanation: Сім'я is feminine.
+        explanation: Сім'я — жіночого роду.
       - sentence: ___ це? Це мій тато.
         answer: Хто
         options:
@@ -326,23 +326,23 @@ workbook:
           - Її
           - Його
           - Вони
-        explanation: Її fits a sister.
+        explanation: Її підходить до сестри.
       - sentence: Це мій брат. ___ звати Коля.
         answer: Його
         options:
           - Його
           - Її
           - Вона
-        explanation: Його fits a brother.
+        explanation: Його підходить до брата.
       - sentence: А це ___ бабуся?
         answer: твоя
         options:
           - твоя
           - твій
           - твоє
-        explanation: Бабуся is feminine.
+        explanation: Бабуся — жіночого роду.
   - type: translate
-    title: Family vocabulary quick check
+    title: Швидка перевірка родинної лексики
     instruction: Обери англійське значення.
     items:
       - source: сім'я
@@ -353,7 +353,7 @@ workbook:
             correct: false
           - text: profession
             correct: false
-        explanation: Сім'я is the close family word.
+        explanation: Сім'я — слово для близької родини.
       - source: родина
         options:
           - text: family or kin
@@ -362,7 +362,7 @@ workbook:
             correct: false
           - text: first name
             correct: false
-        explanation: Родина often sounds wider than сім'я.
+        explanation: Родина часто звучить ширше, ніж сім'я.
       - source: У мене є брат.
         options:
           - text: I have a brother.
@@ -371,7 +371,7 @@ workbook:
             correct: false
           - text: This is my brother.
             correct: false
-        explanation: У мене є... is the I-have chunk.
+        explanation: У мене є... — блок, щоб сказати, що щось або хтось є в мене.
       - source: Це моя сестра.
         options:
           - text: This is my sister.
@@ -380,7 +380,7 @@ workbook:
             correct: false
           - text: This is her sister.
             correct: false
-        explanation: Моя matches сестра.
+        explanation: Моя узгоджується зі словом сестра.
       - source: Чий це брат?
         options:
           - text: Whose brother is this?
@@ -389,4 +389,4 @@ workbook:
             correct: false
           - text: Do you have a brother?
             correct: false
-        explanation: Чий asks whose and matches брат.
+        explanation: Чий питає про належність і узгоджується зі словом брат.

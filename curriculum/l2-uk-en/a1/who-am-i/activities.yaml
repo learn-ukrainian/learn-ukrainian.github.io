@@ -140,28 +140,28 @@ workbook:
         options:
           - Я студент.
           - Я є студент.
-        explanation: In present-time identity, say Я студент or Я — студент.
+        explanation: У теперішній ідентичності кажи Я студент або Я — студент.
       - sentence: Моє ім'я є Джон.
         error: Моє ім'я є Джон.
         correction: Мене звати Джон.
         options:
           - Мене звати Джон.
           - Моє ім'я є Джон.
-        explanation: Мене звати... is the high-frequency introduction model.
+        explanation: Мене звати... — частотна модель першого представлення.
       - sentence: Я маю 20 років.
         error: Я маю 20 років.
         correction: Мені 20 років.
         options:
           - Мені 20 років.
           - Я маю 20 років.
-        explanation: Age uses a different chunk and is not the model for this lesson.
+        explanation: Вік має інший блок; це не модель цього уроку.
       - sentence: Оксана каже, "Я (жінка) лікар."
         error: Я (жінка) лікар.
         correction: Я лікарка.
         options:
           - Я лікарка.
           - Я (жінка) лікар.
-        explanation: Лікарка is the standard feminine form for a woman doctor.
+        explanation: Лікарка — стандартна жіноча форма для жінки, яка працює лікарем.
       - sentence: Воно мій тато.
         error: Воно
         correction: Це мій тато.
@@ -177,7 +177,7 @@ workbook:
           - Привіт, пане професоре!
         explanation: З професором або незнайомим дорослим уживай Добрий день.
   - type: match-up
-    title: Profession pairs
+    title: Пари професій
     instruction: З'єднай чоловічу і жіночу форму професії.
     pairs:
       - left: студент
@@ -206,42 +206,42 @@ workbook:
           - тебе
           - вас
           - це
-        explanation: Привіт points to an informal peer situation.
+        explanation: Привіт показує неформальну ситуацію з ровесником.
       - sentence: Мене ___ Олена.
         answer: звати
         options:
           - звати
           - це
           - з
-        explanation: Мене звати... is the name chunk.
+        explanation: Мене звати... — блок для імені.
       - sentence: Мене звати Марко. ___ тебе?
         answer: А
         options:
           - А
           - Хто
           - Що
-        explanation: А тебе? returns the question.
+        explanation: А тебе? повертає питання.
       - sentence: Добрий день! Як ___ звати?
         answer: вас
         options:
           - вас
           - тебе
           - я
-        explanation: Добрий день fits the formal version here.
+        explanation: Добрий день пасує до формальної версії тут.
       - sentence: Дуже ___!
         answer: приємно
         options:
           - приємно
           - Київ
           - студентка
-        explanation: Дуже приємно follows the name exchange.
+        explanation: Дуже приємно звучить після обміну іменами.
       - sentence: ___ ти? Я з Канади.
         answer: Звідки
         options:
           - Звідки
           - Хто
           - Що
-        explanation: Звідки asks where someone is from.
+        explanation: Звідки питає, звідки людина.
   - type: fill-in
     title: Обери українську норму
     instruction: Заповни речення українським вибором.
@@ -251,36 +251,36 @@ workbook:
         options:
           - тато
           - не наш A1-вибір для тата
-        explanation: Тато is the native Ukrainian choice for dad.
+        explanation: Тато — природний український вибір для слова про батька.
       - sentence: Це моя ___ Марія.
         answer: дружина
         options:
           - дружина
           - неукраїнська форма для дружини
-        explanation: Дружина is the native Ukrainian choice for wife.
+        explanation: Дружина — природний український вибір для жінки в шлюбі.
       - sentence: ___, як вас звати?
         answer: Вибачте
         options:
           - Вибачте
           - не наш A1-вибір для вибачення
-        explanation: Вибачте and пробачте are safe Ukrainian choices.
+        explanation: Вибачте і пробачте — безпечні українські вибори.
       - sentence: ___, дуже приємно!
         answer: Дякую
         options:
           - Дякую
           - не наш A1-вибір для подяки
-        explanation: Дякую and спасибі are safe Ukrainian choices.
+        explanation: Дякую і спасибі — безпечні українські вибори.
       - sentence: Мені ___ приємно.
         answer: теж
         options:
           - теж
           - не наш A1-вибір для також
-        explanation: Теж and також are safe Ukrainian choices.
+        explanation: Теж і також — безпечні українські вибори.
       - sentence: Оксана — ___.
         answer: інженерка
         options:
           - інженерка
-          - masculine generic for a woman
+          - чоловіча форма для жінки
         explanation: Для жінки вживай фемінітив, коли українська форма існує.
   - type: translate
     title: Лексика знайомства
@@ -294,7 +294,7 @@ workbook:
             correct: false
           - text: This is...
             correct: false
-        explanation: Мене звати... is the name chunk.
+        explanation: Мене звати... — блок для імені.
       - source: Як тебе звати?
         options:
           - text: What is your name? informal
@@ -303,7 +303,7 @@ workbook:
             correct: false
           - text: I am from Ukraine.
             correct: false
-        explanation: Тебе marks the informal version.
+        explanation: Тебе позначає неформальну версію.
       - source: Як вас звати?
         options:
           - text: What is your name? formal
@@ -312,7 +312,7 @@ workbook:
             correct: false
           - text: This is Kyiv.
             correct: false
-        explanation: Вас marks the formal version.
+        explanation: Вас позначає формальну версію.
       - source: Дуже приємно!
         options:
           - text: Pleased to meet you!
@@ -321,7 +321,7 @@ workbook:
             correct: false
           - text: Where from?
             correct: false
-        explanation: Дуже приємно closes the introduction politely.
+        explanation: Дуже приємно ввічливо завершує представлення.
       - source: Звідки ти?
         options:
           - text: Where are you from? informal
@@ -330,7 +330,7 @@ workbook:
             correct: false
           - text: I am a student.
             correct: false
-        explanation: Звідки asks from where.
+        explanation: Звідки питає про походження.
       - source: Я — студентка.
         options:
           - text: I am a female student.
@@ -339,4 +339,4 @@ workbook:
             correct: false
           - text: My name is...
             correct: false
-        explanation: Студентка is the feminine form.
+        explanation: Студентка — жіноча форма.

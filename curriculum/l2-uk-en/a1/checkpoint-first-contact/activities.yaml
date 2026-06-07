@@ -97,7 +97,7 @@ inline:
           - прізвище
           - фамілія
           - професія
-        explanation: Прізвище — стандартне українське слово для surname.
+        explanation: Прізвище — стандартне українське слово для родового імені.
       - sentence: Я ___ Києва.
         answer: з
         options:
@@ -111,7 +111,7 @@ inline:
           - студент
           - є студент
           - мене студент
-        explanation: A1-речення ідентичності не потребує є.
+        explanation: Речення A1 про ідентичність не потребує є.
       - sentence: ___ 20 років.
         answer: Мені
         options:
@@ -125,7 +125,7 @@ inline:
           - є
           - звати
           - з
-        explanation: У мене є... — блок для "I have".
+        explanation: У мене є... — блок, щоб сказати, що хтось або щось є в мене.
       - sentence: Це ___ мама.
         answer: моя
         options:
@@ -316,7 +316,7 @@ workbook:
             correct: false
           - text: Olena is my surname.
             correct: false
-        explanation: Мене звати... gives a name.
+        explanation: Мене звати... називає ім'я.
       - prompt: Моє прізвище Мельник.
         options:
           - text: My surname is Melnyk.
@@ -325,7 +325,7 @@ workbook:
             correct: false
           - text: My family is Melnyk.
             correct: false
-        explanation: Прізвище means surname.
+        explanation: Прізвище означає родове ім'я.
       - prompt: Я з Канади.
         options:
           - text: I am from Canada.
@@ -334,7 +334,7 @@ workbook:
             correct: false
           - text: I have Canada.
             correct: false
-        explanation: Я з... gives origin.
+        explanation: Я з... подає походження.
       - prompt: Я студентка.
         options:
           - text: I am a female student.
@@ -343,7 +343,7 @@ workbook:
             correct: false
           - text: My name is student.
             correct: false
-        explanation: Identity uses the noun directly here.
+        explanation: У цьому реченні ідентичність виражена іменником без є.
       - prompt: У мене є сестра.
         options:
           - text: I have a sister.
@@ -352,7 +352,7 @@ workbook:
             correct: false
           - text: This is my sister.
             correct: false
-        explanation: У мене є... is the I-have chunk.
+        explanation: У мене є... — блок для наявності.
       - prompt: Мені теж.
         options:
           - text: Me too.
@@ -361,7 +361,7 @@ workbook:
             correct: false
           - text: Goodbye.
             correct: false
-        explanation: Мені теж gives the reciprocal answer.
+        explanation: Мені теж дає взаємну відповідь.
   - type: match-up
     title: Карта лексики
     instruction: З'єднай українське контрольне слово з англійською підказкою.
@@ -392,32 +392,32 @@ workbook:
           - Привіт
           - Пока
           - Прізвище
-        explanation: Привіт opens an informal chat.
+        explanation: Привіт відкриває неформальний чат.
       - sentence: Я ___ Одеси.
         answer: з
         options:
           - з
           - є
           - моя
-        explanation: Я з... gives origin.
+        explanation: Я з... подає походження.
       - sentence: Привіт, ___!
         answer: Ліно
         options:
           - Ліно
           - Ліна
           - Ліну
-        explanation: Ліно is the vocative form in direct address.
+        explanation: Ліно — клична форма прямого звертання.
       - sentence: Дуже ___!
         answer: приємно
         options:
           - приємно
           - професія
           - адреса
-        explanation: Дуже приємно is a polite first-contact response.
+        explanation: Дуже приємно — ввічлива відповідь під час першого знайомства.
       - sentence: Мені ___.
         answer: теж
         options:
           - теж
           - звати
           - словник
-        explanation: Мені теж means me too.
+        explanation: Мені теж означає взаємну відповідь.
