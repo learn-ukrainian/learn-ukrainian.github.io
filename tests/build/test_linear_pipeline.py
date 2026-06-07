@@ -1747,6 +1747,170 @@ def test_vesum_gate_lowercases_before_lookup(tmp_path: Path) -> None:
     assert report["gates"]["vesum_verified"]["passed"] is True
 
 
+def test_bad_form_heritage_gate_allows_confirmed_russianisms() -> None:
+    calls: list[str] = []
+
+    def fake_lookup(query: str) -> list[dict]:
+        calls.append(query)
+        assert query in {"завтрак", "полотенце"}
+        return [
+            {
+                "source_family": "style_guide",
+                "source": "Антоненко-Давидович",
+                "word": query,
+                "classification": "potential_russianism_or_calque",
+                "is_authentic_ukrainian": False,
+                "is_russianism": True,
+            }
+        ]
+
+    report = linear_pipeline._bad_form_heritage_gate(
+        module_text="Сніданок, not <!-- bad -->завтрак<!-- /bad -->.",
+        activities=[],
+        vocabulary=[
+            {"usage": "Рушник, not <!-- bad -->полотенце<!-- /bad -->."}
+        ],
+        resources=[],
+        heritage_lookup_fn=fake_lookup,
+    )
+
+    assert report["passed"] is True
+    assert calls == ["завтрак", "полотенце"]
+    assert report["checked"] == 2
+
+
+def test_bad_form_heritage_gate_rejects_authentic_ukrainian_forms() -> None:
+    def fake_lookup(query: str) -> list[dict]:
+        if query == "одіватися":
+            return [
+                {
+                    "source_family": "grinchenko",
+                    "source": "Грінченко",
+                    "word": "одіватися",
+                    "classification": "pre_soviet_ukrainian_attestation",
+                    "is_authentic_ukrainian": True,
+                    "is_russianism": False,
+                    "evidence_tags": ["pre_soviet", "lexicographic"],
+                    "text": "attested form",
+                }
+            ]
+        if query == "кобета":
+            return [
+                {
+                    "source_family": "slovnyk_me",
+                    "source": "СУМ-20",
+                    "word": "кобіта",
+                    "classification": "regional_or_historical_ukrainian_attestation",
+                    "is_authentic_ukrainian": True,
+                    "is_russianism": False,
+                    "evidence_tags": ["regional_or_historical"],
+                    "text": "dialectal Ukrainian form",
+                }
+            ]
+        return []
+
+    report = linear_pipeline._bad_form_heritage_gate(
+        module_text=(
+            "Use одягатися, not <!-- bad -->одіватися<!-- /bad -->. "
+            "Do not erase <!-- bad -->кобета<!-- /bad -->."
+        ),
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        heritage_lookup_fn=fake_lookup,
+    )
+
+    assert report["passed"] is False
+    assert report["finding_count"] == 2
+    assert {finding["query"] for finding in report["findings"]} == {
+        "одіватися",
+        "кобета",
+    }
+
+
+def test_bad_form_heritage_gate_preserves_backticked_marker_content() -> None:
+    calls: list[str] = []
+
+    def fake_lookup(query: str) -> list[dict]:
+        calls.append(query)
+        return []
+
+    report = linear_pipeline._bad_form_heritage_gate(
+        module_text="Use сніданок, not <!-- bad -->`завтрак`<!-- /bad -->.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        heritage_lookup_fn=fake_lookup,
+    )
+
+    assert report["passed"] is True
+    assert report["checked"] == 1
+    assert calls == ["завтрак"]
+
+
+def test_bad_form_heritage_gate_does_not_split_grammar_error_sentences() -> None:
+    calls: list[str] = []
+
+    def fake_lookup(query: str) -> list[dict]:
+        calls.append(query)
+        return []
+
+    report = linear_pipeline._bad_form_heritage_gate(
+        module_text="",
+        activities=[
+            {
+                "type": "true-false",
+                "items": [
+                    {
+                        "statement": "<!-- bad -->Я бачу нікого.<!-- /bad -->",
+                        "answer": False,
+                    }
+                ],
+            }
+        ],
+        vocabulary=[],
+        resources=[],
+        heritage_lookup_fn=fake_lookup,
+    )
+
+    assert report["passed"] is True
+    assert calls == ["Я бачу нікого"]
+
+
+def test_run_python_qg_reports_bad_form_heritage_failure(tmp_path: Path) -> None:
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    module_path = module_dir / "module.md"
+    module_path.write_text(
+        module_path.read_text(encoding="utf-8")
+        + "\nUse одягатися, not <!-- bad -->одіватися<!-- /bad -->.\n",
+        encoding="utf-8",
+    )
+
+    def fake_lookup(query: str) -> list[dict]:
+        assert query == "одіватися"
+        return [
+            {
+                "source_family": "grinchenko",
+                "source": "Грінченко",
+                "word": "одіватися",
+                "classification": "pre_soviet_ukrainian_attestation",
+                "is_authentic_ukrainian": True,
+                "is_russianism": False,
+            }
+        ]
+
+    report = linear_pipeline.run_python_qg(
+        module_dir,
+        plan_path,
+        verify_words_fn=fake_verify,
+        heritage_lookup_fn=fake_lookup,
+    )
+
+    assert report["gates"]["bad_form_heritage"]["passed"] is False
+    assert report["gates"]["bad_form_heritage"]["finding_count"] == 1
+    assert report["gates"]["passed"] is False
+
+
 def test_vesum_gate_strips_phonetic_transcriptions_in_brackets(tmp_path: Path) -> None:
     """Phonetic notation in `[...]` must NOT be tokenized for VESUM lookup."""
     module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)

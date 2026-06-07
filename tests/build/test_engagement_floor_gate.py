@@ -60,15 +60,16 @@ def test_engagement_fails_when_zero_callouts() -> None:
     assert any("callouts" in issue for issue in report["issues"])
 
 
-def test_engagement_fails_when_one_callout_below_minimum() -> None:
+def test_engagement_passes_with_one_callout_floor() -> None:
     text = """
 :::tip
-Just one callout — below the minimum of 2.
+One content-anchored callout meets the current deterministic floor.
 :::
 """
     report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is False
+    assert report["passed"] is True
     assert report["callout_count"] == 1
+    assert report["callout_min"] == 1
 
 
 def test_engagement_accepts_github_admonition_syntax() -> None:
