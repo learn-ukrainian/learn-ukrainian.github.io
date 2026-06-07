@@ -1,470 +1,466 @@
-- id: act-1
-  type: quiz
-  title: Count 0-10
-  instruction: Choose the correct Ukrainian number or chunk.
-  items:
-    - prompt: 0
-      options:
-        - text: нуль
-          correct: true
-        - text: о
-          correct: false
-        - text: один
-          correct: false
-      explanation: Phone numbers use нуль, not English "oh."
-    - prompt: one pencil
-      options:
-        - text: один олівець
-          correct: true
-        - text: одна олівець
-          correct: false
-        - text: одне олівець
-          correct: false
-      explanation: Олівець is masculine.
-    - prompt: one pen
-      options:
-        - text: одна ручка
-          correct: true
-        - text: один ручка
-          correct: false
-        - text: одне ручка
-          correct: false
-      explanation: Ручка is feminine.
-    - prompt: one pastry
-      options:
-        - text: одне тістечко
-          correct: true
-        - text: один тістечко
-          correct: false
-        - text: одна тістечко
-          correct: false
-      explanation: Тістечко is neuter.
-    - prompt: two pencils
-      options:
-        - text: два олівці
-          correct: true
-        - text: дві олівці
-          correct: false
-        - text: два олівець
-          correct: false
-      explanation: Use два with masculine plural chunks.
-    - prompt: two pens
-      options:
-        - text: дві ручки
-          correct: true
-        - text: два ручки
-          correct: false
-        - text: дві ручка
-          correct: false
-      explanation: Use дві with feminine plural chunks.
-- id: act-2
-  type: fill-in
-  title: Write the number
-  instruction: Choose the Ukrainian written form.
-  items:
-    - sentence: 5 = ___
-      answer: п'ять
-      options:
-        - п'ять
-        - пять
-        - пьять
-      explanation: П'ять has an apostrophe.
-    - sentence: 6 = ___
-      answer: шість
-      options:
-        - шість
-        - шесть
-        - шисть
-      explanation: Use the Ukrainian form шість.
-    - sentence: 7 = ___
-      answer: сім
-      options:
-        - сім
-        - сєм
-        - семь
-      explanation: Use сім.
-    - sentence: 15 = ___
-      answer: п'ятнадцять
-      options:
-        - п'ятнадцять
-        - пятьнадцять
-        - п'ятьнадцять
-      explanation: П'ятнадцять keeps the apostrophe and the -надцять pattern.
-    - sentence: 17 = ___
-      answer: сімнадцять
-      options:
-        - сімнадцять
-        - сємнадцять
-        - семнадцять
-      explanation: Use сімнадцять.
-    - sentence: 18 = ___
-      answer: вісімнадцять
-      options:
-        - вісімнадцять
-        - вісемнадцять
-        - вісімнацять
-      explanation: Keep the full -надцять ending.
-    - sentence: 20 = ___
-      answer: двадцять
-      options:
-        - двадцять
-        - дванадцять
-        - двадцать
-      explanation: Двадцять is twenty.
-    - sentence: 47 = ___
-      answer: сорок сім
-      options:
-        - сорок сім
-        - чотиридесят сім
-        - сорок семь
-      explanation: Forty is сорок; seven is сім.
-    - sentence: 50 = ___
-      answer: п'ятдесят
-      options:
-        - п'ятдесят
-        - п'ятьдесять
-        - пятьдесят
-      explanation: Use п'ятдесят, without an extra soft sign.
-    - sentence: 90 = ___
-      answer: дев'яносто
-      options:
-        - дев'яносто
-        - дев'ятдесят
-        - дев'яносят
-      explanation: Ninety is дев'яносто.
-- id: act-3
-  type: match-up
-  title: Prices
-  instruction: Match the price with the Ukrainian phrase.
-  pairs:
-    - left: 1 UAH
-      right: одна гривня
-    - left: 2 UAH
-      right: дві гривні
-    - left: 4 UAH
-      right: чотири гривні
-    - left: 5 UAH
-      right: п'ять гривень
-    - left: 50 UAH
-      right: п'ятдесят гривень
-    - left: 150 UAH
-      right: сто п'ятдесят гривень
-    - left: 200 UAH
-      right: двісті гривень
-    - left: 1000 UAH
-      right: тисяча гривень
-- id: act-4
-  type: fill-in
-  title: Age chunks
-  instruction: Choose рік, роки, or років.
-  items:
-    - sentence: Мені двадцять один ___.
-      answer: рік
-      options:
-        - рік
-        - роки
-        - років
-      explanation: Numbers ending in 1 use рік, except 11.
-    - sentence: Моїй сестрі двадцять чотири ___.
-      answer: роки
-      options:
-        - роки
-        - рік
-        - років
-      explanation: Numbers ending in 2-4 use роки, except 12-14.
-    - sentence: Мені двадцять п'ять ___.
-      answer: років
-      options:
-        - років
-        - рік
-        - роки
-      explanation: Numbers ending in 5+ use років.
-    - sentence: Їй вісімнадцять ___.
-      answer: років
-      options:
-        - років
-        - роки
-        - рік
-      explanation: Teens use років.
-    - sentence: Бабусі вісімдесят ___.
-      answer: років
-      options:
-        - років
-        - роки
-        - рік
-      explanation: Eighty uses років.
-    - sentence: Скільки тобі ___?
-      answer: років
-      options:
-        - років
-        - год
-        - рік
-      explanation: Ask Скільки тобі років?
-- id: act-5
-  type: quiz
-  title: Phone number groups
-  instruction: Choose the line that reads the number naturally.
-  items:
-    - prompt: 097
-      options:
-        - text: нуль дев'яносто сім
-          correct: true
-        - text: о дев'яносто сім
-          correct: false
-        - text: нуль дев'ятдесят сім
-          correct: false
-      explanation: Say нуль; 90 is дев'яносто.
-    - prompt: 45
-      options:
-        - text: сорок п'ять
-          correct: true
-        - text: чотиридесят п'ять
-          correct: false
-        - text: сорок пять
-          correct: false
-      explanation: 45 is сорок п'ять.
-    - prompt: 67
-      options:
-        - text: шістдесят сім
-          correct: true
-        - text: шістьдесять сім
-          correct: false
-        - text: шістдесят семь
-          correct: false
-      explanation: Use шістдесят сім.
-    - prompt: 321
-      options:
-        - text: три два один
-          correct: true
-        - text: триста двадцять один
-          correct: false
-        - text: три дві один
-          correct: false
-      explanation: Phone numbers may be read digit by digit in a group.
-    - prompt: 050
-      options:
-        - text: нуль п'ятдесят
-          correct: true
-        - text: о п'ятдесят
-          correct: false
-        - text: нуль п'ятьдесять
-          correct: false
-      explanation: Say нуль and п'ятдесят.
-- id: act-6
-  type: group-sort
-  title: 1 / 2-4 / 5+ chunks
-  instruction: Sort each noun chunk by the number pattern.
-  groups:
-    - label: 1
-      items:
-        - одна гривня
-        - один рік
-        - один олівець
-        - одне тістечко
-    - label: 2-4
-      items:
-        - дві гривні
-        - три роки
-        - чотири зошити
-        - дві ручки
-    - label: 5+
-      items:
-        - п'ять гривень
-        - двадцять років
-        - десять зошитів
-        - шість студентів
-- id: act-7
-  type: error-correction
-  title: Repair number traps
-  instruction: Choose the standard Ukrainian correction.
-  items:
-    - sentence: п'ять столи / п'ять студентів (якщо вжито як Називний множини)
-      error: п'ять столи
-      answer: п'ять столів / п'ять студентів
-      options:
-        - п'ять столів / п'ять студентів
-        - п'ять столи / п'ять студенти
-        - п'ять стола / п'ять студент
-      explanation: With 5+, use the memorized chunk п'ять столів.
-    - sentence: Який час? / Що час?
-      error: Який час? / Що час?
-      answer: Котра година? / О котрій годині?
-      options:
-        - Котра година? / О котрій годині?
-        - Який час? / Що час?
-        - Скільки час?
-      explanation: For time, use the fixed formula Котра година?
-    - sentence: Я маю 20 років / Я є 20 років
-      error: Я маю 20 років / Я є 20 років
-      answer: Мені 20 років
-      options:
-        - Мені 20 років
-        - Я маю 20 років
-        - Я є 20 років
-      explanation: Age uses the chunk Мені ... років.
-    - sentence: перше січень / сьоме травень
-      error: перше січень / сьоме травень
-      answer: перше січня / сьоме травня
-      options:
-        - перше січня / сьоме травня
-        - перше січень / сьоме травень
-        - один січня / сім травня
-      explanation: Learn dates as fixed chunks for now.
-    - sentence: п'ятьдесять / шістьдесять
-      error: п'ятьдесять / шістьдесять
-      answer: п'ятдесят / шістдесят
-      options:
-        - п'ятдесят / шістдесят
-        - п'ятьдесять / шістьдесять
-        - п'ятдесять / шістьдесят
-      explanation: Use п'ятдесят and шістдесят.
-    - sentence: один тисяча / один мільйон
-      error: один тисяча / один мільйон
-      answer: тисяча / мільйон
-      options:
-        - тисяча / мільйон
-        - один тисяча / один мільйон
-        - одне тисяча / одне мільйон
-      explanation: Use тисяча and мільйон as standalone chunks.
-- id: act-8
-  type: fill-in
-  title: Numeral spell-check
-  instruction: Choose the standard form.
-  items:
-    - sentence: У мене ___ книг.
-      answer: п'ять
-      options:
-        - п'ять
-        - пять
-        - пьять
-      explanation: П'ять has an apostrophe.
-    - sentence: У нашій групі ___ студентів.
-      answer: шість
-      options:
-        - шість
-        - шесть
-        - шисть
-      explanation: Use шість.
-    - sentence: На поличці ___ книжок.
-      answer: сім
-      options:
-        - сім
-        - сєм
-        - семь
-      explanation: Use сім.
-    - sentence: На картці ___ гривень.
-      answer: сімнадцять
-      options:
-        - сімнадцять
-        - сємнадцять
-        - семнадцять
-      explanation: Use сімнадцять.
-    - sentence: Мамі ___ років.
-      answer: п'ятдесят
-      options:
-        - п'ятдесят
-        - пятдесят
-        - пятьдесят
-      explanation: Use п'ятдесят.
-    - sentence: Дідусеві ___ років.
-      answer: дев'яносто
-      options:
-        - дев'яносто
-        - дев'ятдесят
-        - дев'яносят
-      explanation: Use дев'яносто.
-    - sentence: Зараз ___.
-      answer: пів на шосту
-      options:
-        - пів на шосту
-        - пол-шостого
-        - половина шостого
-      explanation: Use the Ukrainian time chunk пів на шосту.
-- id: act-9
-  type: translate
-  title: Choose the Ukrainian line
-  instruction: Choose the Ukrainian sentence that matches the English cue.
-  items:
-    - source: How much does the cake cost?
-      options:
-        - text: Скільки коштує торт?
-          correct: true
-        - text: Скільки є торт?
-          correct: false
-        - text: Який коштує торт?
-          correct: false
-      explanation: Use Скільки коштує...?
-    - source: Two hundred hryvnias.
-      options:
-        - text: Двісті гривень.
-          correct: true
-        - text: Два сто гривні.
-          correct: false
-        - text: Двісті гривні.
-          correct: false
-      explanation: Use двісті гривень.
-    - source: I am twenty-five years old.
-      options:
-        - text: Мені двадцять п'ять років.
-          correct: true
-        - text: Я маю двадцять п'ять років.
-          correct: false
-        - text: Я є двадцять п'ять років.
-          correct: false
-      explanation: Use Мені ... років.
-    - source: She is eighteen.
-      options:
-        - text: Їй вісімнадцять.
-          correct: true
-        - text: Вона має вісімнадцять.
-          correct: false
-        - text: Її вісімнадцять.
-          correct: false
-      explanation: Use Їй for the age chunk.
-    - source: My phone number is zero ninety-seven...
-      options:
-        - text: Мій номер телефону — нуль дев'яносто сім...
-          correct: true
-        - text: Мій номер телефону — о дев'яносто сім...
-          correct: false
-        - text: Мій номер телефону — нуль дев'ятдесят сім...
-          correct: false
-      explanation: Say нуль and дев'яносто.
-    - source: 250 hryvnias.
-      options:
-        - text: Двісті п'ятдесят гривень.
-          correct: true
-        - text: Двасто п'ятьдесять гривень.
-          correct: false
-        - text: Двісті п'ятдесят гривні.
-          correct: false
-      explanation: Use двісті п'ятдесят гривень.
-- id: act-10
-  type: true-false
-  title: Quick number checkpoint
-  instruction: Decide if the statement is right.
-  items:
-    - statement: П'ять зошитів.
-      answer: true
-      explanation: This is the safe 5+ chunk.
-    - statement: П'ять столи.
-      answer: false
-      explanation: Say п'ять столів.
-    - statement: Мені двадцять один рік.
-      answer: true
-      explanation: Numbers ending in 1 use рік, except 11.
-    - statement: Мені двадцять чотири роки.
-      answer: true
-      explanation: Numbers ending in 2-4 use роки, except 12-14.
-    - statement: Я маю двадцять років.
-      answer: false
-      explanation: Use Мені двадцять років.
-    - statement: Нуль дев'яносто сім.
-      answer: true
-      explanation: This is a natural phone-number group.
-    - statement: П'ятдесят гривень.
-      answer: true
-      explanation: П'ятдесят is the standard form for 50.
-    - statement: Один тисяча гривень.
-      answer: false
-      explanation: Use тисяча гривень.
+inline:
+  - id: act-1
+    type: quiz
+    title: Count 0-10
+    instruction: Choose the correct Ukrainian number or chunk.
+    items:
+      - prompt: 0
+        options:
+          - text: нуль
+            correct: true
+          - text: о
+            correct: false
+          - text: один
+            correct: false
+        explanation: Phone numbers use нуль, not English "oh."
+      - prompt: one pencil
+        options:
+          - text: один олівець
+            correct: true
+          - text: одна олівець
+            correct: false
+          - text: одне олівець
+            correct: false
+        explanation: Олівець is masculine.
+      - prompt: one pen
+        options:
+          - text: одна ручка
+            correct: true
+          - text: один ручка
+            correct: false
+          - text: одне ручка
+            correct: false
+        explanation: Ручка is feminine.
+      - prompt: one pastry
+        options:
+          - text: одне тістечко
+            correct: true
+          - text: один тістечко
+            correct: false
+          - text: одна тістечко
+            correct: false
+        explanation: Тістечко is neuter.
+      - prompt: two pencils
+        options:
+          - text: два олівці
+            correct: true
+          - text: дві олівці
+            correct: false
+          - text: два олівець
+            correct: false
+        explanation: Use два with masculine plural chunks.
+      - prompt: two pens
+        options:
+          - text: дві ручки
+            correct: true
+          - text: два ручки
+            correct: false
+          - text: дві ручка
+            correct: false
+        explanation: Use дві with feminine plural chunks.
+  - id: act-3
+    type: match-up
+    title: Prices
+    instruction: Match the price with the Ukrainian phrase.
+    pairs:
+      - left: 1 UAH
+        right: одна гривня
+      - left: 2 UAH
+        right: дві гривні
+      - left: 4 UAH
+        right: чотири гривні
+      - left: 5 UAH
+        right: п'ять гривень
+      - left: 50 UAH
+        right: п'ятдесят гривень
+      - left: 150 UAH
+        right: сто п'ятдесят гривень
+      - left: 200 UAH
+        right: двісті гривень
+      - left: 1000 UAH
+        right: тисяча гривень
+  - id: act-4
+    type: fill-in
+    title: Age chunks
+    instruction: Choose рік, роки, or років.
+    items:
+      - sentence: Мені двадцять один ___.
+        answer: рік
+        options:
+          - рік
+          - роки
+          - років
+        explanation: Numbers ending in 1 use рік, except 11.
+      - sentence: Моїй сестрі двадцять чотири ___.
+        answer: роки
+        options:
+          - роки
+          - рік
+          - років
+        explanation: Numbers ending in 2-4 use роки, except 12-14.
+      - sentence: Мені двадцять п'ять ___.
+        answer: років
+        options:
+          - років
+          - рік
+          - роки
+        explanation: Numbers ending in 5+ use років.
+      - sentence: Їй вісімнадцять ___.
+        answer: років
+        options:
+          - років
+          - роки
+          - рік
+        explanation: Teens use років.
+      - sentence: Бабусі вісімдесят ___.
+        answer: років
+        options:
+          - років
+          - роки
+          - рік
+        explanation: Eighty uses років.
+      - sentence: Скільки тобі ___?
+        answer: років
+        options:
+          - років
+          - год
+          - рік
+        explanation: Ask Скільки тобі років?
+  - id: act-5
+    type: quiz
+    title: Phone number groups
+    instruction: Choose the line that reads the number naturally.
+    items:
+      - prompt: 097
+        options:
+          - text: нуль дев'яносто сім
+            correct: true
+          - text: о дев'яносто сім
+            correct: false
+          - text: нуль дев'ятдесят сім
+            correct: false
+        explanation: Say нуль; 90 is дев'яносто.
+      - prompt: 45
+        options:
+          - text: сорок п'ять
+            correct: true
+          - text: чотиридесят п'ять
+            correct: false
+          - text: сорок пять
+            correct: false
+        explanation: 45 is сорок п'ять.
+      - prompt: 67
+        options:
+          - text: шістдесят сім
+            correct: true
+          - text: шістьдесять сім
+            correct: false
+          - text: шістдесят семь
+            correct: false
+        explanation: Use шістдесят сім.
+      - prompt: 321
+        options:
+          - text: три два один
+            correct: true
+          - text: триста двадцять один
+            correct: false
+          - text: три дві один
+            correct: false
+        explanation: Phone numbers may be read digit by digit in a group.
+      - prompt: 050
+        options:
+          - text: нуль п'ятдесят
+            correct: true
+          - text: о п'ятдесят
+            correct: false
+          - text: нуль п'ятьдесять
+            correct: false
+        explanation: Say нуль and п'ятдесят.
+workbook:
+  - type: fill-in
+    title: Write the number
+    instruction: Choose the Ukrainian written form.
+    items:
+      - sentence: 5 = ___
+        answer: п'ять
+        options:
+          - п'ять
+          - пять
+          - пьять
+        explanation: П'ять has an apostrophe.
+      - sentence: 6 = ___
+        answer: шість
+        options:
+          - шість
+          - шесть
+          - шисть
+        explanation: Use the Ukrainian form шість.
+      - sentence: 7 = ___
+        answer: сім
+        options:
+          - сім
+          - сєм
+          - семь
+        explanation: Use сім.
+      - sentence: 15 = ___
+        answer: п'ятнадцять
+        options:
+          - п'ятнадцять
+          - пятьнадцять
+          - п'ятьнадцять
+        explanation: П'ятнадцять keeps the apostrophe and the -надцять pattern.
+      - sentence: 17 = ___
+        answer: сімнадцять
+        options:
+          - сімнадцять
+          - сємнадцять
+          - семнадцять
+        explanation: Use сімнадцять.
+      - sentence: 18 = ___
+        answer: вісімнадцять
+        options:
+          - вісімнадцять
+          - вісемнадцять
+          - вісімнацять
+        explanation: Keep the full -надцять ending.
+      - sentence: 20 = ___
+        answer: двадцять
+        options:
+          - двадцять
+          - дванадцять
+          - двадцать
+        explanation: Двадцять is twenty.
+      - sentence: 47 = ___
+        answer: сорок сім
+        options:
+          - сорок сім
+          - чотиридесят сім
+          - сорок семь
+        explanation: Forty is сорок; seven is сім.
+      - sentence: 50 = ___
+        answer: п'ятдесят
+        options:
+          - п'ятдесят
+          - п'ятьдесять
+          - пятьдесят
+        explanation: Use п'ятдесят, without an extra soft sign.
+      - sentence: 90 = ___
+        answer: дев'яносто
+        options:
+          - дев'яносто
+          - дев'ятдесят
+          - дев'яносят
+        explanation: Ninety is дев'яносто.
+  - type: group-sort
+    title: 1 / 2-4 / 5+ chunks
+    instruction: Sort each noun chunk by the number pattern.
+    groups:
+      - label: 1
+        items:
+          - одна гривня
+          - один рік
+          - один олівець
+          - одне тістечко
+      - label: 2-4
+        items:
+          - дві гривні
+          - три роки
+          - чотири зошити
+          - дві ручки
+      - label: 5+
+        items:
+          - п'ять гривень
+          - двадцять років
+          - десять зошитів
+          - шість студентів
+  - type: error-correction
+    title: Repair number traps
+    instruction: Choose the standard Ukrainian correction.
+    items:
+      - sentence: п'ять столи / п'ять студентів (якщо вжито як Називний множини)
+        error: п'ять столи
+        answer: п'ять столів / п'ять студентів
+        options:
+          - п'ять столів / п'ять студентів
+          - п'ять столи / п'ять студенти
+          - п'ять стола / п'ять студент
+        explanation: With 5+, use the memorized chunk п'ять столів.
+      - sentence: Який час? / Що час?
+        error: Який час? / Що час?
+        answer: Котра година? / О котрій годині?
+        options:
+          - Котра година? / О котрій годині?
+          - Який час? / Що час?
+          - Скільки час?
+        explanation: For time, use the fixed formula Котра година?
+      - sentence: Я маю 20 років / Я є 20 років
+        error: Я маю 20 років / Я є 20 років
+        answer: Мені 20 років
+        options:
+          - Мені 20 років
+          - Я маю 20 років
+          - Я є 20 років
+        explanation: Age uses the chunk Мені ... років.
+      - sentence: перше січень / сьоме травень
+        error: перше січень / сьоме травень
+        answer: перше січня / сьоме травня
+        options:
+          - перше січня / сьоме травня
+          - перше січень / сьоме травень
+          - один січня / сім травня
+        explanation: Learn dates as fixed chunks for now.
+      - sentence: п'ятьдесять / шістьдесять
+        error: п'ятьдесять / шістьдесять
+        answer: п'ятдесят / шістдесят
+        options:
+          - п'ятдесят / шістдесят
+          - п'ятьдесять / шістьдесять
+          - п'ятдесять / шістьдесят
+        explanation: Use п'ятдесят and шістдесят.
+      - sentence: один тисяча / один мільйон
+        error: один тисяча / один мільйон
+        answer: тисяча / мільйон
+        options:
+          - тисяча / мільйон
+          - один тисяча / один мільйон
+          - одне тисяча / одне мільйон
+        explanation: Use тисяча and мільйон as standalone chunks.
+  - type: fill-in
+    title: Numeral spell-check
+    instruction: Choose the standard form.
+    items:
+      - sentence: У мене ___ книг.
+        answer: п'ять
+        options:
+          - п'ять
+          - пять
+          - пьять
+        explanation: П'ять has an apostrophe.
+      - sentence: У нашій групі ___ студентів.
+        answer: шість
+        options:
+          - шість
+          - шесть
+          - шисть
+        explanation: Use шість.
+      - sentence: На поличці ___ книжок.
+        answer: сім
+        options:
+          - сім
+          - сєм
+          - семь
+        explanation: Use сім.
+      - sentence: На картці ___ гривень.
+        answer: сімнадцять
+        options:
+          - сімнадцять
+          - сємнадцять
+          - семнадцять
+        explanation: Use сімнадцять.
+      - sentence: Мамі ___ років.
+        answer: п'ятдесят
+        options:
+          - п'ятдесят
+          - пятдесят
+          - пятьдесят
+        explanation: Use п'ятдесят.
+      - sentence: Дідусеві ___ років.
+        answer: дев'яносто
+        options:
+          - дев'яносто
+          - дев'ятдесят
+          - дев'яносят
+        explanation: Use дев'яносто.
+      - sentence: Зараз ___.
+        answer: пів на шосту
+        options:
+          - пів на шосту
+          - пол-шостого
+          - половина шостого
+        explanation: Use the Ukrainian time chunk пів на шосту.
+  - type: translate
+    title: Choose the Ukrainian line
+    instruction: Choose the Ukrainian sentence that matches the English cue.
+    items:
+      - source: How much does the cake cost?
+        options:
+          - text: Скільки коштує торт?
+            correct: true
+          - text: Скільки є торт?
+            correct: false
+          - text: Який коштує торт?
+            correct: false
+        explanation: Use Скільки коштує...?
+      - source: Two hundred hryvnias.
+        options:
+          - text: Двісті гривень.
+            correct: true
+          - text: Два сто гривні.
+            correct: false
+          - text: Двісті гривні.
+            correct: false
+        explanation: Use двісті гривень.
+      - source: I am twenty-five years old.
+        options:
+          - text: Мені двадцять п'ять років.
+            correct: true
+          - text: Я маю двадцять п'ять років.
+            correct: false
+          - text: Я є двадцять п'ять років.
+            correct: false
+        explanation: Use Мені ... років.
+      - source: She is eighteen.
+        options:
+          - text: Їй вісімнадцять.
+            correct: true
+          - text: Вона має вісімнадцять.
+            correct: false
+          - text: Її вісімнадцять.
+            correct: false
+        explanation: Use Їй for the age chunk.
+      - source: My phone number is zero ninety-seven...
+        options:
+          - text: Мій номер телефону — нуль дев'яносто сім...
+            correct: true
+          - text: Мій номер телефону — о дев'яносто сім...
+            correct: false
+          - text: Мій номер телефону — нуль дев'ятдесят сім...
+            correct: false
+        explanation: Say нуль and дев'яносто.
+      - source: 250 hryvnias.
+        options:
+          - text: Двісті п'ятдесят гривень.
+            correct: true
+          - text: Двасто п'ятьдесять гривень.
+            correct: false
+          - text: Двісті п'ятдесят гривні.
+            correct: false
+        explanation: Use двісті п'ятдесят гривень.
+  - type: true-false
+    title: Quick number checkpoint
+    instruction: Decide if the statement is right.
+    items:
+      - statement: П'ять зошитів.
+        answer: true
+        explanation: This is the safe 5+ chunk.
+      - statement: П'ять столи.
+        answer: false
+        explanation: Say п'ять столів.
+      - statement: Мені двадцять один рік.
+        answer: true
+        explanation: Numbers ending in 1 use рік, except 11.
+      - statement: Мені двадцять чотири роки.
+        answer: true
+        explanation: Numbers ending in 2-4 use роки, except 12-14.
+      - statement: Я маю двадцять років.
+        answer: false
+        explanation: Use Мені двадцять років.
+      - statement: Нуль дев'яносто сім.
+        answer: true
+        explanation: This is a natural phone-number group.
+      - statement: П'ятдесят гривень.
+        answer: true
+        explanation: П'ятдесят is the standard form for 50.
+      - statement: Один тисяча гривень.
+        answer: false
+        explanation: Use тисяча гривень.

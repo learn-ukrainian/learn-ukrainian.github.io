@@ -165,8 +165,6 @@ agreement (**біла**, **синя**, **старий**, **маленькі**), 
 (**ця**, **той**, **ці**, **це**), prices (**сто гривень**), and plural forms
 (**писанки маленькі**).
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Підсумок
 
 Make your own 6-10 sentence checkpoint text. Keep it personal and small. This
@@ -216,9 +214,3 @@ Historical and cultural facts stay precise when they appear later:
 the Holodomor is **1932-1933**, and Ukrainian literature examples belong to
 the Ukrainian canon. Do not present Russian-imperial figures as Ukrainian
 authors.
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

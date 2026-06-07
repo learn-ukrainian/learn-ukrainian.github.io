@@ -59,8 +59,6 @@ When you hear a price, first catch the number, then catch the money word.
 to translate every ending while someone is speaking.
 :::
 
-<!-- INJECT_ACTIVITY: act-2 -->
-
 ## Числа 1-20
 
 Learn **нуль** first. In phone numbers, the first digit is **нуль**, not the
@@ -242,8 +240,6 @@ number (**п'ятдесят шість**). The practical goal is clarity. Speak 
 pause between groups, and repeat the number back before you trust that you
 wrote it correctly.
 
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Number Traps
 
 Keep these repairs automatic:
@@ -274,8 +270,6 @@ produce them yet.
 One more trap is the money word itself. Use **гривня**, **гривні**,
 **гривень** for Ukrainian money. Keep other currencies out of these A1 price
 drills unless a later lesson gives you a specific travel context.
-
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ## Підсумок
 
@@ -309,9 +303,3 @@ A strong final routine has four lines:
 Say those lines until the chunks feel boring. That is the point: numbers should
 become quick enough that you can use them while buying bread, writing a phone
 number, or answering a simple personal question.
-
-<!-- INJECT_ACTIVITY: act-8 -->
-
-<!-- INJECT_ACTIVITY: act-9 -->
-
-<!-- INJECT_ACTIVITY: act-10 -->

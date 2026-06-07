@@ -189,8 +189,6 @@ Practice the contrast with one question: **Якого кольору небо?**
 clear, bright sky, answer **блакитне**. If you point to deep water, answer
 **синє**.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Зовнішність
 
 People are not always described by the same simple palette you use for objects.
@@ -217,8 +215,6 @@ Say:
 
 Do not copy English color idioms word for word. If you mean "I feel blue,"
 say **Мені сумно** or **У мене поганий настрій**.
-
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Підсумок
 
@@ -262,11 +258,3 @@ add counting; for now, one noun plus one color is the goal.
 End with one small spoken chain: **Якого кольору? Білий, біла, біле. Чорний,
 чорна, чорне. Синій, синя, синє.** Then choose one real object and say one
 sentence about it.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
-
-<!-- INJECT_ACTIVITY: act-9 -->
-
-<!-- INJECT_ACTIVITY: act-10 -->

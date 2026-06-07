@@ -165,8 +165,6 @@ Use **ті** for plural things farther away: **ті ручки**, **ті тел�
 "these," and **ті** means "those." Keep the question small:
 **Які ручки — ці чи ті?**
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Підсумок
 
 Most of this module stays in the nominative:
@@ -196,8 +194,6 @@ You may also see old or emphatic forms:
 Use **цей / ця / це / той / та / те** actively. Treat the other forms as
 recognition items for reading, songs, or later lessons.
 
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ### Repair traps
 
 Keep these repairs close:
@@ -217,10 +213,6 @@ habit now. **Мене звати** comes from your introduction module, and
 After prepositions, Ukrainian pronouns often change in a way English does not:
 **з ним**, **у нього**, **у неї**. That is later material. For today, simply
 recognize **Я розмовляю з ним** as the safe chunk, not **з його**.
-
-<!-- INJECT_ACTIVITY: act-8 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Mini world check
 
