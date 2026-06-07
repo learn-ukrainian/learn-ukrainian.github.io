@@ -1,13 +1,22 @@
-# Reading Ukrainian
+# Читаємо українською
 
-This module turns the alphabet from Module 1 into a reading tool. You still do
-not need long Ukrainian sentences. The goal is smaller and more useful: see a
-word, find its vowel sounds, split it into syllables, and read it without
-guessing from English spelling habits.
+**ма — мо — му — ми. ма́ма. молоко́.** — syllables and first words.
 
-You already practiced counting **склади** in Module 1 with the rule **one vowel
-sound = one склад**. Here we use that same skill more deliberately: not just to
-count syllables, but as the first step for reading any new Ukrainian word.
+Printed Ukrainian comes first. English support comes after the eye has found
+the letters, vowel sounds, and syllables.
+
+Use one lawful listening pass before you read fast. Open the public ULP
+[Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/)
+only as a listen-and-repeat support. Do not download, transcribe, remix, or
+reuse the audio. Listen for the vowel, point to it on this page, then read the
+printed word.
+
+You already know one rule from Module 1:
+
+**one vowel sound = one склад**
+
+Here you use it as a reading tool: see a word, find its vowel sounds, split it
+into syllables, and read it without guessing from another alphabet.
 
 By the end, you can:
 
@@ -15,23 +24,23 @@ By the end, you can:
 - read simple open syllables such as **ма**, **мо**, **му**, **ми**;
 - keep the six simple vowel sounds clear;
 - explain what **Я, Ю, Є, Ї** do at beginner level;
-- read short practice words such as **ма́ма**, **молоко́**, **день**,
-  **я́блуко**, **люди́на**, and **ву́лиця**;
+- read **ма́ма**, **молоко́**, **день**, **я́блуко**, **люди́на**, and
+  **ву́лиця**;
 - avoid the first reading traps: splitting **дж** and **дз**, ignoring **ь**,
-  blurring **о**, and losing the **й** sound in **ї**.
+  blurring **о**, and losing **й** in **ї**.
 
-## Syllables
+## Склади
 
-Start every reading attempt with one question:
+**склад** — syllable.
 
-**Where are the vowel sounds?**
+Start every reading attempt with one Ukrainian question:
+
+**Де голосні звуки?** — Where are the vowel sounds?
 
 In Ukrainian, every syllable has a vowel sound. A single vowel can be a whole
-syllable, and a consonant by itself cannot make a syllable. This is the school
-rule behind beginner reading: count the vowel sounds, and you have the number
-of **склади́**.
+syllable, and a consonant by itself cannot make a syllable.
 
-| Word | Vowel letters to notice | Syllables |
+| Слово́ | Голосні to notice | Склади́ |
 | --- | --- | --- |
 | **день** | **е** | 1 |
 | **ма́ма** | **а + а** | 2 |
@@ -39,11 +48,10 @@ of **склади́**.
 | **ву́лиця** | **у + и + я** | 3 |
 
 Use a simple body check. Put a hand lightly under your chin and say the word
-slowly. Each open vowel pulse makes the chin move. That movement is not the
-whole science of Ukrainian, but it is a good beginner check before you write or
-choose an answer.
+slowly. Each open vowel pulse makes the chin move. That movement is a
+beginner check before you write or choose an answer.
 
-Now build from syllables instead of naming letters one by one:
+Build from syllables instead of naming letters one by one:
 
 | Letter path | Reading path |
 | --- | --- |
@@ -55,34 +63,29 @@ Now build from syllables instead of naming letters one by one:
 Then join syllables:
 
 **ма + ма = ма́ма**
+
 **мо + ло + ко = молоко́**
 
-This is why Ukrainian early reading feels different from English. Do not ask,
-"What English word does this look like?" Ask, "Where are the vowel sounds, and
-what syllables do they make?"
-
 :::tip
-When a workbook item asks for **склад**, it means "syllable." Find the vowel
-sound first. That is the anchor.
+**склад** — syllable. Find the vowel sound first. That is the anchor.
 :::
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-## Vowel Letters
+## Голосні лі́тери
 
-Ukrainian has six simple vowel sounds:
+**А О У Е И І** — six simple vowel letters.
+
+The sounds are:
 
 **[а] [о] [у] [е] [и] [і]**
 
-The simple vowel letters are:
+Read them as clean sounds. In **молоко́**, every **о** stays **о**:
 
-**А О У Е И І**
+**мо-ло-ко́**
 
-Read them as clean sounds. Do not reduce **о** into an English-style unclear
-vowel. In **молоко́**, every **о** stays **о**:
-
-**молоко́** has three syllables. Say it slowly as three open beats, but keep
-the written word whole on the page.
+Say it slowly as three open beats, but keep the written word whole on the
+page.
 
 Now add the four special vowel letters:
 
@@ -90,30 +93,32 @@ Now add the four special vowel letters:
 
 At beginner level, use this two-job rule:
 
-| Letter | At the start of a word or after a vowel/apostrophe | After a consonant |
+| Лі́тера | At the start of a word or after a vowel/apostrophe | After a consonant |
 | --- | --- | --- |
 | **Я** | **[йа]** as in **я́блуко** | softens the consonant + **[а]** |
 | **Ю** | **[йу]** | softens the consonant + **[у]** |
 | **Є** | **[йе]** | softens the consonant + **[е]** |
 | **Ї** | always **[йі]** | always **[йі]** |
 
-That last line matters. **Ї** is not a softening letter. It is always two
-sounds: **[йі]**. In **Украї́на**, read **ї** as **[йі]**.
+**Ї** is not a softening letter. It is always two sounds: **[йі]**. In
+**Украї́на**, read **ї** as **[йі]**.
 
 Use three safe examples:
 
-| Word | Meaning | What to read |
+| Слово́ | English support | What to read |
 | --- | --- | --- |
 | **я́блуко** | apple | **я** starts the word: **[йа]** |
 | **люди́на** | person | **ю** follows **л** and marks softness + **[у]** |
 | **пі́сня** | song | **я** follows **н** and marks softness + **[а]** |
 
-You do not need to describe every phonetic detail yet. You need a safe reading
-habit: look at the position of **Я, Ю, Є, Ї**, then read the word slowly.
+You do not need every phonetic detail yet. Look at the position of
+**Я, Ю, Є, Ї**, then read the word slowly.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## Reading Words
+## Читаємо слова́
+
+**ма́ма. та́то. вода́. ка́ша.**
 
 Use this three-step reading routine:
 
@@ -123,7 +128,7 @@ Use this three-step reading routine:
 
 Try the routine with easy words:
 
-| Word | Split | Meaning |
+| Слово́ | Split | English support |
 | --- | --- | --- |
 | **ма́ма** | 2 syllables | mother |
 | **та́то** | 2 syllables | father |
@@ -132,9 +137,9 @@ Try the routine with easy words:
 | **ву́лиця** | 3 syllables | street |
 | **столи́ця** | 3 syllables | capital |
 
-Longer words are not magic. They are the same routine with more vowel sounds:
+Longer words use the same routine with more vowel sounds:
 
-| Word | Split | Beginner note |
+| Слово́ | Split | Beginner note |
 | --- | --- | --- |
 | **університе́т** | 5 syllables | read from left to right |
 | **бібліоте́ка** | 5 syllables | **о** is its own vowel pulse |
@@ -142,7 +147,7 @@ Longer words are not magic. They are the same routine with more vowel sounds:
 
 Names of Ukrainian cities are also good reading practice:
 
-| City | Split | Note |
+| Мі́сто | Split | Note |
 | --- | --- | --- |
 | **Ки́їв** | 2 syllables | **ї** is **[йі]** |
 | **Львів** | 1 syllable | one vowel sound |
@@ -150,8 +155,7 @@ Names of Ukrainian cities are also good reading practice:
 | **Дніпро́** | 2 syllables | consonant cluster, still two vowels |
 | **Полта́ва** | 3 syllables | steady open syllables |
 
-There are three signs or combinations to notice now and study more deeply in
-Module 3:
+Three signs or combinations return in Module 3:
 
 | Form | Beginner reading habit |
 | --- | --- |
@@ -160,55 +164,61 @@ Module 3:
 | **ДЖ / ДЗ** | one joined sound, not two broken sounds |
 
 Read **день** with soft **н**, not with an extra vowel after it. Read
-**сім'я́** with a clear break before **я**. Read **джерело́** with joined
+**сім'я́** with a clear **й** before **я**. Read **джерело́** with joined
 **дж**.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-## Reading Traps
+## Пастки читання
 
-English can push you toward the wrong habit. Use these safety checks:
+**молоко́. день. Украї́на. джерело́.**
+
+Use these safety checks:
 
 | Trap | Safer Ukrainian habit |
 | --- | --- |
 | Reading letter by letter | Read by syllables: three beats in **молоко́** |
-| Reducing unstressed **о** | Keep **о** clean every time |
+| Blurring unstressed **о** | Keep **о** clear every time |
 | Reading **дж** as **д + ж** | Join it as one sound |
 | Ignoring **ь** | Make the previous consonant soft |
 | Reading **ї** as plain **і** | Read **ї** as **[йі]** |
 | Treating apostrophe as decoration | Keep the following **й** sound |
 
-Keep the Ukrainian system independent. Do not explain **И**, **І**, **Г**, or
-**О** through another language's alphabet. Build the category from Ukrainian
-examples: **ми**, **ді́ти**, **гора́**, **молоко́**.
+Build the categories from Ukrainian examples: **ми**, **ді́ти**, **гора́**,
+**молоко́**. Do not use another language's alphabet as the shortcut.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Textbook Check
+## Друк, зошит, перевірка
+
+**Друк:** **ма́ма**, **молоко́**, **день**, **Ки́їв**.
+
+**Зошит:** the same known words written by you, a teacher, or a tutor.
+
+Recognition comes before long handwriting production. Ask a native Ukrainian
+teacher or tutor to write one known word in their own hand. Your job is only to
+match it to the printed word and read it aloud. Do not copy or trace a
+third-party handwriting sample.
+
+| Друк | Notebook recognition prompt |
+| --- | --- |
+| **ма́ма** | Which printed word matches the handwritten **ма́ма**? |
+| **молоко́** | Which printed word matches the handwritten **молоко́**? |
+| **день** | Which printed word has the final soft sign? |
+| **Ки́їв** | Which printed word has **ї**? |
 
 Use a short partner routine when possible. Student A points to the word.
 Student B says only the number of vowel sounds. Then both students read the
-word aloud. If you are alone, cover the English meaning first, count the vowel
-sounds, and read before you check the translation. This keeps the page from
-becoming a memorized list of English meanings. The reading skill is the target.
+word aloud. If you are alone, cover the English support first, count the vowel
+sounds, and read before you check meaning.
 
-When a word feels long, do not panic. Long Ukrainian words are usually long
-because they have more syllables, not because the spelling has become
-unpredictable. **Університе́т** has five vowel sounds. **Бібліоте́ка** also has
-five vowel sounds. The same routine works for both: find the vowels, count the
-beats, then read smoothly. You are not expected to use these words in free
-conversation yet. They are training weights for your eyes and mouth.
-
-You can also mark your confidence after each word:
+When a word feels long, slow down:
 
 | Mark | Meaning |
 | --- | --- |
 | **1** | I can find the vowel sounds. |
 | **2** | I can count the syllables. |
 | **3** | I can read the word aloud smoothly. |
-
-The workbook repeats easy words and a few longer words on purpose. Repetition
-is how the alphabet becomes automatic.
 
 Before you leave the lesson tab, check that you can do these things:
 
@@ -217,11 +227,11 @@ Before you leave the lesson tab, check that you can do these things:
 - count three vowel sounds in **ву́лиця**;
 - say why **Ї** is always **[йі]**;
 - read **я́блуко**, **люди́на**, **пі́сня**, and **день** slowly;
-- keep **о** clean in **молоко́** and **столи́ця**;
+- keep **о** clear in **молоко́** and **столи́ця**;
 - say that **дж** and **дз** are joined reading units;
-- avoid Russian or English shortcuts when you describe Ukrainian sounds.
+- match a known printed word to a notebook version before copying it.
 
-The workbook now gives you short recognition and reading checks. Use the same
-routine every time: vowel sounds first, syllables second, smooth reading third.
+The workbook repeats easy words and a few longer words on purpose. Repetition
+is how the alphabet becomes automatic.
 
 <!-- INJECT_ACTIVITY: act-5 -->
