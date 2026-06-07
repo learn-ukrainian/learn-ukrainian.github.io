@@ -101,6 +101,12 @@ DASHBOARD_LOADS = {
         "/api/runtime/recent?limit=50",
         "/api/runtime/auth",
     ],
+    "routing.html": [
+        "/api/state/routing-budget",
+        "/api/runtime/agents",
+        "/api/runtime/usage?days=7",
+        "/api/delegate/tasks?limit=100",
+    ],
     "track-health.html": [
         "/api/state/build-status",
         "/api/state/enrichment-status",
@@ -157,6 +163,7 @@ BUDGETS = {
     "/api/runtime/auth": 1.5,
     "/api/runtime/recent?limit=50": 1.5,
     "/api/runtime/usage?days=7": 1.5,
+    "/api/state/routing-budget": 1.5,
     "/api/state/build-status": 1.5,
     "/api/state/enrichment-status": 1.5,
     "/api/state/issues": 1.5,

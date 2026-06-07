@@ -132,6 +132,7 @@ class TestApiEndpoints:
         "/api/state/pipeline-versions",
         "/api/state/research-coverage",
         "/api/state/review-coverage",
+        "/api/state/routing-budget",
         "/api/state/summary",
         "/api/state/weak-points",
     }
