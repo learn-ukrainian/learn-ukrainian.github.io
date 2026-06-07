@@ -113,6 +113,7 @@ const API_TIMEOUT_MS = 5000;
 let refreshTimer = null;
 let selectedTrack = null;
 let tracksCache = [];
+let operationalTrackIds = null;
 
 function escapeHtml(value) {
   const node = document.createElement('span');
@@ -169,6 +170,13 @@ function initLogFilter() {
   select.innerHTML = options.map(track => `<option value="${track}">${track || 'All tracks'}</option>`).join('');
 }
 
+function operationalTrackIdSet(summary) {
+  if (!summary?.tracks) return null;
+  return new Set(Object.entries(summary?.tracks || {})
+    .filter(([, track]) => track.module_source !== 'plans-fallback')
+    .map(([track]) => track));
+}
+
 function renderProgress(tracks) {
   tracksCache = tracks.slice();
   initLogFilter();
@@ -211,8 +219,17 @@ async function selectTrack(track) {
 
 async function loadProgress() {
   try {
-    const data = await fetchJson('/api/wiki/status');
-    const tracks = Array.isArray(data.tracks) ? data.tracks.slice().sort((a, b) => b.pct - a.pct || a.track.localeCompare(b.track)) : [];
+    const [data, summary] = await Promise.all([
+      fetchJson('/api/wiki/status'),
+      fetchJson('/api/state/summary?fresh=true').catch(() => null),
+    ]);
+    operationalTrackIds = operationalTrackIdSet(summary);
+    let tracks = Array.isArray(data.tracks) ? data.tracks.slice() : [];
+    if (operationalTrackIds) {
+      tracks = tracks.filter(track => operationalTrackIds.has(track.track));
+    }
+    tracks.sort((a, b) => b.pct - a.pct || a.track.localeCompare(b.track));
+    if (selectedTrack && !tracks.some(track => track.track === selectedTrack)) selectedTrack = null;
     if (!selectedTrack && tracks.length) selectedTrack = tracks[0].track;
     renderProgress(tracks);
     setBanner('progress-banner', '');
@@ -262,7 +279,10 @@ async function loadBuildLog() {
   if (filter) params.set('track', filter);
   try {
     const data = await fetchJson(`/api/wiki/build-log?${params.toString()}`);
-    const events = Array.isArray(data.events) ? data.events : [];
+    let events = Array.isArray(data.events) ? data.events : [];
+    if (!filter && operationalTrackIds) {
+      events = events.filter(event => operationalTrackIds.has(event.track));
+    }
     if (!events.length) {
       document.getElementById('log-content').innerHTML = '<div class="empty">No build log events for the selected filter</div>';
     } else {
