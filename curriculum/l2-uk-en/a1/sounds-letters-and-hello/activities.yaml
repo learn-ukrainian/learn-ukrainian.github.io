@@ -1,53 +1,53 @@
-version: "1.0"
-module: "sounds-letters-and-hello"
-level: "a1"
+version: '1.0'
+module: 'sounds-letters-and-hello'
+level: 'a1'
 
 inline:
   - id: act-1
     type: quiz
-    title: Sound or letter
+    title: Звук чи лі́тера
     instruction: Choose the correct anchor.
     items:
-      - question: What do we hear and pronounce?
+      - question: Звук — що ми робимо?
         options:
-          - лі́тера
-          - Звук
-          - Слово
+          - бачимо на сторі́нці
+          - чуємо й вимовля́ємо
+          - ставимо апо́строф
         correct: 1
         explanation: Звук is what we hear and pronounce.
-      - question: What do we see in writing?
+      - question: Лі́тера — що ми робимо?
         options:
-          - Звук
-          - лі́тера
-          - Вимова
-        correct: 1
+          - бачимо й пишемо
+          - чуємо без сторі́нки
+          - рахуємо як склад
+        correct: 0
         explanation: Лі́тера is the written sign.
-      - question: How many letters are in the Ukrainian alphabet?
+      - question: Українська абе́тка — скільки лі́тер?
         options:
-          - "38"
-          - "33"
-          - "6"
+          - '38'
+          - '33'
+          - '6'
         correct: 1
         explanation: The standard Ukrainian alphabet has 33 letters.
-      - question: Why can 33 letters point to more sounds?
+      - question: Я, Ю, Є, Ї — чому вони особливі?
         options:
-          - Some letters have more than one job
-          - English spelling changes Ukrainian sounds
-          - Every letter is silent
+          - мають більше ніж одну роботу
+          - завжди мовчать
+          - завжди є при́голосними
         correct: 0
         explanation: Some Ukrainian letters can point to more than one sound or modify a nearby sound.
-      - question: Which sign has no sound of its own?
+      - question: Ь — що правильно?
         options:
-          - А
-          - Ь
-          - О
+          - має власний голосни́й звук
+          - не має власного звука
+          - це літера О
         correct: 1
         explanation: Ь has no sound of its own.
-      - question: Which word has three vowel sounds?
+      - question: Молоко́ — скільки голосних звуків?
         options:
-          - Приві́т
-          - молоко́
-          - Мов
+          - два
+          - три
+          - один
         correct: 1
         explanation: Молоко́ has three vowel sounds, о + о + о.
 
@@ -76,29 +76,29 @@ inline:
     instruction: З'єднай літеру з її звуком або функцією.
     pairs:
       - left: І
-        right: "[і]"
+        right: '[і]'
       - left: В
-        right: "[в]"
+        right: '[в]'
       - left: А
-        right: "[а]"
+        right: '[а]'
       - left: О
-        right: "[о]"
+        right: '[о]'
       - left: У
-        right: "[у]"
+        right: '[у]'
       - left: Н
-        right: "[н]"
+        right: '[н]'
       - left: Ч
-        right: "[ч]"
+        right: '[ч]'
       - left: Ь
-        right: softens the previous consonant
+        right: м'якшить попередній при́голосний
       - left: Я
-        right: "[йа] or softens the previous consonant"
+        right: "[йа] або м'якшить попередній при́голосний"
       - left: Ї
-        right: "[йі]"
+        right: '[йі]'
       - left: Щ
-        right: "[шч]"
+        right: '[шч]'
       - left: Д
-        right: "[д]"
+        right: '[д]'
 
   - id: act-4
     type: watch-and-repeat
@@ -207,8 +207,8 @@ inline:
 
   - id: act-5
     type: fill-in
-    title: Short dialogue
-    instruction: Choose the phrase that completes the first dialogue.
+    title: Короткий діало́г
+    instruction: Choose the phrase that completes the Ukrainian line.
     items:
       - sentence: Приві́т! ___ спра́ви?
         answer: Як
@@ -228,13 +228,13 @@ inline:
           - А тебе́
           - А у тебе́
           - А тобі́
-      - sentence: "___ тебе́ бачити! (woman speaker)"
+      - sentence: '___ тебе́ ба́чити! (говорить жінка)'
         answer: Рада
         options:
           - Рада
           - Радий
           - Раді
-      - sentence: "___ тебе́ бачити! (man speaker)"
+      - sentence: '___ тебе́ ба́чити! (говорить чоловік)'
         answer: Радий
         options:
           - Радий
@@ -242,30 +242,28 @@ inline:
           - Раді
 
 workbook:
-  - id: wb-1
-    type: true-false
-    title: Quick sound checks
-    instruction: Decide whether each review statement is true or false.
+  - type: true-false
+    title: Швидка переві́рка звуків
+    instruction: Choose true or false.
     items:
-      - statement: Звук is what you hear and pronounce.
+      - statement: Звук — це те, що ми чуємо й вимовля́ємо.
         correct: true
-        explanation: The learner hears and pronounces a sound.
-      - statement: Ь has its own vowel sound.
+        explanation: Звук is what the learner hears and pronounces.
+      - statement: Ь має власний голосни́й звук.
         correct: false
         explanation: Ь has no sound of its own; it softens the previous consonant.
-      - statement: Молоко́ has three vowel sounds.
+      - statement: Молоко́ має три голосні звуки.
         correct: true
         explanation: The vowels are о + о + о.
-      - statement: До́брий день is a greeting phrase.
+      - statement: До́брий день — це вітальна фра́за.
         correct: true
         explanation: It is one of the first ready-made greetings in the lesson.
-      - statement: In this module, Щ is taught as [ш].
+      - statement: У цьому модулі Щ = [ш].
         correct: false
-        explanation: This module teaches Щ as [шч].
+        explanation: Here, Щ = [шч].
 
-  - id: wb-2
-    type: order
-    title: Build the greeting exchange
+  - type: order
+    title: Склади діало́г
     instruction: Put the mini-dialogue in a natural order.
     items:
       - А у тебе́?
@@ -278,32 +276,15 @@ workbook:
       - 2
       - 0
 
-  - id: wb-3
-    type: fill-in
-    title: Pick the right phrase
-    instruction: Choose the greeting or closing phrase that fits each moment.
-    items:
-      - sentence: "Morning arrival at school: ___!"
-        answer: До́брого ра́нку
-        options:
-          - До́брого ра́нку
-          - До поба́чення
-          - На все до́бре
-      - sentence: "Casual hello to one friend: ___!"
-        answer: Приві́т
-        options:
-          - Приві́т
-          - До́брий ве́чір
-          - До поба́чення
-      - sentence: "Midday greeting to a teacher: ___!"
-        answer: До́брий день
-        options:
-          - До́брий день
-          - Приві́т
-          - На все до́бре
-      - sentence: "Leaving the room: ___!"
-        answer: До поба́чення
-        options:
-          - До поба́чення
-          - Як спра́ви
-          - Мене́ зва́ти
+  - type: match-up
+    title: Друк і зошит
+    instruction: Match the printed card to the notebook recognition cue.
+    pairs:
+      - left: 'друк: П п'
+        right: 'зошит: teacher writes п'
+      - left: 'друк: М м'
+        right: 'зошит: teacher writes м'
+      - left: 'друк: Приві́т'
+        right: 'зошит: приві́т'
+      - left: 'друк: ма́ма'
+        right: 'зошит: ма́ма'
