@@ -185,7 +185,6 @@ The contrast also repairs a common learner line:
 **Я хочу воду**. Both are useful. The first uses an infinitive. The second uses
 the direct object **воду**.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Підсумок
 
@@ -226,9 +225,3 @@ being squeezed into English or Russian frames.
 
 For self-check, name three things you eat today and three things you drink.
 Say them aloud with **я їм** and **я п'ю**.
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

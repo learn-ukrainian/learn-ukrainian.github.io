@@ -194,7 +194,6 @@ Use Ukrainian cafe words, not Russian or hybrid service language.
 The phrase **кава із собою** is the clean order. You may hear other forms in
 the world, but this course gives you the Ukrainian standard to use.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Підсумок
 
@@ -231,9 +230,3 @@ Self-check:
 | **<!-- bad -->ПрошУ<!-- /bad -->** as "please" | **ПрОшу** as a polite inserted word |
 | **<!-- bad -->[балєт], [проблєма]<!-- /bad -->** | **[балет], [проблема]** |
 | **<!-- bad -->Здрастуйте! / Пока!<!-- /bad -->** | **Добрий день! / До побачення!** |
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

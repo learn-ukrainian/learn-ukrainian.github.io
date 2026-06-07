@@ -218,11 +218,3 @@ Repair these common learner forms:
 | age with possession | **Йому 20 років.** |
 | forced present copula | **Я студент.** |
 | family-name term | **Яке твоє прізвище?** |
-
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
