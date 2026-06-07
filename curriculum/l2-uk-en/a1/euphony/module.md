@@ -161,9 +161,7 @@ When you are unsure, read the whole phrase aloud once. Do not translate "in" or
 lets the phrase move smoothly.
 :::
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Підсумок
 
@@ -205,7 +203,3 @@ Use the same four-part check with your own lines: **Я живу в Києві**,
 **у місті**, **в офісі**, **у парку**, **в аптеці**. If the line feels crowded,
 try the other tiny word and read it again. This is normal practice, not a
 mistake.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

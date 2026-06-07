@@ -179,7 +179,6 @@ with **де**, **куди**, and **звідки** as conjunctions yet.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Діалог
 
@@ -216,7 +215,6 @@ In English use **Kyiv**, **Lviv**, **Kharkiv**, and **Odesa**. Do not use
 Russian-imperial spellings as course forms. Keep the country phrase precise:
 **в Україні**, **в Україну**, **з України**.
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -251,7 +249,3 @@ Final self-check:
 Now write your own six-line place checkpoint. Include one current place, one
 destination, one source, one transport chunk, one direction word, and one
 Ukrainian city name.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
