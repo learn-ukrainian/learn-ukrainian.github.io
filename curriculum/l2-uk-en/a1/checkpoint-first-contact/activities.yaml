@@ -1,10 +1,10 @@
 inline:
   - id: act-1
     type: quiz
-    title: First-contact readiness
-    instruction: Choose the safe Ukrainian line for the checkpoint situation.
+    title: Готовність до знайомства
+    instruction: Обери безпечний український рядок для ситуації.
     items:
-      - prompt: You greet a peer at the start of class.
+      - prompt: Ти вітаєш ровесника на початку заняття.
         options:
           - text: Привіт!
             correct: true
@@ -12,8 +12,8 @@ inline:
             correct: false
           - text: Мені теж.
             correct: false
-        explanation: Привіт is the informal peer greeting.
-      - prompt: You greet a teacher or administrator neutrally.
+        explanation: Привіт — неформальне привітання для ровесника.
+      - prompt: Ти нейтрально вітаєш викладача або адміністратора.
         options:
           - text: Добрий день!
             correct: true
@@ -21,8 +21,8 @@ inline:
             correct: false
           - text: Мене звати!
             correct: false
-        explanation: Добрий день is the safe neutral formal greeting.
-      - prompt: You introduce your name.
+        explanation: Добрий день — безпечне нейтральне формальне привітання.
+      - prompt: Ти називаєш своє ім'я.
         options:
           - text: Мене звати Олена.
             correct: true
@@ -30,8 +30,8 @@ inline:
             correct: false
           - text: Я звати Олена.
             correct: false
-        explanation: Мене звати... is the canonical first-name chunk.
-      - prompt: You say that you are a student.
+        explanation: Мене звати... — головний блок для імені.
+      - prompt: Ти кажеш, що ти студент.
         options:
           - text: Я студент.
             correct: true
@@ -39,8 +39,8 @@ inline:
             correct: false
           - text: Мене студент.
             correct: false
-        explanation: Ukrainian usually omits the present-tense copula in this identity line.
-      - prompt: You say your age.
+        explanation: У такому реченні українська зазвичай не додає є.
+      - prompt: Ти кажеш свій вік.
         options:
           - text: Мені 20 років.
             correct: true
@@ -48,8 +48,8 @@ inline:
             correct: false
           - text: Я 20 роки.
             correct: false
-        explanation: Age uses Мені ... років.
-      - prompt: You close the first meeting politely.
+        explanation: Вік подаємо блоком Мені ... років.
+      - prompt: Ти ввічливо завершуєш перше знайомство.
         options:
           - text: Дуже приємно. До побачення!
             correct: true
@@ -57,11 +57,11 @@ inline:
             correct: false
           - text: Звідки ти? Мені теж!
             correct: false
-        explanation: Дуже приємно and До побачення close the exchange.
+        explanation: Дуже приємно і До побачення завершують розмову.
   - id: act-2
     type: match-up
-    title: Questions and answers
-    instruction: Match each first-contact question with the natural answer.
+    title: Питання і відповіді
+    instruction: З'єднай питання з природною відповіддю.
     pairs:
       - left: Як тебе звати?
         right: Мене звати Богдан.
@@ -81,8 +81,8 @@ inline:
         right: Мені теж.
   - id: act-3
     type: fill-in
-    title: Complete the review text
-    instruction: Choose the missing word or chunk in the self-introduction.
+    title: Доповни текст
+    instruction: Обери пропущене слово або блок у самопрезентації.
     items:
       - sentence: Привіт! ___ звати Марко.
         answer: Мене
@@ -90,121 +90,121 @@ inline:
           - Мене
           - Моє
           - Мій
-        explanation: Мене звати... is the safe name chunk.
+        explanation: Мене звати... — безпечний блок для імені.
       - sentence: Моє ___ Коваленко.
         answer: прізвище
         options:
           - прізвище
           - фамілія
           - професія
-        explanation: Прізвище is the standard Ukrainian word for surname.
+        explanation: Прізвище — стандартне українське слово для родового імені.
       - sentence: Я ___ Києва.
         answer: з
         options:
           - з
           - у
           - це
-        explanation: Я з... gives origin.
+        explanation: Я з... дає походження.
       - sentence: Я ___.
         answer: студент
         options:
           - студент
           - є студент
           - мене студент
-        explanation: The A1 identity sentence does not need є.
+        explanation: Речення A1 про ідентичність не потребує є.
       - sentence: ___ 20 років.
         answer: Мені
         options:
           - Мені
           - Я маю
           - Мене
-        explanation: Age uses Мені ... років.
+        explanation: Вік подаємо блоком Мені ... років.
       - sentence: У мене ___ сестра.
         answer: є
         options:
           - є
           - звати
           - з
-        explanation: У мене є... is the I-have chunk.
+        explanation: У мене є... — блок, щоб сказати, що хтось або щось є в мене.
       - sentence: Це ___ мама.
         answer: моя
         options:
           - моя
           - мій
           - моє
-        explanation: Мама is feminine, so use моя.
+        explanation: Мама — жіночого роду, тому моя.
       - sentence: Дуже ___ познайомитися!
         answer: приємно
         options:
           - приємно
           - прізвище
           - звати
-        explanation: Дуже приємно познайомитися closes a first meeting.
+        explanation: Дуже приємно познайомитися завершує знайомство.
   - id: act-4
     type: quiz
-    title: Fix common A1.1 traps
-    instruction: Choose the normative Ukrainian form.
+    title: Виправ A1.1 пастки
+    instruction: Обери нормативну українську форму.
     items:
-      - prompt: Name introduction
+      - prompt: Представлення імені
         options:
           - text: Мене звати Джон.
             correct: true
           - text: Моє ім'я є Джон.
             correct: false
-        explanation: Ukrainian introduces a name with Мене звати...
-      - prompt: Identity sentence
+        explanation: Українська представляє ім'я через Мене звати...
+      - prompt: Речення ідентичності
         options:
           - text: Я студент.
             correct: true
           - text: Я є студент.
             correct: false
-        explanation: Present identity normally omits є.
-      - prompt: Age sentence
+        explanation: Теперішня ідентичність зазвичай не додає є.
+      - prompt: Речення про вік
         options:
           - text: Мені 20 років.
             correct: true
           - text: Я маю 20 років.
             correct: false
-        explanation: Age uses Мені ... років.
-      - prompt: Direct address
+        explanation: Вік подаємо блоком Мені ... років.
+      - prompt: Пряме звертання
         options:
           - text: Привіт, Максиме!
             correct: true
           - text: Привіт, Максим!
             correct: false
-        explanation: Direct address uses the vocative form in the safe example.
-      - prompt: Safe greeting
+        explanation: Пряме звертання має кличну форму в безпечному прикладі.
+      - prompt: Безпечне привітання
         options:
           - text: Добрий день! Мене звати Оксана.
             correct: true
           - text: Здрастуйте! Мене звати Оксана.
             correct: false
-        explanation: Добрий день is the safe standard greeting.
-      - prompt: Surname
+        explanation: Добрий день — безпечне стандартне привітання.
+      - prompt: Прізвище
         options:
           - text: Моє прізвище Сміт.
             correct: true
           - text: Моя фамілія Сміт.
             correct: false
-        explanation: Прізвище is the standard Ukrainian word for surname.
-      - prompt: Farewell
+        explanation: Прізвище — стандартне українське слово.
+      - prompt: Прощання
         options:
           - text: До побачення!
             correct: true
           - text: Пока!
             correct: false
-        explanation: До побачення is the safe standard farewell.
-      - prompt: Noun gender habit
+        explanation: До побачення — безпечне стандартне прощання.
+      - prompt: Звичка до роду іменника
         options:
           - text: Вивчення слова разом із його родом
             correct: true
           - text: Ігнорування роду іменника
             correct: false
-        explanation: Store a Ukrainian noun with its gender cues from the beginning.
+        explanation: Запам'ятовуй український іменник разом із підказками роду.
   - id: act-5
     type: fill-in
-    title: Full dialogue blanks
-    instruction: Complete the peer language-course dialogue.
+    title: Пропуски в діалозі
+    instruction: Доповни діалог на мовних курсах.
     items:
       - sentence: ___! Мене звати Богдан.
         answer: Привіт
@@ -212,62 +212,62 @@ inline:
           - Привіт
           - Прізвище
           - Років
-        explanation: Привіт opens a peer exchange.
+        explanation: Привіт відкриває розмову ровесників.
       - sentence: Привіт, ___! Мене звати Соломія.
         answer: Богдане
         options:
           - Богдане
           - Богдан
           - Богдана
-        explanation: Богдане is the vocative direct-address form.
+        explanation: Богдане — клична форма прямого звертання.
       - sentence: Дуже приємно, ___.
         answer: Соломіє
         options:
           - Соломіє
           - Соломія
           - Соломію
-        explanation: Соломіє is the vocative direct-address form.
+        explanation: Соломіє — клична форма прямого звертання.
       - sentence: ___ ти? Я з Дніпра.
         answer: Звідки
         options:
           - Звідки
           - Хто
           - Чий
-        explanation: Звідки ти? asks where someone is from.
+        explanation: Звідки ти? питає, звідки людина.
       - sentence: Моя майбутня ___ — вчителька.
         answer: професія
         options:
           - професія
           - прізвище
           - адреса
-        explanation: Професія names a profession or occupation.
+        explanation: Професія називає фах або заняття.
       - sentence: У мене є сестра. ___ звати Ірина.
         answer: Її
         options:
           - Її
           - Його
           - Я
-        explanation: Її fits a sister.
+        explanation: Її підходить до сестри.
       - sentence: У мене є брат. ___ звати Назар.
         answer: Його
         options:
           - Його
           - Її
           - Вона
-        explanation: Його fits a brother.
+        explanation: Його підходить до брата.
       - sentence: Дуже приємно ___!
         answer: познайомитися
         options:
           - познайомитися
           - походження
           - допомогти
-        explanation: Дуже приємно познайомитися is a first-meeting closure.
+        explanation: Дуже приємно познайомитися завершує першу зустріч.
   - id: act-6
     type: quiz
-    title: Put the meeting in order
-    instruction: Choose the next line in the first-contact exchange.
+    title: Порядок знайомства
+    instruction: Обери наступний рядок у розмові.
     items:
-      - prompt: 'Opening line: Привіт! Мене звати Богдан.'
+      - prompt: 'Перший рядок: Привіт! Мене звати Богдан.'
         options:
           - text: Привіт, Богдане! Мене звати Соломія.
             correct: true
@@ -275,8 +275,8 @@ inline:
             correct: false
           - text: Мені 20 років.
             correct: false
-        explanation: The other person answers with a greeting and name.
-      - prompt: 'Line: Дуже приємно, Соломіє.'
+        explanation: Інша людина відповідає привітанням та іменем.
+      - prompt: 'Рядок: Дуже приємно, Соломіє.'
         options:
           - text: Мені теж. Звідки ти?
             correct: true
@@ -284,8 +284,8 @@ inline:
             correct: false
           - text: Це моя гривня.
             correct: false
-        explanation: Мені теж gives the reciprocal answer and keeps the exchange moving.
-      - prompt: 'Line: Я з Дніпра. А ти?'
+        explanation: Мені теж дає взаємну відповідь і рухає розмову далі.
+      - prompt: 'Рядок: Я з Дніпра. А ти?'
         options:
           - text: Я з Тернополя.
             correct: true
@@ -293,8 +293,8 @@ inline:
             correct: false
           - text: Це мій брат.
             correct: false
-        explanation: A ти? asks the same origin question back.
-      - prompt: 'Line: У мене є брат.'
+        explanation: А ти? повертає питання про походження.
+      - prompt: 'Рядок: У мене є брат.'
         options:
           - text: Дуже приємно. До побачення!
             correct: true
@@ -302,11 +302,11 @@ inline:
             correct: false
           - text: Я маю брат років.
             correct: false
-        explanation: A polite closing fits after the family line.
+        explanation: Після родинного рядка пасує ввічливе завершення.
 workbook:
   - type: quiz
-    title: Checkpoint quick translation
-    instruction: Choose the English meaning of each Ukrainian line.
+    title: Швидкий переклад
+    instruction: Обери англійське значення кожного українського рядка.
     items:
       - prompt: Мене звати Олена.
         options:
@@ -316,7 +316,7 @@ workbook:
             correct: false
           - text: Olena is my surname.
             correct: false
-        explanation: Мене звати... gives a name.
+        explanation: Мене звати... називає ім'я.
       - prompt: Моє прізвище Мельник.
         options:
           - text: My surname is Melnyk.
@@ -325,7 +325,7 @@ workbook:
             correct: false
           - text: My family is Melnyk.
             correct: false
-        explanation: Прізвище means surname.
+        explanation: Прізвище означає родове ім'я.
       - prompt: Я з Канади.
         options:
           - text: I am from Canada.
@@ -334,7 +334,7 @@ workbook:
             correct: false
           - text: I have Canada.
             correct: false
-        explanation: Я з... gives origin.
+        explanation: Я з... подає походження.
       - prompt: Я студентка.
         options:
           - text: I am a female student.
@@ -343,7 +343,7 @@ workbook:
             correct: false
           - text: My name is student.
             correct: false
-        explanation: Identity uses the noun directly here.
+        explanation: У цьому реченні ідентичність виражена іменником без є.
       - prompt: У мене є сестра.
         options:
           - text: I have a sister.
@@ -352,7 +352,7 @@ workbook:
             correct: false
           - text: This is my sister.
             correct: false
-        explanation: У мене є... is the I-have chunk.
+        explanation: У мене є... — блок для наявності.
       - prompt: Мені теж.
         options:
           - text: Me too.
@@ -361,10 +361,10 @@ workbook:
             correct: false
           - text: Goodbye.
             correct: false
-        explanation: Мені теж gives the reciprocal answer.
+        explanation: Мені теж дає взаємну відповідь.
   - type: match-up
-    title: Review vocabulary map
-    instruction: Match the Ukrainian checkpoint word with its English cue.
+    title: Карта лексики
+    instruction: З'єднай українське контрольне слово з англійською підказкою.
     pairs:
       - left: ім'я
         right: first name
@@ -383,8 +383,8 @@ workbook:
       - left: адреса
         right: address
   - type: fill-in
-    title: Digital chat etiquette
-    instruction: Complete the short course-chat exchange.
+    title: Етикет у чаті
+    instruction: Доповни коротку розмову в чаті курсу.
     items:
       - sentence: ___! Мене звати Ліна.
         answer: Привіт
@@ -392,32 +392,32 @@ workbook:
           - Привіт
           - Пока
           - Прізвище
-        explanation: Привіт opens an informal chat.
+        explanation: Привіт відкриває неформальний чат.
       - sentence: Я ___ Одеси.
         answer: з
         options:
           - з
           - є
           - моя
-        explanation: Я з... gives origin.
+        explanation: Я з... подає походження.
       - sentence: Привіт, ___!
         answer: Ліно
         options:
           - Ліно
           - Ліна
           - Ліну
-        explanation: Ліно is the vocative form in direct address.
+        explanation: Ліно — клична форма прямого звертання.
       - sentence: Дуже ___!
         answer: приємно
         options:
           - приємно
           - професія
           - адреса
-        explanation: Дуже приємно is a polite first-contact response.
+        explanation: Дуже приємно — ввічлива відповідь під час першого знайомства.
       - sentence: Мені ___.
         answer: теж
         options:
           - теж
           - звати
           - словник
-        explanation: Мені теж means me too.
+        explanation: Мені теж означає взаємну відповідь.

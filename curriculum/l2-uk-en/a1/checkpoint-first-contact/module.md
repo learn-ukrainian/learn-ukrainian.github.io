@@ -1,4 +1,7 @@
-# Checkpoint: First Contact
+# Підсумок: перший контакт
+
+**Приві́т! Мене́ зва́ти Богдан. Я з Дніпра́.** — Hi! My name is Bohdan.
+I am from Dnipro.
 
 This checkpoint is a working rehearsal for the first six modules. Nothing here
 needs a new grammar rule. You are checking whether the first-contact pieces can
@@ -21,22 +24,13 @@ By the end, you can:
 
 The checkpoint keeps a Ukrainian-first frame. Ukrainian letters, stress, and
 soft signs are explained as Ukrainian habits. The page never asks you to compare
-them to Russian letters or Russian pronunciation. Russian-influenced greetings
-and calques appear only as wrong choices inside correction practice.
+them to Russian letters or Russian pronunciation. Non-target greetings and
+calques appear only as wrong choices inside correction practice.
 
 The roadmap behind this checkpoint has six learner steps: sound and alphabet
 control, greeting chunks, self-introduction, noun gender habits, vocative
 address, and modern chat etiquette. Use that order as a checklist, not as new
 grammar to memorize.
-
-<!--
-Крок 1: Базова фонетика та українська абетка.
-Крок 2: Етикетні формули вітання та прощання як монолітні блоки; чунки; Доброго ранку; завершувати етикетними фразами на кшталт «Радий/а знайомству».
-Крок 3: Алгоритм знайомства та базова самопрезентація; якщо представляєтеся самі, чітко назвіть своє повне ім’я та прізвище; Як ся маєш?; Як ваші справи?
-Крок 4: Категорія роду українських іменників.
-Крок 5: Запровадження кличного відмінка як вияву глибокої поваги; А1; самобутньою ознакою української мови; особливість кличного відмінка; у яких життєвих ситуаціях ми використовуємо іменники в кличному відмінку.
-Крок 6: Адаптація до сучасних цифрових засобів комунікації та іншомовної лексики; спілкуватися будь з ким на великій відстані; розширення політичних, економічних і культурних зв’язків України з іноземними (передовсім з англомовними) країнами.
--->
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -44,14 +38,14 @@ grammar to memorize.
 
 You now have six small toolkits.
 
-| Toolkit | You can do this now |
+| Опора | Що ти вже робиш |
 | --- | --- |
-| Sounds and letters | recognize Ukrainian letters, vowels, **ґ**, **ї**, **є**, **и**, **і**, **ь**, and the apostrophe |
-| Reading | read short words and syllables slowly but confidently |
-| Special signs | hear that **сім'я**, **бур'ян**, and **день** are not spelled decoration; the sign changes the sound |
-| Stress and melody | mark the stressed syllable and use a rising yes/no question melody |
-| Who am I? | say your name, origin, nationality, profession, and age |
-| My family | name close family members and use **У мене є...** |
+| **Звуки́ й лі́тери** | recognize Ukrainian letters, vowels, **ґ**, **ї**, **є**, **и**, **і**, **ь**, and the apostrophe |
+| **Чита́ння** | read short words and syllables slowly but confidently |
+| **Спеціа́льні зна́ки** | hear that **сім'я́**, **бур'я́н**, and **день** are not spelled decoration |
+| **На́голос і мело́дія** | mark the stressed syllable and use a rising yes/no question melody |
+| **Хто я?** | say your name, origin, nationality, profession, and age |
+| **Моя́ сім'я́** | name close family members and use **У ме́не є...** |
 
 A checkpoint is not a memory trick. It is a task: can you meet one new person
 and keep the exchange moving? Use short sentences. Use the chunks exactly. If
@@ -59,17 +53,17 @@ you hesitate, return to the sentence frame instead of translating from English.
 
 Keep these blocks as whole blocks:
 
-| English need | Ukrainian block |
+| Український блок | English support |
 | --- | --- |
-| What is your name? | **Як тебе звати?** |
-| My name is... | **Мене звати...** |
-| Nice to meet you. | **Дуже приємно.** |
-| Me too. | **Мені теж.** |
-| Where are you from? | **Звідки ти?** |
-| I am from... | **Я з...** |
-| I am a student. | **Я студент / студентка.** |
-| I am 20 years old. | **Мені 20 років.** |
-| I have... | **У мене є...** |
+| **Як тебе́ зва́ти?** | What is your name? |
+| **Мене́ зва́ти...** | My name is... |
+| **Ду́же приє́мно.** | Nice to meet you. |
+| **Мені́ теж.** | Me too. |
+| **Зві́дки ти?** | Where are you from? |
+| **Я з...** | I am from... |
+| **Я студе́нт / студе́нтка.** | I am a student. |
+| **Мені́ 20 ро́ків.** | I am 20 years old. |
+| **У ме́не є...** | I have... |
 
 Formal address still exists, but this checkpoint uses a peer language-course
 setting, so the main dialogue stays in **ти**. Do not mix **ти** and **Ви** in
@@ -89,15 +83,27 @@ Read this text aloud. Use the letter and stress habits from the script modules.
 The content is only the A1.1 world: name, place, role, family, and a simple
 closing.
 
-<DialogueBox uk="Привіт! Мене звати Марко." en="Hi! My name is Marko." />
-<DialogueBox uk="Моє прізвище Коваленко." en="My surname is Kovalenko." />
-<DialogueBox uk="Я з Києва, але зараз я студент у Львові." en="I am from Kyiv, but now I am a student in Lviv." />
-<DialogueBox uk="Мені 20 років." en="I am 20 years old." />
-<DialogueBox uk="Моя професія зараз — студент." en="My profession or role now is student." />
-<DialogueBox uk="У мене є мама, тато і сестра." en="I have a mom, a dad, and a sister." />
-<DialogueBox uk="Моя мама — вчителька, а мій тато — інженер." en="My mom is a teacher, and my dad is an engineer." />
-<DialogueBox uk="Мою сестру звати Оля." en="My sister's name is Olia." />
-<DialogueBox uk="Дуже приємно познайомитися!" en="Very nice to meet you!" />
+```text
+Приві́т! Мене́ зва́ти Марко́.
+Моє́ прі́звище Ковале́нко.
+Я з Ки́єва, але́ за́раз я студе́нт у Льво́ві.
+Мені́ 20 ро́ків.
+Моя́ профе́сія за́раз — студе́нт.
+У ме́не є ма́ма, та́то і сестра́.
+Моя́ ма́ма — вчи́телька, а мій та́то — інжене́р.
+Мою́ сестру́ зва́ти О́ля.
+Ду́же приє́мно познайо́митися!
+```
+
+Support after the text:
+
+| Українська | English support |
+| --- | --- |
+| **Моє́ прі́звище Ковале́нко.** | My surname is Kovalenko. |
+| **Я з Ки́єва.** | I am from Kyiv. |
+| **Мені́ 20 ро́ків.** | I am 20 years old. |
+| **У ме́не є ма́ма, та́то і сестра́.** | I have a mom, dad, and sister. |
+| **Ду́же приє́мно познайо́митися!** | Very nice to meet you! |
 
 Now check the reading decisions.
 
@@ -124,14 +130,14 @@ letters. That habit matters more than speed.
 The grammar checkpoint has six safe patterns. They are small, but they cover a
 real first meeting.
 
-| Pattern | Safe line | Watch out |
+| Опора | Безпечний рядок | Не треба зараз |
 | --- | --- | --- |
-| **Це + noun** | **Це Богдан. Це моя сестра.** | Do not overbuild the sentence. |
-| Identity without **є** | **Я студент. Вона лікарка.** | Do not say **Я є студент** in this A1 sentence. |
-| Name | **Мене звати Соломія.** | Do not build **Моє ім'я є...** from English. |
-| Origin | **Я з Канади. Я зі Львова.** | Use **з / зі** as the learned chunk. |
-| Age | **Мені 20 років.** | Do not use the English "have years" shape. |
-| Possession | **У мене є брат.** | Learn the whole chunk, not a verb for "have." |
+| **Це + noun** | **Це Богдан. Це моя́ сестра́.** | Do not overbuild the sentence. |
+| Identity without **є** | **Я студе́нт. Вона́ лі́карка.** | Do not say **Я є студент** in this A1 sentence. |
+| Name | **Мене́ зва́ти Соломі́я.** | Do not build **Моє́ ім'я́ є...** from English. |
+| Origin | **Я з Кана́ди. Я зі Льво́ва.** | Use **з / зі** as the learned chunk. |
+| Age | **Мені́ 20 ро́ків.** | Do not use the English "have years" shape. |
+| Possession | **У ме́не є брат.** | Learn the whole chunk, not a verb for "have." |
 
 For family and identity, the owned word chooses the possessive form:
 
@@ -148,9 +154,9 @@ with its gender when that helps you later: **словник** is masculine,
 system today, but you do need the habit of learning a noun with its form cues.
 
 The safe social vocabulary also stays native Ukrainian. Use **прізвище** for
-surname, not the colloquial or Russian-influenced **фамілія**. Use **тато** or
-**батько** for father in this course context, not the Russian-influenced
-**папа**. Use **Добрий день** or **Вітаю** when you need a neutral hello, and
+surname in official-style lines, not colloquial **фамілія**. Use **тато** or
+**батько** for father in this course context; keep **папа** as recognition, not
+the active A1 default. Use **Добрий день** or **Вітаю** when you need a neutral hello, and
 **До побачення** for goodbye.
 
 <!-- INJECT_ACTIVITY: act-4 -->
@@ -161,30 +167,44 @@ This is the full first-contact task. Read it once for meaning, then read it
 again aloud. The setting is a break on the first day of Ukrainian courses, so
 both people use **ти**.
 
-<DialogueBox uk="Богдан: Привіт! Мене звати Богдан." en="Bohdan: Hi! My name is Bohdan." />
-<DialogueBox uk="Соломія: Привіт, Богдане! Мене звати Соломія." en="Solomiia: Hi, Bohdane! My name is Solomiia." />
-<DialogueBox uk="Богдан: Дуже приємно, Соломіє." en="Bohdan: Very nice to meet you, Solomiie." />
-<DialogueBox uk="Соломія: Мені теж. Звідки ти?" en="Solomiia: Me too. Where are you from?" />
-<DialogueBox uk="Богдан: Я з Дніпра. А ти?" en="Bohdan: I am from Dnipro. And you?" />
-<DialogueBox uk="Соломія: Я з Тернополя." en="Solomiia: I am from Ternopil." />
-<DialogueBox uk="Богдан: Ти студентка?" en="Bohdan: Are you a student?" />
-<DialogueBox uk="Соломія: Так, я студентка. Моя майбутня професія — вчителька." en="Solomiia: Yes, I am a student. My future profession is teacher." />
-<DialogueBox uk="Богдан: Класно. Я студент, майбутній інженер." en="Bohdan: Nice. I am a student, a future engineer." />
-<DialogueBox uk="Соломія: У тебе є брати чи сестри?" en="Solomiia: Do you have brothers or sisters?" />
-<DialogueBox uk="Богдан: Так, у мене є сестра. Її звати Ірина." en="Bohdan: Yes, I have a sister. Her name is Iryna." />
-<DialogueBox uk="Соломія: У мене є брат. Його звати Назар." en="Solomiia: I have a brother. His name is Nazar." />
-<DialogueBox uk="Богдан: Дуже приємно познайомитися." en="Bohdan: Very nice to meet you." />
-<DialogueBox uk="Соломія: Мені теж. До побачення!" en="Solomiia: Me too. Goodbye!" />
+```text
+Богда́н: Приві́т! Мене́ зва́ти Богда́н.
+Соломі́я: Приві́т, Богда́не! Мене́ зва́ти Соломі́я.
+Богда́н: Ду́же приє́мно, Соломі́є.
+Соломі́я: Мені́ теж. Зві́дки ти?
+Богда́н: Я з Дніпра́. А ти?
+Соломі́я: Я з Терно́поля.
+Богда́н: Ти студе́нтка?
+Соломі́я: Так, я студе́нтка. Моя́ майбу́тня профе́сія — вчи́телька.
+Богда́н: Кла́сно. Я студе́нт, майбу́тній інжене́р.
+Соломі́я: У те́бе є брати́ чи се́стри?
+Богда́н: Так, у ме́не є сестра́. Її́ зва́ти Іри́на.
+Соломі́я: У ме́не є брат. Його́ зва́ти Наза́р.
+Богда́н: Ду́же приє́мно познайо́митися.
+Соломі́я: Мені́ теж. До поба́чення!
+```
+
+Support after the dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Приві́т, Богда́не!** | Hi, Bohdan! |
+| **Ду́же приє́мно, Соломі́є.** | Very nice to meet you, Solomiia. |
+| **Я з Дніпра́.** | I am from Dnipro. |
+| **У те́бе є брати́ чи се́стри?** | Do you have brothers or sisters? |
+| **До поба́чення!** | Goodbye! |
 
 Use this as your graduation speech for A1.1:
 
-<DialogueBox uk="Привіт! Мене звати Олена." en="Hi! My name is Olena." />
-<DialogueBox uk="Моє прізвище Мельник." en="My surname is Melnyk." />
-<DialogueBox uk="Я з Канади. Я канадка." en="I am from Canada. I am Canadian." />
-<DialogueBox uk="Я студентка. Моя майбутня професія — лікарка." en="I am a student. My future profession is doctor." />
-<DialogueBox uk="Моя мама — вчителька, а мій тато — інженер." en="My mom is a teacher, and my dad is an engineer." />
-<DialogueBox uk="У мене є одна сестра." en="I have one sister." />
-<DialogueBox uk="Дуже приємно познайомитися!" en="Very nice to meet you!" />
+```text
+Приві́т! Мене́ зва́ти Оле́на.
+Моє́ прі́звище Ме́льник.
+Я з Кана́ди. Я кана́дка.
+Я студе́нтка. Моя́ майбу́тня профе́сія — лі́карка.
+Моя́ ма́ма — вчи́телька, а мій та́то — інжене́р.
+У ме́не є одна́ сестра́.
+Ду́же приє́мно познайо́митися!
+```
 
 If you want a shorter answer, keep five sentences: name, origin, role, one
 family line, and closing. That is enough for the checkpoint.
@@ -198,10 +218,20 @@ start with a greeting, name yourself, ask one clear question, and close
 politely. Do not hide behind emoji-only messages when the task is language
 practice.
 
-<DialogueBox uk="Привіт! Мене звати Ліна. Я з Одеси. А тебе?" en="Hi! My name is Lina. I am from Odesa. And you?" />
-<DialogueBox uk="Привіт, Ліно! Мене звати Том. Я з Канади." en="Hi, Lino! My name is Tom. I am from Canada." />
-<DialogueBox uk="Дуже приємно!" en="Very nice to meet you!" />
-<DialogueBox uk="Мені теж." en="Me too." />
+```text
+Лі́на: Приві́т! Мене́ зва́ти Лі́на. Я з Оде́си. А тебе́?
+Том: Приві́т, Лі́но! Мене́ зва́ти Том. Я з Кана́ди.
+Лі́на: Ду́же приє́мно!
+Том: Мені́ теж.
+```
+
+Support after the chat:
+
+| Українська | English support |
+| --- | --- |
+| **А тебе́?** | And you? |
+| **Приві́т, Лі́но!** | Hi, Lina! |
+| **Мені́ теж.** | Me too. |
 
 This chat task also reviews the borrowed-word habit from the wiki brief:
 modern Ukrainian can use international words, but your core first-contact
@@ -209,6 +239,17 @@ grammar should stay Ukrainian. Say **чат** if the setting is a chat, but stil
 say **Мене звати...**, **Я з...**, and **До побачення**.
 
 <!-- INJECT_ACTIVITY: act-6 -->
+
+## Слу́хай, зошит, підсумок
+
+For lawful listening, use Ukrainian Lessons Podcast Episode 10 as listen-only
+review support. Listen for short chunks you already know, repeat them, and
+return to this page. Do not copy or transcribe paid material.
+
+For handwriting recognition, ask a teacher, tutor, or classmate to write an
+original five-line card with **ім'я́**, **прі́звище**, **Кана́да**,
+**сестра́**, and **До поба́чення**. First compare the notebook card with the
+printed model; then write your own final card.
 
 ## Підсумок
 
@@ -228,11 +269,13 @@ Use this final self-check before you move on.
 
 Your final model can be simple:
 
-<DialogueBox uk="Добрий день! Мене звати Алекс." en="Good afternoon! My name is Alex." />
-<DialogueBox uk="Я з Канади. Я студент." en="I am from Canada. I am a student." />
-<DialogueBox uk="Мені 20 років." en="I am 20 years old." />
-<DialogueBox uk="У мене є брат." en="I have a brother." />
-<DialogueBox uk="Дуже приємно познайомитися!" en="Very nice to meet you!" />
+```text
+До́брий день! Мене́ зва́ти Алекс.
+Я з Кана́ди. Я студе́нт.
+Мені́ 20 ро́ків.
+У ме́не є брат.
+Ду́же приє́мно познайо́митися!
+```
 
 Use the workbook for extra practice: quick translation, vocabulary mapping,
 and digital chat etiquette. Passing the workbook means the A1.1 first-contact
