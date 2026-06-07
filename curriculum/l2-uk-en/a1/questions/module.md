@@ -144,8 +144,6 @@ after a preposition.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Підсумок
 
 You now have three small tools for everyday questions. First, start with a
@@ -187,9 +185,3 @@ it with rising intonation. If the sentence is negative, find the verb and put
 Keep the active set small. Produce **хто, що, де, куди, коли, чому, як** and
 **не + verb**. Recognize **чи**, **який**, **чий**, **котрий**, and the split
 shape **ні в що**, but do not make them your main production task today.
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

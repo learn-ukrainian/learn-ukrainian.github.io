@@ -140,10 +140,6 @@ the morning story useful without forcing you to invent new grammar. A good A1
 answer can be direct: **Спочатку я прокидаюся о восьмій. Потім вмиваюся. Після
 цього снідаю. Нарешті йду в університет.**
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Підсумок
 
 The active pattern is regular verb form plus **-ся**: **я прокидаюся**,
@@ -182,7 +178,3 @@ For your own A1 story, keep the order simple:
 Do not explain these endings through any other language. Ukrainian has its own
 clear pattern: choose the Ukrainian verb form, add **-ся / -сь**, and pronounce
 the final cluster smoothly.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

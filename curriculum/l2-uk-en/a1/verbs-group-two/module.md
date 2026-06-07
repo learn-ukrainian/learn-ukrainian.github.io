@@ -148,8 +148,6 @@ short present-tense chunks:
 <DialogueBox uk="Вони стоять." en="They are standing." />
 <DialogueBox uk="Вони сидять." en="They are sitting." />
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ### More useful Group Two chunks
 
 Use these in small sentences:
@@ -168,8 +166,6 @@ You already know **любити** from preferences. Now you can recognize why
 <DialogueBox uk="Ти просиш каву?" en="Are you asking for coffee?" />
 <DialogueBox uk="Ми вчимо українську." en="We are learning Ukrainian." />
 <DialogueBox uk="Вони люблять музику." en="They like music." />
-
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ### Recognition-only exceptions
 
@@ -191,8 +187,6 @@ The recognition-only list protects your active practice. You can understand
 **вони сплять** or **ти їси** when you meet them, but your speaking task stays
 with the regular Group Two chunks above. This keeps the lesson useful without
 turning every exception into a table.
-
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ## Підсумок
 
@@ -224,5 +218,3 @@ Repair the common traps by choosing the ready Ukrainian form:
 | old identity pattern | **Я студент.** |
 | English-style name phrase | **Мене звати Томас.** |
 | English-style age phrase | **Мені 20 років.** |
-
-<!-- INJECT_ACTIVITY: act-8 -->

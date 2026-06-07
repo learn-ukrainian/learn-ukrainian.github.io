@@ -153,8 +153,6 @@ productive tools are smaller:
 One more clean Ukrainian chunk matters: **брати участь**. If you mean "take
 part," use **Я беру участь**. Do not build the habit **Я приймаю участь**.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Підсумок
 
 Keep two preference lanes separate.
@@ -184,9 +182,3 @@ Build a short personal answer:
 | wrong favorite word with **спорт** | **Це мій улюблений спорт.** | use **улюблений** for favorite things |
 | **Моє улюблене хобі...** | **Моє захоплення...** / **Моє хобі...** | avoid the tautology |
 | **Я приймаю участь.** | **Я беру участь.** | Ukrainian uses **брати участь** |
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
