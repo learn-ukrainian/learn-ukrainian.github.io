@@ -1,219 +1,217 @@
-- id: act-1
-  type: count-syllables
-  title: Count vowel sounds
-  instruction: Count the vowel sounds. Each vowel sound makes one склад.
-  max_count: 5
-  items:
-  - word: день
-    correct: 1
-  - word: ма́ма
-    correct: 2
-  - word: молоко́
-    correct: 3
-  - word: ву́лиця
-    correct: 3
-  - word: бібліоте́ка
-    correct: 5
-  - word: Украї́на
-    correct: 4
-- id: act-2
-  type: match-up
-  title: Vowel letter jobs
-  instruction: Match each letter with its beginner reading job.
-  pairs:
-  - left: А
-    right: clean [а]
-  - left: О
-    right: clean [о]
-  - left: И
-    right: clean [и]
-  - left: І
-    right: clean [і]
-  - left: Я at word start
-    right: '[йа]'
-  - left: Ї
-    right: always [йі]
-- id: act-3
-  type: divide-words
-  title: Split into склади́
-  instruction: Divide each word into syllables.
-  items:
-  - word: мама
-    answer: ма ма
-  - word: молоко
-    answer: мо ло ко
-  - word: вулиця
-    answer: ву ли ця
-  - word: столиця
-    answer: сто ли ця
-  - word: людина
-    answer: лю ди на
-  - word: бібліотека
-    answer: бі блі о те ка
-- id: act-4
-  type: error-correction
-  title: Reading traps
-  instruction: Choose the safer Ukrainian reading habit.
-  items:
-  - sentence: Do not read молоко as м[а]локо.
-    error: м[а]локо
-    correction: молоко
-    options:
-    - молоко
-    - blurred о
-    explanation: Ukrainian о stays clean; read молоко with three open beats.
-  - sentence: Do not read дж as two broken sounds.
-    error: two broken sounds
-    correction: one joined sound
-    options:
-    - one joined sound
-    - д plus ж
-    explanation: ДЖ marks one joined reading unit in words such as джерело.
-  - sentence: Do not read Ї as plain І.
-    error: plain І
-    correction: '[йі]'
-    options:
-    - '[йі]'
-    - '[і]'
-    explanation: Ї is always [йі].
-  - sentence: Do not add a vowel after день.
-    error: add a vowel
-    correction: soften н and stop
-    options:
-    - soften н and stop
-    - add і after нь
-    explanation: Ь has no sound of its own; it softens the previous consonant.
-- id: act-5
-  type: quiz
-  title: Textbook check
-  instruction: Choose the correct answer.
-  items:
-  - prompt: What is a склад?
-    options:
-    - text: a syllable
-      correct: true
-    - text: a letter
-      correct: false
-    - text: a greeting
-      correct: false
-    explanation: A склад is a syllable.
-  - prompt: How many syllables are in молоко?
-    options:
-    - text: '3'
-      correct: true
-    - text: '2'
-      correct: false
-    - text: '1'
-      correct: false
-    explanation: молоко has three vowel sounds and three syllables.
-  - prompt: Which letter is always [йі]?
-    options:
-    - text: Ї
-      correct: true
-    - text: І
-      correct: false
-    - text: И
-      correct: false
-    explanation: Ї is always [йі].
-- id: act-6
-  type: group-sort
-  title: One, two, or three syllables?
-  instruction: Sort the words by syllable count.
-  groups:
-  - label: One syllable
+inline:
+  - id: act-1
+    type: count-syllables
+    title: Count vowel sounds
+    instruction: Count the vowel sounds. Each vowel sound makes one склад.
+    max_count: 5
     items:
-    - день
-    - Львів
-  - label: Two syllables
+      - word: день
+        correct: 1
+      - word: ма́ма
+        correct: 2
+      - word: молоко́
+        correct: 3
+      - word: ву́лиця
+        correct: 3
+      - word: бібліоте́ка
+        correct: 5
+      - word: Украї́на
+        correct: 4
+  - id: act-2
+    type: match-up
+    title: Vowel letter jobs
+    instruction: Match each letter with its beginner reading job.
+    pairs:
+      - left: А
+        right: clean [а]
+      - left: О
+        right: clean [о]
+      - left: И
+        right: clean [и]
+      - left: І
+        right: clean [і]
+      - left: Я at word start
+        right: '[йа]'
+      - left: Ї
+        right: always [йі]
+  - id: act-3
+    type: divide-words
+    title: Split into склади́
+    instruction: Divide each word into syllables.
     items:
-    - ма́ма
-    - та́то
-    - Ки́їв
-  - label: Three syllables
+      - word: мама
+        answer: ма ма
+      - word: молоко
+        answer: мо ло ко
+      - word: вулиця
+        answer: ву ли ця
+      - word: столиця
+        answer: сто ли ця
+      - word: людина
+        answer: лю ди на
+      - word: бібліотека
+        answer: бі блі о те ка
+  - id: act-4
+    type: error-correction
+    title: Reading traps
+    instruction: Choose the safer Ukrainian reading habit.
     items:
-    - молоко́
-    - ву́лиця
-    - столи́ця
-- id: act-7
-  type: true-false
-  title: Reading facts
-  instruction: Choose true or false.
-  items:
-  - statement: Every Ukrainian syllable needs a vowel sound.
-    correct: true
-    explanation: The vowel sound is the core of the syllable.
-  - statement: Ї sometimes softens the previous consonant.
-    correct: false
-    explanation: Ї is always [йі].
-  - statement: In молоко, о stays clean.
-    correct: true
-    explanation: Do not reduce о to an unclear English-style vowel.
-  - statement: ДЖ and ДЗ should be read as joined units.
-    correct: true
-    explanation: They are digraph reading units.
-- id: act-8
-  type: translate
-  title: Reading words
-  instruction: Choose the English meaning.
-  items:
-  - source: ма́ма
-    options:
-    - text: mother
-      correct: true
-    - text: street
-      correct: false
-    - text: milk
-      correct: false
-    explanation: Ма́ма means mother.
-  - source: молоко́
-    options:
-    - text: milk
-      correct: true
-    - text: apple
-      correct: false
-    - text: day
-      correct: false
-    explanation: Молоко́ means milk.
-  - source: ву́лиця
-    options:
-    - text: street
-      correct: true
-    - text: person
-      correct: false
-    - text: capital
-      correct: false
-    explanation: Ву́лиця means street.
-  - source: я́блуко
-    options:
-    - text: apple
-      correct: true
-    - text: song
-      correct: false
-    - text: mirror
-      correct: false
-    explanation: Я́блуко means apple.
-- id: act-9
-  type: watch-and-repeat
-  title: Vowel reading pass
-  instruction: Watch the alphabet overview again, then repeat the simple vowels.
-  items:
-  - letter: А
-    sound: '[а]'
-    word: ма́ма
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: О
-    sound: '[о]'
-    word: молоко́
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: У
-    sound: '[у]'
-    word: ву́лиця
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: И
-    sound: '[и]'
-    word: ми
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: І
-    sound: '[і]'
-    word: ді́ти
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+      - sentence: Do not read молоко as м[а]локо.
+        error: м[а]локо
+        correction: молоко
+        options:
+          - молоко
+          - blurred о
+        explanation: Ukrainian о stays clean; read молоко with three open beats.
+      - sentence: Do not read дж as two broken sounds.
+        error: two broken sounds
+        correction: one joined sound
+        options:
+          - one joined sound
+          - д plus ж
+        explanation: ДЖ marks one joined reading unit in words such as джерело.
+      - sentence: Do not read Ї as plain І.
+        error: plain І
+        correction: '[йі]'
+        options:
+          - '[йі]'
+          - '[і]'
+        explanation: Ї is always [йі].
+      - sentence: Do not add a vowel after день.
+        error: add a vowel
+        correction: soften н and stop
+        options:
+          - soften н and stop
+          - add і after нь
+        explanation: Ь has no sound of its own; it softens the previous consonant.
+  - id: act-5
+    type: quiz
+    title: Textbook check
+    instruction: Choose the correct answer.
+    items:
+      - prompt: What is a склад?
+        options:
+          - text: a syllable
+            correct: true
+          - text: a letter
+            correct: false
+          - text: a greeting
+            correct: false
+        explanation: A склад is a syllable.
+      - prompt: How many syllables are in молоко?
+        options:
+          - text: '3'
+            correct: true
+          - text: '2'
+            correct: false
+          - text: '1'
+            correct: false
+        explanation: молоко has three vowel sounds and three syllables.
+      - prompt: Which letter is always [йі]?
+        options:
+          - text: Ї
+            correct: true
+          - text: І
+            correct: false
+          - text: И
+            correct: false
+        explanation: Ї is always [йі].
+workbook:
+  - type: group-sort
+    title: One, two, or three syllables?
+    instruction: Sort the words by syllable count.
+    groups:
+      - label: One syllable
+        items:
+          - день
+          - Львів
+      - label: Two syllables
+        items:
+          - ма́ма
+          - та́то
+          - Ки́їв
+      - label: Three syllables
+        items:
+          - молоко́
+          - ву́лиця
+          - столи́ця
+  - type: true-false
+    title: Reading facts
+    instruction: Choose true or false.
+    items:
+      - statement: Every Ukrainian syllable needs a vowel sound.
+        correct: true
+        explanation: The vowel sound is the core of the syllable.
+      - statement: Ї sometimes softens the previous consonant.
+        correct: false
+        explanation: Ї is always [йі].
+      - statement: In молоко, о stays clean.
+        correct: true
+        explanation: Do not reduce о to an unclear English-style vowel.
+      - statement: ДЖ and ДЗ should be read as joined units.
+        correct: true
+        explanation: They are digraph reading units.
+  - type: translate
+    title: Reading words
+    instruction: Choose the English meaning.
+    items:
+      - source: ма́ма
+        options:
+          - text: mother
+            correct: true
+          - text: street
+            correct: false
+          - text: milk
+            correct: false
+        explanation: Ма́ма means mother.
+      - source: молоко́
+        options:
+          - text: milk
+            correct: true
+          - text: apple
+            correct: false
+          - text: day
+            correct: false
+        explanation: Молоко́ means milk.
+      - source: ву́лиця
+        options:
+          - text: street
+            correct: true
+          - text: person
+            correct: false
+          - text: capital
+            correct: false
+        explanation: Ву́лиця means street.
+      - source: я́блуко
+        options:
+          - text: apple
+            correct: true
+          - text: song
+            correct: false
+          - text: mirror
+            correct: false
+        explanation: Я́блуко means apple.
+  - type: watch-and-repeat
+    title: Vowel reading pass
+    instruction: Watch the alphabet overview again, then repeat the simple vowels.
+    items:
+      - letter: А
+        sound: '[а]'
+        word: ма́ма
+        video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+      - letter: О
+        sound: '[о]'
+        word: молоко́
+        video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+      - letter: У
+        sound: '[у]'
+        word: ву́лиця
+        video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+      - letter: И
+        sound: '[и]'
+        word: ми
+        video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+      - letter: І
+        sound: '[і]'
+        word: ді́ти
+        video: https://www.youtube.com/watch?v=ksXIXj7CXwc
