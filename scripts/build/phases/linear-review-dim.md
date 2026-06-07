@@ -314,6 +314,14 @@ known_grammar from prior modules. Verify the writer:
    introduced, check the `<plan_reasoning>` for `<vocab_level_check>` nodes.
    Missing for a non-plan lemma = `unverified_vocab_introduction`.
 
+5. **Intentional repetition is signposted.** If the module repeats a
+   learner-facing concept, skill, or activity family from earlier modules,
+   the prose should explicitly frame it as review, reuse, or deeper practice
+   before asking the learner to do it again. Good patterns: "You already
+   practiced X in Module N; now use it for Y", "Quick review: X. New step:
+   Y", or "This is the same X, but the task is harder because Y." If the
+   repeated concept appears as if new, FLAG `unsignposted_repetition`.
+
 Pedagogical score: respecting the learner's prior knowledge is what makes the
 module BUILD instead of REPEAT. Naturalness score: scaffolded vocabulary
 introduction reads as a real teacher's voice; un-introduced vocab feels like a

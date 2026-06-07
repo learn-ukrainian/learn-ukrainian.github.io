@@ -141,7 +141,10 @@ Unverified items become FLAG strings in your evidence and weigh the score down.
 - **H. Student-aware (pedagogical, engagement, naturalness).** Verify the writer
   did not re-explain already-taught grammar (`re_explained_known_grammar`) and
   did not introduce unknown vocab without inline gloss
-  (`unknown_vocab_unscaffolded` / `missing_foreshadowing_gloss`).
+  (`unknown_vocab_unscaffolded` / `missing_foreshadowing_gloss`). Repeated
+  learner-facing concepts, skills, or activity families must be explicitly
+  framed as review, reuse, or deeper practice; otherwise FLAG
+  `unsignposted_repetition`.
 - **I. Audit-line integrity (all dims).** Verify the three pre-emit audit lines
   (`implementation_map_audit`, `bad_form_audit`, `activity_split_audit`) are
   present, parseable, and consistent with the artifacts. Missing → FLAG
