@@ -9,6 +9,9 @@
 #   ./services.sh restart            # Restart all
 #   ./services.sh restart api        # Restart specific service
 #   ./services.sh status             # Show what's running
+#   ./services.sh build starlight     # Run Starlight production build (no dev server)
+#   ./services.sh clean starlight     # Remove Starlight build/cache outputs
+#   ./services.sh rebuild starlight   # Run Starlight clean then build
 #
 # Services: sources, api, starlight
 #
@@ -430,24 +433,74 @@ _stop_service() {
         sleep 0.5
     done
 
-    # Starlight: clear Astro content collection cache on stop.
-    # Astro 6 doesn't reliably pick up new MDX files added while the
-    # dev server is running (content-layer deferred modules). Clearing
-    # the data-store forces a full re-index on next start.
     if [[ "$name" == "starlight" ]]; then
-        local cache_file="$PROJECT_ROOT/starlight/.astro/data-store.json"
-        if [[ -f "$cache_file" ]]; then
-            rm -f "$cache_file"
-            echo "  Cleared Astro content cache (data-store.json)"
-        fi
-        local vite_cache_dir="$PROJECT_ROOT/starlight/node_modules/.vite"
-        if [[ -d "$vite_cache_dir" ]]; then
-            rm -rf "$vite_cache_dir"
-            echo "  Cleared Vite cache (.vite)"
-        fi
+        _starlight_cleanup_cache
     fi
 
     echo "  $name stopped"
+}
+
+_starlight_cleanup_cache() {
+    local cache_file="$PROJECT_ROOT/starlight/.astro/data-store.json"
+    local vite_cache_dir="$PROJECT_ROOT/starlight/node_modules/.vite"
+
+    # Astro 6 doesn't reliably pick up new MDX files added while the dev
+    # server is running (content-layer deferred modules). Clearing the
+    # content cache forces a full re-index on next startup.
+    if [[ -f "$cache_file" ]]; then
+        rm -f "$cache_file"
+        echo "  Cleared Astro content cache (data-store.json)"
+    fi
+    if [[ -d "$vite_cache_dir" ]]; then
+        rm -rf "$vite_cache_dir"
+        echo "  Cleared Vite cache (.vite)"
+    fi
+}
+
+_starlight_cleanup_build_artifacts() {
+    local dist_dir="$PROJECT_ROOT/starlight/dist"
+    local astro_dir="$PROJECT_ROOT/starlight/.astro"
+
+    if [[ -d "$dist_dir" ]]; then
+        rm -rf "$dist_dir"
+        echo "  Removed Starlight build output (dist)"
+    fi
+    if [[ -d "$astro_dir" ]]; then
+        rm -rf "$astro_dir"
+        echo "  Removed Astro generated directory (.astro)"
+    fi
+}
+
+_build_starlight() {
+    echo "  Building starlight..."
+    cd "$PROJECT_ROOT"
+    npm run build --prefix starlight
+}
+
+_clean_starlight() {
+    local state
+    state="$(_known_service_pid starlight || true)"
+    if [[ -n "$state" ]]; then
+        echo "  Stopping starlight before clean..."
+        _stop_service starlight
+    fi
+
+    local had_outputs=0
+    if [[ -d "$PROJECT_ROOT/starlight/dist" || -f "$PROJECT_ROOT/starlight/.astro/data-store.json" || -d "$PROJECT_ROOT/starlight/.astro" || -d "$PROJECT_ROOT/starlight/node_modules/.vite" ]]; then
+        had_outputs=1
+    fi
+
+    _starlight_cleanup_cache
+    _starlight_cleanup_build_artifacts
+
+    if [[ "$had_outputs" -eq 0 ]]; then
+        echo "  No Starlight build/cache outputs to remove."
+    fi
+}
+
+_rebuild_starlight() {
+    _clean_starlight
+    _build_starlight
 }
 
 _status() {
@@ -529,11 +582,68 @@ case "$action" in
         echo ""
         _status
         ;;
+    build)
+        if [[ "$#" -eq 0 ]]; then
+            echo "Usage: $0 build <service>"
+            echo "Supported service: starlight"
+            exit 1
+        fi
+        supported_starlight=0
+        for svc in $services; do
+            if [[ "$svc" == "starlight" ]]; then
+                supported_starlight=1
+                _build_starlight
+            else
+                echo "  Unsupported service for build: $svc (supported: starlight)"
+            fi
+        done
+        if [[ "$supported_starlight" -eq 0 ]]; then
+            exit 1
+        fi
+        ;;
+    clean)
+        if [[ "$#" -eq 0 ]]; then
+            echo "Usage: $0 clean <service>"
+            echo "Supported service: starlight"
+            exit 1
+        fi
+        supported_starlight=0
+        for svc in $services; do
+            if [[ "$svc" == "starlight" ]]; then
+                supported_starlight=1
+                _clean_starlight
+            else
+                echo "  Unsupported service for clean: $svc (supported: starlight)"
+            fi
+        done
+        if [[ "$supported_starlight" -eq 0 ]]; then
+            exit 1
+        fi
+        ;;
+    rebuild)
+        if [[ "$#" -eq 0 ]]; then
+            echo "Usage: $0 rebuild <service>"
+            echo "Supported service: starlight"
+            exit 1
+        fi
+        supported_starlight=0
+        for svc in $services; do
+            if [[ "$svc" == "starlight" ]]; then
+                supported_starlight=1
+                _rebuild_starlight
+            else
+                echo "  Unsupported service for rebuild: $svc (supported: starlight)"
+            fi
+        done
+        if [[ "$supported_starlight" -eq 0 ]]; then
+            exit 1
+        fi
+        ;;
     status)
         _status
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status} [service ...]"
+        echo "Usage: $0 {start|stop|restart|status|build|clean|rebuild} [service ...]"
         echo ""
         echo "Services:"
         for name in $ALL_SERVICES; do
@@ -545,6 +655,9 @@ case "$action" in
         echo "  $0 start sources api      # Start specific"
         echo "  $0 stop sources           # Stop one"
         echo "  $0 restart                # Restart all"
+        echo "  $0 build starlight        # Build Starlight"
+        echo "  $0 clean starlight        # Clean Starlight cache/build outputs"
+        echo "  $0 rebuild starlight      # Clean then build Starlight"
         echo "  $0 status                 # Show status"
         echo ""
         echo "Note: 'rag' is accepted as a legacy alias for 'sources'."
