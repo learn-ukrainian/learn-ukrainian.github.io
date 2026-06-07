@@ -192,8 +192,6 @@ Then add pointing words from the last module:
 - **Ті стільці старі.**
 - **Мої ручки сині.**
 
-<!-- INJECT_ACTIVITY: act-4 -->
-
 ### With numbers
 
 You already met the number pattern in prices and ages. Here it helps with
@@ -257,8 +255,6 @@ Third, combine plural helpers:
 - **мої сині зошити**
 - **які червоні ручки?**
 
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ### Repair traps
 
 Use these repairs when English tries to keep Ukrainian too simple:
@@ -273,10 +269,6 @@ Use these repairs when English tries to keep Ukrainian too simple:
 | **молоді** for the group | **молодь** | The group word stays singular |
 | **для ми** | **для нас** | Pronouns change in chunks |
 | **з ми** | **з нами** | After **з**, use **нами** |
-
-<!-- INJECT_ACTIVITY: act-8 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Mini room check
 

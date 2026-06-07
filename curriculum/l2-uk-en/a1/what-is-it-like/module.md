@@ -179,8 +179,6 @@ Cover the English and answer aloud:
 - **Який стіл?** — **Новий і чистий.**
 - **Яке ліжко?** — **Старе, але зручне.**
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ### Watch the traps
 
 Adjectives are a common interference zone. Keep Ukrainian on its own terms.
@@ -202,8 +200,6 @@ words. Use the clean Ukrainian pair.
 One more sentence-frame trap: present-tense Ukrainian often has no visible
 "to be." Use **Він добрий студент**, not **Він є добрий студент**. Use
 **Книга нова**, not an English-shaped sentence.
-
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Підсумок
 
@@ -242,11 +238,3 @@ chunks.
 Workbook practice will make the pattern automatic: choose the right question
 word, finish the adjective ending, match opposites, describe a room, and repair
 the adjective traps.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
-
-<!-- INJECT_ACTIVITY: act-9 -->
-
-<!-- INJECT_ACTIVITY: act-10 -->
