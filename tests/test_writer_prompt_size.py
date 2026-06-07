@@ -9,8 +9,8 @@ from scripts.audit.check_writer_prompt_size import (
 )
 
 
-def test_ceiling_is_135kb() -> None:
-    """Ceiling is 135KB after the 2026-05-28 V7.1 charter bump.
+def test_ceiling_is_130kb() -> None:
+    """Ceiling is back to 130KB after the 2026-06-07 #2378 prompt trim.
 
     Original PR-C 2026-05-23: 130KB (120KB target + 10KB headroom).
     Bumped 2026-05-27 (Path B / PR #2372): 132KB to accommodate 4 hardening PRs
@@ -20,11 +20,10 @@ def test_ceiling_is_135kb() -> None:
     cluster. The charter adds ~3KB; a1/sounds-letters-and-hello was already
     right at the previous 132KB ceiling.
 
-    Aggressive trim (cursor r1: "PR #2260 proved -118 lines viable") is queued
-    as a follow-up — see issue #2378. After that lands, the ceiling can drop
-    back below 130KB and this test's literal will follow.
+    Issue #2378 trims repeated linear-writer instructions while preserving
+    load-bearing rule anchors, so the enforced ceiling returns to 130KB.
     """
-    assert WRITER_PROMPT_CEILING_BYTES == 135 * 1024
+    assert WRITER_PROMPT_CEILING_BYTES == 130 * 1024
 
 
 def test_fixture_modules_includes_a1_my_morning() -> None:
