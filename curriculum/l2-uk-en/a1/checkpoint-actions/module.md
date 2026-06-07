@@ -138,8 +138,6 @@ Keep the common repairs close:
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Діалог
 
 Read the roommate conversation. It checks liking, two verb groups, modal verbs,
@@ -165,8 +163,6 @@ This dialogue uses clean Ukrainian greeting and farewell chunks:
 **Добрий день** and **До побачення**. Keep everyday language precise:
 **тато**, **прізвище**, **українська мова**, **Київ**, **гривня**. Those forms
 belong to earlier A1 work and stay stable here.
-
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Підсумок
 
@@ -197,7 +193,3 @@ and precise. **Тарас Шевченко**, **Леся Українка**, **�
 need exact dates, for example **Голодомор 1932-1933 років**. For this A1
 checkpoint, you only need to carry the principle forward: use Ukrainian forms
 and Ukrainian context clearly.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

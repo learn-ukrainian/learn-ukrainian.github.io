@@ -1,277 +1,275 @@
-- id: act-1
-  type: quiz
-  title: Preference warm-up
-  instruction: Choose the safe Ukrainian line.
-  items:
-    - prompt: I like to read.
-      options:
-        - text: Я люблю читати.
-          correct: true
-        - text: Я люблю читаю.
-          correct: false
-        - text: Я подобається читати.
-          correct: false
-      explanation: Use Я люблю plus the -ти action word.
-    - prompt: I like music.
-      options:
-        - text: Мені подобається музика.
-          correct: true
-        - text: Я подобається музика.
-          correct: false
-        - text: Мені подобається музику.
-          correct: false
-      explanation: Мені подобається is the safe chunk for liking a thing.
-    - prompt: Do you like to cook?
-      options:
-        - text: Ти любиш готувати?
-          correct: true
-        - text: Ти любиш готуєш?
-          correct: false
-        - text: Тобі любиш готувати?
-          correct: false
-      explanation: The question keeps любиш plus an infinitive.
-- id: act-2
-  type: match-up
-  title: Infinitive actions
-  instruction: Match each Ukrainian action word with its meaning.
-  pairs:
-    - left: читати
-      right: to read
-    - left: гуляти
-      right: to walk
-    - left: готувати
-      right: to cook
-    - left: слухати
-      right: to listen
-    - left: дивитися
-      right: to watch
-    - left: грати
-      right: to play
-    - left: малювати
-      right: to draw
-    - left: співати
-      right: to sing
-- id: act-3
-  type: fill-in
-  title: Build Я люблю
-  instruction: Complete each sentence with the safe action word.
-  items:
-    - sentence: Я люблю ___.
-      answer: читати
-      options:
-        - читати
-        - читаю
-        - читаєш
-      explanation: After люблю, use the -ти form.
-    - sentence: Я люблю ___ музику.
-      answer: слухати
-      options:
-        - слухати
-        - слухаю
-        - слухає
-      explanation: Слухати stays in the infinitive.
-    - sentence: Ти любиш ___?
-      answer: готувати
-      options:
-        - готувати
-        - готуєш
-        - готую
-      explanation: Ти любиш also takes the -ти form.
-    - sentence: Вона любить ___.
-      answer: малювати
-      options:
-        - малювати
-        - малює
-        - малюю
-      explanation: Keep the second action as малювати.
-    - sentence: Ми любимо ___.
-      answer: гуляти
-      options:
-        - гуляти
-        - гуляємо
-        - гуляє
-      explanation: Любимо plus infinitive.
-    - sentence: Вони люблять ___.
-      answer: співати
-      options:
-        - співати
-        - співають
-        - співає
-      explanation: Люблять plus infinitive.
-- id: act-4
-  type: group-sort
-  title: Action or thing
-  instruction: Sort the words by the preference pattern they usually use today.
-  groups:
-    - name: Я люблю + action
-      items:
-        - читати
-        - гуляти
-        - готувати
-        - малювати
-    - name: Мені подобається + thing
-      items:
-        - музика
-        - книга
-        - фільм
-        - Київ
-- id: act-5
-  type: quiz
-  title: Люблю or подобається
-  instruction: Choose the sentence that matches the meaning.
-  items:
-    - prompt: I like to walk.
-      options:
-        - text: Я люблю гуляти.
-          correct: true
-        - text: Мені подобається гуляю.
-          correct: false
-        - text: Я люблю гуляю.
-          correct: false
-      explanation: Use Я люблю plus гуляти for an action.
-    - prompt: I like this film.
-      options:
-        - text: Мені подобається цей фільм.
-          correct: true
-        - text: Я подобається цей фільм.
-          correct: false
-        - text: Мені люблю цей фільм.
-          correct: false
-      explanation: Use Мені подобається for a thing.
-    - prompt: I do not like to cook.
-      options:
-        - text: Я не люблю готувати.
-          correct: true
-        - text: Я люблю не готувати.
-          correct: false
-        - text: Я не люблю готую.
-          correct: false
-      explanation: Put не before люблю, then use the -ти action.
-    - prompt: I do not like this book.
-      options:
-        - text: Мені не подобається ця книга.
-          correct: true
-        - text: Мені подобається не ця книга.
-          correct: false
-        - text: Я не подобається ця книга.
-          correct: false
-      explanation: Put не before подобається.
-- id: act-6
-  type: error-correction
-  title: Repair preference traps
-  instruction: Choose the standard Ukrainian repair.
-  anchor_id: repair-traps
-  items:
-    - sentence: Я люблю малюю.
-      error: Я люблю малюю.
-      answer: Я люблю малювати.
-      options:
-        - Я люблю малювати.
-        - Я люблю малюю.
-        - Я подобається малювати.
-      explanation: The second action stays in the -ти form.
-    - sentence: Я люблю музика.
-      error: Я люблю музика.
-      answer: Я люблю музику.
-      options:
-        - Я люблю музику.
-        - Я люблю музика.
-        - Мені люблю музика.
-      explanation: Learn музику as the small object chunk.
-    - sentence: Я подобається це.
-      error: Я подобається це.
-      answer: Мені подобається це.
-      options:
-        - Мені подобається це.
-        - Я подобається це.
-        - Мене подобається це.
-      explanation: Use the ready chunk Мені подобається.
-    - sentence: Це мій любимий спорт.
-      error: Це мій любимий спорт.
-      answer: Це мій улюблений спорт.
-      options:
-        - Це мій улюблений спорт.
-        - Це улюблений спорт.
-        - Це моя улюблена книга.
-      explanation: Use улюблений for favorite things.
-    - sentence: Моє улюблене хобі...
-      error: Моє улюблене хобі...
-      answer: Моє захоплення...
-      options:
-        - Моє захоплення...
-        - Моє улюблене хобі...
-        - Моя улюблена книга...
-      explanation: Моє захоплення is cleaner.
-    - sentence: Я приймаю участь.
-      error: Я приймаю участь.
-      answer: Я беру участь.
-      options:
-        - Я беру участь.
-        - Я приймаю участь.
-        - Я маю участь.
-      explanation: Ukrainian uses брати участь.
-- id: act-7
-  type: fill-in
-  title: Make it negative
-  instruction: Add the missing preference word.
-  items:
-    - sentence: Я ___ люблю готувати.
-      answer: не
-      options:
-        - не
-        - ні
-        - немає
-      explanation: Put не before люблю.
-    - sentence: Мені ___ подобається цей фільм.
-      answer: не
-      options:
-        - не
-        - ні
-        - немає
-      explanation: Put не before подобається.
-    - sentence: Тобі ___ подобається кава?
-      answer: не
-      options:
-        - не
-        - ні
-        - немає
-      explanation: This asks whether you do not like coffee.
-    - sentence: Вони ___ люблять співати.
-      answer: не
-      options:
-        - не
-        - ні
-        - немає
-      explanation: Put не before the preference verb.
-- id: act-8
-  type: quiz
-  title: Your short answer
-  instruction: Choose the best next sentence.
-  items:
-    - prompt: Що ти любиш робити?
-      options:
-        - text: Я люблю читати.
-          correct: true
-        - text: Мені подобається читати.
-          correct: false
-        - text: Я читаєш.
-          correct: false
-      explanation: Answer with Я люблю plus an action.
-    - prompt: Тобі подобається ця книга?
-      options:
-        - text: Так, мені подобається.
-          correct: true
-        - text: Так, я подобається.
-          correct: false
-        - text: Так, мені люблю.
-          correct: false
-      explanation: The short answer keeps мені подобається.
-    - prompt: А ти?
-      options:
-        - text: Я люблю гуляти.
-          correct: true
-        - text: Ти люблю гуляти.
-          correct: false
-        - text: Я любиш гуляти.
-          correct: false
-      explanation: For yourself, use Я люблю.
+inline:
+  - id: act-1
+    type: quiz
+    title: Preference warm-up
+    instruction: Choose the safe Ukrainian line.
+    items:
+      - prompt: I like to read.
+        options:
+          - text: Я люблю читати.
+            correct: true
+          - text: Я люблю читаю.
+            correct: false
+          - text: Я подобається читати.
+            correct: false
+        explanation: Use Я люблю plus the -ти action word.
+      - prompt: I like music.
+        options:
+          - text: Мені подобається музика.
+            correct: true
+          - text: Я подобається музика.
+            correct: false
+          - text: Мені подобається музику.
+            correct: false
+        explanation: Мені подобається is the safe chunk for liking a thing.
+      - prompt: Do you like to cook?
+        options:
+          - text: Ти любиш готувати?
+            correct: true
+          - text: Ти любиш готуєш?
+            correct: false
+          - text: Тобі любиш готувати?
+            correct: false
+        explanation: The question keeps любиш plus an infinitive.
+  - id: act-2
+    type: match-up
+    title: Infinitive actions
+    instruction: Match each Ukrainian action word with its meaning.
+    pairs:
+      - left: читати
+        right: to read
+      - left: гуляти
+        right: to walk
+      - left: готувати
+        right: to cook
+      - left: слухати
+        right: to listen
+      - left: дивитися
+        right: to watch
+      - left: грати
+        right: to play
+      - left: малювати
+        right: to draw
+      - left: співати
+        right: to sing
+  - id: act-3
+    type: fill-in
+    title: Build Я люблю
+    instruction: Complete each sentence with the safe action word.
+    items:
+      - sentence: Я люблю ___.
+        answer: читати
+        options:
+          - читати
+          - читаю
+          - читаєш
+        explanation: After люблю, use the -ти form.
+      - sentence: Я люблю ___ музику.
+        answer: слухати
+        options:
+          - слухати
+          - слухаю
+          - слухає
+        explanation: Слухати stays in the infinitive.
+      - sentence: Ти любиш ___?
+        answer: готувати
+        options:
+          - готувати
+          - готуєш
+          - готую
+        explanation: Ти любиш also takes the -ти form.
+      - sentence: Вона любить ___.
+        answer: малювати
+        options:
+          - малювати
+          - малює
+          - малюю
+        explanation: Keep the second action as малювати.
+      - sentence: Ми любимо ___.
+        answer: гуляти
+        options:
+          - гуляти
+          - гуляємо
+          - гуляє
+        explanation: Любимо plus infinitive.
+      - sentence: Вони люблять ___.
+        answer: співати
+        options:
+          - співати
+          - співають
+          - співає
+        explanation: Люблять plus infinitive.
+  - id: act-4
+    type: group-sort
+    title: Action or thing
+    instruction: Sort the words by the preference pattern they usually use today.
+    groups:
+      - name: Я люблю + action
+        items:
+          - читати
+          - гуляти
+          - готувати
+          - малювати
+      - name: Мені подобається + thing
+        items:
+          - музика
+          - книга
+          - фільм
+          - Київ
+workbook:
+  - type: quiz
+    title: Люблю or подобається
+    instruction: Choose the sentence that matches the meaning.
+    items:
+      - prompt: I like to walk.
+        options:
+          - text: Я люблю гуляти.
+            correct: true
+          - text: Мені подобається гуляю.
+            correct: false
+          - text: Я люблю гуляю.
+            correct: false
+        explanation: Use Я люблю plus гуляти for an action.
+      - prompt: I like this film.
+        options:
+          - text: Мені подобається цей фільм.
+            correct: true
+          - text: Я подобається цей фільм.
+            correct: false
+          - text: Мені люблю цей фільм.
+            correct: false
+        explanation: Use Мені подобається for a thing.
+      - prompt: I do not like to cook.
+        options:
+          - text: Я не люблю готувати.
+            correct: true
+          - text: Я люблю не готувати.
+            correct: false
+          - text: Я не люблю готую.
+            correct: false
+        explanation: Put не before люблю, then use the -ти action.
+      - prompt: I do not like this book.
+        options:
+          - text: Мені не подобається ця книга.
+            correct: true
+          - text: Мені подобається не ця книга.
+            correct: false
+          - text: Я не подобається ця книга.
+            correct: false
+        explanation: Put не before подобається.
+  - type: error-correction
+    title: Repair preference traps
+    instruction: Choose the standard Ukrainian repair.
+    anchor_id: repair-traps
+    items:
+      - sentence: Я люблю малюю.
+        error: Я люблю малюю.
+        answer: Я люблю малювати.
+        options:
+          - Я люблю малювати.
+          - Я люблю малюю.
+          - Я подобається малювати.
+        explanation: The second action stays in the -ти form.
+      - sentence: Я люблю музика.
+        error: Я люблю музика.
+        answer: Я люблю музику.
+        options:
+          - Я люблю музику.
+          - Я люблю музика.
+          - Мені люблю музика.
+        explanation: Learn музику as the small object chunk.
+      - sentence: Я подобається це.
+        error: Я подобається це.
+        answer: Мені подобається це.
+        options:
+          - Мені подобається це.
+          - Я подобається це.
+          - Мене подобається це.
+        explanation: Use the ready chunk Мені подобається.
+      - sentence: Це мій любимий спорт.
+        error: Це мій любимий спорт.
+        answer: Це мій улюблений спорт.
+        options:
+          - Це мій улюблений спорт.
+          - Це улюблений спорт.
+          - Це моя улюблена книга.
+        explanation: Use улюблений for favorite things.
+      - sentence: Моє улюблене хобі...
+        error: Моє улюблене хобі...
+        answer: Моє захоплення...
+        options:
+          - Моє захоплення...
+          - Моє улюблене хобі...
+          - Моя улюблена книга...
+        explanation: Моє захоплення is cleaner.
+      - sentence: Я приймаю участь.
+        error: Я приймаю участь.
+        answer: Я беру участь.
+        options:
+          - Я беру участь.
+          - Я приймаю участь.
+          - Я маю участь.
+        explanation: Ukrainian uses брати участь.
+  - type: fill-in
+    title: Make it negative
+    instruction: Add the missing preference word.
+    items:
+      - sentence: Я ___ люблю готувати.
+        answer: не
+        options:
+          - не
+          - ні
+          - немає
+        explanation: Put не before люблю.
+      - sentence: Мені ___ подобається цей фільм.
+        answer: не
+        options:
+          - не
+          - ні
+          - немає
+        explanation: Put не before подобається.
+      - sentence: Тобі ___ подобається кава?
+        answer: не
+        options:
+          - не
+          - ні
+          - немає
+        explanation: This asks whether you do not like coffee.
+      - sentence: Вони ___ люблять співати.
+        answer: не
+        options:
+          - не
+          - ні
+          - немає
+        explanation: Put не before the preference verb.
+  - type: quiz
+    title: Your short answer
+    instruction: Choose the best next sentence.
+    items:
+      - prompt: Що ти любиш робити?
+        options:
+          - text: Я люблю читати.
+            correct: true
+          - text: Мені подобається читати.
+            correct: false
+          - text: Я читаєш.
+            correct: false
+        explanation: Answer with Я люблю plus an action.
+      - prompt: Тобі подобається ця книга?
+        options:
+          - text: Так, мені подобається.
+            correct: true
+          - text: Так, я подобається.
+            correct: false
+          - text: Так, мені люблю.
+            correct: false
+        explanation: The short answer keeps мені подобається.
+      - prompt: А ти?
+        options:
+          - text: Я люблю гуляти.
+            correct: true
+          - text: Ти люблю гуляти.
+            correct: false
+          - text: Я любиш гуляти.
+            correct: false
+        explanation: For yourself, use Я люблю.

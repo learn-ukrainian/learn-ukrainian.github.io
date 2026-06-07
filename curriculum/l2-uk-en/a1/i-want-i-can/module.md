@@ -163,8 +163,6 @@ recognition, not active production.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Підсумок
 
 Choose the helper by the job it does:
@@ -216,9 +214,3 @@ with **[ц':а]**. A textbook example writes **сміється** and shows
 | <!-- bad -->Я мусю працювати.<!-- /bad --> | **Я мушу працювати.** | learn **я мушу** as a ready chunk |
 | <!-- bad -->Я не можу не.<!-- /bad --> | **Я не можу піти.** | finish the sentence with an action |
 | blunt order every time | **Можна мені, будь ласка, каву?** | service speech needs a polite chunk |
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

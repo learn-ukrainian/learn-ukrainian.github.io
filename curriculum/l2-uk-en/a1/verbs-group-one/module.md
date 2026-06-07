@@ -132,8 +132,6 @@ If you hesitate, ask two questions:
 1. Who is doing it: **я, ти, він/вона, ми, ви, вони**?
 2. Which ending fits: **-ю, -єш, -є, -ємо, -єте, -ють**?
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ### Працювати and готувати
 
 Some Group One verbs end in **-увати** or **-ювати**. This is **Тип
@@ -174,8 +172,6 @@ read" both fit **Я читаю** in this beginner context. The time word can com
 later: **Я читаю сьогодні**, **Ми працюємо сьогодні**, **Вони гуляють
 сьогодні**. Your main signal is still the verb ending.
 
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ### Later: future forms
 
 Ukrainian also has future forms. You may see grammar labels such as
@@ -186,8 +182,6 @@ present tense:
 - **Я читаю.**
 - **Ти читаєш.**
 - **Ми читаємо.**
-
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ## Підсумок
 
@@ -229,5 +223,3 @@ look for **-єш**: **читаєш**, **знаєш**, **працюєш**, **го
 subject is **ми**, say the full **-ємо** ending: **читаємо**, **знаємо**,
 **працюємо**, **готуємо**. These four quick checks make your first Group One
 sentences sound complete.
-
-<!-- INJECT_ACTIVITY: act-8 -->
