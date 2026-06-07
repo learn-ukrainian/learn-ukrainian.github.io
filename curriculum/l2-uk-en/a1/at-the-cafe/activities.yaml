@@ -1,355 +1,353 @@
-- id: act-1
-  type: match-up
-  title: Cafe line to function
-  instruction: Match each cafe phrase with what it does.
-  pairs:
-    - left: "Рахунок, будь ласка."
-      right: "ask for the bill"
-    - left: "Що ви рекомендуєте?"
-      right: "ask for a recommendation"
-    - left: "Мені борщ, будь ласка."
-      right: "order food"
-    - left: "Скільки коштує?"
-      right: "ask the price"
-    - left: "Можна карткою?"
-      right: "ask to pay by card"
-    - left: "Дуже смачно!"
-      right: "praise the food"
-    - left: "Тут вільно?"
-      right: "ask about a free seat"
-    - left: "Вам тут чи із собою?"
-      right: "ask about format"
-    - left: "Велику каву, будь ласка."
-      right: "order a size chunk"
-- id: act-2
-  type: fill-in
-  title: Order with мені
-  instruction: Choose the form that completes the cafe order.
-  items:
-    - sentence: "Мені ___, будь ласка."
-      answer: "каву"
-      options:
-        - "каву"
-        - "кава"
-        - "каві"
-      explanation: "Кава becomes каву in an order."
-    - sentence: "Мені ___, будь ласка."
-      answer: "воду"
-      options:
-        - "воду"
-        - "вода"
-        - "водою"
-      explanation: "Вода becomes воду."
-    - sentence: "Мені ___, будь ласка."
-      answer: "борщ"
-      options:
-        - "борщ"
-        - "борщу"
-        - "борщем"
-      explanation: "Борщ is masculine inanimate and stays борщ."
-    - sentence: "Мені ___, будь ласка."
-      answer: "салат"
-      options:
-        - "салат"
-        - "салату"
-        - "салатом"
-      explanation: "Салат stays салат in this A1 pattern."
-    - sentence: "Дайте, будь ласка, ___."
-      answer: "чай"
-      options:
-        - "чай"
-        - "чаю"
-        - "чаєм"
-      explanation: "Чай stays чай."
-    - sentence: "Я буду ___."
-      answer: "піцу"
-      options:
-        - "піцу"
-        - "піца"
-        - "піці"
-      explanation: "Піца becomes піцу."
-    - sentence: "Можна ___?"
-      answer: "хліб"
-      options:
-        - "хліб"
-        - "хліба"
-        - "хлібом"
-      explanation: "Хліб stays хліб."
-    - sentence: "Мені ___ із собою, будь ласка."
-      answer: "маленьку каву"
-      options:
-        - "маленьку каву"
-        - "маленька кава"
-        - "маленької кави"
-      explanation: "Use маленьку каву as one ordering chunk."
-- id: act-3
-  type: quiz
-  title: What do you say?
-  instruction: Choose the line that fits the cafe situation.
-  items:
-    - prompt: "You want to order coffee."
-      options:
-        - text: "Мені каву, будь ласка."
-          correct: true
-        - text: "Рахунок, будь ласка."
-          correct: false
-        - text: "Що ви рекомендуєте?"
-          correct: false
-      explanation: "Мені каву, будь ласка is an order."
-    - prompt: "You want to pay."
-      options:
-        - text: "Рахунок, будь ласка."
-          correct: true
-        - text: "Можна меню?"
-          correct: false
-        - text: "Це гостре?"
-          correct: false
-      explanation: "Ask for the bill with рахунок."
-    - prompt: "You want to know the price."
-      options:
-        - text: "Скільки коштує?"
-          correct: true
-        - text: "Це з м'ясом?"
-          correct: false
-        - text: "Тут вільно?"
-          correct: false
-      explanation: "Скільки коштує? asks how much it costs."
-    - prompt: "You want a recommendation."
-      options:
-        - text: "Що ви рекомендуєте?"
-          correct: true
-        - text: "Є вегетаріанське меню?"
-          correct: false
-        - text: "Все було дуже смачно!"
-          correct: false
-      explanation: "Рекомендуєте asks the server to recommend."
-    - prompt: "You want to praise the food."
-      options:
-        - text: "Все було дуже смачно!"
-          correct: true
-        - text: "Можна карткою?"
-          correct: false
-        - text: "Без цукру."
-          correct: false
-      explanation: "This is the praise line after eating."
-    - prompt: "You want to know whether a seat is free."
-      options:
-        - text: "Тут вільно?"
-          correct: true
-        - text: "Ще одну каву, будь ласка."
-          correct: false
-        - text: "Рахунок, будь ласка."
-          correct: false
-      explanation: "Тут вільно? asks if the place is free."
-    - prompt: "You want to know whether a dish is spicy."
-      options:
-        - text: "Це гостре?"
-          correct: true
-        - text: "Це з м'ясом?"
-          correct: false
-        - text: "Скільки коштує?"
-          correct: false
-      explanation: "Гостре means spicy here."
-    - prompt: "You want to pay by card."
-      options:
-        - text: "Можна карткою?"
-          correct: true
-        - text: "Є вегетаріанське меню?"
-          correct: false
-        - text: "Що ви рекомендуєте?"
-          correct: false
-      explanation: "Карткою is the card-payment chunk."
-- id: act-4
-  type: fill-in
-  title: Complete the cafe dialogue
-  instruction: Choose the word or phrase that fits the dialogue.
-  items:
-    - sentence: "Добрий день! Ось ___."
-      answer: "меню"
-      options:
-        - "меню"
-        - "рахунок"
-        - "картка"
-      explanation: "The server gives the menu first."
-    - sentence: "Дякую. Що ви ___?"
-      answer: "рекомендуєте"
-      options:
-        - "рекомендуєте"
-        - "коштуєте"
-        - "платите"
-      explanation: "Що ви рекомендуєте? asks for advice."
-    - sentence: "Борщ дуже ___."
-      answer: "смачний"
-      options:
-        - "смачний"
-        - "вільний"
-        - "картковий"
-      explanation: "Борщ is described as tasty."
-    - sentence: "Добре, ___ борщ і хліб, будь ласка."
-      answer: "мені"
-      options:
-        - "мені"
-        - "я"
-        - "мене"
-      explanation: "Мені begins the order frame."
-    - sentence: "А що будете ___?"
-      answer: "пити"
-      options:
-        - "пити"
-        - "читати"
-        - "платити"
-      explanation: "The server asks what you will drink."
-    - sentence: "Добре, одну ___."
-      answer: "хвилинку"
-      options:
-        - "хвилинку"
-        - "годину"
-        - "картку"
-      explanation: "Одну хвилинку means one moment."
-- id: act-5
-  type: true-false
-  title: Cafe culture checks
-  instruction: Decide whether each statement fits the module.
-  items:
-    - statement: "Рахунок, будь ласка asks for the bill."
-      answer: true
-      explanation: "Рахунок is the bill."
-    - statement: "Вам тут чи із собою? asks whether the order is for here or to go."
-      answer: true
-      explanation: "Тут and із собою are the format answers."
-    - statement: "Велику каву is taught here as an adjective table."
-      answer: false
-      explanation: "It is taught as one cafe chunk."
-    - statement: "Кава на винос is the course form."
-      answer: false
-      explanation: "Use кава із собою."
-    - statement: "Можна карткою? asks whether card payment is possible."
-      answer: true
-      explanation: "Карткою is the card-payment chunk."
-    - statement: "Дуже смачно було! is a food praise line."
-      answer: true
-      explanation: "Use it after the meal."
-    - statement: "Пірожене is the course word for pastry."
-      answer: false
-      explanation: "Use тістечко."
-    - statement: "Перепрошую is a polite way to get attention."
-      answer: true
-      explanation: "It is a neutral service-scene attention getter."
-- id: act-6
-  type: order
-  title: One cafe visit
-  instruction: Put the cafe visit in order.
-  is_ukrainian: true
-  items:
-    - "Добрий день! Можна меню?"
-    - "Що ви рекомендуєте?"
-    - "Мені борщ і хліб, будь ласка."
-    - "А мені маленьку каву із собою."
-    - "Рахунок, будь ласка."
-    - "Можна карткою?"
-    - "Дякую, все було дуже смачно!"
-    - "До побачення!"
-  correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
-- id: act-7
-  type: group-sort
-  title: Cafe shelves
-  instruction: Sort each phrase by its cafe job.
-  groups:
-    - name: "Greeting or attention"
-      items:
-        - "Добрий день!"
-        - "Доброго ранку!"
-        - "Перепрошую."
-    - name: "Ordering"
-      items:
-        - "Мені каву, будь ласка."
-        - "Дайте, будь ласка, борщ."
-        - "Велику каву із собою."
-    - name: "Questions"
-      items:
-        - "Що ви рекомендуєте?"
-        - "Скільки коштує?"
-        - "Це гостре?"
-    - name: "Payment or closing"
-      items:
-        - "Рахунок, будь ласка."
-        - "Можна карткою?"
-        - "До побачення!"
-- id: act-8
-  type: error-correction
-  title: Repair cafe interference
-  instruction: Choose the clean Ukrainian repair.
-  anchor_id: repair-at-the-cafe-interference
-  items:
-    - sentence: "Доброго дня!"
-      error: "Доброго дня!"
-      answer: "Добрий день!"
-      options:
-        - "Добрий день!"
-        - "Доброго дня!"
-        - "Добрий дня!"
-      explanation: "Use Добрий день as the neutral greeting."
-    - sentence: "Вибачаюсь!"
-      error: "Вибачаюсь!"
-      answer: "Вибачте! / Перепрошую!"
-      options:
-        - "Вибачте! / Перепрошую!"
-        - "Вибачаюсь!"
-        - "Я вибачаю себе!"
-      explanation: "Use Вибачте or Перепрошую."
-    - sentence: "Я хочу кава."
-      error: "Я хочу кава."
-      answer: "Я хочу каву. / Дайте каву."
-      options:
-        - "Я хочу каву. / Дайте каву."
-        - "Я хочу кава."
-        - "Я хочу каві."
-      explanation: "Кава becomes каву in this request."
-    - sentence: "ПрошУ (як прохання)"
-      error: "ПрошУ (як прохання)"
-      answer: "ПрОшу (як \"будь ласка\")"
-      options:
-        - "ПрОшу (як \"будь ласка\")"
-        - "ПрошУ (як прохання)"
-        - "Прошу без наголосу."
-      explanation: "As a polite inserted word meaning please, the stress is ПрОшу."
-    - sentence: "[балєт], [проблєма]"
-      error: "[балєт], [проблєма]"
-      answer: "[балет], [проблема]"
-      options:
-        - "[балет], [проблема]"
-        - "[балєт], [проблєма]"
-        - "[балет], [проблєма]"
-      explanation: "Keep л before е hard in these examples."
-    - sentence: "Здрастуйте! / Пока!"
-      error: "Здрастуйте! / Пока!"
-      answer: "Добрий день! / До побачення!"
-      options:
-        - "Добрий день! / До побачення!"
-        - "Здрастуйте! / Пока!"
-        - "Добрий день! / Пока!"
-      explanation: "Use Ukrainian greeting and goodbye formulas."
-    - sentence: "Можна счет?"
-      error: "счет"
-      answer: "Можна рахунок?"
-      options:
-        - "Можна рахунок?"
-        - "Можна счет?"
-        - "Можна рахунка?"
-      explanation: "Use рахунок."
-    - sentence: "Кава на винос."
-      error: "на винос"
-      answer: "Кава із собою."
-      options:
-        - "Кава із собою."
-        - "Кава на винос."
-        - "Кава з себе."
-      explanation: "The course chunk is із собою."
-    - sentence: "Дайте пірожене."
-      error: "пірожене"
-      answer: "Дайте тістечко."
-      options:
-        - "Дайте тістечко."
-        - "Дайте пірожене."
-        - "Дайте тісто."
-      explanation: "Use тістечко."
+inline:
+  - id: act-1
+    type: match-up
+    title: Cafe line to function
+    instruction: Match each cafe phrase with what it does.
+    pairs:
+      - left: 'Рахунок, будь ласка.'
+        right: 'ask for the bill'
+      - left: 'Що ви рекомендуєте?'
+        right: 'ask for a recommendation'
+      - left: 'Мені борщ, будь ласка.'
+        right: 'order food'
+      - left: 'Скільки коштує?'
+        right: 'ask the price'
+      - left: 'Можна карткою?'
+        right: 'ask to pay by card'
+      - left: 'Дуже смачно!'
+        right: 'praise the food'
+      - left: 'Тут вільно?'
+        right: 'ask about a free seat'
+      - left: 'Вам тут чи із собою?'
+        right: 'ask about format'
+      - left: 'Велику каву, будь ласка.'
+        right: 'order a size chunk'
+  - id: act-2
+    type: fill-in
+    title: Order with мені
+    instruction: Choose the form that completes the cafe order.
+    items:
+      - sentence: 'Мені ___, будь ласка.'
+        answer: 'каву'
+        options:
+          - 'каву'
+          - 'кава'
+          - 'каві'
+        explanation: 'Кава becomes каву in an order.'
+      - sentence: 'Мені ___, будь ласка.'
+        answer: 'воду'
+        options:
+          - 'воду'
+          - 'вода'
+          - 'водою'
+        explanation: 'Вода becomes воду.'
+      - sentence: 'Мені ___, будь ласка.'
+        answer: 'борщ'
+        options:
+          - 'борщ'
+          - 'борщу'
+          - 'борщем'
+        explanation: 'Борщ is masculine inanimate and stays борщ.'
+      - sentence: 'Мені ___, будь ласка.'
+        answer: 'салат'
+        options:
+          - 'салат'
+          - 'салату'
+          - 'салатом'
+        explanation: 'Салат stays салат in this A1 pattern.'
+      - sentence: 'Дайте, будь ласка, ___.'
+        answer: 'чай'
+        options:
+          - 'чай'
+          - 'чаю'
+          - 'чаєм'
+        explanation: 'Чай stays чай.'
+      - sentence: 'Я буду ___.'
+        answer: 'піцу'
+        options:
+          - 'піцу'
+          - 'піца'
+          - 'піці'
+        explanation: 'Піца becomes піцу.'
+      - sentence: 'Можна ___?'
+        answer: 'хліб'
+        options:
+          - 'хліб'
+          - 'хліба'
+          - 'хлібом'
+        explanation: 'Хліб stays хліб.'
+      - sentence: 'Мені ___ із собою, будь ласка.'
+        answer: 'маленьку каву'
+        options:
+          - 'маленьку каву'
+          - 'маленька кава'
+          - 'маленької кави'
+        explanation: 'Use маленьку каву as one ordering chunk.'
+  - id: act-3
+    type: quiz
+    title: What do you say?
+    instruction: Choose the line that fits the cafe situation.
+    items:
+      - prompt: 'You want to order coffee.'
+        options:
+          - text: 'Мені каву, будь ласка.'
+            correct: true
+          - text: 'Рахунок, будь ласка.'
+            correct: false
+          - text: 'Що ви рекомендуєте?'
+            correct: false
+        explanation: 'Мені каву, будь ласка is an order.'
+      - prompt: 'You want to pay.'
+        options:
+          - text: 'Рахунок, будь ласка.'
+            correct: true
+          - text: 'Можна меню?'
+            correct: false
+          - text: 'Це гостре?'
+            correct: false
+        explanation: 'Ask for the bill with рахунок.'
+      - prompt: 'You want to know the price.'
+        options:
+          - text: 'Скільки коштує?'
+            correct: true
+          - text: "Це з м'ясом?"
+            correct: false
+          - text: 'Тут вільно?'
+            correct: false
+        explanation: 'Скільки коштує? asks how much it costs.'
+      - prompt: 'You want a recommendation.'
+        options:
+          - text: 'Що ви рекомендуєте?'
+            correct: true
+          - text: 'Є вегетаріанське меню?'
+            correct: false
+          - text: 'Все було дуже смачно!'
+            correct: false
+        explanation: 'Рекомендуєте asks the server to recommend.'
+      - prompt: 'You want to praise the food.'
+        options:
+          - text: 'Все було дуже смачно!'
+            correct: true
+          - text: 'Можна карткою?'
+            correct: false
+          - text: 'Без цукру.'
+            correct: false
+        explanation: 'This is the praise line after eating.'
+      - prompt: 'You want to know whether a seat is free.'
+        options:
+          - text: 'Тут вільно?'
+            correct: true
+          - text: 'Ще одну каву, будь ласка.'
+            correct: false
+          - text: 'Рахунок, будь ласка.'
+            correct: false
+        explanation: 'Тут вільно? asks if the place is free.'
+      - prompt: 'You want to know whether a dish is spicy.'
+        options:
+          - text: 'Це гостре?'
+            correct: true
+          - text: "Це з м'ясом?"
+            correct: false
+          - text: 'Скільки коштує?'
+            correct: false
+        explanation: 'Гостре means spicy here.'
+      - prompt: 'You want to pay by card.'
+        options:
+          - text: 'Можна карткою?'
+            correct: true
+          - text: 'Є вегетаріанське меню?'
+            correct: false
+          - text: 'Що ви рекомендуєте?'
+            correct: false
+        explanation: 'Карткою is the card-payment chunk.'
+  - id: act-4
+    type: fill-in
+    title: Complete the cafe dialogue
+    instruction: Choose the word or phrase that fits the dialogue.
+    items:
+      - sentence: 'Добрий день! Ось ___.'
+        answer: 'меню'
+        options:
+          - 'меню'
+          - 'рахунок'
+          - 'картка'
+        explanation: 'The server gives the menu first.'
+      - sentence: 'Дякую. Що ви ___?'
+        answer: 'рекомендуєте'
+        options:
+          - 'рекомендуєте'
+          - 'коштуєте'
+          - 'платите'
+        explanation: 'Що ви рекомендуєте? asks for advice.'
+      - sentence: 'Борщ дуже ___.'
+        answer: 'смачний'
+        options:
+          - 'смачний'
+          - 'вільний'
+          - 'картковий'
+        explanation: 'Борщ is described as tasty.'
+      - sentence: 'Добре, ___ борщ і хліб, будь ласка.'
+        answer: 'мені'
+        options:
+          - 'мені'
+          - 'я'
+          - 'мене'
+        explanation: 'Мені begins the order frame.'
+      - sentence: 'А що будете ___?'
+        answer: 'пити'
+        options:
+          - 'пити'
+          - 'читати'
+          - 'платити'
+        explanation: 'The server asks what you will drink.'
+      - sentence: 'Добре, одну ___.'
+        answer: 'хвилинку'
+        options:
+          - 'хвилинку'
+          - 'годину'
+          - 'картку'
+        explanation: 'Одну хвилинку means one moment.'
+workbook:
+  - type: true-false
+    title: Cafe culture checks
+    instruction: Decide whether each statement fits the module.
+    items:
+      - statement: 'Рахунок, будь ласка asks for the bill.'
+        answer: true
+        explanation: 'Рахунок is the bill.'
+      - statement: 'Вам тут чи із собою? asks whether the order is for here or to go.'
+        answer: true
+        explanation: 'Тут and із собою are the format answers.'
+      - statement: 'Велику каву is taught here as an adjective table.'
+        answer: false
+        explanation: 'It is taught as one cafe chunk.'
+      - statement: 'Кава на винос is the course form.'
+        answer: false
+        explanation: 'Use кава із собою.'
+      - statement: 'Можна карткою? asks whether card payment is possible.'
+        answer: true
+        explanation: 'Карткою is the card-payment chunk.'
+      - statement: 'Дуже смачно було! is a food praise line.'
+        answer: true
+        explanation: 'Use it after the meal.'
+      - statement: 'Пірожене is the course word for pastry.'
+        answer: false
+        explanation: 'Use тістечко.'
+      - statement: 'Перепрошую is a polite way to get attention.'
+        answer: true
+        explanation: 'It is a neutral service-scene attention getter.'
+  - type: order
+    title: One cafe visit
+    instruction: Put the cafe visit in order.
+    is_ukrainian: true
+    items:
+      - 'Добрий день! Можна меню?'
+      - 'Що ви рекомендуєте?'
+      - 'Мені борщ і хліб, будь ласка.'
+      - 'А мені маленьку каву із собою.'
+      - 'Рахунок, будь ласка.'
+      - 'Можна карткою?'
+      - 'Дякую, все було дуже смачно!'
+      - 'До побачення!'
+    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+  - type: group-sort
+    title: Cafe shelves
+    instruction: Sort each phrase by its cafe job.
+    groups:
+      - name: 'Greeting or attention'
+        items:
+          - 'Добрий день!'
+          - 'Доброго ранку!'
+          - 'Перепрошую.'
+      - name: 'Ordering'
+        items:
+          - 'Мені каву, будь ласка.'
+          - 'Дайте, будь ласка, борщ.'
+          - 'Велику каву із собою.'
+      - name: 'Questions'
+        items:
+          - 'Що ви рекомендуєте?'
+          - 'Скільки коштує?'
+          - 'Це гостре?'
+      - name: 'Payment or closing'
+        items:
+          - 'Рахунок, будь ласка.'
+          - 'Можна карткою?'
+          - 'До побачення!'
+  - type: error-correction
+    title: Repair cafe interference
+    instruction: Choose the clean Ukrainian repair.
+    anchor_id: repair-at-the-cafe-interference
+    items:
+      - sentence: 'Доброго дня!'
+        error: 'Доброго дня!'
+        answer: 'Добрий день!'
+        options:
+          - 'Добрий день!'
+          - 'Доброго дня!'
+          - 'Добрий дня!'
+        explanation: 'Use Добрий день as the neutral greeting.'
+      - sentence: 'Вибачаюсь!'
+        error: 'Вибачаюсь!'
+        answer: 'Вибачте! / Перепрошую!'
+        options:
+          - 'Вибачте! / Перепрошую!'
+          - 'Вибачаюсь!'
+          - 'Я вибачаю себе!'
+        explanation: 'Use Вибачте or Перепрошую.'
+      - sentence: 'Я хочу кава.'
+        error: 'Я хочу кава.'
+        answer: 'Я хочу каву. / Дайте каву.'
+        options:
+          - 'Я хочу каву. / Дайте каву.'
+          - 'Я хочу кава.'
+          - 'Я хочу каві.'
+        explanation: 'Кава becomes каву in this request.'
+      - sentence: 'ПрошУ (як прохання)'
+        error: 'ПрошУ (як прохання)'
+        answer: 'ПрОшу (як "будь ласка")'
+        options:
+          - 'ПрОшу (як "будь ласка")'
+          - 'ПрошУ (як прохання)'
+          - 'Прошу без наголосу.'
+        explanation: 'As a polite inserted word meaning please, the stress is ПрОшу.'
+      - sentence: '[балєт], [проблєма]'
+        error: '[балєт], [проблєма]'
+        answer: '[балет], [проблема]'
+        options:
+          - '[балет], [проблема]'
+          - '[балєт], [проблєма]'
+          - '[балет], [проблєма]'
+        explanation: 'Keep л before е hard in these examples.'
+      - sentence: 'Здрастуйте! / Пока!'
+        error: 'Здрастуйте! / Пока!'
+        answer: 'Добрий день! / До побачення!'
+        options:
+          - 'Добрий день! / До побачення!'
+          - 'Здрастуйте! / Пока!'
+          - 'Добрий день! / Пока!'
+        explanation: 'Use Ukrainian greeting and goodbye formulas.'
+      - sentence: 'Можна счет?'
+        error: 'счет'
+        answer: 'Можна рахунок?'
+        options:
+          - 'Можна рахунок?'
+          - 'Можна счет?'
+          - 'Можна рахунка?'
+        explanation: 'Use рахунок.'
+      - sentence: 'Кава на винос.'
+        error: 'на винос'
+        answer: 'Кава із собою.'
+        options:
+          - 'Кава із собою.'
+          - 'Кава на винос.'
+          - 'Кава з себе.'
+        explanation: 'The course chunk is із собою.'
+      - sentence: 'Дайте пірожене.'
+        error: 'пірожене'
+        answer: 'Дайте тістечко.'
+        options:
+          - 'Дайте тістечко.'
+          - 'Дайте пірожене.'
+          - 'Дайте тісто.'
+        explanation: 'Use тістечко.'

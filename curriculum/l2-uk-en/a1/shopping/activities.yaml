@@ -1,352 +1,350 @@
-- id: act-1
-  type: fill-in
-  title: Price questions
-  instruction: Choose the word that completes each shopping question.
-  items:
-    - sentence: "Скільки ___ хліб?"
-      answer: "коштує"
-      options:
-        - "коштує"
-        - "коштують"
-        - "коштувати"
-      explanation: "Use коштує with one item."
-    - sentence: "Скільки ___ молоко?"
-      answer: "коштує"
-      options:
-        - "коштує"
-        - "коштують"
-        - "коштувала"
-      explanation: "Молоко is one item here, so use коштує."
-    - sentence: "Скільки ___ цей сир?"
-      answer: "коштує"
-      options:
-        - "коштує"
-        - "коштують"
-        - "коштуєте"
-      explanation: "Цей сир is singular."
-    - sentence: "Скільки ___ яблука?"
-      answer: "коштують"
-      options:
-        - "коштують"
-        - "коштує"
-        - "коштувати"
-      explanation: "Яблука is plural, so use коштують."
-    - sentence: "Скільки ___ помідори?"
-      answer: "коштують"
-      options:
-        - "коштують"
-        - "коштує"
-        - "коштуєш"
-      explanation: "Помідори is plural."
-    - sentence: "Скільки ___ пляшка води?"
-      answer: "коштує"
-      options:
-        - "коштує"
-        - "коштують"
-        - "коштуємо"
-      explanation: "Пляшка is one bottle."
-    - sentence: "Скільки ___ три пляшки води?"
-      answer: "коштують"
-      options:
-        - "коштують"
-        - "коштує"
-        - "коштувала"
-      explanation: "Three bottles are plural in this price question."
-    - sentence: "Скільки ___ ця сукня?"
-      answer: "коштує"
-      options:
-        - "коштує"
-        - "коштують"
-        - "коштуємо"
-      explanation: "Ця сукня is singular."
-- id: act-2
-  type: quiz
-  title: Гривня, гривні, гривень
-  instruction: Choose the currency form that fits the number.
-  items:
-    - prompt: "21 ___"
-      options:
-        - text: "гривня"
-          correct: true
-        - text: "гривні"
-          correct: false
-        - text: "гривень"
-          correct: false
-      explanation: "21 ends like 1: гривня."
-    - prompt: "32 ___"
-      options:
-        - text: "гривні"
-          correct: true
-        - text: "гривня"
-          correct: false
-        - text: "гривень"
-          correct: false
-      explanation: "32 ends like 2: гривні."
-    - prompt: "45 ___"
-      options:
-        - text: "гривень"
-          correct: true
-        - text: "гривня"
-          correct: false
-        - text: "гривні"
-          correct: false
-      explanation: "45 uses гривень."
-    - prompt: "100 ___"
-      options:
-        - text: "гривень"
-          correct: true
-        - text: "гривня"
-          correct: false
-        - text: "гривні"
-          correct: false
-      explanation: "100 uses гривень."
-    - prompt: "1 ___"
-      options:
-        - text: "гривня"
-          correct: true
-        - text: "гривні"
-          correct: false
-        - text: "гривень"
-          correct: false
-      explanation: "1 is гривня."
-    - prompt: "3 ___"
-      options:
-        - text: "гривні"
-          correct: true
-        - text: "гривня"
-          correct: false
-        - text: "гривень"
-          correct: false
-      explanation: "3 is гривні."
-    - prompt: "10 ___"
-      options:
-        - text: "гривень"
-          correct: true
-        - text: "гривня"
-          correct: false
-        - text: "гривні"
-          correct: false
-      explanation: "10 is гривень."
-    - prompt: "54 ___"
-      options:
-        - text: "гривні"
-          correct: true
-        - text: "гривня"
-          correct: false
-        - text: "гривень"
-          correct: false
-      explanation: "54 ends like 4: гривні."
-- id: act-3
-  type: match-up
-  title: Where do you buy it?
-  instruction: Match each item with a likely place or department.
-  pairs:
-    - left: "помідори"
-      right: "ринок"
-    - left: "м'ясо"
-      right: "м'ясний відділ"
-    - left: "сир"
-      right: "молочний відділ"
-    - left: "хліб"
-      right: "крамниця"
-    - left: "молоко"
-      right: "супермаркет"
-    - left: "вода"
-      right: "магазин"
-    - left: "сукня"
-      right: "магазин одягу"
-    - left: "книжка"
-      right: "книгарня"
-- id: act-4
-  type: fill-in
-  title: Quantity chunks
-  instruction: Choose the quantity word or phrase that fits the product.
-  items:
-    - sentence: "Дайте, будь ласка, ___ яблук."
-      answer: "один кілограм"
-      options:
-        - "один кілограм"
-        - "одна пляшка"
-        - "один літр"
-      explanation: "Use один кілограм яблук as a buying chunk."
-    - sentence: "Дайте ___ молока."
-      answer: "літр"
-      options:
-        - "літр"
-        - "пляшку"
-        - "буханку"
-      explanation: "Use літр молока."
-    - sentence: "Дайте ___ води."
-      answer: "пляшку"
-      options:
-        - "пляшку"
-        - "кілограм"
-        - "буханку"
-      explanation: "Use пляшку води."
-    - sentence: "Дайте ___ чаю."
-      answer: "пачку"
-      options:
-        - "пачку"
-        - "літр"
-        - "пляшку"
-      explanation: "Use пачку чаю."
-    - sentence: "Дайте ___ хліба."
-      answer: "буханку"
-      options:
-        - "буханку"
-        - "літр"
-        - "пляшку"
-      explanation: "Use буханку хліба."
-    - sentence: "Дайте, будь ласка, ___ помідорів."
-      answer: "два кілограми"
-      options:
-        - "два кілограми"
-        - "дві пляшки"
-        - "два літри"
-      explanation: "Use два кілограми помідорів."
-    - sentence: "Купіть три ___ води."
-      answer: "пляшки"
-      options:
-        - "пляшки"
-        - "пляшка"
-        - "кілограм"
-      explanation: "Use три пляшки води."
-- id: act-5
-  type: group-sort
-  title: Shopping shelves
-  instruction: Sort each phrase by what it does in a shopping visit.
-  groups:
-    - name: "Start or availability"
-      items:
-        - "Добрий день!"
-        - "У вас є хліб?"
-        - "Чи є у вас яблука?"
-    - name: "Price"
-      items:
-        - "Скільки коштує?"
-        - "Скільки коштують яблука?"
-        - "Дорого!"
-    - name: "Quantity"
-      items:
-        - "один кілограм яблук"
-        - "літр молока"
-        - "пляшка води"
-    - name: "Checkout"
-      items:
-        - "З вас сто сім гривень."
-        - "Можна карткою?"
-        - "Карткою, будь ласка."
-- id: act-6
-  type: order
-  title: One shopping visit
-  instruction: Put the shopping visit in order.
-  is_ukrainian: true
-  items:
-    - "Добрий день! У вас є яблука?"
-    - "Так, є."
-    - "Скільки коштує кілограм яблук?"
-    - "Сорок гривень."
-    - "Дайте, будь ласка, один кілограм яблук."
-    - "З вас сорок гривень."
-    - "Можна карткою?"
-    - "Карткою, будь ласка."
-  correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
-- id: act-7
-  type: true-false
-  title: Shopping decisions
-  instruction: Decide whether each statement fits this module.
-  items:
-    - statement: "Скільки коштує? asks about price."
-      answer: true
-      explanation: "Коштує is the price verb."
-    - statement: "Скільки коштують яблука? is used for plural apples."
-      answer: true
-      explanation: "Use коштують with plural items."
-    - statement: "Кілограм яблук is taught here as a ready shopping chunk."
-      answer: true
-      explanation: "The module avoids a full case lesson."
-    - statement: "Карткою, будь ласка means by card, please."
-      answer: true
-      explanation: "It is the checkout payment chunk."
-    - statement: "З вас сто сім гривень is a greeting."
-      answer: false
-      explanation: "It is a checkout total."
-    - statement: "Приміряти is useful when trying on clothes."
-      answer: true
-      explanation: "Use приміряти for clothing."
-    - statement: "Скільки це є? is the course price question."
-      answer: false
-      explanation: "Use Скільки це коштує?"
-    - statement: "Грн is the common price-label abbreviation for гривня."
-      answer: true
-      explanation: "Грн appears on price labels."
-- id: act-8
-  type: error-correction
-  title: Repair shopping interference
-  instruction: Choose the clean Ukrainian repair.
-  anchor_id: repair-shopping-interference
-  items:
-    - sentence: "How much is it? → Скільки це є?"
-      error: "How much is it? → Скільки це є?"
-      answer: "Скільки це коштує?"
-      options:
-        - "Скільки це коштує?"
-        - "Скільки це є?"
-        - "Скільки це має?"
-      explanation: "Use коштує for price questions."
-    - sentence: "I have 20 hryvnias. → Я маю 20 гривнів."
-      error: "I have 20 hryvnias. → Я маю 20 гривнів."
-      answer: "У мене є 20 гривень."
-      options:
-        - "У мене є 20 гривень."
-        - "Я маю 20 гривнів."
-        - "У мене 20 гривні."
-      explanation: "Use У мене є and гривень."
-    - sentence: "Do you have...? → Ви маєте хліб?"
-      error: "Do you have...? → Ви маєте хліб?"
-      answer: "У вас є хліб?"
-      options:
-        - "У вас є хліб?"
-        - "Ви маєте хліб?"
-        - "Вас є хліб?"
-      explanation: "Use the shop availability chunk У вас є."
-    - sentence: "I will pay with a card. → Я плачу з карткою."
-      error: "I will pay with a card. → Я плачу з карткою."
-      answer: "Карткою, будь ласка."
-      options:
-        - "Карткою, будь ласка."
-        - "Я плачу з карткою."
-        - "З карткою, будь ласка."
-      explanation: "At checkout, use the chunk Карткою, будь ласка."
-    - sentence: "Give me one kilo apples. → Дайте один кілограм яблука."
-      error: "Give me one kilo apples. → Дайте один кілограм яблука."
-      answer: "Дайте, будь ласка, один кілограм яблук."
-      options:
-        - "Дайте, будь ласка, один кілограм яблук."
-        - "Дайте один кілограм яблука."
-        - "Дайте одна кілограм яблук."
-      explanation: "Use the whole chunk один кілограм яблук."
-    - sentence: "It costs 50 grivnas. → Це коштує 50 гривн."
-      error: "It costs 50 grivnas. → Це коштує 50 гривн."
-      answer: "Це коштує 50 гривень."
-      options:
-        - "Це коштує 50 гривень."
-        - "Це коштує 50 гривн."
-        - "Це коштує 50 гривні."
-      explanation: "The money word is гривня; 50 uses гривень."
-    - sentence: "Я хочу поміряти пальто."
-      error: "поміряти"
-      answer: "Я хочу приміряти пальто."
-      options:
-        - "Я хочу приміряти пальто."
-        - "Я хочу поміряти пальто."
-        - "Я хочу міряти пальто."
-      explanation: "Use приміряти for trying on clothes."
-    - sentence: "Два яблука коштує сорок гривень."
-      error: "коштує"
-      answer: "Два яблука коштують сорок гривень."
-      options:
-        - "Два яблука коштують сорок гривень."
-        - "Два яблука коштує сорок гривень."
-        - "Два яблука коштувати сорок гривень."
-      explanation: "Use коштують with plural apples."
+inline:
+  - id: act-1
+    type: fill-in
+    title: Price questions
+    instruction: Choose the word that completes each shopping question.
+    items:
+      - sentence: 'Скільки ___ хліб?'
+        answer: 'коштує'
+        options:
+          - 'коштує'
+          - 'коштують'
+          - 'коштувати'
+        explanation: 'Use коштує with one item.'
+      - sentence: 'Скільки ___ молоко?'
+        answer: 'коштує'
+        options:
+          - 'коштує'
+          - 'коштують'
+          - 'коштувала'
+        explanation: 'Молоко is one item here, so use коштує.'
+      - sentence: 'Скільки ___ цей сир?'
+        answer: 'коштує'
+        options:
+          - 'коштує'
+          - 'коштують'
+          - 'коштуєте'
+        explanation: 'Цей сир is singular.'
+      - sentence: 'Скільки ___ яблука?'
+        answer: 'коштують'
+        options:
+          - 'коштують'
+          - 'коштує'
+          - 'коштувати'
+        explanation: 'Яблука is plural, so use коштують.'
+      - sentence: 'Скільки ___ помідори?'
+        answer: 'коштують'
+        options:
+          - 'коштують'
+          - 'коштує'
+          - 'коштуєш'
+        explanation: 'Помідори is plural.'
+      - sentence: 'Скільки ___ пляшка води?'
+        answer: 'коштує'
+        options:
+          - 'коштує'
+          - 'коштують'
+          - 'коштуємо'
+        explanation: 'Пляшка is one bottle.'
+      - sentence: 'Скільки ___ три пляшки води?'
+        answer: 'коштують'
+        options:
+          - 'коштують'
+          - 'коштує'
+          - 'коштувала'
+        explanation: 'Three bottles are plural in this price question.'
+      - sentence: 'Скільки ___ ця сукня?'
+        answer: 'коштує'
+        options:
+          - 'коштує'
+          - 'коштують'
+          - 'коштуємо'
+        explanation: 'Ця сукня is singular.'
+  - id: act-2
+    type: quiz
+    title: Гривня, гривні, гривень
+    instruction: Choose the currency form that fits the number.
+    items:
+      - prompt: '21 ___'
+        options:
+          - text: 'гривня'
+            correct: true
+          - text: 'гривні'
+            correct: false
+          - text: 'гривень'
+            correct: false
+        explanation: '21 ends like 1: гривня.'
+      - prompt: '32 ___'
+        options:
+          - text: 'гривні'
+            correct: true
+          - text: 'гривня'
+            correct: false
+          - text: 'гривень'
+            correct: false
+        explanation: '32 ends like 2: гривні.'
+      - prompt: '45 ___'
+        options:
+          - text: 'гривень'
+            correct: true
+          - text: 'гривня'
+            correct: false
+          - text: 'гривні'
+            correct: false
+        explanation: '45 uses гривень.'
+      - prompt: '100 ___'
+        options:
+          - text: 'гривень'
+            correct: true
+          - text: 'гривня'
+            correct: false
+          - text: 'гривні'
+            correct: false
+        explanation: '100 uses гривень.'
+      - prompt: '1 ___'
+        options:
+          - text: 'гривня'
+            correct: true
+          - text: 'гривні'
+            correct: false
+          - text: 'гривень'
+            correct: false
+        explanation: '1 is гривня.'
+      - prompt: '3 ___'
+        options:
+          - text: 'гривні'
+            correct: true
+          - text: 'гривня'
+            correct: false
+          - text: 'гривень'
+            correct: false
+        explanation: '3 is гривні.'
+      - prompt: '10 ___'
+        options:
+          - text: 'гривень'
+            correct: true
+          - text: 'гривня'
+            correct: false
+          - text: 'гривні'
+            correct: false
+        explanation: '10 is гривень.'
+      - prompt: '54 ___'
+        options:
+          - text: 'гривні'
+            correct: true
+          - text: 'гривня'
+            correct: false
+          - text: 'гривень'
+            correct: false
+        explanation: '54 ends like 4: гривні.'
+  - id: act-3
+    type: match-up
+    title: Where do you buy it?
+    instruction: Match each item with a likely place or department.
+    pairs:
+      - left: 'помідори'
+        right: 'ринок'
+      - left: "м'ясо"
+        right: "м'ясний відділ"
+      - left: 'сир'
+        right: 'молочний відділ'
+      - left: 'хліб'
+        right: 'крамниця'
+      - left: 'молоко'
+        right: 'супермаркет'
+      - left: 'вода'
+        right: 'магазин'
+      - left: 'сукня'
+        right: 'магазин одягу'
+      - left: 'книжка'
+        right: 'книгарня'
+  - id: act-4
+    type: fill-in
+    title: Quantity chunks
+    instruction: Choose the quantity word or phrase that fits the product.
+    items:
+      - sentence: 'Дайте, будь ласка, ___ яблук.'
+        answer: 'один кілограм'
+        options:
+          - 'один кілограм'
+          - 'одна пляшка'
+          - 'один літр'
+        explanation: 'Use один кілограм яблук as a buying chunk.'
+      - sentence: 'Дайте ___ молока.'
+        answer: 'літр'
+        options:
+          - 'літр'
+          - 'пляшку'
+          - 'буханку'
+        explanation: 'Use літр молока.'
+      - sentence: 'Дайте ___ води.'
+        answer: 'пляшку'
+        options:
+          - 'пляшку'
+          - 'кілограм'
+          - 'буханку'
+        explanation: 'Use пляшку води.'
+      - sentence: 'Дайте ___ чаю.'
+        answer: 'пачку'
+        options:
+          - 'пачку'
+          - 'літр'
+          - 'пляшку'
+        explanation: 'Use пачку чаю.'
+      - sentence: 'Дайте ___ хліба.'
+        answer: 'буханку'
+        options:
+          - 'буханку'
+          - 'літр'
+          - 'пляшку'
+        explanation: 'Use буханку хліба.'
+      - sentence: 'Дайте, будь ласка, ___ помідорів.'
+        answer: 'два кілограми'
+        options:
+          - 'два кілограми'
+          - 'дві пляшки'
+          - 'два літри'
+        explanation: 'Use два кілограми помідорів.'
+      - sentence: 'Купіть три ___ води.'
+        answer: 'пляшки'
+        options:
+          - 'пляшки'
+          - 'пляшка'
+          - 'кілограм'
+        explanation: 'Use три пляшки води.'
+workbook:
+  - type: group-sort
+    title: Shopping shelves
+    instruction: Sort each phrase by what it does in a shopping visit.
+    groups:
+      - name: 'Start or availability'
+        items:
+          - 'Добрий день!'
+          - 'У вас є хліб?'
+          - 'Чи є у вас яблука?'
+      - name: 'Price'
+        items:
+          - 'Скільки коштує?'
+          - 'Скільки коштують яблука?'
+          - 'Дорого!'
+      - name: 'Quantity'
+        items:
+          - 'один кілограм яблук'
+          - 'літр молока'
+          - 'пляшка води'
+      - name: 'Checkout'
+        items:
+          - 'З вас сто сім гривень.'
+          - 'Можна карткою?'
+          - 'Карткою, будь ласка.'
+  - type: order
+    title: One shopping visit
+    instruction: Put the shopping visit in order.
+    is_ukrainian: true
+    items:
+      - 'Добрий день! У вас є яблука?'
+      - 'Так, є.'
+      - 'Скільки коштує кілограм яблук?'
+      - 'Сорок гривень.'
+      - 'Дайте, будь ласка, один кілограм яблук.'
+      - 'З вас сорок гривень.'
+      - 'Можна карткою?'
+      - 'Карткою, будь ласка.'
+    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+  - type: true-false
+    title: Shopping decisions
+    instruction: Decide whether each statement fits this module.
+    items:
+      - statement: 'Скільки коштує? asks about price.'
+        answer: true
+        explanation: 'Коштує is the price verb.'
+      - statement: 'Скільки коштують яблука? is used for plural apples.'
+        answer: true
+        explanation: 'Use коштують with plural items.'
+      - statement: 'Кілограм яблук is taught here as a ready shopping chunk.'
+        answer: true
+        explanation: 'The module avoids a full case lesson.'
+      - statement: 'Карткою, будь ласка means by card, please.'
+        answer: true
+        explanation: 'It is the checkout payment chunk.'
+      - statement: 'З вас сто сім гривень is a greeting.'
+        answer: false
+        explanation: 'It is a checkout total.'
+      - statement: 'Приміряти is useful when trying on clothes.'
+        answer: true
+        explanation: 'Use приміряти for clothing.'
+      - statement: 'Скільки це є? is the course price question.'
+        answer: false
+        explanation: 'Use Скільки це коштує?'
+      - statement: 'Грн is the common price-label abbreviation for гривня.'
+        answer: true
+        explanation: 'Грн appears on price labels.'
+  - type: error-correction
+    title: Repair shopping interference
+    instruction: Choose the clean Ukrainian repair.
+    anchor_id: repair-shopping-interference
+    items:
+      - sentence: 'How much is it? → Скільки це є?'
+        error: 'How much is it? → Скільки це є?'
+        answer: 'Скільки це коштує?'
+        options:
+          - 'Скільки це коштує?'
+          - 'Скільки це є?'
+          - 'Скільки це має?'
+        explanation: 'Use коштує for price questions.'
+      - sentence: 'I have 20 hryvnias. → Я маю 20 гривнів.'
+        error: 'I have 20 hryvnias. → Я маю 20 гривнів.'
+        answer: 'У мене є 20 гривень.'
+        options:
+          - 'У мене є 20 гривень.'
+          - 'Я маю 20 гривнів.'
+          - 'У мене 20 гривні.'
+        explanation: 'Use У мене є and гривень.'
+      - sentence: 'Do you have...? → Ви маєте хліб?'
+        error: 'Do you have...? → Ви маєте хліб?'
+        answer: 'У вас є хліб?'
+        options:
+          - 'У вас є хліб?'
+          - 'Ви маєте хліб?'
+          - 'Вас є хліб?'
+        explanation: 'Use the shop availability chunk У вас є.'
+      - sentence: 'I will pay with a card. → Я плачу з карткою.'
+        error: 'I will pay with a card. → Я плачу з карткою.'
+        answer: 'Карткою, будь ласка.'
+        options:
+          - 'Карткою, будь ласка.'
+          - 'Я плачу з карткою.'
+          - 'З карткою, будь ласка.'
+        explanation: 'At checkout, use the chunk Карткою, будь ласка.'
+      - sentence: 'Give me one kilo apples. → Дайте один кілограм яблука.'
+        error: 'Give me one kilo apples. → Дайте один кілограм яблука.'
+        answer: 'Дайте, будь ласка, один кілограм яблук.'
+        options:
+          - 'Дайте, будь ласка, один кілограм яблук.'
+          - 'Дайте один кілограм яблука.'
+          - 'Дайте одна кілограм яблук.'
+        explanation: 'Use the whole chunk один кілограм яблук.'
+      - sentence: 'It costs 50 grivnas. → Це коштує 50 гривн.'
+        error: 'It costs 50 grivnas. → Це коштує 50 гривн.'
+        answer: 'Це коштує 50 гривень.'
+        options:
+          - 'Це коштує 50 гривень.'
+          - 'Це коштує 50 гривн.'
+          - 'Це коштує 50 гривні.'
+        explanation: 'The money word is гривня; 50 uses гривень.'
+      - sentence: 'Я хочу поміряти пальто.'
+        error: 'поміряти'
+        answer: 'Я хочу приміряти пальто.'
+        options:
+          - 'Я хочу приміряти пальто.'
+          - 'Я хочу поміряти пальто.'
+          - 'Я хочу міряти пальто.'
+        explanation: 'Use приміряти for trying on clothes.'
+      - sentence: 'Два яблука коштує сорок гривень.'
+        error: 'коштує'
+        answer: 'Два яблука коштують сорок гривень.'
+        options:
+          - 'Два яблука коштують сорок гривень.'
+          - 'Два яблука коштує сорок гривень.'
+          - 'Два яблука коштувати сорок гривень.'
+        explanation: 'Use коштують with plural apples.'

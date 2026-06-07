@@ -206,11 +206,3 @@ Use these repairs in shopping scenes:
 | card payment with **з** | **Карткою, будь ласка.** |
 | weak quantity chunk | **Дайте, будь ласка, один кілограм яблук.** |
 | wrong currency ending | **Це коштує 50 гривень.** |
-
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

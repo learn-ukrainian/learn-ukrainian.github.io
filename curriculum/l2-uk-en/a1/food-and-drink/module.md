@@ -206,7 +206,6 @@ You may also recognize simple buying measures: **літр**, **грам**, and
 **сто грамів сиру**, **кілограм картоплі**. The detailed number patterns belong
 to later shopping practice.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Щоденний раціон
 
@@ -242,7 +241,6 @@ as **мені подобається борщ** are enough.
 Again, keep the chunks whole. **Без цукру** and **без молока** are service
 phrases, not a case chart. You will meet the grammar later with more room.
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="repair-food-and-drink-interference"></span>
 
@@ -264,7 +262,6 @@ The goal is not to shame a learner who has heard mixed forms. The goal is to
 give the learner clean, memorable Ukrainian forms early. Food vocabulary is
 high-frequency, so early repairs matter.
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ## Підсумок
 
@@ -291,5 +288,3 @@ Final self-check:
 Now write your own six-line food day. Include one breakfast line, one lunch
 line, one dinner line, one drink with **з**, one drink with **без**, and one
 Ukrainian cultural dish.
-
-<!-- INJECT_ACTIVITY: act-8 -->

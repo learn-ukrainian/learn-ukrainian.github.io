@@ -185,7 +185,6 @@ The dialogue is a role play. It uses etiquette formulas and a cafe invitation
 idea: **Хочеш, аби твої друзі розділили з тобою свято?** For A1, that becomes
 a simple invitation: **Ходімо в кафе. Я хочу каву і торт.**
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Підсумок
 
@@ -216,9 +215,3 @@ inside this checkpoint. Finish A1.6 by making the food-shopping story smooth.
 | **Моє ім'я є Джон, і я хочу меню.** | **Мене звати Джон, дайте меню.** |
 | **Чи не могли б ви дати мені рахунок?** | **Дайте, будь ласка, рахунок.** |
 | payment with a non-Ukrainian currency | **Я плачу гривнями.** |
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
