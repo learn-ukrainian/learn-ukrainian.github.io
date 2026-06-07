@@ -66,6 +66,7 @@ from .issues_router import router as issues_router
 from .rag_router import router as rag_router
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
+from .route_contracts import router as contracts_router
 from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
 from .session_router import router as session_router
@@ -124,6 +125,7 @@ app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")
 app.include_router(cost_router, prefix="/api/cost")
 app.include_router(cost_router, prefix="/api/analytics/cost")
+app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])
 app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
 app.include_router(delegate_router, prefix="/api/delegate")

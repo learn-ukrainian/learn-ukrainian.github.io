@@ -31,6 +31,7 @@ def test_index_page_uses_shared_parchment_monitor_design():
         "/cost.html",
         "/curriculum-dashboard.html",
         "/delegate.html",
+        "/routing.html",
         "/artifacts/",
         "/image-explorer.html",
         "/orient.html",
@@ -97,6 +98,17 @@ def test_runtime_page_keeps_primary_monitor_nav():
         assert f'href="{href}"' in html
 
 
+def test_routing_page_uses_live_monitor_sources():
+    html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
+    assert "Static snapshot" not in html
+    assert "refreshed manually" not in html
+    assert "/api/state/routing-budget" in html
+    assert "/api/runtime/agents" in html
+    assert "/api/runtime/usage?days=7" in html
+    assert "/api/delegate/tasks?limit=100" in html
+    assert "Live routing budget" in html
+
+
 def test_shared_monitor_css_targets_unified_nav_classes():
     css = (DASHBOARDS / "monitor.css").read_text(encoding="utf-8")
     assert ".topbar .nav" not in css
@@ -154,6 +166,7 @@ def test_artifacts_page_preserves_legacy_dashboard_links():
         "/cost.html",
         "/curriculum-dashboard.html",
         "/delegate.html",
+        "/routing.html",
         "/image-explorer.html",
         "/orient.html",
         "/progress.html",
