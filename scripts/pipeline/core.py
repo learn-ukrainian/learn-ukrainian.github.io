@@ -2035,7 +2035,9 @@ def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
 
     skill_name, skill_identity, persona_flavor = get_track_skill(track, num)
-    immersion_rule = get_immersion_rule(track, num)
+    from config import get_immersion_rule as get_shared_immersion_rule
+
+    immersion_rule = get_shared_immersion_rule(track, num, letter_module=bool(plan.get("letter_module")))
     level_constraints = get_level_constraints(track, plan)
     activity_config = get_activity_config(track, num, slug=slug)
     track_config = get_track_config(track)

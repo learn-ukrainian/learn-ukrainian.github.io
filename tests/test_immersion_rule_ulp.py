@@ -24,25 +24,50 @@ def _keyword_hits(rule: str) -> int:
     return sum(1 for keyword in ULP_KEYWORDS if keyword.lower() in lowered)
 
 
+def _writer_context_immersion_rule(slug: str) -> str:
+    plan_path = linear_pipeline.plan_path_for("a1", slug)
+    plan = linear_pipeline.load_plan(plan_path)
+    context = linear_pipeline.writer_context(
+        plan=plan,
+        plan_content=plan_path.read_text(encoding="utf-8"),
+        knowledge_packet="Knowledge packet stub.",
+        wiki_manifest="{}",
+    )
+    return context["IMMERSION_RULE"]
+
+
 def test_a1_letter_module_gets_ulp_practices() -> None:
-    rule = config.get_immersion_rule("a1", 4)
+    rule = config.get_immersion_rule("a1", 4, letter_module=True)
 
     assert "ULP Presentation Pattern" in rule
+    assert "letter_module:true full contract" in rule
+    assert "SIDE-BY-SIDE BILINGUAL" in rule
     assert _keyword_hits(rule) >= 2
 
 
-def test_a1_m20_gets_ulp_practices() -> None:
+def test_a1_m20_gets_short_ulp_reference_only() -> None:
     rule = config.get_immersion_rule("a1", 20)
 
-    assert "ULP Presentation Pattern" in rule
-    assert _keyword_hits(rule) >= 2
+    assert "docs/best-practices/ulp-presentation-pattern.md" in rule
+    assert "ULP Presentation Pattern" not in rule
+    assert "SIDE-BY-SIDE BILINGUAL" not in rule
 
 
-def test_a1_late_module_gets_s1_ulp_practices() -> None:
+def test_a1_late_module_gets_short_ulp_reference_only() -> None:
     rule = config.get_immersion_rule("a1", 50)
 
-    assert "ULP Presentation Pattern" in rule
-    assert _keyword_hits(rule) >= 2
+    assert "docs/best-practices/ulp-presentation-pattern.md" in rule
+    assert "ULP Presentation Pattern" not in rule
+    assert "SIDE-BY-SIDE BILINGUAL" not in rule
+
+
+def test_writer_context_uses_plan_letter_module_flag() -> None:
+    letter_rule = _writer_context_immersion_rule("stress-and-melody")
+    non_letter_rule = _writer_context_immersion_rule("my-morning")
+
+    assert "letter_module:true full contract" in letter_rule
+    assert "docs/best-practices/ulp-presentation-pattern.md" in non_letter_rule
+    assert "letter_module:true full contract" not in non_letter_rule
 
 
 def test_c1_module_does_not_get_a1_ulp_practices() -> None:

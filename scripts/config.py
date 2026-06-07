@@ -586,17 +586,10 @@ def _uses_ulp_s1_band(band_key: str) -> bool:
 def _ulp_s1_language_roles() -> str:
     return (
         "TARGET: 40-55% Ukrainian. ULP S1 bilingual immersion.\n"
-        "## ULP Presentation Pattern (Anna Ohoiko S1 baseline)\n"
         "LANGUAGE ROLES:\n"
-        "- PRIMARY POSTURE: Ukrainian-first, example-first teaching. English is a brief receding scaffold, not lecture prose.\n"
-        "- EM-DASH GLOSS: Introduce every Ukrainian term before its English gloss: `прокидаюся — I wake up`.\n"
-        "- STRESS MARKS: The pipeline applies stress marks deterministically after writing; write plain Ukrainian.\n"
-        "- DIALOGUES: Use `<DialogueBox uk=\"...\" en=\"...\" />`; each `uk` turn is Ukrainian-only.\n"
-        "- TAB 3 RECALL: Comprehension stems and content options are Ukrainian-only; English appears only in UI affordances.\n"
-        "- PERSONA: Use a named first-person teacher persona or named characters with real Ukrainian cultural anchors.\n"
-        "- FORBIDDEN: English grammar-lecture paragraphs with Ukrainian bolted on, transliteration tables, "
-        "\"X sounds like Y in English\", \"the student must learn\", and English topic-sentence openers.\n"
-        "Ukrainian sentences stay short and concrete; follow Anna Ohoiko's S1 rhythm: short Ukrainian first, then brief English support."
+        "- PRIMARY POSTURE: Ukrainian-first, example-first teaching with brief receding English support.\n"
+        "- ULP SSOT: follow docs/best-practices/ulp-presentation-pattern.md for the Ohoiko S1 rhythm. "
+        "The full seven-practice contract is injected only for `letter_module: true` plans."
     )
 
 
@@ -622,6 +615,22 @@ def _structural_immersion_rule(band: dict[str, Any]) -> str:
 def _ulp_practices_rule(track: str, module_num: int) -> str:
     """Deprecated compatibility hook; ULP S1 is embedded in band roles."""
     return ""
+
+
+def _ulp_letter_module_contract() -> str:
+    return (
+        "## ULP Presentation Pattern — letter_module:true full contract\n"
+        "For `letter_module: true` A1/A2 plans, follow all seven Anna Ohoiko practices:\n"
+        "1. EM-DASH GLOSS: UK terms precede EN glosses (`привіт — hello`); never gloss-first.\n"
+        "2. SIDE-BY-SIDE BILINGUAL: narratives of 3+ sentences use UK-left / EN-right aligned rendering.\n"
+        "3. STRESS MARKS: keep plain Ukrainian ready for deterministic stress marking; do not transliterate.\n"
+        "4. DIALOGUE UK-ONLY: Tab 1 dialogues are pure Ukrainian; support follows in `en` props or a table/paragraph.\n"
+        "5. UK-ONLY Q&A: comprehension stems and content options stay Ukrainian; English only in UI affordances.\n"
+        "6. TRANSLATE TO WORKBOOK: EN→UK translation drills belong in workbook practice, never Tab 1 prose.\n"
+        "7. NAMED PERSONA: use a named Ukrainian teacher/persona or characters with real Ukrainian anchors.\n"
+        "Reject transliteration tables, `X sounds like Y in English`, EN-first dialogue glossing, vocab dumps, "
+        "and abstract `the student must learn` framing."
+    )
 
 
 def _extend_immersion_band(raw_band: dict[str, Any]) -> dict[str, Any]:
@@ -838,12 +847,16 @@ def get_immersion_rule(
     track: str,
     module_num: int,
     learner_state: dict | None = None,
+    *,
+    letter_module: bool = False,
 ) -> str:
     """Return the writer-facing immersion instruction for a track/module pair."""
     rule = str(compute_immersion_band(track, module_num, learner_state)["rule"])
     ulp_rule = _ulp_practices_rule(track, module_num)
     if ulp_rule:
         return f"{rule}\n\n{ulp_rule}"
+    if letter_module and _immersion_track_key(track) in {"a1", "a2"}:
+        return f"{rule}\n\n{_ulp_letter_module_contract()}"
     return rule
 
 
