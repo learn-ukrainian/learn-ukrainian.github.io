@@ -158,6 +158,7 @@ PYTHON_QG_GATE_ORDER = (
     "formatting_standards",
     "scaffolding_leak",
     "vesum_verified",
+    "bad_form_heritage",
     "citations_resolve",
     "textbook_grounding",
     "resources_search_attempted",
@@ -211,6 +212,7 @@ TERMINAL_ZERO_RETRY_GATES = frozenset(
         "component_props",
         "previously_passed_regression",
         "quiz_translate_explanations",
+        "bad_form_heritage",
         "resources_search_attempted",
     }
 )
@@ -2096,6 +2098,8 @@ def _writer_rule_ids_for_gate_failure(
         return [RULE_NO_SCAFFOLDING_LEAKS]
     if gate == "vesum_verified":
         return [RULE_VESUM_ALL_WORDS, RULE_BAD_FORM_MARKER]
+    if gate == "bad_form_heritage":
+        return [RULE_BAD_FORM_MARKER]
     if gate in {"russianisms_strict", "russianisms_clean", "surzhyk_clean", "calques_clean", "paronym_clean"}:
         return [RULE_BAD_FORM_MARKER]
     if gate == "citations_resolve":
@@ -2121,6 +2125,12 @@ def _writer_rule_evidence_for_gate(
         missing = report.get("missing")
         if isinstance(missing, list):
             return "missing=" + ", ".join(str(item) for item in missing[:5])
+        if report.get("error"):
+            return str(report["error"])
+    if gate == "bad_form_heritage":
+        findings = report.get("findings")
+        if isinstance(findings, list) and findings:
+            return "; ".join(str(item) for item in findings[:3])
         if report.get("error"):
             return str(report["error"])
     if gate == "russianisms_strict":
@@ -4986,6 +4996,7 @@ def run_python_qg_with_corrections(
     plan_path: Path,
     *,
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    heritage_lookup_fn: Callable[[str], list[dict[str, Any]]] | None = None,
     qg_runner: Callable[[], dict[str, Any]] | None = None,
     writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None = None,
     reviewer_corrector: Callable[[CorrectionContext], str | None] | None = None,
@@ -5013,6 +5024,7 @@ def run_python_qg_with_corrections(
                 module_dir,
                 plan_path,
                 verify_words_fn=verify_words_fn,
+                heritage_lookup_fn=heritage_lookup_fn,
                 ignored_vesum_missing_surfaces=vesum_missing_exclusions,
                 event_sink=event_sink,
             )
@@ -6633,6 +6645,7 @@ def run_python_qg(
     plan_path: Path,
     *,
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    heritage_lookup_fn: Callable[[str], list[dict[str, Any]]] | None = None,
     gate_observer: Callable[[str], None] | None = None,
     ignored_vesum_missing_surfaces: Collection[str] = (),
     event_sink: Callable[..., None] | None = None,
@@ -6701,6 +6714,16 @@ def run_python_qg(
             resources=resources,
             verify_words_fn=verify_words_fn,
             ignored_missing_surfaces=ignored_vesum_missing_surfaces,
+        ),
+    )
+    record(
+        "bad_form_heritage",
+        _bad_form_heritage_gate(
+            module_text=module_text,
+            activities=activities,
+            vocabulary=vocabulary,
+            resources=resources,
+            heritage_lookup_fn=heritage_lookup_fn,
         ),
     )
     record("citations_resolve", _citation_gate(resources, plan))
@@ -8128,6 +8151,123 @@ def _vesum_gate(
         "whitelisted": len(surface_pairs) - len(unchecked_pairs),
         "missing": missing[:100],
         "missing_count": len(missing),
+    }
+
+
+def _bad_form_heritage_gate(
+    *,
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
+    heritage_lookup_fn: Callable[[str], list[dict[str, Any]]] | None = None,
+) -> dict[str, Any]:
+    """Reject bad-form markers for forms attested as authentic Ukrainian."""
+    markers = _collect_bad_form_markers(module_text, activities, vocabulary, resources)
+    if heritage_lookup_fn is None:
+        heritage_lookup_fn = _search_heritage_no_live
+
+    findings: list[dict[str, Any]] = []
+    checked = 0
+    skipped_empty = 0
+    for marker in markers:
+        query = _normalize_bad_form_query(marker["form"])
+        if not query:
+            skipped_empty += 1
+            continue
+        checked += 1
+        try:
+            hits = heritage_lookup_fn(query)
+        except Exception as exc:
+            return {
+                "passed": False,
+                "error": str(exc),
+                "checked": checked,
+                "marker_count": len(markers),
+            }
+        for hit in hits:
+            if not _heritage_hit_blocks_bad_form_marker(hit):
+                continue
+            findings.append(_bad_form_heritage_finding(marker, query, hit))
+            break
+
+    return {
+        "passed": not findings,
+        "checked": checked,
+        "marker_count": len(markers),
+        "skipped_empty": skipped_empty,
+        "findings": findings[:100],
+        "finding_count": len(findings),
+    }
+
+
+def _search_heritage_no_live(query: str) -> list[dict[str, Any]]:
+    from scripts.wiki.sources_db import search_heritage
+
+    return search_heritage(query, include_live_slovnyk=False)
+
+
+def _collect_bad_form_markers(
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
+) -> list[dict[str, str]]:
+    markers: list[dict[str, str]] = []
+    for artifact, strings in (
+        ("module.md", [module_text]),
+        ("activities.yaml", _walk_yaml_strings(activities)),
+        ("vocabulary.yaml", _walk_yaml_strings(vocabulary)),
+        ("resources.yaml", _walk_yaml_strings(resources)),
+    ):
+        for text in strings:
+            for match in _AVOID_MARKER_RE.finditer(text):
+                markers.append({"artifact": artifact, "form": match.group(1)})
+    return markers
+
+
+def _normalize_bad_form_query(raw: str) -> str:
+    normalized = unicodedata.normalize("NFD", raw)
+    normalized = "".join(char for char in normalized if char not in _VESUM_STRESS_MARKS)
+    text = unicodedata.normalize("NFC", normalized)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = text.replace("**", " ").replace("__", " ").replace("~~", " ")
+    text = re.sub(r"[*_`]+", " ", text)
+    text = text.strip()
+    text = text.strip(" \t\r\n\"'’ʼ“”„«».,;:!?()[]{}<>")
+    return re.sub(r"\s+", " ", text)
+
+
+def _heritage_hit_blocks_bad_form_marker(hit: Mapping[str, Any]) -> bool:
+    authentic = bool(
+        hit.get("is_authentic_ukrainian")
+        or hit.get("authentic_ukrainian")
+        or hit.get("authentic")
+    )
+    russianism = bool(
+        hit.get("is_russianism")
+        or hit.get("russianism_warning")
+        or hit.get("Russianism warning")
+    )
+    return authentic and not russianism
+
+
+def _bad_form_heritage_finding(
+    marker: Mapping[str, str],
+    query: str,
+    hit: Mapping[str, Any],
+) -> dict[str, Any]:
+    text = str(hit.get("text") or hit.get("definition") or hit.get("snippet") or "")
+    return {
+        "artifact": marker.get("artifact", ""),
+        "form": marker.get("form", ""),
+        "query": query,
+        "source_family": hit.get("source_family", ""),
+        "source": hit.get("source", ""),
+        "word": hit.get("word", ""),
+        "classification": hit.get("classification", ""),
+        "evidence_tags": hit.get("evidence_tags", []),
+        "text": text[:240],
     }
 
 
