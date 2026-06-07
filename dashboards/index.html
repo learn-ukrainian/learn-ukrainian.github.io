@@ -215,7 +215,61 @@ function setStat(id, text) {
   if (el) el.textContent = text || '';
 }
 
-function buildStateSummary(pv) {
+function operationalTrackIdSetFromSummary(summary) {
+  if (!summary?.tracks) return null;
+  const tracks = summary.tracks;
+  const ids = Object.entries(tracks)
+    .filter(([, track]) => track.module_source !== 'plans-fallback')
+    .map(([id]) => id);
+  return new Set(ids);
+}
+
+function filterOperationalDashboardTracks(tracks, summary) {
+  const summaryIds = operationalTrackIdSetFromSummary(summary);
+  return (tracks || []).filter(track => {
+    if (summaryIds) return summaryIds.has(track.id);
+    return track.module_source !== 'plans-fallback';
+  });
+}
+
+function sumDashboardTotals(tracks) {
+  return tracks.reduce((acc, track) => {
+    const stats = track.stats || {};
+    acc.total += track.module_count || 0;
+    acc.pass += stats.pass || 0;
+    acc.content_complete += stats.content_complete || 0;
+    return acc;
+  }, { total: 0, pass: 0, content_complete: 0 });
+}
+
+function sumSummaryTotals(summary, trackIds) {
+  if (!summary?.tracks || !trackIds) return summary?.totals || {};
+  const totals = { total: 0 };
+  for (const id of trackIds) {
+    const track = summary.tracks[id] || {};
+    for (const [key, value] of Object.entries(track)) {
+      if (typeof value !== 'number') continue;
+      totals[key] = (totals[key] || 0) + value;
+    }
+  }
+  return totals;
+}
+
+function buildStateSummary(pv, trackIds) {
+  if (trackIds && pv?.per_track) {
+    const counts = {v6:0,v5:0,v3:0,unbuilt:0};
+    for (const trackId of trackIds) {
+      const row = pv.per_track[trackId] || {};
+      for (const key of Object.keys(counts)) counts[key] += row[key] || 0;
+    }
+    const total = counts.v6 + counts.v5 + counts.v3 + counts.unbuilt;
+    const built = counts.v6 + counts.v5 + counts.v3;
+    return {
+      current: counts.v6,
+      backlog: counts.v5 + counts.v3 + counts.unbuilt,
+      builtPct: total > 0 ? Math.round(built / total * 100) : 0,
+    };
+  }
   const state = pv?.build_state || {};
   const current = pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0;
   const backlog = pv?.rebuild_backlog ?? state.backlog ?? pv?.needs_rebuild ?? 0;
@@ -246,8 +300,10 @@ async function loadStats() {
 
   try {
     if (!data || !pv) throw new Error('overview unavailable');
-    const t = data.totals;
-    buildState = buildStateSummary(pv);
+    const dashboardTracks = filterOperationalDashboardTracks(data.tracks, summary);
+    const operationalIds = new Set(dashboardTracks.map(track => track.id));
+    const t = sumDashboardTotals(dashboardTracks);
+    buildState = buildStateSummary(pv, operationalIds);
     pendingConsultations = cMetrics?.pending_queue || 0;
 
     document.getElementById('stats-row').innerHTML = `
@@ -260,7 +316,7 @@ async function loadStats() {
     `;
 
     document.getElementById('audit-stat').textContent = `${t.pass} passing / ${t.total} total`;
-    document.getElementById('curriculum-stat').textContent = `${data.tracks.length} tracks`;
+    document.getElementById('curriculum-stat').textContent = `${dashboardTracks.length} tracks`;
     if (pendingConsultations > 0) {
       document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;
     }
@@ -270,7 +326,11 @@ async function loadStats() {
 
   try {
     if (!summary) throw new Error('summary unavailable');
-    const t = summary.totals;
+    const dashboardTracks = filterOperationalDashboardTracks(data?.tracks || [], summary);
+    const operationalIds = dashboardTracks.length
+      ? new Set(dashboardTracks.map(track => track.id))
+      : operationalTrackIdSetFromSummary(summary);
+    const t = sumSummaryTotals(summary, operationalIds);
     const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
       `${buildState.current} current · ${buildState.backlog} backlog · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
@@ -312,7 +372,9 @@ async function loadStats() {
   }
 
   if (wiki) {
-    const totals = (wiki.tracks || []).reduce((acc, track) => {
+    const operationalIds = operationalTrackIdSetFromSummary(summary);
+    const tracks = (wiki.tracks || []).filter(track => !operationalIds || operationalIds.has(track.track));
+    const totals = tracks.reduce((acc, track) => {
       acc.compiled += track.compiled || 0;
       acc.total += track.total || 0;
       return acc;

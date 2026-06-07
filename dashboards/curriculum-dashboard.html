@@ -33,7 +33,7 @@ a:hover { text-decoration: underline; }
 .treemap { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; }
 .treemap-cell { border-radius: 6px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; min-height: 60px; transition: transform 0.1s; }
 .treemap-cell:hover { transform: scale(1.02); z-index: 1; }
-.treemap-cell .name { font-weight: 700; font-size: 13px; }
+.treemap-cell .name { font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
 .treemap-cell .count { font-size: 11px; opacity: 0.8; }
 .treemap-cell.selected { outline: 2px solid var(--blue); outline-offset: -2px; }
 
@@ -174,8 +174,14 @@ function needsBuildRefresh(module) {
   return pipelineLabel(module.pipeline_version) !== 'current';
 }
 
+function operationalTracks(tracks) {
+  return (tracks || []).filter(track => track.module_source !== 'plans-fallback');
+}
+
 async function fetchOverview() {
   overviewData = await fetchJson(`${API}/overview`);
+  overviewData.tracks = operationalTracks(overviewData.tracks);
+  if (selectedTrack && !overviewData.tracks.some(track => track.id === selectedTrack)) selectedTrack = null;
   renderTreemap(overviewData.tracks);
   document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
 }

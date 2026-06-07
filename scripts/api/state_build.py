@@ -61,10 +61,10 @@ def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
                 "words": f"{audit_result.get('word_count', 0)}/{audit_result.get('word_target', 0)}",
                 "ts": latest_ts,
             })
-        elif running_phase:
-            building_now.append({"num": num, "slug": slug, "phase": running_phase, "prev": furthest})
         elif audit_status == "failed":
             failed += 1
+        elif running_phase:
+            building_now.append({"num": num, "slug": slug, "phase": running_phase, "prev": furthest})
         elif furthest:
             building_now.append({"num": num, "slug": slug, "phase": f"queued-after-{furthest}", "prev": furthest})
         else:
@@ -132,21 +132,23 @@ def compute_build_status_all() -> dict:
             continue
         track_dir = CURRICULUM_ROOT / level_cfg["path"]
         total = len(plan_slugs)
-        done = building = failed = 0
+        done = building = queued = failed = 0
 
         for _num, slug in plan_slugs:
             orch_dir = safe_join(track_dir / "orchestration", slug)
             version = detect_pipeline_version(orch_dir)
-            _furthest, running_phase, _latest_ts, audit_status = scan_module_phases(orch_dir, version)
+            furthest, running_phase, _latest_ts, audit_status = scan_module_phases(orch_dir, version)
             if audit_status == "complete":
                 done += 1
             elif audit_status == "failed":
                 failed += 1
-            elif running_phase:
+            elif running_phase or furthest:
                 building += 1
+            else:
+                queued += 1
 
         tracks[track_id] = {
-            "total": total, "done": done, "building": building, "failed": failed,
+            "total": total, "done": done, "building": building, "queued": queued, "failed": failed,
             "progress": f"{done}/{total} ({round(done/total*100) if total else 0}%)",
         }
 

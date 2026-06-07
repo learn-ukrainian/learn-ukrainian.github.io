@@ -194,9 +194,14 @@ async function fetchJson(url, options) {
 function pct(v, t) { return t > 0 ? Math.round(v / t * 100) : 0; }
 
 function orderedTrackIds(summaryTracks, ...trackMaps) {
-  const ids = new Set(Object.keys(summaryTracks || {}));
+  const summary = summaryTracks || {};
+  const hasSummary = Object.keys(summary).length > 0;
+  const isOperational = id => !hasSummary || summary[id]?.module_source !== 'plans-fallback';
+  const ids = new Set(Object.keys(summary).filter(isOperational));
   for (const trackMap of trackMaps) {
-    for (const id of Object.keys(trackMap || {})) ids.add(id);
+    for (const id of Object.keys(trackMap || {})) {
+      if (isOperational(id)) ids.add(id);
+    }
   }
   return Array.from(ids).filter(Boolean);
 }
@@ -270,7 +275,7 @@ async function loadOverview() {
             <span style="font-size:11px;color:var(--text2);min-width:40px">${done}/${total}</span>
           </div>
         </td>
-        <td>${building > 0 ? `<span style="color:var(--blue)">${building} active</span>` : '<span style="color:var(--text3)">—</span>'}</td>
+        <td>${building > 0 ? `<span style="color:var(--blue)">${building} building</span>` : '<span style="color:var(--text3)">—</span>'}</td>
         <td>${failed > 0 ? `<span style="color:var(--red)">${failed}</span>` : '<span style="color:var(--text3)">0</span>'}</td>
         <td class="bar-cell">
           <div style="display:flex;align-items:center;gap:8px">

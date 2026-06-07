@@ -156,6 +156,36 @@ class TestPipelineVersionsEndpoint:
         assert "pct_current" in data
 
 
+class TestBuildStatusEndpoint:
+    """GET /api/state/build-status agrees with per-track build status."""
+
+    def test_all_tracks_matches_per_track_build_counts(self):
+        all_tracks = client.get("/api/state/build-status").json()["tracks"]
+
+        for track in ["a1", "bio", "folk"]:
+            per_track = client.get(f"/api/state/build-status/{track}").json()
+            assert all_tracks[track]["building"] == per_track["building"]
+            assert all_tracks[track]["queued"] == per_track["queued"]
+            assert all_tracks[track]["failed"] == per_track["failed"]
+
+    def test_per_track_counts_failed_audit_before_running_phase(self, monkeypatch):
+        from scripts.api import state_build
+
+        monkeypatch.setattr(state_build, "get_plan_slugs", lambda _track_id: [(1, "failed-module")])
+        monkeypatch.setattr(state_build, "detect_pipeline_version", lambda _orch_dir: "v6")
+        monkeypatch.setattr(
+            state_build,
+            "scan_module_phases",
+            lambda _orch_dir, _version: ("write", "audit(FAIL)", "2026-06-07T00:00:00Z", "failed"),
+        )
+
+        result = state_build.compute_build_status_track("folk", {"path": "folk"})
+
+        assert result["failed"] == 1
+        assert result["building"] == 0
+        assert result["queued"] == 0
+
+
 class TestDashboardOverviewEndpoint:
     """GET /api/dashboard/overview returns tracks."""
 

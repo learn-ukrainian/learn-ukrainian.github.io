@@ -191,7 +191,46 @@ function isDone(phase) {
   return phase && phase.status === 'complete';
 }
 
-function buildStateSummary(pv) {
+function operationalTrackEntries(tracks) {
+  return Object.entries(tracks || {})
+    .filter(([, track]) => (track.total || 0) > 0 && track.module_source !== 'plans-fallback');
+}
+
+function operationalTrackIdSet(trackEntries) {
+  return new Set(trackEntries.map(([id]) => id));
+}
+
+function emptySummaryTotals() {
+  return {
+    total: 0, research_done: 0, content_done: 0, audit_passing: 0,
+    reviewed: 0, final_review_done: 0, dossier_done: 0,
+    published_mdx: 0, audit_stale: 0,
+  };
+}
+
+function sumSummaryTotals(trackEntries) {
+  const totals = emptySummaryTotals();
+  for (const [, track] of trackEntries) {
+    for (const [key, value] of Object.entries(track)) {
+      if (typeof value !== 'number') continue;
+      totals[key] = (totals[key] || 0) + value;
+    }
+  }
+  return totals;
+}
+
+function buildStateSummary(pv, trackIds) {
+  if (trackIds && pv?.per_track) {
+    const counts = {v6:0,v5:0,v3:0,unbuilt:0};
+    for (const trackId of trackIds) {
+      const row = pv.per_track[trackId] || {};
+      for (const key of Object.keys(counts)) counts[key] += row[key] || 0;
+    }
+    return {
+      current: counts.v6,
+      backlog: counts.v5 + counts.v3 + counts.unbuilt,
+    };
+  }
   const state = pv?.build_state || {};
   return {
     current: pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0,
@@ -379,7 +418,9 @@ async function load() {
       fetchJson('/api/state/pipeline-versions?fresh=true').catch(() => ({})),
     ]);
     const data = res;
-    const t = data.totals;
+    const trackEntries = operationalTrackEntries(data.tracks);
+    const t = sumSummaryTotals(trackEntries);
+    const trackIds = operationalTrackIdSet(trackEntries);
     renderFreshness(data.meta);
 
     document.getElementById('total-modules').textContent = t.total;
@@ -390,15 +431,13 @@ async function load() {
     document.getElementById('total-final-review').textContent = t.final_review_done;
     document.getElementById('total-dossier').textContent = t.dossier_done || 0;
     document.getElementById('total-published').textContent = t.published_mdx || 0;
-    const buildState = buildStateSummary(pv);
+    const buildState = buildStateSummary(pv, trackIds);
     document.getElementById('total-current-builds').textContent = `${buildState.current}`;
     document.getElementById('total-rebuild').textContent = `${buildState.backlog}`;
     document.getElementById('topbar-subtitle').textContent =
-      `Build state across all tracks — ${buildState.current} current, ${t.published_mdx || 0} published, ${buildState.backlog} in backlog`;
+      `Build state across operational tracks — ${buildState.current} current, ${t.published_mdx || 0} published, ${buildState.backlog} in backlog`;
 
     const container = document.getElementById('tracks-container');
-    const trackEntries = Object.entries(data.tracks)
-      .filter(([, v]) => v.total > 0);
 
     // Sort: seminar first, then by name
     trackEntries.sort(([a], [b]) => {

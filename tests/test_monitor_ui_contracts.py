@@ -186,6 +186,41 @@ def test_track_health_uses_live_track_inventory():
     assert "const TRACKS =" not in html
     assert "/api/state/summary?fresh=true" in html
     assert "orderedTrackIds" in html
+    assert "module_source !== 'plans-fallback'" in html
+
+
+def test_operational_dashboards_hide_plan_fallback_tracks():
+    dashboard_text = {
+        path.name: path.read_text(encoding="utf-8")
+        for path in [
+            DASHBOARDS / "index.html",
+            DASHBOARDS / "progress.html",
+            DASHBOARDS / "track-health.html",
+            DASHBOARDS / "curriculum-dashboard.html",
+            DASHBOARDS / "wiki.html",
+        ]
+    }
+
+    for page, html in dashboard_text.items():
+        assert "plans-fallback" in html, f"{page} must filter fallback-only plan tracks"
+
+    assert "operationalTrackIdSetFromSummary" in dashboard_text["index.html"]
+    assert "operationalTrackEntries" in dashboard_text["progress.html"]
+    assert "operationalTracks" in dashboard_text["curriculum-dashboard.html"]
+    assert "/api/state/summary?fresh=true" in dashboard_text["wiki.html"]
+
+
+def test_operational_track_filters_treat_empty_sets_as_valid():
+    index_html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    progress_html = (DASHBOARDS / "progress.html").read_text(encoding="utf-8")
+    wiki_html = (DASHBOARDS / "wiki.html").read_text(encoding="utf-8")
+
+    assert "if (summaryIds) return summaryIds.has(track.id)" in index_html
+    assert "dashboardTracks.length ? sumDashboardTotals" not in index_html
+    assert "trackIds?.size && pv?.per_track" not in index_html
+    assert "trackIds?.size && pv?.per_track" not in progress_html
+    assert "if (operationalTrackIds.size)" not in wiki_html
+    assert "let operationalTrackIds = null" in wiki_html
 
 
 def test_comms_recent_completions_open_build_detail_without_fake_task_ids():
