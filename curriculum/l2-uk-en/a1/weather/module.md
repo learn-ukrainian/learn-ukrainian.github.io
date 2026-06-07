@@ -162,10 +162,6 @@ Use the Ukrainian weather noun **опади** for precipitation. Do not use
 **осадки**. For hot weather, prefer **спекотно** and **спекотний**. You may
 hear **жарко**, but **спекотно** is the better course word.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Підсумок
 
 Keep four weather cards.
@@ -210,7 +206,3 @@ Write your own five-line weather note:
 <DialogueBox uk="Іде дощ." en="It is raining." />
 <DialogueBox uk="Завтра буде тепло." en="Tomorrow it will be warm." />
 <DialogueBox uk="Мені подобається весна." en="I like spring." />
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

@@ -173,10 +173,6 @@ the chunks. There is no **в** before these dates. Say **Я народився �
 After **з** in greetings, keep the month in the date form too:
 **Вітаю з 1 вересня!** The month stays **вересня**, not **вересням**.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Підсумок
 
 Keep four calendar cards.
@@ -220,7 +216,3 @@ plan, one for a month, one for a season, and one for a birthday:
 <DialogueBox uk="Мій день народження у серпні." en="My birthday is in August." />
 <DialogueBox uk="Восени часто йде дощ." en="In autumn it often rains." />
 <DialogueBox uk="День народження двадцять другого серпня." en="The birthday is on August twenty-second." />
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

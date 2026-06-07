@@ -153,8 +153,6 @@ and **г** as Ukrainian sounds in Ukrainian words such as **синьо-жовт�
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Діалог
 
 Read the planning dialogue. It combines time, calendar, weather, routine, and
@@ -177,8 +175,6 @@ Notice the clean everyday forms: **Добрий день**, **До побаче�
 **прізвище**, **тато**, **Мені 20 років**, **Я студент**, and
 **Він спортсмен**. Use Ukrainian zero-copula and age chunks; do not force an
 English helper into these lines.
-
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Підсумок
 
@@ -209,7 +205,3 @@ Write your own six-line checkpoint answer. Include:
 - one sequence word: **спочатку** or **потім**;
 - one free-time action: **гуляю**, **читаю**, **слухаю музику**;
 - one alternative: **якщо буде дощ...**.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

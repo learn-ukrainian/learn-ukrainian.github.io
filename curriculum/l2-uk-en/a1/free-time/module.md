@@ -158,10 +158,6 @@ For a short contrast, use **а** or **але**: **Я часто читаю, а �
 a tiny integrated text, title it **Мій звичайний день** and include one free
 time line. You can also say: **Я люблю кіно, але рідко ходжу в театр.**
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Підсумок
 
 For free time, keep three patterns in your head:
@@ -201,7 +197,3 @@ Write five short lines about your free time:
 <DialogueBox uk="Я граю у футбол двічі на тиждень." en="I play football twice a week." />
 <DialogueBox uk="У суботу о п'ятій ходімо в кіно." en="On Saturday at five, let's go to the cinema." />
 <DialogueBox uk="Якщо буде дощ, ходімо в музей." en="If it rains, let's go to the museum." />
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

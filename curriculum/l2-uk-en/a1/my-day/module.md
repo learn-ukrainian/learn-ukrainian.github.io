@@ -141,10 +141,6 @@ Planning uses light chunks, not a full future-tense lesson:
 The dictionary verb is **планувати**, but the useful A1 line is **я планую**.
 For duty, keep the paired chunk **маю / мені потрібно** plus an infinitive.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Підсумок
 
 Build a day from three parts:
@@ -182,7 +178,3 @@ study, one for lunch, one for weather, one for a plan, and one for the evening:
 <DialogueBox uk="О дев'ятій я працюю." en="At nine I work." />
 <DialogueBox uk="Після обіду я планую читати." en="After lunch I plan to read." />
 <DialogueBox uk="Ввечері лягаю спати о десятій." en="In the evening I go to bed at ten." />
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
