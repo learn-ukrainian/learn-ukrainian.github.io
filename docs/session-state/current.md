@@ -4,7 +4,6 @@ Latest-Brief: docs/session-state/current.orchestrator.md
 
 Agent-Handoff:
 - orchestrator: docs/session-state/current.orchestrator.md
-- codex: docs/session-state/current.codex.md
 - claude: docs/session-state/current.claude.md
 - gemini: docs/session-state/current.gemini.md
 

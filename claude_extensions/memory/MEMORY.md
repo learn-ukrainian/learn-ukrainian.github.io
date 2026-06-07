@@ -132,9 +132,9 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 
 ## Critical Behavioral Rules (condensed)
 - **PLUGINS:** `frontend-design`, `code-review`, `playground`, `pyright-lsp`. Use them.
-- **PRE-COMMIT AUTO:** Done + tests pass → IMMEDIATELY (1) ruff (2) `/simplify` (3) Gemini review. User never reminds.
+- **PRE-COMMIT AUTO:** Done + tests pass → IMMEDIATELY (1) ruff (2) `/simplify` (3) local-agent Gemini review via `ai_agent_bridge`, never GitHub Gemini Code Assist. User never reminds.
 - **QUALITY GATE:** Every changed function needs a test. 80%+ on critical paths.
-- **GH ISSUE HYGIENE:** After work, close if all ACs met, comment if partial.
+- **HYGIENE:** Issues: close if done, comment if partial/stale. State: no Codex snapshots in `current.md`/`current.codex.md`; delete scratch updates; use Monitor API/orchestrator handoff.
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.
 - **SEQUENCE:** One working e2e example FIRST. Never modify pipeline without tracing.
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
