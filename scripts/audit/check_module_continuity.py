@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-MODULE_RE = re.compile(r'num:\s*(?P<num>\d+),\s*slug:\s*"(?P<slug>[^"]+)"')
+MODULE_RE = re.compile(r"""num:\s*(?P<num>\d+),\s*slug:\s*['"](?P<slug>[^'"]+)['"]""")
 
 DEFAULT_TERMS: dict[str, tuple[str, ...]] = {
     "склад": ("склад", "склади", "складів", "складом", "складу"),
@@ -76,7 +76,8 @@ class Finding:
 def module_order(level: str, root: Path = ROOT) -> list[tuple[int, str]]:
     data_path = root / "starlight" / "src" / "data" / f"{level}-modules.ts"
     data = data_path.read_text(encoding="utf-8")
-    return [(int(m.group("num")), m.group("slug")) for m in MODULE_RE.finditer(data)]
+    modules = [(int(m.group("num")), m.group("slug")) for m in MODULE_RE.finditer(data)]
+    return sorted(modules, key=lambda item: item[0])
 
 
 def load_modules(level: str, first: int | None = None, root: Path = ROOT) -> list[Module]:
@@ -94,13 +95,24 @@ def _normalized(text: str) -> str:
     return text.casefold().replace("’", "'")
 
 
-def _term_positions(text: str, variants: tuple[str, ...]) -> list[int]:
-    haystack = _normalized(text)
-    positions: list[int] = []
+def _variant_patterns(variants: tuple[str, ...]) -> tuple[re.Pattern[str], ...]:
+    patterns: list[re.Pattern[str]] = []
+    seen: set[str] = set()
     for variant in variants:
-        start = haystack.find(_normalized(variant))
-        if start >= 0:
-            positions.append(start)
+        normalized_variant = _normalized(variant)
+        if normalized_variant in seen:
+            continue
+        seen.add(normalized_variant)
+        patterns.append(
+            re.compile(rf"(?<!\w){re.escape(normalized_variant)}(?!\w)")
+        )
+    return tuple(patterns)
+
+
+def _term_positions(normalized_text: str, variants: tuple[str, ...]) -> list[int]:
+    positions: set[int] = set()
+    for pattern in _variant_patterns(variants):
+        positions.update(match.start() for match in pattern.finditer(normalized_text))
     return sorted(positions)
 
 
@@ -114,10 +126,10 @@ def _snippet(text: str, offset: int, radius: int = 90) -> str:
     return " ".join(text[start:end].split())
 
 
-def _has_bridge_cue(text: str, offset: int) -> bool:
+def _has_bridge_cue(normalized_text: str, offset: int) -> bool:
     start = max(0, offset - 350)
-    end = min(len(text), offset + 500)
-    context = _normalized(text[start:end])
+    end = min(len(normalized_text), offset + 500)
+    context = normalized_text[start:end]
     return any(cue in context for cue in BRIDGE_CUES)
 
 
@@ -129,17 +141,18 @@ def find_unsignposted_repetition(
     findings: list[Finding] = []
 
     for module in modules:
+        normalized_text = _normalized(module.text)
         for label, variants in terms.items():
-            positions = _term_positions(module.text, variants)
+            positions = _term_positions(normalized_text, variants)
             if not positions:
                 continue
             first = first_seen.get(label)
             if first is None:
                 first_seen[label] = module
                 continue
-            offset = positions[0]
-            if _has_bridge_cue(module.text, offset):
+            if any(_has_bridge_cue(normalized_text, offset) for offset in positions):
                 continue
+            offset = positions[0]
             findings.append(
                 Finding(
                     module_num=module.num,
@@ -169,6 +182,9 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     modules = load_modules(args.level, args.first)
+    if not modules:
+        print(f"Error: no modules found for level '{args.level}'.")
+        return 1
     findings = find_unsignposted_repetition(modules)
 
     print(f"Continuity scan: level={args.level} modules={len(modules)} findings={len(findings)}")
