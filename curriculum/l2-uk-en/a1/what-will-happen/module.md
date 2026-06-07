@@ -188,11 +188,8 @@ For a quick spoken answer, repeat the pattern twice: **Завтра я буду
 працювати. Ввечері я буду відпочивати.** The repetition is useful because the
 infinitives stay visible.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Repair traps
 
@@ -218,7 +215,6 @@ Another trap is choosing the wrong future form of **бути**:
 | <del>**ми буде робити**</del> | **ми будемо робити** |
 | <del>**вони будемо робити**</del> | **вони будуть робити** |
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -249,7 +245,3 @@ Self-check:
 
 Stop with the compound future. The next module uses this same pattern for
 plans and invitations with days and times.
-
-<!-- INJECT_ACTIVITY: act-9 -->
-
-<!-- INJECT_ACTIVITY: act-10 -->

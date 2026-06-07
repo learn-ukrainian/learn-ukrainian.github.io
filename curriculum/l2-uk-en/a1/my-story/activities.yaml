@@ -1,214 +1,211 @@
-- id: act-1
-  type: fill-in
-  title: Choose the time signal
-  instruction: Pick the word that matches the time of the sentence.
-  items:
-    - sentence: "___ я жив у Торонто."
-      answer: "Раніше"
-      options:
-        - "Раніше"
-        - "Зараз"
-        - "Далі"
-      explanation: "Раніше points to the past."
-    - sentence: "___ я живу в Києві."
-      answer: "Зараз"
-      options:
-        - "Зараз"
-        - "Учора"
-        - "Далі"
-      explanation: "Зараз points to the present."
-    - sentence: "___ я буду вчити українську."
-      answer: "Далі"
-      options:
-        - "Далі"
-        - "У дитинстві"
-        - "Раніше"
-      explanation: "Далі points to a future plan."
-    - sentence: "___ я ходила в школу."
-      answer: "У дитинстві"
-      options:
-        - "У дитинстві"
-        - "Завтра"
-        - "Зараз"
-      explanation: "У дитинстві is a past-life signal."
-- id: act-2
-  type: order
-  title: Put the life story in order
-  instruction: Arrange the lines from past to future.
-  items:
-    - "Я народився в Канаді."
-    - "У дитинстві я жив у Торонто."
-    - "Потім я переїхав у Київ."
-    - "Зараз я живу в Києві."
-    - "Далі я буду вчити українську."
-  correct_order: [0, 1, 2, 3, 4]
-- id: act-3
-  type: match-up
-  title: Match the tense
-  instruction: Match each phrase with its time.
-  pairs:
-    - left: "я народився"
-      right: "past"
-    - left: "я жила"
-      right: "past"
-    - left: "я живу"
-      right: "present"
-    - left: "я працюю"
-      right: "present"
-    - left: "я буду подорожувати"
-      right: "future"
-    - left: "ми будемо вчити"
-      right: "future"
-- id: act-4
-  type: group-sort
-  title: Sort story pieces
-  instruction: Put each phrase into the right story group.
-  groups:
-    - name: "past"
-      items:
-        - "я народився"
-        - "я жила"
-        - "переїхав"
-        - "у дитинстві"
-    - name: "present"
-      items:
-        - "зараз"
-        - "я живу"
-        - "я працюю"
-        - "я вивчаю"
-    - name: "future"
-      items:
-        - "далі"
-        - "я буду жити"
-        - "ми будемо вчити"
-        - "вона буде працювати"
-- id: act-5
-  type: true-false
-  title: A1 story check
-  instruction: Decide whether the sentence stays in the A1 story frame.
-  items:
-    - statement: "Раніше я жив у Варшаві."
-      answer: true
-      explanation: "Раніше plus past жив is a clear past sentence."
-    - statement: "Зараз я буду живу в Києві."
-      answer: false
-      explanation: "Do not put буду before a present form. Use Зараз я живу."
-    - statement: "Далі я буду подорожувати."
-      answer: true
-      explanation: "Буду + infinitive is the A1 future pattern."
-    - statement: "Мене звати Софія."
-      answer: true
-      explanation: "This is the normal A1 name chunk."
-    - statement: "Моє ім'я є Софія."
-      answer: false
-      explanation: "Use Мене звати..., not an English-style my-name-is sentence."
-- id: act-6
-  type: unjumble
-  title: Build story lines
-  instruction: Put the words in a natural order.
-  items:
-    - words: "Раніше/я/жив/у/Торонто"
-      answer: "Раніше я жив у Торонто."
-    - words: "Зараз/я/живу/в/Києві"
-      answer: "Зараз я живу в Києві."
-    - words: "Далі/я/буду/вчити/українську"
-      answer: "Далі я буду вчити українську."
-    - words: "Мене/звати/Софія"
-      answer: "Мене звати Софія."
-- id: act-7
-  type: fill-in
-  title: Complete the mini biography
-  instruction: Choose the form that fits the time word.
-  items:
-    - sentence: "Я ___ у Львові."
-      answer: "народилася"
-      options:
-        - "народилася"
-        - "народжуся"
-        - "народжуюся"
-      explanation: "Use the familiar past chunk народилася."
-    - sentence: "Раніше я ___ в Одесі."
-      answer: "жила"
-      options:
-        - "жила"
-        - "живу"
-        - "буду жити"
-      explanation: "Раніше points to the past."
-    - sentence: "Зараз я ___ в офісі."
-      answer: "працюю"
-      options:
-        - "працюю"
-        - "працювала"
-        - "буду працювати"
-      explanation: "Зараз points to the present."
-    - sentence: "Далі я ___ українську щодня."
-      answer: "буду вчити"
-      options:
-        - "буду вчити"
-        - "вчила"
-        - "вчу"
-      explanation: "Далі points to the future."
-- id: act-8
-  type: quiz
-  title: Repair the story
-  instruction: Choose the better A1 sentence.
-  items:
-    - prompt: "Which sentence matches the time word?"
-      options:
-        - text: "Зараз я живу в Києві."
-          correct: true
-        - text: "Зараз я жив у Києві."
-          correct: false
-        - text: "Зараз я буду живу в Києві."
-          correct: false
-      explanation: "Зараз uses the present form живу."
-    - prompt: "Which sentence uses the A1 future?"
-      options:
-        - text: "Далі я буду працювати."
-          correct: true
-        - text: "Далі я працював."
-          correct: false
-        - text: "Далі я працюю учора."
-          correct: false
-      explanation: "Буду + infinitive is the A1 future."
-    - prompt: "Which is the natural name sentence?"
-      options:
-        - text: "Мене звати Данило."
-          correct: true
-        - text: "Моє ім'я є Данило."
-          correct: false
-        - text: "Я звати Данило."
-          correct: false
-      explanation: "Use the chunk Мене звати..."
-- id: act-9
-  type: translate
-  title: Say your story
-  instruction: Choose the Ukrainian sentence that matches the English prompt.
-  items:
-    - source: "Earlier I lived in Toronto."
-      options:
-        - text: "Раніше я жив у Торонто."
-          correct: true
-        - text: "Зараз я живу в Торонто."
-          correct: false
-        - text: "Далі я буду жити в Торонто."
-          correct: false
-      explanation: "Earlier points to the past."
-    - source: "Now I live in Kyiv."
-      options:
-        - text: "Зараз я живу в Києві."
-          correct: true
-        - text: "Раніше я жив у Києві."
-          correct: false
-        - text: "Далі я буду жити в Києві."
-          correct: false
-      explanation: "Now points to the present."
-    - source: "Next I will study Ukrainian."
-      options:
-        - text: "Далі я буду вчити українську."
-          correct: true
-        - text: "Далі я вчив українську."
-          correct: false
-        - text: "Зараз я вчив українську."
-          correct: false
-      explanation: "Use буду + infinitive for the future."
+inline:
+  - id: act-1
+    type: fill-in
+    title: Choose the time signal
+    instruction: Pick the word that matches the time of the sentence.
+    items:
+      - sentence: '___ я жив у Торонто.'
+        answer: 'Раніше'
+        options:
+          - 'Раніше'
+          - 'Зараз'
+          - 'Далі'
+        explanation: 'Раніше points to the past.'
+      - sentence: '___ я живу в Києві.'
+        answer: 'Зараз'
+        options:
+          - 'Зараз'
+          - 'Учора'
+          - 'Далі'
+        explanation: 'Зараз points to the present.'
+      - sentence: '___ я буду вчити українську.'
+        answer: 'Далі'
+        options:
+          - 'Далі'
+          - 'У дитинстві'
+          - 'Раніше'
+        explanation: 'Далі points to a future plan.'
+      - sentence: '___ я ходила в школу.'
+        answer: 'У дитинстві'
+        options:
+          - 'У дитинстві'
+          - 'Завтра'
+          - 'Зараз'
+        explanation: 'У дитинстві is a past-life signal.'
+  - id: act-2
+    type: order
+    title: Put the life story in order
+    instruction: Arrange the lines from past to future.
+    items:
+      - 'Я народився в Канаді.'
+      - 'У дитинстві я жив у Торонто.'
+      - 'Потім я переїхав у Київ.'
+      - 'Зараз я живу в Києві.'
+      - 'Далі я буду вчити українську.'
+    correct_order: [0, 1, 2, 3, 4]
+  - id: act-3
+    type: match-up
+    title: Match the tense
+    instruction: Match each phrase with its time.
+    pairs:
+      - left: 'я народився'
+        right: 'past'
+      - left: 'я жила'
+        right: 'past'
+      - left: 'я живу'
+        right: 'present'
+      - left: 'я працюю'
+        right: 'present'
+      - left: 'я буду подорожувати'
+        right: 'future'
+      - left: 'ми будемо вчити'
+        right: 'future'
+  - id: act-4
+    type: group-sort
+    title: Sort story pieces
+    instruction: Put each phrase into the right story group.
+    groups:
+      - name: 'past'
+        items:
+          - 'я народився'
+          - 'я жила'
+          - 'переїхав'
+          - 'у дитинстві'
+      - name: 'present'
+        items:
+          - 'зараз'
+          - 'я живу'
+          - 'я працюю'
+          - 'я вивчаю'
+      - name: 'future'
+        items:
+          - 'далі'
+          - 'я буду жити'
+          - 'ми будемо вчити'
+          - 'вона буде працювати'
+workbook:
+  - type: true-false
+    title: A1 story check
+    instruction: Decide whether the sentence stays in the A1 story frame.
+    items:
+      - statement: 'Раніше я жив у Варшаві.'
+        answer: true
+        explanation: 'Раніше plus past жив is a clear past sentence.'
+      - statement: 'Зараз я буду живу в Києві.'
+        answer: false
+        explanation: 'Do not put буду before a present form. Use Зараз я живу.'
+      - statement: 'Далі я буду подорожувати.'
+        answer: true
+        explanation: 'Буду + infinitive is the A1 future pattern.'
+      - statement: 'Мене звати Софія.'
+        answer: true
+        explanation: 'This is the normal A1 name chunk.'
+      - statement: "Моє ім'я є Софія."
+        answer: false
+        explanation: 'Use Мене звати..., not an English-style my-name-is sentence.'
+  - type: unjumble
+    title: Build story lines
+    instruction: Put the words in a natural order.
+    items:
+      - words: 'Раніше/я/жив/у/Торонто'
+        answer: 'Раніше я жив у Торонто.'
+      - words: 'Зараз/я/живу/в/Києві'
+        answer: 'Зараз я живу в Києві.'
+      - words: 'Далі/я/буду/вчити/українську'
+        answer: 'Далі я буду вчити українську.'
+      - words: 'Мене/звати/Софія'
+        answer: 'Мене звати Софія.'
+  - type: fill-in
+    title: Complete the mini biography
+    instruction: Choose the form that fits the time word.
+    items:
+      - sentence: 'Я ___ у Львові.'
+        answer: 'народилася'
+        options:
+          - 'народилася'
+          - 'народжуся'
+          - 'народжуюся'
+        explanation: 'Use the familiar past chunk народилася.'
+      - sentence: 'Раніше я ___ в Одесі.'
+        answer: 'жила'
+        options:
+          - 'жила'
+          - 'живу'
+          - 'буду жити'
+        explanation: 'Раніше points to the past.'
+      - sentence: 'Зараз я ___ в офісі.'
+        answer: 'працюю'
+        options:
+          - 'працюю'
+          - 'працювала'
+          - 'буду працювати'
+        explanation: 'Зараз points to the present.'
+      - sentence: 'Далі я ___ українську щодня.'
+        answer: 'буду вчити'
+        options:
+          - 'буду вчити'
+          - 'вчила'
+          - 'вчу'
+        explanation: 'Далі points to the future.'
+  - type: quiz
+    title: Repair the story
+    instruction: Choose the better A1 sentence.
+    items:
+      - prompt: 'Which sentence matches the time word?'
+        options:
+          - text: 'Зараз я живу в Києві.'
+            correct: true
+          - text: 'Зараз я жив у Києві.'
+            correct: false
+          - text: 'Зараз я буду живу в Києві.'
+            correct: false
+        explanation: 'Зараз uses the present form живу.'
+      - prompt: 'Which sentence uses the A1 future?'
+        options:
+          - text: 'Далі я буду працювати.'
+            correct: true
+          - text: 'Далі я працював.'
+            correct: false
+          - text: 'Далі я працюю учора.'
+            correct: false
+        explanation: 'Буду + infinitive is the A1 future.'
+      - prompt: 'Which is the natural name sentence?'
+        options:
+          - text: 'Мене звати Данило.'
+            correct: true
+          - text: "Моє ім'я є Данило."
+            correct: false
+          - text: 'Я звати Данило.'
+            correct: false
+        explanation: 'Use the chunk Мене звати...'
+  - type: translate
+    title: Say your story
+    instruction: Choose the Ukrainian sentence that matches the English prompt.
+    items:
+      - source: 'Earlier I lived in Toronto.'
+        options:
+          - text: 'Раніше я жив у Торонто.'
+            correct: true
+          - text: 'Зараз я живу в Торонто.'
+            correct: false
+          - text: 'Далі я буду жити в Торонто.'
+            correct: false
+        explanation: 'Earlier points to the past.'
+      - source: 'Now I live in Kyiv.'
+        options:
+          - text: 'Зараз я живу в Києві.'
+            correct: true
+          - text: 'Раніше я жив у Києві.'
+            correct: false
+          - text: 'Далі я буду жити в Києві.'
+            correct: false
+        explanation: 'Now points to the present.'
+      - source: 'Next I will study Ukrainian.'
+        options:
+          - text: 'Далі я буду вчити українську.'
+            correct: true
+          - text: 'Далі я вчив українську.'
+            correct: false
+          - text: 'Зараз я вчив українську.'
+            correct: false
+        explanation: 'Use буду + infinitive for the future.'

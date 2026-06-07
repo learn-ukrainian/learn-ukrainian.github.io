@@ -1,284 +1,280 @@
-- id: act-1
-  type: match-up
-  title: Match the future form
-  instruction: Match each person with the future form of бути.
-  pairs:
-    - left: "я"
-      right: "буду"
-    - left: "ти"
-      right: "будеш"
-    - left: "він / вона"
-      right: "буде"
-    - left: "ми"
-      right: "будемо"
-    - left: "ви"
-      right: "будете"
-    - left: "вони"
-      right: "будуть"
-- id: act-2
-  type: fill-in
-  title: Build the compound future
-  instruction: Choose the correct form of бути.
-  items:
-    - sentence: "Завтра я ___ працювати."
-      answer: "буду"
-      options:
-        - "буду"
-        - "буде"
-        - "будемо"
-      explanation: "Я takes буду."
-    - sentence: "Що ти ___ робити ввечері?"
-      answer: "будеш"
-      options:
-        - "будеш"
-        - "буду"
-        - "будете"
-      explanation: "Ти takes будеш."
-    - sentence: "Вона ___ читати книжку."
-      answer: "буде"
-      options:
-        - "буде"
-        - "будуть"
-        - "будемо"
-      explanation: "Вона takes буде."
-    - sentence: "Ми ___ дивитися футбол."
-      answer: "будемо"
-      options:
-        - "будемо"
-        - "буде"
-        - "буду"
-      explanation: "Ми takes будемо."
-    - sentence: "Ви ___ гуляти в парку?"
-      answer: "будете"
-      options:
-        - "будете"
-        - "будеш"
-        - "будуть"
-      explanation: "Ви takes будете."
-    - sentence: "Вони ___ відпочивати."
-      answer: "будуть"
-      options:
-        - "будуть"
-        - "будемо"
-        - "буде"
-      explanation: "Вони takes будуть."
-- id: act-3
-  type: quiz
-  title: Future pattern check
-  instruction: Choose the answer that keeps the A1 compound future.
-  items:
-    - prompt: "Which sentence means I will read?"
-      options:
-        - text: "Я буду читати."
-          correct: true
-        - text: "Я буду читаю."
-          correct: false
-        - text: "Я читаю завтра."
-          correct: false
-      explanation: "Use буду + infinitive: буду читати."
-    - prompt: "What stays unchanged after будемо?"
-      options:
-        - text: "The infinitive."
-          correct: true
-        - text: "A present-tense ending."
-          correct: false
-        - text: "A past-tense ending."
-          correct: false
-      explanation: "The second verb stays in the infinitive."
-    - prompt: "Which form fits ми?"
-      options:
-        - text: "Ми будемо робити."
-          correct: true
-        - text: "Ми буде робити."
-          correct: false
-        - text: "Ми будеш робити."
-          correct: false
-      explanation: "Ми takes будемо."
-    - prompt: "Which question asks about tomorrow?"
-      options:
-        - text: "Що ти будеш робити завтра?"
-          correct: true
-        - text: "Що ти робиш учора?"
-          correct: false
-        - text: "Що ти робив зараз?"
-          correct: false
-      explanation: "Будеш робити завтра is the future question."
-- id: act-4
-  type: group-sort
-  title: Sort the time frames
-  instruction: Sort each sentence by time.
-  groups:
-    - name: "past"
-      items:
-        - "Учора я читав."
-        - "Учора вона працювала."
-    - name: "present"
-      items:
-        - "Зараз я читаю."
-        - "Зараз ми працюємо."
-    - name: "future"
-      items:
-        - "Завтра я буду читати."
-        - "Наступного тижня ми будемо працювати."
-- id: act-5
-  type: true-false
-  title: Check the compound future
-  instruction: Decide whether each sentence uses буду + infinitive correctly.
-  items:
-    - statement: "Я буду читати завтра."
-      answer: true
-      explanation: "Буду + читати is correct."
-    - statement: "Ти будеш робити ввечері?"
-      answer: true
-      explanation: "Будеш + робити is correct."
-    - statement: "Вона буде читає книжку."
-      answer: false
-      explanation: "After буде, use читати."
-    - statement: "Ми будемо дивитися футбол."
-      answer: true
-      explanation: "Будемо + дивитися is correct."
-    - statement: "Вони будуть працюють."
-      answer: false
-      explanation: "After будуть, use працювати."
-    - statement: "Ви будете гуляти в парку?"
-      answer: true
-      explanation: "Будете + гуляти is correct."
-- id: act-6
-  type: unjumble
-  title: Build future sentences
-  instruction: Put the words in a natural order.
-  items:
-    - words: ["Завтра", "я", "буду", "працювати"]
-      answer: "Завтра я буду працювати."
-    - words: ["Що", "ти", "будеш", "робити", "ввечері"]
-      answer: "Що ти будеш робити ввечері?"
-    - words: ["Вона", "буде", "читати", "книжку"]
-      answer: "Вона буде читати книжку."
-    - words: ["Ми", "будемо", "дивитися", "футбол"]
-      answer: "Ми будемо дивитися футбол."
-    - words: ["Вони", "будуть", "відпочивати"]
-      answer: "Вони будуть відпочивати."
-- id: act-7
-  type: order
-  title: From now to tomorrow
-  instruction: Put the mini-sequence in a natural time order.
-  items:
-    - "Зараз я читаю."
-    - "Ввечері я буду готувати."
-    - "Завтра я буду працювати."
-    - "Наступного тижня я буду відпочивати."
-  correct_order: [0, 1, 2, 3]
-- id: act-8
-  type: fill-in
-  title: Keep the infinitive
-  instruction: Choose the infinitive after the future form of бути.
-  items:
-    - sentence: "Я буду ___ завтра."
-      answer: "читати"
-      options:
-        - "читати"
-        - "читаю"
-        - "читав"
-      explanation: "After буду, use the infinitive читати."
-    - sentence: "Ти будеш ___ ввечері?"
-      answer: "робити"
-      options:
-        - "робити"
-        - "робиш"
-        - "робив"
-      explanation: "After будеш, use робити."
-    - sentence: "Вона буде ___ вечерю."
-      answer: "готувати"
-      options:
-        - "готувати"
-        - "готує"
-        - "готувала"
-      explanation: "After буде, use готувати."
-    - sentence: "Ми будемо ___ футбол."
-      answer: "дивитися"
-      options:
-        - "дивитися"
-        - "дивимося"
-        - "дивилися"
-      explanation: "After будемо, use дивитися."
-    - sentence: "Вони будуть ___."
-      answer: "відпочивати"
-      options:
-        - "відпочивати"
-        - "відпочивають"
-        - "відпочивали"
-      explanation: "After будуть, use відпочивати."
-- id: act-9
-  type: translate
-  title: Say future plans
-  instruction: Choose the Ukrainian sentence that matches the English prompt.
-  items:
-    - source: "Tomorrow I will work."
-      options:
-        - text: "Завтра я буду працювати."
-          correct: true
-        - text: "Учора я працював."
-          correct: false
-        - text: "Зараз я працюю."
-          correct: false
-      explanation: "Tomorrow needs буду працювати."
-    - source: "What will you do in the evening?"
-      options:
-        - text: "Що ти будеш робити ввечері?"
-          correct: true
-        - text: "Що ти робив учора?"
-          correct: false
-        - text: "Що ти робиш зараз?"
-          correct: false
-      explanation: "Use будеш робити for you will do."
-    - source: "We will watch football."
-      options:
-        - text: "Ми будемо дивитися футбол."
-          correct: true
-        - text: "Ми дивимося футбол."
-          correct: false
-        - text: "Ми дивилися футбол."
-          correct: false
-      explanation: "Use будемо дивитися."
-    - source: "They will rest."
-      options:
-        - text: "Вони будуть відпочивати."
-          correct: true
-        - text: "Вони відпочивають."
-          correct: false
-        - text: "Вони відпочивали."
-          correct: false
-      explanation: "Use будуть відпочивати."
-- id: act-10
-  type: error-correction
-  title: Repair future forms
-  instruction: Fix the sentence by using буду + infinitive.
-  items:
-    - sentence: "Я буду читаю завтра."
-      error: "читаю"
-      correction: "читати"
-      explanation: "After буду, use the infinitive читати."
-    - sentence: "Ти будеш робиш ввечері?"
-      error: "робиш"
-      correction: "робити"
-      explanation: "After будеш, use робити."
-    - sentence: "Вона буде читає книжку."
-      error: "читає"
-      correction: "читати"
-      explanation: "After буде, use читати."
-    - sentence: "Ми будемо дивимося футбол."
-      error: "дивимося"
-      correction: "дивитися"
-      explanation: "After будемо, use дивитися."
-    - sentence: "Ми будемо читаємо текст."
-      error: "Ми будемо читаємо текст."
-      correction: "Ми будемо читати текст."
-      explanation: "In the compound future, only будемо changes; the second verb stays читати."
-    - sentence: "Вони будуть працюють."
-      error: "працюють"
-      correction: "працювати"
-      explanation: "After будуть, use працювати."
-    - sentence: "Я буде робити завтра."
-      error: "буде"
-      correction: "буду"
-      explanation: "Я takes буду."
+inline:
+  - id: act-1
+    type: match-up
+    title: Match the future form
+    instruction: Match each person with the future form of бути.
+    pairs:
+      - left: 'я'
+        right: 'буду'
+      - left: 'ти'
+        right: 'будеш'
+      - left: 'він / вона'
+        right: 'буде'
+      - left: 'ми'
+        right: 'будемо'
+      - left: 'ви'
+        right: 'будете'
+      - left: 'вони'
+        right: 'будуть'
+  - id: act-2
+    type: fill-in
+    title: Build the compound future
+    instruction: Choose the correct form of бути.
+    items:
+      - sentence: 'Завтра я ___ працювати.'
+        answer: 'буду'
+        options:
+          - 'буду'
+          - 'буде'
+          - 'будемо'
+        explanation: 'Я takes буду.'
+      - sentence: 'Що ти ___ робити ввечері?'
+        answer: 'будеш'
+        options:
+          - 'будеш'
+          - 'буду'
+          - 'будете'
+        explanation: 'Ти takes будеш.'
+      - sentence: 'Вона ___ читати книжку.'
+        answer: 'буде'
+        options:
+          - 'буде'
+          - 'будуть'
+          - 'будемо'
+        explanation: 'Вона takes буде.'
+      - sentence: 'Ми ___ дивитися футбол.'
+        answer: 'будемо'
+        options:
+          - 'будемо'
+          - 'буде'
+          - 'буду'
+        explanation: 'Ми takes будемо.'
+      - sentence: 'Ви ___ гуляти в парку?'
+        answer: 'будете'
+        options:
+          - 'будете'
+          - 'будеш'
+          - 'будуть'
+        explanation: 'Ви takes будете.'
+      - sentence: 'Вони ___ відпочивати.'
+        answer: 'будуть'
+        options:
+          - 'будуть'
+          - 'будемо'
+          - 'буде'
+        explanation: 'Вони takes будуть.'
+  - id: act-3
+    type: quiz
+    title: Future pattern check
+    instruction: Choose the answer that keeps the A1 compound future.
+    items:
+      - prompt: 'Which sentence means I will read?'
+        options:
+          - text: 'Я буду читати.'
+            correct: true
+          - text: 'Я буду читаю.'
+            correct: false
+          - text: 'Я читаю завтра.'
+            correct: false
+        explanation: 'Use буду + infinitive: буду читати.'
+      - prompt: 'What stays unchanged after будемо?'
+        options:
+          - text: 'The infinitive.'
+            correct: true
+          - text: 'A present-tense ending.'
+            correct: false
+          - text: 'A past-tense ending.'
+            correct: false
+        explanation: 'The second verb stays in the infinitive.'
+      - prompt: 'Which form fits ми?'
+        options:
+          - text: 'Ми будемо робити.'
+            correct: true
+          - text: 'Ми буде робити.'
+            correct: false
+          - text: 'Ми будеш робити.'
+            correct: false
+        explanation: 'Ми takes будемо.'
+      - prompt: 'Which question asks about tomorrow?'
+        options:
+          - text: 'Що ти будеш робити завтра?'
+            correct: true
+          - text: 'Що ти робиш учора?'
+            correct: false
+          - text: 'Що ти робив зараз?'
+            correct: false
+        explanation: 'Будеш робити завтра is the future question.'
+  - id: act-4
+    type: group-sort
+    title: Sort the time frames
+    instruction: Sort each sentence by time.
+    groups:
+      - name: 'past'
+        items:
+          - 'Учора я читав.'
+          - 'Учора вона працювала.'
+      - name: 'present'
+        items:
+          - 'Зараз я читаю.'
+          - 'Зараз ми працюємо.'
+      - name: 'future'
+        items:
+          - 'Завтра я буду читати.'
+          - 'Наступного тижня ми будемо працювати.'
+workbook:
+  - type: true-false
+    title: Check the compound future
+    instruction: Decide whether each sentence uses буду + infinitive correctly.
+    items:
+      - statement: 'Я буду читати завтра.'
+        answer: true
+        explanation: 'Буду + читати is correct.'
+      - statement: 'Ти будеш робити ввечері?'
+        answer: true
+        explanation: 'Будеш + робити is correct.'
+      - statement: 'Вона буде читає книжку.'
+        answer: false
+        explanation: 'After буде, use читати.'
+      - statement: 'Ми будемо дивитися футбол.'
+        answer: true
+        explanation: 'Будемо + дивитися is correct.'
+      - statement: 'Вони будуть працюють.'
+        answer: false
+        explanation: 'After будуть, use працювати.'
+      - statement: 'Ви будете гуляти в парку?'
+        answer: true
+        explanation: 'Будете + гуляти is correct.'
+  - type: unjumble
+    title: Build future sentences
+    instruction: Put the words in a natural order.
+    items:
+      - words: ['Завтра', 'я', 'буду', 'працювати']
+        answer: 'Завтра я буду працювати.'
+      - words: ['Що', 'ти', 'будеш', 'робити', 'ввечері']
+        answer: 'Що ти будеш робити ввечері?'
+      - words: ['Вона', 'буде', 'читати', 'книжку']
+        answer: 'Вона буде читати книжку.'
+      - words: ['Ми', 'будемо', 'дивитися', 'футбол']
+        answer: 'Ми будемо дивитися футбол.'
+      - words: ['Вони', 'будуть', 'відпочивати']
+        answer: 'Вони будуть відпочивати.'
+  - type: order
+    title: From now to tomorrow
+    instruction: Put the mini-sequence in a natural time order.
+    items:
+      - 'Зараз я читаю.'
+      - 'Ввечері я буду готувати.'
+      - 'Завтра я буду працювати.'
+      - 'Наступного тижня я буду відпочивати.'
+    correct_order: [0, 1, 2, 3]
+  - type: fill-in
+    title: Keep the infinitive
+    instruction: Choose the infinitive after the future form of бути.
+    items:
+      - sentence: 'Я буду ___ завтра.'
+        answer: 'читати'
+        options:
+          - 'читати'
+          - 'читаю'
+          - 'читав'
+        explanation: 'After буду, use the infinitive читати.'
+      - sentence: 'Ти будеш ___ ввечері?'
+        answer: 'робити'
+        options:
+          - 'робити'
+          - 'робиш'
+          - 'робив'
+        explanation: 'After будеш, use робити.'
+      - sentence: 'Вона буде ___ вечерю.'
+        answer: 'готувати'
+        options:
+          - 'готувати'
+          - 'готує'
+          - 'готувала'
+        explanation: 'After буде, use готувати.'
+      - sentence: 'Ми будемо ___ футбол.'
+        answer: 'дивитися'
+        options:
+          - 'дивитися'
+          - 'дивимося'
+          - 'дивилися'
+        explanation: 'After будемо, use дивитися.'
+      - sentence: 'Вони будуть ___.'
+        answer: 'відпочивати'
+        options:
+          - 'відпочивати'
+          - 'відпочивають'
+          - 'відпочивали'
+        explanation: 'After будуть, use відпочивати.'
+  - type: translate
+    title: Say future plans
+    instruction: Choose the Ukrainian sentence that matches the English prompt.
+    items:
+      - source: 'Tomorrow I will work.'
+        options:
+          - text: 'Завтра я буду працювати.'
+            correct: true
+          - text: 'Учора я працював.'
+            correct: false
+          - text: 'Зараз я працюю.'
+            correct: false
+        explanation: 'Tomorrow needs буду працювати.'
+      - source: 'What will you do in the evening?'
+        options:
+          - text: 'Що ти будеш робити ввечері?'
+            correct: true
+          - text: 'Що ти робив учора?'
+            correct: false
+          - text: 'Що ти робиш зараз?'
+            correct: false
+        explanation: 'Use будеш робити for you will do.'
+      - source: 'We will watch football.'
+        options:
+          - text: 'Ми будемо дивитися футбол.'
+            correct: true
+          - text: 'Ми дивимося футбол.'
+            correct: false
+          - text: 'Ми дивилися футбол.'
+            correct: false
+        explanation: 'Use будемо дивитися.'
+      - source: 'They will rest.'
+        options:
+          - text: 'Вони будуть відпочивати.'
+            correct: true
+          - text: 'Вони відпочивають.'
+            correct: false
+          - text: 'Вони відпочивали.'
+            correct: false
+        explanation: 'Use будуть відпочивати.'
+  - type: error-correction
+    title: Repair future forms
+    instruction: Fix the sentence by using буду + infinitive.
+    items:
+      - sentence: 'Я буду читаю завтра.'
+        error: 'читаю'
+        correction: 'читати'
+        explanation: 'After буду, use the infinitive читати.'
+      - sentence: 'Ти будеш робиш ввечері?'
+        error: 'робиш'
+        correction: 'робити'
+        explanation: 'After будеш, use робити.'
+      - sentence: 'Вона буде читає книжку.'
+        error: 'читає'
+        correction: 'читати'
+        explanation: 'After буде, use читати.'
+      - sentence: 'Ми будемо дивимося футбол.'
+        error: 'дивимося'
+        correction: 'дивитися'
+        explanation: 'After будемо, use дивитися.'
+      - sentence: 'Ми будемо читаємо текст.'
+        error: 'Ми будемо читаємо текст.'
+        correction: 'Ми будемо читати текст.'
+        explanation: 'In the compound future, only будемо changes; the second verb stays читати.'
+      - sentence: 'Вони будуть працюють.'
+        error: 'працюють'
+        correction: 'працювати'
+        explanation: 'After будуть, use працювати.'
+      - sentence: 'Я буде робити завтра.'
+        error: 'буде'
+        correction: 'буду'
+        explanation: 'Я takes буду.'

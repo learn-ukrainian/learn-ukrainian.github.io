@@ -174,11 +174,8 @@ Do not mix the two templates inside one story. If the story begins **я
 **я лягла**. If the story begins **я прокинувся**, continue with
 **я поснідав**, **я пішов**, **я повернувся**, **я ліг**.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Build a short day story
 
@@ -206,7 +203,6 @@ such as **кафе**, a person such as **колега**, or an object such as
 **продукти**. The time line should still be easy to scan from morning to
 evening.
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -248,7 +244,3 @@ Self-check with one six-sentence story:
 | **Нарешті я лягла спати.** | Finally I went to bed. |
 
 If every verb matches the same speaker, the story is doing its job.
-
-<!-- INJECT_ACTIVITY: act-9 -->
-
-<!-- INJECT_ACTIVITY: act-10 -->

@@ -165,11 +165,8 @@ If a line feels hard, shorten it. A strong A1 story can be only six sentences:
 **Мене звати Адам. Я народився в Канаді. Раніше я жив у Торонто. Зараз я живу
 в Києві. Я вивчаю українську. Далі я буду працювати і подорожувати.**
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Repair traps
 
@@ -187,7 +184,6 @@ Keep the time word and the verb in the same time.
 The last repair is important. Ukrainian does not need the English-style
 sentence **my name is...**. Use the familiar A1 chunk **Мене звати...**.
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -209,5 +205,3 @@ One final model:
 
 Stop here. If you can tell this kind of story, you can connect past, present,
 and future without leaving A1.
-
-<!-- INJECT_ACTIVITY: act-9 -->
