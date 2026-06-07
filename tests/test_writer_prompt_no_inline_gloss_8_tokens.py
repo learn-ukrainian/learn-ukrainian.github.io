@@ -31,6 +31,8 @@ def test_writer_prompt_does_not_require_inline_english_gloss_within_8_tokens() -
     prompt = _render_a1_my_morning_prompt()
 
     assert "inline English gloss within 8 tokens" not in prompt
+    assert "within 8 tokens" not in prompt
+    assert "block-bottom" not in prompt
 
 
 def test_writer_prompt_requires_dialoguebox_side_by_side_translation() -> None:
