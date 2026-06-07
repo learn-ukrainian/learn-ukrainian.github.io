@@ -263,7 +263,7 @@ async function loadTasks() {
     document.getElementById('active-content').innerHTML = '<div class="empty">Unable to load tasks</div>';
     document.getElementById('completed-content').innerHTML = '<div class="empty">Unable to load tasks</div>';
   }
-  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · manual refresh only`;
+  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · refresh on demand`;
 }
 
 loadTasks();

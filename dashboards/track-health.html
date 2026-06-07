@@ -175,7 +175,7 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
-const TRACKS = ['a1','a2','b1','b2','b2-pro','c1','c1-pro','c2','b2-hist','c1-hist','c1-bio','lit','oes','ruth'];
+let trackIds = [];
 let currentTrack = null;
 let overviewData = null;
 
@@ -192,6 +192,30 @@ async function fetchJson(url, options) {
 }
 
 function pct(v, t) { return t > 0 ? Math.round(v / t * 100) : 0; }
+
+function orderedTrackIds(summaryTracks, ...trackMaps) {
+  const ids = new Set(Object.keys(summaryTracks || {}));
+  for (const trackMap of trackMaps) {
+    for (const id of Object.keys(trackMap || {})) ids.add(id);
+  }
+  return Array.from(ids).filter(Boolean);
+}
+
+function buildStateSummary(pv) {
+  const state = pv?.build_state || {};
+  return {
+    current: pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0,
+    currentPct: pv?.pct_current ?? pv?.pct_v6 ?? 0,
+    backlog: pv?.rebuild_backlog ?? state.backlog ?? pv?.needs_rebuild ?? 0,
+  };
+}
+
+function pipelineLabel(version) {
+  if (version === 'v6') return 'current build state';
+  if (version === 'v5' || version === 'v3') return 'legacy build state';
+  if (version === 'unbuilt' || !version) return 'pending build state';
+  return 'unknown build state';
+}
 
 function barColor(pct) {
   if (pct >= 90) return 'var(--green)';
@@ -214,14 +238,18 @@ async function loadOverview() {
   const el = document.getElementById('overview-container');
   el.innerHTML = '<div class="loading">Loading all tracks...</div>';
   try {
-    const [buildRes, enrichRes] = await Promise.all([
+    const [buildRes, enrichRes, summaryRes] = await Promise.all([
       fetchJson('/api/state/build-status'),
       fetchJson('/api/state/enrichment-status'),
+      fetchJson('/api/state/summary?fresh=true').catch(() => ({ tracks: {} })),
     ]);
     overviewData = { build: buildRes.tracks, enrich: enrichRes.tracks };
+    trackIds = orderedTrackIds(summaryRes.tracks, buildRes.tracks, enrichRes.tracks);
+    if (currentTrack && !trackIds.includes(currentTrack)) currentTrack = null;
+    renderTrackSelector();
 
     let rows = '';
-    for (const tid of TRACKS) {
+    for (const tid of trackIds) {
       const b = buildRes.tracks[tid];
       const e = enrichRes.tracks[tid];
       if (!b && !e) continue;
@@ -264,7 +292,7 @@ async function loadOverview() {
 
 function renderTrackSelector() {
   const el = document.getElementById('track-selector');
-  el.innerHTML = TRACKS.map(t => {
+  el.innerHTML = trackIds.map(t => {
     const active = t === currentTrack ? ' active' : '';
     return `<button class="track-btn${active}" onclick="selectTrack('${t}')">${t}</button>`;
   }).join('');
@@ -285,8 +313,7 @@ async function selectTrack(trackId) {
 
     const h = health;
     const bs = buildStatus;
-    const v6Pct = pv.pct_v6 || 0;
-    const v6Count = pv.counts?.v6 || 0;
+    const buildState = buildStateSummary(pv);
 
     // Health cards
     let cards = '';
@@ -294,7 +321,7 @@ async function selectTrack(trackId) {
     const ship = h.shippable || {count: 0, pct: 0};
     cards += healthCard('Shippable', `${ship.pct}%`, `${ship.count}/${h.total} ready to deploy`, ship.pct);
     cards += healthCard('Audit Passing', `${h.audit.pct}%`, `${h.audit.passing} pass, ${h.audit.failing} fail`, h.audit.pct, 'var(--cyan)');
-    cards += healthCard('V6 Pipeline', `${v6Pct}%`, `${v6Count}/${h.total} modules on v6`, v6Pct, 'var(--gray)');
+    cards += healthCard('Current Builds', `${buildState.currentPct}%`, `${buildState.current}/${h.total} current, ${buildState.backlog} backlog`, buildState.currentPct, 'var(--gray)');
     cards += healthCard('Word Quality', h.words.avg_ratio, 'avg words vs target', null, 'var(--cyan)');
     cards += `<div class="health-card eta-card">
       <div class="label">ETA (remaining)</div>
@@ -383,17 +410,16 @@ function startAutoRefresh() {
 }
 
 // Init
-renderTrackSelector();
 loadOverview();
 startAutoRefresh();
 
 // Auto-select first track with activity
 setTimeout(async () => {
   if (!overviewData) return;
-  const active = TRACKS.find(t => {
+  const active = trackIds.find(t => {
     const b = overviewData.build[t];
     return b && (b.done > 0 || b.building > 0);
-  });
+  }) || trackIds[0];
   if (active) selectTrack(active);
 }, 1500);
 
@@ -503,7 +529,7 @@ function renderInspector(mod, extraComms) {
     ['Track', mod.track || '—'],
     ['Module #', mod.num || '—'],
     ['Slug', mod.slug || '—'],
-    ['Pipeline', mod.pipeline_version || 'unknown'],
+    ['Build State', pipelineLabel(mod.pipeline_version)],
     ['Words', wordCount ? `${wordCount}` : '—'],
     ['Word Target', wordTarget ? `${wordTarget}` : '—'],
     ['Audit', auditStatus],
@@ -514,7 +540,7 @@ function renderInspector(mod, extraComms) {
   ];
   const infoHtml = info.map(([k, v]) => {
     let style = '';
-    if (k === 'Pipeline') style = v === 'v6' ? 'color:var(--green);font-weight:600' : 'color:var(--text3)';
+    if (k === 'Build State') style = v === 'current build state' ? 'color:var(--green);font-weight:600' : 'color:var(--text3)';
     if (k === 'Audit') style = v === 'pass' ? 'color:var(--green)' : v === 'fail' ? 'color:var(--red)' : '';
     if (k === 'Review') style = reviewData.score >= 8.0 ? 'color:var(--green)' : reviewData.score != null ? 'color:var(--yellow)' : '';
     if (k === 'Shippable') style = v === 'YES' ? 'color:var(--green);font-weight:700' : 'color:var(--red);font-weight:700';
@@ -623,7 +649,7 @@ function renderInspector(mod, extraComms) {
 
   inspectorBody.innerHTML = `
     <div class="insp-section">
-      <div class="insp-section-title">Pipeline Phases <span style="font-size:10px;color:${mod.pipeline_version === 'v6' ? 'var(--green)' : 'var(--text3)'};font-weight:400">(${mod.pipeline_version || 'unknown'})</span></div>
+      <div class="insp-section-title">Build Phases <span style="font-size:10px;color:${pipelineLabel(mod.pipeline_version) === 'current build state' ? 'var(--green)' : 'var(--text3)'};font-weight:400">(${pipelineLabel(mod.pipeline_version)})</span></div>
       <div class="phase-timeline">${timeline}</div>
     </div>
     <div class="insp-section">

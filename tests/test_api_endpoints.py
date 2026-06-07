@@ -138,6 +138,23 @@ class TestPipelineVersionsEndpoint:
         data = client.get("/api/state/pipeline-versions").json()
         assert "counts" in data
 
+    def test_exposes_neutral_build_state_summary(self):
+        data = client.get("/api/state/pipeline-versions?fresh=true").json()
+        counts = data["counts"]
+
+        assert data["current_builds"] == counts["v6"]
+        assert data["legacy_builds"] == counts["v5"] + counts["v3"]
+        assert data["unbuilt_modules"] == counts["unbuilt"]
+        assert data["rebuild_backlog"] == counts["v5"] + counts["v3"] + counts["unbuilt"]
+        assert data["needs_rebuild"] == data["rebuild_backlog"]
+        assert data["build_state"] == {
+            "current": data["current_builds"],
+            "legacy": data["legacy_builds"],
+            "unbuilt": data["unbuilt_modules"],
+            "backlog": data["rebuild_backlog"],
+        }
+        assert "pct_current" in data
+
 
 class TestDashboardOverviewEndpoint:
     """GET /api/dashboard/overview returns tracks."""
