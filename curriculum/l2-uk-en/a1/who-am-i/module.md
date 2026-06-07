@@ -1,274 +1,311 @@
-# Who Am I?
+# Хто я?
 
-Your first real Ukrainian conversation is short. You greet someone, ask for a
-name, answer with your own name, and turn the question back. Keep the language
-as memorized chunks first. Grammar comes only after the phrases already work in
-your mouth.
+**Приві́т! Мене́ зва́ти Марко́. А тебе́?** — Hi! My name is Marko.
+And yours?
+
+This lesson stays short and spoken. First you hear a Ukrainian line, then you
+use a small amount of English support to check the meaning. Treat the first
+phrases as whole chunks:
+
+| Українська опора | English support |
+| --- | --- |
+| **Мене́ зва́ти...** | My name is... |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **Як вас зва́ти?** | What is your name? formal |
+| **Ду́же приє́мно!** | Nice to meet you! |
+| **Зві́дки ти?** | Where are you from? |
 
 By the end, you can:
 
-- ask **Як тебе звати?** with a peer and **Як вас звати?** with a new adult;
-- answer **Мене звати...**;
-- use **А тебе?** and **А вас?** to return the name question;
+- ask **Як тебе́ зва́ти?** with a peer and **Як вас зва́ти?** with a new adult;
+- answer **Мене́ зва́ти...**;
+- return the question with **А тебе́?** or **А вас?**;
 - point to a person or thing with **це**;
 - use **я**, **ти**, **він**, **вона**, and **ви** in simple identity lines;
-- say **Я — студент** or **Я — студентка** without adding a present-tense
+- say **Я — студе́нт** or **Я — студе́нтка** without adding a present-tense
   "am" word;
-- say where you are from with memorized phrases such as **Я з України** and
-  **Я з Канади**;
-- choose native Ukrainian identity words, including feminitives such as
-  **лікарка**, **вчителька**, and **інженерка**.
+- say where you are from with memorized phrases such as **Я з Украї́ни** and
+  **Я з Кана́ди**;
+- choose Ukrainian identity words, including **лі́карка**, **вчи́телька**, and
+  **інжене́рка**.
 
-## Dialogues
+## Діало́ги
 
-Read the dialogue first. Do not analyze every word yet. Your first target is
-the conversation shape.
+Read each Ukrainian dialogue first. Do not translate line by line while you
+read. The support table comes after the dialogue.
 
-<DialogueBox uk="Марко: Привіт! Як тебе звати?" en="Marko: Hi! What is your name?" />
-<DialogueBox uk="Олена: Мене звати Олена. А тебе?" en="Olena: My name is Olena. And yours?" />
-<DialogueBox uk="Марко: Мене звати Марко. Дуже приємно!" en="Marko: My name is Marko. Pleased to meet you!" />
-<DialogueBox uk="Олена: Дуже приємно! Звідки ти?" en="Olena: Pleased to meet you! Where are you from?" />
-<DialogueBox uk="Марко: Я з Канади. А ти?" en="Marko: I am from Canada. And you?" />
-<DialogueBox uk="Олена: Я з України." en="Olena: I am from Ukraine." />
+```text
+Марко́: Приві́т! Як тебе́ зва́ти?
+Оле́на: Мене́ зва́ти Оле́на. А тебе́?
+Марко́: Мене́ зва́ти Марко́. Ду́же приє́мно!
+Оле́на: Ду́же приє́мно! Зві́дки ти?
+Марко́: Я з Кана́ди. А ти?
+Оле́на: Я з Украї́ни.
+```
 
-Use **Привіт** with peers. Use **А тебе?** only after the other person has
-asked or answered the same name question. It is an echo pattern: short, polite,
-and easy. Do not switch to the longer pattern with **у** here; that belongs to
-a later grammar module.
+Support after the dialogue:
 
-Now compare a formal first meeting:
+| Українська | English support |
+| --- | --- |
+| **Приві́т!** | Hi! |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **А тебе́?** | And yours? informal |
+| **Я з Кана́ди.** | I am from Canada. |
+| **Я з Украї́ни.** | I am from Ukraine. |
 
-<DialogueBox uk="Петро: Добрий день! Як вас звати?" en="Petro: Good afternoon! What is your name?" />
-<DialogueBox uk="Софія: Мене звати Софія. А вас?" en="Sofiia: My name is Sofiia. And yours?" />
-<DialogueBox uk="Петро: Мене звати Петро. Дуже приємно!" en="Petro: My name is Petro. Pleased to meet you!" />
-<DialogueBox uk="Софія: Мені також. Ви з України?" en="Sofiia: Me too. Are you from Ukraine?" />
-<DialogueBox uk="Петро: Так, я з Києва." en="Petro: Yes, I am from Kyiv." />
+Use **Приві́т** with peers. Use **А тебе́?** only after the name question is
+already active. It is an echo pattern: short, polite, and easy.
 
-The formal version changes two pieces. **Тебе** becomes **вас**. **Ти**
-becomes **ви**. English uses one word, "you"; Ukrainian asks you to choose
-relationship and politeness.
+Now read a formal first meeting:
 
-Use **Добрий день** when you meet an adult, teacher, host, or stranger. Keep
-**Привіт** for friends, classmates, children, and relaxed peer situations.
+```text
+Петро́: До́брий день! Як вас зва́ти?
+Софі́я: Мене́ зва́ти Софі́я. А вас?
+Петро́: Мене́ зва́ти Петро́. Ду́же приє́мно!
+Софі́я: Мені́ також. Ви з Украї́ни?
+Петро́: Так, я з Ки́єва.
+```
 
-The third dialogue introduces another person. Notice that two people still
-speak; it is not a monologue.
+Support after the dialogue:
 
-<DialogueBox uk="Тарас: Це Андрій. Він зі Львова." en="Taras: This is Andrii. He is from Lviv." />
-<DialogueBox uk="Наталка: Дуже приємно. А хто це?" en="Natalka: Pleased to meet you. And who is this?" />
-<DialogueBox uk="Тарас: Це Оксана. Вона з Одеси. Вона — лікарка." en="Taras: This is Oksana. She is from Odesa. She is a doctor." />
-<DialogueBox uk="Наталка: Дуже приємно, Оксано." en="Natalka: Pleased to meet you, Oksana." />
+| Українська | English support |
+| --- | --- |
+| **До́брий день!** | Good afternoon! |
+| **Як вас зва́ти?** | What is your name? formal |
+| **А вас?** | And yours? formal |
+| **Мені́ також.** | Me too. |
+| **Так, я з Ки́єва.** | Yes, I am from Kyiv. |
+
+The formal version changes two pieces. **тебе́** becomes **вас**. **ти**
+becomes **ви**. English has one everyday word, "you"; Ukrainian asks you to
+choose relationship and politeness.
+
+The third dialogue introduces another person:
+
+```text
+Тара́с: Це Андрі́й. Він зі Льво́ва.
+Ната́лка: Ду́же приє́мно. А хто це?
+Тара́с: Це Окса́на. Вона́ з Оде́си. Вона́ — лі́карка.
+Ната́лка: Ду́же приє́мно, Окса́но.
+```
+
+Support after the dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Це Андрі́й.** | This is Andrii. |
+| **Він зі Льво́ва.** | He is from Lviv. |
+| **А хто це?** | And who is this? |
+| **Вона́ — лі́карка.** | She is a doctor. |
 
 For a woman, use the feminine profession form when Ukrainian has the normal
-form: **лікарка**, **вчителька**, **інженерка**, **програмістка**,
-**студентка**. These are not decorative extras. They are standard Ukrainian
-identity words.
+form: **лі́карка**, **вчи́телька**, **інжене́рка**, **програмі́стка**,
+**студе́нтка**. These are standard Ukrainian identity words.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-## My Name Is...
+## Мене́ зва́ти...
 
-**Мене звати...** means "My name is..." Treat it as one chunk:
+**Мене́ зва́ти...** is one chunk. You do not need the grammar of **мене́** or
+**зва́ти** yet. You need the social move: ask, answer, echo.
 
-| Ukrainian | English use |
+| Українська | English support |
 | --- | --- |
-| **Мене звати Марко.** | My name is Marko. |
-| **Мене звати Олена.** | My name is Olena. |
-| **Мене звати [ім'я].** | My name is [name]. |
-| **Як тебе звати?** | What is your name? informal |
-| **Як вас звати?** | What is your name? formal |
-| **До побачення!** | Goodbye! |
-
-These **фрази знайомства** are chunks. Do not translate the chunk word by
-word. At this level, you do not need the case of **мене** or the verb form
-behind **звати**. You need the social move: ask, answer, echo.
+| **Мене́ зва́ти Марко́.** | My name is Marko. |
+| **Мене́ зва́ти Оле́на.** | My name is Olena. |
+| **Мене́ зва́ти [ім'я́].** | My name is [name]. |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **Як вас зва́ти?** | What is your name? formal |
+| **До поба́чення!** | Goodbye! |
 
 Name exchange order:
 
-1. **Привіт!** or **Добрий день!**
-2. **Як тебе звати?** or **Як вас звати?**
-3. **Мене звати...**
-4. **А тебе?** or **А вас?**
-5. **Дуже приємно!**
+1. **Приві́т!** or **До́брий день!**
+2. **Як тебе́ зва́ти?** or **Як вас зва́ти?**
+3. **Мене́ зва́ти...**
+4. **А тебе́?** or **А вас?**
+5. **Ду́же приє́мно!**
 
 :::tip
-For this module, **А тебе?** and **А вас?** are return buttons. Use them only
+For this module, **А тебе́?** and **А вас?** are return buttons. Use them only
 after the same question is already active in the conversation.
 :::
 
-**Дуже приємно!** comes after names are exchanged. It is the small phrase that
-closes the introduction politely.
-
 Avoid the English-shaped line "My name is..." as a Ukrainian sentence. The
-natural high-frequency Ukrainian model for a first introduction is
-**Мене звати...**.
+natural first-introduction model is **Мене́ зва́ти...**.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## This Is...
+## Це...
 
 **Це** is the fast pointing word. It can introduce a thing, a city, or a
 person:
 
-| Ukrainian | English |
+| Українська | English support |
 | --- | --- |
-| **Це кава.** | This is coffee. |
-| **Це Київ.** | This is Kyiv. |
-| **Це Андрій.** | This is Andrii. |
-| **Це Оксана.** | This is Oksana. |
+| **Це ка́ва.** | This is coffee. |
+| **Це Ки́їв.** | This is Kyiv. |
+| **Це Андрі́й.** | This is Andrii. |
+| **Це Окса́на.** | This is Oksana. |
 
-Use **Що це?** for a thing: **Що це? Це кава.** Use **Хто це?** for a
-person: **Хто це? Це Оксана.**
+Use **Що це?** for a thing: **Що це? Це ка́ва.** Use **Хто це?** for a
+person: **Хто це? Це Окса́на.**
 
 Keep the question word first. Ukrainian beginner questions are easier when the
-question word opens the question: **Хто це?**, **Що це?**, **Звідки ти?**
+question word opens the question: **Хто це?**, **Що це?**, **Зві́дки ти?**
 
 Use **це** instead of an English-style "it" when you identify a person in a
 photo, on the phone, or in a group:
 
-| Safer beginner line | English meaning |
+| Українська | English support |
 | --- | --- |
-| **Це мій тато.** | This is my dad. |
-| **Це моя мама.** | This is my mom. |
-| **Це моя подруга.** | This is my female friend. |
+| **Це мій та́то.** | This is my dad. |
+| **Це моя́ ма́ма.** | This is my mom. |
+| **Це моя́ подру́га.** | This is my female friend. |
 
-For people, **він** and **вона** are also possible after you know who the
-person is: **Це Андрій. Він зі Львова.** **Це Оксана. Вона — лікарка.**
+For people, **він** and **вона́** are also possible after you know who the
+person is: **Це Андрі́й. Він зі Льво́ва.** **Це Окса́на. Вона́ — лі́карка.**
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-## Personal Pronouns
+## Особо́ві займéнники
 
-Personal pronouns point to people in a conversation. Learn only the naming
-case now:
+Learn only the naming case now:
 
-| Ukrainian | Use |
+| Українська | English support |
 | --- | --- |
-| **я** | I, the speaker; **1-ша особа** |
-| **ми** | we; **1-ша особа** plural |
-| **ти** | you, one familiar person; **2-га особа**, points **на співрозмовника** |
-| **ви** | you formal, or you plural; **2-га особа**, points **на співрозмовника** |
-| **він** | he; **3-тя особа** |
-| **вона** | she; **3-тя особа** |
-| **вони** | they; **3-тя особа** |
+| **я** | I, the speaker |
+| **ми** | we |
+| **ти** | you, one familiar person |
+| **ви** | you formal, or you plural |
+| **він** | he |
+| **вона́** | she |
+| **вони́** | they |
 
-The important beginner contrast is **ти / ви**. Use **ти** **для друзів,
-дітей** and close classmates when the relationship is informal. Use **ви**
-**для викладачів, старших людей**, one unknown adult, a host, or several
+The important beginner contrast is **ти / ви**. Use **ти** **для дру́зів,
+діте́й** and close classmates when the relationship is informal. Use **ви**
+**для викладачі́в, ста́рших люде́й**, one unknown adult, a host, or several
 people.
 
 Mini-patterns:
 
-| Informal | Formal |
+| Неформально | Формально |
 | --- | --- |
-| **Як тебе звати?** | **Як вас звати?** |
-| **А тебе?** | **А вас?** |
-| **Звідки ти?** | **Звідки ви?** |
+| **Як тебе́ зва́ти?** | **Як вас зва́ти?** |
+| **А тебе́?** | **А вас?** |
+| **Зві́дки ти?** | **Зві́дки ви?** |
 
 When you write polite **Ви** to one person, Ukrainian often uses a capital
-letter. In this course page, the lower-case **ви** is enough for practice, but
+letter. In this course page, lower-case **ви** is enough for practice, but
 recognize **Ви** when you see it.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## I Am a Student
+## Я — студе́нт
 
 Ukrainian present-time identity lines do not need a word for English "am" or
 "is":
 
-| Ukrainian | English |
+| Українська | English support |
 | --- | --- |
-| **Я — студент.** | I am a male student. |
-| **Я — студентка.** | I am a female student. |
-| **Він — лікар.** | He is a doctor. |
-| **Вона — лікарка.** | She is a doctor. |
+| **Я — студе́нт.** | I am a male student. |
+| **Я — студе́нтка.** | I am a female student. |
+| **Він — лі́кар.** | He is a doctor. |
+| **Вона́ — лі́карка.** | She is a doctor. |
 
 The dash is a reading helper. It marks the place where English expects "am" or
-"is." In ordinary writing, you may see the same pattern without a dash, but the
-meaning is the same: **Я студент.**
-
-The grammar label is **Нульова зв'язка** or **Опущений дієслово-копула**.
-For today, that only means: do not add **бути** in present-time identity lines
-such as **Я студент**, **Я лікарка**, **Він — лікар**, and **Вона — лікарка**.
+"is." In ordinary writing, you may see the same pattern without a dash:
+**Я студе́нт.**
 
 Use profession pairs as pairs:
 
-| Masculine | Feminine |
+| Чоловіча форма | Жіноча форма |
 | --- | --- |
-| **студент** | **студентка** |
-| **вчитель** | **вчителька** |
-| **лікар** | **лікарка** |
-| **програміст** | **програмістка** |
-| **інженер** | **інженерка** |
-| **українець** | **українка** |
-| **канадієць** | **канадка** |
-| **американець** | **американка** |
+| **студе́нт** | **студе́нтка** |
+| **вчи́тель** | **вчи́телька** |
+| **лі́кар** | **лі́карка** |
+| **програмі́ст** | **програмі́стка** |
+| **інжене́р** | **інжене́рка** |
+| **украї́нець** | **украї́нка** |
+| **канаді́єць** | **кана́дка** |
+| **америка́нець** | **америка́нка** |
 
-The feminine form is the primary form for a woman. **Оксана — лікарка.**
-**Софія — студентка.** **Наталка — інженерка.** The simple classroom phrase
-**фізична реальність** means the real person guides the label: **Я
-програмістка** for a woman, **Я програміст** for a man.
+The feminine form is the primary form for a woman. **Окса́на — лі́карка.**
+**Софі́я — студе́нтка.** **Ната́лка — інжене́рка.**
 
-This is a Ukrainian-centered habit. Do not treat masculine profession words as
-universal labels for women.
+## Зві́дки?
 
-## Where From?
+**Зві́дки?** means "from where?" Use the country phrases as memorized chunks:
 
-**Звідки?** means "from where?" Use the country phrases as memorized chunks:
-
-| Question | Answer |
+| Питання | Відповідь |
 | --- | --- |
-| **Звідки ти?** | **Я з України.** |
-| **Звідки ви?** | **Я з Канади.** |
-| **Ви з України?** | **Так, я з Києва.** |
+| **Зві́дки ти?** | **Я з Украї́ни.** |
+| **Зві́дки ви?** | **Я з Кана́ди.** |
+| **Ви з Украї́ни?** | **Так, я з Ки́єва.** |
 
 Add a few prepared places:
 
-| Ukrainian | English |
+| Українська | English support |
 | --- | --- |
-| **Я з України.** | I am from Ukraine. |
-| **Я з Канади.** | I am from Canada. |
-| **Я зі Штатів.** | I am from the States. |
-| **Я з Німеччини.** | I am from Germany. |
-| **Я з Києва.** | I am from Kyiv. |
-| **Я зі Львова.** | I am from Lviv. |
-| **Я з Одеси.** | I am from Odesa. |
+| **Я з Украї́ни.** | I am from Ukraine. |
+| **Я з Кана́ди.** | I am from Canada. |
+| **Я зі Шта́тів.** | I am from the States. |
+| **Я з Німе́ччини.** | I am from Germany. |
+| **Я з Ки́єва.** | I am from Kyiv. |
+| **Я зі Льво́ва.** | I am from Lviv. |
+| **Я з Оде́си.** | I am from Odesa. |
 
 The forms after **з / зі** are memorized here. Do not open the full grammar of
 "from" yet. Your speaking goal is a natural first-contact answer.
 
 Build a three-line self-introduction:
 
-<DialogueBox uk="Добрий день. Мене звати Софія." en="Good afternoon. My name is Sofiia." />
-<DialogueBox uk="Я з України." en="I am from Ukraine." />
-<DialogueBox uk="Я — студентка." en="I am a student." />
+```text
+До́брий день. Мене́ зва́ти Софі́я.
+Я з Украї́ни.
+Я — студе́нтка.
+```
 
 Or informal:
 
-<DialogueBox uk="Привіт! Мене звати Марко." en="Hi! My name is Marko." />
-<DialogueBox uk="Я з Канади." en="I am from Canada." />
-<DialogueBox uk="Я — програміст." en="I am a programmer." />
+```text
+Приві́т! Мене́ зва́ти Марко́.
+Я з Кана́ди.
+Я — програмі́ст.
+```
 
-Native Ukrainian choices matter even in tiny introductions. Use **тато** for
-dad, **дружина** for wife, **вибачте** or **пробачте** for excuse me,
-**дякую** or **спасибі** for thank you, and **теж** or **також** for also.
+Native Ukrainian choices matter even in tiny introductions. Use **та́то** for
+dad, **дружи́на** for wife, **ви́бачте** or **проба́чте** for excuse me,
+**дя́кую** or **спаси́бі** for thank you, and **теж** or **та́кож** for also.
 
-## Textbook Check
+## Слу́хай і зошит
 
-Before the workbook, cover the English side and say the Ukrainian aloud:
+For lawful listening, use public Ukrainian Lessons Podcast pages as listen-only
+support: Episode 3 for introductions, Episode 4 for **Зві́дки?**, and Episode
+8 for professions. Listen, repeat a short chunk, and come back to the page.
+Do not copy or transcribe paid material.
 
-| English cue | Ukrainian you say |
+For handwriting recognition, ask a teacher, tutor, or classmate to write these
+original labels in a notebook: **ім'я́**, **прі́звище**, **Ки́їв**,
+**студе́нтка**, **лі́карка**. First compare the notebook label with the printed
+word; then write your own line.
+
+## Самопереві́рка
+
+Cover the English support and read the Ukrainian aloud:
+
+| Українська | English support |
 | --- | --- |
-| What is your name? informal | **Як тебе звати?** |
-| My name is... | **Мене звати...** |
-| And yours? informal | **А тебе?** |
-| And yours? formal | **А вас?** |
-| This is Oksana. | **Це Оксана.** |
-| Who is this? | **Хто це?** |
-| I am a student. female speaker | **Я — студентка.** |
-| She is a doctor. | **Вона — лікарка.** |
-| Where are you from? informal | **Звідки ти?** |
-| I am from Canada. | **Я з Канади.** |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **Мене́ зва́ти...** | My name is... |
+| **А тебе́?** | And yours? informal |
+| **А вас?** | And yours? formal |
+| **Це Окса́на.** | This is Oksana. |
+| **Хто це?** | Who is this? |
+| **Я — студе́нтка.** | I am a female student. |
+| **Вона́ — лі́карка.** | She is a doctor. |
+| **Зві́дки ти?** | Where are you from? informal |
+| **Я з Кана́ди.** | I am from Canada. |
 
 Use the workbook for extra practice: profession pairs, dialogue fill-ins,
 safer Ukrainian sentence choices, native-form choices, and vocabulary

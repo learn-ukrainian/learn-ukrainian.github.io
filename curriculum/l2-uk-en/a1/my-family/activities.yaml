@@ -1,10 +1,10 @@
 inline:
   - id: act-1
     type: quiz
-    title: Family photo questions
-    instruction: Choose the Ukrainian line that fits the photo exchange.
+    title: Питання до фото
+    instruction: Обери український рядок для фото-розмови.
     items:
-      - prompt: You ask one peer whether they have a brother.
+      - prompt: Ти питаєш одного ровесника про брата.
         options:
           - text: У тебе є брат?
             correct: true
@@ -12,8 +12,8 @@ inline:
             correct: false
           - text: Це брат?
             correct: false
-        explanation: У тебе є...? asks one familiar person whether they have someone.
-      - prompt: You answer yes and say you have one sister.
+        explanation: У тебе є...? питає одну знайому людину.
+      - prompt: Ти відповідаєш так і кажеш, що маєш одну сестру.
         options:
           - text: Так, у мене є одна сестра.
             correct: true
@@ -21,8 +21,8 @@ inline:
             correct: false
           - text: Так, це одна сестра.
             correct: false
-        explanation: У мене є... answers for yourself.
-      - prompt: You answer no with the safe A1 answer.
+        explanation: У мене є... відповідає за себе.
+      - prompt: Ти відповідаєш ні короткою A1-фразою.
         options:
           - text: Ні.
             correct: true
@@ -30,8 +30,8 @@ inline:
             correct: false
           - text: Ні є брат.
             correct: false
-        explanation: Keep the negative answer simple at A1.
-      - prompt: You ask what his name is.
+        explanation: На A1 тримай заперечну відповідь простою.
+      - prompt: Ти питаєш, як його звати.
         options:
           - text: Як його звати?
             correct: true
@@ -39,8 +39,8 @@ inline:
             correct: false
           - text: Що його звати?
             correct: false
-        explanation: Його fits a brother, dad, son, or grandfather.
-      - prompt: You identify your mom in a photo.
+        explanation: Його підходить до брата, тата, сина або дідуся.
+      - prompt: Ти показуєш маму на фото.
         options:
           - text: Це моя мама.
             correct: true
@@ -48,8 +48,8 @@ inline:
             correct: false
           - text: Це моє мама.
             correct: false
-        explanation: Мама is feminine, so use моя.
-      - prompt: You identify your parents.
+        explanation: Мама — жіночого роду, тому моя.
+      - prompt: Ти показуєш батьків.
         options:
           - text: Це мої батьки.
             correct: true
@@ -57,32 +57,32 @@ inline:
             correct: false
           - text: Це моя батьки.
             correct: false
-        explanation: Батьки is plural, so use мої.
+        explanation: Батьки — множина, тому мої.
   - id: act-2
     type: match-up
-    title: Family words
-    instruction: Match the English cue with the Ukrainian family word.
+    title: Слова родини
+    instruction: З'єднай українське слово з українською підказкою.
     pairs:
-      - left: mother
-        right: мама
-      - left: father
-        right: тато
-      - left: brother
-        right: брат
-      - left: sister
-        right: сестра
-      - left: grandmother
-        right: бабуся
-      - left: grandfather
-        right: дідусь
-      - left: parents
-        right: батьки
-      - left: relatives
-        right: родичі
+      - left: мама
+        right: мати
+      - left: тато
+        right: батько
+      - left: брат
+        right: син для моїх батьків
+      - left: сестра
+        right: дочка для моїх батьків
+      - left: бабуся
+        right: мама мами або тата
+      - left: дідусь
+        right: тато мами або тата
+      - left: батьки
+        right: мама і тато
+      - left: родичі
+        right: люди з родини
   - id: act-3
     type: fill-in
-    title: Build the I-have chunk
-    instruction: Choose the word or phrase that completes the family sentence.
+    title: Склади У мене є
+    instruction: Обери слово або фразу для родинного речення.
     items:
       - sentence: ___ мене є брат.
         answer: У
@@ -90,60 +90,60 @@ inline:
           - У
           - Це
           - Хто
-        explanation: У мене є... is the whole I-have chunk.
+        explanation: У мене є... — цілий блок для "I have".
       - sentence: У ___ є сестра.
         answer: мене
         options:
           - мене
           - мій
           - це
-        explanation: У мене є... answers for yourself.
+        explanation: У мене є... відповідає за себе.
       - sentence: У ___ є брат?
         answer: тебе
         options:
           - тебе
           - мене
           - він
-        explanation: У тебе є...? asks one familiar person.
+        explanation: У тебе є...? питає одну знайому людину.
       - sentence: У ___ є діти?
         answer: вас
         options:
           - вас
           - твій
           - вона
-        explanation: У вас є...? is formal or plural.
+        explanation: У вас є...? — формально або множина.
       - sentence: У мене є ___ брат.
         answer: один
         options:
           - один
           - одна
           - дві
-        explanation: Брат is masculine, so use один.
+        explanation: Брат — чоловічого роду, тому один.
       - sentence: У мене є ___ сестра.
         answer: одна
         options:
           - одна
           - один
           - два
-        explanation: Сестра is feminine, so use одна.
+        explanation: Сестра — жіночого роду, тому одна.
       - sentence: У мене є ___ брати.
         answer: два
         options:
           - два
           - дві
           - одна
-        explanation: Брати uses два.
+        explanation: Брати вживаємо з два.
       - sentence: У мене є ___ сестри.
         answer: дві
         options:
           - дві
           - два
           - один
-        explanation: Сестри uses дві.
+        explanation: Сестри вживаємо з дві.
   - id: act-4
     type: fill-in
-    title: My or your?
-    instruction: Choose the possessive form that matches the family word.
+    title: Мій чи моя?
+    instruction: Обери присвійний займенник до родинного слова.
     items:
       - sentence: Це ___ брат.
         answer: мій
@@ -152,7 +152,7 @@ inline:
           - моя
           - моє
           - мої
-        explanation: Брат is masculine.
+        explanation: Брат — чоловічого роду.
       - sentence: Це ___ мама.
         answer: моя
         options:
@@ -160,7 +160,7 @@ inline:
           - мій
           - моє
           - мої
-        explanation: Мама is feminine.
+        explanation: Мама — жіночого роду.
       - sentence: Це ___ місто.
         answer: моє
         options:
@@ -168,7 +168,7 @@ inline:
           - мій
           - моя
           - мої
-        explanation: Місто is neuter.
+        explanation: Місто — середнього роду.
       - sentence: Це ___ батьки.
         answer: мої
         options:
@@ -176,7 +176,7 @@ inline:
           - мій
           - моя
           - моє
-        explanation: Батьки is plural.
+        explanation: Батьки — множина.
       - sentence: Це ___ тато?
         answer: твій
         options:
@@ -184,7 +184,7 @@ inline:
           - твоя
           - твоє
           - твої
-        explanation: Тато is masculine even though it ends in -о.
+        explanation: Тато — чоловічого роду, хоча слово закінчується на -о.
       - sentence: Це ___ сестра?
         answer: твоя
         options:
@@ -192,7 +192,7 @@ inline:
           - твій
           - твоє
           - твої
-        explanation: Сестра is feminine.
+        explanation: Сестра — жіночого роду.
       - sentence: Це ___ прізвище?
         answer: твоє
         options:
@@ -200,7 +200,7 @@ inline:
           - твій
           - твоя
           - твої
-        explanation: Прізвище is neuter.
+        explanation: Прізвище — середнього роду.
       - sentence: Це ___ родичі?
         answer: твої
         options:
@@ -208,11 +208,11 @@ inline:
           - твій
           - твоя
           - твоє
-        explanation: Родичі is plural.
+        explanation: Родичі — множина.
 workbook:
   - type: error-correction
-    title: Choose the Ukrainian family sentence
-    instruction: Choose the safer Ukrainian line.
+    title: Обери українське родинне речення
+    instruction: Обери безпечніший український рядок.
     items:
       - sentence: Моє ім'я є Джон.
         error: Моє ім'я є Джон.
@@ -258,7 +258,7 @@ workbook:
         explanation: Брат is masculine, so the question word is чий.
   - type: fill-in
     title: Native family words
-    instruction: Fill the sentence with the native Ukrainian family word.
+    instruction: Заповни речення українським родинним словом.
     items:
       - sentence: Моя ___ — вчителька.
         answer: дружина
@@ -304,7 +304,7 @@ workbook:
         explanation: Одружений means married.
   - type: fill-in
     title: Complete the photo dialogue
-    instruction: Choose the missing word from the family conversation.
+    instruction: Обери пропущене слово з родинної розмови.
     items:
       - sentence: Це ___ сім'я на фотографії.
         answer: моя
@@ -319,7 +319,7 @@ workbook:
           - Хто
           - Що
           - Де
-        explanation: Use хто for a person.
+        explanation: Для людини вживай хто.
       - sentence: Це моя сестра. ___ звати Катя.
         answer: Її
         options:
@@ -343,7 +343,7 @@ workbook:
         explanation: Бабуся is feminine.
   - type: translate
     title: Family vocabulary quick check
-    instruction: Choose the English meaning.
+    instruction: Обери англійське значення.
     items:
       - source: сім'я
         options:

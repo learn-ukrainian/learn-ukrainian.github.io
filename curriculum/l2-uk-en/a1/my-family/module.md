@@ -1,8 +1,10 @@
-# My Family
+# Моя сім'я
+
+**Це моя́ сім'я́. У ме́не є брат.** — This is my family. I have a brother.
 
 Family is the first topic where you introduce other people, not only yourself.
 Keep the Ukrainian small and photo-based. Point to a person, say who it is,
-and add one simple line with **У мене є...** or **Це мій / моя...**.
+and add one simple line with **У ме́не є...** or **Це мій / моя́...**.
 
 By the end, you can:
 
@@ -18,34 +20,59 @@ By the end, you can:
   family or kin circle;
 - recognize a formal patronymic greeting without producing patronymics yet.
 
-## Dialogues
+## Діало́ги
 
-Read the dialogue first as a photo exchange. You do not need the whole grammar
-of possession. Treat **У мене є** and **У тебе є** as whole chunks.
+Read the Ukrainian first as a photo exchange. You do not need the whole grammar
+of possession. Treat **У ме́не є** and **У те́бе є** as whole chunks.
 
-<DialogueBox uk="Оля: Привіт, Марку! Це фото моєї сім'ї." en="Olia: Hi, Marko! This is a photo of my family." />
-<DialogueBox uk="Марк: Класно! У тебе є брати чи сестри?" en="Marko: Nice! Do you have brothers or sisters?" />
-<DialogueBox uk="Оля: Так, у мене є два брати і одна сестра." en="Olia: Yes, I have two brothers and one sister." />
-<DialogueBox uk="Марк: Ого! У мене тільки один брат." en="Marko: Wow! I have only one brother." />
-<DialogueBox uk="Оля: Як його звати?" en="Olia: What is his name?" />
-<DialogueBox uk="Марк: Його звати Коля." en="Marko: His name is Kolia." />
+```text
+О́ля: Приві́т, Ма́рку! Це фо́то моє́ї сім'ї́.
+Марк: Кла́сно! У те́бе є брати́ чи се́стри?
+О́ля: Так, у ме́не є два брати́ і одна́ сестра́.
+Марк: Ого́! У ме́не ті́льки оди́н брат.
+О́ля: Як його́ зва́ти?
+Марк: Його́ зва́ти Ко́ля.
+```
+
+Support after the dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Це фо́то моє́ї сім'ї́.** | This is a photo of my family. |
+| **У те́бе є брати́ чи се́стри?** | Do you have brothers or sisters? |
+| **У ме́не є два брати́ і одна́ сестра́.** | I have two brothers and one sister. |
+| **Як його́ зва́ти?** | What is his name? |
 
 Now use **це** to identify people in a family photo.
 
-<DialogueBox uk="Даша: Це моя сім'я на фотографії." en="Dasha: This is my family in the photo." />
-<DialogueBox uk="Андрій: Хто це?" en="Andrii: Who is this?" />
-<DialogueBox uk="Даша: Це моя мама Марина. Це мій тато Євген." en="Dasha: This is my mom Maryna. This is my dad Yevhen." />
-<DialogueBox uk="Андрій: А це твоя сестра?" en="Andrii: And is this your sister?" />
-<DialogueBox uk="Даша: Так. Це моя сестра Катя і мої брати, Іван і Денис." en="Dasha: Yes. This is my sister Katia and my brothers, Ivan and Denys." />
-<DialogueBox uk="Андрій: А це твоя бабуся?" en="Andrii: And is this your grandmother?" />
-<DialogueBox uk="Даша: Так, її звати Тетяна." en="Dasha: Yes, her name is Tetiana." />
+```text
+Да́ша: Це моя́ сім'я́ на фотогра́фії.
+Андрі́й: Хто це?
+Да́ша: Це моя́ ма́ма Мари́на. Це мій та́то Євге́н.
+Андрі́й: А це твоя́ сестра́?
+Да́ша: Так. Це моя́ сестра́ Ка́тя і мої́ брати́, Іва́н і Дени́с.
+Андрі́й: А це твоя́ бабу́ся?
+Да́ша: Так, її́ зва́ти Тетя́на.
+```
+
+Support after the dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Це моя́ сім'я́.** | This is my family. |
+| **Хто це?** | Who is this? |
+| **Це моя́ ма́ма.** | This is my mom. |
+| **Це мій та́то.** | This is my dad. |
+| **її́ зва́ти Тетя́на.** | Her name is Tetiana. |
 
 A short connected answer can reuse M5 and add family:
 
-<DialogueBox uk="Привіт! Мене звати Софія." en="Hi! My name is Sofiia." />
-<DialogueBox uk="Моя мама — вчителька." en="My mom is a teacher." />
-<DialogueBox uk="Мій тато — інженер." en="My dad is an engineer." />
-<DialogueBox uk="У мене є один брат." en="I have one brother." />
+```text
+Приві́т! Мене́ зва́ти Софі́я.
+Моя́ ма́ма — вчи́телька.
+Мій та́то — інжене́р.
+У ме́не є оди́н брат.
+```
 
 Notice the question words from earlier modules: **хто?** asks about a person,
 **що?** asks about a thing, **чий?** asks whose, and **який?** can ask what
@@ -56,7 +83,7 @@ it as one memorized block before you add family information.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-## Family
+## Сім'я́
 
 Use family words with a photo or a simple drawing. The first task is not a
 family tree; it is recognizing and saying the common people words.
@@ -103,10 +130,10 @@ level.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## I Have
+## У ме́не є
 
 English says "I have a brother." Ukrainian normally uses a different shape:
-**У мене є брат.** Learn it as one piece.
+**У ме́не є брат.** Learn it as one piece.
 
 | Ukrainian chunk | English use |
 | --- | --- |
@@ -138,7 +165,7 @@ requires more case grammar.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-## My
+## Мій / моя́
 
 The Ukrainian "my" word changes to match the person or thing you own. It does
 not match the gender of the owner.
@@ -177,7 +204,7 @@ photo tool.
 
 For "whose," match the question word to the noun:
 
-| Ukrainian | English cue |
+| Українська | English support |
 | --- | --- |
 | **Чий це брат?** | Whose brother is this? |
 | **Чия це сестра?** | Whose sister is this? |
@@ -185,40 +212,54 @@ For "whose," match the question word to the noun:
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Textbook Check
+## Слу́хай, фо́то, зошит
 
-Before the workbook, cover the English side and say the Ukrainian aloud:
+For lawful listening, use public Ukrainian Lessons Podcast pages as listen-only
+support: Episode 6 for **сім'я́ / У ме́не є...**, Episode 7 for **мій /
+моя́**, and Episode 10 for connected review speech. Listen, repeat a short
+chunk, and come back to the page. Do not copy or transcribe paid material.
 
-| English cue | Ukrainian you say |
+For handwriting recognition, ask a teacher, tutor, or classmate to write these
+original labels beside a simple family sketch: **ма́ма**, **та́то**,
+**брат**, **сестра́**, **сім'я́**, **бабу́ся**. First compare the notebook
+label with the printed word; then write your own line.
+
+## Самопереві́рка
+
+Cover the English support and read the Ukrainian aloud:
+
+| Українська | English support |
 | --- | --- |
-| This is my family. | **Це моя сім'я.** |
-| This is my mom. | **Це моя мама.** |
-| This is my dad. | **Це мій тато.** |
-| Do you have a brother? | **У тебе є брат?** |
-| Yes, I have one brother. | **Так, у мене є один брат.** |
-| No. | **Ні.** |
-| I have two sisters. | **У мене є дві сестри.** |
-| This is my brother. His name is Kolia. | **Це мій брат. Його звати Коля.** |
-| This is my sister. Her name is Katia. | **Це моя сестра. Її звати Катя.** |
-| Whose brother is this? | **Чий це брат?** |
-| I am 20 years old. | **Мені 20 років.** |
+| **Це моя́ сім'я́.** | This is my family. |
+| **Це моя́ ма́ма.** | This is my mom. |
+| **Це мій та́то.** | This is my dad. |
+| **У те́бе є брат?** | Do you have a brother? |
+| **Так, у ме́не є оди́н брат.** | Yes, I have one brother. |
+| **Ні.** | No. |
+| **У ме́не є дві сестри́.** | I have two sisters. |
+| **Це мій брат. Його́ зва́ти Ко́ля.** | This is my brother. His name is Kolia. |
+| **Це моя́ сестра́. Її́ зва́ти Ка́тя.** | This is my sister. Her name is Katia. |
+| **Чий це брат?** | Whose brother is this? |
+| **Мені́ 20 ро́ків.** | I am 20 years old. |
 
-The age chunk can be generalized as **Мені [N] років**. If you add a job for a
-family member, keep it as one simple profession word: **актор**, **художник**,
-**співак**, or **журналіст**.
+The age chunk can be generalized as **Мені́ [N] ро́ків**. If you add a job for
+a family member, keep it as one simple profession word: **акто́р**,
+**худо́жник**, **співа́к**, or **журналі́ст**.
 
 You can now make a four-sentence family introduction:
 
-<DialogueBox uk="Мене звати Марко." en="My name is Marko." />
-<DialogueBox uk="Це моя сім'я." en="This is my family." />
-<DialogueBox uk="Моя мама — журналістка." en="My mom is a journalist." />
-<DialogueBox uk="У мене є одна сестра." en="I have one sister." />
+```text
+Мене́ зва́ти Марко́.
+Це моя́ сім'я́.
+Моя́ ма́ма — журналі́стка.
+У ме́не є одна́ сестра́.
+```
 
-Use native Ukrainian family words in the workbook: **дружина** for wife,
-**чоловік** for husband or man by context, **бабуся** for grandmother,
-**родичі** for relatives, **дитина** for child, **молодший** for younger, and
-**одружений** for married. Do not turn these into a Russian comparison lesson;
-just choose the Ukrainian word.
+Use native Ukrainian family words in the workbook: **дружи́на** for wife,
+**чолові́к** for husband or man by context, **бабу́ся** for grandmother,
+**ро́дичі** for relatives, **дити́на** for child, **моло́дший** for younger,
+and **одру́жений** for married. Do not turn these into a Russian comparison
+lesson; just choose the Ukrainian word.
 
 Use the workbook for extra practice: safer Ukrainian family sentences, native
 family-word choices, photo-dialogue blanks, and quick vocabulary recognition.
