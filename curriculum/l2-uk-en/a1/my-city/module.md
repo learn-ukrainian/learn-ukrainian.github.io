@@ -131,9 +131,7 @@ Russian-imperial spelling. Use **Одеса / Odesa**, **Львів / Lviv**, an
 **Харків / Kharkiv**. Say **площа**, not the Russian street word; say
 **синьо-жовтий прапор**, **Тризуб**, and **гривня** for Ukrainian city life.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -172,7 +170,3 @@ Then swap the place names and keep the grammar frame. **Біля мого дом
 vocabulary becomes usable speech rather than a memorized list.
 Say the final version aloud once, then point to each place on your real or
 imagined map.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

@@ -150,9 +150,7 @@ and **Odesa**. The Russian-imperial spellings **Kiev**, **Lvov**, **Kharkov**,
 and **Odessa** are not course forms. In Ukrainian, use **Київ**, **Львів**,
 **Харків**, **Одеса**, **Дніпро**, and write them with a capital letter.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -195,7 +193,3 @@ Now change only the origin pieces: **з України**, **з Канади**, *
 **з Німеччини**, **зі США**, **з Києва**, **зі Львова**, **з Одеси**. If
 **де?**, **куди?**, and **звідки?** stay separate while you change names, the
 place system is ready for the checkpoint.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

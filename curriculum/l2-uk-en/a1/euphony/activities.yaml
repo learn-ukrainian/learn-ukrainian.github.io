@@ -1,286 +1,284 @@
-- id: act-1
-  type: quiz
-  title: Hear the smoother line
-  instruction: Choose the line that is easier to say aloud.
-  items:
-    - prompt: "After a vowel before Kyiv, choose the smoother place phrase."
-      options:
-        - text: "Я живу в Києві."
-          correct: true
-        - text: "Я живу у Києві."
-          correct: false
-        - text: "Я живу Києві."
-          correct: false
-      explanation: After живу, в Києві gives a smooth vowel-consonant link.
-    - prompt: "Before Львів, choose the form that avoids a hard cluster."
-      options:
-        - text: "Сестра у Львові."
-          correct: true
-        - text: "Сестра в Львові."
-          correct: false
-        - text: "Сестра Львові."
-          correct: false
-      explanation: Use у before Львів to avoid a heavy в лв cluster.
-    - prompt: "Connect mother and father."
-      options:
-        - text: "Мама й тато вдома."
-          correct: true
-        - text: "Мама і тато вдома."
-          correct: false
-        - text: "Мама з тато вдома."
-          correct: false
-      explanation: After a vowel before тато, й sounds smooth.
-    - prompt: "Connect brother and sister."
-      options:
-        - text: "Брат і сестра в школі."
-          correct: true
-        - text: "Брат й сестра в школі."
-          correct: false
-        - text: "Брат з сестра в школі."
-          correct: false
-      explanation: Between consonants, і is easier than й.
-    - prompt: "Choose the common smooth phrase with мною."
-      options:
-        - text: "зі мною"
-          correct: true
-        - text: "з мною"
-          correct: false
-        - text: "із мною"
-          correct: false
-      explanation: Зі мною is the common smooth A1 phrase.
-- id: act-2
-  type: group-sort
-  title: Sound-neighbor shelves
-  instruction: Sort each phrase by the euphony choice it practices.
-  groups:
-    - name: У
-      items:
-        - "у Львові"
-        - "у школі"
-        - "у вівторок"
-    - name: В
-      items:
-        - "в Києві"
-        - "в офісі"
-        - "в аптеці"
-    - name: І
-      items:
-        - "брат і сестра"
-        - "Марія і Яна"
-        - "І він іде"
-    - name: Й
-      items:
-        - "мама й тато"
-        - "ти й Іван"
-        - "Олена й Анна"
-- id: act-3
-  type: fill-in
-  title: У чи в around town
-  instruction: Choose the smoother form for each short place line.
-  items:
-    - sentence: "Вона ___ школі."
-      answer: в
-      options:
-        - в
-        - у
-        - зі
-      explanation: Вона ends in a vowel, so в школі is smooth.
-    - sentence: "Тарас ___ школі."
-      answer: у
-      options:
-        - у
-        - в
-        - й
-      explanation: After a consonant before шк, use у.
-    - sentence: "Я працюю ___ офісі."
-      answer: в
-      options:
-        - в
-        - у
-        - із
-      explanation: Before a vowel at the start of офісі, в works well.
-    - sentence: "Максим працює ___ банку."
-      answer: у
-      options:
-        - у
-        - в
-        - з
-      explanation: After the consonant in Максим, у банку is easier.
-    - sentence: "___ місті цікаво."
-      answer: У
-      options:
-        - У
-        - В
-        - Й
-      explanation: At the start before a consonant, use У.
-    - sentence: "___ Одесі тепло."
-      answer: В
-      options:
-        - В
-        - У
-        - Із
-      explanation: At the start before a vowel, use В.
-    - sentence: "Сестра ___ Львові."
-      answer: у
-      options:
-        - у
-        - в
-        - з
-      explanation: Use у before Львові to avoid the heavy в лв cluster.
-    - sentence: "Квиток ___ кіно."
-      answer: у
-      options:
-        - у
-        - в
-        - й
-      explanation: У кіно is the safer smooth chunk here.
-- id: act-4
-  type: match-up
-  title: Context to smooth link
-  instruction: Match each context with the euphony choice that fits.
-  pairs:
-    - left: "Вона + школа"
-      right: "Вона в школі."
-    - left: "Тарас + школа"
-      right: "Тарас у школі."
-    - left: "мама + тато"
-      right: "мама й тато"
-    - left: "брат + сестра"
-      right: "брат і сестра"
-    - left: "я + Максим"
-      right: "я і Максим"
-    - left: "ти + Іван"
-      right: "ти й Іван"
-    - left: "з + мною"
-      right: "зі мною"
-    - left: "з + Одеси"
-      right: "з Одеси"
-- id: act-5
-  type: odd-one-out
-  title: Find the rough sound
-  instruction: Choose the line that does not sound smooth.
-  items:
-    - words:
-        - "Я живу в Києві."
-        - "Я живу у Львові."
-        - "У місті цікаво."
-        - "Сестра в Львові."
-      answer: "Сестра в Львові."
-      explanation: Use у Львові to avoid the heavy cluster.
-    - words:
-        - "Брат і сестра."
-        - "Мама й тато."
-        - "Марія і Яна."
-        - "Брат й сестра."
-      answer: "Брат й сестра."
-      explanation: Between consonants, use і.
-    - words:
-        - "Вона в школі."
-        - "Тарас у школі."
-        - "Максим у банку."
-        - "Вона у школі."
-      answer: "Вона у школі."
-      explanation: After Вона, use в школі.
-    - words:
-        - "зі мною"
-        - "зі святом"
-        - "з Одеси"
-        - "з мною"
-      answer: "з мною"
-      explanation: Зі мною is the common smooth phrase.
-    - words:
-        - "Відео і ютуб."
-        - "Марія і Яна."
-        - "Олена й Анна."
-        - "Відео й ютуб."
-      answer: "Відео й ютуб."
-      explanation: Before ютуб, keep і to avoid a doubled й sound.
-- id: act-6
-  type: true-false
-  title: Pause and beginning checks
-  instruction: Decide whether the euphony choice fits the sentence edge or pause.
-  items:
-    - statement: "У парку тепло."
-      answer: true
-      explanation: At the start before a consonant, У is smooth.
-    - statement: "В офісі тихо."
-      answer: true
-      explanation: At the start before a vowel, В is smooth.
-    - statement: "Так, у нас є час."
-      answer: true
-      explanation: After a pause, у нас is natural.
-    - statement: "В місті цікаво."
-      answer: false
-      explanation: At the start before місті, use У місті.
-    - statement: "І він іде."
-      answer: true
-      explanation: At the beginning, І is safe.
-    - statement: "Марія й Яна в аптеці."
-      answer: false
-      explanation: "Before Яна, keep і: Марія і Яна."
-- id: act-7
-  type: order
-  title: Read the city note aloud
-  instruction: Put the note in an order that moves from place to people to plan.
-  is_ukrainian: true
-  items:
-    - "У місті є школа."
-    - "В офісі працює Іван."
-    - "Мама й тато в парку."
-    - "Брат і сестра йдуть у театр."
-    - "Софія зі мною."
-    - "У вівторок ми йдемо в кіно."
-  correct_order: [0, 1, 2, 3, 4, 5]
-- id: act-8
-  type: error-correction
-  title: Repair euphony interference
-  instruction: Choose the smooth Ukrainian repair for each learner sentence.
-  items:
-    - sentence: "Вона у школі."
-      error: "у школі"
-      correction: "Вона в школі."
-      options:
-        - "Вона в школі."
-        - "Вона у школі."
-        - "Вона й школі."
-      explanation: Вона ends in a vowel, so use в школі.
-    - sentence: "Брат й сестра."
-      error: "й сестра"
-      correction: "Брат і сестра."
-      options:
-        - "Брат і сестра."
-        - "Брат й сестра."
-        - "Брат у сестра."
-      explanation: Between consonants, use і.
-    - sentence: "В місті цікаво."
-      error: "В місті"
-      correction: "У місті цікаво."
-      options:
-        - "У місті цікаво."
-        - "В місті цікаво."
-        - "Й місті цікаво."
-      explanation: At the start before a consonant, use У.
-    - sentence: "Відео й ютуб."
-      error: "й ютуб"
-      correction: "Відео і ютуб."
-      options:
-        - "Відео і ютуб."
-        - "Відео й ютуб."
-        - "Відео у ютуб."
-      explanation: Before ютуб, keep і to avoid a doubled й sound.
-    - sentence: "Звернувся в фірму."
-      error: "в фірму"
-      correction: "Звернувся у фірму."
-      options:
-        - "Звернувся у фірму."
-        - "Звернувся в фірму."
-        - "Звернувся й фірму."
-      explanation: Before ф, use у to avoid в ф.
-    - sentence: "Вони вдосконалюють..."
-      error: "вдосконалюють"
-      correction: "Вони удосконалюють..."
-      options:
-        - "Вони удосконалюють..."
-        - "Вони вдосконалюють..."
-        - "Вони покращують..."
-      explanation: After the consonant in Вони, use the smoother у- form here.
+inline:
+  - id: act-1
+    type: quiz
+    title: Hear the smoother line
+    instruction: Choose the line that is easier to say aloud.
+    items:
+      - prompt: 'After a vowel before Kyiv, choose the smoother place phrase.'
+        options:
+          - text: 'Я живу в Києві.'
+            correct: true
+          - text: 'Я живу у Києві.'
+            correct: false
+          - text: 'Я живу Києві.'
+            correct: false
+        explanation: After живу, в Києві gives a smooth vowel-consonant link.
+      - prompt: 'Before Львів, choose the form that avoids a hard cluster.'
+        options:
+          - text: 'Сестра у Львові.'
+            correct: true
+          - text: 'Сестра в Львові.'
+            correct: false
+          - text: 'Сестра Львові.'
+            correct: false
+        explanation: Use у before Львів to avoid a heavy в лв cluster.
+      - prompt: 'Connect mother and father.'
+        options:
+          - text: 'Мама й тато вдома.'
+            correct: true
+          - text: 'Мама і тато вдома.'
+            correct: false
+          - text: 'Мама з тато вдома.'
+            correct: false
+        explanation: After a vowel before тато, й sounds smooth.
+      - prompt: 'Connect brother and sister.'
+        options:
+          - text: 'Брат і сестра в школі.'
+            correct: true
+          - text: 'Брат й сестра в школі.'
+            correct: false
+          - text: 'Брат з сестра в школі.'
+            correct: false
+        explanation: Between consonants, і is easier than й.
+      - prompt: 'Choose the common smooth phrase with мною.'
+        options:
+          - text: 'зі мною'
+            correct: true
+          - text: 'з мною'
+            correct: false
+          - text: 'із мною'
+            correct: false
+        explanation: Зі мною is the common smooth A1 phrase.
+  - id: act-2
+    type: group-sort
+    title: Sound-neighbor shelves
+    instruction: Sort each phrase by the euphony choice it practices.
+    groups:
+      - name: У
+        items:
+          - 'у Львові'
+          - 'у школі'
+          - 'у вівторок'
+      - name: В
+        items:
+          - 'в Києві'
+          - 'в офісі'
+          - 'в аптеці'
+      - name: І
+        items:
+          - 'брат і сестра'
+          - 'Марія і Яна'
+          - 'І він іде'
+      - name: Й
+        items:
+          - 'мама й тато'
+          - 'ти й Іван'
+          - 'Олена й Анна'
+  - id: act-3
+    type: fill-in
+    title: У чи в around town
+    instruction: Choose the smoother form for each short place line.
+    items:
+      - sentence: 'Вона ___ школі.'
+        answer: в
+        options:
+          - в
+          - у
+          - зі
+        explanation: Вона ends in a vowel, so в школі is smooth.
+      - sentence: 'Тарас ___ школі.'
+        answer: у
+        options:
+          - у
+          - в
+          - й
+        explanation: After a consonant before шк, use у.
+      - sentence: 'Я працюю ___ офісі.'
+        answer: в
+        options:
+          - в
+          - у
+          - із
+        explanation: Before a vowel at the start of офісі, в works well.
+      - sentence: 'Максим працює ___ банку.'
+        answer: у
+        options:
+          - у
+          - в
+          - з
+        explanation: After the consonant in Максим, у банку is easier.
+      - sentence: '___ місті цікаво.'
+        answer: У
+        options:
+          - У
+          - В
+          - Й
+        explanation: At the start before a consonant, use У.
+      - sentence: '___ Одесі тепло.'
+        answer: В
+        options:
+          - В
+          - У
+          - Із
+        explanation: At the start before a vowel, use В.
+      - sentence: 'Сестра ___ Львові.'
+        answer: у
+        options:
+          - у
+          - в
+          - з
+        explanation: Use у before Львові to avoid the heavy в лв cluster.
+      - sentence: 'Квиток ___ кіно.'
+        answer: у
+        options:
+          - у
+          - в
+          - й
+        explanation: У кіно is the safer smooth chunk here.
+  - id: act-4
+    type: match-up
+    title: Context to smooth link
+    instruction: Match each context with the euphony choice that fits.
+    pairs:
+      - left: 'Вона + школа'
+        right: 'Вона в школі.'
+      - left: 'Тарас + школа'
+        right: 'Тарас у школі.'
+      - left: 'мама + тато'
+        right: 'мама й тато'
+      - left: 'брат + сестра'
+        right: 'брат і сестра'
+      - left: 'я + Максим'
+        right: 'я і Максим'
+      - left: 'ти + Іван'
+        right: 'ти й Іван'
+      - left: 'з + мною'
+        right: 'зі мною'
+      - left: 'з + Одеси'
+        right: 'з Одеси'
+workbook:
+  - type: odd-one-out
+    title: Find the rough sound
+    instruction: Choose the line that does not sound smooth.
+    items:
+      - words:
+          - 'Я живу в Києві.'
+          - 'Я живу у Львові.'
+          - 'У місті цікаво.'
+          - 'Сестра в Львові.'
+        answer: 'Сестра в Львові.'
+        explanation: Use у Львові to avoid the heavy cluster.
+      - words:
+          - 'Брат і сестра.'
+          - 'Мама й тато.'
+          - 'Марія і Яна.'
+          - 'Брат й сестра.'
+        answer: 'Брат й сестра.'
+        explanation: Between consonants, use і.
+      - words:
+          - 'Вона в школі.'
+          - 'Тарас у школі.'
+          - 'Максим у банку.'
+          - 'Вона у школі.'
+        answer: 'Вона у школі.'
+        explanation: After Вона, use в школі.
+      - words:
+          - 'зі мною'
+          - 'зі святом'
+          - 'з Одеси'
+          - 'з мною'
+        answer: 'з мною'
+        explanation: Зі мною is the common smooth phrase.
+      - words:
+          - 'Відео і ютуб.'
+          - 'Марія і Яна.'
+          - 'Олена й Анна.'
+          - 'Відео й ютуб.'
+        answer: 'Відео й ютуб.'
+        explanation: Before ютуб, keep і to avoid a doubled й sound.
+  - type: true-false
+    title: Pause and beginning checks
+    instruction: Decide whether the euphony choice fits the sentence edge or pause.
+    items:
+      - statement: 'У парку тепло.'
+        answer: true
+        explanation: At the start before a consonant, У is smooth.
+      - statement: 'В офісі тихо.'
+        answer: true
+        explanation: At the start before a vowel, В is smooth.
+      - statement: 'Так, у нас є час.'
+        answer: true
+        explanation: After a pause, у нас is natural.
+      - statement: 'В місті цікаво.'
+        answer: false
+        explanation: At the start before місті, use У місті.
+      - statement: 'І він іде.'
+        answer: true
+        explanation: At the beginning, І is safe.
+      - statement: 'Марія й Яна в аптеці.'
+        answer: false
+        explanation: 'Before Яна, keep і: Марія і Яна.'
+  - type: order
+    title: Read the city note aloud
+    instruction: Put the note in an order that moves from place to people to plan.
+    is_ukrainian: true
+    items:
+      - 'У місті є школа.'
+      - 'В офісі працює Іван.'
+      - 'Мама й тато в парку.'
+      - 'Брат і сестра йдуть у театр.'
+      - 'Софія зі мною.'
+      - 'У вівторок ми йдемо в кіно.'
+    correct_order: [0, 1, 2, 3, 4, 5]
+  - type: error-correction
+    title: Repair euphony interference
+    instruction: Choose the smooth Ukrainian repair for each learner sentence.
+    items:
+      - sentence: 'Вона у школі.'
+        error: 'у школі'
+        correction: 'Вона в школі.'
+        options:
+          - 'Вона в школі.'
+          - 'Вона у школі.'
+          - 'Вона й школі.'
+        explanation: Вона ends in a vowel, so use в школі.
+      - sentence: 'Брат й сестра.'
+        error: 'й сестра'
+        correction: 'Брат і сестра.'
+        options:
+          - 'Брат і сестра.'
+          - 'Брат й сестра.'
+          - 'Брат у сестра.'
+        explanation: Between consonants, use і.
+      - sentence: 'В місті цікаво.'
+        error: 'В місті'
+        correction: 'У місті цікаво.'
+        options:
+          - 'У місті цікаво.'
+          - 'В місті цікаво.'
+          - 'Й місті цікаво.'
+        explanation: At the start before a consonant, use У.
+      - sentence: 'Відео й ютуб.'
+        error: 'й ютуб'
+        correction: 'Відео і ютуб.'
+        options:
+          - 'Відео і ютуб.'
+          - 'Відео й ютуб.'
+          - 'Відео у ютуб.'
+        explanation: Before ютуб, keep і to avoid a doubled й sound.
+      - sentence: 'Звернувся в фірму.'
+        error: 'в фірму'
+        correction: 'Звернувся у фірму.'
+        options:
+          - 'Звернувся у фірму.'
+          - 'Звернувся в фірму.'
+          - 'Звернувся й фірму.'
+        explanation: Before ф, use у to avoid в ф.
+      - sentence: 'Вони вдосконалюють...'
+        error: 'вдосконалюють'
+        correction: 'Вони удосконалюють...'
+        options:
+          - 'Вони удосконалюють...'
+          - 'Вони вдосконалюють...'
+          - 'Вони покращують...'
+        explanation: After the consonant in Вони, use the smoother у- form here.

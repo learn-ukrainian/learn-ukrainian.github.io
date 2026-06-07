@@ -149,9 +149,7 @@ jobs. **На білочці руда шубка** answers **на кому?** and
 **нагороду мені**. For this A1 module, keep the simple test: locative place
 phrases almost always have **в/у** or **на**.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -197,7 +195,3 @@ Now answer three real questions:
 Use short A1 answers first: **Я живу в Україні. Я живу у Львові. Я працюю в
 офісі. Аптека на вулиці. Пошта на площі.** Those chunks are enough to move into
 the next module, **Моє місто**.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

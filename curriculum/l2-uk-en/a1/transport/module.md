@@ -131,9 +131,7 @@ Keep the transport vocabulary clean. Use **зупинка**, not "останов
 **квиток**, not "білет", for this lesson. Start a polite transport exchange
 with **Добрий день**, not "Здрастуйте".
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -179,7 +177,3 @@ Now expand the same dialogue once: **Один квиток до центру, б
 one transport word: **автобусом**, **потягом**, **трамваєм**, **на метро**,
 **на таксі**. If the travel model stays stable while the vehicle changes, this
 module has done its job.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

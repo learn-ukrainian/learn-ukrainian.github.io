@@ -1,243 +1,241 @@
-- id: act-1
-  type: match-up
-  title: Place to action
-  instruction: Match each city place with a natural A1 action.
-  pairs:
-    - left: "аптека"
-      right: "купувати ліки"
-    - left: "бібліотека"
-      right: "читати книжку"
-    - left: "магазин"
-      right: "купувати хліб"
-    - left: "ресторан"
-      right: "вечеряти"
-    - left: "готель"
-      right: "спати"
-    - left: "вокзал"
-      right: "чекати поїзд"
-    - left: "музей"
-      right: "дивитися картини"
-    - left: "стадіон"
-      right: "дивитися матч"
-- id: act-2
-  type: quiz
-  title: В or на in the city
-  instruction: Choose the correct city chunk.
-  items:
-    - prompt: "Where do you buy medicine?"
-      options:
-        - text: "в аптеці"
-          correct: true
-        - text: "на аптеці"
-          correct: false
-        - text: "в аптека"
-          correct: false
-      explanation: "Аптека is a contained place: в аптеці."
-    - prompt: "Where are you at the post office?"
-      options:
-        - text: "на пошті"
-          correct: true
-        - text: "у пошті"
-          correct: false
-        - text: "на пошта"
-          correct: false
-      explanation: The common chunk is на пошті.
-    - prompt: "Where is the train station sentence?"
-      options:
-        - text: "Вона на вокзалі."
-          correct: true
-        - text: "Вона у вокзалі."
-          correct: false
-        - text: "Вона вокзал."
-          correct: false
-      explanation: Learn вокзал with на вокзалі.
-    - prompt: "Where do students read?"
-      options:
-        - text: "у бібліотеці"
-          correct: true
-        - text: "на бібліотеці"
-          correct: false
-        - text: "у бібліотека"
-          correct: false
-      explanation: Бібліотека changes to бібліотеці.
-- id: act-3
-  type: fill-in
-  title: У моєму місті є
-  instruction: Complete each city sentence.
-  items:
-    - sentence: "У моєму місті є великий ___."
-      answer: "парк"
-      options:
-        - "парк"
-        - "парку"
-        - "парком"
-      explanation: "After є, name the object: парк."
-    - sentence: "Бібліотека ___ університету."
-      answer: "біля"
-      options:
-        - "біля"
-        - "далеко"
-        - "там"
-      explanation: Біля connects two places.
-    - sentence: "Аптека ___ розі."
-      answer: "на"
-      options:
-        - "на"
-        - "в"
-        - "до"
-      explanation: The chunk is на розі.
-    - sentence: "Магазин тут, ___ дому."
-      answer: "біля"
-      options:
-        - "біля"
-        - "на"
-        - "до"
-      explanation: Біля дому is a fixed A1 chunk.
-    - sentence: "Школа далеко, ___ центрі міста."
-      answer: "у"
-      options:
-        - "у"
-        - "на"
-        - "до"
-      explanation: Use у центрі міста.
-    - sentence: "У місті ___ багато парків."
-      answer: "є"
-      options:
-        - "є"
-        - "має"
-        - "йде"
-      explanation: Use є for existence.
-- id: act-4
-  type: odd-one-out
-  title: Find the odd city chunk
-  instruction: Choose the phrase that does not fit the pattern.
-  items:
-    - words:
-        - "в аптеці"
-        - "у бібліотеці"
-        - "у банку"
-        - "на аптеці"
-      answer: "на аптеці"
-      explanation: Аптека uses в аптеці.
-    - words:
-        - "на пошті"
-        - "на вокзалі"
-        - "на стадіоні"
-        - "у пошті"
-      answer: "у пошті"
-      explanation: The common chunk is на пошті.
-    - words:
-        - "біля дому"
-        - "біля парку"
-        - "біля університету"
-        - "біля парк"
-      answer: "біля парк"
-      explanation: "Біля changes the following noun: біля парку."
-    - words:
-        - "Київ"
-        - "Одеса"
-        - "Львів"
-        - "Kiev"
-      answer: "Kiev"
-      explanation: Use Kyiv for the Ukrainian capital in English.
-- id: act-5
-  type: group-sort
-  title: City shelves
-  instruction: Sort the city words by use.
-  groups:
-    - name: "Places"
-      items:
-        - "аптека"
-        - "бібліотека"
-        - "музей"
-        - "готель"
-    - name: "Location words"
-      items:
-        - "тут"
-        - "там"
-        - "далеко"
-        - "близько"
-    - name: "People in the city"
-      items:
-        - "лікар"
-        - "офіціант"
-        - "продавець"
-        - "банкір"
-- id: act-6
-  type: order
-  title: Mini-map note
-  instruction: Put the city note in a natural order.
-  is_ukrainian: true
-  items:
-    - "У моєму місті є парк."
-    - "Біля парку є бібліотека."
-    - "Аптека на розі."
-    - "Магазин тут, біля дому."
-    - "Вокзал далеко."
-    - "Музей у центрі міста."
-  correct_order: [0, 1, 2, 3, 4, 5]
-- id: act-7
-  type: true-false
-  title: City language guardrails
-  instruction: Decide whether the statement fits the lesson.
-  items:
-    - statement: "Use Київ and Kyiv for Ukraine's capital."
-      answer: true
-      explanation: Kyiv is the Ukrainian English form.
-    - statement: "Площа is the Ukrainian word for square."
-      answer: true
-      explanation: Use площа, not a Russian street word.
-    - statement: "У місті має багато парків is the best A1 model."
-      answer: false
-      explanation: Say У місті є багато парків.
-    - statement: "Біля парку is a useful near-place chunk."
-      answer: true
-      explanation: Біля takes a changed place form.
-    - statement: "На вулиці Шевченка is a correct street-location chunk."
-      answer: true
-      explanation: Streets use на вулиці.
-- id: act-8
-  type: error-correction
-  title: Repair city interference
-  instruction: Choose the natural Ukrainian city sentence.
-  items:
-    - sentence: "Я живу в вулиці Шевченка."
-      error: "в вулиці"
-      correction: "Я живу на вулиці Шевченка."
-      options:
-        - "Я живу на вулиці Шевченка."
-        - "Я живу в вулиці Шевченка."
-        - "Я живу до вулиці Шевченка."
-      explanation: Use на вулиці for street location.
-    - sentence: "Моє місто є Київ."
-      error: "є Київ"
-      correction: "Моє місто — Київ."
-      options:
-        - "Моє місто — Київ."
-        - "Моє місто є Київ."
-        - "Моє місто на Київ."
-      explanation: Ukrainian can identify the city without є.
-    - sentence: "Я йду у парку."
-      error: "у парку"
-      correction: "Я йду в парк. (або до парку)"
-      options:
-        - "Я йду в парк. (або до парку)"
-        - "Я йду у парку."
-        - "Я на парку."
-      explanation: Йду asks куди?, so use в парк.
-    - sentence: "Магазин біля парк."
-      error: "біля парк"
-      correction: "Магазин біля парку."
-      options:
-        - "Магазин біля парку."
-        - "Магазин біля парк."
-        - "Магазин на парк."
-      explanation: Біля takes the changed form парку.
-    - sentence: "У місті має багато парків."
-      error: "має"
-      correction: "У місті є багато парків."
-      options:
-        - "У місті є багато парків."
-        - "У місті має багато парків."
-        - "Місто є багато парків."
-      explanation: Use є for existence in a place.
+inline:
+  - id: act-1
+    type: match-up
+    title: Place to action
+    instruction: Match each city place with a natural A1 action.
+    pairs:
+      - left: 'аптека'
+        right: 'купувати ліки'
+      - left: 'бібліотека'
+        right: 'читати книжку'
+      - left: 'магазин'
+        right: 'купувати хліб'
+      - left: 'ресторан'
+        right: 'вечеряти'
+      - left: 'готель'
+        right: 'спати'
+      - left: 'вокзал'
+        right: 'чекати поїзд'
+      - left: 'музей'
+        right: 'дивитися картини'
+      - left: 'стадіон'
+        right: 'дивитися матч'
+  - id: act-2
+    type: quiz
+    title: В or на in the city
+    instruction: Choose the correct city chunk.
+    items:
+      - prompt: 'Where do you buy medicine?'
+        options:
+          - text: 'в аптеці'
+            correct: true
+          - text: 'на аптеці'
+            correct: false
+          - text: 'в аптека'
+            correct: false
+        explanation: 'Аптека is a contained place: в аптеці.'
+      - prompt: 'Where are you at the post office?'
+        options:
+          - text: 'на пошті'
+            correct: true
+          - text: 'у пошті'
+            correct: false
+          - text: 'на пошта'
+            correct: false
+        explanation: The common chunk is на пошті.
+      - prompt: 'Where is the train station sentence?'
+        options:
+          - text: 'Вона на вокзалі.'
+            correct: true
+          - text: 'Вона у вокзалі.'
+            correct: false
+          - text: 'Вона вокзал.'
+            correct: false
+        explanation: Learn вокзал with на вокзалі.
+      - prompt: 'Where do students read?'
+        options:
+          - text: 'у бібліотеці'
+            correct: true
+          - text: 'на бібліотеці'
+            correct: false
+          - text: 'у бібліотека'
+            correct: false
+        explanation: Бібліотека changes to бібліотеці.
+  - id: act-3
+    type: fill-in
+    title: У моєму місті є
+    instruction: Complete each city sentence.
+    items:
+      - sentence: 'У моєму місті є великий ___.'
+        answer: 'парк'
+        options:
+          - 'парк'
+          - 'парку'
+          - 'парком'
+        explanation: 'After є, name the object: парк.'
+      - sentence: 'Бібліотека ___ університету.'
+        answer: 'біля'
+        options:
+          - 'біля'
+          - 'далеко'
+          - 'там'
+        explanation: Біля connects two places.
+      - sentence: 'Аптека ___ розі.'
+        answer: 'на'
+        options:
+          - 'на'
+          - 'в'
+          - 'до'
+        explanation: The chunk is на розі.
+      - sentence: 'Магазин тут, ___ дому.'
+        answer: 'біля'
+        options:
+          - 'біля'
+          - 'на'
+          - 'до'
+        explanation: Біля дому is a fixed A1 chunk.
+      - sentence: 'Школа далеко, ___ центрі міста.'
+        answer: 'у'
+        options:
+          - 'у'
+          - 'на'
+          - 'до'
+        explanation: Use у центрі міста.
+      - sentence: 'У місті ___ багато парків.'
+        answer: 'є'
+        options:
+          - 'є'
+          - 'має'
+          - 'йде'
+        explanation: Use є for existence.
+  - id: act-4
+    type: odd-one-out
+    title: Find the odd city chunk
+    instruction: Choose the phrase that does not fit the pattern.
+    items:
+      - words:
+          - 'в аптеці'
+          - 'у бібліотеці'
+          - 'у банку'
+          - 'на аптеці'
+        answer: 'на аптеці'
+        explanation: Аптека uses в аптеці.
+      - words:
+          - 'на пошті'
+          - 'на вокзалі'
+          - 'на стадіоні'
+          - 'у пошті'
+        answer: 'у пошті'
+        explanation: The common chunk is на пошті.
+      - words:
+          - 'біля дому'
+          - 'біля парку'
+          - 'біля університету'
+          - 'біля парк'
+        answer: 'біля парк'
+        explanation: 'Біля changes the following noun: біля парку.'
+      - words:
+          - 'Київ'
+          - 'Одеса'
+          - 'Львів'
+          - 'Kiev'
+        answer: 'Kiev'
+        explanation: Use Kyiv for the Ukrainian capital in English.
+workbook:
+  - type: group-sort
+    title: City shelves
+    instruction: Sort the city words by use.
+    groups:
+      - name: 'Places'
+        items:
+          - 'аптека'
+          - 'бібліотека'
+          - 'музей'
+          - 'готель'
+      - name: 'Location words'
+        items:
+          - 'тут'
+          - 'там'
+          - 'далеко'
+          - 'близько'
+      - name: 'People in the city'
+        items:
+          - 'лікар'
+          - 'офіціант'
+          - 'продавець'
+          - 'банкір'
+  - type: order
+    title: Mini-map note
+    instruction: Put the city note in a natural order.
+    is_ukrainian: true
+    items:
+      - 'У моєму місті є парк.'
+      - 'Біля парку є бібліотека.'
+      - 'Аптека на розі.'
+      - 'Магазин тут, біля дому.'
+      - 'Вокзал далеко.'
+      - 'Музей у центрі міста.'
+    correct_order: [0, 1, 2, 3, 4, 5]
+  - type: true-false
+    title: City language guardrails
+    instruction: Decide whether the statement fits the lesson.
+    items:
+      - statement: "Use Київ and Kyiv for Ukraine's capital."
+        answer: true
+        explanation: Kyiv is the Ukrainian English form.
+      - statement: 'Площа is the Ukrainian word for square.'
+        answer: true
+        explanation: Use площа, not a Russian street word.
+      - statement: 'У місті має багато парків is the best A1 model.'
+        answer: false
+        explanation: Say У місті є багато парків.
+      - statement: 'Біля парку is a useful near-place chunk.'
+        answer: true
+        explanation: Біля takes a changed place form.
+      - statement: 'На вулиці Шевченка is a correct street-location chunk.'
+        answer: true
+        explanation: Streets use на вулиці.
+  - type: error-correction
+    title: Repair city interference
+    instruction: Choose the natural Ukrainian city sentence.
+    items:
+      - sentence: 'Я живу в вулиці Шевченка.'
+        error: 'в вулиці'
+        correction: 'Я живу на вулиці Шевченка.'
+        options:
+          - 'Я живу на вулиці Шевченка.'
+          - 'Я живу в вулиці Шевченка.'
+          - 'Я живу до вулиці Шевченка.'
+        explanation: Use на вулиці for street location.
+      - sentence: 'Моє місто є Київ.'
+        error: 'є Київ'
+        correction: 'Моє місто — Київ.'
+        options:
+          - 'Моє місто — Київ.'
+          - 'Моє місто є Київ.'
+          - 'Моє місто на Київ.'
+        explanation: Ukrainian can identify the city without є.
+      - sentence: 'Я йду у парку.'
+        error: 'у парку'
+        correction: 'Я йду в парк. (або до парку)'
+        options:
+          - 'Я йду в парк. (або до парку)'
+          - 'Я йду у парку.'
+          - 'Я на парку.'
+        explanation: Йду asks куди?, so use в парк.
+      - sentence: 'Магазин біля парк.'
+        error: 'біля парк'
+        correction: 'Магазин біля парку.'
+        options:
+          - 'Магазин біля парку.'
+          - 'Магазин біля парк.'
+          - 'Магазин на парк.'
+        explanation: Біля takes the changed form парку.
+      - sentence: 'У місті має багато парків.'
+        error: 'має'
+        correction: 'У місті є багато парків.'
+        options:
+          - 'У місті є багато парків.'
+          - 'У місті має багато парків.'
+          - 'Місто є багато парків.'
+        explanation: Use є for existence in a place.

@@ -1,271 +1,269 @@
-- id: act-1
-  type: fill-in
-  title: Direction words
-  instruction: Complete each direction line.
-  items:
-    - sentence: "Ідіть ___, потім направо."
-      answer: "прямо"
-      options:
-        - "прямо"
-        - "пішки"
-        - "поруч"
-      explanation: "Прямо means straight ahead."
-    - sentence: "Вибачте, як ___ до музею?"
-      answer: "дістатися"
-      options:
-        - "дістатися"
-        - "вдома"
-        - "живу"
-      explanation: "Як дістатися до...? asks how to get to a place."
-    - sentence: "Аптека близько. Ідіть прямо п'ять ___."
-      answer: "хвилин"
-      options:
-        - "хвилин"
-        - "район"
-        - "центр"
-      explanation: "П'ять хвилин пішки is a route chunk."
-    - sentence: "Потім ідіть ___, школа там."
-      answer: "направо"
-      options:
-        - "направо"
-        - "пішки"
-        - "вдома"
-      explanation: "Направо means to the right."
-    - sentence: "Йдіть прямо, а потім ___."
-      answer: "наліво"
-      options:
-        - "наліво"
-        - "центр"
-        - "зупинка"
-      explanation: "Наліво means to the left."
-    - sentence: "Ресторан поруч. Ідіть прямо і ___."
-      answer: "направо"
-      options:
-        - "направо"
-        - "район"
-        - "куди"
-      explanation: "Use a direction word after і."
-- id: act-2
-  type: quiz
-  title: Де or куди in context
-  instruction: Choose the phrase that fits the sentence.
-  items:
-    - prompt: "Я зараз..."
-      options:
-        - text: "в парку"
-          correct: true
-        - text: "в парк"
-          correct: false
-        - text: "до парку"
-          correct: false
-      explanation: "Зараз asks де?"
-    - prompt: "Я йду..."
-      options:
-        - text: "в магазин"
-          correct: true
-        - text: "в магазині"
-          correct: false
-        - text: "на магазині"
-          correct: false
-      explanation: "Йду asks куди?"
-    - prompt: "Магазин на..."
-      options:
-        - text: "вулиці"
-          correct: true
-        - text: "вулицю"
-          correct: false
-        - text: "вулиця"
-          correct: false
-      explanation: "На вулиці answers де?"
-    - prompt: "Потім їду на..."
-      options:
-        - text: "роботу"
-          correct: true
-        - text: "роботі"
-          correct: false
-        - text: "робота"
-          correct: false
-      explanation: "Їду на роботу answers куди?"
-    - prompt: "Ми зараз у..."
-      options:
-        - text: "центрі"
-          correct: true
-        - text: "центр"
-          correct: false
-        - text: "центру"
-          correct: false
-      explanation: "Зараз у центрі is static."
-    - prompt: "Вона йде в..."
-      options:
-        - text: "офіс"
-          correct: true
-        - text: "офісі"
-          correct: false
-        - text: "офісу"
-          correct: false
-      explanation: "Йде в офіс answers куди?"
-- id: act-3
-  type: match-up
-  title: City questions
-  instruction: Match each question with a useful answer.
-  pairs:
-    - left: "Вибачте, як дістатися до бібліотеки?"
-      right: "Ідіть прямо, потім направо."
-    - left: "Де музей?"
-      right: "Він у центрі."
-    - left: "Як ти дістаєшся на роботу?"
-      right: "Їду автобусом."
-    - left: "Школа далеко?"
-      right: "Ні, близько. П'ять хвилин пішки."
-    - left: "Куди ви йдете?"
-      right: "У магазин."
-    - left: "Де ти живеш?"
-      right: "На вулиці Франка."
-- id: act-4
-  type: order
-  title: Daily city route
-  instruction: Put the route in a natural order.
-  is_ukrainian: true
-  items:
-    - "Спочатку я йду на зупинку."
-    - "Потім їду автобусом до центру."
-    - "Після цього йду пішки п'ять хвилин."
-    - "Робота в офісі на площі."
-    - "Після роботи йду в магазин."
-    - "Потім повертаюся додому."
-  correct_order: [0, 1, 2, 3, 4, 5]
-- id: act-5
-  type: group-sort
-  title: City route shelves
-  instruction: Sort each chunk by its route function.
-  groups:
-    - name: "Where now"
-      items:
-        - "у парку"
-        - "на площі"
-        - "у центрі"
-        - "на вулиці"
-    - name: "Where to"
-      items:
-        - "в парк"
-        - "на роботу"
-        - "до бібліотеки"
-        - "у магазин"
-    - name: "How"
-      items:
-        - "пішки"
-        - "автобусом"
-        - "на метро"
-        - "п'ять хвилин"
-    - name: "Direction commands"
-      items:
-        - "ідіть прямо"
-        - "направо"
-        - "наліво"
-        - "їдьте"
-- id: act-6
-  type: odd-one-out
-  title: Find the city mismatch
-  instruction: Choose the phrase that does not fit the pattern.
-  items:
-    - words:
-        - "в аптеці"
-        - "на площі"
-        - "у центрі"
-        - "в аптеку"
-      answer: "в аптеку"
-      explanation: "В аптеку answers куди?; the others answer де?"
-    - words:
-        - "в магазин"
-        - "на роботу"
-        - "до бібліотеки"
-        - "на роботі"
-      answer: "на роботі"
-      explanation: "На роботі is static."
-    - words:
-        - "Київ"
-        - "Харків"
-        - "Одеса"
-        - "Kiev"
-      answer: "Kiev"
-      explanation: "Use Kyiv / Київ."
-    - words:
-        - "Добрий день"
-        - "Мене звати Олена"
-        - "Мені двадцять років"
-        - "Моє ім'я є Олена"
-      answer: "Моє ім'я є Олена"
-      explanation: "Use Мене звати..."
-- id: act-7
-  type: true-false
-  title: City language guardrails
-  instruction: Decide whether the statement fits the lesson.
-  items:
-    - statement: "Use гривня for city prices in this course."
-      answer: true
-      explanation: "The course uses Ukrainian currency."
-    - statement: "Синьо-жовтий is the flag-color form used here."
-      answer: true
-      explanation: "Use синьо-жовтий."
-    - statement: "У/в is explained through Ukrainian милозвучність."
-      answer: true
-      explanation: "Do not explain it through another language."
-    - statement: "Мені двадцять років is the age pattern."
-      answer: true
-      explanation: "Age uses the dative pattern."
-    - statement: "До always takes a local-place ending like місті."
-      answer: false
-      explanation: "До takes genitive: до міста."
-- id: act-8
-  type: error-correction
-  title: Repair city-route interference
-  instruction: Choose the natural Ukrainian city sentence.
-  items:
-    - sentence: "Я живу Київ. / Я бути школа."
-      error: "живу Київ / бути школа"
-      correction: "Я живу в Києві. / Я в школі."
-      options:
-        - "Я живу в Києві. / Я в школі."
-        - "Я живу Київ. / Я бути школа."
-        - "Я живу до Києва. / Я школа."
-      explanation: "Де? needs в/у or на plus the locative."
-    - sentence: "Я йду в парк. (коли означає локацію \"I am walking in the park\")"
-      error: "йду в парк"
-      correction: "Я гуляю в парку."
-      options:
-        - "Я гуляю в парку."
-        - "Я йду в парк."
-        - "Я гуляю в парк."
-      explanation: "Use гуляти в парку for walking inside the park."
-    - sentence: "Кіт на столі (замість в столі - \"in the desk\")"
-      error: "на столі"
-      correction: "Кіт у столі."
-      options:
-        - "Кіт у столі."
-        - "Кіт на столі."
-        - "Кіт до столу."
-      explanation: "Choose в/у or на by the real location."
-    - sentence: "Я даю гроші місті."
-      error: "місті"
-      correction: "Я даю гроші місту."
-      options:
-        - "Я даю гроші місту."
-        - "Я даю гроші місті."
-        - "Я даю гроші в місто."
-      explanation: "Давальний uses місту without a preposition."
-    - sentence: "Я живу у Одесі."
-      error: "у Одесі"
-      correction: "Я живу в Одесі."
-      options:
-        - "Я живу в Одесі."
-        - "Я живу у Одесі."
-        - "Я живу до Одеси."
-      explanation: "Use в before a vowel for милозвучність."
-    - sentence: "Я йду до місті."
-      error: "до місті"
-      correction: "Я йду до міста."
-      options:
-        - "Я йду до міста."
-        - "Я йду до місті."
-        - "Я йду в місті."
-      explanation: "До takes genitive: міста."
+inline:
+  - id: act-1
+    type: fill-in
+    title: Direction words
+    instruction: Complete each direction line.
+    items:
+      - sentence: 'Ідіть ___, потім направо.'
+        answer: 'прямо'
+        options:
+          - 'прямо'
+          - 'пішки'
+          - 'поруч'
+        explanation: 'Прямо means straight ahead.'
+      - sentence: 'Вибачте, як ___ до музею?'
+        answer: 'дістатися'
+        options:
+          - 'дістатися'
+          - 'вдома'
+          - 'живу'
+        explanation: 'Як дістатися до...? asks how to get to a place.'
+      - sentence: "Аптека близько. Ідіть прямо п'ять ___."
+        answer: 'хвилин'
+        options:
+          - 'хвилин'
+          - 'район'
+          - 'центр'
+        explanation: "П'ять хвилин пішки is a route chunk."
+      - sentence: 'Потім ідіть ___, школа там.'
+        answer: 'направо'
+        options:
+          - 'направо'
+          - 'пішки'
+          - 'вдома'
+        explanation: 'Направо means to the right.'
+      - sentence: 'Йдіть прямо, а потім ___.'
+        answer: 'наліво'
+        options:
+          - 'наліво'
+          - 'центр'
+          - 'зупинка'
+        explanation: 'Наліво means to the left.'
+      - sentence: 'Ресторан поруч. Ідіть прямо і ___.'
+        answer: 'направо'
+        options:
+          - 'направо'
+          - 'район'
+          - 'куди'
+        explanation: 'Use a direction word after і.'
+  - id: act-2
+    type: quiz
+    title: Де or куди in context
+    instruction: Choose the phrase that fits the sentence.
+    items:
+      - prompt: 'Я зараз...'
+        options:
+          - text: 'в парку'
+            correct: true
+          - text: 'в парк'
+            correct: false
+          - text: 'до парку'
+            correct: false
+        explanation: 'Зараз asks де?'
+      - prompt: 'Я йду...'
+        options:
+          - text: 'в магазин'
+            correct: true
+          - text: 'в магазині'
+            correct: false
+          - text: 'на магазині'
+            correct: false
+        explanation: 'Йду asks куди?'
+      - prompt: 'Магазин на...'
+        options:
+          - text: 'вулиці'
+            correct: true
+          - text: 'вулицю'
+            correct: false
+          - text: 'вулиця'
+            correct: false
+        explanation: 'На вулиці answers де?'
+      - prompt: 'Потім їду на...'
+        options:
+          - text: 'роботу'
+            correct: true
+          - text: 'роботі'
+            correct: false
+          - text: 'робота'
+            correct: false
+        explanation: 'Їду на роботу answers куди?'
+      - prompt: 'Ми зараз у...'
+        options:
+          - text: 'центрі'
+            correct: true
+          - text: 'центр'
+            correct: false
+          - text: 'центру'
+            correct: false
+        explanation: 'Зараз у центрі is static.'
+      - prompt: 'Вона йде в...'
+        options:
+          - text: 'офіс'
+            correct: true
+          - text: 'офісі'
+            correct: false
+          - text: 'офісу'
+            correct: false
+        explanation: 'Йде в офіс answers куди?'
+  - id: act-3
+    type: match-up
+    title: City questions
+    instruction: Match each question with a useful answer.
+    pairs:
+      - left: 'Вибачте, як дістатися до бібліотеки?'
+        right: 'Ідіть прямо, потім направо.'
+      - left: 'Де музей?'
+        right: 'Він у центрі.'
+      - left: 'Як ти дістаєшся на роботу?'
+        right: 'Їду автобусом.'
+      - left: 'Школа далеко?'
+        right: "Ні, близько. П'ять хвилин пішки."
+      - left: 'Куди ви йдете?'
+        right: 'У магазин.'
+      - left: 'Де ти живеш?'
+        right: 'На вулиці Франка.'
+  - id: act-4
+    type: order
+    title: Daily city route
+    instruction: Put the route in a natural order.
+    is_ukrainian: true
+    items:
+      - 'Спочатку я йду на зупинку.'
+      - 'Потім їду автобусом до центру.'
+      - "Після цього йду пішки п'ять хвилин."
+      - 'Робота в офісі на площі.'
+      - 'Після роботи йду в магазин.'
+      - 'Потім повертаюся додому.'
+    correct_order: [0, 1, 2, 3, 4, 5]
+workbook:
+  - type: group-sort
+    title: City route shelves
+    instruction: Sort each chunk by its route function.
+    groups:
+      - name: 'Where now'
+        items:
+          - 'у парку'
+          - 'на площі'
+          - 'у центрі'
+          - 'на вулиці'
+      - name: 'Where to'
+        items:
+          - 'в парк'
+          - 'на роботу'
+          - 'до бібліотеки'
+          - 'у магазин'
+      - name: 'How'
+        items:
+          - 'пішки'
+          - 'автобусом'
+          - 'на метро'
+          - "п'ять хвилин"
+      - name: 'Direction commands'
+        items:
+          - 'ідіть прямо'
+          - 'направо'
+          - 'наліво'
+          - 'їдьте'
+  - type: odd-one-out
+    title: Find the city mismatch
+    instruction: Choose the phrase that does not fit the pattern.
+    items:
+      - words:
+          - 'в аптеці'
+          - 'на площі'
+          - 'у центрі'
+          - 'в аптеку'
+        answer: 'в аптеку'
+        explanation: 'В аптеку answers куди?; the others answer де?'
+      - words:
+          - 'в магазин'
+          - 'на роботу'
+          - 'до бібліотеки'
+          - 'на роботі'
+        answer: 'на роботі'
+        explanation: 'На роботі is static.'
+      - words:
+          - 'Київ'
+          - 'Харків'
+          - 'Одеса'
+          - 'Kiev'
+        answer: 'Kiev'
+        explanation: 'Use Kyiv / Київ.'
+      - words:
+          - 'Добрий день'
+          - 'Мене звати Олена'
+          - 'Мені двадцять років'
+          - "Моє ім'я є Олена"
+        answer: "Моє ім'я є Олена"
+        explanation: 'Use Мене звати...'
+  - type: true-false
+    title: City language guardrails
+    instruction: Decide whether the statement fits the lesson.
+    items:
+      - statement: 'Use гривня for city prices in this course.'
+        answer: true
+        explanation: 'The course uses Ukrainian currency.'
+      - statement: 'Синьо-жовтий is the flag-color form used here.'
+        answer: true
+        explanation: 'Use синьо-жовтий.'
+      - statement: 'У/в is explained through Ukrainian милозвучність.'
+        answer: true
+        explanation: 'Do not explain it through another language.'
+      - statement: 'Мені двадцять років is the age pattern.'
+        answer: true
+        explanation: 'Age uses the dative pattern.'
+      - statement: 'До always takes a local-place ending like місті.'
+        answer: false
+        explanation: 'До takes genitive: до міста.'
+  - type: error-correction
+    title: Repair city-route interference
+    instruction: Choose the natural Ukrainian city sentence.
+    items:
+      - sentence: 'Я живу Київ. / Я бути школа.'
+        error: 'живу Київ / бути школа'
+        correction: 'Я живу в Києві. / Я в школі.'
+        options:
+          - 'Я живу в Києві. / Я в школі.'
+          - 'Я живу Київ. / Я бути школа.'
+          - 'Я живу до Києва. / Я школа.'
+        explanation: 'Де? needs в/у or на plus the locative.'
+      - sentence: 'Я йду в парк. (коли означає локацію "I am walking in the park")'
+        error: 'йду в парк'
+        correction: 'Я гуляю в парку.'
+        options:
+          - 'Я гуляю в парку.'
+          - 'Я йду в парк.'
+          - 'Я гуляю в парк.'
+        explanation: 'Use гуляти в парку for walking inside the park.'
+      - sentence: 'Кіт на столі (замість в столі - "in the desk")'
+        error: 'на столі'
+        correction: 'Кіт у столі.'
+        options:
+          - 'Кіт у столі.'
+          - 'Кіт на столі.'
+          - 'Кіт до столу.'
+        explanation: 'Choose в/у or на by the real location.'
+      - sentence: 'Я даю гроші місті.'
+        error: 'місті'
+        correction: 'Я даю гроші місту.'
+        options:
+          - 'Я даю гроші місту.'
+          - 'Я даю гроші місті.'
+          - 'Я даю гроші в місто.'
+        explanation: 'Давальний uses місту without a preposition.'
+      - sentence: 'Я живу у Одесі.'
+        error: 'у Одесі'
+        correction: 'Я живу в Одесі.'
+        options:
+          - 'Я живу в Одесі.'
+          - 'Я живу у Одесі.'
+          - 'Я живу до Одеси.'
+        explanation: 'Use в before a vowel for милозвучність.'
+      - sentence: 'Я йду до місті.'
+        error: 'до місті'
+        correction: 'Я йду до міста.'
+        options:
+          - 'Я йду до міста.'
+          - 'Я йду до місті.'
+          - 'Я йду в місті.'
+        explanation: 'До takes genitive: міста.'

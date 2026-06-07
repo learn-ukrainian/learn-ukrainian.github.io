@@ -141,9 +141,7 @@ Here are the common repairs you need now:
 | Книжка на столу. | **Книжка на столі.** | Static surface location uses **на столі**. |
 | Аптека — в аптекі. | **Аптека — в аптеці.** | **к -> ц** before **-і** in this form. |
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -176,7 +174,3 @@ Now change only the destinations: **в магазин**, **у бібліотек
 роботу**, **до лікаря**, **у парк**. If you can keep **де?** and **куди?**
 separate while swapping places, the new case is already becoming a usable
 navigation tool.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
