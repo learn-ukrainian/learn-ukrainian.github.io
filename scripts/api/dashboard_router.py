@@ -5,6 +5,7 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 comms monitoring.
 """
 
+import asyncio
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -16,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from common.thresholds import REVIEW_PASS_FLOOR
 
-from .config import CURRICULUM_ROOT, LEVELS
+from .config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
 from .dashboard_comms import (
     collect_stuck_tasks,
     ensure_broker_cols,
@@ -38,6 +39,8 @@ from .dashboard_helpers import (
     scan_track_cached,
     scan_track_summary_cached,
 )
+from .state_coverage import compute_summary
+from .state_helpers import cache_get_with_age, cache_set, get_plan_slugs
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -50,6 +53,18 @@ except ImportError:
 from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
+DASHBOARD_STATE_SUMMARY_TTL_S = 60.0
+
+
+async def _state_summary_for_dashboard() -> tuple[dict, str, float | None]:
+    """Reuse the state-summary cache so dashboard loads stay responsive."""
+    cached = cache_get_with_age("summary", ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
+    if cached is not None:
+        value, age_s = cached
+        return value, "hit", age_s
+    result = await asyncio.to_thread(compute_summary)
+    cache_set("summary", result)
+    return result, "miss", 0.0
 
 
 # ==================== ENDPOINTS ====================
@@ -60,19 +75,31 @@ async def overview():
     """All tracks with module counts and pass/prose/fail stats."""
     manifest = load_manifest()
     levels = manifest.get("levels", {})
+    state_summary, cache_state, age_s = await _state_summary_for_dashboard()
+    state_tracks = state_summary.get("tracks", {})
 
     tracks = []
     totals = {"pass": 0, "content_complete": 0, "fail": 0, "unaudited": 0, "missing": 0, "shippable": 0, "total": 0}
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_modules = levels.get(track_id, {}).get("modules", [])
+        track_modules = levels.get(track_id, {}).get("modules", []) or [
+            slug for _num, slug in get_plan_slugs(track_id)
+        ]
         if not track_modules:
             continue
 
         track_data = scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
         track_data["stats"] = compute_track_stats(track_data["modules"], track_id)
+        summary_stats = state_tracks.get(track_id, {})
         s = track_data["stats"]
+        research_total_key = "dossier_done" if summary_stats.get("is_seminar") else "research_done"
+        s["research"] = {
+            **s.get("research", {}),
+            "total": summary_stats.get(research_total_key, 0),
+            "docs": summary_stats.get("dossier_docs", 0),
+            "curriculum": summary_stats.get("dossier_curriculum", 0),
+        }
         pct = round(s["pass"] / track_data["module_count"] * 100) if track_data["module_count"] > 0 else 0
 
         track_entry = {
@@ -81,9 +108,13 @@ async def overview():
             "module_count": track_data["module_count"],
             "stats": s,
             "pct_complete": pct,
+            "profile": summary_stats.get("profile", "seminar" if track_id in SEMINAR_TRACK_IDS else "core"),
+            "is_seminar": bool(track_data.get("is_seminar") or summary_stats.get("is_seminar")),
+            "module_source": summary_stats.get("module_source"),
+            "published_mdx": summary_stats.get("published_mdx", 0),
+            "generated_md": summary_stats.get("generated_md", 0),
+            "audit_stale": summary_stats.get("audit_stale", 0),
         }
-        if track_data.get("is_seminar"):
-            track_entry["is_seminar"] = True
         tracks.append(track_entry)
 
         for key in totals:
@@ -96,6 +127,14 @@ async def overview():
         "tracks": tracks,
         "totals": totals,
         "timestamp": datetime.now(UTC).isoformat(),
+        "meta": {
+            "generated_at": state_summary.get("generated_at"),
+            "source": "fs:dashboard-summary+state-summary",
+            "cache": cache_state,
+            "stale_after_s": DASHBOARD_STATE_SUMMARY_TTL_S,
+            "stale": False,
+            **({"age_s": round(age_s, 3)} if age_s is not None else {}),
+        },
     }
 
 
@@ -108,7 +147,9 @@ async def research_overview():
     tracks = []
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_modules = levels.get(track_id, {}).get("modules", [])
+        track_modules = levels.get(track_id, {}).get("modules", []) or [
+            slug for _num, slug in get_plan_slugs(track_id)
+        ]
         if not track_modules:
             continue
 
@@ -158,9 +199,9 @@ async def track_summary(track_id: str):
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
-    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
-    if track_modules is None:
-        track_modules = []
+    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", []) or [
+        slug for _num, slug in get_plan_slugs(track_id)
+    ]
     return scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
 
 
@@ -172,9 +213,9 @@ async def track_detail(track_id: str):
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
-    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
-    if track_modules is None:
-        track_modules = []
+    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", []) or [
+        slug for _num, slug in get_plan_slugs(track_id)
+    ]
     return scan_track_cached(track_id, level_cfg["path"], track_modules)
 
 

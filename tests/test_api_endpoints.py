@@ -115,6 +115,17 @@ class TestStateSummaryEndpoint:
         assert "tracks" in data
         assert isinstance(data["tracks"], dict)
 
+    def test_has_freshness_meta_and_dossier_fields(self):
+        data = client.get("/api/state/summary?fresh=true").json()
+        meta = data["meta"]
+        assert meta["source"] == "fs:plans+orchestration+artifacts+research"
+        assert meta["cache"] == "miss"
+        assert meta["stale_after_s"] == 60.0
+        assert "dossier_done" in data["totals"]
+        assert "published_mdx" in data["totals"]
+        assert data["tracks"]["folk"]["profile"] == "seminar"
+        assert data["tracks"]["folk"]["is_seminar"] is True
+
 
 class TestPipelineVersionsEndpoint:
     """GET /api/state/pipeline-versions returns version counts."""
@@ -146,6 +157,26 @@ class TestDashboardOverviewEndpoint:
         totals = data["totals"]
         for key in ["pass", "fail", "missing", "unaudited", "total"]:
             assert key in totals
+
+    def test_track_counts_match_state_summary(self):
+        summary = client.get("/api/state/summary?fresh=true").json()
+        overview = client.get("/api/dashboard/overview").json()
+
+        overview_counts = {track["id"]: track["module_count"] for track in overview["tracks"]}
+        summary_counts = {track: stats["total"] for track, stats in summary["tracks"].items()}
+
+        assert overview_counts == summary_counts
+        assert overview_counts["lit-doc"] == summary_counts["lit-doc"]
+        assert overview_counts["lit-crimea"] == summary_counts["lit-crimea"]
+
+    def test_overview_reuses_state_summary_cache_and_track_specific_research_metric(self):
+        summary = client.get("/api/state/summary?fresh=true").json()
+        overview = client.get("/api/dashboard/overview").json()
+        tracks = {track["id"]: track for track in overview["tracks"]}
+
+        assert overview["meta"]["cache"] == "hit"
+        assert tracks["a1"]["stats"]["research"]["total"] == summary["tracks"]["a1"]["research_done"]
+        assert tracks["folk"]["stats"]["research"]["total"] == summary["tracks"]["folk"]["dossier_done"]
 
 
 # ==================== Router mounting tests ====================

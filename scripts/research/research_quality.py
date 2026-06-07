@@ -140,6 +140,10 @@ from research.research_markdown_utils import (
     extract_section as _extract_section,
 )
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DOCS_RESEARCH_ROOT = PROJECT_ROOT / "docs" / "research"
+_docs_research_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
+
 # ==================== SUBSTANCE SCORING ====================
 
 # Substance thresholds by tier.
@@ -917,7 +921,8 @@ def _compute_gaps(dims: dict) -> list[str]:
 def find_research_path(track_dir: Path, slug: str) -> Path | None:
     """Find the research file path for a module.
 
-    Checks V5 format ({slug}-research.md) and V6 format ({slug}-knowledge-packet.md).
+    Checks curriculum research output first, then seminar dossier files
+    under docs/research/{track}/{slug}.md.
     """
     research_dir = track_dir / "research"
     for candidate in [
@@ -931,7 +936,38 @@ def find_research_path(track_dir: Path, slug: str) -> Path | None:
                 return rp
         except ValueError:
             pass
+
+    for candidate in [
+        f"{slug}.md",
+        f"{slug}-research.md",
+        f"{slug}-knowledge-packet.md",
+    ]:
+        rp = _docs_research_index(track_dir.name).get(candidate)
+        if rp:
+            return rp
     return None
+
+
+def _docs_research_index(track_id: str) -> dict[str, Path]:
+    """Return filename -> path index for docs/research/{track_id}."""
+    docs_research_dir = DOCS_RESEARCH_ROOT / track_id
+    if not docs_research_dir.is_dir():
+        return {}
+    try:
+        mtime = docs_research_dir.stat().st_mtime
+    except OSError:
+        return {}
+    cached = _docs_research_index_cache.get(docs_research_dir)
+    if cached and cached[0] == mtime:
+        return cached[1]
+
+    index = {
+        path.name: path
+        for path in docs_research_dir.iterdir()
+        if path.is_file() and path.suffix == ".md"
+    }
+    _docs_research_index_cache[docs_research_dir] = (mtime, index)
+    return index
 
 
 # ==================== PUBLIC API ====================

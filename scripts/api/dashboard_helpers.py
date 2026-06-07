@@ -27,7 +27,7 @@ except ImportError:
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import detect_pipeline_version, read_v2_state
+from .state_helpers import detect_pipeline_version, get_plan_slugs, read_v2_state
 
 # Simple TTL cache for scan_track results
 _track_cache: dict[str, tuple[float, dict]] = {}
@@ -266,6 +266,7 @@ def compute_track_stats(modules: list, track_id: str) -> dict:
         "plan_pass": sum(1 for m in modules if m.get("plan_review_verdict") == "PASS"),
         "plan_needs_fixes": sum(1 for m in modules if m.get("plan_review_verdict") == "NEEDS FIXES"),
         "plan_fail": sum(1 for m in modules if m.get("plan_review_verdict") == "FAIL"),
+        "stale_status": sum(1 for m in modules if m.get("is_fresh") is False and m.get("status") not in {"missing", "unaudited"}),
     }
 
     rubric_name = get_rubric(track_id)
@@ -363,17 +364,20 @@ def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -
             "track_id": track_id,
             "track_path": track_path,
             "module_count": 0,
+            "is_seminar": track_id in SEMINAR_TRACK_IDS,
             "modules": [],
         }
 
+    module_entries = manifest_modules or [slug for _num, slug in get_plan_slugs(track_id)]
     modules = [
         build_module_summary(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
-        for idx, m_entry in enumerate(manifest_modules)
+        for idx, m_entry in enumerate(module_entries)
     ]
 
     return {
         "track_id": track_id,
         "track_path": track_path,
+        "is_seminar": track_id in SEMINAR_TRACK_IDS,
         "module_count": len(modules),
         "modules": modules,
     }
@@ -393,9 +397,10 @@ def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             "modules": [],
         }
 
+    module_entries = manifest_modules or [slug for _num, slug in get_plan_slugs(track_id)]
     modules = [
         build_module_info(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
-        for idx, m_entry in enumerate(manifest_modules)
+        for idx, m_entry in enumerate(module_entries)
     ]
 
     return {

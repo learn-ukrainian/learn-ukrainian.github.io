@@ -174,25 +174,54 @@ Full project snapshot — one call replaces 5 bash scripts at session start.
 curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
 ```
 
+Freshness:
+- Cached for 60 seconds.
+- Pass `?fresh=true` to bypass the state-summary cache.
+- `meta.generated_at`, `meta.source`, `meta.cache`, and
+  `meta.stale_after_s` describe the snapshot. `cache: "hit"` means the
+  payload is still within the TTL; clients should still surface
+  `audit_stale` when present because that is source-artifact staleness,
+  not API-cache staleness.
+
 Returns per-track counts:
-- `total` — plan files count (source of truth)
-- `research_done` — modules with research complete across current and legacy build flows
-- `content_done` — modules with lesson content complete across current and legacy build flows
+- `total` — module catalog count from `curriculum.yaml`, falling back to
+  `plans/{track}/*.yaml` when the manifest has no module list
+- `module_source` — `curriculum.yaml` or `plans-fallback`
+- `research_done` — modules with research complete in pipeline state or
+  a discovered research/dossier file
+- `dossier_done` — discovered dossier/research files, including
+  `docs/research/{track}/{slug}.md` seminar dossiers
+- `dossier_docs` / `dossier_curriculum` — split by dossier source
+- `content_done` — modules with lesson content complete in pipeline state
+- `generated_md` — generated curriculum markdown exists on disk
+- `published_mdx` — Starlight MDX exists under
+  `starlight/src/content/docs/{track}/{slug}.mdx`
 - `audit_passing` — `status/*.json` overall == "pass"
+- `audit_stale` — status cache exists but is older than the module source
 - `final_review_done` — `review/*-final-review.md` exists
 - `prompt_reviewed` — `/prompt-review` done (`audit/*-prompt-review.md` exists)
 - `content_reviewed` — `/content-review` done (`audit/*-content-review.md` exists)
 - `profile` — "core" | "seminar" | "pro"
+- `is_seminar` — true for tracks listed in `SEMINAR_TRACK_IDS`
 
 Sample response:
 ```json
 {
   "generated_at": "2026-02-19T15:30:06Z",
+  "meta": {
+    "generated_at": "2026-02-19T15:30:06Z",
+    "source": "fs:plans+orchestration+artifacts+research",
+    "cache": "miss",
+    "stale_after_s": 60,
+    "stale": false
+  },
   "tracks": {
     "istorio": {
-      "total": 136, "profile": "seminar",
-      "research_done": 26, "content_done": 0,
-      "audit_passing": 0, "final_review_done": 0
+      "total": 136, "profile": "seminar", "is_seminar": true,
+      "module_source": "curriculum.yaml",
+      "research_done": 26, "dossier_done": 26,
+      "generated_md": 0, "published_mdx": 136,
+      "content_done": 0, "audit_passing": 0, "final_review_done": 0
     },
     "hist": {
       "total": 140, "profile": "seminar",
@@ -200,7 +229,7 @@ Sample response:
       "audit_passing": 4, "final_review_done": 4
     }
   },
-  "totals": { "total": 1778, "research_done": 400, ... }
+  "totals": { "total": 1778, "research_done": 400, "published_mdx": 220, ... }
 }
 ```
 
@@ -218,22 +247,29 @@ curl -s http://localhost:8765/api/state/pipeline/a1 | python3 -m json.tool
 Returns:
 ```json
 {
-  "num": 1, "slug": "sounds-letters-and-hello",
-  "pipeline_version": "v6",
-  "phases": {
-    "check": {"status": "complete", "ts": "2026-03-20T14:00:00Z"},
-    "research": {"status": "complete", "ts": "2026-03-20T14:01:00Z"},
-    "write": {"status": "complete", "ts": "2026-03-20T14:05:00Z"},
-    "exercises": {"status": "complete", "ts": "2026-03-20T14:08:00Z"},
-    "annotate": {"status": "complete", "ts": "2026-03-20T14:10:00Z"},
-    "enrich": {"status": "complete", "ts": "2026-03-20T14:12:00Z"},
-    "verify": {"status": "complete", "ts": "2026-03-20T14:15:00Z"},
-    "publish": {"status": "pending"}
-  },
-  "audit": "pass",
-  "words": 1500,
-  "word_target": 1200,
-  "research_score": null
+  "track": "a1",
+  "profile": "core",
+  "is_seminar": false,
+  "meta": {"source": "fs:orchestration+audit+research", "cache": "miss", "stale_after_s": 60},
+  "modules": [
+    {
+      "num": 1, "slug": "sounds-letters-and-hello",
+      "pipeline_version": "v6",
+      "phases": {
+        "check": {"status": "complete", "ts": "2026-03-20T14:00:00Z"},
+        "research": {"status": "complete", "ts": "2026-03-20T14:01:00Z"},
+        "write": {"status": "complete", "ts": "2026-03-20T14:05:00Z"},
+        "publish": {"status": "pending"}
+      },
+      "audit": "pass",
+      "words": 1500,
+      "word_target": 1200,
+      "research_score": null,
+      "generated_md": true,
+      "published_mdx": true,
+      "dossier": {"exists": false, "source": null}
+    }
+  ]
 }
 ```
 
@@ -1831,15 +1867,31 @@ revision of this endpoint was removed per reviewer BLOCKER on
 
 | Page | URL | Data source |
 |------|-----|-------------|
-| Home | `/` | `/api/dashboard/overview`, `/api/state/summary`, `/api/comms/batch-progress` |
+| Home | `/` | `/api/dashboard/overview`, `/api/state/summary?fresh=true`, `/api/comms/batch-progress` |
 | Audit Dashboard | `/audit-dashboard.html` | `/api/dashboard/overview`, `/api/dashboard/track/{id}` |
-| Progress | `/progress.html` | `/api/state/summary`, `/api/state/pipeline/{track}` |
+| Progress | `/progress.html` | `/api/state/summary?fresh=true`, `/api/state/pipeline-versions?fresh=true`, `/api/state/pipeline/{track}?fresh=true` |
 | Agent Comms | `/comms.html` | `/api/build/events/active`, `/api/build/events/recent`, `/api/comms/batch-progress`, `/api/comms/zombies`, `/api/comms/messages`, `/api/comms/stats` |
 | Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
 | Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
 | Consultation | `/consultation.html` | `/api/consultation/queue`, `/api/consultation/history`, `/api/consultation/metrics` |
 | API Docs | `/docs` | FastAPI auto-generated |
+
+Dashboard consolidation status:
+- `/progress.html` is the canonical fast visual overview for current
+  track/module state. It surfaces cache freshness, dossier coverage,
+  generated/published state, stale audit warnings, and next-action hints.
+- `/audit-dashboard.html` remains because it drills into QA gate
+  breakdowns through `/api/dashboard/track/{id}`.
+- `/quality.html` remains because it is a fix queue over research,
+  reviews, issues, and weak-point endpoints rather than a status overview.
+- `/track-health.html` remains because it uses build-status and
+  enrichment endpoints that are not shown in the progress overview.
+- `/curriculum-dashboard.html` remains for plan/meta inspection. It is
+  overlapping, but deleting it would remove a distinct module-inspection
+  workflow.
+- No page is removed in this slice; the safe consolidation is to make
+  `/progress.html` trustworthy and leave the specialized pages explicit.
 
 ---
 

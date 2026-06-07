@@ -116,6 +116,21 @@ def test_comms_page_keeps_secondary_dashboard_links():
         assert f'href="{href}"' in html
 
 
+def test_progress_page_surfaces_freshness_and_dossiers():
+    html = (DASHBOARDS / "progress.html").read_text(encoding="utf-8")
+    assert "freshness-banner" in html
+    assert "/api/state/summary?fresh=true" in html
+    assert "/api/state/pipeline-versions?fresh=true" in html
+    assert "dossier_done" in html
+    assert "published_mdx" in html
+    assert "audit_stale" in html
+    assert "nextAction" in html
+    assert "Research gap" in html
+    assert "Build content" in html
+    index_html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert "t.dossier_done ?? 0" in index_html
+
+
 def test_artifacts_page_uses_metadata_endpoint_and_filters():
     html = (DASHBOARDS / "artifacts.html").read_text(encoding="utf-8")
     assert "/api/artifacts/html" in html

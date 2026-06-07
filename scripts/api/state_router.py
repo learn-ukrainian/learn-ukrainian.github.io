@@ -61,6 +61,8 @@ from .state_coverage import (
 )
 from .state_helpers import (
     cache_get,
+    cache_get_with_age,
+    cache_invalidate,
     cache_set,
     detect_pipeline_version,
     get_audit_status,
@@ -87,6 +89,36 @@ router = APIRouter(tags=["state"])
 
 BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
 AGENT_NAMES = ("claude", "codex", "gemini")
+STATE_SUMMARY_TTL_S = 60.0
+STATE_PIPELINE_TTL_S = 60.0
+STATE_RESEARCH_COVERAGE_TTL_S = 300.0
+STATE_RESEARCH_DETAIL_TTL_S = 120.0
+STATE_REVIEW_COVERAGE_TTL_S = 300.0
+STATE_PIPELINE_VERSIONS_TTL_S = 60.0
+
+
+def _with_state_meta(
+    result: dict[str, Any],
+    *,
+    source: str,
+    stale_after_s: float,
+    cache: str,
+    age_s: float | None = None,
+) -> dict[str, Any]:
+    """Attach freshness metadata without mutating the cached payload."""
+    payload = dict(result)
+    generated_at = str(payload.get("generated_at") or _isoformat_z(datetime.now(UTC)))
+    meta: dict[str, Any] = {
+        "generated_at": generated_at,
+        "source": source,
+        "cache": cache,
+        "stale_after_s": stale_after_s,
+        "stale": False,
+    }
+    if age_s is not None:
+        meta["age_s"] = round(age_s, 3)
+    payload["meta"] = meta
+    return payload
 
 
 def _isoformat_z(value: datetime) -> str:
@@ -418,34 +450,64 @@ async def routing_budget():
 
 
 @router.get("/summary")
-async def state_summary():
+async def state_summary(fresh: bool = Query(False)):
     """Full project snapshot. One call replaces 5 bash scripts at session start."""
-    cached = cache_get("summary", ttl=60.0)
+    if fresh:
+        cache_invalidate("summary")
+    cached = cache_get_with_age("summary", ttl=STATE_SUMMARY_TTL_S)
     if cached is not None:
-        return cached
+        value, age_s = cached
+        return _with_state_meta(
+            value,
+            source="fs:plans+orchestration+artifacts+research",
+            stale_after_s=STATE_SUMMARY_TTL_S,
+            cache="hit",
+            age_s=age_s,
+        )
     result = await asyncio.to_thread(compute_summary)
     cache_set("summary", result)
-    return result
+    return _with_state_meta(
+        result,
+        source="fs:plans+orchestration+artifacts+research",
+        stale_after_s=STATE_SUMMARY_TTL_S,
+        cache="miss",
+        age_s=0.0,
+    )
 
 
 @router.get("/pipeline/{track_id}")
-async def pipeline_track(track_id: str):
+async def pipeline_track(track_id: str, fresh: bool = Query(False)):
     """Per-module pipeline state for one track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
     cache_key = f"pipeline_{track_id}"
-    cached = cache_get(cache_key, ttl=60.0)
+    if fresh:
+        cache_invalidate(cache_key)
+    cached = cache_get_with_age(cache_key, ttl=STATE_PIPELINE_TTL_S)
     if cached is not None:
-        return cached
+        value, age_s = cached
+        return _with_state_meta(
+            value,
+            source="fs:orchestration+audit+research",
+            stale_after_s=STATE_PIPELINE_TTL_S,
+            cache="hit",
+            age_s=age_s,
+        )
     result = await asyncio.to_thread(compute_pipeline_track, track_id, level_cfg)
     cache_set(cache_key, result)
-    return result
+    return _with_state_meta(
+        result,
+        source="fs:orchestration+audit+research",
+        stale_after_s=STATE_PIPELINE_TTL_S,
+        cache="miss",
+        age_s=0.0,
+    )
 
 
 @router.get("/pipeline-versions")
-async def pipeline_versions(track: str | None = Query(None)):
+async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query(False)):
     """All modules grouped by pipeline version."""
     def _compute():
         counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
@@ -489,12 +551,27 @@ async def pipeline_versions(track: str | None = Query(None)):
         }
 
     cache_key = f"pipeline_versions_{track or 'all'}"
-    cached = cache_get(cache_key, ttl=60.0)
+    if fresh:
+        cache_invalidate(cache_key)
+    cached = cache_get_with_age(cache_key, ttl=STATE_PIPELINE_VERSIONS_TTL_S)
     if cached is not None:
-        return cached
+        value, age_s = cached
+        return _with_state_meta(
+            value,
+            source="fs:orchestration",
+            stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
+            cache="hit",
+            age_s=age_s,
+        )
     result = await asyncio.to_thread(_compute)
     cache_set(cache_key, result)
-    return result
+    return _with_state_meta(
+        result,
+        source="fs:orchestration",
+        stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
+        cache="miss",
+        age_s=0.0,
+    )
 
 
 @router.get("/ready-to-build")
@@ -632,42 +709,87 @@ async def failing_modules(track: str | None = Query(None)):
 
 
 @router.get("/research-coverage")
-async def research_coverage():
+async def research_coverage(fresh: bool = Query(False)):
     """Per-track research completeness and quality."""
-    cached = cache_get("research_coverage", ttl=300.0)
+    if fresh:
+        cache_invalidate("research_coverage")
+    cached = cache_get_with_age("research_coverage", ttl=STATE_RESEARCH_COVERAGE_TTL_S)
     if cached is not None:
-        return cached
+        value, age_s = cached
+        return _with_state_meta(
+            value,
+            source="fs:research+dossiers",
+            stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
+            cache="hit",
+            age_s=age_s,
+        )
     result = await asyncio.to_thread(compute_research_coverage)
     cache_set("research_coverage", result)
-    return result
+    return _with_state_meta(
+        result,
+        source="fs:research+dossiers",
+        stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
+        cache="miss",
+        age_s=0.0,
+    )
 
 
 @router.get("/research/{track_id}")
-async def research_detail(track_id: str, min_score: int = 9):
+async def research_detail(track_id: str, min_score: int = 9, fresh: bool = Query(False)):
     """Per-module research quality with dimension scores, gaps, and upgrade queue."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
 
     cache_key = f"research_detail_{track_id}_{min_score}"
-    cached = cache_get(cache_key, ttl=120.0)
+    if fresh:
+        cache_invalidate(cache_key)
+    cached = cache_get_with_age(cache_key, ttl=STATE_RESEARCH_DETAIL_TTL_S)
     if cached is not None:
-        return cached
+        value, age_s = cached
+        return _with_state_meta(
+            value,
+            source="fs:research+dossiers",
+            stale_after_s=STATE_RESEARCH_DETAIL_TTL_S,
+            cache="hit",
+            age_s=age_s,
+        )
 
     result = await asyncio.to_thread(compute_research_detail, track_id, level_cfg, min_score)
     cache_set(cache_key, result)
-    return result
+    return _with_state_meta(
+        result,
+        source="fs:research+dossiers",
+        stale_after_s=STATE_RESEARCH_DETAIL_TTL_S,
+        cache="miss",
+        age_s=0.0,
+    )
 
 
 @router.get("/review-coverage")
-async def review_coverage():
+async def review_coverage(fresh: bool = Query(False)):
     """Per-track review and final-review coverage + quality signal."""
-    cached = cache_get("review_coverage", ttl=300.0)
+    if fresh:
+        cache_invalidate("review_coverage")
+    cached = cache_get_with_age("review_coverage", ttl=STATE_REVIEW_COVERAGE_TTL_S)
     if cached is not None:
-        return cached
+        value, age_s = cached
+        return _with_state_meta(
+            value,
+            source="fs:review+audit",
+            stale_after_s=STATE_REVIEW_COVERAGE_TTL_S,
+            cache="hit",
+            age_s=age_s,
+        )
     result = await asyncio.to_thread(compute_review_coverage)
     cache_set("review_coverage", result)
-    return result
+    return _with_state_meta(
+        result,
+        source="fs:review+audit",
+        stale_after_s=STATE_REVIEW_COVERAGE_TTL_S,
+        cache="miss",
+        age_s=0.0,
+    )
 
 
 @router.get("/build-status/{track_id}")
