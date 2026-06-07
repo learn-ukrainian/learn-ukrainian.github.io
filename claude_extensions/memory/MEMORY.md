@@ -134,7 +134,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **PLUGINS:** `frontend-design`, `code-review`, `playground`, `pyright-lsp`. Use them.
 - **PRE-COMMIT AUTO:** Done + tests pass → IMMEDIATELY (1) ruff (2) `/simplify` (3) local-agent Gemini review via `ai_agent_bridge`, never GitHub Gemini Code Assist. User never reminds.
 - **QUALITY GATE:** Every changed function needs a test. 80%+ on critical paths.
-- **HYGIENE:** Issues: close/comment stale. State: no Codex `current.*` scratch. If user corrects workflow, update+commit memory immediately; chat promises don't persist.
+- **HYGIENE:** Work like now: act, record durable memory immediately, commit/push cleanup, keep git clean, update stale/partial issues. No chat-only promises.
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.
 - **SEQUENCE:** One working e2e example FIRST. Never modify pipeline without tracing.
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
