@@ -2,7 +2,8 @@ module: a1-004
 level: A1
 sequence: 4
 slug: stress-and-melody
-version: 1.2.2
+version: 1.2.3
+letter_module: true
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-stress-and-melody
