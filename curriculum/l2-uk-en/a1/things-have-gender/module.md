@@ -63,8 +63,6 @@ Do not ask whether the speaker is a man or a woman. Ask what gender the
 Ukrainian noun has. **Мій стіл** is the same if the owner is Olena, Marko, or
 you.
 
-<!-- INJECT_ACTIVITY: act-2 -->
-
 ## Він, вона, воно
 
 <!--
@@ -163,8 +161,6 @@ The owner does not decide the form. The noun decides it. Learn the phrase as a
 pair: **стіл -> мій стіл**, **книга -> моя книга**, **вікно -> моє вікно**.
 :::
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Підсумок
 
 For people, choose the form that fits the person.
@@ -198,8 +194,6 @@ Some male names end in **-а**, **-я**, or **-о**: **Микола**, **Ілл�
 **Павло**. They are still **він** because they name men. Family words such as
 **тато**, **батько**, and **дядько** are also masculine.
 
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ### Watch the traps
 
 Most errors come from using English habits too directly or from trusting the
@@ -223,10 +217,6 @@ The gender-flip mini-check uses five words that are not your active vocabulary:
 **біль**, **степ**, **розпис**, **літопис**, and **путь**. They are diagnostic
 props. The point is simple: trust the Ukrainian gender test, not an instinct
 from another language.
-
-<!-- INJECT_ACTIVITY: act-8 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Textbook check
 
