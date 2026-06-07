@@ -84,6 +84,38 @@ def test_karaman_grade10_p187_resolves_to_chunk(
     assert hits[0]["chunk_id"] == "10-klas-ukrmova-karaman-2018_s0187"
 
 
+def test_cyrillic_stor_reference_resolves_to_direct_chunk(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """A1 plans often cite `Автор, ... клас, стор. N`, not `Grade N, p.N`."""
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "1-klas-bukvar-bolshakova-2018_s0024",
+                "title": "Сторінка 24",
+                "text": "Голосні почуєш в пісні, і у темному лісі.",
+                "source_file": "1-klas-bukvar-bolshakova-2018",
+                "grade": "1",
+                "author": "bolshakova",
+                "author_uk": "Большакова",
+            }
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+
+    hits = linear_pipeline._search_textbook_hits(
+        "Большакова, буквар 1 клас, стор. 24",
+        level="a1",
+        limit=1,
+    )
+
+    assert len(hits) == 1
+    assert hits[0]["chunk_id"] == "1-klas-bukvar-bolshakova-2018_s0024"
+
+
 def test_zakhariychuk_grade4_p162_reports_corpus_missing_deterministically(
     tmp_path: Path,
     monkeypatch,
@@ -433,3 +465,51 @@ def test_textbook_excerpt_context_uses_reference_title_for_direct_lookup(
 
     assert "10-klas-ukrmova-karaman-2018" in context
     assert "corpus_missing: true" not in context
+
+
+def test_textbook_excerpt_budget_still_marks_later_missing_refs(monkeypatch) -> None:
+    plan = {
+        "references": [
+            {"title": "Found Grade 1, p.1"},
+            {"title": "Missing Grade 1, p.2"},
+        ],
+        "title": "letters",
+        "subtitle": "sounds",
+        "content_outline": [{"section": "Letters", "points": ["sounds"]}],
+    }
+
+    def fake_lookup(
+        title: str,
+        *,
+        limit: int = 1,
+        missing_reason: list[str] | None = None,
+    ) -> list[dict] | None:
+        del limit
+        if title.startswith("Found"):
+            return [
+                {
+                    "chunk_id": "found_s0001",
+                    "title": "Found page",
+                    "text": "А" * 1000,
+                    "source_file": "found-source",
+                    "grade": "1",
+                    "author": "found",
+                    "page": 1,
+                }
+            ]
+        if missing_reason is not None:
+            missing_reason.append("page 2 not in corpus")
+        return []
+
+    monkeypatch.setattr(linear_pipeline, "_lookup_textbook_reference_chunk", fake_lookup)
+
+    context = linear_pipeline._build_textbook_excerpt_context(
+        plan,
+        "a1",
+        max_chars=120,
+        excerpt_chars=80,
+    )
+
+    assert "textbook reference(s) omitted from this prompt excerpt budget" in context
+    assert plan["references"][1]["corpus_missing"] is True
+    assert plan["references"][1]["corpus_missing_reason"] == "page 2 not in corpus"

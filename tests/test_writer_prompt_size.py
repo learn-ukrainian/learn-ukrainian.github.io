@@ -7,6 +7,7 @@ from scripts.audit.check_writer_prompt_size import (
     WRITER_PROMPT_CEILING_BYTES,
     render_fixture_writer_prompt,
 )
+from scripts.build import linear_pipeline
 
 
 def test_ceiling_is_130kb() -> None:
@@ -42,3 +43,25 @@ def test_fixture_writer_prompts_under_ceiling() -> None:
     for level, slug in FIXTURE_MODULES:
         rendered = render_fixture_writer_prompt(level, slug)
         assert len(rendered.encode("utf-8")) <= WRITER_PROMPT_CEILING_BYTES
+
+
+def test_prompt_plan_content_omits_review_history_metadata() -> None:
+    plan = {
+        "module": "a1-999",
+        "title": "Letters",
+        "content_outline": [{"section": "Core", "words": 100, "points": ["Teach letters."]}],
+        "activity_hints": [{"type": "quiz", "focus": "letters"}],
+        "references": [{"title": "Reference"}],
+        "review_notes": "Long audit narrative that belongs in the source plan only.",
+        "plan_fixes": [{"version": "1.0.1", "changes": ["historical fix"]}],
+        "changelog": [{"version": "1.0.0", "changes": ["historical note"]}],
+    }
+
+    rendered = linear_pipeline._prompt_plan_content(plan, "raw plan")
+
+    assert "content_outline:" in rendered
+    assert "activity_hints:" in rendered
+    assert "references:" in rendered
+    assert "review_notes" not in rendered
+    assert "plan_fixes" not in rendered
+    assert "changelog" not in rendered

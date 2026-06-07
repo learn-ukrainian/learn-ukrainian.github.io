@@ -1382,7 +1382,7 @@ def _normalize_vocab_hint(item: Any) -> str:
 def _build_dictionary_context(
     plan: Mapping[str, Any],
     *,
-    max_chars: int = 6000,
+    max_chars: int = 3000,
     definition_chars: int = 200,
 ) -> str:
     """Build compact VESUM + dictionary context for plan vocabulary."""
@@ -1534,6 +1534,14 @@ _TEXTBOOK_REFERENCE_TITLE_RE = re.compile(
     r"^(?P<author>\S+)\s+Grade\s+(?P<grade>\d+),\s*p\.\s*(?P<page>\d+)$",
     re.IGNORECASE,
 )
+_CYRILLIC_TEXTBOOK_REFERENCE_TITLE_RE = re.compile(
+    r"^(?P<author>[А-ЯІЇЄҐ][А-Яа-яІіЇїЄєҐґ'’ʼ-]+)"
+    r"(?:[,\s]+[^,\n]*?)?"
+    r"\b(?P<grade>\d+)\s*клас\b"
+    r"(?:[^,\n]*?)\s*,?\s*"
+    r"(?:стор\.?|с\.|сторінка|p\.)\s*(?P<page>\d+)\b",
+    re.IGNORECASE,
+)
 
 # Cyrillic spelling-variant canonicalization. Maps non-canonical Cyrillic
 # author spellings (regional/historical variants like Литвінова or the
@@ -1564,8 +1572,11 @@ def _canonicalize_author_uk(author: str) -> str:
 
 
 def _parse_textbook_reference_title(title: str) -> tuple[str, int, int] | None:
-    match = _TEXTBOOK_REFERENCE_TITLE_RE.match(title.strip())
-    if not match:
+    text = title.strip()
+    match = _TEXTBOOK_REFERENCE_TITLE_RE.match(text)
+    if match is None:
+        match = _CYRILLIC_TEXTBOOK_REFERENCE_TITLE_RE.match(text)
+    if match is None:
         return None
     return (
         match.group("author"),
@@ -1718,6 +1729,9 @@ def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dic
 def _build_textbook_excerpt_context(
     plan: Mapping[str, Any],
     level: str,
+    *,
+    max_chars: int = 4200,
+    excerpt_chars: int = 520,
 ) -> str:
     references = [str(title).strip() for title in extract_plan_reference_titles(plan) if str(title).strip()]
     if not references:
@@ -1725,6 +1739,8 @@ def _build_textbook_excerpt_context(
 
     topic_query = _plan_topic_query(plan)
     lines = ["## Textbook Excerpts (verbatim, must be cited)", ""]
+    current_chars = sum(len(line.encode("utf-8")) + 1 for line in lines)
+    omitted_count = 0
     found_any = False
     for title in references:
         query = f"{title} {topic_query}".strip()
@@ -1735,8 +1751,7 @@ def _build_textbook_excerpt_context(
             missing_reason=missing_reasons,
         )
         hits = direct_hits if direct_hits is not None else _search_textbook_hits(query, level=level, limit=1)
-        lines.append(f"### {title}")
-        lines.append("")
+        section_lines = [f"### {title}", ""]
         if not hits:
             missing_reason = missing_reasons[0] if missing_reasons else ""
             for ref in plan.get("references") or []:
@@ -1744,24 +1759,35 @@ def _build_textbook_excerpt_context(
                     ref["corpus_missing"] = True
                     if missing_reason:
                         ref["corpus_missing_reason"] = missing_reason
-            lines.append("*No textbook excerpt found for this reference.*")
-            lines.append("corpus_missing: true")
+            section_lines.append("*No textbook excerpt found for this reference.*")
+            section_lines.append("corpus_missing: true")
             if missing_reason:
-                lines.append(f"corpus_missing_reason: {missing_reason}")
-            lines.append("")
+                section_lines.append(f"corpus_missing_reason: {missing_reason}")
+            section_lines.append("")
+        else:
+            hit = hits[0]
+            text = _textbook_hit_text(hit, max_chars=excerpt_chars)
+            if not text:
+                section_lines.append("*Textbook search returned metadata without excerpt text.*")
+                section_lines.append("")
+            else:
+                found_any = True
+                section_lines.append(f"Source: {_textbook_hit_label(hit)}")
+                section_lines.append("")
+                for quote_line in text.splitlines():
+                    section_lines.append(f"> {quote_line}")
+                section_lines.append("")
+        section_chars = sum(len(line.encode("utf-8")) + 1 for line in section_lines)
+        if current_chars + section_chars > max_chars:
+            omitted_count += 1
             continue
-        hit = hits[0]
-        text = _textbook_hit_text(hit)
-        if not text:
-            lines.append("*Textbook search returned metadata without excerpt text.*")
-            lines.append("")
-            continue
-        found_any = True
-        lines.append(f"Source: {_textbook_hit_label(hit)}")
-        lines.append("")
-        for quote_line in text.splitlines():
-            lines.append(f"> {quote_line}")
-        lines.append("")
+        lines.extend(section_lines)
+        current_chars += section_chars
+    if omitted_count:
+        lines.append(
+            f"*{omitted_count} textbook reference(s) omitted from this prompt excerpt budget; "
+            "call `mcp__sources__get_chunk_context` for every plan reference before citing.*"
+        )
 
     return "\n".join(lines).rstrip() if found_any or references else ""
 
@@ -1950,6 +1976,38 @@ def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:
     if unresolved:
         raise LinearPipelineError(f"Unresolved downstream prompt tokens in {template_path}: " + ", ".join(unresolved))
     return rendered
+
+
+_PROMPT_PLAN_OMIT_KEYS = frozenset(
+    {
+        "lifecycle",
+        "reviewed_at",
+        "reviewed_by",
+        "review_notes",
+        "plan_fixes",
+        "changelog",
+    }
+)
+
+
+def _prompt_plan_content(
+    plan: Mapping[str, Any],
+    raw_plan_content: str,
+) -> str:
+    """Return the writer-facing plan copy without audit/history metadata."""
+    if not any(key in plan for key in _PROMPT_PLAN_OMIT_KEYS):
+        return raw_plan_content
+    compact = {
+        key: value
+        for key, value in plan.items()
+        if key not in _PROMPT_PLAN_OMIT_KEYS
+    }
+    return yaml.safe_dump(
+        compact,
+        allow_unicode=True,
+        sort_keys=False,
+        width=4096,
+    ).strip()
 
 
 def writer_prompt_path(writer_family: str) -> Path:
@@ -3163,7 +3221,7 @@ def writer_context(
         "PHASE": str(plan.get("phase", "")),
         "WORD_TARGET": str(plan["word_target"]),
         "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
-        "PLAN_CONTENT": plan_content,
+        "PLAN_CONTENT": _prompt_plan_content(plan, plan_content),
         "KNOWLEDGE_PACKET": knowledge_packet,
         "WIKI_MANIFEST": wiki_manifest_text,
         "WIKI_COVERAGE_REQUIRED_ITEMS": required_items_text,
