@@ -457,7 +457,7 @@ async function loadOrient() {
   } catch (error) {
     setPageBanner(`API unavailable: ${error.message}`);
     document.getElementById('refresh-status').textContent = 'Auto-refresh stopped after API failure';
-    document.getElementById('generated-at').textContent = 'Waiting for manual refresh';
+    document.getElementById('generated-at').textContent = 'Waiting for refresh';
     refreshHalted = true;
     stopRefresh();
     console.error('[orient] refresh failed', error);

@@ -314,15 +314,15 @@ function closeDetail() {
   document.getElementById('detail-panel').classList.remove('open');
 }
 
-// Parse task_id to extract track, slug, phase
+// Parse task_id to extract track, slug, phase.
 function parseTaskId(taskId) {
   if (!taskId) return null;
-  // v5-body-injury-dual-pA -> track from state, slug=body-injury-dual, phase=A
-  const m = taskId.match(/^v5-(.+?)-(p[A-Z].*)$/);
-  if (m) return { slug: m[1], phaseKey: m[2] };
-  // yw-some-slug-p0 -> old format
-  const m2 = taskId.match(/^yw-(.+?)-(p\d.*)$/);
-  if (m2) return { slug: m2[1], phaseKey: m2[2] };
+  const modern = taskId.match(/^build:([^:]+):(.+?):(.+)$/);
+  if (modern) return { track: modern[1], slug: modern[2], phaseKey: modern[3] };
+  const legacy = taskId.match(/^v5-(.+?)-(p[A-Z].*)$/);
+  if (legacy) return { slug: legacy[1], phaseKey: legacy[2] };
+  const oldQueue = taskId.match(/^yw-(.+?)-(p\d.*)$/);
+  if (oldQueue) return { slug: oldQueue[1], phaseKey: oldQueue[2] };
   return null;
 }
 
@@ -564,9 +564,13 @@ async function loadLiveActivity() {
         const slug = escapeHtmlAttribute(c.slug || '');
         const type = escapeHtmlAttribute(c.type || '');
         const sizeKb = escapeHtmlAttribute(c.size_kb ?? '');
-        const taskId = escapeHtmlAttribute(`v5-${c.slug || ''}-pA`);
         return `
-          <div class="feed-item completion conversation-row" data-task-id="${taskId}">
+          <div class="feed-item completion build-row"
+               data-build-track="${track}"
+               data-build-slug="${slug}"
+               data-build-phase="${type}"
+               data-build-status="completed"
+               data-task-id="">
             <div class="fi-top">
               <span class="fi-track">${track}</span>
               <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
@@ -582,10 +586,12 @@ async function loadLiveActivity() {
     const dispatches = (recentData.events || []).slice(0, DISPATCH_LIMIT).map(e => {
       const ts = e.ts ? new Date(e.ts).getTime() : now;
       return {
-        task_id: `${e.level || ''}-${e.slug || ''}-${e.phase || 'event'}`,
+        task_id: e.task_id || '',
         from: e.agent || 'pipeline',
         to: e.level || '',
         type: e.ok ? 'success' : 'error',
+        slug: e.slug || '',
+        phase: e.phase || '',
         preview: `${e.phase || 'phase'} ${e.ok ? 'ok' : 'failed'}${e.duration_s != null ? ` (${e.duration_s}s)` : ''}`,
         seconds_ago: Math.max(0, Math.round((now - ts) / 1000)),
       };
@@ -596,9 +602,9 @@ async function loadLiveActivity() {
       dispEl.innerHTML = '<div class="empty-feed">No recent messages</div>';
     } else {
       dispEl.innerHTML = dispatches.map(d => {
-        // Extract slug from task_id (v5-some-slug-pA -> some-slug)
-        const slug = (d.task_id || '').replace(/^v5-/, '').replace(/-p[A-Z].*$/, '') || d.task_id;
-        const phase = (d.task_id || '').match(/-p([A-Z][^-]*)/) ? (d.task_id.match(/-p([A-Z][^-]*)/)[1]) : '';
+        const parsed = parseTaskId(d.task_id || '');
+        const slug = parsed?.slug || d.slug || d.task_id || 'build event';
+        const phase = parsed?.phaseKey || d.phase || '';
         const isFinished = (d.preview || '').includes('finished');
         const isError = d.type === 'error' || (d.preview || '').includes('Error');
         const borderClass = isError ? 'style="border-left-color:var(--red)"' : isFinished ? 'style="border-left-color:var(--green)"' : '';
@@ -609,8 +615,8 @@ async function loadLiveActivity() {
               <span>${d.from} &rarr; ${d.to}</span>
               <span class="fi-age">${timeAgo(d.seconds_ago)} ago</span>
             </div>
-            <div class="fi-slug">${slug}${phase ? ' <span class="fi-phase ' + phaseClass('Phase ' + phase) + '">' + phase + '</span>' : ''}</div>
-            <div class="fi-detail">${(d.preview || '').substring(0, 100)}</div>
+            <div class="fi-slug">${escapeHtmlAttribute(slug)}${phase ? ' <span class="fi-phase ' + phaseClass('Phase ' + phase) + '">' + escapeHtmlAttribute(phase) + '</span>' : ''}</div>
+            <div class="fi-detail">${escapeHtmlAttribute((d.preview || '').substring(0, 100))}</div>
           </div>
         `;
       }).join('');
@@ -908,7 +914,7 @@ async function refreshHealthOnly() {
 }
 
 document.getElementById('feed-building').addEventListener('click', onBuildRowClick);
-document.getElementById('feed-completions').addEventListener('click', onConversationRowClick);
+document.getElementById('feed-completions').addEventListener('click', onBuildRowClick);
 document.getElementById('feed-dispatches').addEventListener('click', onConversationRowClick);
 document.getElementById('zombie-list').addEventListener('click', onConversationRowClick);
 document.getElementById('msg-tbody').addEventListener('click', onConversationRowClick);

@@ -537,13 +537,28 @@ async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query
             per_track[track_id] = track_counts
 
         total = sum(counts.values())
-        built = counts["v6"] + counts["v5"]
+        current_builds = counts["v6"]
+        legacy_builds = counts["v5"] + counts["v3"]
+        unbuilt_modules = counts["unbuilt"]
+        rebuild_backlog = legacy_builds + unbuilt_modules
+        built = current_builds + counts["v5"]
         return {
             "total": total, "counts": counts,
             "pct_v6": round(counts["v6"] / total * 100) if total else 0,
             "pct_v5": round(counts["v5"] / total * 100) if total else 0,
+            "pct_current": round(current_builds / total * 100) if total else 0,
             "pct_built": round(built / total * 100) if total else 0,
-            "needs_rebuild": counts["v5"] + counts["v3"] + counts["unbuilt"],
+            "current_builds": current_builds,
+            "legacy_builds": legacy_builds,
+            "unbuilt_modules": unbuilt_modules,
+            "rebuild_backlog": rebuild_backlog,
+            "build_state": {
+                "current": current_builds,
+                "legacy": legacy_builds,
+                "unbuilt": unbuilt_modules,
+                "backlog": rebuild_backlog,
+            },
+            "needs_rebuild": rebuild_backlog,
             "per_track": per_track,
             "v6_modules": by_version["v6"],
             "v5_modules": by_version["v5"],

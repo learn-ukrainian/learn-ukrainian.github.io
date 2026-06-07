@@ -87,7 +87,7 @@ a:hover { text-decoration: underline; }
 .chip-published { background: #123f45; color: var(--cyan); }
 .chip-pass { background: var(--green); color: #000; }
 
-/* Unbuilt modules */
+/* Modules outside the current build state */
 .obsolete { opacity: 0.4; }
 
 .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -110,7 +110,7 @@ a:hover { text-decoration: underline; }
 
 <div class="topbar">
   <h1>&#9654; Progress</h1>
-  <div style="font-size:12px;color:var(--text3);" id="topbar-subtitle">Pipeline state across all tracks</div>
+  <div style="font-size:12px;color:var(--text3);" id="topbar-subtitle">Build state across all tracks</div>
   <div class="spacer"></div>
   <nav class="monitor-nav" aria-label="Monitor sections">
     <a href="/">Home</a>
@@ -137,8 +137,8 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:#58a6ff" id="total-final-review">—</div><div class="label">Final QA</div></div>
   <div class="stat-card"><div class="value" style="color:var(--orange)" id="total-dossier">—</div><div class="label">Dossiers</div></div>
   <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-published">—</div><div class="label">Published MDX</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v6">—</div><div class="label">V6 Pipeline</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-rebuild">—</div><div class="label">Needs Rebuild</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-current-builds">—</div><div class="label">Current Builds</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-rebuild">—</div><div class="label">Rebuild Backlog</div></div>
 </div>
 
 <div class="container">
@@ -152,15 +152,11 @@ a:hover { text-decoration: underline; }
     <div class="legend-item"><div class="legend-dot" style="background:#1a3055;border:1px solid var(--blue)"></div> Content</div>
     <div class="legend-item"><div class="legend-dot" style="background:#5a3e1b;border:1px solid var(--orange)"></div> Research</div>
     <div class="legend-item"><div class="legend-dot" style="background:#123f45;border:1px solid var(--cyan)"></div> Published MDX</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Unbuilt</div>
-  </div>
-
-  <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">
-    Click a track row to expand per-module phase chips. Hover a chip to see details.
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Pending build state</div>
   </div>
 
   <div id="tracks-container">
-    <div class="loading-msg">Loading pipeline state...</div>
+    <div class="loading-msg">Loading build state...</div>
   </div>
 </div>
 
@@ -195,6 +191,26 @@ function isDone(phase) {
   return phase && phase.status === 'complete';
 }
 
+function buildStateSummary(pv) {
+  const state = pv?.build_state || {};
+  return {
+    current: pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0,
+    backlog: pv?.rebuild_backlog ?? state.backlog ?? pv?.needs_rebuild ?? 0,
+  };
+}
+
+function pipelineLabel(version) {
+  if (version === 'v6') return 'current build state';
+  if (version === 'v5' || version === 'v3') return 'legacy build state';
+  if (version === 'unbuilt' || !version) return 'pending build state';
+  return 'unknown build state';
+}
+
+function moduleNeedsRefresh(mod) {
+  if (typeof mod.needs_rebuild === 'boolean') return mod.needs_rebuild;
+  return pipelineLabel(mod.pipeline_version) !== 'current build state';
+}
+
 function chipClass(mod) {
   const phases = mod.phases || {};
   if (mod.audit === 'pass') return 'chip-pass';
@@ -217,13 +233,13 @@ function chipLabel(mod) {
 
 function chipTitle(mod) {
   const phases = mod.phases || {};
-  const ver = mod.pipeline_version || 'unknown';
+  const buildState = pipelineLabel(mod.pipeline_version);
   const phaseStates = Object.entries(phases)
     .map(([k, v]) => `${k}:${v.status || 'pending'}`)
     .join(' | ');
   const dossier = mod.dossier?.exists ? `dossier:${mod.dossier.source || 'yes'}` : 'dossier:missing';
   const mdx = mod.published_mdx ? 'published:yes' : 'published:no';
-  return `#${mod.num} ${mod.slug} [${ver}] | ${phaseStates} | audit:${mod.audit} | words:${mod.words} | ${dossier} | ${mdx}`;
+  return `#${mod.num} ${mod.slug} [${buildState}] | ${phaseStates} | audit:${mod.audit} | words:${mod.words} | ${dossier} | ${mdx}`;
 }
 
 async function loadModulePanel(trackId, panel) {
@@ -236,7 +252,7 @@ async function loadModulePanel(trackId, panel) {
       const cls = chipClass(mod);
       const label = chipLabel(mod);
       const title = chipTitle(mod);
-      const obsolete = mod.pipeline_version === 'v6' ? '' : ' obsolete';
+      const obsolete = moduleNeedsRefresh(mod) ? ' obsolete' : '';
       return `<div class="module-chip ${cls}${obsolete}" data-tip="${title}">${label}</div>`;
     }).join('');
 
@@ -374,10 +390,11 @@ async function load() {
     document.getElementById('total-final-review').textContent = t.final_review_done;
     document.getElementById('total-dossier').textContent = t.dossier_done || 0;
     document.getElementById('total-published').textContent = t.published_mdx || 0;
-    document.getElementById('total-v6').textContent = `${pv.counts?.v6 || 0}`;
-    document.getElementById('total-rebuild').textContent = `${pv.needs_rebuild || 0}`;
+    const buildState = buildStateSummary(pv);
+    document.getElementById('total-current-builds').textContent = `${buildState.current}`;
+    document.getElementById('total-rebuild').textContent = `${buildState.backlog}`;
     document.getElementById('topbar-subtitle').textContent =
-      `Pipeline state across all tracks — ${pv.counts?.v6 || 0} v6, ${t.published_mdx || 0} published, ${pv.needs_rebuild || 0} rebuild needed`;
+      `Build state across all tracks — ${buildState.current} current, ${t.published_mdx || 0} published, ${buildState.backlog} in backlog`;
 
     const container = document.getElementById('tracks-container');
     const trackEntries = Object.entries(data.tracks)

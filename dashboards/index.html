@@ -118,13 +118,13 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   <a class="card" href="/delegate.html" style="border-left: 3px solid var(--yellow);">
     <div class="icon">&#129309;</div>
     <h2>Delegate</h2>
-    <p>Delegation task list with zombie detection, manual refresh, and full task detail modal.</p>
+    <p>Delegation task list with zombie detection, active counts, and full task detail modal.</p>
     <div class="card-stat" id="card-stat-delegate"></div>
   </a>
   <a class="card" href="/routing.html" style="border-left: 3px solid var(--blue);">
     <div class="icon">&#129518;</div>
     <h2>Agent Routing</h2>
-    <p>Which agent for what, subscription headroom, and a dispatch-usage snapshot. Maximize the paid subscriptions.</p>
+    <p>Which agent for what, subscription headroom, and live dispatch usage. Maximize the paid subscriptions.</p>
     <div class="card-stat">routing &amp; usage</div>
   </a>
   <a class="card" href="/artifacts/" style="border-left: 3px solid var(--accent);">
@@ -148,7 +148,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   <a class="card progress" href="/progress.html">
     <div class="icon">&#9654;</div>
     <h2>Progress</h2>
-    <p>Pipeline state across all tracks. Research → Content → Validate → Review → MDX.</p>
+    <p>Build state across all tracks. Research, content, validation, review, published MDX.</p>
     <div class="card-stat" id="progress-stat"></div>
   </a>
   <a class="card quality" href="/quality.html">
@@ -215,11 +215,23 @@ function setStat(id, text) {
   if (el) el.textContent = text || '';
 }
 
+function buildStateSummary(pv) {
+  const state = pv?.build_state || {};
+  const current = pv?.current_builds ?? state.current ?? pv?.counts?.v6 ?? 0;
+  const backlog = pv?.rebuild_backlog ?? state.backlog ?? pv?.needs_rebuild ?? 0;
+  return {
+    current,
+    backlog,
+    builtPct: pv?.pct_built || 0,
+  };
+}
+
 async function loadStats() {
-  let v6Count = 0, v5Count = 0, builtPct = 0, pendingConsultations = 0;
+  let buildState = { current: 0, backlog: 0, builtPct: 0 };
+  let pendingConsultations = 0;
   const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
-    safeFetch('/api/state/pipeline-versions'),
+    safeFetch('/api/state/pipeline-versions?fresh=true'),
     safeFetch('/api/consultation/metrics'),
     safeFetch('/api/state/summary?fresh=true'),
     safeFetch('/api/comms/batch-progress'),
@@ -235,17 +247,16 @@ async function loadStats() {
   try {
     if (!data || !pv) throw new Error('overview unavailable');
     const t = data.totals;
-    v6Count = pv.counts?.v6 || 0;
-    v5Count = pv.counts?.v5 || 0;
-    builtPct = pv.pct_built || 0;
+    buildState = buildStateSummary(pv);
     pendingConsultations = cMetrics?.pending_queue || 0;
 
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
       <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
-      <div class="stat"><div class="value" style="color:var(--cyan)">${v6Count} v6 / ${v5Count} v5</div><div class="label">Pipeline</div></div>
-      <div class="stat"><div class="value" style="color:var(--purple)">${builtPct}%</div><div class="label">Built</div></div>
+      <div class="stat"><div class="value" style="color:var(--cyan)">${buildState.current}</div><div class="label">Current Builds</div></div>
+      <div class="stat"><div class="value" style="color:var(--orange)">${buildState.backlog}</div><div class="label">Rebuild Backlog</div></div>
+      <div class="stat"><div class="value" style="color:var(--purple)">${buildState.builtPct}%</div><div class="label">Built</div></div>
     `;
 
     document.getElementById('audit-stat').textContent = `${t.pass} passing / ${t.total} total`;
@@ -262,7 +273,7 @@ async function loadStats() {
     const t = summary.totals;
     const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
-      `${v6Count} v6 · ${v5Count} v5 · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
+      `${buildState.current} current · ${buildState.backlog} backlog · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
   } catch(e) {}
 
   try {

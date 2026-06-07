@@ -58,8 +58,9 @@ a:hover { text-decoration: underline; }
 .module-table .rq-score.stub { color: var(--red); }
 .module-table .rq-coverage { color: var(--text3); font-size: 11px; }
 .module-table .ver-label { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
-.module-table .ver-v6 { background: rgba(63,185,80,0.15); color: var(--green); }
-.module-table .ver-unbuilt { background: rgba(72,79,88,0.2); color: var(--text3); }
+.module-table .ver-current { background: rgba(63,185,80,0.15); color: var(--green); }
+.module-table .ver-backlog { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.module-table .ver-pending { background: rgba(72,79,88,0.2); color: var(--text3); }
 
 /* Unbuilt modules */
 .obsolete { opacity: 0.4; }
@@ -154,6 +155,25 @@ function pctColor(pct) {
   return 'rgba(72,79,88,0.3)';
 }
 
+function pipelineLabel(version) {
+  if (version === 'v6') return 'current';
+  if (version === 'v5' || version === 'v3') return 'legacy';
+  if (version === 'unbuilt' || !version) return 'pending';
+  return 'unknown';
+}
+
+function pipelineClass(version) {
+  const label = pipelineLabel(version);
+  if (label === 'current') return 'ver-current';
+  if (label === 'legacy') return 'ver-backlog';
+  return 'ver-pending';
+}
+
+function needsBuildRefresh(module) {
+  if (typeof module.needs_rebuild === 'boolean') return module.needs_rebuild;
+  return pipelineLabel(module.pipeline_version) !== 'current';
+}
+
 async function fetchOverview() {
   overviewData = await fetchJson(`${API}/overview`);
   renderTreemap(overviewData.tracks);
@@ -235,14 +255,14 @@ async function loadTrackDetail(trackId) {
       ${researchStat}
     </div>
     <table class="module-table">
-      <thead><tr><th>#</th><th>Module</th><th>Ver</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
+      <thead><tr><th>#</th><th>Module</th><th>Build</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
       <tbody>
         ${data.modules.map(m => {
           const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
           const ver = m.pipeline_version || 'unbuilt';
-          const isV6 = ver === 'v6';
-          const obsolete = isV6 ? '' : ' obsolete';
-          const verCls = isV6 ? 'ver-v6' : 'ver-unbuilt';
+          const obsolete = needsBuildRefresh(m) ? ' obsolete' : '';
+          const verCls = pipelineClass(ver);
+          const verLabel = pipelineLabel(ver);
           const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
           const r = m.research || {};
           let rCol;
@@ -260,7 +280,7 @@ async function loadTrackDetail(trackId) {
             <tr class="${obsolete}" onclick="loadModuleDetail('${trackId}','${m.slug}')">
               <td>${m.num}</td>
               <td>${m.slug}</td>
-              <td><span class="ver-label ${verCls}">${ver}</span></td>
+              <td><span class="ver-label ${verCls}">${verLabel}</span></td>
               <td><span class="status-dot ${cls}"></span> ${m.status}</td>
               <td>${m.word_count.toLocaleString()}/${m.word_target.toLocaleString()} <span class="word-mini" style="width:${wordPct}%"></span></td>
               ${rCol}
@@ -402,12 +422,12 @@ async function loadModuleDetail(trackId, slug) {
         ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:var(--yellow)">⏳ Pending — run with --final-review</span></div></div>`
         : '');
 
-  const pipelineVer = m.pipeline_version || 'unknown';
-  const verColor = pipelineVer === 'v6' ? 'var(--green)' : 'var(--text3)';
+  const pipelineVer = pipelineLabel(m.pipeline_version);
+  const verColor = pipelineVer === 'current' ? 'var(--green)' : 'var(--text3)';
 
   panel.innerHTML = `
     <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
-    <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId} &middot; <span style="color:${verColor};font-weight:600">${pipelineVer}</span></div>
+    <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId} &middot; <span style="color:${verColor};font-weight:600">${pipelineVer} build state</span></div>
     ${qaHtml}
     ${researchHtml}
     ${planHtml}

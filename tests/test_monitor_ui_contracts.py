@@ -143,6 +143,59 @@ def test_progress_page_surfaces_freshness_and_dossiers():
     assert "t.dossier_done ?? 0" in index_html
 
 
+def test_monitor_dashboards_hide_legacy_pipeline_version_labels():
+    dashboard_text = {
+        path.name: path.read_text(encoding="utf-8")
+        for path in [
+            DASHBOARDS / "index.html",
+            DASHBOARDS / "progress.html",
+            DASHBOARDS / "track-health.html",
+            DASHBOARDS / "curriculum-dashboard.html",
+            DASHBOARDS / "comms.html",
+            DASHBOARDS / "delegate.html",
+            DASHBOARDS / "orient.html",
+            DASHBOARDS / "cost.html",
+        ]
+    }
+    stale_strings = [
+        "V6 Pipeline",
+        " v6",
+        " v5",
+        "v5-${",
+        "modules on v6",
+        "manual refresh only",
+        "dispatch-usage snapshot",
+        "Legacy gaps",
+        "Pipeline state across all tracks",
+        "Waiting for manual refresh",
+        "<th>Ver</th>",
+    ]
+
+    for page, html in dashboard_text.items():
+        for stale_string in stale_strings:
+            assert stale_string not in html, f"{page} exposes stale Monitor UI copy: {stale_string!r}"
+
+    assert "Current Builds" in dashboard_text["index.html"]
+    assert "Rebuild Backlog" in dashboard_text["progress.html"]
+    assert "Build State" in dashboard_text["track-health.html"]
+    assert "<th>Build</th>" in dashboard_text["curriculum-dashboard.html"]
+
+
+def test_track_health_uses_live_track_inventory():
+    html = (DASHBOARDS / "track-health.html").read_text(encoding="utf-8")
+    assert "const TRACKS =" not in html
+    assert "/api/state/summary?fresh=true" in html
+    assert "orderedTrackIds" in html
+
+
+def test_comms_recent_completions_open_build_detail_without_fake_task_ids():
+    html = (DASHBOARDS / "comms.html").read_text(encoding="utf-8")
+    assert 'class="feed-item completion build-row"' in html
+    assert 'data-build-status="completed"' in html
+    assert "feed-completions').addEventListener('click', onBuildRowClick)" in html
+    assert "v5-${" not in html
+
+
 def test_artifacts_page_uses_metadata_endpoint_and_filters():
     html = (DASHBOARDS / "artifacts.html").read_text(encoding="utf-8")
     assert "/api/artifacts/html" in html
