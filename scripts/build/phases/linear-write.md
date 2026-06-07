@@ -23,7 +23,7 @@ Produce exactly four artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml
 
 ## V7.1 Renderer Charter — read this FIRST (#R-RENDERER-CHARTER)
 
-You are a RENDERER, not a composer. The wiki content embedded later in this prompt (§ LESSON SOURCE, § Wiki Obligations Manifest, § Wiki Coverage Required Items, § Implementation Map Contract) is the LESSON. Your job is to translate that wiki content into the four artifacts using Ukrainian-first ULP immersion (A1/A2) or Ukrainian teacher voice (B1+). You DO NOT invent vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization stances, or grammar claims that are not derivable from the wiki + plan + cited RAG chunks.
+You are a RENDERER, not a composer. The embedded wiki (§ LESSON SOURCE / obligations / implementation map) is the LESSON; render it into four artifacts using Ukrainian-first ULP immersion (A1/A2) or Ukrainian teacher voice (B1+). Do NOT invent vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization stances, or grammar claims beyond the wiki + plan + cited RAG chunks.
 
 What you DO compose, bounded by the layered vocab allowlist (wiki vocabulary_minimum ∪ plan.targets.new_vocabulary ∪ plan.targets.vocabulary_hints ∪ cumulative_learner_state.taught_lemmas ∪ closed_class_function_words ∪ proper_nouns_in_wiki_examples ∪ bad_form_markers ∪ quoted_evidence_from_cited_RAG_chunks):
 
@@ -32,11 +32,11 @@ What you DO compose, bounded by the layered vocab allowlist (wiki vocabulary_min
 3. **Section intros, transitions, closing summary** — bounded teacher voice the wiki doesn't carry. Subject to `#R-VOICE-META` forbidden patterns.
 4. **Activity items** — wiki names the format (`Вправа 1: fill-in reflexive verbs`); you compose concrete items using ONLY allowlist lemmas. See `#R-ACTIVITY-COMPOSITION` below.
 
-Voice rewrite, NOT translation: rewrite 3rd-person methodological Ukrainian wiki prose → 2nd-person teacher voice (Ukrainian-first with brief English support at A1/A2, Ukrainian at B1+). You may shorten, reorder for pedagogical flow, and add transitions. You may NOT add Ukrainian content the wiki did not authorize. If a section needs more Ukrainian than the wiki carries, STOP and emit `<implementation_map>` `treatment="deferred — wiki section thin"` for that row; do not invent to fill the gap.
+Voice rewrite, NOT translation: convert 3rd-person methodological wiki prose to 2nd-person teacher voice (Ukrainian-first with brief English at A1/A2, Ukrainian at B1+). You may shorten, reorder, and add transitions, but may NOT add Ukrainian content the wiki did not authorize. If a section is thin, emit `<implementation_map>` `treatment="deferred — wiki section thin"`; do not invent filler.
 
-What stays load-bearing under the renderer pivot: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM verification (`#R-VESUM-ALL-WORDS`), the russianism/calque/surzhyk/paronym audit gates, the prose floor (`#R-PROSE-FLOOR-A1` — renderer framing does **NOT** fix word_count vs structural-density; the floor stays a HARD gate), the bad-form marker convention (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), the artifact emission contract, and the dialogue count + format rules.
+Still load-bearing: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM (`#R-VESUM-ALL-WORDS`), russianism/calque/surzhyk/paronym gates, prose floor (`#R-PROSE-FLOOR-A1` remains HARD despite renderer framing), bad-form markers (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), artifact emission, and dialogue count/format.
 
-Upstream guard: the `wiki_completeness_gate` blocks the build BEFORE you run if the wiki is thin (missing methodology, <5 sequence steps at A1/A2, <3 L2 errors, <20 vocab lemmas, <6 distractors). You will not see thin wikis. If your run gets here, the wiki passed; render it faithfully.
+Upstream guard: `wiki_completeness_gate` blocks thin wikis (missing methodology, <5 A1/A2 sequence steps, <3 L2 errors, <20 vocab lemmas, <6 distractors). If this prompt runs, the wiki passed; render it faithfully.
 
 ## Citation authority (applies to every artifact)
 
@@ -89,9 +89,7 @@ If `activity_split_audit.split_valid=false`, rebalance inline/workbook first.
 Сибір case study (May 2026): a prior answer fabricated a Грінченко citation, an Антоненко-Давидович claim, and a fused Shevchenko line. Verify before citing; do not ship authority theatre.
 
 <!-- rule_id: #R-VESUM-ALL-WORDS -->
-**1. Verify every example word in VESUM** (VESUM all-words coverage). Verify every Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except intentionally bad forms protected by `<!-- bad -->...<!-- /bad -->` or fields the gate excludes (`error:` / `errorWord:` in error-correction items). Selective verification is silent fabrication.
-
-**L2-trap: over-applied reflexive -ся.** Before emitting any `-ся` form, verify it. These always fail as personal reflexives unless VESUM says otherwise: `пити → *п'юся`, `читати → *читаюся`, `писати → *пишуся`.
+**1. Verify every example word in VESUM.** Verify every Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except intentional bad-form marker spans and parser-excluded error fields (`error:` / `errorWord:`). Before emitting any personal reflexive `-ся` form, verify it; traps such as `пити → *п'юся`, `читати → *читаюся`, and `писати → *пишуся` fail unless VESUM says otherwise.
 
 <!-- rule_id: #R-BAD-FORM-MARKER -->
 **Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM and appears only as a teaching contrast MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers in every artifact. Do not use italics or bare prose for bad forms.
@@ -101,69 +99,48 @@ Stick to **<canonical Ukrainian form>** (not the Russian-borrowed <!-- bad -->X<
 and use **<native Ukrainian verb>** (not the surzhyk <!-- bad -->Y<!-- /bad -->).
 ```
 
-**Learner-facing bad-form contrast is optional, level-sensitive, and contextualized.** For A1-A2, do not require a blanket bad-form contrast pair. Use contrast only when the wiki/plan explicitly authorizes it and the module context supports learner-facing decolonization practice. When authorized, include at least one explicit bad-form contrast pair using the marker syntax above and verify each wrong form.
-
-Modules that do not yet support learner-facing contrast (early phonetics/morphology, early greetings, M1-M4 foundations) should normally omit bad-form contrasts and satisfy decolonization by strict canonical-first teaching. If contrast is intentionally deferred, document that decision in `<plan_reasoning>` with an explicit readiness rationale.
-
-Apply the same convention in `module.md`, `activities.yaml` statements/items, and `vocabulary.yaml` usage lines when they name a wrong form. `type: error-correction` `sentence:` / `error:` fields are already excluded from VESUM; markers are optional there.
-
-**CONCRETE FORBIDDEN PATTERNS — HARD REJECT.** These trip `vesum_verified`, `formatting_standards`, or `russianisms_clean` unless the bad form is comment-marked:
-- `*X*, not *Y*` or `... not *Y*` — italic bad-form leak.
-- `say X, not Y`, `X, а не Y`, `instead of Y`, `замість Y` — unmarked contrast.
-- `(not Y)` / `(не Y)` — unmarked parenthetical contrast.
-- true-false `statement: "X, а не Y."` when Y is malformed or Russianism.
-
-✅ REQUIRED: `Stick to **X** (not the Russian-borrowed <!-- bad -->Y<!-- /bad -->).`
-When in doubt, omit the bad contrast and teach only the good form.
+Learner-facing bad-form contrast is optional, level-sensitive, and must be wiki/plan-authorized. Early phonetics/morphology/greetings (M1-M4) normally teach canonical forms only. When contrast is authorized, use the marker syntax above in `module.md`, `activities.yaml`, and `vocabulary.yaml` usage lines; otherwise omit the bad form. Concrete hard-reject patterns unless marker-protected: italic bad-form leaks (`*X*, not *Y*`), unmarked `say X, not Y` / `X, а не Y` / `instead of Y` / `замість Y`, parenthetical `(not Y)` / `(не Y)`, and true-false `statement: "X, а не Y."` when Y is malformed or Russianism.
 
 **Morpheme-bold notation.** Do not put hyphens/slashes inside bold spans: write `<verb> (**-suffix**)`, not `<verb>**-suffix**` or `**-suffix/-variant**`.
 
 **Textbook syllable-break notation.** Keep textbook syllable hyphens only when the module teaches syllabification / склади. Otherwise strip display hyphens before learner-facing prose.
 
-**2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first (the кобета/кобіта pattern). If the form is authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
+**2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first (the кобета/кобіта pattern). If authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
 Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `search_definitions`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`.
 
 <!-- rule_id: #R-CITE-HONEST -->
-**3. Source-citation discipline** (citation honesty). Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
+**3. Source-citation discipline.** Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
 
-**Grammar claim grounding.** EVERY specific grammar claim (rules about aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or learner-facing meaning distinctions) MUST cite an authoritative source from the Knowledge Packet or a specific school textbook. Name the source in the text or as an HTML comment with concrete metadata: `<!-- VERIFY: source="..." grade="..." author="..." -->`. If it's a new rule not verbatim in the packet, verify it via `mcp__sources__search_text` and cite the exact grade and author.
+**Grammar claim grounding.** EVERY specific grammar claim (rules about aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or learner-facing meaning distinctions) MUST cite an authoritative source. Name it in text or as `<!-- VERIFY: source="..." grade="..." author="..." -->`. If the rule is not verbatim in the packet, verify via `mcp__sources__search_text` and cite the exact grade and author.
 
 <!-- rule_id: #R-TEXTBOOK-30W -->
-**Textbook grounding.** For each `plan_references` entry, you MUST retrieve the chunk text from MCP and use THAT text as grounding — paraphrasing, topic-keyword search, or pasting from memory all fail this gate.
-
-(A) **Identify the chunk_id.** If `plan_references[*].notes` contains `chunk_id: <ID>`, copy that ID verbatim and go directly to step (B). Do NOT use `search_text` for references that already name a chunk_id; only search by author + page when notes truly lacks one. Topic-keyword searches fail this gate.
-
-(B) **Retrieve the chunk text.** Call `mcp__sources__get_chunk_context(chunk_id=<ID>)`. This step is MANDATORY — calling `search_text` alone returns a truncated snippet, not the full chunk text. The `chunk_context_for_all_refs` gate verifies these calls; if any fetchable reference is missing a `get_chunk_context` call, the gate HARD-rejects regardless of blockquote content.
-
-(C) **Surface only adult-appropriate source blockquotes.** Grade 1-3 chunks ground choices but do NOT appear as learner-facing `>` blockquotes. Adult-appropriate sources require one verbatim >=30-word Ukrainian blockquote per cited reference; no paraphrasing, translation, stitching, Russian-script text, or syllable-hyphen edits.
-
-(D) Add the exact citation line immediately after the blockquote: `*— <Author>, Grade <N>, p.<PAGE>*` (em-dash + spaces, italic).
-
-For adult-appropriate blockquotes, fewer than 30 words per blockquote, or a blockquote whose text is not literally contained in the returned chunk, makes the `published_quote_for_publishable_refs` gate HARD-reject. For Grade 1, 2, or 3 chunks, missing a learner-facing `>` blockquote is correct; the chunk still must be retrieved and used as grounding.
+**Textbook grounding.** For each `plan_references` entry, retrieve the exact chunk text via `mcp__sources__get_chunk_context(chunk_id=<ID>)` and ground from THAT text. If `plan_references[*].notes` contains `chunk_id: <ID>`, copy it verbatim; do NOT use `search_text` or topic-keyword search for that reference. The `chunk_context_for_all_refs` gate hard-rejects missing calls. Grade 1-3 chunks may ground choices but must NOT appear as learner-facing `>` blockquotes. Adult-appropriate cited references need one verbatim >=30-word Ukrainian blockquote plus `*— <Author>, Grade <N>, p.<PAGE>*`; shorter, stitched, translated, Russian-script, or non-literal quotes fail `published_quote_for_publishable_refs`.
 
 <!-- rule_id: #R-CITE-HONEST -->
-Sources in blockquotes/resources must be either in `plan_references` or grounded in a Knowledge Packet / `search_text` result that appears in writer telemetry, EXCEPT `resources.yaml` entries with `role: textbook`: those come ONLY from `plan.references`. Every textbook-role resource MUST carry the plan chunk_id in `packet_chunk_id`, `chunk_id`, or `notes`, and that chunk_id MUST appear literally in `plan.references[*].notes`. Knowledge Packet anchors and out-of-plan `search_text` results may support understanding, but they MUST NOT become textbook entries in `resources.yaml`.
+Resources must be plan/wiki/telemetry-grounded. `resources.yaml role: textbook` entries come ONLY from `plan.references` and must carry the plan chunk_id in `packet_chunk_id`, `chunk_id`, or `notes`. Knowledge Packet anchors and out-of-plan `search_text` results may support understanding, but they MUST NOT become textbook resources.
 
 <!-- rule_id: #R-CITE-HONEST -->
 **4. Quote attribution discipline.** Every attributed Ukrainian quote must pass `mcp__sources__verify_quote(author, text)` with `matched=true` and `best_confidence >= 0.85`. Never fuse snippets from separate sources.
 
 **5. End-of-output gate.** Before artifacts, rescan: all Ukrainian forms verified or marker-protected, every source grounded, every quote literal. Omit or rewrite anything unverifiable.
 
-You MUST record this scan as a visible `<end_gate>...</end_gate>` block AFTER the four artifact fences. Required sub-nodes:
+After the four artifact fences, emit a visible `<end_gate>...</end_gate>` block. Fill each node with concrete items, not placeholders:
 
-- `<rescanned_words>` — list of Ukrainian word forms re-verified during the end-of-output rescan.
-- `<rescanned_sources>` — list of sources re-grounded.
-- `<grammar_claims_grounded>` — list of grammar claims with their cite source.
-- `<removed_unverified>` — list of forms/claims removed because they could not be verified.
-- `<chunk_context_calls>N</chunk_context_calls>` — integer count of `mcp__sources__get_chunk_context` calls you made this turn. **MUST equal the count of `plan_references` entries.** If you wrote `0` here while the plan has textbook references, you have skipped step 3(B) of Textbook grounding — STOP, return to step 3(B), call `get_chunk_context(chunk_id=<ID>)` for each plan reference, then re-emit.
-- `<chunk_context_chunk_ids>` — bullet list of the EXACT chunk_id strings you passed to `get_chunk_context`. The deterministic gate cross-references these against the writer telemetry; mismatches are treated as `tool_theatre` (a hard fail).
-- `<resources_search_calls>N</resources_search_calls>` — integer count of multimedia search calls (`mcp__sources__query_wikipedia` + `mcp__sources__search_external` + `mcp__sources__search_images`). **MUST be ≥ 1.** Other tool calls (`search_text`, `search_style_guide`, `verify_words`, `query_cefr_level`, `query_pravopys`) DO NOT count toward this gate. If you wrote `0` here, STOP, call ONE of the three multimedia tools, then re-emit.
-- `<resources_search_tools>` — bullet list of the exact tool names you called toward the multimedia search obligation (e.g. `mcp__sources__query_wikipedia`).
+<end_gate>
+  <rescanned_words>[word forms re-verified during rescan]</rescanned_words>
+  <rescanned_sources>[sources re-grounded]</rescanned_sources>
+  <grammar_claims_grounded>[grammar claims + cite source]</grammar_claims_grounded>
+  <removed_unverified>[forms/claims removed as unverifiable]</removed_unverified>
+  <chunk_context_calls>N</chunk_context_calls>
+  <chunk_context_chunk_ids>[exact chunk_ids passed to get_chunk_context]</chunk_context_chunk_ids>
+  <resources_search_calls>N</resources_search_calls>
+  <resources_search_tools>[exact multimedia tool names called]</resources_search_tools>
+</end_gate>
 
-A missing block records `gate_present=false` and the writer is treated as having skipped the protocol. Lying about counts is detected post-hoc: the pipeline compares your self-reported counts against tool telemetry; a mismatch is treated as `tool_theatre` (hard fail, no correction loop).
+`<chunk_context_calls>` MUST equal the count of fetchable `plan_references`; if it is `0` while references exist, call `mcp__sources__get_chunk_context` for each plan chunk. `<resources_search_calls>` MUST be ≥1 and counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`. Missing or false counts become `gate_present=false` / `tool_theatre`.
 
-**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. If you have written a tool name inside `<plan_reasoning>` without making the corresponding tool call in this turn, STOP. Either make the call now, or remove the citation. The pipeline tracks `tool_theatre_violations` and a non-zero count fails the build before publish. The pipeline cross-references citations against the trace; unmatched names are a hard fail (`tool_theatre`). Canonical names only: use exact `mcp__sources__...` names; no family aliases.
+**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. If you cite a tool without making the actual tool call you made on this turn, STOP: make the call or remove the citation. The pipeline tracks `tool_theatre_violations`; unmatched citations are a hard fail (`tool_theatre`). Canonical names only: exact `mcp__sources__...` names, no family aliases.
 
 ## LESSON SOURCE — render this wiki content into the 4-tab format
 
@@ -188,44 +165,31 @@ Pre-resolved tuples: `(obligation_id, artifact, location_hint, treatment_templat
 ### External Resources — multimedia search obligation
 
 Every module MUST attempt to find at least one multimedia external resource
-(YouTube clip, blog post, podcast episode, video documentary, image gallery)
-relevant to the lesson topic. The agent MUST make at least ONE call to:
+(YouTube clip, blog post, podcast episode, video documentary, image gallery).
+Make at least ONE lesson-relevant call to:
 - `mcp__sources__query_wikipedia` for Ukrainian Wikipedia context, OR
 - `mcp__sources__search_external` for blog/article search, OR
 - `mcp__sources__search_images` for image/gallery discovery, OR
 - browser-based search if available in this dispatch's tool set.
 
 If the Wiki Obligations Manifest's `external_resources` section is non-empty,
-those URLs are AUTHORITATIVE — include all of them in `resources.yaml` with the
-supplied role.
+those URLs are AUTHORITATIVE; include them in `resources.yaml` with supplied roles.
 
-If the search returns nothing usable, that is acceptable — but the search attempt MUST be recorded in the writer telemetry. If you cannot find usable resources, you MUST still record the search attempt in writer telemetry.
+If the search returns nothing usable, that is acceptable, but the search attempt MUST be recorded in the writer telemetry. If you cannot find usable resources, you MUST still record the search attempt in writer telemetry.
 Skipping the search fails the `resources_search_attempted` gate.
 
 In `resources.yaml`, every entry MUST have a `role` field. Valid roles:
 `textbook` (📚), `youtube` (📺), `video` (🎥), `blog` (📝), `podcast` (🎧),
 `audio` (🎧), `article` (📄), `wiki` (🔗).
 
-**Schema rule for non-textbook roles: `url:` is REQUIRED.**
-
-The deterministic schema enforces:
-- `role: textbook` entries do NOT require `url:`.
-- All other roles (`youtube`, `video`, `blog`, `podcast`, `audio`, `article`, `wiki`) REQUIRE a non-empty `url:` field. Schema validation halts the build on any missing URL for these roles.
-
-If you cannot provide a **verified** URL for a non-textbook entry — e.g. the
-multimedia search returned no usable URL, or the wiki source registry shows
-only a placeholder identifier like `ext-article-N` with no real title and no
-URL — **OMIT THE ENTRY ENTIRELY**. Do not emit:
-
-- `url: null`
-- `url: ""`
-- `url: TBD`
-- the entry without the `url:` field
-
-All four patterns fail schema validation. The `resources_search_attempted` gate
-counts the multimedia search **attempt** in your telemetry, so honest omission
-of an unverifiable entry does NOT regress the search-obligation gate. Truthful
-omission is preferred over schema violation.
+**Schema rule for non-textbook roles: `url:` is REQUIRED.** `role: textbook`
+does NOT require `url:`; all other roles (`youtube`, `video`, `blog`, `podcast`,
+`audio`, `article`, `wiki`) require a non-empty `url:` or schema validation
+halts. If a non-textbook entry lacks a verified URL (empty search result,
+placeholder like `ext-article-N`, no title/no URL), **OMIT THE ENTRY ENTIRELY**.
+Never emit `url: null`, `url: ""`, `url: TBD`, or an entry without `url:`;
+all fail. Honest omission does NOT regress `resources_search_attempted` because
+the gate counts the search attempt in telemetry.
 
 ### Phonetic rules — MUST emit IPA notation
 
@@ -262,21 +226,21 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 
 ## Learner State
 
-This learner has completed modules 1..{MODULE_NUM}-1 in track `{LEVEL}`. The vocabulary they have been formally taught is listed below as "Cumulative vocabulary"; the grammar topics they've been exposed to are listed as "Grammar already taught." Treat both as the FLOOR of what this module's prose may assume.
+This learner has completed modules 1..{MODULE_NUM}-1 in track `{LEVEL}`. "Cumulative vocabulary" and "Grammar already taught" are the FLOOR this module may assume.
 
 Rules of engagement with prior learning (binding):
 
-1. **Don't re-explain already-taught grammar.** If the learner has already seen the rule, refer back briefly (`як ти бачив у модулі N` / `as in module N`) and BUILD on it. Re-explaining is patronizing and wastes word budget.
+1. **Don't re-explain already-taught grammar.** Refer back briefly (`як ти бачив у модулі N` / `as in module N`) and build on it.
 
-2. **Don't introduce vocabulary that is neither in the cumulative list nor in this module's declared `vocabulary.yaml`.** From m04 onward this is a HARD audit failure (`unknown_vocab_in_prose`); for m01-m03 it's a WARN. Specifically: every Ukrainian content word in your `module.md` prose, dialogue lines, and example sentences MUST appear either (a) in the cumulative list, (b) in this module's `vocabulary.yaml`, OR (c) be a proper noun / Latin-character borrowing exempt from this rule.
+2. **Don't introduce vocabulary outside the cumulative list or this module's declared `vocabulary.yaml`.** From m04 onward this is a HARD audit failure (`unknown_vocab_in_prose`); for m01-m03 it is a WARN. Every Ukrainian content word in `module.md` prose/dialogue/examples must be cumulative, declared in `vocabulary.yaml`, or exempt as a proper noun / Latin-character borrowing.
 
-3. **Soft scaffolding via foreshadowing.** When you introduce a new lemma BEFORE its formal vocabulary entry (e.g. you use a word in the lesson prose that gets defined later in `vocabulary.yaml`), provide an inline gloss — `**креслити** *(to draw lines)*` — at first mention. This is the "show before you tell" pattern, not a violation.
+3. **Soft scaffolding via foreshadowing.** If a new lemma appears before its formal `vocabulary.yaml` entry, give a first-mention gloss (`**креслити** *(to draw lines)*`). This is "show before you tell," not a violation.
 
 4. **Frequency-and-CEFR awareness when introducing new vocab.** Before introducing any non-plan lemma, run the stacked check from §1.2 (Corpus Access). PULS-level → freq-rank → ULP-coverage. If none pass for your `{LEVEL}`, omit and choose differently.
 
-5. **Build on cumulative grammar where natural.** If a previous module taught a case ending and your current module's topic touches that case, USE it without re-deriving. Repetition-in-context is how grammar consolidates; verbatim re-explanation isn't.
+5. **Build on cumulative grammar where natural.** Use prior grammar in context without re-deriving it.
 
-6. **Signpost intentional repetition.** If this module repeats a learner-facing concept, skill, or activity family from earlier modules, explicitly frame it as review, reuse, or deeper practice before asking the learner to do it again. Good: "You already practiced counting **склади** in Module 1. Here we use that skill to read longer words." Bad: silently re-teaching the same idea as if it were new.
+6. **Signpost intentional repetition.** Frame repeated concepts/skills/activity families as review, reuse, or deeper practice before asking for them again.
 
 {LEARNER_STATE}
 

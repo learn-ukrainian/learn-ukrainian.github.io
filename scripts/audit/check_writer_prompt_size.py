@@ -11,9 +11,9 @@ Empirical baseline:
 - 2026-05-27 (Path B + 4 hardening PRs #2366/#2367/#2370/#2371): bumped to
   132KB ceiling. The hardening rules added ~3KB; bumping vs trimming the
   hardening was the choice (hardening rules are load-bearing per PR #2358's
-  empirical calibration). The pivot to wiki-driven writer (post-2026-05-27)
-  is expected to collapse most rules and let the ceiling drop back to 130KB
-  or below.
+  empirical calibration).
+- 2026-06-07 (issue #2378): trimmed the V7.1 linear writer prompt and restored
+  the 130KB ceiling.
 - Below 120KB requires per-module data restructure (knowledge-packet
   diet, manifest compression).
 
@@ -30,7 +30,7 @@ import pytest
 from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
 
-WRITER_PROMPT_CEILING_BYTES = 135 * 1024  # 135KB (bumped from 132KB 2026-05-28 for V7.1 renderer charter; aggressive trim queued — see follow-up issue)
+WRITER_PROMPT_CEILING_BYTES = 130 * 1024
 
 # Fixture modules to enforce against. Add more as the strip proves out on each
 # level. Start with the A1 anchor.
