@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: quiz
     title: М'яко чи розді́льно
-    instruction: Choose the beginner reading explanation.
+    instruction: Обери перше читацьке пояснення.
     items:
       - prompt: Буря́к — що стається перед я?
         options:
@@ -12,7 +12,7 @@ inline:
             correct: false
           - text: Ї завжди [йі].
             correct: false
-        explanation: Буря́к has no apostrophe; р softens before я.
+        explanation: У слові буря́к немає апо́строфа; р м'якшиться перед я.
       - prompt: Бур'я́н — що робить апо́строф?
         options:
           - text: Р лишається твердим, потім чути [йа].
@@ -21,7 +21,7 @@ inline:
             correct: false
           - text: Додає звук [і].
             correct: false
-        explanation: The apostrophe separates р from я.
+        explanation: Апо́строф відділяє р від я.
       - prompt: Ї — що завжди правильно?
         options:
           - text: Завжди [йі].
@@ -30,11 +30,11 @@ inline:
             correct: false
           - text: Це м'яки́й знак.
             correct: false
-        explanation: Ї always represents [йі].
+        explanation: Ї завжди позначає [йі].
   - id: act-2
     type: match-up
     title: Що робить ь
-    instruction: Match each word with the soft-sign clue.
+    instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
     pairs:
       - left: день
         right: м'який фінальний н
@@ -49,30 +49,30 @@ inline:
   - id: act-3
     type: fill-in
     title: Додай знак
-    instruction: Choose ь, apostrophe, or no sign.
+    instruction: Обери ь, апо́строф або без знака.
     items:
       - sentence: сім_я
         answer: "'"
         options:
           - "'"
           - ь
-          - no sign
+          - без знака
       - sentence: ден_
         answer: ь
         options:
           - ь
           - "'"
-          - no sign
+          - без знака
       - sentence: п_ять
         answer: "'"
         options:
           - "'"
           - ь
-          - no sign
-      - sentence: свя́то needs ____.
-        answer: no sign
+          - без знака
+      - sentence: свя́то потребує ____.
+        answer: без знака
         options:
-          - no sign
+          - без знака
           - "'"
           - ь
       - sentence: бур_ян
@@ -80,24 +80,24 @@ inline:
         options:
           - "'"
           - ь
-          - no sign
+          - без знака
       - sentence: мале́нький needs ____.
         answer: ь
         options:
           - ь
           - "'"
-          - no sign
+          - без знака
   - id: act-4
     type: error-correction
     title: Виправ пастки
-    instruction: Choose the correct Ukrainian form.
+    instruction: Обери правильну українську форму.
     items:
       - sentence: Сім'я́ — не губи апо́строф.
         error: сімя
         correction: сім'я́
         options:
           - сім'я́
-          - family word without apostrophe
+          - сімя без апо́строфа
         explanation: The apostrophe is required in сім'я́.
       - sentence: День — не пиши ден.
         error: ден
@@ -105,32 +105,32 @@ inline:
         options:
           - день
           - ден
-        explanation: День needs the soft sign.
+        explanation: День потребує м'якого знака.
       - sentence: Свя́то — не додавай апо́строф.
         error: св'ято
         correction: свя́то
         options:
           - свя́то
           - св'ято
-        explanation: Свя́то is a prepared no-apostrophe word.
+        explanation: Свя́то — підготовлене слово без апо́строфа.
       - sentence: Ло́жка — не вигадуй м'яки́й знак.
         error: льожка
         correction: ло́жка
         options:
           - ло́жка
-          - invented soft-sign spelling
-        explanation: Ло́жка does not have a soft sign after л.
+          - вигадане написання з ь
+        explanation: Ло́жка не має м'якого знака після л.
       - sentence: Сім'я́ — не роби повну паузу.
         error: сім-пауза-я
-        correction: smooth й sound
+        correction: плавний звук й
         options:
-          - smooth й sound
+          - плавний звук й
           - full stop
-        explanation: The apostrophe separates sounds but does not create a full pause.
+        explanation: Апо́строф розділяє звуки, але не створює повної паузи.
   - id: act-5
     type: divide-words
     title: Перенос слів
-    instruction: Choose the prepared line-break model.
+    instruction: Обери підготовлену модель переносу.
     items:
       - word: Мар'я́на
         answer: Мар'-яна
@@ -143,7 +143,7 @@ inline:
 workbook:
   - type: group-sort
     title: Сортуй за знаком
-    instruction: Sort each word into the correct group.
+    instruction: Розподіли кожне слово в правильну групу.
     groups:
       - label: Є ь
         items:
@@ -167,56 +167,56 @@ workbook:
           - ло́жка
   - type: true-false
     title: Факти про знаки
-    instruction: Choose true or false.
+    instruction: Обери правда чи неправда.
     items:
       - statement: Ь не має власного звука.
         correct: true
-        explanation: It softens the previous consonant.
+        explanation: Він м'якшить попередній при́голосний.
       - statement: Апо́строф тримає попередній при́голосний твердим.
         correct: true
-        explanation: It separates the consonant from the iotated vowel.
+        explanation: Він відділяє при́голосний від йотованої голосної.
       - statement: Ї іноді мовчить.
         correct: false
-        explanation: Ї is always [йі].
+        explanation: Ї завжди читаємо як [йі].
       - statement: Свя́то має апо́строф.
         correct: false
-        explanation: Свя́то is a no-apostrophe model word.
+        explanation: Свя́то — модельне слово без апо́строфа.
   - type: match-up
     title: Друк і зошит
-    instruction: Match the printed word to the notebook recognition cue.
+    instruction: З'єднай друковане слово з підказкою в зо́шиті.
     pairs:
       - left: 'друк: день'
-        right: 'зошит: word with final ь'
+        right: 'зошит: слово з кінцевим ь'
       - left: "друк: сім'я́"
         right: 'зошит: apostrophe before я'
       - left: "друк: п'ять"
-        right: 'зошит: apostrophe plus final ь'
+        right: 'зошит: апо́строф і кінцевий ь'
       - left: 'друк: свя́то'
         right: 'зошит: no apostrophe'
       - left: "друк: бур'я́н"
         right: 'зошит: apostrophe after р'
   - type: quiz
     title: Правильна форма
-    instruction: Choose the correctly written word.
+    instruction: Обери правильно написане слово.
     items:
       - prompt: Сім'я́ — яка форма правильна?
         options:
           - text: сім'я́
             correct: true
-          - text: family word without apostrophe
+          - text: сімя без апо́строфа
             correct: false
-        explanation: Сім'я́ needs the apostrophe.
+        explanation: Сім'я́ потребує апо́строфа.
       - prompt: День — яка форма правильна?
         options:
           - text: день
             correct: true
           - text: ден
             correct: false
-        explanation: День needs the soft sign.
+        explanation: День потребує м'якого знака.
       - prompt: Слово без апо́строфа?
         options:
           - text: свя́то
             correct: true
           - text: apostrophe spelling
             correct: false
-        explanation: Свя́то is the prepared no-apostrophe word.
+        explanation: Свя́то — підготовлене слово без апо́строфа.

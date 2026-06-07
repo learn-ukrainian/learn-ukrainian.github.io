@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: quiz
     title: Де на́голос
-    instruction: Listen first, then choose the stressed syllable shown by the accent mark.
+    instruction: Спочатку слухай, потім обери склад із позначеним на́голосом.
     items:
       - prompt: 'Слухай, потім читай: ка́ва. Де на́голос?'
         options:
@@ -12,7 +12,7 @@ inline:
             correct: false
           - text: немає наголосу
             correct: false
-        explanation: Ка́ва is stressed on ка́.
+        explanation: У слові ка́ва на́голос на ка́.
       - prompt: 'Слухай, потім читай: вода́. Де на́голос?'
         options:
           - text: останній склад
@@ -21,7 +21,7 @@ inline:
             correct: false
           - text: усі склади однакові
             correct: false
-        explanation: Вода́ is stressed on да́.
+        explanation: У слові вода́ на́голос на да́.
       - prompt: 'Слухай, потім читай: столи́ця. Де на́голос?'
         options:
           - text: середній склад
@@ -30,7 +30,7 @@ inline:
             correct: false
           - text: останній склад
             correct: false
-        explanation: Столи́ця is stressed on ли́.
+        explanation: У слові столи́ця на́голос на ли́.
       - prompt: 'Молоко́: що робимо з ненаголошеними голосними?'
         options:
           - text: тримаємо кожен голосни́й чистим
@@ -39,11 +39,11 @@ inline:
             correct: false
           - text: читаємо кожне о як а
             correct: false
-        explanation: Ukrainian unstressed vowels stay clear.
+        explanation: Українські ненаголошені голосні залишаються чистими.
   - id: act-2
     type: quiz
     title: Вибір мелодики
-    instruction: Choose the beginner sentence melody.
+    instruction: Обери першу модель мелодики речення.
     items:
       - prompt: Це ка́ва.
         options:
@@ -51,32 +51,32 @@ inline:
             correct: true
           - text: висхідна ↗
             correct: false
-        explanation: A statement uses falling melody.
+        explanation: Твердження має спадну мелодику.
       - prompt: Це ка́ва?
         options:
           - text: висхідна ↗
             correct: true
           - text: спадна ↘
             correct: false
-        explanation: A yes/no question uses rising melody.
+        explanation: Так/ні питання має висхідну мелодику.
       - prompt: Де метро́?
         options:
           - text: спадна ↘
             correct: true
           - text: висхідна ↗
             correct: false
-        explanation: A question with де uses falling melody at A1.
+        explanation: Питання з де на A1 має спадну мелодику.
       - prompt: Як га́рно!
         options:
           - text: сильніша спадна ↘↘
             correct: true
           - text: висхідна ↗
             correct: false
-        explanation: An exclamation uses a stronger falling contour.
+        explanation: Оклик має сильнішу спадну мелодику.
   - id: act-3
     type: match-up
     title: На́голос змінює значення
-    instruction: Match the stressed word with the English meaning.
+    instruction: З'єднай наголошене слово з короткою англійською підказкою.
     pairs:
       - left: за́мок
         right: castle
@@ -93,7 +93,7 @@ inline:
   - id: act-4
     type: fill-in
     title: Пунктуація і мелодика
-    instruction: Choose the punctuation mark that matches the sentence.
+    instruction: Обери розділовий знак, який відповідає реченню.
     items:
       - sentence: Це ка́ва_
         answer: .
@@ -101,78 +101,78 @@ inline:
           - .
           - '?'
           - '!'
-        explanation: The statement takes a full stop and falling melody.
+        explanation: Твердження має крапку й спадну мелодику.
       - sentence: Це метро́_
         answer: '?'
         options:
           - '?'
           - .
           - '!'
-        explanation: The yes/no question takes a question mark and rising melody.
+        explanation: Так/ні питання має знак питання й висхідну мелодику.
       - sentence: Де апте́ка_
         answer: '?'
         options:
           - '?'
           - .
           - '!'
-        explanation: Де makes it a question, but the melody is falling.
+        explanation: Де робить це питанням, але мелодика спадна.
       - sentence: Як га́рно_
         answer: '!'
         options:
           - '!'
           - '?'
           - .
-        explanation: This is an exclamation.
+        explanation: Це оклик.
       - sentence: Так, це вода́_
         answer: .
         options:
           - .
           - '?'
           - '!'
-        explanation: This is a statement.
+        explanation: Це твердження.
 workbook:
   - type: error-correction
     title: Виправ пастки наголосу
-    instruction: Choose the safer Ukrainian reading habit.
+    instruction: Обери безпечнішу українську читацьку звичку.
     items:
       - sentence: Молоко́ — тримай усі голосні чистими.
-        error: blurred first two vowels
+        error: нечіткі перші два голосні
         correction: мо-ло-ко́
         options:
           - мо-ло-ко́
-          - blurred vowels
-        explanation: Ukrainian vowels stay clear outside stress.
+          - нечіткі голосні
+        explanation: Українські голосні залишаються чистими поза на́голосом.
       - sentence: Кіломе́тр — став на́голос на -ме́тр.
         error: кі́лометр
         correction: кіломе́тр
         options:
           - кіломе́тр
           - кі́лометр
-        explanation: The prepared model is кіломе́тр.
+        explanation: Підготовлена модель — кіломе́тр.
       - sentence: Кни́жка / книжки́ — помічай рухомий на́голос.
         error: кни́жки
         correction: книжки́
         options:
           - книжки́
           - кни́жки
-        explanation: This plural model moves stress to the ending.
+        explanation: У цій множинній моделі на́голос переходить на закінчення.
       - sentence: Одина́дцять — наголос на -на́-.
         error: о́динадцять
         correction: одина́дцять
         options:
           - одина́дцять
           - о́динадцять
-        explanation: The A1 target has stress on -на́-.
+        explanation: Ціль A1 має на́голос на -на́-.
       - sentence: Чотирна́дцять — наголос на -на́-.
         error: чоти́рнадцять
         correction: чотирна́дцять
         options:
           - чотирна́дцять
           - чоти́рнадцять
-        explanation: The A1 target has stress on -на́-.
+        explanation: Ціль A1 має на́голос на -на́-.
   - type: group-sort
     title: Сортуй за наголосом
-    instruction: Sort each word by the marked stressed syllable.
+    instruction: Розподіли кожне слово за позначеним наголошеним складом.
     groups:
       - label: Перший склад
         items:
@@ -194,35 +194,35 @@ workbook:
           - метро́
   - type: match-up
     title: Друк і зошит
-    instruction: Match the printed word to the notebook recognition cue.
+    instruction: З'єднай друковане слово з підказкою в зо́шиті.
     pairs:
       - left: 'друк: ка́ва'
-        right: 'зошит: stress on first syllable'
+        right: 'зошит: на́голос на першому складі'
       - left: 'друк: вода́'
-        right: 'зошит: stress on final syllable'
+        right: 'зошит: на́голос на останньому складі'
       - left: 'друк: молоко́'
-        right: 'зошит: three clear о sounds'
+        right: 'зошит: три чисті звуки о'
       - left: 'друк: метро́'
-        right: 'зошит: final stressed vowel'
+        right: 'зошит: останній наголошений голосни́й'
   - type: true-false
     title: Факти про наголос і мелодику
-    instruction: Choose true or false.
+    instruction: Обери правда чи неправда.
     items:
       - statement: Український на́голос може бути на різних складах.
         correct: true
-        explanation: Stress is free, so learn it with each word.
+        explanation: На́голос вільний, тому вчи його разом із кожним словом.
       - statement: Звичайні українські тексти завжди мають позначки наголосу.
         correct: false
-        explanation: Stress marks appear in learning materials and dictionaries, not most ordinary texts.
+        explanation: Позначки наголосу є в навчальних матеріалах і словниках, а не в більшості звичайних текстів.
       - statement: Так/ні питання Це вода́? має висхідну мелодику на A1.
         correct: true
-        explanation: Yes/no questions use rising melody.
+        explanation: Так/ні питання має висхідну мелодику.
       - statement: Питання з де завжди потребує висхідної мелодики на A1.
         correct: false
-        explanation: A question with a question word such as де uses falling melody.
+        explanation: Питання з питальним словом як де має спадну мелодику.
   - type: translate
     title: Слова з наголосом
-    instruction: Choose the English support meaning after reading the Ukrainian first.
+    instruction: Спочатку прочитай українське слово, потім обери англійську підказку.
     items:
       - source: на́голос
         options:
@@ -232,7 +232,7 @@ workbook:
             correct: false
           - text: water
             correct: false
-        explanation: На́голос means word stress or accent.
+        explanation: На́голос — stress / accent.
       - source: ка́ва
         options:
           - text: coffee
@@ -241,7 +241,7 @@ workbook:
             correct: false
           - text: morning
             correct: false
-        explanation: Ка́ва means coffee.
+        explanation: Ка́ва — coffee.
       - source: вода́
         options:
           - text: water
@@ -250,7 +250,7 @@ workbook:
             correct: false
           - text: atlas
             correct: false
-        explanation: Вода́ means water.
+        explanation: Вода́ — water.
       - source: столи́ця
         options:
           - text: capital
@@ -259,4 +259,4 @@ workbook:
             correct: false
           - text: family
             correct: false
-        explanation: Столи́ця means capital.
+        explanation: Столи́ця — capital.

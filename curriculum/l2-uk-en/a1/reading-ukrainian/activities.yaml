@@ -20,7 +20,7 @@ inline:
   - id: act-2
     type: match-up
     title: Робота голосних лі́тер
-    instruction: З'єднай літеру з її beginner reading job.
+    instruction: З'єднай лі́теру з її першою читацькою роботою.
     pairs:
       - left: А
         right: чистий [а]
@@ -37,7 +37,7 @@ inline:
   - id: act-3
     type: divide-words
     title: Поділи на склади́
-    instruction: Divide each printed word into syllables.
+    instruction: Поділи кожне друковане слово на склади́.
     items:
       - word: ма́ма
         answer: ма ма
@@ -54,50 +54,50 @@ inline:
   - id: act-4
     type: error-correction
     title: Пастки читання
-    instruction: Choose the safer Ukrainian reading habit.
+    instruction: Обери безпечнішу українську читацьку звичку.
     items:
       - sentence: Молоко́ — не міняй о на інший звук.
         error: м[а]локо
         correction: молоко
         options:
           - молоко
-          - blurred о
-        explanation: Ukrainian о stays clear; read молоко́ with three open beats.
+          - нечітке о
+        explanation: Українське о залишається чистим; читай молоко́ у три відкриті удари.
       - sentence: Джерело́ — не розривай дж.
-        error: two broken sounds
-        correction: one joined sound
+        error: два розірвані звуки
+        correction: один злитий звук
         options:
-          - one joined sound
-          - д plus ж
-        explanation: ДЖ marks one joined reading unit in words such as джерело́.
+          - один злитий звук
+          - д плюс ж
+        explanation: ДЖ позначає одну злиту читацьку одиницю у словах як джерело́.
       - sentence: Украї́на — не читай ї як plain і.
-        error: plain і
+        error: просте і
         correction: '[йі]'
         options:
           - '[йі]'
           - '[і]'
-        explanation: Ї is always [йі].
+        explanation: Ї завжди читаємо як [йі].
       - sentence: День — не додавай голосний після нь.
-        error: add a vowel
-        correction: soften н and stop
+        error: додати голосний
+        correction: пом'якшити н і зупинитися
         options:
-          - soften н and stop
-          - add і after нь
-        explanation: Ь has no sound of its own; it softens the previous consonant.
+          - пом'якшити н і зупинитися
+          - додати і після нь
+        explanation: Ь не має власного звука; він м'якшить попередній при́голосний.
   - id: act-5
     type: quiz
     title: Переві́рка читання
-    instruction: Choose the correct answer.
+    instruction: Обери правильну відповідь.
     items:
       - prompt: Склад — що це?
         options:
-          - text: syllable
+          - text: склад
             correct: true
-          - text: letter
+          - text: лі́тера
             correct: false
-          - text: greeting
+          - text: вітання
             correct: false
-        explanation: Склад is a syllable.
+        explanation: Склад — це один голосовий удар у слові.
       - prompt: Молоко́ — скільки складів?
         options:
           - text: '3'
@@ -106,7 +106,7 @@ inline:
             correct: false
           - text: '1'
             correct: false
-        explanation: Молоко́ has three vowel sounds and three syllables.
+        explanation: Молоко́ має три голосні звуки й три склади́.
       - prompt: Яка літера завжди [йі]?
         options:
           - text: Ї
@@ -115,11 +115,11 @@ inline:
             correct: false
           - text: И
             correct: false
-        explanation: Ї is always [йі].
+        explanation: Ї завжди читаємо як [йі].
 workbook:
   - type: group-sort
     title: Один, два чи три склади́
-    instruction: Sort the words by syllable count.
+    instruction: Розподіли слова за кількістю складів.
     groups:
       - label: Один склад
         items:
@@ -137,37 +137,37 @@ workbook:
           - столи́ця
   - type: true-false
     title: Факти про читання
-    instruction: Choose true or false.
+    instruction: Обери правда чи неправда.
     items:
       - statement: Кожен український склад має голосни́й звук.
         correct: true
-        explanation: The vowel sound is the core of the syllable.
+        explanation: Голосни́й звук — центр складу.
       - statement: Ї іноді м'якшить попередній при́голосний.
         correct: false
-        explanation: Ї is always [йі].
+        explanation: Ї завжди читаємо як [йі].
       - statement: У молоко́ звук о залишається чистим.
         correct: true
-        explanation: Do not reduce о to an unclear vowel.
+        explanation: Не перетворюй о на нечіткий голосни́й.
       - statement: ДЖ and ДЗ should be read as joined units.
         correct: true
-        explanation: They are digraph reading units.
+        explanation: ДЖ і ДЗ читаємо як злиті одиниці.
   - type: match-up
     title: Друк і зошит
-    instruction: Match the printed word to the notebook recognition cue.
+    instruction: З'єднай друковане слово з підказкою в зо́шиті.
     pairs:
       - left: 'друк: ма́ма'
         right: 'зошит: ма́ма'
       - left: 'друк: молоко́'
         right: 'зошит: молоко́'
       - left: 'друк: день'
-        right: 'зошит: word with final ь'
+        right: 'зошит: слово з кінцевим ь'
       - left: 'друк: Ки́їв'
-        right: 'зошит: word with ї'
+        right: 'зошит: слово з ї'
       - left: 'друк: ву́лиця'
-        right: 'зошит: three-syllable city word'
+        right: 'зошит: трискладове слово про місто'
   - type: watch-and-repeat
     title: Повтор голосних
-    instruction: Watch the alphabet overview again, then repeat the simple vowels.
+    instruction: Подивися огляд абетки ще раз, потім повтори прості голосні.
     items:
       - letter: А
         sound: '[а]'

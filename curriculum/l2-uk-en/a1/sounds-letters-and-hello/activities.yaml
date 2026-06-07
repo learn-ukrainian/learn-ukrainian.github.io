@@ -6,7 +6,7 @@ inline:
   - id: act-1
     type: quiz
     title: Звук чи лі́тера
-    instruction: Choose the correct anchor.
+    instruction: Обери правильну опору.
     items:
       - question: Звук — що ми робимо?
         options:
@@ -14,42 +14,42 @@ inline:
           - чуємо й вимовля́ємо
           - ставимо апо́строф
         correct: 1
-        explanation: Звук is what we hear and pronounce.
+        explanation: Звук — це те, що ми чуємо й вимовля́ємо.
       - question: Лі́тера — що ми робимо?
         options:
           - бачимо й пишемо
           - чуємо без сторі́нки
           - рахуємо як склад
         correct: 0
-        explanation: Лі́тера is the written sign.
+        explanation: Лі́тера — це письмовий знак.
       - question: Українська абе́тка — скільки лі́тер?
         options:
           - '38'
           - '33'
           - '6'
         correct: 1
-        explanation: The standard Ukrainian alphabet has 33 letters.
+        explanation: Стандартна українська абе́тка має 33 лі́тери.
       - question: Я, Ю, Є, Ї — чому вони особливі?
         options:
           - мають більше ніж одну роботу
           - завжди мовчать
           - завжди є при́голосними
         correct: 0
-        explanation: Some Ukrainian letters can point to more than one sound or modify a nearby sound.
+        explanation: Деякі українські лі́тери мають більше ніж одну роботу.
       - question: Ь — що правильно?
         options:
           - має власний голосни́й звук
           - не має власного звука
           - це літера О
         correct: 1
-        explanation: Ь has no sound of its own.
+        explanation: Ь не має власного звука.
       - question: Молоко́ — скільки голосних звуків?
         options:
           - два
           - три
           - один
         correct: 1
-        explanation: Молоко́ has three vowel sounds, о + о + о.
+        explanation: 'Молоко́ має три голосні звуки: о + о + о.'
 
   - id: act-2
     type: count-syllables
@@ -208,7 +208,7 @@ inline:
   - id: act-5
     type: fill-in
     title: Короткий діало́г
-    instruction: Choose the phrase that completes the Ukrainian line.
+    instruction: Обери фра́зу, яка доповнює український рядок.
     items:
       - sentence: Приві́т! ___ спра́ви?
         answer: Як
@@ -244,23 +244,23 @@ inline:
 workbook:
   - type: true-false
     title: Швидка переві́рка звуків
-    instruction: Choose true or false.
+    instruction: Обери правда чи неправда.
     items:
       - statement: Звук — це те, що ми чуємо й вимовля́ємо.
         correct: true
-        explanation: Звук is what the learner hears and pronounces.
+        explanation: Звук — це те, що ми чуємо й вимовля́ємо.
       - statement: Ь має власний голосни́й звук.
         correct: false
-        explanation: Ь has no sound of its own; it softens the previous consonant.
+        explanation: Ь не має власного звука; він м'якшить попередній при́голосний.
       - statement: Молоко́ має три голосні звуки.
         correct: true
-        explanation: The vowels are о + о + о.
+        explanation: 'Голосні звуки: о + о + о.'
       - statement: До́брий день — це вітальна фра́за.
         correct: true
-        explanation: It is one of the first ready-made greetings in the lesson.
+        explanation: Це одна з перших готових фраз вітання в уро́ці.
       - statement: У цьому модулі Щ = [ш].
         correct: false
-        explanation: Here, Щ = [шч].
+        explanation: У цьому модулі Щ = [шч].
 
   - type: order
     title: Склади діало́г
@@ -278,12 +278,12 @@ workbook:
 
   - type: match-up
     title: Друк і зошит
-    instruction: Match the printed card to the notebook recognition cue.
+    instruction: З'єднай друковану картку з підказкою в зо́шиті.
     pairs:
       - left: 'друк: П п'
-        right: 'зошит: teacher writes п'
+        right: 'зошит: учитель пише п'
       - left: 'друк: М м'
-        right: 'зошит: teacher writes м'
+        right: 'зошит: учитель пише м'
       - left: 'друк: Приві́т'
         right: 'зошит: приві́т'
       - left: 'друк: ма́ма'
