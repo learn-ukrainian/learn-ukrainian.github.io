@@ -1,300 +1,298 @@
-- id: act-1
-  type: fill-in
-  title: Pick the connector
-  instruction: Choose the connector that completes the A1 sentence.
-  items:
-    - sentence: "Я читаю ___ пишу."
-      answer: "і"
-      options:
-        - "і"
-        - "але"
-        - "бо"
-      explanation: "Use і to add one more action."
-    - sentence: "Я хочу каву, ___ ти?"
-      answer: "а"
-      options:
-        - "а"
-        - "і"
-        - "бо"
-      explanation: "Use а to compare your choice with another person's choice."
-    - sentence: "Я хочу, ___ не можу."
-      answer: "але"
-      options:
-        - "але"
-        - "і"
-        - "чи"
-      explanation: "Use але when the second part limits the first."
-    - sentence: "Я не йду, ___ я хворий."
-      answer: "бо"
-      options:
-        - "бо"
-        - "а"
-        - "або"
-      explanation: "Use бо to answer чому?"
-    - sentence: "Мама ___ тато вдома."
-      answer: "й"
-      options:
-        - "й"
-        - "але"
-        - "тому що"
-      explanation: "Use й as a smooth and-form."
-    - sentence: "Хліб ___ масло на столі."
-      answer: "та"
-      options:
-        - "та"
-        - "бо"
-        - "а"
-      explanation: "Use та like і in this simple list."
-    - sentence: "Кава ___ чай?"
-      answer: "або"
-      options:
-        - "або"
-        - "але"
-        - "тому що"
-      explanation: "Use або for a simple choice."
-    - sentence: "Ви студент ___ лікар?"
-      answer: "чи"
-      options:
-        - "чи"
-        - "бо"
-        - "та"
-      explanation: "Use чи in many choice questions."
-- id: act-2
-  type: quiz
-  title: What does it do?
-  instruction: Choose the meaning of the connector in the sentence.
-  items:
-    - prompt: "Я люблю каву і чай."
-      options:
-        - text: "adds one more thing"
-          correct: true
-        - text: "gives a reason"
-          correct: false
-        - text: "shows a strong contrast"
-          correct: false
-      explanation: "І adds tea to coffee."
-    - prompt: "Я працюю, а брат навчається."
-      options:
-        - text: "compares two facts"
-          correct: true
-        - text: "asks for a reason"
-          correct: false
-        - text: "makes a list only"
-          correct: false
-      explanation: "А places two facts next to each other."
-    - prompt: "Я хочу, але не можу."
-      options:
-        - text: "shows contrast"
-          correct: true
-        - text: "offers a choice"
-          correct: false
-        - text: "adds one more item"
-          correct: false
-      explanation: "Але turns the meaning."
-    - prompt: "Я вдома, бо я хворий."
-      options:
-        - text: "gives a reason"
-          correct: true
-        - text: "makes a choice"
-          correct: false
-        - text: "names two people"
-          correct: false
-      explanation: "Бо answers чому?"
-    - prompt: "Ти хочеш каву чи чай?"
-      options:
-        - text: "offers a choice in a question"
-          correct: true
-        - text: "shows a contrast"
-          correct: false
-        - text: "means therefore"
-          correct: false
-      explanation: "Чи is useful in choice questions."
-    - prompt: "Ми вдома, тому що йде дощ."
-      options:
-        - text: "gives a reason"
-          correct: true
-        - text: "starts a list"
-          correct: false
-        - text: "means and"
-          correct: false
-      explanation: "Тому що means because."
-- id: act-3
-  type: fill-in
-  title: Reason answers
-  instruction: Complete the reason with бо or тому що.
-  items:
-    - sentence: "Я вчу українську, ___ люблю Україну."
-      answer: "бо"
-      options:
-        - "бо"
-        - "а"
-        - "але"
-      explanation: "Бо gives the reason."
-    - sentence: "Ми не гуляємо, ___ йде дощ."
-      answer: "тому що"
-      options:
-        - "тому що"
-        - "чи"
-        - "і"
-      explanation: "Тому що gives the reason."
-    - sentence: "Олена читає, ___ має іспит."
-      answer: "бо"
-      options:
-        - "бо"
-        - "або"
-        - "та"
-      explanation: "Бо answers why Olena is reading."
-    - sentence: "Я вдома, ___ я хворий."
-      answer: "тому що"
-      options:
-        - "тому що"
-        - "а"
-        - "чи"
-      explanation: "Тому що means because."
-    - sentence: "Марко купує воду, ___ хоче пити."
-      answer: "бо"
-      options:
-        - "бо"
-        - "але"
-        - "й"
-      explanation: "Бо introduces the reason."
-    - sentence: "Вони чекають, ___ автобус спізнюється."
-      answer: "тому що"
-      options:
-        - "тому що"
-        - "або"
-        - "та"
-      explanation: "Тому що introduces the reason."
-- id: act-4
-  type: group-sort
-  title: Connector shelves
-  instruction: Sort each connector by its A1 job.
-  groups:
-    - name: "add"
-      items:
-        - "і"
-        - "й"
-        - "та"
-    - name: "compare or contrast"
-      items:
-        - "а"
-        - "але"
-        - "проте"
-        - "зате"
-    - name: "choice"
-      items:
-        - "або"
-        - "чи"
-    - name: "reason"
-      items:
-        - "бо"
-        - "тому що"
-    - name: "recognize later"
-      items:
-        - "щоб"
-        - "якщо"
-        - "коли"
-        - "поки"
-        - "відколи"
-- id: act-5
-  type: unjumble
-  title: Build connected sentences
-  instruction: Put the words in a natural order.
-  items:
-    - words: ["Я", "читаю", "і", "пишу"]
-      answer: "Я читаю і пишу."
-    - words: ["Я", "хочу", "каву", "а", "ти"]
-      answer: "Я хочу каву, а ти?"
-    - words: ["Гори", "гарні", "але", "далеко"]
-      answer: "Гори гарні, але далеко."
-    - words: ["Море", "тепле", "бо", "літо"]
-      answer: "Море тепле, бо літо."
-    - words: ["Ви", "студент", "чи", "лікар"]
-      answer: "Ви студент чи лікар?"
-    - words: ["Ми", "вдома", "тому", "що", "йде", "дощ"]
-      answer: "Ми вдома, тому що йде дощ."
-- id: act-6
-  type: match-up
-  title: Repair linking interference
-  instruction: Match each learner mistake with the Ukrainian repair.
-  pairs:
-    - left: "<!-- bad -->Він вивчає українську, тому що це є цікаво.<!-- /bad -->"
-      right: "Він вивчає українську, тому що це цікаво."
-    - left: "<!-- bad -->Я не прийшов, що я захворів.<!-- /bad -->"
-      right: "Я не прийшов, бо я захворів. (або тому що)"
-    - left: "<!-- bad -->Я поважаю його за те що він дуже сміливий. (написання разом)<!-- /bad -->"
-      right: "Я поважаю його за те, що він дуже сміливий."
-    - left: "<!-- bad -->Я працюю а мій брат навчається в університеті. (без коми)<!-- /bad -->"
-      right: "Я працюю, а мій брат навчається в університеті."
-    - left: "<!-- bad -->Він дуже хоче що б ми всі прийшли.<!-- /bad -->"
-      right: "Він дуже хоче, щоб ми всі прийшли."
-    - left: "<!-- bad -->Добрий день, я маю 20 років, і я студент.<!-- /bad -->"
-      right: "Добрий день, мені 20 років, і я студент."
-    - left: "<!-- bad -->Я купив яблука і банани і груші.<!-- /bad -->"
-      right: "Я купив яблука, банани і груші."
-- id: act-7
-  type: true-false
-  title: Connector checks
-  instruction: Decide whether each statement fits this A1 module.
-  items:
-    - statement: "І, й, and та can add one more item or action."
-      answer: true
-      explanation: "They are useful A1 and-forms."
-    - statement: "А often compares two people, facts, or choices."
-      answer: true
-      explanation: "Я працюю, а брат навчається is a comparison."
-    - statement: "Але gives a stronger contrast than simple addition."
-      answer: true
-      explanation: "Але turns or limits the first part."
-    - statement: "Бо is wrong Ukrainian and should be avoided."
-      answer: false
-      explanation: "Бо is normal Ukrainian for giving a reason."
-    - statement: "Тому що answers чому?"
-      answer: true
-      explanation: "Тому що means because."
-    - statement: "Use що alone to mean because in A1 Ukrainian."
-      answer: false
-      explanation: "Use бо or тому що for a reason."
-    - statement: "The active target is full formal syntax theory."
-      answer: false
-      explanation: "The active target is practical sentence linking."
-    - statement: "In a simple list, яблука, банани і груші is a good pattern."
-      answer: true
-      explanation: "Use commas, then one final і."
-- id: act-8
-  type: error-correction
-  title: Fix the linked sentence
-  instruction: Correct the connector, comma, or copied structure.
-  items:
-    - sentence: "Він вивчає українську, тому що це є цікаво."
-      error: "є"
-      correction: ""
-      explanation: "Do not copy present-tense is into це цікаво."
-    - sentence: "Я не прийшов, що я захворів."
-      error: "що"
-      correction: "бо"
-      explanation: "Use бо or тому що for a reason."
-    - sentence: "Я поважаю його за те що він дуже сміливий."
-      error: "за те що"
-      correction: "за те, що"
-      explanation: "Write за те separately and add the comma before що."
-    - sentence: "Я працюю а мій брат навчається в університеті."
-      error: "працюю а"
-      correction: "працюю, а"
-      explanation: "Add the comma before а."
-    - sentence: "Він дуже хоче що б ми всі прийшли."
-      error: "що б"
-      correction: "щоб"
-      explanation: "Use щоб together in this purpose sentence, with a comma before it in the full repair."
-    - sentence: "Добрий день, я маю 20 років, і я студент."
-      error: "я маю 20 років"
-      correction: "мені 20 років"
-      explanation: "Use мені 20 років for age."
-    - sentence: "Я купив яблука і банани і груші."
-      error: "яблука і банани і груші"
-      correction: "яблука, банани і груші"
-      explanation: "Use commas for the list, then one final і."
-    - sentence: "Я вдома бо я хворий."
-      error: "вдома бо"
-      correction: "вдома, бо"
-      explanation: "Add the comma before бо."
+inline:
+  - id: act-1
+    type: fill-in
+    title: Pick the connector
+    instruction: Choose the connector that completes the A1 sentence.
+    items:
+      - sentence: 'Я читаю ___ пишу.'
+        answer: 'і'
+        options:
+          - 'і'
+          - 'але'
+          - 'бо'
+        explanation: 'Use і to add one more action.'
+      - sentence: 'Я хочу каву, ___ ти?'
+        answer: 'а'
+        options:
+          - 'а'
+          - 'і'
+          - 'бо'
+        explanation: "Use а to compare your choice with another person's choice."
+      - sentence: 'Я хочу, ___ не можу.'
+        answer: 'але'
+        options:
+          - 'але'
+          - 'і'
+          - 'чи'
+        explanation: 'Use але when the second part limits the first.'
+      - sentence: 'Я не йду, ___ я хворий.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'а'
+          - 'або'
+        explanation: 'Use бо to answer чому?'
+      - sentence: 'Мама ___ тато вдома.'
+        answer: 'й'
+        options:
+          - 'й'
+          - 'але'
+          - 'тому що'
+        explanation: 'Use й as a smooth and-form.'
+      - sentence: 'Хліб ___ масло на столі.'
+        answer: 'та'
+        options:
+          - 'та'
+          - 'бо'
+          - 'а'
+        explanation: 'Use та like і in this simple list.'
+      - sentence: 'Кава ___ чай?'
+        answer: 'або'
+        options:
+          - 'або'
+          - 'але'
+          - 'тому що'
+        explanation: 'Use або for a simple choice.'
+      - sentence: 'Ви студент ___ лікар?'
+        answer: 'чи'
+        options:
+          - 'чи'
+          - 'бо'
+          - 'та'
+        explanation: 'Use чи in many choice questions.'
+  - id: act-2
+    type: quiz
+    title: What does it do?
+    instruction: Choose the meaning of the connector in the sentence.
+    items:
+      - prompt: 'Я люблю каву і чай.'
+        options:
+          - text: 'adds one more thing'
+            correct: true
+          - text: 'gives a reason'
+            correct: false
+          - text: 'shows a strong contrast'
+            correct: false
+        explanation: 'І adds tea to coffee.'
+      - prompt: 'Я працюю, а брат навчається.'
+        options:
+          - text: 'compares two facts'
+            correct: true
+          - text: 'asks for a reason'
+            correct: false
+          - text: 'makes a list only'
+            correct: false
+        explanation: 'А places two facts next to each other.'
+      - prompt: 'Я хочу, але не можу.'
+        options:
+          - text: 'shows contrast'
+            correct: true
+          - text: 'offers a choice'
+            correct: false
+          - text: 'adds one more item'
+            correct: false
+        explanation: 'Але turns the meaning.'
+      - prompt: 'Я вдома, бо я хворий.'
+        options:
+          - text: 'gives a reason'
+            correct: true
+          - text: 'makes a choice'
+            correct: false
+          - text: 'names two people'
+            correct: false
+        explanation: 'Бо answers чому?'
+      - prompt: 'Ти хочеш каву чи чай?'
+        options:
+          - text: 'offers a choice in a question'
+            correct: true
+          - text: 'shows a contrast'
+            correct: false
+          - text: 'means therefore'
+            correct: false
+        explanation: 'Чи is useful in choice questions.'
+      - prompt: 'Ми вдома, тому що йде дощ.'
+        options:
+          - text: 'gives a reason'
+            correct: true
+          - text: 'starts a list'
+            correct: false
+          - text: 'means and'
+            correct: false
+        explanation: 'Тому що means because.'
+  - id: act-3
+    type: fill-in
+    title: Reason answers
+    instruction: Complete the reason with бо or тому що.
+    items:
+      - sentence: 'Я вчу українську, ___ люблю Україну.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'а'
+          - 'але'
+        explanation: 'Бо gives the reason.'
+      - sentence: 'Ми не гуляємо, ___ йде дощ.'
+        answer: 'тому що'
+        options:
+          - 'тому що'
+          - 'чи'
+          - 'і'
+        explanation: 'Тому що gives the reason.'
+      - sentence: 'Олена читає, ___ має іспит.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'або'
+          - 'та'
+        explanation: 'Бо answers why Olena is reading.'
+      - sentence: 'Я вдома, ___ я хворий.'
+        answer: 'тому що'
+        options:
+          - 'тому що'
+          - 'а'
+          - 'чи'
+        explanation: 'Тому що means because.'
+      - sentence: 'Марко купує воду, ___ хоче пити.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'але'
+          - 'й'
+        explanation: 'Бо introduces the reason.'
+      - sentence: 'Вони чекають, ___ автобус спізнюється.'
+        answer: 'тому що'
+        options:
+          - 'тому що'
+          - 'або'
+          - 'та'
+        explanation: 'Тому що introduces the reason.'
+  - id: act-4
+    type: group-sort
+    title: Connector shelves
+    instruction: Sort each connector by its A1 job.
+    groups:
+      - name: 'add'
+        items:
+          - 'і'
+          - 'й'
+          - 'та'
+      - name: 'compare or contrast'
+        items:
+          - 'а'
+          - 'але'
+          - 'проте'
+          - 'зате'
+      - name: 'choice'
+        items:
+          - 'або'
+          - 'чи'
+      - name: 'reason'
+        items:
+          - 'бо'
+          - 'тому що'
+      - name: 'recognize later'
+        items:
+          - 'щоб'
+          - 'якщо'
+          - 'коли'
+          - 'поки'
+          - 'відколи'
+workbook:
+  - type: unjumble
+    title: Build connected sentences
+    instruction: Put the words in a natural order.
+    items:
+      - words: ['Я', 'читаю', 'і', 'пишу']
+        answer: 'Я читаю і пишу.'
+      - words: ['Я', 'хочу', 'каву', 'а', 'ти']
+        answer: 'Я хочу каву, а ти?'
+      - words: ['Гори', 'гарні', 'але', 'далеко']
+        answer: 'Гори гарні, але далеко.'
+      - words: ['Море', 'тепле', 'бо', 'літо']
+        answer: 'Море тепле, бо літо.'
+      - words: ['Ви', 'студент', 'чи', 'лікар']
+        answer: 'Ви студент чи лікар?'
+      - words: ['Ми', 'вдома', 'тому', 'що', 'йде', 'дощ']
+        answer: 'Ми вдома, тому що йде дощ.'
+  - type: match-up
+    title: Repair linking interference
+    instruction: Match each learner mistake with the Ukrainian repair.
+    pairs:
+      - left: '<!-- bad -->Він вивчає українську, тому що це є цікаво.<!-- /bad -->'
+        right: 'Він вивчає українську, тому що це цікаво.'
+      - left: '<!-- bad -->Я не прийшов, що я захворів.<!-- /bad -->'
+        right: 'Я не прийшов, бо я захворів. (або тому що)'
+      - left: '<!-- bad -->Я поважаю його за те що він дуже сміливий. (написання разом)<!-- /bad -->'
+        right: 'Я поважаю його за те, що він дуже сміливий.'
+      - left: '<!-- bad -->Я працюю а мій брат навчається в університеті. (без коми)<!-- /bad -->'
+        right: 'Я працюю, а мій брат навчається в університеті.'
+      - left: '<!-- bad -->Він дуже хоче що б ми всі прийшли.<!-- /bad -->'
+        right: 'Він дуже хоче, щоб ми всі прийшли.'
+      - left: '<!-- bad -->Добрий день, я маю 20 років, і я студент.<!-- /bad -->'
+        right: 'Добрий день, мені 20 років, і я студент.'
+      - left: '<!-- bad -->Я купив яблука і банани і груші.<!-- /bad -->'
+        right: 'Я купив яблука, банани і груші.'
+  - type: true-false
+    title: Connector checks
+    instruction: Decide whether each statement fits this A1 module.
+    items:
+      - statement: 'І, й, and та can add one more item or action.'
+        answer: true
+        explanation: 'They are useful A1 and-forms.'
+      - statement: 'А often compares two people, facts, or choices.'
+        answer: true
+        explanation: 'Я працюю, а брат навчається is a comparison.'
+      - statement: 'Але gives a stronger contrast than simple addition.'
+        answer: true
+        explanation: 'Але turns or limits the first part.'
+      - statement: 'Бо is wrong Ukrainian and should be avoided.'
+        answer: false
+        explanation: 'Бо is normal Ukrainian for giving a reason.'
+      - statement: 'Тому що answers чому?'
+        answer: true
+        explanation: 'Тому що means because.'
+      - statement: 'Use що alone to mean because in A1 Ukrainian.'
+        answer: false
+        explanation: 'Use бо or тому що for a reason.'
+      - statement: 'The active target is full formal syntax theory.'
+        answer: false
+        explanation: 'The active target is practical sentence linking.'
+      - statement: 'In a simple list, яблука, банани і груші is a good pattern.'
+        answer: true
+        explanation: 'Use commas, then one final і.'
+  - type: error-correction
+    title: Fix the linked sentence
+    instruction: Correct the connector, comma, or copied structure.
+    items:
+      - sentence: 'Він вивчає українську, тому що це є цікаво.'
+        error: 'є'
+        correction: ''
+        explanation: 'Do not copy present-tense is into це цікаво.'
+      - sentence: 'Я не прийшов, що я захворів.'
+        error: 'що'
+        correction: 'бо'
+        explanation: 'Use бо or тому що for a reason.'
+      - sentence: 'Я поважаю його за те що він дуже сміливий.'
+        error: 'за те що'
+        correction: 'за те, що'
+        explanation: 'Write за те separately and add the comma before що.'
+      - sentence: 'Я працюю а мій брат навчається в університеті.'
+        error: 'працюю а'
+        correction: 'працюю, а'
+        explanation: 'Add the comma before а.'
+      - sentence: 'Він дуже хоче що б ми всі прийшли.'
+        error: 'що б'
+        correction: 'щоб'
+        explanation: 'Use щоб together in this purpose sentence, with a comma before it in the full repair.'
+      - sentence: 'Добрий день, я маю 20 років, і я студент.'
+        error: 'я маю 20 років'
+        correction: 'мені 20 років'
+        explanation: 'Use мені 20 років for age.'
+      - sentence: 'Я купив яблука і банани і груші.'
+        error: 'яблука і банани і груші'
+        correction: 'яблука, банани і груші'
+        explanation: 'Use commas for the list, then one final і.'
+      - sentence: 'Я вдома бо я хворий.'
+        error: 'вдома бо'
+        correction: 'вдома, бо'
+        explanation: 'Add the comma before бо.'

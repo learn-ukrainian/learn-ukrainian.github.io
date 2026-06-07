@@ -132,7 +132,6 @@ Write the comma before **що**, **де**, and **коли** when they connect tw
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Діалог
 
@@ -172,7 +171,6 @@ This second scene uses the plan vocabulary: **плакати**, **квитки**
 **столи**, **стільці**. It also shows how a checkpoint works: the topic can
 change, but the communication tools stay the same.
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -199,7 +197,3 @@ Use the repair list when your English habits push too hard:
 This checkpoint closes A1.7 communication. Stop here when you can read the
 dialogue, answer the questions, and repair the common mistakes without adding
 new material.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

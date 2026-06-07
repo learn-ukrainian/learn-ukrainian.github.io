@@ -205,7 +205,6 @@ Also keep the adjective simple if it appears before the address. Say
 **Шановний пане Іване!**, not a changed adjective form. This is useful for
 recognition, but the everyday A1 path is shorter: **Добрий день, пане Іване!**
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ### Типові помилки
 
@@ -262,7 +261,6 @@ Use Ukrainian etiquette words cleanly:
 - **«тато»**, not <!-- bad -->«папа»<!-- /bad --> for a family father.
 - **«прізвище»**, not <!-- bad -->«фамілія»<!-- /bad --> for surname.
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -315,7 +313,3 @@ simple and focus on the address: **Олено! Тарасе! Друже! Мам�
 | borrowed name shape for Світлана | **Світлано** |
 | missing double address | **пане Іване / пані Оксано** |
 | over-explaining at A1 | learn **Олено**, **Тарасе**, **Андрію**, **мамо**, **друже** as useful calling forms |
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

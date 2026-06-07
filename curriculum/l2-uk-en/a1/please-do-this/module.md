@@ -225,11 +225,3 @@ Next module links short ideas. You will be able to say:
 | <!-- bad -->**Поставь книгу на стіл.**<!-- /bad --> | **Постав книгу на стіл.** |
 | <!-- bad -->**Доповіди керівнику.**<!-- /bad --> | **Доповідай керівнику.** |
 | <!-- bad -->**Читаємте разом!**<!-- /bad --> | **Читаймо разом!** |
-
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
