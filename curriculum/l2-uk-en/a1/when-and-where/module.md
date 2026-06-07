@@ -187,9 +187,7 @@ Many English speakers write the Ukrainian sentence like English:
 The last repair matters because **що** is not a universal question word. Use
 **де** for a place and **коли** for a time.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 <span id="підсумок"></span>
 
@@ -239,7 +237,3 @@ Use this mini-checklist:
 | Did I use **що** for a place? | Use **де**. |
 | Did I use **що** for a time? | Use **коли**. |
 | Is the second part too long? | Make it short and A1. |
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->

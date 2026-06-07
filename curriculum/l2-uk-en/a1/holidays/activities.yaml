@@ -1,258 +1,256 @@
-- id: act-1
-  type: match-up
-  title: Match the holiday and date
-  instruction: Connect each Ukrainian holiday with its date.
-  pairs:
-    - left: "Новий рік"
-      right: "1 січня"
-    - left: "Різдво Христове"
-      right: "25 грудня"
-    - left: "День Незалежності України"
-      right: "24 серпня"
-    - left: "День Соборності України"
-      right: "22 січня"
-- id: act-2
-  type: fill-in
-  title: Holiday greetings
-  instruction: Choose the fixed holiday greeting form.
-  items:
-    - sentence: "Вітаю з ___!"
-      answer: "Новим роком"
-      options:
-        - "Новим роком"
-        - "Новий рік"
-        - "Новому році"
-      explanation: "Learn з Новим роком as one greeting chunk."
-    - sentence: "З ___ Христовим!"
-      answer: "Різдвом"
-      options:
-        - "Різдвом"
-        - "Різдво"
-        - "Різдві"
-      explanation: "Use З Різдвом Христовим."
-    - sentence: "З ___!"
-      answer: "Великоднем"
-      options:
-        - "Великоднем"
-        - "Великдень"
-        - "Великодні"
-      explanation: "Use З Великоднем."
-    - sentence: "З Днем ___ України!"
-      answer: "Незалежності"
-      options:
-        - "Незалежності"
-        - "Незалежність"
-        - "Незалежністю"
-      explanation: "The official greeting is З Днем Незалежності України."
-- id: act-3
-  type: fill-in
-  title: Святкувати or на?
-  instruction: Choose the Ukrainian pattern.
-  items:
-    - sentence: "Ми ___ Різдво вдома."
-      answer: "святкуємо"
-      options:
-        - "святкуємо"
-        - "на"
-        - "з"
-      explanation: "Use святкуємо Різдво without на."
-    - sentence: "___ Різдво ми співаємо колядки."
-      answer: "На"
-      options:
-        - "На"
-        - "З"
-        - "Святкуємо"
-      explanation: "Use на when the holiday is the time."
-    - sentence: "Ми ___ Великдень з родиною."
-      answer: "святкуємо"
-      options:
-        - "святкуємо"
-        - "на"
-        - "у"
-      explanation: "Use святкуємо Великдень."
-    - sentence: "___ Великдень ми печемо паски."
-      answer: "На"
-      options:
-        - "На"
-        - "З"
-        - "Святкуємо"
-      explanation: "Use на + holiday for a time phrase."
-    - sentence: "Я ___ День Незалежності України."
-      answer: "святкую"
-      options:
-        - "святкую"
-        - "на"
-        - "вітаю"
-      explanation: "Святкувати takes the holiday name directly."
-    - sentence: "___ Новий рік ми даруємо подарунки."
-      answer: "На"
-      options:
-        - "На"
-        - "З"
-        - "Святкуємо"
-      explanation: "This sentence talks about what happens at that time."
-- id: act-4
-  type: quiz
-  title: What belongs to which holiday?
-  instruction: Choose the Ukrainian cultural item.
-  items:
-    - prompt: "Що співають на Різдво?"
-      options:
-        - text: "колядки"
-          correct: true
-        - text: "щедрівки"
-          correct: false
-        - text: "писанки"
-          correct: false
-      explanation: "Колядки belong to Christmas."
-    - prompt: "Що звучить на Щедрий вечір?"
-      options:
-        - text: "щедрівки"
-          correct: true
-        - text: "колядки"
-          correct: false
-        - text: "паски"
-          correct: false
-      explanation: "Щедрівки belong to Щедрий вечір."
-    - prompt: "Що печуть на Великдень?"
-      options:
-        - text: "паски"
-          correct: true
-        - text: "листівки"
-          correct: false
-        - text: "прапори"
-          correct: false
-      explanation: "Паска is Easter bread."
-    - prompt: "Що часто бачать на День Незалежності України?"
-      options:
-        - text: "синьо-жовті прапори"
-          correct: true
-        - text: "писанки"
-          correct: false
-        - text: "колядки"
-          correct: false
-      explanation: "The flag is a state symbol."
-- id: act-5
-  type: fill-in
-  title: Short holiday card
-  instruction: Complete the short card or greeting.
-  items:
-    - sentence: "Вітаю тебе з ___! Бажаю веселих свят."
-      answer: "Новим роком"
-      options:
-        - "Новим роком"
-        - "Новий рік"
-        - "Новому році"
-      explanation: "Use the fixed greeting form."
-    - sentence: "З ___ Христовим! Бажаю здоров'я."
-      answer: "Різдвом"
-      options:
-        - "Різдвом"
-        - "Різдво"
-        - "Різдві"
-      explanation: "Use З Різдвом Христовим."
-    - sentence: "З ___! Бажаю добра."
-      answer: "Великоднем"
-      options:
-        - "Великоднем"
-        - "Великдень"
-        - "Великодні"
-      explanation: "Use З Великоднем."
-    - sentence: "Двадцять четвертого серпня - День ___ України."
-      answer: "Незалежності"
-      options:
-        - "Незалежності"
-        - "Незалежність"
-        - "Незалежністю"
-      explanation: "The holiday name is День Незалежності України."
-- id: act-6
-  type: group-sort
-  title: Holiday shelves
-  instruction: Sort words and phrases by holiday context.
-  groups:
-    - name: "Новий рік"
-      items:
-        - "1 січня"
-        - "З Новим роком!"
-        - "подарунок"
-    - name: "Різдво"
-      items:
-        - "25 грудня"
-        - "колядка"
-        - "З Різдвом Христовим!"
-    - name: "Великдень"
-      items:
-        - "паска"
-        - "писанка"
-        - "З Великоднем!"
-    - name: "Державні дати"
-      items:
-        - "24 серпня"
-        - "22 січня"
-        - "синьо-жовтий прапор"
-- id: act-7
-  type: true-false
-  title: Holiday checks
-  instruction: Decide whether the statement fits this module.
-  items:
-    - statement: "З Новим роком is a fixed greeting chunk."
-      answer: true
-      explanation: "At A1, learn the whole phrase."
-    - statement: "Святкувати Різдво is a good Ukrainian pattern."
-      answer: true
-      explanation: "Святкувати takes the holiday name directly."
-    - statement: "На Різдво ми співаємо колядки is a time phrase."
-      answer: true
-      explanation: "На + holiday tells when something happens."
-    - statement: "Колядки and щедрівки are the same word."
-      answer: false
-      explanation: "They belong to different parts of the winter cycle."
-    - statement: "25 грудня is the date used here for Різдво Христове."
-      answer: true
-      explanation: "This module uses the current Ukrainian date."
-    - statement: "Паска and писанка belong to the Easter block."
-      answer: true
-      explanation: "They are Великдень words."
-    - statement: "День Незалежності України is on 24 серпня."
-      answer: true
-      explanation: "That is the active state-holiday date."
-    - statement: "Пасха is the preferred active A1 word in this module."
-      answer: false
-      explanation: "Use Великдень as the active word."
-- id: act-8
-  type: error-correction
-  title: Repair holiday interference
-  instruction: Correct the greeting, pattern, or holiday word.
-  items:
-    - sentence: "Вітаю з Новий рік!"
-      error: "Новий рік"
-      correction: "Новим роком"
-      explanation: "Use the fixed chunk з Новим роком."
-    - sentence: "Ми святкуємо на Різдво."
-      error: "святкуємо на Різдво"
-      correction: "святкуємо Різдво"
-      explanation: "Use святкувати + holiday name."
-    - sentence: "На Різдво ми співаємо щедрівки."
-      error: "щедрівки"
-      correction: "колядки"
-      explanation: "Use колядки for Christmas."
-    - sentence: "З днем незалежності україни!"
-      error: "днем незалежності україни"
-      correction: "Днем Незалежності України"
-      explanation: "Use the official capitalization in the holiday name."
-    - sentence: "З Великдень!"
-      error: "Великдень"
-      correction: "Великоднем"
-      explanation: "Use the fixed greeting З Великоднем."
-    - sentence: "Ми печемо писанки."
-      error: "печемо писанки"
-      correction: "фарбуємо яйця / робимо писанки"
-      explanation: "You bake pasky; you decorate or dye eggs."
-    - sentence: "День Незалежності України - 22 січня."
-      error: "22 січня"
-      correction: "24 серпня"
-      explanation: "24 серпня is Independence Day of Ukraine."
-    - sentence: "Пасха - мій улюблений день."
-      error: "Пасха"
-      correction: "Великдень"
-      explanation: "Use Великдень as the active Ukrainian word."
+inline:
+  - id: act-1
+    type: match-up
+    title: Match the holiday and date
+    instruction: Connect each Ukrainian holiday with its date.
+    pairs:
+      - left: 'Новий рік'
+        right: '1 січня'
+      - left: 'Різдво Христове'
+        right: '25 грудня'
+      - left: 'День Незалежності України'
+        right: '24 серпня'
+      - left: 'День Соборності України'
+        right: '22 січня'
+  - id: act-2
+    type: fill-in
+    title: Holiday greetings
+    instruction: Choose the fixed holiday greeting form.
+    items:
+      - sentence: 'Вітаю з ___!'
+        answer: 'Новим роком'
+        options:
+          - 'Новим роком'
+          - 'Новий рік'
+          - 'Новому році'
+        explanation: 'Learn з Новим роком as one greeting chunk.'
+      - sentence: 'З ___ Христовим!'
+        answer: 'Різдвом'
+        options:
+          - 'Різдвом'
+          - 'Різдво'
+          - 'Різдві'
+        explanation: 'Use З Різдвом Христовим.'
+      - sentence: 'З ___!'
+        answer: 'Великоднем'
+        options:
+          - 'Великоднем'
+          - 'Великдень'
+          - 'Великодні'
+        explanation: 'Use З Великоднем.'
+      - sentence: 'З Днем ___ України!'
+        answer: 'Незалежності'
+        options:
+          - 'Незалежності'
+          - 'Незалежність'
+          - 'Незалежністю'
+        explanation: 'The official greeting is З Днем Незалежності України.'
+  - id: act-3
+    type: fill-in
+    title: Святкувати or на?
+    instruction: Choose the Ukrainian pattern.
+    items:
+      - sentence: 'Ми ___ Різдво вдома.'
+        answer: 'святкуємо'
+        options:
+          - 'святкуємо'
+          - 'на'
+          - 'з'
+        explanation: 'Use святкуємо Різдво without на.'
+      - sentence: '___ Різдво ми співаємо колядки.'
+        answer: 'На'
+        options:
+          - 'На'
+          - 'З'
+          - 'Святкуємо'
+        explanation: 'Use на when the holiday is the time.'
+      - sentence: 'Ми ___ Великдень з родиною.'
+        answer: 'святкуємо'
+        options:
+          - 'святкуємо'
+          - 'на'
+          - 'у'
+        explanation: 'Use святкуємо Великдень.'
+      - sentence: '___ Великдень ми печемо паски.'
+        answer: 'На'
+        options:
+          - 'На'
+          - 'З'
+          - 'Святкуємо'
+        explanation: 'Use на + holiday for a time phrase.'
+      - sentence: 'Я ___ День Незалежності України.'
+        answer: 'святкую'
+        options:
+          - 'святкую'
+          - 'на'
+          - 'вітаю'
+        explanation: 'Святкувати takes the holiday name directly.'
+      - sentence: '___ Новий рік ми даруємо подарунки.'
+        answer: 'На'
+        options:
+          - 'На'
+          - 'З'
+          - 'Святкуємо'
+        explanation: 'This sentence talks about what happens at that time.'
+  - id: act-4
+    type: quiz
+    title: What belongs to which holiday?
+    instruction: Choose the Ukrainian cultural item.
+    items:
+      - prompt: 'Що співають на Різдво?'
+        options:
+          - text: 'колядки'
+            correct: true
+          - text: 'щедрівки'
+            correct: false
+          - text: 'писанки'
+            correct: false
+        explanation: 'Колядки belong to Christmas.'
+      - prompt: 'Що звучить на Щедрий вечір?'
+        options:
+          - text: 'щедрівки'
+            correct: true
+          - text: 'колядки'
+            correct: false
+          - text: 'паски'
+            correct: false
+        explanation: 'Щедрівки belong to Щедрий вечір.'
+      - prompt: 'Що печуть на Великдень?'
+        options:
+          - text: 'паски'
+            correct: true
+          - text: 'листівки'
+            correct: false
+          - text: 'прапори'
+            correct: false
+        explanation: 'Паска is Easter bread.'
+      - prompt: 'Що часто бачать на День Незалежності України?'
+        options:
+          - text: 'синьо-жовті прапори'
+            correct: true
+          - text: 'писанки'
+            correct: false
+          - text: 'колядки'
+            correct: false
+        explanation: 'The flag is a state symbol.'
+workbook:
+  - type: fill-in
+    title: Short holiday card
+    instruction: Complete the short card or greeting.
+    items:
+      - sentence: 'Вітаю тебе з ___! Бажаю веселих свят.'
+        answer: 'Новим роком'
+        options:
+          - 'Новим роком'
+          - 'Новий рік'
+          - 'Новому році'
+        explanation: 'Use the fixed greeting form.'
+      - sentence: "З ___ Христовим! Бажаю здоров'я."
+        answer: 'Різдвом'
+        options:
+          - 'Різдвом'
+          - 'Різдво'
+          - 'Різдві'
+        explanation: 'Use З Різдвом Христовим.'
+      - sentence: 'З ___! Бажаю добра.'
+        answer: 'Великоднем'
+        options:
+          - 'Великоднем'
+          - 'Великдень'
+          - 'Великодні'
+        explanation: 'Use З Великоднем.'
+      - sentence: 'Двадцять четвертого серпня - День ___ України.'
+        answer: 'Незалежності'
+        options:
+          - 'Незалежності'
+          - 'Незалежність'
+          - 'Незалежністю'
+        explanation: 'The holiday name is День Незалежності України.'
+  - type: group-sort
+    title: Holiday shelves
+    instruction: Sort words and phrases by holiday context.
+    groups:
+      - name: 'Новий рік'
+        items:
+          - '1 січня'
+          - 'З Новим роком!'
+          - 'подарунок'
+      - name: 'Різдво'
+        items:
+          - '25 грудня'
+          - 'колядка'
+          - 'З Різдвом Христовим!'
+      - name: 'Великдень'
+        items:
+          - 'паска'
+          - 'писанка'
+          - 'З Великоднем!'
+      - name: 'Державні дати'
+        items:
+          - '24 серпня'
+          - '22 січня'
+          - 'синьо-жовтий прапор'
+  - type: true-false
+    title: Holiday checks
+    instruction: Decide whether the statement fits this module.
+    items:
+      - statement: 'З Новим роком is a fixed greeting chunk.'
+        answer: true
+        explanation: 'At A1, learn the whole phrase.'
+      - statement: 'Святкувати Різдво is a good Ukrainian pattern.'
+        answer: true
+        explanation: 'Святкувати takes the holiday name directly.'
+      - statement: 'На Різдво ми співаємо колядки is a time phrase.'
+        answer: true
+        explanation: 'На + holiday tells when something happens.'
+      - statement: 'Колядки and щедрівки are the same word.'
+        answer: false
+        explanation: 'They belong to different parts of the winter cycle.'
+      - statement: '25 грудня is the date used here for Різдво Христове.'
+        answer: true
+        explanation: 'This module uses the current Ukrainian date.'
+      - statement: 'Паска and писанка belong to the Easter block.'
+        answer: true
+        explanation: 'They are Великдень words.'
+      - statement: 'День Незалежності України is on 24 серпня.'
+        answer: true
+        explanation: 'That is the active state-holiday date.'
+      - statement: 'Пасха is the preferred active A1 word in this module.'
+        answer: false
+        explanation: 'Use Великдень as the active word.'
+  - type: error-correction
+    title: Repair holiday interference
+    instruction: Correct the greeting, pattern, or holiday word.
+    items:
+      - sentence: 'Вітаю з Новий рік!'
+        error: 'Новий рік'
+        correction: 'Новим роком'
+        explanation: 'Use the fixed chunk з Новим роком.'
+      - sentence: 'Ми святкуємо на Різдво.'
+        error: 'святкуємо на Різдво'
+        correction: 'святкуємо Різдво'
+        explanation: 'Use святкувати + holiday name.'
+      - sentence: 'На Різдво ми співаємо щедрівки.'
+        error: 'щедрівки'
+        correction: 'колядки'
+        explanation: 'Use колядки for Christmas.'
+      - sentence: 'З днем незалежності україни!'
+        error: 'днем незалежності україни'
+        correction: 'Днем Незалежності України'
+        explanation: 'Use the official capitalization in the holiday name.'
+      - sentence: 'З Великдень!'
+        error: 'Великдень'
+        correction: 'Великоднем'
+        explanation: 'Use the fixed greeting З Великоднем.'
+      - sentence: 'Ми печемо писанки.'
+        error: 'печемо писанки'
+        correction: 'фарбуємо яйця / робимо писанки'
+        explanation: 'You bake pasky; you decorate or dye eggs.'
+      - sentence: 'День Незалежності України - 22 січня.'
+        error: '22 січня'
+        correction: '24 серпня'
+        explanation: '24 серпня is Independence Day of Ukraine.'
+      - sentence: 'Пасха - мій улюблений день.'
+        error: 'Пасха'
+        correction: 'Великдень'
+        explanation: 'Use Великдень as the active Ukrainian word.'

@@ -1,298 +1,296 @@
-- id: act-1
-  type: fill-in
-  title: Build the command
-  instruction: Choose the command form that completes the request.
-  items:
-    - sentence: "Олено, ___ текст, будь ласка."
-      answer: "читай"
-      options:
-        - "читай"
-        - "читати"
-        - "читаєш"
-      explanation: "Use читай with one familiar person."
-    - sentence: "Пане Іване, ___ текст, будь ласка."
-      answer: "читайте"
-      options:
-        - "читайте"
-        - "читати"
-        - "читаєте"
-      explanation: "Use читайте for polite ви."
-    - sentence: "Тарасе, ___ речення."
-      answer: "пиши"
-      options:
-        - "пиши"
-        - "писати"
-        - "пишеш"
-      explanation: "Пиши is the ти command."
-    - sentence: "Студенти, ___ речення."
-      answer: "пишіть"
-      options:
-        - "пишіть"
-        - "писати"
-        - "пишете"
-      explanation: "Пишіть is the ви or plural command."
-    - sentence: "Маріє, ___ мене, будь ласка."
-      answer: "слухай"
-      options:
-        - "слухай"
-        - "слухати"
-        - "слухаєш"
-      explanation: "Use слухай with one familiar person."
-    - sentence: "Друзі, ___ мене."
-      answer: "слухайте"
-      options:
-        - "слухайте"
-        - "слухати"
-        - "слухаєте"
-      explanation: "Use слухайте for more than one person."
-    - sentence: "___ меню, будь ласка."
-      answer: "Дайте"
-      options:
-        - "Дайте"
-        - "Дати"
-        - "Даєте"
-      explanation: "Дайте is a polite request."
-    - sentence: "___, що ти хочеш."
-      answer: "Скажи"
-      options:
-        - "Скажи"
-        - "Сказати"
-        - "Скажеш"
-      explanation: "Скажи is the ти command."
-- id: act-2
-  type: quiz
-  title: Ti or vy?
-  instruction: Choose the form that fits the situation.
-  items:
-    - prompt: "You ask one friend to read."
-      options:
-        - text: "Читай, будь ласка."
-          correct: true
-        - text: "Читайте, будь ласка."
-          correct: false
-        - text: "Читати, будь ласка."
-          correct: false
-      explanation: "One friend takes the ти form читай."
-    - prompt: "You ask a teacher to read."
-      options:
-        - text: "Читайте, будь ласка."
-          correct: true
-        - text: "Читай, будь ласка."
-          correct: false
-        - text: "Читаєте, будь ласка."
-          correct: false
-      explanation: "A teacher takes polite ви."
-    - prompt: "You ask a server for the bill."
-      options:
-        - text: "Дайте рахунок, будь ласка."
-          correct: true
-        - text: "Дай рахунок, будь ласка."
-          correct: false
-        - text: "Дати рахунок, будь ласка."
-          correct: false
-      explanation: "Use polite дайте with a server."
-    - prompt: "You ask one close friend for the menu."
-      options:
-        - text: "Дай меню, будь ласка."
-          correct: true
-        - text: "Дайте меню, будь ласка."
-          correct: false
-        - text: "Даєш меню, будь ласка."
-          correct: false
-      explanation: "Use дай with one close person."
-    - prompt: "A teacher gives a class instruction."
-      options:
-        - text: "Пишіть речення."
-          correct: true
-        - text: "Пиши речення."
-          correct: false
-        - text: "Писати речення."
-          correct: false
-      explanation: "The class takes the plural form пишіть."
-    - prompt: "A friend asks you to look."
-      options:
-        - text: "Подивись!"
-          correct: true
-        - text: "Дивитися!"
-          correct: false
-        - text: "Дивишся!"
-          correct: false
-      explanation: "Подивись is a useful ти command."
-    - prompt: "You politely ask someone to say it again."
-      options:
-        - text: "Скажіть ще раз, будь ласка."
-          correct: true
-        - text: "Сказати ще раз, будь ласка."
-          correct: false
-        - text: "Скажете ще раз, будь ласка."
-          correct: false
-      explanation: "Скажіть is the polite command form."
-    - prompt: "A coach asks the team to open the door."
-      options:
-        - text: "Відкрийте двері."
-          correct: true
-        - text: "Відкрий двері."
-          correct: false
-        - text: "Відкрити двері."
-          correct: false
-      explanation: "The team takes the plural command відкрийте."
-- id: act-3
-  type: group-sort
-  title: Command shelves
-  instruction: Sort the commands by social use.
-  groups:
-    - name: "ти: one familiar person"
-      items:
-        - "читай"
-        - "пиши"
-        - "слухай"
-        - "дай"
-        - "скажи"
-        - "іди"
-    - name: "ви: polite or plural"
-      items:
-        - "читайте"
-        - "пишіть"
-        - "слухайте"
-        - "дайте"
-        - "скажіть"
-        - "ідіть"
-- id: act-4
-  type: unjumble
-  title: Polite request order
-  instruction: Put the words in a natural order.
-  items:
-    - words: ["Олено", "читай", "будь", "ласка"]
-      answer: "Олено, читай, будь ласка."
-    - words: ["Пане", "Іване", "читайте", "будь", "ласка"]
-      answer: "Пане Іване, читайте, будь ласка."
-    - words: ["Дайте", "мені", "меню", "будь", "ласка"]
-      answer: "Дайте мені меню, будь ласка."
-    - words: ["Дай", "мені", "меню", "будь", "ласка"]
-      answer: "Дай мені меню, будь ласка."
-    - words: ["Скажіть", "ще", "раз", "будь", "ласка"]
-      answer: "Скажіть ще раз, будь ласка."
-    - words: ["Відкрийте", "підручники", "будь", "ласка"]
-      answer: "Відкрийте підручники, будь ласка."
-- id: act-5
-  type: fill-in
-  title: Address plus command
-  instruction: Choose the command form that matches the address.
-  items:
-    - sentence: "Олено, ___ книжку!"
-      answer: "дай"
-      options:
-        - "дай"
-        - "дайте"
-        - "дати"
-      explanation: "Олено points to one familiar person."
-    - sentence: "Пане Іване, ___ книжку!"
-      answer: "дайте"
-      options:
-        - "дайте"
-        - "дай"
-        - "дати"
-      explanation: "Пане Іване takes polite ви."
-    - sentence: "Тарасе, ___ сюди."
-      answer: "іди"
-      options:
-        - "іди"
-        - "ідіть"
-        - "іти"
-      explanation: "Use іди with one familiar person."
-    - sentence: "Друзі, ___ сюди."
-      answer: "ідіть"
-      options:
-        - "ідіть"
-        - "іди"
-        - "іти"
-      explanation: "Use ідіть for a group."
-    - sentence: "Маріє, ___, що ти хочеш."
-      answer: "скажи"
-      options:
-        - "скажи"
-        - "скажіть"
-        - "сказати"
-      explanation: "Use скажи with one familiar person."
-    - sentence: "Пані Оксано, ___, будь ласка."
-      answer: "скажіть"
-      options:
-        - "скажіть"
-        - "скажи"
-        - "сказати"
-      explanation: "Use скажіть for polite address."
-- id: act-6
-  type: true-false
-  title: Request checks
-  instruction: Decide whether each statement fits this A1 lesson.
-  items:
-    - statement: "Будь ласка makes a command or request more polite."
-      answer: true
-      explanation: "Add будь ласка for polite requests."
-    - statement: "Читай and читайте are both useful A1 command forms."
-      answer: true
-      explanation: "Читай is ти; читайте is ви."
-    - statement: "The active A1 target is every imperative person and number."
-      answer: false
-      explanation: "This module actively uses only ти and ви forms."
-    - statement: "Дайте рахунок, будь ласка is a polite cafe request."
-      answer: true
-      explanation: "Use дайте with a server."
-    - statement: "Будь ласка, читати текст is the target request form."
-      answer: false
-      explanation: "Use читай or читайте, not the infinitive."
-    - statement: "Давай is not used here as a shortcut for building Ukrainian imperatives."
-      answer: true
-      explanation: "Use the Ukrainian command form itself."
-    - statement: "Поставь is the Ukrainian spelling target."
-      answer: false
-      explanation: "Use постав."
-    - statement: "Олено, прочитай, будь ласка combines address and request."
-      answer: true
-      explanation: "Address plus command plus будь ласка is a good A1 pattern."
-- id: act-7
-  type: match-up
-  title: Repair imperative interference
-  instruction: Match each learner mistake with the Ukrainian repair.
-  pairs:
-    - left: "<!-- bad -->Будь ласка, читати текст.<!-- /bad -->"
-      right: "Будь ласка, читай(те) текст."
-    - left: "<!-- bad -->Давай робити це зараз.<!-- /bad -->"
-      right: "Робімо це зараз!"
-    - left: "<!-- bad -->Хай він працювати.<!-- /bad -->"
-      right: "Хай він працює."
-    - left: "<!-- bad -->Поставь книгу на стіл.<!-- /bad -->"
-      right: "Постав книгу на стіл."
-    - left: "<!-- bad -->Доповіди керівнику.<!-- /bad -->"
-      right: "Доповідай керівнику."
-    - left: "<!-- bad -->Читаємте разом!<!-- /bad -->"
-      right: "Читаймо разом!"
-- id: act-8
-  type: error-correction
-  title: Fix the request
-  instruction: Correct the command or request form.
-  items:
-    - sentence: "Будь ласка, читати текст."
-      error: "читати"
-      correction: "читай"
-      explanation: "Use читай with one familiar person, or читайте for polite ви."
-    - sentence: "Пане Іване, читати текст, будь ласка."
-      error: "читати"
-      correction: "читайте"
-      explanation: "Use читайте for polite address."
-    - sentence: "Дайте меню? Ні: дати меню, будь ласка."
-      error: "дати"
-      correction: "дайте"
-      explanation: "Use дайте in the polite request."
-    - sentence: "Поставь книгу на стіл."
-      error: "Поставь"
-      correction: "Постав"
-      explanation: "Do not write a soft sign here."
-    - sentence: "Хай він працювати."
-      error: "працювати"
-      correction: "працює"
-      explanation: "After хай, use a finite verb form."
-    - sentence: "Читаємте разом!"
-      error: "Читаємте"
-      correction: "Читаймо"
-      explanation: "Use the single Ukrainian form Читаймо for this repair."
+inline:
+  - id: act-1
+    type: fill-in
+    title: Build the command
+    instruction: Choose the command form that completes the request.
+    items:
+      - sentence: 'Олено, ___ текст, будь ласка.'
+        answer: 'читай'
+        options:
+          - 'читай'
+          - 'читати'
+          - 'читаєш'
+        explanation: 'Use читай with one familiar person.'
+      - sentence: 'Пане Іване, ___ текст, будь ласка.'
+        answer: 'читайте'
+        options:
+          - 'читайте'
+          - 'читати'
+          - 'читаєте'
+        explanation: 'Use читайте for polite ви.'
+      - sentence: 'Тарасе, ___ речення.'
+        answer: 'пиши'
+        options:
+          - 'пиши'
+          - 'писати'
+          - 'пишеш'
+        explanation: 'Пиши is the ти command.'
+      - sentence: 'Студенти, ___ речення.'
+        answer: 'пишіть'
+        options:
+          - 'пишіть'
+          - 'писати'
+          - 'пишете'
+        explanation: 'Пишіть is the ви or plural command.'
+      - sentence: 'Маріє, ___ мене, будь ласка.'
+        answer: 'слухай'
+        options:
+          - 'слухай'
+          - 'слухати'
+          - 'слухаєш'
+        explanation: 'Use слухай with one familiar person.'
+      - sentence: 'Друзі, ___ мене.'
+        answer: 'слухайте'
+        options:
+          - 'слухайте'
+          - 'слухати'
+          - 'слухаєте'
+        explanation: 'Use слухайте for more than one person.'
+      - sentence: '___ меню, будь ласка.'
+        answer: 'Дайте'
+        options:
+          - 'Дайте'
+          - 'Дати'
+          - 'Даєте'
+        explanation: 'Дайте is a polite request.'
+      - sentence: '___, що ти хочеш.'
+        answer: 'Скажи'
+        options:
+          - 'Скажи'
+          - 'Сказати'
+          - 'Скажеш'
+        explanation: 'Скажи is the ти command.'
+  - id: act-2
+    type: quiz
+    title: Ti or vy?
+    instruction: Choose the form that fits the situation.
+    items:
+      - prompt: 'You ask one friend to read.'
+        options:
+          - text: 'Читай, будь ласка.'
+            correct: true
+          - text: 'Читайте, будь ласка.'
+            correct: false
+          - text: 'Читати, будь ласка.'
+            correct: false
+        explanation: 'One friend takes the ти form читай.'
+      - prompt: 'You ask a teacher to read.'
+        options:
+          - text: 'Читайте, будь ласка.'
+            correct: true
+          - text: 'Читай, будь ласка.'
+            correct: false
+          - text: 'Читаєте, будь ласка.'
+            correct: false
+        explanation: 'A teacher takes polite ви.'
+      - prompt: 'You ask a server for the bill.'
+        options:
+          - text: 'Дайте рахунок, будь ласка.'
+            correct: true
+          - text: 'Дай рахунок, будь ласка.'
+            correct: false
+          - text: 'Дати рахунок, будь ласка.'
+            correct: false
+        explanation: 'Use polite дайте with a server.'
+      - prompt: 'You ask one close friend for the menu.'
+        options:
+          - text: 'Дай меню, будь ласка.'
+            correct: true
+          - text: 'Дайте меню, будь ласка.'
+            correct: false
+          - text: 'Даєш меню, будь ласка.'
+            correct: false
+        explanation: 'Use дай with one close person.'
+      - prompt: 'A teacher gives a class instruction.'
+        options:
+          - text: 'Пишіть речення.'
+            correct: true
+          - text: 'Пиши речення.'
+            correct: false
+          - text: 'Писати речення.'
+            correct: false
+        explanation: 'The class takes the plural form пишіть.'
+      - prompt: 'A friend asks you to look.'
+        options:
+          - text: 'Подивись!'
+            correct: true
+          - text: 'Дивитися!'
+            correct: false
+          - text: 'Дивишся!'
+            correct: false
+        explanation: 'Подивись is a useful ти command.'
+      - prompt: 'You politely ask someone to say it again.'
+        options:
+          - text: 'Скажіть ще раз, будь ласка.'
+            correct: true
+          - text: 'Сказати ще раз, будь ласка.'
+            correct: false
+          - text: 'Скажете ще раз, будь ласка.'
+            correct: false
+        explanation: 'Скажіть is the polite command form.'
+      - prompt: 'A coach asks the team to open the door.'
+        options:
+          - text: 'Відкрийте двері.'
+            correct: true
+          - text: 'Відкрий двері.'
+            correct: false
+          - text: 'Відкрити двері.'
+            correct: false
+        explanation: 'The team takes the plural command відкрийте.'
+  - id: act-3
+    type: group-sort
+    title: Command shelves
+    instruction: Sort the commands by social use.
+    groups:
+      - name: 'ти: one familiar person'
+        items:
+          - 'читай'
+          - 'пиши'
+          - 'слухай'
+          - 'дай'
+          - 'скажи'
+          - 'іди'
+      - name: 'ви: polite or plural'
+        items:
+          - 'читайте'
+          - 'пишіть'
+          - 'слухайте'
+          - 'дайте'
+          - 'скажіть'
+          - 'ідіть'
+  - id: act-4
+    type: unjumble
+    title: Polite request order
+    instruction: Put the words in a natural order.
+    items:
+      - words: ['Олено', 'читай', 'будь', 'ласка']
+        answer: 'Олено, читай, будь ласка.'
+      - words: ['Пане', 'Іване', 'читайте', 'будь', 'ласка']
+        answer: 'Пане Іване, читайте, будь ласка.'
+      - words: ['Дайте', 'мені', 'меню', 'будь', 'ласка']
+        answer: 'Дайте мені меню, будь ласка.'
+      - words: ['Дай', 'мені', 'меню', 'будь', 'ласка']
+        answer: 'Дай мені меню, будь ласка.'
+      - words: ['Скажіть', 'ще', 'раз', 'будь', 'ласка']
+        answer: 'Скажіть ще раз, будь ласка.'
+      - words: ['Відкрийте', 'підручники', 'будь', 'ласка']
+        answer: 'Відкрийте підручники, будь ласка.'
+workbook:
+  - type: fill-in
+    title: Address plus command
+    instruction: Choose the command form that matches the address.
+    items:
+      - sentence: 'Олено, ___ книжку!'
+        answer: 'дай'
+        options:
+          - 'дай'
+          - 'дайте'
+          - 'дати'
+        explanation: 'Олено points to one familiar person.'
+      - sentence: 'Пане Іване, ___ книжку!'
+        answer: 'дайте'
+        options:
+          - 'дайте'
+          - 'дай'
+          - 'дати'
+        explanation: 'Пане Іване takes polite ви.'
+      - sentence: 'Тарасе, ___ сюди.'
+        answer: 'іди'
+        options:
+          - 'іди'
+          - 'ідіть'
+          - 'іти'
+        explanation: 'Use іди with one familiar person.'
+      - sentence: 'Друзі, ___ сюди.'
+        answer: 'ідіть'
+        options:
+          - 'ідіть'
+          - 'іди'
+          - 'іти'
+        explanation: 'Use ідіть for a group.'
+      - sentence: 'Маріє, ___, що ти хочеш.'
+        answer: 'скажи'
+        options:
+          - 'скажи'
+          - 'скажіть'
+          - 'сказати'
+        explanation: 'Use скажи with one familiar person.'
+      - sentence: 'Пані Оксано, ___, будь ласка.'
+        answer: 'скажіть'
+        options:
+          - 'скажіть'
+          - 'скажи'
+          - 'сказати'
+        explanation: 'Use скажіть for polite address.'
+  - type: true-false
+    title: Request checks
+    instruction: Decide whether each statement fits this A1 lesson.
+    items:
+      - statement: 'Будь ласка makes a command or request more polite.'
+        answer: true
+        explanation: 'Add будь ласка for polite requests.'
+      - statement: 'Читай and читайте are both useful A1 command forms.'
+        answer: true
+        explanation: 'Читай is ти; читайте is ви.'
+      - statement: 'The active A1 target is every imperative person and number.'
+        answer: false
+        explanation: 'This module actively uses only ти and ви forms.'
+      - statement: 'Дайте рахунок, будь ласка is a polite cafe request.'
+        answer: true
+        explanation: 'Use дайте with a server.'
+      - statement: 'Будь ласка, читати текст is the target request form.'
+        answer: false
+        explanation: 'Use читай or читайте, not the infinitive.'
+      - statement: 'Давай is not used here as a shortcut for building Ukrainian imperatives.'
+        answer: true
+        explanation: 'Use the Ukrainian command form itself.'
+      - statement: 'Поставь is the Ukrainian spelling target.'
+        answer: false
+        explanation: 'Use постав.'
+      - statement: 'Олено, прочитай, будь ласка combines address and request.'
+        answer: true
+        explanation: 'Address plus command plus будь ласка is a good A1 pattern.'
+  - type: match-up
+    title: Repair imperative interference
+    instruction: Match each learner mistake with the Ukrainian repair.
+    pairs:
+      - left: '<!-- bad -->Будь ласка, читати текст.<!-- /bad -->'
+        right: 'Будь ласка, читай(те) текст.'
+      - left: '<!-- bad -->Давай робити це зараз.<!-- /bad -->'
+        right: 'Робімо це зараз!'
+      - left: '<!-- bad -->Хай він працювати.<!-- /bad -->'
+        right: 'Хай він працює.'
+      - left: '<!-- bad -->Поставь книгу на стіл.<!-- /bad -->'
+        right: 'Постав книгу на стіл.'
+      - left: '<!-- bad -->Доповіди керівнику.<!-- /bad -->'
+        right: 'Доповідай керівнику.'
+      - left: '<!-- bad -->Читаємте разом!<!-- /bad -->'
+        right: 'Читаймо разом!'
+  - type: error-correction
+    title: Fix the request
+    instruction: Correct the command or request form.
+    items:
+      - sentence: 'Будь ласка, читати текст.'
+        error: 'читати'
+        correction: 'читай'
+        explanation: 'Use читай with one familiar person, or читайте for polite ви.'
+      - sentence: 'Пане Іване, читати текст, будь ласка.'
+        error: 'читати'
+        correction: 'читайте'
+        explanation: 'Use читайте for polite address.'
+      - sentence: 'Дайте меню? Ні: дати меню, будь ласка.'
+        error: 'дати'
+        correction: 'дайте'
+        explanation: 'Use дайте in the polite request.'
+      - sentence: 'Поставь книгу на стіл.'
+        error: 'Поставь'
+        correction: 'Постав'
+        explanation: 'Do not write a soft sign here.'
+      - sentence: 'Хай він працювати.'
+        error: 'працювати'
+        correction: 'працює'
+        explanation: 'After хай, use a finite verb form.'
+      - sentence: 'Читаємте разом!'
+        error: 'Читаємте'
+        correction: 'Читаймо'
+        explanation: 'Use the single Ukrainian form Читаймо for this repair.'

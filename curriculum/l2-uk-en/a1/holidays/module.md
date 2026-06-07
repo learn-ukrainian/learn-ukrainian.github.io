@@ -178,7 +178,6 @@ simple: **З Великоднем!**
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Державні свята і підсумок
 
@@ -228,9 +227,3 @@ You can now do four practical things:
 | <del>**Ми співаємо колядки на Новий рік.**</del> | **На Різдво ми співаємо колядки.** |
 | <del>**З днем незалежності україни!**</del> | **З Днем Незалежності України!** |
 | <del>**Пасха**</del> | **Великдень** |
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
