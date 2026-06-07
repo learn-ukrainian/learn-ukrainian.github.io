@@ -148,9 +148,7 @@ Other useful fixed phrases:
 Use **хворий** if you speak as a man or boy. Use **хвора** if you speak as a
 woman or girl.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Просити про допомогу
 
@@ -198,7 +196,6 @@ Use these scripts as ready-made cards. Replace only the body word or place word.
 These scripts repeat the same safe pattern: greet, name the symptom, ask for a
 doctor, and use a repair phrase. You can say them slowly and still be clear.
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Repair traps
 
@@ -215,7 +212,6 @@ Keep the Ukrainian phrase shape.
 These repairs are about natural Ukrainian phrases. You do not need to name the
 grammar. Memorize the safe chunks and use them.
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -236,5 +232,3 @@ One complete A1 message can be this short:
 
 That is enough for this module: say the symptom, ask for help, and use repair
 phrases when you need them.
-
-<!-- INJECT_ACTIVITY: act-9 -->

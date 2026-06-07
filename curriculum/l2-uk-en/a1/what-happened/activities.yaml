@@ -1,304 +1,300 @@
-- id: act-1
-  type: match-up
-  title: Past endings map
-  instruction: Match each subject with the regular past-tense ending.
-  pairs:
-    - left: "він"
-      right: "-в"
-    - left: "вона"
-      right: "-ла"
-    - left: "воно"
-      right: "-ло"
-    - left: "вони"
-      right: "-ли"
-    - left: "ми"
-      right: "-ли"
-    - left: "Олена"
-      right: "-ла"
-    - left: "Тарас"
-      right: "-в"
-    - left: "друзі"
-      right: "-ли"
-- id: act-2
-  type: fill-in
-  title: Choose the past form
-  instruction: Pick the form that fits the subject.
-  items:
-    - sentence: "Учора він ___ книжку."
-      answer: "читав"
-      options:
-        - "читав"
-        - "читала"
-        - "читали"
-      explanation: "Він is masculine singular, so use читав."
-    - sentence: "Олена ___ вечерю."
-      answer: "готувала"
-      options:
-        - "готувала"
-        - "готував"
-        - "готували"
-      explanation: "Олена is feminine singular, so use готувала."
-    - sentence: "Ми ___ в парку."
-      answer: "гуляли"
-      options:
-        - "гуляли"
-        - "гуляв"
-        - "гуляла"
-      explanation: "Ми is plural, so use гуляли."
-    - sentence: "Вони ___ разом."
-      answer: "працювали"
-      options:
-        - "працювали"
-        - "працював"
-        - "працювало"
-      explanation: "Вони is plural, so use працювали."
-    - sentence: "Тарас ___ фільм."
-      answer: "дивився"
-      options:
-        - "дивився"
-        - "дивилася"
-        - "дивилися"
-      explanation: "Тарас is masculine singular, so use дивився."
-    - sentence: "Марія ___ телефоном."
-      answer: "говорила"
-      options:
-        - "говорила"
-        - "говорив"
-        - "говорили"
-      explanation: "Марія is feminine singular, so use говорила."
-- id: act-3
-  type: quiz
-  title: Gender, not person
-  instruction: Choose the statement that matches the A1 past-tense rule.
-  items:
-    - prompt: "Why can я читав and ти читав have the same ending?"
-      options:
-        - text: "Because past tense marks masculine singular here."
-          correct: true
-        - text: "Because я and ти always use one ending."
-          correct: false
-        - text: "Because Ukrainian has no person forms."
-          correct: false
-      explanation: "The past ending shows gender in the singular, not person."
-    - prompt: "Which form fits a female speaker saying I read?"
-      options:
-        - text: "Я читала."
-          correct: true
-        - text: "Я читав."
-          correct: false
-        - text: "Я читали."
-          correct: false
-      explanation: "A female speaker uses the feminine form читала."
-    - prompt: "Which form fits a group?"
-      options:
-        - text: "Ми читали."
-          correct: true
-        - text: "Ми читав."
-          correct: false
-        - text: "Ми читала."
-          correct: false
-      explanation: "Plural past uses -ли."
-    - prompt: "Which question fits Ivan?"
-      options:
-        - text: "Що ти робив?"
-          correct: true
-        - text: "Що ти робила?"
-          correct: false
-        - text: "Що ти робило?"
-          correct: false
-      explanation: "Ivan is male, so ask робив."
-- id: act-4
-  type: group-sort
-  title: Sort the forms
-  instruction: Sort each past-tense form by ending.
-  groups:
-    - name: "-в"
-      items:
-        - "читав"
-        - "працював"
-        - "гуляв"
-    - name: "-ла"
-      items:
-        - "читала"
-        - "працювала"
-        - "гуляла"
-    - name: "-ло"
-      items:
-        - "читало"
-        - "працювало"
-        - "гуляло"
-    - name: "-ли"
-      items:
-        - "читали"
-        - "працювали"
-        - "гуляли"
-- id: act-5
-  type: true-false
-  title: Check the past form
-  instruction: Decide whether each sentence uses the expected A1 past ending.
-  items:
-    - statement: "Олена читала книжку."
-      answer: true
-      explanation: "Олена is feminine singular, so читала fits."
-    - statement: "Тарас читала книжку."
-      answer: false
-      explanation: "Use Тарас читав."
-    - statement: "Вони працювали разом."
-      answer: true
-      explanation: "Вони takes the plural form -ли."
-    - statement: "Ми читалимо текст."
-      answer: false
-      explanation: "Do not add present endings. Use Ми читали текст."
-    - statement: "Сонце працювало."
-      answer: true
-      explanation: "Сонце is neuter, so -ло fits."
-    - statement: "Я буду читав завтра."
-      answer: false
-      explanation: "After буду, use the infinitive: буду читати."
-- id: act-6
-  type: unjumble
-  title: Build short past sentences
-  instruction: Put the words in a natural order.
-  items:
-    - words: ["Учора", "Тарас", "читав", "книжку"]
-      answer: "Учора Тарас читав книжку."
-    - words: ["Олена", "готувала", "вечерю"]
-      answer: "Олена готувала вечерю."
-    - words: ["Ми", "гуляли", "в", "парку"]
-      answer: "Ми гуляли в парку."
-    - words: ["Вони", "працювали", "разом"]
-      answer: "Вони працювали разом."
-    - words: ["Що", "ти", "робив", "учора"]
-      answer: "Що ти робив учора?"
-    - words: ["Що", "ти", "робила", "учора"]
-      answer: "Що ти робила учора?"
-- id: act-7
-  type: order
-  title: From one subject to many
-  instruction: Put the transformation path in order.
-  items:
-    - "він читав"
-    - "вона читала"
-    - "воно читало"
-    - "вони читали"
-  correct_order: [0, 1, 2, 3]
-- id: act-8
-  type: error-correction
-  title: Repair the A1 past tense
-  instruction: Fix the sentence by choosing the correct A1 form.
-  items:
-    - sentence: "Чоловік: Я читала. Жінка: Я читав."
-      error: "Чоловік: Я читала. Жінка: Я читав."
-      correction: "Чоловік: Я читав. Жінка: Я читала."
-      explanation: "The male speaker uses читав; the female speaker uses читала."
-    - sentence: "Чоловік: Я читала."
-      error: "читала"
-      correction: "читав"
-      explanation: "A male speaker says Я читав."
-    - sentence: "Жінка: Я читав."
-      error: "читав"
-      correction: "читала"
-      explanation: "A female speaker says Я читала."
-    - sentence: "Ми читалимо текст."
-      error: "читалимо"
-      correction: "читали"
-      explanation: "Past plural is читали; do not add -мо."
-    - sentence: "Вони читалить текст."
-      error: "читалить"
-      correction: "читали"
-      explanation: "Past plural is читали; do not add present endings."
-    - sentence: "Сонце встав."
-      error: "встав"
-      correction: "Сонце встало."
-      explanation: "Сонце is neuter, so use -ло."
-    - sentence: "Я буду читав завтра."
-      error: "читав"
-      correction: "читати"
-      explanation: "After буду, use the infinitive читати."
-    - sentence: "Він принісв книгу. або Він везв сумку."
-      error: "принісв / везв"
-      correction: "Він приніс книгу. / Він віз сумку."
-      explanation: "This is later recognition only; do not build these forms by the A1 regular pattern."
-- id: act-9
-  type: translate
-  title: Say it in Ukrainian
-  instruction: Choose the Ukrainian line that matches the English prompt.
-  items:
-    - source: "Yesterday he read a book."
-      options:
-        - text: "Учора він читав книжку."
-          correct: true
-        - text: "Учора вона читала книжку."
-          correct: false
-        - text: "Учора вони читали книжку."
-          correct: false
-      explanation: "He is masculine singular, so use читав."
-    - source: "Yesterday she cooked dinner."
-      options:
-        - text: "Учора вона готувала вечерю."
-          correct: true
-        - text: "Учора він готував вечерю."
-          correct: false
-        - text: "Учора ми готували вечерю."
-          correct: false
-      explanation: "She is feminine singular, so use готувала."
-    - source: "We walked in the park."
-      options:
-        - text: "Ми гуляли в парку."
-          correct: true
-        - text: "Він гуляв у парку."
-          correct: false
-        - text: "Вона гуляла в парку."
-          correct: false
-      explanation: "We is plural, so use гуляли."
-    - source: "What were you doing yesterday? (to Ivan)"
-      options:
-        - text: "Що ти робив учора?"
-          correct: true
-        - text: "Що ти робила учора?"
-          correct: false
-        - text: "Що ви робили учора?"
-          correct: false
-      explanation: "Ivan is male, so the question uses робив."
-    - source: "What were you doing yesterday? (to Olena)"
-      options:
-        - text: "Що ти робила учора?"
-          correct: true
-        - text: "Що ти робив учора?"
-          correct: false
-        - text: "Що вони робили учора?"
-          correct: false
-      explanation: "Olena is female, so the question uses робила."
-- id: act-10
-  type: odd-one-out
-  title: Find the ending that does not fit
-  instruction: Choose the form that does not belong in each set.
-  items:
-    - prompt: "Forms for feminine singular"
-      words:
-        - "читала"
-        - "працювала"
-        - "гуляли"
-      answer: "гуляли"
-      explanation: "Гуляли is plural, not feminine singular."
-    - prompt: "Forms for plural"
-      words:
-        - "читали"
-        - "говорили"
-        - "говорив"
-      answer: "говорив"
-      explanation: "Говорив is masculine singular."
-    - prompt: "Forms for masculine singular"
-      words:
-        - "читав"
-        - "готував"
-        - "готувала"
-      answer: "готувала"
-      explanation: "Готувала is feminine singular."
-    - prompt: "Forms for neuter singular"
-      words:
-        - "читало"
-        - "працювало"
-        - "працювали"
-      answer: "працювали"
-      explanation: "Працювали is plural."
+inline:
+  - id: act-1
+    type: match-up
+    title: Past endings map
+    instruction: Match each subject with the regular past-tense ending.
+    pairs:
+      - left: 'він'
+        right: '-в'
+      - left: 'вона'
+        right: '-ла'
+      - left: 'воно'
+        right: '-ло'
+      - left: 'вони'
+        right: '-ли'
+      - left: 'ми'
+        right: '-ли'
+      - left: 'Олена'
+        right: '-ла'
+      - left: 'Тарас'
+        right: '-в'
+      - left: 'друзі'
+        right: '-ли'
+  - id: act-2
+    type: fill-in
+    title: Choose the past form
+    instruction: Pick the form that fits the subject.
+    items:
+      - sentence: 'Учора він ___ книжку.'
+        answer: 'читав'
+        options:
+          - 'читав'
+          - 'читала'
+          - 'читали'
+        explanation: 'Він is masculine singular, so use читав.'
+      - sentence: 'Олена ___ вечерю.'
+        answer: 'готувала'
+        options:
+          - 'готувала'
+          - 'готував'
+          - 'готували'
+        explanation: 'Олена is feminine singular, so use готувала.'
+      - sentence: 'Ми ___ в парку.'
+        answer: 'гуляли'
+        options:
+          - 'гуляли'
+          - 'гуляв'
+          - 'гуляла'
+        explanation: 'Ми is plural, so use гуляли.'
+      - sentence: 'Вони ___ разом.'
+        answer: 'працювали'
+        options:
+          - 'працювали'
+          - 'працював'
+          - 'працювало'
+        explanation: 'Вони is plural, so use працювали.'
+      - sentence: 'Тарас ___ фільм.'
+        answer: 'дивився'
+        options:
+          - 'дивився'
+          - 'дивилася'
+          - 'дивилися'
+        explanation: 'Тарас is masculine singular, so use дивився.'
+      - sentence: 'Марія ___ телефоном.'
+        answer: 'говорила'
+        options:
+          - 'говорила'
+          - 'говорив'
+          - 'говорили'
+        explanation: 'Марія is feminine singular, so use говорила.'
+  - id: act-3
+    type: quiz
+    title: Gender, not person
+    instruction: Choose the statement that matches the A1 past-tense rule.
+    items:
+      - prompt: 'Why can я читав and ти читав have the same ending?'
+        options:
+          - text: 'Because past tense marks masculine singular here.'
+            correct: true
+          - text: 'Because я and ти always use one ending.'
+            correct: false
+          - text: 'Because Ukrainian has no person forms.'
+            correct: false
+        explanation: 'The past ending shows gender in the singular, not person.'
+      - prompt: 'Which form fits a female speaker saying I read?'
+        options:
+          - text: 'Я читала.'
+            correct: true
+          - text: 'Я читав.'
+            correct: false
+          - text: 'Я читали.'
+            correct: false
+        explanation: 'A female speaker uses the feminine form читала.'
+      - prompt: 'Which form fits a group?'
+        options:
+          - text: 'Ми читали.'
+            correct: true
+          - text: 'Ми читав.'
+            correct: false
+          - text: 'Ми читала.'
+            correct: false
+        explanation: 'Plural past uses -ли.'
+      - prompt: 'Which question fits Ivan?'
+        options:
+          - text: 'Що ти робив?'
+            correct: true
+          - text: 'Що ти робила?'
+            correct: false
+          - text: 'Що ти робило?'
+            correct: false
+        explanation: 'Ivan is male, so ask робив.'
+  - id: act-4
+    type: group-sort
+    title: Sort the forms
+    instruction: Sort each past-tense form by ending.
+    groups:
+      - name: '-в'
+        items:
+          - 'читав'
+          - 'працював'
+          - 'гуляв'
+      - name: '-ла'
+        items:
+          - 'читала'
+          - 'працювала'
+          - 'гуляла'
+      - name: '-ло'
+        items:
+          - 'читало'
+          - 'працювало'
+          - 'гуляло'
+      - name: '-ли'
+        items:
+          - 'читали'
+          - 'працювали'
+          - 'гуляли'
+workbook:
+  - type: true-false
+    title: Check the past form
+    instruction: Decide whether each sentence uses the expected A1 past ending.
+    items:
+      - statement: 'Олена читала книжку.'
+        answer: true
+        explanation: 'Олена is feminine singular, so читала fits.'
+      - statement: 'Тарас читала книжку.'
+        answer: false
+        explanation: 'Use Тарас читав.'
+      - statement: 'Вони працювали разом.'
+        answer: true
+        explanation: 'Вони takes the plural form -ли.'
+      - statement: 'Ми читалимо текст.'
+        answer: false
+        explanation: 'Do not add present endings. Use Ми читали текст.'
+      - statement: 'Сонце працювало.'
+        answer: true
+        explanation: 'Сонце is neuter, so -ло fits.'
+      - statement: 'Я буду читав завтра.'
+        answer: false
+        explanation: 'After буду, use the infinitive: буду читати.'
+  - type: unjumble
+    title: Build short past sentences
+    instruction: Put the words in a natural order.
+    items:
+      - words: ['Учора', 'Тарас', 'читав', 'книжку']
+        answer: 'Учора Тарас читав книжку.'
+      - words: ['Олена', 'готувала', 'вечерю']
+        answer: 'Олена готувала вечерю.'
+      - words: ['Ми', 'гуляли', 'в', 'парку']
+        answer: 'Ми гуляли в парку.'
+      - words: ['Вони', 'працювали', 'разом']
+        answer: 'Вони працювали разом.'
+      - words: ['Що', 'ти', 'робив', 'учора']
+        answer: 'Що ти робив учора?'
+      - words: ['Що', 'ти', 'робила', 'учора']
+        answer: 'Що ти робила учора?'
+  - type: order
+    title: From one subject to many
+    instruction: Put the transformation path in order.
+    items:
+      - 'він читав'
+      - 'вона читала'
+      - 'воно читало'
+      - 'вони читали'
+    correct_order: [0, 1, 2, 3]
+  - type: error-correction
+    title: Repair the A1 past tense
+    instruction: Fix the sentence by choosing the correct A1 form.
+    items:
+      - sentence: 'Чоловік: Я читала. Жінка: Я читав.'
+        error: 'Чоловік: Я читала. Жінка: Я читав.'
+        correction: 'Чоловік: Я читав. Жінка: Я читала.'
+        explanation: 'The male speaker uses читав; the female speaker uses читала.'
+      - sentence: 'Чоловік: Я читала.'
+        error: 'читала'
+        correction: 'читав'
+        explanation: 'A male speaker says Я читав.'
+      - sentence: 'Жінка: Я читав.'
+        error: 'читав'
+        correction: 'читала'
+        explanation: 'A female speaker says Я читала.'
+      - sentence: 'Ми читалимо текст.'
+        error: 'читалимо'
+        correction: 'читали'
+        explanation: 'Past plural is читали; do not add -мо.'
+      - sentence: 'Вони читалить текст.'
+        error: 'читалить'
+        correction: 'читали'
+        explanation: 'Past plural is читали; do not add present endings.'
+      - sentence: 'Сонце встав.'
+        error: 'встав'
+        correction: 'Сонце встало.'
+        explanation: 'Сонце is neuter, so use -ло.'
+      - sentence: 'Я буду читав завтра.'
+        error: 'читав'
+        correction: 'читати'
+        explanation: 'After буду, use the infinitive читати.'
+      - sentence: 'Він принісв книгу. або Він везв сумку.'
+        error: 'принісв / везв'
+        correction: 'Він приніс книгу. / Він віз сумку.'
+        explanation: 'This is later recognition only; do not build these forms by the A1 regular pattern.'
+  - type: translate
+    title: Say it in Ukrainian
+    instruction: Choose the Ukrainian line that matches the English prompt.
+    items:
+      - source: 'Yesterday he read a book.'
+        options:
+          - text: 'Учора він читав книжку.'
+            correct: true
+          - text: 'Учора вона читала книжку.'
+            correct: false
+          - text: 'Учора вони читали книжку.'
+            correct: false
+        explanation: 'He is masculine singular, so use читав.'
+      - source: 'Yesterday she cooked dinner.'
+        options:
+          - text: 'Учора вона готувала вечерю.'
+            correct: true
+          - text: 'Учора він готував вечерю.'
+            correct: false
+          - text: 'Учора ми готували вечерю.'
+            correct: false
+        explanation: 'She is feminine singular, so use готувала.'
+      - source: 'We walked in the park.'
+        options:
+          - text: 'Ми гуляли в парку.'
+            correct: true
+          - text: 'Він гуляв у парку.'
+            correct: false
+          - text: 'Вона гуляла в парку.'
+            correct: false
+        explanation: 'We is plural, so use гуляли.'
+      - source: 'What were you doing yesterday? (to Ivan)'
+        options:
+          - text: 'Що ти робив учора?'
+            correct: true
+          - text: 'Що ти робила учора?'
+            correct: false
+          - text: 'Що ви робили учора?'
+            correct: false
+        explanation: 'Ivan is male, so the question uses робив.'
+      - source: 'What were you doing yesterday? (to Olena)'
+        options:
+          - text: 'Що ти робила учора?'
+            correct: true
+          - text: 'Що ти робив учора?'
+            correct: false
+          - text: 'Що вони робили учора?'
+            correct: false
+        explanation: 'Olena is female, so the question uses робила.'
+  - type: odd-one-out
+    title: Find the ending that does not fit
+    instruction: Choose the form that does not belong in each set.
+    items:
+      - prompt: 'Forms for feminine singular'
+        words:
+          - 'читала'
+          - 'працювала'
+          - 'гуляли'
+        answer: 'гуляли'
+        explanation: 'Гуляли is plural, not feminine singular.'
+      - prompt: 'Forms for plural'
+        words:
+          - 'читали'
+          - 'говорили'
+          - 'говорив'
+        answer: 'говорив'
+        explanation: 'Говорив is masculine singular.'
+      - prompt: 'Forms for masculine singular'
+        words:
+          - 'читав'
+          - 'готував'
+          - 'готувала'
+        answer: 'готувала'
+        explanation: 'Готувала is feminine singular.'
+      - prompt: 'Forms for neuter singular'
+        words:
+          - 'читало'
+          - 'працювало'
+          - 'працювали'
+        answer: 'працювали'
+        explanation: 'Працювали is plural.'

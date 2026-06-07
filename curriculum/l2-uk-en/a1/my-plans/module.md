@@ -163,11 +163,8 @@ For a group chat, make each message short. One friend can write **Я буду
 прибирати зранку.** Another can answer **Я буду вільна о шостій.** Then the
 invitation can be only **Ходімо в кіно!**
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Repair traps
 
@@ -199,7 +196,6 @@ Use **у / в** with days:
 - **у суботу**;
 - **в неділю**.
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -234,7 +230,3 @@ Self-check:
 
 Stop here after your week plan. The next module moves to a personal story, but
 this module stays with plans, invitations, days, and times.
-
-<!-- INJECT_ACTIVITY: act-9 -->
-
-<!-- INJECT_ACTIVITY: act-10 -->

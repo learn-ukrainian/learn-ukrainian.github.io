@@ -164,11 +164,8 @@ That is why the past tense is not a person table. **Я**, **ти**, and **він
 can all use **читав** when the subject is masculine singular. **Я**, **ти**,
 and **вона** can all use **читала** when the subject is feminine singular.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Repair traps
 
@@ -218,7 +215,6 @@ same speaker. Do not start with **я працював** and then switch to
 **я гуляла** unless the speaker changes. A clean A1 story repeats one pattern
 until your ear notices it.
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -252,9 +248,7 @@ Self-check:
 Stop here when the endings feel visible. The next module uses the same forms
 to tell a simple story about yesterday.
 
-<!-- INJECT_ACTIVITY: act-9 -->
 
-<!-- INJECT_ACTIVITY: act-10 -->
 
 <span id="repair-past-gender-interference"></span>
 

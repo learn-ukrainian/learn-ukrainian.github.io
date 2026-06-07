@@ -120,11 +120,8 @@ Notice the three time zones:
 This is enough for an A1 final story. It has a place, actions, people, food,
 transport, money, and plans.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ## Чекліст А1
 
@@ -156,7 +153,6 @@ You can now handle short everyday exchanges.
 <DialogueBox uk="Студент 1: Я буду говорити щодня. Я буду читати короткі тексти. Я буду слухати українську." en="Student 1: I will speak every day. I will read short texts. I will listen to Ukrainian." />
 <DialogueBox uk="Студент 2: Чудовий план. До зустрічі!" en="Student 2: Great plan. See you!" />
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -179,5 +175,3 @@ Short signpost: A2 will help you speak and read longer connected texts. For
 today, the win is A1: clear short speech in real situations.
 
 Вітаю. Це початок, і це вже багато.
-
-<!-- INJECT_ACTIVITY: act-9 -->

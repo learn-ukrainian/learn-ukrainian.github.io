@@ -1,284 +1,280 @@
-- id: act-1
-  type: order
-  title: Put the day in order
-  instruction: Arrange Анна's yesterday from morning to night.
-  items:
-    - "Зранку я прокинулася о сьомій."
-    - "Спочатку я поснідала."
-    - "Потім я пішла на роботу."
-    - "Вдень я обідала з колегою."
-    - "Ввечері я повернулася додому."
-    - "Нарешті я лягла спати."
-  correct_order: [0, 1, 2, 3, 4, 5]
-- id: act-2
-  type: fill-in
-  title: Time words for yesterday
-  instruction: Choose the time word that fits each part of the day.
-  items:
-    - sentence: "___ я прокинулася о сьомій."
-      answer: "Зранку"
-      options:
-        - "Зранку"
-        - "Ввечері"
-        - "Нарешті"
-      explanation: "Зранку marks the morning."
-    - sentence: "___ я пішла на роботу."
-      answer: "Потім"
-      options:
-        - "Потім"
-        - "Учора"
-        - "Вночі"
-      explanation: "Потім moves the story to the next action."
-    - sentence: "___ я обідала в кафе."
-      answer: "Вдень"
-      options:
-        - "Вдень"
-        - "Зранку"
-        - "Нарешті"
-      explanation: "Вдень fits lunch or the middle of the day."
-    - sentence: "___ я повернулася додому."
-      answer: "Ввечері"
-      options:
-        - "Ввечері"
-        - "Спочатку"
-        - "Зранку"
-      explanation: "Ввечері marks the evening."
-    - sentence: "___ я лягла спати."
-      answer: "Нарешті"
-      options:
-        - "Нарешті"
-        - "Вдень"
-        - "Після цього"
-      explanation: "Нарешті can mark the last action."
-- id: act-3
-  type: group-sort
-  title: Sort story words
-  instruction: Put each word or phrase into the right story group.
-  groups:
-    - name: "time markers"
-      items:
-        - "учора"
-        - "зранку"
-        - "вдень"
-        - "ввечері"
-        - "потім"
-        - "нарешті"
-    - name: "routine actions"
-      items:
-        - "прокинулася"
-        - "поснідала"
-        - "обідала"
-        - "повернулася"
-        - "лягла спати"
-    - name: "small details"
-      items:
-        - "з колегою"
-        - "біля офісу"
-        - "продукти"
-        - "серіал"
-- id: act-4
-  type: quiz
-  title: Keep the speaker consistent
-  instruction: Choose the line that keeps Анна's story in the same speaker pattern.
-  items:
-    - prompt: "Анна says: Зранку я прокинулася. What should come next?"
-      options:
-        - text: "Потім я поснідала."
-          correct: true
-        - text: "Потім я поснідав."
-          correct: false
-        - text: "Потім я поснідали."
-          correct: false
-      explanation: "Анна keeps the feminine form поснідала."
-    - prompt: "Which pair fits one female speaker?"
-      options:
-        - text: "Я пішла. Я повернулася."
-          correct: true
-        - text: "Я пішла. Я повернувся."
-          correct: false
-        - text: "Я пішов. Я повернулася."
-          correct: false
-      explanation: "Both verbs stay feminine."
-    - prompt: "Which line is a clean end to Анна's day?"
-      options:
-        - text: "Нарешті я лягла спати."
-          correct: true
-        - text: "Нарешті я ліг спати."
-          correct: false
-        - text: "Нарешті я лягли спати."
-          correct: false
-      explanation: "For Анна, use лягла."
-    - prompt: "What does учора do in the story?"
-      options:
-        - text: "It places the story in the past day."
-          correct: true
-        - text: "It means the story happens tomorrow."
-          correct: false
-        - text: "It changes the verb into the present tense."
-          correct: false
-      explanation: "Учора is the time marker for yesterday."
-- id: act-5
-  type: match-up
-  title: Infinitive to story form
-  instruction: Match each infinitive with the feminine past form used by Анна.
-  pairs:
-    - left: "прокинутися"
-      right: "прокинулася"
-    - left: "поснідати"
-      right: "поснідала"
-    - left: "піти"
-      right: "пішла"
-    - left: "обідати"
-      right: "обідала"
-    - left: "повернутися"
-      right: "повернулася"
-    - left: "лягти"
-      right: "лягла"
-- id: act-6
-  type: true-false
-  title: Does the story stay consistent?
-  instruction: Decide whether the sentence fits one female speaker's yesterday story.
-  items:
-    - statement: "Учора я прокинулася о сьомій."
-      answer: true
-      explanation: "This can fit Анна's story."
-    - statement: "Потім я поснідав."
-      answer: false
-      explanation: "For Анна, use поснідала."
-    - statement: "Вдень я обідала з колегою."
-      answer: true
-      explanation: "Обідала matches the female speaker."
-    - statement: "Ввечері я повернувся додому."
-      answer: false
-      explanation: "For Анна, use повернулася."
-    - statement: "Нарешті я лягла спати."
-      answer: true
-      explanation: "Лягла matches the female speaker."
-    - statement: "Учора я працює в офісі."
-      answer: false
-      explanation: "Учора needs a past form: працювала."
-- id: act-7
-  type: unjumble
-  title: Build yesterday sentences
-  instruction: Put the words in a natural order.
-  items:
-    - words: ["Учора", "я", "прокинулася", "о", "сьомій"]
-      answer: "Учора я прокинулася о сьомій."
-    - words: ["Потім", "я", "поснідала"]
-      answer: "Потім я поснідала."
-    - words: ["Вдень", "я", "обідала", "з", "колегою"]
-      answer: "Вдень я обідала з колегою."
-    - words: ["Ввечері", "я", "купила", "продукти"]
-      answer: "Ввечері я купила продукти."
-    - words: ["Нарешті", "я", "лягла", "спати"]
-      answer: "Нарешті я лягла спати."
-- id: act-8
-  type: translate
-  title: Say the day in Ukrainian
-  instruction: Choose the Ukrainian sentence that matches the English prompt.
-  items:
-    - source: "Yesterday I woke up at seven. (female speaker)"
-      options:
-        - text: "Учора я прокинулася о сьомій."
-          correct: true
-        - text: "Учора я прокинувся о сьомій."
-          correct: false
-        - text: "Учора я прокидаюся о сьомій."
-          correct: false
-      explanation: "For a female speaker in the past, use прокинулася."
-    - source: "Then I had breakfast. (female speaker)"
-      options:
-        - text: "Потім я поснідала."
-          correct: true
-        - text: "Потім я поснідав."
-          correct: false
-        - text: "Потім я снідаю."
-          correct: false
-      explanation: "Поснідала fits the female speaker."
-    - source: "In the afternoon I had lunch with a colleague. (female speaker)"
-      options:
-        - text: "Вдень я обідала з колегою."
-          correct: true
-        - text: "Вдень я обідав з колегою."
-          correct: false
-        - text: "Завтра я буду обідати з колегою."
-          correct: false
-      explanation: "The time is yesterday, so use past tense."
-    - source: "In the evening I watched a series. (female speaker)"
-      options:
-        - text: "Ввечері я дивилася серіал."
-          correct: true
-        - text: "Ввечері я дивився серіал."
-          correct: false
-        - text: "Ввечері я дивлюся серіал."
-          correct: false
-      explanation: "Дивилася matches the female speaker."
-- id: act-9
-  type: fill-in
-  title: Complete Анна's story
-  instruction: Choose the form that keeps the whole story in Анна's voice.
-  items:
-    - sentence: "Учора я ___ о пів на сьому."
-      answer: "прокинулася"
-      options:
-        - "прокинулася"
-        - "прокинувся"
-        - "прокинулися"
-      explanation: "Анна says прокинулася."
-    - sentence: "Потім я ___ кашу і пила каву."
-      answer: "їла"
-      options:
-        - "їла"
-        - "їв"
-        - "їли"
-      explanation: "Їла matches the female speaker."
-    - sentence: "Вдень я ___ салат."
-      answer: "замовила"
-      options:
-        - "замовила"
-        - "замовив"
-        - "замовили"
-      explanation: "Замовила matches Анна."
-    - sentence: "Після роботи я ___ продукти."
-      answer: "купила"
-      options:
-        - "купила"
-        - "купив"
-        - "купили"
-      explanation: "Купила keeps the same speaker pattern."
-    - sentence: "Об одинадцятій я ___ спати."
-      answer: "лягла"
-      options:
-        - "лягла"
-        - "ліг"
-        - "лягли"
-      explanation: "Лягла fits a female speaker."
-- id: act-10
-  type: error-correction
-  title: Repair the yesterday narrative
-  instruction: Fix the sentence so it matches one female speaker's day.
-  items:
-    - sentence: "Зранку я прокинувся о сьомій."
-      error: "прокинувся"
-      correction: "прокинулася"
-      explanation: "Анна is the speaker, so use прокинулася."
-    - sentence: "Потім я поснідав."
-      error: "поснідав"
-      correction: "поснідала"
-      explanation: "Keep the feminine form."
-    - sentence: "Вдень я обідав з колегою."
-      error: "обідав"
-      correction: "обідала"
-      explanation: "Обідала matches the female speaker."
-    - sentence: "Ввечері я повернувся додому."
-      error: "повернувся"
-      correction: "повернулася"
-      explanation: "Use повернулася for Анна."
-    - sentence: "Нарешті я ліг спати."
-      error: "ліг"
-      correction: "лягла"
-      explanation: "Use лягла for a female speaker."
-    - sentence: "Учора я працює в офісі."
-      error: "працює"
-      correction: "працювала"
-      explanation: "Учора needs the past form працювала."
+inline:
+  - id: act-1
+    type: order
+    title: Put the day in order
+    instruction: Arrange Анна's yesterday from morning to night.
+    items:
+      - 'Зранку я прокинулася о сьомій.'
+      - 'Спочатку я поснідала.'
+      - 'Потім я пішла на роботу.'
+      - 'Вдень я обідала з колегою.'
+      - 'Ввечері я повернулася додому.'
+      - 'Нарешті я лягла спати.'
+    correct_order: [0, 1, 2, 3, 4, 5]
+  - id: act-2
+    type: fill-in
+    title: Time words for yesterday
+    instruction: Choose the time word that fits each part of the day.
+    items:
+      - sentence: '___ я прокинулася о сьомій.'
+        answer: 'Зранку'
+        options:
+          - 'Зранку'
+          - 'Ввечері'
+          - 'Нарешті'
+        explanation: 'Зранку marks the morning.'
+      - sentence: '___ я пішла на роботу.'
+        answer: 'Потім'
+        options:
+          - 'Потім'
+          - 'Учора'
+          - 'Вночі'
+        explanation: 'Потім moves the story to the next action.'
+      - sentence: '___ я обідала в кафе.'
+        answer: 'Вдень'
+        options:
+          - 'Вдень'
+          - 'Зранку'
+          - 'Нарешті'
+        explanation: 'Вдень fits lunch or the middle of the day.'
+      - sentence: '___ я повернулася додому.'
+        answer: 'Ввечері'
+        options:
+          - 'Ввечері'
+          - 'Спочатку'
+          - 'Зранку'
+        explanation: 'Ввечері marks the evening.'
+      - sentence: '___ я лягла спати.'
+        answer: 'Нарешті'
+        options:
+          - 'Нарешті'
+          - 'Вдень'
+          - 'Після цього'
+        explanation: 'Нарешті can mark the last action.'
+  - id: act-3
+    type: group-sort
+    title: Sort story words
+    instruction: Put each word or phrase into the right story group.
+    groups:
+      - name: 'time markers'
+        items:
+          - 'учора'
+          - 'зранку'
+          - 'вдень'
+          - 'ввечері'
+          - 'потім'
+          - 'нарешті'
+      - name: 'routine actions'
+        items:
+          - 'прокинулася'
+          - 'поснідала'
+          - 'обідала'
+          - 'повернулася'
+          - 'лягла спати'
+      - name: 'small details'
+        items:
+          - 'з колегою'
+          - 'біля офісу'
+          - 'продукти'
+          - 'серіал'
+  - id: act-4
+    type: quiz
+    title: Keep the speaker consistent
+    instruction: Choose the line that keeps Анна's story in the same speaker pattern.
+    items:
+      - prompt: 'Анна says: Зранку я прокинулася. What should come next?'
+        options:
+          - text: 'Потім я поснідала.'
+            correct: true
+          - text: 'Потім я поснідав.'
+            correct: false
+          - text: 'Потім я поснідали.'
+            correct: false
+        explanation: 'Анна keeps the feminine form поснідала.'
+      - prompt: 'Which pair fits one female speaker?'
+        options:
+          - text: 'Я пішла. Я повернулася.'
+            correct: true
+          - text: 'Я пішла. Я повернувся.'
+            correct: false
+          - text: 'Я пішов. Я повернулася.'
+            correct: false
+        explanation: 'Both verbs stay feminine.'
+      - prompt: "Which line is a clean end to Анна's day?"
+        options:
+          - text: 'Нарешті я лягла спати.'
+            correct: true
+          - text: 'Нарешті я ліг спати.'
+            correct: false
+          - text: 'Нарешті я лягли спати.'
+            correct: false
+        explanation: 'For Анна, use лягла.'
+      - prompt: 'What does учора do in the story?'
+        options:
+          - text: 'It places the story in the past day.'
+            correct: true
+          - text: 'It means the story happens tomorrow.'
+            correct: false
+          - text: 'It changes the verb into the present tense.'
+            correct: false
+        explanation: 'Учора is the time marker for yesterday.'
+workbook:
+  - type: match-up
+    title: Infinitive to story form
+    instruction: Match each infinitive with the feminine past form used by Анна.
+    pairs:
+      - left: 'прокинутися'
+        right: 'прокинулася'
+      - left: 'поснідати'
+        right: 'поснідала'
+      - left: 'піти'
+        right: 'пішла'
+      - left: 'обідати'
+        right: 'обідала'
+      - left: 'повернутися'
+        right: 'повернулася'
+      - left: 'лягти'
+        right: 'лягла'
+  - type: true-false
+    title: Does the story stay consistent?
+    instruction: Decide whether the sentence fits one female speaker's yesterday story.
+    items:
+      - statement: 'Учора я прокинулася о сьомій.'
+        answer: true
+        explanation: "This can fit Анна's story."
+      - statement: 'Потім я поснідав.'
+        answer: false
+        explanation: 'For Анна, use поснідала.'
+      - statement: 'Вдень я обідала з колегою.'
+        answer: true
+        explanation: 'Обідала matches the female speaker.'
+      - statement: 'Ввечері я повернувся додому.'
+        answer: false
+        explanation: 'For Анна, use повернулася.'
+      - statement: 'Нарешті я лягла спати.'
+        answer: true
+        explanation: 'Лягла matches the female speaker.'
+      - statement: 'Учора я працює в офісі.'
+        answer: false
+        explanation: 'Учора needs a past form: працювала.'
+  - type: unjumble
+    title: Build yesterday sentences
+    instruction: Put the words in a natural order.
+    items:
+      - words: ['Учора', 'я', 'прокинулася', 'о', 'сьомій']
+        answer: 'Учора я прокинулася о сьомій.'
+      - words: ['Потім', 'я', 'поснідала']
+        answer: 'Потім я поснідала.'
+      - words: ['Вдень', 'я', 'обідала', 'з', 'колегою']
+        answer: 'Вдень я обідала з колегою.'
+      - words: ['Ввечері', 'я', 'купила', 'продукти']
+        answer: 'Ввечері я купила продукти.'
+      - words: ['Нарешті', 'я', 'лягла', 'спати']
+        answer: 'Нарешті я лягла спати.'
+  - type: translate
+    title: Say the day in Ukrainian
+    instruction: Choose the Ukrainian sentence that matches the English prompt.
+    items:
+      - source: 'Yesterday I woke up at seven. (female speaker)'
+        options:
+          - text: 'Учора я прокинулася о сьомій.'
+            correct: true
+          - text: 'Учора я прокинувся о сьомій.'
+            correct: false
+          - text: 'Учора я прокидаюся о сьомій.'
+            correct: false
+        explanation: 'For a female speaker in the past, use прокинулася.'
+      - source: 'Then I had breakfast. (female speaker)'
+        options:
+          - text: 'Потім я поснідала.'
+            correct: true
+          - text: 'Потім я поснідав.'
+            correct: false
+          - text: 'Потім я снідаю.'
+            correct: false
+        explanation: 'Поснідала fits the female speaker.'
+      - source: 'In the afternoon I had lunch with a colleague. (female speaker)'
+        options:
+          - text: 'Вдень я обідала з колегою.'
+            correct: true
+          - text: 'Вдень я обідав з колегою.'
+            correct: false
+          - text: 'Завтра я буду обідати з колегою.'
+            correct: false
+        explanation: 'The time is yesterday, so use past tense.'
+      - source: 'In the evening I watched a series. (female speaker)'
+        options:
+          - text: 'Ввечері я дивилася серіал.'
+            correct: true
+          - text: 'Ввечері я дивився серіал.'
+            correct: false
+          - text: 'Ввечері я дивлюся серіал.'
+            correct: false
+        explanation: 'Дивилася matches the female speaker.'
+  - type: fill-in
+    title: Complete Анна's story
+    instruction: Choose the form that keeps the whole story in Анна's voice.
+    items:
+      - sentence: 'Учора я ___ о пів на сьому.'
+        answer: 'прокинулася'
+        options:
+          - 'прокинулася'
+          - 'прокинувся'
+          - 'прокинулися'
+        explanation: 'Анна says прокинулася.'
+      - sentence: 'Потім я ___ кашу і пила каву.'
+        answer: 'їла'
+        options:
+          - 'їла'
+          - 'їв'
+          - 'їли'
+        explanation: 'Їла matches the female speaker.'
+      - sentence: 'Вдень я ___ салат.'
+        answer: 'замовила'
+        options:
+          - 'замовила'
+          - 'замовив'
+          - 'замовили'
+        explanation: 'Замовила matches Анна.'
+      - sentence: 'Після роботи я ___ продукти.'
+        answer: 'купила'
+        options:
+          - 'купила'
+          - 'купив'
+          - 'купили'
+        explanation: 'Купила keeps the same speaker pattern.'
+      - sentence: 'Об одинадцятій я ___ спати.'
+        answer: 'лягла'
+        options:
+          - 'лягла'
+          - 'ліг'
+          - 'лягли'
+        explanation: 'Лягла fits a female speaker.'
+  - type: error-correction
+    title: Repair the yesterday narrative
+    instruction: Fix the sentence so it matches one female speaker's day.
+    items:
+      - sentence: 'Зранку я прокинувся о сьомій.'
+        error: 'прокинувся'
+        correction: 'прокинулася'
+        explanation: 'Анна is the speaker, so use прокинулася.'
+      - sentence: 'Потім я поснідав.'
+        error: 'поснідав'
+        correction: 'поснідала'
+        explanation: 'Keep the feminine form.'
+      - sentence: 'Вдень я обідав з колегою.'
+        error: 'обідав'
+        correction: 'обідала'
+        explanation: 'Обідала matches the female speaker.'
+      - sentence: 'Ввечері я повернувся додому.'
+        error: 'повернувся'
+        correction: 'повернулася'
+        explanation: 'Use повернулася for Анна.'
+      - sentence: 'Нарешті я ліг спати.'
+        error: 'ліг'
+        correction: 'лягла'
+        explanation: 'Use лягла for a female speaker.'
+      - sentence: 'Учора я працює в офісі.'
+        error: 'працює'
+        correction: 'працювала'
+        explanation: 'Учора needs the past form працювала.'

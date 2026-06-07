@@ -133,9 +133,7 @@ a woman or girl.
 For an A1 call, one problem sentence is enough. Add location next. Keep each
 line separate: help, problem, place, identity, repair.
 
-<!-- INJECT_ACTIVITY: act-5 -->
 
-<!-- INJECT_ACTIVITY: act-6 -->
 
 ## Де ви?
 
@@ -162,7 +160,6 @@ Say numbers slowly. If you need time to repeat, use:
 
 **Повільніше, будь ласка. Я повторюю адресу.**
 
-<!-- INJECT_ACTIVITY: act-7 -->
 
 ### Особиста інформація
 
@@ -184,7 +181,6 @@ Keep the answer slow and separate:
 
 This is not a story. It is a clear information block.
 
-<!-- INJECT_ACTIVITY: act-8 -->
 
 ## Підсумок
 
@@ -208,5 +204,3 @@ One complete A1 call can be very short:
 <DialogueBox uk="Допоможіть! Тут пожежа. Я в Києві, на вулиці Франка, будинок десять. Мене звати Сара Браун. Мій номер телефону: нуль дев'яносто сім, триста десять, двадцять два, сорок один. Повторіть, будь ласка." en="Help! There is a fire here. I am in Kyiv, on Franka Street, building ten. My name is Sarah Brown. My phone number is zero ninety-seven, three hundred ten, twenty-two, forty-one. Please repeat." />
 
 That is the goal: a clear problem, a clear place, and clear identity words.
-
-<!-- INJECT_ACTIVITY: act-9 -->
