@@ -50,7 +50,13 @@ a:hover { text-decoration: underline; }
 .fill-content { background: var(--blue); }
 .fill-audit { background: var(--green); }
 .fill-review { background: var(--purple); }
+.fill-dossier { background: var(--orange); }
+.fill-published { background: var(--cyan); }
 .phase-count { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.track-hints { min-width: 132px; max-width: 160px; font-size: 11px; color: var(--text2); line-height: 1.35; }
+.hint-warn { color: var(--yellow); }
+.hint-ok { color: var(--green); }
+.hint-stale { color: var(--red); }
 .track-chevron { color: var(--text3); font-size: 11px; transition: transform 0.2s; margin-left: 8px; }
 .track-expanded .track-chevron { transform: rotate(90deg); }
 
@@ -78,6 +84,7 @@ a:hover { text-decoration: underline; }
 .chip-content { background: #1a3055; color: var(--blue); }
 .chip-audit { background: #1a3f25; color: var(--green); }
 .chip-review { background: #2d1f5a; color: var(--purple); }
+.chip-published { background: #123f45; color: var(--cyan); }
 .chip-pass { background: var(--green); color: #000; }
 
 /* Unbuilt modules */
@@ -86,6 +93,13 @@ a:hover { text-decoration: underline; }
 .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
 .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+.freshness-banner {
+  display:flex; justify-content:space-between; gap:12px; align-items:center;
+  margin-bottom:14px; padding:10px 12px; border:1px solid var(--border);
+  background:var(--bg2); color:var(--text2); font-size:12px; border-radius:4px;
+}
+.freshness-banner strong { color:var(--text); }
+.freshness-banner .warn { color:var(--yellow); }
 
 .error-msg { color: var(--red); font-size: 13px; padding: 8px 0; }
 </style>
@@ -121,15 +135,23 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:var(--green)" id="total-audit">—</div><div class="label">Audit Passing</div></div>
   <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-reviewed">—</div><div class="label">Reviewed</div></div>
   <div class="stat-card"><div class="value" style="color:#58a6ff" id="total-final-review">—</div><div class="label">Final QA</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--orange)" id="total-dossier">—</div><div class="label">Dossiers</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-published">—</div><div class="label">Published MDX</div></div>
   <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v6">—</div><div class="label">V6 Pipeline</div></div>
   <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-rebuild">—</div><div class="label">Needs Rebuild</div></div>
 </div>
 
 <div class="container">
+  <div class="freshness-banner" id="freshness-banner">
+    <span><strong>State:</strong> loading current API snapshot</span>
+    <span></span>
+  </div>
+
   <div class="legend">
     <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Full pass</div>
     <div class="legend-item"><div class="legend-dot" style="background:#1a3055;border:1px solid var(--blue)"></div> Content</div>
     <div class="legend-item"><div class="legend-dot" style="background:#5a3e1b;border:1px solid var(--orange)"></div> Research</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#123f45;border:1px solid var(--cyan)"></div> Published MDX</div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Unbuilt</div>
   </div>
 
@@ -179,6 +201,7 @@ function chipClass(mod) {
   if (isDone(phases.audit) || isDone(phases.publish) || isDone(phases.verify) || isDone(phases.validate)) return 'chip-audit';
   if (isDone(phases.write) || isDone(phases.content)) return 'chip-content';
   if (isDone(phases.research)) return 'chip-research';
+  if (mod.published_mdx) return 'chip-published';
   return 'chip-none';
 }
 
@@ -188,6 +211,7 @@ function chipLabel(mod) {
   if (isDone(phases.audit) || isDone(phases.publish) || isDone(phases.verify) || isDone(phases.validate)) return 'A';
   if (isDone(phases.write) || isDone(phases.content)) return 'C';
   if (isDone(phases.research)) return 'R';
+  if (mod.published_mdx) return 'P';
   return '·';
 }
 
@@ -197,13 +221,15 @@ function chipTitle(mod) {
   const phaseStates = Object.entries(phases)
     .map(([k, v]) => `${k}:${v.status || 'pending'}`)
     .join(' | ');
-  return `#${mod.num} ${mod.slug} [${ver}] | ${phaseStates} | audit:${mod.audit} | words:${mod.words}`;
+  const dossier = mod.dossier?.exists ? `dossier:${mod.dossier.source || 'yes'}` : 'dossier:missing';
+  const mdx = mod.published_mdx ? 'published:yes' : 'published:no';
+  return `#${mod.num} ${mod.slug} [${ver}] | ${phaseStates} | audit:${mod.audit} | words:${mod.words} | ${dossier} | ${mdx}`;
 }
 
 async function loadModulePanel(trackId, panel) {
   panel.innerHTML = '<div class="loading-msg">Loading module data...</div>';
   try {
-    const data = await fetchJson(`/api/state/pipeline/${trackId}`);
+    const data = await fetchJson(`/api/state/pipeline/${trackId}?fresh=true`);
     const mods = data.modules || [];
 
     const chips = mods.map(mod => {
@@ -223,6 +249,11 @@ async function loadModulePanel(trackId, panel) {
 function renderTrack(trackId, trackData) {
   const { total, profile, research_done, content_done, audit_passing, reviewed, final_review_done } = trackData;
   const profileColor = PROFILE_COLOR[profile] || '#8b949e';
+  const dossierDone = trackData.dossier_done || 0;
+  const published = trackData.published_mdx || 0;
+  const staleAudit = trackData.audit_stale || 0;
+  const next = nextAction(trackData);
+  const dossierLabel = trackData.is_seminar ? 'Dossier' : 'Research';
 
   return `
   <div class="track-row" id="track-${trackId}">
@@ -231,8 +262,8 @@ function renderTrack(trackId, trackData) {
       <div class="track-profile" style="color:${profileColor}">${profile}</div>
       <div class="track-phases">
         <div class="phase-col">
-          <div class="phase-label">Research</div>
-          ${progressBar(research_done, total, 'fill-research')}
+          <div class="phase-label">${dossierLabel}</div>
+          ${progressBar(trackData.is_seminar ? dossierDone : research_done, total, 'fill-dossier')}
         </div>
         <div class="phase-col">
           <div class="phase-label">Content</div>
@@ -250,6 +281,14 @@ function renderTrack(trackId, trackData) {
           <div class="phase-label">Final QA</div>
           ${progressBar(final_review_done, total, 'fill-review')}
         </div>
+        <div class="phase-col">
+          <div class="phase-label">Published</div>
+          ${progressBar(published, total, 'fill-published')}
+        </div>
+      </div>
+      <div class="track-hints">
+        <div class="${next.cls}">${next.text}</div>
+        ${staleAudit ? `<div class="hint-stale">${staleAudit} stale audit cache${staleAudit === 1 ? '' : 's'}</div>` : ''}
       </div>
       <div class="track-chevron">▶</div>
     </div>
@@ -268,14 +307,64 @@ function toggleTrack(trackId) {
   }
 }
 
+function nextAction(trackData) {
+  const total = trackData.total || 0;
+  if (trackData.is_seminar && (trackData.dossier_done || 0) < total) {
+    return { text: `Dossier gap ${trackData.dossier_done || 0}/${total}`, cls: 'hint-warn' };
+  }
+  if (!trackData.is_seminar && (trackData.research_done || 0) < total) {
+    return { text: `Research gap ${trackData.research_done || 0}/${total}`, cls: 'hint-warn' };
+  }
+  if ((trackData.generated_md || 0) < total) {
+    return { text: `Build content ${trackData.generated_md || 0}/${total}`, cls: 'hint-warn' };
+  }
+  if ((trackData.audit_stale || 0) > 0) {
+    return { text: 'Refresh audit', cls: 'hint-stale' };
+  }
+  if ((trackData.audit_passing || 0) < (trackData.generated_md || 0)) {
+    return { text: `Audit/fix ${trackData.audit_passing || 0}/${trackData.generated_md || 0}`, cls: 'hint-warn' };
+  }
+  if ((trackData.final_review_done || 0) < (trackData.audit_passing || 0)) {
+    return { text: 'Final review next', cls: 'hint-warn' };
+  }
+  return { text: 'No immediate blocker', cls: 'hint-ok' };
+}
+
+function formatTimestamp(value) {
+  if (!value) return 'unknown time';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function renderFreshness(meta) {
+  const banner = document.getElementById('freshness-banner');
+  const cache = meta?.cache || 'unknown';
+  const age = typeof meta?.age_s === 'number' ? `${Math.round(meta.age_s)}s old` : 'fresh read';
+  const ttl = typeof meta?.stale_after_s === 'number' ? `${Math.round(meta.stale_after_s)}s TTL` : 'TTL unknown';
+  const generated = formatTimestamp(meta?.generated_at);
+  const cls = cache === 'hit' ? 'warn' : '';
+  banner.innerHTML = `
+    <span><strong>State:</strong> ${escapeHtml(meta?.source || 'unknown source')} · generated ${escapeHtml(generated)}</span>
+    <span class="${cls}">${escapeHtml(cache)} · ${escapeHtml(age)} · ${escapeHtml(ttl)}</span>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
 async function load() {
   try {
     const [res, pv] = await Promise.all([
-      fetchJson('/api/state/summary'),
-      fetchJson('/api/state/pipeline-versions').catch(() => ({})),
+      fetchJson('/api/state/summary?fresh=true'),
+      fetchJson('/api/state/pipeline-versions?fresh=true').catch(() => ({})),
     ]);
     const data = res;
     const t = data.totals;
+    renderFreshness(data.meta);
 
     document.getElementById('total-modules').textContent = t.total;
     document.getElementById('total-research').textContent = t.research_done;
@@ -283,10 +372,12 @@ async function load() {
     document.getElementById('total-audit').textContent = t.audit_passing;
     document.getElementById('total-reviewed').textContent = t.reviewed || 0;
     document.getElementById('total-final-review').textContent = t.final_review_done;
+    document.getElementById('total-dossier').textContent = t.dossier_done || 0;
+    document.getElementById('total-published').textContent = t.published_mdx || 0;
     document.getElementById('total-v6').textContent = `${pv.counts?.v6 || 0}`;
     document.getElementById('total-rebuild').textContent = `${pv.needs_rebuild || 0}`;
     document.getElementById('topbar-subtitle').textContent =
-      `Pipeline state across all tracks — ${pv.counts?.v6 || 0} v6, ${pv.needs_rebuild || 0} rebuild needed`;
+      `Pipeline state across all tracks — ${pv.counts?.v6 || 0} v6, ${t.published_mdx || 0} published, ${pv.needs_rebuild || 0} rebuild needed`;
 
     const container = document.getElementById('tracks-container');
     const trackEntries = Object.entries(data.tracks)

@@ -27,7 +27,7 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, MESSAGE_DB
+from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -79,19 +79,11 @@ CURRICULUM_YAML = CURRICULUM_ROOT / "curriculum.yaml"
 PLANS_ROOT = CURRICULUM_ROOT / "plans"
 _EMPTY_YAML_VALUES = {"", "[]", "null", "Null", "NULL", "~"}
 
-# Track -> profile mapping. Professional tracks were deleted 2026-04-10
-# (STEM will eventually replace them; that work is not in this issue).
-# The entries are intentionally absent.
+# Track -> profile mapping. Keep this derived from config so newly added
+# seminar tracks do not silently render as core in state summaries.
 PROFILE_MAP = {
-    "a1": "core", "a2": "core", "b1": "core", "b2": "core",
-    "c1": "core", "c2": "core",
-    "hist": "seminar", "istorio": "seminar", "bio": "seminar",
-    "lit": "seminar", "lit-essay": "seminar", "lit-hist-fic": "seminar",
-    "lit-fantastika": "seminar", "lit-war": "seminar",
-    "lit-humor": "seminar", "lit-youth": "seminar",
-    "lit-doc": "seminar", "lit-drama": "seminar",
-    "lit-crimea": "seminar",
-    "oes": "seminar", "ruth": "seminar",
+    cfg["id"]: ("seminar" if cfg["id"] in SEMINAR_TRACK_IDS else "core")
+    for cfg in LEVELS
 }
 
 
@@ -154,6 +146,17 @@ def cache_get(key: str, ttl: float) -> object | None:
     entry = _ttl_cache.get(key)
     if entry and (time.monotonic() - entry[0]) < ttl:
         return entry[1]
+    return None
+
+
+def cache_get_with_age(key: str, ttl: float) -> tuple[object, float] | None:
+    """Return cached value and age if still within TTL, else None."""
+    entry = _ttl_cache.get(key)
+    if entry is None:
+        return None
+    age = time.monotonic() - entry[0]
+    if age < ttl:
+        return entry[1], age
     return None
 
 
@@ -384,14 +387,7 @@ def parse_phase_status_from_state(state: dict, phase_name: str) -> dict:
 
 def has_research_file(track_dir: Path, slug: str) -> bool:
     """Return True if a research file exists for this module (V5 or V6 format)."""
-    try:
-        research_dir = safe_join(track_dir, "research")
-        research_file = safe_join(research_dir, f"{slug}-research.md")
-        knowledge_packet = safe_join(research_dir, f"{slug}-knowledge-packet.md")
-    except ValueError:
-        return False
-
-    return research_file.exists() or knowledge_packet.exists()
+    return find_research_path(track_dir, slug) is not None
 
 
 def is_research_done(state: dict, track_dir: Path | None = None, slug: str | None = None) -> bool:

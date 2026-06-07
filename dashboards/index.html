@@ -221,7 +221,7 @@ async function loadStats() {
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions'),
     safeFetch('/api/consultation/metrics'),
-    safeFetch('/api/state/summary'),
+    safeFetch('/api/state/summary?fresh=true'),
     safeFetch('/api/comms/batch-progress'),
     safeFetch('/api/state/weak-points?limit=1'),
     safeFetch('/api/orient'),
@@ -260,8 +260,9 @@ async function loadStats() {
   try {
     if (!summary) throw new Error('summary unavailable');
     const t = summary.totals;
+    const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
-      `${v6Count} v6 · ${v5Count} v5 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
+      `${v6Count} v6 · ${v5Count} v5 · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
   } catch(e) {}
 
   try {
