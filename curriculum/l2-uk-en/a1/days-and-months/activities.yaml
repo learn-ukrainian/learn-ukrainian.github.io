@@ -1,252 +1,250 @@
-- id: act-1
-  type: order
-  title: Put the week in order
-  instruction: Put the days from Monday to Sunday.
-  is_ukrainian: true
-  items:
-    - понеділок
-    - вівторок
-    - середа
-    - четвер
-    - п'ятниця
-    - субота
-    - неділя
-  correct_order: [0, 1, 2, 3, 4, 5, 6]
-- id: act-2
-  type: quiz
-  title: Clinic appointment day
-  questions:
-    - question: "У понеділок о дев'ятій можна?"
-      options:
-        - text: The receptionist offers Monday at nine.
-          correct: true
-        - text: The receptionist offers March at nine.
-          correct: false
-        - text: The receptionist offers Sunday at one.
-          correct: false
-      explanation: "У понеділок means on Monday; о дев'ятій means at nine."
-    - question: "Пацієнт каже: У понеділок я працюю. А у середу?"
-      options:
-        - text: Monday is not good; Wednesday may work.
-          correct: true
-        - text: Wednesday is not good; Sunday may work.
-          correct: false
-        - text: The patient asks about a month.
-          correct: false
-      explanation: "У середу is the Wednesday planning chunk."
-    - question: "Добре, у середу о другій."
-      options:
-        - text: The appointment is Wednesday at two.
-          correct: true
-        - text: The appointment is Friday at two.
-          correct: false
-        - text: The appointment is in February.
-          correct: false
-      explanation: "У середу + о другій combines day and time chunks."
-    - question: "Which Ukrainian greeting fits the clinic dialogue?"
-      options:
-        - text: Добрий день.
-          correct: true
-        - text: Здрастуйте.
-          correct: false
-        - text: Пока.
-          correct: false
-      explanation: "Use standard Ukrainian classroom greetings."
-- id: act-3
-  type: fill-in
-  title: Day planning chunks
-  items:
-    - sentence: "Я працюю ___."
-      answer: "у понеділок"
-      options: ["у понеділок", "on понеділок", "понеділок"]
-    - sentence: "Ми вивчаємо українську ___."
-      answer: "у вівторок"
-      options: ["у вівторок", "в вівторок", "вівторок"]
-    - sentence: "Зустріч ___."
-      answer: "у середу"
-      options: ["у середу", "середа", "на середу"]
-    - sentence: "Кава ___."
-      answer: "у четвер"
-      options: ["у четвер", "четвер", "на четвер"]
-    - sentence: "Фільм ___."
-      answer: "у п'ятницю"
-      options: ["у п'ятницю", "п'ятниця", "в п'ятниця"]
-    - sentence: "Я гуляю ___."
-      answer: "в суботу"
-      options: ["в суботу", "субота", "на субота"]
-    - sentence: "Я відпочиваю ___."
-      answer: "в неділю"
-      options: ["в неділю", "неділя", "on неділя"]
-- id: act-4
-  type: group-sort
-  title: Calendar shelves
-  instruction: Sort each word onto the right calendar shelf.
-  groups:
-    - name: Days
-      items:
-        - понеділок
-        - середа
-        - п'ятниця
-        - неділя
-    - name: Months
-      items:
-        - січень
-        - квітень
-        - липень
-        - листопад
-    - name: Seasons
-      items:
-        - зима
-        - весна
-        - літо
-        - осінь
-    - name: Nature and weather
-      items:
-        - сонце
-        - дощ
-        - сніг
-        - вітер
-- id: act-5
-  type: match-up
-  title: Month, season, memory hook
-  pairs:
-    - left: січень
-      right: зима
-    - left: березень
-      right: весна
-    - left: липень
-      right: літо
-    - left: листопад
-      right: осінь
-    - left: квітень
-      right: flowers
-    - left: липень
-      right: linden tree
-    - left: листопад
-      right: falling leaves
-    - left: березень
-      right: birch
-- id: act-6
-  type: true-false
-  title: Calendar safety checks
-  items:
-    - statement: "Ukrainian writes понеділок and січень with lowercase letters in normal sentences."
-      isTrue: true
-      explanation: "Days and months are common nouns in Ukrainian."
-    - statement: "Сьогодні є вівторок is the safest A1 sentence."
-      isTrue: false
-      explanation: "Use Сьогодні вівторок without є."
-    - statement: "Взимку, навесні, влітку, восени are useful season chunks."
-      isTrue: true
-      explanation: "These adverbs are the safe A1 forms."
-    - statement: "Я народився першого січня uses no preposition before the date."
-      isTrue: true
-      explanation: "Dates use the date chunk directly."
-    - statement: "В літо is the safe chunk for in summer."
-      isTrue: false
-      explanation: "Use влітку."
-    - statement: "У березні answers in which month."
-      isTrue: true
-      explanation: "У березні is the month chunk."
-- id: act-7
-  type: translate
-  title: Build calendar lines
-  questions:
-    - source: Today is Tuesday.
-      options:
-        - text: "Сьогодні вівторок."
-          correct: true
-        - text: "Сьогодні є вівторок."
-          correct: false
-        - text: "Сьогодні у вівторок."
-          correct: false
-      explanation: "Identify the day without є."
-    - source: I work on Monday.
-      options:
-        - text: "Я працюю у понеділок."
-          correct: true
-        - text: "Я працюю on понеділок."
-          correct: false
-        - text: "Я працюю понеділок."
-          correct: false
-      explanation: "Use у понеділок for a planned day."
-    - source: My birthday is in August.
-      options:
-        - text: "Мій день народження у серпні."
-          correct: true
-        - text: "Мій день народження в Серпень."
-          correct: false
-        - text: "Мій день народження серпень."
-          correct: false
-      explanation: "Use the month chunk у серпні and lowercase."
-    - source: In summer it is warm.
-      options:
-        - text: "Влітку тепло."
-          correct: true
-        - text: "В літо тепло."
-          correct: false
-        - text: "Літом тепло."
-          correct: false
-      explanation: "Prefer влітку."
-    - source: My birthday is on March fifteenth.
-      options:
-        - text: "Мій день народження п'ятнадцятого березня."
-          correct: true
-        - text: "Мій день народження в п'ятнадцяте березня."
-          correct: false
-        - text: "Мій день народження у березень п'ятнадцять."
-          correct: false
-      explanation: "Use the date chunk without a preposition."
-- id: act-8
-  type: error-correction
-  title: Repair calendar traps
-  instruction: Choose the safe Ukrainian calendar form.
-  items:
-    - sentence: "On понеділок я працюю."
-      error: "On понеділок"
-      answer: "У понеділок я працюю."
-      options:
-        - "У понеділок я працюю."
-        - "On понеділок я працюю."
-        - "На понеділок я працюю."
-      explanation: "Use у/в with weekday chunks, not English on."
-    - sentence: "Я народився в Перше січня."
-      error: "в Перше січня"
-      answer: "Я народився першого січня."
-      options:
-        - "Я народився першого січня."
-        - "Я народився в Перше січня."
-        - "Я народився у перший січень."
-      explanation: "Date chunks do not need в."
-    - sentence: "Вітаю з 1 вересням!"
-      error: "вересням"
-      answer: "Вітаю з 1 вересня!"
-      options:
-        - "Вітаю з 1 вересня!"
-        - "Вітаю з 1 вересням!"
-        - "Вітаю з 1 вересень!"
-      explanation: "In dates, keep the month in the date form."
-    - sentence: "Моє улюблене свято в Січень."
-      error: "в Січень"
-      answer: "Моє улюблене свято в січні."
-      options:
-        - "Моє улюблене свято в січні."
-        - "Моє улюблене свято в Січень."
-        - "Моє улюблене свято у січень."
-      explanation: "Use lowercase and the month chunk в січні."
-    - sentence: "Ми поїдемо в літо."
-      error: "в літо"
-      answer: "Ми поїдемо влітку."
-      options:
-        - "Ми поїдемо влітку."
-        - "Ми поїдемо в літо."
-        - "Ми поїдемо літо."
-      explanation: "Use the season adverb влітку."
-    - sentence: "Сьогодні є вівторок."
-      error: "є"
-      answer: "Сьогодні вівторок."
-      options:
-        - "Сьогодні вівторок."
-        - "Сьогодні є вівторок."
-        - "Сьогодні у вівторок."
-      explanation: "Do not copy English is into this line."
+inline:
+  - id: act-1
+    type: order
+    title: Put the week in order
+    instruction: Put the days from Monday to Sunday.
+    is_ukrainian: true
+    items:
+      - понеділок
+      - вівторок
+      - середа
+      - четвер
+      - п'ятниця
+      - субота
+      - неділя
+    correct_order: [0, 1, 2, 3, 4, 5, 6]
+  - id: act-2
+    type: quiz
+    title: Clinic appointment day
+    questions:
+      - question: "У понеділок о дев'ятій можна?"
+        options:
+          - text: The receptionist offers Monday at nine.
+            correct: true
+          - text: The receptionist offers March at nine.
+            correct: false
+          - text: The receptionist offers Sunday at one.
+            correct: false
+        explanation: "У понеділок means on Monday; о дев'ятій means at nine."
+      - question: 'Пацієнт каже: У понеділок я працюю. А у середу?'
+        options:
+          - text: Monday is not good; Wednesday may work.
+            correct: true
+          - text: Wednesday is not good; Sunday may work.
+            correct: false
+          - text: The patient asks about a month.
+            correct: false
+        explanation: 'У середу is the Wednesday planning chunk.'
+      - question: 'Добре, у середу о другій.'
+        options:
+          - text: The appointment is Wednesday at two.
+            correct: true
+          - text: The appointment is Friday at two.
+            correct: false
+          - text: The appointment is in February.
+            correct: false
+        explanation: 'У середу + о другій combines day and time chunks.'
+      - question: 'Which Ukrainian greeting fits the clinic dialogue?'
+        options:
+          - text: Добрий день.
+            correct: true
+          - text: Здрастуйте.
+            correct: false
+          - text: Пока.
+            correct: false
+        explanation: 'Use standard Ukrainian classroom greetings.'
+  - id: act-3
+    type: fill-in
+    title: Day planning chunks
+    items:
+      - sentence: 'Я працюю ___.'
+        answer: 'у понеділок'
+        options: ['у понеділок', 'on понеділок', 'понеділок']
+      - sentence: 'Ми вивчаємо українську ___.'
+        answer: 'у вівторок'
+        options: ['у вівторок', 'в вівторок', 'вівторок']
+      - sentence: 'Зустріч ___.'
+        answer: 'у середу'
+        options: ['у середу', 'середа', 'на середу']
+      - sentence: 'Кава ___.'
+        answer: 'у четвер'
+        options: ['у четвер', 'четвер', 'на четвер']
+      - sentence: 'Фільм ___.'
+        answer: "у п'ятницю"
+        options: ["у п'ятницю", "п'ятниця", "в п'ятниця"]
+      - sentence: 'Я гуляю ___.'
+        answer: 'в суботу'
+        options: ['в суботу', 'субота', 'на субота']
+      - sentence: 'Я відпочиваю ___.'
+        answer: 'в неділю'
+        options: ['в неділю', 'неділя', 'on неділя']
+  - id: act-4
+    type: group-sort
+    title: Calendar shelves
+    instruction: Sort each word onto the right calendar shelf.
+    groups:
+      - name: Days
+        items:
+          - понеділок
+          - середа
+          - п'ятниця
+          - неділя
+      - name: Months
+        items:
+          - січень
+          - квітень
+          - липень
+          - листопад
+      - name: Seasons
+        items:
+          - зима
+          - весна
+          - літо
+          - осінь
+      - name: Nature and weather
+        items:
+          - сонце
+          - дощ
+          - сніг
+          - вітер
+workbook:
+  - type: match-up
+    title: Month, season, memory hook
+    pairs:
+      - left: січень
+        right: зима
+      - left: березень
+        right: весна
+      - left: липень
+        right: літо
+      - left: листопад
+        right: осінь
+      - left: квітень
+        right: flowers
+      - left: липень
+        right: linden tree
+      - left: листопад
+        right: falling leaves
+      - left: березень
+        right: birch
+  - type: true-false
+    title: Calendar safety checks
+    items:
+      - statement: 'Ukrainian writes понеділок and січень with lowercase letters in normal sentences.'
+        isTrue: true
+        explanation: 'Days and months are common nouns in Ukrainian.'
+      - statement: 'Сьогодні є вівторок is the safest A1 sentence.'
+        isTrue: false
+        explanation: 'Use Сьогодні вівторок without є.'
+      - statement: 'Взимку, навесні, влітку, восени are useful season chunks.'
+        isTrue: true
+        explanation: 'These adverbs are the safe A1 forms.'
+      - statement: 'Я народився першого січня uses no preposition before the date.'
+        isTrue: true
+        explanation: 'Dates use the date chunk directly.'
+      - statement: 'В літо is the safe chunk for in summer.'
+        isTrue: false
+        explanation: 'Use влітку.'
+      - statement: 'У березні answers in which month.'
+        isTrue: true
+        explanation: 'У березні is the month chunk.'
+  - type: translate
+    title: Build calendar lines
+    questions:
+      - source: Today is Tuesday.
+        options:
+          - text: 'Сьогодні вівторок.'
+            correct: true
+          - text: 'Сьогодні є вівторок.'
+            correct: false
+          - text: 'Сьогодні у вівторок.'
+            correct: false
+        explanation: 'Identify the day without є.'
+      - source: I work on Monday.
+        options:
+          - text: 'Я працюю у понеділок.'
+            correct: true
+          - text: 'Я працюю on понеділок.'
+            correct: false
+          - text: 'Я працюю понеділок.'
+            correct: false
+        explanation: 'Use у понеділок for a planned day.'
+      - source: My birthday is in August.
+        options:
+          - text: 'Мій день народження у серпні.'
+            correct: true
+          - text: 'Мій день народження в Серпень.'
+            correct: false
+          - text: 'Мій день народження серпень.'
+            correct: false
+        explanation: 'Use the month chunk у серпні and lowercase.'
+      - source: In summer it is warm.
+        options:
+          - text: 'Влітку тепло.'
+            correct: true
+          - text: 'В літо тепло.'
+            correct: false
+          - text: 'Літом тепло.'
+            correct: false
+        explanation: 'Prefer влітку.'
+      - source: My birthday is on March fifteenth.
+        options:
+          - text: "Мій день народження п'ятнадцятого березня."
+            correct: true
+          - text: "Мій день народження в п'ятнадцяте березня."
+            correct: false
+          - text: "Мій день народження у березень п'ятнадцять."
+            correct: false
+        explanation: 'Use the date chunk without a preposition.'
+  - type: error-correction
+    title: Repair calendar traps
+    instruction: Choose the safe Ukrainian calendar form.
+    items:
+      - sentence: 'On понеділок я працюю.'
+        error: 'On понеділок'
+        answer: 'У понеділок я працюю.'
+        options:
+          - 'У понеділок я працюю.'
+          - 'On понеділок я працюю.'
+          - 'На понеділок я працюю.'
+        explanation: 'Use у/в with weekday chunks, not English on.'
+      - sentence: 'Я народився в Перше січня.'
+        error: 'в Перше січня'
+        answer: 'Я народився першого січня.'
+        options:
+          - 'Я народився першого січня.'
+          - 'Я народився в Перше січня.'
+          - 'Я народився у перший січень.'
+        explanation: 'Date chunks do not need в.'
+      - sentence: 'Вітаю з 1 вересням!'
+        error: 'вересням'
+        answer: 'Вітаю з 1 вересня!'
+        options:
+          - 'Вітаю з 1 вересня!'
+          - 'Вітаю з 1 вересням!'
+          - 'Вітаю з 1 вересень!'
+        explanation: 'In dates, keep the month in the date form.'
+      - sentence: 'Моє улюблене свято в Січень.'
+        error: 'в Січень'
+        answer: 'Моє улюблене свято в січні.'
+        options:
+          - 'Моє улюблене свято в січні.'
+          - 'Моє улюблене свято в Січень.'
+          - 'Моє улюблене свято у січень.'
+        explanation: 'Use lowercase and the month chunk в січні.'
+      - sentence: 'Ми поїдемо в літо.'
+        error: 'в літо'
+        answer: 'Ми поїдемо влітку.'
+        options:
+          - 'Ми поїдемо влітку.'
+          - 'Ми поїдемо в літо.'
+          - 'Ми поїдемо літо.'
+        explanation: 'Use the season adverb влітку.'
+      - sentence: 'Сьогодні є вівторок.'
+        error: 'є'
+        answer: 'Сьогодні вівторок.'
+        options:
+          - 'Сьогодні вівторок.'
+          - 'Сьогодні є вівторок.'
+          - 'Сьогодні у вівторок.'
+        explanation: 'Do not copy English is into this line.'

@@ -1,284 +1,282 @@
-- id: act-1
-  type: true-false
-  title: Notice board invitations
-  instruction: Decide if each plan is a safe A1 invitation.
-  items:
-    - statement: "Ходімо в кіно в суботу о п'ятій."
-      answer: true
-      explanation: Invitation + place + day + time is a safe plan.
-    - statement: "Ходімо до кіно в суботу."
-      answer: false
-      explanation: Use the chunk ходімо в кіно.
-    - statement: "Давай слухати музику ввечері."
-      answer: true
-      explanation: Давай + infinitive is a friendly A1 invitation.
-    - statement: "Я ніколи працюю у неділю."
-      answer: false
-      explanation: Ніколи needs не, so say я ніколи не працюю.
-    - statement: "Якщо буде дощ, ходімо в музей."
-      answer: true
-      explanation: This combines weather and an alternative activity.
-    - statement: "Брати участь у гуртку."
-      answer: true
-      explanation: Брати участь is the safe Ukrainian chunk.
-- id: act-2
-  type: match-up
-  title: Build hobby chunks
-  instruction: Match each verb with the natural hobby chunk.
-  pairs:
-    - left: грати
-      right: у футбол
-    - left: грати
-      right: на гітарі
-    - left: слухати
-      right: музику
-    - left: дивитися
-      right: фільми
-    - left: ходити
-      right: в кіно
-    - left: ходити
-      right: в театр
-    - left: читати
-      right: книгу
-    - left: відпочивати
-      right: вдома
-- id: act-3
-  type: fill-in
-  title: Frequency and invitations
-  instruction: Choose the word or chunk that completes the sentence.
-  items:
-    - sentence: "Я ___ працюю у неділю."
-      answer: ніколи не
-      options:
-        - ніколи не
-        - ніколи
-        - завжди не
-      explanation: Ніколи needs не.
-    - sentence: "Вона грає у теніс двічі ___."
-      answer: на тиждень
-      options:
-        - на тиждень
-        - у тиждень
-        - в тиждень
-      explanation: Use раз/двічі/тричі на тиждень.
-    - sentence: "___ в кіно у суботу! — Добре!"
-      answer: Ходімо
-      options:
-        - Ходімо
-        - Ходжу
-        - Ходиш
-      explanation: Ходімо! is the invitation chunk.
-    - sentence: "Я люблю спорт, тому ___ граю у баскетбол."
-      answer: часто
-      options:
-        - часто
-        - ніколи
-        - не
-      explanation: Often fits the reason.
-    - sentence: "Я не маю часу, тому ___ читаю книги."
-      answer: рідко
-      options:
-        - рідко
-        - завжди
-        - кожен
-      explanation: Little time means rarely.
-    - sentence: "— Що ти робиш ___? — Відпочиваю."
-      answer: у вихідні
-      options:
-        - у вихідні
-        - вихідні
-        - на вихідні
-      explanation: Use у вихідні for on weekends.
-- id: act-4
-  type: quiz
-  title: Choose the safe preposition
-  instruction: Pick the phrase that keeps the activity chunk natural.
-  items:
-    - prompt: "Він грає ___ піаніно."
-      options:
-        - text: на
-          correct: true
-        - text: у
-          correct: false
-        - text: в
-          correct: false
-      explanation: Instruments use грати на.
-    - prompt: "Ми граємо ___ футбол."
-      options:
-        - text: у
-          correct: true
-        - text: на
-          correct: false
-        - text: до
-          correct: false
-      explanation: Sports use грати у/в.
-    - prompt: "Я хочу ходити ___ концерт."
-      options:
-        - text: на
-          correct: true
-        - text: в
-          correct: false
-        - text: до
-          correct: false
-      explanation: Use ходити на концерт.
-    - prompt: "Вони ходять ___ театр раз на місяць."
-      options:
-        - text: в
-          correct: true
-        - text: на
-          correct: false
-        - text: до
-          correct: false
-      explanation: Use ходити в театр.
-    - prompt: "Ми йдемо ___ кіно."
-      options:
-        - text: в
-          correct: true
-        - text: до
-          correct: false
-        - text: на
-          correct: false
-      explanation: The safe chunk is йти в кіно.
-- id: act-5
-  type: order
-  title: From weather to plan
-  instruction: Put the planning lines into a natural order.
-  is_ukrainian: true
-  items:
-    - Сьогодні субота.
-    - Оленко, що ти робиш у вихідні?
-    - Зазвичай я гуляю і читаю.
-    - Буде тепло.
-    - Давай грати у футбол о третій.
-    - Добре, а якщо буде дощ?
-    - Якщо буде дощ, ходімо в музей.
-    - Чудово!
-  correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
-- id: act-6
-  type: group-sort
-  title: Frequency shelves
-  instruction: Sort the chunks by what they answer.
-  groups:
-    - name: Always or usually
-      items:
-        - завжди
-        - зазвичай
-        - кожен день
-    - name: Sometimes or rarely
-      items:
-        - іноді
-        - інколи
-        - рідко
-    - name: Counted frequency
-      items:
-        - раз на тиждень
-        - двічі на тиждень
-        - раз на місяць
-    - name: Invitations
-      items:
-        - Ходімо в кіно!
-        - Давай грати разом!
-        - Ходімо в музей!
-- id: act-7
-  type: translate
-  title: Say a free-time plan
-  instruction: Translate into Ukrainian using the chunks from the lesson.
-  items:
-    - source: "I often listen to music."
-      options:
-        - text: "Я часто слухаю музику."
-          correct: true
-        - text: "Я слухаю до музики часто."
-          correct: false
-        - text: "Я часто слухаю до музики."
-          correct: false
-      explanation: Часто usually stands before the verb.
-    - source: "I play football twice a week."
-      options:
-        - text: "Я граю у футбол двічі на тиждень."
-          correct: true
-        - text: "Я граю футбол двічі на тиждень."
-          correct: false
-        - text: "Я граю на футбол двічі в тиждень."
-          correct: false
-      explanation: Sports use грати у/в.
-    - source: "Let's go to the cinema on Saturday at five."
-      options:
-        - text: "Ходімо в кіно в суботу о п'ятій."
-          correct: true
-        - text: "Ходімо до кіно в суботу о п'ятій."
-          correct: false
-        - text: "Ходжу в кіно в суботу о п'ятій."
-          correct: false
-      explanation: Ходімо в кіно is the clean invitation.
-    - source: "If it rains, let's go to the museum."
-      options:
-        - text: "Якщо буде дощ, ходімо в музей."
-          correct: true
-        - text: "Якщо буде дощ, ходімо до музей."
-          correct: false
-        - text: "Якщо є дощ, ходжу в музей."
-          correct: false
-      explanation: This combines weather and an alternative.
-    - source: "I never work on Sunday."
-      options:
-        - text: "Я ніколи не працюю у неділю."
-          correct: true
-        - text: "Я ніколи працюю у неділю."
-          correct: false
-        - text: "Я не ніколи працюю у неділю."
-          correct: false
-      explanation: Ніколи needs не.
-- id: act-8
-  type: error-correction
-  title: Repair hobby interference
-  instruction: Choose the Ukrainian repair for each unsafe learner sentence.
-  items:
-    - sentence: "Я граю гру (англ. I play a game)."
-      error: "граю гру"
-      answer: "Я граю в гру."
-      options:
-        - "Я граю в гру."
-        - "Я граю гру."
-        - "Я граю до гри."
-      explanation: Games use грати в/у + object.
-    - sentence: "Я слухаю до музики (англ. I listen to music)."
-      error: "до музики"
-      answer: "Я слухаю музику."
-      options:
-        - "Я слухаю музику."
-        - "Я слухаю до музики."
-        - "Я слухаю на музику."
-      explanation: Слухати takes a direct object without a preposition.
-    - sentence: "Я займаюся спорт (англ. I do sport)."
-      error: "спорт"
-      answer: "Я займаюся спортом."
-      options:
-        - "Я займаюся спортом."
-        - "Я займаюся спорт."
-        - "Я роблю спорт."
-      explanation: The safe chunk is займатися спортом.
-    - sentence: "Я дивлюся на телевізор (англ. I look at the TV)."
-      error: "на телевізор"
-      answer: "Я дивлюся телевізор."
-      options:
-        - "Я дивлюся телевізор."
-        - "Я дивлюся на телевізор."
-        - "Я слухаю телевізор."
-      explanation: For watching TV, use дивитися телевізор.
-    - sentence: "На моєму вільному часі (англ. In my free time)."
-      error: "На моєму вільному часі"
-      answer: "У мій вільний час."
-      options:
-        - "У мій вільний час."
-        - "На моєму вільному часі."
-        - "До мого вільного часу."
-      explanation: Use у/в + chunk, not на.
-    - sentence: "Ми йдемо до кіно (англ. Go to the movies)."
-      error: "до кіно"
-      answer: "Ми йдемо в кіно."
-      options:
-        - "Ми йдемо в кіно."
-        - "Ми йдемо до кіно."
-        - "Ми йдемо на кіно."
-      explanation: The safe direction chunk is в кіно.
+inline:
+  - id: act-1
+    type: true-false
+    title: Notice board invitations
+    instruction: Decide if each plan is a safe A1 invitation.
+    items:
+      - statement: "Ходімо в кіно в суботу о п'ятій."
+        answer: true
+        explanation: Invitation + place + day + time is a safe plan.
+      - statement: 'Ходімо до кіно в суботу.'
+        answer: false
+        explanation: Use the chunk ходімо в кіно.
+      - statement: 'Давай слухати музику ввечері.'
+        answer: true
+        explanation: Давай + infinitive is a friendly A1 invitation.
+      - statement: 'Я ніколи працюю у неділю.'
+        answer: false
+        explanation: Ніколи needs не, so say я ніколи не працюю.
+      - statement: 'Якщо буде дощ, ходімо в музей.'
+        answer: true
+        explanation: This combines weather and an alternative activity.
+      - statement: 'Брати участь у гуртку.'
+        answer: true
+        explanation: Брати участь is the safe Ukrainian chunk.
+  - id: act-2
+    type: match-up
+    title: Build hobby chunks
+    instruction: Match each verb with the natural hobby chunk.
+    pairs:
+      - left: грати
+        right: у футбол
+      - left: грати
+        right: на гітарі
+      - left: слухати
+        right: музику
+      - left: дивитися
+        right: фільми
+      - left: ходити
+        right: в кіно
+      - left: ходити
+        right: в театр
+      - left: читати
+        right: книгу
+      - left: відпочивати
+        right: вдома
+  - id: act-3
+    type: fill-in
+    title: Frequency and invitations
+    instruction: Choose the word or chunk that completes the sentence.
+    items:
+      - sentence: 'Я ___ працюю у неділю.'
+        answer: ніколи не
+        options:
+          - ніколи не
+          - ніколи
+          - завжди не
+        explanation: Ніколи needs не.
+      - sentence: 'Вона грає у теніс двічі ___.'
+        answer: на тиждень
+        options:
+          - на тиждень
+          - у тиждень
+          - в тиждень
+        explanation: Use раз/двічі/тричі на тиждень.
+      - sentence: '___ в кіно у суботу! — Добре!'
+        answer: Ходімо
+        options:
+          - Ходімо
+          - Ходжу
+          - Ходиш
+        explanation: Ходімо! is the invitation chunk.
+      - sentence: 'Я люблю спорт, тому ___ граю у баскетбол.'
+        answer: часто
+        options:
+          - часто
+          - ніколи
+          - не
+        explanation: Often fits the reason.
+      - sentence: 'Я не маю часу, тому ___ читаю книги.'
+        answer: рідко
+        options:
+          - рідко
+          - завжди
+          - кожен
+        explanation: Little time means rarely.
+      - sentence: '— Що ти робиш ___? — Відпочиваю.'
+        answer: у вихідні
+        options:
+          - у вихідні
+          - вихідні
+          - на вихідні
+        explanation: Use у вихідні for on weekends.
+  - id: act-4
+    type: quiz
+    title: Choose the safe preposition
+    instruction: Pick the phrase that keeps the activity chunk natural.
+    items:
+      - prompt: 'Він грає ___ піаніно.'
+        options:
+          - text: на
+            correct: true
+          - text: у
+            correct: false
+          - text: в
+            correct: false
+        explanation: Instruments use грати на.
+      - prompt: 'Ми граємо ___ футбол.'
+        options:
+          - text: у
+            correct: true
+          - text: на
+            correct: false
+          - text: до
+            correct: false
+        explanation: Sports use грати у/в.
+      - prompt: 'Я хочу ходити ___ концерт.'
+        options:
+          - text: на
+            correct: true
+          - text: в
+            correct: false
+          - text: до
+            correct: false
+        explanation: Use ходити на концерт.
+      - prompt: 'Вони ходять ___ театр раз на місяць.'
+        options:
+          - text: в
+            correct: true
+          - text: на
+            correct: false
+          - text: до
+            correct: false
+        explanation: Use ходити в театр.
+      - prompt: 'Ми йдемо ___ кіно.'
+        options:
+          - text: в
+            correct: true
+          - text: до
+            correct: false
+          - text: на
+            correct: false
+        explanation: The safe chunk is йти в кіно.
+workbook:
+  - type: order
+    title: From weather to plan
+    instruction: Put the planning lines into a natural order.
+    is_ukrainian: true
+    items:
+      - Сьогодні субота.
+      - Оленко, що ти робиш у вихідні?
+      - Зазвичай я гуляю і читаю.
+      - Буде тепло.
+      - Давай грати у футбол о третій.
+      - Добре, а якщо буде дощ?
+      - Якщо буде дощ, ходімо в музей.
+      - Чудово!
+    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+  - type: group-sort
+    title: Frequency shelves
+    instruction: Sort the chunks by what they answer.
+    groups:
+      - name: Always or usually
+        items:
+          - завжди
+          - зазвичай
+          - кожен день
+      - name: Sometimes or rarely
+        items:
+          - іноді
+          - інколи
+          - рідко
+      - name: Counted frequency
+        items:
+          - раз на тиждень
+          - двічі на тиждень
+          - раз на місяць
+      - name: Invitations
+        items:
+          - Ходімо в кіно!
+          - Давай грати разом!
+          - Ходімо в музей!
+  - type: translate
+    title: Say a free-time plan
+    instruction: Translate into Ukrainian using the chunks from the lesson.
+    items:
+      - source: 'I often listen to music.'
+        options:
+          - text: 'Я часто слухаю музику.'
+            correct: true
+          - text: 'Я слухаю до музики часто.'
+            correct: false
+          - text: 'Я часто слухаю до музики.'
+            correct: false
+        explanation: Часто usually stands before the verb.
+      - source: 'I play football twice a week.'
+        options:
+          - text: 'Я граю у футбол двічі на тиждень.'
+            correct: true
+          - text: 'Я граю футбол двічі на тиждень.'
+            correct: false
+          - text: 'Я граю на футбол двічі в тиждень.'
+            correct: false
+        explanation: Sports use грати у/в.
+      - source: "Let's go to the cinema on Saturday at five."
+        options:
+          - text: "Ходімо в кіно в суботу о п'ятій."
+            correct: true
+          - text: "Ходімо до кіно в суботу о п'ятій."
+            correct: false
+          - text: "Ходжу в кіно в суботу о п'ятій."
+            correct: false
+        explanation: Ходімо в кіно is the clean invitation.
+      - source: "If it rains, let's go to the museum."
+        options:
+          - text: 'Якщо буде дощ, ходімо в музей.'
+            correct: true
+          - text: 'Якщо буде дощ, ходімо до музей.'
+            correct: false
+          - text: 'Якщо є дощ, ходжу в музей.'
+            correct: false
+        explanation: This combines weather and an alternative.
+      - source: 'I never work on Sunday.'
+        options:
+          - text: 'Я ніколи не працюю у неділю.'
+            correct: true
+          - text: 'Я ніколи працюю у неділю.'
+            correct: false
+          - text: 'Я не ніколи працюю у неділю.'
+            correct: false
+        explanation: Ніколи needs не.
+  - type: error-correction
+    title: Repair hobby interference
+    instruction: Choose the Ukrainian repair for each unsafe learner sentence.
+    items:
+      - sentence: 'Я граю гру (англ. I play a game).'
+        error: 'граю гру'
+        answer: 'Я граю в гру.'
+        options:
+          - 'Я граю в гру.'
+          - 'Я граю гру.'
+          - 'Я граю до гри.'
+        explanation: Games use грати в/у + object.
+      - sentence: 'Я слухаю до музики (англ. I listen to music).'
+        error: 'до музики'
+        answer: 'Я слухаю музику.'
+        options:
+          - 'Я слухаю музику.'
+          - 'Я слухаю до музики.'
+          - 'Я слухаю на музику.'
+        explanation: Слухати takes a direct object without a preposition.
+      - sentence: 'Я займаюся спорт (англ. I do sport).'
+        error: 'спорт'
+        answer: 'Я займаюся спортом.'
+        options:
+          - 'Я займаюся спортом.'
+          - 'Я займаюся спорт.'
+          - 'Я роблю спорт.'
+        explanation: The safe chunk is займатися спортом.
+      - sentence: 'Я дивлюся на телевізор (англ. I look at the TV).'
+        error: 'на телевізор'
+        answer: 'Я дивлюся телевізор.'
+        options:
+          - 'Я дивлюся телевізор.'
+          - 'Я дивлюся на телевізор.'
+          - 'Я слухаю телевізор.'
+        explanation: For watching TV, use дивитися телевізор.
+      - sentence: 'На моєму вільному часі (англ. In my free time).'
+        error: 'На моєму вільному часі'
+        answer: 'У мій вільний час.'
+        options:
+          - 'У мій вільний час.'
+          - 'На моєму вільному часі.'
+          - 'До мого вільного часу.'
+        explanation: Use у/в + chunk, not на.
+      - sentence: 'Ми йдемо до кіно (англ. Go to the movies).'
+        error: 'до кіно'
+        answer: 'Ми йдемо в кіно.'
+        options:
+          - 'Ми йдемо в кіно.'
+          - 'Ми йдемо до кіно.'
+          - 'Ми йдемо на кіно.'
+        explanation: The safe direction chunk is в кіно.

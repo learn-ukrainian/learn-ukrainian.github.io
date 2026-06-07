@@ -167,10 +167,6 @@ answers: **з дев'ятої до п'ятої**. A workday sentence can be simp
 **Я працюю з дев'ятої до п'ятої.** This is enough for A1. The full grammar of
 these forms comes later.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
-<!-- INJECT_ACTIVITY: act-6 -->
-
 ## Підсумок
 
 Keep three cards in your head.
@@ -219,7 +215,3 @@ and one line for a meeting:
 If you only remember one rule, remember this: **котра? -> перша, друга,
 третя** for the clock; **о котрій? -> о першій, о другій, о третій** for the
 schedule.
-
-<!-- INJECT_ACTIVITY: act-7 -->
-
-<!-- INJECT_ACTIVITY: act-8 -->
