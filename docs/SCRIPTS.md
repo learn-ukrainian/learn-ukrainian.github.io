@@ -272,15 +272,41 @@ Checks short articles, leaked reasoning, fence wrapping, missing headings, and t
 .venv/bin/python scripts/wiki/fetch_external_sources.py --status
 ```
 
-### Services
+### Services (`./services.sh`)
+
+Canonical process manager for the three long-running local services. It owns
+PID/lock/port bookkeeping — **always use it instead of ad-hoc `npm run dev`,
+`astro preview`, or `nohup`**, which create port drift (4322/4323…) and orphan
+servers.
+
+| Service | Port | What it is |
+|---|---|---|
+| `sources` | 8766 | MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia). Legacy alias: `rag`. |
+| `api` | 8765 | API / Monitor dashboard (FastAPI) — the `/api/orient` etc. cold-start endpoints. |
+| `astro` | **4321** | **Astro Course UI dev server** — the local site. Alias: `starlight`. |
 
 ```bash
-./services.sh start
-./services.sh start rag
-./services.sh stop rag
-./services.sh restart
-./services.sh status
+./services.sh status            # read-only, safe — what's running + PID + port
+./services.sh start             # start all three
+./services.sh start astro       # start ONLY the Course UI → http://localhost:4321/
+./services.sh stop astro        # stop one service
+./services.sh restart astro     # restart one service (use after dependency/config changes)
 ```
+
+**Local site = `./services.sh start astro` → http://localhost:4321/** (live-reload
+dev server; reflects source edits to `starlight/src/**` immediately). For a
+build-accurate local copy of what would deploy, use the production build instead
+of a second server:
+
+```bash
+./services.sh build astro       # astro production build → starlight/dist/ (no server)
+./services.sh clean astro       # remove build/cache outputs
+./services.sh rebuild astro     # clean then build
+```
+
+> Public deploy is separate and **manual**: the `deploy-pages.yml` GitHub Actions
+> workflow (`workflow_dispatch`) — auto-deploy on push to `main` is disabled.
+> Running services locally never touches the live site.
 
 ### Key Files
 
