@@ -112,10 +112,11 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
-# Autocompact at 75% of 1M context (~750K tokens)
-# Balances: using the 1M window we pay for vs. leaving buffer before degradation
-# Subagents handle isolated work in their own windows, so main thread stays clean
-export CLAUDE_CODE_AUTO_COMPACT_WINDOW=750000
+# Autocompact at the full 1M context window (kubedojo parity; raised from 750K 2026-06-08).
+# Soft handoff discipline is separate and EARLIER — see MEMORY #2 (~750K, gated by a
+# context-integrity self-check). Late handoff fails silently, so we hand off well before
+# autocompact rewrites context. Subagents handle isolated work in their own windows.
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)

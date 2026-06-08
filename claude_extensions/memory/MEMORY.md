@@ -103,7 +103,7 @@ Pipeline-prompt changes pilot on ≥3 seeded modules before bulk. Gradual: 0→1
 DO NOT run `v6_build.py --range` or `--step all`. Only user runs builds. Heal: `--step publish --resume`. Review: `--step review --resume`. Lesson 2026-04-10: `--step all --resume` destroyed 40+ files.
 
 ## #2 — CONTEXT + SESSION DISCIPLINE
-**Context cap:** 750K (`CLAUDE_CODE_AUTO_COMPACT_WINDOW`). **Handoff trigger:** 300K early signal | 400K handoff zone | 450K past target. Self-estimate runs 1.8× high — use the Bash one-liner to check actual.
+**Context cap (autocompact):** 1M (`CLAUDE_CODE_AUTO_COMPACT_WINDOW`; raised from 750K 2026-06-08, kubedojo parity). **Handoff trigger — content-weighted + GATED:** ≤600K normal | 600–750K keep going but run a context-integrity self-check (recite the session's live decisions/constraints) before each high-stakes action (dispatch brief, merge, ground-check) | ~750K hard handoff unless a quick integrity probe is clean. Late handoff fails SILENTLY (rot ≠ self-reported) — when unsure, hand off; dense-state sessions hand off earlier than read-once-file ones. Self-estimate runs 1.8× high — use the Bash one-liner to check actual.
 - NEVER `/compact` (rewrites context, loses fidelity).
 - NEVER `--resume`/`--continue` (1.117 auto-summarizes, cache miss).
 - Diary handoff: `docs/session-state/YYYY-MM-DD-<slug>.md`.
