@@ -8,6 +8,7 @@ execution. Long-running V7 writer-phase work goes through
 ``delegate.py dispatch --agent agy`` instead.
 """
 
+import json
 import os
 
 from agent_runtime import runner as agent_runner
@@ -208,24 +209,27 @@ def _fetch_agy_message(message_id: int) -> dict | None:
 
 
 def _extract_target_model(msg: dict) -> str | None:
-    """Pull ``to_model`` from the broker message if recorded.
+    """Read optional ``to_model`` from the message's ``data`` JSON blob.
 
-    The send_message machinery may persist a ``to_model`` in the message
-    row when ``--to-model`` was supplied; the codex bridge consults it
-    the same way. Returns None when absent — caller falls back to the
-    adapter's default.
+    ``send_message`` serializes ``--to-model`` into the ``data`` JSON column
+    (NOT a dedicated ``to_model`` column — that column never existed in the
+    ``messages`` schema, which is why the old PRAGMA-based lookup always
+    returned None and every invocation silently fell back to flash). The
+    adapter's ``_resolve_model_flag`` maps the returned slug
+    (e.g. ``gemini-3.1-pro-high``) or display label to agy's ``--model``.
+    Ported from kubedojo's fixed bridge. Returns None when absent.
     """
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(messages)")
-    columns = {row[1] for row in cursor.fetchall()}
-    if "to_model" not in columns:
-        conn.close()
+    data = msg.get("data")
+    if not data:
         return None
-    cursor.execute("SELECT to_model FROM messages WHERE id = ?", (msg["id"],))
-    row = cursor.fetchone()
-    conn.close()
-    return row[0] if row and row[0] else None
+    try:
+        payload = json.loads(data)
+    except (json.JSONDecodeError, TypeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    model = payload.get("to_model")
+    return str(model) if model else None
 
 
 def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
