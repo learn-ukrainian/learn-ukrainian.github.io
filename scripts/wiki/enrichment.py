@@ -160,6 +160,34 @@ def rank_external_hits(hits: list[dict], track: str | None = None) -> list[dict]
     )
 
 
+def _dossier_query_seed(track: str, slug: str) -> str | None:
+    """Build a dense-retrieval seed for a dossier-only topic (no discovery file).
+
+    Combines the dossier H1 (Ukrainian subject title) with the slug words so the
+    unified dense search returns real corpus chunks — letting [S#] citations
+    resolve to actual sources instead of a single stub. Returns None when no
+    dossier exists. (The H1 parse mirrors compile._dossier_title but serves a
+    different purpose here: a search query, not a display title.)
+    """
+    dossier_path = PROJECT_ROOT / "docs" / "research" / track / f"{slug}.md"
+    if not dossier_path.is_file():
+        return None
+    title = ""
+    for line in dossier_path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("# "):
+            title = stripped[2:].strip()
+            for sep in ("—", "–", "-"):
+                marker = f"{sep} Research Dossier"
+                idx = title.find(marker)
+                if idx != -1:
+                    title = title[:idx].strip()
+                    break
+            break
+    seed = f"{title} {slug.replace('-', ' ')}".strip()
+    return seed or None
+
+
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     """Enrich source chunks for a module with track-specific data.
 
@@ -187,18 +215,25 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     discovery_count = len(all_chunks)
 
     # 2. Unified dense retrieval across all dense-indexed corpora.
+    #    Normally seeded by the discovery file. For dossier-only topics (no
+    #    discovery file — folk broad-scope, bio new-130) seed the SAME dense
+    #    search from the dossier title/slug so [S#] citations resolve to real
+    #    corpus chunks instead of a single stub source.
     discovery_path = CURRICULUM_DIR / track / "discovery" / f"{slug}.yaml"
-    if discovery_path.exists():
+    has_discovery = discovery_path.exists()
+    dense_query = discovery_path if has_discovery else _dossier_query_seed(track, slug)
+    if dense_query is not None:
         from .sources_db import search_sources
 
         unified_hits = search_sources(
-            discovery_path,
+            dense_query,
             track=track,
             strategy="unified_dense",
             limit=10,
         )
         if unified_hits:
-            print(f"  🔎 +{len(unified_hits)} unified dense sources ({track})")
+            seed_kind = "discovery" if has_discovery else "dossier-seeded"
+            print(f"  🔎 +{len(unified_hits)} {seed_kind} dense sources ({track})")
             all_chunks.extend(unified_hits)
 
     # 3. Local data enrichment
