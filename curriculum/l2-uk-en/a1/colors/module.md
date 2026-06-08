@@ -18,9 +18,9 @@ By the end, you can:
 Keep the goal practical. You are not learning every shade or every case.
 You are learning to ask about color and attach one color to one familiar noun.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Start with the question, not with a color list. Say **Якого кольору...?** as a
 single chunk. You do not need to analyze why the form is **якого** yet.
@@ -35,13 +35,27 @@ that means:
 
 At a small flower market, Natalka is choosing a bouquet:
 
-<DialogueBox uk="Наталка: Які гарні троянди! Якого вони кольору?" en="Natalka: What nice roses! What color are they?" />
-<DialogueBox uk="Продавець: Червоні." en="Seller: Red." />
-<DialogueBox uk="Наталка: А ці лілії білі?" en="Natalka: And are these lilies white?" />
-<DialogueBox uk="Продавець: Так, білі лілії." en="Seller: Yes, white lilies." />
-<DialogueBox uk="Наталка: Мені подобаються жовті соняшники." en="Natalka: I like the yellow sunflowers." />
-<DialogueBox uk="Продавець: Добре. Загорнути букет?" en="Seller: Good. Shall I wrap the bouquet?" />
-<DialogueBox uk="Наталка: Так, дякую. У синю стрічку." en="Natalka: Yes, thank you. In a blue ribbon." />
+```text
+Наталка: Які гарні троянди! Якого вони кольору?
+Продавець: Червоні.
+Наталка: А ці лілії білі?
+Продавець: Так, білі лілії.
+Наталка: Мені подобаються жовті соняшники.
+Продавець: Добре. Загорнути букет?
+Наталка: Так, дякую. У синю стрічку.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Наталка: Які гарні троянди! Якого вони кольору?** | Natalka: What nice roses! What color are they? |
+| **Продавець: Червоні.** | Seller: Red. |
+| **Наталка: А ці лілії білі?** | Natalka: And are these lilies white? |
+| **Продавець: Так, білі лілії.** | Seller: Yes, white lilies. |
+| **Наталка: Мені подобаються жовті соняшники.** | Natalka: I like the yellow sunflowers. |
+| **Продавець: Добре. Загорнути букет?** | Seller: Good. Shall I wrap the bouquet? |
+| **Наталка: Так, дякую. У синю стрічку.** | Natalka: Yes, thank you. In a blue ribbon. |
 
 The phrase **Мені подобаються...** is a ready chunk here. Store it for
 recognition. The productive work today is color.
@@ -133,14 +147,29 @@ The same no-**є** rhythm works across the course:
 
 Liza and Dmytro are planning what to wear:
 
-<DialogueBox uk="Ліза: Що мені одягнути на вечірку?" en="Liza: What should I wear to the party?" />
-<DialogueBox uk="Дмитро: Чорну сукню. І сіре пальто зверху." en="Dmytro: A black dress. And a grey coat on top." />
-<DialogueBox uk="Ліза: А черевики?" en="Liza: And shoes?" />
-<DialogueBox uk="Дмитро: Коричневі." en="Dmytro: Brown." />
-<DialogueBox uk="Ліза: А як я впізнаю Олю?" en="Liza: And how will I recognize Olia?" />
-<DialogueBox uk="Дмитро: У неї карі очі й русяве волосся." en="Dmytro: She has brown eyes and fair hair." />
-<DialogueBox uk="Ліза: А білий светр?" en="Liza: And the white sweater?" />
-<DialogueBox uk="Дмитро: Ні, білий светр сьогодні не треба." en="Dmytro: No, the white sweater is not needed today." />
+```text
+Ліза: Що мені одягнути на вечірку?
+Дмитро: Чорну сукню. І сіре пальто зверху.
+Ліза: А черевики?
+Дмитро: Коричневі.
+Ліза: А як я впізнаю Олю?
+Дмитро: У неї карі очі й русяве волосся.
+Ліза: А білий светр?
+Дмитро: Ні, білий светр сьогодні не треба.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ліза: Що мені одягнути на вечірку?** | Liza: What should I wear to the party? |
+| **Дмитро: Чорну сукню. І сіре пальто зверху.** | Dmytro: A black dress. And a grey coat on top. |
+| **Ліза: А черевики?** | Liza: And shoes? |
+| **Дмитро: Коричневі.** | Dmytro: Brown. |
+| **Ліза: А як я впізнаю Олю?** | Liza: And how will I recognize Olia? |
+| **Дмитро: У неї карі очі й русяве волосся.** | Dmytro: She has brown eyes and fair hair. |
+| **Ліза: А білий светр?** | Liza: And the white sweater? |
+| **Дмитро: Ні, білий светр сьогодні не треба.** | Dmytro: No, the white sweater is not needed today. |
 
 You saw **чорну сукню** in that dialogue because the dress is an object in the
 sentence. Do not turn that into a full case lesson today. Your productive A1
@@ -226,12 +255,25 @@ Your checklist is short:
 
 Try it with three things near you:
 
-<DialogueBox uk="Якого кольору стіл?" en="What color is the table?" />
-<DialogueBox uk="Стіл коричневий." en="The table is brown." />
-<DialogueBox uk="Якого кольору ручка?" en="What color is the pen?" />
-<DialogueBox uk="Ручка синя." en="The pen is blue." />
-<DialogueBox uk="Якого кольору фото?" en="What color is the photo?" />
-<DialogueBox uk="Фото чорно-біле." en="The photo is black and white." />
+```text
+Якого кольору стіл?
+Стіл коричневий.
+Якого кольору ручка?
+Ручка синя.
+Якого кольору фото?
+Фото чорно-біле.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Якого кольору стіл?** | What color is the table? |
+| **Стіл коричневий.** | The table is brown. |
+| **Якого кольору ручка?** | What color is the pen? |
+| **Ручка синя.** | The pen is blue. |
+| **Якого кольору фото?** | What color is the photo? |
+| **Фото чорно-біле.** | The photo is black and white. |
 
 Then add one person-description chunk:
 

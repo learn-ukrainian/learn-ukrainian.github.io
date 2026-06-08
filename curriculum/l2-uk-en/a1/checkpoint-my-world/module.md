@@ -35,9 +35,9 @@ ban-4: Use accurate cultural markers: синьо-жовтий прапор, Тр
 ban-5: Keep historical and cultural facts precise: Holodomor 1932-1933, Ukrainian literary canon, and no Russian-imperial figures as Ukrainian authors.
 -->
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Що ми знаємо?
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 You have six small toolkits from Modules 8-13.
 
@@ -72,29 +72,61 @@ plural? Then choose the pointing word, possessive, and adjective.
 Read this short text aloud. It uses the A1.2 world: room objects, colors,
 prices, pointing words, and plural nouns.
 
-<DialogueBox uk="Це моя кімната." en="This is my room." />
-<DialogueBox uk="Мій стіл великий і новий." en="My table is big and new." />
-<DialogueBox uk="Ця лампа біла, а та лампа жовта." en="This lamp is white, and that lamp is yellow." />
-<DialogueBox uk="На столі є три книги." en="There are three books on the table." />
-<DialogueBox uk="Ці книги нові." en="These books are new." />
-<DialogueBox uk="Ті зошити сині." en="Those notebooks are blue." />
-<DialogueBox uk="Моє вікно чисте." en="My window is clean." />
-<DialogueBox uk="Стіни білі." en="The walls are white." />
-<DialogueBox uk="У мене є окуляри." en="I have glasses." />
-<DialogueBox uk="Мені 20 років." en="I am 20 years old." />
+```text
+Це моя кімната.
+Мій стіл великий і новий.
+Ця лампа біла, а та лампа жовта.
+На столі є три книги.
+Ці книги нові.
+Ті зошити сині.
+Моє вікно чисте.
+Стіни білі.
+У мене є окуляри.
+Мені 20 років.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Це моя кімната.** | This is my room. |
+| **Мій стіл великий і новий.** | My table is big and new. |
+| **Ця лампа біла, а та лампа жовта.** | This lamp is white, and that lamp is yellow. |
+| **На столі є три книги.** | There are three books on the table. |
+| **Ці книги нові.** | These books are new. |
+| **Ті зошити сині.** | Those notebooks are blue. |
+| **Моє вікно чисте.** | My window is clean. |
+| **Стіни білі.** | The walls are white. |
+| **У мене є окуляри.** | I have glasses. |
+| **Мені 20 років.** | I am 20 years old. |
 
 Now read the marketplace scene. The cultural words are there for context:
 **вишиванка**, **глечик**, **намисто**, **писанки**. You only need to use the
 grammar around them.
 
-<DialogueBox uk="Іванко: Катю, що це?" en="Ivanko: Katia, what is this?" />
-<DialogueBox uk="Катя: Це вишиванка. Вона біла і синя." en="Katia: This is an embroidered shirt. It is white and blue." />
-<DialogueBox uk="Іванко: А той глечик?" en="Ivanko: And that clay jug?" />
-<DialogueBox uk="Катя: Той глечик старий, але гарний." en="Katia: That clay jug is old, but beautiful." />
-<DialogueBox uk="Іванко: Ці писанки червоні чи жовті?" en="Ivanko: Are these pysanky red or yellow?" />
-<DialogueBox uk="Катя: Ці писанки червоні, жовті й сині." en="Katia: These pysanky are red, yellow, and blue." />
-<DialogueBox uk="Іванко: Скільки коштує намисто?" en="Ivanko: How much does the necklace cost?" />
-<DialogueBox uk="Катя: Сто гривень." en="Katia: One hundred hryvnias." />
+```text
+Іванко: Катю, що це?
+Катя: Це вишиванка. Вона біла і синя.
+Іванко: А той глечик?
+Катя: Той глечик старий, але гарний.
+Іванко: Ці писанки червоні чи жовті?
+Катя: Ці писанки червоні, жовті й сині.
+Іванко: Скільки коштує намисто?
+Катя: Сто гривень.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Іванко: Катю, що це?** | Ivanko: Katia, what is this? |
+| **Катя: Це вишиванка. Вона біла і синя.** | Katia: This is an embroidered shirt. It is white and blue. |
+| **Іванко: А той глечик?** | Ivanko: And that clay jug? |
+| **Катя: Той глечик старий, але гарний.** | Katia: That clay jug is old, but beautiful. |
+| **Іванко: Ці писанки червоні чи жовті?** | Ivanko: Are these pysanky red or yellow? |
+| **Катя: Ці писанки червоні, жовті й сині.** | Katia: These pysanky are red, yellow, and blue. |
+| **Іванко: Скільки коштує намисто?** | Ivanko: How much does the necklace cost? |
+| **Катя: Сто гривень.** | Katia: One hundred hryvnias. |
 
 The cultural frame stays Ukrainian: **синьо-жовтий прапор**, **Тризуб**,
 **Київ**, and **гривня** are the precise forms to keep. In English-facing
@@ -145,20 +177,41 @@ Plural-only words, or **множинні іменники**, remain whole-word i
 
 Use the full checkpoint conversation at a Ukrainian street market.
 
-<DialogueBox uk="Іванко: Добрий день! Це ваша крамниця?" en="Ivanko: Good afternoon! Is this your stall?" />
-<DialogueBox uk="Катя: Так, це моя крамниця. Я Катя." en="Katia: Yes, this is my stall. I am Katia." />
-<DialogueBox uk="Іванко: Мене звати Іванко. Дуже приємно." en="Ivanko: My name is Ivanko. Nice to meet you." />
-<DialogueBox uk="Катя: Мені теж. Що тобі подобається?" en="Katia: Me too. What do you like?" />
-<DialogueBox uk="Іванко: Мені подобається ця вишиванка. Вона біла?" en="Ivanko: I like this embroidered shirt. Is it white?" />
-<DialogueBox uk="Катя: Так, вона біла і синя." en="Katia: Yes, it is white and blue." />
-<DialogueBox uk="Іванко: А той глечик? Він новий?" en="Ivanko: And that clay jug? Is it new?" />
-<DialogueBox uk="Катя: Ні, він старий, але гарний." en="Katia: No, it is old but beautiful." />
-<DialogueBox uk="Іванко: Ці писанки маленькі?" en="Ivanko: Are these pysanky small?" />
-<DialogueBox uk="Катя: Так, ці писанки маленькі й червоні." en="Katia: Yes, these pysanky are small and red." />
-<DialogueBox uk="Іванко: Скільки коштує це намисто?" en="Ivanko: How much does this necklace cost?" />
-<DialogueBox uk="Катя: Сто гривень." en="Katia: One hundred hryvnias." />
-<DialogueBox uk="Іванко: Добре. Я хочу це намисто." en="Ivanko: Good. I want this necklace." />
-<DialogueBox uk="Катя: Будь ласка. До побачення!" en="Katia: Here you are. Goodbye!" />
+```text
+Іванко: Добрий день! Це ваша крамниця?
+Катя: Так, це моя крамниця. Я Катя.
+Іванко: Мене звати Іванко. Дуже приємно.
+Катя: Мені теж. Що тобі подобається?
+Іванко: Мені подобається ця вишиванка. Вона біла?
+Катя: Так, вона біла і синя.
+Іванко: А той глечик? Він новий?
+Катя: Ні, він старий, але гарний.
+Іванко: Ці писанки маленькі?
+Катя: Так, ці писанки маленькі й червоні.
+Іванко: Скільки коштує це намисто?
+Катя: Сто гривень.
+Іванко: Добре. Я хочу це намисто.
+Катя: Будь ласка. До побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Іванко: Добрий день! Це ваша крамниця?** | Ivanko: Good afternoon! Is this your stall? |
+| **Катя: Так, це моя крамниця. Я Катя.** | Katia: Yes, this is my stall. I am Katia. |
+| **Іванко: Мене звати Іванко. Дуже приємно.** | Ivanko: My name is Ivanko. Nice to meet you. |
+| **Катя: Мені теж. Що тобі подобається?** | Katia: Me too. What do you like? |
+| **Іванко: Мені подобається ця вишиванка. Вона біла?** | Ivanko: I like this embroidered shirt. Is it white? |
+| **Катя: Так, вона біла і синя.** | Katia: Yes, it is white and blue. |
+| **Іванко: А той глечик? Він новий?** | Ivanko: And that clay jug? Is it new? |
+| **Катя: Ні, він старий, але гарний.** | Katia: No, it is old but beautiful. |
+| **Іванко: Ці писанки маленькі?** | Ivanko: Are these pysanky small? |
+| **Катя: Так, ці писанки маленькі й червоні.** | Katia: Yes, these pysanky are small and red. |
+| **Іванко: Скільки коштує це намисто?** | Ivanko: How much does this necklace cost? |
+| **Катя: Сто гривень.** | Katia: One hundred hryvnias. |
+| **Іванко: Добре. Я хочу це намисто.** | Ivanko: Good. I want this necklace. |
+| **Катя: Будь ласка. До побачення!** | Katia: Here you are. Goodbye! |
 
 This dialogue checks all A1.2 skills at once: gender (**вона**, **він**),
 agreement (**біла**, **синя**, **старий**, **маленькі**), pointing
@@ -189,13 +242,27 @@ Use this frame:
 
 One safe model:
 
-<DialogueBox uk="Мене звати Анна." en="My name is Anna." />
-<DialogueBox uk="Це моя кімната." en="This is my room." />
-<DialogueBox uk="Мій стіл великий, а моє вікно чисте." en="My table is big, and my window is clean." />
-<DialogueBox uk="Ця лампа біла, а та сумка синя." en="This lamp is white, and that bag is blue." />
-<DialogueBox uk="У мене є три книги." en="I have three books." />
-<DialogueBox uk="Ці книги нові." en="These books are new." />
-<DialogueBox uk="Мені 20 років." en="I am 20 years old." />
+```text
+Мене звати Анна.
+Це моя кімната.
+Мій стіл великий, а моє вікно чисте.
+Ця лампа біла, а та сумка синя.
+У мене є три книги.
+Ці книги нові.
+Мені 20 років.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мене звати Анна.** | My name is Anna. |
+| **Це моя кімната.** | This is my room. |
+| **Мій стіл великий, а моє вікно чисте.** | My table is big, and my window is clean. |
+| **Ця лампа біла, а та сумка синя.** | This lamp is white, and that bag is blue. |
+| **У мене є три книги.** | I have three books. |
+| **Ці книги нові.** | These books are new. |
+| **Мені 20 років.** | I am 20 years old. |
 
 ### Repair traps
 
