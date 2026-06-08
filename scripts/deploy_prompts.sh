@@ -54,7 +54,9 @@ ORPHAN_PATHS_AGENTS=""
 ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml hooks.json"
 # tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);
 #        local working state, NOT a deploy artifact. Preserve across rsync --delete.
-ORPHAN_PATHS_GEMINI="docs/ rules/ tmp/"
+# config.yaml — repository-level Gemini Code Assist for GitHub configuration.
+#        It disables GitHub PR reviews while preserving local Gemini CLI tooling.
+ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/"
 
 # Claude Code auto-loads every unscoped file in `.claude/rules/` into
 # the system prompt. These six always-load rules are now served by the

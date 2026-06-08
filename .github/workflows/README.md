@@ -42,6 +42,9 @@ coordination now runs through the bridge (`scripts/ai_agent_bridge`) and
 `scripts/delegate.py`, not GitHub Actions. See
 `docs/best-practices/agent-cooperation.md`.
 
+Gemini Code Assist for GitHub PR reviews is disabled by `.gemini/config.yaml`.
+Use local machine-agent review via `scripts/delegate.py` instead.
+
 ## References
 
 - **Agent cooperation:** `docs/best-practices/agent-cooperation.md`
