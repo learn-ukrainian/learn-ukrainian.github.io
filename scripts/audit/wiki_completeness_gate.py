@@ -29,6 +29,7 @@ EARLY_FOUNDATION_DECOLONIZATION_SECTION_ONLY_SLUGS = frozenset(
 )
 SEMINAR_LEVELS = frozenset(
     {
+        "folk",
         "hist",
         "istorio",
         "bio",
@@ -46,6 +47,18 @@ SEMINAR_LEVELS = frozenset(
         "ruth",
     }
 )
+SEMINAR_REQUIRED_SECTIONS = (
+    "Короткий зміст",
+    "Основний зміст",
+    "Ключові терміни",
+    "Мовні зразки",
+    "Деколонізаційна перспектива",
+    "Пов'язані статті",
+)
+SEMINAR_SECTION_HEADING_RES = {
+    heading: re.compile(rf"^##\s+{re.escape(heading)}\s*$", re.IGNORECASE)
+    for heading in SEMINAR_REQUIRED_SECTIONS
+}
 
 METHODOLOGY_HEADING_RE = re.compile(r"^##\s+Методичний\s+підхід\b", re.IGNORECASE)
 DECOLONIZATION_HEADING_RE = re.compile(r"^##\s+Деколонізаційні\s+застереження\b", re.IGNORECASE)
@@ -65,21 +78,42 @@ CHECK_TITLES = {
     "textbook_exercises": "Приклади з підручників",
     "distractor_inventory": "distractor_inventory",
     "chunk_citations_spot_check": "chunk_citations_spot_check",
+    "seminar_sections": "seminar_sections",
+    "distinct_sources": "distinct_sources",
+    "citation_resolution": "citation_resolution",
+    "source_ref_resolution": "source_ref_resolution",
+    "all_chunk_verify_quote": "all_chunk_verify_quote",
 }
-CHECK_ORDER = tuple(CHECK_TITLES)
+CHECK_ORDER = (
+    "methodology",
+    "sequence_steps",
+    "l2_errors",
+    "decolonization_pairs",
+    "vocabulary_minimum",
+    "textbook_exercises",
+    "distractor_inventory",
+    "chunk_citations_spot_check",
+)
+SEMINAR_CHECK_ORDER = (
+    "seminar_sections",
+    "distinct_sources",
+    "citation_resolution",
+    "source_ref_resolution",
+    "all_chunk_verify_quote",
+)
 
 
-def thresholds_for_level(level: str) -> dict[str, int]:
+def thresholds_for_level(level: str) -> dict[str, Any]:
     """Return V7.1 wiki completeness thresholds for implemented core levels."""
     level_key = level.lower()
     if level_key in SEMINAR_LEVELS:
-        # Seminar checks need all-chunk verification, URL resolution, and a
-        # claim/source registry. That infrastructure is intentionally deferred
-        # to the separate seminar ADR called out in the V7.1 decision.
-        raise NotImplementedError(
-            "Seminar wiki completeness checks are deferred pending all-chunk "
-            "verify_quote, URL resolution, and two-source-rule infrastructure."
-        )
+        return {
+            "required_sections": SEMINAR_REQUIRED_SECTIONS,
+            "min_distinct_sources": 2,
+            "citations_resolve": 100,
+            "source_refs_resolve": 100,
+            "all_chunk_verify_quote": 100,
+        }
     if level_key not in CORE_LEVELS:
         raise ValueError(f"Unknown level for wiki completeness gate: {level!r}")
     if level_key in {"a1", "a2"}:
@@ -103,7 +137,7 @@ def thresholds_for_level(level: str) -> dict[str, int]:
     }
 
 
-def thresholds_for_module(level: str, slug: str | None) -> dict[str, int]:
+def thresholds_for_module(level: str, slug: str | None) -> dict[str, Any]:
     """Return wiki completeness thresholds adjusted for module-level policy."""
     thresholds = thresholds_for_level(level)
     level_key = level.lower()
@@ -130,6 +164,16 @@ def check_wiki_completeness(
     slug_value = slug or str(manifest.get("slug") or path.stem)
     level_key = level.lower()
     thresholds = thresholds_for_module(level_key, slug_value)
+    if level_key in SEMINAR_LEVELS:
+        return _check_seminar_completeness(
+            text,
+            lines,
+            path,
+            level=level_key,
+            slug=slug_value,
+            thresholds=thresholds,
+            verify_quote_fn=verify_quote_fn,
+        )
 
     methodology_text = _section_text(lines, METHODOLOGY_HEADING_RE)
     decolonization_text = _section_text(lines, DECOLONIZATION_HEADING_RE)
@@ -187,6 +231,197 @@ def check_wiki_completeness(
         "checks": checks,
         "diagnostic": _diagnostic(failed[0], checks[failed[0]]) if failed else "Wiki completeness gate passed.",
     }
+
+
+def _check_seminar_completeness(
+    wiki_text: str,
+    lines: list[str],
+    wiki_path: Path,
+    *,
+    level: str,
+    slug: str,
+    thresholds: Mapping[str, Any],
+    verify_quote_fn: Callable[[str, str, Mapping[str, Any]], Mapping[str, Any] | bool] | None,
+) -> dict[str, Any]:
+    required_sections = tuple(str(section) for section in thresholds["required_sections"])
+    citations = _ordered_source_ids(wiki_text)
+    sources = _load_source_registry(wiki_path)
+
+    checks = {
+        "seminar_sections": _seminar_sections_check(lines, required_sections),
+        "distinct_sources": _minimum_check(
+            len(citations),
+            int(thresholds["min_distinct_sources"]),
+            "distinct inline source citation(s) found.",
+        ),
+        "citation_resolution": _citation_resolution_check(
+            citations,
+            sources,
+            int(thresholds["citations_resolve"]),
+        ),
+        "source_ref_resolution": _source_ref_resolution_check(
+            citations,
+            sources,
+            int(thresholds["source_refs_resolve"]),
+        ),
+        "all_chunk_verify_quote": _all_chunk_verify_quote_check(
+            wiki_text,
+            citations,
+            sources,
+            int(thresholds["all_chunk_verify_quote"]),
+            verify_quote_fn=verify_quote_fn,
+        ),
+    }
+
+    failed = [name for name in SEMINAR_CHECK_ORDER if checks[name]["verdict"] == "FAIL"]
+    return {
+        "verdict": "FAIL" if failed else "PASS",
+        "level": level,
+        "slug": slug,
+        "checks": checks,
+        "diagnostic": _diagnostic(failed[0], checks[failed[0]]) if failed else "Wiki completeness gate passed.",
+    }
+
+
+def _seminar_sections_check(lines: list[str], required_sections: tuple[str, ...]) -> dict[str, Any]:
+    missing_or_empty = [
+        heading
+        for heading in required_sections
+        if not _section_text(lines, SEMINAR_SECTION_HEADING_RES[heading]).strip()
+    ]
+    actual = len(required_sections) - len(missing_or_empty)
+    report = _minimum_check(
+        actual,
+        len(required_sections),
+        f"{actual}/{len(required_sections)} required seminar sections are present and non-empty.",
+    )
+    if missing_or_empty:
+        report["missing_or_empty"] = missing_or_empty
+        report["detail"] = "missing or empty seminar section(s): " + ", ".join(missing_or_empty)
+    return report
+
+
+def _citation_resolution_check(
+    citations: list[str],
+    sources: Mapping[str, Mapping[str, Any]],
+    minimum_percent: int,
+) -> dict[str, Any]:
+    missing = [source_id for source_id in citations if source_id not in sources]
+    resolved = len(citations) - len(missing)
+    actual_percent = _percent(resolved, len(citations))
+    verdict = "PASS" if actual_percent >= minimum_percent else "FAIL"
+    report: dict[str, Any] = {
+        "verdict": verdict,
+        "actual": actual_percent,
+        "minimum": minimum_percent,
+        "detail": f"{resolved}/{len(citations)} cited source id(s) defined in source registry.",
+    }
+    if missing:
+        report["dangling_ids"] = missing
+        report["detail"] = "dangling citation id(s): " + ", ".join(missing)
+    return report
+
+
+def _source_ref_resolution_check(
+    citations: list[str],
+    sources: Mapping[str, Mapping[str, Any]],
+    minimum_percent: int,
+) -> dict[str, Any]:
+    unresolved = [
+        source_id
+        for source_id in citations
+        if not _source_has_resolvable_reference(sources.get(source_id))
+    ]
+    resolved = len(citations) - len(unresolved)
+    actual_percent = _percent(resolved, len(citations))
+    verdict = "PASS" if actual_percent >= minimum_percent else "FAIL"
+    report: dict[str, Any] = {
+        "verdict": verdict,
+        "actual": actual_percent,
+        "minimum": minimum_percent,
+        "detail": f"{resolved}/{len(citations)} cited source reference(s) resolved.",
+    }
+    if unresolved:
+        report["unresolved_ids"] = unresolved
+        report["detail"] = "unresolved source reference id(s): " + ", ".join(unresolved)
+    return report
+
+
+def _all_chunk_verify_quote_check(
+    wiki_text: str,
+    citations: list[str],
+    sources: Mapping[str, Mapping[str, Any]],
+    minimum_percent: int,
+    *,
+    verify_quote_fn: Callable[[str, str, Mapping[str, Any]], Mapping[str, Any] | bool] | None,
+) -> dict[str, Any]:
+    if verify_quote_fn is None:
+        resolved = sum(
+            1
+            for source_id in citations
+            if source_id in sources and _source_has_resolvable_reference(sources.get(source_id))
+        )
+        actual_percent = _percent(resolved, len(citations))
+        verdict = "PASS" if actual_percent >= minimum_percent else "FAIL"
+        report: dict[str, Any] = {
+            "verdict": verdict,
+            "actual": actual_percent,
+            "minimum": minimum_percent,
+            "detail": (
+                f"{resolved}/{len(citations)} source registry ids and references resolved "
+                "(verify_quote adapter not configured)"
+            ),
+        }
+        failures = [
+            source_id
+            for source_id in citations
+            if source_id not in sources or not _source_has_resolvable_reference(sources.get(source_id))
+        ]
+        if failures:
+            report["failures"] = failures
+        return report
+
+    passed = 0
+    failures: list[str] = []
+    for source_id in citations:
+        source = sources.get(source_id)
+        if not _source_has_resolvable_reference(source):
+            failures.append(source_id)
+            continue
+        result = verify_quote_fn(source_id, _citation_context(wiki_text, source_id), source)
+        if _verification_passed(result):
+            passed += 1
+        else:
+            failures.append(source_id)
+
+    actual_percent = _percent(passed, len(citations))
+    verdict = "PASS" if actual_percent >= minimum_percent else "FAIL"
+    report = {
+        "verdict": verdict,
+        "actual": actual_percent,
+        "minimum": minimum_percent,
+        "detail": f"{passed}/{len(citations)} verify_quote returned PASS",
+    }
+    if failures:
+        report["failures"] = failures
+    return report
+
+
+def _source_has_resolvable_reference(source: Mapping[str, Any] | None) -> bool:
+    if not source:
+        return False
+    source_type = str(source.get("type") or "").strip().lower()
+    if source_type in {"literary", "textbook"}:
+        return bool(str(source.get("file") or "").strip())
+    if source_type in {"wikipedia", "external", "external_article"}:
+        return bool(str(source.get("url") or "").strip())
+    return bool(str(source.get("file") or source.get("url") or "").strip())
+
+
+def _percent(numerator: int, denominator: int) -> int:
+    if denominator <= 0:
+        return 100
+    return round((numerator / denominator) * 100)
 
 
 def _section_presence_check(section_text: str, detail: str) -> dict[str, Any]:
