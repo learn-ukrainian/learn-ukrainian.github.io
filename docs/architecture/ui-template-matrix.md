@@ -12,6 +12,10 @@ The POC files are design intent, not source to copy:
 - `docs/poc/poc-folk-lesson-design.html`
 - `docs/poc/poc-lit-lesson-design.html`
 
+The post-foundation state contract is `docs/architecture/ui-template-state-spec.md`.
+Use it as the source of truth for required versus intentionally deferred states
+before opening the next UI implementation PR.
+
 ## Global Rules
 
 - Support light and dark modes for every page class.
