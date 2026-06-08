@@ -2,28 +2,29 @@
 
 Generated-At: 2026-06-08 (Claude orchestrator, user-requested handoff at ~500K)
 
-## Latest Brief
+## Latest Brief (2026-06-08 PM — Claude UI session)
 
-Claude orchestrator session. Shipped this session (all merged to origin/main):
-Dependabot sweep; security helper `safe_env.sh` (#1896 closed); agy lane hardening
-PR #2839 (#2739+#2362 closed); **agy `--to-model` fix** (pro now selectable, ported
-from kubedojo); agy routing flipped to default (wiki/factual held); **autocompact
-DISABLED** + brain-rot canary (`scripts/context_canary.py`) + 500/700 graduated
-handoff policy; **main-page color de-Sovietization** (flag azure/yellow, navy+goldenrod
-retired — needs manual Pages deploy); **#2823 lightweight-UI takeover** (audit + matrix
-+ 6-slice plan posted to the issue — foundation only, nothing built to POC fidelity, NO
-UI design review yet).
+Driving **#2823 lightweight UI** (tech + design); folk owned by another agent. Shipped +
+pushed to origin/main (verified in-browser on localhost:4321, NOT deployed — user wants
+live site untouched): **dark-mode contrast root-cause fix** (`1ce28423d3` — footer was
+white-on-white; added fixed on-color tokens; home 23→0 contrast failures, 340 tests pass);
+A1 landing **M08 CTA fix** (`cf1c78fafe`); track-orchestrator→folk retarget (`497c51b09a`);
+SCRIPTS.md services.sh doc (`cd4620834a`).
 
-**Full detail:** `docs/session-state/2026-06-08-claude-agy-context-policy-2823-takeover.md`
+**Full detail (READ THIS):** `docs/session-state/2026-06-08-claude-ui-darkmode-slice1-lexicon.md`
+
+## ⚠️ Hazard: Codex is sharing the main checkout (branch switch + recurring index.lock). Get Codex on a worktree.
 
 ## Top next actions
-1. **#2823 epic**: drive slice 1 (de-Starlight cleanup) → slices 2-6. Slice 6 = the visual
-   design review the user asked for ("do pages look nice/best-practice?" → currently NO/UNVERIFIED).
-   Architecture is decided (Astro-without-Starlight, already in place). Plan in issue #2823.
-2. **Agy wiki-lane flip** (unblocked): rigorous §7 re-test on agy pro + obscure bio + COMPLETE
-   reference (this session's probe was corpus-limited); if clean, add `agy` to
-   `scripts/wiki/compiler.py` WRITER_CHOICES + flip MEMORY L73/L112.
-3. **Trigger manual Pages deploy** (`deploy-pages.yml`) to push the color fix live.
+1. **Lexicon "unusable" (user-flagged)** — detail pages are empty v1 stubs by design; raw
+   `plan_required` token leaks. DECIDE: build enrichment pipeline vs defer Word Atlas from
+   nav (AC allows defer). Quick win: fix the token leak in `src/pages/lexicon/[lemma].astro`.
+2. **#2823 slice 1 redo** — in `stash@{0}`, blocked by `check-mdx-source-parity`. Redo
+   parity-safe: keep Vite alias, only fix generator + delete dead overrides/CSS + drop
+   `template` field. Do NOT bulk-edit published MDX.
+3. **#2823 slices 2-6** (shell/landing/lesson/seminar/word-atlas/QA). Design-QA already
+   swept 7 page classes — all clean in dark mode.
+4. (Older, still open) Agy wiki-lane §7 re-test; manual Pages deploy when user approves.
 
 ## Context policy (autocompact OFF)
 Handoff is the ONLY guard. ~500K this phase, ~700K next. Monitor rot with
