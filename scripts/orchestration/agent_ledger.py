@@ -10,9 +10,12 @@ events needed by the orchestrator.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
-import os
 import re
+import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -71,7 +74,7 @@ def safe_id(value: str) -> str:
 
 
 def safe_path_component(value: str) -> str:
-    return re.sub(r"[^A-Za-z0-9._:-]+", "_", value).strip("._") or "task"
+    return safe_id(value)
 
 
 def ledger_dir(repo_root: Path) -> Path:
@@ -86,23 +89,44 @@ def task_path(repo_root: Path, task_id: str) -> Path:
     return tasks_dir(repo_root) / f"{safe_path_component(task_id)}.json"
 
 
+@contextmanager
+def ledger_mutation_lock(repo_root: Path) -> Iterator[None]:
+    lock_path = ledger_dir(repo_root) / ".lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+", encoding="utf-8") as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
 def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
+    tmp = path.with_suffix(path.suffix + f".tmp.{uuid.uuid4().hex}")
     tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(tmp, path)
+    tmp.replace(path)
 
 
 def read_json(path: Path) -> dict[str, Any] | None:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    except FileNotFoundError:
         return None
+    except OSError as exc:
+        raise LedgerError(f"could not read ledger file {path}: {exc}") from exc
+    except json.JSONDecodeError as exc:
+        raise LedgerError(f"invalid JSON in ledger file {path}: {exc.msg}") from exc
+    if not isinstance(payload, dict):
+        raise LedgerError(f"ledger file must contain a JSON object: {path}")
     return payload if isinstance(payload, dict) else None
 
 
 def normalize_owned_path(path: str) -> str:
-    value = path.strip().replace("\\", "/")
+    raw = path.strip().replace("\\", "/")
+    if raw.startswith("/") or re.match(r"^[A-Za-z]:/", raw):
+        raise LedgerError(f"owned paths must be relative to the repository: {path!r}")
+    value = raw
     value = re.sub(r"/+", "/", value).strip("/")
     if not value or value.startswith("..") or "/../" in f"/{value}/":
         raise LedgerError(f"invalid owned path: {path!r}")
@@ -192,8 +216,8 @@ def upsert_task(
     repo_root: Path,
     *,
     task_id: str,
-    agent: str,
-    status: str = "planned",
+    agent: str | None = None,
+    status: str | None = None,
     issue: int | None = None,
     lane: str | None = None,
     module_family: str | None = None,
@@ -206,58 +230,71 @@ def upsert_task(
     allow_conflicts: bool = False,
     metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    task_id = safe_id(task_id)
-    if status not in VALID_STATUSES:
-        raise LedgerError(f"invalid status: {status}")
-    if task_family and task_family not in TASK_FAMILIES:
-        raise LedgerError(f"invalid task_family: {task_family}")
+    with ledger_mutation_lock(repo_root):
+        task_id = safe_id(task_id)
+        existing = get_task(repo_root, task_id) or {}
 
-    owned = normalize_owned_paths(owned_paths)
-    if status in ACTIVE_STATUSES and not allow_conflicts:
-        conflicts = _overlap_conflicts(repo_root, task_id=task_id, owned_paths=owned)
-        if conflicts:
-            raise OwnershipConflictError(task_id, conflicts)
+        effective_agent = agent or existing.get("agent")
+        if not effective_agent:
+            raise LedgerError("agent is required when creating a task")
 
-    now = isoformat_z(utc_now())
-    existing = get_task(repo_root, task_id) or {}
-    events = list(existing.get("events") or [])
-    if not existing:
-        events.append(task_event(event_type="created", actor=agent, message="task registered"))
-    elif existing.get("status") != status:
-        events.append(
-            task_event(
-                event_type="status",
-                actor=agent,
-                message=f"{existing.get('status')} -> {status}",
-            )
+        effective_status = status or existing.get("status") or "planned"
+        if effective_status not in VALID_STATUSES:
+            raise LedgerError(f"invalid status: {effective_status}")
+
+        effective_task_family = task_family if task_family is not None else existing.get("task_family")
+        if effective_task_family and effective_task_family not in TASK_FAMILIES:
+            raise LedgerError(f"invalid task_family: {effective_task_family}")
+
+        owned = (
+            list(existing.get("owned_paths") or [])
+            if owned_paths is None
+            else normalize_owned_paths(owned_paths)
         )
+        if effective_status in ACTIVE_STATUSES and not allow_conflicts:
+            conflicts = _overlap_conflicts(repo_root, task_id=task_id, owned_paths=owned)
+            if conflicts:
+                raise OwnershipConflictError(task_id, conflicts)
 
-    payload = {
-        "schema_version": SCHEMA_VERSION,
-        "task_id": task_id,
-        "issue": issue,
-        "lane": lane,
-        "module_family": module_family,
-        "task_family": task_family,
-        "agent": agent,
-        "model": model,
-        "thread_id": thread_id,
-        "branch": branch,
-        "worktree": worktree,
-        "owned_paths": owned,
-        "status": status,
-        "heartbeat_at": existing.get("heartbeat_at"),
-        "validation": existing.get("validation") or {},
-        "review": existing.get("review") or {},
-        "ci": existing.get("ci") or {},
-        "pr_url": existing.get("pr_url"),
-        "metadata": {**(existing.get("metadata") or {}), **(metadata or {})},
-        "events": events,
-        "created_at": existing.get("created_at") or now,
-        "updated_at": now,
-    }
-    write_json_atomic(task_path(repo_root, task_id), payload)
-    return payload
+        now = isoformat_z(utc_now())
+        events = list(existing.get("events") or [])
+        if not existing:
+            events.append(task_event(event_type="created", actor=effective_agent, message="task registered"))
+        elif existing.get("status") != effective_status:
+            events.append(
+                task_event(
+                    event_type="status",
+                    actor=effective_agent,
+                    message=f"{existing.get('status')} -> {effective_status}",
+                )
+            )
+
+        payload = {
+            "schema_version": SCHEMA_VERSION,
+            "task_id": task_id,
+            "issue": issue if issue is not None else existing.get("issue"),
+            "lane": lane if lane is not None else existing.get("lane"),
+            "module_family": module_family if module_family is not None else existing.get("module_family"),
+            "task_family": effective_task_family,
+            "agent": effective_agent,
+            "model": model if model is not None else existing.get("model"),
+            "thread_id": thread_id if thread_id is not None else existing.get("thread_id"),
+            "branch": branch if branch is not None else existing.get("branch"),
+            "worktree": worktree if worktree is not None else existing.get("worktree"),
+            "owned_paths": owned,
+            "status": effective_status,
+            "heartbeat_at": existing.get("heartbeat_at"),
+            "validation": existing.get("validation") or {},
+            "review": existing.get("review") or {},
+            "ci": existing.get("ci") or {},
+            "pr_url": existing.get("pr_url"),
+            "metadata": {**(existing.get("metadata") or {}), **(metadata or {})},
+            "events": events,
+            "created_at": existing.get("created_at") or now,
+            "updated_at": now,
+        }
+        write_json_atomic(task_path(repo_root, task_id), payload)
+        return payload
 
 
 def append_event(
@@ -269,28 +306,29 @@ def append_event(
     message: str = "",
     data: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    task = get_task(repo_root, task_id)
-    if task is None:
-        raise LedgerError(f"task not found: {task_id}")
-    task.setdefault("events", []).append(
-        task_event(event_type=event_type, actor=actor, message=message, data=data)
-    )
-    task["updated_at"] = isoformat_z(utc_now())
-    write_json_atomic(task_path(repo_root, task_id), task)
-    return task
+    with ledger_mutation_lock(repo_root):
+        task = get_task(repo_root, task_id)
+        if task is None:
+            raise LedgerError(f"task not found: {task_id}")
+        task.setdefault("events", []).append(
+            task_event(event_type=event_type, actor=actor, message=message, data=data)
+        )
+        task["updated_at"] = isoformat_z(utc_now())
+        write_json_atomic(task_path(repo_root, task_id), task)
+        return task
 
 
 def heartbeat(repo_root: Path, task_id: str, *, actor: str, message: str = "") -> dict[str, Any]:
-    task = append_event(
-        repo_root,
-        task_id,
-        event_type="heartbeat",
-        actor=actor,
-        message=message,
-    )
-    task["heartbeat_at"] = task["events"][-1]["timestamp"]
-    write_json_atomic(task_path(repo_root, task_id), task)
-    return task
+    with ledger_mutation_lock(repo_root):
+        task = get_task(repo_root, task_id)
+        if task is None:
+            raise LedgerError(f"task not found: {task_id}")
+        event = task_event(event_type="heartbeat", actor=actor, message=message)
+        task.setdefault("events", []).append(event)
+        task["heartbeat_at"] = event["timestamp"]
+        task["updated_at"] = isoformat_z(utc_now())
+        write_json_atomic(task_path(repo_root, task_id), task)
+        return task
 
 
 def summary(repo_root: Path) -> dict[str, Any]:
@@ -316,7 +354,10 @@ def summary(repo_root: Path) -> dict[str, Any]:
 def _json_arg(raw: str | None) -> dict[str, Any] | None:
     if not raw:
         return None
-    data = json.loads(raw)
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise LedgerError(f"invalid JSON object: {exc.msg}") from exc
     if not isinstance(data, dict):
         raise LedgerError("--metadata/--data must be a JSON object")
     return data
@@ -329,8 +370,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     upsert = sub.add_parser("upsert-task")
     upsert.add_argument("--task-id", required=True)
-    upsert.add_argument("--agent", required=True)
-    upsert.add_argument("--status", default="planned", choices=sorted(VALID_STATUSES))
+    upsert.add_argument("--agent")
+    upsert.add_argument("--status", choices=sorted(VALID_STATUSES))
     upsert.add_argument("--issue", type=int)
     upsert.add_argument("--lane")
     upsert.add_argument("--module-family")
@@ -339,7 +380,7 @@ def build_parser() -> argparse.ArgumentParser:
     upsert.add_argument("--thread-id")
     upsert.add_argument("--branch")
     upsert.add_argument("--worktree")
-    upsert.add_argument("--owned-path", action="append", default=[])
+    upsert.add_argument("--owned-path", action="append")
     upsert.add_argument("--allow-conflicts", action="store_true")
     upsert.add_argument("--metadata")
 

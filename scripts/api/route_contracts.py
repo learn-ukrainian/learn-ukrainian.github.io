@@ -257,6 +257,16 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "keep",
     ),
     RouteContract(
+        "/api/coordination", "prefix", "http",
+        "Parallel-agent coordination ledger summary, active task list, and task detail.",
+        "orchestration/agent-ledger/tasks/*.json written by scripts/orchestration/agent_ledger.py.",
+        "No route cache; live filesystem reads from the local coordination ledger.",
+        ("agents", "orchestrator", "future dashboards"),
+        "Complements /api/delegate process state with explicit task ownership and review metadata.",
+        "low while JSON ledger is healthy; invalid task files surface as errors instead of silent stale state",
+        "keep",
+    ),
+    RouteContract(
         "/api/worktrees", "exact", "http",
         "Active git worktree registry.",
         "git worktree list --porcelain, per-worktree git status, and git log -1.",

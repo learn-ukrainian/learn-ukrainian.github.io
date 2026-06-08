@@ -27,7 +27,10 @@ async def coordination_active():
 
 @router.get("/tasks/{task_id}")
 async def coordination_task(task_id: str):
-    task = await asyncio.to_thread(agent_ledger.get_task, PROJECT_ROOT, task_id)
+    try:
+        task = await asyncio.to_thread(agent_ledger.get_task, PROJECT_ROOT, task_id)
+    except agent_ledger.LedgerError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     if task is None:
         raise HTTPException(status_code=404, detail=f"Task not found: {task_id}")
     return task
