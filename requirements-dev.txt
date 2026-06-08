@@ -14,7 +14,7 @@
 pre-commit>=4.6.0
 
 # Static type checking (gradual — see [tool.mypy] in pyproject.toml)
-mypy>=1.13
+mypy>=2.1.0
 
 # Test utilities
 pytest-xdist>=3.6         # parallel test execution (-n auto)
