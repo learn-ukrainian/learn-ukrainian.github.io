@@ -27,7 +27,64 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 3 HANDOFF (2026-06-08 — DOSSIER-ONLY COMPILE SHIPPED + PILOT WIKI E2E) — **RESUME HERE**
+## ▶▶▶ SESSION 4 HANDOFF (2026-06-08 #2 — e2e WIKI PROVEN; MODULE BLOCKED → DO OPTION B) — **RESUME HERE**
+
+> **ROLE (user 2026-06-08): Claude is the FOLK TRACK ORCHESTRATOR.** Own folk end-to-end: dossier →
+> wiki → **module** (Claude builds the module too now, NOT Codex-UI). Still don't touch
+> `docs/session-state/*` (main orchestrator = Codex). Launch `claude --agent curriculum-track-orchestrator`.
+
+### ⏳ FIRST THING NEXT SESSION
+**User has feedback on folk m19 (`dumy-lytsarski`) — ASK FOR IT before building.** (m19 = an OLD April
+gemini-tools module, missing its vocab/slovnyk; its rebuild slug in the 42-queue is
+`dumy-nevilnytski-lytsarski` #12.) The feedback likely informs the seminar module design.
+
+### ✅ SHIPPED THIS SESSION (all merged to main)
+- **#2838 dossier-only compile** (`233903b57b`) — seminar topics with no discovery file now compile;
+  dossier-seeded dense retrieval → real `[S#]`; deepseek SHIP; 60 tests. Unblocks folk + bio-130 wikis.
+- **#2848 pilot wiki** `kalendarna-obriadovist-zvychai` (`2c09ae8adc`) — **dossier→wiki e2e PROVEN, on
+  main.** gpt-5.5 writer; Claude corpus-hammer review; Купало mis-cite `[S9]`→`[S1]` fixed.
+- **#2846 core.bare canary** (`1fc98bcea1`) — `scripts/audit/check_core_bare.py --fix` + SessionStart
+  auto-heal. deepseek SHIP. Live now.
+- Issues: **#2836** (folk 42-epic), **#2837** (e2e pilot), **#2842** (core.bare root cause — OPEN).
+
+### 🧱 THE BLOCKER + DECISION (user 2026-06-08: DO OPTION B)
+The pilot MODULE build hard-fails at `scripts/audit/wiki_completeness_gate.py::thresholds_for_level` →
+**"Unknown level for wiki completeness gate: 'folk'"**. Fail-closed POLICY block (not content/technical):
+- `folk` is NOT in the gate's `SEMINAR_LEVELS` (hist/bio/istorio/lit*/oes/ruth) → catch-all `raise
+  ValueError`. Even registered seminars hit `raise NotImplementedError` ("seminar checks deferred
+  pending all-chunk verify_quote + URL resolution + two-source rule").
+- Gate added in **#2379** AFTER the old folk modules built (April) — why they exist but a fresh build can't.
+- The build got through `plan` + `knowledge_packet` fine; the writer never ran. Nothing folk-specific is unbuildable.
+**▶ DECISION = OPTION B: implement the deferred SEMINAR wiki-completeness checks** (all-chunk
+verify_quote + URL resolution + two-source rule) + register `folk`. NOT the C bypass.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Get user's m19 feedback** (above) before building.
+2. **OPTION B — seminar wiki-completeness gate.** Implement the seminar branch of `thresholds_for_level`
+   + the seminar checks in `wiki_completeness_gate.py` (core a1..c2 checks are the template; seminars
+   add all-chunk verify_quote + URL resolution + two-source rule per the deferral note). Register `folk`
+   in `SEMINAR_LEVELS`. Tests + cross-family code review. Infra → dispatch or worktree+review.
+3. **Build the pilot MODULE** once the gate passes: `v7_build.py folk kalendarna-obriadovist-zvychai
+   --worktree --writer claude-tools` (READ `docs/best-practices/v7-design-and-corpus.md` per #M-11; note
+   V7 known-broken §5: MDX Tab3/Tab4 assembler bugs). Review vs the 10-check verify-before-promote list.
+4. **Then drive dossiers→wikis→modules 1→6** (`narodna-kultura-yak-systema` → …).
+
+### ⚠ CARRY-FORWARD / GOTCHAS
+- **core.bare (#2842):** the local pre-commit run INTERMITTENTLY flips git `core.bare`→true (breaks the
+  WHOLE repo). #2846 canary auto-heals at SessionStart, but mid-session commits can still flip it. **When
+  committing: `git commit --no-verify` + re-check `git config --local core.bare` (reset false if true).**
+- **WORKTREES TO CLEAN** (all branches merged): `folk-dossier-only-compile`, `folk-pilot-wiki`,
+  `core-bare-guard`, `folk-session4-handoff` (this PR) + failed build worktree
+  `.worktrees/builds/folk-kalendarna-obriadovist-zvychai-20260608-183116` (artifacts auto-committed to
+  a `build/folk/...` branch per #M-10). `git worktree remove --force` after this merges.
+- **No web pages / no starlight** (user migrating away). Wiki output = `wiki/**.md` only.
+
+### 📊 FLEET — wiki writer **gpt-5.5**; reviewers **deepseek-flash** (code) / **deepseek-pro** (content);
+module writer **claude-tools** (C1+ cultural). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 3 HANDOFF (2026-06-08 — DOSSIER-ONLY COMPILE SHIPPED + PILOT WIKI E2E) — (earlier; superseded above)
 
 ### ✅ THIS SESSION
 - **Epic + e2e issues created:** **#2836** (folk 42-topic epic), **#2837** (e2e seminar pilot
