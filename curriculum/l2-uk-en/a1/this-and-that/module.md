@@ -36,28 +36,55 @@ ban-3: Keep vocabulary clean: тато, прізвище, Добрий день,
 ban-4: Use Ukrainian cultural framing precisely: синьо-жовтий прапор, Holodomor 1932-1933, and Ukrainian cultural references.
 -->
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 At a table, a bag is close to you and another bag is across the room.
 
-<DialogueBox uk="Ірина: Добрий день! Скільки коштує ця сумка?" en="Iryna: Good afternoon! How much does this bag cost?" />
-<DialogueBox uk="Консультант: Ця червона? Двісті гривень." en="Assistant: This red one? Two hundred hryvnias." />
-<DialogueBox uk="Ірина: Ні, та синя." en="Iryna: No, that blue one." />
-<DialogueBox uk="Консультант: Та синя коштує сто п'ятдесят гривень." en="Assistant: That blue one costs one hundred fifty hryvnias." />
-<DialogueBox uk="Ірина: А цей рюкзак?" en="Iryna: And this backpack?" />
-<DialogueBox uk="Консультант: Цей — сто гривень." en="Assistant: This one is one hundred hryvnias." />
+```text
+Ірина: Добрий день! Скільки коштує ця сумка?
+Консультант: Ця червона? Двісті гривень.
+Ірина: Ні, та синя.
+Консультант: Та синя коштує сто п'ятдесят гривень.
+Ірина: А цей рюкзак?
+Консультант: Цей — сто гривень.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ірина: Добрий день! Скільки коштує ця сумка?** | Iryna: Good afternoon! How much does this bag cost? |
+| **Консультант: Ця червона? Двісті гривень.** | Assistant: This red one? Two hundred hryvnias. |
+| **Ірина: Ні, та синя.** | Iryna: No, that blue one. |
+| **Консультант: Та синя коштує сто п'ятдесят гривень.** | Assistant: That blue one costs one hundred fifty hryvnias. |
+| **Ірина: А цей рюкзак?** | Iryna: And this backpack? |
+| **Консультант: Цей — сто гривень.** | Assistant: This one is one hundred hryvnias. |
 
 In a room, the same grammar works without prices:
 
-<DialogueBox uk="Оля: Що це?" en="Olia: What is this?" />
-<DialogueBox uk="Дмитро: Це мій стіл." en="Dmytro: This is my table." />
-<DialogueBox uk="Оля: А те?" en="Olia: And that?" />
-<DialogueBox uk="Дмитро: Те — крісло." en="Dmytro: That is an armchair." />
-<DialogueBox uk="Оля: Цей стілець новий?" en="Olia: Is this chair new?" />
-<DialogueBox uk="Дмитро: Так, цей новий, а той старий." en="Dmytro: Yes, this one is new, and that one is old." />
-<DialogueBox uk="Оля: Добре, дякую." en="Olia: Good, thank you." />
+```text
+Оля: Що це?
+Дмитро: Це мій стіл.
+Оля: А те?
+Дмитро: Те — крісло.
+Оля: Цей стілець новий?
+Дмитро: Так, цей новий, а той старий.
+Оля: Добре, дякую.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оля: Що це?** | Olia: What is this? |
+| **Дмитро: Це мій стіл.** | Dmytro: This is my table. |
+| **Оля: А те?** | Olia: And that? |
+| **Дмитро: Те — крісло.** | Dmytro: That is an armchair. |
+| **Оля: Цей стілець новий?** | Olia: Is this chair new? |
+| **Дмитро: Так, цей новий, а той старий.** | Dmytro: Yes, this one is new, and that one is old. |
+| **Оля: Добре, дякую.** | Olia: Good, thank you. |
 
 The pattern is small:
 

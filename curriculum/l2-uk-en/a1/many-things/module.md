@@ -37,31 +37,60 @@ ban-3: Do not phrase Ukrainian rules as exceptions to another language.
 ban-4: Keep двоє, троє, четверо as Ukrainian collective-number recognition chunks for plural-only nouns.
 -->
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 The classroom is getting ready for a Ukrainian lesson. Several things are on
 the tables, so the first job is simple: name one thing, then name many.
 
-<DialogueBox uk="Марко: Що тут є?" en="Marko: What is here?" />
-<DialogueBox uk="Оля: Тут столи, стільці і вікна." en="Olia: There are tables, chairs, and windows here." />
-<DialogueBox uk="Марко: Які столи?" en="Marko: What are the tables like?" />
-<DialogueBox uk="Оля: Столи великі й нові." en="Olia: The tables are big and new." />
-<DialogueBox uk="Марко: А стільці?" en="Marko: And the chairs?" />
-<DialogueBox uk="Оля: Стільці старі, але чисті." en="Olia: The chairs are old, but clean." />
-<DialogueBox uk="Марко: А ці вікна?" en="Marko: And these windows?" />
-<DialogueBox uk="Оля: Ці вікна чисті й великі." en="Olia: These windows are clean and big." />
+```text
+Марко: Що тут є?
+Оля: Тут столи, стільці і вікна.
+Марко: Які столи?
+Оля: Столи великі й нові.
+Марко: А стільці?
+Оля: Стільці старі, але чисті.
+Марко: А ці вікна?
+Оля: Ці вікна чисті й великі.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марко: Що тут є?** | Marko: What is here? |
+| **Оля: Тут столи, стільці і вікна.** | Olia: There are tables, chairs, and windows here. |
+| **Марко: Які столи?** | Marko: What are the tables like? |
+| **Оля: Столи великі й нові.** | Olia: The tables are big and new. |
+| **Марко: А стільці?** | Marko: And the chairs? |
+| **Оля: Стільці старі, але чисті.** | Olia: The chairs are old, but clean. |
+| **Марко: А ці вікна?** | Marko: And these windows? |
+| **Оля: Ці вікна чисті й великі.** | Olia: These windows are clean and big. |
 
 At a small shop, plural forms appear because you want more than one item:
 
-<DialogueBox uk="Покупець: У вас є ручки?" en="Customer: Do you have pens?" />
-<DialogueBox uk="Продавець: Так. Які ручки - червоні чи сині?" en="Seller: Yes. Which pens - red or blue?" />
-<DialogueBox uk="Покупець: Сині. І ще зошити." en="Customer: Blue ones. And notebooks too." />
-<DialogueBox uk="Продавець: Скільки?" en="Seller: How many?" />
-<DialogueBox uk="Покупець: Три зошити і дві ручки." en="Customer: Three notebooks and two pens." />
-<DialogueBox uk="Продавець: Добре. Для вас є нові сині ручки." en="Seller: Good. For you there are new blue pens." />
-<DialogueBox uk="Покупець: Дякую. Нам треба саме ці." en="Customer: Thank you. We need exactly these." />
+```text
+Покупець: У вас є ручки?
+Продавець: Так. Які ручки - червоні чи сині?
+Покупець: Сині. І ще зошити.
+Продавець: Скільки?
+Покупець: Три зошити і дві ручки.
+Продавець: Добре. Для вас є нові сині ручки.
+Покупець: Дякую. Нам треба саме ці.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: У вас є ручки?** | Customer: Do you have pens? |
+| **Продавець: Так. Які ручки - червоні чи сині?** | Seller: Yes. Which pens - red or blue? |
+| **Покупець: Сині. І ще зошити.** | Customer: Blue ones. And notebooks too. |
+| **Продавець: Скільки?** | Seller: How many? |
+| **Покупець: Три зошити і дві ручки.** | Customer: Three notebooks and two pens. |
+| **Продавець: Добре. Для вас є нові сині ручки.** | Seller: Good. For you there are new blue pens. |
+| **Покупець: Дякую. Нам треба саме ці.** | Customer: Thank you. We need exactly these. |
 
 Notice four small plural helpers:
 

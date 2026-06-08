@@ -24,9 +24,9 @@ By the end, you can:
 Крок 6: Практичний та комунікативний вимір. На завершальному етапі теми ми переходимо до засвоєння стійких комунікативних формул. Це визначення часу за допомогою конструкції «Котра година?» (де години позначаються порядковими числівниками, а хвилини — кількісними) [S6]. Також вивчаються дати з використанням порядкових числівників для років та місяців у Родовому відмінку (наприклад, конструкція «перше січня») [S8]. Крім того, учні вчаться правильно диктувати та записувати номери телефонів по одній або дві цифри [S11].
 -->
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Start with one question:
 
@@ -38,11 +38,23 @@ In a shop, the most useful line is:
 
 At a market stall:
 
-<DialogueBox uk="Покупець: Добрий день! Скільки коштує синя сумка?" en="Customer: Good afternoon! How much is the blue bag?" />
-<DialogueBox uk="Продавець: Двісті гривень." en="Seller: Two hundred hryvnias." />
-<DialogueBox uk="Покупець: А маленька зелена сумка?" en="Customer: And the small green bag?" />
-<DialogueBox uk="Продавець: Сто п'ятдесят гривень." en="Seller: One hundred fifty hryvnias." />
-<DialogueBox uk="Покупець: Добре, дякую." en="Customer: Good, thank you." />
+```text
+Покупець: Добрий день! Скільки коштує синя сумка?
+Продавець: Двісті гривень.
+Покупець: А маленька зелена сумка?
+Продавець: Сто п'ятдесят гривень.
+Покупець: Добре, дякую.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: Добрий день! Скільки коштує синя сумка?** | Customer: Good afternoon! How much is the blue bag? |
+| **Продавець: Двісті гривень.** | Seller: Two hundred hryvnias. |
+| **Покупець: А маленька зелена сумка?** | Customer: And the small green bag? |
+| **Продавець: Сто п'ятдесят гривень.** | Seller: One hundred fifty hryvnias. |
+| **Покупець: Добре, дякую.** | Customer: Good, thank you. |
 
 Keep **гривня / гривні / гривень** as a price chunk:
 
@@ -192,11 +204,23 @@ Use age as one ready formula:
 
 Read the dialogue:
 
-<DialogueBox uk="Оля: Скільки тобі років?" en="Olia: How old are you?" />
-<DialogueBox uk="Дмитро: Мені двадцять п'ять. А тобі?" en="Dmytro: I am twenty-five. And you?" />
-<DialogueBox uk="Оля: Мені тридцять два." en="Olia: I am thirty-two." />
-<DialogueBox uk="Дмитро: А твоя сестра?" en="Dmytro: And your sister?" />
-<DialogueBox uk="Оля: Їй вісімнадцять." en="Olia: She is eighteen." />
+```text
+Оля: Скільки тобі років?
+Дмитро: Мені двадцять п'ять. А тобі?
+Оля: Мені тридцять два.
+Дмитро: А твоя сестра?
+Оля: Їй вісімнадцять.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оля: Скільки тобі років?** | Olia: How old are you? |
+| **Дмитро: Мені двадцять п'ять. А тобі?** | Dmytro: I am twenty-five. And you? |
+| **Оля: Мені тридцять два.** | Olia: I am thirty-two. |
+| **Дмитро: А твоя сестра?** | Dmytro: And your sister? |
+| **Оля: Їй вісімнадцять.** | Olia: She is eighteen. |
 
 The word **років** is often left understood after the first question. The safe
 full answer is still **Мені двадцять п'ять років**.
@@ -219,10 +243,21 @@ of the age formula, not as a new grammar topic to unpack today.
 Ukrainian mobile numbers often appear as **+380 XX XXX XX XX**. When speaking,
 read them in small groups. Say **нуль**, not "oh."
 
-<DialogueBox uk="Ліза: Дай, будь ласка, свій номер телефону." en="Liza: Please give me your phone number." />
-<DialogueBox uk="Марко: Запиши: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім." en="Marko: Write it down: zero ninety-seven, three two one, forty-five, sixty-seven." />
-<DialogueBox uk="Ліза: Повторюю: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім. Так?" en="Liza: I repeat: zero ninety-seven, three two one, forty-five, sixty-seven. Right?" />
-<DialogueBox uk="Марко: Так, усе правильно." en="Marko: Yes, everything is correct." />
+```text
+Ліза: Дай, будь ласка, свій номер телефону.
+Марко: Запиши: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.
+Ліза: Повторюю: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім. Так?
+Марко: Так, усе правильно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ліза: Дай, будь ласка, свій номер телефону.** | Liza: Please give me your phone number. |
+| **Марко: Запиши: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.** | Marko: Write it down: zero ninety-seven, three two one, forty-five, sixty-seven. |
+| **Ліза: Повторюю: нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім. Так?** | Liza: I repeat: zero ninety-seven, three two one, forty-five, sixty-seven. Right? |
+| **Марко: Так, усе правильно.** | Marko: Yes, everything is correct. |
 
 For A1, reading by groups is enough. You do not need every phone-number style.
 The key habits are **нуль** at the start and clear chunks such as
@@ -295,10 +330,21 @@ phone number. That is already a lot for one A1 module.
 
 A strong final routine has four lines:
 
-<DialogueBox uk="Мені двадцять три роки." en="I am twenty-three years old." />
-<DialogueBox uk="Ця сумка коштує двісті гривень." en="This bag costs two hundred hryvnias." />
-<DialogueBox uk="Мій номер телефону — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім." en="My phone number is zero ninety-seven, three two one, forty-five, sixty-seven." />
-<DialogueBox uk="Повторіть, будь ласка." en="Please repeat." />
+```text
+Мені двадцять три роки.
+Ця сумка коштує двісті гривень.
+Мій номер телефону — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.
+Повторіть, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мені двадцять три роки.** | I am twenty-three years old. |
+| **Ця сумка коштує двісті гривень.** | This bag costs two hundred hryvnias. |
+| **Мій номер телефону — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.** | My phone number is zero ninety-seven, three two one, forty-five, sixty-seven. |
+| **Повторіть, будь ласка.** | Please repeat. |
 
 Say those lines until the chunks feel boring. That is the point: numbers should
 become quick enough that you can use them while buying bread, writing a phone

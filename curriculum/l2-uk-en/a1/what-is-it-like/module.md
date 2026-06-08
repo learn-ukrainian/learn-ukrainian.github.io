@@ -32,9 +32,9 @@ training the first visible pattern: noun gender plus adjective ending.
 Державний Прапор України є виключно синьо-жовтий.
 -->
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Start with the question word. English has one easy phrase, "what kind of."
 Ukrainian asks it four ways because the noun still matters.
@@ -55,13 +55,27 @@ Read the question and the answer as a pair:
 
 At a weekend book fair, Sofia and Taras are looking at a small table:
 
-<DialogueBox uk="Софія: Дивись, це нова книга." en="Sofia: Look, this is a new book." />
-<DialogueBox uk="Тарас: Яка вона?" en="Taras: What is it like?" />
-<DialogueBox uk="Софія: Вона цікава і гарна." en="Sofia: It is interesting and nice." />
-<DialogueBox uk="Тарас: А атлас? Який він?" en="Taras: And the atlas? What is it like?" />
-<DialogueBox uk="Софія: Він старий, але корисний." en="Sofia: It is old, but useful." />
-<DialogueBox uk="Тарас: А фото? Яке воно?" en="Taras: And the photo? What is it like?" />
-<DialogueBox uk="Софія: Воно маленьке." en="Sofia: It is small." />
+```text
+Софія: Дивись, це нова книга.
+Тарас: Яка вона?
+Софія: Вона цікава і гарна.
+Тарас: А атлас? Який він?
+Софія: Він старий, але корисний.
+Тарас: А фото? Яке воно?
+Софія: Воно маленьке.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Софія: Дивись, це нова книга.** | Sofia: Look, this is a new book. |
+| **Тарас: Яка вона?** | Taras: What is it like? |
+| **Софія: Вона цікава і гарна.** | Sofia: It is interesting and nice. |
+| **Тарас: А атлас? Який він?** | Taras: And the atlas? What is it like? |
+| **Софія: Він старий, але корисний.** | Sofia: It is old, but useful. |
+| **Тарас: А фото? Яке воно?** | Taras: And the photo? What is it like? |
+| **Софія: Воно маленьке.** | Sofia: It is small. |
 
 Notice the short answers. You do not need **є** here. Say **Книга цікава**,
 not a word-for-word English sentence with "is."
@@ -165,13 +179,27 @@ Use **але** when the second idea limits the first:
 
 Here is the room pattern:
 
-<DialogueBox uk="Марія: Це моя кімната." en="Mariia: This is my room." />
-<DialogueBox uk="Оленка: Яка вона?" en="Olenka: What is it like?" />
-<DialogueBox uk="Марія: Вона маленька, але світла." en="Mariia: It is small, but bright." />
-<DialogueBox uk="Оленка: А стіл?" en="Olenka: And the table?" />
-<DialogueBox uk="Марія: Стіл новий і чистий." en="Mariia: The table is new and clean." />
-<DialogueBox uk="Оленка: А ліжко?" en="Olenka: And the bed?" />
-<DialogueBox uk="Марія: Ліжко старе, але зручне." en="Mariia: The bed is old, but comfortable." />
+```text
+Марія: Це моя кімната.
+Оленка: Яка вона?
+Марія: Вона маленька, але світла.
+Оленка: А стіл?
+Марія: Стіл новий і чистий.
+Оленка: А ліжко?
+Марія: Ліжко старе, але зручне.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Це моя кімната.** | Mariia: This is my room. |
+| **Оленка: Яка вона?** | Olenka: What is it like? |
+| **Марія: Вона маленька, але світла.** | Mariia: It is small, but bright. |
+| **Оленка: А стіл?** | Olenka: And the table? |
+| **Марія: Стіл новий і чистий.** | Mariia: The table is new and clean. |
+| **Оленка: А ліжко?** | Olenka: And the bed? |
+| **Марія: Ліжко старе, але зручне.** | Mariia: The bed is old, but comfortable. |
 
 Cover the English and answer aloud:
 
@@ -217,9 +245,19 @@ time. You do not need the theory yet. You only need safe chunks:
 
 Now make your own three-line room description. Keep it short:
 
-<DialogueBox uk="Це моя кімната." en="This is my room." />
-<DialogueBox uk="Вона маленька, але гарна." en="It is small, but nice." />
-<DialogueBox uk="У мене є новий стіл і стара лампа." en="I have a new table and an old lamp." />
+```text
+Це моя кімната.
+Вона маленька, але гарна.
+У мене є новий стіл і стара лампа.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Це моя кімната.** | This is my room. |
+| **Вона маленька, але гарна.** | It is small, but nice. |
+| **У мене є новий стіл і стара лампа.** | I have a new table and an old lamp. |
 
 Then change one noun and one adjective:
 
