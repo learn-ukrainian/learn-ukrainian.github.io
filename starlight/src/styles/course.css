@@ -3,11 +3,14 @@
 
 :root {
   color-scheme: light;
+  /* Flag-true palette (DSTU 4512:2006): azure #0057B8 + yellow #FFD700.
+     *-dark variants stay IN-FAMILY — never imperial navy/goldenrod
+     (retired #003D82 / #B8860B 2026-06-08: navy+gold reads Soviet). */
   --lu-blue: #0057B8;
-  --lu-blue-dark: #003D82;
+  --lu-blue-dark: #004B9C;
   --lu-blue-light: #E8F0FE;
   --lu-yellow: #FFD700;
-  --lu-yellow-dark: #B8860B;
+  --lu-yellow-dark: #E6B800;
   --lu-yellow-light: #FFF9E0;
   --lu-green: #2E7D32;
   --lu-green-light: #E8F5E9;
@@ -316,7 +319,7 @@ body {
 
 .lu-hero {
   color: #FFFFFF;
-  background: linear-gradient(135deg, var(--lu-blue-dark), var(--lu-blue) 55%, #1A6FD4);
+  background: linear-gradient(135deg, var(--lu-blue), #1A6FD4);
   border-bottom: 4px solid var(--lu-yellow);
 }
 
