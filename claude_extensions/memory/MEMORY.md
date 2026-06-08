@@ -134,7 +134,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **PLUGINS:** `frontend-design`, `code-review`, `playground`, `pyright-lsp`. Use them.
 - **PRE-COMMIT AUTO:** Done + tests pass → IMMEDIATELY (1) ruff (2) `/simplify` (3) local-agent Gemini review via `ai_agent_bridge`, never GitHub Gemini Code Assist. User never reminds.
 - **QUALITY GATE:** Every changed function needs a test. 80%+ on critical paths.
-- **HYGIENE:** Work like now: act, record durable memory immediately, commit/push cleanup, keep git clean, update stale/partial issues. No chat-only promises.
+- **HYGIENE:** Resolve dirty orchestration files before feature work; delete/avoid `docs/session-state/current.md`; act, record durable memory, commit/push cleanup, keep git clean.
 - **CONTEXT HANDOFF:** At threshold, use Codex thread tools to create/fork/send continuation; do not ask user to move threads manually.
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.
 - **SEQUENCE:** One working e2e example FIRST. Never modify pipeline without tracing.
