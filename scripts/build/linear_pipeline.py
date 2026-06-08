@@ -1031,11 +1031,19 @@ def run_wiki_completeness_gate(
         raise LinearPipelineError(f"No wiki article found for level={level_key!r}, slug={slug_key!r}")
     from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 
+    # TODO(folk-seminar-gate): wire corpus verify_quote for seminar levels once
+    # there is an in-process function that accepts (source_id,
+    # citation_context, source_mapping). The current implementation lives at
+    # .mcp/servers/sources/server.py::handle_verify_quote and only accepts
+    # author/text search arguments, so it cannot verify registry `file` chunk
+    # ids without changing semantics.
+    verify_quote_fn = None
+
     # Current build layout resolves to a single canonical wiki article. If a
     # future module has multiple articles, each must be complete enough to act
     # as the renderer spine; fail fast on the first thin article.
     reports = [
-        check_wiki_completeness(path, level=level_key, slug=slug_key)
+        check_wiki_completeness(path, level=level_key, slug=slug_key, verify_quote_fn=verify_quote_fn)
         for path in article_paths
     ]
     if len(reports) == 1:
