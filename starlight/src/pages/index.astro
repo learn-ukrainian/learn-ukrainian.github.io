@@ -180,7 +180,7 @@ const seminarTracks = [
     }
     .home-primary {
       background: var(--lu-yellow);
-      color: var(--lu-gray-900);
+      color: var(--lu-on-yellow);
     }
     .home-secondary {
       border: 2px solid var(--lu-blue);
@@ -224,6 +224,12 @@ const seminarTracks = [
     .track-badge.a1 { background: var(--lu-green); }
     .track-badge.folk { background: #A4133C; }
     .track-badge.atlas { background: var(--lu-teal); }
+    /* In dark mode --lu-green/--lu-teal go pale → white text fails. The folk
+       chip is a fixed dark crimson, so it keeps white text. */
+    :global([data-theme='dark']) .track-badge.a1,
+    :global([data-theme='dark']) .track-badge.atlas {
+      color: var(--lu-on-yellow);
+    }
     .teacher-note {
       margin-top: 42px;
       padding: 22px;

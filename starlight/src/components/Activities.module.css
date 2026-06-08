@@ -754,6 +754,16 @@
   font-size: 14px;
 }
 
+/* #6A1B9A is the light-mode purple — unreadable on the dark drop-zone.
+   Use the dark-mode purple variant (matches --lu-purple in [data-theme=dark]). */
+[data-theme='dark'] .groupTitle {
+  color: #C58BFF;
+}
+
+[data-theme='dark'] .groupBucket.dropTarget {
+  border-color: #C58BFF;
+}
+
 .groupItems {
   display: flex;
   flex-wrap: wrap;
@@ -763,7 +773,9 @@
 }
 
 .bucketPlaceholder {
-  color: var(--ifm-color-emphasis-400);
+  /* --ifm-color-emphasis-400 is undefined in this theme (fell back to a
+     low-contrast gray). Use the defined muted token — readable in both modes. */
+  color: var(--lu-text-muted);
   font-style: italic;
   font-size: 0.9rem;
 }
@@ -792,6 +804,12 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+/* --ifm-color-primary (= --lu-blue) goes pale in dark mode → white text fails.
+   Use a fixed mid-azure so the white label stays readable. */
+[data-theme='dark'] .stepBadge {
+  background: #1A6FD4;
 }
 
 .stepBadgeComplete {

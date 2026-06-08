@@ -45,6 +45,14 @@
   --lu-max-width: 1200px;
   --lu-content-width: 840px;
 
+  /* Fixed on-color surfaces — these must NOT invert by theme.
+     Yellow is light in BOTH modes (text on it is always dark); the hero is a
+     brand band that must stay confident azure so white text always reads; the
+     footer is a dark band in both modes. Never redefine these in [data-theme]. */
+  --lu-on-yellow: #1A1A1A;
+  --lu-hero-grad: linear-gradient(135deg, #0057B8, #1A6FD4);
+  --lu-footer-bg: #1A1F26;
+
   --sl-color-accent: var(--lu-blue);
   --sl-color-accent-high: var(--lu-blue);
   --sl-color-accent-low: var(--lu-blue-light);
@@ -157,7 +165,7 @@ body {
   padding: 8px 12px;
   border-radius: 6px;
   background: var(--lu-yellow);
-  color: var(--lu-gray-900);
+  color: var(--lu-on-yellow);
   font-weight: 900;
   text-decoration: none;
   transform: translateY(-160%);
@@ -210,7 +218,7 @@ body {
   display: inline-grid;
   place-items: center;
   border-radius: 8px;
-  background: var(--lu-blue);
+  background: #0057B8;
   color: #FFFFFF;
   font-weight: 900;
 }
@@ -239,7 +247,7 @@ body {
 }
 
 .lu-nav a[aria-current='page'] {
-  background: var(--lu-blue);
+  background: #0057B8;
   color: #FFFFFF;
 }
 
@@ -319,7 +327,7 @@ body {
 
 .lu-hero {
   color: #FFFFFF;
-  background: linear-gradient(135deg, var(--lu-blue), #1A6FD4);
+  background: var(--lu-hero-grad);
   border-bottom: 4px solid var(--lu-yellow);
 }
 
@@ -328,7 +336,7 @@ body {
 }
 
 .lu-hero.lexicon {
-  background: linear-gradient(135deg, var(--lu-teal), var(--lu-yellow-dark));
+  background: linear-gradient(135deg, #00695C, #004D40);
 }
 
 .lu-hero.seminar {
@@ -359,7 +367,7 @@ body {
   padding: 3px 10px;
   border-radius: 4px;
   background: var(--lu-yellow);
-  color: var(--lu-gray-900);
+  color: var(--lu-on-yellow);
   font-size: 0.75rem;
   font-weight: 800;
 }
@@ -528,7 +536,7 @@ body {
 .lu-footer {
   margin-top: 60px;
   padding: 44px 24px 22px;
-  background: var(--lu-gray-900);
+  background: var(--lu-footer-bg);
   color: rgba(255, 255, 255, 0.72);
   border-top: 4px solid var(--lu-yellow);
 }
@@ -1087,7 +1095,7 @@ body {
   place-items: center;
   border-radius: 6px;
   background: var(--lu-yellow);
-  color: var(--lu-gray-900);
+  color: var(--lu-on-yellow);
 }
 
 @media (max-width: 820px) {
