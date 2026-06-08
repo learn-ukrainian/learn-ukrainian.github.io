@@ -24,23 +24,40 @@ informal writing: **прокидаюся / прокидаюсь**. For your own 
 full form **-ся** first. Recognize **-сь**, but keep your active pattern
 simple.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Read the first dialogue as a morning check-in between roommates. The Ukrainian
 chunks are short and repeat the same safe pattern.
 
-<DialogueBox uk="Ліна: Коли ти прокидаєшся?" en="Lina: When do you wake up?" />
-<DialogueBox uk="Настя: Я прокидаюся о сьомій." en="Nastia: I wake up at seven." />
-<DialogueBox uk="Ліна: Що ти робиш потім?" en="Lina: What do you do then?" />
-<DialogueBox uk="Настя: Вмиваюся, одягаюся і снідаю." en="Nastia: I wash up, get dressed, and have breakfast." />
-<DialogueBox uk="Ліна: Ти поспішаєш?" en="Lina: Are you hurrying?" />
-<DialogueBox uk="Настя: Так, трохи. Потім я йду на роботу." en="Nastia: Yes, a little. Then I go to work." />
-<DialogueBox uk="Ліна: У ванній є рушник?" en="Lina: Is there a towel in the bathroom?" />
-<DialogueBox uk="Настя: Так, є рушник, мило і зубна паста." en="Nastia: Yes, there is a towel, soap, and toothpaste." />
-<DialogueBox uk="Ліна: Ти робиш руханку?" en="Lina: Do you do a short exercise routine?" />
-<DialogueBox uk="Настя: Так, але швидко." en="Nastia: Yes, but quickly." />
+```text
+Ліна: Коли ти прокидаєшся?
+Настя: Я прокидаюся о сьомій.
+Ліна: Що ти робиш потім?
+Настя: Вмиваюся, одягаюся і снідаю.
+Ліна: Ти поспішаєш?
+Настя: Так, трохи. Потім я йду на роботу.
+Ліна: У ванній є рушник?
+Настя: Так, є рушник, мило і зубна паста.
+Ліна: Ти робиш руханку?
+Настя: Так, але швидко.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ліна: Коли ти прокидаєшся?** | Lina: When do you wake up? |
+| **Настя: Я прокидаюся о сьомій.** | Nastia: I wake up at seven. |
+| **Ліна: Що ти робиш потім?** | Lina: What do you do then? |
+| **Настя: Вмиваюся, одягаюся і снідаю.** | Nastia: I wash up, get dressed, and have breakfast. |
+| **Ліна: Ти поспішаєш?** | Lina: Are you hurrying? |
+| **Настя: Так, трохи. Потім я йду на роботу.** | Nastia: Yes, a little. Then I go to work. |
+| **Ліна: У ванній є рушник?** | Lina: Is there a towel in the bathroom? |
+| **Настя: Так, є рушник, мило і зубна паста.** | Nastia: Yes, there is a towel, soap, and toothpaste. |
+| **Ліна: Ти робиш руханку?** | Lina: Do you do a short exercise routine? |
+| **Настя: Так, але швидко.** | Nastia: Yes, but quickly. |
 
 Notice the difference between a reflexive morning action and a regular action.
 **Вмиваюся** and **одягаюся** end in **-ся**. **Снідаю** does not. You do not
@@ -54,10 +71,21 @@ sentences are still real Ukrainian when the order is clear.
 
 The second dialogue compares a weekday and a free morning.
 
-<DialogueBox uk="Настя: У суботу я не поспішаю." en="Nastia: On Saturday I do not hurry." />
-<DialogueBox uk="Настя: Прокидаюся пізно і снідаю вдома." en="Nastia: I wake up late and have breakfast at home." />
-<DialogueBox uk="Ліна: А я вранці навчаюся." en="Lina: And I study in the morning." />
-<DialogueBox uk="Ліна: Потім збираюся і гуляю." en="Lina: Then I get ready and walk." />
+```text
+Настя: У суботу я не поспішаю.
+Настя: Прокидаюся пізно і снідаю вдома.
+Ліна: А я вранці навчаюся.
+Ліна: Потім збираюся і гуляю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Настя: У суботу я не поспішаю.** | Nastia: On Saturday I do not hurry. |
+| **Настя: Прокидаюся пізно і снідаю вдома.** | Nastia: I wake up late and have breakfast at home. |
+| **Ліна: А я вранці навчаюся.** | Lina: And I study in the morning. |
+| **Ліна: Потім збираюся і гуляю.** | Lina: Then I get ready and walk. |
 
 **Навчатися** is also a **-ся** verb: **я навчаюся**, **ти навчаєшся**. Some
 verbs on **-уватися / -юватися** change the inside of the word in the present

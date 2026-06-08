@@ -19,22 +19,37 @@ For a yes/no question, keep the same words and raise your voice at the end:
 **Чи ти читаєш?** For today, intonation is the active tool and **чи** is a clear
 written or careful-speech option.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Start with questions that identify a person, a thing, a place, and a time.
 Read the first dialogue as a small interview. The answers are short on purpose:
 you are practicing the question word, not long explanations.
 
-<DialogueBox uk="Анна: Хто ти?" en="Anna: Who are you?" />
-<DialogueBox uk="Том: Я студент." en="Tom: I am a student." />
-<DialogueBox uk="Анна: Що ти вивчаєш?" en="Anna: What are you studying?" />
-<DialogueBox uk="Том: Я вивчаю українську." en="Tom: I am studying Ukrainian." />
-<DialogueBox uk="Анна: Де ти живеш?" en="Anna: Where do you live?" />
-<DialogueBox uk="Том: Я живу в Києві." en="Tom: I live in Kyiv." />
-<DialogueBox uk="Анна: Коли ти працюєш?" en="Anna: When do you work?" />
-<DialogueBox uk="Том: Вранці." en="Tom: In the morning." />
+```text
+Анна: Хто ти?
+Том: Я студент.
+Анна: Що ти вивчаєш?
+Том: Я вивчаю українську.
+Анна: Де ти живеш?
+Том: Я живу в Києві.
+Анна: Коли ти працюєш?
+Том: Вранці.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Анна: Хто ти?** | Anna: Who are you? |
+| **Том: Я студент.** | Tom: I am a student. |
+| **Анна: Що ти вивчаєш?** | Anna: What are you studying? |
+| **Том: Я вивчаю українську.** | Tom: I am studying Ukrainian. |
+| **Анна: Де ти живеш?** | Anna: Where do you live? |
+| **Том: Я живу в Києві.** | Tom: I live in Kyiv. |
+| **Анна: Коли ти працюєш?** | Anna: When do you work? |
+| **Том: Вранці.** | Tom: In the morning. |
 
 Notice that **хто** asks about people and other living beings, or **істоти**.
 **Що** asks about things, topics, actions, and other **неістоти**. At A1, keep
@@ -44,12 +59,25 @@ them in these simple forms. Later you will meet forms such as **кого** and
 Now add the home dialogue from the plan. It shows a question plus a very common
 negative answer.
 
-<DialogueBox uk="Денис: Де моя книга?" en="Denys: Where is my book?" />
-<DialogueBox uk="Оля: Я не знаю." en="Olia: I do not know." />
-<DialogueBox uk="Денис: А хто знає?" en="Denys: And who knows?" />
-<DialogueBox uk="Оля: Мама знає." en="Olia: Mom knows." />
-<DialogueBox uk="Денис: Чому мама?" en="Denys: Why Mom?" />
-<DialogueBox uk="Оля: Тому що вона все знає!" en="Olia: Because she knows everything!" />
+```text
+Денис: Де моя книга?
+Оля: Я не знаю.
+Денис: А хто знає?
+Оля: Мама знає.
+Денис: Чому мама?
+Оля: Тому що вона все знає!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Денис: Де моя книга?** | Denys: Where is my book? |
+| **Оля: Я не знаю.** | Olia: I do not know. |
+| **Денис: А хто знає?** | Denys: And who knows? |
+| **Оля: Мама знає.** | Olia: Mom knows. |
+| **Денис: Чому мама?** | Denys: Why Mom? |
+| **Оля: Тому що вона все знає!** | Olia: Because she knows everything! |
 
 **Я не знаю** is the model negative. Ukrainian writes **не** as a separate word
 before the verb: **не знаю**, **не хочу**, **не можу**, **не розумію**. Do not

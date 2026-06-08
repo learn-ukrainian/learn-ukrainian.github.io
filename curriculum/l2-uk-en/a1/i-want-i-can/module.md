@@ -11,34 +11,63 @@ verbs for everyday plans: **хотіти** "to want," **могти** "can / be a
 After the helper verb, keep the second action in the dictionary **-ти** form:
 **Я хочу читати**, **Я можу допомогти**, **Я мушу працювати**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Olia and Denys are deciding what to do tonight. Read for the job of each helper
 verb: **хочу** tells desire, **можу** tells possibility, and **мушу** tells an
 obligation.
 
-<DialogueBox uk="Оля: Денисе, ти хочеш піти в кіно?" en="Olia: Denys, do you want to go to the cinema?" />
-<DialogueBox uk="Денис: Так, я хочу піти в кіно." en="Denys: Yes, I want to go to the cinema." />
-<DialogueBox uk="Оля: Ти можеш піти сьогодні?" en="Olia: Can you go today?" />
-<DialogueBox uk="Денис: На жаль, не можу." en="Denys: Unfortunately, I cannot." />
-<DialogueBox uk="Оля: Чому?" en="Olia: Why?" />
-<DialogueBox uk="Денис: Я мушу працювати." en="Denys: I have to work." />
-<DialogueBox uk="Оля: Шкода. А завтра?" en="Olia: That's a pity. And tomorrow?" />
-<DialogueBox uk="Денис: Завтра я можу. Хочу гуляти." en="Denys: Tomorrow I can. I want to walk." />
+```text
+Оля: Денисе, ти хочеш піти в кіно?
+Денис: Так, я хочу піти в кіно.
+Оля: Ти можеш піти сьогодні?
+Денис: На жаль, не можу.
+Оля: Чому?
+Денис: Я мушу працювати.
+Оля: Шкода. А завтра?
+Денис: Завтра я можу. Хочу гуляти.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оля: Денисе, ти хочеш піти в кіно?** | Olia: Denys, do you want to go to the cinema? |
+| **Денис: Так, я хочу піти в кіно.** | Denys: Yes, I want to go to the cinema. |
+| **Оля: Ти можеш піти сьогодні?** | Olia: Can you go today? |
+| **Денис: На жаль, не можу.** | Denys: Unfortunately, I cannot. |
+| **Оля: Чому?** | Olia: Why? |
+| **Денис: Я мушу працювати.** | Denys: I have to work. |
+| **Оля: Шкода. А завтра?** | Olia: That's a pity. And tomorrow? |
+| **Денис: Завтра я можу. Хочу гуляти.** | Denys: Tomorrow I can. I want to walk. |
 
 The same tools appear in a café, but service speech needs polite chunks. A
 direct **Я хочу каву** is understandable with friends. In a café, make the
 request softer.
 
-<DialogueBox uk="Клієнт: Добрий день!" en="Customer: Good afternoon!" />
-<DialogueBox uk="Офіціантка: Добрий день!" en="Waitress: Good afternoon!" />
-<DialogueBox uk="Клієнт: Можна мені, будь ласка, каву?" en="Customer: Could I have coffee, please?" />
-<DialogueBox uk="Офіціантка: Звичайно. Ще щось?" en="Waitress: Of course. Anything else?" />
-<DialogueBox uk="Клієнт: Що можете порадити?" en="Customer: What can you recommend?" />
-<DialogueBox uk="Офіціантка: Борщ дуже смачний." en="Waitress: The borshch is very tasty." />
-<DialogueBox uk="Клієнт: Тоді ще борщ, будь ласка." en="Customer: Then borshch too, please." />
+```text
+Клієнт: Добрий день!
+Офіціантка: Добрий день!
+Клієнт: Можна мені, будь ласка, каву?
+Офіціантка: Звичайно. Ще щось?
+Клієнт: Що можете порадити?
+Офіціантка: Борщ дуже смачний.
+Клієнт: Тоді ще борщ, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Клієнт: Добрий день!** | Customer: Good afternoon! |
+| **Офіціантка: Добрий день!** | Waitress: Good afternoon! |
+| **Клієнт: Можна мені, будь ласка, каву?** | Customer: Could I have coffee, please? |
+| **Офіціантка: Звичайно. Ще щось?** | Waitress: Of course. Anything else? |
+| **Клієнт: Що можете порадити?** | Customer: What can you recommend? |
+| **Офіціантка: Борщ дуже смачний.** | Waitress: The borshch is very tasty. |
+| **Клієнт: Тоді ще борщ, будь ласка.** | Customer: Then borshch too, please. |
 
 Keep these three service chunks whole:
 
@@ -89,9 +118,19 @@ Here are the active forms:
 
 Use **хотіти + інфінітив** when the desired thing is an action:
 
-<DialogueBox uk="Я хочу читати." en="I want to read." />
-<DialogueBox uk="Ти хочеш гуляти?" en="Do you want to walk?" />
-<DialogueBox uk="Ми хочемо піти в парк." en="We want to go to the park." />
+```text
+Я хочу читати.
+Ти хочеш гуляти?
+Ми хочемо піти в парк.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я хочу читати.** | I want to read. |
+| **Ти хочеш гуляти?** | Do you want to walk? |
+| **Ми хочемо піти в парк.** | We want to go to the park. |
 
 You can also want a thing: **Я хочу каву**, **Я хочу воду**, **Я хочу цю
 книгу**. This is **знахідний відмінок** in a tiny A1 shape: feminine nouns on
@@ -128,14 +167,33 @@ ability, a practical possibility, or polite permission. The base moves from
 
 Use **могти + інфінітив**:
 
-<DialogueBox uk="Я можу читати українською." en="I can read in Ukrainian." />
-<DialogueBox uk="Ти можеш допомогти?" en="Can you help?" />
-<DialogueBox uk="Ми можемо піти завтра." en="We can go tomorrow." />
+```text
+Я можу читати українською.
+Ти можеш допомогти?
+Ми можемо піти завтра.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я можу читати українською.** | I can read in Ukrainian. |
+| **Ти можеш допомогти?** | Can you help? |
+| **Ми можемо піти завтра.** | We can go tomorrow. |
 
 For "I cannot," say **не можу**. The short answer is complete:
 
-<DialogueBox uk="Ти можеш сьогодні?" en="Can you today?" />
-<DialogueBox uk="На жаль, не можу." en="Unfortunately, I cannot." />
+```text
+Ти можеш сьогодні?
+На жаль, не можу.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ти можеш сьогодні?** | Can you today? |
+| **На жаль, не можу.** | Unfortunately, I cannot. |
 
 **Мусити** means "must" or "have to." It marks obligation or need, but it does
 not automatically mean an emergency right now. Context tells you how urgent it
