@@ -27,7 +27,67 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 4 HANDOFF (2026-06-08 #2 — e2e WIKI PROVEN; MODULE BLOCKED → DO OPTION B) — **RESUME HERE**
+## ▶▶▶ SESSION 5 HANDOFF (2026-06-09 — e2e MODULE BUILT; OPTION B DONE; MDX FIX DONE) — **RESUME HERE**
+
+> **USER DIRECTIVE (2026-06-08 PM, going to sleep):** *"keep driving the track. after pilot keep
+> building the rest according to the plan. morning I will review the pilot. when you finish the pilot
+> keep working on the rest but UP TO WIKI, and we will finish them [the modules] after the pilot was
+> reviewed."* → Sequence: (1) finish pilot e2e [DONE], (2) drive the rest dossier→**wiki only** (NO
+> modules — modules wait for the pilot review), (3) leave the pilot MODULE as a PR for user review.
+
+### ✅ SHIPPED THIS SESSION (merged to main)
+- **#2855 seminar wiki-completeness gate** (`c3dccc3bed`) — OPTION B DONE. Implemented the deferred
+  seminar branch (section-presence + ≥2 distinct sources + 100% citation resolution + source-ref
+  resolution + all-chunk verify_quote seam) + registered `folk` in `SEMINAR_LEVELS`. Cross-track (all
+  seminar levels); strictly-less-restrictive (was NotImplementedError/ValueError), zero regression.
+  Inline review + deepseek-flash cross-family = SHIP; 15 tests; CI green. verify_quote_fn left `None`
+  with a precise TODO (no in-process registry-backed entry point; MCP `handle_verify_quote` takes
+  author/text). **3 non-blocking follow-ups** noted on the PR: (1) `_percent` exact-100% hardening
+  (rounds 199/200→100, unreachable at seminar sizes), (2) test for trivially-empty section, (3) rename
+  `test_..._seminar_deferred`.
+- **#2856 MDX activity-id backfill** (`b968dcfa16`) — the pilot build hard-failed at MDX
+  (`KeyError: 'id'`): writer authored ids only for inline act-1..act-4, workbook acts 5-16 were id-less.
+  Fix: deterministic `backfill_missing_activity_ids` in `scripts/generate_mdx/core.py` (preserves
+  writer/inline ids, `act-{index}` + collision fallback, idempotent) + cloze-blank-id + translation-
+  critique robustness in `yaml_activities.py`. 535 tests; repro assembles the pilot. **CI-gap noted on
+  PR for @main:** `MDX Generation Drift` is path-filtered to content and SKIPS on generator-code changes.
+
+### ⭐ PILOT MODULE BUILT — `folk/kalendarna-obriadovist-zvychai` (THIS PR, DO NOT MERGE — user reviews)
+Built via `v7_build folk … --worktree --writer claude-tools`; gate now passes; MDX re-assembled
+(73KB, 16 activities, 4 tabs) from the build artifacts (no writer re-run) at
+`starlight/src/content/docs/folk/kalendarna-obriadovist-zvychai.mdx`. Build worktree (full forensics):
+`.worktrees/builds/folk-kalendarna-obriadovist-zvychai-20260608-220114/` (#M-10 auto-committed to a
+`build/folk/…` branch). **Claude review (content, not just metrics):**
+- ✅ 4 tabs all populated; Activities tab non-empty (19 components — no m20 empty-tab repeat); 30-lemma
+  FlashcardDeck; prose is strong C1 Ukrainian with real decolonization framing ("не низка свят, а
+  система"); VESUM-clean (3 flagged words auto-corrected: будьяку/працююча/Семінарний); activity split
+  valid (5 inline/11 workbook per FOLK config); writer used corpus (verify_words, query_wikipedia,
+  search_style_guide). LLM QG 7.0 terminal-PASS.
+- **ISSUES FOR USER REVIEW (documented, not build-blockers):** (a) ❌ stress marks applied at FULL
+  density across all prose + bleed into 5 H2 headings — likely over-scaffolding for C1; follow-up =
+  stress_annotation should skip headings + reconsider C1 density; (b) ⚠ tab labels are EN
+  (Lesson/Vocabulary/Activities/Resources) not UK (Урок/Словник/Вправи/Ресурси per contract P1);
+  (c) ⚠ P2 inline-and-aggregate cross-refs absent (known-broken §5 #3, not new); (d) ⚠ LLM 7.0/REVISE
+  warnings on pedagogical/engagement/tone — worth a content read.
+
+### 🔭 IN-FLIGHT: **NONE** at handoff write. (verify: `curl -s :8765/api/delegate/active`)
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **User reviews the pilot MODULE PR** in the morning (this PR). Their m19 (`dumy-lytsarski`) feedback +
+   pilot review will set the bar/approach for the rest's modules.
+2. **Drive the REST up-to-WIKI ONLY** (per directive): dossier→wiki via the proven loop, build-order
+   `narodna-kultura-yak-systema` → `narodni-viruvannia-mifolohiia-demonolohiia` → `koliadky-shchedrivky`
+   → `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`. GPT writes dossier / Claude corpus-
+   hammer reviews (NO DeepSeek for culture). Hold these as PRs (don't lock main before the pilot review
+   sets the approach). **Build NO modules for the rest until the user reviews the pilot.**
+3. After pilot review: address the pilot's stress/label/P2 follow-ups, then build the rest's modules.
+
+### 📊 FLEET — wiki writer **gpt-5.5** (dossier-grounded); module writer **claude-tools** (C1+ cultural);
+reviewers **deepseek-flash** (code) / Claude corpus-hammer (culture content). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 4 HANDOFF (2026-06-08 #2 — e2e WIKI PROVEN; MODULE BLOCKED → DO OPTION B) — (superseded by Session 5)
 
 > **ROLE (user 2026-06-08): Claude is the FOLK TRACK ORCHESTRATOR.** Own folk end-to-end: dossier →
 > wiki → **module** (Claude builds the module too now, NOT Codex-UI). Still don't touch
