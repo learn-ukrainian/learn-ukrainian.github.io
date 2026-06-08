@@ -41,6 +41,7 @@ def _copy_repo_subset(target: Path) -> None:
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
+        Path(".gemini/config.yaml"),
     ):
         destination = target / relative_path
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -100,6 +101,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         f"stdout: {check_result.stdout}\nstderr: {check_result.stderr}"
     )
     assert (repo / CODEX_HOOK_TARGET).exists()
+    assert (repo / ".gemini/config.yaml").exists()
     deployed_claude_rules = sorted(
         path.name for path in (repo / ".claude" / "rules").glob("*.md")
     )

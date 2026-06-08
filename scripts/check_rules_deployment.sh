@@ -71,7 +71,7 @@ check_pair \
     "config.toml" \
     "hooks.json" || drift=1
 check_pair "claude_extensions/skills" ".agents/skills" || drift=1
-check_pair "gemini_extensions" ".gemini" "docs/" "rules/" || drift=1
+check_pair "gemini_extensions" ".gemini" "config.yaml" "docs/" "rules/" || drift=1
 check_pair "claude_extensions/rules" ".gemini/rules" || drift=1
 
 exit "$drift"

@@ -1,0 +1,11 @@
+# Repository-level Gemini Code Assist for GitHub configuration.
+# Keep local Gemini CLI/agent tooling enabled, but do not let the GitHub app
+# review or summarize pull requests. Local machine-agent review remains the
+# review path for this repository.
+code_review:
+  disable: true
+  pull_request_opened:
+    help: false
+    summary: false
+    code_review: false
+    include_drafts: false
