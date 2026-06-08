@@ -16,19 +16,32 @@ By the end, you can:
 - repair unsafe calendar phrases such as **On понеділок**, **в Перше січня**,
   **в Січень**, **в літо**, and **Сьогодні є вівторок**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 The first scene is at a clinic reception desk. It uses days of the week because
 appointments happen on a specific day.
 
-<DialogueBox uk="Пацієнт: Добрий день. Мені потрібен лікар." en="Patient: Good afternoon. I need a doctor." />
-<DialogueBox uk="Реєстраторка: Добрий день. У понеділок о дев'ятій можна?" en="Receptionist: Good afternoon. Is Monday at nine possible?" />
-<DialogueBox uk="Пацієнт: У понеділок я працюю. А у середу?" en="Patient: On Monday I work. What about Wednesday?" />
-<DialogueBox uk="Реєстраторка: У середу о другій є час." en="Receptionist: On Wednesday at two there is a slot." />
-<DialogueBox uk="Пацієнт: Добре, у середу о другій." en="Patient: Good, Wednesday at two." />
-<DialogueBox uk="Реєстраторка: Записано. До побачення!" en="Receptionist: Booked. Goodbye!" />
+```text
+Пацієнт: Добрий день. Мені потрібен лікар.
+Реєстраторка: Добрий день. У понеділок о дев'ятій можна?
+Пацієнт: У понеділок я працюю. А у середу?
+Реєстраторка: У середу о другій є час.
+Пацієнт: Добре, у середу о другій.
+Реєстраторка: Записано. До побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Пацієнт: Добрий день. Мені потрібен лікар.** | Patient: Good afternoon. I need a doctor. |
+| **Реєстраторка: Добрий день. У понеділок о дев'ятій можна?** | Receptionist: Good afternoon. Is Monday at nine possible? |
+| **Пацієнт: У понеділок я працюю. А у середу?** | Patient: On Monday I work. What about Wednesday? |
+| **Реєстраторка: У середу о другій є час.** | Receptionist: On Wednesday at two there is a slot. |
+| **Пацієнт: Добре, у середу о другій.** | Patient: Good, Wednesday at two. |
+| **Реєстраторка: Записано. До побачення!** | Receptionist: Booked. Goodbye! |
 
 Use standard Ukrainian greetings here: **Добрий день** and **До побачення**.
 Do not import classroom habits such as **Здрастуйте** or **Пока**. This lesson
@@ -40,12 +53,25 @@ English **on**. Say **У понеділок я працюю**, not **On поне
 
 The second scene connects months, dates, and seasons.
 
-<DialogueBox uk="Оля: Коли у тебе день народження?" en="Olia: When is your birthday?" />
-<DialogueBox uk="Марко: У березні." en="Marko: In March." />
-<DialogueBox uk="Оля: Якого числа?" en="Olia: What date?" />
-<DialogueBox uk="Марко: П'ятнадцятого березня. А у тебе?" en="Marko: The fifteenth of March. And yours?" />
-<DialogueBox uk="Оля: У мене двадцять другого серпня." en="Olia: Mine is the twenty-second of August." />
-<DialogueBox uk="Марко: Це влітку!" en="Marko: That is in summer!" />
+```text
+Оля: Коли у тебе день народження?
+Марко: У березні.
+Оля: Якого числа?
+Марко: П'ятнадцятого березня. А у тебе?
+Оля: У мене двадцять другого серпня.
+Марко: Це влітку!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оля: Коли у тебе день народження?** | Olia: When is your birthday? |
+| **Марко: У березні.** | Marko: In March. |
+| **Оля: Якого числа?** | Olia: What date? |
+| **Марко: П'ятнадцятого березня. А у тебе?** | Marko: The fifteenth of March. And yours? |
+| **Оля: У мене двадцять другого серпня.** | Olia: Mine is the twenty-second of August. |
+| **Марко: Це влітку!** | Marko: That is in summer! |
 
 There are two different jobs here. **У березні** answers "in which month?"
 **П'ятнадцятого березня** answers "on what date?" Ukrainian does not need a
@@ -179,24 +205,61 @@ Keep four calendar cards.
 
 First: identify the day.
 
-<DialogueBox uk="Який сьогодні день?" en="What day is today?" />
-<DialogueBox uk="Сьогодні четвер." en="Today is Thursday." />
+```text
+Який сьогодні день?
+Сьогодні четвер.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Який сьогодні день?** | What day is today? |
+| **Сьогодні четвер.** | Today is Thursday. |
 
 Second: plan with a day chunk and a time chunk.
 
-<DialogueBox uk="У середу о другій я маю зустріч." en="On Wednesday at two I have a meeting." />
-<DialogueBox uk="В суботу я гуляю." en="On Saturday I take a walk." />
+```text
+У середу о другій я маю зустріч.
+В суботу я гуляю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **У середу о другій я маю зустріч.** | On Wednesday at two I have a meeting. |
+| **В суботу я гуляю.** | On Saturday I take a walk. |
 
 Third: name the month and season.
 
-<DialogueBox uk="Мій день народження у березні." en="My birthday is in March." />
-<DialogueBox uk="Березень — це весна." en="March is spring." />
-<DialogueBox uk="Влітку тепло." en="In summer it is warm." />
+```text
+Мій день народження у березні.
+Березень — це весна.
+Влітку тепло.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мій день народження у березні.** | My birthday is in March. |
+| **Березень — це весна.** | March is spring. |
+| **Влітку тепло.** | In summer it is warm. |
 
 Fourth: give a date as a chunk.
 
-<DialogueBox uk="Коли твій день народження?" en="When is your birthday?" />
-<DialogueBox uk="П'ятнадцятого березня." en="On the fifteenth of March." />
+```text
+Коли твій день народження?
+П'ятнадцятого березня.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Коли твій день народження?** | When is your birthday? |
+| **П'ятнадцятого березня.** | On the fifteenth of March. |
 
 :::caution
 Keep the calendar fully Ukrainian and use a **деколонізований підхід**. Use
@@ -211,8 +274,20 @@ For seasons, prefer **взимку**, **навесні**, **влітку**, **в
 Write your own five-line calendar. Use one line for today, one for a weekday
 plan, one for a month, one for a season, and one for a birthday:
 
-<DialogueBox uk="Сьогодні понеділок." en="Today is Monday." />
-<DialogueBox uk="У середу о другій я працюю." en="On Wednesday at two I work." />
-<DialogueBox uk="Мій день народження у серпні." en="My birthday is in August." />
-<DialogueBox uk="Восени часто йде дощ." en="In autumn it often rains." />
-<DialogueBox uk="День народження двадцять другого серпня." en="The birthday is on August twenty-second." />
+```text
+Сьогодні понеділок.
+У середу о другій я працюю.
+Мій день народження у серпні.
+Восени часто йде дощ.
+День народження двадцять другого серпня.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Сьогодні понеділок.** | Today is Monday. |
+| **У середу о другій я працюю.** | On Wednesday at two I work. |
+| **Мій день народження у серпні.** | My birthday is in August. |
+| **Восени часто йде дощ.** | In autumn it often rains. |
+| **День народження двадцять другого серпня.** | The birthday is on August twenty-second. |

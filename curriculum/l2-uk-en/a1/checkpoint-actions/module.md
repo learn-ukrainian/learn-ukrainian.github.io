@@ -15,9 +15,9 @@ By the end, you can:
 - describe a routine with **спочатку, потім, після цього, нарешті** and
   **-ся** verbs.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Що ми знаємо?
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Think of A1.3 as a set of action cards. The dictionary card is the infinitive,
 usually ending in **-ти**: **читати**, **говорити**, **працювати**, **хотіти**.
@@ -70,16 +70,33 @@ ending in **-ти**, a person form like **працюю**, a modal helper like
 Read this checkpoint text aloud. It uses only A1.3 action material and familiar
 daily words.
 
-<DialogueBox uk="Я прокидаюся о сьомій." en="I wake up at seven." />
-<DialogueBox uk="Спочатку вмиваюся і чищу зуби." en="First I wash up and brush my teeth." />
-<DialogueBox uk="Потім снідаю вдома." en="Then I have breakfast at home." />
-<DialogueBox uk="Я працюю в офісі." en="I work in an office." />
-<DialogueBox uk="У перерві я читаю книгу." en="During the break I read a book." />
-<DialogueBox uk="Я люблю читати, але сьогодні мушу писати." en="I like reading, but today I have to write." />
-<DialogueBox uk="Увечері я хочу гуляти." en="In the evening I want to walk." />
-<DialogueBox uk="Моя сусідка може готувати." en="My roommate can cook." />
-<DialogueBox uk="Ми говоримо українською." en="We speak Ukrainian." />
-<DialogueBox uk="Нарешті я дивлюся фільм і відпочиваю." en="Finally I watch a film and rest." />
+```text
+Я прокидаюся о сьомій.
+Спочатку вмиваюся і чищу зуби.
+Потім снідаю вдома.
+Я працюю в офісі.
+У перерві я читаю книгу.
+Я люблю читати, але сьогодні мушу писати.
+Увечері я хочу гуляти.
+Моя сусідка може готувати.
+Ми говоримо українською.
+Нарешті я дивлюся фільм і відпочиваю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я прокидаюся о сьомій.** | I wake up at seven. |
+| **Спочатку вмиваюся і чищу зуби.** | First I wash up and brush my teeth. |
+| **Потім снідаю вдома.** | Then I have breakfast at home. |
+| **Я працюю в офісі.** | I work in an office. |
+| **У перерві я читаю книгу.** | During the break I read a book. |
+| **Я люблю читати, але сьогодні мушу писати.** | I like reading, but today I have to write. |
+| **Увечері я хочу гуляти.** | In the evening I want to walk. |
+| **Моя сусідка може готувати.** | My roommate can cook. |
+| **Ми говоримо українською.** | We speak Ukrainian. |
+| **Нарешті я дивлюся фільм і відпочиваю.** | Finally I watch a film and rest. |
 
 Use the text as a diagnostic. Can you point to an infinitive? **читати**,
 **писати**, **гуляти**, and **готувати** are infinitives. Can you point to a
@@ -143,21 +160,43 @@ Keep the common repairs close:
 Read the roommate conversation. It checks liking, two verb groups, modal verbs,
 questions, negatives, and a morning routine in one scene.
 
-<DialogueBox uk="Олег: Добрий день! Ти нова сусідка?" en="Oleh: Good afternoon! Are you the new roommate?" />
-<DialogueBox uk="Марина: Так. Мене звати Марина." en="Maryna: Yes. My name is Maryna." />
-<DialogueBox uk="Олег: Дуже приємно. Коли ти прокидаєшся?" en="Oleh: Nice to meet you. When do you wake up?" />
-<DialogueBox uk="Марина: Я прокидаюся о сьомій." en="Maryna: I wake up at seven." />
-<DialogueBox uk="Олег: Що ти робиш потім?" en="Oleh: What do you do then?" />
-<DialogueBox uk="Марина: Вмиваюся, снідаю і йду на роботу." en="Maryna: I wash up, have breakfast, and go to work." />
-<DialogueBox uk="Олег: Де ти працюєш?" en="Oleh: Where do you work?" />
-<DialogueBox uk="Марина: Я працюю в школі." en="Maryna: I work at a school." />
-<DialogueBox uk="Олег: Ти любиш читати ввечері?" en="Oleh: Do you like to read in the evening?" />
-<DialogueBox uk="Марина: Так, люблю читати і писати." en="Maryna: Yes, I like reading and writing." />
-<DialogueBox uk="Олег: Я хочу готувати сьогодні. Ти можеш допомагати?" en="Oleh: I want to cook today. Can you help?" />
-<DialogueBox uk="Марина: Не можу зараз, мушу працювати." en="Maryna: I cannot now, I have to work." />
-<DialogueBox uk="Олег: Коли ти можеш?" en="Oleh: When can you?" />
-<DialogueBox uk="Марина: Після шостої. Тоді ми готуємо і говоримо українською." en="Maryna: After six. Then we cook and speak Ukrainian." />
-<DialogueBox uk="Олег: Добре. До побачення!" en="Oleh: Good. Goodbye!" />
+```text
+Олег: Добрий день! Ти нова сусідка?
+Марина: Так. Мене звати Марина.
+Олег: Дуже приємно. Коли ти прокидаєшся?
+Марина: Я прокидаюся о сьомій.
+Олег: Що ти робиш потім?
+Марина: Вмиваюся, снідаю і йду на роботу.
+Олег: Де ти працюєш?
+Марина: Я працюю в школі.
+Олег: Ти любиш читати ввечері?
+Марина: Так, люблю читати і писати.
+Олег: Я хочу готувати сьогодні. Ти можеш допомагати?
+Марина: Не можу зараз, мушу працювати.
+Олег: Коли ти можеш?
+Марина: Після шостої. Тоді ми готуємо і говоримо українською.
+Олег: Добре. До побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олег: Добрий день! Ти нова сусідка?** | Oleh: Good afternoon! Are you the new roommate? |
+| **Марина: Так. Мене звати Марина.** | Maryna: Yes. My name is Maryna. |
+| **Олег: Дуже приємно. Коли ти прокидаєшся?** | Oleh: Nice to meet you. When do you wake up? |
+| **Марина: Я прокидаюся о сьомій.** | Maryna: I wake up at seven. |
+| **Олег: Що ти робиш потім?** | Oleh: What do you do then? |
+| **Марина: Вмиваюся, снідаю і йду на роботу.** | Maryna: I wash up, have breakfast, and go to work. |
+| **Олег: Де ти працюєш?** | Oleh: Where do you work? |
+| **Марина: Я працюю в школі.** | Maryna: I work at a school. |
+| **Олег: Ти любиш читати ввечері?** | Oleh: Do you like to read in the evening? |
+| **Марина: Так, люблю читати і писати.** | Maryna: Yes, I like reading and writing. |
+| **Олег: Я хочу готувати сьогодні. Ти можеш допомагати?** | Oleh: I want to cook today. Can you help? |
+| **Марина: Не можу зараз, мушу працювати.** | Maryna: I cannot now, I have to work. |
+| **Олег: Коли ти можеш?** | Oleh: When can you? |
+| **Марина: Після шостої. Тоді ми готуємо і говоримо українською.** | Maryna: After six. Then we cook and speak Ukrainian. |
+| **Олег: Добре. До побачення!** | Oleh: Good. Goodbye! |
 
 This dialogue uses clean Ukrainian greeting and farewell chunks:
 **Добрий день** and **До побачення**. Keep everyday language precise:
@@ -180,12 +219,25 @@ line for the morning, one line for work or study, one line for liking, one line
 with **хочу / можу / мушу**, one question, and one negative. A good A1 answer
 can look like this:
 
-<DialogueBox uk="Я прокидаюся о сьомій." en="I wake up at seven." />
-<DialogueBox uk="Потім працюю вдома." en="Then I work at home." />
-<DialogueBox uk="Я люблю читати." en="I like reading." />
-<DialogueBox uk="Увечері хочу гуляти." en="In the evening I want to walk." />
-<DialogueBox uk="Сьогодні не можу, мушу писати." en="Today I cannot; I have to write." />
-<DialogueBox uk="Коли ти можеш говорити?" en="When can you speak?" />
+```text
+Я прокидаюся о сьомій.
+Потім працюю вдома.
+Я люблю читати.
+Увечері хочу гуляти.
+Сьогодні не можу, мушу писати.
+Коли ти можеш говорити?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я прокидаюся о сьомій.** | I wake up at seven. |
+| **Потім працюю вдома.** | Then I work at home. |
+| **Я люблю читати.** | I like reading. |
+| **Увечері хочу гуляти.** | In the evening I want to walk. |
+| **Сьогодні не можу, мушу писати.** | Today I cannot; I have to write. |
+| **Коли ти можеш говорити?** | When can you speak? |
 
 When Ukrainian cultural examples appear in later reading, keep them Ukrainian
 and precise. **Тарас Шевченко**, **Леся Українка**, **Ліна Костенко**, and
