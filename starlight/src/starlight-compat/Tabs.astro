@@ -1,0 +1,74 @@
+---
+interface TabsProps {
+  syncKey?: string;
+}
+
+const { syncKey = 'tabs' } = Astro.props as TabsProps;
+---
+
+<div class="lu-tabs" data-sync-key={syncKey}>
+  <div class="lu-tab-buttons" role="tablist" aria-label={syncKey}></div>
+  <div class="lu-tab-panels">
+    <slot />
+  </div>
+</div>
+
+<script is:inline>
+  const slugify = (value) =>
+    String(value || 'tab')
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
+      .replace(/^-+|-+$/g, '') || 'tab';
+
+  const activate = (panels, buttons, index, updateHash) => {
+    panels.forEach((panel, panelIndex) => {
+      const active = panelIndex === index;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+      buttons[panelIndex]?.classList.toggle('is-active', active);
+      buttons[panelIndex]?.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    if (updateHash && window.history?.replaceState) {
+      const label = panels[index]?.dataset.label;
+      if (label) window.history.replaceState(null, '', `#${encodeURIComponent(slugify(label))}`);
+    }
+  };
+
+  document.querySelectorAll('.lu-tabs').forEach((root) => {
+    const buttonBar = root.querySelector('.lu-tab-buttons');
+    const panels = Array.from(root.querySelectorAll(':scope .lu-tab-panel'));
+    if (!buttonBar || panels.length === 0 || root.classList.contains('is-ready')) return;
+
+    const requested = (() => {
+      try {
+        return decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        return window.location.hash.slice(1);
+      }
+    })();
+
+    const buttons = panels.map((panel, index) => {
+      const label = panel.dataset.label || `Tab ${index + 1}`;
+      const id = panel.id || `tab-panel-${index}`;
+      panel.id = id;
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', `${id}-tab`);
+
+      const button = document.createElement('button');
+      button.className = 'lu-tab-button';
+      button.id = `${id}-tab`;
+      button.type = 'button';
+      button.role = 'tab';
+      button.textContent = label;
+      button.setAttribute('aria-controls', id);
+      button.addEventListener('click', () => activate(panels, buttons, index, true));
+      buttonBar.appendChild(button);
+      return button;
+    });
+
+    const initialIndex = Math.max(0, panels.findIndex((panel) => slugify(panel.dataset.label) === requested));
+    activate(panels, buttons, initialIndex, false);
+    root.classList.add('is-ready');
+  });
+</script>

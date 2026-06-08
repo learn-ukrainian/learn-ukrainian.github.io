@@ -1,0 +1,716 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import CourseLayout from '../layouts/CourseLayout.astro';
+import curriculumStats from '../data/curriculum-stats.json';
+import lexiconManifest from '../data/lexicon-manifest.json';
+
+type DocsEntry = CollectionEntry<'docs'>;
+type TrackStats = Record<string, { modules?: number } | number>;
+type HeroVariant = 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'unavailable';
+type TrackFamily = 'core' | 'seminar' | 'reference';
+type TrackState = 'beta' | 'next' | 'planned' | 'test' | 'unavailable';
+type TrackOverview = {
+  label: string;
+  title: string;
+  eyebrow: string;
+  subtitle: string;
+  status: string;
+  family: TrackFamily;
+  state: TrackState;
+  heroVariant: HeroVariant;
+  primaryAction?: { href: string; label: string };
+  secondaryAction?: { href: string; label: string };
+  points: string[];
+  pattern: string[];
+};
+type SearchItem = {
+  title: string;
+  href: string;
+  type: string;
+  track: string;
+  text: string;
+};
+type LexiconManifest = {
+  entries: Array<{ lemma: string; url_slug: string; gloss: string | null }>;
+};
+type RouteProps =
+  | { kind: 'doc'; entry: DocsEntry }
+  | { kind: 'track'; track: string }
+  | { kind: 'search' }
+  | { kind: 'state'; state: 'missing-content' | 'empty-reference' | 'not-found' };
+
+const stats = curriculumStats as TrackStats;
+const lexicon = lexiconManifest as LexiconManifest;
+const moduleCount = (id: string) => {
+  const entry = stats[id];
+  return typeof entry === 'object' && entry ? entry.modules ?? 0 : 0;
+};
+
+const TRACKS: Record<string, TrackOverview> = {
+  a1: {
+    label: 'A1',
+    title: 'Перші кроки · First Steps',
+    eyebrow: 'A1 beta release',
+    subtitle: 'Beginner Ukrainian for sounds, reading, first conversations, everyday needs, and the A1 finale.',
+    status: 'Beta / release focus',
+    family: 'core',
+    state: 'beta',
+    heroVariant: 'core',
+    primaryAction: { href: '/a1/sounds-letters-and-hello/', label: 'Start Module 1' },
+    secondaryAction: { href: '/a1/things-have-gender/', label: 'Open M08' },
+    points: [
+      'A1 is the public release focus and the first track learners should use today.',
+      'Lessons keep Ukrainian first with English support where it helps beginners move.',
+      'Self-study is supported, but trained native Ukrainian teachers are still the best path.',
+    ],
+    pattern: ['tabs', 'dialogue', 'rule cards', 'vocabulary', 'workbook practice', 'prev/next'],
+  },
+  a2: {
+    label: 'A2',
+    title: 'A2 · Elementary Ukrainian',
+    eyebrow: 'Next core target',
+    subtitle: 'The next regeneration lane after the A1 learner surface is stable.',
+    status: 'Next after A1',
+    family: 'core',
+    state: 'next',
+    heroVariant: 'core',
+    primaryAction: { href: '/a1/', label: 'Use A1 First' },
+    secondaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
+    points: [
+      'A2 is visible as the next core track without stale release promises.',
+      'Locked module inventories communicate scope without pretending the content is ready.',
+      'The same core lesson template will host A2 once regenerated modules land.',
+    ],
+    pattern: ['course roadmap', 'locked modules', 'core grammar ladder', 'future lesson shell'],
+  },
+  b1: {
+    label: 'B1',
+    title: 'B1 · Intermediate Ukrainian',
+    eyebrow: 'Future core track',
+    subtitle: 'Intermediate grammar, texts, register, and argumentation after A2 is regenerated.',
+    status: 'Planned / unavailable',
+    family: 'core',
+    state: 'unavailable',
+    heroVariant: 'unavailable',
+    primaryAction: { href: '/a1/', label: 'Start With A1' },
+    points: [
+      'B1 is intentionally shown as future work, not a current learner promise.',
+      'The unavailable state keeps navigation honest while preserving the long-term course map.',
+      'Existing plan inventory remains source material for later UI slices.',
+    ],
+    pattern: ['future track notice', 'module count', 'return path', 'no stale publication claim'],
+  },
+  b2: {
+    label: 'B2',
+    title: 'B2 · Upper-Intermediate Ukrainian',
+    eyebrow: 'Future core track',
+    subtitle: 'Upper-intermediate study will follow the stabilized core ladder.',
+    status: 'Planned / unavailable',
+    family: 'core',
+    state: 'unavailable',
+    heroVariant: 'unavailable',
+    primaryAction: { href: '/a1/', label: 'Start With A1' },
+    points: [
+      'B2 remains in the curriculum map while learner-facing delivery focuses on A1, then A2.',
+      'No professional-track or stale promise is advertised here.',
+      'Unavailable pages are explicit so search and navigation never dead-end silently.',
+    ],
+    pattern: ['future track notice', 'core ladder context', 'support links'],
+  },
+  c1: {
+    label: 'C1',
+    title: 'C1 · Advanced Ukrainian',
+    eyebrow: 'Future core track',
+    subtitle: 'Advanced Ukrainian is a long-range core track after the lower ladder matures.',
+    status: 'Planned / unavailable',
+    family: 'core',
+    state: 'unavailable',
+    heroVariant: 'unavailable',
+    primaryAction: { href: '/a1/', label: 'Start With A1' },
+    points: [
+      'C1 is shown as curriculum scope, not an active course release.',
+      'The UI has a stable unavailable state for future and hidden content.',
+      'Reference tools remain available while the core ladder is regenerated.',
+    ],
+    pattern: ['future track notice', 'reference support', 'honest scope'],
+  },
+  c2: {
+    label: 'C2',
+    title: 'C2 · Mastery Ukrainian',
+    eyebrow: 'Long-range core track',
+    subtitle: 'Mastery-level work is long-range and unavailable in the learner UI today.',
+    status: 'Long-range / unavailable',
+    family: 'core',
+    state: 'unavailable',
+    heroVariant: 'unavailable',
+    primaryAction: { href: '/a1/', label: 'Start With A1' },
+    points: [
+      'C2 is a future signal only; no current learner should be routed here for study.',
+      'The page documents that the template family exists without overpromising content.',
+      'Search results can point users back to available A1 and reference surfaces.',
+    ],
+    pattern: ['future track notice', 'long-range scope', 'return CTA'],
+  },
+  folk: {
+    label: 'Folk',
+    title: 'Folk · Seminar Test Track',
+    eyebrow: 'Seminar test lane',
+    subtitle: 'Advanced Ukrainian cultural source work in parallel with the core course release effort.',
+    status: 'Seminar test track',
+    family: 'seminar',
+    state: 'test',
+    heroVariant: 'folk',
+    primaryAction: { href: '/folk/koliadky-shchedrivky/', label: 'Open First Seminar' },
+    secondaryAction: { href: '/folk/dumy-lytsarski/', label: 'Open Active Seminar' },
+    points: [
+      'Folk proves the source-heavy seminar pattern before the wider seminar family ships.',
+      'Lessons emphasize motif, context, performance, source notes, and decolonization framing.',
+      'This track is separate from beginner A1 release readiness.',
+    ],
+    pattern: ['source note', 'motif map', 'performance context', 'seminar workbook', 'resource trail'],
+  },
+  bio: {
+    label: 'BIO',
+    title: 'BIO · Biographies Of Ukrainians',
+    eyebrow: 'Planned seminar track',
+    subtitle: 'Biographical seminars need chronology, source trails, and anti-hagiographic framing.',
+    status: 'Planned seminar work',
+    family: 'seminar',
+    state: 'planned',
+    heroVariant: 'seminar',
+    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    points: [
+      'BIO is planned work; the learner UI shows the template without claiming finished modules.',
+      'The page pattern reserves space for chronology, source conflict, and decolonization notes.',
+      'Biographical writing must stay grounded in documented sources rather than hero cards.',
+    ],
+    pattern: ['chronology', 'source trail', 'anti-hagiography note', 'legacy map'],
+  },
+  hist: {
+    label: 'HIST',
+    title: 'HIST · Історія України',
+    eyebrow: 'Planned seminar track',
+    subtitle: 'History seminars need chronology, evidence, competing interpretations, and decolonization checks.',
+    status: 'Planned seminar work',
+    family: 'seminar',
+    state: 'planned',
+    heroVariant: 'history',
+    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    points: [
+      'HIST is planned after the current release focus; it is not a live course lane yet.',
+      'The template foregrounds evidence and interpretation rather than timeline trivia.',
+      'Decolonization notes are a first-class seminar affordance where relevant.',
+    ],
+    pattern: ['chronology', 'source comparison', 'decolonization note', 'discussion prompt'],
+  },
+  istorio: {
+    label: 'ISTORIO',
+    title: 'ISTORIO · Historiography',
+    eyebrow: 'Planned seminar track',
+    subtitle: 'Historiography work needs source disagreement, method, and bias-aware reading.',
+    status: 'Planned seminar work',
+    family: 'seminar',
+    state: 'planned',
+    heroVariant: 'history',
+    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    points: [
+      'ISTORIO stays visible as a method-heavy seminar family.',
+      'The future lesson template needs source disagreement and interpretive stakes.',
+      'The UI makes planned scope explicit to avoid hidden-route confusion.',
+    ],
+    pattern: ['method note', 'source disagreement', 'bias check', 'reader position'],
+  },
+  lit: {
+    label: 'LIT',
+    title: 'LIT · Ukrainian Literature',
+    eyebrow: 'Planned seminar track',
+    subtitle: 'Literary seminars need close reading, protected-text boundaries, genre framing, and source notes.',
+    status: 'Planned seminar work',
+    family: 'seminar',
+    state: 'planned',
+    heroVariant: 'lit',
+    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    points: [
+      'LIT and its variants share one close-reading template family.',
+      'The UI supports excerpts and references without copying protected texts.',
+      'Drama, essay, war literature, youth literature, humor, and fantastika remain subtrack variants.',
+    ],
+    pattern: ['close reading', 'genre frame', 'excerpt boundary', 'performance block', 'essay prompt'],
+  },
+  oes: {
+    label: 'OES',
+    title: 'OES · Old East Slavic',
+    eyebrow: 'Planned seminar track',
+    subtitle: 'Historical-language seminars need dense evidence, glossary support, and careful source framing.',
+    status: 'Planned seminar work',
+    family: 'seminar',
+    state: 'planned',
+    heroVariant: 'seminar',
+    primaryAction: { href: '/etymology/', label: 'Open Etymology' },
+    points: [
+      'OES is not a beginner lane; it needs a denser reference-first reading surface.',
+      'The template reserves space for paleography, glossary, and evidence blocks.',
+      'Reference links should support, not replace, guided seminar interpretation.',
+    ],
+    pattern: ['dense reading', 'glossary', 'paleography note', 'evidence table'],
+  },
+  ruth: {
+    label: 'RUTH',
+    title: 'RUTH · Ruthenian Baroque',
+    eyebrow: 'Planned seminar track',
+    subtitle: 'Historical-language and baroque text work needs glossary support, context, and source trails.',
+    status: 'Planned seminar work',
+    family: 'seminar',
+    state: 'planned',
+    heroVariant: 'seminar',
+    primaryAction: { href: '/etymology/', label: 'Open Etymology' },
+    points: [
+      'RUTH will use the historical-language seminar surface, not the core lesson ladder.',
+      'The planned template emphasizes context, terms, source notes, and careful quotation boundaries.',
+      'The current page is an honest unavailable/planned landing for future work.',
+    ],
+    pattern: ['context frame', 'glossary', 'source note', 'evidence table'],
+  },
+};
+
+const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
+const PUBLIC_LESSON_PREFIXES = new Set(['a1', 'folk']);
+const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
+const hrefFromRoute = (route: string) => `/${route}/`;
+const trackIds = Object.keys(TRACKS);
+
+const allDocs = await getCollection('docs');
+const visibleDocs = allDocs.filter((entry) => {
+  const id = normalizeId(entry.id);
+  const track = id.split('/')[0];
+  if (HIDDEN_DOCS.has(id)) return false;
+  if (entry.data.draft) return false;
+  return track in TRACKS;
+});
+
+const deployedDocsByTrack = new Map<string, DocsEntry[]>();
+for (const entry of visibleDocs) {
+  const id = normalizeId(entry.id);
+  const track = id.split('/')[0];
+  if (id === track) continue;
+  const bucket = deployedDocsByTrack.get(track) ?? [];
+  bucket.push(entry);
+  deployedDocsByTrack.set(track, bucket);
+}
+for (const entries of deployedDocsByTrack.values()) {
+  entries.sort((a, b) => (a.data.sidebar?.order ?? 999) - (b.data.sidebar?.order ?? 999));
+}
+
+const searchItems: SearchItem[] = [
+  ...trackIds.map((id) => {
+    const track = TRACKS[id];
+    return {
+      title: `${track.label} · ${track.title}`,
+      href: `/${id}/`,
+      type: track.family === 'core' ? 'Core track' : 'Seminar track',
+      track: track.label,
+      text: `${track.subtitle} ${track.status} ${track.points.join(' ')} ${track.pattern.join(' ')}`,
+    };
+  }),
+  ...visibleDocs
+    .filter((entry) => {
+      const id = normalizeId(entry.id);
+      const track = id.split('/')[0];
+      return PUBLIC_LESSON_PREFIXES.has(track) && id !== track;
+    })
+    .map((entry) => {
+      const id = normalizeId(entry.id);
+      const track = id.split('/')[0];
+      return {
+        title: entry.data.title,
+        href: hrefFromRoute(id),
+        type: track === 'folk' ? 'Seminar lesson' : 'Core lesson',
+        track: TRACKS[track]?.label ?? track.toUpperCase(),
+        text: `${entry.data.title} ${entry.data.description ?? ''} ${entry.data.sidebar?.label ?? ''}`,
+      };
+    }),
+  ...lexicon.entries.slice(0, 160).map((entry) => ({
+    title: entry.lemma,
+    href: `/lexicon/${entry.url_slug}/`,
+    type: 'Word Atlas',
+    track: 'Atlas',
+    text: `${entry.lemma} ${entry.gloss ?? ''}`,
+  })),
+  {
+    title: 'Етимологія',
+    href: '/etymology/',
+    type: 'Reference',
+    track: 'Reference',
+    text: 'ЕСУМ etymology reference entries cognates proto forms source dictionary',
+  },
+];
+
+export async function getStaticPaths() {
+  const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
+  const publicLessonPrefixes = new Set(['a1', 'folk']);
+  const hiddenDocs = new Set(['a1/review-clears-needs-human']);
+  const tracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
+  const docs = (await getCollection('docs')).filter((entry) => {
+    const id = normalizeDocId(entry.id);
+    const track = id.split('/')[0];
+    if (!publicLessonPrefixes.has(track)) return false;
+    if (id === track) return false;
+    if (hiddenDocs.has(id)) return false;
+    if (entry.data.draft) return false;
+    return true;
+  });
+
+  return [
+    ...tracks.map((track) => ({
+      params: { slug: track },
+      props: { kind: 'track', track },
+    })),
+    { params: { slug: 'search' }, props: { kind: 'search' } },
+    { params: { slug: 'missing-content' }, props: { kind: 'state', state: 'missing-content' } },
+    { params: { slug: 'empty-reference' }, props: { kind: 'state', state: 'empty-reference' } },
+    ...docs.map((entry) => ({
+      params: { slug: normalizeDocId(entry.id) },
+      props: { kind: 'doc', entry },
+    })),
+  ];
+}
+
+const props = Astro.props as RouteProps;
+const pageTrack = props.kind === 'track'
+  ? TRACKS[props.track]
+  : props.kind === 'doc'
+    ? TRACKS[normalizeId(props.entry.id).split('/')[0]]
+    : undefined;
+
+let Content: Awaited<ReturnType<typeof render<'docs'>>>['Content'] | undefined;
+let docRoute = '';
+let docTrack = '';
+let isSeminarLesson = false;
+let previousLink: { href: string; label: string } | undefined;
+let nextLink: { href: string; label: string } | undefined;
+
+if (props.kind === 'doc') {
+  const rendered = await render(props.entry);
+  Content = rendered.Content;
+  docRoute = normalizeId(props.entry.id);
+  docTrack = docRoute.split('/')[0];
+  isSeminarLesson = TRACKS[docTrack]?.family === 'seminar';
+  const prev = props.entry.data.prev;
+  const next = props.entry.data.next;
+  if (typeof prev === 'string') previousLink = { href: `/${docTrack}/${prev}/`, label: 'Previous' };
+  if (typeof next === 'string') nextLink = { href: `/${docTrack}/${next}/`, label: 'Next' };
+}
+
+const pageMeta = (() => {
+  if (props.kind === 'track') {
+    const track = TRACKS[props.track];
+    return {
+      title: track.title,
+      description: track.subtitle,
+      eyebrow: track.eyebrow,
+      subtitle: track.subtitle,
+      currentPath: `/${props.track}/`,
+      heroVariant: track.heroVariant,
+      wide: true,
+    };
+  }
+  if (props.kind === 'search') {
+    return {
+      title: 'Search',
+      description: 'Search the learner UI, course lessons, track landings, Word Atlas entries, and reference pages.',
+      eyebrow: 'Find a page',
+      subtitle: 'Static client-side search for lessons, tracks, Word Atlas entries, and references.',
+      currentPath: '/search/',
+      heroVariant: 'lexicon' as HeroVariant,
+      wide: true,
+    };
+  }
+  if (props.kind === 'state') {
+    const title = props.state === 'not-found'
+      ? 'Page Not Found'
+      : props.state === 'missing-content'
+        ? 'Missing Content'
+        : 'Empty Reference State';
+    return {
+      title,
+      description: 'Learner UI state template for missing, unavailable, and empty content.',
+      eyebrow: 'Learner state',
+      subtitle: 'A clear route state keeps learners oriented instead of dropping them into a generic docs page.',
+      currentPath: props.state === 'not-found' ? '/404/' : `/${props.state}/`,
+      heroVariant: 'unavailable' as HeroVariant,
+      wide: true,
+    };
+  }
+
+  const route = normalizeId(props.entry.id);
+  const track = route.split('/')[0];
+  const order = props.entry.data.sidebar?.order;
+  return {
+    title: props.entry.data.title,
+    description: props.entry.data.description ?? TRACKS[track]?.subtitle,
+    eyebrow: `${TRACKS[track]?.label ?? track.toUpperCase()} · ${order ? `Module ${String(order).padStart(2, '0')}` : 'Lesson'}`,
+    subtitle: props.entry.data.description ?? TRACKS[track]?.subtitle,
+    currentPath: hrefFromRoute(route),
+    heroVariant: TRACKS[track]?.heroVariant ?? 'core',
+    wide: false,
+  };
+})();
+
+const navItems = props.kind === 'doc'
+  ? [
+      { href: '/', label: 'Home' },
+      { href: `/${docTrack}/`, label: TRACKS[docTrack]?.label ?? docTrack.toUpperCase() },
+      { href: hrefFromRoute(docRoute), label: props.entry.data.sidebar?.label ?? props.entry.data.title },
+    ]
+  : [
+      { href: '/', label: 'Home' },
+      { href: pageMeta.currentPath, label: pageMeta.title },
+    ];
+---
+
+<CourseLayout
+  title={pageMeta.title}
+  description={pageMeta.description}
+  eyebrow={pageMeta.eyebrow}
+  subtitle={pageMeta.subtitle}
+  currentPath={pageMeta.currentPath}
+  heroVariant={pageMeta.heroVariant}
+  navItems={navItems}
+  wide={pageMeta.wide}
+  showHero
+>
+  {props.kind === 'track' && pageTrack ? (
+    <section class:list={['track-overview', `track-${props.track}`, pageTrack.family, pageTrack.state]}>
+      <div class="track-status-panel">
+        <span>{pageTrack.status}</span>
+        <strong>{moduleCount(props.track)} planned modules</strong>
+      </div>
+
+      <div class="track-overview-grid">
+        <section class="track-lead">
+          <p class="track-family">{pageTrack.family === 'core' ? 'Core ladder' : 'Seminar track'}</p>
+          <h2>{pageTrack.title}</h2>
+          <p>{pageTrack.subtitle}</p>
+          <div class="track-actions">
+            {pageTrack.primaryAction && <a class="track-primary" href={pageTrack.primaryAction.href}>{pageTrack.primaryAction.label}</a>}
+            {pageTrack.secondaryAction && <a class="track-secondary" href={pageTrack.secondaryAction.href}>{pageTrack.secondaryAction.label}</a>}
+          </div>
+        </section>
+
+        <section class="track-notes" aria-label={`${pageTrack.label} notes`}>
+          {pageTrack.points.map((point) => (
+            <p>{point}</p>
+          ))}
+        </section>
+      </div>
+
+      <section class="track-pattern">
+        <h2>Template Pattern</h2>
+        <div class="track-pattern-grid">
+          {pageTrack.pattern.map((item) => (
+            <span>{item}</span>
+          ))}
+        </div>
+      </section>
+
+      {pageTrack.family === 'seminar' && (
+        <section class="seminar-frame">
+          <div>
+            <h2>Seminar Reading Frame</h2>
+            <p>
+              Source-heavy lessons use a different rhythm from the core ladder: evidence first,
+              interpretation second, and practice that asks learners to compare claims rather than
+              memorize isolated facts.
+            </p>
+          </div>
+          <ul>
+            <li>source note with provenance and limits</li>
+            <li>context card before claims get interpreted</li>
+            <li>decolonization or bias check where the topic requires it</li>
+            <li>workbook tasks for comparison, evaluation, and response</li>
+          </ul>
+        </section>
+      )}
+
+      {pageTrack.state === 'unavailable' || pageTrack.state === 'planned' || pageTrack.state === 'next' ? (
+        <section class="route-state-card">
+          <p class="state-code">{pageTrack.state === 'next' ? 'Next Track' : 'Unavailable Today'}</p>
+          <h2>This track is mapped, not released.</h2>
+          <p>
+            The learner UI keeps the route visible so navigation, search, and future publishing have
+            a real template, but it does not claim this content is ready for study.
+          </p>
+          <a href="/a1/">Use the available A1 beta track</a>
+        </section>
+      ) : (
+        <section class="module-preview">
+          <h2>Available Modules</h2>
+          <div class="module-preview-list">
+            {(deployedDocsByTrack.get(props.track) ?? []).map((entry) => {
+              const id = normalizeId(entry.id);
+              return (
+                <a href={hrefFromRoute(id)}>
+                  <span>{entry.data.sidebar?.order ? String(entry.data.sidebar.order).padStart(2, '0') : 'Lesson'}</span>
+                  <strong>{entry.data.title}</strong>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <section class="track-support">
+        <h2>Learning Support</h2>
+        <div class="track-support-grid">
+          <a href="/lexicon/">
+            <strong>Word Atlas</strong>
+            <span>Static vocabulary, morphology, etymology, and course usage pages.</span>
+          </a>
+          <a href="/search/">
+            <strong>Search</strong>
+            <span>Find lessons, track pages, Word Atlas entries, and reference surfaces.</span>
+          </a>
+          <a href="https://www.ukrainianlessons.com/">
+            <strong>Ukrainian Lessons</strong>
+            <span>Recommended external learning ecosystem; inspiration only, not copied content.</span>
+          </a>
+        </div>
+      </section>
+    </section>
+  ) : props.kind === 'search' ? (
+    <section class="search-page" data-search-root>
+      <form class="search-panel" role="search">
+        <label for="course-search">Search lessons, tracks, and reference pages</label>
+        <div class="search-input-row">
+          <input id="course-search" name="q" type="search" placeholder="Try gender, колядки, вікно, etymology..." autocomplete="off" />
+          <button type="submit">Search</button>
+        </div>
+      </form>
+
+      <div class="search-state search-loading" data-search-loading hidden>
+        <span class="state-code">Loading</span>
+        <p>Preparing the local index.</p>
+      </div>
+      <div class="search-state search-error" data-search-error hidden>
+        <span class="state-code">Error</span>
+        <h2>Search could not run.</h2>
+        <p>The static page is still available. Use the course links below while the search script recovers.</p>
+      </div>
+      <div class="search-state search-empty" data-search-empty hidden>
+        <span class="state-code">No Results</span>
+        <h2>No matching pages.</h2>
+        <p>Try a broader term, a Ukrainian lemma, or open A1, Folk, Word Atlas, or Etymology directly.</p>
+      </div>
+
+      <section class="search-results-section" aria-live="polite">
+        <div class="section-heading">
+          <h2 data-search-heading>Suggested Pages</h2>
+          <p data-search-count>Start with a broad query or use the shortcuts.</p>
+        </div>
+        <div class="search-results" data-search-results>
+          {searchItems.slice(0, 9).map((item) => (
+            <a href={item.href}>
+              <span>{item.type} · {item.track}</span>
+              <strong>{item.title}</strong>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <script is:inline define:vars={{ searchItems }}>
+        const root = document.querySelector('[data-search-root]');
+        const input = root?.querySelector('#course-search');
+        const form = root?.querySelector('form');
+        const results = root?.querySelector('[data-search-results]');
+        const count = root?.querySelector('[data-search-count]');
+        const heading = root?.querySelector('[data-search-heading]');
+        const empty = root?.querySelector('[data-search-empty]');
+        const error = root?.querySelector('[data-search-error]');
+        const loading = root?.querySelector('[data-search-loading]');
+        const params = new URLSearchParams(window.location.search);
+        const normalize = (value) => String(value || '').toLocaleLowerCase('uk');
+        const escapeHtml = (value) => String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+        const render = (query) => {
+          const q = normalize(query).trim();
+          error.hidden = params.get('state') !== 'error';
+          loading.hidden = true;
+          if (!results || !count || !heading || !empty || !error.hidden) return;
+          const matches = q
+            ? searchItems.filter((item) => normalize(`${item.title} ${item.text} ${item.type} ${item.track}`).includes(q)).slice(0, 24)
+            : searchItems.slice(0, 9);
+          empty.hidden = matches.length !== 0 || !q;
+          heading.textContent = q ? `Results for "${query}"` : 'Suggested Pages';
+          count.textContent = matches.length
+            ? `${matches.length} ${matches.length === 1 ? 'match' : 'matches'} in the static learner index.`
+            : q
+              ? 'No pages matched this query.'
+              : 'Start with a broad query or use the shortcuts.';
+          results.innerHTML = matches.map((item) => (
+            `<a href="${escapeHtml(item.href)}"><span>${escapeHtml(item.type)} · ${escapeHtml(item.track)}</span><strong>${escapeHtml(item.title)}</strong></a>`
+          )).join('');
+        };
+        if (input) {
+          input.value = params.get('q') || '';
+          input.addEventListener('input', () => render(input.value));
+        }
+        form?.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const query = input?.value || '';
+          const url = query ? `/search/?q=${encodeURIComponent(query)}` : '/search/';
+          window.history.replaceState(null, '', url);
+          render(query);
+        });
+        render(input?.value || '');
+      </script>
+    </section>
+  ) : props.kind === 'state' ? (
+    <section class="route-state-card big">
+      <p class="state-code">
+        {props.state === 'not-found' ? '404' : props.state === 'missing-content' ? 'Missing' : 'Empty'}
+      </p>
+      <h2>
+        {props.state === 'not-found'
+          ? 'This page is not part of the public learner UI.'
+          : props.state === 'missing-content'
+            ? 'The route exists, but the lesson content is not ready.'
+            : 'The reference template has an empty state.'}
+      </h2>
+      <p>
+        {props.state === 'not-found'
+          ? 'Hidden drafts and unknown routes should fail clearly, with useful recovery paths.'
+          : props.state === 'missing-content'
+            ? 'Learners should get a plain explanation and a path back to an available track.'
+            : 'Atlas and reference indexes should communicate when a filter or future dataset has no records.'}
+      </p>
+      <div class="state-actions">
+        <a href="/a1/">A1 Beta</a>
+        <a href="/folk/">Folk Seminar</a>
+        <a href="/search/">Search</a>
+        <a href="/lexicon/">Word Atlas</a>
+      </div>
+    </section>
+  ) : Content ? (
+    <section class:list={['lesson-shell', isSeminarLesson && 'seminar-lesson']}>
+      <aside class="lesson-companion" aria-label="Lesson context">
+        <p class="state-code">{isSeminarLesson ? 'Seminar' : 'Core lesson'}</p>
+        <h2>{isSeminarLesson ? 'Source-Heavy Reading' : 'Learner Path'}</h2>
+        <p>
+          {isSeminarLesson
+            ? 'Read for evidence, context, and interpretation. Source notes and workbook tasks stay visible as part of the seminar frame.'
+            : 'Use the lesson tab first, then vocabulary, activities, and resources. Dialogue and tables are styled for repeated practice.'}
+        </p>
+      </aside>
+      <Content />
+      {(previousLink || nextLink) && (
+        <nav class="lesson-next-prev" aria-label="Lesson navigation">
+          {previousLink ? <a href={previousLink.href}>← {previousLink.label}</a> : <span></span>}
+          {nextLink ? <a href={nextLink.href}>{nextLink.label} →</a> : <span></span>}
+        </nav>
+      )}
+    </section>
+  ) : null}
+</CourseLayout>

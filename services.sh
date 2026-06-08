@@ -9,18 +9,18 @@
 #   ./services.sh restart            # Restart all
 #   ./services.sh restart api        # Restart specific service
 #   ./services.sh status             # Show what's running
-#   ./services.sh build starlight     # Run Starlight production build (no dev server)
-#   ./services.sh clean starlight     # Remove Starlight build/cache outputs
-#   ./services.sh rebuild starlight   # Run Starlight clean then build
+#   ./services.sh build astro        # Run Astro production build (no dev server)
+#   ./services.sh clean astro        # Remove Astro build/cache outputs
+#   ./services.sh rebuild astro      # Run Astro clean then build
 #
-# Services: sources, api, starlight
+# Services: sources, api, astro
 #
 # Note: the `sources` service was historically called `rag`. It serves
 # SQLite FTS5 indices over textbook chunks, dictionaries, VESUM, literary
 # sources, and Wikipedia — an MCP server, not vector-RAG retrieval. We
-# accept the legacy name `rag` as an alias below for backwards compat
-# with old shell history and session notes. Remove the alias after the
-# next quarterly cleanup pass.
+# accept legacy service aliases below for backwards compat with old shell
+# history and session notes. Remove the aliases after the next quarterly
+# cleanup pass.
 
 set -euo pipefail
 
@@ -53,27 +53,34 @@ SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
 SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
 SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
 
-SVC_CMD[starlight]="npm run dev --prefix starlight -- --host 127.0.0.1 --force"
-SVC_PORT[starlight]=4321
-SVC_HOST[starlight]=127.0.0.1
-SVC_LOG[starlight]="$LOGS_DIR/starlight.log"
-SVC_DESC[starlight]="Starlight Dev Server (Astro)"
-SVC_HEALTH[starlight]="http://127.0.0.1:4321/"
-SVC_HEALTH_ALT[starlight]="http://localhost:4321/"
-SVC_MATCH[starlight]="$PROJECT_ROOT/starlight/node_modules/.bin/astro dev"
+SVC_CMD[astro]="npm run dev --prefix starlight -- --host 127.0.0.1 --port 4321 --force"
+SVC_PORT[astro]=4321
+SVC_HOST[astro]=127.0.0.1
+SVC_LOG[astro]="$LOGS_DIR/astro.log"
+SVC_DESC[astro]="Astro Course UI Dev Server"
+SVC_HEALTH[astro]="http://127.0.0.1:4321/"
+SVC_HEALTH_ALT[astro]="http://localhost:4321/"
+SVC_MATCH[astro]="starlight/node_modules/.bin/astro dev --host 127.0.0.1"
 
-ALL_SERVICES="sources api starlight"
+ALL_SERVICES="sources api astro"
 
-# Legacy alias: rewrite `rag` → `sources` when passed as a CLI arg.
-# Accept shell history + scripts that still say `./services.sh start rag`.
+# Legacy aliases: rewrite old service names when passed as CLI args.
+# Accept shell history + scripts that still say `./services.sh start rag`
+# or `./services.sh restart starlight`.
 _rewrite_legacy_alias() {
     local out=()
     for svc in "$@"; do
-        if [[ "$svc" == "rag" ]]; then
-            out+=("sources")
-        else
-            out+=("$svc")
-        fi
+        case "$svc" in
+            rag)
+                out+=("sources")
+                ;;
+            starlight)
+                out+=("astro")
+                ;;
+            *)
+                out+=("$svc")
+                ;;
+        esac
     done
     printf '%s\n' "${out[@]}"
 }
@@ -230,7 +237,7 @@ _health_probe() {
         return 1
     fi
 
-    if [[ "$name" == "starlight" ]]; then
+    if [[ "$name" == "astro" ]]; then
         curl -fsSI --max-time 2 "$url" >/dev/null 2>&1
     else
         curl -fsS --max-time 2 "$url" >/dev/null 2>&1
@@ -248,7 +255,7 @@ _health_check() {
 
     # Host-scoped services must be healthy on their configured bind address.
     # Otherwise a sibling process on localhost/IPv6 can mask a dead worktree
-    # preview and make `services.sh restart starlight` refuse to respawn it.
+    # preview and make `services.sh restart astro` refuse to respawn it.
     if [[ -n "${SVC_HOST[$name]-}" ]]; then
         return 1
     fi
@@ -359,7 +366,7 @@ _start_service() {
     cd "$PROJECT_ROOT"
 
     local pid=""
-    if [[ "$name" == "starlight" ]] && command -v tmux >/dev/null 2>&1; then
+    if [[ "$name" == "astro" ]] && command -v tmux >/dev/null 2>&1; then
         local session
         session="$(_tmux_session_name "$name")"
         tmux kill-session -t "$session" 2>/dev/null || true
@@ -418,7 +425,7 @@ _stop_service() {
     fi
 
     rm -f "$pidfile"
-    if [[ "$name" == "starlight" ]] && command -v tmux >/dev/null 2>&1; then
+    if [[ "$name" == "astro" ]] && command -v tmux >/dev/null 2>&1; then
         tmux kill-session -t "$(_tmux_session_name "$name")" 2>/dev/null || true
     fi
 
@@ -433,14 +440,14 @@ _stop_service() {
         sleep 0.5
     done
 
-    if [[ "$name" == "starlight" ]]; then
-        _starlight_cleanup_cache
+    if [[ "$name" == "astro" ]]; then
+        _astro_cleanup_cache
     fi
 
     echo "  $name stopped"
 }
 
-_starlight_cleanup_cache() {
+_astro_cleanup_cache() {
     local cache_file="$PROJECT_ROOT/starlight/.astro/data-store.json"
     local vite_cache_dir="$PROJECT_ROOT/starlight/node_modules/.vite"
 
@@ -457,13 +464,13 @@ _starlight_cleanup_cache() {
     fi
 }
 
-_starlight_cleanup_build_artifacts() {
+_astro_cleanup_build_artifacts() {
     local dist_dir="$PROJECT_ROOT/starlight/dist"
     local astro_dir="$PROJECT_ROOT/starlight/.astro"
 
     if [[ -d "$dist_dir" ]]; then
         rm -rf "$dist_dir"
-        echo "  Removed Starlight build output (dist)"
+        echo "  Removed Astro build output (dist)"
     fi
     if [[ -d "$astro_dir" ]]; then
         rm -rf "$astro_dir"
@@ -471,18 +478,18 @@ _starlight_cleanup_build_artifacts() {
     fi
 }
 
-_build_starlight() {
-    echo "  Building starlight..."
+_build_astro() {
+    echo "  Building astro..."
     cd "$PROJECT_ROOT"
     npm run build --prefix starlight
 }
 
-_clean_starlight() {
+_clean_astro() {
     local state
-    state="$(_known_service_pid starlight || true)"
+    state="$(_known_service_pid astro || true)"
     if [[ -n "$state" ]]; then
-        echo "  Stopping starlight before clean..."
-        _stop_service starlight
+        echo "  Stopping astro before clean..."
+        _stop_service astro
     fi
 
     local had_outputs=0
@@ -490,17 +497,17 @@ _clean_starlight() {
         had_outputs=1
     fi
 
-    _starlight_cleanup_cache
-    _starlight_cleanup_build_artifacts
+    _astro_cleanup_cache
+    _astro_cleanup_build_artifacts
 
     if [[ "$had_outputs" -eq 0 ]]; then
-        echo "  No Starlight build/cache outputs to remove."
+        echo "  No Astro build/cache outputs to remove."
     fi
 }
 
-_rebuild_starlight() {
-    _clean_starlight
-    _build_starlight
+_rebuild_astro() {
+    _clean_astro
+    _build_astro
 }
 
 _status() {
@@ -585,57 +592,57 @@ case "$action" in
     build)
         if [[ "$#" -eq 0 ]]; then
             echo "Usage: $0 build <service>"
-            echo "Supported service: starlight"
+            echo "Supported service: astro"
             exit 1
         fi
-        supported_starlight=0
+        supported_astro=0
         for svc in $services; do
-            if [[ "$svc" == "starlight" ]]; then
-                supported_starlight=1
-                _build_starlight
+            if [[ "$svc" == "astro" ]]; then
+                supported_astro=1
+                _build_astro
             else
-                echo "  Unsupported service for build: $svc (supported: starlight)"
+                echo "  Unsupported service for build: $svc (supported: astro)"
             fi
         done
-        if [[ "$supported_starlight" -eq 0 ]]; then
+        if [[ "$supported_astro" -eq 0 ]]; then
             exit 1
         fi
         ;;
     clean)
         if [[ "$#" -eq 0 ]]; then
             echo "Usage: $0 clean <service>"
-            echo "Supported service: starlight"
+            echo "Supported service: astro"
             exit 1
         fi
-        supported_starlight=0
+        supported_astro=0
         for svc in $services; do
-            if [[ "$svc" == "starlight" ]]; then
-                supported_starlight=1
-                _clean_starlight
+            if [[ "$svc" == "astro" ]]; then
+                supported_astro=1
+                _clean_astro
             else
-                echo "  Unsupported service for clean: $svc (supported: starlight)"
+                echo "  Unsupported service for clean: $svc (supported: astro)"
             fi
         done
-        if [[ "$supported_starlight" -eq 0 ]]; then
+        if [[ "$supported_astro" -eq 0 ]]; then
             exit 1
         fi
         ;;
     rebuild)
         if [[ "$#" -eq 0 ]]; then
             echo "Usage: $0 rebuild <service>"
-            echo "Supported service: starlight"
+            echo "Supported service: astro"
             exit 1
         fi
-        supported_starlight=0
+        supported_astro=0
         for svc in $services; do
-            if [[ "$svc" == "starlight" ]]; then
-                supported_starlight=1
-                _rebuild_starlight
+            if [[ "$svc" == "astro" ]]; then
+                supported_astro=1
+                _rebuild_astro
             else
-                echo "  Unsupported service for rebuild: $svc (supported: starlight)"
+                echo "  Unsupported service for rebuild: $svc (supported: astro)"
             fi
         done
-        if [[ "$supported_starlight" -eq 0 ]]; then
+        if [[ "$supported_astro" -eq 0 ]]; then
             exit 1
         fi
         ;;
@@ -655,11 +662,11 @@ case "$action" in
         echo "  $0 start sources api      # Start specific"
         echo "  $0 stop sources           # Stop one"
         echo "  $0 restart                # Restart all"
-        echo "  $0 build starlight        # Build Starlight"
-        echo "  $0 clean starlight        # Clean Starlight cache/build outputs"
-        echo "  $0 rebuild starlight      # Clean then build Starlight"
+        echo "  $0 build astro            # Build Astro"
+        echo "  $0 clean astro            # Clean Astro cache/build outputs"
+        echo "  $0 rebuild astro          # Clean then build Astro"
         echo "  $0 status                 # Show status"
         echo ""
-        echo "Note: 'rag' is accepted as a legacy alias for 'sources'."
+        echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'starlight' is accepted as a legacy alias for 'astro'."
         ;;
 esac
