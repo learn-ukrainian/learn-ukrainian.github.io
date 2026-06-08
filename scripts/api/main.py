@@ -51,6 +51,7 @@ from .config import (
     PROJECT_ROOT,
 )
 from .consultation_router import router as consultation_router
+from .coordination_router import router as coordination_router
 from .cost_router import router as cost_router
 from .dashboard_router import router as dashboard_router
 from .decisions_router import router as decisions_router
@@ -122,6 +123,7 @@ app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
 app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
+app.include_router(coordination_router, prefix="/api/coordination")
 app.include_router(consultation_router, prefix="/api/consultation")
 app.include_router(cost_router, prefix="/api/cost")
 app.include_router(cost_router, prefix="/api/analytics/cost")
