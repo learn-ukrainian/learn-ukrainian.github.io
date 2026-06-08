@@ -346,8 +346,17 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
     sources_info = gather_discovery_sources(track, slug)
     print(f"    ✓ gather_discovery_sources in {time.monotonic() - t_stage:.1f}s", flush=True)
     if "error" in sources_info:
-        print(f"  ❌ {sources_info['error']}")
-        return False
+        # Dossier-only path. A verified research dossier is itself an authoritative
+        # grounding tier (load_dossier_text → _build_prompt). New seminar topics —
+        # folk broad-scope additions, bio new-130 — have a dossier but no discovery
+        # file; compile them grounded on the dossier rather than failing. Dense
+        # retrieval is an optional enhancement that needs a discovery seed (absent here).
+        if load_dossier_text(track, slug):
+            print(f"  📓 No discovery file — dossier-only compile for {track}/{slug}")
+            sources_info = {}
+        else:
+            print(f"  ❌ {sources_info['error']}")
+            return False
 
     # Collect and enrich source chunks — dense retrieval + tokenizer encode,
     # can take 10–60s on a cold cache.
@@ -808,10 +817,38 @@ def _existing_article_paths(track: str, *, slug: str | None = None) -> list[Path
     return sorted(articles)
 
 
+def _dossier_title(track: str, slug: str) -> str | None:
+    """Extract the Ukrainian subject title from a dossier's H1, if present.
+
+    Returns the first level-1 heading with a trailing "— Research Dossier"
+    annotation stripped, but only when it contains Cyrillic. Used as the topic
+    fallback for dossier-only compiles (new seminar topics with no discovery
+    keywords) so the article title is Ukrainian, not a Latin-transliterated slug.
+    Returns None when there is no dossier or no usable Cyrillic H1.
+    """
+    text = load_dossier_text(track, slug)
+    if not text:
+        return None
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("# "):
+            title = stripped[2:].strip()
+            for sep in ("—", "–", "-"):
+                marker = f"{sep} Research Dossier"
+                idx = title.find(marker)
+                if idx != -1:
+                    title = title[:idx].strip()
+                    break
+            if any(0x0400 <= ord(c) <= 0x04FF for c in title):
+                return title
+            return None
+    return None
+
+
 def _slug_to_topic(slug: str, track: str, sources_info: dict | None = None) -> str:
     """Build a topic name, preferring Ukrainian from discovery keywords.
 
-    Falls back to Latin slug title-case if no discovery data available.
+    Falls back to the dossier H1 (Ukrainian), then to Latin slug title-case.
     """
     track_labels = {
         "a1": "Педагогіка A1",
@@ -848,6 +885,13 @@ def _slug_to_topic(slug: str, track: str, sources_info: dict | None = None) -> s
             # Check if it has Cyrillic (Ukrainian)
             if any("\u0400" <= c <= "\u04FF" for c in first_kw):
                 return f"{label}: {first_kw}"
+
+    # Dossier-only fallback: derive the Ukrainian title from the dossier H1
+    # (new seminar topics have no discovery keywords, so the slug branch above
+    # is skipped). Keeps the article title Cyrillic instead of a Latin slug.
+    dossier_title = _dossier_title(track, slug)
+    if dossier_title:
+        return f"{label}: {dossier_title}"
 
     # Fallback: Latin slug
     topic = slug.replace("-", " ").title()

@@ -278,7 +278,11 @@ def _format_dossier_section(dossier_text: str | None) -> str:
         "breadth, but where a chunk (esp. a Wikipedia-only chunk) conflicts "
         "with the dossier, the DOSSIER WINS. Do NOT introduce facts that "
         "contradict the dossier. Do NOT invent quotes — if the dossier marks "
-        "a quote as not corpus-confirmed, keep that caution.\n\n"
+        "a quote as not corpus-confirmed, keep that caution. A claim grounded "
+        "in this dossier is FULLY grounded: cite it normally and do NOT add a "
+        "<!-- VERIFY --> marker merely because it rests on the dossier rather "
+        "than on a numbered [S#] source chunk — the dossier is itself verified. "
+        "Reserve <!-- VERIFY --> for genuinely uncertain or unsourced claims.\n\n"
     )
 
 
