@@ -70,17 +70,36 @@ Built via `v7_build folk … --worktree --writer claude-tools`; gate now passes;
   (c) ⚠ P2 inline-and-aggregate cross-refs absent (known-broken §5 #3, not new); (d) ⚠ LLM 7.0/REVISE
   warnings on pedagogical/engagement/tone — worth a content read.
 
-### 🔭 IN-FLIGHT: **NONE** at handoff write. (verify: `curl -s :8765/api/delegate/active`)
+### 🔭 PHASE-2 PROGRESS (the rest, up-to-wiki) + IN-FLIGHT (verify: `curl -s :8765/api/delegate/active`)
+- ✅ **Dossier #1 `narodna-kultura-yak-systema`** (frame) — DONE, Claude corpus-hammer **SHIP** → **PR #2858**
+  (HELD, no merge). Independently re-verified 3 §4 quotes at 1.0 + exact chunk ids; Берегиня flagged as
+  romantic reconstruction; do-not-quote section present. **Wiki NOT yet compiled.**
+- ⏳ **Dossier #2 `narodni-viruvannia-mifolohiia-demonolohiia`** — IN FLIGHT (dispatch
+  `folk-dossier-narodni-viruvannia`, codex/gpt-5.5; watcher `b4p1gnvdz`). Needs Claude corpus-hammer
+  review on landing (esp. the anti-pantheon/Берегиня discipline — this is the highest-risk topic for it).
+- ⏳ **To fire next:** dossiers for `koliadky-shchedrivky`, `rodynna-obriadovist-zvychai`,
+  `dumy-nevilnytski-lytsarski` (all NEW; old April wikis exist but are pre-dossier — rebuild with dossier).
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **User reviews the pilot MODULE PR** in the morning (this PR). Their m19 (`dumy-lytsarski`) feedback +
-   pilot review will set the bar/approach for the rest's modules.
-2. **Drive the REST up-to-WIKI ONLY** (per directive): dossier→wiki via the proven loop, build-order
-   `narodna-kultura-yak-systema` → `narodni-viruvannia-mifolohiia-demonolohiia` → `koliadky-shchedrivky`
-   → `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`. GPT writes dossier / Claude corpus-
-   hammer reviews (NO DeepSeek for culture). Hold these as PRs (don't lock main before the pilot review
-   sets the approach). **Build NO modules for the rest until the user reviews the pilot.**
-3. After pilot review: address the pilot's stress/label/P2 follow-ups, then build the rest's modules.
+1. **Review in-flight dossier #2** (`folk-dossier-narodni-viruvannia`, watcher `b4p1gnvdz`): read content,
+   INDEPENDENTLY re-run `verify_quote` on a §4 sample (don't trust self-report), check the
+   `search_heritage("берегиня")` discipline, `check_russian_shadow` on demon names. SHIP/REVISE → comment on its PR.
+2. **COMPILE WIKIS** for the SHIP'd dossiers (#1 narodna-kultura ready now; #2 after review). ⚠ CORPUS-ACCESS
+   NOTE: `scripts/wiki/compile.py` uses `load_dossier_text(track,slug)` + dense retrieval which needs
+   `data/` — worktrees SPARSE-EXCLUDE `data/`. So run compile from a `data/`-bearing checkout: copy the
+   dossier into the MAIN root's `docs/research/folk/<slug>.md` (untracked working file, NOT a commit),
+   run `.venv/bin/python scripts/wiki/compile.py --track folk --slug <slug> --writer gpt-5.5 --review`
+   from main root, then move the wiki+sources.yaml onto the dossier's PR branch + push. Monitor the
+   compile via the `Monitor` tool. Corpus-hammer review the wiki (verify_quote a §4 sample). The seminar
+   wiki-completeness gate (#2855, now live) will gate the eventual module build.
+3. **Continue the rest** up-to-wiki (fire dossiers koliadky→rodynna→dumy; review; compile wikis). HOLD all
+   as PRs — do NOT lock main before the user reviews the pilot. **Build NO modules for the rest yet.**
+4. **After user reviews pilot #2857:** address the pilot follow-ups (stress-annotation skips headings +
+   C1 density; UK tab labels; P2 inline-and-aggregate §5 #3), then build the rest's modules.
+
+### 📌 HOLD DECISION (told the user): all phase-2 dossier+wiki PRs stay OPEN/unmerged until the pilot
+review sets the approach. State lives on PR branches (#2857 carries this handoff; #2858 = dossier #1).
+Cold-start: `gh pr list` + `/api/delegate/active` + read this handoff on the `claude/folk-pilot-module` branch.
 
 ### 📊 FLEET — wiki writer **gpt-5.5** (dossier-grounded); module writer **claude-tools** (C1+ cultural);
 reviewers **deepseek-flash** (code) / Claude corpus-hammer (culture content). Cross-family always.
